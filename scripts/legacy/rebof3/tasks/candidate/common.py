@@ -94,11 +94,11 @@ def wrap_candidate_source_text(
         stub_source_path=stub_source_path,
     )
     comment_label = original_symbol_name or function_name
-    rewritten = rewrite_seed_function_name(seed_text.strip(), function_name=function_name)
+    rewritten = rewrite_seed_function_name(
+        seed_text.strip(), function_name=function_name
+    )
     return (
-        f"{include_line}\n\n"
-        f"/* @source: {entry_hex} {comment_label} */\n"
-        f"{rewritten}\n"
+        f"{include_line}\n\n/* @source: {entry_hex} {comment_label} */\n{rewritten}\n"
     )
 
 

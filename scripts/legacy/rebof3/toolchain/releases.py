@@ -36,7 +36,10 @@ def extract_tar_gz(archive_path: Path, dest: Path) -> None:
         dest_resolved = dest.resolve()
         for member in archive.getmembers():
             member_path = (dest / member.name).resolve()
-            if member_path != dest_resolved and dest_resolved not in member_path.parents:
+            if (
+                member_path != dest_resolved
+                and dest_resolved not in member_path.parents
+            ):
                 raise RuntimeError(
                     f"refusing to extract path outside destination: {member.name}"
                 )

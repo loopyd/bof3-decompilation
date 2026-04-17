@@ -24,9 +24,7 @@ class GhidraBootstrapService(Service):
 
     def run(self, request: GhidraBootstrapRequest, *, logger) -> int:
         if not (constants.ROOT / "processed" / "emi_raw" / "BIN").exists():
-            logger.error(
-                "processed/emi_raw/BIN not found. Run 'make unpack' first."
-            )
+            logger.error("processed/emi_raw/BIN not found. Run 'make unpack' first.")
             return 1
         ghidra_home = Path(
             os.environ.get("GHIDRA_HOME") or constants.DEFAULT_GHIDRA_HOME

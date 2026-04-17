@@ -85,8 +85,7 @@ class OldGccInstaller(Installer):
             ready.append(compiler_id)
 
         logger.summary(
-            "old-gcc ready: "
-            f"dest_root={request.dest_root} compilers={', '.join(ready)}"
+            f"old-gcc ready: dest_root={request.dest_root} compilers={', '.join(ready)}"
         )
         return 0
 

@@ -128,7 +128,10 @@ class GhidraDecompRuntimeTests(unittest.TestCase):
         self.assertTrue(str(payload["commands"][-1][-1]).endswith("func.m2c.s"))
         self.assertIn("--context", payload["commands"][-1])
         self.assertTrue(
-            any(str(command[-1]).endswith("func.m2c.ctx.c") for command in payload["commands"])
+            any(
+                str(command[-1]).endswith("func.m2c.ctx.c")
+                for command in payload["commands"]
+            )
         )
         self.assertEqual(payload["asm_backend"], "ghidra")
         self.assertTrue(payload["emit_spimdisasm"])
@@ -168,12 +171,15 @@ class GhidraDecompRuntimeTests(unittest.TestCase):
                     "slice_end": "0x8016215c",
                 }
 
-            with patch(
-                "scripts.rebof3.tasks.decomp.ghidra_bundle_export.run_bundle_export",
-                side_effect=fake_bundle_export,
-            ), patch(
-                "scripts.rebof3.tasks.decomp.spimdisasm_asm.run_spimdisasm_function_asm",
-                side_effect=fake_spimdisasm,
+            with (
+                patch(
+                    "scripts.rebof3.tasks.decomp.ghidra_bundle_export.run_bundle_export",
+                    side_effect=fake_bundle_export,
+                ),
+                patch(
+                    "scripts.rebof3.tasks.decomp.spimdisasm_asm.run_spimdisasm_function_asm",
+                    side_effect=fake_spimdisasm,
+                ),
             ):
                 returncode, payload = decomp_runtime.run_decomp_bundle(
                     source_text="build/extracted/SLUS_004.22",

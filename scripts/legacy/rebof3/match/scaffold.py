@@ -235,7 +235,9 @@ def mirror_artifacts(
         target_rel = relative_to_root(target_path)
         if not source_path.exists():
             mirrored[key] = {
-                "status": "would_copy" if dry_run and export_planned else "missing_source",
+                "status": "would_copy"
+                if dry_run and export_planned
+                else "missing_source",
                 "path": target_rel,
             }
             continue
@@ -363,7 +365,9 @@ def main(argv: list[str] | None = None) -> int:
         artifacts_dir = artifacts_dir_for_row(item, args.artifact_root)
         bundle_action = "skipped_missing_source_hint"
         bundle_payload: dict[str, Any] | None = None
-        bundle_paths = None if artifacts_dir is None else bundle_file_paths(artifacts_dir)
+        bundle_paths = (
+            None if artifacts_dir is None else bundle_file_paths(artifacts_dir)
+        )
         bundle_error = None
 
         stub_action, created_stub_path = create_stub(

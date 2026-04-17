@@ -15,7 +15,9 @@ from ..tasks.candidate.common import (
 from . import pipeline_ready
 
 
-def add_prepare_args(parser: argparse.ArgumentParser, *, prog: str, description: str) -> None:
+def add_prepare_args(
+    parser: argparse.ArgumentParser, *, prog: str, description: str
+) -> None:
     """Populate a parser with the inputs required to seed a candidate pipeline."""
 
     parser.prog = prog

@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from ...common import relative_to_root
-from ...lib.pipeline import PipelineContext, PipelineOptions, PipelineTask, option_logger
+from ...lib.pipeline import (
+    PipelineContext,
+    PipelineOptions,
+    PipelineTask,
+    option_logger,
+)
 from ...re.services.ghidra.decomp_helpers import load_program_symbol_resolver
 from ...re.services.spimdisasm_backend import run_spimdisasm_function_asm
 from .options import asm_backend, emit_spimdisasm
@@ -53,7 +58,9 @@ class SpimdisasmAsmTask(PipelineTask):
             )
             logger.debug(f"wrote spim asm {relative_to_root(context['spim_asm_path'])}")
         elif metadata.get("stderr"):
-            logger.debug(f"spimdisasm status={metadata['status']} stderr={metadata['stderr']}")
+            logger.debug(
+                f"spimdisasm status={metadata['status']} stderr={metadata['stderr']}"
+            )
         context["spimdisasm_metadata"] = metadata
         return context
 

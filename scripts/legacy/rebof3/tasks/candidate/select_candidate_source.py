@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from ...common import ROOT
-from ...lib.pipeline import PipelineContext, PipelineOptions, PipelineTask, option_logger
+from ...lib.pipeline import (
+    PipelineContext,
+    PipelineOptions,
+    PipelineTask,
+    option_logger,
+)
 from .options import candidate_variant
 
 

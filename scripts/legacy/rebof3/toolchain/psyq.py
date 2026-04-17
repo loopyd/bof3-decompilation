@@ -19,35 +19,15 @@ from .installer import Installer
 INCLUDE_FILE_NAMES = ("LIBGPU.H", "libgpu.h")
 LIB_FILE_NAMES = ("LIBGPU.LIB", "libgpu.lib", "libgpu.a")
 AUTO_DISCOVERY_CANDIDATES = (
-    ROOT / "psyq-4.0",
-    ROOT / "psyq40",
-    ROOT / "deps" / "psyq-4.0",
-    ROOT / "deps" / "psyq40",
-    ROOT / "deps" / "psyq-original-src",
-    ROOT / "deps" / "psyq-original" / "4.0-src",
-)
-HOME_DISCOVERY_PATTERNS = (
-    "psyq-4.0",
-    "psyq40",
-    "PsyQ4.0",
-    "Downloads/psyq-4.0",
-    "Downloads/psyq40",
-    "Documents/psyq-4.0",
-    "Documents/psyq40",
+    ROOT / "inputs" / "psyq-4.7-converted-full",
+    ROOT / "inputs" / "external" / "psyq-4.7-converted-full",
+    ROOT / "external" / "private-assets" / "psyq" / "source-tree",
 )
 AUTO_DISCOVERY_ARCHIVES = (
-    ROOT / "psyq-4.7-converted-full.7z",
-    ROOT / "psyq-4.0-converted-full.7z",
-    ROOT / "deps" / "psyq-4.7-converted-full.7z",
-    ROOT / "deps" / "psyq-4.0-converted-full.7z",
-)
-HOME_ARCHIVE_PATTERNS = (
-    "Downloads/psyq-4.7-converted-full.7z",
-    "Downloads/psyq-4.7-converted-full.zip",
-    "Downloads/psyq-4.0-converted-full.7z",
-    "Downloads/psyq-4.0-converted-full.zip",
-    "Downloads/psyq40.7z",
-    "Downloads/psyq40.zip",
+    ROOT / "inputs" / "psyq-4.7-converted-full.7z",
+    ROOT / "inputs" / "psyq-4.7-converted-full.zip",
+    ROOT / "inputs" / "external" / "psyq-4.7-converted-full.7z",
+    ROOT / "external" / "private-assets" / "psyq" / "source-media",
 )
 SUPPORTED_ARCHIVE_SUFFIXES = (".7z", ".zip", ".tar.gz", ".tgz")
 TEXT_FILE_SUFFIXES = {
@@ -87,7 +67,7 @@ class PsyqOriginalStager(Installer):
             logger.error(f"source root not found: {source_root}")
             return 1
         if original_sdk_is_ready(dest_root) and not request.force:
-            logger.summary(f"PsyQ 4.0 already staged at {dest_root}")
+            logger.summary(f"PsyQ 4.7 already staged at {dest_root}")
             return 0
         try:
             include_source = find_sdk_subdir(source_root, "INCLUDE", INCLUDE_FILE_NAMES)
@@ -104,10 +84,10 @@ class PsyqOriginalStager(Installer):
         create_lowercase_aliases(dest_root / "lib")
         if not original_sdk_is_ready(dest_root):
             logger.error(
-                "staged PsyQ 4.0 tree is incomplete; expected include/lib layout was not produced"
+                "staged PsyQ 4.7 tree is incomplete; expected include/lib layout was not produced"
             )
             return 1
-        logger.summary(f"PsyQ 4.0 staged at {dest_root}")
+        logger.summary(f"PsyQ 4.7 staged at {dest_root}")
         return 0
 
     def install(self, request: PsyqOriginalStageRequest, *, logger) -> int:
@@ -115,6 +95,19 @@ class PsyqOriginalStager(Installer):
 
 
 DEFAULT_PSYQ_ORIGINAL_STAGER = PsyqOriginalStager()
+
+
+def _is_repo_local_path(path: Path) -> bool:
+    candidate = path.expanduser().resolve(strict=False)
+    return candidate == ROOT or ROOT in candidate.parents
+
+
+def _validate_repo_local_input(path: Path, *, label: str) -> Path:
+    if not _is_repo_local_path(path):
+        raise ValueError(
+            f"{label} must stay inside the repo workspace under inputs/ or external/private-assets: {path}"
+        )
+    return path.expanduser()
 
 
 def contains_any_file(directory: Path, names: tuple[str, ...]) -> bool:
@@ -188,7 +181,9 @@ def normalize_text_tree_newlines(root: Path) -> int:
 
 
 def staged_sdk_layout_exists(root: Path) -> bool:
-    return all((root / subdir_name).exists() for subdir_name in STAGED_SDK_REQUIRED_DIRS)
+    return all(
+        (root / subdir_name).exists() for subdir_name in STAGED_SDK_REQUIRED_DIRS
+    )
 
 
 def list_text_files_with_crlf(root: Path) -> list[Path]:
@@ -281,16 +276,16 @@ def archive_path_looks_valid(path: Path) -> bool:
 
 def auto_discovery_roots() -> list[Path]:
     roots: list[Path] = []
-    env_source = os.environ.get("PSYQ40_SOURCE")
+    env_source = os.environ.get("PSYQ_SOURCE")
     if env_source:
         roots.append(Path(env_source).expanduser())
     roots.extend(AUTO_DISCOVERY_CANDIDATES)
-    home = Path.home()
-    roots.extend(home / pattern for pattern in HOME_DISCOVERY_PATTERNS)
     deduped: list[Path] = []
     seen: set[Path] = set()
     for candidate in roots:
         resolved = candidate.expanduser()
+        if not _is_repo_local_path(resolved):
+            continue
         if resolved in seen:
             continue
         seen.add(resolved)
@@ -300,16 +295,16 @@ def auto_discovery_roots() -> list[Path]:
 
 def auto_discovery_archives() -> list[Path]:
     archives: list[Path] = []
-    env_archive = os.environ.get("PSYQ40_ARCHIVE")
+    env_archive = os.environ.get("PSYQ_ARCHIVE")
     if env_archive:
         archives.append(Path(env_archive).expanduser())
     archives.extend(AUTO_DISCOVERY_ARCHIVES)
-    home = Path.home()
-    archives.extend(home / pattern for pattern in HOME_ARCHIVE_PATTERNS)
     deduped: list[Path] = []
     seen: set[Path] = set()
     for candidate in archives:
         resolved = candidate.expanduser()
+        if not _is_repo_local_path(resolved):
+            continue
         if resolved in seen:
             continue
         seen.add(resolved)
@@ -320,7 +315,9 @@ def auto_discovery_archives() -> list[Path]:
 def discover_source_root(explicit_source: Path | None = None) -> Path | None:
     candidates: list[Path] = []
     if explicit_source is not None:
-        candidates.append(explicit_source.expanduser())
+        candidates.append(
+            _validate_repo_local_input(explicit_source, label="PsyQ source root")
+        )
     candidates.extend(auto_discovery_roots())
     seen: set[Path] = set()
     for candidate in candidates:
@@ -335,7 +332,9 @@ def discover_source_root(explicit_source: Path | None = None) -> Path | None:
 def discover_source_archive(explicit_archive: Path | None = None) -> Path | None:
     candidates: list[Path] = []
     if explicit_archive is not None:
-        candidates.append(explicit_archive.expanduser())
+        candidates.append(
+            _validate_repo_local_input(explicit_archive, label="PsyQ archive")
+        )
     candidates.extend(auto_discovery_archives())
     seen: set[Path] = set()
     for candidate in candidates:
@@ -381,7 +380,7 @@ def materialized_source_root(source_input: PsyqSourceInput):
     if source_input.kind == "tree":
         yield source_input.path
         return
-    with tempfile.TemporaryDirectory(prefix="psyq40-") as tmp_dir:
+    with tempfile.TemporaryDirectory(prefix="psyq47-") as tmp_dir:
         extraction_root = Path(tmp_dir) / "source"
         extraction_root.mkdir(parents=True, exist_ok=True)
         extract_archive(source_input.path, extraction_root)
@@ -392,7 +391,7 @@ def build_original_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog=package_prog("toolchain", "psyq-original"),
         description=(
-            "Stage a local original PsyQ 4.0 SDK tree into deps/psyq-original/4.0 "
+            "Stage a repo-local PsyQ 4.7 SDK tree into toolchains/psyq/4.7 "
             "with lowercase header aliases for Linux builds."
         ),
     )
@@ -400,7 +399,7 @@ def build_original_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--source-root",
         type=Path,
-        help="path to an extracted/local PsyQ 4.0 tree containing INCLUDE and LIB directories",
+        help="path to a repo-local PsyQ 4.7 tree containing INCLUDE and LIB directories",
     )
     parser.add_argument(
         "--archive",
@@ -410,18 +409,18 @@ def build_original_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--no-auto-detect",
         action="store_true",
-        help="require --source-root or PSYQ40_SOURCE instead of searching common local paths",
+        help="require --source-root or PSYQ_SOURCE instead of repo-local auto-discovery",
     )
     parser.add_argument(
         "--print-detected-source",
         action="store_true",
-        help="print the discovered PsyQ 4.0 source root and exit",
+        help="print the discovered PsyQ 4.7 source root and exit",
     )
     parser.add_argument(
         "--dest",
         type=Path,
         default=PSYQ_ORIGINAL_40_ROOT,
-        help="destination root for the staged original PsyQ 4.0 tree",
+        help="destination root for the staged PsyQ 4.7 tree",
     )
     parser.add_argument(
         "--repair-existing",
@@ -458,14 +457,14 @@ def main_original(argv: list[str] | None = None) -> int:
             source_input = PsyqSourceInput(kind="archive", path=args.archive)
         else:
             context.logger.error(
-                "missing PsyQ 4.0 source tree; pass --source-root, --archive, or set PSYQ40_SOURCE/PSYQ40_ARCHIVE"
+                "missing PsyQ 4.7 source tree or archive under inputs/ or external/private-assets; pass --source-root, --archive, or set PSYQ_SOURCE/PSYQ_ARCHIVE"
             )
             return 1
     else:
         source_input = discover_source_input(source_root, args.archive)
         if source_input is None:
             context.logger.error(
-                "missing PsyQ 4.0 source tree or archive; pass --source-root/--archive, set PSYQ40_SOURCE/PSYQ40_ARCHIVE, or place a local tree/archive in a common path like ~/Downloads/psyq-4.7-converted-full.7z"
+                "missing PsyQ 4.7 source tree or archive under inputs/ or external/private-assets; pass --source-root/--archive or set PSYQ_SOURCE/PSYQ_ARCHIVE to a repo-local path"
             )
             return 1
     if args.print_detected_source:

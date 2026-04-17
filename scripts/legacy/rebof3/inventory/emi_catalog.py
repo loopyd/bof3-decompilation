@@ -24,6 +24,7 @@ from .repositories.archives import ArchiveRepository
 
 EXTRACT_BIN_DIR = ROOT / "build" / "extracted" / "BIN"
 
+
 def file_sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 

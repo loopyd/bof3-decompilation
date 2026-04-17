@@ -3,7 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from ...common import ROOT, relative_to_root
-from ...lib.pipeline import PipelineContext, PipelineOptions, PipelineTask, option_logger
+from ...lib.pipeline import (
+    PipelineContext,
+    PipelineOptions,
+    PipelineTask,
+    option_logger,
+)
 from ...match import permuter as permuter_lib
 from ...match import pipeline_ready
 from .options import (

@@ -123,7 +123,9 @@ def run_decomp_bundle(
                 output_path=m2c_context_path,
             )
         )
-        commands.append(build_m2c_command(m2c_asm_path, context_paths=[m2c_context_path]))
+        commands.append(
+            build_m2c_command(m2c_asm_path, context_paths=[m2c_context_path])
+        )
 
     if dry_run:
         return 0, {
@@ -222,7 +224,9 @@ def run_decomp_bundle(
                 else None
             ),
             "m2c_context": (
-                relative_to_root(m2c_context_path) if m2c_context_path.exists() else None
+                relative_to_root(m2c_context_path)
+                if m2c_context_path.exists()
+                else None
             ),
             "m2c_asm": relative_to_root(m2c_asm_path) if not no_m2c else None,
             "m2c_c": m2c_metadata["path"],

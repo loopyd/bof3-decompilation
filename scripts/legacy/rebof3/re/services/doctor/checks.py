@@ -239,7 +239,7 @@ def psyq_original_40_check(required: bool) -> DoctorCheck:
         required,
         "missing",
         str(constants.PSYQ_ORIGINAL_40_ROOT),
-        "run `make setup_psyq_40 PSYQ40_SOURCE=/path/to/psyq-4.0`",
+        "run `make setup-psyq PSYQ_ARCHIVE=inputs/psyq-4.7-converted-full.7z`",
     )
 
 
@@ -532,7 +532,7 @@ def build_checks() -> list[DoctorCheck]:
             name="maspsx-cc",
             required=False,
             repo_path=constants.MASPSX_CC,
-            hint="run `make setup_toolchain` and stage the canonical PsyQ 4.0 tree; expected repo wrapper under scripts/rebof3/toolchain/maspsx-cc",
+            hint="run `make setup_toolchain` and stage the canonical PsyQ 4.7 tree; expected repo wrapper under scripts/rebof3/toolchain/maspsx-cc",
         ),
         psx_compiler_check(required=False),
         psx_toolchain_check(required=False),

@@ -42,8 +42,12 @@ class CandidateCliTests(unittest.TestCase):
         fake_pipeline = SimpleNamespace(
             run=Mock(
                 return_value={
-                    "workspace_json": Path("tmp/matching/candidates/foo/workspace.json"),
-                    "candidate_source_file": Path("bof3/stubs/modules/battle/15/func_80097eb8.c"),
+                    "workspace_json": Path(
+                        "tmp/matching/candidates/foo/workspace.json"
+                    ),
+                    "candidate_source_file": Path(
+                        "bof3/stubs/modules/battle/15/func_80097eb8.c"
+                    ),
                     "candidate_source_variant": "m2c",
                     "bundle_payload": {
                         "artifacts_dir": "tmp/ghidra_decomp/foo",
@@ -61,7 +65,9 @@ class CandidateCliTests(unittest.TestCase):
 
         with (
             patch.object(candidate_prepare_module, "parse_args", return_value=args),
-            patch.object(candidate_prepare_module, "logger_from_args", return_value=logger),
+            patch.object(
+                candidate_prepare_module, "logger_from_args", return_value=logger
+            ),
             patch.object(
                 candidate_prepare_module,
                 "pipeline_candidate_prepare",
@@ -122,7 +128,9 @@ class CandidateCliTests(unittest.TestCase):
 
         with (
             patch.object(candidate_build_module, "parse_args", return_value=args),
-            patch.object(candidate_build_module, "logger_from_args", return_value=logger),
+            patch.object(
+                candidate_build_module, "logger_from_args", return_value=logger
+            ),
             patch.object(
                 candidate_build_module,
                 "resolve_existing_workspace_context",
@@ -300,8 +308,12 @@ class CandidateCliTests(unittest.TestCase):
         fake_pipeline = SimpleNamespace(
             run=Mock(
                 return_value={
-                    "workspace_json": Path("tmp/matching/candidates/foo/workspace.json"),
-                    "candidate_source_file": Path("bof3/stubs/modules/battle/15/func_80097eb8.c"),
+                    "workspace_json": Path(
+                        "tmp/matching/candidates/foo/workspace.json"
+                    ),
+                    "candidate_source_file": Path(
+                        "bof3/stubs/modules/battle/15/func_80097eb8.c"
+                    ),
                     "candidate_source_variant": "m2c",
                     "bundle_payload": {
                         "artifacts_dir": "tmp/ghidra_decomp/foo",
@@ -338,7 +350,9 @@ class CandidateCliTests(unittest.TestCase):
 
         with (
             patch.object(candidate_full_module, "parse_args", return_value=args),
-            patch.object(candidate_full_module, "logger_from_args", return_value=logger),
+            patch.object(
+                candidate_full_module, "logger_from_args", return_value=logger
+            ),
             patch.object(
                 candidate_full_module,
                 "pipeline_candidate_full",

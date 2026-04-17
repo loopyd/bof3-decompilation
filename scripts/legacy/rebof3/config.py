@@ -35,8 +35,8 @@ OLD_GCC_TOOLCHAINS_ROOT = DEPS_DIR / "old_gcc_toolchains"
 PSN00B_TOOLCHAIN_ROOT = DEPS_DIR / "psn00b_toolchain"
 PSN00B_TOOLCHAIN_BIN = PSN00B_TOOLCHAIN_ROOT / "bin"
 PSN00B_SDK_ROOT = DEPS_DIR / "psn00bsdk"
-PSYQ_ORIGINAL_ROOT = DEPS_DIR / "psyq-original"
-PSYQ_ORIGINAL_40_ROOT = PSYQ_ORIGINAL_ROOT / "4.0"
+PSYQ_ORIGINAL_ROOT = ROOT / "toolchains" / "psyq"
+PSYQ_ORIGINAL_40_ROOT = PSYQ_ORIGINAL_ROOT / "4.7"
 BOF3_DISK_BINARY = TOOL_BUILD_DIR / "bof3-disk" / "bof3-disk"
 EMI_EX_BINARY = ROOT / "build" / "tools" / "emi-ex-v2" / "cli" / "emi-ex"
 GHIDRA_SRC_DIR = THIRD_PARTY_TOOLS_DIR / "bof3-ghidra" / "src"
@@ -56,7 +56,7 @@ PSX_PROFILE_ASPSX_VERSIONS = {
     PROFILE_CAPCOM97_BOF3: "2.56",
 }
 PSX_PROFILE_DISPLAY_NAMES = {
-    PROFILE_CAPCOM97_BOF3: "Capcom 1997 BOF3 candidate (PsyQ 4.0 + maspsx 2.56)",
+    PROFILE_CAPCOM97_BOF3: "Capcom 1997 BOF3 candidate (PsyQ 4.7 + maspsx 2.56)",
 }
 PSX_PROFILE_SDK_KINDS = {
     PROFILE_CAPCOM97_BOF3: "original",

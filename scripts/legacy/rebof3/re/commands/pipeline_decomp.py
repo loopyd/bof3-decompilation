@@ -13,9 +13,7 @@ class PipelineDecompCommand(Command):
     def build_parser(cls):
         parser = _build_ghidra_decomp_parser()
         parser.prog = package_prog("re", "pipeline-decomp")
-        parser.description = (
-            "Run the concrete decomp pipeline for one function and write the bundle artifacts."
-        )
+        parser.description = "Run the concrete decomp pipeline for one function and write the bundle artifacts."
         return parser
 
     @classmethod

@@ -34,7 +34,9 @@ def build_m2c_context_source(
         address=requested_address,
         program_name=program_name,
     )
-    internal_header = None if current_mapping is None else mapping_internal_header(current_mapping)
+    internal_header = (
+        None if current_mapping is None else mapping_internal_header(current_mapping)
+    )
     prototype_lines = referenced_repo_prototype_lines(
         selected_asm_text,
         source_text=source_text,
@@ -59,7 +61,9 @@ def build_m2c_context_source(
     metadata: dict[str, Any] = {
         "status": "ok",
         "current_source_file": (
-            None if current_mapping is None else str(current_mapping.get("source_file") or "")
+            None
+            if current_mapping is None
+            else str(current_mapping.get("source_file") or "")
         ),
         "internal_header": internal_header,
         "prototype_count": len(prototype_lines),

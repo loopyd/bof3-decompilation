@@ -7,7 +7,7 @@ import zipfile
 from pathlib import Path
 from unittest import mock
 
-from scripts.rebof3.toolchain import psyq as MODULE
+from rebof3.toolchain import psyq as MODULE
 
 
 def _make_fake_psyq_tree(root: Path, *, crlf: bool = False) -> None:
@@ -30,23 +30,24 @@ def _make_fake_psyq_tree(root: Path, *, crlf: bool = False) -> None:
 class PsyqToolchainTests(unittest.TestCase):
     def test_discover_source_root_uses_explicit_source(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            root = Path(tmp_dir) / "psyq-4.0"
+            root = Path(tmp_dir) / "psyq-4.7"
             _make_fake_psyq_tree(root)
 
-            discovered = MODULE.discover_source_root(root)
+            with self.assertRaisesRegex(
+                ValueError, "must stay inside the repo workspace"
+            ):
+                MODULE.discover_source_root(root)
 
-        self.assertEqual(discovered, root)
-
-    def test_discover_source_root_uses_environment_and_home_candidates(self) -> None:
+    def test_discover_source_root_uses_repo_local_environment_candidate(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            home = Path(tmp_dir) / "home"
-            env_root = home / "Downloads" / "psyq-4.0"
+            repo_root = Path(tmp_dir) / "repo"
+            env_root = repo_root / "inputs" / "psyq-4.7-converted-full"
             _make_fake_psyq_tree(env_root)
 
             with (
-                mock.patch.object(MODULE.Path, "home", return_value=home),
+                mock.patch.object(MODULE, "ROOT", repo_root),
                 mock.patch.dict(
-                    os.environ, {"PSYQ40_SOURCE": str(env_root)}, clear=False
+                    os.environ, {"PSYQ_SOURCE": str(env_root)}, clear=False
                 ),
             ):
                 discovered = MODULE.discover_source_root()
@@ -57,17 +58,19 @@ class PsyqToolchainTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             self.assertFalse(MODULE.source_root_looks_valid(Path(tmp_dir) / "missing"))
 
-    def test_discover_source_archive_uses_environment_and_home_candidates(self) -> None:
+    def test_discover_source_archive_uses_repo_local_environment_candidate(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            home = Path(tmp_dir) / "home"
-            archive = home / "Downloads" / "psyq-4.7-converted-full.zip"
+            repo_root = Path(tmp_dir) / "repo"
+            archive = repo_root / "inputs" / "psyq-4.7-converted-full.zip"
             archive.parent.mkdir(parents=True, exist_ok=True)
             archive.write_bytes(b"zip")
 
             with (
-                mock.patch.object(MODULE.Path, "home", return_value=home),
+                mock.patch.object(MODULE, "ROOT", repo_root),
                 mock.patch.dict(
-                    os.environ, {"PSYQ40_ARCHIVE": str(archive)}, clear=False
+                    os.environ, {"PSYQ_ARCHIVE": str(archive)}, clear=False
                 ),
             ):
                 discovered = MODULE.discover_source_archive()
@@ -174,11 +177,17 @@ class PsyqToolchainTests(unittest.TestCase):
                 newline="",
             )
 
-            result = MODULE.repair_staged_sdk_roots(root / "psyq-original", logger=logger)
+            result = MODULE.repair_staged_sdk_roots(
+                root / "psyq-original", logger=logger
+            )
 
             self.assertEqual(result, 0)
-            self.assertFalse(MODULE.file_uses_crlf(first_root / "include" / "GPUCORE.H"))
-            self.assertFalse(MODULE.file_uses_crlf(second_root / "include" / "GPUCORE.H"))
+            self.assertFalse(
+                MODULE.file_uses_crlf(first_root / "include" / "GPUCORE.H")
+            )
+            self.assertFalse(
+                MODULE.file_uses_crlf(second_root / "include" / "GPUCORE.H")
+            )
 
 
 if __name__ == "__main__":

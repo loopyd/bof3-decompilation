@@ -10,7 +10,9 @@ from scripts.rebof3.re.services import m2c_context as MODULE
 
 
 class M2CContextTests(unittest.TestCase):
-    def test_build_m2c_context_source_uses_internal_header_and_repo_prototypes(self) -> None:
+    def test_build_m2c_context_source_uses_internal_header_and_repo_prototypes(
+        self,
+    ) -> None:
         def fake_find_source_mapping(entry: str, **_: object):
             if entry == "0x80161fdc":
                 return {
@@ -70,25 +72,30 @@ class M2CContextTests(unittest.TestCase):
             source_path = Path(tmp_dir) / "func.m2c.ctx.c"
             output_path = Path(tmp_dir) / "func.m2c.ctx.i"
 
-            with patch.object(
-                MODULE,
-                "build_m2c_context_source",
-                return_value=(
-                    '#include "bof3/psyq_compat.h"\n',
-                    {
-                        "status": "ok",
-                        "internal_header": None,
-                        "prototype_count": 0,
-                        "psyq_headers": [],
-                    },
+            with (
+                patch.object(
+                    MODULE,
+                    "build_m2c_context_source",
+                    return_value=(
+                        '#include "bof3/psyq_compat.h"\n',
+                        {
+                            "status": "ok",
+                            "internal_header": None,
+                            "prototype_count": 0,
+                            "psyq_headers": [],
+                        },
+                    ),
                 ),
-            ), patch.object(
-                MODULE,
-                "run_command",
-                side_effect=lambda command: (
-                    output_path.write_text("typedef int s32;\n", encoding="utf-8"),
-                    CompletedProcess(args=command, returncode=0, stdout="", stderr=""),
-                )[1],
+                patch.object(
+                    MODULE,
+                    "run_command",
+                    side_effect=lambda command: (
+                        output_path.write_text("typedef int s32;\n", encoding="utf-8"),
+                        CompletedProcess(
+                            args=command, returncode=0, stdout="", stderr=""
+                        ),
+                    )[1],
+                ),
             ):
                 metadata = MODULE.generate_m2c_context_artifacts(
                     source_text="build/extracted/SLUS_004.22",
@@ -103,7 +110,9 @@ class M2CContextTests(unittest.TestCase):
                 source_path.read_text(encoding="utf-8"),
                 '#include "bof3/psyq_compat.h"\n',
             )
-            self.assertEqual(output_path.read_text(encoding="utf-8"), "typedef int s32;\n")
+            self.assertEqual(
+                output_path.read_text(encoding="utf-8"), "typedef int s32;\n"
+            )
             self.assertEqual(metadata["status"], "ok")
             self.assertTrue(str(metadata["path"]).endswith("func.m2c.ctx.i"))
 

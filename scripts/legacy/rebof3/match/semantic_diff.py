@@ -85,7 +85,9 @@ def match_memory_operands(operands: list[str]) -> tuple[str, str, str] | None:
     )
 
 
-def normalized_move_signature(parsed: tuple[str, list[str]] | None) -> tuple[str, str] | None:
+def normalized_move_signature(
+    parsed: tuple[str, list[str]] | None,
+) -> tuple[str, str] | None:
     if parsed is None:
         return None
     mnemonic, operands = parsed
@@ -103,7 +105,9 @@ def normalized_move_signature(parsed: tuple[str, list[str]] | None) -> tuple[str
     return None
 
 
-def normalized_li_signature(parsed: tuple[str, list[str]] | None) -> tuple[str, str] | None:
+def normalized_li_signature(
+    parsed: tuple[str, list[str]] | None,
+) -> tuple[str, str] | None:
     if parsed is None:
         return None
     mnemonic, operands = parsed
@@ -115,7 +119,9 @@ def normalized_li_signature(parsed: tuple[str, list[str]] | None) -> tuple[str, 
     return None
 
 
-def normalized_branch_signature(parsed: tuple[str, list[str]] | None) -> tuple[str, str | None, str] | None:
+def normalized_branch_signature(
+    parsed: tuple[str, list[str]] | None,
+) -> tuple[str, str | None, str] | None:
     if parsed is None:
         return None
     mnemonic, operands = parsed
@@ -149,7 +155,10 @@ def is_commutative_swap(
         return False
     left_mnemonic, left_operands = left
     right_mnemonic, right_operands = right
-    if left_mnemonic != right_mnemonic or left_mnemonic not in COMMUTATIVE_RTYPE_MNEMONICS:
+    if (
+        left_mnemonic != right_mnemonic
+        or left_mnemonic not in COMMUTATIVE_RTYPE_MNEMONICS
+    ):
         return False
     if len(left_operands) != 3 or len(right_operands) != 3:
         return False
@@ -188,11 +197,18 @@ def is_address_materialization(
     if left_mnemonic != right_mnemonic or left_mnemonic not in ADDRESS_IMM_MNEMONICS:
         return False
     if left_mnemonic == "lui" and len(left_operands) == 2 and len(right_operands) == 2:
-        return normalize_register(left_operands[0]) == normalize_register(right_operands[0])
-    if left_mnemonic in {"addiu", "ori"} and len(left_operands) == 3 and len(right_operands) == 3:
-        return (
-            normalize_register(left_operands[0]) == normalize_register(right_operands[0])
-            and normalize_register(left_operands[1]) == normalize_register(right_operands[1])
+        return normalize_register(left_operands[0]) == normalize_register(
+            right_operands[0]
+        )
+    if (
+        left_mnemonic in {"addiu", "ori"}
+        and len(left_operands) == 3
+        and len(right_operands) == 3
+    ):
+        return normalize_register(left_operands[0]) == normalize_register(
+            right_operands[0]
+        ) and normalize_register(left_operands[1]) == normalize_register(
+            right_operands[1]
         )
     if left_mnemonic in MEMORY_MNEMONICS:
         left_memory = match_memory_operands(left_operands)
@@ -212,11 +228,17 @@ def classify_pair(
         return None
     left = parse_instruction(left_text)
     right = parse_instruction(right_text)
-    if normalized_move_signature(left) is not None and normalized_move_signature(left) == normalized_move_signature(right):
+    if normalized_move_signature(left) is not None and normalized_move_signature(
+        left
+    ) == normalized_move_signature(right):
         return "move_zero_sugar"
-    if normalized_li_signature(left) is not None and normalized_li_signature(left) == normalized_li_signature(right):
+    if normalized_li_signature(left) is not None and normalized_li_signature(
+        left
+    ) == normalized_li_signature(right):
         return "li_zero_sugar"
-    if normalized_branch_signature(left) is not None and normalized_branch_signature(left) == normalized_branch_signature(right):
+    if normalized_branch_signature(left) is not None and normalized_branch_signature(
+        left
+    ) == normalized_branch_signature(right):
         return "branch_zero_sugar"
     if is_commutative_swap(left, right):
         return "commutative_swap"
@@ -241,8 +263,12 @@ def select_symbol_payload(
                 break
     if candidate_name is None:
         return None, None, None
-    left = next((item for item in left_symbols if item.get("name") == candidate_name), None)
-    right = next((item for item in right_symbols if item.get("name") == candidate_name), None)
+    left = next(
+        (item for item in left_symbols if item.get("name") == candidate_name), None
+    )
+    right = next(
+        (item for item in right_symbols if item.get("name") == candidate_name), None
+    )
     return left, right, candidate_name
 
 
@@ -252,22 +278,30 @@ def classify_objdiff_payload(
     symbol_name: str | None = None,
     asm_score: int | None = None,
 ) -> dict[str, Any]:
-    left_symbol, right_symbol, resolved_symbol = select_symbol_payload(stdout_json, symbol_name)
+    left_symbol, right_symbol, resolved_symbol = select_symbol_payload(
+        stdout_json, symbol_name
+    )
     left_instructions = (left_symbol or {}).get("instructions") or []
     right_instructions = (right_symbol or {}).get("instructions") or []
     total_mismatches = 0
     category_counts = {name: 0 for name in CATEGORY_ORDER}
-    category_examples: dict[str, list[dict[str, str]]] = {name: [] for name in CATEGORY_ORDER}
+    category_examples: dict[str, list[dict[str, str]]] = {
+        name: [] for name in CATEGORY_ORDER
+    }
     unclassified_examples: list[dict[str, str]] = []
 
     for index, left_instruction in enumerate(left_instructions):
-        right_instruction = right_instructions[index] if index < len(right_instructions) else {}
-        diff_kind = left_instruction.get("diff_kind") or right_instruction.get("diff_kind")
+        right_instruction = (
+            right_instructions[index] if index < len(right_instructions) else {}
+        )
+        diff_kind = left_instruction.get("diff_kind") or right_instruction.get(
+            "diff_kind"
+        )
         if not diff_kind or diff_kind == "DIFF_NONE":
             continue
         total_mismatches += 1
-        left_text = ((left_instruction.get("instruction") or {}).get("formatted"))
-        right_text = ((right_instruction.get("instruction") or {}).get("formatted"))
+        left_text = (left_instruction.get("instruction") or {}).get("formatted")
+        right_text = (right_instruction.get("instruction") or {}).get("formatted")
         category = classify_pair(left_text, right_text, diff_kind)
         example = {
             "left": normalize_instruction_text(left_text) or "",
@@ -320,9 +354,7 @@ def classify_objdiff_payload(
         "category_counts": category_counts,
         "active_categories": active_categories,
         "category_examples": {
-            name: examples
-            for name, examples in category_examples.items()
-            if examples
+            name: examples for name, examples in category_examples.items() if examples
         },
         "unclassified_examples": unclassified_examples,
     }
@@ -425,7 +457,7 @@ def resolve_workspace_json_inputs(
     asm_report_path = workspace_dir / "asm_differ" / "backend.json"
     if asm_report_path.exists():
         asm_report = maybe_load_json(asm_report_path.read_text(encoding="utf-8")) or {}
-        asm_score = ((asm_report.get("diff_summary") or {}).get("current_score"))
+        asm_score = (asm_report.get("diff_summary") or {}).get("current_score")
     objdiff_json = maybe_load_json(objdiff_path.read_text(encoding="utf-8"))
     if objdiff_json is None:
         logger.error(f"failed to parse objdiff json: {objdiff_path}")
@@ -433,7 +465,9 @@ def resolve_workspace_json_inputs(
     symbol_name = args.symbol
     if symbol_name is None:
         source_mapping = workspace_payload.get("source_mapping") or {}
-        symbol_name = source_mapping.get("source_function") or workspace_payload.get("name")
+        symbol_name = source_mapping.get("source_function") or workspace_payload.get(
+            "name"
+        )
     return objdiff_json, str(symbol_name) if symbol_name else None, asm_score
 
 

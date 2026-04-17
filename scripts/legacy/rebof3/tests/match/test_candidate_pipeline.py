@@ -35,7 +35,9 @@ class CandidatePipelineTests(unittest.TestCase):
         task = MODULE.SelectCandidateSourceTask()
         with tempfile.TemporaryDirectory() as tmp_dir:
             m2c_path = Path(tmp_dir) / "func.m2c.c"
-            m2c_path.write_text("s32 func_80097eb8(void) { return 1; }\n", encoding="utf-8")
+            m2c_path.write_text(
+                "s32 func_80097eb8(void) { return 1; }\n", encoding="utf-8"
+            )
 
             result = task.run(
                 {
@@ -75,7 +77,9 @@ class CandidatePipelineTests(unittest.TestCase):
                 encoding="utf-8",
             )
             source_file = tmp_path / "func_80097eb8.c"
-            source_file.write_text("s32 func_80097eb8(void) { return 1; }\n", encoding="utf-8")
+            source_file.write_text(
+                "s32 func_80097eb8(void) { return 1; }\n", encoding="utf-8"
+            )
 
             row = {
                 "program_name": "BATTLE_e15_80096800.bin",

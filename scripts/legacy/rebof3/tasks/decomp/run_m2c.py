@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from ...common import relative_to_root, run_command, write_text_output
-from ...lib.pipeline import PipelineContext, PipelineOptions, PipelineTask, option_logger
+from ...lib.pipeline import (
+    PipelineContext,
+    PipelineOptions,
+    PipelineTask,
+    option_logger,
+)
 from ...re.services.m2c_runner import build_m2c_command
 
 

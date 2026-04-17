@@ -3,7 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from ...common import relative_to_root, write_json_output, write_text_output
-from ...lib.pipeline import PipelineContext, PipelineOptions, PipelineTask, option_logger
+from ...lib.pipeline import (
+    PipelineContext,
+    PipelineOptions,
+    PipelineTask,
+    option_logger,
+)
 from ...match import diff as diff_lib
 from ...match import pipeline_ready
 
@@ -41,13 +46,19 @@ class RunDiffTask(PipelineTask):
             "program_path": state.workspace_payload.get("program_path"),
             "entry_hex": state.workspace_payload.get("entry_hex"),
             "status": status,
-            "ghidra_bundle_json": state.workspace_payload.get("ghidra_decomp_bundle_json"),
+            "ghidra_bundle_json": state.workspace_payload.get(
+                "ghidra_decomp_bundle_json"
+            ),
             "ghidra_bundle_exists": state.ghidra_bundle_exists,
             "build_status_present": state.build_status is not None,
             "build_status": state.build_status,
-            "source_mapping_ready": bool(state.workspace_payload.get("source_mapping_ready")),
+            "source_mapping_ready": bool(
+                state.workspace_payload.get("source_mapping_ready")
+            ),
             "source_mapping": state.workspace_payload.get("source_mapping"),
-            "expected_baseline_ready": bool(state.workspace_payload.get("expected_baseline_ready")),
+            "expected_baseline_ready": bool(
+                state.workspace_payload.get("expected_baseline_ready")
+            ),
             "expected_baseline": state.workspace_payload.get("expected_baseline"),
             "backend_ready": True,
             "backend": backend_reports.get("asm-differ"),

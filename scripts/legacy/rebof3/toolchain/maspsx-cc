@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 MASPSX="${SCRIPT_DIR}/../../../third_party/tools/maspsx/maspsx.py"
 LOCAL_COMPILER_ROOT="${SCRIPT_DIR}/../../../deps/gcc-2.7.2-psx"
 LOCAL_TOOLCHAIN_BIN="${SCRIPT_DIR}/../../../deps/psn00b_toolchain/bin"
-PSYQ40_ROOT="${SCRIPT_DIR}/../../../deps/psyq-original/4.0"
+PSYQ47_ROOT="${SCRIPT_DIR}/../../../toolchains/psyq/4.7"
 DEFAULT_PROFILE="capcom97-bof3"
 
 resolve_toolchain_tool() {
@@ -52,7 +52,7 @@ resolve_c_compiler() {
 resolve_profile_settings() {
 	case "$1" in
 		capcom97-bof3)
-			PSYQ_ROOT="${PSYQ40_ROOT}"
+			PSYQ_ROOT="${PSYQ47_ROOT}"
 			ASPSX_VERSION="2.56"
 			;;
 		*)

@@ -32,6 +32,7 @@ class Psn00bInstallRequest:
     gcc272psx_dest: Path
     force: bool = False
 
+
 class Psn00bInstaller(Installer):
     installer_name = "psn00b"
 

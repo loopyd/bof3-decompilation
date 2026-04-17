@@ -4,7 +4,12 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 from ...common import relative_to_root
-from ...lib.pipeline import PipelineContext, PipelineOptions, PipelineTask, option_logger
+from ...lib.pipeline import (
+    PipelineContext,
+    PipelineOptions,
+    PipelineTask,
+    option_logger,
+)
 from ...match import build as build_lib, compile_one
 from .options import profile
 
@@ -28,7 +33,9 @@ class CompileWorkspaceTask(PipelineTask):
         build_root = Path(str(context["build_root"])).resolve()
         build_profile = profile(options)
         try:
-            plan = compile_one.plan_compile_one(workspace_payload, build_root=build_root)
+            plan = compile_one.plan_compile_one(
+                workspace_payload, build_root=build_root
+            )
         except (FileNotFoundError, LookupError) as exc:
             raise RuntimeError(f"compile-one unavailable: {exc}") from exc
         logger.debug(

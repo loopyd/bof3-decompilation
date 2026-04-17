@@ -99,12 +99,8 @@ class SemanticDiffTests(unittest.TestCase):
                             99.0,
                             [
                                 _instruction("lui at, 0x8014", "DIFF_ARG_MISMATCH"),
-                                _instruction(
-                                    "sw a1, 0x3b44(at)", "DIFF_ARG_MISMATCH"
-                                ),
-                                _instruction(
-                                    "jal func_00175640", "DIFF_ARG_MISMATCH"
-                                ),
+                                _instruction("sw a1, 0x3b44(at)", "DIFF_ARG_MISMATCH"),
+                                _instruction("jal func_00175640", "DIFF_ARG_MISMATCH"),
                             ],
                         )
                     ]
@@ -117,9 +113,7 @@ class SemanticDiffTests(unittest.TestCase):
                             [
                                 _instruction("lui at, 0x0", "DIFF_ARG_MISMATCH"),
                                 _instruction("sw a1, 0x0(at)", "DIFF_ARG_MISMATCH"),
-                                _instruction(
-                                    "jal func_00000000", "DIFF_ARG_MISMATCH"
-                                ),
+                                _instruction("jal func_00000000", "DIFF_ARG_MISMATCH"),
                             ],
                         )
                     ]
@@ -133,7 +127,9 @@ class SemanticDiffTests(unittest.TestCase):
         self.assertEqual(summary["category_counts"]["address_materialization"], 2)
         self.assertEqual(summary["category_counts"]["call_target_reloc"], 1)
 
-    def test_classify_objdiff_payload_reports_structural_when_unclassified(self) -> None:
+    def test_classify_objdiff_payload_reports_structural_when_unclassified(
+        self,
+    ) -> None:
         summary = MODULE.classify_objdiff_payload(
             {
                 "left": {

@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from ...common import relative_to_root, write_text_output
-from ...lib.pipeline import PipelineContext, PipelineOptions, PipelineTask, option_logger
+from ...lib.pipeline import (
+    PipelineContext,
+    PipelineOptions,
+    PipelineTask,
+    option_logger,
+)
 from ...re.services.ghidra.bundle_export import run_bundle_export
 
 

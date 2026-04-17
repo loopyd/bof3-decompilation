@@ -42,6 +42,7 @@ COMMAND_HELP = {
     "ghidra-symbols": "reshape whole-project Ghidra symbol exports",
 }
 
+
 def build_command_parser() -> argparse.ArgumentParser:
     return argparse.ArgumentParser(
         prog=package_prog("inventory", "build"),

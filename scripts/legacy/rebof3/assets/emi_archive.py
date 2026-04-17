@@ -56,7 +56,9 @@ class EmiArchive:
                     payload_offset=payload_offset,
                 )
             )
-            payload_offset += ((size + EMI_SECTOR_SIZE - 1) // EMI_SECTOR_SIZE) * EMI_SECTOR_SIZE
+            payload_offset += (
+                (size + EMI_SECTOR_SIZE - 1) // EMI_SECTOR_SIZE
+            ) * EMI_SECTOR_SIZE
 
         self.entries = entries
 

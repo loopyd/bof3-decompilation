@@ -43,16 +43,30 @@ class BootstrapServiceTests(unittest.TestCase):
 
             with (
                 patch.object(bootstrap_service.constants, "ROOT", root),
-                patch.object(bootstrap_service, "default_inventory_db", return_value=inventory_db),
-                patch.object(bootstrap_service, "default_project_dir", return_value=project_gpr.parent),
-                patch.object(bootstrap_service, "project_busy_message", return_value=None),
-                patch.object(bootstrap_service, "ensure_project_marker", return_value=project_gpr),
+                patch.object(
+                    bootstrap_service, "default_inventory_db", return_value=inventory_db
+                ),
+                patch.object(
+                    bootstrap_service,
+                    "default_project_dir",
+                    return_value=project_gpr.parent,
+                ),
+                patch.object(
+                    bootstrap_service, "project_busy_message", return_value=None
+                ),
+                patch.object(
+                    bootstrap_service, "ensure_project_marker", return_value=project_gpr
+                ),
                 patch.object(
                     bootstrap_service,
                     "run_command",
-                    return_value=subprocess.CompletedProcess(args=["bootstrap"], returncode=0),
+                    return_value=subprocess.CompletedProcess(
+                        args=["bootstrap"], returncode=0
+                    ),
                 ),
-                patch.object(bootstrap_service, "capture_into_inventory") as capture_mock,
+                patch.object(
+                    bootstrap_service, "capture_into_inventory"
+                ) as capture_mock,
             ):
                 status = service.run(
                     GhidraBootstrapRequest(),

@@ -83,7 +83,9 @@ def source_program_path(source_text: str) -> str | None:
     archive_name = Path(relative_parts[-1]).stem
     folder_parts = relative_parts[:-1]
     return canonical_program_path(
-        "/bins/" + "/".join(folder_parts) + f"/{archive_name}/{source_spec.entry_index}.bin"
+        "/bins/"
+        + "/".join(folder_parts)
+        + f"/{archive_name}/{source_spec.entry_index}.bin"
     )
 
 

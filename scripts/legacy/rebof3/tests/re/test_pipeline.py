@@ -16,7 +16,9 @@ from scripts.rebof3.lib import (
 )
 from scripts.rebof3.logger import make_logger
 from scripts.rebof3.tasks import decomp as decomp_tasks
-from scripts.rebof3.tasks.decomp import generate_m2c_context as generate_m2c_context_module
+from scripts.rebof3.tasks.decomp import (
+    generate_m2c_context as generate_m2c_context_module,
+)
 from scripts.rebof3.tasks.decomp import run_m2c as run_m2c_module
 
 

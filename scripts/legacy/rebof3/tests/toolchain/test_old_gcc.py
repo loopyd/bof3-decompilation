@@ -47,9 +47,9 @@ class OldGccToolchainTests(unittest.TestCase):
                 patch.object(MODULE, "extract_tar_gz") as extract_tar_gz,
                 patch.object(MODULE.shutil, "which", return_value="/usr/bin/gh"),
             ):
-                extract_tar_gz.side_effect = (
-                    lambda archive, dest: (dest / "gcc").write_text("", encoding="utf-8")
-                )
+                extract_tar_gz.side_effect = lambda archive, dest: (
+                    dest / "gcc"
+                ).write_text("", encoding="utf-8")
                 result = MODULE.DEFAULT_OLD_GCC_INSTALLER.install(
                     MODULE.OldGccInstallRequest(
                         dest_root=dest_root,

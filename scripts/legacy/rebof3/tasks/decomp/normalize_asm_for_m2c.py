@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from ...common import relative_to_root, write_text_output
-from ...lib.pipeline import PipelineContext, PipelineOptions, PipelineTask, option_logger
+from ...lib.pipeline import (
+    PipelineContext,
+    PipelineOptions,
+    PipelineTask,
+    option_logger,
+)
 from ...re.services.ghidra.decomp_helpers import (
     load_program_symbol_resolver,
     rewrite_asm_for_m2c,

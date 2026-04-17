@@ -103,7 +103,9 @@ def slice_function_binary(
     function_payload: dict[str, Any],
     slice_path: Path,
 ) -> SpimdisasmSlice:
-    payload, load_address, source_kind, source_path = resolve_source_payload(source_text)
+    payload, load_address, source_kind, source_path = resolve_source_payload(
+        source_text
+    )
     start_address, end_address = function_bounds(function_payload)
     start_offset = start_address - load_address
     end_offset = end_address - load_address + 1
@@ -240,7 +242,9 @@ def run_spimdisasm_function_asm(
         "command": command,
         "slice_path": relative_to_root(slice_info.slice_path),
         "symbol_addrs_path": (
-            None if written_symbol_addrs is None else relative_to_root(written_symbol_addrs)
+            None
+            if written_symbol_addrs is None
+            else relative_to_root(written_symbol_addrs)
         ),
         "output_path": relative_to_root(output_path),
         "source_kind": slice_info.source_kind,
@@ -250,7 +254,9 @@ def run_spimdisasm_function_asm(
     if result.returncode == 0:
         if tool_output_path.is_file():
             output_path.parent.mkdir(parents=True, exist_ok=True)
-            output_path.write_text(tool_output_path.read_text(encoding="utf-8"), encoding="utf-8")
+            output_path.write_text(
+                tool_output_path.read_text(encoding="utf-8"), encoding="utf-8"
+            )
         elif tool_output_path.is_dir():
             asm_files = sorted(tool_output_path.rglob("*.s"))
             if not asm_files:
@@ -258,7 +264,9 @@ def run_spimdisasm_function_asm(
                 metadata["stderr"] = "spimdisasm produced no asm output files"
             else:
                 output_path.parent.mkdir(parents=True, exist_ok=True)
-                output_path.write_text(asm_files[0].read_text(encoding="utf-8"), encoding="utf-8")
+                output_path.write_text(
+                    asm_files[0].read_text(encoding="utf-8"), encoding="utf-8"
+                )
         else:
             metadata["status"] = "failed"
             metadata["stderr"] = "spimdisasm produced no output artifact"

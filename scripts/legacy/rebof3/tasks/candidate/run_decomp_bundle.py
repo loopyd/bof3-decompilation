@@ -3,7 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from ...common import ROOT
-from ...lib.pipeline import PipelineContext, PipelineOptions, PipelineTask, option_logger
+from ...lib.pipeline import (
+    PipelineContext,
+    PipelineOptions,
+    PipelineTask,
+    option_logger,
+)
 from ...re.services.ghidra.decomp_runtime import run_decomp_bundle
 from .options import asm_backend, emit_spimdisasm, enable_m2c, force_decomp
 

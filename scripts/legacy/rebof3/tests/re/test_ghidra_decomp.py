@@ -108,7 +108,9 @@ class GhidraDecompTests(unittest.TestCase):
         self.assertEqual(artifacts["ghidra_asm"], Path("/tmp/out/func.ghidra.s"))
         self.assertEqual(artifacts["spim_asm"], Path("/tmp/out/func.spim.s"))
         self.assertEqual(artifacts["asm"], Path("/tmp/out/func.s"))
-        self.assertEqual(artifacts["m2c_context_source"], Path("/tmp/out/func.m2c.ctx.c"))
+        self.assertEqual(
+            artifacts["m2c_context_source"], Path("/tmp/out/func.m2c.ctx.c")
+        )
         self.assertEqual(artifacts["m2c_context"], Path("/tmp/out/func.m2c.ctx.i"))
         self.assertEqual(artifacts["m2c_asm"], Path("/tmp/out/func.m2c.s"))
         self.assertEqual(artifacts["m2c_c"], Path("/tmp/out/func.m2c.c"))
@@ -151,7 +153,9 @@ class GhidraDecompTests(unittest.TestCase):
         self.assertIn("lw v0, %lo(DAT_80146494)(a0)", result)
         self.assertIn("jal func_80123456", result)
 
-    def test_rewrite_asm_for_m2c_preserves_exported_labels_and_symbolic_calls(self) -> None:
+    def test_rewrite_asm_for_m2c_preserves_exported_labels_and_symbolic_calls(
+        self,
+    ) -> None:
         asm_text = (
             ".text\n\n"
             ".globl FUN_80161fdc\n"

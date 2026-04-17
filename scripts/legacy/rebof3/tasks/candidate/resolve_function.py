@@ -5,7 +5,12 @@ from pathlib import Path
 from ...common import ROOT, default_artifacts_dir, parse_hexish, parse_source_spec
 from ...config import DEFAULT_GHIDRA_DECOMP_ROOT
 from ...inventory.layout import INVENTORY_SQLITE
-from ...lib.pipeline import PipelineContext, PipelineOptions, PipelineTask, option_logger
+from ...lib.pipeline import (
+    PipelineContext,
+    PipelineOptions,
+    PipelineTask,
+    option_logger,
+)
 from ...match import target
 from .common import (
     DEFAULT_CANDIDATE_BUILD_ROOT,
@@ -29,7 +34,9 @@ class ResolveFunctionTask(PipelineTask):
         options: PipelineOptions | None = None,
     ) -> PipelineContext:
         logger = option_logger(options, fallback_name=self.name)
-        inventory_db = Path(str(context.get("inventory_db") or INVENTORY_SQLITE)).resolve()
+        inventory_db = Path(
+            str(context.get("inventory_db") or INVENTORY_SQLITE)
+        ).resolve()
         rows = target.load_function_rows(inventory_db)
         program_rows = target.load_program_rows(inventory_db)
         row = target.find_function_row(
@@ -62,7 +69,9 @@ class ResolveFunctionTask(PipelineTask):
         if artifacts_dir is None:
             source_hint = str(row.get("source_hint") or "").strip()
             if not source_hint:
-                raise LookupError("function row is missing source_hint for ghidra bundle")
+                raise LookupError(
+                    "function row is missing source_hint for ghidra bundle"
+                )
             source_spec = parse_source_spec(source_hint)
             source_path = source_spec.path
             if not source_path.is_absolute():

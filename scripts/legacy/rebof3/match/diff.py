@@ -135,8 +135,8 @@ def render_markdown(report: dict[str, Any]) -> str:
         )
     lines.extend(
         [
-        "## Next Steps",
-        "",
+            "## Next Steps",
+            "",
         ]
     )
     for step in report["next_steps"]:

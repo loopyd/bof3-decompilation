@@ -59,7 +59,7 @@ and the raw assembly remain the primary evidence.
 
 The default profile is `capcom97-bof3`:
 
-- PsyQ 4.0
+- PsyQ 4.7
 - ASPSX 2.56
 - gcc 2.7.2-psx
 - `maspsx`

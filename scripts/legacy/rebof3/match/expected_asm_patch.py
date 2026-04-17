@@ -81,9 +81,9 @@ def resolve_workspace_patch(
     baseline_asm_path = normalize_repo_path(baseline_info.get("asm_source"))
     baseline_symbol_name = baseline_info.get("symbol_name")
     source_mapping = state.workspace_payload.get("source_mapping") or {}
-    target_symbol_name = source_mapping.get("source_function") or state.workspace_payload.get(
-        "name"
-    )
+    target_symbol_name = source_mapping.get(
+        "source_function"
+    ) or state.workspace_payload.get("name")
     if baseline_asm_path is None or not baseline_asm_path.exists():
         logger.error("workspace is missing an expected baseline asm source")
         return None

@@ -43,7 +43,9 @@ class ProgramIdentityTests(unittest.TestCase):
         self.assertEqual(result.normalized_slot, "04")
         self.assertEqual(result.slot_index, 4)
 
-    def test_parse_bin_program_path_strips_duplicate_suffix_from_raw_bin_alias(self) -> None:
+    def test_parse_bin_program_path_strips_duplicate_suffix_from_raw_bin_alias(
+        self,
+    ) -> None:
         result = MODULE.parse_bin_program_path("/bins/BIN/BOSS/BOSS037/3.bin.0")
 
         self.assertEqual(result.family, "boss")

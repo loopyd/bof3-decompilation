@@ -85,7 +85,9 @@ class MatchScaffoldTests(unittest.TestCase):
             Path("bof3/stubs/modules/game/00/func_80196f78.c"),
         )
         assert asm_targets is not None
-        self.assertEqual(asm_targets["asm"], Path("tmp/asm-stage/core/emi/func_80162d00.s"))
+        self.assertEqual(
+            asm_targets["asm"], Path("tmp/asm-stage/core/emi/func_80162d00.s")
+        )
         self.assertEqual(
             asm_targets["m2c"], Path("tmp/asm-stage/core/emi/func_80162d00.m2c.c")
         )
@@ -220,7 +222,11 @@ class MatchScaffoldTests(unittest.TestCase):
                                 "asm": str(artifacts_dir / "func.s"),
                                 "m2c_c": str(artifacts_dir / "func.m2c.c"),
                             },
-                            "m2c": {"attempted": True, "path": "func.m2c.c", "status": "ok"},
+                            "m2c": {
+                                "attempted": True,
+                                "path": "func.m2c.c",
+                                "status": "ok",
+                            },
                         }
                     ),
                     encoding="utf-8",

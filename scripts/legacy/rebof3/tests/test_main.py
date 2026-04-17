@@ -147,14 +147,23 @@ class MainCliTests(unittest.TestCase):
         patched.assert_called_once_with("scripts.rebof3.match.scaffold")
         fake_module.main.assert_called_once_with(["--limit", "10"])
 
-    def test_match_candidate_prepare_dispatches_to_candidate_prepare_module(self) -> None:
+    def test_match_candidate_prepare_dispatches_to_candidate_prepare_module(
+        self,
+    ) -> None:
         fake_module = SimpleNamespace(main=mock.Mock(return_value=0))
 
         with mock.patch.object(
             MODULE.importlib, "import_module", return_value=fake_module
         ) as patched:
             result = MODULE.main(
-                ["match", "candidate-prepare", "-p", "/boot/SLUS_004.22", "-e", "0x80162d00"]
+                [
+                    "match",
+                    "candidate-prepare",
+                    "-p",
+                    "/boot/SLUS_004.22",
+                    "-e",
+                    "0x80162d00",
+                ]
             )
 
         self.assertEqual(result, 0)

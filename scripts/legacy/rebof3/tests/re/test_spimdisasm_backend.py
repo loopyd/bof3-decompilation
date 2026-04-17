@@ -112,11 +112,17 @@ class SpimdisasmBackendTests(unittest.TestCase):
                 encoding="utf-8",
             )
             output_path = Path(tmp_dir) / "func.spim.s"
+
             def _fake_run(command, **_kwargs):
                 tool_output_dir = Path(command[5])
                 tool_output_dir.mkdir(parents=True, exist_ok=True)
-                (tool_output_dir / "func.text.s").write_text(".text\n", encoding="utf-8")
-                return CompletedProcess(args=["spimdisasm"], returncode=0, stdout="", stderr="")
+                (tool_output_dir / "func.text.s").write_text(
+                    ".text\n", encoding="utf-8"
+                )
+                return CompletedProcess(
+                    args=["spimdisasm"], returncode=0, stdout="", stderr=""
+                )
+
             with patch.object(
                 MODULE,
                 "run_command",

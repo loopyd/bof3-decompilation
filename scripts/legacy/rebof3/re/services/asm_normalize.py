@@ -111,7 +111,9 @@ def rewrite_absolute_call_or_jump(
     symbol = resolver.function_symbol(target)
     if symbol is None:
         return opcode
-    return f"{match.group('mnemonic')} {normalize_asm_symbol_name(symbol, 'func', target)}"
+    return (
+        f"{match.group('mnemonic')} {normalize_asm_symbol_name(symbol, 'func', target)}"
+    )
 
 
 def rewrite_hi_lo_pair(
@@ -152,7 +154,9 @@ def rewrite_hi_lo_pair(
         return opcode
     symbol = normalize_asm_symbol_name(symbol, "DAT", full_address)
     body_lines[pending[1]] = f"lui {src}, %hi({symbol})"
-    return f"{three_arg.group('mnemonic')} {three_arg.group('dst')}, {src}, %lo({symbol})"
+    return (
+        f"{three_arg.group('mnemonic')} {three_arg.group('dst')}, {src}, %lo({symbol})"
+    )
 
 
 def normalize_commented_asm(

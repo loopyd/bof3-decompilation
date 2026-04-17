@@ -44,7 +44,9 @@ def run_m2c_sidecar(
     rewritten_asm = rewrite_asm_for_m2c(asm_text, resolver=resolver)
     write_text_output(rewritten_asm_path, rewritten_asm)
 
-    result = run_command(build_m2c_command(rewritten_asm_path, context_paths=context_paths))
+    result = run_command(
+        build_m2c_command(rewritten_asm_path, context_paths=context_paths)
+    )
     metadata: dict[str, Any] = {
         "attempted": True,
         "path": None,

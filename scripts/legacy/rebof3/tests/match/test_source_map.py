@@ -77,10 +77,7 @@ class SourceMapTests(unittest.TestCase):
 
         self.assertGreaterEqual(len(candidates), 2)
         self.assertTrue(
-            any(
-                candidate.endswith("func_80162d00.c.obj")
-                for candidate in candidates
-            )
+            any(candidate.endswith("func_80162d00.c.obj") for candidate in candidates)
         )
         self.assertTrue(
             any(candidate.endswith("func_80162d00.c.o") for candidate in candidates)
@@ -137,10 +134,7 @@ class SourceMapTests(unittest.TestCase):
             source_file = root / "loader.c"
             source_file.parent.mkdir(parents=True, exist_ok=True)
             source_file.write_text(
-                "bool func_80162d00(void)\n"
-                "{\n"
-                "    return 1;\n"
-                "}\n",
+                "bool func_80162d00(void)\n{\n    return 1;\n}\n",
                 encoding="utf-8",
             )
 
@@ -155,7 +149,9 @@ class SourceMapTests(unittest.TestCase):
     ) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
             root = Path(tmp_dir)
-            slot_table = root / "bof3" / "src" / "core" / "disc" / "slot_table_logo_str.c"
+            slot_table = (
+                root / "bof3" / "src" / "core" / "disc" / "slot_table_logo_str.c"
+            )
             logo_dir = root / "bof3" / "src" / "modules" / "logo"
             slot_table.parent.mkdir(parents=True, exist_ok=True)
             logo_dir.mkdir(parents=True, exist_ok=True)
