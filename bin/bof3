@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(CDPATH= cd -- "${SCRIPT_DIR}/.." && pwd)"
+PYTHON_BIN="${PYTHON_BIN:-${ROOT_DIR}/.venv/bin/python}"
+
+if [ ! -x "${PYTHON_BIN}" ]; then
+  PYTHON_BIN=python3
+fi
+
+export PYTHONPATH="${ROOT_DIR}/tools/python${PYTHONPATH:+:${PYTHONPATH}}"
+exec "${PYTHON_BIN}" -m rebof3.cli "$@"

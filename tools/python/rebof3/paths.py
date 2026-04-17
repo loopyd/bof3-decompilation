@@ -1,0 +1,90 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+
+
+@dataclass(frozen=True)
+class RepoLayout:
+    root: Path
+    build_dir: Path
+    out_dir: Path
+    toolchains_dir: Path
+    third_party_dir: Path
+    inputs_dir: Path
+    docs_dir: Path
+    downloads_dir: Path
+    bof3_dir: Path
+    disc_dir: Path
+    external_dir: Path
+    slus_path: Path
+    logo_path: Path
+    emi_root: Path
+    extracted_dir: Path
+    raw_emi_dir: Path
+    ghidra_bootstrap_dir: Path
+    bof3_disk_src: Path
+    emi_ex_src: Path
+    objdiff_src: Path
+    mipsmatch_src: Path
+    bof3_disk_bin: Path
+    emi_ex_bin: Path
+    objdiff_bin: Path
+    mipsmatch_bin: Path
+    psn00b_toolchain_root: Path
+    psn00b_sdk_root: Path
+    gcc272_psx_root: Path
+    psyq_root: Path
+    inventory_path: Path
+    groups_path: Path
+    ghidra_manifest_path: Path
+    aspsx_psyq_root: Path
+    aspsx_psyq_compat_root: Path
+
+
+def repo_layout(root: Path | None = None) -> RepoLayout:
+    resolved_root = (root or Path(__file__).resolve().parents[3]).resolve()
+    build_dir = resolved_root / "build"
+    out_dir = resolved_root / "out"
+    toolchains_dir = resolved_root / "toolchains"
+    third_party_dir = resolved_root / "third_party"
+    inputs_dir = resolved_root / "inputs"
+    extracted_dir = build_dir / "extracted"
+    raw_emi_dir = out_dir / "emi_raw"
+    ghidra_bootstrap_dir = out_dir / "ghidra-bootstrap"
+    return RepoLayout(
+        root=resolved_root,
+        build_dir=build_dir,
+        out_dir=out_dir,
+        toolchains_dir=toolchains_dir,
+        third_party_dir=third_party_dir,
+        inputs_dir=inputs_dir,
+        docs_dir=resolved_root / "docs",
+        downloads_dir=toolchains_dir / "downloads",
+        bof3_dir=resolved_root / "bof3",
+        disc_dir=inputs_dir / "disc",
+        external_dir=inputs_dir / "external",
+        slus_path=extracted_dir / "SLUS_004.22",
+        logo_path=extracted_dir / "LOGO" / "LOGO.EXE",
+        emi_root=raw_emi_dir / "BIN",
+        extracted_dir=extracted_dir,
+        raw_emi_dir=raw_emi_dir,
+        ghidra_bootstrap_dir=ghidra_bootstrap_dir,
+        bof3_disk_src=third_party_dir / "bof3-disk",
+        emi_ex_src=third_party_dir / "emi-ex",
+        objdiff_src=third_party_dir / "objdiff",
+        mipsmatch_src=third_party_dir / "mipsmatch",
+        bof3_disk_bin=build_dir / "third_party" / "bof3-disk" / "bof3-disk",
+        emi_ex_bin=build_dir / "tools" / "emi-ex-v2" / "cli" / "emi-ex",
+        objdiff_bin=build_dir / "third_party" / "objdiff" / "release" / "objdiff-cli",
+        mipsmatch_bin=build_dir / "third_party" / "mipsmatch" / "release" / "mipsmatch",
+        psn00b_toolchain_root=toolchains_dir / "psn00b_toolchain",
+        psn00b_sdk_root=toolchains_dir / "psn00bsdk",
+        gcc272_psx_root=toolchains_dir / "gcc-2.7.2-psx",
+        psyq_root=toolchains_dir / "psyq-original" / "4.0",
+        inventory_path=ghidra_bootstrap_dir / "inventory.json",
+        groups_path=ghidra_bootstrap_dir / "groups.json",
+        ghidra_manifest_path=ghidra_bootstrap_dir / "ghidra_import_manifest.json",
+        aspsx_psyq_root=toolchains_dir / "aspsx-psyq-binaries",
+        aspsx_psyq_compat_root=third_party_dir / "maspsx" / "aspsx" / "psyq",
+    )

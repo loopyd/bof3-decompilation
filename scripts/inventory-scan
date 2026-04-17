@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(CDPATH= cd -- "${SCRIPT_DIR}/.." && pwd)"
+
+exec "${SCRIPT_DIR}/_bof3" inventory scan \
+  --slus "${SLUS:-${ROOT_DIR}/build/extracted/SLUS_004.22}" \
+  --logo "${LOGO:-${ROOT_DIR}/build/extracted/LOGO/LOGO.EXE}" \
+  --emi-root "${EMI_ROOT:-${ROOT_DIR}/out/emi_raw/BIN}" \
+  --output "${OUTPUT:-${ROOT_DIR}/out/ghidra-bootstrap/inventory.json}"
