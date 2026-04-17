@@ -9,12 +9,15 @@ from .commands import setup as setup_command
 from .commands import toolchain as toolchain_command
 
 
-def build_parser() -> argparse.ArgumentParser:
-    # Keep the legacy aggregate CLI for compatibility, but delegate the actual
-    # command implementations to smaller modules.
-    parser = argparse.ArgumentParser(prog="bof3")
-    subparsers = parser.add_subparsers(required=True)
+COMPATIBILITY_DESCRIPTION = (
+    "Compatibility entrypoint for the legacy aggregate CLI. "
+    "Prefer the dedicated bin/* commands for normal use."
+)
 
+
+def add_compatibility_parsers(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
     inventory_command.add_legacy_parser(subparsers)
 
     plan = subparsers.add_parser("plan")
@@ -29,6 +32,15 @@ def build_parser() -> argparse.ArgumentParser:
     doctor_command.add_legacy_parser(subparsers)
     toolchain_command.add_legacy_parser(subparsers)
     setup_command.add_legacy_parser(subparsers)
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="bof3",
+        description=COMPATIBILITY_DESCRIPTION,
+    )
+    subparsers = parser.add_subparsers(required=True)
+    add_compatibility_parsers(subparsers)
 
     return parser
 

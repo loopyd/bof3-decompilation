@@ -3,6 +3,12 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from ..ghidra import (
+    DEFAULT_PROJECT_NAME,
+    DEFAULT_PROJECT_ROOT,
+    install_extensions,
+    launch_ui,
+)
 from ..jsonio import read_json, write_json
 from ..models import DuplicateGroups, InventorySnapshot
 from ..paths import repo_layout
@@ -62,6 +68,26 @@ def run_summary(args: argparse.Namespace) -> int:
     return 0
 
 
+def run_ui(args: argparse.Namespace) -> int:
+    return launch_ui(
+        ghidra_home=args.ghidra_home,
+        project_dir=args.project_dir,
+        project_name=args.project_name,
+        extra_args=args.ghidra_arg,
+    )
+
+
+def run_install_extensions(args: argparse.Namespace) -> int:
+    extensions_dir, installed_paths = install_extensions(
+        args.sources,
+        user_dir=args.user_dir,
+    )
+    print(f"extensions-dir: {extensions_dir}")
+    for path in installed_paths:
+        print(f"installed: {path}")
+    return 0
+
+
 def configure_bootstrap_parser(parser: argparse.ArgumentParser) -> None:
     layout = repo_layout()
     parser.add_argument("--slus", type=Path, default=layout.slus_path)
@@ -87,6 +113,20 @@ def configure_summary_parser(parser: argparse.ArgumentParser) -> None:
     parser.set_defaults(handler=run_summary)
 
 
+def configure_ui_parser(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--ghidra-home", type=Path)
+    parser.add_argument("--project-dir", type=Path, default=DEFAULT_PROJECT_ROOT)
+    parser.add_argument("--project-name", default=DEFAULT_PROJECT_NAME)
+    parser.add_argument("--ghidra-arg", action="append", default=[])
+    parser.set_defaults(handler=run_ui)
+
+
+def configure_install_extensions_parser(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("sources", nargs="+", type=Path)
+    parser.add_argument("--user-dir", type=Path)
+    parser.set_defaults(handler=run_install_extensions)
+
+
 def configure_root_parser(parser: argparse.ArgumentParser) -> None:
     subparsers = parser.add_subparsers(required=True)
 
@@ -98,6 +138,12 @@ def configure_root_parser(parser: argparse.ArgumentParser) -> None:
 
     summary = subparsers.add_parser("summary")
     configure_summary_parser(summary)
+
+    ui = subparsers.add_parser("ui")
+    configure_ui_parser(ui)
+
+    install_extensions_parser = subparsers.add_parser("install-extensions")
+    configure_install_extensions_parser(install_extensions_parser)
 
 
 def build_parser() -> argparse.ArgumentParser:

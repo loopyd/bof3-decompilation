@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import struct
 from pathlib import Path
 
-from .models import DuplicateGroup, DuplicateGroups, InventoryProgram, InventorySnapshot
+from ..models import InventoryProgram, InventorySnapshot
 
 DEFAULT_PSX_PROCESSOR = "PSX:LE:32:default"
 DEFAULT_COMPILER = "default"
@@ -61,7 +62,7 @@ def scan_emi_root(root: Path) -> list[InventoryProgram]:
         archive_dir = manifest_path.parent
         archive_id = archive_dir.relative_to(root).as_posix()
         family = archive_dir.relative_to(root).parts[0] if archive_id else None
-        payload = __import__("json").loads(manifest_path.read_text(encoding="utf-8"))
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
         entries = payload.get("entries", [])
         if not isinstance(entries, list):
             raise ValueError(f"invalid EMI manifest: {manifest_path}")
@@ -79,6 +80,7 @@ def scan_emi_root(root: Path) -> list[InventoryProgram]:
             if not payload_path.is_file():
                 continue
             program_name = f"{archive_name}_e{entry_index:02d}_{ram_ptr:08x}.bin"
+            size = payload_path.stat().st_size
             programs.append(
                 InventoryProgram(
                     program_id=f"/bins/{archive_id}#{entry_index}",
@@ -92,9 +94,9 @@ def scan_emi_root(root: Path) -> list[InventoryProgram]:
                     compiler=DEFAULT_COMPILER,
                     base_addr=ram_ptr,
                     file_offset=0,
-                    length=payload_path.stat().st_size,
+                    length=size,
                     block_name=program_name[:60],
-                    size=payload_path.stat().st_size,
+                    size=size,
                     sha256=file_sha256(payload_path),
                     family=family,
                     archive_id=archive_id,
@@ -130,33 +132,3 @@ def scan_inventory(
     if emi_root is not None:
         programs.extend(scan_emi_root(emi_root.resolve()))
     return InventorySnapshot(programs=programs)
-
-
-def group_exact_duplicates(snapshot: InventorySnapshot) -> DuplicateGroups:
-    buckets: dict[str, list[InventoryProgram]] = {}
-    for program in snapshot.programs:
-        if program.kind != "overlay":
-            continue
-        buckets.setdefault(program.sha256, []).append(program)
-
-    groups: list[DuplicateGroup] = []
-    for sha256, members in sorted(buckets.items()):
-        if len(members) < 2:
-            continue
-        ordered_members = sorted(
-            members,
-            key=lambda program: (
-                program.archive_id or "",
-                program.entry_index if program.entry_index is not None else -1,
-                program.program_id,
-            ),
-        )
-        member_ids = [program.program_id for program in ordered_members]
-        groups.append(
-            DuplicateGroup(
-                duplicate_group_key=sha256,
-                representative_program_id=member_ids[0],
-                member_program_ids=member_ids,
-            )
-        )
-    return DuplicateGroups(groups=groups)
