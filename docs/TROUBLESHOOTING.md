@@ -19,10 +19,10 @@ Common fixes:
 
 ## PsyQ is missing
 
-The active SDK path is `toolchains/psyq-original/4.0/`. Stage it from a local PsyQ 4.0 tree or archive with one of:
+The active SDK path is `toolchains/psyq/4.7/`. Stage it from a repo-local PsyQ 4.7 tree or archive with one of:
 
-- `PSYQ_SOURCE=/path/to/psyq-4.0`
-- `PSYQ_ARCHIVE=/path/to/psyq-4.7-converted-full.7z`
+- `PSYQ_SOURCE=inputs/psyq-4.7-converted-full`
+- `PSYQ_ARCHIVE=inputs/psyq-4.7-converted-full.7z`
 
 If the optional private workspace is available, `toolchain psyq import` can cache and process source media under `external/private-assets/...` before staging the active SDK.
 

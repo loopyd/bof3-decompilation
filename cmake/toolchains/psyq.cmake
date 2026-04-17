@@ -10,7 +10,7 @@ if(NOT DEFINED BOF3_PSX_GCC_ROOT)
     set(BOF3_PSX_GCC_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../toolchains/gcc-2.7.2-psx")
 endif()
 
-set(BOF3_PSYQ_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../toolchains/psyq-original/4.0"
+set(BOF3_PSYQ_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../toolchains/psyq/4.7"
     CACHE PATH "Active PsyQ SDK root" FORCE)
 set(BOF3_LOCAL_TOOLCHAIN_BIN "${CMAKE_CURRENT_LIST_DIR}/../../toolchains/psn00b_toolchain/bin"
     CACHE PATH "Repo-local GNU binutils toolchain bin dir" FORCE)
@@ -24,8 +24,8 @@ if(BOF3_PSX_PROFILE STREQUAL "capcom97-bof3")
     set(BOF3_MASPSX_ASPSX_VERSION "2.56" CACHE STRING "ASPSX behavior version for maspsx" FORCE)
     if(NOT EXISTS "${BOF3_PSYQ_ROOT}/include/libgpu.h")
         message(FATAL_ERROR
-            "Original PsyQ 4.0 headers not found at ${BOF3_PSYQ_ROOT}. "
-            "Run 'make setup-psyq PSYQ_SOURCE=/path/to/psyq-4.0' first.")
+            "PsyQ 4.7 headers not found at ${BOF3_PSYQ_ROOT}. "
+            "Run 'make setup-psyq PSYQ_ARCHIVE=inputs/psyq-4.7-converted-full.7z' first.")
     endif()
 else()
     message(FATAL_ERROR "Unsupported BOF3_PSX_PROFILE='${BOF3_PSX_PROFILE}'.")

@@ -95,7 +95,7 @@ def configure_psyq_import_parser(parser: argparse.ArgumentParser) -> None:
         "--dest",
         type=Path,
         default=layout.psyq_root,
-        help="repo-consumable PsyQ destination; defaults to toolchains/psyq-original/4.0",
+        help="repo-consumable PsyQ destination; defaults to toolchains/psyq/4.7",
     )
     parser.add_argument(
         "--private-root",

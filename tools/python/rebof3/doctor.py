@@ -108,8 +108,8 @@ def run_doctor(
                 DoctorCheck(
                     name="inputs/local-psyq-source",
                     status="missing",
-                    detail="no local PsyQ 4.0 source tree or archive found",
-                    hint="set PSYQ_SOURCE / PSYQ_ARCHIVE, place a local archive under inputs/, or use `toolchain psyq import` to cache and stage it via the optional private-assets workspace",
+                    detail="no repo-local PsyQ 4.7 source tree or archive found",
+                    hint="set PSYQ_SOURCE / PSYQ_ARCHIVE to a repo-local path under inputs/ or external/private-assets, or use `toolchain psyq import` to download the public Arthus artifact",
                 )
             )
         else:
@@ -146,7 +146,7 @@ def run_doctor(
             _file_check(
                 repo.psyq_root / "include" / "libgpu.h",
                 name="toolchains/psyq",
-                hint="run `make setup-psyq PSYQ_SOURCE=/path/to/psyq-4.0` or `bin/setup-psyq --source-root /path/to/psyq-4.0`",
+                hint="run `make setup-psyq PSYQ_ARCHIVE=inputs/psyq-4.7-converted-full.7z` or `bin/setup-psyq --archive inputs/psyq-4.7-converted-full.7z`",
             )
         )
 

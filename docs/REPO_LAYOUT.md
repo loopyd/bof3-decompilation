@@ -13,7 +13,7 @@ Use these names as canonical:
 - `inputs/`
   - local runtime inputs, including the active disc set under `inputs/disc/`
 - `toolchains/`
-  - downloaded or staged SDKs and compilers, including `toolchains/psyq-original/4.0/`
+  - downloaded or staged SDKs and compilers, including `toolchains/psyq/4.7/`
 - `external/private-assets/`
   - optional private download, processing, and cache workspace only
 - `out/`

@@ -23,11 +23,9 @@ DEFAULT_BOF3_ARCHIVE_URL = "https://archive.org/download/BreathOfFireIIIv1.1.7z"
 AUTO_DISCOVERY_ARCHIVES = (
     DEFAULT_PRIVATE_ASSETS_ROOT / "bof3" / "source-media",
     DEFAULT_PRIVATE_ASSETS_ROOT / "bof3" / "BreathOfFireIIIv1.1.7z",
+    REPO_ROOT / "inputs" / "external",
     REPO_ROOT / "inputs" / "external" / "BreathOfFireIIIv1.1.7z",
-)
-HOME_ARCHIVE_PATTERNS = (
-    "Downloads/BreathOfFireIIIv1.1.7z",
-    "Documents/BreathOfFireIIIv1.1.7z",
+    REPO_ROOT / "inputs",
 )
 
 FILE_PATTERN = re.compile(r'^\s*FILE\s+"([^"]+)"\s+\S+', re.IGNORECASE)
@@ -53,6 +51,19 @@ def _dedupe_paths(candidates: list[Path]) -> list[Path]:
     return deduped
 
 
+def _is_repo_local_path(path: Path) -> bool:
+    candidate = path.expanduser().resolve(strict=False)
+    return candidate == REPO_ROOT or REPO_ROOT in candidate.parents
+
+
+def _validate_repo_local_input(path: Path, *, label: str) -> Path:
+    if not _is_repo_local_path(path):
+        raise ValueError(
+            f"{label} must stay inside the repo workspace under inputs/ or external/private-assets: {path}"
+        )
+    return path.expanduser()
+
+
 def _iter_archive_matches(candidate: Path) -> list[Path]:
     if archive_path_looks_valid(candidate):
         return [candidate]
@@ -68,12 +79,14 @@ def _iter_archive_matches(candidate: Path) -> list[Path]:
 def discover_disc_archive(explicit_archive: Path | None = None) -> Path | None:
     candidates: list[Path] = []
     if explicit_archive is not None:
-        candidates.append(explicit_archive)
+        candidates.append(
+            _validate_repo_local_input(explicit_archive, label="BOF3 archive")
+        )
     candidates.extend(AUTO_DISCOVERY_ARCHIVES)
-    home = Path.home()
-    candidates.extend(home / pattern for pattern in HOME_ARCHIVE_PATTERNS)
 
-    for candidate in _dedupe_paths(candidates):
+    for candidate in _dedupe_paths(
+        [candidate for candidate in candidates if _is_repo_local_path(candidate)]
+    ):
         matches = _iter_archive_matches(candidate)
         if matches:
             return matches[0]
@@ -114,8 +127,8 @@ def resolve_bof3_archive(
         return download_archive(archive_url, archive_store / archive_name, force=force)
 
     resolved_archive = discover_disc_archive()
-        if resolved_archive is None:
-            raise FileNotFoundError(
+    if resolved_archive is None:
+        raise FileNotFoundError(
             "missing BOF3 archive; pass --archive or use `toolchain disc import` to download, cache, and stage it via the optional private-assets workspace"
         )
     return sync_archive_into_store(

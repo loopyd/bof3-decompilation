@@ -66,9 +66,9 @@ make setup-match-tools
 Once local proprietary inputs are available, stage PsyQ separately:
 
 ```bash
-make setup-psyq PSYQ_SOURCE=/path/to/psyq-4.0
+make setup-psyq PSYQ_ARCHIVE=inputs/psyq-4.7-converted-full.7z
 # or
-bin/setup-psyq --source-root /path/to/psyq-4.0
+bin/setup-psyq --archive inputs/psyq-4.7-converted-full.7z
 ```
 
 Refresh the generated inventory and Ghidra import manifest:
@@ -111,10 +111,10 @@ make fmt
 - `bin/maspsx-cc` is the canonical maspsx wrapper used by CMake.
 - `make fmt` formats repo-owned `bof3/` C/H sources with `clang-format` and `tools/python/` with `ruff format`.
 - `make format-python` runs only the Python formatter.
-- PsyQ is still a local proprietary input. Pass `PSYQ_SOURCE` / `PSYQ_ARCHIVE` or place a local copy under `inputs/`.
+- PsyQ setup only consumes repo-local inputs under `inputs/` or the optional `external/private-assets/` workspace.
 - `toolchain disc import` caches and extracts under `external/private-assets/...`, then refreshes the active disc set under `inputs/disc/`.
-- `toolchain psyq import` caches and prepares source media under `external/private-assets/...`, then stages the consumable SDK under `toolchains/psyq-original/4.0/`.
+- `toolchain psyq import` downloads the public Arthus `psyq-4.7-converted-full` artifact by default, caches it under `external/private-assets/...`, and stages the active SDK under `toolchains/psyq/4.7/`.
 - Public setup still works without the optional `external/private-assets` submodule.
-- `make setup-aspsx` stages only the canonical public ASPSX/PsyQ 4.0 bundle under `toolchains/aspsx-psyq-binaries/` and exposes it to maspsx through `third_party/maspsx/aspsx/psyq`.
+- `make setup-aspsx` stages only the canonical public ASPSX `psyq4.0` compatibility bundle under `toolchains/aspsx-psyq-binaries/` and exposes it to maspsx through `third_party/maspsx/aspsx/psyq`.
 - Use `bin/setup-aspsx --all-versions` only if you need the broader public version matrix for research or toolchain comparison.
 - `scripts/` and `scripts/legacy/` are compatibility surfaces, not the preferred workflow.

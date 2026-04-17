@@ -73,25 +73,25 @@ Normal public setup and runtime do not require it.
 It is not the active disc path or the active PsyQ SDK path used by the repo.
 
 - active disc input: `inputs/disc/`
-- active PsyQ SDK: `toolchains/psyq-original/4.0/`
+- active PsyQ SDK: `toolchains/psyq/4.7/`
 
 The importer commands can use the private workspace when it exists:
 
 - `toolchain disc import` downloads or copies source media into `external/private-assets/...`, extracts there, then copies the active cue/bin set into `inputs/disc/`
-- `toolchain psyq import` downloads or copies source media into `external/private-assets/...`, prepares it there, then stages the consumable SDK into `toolchains/psyq-original/4.0/`
+- `toolchain psyq import` downloads or copies source media into `external/private-assets/...`, then stages the consumable SDK into `toolchains/psyq/4.7/`
 
 ## PsyQ
 
-PsyQ remains local and proprietary. The public repo does not require the optional private workspace.
+The public repo stages the converted PsyQ 4.7 SDK. The public repo does not search outside the workspace and does not own private dump-processing flows.
 
 Use one of:
 
-- `make setup PSYQ_SOURCE=/path/to/psyq-4.0`
-- `make setup-psyq PSYQ_ARCHIVE=/path/to/psyq-4.7-converted-full.7z`
-- `bin/setup-psyq --source-root /path/to/psyq-4.0`
-- `bin/setup-psyq --archive /path/to/psyq-4.7-converted-full.7z`
+- `make setup-psyq PSYQ_ARCHIVE=inputs/psyq-4.7-converted-full.7z`
+- `bin/setup-psyq --archive inputs/psyq-4.7-converted-full.7z`
+- `bin/setup-psyq --source-root inputs/psyq-4.7-converted-full`
+- `bin/toolchain psyq import`
 
-Or, when the private workspace is available, use `toolchain psyq import` to populate `toolchains/psyq-original/4.0/` through the cached import flow.
+Or, when the private workspace is available, use `toolchain psyq import` to populate `toolchains/psyq/4.7/` through the cached import flow.
 
 The staging step normalizes text-file line endings for non-Windows workflows and creates lowercase compatibility aliases used by the build.
 

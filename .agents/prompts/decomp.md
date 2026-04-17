@@ -106,7 +106,7 @@ until the same object/asm can be recovered again.
 
 - Primary profile: `capcom97-bof3`
 - Toolchain:
-  - PsyQ 4.0
+  - PsyQ 4.7
   - ASPSX 2.56 behavior via `maspsx`
   - `gcc-2.7.2-psx`
 - Primary verification:

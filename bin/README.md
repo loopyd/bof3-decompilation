@@ -34,4 +34,4 @@ Legacy compatibility entrypoints:
 - `bin/inventory`
 
 `external/private-assets/` is not a normal runtime dependency.
-Importer flows may use it as an optional private workspace before staging active inputs under `inputs/disc/` or `toolchains/psyq-original/4.0/`.
+Importer flows may use it as an optional private workspace before staging active inputs under `inputs/disc/` or `toolchains/psyq/4.7/`.

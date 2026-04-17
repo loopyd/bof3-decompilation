@@ -22,6 +22,7 @@ class RepoLayout:
     logo_path: Path
     emi_root: Path
     extracted_dir: Path
+    rebuilt_dir: Path
     raw_emi_dir: Path
     ghidra_bootstrap_dir: Path
     bof3_disk_src: Path
@@ -39,6 +40,31 @@ class RepoLayout:
     inventory_path: Path
     groups_path: Path
     ghidra_manifest_path: Path
+    inventory_artifacts_dir: Path
+    inventory_artifact_index_path: Path
+    inventory_disc_lba_path: Path
+    inventory_slot_map_path: Path
+    inventory_slot_map_md_path: Path
+    inventory_emi_catalog_path: Path
+    inventory_emi_catalog_md_path: Path
+    inventory_overlay_catalog_path: Path
+    inventory_overlay_catalog_md_path: Path
+    inventory_overlay_clusters_path: Path
+    inventory_overlay_clusters_md_path: Path
+    inventory_unique_overlay_map_path: Path
+    inventory_unique_overlay_map_md_path: Path
+    inventory_entry_tables_path: Path
+    inventory_entry_tables_md_path: Path
+    inventory_project_plan_path: Path
+    inventory_project_plan_md_path: Path
+    inventory_render_metadata_path: Path
+    inventory_render_metadata_md_path: Path
+    inventory_ghidra_symbols_index_path: Path
+    inventory_ghidra_function_index_path: Path
+    inventory_ghidra_function_index_tsv_path: Path
+    inventory_ghidra_symbols_md_path: Path
+    inventory_ghidra_symbols_program_dir: Path
+    disk_checksums_path: Path
     aspsx_psyq_root: Path
     aspsx_psyq_compat_root: Path
 
@@ -51,8 +77,10 @@ def repo_layout(root: Path | None = None) -> RepoLayout:
     third_party_dir = resolved_root / "third_party"
     inputs_dir = resolved_root / "inputs"
     extracted_dir = build_dir / "extracted"
+    rebuilt_dir = build_dir / "rebuilt"
     raw_emi_dir = out_dir / "emi_raw"
     ghidra_bootstrap_dir = out_dir / "ghidra-bootstrap"
+    inventory_artifacts_dir = out_dir / "inventory"
     return RepoLayout(
         root=resolved_root,
         build_dir=build_dir,
@@ -70,6 +98,7 @@ def repo_layout(root: Path | None = None) -> RepoLayout:
         logo_path=extracted_dir / "LOGO" / "LOGO.EXE",
         emi_root=raw_emi_dir / "BIN",
         extracted_dir=extracted_dir,
+        rebuilt_dir=rebuilt_dir,
         raw_emi_dir=raw_emi_dir,
         ghidra_bootstrap_dir=ghidra_bootstrap_dir,
         bof3_disk_src=third_party_dir / "bof3-disk",
@@ -83,10 +112,45 @@ def repo_layout(root: Path | None = None) -> RepoLayout:
         psn00b_toolchain_root=toolchains_dir / "psn00b_toolchain",
         psn00b_sdk_root=toolchains_dir / "psn00bsdk",
         gcc272_psx_root=toolchains_dir / "gcc-2.7.2-psx",
-        psyq_root=toolchains_dir / "psyq-original" / "4.0",
+        psyq_root=toolchains_dir / "psyq" / "4.7",
         inventory_path=ghidra_bootstrap_dir / "inventory.json",
         groups_path=ghidra_bootstrap_dir / "groups.json",
         ghidra_manifest_path=ghidra_bootstrap_dir / "ghidra_import_manifest.json",
+        inventory_artifacts_dir=inventory_artifacts_dir,
+        inventory_artifact_index_path=inventory_artifacts_dir / "index.json",
+        inventory_disc_lba_path=inventory_artifacts_dir / "disc_lba.json",
+        inventory_slot_map_path=inventory_artifacts_dir / "slot_map.json",
+        inventory_slot_map_md_path=inventory_artifacts_dir / "slot_map.md",
+        inventory_emi_catalog_path=inventory_artifacts_dir / "emi_catalog.json",
+        inventory_emi_catalog_md_path=inventory_artifacts_dir / "emi_catalog.md",
+        inventory_overlay_catalog_path=inventory_artifacts_dir / "overlay_catalog.json",
+        inventory_overlay_catalog_md_path=inventory_artifacts_dir
+        / "overlay_catalog.md",
+        inventory_overlay_clusters_path=inventory_artifacts_dir
+        / "overlay_clusters.json",
+        inventory_overlay_clusters_md_path=inventory_artifacts_dir
+        / "overlay_clusters.md",
+        inventory_unique_overlay_map_path=inventory_artifacts_dir
+        / "unique_overlay_map.json",
+        inventory_unique_overlay_map_md_path=inventory_artifacts_dir
+        / "unique_overlay_map.md",
+        inventory_entry_tables_path=inventory_artifacts_dir / "entry_tables.json",
+        inventory_entry_tables_md_path=inventory_artifacts_dir / "entry_tables.md",
+        inventory_project_plan_path=inventory_artifacts_dir / "project_plan.json",
+        inventory_project_plan_md_path=inventory_artifacts_dir / "project_plan.md",
+        inventory_render_metadata_path=inventory_artifacts_dir / "render_metadata.json",
+        inventory_render_metadata_md_path=inventory_artifacts_dir
+        / "render_metadata.md",
+        inventory_ghidra_symbols_index_path=inventory_artifacts_dir
+        / "ghidra_symbols_index.json",
+        inventory_ghidra_function_index_path=inventory_artifacts_dir
+        / "ghidra_function_index.json",
+        inventory_ghidra_function_index_tsv_path=inventory_artifacts_dir
+        / "ghidra_function_index.tsv",
+        inventory_ghidra_symbols_md_path=inventory_artifacts_dir / "ghidra_symbols.md",
+        inventory_ghidra_symbols_program_dir=inventory_artifacts_dir
+        / "ghidra_symbols_programs",
+        disk_checksums_path=out_dir / "disk_checksums.json",
         aspsx_psyq_root=toolchains_dir / "aspsx-psyq-binaries",
         aspsx_psyq_compat_root=third_party_dir / "maspsx" / "aspsx" / "psyq",
     )

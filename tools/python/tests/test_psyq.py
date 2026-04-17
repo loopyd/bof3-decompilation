@@ -16,7 +16,8 @@ def make_fake_psyq_tree(root: Path) -> None:
     (lib_dir / "LIBGPU.LIB").write_bytes(b"fake")
 
 
-def test_stage_psyq_sdk_from_tree(tmp_path: Path) -> None:
+def test_stage_psyq_sdk_from_tree(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(psyq_lib, "REPO_ROOT", tmp_path)
     source_root = tmp_path / "psyq-source"
     dest_root = tmp_path / "psyq-staged"
     make_fake_psyq_tree(source_root)
@@ -33,7 +34,6 @@ def test_stage_psyq_sdk_from_tree(tmp_path: Path) -> None:
 
 def test_resolve_psyq_inputs_prefers_generic_env(monkeypatch) -> None:
     monkeypatch.setenv("PSYQ_SOURCE", "/tmp/generic-tree")
-    monkeypatch.setenv("PSYQ40_SOURCE", "/tmp/legacy-tree")
 
     source_root, archive = psyq_lib._resolve_psyq_inputs(None, None)
 
@@ -41,8 +41,9 @@ def test_resolve_psyq_inputs_prefers_generic_env(monkeypatch) -> None:
     assert archive is None
 
 
-def test_import_psyq_sdk_stages_original_archive(tmp_path: Path) -> None:
-    archive_path = tmp_path / "psyq40.zip"
+def test_import_psyq_sdk_stages_original_archive(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(psyq_lib, "REPO_ROOT", tmp_path)
+    archive_path = tmp_path / "psyq47.zip"
     private_root = tmp_path / "private-assets"
     dest_root = tmp_path / "psyq-staged"
     with zipfile.ZipFile(archive_path, "w") as archive:
@@ -61,20 +62,20 @@ def test_import_psyq_sdk_stages_original_archive(tmp_path: Path) -> None:
     assert (dest_root / "include" / "libgpu.h").exists()
 
 
-def test_find_psyq_source_does_not_treat_private_assets_as_runtime_source(
+def test_find_psyq_source_discovers_repo_private_assets_source(
     monkeypatch, tmp_path: Path
 ) -> None:
-    private_root = tmp_path / "inputs" / "external" / "private-assets" / "psyq"
-    make_fake_psyq_tree(private_root / "sdk-source")
+    monkeypatch.setattr(psyq_lib, "REPO_ROOT", tmp_path)
+    private_root = tmp_path / "external" / "private-assets" / "psyq" / "source-tree"
+    make_fake_psyq_tree(private_root / "psyq-4.7-converted-full")
 
     monkeypatch.setattr(
         psyq_lib,
         "AUTO_DISCOVERY_CANDIDATES",
         (
-            tmp_path / "inputs" / "external" / "psyq-4.0",
-            tmp_path / "inputs" / "external" / "psyq40",
-            tmp_path / "inputs" / "psyq-4.0",
-            tmp_path / "inputs" / "psyq40",
+            tmp_path / "inputs" / "external" / "psyq-4.7-converted-full",
+            tmp_path / "inputs" / "psyq-4.7-converted-full",
+            private_root,
         ),
     )
     monkeypatch.setattr(
@@ -85,7 +86,20 @@ def test_find_psyq_source_does_not_treat_private_assets_as_runtime_source(
             tmp_path / "inputs" / "psyq-4.7-converted-full.7z",
         ),
     )
-    monkeypatch.setattr(psyq_lib, "HOME_DISCOVERY_PATTERNS", ())
-    monkeypatch.setattr(psyq_lib, "HOME_ARCHIVE_PATTERNS", ())
+    discovered = psyq_lib.find_psyq_source()
 
-    assert psyq_lib.find_psyq_source() is None
+    assert discovered is not None
+    assert discovered.kind == "tree"
+    assert discovered.path == private_root
+
+
+def test_find_psyq_source_rejects_explicit_paths_outside_repo(tmp_path: Path) -> None:
+    source_root = tmp_path / "psyq-source"
+    make_fake_psyq_tree(source_root)
+
+    try:
+        psyq_lib.find_psyq_source(source_root=source_root)
+    except ValueError as exc:
+        assert "must stay inside the repo workspace" in str(exc)
+    else:
+        raise AssertionError("expected explicit outside-repo source to be rejected")

@@ -62,6 +62,7 @@ def test_doctor_passes_for_seeded_layout(monkeypatch, tmp_path: Path) -> None:
 
     assert doctor_exit_code(checks) == 0
     assert all(check.status == "ok" for check in checks)
+    assert layout.psyq_root == tmp_path / "toolchains" / "psyq" / "4.7"
 
 
 def test_doctor_open_profile_passes_for_seeded_open_layout(

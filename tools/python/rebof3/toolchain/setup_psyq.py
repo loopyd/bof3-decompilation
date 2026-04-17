@@ -16,47 +16,28 @@ from .archive import (
     extract_archive,
     sync_archive_into_store,
 )
-from .setup_disc import find_disc_set
 
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-DEFAULT_DEST = REPO_ROOT / "toolchains" / "psyq-original" / "4.0"
+DEFAULT_DEST = REPO_ROOT / "toolchains" / "psyq" / "4.7"
 
 INCLUDE_FILE_NAMES = ("LIBGPU.H", "libgpu.h")
 LIB_FILE_NAMES = ("LIBGPU.LIB", "libgpu.lib", "libgpu.a")
 TEXT_FILE_SUFFIXES = {".c", ".cc", ".cpp", ".h", ".hpp", ".inc", ".inl", ".s", ".txt"}
 DEFAULT_PRIVATE_ASSETS_ROOT = REPO_ROOT / "external" / "private-assets"
-DEFAULT_PSYQ_ARCHIVE_URL = "https://archive.org/download/ps1_sdks/Programmer%20Tool%20-%20Runtime%20Library%20Version%204.0%20%28Japan%29_DTL-S2320_redump.zip"
-RAW_SECTOR_SIZE = 2352
-RAW_SECTOR_DATA_OFFSET = 24
-RAW_SECTOR_DATA_SIZE = 2048
-PRIMARY_VOLUME_DESCRIPTOR_SECTOR = 16
+DEFAULT_PSYQ_ARCHIVE_URL = "https://github.com/arthus/psyq-4.7-converted-full/releases/latest/download/psyq-4.7-converted-full.7z"
 
 AUTO_DISCOVERY_CANDIDATES = (
-    REPO_ROOT / "inputs" / "external" / "psyq-4.0",
-    REPO_ROOT / "inputs" / "external" / "psyq40",
-    REPO_ROOT / "inputs" / "psyq-4.0",
-    REPO_ROOT / "inputs" / "psyq40",
-)
-HOME_DISCOVERY_PATTERNS = (
-    "psyq-4.0",
-    "psyq40",
-    "PsyQ4.0",
-    "Downloads/psyq-4.0",
-    "Downloads/psyq40",
-    "Documents/psyq-4.0",
-    "Documents/psyq40",
+    REPO_ROOT / "inputs" / "external" / "psyq-4.7-converted-full",
+    REPO_ROOT / "inputs" / "psyq-4.7-converted-full",
+    DEFAULT_PRIVATE_ASSETS_ROOT / "psyq" / "source-tree",
 )
 AUTO_DISCOVERY_ARCHIVES = (
+    DEFAULT_PRIVATE_ASSETS_ROOT / "psyq" / "source-media",
     REPO_ROOT / "inputs" / "external" / "psyq-4.7-converted-full.7z",
+    REPO_ROOT / "inputs" / "external" / "psyq-4.7-converted-full.zip",
     REPO_ROOT / "inputs" / "psyq-4.7-converted-full.7z",
-)
-HOME_ARCHIVE_PATTERNS = (
-    "Downloads/Programmer Tool - Runtime Library Version 4.0 (Japan)_DTL-S2320_redump.zip",
-    "Downloads/psyq-4.7-converted-full.7z",
-    "Downloads/psyq-4.7-converted-full.zip",
-    "Downloads/psyq40.7z",
-    "Downloads/psyq40.zip",
+    REPO_ROOT / "inputs" / "psyq-4.7-converted-full.zip",
 )
 
 
@@ -78,11 +59,11 @@ def _resolve_psyq_inputs(
     archive: Path | None,
 ) -> tuple[Path | None, Path | None]:
     if source_root is None:
-        source_env = os.environ.get("PSYQ_SOURCE") or os.environ.get("PSYQ40_SOURCE")
+        source_env = os.environ.get("PSYQ_SOURCE")
         if source_env:
             source_root = Path(source_env)
     if archive is None:
-        archive_env = os.environ.get("PSYQ_ARCHIVE") or os.environ.get("PSYQ40_ARCHIVE")
+        archive_env = os.environ.get("PSYQ_ARCHIVE")
         if archive_env:
             archive = Path(archive_env)
     return source_root, archive
@@ -98,6 +79,25 @@ def _dedupe_paths(candidates: list[Path]) -> list[Path]:
         seen.add(expanded)
         deduped.append(expanded)
     return deduped
+
+
+def _is_repo_local_path(path: Path) -> bool:
+    candidate = path.expanduser().resolve(strict=False)
+    return candidate == REPO_ROOT or REPO_ROOT in candidate.parents
+
+
+def _filter_repo_local_paths(candidates: list[Path]) -> list[Path]:
+    return _dedupe_paths(
+        [candidate for candidate in candidates if _is_repo_local_path(candidate)]
+    )
+
+
+def _validate_repo_local_input(path: Path, *, label: str) -> Path:
+    if not _is_repo_local_path(path):
+        raise ValueError(
+            f"{label} must stay inside the repo workspace under inputs/ or external/private-assets: {path}"
+        )
+    return path.expanduser()
 
 
 def contains_any_file(directory: Path, names: tuple[str, ...]) -> bool:
@@ -211,24 +211,20 @@ def archive_path_looks_valid(path: Path) -> bool:
 
 def auto_discovery_roots() -> list[Path]:
     candidates: list[Path] = []
-    env_source = os.environ.get("PSYQ_SOURCE") or os.environ.get("PSYQ40_SOURCE")
+    env_source = os.environ.get("PSYQ_SOURCE")
     if env_source:
         candidates.append(Path(env_source))
     candidates.extend(AUTO_DISCOVERY_CANDIDATES)
-    home = Path.home()
-    candidates.extend(home / pattern for pattern in HOME_DISCOVERY_PATTERNS)
-    return _dedupe_paths(candidates)
+    return _filter_repo_local_paths(candidates)
 
 
 def auto_discovery_archives() -> list[Path]:
     candidates: list[Path] = []
-    env_archive = os.environ.get("PSYQ_ARCHIVE") or os.environ.get("PSYQ40_ARCHIVE")
+    env_archive = os.environ.get("PSYQ_ARCHIVE")
     if env_archive:
         candidates.append(Path(env_archive))
     candidates.extend(AUTO_DISCOVERY_ARCHIVES)
-    home = Path.home()
-    candidates.extend(home / pattern for pattern in HOME_ARCHIVE_PATTERNS)
-    return _dedupe_paths(candidates)
+    return _filter_repo_local_paths(candidates)
 
 
 def _iter_archive_matches(candidate: Path) -> list[Path]:
@@ -246,7 +242,9 @@ def _iter_archive_matches(candidate: Path) -> list[Path]:
 def discover_source_root(explicit_source: Path | None = None) -> Path | None:
     candidates: list[Path] = []
     if explicit_source is not None:
-        candidates.append(explicit_source)
+        candidates.append(
+            _validate_repo_local_input(explicit_source, label="PsyQ source root")
+        )
     candidates.extend(auto_discovery_roots())
     for candidate in _dedupe_paths(candidates):
         if source_root_looks_valid(candidate):
@@ -257,7 +255,9 @@ def discover_source_root(explicit_source: Path | None = None) -> Path | None:
 def discover_source_archive(explicit_archive: Path | None = None) -> Path | None:
     candidates: list[Path] = []
     if explicit_archive is not None:
-        candidates.append(explicit_archive)
+        candidates.append(
+            _validate_repo_local_input(explicit_archive, label="PsyQ archive")
+        )
     candidates.extend(auto_discovery_archives())
     for candidate in _dedupe_paths(candidates):
         matches = _iter_archive_matches(candidate)
@@ -279,128 +279,12 @@ def discover_source_input(
     return None
 
 
-def _read_le_uint32(field: bytes) -> int:
-    return int.from_bytes(field[:4], "little")
-
-
-def materialize_raw_mode2_iso(track_path: Path, iso_path: Path) -> Path:
-    track_data = track_path.read_bytes()
-    if len(track_data) < RAW_SECTOR_SIZE:
-        raise RuntimeError(f"raw disc track is too small: {track_path}")
-
-    iso_path.parent.mkdir(parents=True, exist_ok=True)
-    with iso_path.open("wb") as output:
-        for offset in range(0, len(track_data), RAW_SECTOR_SIZE):
-            sector = track_data[offset : offset + RAW_SECTOR_SIZE]
-            if len(sector) != RAW_SECTOR_SIZE:
-                continue
-            output.write(
-                sector[
-                    RAW_SECTOR_DATA_OFFSET : RAW_SECTOR_DATA_OFFSET
-                    + RAW_SECTOR_DATA_SIZE
-                ]
-            )
-    return iso_path
-
-
-def iter_iso_root_files(iso_path: Path) -> list[tuple[str, int, int]]:
-    with iso_path.open("rb") as iso_file:
-        iso_file.seek(PRIMARY_VOLUME_DESCRIPTOR_SECTOR * RAW_SECTOR_DATA_SIZE)
-        pvd = iso_file.read(RAW_SECTOR_DATA_SIZE)
-        if len(pvd) < 190 or pvd[0] != 1 or pvd[1:6] != b"CD001":
-            raise RuntimeError(
-                f"invalid ISO-9660 primary volume descriptor: {iso_path}"
-            )
-
-        root_record = pvd[156 : 156 + pvd[156]]
-        root_extent = _read_le_uint32(root_record[2:10])
-        root_size = _read_le_uint32(root_record[10:18])
-        iso_file.seek(root_extent * RAW_SECTOR_DATA_SIZE)
-        directory_data = iso_file.read(root_size)
-
-    files: list[tuple[str, int, int]] = []
-    offset = 0
-    while offset < len(directory_data):
-        record_length = directory_data[offset]
-        if record_length == 0:
-            next_sector = ((offset // RAW_SECTOR_DATA_SIZE) + 1) * RAW_SECTOR_DATA_SIZE
-            offset = next_sector
-            continue
-
-        record = directory_data[offset : offset + record_length]
-        name_length = record[32]
-        name = record[33 : 33 + name_length].decode("ascii", errors="ignore")
-        if name not in ("\x00", "\x01"):
-            extent = _read_le_uint32(record[2:10])
-            size = _read_le_uint32(record[10:18])
-            flags = record[25]
-            if flags & 0x02 == 0:
-                files.append((name.split(";", 1)[0], extent, size))
-        offset += record_length
-    return files
-
-
-def extract_iso_root_file(iso_path: Path, file_name: str, dest: Path) -> Path:
-    for candidate_name, extent, size in iter_iso_root_files(iso_path):
-        if candidate_name.upper() != file_name.upper():
-            continue
-        with iso_path.open("rb") as iso_file:
-            iso_file.seek(extent * RAW_SECTOR_DATA_SIZE)
-            payload = iso_file.read(size)
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_bytes(payload)
-        return dest
-    raise FileNotFoundError(f"could not find {file_name} in {iso_path}")
-
-
-def extract_lzh_archive(archive_path: Path, dest: Path) -> None:
-    dest.mkdir(parents=True, exist_ok=True)
-    subprocess.run(["7z", "x", str(archive_path), f"-o{dest}"], check=True)
-
-
-def prepare_original_media_source_root(source_root: Path, *, force: bool) -> Path:
-    if source_root_looks_valid(source_root):
-        return source_root
-
-    cue_path, bin_paths = find_disc_set(source_root)
-    if not bin_paths:
-        raise FileNotFoundError(
-            f"could not find a PlayStation data track under {source_root}"
-        )
-
-    prepared_root = source_root / "sdk-source"
-    if force and prepared_root.exists():
-        shutil.rmtree(prepared_root)
-    if source_root_looks_valid(prepared_root):
-        return prepared_root
-
-    iso_path = prepared_root / "disc" / (cue_path.stem + ".iso")
-    materialize_raw_mode2_iso(bin_paths[0], iso_path)
-
-    archives_dir = prepared_root / "archives"
-    for archive_name in ("PSX40.LZH", "PSYQ40.LZH"):
-        try:
-            extract_iso_root_file(iso_path, archive_name, archives_dir / archive_name)
-            extract_lzh_archive(archives_dir / archive_name, prepared_root / "expanded")
-            if source_root_looks_valid(prepared_root / "expanded"):
-                return prepared_root / "expanded"
-        except FileNotFoundError:
-            continue
-
-    expanded_root = prepared_root / "expanded"
-    if not source_root_looks_valid(expanded_root):
-        raise RuntimeError(
-            f"prepared PsyQ source tree is incomplete under {expanded_root}"
-        )
-    return expanded_root
-
-
 @contextlib.contextmanager
 def materialized_source_root(source_input: PsyqSource):
     if source_input.kind == "tree":
         yield source_input.path
         return
-    with tempfile.TemporaryDirectory(prefix="psyq40-") as tmp_dir:
+    with tempfile.TemporaryDirectory(prefix="psyq47-") as tmp_dir:
         extraction_root = Path(tmp_dir) / "source"
         extraction_root.mkdir(parents=True, exist_ok=True)
         extract_archive(source_input.path, extraction_root)
@@ -427,7 +311,7 @@ def stage_psyq_sdk(
     source_input = discover_source_input(source_root, archive)
     if source_input is None:
         raise FileNotFoundError(
-            "missing PsyQ 4.0 source tree or archive; pass --source-root/--archive, set PSYQ_SOURCE/PSYQ_ARCHIVE, or use the legacy PSYQ40_SOURCE/PSYQ40_ARCHIVE names"
+            "missing PsyQ 4.7 source tree or archive under inputs/ or external/private-assets; pass --source-root/--archive or set PSYQ_SOURCE/PSYQ_ARCHIVE to a repo-local path"
         )
 
     dest_root = dest.resolve()
@@ -450,7 +334,7 @@ def stage_psyq_sdk(
         ensure_gitkeep(dest_root)
 
     if not original_sdk_is_ready(dest_root):
-        raise RuntimeError(f"staged PsyQ 4.0 tree is incomplete under {dest_root}")
+        raise RuntimeError(f"staged PsyQ 4.7 tree is incomplete under {dest_root}")
 
     return dest_root
 
@@ -476,7 +360,7 @@ def import_psyq_sdk(
     if archive is not None:
         resolved_archive = discover_source_archive(archive)
         if resolved_archive is None:
-            raise FileNotFoundError(f"missing PsyQ 4.0 source archive: {archive}")
+            raise FileNotFoundError(f"missing PsyQ 4.7 source archive: {archive}")
         source_archive = sync_archive_into_store(
             resolved_archive,
             archive_store / resolved_archive.name,
@@ -495,7 +379,7 @@ def import_psyq_sdk(
         resolved_archive = discover_source_archive()
         if resolved_archive is None:
             raise FileNotFoundError(
-                "missing PsyQ 4.0 source archive; pass --archive, provide PSYQ_ARCHIVE, or use `toolchain psyq import` to cache and stage it via the optional private-assets workspace"
+                "missing PsyQ 4.7 source archive under inputs/ or external/private-assets; pass --archive, provide PSYQ_ARCHIVE, or let `toolchain psyq import` download the public Arthus artifact"
             )
         source_archive = sync_archive_into_store(
             resolved_archive,
@@ -510,5 +394,8 @@ def import_psyq_sdk(
         shutil.rmtree(source_root)
     if not source_root.exists() or not any(source_root.iterdir()):
         extract_archive(source_archive, source_root)
-    prepared_source_root = prepare_original_media_source_root(source_root, force=force)
-    return stage_psyq_sdk(dest=dest, source_root=prepared_source_root, force=force)
+    if not source_root_looks_valid(source_root):
+        raise RuntimeError(
+            f"extracted PsyQ 4.7 source tree is incomplete under {source_root}"
+        )
+    return stage_psyq_sdk(dest=dest, source_root=source_root, force=force)
