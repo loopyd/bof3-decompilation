@@ -1,0 +1,17 @@
+#include "internal.h"
+
+/* does: opens the selection-specific EXE effect using the current selection.
+ * @source: 0x801d1134 FUN_801d1134
+ * @source: docs/specs/runtime/game-overlay.md
+ */
+void __attribute__((noinline)) func_801d1134(void) {
+  u32 selection = (u32)BOF3_GAME_FRONT_SELECTION;
+
+  if (selection != 0xffu) {
+    u32 selection_offset = selection << 2;
+
+    game_start_selection_fx(
+        BOF3_GAME_FRONT_SELECTION_FX_TABLE[selection_offset + 0u],
+        BOF3_GAME_FRONT_SELECTION_FX_TABLE[selection_offset + 1u], 100, 0x10);
+  }
+}

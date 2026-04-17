@@ -1,0 +1,72 @@
+#include "internal.h"
+
+/* does: advances several battler-local countdown bytes and, when the global
+ * suppression countdown expires, clears the shared `0x10` flag across all
+ * currently available battlers.
+ * @source: 0x801d4d44 FUN_801d4d44
+ */
+void func_801d4d44(void) {
+  u8 index;
+
+  index = 0u;
+  do {
+    volatile Battle03LocalWork* battle_work;
+
+    battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
+    if (func_801d64c4(index) == 0u) {
+      if (((battle_work->flags_00 & 1u) != 0u) &&
+          (BOF3_BATTLE_LOCAL_BYTE_136(battle_work) < 6u)) {
+        BOF3_BATTLE_LOCAL_BYTE_136(battle_work) += 1u;
+      }
+      if (((BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) & 0x0800u) != 0u) &&
+          (BOF3_BATTLE_LOCAL_BYTE_137(battle_work) < 6u)) {
+        BOF3_BATTLE_LOCAL_BYTE_137(battle_work) += 1u;
+      }
+      if (((BOF3_BATTLE_LOCAL_WORD_128(battle_work) & 0x4000u) != 0u) &&
+          (BOF3_BATTLE_LOCAL_BYTE_136(battle_work) < 3u)) {
+        BOF3_BATTLE_LOCAL_BYTE_136(battle_work) += 1u;
+      }
+    }
+    index += 1u;
+  } while (index < 3u);
+
+  index = 3u;
+  do {
+    volatile Battle03EnemyWork* battle_work;
+
+    battle_work = &BOF3_BATTLE_ENEMY_WORK_ARRAY[index - 3u];
+    if ((func_801d64c4(index) == 0u) &&
+        ((BOF3_BATTLE_ENEMY_WORD_104(battle_work) & 0x4000u) != 0u) &&
+        (BOF3_BATTLE_ENEMY_BYTE_112(battle_work) < 3u)) {
+      BOF3_BATTLE_ENEMY_BYTE_112(battle_work) += 1u;
+    }
+    index += 1u;
+  } while (index < 0x0bu);
+
+  if (BOF3_BATTLE_GLOBAL_BYTE_63CE != 0u) {
+    BOF3_BATTLE_GLOBAL_BYTE_63CE -= 1u;
+    if (BOF3_BATTLE_GLOBAL_BYTE_63CE == 0u) {
+      index = 0u;
+      do {
+        volatile Battle03LocalWork* battle_work;
+
+        battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
+        if (func_801db524(index) == 0u) {
+          BOF3_BATTLE_LOCAL_WORD_128(battle_work) &= 0xffffffefu;
+        }
+        index += 1u;
+      } while (index < 3u);
+
+      index = 3u;
+      do {
+        volatile Battle03EnemyWork* battle_work;
+
+        battle_work = &BOF3_BATTLE_ENEMY_WORK_ARRAY[index - 3u];
+        if (func_801db524(index) == 0u) {
+          BOF3_BATTLE_ENEMY_WORD_104(battle_work) &= 0xffffffefu;
+        }
+        index += 1u;
+      } while (index < 0x0bu);
+    }
+  }
+}

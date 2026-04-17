@@ -1,0 +1,43 @@
+#include "internal.h"
+
+#define BOF3_EMI_STREAM_INDEX_HINT (*(volatile u8*)0x80145024u)
+
+/* possible name: emi_family_slot
+ * does: maps a BOF3 content family plus index into the slot id used by the EXE
+ * loader path.
+ * @source: 0x8016728c FUN_8016728c
+ */
+void func_8016728c(u8 index, u8 family) {
+  u32 new_var;
+  u32 slot_id;
+
+  if (family != 3u) {
+    BOF3_EMI_STREAM_INDEX_HINT = index;
+    if (family == 0u) {
+      BOF3_EMI_STREAM_INDEX_HINT = index | 0x80u;
+    }
+  }
+
+  new_var = 0x27du;
+
+  switch (family) {
+    case 1:
+      slot_id = (u32)index;
+      slot_id = slot_id + 0x1dbu;
+      break;
+    case 0:
+      slot_id = 0x26au;
+      slot_id = (u32)index + slot_id;
+      break;
+    case 2:
+      slot_id = (u32)index + 0x1eeu;
+      break;
+    case 3:
+      slot_id = (u32)index + new_var;
+      break;
+    default:
+      return;
+  }
+
+  emi_stream_init_slot(slot_id);
+}

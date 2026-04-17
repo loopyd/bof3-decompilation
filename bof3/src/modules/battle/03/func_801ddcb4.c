@@ -1,0 +1,41 @@
+#include "internal.h"
+
+/* does: evaluates whether one battler's countdown/retry state should trigger on
+ * this frame using both the short counter table and the long retry table.
+ * @source: 0x801ddcb4 FUN_801ddcb4
+ */
+u8 func_801ddcb4(u32 arg0) {
+  u8 counter;
+  u8 retry_index;
+
+  if (arg0 < 3u) {
+    counter = BOF3_BATTLE_LOCAL_BYTE_121(&BOF3_BATTLE_LOCAL_WORK_ARRAY[arg0]);
+  } else {
+    counter = BOF3_BATTLE_ENEMY_BYTE_FD(
+        &BOF3_BATTLE_ENEMY_WORK_ARRAY[(arg0 - 3u) & 0xffu]);
+  }
+  if (counter == 0u) {
+    return 0u;
+  }
+
+  if (counter < 3u) {
+    if ((func_8017e3d4() % 100) <= BOF3_BATTLE_COUNTER_TABLE_AFFC[counter]) {
+      return 1u;
+    }
+  } else {
+    if ((func_8017e3d4() % 100) < 0x4cu) {
+      return 1u;
+    }
+  }
+
+  if (arg0 < 3u) {
+    retry_index =
+        BOF3_BATTLE_LOCAL_BYTE_A6(&BOF3_BATTLE_LOCAL_WORK_ARRAY[arg0]);
+  } else {
+    retry_index = BOF3_BATTLE_ENEMY_BYTE_E6(
+        &BOF3_BATTLE_ENEMY_WORK_ARRAY[(arg0 - 3u) & 0xffu]);
+  }
+
+  return (func_8017e3d4() % 10000) <=
+         (10000 - ((s32)BOF3_BATTLE_RETRY_TABLE_AFF4[retry_index] * 50));
+}

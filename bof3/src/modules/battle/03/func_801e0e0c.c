@@ -1,0 +1,40 @@
+#include "internal.h"
+
+/* does: reports whether all active local battlers satisfy the strict ready
+ * predicate used by the later queued branch.
+ * @source: 0x801e0e0c FUN_801e0e0c
+ */
+u8 func_801e0e0c(void) {
+  u8 index;
+
+  index = 0u;
+  while (index < 3u) {
+    volatile Battle03LocalWork* battle_work;
+
+    battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
+    if ((battle_work->flags_00 & 1u) != 0u) {
+      if ((BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) & 0x4004u) == 0u) {
+        return 0u;
+      }
+      if ((BOF3_BATTLE_LOCAL_WORD_124(battle_work) & 4u) != 0u) {
+        return 0u;
+      }
+      if ((BOF3_BATTLE_LOCAL_WORD_128(battle_work) & 2u) != 0u) {
+        return 0u;
+      }
+      if ((BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) & 0x4000u) != 0u) {
+        if (BOF3_BATTLE_LOCAL_BYTE_86(battle_work) == 0x18u) {
+          return 0u;
+        }
+        if (BOF3_BATTLE_LOCAL_BYTE_87(battle_work) == 0x18u) {
+          return 0u;
+        }
+        if (BOF3_BATTLE_LOCAL_BYTE_85(battle_work) == 'C') {
+          return 0u;
+        }
+      }
+    }
+    index += 1u;
+  }
+  return 1u;
+}
