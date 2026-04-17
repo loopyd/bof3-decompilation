@@ -11,17 +11,19 @@ EMI_ROOT ?= $(CURDIR)/out/emi_raw/BIN
 
 PSYQ_SOURCE ?=
 PSYQ_ARCHIVE ?=
+BOF3_ARCHIVE ?=
 
 GHIDRA_BOOTSTRAP_DIR := $(CURDIR)/out/ghidra-bootstrap
 INVENTORY_JSON := $(GHIDRA_BOOTSTRAP_DIR)/inventory.json
 GROUPS_JSON := $(GHIDRA_BOOTSTRAP_DIR)/groups.json
 GHIDRA_MANIFEST_JSON := $(GHIDRA_BOOTSTRAP_DIR)/ghidra_import_manifest.json
 SETUP_PSYQ_FLAGS = $(if $(PSYQ_SOURCE),--psyq-source-root "$(PSYQ_SOURCE)") \
-	$(if $(PSYQ_ARCHIVE),--psyq-archive "$(PSYQ_ARCHIVE)")
+	$(if $(PSYQ_ARCHIVE),--psyq-archive "$(PSYQ_ARCHIVE)") \
+	$(if $(BOF3_ARCHIVE),--disc-archive "$(BOF3_ARCHIVE)")
 
 .DEFAULT_GOAL := help
 
-.PHONY: help venv doctor doctor-open setup-plan setup-open-plan setup-open setup-submodules setup-native-tools setup-psx-toolchain setup-match-tools setup setup-psyq setup-aspsx inventory configure build test test-python fmt format format-c format-python inventory-scan inventory-group ghidra-plan ghidra-bootstrap configure-psx build-psx
+.PHONY: help venv doctor doctor-open setup-plan setup-open-plan setup-open setup-submodules setup-private-assets setup-native-tools setup-psx-toolchain setup-match-tools setup setup-psyq setup-aspsx inventory configure build test test-python fmt format format-c format-python inventory-scan inventory-group ghidra-plan ghidra-bootstrap configure-psx build-psx
 
 help:
 	@printf '\n%s\n' 'Core'
@@ -40,6 +42,7 @@ help:
 	@printf '\n%s\n' 'Setup'
 	@printf '  %-24s %s\n' 'make setup-open' 'Run the full fresh-clone open setup path'
 	@printf '  %-24s %s\n' 'make setup-submodules' 'Initialize git submodules only'
+	@printf '  %-24s %s\n' 'make setup-private-assets' 'Initialize the optional private-assets workspace submodule'
 	@printf '  %-24s %s\n' 'make setup-aspsx' 'Stage public ASPSX/PsyQ reference binaries'
 	@printf '  %-24s %s\n' 'make setup-native-tools' 'Build bof3-disk and emi-ex only'
 	@printf '  %-24s %s\n' 'make setup-psx-toolchain' 'Stage the canonical open PSX toolchain only'
@@ -129,6 +132,9 @@ setup-aspsx: .venv/.ready
 
 setup-submodules: .venv/.ready
 	@$(BIN_DIR)/setup-submodules
+
+setup-private-assets: .venv/.ready
+	@$(BIN_DIR)/setup-private-assets
 
 setup-native-tools: .venv/.ready
 	@$(BIN_DIR)/setup-native-tools

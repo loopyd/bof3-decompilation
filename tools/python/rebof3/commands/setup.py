@@ -23,6 +23,7 @@ def add_setup_option_flags(
     if include_psyq_inputs:
         parser.add_argument("--psyq-source-root", type=Path)
         parser.add_argument("--psyq-archive", type=Path)
+        parser.add_argument("--disc-archive", type=Path)
     if include_force:
         parser.add_argument("--force", action="store_true")
     if include_skip_flags:
@@ -52,6 +53,7 @@ def build_setup_options(args: argparse.Namespace) -> SetupOptions:
         include_ghidra_plan=not skip_ghidra_plan,
         psyq_source_root=getattr(args, "psyq_source_root", None),
         psyq_archive=getattr(args, "psyq_archive", None),
+        disc_archive=getattr(args, "disc_archive", None),
     )
 
 

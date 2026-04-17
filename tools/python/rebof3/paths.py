@@ -17,6 +17,7 @@ class RepoLayout:
     bof3_dir: Path
     disc_dir: Path
     external_dir: Path
+    private_assets_dir: Path
     slus_path: Path
     logo_path: Path
     emi_root: Path
@@ -64,6 +65,7 @@ def repo_layout(root: Path | None = None) -> RepoLayout:
         bof3_dir=resolved_root / "bof3",
         disc_dir=inputs_dir / "disc",
         external_dir=inputs_dir / "external",
+        private_assets_dir=resolved_root / "external" / "private-assets",
         slus_path=extracted_dir / "SLUS_004.22",
         logo_path=extracted_dir / "LOGO" / "LOGO.EXE",
         emi_root=raw_emi_dir / "BIN",

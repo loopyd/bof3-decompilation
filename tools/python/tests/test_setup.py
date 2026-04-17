@@ -55,6 +55,7 @@ def test_plan_setup_tasks_can_skip_only_local_psyq_step() -> None:
 def test_setup_task_names_are_stable() -> None:
     assert setup_task_names() == (
         "submodules",
+        "private-assets-submodule",
         "aspsx-binaries",
         "native-tools",
         "psx-toolchain",

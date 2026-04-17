@@ -16,6 +16,7 @@ class SetupOptions:
     include_ghidra_plan: bool = True
     psyq_source_root: Path | None = None
     psyq_archive: Path | None = None
+    disc_archive: Path | None = None
 
 
 @dataclass(frozen=True)

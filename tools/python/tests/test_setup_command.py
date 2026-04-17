@@ -16,6 +16,7 @@ def test_build_setup_options_open_flag_skips_local_steps() -> None:
         skip_ghidra_plan=False,
         psyq_source_root=None,
         psyq_archive=None,
+        disc_archive=None,
         open_setup=True,
     )
 
@@ -36,6 +37,7 @@ def test_build_setup_options_preserves_explicit_inputs() -> None:
         skip_ghidra_plan=False,
         psyq_source_root=Path("/tmp/psyq"),
         psyq_archive=None,
+        disc_archive=Path("/tmp/bof3.7z"),
         open_setup=False,
     )
 
@@ -44,3 +46,4 @@ def test_build_setup_options_preserves_explicit_inputs() -> None:
     assert options.force is True
     assert options.include_match_tools is False
     assert options.psyq_source_root == Path("/tmp/psyq")
+    assert options.disc_archive == Path("/tmp/bof3.7z")

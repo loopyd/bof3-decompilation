@@ -8,6 +8,7 @@ from . import (
     ghidra_bootstrap,
     match_tools,
     native_tools,
+    private_assets_submodule,
     psyq,
     psx_toolchain,
     submodules,
@@ -39,11 +40,23 @@ def when_ghidra_plan_enabled(options: SetupOptions) -> bool:
     return options.include_ghidra_plan
 
 
+def never_enabled(_: SetupOptions) -> bool:
+    return False
+
+
 SETUP_TASK_SPECS: tuple[SetupTaskSpec, ...] = (
     SetupTaskSpec(
         task=SetupTask("submodules", "Initialize git submodules"),
         runner=submodules.run,
         enabled=always_enabled,
+    ),
+    SetupTaskSpec(
+        task=SetupTask(
+            "private-assets-submodule",
+            "Initialize the optional private-assets import workspace git submodule",
+        ),
+        runner=private_assets_submodule.run,
+        enabled=never_enabled,
     ),
     SetupTaskSpec(
         task=SetupTask(
