@@ -2,7 +2,7 @@ SYSTEM_PYTHON ?= python3
 PYTHON ?= $(CURDIR)/.venv/bin/python
 PIP ?= $(CURDIR)/.venv/bin/pip
 PYTHONPATH := $(CURDIR)/tooling
-CLI := $(CURDIR)/bin/bof3
+BIN_DIR := $(CURDIR)/bin
 FORMAT_JOBS ?= $(shell nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 1)
 
 SLUS ?= $(CURDIR)/build/extracted/SLUS_004.22
@@ -21,13 +21,15 @@ SETUP_PSYQ_FLAGS = $(if $(PSYQ_SOURCE),--psyq-source-root "$(PSYQ_SOURCE)") \
 
 .DEFAULT_GOAL := help
 
-.PHONY: help venv doctor setup-plan setup-open setup setup-psyq setup-aspsx inventory configure build test test-python fmt format format-c format-python inventory-scan inventory-group ghidra-plan ghidra-bootstrap configure-psx build-psx
+.PHONY: help venv doctor doctor-open setup-plan setup-open-plan setup-open setup-submodules setup-native-tools setup-psx-toolchain setup-match-tools setup setup-psyq setup-aspsx inventory configure build test test-python fmt format format-c format-python inventory-scan inventory-group ghidra-plan ghidra-bootstrap configure-psx build-psx
 
 help:
 	@printf '\n%s\n' 'Core'
 	@printf '  %-24s %s\n' 'make venv' 'Create .venv and install the tooling package'
-	@printf '  %-24s %s\n' 'make doctor' 'Check tools, inputs, toolchains, and generated state'
-	@printf '  %-24s %s\n' 'make setup-plan' 'Preview the setup task sequence'
+	@printf '  %-24s %s\n' 'make doctor' 'Check the full workspace, including local-only inputs'
+	@printf '  %-24s %s\n' 'make doctor-open' 'Check the fresh-clone open setup path only'
+	@printf '  %-24s %s\n' 'make setup-plan' 'Preview the full setup task sequence'
+	@printf '  %-24s %s\n' 'make setup-open-plan' 'Preview the fresh-clone open setup sequence'
 	@printf '  %-24s %s\n' 'make setup' 'Run the full workspace setup flow'
 	@printf '\n%s\n' 'Inventory'
 	@printf '  %-24s %s\n' 'make inventory' 'Refresh inventory, duplicate groups, and the Ghidra manifest'
@@ -36,9 +38,13 @@ help:
 	@printf '  %-24s %s\n' 'make ghidra-plan' 'Build the Ghidra import manifest only'
 	@printf '  %-24s %s\n' 'make ghidra-bootstrap' 'Run the full Ghidra bootstrap pipeline'
 	@printf '\n%s\n' 'Setup'
-	@printf '  %-24s %s\n' 'make setup-open' 'Stage open-source tools and toolchains only'
-	@printf '  %-24s %s\n' 'make setup-psyq' 'Stage local PsyQ 4.0 into toolchains/psyq-original/4.0'
+	@printf '  %-24s %s\n' 'make setup-open' 'Run the full fresh-clone open setup path'
+	@printf '  %-24s %s\n' 'make setup-submodules' 'Initialize git submodules only'
 	@printf '  %-24s %s\n' 'make setup-aspsx' 'Stage public ASPSX/PsyQ reference binaries'
+	@printf '  %-24s %s\n' 'make setup-native-tools' 'Build bof3-disk and emi-ex only'
+	@printf '  %-24s %s\n' 'make setup-psx-toolchain' 'Stage the canonical open PSX toolchain only'
+	@printf '  %-24s %s\n' 'make setup-match-tools' 'Build objdiff-cli and mipsmatch only'
+	@printf '  %-24s %s\n' 'make setup-psyq' 'Stage local PsyQ 4.0 into toolchains/psyq-original/4.0'
 	@printf '\n%s\n' 'Build'
 	@printf '  %-24s %s\n' 'make configure' 'Configure the BOF3 PSX CMake preset'
 	@printf '  %-24s %s\n' 'make build' 'Build the BOF3 PSX CMake preset'
@@ -56,10 +62,16 @@ help:
 venv: .venv/.ready
 
 doctor: .venv/.ready
-	@$(CLI) doctor
+	@$(BIN_DIR)/doctor
+
+doctor-open: .venv/.ready
+	@$(BIN_DIR)/doctor-open
 
 setup-plan: .venv/.ready
-	@$(CLI) setup plan
+	@$(BIN_DIR)/setup-plan
+
+setup-open-plan: .venv/.ready
+	@$(BIN_DIR)/setup-open-plan
 
 configure: configure-psx
 
@@ -84,49 +96,58 @@ format-python: .venv/.ready
 	@PYTHONPATH="$(PYTHONPATH)" $(PYTHON) -m ruff format tools/python
 
 inventory-scan: .venv/.ready
-	@$(CLI) inventory scan \
+	@$(BIN_DIR)/inventory-scan \
 		--slus "$(SLUS)" \
 		--logo "$(LOGO)" \
 		--emi-root "$(EMI_ROOT)" \
 		--output "$(INVENTORY_JSON)"
 
 inventory-group: .venv/.ready
-	@$(CLI) inventory group \
+	@$(BIN_DIR)/inventory-group \
 		--input "$(INVENTORY_JSON)" \
 		--output "$(GROUPS_JSON)"
 
 ghidra-plan: .venv/.ready
-	@$(CLI) plan ghidra \
+	@$(BIN_DIR)/ghidra-plan \
 		--inventory "$(INVENTORY_JSON)" \
 		--groups "$(GROUPS_JSON)" \
 		--output "$(GHIDRA_MANIFEST_JSON)"
 
 ghidra-bootstrap: .venv/.ready
-	@$(CLI) pipeline ghidra-bootstrap \
+	@$(BIN_DIR)/ghidra-bootstrap \
 		--slus "$(SLUS)" \
 		--logo "$(LOGO)" \
 		--emi-root "$(EMI_ROOT)" \
 		--output-dir "$(GHIDRA_BOOTSTRAP_DIR)"
 
 setup-psyq: .venv/.ready
-	@$(CLI) setup task psyq \
+	@$(BIN_DIR)/setup-psyq \
 		$(SETUP_PSYQ_FLAGS)
 
 setup-aspsx: .venv/.ready
-	@$(CLI) setup task aspsx-binaries
+	@$(BIN_DIR)/setup-aspsx
+
+setup-submodules: .venv/.ready
+	@$(BIN_DIR)/setup-submodules
+
+setup-native-tools: .venv/.ready
+	@$(BIN_DIR)/setup-native-tools
+
+setup-psx-toolchain: .venv/.ready
+	@$(BIN_DIR)/setup-psx-toolchain
+
+setup-match-tools: .venv/.ready
+	@$(BIN_DIR)/setup-match-tools
 
 setup-open: .venv/.ready
-	@$(CLI) setup workspace \
-		$(SETUP_PSYQ_FLAGS) \
-		--skip-extract \
-		--skip-ghidra-plan
+	@$(BIN_DIR)/setup-open
 
 setup: .venv/.ready
-	@$(CLI) setup workspace \
+	@$(BIN_DIR)/setup \
 		$(SETUP_PSYQ_FLAGS)
 
 configure-psx:
-	cmake --preset default
+	$(BIN_DIR)/configure
 
 build-psx:
-	cmake --build --preset default
+	$(BIN_DIR)/build

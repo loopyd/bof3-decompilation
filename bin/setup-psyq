@@ -1,5 +1,14 @@
 #!/bin/sh
 set -eu
 
-SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
-exec "${SCRIPT_DIR}/bof3" toolchain psyq setup --dest "${DEST:-$(CDPATH= cd -- "${SCRIPT_DIR}/.." && pwd)/toolchains/psyq-original/4.0}" "$@"
+REBOF3_SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
+REBOF3_ROOT_DIR="$(CDPATH= cd -- "${REBOF3_SCRIPT_DIR}/.." && pwd)"
+REBOF3_PYTHON_ENTRY="${REBOF3_SCRIPT_DIR}/_python_entry"
+REBOF3_ENTRY_MODULE="rebof3.commands.toolchain"
+REBOF3_ENTRY_TOOLCHAIN="psyq"
+REBOF3_ENTRY_ACTION="setup"
+REBOF3_DEST_FLAG="--dest"
+REBOF3_DEFAULT_DEST="${REBOF3_ROOT_DIR}/toolchains/psyq-original/4.0"
+REBOF3_DEST="${DEST:-${REBOF3_DEFAULT_DEST}}"
+
+exec "${REBOF3_PYTHON_ENTRY}" "${REBOF3_ENTRY_MODULE}" "${REBOF3_ENTRY_TOOLCHAIN}" "${REBOF3_ENTRY_ACTION}" "${REBOF3_DEST_FLAG}" "${REBOF3_DEST}" "$@"

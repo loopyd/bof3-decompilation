@@ -1,0 +1,26 @@
+#!/bin/sh
+set -eu
+
+REBOF3_SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
+REBOF3_ROOT_DIR="$(CDPATH= cd -- "${REBOF3_SCRIPT_DIR}/.." && pwd)"
+REBOF3_DEFAULT_PYTHON_BIN="${REBOF3_ROOT_DIR}/.venv/bin/python"
+REBOF3_FALLBACK_PYTHON_BIN="python3"
+REBOF3_PYTHONPATH_ROOT="${REBOF3_ROOT_DIR}/tools/python"
+REBOF3_USAGE="usage: _python_entry module [args...]"
+
+if [ "$#" -lt 1 ]; then
+  printf '%s\n' "${REBOF3_USAGE}" >&2
+  exit 2
+fi
+
+REBOF3_MODULE="$1"
+shift
+
+REBOF3_PYTHON_BIN="${PYTHON_BIN:-${REBOF3_DEFAULT_PYTHON_BIN}}"
+if [ ! -x "${REBOF3_PYTHON_BIN}" ]; then
+  REBOF3_PYTHON_BIN="${REBOF3_FALLBACK_PYTHON_BIN}"
+fi
+
+export PYTHONPATH="${REBOF3_PYTHONPATH_ROOT}${PYTHONPATH:+:${PYTHONPATH}}"
+
+exec "${REBOF3_PYTHON_BIN}" -m "${REBOF3_MODULE}" "$@"

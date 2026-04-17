@@ -35,7 +35,7 @@ def _command_check(command: str, *, required: bool = True) -> DoctorCheck:
 
 
 def _directory_check(path, *, name: str, hint: str) -> DoctorCheck:
-    if path.exists():
+    if path.exists() and path.is_dir() and any(path.iterdir()):
         return DoctorCheck(name=name, status="ok", detail=str(path))
     return DoctorCheck(
         name=name,
@@ -57,11 +57,17 @@ def _file_check(path, *, name: str, hint: str, required: bool = True) -> DoctorC
     )
 
 
-def run_doctor(*, layout: RepoLayout | None = None) -> list[DoctorCheck]:
+def run_doctor(
+    *,
+    layout: RepoLayout | None = None,
+    include_local_inputs: bool = True,
+    include_generated_outputs: bool = True,
+) -> list[DoctorCheck]:
     repo = layout or repo_layout()
     checks: list[DoctorCheck] = [
         _command_check("python3"),
         _command_check("cmake"),
+        _command_check("ninja"),
         _command_check("cargo"),
     ]
 
@@ -74,76 +80,85 @@ def run_doctor(*, layout: RepoLayout | None = None) -> list[DoctorCheck]:
             )
         )
 
-    disc_inputs = []
-    for pattern in ("*.cue", "*.bin", "*.iso"):
-        disc_inputs.extend(sorted(repo.disc_dir.glob(pattern)))
-    if disc_inputs:
-        checks.append(
-            DoctorCheck(
-                name="inputs/disc",
-                status="ok",
-                detail=f"{len(disc_inputs)} disc input file(s) under {repo.disc_dir}",
+    if include_local_inputs:
+        disc_inputs = []
+        for pattern in ("*.cue", "*.bin", "*.iso"):
+            disc_inputs.extend(sorted(repo.disc_dir.glob(pattern)))
+        if disc_inputs:
+            checks.append(
+                DoctorCheck(
+                    name="inputs/disc",
+                    status="ok",
+                    detail=f"{len(disc_inputs)} disc input file(s) under {repo.disc_dir}",
+                )
             )
-        )
-    else:
-        checks.append(
-            DoctorCheck(
-                name="inputs/disc",
-                status="missing",
-                detail=f"no .cue, .bin, or .iso files under {repo.disc_dir}",
-                hint="place one BOF3 disc image set under inputs/disc/",
+        else:
+            checks.append(
+                DoctorCheck(
+                    name="inputs/disc",
+                    status="missing",
+                    detail=f"no .cue, .bin, or .iso files under {repo.disc_dir}",
+                    hint="place one BOF3 disc image set under inputs/disc/",
+                )
             )
-        )
 
-    psyq_source = find_psyq_source()
-    if psyq_source is None:
-        checks.append(
-            DoctorCheck(
-                name="inputs/psyq-source",
-                status="missing",
-                detail="no local PsyQ 4.0 source tree or archive found",
-                hint="set PSYQ_SOURCE / PSYQ_ARCHIVE or place a local archive under inputs/",
+        psyq_source = find_psyq_source()
+        if psyq_source is None:
+            checks.append(
+                DoctorCheck(
+                    name="inputs/psyq-source",
+                    status="missing",
+                    detail="no local PsyQ 4.0 source tree or archive found",
+                    hint="set PSYQ_SOURCE / PSYQ_ARCHIVE or place a local archive under inputs/",
+                )
             )
-        )
-    else:
-        checks.append(
-            DoctorCheck(
-                name="inputs/psyq-source",
-                status="ok",
-                detail=f"{psyq_source.kind}: {psyq_source.path}",
+        else:
+            checks.append(
+                DoctorCheck(
+                    name="inputs/psyq-source",
+                    status="ok",
+                    detail=f"{psyq_source.kind}: {psyq_source.path}",
+                )
             )
-        )
 
     checks.extend(
         [
             _file_check(
                 repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-gcc",
                 name="toolchains/psn00b",
-                hint="run `make setup-open` or `bof3 setup task psx-toolchain`",
+                hint="run `make setup-open` or `bin/setup-open`",
             ),
             _file_check(
                 repo.gcc272_psx_root / "gcc",
                 name="toolchains/gcc-2.7.2-psx",
-                hint="run `make setup-open` or `bof3 setup task psx-toolchain`",
-            ),
-            _file_check(
-                repo.psyq_root / "include" / "libgpu.h",
-                name="toolchains/psyq",
-                hint="run `make setup-psyq PSYQ_SOURCE=/path/to/psyq-4.0`",
+                hint="run `make setup-open` or `bin/setup-open`",
             ),
             _file_check(
                 repo.aspsx_psyq_root / "psyq4.0" / "ASPSX.EXE",
                 name="toolchains/aspsx",
-                hint="run `make setup-aspsx` or `bof3 setup task aspsx-binaries`",
+                hint="run `make setup-aspsx` or `bin/setup-aspsx`",
             ),
+        ]
+    )
+
+    if include_local_inputs:
+        checks.append(
+            _file_check(
+                repo.psyq_root / "include" / "libgpu.h",
+                name="toolchains/psyq",
+                hint="run `make setup-psyq PSYQ_SOURCE=/path/to/psyq-4.0` or `bin/setup-psyq --source-root /path/to/psyq-4.0`",
+            )
+        )
+
+    if include_generated_outputs:
+        checks.append(
             _file_check(
                 repo.ghidra_manifest_path,
                 name="out/ghidra-bootstrap",
                 required=False,
-                hint="run `make inventory` after extraction and unpack",
-            ),
-        ]
-    )
+                hint="run `make inventory` or `bin/ghidra-bootstrap` after extraction and unpack",
+            )
+        )
 
     return checks
 

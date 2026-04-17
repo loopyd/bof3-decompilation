@@ -4,13 +4,16 @@
 
 Read the failing lines directly. The doctor command reports missing host tools, missing local inputs, missing staged toolchains, and missing generated outputs.
 
+On a fresh clone before PsyQ, disc images, extraction, and unpack are available, run `make doctor-open` instead of `make doctor`.
+
 Common fixes:
 
 - install `cmake`
+- install `ninja`
 - install `cargo`
 - place a BOF3 disc set under `inputs/disc/`
-- stage PsyQ with `make setup-psyq ...`
-- stage open toolchains with `make setup-open`
+- stage PsyQ with `make setup-psyq ...` or `bin/setup-psyq ...`
+- stage open toolchains with `make setup-open` or `bin/setup-open`
 
 ## PsyQ is missing
 

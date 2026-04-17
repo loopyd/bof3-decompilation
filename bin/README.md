@@ -4,9 +4,30 @@ This directory is the human-facing command surface.
 
 Preferred entrypoints:
 
-- `bin/bof3`
-- `bin/doctor`
-- `bin/setup`
-- `bin/inventory`
-- `bin/ghidra-bootstrap`
+- `bin/setup-open`
+- `bin/setup-open-plan`
+- `bin/setup-submodules`
+- `bin/setup-aspsx`
+- `bin/setup-native-tools`
+- `bin/setup-psx-toolchain`
+- `bin/setup-match-tools`
 - `bin/setup-psyq`
+- `bin/doctor-open`
+- `bin/doctor`
+- `bin/inventory-scan`
+- `bin/inventory-group`
+- `bin/ghidra-plan`
+- `bin/ghidra-bootstrap`
+- `bin/ghidra-summary`
+- `bin/configure`
+- `bin/build`
+
+Other maintained entrypoints:
+
+- `bin/setup`
+- `bin/setup-plan`
+
+Legacy compatibility entrypoints:
+
+- `bin/bof3`
+- `bin/inventory`
