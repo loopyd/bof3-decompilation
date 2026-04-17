@@ -1,0 +1,32 @@
+.pytest_cache/
+.venv/
+__pycache__/
+build/
+dist/
+*.egg-info/
+compile_commands.json
+.codex
+
+# local supplied inputs
+inputs/disc/*
+!inputs/disc/README.md
+inputs/external/*
+!inputs/external/.gitkeep
+!inputs/README.md
+
+# staged toolchains and downloads
+toolchains/downloads/
+toolchains/gcc-2.7.2-psx/*
+!toolchains/gcc-2.7.2-psx/.gitkeep
+toolchains/psn00b_toolchain/*
+!toolchains/psn00b_toolchain/.gitkeep
+toolchains/psn00bsdk/*
+!toolchains/psn00bsdk/.gitkeep
+toolchains/aspsx-psyq-binaries/*
+toolchains/psyq-original/4.0/*
+!toolchains/psyq-original/4.0/.gitkeep
+!toolchains/README.md
+
+# generated outputs
+out/*
+!out/README.md
