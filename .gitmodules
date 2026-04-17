@@ -33,3 +33,4 @@
 [submodule "external/private-assets"]
 	path = external/private-assets
 	url = https://github.com/raulcorreia7/rebof3-private-assets.git
+	ignore = untracked
