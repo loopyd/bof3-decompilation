@@ -27,6 +27,7 @@ def test_stage_psyq_sdk_from_tree(tmp_path: Path) -> None:
     assert (dest_root / "include" / "libgpu.h").exists()
     assert not (dest_root / "include" / "libgpu.h").is_symlink()
     assert (dest_root / "lib" / "LIBGPU.LIB").exists()
+    assert (dest_root / ".gitkeep").exists()
 
 
 def test_resolve_psyq_inputs_prefers_generic_env(monkeypatch) -> None:

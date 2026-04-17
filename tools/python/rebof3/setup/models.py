@@ -11,6 +11,7 @@ class SetupOptions:
     force: bool = False
     include_aspsx_binaries: bool = True
     include_match_tools: bool = True
+    include_psyq: bool = True
     include_extract: bool = True
     include_ghidra_plan: bool = True
     psyq_source_root: Path | None = None

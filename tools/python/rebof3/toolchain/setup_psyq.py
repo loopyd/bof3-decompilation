@@ -46,6 +46,11 @@ HOME_ARCHIVE_PATTERNS = (
 )
 
 
+def ensure_gitkeep(root: Path) -> None:
+    root.mkdir(parents=True, exist_ok=True)
+    (root / ".gitkeep").touch(exist_ok=True)
+
+
 @dataclass(frozen=True)
 class PsyqSource:
     kind: str
@@ -317,6 +322,7 @@ def stage_psyq_sdk(
         normalize_text_tree_newlines(dest_root)
         create_lowercase_aliases(dest_root / "include")
         create_lowercase_aliases(dest_root / "lib")
+        ensure_gitkeep(dest_root)
 
     if not original_sdk_is_ready(dest_root):
         raise RuntimeError(f"staged PsyQ 4.0 tree is incomplete under {dest_root}")

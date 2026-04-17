@@ -27,6 +27,10 @@ def when_match_tools_enabled(options: SetupOptions) -> bool:
     return options.include_match_tools
 
 
+def when_psyq_enabled(options: SetupOptions) -> bool:
+    return options.include_psyq
+
+
 def when_extract_enabled(options: SetupOptions) -> bool:
     return options.include_extract
 
@@ -64,7 +68,7 @@ SETUP_TASK_SPECS: tuple[SetupTaskSpec, ...] = (
     SetupTaskSpec(
         task=SetupTask("psyq", "Stage the local PsyQ 4.0 SDK"),
         runner=psyq.run,
-        enabled=always_enabled,
+        enabled=when_psyq_enabled,
     ),
     SetupTaskSpec(
         task=SetupTask("match-tools", "Build objdiff-cli and mipsmatch"),

@@ -29,6 +29,11 @@ class CanonicalPsxToolchainResult:
     psn00b_toolchain: Path
 
 
+def ensure_gitkeep(root: Path) -> None:
+    root.mkdir(parents=True, exist_ok=True)
+    (root / ".gitkeep").touch(exist_ok=True)
+
+
 def install_canonical_psx_toolchain(
     layout: RepoLayout,
     *,
@@ -73,14 +78,17 @@ def install_canonical_psx_toolchain(
     if not (layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-gcc").exists():
         shutil.rmtree(layout.psn00b_toolchain_root, ignore_errors=True)
         extract_zip(toolchain_archive, layout.psn00b_toolchain_root)
+    ensure_gitkeep(layout.psn00b_toolchain_root)
 
     if not (layout.psn00b_sdk_root / "PSn00bSDK-0.24-Linux").exists():
         shutil.rmtree(layout.psn00b_sdk_root, ignore_errors=True)
         extract_zip(sdk_archive, layout.psn00b_sdk_root)
+    ensure_gitkeep(layout.psn00b_sdk_root)
 
     if not (layout.gcc272_psx_root / "gcc").exists():
         shutil.rmtree(layout.gcc272_psx_root, ignore_errors=True)
         extract_tar_gz(old_gcc_archive, layout.gcc272_psx_root)
+    ensure_gitkeep(layout.gcc272_psx_root)
 
     return CanonicalPsxToolchainResult(
         gcc272_psx=layout.gcc272_psx_root,
