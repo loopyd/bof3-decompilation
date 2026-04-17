@@ -13,6 +13,9 @@ The tracked canonical US v1.1 files currently committed in this repo are:
 
 The extract workflow auto-detects the single disc set under `inputs/disc/`; the cue sheet and track files only need to agree with each other and the committed checksum manifest.
 
+`inputs/disc/` is the active runtime input path.
+If you use the private importer flow, it downloads and extracts under `external/private-assets/...` first, then copies the selected cue/bin set here.
+
 ## Strict Identity Notes
 
 For a strict byte-identical rebuild check, compare the rebuilt combined image against `track01 + track02` bytes from the source cue/bin set.

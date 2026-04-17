@@ -11,8 +11,8 @@ The canonical top-level layout is:
 - `bof3/`: recovered game code
 - `tools/`: repo-owned tooling, with Python automation under `tools/python/`
 - `third_party/`: vendored or external tool repos
-- `inputs/`: local supplied inputs such as disc images and proprietary SDK archives
-- `toolchains/`: downloaded or staged SDKs and compilers
+- `inputs/`: local runtime inputs such as the active BOF3 disc set
+- `toolchains/`: downloaded or staged SDKs and compilers, including the active PsyQ SDK
 - `out/`: generated manifests, extracted data, and reports
 - `docs/`: human documentation and reverse-engineering specs
 - `cmake/`: PSX build and toolchain files
@@ -50,6 +50,8 @@ bin/setup-open
 ```
 
 This stops before local PsyQ staging, disc extraction, unpack, and Ghidra planning while still initializing submodules, staging public toolchains, and building the open-source helper tools.
+
+The optional `external/private-assets/` path is only a private download, processing, and cache workspace. It is not a runtime dependency for normal repo builds.
 
 If you want the same bring-up one step at a time, use:
 
@@ -110,6 +112,9 @@ make fmt
 - `make fmt` formats repo-owned `bof3/` C/H sources with `clang-format` and `tools/python/` with `ruff format`.
 - `make format-python` runs only the Python formatter.
 - PsyQ is still a local proprietary input. Pass `PSYQ_SOURCE` / `PSYQ_ARCHIVE` or place a local copy under `inputs/`.
+- `toolchain disc import` caches and extracts under `external/private-assets/...`, then refreshes the active disc set under `inputs/disc/`.
+- `toolchain psyq import` caches and prepares source media under `external/private-assets/...`, then stages the consumable SDK under `toolchains/psyq-original/4.0/`.
+- Public setup still works without the optional `external/private-assets` submodule.
 - `make setup-aspsx` stages only the canonical public ASPSX/PsyQ 4.0 bundle under `toolchains/aspsx-psyq-binaries/` and exposes it to maspsx through `third_party/maspsx/aspsx/psyq`.
 - Use `bin/setup-aspsx --all-versions` only if you need the broader public version matrix for research or toolchain comparison.
 - `scripts/` and `scripts/legacy/` are compatibility surfaces, not the preferred workflow.

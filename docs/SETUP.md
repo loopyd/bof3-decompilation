@@ -12,6 +12,7 @@ Use one of these:
 - `make setup`
 - `make setup-open`
 - `make setup-submodules`
+- `make setup-private-assets`
 - `make setup-aspsx`
 - `make setup-native-tools`
 - `make setup-psx-toolchain`
@@ -29,6 +30,7 @@ Or use the direct command wrappers under `bin/`:
 - `bin/setup-open-plan`
 - `bin/setup-plan`
 - `bin/setup-submodules`
+- `bin/setup-private-assets`
 - `bin/setup-aspsx`
 - `bin/setup-native-tools`
 - `bin/setup-psx-toolchain`
@@ -60,11 +62,27 @@ Use `make format-python` when you only want the Python formatter.
 `make setup-open` stops before the local PsyQ stage, disc extraction, unpack, and Ghidra planning.
 Use it to initialize submodules, public toolchains, and the repo-owned helper tools on a fresh clone before supplying proprietary inputs.
 
+`make setup-private-assets` initializes only the optional `external/private-assets` submodule when that private workspace is available.
+Normal public setup and runtime do not require it.
+
 `make doctor` remains the full-workspace check once those local inputs and generated outputs exist.
+
+## Private Import Workspace
+
+`external/private-assets/` is an optional private download, processing, and cache workspace.
+It is not the active disc path or the active PsyQ SDK path used by the repo.
+
+- active disc input: `inputs/disc/`
+- active PsyQ SDK: `toolchains/psyq-original/4.0/`
+
+The importer commands can use the private workspace when it exists:
+
+- `toolchain disc import` downloads or copies source media into `external/private-assets/...`, extracts there, then copies the active cue/bin set into `inputs/disc/`
+- `toolchain psyq import` downloads or copies source media into `external/private-assets/...`, prepares it there, then stages the consumable SDK into `toolchains/psyq-original/4.0/`
 
 ## PsyQ
 
-PsyQ is local and proprietary. The repo does not download it for you.
+PsyQ remains local and proprietary. The public repo does not require the optional private workspace.
 
 Use one of:
 
@@ -72,6 +90,8 @@ Use one of:
 - `make setup-psyq PSYQ_ARCHIVE=/path/to/psyq-4.7-converted-full.7z`
 - `bin/setup-psyq --source-root /path/to/psyq-4.0`
 - `bin/setup-psyq --archive /path/to/psyq-4.7-converted-full.7z`
+
+Or, when the private workspace is available, use `toolchain psyq import` to populate `toolchains/psyq-original/4.0/` through the cached import flow.
 
 The staging step normalizes text-file line endings for non-Windows workflows and creates lowercase compatibility aliases used by the build.
 
@@ -88,3 +108,4 @@ The public ASPSX reference bundle is downloaded separately from the proprietary 
 - unpacked EMI payloads: `out/emi_raw/`
 - staged toolchains: `toolchains/`
 - local supplied inputs: `inputs/`
+- optional private import workspace: `external/private-assets/`

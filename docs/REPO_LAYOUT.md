@@ -11,9 +11,11 @@ Use these names as canonical:
 - `third_party/`
   - vendored tool repos and helper projects
 - `inputs/`
-  - local supplied assets and proprietary inputs
+  - local runtime inputs, including the active disc set under `inputs/disc/`
 - `toolchains/`
-  - downloaded or staged SDKs and compilers
+  - downloaded or staged SDKs and compilers, including `toolchains/psyq-original/4.0/`
+- `external/private-assets/`
+  - optional private download, processing, and cache workspace only
 - `out/`
   - generated manifests, extracted payloads, reports, and scratch output
 - `docs/`
