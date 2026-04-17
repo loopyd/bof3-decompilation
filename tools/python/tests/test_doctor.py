@@ -19,9 +19,7 @@ def seed_open_layout(layout) -> None:
     layout.gcc272_psx_root.mkdir(parents=True, exist_ok=True)
     (layout.gcc272_psx_root / "gcc").write_text("", encoding="utf-8")
     (layout.aspsx_psyq_root / "psyq4.0").mkdir(parents=True, exist_ok=True)
-    (layout.aspsx_psyq_root / "psyq4.0" / "ASPSX.EXE").write_text(
-        "", encoding="utf-8"
-    )
+    (layout.aspsx_psyq_root / "psyq4.0" / "ASPSX.EXE").write_text("", encoding="utf-8")
 
 
 def seed_layout(layout) -> None:
@@ -83,7 +81,7 @@ def test_doctor_open_profile_passes_for_seeded_open_layout(
 
     assert doctor_exit_code(checks) == 0
     assert all(check.name != "inputs/disc" for check in checks)
-    assert all(check.name != "inputs/psyq-source" for check in checks)
+    assert all(check.name != "inputs/local-psyq-source" for check in checks)
     assert all(check.name != "toolchains/psyq" for check in checks)
     assert all(check.name != "out/ghidra-bootstrap" for check in checks)
 

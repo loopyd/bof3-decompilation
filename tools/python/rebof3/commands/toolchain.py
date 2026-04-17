@@ -5,7 +5,13 @@ from pathlib import Path
 
 from ..paths import repo_layout
 from ..toolchain.aspsx import ALL_ASPSX_PSYQ_VERSIONS, download_aspsx_binaries
-from ..toolchain.setup_psyq import find_psyq_source, stage_psyq_sdk
+from ..toolchain.setup_disc import DEFAULT_BOF3_ARCHIVE_URL, import_bof3_disc
+from ..toolchain.setup_psyq import (
+    DEFAULT_PSYQ_ARCHIVE_URL,
+    find_psyq_source,
+    import_psyq_sdk,
+    stage_psyq_sdk,
+)
 from ._common import run_main
 
 
@@ -26,6 +32,33 @@ def run_psyq_setup(args: argparse.Namespace) -> int:
         force=args.force,
     )
     print(f"staged: {dest}")
+    return 0
+
+
+def run_psyq_import(args: argparse.Namespace) -> int:
+    dest = import_psyq_sdk(
+        dest=args.dest,
+        archive=args.archive,
+        archive_url=args.archive_url or DEFAULT_PSYQ_ARCHIVE_URL,
+        private_assets_root=args.private_root,
+        force=args.force,
+    )
+    print(f"staged: {dest}")
+    return 0
+
+
+def run_disc_import(args: argparse.Namespace) -> int:
+    result = import_bof3_disc(
+        dest=args.dest,
+        archive=args.archive,
+        archive_url=args.archive_url or DEFAULT_BOF3_ARCHIVE_URL,
+        private_assets_root=args.private_root,
+        force=args.force,
+    )
+    print(f"archive: {result.archive_path}")
+    print(f"extracted: {result.extracted_root}")
+    print(f"cue: {result.cue_path}")
+    print(f"staged: {', '.join(str(path) for path in result.staged_paths)}")
     return 0
 
 
@@ -54,6 +87,46 @@ def configure_psyq_setup_parser(parser: argparse.ArgumentParser) -> None:
     parser.set_defaults(handler=run_psyq_setup)
 
 
+def configure_psyq_import_parser(parser: argparse.ArgumentParser) -> None:
+    layout = repo_layout()
+    parser.add_argument("--archive", type=Path)
+    parser.add_argument("--archive-url")
+    parser.add_argument(
+        "--dest",
+        type=Path,
+        default=layout.psyq_root,
+        help="repo-consumable PsyQ destination; defaults to toolchains/psyq-original/4.0",
+    )
+    parser.add_argument(
+        "--private-root",
+        type=Path,
+        default=layout.private_assets_dir,
+        help="optional private download and processing workspace; not a runtime SDK path",
+    )
+    parser.add_argument("--force", action="store_true")
+    parser.set_defaults(handler=run_psyq_import)
+
+
+def configure_disc_import_parser(parser: argparse.ArgumentParser) -> None:
+    layout = repo_layout()
+    parser.add_argument("--archive", type=Path)
+    parser.add_argument("--archive-url")
+    parser.add_argument(
+        "--dest",
+        type=Path,
+        default=layout.disc_dir,
+        help="repo-consumable BOF3 disc destination; defaults to inputs/disc",
+    )
+    parser.add_argument(
+        "--private-root",
+        type=Path,
+        default=layout.private_assets_dir,
+        help="optional private download and processing workspace; not a runtime disc path",
+    )
+    parser.add_argument("--force", action="store_true")
+    parser.set_defaults(handler=run_disc_import)
+
+
 def configure_aspsx_download_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--all-versions", action="store_true")
     parser.add_argument("--force", action="store_true")
@@ -71,6 +144,15 @@ def configure_root_parser(parser: argparse.ArgumentParser) -> None:
 
     psyq_setup = psyq_subparsers.add_parser("setup")
     configure_psyq_setup_parser(psyq_setup)
+
+    psyq_import = psyq_subparsers.add_parser("import")
+    configure_psyq_import_parser(psyq_import)
+
+    disc = subparsers.add_parser("disc")
+    disc_subparsers = disc.add_subparsers(required=True)
+
+    disc_import = disc_subparsers.add_parser("import")
+    configure_disc_import_parser(disc_import)
 
     aspsx = subparsers.add_parser("aspsx")
     aspsx_subparsers = aspsx.add_subparsers(required=True)

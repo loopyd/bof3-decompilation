@@ -106,16 +106,16 @@ def run_doctor(
         if psyq_source is None:
             checks.append(
                 DoctorCheck(
-                    name="inputs/psyq-source",
+                    name="inputs/local-psyq-source",
                     status="missing",
                     detail="no local PsyQ 4.0 source tree or archive found",
-                    hint="set PSYQ_SOURCE / PSYQ_ARCHIVE or place a local archive under inputs/",
+                    hint="set PSYQ_SOURCE / PSYQ_ARCHIVE, place a local archive under inputs/, or use `toolchain psyq import` to cache and stage it via the optional private-assets workspace",
                 )
             )
         else:
             checks.append(
                 DoctorCheck(
-                    name="inputs/psyq-source",
+                    name="inputs/local-psyq-source",
                     status="ok",
                     detail=f"{psyq_source.kind}: {psyq_source.path}",
                 )
