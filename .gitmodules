@@ -1,0 +1,31 @@
+[submodule "third_party/asm-differ"]
+	path = third_party/asm-differ
+	url = https://github.com/raulcorreia7/asm-differ.git
+[submodule "third_party/bof3-disk"]
+	path = third_party/bof3-disk
+	url = https://github.com/raulcorreia7/rebof3-disk.git
+[submodule "third_party/bof3-ghidra"]
+	path = third_party/bof3-ghidra
+	url = https://github.com/raulcorreia7/bof3-ghidra.git
+[submodule "third_party/decomp-permuter"]
+	path = third_party/decomp-permuter
+	url = https://github.com/raulcorreia7/decomp-permuter.git
+[submodule "third_party/emi-ex"]
+	path = third_party/emi-ex
+	url = https://github.com/raulcorreia7/emi-ex.git
+	branch = main
+[submodule "third_party/ghidra-mcp"]
+	path = third_party/ghidra-mcp
+	url = https://github.com/raulcorreia7/ghidra-mcp.git
+[submodule "third_party/m2c"]
+	path = third_party/m2c
+	url = https://github.com/raulcorreia7/m2c.git
+[submodule "third_party/maspsx"]
+	path = third_party/maspsx
+	url = https://github.com/raulcorreia7/maspsx.git
+[submodule "third_party/mipsmatch"]
+	path = third_party/mipsmatch
+	url = https://github.com/raulcorreia7/mipsmatch.git
+[submodule "third_party/objdiff"]
+	path = third_party/objdiff
+	url = https://github.com/raulcorreia7/objdiff.git
