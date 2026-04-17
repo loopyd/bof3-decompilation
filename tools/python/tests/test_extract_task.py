@@ -17,20 +17,17 @@ def test_extract_uses_explicit_disc_input_path(monkeypatch, tmp_path: Path) -> N
 
     calls: list[list[str]] = []
 
-    def fake_run_command(command: list[str], *, cwd, env=None) -> None:
-        calls.append(command)
+    def fake_disk_extract(**kwargs) -> Path:
+        calls.append([str(kwargs["tool_path"]), str(kwargs["output_dir"])])
+        return layout.disc_dir / "game.cue"
 
-    monkeypatch.setattr("rebof3.setup.tasks.extract.run_command", fake_run_command)
+    monkeypatch.setattr("rebof3.setup.tasks.extract.disk_extract", fake_disk_extract)
 
     extract.run(SetupContext(layout=layout, options=SetupOptions()))
 
     assert calls == [
         [
             str(layout.bof3_disk_bin),
-            "extract",
-            "-i",
-            str(layout.disc_dir / "game.cue"),
-            "-o",
             str(layout.extracted_dir),
         ]
     ]
