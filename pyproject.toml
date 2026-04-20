@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Minimal BOF3 inventory and Ghidra planning pipeline"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = ["Pillow>=10.0"]
 
 [project.optional-dependencies]
 dev = [

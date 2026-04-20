@@ -1,111 +1,150 @@
 # Setup
 
-## Human Entry Points
+Use `bin/*` as the primary interface. `make *` targets are convenience aliases.
 
-Use one of these:
+## Stage 1: Open Setup
 
-- `make venv`
-- `make doctor`
-- `make doctor-open`
-- `make setup-plan`
-- `make setup-open-plan`
-- `make setup`
-- `make setup-open`
-- `make setup-submodules`
-- `make setup-private-assets`
-- `make setup-aspsx`
-- `make setup-native-tools`
-- `make setup-psx-toolchain`
-- `make setup-match-tools`
-- `make inventory`
-- `make fmt`
-- `make format-python`
-- `make configure`
-- `make build`
+Fresh clone:
 
-Or use the direct command wrappers under `bin/`:
+```bash
+make venv
+bin/doctor-open
+bin/setup-open-plan
+bin/setup-open
+```
 
-- `bin/setup`
-- `bin/setup-open`
-- `bin/setup-open-plan`
-- `bin/setup-plan`
+`bin/setup-open` covers the open-source path only. It stops before:
+
+- local PsyQ staging
+- disc extraction
+- EMI unpack
+- Ghidra planning against local extracted assets
+
+Run the setup pieces directly when needed:
+
 - `bin/setup-submodules`
-- `bin/setup-private-assets`
+- `bin/setup-private-assets` for the optional private cache workspace only
 - `bin/setup-aspsx`
 - `bin/setup-native-tools`
 - `bin/setup-psx-toolchain`
 - `bin/setup-match-tools`
-- `bin/setup-psyq`
-- `bin/doctor`
-- `bin/doctor-open`
+
+## Stage 2: Local / Proprietary Inputs
+
+Stage PsyQ once local inputs are available:
+
+```bash
+bin/setup-psyq --archive inputs/psyq-4.7-converted-full.7z
+```
+
+Also supported:
+
+- `bin/setup-psyq --source-root inputs/psyq-4.7-converted-full`
+- `bin/setup --psyq-archive ... --disc-archive ...` for the full setup path
+
+Active runtime paths:
+
+- disc input: `inputs/disc/`
+- PsyQ SDK: `toolchains/psyq/4.7/`
+
+`external/private-assets/` is optional. It is a private download and cache workspace,
+not the normal runtime location.
+
+## Stage 3: Disk / EMI Lifecycle
+
+Typical sequence:
+
+```bash
+bin/disk-extract
+bin/emi-unpack
+```
+
+Related commands:
+
+- `bin/emi-pack`: repack unpacked EMI folders back into the tree
+- `bin/disk-rebuild`: rebuild a disc image from the extracted project
+- `bin/disk-checksums`: generate checksums for staged disc images
+- `bin/disk-verify`: verify staged disc images against those checksums
+
+`bin/emi-unpack` and `bin/emi-pack` operate over the tree by default.
+`bin/disk-checksums` is the companion command for `bin/disk-verify`.
+
+## Stage 4: Inventory
+
+Use the maintained pipeline when you want the full artifact family:
+
+```bash
+bin/inventory-build
+```
+
+Individual inventory commands remain available:
+
 - `bin/inventory-scan`
 - `bin/inventory-group`
-- `bin/ghidra-plan`
-- `bin/ghidra-bootstrap`
-- `bin/configure`
-- `bin/build`
+- `bin/inventory-slot-map`
+- `bin/inventory-emi-catalog`
+- `bin/inventory-overlay-catalog`
+- `bin/inventory-overlay-clusters`
+- `bin/inventory-unique-overlay-map`
+- `bin/inventory-entry-tables`
+- `bin/inventory-project-plan`
+- `bin/inventory-render-metadata`
+- `bin/inventory-import-ghidra-symbols`
 
-`bin/bof3` remains available as a legacy compatibility wrapper.
+Raw Ghidra export reshaping still runs through
+`bin/inventory-import-ghidra-symbols`. Dedicated export scripts are not implemented yet.
 
-## Typical Flow
+## Stage 5: Ghidra
 
-1. Create the Python environment.
-2. Run `make doctor-open`.
-3. Preview the fresh-clone bring-up with `make setup-open-plan`.
-4. Run `make setup-open` or the smaller `make setup-submodules`, `make setup-aspsx`, `make setup-native-tools`, `make setup-psx-toolchain`, and `make setup-match-tools` targets.
-5. Once local inputs are available, run `make setup-psyq`, extract the disc, unpack, then run `make inventory`.
-6. Configure and build with CMake.
+Typical sequence:
 
-Use `make fmt` to format repo-owned `bof3/` C/H sources plus the Python tooling.
-Use `make format-python` when you only want the Python formatter.
+```bash
+bin/ghidra-plan
+bin/ghidra-bootstrap
+```
 
-`make setup-open` stops before the local PsyQ stage, disc extraction, unpack, and Ghidra planning.
-Use it to initialize submodules, public toolchains, and the repo-owned helper tools on a fresh clone before supplying proprietary inputs.
+Other supported commands:
 
-`make setup-private-assets` initializes only the optional `external/private-assets` submodule when that private workspace is available.
-Normal public setup and runtime do not require it.
+- `bin/ghidra-summary`
+- `bin/ghidra-ui`
+- `bin/ghidra-install-extensions`
 
-`make doctor` remains the full-workspace check once those local inputs and generated outputs exist.
+Generated planning artifacts live under `out/ghidra-bootstrap/`.
 
-## Private Import Workspace
+## Stage 6: Match / Asset Work
 
-`external/private-assets/` is an optional private download, processing, and cache workspace.
-It is not the active disc path or the active PsyQ SDK path used by the repo.
+Function matching:
 
-- active disc input: `inputs/disc/`
-- active PsyQ SDK: `toolchains/psyq/4.7/`
+- `bin/match-init`
+- `bin/match-build`
+- `bin/match-diff`
+- `bin/match-report`
 
-The importer commands can use the private workspace when it exists:
+Asset extraction and review:
 
-- `toolchain disc import` downloads or copies source media into `external/private-assets/...`, extracts there, then copies the active cue/bin set into `inputs/disc/`
-- `toolchain psyq import` downloads or copies source media into `external/private-assets/...`, then stages the consumable SDK into `toolchains/psyq/4.7/`
+- `bin/emi-extract`
+- `bin/emi-review`
+- `bin/emi-extract-archive`
+- `bin/emi-extract-tree`
+- `bin/emi-render-title`
+- `bin/emi-render-status`
+- `bin/emi-preview`
 
-## PsyQ
+Image workflows require Pillow in the active Python environment.
 
-The public repo stages the converted PsyQ 4.7 SDK. The public repo does not search outside the workspace and does not own private dump-processing flows.
+## Convenience Aliases
 
-Use one of:
+The main `make` aliases are:
 
-- `make setup-psyq PSYQ_ARCHIVE=inputs/psyq-4.7-converted-full.7z`
-- `bin/setup-psyq --archive inputs/psyq-4.7-converted-full.7z`
-- `bin/setup-psyq --source-root inputs/psyq-4.7-converted-full`
-- `bin/toolchain psyq import`
+- `make doctor-open`, `make setup-open-plan`, `make setup-open`
+- `make setup-psyq`, `make setup`
+- `make disk-extract`, `make emi-unpack`, `make emi-pack`
+- `make inventory-build`, `make ghidra-bootstrap`
+- `make match-init`, `make match-build`, `make match-diff`, `make match-report`
+- `make configure`, `make build`
 
-Or, when the private workspace is available, use `toolchain psyq import` to populate `toolchains/psyq/4.7/` through the cached import flow.
+## Current Caveats
 
-The staging step normalizes text-file line endings for non-Windows workflows and creates lowercase compatibility aliases used by the build.
-
-## ASPSX
-
-The public ASPSX reference bundle is downloaded separately from the proprietary PsyQ SDK.
-
-- `make setup-aspsx` downloads only the canonical `psyq4.0` bundle.
-- `bin/setup-aspsx --all-versions` downloads the full public version matrix when you need it for research.
-
-## Output Locations
-
-- generated planning manifests: `out/ghidra-bootstrap/`
-- unpacked EMI payloads: `out/emi_raw/`
-- staged toolchains: `toolchains/`
-- local supplied inputs: `inputs/`
-- optional private import workspace: `external/private-assets/`
+- `bin/bof3` and the aggregate CLI surface are compatibility-only.
+- `bin/inventory` is also compatibility-oriented; prefer the explicit inventory and Ghidra commands.
+- Full heavy verification was intentionally skipped for now.

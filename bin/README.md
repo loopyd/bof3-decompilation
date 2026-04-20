@@ -1,37 +1,62 @@
 # bin
 
-This directory is the human-facing command surface.
+This directory is the primary human-facing command surface.
 
-Preferred entrypoints:
+Use `make *` only as convenience aliases for the common wrappers here.
 
-- `bin/setup-open`
-- `bin/setup-open-plan`
-- `bin/setup-submodules`
-- `bin/setup-private-assets` (optional private download/cache workspace only)
-- `bin/setup-aspsx`
-- `bin/setup-native-tools`
-- `bin/setup-psx-toolchain`
-- `bin/setup-match-tools`
-- `bin/setup-psyq`
-- `bin/doctor-open`
-- `bin/doctor`
-- `bin/inventory-scan`
-- `bin/inventory-group`
-- `bin/ghidra-plan`
-- `bin/ghidra-bootstrap`
-- `bin/ghidra-summary`
-- `bin/configure`
-- `bin/build`
+## Setup
 
-Other maintained entrypoints:
+- `setup-open`, `setup-open-plan`, `setup-plan`, `setup`
+- `setup-submodules`, `setup-private-assets`
+- `setup-aspsx`, `setup-native-tools`, `setup-psx-toolchain`, `setup-match-tools`
+- `setup-psyq`
+- `doctor-open`, `doctor`
 
-- `bin/setup`
-- `bin/setup-plan`
+## Disk / EMI
 
-Legacy compatibility entrypoints:
+- `disk-extract`, `disk-rebuild`, `disk-verify`, `disk-checksums`
+- `emi-unpack`, `emi-pack`
+- `emi-extract`, `emi-review`
+- `emi-extract-archive`, `emi-extract-tree`
+- `emi-render-title`, `emi-render-status`, `emi-preview`
 
-- `bin/bof3`
-- `bin/inventory`
+Notes:
 
-`external/private-assets/` is not a normal runtime dependency.
-Importer flows may use it as an optional private workspace before staging active inputs under `inputs/disc/` or `toolchains/psyq/4.7/`.
+- `emi-unpack` and `emi-pack` operate over the tree by default.
+- `disk-checksums` pairs with `disk-verify`.
+- Image workflows require Pillow.
+
+## Inventory
+
+- `inventory-build`
+- `inventory-scan`, `inventory-group`
+- `inventory-slot-map`, `inventory-emi-catalog`
+- `inventory-overlay-catalog`, `inventory-overlay-clusters`
+- `inventory-unique-overlay-map`, `inventory-entry-tables`
+- `inventory-project-plan`, `inventory-render-metadata`
+- `inventory-import-ghidra-symbols`
+
+## Ghidra
+
+- `ghidra-plan`, `ghidra-bootstrap`, `ghidra-summary`
+- `ghidra-ui`, `ghidra-install-extensions`
+
+Raw Ghidra export reshaping currently still flows through
+`inventory-import-ghidra-symbols`.
+
+## Match
+
+- `match-init`, `match-build`, `match-diff`, `match-report`
+
+## Build
+
+- `configure`, `build`
+- `maspsx-cc` is the canonical maspsx wrapper used by CMake
+
+## Compatibility-Only
+
+- `bof3`
+- `inventory`
+
+`external/private-assets/` is optional. It is a private download and cache
+workspace, not a normal runtime dependency.

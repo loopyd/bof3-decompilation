@@ -23,7 +23,7 @@ SETUP_PSYQ_FLAGS = $(if $(PSYQ_SOURCE),--psyq-source-root "$(PSYQ_SOURCE)") \
 
 .DEFAULT_GOAL := help
 
-.PHONY: help venv doctor doctor-open setup-plan setup-open-plan setup-open setup-submodules setup-private-assets setup-native-tools setup-psx-toolchain setup-match-tools setup setup-psyq setup-aspsx inventory configure build test test-python fmt format format-c format-python inventory-scan inventory-group inventory-build inventory-slot-map inventory-emi-catalog inventory-overlay-catalog inventory-overlay-clusters inventory-unique-overlay-map inventory-entry-tables inventory-project-plan inventory-render-metadata inventory-import-ghidra-symbols ghidra-plan ghidra-bootstrap ghidra-ui ghidra-install-extensions match-init match-build match-diff match-report disk-extract emi-unpack disk-rebuild emi-pack disk-verify disk-checksums
+.PHONY: help venv doctor doctor-open setup-plan setup-open-plan setup-open setup-submodules setup-private-assets setup-native-tools setup-psx-toolchain setup-match-tools setup setup-psyq setup-aspsx inventory configure build test test-python fmt format format-c format-python inventory-scan inventory-group inventory-build inventory-slot-map inventory-emi-catalog inventory-overlay-catalog inventory-overlay-clusters inventory-unique-overlay-map inventory-entry-tables inventory-project-plan inventory-render-metadata inventory-import-ghidra-symbols ghidra-plan ghidra-bootstrap ghidra-ui ghidra-install-extensions match-init match-build match-diff match-report disk-extract emi-unpack disk-rebuild emi-pack disk-verify disk-checksums emi-extract emi-review emi-extract-archive emi-extract-tree emi-render-title emi-render-status emi-preview
 
 help:
 	@printf '\n%s\n' 'Core'
@@ -63,6 +63,13 @@ help:
 	@printf '\n%s\n' 'Disk / EMI'
 	@printf '  %-24s %s\n' 'make disk-extract' 'Extract the staged BOF3 disc image'
 	@printf '  %-24s %s\n' 'make emi-unpack' 'Unpack all EMI archives from build/extracted/'
+	@printf '  %-24s %s\n' 'make emi-extract' 'Unpack EMI archives and refresh focused inventory artifacts'
+	@printf '  %-24s %s\n' 'make emi-review' 'Build a focused EMI review packet from the catalog'
+	@printf '  %-24s %s\n' 'make emi-extract-archive' 'Extract one EMI archive or manifest directory to PNGs'
+	@printf '  %-24s %s\n' 'make emi-extract-tree' 'Extract indexed-image candidates across an EMI tree'
+	@printf '  %-24s %s\n' 'make emi-render-title' 'Render the validated title bundle outputs'
+	@printf '  %-24s %s\n' 'make emi-render-status' 'Render STATUS portrait outputs and diagnostics'
+	@printf '  %-24s %s\n' 'make emi-preview' 'Preview one raw indexed image with a palette'
 	@printf '  %-24s %s\n' 'make disk-rebuild' 'Rebuild a BOF3 disc image from the extracted project'
 	@printf '  %-24s %s\n' 'make emi-pack' 'Pack unpacked EMI folders back into build/extracted/'
 	@printf '  %-24s %s\n' 'make disk-verify' 'Verify staged disc images against disk checksums'
@@ -233,6 +240,27 @@ disk-extract: .venv/.ready
 
 emi-unpack: .venv/.ready
 	@$(BIN_DIR)/emi-unpack
+
+emi-extract: .venv/.ready
+	@$(BIN_DIR)/emi-extract
+
+emi-review: .venv/.ready
+	@$(BIN_DIR)/emi-review
+
+emi-extract-archive: .venv/.ready
+	@$(BIN_DIR)/emi-extract-archive
+
+emi-extract-tree: .venv/.ready
+	@$(BIN_DIR)/emi-extract-tree
+
+emi-render-title: .venv/.ready
+	@$(BIN_DIR)/emi-render-title
+
+emi-render-status: .venv/.ready
+	@$(BIN_DIR)/emi-render-status
+
+emi-preview: .venv/.ready
+	@$(BIN_DIR)/emi-preview
 
 disk-rebuild: .venv/.ready
 	@$(BIN_DIR)/disk-rebuild

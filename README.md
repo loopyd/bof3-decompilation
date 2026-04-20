@@ -1,120 +1,101 @@
 # rebof3-simple
 
-`rebof3-simple` is a stripped-down BOF3 decomp workspace with two public surfaces:
+`rebof3-simple` is a stripped-down BOF3 decomp workspace.
 
-- `make ...` for common workflows
-- `bin/...` for direct POSIX entrypoints
+Primary UX:
 
-The canonical top-level layout is:
+- `bin/*` commands
+- `make *` convenience aliases for common wrappers
 
-- `bin/`: human-facing commands
-- `bof3/`: recovered game code
-- `tools/`: repo-owned tooling, with Python automation under `tools/python/`
-- `third_party/`: vendored or external tool repos
-- `inputs/`: local runtime inputs such as the active BOF3 disc set
-- `toolchains/`: downloaded or staged SDKs and compilers, including the active PsyQ SDK
-- `out/`: generated manifests, extracted data, and reports
-- `docs/`: human documentation and reverse-engineering specs
-- `cmake/`: PSX build and toolchain files
+Compatibility-only surfaces still exist, but they are not the preferred workflow.
 
 ## Quick Start
 
-Bootstrap the Python environment:
+Create the Python environment:
 
 ```bash
 make venv
 ```
 
-Check the fresh-clone open setup path:
+Check the open-source setup path:
 
 ```bash
-make doctor-open
-# or
 bin/doctor-open
-```
-
-Preview the fresh-clone setup flow:
-
-```bash
-make setup-open-plan
-# or
 bin/setup-open-plan
-```
-
-Set up only the open-source pieces first:
-
-```bash
-make setup-open
-# or
 bin/setup-open
 ```
 
-This stops before local PsyQ staging, disc extraction, unpack, and Ghidra planning while still initializing submodules, staging public toolchains, and building the open-source helper tools.
-
-The optional `external/private-assets/` path is only a private download, processing, and cache workspace. It is not a runtime dependency for normal repo builds.
-
-If you want the same bring-up one step at a time, use:
+Once local proprietary inputs are available, continue with the full asset flow:
 
 ```bash
-make setup-submodules
-make setup-aspsx
-make setup-native-tools
-make setup-psx-toolchain
-make setup-match-tools
-```
-
-Once local proprietary inputs are available, stage PsyQ separately:
-
-```bash
-make setup-psyq PSYQ_ARCHIVE=inputs/psyq-4.7-converted-full.7z
-# or
 bin/setup-psyq --archive inputs/psyq-4.7-converted-full.7z
-```
-
-Refresh the generated inventory and Ghidra import manifest:
-
-```bash
-make inventory
-# or
+bin/disk-extract
+bin/emi-unpack
 bin/ghidra-bootstrap
-```
-
-Configure and build the PSX target:
-
-```bash
-make configure
-make build
-# or
 bin/configure
 bin/build
 ```
 
-Format the Python tooling:
+## Main Workflows
 
-```bash
-make format-python
-```
+### Setup
 
-Format all repo-owned source we maintain directly:
+- `bin/setup-open`: fresh-clone open setup
+- `bin/setup-submodules`: init submodules only
+- `bin/setup-aspsx`: stage public ASPSX reference binaries
+- `bin/setup-native-tools`: build native helper tools
+- `bin/setup-psx-toolchain`: stage the open PSX toolchain
+- `bin/setup-match-tools`: build matching helpers
+- `bin/setup-psyq`: stage local PsyQ into `toolchains/psyq/4.7/`
+- `bin/setup`: full setup when local proprietary inputs are ready
 
-```bash
-make fmt
-```
+### Disk / EMI
+
+- `bin/disk-extract`: extract the staged BOF3 disc image
+- `bin/emi-unpack`: unpack EMI archives from the extracted tree
+- `bin/emi-pack`: repack unpacked EMI folders back into the tree
+- `bin/disk-rebuild`: rebuild a disc image from the extracted project
+- `bin/disk-checksums`: generate checksums for staged disc images
+- `bin/disk-verify`: verify staged disc images against those checksums
+
+`bin/emi-unpack` and `bin/emi-pack` operate over the tree by default.
+
+### Inventory / Ghidra
+
+- `bin/inventory-build`: refresh the maintained inventory artifact family
+- `bin/inventory-scan`, `bin/inventory-group`
+- `bin/inventory-slot-map`, `bin/inventory-emi-catalog`
+- `bin/inventory-overlay-catalog`, `bin/inventory-overlay-clusters`
+- `bin/inventory-unique-overlay-map`, `bin/inventory-entry-tables`
+- `bin/inventory-project-plan`, `bin/inventory-render-metadata`
+- `bin/inventory-import-ghidra-symbols`: reshape raw Ghidra export artifacts
+- `bin/ghidra-plan`, `bin/ghidra-bootstrap`, `bin/ghidra-summary`
+- `bin/ghidra-ui`, `bin/ghidra-install-extensions`
+
+Raw Ghidra export reshaping currently still flows through
+`bin/inventory-import-ghidra-symbols`. Dedicated export scripts are not
+implemented yet.
+
+### Match
+
+- `bin/match-init`
+- `bin/match-build`
+- `bin/match-diff`
+- `bin/match-report`
+
+### Asset Review
+
+- `bin/emi-extract`, `bin/emi-review`
+- `bin/emi-extract-archive`, `bin/emi-extract-tree`
+- `bin/emi-render-title`, `bin/emi-render-status`
+- `bin/emi-preview`
+
+Image workflows require Pillow in the active Python environment.
 
 ## Notes
 
-- `make setup-open` is the recommended fresh-clone bring-up path.
-- `make setup` remains available when local PsyQ and disc inputs are ready.
-- `bin/setup-open`, `bin/setup-open-plan`, `bin/setup-submodules`, `bin/setup-aspsx`, `bin/setup-native-tools`, `bin/setup-psx-toolchain`, `bin/setup-match-tools`, `bin/doctor-open`, and `bin/setup-psyq` are the preferred setup entrypoints.
-- `bin/doctor`, `bin/inventory-scan`, `bin/inventory-group`, `bin/ghidra-plan`, `bin/ghidra-bootstrap`, `bin/configure`, and `bin/build` remain the maintained workflow entrypoints outside setup.
-- `bin/bof3` remains available as a legacy compatibility wrapper.
-- `bin/maspsx-cc` is the canonical maspsx wrapper used by CMake.
-- `make fmt` formats repo-owned `bof3/` C/H sources with `clang-format` and `tools/python/` with `ruff format`.
-- `make format-python` runs only the Python formatter.
-- PsyQ setup only consumes repo-local inputs under `inputs/` or the optional `external/private-assets/` workspace.
-- `toolchain disc import` caches and extracts under `external/private-assets/...`, then refreshes the active disc set under `inputs/disc/`.
-- `toolchain psyq import` downloads the public Arthus `psyq-4.7-converted-full` artifact by default, caches it under `external/private-assets/...`, and stages the active SDK under `toolchains/psyq/4.7/`.
-- Public setup still works without the optional `external/private-assets` submodule.
-- `make setup-aspsx` stages only the canonical public ASPSX `psyq4.0` compatibility bundle under `toolchains/aspsx-psyq-binaries/` and exposes it to maspsx through `third_party/maspsx/aspsx/psyq`.
-- Use `bin/setup-aspsx --all-versions` only if you need the broader public version matrix for research or toolchain comparison.
-- `scripts/` and `scripts/legacy/` are compatibility surfaces, not the preferred workflow.
+- `make` targets mirror the main `bin/*` commands as convenience aliases.
+- `bin/bof3` and the aggregate compatibility CLI surface are compatibility-only.
+- `bin/inventory` remains a compatibility wrapper; prefer the explicit inventory and Ghidra commands above.
+- The optional `external/private-assets/` path is a private download and cache workspace, not a normal runtime dependency.
+- Full heavy verification was intentionally skipped for now. Do not treat the current docs as claiming a full validation matrix.

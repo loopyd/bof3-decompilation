@@ -62,6 +62,55 @@ def test_emi_unpack_wrapper_help_is_available(tmp_path: Path) -> None:
     assert "usage: emi-unpack" in result.stdout
 
 
+def test_emi_extract_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("emi-extract", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: emi-extract" in result.stdout
+
+
+def test_emi_review_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("emi-review", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: emi-review" in result.stdout
+
+
+def test_emi_extract_archive_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("emi-extract-archive", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: emi-extract-archive" in result.stdout
+
+
+def test_emi_extract_tree_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("emi-extract-tree", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: emi-extract-tree" in result.stdout
+
+
+def test_emi_render_title_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("emi-render-title", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: emi-render-title" in result.stdout
+
+
+def test_emi_render_status_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("emi-render-status", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: emi-render-status" in result.stdout
+
+
+def test_emi_preview_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("emi-preview", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: emi-preview" in result.stdout
+
+
 def test_inventory_build_wrapper_help_is_available(tmp_path: Path) -> None:
     result = run_wrapper("inventory-build", "--help", cwd=tmp_path)
 
