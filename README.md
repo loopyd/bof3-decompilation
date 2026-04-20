@@ -2,6 +2,10 @@
 
 `rebof3-simple` is a stripped-down BOF3 decomp workspace.
 
+This repo is in a migration stabilization pass. Treat `bin/` plus
+`tools/python/` as the maintained command and implementation surfaces.
+`scripts/legacy/` remains compatibility-only.
+
 Primary UX:
 
 - `bin/*` commands
@@ -92,10 +96,22 @@ implemented yet.
 
 Image workflows require Pillow in the active Python environment.
 
+## Layout And Ownership
+
+- `bin/`: canonical human-facing commands
+- `tools/python/`: maintained repo-owned Python implementations behind `bin/`
+- `scripts/legacy/`: compatibility-only legacy automation surface
+- `inputs/`: user-owned local runtime inputs such as disc images and local source archives
+- `external/private-assets/`: optional private download and cache workspace only
+- `toolchains/`: staged or downloaded SDKs and compilers, including local PsyQ under `toolchains/psyq/4.7/`
+- `build/`: generated local build tree
+- `out/`: generated extraction, inventory, planning, and review artifacts
+
 ## Notes
 
 - `make` targets mirror the main `bin/*` commands as convenience aliases.
 - `bin/bof3` and the aggregate compatibility CLI surface are compatibility-only.
 - `bin/inventory` remains a compatibility wrapper; prefer the explicit inventory and Ghidra commands above.
 - The optional `external/private-assets/` path is a private download and cache workspace, not a normal runtime dependency.
+- `tmp/` and `processed/` may still appear in older docs or tooling; treat `out/` as the current generated-artifact tree.
 - Full heavy verification was intentionally skipped for now. Do not treat the current docs as claiming a full validation matrix.

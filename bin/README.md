@@ -1,8 +1,10 @@
 # bin
 
-This directory is the primary human-facing command surface.
+This directory is the maintained primary human-facing command surface.
 
 Use `make *` only as convenience aliases for the common wrappers here.
+Most wrappers dispatch into the maintained Python implementation under
+`tools/python/`.
 
 ## Setup
 
@@ -57,6 +59,10 @@ Raw Ghidra export reshaping currently still flows through
 
 - `bof3`
 - `inventory`
+- `_python_entry` is an internal wrapper helper, not a user command
 
 `external/private-assets/` is optional. It is a private download and cache
 workspace, not a normal runtime dependency.
+
+`build/` and `out/` are generated trees. Use the commands here to populate and
+refresh them instead of treating them as maintained source directories.

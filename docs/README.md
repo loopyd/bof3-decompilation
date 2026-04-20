@@ -2,6 +2,9 @@
 
 This tree holds the human documentation for the repo.
 
+This repo is still settling after the tooling/layout migration. The maintained
+surfaces are `bin/` plus `tools/python/`; `scripts/legacy/` is compatibility-only.
+
 Start here:
 
 1. `docs/SETUP.md`
@@ -11,16 +14,23 @@ Start here:
 
 Use `docs/specs/` for stable reverse-engineering knowledge. Keep workflow guidance in the top-level docs files above instead of mixing it into the specs tree.
 
+Some specs still cite legacy generated paths as historical evidence. When
+describing the active repo layout or workflows, prefer the top-level docs and
+current paths under `out/`.
+
 ## Source Of Truth
 
 - `docs/specs/`
   - stable human-maintained reverse-engineering knowledge
 - `out/`
-  - generated extraction and planning artifacts
+  - generated extraction, inventory, planning, and review artifacts
 - `bof3/`
   - recovered or reimplemented PSX-first source
+- `bin/`
+  - maintained command surface
 - `tools/python/`
-  - repo-owned CLI and setup implementation
+  - repo-owned maintained CLI and setup implementation
+- `scripts/legacy/`
+  - compatibility-only legacy automation
 - `third_party/`
   - vendored external tools
-  - CLI and setup implementation
