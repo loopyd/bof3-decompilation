@@ -1,6 +1,15 @@
-# scripts/rebof3
+# scripts/legacy/rebof3
 
-`scripts/rebof3/` is the repo-owned automation layer for the only supported decomp loop:
+`scripts/legacy/rebof3/` is a compatibility-only legacy automation surface.
+
+Treat `bin/` plus `tools/python/` as the maintained command and implementation
+surfaces. Use this tree only when you are intentionally following an older
+workflow that has not been migrated yet.
+
+The physical directory now lives under `scripts/legacy/rebof3/`, but the legacy
+Python module path still uses `scripts.rebof3` for compatibility.
+
+The legacy loop documented here is:
 
 1. extract and inventory the disc
 2. export one function from Ghidra
@@ -8,12 +17,14 @@
 4. build it
 5. diff it
 
-Tracked incubating helpers live under `staging/`. Do not keep reusable tools in
-plain `tmp/`.
+Legacy-generated artifacts may still appear under `tmp/` compatibility paths,
+but the maintained generated-artifact root is `out/`. Do not add new maintained
+workflow docs that point back at `tmp/` or `processed/`.
 
 ## Canonical Commands
 
-Prefer the root `Makefile` targets when they exist.
+Prefer the root `bin/*` commands when a maintained equivalent exists. Prefer the
+root `Makefile` targets only as convenience aliases for those wrappers.
 
 ### Extraction and inventory
 
@@ -28,7 +39,7 @@ Prefer the root `Makefile` targets when they exist.
 - `python3 -m scripts.rebof3 re ghidra-decomp <source> <address> --asm-backend ghidra`
 - `python3 -m scripts.rebof3 re ghidra-decomp <source> <address> --asm-backend spimdisasm`
 
-This exports one per-function bundle under `tmp/ghidra_decomp/...` with:
+This exports one per-function bundle under `out/ghidra_decomp/...` with:
 
 - `func.json`
 - `func.ghidra.c`
@@ -53,7 +64,7 @@ and the raw assembly remain the primary evidence.
 - `make match_diff PROGRAM=... ENTRY=... MATCH_DIFF_ARGS='--run-backend'`
 - `make match_permuter PROGRAM=... ENTRY=... MATCH_PERMUTER_ARGS='--variant ghidra'`
 - `make match_scaffold MATCH_SCAFFOLD_ARGS='--limit 50 --family ETC'`
-- `make match_scaffold MATCH_SCAFFOLD_ARGS='--program-kind bin --asm-root tmp/asm-stage --exclude-glob "bof3/stubs/modules/boss*/*"'`
+- `make match_scaffold MATCH_SCAFFOLD_ARGS='--program-kind bin --asm-root out/asm-stage --exclude-glob "bof3/stubs/modules/boss*/*"'`
 - `make match_sweep`
 - `make match_compiler_report MATCH_COMPILER_REPORT_ARGS='--compiler-set tested-matrix'`
 
@@ -65,8 +76,8 @@ The default profile is `capcom97-bof3`:
 - `maspsx`
 
 Cross-compiler validation is optional. The canonical path is still
-`gcc-2.7.2-psx`; extra old-gcc toolchains can be staged under
-`deps/old_gcc_toolchains/` with:
+`gcc-2.7.2-psx`; extra old-gcc toolchains can be staged locally when needed
+with:
 
 - `make setup_old_gcc`
 - `python3 -m scripts.rebof3 re setup-old-gcc --compiler gcc-2.8.0-psx`
