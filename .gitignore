@@ -24,6 +24,7 @@ toolchains/psn00bsdk/*
 !toolchains/psn00bsdk/.gitkeep
 toolchains/aspsx-psyq-binaries/*
 toolchains/psyq/4.7/*
+toolchains/psyq-original/
 !toolchains/psyq/4.7/.gitkeep
 !toolchains/README.md
 
