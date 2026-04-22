@@ -21,6 +21,7 @@ def add_setup_option_flags(
     include_skip_flags: bool = False,
 ) -> None:
     if include_psyq_inputs:
+        parser.add_argument("--psyq-version")
         parser.add_argument("--psyq-source-root", type=Path)
         parser.add_argument("--psyq-archive", type=Path)
         parser.add_argument("--disc-archive", type=Path)
@@ -51,6 +52,7 @@ def build_setup_options(args: argparse.Namespace) -> SetupOptions:
         include_psyq=not skip_psyq,
         include_extract=not skip_extract,
         include_ghidra_plan=not skip_ghidra_plan,
+        psyq_version=getattr(args, "psyq_version", None),
         psyq_source_root=getattr(args, "psyq_source_root", None),
         psyq_archive=getattr(args, "psyq_archive", None),
         disc_archive=getattr(args, "disc_archive", None),
@@ -103,31 +105,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="setup")
     configure_flat_parser(parser)
     return parser
-
-
-def add_legacy_parser(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-) -> None:
-    setup = subparsers.add_parser("setup")
-    setup_subparsers = setup.add_subparsers(required=True)
-
-    setup_plan = setup_subparsers.add_parser("plan")
-    add_setup_option_flags(setup_plan, include_skip_flags=True)
-    setup_plan.set_defaults(handler=run_plan)
-
-    setup_workspace = setup_subparsers.add_parser("workspace")
-    add_setup_option_flags(
-        setup_workspace,
-        include_force=True,
-        include_psyq_inputs=True,
-        include_skip_flags=True,
-    )
-    setup_workspace.set_defaults(handler=run_workspace)
-
-    setup_task = setup_subparsers.add_parser("task")
-    setup_task.add_argument("task_name", choices=setup_task_names())
-    add_setup_option_flags(setup_task, include_force=True, include_psyq_inputs=True)
-    setup_task.set_defaults(handler=run_task)
 
 
 def main(argv: list[str] | None = None) -> int:

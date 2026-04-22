@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import shutil
 import subprocess
 import zipfile
@@ -14,11 +13,7 @@ DEFAULT_PROJECT_ROOT = Path("out") / "ghidra-project"
 def resolve_ghidra_home(ghidra_home: Path | None) -> Path:
     candidate = ghidra_home
     if candidate is None:
-        env_value = os.environ.get("GHIDRA_HOME")
-        if env_value:
-            candidate = Path(env_value)
-    if candidate is None:
-        raise ValueError("set --ghidra-home or GHIDRA_HOME")
+        raise ValueError("pass --ghidra-home")
     resolved = candidate.expanduser().resolve()
     if not resolved.is_dir():
         raise FileNotFoundError(f"ghidra home not found: {resolved}")
@@ -36,10 +31,6 @@ def resolve_ghidra_run(ghidra_home: Path | None) -> Path:
 def resolve_user_settings_dir(user_dir: Path | None) -> Path:
     if user_dir is not None:
         return user_dir.expanduser().resolve()
-
-    env_value = os.environ.get("GHIDRA_USER_DIR")
-    if env_value:
-        return Path(env_value).expanduser().resolve()
 
     root = Path.home() / ".ghidra"
     version_dirs = sorted(path for path in root.glob(".ghidra_*") if path.is_dir())

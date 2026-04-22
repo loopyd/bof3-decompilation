@@ -1,6 +1,27 @@
 # Setup
 
-Use `bin/*` as the primary interface. `make *` targets are convenience aliases.
+Use `bin/*` as the primary tool interface. `make` is intentionally small and
+only covers setup, test, format, build, and high-level pipelines.
+
+## Stage 0: Python Environment
+
+Create or refresh the project environment first:
+
+```bash
+make venv
+```
+
+`make venv` requires `uv` and runs:
+
+```bash
+uv sync --extra dev --frozen
+```
+
+That keeps `.venv/` in sync with `pyproject.toml` and `uv.lock`, including
+runtime dependencies such as Pillow and dev tools such as pytest and ruff.
+
+Do not treat a pre-existing `.venv/` as proof that dependencies are installed;
+run `make venv` after pulling changes to `pyproject.toml` or `uv.lock`.
 
 ## Stage 1: Open Setup
 
@@ -11,6 +32,7 @@ make venv
 bin/doctor-open
 bin/setup-open-plan
 bin/setup-open
+bin/doctor-open --strict
 ```
 
 `bin/setup-open` covers the open-source path only. It stops before:
@@ -29,9 +51,39 @@ Run the setup pieces directly when needed:
 - `bin/setup-psx-toolchain`
 - `bin/setup-match-tools`
 
+The open setup pipeline currently runs these tasks:
+
+1. `submodules`
+2. `aspsx-binaries`
+3. `native-tools`
+4. `psx-toolchain`
+5. `match-tools`
+
+The `psx-toolchain` task downloads and stages:
+
+- `toolchains/psn00b_toolchain/bin/mipsel-none-elf-gcc`
+- `toolchains/psn00bsdk/`
+- `toolchains/gcc-2.7.2-psx/gcc`
+
+Before `bin/setup-open`, `bin/doctor-open --strict` is expected to report those
+toolchains as missing. After `bin/setup-open`, strict open doctor should pass
+unless a host tool or download/build step failed.
+
 ## Stage 2: Local / Proprietary Inputs
 
-Stage PsyQ once local inputs are available:
+Default BOF3 work currently uses PsyQ 4.7. Download the public Arthus
+`psyq-4.7-converted-full` archive into the private asset cache, extract it, and
+stage the active SDK with:
+
+```bash
+bin/download-psyq
+```
+
+This writes source media and extracted source trees under
+`external/private-assets/psyq/4.7/`, then stages the repo-consumable SDK under
+`toolchains/psyq/4.7/`.
+
+To stage an existing repo-local tree or archive instead:
 
 ```bash
 bin/setup-psyq --archive inputs/psyq-4.7-converted-full.7z
@@ -40,15 +92,19 @@ bin/setup-psyq --archive inputs/psyq-4.7-converted-full.7z
 Also supported:
 
 - `bin/setup-psyq --source-root inputs/psyq-4.7-converted-full`
-- `bin/setup --psyq-archive ... --disc-archive ...` for the full setup path
+- `bin/setup-psyq --version 4.6 --archive inputs/psyq-4.6.zip`
+- `bin/setup-psyq --version 4.6 --source-root inputs/psyq-4.6`
+- `bin/setup --psyq-version 4.7 --psyq-archive ... --disc-archive ...` for the full setup path
 
 Active runtime paths:
 
 - disc input: `inputs/disc/`
-- PsyQ SDK: `toolchains/psyq/4.7/`
+- PsyQ SDK: `toolchains/psyq/<version>/`
 
-`external/private-assets/` is optional. It is a private download and cache workspace,
-not the normal runtime location.
+`external/private-assets/` is a private download and cache workspace, not the
+normal runtime location. The build reads the staged SDK from `toolchains/psyq/<version>/`.
+Use `bin/configure -DBOF3_PSYQ_VERSION=4.6` for another staged SDK version, or
+`bin/configure -DBOF3_PSYQ_ROOT=/absolute/path/to/psyq` for an explicit SDK root.
 
 ## Stage 3: Disk / EMI Lifecycle
 
@@ -132,19 +188,17 @@ Asset extraction and review:
 
 Image workflows require Pillow in the active Python environment.
 
-## Convenience Aliases
+## Make Targets
 
-The main `make` aliases are:
+The Makefile intentionally exposes only high-level lifecycle targets:
 
-- `make doctor-open`, `make setup-open-plan`, `make setup-open`
-- `make setup-psyq`, `make setup`
-- `make disk-extract`, `make emi-unpack`, `make emi-pack`
-- `make inventory-build`, `make ghidra-bootstrap`
-- `make match-init`, `make match-build`, `make match-diff`, `make match-report`
-- `make configure`, `make build`
+- `make venv`, `make doctor-open`, `make doctor`
+- `make setup-open`, `make setup`
+- `make extract`, `make inventory`, `make ghidra`
+- `make configure`, `make build`, `make test`, `make fmt`
+
+Use `bin/*` for individual tools.
 
 ## Current Caveats
 
-- `bin/bof3` and the aggregate CLI surface are compatibility-only.
-- `bin/inventory` is also compatibility-oriented; prefer the explicit inventory and Ghidra commands.
-- Full heavy verification was intentionally skipped for now.
+- Full heavy verification can be slow; run the checks that match the workflow you changed before submitting.

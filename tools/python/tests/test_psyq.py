@@ -32,15 +32,6 @@ def test_stage_psyq_sdk_from_tree(monkeypatch, tmp_path: Path) -> None:
     assert (dest_root / ".gitkeep").exists()
 
 
-def test_resolve_psyq_inputs_prefers_generic_env(monkeypatch) -> None:
-    monkeypatch.setenv("PSYQ_SOURCE", "/tmp/generic-tree")
-
-    source_root, archive = psyq_lib._resolve_psyq_inputs(None, None)
-
-    assert source_root == Path("/tmp/generic-tree")
-    assert archive is None
-
-
 def test_import_psyq_sdk_stages_original_archive(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr(psyq_lib, "REPO_ROOT", tmp_path)
     archive_path = tmp_path / "psyq47.zip"
@@ -58,7 +49,7 @@ def test_import_psyq_sdk_stages_original_archive(monkeypatch, tmp_path: Path) ->
     )
 
     assert staged == dest_root.resolve()
-    assert (private_root / "psyq" / "source-media" / archive_path.name).exists()
+    assert (private_root / "psyq" / "4.7" / "source-media" / archive_path.name).exists()
     assert (dest_root / "include" / "libgpu.h").exists()
 
 
@@ -66,31 +57,52 @@ def test_find_psyq_source_discovers_repo_private_assets_source(
     monkeypatch, tmp_path: Path
 ) -> None:
     monkeypatch.setattr(psyq_lib, "REPO_ROOT", tmp_path)
-    private_root = tmp_path / "external" / "private-assets" / "psyq" / "source-tree"
-    make_fake_psyq_tree(private_root / "psyq-4.7-converted-full")
+    private_root = (
+        tmp_path
+        / "external"
+        / "private-assets"
+        / "psyq"
+        / "4.7"
+        / "source-tree"
+        / "psyq-4.7-converted-full"
+    )
+    make_fake_psyq_tree(private_root)
 
-    monkeypatch.setattr(
-        psyq_lib,
-        "AUTO_DISCOVERY_CANDIDATES",
-        (
-            tmp_path / "inputs" / "external" / "psyq-4.7-converted-full",
-            tmp_path / "inputs" / "psyq-4.7-converted-full",
-            private_root,
-        ),
-    )
-    monkeypatch.setattr(
-        psyq_lib,
-        "AUTO_DISCOVERY_ARCHIVES",
-        (
-            tmp_path / "inputs" / "external" / "psyq-4.7-converted-full.7z",
-            tmp_path / "inputs" / "psyq-4.7-converted-full.7z",
-        ),
-    )
     discovered = psyq_lib.find_psyq_source()
 
     assert discovered is not None
     assert discovered.kind == "tree"
     assert discovered.path == private_root
+
+
+def test_find_psyq_source_ignores_legacy_unversioned_private_assets(
+    monkeypatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(psyq_lib, "REPO_ROOT", tmp_path)
+    legacy_private_root = (
+        tmp_path
+        / "external"
+        / "private-assets"
+        / "psyq"
+        / "source-tree"
+        / "psyq-4.7-converted-full"
+    )
+    make_fake_psyq_tree(legacy_private_root)
+
+    assert psyq_lib.find_psyq_source() is None
+
+
+def test_stage_psyq_sdk_uses_versioned_default_dest(
+    monkeypatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(psyq_lib, "REPO_ROOT", tmp_path)
+    source_root = tmp_path / "psyq-4.6-source"
+    make_fake_psyq_tree(source_root)
+
+    staged = stage_psyq_sdk(source_root=source_root, version="4.6")
+
+    assert staged == (tmp_path / "toolchains" / "psyq" / "4.6").resolve()
+    assert (staged / "include" / "libgpu.h").exists()
 
 
 def test_find_psyq_source_rejects_explicit_paths_outside_repo(tmp_path: Path) -> None:

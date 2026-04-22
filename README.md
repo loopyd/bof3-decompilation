@@ -4,22 +4,21 @@
 
 This repo is in a migration stabilization pass. Treat `bin/` plus
 `tools/python/` as the maintained command and implementation surfaces.
-`scripts/legacy/` remains compatibility-only.
 
 Primary UX:
 
-- `bin/*` commands
-- `make *` convenience aliases for common wrappers
-
-Compatibility-only surfaces still exist, but they are not the preferred workflow.
+- `bin/*` commands for detailed tools
+- `make` targets for setup, test, format, build, and high-level pipelines
 
 ## Quick Start
 
-Create the Python environment:
+Create or sync the Python environment:
 
 ```bash
 make venv
 ```
+
+This requires `uv` and runs `uv sync --extra dev --frozen`.
 
 Check the open-source setup path:
 
@@ -27,12 +26,13 @@ Check the open-source setup path:
 bin/doctor-open
 bin/setup-open-plan
 bin/setup-open
+bin/doctor-open --strict
 ```
 
 Once local proprietary inputs are available, continue with the full asset flow:
 
 ```bash
-bin/setup-psyq --archive inputs/psyq-4.7-converted-full.7z
+bin/download-psyq
 bin/disk-extract
 bin/emi-unpack
 bin/ghidra-bootstrap
@@ -50,7 +50,8 @@ bin/build
 - `bin/setup-native-tools`: build native helper tools
 - `bin/setup-psx-toolchain`: stage the open PSX toolchain
 - `bin/setup-match-tools`: build matching helpers
-- `bin/setup-psyq`: stage local PsyQ into `toolchains/psyq/4.7/`
+- `bin/download-psyq`: download/cache the default PsyQ 4.7 source archive under `external/private-assets/`, then stage it
+- `bin/setup-psyq`: stage a repo-local PsyQ tree or archive into `toolchains/psyq/<version>/`
 - `bin/setup`: full setup when local proprietary inputs are ready
 
 ### Disk / EMI
@@ -100,18 +101,14 @@ Image workflows require Pillow in the active Python environment.
 
 - `bin/`: canonical human-facing commands
 - `tools/python/`: maintained repo-owned Python implementations behind `bin/`
-- `scripts/legacy/`: compatibility-only legacy automation surface
 - `inputs/`: user-owned local runtime inputs such as disc images and local source archives
 - `external/private-assets/`: optional private download and cache workspace only
-- `toolchains/`: staged or downloaded SDKs and compilers, including local PsyQ under `toolchains/psyq/4.7/`
+- `toolchains/`: staged or downloaded SDKs and compilers, including PsyQ under `toolchains/psyq/<version>/`
 - `build/`: generated local build tree
 - `out/`: generated extraction, inventory, planning, and review artifacts
 
 ## Notes
 
-- `make` targets mirror the main `bin/*` commands as convenience aliases.
-- `bin/bof3` and the aggregate compatibility CLI surface are compatibility-only.
-- `bin/inventory` remains a compatibility wrapper; prefer the explicit inventory and Ghidra commands above.
+- `make` intentionally stays small; use `bin/*` for detailed tools.
 - The optional `external/private-assets/` path is a private download and cache workspace, not a normal runtime dependency.
-- `tmp/` and `processed/` may still appear in older docs or tooling; treat `out/` as the current generated-artifact tree.
-- Full heavy verification was intentionally skipped for now. Do not treat the current docs as claiming a full validation matrix.
+- Treat `out/` as the generated-artifact tree for current workflows.

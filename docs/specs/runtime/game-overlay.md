@@ -4,7 +4,7 @@ This document records the first representative BOF3 overlay recovered far enough
 
 Target archive:
 
-- `processed/emi_raw/BIN/ETC/GAME`
+- `emi_raw/BIN/ETC/GAME`
 
 Relevant entries:
 

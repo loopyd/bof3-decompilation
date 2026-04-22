@@ -42,3 +42,9 @@ def test_install_canonical_psx_toolchain_preserves_gitkeep_files(
     assert (layout.psn00b_toolchain_root / ".gitkeep").exists()
     assert (layout.psn00b_sdk_root / ".gitkeep").exists()
     assert (layout.gcc272_psx_root / ".gitkeep").exists()
+    assert (
+        layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-gcc"
+    ).stat().st_mode & 0o111
+    assert (
+        layout.psn00b_sdk_root / "PSn00bSDK-0.24-Linux" / "bin" / "mipsel-none-elf-gcc"
+    ).stat().st_mode & 0o111

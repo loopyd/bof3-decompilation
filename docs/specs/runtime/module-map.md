@@ -46,7 +46,7 @@ executable-overlay subset.
 ## Ghidra Import Catalog
 
 For the broader practical Ghidra import set built from local EMI TOC metadata,
-see [emi-ghidra-import-catalog.md](/home/rcorreia/projects/rebof3/docs/specs/runtime/emi-ghidra-import-catalog.md).
+see [emi-ghidra-import-catalog.md](runtime/emi-ghidra-import-catalog.md).
 
 ## Mixed-Content Archive Pattern
 

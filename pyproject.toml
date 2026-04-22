@@ -16,9 +16,6 @@ dev = [
     "ruff>=0.11.0",
 ]
 
-[project.scripts]
-bof3 = "rebof3.cli:main"
-
 [tool.setuptools]
 package-dir = {"" = "tools/python"}
 

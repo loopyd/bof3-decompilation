@@ -3,68 +3,86 @@ set -euo pipefail
 
 REBOF3_SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REBOF3_ROOT_DIR="$(cd "${REBOF3_SCRIPT_DIR}/.." && pwd)"
-REBOF3_PYTHON_BIN="${PYTHON_BIN:-python3}"
+REBOF3_PYTHON_BIN="${REBOF3_ROOT_DIR}/.venv/bin/python"
 REBOF3_MASPSX_SCRIPT="${REBOF3_ROOT_DIR}/third_party/maspsx/maspsx.py"
 REBOF3_COMPILER_ROOT="${REBOF3_ROOT_DIR}/toolchains/gcc-2.7.2-psx"
 REBOF3_TOOLCHAIN_BIN="${REBOF3_ROOT_DIR}/toolchains/psn00b_toolchain/bin"
-REBOF3_PSYQ_ROOT="${REBOF3_ROOT_DIR}/toolchains/psyq/4.7"
+REBOF3_DEFAULT_PSYQ_VERSION="4.7"
 REBOF3_DEFAULT_PROFILE="capcom97-bof3"
 REBOF3_CAPCOM97_PROFILE="capcom97-bof3"
 REBOF3_CAPCOM97_ASPSX_VERSION="2.56"
 REBOF3_AS_LOCAL_NAME="mipsel-none-elf-as"
-REBOF3_AS_CANDIDATES=(mipsel-linux-gnu-as mipsel-none-elf-as)
 REBOF3_PROFILE_FLAGS=(-O2 -G0 -funsigned-char -msoft-float -gcoff)
 REBOF3_ASSEMBLER_FLAGS=(-G0 -EL -mips1)
 REBOF3_MODE_COMPILE="compile"
 REBOF3_MODE_PREPROCESS="preprocess"
-REBOF3_USAGE="Usage: $0 [--profile PROFILE] -c source.c -o output.o [flags...]"
+REBOF3_USAGE="Usage: $0 [--profile PROFILE] [--psyq-version VERSION | --psyq-root PATH] [-Wa,--aspsx-version=VERSION] -c source.c -o output.o [flags...]"
 
-resolve_toolchain_tool() {
-	local local_name="$1"
-	shift
-	if [[ -x "${REBOF3_TOOLCHAIN_BIN}/${local_name}" ]]; then
-		printf '%s\n' "${REBOF3_TOOLCHAIN_BIN}/${local_name}"
+require_value_arg() {
+	local option="$1"
+	local value="${2-}"
+	if [[ -z "${value}" ]]; then
+		echo "${option} requires a value" >&2
+		echo "${REBOF3_USAGE}" >&2
+		exit 1
+	fi
+}
+
+require_project_python() {
+	if [[ -x "${REBOF3_PYTHON_BIN}" ]]; then
 		return 0
 	fi
 
-	local candidate
-	for candidate in "$@"; do
-		if command -v "$candidate" >/dev/null 2>&1; then
-			command -v "$candidate"
-			return 0
-		fi
-	done
+	echo "missing project Python environment: ${REBOF3_PYTHON_BIN}" >&2
+	echo "run 'make venv' from ${REBOF3_ROOT_DIR}" >&2
+	exit 1
+}
 
-	echo "missing toolchain binary: ${local_name} (looked for $*)" >&2
+require_maspsx() {
+	if [[ -f "${REBOF3_MASPSX_SCRIPT}" ]]; then
+		return 0
+	fi
+
+	echo "missing maspsx script: ${REBOF3_MASPSX_SCRIPT}" >&2
+	echo "run 'bin/setup-submodules' or 'bin/setup-open'" >&2
+	exit 1
+}
+
+resolve_toolchain_tool() {
+	local local_name="$1"
+	local candidate="${REBOF3_TOOLCHAIN_BIN}/${local_name}"
+
+	if [[ -x "${candidate}" ]]; then
+		printf '%s\n' "${candidate}"
+		return 0
+	fi
+
+	echo "missing repo-local toolchain binary: ${candidate}" >&2
+	echo "run 'bin/setup-psx-toolchain' or 'bin/setup-open'" >&2
 	exit 1
 }
 
 resolve_c_compiler() {
-	if [[ -n "${BOF3_PSX_GCC:-}" ]]; then
-		if [[ -x "${BOF3_PSX_GCC}" ]]; then
-			printf '%s\n' "${BOF3_PSX_GCC}"
-			return 0
-		fi
-		echo "missing BOF3_PSX_GCC executable: ${BOF3_PSX_GCC}" >&2
-		exit 1
-	fi
-
-	local compiler_root="${BOF3_PSX_GCC_ROOT:-${REBOF3_COMPILER_ROOT}}"
+	local compiler_root="${REBOF3_COMPILER_ROOT}"
 	if [[ -x "${compiler_root}/gcc" ]]; then
 		printf '%s\n' "${compiler_root}/gcc"
 		return 0
 	fi
 
 	echo "missing canonical PSX C compiler: ${compiler_root}/gcc" >&2
-	echo "stage toolchains/gcc-2.7.2-psx or set BOF3_PSX_GCC / BOF3_PSX_GCC_ROOT" >&2
+	echo "run 'bin/setup-psx-toolchain' or 'bin/setup-open'" >&2
 	exit 1
 }
 
 resolve_profile_settings() {
 	case "$1" in
 		"${REBOF3_CAPCOM97_PROFILE}")
-			PSYQ_ROOT="${REBOF3_PSYQ_ROOT}"
-			ASPSX_VERSION="${REBOF3_CAPCOM97_ASPSX_VERSION}"
+			if [[ -z "${PSYQ_ROOT}" ]]; then
+				PSYQ_ROOT="${REBOF3_ROOT_DIR}/toolchains/psyq/${REBOF3_DEFAULT_PSYQ_VERSION}"
+			fi
+			if [[ -z "${ASPSX_VERSION}" ]]; then
+				ASPSX_VERSION="${REBOF3_CAPCOM97_ASPSX_VERSION}"
+			fi
 			;;
 		*)
 			echo "unsupported BOF3 PSX profile: $1" >&2
@@ -74,40 +92,71 @@ resolve_profile_settings() {
 	PSYQ_INCLUDE="${PSYQ_ROOT}/include"
 }
 
+require_project_python
+require_maspsx
+
 GCC="$(resolve_c_compiler)"
 GCC_DIR="$(cd "$(dirname "${GCC}")" && pwd)"
-AS="$(resolve_toolchain_tool "${REBOF3_AS_LOCAL_NAME}" "${REBOF3_AS_CANDIDATES[@]}")"
-PROFILE="${BOF3_PSX_PROFILE:-${REBOF3_DEFAULT_PROFILE}}"
-ASPSX_VERSION="${REBOF3_CAPCOM97_ASPSX_VERSION}"
+AS="$(resolve_toolchain_tool "${REBOF3_AS_LOCAL_NAME}")"
+PROFILE="${REBOF3_DEFAULT_PROFILE}"
+PSYQ_ROOT=""
+ASPSX_VERSION=""
 MODE="${REBOF3_MODE_COMPILE}"
 SOURCE=""
 OUTPUT=""
 EXTRA_INCLUDE_FLAGS=()
 EXTRA_FLAGS=()
 PREPROCESS_FLAGS=()
-resolve_profile_settings "${PROFILE}"
 
 while [[ $# -gt 0 ]]; do
 	case $1 in
 		--profile)
+			require_value_arg "$1" "${2-}"
 			PROFILE="$2"
 			shift 2
-			resolve_profile_settings "${PROFILE}"
 			;;
 		--profile=*)
 			PROFILE="${1#--profile=}"
 			shift
-			resolve_profile_settings "${PROFILE}"
+			;;
+		--psyq-root)
+			require_value_arg "$1" "${2-}"
+			PSYQ_ROOT="$2"
+			shift 2
+			;;
+		--psyq-root=*)
+			PSYQ_ROOT="${1#--psyq-root=}"
+			shift
+			;;
+		--psyq-version)
+			require_value_arg "$1" "${2-}"
+			PSYQ_ROOT="${REBOF3_ROOT_DIR}/toolchains/psyq/$2"
+			shift 2
+			;;
+		--psyq-version=*)
+			PSYQ_ROOT="${REBOF3_ROOT_DIR}/toolchains/psyq/${1#--psyq-version=}"
+			shift
 			;;
 		-Wa,--aspsx-version=*)
 			ASPSX_VERSION="${1#-Wa,--aspsx-version=}"
 			shift
 			;;
+		--aspsx-version)
+			require_value_arg "$1" "${2-}"
+			ASPSX_VERSION="$2"
+			shift 2
+			;;
+		--aspsx-version=*)
+			ASPSX_VERSION="${1#--aspsx-version=}"
+			shift
+			;;
 		-o)
+			require_value_arg "$1" "${2-}"
 			OUTPUT="$2"
 			shift 2
 			;;
 		-c)
+			require_value_arg "$1" "${2-}"
 			SOURCE="$2"
 			shift 2
 			;;
@@ -127,6 +176,8 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 
+resolve_profile_settings "${PROFILE}"
+
 if [[ -z "${SOURCE}" ]] || [[ -z "${OUTPUT}" ]]; then
 	echo "${REBOF3_USAGE}" >&2
 	exit 1
@@ -137,7 +188,7 @@ if [[ ! -d "${PSYQ_INCLUDE}" ]]; then
 	exit 1
 fi
 
-export PATH="${GCC_DIR}:${REBOF3_TOOLCHAIN_BIN}${PATH:+:${PATH}}"
+export PATH="${GCC_DIR}:${REBOF3_TOOLCHAIN_BIN}"
 export GCC_EXEC_PREFIX="${GCC_DIR}/"
 export COMPILER_PATH="${GCC_DIR}"
 
@@ -151,7 +202,7 @@ fi
 
 ASM_FILE="${OUTPUT}.s"
 
-	"${GCC}" "${EXTRA_INCLUDE_FLAGS[@]}" "${REBOF3_PROFILE_FLAGS[@]}" "${EXTRA_FLAGS[@]}" -S -o "${ASM_FILE}" "${SOURCE}"
+"${GCC}" "${EXTRA_INCLUDE_FLAGS[@]}" "${REBOF3_PROFILE_FLAGS[@]}" "${EXTRA_FLAGS[@]}" -S -o "${ASM_FILE}" "${SOURCE}"
 
-	"${REBOF3_PYTHON_BIN}" "${REBOF3_MASPSX_SCRIPT}" --aspsx-version="${ASPSX_VERSION}" "${ASM_FILE}" | \
+"${REBOF3_PYTHON_BIN}" "${REBOF3_MASPSX_SCRIPT}" --aspsx-version="${ASPSX_VERSION}" "${ASM_FILE}" | \
 	"${AS}" "${REBOF3_ASSEMBLER_FLAGS[@]}" -o "${OUTPUT}" -

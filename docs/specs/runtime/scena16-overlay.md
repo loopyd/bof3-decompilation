@@ -4,7 +4,7 @@ This document records the first scenario overlay recovered far enough to guide P
 
 Target archive:
 
-- `processed/emi_raw/BIN/SCENARIO/SCENA16`
+- `emi_raw/BIN/SCENARIO/SCENA16`
 
 Relevant entry:
 

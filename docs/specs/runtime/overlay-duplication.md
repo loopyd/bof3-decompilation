@@ -82,7 +82,7 @@ For this repo, prefer this order:
 
 Local generated artifacts already show exact duplicate pressure:
 
-- `processed/inventory/inventory.sqlite`
+- `processed/inventory/`
 
 Representative local patterns already visible:
 

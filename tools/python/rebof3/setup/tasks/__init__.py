@@ -79,7 +79,7 @@ SETUP_TASK_SPECS: tuple[SetupTaskSpec, ...] = (
         enabled=always_enabled,
     ),
     SetupTaskSpec(
-        task=SetupTask("psyq", "Stage the local PsyQ 4.7 SDK"),
+        task=SetupTask("psyq", "Stage the configured PsyQ SDK"),
         runner=psyq.run,
         enabled=when_psyq_enabled,
     ),

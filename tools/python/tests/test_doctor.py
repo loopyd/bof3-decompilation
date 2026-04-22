@@ -16,8 +16,10 @@ def seed_open_layout(layout) -> None:
     (layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-gcc").write_text(
         "", encoding="utf-8"
     )
+    (layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-gcc").chmod(0o755)
     layout.gcc272_psx_root.mkdir(parents=True, exist_ok=True)
     (layout.gcc272_psx_root / "gcc").write_text("", encoding="utf-8")
+    (layout.gcc272_psx_root / "gcc").chmod(0o755)
     (layout.aspsx_psyq_root / "psyq4.0").mkdir(parents=True, exist_ok=True)
     (layout.aspsx_psyq_root / "psyq4.0" / "ASPSX.EXE").write_text("", encoding="utf-8")
 
@@ -36,8 +38,10 @@ def seed_layout(layout) -> None:
     (layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-gcc").write_text(
         "", encoding="utf-8"
     )
+    (layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-gcc").chmod(0o755)
     layout.gcc272_psx_root.mkdir(parents=True, exist_ok=True)
     (layout.gcc272_psx_root / "gcc").write_text("", encoding="utf-8")
+    (layout.gcc272_psx_root / "gcc").chmod(0o755)
     (layout.psyq_root / "include").mkdir(parents=True, exist_ok=True)
     (layout.psyq_root / "include" / "libgpu.h").write_text("", encoding="utf-8")
     (layout.aspsx_psyq_root / "psyq4.0").mkdir(parents=True, exist_ok=True)
@@ -53,7 +57,7 @@ def test_doctor_passes_for_seeded_layout(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr("rebof3.doctor.shutil.which", lambda name: f"/usr/bin/{name}")
     monkeypatch.setattr(
         "rebof3.doctor.find_psyq_source",
-        lambda: type(
+        lambda **_: type(
             "PsyqSource", (), {"kind": "tree", "path": tmp_path / "psyq-source"}
         )(),
     )
@@ -72,7 +76,7 @@ def test_doctor_open_profile_passes_for_seeded_open_layout(
     seed_open_layout(layout)
 
     monkeypatch.setattr("rebof3.doctor.shutil.which", lambda name: f"/usr/bin/{name}")
-    monkeypatch.setattr("rebof3.doctor.find_psyq_source", lambda: None)
+    monkeypatch.setattr("rebof3.doctor.find_psyq_source", lambda **_: None)
 
     checks = run_doctor(
         layout=layout,
@@ -98,7 +102,7 @@ def test_doctor_fails_when_required_prerequisites_are_missing(
         return f"/usr/bin/{name}"
 
     monkeypatch.setattr("rebof3.doctor.shutil.which", fake_which)
-    monkeypatch.setattr("rebof3.doctor.find_psyq_source", lambda: None)
+    monkeypatch.setattr("rebof3.doctor.find_psyq_source", lambda **_: None)
 
     checks = run_doctor(layout=layout)
 
@@ -116,7 +120,7 @@ def test_doctor_flags_empty_submodule_directories_as_missing(
         (layout.third_party_dir / tool_name).mkdir(parents=True, exist_ok=True)
 
     monkeypatch.setattr("rebof3.doctor.shutil.which", lambda name: f"/usr/bin/{name}")
-    monkeypatch.setattr("rebof3.doctor.find_psyq_source", lambda: None)
+    monkeypatch.setattr("rebof3.doctor.find_psyq_source", lambda **_: None)
 
     checks = run_doctor(layout=layout)
 

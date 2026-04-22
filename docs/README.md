@@ -3,7 +3,7 @@
 This tree holds the human documentation for the repo.
 
 This repo is still settling after the tooling/layout migration. The maintained
-surfaces are `bin/` plus `tools/python/`; `scripts/legacy/` is compatibility-only.
+surfaces are `bin/` plus `tools/python/`.
 
 Start here:
 
@@ -30,7 +30,5 @@ current paths under `out/`.
   - maintained command surface
 - `tools/python/`
   - repo-owned maintained CLI and setup implementation
-- `scripts/legacy/`
-  - compatibility-only legacy automation
 - `third_party/`
   - vendored external tools

@@ -487,4 +487,4 @@ Each callback can:
 - `docs/specs/runtime/emi-loader.md` - EMI loader details
 - `docs/specs/runtime/first-overlay.md` - FIRST.EMI structure
 - `docs/specs/runtime/game-overlay.md` - GAME.EMI controller
-- `processed/inventory/inventory.sqlite` - canonical slot-to-file mapping
+- `processed/inventory/` - canonical slot-to-file mapping

@@ -31,23 +31,6 @@ def test_build_wrapper_uses_repo_root_for_presets(tmp_path: Path) -> None:
     assert '"default"' in result.stdout
 
 
-def test_bof3_wrapper_help_keeps_compatibility_entrypoint_available(
-    tmp_path: Path,
-) -> None:
-    result = run_wrapper("bof3", "--help", cwd=tmp_path)
-
-    assert result.returncode == 0, result.stderr
-    assert "usage: bof3" in result.stdout
-    assert "Compatibility entrypoint for the legacy aggregate CLI" in result.stdout
-
-
-def test_inventory_wrapper_help_still_exposes_legacy_alias(tmp_path: Path) -> None:
-    result = run_wrapper("inventory", "--help", cwd=tmp_path)
-
-    assert result.returncode == 0, result.stderr
-    assert "usage: inventory" in result.stdout
-
-
 def test_disk_extract_wrapper_help_is_available(tmp_path: Path) -> None:
     result = run_wrapper("disk-extract", "--help", cwd=tmp_path)
 
@@ -132,6 +115,13 @@ def test_ghidra_install_extensions_wrapper_help_is_available(tmp_path: Path) -> 
 
     assert result.returncode == 0, result.stderr
     assert "usage: ghidra install-extensions" in result.stdout
+
+
+def test_download_psyq_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("download-psyq", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: download-psyq" in result.stdout
 
 
 def test_match_init_wrapper_help_is_available(tmp_path: Path) -> None:

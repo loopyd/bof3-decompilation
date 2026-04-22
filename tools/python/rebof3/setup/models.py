@@ -14,6 +14,7 @@ class SetupOptions:
     include_psyq: bool = True
     include_extract: bool = True
     include_ghidra_plan: bool = True
+    psyq_version: str | None = None
     psyq_source_root: Path | None = None
     psyq_archive: Path | None = None
     disc_archive: Path | None = None

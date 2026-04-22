@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import shutil
 from dataclasses import dataclass
 
@@ -57,6 +58,28 @@ def _file_check(path, *, name: str, hint: str, required: bool = True) -> DoctorC
     )
 
 
+def _executable_check(
+    path, *, name: str, hint: str, required: bool = True
+) -> DoctorCheck:
+    if path.exists() and os.access(path, os.X_OK):
+        return DoctorCheck(name=name, status="ok", detail=str(path), required=required)
+    if path.exists():
+        return DoctorCheck(
+            name=name,
+            status="missing",
+            detail=f"not executable: {path}",
+            required=required,
+            hint=hint,
+        )
+    return DoctorCheck(
+        name=name,
+        status="missing",
+        detail=f"missing {path}",
+        required=required,
+        hint=hint,
+    )
+
+
 def run_doctor(
     *,
     layout: RepoLayout | None = None,
@@ -65,7 +88,7 @@ def run_doctor(
 ) -> list[DoctorCheck]:
     repo = layout or repo_layout()
     checks: list[DoctorCheck] = [
-        _command_check("python3"),
+        _command_check("uv"),
         _command_check("cmake"),
         _command_check("ninja"),
         _command_check("cargo"),
@@ -102,14 +125,14 @@ def run_doctor(
                 )
             )
 
-        psyq_source = find_psyq_source()
+        psyq_source = find_psyq_source(version=repo.psyq_version)
         if psyq_source is None:
             checks.append(
                 DoctorCheck(
                     name="inputs/local-psyq-source",
                     status="missing",
-                    detail="no repo-local PsyQ 4.7 source tree or archive found",
-                    hint="set PSYQ_SOURCE / PSYQ_ARCHIVE to a repo-local path under inputs/ or external/private-assets, or use `toolchain psyq import` to download the public Arthus artifact",
+                    detail=f"no repo-local PsyQ {repo.psyq_version} source tree or archive found",
+                    hint="run `bin/download-psyq`, or pass --source-root/--archive to `bin/setup-psyq`",
                 )
             )
         else:
@@ -123,12 +146,12 @@ def run_doctor(
 
     checks.extend(
         [
-            _file_check(
+            _executable_check(
                 repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-gcc",
                 name="toolchains/psn00b",
                 hint="run `make setup-open` or `bin/setup-open`",
             ),
-            _file_check(
+            _executable_check(
                 repo.gcc272_psx_root / "gcc",
                 name="toolchains/gcc-2.7.2-psx",
                 hint="run `make setup-open` or `bin/setup-open`",
@@ -136,7 +159,7 @@ def run_doctor(
             _file_check(
                 repo.aspsx_psyq_root / "psyq4.0" / "ASPSX.EXE",
                 name="toolchains/aspsx",
-                hint="run `make setup-aspsx` or `bin/setup-aspsx`",
+                hint="run `bin/setup-aspsx` or `bin/setup-open`",
             ),
         ]
     )
@@ -146,7 +169,7 @@ def run_doctor(
             _file_check(
                 repo.psyq_root / "include" / "libgpu.h",
                 name="toolchains/psyq",
-                hint="run `make setup-psyq PSYQ_ARCHIVE=inputs/psyq-4.7-converted-full.7z` or `bin/setup-psyq --archive inputs/psyq-4.7-converted-full.7z`",
+                hint="run `bin/setup-psyq --archive inputs/psyq-4.7-converted-full.7z` or `bin/download-psyq`",
             )
         )
 
@@ -156,7 +179,7 @@ def run_doctor(
                 repo.ghidra_manifest_path,
                 name="out/ghidra-bootstrap",
                 required=False,
-                hint="run `make inventory` or `bin/ghidra-bootstrap` after extraction and unpack",
+                hint="run `make ghidra` or `bin/ghidra-bootstrap` after extraction and unpack",
             )
         )
 

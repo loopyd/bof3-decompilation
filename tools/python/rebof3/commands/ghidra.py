@@ -152,27 +152,6 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def add_legacy_plan_parser(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-) -> None:
-    parser = subparsers.add_parser("ghidra")
-    configure_plan_parser(parser)
-
-
-def add_legacy_pipeline_parser(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-) -> None:
-    parser = subparsers.add_parser("ghidra-bootstrap")
-    configure_bootstrap_parser(parser)
-
-
-def add_legacy_ghidra_parser(
-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
-) -> None:
-    parser = subparsers.add_parser("summary")
-    configure_summary_parser(parser)
-
-
 def main(argv: list[str] | None = None) -> int:
     return run_main(build_parser, argv)
 

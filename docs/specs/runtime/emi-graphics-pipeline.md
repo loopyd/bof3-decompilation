@@ -7,7 +7,7 @@ It is the durable description of the graphics-side extraction model currently
 reflected by:
 
 - `scripts/rebof3/assets/emi_archive.py`
-- `processed/inventory/inventory.sqlite`
+- `processed/inventory/`
 - the related runtime specs in `docs/specs/runtime/` and `docs/specs/formats/`
 
 ## Scope
@@ -240,7 +240,7 @@ That is why title outputs split into:
 
 Machine source of truth:
 
-- `processed/inventory/inventory.sqlite`
+- `processed/inventory/`
 
 That metadata is expected to hold:
 

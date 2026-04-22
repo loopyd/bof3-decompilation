@@ -1,15 +1,14 @@
 from __future__ import annotations
 
 import contextlib
-import os
 import shutil
-import subprocess
 import tempfile
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
+from ..paths import DEFAULT_PSYQ_VERSION, normalize_psyq_version
 from .archive import (
     archive_path_looks_valid as archive_file_looks_valid,
     archive_stem,
@@ -19,26 +18,42 @@ from .archive import (
 
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-DEFAULT_DEST = REPO_ROOT / "toolchains" / "psyq" / "4.7"
 
 INCLUDE_FILE_NAMES = ("LIBGPU.H", "libgpu.h")
 LIB_FILE_NAMES = ("LIBGPU.LIB", "libgpu.lib", "libgpu.a")
 TEXT_FILE_SUFFIXES = {".c", ".cc", ".cpp", ".h", ".hpp", ".inc", ".inl", ".s", ".txt"}
-DEFAULT_PRIVATE_ASSETS_ROOT = REPO_ROOT / "external" / "private-assets"
-DEFAULT_PSYQ_ARCHIVE_URL = "https://github.com/arthus/psyq-4.7-converted-full/releases/latest/download/psyq-4.7-converted-full.7z"
+DEFAULT_PSYQ_ARCHIVE_URL = "https://psx.arthus.net/sdk/Psy-Q/psyq-4.7-converted-full.7z"
 
-AUTO_DISCOVERY_CANDIDATES = (
-    REPO_ROOT / "inputs" / "external" / "psyq-4.7-converted-full",
-    REPO_ROOT / "inputs" / "psyq-4.7-converted-full",
-    DEFAULT_PRIVATE_ASSETS_ROOT / "psyq" / "source-tree",
-)
-AUTO_DISCOVERY_ARCHIVES = (
-    DEFAULT_PRIVATE_ASSETS_ROOT / "psyq" / "source-media",
-    REPO_ROOT / "inputs" / "external" / "psyq-4.7-converted-full.7z",
-    REPO_ROOT / "inputs" / "external" / "psyq-4.7-converted-full.zip",
-    REPO_ROOT / "inputs" / "psyq-4.7-converted-full.7z",
-    REPO_ROOT / "inputs" / "psyq-4.7-converted-full.zip",
-)
+
+def psyq_dest(version: str | None = None) -> Path:
+    return REPO_ROOT / "toolchains" / "psyq" / normalize_psyq_version(version)
+
+
+def default_private_assets_root() -> Path:
+    return REPO_ROOT / "external" / "private-assets"
+
+
+def psyq_archive_stem(version: str | None = None) -> str:
+    resolved_version = normalize_psyq_version(version)
+    if resolved_version == DEFAULT_PSYQ_VERSION:
+        return "psyq-4.7-converted-full"
+    return f"psyq-{resolved_version}"
+
+
+def default_psyq_archive_url(version: str | None = None) -> str | None:
+    if normalize_psyq_version(version) == DEFAULT_PSYQ_VERSION:
+        return DEFAULT_PSYQ_ARCHIVE_URL
+    return None
+
+
+def psyq_private_cache_root(
+    private_root: Path | None = None, version: str | None = None
+) -> Path:
+    return (
+        (private_root or default_private_assets_root())
+        / "psyq"
+        / (normalize_psyq_version(version))
+    )
 
 
 def ensure_gitkeep(root: Path) -> None:
@@ -52,21 +67,6 @@ def ensure_gitkeep(root: Path) -> None:
 class PsyqSource:
     kind: str
     path: Path
-
-
-def _resolve_psyq_inputs(
-    source_root: Path | None,
-    archive: Path | None,
-) -> tuple[Path | None, Path | None]:
-    if source_root is None:
-        source_env = os.environ.get("PSYQ_SOURCE")
-        if source_env:
-            source_root = Path(source_env)
-    if archive is None:
-        archive_env = os.environ.get("PSYQ_ARCHIVE")
-        if archive_env:
-            archive = Path(archive_env)
-    return source_root, archive
 
 
 def _dedupe_paths(candidates: list[Path]) -> list[Path]:
@@ -167,17 +167,6 @@ def list_text_files_with_crlf(root: Path) -> list[Path]:
 
 def normalize_text_tree_newlines(root: Path) -> int:
     candidates = list_text_files_with_crlf(root)
-    if not candidates:
-        return 0
-    if shutil.which("dos2unix") is not None:
-        try:
-            subprocess.run(
-                ["dos2unix", "-q", *(str(candidate) for candidate in candidates)],
-                check=True,
-            )
-            return len(candidates)
-        except (OSError, subprocess.CalledProcessError):
-            pass
     return sum(1 for candidate in candidates if normalize_text_file_newlines(candidate))
 
 
@@ -209,21 +198,29 @@ def archive_path_looks_valid(path: Path) -> bool:
     return archive_file_looks_valid(path)
 
 
-def auto_discovery_roots() -> list[Path]:
+def auto_discovery_roots(version: str | None = None) -> list[Path]:
+    stem = psyq_archive_stem(version)
+    cache_root = psyq_private_cache_root(version=version)
     candidates: list[Path] = []
-    env_source = os.environ.get("PSYQ_SOURCE")
-    if env_source:
-        candidates.append(Path(env_source))
-    candidates.extend(AUTO_DISCOVERY_CANDIDATES)
+    candidates.extend(
+        [
+            REPO_ROOT / "inputs" / "external" / stem,
+            REPO_ROOT / "inputs" / stem,
+            cache_root / "source-tree" / stem,
+            cache_root / "source-tree",
+        ]
+    )
     return _filter_repo_local_paths(candidates)
 
 
-def auto_discovery_archives() -> list[Path]:
+def auto_discovery_archives(version: str | None = None) -> list[Path]:
+    stem = psyq_archive_stem(version)
+    cache_root = psyq_private_cache_root(version=version)
     candidates: list[Path] = []
-    env_archive = os.environ.get("PSYQ_ARCHIVE")
-    if env_archive:
-        candidates.append(Path(env_archive))
-    candidates.extend(AUTO_DISCOVERY_ARCHIVES)
+    candidates.append(cache_root / "source-media")
+    for parent in (REPO_ROOT / "inputs" / "external", REPO_ROOT / "inputs"):
+        for suffix in (".7z", ".zip", ".tar.gz", ".tgz"):
+            candidates.append(parent / f"{stem}{suffix}")
     return _filter_repo_local_paths(candidates)
 
 
@@ -239,26 +236,34 @@ def _iter_archive_matches(candidate: Path) -> list[Path]:
     return matches
 
 
-def discover_source_root(explicit_source: Path | None = None) -> Path | None:
+def discover_source_root(
+    explicit_source: Path | None = None,
+    *,
+    version: str | None = None,
+) -> Path | None:
     candidates: list[Path] = []
     if explicit_source is not None:
         candidates.append(
             _validate_repo_local_input(explicit_source, label="PsyQ source root")
         )
-    candidates.extend(auto_discovery_roots())
+    candidates.extend(auto_discovery_roots(version))
     for candidate in _dedupe_paths(candidates):
         if source_root_looks_valid(candidate):
             return candidate
     return None
 
 
-def discover_source_archive(explicit_archive: Path | None = None) -> Path | None:
+def discover_source_archive(
+    explicit_archive: Path | None = None,
+    *,
+    version: str | None = None,
+) -> Path | None:
     candidates: list[Path] = []
     if explicit_archive is not None:
         candidates.append(
             _validate_repo_local_input(explicit_archive, label="PsyQ archive")
         )
-    candidates.extend(auto_discovery_archives())
+    candidates.extend(auto_discovery_archives(version))
     for candidate in _dedupe_paths(candidates):
         matches = _iter_archive_matches(candidate)
         if matches:
@@ -269,11 +274,13 @@ def discover_source_archive(explicit_archive: Path | None = None) -> Path | None
 def discover_source_input(
     explicit_source: Path | None = None,
     explicit_archive: Path | None = None,
+    *,
+    version: str | None = None,
 ) -> PsyqSource | None:
-    source_root = discover_source_root(explicit_source)
+    source_root = discover_source_root(explicit_source, version=version)
     if source_root is not None:
         return PsyqSource(kind="tree", path=source_root)
-    archive_path = discover_source_archive(explicit_archive)
+    archive_path = discover_source_archive(explicit_archive, version=version)
     if archive_path is not None:
         return PsyqSource(kind="archive", path=archive_path)
     return None
@@ -284,7 +291,7 @@ def materialized_source_root(source_input: PsyqSource):
     if source_input.kind == "tree":
         yield source_input.path
         return
-    with tempfile.TemporaryDirectory(prefix="psyq47-") as tmp_dir:
+    with tempfile.TemporaryDirectory(prefix="psyq-") as tmp_dir:
         extraction_root = Path(tmp_dir) / "source"
         extraction_root.mkdir(parents=True, exist_ok=True)
         extract_archive(source_input.path, extraction_root)
@@ -295,26 +302,28 @@ def find_psyq_source(
     *,
     source_root: Path | None = None,
     archive: Path | None = None,
+    version: str | None = None,
 ) -> PsyqSource | None:
-    source_root, archive = _resolve_psyq_inputs(source_root, archive)
-    return discover_source_input(source_root, archive)
+    psyq_version = normalize_psyq_version(version)
+    return discover_source_input(source_root, archive, version=psyq_version)
 
 
 def stage_psyq_sdk(
     *,
-    dest: Path = DEFAULT_DEST,
+    dest: Path | None = None,
     source_root: Path | None = None,
     archive: Path | None = None,
+    version: str | None = None,
     force: bool = False,
 ) -> Path:
-    source_root, archive = _resolve_psyq_inputs(source_root, archive)
-    source_input = discover_source_input(source_root, archive)
+    psyq_version = normalize_psyq_version(version)
+    source_input = discover_source_input(source_root, archive, version=psyq_version)
     if source_input is None:
         raise FileNotFoundError(
-            "missing PsyQ 4.7 source tree or archive under inputs/ or external/private-assets; pass --source-root/--archive or set PSYQ_SOURCE/PSYQ_ARCHIVE to a repo-local path"
+            f"missing PsyQ {psyq_version} source tree or archive under inputs/ or external/private-assets; pass --source-root or --archive with a repo-local path"
         )
 
-    dest_root = dest.resolve()
+    dest_root = (dest or psyq_dest(psyq_version)).resolve()
     if original_sdk_is_ready(dest_root) and not force:
         return dest_root
 
@@ -334,7 +343,9 @@ def stage_psyq_sdk(
         ensure_gitkeep(dest_root)
 
     if not original_sdk_is_ready(dest_root):
-        raise RuntimeError(f"staged PsyQ 4.7 tree is incomplete under {dest_root}")
+        raise RuntimeError(
+            f"staged PsyQ {psyq_version} tree is incomplete under {dest_root}"
+        )
 
     return dest_root
 
@@ -350,17 +361,23 @@ def download_archive(url: str, dest: Path, *, force: bool) -> Path:
 
 def import_psyq_sdk(
     *,
-    dest: Path = DEFAULT_DEST,
+    dest: Path | None = None,
     archive: Path | None = None,
     archive_url: str | None = None,
-    private_assets_root: Path = DEFAULT_PRIVATE_ASSETS_ROOT,
+    private_assets_root: Path | None = None,
+    version: str | None = None,
     force: bool = False,
 ) -> Path:
-    archive_store = private_assets_root / "psyq" / "source-media"
+    psyq_version = normalize_psyq_version(version)
+    resolved_private_assets_root = private_assets_root or default_private_assets_root()
+    cache_root = psyq_private_cache_root(resolved_private_assets_root, psyq_version)
+    archive_store = cache_root / "source-media"
     if archive is not None:
-        resolved_archive = discover_source_archive(archive)
+        resolved_archive = discover_source_archive(archive, version=psyq_version)
         if resolved_archive is None:
-            raise FileNotFoundError(f"missing PsyQ 4.7 source archive: {archive}")
+            raise FileNotFoundError(
+                f"missing PsyQ {psyq_version} source archive: {archive}"
+            )
         source_archive = sync_archive_into_store(
             resolved_archive,
             archive_store / resolved_archive.name,
@@ -376,26 +393,42 @@ def import_psyq_sdk(
             force=force,
         )
     else:
-        resolved_archive = discover_source_archive()
-        if resolved_archive is None:
-            raise FileNotFoundError(
-                "missing PsyQ 4.7 source archive under inputs/ or external/private-assets; pass --archive, provide PSYQ_ARCHIVE, or let `toolchain psyq import` download the public Arthus artifact"
+        resolved_archive = discover_source_archive(version=psyq_version)
+        if resolved_archive is not None:
+            source_archive = sync_archive_into_store(
+                resolved_archive,
+                archive_store / resolved_archive.name,
+                force=force,
             )
-        source_archive = sync_archive_into_store(
-            resolved_archive,
-            archive_store / resolved_archive.name,
-            force=force,
-        )
+        else:
+            archive_url = archive_url or default_psyq_archive_url(psyq_version)
+            if archive_url is None:
+                raise FileNotFoundError(
+                    f"missing PsyQ {psyq_version} source archive under inputs/ or external/private-assets; pass --archive or --archive-url"
+                )
+            archive_name = Path(urllib.parse.urlparse(archive_url).path).name
+            if not archive_name:
+                raise ValueError(
+                    f"could not derive archive name from URL: {archive_url}"
+                )
+            source_archive = download_archive(
+                archive_url,
+                archive_store / archive_name,
+                force=force,
+            )
 
-    source_root = (
-        private_assets_root / "psyq" / "source-tree" / archive_stem(source_archive)
-    )
+    source_root = cache_root / "source-tree" / archive_stem(source_archive)
     if force and source_root.exists():
         shutil.rmtree(source_root)
     if not source_root.exists() or not any(source_root.iterdir()):
         extract_archive(source_archive, source_root)
     if not source_root_looks_valid(source_root):
         raise RuntimeError(
-            f"extracted PsyQ 4.7 source tree is incomplete under {source_root}"
+            f"extracted PsyQ {psyq_version} source tree is incomplete under {source_root}"
         )
-    return stage_psyq_sdk(dest=dest, source_root=source_root, force=force)
+    return stage_psyq_sdk(
+        dest=dest,
+        source_root=source_root,
+        version=psyq_version,
+        force=force,
+    )

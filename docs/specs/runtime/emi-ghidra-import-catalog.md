@@ -5,7 +5,7 @@ archives and the archive-side inputs that still matter for full reverse
 engineering.
 
 It is broader than the conservative documented subset in
-[module-map.md](/home/rcorreia/projects/rebof3/docs/specs/runtime/module-map.md).
+[module-map.md](runtime/module-map.md).
 The goal here is import triage: which archives should be considered code-bearing
 or overlay-like first when building or refreshing the Ghidra project.
 

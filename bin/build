@@ -3,10 +3,6 @@ set -eu
 
 REBOF3_SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
 REBOF3_ROOT_DIR="$(CDPATH= cd -- "${REBOF3_SCRIPT_DIR}/.." && pwd)"
-REBOF3_CMAKE_BIN="${CMAKE_BIN:-cmake}"
-REBOF3_CMAKE_PRESET="${CMAKE_PRESET:-default}"
-REBOF3_CMAKE_PRESET_FLAG="--preset"
-REBOF3_CMAKE_BUILD_FLAG="--build"
 
 cd -- "${REBOF3_ROOT_DIR}"
-exec "${REBOF3_CMAKE_BIN}" "${REBOF3_CMAKE_BUILD_FLAG}" "${REBOF3_CMAKE_PRESET_FLAG}" "${REBOF3_CMAKE_PRESET}" "$@"
+exec cmake --build --preset default "$@"

@@ -28,7 +28,7 @@ boot path starting at `SLUS_004.22`.
 
 Archive:
 
-- `processed/emi_raw/BIN/ETC/FIRST`
+- `emi_raw/BIN/ETC/FIRST`
 
 Manifest summary:
 
@@ -71,7 +71,7 @@ Current local confirmation:
 
 Archive:
 
-- `processed/emi_raw/BIN/ETC/DEMO`
+- `emi_raw/BIN/ETC/DEMO`
 
 Manifest summary:
 

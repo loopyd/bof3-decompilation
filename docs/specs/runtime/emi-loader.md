@@ -46,7 +46,7 @@ The slot table has now been mapped against disc layout:
 
 - `DAT_80182444` is a direct `slot id -> file start LBA` table.
 - The LBA values match the regenerated disc LBA report derived from `build/Breath of Fire III (v1.1).xml`.
-- `processed/inventory/inventory.sqlite` now holds the canonical slot-to-LBA mapping.
+- `processed/inventory/` now holds the canonical slot-to-LBA mapping.
 - most slot entries resolve to EMI archives, but the tail of the table also covers direct `.STR` media and boot files such as `CAPCOM30.STR`, `LOGO.EXE`, `SYSTEM.CNF`, and `SLUS_004.22`.
 
 Current unproven behavior:
@@ -462,7 +462,7 @@ At least one confirmed code-bearing type-`0` payload begins with an overlay-loca
 
 Confirmed local example:
 
-- archive: `processed/emi_raw/BIN/BATTLE/BATTLE`
+- archive: `emi_raw/BIN/BATTLE/BATTLE`
 - entry: `15.bin`
 - load address: `0x80096800`
 - TOC `first4`: `17`
@@ -490,7 +490,7 @@ Current interpretation:
 
 Generated local evidence now lives in:
 
-- `processed/inventory/inventory.sqlite` (`overlay_entry_tables` plus related views)
+- `processed/inventory/` (`overlay_entry_tables` plus related views)
 
 Current local scan results:
 
@@ -513,12 +513,12 @@ Confirmed sequence:
 3. the caller polls `0x80162d00`
 4. once ready, `0x8014ec94` executes `jal 0x801d0c04`
 
-`processed/emi_raw/BIN/ETC/GAME/emi.json` shows:
+`emi_raw/BIN/ETC/GAME/emi.json` shows:
 
 - entry `0` -> `0x80195800`, size `229720`
 - entry `1` -> `0x801d0c00`, size `4404`
 
-`processed/emi_raw/BIN/ETC/GAME/1.bin` begins with a non-code word `0x20` at `0x801d0c00`, and real code begins at `0x801d0c04`.
+`emi_raw/BIN/ETC/GAME/1.bin` begins with a non-code word `0x20` at `0x801d0c00`, and real code begins at `0x801d0c04`.
 
 Current interpretation:
 
@@ -679,7 +679,7 @@ Confirmed examples:
 
 The mapping was confirmed by regenerating the disc-LBA inventory from
 `build/Breath of Fire III (v1.1).xml`, persisting the canonical rows into
-`processed/inventory/inventory.sqlite`, and then comparing those LBAs against
+`processed/inventory/`, and then comparing those LBAs against
 the table values in `SLUS_004.22`.
 
 Current interpretation:

@@ -93,7 +93,7 @@ Notes:
 - handlers also exist in `SLUS_004.22` for types `4`, `5`, and `9`, but those meanings are not yet proven
 - current local EMI manifests contain many type `6`, `7`, `8`, and `10`
   payloads, but no concrete shipped type-`9` sample is currently confirmed
-- current local counts across `processed/emi_raw/` are:
+- current local counts across `emi_raw/` are:
   - type `6`: `1020`
   - type `7`: `1020`
   - type `8`: `904`

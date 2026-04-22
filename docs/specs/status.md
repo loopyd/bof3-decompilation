@@ -40,7 +40,7 @@ Use shipped archive + slot naming for lifted code:
 
 ## Current Reports
 
-- `processed/inventory/inventory.sqlite`
+- `processed/inventory/`
 - `tmp/matching/_reports/lifted_match_capcom97_bof3.json`
 
 ## Next Targets

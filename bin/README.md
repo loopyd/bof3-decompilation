@@ -2,7 +2,7 @@
 
 This directory is the maintained primary human-facing command surface.
 
-Use `make *` only as convenience aliases for the common wrappers here.
+Use `make` only for setup, test, format, build, and high-level pipelines.
 Most wrappers dispatch into the maintained Python implementation under
 `tools/python/`.
 
@@ -11,7 +11,7 @@ Most wrappers dispatch into the maintained Python implementation under
 - `setup-open`, `setup-open-plan`, `setup-plan`, `setup`
 - `setup-submodules`, `setup-private-assets`
 - `setup-aspsx`, `setup-native-tools`, `setup-psx-toolchain`, `setup-match-tools`
-- `setup-psyq`
+- `download-psyq`, `setup-psyq`
 - `doctor-open`, `doctor`
 
 ## Disk / EMI
@@ -55,10 +55,8 @@ Raw Ghidra export reshaping currently still flows through
 - `configure`, `build`
 - `maspsx-cc` is the canonical maspsx wrapper used by CMake
 
-## Compatibility-Only
+## Internal
 
-- `bof3`
-- `inventory`
 - `_python_entry` is an internal wrapper helper, not a user command
 
 `external/private-assets/` is optional. It is a private download and cache

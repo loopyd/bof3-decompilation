@@ -5,7 +5,7 @@ This document records the EXE-side title bootstrap that runs after
 
 Target archive:
 
-- `processed/emi_raw/BIN/ETC/FIRST`
+- `emi_raw/BIN/ETC/FIRST`
 
 ## Proven `SLUS` Handoff
 

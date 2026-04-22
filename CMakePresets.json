@@ -8,20 +8,16 @@
   "configurePresets": [
     {
       "name": "default",
-      "displayName": "default",
-      "inherits": "bof3-psyq40"
-    },
-    {
-      "name": "bof3-psyq40",
-      "displayName": "bof3 capcom97 PsyQ 4.0 + maspsx 2.56",
+      "displayName": "BOF3 PSX",
       "generator": "Ninja",
       "toolchainFile": "${sourceDir}/cmake/toolchains/psyq.cmake",
-      "binaryDir": "${sourceDir}/build/bof3-psyq40",
+      "binaryDir": "${sourceDir}/build/default",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "BOF3_TARGET_PSX": "ON",
-        "BOF3_PSX_PROFILE": "capcom97-bof3"
+        "BOF3_PSX_PROFILE": "capcom97-bof3",
+        "BOF3_PSYQ_VERSION": "4.7"
       }
     }
   ],
@@ -29,10 +25,6 @@
     {
       "name": "default",
       "configurePreset": "default"
-    },
-    {
-      "name": "bof3-psyq40",
-      "configurePreset": "bof3-psyq40"
     }
   ]
 }

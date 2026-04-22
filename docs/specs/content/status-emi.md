@@ -5,7 +5,7 @@ reference point for menu-mode reverse engineering.
 
 Archive:
 
-- `processed/emi_raw/BIN/ETC/STATUS`
+- `emi_raw/BIN/ETC/STATUS`
 
 ## Local Manifest
 

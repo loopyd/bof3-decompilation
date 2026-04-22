@@ -4,8 +4,6 @@ Use these names as canonical during the migration stabilization pass:
 
 - `bin/`
   - maintained human-facing command surface
-- `scripts/legacy/`
-  - compatibility-only legacy wrappers and workflows
 - `bof3/`
   - recovered game code
 - `tools/`
@@ -15,7 +13,7 @@ Use these names as canonical during the migration stabilization pass:
 - `inputs/`
   - user-owned local runtime inputs, including the active disc set under `inputs/disc/`
 - `toolchains/`
-  - downloaded or staged SDKs and compilers, including `toolchains/psyq/4.7/`
+  - downloaded or staged SDKs and compilers, including `toolchains/psyq/<version>/`
 - `external/private-assets/`
   - optional private download, processing, and cache workspace only
 - `build/`
@@ -28,5 +26,5 @@ Use these names as canonical during the migration stabilization pass:
 
 Notes:
 
-- Prefer `bin/*` commands over direct calls into legacy trees.
-- `tmp/` and `processed/` are legacy/generated compatibility paths where they still exist; new docs should point at `out/`.
+- Prefer `bin/*` commands for all maintained workflows.
+- Use `out/` for generated artifacts in current workflows.

@@ -154,7 +154,7 @@ Resolved from SLUS symbol analysis:
 
 Scope/provenance:
 - historical analyzed undefined-metadata worklist export from an earlier inventory workflow
-- canonical metadata inventory store: `processed/inventory/inventory.sqlite`
+- canonical metadata inventory store: `processed/inventory/`
 - deterministic undefined rows are metadata rows whose `type_spec` begins with `undefined`, optionally filtered by `kind` and `program`
 - program: `/boot/SLUS_004.22`
 - address coverage: `0x801695ac`..`0x801752f0`
@@ -241,7 +241,7 @@ Bank state table (per-bank, indexed by `bank_id * 12`):
 
 ## DEMO.EMI Audio Assets
 
-Title screen music assets from `processed/emi_raw/BIN/ETC/DEMO/emi.json`:
+Title screen music assets from `emi_raw/BIN/ETC/DEMO/emi.json`:
 
 | Entry | Type | Name | Size | Bank (`ram_ptr`) |
 | ---: | --- | --- | --- | --- |

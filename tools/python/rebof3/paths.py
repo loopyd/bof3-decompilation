@@ -4,6 +4,19 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
+DEFAULT_PSYQ_VERSION = "4.7"
+
+
+def normalize_psyq_version(version: str | None = None) -> str:
+    raw_version = version or DEFAULT_PSYQ_VERSION
+    normalized = raw_version.strip()
+    if normalized.lower().startswith("psyq"):
+        normalized = normalized[4:]
+    if not normalized:
+        raise ValueError("PsyQ version must not be empty")
+    return normalized
+
+
 @dataclass(frozen=True)
 class RepoLayout:
     root: Path
@@ -36,6 +49,7 @@ class RepoLayout:
     psn00b_toolchain_root: Path
     psn00b_sdk_root: Path
     gcc272_psx_root: Path
+    psyq_version: str
     psyq_root: Path
     inventory_path: Path
     groups_path: Path
@@ -69,8 +83,11 @@ class RepoLayout:
     aspsx_psyq_compat_root: Path
 
 
-def repo_layout(root: Path | None = None) -> RepoLayout:
+def repo_layout(
+    root: Path | None = None, *, psyq_version: str | None = None
+) -> RepoLayout:
     resolved_root = (root or Path(__file__).resolve().parents[3]).resolve()
+    resolved_psyq_version = normalize_psyq_version(psyq_version)
     build_dir = resolved_root / "build"
     out_dir = resolved_root / "out"
     toolchains_dir = resolved_root / "toolchains"
@@ -112,7 +129,8 @@ def repo_layout(root: Path | None = None) -> RepoLayout:
         psn00b_toolchain_root=toolchains_dir / "psn00b_toolchain",
         psn00b_sdk_root=toolchains_dir / "psn00bsdk",
         gcc272_psx_root=toolchains_dir / "gcc-2.7.2-psx",
-        psyq_root=toolchains_dir / "psyq" / "4.7",
+        psyq_version=resolved_psyq_version,
+        psyq_root=toolchains_dir / "psyq" / resolved_psyq_version,
         inventory_path=ghidra_bootstrap_dir / "inventory.json",
         groups_path=ghidra_bootstrap_dir / "groups.json",
         ghidra_manifest_path=ghidra_bootstrap_dir / "ghidra_import_manifest.json",
