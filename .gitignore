@@ -20,6 +20,7 @@ toolchains/gcc-2.7.2-psx/*
 !toolchains/gcc-2.7.2-psx/.gitkeep
 toolchains/psn00b_toolchain/*
 !toolchains/psn00b_toolchain/.gitkeep
+!toolchains/psn00b_toolchain/bin/as
 toolchains/psn00bsdk/*
 !toolchains/psn00bsdk/.gitkeep
 toolchains/aspsx-psyq-binaries/*

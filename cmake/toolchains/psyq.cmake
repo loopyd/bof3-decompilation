@@ -88,7 +88,7 @@ bof3_find_program(MIPSEL_NM
     ERROR_MESSAGE "missing repo-local PSX nm at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-nm; run 'bin/setup-psx-toolchain'")
 
 set(CMAKE_C_COMPILER "${MASPSX_CC}")
-set(CMAKE_ASM_COMPILER "${REBOF3_ROOT_DIR}/bin/mipsel-none-elf-as-wrapper")
+set(CMAKE_ASM_COMPILER "${MASPSX_CC}")
 set(CMAKE_LINKER ${MIPSEL_LD})
 set(CMAKE_AR ${MIPSEL_AR})
 set(CMAKE_RANLIB ${MIPSEL_RANLIB})
@@ -98,8 +98,8 @@ set(BOF3_TOOLCHAIN_NM ${MIPSEL_NM}
     CACHE FILEPATH "PSX nm used for symbol maps and diagnostics")
 
 set(CMAKE_C_FLAGS_INIT "--profile=${BOF3_PSX_PROFILE} --psyq-root=${BOF3_ACTIVE_PSYQ_ROOT} -Wa,--aspsx-version=${BOF3_MASPSX_ASPSX_VERSION}")
-set(CMAKE_ASM_FLAGS_INIT "-EL -mabi=32 -msoft-float")
-set(CMAKE_EXE_LINKER_FLAGS_INIT "-EL -nostdlib -static -L${BOF3_ACTIVE_PSYQ_ROOT}/lib -melf32elmip")
+set(CMAKE_ASM_FLAGS_INIT "-EL")
+set(CMAKE_EXE_LINKER_FLAGS_INIT "-EL -nostdlib -static -L${BOF3_ACTIVE_PSYQ_ROOT}/lib")
 set(CMAKE_C_LINK_EXECUTABLE
     "${MIPSEL_GCC} <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
 set(CMAKE_ASM_LINK_EXECUTABLE

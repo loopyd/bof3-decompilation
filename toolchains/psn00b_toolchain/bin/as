@@ -1,6 +1,7 @@
 #!/bin/sh
 # Wrapper for mipsel-none-elf-as that strips -c flag (ambiguous in GNU binutils 2.40+)
 set -eu
+DIR="$(cd "$(dirname "$0")" && pwd)"
 ARGS=()
 for arg in "$@"; do
     if [ "$arg" = "-c" ]; then
@@ -8,4 +9,4 @@ for arg in "$@"; do
     fi
     ARGS+=("$arg")
 done
-exec /home/rcorreia/projects/rebof3-mono/rebof3-simple/toolchains/psn00b_toolchain/bin/mipsel-none-elf-as "${ARGS[@]}"
+exec "${DIR}/mipsel-none-elf-as" "${ARGS[@]}"

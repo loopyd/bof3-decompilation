@@ -200,6 +200,13 @@ if [[ "${MODE}" == "${REBOF3_MODE_PREPROCESS}" ]]; then
 	exit 0
 fi
 
+case "${SOURCE}" in
+	*.s|*.S)
+		"${AS}" "${REBOF3_ASSEMBLER_FLAGS[@]}" -o "${OUTPUT}" "${SOURCE}"
+		exit 0
+		;;
+esac
+
 ASM_FILE="${OUTPUT}.s"
 
 "${GCC}" "${EXTRA_INCLUDE_FLAGS[@]}" "${REBOF3_PROFILE_FLAGS[@]}" "${EXTRA_FLAGS[@]}" -S -o "${ASM_FILE}" "${SOURCE}"
