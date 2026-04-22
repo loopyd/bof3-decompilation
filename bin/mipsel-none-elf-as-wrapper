@@ -1,0 +1,11 @@
+#!/bin/sh
+# Wrapper for mipsel-none-elf-as that strips -c flag (ambiguous in GNU binutils 2.40+)
+set -eu
+ARGS=()
+for arg in "$@"; do
+    if [ "$arg" = "-c" ]; then
+        continue
+    fi
+    ARGS+=("$arg")
+done
+exec /home/rcorreia/projects/rebof3-mono/rebof3-simple/toolchains/psn00b_toolchain/bin/mipsel-none-elf-as "${ARGS[@]}"
