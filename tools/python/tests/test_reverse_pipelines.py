@@ -72,6 +72,7 @@ def test_decomp_ready_pipeline_imports_symbols_then_verifies_decomp_profile() ->
     build_decomp_ready_pipeline(root=root, executor=executor).run()
 
     assert executor.calls == [
+        ((str(root / "bin" / "ghidra-export-symbols"),), root),
         ((str(root / "bin" / "inventory-import-ghidra-symbols"),), root),
         ((str(root / "bin" / "doctor"), "--profile", "decomp"), root),
     ]

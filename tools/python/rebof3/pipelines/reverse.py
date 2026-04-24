@@ -125,8 +125,15 @@ def build_decomp_ready_pipeline(
     repo_root = root or repo_layout().root
     return Pipeline(
         name="decomp-ready",
-        description="Import Ghidra symbols and verify decomp/matching readiness",
+        description="Export/import Ghidra symbols and verify decomp/matching readiness",
         tasks=[
+            _task(
+                root=repo_root,
+                executor=executor,
+                name="ghidra-export-symbols",
+                description="Export raw Ghidra function symbols from the project",
+                command=(_bin(repo_root, "ghidra-export-symbols"),),
+            ),
             _task(
                 root=repo_root,
                 executor=executor,

@@ -96,6 +96,7 @@ def build_ghidra_bootstrap_pipeline() -> Pipeline:
 
 def build_default_registry() -> PipelineRegistry:
     registry = PipelineRegistry()
+    from .build_match import build_build_ready_pipeline, build_match_loop_pipeline
     from .reverse import (
         build_decomp_ready_pipeline,
         build_extract_assets_pipeline,
@@ -108,6 +109,16 @@ def build_default_registry() -> PipelineRegistry:
         "setup-open",
         "Prepare a fresh clone for open-source workspace usage",
         build_setup_open_pipeline,
+    )
+    registry.register(
+        "build-ready",
+        "Configure and build the workspace",
+        build_build_ready_pipeline,
+    )
+    registry.register(
+        "match-loop",
+        "Build, diff, and report matching status",
+        build_match_loop_pipeline,
     )
     registry.register(
         "extract-assets",
@@ -126,7 +137,7 @@ def build_default_registry() -> PipelineRegistry:
     )
     registry.register(
         "decomp-ready",
-        "Import Ghidra symbols and verify decomp/matching readiness",
+        "Export/import Ghidra symbols and verify decomp/matching readiness",
         build_decomp_ready_pipeline,
     )
     registry.register(
