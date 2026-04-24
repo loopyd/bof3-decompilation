@@ -180,8 +180,9 @@ Individual inventory commands remain available:
 - `bin/inventory-render-metadata`
 - `bin/inventory-import-ghidra-symbols`
 
-Raw Ghidra export reshaping still runs through
-`bin/inventory-import-ghidra-symbols`. Dedicated export scripts are not implemented yet.
+Ghidra symbol export automation runs through `bin/ghidra-export-symbols`.
+`bin/inventory-import-ghidra-symbols` reshapes those exported artifacts into
+repo inventory indexes.
 
 ## Stage 5: Ghidra
 
@@ -204,6 +205,37 @@ Other supported commands:
 Generated planning artifacts live under `out/ghidra-bootstrap/`.
 `bin/ghidra-import-project` also accepts `GHIDRA_HOME` when `--ghidra-home` is
 not passed.
+
+For the system Ghidra install on this workstation, use:
+
+```bash
+export GHIDRA_HOME=/opt/ghidra
+```
+
+Headless Ghidra also needs a writable settings/cache area. In sandboxed runs
+where `$HOME/.config` or `/var/tmp` are not writable, use explicit temporary
+locations:
+
+```bash
+export XDG_CONFIG_HOME=/tmp/rebof3-ghidra-config
+export XDG_CACHE_HOME=/tmp/rebof3-ghidra-cache
+```
+
+The BOF3 import manifest uses the PSX language (`PSX:LE:32:default`), so the
+active Ghidra user dir must have the `ghidra_psx_ldr` extension installed. If
+the normal user config already has it and the sandbox uses a temporary
+`XDG_CONFIG_HOME`, copy it into the temporary Ghidra user dir:
+
+```bash
+bin/ghidra-install-extensions \
+  --user-dir /tmp/rebof3-ghidra-config/$USER-ghidra/ghidra_12.0.4_DEV \
+  ~/.config/ghidra/ghidra_12.0.4_DEV/Extensions/ghidra_psx_ldr
+```
+
+`bin/ghidra-import-project` stages hardlinked or copied files under
+`out/ghidra-import-staging/` before import. This preserves the manifest's
+human-readable program names with Ghidra 12, which does not support a
+headless `-programName` import flag.
 
 ## Stage 6: Ghidra Symbols
 

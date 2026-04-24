@@ -63,10 +63,13 @@ Notes:
 
 Heavy Ghidra workflows should use `GHIDRA_HOME` or commands that accept
 `--ghidra-home` instead of embedding workstation-specific paths.
-Raw Ghidra export reshaping currently still flows through
-`inventory-import-ghidra-symbols`.
-Headless symbol export automation is available through `ghidra-export-symbols`
-and the `decomp-ready` pipeline.
+For the system install here, `GHIDRA_HOME=/opt/ghidra` is the expected value.
+Sandboxed headless runs may also need writable `XDG_CONFIG_HOME` and
+`XDG_CACHE_HOME` values, and the active Ghidra user dir must include the
+`ghidra_psx_ldr` extension for `PSX:LE:32:default`.
+Ghidra symbol export automation is available through `ghidra-export-symbols`.
+`inventory-import-ghidra-symbols` reshapes those exports, and `decomp-ready`
+runs export, import, and decomp-profile verification as one inspectable recipe.
 
 ## Match
 

@@ -34,11 +34,19 @@ Once local proprietary inputs are available, continue with the full asset flow:
 
 ```bash
 bin/download-psyq
+export GHIDRA_HOME=/opt/ghidra
 bin/pipeline ghidra-ready --plan
 bin/pipeline ghidra-ready
+bin/pipeline decomp-ready --plan
+bin/pipeline decomp-ready
 bin/configure
 bin/build
 ```
+
+Sandboxed headless Ghidra runs may also need writable `XDG_CONFIG_HOME` and
+`XDG_CACHE_HOME` values, plus the `ghidra_psx_ldr` extension in the active
+Ghidra user directory. See `docs/SETUP.md` and `docs/TROUBLESHOOTING.md` for
+the exact local setup.
 
 ## Main Workflows
 
@@ -82,8 +90,9 @@ bin/build
 - `bin/inventory-overlay-catalog`, `bin/inventory-overlay-clusters`
 - `bin/inventory-unique-overlay-map`, `bin/inventory-entry-tables`
 - `bin/inventory-project-plan`, `bin/inventory-render-metadata`
-- `bin/inventory-import-ghidra-symbols`: reshape raw Ghidra export artifacts
+- `bin/inventory-import-ghidra-symbols`: reshape Ghidra symbol export artifacts
 - `bin/ghidra-plan`, `bin/ghidra-bootstrap`, `bin/ghidra-import-project`, `bin/ghidra-summary`
+- `bin/ghidra-export-symbols`
 - `bin/ghidra-ui --ghidra-home /path/to/ghidra`
 - `bin/ghidra-install-extensions --user-dir /path/to/.ghidra_XX.Y <extension>`
 
@@ -94,9 +103,10 @@ Composable equivalents:
 - `bin/pipeline ghidra-ready`
 - `bin/pipeline decomp-ready`
 
-Raw Ghidra export reshaping currently still flows through
-`bin/inventory-import-ghidra-symbols`. Dedicated export scripts are not
-implemented yet.
+Ghidra symbol export automation is available through
+`bin/ghidra-export-symbols`. `bin/inventory-import-ghidra-symbols` reshapes
+those exports, and the `decomp-ready` pipeline runs export, import, and
+decomp-profile verification as one inspectable recipe.
 
 ### Match
 

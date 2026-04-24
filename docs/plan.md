@@ -13,12 +13,16 @@ for legacy `rebof3`.
 - Reverse command-backed pipelines are implemented.
 - Headless Ghidra project import automation is implemented through
   `bin/ghidra-import-project` and the `ghidra-ready` pipeline.
+- Ghidra import now stages hardlinked/copied inputs under
+  `out/ghidra-import-staging/` so manifest program names survive Ghidra 12
+  headless import.
 - Headless Ghidra symbol export automation is implemented through
   `bin/ghidra-export-symbols` and the `decomp-ready` pipeline.
 - Build and match pipeline recipes are implemented as `build-ready` and
   `match-loop`.
 - Docs have been updated for current setup and workflow guidance.
-- Relevant tests are passing as of the latest verification run.
+- Latest verification on 2026-04-24 passed: full pytest suite, Ruff,
+  compileall, diff whitespace, and `bin/ghidra-import-project --help`.
 
 ## In Progress
 
@@ -34,5 +38,10 @@ for legacy `rebof3`.
 
 - Keep migration scope isolated to `rebof3-simple`; avoid coupling new work to
   legacy `rebof3`.
+- Optimize full Ghidra bootstrap runtime. Current import is correct but still
+  expensive because each manifest entry needs distinct loader options.
 - Validate Ghidra automation on clean machines, not only developer workstations.
+  Latest local validation confirmed `/opt/ghidra`, writable headless
+  config/cache requirements, and active `ghidra_psx_ldr` extension
+  requirements.
 - Keep the plan concise and human-editable; avoid turning it into a changelog.

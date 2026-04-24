@@ -11,7 +11,8 @@ Start here:
 2. `docs/REPO_LAYOUT.md`
 3. `docs/DECOMP_WORKFLOW.md`
 4. `docs/TROUBLESHOOTING.md`
-5. `docs/specs/status.md`
+5. `docs/plan.md`
+6. `docs/specs/status.md`
 
 Use `docs/specs/` for stable reverse-engineering knowledge. Keep workflow guidance in the top-level docs files above instead of mixing it into the specs tree.
 
@@ -40,13 +41,18 @@ The intended organic layout is:
 
 Use `bin/pipeline --list` to inspect the composable pipeline surface. Current
 high-level recipes include `setup-open`, `extract-assets`, `inventory-refresh`,
-`ghidra-ready`, and `decomp-ready`. Use `bin/pipeline <name> --plan` before
-running a pipeline when changing task order or adding new tasks.
+`ghidra-bootstrap`, `ghidra-ready`, `decomp-ready`, `build-ready`, and
+`match-loop`. Use `bin/pipeline <name> --plan` before running a pipeline when
+changing task order or adding new tasks.
 
 Ghidra, decompilation helpers, PsyQ staging, extracted disc data, inventory
 artifacts, and matching tools are all part of the full reverse-engineering
 project. Doctor profiles validate different phases of that project; they do
 not turn those dependencies into optional extras.
+
+The active migration status lives in `docs/plan.md`. Keep it concise and
+task-oriented so a human can inspect, edit, and extend it without reading a
+generated changelog.
 
 ## Source Of Truth
 
@@ -62,5 +68,7 @@ not turn those dependencies into optional extras.
   - maintained command surface
 - `tools/python/`
   - repo-owned maintained CLI and setup implementation
+- `docs/plan.md`
+  - living migration plan and current implementation status
 - `third_party/`
   - vendored external tools

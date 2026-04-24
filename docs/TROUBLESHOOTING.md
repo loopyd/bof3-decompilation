@@ -74,6 +74,67 @@ For an existing repo-local tree or archive, use:
 
 Use the canonical wrapper at `bin/maspsx-cc`.
 
+## Ghidra command says `pass --ghidra-home or set GHIDRA_HOME`
+
+Point the command at the native Ghidra install:
+
+```bash
+export GHIDRA_HOME=/opt/ghidra
+```
+
+Or pass it explicitly:
+
+```bash
+bin/ghidra-import-project --ghidra-home /opt/ghidra
+bin/ghidra-export-symbols --ghidra-home /opt/ghidra
+```
+
+## Headless Ghidra cannot write settings or cache files
+
+If Ghidra reports failures around `java_home.save`, a read-only config path, or
+`fscache2`, give the run writable config and cache directories:
+
+```bash
+export XDG_CONFIG_HOME=/tmp/rebof3-ghidra-config
+export XDG_CACHE_HOME=/tmp/rebof3-ghidra-cache
+```
+
+Then rerun the same `bin/ghidra-*` or `bin/pipeline ghidra-ready` command.
+
+## Ghidra reports `Unsupported language: PSX:LE:32:default`
+
+Install the PSX loader extension into the active Ghidra user directory. When
+using a temporary `XDG_CONFIG_HOME`, copy the normal extension into that
+temporary profile:
+
+```bash
+bin/ghidra-install-extensions \
+  --user-dir /tmp/rebof3-ghidra-config/$USER-ghidra/ghidra_12.0.4_DEV \
+  ~/.config/ghidra/ghidra_12.0.4_DEV/Extensions/ghidra_psx_ldr
+```
+
+Adjust the `ghidra_12.0.4_DEV` segment if the local Ghidra user-dir version is
+different.
+
+## Ghidra imports programs with numeric names
+
+Current `bin/ghidra-import-project` stages each import as a hardlink or copy
+under `out/ghidra-import-staging/` before launching Ghidra. That preserves the
+manifest's human-readable program names on Ghidra 12, which does not expose a
+headless `-programName` import flag.
+
+If an older interrupted import already created numeric project entries, rerun
+`bin/ghidra-import-project` after the staging fix. Remove the old generated
+project only if you intentionally want a clean Ghidra project.
+
+## Full Ghidra import is slow
+
+This is a known remaining optimization target. The import is correct, but the
+manifest currently requires per-entry loader options, so the headless workflow
+launches many imports. Use `bin/pipeline ghidra-ready --plan` before running it
+and expect the full import to take longer than the lightweight setup and
+inventory checks.
+
 ## Old docs still mention removed root aliases
 
 Prefer:
