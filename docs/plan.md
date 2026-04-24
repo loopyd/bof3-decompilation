@@ -13,6 +13,10 @@ for legacy `rebof3`.
 - Reverse command-backed pipelines are implemented.
 - Headless Ghidra project import automation is implemented through
   `bin/ghidra-import-project` and the `ghidra-ready` pipeline.
+- Headless Ghidra symbol export automation is implemented through
+  `bin/ghidra-export-symbols` and the `decomp-ready` pipeline.
+- Build and match pipeline recipes are implemented as `build-ready` and
+  `match-loop`.
 - Docs have been updated for current setup and workflow guidance.
 - Relevant tests are passing as of the latest verification run.
 
@@ -22,10 +26,8 @@ for legacy `rebof3`.
 
 ## Next
 
-- Automate Ghidra symbol export from headless projects.
 - Add pipeline argument support for configurable runs.
 - Consolidate wrappers so command-backed pipelines share one obvious path.
-- Add build and match pipelines.
 - Clean up setup architecture and audit dependencies.
 
 ## Later/Risks

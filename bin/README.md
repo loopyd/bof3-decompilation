@@ -6,6 +6,9 @@ Use `make` only for setup, test, format, build, and high-level pipelines.
 Most wrappers dispatch into the maintained Python implementation under
 `tools/python/`.
 
+Pipelines are command-backed recipes. Use `pipeline <name> --plan` to inspect
+the exact commands before running a workflow.
+
 ## Setup
 
 - `pipeline --list`
@@ -54,11 +57,16 @@ Notes:
 ## Ghidra
 
 - `ghidra-plan`, `ghidra-bootstrap`, `ghidra-import-project`, `ghidra-summary`
+- `ghidra-export-symbols`
 - `ghidra-ui --ghidra-home /path/to/ghidra`
 - `ghidra-install-extensions --user-dir /path/to/.ghidra_XX.Y <extension>`
 
+Heavy Ghidra workflows should use `GHIDRA_HOME` or commands that accept
+`--ghidra-home` instead of embedding workstation-specific paths.
 Raw Ghidra export reshaping currently still flows through
 `inventory-import-ghidra-symbols`.
+Headless symbol export automation is available through `ghidra-export-symbols`
+and the `decomp-ready` pipeline.
 
 ## Match
 
@@ -73,6 +81,11 @@ disc/PsyQ inputs, run `pipeline ghidra-ready`, export symbols from Ghidra, run
 
 - `configure`, `build`
 - `maspsx-cc` is the canonical maspsx wrapper used by CMake
+
+Composable equivalents:
+
+- `pipeline build-ready`
+- `pipeline match-loop`
 
 ## Internal
 

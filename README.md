@@ -52,7 +52,7 @@ bin/build
 - `bin/pipeline --list`: list composable pipeline entry points
 - `bin/pipeline setup-open --plan`: inspect the task-level setup-open pipeline
 - `bin/pipeline ghidra-ready --plan`: inspect extraction, inventory, and Ghidra bootstrap
-- `bin/pipeline decomp-ready --plan`: inspect Ghidra symbol import and decomp verification
+- `bin/pipeline decomp-ready --plan`: inspect Ghidra symbol export/import and decomp verification
 - `bin/setup-open`: fresh-clone open setup
 - `bin/setup-submodules`: init submodules only
 - `bin/setup-aspsx`: stage public ASPSX reference binaries

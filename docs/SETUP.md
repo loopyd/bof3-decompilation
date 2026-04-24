@@ -3,6 +3,16 @@
 Use `bin/*` as the primary tool interface. `make` is intentionally small and
 only covers setup, test, format, build, and high-level pipelines.
 
+Pipelines are command-backed recipes. Inspect any maintained pipeline before
+running it with:
+
+```bash
+bin/pipeline <name> --plan
+```
+
+Heavy Ghidra workflows should use commands that accept `GHIDRA_HOME` or an
+explicit `--ghidra-home` path instead of embedding workstation-specific paths.
+
 ## Doctor Profiles
 
 Use `bin/doctor --profile <name>` to validate a workflow phase:
@@ -187,6 +197,7 @@ Other supported commands:
 
 - `bin/ghidra-summary`
 - `bin/ghidra-import-project --ghidra-home /path/to/ghidra`
+- `bin/ghidra-export-symbols --ghidra-home /path/to/ghidra`
 - `bin/ghidra-ui --ghidra-home /path/to/ghidra`
 - `bin/ghidra-install-extensions --user-dir /path/to/.ghidra_XX.Y <extension>`
 
@@ -204,8 +215,8 @@ bin/pipeline decomp-ready --plan
 bin/pipeline decomp-ready
 ```
 
-Dedicated Ghidra export scripts are not implemented yet. The import command is
-the maintained repo side of the export/import handoff.
+`bin/pipeline decomp-ready` exports symbols from the headless Ghidra project,
+imports them into repo inventory indexes, and verifies the decomp profile.
 
 ## Stage 7: Match / Asset Work
 
@@ -218,6 +229,10 @@ Function matching:
 - `bin/match-report`
 
 For the maintained one-function decomp loop, see `docs/DECOMP_WORKFLOW.md`.
+
+Build and match pipeline recipes are available as `bin/pipeline build-ready`
+and `bin/pipeline match-loop`. Inspect them first with
+`bin/pipeline <name> --plan`.
 
 Asset extraction and review:
 
