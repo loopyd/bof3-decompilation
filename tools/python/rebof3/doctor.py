@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import shutil
 from dataclasses import dataclass
+from typing import Literal
 
 from .paths import RepoLayout, repo_layout
 from .toolchain.setup_psyq import find_psyq_source
@@ -15,6 +16,73 @@ class DoctorCheck:
     detail: str
     required: bool = True
     hint: str | None = None
+
+
+DoctorProfile = Literal["open", "full", "ghidra", "decomp", "workspace"]
+DOCTOR_PROFILES: tuple[DoctorProfile, ...] = (
+    "open",
+    "full",
+    "ghidra",
+    "decomp",
+    "workspace",
+)
+
+_PROFILE_PHASES: dict[DoctorProfile, tuple[str, ...]] = {
+    "workspace": ("commands", "third_party_core"),
+    "open": (
+        "commands",
+        "third_party_core",
+        "third_party_match",
+        "native_tools",
+        "match_tools",
+        "toolchains_open",
+    ),
+    "ghidra": (
+        "commands",
+        "third_party_core",
+        "third_party_ghidra",
+        "native_tools",
+        "toolchains_open",
+        "local_inputs",
+        "psyq_toolchain",
+        "ghidra_outputs",
+    ),
+    "decomp": (
+        "commands",
+        "third_party_core",
+        "third_party_match",
+        "third_party_ghidra",
+        "third_party_decomp",
+        "native_tools",
+        "match_tools",
+        "toolchains_open",
+        "local_inputs",
+        "psyq_toolchain",
+        "ghidra_outputs",
+        "ghidra_symbol_outputs",
+    ),
+    "full": (
+        "commands",
+        "third_party_core",
+        "third_party_match",
+        "third_party_ghidra",
+        "third_party_decomp",
+        "native_tools",
+        "match_tools",
+        "toolchains_open",
+        "local_inputs",
+        "psyq_toolchain",
+        "ghidra_outputs",
+        "ghidra_symbol_outputs",
+    ),
+}
+
+_THIRD_PARTY_TOOLS: dict[str, tuple[str, ...]] = {
+    "third_party_core": ("bof3-disk", "emi-ex", "maspsx"),
+    "third_party_match": ("objdiff", "mipsmatch"),
+    "third_party_ghidra": ("bof3-ghidra", "ghidra-mcp"),
+    "third_party_decomp": ("asm-differ", "m2c", "decomp-permuter"),
+}
 
 
 def _command_check(command: str, *, required: bool = True) -> DoctorCheck:
@@ -80,30 +148,86 @@ def _executable_check(
     )
 
 
+def _third_party_checks(repo: RepoLayout, phases: frozenset[str]) -> list[DoctorCheck]:
+    checks: list[DoctorCheck] = []
+    seen: set[str] = set()
+    for phase, tool_names in _THIRD_PARTY_TOOLS.items():
+        if phase not in phases:
+            continue
+        for tool_name in tool_names:
+            if tool_name in seen:
+                continue
+            seen.add(tool_name)
+            checks.append(
+                _directory_check(
+                    repo.third_party_dir / tool_name,
+                    name=f"third_party/{tool_name}",
+                    hint=f"restore third_party/{tool_name} or re-sync the repository dependencies",
+                )
+            )
+    return checks
+
+
 def run_doctor(
     *,
     layout: RepoLayout | None = None,
-    include_local_inputs: bool = True,
-    include_generated_outputs: bool = True,
+    profile: DoctorProfile = "full",
 ) -> list[DoctorCheck]:
-    repo = layout or repo_layout()
-    checks: list[DoctorCheck] = [
-        _command_check("uv"),
-        _command_check("cmake"),
-        _command_check("ninja"),
-        _command_check("cargo"),
-    ]
-
-    for tool_name in ("bof3-disk", "emi-ex", "maspsx", "objdiff", "mipsmatch"):
-        checks.append(
-            _directory_check(
-                repo.third_party_dir / tool_name,
-                name=f"third_party/{tool_name}",
-                hint=f"restore third_party/{tool_name} or re-sync the repository dependencies",
-            )
+    if profile not in DOCTOR_PROFILES:
+        choices = ", ".join(DOCTOR_PROFILES)
+        raise ValueError(
+            f"unknown doctor profile {profile!r}; expected one of: {choices}"
         )
 
-    if include_local_inputs:
+    repo = layout or repo_layout()
+    phases = frozenset(_PROFILE_PHASES[profile])
+    checks: list[DoctorCheck] = []
+
+    if "commands" in phases:
+        checks.extend(
+            [
+                _command_check("uv"),
+                _command_check("cmake"),
+                _command_check("ninja"),
+                _command_check("cargo"),
+            ]
+        )
+
+    checks.extend(_third_party_checks(repo, phases))
+
+    if "native_tools" in phases:
+        checks.extend(
+            [
+                _executable_check(
+                    repo.bof3_disk_bin,
+                    name="tools/bof3-disk",
+                    hint="run `bin/setup-native-tools` or `bin/setup-open`",
+                ),
+                _executable_check(
+                    repo.emi_ex_bin,
+                    name="tools/emi-ex",
+                    hint="run `bin/setup-native-tools` or `bin/setup-open`",
+                ),
+            ]
+        )
+
+    if "match_tools" in phases:
+        checks.extend(
+            [
+                _executable_check(
+                    repo.objdiff_bin,
+                    name="tools/objdiff-cli",
+                    hint="run `bin/setup-match-tools` or `bin/setup-open`",
+                ),
+                _executable_check(
+                    repo.mipsmatch_bin,
+                    name="tools/mipsmatch",
+                    hint="run `bin/setup-match-tools` or `bin/setup-open`",
+                ),
+            ]
+        )
+
+    if "local_inputs" in phases:
         disc_inputs = []
         for pattern in ("*.cue", "*.bin", "*.iso"):
             disc_inputs.extend(sorted(repo.disc_dir.glob(pattern)))
@@ -144,27 +268,38 @@ def run_doctor(
                 )
             )
 
-    checks.extend(
-        [
-            _executable_check(
-                repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-gcc",
-                name="toolchains/psn00b",
-                hint="run `make setup-open` or `bin/setup-open`",
-            ),
-            _executable_check(
-                repo.gcc272_psx_root / "gcc",
-                name="toolchains/gcc-2.7.2-psx",
-                hint="run `make setup-open` or `bin/setup-open`",
-            ),
-            _file_check(
-                repo.aspsx_psyq_root / "psyq4.0" / "ASPSX.EXE",
-                name="toolchains/aspsx",
-                hint="run `bin/setup-aspsx` or `bin/setup-open`",
-            ),
-        ]
-    )
+    if "toolchains_open" in phases:
+        checks.extend(
+            [
+                _executable_check(
+                    repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-gcc",
+                    name="toolchains/psn00b",
+                    hint="run `make setup-open` or `bin/setup-open`",
+                ),
+                _executable_check(
+                    repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-objdump",
+                    name="toolchains/psn00b-objdump",
+                    hint="run `make setup-open` or `bin/setup-open`",
+                ),
+                _executable_check(
+                    repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-nm",
+                    name="toolchains/psn00b-nm",
+                    hint="run `make setup-open` or `bin/setup-open`",
+                ),
+                _executable_check(
+                    repo.gcc272_psx_root / "gcc",
+                    name="toolchains/gcc-2.7.2-psx",
+                    hint="run `make setup-open` or `bin/setup-open`",
+                ),
+                _file_check(
+                    repo.aspsx_psyq_root / "psyq4.0" / "ASPSX.EXE",
+                    name="toolchains/aspsx",
+                    hint="run `bin/setup-aspsx` or `bin/setup-open`",
+                ),
+            ]
+        )
 
-    if include_local_inputs:
+    if "psyq_toolchain" in phases:
         checks.append(
             _file_check(
                 repo.psyq_root / "include" / "libgpu.h",
@@ -173,14 +308,29 @@ def run_doctor(
             )
         )
 
-    if include_generated_outputs:
+    if "ghidra_outputs" in phases:
         checks.append(
             _file_check(
                 repo.ghidra_manifest_path,
                 name="out/ghidra-bootstrap",
-                required=False,
                 hint="run `make ghidra` or `bin/ghidra-bootstrap` after extraction and unpack",
             )
+        )
+
+    if "ghidra_symbol_outputs" in phases:
+        checks.extend(
+            [
+                _file_check(
+                    repo.inventory_ghidra_symbols_index_path,
+                    name="out/ghidra-symbols-index",
+                    hint="export Ghidra symbols and run `bin/inventory-import-ghidra-symbols`",
+                ),
+                _file_check(
+                    repo.inventory_ghidra_function_index_path,
+                    name="out/ghidra-function-index",
+                    hint="export Ghidra symbols and run `bin/inventory-import-ghidra-symbols`",
+                ),
+            ]
         )
 
     return checks
@@ -196,7 +346,7 @@ def render_doctor(checks: list[DoctorCheck]) -> None:
         "ok": "OK",
         "missing": "MISS",
     }
-    ordered_groups = ("command", "third_party", "inputs", "toolchains", "out")
+    ordered_groups = ("command", "third_party", "tools", "inputs", "toolchains", "out")
 
     for group in ordered_groups:
         entries = grouped.get(group, [])

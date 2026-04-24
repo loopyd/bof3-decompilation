@@ -4,8 +4,10 @@ import argparse
 from pathlib import Path
 
 from ..ghidra import (
+    DEFAULT_IMPORT_MANIFEST,
     DEFAULT_PROJECT_NAME,
     DEFAULT_PROJECT_ROOT,
+    import_ghidra_project,
     install_extensions,
     launch_ui,
 )
@@ -17,7 +19,37 @@ from ..planning import build_ghidra_manifest
 from ._common import run_main
 
 
+def require_bootstrap_inputs(args: argparse.Namespace) -> bool:
+    required_files = {
+        "--slus": args.slus,
+        "--logo": args.logo,
+    }
+    required_dirs = {
+        "--emi-root": args.emi_root,
+    }
+
+    missing: list[str] = []
+    for option, path in required_files.items():
+        if not path.is_file():
+            missing.append(f"{option}: {path}")
+    for option, path in required_dirs.items():
+        if not path.is_dir():
+            missing.append(f"{option}: {path}")
+
+    if not missing:
+        return True
+
+    print("missing Ghidra bootstrap inputs:")
+    for entry in missing:
+        print(f"  {entry}")
+    print("run 'bin/disk-extract' and 'bin/emi-unpack', or pass explicit paths")
+    return False
+
+
 def run_bootstrap(args: argparse.Namespace) -> int:
+    if not require_bootstrap_inputs(args):
+        return 1
+
     outputs = run_ghidra_bootstrap_pipeline(
         slus_path=args.slus,
         logo_path=args.logo,
@@ -77,6 +109,26 @@ def run_ui(args: argparse.Namespace) -> int:
     )
 
 
+def run_import_project(args: argparse.Namespace) -> int:
+    analyze: bool | None = None
+    if args.analyze:
+        analyze = True
+    if args.no_analyze:
+        analyze = False
+    result = import_ghidra_project(
+        ghidra_home=args.ghidra_home,
+        manifest=args.manifest,
+        project_dir=args.project_dir,
+        project_name=args.project_name,
+        script_path=args.script_path,
+        analyze=analyze,
+    )
+    print(f"imported: {result.imported_count}")
+    print(f"project-dir: {args.project_dir}")
+    print(f"project-name: {args.project_name}")
+    return 0
+
+
 def run_install_extensions(args: argparse.Namespace) -> int:
     extensions_dir, installed_paths = install_extensions(
         args.sources,
@@ -121,9 +173,21 @@ def configure_ui_parser(parser: argparse.ArgumentParser) -> None:
     parser.set_defaults(handler=run_ui)
 
 
+def configure_import_project_parser(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--ghidra-home", type=Path)
+    parser.add_argument("--manifest", type=Path, default=DEFAULT_IMPORT_MANIFEST)
+    parser.add_argument("--project-dir", type=Path, default=DEFAULT_PROJECT_ROOT)
+    parser.add_argument("--project-name", default=DEFAULT_PROJECT_NAME)
+    parser.add_argument("--script-path", type=Path)
+    analyze_group = parser.add_mutually_exclusive_group()
+    analyze_group.add_argument("--analyze", action="store_true")
+    analyze_group.add_argument("--no-analyze", action="store_true")
+    parser.set_defaults(handler=run_import_project)
+
+
 def configure_install_extensions_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("sources", nargs="+", type=Path)
-    parser.add_argument("--user-dir", type=Path)
+    parser.add_argument("--user-dir", type=Path, required=True)
     parser.set_defaults(handler=run_install_extensions)
 
 
@@ -141,6 +205,9 @@ def configure_root_parser(parser: argparse.ArgumentParser) -> None:
 
     ui = subparsers.add_parser("ui")
     configure_ui_parser(ui)
+
+    import_project = subparsers.add_parser("import-project")
+    configure_import_project_parser(import_project)
 
     install_extensions_parser = subparsers.add_parser("install-extensions")
     configure_install_extensions_parser(install_extensions_parser)

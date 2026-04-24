@@ -32,6 +32,21 @@ bof3_apply_common_target_settings(bof3 INCLUDE_VISIBILITY PUBLIC)
 
 bof3_find_sdk_tool(BOF3_ELF2X elf2x)
 set(BOF3_EXE_LINKER_SCRIPT "${BOF3_SHARED_CMAKE_DIR}/toolchains/psx-exe.ld")
+set(BOF3_PSYQ_RUNTIME_LIBS
+    "${BOF3_PSYQ_LIB_DIR}/libapi.a"
+    "${BOF3_PSYQ_LIB_DIR}/libc.a"
+    "${BOF3_PSYQ_LIB_DIR}/libcard.a"
+    "${BOF3_PSYQ_LIB_DIR}/libcd.a"
+    "${BOF3_PSYQ_LIB_DIR}/libetc.a"
+    "${BOF3_PSYQ_LIB_DIR}/libgpu.a"
+    "${BOF3_PSYQ_LIB_DIR}/libgte.a"
+    "${BOF3_PSYQ_LIB_DIR}/libpad.a"
+)
+foreach(psyq_lib IN LISTS BOF3_PSYQ_RUNTIME_LIBS)
+    if(NOT EXISTS "${psyq_lib}")
+        message(FATAL_ERROR "Required PsyQ runtime library not found: ${psyq_lib}")
+    endif()
+endforeach()
 
 add_executable(bof3_exe ${BOF3_BOOT_SOURCES})
 set_target_properties(bof3_exe PROPERTIES
@@ -39,7 +54,12 @@ set_target_properties(bof3_exe PROPERTIES
     SUFFIX ".elf"
 )
 bof3_apply_common_target_settings(bof3_exe)
-target_link_libraries(bof3_exe PRIVATE bof3)
+target_link_libraries(bof3_exe PRIVATE
+    bof3
+    --start-group
+    ${BOF3_PSYQ_RUNTIME_LIBS}
+    --end-group
+)
 target_link_options(bof3_exe PRIVATE
     "-T$<SHELL_PATH:${BOF3_EXE_LINKER_SCRIPT}>"
 )

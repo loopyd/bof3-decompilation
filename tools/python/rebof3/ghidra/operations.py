@@ -1,19 +1,33 @@
 from __future__ import annotations
 
+import json
+import os
 import shutil
 import subprocess
 import zipfile
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 
 
 DEFAULT_PROJECT_NAME = "bof3_main"
 DEFAULT_PROJECT_ROOT = Path("out") / "ghidra-project"
+DEFAULT_IMPORT_MANIFEST = Path("out") / "ghidra-bootstrap" / "ghidra_import_manifest.json"
+
+HeadlessRunner = Callable[[Sequence[str]], object]
+
+
+@dataclass(frozen=True)
+class GhidraProjectImportResult:
+    imported_count: int
+    commands: list[tuple[str, ...]]
 
 
 def resolve_ghidra_home(ghidra_home: Path | None) -> Path:
-    candidate = ghidra_home
+    env_home = os.environ.get("GHIDRA_HOME")
+    candidate = ghidra_home or (Path(env_home) if env_home else None)
     if candidate is None:
-        raise ValueError("pass --ghidra-home")
+        raise ValueError("pass --ghidra-home or set GHIDRA_HOME")
     resolved = candidate.expanduser().resolve()
     if not resolved.is_dir():
         raise FileNotFoundError(f"ghidra home not found: {resolved}")
@@ -28,15 +42,22 @@ def resolve_ghidra_run(ghidra_home: Path | None) -> Path:
     return ghidra_run
 
 
-def resolve_user_settings_dir(user_dir: Path | None) -> Path:
-    if user_dir is not None:
-        return user_dir.expanduser().resolve()
+def resolve_analyze_headless(ghidra_home: Path | None) -> Path:
+    ghidra_root = resolve_ghidra_home(ghidra_home)
+    candidates = [
+        ghidra_root / "support" / "analyzeHeadless",
+        ghidra_root / "support" / "analyzeHeadless.bat",
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    raise FileNotFoundError(f"analyzeHeadless not found under {ghidra_root}")
 
-    root = Path.home() / ".ghidra"
-    version_dirs = sorted(path for path in root.glob(".ghidra_*") if path.is_dir())
-    if version_dirs:
-        return version_dirs[-1].resolve()
-    return (root / ".ghidra_local").resolve()
+
+def resolve_user_settings_dir(user_dir: Path | None) -> Path:
+    if user_dir is None:
+        raise ValueError("pass --user-dir")
+    return user_dir.expanduser().resolve()
 
 
 def resolve_extensions_dir(user_dir: Path | None) -> Path:
@@ -125,3 +146,139 @@ def launch_ui(
     command.extend(extra_args)
     result = subprocess.run(command, check=False)
     return int(result.returncode)
+
+
+def default_headless_runner(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(list(command), check=False)
+
+
+def _returncode(result: object) -> int:
+    if result is None:
+        return 0
+    code = getattr(result, "returncode", None)
+    if isinstance(code, int):
+        return code
+    if isinstance(result, int):
+        return result
+    return 0
+
+
+def _load_manifest(path: Path) -> dict[str, object]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"expected a JSON object in {path}")
+    return payload
+
+
+def _entry_path(entry: dict[str, object], *, manifest_path: Path) -> Path:
+    raw = entry.get("path") or entry.get("payload_path") or entry.get("source")
+    if not raw:
+        raise ValueError("Ghidra import entry missing path/payload_path/source")
+    path = Path(str(raw)).expanduser()
+    if not path.is_absolute():
+        path = manifest_path.parent / path
+    return path.resolve()
+
+
+def _entry_name(entry: dict[str, object], *, path: Path) -> str:
+    raw = entry.get("name") or entry.get("program_name") or entry.get("display")
+    return str(raw or path.name)
+
+
+def _project_name_with_folder(project_name: str, folder: str) -> str:
+    normalized = folder.strip()
+    if not normalized or normalized == "/":
+        return project_name
+    if not normalized.startswith("/"):
+        normalized = f"/{normalized}"
+    return f"{project_name}{normalized}"
+
+
+def build_analyze_headless_import_commands(
+    *,
+    ghidra_home: Path | None,
+    manifest: Path,
+    project_dir: Path,
+    project_name: str,
+    script_path: Path | None = None,
+    analyze: bool | None = None,
+) -> list[tuple[str, ...]]:
+    manifest_path = manifest.expanduser().resolve()
+    payload = _load_manifest(manifest_path)
+    imports = payload.get("imports", [])
+    if not isinstance(imports, list):
+        raise ValueError("manifest imports must be a list")
+
+    effective_analyze = bool(payload.get("analyze", True)) if analyze is None else analyze
+    project_location = project_dir.expanduser().resolve()
+    analyze_headless = resolve_analyze_headless(ghidra_home)
+
+    commands: list[tuple[str, ...]] = []
+    for raw_entry in imports:
+        if not isinstance(raw_entry, dict):
+            raise ValueError("manifest import entries must be JSON objects")
+        path = _entry_path(raw_entry, manifest_path=manifest_path)
+        folder = str(raw_entry.get("project_folder_path") or "")
+        command = [
+            str(analyze_headless),
+            str(project_location),
+            _project_name_with_folder(project_name, folder),
+            "-import",
+            str(path),
+            "-programName",
+            _entry_name(raw_entry, path=path),
+            "-overwrite",
+        ]
+        loader = raw_entry.get("loader")
+        if isinstance(loader, dict):
+            processor = loader.get("processor")
+            compiler = loader.get("compiler")
+            loader_name = loader.get("loader_name")
+            if processor:
+                command.extend(["-processor", str(processor)])
+            if compiler:
+                command.extend(["-cspec", str(compiler)])
+            if loader_name:
+                command.extend(["-loader", str(loader_name)])
+            loader_args = loader.get("loader_args", [])
+            if isinstance(loader_args, list):
+                for raw_arg in loader_args:
+                    if not isinstance(raw_arg, dict):
+                        continue
+                    name = raw_arg.get("name")
+                    value = raw_arg.get("value")
+                    if name and value is not None:
+                        command.extend([str(name), str(value)])
+        if script_path is not None:
+            command.extend(["-scriptPath", str(script_path.expanduser().resolve())])
+        if not effective_analyze:
+            command.append("-noanalysis")
+        commands.append(tuple(command))
+    return commands
+
+
+def import_ghidra_project(
+    *,
+    ghidra_home: Path | None,
+    manifest: Path = DEFAULT_IMPORT_MANIFEST,
+    project_dir: Path = DEFAULT_PROJECT_ROOT,
+    project_name: str = DEFAULT_PROJECT_NAME,
+    script_path: Path | None = None,
+    analyze: bool | None = None,
+    runner: HeadlessRunner = default_headless_runner,
+) -> GhidraProjectImportResult:
+    commands = build_analyze_headless_import_commands(
+        ghidra_home=ghidra_home,
+        manifest=manifest,
+        project_dir=project_dir,
+        project_name=project_name,
+        script_path=script_path,
+        analyze=analyze,
+    )
+    project_dir.expanduser().resolve().mkdir(parents=True, exist_ok=True)
+    for command in commands:
+        result = runner(command)
+        returncode = _returncode(result)
+        if returncode != 0:
+            raise subprocess.CalledProcessError(returncode, command)
+    return GhidraProjectImportResult(imported_count=len(commands), commands=commands)

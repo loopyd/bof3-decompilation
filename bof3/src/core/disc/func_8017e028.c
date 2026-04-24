@@ -1,12 +1,11 @@
 #include <libapi.h>
 
 #include "internal.h"
+#include "bof3/original_symbols.h"
 
 void InitCARD2(s32 arg0);
 void _patch_card(void);
 void _patch_card2(void);
-void func_8017ee0c(void);
-void func_8017ee1c(void);
 
 /* does: resets PAD clearing, applies the boot-side memory card init/patch
  * sequence under the event guard, then restores the event state.

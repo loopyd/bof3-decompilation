@@ -38,22 +38,12 @@ enum {
 #define BOF3_NO_SIBLING_CALLS
 #endif
 
-/* does: enters the short critical section wrapped around callback-thread
- * open/close.
- * @source: 0x8017ee0c
- */
-void func_8017ee0c(void);
+#include "bof3/original_symbols.h"
 
 /* does: spawns one callback thread from the current slot metadata.
  * @source: 0x8017ed9c
  */
 s32 func_8017ed9c(Bof3CallbackEntry callback, u32 open_arg, u32 open_arg_2);
-
-/* does: leaves the short critical section wrapped around callback-thread
- * open/close.
- * @source: 0x8017ee1c
- */
-void func_8017ee1c(void);
 
 /* does: closes one callback thread by id.
  * @source: 0x8017edac

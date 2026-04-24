@@ -1,20 +1,9 @@
 #include "internal.h"
 
-void func_801748e4(void);
+#include "bof3/original_symbols.h"
+
 void func_80161f58(void);
-void func_80174700(s32 arg0);
-void func_8017af0c(s32 arg0);
-void func_801753c4(s32 arg0);
-void func_8017ee0c(void);
-s32  func_8017ed3c(s32 event_spec, s32 spec, s32 mode, void* callback);
-void func_8017ed7c(s32 event_id);
-void func_8017ee1c(void);
-void func_80178660(void);
-void func_801790c8(s32 arg0);
-void func_801790a8(s32 x, s32 y);
-void func_80174668(s32 arg0);
 void func_8014b1a4(void);
-void func_8017eebc(s32 arg0);
 void func_8014b3c4(void);
 
 extern u8 DAT_8018b300;

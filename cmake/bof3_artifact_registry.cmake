@@ -1,7 +1,7 @@
 include_guard(GLOBAL)
 
-set(BOF3_ARTIFACT_ROOT_DIR "${CMAKE_BINARY_DIR}/artifacts"
-    CACHE PATH "Scaffold root for bof3 artifact-shaped build outputs")
+unset(BOF3_ARTIFACT_ROOT_DIR CACHE)
+set(BOF3_ARTIFACT_ROOT_DIR "${CMAKE_BINARY_DIR}/artifacts")
 
 set(BOF3_ARTIFACT_RAW_ROOT_DIR "${BOF3_ARTIFACT_ROOT_DIR}/raw")
 set(BOF3_ARTIFACT_METADATA_DIR "${BOF3_ARTIFACT_ROOT_DIR}/metadata")

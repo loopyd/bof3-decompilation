@@ -8,11 +8,24 @@ Most wrappers dispatch into the maintained Python implementation under
 
 ## Setup
 
+- `pipeline --list`
+- `pipeline setup-open --plan`
+- `pipeline extract-assets --plan`
+- `pipeline inventory-refresh --plan`
+- `pipeline ghidra-bootstrap --plan`
+- `pipeline ghidra-ready --plan`
+- `pipeline decomp-ready --plan`
 - `setup-open`, `setup-open-plan`, `setup-plan`, `setup`
 - `setup-submodules`, `setup-private-assets`
 - `setup-aspsx`, `setup-native-tools`, `setup-psx-toolchain`, `setup-match-tools`
 - `download-psyq`, `setup-psyq`
-- `doctor-open`, `doctor`
+- `bin/doctor --profile open`, `bin/doctor --profile full`
+- `bin/doctor --profile decomp`, `bin/doctor --profile ghidra`
+- `bin/doctor-open` is an alias for `bin/doctor --profile open`
+
+Doctor profiles validate phases of the same full reverse-engineering project:
+open setup, Ghidra bootstrap, decomp/matching, or the full reverse project.
+Ghidra and decomp dependencies are project dependencies, not optional extras.
 
 ## Disk / EMI
 
@@ -40,15 +53,21 @@ Notes:
 
 ## Ghidra
 
-- `ghidra-plan`, `ghidra-bootstrap`, `ghidra-summary`
-- `ghidra-ui`, `ghidra-install-extensions`
+- `ghidra-plan`, `ghidra-bootstrap`, `ghidra-import-project`, `ghidra-summary`
+- `ghidra-ui --ghidra-home /path/to/ghidra`
+- `ghidra-install-extensions --user-dir /path/to/.ghidra_XX.Y <extension>`
 
 Raw Ghidra export reshaping currently still flows through
 `inventory-import-ghidra-symbols`.
 
 ## Match
 
+- `asm-diff-one <bof3/src/.../func_XXXXXXXX.c>`
 - `match-init`, `match-build`, `match-diff`, `match-report`
+
+The high-level reverse path is clone, verify open dependencies, stage local
+disc/PsyQ inputs, run `pipeline ghidra-ready`, export symbols from Ghidra, run
+`pipeline decomp-ready`, then iterate through decomp and match loops.
 
 ## Build
 

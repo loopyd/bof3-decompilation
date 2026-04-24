@@ -6,15 +6,13 @@
 /* clang-format on */
 
 #include "bof3/defines.h"
+#include "bof3/original_symbols.h"
 
 extern u_long DAT_801d8bb0;
 
 void SetDispMask(int mask);
 
 void func_801ce758(void);
-void func_801ce760(void* work_base, u_long disc_lba);
-int  func_801cea98(void);
-void func_801cebfc(void);
 void func_801ceef4(void);
 
 /* does: boots the LOGO.EXE stream path, polls for skip/completion, then shuts

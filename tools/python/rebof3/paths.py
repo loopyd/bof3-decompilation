@@ -123,7 +123,7 @@ def repo_layout(
         objdiff_src=third_party_dir / "objdiff",
         mipsmatch_src=third_party_dir / "mipsmatch",
         bof3_disk_bin=build_dir / "third_party" / "bof3-disk" / "bof3-disk",
-        emi_ex_bin=build_dir / "tools" / "emi-ex-v2" / "cli" / "emi-ex",
+        emi_ex_bin=build_dir / "tools" / "emi-ex-v2" / "emi-ex",
         objdiff_bin=build_dir / "third_party" / "objdiff" / "release" / "objdiff-cli",
         mipsmatch_bin=build_dir / "third_party" / "mipsmatch" / "release" / "mipsmatch",
         psn00b_toolchain_root=toolchains_dir / "psn00b_toolchain",

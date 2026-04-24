@@ -1,7 +1,5 @@
 #include "internal.h"
-
-s32 CdInit(void) __asm__("func_801753ec");
-s32 VSync(s32 arg0) __asm__("func_80174700");
+#include "bof3/original_symbols.h"
 
 extern vu32 DAT_80146464;
 extern vu8  DAT_8014648a;
@@ -18,10 +16,10 @@ void func_80161f58(void) {
   s32 i;
   u8* slot_state;
 
-  while (CdInit() == 0) {
+  while (func_801753ec() == 0) {
   }
 
-  VSync(3);
+  func_80174700(3);
 
   DAT_80146464 = 0x800E4800;
   DAT_80146840 = 0;

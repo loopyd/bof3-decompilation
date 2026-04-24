@@ -23,19 +23,19 @@ This requires `uv` and runs `uv sync --extra dev --frozen`.
 Check the open-source setup path:
 
 ```bash
-bin/doctor-open
+bin/doctor --profile open
+bin/pipeline setup-open --plan
 bin/setup-open-plan
 bin/setup-open
-bin/doctor-open --strict
+bin/doctor --profile open --strict
 ```
 
 Once local proprietary inputs are available, continue with the full asset flow:
 
 ```bash
 bin/download-psyq
-bin/disk-extract
-bin/emi-unpack
-bin/ghidra-bootstrap
+bin/pipeline ghidra-ready --plan
+bin/pipeline ghidra-ready
 bin/configure
 bin/build
 ```
@@ -44,6 +44,15 @@ bin/build
 
 ### Setup
 
+- `bin/doctor --profile open`: validate the fresh-clone open setup phase
+- `bin/doctor --profile full`: validate the complete reverse project state
+- `bin/doctor --profile decomp`: validate the decomp/matching phase
+- `bin/doctor --profile ghidra`: validate the Ghidra bootstrap phase
+- `bin/doctor-open`: alias for `bin/doctor --profile open`
+- `bin/pipeline --list`: list composable pipeline entry points
+- `bin/pipeline setup-open --plan`: inspect the task-level setup-open pipeline
+- `bin/pipeline ghidra-ready --plan`: inspect extraction, inventory, and Ghidra bootstrap
+- `bin/pipeline decomp-ready --plan`: inspect Ghidra symbol import and decomp verification
 - `bin/setup-open`: fresh-clone open setup
 - `bin/setup-submodules`: init submodules only
 - `bin/setup-aspsx`: stage public ASPSX reference binaries
@@ -74,8 +83,16 @@ bin/build
 - `bin/inventory-unique-overlay-map`, `bin/inventory-entry-tables`
 - `bin/inventory-project-plan`, `bin/inventory-render-metadata`
 - `bin/inventory-import-ghidra-symbols`: reshape raw Ghidra export artifacts
-- `bin/ghidra-plan`, `bin/ghidra-bootstrap`, `bin/ghidra-summary`
-- `bin/ghidra-ui`, `bin/ghidra-install-extensions`
+- `bin/ghidra-plan`, `bin/ghidra-bootstrap`, `bin/ghidra-import-project`, `bin/ghidra-summary`
+- `bin/ghidra-ui --ghidra-home /path/to/ghidra`
+- `bin/ghidra-install-extensions --user-dir /path/to/.ghidra_XX.Y <extension>`
+
+Composable equivalents:
+
+- `bin/pipeline extract-assets`
+- `bin/pipeline inventory-refresh`
+- `bin/pipeline ghidra-ready`
+- `bin/pipeline decomp-ready`
 
 Raw Ghidra export reshaping currently still flows through
 `bin/inventory-import-ghidra-symbols`. Dedicated export scripts are not
@@ -83,10 +100,13 @@ implemented yet.
 
 ### Match
 
+- `bin/asm-diff-one bof3/src/core/emi/func_80162178.c`: compile one source object and diff it against original asm
 - `bin/match-init`
 - `bin/match-build`
 - `bin/match-diff`
 - `bin/match-report`
+
+See `docs/DECOMP_WORKFLOW.md` for the one-function decomp loop.
 
 ### Asset Review
 
@@ -101,6 +121,7 @@ Image workflows require Pillow in the active Python environment.
 
 - `bin/`: canonical human-facing commands
 - `tools/python/`: maintained repo-owned Python implementations behind `bin/`
+- `docs/DECOMP_WORKFLOW.md`: focused compile/decompile/asm-diff loop
 - `inputs/`: user-owned local runtime inputs such as disc images and local source archives
 - `external/private-assets/`: optional private download and cache workspace only
 - `toolchains/`: staged or downloaded SDKs and compilers, including PsyQ under `toolchains/psyq/<version>/`

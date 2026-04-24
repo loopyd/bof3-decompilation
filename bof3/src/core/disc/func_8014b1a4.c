@@ -1,11 +1,10 @@
 #include "internal.h"
 
-void func_8017ee0c(void);
+#include "bof3/original_symbols.h"
+
 s32  OpenEvent(u32 event_spec, s32 spec, s32 mode, void* callback);
-void func_8017ee1c(void);
 void EnableEvent(s32 event_id);
 void func_8017e028(s32 arg0);
-void func_8017e07c(void);
 void _bu_init(void);
 void ChangeClearPAD(s32 arg0);
 

@@ -117,6 +117,20 @@ def test_ghidra_install_extensions_wrapper_help_is_available(tmp_path: Path) -> 
     assert "usage: ghidra install-extensions" in result.stdout
 
 
+def test_ghidra_import_project_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("ghidra-import-project", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: ghidra import-project" in result.stdout
+
+
+def test_pipeline_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("pipeline", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: pipeline" in result.stdout
+
+
 def test_download_psyq_wrapper_help_is_available(tmp_path: Path) -> None:
     result = run_wrapper("download-psyq", "--help", cwd=tmp_path)
 

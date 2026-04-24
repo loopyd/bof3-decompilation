@@ -43,6 +43,6 @@ function(bof3_find_sdk_tool out_var tool_name)
     endforeach()
 
     message(FATAL_ERROR
-        "Required PSX SDK tool `${tool_name}` was not found under ${BOF3_PSN00B_SDK_ROOT}. Run 'bin/setup-psx-toolchain' or set BOF3_PSN00B_SDK_ROOT explicitly."
+        "Required PSX SDK tool `${tool_name}` was not found under ${BOF3_PSN00B_SDK_ROOT}. Run 'bin/setup-psx-toolchain'."
     )
 endfunction()

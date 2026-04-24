@@ -328,8 +328,5 @@ set(BOF3_SOURCES
 
 set(BOF3_BOOT_SOURCES
     src/boot/startup.s
-)
-
-set(BOF3_BOOT_SOURCES
-    src/boot/startup.s
+    src/boot/original_symbols.c
 )

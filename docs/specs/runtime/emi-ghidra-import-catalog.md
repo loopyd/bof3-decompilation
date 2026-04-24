@@ -17,7 +17,7 @@ Local scan target:
 
 Scanner:
 
-- `build/tools/emi-ex-v2/cli/emi-ex extract -q --dry-run --print-manifest --manifest-type-status`
+- `build/tools/emi-ex-v2/emi-ex extract -q --dry-run --print-manifest --manifest-type-status`
 
 Archive inclusion rule:
 

@@ -6,9 +6,8 @@
 #include <libgpu.h>
 /* clang-format on */
 
-void func_8017ee1c(void);
-void func_8014b020(void);
-void func_8014b0f0(void);
+#include "bof3/original_symbols.h"
+
 void func_80150098(s16 x, s16 y, u32 arg2, void* arg3);
 int  sprintf(char* buffer, const char* format, ...);
 

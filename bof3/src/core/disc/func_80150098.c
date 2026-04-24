@@ -5,8 +5,9 @@
 #include <libgpu.h>
 /* clang-format on */
 
+#include "bof3/original_symbols.h"
+
 void func_8014e5a0(u32 arg0, u32 arg1);
-void func_8014fc00(s32 arg0);
 
 extern SPRT_8* DAT_8014598c;
 

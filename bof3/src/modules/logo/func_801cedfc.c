@@ -1,8 +1,6 @@
 #include "internal.h"
+#include "bof3/original_symbols.h"
 
-void func_801ce760(void* work_base, u_long disc_lba);
-int  func_801cea98(void);
-void func_801cebfc(void);
 void func_801ceef4(void);
 
 /* possible name: logo_exe_main

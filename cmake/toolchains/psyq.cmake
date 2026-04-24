@@ -6,12 +6,15 @@ set(BOF3_PSX_PROFILE "capcom97-bof3" CACHE STRING "PSX build profile for bof3")
 set_property(CACHE BOF3_PSX_PROFILE PROPERTY STRINGS capcom97-bof3)
 set(BOF3_PSYQ_VERSION "4.7" CACHE STRING "Staged PsyQ SDK version under toolchains/psyq")
 set(BOF3_PSYQ_ROOT "" CACHE PATH "Optional staged PsyQ SDK root override")
-set(BOF3_LOCAL_TOOLCHAIN_BIN "${REBOF3_ROOT_DIR}/toolchains/psn00b_toolchain/bin"
-    CACHE PATH "Repo-local GNU binutils toolchain bin dir")
-set(BOF3_PSN00B_SDK_ROOT "${REBOF3_ROOT_DIR}/toolchains/psn00bsdk"
-    CACHE PATH "Repo-local PSn00bSDK root")
-set(BOF3_PSX_GCC_ROOT "${REBOF3_ROOT_DIR}/toolchains/gcc-2.7.2-psx"
-    CACHE PATH "Repo-local canonical BOF3 gcc-2.7.2-psx root")
+unset(BOF3_LOCAL_TOOLCHAIN_BIN CACHE)
+unset(BOF3_PSN00B_SDK_ROOT CACHE)
+unset(BOF3_PSX_GCC_ROOT CACHE)
+unset(BOF3_MASPSX_ASPSX_VERSION CACHE)
+unset(BOF3_PSYQ_SDK_KIND CACHE)
+unset(BOF3_TOOLCHAIN_NM CACHE)
+set(BOF3_LOCAL_TOOLCHAIN_BIN "${REBOF3_ROOT_DIR}/toolchains/psn00b_toolchain/bin")
+set(BOF3_PSN00B_SDK_ROOT "${REBOF3_ROOT_DIR}/toolchains/psn00bsdk")
+set(BOF3_PSX_GCC_ROOT "${REBOF3_ROOT_DIR}/toolchains/gcc-2.7.2-psx")
 
 if(BOF3_PSYQ_ROOT)
     get_filename_component(BOF3_ACTIVE_PSYQ_ROOT "${BOF3_PSYQ_ROOT}" ABSOLUTE)
@@ -20,8 +23,8 @@ else()
 endif()
 
 if(BOF3_PSX_PROFILE STREQUAL "capcom97-bof3")
-    set(BOF3_PSYQ_SDK_KIND "original" CACHE STRING "Active PsyQ SDK kind")
-    set(BOF3_MASPSX_ASPSX_VERSION "2.56" CACHE STRING "ASPSX behavior version for maspsx")
+    set(BOF3_PSYQ_SDK_KIND "original")
+    set(BOF3_MASPSX_ASPSX_VERSION "2.56")
     if(NOT EXISTS "${BOF3_ACTIVE_PSYQ_ROOT}/include/libgpu.h")
         message(FATAL_ERROR
             "PsyQ ${BOF3_PSYQ_VERSION} headers not found at ${BOF3_ACTIVE_PSYQ_ROOT}. "
@@ -38,11 +41,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
     BOF3_PSX_PROFILE
     BOF3_PSYQ_VERSION
-    BOF3_PSYQ_ROOT
-    BOF3_MASPSX_ASPSX_VERSION
-    BOF3_LOCAL_TOOLCHAIN_BIN
-    BOF3_PSX_GCC_ROOT
-    BOF3_PSN00B_SDK_ROOT)
+    BOF3_PSYQ_ROOT)
 
 set(MASPSX_CC "${REBOF3_ROOT_DIR}/bin/maspsx-cc")
 if(NOT EXISTS "${MASPSX_CC}")
@@ -62,9 +61,6 @@ function(bof3_find_program out_var)
     endif()
 endfunction()
 
-bof3_find_program(MIPSEL_GCC
-    NAMES mipsel-none-elf-gcc
-    ERROR_MESSAGE "missing repo-local PSX C compiler driver at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-gcc; run 'bin/setup-psx-toolchain'")
 bof3_find_program(MIPSEL_AS
     NAMES mipsel-none-elf-as
     ERROR_MESSAGE "missing repo-local PSX assembler at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-as; run 'bin/setup-psx-toolchain'")
@@ -88,20 +84,21 @@ bof3_find_program(MIPSEL_NM
     ERROR_MESSAGE "missing repo-local PSX nm at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-nm; run 'bin/setup-psx-toolchain'")
 
 set(CMAKE_C_COMPILER "${MASPSX_CC}")
-set(CMAKE_ASM_COMPILER "${MASPSX_CC}")
+set(CMAKE_ASM_COMPILER ${MIPSEL_AS})
 set(CMAKE_LINKER ${MIPSEL_LD})
 set(CMAKE_AR ${MIPSEL_AR})
 set(CMAKE_RANLIB ${MIPSEL_RANLIB})
 set(CMAKE_OBJCOPY ${MIPSEL_OBJCOPY})
 set(CMAKE_OBJDUMP ${MIPSEL_OBJDUMP})
-set(BOF3_TOOLCHAIN_NM ${MIPSEL_NM}
-    CACHE FILEPATH "PSX nm used for symbol maps and diagnostics")
+set(BOF3_TOOLCHAIN_NM ${MIPSEL_NM})
 
 set(CMAKE_C_FLAGS_INIT "--profile=${BOF3_PSX_PROFILE} --psyq-root=${BOF3_ACTIVE_PSYQ_ROOT} -Wa,--aspsx-version=${BOF3_MASPSX_ASPSX_VERSION}")
-set(CMAKE_ASM_FLAGS_INIT "-EL")
-set(CMAKE_EXE_LINKER_FLAGS_INIT "-EL -nostdlib -static -L${BOF3_ACTIVE_PSYQ_ROOT}/lib")
+set(CMAKE_ASM_FLAGS_INIT "-G0 -EL -mips1")
+set(CMAKE_EXE_LINKER_FLAGS_INIT "-EL -static -L${BOF3_ACTIVE_PSYQ_ROOT}/lib")
+set(CMAKE_ASM_COMPILE_OBJECT
+    "${MIPSEL_AS} <FLAGS> <INCLUDES> -o <OBJECT> <SOURCE>")
 set(CMAKE_C_LINK_EXECUTABLE
-    "${MIPSEL_GCC} <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
+    "${MIPSEL_LD} <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
 set(CMAKE_ASM_LINK_EXECUTABLE
     "${MIPSEL_LD} <CMAKE_ASM_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
 

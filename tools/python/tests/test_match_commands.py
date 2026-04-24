@@ -218,3 +218,26 @@ def test_ghidra_install_extensions_installs_directory_and_archive(
     assert (
         user_dir / "Extensions" / "ArchiveExtension" / "extension.properties"
     ).is_file()
+
+
+def test_ghidra_bootstrap_reports_missing_inputs(tmp_path: Path, capsys) -> None:
+    result = ghidra_command.main(
+        [
+            "bootstrap",
+            "--slus",
+            str(tmp_path / "SLUS_004.22"),
+            "--logo",
+            str(tmp_path / "LOGO.EXE"),
+            "--emi-root",
+            str(tmp_path / "BIN"),
+            "--output-dir",
+            str(tmp_path / "ghidra-bootstrap"),
+        ]
+    )
+
+    assert result == 1
+    output = capsys.readouterr().out
+    assert "missing Ghidra bootstrap inputs:" in output
+    assert "--slus:" in output
+    assert "--logo:" in output
+    assert "--emi-root:" in output

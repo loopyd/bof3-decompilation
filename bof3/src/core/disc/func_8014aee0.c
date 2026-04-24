@@ -6,11 +6,10 @@
 #include <libgpu.h>
 /* clang-format on */
 
+#include "bof3/original_symbols.h"
+
 void func_8014e0fc(const char* path);
-void func_8017e0b4(void);
-void func_8017ee0c(void);
 void Exec(void* exec_header, int argc, int argv);
-void func_8017ee1c(void);
 void func_8014ad28(void);
 void func_8014e564(int x, int y, int width, int height);
 

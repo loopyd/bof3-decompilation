@@ -3,6 +3,25 @@
 Use `bin/*` as the primary tool interface. `make` is intentionally small and
 only covers setup, test, format, build, and high-level pipelines.
 
+## Doctor Profiles
+
+Use `bin/doctor --profile <name>` to validate a workflow phase:
+
+- `bin/doctor --profile open`: fresh clone, open-source submodules, host tools,
+  native tools, matching helpers, and open PSX toolchain
+- `bin/doctor --profile full`: complete reverse project state, including local
+  disc/PsyQ inputs, Ghidra bootstrap outputs, Ghidra symbol imports, and decomp
+  tools
+- `bin/doctor --profile decomp`: decompilation loop state; currently equivalent
+  to `full`
+- `bin/doctor --profile ghidra`: Ghidra bootstrap state before symbol import and
+  decomp loops
+- `bin/doctor-open`: alias for `bin/doctor --profile open`
+
+Add `--strict` when a check should fail on any reported issue. Ghidra and
+decomp dependencies are part of the full reverse-engineering project; profiles
+only validate different phases of the workflow.
+
 ## Stage 0: Python Environment
 
 Create or refresh the project environment first:
@@ -29,10 +48,12 @@ Fresh clone:
 
 ```bash
 make venv
-bin/doctor-open
+bin/doctor --profile open
+bin/pipeline --list
+bin/pipeline setup-open --plan
 bin/setup-open-plan
 bin/setup-open
-bin/doctor-open --strict
+bin/doctor --profile open --strict
 ```
 
 `bin/setup-open` covers the open-source path only. It stops before:
@@ -65,9 +86,9 @@ The `psx-toolchain` task downloads and stages:
 - `toolchains/psn00bsdk/`
 - `toolchains/gcc-2.7.2-psx/gcc`
 
-Before `bin/setup-open`, `bin/doctor-open --strict` is expected to report those
-toolchains as missing. After `bin/setup-open`, strict open doctor should pass
-unless a host tool or download/build step failed.
+Before `bin/setup-open`, `bin/doctor --profile open --strict` is expected to
+report those toolchains as missing. After `bin/setup-open`, strict open doctor
+should pass unless a host tool or download/build step failed.
 
 ## Stage 2: Local / Proprietary Inputs
 
@@ -105,6 +126,8 @@ Active runtime paths:
 normal runtime location. The build reads the staged SDK from `toolchains/psyq/<version>/`.
 Use `bin/configure -DBOF3_PSYQ_VERSION=4.6` for another staged SDK version, or
 `bin/configure -DBOF3_PSYQ_ROOT=/absolute/path/to/psyq` for an explicit SDK root.
+The PSX build uses `toolchains/gcc-2.7.2-psx/gcc` for C and the staged
+PSn00b binutils for assembly, archive, link, and EXE conversion.
 
 ## Stage 3: Disk / EMI Lifecycle
 
@@ -155,26 +178,46 @@ Raw Ghidra export reshaping still runs through
 Typical sequence:
 
 ```bash
-bin/ghidra-plan
-bin/ghidra-bootstrap
+bin/pipeline ghidra-ready --plan
+bin/pipeline ghidra-ready
+bin/doctor --profile ghidra --strict
 ```
 
 Other supported commands:
 
 - `bin/ghidra-summary`
-- `bin/ghidra-ui`
-- `bin/ghidra-install-extensions`
+- `bin/ghidra-import-project --ghidra-home /path/to/ghidra`
+- `bin/ghidra-ui --ghidra-home /path/to/ghidra`
+- `bin/ghidra-install-extensions --user-dir /path/to/.ghidra_XX.Y <extension>`
 
 Generated planning artifacts live under `out/ghidra-bootstrap/`.
+`bin/ghidra-import-project` also accepts `GHIDRA_HOME` when `--ghidra-home` is
+not passed.
 
-## Stage 6: Match / Asset Work
+## Stage 6: Ghidra Symbols
+
+Use Ghidra to review the bootstrapped project and export symbols, then reshape
+the raw export for repo inventory:
+
+```bash
+bin/pipeline decomp-ready --plan
+bin/pipeline decomp-ready
+```
+
+Dedicated Ghidra export scripts are not implemented yet. The import command is
+the maintained repo side of the export/import handoff.
+
+## Stage 7: Match / Asset Work
 
 Function matching:
 
+- `bin/asm-diff-one bof3/src/core/emi/func_80162178.c`
 - `bin/match-init`
 - `bin/match-build`
 - `bin/match-diff`
 - `bin/match-report`
+
+For the maintained one-function decomp loop, see `docs/DECOMP_WORKFLOW.md`.
 
 Asset extraction and review:
 
@@ -188,12 +231,29 @@ Asset extraction and review:
 
 Image workflows require Pillow in the active Python environment.
 
+## Full Reverse Workflow
+
+The full reverse/decompilation path is:
+
+1. Clone `rebof3-simple` and run `make venv`.
+2. Verify the open phase with `bin/doctor --profile open`, then run
+   `bin/setup-open`.
+3. Manually provide local disc inputs under `inputs/disc/` and stage PsyQ with
+   `bin/download-psyq` or `bin/setup-psyq`.
+4. Inspect and run `bin/pipeline ghidra-ready --plan`, then
+   `bin/pipeline ghidra-ready`.
+5. Export symbols from Ghidra.
+6. Inspect and run `bin/pipeline decomp-ready --plan`, then
+   `bin/pipeline decomp-ready`.
+7. Iterate with `bin/asm-diff-one`, `bin/match-build`, `bin/match-diff`, and
+   `bin/match-report`.
+
 ## Make Targets
 
 The Makefile intentionally exposes only high-level lifecycle targets:
 
 - `make venv`, `make doctor-open`, `make doctor`
-- `make setup-open`, `make setup`
+- `make setup-open`, `make setup`, `make pipeline`
 - `make extract`, `make inventory`, `make ghidra`
 - `make configure`, `make build`, `make test`, `make fmt`
 
