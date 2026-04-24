@@ -7,6 +7,9 @@ from ..ghidra import (
     DEFAULT_IMPORT_MANIFEST,
     DEFAULT_PROJECT_NAME,
     DEFAULT_PROJECT_ROOT,
+    DEFAULT_SYMBOL_EXPORT,
+    DEFAULT_SYMBOL_EXPORT_SCRIPT,
+    export_ghidra_symbols,
     import_ghidra_project,
     install_extensions,
     launch_ui,
@@ -129,6 +132,22 @@ def run_import_project(args: argparse.Namespace) -> int:
     return 0
 
 
+def run_export_symbols(args: argparse.Namespace) -> int:
+    result = export_ghidra_symbols(
+        ghidra_home=args.ghidra_home,
+        project_dir=args.project_dir,
+        project_name=args.project_name,
+        output_path=args.output,
+        script_path=args.script_path,
+        process=args.process,
+        recursive=not args.no_recursive,
+    )
+    print(f"exported: {result.output_path}")
+    print(f"project-dir: {args.project_dir}")
+    print(f"project-name: {args.project_name}")
+    return 0
+
+
 def run_install_extensions(args: argparse.Namespace) -> int:
     extensions_dir, installed_paths = install_extensions(
         args.sources,
@@ -185,6 +204,17 @@ def configure_import_project_parser(parser: argparse.ArgumentParser) -> None:
     parser.set_defaults(handler=run_import_project)
 
 
+def configure_export_symbols_parser(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--ghidra-home", type=Path)
+    parser.add_argument("--project-dir", type=Path, default=DEFAULT_PROJECT_ROOT)
+    parser.add_argument("--project-name", default=DEFAULT_PROJECT_NAME)
+    parser.add_argument("--output", type=Path, default=DEFAULT_SYMBOL_EXPORT)
+    parser.add_argument("--script-path", type=Path, default=DEFAULT_SYMBOL_EXPORT_SCRIPT)
+    parser.add_argument("--process", default="/")
+    parser.add_argument("--no-recursive", action="store_true")
+    parser.set_defaults(handler=run_export_symbols)
+
+
 def configure_install_extensions_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("sources", nargs="+", type=Path)
     parser.add_argument("--user-dir", type=Path, required=True)
@@ -208,6 +238,9 @@ def configure_root_parser(parser: argparse.ArgumentParser) -> None:
 
     import_project = subparsers.add_parser("import-project")
     configure_import_project_parser(import_project)
+
+    export_symbols = subparsers.add_parser("export-symbols")
+    configure_export_symbols_parser(export_symbols)
 
     install_extensions_parser = subparsers.add_parser("install-extensions")
     configure_install_extensions_parser(install_extensions_parser)

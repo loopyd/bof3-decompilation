@@ -124,6 +124,13 @@ def test_ghidra_import_project_wrapper_help_is_available(tmp_path: Path) -> None
     assert "usage: ghidra import-project" in result.stdout
 
 
+def test_ghidra_export_symbols_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("ghidra-export-symbols", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: ghidra export-symbols" in result.stdout
+
+
 def test_pipeline_wrapper_help_is_available(tmp_path: Path) -> None:
     result = run_wrapper("pipeline", "--help", cwd=tmp_path)
 

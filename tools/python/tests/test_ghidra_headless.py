@@ -5,8 +5,12 @@ from pathlib import Path
 
 from rebof3.commands import ghidra as ghidra_command
 from rebof3.ghidra import (
+    DEFAULT_SYMBOL_EXPORT_SCRIPT,
     GhidraProjectImportResult,
+    GhidraSymbolExportResult,
     build_analyze_headless_import_commands,
+    build_analyze_headless_symbol_export_command,
+    export_ghidra_symbols,
     import_ghidra_project,
 )
 from rebof3.jsonio import write_json
@@ -112,6 +116,79 @@ def test_import_ghidra_project_runs_commands_with_injected_runner(
     assert "-noanalysis" not in calls[0]
 
 
+def test_build_analyze_headless_symbol_export_command_uses_defaults(
+    tmp_path: Path,
+) -> None:
+    ghidra_home = make_ghidra_home(tmp_path)
+    output_path = tmp_path / "out" / "inventory" / "raw_ghidra_export.json"
+
+    command = build_analyze_headless_symbol_export_command(
+        ghidra_home=ghidra_home,
+        project_dir=tmp_path / "project",
+        project_name="bof3",
+        output_path=output_path,
+    )
+
+    assert command == (
+        str(ghidra_home / "support" / "analyzeHeadless"),
+        str((tmp_path / "project").resolve()),
+        "bof3",
+        "-process",
+        "/",
+        "-recursive",
+        "-scriptPath",
+        str(DEFAULT_SYMBOL_EXPORT_SCRIPT.resolve().parent),
+        "-postScript",
+        DEFAULT_SYMBOL_EXPORT_SCRIPT.name,
+        str(output_path.resolve()),
+        "/",
+        "-noanalysis",
+    )
+
+
+def test_export_ghidra_symbols_runs_command_with_injected_runner(
+    tmp_path: Path,
+) -> None:
+    ghidra_home = make_ghidra_home(tmp_path)
+    script_path = tmp_path / "scripts" / "ExportSymbolsJson.java"
+    script_path.parent.mkdir()
+    script_path.write_text("// script\n", encoding="utf-8")
+    output_path = tmp_path / "raw_ghidra_export.json"
+    calls: list[tuple[str, ...]] = []
+
+    def runner(command: Sequence[str]) -> int:
+        calls.append(tuple(command))
+        return 0
+
+    result = export_ghidra_symbols(
+        ghidra_home=ghidra_home,
+        project_dir=tmp_path / "project",
+        project_name="bof3",
+        output_path=output_path,
+        script_path=script_path,
+        process="/boot",
+        recursive=False,
+        runner=runner,
+    )
+
+    assert result.output_path == output_path.resolve()
+    assert calls == [result.command]
+    assert calls[0] == (
+        str(ghidra_home / "support" / "analyzeHeadless"),
+        str((tmp_path / "project").resolve()),
+        "bof3",
+        "-process",
+        "/boot",
+        "-scriptPath",
+        str(script_path.parent.resolve()),
+        "-postScript",
+        script_path.name,
+        str(output_path.resolve()),
+        "/boot",
+        "-noanalysis",
+    )
+
+
 def test_build_analyze_headless_import_commands_accepts_path_and_name(
     tmp_path: Path,
 ) -> None:
@@ -192,3 +269,57 @@ def test_ghidra_import_project_cli_dispatches_operation(
         }
     ]
     assert "imported: 2" in capsys.readouterr().out
+
+
+def test_ghidra_export_symbols_cli_dispatches_operation(
+    monkeypatch,
+    tmp_path: Path,
+    capsys,
+) -> None:
+    calls: list[dict[str, object]] = []
+
+    def fake_export_ghidra_symbols(**kwargs: object) -> GhidraSymbolExportResult:
+        calls.append(kwargs)
+        return GhidraSymbolExportResult(
+            output_path=tmp_path / "raw_ghidra_export.json",
+            command=(),
+        )
+
+    monkeypatch.setattr(
+        ghidra_command,
+        "export_ghidra_symbols",
+        fake_export_ghidra_symbols,
+    )
+
+    result = ghidra_command.main(
+        [
+            "export-symbols",
+            "--ghidra-home",
+            str(tmp_path / "ghidra"),
+            "--project-dir",
+            str(tmp_path / "project"),
+            "--project-name",
+            "bof3",
+            "--output",
+            str(tmp_path / "raw.json"),
+            "--script-path",
+            str(tmp_path / "scripts" / "ExportSymbolsJson.java"),
+            "--process",
+            "/boot",
+            "--no-recursive",
+        ]
+    )
+
+    assert result == 0
+    assert calls == [
+        {
+            "ghidra_home": tmp_path / "ghidra",
+            "project_dir": tmp_path / "project",
+            "project_name": "bof3",
+            "output_path": tmp_path / "raw.json",
+            "script_path": tmp_path / "scripts" / "ExportSymbolsJson.java",
+            "process": "/boot",
+            "recursive": False,
+        }
+    ]
+    assert f"exported: {tmp_path / 'raw_ghidra_export.json'}" in capsys.readouterr().out

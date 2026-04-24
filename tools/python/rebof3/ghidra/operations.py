@@ -13,6 +13,14 @@ from pathlib import Path
 DEFAULT_PROJECT_NAME = "bof3_main"
 DEFAULT_PROJECT_ROOT = Path("out") / "ghidra-project"
 DEFAULT_IMPORT_MANIFEST = Path("out") / "ghidra-bootstrap" / "ghidra_import_manifest.json"
+DEFAULT_SYMBOL_EXPORT = Path("out") / "inventory" / "raw_ghidra_export.json"
+DEFAULT_SYMBOL_EXPORT_SCRIPT = (
+    Path(__file__).resolve().parents[4]
+    / "tools"
+    / "ghidra"
+    / "scripts"
+    / "ExportSymbolsJson.java"
+)
 
 HeadlessRunner = Callable[[Sequence[str]], object]
 
@@ -21,6 +29,12 @@ HeadlessRunner = Callable[[Sequence[str]], object]
 class GhidraProjectImportResult:
     imported_count: int
     commands: list[tuple[str, ...]]
+
+
+@dataclass(frozen=True)
+class GhidraSymbolExportResult:
+    output_path: Path
+    command: tuple[str, ...]
 
 
 def resolve_ghidra_home(ghidra_home: Path | None) -> Path:
@@ -255,6 +269,75 @@ def build_analyze_headless_import_commands(
             command.append("-noanalysis")
         commands.append(tuple(command))
     return commands
+
+
+def build_analyze_headless_symbol_export_command(
+    *,
+    ghidra_home: Path | None,
+    project_dir: Path,
+    project_name: str,
+    output_path: Path,
+    script_path: Path = DEFAULT_SYMBOL_EXPORT_SCRIPT,
+    process: str = "/",
+    recursive: bool = True,
+) -> tuple[str, ...]:
+    analyze_headless = resolve_analyze_headless(ghidra_home)
+    resolved_script = script_path.expanduser().resolve()
+    if not resolved_script.is_file():
+        raise FileNotFoundError(f"Ghidra export script not found: {resolved_script}")
+
+    command = [
+        str(analyze_headless),
+        str(project_dir.expanduser().resolve()),
+        project_name,
+        "-process",
+        process,
+    ]
+    if recursive:
+        command.append("-recursive")
+    command.extend(
+        [
+            "-scriptPath",
+            str(resolved_script.parent),
+            "-postScript",
+            resolved_script.name,
+            str(output_path.expanduser().resolve()),
+            process,
+            "-noanalysis",
+        ]
+    )
+    return tuple(command)
+
+
+def export_ghidra_symbols(
+    *,
+    ghidra_home: Path | None,
+    project_dir: Path = DEFAULT_PROJECT_ROOT,
+    project_name: str = DEFAULT_PROJECT_NAME,
+    output_path: Path = DEFAULT_SYMBOL_EXPORT,
+    script_path: Path = DEFAULT_SYMBOL_EXPORT_SCRIPT,
+    process: str = "/",
+    recursive: bool = True,
+    runner: HeadlessRunner = default_headless_runner,
+) -> GhidraSymbolExportResult:
+    command = build_analyze_headless_symbol_export_command(
+        ghidra_home=ghidra_home,
+        project_dir=project_dir,
+        project_name=project_name,
+        output_path=output_path,
+        script_path=script_path,
+        process=process,
+        recursive=recursive,
+    )
+    output_path.expanduser().resolve().parent.mkdir(parents=True, exist_ok=True)
+    result = runner(command)
+    returncode = _returncode(result)
+    if returncode != 0:
+        raise subprocess.CalledProcessError(returncode, command)
+    return GhidraSymbolExportResult(
+        output_path=output_path.expanduser().resolve(),
+        command=command,
+    )
 
 
 def import_ghidra_project(
