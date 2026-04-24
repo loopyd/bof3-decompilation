@@ -13,6 +13,7 @@ from pathlib import Path
 DEFAULT_PROJECT_NAME = "bof3_main"
 DEFAULT_PROJECT_ROOT = Path("out") / "ghidra-project"
 DEFAULT_IMPORT_MANIFEST = Path("out") / "ghidra-bootstrap" / "ghidra_import_manifest.json"
+DEFAULT_IMPORT_STAGING = Path("out") / "ghidra-import-staging"
 DEFAULT_SYMBOL_EXPORT = Path("out") / "inventory" / "raw_ghidra_export.json"
 DEFAULT_SYMBOL_EXPORT_SCRIPT = (
     Path(__file__).resolve().parents[4]
@@ -199,6 +200,44 @@ def _entry_name(entry: dict[str, object], *, path: Path) -> str:
     return str(raw or path.name)
 
 
+def _entry_project_folder(entry: dict[str, object]) -> str:
+    raw = str(entry.get("project_folder_path") or "")
+    return raw.strip("/")
+
+
+def _stage_import_path(
+    *,
+    source: Path,
+    entry: dict[str, object],
+    staging_dir: Path | None,
+) -> Path:
+    if staging_dir is None:
+        return source
+
+    staged_name = Path(_entry_name(entry, path=source)).name
+    if not staged_name or staged_name == source.name:
+        return source
+
+    folder = _entry_project_folder(entry)
+    folder_parts = [part for part in folder.split("/") if part]
+    staged_path = staging_dir.expanduser().resolve().joinpath(*folder_parts, staged_name)
+    staged_path.parent.mkdir(parents=True, exist_ok=True)
+    if staged_path.exists() or staged_path.is_symlink():
+        try:
+            if not staged_path.is_symlink() and staged_path.samefile(source):
+                return staged_path
+        except FileNotFoundError:
+            pass
+        if staged_path.is_dir():
+            raise IsADirectoryError(f"staging path is a directory: {staged_path}")
+        staged_path.unlink()
+    try:
+        os.link(source, staged_path)
+    except OSError:
+        shutil.copy2(source, staged_path)
+    return staged_path
+
+
 def _project_name_with_folder(project_name: str, folder: str) -> str:
     normalized = folder.strip()
     if not normalized or normalized == "/":
@@ -214,6 +253,7 @@ def build_analyze_headless_import_commands(
     manifest: Path,
     project_dir: Path,
     project_name: str,
+    staging_dir: Path | None = None,
     script_path: Path | None = None,
     analyze: bool | None = None,
 ) -> list[tuple[str, ...]]:
@@ -233,14 +273,17 @@ def build_analyze_headless_import_commands(
             raise ValueError("manifest import entries must be JSON objects")
         path = _entry_path(raw_entry, manifest_path=manifest_path)
         folder = str(raw_entry.get("project_folder_path") or "")
+        import_path = _stage_import_path(
+            source=path,
+            entry=raw_entry,
+            staging_dir=staging_dir,
+        )
         command = [
             str(analyze_headless),
             str(project_location),
             _project_name_with_folder(project_name, folder),
             "-import",
-            str(path),
-            "-programName",
-            _entry_name(raw_entry, path=path),
+            str(import_path),
             "-overwrite",
         ]
         loader = raw_entry.get("loader")
@@ -346,6 +389,7 @@ def import_ghidra_project(
     manifest: Path = DEFAULT_IMPORT_MANIFEST,
     project_dir: Path = DEFAULT_PROJECT_ROOT,
     project_name: str = DEFAULT_PROJECT_NAME,
+    staging_dir: Path | None = None,
     script_path: Path | None = None,
     analyze: bool | None = None,
     runner: HeadlessRunner = default_headless_runner,
@@ -355,6 +399,7 @@ def import_ghidra_project(
         manifest=manifest,
         project_dir=project_dir,
         project_name=project_name,
+        staging_dir=staging_dir,
         script_path=script_path,
         analyze=analyze,
     )

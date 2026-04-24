@@ -5,6 +5,7 @@ from pathlib import Path
 
 from ..ghidra import (
     DEFAULT_IMPORT_MANIFEST,
+    DEFAULT_IMPORT_STAGING,
     DEFAULT_PROJECT_NAME,
     DEFAULT_PROJECT_ROOT,
     DEFAULT_SYMBOL_EXPORT,
@@ -123,6 +124,7 @@ def run_import_project(args: argparse.Namespace) -> int:
         manifest=args.manifest,
         project_dir=args.project_dir,
         project_name=args.project_name,
+        staging_dir=args.staging_dir,
         script_path=args.script_path,
         analyze=analyze,
     )
@@ -197,6 +199,7 @@ def configure_import_project_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--manifest", type=Path, default=DEFAULT_IMPORT_MANIFEST)
     parser.add_argument("--project-dir", type=Path, default=DEFAULT_PROJECT_ROOT)
     parser.add_argument("--project-name", default=DEFAULT_PROJECT_NAME)
+    parser.add_argument("--staging-dir", type=Path, default=DEFAULT_IMPORT_STAGING)
     parser.add_argument("--script-path", type=Path)
     analyze_group = parser.add_mutually_exclusive_group()
     analyze_group.add_argument("--analyze", action="store_true")

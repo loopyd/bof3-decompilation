@@ -5,6 +5,7 @@ from pathlib import Path
 
 from rebof3.commands import ghidra as ghidra_command
 from rebof3.ghidra import (
+    DEFAULT_IMPORT_STAGING,
     DEFAULT_SYMBOL_EXPORT_SCRIPT,
     GhidraProjectImportResult,
     GhidraSymbolExportResult,
@@ -73,8 +74,6 @@ def test_build_analyze_headless_import_commands_uses_manifest_entries(
             "bof3/bins/AREA01",
             "-import",
             str(tmp_path / "payload.bin"),
-            "-programName",
-            "overlay_e00.bin",
             "-overwrite",
             "-processor",
             "PSX:LE:32:default",
@@ -216,11 +215,29 @@ def test_build_analyze_headless_import_commands_accepts_path_and_name(
     )[0]
 
     assert command[2] == "bof3/boot"
-    assert command[4:7] == (
-        str((tmp_path / "relative.bin").resolve()),
-        "-programName",
-        "custom.bin",
-    )
+    assert command[4:6] == (str((tmp_path / "relative.bin").resolve()), "-overwrite")
+
+
+def test_build_analyze_headless_import_commands_stages_named_imports(
+    tmp_path: Path,
+) -> None:
+    ghidra_home = make_ghidra_home(tmp_path)
+    manifest_path = write_manifest(tmp_path)
+    staging_dir = tmp_path / "staging"
+
+    command = build_analyze_headless_import_commands(
+        ghidra_home=ghidra_home,
+        manifest=manifest_path,
+        project_dir=tmp_path / "project",
+        project_name="bof3",
+        staging_dir=staging_dir,
+    )[0]
+
+    staged_path = staging_dir.resolve() / "bins" / "AREA01" / "overlay_e00.bin"
+    assert command[4:6] == (str(staged_path), "-overwrite")
+    assert staged_path.exists()
+    assert not staged_path.is_symlink()
+    assert staged_path.samefile(tmp_path / "payload.bin")
 
 
 def test_ghidra_import_project_cli_dispatches_operation(
@@ -264,6 +281,7 @@ def test_ghidra_import_project_cli_dispatches_operation(
             "manifest": tmp_path / "manifest.json",
             "project_dir": tmp_path / "project",
             "project_name": "bof3",
+            "staging_dir": DEFAULT_IMPORT_STAGING,
             "script_path": tmp_path / "scripts",
             "analyze": False,
         }
