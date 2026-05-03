@@ -4,6 +4,7 @@ import pytest
 
 from rebof3.commands import pipeline as pipeline_command
 from rebof3.core import Pipeline, Task
+from rebof3.core.process import ProcessError, ProcessResult
 from rebof3.pipelines.registry import PipelineRegistry, build_default_registry
 
 
@@ -80,24 +81,64 @@ def test_pipeline_run_executes_registered_pipeline() -> None:
     assert events == ["first", "second"]
 
 
+def test_pipeline_run_reports_process_failure_without_traceback(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    registry = PipelineRegistry()
+    registry.register(
+        "fail",
+        "Failing pipeline",
+        lambda: Pipeline(
+            name="fail",
+            description="Failing pipeline",
+            tasks=[
+                Task(
+                    "failed-command",
+                    "Failed command",
+                    lambda _: (_ for _ in ()).throw(
+                        ProcessError(
+                            ProcessResult(
+                                command=("tool",),
+                                returncode=7,
+                                cwd=None,
+                                stdout="",
+                                stderr="",
+                            )
+                        )
+                    ),
+                )
+            ],
+        ),
+    )
+
+    result = pipeline_command.main(["fail"], registry=registry)
+
+    assert result == 7
+    assert "command failed with exit code 7" in capsys.readouterr().err
+
+
 def test_default_registry_includes_ghidra_bootstrap_pipeline() -> None:
     registry = build_default_registry()
 
     assert registry.names() == [
+        "binary-parity",
         "build-ready",
         "decomp-ready",
         "extract-assets",
         "ghidra-bootstrap",
         "ghidra-ready",
+        "harness-ready",
         "inventory-refresh",
         "match-loop",
         "setup-open",
     ]
+    assert registry.get("binary-parity").description
     assert registry.get("build-ready").description
     assert registry.get("decomp-ready").description
     assert registry.get("extract-assets").description
     assert registry.get("ghidra-bootstrap").description
     assert registry.get("ghidra-ready").description
+    assert registry.get("harness-ready").description
     assert registry.get("inventory-refresh").description
     assert registry.get("match-loop").description
     assert registry.get("setup-open").description

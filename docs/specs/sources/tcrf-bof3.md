@@ -22,7 +22,7 @@ In this repo it should be treated as:
 
 ## Current Local Corroboration
 
-- `processed/inventory/` now resolves the full 887-entry top-level slot table, including:
+- `out/inventory/` now resolves the full 887-entry top-level slot table, including:
   - `build/extracted/BIN/WORLD04/AREA197.EMI`
   - `build/extracted/BIN/WORLD04/AREA198.EMI`
   - `build/extracted/BIN/WORLD04/AREA199.EMI`

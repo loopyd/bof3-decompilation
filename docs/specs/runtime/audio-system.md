@@ -154,7 +154,7 @@ Resolved from SLUS symbol analysis:
 
 Scope/provenance:
 - historical analyzed undefined-metadata worklist export from an earlier inventory workflow
-- canonical metadata inventory store: `processed/inventory/`
+- canonical metadata inventory store: `out/inventory/`
 - deterministic undefined rows are metadata rows whose `type_spec` begins with `undefined`, optionally filtered by `kind` and `program`
 - program: `/boot/SLUS_004.22`
 - address coverage: `0x801695ac`..`0x801752f0`

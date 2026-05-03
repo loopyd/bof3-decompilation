@@ -75,10 +75,28 @@ runs export, import, and decomp-profile verification as one inspectable recipe.
 
 - `asm-diff-one <bof3/src/.../func_XXXXXXXX.c>`
 - `match-init`, `match-build`, `match-diff`, `match-report`
+- `harness status`, `harness resume`, `harness queue`, `harness dashboard`
+- `harness verify function <bof3/src/.../func_XXXXXXXX.c>`
+- `harness binary map --all --type emi`, `harness verify binary --all --type emi`
 
 The high-level reverse path is clone, verify open dependencies, stage local
 disc/PsyQ inputs, run `pipeline ghidra-ready`, export symbols from Ghidra, run
 `pipeline decomp-ready`, then iterate through decomp and match loops.
+
+`bin/harness` is the current orchestration layer for target cataloging, claims,
+context stubs, fast function parity, later whole-binary verification, binary
+maps/diffs, reports, and the static dashboard under `out/harness/`.
+
+Function parity is the fast compile/decompile/m2c/asm-diff loop. Binary parity
+comes later and compares extracted code-bearing EMI `*.bin` files against
+compiler-produced raw `*.bin` files. It does not repack `.EMI` archives. The
+pipeline records binary differences without failing; direct `harness verify
+binary` calls fail on differences unless `--allow-different` is passed.
+
+Composable equivalents:
+
+- `pipeline harness-ready`
+- `pipeline binary-parity`
 
 ## Build
 
@@ -89,6 +107,7 @@ Composable equivalents:
 
 - `pipeline build-ready`
 - `pipeline match-loop`
+- `pipeline binary-parity`
 
 ## Internal
 

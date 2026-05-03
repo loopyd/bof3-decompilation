@@ -10,6 +10,10 @@ import ghidra.program.model.listing.Function;
 import ghidra.program.model.listing.FunctionIterator;
 import ghidra.program.model.listing.FunctionManager;
 import ghidra.program.model.listing.Program;
+import ghidra.program.model.symbol.Reference;
+import ghidra.program.model.symbol.ReferenceIterator;
+import ghidra.program.model.symbol.Symbol;
+import ghidra.program.model.symbol.SymbolIterator;
 import ghidra.program.model.symbol.SourceType;
 
 import java.io.PrintWriter;
@@ -22,6 +26,7 @@ import java.util.List;
 
 public class ExportSymbolsJson extends GhidraScript {
     private static final class Row {
+        String kind;
         String programPath;
         String address;
         String name;
@@ -33,6 +38,11 @@ public class ExportSymbolsJson extends GhidraScript {
         boolean thunk;
         String comment;
         String repeatableComment;
+        String fromAddress;
+        String toAddress;
+        String referenceType;
+        int operandIndex;
+        boolean externalReference;
     }
 
     @Override
@@ -47,9 +57,12 @@ public class ExportSymbolsJson extends GhidraScript {
         String selectedPath = args.length > 1 ? args[1] : "/";
         collectRows(projectData.getRootFolder(), rows, selectedPath);
         rows.sort(Comparator
-            .comparing((Row row) -> row.programPath)
-            .thenComparing(row -> row.address)
-            .thenComparing(row -> row.name));
+            .comparing((Row row) -> sortKey(row.programPath))
+            .thenComparing(row -> sortKey(row.kind))
+            .thenComparing(row -> sortKey(row.address))
+            .thenComparing(row -> sortKey(row.fromAddress))
+            .thenComparing(row -> sortKey(row.toAddress))
+            .thenComparing(row -> sortKey(row.name)));
 
         Path outputPath = Path.of(args[0]);
         Path parent = outputPath.getParent();
@@ -95,6 +108,7 @@ public class ExportSymbolsJson extends GhidraScript {
                 monitor.checkCancelled();
                 Function function = functions.next();
                 Row row = new Row();
+                row.kind = "function";
                 row.programPath = file.getPathname();
                 row.address = function.getEntryPoint().toString();
                 row.name = function.getName();
@@ -108,6 +122,38 @@ public class ExportSymbolsJson extends GhidraScript {
                 row.thunk = function.isThunk();
                 row.comment = function.getComment();
                 row.repeatableComment = function.getRepeatableComment();
+                rows.add(row);
+            }
+            SymbolIterator symbols = program.getSymbolTable().getAllSymbols(true);
+            while (symbols.hasNext()) {
+                monitor.checkCancelled();
+                Symbol symbol = symbols.next();
+                if (symbol.getSymbolType().toString().equals("Function")) {
+                    continue;
+                }
+                Row row = new Row();
+                row.kind = "symbol";
+                row.programPath = file.getPathname();
+                row.address = symbol.getAddress().toString();
+                row.name = symbol.getName();
+                row.namespace = symbol.getParentNamespace().getName(true);
+                SourceType source = symbol.getSource();
+                row.nameSource = source == null ? null : source.name();
+                rows.add(row);
+            }
+            ReferenceIterator references = program.getReferenceManager()
+                    .getReferenceIterator(program.getMemory().getMinAddress());
+            while (references.hasNext()) {
+                monitor.checkCancelled();
+                Reference reference = references.next();
+                Row row = new Row();
+                row.kind = "xref";
+                row.programPath = file.getPathname();
+                row.fromAddress = reference.getFromAddress().toString();
+                row.toAddress = reference.getToAddress().toString();
+                row.referenceType = reference.getReferenceType().getName();
+                row.operandIndex = reference.getOperandIndex();
+                row.externalReference = reference.isExternalReference();
                 rows.add(row);
             }
         }
@@ -126,7 +172,7 @@ public class ExportSymbolsJson extends GhidraScript {
         for (int index = 0; index < rows.size(); index++) {
             Row row = rows.get(index);
             writer.println("    {");
-            writer.println("      \"kind\": \"function\",");
+            writer.println("      \"kind\": " + jsonString(row.kind) + ",");
             writer.println("      \"program_path\": " + jsonString(row.programPath) + ",");
             writer.println("      \"address\": " + jsonString(row.address) + ",");
             writer.println("      \"name\": " + jsonString(row.name) + ",");
@@ -137,7 +183,12 @@ public class ExportSymbolsJson extends GhidraScript {
             writer.println("      \"name_source\": " + jsonString(row.nameSource) + ",");
             writer.println("      \"is_thunk\": " + row.thunk + ",");
             writer.println("      \"comment\": " + jsonString(row.comment) + ",");
-            writer.println("      \"repeatable_comment\": " + jsonString(row.repeatableComment));
+            writer.println("      \"repeatable_comment\": " + jsonString(row.repeatableComment) + ",");
+            writer.println("      \"from_address\": " + jsonString(row.fromAddress) + ",");
+            writer.println("      \"to_address\": " + jsonString(row.toAddress) + ",");
+            writer.println("      \"reference_type\": " + jsonString(row.referenceType) + ",");
+            writer.println("      \"operand_index\": " + row.operandIndex + ",");
+            writer.println("      \"external_reference\": " + row.externalReference);
             writer.print("    }");
             writer.println(index + 1 == rows.size() ? "" : ",");
         }
@@ -187,5 +238,9 @@ public class ExportSymbolsJson extends GhidraScript {
         }
         builder.append('"');
         return builder.toString();
+    }
+
+    private String sortKey(String value) {
+        return value == null ? "" : value;
     }
 }

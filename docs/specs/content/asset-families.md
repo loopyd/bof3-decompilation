@@ -4,7 +4,9 @@ This document describes the major `BIN/` archive families and their current runt
 
 The goal is not to fully decode every file yet. The goal is to keep a stable map of what each family appears to contain and how it is likely used by the runtime.
 
-For generated archive counts and representative overlay maps, use `processed/inventory/` as the canonical source. Any JSON or Markdown exports from the inventory helpers are ad hoc views, not durable repo state.
+For generated archive counts and representative overlay maps, use `out/inventory/`
+as the canonical source. Harness queue and claim state lives under
+`out/harness/`.
 
 ## Family Roles
 

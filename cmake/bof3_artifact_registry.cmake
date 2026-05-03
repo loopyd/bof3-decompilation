@@ -182,6 +182,82 @@ function(bof3_artifact_register_archive target)
     )
 endfunction()
 
+function(bof3_artifact_register_raw_module target)
+    cmake_parse_arguments(
+        ARG
+        ""
+        "FOLDER;PROGRAM_NAME;PROGRAM_PATH;SOURCE_HINT;KIND;LOAD_ADDRESS;RAW_SIZE"
+        "DECLARED_SOURCES"
+        ${ARGN}
+    )
+
+    if(NOT ARG_DECLARED_SOURCES)
+        message(FATAL_ERROR "bof3_artifact_register_raw_module requires DECLARED_SOURCES.")
+    endif()
+    if(NOT ARG_LOAD_ADDRESS)
+        message(FATAL_ERROR "bof3_artifact_register_raw_module requires LOAD_ADDRESS.")
+    endif()
+    if(NOT CMAKE_OBJCOPY)
+        message(FATAL_ERROR "CMAKE_OBJCOPY must be set for raw module artifacts.")
+    endif()
+    if(NOT Python3_EXECUTABLE)
+        message(FATAL_ERROR "Python3_EXECUTABLE must be set for raw module artifacts.")
+    endif()
+
+    set(object_target "${target}_objects")
+    add_library("${object_target}" OBJECT EXCLUDE_FROM_ALL ${ARG_DECLARED_SOURCES})
+    bof3_apply_common_target_settings("${object_target}")
+
+    bof3_artifact_resolve_paths(relative_path computed_program_path raw_output_path
+        "${ARG_FOLDER}" "${ARG_PROGRAM_NAME}")
+    set(program_path "${ARG_PROGRAM_PATH}")
+    if(program_path STREQUAL "")
+        set(program_path "${computed_program_path}")
+    endif()
+    set(metadata_path "${raw_output_path}.json")
+    get_filename_component(raw_output_dir "${raw_output_path}" DIRECTORY)
+
+    set(size_args)
+    if(ARG_RAW_SIZE)
+        list(APPEND size_args "--size" "${ARG_RAW_SIZE}")
+    endif()
+
+    add_custom_command(
+        OUTPUT "${raw_output_path}" "${metadata_path}"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "$<SHELL_PATH:${raw_output_dir}>"
+        COMMAND ${CMAKE_COMMAND} -E env
+            "PYTHONPATH=$<SHELL_PATH:${REBOF3_ROOT_DIR}/tools/python>"
+            "$<SHELL_PATH:${Python3_EXECUTABLE}>"
+            -m rebof3.build.raw_module
+            --output "$<SHELL_PATH:${raw_output_path}>"
+            --metadata "$<SHELL_PATH:${metadata_path}>"
+            --base-address "${ARG_LOAD_ADDRESS}"
+            ${size_args}
+            --truncate-overlaps
+            --objcopy "$<SHELL_PATH:${CMAKE_OBJCOPY}>"
+            --objects $<TARGET_OBJECTS:${object_target}>
+        DEPENDS $<TARGET_OBJECTS:${object_target}>
+        VERBATIM
+        COMMAND_EXPAND_LISTS
+    )
+    add_custom_target("${target}" DEPENDS "${raw_output_path}" "${metadata_path}")
+
+    set(kind "${ARG_KIND}")
+    if(kind STREQUAL "")
+        set(kind "module")
+    endif()
+    bof3_artifact_register(
+        "${target}"
+        FOLDER "${ARG_FOLDER}"
+        PROGRAM_NAME "${ARG_PROGRAM_NAME}"
+        PROGRAM_PATH "${program_path}"
+        SOURCE_HINT "${ARG_SOURCE_HINT}"
+        KIND "${kind}"
+        BUILD_STAGE "raw"
+        DECLARED_SOURCES ${ARG_DECLARED_SOURCES}
+    )
+endfunction()
+
 function(bof3_artifact_write_manifest out_var)
     get_property(registered_targets GLOBAL PROPERTY BOF3_ARTIFACT_TARGETS)
 

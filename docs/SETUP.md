@@ -255,6 +255,7 @@ imports them into repo inventory indexes, and verifies the decomp profile.
 Function matching:
 
 - `bin/asm-diff-one bof3/src/core/emi/func_80162178.c`
+- `bin/harness verify function bof3/src/core/emi/func_80162178.c`
 - `bin/match-init`
 - `bin/match-build`
 - `bin/match-diff`
@@ -262,9 +263,10 @@ Function matching:
 
 For the maintained one-function decomp loop, see `docs/DECOMP_WORKFLOW.md`.
 
-Build and match pipeline recipes are available as `bin/pipeline build-ready`
-and `bin/pipeline match-loop`. Inspect them first with
-`bin/pipeline <name> --plan`.
+Build, match, harness, and later whole-binary parity recipes are available as
+`bin/pipeline build-ready`, `bin/pipeline match-loop`,
+`bin/pipeline harness-ready`, and `bin/pipeline binary-parity`. Inspect them
+first with `bin/pipeline <name> --plan`.
 
 Asset extraction and review:
 

@@ -329,13 +329,23 @@ def build_analyze_headless_symbol_export_command(
     if not resolved_script.is_file():
         raise FileNotFoundError(f"Ghidra export script not found: {resolved_script}")
 
+    project_name_arg = project_name
+    process_arg = process
+    if process and process != "/" and process.startswith("/"):
+        process_path = Path(process.strip("/"))
+        if process_path.parent != Path("."):
+            project_name_arg = f"{project_name}/{process_path.parent.as_posix()}"
+            process_arg = process_path.name
+        else:
+            process_arg = process_path.name
     command = [
         str(analyze_headless),
         str(project_dir.expanduser().resolve()),
-        project_name,
+        project_name_arg,
         "-process",
-        process,
     ]
+    if process_arg and process_arg != "/":
+        command.append(process_arg)
     if recursive:
         command.append("-recursive")
     command.extend(

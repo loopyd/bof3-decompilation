@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from rebof3.match.asm_diff import (
+    compiler_asm_path_for_object,
     extract_original_bytes,
     infer_size_from_sibling_sources,
     normalize_disassembly,
@@ -67,6 +68,14 @@ def test_object_path_matches_cmake_object_layout(tmp_path: Path) -> None:
         / "core"
         / "emi"
         / "func_80162178.c.obj"
+    )
+
+
+def test_compiler_asm_path_matches_maspsx_wrapper_output(tmp_path: Path) -> None:
+    object_path = tmp_path / "func_8009c868.c.obj"
+
+    assert compiler_asm_path_for_object(object_path) == (
+        tmp_path / "func_8009c868.c.obj.s"
     )
 
 

@@ -18,8 +18,8 @@ endfunction()
 function(bof3_define_module_artifact target)
     cmake_parse_arguments(
         ARG
-        "PLACEHOLDER"
-        "DISC_FOLDER;PROGRAM_NAME;PROGRAM_PATH;SOURCE_HINT;KIND"
+        "PLACEHOLDER;RAW_BINARY"
+        "DISC_FOLDER;PROGRAM_NAME;PROGRAM_PATH;SOURCE_HINT;KIND;LOAD_ADDRESS;RAW_SIZE"
         "SOURCE_PREFIXES;DECLARED_SOURCES"
         ${ARGN}
     )
@@ -53,6 +53,18 @@ function(bof3_define_module_artifact target)
             PROGRAM_PATH "${ARG_PROGRAM_PATH}"
             SOURCE_HINT "${ARG_SOURCE_HINT}"
             KIND "${kind}"
+            DECLARED_SOURCES ${declared_sources}
+        )
+    elseif(ARG_RAW_BINARY)
+        bof3_artifact_register_raw_module(
+            "${target}"
+            FOLDER "${ARG_DISC_FOLDER}"
+            PROGRAM_NAME "${ARG_PROGRAM_NAME}"
+            PROGRAM_PATH "${ARG_PROGRAM_PATH}"
+            SOURCE_HINT "${ARG_SOURCE_HINT}"
+            KIND "${kind}"
+            LOAD_ADDRESS "${ARG_LOAD_ADDRESS}"
+            RAW_SIZE "${ARG_RAW_SIZE}"
             DECLARED_SOURCES ${declared_sources}
         )
     else()

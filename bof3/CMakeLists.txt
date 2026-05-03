@@ -17,6 +17,8 @@ set(BOF3_CMAKE_DIR "${BOF3_PROJECT_DIR}/cmake")
 set(BOF3_SHARED_CMAKE_DIR "${BOF3_REPO_ROOT_DIR}/cmake")
 set(BOF3_INCLUDE_DIR "${BOF3_PROJECT_DIR}/include")
 
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+
 include(${BOF3_SHARED_CMAKE_DIR}/bof3_sdk_helpers.cmake)
 include(${BOF3_SHARED_CMAKE_DIR}/bof3_target_helpers.cmake)
 include(${BOF3_SHARED_CMAKE_DIR}/bof3_artifact_registry.cmake)

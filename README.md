@@ -115,8 +115,14 @@ decomp-profile verification as one inspectable recipe.
 - `bin/match-build`
 - `bin/match-diff`
 - `bin/match-report`
+- `bin/harness`: catalog targets, claim work, build context stubs, binary maps/diffs, report, and dashboard
+- `bin/harness verify function <source>`: fast per-function asm-diff parity loop
+- `bin/harness verify binary <target>`: later whole-`.bin` parity gate
+- `make harness-ready`: refresh harness state, binary maps, reports, and dashboard
+- `make binary-parity`: later-stage gate that builds compiler-produced raw `.bin` files and diffs them against extracted originals; no `.EMI` repack
 
 See `docs/DECOMP_WORKFLOW.md` for the one-function decomp loop.
+Use `.agents/harness.md` for the current small-agent orchestration loop.
 
 ### Asset Review
 
@@ -137,6 +143,7 @@ Image workflows require Pillow in the active Python environment.
 - `toolchains/`: staged or downloaded SDKs and compilers, including PsyQ under `toolchains/psyq/<version>/`
 - `build/`: generated local build tree
 - `out/`: generated extraction, inventory, planning, and review artifacts
+- `out/harness/`: generated harness SQLite state, workspaces, reports, and dashboard
 
 ## Notes
 

@@ -18,8 +18,8 @@ loaded at `0x801d0c00`.
 | Load address | `0x801d0c00` |
 | Representative name | `ovl_battle_battle_e03_801d0c00` |
 | Duplicate scope | exact-duplicate group size `42` across `BATTLE` / `BOSS` |
-| Canonical inventory store | `processed/inventory/` |
-| Inventory evidence source | `processed/inventory/` views and metadata rows |
+| Canonical inventory store | `out/inventory/` |
+| Inventory evidence source | `out/inventory/` views and metadata rows |
 | Current undefined-row state | `row_count: 0` |
 | Frontier status | semantically closed under the current canonical bundle |
 
@@ -49,7 +49,7 @@ Why this family matters:
 - representative findings apply to the exact-duplicate family as a shared
   implementation, not as separately proven bespoke logic for every duplicate
 
-@source: `processed/inventory/`
+@source: `out/inventory/`
 
 ## High-level control map
 

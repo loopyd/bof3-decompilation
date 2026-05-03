@@ -9,11 +9,13 @@ bof3_define_module_artifact(
 
 bof3_define_module_artifact(
     bof3_battle_03_raw
-    PLACEHOLDER
+    RAW_BINARY
     DISC_FOLDER "BIN/BATTLE/BATTLE"
     PROGRAM_NAME "03.bin"
     PROGRAM_PATH "/bins/BIN/BATTLE/BATTLE/03.bin"
     SOURCE_HINT "build/extracted/BIN/BATTLE/BATTLE.EMI#3"
+    LOAD_ADDRESS "0x801d0c00"
+    RAW_SIZE "118224"
     SOURCE_PREFIXES "src/modules/battle/03/"
 )
 

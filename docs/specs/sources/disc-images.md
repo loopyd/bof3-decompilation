@@ -2,7 +2,8 @@
 
 This file records known-good source image references for the canonical US v1.1 target.
 
-Use `processed/inventory/` for the canonical machine-readable disk inventory and `make verify_disk` for automated local verification. The verifier currently reads `processed/inventory/disk/checksums.json` as its checksum manifest.
+Use `out/inventory/` for generated disk inventory views and `bin/disk-verify`
+for automated local verification. Checksum output is generated under `out/`.
 
 ## Canonical Disk Set
 

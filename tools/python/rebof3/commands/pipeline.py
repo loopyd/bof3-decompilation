@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import argparse
 from collections.abc import Mapping
+import sys
 from typing import Any
 
 from ..core import Pipeline
+from ..core.process import ProcessError
 from ..pipelines.registry import PipelineRegistry, build_default_registry
 from ._common import run_main
 
@@ -57,7 +59,16 @@ def run_pipeline_command(args: argparse.Namespace) -> int:
         print_pipeline_plan(pipeline)
         return 0
 
-    print_pipeline_result(pipeline.run())
+    try:
+        result = pipeline.run()
+    except ProcessError as exc:
+        print(str(exc), file=sys.stderr)
+        return exc.result.returncode
+    except Exception as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    print_pipeline_result(result)
     return 0
 
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 import difflib
 import os
 import re
+import shutil
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -125,6 +126,10 @@ def object_path_for_source(layout: RepoLayout, source_path: Path) -> Path:
         / "bof3.dir"
         / source_relative_to_project
     ).with_suffix(source_relative_to_project.suffix + ".obj")
+
+
+def compiler_asm_path_for_object(object_path: Path) -> Path:
+    return object_path.with_name(object_path.name + ".s")
 
 
 def build_target_for_source(layout: RepoLayout, source_path: Path) -> str:
@@ -329,6 +334,8 @@ def build_result_payload(
             "diff": str(output_dir / "diff.patch"),
             "original_asm": str(output_dir / "original.normalized.s"),
             "current_asm": str(output_dir / "current.normalized.s"),
+            "original_extracted_asm": str(output_dir / "original.objdump.s"),
+            "current_compiler_asm": str(output_dir / "current.compiler.s"),
             "original_objdump": str(output_dir / "original.objdump.s"),
             "current_objdump": str(output_dir / "current.objdump.s"),
             "original_bytes": str(output_dir / "original.bin"),
@@ -397,12 +404,18 @@ def run_asm_diff_one(
     current_objdump = disassemble_current(
         objdump_path=objdump_path, object_path=object_path
     )
+    current_compiler_asm = compiler_asm_path_for_object(object_path)
+    if not current_compiler_asm.is_file():
+        raise FileNotFoundError(
+            f"expected compiler assembly was not written: {current_compiler_asm}"
+        )
     original_lines = normalize_disassembly(original_objdump)
     current_lines = normalize_disassembly(current_objdump)
     current_size = current_symbol_size(nm_path, object_path, function_name)
 
     (output_dir / "original.objdump.s").write_text(original_objdump, encoding="utf-8")
     (output_dir / "current.objdump.s").write_text(current_objdump, encoding="utf-8")
+    shutil.copyfile(current_compiler_asm, output_dir / "current.compiler.s")
     (output_dir / "original.normalized.s").write_text(
         render_normalized(original_lines), encoding="utf-8"
     )

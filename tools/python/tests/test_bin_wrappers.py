@@ -157,3 +157,24 @@ def test_match_report_wrapper_help_is_available(tmp_path: Path) -> None:
 
     assert result.returncode == 0, result.stderr
     assert "usage: match report" in result.stdout
+
+
+def test_harness_wrapper_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("harness", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: harness" in result.stdout
+
+
+def test_harness_verify_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("harness", "verify", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: harness verify" in result.stdout
+
+
+def test_harness_verify_function_help_is_available(tmp_path: Path) -> None:
+    result = run_wrapper("harness", "verify", "function", "--help", cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert "usage: harness verify function" in result.stdout

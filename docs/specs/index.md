@@ -14,7 +14,8 @@ Read first:
 2. `docs/specs/glossary.md`
 3. `docs/specs/runtime/runtime-layout.md`
 4. `docs/specs/runtime/module-map.md`
-5. `docs/specs/formats/emi.md`
+5. `docs/specs/formats/artifacts.md`
+6. `docs/specs/formats/emi.md`
 
 Read by goal:
 
@@ -32,6 +33,7 @@ Read by goal:
 - Understand what content each archive has:
   - `content/asset-families.md`
   - `content/status-emi.md`
+  - `formats/artifacts.md`
   - `formats/emi.md`
   - `formats/emi-graphics-payloads.md`
   - `formats/emi-audio-payloads.md`
@@ -48,4 +50,4 @@ Rules:
 
 - prefer shipped module names over synthetic names
 - for code-bearing archives, treat `archive + slot` as the module identity
-- keep durable facts here and leave generated manifests in `processed/inventory/`
+- keep durable facts here and leave generated manifests in `out/inventory/` or `out/harness/`

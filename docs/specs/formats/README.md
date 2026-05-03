@@ -5,15 +5,17 @@ Stable file and payload facts.
 Scope boundaries:
 
 - keep runtime module behavior, call flow, and helper behavior in `docs/specs/runtime/`
-- keep generated per-file tables and inventories in `processed/inventory/`
+- keep generated per-file tables and inventories in `out/inventory/`
+- use `artifacts.md` for the current artifact and harness state model
 - keep payload-structure and type semantics in this folder
 
 ## Recommended read order
 
-1. `emi.md` (container layout + shared type semantics)
-2. `emi-graphics-payloads.md` (type-3 and palette/CLUT companion behavior)
-3. `emi-audio-payloads.md` (type-6/7/10 and type-8/9 leads)
-4. `emi-mixed-payloads.md` (type-0/1 mixed and unresolved semantics)
+1. `artifacts.md` (artifact identities, generated roots, and EMI symbolic kinds)
+2. `emi.md` (container layout + shared type semantics)
+3. `emi-graphics-payloads.md` (type-3 and palette/CLUT companion behavior)
+4. `emi-audio-payloads.md` (type-6/7/10 and type-8/9 leads)
+5. `emi-mixed-payloads.md` (type-0/1 mixed and unresolved semantics)
 
 ## Maintenance rules
 

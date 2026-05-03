@@ -2,7 +2,7 @@
 
 Archive-family grouping and content composition.
 
-Keep exact manifests in `processed/inventory/`.
+Keep exact manifests in `out/inventory/`.
 Keep runtime control-path and module behavior in `runtime/`.
 
 Current content docs:

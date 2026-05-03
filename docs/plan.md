@@ -18,8 +18,9 @@ for legacy `rebof3`.
   headless import.
 - Headless Ghidra symbol export automation is implemented through
   `bin/ghidra-export-symbols` and the `decomp-ready` pipeline.
-- Build and match pipeline recipes are implemented as `build-ready` and
-  `match-loop`.
+- Build, match, harness, and whole-binary parity pipeline recipes are
+  implemented as `build-ready`, `match-loop`, `harness-ready`, and
+  `binary-parity`.
 - Docs have been updated for current setup and workflow guidance.
 - Latest verification on 2026-04-24 passed: full pytest suite, Ruff,
   compileall, diff whitespace, and `bin/ghidra-import-project --help`.

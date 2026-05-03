@@ -133,7 +133,6 @@ def test_build_analyze_headless_symbol_export_command_uses_defaults(
         str((tmp_path / "project").resolve()),
         "bof3",
         "-process",
-        "/",
         "-recursive",
         "-scriptPath",
         str(DEFAULT_SYMBOL_EXPORT_SCRIPT.resolve().parent),
@@ -177,7 +176,7 @@ def test_export_ghidra_symbols_runs_command_with_injected_runner(
         str((tmp_path / "project").resolve()),
         "bof3",
         "-process",
-        "/boot",
+        "boot",
         "-scriptPath",
         str(script_path.parent.resolve()),
         "-postScript",
@@ -185,6 +184,30 @@ def test_export_ghidra_symbols_runs_command_with_injected_runner(
         str(output_path.resolve()),
         "/boot",
         "-noanalysis",
+    )
+
+
+def test_build_symbol_export_command_splits_project_folder_paths(
+    tmp_path: Path,
+) -> None:
+    ghidra_home = make_ghidra_home(tmp_path)
+    output_path = tmp_path / "raw.json"
+
+    command = build_analyze_headless_symbol_export_command(
+        ghidra_home=ghidra_home,
+        project_dir=tmp_path / "project",
+        project_name="bof3",
+        output_path=output_path,
+        process="/bins/BATTLE/BATTLE/3.bin",
+        recursive=False,
+    )
+
+    assert command[:5] == (
+        str(ghidra_home / "support" / "analyzeHeadless"),
+        str((tmp_path / "project").resolve()),
+        "bof3/bins/BATTLE/BATTLE",
+        "-process",
+        "3.bin",
     )
 
 

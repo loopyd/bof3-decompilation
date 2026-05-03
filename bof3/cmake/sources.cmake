@@ -213,6 +213,7 @@ set(BOF3_SOURCES
     src/modules/battle/15/func_8009af84.c
     src/modules/battle/15/func_8009b20c.c
     src/modules/battle/15/func_8009bbe8.c
+    src/modules/battle/15/func_8009c868.c
     src/modules/battle/15/func_8009c8ac.c
     src/modules/battle/15/func_8009cfec.c
     src/modules/bate/03/func_80033a00.c
@@ -263,6 +264,9 @@ set(BOF3_SOURCES
     src/modules/game/00/func_80197068.c
     src/modules/game/00/func_801970ec.c
     src/modules/game/00/func_801a7704.c
+    src/modules/game/00/func_801af270.c
+    src/modules/game/00/func_801af2a0.c
+    src/modules/game/00/func_801af390.c
     src/modules/game/01/func_801d0c90.c
     src/modules/game/01/func_801d0df0.c
     src/modules/game/01/func_801d1134.c

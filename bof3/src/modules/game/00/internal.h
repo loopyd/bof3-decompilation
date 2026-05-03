@@ -87,4 +87,22 @@ void func_801a782c(void);
  */
 void func_801992b8(void);
 
+/* does: returns a pointer into one of two sprite-rect tables indexed by
+ * sprite_id * 4, with the table chosen by flags & 1.
+ * @source: 0x801af270
+ */
+u8* func_801af270(u8 sprite_id, u8 flags);
+
+/* does: draws one sprite by filling a GT quad primitive from a rect-table
+ * entry, selecting CLUT by flags & 2, then appending to the OT.
+ * @source: 0x801af2a0
+ */
+void func_801af2a0(s16 x, s16 y, u8 sprite_id, u8 flags);
+
+/* does: iterates a packed sprite-record table and draws each sprite via
+ * func_801af2a0 with signed offsets shifted by 3 applied to base coords.
+ * @source: 0x801af390
+ */
+void func_801af390(s16 base_x, s16 base_y, const u8* record_table, u8 flags);
+
 #endif

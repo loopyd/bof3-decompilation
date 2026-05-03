@@ -120,3 +120,9 @@ Current conclusion:
 - full distinction between raw textures, CLUTs, and other graphics-side blobs
 - any relocation or init convention for code-bearing payloads
 - exact 3D model format stored in character, world, or battle archives
+
+## Harness Naming
+
+Harness reports preserve the raw TOC value as `raw_type` and render a symbolic
+`emi_kind` for humans. The current symbolic names are documented in
+`artifacts.md`.

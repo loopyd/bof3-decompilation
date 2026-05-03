@@ -82,7 +82,7 @@ For this repo, prefer this order:
 
 Local generated artifacts already show exact duplicate pressure:
 
-- `processed/inventory/`
+- `out/inventory/`
 
 Representative local patterns already visible:
 

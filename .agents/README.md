@@ -1,5 +1,6 @@
 # .agents
 
-Place prompt files and agent-specific notes under `prompts/`.
+Use `harness.md` for the current small-agent BOF3 decomp workflow.
 
-Keep them project-local and short.
+The old pre-harness prompt files were removed. Keep new coordination guidance
+project-local, short, and pointed at `bin/harness`.

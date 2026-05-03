@@ -46,7 +46,7 @@ The slot table has now been mapped against disc layout:
 
 - `DAT_80182444` is a direct `slot id -> file start LBA` table.
 - The LBA values match the regenerated disc LBA report derived from `build/Breath of Fire III (v1.1).xml`.
-- `processed/inventory/` now holds the canonical slot-to-LBA mapping.
+- `out/inventory/` now holds the canonical slot-to-LBA mapping.
 - most slot entries resolve to EMI archives, but the tail of the table also covers direct `.STR` media and boot files such as `CAPCOM30.STR`, `LOGO.EXE`, `SYSTEM.CNF`, and `SLUS_004.22`.
 
 Current unproven behavior:
@@ -490,7 +490,7 @@ Current interpretation:
 
 Generated local evidence now lives in:
 
-- `processed/inventory/` (`overlay_entry_tables` plus related views)
+- `out/inventory/` (`entry_tables` plus related views)
 
 Current local scan results:
 
@@ -679,7 +679,7 @@ Confirmed examples:
 
 The mapping was confirmed by regenerating the disc-LBA inventory from
 `build/Breath of Fire III (v1.1).xml`, persisting the canonical rows into
-`processed/inventory/`, and then comparing those LBAs against
+`out/inventory/`, and then comparing those LBAs against
 the table values in `SLUS_004.22`.
 
 Current interpretation:

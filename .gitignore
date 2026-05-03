@@ -35,3 +35,5 @@ toolchains/psyq-stock/
 # generated outputs
 out/*
 !out/README.md
+tmp/
+processed/
