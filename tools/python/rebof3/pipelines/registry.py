@@ -97,8 +97,13 @@ def build_ghidra_bootstrap_pipeline() -> Pipeline:
 def build_default_registry() -> PipelineRegistry:
     registry = PipelineRegistry()
     from .build_match import build_build_ready_pipeline, build_match_loop_pipeline
-    from .harness import build_binary_parity_pipeline, build_harness_ready_pipeline
+    from .harness import (
+        build_binary_parity_pipeline,
+        build_harness_ready_pipeline,
+        build_lift_ready_pipeline,
+    )
     from .reverse import (
+        build_decomp_full_ready_pipeline,
         build_decomp_ready_pipeline,
         build_extract_assets_pipeline,
         build_ghidra_ready_pipeline,
@@ -127,6 +132,11 @@ def build_default_registry() -> PipelineRegistry:
         build_harness_ready_pipeline,
     )
     registry.register(
+        "lift-ready",
+        "Refresh cheap harness state for function lifting",
+        build_lift_ready_pipeline,
+    )
+    registry.register(
         "binary-parity",
         "Build compiled raw bins and diff them against extracted EMI bins",
         build_binary_parity_pipeline,
@@ -150,6 +160,11 @@ def build_default_registry() -> PipelineRegistry:
         "decomp-ready",
         "Export/import Ghidra symbols and verify decomp/matching readiness",
         build_decomp_ready_pipeline,
+    )
+    registry.register(
+        "decomp-full-ready",
+        "Refresh extraction, Ghidra, symbol indexes, and harness state",
+        build_decomp_full_ready_pipeline,
     )
     registry.register(
         "ghidra-bootstrap",

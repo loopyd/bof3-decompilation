@@ -6,6 +6,24 @@ from typing import Any
 from .config import HarnessConfig
 from .workspace import safe_name
 
+_OVERLAY_PATHS: dict[str, str] = {
+    "GAME_e00": "game/00",
+    "GAME_e01": "game/01",
+    "BATTLE_e03": "battle/03",
+    "BATTLE_e15": "battle/15",
+    "START_e08": "sce10eff/00",
+    "LOGO": "logo",
+}
+
+
+def _overlay_context_dir(config: HarnessConfig, program_path: str) -> Path | None:
+    for key, rel in _OVERLAY_PATHS.items():
+        if key in program_path:
+            candidate = config.root / "bof3" / "context" / rel
+            if (candidate / "context.h").is_file():
+                return candidate
+    return None
+
 
 def common_context_dir(config: HarnessConfig) -> Path:
     return config.root / "bof3" / "context" / "common"
@@ -18,8 +36,14 @@ def ensure_common_context(config: HarnessConfig) -> Path:
         path.write_text(
             "#ifndef BOF3_CONTEXT_COMMON_H\n"
             "#define BOF3_CONTEXT_COMMON_H\n\n"
-            '#include "bof3/defines.h"\n\n'
+            '#include "bof3/context.h"\n\n'
             "#endif\n",
+            encoding="utf-8",
+        )
+    elif "bof3/context.h" not in path.read_text(encoding="utf-8"):
+        text = path.read_text(encoding="utf-8")
+        path.write_text(
+            text.replace('#include "bof3/defines.h"\n', '#include "bof3/context.h"\n'),
             encoding="utf-8",
         )
     return path
@@ -29,6 +53,30 @@ def build_context_header(config: HarnessConfig, target: dict[str, Any]) -> Path:
     ensure_common_context(config)
     context_root = config.context_dir / safe_name(str(target["id"]))
     context_root.mkdir(parents=True, exist_ok=True)
+
+    overlay_dir = _overlay_context_dir(
+        config, str(target.get("program_path") or "")
+    )
+    if overlay_dir is not None:
+        overlay_rel = overlay_dir.relative_to(config.root)
+        path = context_root / "context.h"
+        guard = f"REBOF3_HARNESS_CONTEXT_{safe_name(str(target['id'])).upper()}_H"
+        path.write_text(
+            f"#ifndef {guard}\n"
+            f"#define {guard}\n\n"
+            '#include "bof3/context.h"\n'
+            '#include "bof3/context/common/scratchpad.h"\n\n'
+            f"/* target: {target['id']} */\n"
+            f"/* source: {target.get('source_hint') or ''} */\n"
+            f"/* program: {target.get('program_path') or ''} */\n"
+            f"/* entry: {target.get('entry_hex') or ''} */\n\n"
+            f'#include "{overlay_rel / "structs.h"}"\n'
+            f'#include "{overlay_rel / "prototypes.h"}"\n\n'
+            "#endif\n",
+            encoding="utf-8",
+        )
+        return path
+
     for name, description in (
         ("symbols.h", "function and label names"),
         ("structs.h", "local struct definitions"),
@@ -53,7 +101,8 @@ def build_context_header(config: HarnessConfig, target: dict[str, Any]) -> Path:
     path.write_text(
         f"#ifndef {guard}\n"
         f"#define {guard}\n\n"
-        '#include "bof3/context/common/common.h"\n\n'
+        '#include "bof3/context.h"\n'
+        '#include "bof3/context/common/scratchpad.h"\n\n'
         f"/* target: {target['id']} */\n"
         f"/* source: {source_hint} */\n"
         f"/* program: {program_path} */\n"

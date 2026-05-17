@@ -200,6 +200,35 @@ def upsert_targets(conn: sqlite3.Connection, targets: Iterable[dict[str, Any]]) 
     return count
 
 
+def prune_stale_targets(
+    conn: sqlite3.Connection,
+    *,
+    target_type: str,
+    keep_ids: Iterable[str],
+    statuses: tuple[str, ...] = ("queued", "ready"),
+) -> int:
+    conn.execute("CREATE TEMP TABLE IF NOT EXISTS keep_target_ids(id TEXT PRIMARY KEY)")
+    conn.execute("DELETE FROM keep_target_ids")
+    conn.executemany(
+        "INSERT OR IGNORE INTO keep_target_ids(id) VALUES(?)",
+        [(target_id,) for target_id in keep_ids],
+    )
+    placeholders = ",".join("?" for _ in statuses)
+    cursor = conn.execute(
+        f"""
+        DELETE FROM targets
+        WHERE type = ?
+          AND status IN ({placeholders})
+          AND NOT EXISTS (
+            SELECT 1 FROM keep_target_ids WHERE keep_target_ids.id = targets.id
+          )
+        """,
+        (target_type, *statuses),
+    )
+    conn.execute("DELETE FROM keep_target_ids")
+    return int(cursor.rowcount)
+
+
 def target_row(conn: sqlite3.Connection, target_id: str) -> dict[str, Any] | None:
     row = conn.execute("SELECT * FROM targets WHERE id = ?", (target_id,)).fetchone()
     return None if row is None else row_to_target(row)

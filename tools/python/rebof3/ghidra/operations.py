@@ -393,6 +393,53 @@ def export_ghidra_symbols(
     )
 
 
+DEFAULT_DUPLICATE_EXPORT = Path("out/harness/duplicate_groups.json")
+DEFAULT_DUPLICATE_EXPORT_SCRIPT = (
+    Path(__file__).resolve().parents[4]
+    / "tools"
+    / "ghidra"
+    / "scripts"
+    / "ExportDuplicateGroups.java"
+)
+
+
+@dataclass(frozen=True)
+class GhidraDuplicateGroupsResult:
+    output_path: Path
+    command: tuple[str, ...]
+
+
+def export_duplicate_groups(
+    *,
+    ghidra_home: Path | None,
+    project_dir: Path = DEFAULT_PROJECT_ROOT,
+    project_name: str = DEFAULT_PROJECT_NAME,
+    output_path: Path = DEFAULT_DUPLICATE_EXPORT,
+    script_path: Path = DEFAULT_DUPLICATE_EXPORT_SCRIPT,
+    process: str = "/",
+    recursive: bool = True,
+    runner: HeadlessRunner = default_headless_runner,
+) -> GhidraDuplicateGroupsResult:
+    command = build_analyze_headless_symbol_export_command(
+        ghidra_home=ghidra_home,
+        project_dir=project_dir,
+        project_name=project_name,
+        output_path=output_path,
+        script_path=script_path,
+        process=process,
+        recursive=recursive,
+    )
+    output_path.expanduser().resolve().parent.mkdir(parents=True, exist_ok=True)
+    result = runner(command)
+    returncode = _returncode(result)
+    if returncode != 0:
+        raise subprocess.CalledProcessError(returncode, command)
+    return GhidraDuplicateGroupsResult(
+        output_path=output_path.expanduser().resolve(),
+        command=command,
+    )
+
+
 def import_ghidra_project(
     *,
     ghidra_home: Path | None,

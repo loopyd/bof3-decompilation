@@ -89,13 +89,13 @@ def repo_layout(
     resolved_root = (root or Path(__file__).resolve().parents[3]).resolve()
     resolved_psyq_version = normalize_psyq_version(psyq_version)
     build_dir = resolved_root / "build"
-    out_dir = resolved_root / "out"
+    out_dir = resolved_root / "output"
     toolchains_dir = resolved_root / "toolchains"
     third_party_dir = resolved_root / "third_party"
     inputs_dir = resolved_root / "inputs"
-    extracted_dir = build_dir / "extracted"
-    rebuilt_dir = build_dir / "rebuilt"
-    raw_emi_dir = out_dir / "emi_raw"
+    extracted_dir = out_dir / "extracted"
+    rebuilt_dir = out_dir / "rebuilt"
+    raw_emi_dir = out_dir / "extracted"
     ghidra_bootstrap_dir = out_dir / "ghidra-bootstrap"
     inventory_artifacts_dir = out_dir / "inventory"
     return RepoLayout(

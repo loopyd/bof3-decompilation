@@ -37,7 +37,7 @@ def parse_lba_log(path: Path) -> list[dict[str, Any]]:
 
     rows = []
     for line in path.read_text(encoding="utf-8").splitlines():
-        if "|" not in line or "build/extracted/" not in line:
+        if "|" not in line or "output/extracted/" not in line:
             continue
         parts = [part.strip() for part in line.split("|")]
         if len(parts) < 7:
@@ -49,7 +49,7 @@ def parse_lba_log(path: Path) -> list[dict[str, Any]]:
         path_parts = source_path.parts
         family = (
             path_parts[3]
-            if len(path_parts) >= 4 and path_parts[0:3] == ("build", "extracted", "BIN")
+            if len(path_parts) >= 4 and path_parts[0:3] == ("output", "extracted", "BIN")
             else "unknown"
         )
         archive_path = Path(name)

@@ -92,7 +92,7 @@ def emi_target_records(catalog: dict[str, Any]) -> list[dict[str, Any]]:
         target_id = f"emi:{archive_id}#{entry_index}"
         score = int(classification.get("score") or 0)
         status = "queued" if score >= 50 else "cataloged"
-        source_hint = f"build/extracted/BIN/{archive_id}.EMI#{entry_index}"
+        source_hint = f"output/extracted/BIN/{archive_id}.EMI#{entry_index}"
         records.append(
             {
                 "id": target_id,

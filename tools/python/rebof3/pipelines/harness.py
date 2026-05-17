@@ -37,10 +37,23 @@ def build_harness_ready_pipeline(
     executor: CommandExecutor = run_workspace_command,
 ) -> Pipeline:
     repo_root = root or repo_layout().root
-    harness = _bin(repo_root, "harness")
     return Pipeline(
         name="harness-ready",
         description="Refresh harness state, binary maps, reports, and dashboard",
+        tasks=harness_refresh_tasks(root=repo_root, executor=executor),
+    )
+
+
+def build_lift_ready_pipeline(
+    *,
+    root: Path | None = None,
+    executor: CommandExecutor = run_workspace_command,
+) -> Pipeline:
+    repo_root = root or repo_layout().root
+    harness = _bin(repo_root, "harness")
+    return Pipeline(
+        name="lift-ready",
+        description="Refresh the cheap harness state needed for function lifting",
         tasks=[
             _task(
                 root=repo_root,
@@ -60,22 +73,8 @@ def build_harness_ready_pipeline(
                 root=repo_root,
                 executor=executor,
                 name="harness-analyze",
-                description="Import available function targets from inventory",
+                description="Refresh function targets from existing Ghidra exports",
                 command=(harness, "analyze"),
-            ),
-            _task(
-                root=repo_root,
-                executor=executor,
-                name="harness-split",
-                description="Record staged source migration targets",
-                command=(harness, "split"),
-            ),
-            _task(
-                root=repo_root,
-                executor=executor,
-                name="harness-binary-map",
-                description="Refresh function, symbol, and xref maps for EMI bins",
-                command=(harness, "binary", "map", "--all", "--type", "emi"),
             ),
             _task(
                 root=repo_root,
@@ -93,6 +92,65 @@ def build_harness_ready_pipeline(
             ),
         ],
     )
+
+
+def harness_refresh_tasks(
+    *,
+    root: Path,
+    executor: CommandExecutor,
+) -> list[Task]:
+    harness = _bin(root, "harness")
+    return [
+        _task(
+            root=root,
+            executor=executor,
+            name="harness-setup",
+            description="Initialize harness directories, context, and database",
+            command=(harness, "setup"),
+        ),
+        _task(
+            root=root,
+            executor=executor,
+            name="harness-catalog",
+            description="Catalog EMI entries and build artifacts",
+            command=(harness, "catalog"),
+        ),
+        _task(
+            root=root,
+            executor=executor,
+            name="harness-analyze",
+            description="Import available function targets from inventory",
+            command=(harness, "analyze"),
+        ),
+        _task(
+            root=root,
+            executor=executor,
+            name="harness-split",
+            description="Record staged source migration targets",
+            command=(harness, "split"),
+        ),
+        _task(
+            root=root,
+            executor=executor,
+            name="harness-binary-map",
+            description="Refresh function, symbol, and xref maps for EMI bins",
+            command=(harness, "binary", "map", "--all", "--type", "emi"),
+        ),
+        _task(
+            root=root,
+            executor=executor,
+            name="harness-report",
+            description="Render JSON and Markdown harness reports",
+            command=(harness, "report"),
+        ),
+        _task(
+            root=root,
+            executor=executor,
+            name="harness-dashboard",
+            description="Render the static harness dashboard",
+            command=(harness, "dashboard"),
+        ),
+    ]
 
 
 def build_binary_parity_pipeline(

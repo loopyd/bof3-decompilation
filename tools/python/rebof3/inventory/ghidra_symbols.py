@@ -23,12 +23,12 @@ def infer_source_hint(program_path: str, folder: str, program_name: str) -> str 
     normalized_folder = str(folder or "").strip("/")
     normalized_program = str(program_name or "")
     if normalized_folder == "boot" and normalized_program == "SLUS_004.22":
-        return "build/extracted/SLUS_004.22"
+        return "output/extracted/SLUS_004.22"
     if (
         normalized_folder in {"boot", "boot/logo"}
         and normalized_program.upper() == "LOGO.EXE"
     ):
-        return "build/extracted/LOGO/LOGO.EXE"
+        return "output/extracted/LOGO/LOGO.EXE"
     for prefix in ("bins/", "overlays/"):
         if not normalized_folder.startswith(prefix):
             continue
@@ -38,7 +38,7 @@ def infer_source_hint(program_path: str, folder: str, program_name: str) -> str 
         )
         if match is None or not archive_id:
             return None
-        return f"build/extracted/{archive_id}.EMI#{int(match.group('entry'))}"
+        return f"output/extracted/{archive_id}.EMI#{int(match.group('entry'))}"
     _ = program_path
     return None
 
@@ -143,6 +143,12 @@ def normalize_programs(payload: dict[str, Any]) -> list[dict[str, Any]]:
                 "namespace": row.get("namespace"),
                 "name_source": row.get("name_source"),
                 "is_thunk": bool(row.get("is_thunk", False)),
+                "parameters": row.get("parameters")
+                if isinstance(row.get("parameters"), list)
+                else [],
+                "locals": row.get("locals")
+                if isinstance(row.get("locals"), list)
+                else [],
             }
         )
     programs = []
@@ -213,6 +219,12 @@ def flatten_function_rows(programs: list[dict[str, Any]]) -> list[dict[str, Any]
                     "program_name": program["program_name"],
                     "program_path": program["program_path"],
                     "program_slug": program["program_slug"],
+                    "parameters": function.get("parameters")
+                    if isinstance(function.get("parameters"), list)
+                    else [],
+                    "locals": function.get("locals")
+                    if isinstance(function.get("locals"), list)
+                    else [],
                     "repeatable_comment": function.get("repeatable_comment"),
                     "signature": function.get("signature"),
                     "source_hint": program["source_hint"],
