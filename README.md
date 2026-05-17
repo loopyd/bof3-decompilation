@@ -111,13 +111,18 @@ decomp-profile verification as one inspectable recipe.
 ### Match
 
 - `bin/asm-diff-one bof3/src/core/emi/func_80162178.c`: compile one source object and diff it against original asm
+- `bin/pipeline decomp-full-ready`: refresh extraction, one Ghidra project, symbol indexes, and harness state
 - `bin/match-init`
 - `bin/match-build`
 - `bin/match-diff`
 - `bin/match-report`
 - `bin/harness`: catalog targets, claim work, build context stubs, binary maps/diffs, report, and dashboard
+- `bin/harness candidates`: list good next function targets by module, size, and source status
+- `bin/harness lift <target>`: initialize workspace, build context, export original asm, and generate a target-local m2c draft
 - `bin/harness verify function <source>`: fast per-function asm-diff parity loop
+- `bin/harness verify module <module>`: verify all source-backed functions in one module and print match percentages
 - `bin/harness verify binary <target>`: later whole-`.bin` parity gate
+- `make lift-ready`: cheap harness refresh before function lifting; does not rerun Ghidra
 - `make harness-ready`: refresh harness state, binary maps, reports, and dashboard
 - `make binary-parity`: later-stage gate that builds compiler-produced raw `.bin` files and diffs them against extracted originals; no `.EMI` repack
 

@@ -22,6 +22,7 @@ SLUS post-logo bootstrap
 - `bof3/src/modules/game/00/`: `GAME.EMI#0`
 - `bof3/src/modules/game/01/`: `GAME.EMI#1`
 - `bof3/src/modules/commu00/00/`: `COMMU00.EMI#0`
+- `bof3/src/modules/battle/03/`: `BATTLE.EMI#3`
 - `bof3/src/modules/battle/15/`: `BATTLE.EMI#15`
 
 Use shipped archive + slot naming for lifted code:
@@ -46,7 +47,7 @@ Use shipped archive + slot naming for lifted code:
 
 ## Next Targets
 
-1. Lift `BATTLE.EMI#3`.
-2. Close the authored NEW/LOAD -> `SCENA16` route mapping.
-3. Recover the first true gameplay module after `0x801f7188 -> 0x8014b8b0`.
-4. Recover the card/load branch.
+1. Close the authored NEW/LOAD -> `SCENA16` route mapping.
+2. Recover the first true gameplay module after `0x801f7188 -> 0x8014b8b0`.
+3. Recover the card/load branch.
+4. Lift contiguous `BATTLE.EMI#3` functions to whole-module parity.

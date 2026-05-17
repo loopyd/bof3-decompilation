@@ -3,9 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 
 from rebof3.match.asm_diff import (
+    build_result_payload,
     compiler_asm_path_for_object,
     extract_original_bytes,
     infer_size_from_sibling_sources,
+    matching_instruction_count,
     normalize_disassembly,
     object_path_for_source,
     parse_source_address,
@@ -91,6 +93,60 @@ def test_normalize_disassembly_keeps_only_instruction_text() -> None:
 
     assert normalize_disassembly(disassembly) == [
         "addiu sp,sp,-24",
-        "lui a0,0x0 # %hi(DAT_80146808)",
+        "lui a0,0x8014",
         "jal CdIntToPos",
     ]
+
+
+def test_normalize_disassembly_canonicalizes_func_relocations() -> None:
+    disassembly = """
+   0:\t0c05636e \tjal\t0 <func_80158db8>
+\t\t\t0: R_MIPS_26\tfunc_80158db8
+"""
+
+    assert normalize_disassembly(disassembly) == ["jal 0x80158db8"]
+
+
+def test_normalize_disassembly_resolves_symbol_lo_relocations() -> None:
+    disassembly = """
+  20:\t3c010000 \tlui\tat,0x0
+\t\t\t20: R_MIPS_HI16\tDAT_80143d40
+  24:\tac220000 \tsw\tv0,0(at)
+\t\t\t24: R_MIPS_LO16\tDAT_80143d40
+"""
+
+    assert normalize_disassembly(disassembly) == [
+        "lui at,0x8014",
+        "sw v0,15680(at)",
+    ]
+
+
+def test_normalize_disassembly_uses_relative_branch_targets() -> None:
+    assert normalize_disassembly("  3c:\t10400003 \tbeqz\tv0,4c <LM11>\n") == [
+        "beqz v0,16"
+    ]
+    assert normalize_disassembly(
+        "8014b378:\t10400003 \tbeqz\tv0,0x8014b388\n"
+    ) == ["beqz v0,16"]
+
+
+def test_result_payload_reports_instruction_match_percent(tmp_path: Path) -> None:
+    payload = build_result_payload(
+        source_path=tmp_path / "func_80000000.c",
+        function_name="func_80000000",
+        address=0x80000000,
+        original_size=12,
+        current_size=12,
+        binary_path=tmp_path / "0.bin",
+        object_path=tmp_path / "func_80000000.c.obj",
+        output_dir=tmp_path,
+        original_lines=["addiu sp,sp,-16", "jr ra", "nop"],
+        current_lines=["addiu sp,sp,-16", "move v0,zero", "nop"],
+    )
+
+    assert matching_instruction_count(
+        ["addiu sp,sp,-16", "jr ra", "nop"],
+        ["addiu sp,sp,-16", "move v0,zero", "nop"],
+    ) == 2
+    assert payload["instruction_count"]["matching"] == 2
+    assert payload["instruction_count"]["match_percent"] == 66.67

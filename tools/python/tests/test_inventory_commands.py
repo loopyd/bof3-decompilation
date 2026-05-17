@@ -179,14 +179,14 @@ def test_inventory_slot_map_command_reads_disc_lba_json(tmp_path: Path) -> None:
                         "archive_type": "EMI",
                         "family": "ETC",
                         "lba": 111,
-                        "source_path": "build/extracted/BIN/ETC/FIRST.EMI",
+                        "source_path": "output/extracted/BIN/ETC/FIRST.EMI",
                     },
                     {
                         "archive_name": "SECOND",
                         "archive_type": "EMI",
                         "family": "SCENARIO",
                         "lba": 222,
-                        "source_path": "build/extracted/BIN/SCENARIO/SECOND.EMI",
+                        "source_path": "output/extracted/BIN/SCENARIO/SECOND.EMI",
                     },
                 ]
             },
@@ -247,6 +247,22 @@ def test_inventory_import_ghidra_symbols_writes_indexes_and_program_files(
                         "namespace": "Global",
                         "name_source": "USER_DEFINED",
                         "is_thunk": False,
+                        "parameters": [
+                            {
+                                "name": "slot_id",
+                                "data_type": "uint",
+                                "storage": "r4",
+                                "ordinal": 0,
+                            }
+                        ],
+                        "locals": [
+                            {
+                                "name": "ready",
+                                "data_type": "bool",
+                                "storage": "Stack[0x0]",
+                                "ordinal": -1,
+                            }
+                        ],
                     },
                     {
                         "kind": "function",
@@ -294,6 +310,8 @@ def test_inventory_import_ghidra_symbols_writes_indexes_and_program_files(
     assert index_payload["programs"][0]["program_path"] == "/bins/ETC/FIRST#9"
     assert index_payload["programs"][1]["program_path"] == "/boot/SLUS_004.22"
     assert len(function_payload["rows"]) == 2
+    assert function_payload["rows"][1]["parameters"][0]["name"] == "slot_id"
+    assert function_payload["rows"][1]["locals"][0]["name"] == "ready"
     assert "emi_ready" in function_index_tsv_out.read_text(encoding="utf-8")
     assert md_out.is_file()
     assert len(list(program_output_dir.glob("*_ghidra_symbols.json"))) == 2

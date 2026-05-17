@@ -74,6 +74,7 @@ runs export, import, and decomp-profile verification as one inspectable recipe.
 ## Match
 
 - `asm-diff-one <bof3/src/.../func_XXXXXXXX.c>`
+- `source-status [--module modules/battle/03] [--functions|--full]`
 - `match-init`, `match-build`, `match-diff`, `match-report`
 - `harness status`, `harness resume`, `harness queue`, `harness dashboard`
 - `harness verify function <bof3/src/.../func_XXXXXXXX.c>`

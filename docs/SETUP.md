@@ -206,6 +206,17 @@ Generated planning artifacts live under `out/ghidra-bootstrap/`.
 `bin/ghidra-import-project` also accepts `GHIDRA_HOME` when `--ghidra-home` is
 not passed.
 
+For shared project refreshes, prefer the harness wrappers:
+
+```bash
+bin/harness ghidra import-project
+bin/harness ghidra export-symbols
+```
+
+They serialize Ghidra headless access with the harness `ghidra` lock. Normal
+function lifting should reuse the exported inventory and run `make lift-ready`,
+not Ghidra.
+
 For the system Ghidra install on this workstation, use:
 
 ```bash

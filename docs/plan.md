@@ -22,18 +22,19 @@ for legacy `rebof3`.
   implemented as `build-ready`, `match-loop`, `harness-ready`, and
   `binary-parity`.
 - Docs have been updated for current setup and workflow guidance.
-- Latest verification on 2026-04-24 passed: full pytest suite, Ruff,
+- Latest verification on 2026-05-17 passed: full pytest suite, Ruff,
   compileall, diff whitespace, and `bin/ghidra-import-project --help`.
 
 ## In Progress
 
-- No active implementation task is delegated at the moment.
+- `BATTLE.EMI#3` function lifting (at `bof3/src/modules/battle/03/`).
 
 ## Next
 
 - Add pipeline argument support for configurable runs.
 - Consolidate wrappers so command-backed pipelines share one obvious path.
 - Clean up setup architecture and audit dependencies.
+- Establish a documentation review cadence (every ~2 weeks).
 
 ## Later/Risks
 

@@ -123,23 +123,27 @@ def test_default_registry_includes_ghidra_bootstrap_pipeline() -> None:
     assert registry.names() == [
         "binary-parity",
         "build-ready",
+        "decomp-full-ready",
         "decomp-ready",
         "extract-assets",
         "ghidra-bootstrap",
         "ghidra-ready",
         "harness-ready",
         "inventory-refresh",
+        "lift-ready",
         "match-loop",
         "setup-open",
     ]
     assert registry.get("binary-parity").description
     assert registry.get("build-ready").description
+    assert registry.get("decomp-full-ready").description
     assert registry.get("decomp-ready").description
     assert registry.get("extract-assets").description
     assert registry.get("ghidra-bootstrap").description
     assert registry.get("ghidra-ready").description
     assert registry.get("harness-ready").description
     assert registry.get("inventory-refresh").description
+    assert registry.get("lift-ready").description
     assert registry.get("match-loop").description
     assert registry.get("setup-open").description
 

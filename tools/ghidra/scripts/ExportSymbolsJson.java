@@ -9,7 +9,9 @@ import ghidra.program.model.address.AddressSetView;
 import ghidra.program.model.listing.Function;
 import ghidra.program.model.listing.FunctionIterator;
 import ghidra.program.model.listing.FunctionManager;
+import ghidra.program.model.listing.Parameter;
 import ghidra.program.model.listing.Program;
+import ghidra.program.model.listing.Variable;
 import ghidra.program.model.symbol.Reference;
 import ghidra.program.model.symbol.ReferenceIterator;
 import ghidra.program.model.symbol.Symbol;
@@ -43,6 +45,15 @@ public class ExportSymbolsJson extends GhidraScript {
         String referenceType;
         int operandIndex;
         boolean externalReference;
+        List<VariableRow> parameters = new ArrayList<>();
+        List<VariableRow> locals = new ArrayList<>();
+    }
+
+    private static final class VariableRow {
+        String name;
+        String dataType;
+        String storage;
+        int ordinal;
     }
 
     @Override
@@ -122,6 +133,12 @@ public class ExportSymbolsJson extends GhidraScript {
                 row.thunk = function.isThunk();
                 row.comment = function.getComment();
                 row.repeatableComment = function.getRepeatableComment();
+                for (Parameter parameter : function.getParameters()) {
+                    row.parameters.add(variableRow(parameter));
+                }
+                for (Variable local : function.getLocalVariables()) {
+                    row.locals.add(variableRow(local));
+                }
                 rows.add(row);
             }
             SymbolIterator symbols = program.getSymbolTable().getAllSymbols(true);
@@ -188,7 +205,9 @@ public class ExportSymbolsJson extends GhidraScript {
             writer.println("      \"to_address\": " + jsonString(row.toAddress) + ",");
             writer.println("      \"reference_type\": " + jsonString(row.referenceType) + ",");
             writer.println("      \"operand_index\": " + row.operandIndex + ",");
-            writer.println("      \"external_reference\": " + row.externalReference);
+            writer.println("      \"external_reference\": " + row.externalReference + ",");
+            writer.println("      \"parameters\": " + variablesJson(row.parameters) + ",");
+            writer.println("      \"locals\": " + variablesJson(row.locals));
             writer.print("    }");
             writer.println(index + 1 == rows.size() ? "" : ",");
         }
@@ -237,6 +256,34 @@ public class ExportSymbolsJson extends GhidraScript {
             }
         }
         builder.append('"');
+        return builder.toString();
+    }
+
+    private VariableRow variableRow(Variable variable) {
+        VariableRow row = new VariableRow();
+        row.name = variable.getName();
+        row.dataType = variable.getDataType() == null ? null : variable.getDataType().getDisplayName();
+        row.storage = variable.getVariableStorage() == null ? null : variable.getVariableStorage().toString();
+        row.ordinal = variable instanceof Parameter ? ((Parameter) variable).getOrdinal() : -1;
+        return row;
+    }
+
+    private String variablesJson(List<VariableRow> variables) {
+        StringBuilder builder = new StringBuilder();
+        builder.append('[');
+        for (int index = 0; index < variables.size(); index++) {
+            VariableRow variable = variables.get(index);
+            if (index > 0) {
+                builder.append(',');
+            }
+            builder.append('{');
+            builder.append("\"name\":").append(jsonString(variable.name)).append(',');
+            builder.append("\"data_type\":").append(jsonString(variable.dataType)).append(',');
+            builder.append("\"storage\":").append(jsonString(variable.storage)).append(',');
+            builder.append("\"ordinal\":").append(variable.ordinal);
+            builder.append('}');
+        }
+        builder.append(']');
         return builder.toString();
     }
 
