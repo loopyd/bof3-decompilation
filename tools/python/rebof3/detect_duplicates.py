@@ -5,7 +5,7 @@ Reads the Ghidra function index, groups game functions by body byte content,
 filters to cross-program duplicates only, and writes a JSON report.
 
 Usage: bin/detect-duplicates [--ghidra]
-Output: out/harness/duplicate_groups.json
+Output: output/harness/duplicate_groups.json
 
 With --ghidra: uses Ghidra headless for exact function byte comparison.
 Without --ghidra: uses the emi_catalog SHA256 + function body range fallback.

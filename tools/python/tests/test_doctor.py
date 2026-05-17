@@ -123,7 +123,7 @@ def test_doctor_open_profile_passes_for_seeded_open_layout(
     assert all(check.name != "inputs/disc" for check in checks)
     assert all(check.name != "inputs/local-psyq-source" for check in checks)
     assert all(check.name != "toolchains/psyq" for check in checks)
-    assert all(check.name != "out/ghidra-bootstrap" for check in checks)
+    assert all(check.name != "out/ghidra-bof3" for check in checks)
     assert any(check.name == "tools/bof3-disk" for check in checks)
 
 
@@ -168,7 +168,7 @@ def test_doctor_decomp_profile_requires_match_tools_and_ghidra_indexes(
     assert doctor_exit_code(checks) == 0
     assert any(check.name == "tools/objdiff-cli" for check in checks)
     assert any(check.name == "tools/mipsmatch" for check in checks)
-    assert any(check.name == "out/ghidra-bootstrap" for check in checks)
+    assert any(check.name == "out/ghidra-bof3" for check in checks)
     assert any(check.name == "out/ghidra-function-index" for check in checks)
 
 
@@ -216,7 +216,7 @@ def test_doctor_full_profile_requires_ghidra_outputs(
     checks = run_doctor(layout=layout, profile="full")
 
     assert any(
-        check.name == "out/ghidra-bootstrap"
+        check.name == "out/ghidra-bof3"
         and check.status == "missing"
         and check.required
         for check in checks
@@ -245,7 +245,7 @@ def test_doctor_ghidra_profile_does_not_require_match_tool_binaries(
     assert doctor_exit_code(checks) == 0
     assert all(check.name != "tools/objdiff-cli" for check in checks)
     assert all(check.name != "tools/mipsmatch" for check in checks)
-    assert any(check.name == "out/ghidra-bootstrap" for check in checks)
+    assert any(check.name == "out/ghidra-bof3" for check in checks)
 
 
 def test_doctor_fails_when_required_prerequisites_are_missing(

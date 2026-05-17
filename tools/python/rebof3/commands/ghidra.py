@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 import argparse
+import subprocess
 from pathlib import Path
 
 from ..ghidra import (
     DEFAULT_IMPORT_MANIFEST,
     DEFAULT_IMPORT_STAGING,
+    DEFAULT_ANALYSIS_EXPORT,
+    DEFAULT_ANALYSIS_EXPORT_SCRIPT,
     DEFAULT_PROJECT_NAME,
     DEFAULT_PROJECT_ROOT,
     DEFAULT_SYMBOL_EXPORT,
     DEFAULT_SYMBOL_EXPORT_SCRIPT,
+    export_analysis,
     export_ghidra_symbols,
     import_ghidra_project,
     install_extensions,
@@ -21,6 +25,14 @@ from ..paths import repo_layout
 from ..pipelines import run_ghidra_bootstrap_pipeline
 from ..planning import build_ghidra_manifest
 from ._common import run_main
+
+
+def _headless_error(exc: subprocess.CalledProcessError) -> int:
+    print(f"ghidra headless failed: exit {exc.returncode}")
+    output = exc.output
+    if isinstance(output, str) and output:
+        print(output[-4000:])
+    return int(exc.returncode)
 
 
 def require_bootstrap_inputs(args: argparse.Namespace) -> bool:
@@ -135,15 +147,37 @@ def run_import_project(args: argparse.Namespace) -> int:
 
 
 def run_export_symbols(args: argparse.Namespace) -> int:
-    result = export_ghidra_symbols(
-        ghidra_home=args.ghidra_home,
-        project_dir=args.project_dir,
-        project_name=args.project_name,
-        output_path=args.output,
-        script_path=args.script_path,
-        process=args.process,
-        recursive=not args.no_recursive,
-    )
+    try:
+        result = export_ghidra_symbols(
+            ghidra_home=args.ghidra_home,
+            project_dir=args.project_dir,
+            project_name=args.project_name,
+            output_path=args.output,
+            script_path=args.script_path,
+            process=args.process,
+            recursive=not args.no_recursive,
+        )
+    except subprocess.CalledProcessError as exc:
+        return _headless_error(exc)
+    print(f"exported: {result.output_path}")
+    print(f"project-dir: {args.project_dir}")
+    print(f"project-name: {args.project_name}")
+    return 0
+
+
+def run_export_analysis(args: argparse.Namespace) -> int:
+    try:
+        result = export_analysis(
+            ghidra_home=args.ghidra_home,
+            project_dir=args.project_dir,
+            project_name=args.project_name,
+            output_path=args.output,
+            script_path=args.script_path,
+            process=args.process,
+            recursive=not args.no_recursive,
+        )
+    except subprocess.CalledProcessError as exc:
+        return _headless_error(exc)
     print(f"exported: {result.output_path}")
     print(f"project-dir: {args.project_dir}")
     print(f"project-name: {args.project_name}")
@@ -218,6 +252,17 @@ def configure_export_symbols_parser(parser: argparse.ArgumentParser) -> None:
     parser.set_defaults(handler=run_export_symbols)
 
 
+def configure_export_analysis_parser(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--ghidra-home", type=Path)
+    parser.add_argument("--project-dir", type=Path, default=DEFAULT_PROJECT_ROOT)
+    parser.add_argument("--project-name", default=DEFAULT_PROJECT_NAME)
+    parser.add_argument("--output", type=Path, default=DEFAULT_ANALYSIS_EXPORT)
+    parser.add_argument("--script-path", type=Path, default=DEFAULT_ANALYSIS_EXPORT_SCRIPT)
+    parser.add_argument("--process", default="/")
+    parser.add_argument("--no-recursive", action="store_true")
+    parser.set_defaults(handler=run_export_analysis)
+
+
 def configure_install_extensions_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("sources", nargs="+", type=Path)
     parser.add_argument("--user-dir", type=Path, required=True)
@@ -244,6 +289,9 @@ def configure_root_parser(parser: argparse.ArgumentParser) -> None:
 
     export_symbols = subparsers.add_parser("export-symbols")
     configure_export_symbols_parser(export_symbols)
+
+    export_analysis_parser = subparsers.add_parser("export-analysis")
+    configure_export_analysis_parser(export_analysis_parser)
 
     install_extensions_parser = subparsers.add_parser("install-extensions")
     configure_install_extensions_parser(install_extensions_parser)

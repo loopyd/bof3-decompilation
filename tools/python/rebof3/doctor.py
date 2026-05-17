@@ -312,8 +312,8 @@ def run_doctor(
         checks.append(
             _file_check(
                 repo.ghidra_manifest_path,
-                name="out/ghidra-bootstrap",
-                hint="run `make ghidra` or `bin/ghidra-bootstrap` after extraction and unpack",
+                name="out/ghidra-bof3",
+                hint="run `make ghidra` after extraction and unpack",
             )
         )
 

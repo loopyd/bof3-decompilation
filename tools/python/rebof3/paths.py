@@ -96,7 +96,7 @@ def repo_layout(
     extracted_dir = out_dir / "extracted"
     rebuilt_dir = out_dir / "rebuilt"
     raw_emi_dir = out_dir / "extracted"
-    ghidra_bootstrap_dir = out_dir / "ghidra-bootstrap"
+    ghidra_bootstrap_dir = out_dir / "ghidra-bof3"
     inventory_artifacts_dir = out_dir / "inventory"
     return RepoLayout(
         root=resolved_root,

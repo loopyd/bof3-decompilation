@@ -11,16 +11,25 @@ from pathlib import Path
 
 
 DEFAULT_PROJECT_NAME = "bof3_main"
-DEFAULT_PROJECT_ROOT = Path("out") / "ghidra-project"
-DEFAULT_IMPORT_MANIFEST = Path("out") / "ghidra-bootstrap" / "ghidra_import_manifest.json"
-DEFAULT_IMPORT_STAGING = Path("out") / "ghidra-import-staging"
-DEFAULT_SYMBOL_EXPORT = Path("out") / "inventory" / "raw_ghidra_export.json"
+DEFAULT_PROJECT_ROOT = Path("output") / "ghidra-project"
+DEFAULT_IMPORT_MANIFEST = Path("output") / "ghidra-bof3" / "ghidra_import_manifest.json"
+DEFAULT_IMPORT_STAGING = Path("output") / "ghidra-import-staging"
+DEFAULT_SYMBOL_EXPORT = Path("output") / "inventory" / "raw_ghidra_export.json"
 DEFAULT_SYMBOL_EXPORT_SCRIPT = (
     Path(__file__).resolve().parents[4]
     / "tools"
     / "ghidra"
     / "scripts"
-    / "ExportSymbolsJson.java"
+    / "ExportAnalysisJson.java"
+)
+
+DEFAULT_ANALYSIS_EXPORT = Path("output") / "inventory" / "analysis.json"
+DEFAULT_ANALYSIS_EXPORT_SCRIPT = (
+    Path(__file__).resolve().parents[4]
+    / "tools"
+    / "ghidra"
+    / "scripts"
+    / "ExportAnalysisJson.java"
 )
 
 HeadlessRunner = Callable[[Sequence[str]], object]
@@ -164,7 +173,32 @@ def launch_ui(
 
 
 def default_headless_runner(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(list(command), check=False)
+    return subprocess.run(
+        list(command),
+        check=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+
+
+def _command_output(result: object) -> str:
+    stdout = getattr(result, "stdout", None)
+    stderr = getattr(result, "stderr", None)
+    if isinstance(stdout, str) and stdout:
+        return stdout
+    if isinstance(stderr, str) and stderr:
+        return stderr
+    return ""
+
+
+def _import_progress_label(command: Sequence[str]) -> str:
+    try:
+        project = command[2]
+        import_path = command[command.index("-import") + 1]
+    except (IndexError, ValueError):
+        return "unknown"
+    return f"{project}:{Path(import_path).name}"
 
 
 def _returncode(result: object) -> int:
@@ -386,14 +420,55 @@ def export_ghidra_symbols(
     result = runner(command)
     returncode = _returncode(result)
     if returncode != 0:
-        raise subprocess.CalledProcessError(returncode, command)
+        output = _command_output(result)
+        raise subprocess.CalledProcessError(returncode, command, output=output)
     return GhidraSymbolExportResult(
         output_path=output_path.expanduser().resolve(),
         command=command,
     )
 
 
-DEFAULT_DUPLICATE_EXPORT = Path("out/harness/duplicate_groups.json")
+@dataclass(frozen=True)
+class GhidraAnalysisExportResult:
+    output_path: Path
+    command: tuple[str, ...]
+
+
+def export_analysis(
+    *,
+    ghidra_home: Path | None,
+    project_dir: Path = DEFAULT_PROJECT_ROOT,
+    project_name: str = DEFAULT_PROJECT_NAME,
+    output_path: Path = DEFAULT_ANALYSIS_EXPORT,
+    script_path: Path = DEFAULT_ANALYSIS_EXPORT_SCRIPT,
+    process: str = "/",
+    recursive: bool = True,
+    runner: HeadlessRunner = default_headless_runner,
+) -> GhidraAnalysisExportResult:
+    """Export all analysis data (functions, symbols, xrefs, call_edges,
+    constants, duplicates) in a single Ghidra headless call."""
+    command = build_analyze_headless_symbol_export_command(
+        ghidra_home=ghidra_home,
+        project_dir=project_dir,
+        project_name=project_name,
+        output_path=output_path,
+        script_path=script_path,
+        process=process,
+        recursive=recursive,
+    )
+    output_path.expanduser().resolve().parent.mkdir(parents=True, exist_ok=True)
+    result = runner(command)
+    returncode = _returncode(result)
+    if returncode != 0:
+        output = _command_output(result)
+        raise subprocess.CalledProcessError(returncode, command, output=output)
+    return GhidraAnalysisExportResult(
+        output_path=output_path.expanduser().resolve(),
+        command=command,
+    )
+
+
+DEFAULT_DUPLICATE_EXPORT = Path("output/harness/duplicate_groups.json")
 DEFAULT_DUPLICATE_EXPORT_SCRIPT = (
     Path(__file__).resolve().parents[4]
     / "tools"
@@ -433,7 +508,8 @@ def export_duplicate_groups(
     result = runner(command)
     returncode = _returncode(result)
     if returncode != 0:
-        raise subprocess.CalledProcessError(returncode, command)
+        output = _command_output(result)
+        raise subprocess.CalledProcessError(returncode, command, output=output)
     return GhidraDuplicateGroupsResult(
         output_path=output_path.expanduser().resolve(),
         command=command,
@@ -461,9 +537,16 @@ def import_ghidra_project(
         analyze=analyze,
     )
     project_dir.expanduser().resolve().mkdir(parents=True, exist_ok=True)
-    for command in commands:
+    total = len(commands)
+    show_progress = runner is default_headless_runner
+    for index, command in enumerate(commands, start=1):
+        if show_progress:
+            print(f"[{index}/{total}] importing {_import_progress_label(command)}")
         result = runner(command)
         returncode = _returncode(result)
         if returncode != 0:
-            raise subprocess.CalledProcessError(returncode, command)
+            output = _command_output(result)
+            if show_progress and output:
+                print(output[-2000:])
+            raise subprocess.CalledProcessError(returncode, command, output=output)
     return GhidraProjectImportResult(imported_count=len(commands), commands=commands)
