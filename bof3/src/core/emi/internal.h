@@ -1,10 +1,7 @@
 #ifndef BOF3_SRC_CORE_EMI_INTERNAL_H
 #define BOF3_SRC_CORE_EMI_INTERNAL_H
 
-#include <stddef.h>
-
-#include "bof3/core/emi/loader.h"
-#include "bof3/context.h"
+#include "bof3/bof3.h"
 
 #define EMI_SECTOR_SIZE  0x800u
 #define EMI_MAGIC_OFFSET 0x08u

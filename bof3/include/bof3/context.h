@@ -2,7 +2,7 @@
 #define BOF3_CONTEXT_H
 
 #include "bof3/defines.h"
-#include "bof3/psyq_compat.h"
+#include "bof3/psyq.h"
 #include "bof3/symbols.h"
 #include "bof3/compiler.h"
 
@@ -30,5 +30,6 @@ DEFINE_FUNC_AT(void, func_8017eebc, 0x8017eebc, (s32));
 DEFINE_FUNC_AT(void, func_801ce760, 0x801ce760, (void*, u_long));
 DEFINE_FUNC_AT(int,  func_801cea98, 0x801cea98, (void));
 DEFINE_FUNC_AT(void, func_801cebfc, 0x801cebfc, (void));
+DEFINE_FUNC_AT(void, func_80196f78, 0x80196f78, (void));
 
 #endif

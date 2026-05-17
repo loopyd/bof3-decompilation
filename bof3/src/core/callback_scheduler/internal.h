@@ -1,8 +1,7 @@
 #ifndef BOF3_SRC_CORE_CALLBACK_SCHEDULER_INTERNAL_H
 #define BOF3_SRC_CORE_CALLBACK_SCHEDULER_INTERNAL_H
 
-#include "bof3/core/callback_scheduler.h"
-#include "bof3/context.h"
+#include "bof3/bof3.h"
 
 typedef void (*Bof3CallbackEntry)(void);
 
@@ -27,10 +26,10 @@ enum {
 };
 
 #define GAME_CALLBACK_FORCE_SWITCH ((s32)0xff000000u)
-#define GAME_CALLBACK_SLOTS ((volatile GameCallbackSlot*)0x80143b40u)
+#define GAME_CALLBACK_SLOTS VPTR(GameCallbackSlot, 0x80143b40u)
 #define GAME_CALLBACK_CURSOR \
-  ((volatile GameCallbackSlot* volatile*)0x80143d40u)
-#define GAME_CALLBACK_END ((volatile GameCallbackSlot*)0x80143d40u)
+  VPTR(GameCallbackSlot*, 0x80143d40u)
+#define GAME_CALLBACK_END VPTR(GameCallbackSlot, 0x80143d40u)
 
 s32 func_8017ed9c(Bof3CallbackEntry callback, u32 open_arg, u32 open_arg_2);
 s32 func_8017edac(s32 thread_id);

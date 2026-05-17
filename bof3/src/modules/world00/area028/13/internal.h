@@ -1,8 +1,7 @@
 #ifndef BOF3_SRC_MODULES_WORLD00_AREA028_13_INTERNAL_H
 #define BOF3_SRC_MODULES_WORLD00_AREA028_13_INTERNAL_H
 
-#include "bof3/modules/world00/area028/13.h"
-#include "bof3/context.h"
+#include "bof3/bof3.h"
 
 typedef struct World00Area028Work {
   u8  unk_00[4];
@@ -15,15 +14,15 @@ typedef struct World00Area028Work {
 } World00Area028Work;
 
 #define WORLD00_AREA028_WORK_PTR \
-  (*(volatile World00Area028Work**)0x801f3e00u)
+  VPPTR(World00Area028Work, 0x801f3e00u)
 #define WORLD00_AREA028_WORK_BASE     ((u8*)0x800e4800u)
-#define WORLD00_AREA028_PRIMITIVE_PTR (*(volatile u8**)0x8014598cu)
+#define WORLD00_AREA028_PRIMITIVE_PTR VPPTR(u8, 0x8014598cu)
 #define WORLD00_AREA028_RING_X(index) \
-  (*(volatile u16*)(0x800e4a04u + ((u32)(index) * 4u)))
+  VU16(0x800e4a04u + ((u32)(index) * 4u))
 #define WORLD00_AREA028_RING_Y(index) \
-  (*(volatile u16*)(0x800e4a06u + ((u32)(index) * 4u)))
-#define WORLD00_AREA028_CENTER_X (*(volatile u16*)0x800e4a00u)
-#define WORLD00_AREA028_CENTER_Y (*(volatile u16*)0x800e4a02u)
+  VU16(0x800e4a06u + ((u32)(index) * 4u))
+#define WORLD00_AREA028_CENTER_X VU16(0x800e4a00u)
+#define WORLD00_AREA028_CENTER_Y VU16(0x800e4a02u)
 
 void func_801afe18(void* arg0);
 void func_801aff04(const void* arg0, void* arg1);
@@ -33,5 +32,13 @@ void func_8017a904(void* arg0, s32 arg1);
 void func_8017aa30(void* arg0);
 void func_8017c2d8(void* arg0, s32 arg1, s32 arg2, s32 arg3, void* arg4);
 void func_8014e5a0(u8 arg0, u8 arg1);
+
+/* from old bof3/include/bof3/modules/world00/area028/13.h */
+void  func_801f2d3c(void);
+void  func_801f2f5c(void);
+void  func_801f2fb0(void* arg0);
+void* func_801f3004(void);
+void  func_801f3060(void);
+void  func_801f318c(s16 arg0);
 
 #endif

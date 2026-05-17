@@ -1,5 +1,5 @@
-#ifndef BOF3_PSYQ_COMPAT_H
-#define BOF3_PSYQ_COMPAT_H
+#ifndef BOF3_PSYQ_H
+#define BOF3_PSYQ_H
 
 #include "bof3/defines.h"
 

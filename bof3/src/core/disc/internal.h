@@ -1,10 +1,7 @@
 #ifndef BOF3_SRC_CORE_DISC_INTERNAL_H
 #define BOF3_SRC_CORE_DISC_INTERNAL_H
 
-#include <stddef.h>
-
-#include "bof3/core/disc/slot_table.h"
-#include "bof3/context.h"
+#include "bof3/bof3.h"
 
 typedef enum RuntimePathKind {
   RUNTIME_PATH_EMI = 0,
