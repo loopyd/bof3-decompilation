@@ -4,12 +4,13 @@
 #include <stddef.h>
 
 #include "bof3/core/disc/slot_table.h"
+#include "bof3/context.h"
 
 typedef enum RuntimePathKind {
-  BOF3_RUNTIME_PATH_EMI = 0,
-  BOF3_RUNTIME_PATH_STR = 1,
-  BOF3_RUNTIME_PATH_PSX_EXE = 2,
-  BOF3_RUNTIME_PATH_OTHER = 3,
+  RUNTIME_PATH_EMI = 0,
+  RUNTIME_PATH_STR = 1,
+  RUNTIME_PATH_PSX_EXE = 2,
+  RUNTIME_PATH_OTHER = 3,
 } RuntimePathKind;
 
 struct SlotTableEntry {

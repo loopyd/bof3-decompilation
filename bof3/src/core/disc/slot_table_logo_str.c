@@ -1,12 +1,7 @@
 #include "internal.h"
 
-/* clang-format off */
-#include <libcd.h>
-#include <libetc.h>
-/* clang-format on */
-
 #include "bof3/defines.h"
-#include "bof3/original_symbols.h"
+#include "bof3/context.h"
 
 extern u_long DAT_801d8bb0;
 

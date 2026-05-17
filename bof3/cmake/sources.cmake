@@ -1,4 +1,4 @@
-set(BOF3_SOURCES
+set(BOF3_CORE_SOURCES
     src/core/disc/slot_table_data.c
     src/core/disc/slot_table_find.c
     src/core/disc/slot_table_logo_str.c
@@ -32,6 +32,10 @@ set(BOF3_SOURCES
     src/core/emi/func_80161fdc.c
     src/core/emi/emi_slot_to_lba.c
     src/core/emi/func_8016728c.c
+    src/modules/logo/func_801ce758.c
+)
+
+set(BOF3_MODULE_BATTLE_03_SOURCES
     src/modules/battle/03/func_801dece0.c
     src/modules/battle/03/func_801ded54.c
     src/modules/battle/03/func_801dede4.c
@@ -189,6 +193,9 @@ set(BOF3_SOURCES
     src/modules/battle/03/func_801eaab8.c
     src/modules/battle/03/func_801eab38.c
     src/modules/battle/03/func_801eab6c.c
+)
+
+set(BOF3_MODULE_BATTLE_15_SOURCES
     src/modules/battle/15/func_80096ab0.c
     src/modules/battle/15/func_80096ae8.c
     src/modules/battle/15/func_80096b24.c
@@ -203,6 +210,7 @@ set(BOF3_SOURCES
     src/modules/battle/15/func_8009773c.c
     src/modules/battle/15/func_80097778.c
     src/modules/battle/15/func_80097d1c.c
+    src/modules/battle/15/func_80097eb8.c
     src/modules/battle/15/func_80097ec0.c
     src/modules/battle/15/func_800980e4.c
     src/modules/battle/15/func_80098388.c
@@ -216,7 +224,21 @@ set(BOF3_SOURCES
     src/modules/battle/15/func_8009c868.c
     src/modules/battle/15/func_8009c8ac.c
     src/modules/battle/15/func_8009cfec.c
+    src/modules/battle/15/func_800a2880.c
+    src/modules/battle/15/func_800a2ae0.c
+    src/modules/battle/15/func_800a36f0.c
+    src/modules/battle/15/func_800a4458.c
+    src/modules/battle/15/func_800aaa74.c
+    src/modules/battle/15/func_800aaebc.c
+    src/modules/battle/15/func_800b0498.c
+    src/modules/battle/15/func_800b0b0c.c
+)
+
+set(BOF3_MODULE_BATE_03_SOURCES
     src/modules/bate/03/func_80033a00.c
+)
+
+set(BOF3_MODULE_COMMU00_00_SOURCES
     src/modules/commu00/00/func_801eedf8.c
     src/modules/commu00/00/func_801eeef0.c
     src/modules/commu00/00/func_801f00d4.c
@@ -237,7 +259,13 @@ set(BOF3_SOURCES
     src/modules/commu00/00/func_801f1110.c
     src/modules/commu00/00/func_801f1204.c
     src/modules/commu00/00/func_801f1254.c
+)
+
+set(BOF3_MODULE_SCE10EFF_00_SOURCES
     src/modules/sce10eff/00/func_801d0ee0.c
+)
+
+set(BOF3_MODULE_SCENA16_00_SOURCES
     src/modules/scena16/00/func_801f6c90.c
     src/modules/scena16/00/func_801f6ccc.c
     src/modules/scena16/00/func_801f6d90.c
@@ -258,24 +286,44 @@ set(BOF3_SOURCES
     src/modules/scena16/00/func_801f845c.c
     src/modules/scena16/00/func_801f84ac.c
     src/modules/scena16/00/func_801f8530.c
+)
+
+set(BOF3_MODULE_GAME_00_SOURCES
     src/modules/game/00/func_8019611c.c
     src/modules/game/00/func_80196f78.c
     src/modules/game/00/func_80196ffc.c
     src/modules/game/00/func_80197068.c
     src/modules/game/00/func_801970ec.c
+    src/modules/game/00/func_801a1ae4.c
+    src/modules/game/00/func_801a1bc0.c
     src/modules/game/00/func_801a7704.c
+    src/modules/game/00/func_801a7804.c
     src/modules/game/00/func_801af270.c
     src/modules/game/00/func_801af2a0.c
     src/modules/game/00/func_801af390.c
+    src/modules/game/00/func_801a7330.c
+    src/modules/game/00/func_801c5558.c
+    src/modules/game/00/func_801c5798.c
+    src/modules/game/00/func_801c7188.c
+    src/modules/game/00/func_801c71ac.c
+)
+
+set(BOF3_MODULE_GAME_01_SOURCES
     src/modules/game/01/func_801d0c90.c
     src/modules/game/01/func_801d0df0.c
     src/modules/game/01/func_801d1134.c
     src/modules/game/01/func_801d1184.c
     src/modules/game/01/func_801d1000.c
     src/modules/game/01/func_801d104c.c
+)
+
+set(BOF3_MODULE_WORLD00_AREA008_13_SOURCES
     src/modules/world00/area008/13/func_801f3c2c.c
     src/modules/world00/area008/13/func_801f3d18.c
     src/modules/world00/area008/13/func_801f3d88.c
+)
+
+set(BOF3_MODULE_WORLD00_AREA016_13_SOURCES
     src/modules/world00/area016/13/func_801f3400.c
     src/modules/world00/area016/13/func_801f34c8.c
     src/modules/world00/area016/13/func_801f35b8.c
@@ -284,6 +332,9 @@ set(BOF3_SOURCES
     src/modules/world00/area016/13/func_801f3b00.c
     src/modules/world00/area016/13/func_801f3ecc.c
     src/modules/world00/area016/13/func_801f40c4.c
+)
+
+set(BOF3_MODULE_WORLD00_AREA024_14_SOURCES
     src/modules/world00/area024/14/func_801f2df8.c
     src/modules/world00/area024/14/func_801f2fd4.c
     src/modules/world00/area024/14/func_801f3080.c
@@ -297,18 +348,32 @@ set(BOF3_SOURCES
     src/modules/world00/area024/14/func_801f3d5c.c
     src/modules/world00/area024/14/func_801f3e48.c
     src/modules/world00/area024/14/func_801f4158.c
+)
+
+set(BOF3_MODULE_WORLD00_AREA026_13_SOURCES
+    src/modules/world00/area026/13/func_801f2d5c.c
+    src/modules/world00/area026/13/func_801f2e04.c
+)
+
+set(BOF3_MODULE_WORLD00_AREA027_13_SOURCES
     src/modules/world00/area027/13/func_801f2e3c.c
     src/modules/world00/area027/13/func_801f2f0c.c
     src/modules/world00/area027/13/func_801f304c.c
     src/modules/world00/area027/13/func_801f31cc.c
     src/modules/world00/area027/13/func_801f33a8.c
     src/modules/world00/area027/13/func_801f3480.c
+)
+
+set(BOF3_MODULE_WORLD00_AREA028_13_SOURCES
     src/modules/world00/area028/13/func_801f2d3c.c
     src/modules/world00/area028/13/func_801f2f5c.c
     src/modules/world00/area028/13/func_801f2fb0.c
     src/modules/world00/area028/13/func_801f3004.c
     src/modules/world00/area028/13/func_801f3060.c
     src/modules/world00/area028/13/func_801f318c.c
+)
+
+set(BOF3_MODULE_WORLD00_AREA030_04_SOURCES
     src/modules/world00/area030/04/func_801d11c0.c
     src/modules/world00/area030/04/func_801d159c.c
     src/modules/world00/area030/04/func_801d1744.c
@@ -323,14 +388,58 @@ set(BOF3_SOURCES
     src/modules/world00/area030/04/func_801d3938.c
     src/modules/world00/area030/04/func_801d6a2c.c
     src/modules/world00/area030/04/func_801d6b28.c
-    src/modules/world00/area026/13/func_801f2d5c.c
-    src/modules/world00/area026/13/func_801f2e04.c
+)
+
+set(BOF3_MODULE_WORLD00_AREA032_13_SOURCES
     src/modules/world00/area032/13/func_801f2f04.c
+)
+
+set(BOF3_MODULE_SHOP_00_SOURCES
+    src/modules/shop/00/func_801d3654.c
+)
+
+set(BOF3_MODULE_SCENA00_00_SOURCES
+    src/modules/scena00/00/func_801f7134.c
+    src/modules/scena00/00/func_801f78ec.c
+)
+
+set(BOF3_MODULE_SISYOU_00_SOURCES
+    src/modules/sisyou/00/func_801d0dd4.c
+)
+
+set(BOF3_MODULE_LOGO_SOURCES
     src/modules/logo/func_801ce758.c
     src/modules/logo/func_801cedfc.c
 )
 
+set(BOF3_CORE_COMMON_SOURCES)
+
+# All module sources so every .c has an individual .obj for asm-diff.
+set(BOF3_ALL_MODULE_SOURCES
+    ${BOF3_MODULE_BATTLE_03_SOURCES}
+    ${BOF3_MODULE_BATTLE_15_SOURCES}
+    ${BOF3_MODULE_BATE_03_SOURCES}
+    ${BOF3_MODULE_COMMU00_00_SOURCES}
+    ${BOF3_MODULE_SCE10EFF_00_SOURCES}
+    ${BOF3_MODULE_SCENA16_00_SOURCES}
+    ${BOF3_MODULE_GAME_00_SOURCES}
+    ${BOF3_MODULE_GAME_01_SOURCES}
+    ${BOF3_MODULE_WORLD00_AREA008_13_SOURCES}
+    ${BOF3_MODULE_WORLD00_AREA016_13_SOURCES}
+    ${BOF3_MODULE_WORLD00_AREA024_14_SOURCES}
+    ${BOF3_MODULE_WORLD00_AREA026_13_SOURCES}
+    ${BOF3_MODULE_WORLD00_AREA027_13_SOURCES}
+    ${BOF3_MODULE_WORLD00_AREA028_13_SOURCES}
+    ${BOF3_MODULE_WORLD00_AREA030_04_SOURCES}
+    ${BOF3_MODULE_WORLD00_AREA032_13_SOURCES}
+    ${BOF3_MODULE_SHOP_00_SOURCES}
+    ${BOF3_MODULE_SCENA00_00_SOURCES}
+    ${BOF3_MODULE_SISYOU_00_SOURCES}
+)
+
+set(BOF3_SOURCES ${BOF3_CORE_SOURCES} ${BOF3_CORE_COMMON_SOURCES} ${BOF3_ALL_MODULE_SOURCES})
+
 set(BOF3_BOOT_SOURCES
     src/boot/startup.s
-    src/boot/original_symbols.c
+    src/boot/symbols.c
 )

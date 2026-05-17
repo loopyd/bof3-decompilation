@@ -1,9 +1,5 @@
 #include "internal.h"
 
-/* clang-format off */
-#include <libcd.h>
-/* clang-format on */
-
 extern vu32 DAT_8014648c;
 extern u8   DAT_80146498[];
 

@@ -9,24 +9,24 @@ u8 func_8009c8ac(u16 required_mask) {
   volatile u8* current_battler;
   u8           panel_slot_kind;
 
-  current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+  current_battler = BATTLE_CURRENT_BATTLER_PTR;
   if (*(volatile s16*)(current_battler + 0xf8) == 0) {
     return 0u;
   }
 
-  if (BOF3_BATTLE_PANEL_RULE_PASS_KIND == 4u) {
-    if ((BOF3_BATTLE_SELECTION_KIND_MASK(
-             BOF3_BATTLE_PANEL_RULE_PASS_SELECTION) &
+  if (BATTLE_PANEL_RULE_PASS_KIND == 4u) {
+    if ((BATTLE_SELECTION_KIND_MASK(
+             BATTLE_PANEL_RULE_PASS_SELECTION) &
          required_mask) != 0u) {
       return 1u;
     }
   }
 
-  if (BOF3_BATTLE_PANEL_RULE_PASS_KIND != 1u) {
+  if (BATTLE_PANEL_RULE_PASS_KIND != 1u) {
     return 0u;
   }
 
-  if (BOF3_BATTLE_PANEL_RULE_PASS_SLOT >= 3u) {
+  if (BATTLE_PANEL_RULE_PASS_SLOT >= 3u) {
     return 0u;
   }
 
@@ -35,8 +35,8 @@ u8 func_8009c8ac(u16 required_mask) {
   }
 
   panel_slot_kind =
-      BOF3_BATTLE_PANEL_SLOT_KIND(BOF3_BATTLE_PANEL_RULE_PASS_SLOT);
-  if ((BOF3_BATTLE_PANEL_SLOT_MASK(panel_slot_kind) & (u8)required_mask) !=
+      BATTLE_PANEL_SLOT_KIND(BATTLE_PANEL_RULE_PASS_SLOT);
+  if ((BATTLE_PANEL_SLOT_MASK(panel_slot_kind) & (u8)required_mask) !=
       0u) {
     return 1u;
   }

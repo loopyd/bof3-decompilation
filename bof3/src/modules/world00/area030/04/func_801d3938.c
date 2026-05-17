@@ -8,7 +8,7 @@ void func_801d3938(void) {
   volatile u8* scratch;
   s16          y;
 
-  scratch = BOF3_WORLD00_AREA030_SCRATCH_PTR;
+  scratch = WORLD00_AREA030_SCRATCH_PTR;
 
   *(volatile s16*)(scratch + 0x30u) =
       (s16)(*(volatile s16*)(scratch + 0x30u) - 8);

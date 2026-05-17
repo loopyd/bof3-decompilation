@@ -15,7 +15,7 @@ void func_801f0534(void) {
 
   source_index = 0u;
   while (source_index < 8u) {
-    BOF3_COMMU00_VARIANT_ROTATION[source_index] = 0u;
+    COMMU00_VARIANT_ROTATION[source_index] = 0u;
     source_index += 1u;
   }
 
@@ -32,7 +32,7 @@ void func_801f0534(void) {
         func_801f08d8(source_index, task_index);
       } else if (record_kind == 10u) {
         label_id = 0xcdu;
-        if (BOF3_COMMU00_WORLD_STATE < 0xb6u) {
+        if (COMMU00_WORLD_STATE < 0xb6u) {
           random_value = (u16)(game_random_u16() & 7u);
           if (random_value > 5u) {
             random_value = (u16)(random_value - 5u);
@@ -44,10 +44,10 @@ void func_801f0534(void) {
         task_slot->label_id = label_id;
         func_801f0718(source_index, task_index);
       } else if (record_kind == 11u) {
-        if ((BOF3_COMMU00_WORLD_STATE == 0xafu) ||
-            (BOF3_COMMU00_WORLD_STATE == 0xb2u) ||
-            (BOF3_COMMU00_WORLD_STATE == 0xb5u) ||
-            (BOF3_COMMU00_WORLD_STATE == 0xb9u)) {
+        if ((COMMU00_WORLD_STATE == 0xafu) ||
+            (COMMU00_WORLD_STATE == 0xb2u) ||
+            (COMMU00_WORLD_STATE == 0xb5u) ||
+            (COMMU00_WORLD_STATE == 0xb9u)) {
           label_id = 0xceu;
         } else {
           random_value = (u16)(game_random_u16() & 7u);

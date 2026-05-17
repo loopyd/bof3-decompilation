@@ -9,10 +9,10 @@ u8 func_801e7b34(void) {
 
   index = 0u;
   while (index < 3u) {
-    if ((BOF3_BATTLE_LOCAL_ALT_WORK_ARRAY[(u32)index * 0x140u] & 1u) == 0u) {
+    if ((BATTLE_LOCAL_ALT_WORK_ARRAY[(u32)index * 0x140u] & 1u) == 0u) {
       return 0u;
     }
-    if ((*(volatile u32*)(BOF3_BATTLE_LOCAL_STATUS_ARRAY +
+    if ((*(volatile u32*)(BATTLE_LOCAL_STATUS_ARRAY +
                           ((u32)index * 0x50u)) &
          1u) != 0u) {
       return 1u;

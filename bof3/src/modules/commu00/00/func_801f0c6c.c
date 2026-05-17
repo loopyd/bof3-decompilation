@@ -8,7 +8,7 @@ void func_801f0c6c(u8 task_index, u8 record_kind_index) {
   u16                label_id;
 
   commu00_state = (const volatile u8*)0x80140000u;
-  BOF3_COMMU00_SCRATCH_SLOT->active = 1u;
+  COMMU00_SCRATCH_SLOT->active = 1u;
 
   if (((commu00_state[0x55c4u] == 7u) &&
        (commu00_state[((u32)record_kind_index * 8u) + 0x57a9u] != 0u)) ||

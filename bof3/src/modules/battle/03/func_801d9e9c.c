@@ -10,7 +10,7 @@ void func_801d9e9c(s16 arg0, s16 arg1, u16 arg2, u16 arg3, s8 arg4) {
   u8  tex_left;
   u8  tex_right;
 
-  primitive = BOF3_BATTLE_GLOBAL_WORD_598C;
+  primitive = BATTLE_GLOBAL_WORD_598C;
   func_8017a9b8(primitive);
   *(volatile u16*)(primitive + 0x16) = func_8017a620(0, 0, 0x3c0, 0);
   *(volatile u16*)(primitive + 0xe) =
@@ -43,7 +43,7 @@ void func_801d9e9c(s16 arg0, s16 arg1, u16 arg2, u16 arg3, s8 arg4) {
   *(volatile u8*)(primitive + 0x25) = 0xdfu;
   func_8014e5a0(1u, 0x28u);
 
-  primitive = BOF3_BATTLE_GLOBAL_WORD_598C;
+  primitive = BATTLE_GLOBAL_WORD_598C;
   func_8017a9b8(primitive);
   *(volatile u16*)(primitive + 0x16) = func_8017a620(0, 0, 0x3c0, 0);
   *(volatile u16*)(primitive + 0xe) = func_8017a6f0(0xb0, 0x1e0);

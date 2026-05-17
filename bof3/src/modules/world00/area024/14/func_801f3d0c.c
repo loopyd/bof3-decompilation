@@ -8,7 +8,7 @@ void func_801f3d0c(void) {
   u8* work;
   u8  i;
 
-  work = BOF3_WORLD00_AREA024_SPIN_WORK_BASE;
+  work = WORLD00_AREA024_SPIN_WORK_BASE;
   i = 0u;
 
   do {

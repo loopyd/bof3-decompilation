@@ -7,13 +7,13 @@
 void func_801f2f5c(void) {
   u8 i;
 
-  BOF3_WORLD00_AREA028_WORK_PTR =
-      (World00Area028Work*)BOF3_WORLD00_AREA028_WORK_BASE;
+  WORLD00_AREA028_WORK_PTR =
+      (World00Area028Work*)WORLD00_AREA028_WORK_BASE;
   i = 0u;
   do {
-    BOF3_WORLD00_AREA028_WORK_PTR->unk_00[0] = 0u;
-    BOF3_WORLD00_AREA028_WORK_PTR =
-        (World00Area028Work*)((u8*)BOF3_WORLD00_AREA028_WORK_PTR + 0x10u);
+    WORLD00_AREA028_WORK_PTR->unk_00[0] = 0u;
+    WORLD00_AREA028_WORK_PTR =
+        (World00Area028Work*)((u8*)WORLD00_AREA028_WORK_PTR + 0x10u);
     i += 1u;
   } while (i < 0x20u);
 }

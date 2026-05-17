@@ -13,11 +13,11 @@ u8 func_801d5bc0(void) {
   do {
     volatile Battle03LocalWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
+    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
     if ((func_801d64c4(index) == 0u) &&
-        ((BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) & 0x80u) != 0u)) {
-      BOF3_BATTLE_LOCAL_HALF_1E(battle_work) = 0u;
-      BOF3_BATTLE_LOCAL_HALF_1C(battle_work) = 0u;
+        ((BATTLE_LOCAL_FLAGS_80(battle_work) & 0x80u) != 0u)) {
+      BATTLE_LOCAL_HALF_1E(battle_work) = 0u;
+      BATTLE_LOCAL_HALF_1C(battle_work) = 0u;
       func_801dcef8(index);
       count += 1u;
       battle_work->unk_01 = 6u;
@@ -34,18 +34,18 @@ u8 func_801d5bc0(void) {
   do {
     volatile Battle03EnemyWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_ENEMY_WORK_ARRAY[index - 3u];
+    battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
     if ((func_801d64c4(index) == 0u) &&
-        ((BOF3_BATTLE_ENEMY_FLAGS_82(battle_work) & 0x80u) != 0u)) {
-      BOF3_BATTLE_ENEMY_HALF_FA(battle_work) = 0u;
-      BOF3_BATTLE_ENEMY_HALF_F8(battle_work) = 0u;
+        ((BATTLE_ENEMY_FLAGS_82(battle_work) & 0x80u) != 0u)) {
+      BATTLE_ENEMY_HALF_FA(battle_work) = 0u;
+      BATTLE_ENEMY_HALF_F8(battle_work) = 0u;
       func_801dcef8(index);
       count += 1u;
       battle_work->unk_01 = 6u;
-      BOF3_BATTLE_ENEMY_BYTE_02(battle_work) = 5u;
-      BOF3_BATTLE_ENEMY_BYTE_04(battle_work) = 0u;
-      BOF3_BATTLE_ENEMY_BYTE_03(battle_work) = 0u;
-      BOF3_BATTLE_ENEMY_BYTE_FC(battle_work) = 0x11u;
+      BATTLE_ENEMY_BYTE_02(battle_work) = 5u;
+      BATTLE_ENEMY_BYTE_04(battle_work) = 0u;
+      BATTLE_ENEMY_BYTE_03(battle_work) = 0u;
+      BATTLE_ENEMY_BYTE_FC(battle_work) = 0x11u;
       func_801de190(index);
     }
     index += 1u;

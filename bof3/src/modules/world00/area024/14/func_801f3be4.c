@@ -14,9 +14,9 @@ void func_801f3be4(void* arg0) {
 
   work = (World00Area024SpinWork*)arg0;
 
-  work->field_00 = BOF3_WORLD00_AREA024_SCRATCH_PTR->field_34;
-  work->field_04 = BOF3_WORLD00_AREA024_SCRATCH_PTR->field_38;
-  work->field_08 = BOF3_WORLD00_AREA024_SCRATCH_PTR->field_3c;
+  work->field_00 = WORLD00_AREA024_SCRATCH_PTR->field_34;
+  work->field_04 = WORLD00_AREA024_SCRATCH_PTR->field_38;
+  work->field_08 = WORLD00_AREA024_SCRATCH_PTR->field_3c;
 
   angle_x = rand() & 0xfff;
   angle_y = rand() & 0x3ff;

@@ -12,14 +12,14 @@ void func_801d8df8(s32 arg0, s32 arg1, u32 arg2) {
   s16                         blue;
   u32                         mode;
 
-  battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[arg2 & 0xffu];
+  battle_work = &BATTLE_LOCAL_WORK_ARRAY[arg2 & 0xffu];
 
-  func_8017c2d8(BOF3_BATTLE_GLOBAL_WORD_598C, 0, 0,
+  func_8017c2d8(BATTLE_GLOBAL_WORD_598C, 0, 0,
                 func_8017a620(0, 0, 0x3c0, 0), 0);
   func_8014e5a0(1u, 0x0cu);
 
   color = *(volatile u16*)(0x80033a08u +
-                           (((s32)BOF3_BATTLE_GLOBAL_BYTE_4952 << 6) | 0x20));
+                           (((s32)BATTLE_GLOBAL_BYTE_4952 << 6) | 0x20));
   red = (color & 0x1fu) << 3;
   green = (color >> 2) & 0xf8u;
   blue = (color >> 7) & 0xf8u;
@@ -28,34 +28,34 @@ void func_801d8df8(s32 arg0, s32 arg1, u32 arg2) {
   func_801d9ab4((s16)(arg0 + 4), (s16)(arg1 + 6), 2, 1);
   func_801d9ab4((s16)(arg0 + 4), (s16)(arg1 + 0x19), 3, 1);
 
-  func_8017c2d8(BOF3_BATTLE_GLOBAL_WORD_598C, 0, 0,
+  func_8017c2d8(BATTLE_GLOBAL_WORD_598C, 0, 0,
                 func_8017a620(0, 1, 0x3c0, 0), 0);
   func_8014e5a0(1u, 0x0cu);
   func_801d9c80((s16)arg0, (s16)(arg1 + 2), 8, 0);
   func_801d9ab4((s16)arg0, (s16)arg1, 2, 0);
   func_801d9ab4((s16)arg0, (s16)(arg1 + 0x13), 3, 0);
 
-  mode = (BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) & 0x4000u) != 0u
+  mode = (BATTLE_LOCAL_FLAGS_80(battle_work) & 0x4000u) != 0u
              ? 2u
-             : ((BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) & 0x0bfcu) != 0u);
+             : ((BATTLE_LOCAL_FLAGS_80(battle_work) & 0x0bfcu) != 0u);
   func_8014fc90((s16)(arg0 + 4), (s16)(arg1 + 2), mode, 5,
                 (void*)((volatile u8*)battle_work + 0x44u));
 
   func_801da078((s16)(arg0 + 2), (s16)(arg1 + 10), 0);
   func_801d94d4((s16)(arg0 + 0x14), (u16)(arg1 + 0x0c),
-                (BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) & 0x4000u) != 0u
+                (BATTLE_LOCAL_FLAGS_80(battle_work) & 0x4000u) != 0u
                     ? 2u
-                    : ((BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) >> 11) & 4u),
-                BOF3_BATTLE_LOCAL_HALF_88(battle_work));
+                    : ((BATTLE_LOCAL_FLAGS_80(battle_work) >> 11) & 4u),
+                BATTLE_LOCAL_HALF_88(battle_work));
 
-  func_8017e3f4((void*)BOF3_BATTLE_UI_CHAR_BUFFER, (const void*)0x801d0c6cu,
-                (BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) >> 13) & 2u);
+  func_8017e3f4((void*)BATTLE_UI_CHAR_BUFFER, (const void*)0x801d0c6cu,
+                (BATTLE_LOCAL_FLAGS_80(battle_work) >> 13) & 2u);
   func_80150098((s16)(arg0 + 0x28), (s16)(arg1 + 10),
-                (BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) >> 13) & 2u,
-                (void*)BOF3_BATTLE_UI_CHAR_BUFFER);
+                (BATTLE_LOCAL_FLAGS_80(battle_work) >> 13) & 2u,
+                (void*)BATTLE_UI_CHAR_BUFFER);
   func_801d94d4((s16)(arg0 + 0x30), (u16)(arg1 + 0x0c),
-                (BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) >> 13) & 2u,
-                BOF3_BATTLE_LOCAL_HALF_90(battle_work));
+                (BATTLE_LOCAL_FLAGS_80(battle_work) >> 13) & 2u,
+                BATTLE_LOCAL_HALF_90(battle_work));
 
   func_801da5a8((s16)(arg0 + 2), (s16)(arg1 + 2), (s16)(arg0 + 0x49),
                 (s16)(arg1 + 2), (u8)red, (u8)green, (u8)blue);

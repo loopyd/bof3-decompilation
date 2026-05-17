@@ -10,12 +10,12 @@ void func_801d8270(s32 arg0, s32 arg1) {
   u8  green;
   u8  blue;
 
-  func_8017c2d8(BOF3_BATTLE_GLOBAL_WORD_598C, 0, 0,
+  func_8017c2d8(BATTLE_GLOBAL_WORD_598C, 0, 0,
                 func_8017a620(0, 0, 0x3c0, 0), 0);
   func_8014e5a0(1u, 0x0cu);
 
   color = *(volatile u16*)(0x80033a08u +
-                           (((s32)BOF3_BATTLE_GLOBAL_BYTE_4952 << 6) | 0x20));
+                           (((s32)BATTLE_GLOBAL_BYTE_4952 << 6) | 0x20));
   red = (color & 0x1fu) << 3;
   green = (color >> 2) & 0xf8u;
   blue = (color >> 7) & 0xf8u;

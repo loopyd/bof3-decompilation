@@ -7,7 +7,7 @@
 void func_801d18cc(s16 arg0, s16 arg1, u8 arg2) {
   u32 primitive;
 
-  primitive = (u32)BOF3_WORLD00_AREA030_PRIMITIVE_PTR;
+  primitive = (u32)WORLD00_AREA030_PRIMITIVE_PTR;
   SetSprt8((SPRT_8*)primitive);
   *(volatile u8*)(primitive + 4) = 0x80u;
   *(volatile u8*)(primitive + 5) = 0x80u;

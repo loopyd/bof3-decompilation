@@ -1,11 +1,6 @@
 #include "internal.h"
 
-/* clang-format off */
-#include <libgte.h>
-#include <libgpu.h>
-/* clang-format on */
-
-#include "bof3/original_symbols.h"
+#include "bof3/context.h"
 
 void func_8014e5a0(u32 arg0, u32 arg1);
 

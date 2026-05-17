@@ -13,13 +13,13 @@ void func_801f35b8(void) {
   global = (const u8*)0x80140000u;
   state = global[0x54f2];
   if (state == 2) {
-    BOF3_WORLD00_AREA016_SCRATCH_PTR->state_02 = 3;
+    WORLD00_AREA016_SCRATCH_PTR->state_02 = 3;
   }
 
   {
     World00Area016Scratch* scratch;
 
-    scratch = BOF3_WORLD00_AREA016_SCRATCH_PTR;
+    scratch = WORLD00_AREA016_SCRATCH_PTR;
     func_801f3b00(0x10, scratch->field_2e);
   }
 }

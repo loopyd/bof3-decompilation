@@ -1,17 +1,31 @@
 #include "internal.h"
 
-/* does: requests START.EMI slot 0x268, waits for loader readiness, marks the
- * frontend pack dirty, then advances the local state.
- * @source: 0x80196ffc FUN_80196ffc
- */
+struct GameData {
+    u8 pad_3b90[0x3b90];
+    volatile u16 entry0_state;
+    u8 pad_3b92_5988[0x1df6];
+    volatile u8 palette_serial;
+};
+
+#define GAME_DATA ((struct GameData*)0x80140000)
+
 void func_80196ffc(void) {
-  emi_stream_init_slot(0x268u);
+    volatile u16* const ent = (volatile u16*)((volatile u8*)GAME_DATA + 0x3b90u);
+    u16 ev;
+    u8 pv;
 
-  while (!func_80162d00()) {
-    func_8014b87c(1u);
-  }
+    emi_stream_init_slot(0x268u);
 
-  func_8014e284();
-  BOF3_GAME_PALETTE_STAGE_SERIAL += 1u;
-  BOF3_GAME_ENTRY0_STATE += 1u;
+    while (!func_80162d00()) {
+        func_8014b87c(1u);
+    }
+
+    func_8014e284();
+
+    pv = GAME_DATA->palette_serial;
+    ev = *ent;
+    pv++;
+    ev++;
+    GAME_DATA->palette_serial = pv;
+    *ent = ev;
 }

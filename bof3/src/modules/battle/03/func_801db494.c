@@ -10,9 +10,9 @@ void func_801db494(void) {
   while (index < 3u) {
     volatile Battle03LocalWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
-    BOF3_BATTLE_LOCAL_BYTE_119(battle_work) = 0u;
-    BOF3_BATTLE_LOCAL_WORD_124(battle_work) = 0u;
+    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
+    BATTLE_LOCAL_BYTE_119(battle_work) = 0u;
+    BATTLE_LOCAL_WORD_124(battle_work) = 0u;
     index += 1u;
   }
 
@@ -20,9 +20,9 @@ void func_801db494(void) {
   while (index < 8u) {
     volatile Battle03EnemyWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_ENEMY_WORK_ARRAY[index];
-    BOF3_BATTLE_ENEMY_BYTE_F5(battle_work) = 0u;
-    BOF3_BATTLE_ENEMY_WORD_100(battle_work) = 0u;
+    battle_work = &BATTLE_ENEMY_WORK_ARRAY[index];
+    BATTLE_ENEMY_BYTE_F5(battle_work) = 0u;
+    BATTLE_ENEMY_WORD_100(battle_work) = 0u;
     index += 1u;
   }
 }

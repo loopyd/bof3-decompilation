@@ -13,13 +13,13 @@ void func_801f2f0c(const void* arg0) {
 
   work = (const u8*)arg0;
 
-  func_8017c2d8((void*)BOF3_WORLD00_AREA027_PRIMITIVE_PTR, 0, 0,
+  func_8017c2d8((void*)WORLD00_AREA027_PRIMITIVE_PTR, 0, 0,
                 func_8017a620(0, 1, 0x380, 0x100), 0);
   func_8014e5a0(1u, 0x0cu);
 
   i = 0u;
   do {
-    primitive = (u32)BOF3_WORLD00_AREA027_PRIMITIVE_PTR;
+    primitive = (u32)WORLD00_AREA027_PRIMITIVE_PTR;
     func_8017aa94((void*)primitive);
     func_8017a904((void*)primitive, 1);
 

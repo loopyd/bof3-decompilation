@@ -9,12 +9,12 @@ void func_801f39d8(s16 arg0, s16 arg1, u32 arg2) {
   s32 table_index;
 
   SetDrawMode(
-      (DR_MODE*)BOF3_WORLD00_AREA016_PRIMITIVE_PTR, 0, 0,
+      (DR_MODE*)WORLD00_AREA016_PRIMITIVE_PTR, 0, 0,
       (GetGraphType() == 1) ? 0x22cu : ((GetGraphType() == 2) ? 0x22cu : 0x9cu),
       0);
   func_8014e5a0(1u, 0x0cu);
 
-  primitive = BOF3_WORLD00_AREA016_PRIMITIVE_PTR;
+  primitive = WORLD00_AREA016_PRIMITIVE_PTR;
   SetSprt((SPRT*)primitive);
   SetSemiTrans((void*)primitive, 1);
   *(volatile u8*)(primitive + 4) = 0x80u;
@@ -26,12 +26,12 @@ void func_801f39d8(s16 arg0, s16 arg1, u32 arg2) {
   *(volatile s16*)(primitive + 10) = arg1;
   *(volatile u16*)(primitive + 0xe) = 0x7b80u;
   *(volatile u16*)(primitive + 0x10) =
-      BOF3_WORLD00_AREA016_SPRT_TABLE[table_index + 0u];
+      WORLD00_AREA016_SPRT_TABLE[table_index + 0u];
   *(volatile u16*)(primitive + 0x12) =
-      BOF3_WORLD00_AREA016_SPRT_TABLE[table_index + 1u];
+      WORLD00_AREA016_SPRT_TABLE[table_index + 1u];
   *(volatile u8*)(primitive + 0xc) =
-      BOF3_WORLD00_AREA016_SPRT_TABLE[table_index + 2u];
+      WORLD00_AREA016_SPRT_TABLE[table_index + 2u];
   *(volatile u8*)(primitive + 0xd) =
-      BOF3_WORLD00_AREA016_SPRT_TABLE[table_index + 3u];
+      WORLD00_AREA016_SPRT_TABLE[table_index + 3u];
   func_8014e5a0(1u, 0x14u);
 }

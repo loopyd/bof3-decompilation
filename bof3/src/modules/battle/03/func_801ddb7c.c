@@ -11,12 +11,12 @@ void func_801ddb7c(void) {
   while (index < 3u) {
     volatile Battle03LocalWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
+    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
     if ((battle_work->flags_00 & 1u) == 0u) {
       func_801e590c(0u, 0u);
     } else {
-      BOF3_BATTLE_LOCAL_SCRATCH_PTR = battle_work;
-      BOF3_BATTLE_LOCAL_WORK_PTR = battle_work;
+      BATTLE_LOCAL_SCRATCH_PTR = battle_work;
+      BATTLE_LOCAL_WORK_PTR = battle_work;
       func_801ddaf0();
     }
     index += 1u;
@@ -26,12 +26,12 @@ void func_801ddb7c(void) {
   while (index < 0x0bu) {
     volatile Battle03EnemyWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_ENEMY_WORK_ARRAY[index - 3u];
+    battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
     if ((battle_work->unk_00 & 1u) == 0u) {
       func_801e590c(0u, 0u);
     } else {
-      BOF3_BATTLE_ENEMY_SCRATCH_PTR = battle_work;
-      BOF3_BATTLE_CURRENT_ENEMY_PTR = battle_work;
+      BATTLE_ENEMY_SCRATCH_PTR = battle_work;
+      BATTLE_CURRENT_ENEMY_PTR = battle_work;
       func_801ddaf0();
     }
     index += 1u;

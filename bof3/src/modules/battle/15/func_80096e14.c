@@ -12,8 +12,8 @@ void func_80096e14(void) {
   battle_selection_state = (volatile u8*)0x80140000u;
   battle_queue_frontend_cue(0x104u);
   battle_selection_state[0x62efu] = 0u;
-  BOF3_BATTLE_ACTIVE_SELECTION_SLOT_PTR[1] = 1u;
-  ((volatile u8*)BOF3_BATTLE_ACTIVE_MESSAGE_SLOT_PTR)[1] = 2u;
+  BATTLE_ACTIVE_SELECTION_SLOT_PTR[1] = 1u;
+  ((volatile u8*)BATTLE_ACTIVE_MESSAGE_SLOT_PTR)[1] = 2u;
   advance_counter = battle_selection_state[0x6303u];
   battle_selection_state[0x62e1u] = 1u;
   battle_selection_state[0x62e2u] = 0u;

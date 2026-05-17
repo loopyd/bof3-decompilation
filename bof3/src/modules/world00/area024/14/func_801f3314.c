@@ -12,9 +12,9 @@ void func_801f3314(void) {
   u8                 i;
   VECTOR             center;
 
-  dst = BOF3_WORLD00_AREA024_VERTEX_DST;
-  src = BOF3_WORLD00_AREA024_VERTEX_SRC;
-  state = BOF3_WORLD00_AREA024_STATE_BASE;
+  dst = WORLD00_AREA024_VERTEX_DST;
+  src = WORLD00_AREA024_VERTEX_SRC;
+  state = WORLD00_AREA024_STATE_BASE;
   i = 0u;
 
   do {

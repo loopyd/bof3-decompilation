@@ -4,7 +4,7 @@
 #include <rand.h>
 
 #include "bof3/modules/world00/area024/14.h"
-#include "bof3/psyq_compat.h"
+#include "bof3/context.h"
 
 typedef void (*World00Area024Handler)(void);
 
@@ -43,23 +43,23 @@ typedef struct World00Area024SpinWork {
   s16     field_2a;
 } World00Area024SpinWork;
 
-#define BOF3_WORLD00_AREA024_PRIMITIVE_PTR    (*(volatile u8**)0x8014598cu)
-#define BOF3_WORLD00_AREA024_WORK_PTR         (*(volatile u8**)0x801f5b00u)
-#define BOF3_WORLD00_AREA024_WORK_BASE        ((u8*)0x800e4800u)
-#define BOF3_WORLD00_AREA024_SPIN_WORK_BASE   ((u8*)0x800e5000u)
-#define BOF3_WORLD00_AREA024_STATE_BASE       ((volatile s16*)0x800e4940u)
-#define BOF3_WORLD00_AREA024_STATE_OFFSET     ((volatile s16*)0x800e4944u)
-#define BOF3_WORLD00_AREA024_VERTEX_DST       ((volatile u8*)0x800e4bc8u)
-#define BOF3_WORLD00_AREA024_VERTEX_SRC       ((const volatile u8*)0x80147aa8u)
-#define BOF3_WORLD00_AREA024_SCRATCH_REMAP    ((volatile u8*)0x80147a58u)
-#define BOF3_WORLD00_AREA024_PTR_7AA8         (*(volatile u8**)0x80147aa8u)
-#define BOF3_WORLD00_AREA024_PTR_7AAC         (*(volatile u8**)0x80147aacu)
-#define BOF3_WORLD00_AREA024_GLOBAL_HALF_3E6C (*(volatile u16*)0x80143e6cu)
-#define BOF3_WORLD00_AREA024_STATE_TABLE \
+#define WORLD00_AREA024_PRIMITIVE_PTR    (*(volatile u8**)0x8014598cu)
+#define WORLD00_AREA024_WORK_PTR         (*(volatile u8**)0x801f5b00u)
+#define WORLD00_AREA024_WORK_BASE        ((u8*)0x800e4800u)
+#define WORLD00_AREA024_SPIN_WORK_BASE   ((u8*)0x800e5000u)
+#define WORLD00_AREA024_STATE_BASE       ((volatile s16*)0x800e4940u)
+#define WORLD00_AREA024_STATE_OFFSET     ((volatile s16*)0x800e4944u)
+#define WORLD00_AREA024_VERTEX_DST       ((volatile u8*)0x800e4bc8u)
+#define WORLD00_AREA024_VERTEX_SRC       ((const volatile u8*)0x80147aa8u)
+#define WORLD00_AREA024_SCRATCH_REMAP    ((volatile u8*)0x80147a58u)
+#define WORLD00_AREA024_PTR_7AA8         (*(volatile u8**)0x80147aa8u)
+#define WORLD00_AREA024_PTR_7AAC         (*(volatile u8**)0x80147aacu)
+#define WORLD00_AREA024_GLOBAL_HALF_3E6C (*(volatile u16*)0x80143e6cu)
+#define WORLD00_AREA024_STATE_TABLE \
   ((World00Area024Handler const volatile*)0x801f4214u)
-#define BOF3_WORLD00_AREA024_SCRATCH_PTR \
+#define WORLD00_AREA024_SCRATCH_PTR \
   (*(volatile World00Area024Scratch**)0x1f800044u)
-#define BOF3_WORLD00_AREA024_SCRATCH_BYTE_09 (*(volatile u8*)(0x1f800044u + 9u))
+#define WORLD00_AREA024_SCRATCH_BYTE_09 (*(volatile u8*)(0x1f800044u + 9u))
 
 void func_8015b410(void* arg0);
 void func_8015b4b0(void* arg0);

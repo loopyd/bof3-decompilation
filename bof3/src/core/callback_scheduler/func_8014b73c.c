@@ -1,9 +1,5 @@
 #include "internal.h"
 
-/* clang-format off */
-#include <libapi.h>
-/* clang-format on */
-
 extern volatile GameCallbackSlot* DAT_80143d40;
 extern GameCallbackSlot           DAT_80143b40;
 
@@ -28,7 +24,7 @@ void func_8014b73c(void) {
     state = DAT_80143d40->state;
 
     switch (state) {
-      case BOF3_GAME_CALLBACK_SLOT_STATE_OPEN:
+      case GAME_CALLBACK_SLOT_STATE_OPEN:
         func_8017ee0c();
         (current_slot = DAT_80143d40)->thread_id =
             OpenTh((long (*)())DAT_80143d40->callback, DAT_80143d40->open_arg,
@@ -36,7 +32,7 @@ void func_8014b73c(void) {
         func_8017ee1c();
         goto dispatch;
 
-      case BOF3_GAME_CALLBACK_SLOT_STATE_YIELD:
+      case GAME_CALLBACK_SLOT_STATE_YIELD:
         new_var = DAT_80143d40->countdown;
         countdown = (u16)(new_var - 1u);
         DAT_80143d40->countdown = countdown;
@@ -45,9 +41,9 @@ void func_8014b73c(void) {
         }
         goto dispatch;
 
-      case BOF3_GAME_CALLBACK_SLOT_STATE_SWITCH:
+      case GAME_CALLBACK_SLOT_STATE_SWITCH:
       dispatch:
-        DAT_80143d40->state = (state = BOF3_GAME_CALLBACK_SLOT_STATE_IDLE);
+        DAT_80143d40->state = (state = GAME_CALLBACK_SLOT_STATE_IDLE);
         countdown = DAT_80143d40->thread_id;
         ChangeTh(countdown);
         break;

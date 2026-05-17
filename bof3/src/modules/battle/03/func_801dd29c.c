@@ -15,10 +15,10 @@ void func_801dd29c(void) {
     if (owner == 0xffu) {
       break;
     }
-    BOF3_BATTLE_GLOBAL_BYTE_62EE = owner;
-    BOF3_BATTLE_LOCAL_BYTE_119(&BOF3_BATTLE_LOCAL_WORK_ARRAY[owner]) = 1u;
-    BOF3_BATTLE_LOCAL_BYTE_118(
-        &BOF3_BATTLE_LOCAL_WORK_ARRAY[BOF3_BATTLE_GLOBAL_BYTE_62EE]) = 3u;
+    BATTLE_GLOBAL_BYTE_62EE = owner;
+    BATTLE_LOCAL_BYTE_119(&BATTLE_LOCAL_WORK_ARRAY[owner]) = 1u;
+    BATTLE_LOCAL_BYTE_118(
+        &BATTLE_LOCAL_WORK_ARRAY[BATTLE_GLOBAL_BYTE_62EE]) = 3u;
     *global_byte_6303 += 1u;
   }
 }

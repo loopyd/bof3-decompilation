@@ -2,11 +2,11 @@
 #define BOF3_SRC_MODULES_WORLD00_AREA027_13_INTERNAL_H
 
 #include "bof3/modules/world00/area027/13.h"
-#include "bof3/psyq_compat.h"
+#include "bof3/context.h"
 
-#define BOF3_WORLD00_AREA027_PRIMITIVE_PTR (*(volatile u8**)0x8014598cu)
-#define BOF3_WORLD00_AREA027_SCRATCH_PTR   (*(volatile u8**)0x1f800044u)
-#define BOF3_WORLD00_AREA027_MATRIX_92E8   ((MATRIX*)0x801492e8u)
+#define WORLD00_AREA027_PRIMITIVE_PTR (*(volatile u8**)0x8014598cu)
+#define WORLD00_AREA027_SCRATCH_PTR   (*(volatile u8**)0x1f800044u)
+#define WORLD00_AREA027_MATRIX_92E8   ((MATRIX*)0x801492e8u)
 
 typedef struct World00Area027Point {
   s16 x;

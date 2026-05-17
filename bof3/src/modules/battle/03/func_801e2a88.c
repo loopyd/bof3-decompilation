@@ -10,9 +10,9 @@ s8 func_801e2a88(u8 arg0) {
   u8                          kind_flags;
   s8                          value;
 
-  battle_work = &BOF3_BATTLE_ENEMY_WORK_ARRAY[arg0];
-  if (BOF3_BATTLE_GLOBAL_BYTE_6375 == 1u) {
-    flags = BOF3_BATTLE_ENEMY_FLAGS_80(battle_work);
+  battle_work = &BATTLE_ENEMY_WORK_ARRAY[arg0];
+  if (BATTLE_GLOBAL_BYTE_6375 == 1u) {
+    flags = BATTLE_ENEMY_FLAGS_80(battle_work);
     if ((flags & 1u) != 0u) {
       value = (s8)func_801e30b8((s8)arg0);
       if (value != -1) {
@@ -21,13 +21,13 @@ s8 func_801e2a88(u8 arg0) {
       return (s8)func_801e2e30();
     }
   } else {
-    if (BOF3_BATTLE_GLOBAL_BYTE_6375 != 4u) {
-      return (s8)BOF3_BATTLE_ENEMY_BYTE_05(battle_work);
+    if (BATTLE_GLOBAL_BYTE_6375 != 4u) {
+      return (s8)BATTLE_ENEMY_BYTE_05(battle_work);
     }
 
-    flags = BOF3_BATTLE_ENEMY_FLAGS_80(battle_work);
+    flags = BATTLE_ENEMY_FLAGS_80(battle_work);
     kind_flags =
-        BOF3_BATTLE_KIND_BYTE_00(BOF3_BATTLE_ENEMY_HALF_F6(battle_work));
+        BATTLE_KIND_BYTE_00(BATTLE_ENEMY_HALF_F6(battle_work));
 
     if ((flags & 1u) == 0u) {
       if ((kind_flags & 0x10u) != 0u) {

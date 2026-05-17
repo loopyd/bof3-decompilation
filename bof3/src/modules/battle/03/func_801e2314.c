@@ -10,13 +10,13 @@ void func_801e2314(u32 arg0) {
   u8           mode;
   u8           value;
 
-  script_ptr = BOF3_BATTLE_ENEMY_PTR_EC(BOF3_BATTLE_CURRENT_ENEMY_PTR);
-  mode = BOF3_BATTLE_LOCAL_SCRATCH_PTR->unk_08;
+  script_ptr = BATTLE_ENEMY_PTR_EC(BATTLE_CURRENT_ENEMY_PTR);
+  mode = BATTLE_LOCAL_SCRATCH_PTR->unk_08;
 
   if (mode == 1u) {
     func_8014d8d4(script_ptr[arg0 & 0xffu] & 0x7fu);
     value = script_ptr[arg0 & 0xffu];
-    BOF3_BATTLE_LOCAL_BYTE_2A(BOF3_BATTLE_LOCAL_SCRATCH_PTR) =
+    BATTLE_LOCAL_BYTE_2A(BATTLE_LOCAL_SCRATCH_PTR) =
         (value & 0x80u) == 0u;
     return;
   }
@@ -31,6 +31,6 @@ void func_801e2314(u32 arg0) {
     return;
   }
 
-  BOF3_BATTLE_LOCAL_BYTE_2A(BOF3_BATTLE_LOCAL_SCRATCH_PTR) =
+  BATTLE_LOCAL_BYTE_2A(BATTLE_LOCAL_SCRATCH_PTR) =
       (value & 0x80u) == 0u;
 }

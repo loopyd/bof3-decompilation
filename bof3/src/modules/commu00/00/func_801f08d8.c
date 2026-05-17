@@ -16,7 +16,7 @@ void func_801f08d8(u8 source_index, u8 task_index) {
 
   source_record = commu00_active_record(source_index);
   task_slot = commu00_task_slot(task_index);
-  BOF3_COMMU00_SCRATCH_SLOT = task_slot;
+  COMMU00_SCRATCH_SLOT = task_slot;
 
   task_slot->source_index = source_index;
   record_kind = source_record->kind;
@@ -25,25 +25,25 @@ void func_801f08d8(u8 source_index, u8 task_index) {
   task_slot->variant_state = 0u;
   task_slot->state = 0u;
 
-  variant_index = BOF3_COMMU00_VARIANT_ROTATION[record_kind_index];
+  variant_index = COMMU00_VARIANT_ROTATION[record_kind_index];
   variant_offset = ((u32)record_kind_index * 9u) + ((u32)variant_index * 3u);
   task_slot->field_34 = 0;
   task_slot->field_36 =
-      (s16)(u16)BOF3_COMMU00_RECORD_VARIANTS[variant_offset + 0u];
+      (s16)(u16)COMMU00_RECORD_VARIANTS[variant_offset + 0u];
   task_slot->field_38 = 0;
   task_slot->field_3a =
-      (s16)(u16)BOF3_COMMU00_RECORD_VARIANTS[variant_offset + 1u];
+      (s16)(u16)COMMU00_RECORD_VARIANTS[variant_offset + 1u];
   task_slot->field_3e =
       (s16)commu00_pack_slot_anchor(task_slot->field_34, task_slot->field_38);
-  task_slot->resource_id = BOF3_COMMU00_RECORD_VARIANTS[variant_offset + 2u];
+  task_slot->resource_id = COMMU00_RECORD_VARIANTS[variant_offset + 2u];
   task_slot->reset_flag = 0u;
 
   palette_id =
-      BOF3_COMMU00_SLOT_PALETTE_TABLE[(u32)(task_slot->source_index % 6u)];
+      COMMU00_SLOT_PALETTE_TABLE[(u32)(task_slot->source_index % 6u)];
   commu00_apply_slot_palette(palette_id);
   commu00_prime_slot_resource(task_slot->resource_id);
 
-  handler_kind = BOF3_COMMU00_RECORD_KIND_TABLE[(u32)record_kind_index * 8u];
+  handler_kind = COMMU00_RECORD_KIND_TABLE[(u32)record_kind_index * 8u];
   switch (handler_kind) {
     case 0:
       func_801f0bf4(task_index);
@@ -93,5 +93,5 @@ void func_801f08d8(u8 source_index, u8 task_index) {
       break;
   }
 
-  BOF3_COMMU00_VARIANT_ROTATION[record_kind_index] += 1u;
+  COMMU00_VARIANT_ROTATION[record_kind_index] += 1u;
 }

@@ -14,14 +14,14 @@ void func_801f2f04(s16 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4) {
   u16 tpage;
 
   tpage = GetTPage(0, 1, 0x3c0, 0);
-  SetDrawMode((DR_MODE*)BOF3_WORLD00_AREA032_13_PRIMITIVE_PTR, 0, 1, tpage,
+  SetDrawMode((DR_MODE*)WORLD00_AREA032_13_PRIMITIVE_PTR, 0, 1, tpage,
               NULL);
   func_8014e5a0(1u, 0x0cu);
 
   radius = arg2;
   angle = 0u;
   do {
-    primitive = (u32)BOF3_WORLD00_AREA032_13_PRIMITIVE_PTR;
+    primitive = (u32)WORLD00_AREA032_13_PRIMITIVE_PTR;
     SetPolyG3((POLY_G3*)primitive);
     SetSemiTrans((void*)primitive, 1);
 

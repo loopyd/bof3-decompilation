@@ -16,7 +16,7 @@ void func_801d6b28(s8 arg0) {
   func_801e0dcc(0x16, 1, 0xbc, 0x96);
   func_801e0dcc(0x11, 1, 0x36, 0x9c);
 
-  scratch = BOF3_WORLD00_AREA030_SCRATCH_PTR;
+  scratch = WORLD00_AREA030_SCRATCH_PTR;
 
   left_x = *(volatile s32*)(scratch + 0x0cu);
   if (left_x < 0x39) {

@@ -3,28 +3,28 @@
 
 #include "bof3/core/callback_scheduler.h"
 #include "bof3/core/game_front.h"
-#include "bof3/defines.h"
+#include "bof3/context.h"
 #include "bof3/modules/game/00.h"
 #include "bof3/modules/game/01.h"
 
-#define BOF3_GAME_FRONT_EFFECT_BUSY            (*(volatile u16*)0x80143c40u)
-#define BOF3_GAME_FRONT_PAD_STATE              (*(volatile u16*)0x80145aa8u)
-#define BOF3_GAME_FRONT_STATE                  (*(volatile u16*)0x80143c10u)
-#define BOF3_GAME_FRONT_TIMER                  (*(volatile u16*)0x80143c20u)
-#define BOF3_GAME_FRONT_BANNER_SCROLL          (*(volatile u16*)0x80143c22u)
-#define BOF3_GAME_FRONT_BANNER_ALPHA           (*(volatile u16*)0x80143c24u)
-#define BOF3_GAME_FRONT_WINDOW_ALPHA_PRIMARY   (*(volatile u16*)0x80143c26u)
-#define BOF3_GAME_FRONT_WINDOW_ALPHA_SECONDARY (*(volatile u16*)0x80143c28u)
-#define BOF3_GAME_FRONT_FADE_PHASE             (*(volatile u8*)0x80143c31u)
-#define BOF3_GAME_FRONT_WINDOW_PHASE           (*(volatile u8*)0x80143c32u)
-#define BOF3_GAME_FRONT_INPUT_GATE             (*(volatile u8*)0x80143c33u)
-#define BOF3_GAME_FRONT_SELECTION              (*(volatile u8*)0x80145029u)
-#define BOF3_GAME_FRONT_PALETTE_STAGE_SERIAL   (*(volatile u8*)0x80145988u)
+#define GAME_FRONT_EFFECT_BUSY            (*(volatile u16*)0x80143c40u)
+#define GAME_FRONT_PAD_STATE              (*(volatile u16*)0x80145aa8u)
+#define GAME_FRONT_STATE                  (*(volatile u16*)0x80143c10u)
+#define GAME_FRONT_TIMER                  (*(volatile u16*)0x80143c20u)
+#define GAME_FRONT_BANNER_SCROLL          (*(volatile u16*)0x80143c22u)
+#define GAME_FRONT_BANNER_ALPHA           (*(volatile u16*)0x80143c24u)
+#define GAME_FRONT_WINDOW_ALPHA_PRIMARY   (*(volatile u16*)0x80143c26u)
+#define GAME_FRONT_WINDOW_ALPHA_SECONDARY (*(volatile u16*)0x80143c28u)
+#define GAME_FRONT_FADE_PHASE             (*(volatile u8*)0x80143c31u)
+#define GAME_FRONT_WINDOW_PHASE           (*(volatile u8*)0x80143c32u)
+#define GAME_FRONT_INPUT_GATE             (*(volatile u8*)0x80143c33u)
+#define GAME_FRONT_SELECTION              (*(volatile u8*)0x80145029u)
+#define GAME_FRONT_PALETTE_STAGE_SERIAL   (*(volatile u8*)0x80145988u)
 
-#define BOF3_GAME_FRONT_START_MASK         0x0800u
-#define BOF3_GAME_FRONT_POPUP_PENDING_MASK 0x00ffff00u
-#define BOF3_GAME_FRONT_POPUP_PENDING_OPEN 0x00020000u
-#define BOF3_GAME_FRONT_SELECTION_FX_TABLE ((const volatile u8*)0x80181ebau)
+#define GAME_FRONT_START_MASK         0x0800u
+#define GAME_FRONT_POPUP_PENDING_MASK 0x00ffff00u
+#define GAME_FRONT_POPUP_PENDING_OPEN 0x00020000u
+#define GAME_FRONT_SELECTION_FX_TABLE ((const volatile u8*)0x80181ebau)
 
 /* does: slot-2 frontend-local callback body selected by the local mode byte.
  * @source: 0x8014ed6c

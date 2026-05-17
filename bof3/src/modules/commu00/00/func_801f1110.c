@@ -8,9 +8,9 @@ void func_801f1110(u8 task_index, u8 record_kind_index) {
   u8                        variant_index;
   u16                       label_id;
 
-  task_slot = BOF3_COMMU00_SCRATCH_SLOT;
+  task_slot = COMMU00_SCRATCH_SLOT;
   task_slot->active = 1u;
-  variant_index = BOF3_COMMU00_VARIANT_ROTATION[record_kind_index];
+  variant_index = COMMU00_VARIANT_ROTATION[record_kind_index];
 
   if (variant_index == 0u) {
     label_id = 0xc009u;

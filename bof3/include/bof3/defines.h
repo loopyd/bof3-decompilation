@@ -37,4 +37,15 @@ typedef volatile s16       vs16;
 typedef volatile s32       vs32;
 /* clang-format on */
 
+/*
+ * PSX hardware I/O register accessors.
+ *
+ * For 0x1f80xxxx memory-mapped registers (GPU, GTE, CD, SPU, etc.).
+ *
+ * Usage: REG32(0x1f801080) |= 1;  REG16(0x1f8010f0) = 0x200;
+ */
+#define REG8(addr)   (*(volatile u8 *)(addr))
+#define REG16(addr)  (*(volatile u16 *)(addr))
+#define REG32(addr)  (*(volatile u32 *)(addr))
+
 #endif

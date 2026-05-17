@@ -5,7 +5,7 @@
  * @source: 0x801deeb4 FUN_801deeb4
  */
 void func_801deeb4(void) {
-  if ((BOF3_BATTLE_LOCAL_SCRATCH_PTR->flags_00 & 1u) != 0u) {
-    BOF3_BATTLE_LOCAL_STATE_TABLE[BOF3_BATTLE_LOCAL_SCRATCH_PTR->unk_01]();
+  if ((BATTLE_LOCAL_SCRATCH_PTR->flags_00 & 1u) != 0u) {
+    BATTLE_LOCAL_STATE_TABLE[BATTLE_LOCAL_SCRATCH_PTR->unk_01]();
   }
 }

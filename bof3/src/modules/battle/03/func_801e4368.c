@@ -5,25 +5,25 @@
  * @source: 0x801e4368 FUN_801e4368
  */
 u8 func_801e4368(void) {
-  if ((BOF3_BATTLE_ENEMY_FLAGS_82(BOF3_BATTLE_CURRENT_ENEMY_PTR) & 0x4064u) !=
+  if ((BATTLE_ENEMY_FLAGS_82(BATTLE_CURRENT_ENEMY_PTR) & 0x4064u) !=
       0u) {
     return 0u;
   }
-  if (BOF3_BATTLE_GLOBAL_BYTE_6374 < 3u) {
-    if ((BOF3_BATTLE_GLOBAL_BYTE_6375 == 4u) &&
-        (BOF3_BATTLE_GLOBAL_HALF_63C0 == 0xa1u)) {
+  if (BATTLE_GLOBAL_BYTE_6374 < 3u) {
+    if ((BATTLE_GLOBAL_BYTE_6375 == 4u) &&
+        (BATTLE_GLOBAL_HALF_63C0 == 0xa1u)) {
       return 0u;
     }
-    if ((BOF3_BATTLE_GLOBAL_BYTE_63CE != 0u) &&
-        ((BOF3_BATTLE_ENEMY_WORD_104(BOF3_BATTLE_CURRENT_ENEMY_PTR) & 0x10u) ==
+    if ((BATTLE_GLOBAL_BYTE_63CE != 0u) &&
+        ((BATTLE_ENEMY_WORD_104(BATTLE_CURRENT_ENEMY_PTR) & 0x10u) ==
          0u)) {
       return 0u;
     }
-    if ((BOF3_BATTLE_ENEMY_FLAGS_80(BOF3_BATTLE_CURRENT_ENEMY_PTR) & 2u) ==
+    if ((BATTLE_ENEMY_FLAGS_80(BATTLE_CURRENT_ENEMY_PTR) & 2u) ==
         0u) {
       return 0u;
     }
-    if ((BOF3_BATTLE_ENEMY_WORD_100(BOF3_BATTLE_CURRENT_ENEMY_PTR) & 0x8000u) !=
+    if ((BATTLE_ENEMY_WORD_100(BATTLE_CURRENT_ENEMY_PTR) & 0x8000u) !=
         0u) {
       return 1u;
     }

@@ -8,12 +8,12 @@
 void func_801d0df0(void) {
   u16 timer;
 
-  timer = BOF3_GAME_FRONT_TIMER - 1u;
-  BOF3_GAME_FRONT_TIMER = timer;
+  timer = GAME_FRONT_TIMER - 1u;
+  GAME_FRONT_TIMER = timer;
 
   if ((s32)(timer << 0x10) == 0) {
     func_8014ecac(0);
     func_801d1134();
-    BOF3_GAME_FRONT_STATE = BOF3_GAME_FRONT_STATE + 1u;
+    GAME_FRONT_STATE = GAME_FRONT_STATE + 1u;
   }
 }

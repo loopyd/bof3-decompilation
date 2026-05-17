@@ -10,9 +10,9 @@ void func_801f2fd4(void* arg0) {
 
   work = (World00Area024SpriteWork*)arg0;
 
-  work->field_04 = BOF3_WORLD00_AREA024_SCRATCH_PTR->field_34;
-  work->field_08 = BOF3_WORLD00_AREA024_SCRATCH_PTR->field_38;
-  work->field_0c = BOF3_WORLD00_AREA024_SCRATCH_PTR->field_3c;
+  work->field_04 = WORLD00_AREA024_SCRATCH_PTR->field_34;
+  work->field_08 = WORLD00_AREA024_SCRATCH_PTR->field_38;
+  work->field_0c = WORLD00_AREA024_SCRATCH_PTR->field_3c;
   work->field_14.vx = (rand() & 0xff) - 0x80;
   work->field_14.vy = (rand() & 0xff) - 0x80;
   work->field_14.vz = rand() & 0x7f;

@@ -1,6 +1,7 @@
 #ifndef BOF3_SRC_MODULES_SCENA16_00_INTERNAL_H
 #define BOF3_SRC_MODULES_SCENA16_00_INTERNAL_H
 
+#include "bof3/context.h"
 #include "bof3/core/callback_scheduler.h"
 #include "bof3/core/emi/loader.h"
 #include "bof3/core/game_front.h"

@@ -4,7 +4,7 @@
  * table.
  * @source: 0x801e31c8 FUN_801e31c8
  */
-void BOF3_NO_SIBLING_CALLS func_801e31c8(void) {
+void NO_SIBLING_CALLS func_801e31c8(void) {
   volatile u8**    scratch_root;
   volatile u8*     scratch;
   Battle03Handler* table;

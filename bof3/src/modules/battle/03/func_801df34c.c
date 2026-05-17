@@ -6,7 +6,7 @@
  */
 void func_801df34c(void) {
   func_8014d8d4(
-      (BOF3_BATTLE_LOCAL_FLAGS_80(BOF3_BATTLE_LOCAL_WORK_PTR) & 0x0800u) != 0u
-          ? BOF3_BATTLE_LOCAL_SCRATCH_PTR->unk_08 + 0x34u
-          : BOF3_BATTLE_LOCAL_SCRATCH_PTR->unk_08 + 0x10u);
+      (BATTLE_LOCAL_FLAGS_80(BATTLE_LOCAL_WORK_PTR) & 0x0800u) != 0u
+          ? BATTLE_LOCAL_SCRATCH_PTR->unk_08 + 0x34u
+          : BATTLE_LOCAL_SCRATCH_PTR->unk_08 + 0x10u);
 }

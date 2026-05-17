@@ -15,7 +15,7 @@ void func_801f33a8(void) {
     }
   }
 
-  func_8017c2d8((void*)BOF3_WORLD00_AREA027_PRIMITIVE_PTR, 0, 0, tpage, 0);
+  func_8017c2d8((void*)WORLD00_AREA027_PRIMITIVE_PTR, 0, 0, tpage, 0);
   func_80155a08(0x468000, 0x478000, -1, 0x0c);
 
   point[0] = (s16)0xe340u;

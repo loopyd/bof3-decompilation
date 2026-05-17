@@ -1,9 +1,5 @@
 #include "internal.h"
 
-/* clang-format off */
-#include <libcd.h>
-/* clang-format on */
-
 u32         func_80162160(u32 arg0);
 void        func_80162178(void);
 void        func_80162b08(u8 arg0);

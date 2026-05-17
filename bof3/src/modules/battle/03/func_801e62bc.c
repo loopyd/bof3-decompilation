@@ -11,22 +11,22 @@ void func_801e62bc(u8 arg0) {
   s8  digit_index;
 
   counter =
-      (s16)(*(volatile u16*)((volatile s8*)BOF3_BATTLE_CURRENT_QUEUED_SLOT_PTR +
+      (s16)(*(volatile u16*)((volatile s8*)BATTLE_CURRENT_QUEUED_SLOT_PTR +
                              0x32) +
             1);
-  digit_index = ((volatile s8*)BOF3_BATTLE_CURRENT_QUEUED_SLOT_PTR)[0x0a];
-  *(volatile s16*)((volatile s8*)BOF3_BATTLE_CURRENT_QUEUED_SLOT_PTR + 0x32) =
+  digit_index = ((volatile s8*)BATTLE_CURRENT_QUEUED_SLOT_PTR)[0x0a];
+  *(volatile s16*)((volatile s8*)BATTLE_CURRENT_QUEUED_SLOT_PTR + 0x32) =
       (s16)(counter % 10);
 
   while (digit_index >= 0) {
     current_digit =
-        *(volatile s16*)((volatile s8*)BOF3_BATTLE_CURRENT_QUEUED_SLOT_PTR +
+        *(volatile s16*)((volatile s8*)BATTLE_CURRENT_QUEUED_SLOT_PTR +
                          0x32);
-    y = *(volatile s16*)((volatile s8*)BOF3_BATTLE_CURRENT_QUEUED_SLOT_PTR +
+    y = *(volatile s16*)((volatile s8*)BATTLE_CURRENT_QUEUED_SLOT_PTR +
                          0x3a);
     func_801d9684(
         (s16)(*(volatile u16*)((volatile s8*)
-                                   BOF3_BATTLE_CURRENT_QUEUED_SLOT_PTR +
+                                   BATTLE_CURRENT_QUEUED_SLOT_PTR +
                                0x36) +
               (digit_index * -8) - 0x0cu),
         y, arg0, (u16)((current_digit + digit_index) % 10));

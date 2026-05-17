@@ -9,7 +9,7 @@ void func_801f0f08(u8 source_index, u8 task_index, u8 record_kind_index) {
   u32 label_offset;
   u32 task_offset;
 
-  BOF3_COMMU00_SCRATCH_SLOT->active = 1u;
+  COMMU00_SCRATCH_SLOT->active = 1u;
   delta = *(volatile u32*)(0x80140000u + 0x502cu) -
           *(volatile u32*)((0x80140000u + 0x55ccu) + ((u32)source_index << 3));
 

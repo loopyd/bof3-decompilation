@@ -15,14 +15,14 @@ u8 func_801d5658(void) {
   do {
     volatile Battle03LocalWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
+    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
     if ((func_801d64c4(index) == 0u) &&
-        ((BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) & 0x40u) != 0u)) {
+        ((BATTLE_LOCAL_FLAGS_80(battle_work) & 0x40u) != 0u)) {
       if (func_801ddcb4(index) == 0u) {
-        BOF3_BATTLE_LOCAL_BYTE_21(battle_work) += 1u;
+        BATTLE_LOCAL_BYTE_21(battle_work) += 1u;
       } else {
-        BOF3_BATTLE_LOCAL_BYTE_21(battle_work) = 0u;
-        BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) &= 0xffbfu;
+        BATTLE_LOCAL_BYTE_21(battle_work) = 0u;
+        BATTLE_LOCAL_FLAGS_80(battle_work) &= 0xffbfu;
         count += 1u;
         last_index = index;
       }

@@ -10,10 +10,10 @@ void func_801da5a8(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
   u32 primitive;
 
   primitive_id = func_8017a620(0, 1, 0x3c0, 0);
-  func_8017c2d8(BOF3_BATTLE_GLOBAL_WORD_598C, 0, 0, primitive_id, 0);
+  func_8017c2d8(BATTLE_GLOBAL_WORD_598C, 0, 0, primitive_id, 0);
   func_8014e5a0(1u, 0x0cu);
 
-  primitive = BOF3_BATTLE_GLOBAL_WORD_598C;
+  primitive = BATTLE_GLOBAL_WORD_598C;
   func_8017aa80(primitive);
   *(volatile u8*)(primitive + 4) = arg4;
   *(volatile u8*)(primitive + 5) = arg5;

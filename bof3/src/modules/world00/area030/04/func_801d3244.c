@@ -15,9 +15,9 @@ void func_801d3244(s16 arg0, s16 arg1, u8 arg2, s8 arg3, u8 arg4, s8 arg5) {
   *(volatile u8*)(primitive + 0x0cu) =
       (u8)(*(volatile u8*)(primitive + 0x0cu) + arg3);
 
-  if ((arg5 != 0) && ((BOF3_WORLD00_AREA030_GLOBAL_WORD_3E6C & 8u) == 0u)) {
+  if ((arg5 != 0) && ((WORLD00_AREA030_GLOBAL_WORD_3E6C & 8u) == 0u)) {
     func_801e0c80(6, 2);
-    primitive = (u32)BOF3_WORLD00_AREA030_PRIMITIVE_PTR;
+    primitive = (u32)WORLD00_AREA030_PRIMITIVE_PTR;
     SetTile((TILE*)primitive);
     func_8017a904((void*)primitive, 1);
     *(volatile u16*)(primitive + 0x0eu) = 8u;

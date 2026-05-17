@@ -1,6 +1,7 @@
 #ifndef BOF3_SRC_MODULES_COMMU00_00_INTERNAL_H
 #define BOF3_SRC_MODULES_COMMU00_00_INTERNAL_H
 
+#include "bof3/context.h"
 #include "bof3/modules/commu00/00.h"
 
 typedef struct Commu00TaskSlot {
@@ -39,51 +40,51 @@ typedef struct Commu00ActiveRecord {
   u32 progress_anchor;
 } Commu00ActiveRecord;
 
-#define BOF3_COMMU00_ACTIVE_RECORD_BASE        ((u32)0x801455c8u)
-#define BOF3_COMMU00_RECORD_KIND_TABLE         ((const volatile u8*)0x801457a8u)
-#define BOF3_COMMU00_ACTIVE_TEMPLATE_BASE      ((u32)0x801457e8u)
-#define BOF3_COMMU00_LAST_NOTIFICATION_ROW     (*(volatile u16*)0x801455c0u)
-#define BOF3_COMMU00_VISIBLE_SLOT_COUNT        (*(volatile s8*)0x801455c2u)
-#define BOF3_COMMU00_LAST_WINDOW_STEP_TICK     (*(volatile u32*)0x801455acu)
-#define BOF3_COMMU00_WINDOW_ANCHOR_TICK        (*(volatile u32*)0x801455b0u)
-#define BOF3_COMMU00_REMOVAL_QUEUE             ((volatile u8*)0x80145e30u)
-#define BOF3_COMMU00_REMOVAL_QUEUE_COUNT       (*(volatile u8*)0x80145e44u)
-#define BOF3_COMMU00_PENDING_QUEUE             ((volatile u8*)0x80145e48u)
-#define BOF3_COMMU00_PENDING_QUEUE_COUNT       (*(volatile u8*)0x80145e5cu)
-#define BOF3_COMMU00_NOTIFICATION_QUEUE_COUNT  (*(volatile u8*)0x80145e5du)
-#define BOF3_COMMU00_TYPE45_NOTIFICATION_TABLE ((const volatile u8*)0x801f2458u)
-#define BOF3_COMMU00_TASK_SLOT_BASE            ((u32)0x80146888u)
-#define BOF3_COMMU00_TASK_TEMPLATE_TABLE       ((const volatile u8*)0x801f2568u)
-#define BOF3_COMMU00_SLOT_TEMPLATE_TABLE       ((const volatile u8*)0x801f2700u)
-#define BOF3_COMMU00_TYPE8_LABEL_TABLE  ((const volatile u16*)0x801f2930u)
-#define BOF3_COMMU00_SLOT_PALETTE_TABLE ((const volatile u16*)0x801f24fcu)
-#define BOF3_COMMU00_RECORD_VARIANTS    ((const volatile u8*)0x801f25a4u)
-#define BOF3_COMMU00_VARIANT_ROTATION   ((volatile u8*)0x801f2928u)
-#define BOF3_COMMU00_PROGRESS_COUNTER   (*(volatile u32*)0x8014502cu)
-#define BOF3_COMMU00_WORLD_STATE        (*(volatile u16*)0x80143f00u)
-#define BOF3_COMMU00_TYPE10_TOTAL       (*(volatile u8*)0x801455c5u)
-#define BOF3_COMMU00_TYPE11_TOTAL       (*(volatile u8*)0x801455c6u)
-#define BOF3_COMMU00_SCRATCH_SLOT (*(volatile Commu00TaskSlot**)0x1f800044u)
+#define COMMU00_ACTIVE_RECORD_BASE        ((u32)0x801455c8u)
+#define COMMU00_RECORD_KIND_TABLE         ((const volatile u8*)0x801457a8u)
+#define COMMU00_ACTIVE_TEMPLATE_BASE      ((u32)0x801457e8u)
+#define COMMU00_LAST_NOTIFICATION_ROW     (*(volatile u16*)0x801455c0u)
+#define COMMU00_VISIBLE_SLOT_COUNT        (*(volatile s8*)0x801455c2u)
+#define COMMU00_LAST_WINDOW_STEP_TICK     (*(volatile u32*)0x801455acu)
+#define COMMU00_WINDOW_ANCHOR_TICK        (*(volatile u32*)0x801455b0u)
+#define COMMU00_REMOVAL_QUEUE             ((volatile u8*)0x80145e30u)
+#define COMMU00_REMOVAL_QUEUE_COUNT       (*(volatile u8*)0x80145e44u)
+#define COMMU00_PENDING_QUEUE             ((volatile u8*)0x80145e48u)
+#define COMMU00_PENDING_QUEUE_COUNT       (*(volatile u8*)0x80145e5cu)
+#define COMMU00_NOTIFICATION_QUEUE_COUNT  (*(volatile u8*)0x80145e5du)
+#define COMMU00_TYPE45_NOTIFICATION_TABLE ((const volatile u8*)0x801f2458u)
+#define COMMU00_TASK_SLOT_BASE            ((u32)0x80146888u)
+#define COMMU00_TASK_TEMPLATE_TABLE       ((const volatile u8*)0x801f2568u)
+#define COMMU00_SLOT_TEMPLATE_TABLE       ((const volatile u8*)0x801f2700u)
+#define COMMU00_TYPE8_LABEL_TABLE  ((const volatile u16*)0x801f2930u)
+#define COMMU00_SLOT_PALETTE_TABLE ((const volatile u16*)0x801f24fcu)
+#define COMMU00_RECORD_VARIANTS    ((const volatile u8*)0x801f25a4u)
+#define COMMU00_VARIANT_ROTATION   ((volatile u8*)0x801f2928u)
+#define COMMU00_PROGRESS_COUNTER   (*(volatile u32*)0x8014502cu)
+#define COMMU00_WORLD_STATE        (*(volatile u16*)0x80143f00u)
+#define COMMU00_TYPE10_TOTAL       (*(volatile u8*)0x801455c5u)
+#define COMMU00_TYPE11_TOTAL       (*(volatile u8*)0x801455c6u)
+#define COMMU00_SCRATCH_SLOT (*(volatile Commu00TaskSlot**)0x1f800044u)
 
 static inline volatile Commu00TaskSlot* commu00_task_slot(u8 task_index) {
-  return (volatile Commu00TaskSlot*)(BOF3_COMMU00_TASK_SLOT_BASE +
+  return (volatile Commu00TaskSlot*)(COMMU00_TASK_SLOT_BASE +
                                      ((u32)task_index * 0x98u));
 }
 
 static inline const volatile Commu00ActiveRecord* commu00_active_record(
     u8 source_index) {
-  return (const volatile Commu00ActiveRecord*)(BOF3_COMMU00_ACTIVE_RECORD_BASE +
+  return (const volatile Commu00ActiveRecord*)(COMMU00_ACTIVE_RECORD_BASE +
                                                ((u32)source_index * 8u));
 }
 
 static inline volatile Commu00ActiveRecord* commu00_mutable_active_record(
     u8 source_index) {
-  return (volatile Commu00ActiveRecord*)(BOF3_COMMU00_ACTIVE_RECORD_BASE +
+  return (volatile Commu00ActiveRecord*)(COMMU00_ACTIVE_RECORD_BASE +
                                          ((u32)source_index * 8u));
 }
 
 static inline volatile u8* commu00_active_template(u8 source_index) {
-  return (volatile u8*)(BOF3_COMMU00_ACTIVE_TEMPLATE_BASE +
+  return (volatile u8*)(COMMU00_ACTIVE_TEMPLATE_BASE +
                         ((u32)source_index * 5u));
 }
 

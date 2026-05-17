@@ -17,22 +17,22 @@ void func_801f2d3c(void) {
   u8                  color;
   u32                 primitive;
 
-  work = BOF3_WORLD00_AREA028_WORK_PTR;
+  work = WORLD00_AREA028_WORK_PTR;
 
-  work->field_0c = (s16)(BOF3_WORLD00_AREA028_CENTER_X +
+  work->field_0c = (s16)(WORLD00_AREA028_CENTER_X +
                          ((work->field_04 << 7) / work->field_08));
-  work->field_0e = (s16)(BOF3_WORLD00_AREA028_CENTER_Y +
+  work->field_0e = (s16)(WORLD00_AREA028_CENTER_Y +
                          ((work->field_06 << 7) / work->field_08));
 
   i = 0u;
   next_i = 1u;
   do {
-    dx0 = (s16)(BOF3_WORLD00_AREA028_RING_X(next_i & 0x1fu) -
-                BOF3_WORLD00_AREA028_RING_X(i));
-    dy0 = (s16)(BOF3_WORLD00_AREA028_RING_Y(next_i & 0x1fu) -
-                BOF3_WORLD00_AREA028_RING_Y(i));
-    dx1 = (s16)(work->field_0c - BOF3_WORLD00_AREA028_RING_X(i));
-    dy1 = (s16)(work->field_0e - BOF3_WORLD00_AREA028_RING_Y(i));
+    dx0 = (s16)(WORLD00_AREA028_RING_X(next_i & 0x1fu) -
+                WORLD00_AREA028_RING_X(i));
+    dy0 = (s16)(WORLD00_AREA028_RING_Y(next_i & 0x1fu) -
+                WORLD00_AREA028_RING_Y(i));
+    dx1 = (s16)(work->field_0c - WORLD00_AREA028_RING_X(i));
+    dy1 = (s16)(work->field_0e - WORLD00_AREA028_RING_Y(i));
     if (((s32)dx0 * (s32)dy1) - ((s32)dy0 * (s32)dx1) < 0) {
       return;
     }
@@ -40,7 +40,7 @@ void func_801f2d3c(void) {
     next_i += 1u;
   } while (i < 0x20u);
 
-  primitive = (u32)BOF3_WORLD00_AREA028_PRIMITIVE_PTR;
+  primitive = (u32)WORLD00_AREA028_PRIMITIVE_PTR;
   func_8017aa30((void*)primitive);
   func_8017a904((void*)primitive, 0);
   *(volatile s16*)(primitive + 8) = work->field_0c;

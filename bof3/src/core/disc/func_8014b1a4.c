@@ -1,12 +1,9 @@
 #include "internal.h"
 
-#include "bof3/original_symbols.h"
+#include "bof3/context.h"
 
-s32  OpenEvent(u32 event_spec, s32 spec, s32 mode, void* callback);
-void EnableEvent(s32 event_id);
 void func_8017e028(s32 arg0);
 void _bu_init(void);
-void ChangeClearPAD(s32 arg0);
 
 extern s32 DAT_80145e14;
 extern s32 DAT_80145e18;

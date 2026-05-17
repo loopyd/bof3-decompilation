@@ -6,14 +6,14 @@
  * @source: docs/specs/runtime/game-overlay.md
  */
 void __attribute__((noinline)) func_801d1184(void) {
-  u32 selection = (u32)BOF3_GAME_FRONT_SELECTION;
+  u32 selection = (u32)GAME_FRONT_SELECTION;
 
   if (selection != 0xffu) {
     u32 selection_offset = selection << 2;
 
     game_stop_selection_fx(
-        BOF3_GAME_FRONT_SELECTION_FX_TABLE[selection_offset + 0u],
-        BOF3_GAME_FRONT_SELECTION_FX_TABLE[selection_offset + 1u]);
-    BOF3_GAME_FRONT_SELECTION = 0xffu;
+        GAME_FRONT_SELECTION_FX_TABLE[selection_offset + 0u],
+        GAME_FRONT_SELECTION_FX_TABLE[selection_offset + 1u]);
+    GAME_FRONT_SELECTION = 0xffu;
   }
 }

@@ -8,17 +8,17 @@ void func_801f0e1c(u8 task_index, u8 record_kind_index) {
   u8                        variant_index;
   u16                       label_id;
 
-  variant_index = BOF3_COMMU00_VARIANT_ROTATION[record_kind_index];
+  variant_index = COMMU00_VARIANT_ROTATION[record_kind_index];
 
   if (variant_index == 0u) {
-    task_slot = BOF3_COMMU00_SCRATCH_SLOT;
+    task_slot = COMMU00_SCRATCH_SLOT;
     task_slot->active = 5u;
-    task_slot = BOF3_COMMU00_SCRATCH_SLOT;
+    task_slot = COMMU00_SCRATCH_SLOT;
     task_slot->variant_arg_0 = 1u;
     task_slot->variant_arg_1 = 1u;
     label_id = 0xcau;
   } else {
-    BOF3_COMMU00_SCRATCH_SLOT->active = 1u;
+    COMMU00_SCRATCH_SLOT->active = 1u;
     label_id = (u16)((u16)variant_index | 0xc000u);
   }
 

@@ -1,10 +1,5 @@
 #include "internal.h"
 
-/* clang-format off */
-#include <libgte.h>
-#include <libgpu.h>
-/* clang-format on */
-
 /* does: clears one rectangular display region.
  * @source: 0x8014e564 FUN_8014e564
  */

@@ -4,7 +4,7 @@
  * table.
  * @source: 0x801e4490 FUN_801e4490
  */
-void BOF3_NO_SIBLING_CALLS func_801e4490(void) {
+void NO_SIBLING_CALLS func_801e4490(void) {
   volatile u8* scratch;
 
   scratch = *(volatile u8**)0x1f800044u;

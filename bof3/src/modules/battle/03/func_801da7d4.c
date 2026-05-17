@@ -21,12 +21,12 @@ void func_801da7d4(void) {
   while (index < 0x0bu) {
     volatile Battle03EnemyWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_ENEMY_WORK_ARRAY[index - 3u];
-    if ((BOF3_BATTLE_GLOBAL_BYTE_63BA == 0u) ||
-        ((BOF3_BATTLE_ENEMY_WORD_104(battle_work) & 0x8000u) != 0u)) {
+    battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
+    if ((BATTLE_GLOBAL_BYTE_63BA == 0u) ||
+        ((BATTLE_ENEMY_WORD_104(battle_work) & 0x8000u) != 0u)) {
       if ((func_801db9e4(index) != 0u) &&
-          (max_enemy_value < BOF3_BATTLE_ENEMY_HALF_A8(battle_work))) {
-        max_enemy_value = BOF3_BATTLE_ENEMY_HALF_A8(battle_work);
+          (max_enemy_value < BATTLE_ENEMY_HALF_A8(battle_work))) {
+        max_enemy_value = BATTLE_ENEMY_HALF_A8(battle_work);
       }
     }
     index += 1u;
@@ -37,11 +37,11 @@ void func_801da7d4(void) {
   while (index < 3u) {
     volatile Battle03LocalWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
-    if ((BOF3_BATTLE_GLOBAL_BYTE_63BA == 0u) ||
-        ((BOF3_BATTLE_LOCAL_WORD_128(battle_work) & 0x8000u) != 0u)) {
+    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
+    if ((BATTLE_GLOBAL_BYTE_63BA == 0u) ||
+        ((BATTLE_LOCAL_WORD_128(battle_work) & 0x8000u) != 0u)) {
       if (func_801db844(index) != 0u) {
-        entries[count].value = BOF3_BATTLE_LOCAL_HALF_98(battle_work);
+        entries[count].value = BATTLE_LOCAL_HALF_98(battle_work);
         entries[count].index = index;
         count += 1u;
       }
@@ -73,17 +73,17 @@ void func_801da7d4(void) {
 
   index = 0u;
   while (index < 3u) {
-    BOF3_BATTLE_GLOBAL_BYTE_62F6(index) = 0xffu;
+    BATTLE_GLOBAL_BYTE_62F6(index) = 0xffu;
     index += 1u;
   }
 
-  BOF3_BATTLE_GLOBAL_BYTE_6303 = 0u;
+  BATTLE_GLOBAL_BYTE_6303 = 0u;
   index = 0u;
   while (index < count) {
     if (func_801db844(entries[index].index) != 0u) {
-      BOF3_BATTLE_GLOBAL_BYTE_62F6(BOF3_BATTLE_GLOBAL_BYTE_6303) =
+      BATTLE_GLOBAL_BYTE_62F6(BATTLE_GLOBAL_BYTE_6303) =
           (u8)entries[index].index;
-      BOF3_BATTLE_GLOBAL_BYTE_6303 += 1u;
+      BATTLE_GLOBAL_BYTE_6303 += 1u;
     }
     index += 1u;
   }

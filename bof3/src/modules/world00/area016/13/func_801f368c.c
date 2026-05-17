@@ -13,7 +13,7 @@ void func_801f368c(void) {
   World00Area016Scratch*         scratch;
   World00Area016Overlay801f0000* overlay;
 
-  scratch = BOF3_WORLD00_AREA016_SCRATCH_PTR;
+  scratch = WORLD00_AREA016_SCRATCH_PTR;
   overlay = (World00Area016Overlay801f0000*)0x801f0000;
   overlay->state_table_03[scratch->state_03]();
 }

@@ -9,7 +9,7 @@ void func_801de1d4(void) {
   volatile Battle03QueuedSlot* queued_slots;
 
   index = 0u;
-  queued_slots = BOF3_BATTLE_QUEUED_SLOT_ARRAY;
+  queued_slots = BATTLE_QUEUED_SLOT_ARRAY;
   while (index <= 10u) {
     if (index < 3u) {
       u32 work_offset;

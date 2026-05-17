@@ -13,16 +13,16 @@ void func_801d8450(u32 arg0) {
   u8  blue;
   u32 table_index;
 
-  func_8017c2d8(BOF3_BATTLE_GLOBAL_WORD_598C, 0, 0,
+  func_8017c2d8(BATTLE_GLOBAL_WORD_598C, 0, 0,
                 func_8017a620(0, 0, 0x3c0, 0), 0);
   func_8014e5a0(1u, 0x0cu);
 
   table_index = (arg0 & 0xffu) * 4u;
-  x = BOF3_BATTLE_PANEL_FRAME_TABLE_AEE8[table_index + 0];
-  y = BOF3_BATTLE_PANEL_FRAME_TABLE_AEE8[table_index + 1];
+  x = BATTLE_PANEL_FRAME_TABLE_AEE8[table_index + 0];
+  y = BATTLE_PANEL_FRAME_TABLE_AEE8[table_index + 1];
 
   color = *(volatile u16*)(0x80033a08u +
-                           (((s32)BOF3_BATTLE_GLOBAL_BYTE_4952 << 6) | 0x20));
+                           (((s32)BATTLE_GLOBAL_BYTE_4952 << 6) | 0x20));
   red = (color & 0x1fu) << 3;
   green = (color >> 2) & 0xf8u;
   blue = (color >> 7) & 0xf8u;
@@ -39,5 +39,5 @@ void func_801d8450(u32 arg0) {
   func_801da4b4((s16)(x + 2), (s16)(y + 0x10), (s16)(x + 0x25), (s16)(y + 0x10),
                 red, green, blue);
   func_8014f800((s16)(x + 8), (s16)(y + 3), 0, 8,
-                BOF3_BATTLE_PANEL_ICON_TABLE_AEB0[arg0 & 0xffu]);
+                BATTLE_PANEL_ICON_TABLE_AEB0[arg0 & 0xffu]);
 }

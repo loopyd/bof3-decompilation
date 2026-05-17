@@ -1,5 +1,5 @@
 #include "internal.h"
-#include "bof3/original_symbols.h"
+#include "bof3/context.h"
 
 extern vu32 DAT_80146464;
 extern vu8  DAT_8014648a;

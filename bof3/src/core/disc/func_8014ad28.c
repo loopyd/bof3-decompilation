@@ -1,6 +1,6 @@
 #include "internal.h"
 
-#include "bof3/original_symbols.h"
+#include "bof3/context.h"
 
 void func_80161f58(void);
 void func_8014b1a4(void);

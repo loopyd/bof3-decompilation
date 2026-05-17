@@ -1,12 +1,6 @@
 #include "internal.h"
 
-/* clang-format off */
-#include <libetc.h>
-#include <libgte.h>
-#include <libgpu.h>
-/* clang-format on */
-
-#include "bof3/original_symbols.h"
+#include "bof3/context.h"
 
 void func_80150098(s16 x, s16 y, u32 arg2, void* arg3);
 int  sprintf(char* buffer, const char* format, ...);

@@ -1,7 +1,5 @@
-#include <libapi.h>
-
 #include "internal.h"
-#include "bof3/original_symbols.h"
+#include "bof3/context.h"
 
 void InitCARD2(s32 arg0);
 void _patch_card(void);

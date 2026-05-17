@@ -1,5 +1,5 @@
 #include "internal.h"
-#include "bof3/original_symbols.h"
+#include "bof3/context.h"
 
 /* does: starts one disc read sized from a byte count and waits until the read
  * finishes or returns a terminal status.

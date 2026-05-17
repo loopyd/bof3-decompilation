@@ -8,12 +8,12 @@ void func_801da078(s16 arg0, s16 arg1, s32 arg2) {
   u16 temp_v0;
 
   temp_v0 = func_8017a620(0, 1, 0x3c0, 0);
-  func_8017c2d8(BOF3_BATTLE_GLOBAL_WORD_598C, 0, 0, temp_v0, 0);
+  func_8017c2d8(BATTLE_GLOBAL_WORD_598C, 0, 0, temp_v0, 0);
   func_8014e5a0(1u, 0x0cu);
   {
     volatile u8* temp_a0;
 
-    temp_a0 = (volatile u8*)BOF3_BATTLE_GLOBAL_WORD_598C;
+    temp_a0 = (volatile u8*)BATTLE_GLOBAL_WORD_598C;
     *(volatile u16*)(temp_a0 + 0x10) = 0x10u;
     *(volatile u16*)(temp_a0 + 0x12) = 8u;
     *(volatile u16*)(temp_a0 + 0xe) = 0x7800u;

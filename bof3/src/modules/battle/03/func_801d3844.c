@@ -10,25 +10,25 @@ u8 func_801d3844(void) {
   u16 selected_kind;
 
   kind = 0u;
-  if (BOF3_BATTLE_GLOBAL_HALF_63C0 == 0x24u) {
-    kind = BOF3_BATTLE_RANDOM_TABLE_AC58[func_8017e3d4() & 0x1fu];
+  if (BATTLE_GLOBAL_HALF_63C0 == 0x24u) {
+    kind = BATTLE_RANDOM_TABLE_AC58[func_8017e3d4() & 0x1fu];
   }
-  if ((BOF3_BATTLE_GLOBAL_HALF_63C0 == 0x25u) ||
-      (BOF3_BATTLE_GLOBAL_HALF_63C0 == 0x8cu)) {
-    kind = BOF3_BATTLE_RANDOM_TABLE_AC78[func_8017e3d4() & 0x1fu];
+  if ((BATTLE_GLOBAL_HALF_63C0 == 0x25u) ||
+      (BATTLE_GLOBAL_HALF_63C0 == 0x8cu)) {
+    kind = BATTLE_RANDOM_TABLE_AC78[func_8017e3d4() & 0x1fu];
   }
 
   kind_flags = *(volatile u8*)(0x801ca718u + ((u32)kind * 0x14u));
   selected_kind = kind;
-  BOF3_BATTLE_GLOBAL_HALF_63C0 = selected_kind;
-  *(volatile u16*)(BOF3_BATTLE_GLOBAL_PTR_6380 + 2) = selected_kind;
+  BATTLE_GLOBAL_HALF_63C0 = selected_kind;
+  *(volatile u16*)(BATTLE_GLOBAL_PTR_6380 + 2) = selected_kind;
 
   if ((kind_flags & 0x10u) != 0u) {
     if (((kind_flags & 0x80u) != 0u) && ((kind_flags & 0x40u) == 0u)) {
       return 0xc0u;
     }
 
-    if (BOF3_BATTLE_GLOBAL_BYTE_6374 < 3u) {
+    if (BATTLE_GLOBAL_BYTE_6374 < 3u) {
       if ((kind_flags & 0x20u) != 0u) {
         return 0x40u;
       }
@@ -42,10 +42,10 @@ u8 func_801d3844(void) {
   }
 
   if ((kind_flags & 0x40u) == 0u) {
-    return BOF3_BATTLE_GLOBAL_BYTE_6374;
+    return BATTLE_GLOBAL_BYTE_6374;
   }
 
-  if (BOF3_BATTLE_GLOBAL_BYTE_6374 < 3u) {
+  if (BATTLE_GLOBAL_BYTE_6374 < 3u) {
     if ((kind_flags & 0x20u) != 0u) {
       return func_800a955c();
     }

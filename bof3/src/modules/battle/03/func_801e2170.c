@@ -23,7 +23,7 @@ void func_801e2170(void) {
       battle_work = (volatile Battle03EnemyWork*)((base - 0x49d0u) + offset);
       *(volatile Battle03EnemyWork**)0x1f800044u = battle_work;
       *(volatile Battle03EnemyWork**)0x801eb4e8u = battle_work;
-      if (BOF3_BATTLE_GLOBAL_BYTE_62EA == 0u) {
+      if (BATTLE_GLOBAL_BYTE_62EA == 0u) {
         handler = table_a[battle_work->unk_f0];
       } else {
         if (battle_work->unk_01 != 0u) {

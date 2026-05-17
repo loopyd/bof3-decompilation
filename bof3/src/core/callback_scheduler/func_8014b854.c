@@ -15,5 +15,5 @@ void func_8014b854(int slot_index, Bof3CallbackEntry callback) {
 
   *(volatile Bof3CallbackEntry*)((u8*)&DAT_80143b44 + slot_offset) = callback;
   *(volatile u16*)((u8*)&DAT_80143b40 + slot_offset) =
-      BOF3_GAME_CALLBACK_SLOT_STATE_OPEN;
+      GAME_CALLBACK_SLOT_STATE_OPEN;
 }

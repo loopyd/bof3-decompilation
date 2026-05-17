@@ -10,7 +10,7 @@ void func_801d104c(void) {
   volatile u8* front_gate = (volatile u8*)0x80143c33u;
 
   if (*front_gate != 0u) {
-    if ((BOF3_GAME_FRONT_PAD_STATE & BOF3_GAME_FRONT_START_MASK) != 0u) {
+    if ((GAME_FRONT_PAD_STATE & GAME_FRONT_START_MASK) != 0u) {
       if (func_80162d00()) {
         if (*(volatile u16*)(front_gate + 0x0d) == 0u) {
           if (*(volatile u16*)(front_gate - 0xf3) == 0u) {
@@ -18,8 +18,8 @@ void func_801d104c(void) {
               *(volatile u16*)(front_gate - 0x13) = 1u;
               *(volatile u16*)(front_gate - 0x23) = 2u;
             } else if ((*(volatile u32*)(front_gate - 3) &
-                        BOF3_GAME_FRONT_POPUP_PENDING_MASK) ==
-                       BOF3_GAME_FRONT_POPUP_PENDING_OPEN) {
+                        GAME_FRONT_POPUP_PENDING_MASK) ==
+                       GAME_FRONT_POPUP_PENDING_OPEN) {
               func_8014ecac(0);
               func_801d1134();
               game_queue_frontend_cue(0x105u);

@@ -1,15 +1,8 @@
 #include "internal.h"
 
-/* clang-format off */
-#include <libetc.h>
-#include <libgte.h>
-#include <libgpu.h>
-/* clang-format on */
-
-#include "bof3/original_symbols.h"
+#include "bof3/context.h"
 
 void func_8014e0fc(const char* path);
-void Exec(void* exec_header, int argc, int argv);
 void func_8014ad28(void);
 void func_8014e564(int x, int y, int width, int height);
 

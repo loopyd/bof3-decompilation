@@ -15,7 +15,7 @@ void func_801f2df8(const void* arg0) {
 
   work = (const World00Area024SpriteWork*)arg0;
   object = (const void*)((const u8*)arg0 + 4u);
-  primitive = (u32)BOF3_WORLD00_AREA024_PRIMITIVE_PTR;
+  primitive = (u32)WORLD00_AREA024_PRIMITIVE_PTR;
 
   func_8017a9b8((void*)primitive);
   func_8017a904((void*)primitive, 1);

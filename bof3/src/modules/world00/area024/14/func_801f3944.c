@@ -15,7 +15,7 @@ void func_801f3944(const void* arg0) {
   u8        color_byte;
 
   work = (const u8*)arg0;
-  primitive = (u32)BOF3_WORLD00_AREA024_PRIMITIVE_PTR;
+  primitive = (u32)WORLD00_AREA024_PRIMITIVE_PTR;
 
   func_8017a97c((void*)primitive);
   func_8017a904((void*)primitive, 1);

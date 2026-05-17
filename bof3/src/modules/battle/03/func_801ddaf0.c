@@ -12,11 +12,11 @@ void func_801ddaf0(void) {
   offset = index * 0x78u;
   *(volatile u8*)(0x801f0000u + offset - 0x3cc7u) = 0u;
   *(volatile u32*)(0x801f0000u + offset - 0x3c5cu) =
-      (u32)BOF3_BATTLE_LOCAL_SCRATCH_PTR;
+      (u32)BATTLE_LOCAL_SCRATCH_PTR;
   *(volatile u32*)(0x801f0000u + offset - 0x3c9cu) =
-      BOF3_BATTLE_LOCAL_SCRATCH_PTR->unk_34;
+      BATTLE_LOCAL_SCRATCH_PTR->unk_34;
   *(volatile u32*)(0x801f0000u + offset - 0x3c98u) =
-      BOF3_BATTLE_LOCAL_SCRATCH_PTR->unk_38;
+      BATTLE_LOCAL_SCRATCH_PTR->unk_38;
   *(volatile u32*)(0x801f0000u + offset - 0x3c94u) =
-      *(volatile u32*)((volatile u8*)BOF3_BATTLE_LOCAL_SCRATCH_PTR + 0x3cu);
+      *(volatile u32*)((volatile u8*)BATTLE_LOCAL_SCRATCH_PTR + 0x3cu);
 }

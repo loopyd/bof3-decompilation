@@ -4,10 +4,11 @@
 #include <stddef.h>
 
 #include "bof3/core/emi/loader.h"
+#include "bof3/context.h"
 
-#define BOF3_EMI_SECTOR_SIZE  0x800u
-#define BOF3_EMI_MAGIC_OFFSET 0x08u
-#define BOF3_EMI_MAGIC_SIZE   8u
+#define EMI_SECTOR_SIZE  0x800u
+#define EMI_MAGIC_OFFSET 0x08u
+#define EMI_MAGIC_SIZE   8u
 
 typedef struct EmiTocEntry {
   u32 size;

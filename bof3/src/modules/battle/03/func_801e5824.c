@@ -8,20 +8,20 @@ void func_801e5824(void) {
   Battle03Handler table[4];
   u8              index;
 
-  table[0] = BOF3_BATTLE_QUEUED_SLOT_TABLE[0];
-  table[1] = BOF3_BATTLE_QUEUED_SLOT_TABLE[1];
-  table[2] = BOF3_BATTLE_QUEUED_SLOT_TABLE[2];
-  table[3] = BOF3_BATTLE_QUEUED_SLOT_TABLE[3];
+  table[0] = BATTLE_QUEUED_SLOT_TABLE[0];
+  table[1] = BATTLE_QUEUED_SLOT_TABLE[1];
+  table[2] = BATTLE_QUEUED_SLOT_TABLE[2];
+  table[3] = BATTLE_QUEUED_SLOT_TABLE[3];
 
   index = 0u;
   do {
     volatile Battle03QueuedSlot* slot;
 
-    slot = &BOF3_BATTLE_QUEUED_SLOT_ARRAY[index];
+    slot = &BATTLE_QUEUED_SLOT_ARRAY[index];
     if (slot->unk_00 != 0u) {
-      BOF3_BATTLE_CURRENT_QUEUED_WORD_4B20 = slot->unk_74;
-      BOF3_BATTLE_LOCAL_SCRATCH_PTR = (volatile Battle03LocalWork*)slot;
-      BOF3_BATTLE_CURRENT_QUEUED_SLOT_PTR = slot;
+      BATTLE_CURRENT_QUEUED_WORD_4B20 = slot->unk_74;
+      BATTLE_LOCAL_SCRATCH_PTR = (volatile Battle03LocalWork*)slot;
+      BATTLE_CURRENT_QUEUED_SLOT_PTR = slot;
       table[slot->unk_06]();
     }
     index += 1u;

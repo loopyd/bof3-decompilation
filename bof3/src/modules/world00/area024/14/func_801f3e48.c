@@ -24,11 +24,11 @@ s32 func_801f3e48(u8 arg0) {
   seed_copy[3] = *(volatile u32*)0x801f2c10u;
 
   saved_scratch = *(volatile u8**)0x1f800044u;
-  *(volatile u8**)0x1f800044u = BOF3_WORLD00_AREA024_SCRATCH_REMAP;
+  *(volatile u8**)0x1f800044u = WORLD00_AREA024_SCRATCH_REMAP;
 
   PushMatrix();
 
-  count = *BOF3_WORLD00_AREA024_PTR_7AAC;
+  count = *WORLD00_AREA024_PTR_7AAC;
   func_8015b410(&matrix);
   SetRotMatrix(&matrix);
   SetTransMatrix(&matrix);
@@ -36,16 +36,16 @@ s32 func_801f3e48(u8 arg0) {
   matrix_copy = matrix;
   func_8015b4b0(&matrix_copy);
 
-  func_8017c2d8((void*)BOF3_WORLD00_AREA024_PRIMITIVE_PTR, 0, 0,
+  func_8017c2d8((void*)WORLD00_AREA024_PRIMITIVE_PTR, 0, 0,
                 func_8017a620(0, 1, 0x380, 0x100), 0);
   func_8014e5a0(1u, 0x0cu);
 
   if (count != 0u) {
-    src = BOF3_WORLD00_AREA024_PTR_7AA8 + 2u;
+    src = WORLD00_AREA024_PTR_7AA8 + 2u;
     i = 0u;
 
     do {
-      primitive = (volatile LINE_F4*)BOF3_WORLD00_AREA024_PRIMITIVE_PTR;
+      primitive = (volatile LINE_F4*)WORLD00_AREA024_PRIMITIVE_PTR;
       func_8017aae8((void*)primitive);
       SetSemiTrans((void*)primitive, 1);
       primitive->r0 = arg0;

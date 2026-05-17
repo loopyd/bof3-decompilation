@@ -9,7 +9,7 @@ u8 func_801ddf50(u16 arg0, u32 arg1) {
   u32* entry;
   u16  id;
 
-  table = (u32*)BOF3_BATTLE_TRIGGER_TABLE_6178[arg1 & 0xffu];
+  table = (u32*)BATTLE_TRIGGER_TABLE_6178[arg1 & 0xffu];
   if (table != (u32*)0) {
     entry = table;
     if (*entry != 0xffffffffu) {

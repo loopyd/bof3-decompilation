@@ -14,20 +14,20 @@ u8 func_801d527c(void) {
   do {
     volatile Battle03LocalWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
+    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
     if ((func_801d64c4(index) == 0u) &&
-        ((BOF3_BATTLE_LOCAL_WORD_128(battle_work) & 0x4000u) != 0u) &&
-        (BOF3_BATTLE_LOCAL_BYTE_136(battle_work) == 3u)) {
+        ((BATTLE_LOCAL_WORD_128(battle_work) & 0x4000u) != 0u) &&
+        (BATTLE_LOCAL_BYTE_136(battle_work) == 3u)) {
       count += 1u;
       battle_work->unk_01 = 6u;
       battle_work->unk_02 = 5u;
       battle_work->unk_20 = 0x11u;
-      BOF3_BATTLE_LOCAL_BYTE_136(battle_work) = 0u;
+      BATTLE_LOCAL_BYTE_136(battle_work) = 0u;
       battle_work->unk_04 = 0u;
       battle_work->unk_03 = 0u;
-      BOF3_BATTLE_LOCAL_WORD_128(battle_work) &= 0xffffbfffu;
-      BOF3_BATTLE_LOCAL_HALF_1C(battle_work) =
-          BOF3_BATTLE_LOCAL_HALF_88(battle_work);
+      BATTLE_LOCAL_WORD_128(battle_work) &= 0xffffbfffu;
+      BATTLE_LOCAL_HALF_1C(battle_work) =
+          BATTLE_LOCAL_HALF_88(battle_work);
       func_801de190(index);
     }
     index += 1u;
@@ -37,20 +37,20 @@ u8 func_801d527c(void) {
   do {
     volatile Battle03EnemyWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_ENEMY_WORK_ARRAY[index - 3u];
+    battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
     if ((func_801d64c4(index) == 0u) &&
-        ((BOF3_BATTLE_ENEMY_WORD_104(battle_work) & 0x4000u) != 0u) &&
-        (BOF3_BATTLE_SLOT_BYTE_136(index) == 3u)) {
+        ((BATTLE_ENEMY_WORD_104(battle_work) & 0x4000u) != 0u) &&
+        (BATTLE_SLOT_BYTE_136(index) == 3u)) {
       count += 1u;
       battle_work->unk_01 = 6u;
-      BOF3_BATTLE_ENEMY_BYTE_02(battle_work) = 5u;
-      BOF3_BATTLE_ENEMY_BYTE_FC(battle_work) = 0x11u;
-      BOF3_BATTLE_ENEMY_BYTE_112(battle_work) = 0u;
-      BOF3_BATTLE_ENEMY_BYTE_04(battle_work) = 0u;
-      BOF3_BATTLE_ENEMY_BYTE_03(battle_work) = 0u;
-      BOF3_BATTLE_ENEMY_WORD_104(battle_work) &= 0xffffbfffu;
-      BOF3_BATTLE_ENEMY_HALF_F8(battle_work) =
-          BOF3_BATTLE_ENEMY_HALF_94(battle_work);
+      BATTLE_ENEMY_BYTE_02(battle_work) = 5u;
+      BATTLE_ENEMY_BYTE_FC(battle_work) = 0x11u;
+      BATTLE_ENEMY_BYTE_112(battle_work) = 0u;
+      BATTLE_ENEMY_BYTE_04(battle_work) = 0u;
+      BATTLE_ENEMY_BYTE_03(battle_work) = 0u;
+      BATTLE_ENEMY_WORD_104(battle_work) &= 0xffffbfffu;
+      BATTLE_ENEMY_HALF_F8(battle_work) =
+          BATTLE_ENEMY_HALF_94(battle_work);
       func_801de190(index);
     }
     index += 1u;

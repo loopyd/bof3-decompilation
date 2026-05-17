@@ -7,7 +7,7 @@
 void func_801f3400(void) {
   World00Area016Scratch* scratch;
 
-  scratch = BOF3_WORLD00_AREA016_SCRATCH_PTR;
+  scratch = WORLD00_AREA016_SCRATCH_PTR;
   scratch->field_2e = 0xa0;
   scratch->field_30 = 0x50;
 }

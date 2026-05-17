@@ -19,28 +19,28 @@ void func_8009761c(void) {
 
   if ((selected_kind_flags & 0x40u) != 0u) {
     if ((selected_kind_flags & 0x10u) != 0u) {
-      BOF3_BATTLE_SELECTION_ROOT_STATE = 5u;
+      BATTLE_SELECTION_ROOT_STATE = 5u;
     } else {
-      BOF3_BATTLE_SELECTION_ROOT_STATE = 4u;
+      BATTLE_SELECTION_ROOT_STATE = 4u;
     }
     return;
   }
 
   if ((selected_kind_flags & 0x80u) != 0u) {
-    BOF3_BATTLE_ACTIVE_SELECTION_SLOT_PTR[0] = 0xc0u;
+    BATTLE_ACTIVE_SELECTION_SLOT_PTR[0] = 0xc0u;
   } else if ((selected_kind_flags & 0x10u) != 0u) {
     if ((selected_kind_flags & 0x20u) != 0u) {
-      BOF3_BATTLE_ACTIVE_SELECTION_SLOT_PTR[0] = 0x40u;
+      BATTLE_ACTIVE_SELECTION_SLOT_PTR[0] = 0x40u;
     } else {
       active_selection_kind = 0x80u;
-      BOF3_BATTLE_ACTIVE_SELECTION_SLOT_PTR[0] = active_selection_kind;
+      BATTLE_ACTIVE_SELECTION_SLOT_PTR[0] = active_selection_kind;
     }
   } else {
     active_selection_kind =
-        ((volatile u8*)BOF3_BATTLE_ACTIVE_MESSAGE_SLOT_PTR)[5];
-    BOF3_BATTLE_ACTIVE_SELECTION_SLOT_PTR[0] = active_selection_kind;
+        ((volatile u8*)BATTLE_ACTIVE_MESSAGE_SLOT_PTR)[5];
+    BATTLE_ACTIVE_SELECTION_SLOT_PTR[0] = active_selection_kind;
   }
 
-  BOF3_BATTLE_SELECTION_ROOT_STATE = 4u;
-  BOF3_BATTLE_SELECTION_SUBSTATE = 3u;
+  BATTLE_SELECTION_ROOT_STATE = 4u;
+  BATTLE_SELECTION_SUBSTATE = 3u;
 }

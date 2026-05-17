@@ -14,26 +14,26 @@ void func_801d159c(s16 arg0, s16 arg1) {
   func_801e0dcc(0xe, 3, arg0, arg1);
   func_801e0dcc(0xf, 3, (s16)(arg0 + 0x100), arg1);
 
-  if (BOF3_WORLD00_AREA030_GLOBAL_BYTE_3FC9 == 0u) {
+  if (WORLD00_AREA030_GLOBAL_BYTE_3FC9 == 0u) {
     value = 0;
   } else {
-    value = 0x3e - BOF3_WORLD00_AREA030_GLOBAL_BYTE_4002;
+    value = 0x3e - WORLD00_AREA030_GLOBAL_BYTE_4002;
   }
   if (value < 0) {
     value = 0;
   }
 
-  func_8017e3f4((char*)BOF3_WORLD00_AREA030_UI_CHAR_BUFFER, (char*)0x801d0c04u,
+  func_8017e3f4((char*)WORLD00_AREA030_UI_CHAR_BUFFER, (char*)0x801d0c04u,
                 (s8)value);
 
-  if ((value < 0x32) || (BOF3_WORLD00_AREA030_GLOBAL_BYTE_5E92 != 4u) ||
-      ((BOF3_WORLD00_AREA030_GLOBAL_WORD_3E6C & 4u) == 0u)) {
+  if ((value < 0x32) || (WORLD00_AREA030_GLOBAL_BYTE_5E92 != 4u) ||
+      ((WORLD00_AREA030_GLOBAL_WORD_3E6C & 4u) == 0u)) {
     mode = 0;
   } else {
     mode = 2;
   }
 
   func_8014ff0c((s16)(arg0 + 0xf0), (s16)(arg1 + 0x1a), mode,
-                (const void*)BOF3_WORLD00_AREA030_UI_CHAR_BUFFER);
+                (const void*)WORLD00_AREA030_UI_CHAR_BUFFER);
   func_801d195c(arg0, arg1);
 }

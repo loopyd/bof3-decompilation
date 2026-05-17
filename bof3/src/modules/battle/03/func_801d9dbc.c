@@ -11,7 +11,7 @@ void func_801d9dbc(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4) {
   u32 table_offset;
   u32 color;
 
-  primitive = BOF3_BATTLE_GLOBAL_WORD_598C;
+  primitive = BATTLE_GLOBAL_WORD_598C;
   func_8017aa6c(primitive);
   table_offset = ((u32)arg2 & 0xffu) * 4;
   *(volatile s16*)(primitive + 8) = arg0;

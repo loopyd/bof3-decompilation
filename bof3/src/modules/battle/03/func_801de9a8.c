@@ -10,8 +10,8 @@ void func_801de9a8(u32 arg0) {
       0x80144968u +
           ((u32) *
            (volatile u8*)(0x80181b10u +
-                          BOF3_BATTLE_LOCAL_BYTE_79(
-                              &BOF3_BATTLE_LOCAL_WORK_ARRAY[arg0 & 0xffu])) *
+                          BATTLE_LOCAL_BYTE_79(
+                              &BATTLE_LOCAL_WORK_ARRAY[arg0 & 0xffu])) *
            0xa4u),
       5u);
 }

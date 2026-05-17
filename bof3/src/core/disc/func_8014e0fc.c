@@ -1,9 +1,5 @@
 #include "internal.h"
 
-/* clang-format off */
-#include <libcd.h>
-/* clang-format on */
-
 void* func_8014e0a8(s32 size, void* buffer, s32 sectors);
 
 extern void* DAT_801459f8;

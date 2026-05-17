@@ -22,11 +22,11 @@ void func_801f2e04(const s32* arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4) {
   i = 0u;
   color = 0x80u;
   do {
-    SetDrawMode((DR_MODE*)BOF3_WORLD00_AREA026_13_PRIMITIVE_PTR, 0, 0,
+    SetDrawMode((DR_MODE*)WORLD00_AREA026_13_PRIMITIVE_PTR, 0, 0,
                 GetTPage(0, 2, 0x380, 0x100), NULL);
     func_80155a08(arg0[0] + arg3, arg0[1] + arg4, 0, 0x18);
 
-    primitive = (POLY_F3*)BOF3_WORLD00_AREA026_13_PRIMITIVE_PTR;
+    primitive = (POLY_F3*)WORLD00_AREA026_13_PRIMITIVE_PTR;
     SetPolyF3(primitive);
     SetSemiTrans(primitive, 1);
 

@@ -14,9 +14,9 @@ void func_8009bbe8(void) {
 
   slot_index = 0u;
   do {
-    current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+    current_battler = BATTLE_CURRENT_BATTLER_PTR;
     panel_rule =
-        BOF3_BATTLE_LOCAL_PANEL_RULE(current_battler[0xe0], slot_index);
+        BATTLE_LOCAL_PANEL_RULE(current_battler[0xe0], slot_index);
     condition_ready = 0u;
 
     switch (panel_rule[0]) {
@@ -57,8 +57,8 @@ void func_8009bbe8(void) {
         break;
 
       case 9:
-        if (BOF3_BATTLE_PANEL_RULE_PASS_KIND == 4u) {
-          current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+        if (BATTLE_PANEL_RULE_PASS_KIND == 4u) {
+          current_battler = BATTLE_CURRENT_BATTLER_PTR;
           if (*(volatile s16*)(current_battler + 0xf8) != 0) {
             condition_ready = 1u;
           }
@@ -66,8 +66,8 @@ void func_8009bbe8(void) {
         break;
 
       case 10:
-        if (BOF3_BATTLE_PANEL_RULE_PASS_KIND == 1u) {
-          current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+        if (BATTLE_PANEL_RULE_PASS_KIND == 1u) {
+          current_battler = BATTLE_CURRENT_BATTLER_PTR;
           if (*(volatile s16*)(current_battler + 0xf8) != 0) {
             condition_ready = 1u;
           }
@@ -75,21 +75,21 @@ void func_8009bbe8(void) {
         break;
 
       case 0x16:
-        current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+        current_battler = BATTLE_CURRENT_BATTLER_PTR;
         if ((*(volatile u16*)(current_battler + 0x82) & 8u) != 0u) {
           condition_ready = 1u;
         }
         break;
 
       case 0x17:
-        current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+        current_battler = BATTLE_CURRENT_BATTLER_PTR;
         if ((*(volatile u16*)(current_battler + 0x82) & 0x80u) != 0u) {
           condition_ready = 1u;
         }
         break;
 
       case 0x18:
-        current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+        current_battler = BATTLE_CURRENT_BATTLER_PTR;
         if (current_battler[0x9a] == 0u) {
           condition_ready = 1u;
         }
@@ -97,7 +97,7 @@ void func_8009bbe8(void) {
 
       case 0x21:
         if (func_8009c8ac(1u) != 0u) {
-          current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+          current_battler = BATTLE_CURRENT_BATTLER_PTR;
           battle_copy_local_panel_rule_entry(current_battler, panel_rule);
         }
         slot_index += 1u;
@@ -105,7 +105,7 @@ void func_8009bbe8(void) {
 
       case 0x22:
         if (func_8009c8ac(2u) != 0u) {
-          current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+          current_battler = BATTLE_CURRENT_BATTLER_PTR;
           battle_copy_local_panel_rule_entry(current_battler, panel_rule);
         }
         slot_index += 1u;
@@ -113,15 +113,15 @@ void func_8009bbe8(void) {
 
       case 0x23:
         if (func_8009c8ac(4u) != 0u) {
-          current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+          current_battler = BATTLE_CURRENT_BATTLER_PTR;
           battle_copy_local_panel_rule_entry(current_battler, panel_rule);
         }
         slot_index += 1u;
         continue;
 
       case 0x24:
-        if (BOF3_BATTLE_PANEL_RULE_PASS_KIND == 1u) {
-          current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+        if (BATTLE_PANEL_RULE_PASS_KIND == 1u) {
+          current_battler = BATTLE_CURRENT_BATTLER_PTR;
           if (*(volatile s16*)(current_battler + 0xf8) != 0) {
             battle_copy_local_panel_rule_entry(current_battler, panel_rule);
           }
@@ -130,7 +130,7 @@ void func_8009bbe8(void) {
         continue;
 
       case 0x25:
-        current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+        current_battler = BATTLE_CURRENT_BATTLER_PTR;
         if (*(volatile u16*)(current_battler + 0x94) <=
             *(volatile s16*)(current_battler + 0xf8)) {
           condition_ready = 1u;
@@ -142,7 +142,7 @@ void func_8009bbe8(void) {
     }
 
     if (condition_ready != 0u) {
-      current_battler = BOF3_BATTLE_CURRENT_BATTLER_PTR;
+      current_battler = BATTLE_CURRENT_BATTLER_PTR;
       if (battle_local_panel_slot_has_entry(current_battler, slot_index) ==
           0u) {
         battle_copy_local_panel_rule_entry(current_battler, panel_rule);

@@ -1,10 +1,6 @@
 #include "internal.h"
 
-/* clang-format off */
-#include <libcd.h>
-/* clang-format on */
-
-#define BOF3_EMI_CURRENT_POS ((CdlLOC*)0x8018b490u)
+#define EMI_CURRENT_POS ((CdlLOC*)0x8018b490u)
 
 s32  func_80162b08(u8 slot);
 void func_80162cd8(void);
@@ -37,8 +33,8 @@ void func_80162230(u8 status, u8* result) {
   }
 
   if (CdReady(1, NULL) == 1) {
-    CdGetSector(BOF3_EMI_CURRENT_POS, 3);
-    if (DAT_80146808 != CdPosToInt(BOF3_EMI_CURRENT_POS)) {
+    CdGetSector(EMI_CURRENT_POS, 3);
+    if (DAT_80146808 != CdPosToInt(EMI_CURRENT_POS)) {
       goto fail;
     }
   } else {

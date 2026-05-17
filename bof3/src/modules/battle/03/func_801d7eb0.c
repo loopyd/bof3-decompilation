@@ -17,13 +17,13 @@ void func_801d7eb0(s32 arg0, s32 arg1) {
   s32 clut_index;
 
   width = func_8017a620(0, 0, 0x3c0, 0);
-  func_8017c2d8(BOF3_BATTLE_GLOBAL_WORD_598C, 0, 0, width, 0);
+  func_8017c2d8(BATTLE_GLOBAL_WORD_598C, 0, 0, width, 0);
   func_8014e5a0(1u, 0x0cu);
 
   x0 = (s16)arg0;
   y0 = (s16)(arg1 + 2);
 
-  clut_index = (s32)BOF3_BATTLE_GLOBAL_BYTE_4952;
+  clut_index = (s32)BATTLE_GLOBAL_BYTE_4952;
   color = *(volatile u16*)(0x80033a08u + ((clut_index << 6) | 0x20));
   r = (color & 0x1fu) << 3;
   g = (color >> 2) & 0xf8u;

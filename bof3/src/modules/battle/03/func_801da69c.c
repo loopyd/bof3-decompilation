@@ -9,10 +9,10 @@ u8 func_801da69c(u32 arg0) {
   u8 slot_kind;
 
   arg0 &= 0xffu;
-  slot_kind = BOF3_BATTLE_ENEMY_SLOT_KIND(arg0);
+  slot_kind = BATTLE_ENEMY_SLOT_KIND(arg0);
   owner_index = 7;
   while (owner_index >= 0) {
-    if (BOF3_BATTLE_UI_BYTE_833A((u32)(owner_index + 5)) == (u8)(arg0 + 3u)) {
+    if (BATTLE_UI_BYTE_833A((u32)(owner_index + 5)) == (u8)(arg0 + 3u)) {
       break;
     }
     owner_index -= 1;
@@ -26,10 +26,10 @@ u8 func_801da69c(u32 arg0) {
       u8 ui_kind;
       u8 ui_mode;
 
-      ui_mode = BOF3_BATTLE_UI_BYTE_8333_INDEX((u32)(scan_index + 5));
+      ui_mode = BATTLE_UI_BYTE_8333_INDEX((u32)(scan_index + 5));
       if ((ui_mode != 2u) && (ui_mode != 3u)) {
-        ui_kind = BOF3_BATTLE_UI_BYTE_833A((u32)(scan_index + 5));
-        if (BOF3_BATTLE_ENEMY_SLOT_KIND(ui_kind - 3u) == slot_kind) {
+        ui_kind = BATTLE_UI_BYTE_833A((u32)(scan_index + 5));
+        if (BATTLE_ENEMY_SLOT_KIND(ui_kind - 3u) == slot_kind) {
           return 0u;
         }
       }

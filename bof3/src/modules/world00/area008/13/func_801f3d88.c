@@ -18,8 +18,8 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
   u16                odd_width;
   u8                 bottom_v;
 
-  texture_window = (volatile RECT*)BOF3_WORLD00_AREA008_PRIMITIVE_PTR;
-  BOF3_WORLD00_AREA008_PRIMITIVE_PTR =
+  texture_window = (volatile RECT*)WORLD00_AREA008_PRIMITIVE_PTR;
+  WORLD00_AREA008_PRIMITIVE_PTR =
       (volatile u8*)((volatile u8*)texture_window + sizeof(RECT));
   texture_window->x = 0;
   texture_window->y = 0xf0;
@@ -30,7 +30,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
     GetGraphType();
   }
 
-  SetDrawMode((DR_MODE*)BOF3_WORLD00_AREA008_PRIMITIVE_PTR, 0, 1, 0xf,
+  SetDrawMode((DR_MODE*)WORLD00_AREA008_PRIMITIVE_PTR, 0, 1, 0xf,
               (RECT*)texture_window);
   func_8014e5a0(1u, 0x0cu);
 
@@ -41,7 +41,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
   bottom_y = arg1 + (s16)bottom_v;
   clut_x = ((u16)arg4 << 5) + 0x10u;
 
-  primitive = (volatile POLY_FT4*)BOF3_WORLD00_AREA008_PRIMITIVE_PTR;
+  primitive = (volatile POLY_FT4*)WORLD00_AREA008_PRIMITIVE_PTR;
   SetPolyFT4((POLY_FT4*)primitive);
   SetSemiTrans((void*)primitive, 1);
   primitive->x0 = left_x;
@@ -77,7 +77,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
   half_width = (s16)(((u16)(arg2 + 1u) - 4u) >> 1);
   odd_width = ((u16)(arg2 - 3u)) & 1u;
 
-  primitive = (volatile POLY_FT4*)BOF3_WORLD00_AREA008_PRIMITIVE_PTR;
+  primitive = (volatile POLY_FT4*)WORLD00_AREA008_PRIMITIVE_PTR;
   SetPolyFT4((POLY_FT4*)primitive);
   SetSemiTrans((void*)primitive, 1);
   primitive->x0 = left_inner_x;
@@ -113,7 +113,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
   right_inner_x = left_inner_x + half_width;
   right_x = left_inner_x + half_width + half_width + (s16)odd_width;
 
-  primitive = (volatile POLY_FT4*)BOF3_WORLD00_AREA008_PRIMITIVE_PTR;
+  primitive = (volatile POLY_FT4*)WORLD00_AREA008_PRIMITIVE_PTR;
   SetPolyFT4((POLY_FT4*)primitive);
   SetSemiTrans((void*)primitive, 1);
   primitive->x0 = right_inner_x;
@@ -148,7 +148,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
 
   right_x = arg0 + arg2 + 1;
 
-  primitive = (volatile POLY_FT4*)BOF3_WORLD00_AREA008_PRIMITIVE_PTR;
+  primitive = (volatile POLY_FT4*)WORLD00_AREA008_PRIMITIVE_PTR;
   SetPolyFT4((POLY_FT4*)primitive);
   SetSemiTrans((void*)primitive, 1);
   primitive->x0 = right_x - 2;
@@ -181,8 +181,8 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
 
   func_8014e5a0(1u, 0x28u);
 
-  texture_window = (volatile RECT*)BOF3_WORLD00_AREA008_PRIMITIVE_PTR;
-  BOF3_WORLD00_AREA008_PRIMITIVE_PTR =
+  texture_window = (volatile RECT*)WORLD00_AREA008_PRIMITIVE_PTR;
+  WORLD00_AREA008_PRIMITIVE_PTR =
       (volatile u8*)((volatile u8*)texture_window + sizeof(RECT));
   texture_window->x = 0;
   texture_window->y = 0;
@@ -193,7 +193,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
     GetGraphType();
   }
 
-  SetDrawMode((DR_MODE*)BOF3_WORLD00_AREA008_PRIMITIVE_PTR, 0, 1, 0xf,
+  SetDrawMode((DR_MODE*)WORLD00_AREA008_PRIMITIVE_PTR, 0, 1, 0xf,
               (RECT*)texture_window);
   func_8014e5a0(1u, 0x0cu);
   func_801aeba0((s16)(arg0 + 2), (s16)(arg1 + 2), (s16)(arg2 - 4),

@@ -18,15 +18,15 @@ u32 func_801dcad8(u8 arg0, u8 arg1, s8 arg2) {
   target = arg1;
 
   if (((battler & 0xffu) < 3u) || ((target & 0xffu) >= 3u)) {
-    value = BOF3_BATTLE_GLOBAL_HALF_EC30C;
+    value = BATTLE_GLOBAL_HALF_EC30C;
     if ((u8)arg2 == 0u) {
-      value -= BOF3_BATTLE_GLOBAL_HALF_EC2EE;
+      value -= BATTLE_GLOBAL_HALF_EC2EE;
     }
     if (value < 0) {
       value = 0;
     }
   } else {
-    value = BOF3_BATTLE_GLOBAL_HALF_EC30C;
+    value = BATTLE_GLOBAL_HALF_EC30C;
     if ((u8)arg2 == 0u) {
       value -= func_801dccb0() & 0xffff;
     }
@@ -43,10 +43,10 @@ u32 func_801dcad8(u8 arg0, u8 arg1, s8 arg2) {
     }
 
     random_value = func_8017e3d4();
-    enemy_stat = *(volatile u16*)((volatile u8*)&BOF3_BATTLE_ENEMY_WORK_ARRAY
+    enemy_stat = *(volatile u16*)((volatile u8*)&BATTLE_ENEMY_WORK_ARRAY
                                       [(battler - 3u) & 0xffu] +
                                   0x88u);
-    divisor = BOF3_BATTLE_VARIANCE_TABLE_AF94[rank & 0xffu];
+    divisor = BATTLE_VARIANCE_TABLE_AF94[rank & 0xffu];
     if (divisor != 0u) {
       value = (value * 0x100 +
                (((enemy_stat * 0x100) * ((random_value % 2) + 2) * 0x100) /

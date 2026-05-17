@@ -16,18 +16,18 @@ u8 func_801d54f8(void) {
   do {
     volatile Battle03LocalWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
+    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
     if ((func_801d64c4(index) == 0u) &&
-        ((BOF3_BATTLE_LOCAL_FLAGS_80(battle_work) & 0x0800u) != 0u) &&
-        (BOF3_BATTLE_LOCAL_BYTE_137(battle_work) == 5u)) {
+        ((BATTLE_LOCAL_FLAGS_80(battle_work) & 0x0800u) != 0u) &&
+        (BATTLE_LOCAL_BYTE_137(battle_work) == 5u)) {
       count += 1u;
-      BOF3_BATTLE_LOCAL_BYTE_137(battle_work) = 0u;
-      BOF3_BATTLE_LOCAL_HALF_88(battle_work) =
-          BOF3_BATTLE_LOCAL_HALF_90(battle_work);
-      BOF3_BATTLE_LOCAL_HALF_8A(battle_work) =
-          BOF3_BATTLE_LOCAL_HALF_92(battle_work);
-      BOF3_BATTLE_LOCAL_BYTE_8C(battle_work) =
-          BOF3_BATTLE_LOCAL_BYTE_9E(battle_work);
+      BATTLE_LOCAL_BYTE_137(battle_work) = 0u;
+      BATTLE_LOCAL_HALF_88(battle_work) =
+          BATTLE_LOCAL_HALF_90(battle_work);
+      BATTLE_LOCAL_HALF_8A(battle_work) =
+          BATTLE_LOCAL_HALF_92(battle_work);
+      BATTLE_LOCAL_BYTE_8C(battle_work) =
+          BATTLE_LOCAL_BYTE_9E(battle_work);
       func_800a36f0(index, 0x8ffu);
       last_index = index;
     }

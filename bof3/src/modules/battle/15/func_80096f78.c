@@ -9,5 +9,5 @@ void func_80096f78(void) {
 
   name_handle = battle_resolve_frontend_resource(0x4000u);
   battle_stage_selection_ring_record(2u, 0xffu, name_handle);
-  BOF3_BATTLE_SELECTION_SUBSTATE += 1u;
+  BATTLE_SELECTION_SUBSTATE += 1u;
 }

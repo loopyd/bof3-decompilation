@@ -10,7 +10,7 @@ void func_80098408(void) {
   u8* battle_selection_state;
   u8  selection_root_state;
 
-  active_selection_slot = (u8*)BOF3_BATTLE_ACTIVE_SELECTION_SLOT_PTR;
+  active_selection_slot = (u8*)BATTLE_ACTIVE_SELECTION_SLOT_PTR;
   battle_selection_state = (u8*)0x80140000u;
   active_selection_slot[1] = 5u;
   func_8009af84();

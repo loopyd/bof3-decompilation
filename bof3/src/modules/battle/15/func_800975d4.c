@@ -4,7 +4,7 @@
  * shared selection root and reapplies the local panel-task band reset helper.
  * @source: 0x800975d4 FUN_800975d4
  */
-void BOF3_NO_SIBLING_CALLS func_800975d4(void) {
+void NO_SIBLING_CALLS func_800975d4(void) {
   volatile u8* battle_selection_state;
   volatile u8* battle_selection_lock;
 

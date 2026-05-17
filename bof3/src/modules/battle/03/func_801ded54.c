@@ -11,9 +11,9 @@ void func_801ded54(void) {
   do {
     volatile Battle03LocalWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
-    BOF3_BATTLE_LOCAL_WORK_PTR = battle_work;
-    BOF3_BATTLE_LOCAL_SCRATCH_PTR = battle_work;
+    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
+    BATTLE_LOCAL_WORK_PTR = battle_work;
+    BATTLE_LOCAL_SCRATCH_PTR = battle_work;
 
     if (((battle_work->flags_00 & 1u) != 0u) &&
         ((battle_work->flags_00 & 0x40u) == 0u)) {

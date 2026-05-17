@@ -7,7 +7,7 @@ void func_801d1b88(s16 arg0, s16 arg1, s16 arg2, u8 arg3) {
   u32 primitive;
   s16 bottom_y;
 
-  primitive = (u32)BOF3_WORLD00_AREA030_PRIMITIVE_PTR;
+  primitive = (u32)WORLD00_AREA030_PRIMITIVE_PTR;
   SetPolyG4((POLY_G4*)primitive);
   *(volatile s16*)(primitive + 8) = arg0;
   *(volatile s16*)(primitive + 0x10) = (s16)(arg0 + arg2);
@@ -32,7 +32,7 @@ void func_801d1b88(s16 arg0, s16 arg1, s16 arg2, u8 arg3) {
   *(volatile s16*)(primitive + 0x22) = bottom_y;
   func_8014e5a0(arg3, 0x24u);
 
-  primitive = (u32)BOF3_WORLD00_AREA030_PRIMITIVE_PTR;
+  primitive = (u32)WORLD00_AREA030_PRIMITIVE_PTR;
   SetPolyG4((POLY_G4*)primitive);
   *(volatile s16*)(primitive + 8) = arg0;
   *(volatile s16*)(primitive + 0x10) = (s16)(arg0 + arg2);

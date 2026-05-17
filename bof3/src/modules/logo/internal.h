@@ -5,11 +5,9 @@
 
 /* clang-format off */
 #include <sys/types.h>
-#include <libcd.h>
-#include <libetc.h>
 /* clang-format on */
 
-#include "bof3/defines.h"
+#include "bof3/context.h"
 
 extern u32 DAT_8003b800;
 void       SetDispMask(int mask);

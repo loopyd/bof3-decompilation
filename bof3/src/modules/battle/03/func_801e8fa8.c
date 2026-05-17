@@ -12,7 +12,7 @@ u8 func_801e8fa8(void) {
   u32          kind;
   u32          offset;
 
-  slot = BOF3_BATTLE_CURRENT_QUEUED_PTR_4B20;
+  slot = BATTLE_CURRENT_QUEUED_PTR_4B20;
   kind = slot[5];
 
   if (kind < 3u) {

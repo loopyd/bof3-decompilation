@@ -9,19 +9,19 @@ void func_801f3d5c(void) {
   World00Area024SpinWork* work;
   u8                      i;
 
-  func_8017c2d8((void*)BOF3_WORLD00_AREA024_PRIMITIVE_PTR, 0, 0,
+  func_8017c2d8((void*)WORLD00_AREA024_PRIMITIVE_PTR, 0, 0,
                 func_8017a620(0, 1, 0x380, 0x100), 0);
   func_8014e5a0(1u, 0x0cu);
   func_801afe18(scratch);
 
-  work = (World00Area024SpinWork*)BOF3_WORLD00_AREA024_SPIN_WORK_BASE;
+  work = (World00Area024SpinWork*)WORLD00_AREA024_SPIN_WORK_BASE;
   i = 0u;
 
   do {
     func_801f3944(work);
     work->field_24 = (s16)(work->field_24 + 0x10);
 
-    if (BOF3_WORLD00_AREA024_SCRATCH_BYTE_09 < 4u) {
+    if (WORLD00_AREA024_SCRATCH_BYTE_09 < 4u) {
       work->field_2a = (s16)(work->field_2a + 0x20);
     } else {
       work->field_2a = (s16)(work->field_2a - 2);

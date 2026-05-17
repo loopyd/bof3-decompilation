@@ -15,7 +15,7 @@ u32 func_801dcd50(u32 arg0, u8 arg1, s32 arg2) {
   }
 
   value = (((arg2 * 0x100) * value) >> 8) *
-              BOF3_BATTLE_VARIANCE_TABLE_AFA0[func_8017e3d4() & 7u] >>
+              BATTLE_VARIANCE_TABLE_AFA0[func_8017e3d4() & 7u] >>
           8;
 
   scratch_flags = *(volatile u16*)0x1f800000u;
@@ -24,15 +24,15 @@ u32 func_801dcd50(u32 arg0, u8 arg1, s32 arg2) {
   }
   if ((scratch_flags & 0x20u) != 0u) {
     if (arg1 < 3u) {
-      value = (value * BOF3_BATTLE_SCALE_TABLE_AFC0
-                           [BOF3_BATTLE_LOCAL_BYTE_120(
-                                &BOF3_BATTLE_LOCAL_WORK_ARRAY[arg1]) >>
+      value = (value * BATTLE_SCALE_TABLE_AFC0
+                           [BATTLE_LOCAL_BYTE_120(
+                                &BATTLE_LOCAL_WORK_ARRAY[arg1]) >>
                             7]) /
               100;
     } else {
       value =
-          (value * BOF3_BATTLE_SCALE_TABLE_AFC0[BOF3_BATTLE_ENEMY_BYTE_114(
-                       &BOF3_BATTLE_ENEMY_WORK_ARRAY[(arg1 - 3u) & 0xffu])]) /
+          (value * BATTLE_SCALE_TABLE_AFC0[BATTLE_ENEMY_BYTE_114(
+                       &BATTLE_ENEMY_WORK_ARRAY[(arg1 - 3u) & 0xffu])]) /
           100;
     }
   }

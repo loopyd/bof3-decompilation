@@ -1,10 +1,5 @@
 #include "internal.h"
 
-/* clang-format off */
-#include <libgte.h>
-#include <libgpu.h>
-/* clang-format on */
-
 extern u8    DAT_80143d44;
 extern u8*   DAT_8014598c;
 extern void* DAT_801459d0[];

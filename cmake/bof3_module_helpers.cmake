@@ -38,11 +38,14 @@ function(bof3_define_module_artifact target)
     set(declared_sources ${ARG_DECLARED_SOURCES})
     if(NOT declared_sources)
         if(NOT ARG_SOURCE_PREFIXES)
-            message(FATAL_ERROR
-                "bof3_define_module_artifact requires SOURCE_PREFIXES or DECLARED_SOURCES."
-            )
+            if(NOT ARG_PLACEHOLDER)
+                message(FATAL_ERROR
+                    "bof3_define_module_artifact requires SOURCE_PREFIXES or DECLARED_SOURCES."
+                )
+            endif()
+        else()
+            bof3_collect_sources_with_prefix(declared_sources ${ARG_SOURCE_PREFIXES})
         endif()
-        bof3_collect_sources_with_prefix(declared_sources ${ARG_SOURCE_PREFIXES})
     endif()
 
     if(ARG_PLACEHOLDER)

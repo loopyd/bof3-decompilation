@@ -1,6 +1,6 @@
 #include "internal.h"
 
-#define BOF3_EMI_STREAM_INDEX_HINT (*(volatile u8*)0x80145024u)
+#define EMI_STREAM_INDEX_HINT (*(volatile u8*)0x80145024u)
 
 /* possible name: emi_family_slot
  * does: maps a BOF3 content family plus index into the slot id used by the EXE
@@ -12,9 +12,9 @@ void func_8016728c(u8 index, u8 family) {
   u32 slot_id;
 
   if (family != 3u) {
-    BOF3_EMI_STREAM_INDEX_HINT = index;
+    EMI_STREAM_INDEX_HINT = index;
     if (family == 0u) {
-      BOF3_EMI_STREAM_INDEX_HINT = index | 0x80u;
+      EMI_STREAM_INDEX_HINT = index | 0x80u;
     }
   }
 

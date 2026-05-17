@@ -9,7 +9,7 @@ void __attribute__((noinline)) func_8009b20c(void) {
 
   panel_task_id = 0x10u;
   do {
-    BOF3_BATTLE_LOCAL_PANEL_TASK_ROOT =
+    BATTLE_LOCAL_PANEL_TASK_ROOT =
         (volatile u8*)(0x80148330u + ((u32)panel_task_id * 0x24u));
     panel_task_id += 1u;
     battle_reset_local_task_slot();

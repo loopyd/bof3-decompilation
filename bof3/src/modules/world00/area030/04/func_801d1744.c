@@ -7,7 +7,7 @@ void func_801d1744(s16 arg0, s16 arg1, u8 arg2) {
   u32 primitive;
   s16 bottom_y;
 
-  primitive = (u32)BOF3_WORLD00_AREA030_PRIMITIVE_PTR;
+  primitive = (u32)WORLD00_AREA030_PRIMITIVE_PTR;
   SetPolyG4((POLY_G4*)primitive);
 
   *(volatile s16*)(primitive + 8) = arg0;

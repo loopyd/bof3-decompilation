@@ -12,14 +12,14 @@ void func_801d8690(s32 arg0, s32 arg1, s32 arg2) {
   s16                         green;
   s16                         blue;
 
-  battle_work = &BOF3_BATTLE_ENEMY_WORK_ARRAY[(arg2 - 3u) & 0xffu];
+  battle_work = &BATTLE_ENEMY_WORK_ARRAY[(arg2 - 3u) & 0xffu];
 
-  func_8017c2d8(BOF3_BATTLE_GLOBAL_WORD_598C, 0, 0,
+  func_8017c2d8(BATTLE_GLOBAL_WORD_598C, 0, 0,
                 func_8017a620(0, 0, 0x3c0, 0), 0);
   func_8014e5a0(1u, 0x0cu);
 
   color = *(volatile u16*)(0x80033a08u +
-                           (((s32)BOF3_BATTLE_GLOBAL_BYTE_4952 << 6) | 0x20));
+                           (((s32)BATTLE_GLOBAL_BYTE_4952 << 6) | 0x20));
   red = (color & 0x1fu) << 3;
   green = (color >> 2) & 0xf8u;
   blue = (color >> 7) & 0xf8u;
@@ -28,7 +28,7 @@ void func_801d8690(s32 arg0, s32 arg1, s32 arg2) {
   func_801d9ab4((s16)(arg0 + 4), (s16)(arg1 + 6), 2, 1);
   func_801d9ab4((s16)(arg0 + 4), (s16)(arg1 + 0x19), 3, 1);
 
-  func_8017c2d8(BOF3_BATTLE_GLOBAL_WORD_598C, 0, 0,
+  func_8017c2d8(BATTLE_GLOBAL_WORD_598C, 0, 0,
                 func_8017a620(0, 1, 0x3c0, 0), 0);
   func_8014e5a0(1u, 0x0cu);
   func_801d9c80((s16)arg0, (s16)(arg1 + 2), 8, 0);
@@ -36,10 +36,10 @@ void func_801d8690(s32 arg0, s32 arg1, s32 arg2) {
   func_801d9ab4((s16)arg0, (s16)arg1, 2, 0);
   func_801d9ab4((s16)arg0, (s16)(arg1 + 0x13), 3, 0);
 
-  if (BOF3_BATTLE_ENEMY_BYTE_7F(battle_work) == 1u) {
+  if (BATTLE_ENEMY_BYTE_7F(battle_work) == 1u) {
     func_801d9e9c((s16)(arg0 + 6), (s16)(arg1 + 0x0a),
-                  BOF3_BATTLE_PANEL_TASK_BYTE_0B,
-                  BOF3_BATTLE_PANEL_TASK_BYTE_0D, 1);
+                  BATTLE_PANEL_TASK_BYTE_0B,
+                  BATTLE_PANEL_TASK_BYTE_0D, 1);
   } else {
     func_801d94d4((s16)(arg0 + 0x24), (u16)(arg1 + 0x0c), 0, -1);
   }

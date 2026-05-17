@@ -7,10 +7,10 @@
 void func_801d9900(void) {
   u32 primitive;
 
-  func_8017c2d8(BOF3_BATTLE_GLOBAL_WORD_598C, 0, 0,
+  func_8017c2d8(BATTLE_GLOBAL_WORD_598C, 0, 0,
                 func_8017a620(0, 2, 0x3c0, 0), 0);
   func_8014e5a0(1u, 0x0cu);
-  primitive = BOF3_BATTLE_GLOBAL_WORD_598C;
+  primitive = BATTLE_GLOBAL_WORD_598C;
   func_8017aa6c(primitive);
   *(u16*)(primitive + 0xc) = 0x03c0u;
   *(u16*)(primitive + 0xe) = 0x00f0u;

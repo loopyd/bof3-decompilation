@@ -12,15 +12,15 @@ void func_801f3ecc(s16 arg0, s16 arg1) {
   u32           primitive;
 
   PushMatrix();
-  RotMatrix(BOF3_WORLD00_AREA016_ROTATION, &matrix);
+  RotMatrix(WORLD00_AREA016_ROTATION, &matrix);
   matrix.t[0] = 0;
   matrix.t[1] = 0;
   matrix.t[2] = 0;
   SetRotMatrix(&matrix);
   SetTransMatrix(&matrix);
 
-  scratch = (volatile s16*)BOF3_WORLD00_AREA016_G4_VERTEX0;
-  primitive = (u32)BOF3_WORLD00_AREA016_PRIMITIVE_PTR;
+  scratch = (volatile s16*)WORLD00_AREA016_G4_VERTEX0;
+  primitive = (u32)WORLD00_AREA016_PRIMITIVE_PTR;
 
   scratch[0] = -10;
   scratch[1] = 0;
@@ -37,8 +37,8 @@ void func_801f3ecc(s16 arg0, s16 arg1) {
 
   SetPolyG4((POLY_G4*)primitive);
   RotTransPers4(
-      BOF3_WORLD00_AREA016_G4_VERTEX0, BOF3_WORLD00_AREA016_G4_VERTEX1,
-      BOF3_WORLD00_AREA016_G4_VERTEX2, BOF3_WORLD00_AREA016_G4_VERTEX3,
+      WORLD00_AREA016_G4_VERTEX0, WORLD00_AREA016_G4_VERTEX1,
+      WORLD00_AREA016_G4_VERTEX2, WORLD00_AREA016_G4_VERTEX3,
       (long*)(primitive + 8), (long*)(primitive + 0x10),
       (long*)(primitive + 0x18), (long*)(primitive + 0x20), &depth, &flag);
 

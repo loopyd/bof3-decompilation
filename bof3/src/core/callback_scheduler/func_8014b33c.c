@@ -19,7 +19,7 @@ void func_8014b33c(void) {
   slot_end = &DAT_80143b40 + 4;
 
   do {
-    if (DAT_80143d40->state != BOF3_GAME_CALLBACK_SLOT_STATE_EMPTY) {
+    if (DAT_80143d40->state != GAME_CALLBACK_SLOT_STATE_EMPTY) {
       func_8014b900(slot_index & 0xff);
     }
 

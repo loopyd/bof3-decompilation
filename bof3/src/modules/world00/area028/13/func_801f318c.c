@@ -13,7 +13,7 @@ void func_801f318c(s16 arg0) {
   u32 primitive;
   u8  scratch[0x20];
 
-  func_8017c2d8((void*)BOF3_WORLD00_AREA028_PRIMITIVE_PTR, 0, 1,
+  func_8017c2d8((void*)WORLD00_AREA028_PRIMITIVE_PTR, 0, 1,
                 func_8017a620(0, 2, 0x3c0, 0), 0);
   func_8014e5a0(3u, 0x0cu);
   func_801afe18(scratch);
@@ -22,8 +22,8 @@ void func_801f318c(s16 arg0) {
   point[1] = *(volatile s32*)(0x1f800044u + 0x38u);
   point[2] = *(volatile s32*)(0x1f800044u + 0x3cu);
   func_801aff04(point, center);
-  BOF3_WORLD00_AREA028_CENTER_X = (u16)center[0];
-  BOF3_WORLD00_AREA028_CENTER_Y = (u16)center[1];
+  WORLD00_AREA028_CENTER_X = (u16)center[0];
+  WORLD00_AREA028_CENTER_Y = (u16)center[1];
 
   angle = -0x80;
   point[0] =
@@ -35,7 +35,7 @@ void func_801f318c(s16 arg0) {
 
   i = 0u;
   do {
-    primitive = (u32)BOF3_WORLD00_AREA028_PRIMITIVE_PTR;
+    primitive = (u32)WORLD00_AREA028_PRIMITIVE_PTR;
     func_8017a97c((void*)primitive);
     func_8017a904((void*)primitive, 1);
 
@@ -54,8 +54,8 @@ void func_801f318c(s16 arg0) {
 
     *(volatile s16*)(primitive + 0x18) = outer[0];
     *(volatile s16*)(primitive + 0x1a) = outer[1];
-    BOF3_WORLD00_AREA028_RING_X(i) = (u16)outer[0];
-    BOF3_WORLD00_AREA028_RING_Y(i) = (u16)outer[1];
+    WORLD00_AREA028_RING_X(i) = (u16)outer[0];
+    WORLD00_AREA028_RING_Y(i) = (u16)outer[1];
     *(volatile u8*)(primitive + 4) = 0xffu;
     *(volatile u8*)(primitive + 5) = 0xffu;
     *(volatile u8*)(primitive + 6) = 0xffu;

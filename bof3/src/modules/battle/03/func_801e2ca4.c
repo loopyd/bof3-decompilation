@@ -15,10 +15,10 @@ u8 func_801e2ca4(void) {
   do {
     volatile Battle03EnemyWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_ENEMY_WORK_ARRAY[slot - 3u];
+    battle_work = &BATTLE_ENEMY_WORK_ARRAY[slot - 3u];
     if ((func_801db524(slot) == 0u) &&
-        (BOF3_BATTLE_ENEMY_HALF_94(battle_work) < best)) {
-      best = BOF3_BATTLE_ENEMY_HALF_94(battle_work);
+        (BATTLE_ENEMY_HALF_94(battle_work) < best)) {
+      best = BATTLE_ENEMY_HALF_94(battle_work);
       result = slot;
     }
     slot += 1u;

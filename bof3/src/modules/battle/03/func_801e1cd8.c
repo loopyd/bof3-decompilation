@@ -3,7 +3,7 @@
 /* does: dispatches the current local state-2 followup byte through its table.
  * @source: 0x801e1cd8 FUN_801e1cd8
  */
-void BOF3_NO_SIBLING_CALLS func_801e1cd8(void) {
+void NO_SIBLING_CALLS func_801e1cd8(void) {
   volatile u8* scratch;
 
   scratch = *(volatile u8**)0x1f800044u;

@@ -3,6 +3,6 @@ bof3_define_module_artifact(
     DISC_FOLDER "BIN/ETC/BATE"
     PROGRAM_NAME "3.bin"
     PROGRAM_PATH "/bins/BIN/ETC/BATE/3.bin"
-    SOURCE_HINT "build/extracted/BIN/ETC/BATE.EMI#3"
-    SOURCE_PREFIXES "src/modules/bate/03/"
+    SOURCE_HINT "${BOF3_EXTRACTED_DIR}/BIN/ETC/BATE.EMI#3"
+    DECLARED_SOURCES ${BOF3_MODULE_BATE_03_SOURCES}
 )

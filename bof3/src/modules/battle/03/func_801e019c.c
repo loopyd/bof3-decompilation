@@ -6,8 +6,8 @@
  */
 void func_801e019c(void) {
   if (func_8014daec() != 0u) {
-    BOF3_BATTLE_LOCAL_SCRATCH_PTR->unk_03 += 1u;
-    if ((BOF3_BATTLE_LOCAL_FLAGS_80(BOF3_BATTLE_LOCAL_WORK_PTR) & 4u) == 0u) {
+    BATTLE_LOCAL_SCRATCH_PTR->unk_03 += 1u;
+    if ((BATTLE_LOCAL_FLAGS_80(BATTLE_LOCAL_WORK_PTR) & 4u) == 0u) {
       func_801defe4();
     }
   }

@@ -7,13 +7,13 @@ void func_801f1064(u8 task_index, u8 record_kind_index) {
   volatile Commu00TaskSlot* task_slot;
   u16                       label_id;
 
-  if (BOF3_COMMU00_VARIANT_ROTATION[record_kind_index] != 0u) {
-    BOF3_COMMU00_SCRATCH_SLOT->active = 1u;
-    label_id = (u16)(BOF3_COMMU00_VARIANT_ROTATION[record_kind_index] + 0xcfu);
+  if (COMMU00_VARIANT_ROTATION[record_kind_index] != 0u) {
+    COMMU00_SCRATCH_SLOT->active = 1u;
+    label_id = (u16)(COMMU00_VARIANT_ROTATION[record_kind_index] + 0xcfu);
   } else {
-    task_slot = BOF3_COMMU00_SCRATCH_SLOT;
+    task_slot = COMMU00_SCRATCH_SLOT;
     task_slot->active = 5u;
-    task_slot = BOF3_COMMU00_SCRATCH_SLOT;
+    task_slot = COMMU00_SCRATCH_SLOT;
     task_slot->variant_arg_0 = 6u;
     task_slot->variant_arg_1 = 0u;
     label_id = 0xcbu;

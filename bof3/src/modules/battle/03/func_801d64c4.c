@@ -9,16 +9,16 @@ u8 func_801d64c4(u32 arg0) {
   u32 flags;
 
   if (arg0 < 3u) {
-    if (BOF3_BATTLE_GLOBAL_BYTE_63CE != 0u) {
-      flags = BOF3_BATTLE_LOCAL_WORD_128(&BOF3_BATTLE_LOCAL_WORK_ARRAY[arg0]);
+    if (BATTLE_GLOBAL_BYTE_63CE != 0u) {
+      flags = BATTLE_LOCAL_WORD_128(&BATTLE_LOCAL_WORK_ARRAY[arg0]);
       if ((flags & 0x10u) == 0u) {
         return 1u;
       }
     }
   } else {
-    if (BOF3_BATTLE_GLOBAL_BYTE_63CE != 0u) {
+    if (BATTLE_GLOBAL_BYTE_63CE != 0u) {
       flags =
-          BOF3_BATTLE_ENEMY_WORD_104(&BOF3_BATTLE_ENEMY_WORK_ARRAY[arg0 - 3u]);
+          BATTLE_ENEMY_WORD_104(&BATTLE_ENEMY_WORK_ARRAY[arg0 - 3u]);
       if ((flags & 0x10u) == 0u) {
         return 1u;
       }

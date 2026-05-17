@@ -13,13 +13,13 @@ void func_8009cfec(void) {
   unique_count = 0u;
   source_index = 0u;
 
-  if (BOF3_BATTLE_LOCAL_PANEL_ENTRY_COUNT != 0u) {
+  if (BATTLE_LOCAL_PANEL_ENTRY_COUNT != 0u) {
     do {
       BattleLocalPanelEntry source_entry;
       u8                    duplicate_found;
       u8                    unique_index;
 
-      source_entry = BOF3_BATTLE_LOCAL_PANEL_ENTRY(source_index);
+      source_entry = BATTLE_LOCAL_PANEL_ENTRY(source_index);
       duplicate_found = 0u;
       unique_index = 0u;
 
@@ -28,8 +28,8 @@ void func_8009cfec(void) {
           BattleLocalPanelEntry unique_entry;
 
           unique_entry = unique_entries[unique_index];
-          if ((BOF3_BATTLE_LOCAL_PANEL_OWNER_KIND(source_entry.owner_index) ==
-               BOF3_BATTLE_LOCAL_PANEL_OWNER_KIND(unique_entry.owner_index)) &&
+          if ((BATTLE_LOCAL_PANEL_OWNER_KIND(source_entry.owner_index) ==
+               BATTLE_LOCAL_PANEL_OWNER_KIND(unique_entry.owner_index)) &&
               (source_entry.panel_id == unique_entry.panel_id)) {
             duplicate_found = 1u;
             break;
@@ -45,16 +45,16 @@ void func_8009cfec(void) {
       }
 
       source_index += 1u;
-    } while (source_index < BOF3_BATTLE_LOCAL_PANEL_ENTRY_COUNT);
+    } while (source_index < BATTLE_LOCAL_PANEL_ENTRY_COUNT);
   }
 
-  BOF3_BATTLE_LOCAL_PANEL_ENTRY_COUNT = unique_count;
+  BATTLE_LOCAL_PANEL_ENTRY_COUNT = unique_count;
   if (unique_count != 0u) {
     source_index = 0u;
     do {
-      BOF3_BATTLE_LOCAL_PANEL_ENTRY(source_index) =
+      BATTLE_LOCAL_PANEL_ENTRY(source_index) =
           unique_entries[source_index];
       source_index += 1u;
-    } while (source_index < BOF3_BATTLE_LOCAL_PANEL_ENTRY_COUNT);
+    } while (source_index < BATTLE_LOCAL_PANEL_ENTRY_COUNT);
   }
 }

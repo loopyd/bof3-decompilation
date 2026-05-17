@@ -8,7 +8,7 @@ void func_801d9ab4(s16 arg0, s16 arg1, s32 arg2, s32 arg3) {
   u32 primitive;
   u32 table_offset;
 
-  primitive = BOF3_BATTLE_GLOBAL_WORD_598C;
+  primitive = BATTLE_GLOBAL_WORD_598C;
   func_8017a9a4(primitive);
 
   table_offset = ((u32)arg2 & 0xffu) << 4;
@@ -32,21 +32,21 @@ void func_801d9ab4(s16 arg0, s16 arg1, s32 arg2, s32 arg3) {
   arg3 = (u32)arg3 & 0xffu;
   *(volatile u8*)(primitive + 4) =
       (*(volatile u16*)(0x80030000u +
-                        ((((u32)(BOF3_BATTLE_GLOBAL_BYTE_4952 * 2) + (u32)arg3)
+                        ((((u32)(BATTLE_GLOBAL_BYTE_4952 * 2) + (u32)arg3)
                           << 5) +
                          0x3a08u)) &
        0x1fu)
       << 3;
   *(volatile u8*)(primitive + 5) =
       (*(volatile u16*)(0x80030000u +
-                        ((((u32)(BOF3_BATTLE_GLOBAL_BYTE_4952 * 2) + (u32)arg3)
+                        ((((u32)(BATTLE_GLOBAL_BYTE_4952 * 2) + (u32)arg3)
                           << 5) +
                          0x3a08u)) >>
        2) &
       0xf8u;
   *(volatile u8*)(primitive + 6) =
       (*(volatile u16*)(0x80030000u +
-                        ((((u32)(BOF3_BATTLE_GLOBAL_BYTE_4952 * 2) + (u32)arg3)
+                        ((((u32)(BATTLE_GLOBAL_BYTE_4952 * 2) + (u32)arg3)
                           << 5) +
                          0x3a08u)) >>
        7) &

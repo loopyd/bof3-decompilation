@@ -19,11 +19,11 @@ u8 func_801db058(void) {
   while (index < 0x0bu) {
     volatile Battle03EnemyWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_ENEMY_WORK_ARRAY[index - 3u];
+    battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
     if (func_801db2f8(index) != 0u) {
-      total += BOF3_BATTLE_ENEMY_HALF_A8(battle_work);
-      if (maximum < BOF3_BATTLE_ENEMY_HALF_A8(battle_work)) {
-        maximum = BOF3_BATTLE_ENEMY_HALF_A8(battle_work);
+      total += BATTLE_ENEMY_HALF_A8(battle_work);
+      if (maximum < BATTLE_ENEMY_HALF_A8(battle_work)) {
+        maximum = BATTLE_ENEMY_HALF_A8(battle_work);
       }
       count += 1u;
     }
@@ -39,7 +39,7 @@ u8 func_801db058(void) {
   while (index < 3u) {
     if ((func_801db9e4(index) != 0u) &&
         (func_801db3a0(index, total, maximum) != 0u)) {
-      BOF3_BATTLE_LOCAL_WORD_128(&BOF3_BATTLE_LOCAL_WORK_ARRAY[index]) |=
+      BATTLE_LOCAL_WORD_128(&BATTLE_LOCAL_WORK_ARRAY[index]) |=
           0x8000u;
       local_hits += 1u;
     }
@@ -53,11 +53,11 @@ u8 func_801db058(void) {
   while (index < 3u) {
     volatile Battle03LocalWork* battle_work;
 
-    battle_work = &BOF3_BATTLE_LOCAL_WORK_ARRAY[index];
+    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
     if (func_801db2f8(index) != 0u) {
-      total += BOF3_BATTLE_LOCAL_HALF_98(battle_work);
-      if (maximum < BOF3_BATTLE_LOCAL_HALF_98(battle_work)) {
-        maximum = BOF3_BATTLE_LOCAL_HALF_98(battle_work);
+      total += BATTLE_LOCAL_HALF_98(battle_work);
+      if (maximum < BATTLE_LOCAL_HALF_98(battle_work)) {
+        maximum = BATTLE_LOCAL_HALF_98(battle_work);
       }
       count += 1u;
     }
@@ -72,7 +72,7 @@ u8 func_801db058(void) {
   while (index < 0x0bu) {
     if ((func_801db9e4(index) != 0u) &&
         (func_801db3e4(index, total, maximum) != 0u)) {
-      BOF3_BATTLE_ENEMY_WORD_104(&BOF3_BATTLE_ENEMY_WORK_ARRAY[index - 3u]) |=
+      BATTLE_ENEMY_WORD_104(&BATTLE_ENEMY_WORK_ARRAY[index - 3u]) |=
           0x8000u;
     }
     index += 1u;

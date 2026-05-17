@@ -25,12 +25,12 @@ void func_801f00d4(void) {
 
   progress_counter = (volatile u32*)0x8014502cu;
   active_template_base = (volatile u8*)((u32)progress_counter + 0x7bcu);
-  slot_template_table = BOF3_COMMU00_SLOT_TEMPLATE_TABLE;
+  slot_template_table = COMMU00_SLOT_TEMPLATE_TABLE;
 
   while (1) {
     source_index_u32 = (u32)source_index;
     active_offset = (s32)(source_index_u32 * 8u);
-    if (((const volatile u8*)BOF3_COMMU00_ACTIVE_RECORD_BASE)[active_offset] ==
+    if (((const volatile u8*)COMMU00_ACTIVE_RECORD_BASE)[active_offset] ==
         0u) {
       break;
     }
@@ -42,7 +42,7 @@ void func_801f00d4(void) {
   }
 
   active_record =
-      (volatile Commu00ActiveRecord*)(BOF3_COMMU00_ACTIVE_RECORD_BASE +
+      (volatile Commu00ActiveRecord*)(COMMU00_ACTIVE_RECORD_BASE +
                                       active_offset);
   active_template = active_template_base + (source_index_u32 * 5u);
   template_row = slot_template_table + (source_index_u32 * 9u);
@@ -59,6 +59,6 @@ void func_801f00d4(void) {
     template_row += 1;
   } while (active_template < active_template_end);
 
-  BOF3_COMMU00_PENDING_QUEUE[BOF3_COMMU00_PENDING_QUEUE_COUNT] = source_index;
-  BOF3_COMMU00_PENDING_QUEUE_COUNT += 1u;
+  COMMU00_PENDING_QUEUE[COMMU00_PENDING_QUEUE_COUNT] = source_index;
+  COMMU00_PENDING_QUEUE_COUNT += 1u;
 }

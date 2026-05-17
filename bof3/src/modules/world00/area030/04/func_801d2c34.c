@@ -7,7 +7,7 @@
 void func_801d2c34(s16 arg0, s16 arg1, s8 arg2, u8 arg3) {
   POLY_FT4* primitive;
 
-  primitive = (POLY_FT4*)BOF3_WORLD00_AREA030_PRIMITIVE_PTR;
+  primitive = (POLY_FT4*)WORLD00_AREA030_PRIMITIVE_PTR;
   SetPolyFT4(primitive);
 
   primitive->tpage =

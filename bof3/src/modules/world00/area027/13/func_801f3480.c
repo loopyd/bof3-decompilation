@@ -23,11 +23,11 @@ void func_801f3480(const void* arg0, s32 arg1, u32 arg2) {
   PushMatrix();
   RotTrans((SVECTOR*)point, &translation, &flag);
   RotMatrix(&rotation, &matrix);
-  MulMatrix2(BOF3_WORLD00_AREA027_MATRIX_92E8, &matrix);
+  MulMatrix2(WORLD00_AREA027_MATRIX_92E8, &matrix);
   SetRotMatrix(&matrix);
   SetTransMatrix(&matrix);
 
-  primitive = (POLY_FT4*)BOF3_WORLD00_AREA027_PRIMITIVE_PTR;
+  primitive = (POLY_FT4*)WORLD00_AREA027_PRIMITIVE_PTR;
   SetPolyFT4(primitive);
   SetShadeTex(primitive, 0);
 

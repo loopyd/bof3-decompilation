@@ -4,7 +4,7 @@
  * table rooted at `battle_selection_confirm_substate_table`.
  * @source: 0x80096f3c FUN_80096f3c
  */
-void BOF3_NO_SIBLING_CALLS func_80096f3c(void) {
+void NO_SIBLING_CALLS func_80096f3c(void) {
   volatile u8*                           substate_base;
   u32                                    substate;
   BattleSelectionHandler const volatile* table;

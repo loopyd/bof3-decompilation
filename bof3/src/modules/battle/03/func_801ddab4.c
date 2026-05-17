@@ -6,6 +6,6 @@
  */
 void func_801ddab4(u32 arg0) {
   if ((arg0 & 0x80u) != 0u) {
-    func_8019651c((void*)BOF3_BATTLE_LOCAL_SCRATCH_PTR, -6, -10, 0, 0);
+    func_8019651c((void*)BATTLE_LOCAL_SCRATCH_PTR, -6, -10, 0, 0);
   }
 }

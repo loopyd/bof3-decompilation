@@ -5,7 +5,7 @@
  * @source: 0x801dee4c FUN_801dee4c
  */
 u8 func_801dee4c(void) {
-  volatile u8* battle_work = (volatile u8*)BOF3_BATTLE_LOCAL_WORK_PTR;
+  volatile u8* battle_work = (volatile u8*)BATTLE_LOCAL_WORK_PTR;
   volatile u8* global_base = (volatile u8*)0x80140000u;
 
   if ((*(volatile u16*)(battle_work + 0x80) & 4u) != 0u) {

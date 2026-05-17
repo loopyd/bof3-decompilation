@@ -8,8 +8,8 @@ void func_801f31cc(void) {
   s16 point[3];
 
   if (func_8015b5d4(0x80144e98u, 0x17) != 0) {
-    BOF3_WORLD00_AREA027_SCRATCH_PTR[2] += 1u;
-    *(u32*)(BOF3_WORLD00_AREA027_SCRATCH_PTR + 0x0c) = 0u;
+    WORLD00_AREA027_SCRATCH_PTR[2] += 1u;
+    *(u32*)(WORLD00_AREA027_SCRATCH_PTR + 0x0c) = 0u;
   }
 
   point[0] = (s16)0xe340u;
