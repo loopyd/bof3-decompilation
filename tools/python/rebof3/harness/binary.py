@@ -187,3 +187,13 @@ def build_binary_diff(
 
     write_json(json_path, payload)
     return payload, json_path
+
+
+def binary_diff_exit_code(statuses: list[str], *, allow_different: bool) -> int:
+    if allow_different:
+        return (
+            0
+            if all(status in {"exact_match", "different"} for status in statuses)
+            else 1
+        )
+    return 0 if all(status == "exact_match" for status in statuses) else 1

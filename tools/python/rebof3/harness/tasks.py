@@ -98,6 +98,10 @@ def _source_program_path(relative_path: Path) -> str:
 
 def _source_hint(relative_path: Path) -> str | None:
     parts = relative_path.parts
+    if parts[:4] == ("src", "modules", "game", "00"):
+        return "output/extracted/BIN/ETC/GAME.EMI#0"
+    if parts[:4] == ("src", "modules", "game", "01"):
+        return "output/extracted/BIN/ETC/GAME.EMI#1"
     if parts[:4] == ("src", "modules", "battle", "03"):
         return "output/extracted/BIN/BATTLE/BATTLE.EMI#3"
     if parts[:4] == ("src", "modules", "battle", "15"):
@@ -109,6 +113,74 @@ def _source_hint(relative_path: Path) -> str | None:
     if parts[:2] == ("src", "logo") or parts[:3] == ("src", "modules", "logo"):
         return "output/extracted/LOGO/LOGO.EXE"
     return None
+
+
+def _staged_program_parts(program_path: str) -> tuple[tuple[str, ...], int, int] | None:
+    path = Path(program_path)
+    match = STAGED_EMI_PROGRAM_RE.match(path.name)
+    if not match:
+        return None
+    parts = tuple(Path(program_path.removeprefix("/bins/")).parent.parts)
+    load_address = int(
+        match.group(0).removesuffix(".bin").rsplit("_", 1)[1], 16
+    )
+    return parts, int(match.group("entry"), 10), load_address
+
+
+def _source_path_for_program(program_path: str, entry_hex: str) -> str | None:
+    parsed = _staged_program_parts(program_path)
+    if parsed is None:
+        if program_path == "/boot/LOGO.EXE":
+            return f"bof3/src/modules/logo/func_{entry_hex.removeprefix('0x').lower()}.c"
+        if program_path == "/boot/SLUS_004.22":
+            return f"bof3/src/core/func_{entry_hex.removeprefix('0x').lower()}.c"
+        return None
+
+    parts, entry, _load_address = parsed
+    addr = entry_hex.removeprefix("0x").lower()
+    if parts == ("ETC", "GAME"):
+        return f"bof3/src/modules/game/{entry:02d}/func_{addr}.c"
+    if parts == ("BATTLE", "BATTLE"):
+        return f"bof3/src/modules/battle/{entry:02d}/func_{addr}.c"
+    if len(parts) == 2 and parts[0] == "WORLD00":
+        return f"bof3/src/modules/world00/{parts[1].lower()}/{entry:02d}/func_{addr}.c"
+    if parts:
+        module_parts = "/".join(part.lower() for part in parts)
+        return f"bof3/src/modules/{module_parts}/{entry:02d}/func_{addr}.c"
+    return None
+
+
+def _source_hint_for_program(program_path: str) -> str | None:
+    parsed = _staged_program_parts(program_path)
+    if parsed is None:
+        if program_path == "/boot/LOGO.EXE":
+            return "output/extracted/LOGO/LOGO.EXE"
+        if program_path == "/boot/SLUS_004.22":
+            return "output/extracted/SLUS_004.22"
+        return None
+    parts, entry, _load_address = parsed
+    if parts:
+        return f"output/extracted/BIN/{'/'.join(parts)}.EMI#{entry}"
+    return None
+
+
+def _binary_payload_for_program(config: HarnessConfig, program_path: str) -> dict[str, Any]:
+    if program_path == "/boot/LOGO.EXE":
+        return {"binary_path": str(config.root / "output/extracted/LOGO/LOGO.EXE")}
+    if program_path == "/boot/SLUS_004.22":
+        return {"binary_path": str(config.root / "output/extracted/SLUS_004.22")}
+    if program_path.startswith("/bins/"):
+        binary_path = _binary_path_from_program(config, program_path)
+        load_address = _load_address_from_manifest(binary_path)
+        if load_address is None:
+            parsed = _staged_program_parts(program_path)
+            if parsed is not None:
+                load_address = parsed[2]
+        return {
+            "binary_path": str(binary_path),
+            **({} if load_address is None else {"load_address": load_address}),
+        }
+    return {}
 
 
 def _source_binary_payload(
@@ -317,6 +389,54 @@ def function_target_records(config: HarnessConfig) -> list[dict[str, Any]]:
     return records
 
 
+def analysis_function_target_records(
+    config: HarnessConfig, rows: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for row in rows:
+        if not is_reverse_function_row(row):
+            continue
+        if int(row.get("is_thunk") or 0):
+            continue
+        program_path = str(row.get("program_path") or "")
+        entry_hex = str(row.get("address") or row.get("entry_hex") or "")
+        if not program_path or not entry_hex:
+            continue
+        if not entry_hex.startswith("0x"):
+            entry_hex = f"0x{entry_hex.lower()}"
+        source_path = _source_path_for_program(program_path, entry_hex)
+        source_hint = _source_hint_for_program(program_path)
+        body_min = str(row.get("body_min") or "")
+        body_max = str(row.get("body_max") or "")
+        payload = {
+            **dict(row),
+            **_binary_payload_for_program(config, program_path),
+        }
+        if source_path is not None:
+            payload["source_path"] = source_path
+        if body_min and body_max:
+            payload["size"] = _parse_int(body_max) - _parse_int(body_min) + 1
+        priority = 50
+        if source_path and (config.root / source_path).is_file():
+            priority = 35
+        if source_hint and "BATTLE/BATTLE.EMI#3" in source_hint:
+            priority = 25
+        records.append(
+            {
+                "id": f"func:{program_path}@{entry_hex}",
+                "type": "function",
+                "status": "queued",
+                "priority": priority,
+                "summary": f"{program_path} {entry_hex} {row.get('name') or ''}".strip(),
+                "source_hint": source_hint,
+                "program_path": program_path,
+                "entry_hex": entry_hex,
+                "payload": payload,
+            }
+        )
+    return records
+
+
 def migration_target_records(config: HarnessConfig) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for target in config.migration_targets:
@@ -388,18 +508,30 @@ def resolve_function_target_alias(
 def _module_fragments(module: str) -> set[str]:
     raw = module.strip()
     fragments = {raw}
+    if raw.upper() == "GAME#0":
+        fragments.update(_module_fragments("ETC/GAME#0"))
+    elif raw.upper() == "GAME#1":
+        fragments.update(_module_fragments("ETC/GAME#1"))
+    elif raw.upper().startswith("BATTLE#"):
+        fragments.update(_module_fragments(f"BATTLE/BATTLE#{raw.split('#', 1)[1]}"))
     if raw.startswith("emi:"):
         archive_entry = raw.removeprefix("emi:")
+    else:
+        archive_entry = raw
+    if "#" in archive_entry:
+        archive, entry = archive_entry.rsplit("#", 1)
+        archive_name = Path(archive).name
+        try:
+            entry_int = int(entry)
+        except ValueError:
+            return fragments
         fragments.add(archive_entry)
-        if "#" in archive_entry:
-            archive, entry = archive_entry.rsplit("#", 1)
-            archive_name = Path(archive).name
-            fragments.add(f"{archive}.EMI#{entry}")
-            fragments.add(f"/bins/{archive}/{entry}.bin")
-            fragments.add(f"/bins/{archive}/{int(entry):02d}.bin")
-            fragments.add(f"/bins/{archive}/{archive_name}_e{int(entry):02d}_")
-            fragments.add(f"/bins/BIN/{archive}/{entry}.bin")
-            fragments.add(f"/bins/BIN/{archive}/{int(entry):02d}.bin")
+        fragments.add(f"{archive}.EMI#{entry_int}")
+        fragments.add(f"/bins/{archive}/{entry_int}.bin")
+        fragments.add(f"/bins/{archive}/{entry_int:02d}.bin")
+        fragments.add(f"/bins/{archive}/{archive_name}_e{entry_int:02d}_")
+        fragments.add(f"/bins/BIN/{archive}/{entry_int}.bin")
+        fragments.add(f"/bins/BIN/{archive}/{entry_int:02d}.bin")
     return fragments
 
 

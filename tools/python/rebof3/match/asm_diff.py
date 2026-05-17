@@ -241,7 +241,7 @@ def overlay_load_address_for_source(layout: RepoLayout, source_path: Path) -> in
 
 def _resolve_overlay_binary_fallback(layout: RepoLayout, source_rel: str) -> Path:
     """Last-resort: search EMI catalog for payload_path."""
-    emi_catalog = layout.root / "out/inventory/emi_catalog.json"
+    emi_catalog = layout.root / "output/inventory/emi_catalog.json"
     if emi_catalog.is_file():
         try:
             from ..jsonio import read_json

@@ -3,7 +3,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from rebof3.harness.binary import build_binary_diff, resolve_binary_pair
+from rebof3.harness.binary import (
+    binary_diff_exit_code,
+    build_binary_diff,
+    resolve_binary_pair,
+)
 from rebof3.harness.catalog import emi_target_records, symbolic_emi_catalog
 from rebof3.harness.classify import (
     EMI_AUDIO_SEQ,
@@ -12,7 +16,6 @@ from rebof3.harness.classify import (
     EMI_UNKNOWN,
     emi_kind,
 )
-from rebof3.harness.cli import binary_diff_exit_code
 from rebof3.harness.config import load_harness_config
 from rebof3.harness.context import build_context_header
 from rebof3.harness.dashboard import SECTIONS, render_dashboard
@@ -935,7 +938,7 @@ def test_m2c_canonicalizes_default_ghidra_names_for_context(tmp_path: Path) -> N
 
 
 def test_ghidra_coverage_reports_missing_manifest_programs(tmp_path: Path) -> None:
-    manifest = tmp_path / "out/ghidra-bootstrap/ghidra_import_manifest.json"
+    manifest = tmp_path / "out/ghidra-bof3/ghidra_import_manifest.json"
     manifest.parent.mkdir(parents=True)
     manifest.write_text(
         json.dumps(

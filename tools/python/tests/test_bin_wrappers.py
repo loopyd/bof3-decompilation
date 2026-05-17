@@ -45,8 +45,8 @@ _HELP_COMMANDS = [
     ("match-init", "usage: match init"),
     ("match-report", "usage: match report"),
     ("harness", "usage: harness"),
-    ("harness verify", "usage: harness verify"),
-    ("harness verify function", "usage: harness verify function"),
+    ("harness claim", "usage: harness claim"),
+    ("harness status", "usage: harness status"),
 ]
 
 

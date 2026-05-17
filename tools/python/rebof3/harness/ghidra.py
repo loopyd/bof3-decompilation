@@ -41,9 +41,9 @@ def _program_path_from_manifest_entry(
 
 
 def expected_manifest_program_aliases(config: HarnessConfig) -> dict[str, set[str]]:
-    if not (config.root / "out/ghidra-bootstrap/ghidra_import_manifest.json").is_file():
+    if not (config.root / "output/ghidra-bof3/ghidra_import_manifest.json").is_file():
         return {}
-    payload = read_json(config.root / "out/ghidra-bootstrap/ghidra_import_manifest.json")
+    payload = read_json(config.root / "output/ghidra-bof3/ghidra_import_manifest.json")
     imports = payload.get("imports", [])
     if not isinstance(imports, list):
         return {}
