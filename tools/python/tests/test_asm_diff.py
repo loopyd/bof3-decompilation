@@ -6,6 +6,7 @@ from rebof3.match.asm_diff import (
     build_result_payload,
     compiler_asm_path_for_object,
     extract_original_bytes,
+    infer_original_size,
     infer_size_from_sibling_sources,
     matching_instruction_count,
     normalize_disassembly,
@@ -36,6 +37,35 @@ def test_source_address_and_size_are_inferred_from_source_files(tmp_path: Path) 
 
     assert parse_source_address(current) == 0x80162178
     assert infer_size_from_sibling_sources(current, 0x80162178) == 0x70
+
+
+def test_implausible_sibling_gap_falls_back_to_binary_return(
+    tmp_path: Path,
+) -> None:
+    source_dir = tmp_path / "bof3" / "src" / "modules" / "game" / "00"
+    source_dir.mkdir(parents=True)
+    current = source_dir / "func_801971e8.c"
+    current.write_text("void func_801971e8(void) {}\n", encoding="utf-8")
+    next_source = source_dir / "func_801a1ae4.c"
+    next_source.write_text("void func_801a1ae4(void) {}\n", encoding="utf-8")
+    binary = tmp_path / "0.bin"
+    payload = bytearray(0x2000)
+    return_offset = 0x80197370 - 0x80195800
+    payload[return_offset : return_offset + 4] = (0x03E00008).to_bytes(
+        4, byteorder="little"
+    )
+    binary.write_bytes(payload)
+
+    assert infer_size_from_sibling_sources(current, 0x801971E8) is None
+    assert (
+        infer_original_size(
+            current,
+            address=0x801971E8,
+            binary_path=binary,
+            load_address=0x80195800,
+        )
+        == 0x190
+    )
 
 
 def test_extract_original_bytes_reads_psx_exe_load_address(tmp_path: Path) -> None:

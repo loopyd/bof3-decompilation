@@ -51,24 +51,10 @@ typedef volatile s32       vs32;
 /*
  * Volatile RAM accessors.
  *
- * For reverse-engineering globals at known addresses in PSX RAM
- * (0x800xxxxx .. 0x801xxxxx). Promote to extern + SYMBOL_AT once the
- * variable is fully understood.
- *
- * Usage:
- *   VU8(0x80143f00u)           — single byte at address
- *   VU16(0x80143f00u)          — halfword at address
- *   VU32(0x80143f00u)          — word at address
- *   VPTR(MyStruct, 0x80145ad4u) — pointer to typed data
- *   CVPTR(MyStruct, 0x80147aa8u) — const pointer to typed data
- *   VPPTR(MyStruct, 0x80148648u) — dereferenced pointer to pointer
+ * Use REG8/REG16/REG32 for hardware I/O (0x1f80xxxx).
+ * Use extern type DAT_xxxxx; + SYMBOL_AT(name, addr) for fixed-address
+ * RAM globals (0x800xxxxx .. 0x801xxxxx).
  */
-#define VU8(addr)        (*(volatile u8 *)(addr))
-#define VU16(addr)       (*(volatile u16 *)(addr))
-#define VU32(addr)       (*(volatile u32 *)(addr))
-#define VS8(addr)        (*(volatile s8 *)(addr))
-#define VS16(addr)       (*(volatile s16 *)(addr))
-#define VS32(addr)       (*(volatile s32 *)(addr))
 #define VPTR(type, addr)  ((volatile type *)(addr))
 #define CVPTR(type, addr) ((const volatile type *)(addr))
 #define VPPTR(type, addr) (*(volatile type **)(addr))

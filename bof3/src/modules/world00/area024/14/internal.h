@@ -53,12 +53,12 @@ typedef struct World00Area024SpinWork {
 #define WORLD00_AREA024_SCRATCH_REMAP VPTR(u8, 0x80147a58u)
 #define WORLD00_AREA024_PTR_7AA8      VPPTR(u8, 0x80147aa8u)
 #define WORLD00_AREA024_PTR_7AAC      VPPTR(u8, 0x80147aacu)
-#define WORLD00_AREA024_GLOBAL_HALF_3E6C VU16(0x80143e6cu)
+extern vu16 WORLD00_AREA024_GLOBAL_HALF_3E6C;
 #define WORLD00_AREA024_STATE_TABLE \
   ((World00Area024Handler const volatile*)0x801f4214u)
 #define WORLD00_AREA024_SCRATCH_PTR \
   VPPTR(World00Area024Scratch, 0x1f800044u)
-#define WORLD00_AREA024_SCRATCH_BYTE_09 VU8(0x1f800044u + 9u)
+#define WORLD00_AREA024_SCRATCH_BYTE_09 (*(volatile volatile u8 *)(0x1f800044u + 9u))
 
 void func_8015b410(void* arg0);
 void func_8015b4b0(void* arg0);

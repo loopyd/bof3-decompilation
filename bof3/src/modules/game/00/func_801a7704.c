@@ -25,8 +25,8 @@ void func_801a7704(u8 scenario_index) {
   func_801a7804();
 
   while (!func_80162d00()) {
-    if ((BOF3_GAME_WORLD_STATE != 0xffffu) &&
-        (GAME_ENTRY0_WORLD_PHASE != 5u)) {
+    if ((DAT_80143f00 != 0xffffu) &&
+        (DAT_80143bb0 != 5u)) {
       func_801992b8();
     }
     func_8014b87c(1u);

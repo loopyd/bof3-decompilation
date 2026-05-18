@@ -13,8 +13,7 @@ typedef struct World00Area008Scratch {
   VPPTR(World00Area008Scratch, 0x1f800044u)
 #define WORLD00_AREA008_PRIMITIVE_PTR    VPPTR(u8, 0x8014598cu)
 #define WORLD00_AREA008_UI_CHAR_BUFFER   VPTR(u8, 0x80145ad4u)
-#define WORLD00_AREA008_GLOBAL_BYTE_6867 VU8(0x80146867u)
-
+extern vu8 WORLD00_AREA008_GLOBAL_BYTE_6867;
 void func_8017e3f4(void* arg0, const void* arg1, ...);
 void func_8014ff0c(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 void func_8014f800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);

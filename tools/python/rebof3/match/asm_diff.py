@@ -28,6 +28,8 @@ RELOCATION_RE = re.compile(
 SYMBOL_SIZE_RE = re.compile(
     r"^(?P<address>[0-9a-fA-F]+)\s+(?P<size>[0-9a-fA-F]+)\s+[A-Za-z]\s+(?P<name>\S+)$"
 )
+IMPLAUSIBLE_SIBLING_FUNCTION_SIZE = 0x1000
+MIPS_JR_RA = 0x03E00008
 
 
 @dataclass(frozen=True)
@@ -94,15 +96,55 @@ def collect_source_addresses(source_dir: Path) -> list[tuple[Path, int]]:
     return sorted(rows, key=lambda row: (row[1], row[0].name))
 
 
-def infer_size_from_sibling_sources(source_path: Path, address: int) -> int:
+def infer_size_from_sibling_sources(source_path: Path, address: int) -> int | None:
     for candidate_path, candidate_address in collect_source_addresses(
         source_path.parent
     ):
         if candidate_path == source_path:
             continue
         if candidate_address > address:
-            return candidate_address - address
-    return _infer_size_from_function_index(source_path, address)
+            size = candidate_address - address
+            if size <= IMPLAUSIBLE_SIBLING_FUNCTION_SIZE:
+                return size
+            break
+    return None
+
+
+def infer_size_from_binary_return(
+    binary_path: Path,
+    *,
+    address: int,
+    load_address: int | None,
+) -> int:
+    binary_data = binary_path.read_bytes()
+    psx_info = read_psx_exe_info(binary_path)
+    if psx_info is None:
+        if load_address is None:
+            raise ValueError(
+                f"{binary_path} is not a PS-X EXE; pass --load-address for raw binaries"
+            )
+        payload_offset = 0
+        payload_load_address = load_address
+        payload_size = len(binary_data)
+    else:
+        payload_offset = psx_info.payload_offset
+        payload_load_address = psx_info.load_address
+        payload_size = psx_info.payload_size
+
+    relative_offset = address - payload_load_address
+    if relative_offset < 0 or relative_offset >= payload_size:
+        raise ValueError(
+            f"{format_hex(address)} is outside {binary_path} loaded at {format_hex(payload_load_address)}"
+        )
+
+    for offset in range(
+        payload_offset + relative_offset, payload_offset + payload_size, 4
+    ):
+        if read_u32le(binary_data, offset) == MIPS_JR_RA:
+            return offset - payload_offset - relative_offset + 8
+    raise ValueError(
+        f"cannot infer original size for {format_hex(address)} from {binary_path}; pass --size"
+    )
 
 
 def _infer_size_from_function_index(source_path: Path, address: int) -> int:
@@ -123,6 +165,24 @@ def _infer_size_from_function_index(source_path: Path, address: int) -> int:
     raise ValueError(
         f"cannot infer original size for {source_path}; pass --size or add the next source in the same directory"
     )
+
+
+def infer_original_size(
+    source_path: Path,
+    *,
+    address: int,
+    binary_path: Path,
+    load_address: int | None,
+) -> int:
+    sibling_size = infer_size_from_sibling_sources(source_path, address)
+    if sibling_size is not None:
+        return sibling_size
+    try:
+        return _infer_size_from_function_index(source_path, address)
+    except ValueError:
+        return infer_size_from_binary_return(
+            binary_path, address=address, load_address=load_address
+        )
 
 
 def source_function_name(source_path: Path, address: int) -> str:
@@ -558,11 +618,6 @@ def run_asm_diff_one(
         if request.address is not None
         else parse_source_address(source_path)
     )
-    original_size = (
-        request.size
-        if request.size is not None
-        else infer_size_from_sibling_sources(source_path, address)
-    )
     function_name = source_function_name(source_path, address)
     binary_path = (
         request.binary_path.expanduser().resolve()
@@ -571,6 +626,16 @@ def run_asm_diff_one(
     )
     load_address = request.load_address or overlay_load_address_for_source(
         repo, source_path
+    )
+    original_size = (
+        request.size
+        if request.size is not None
+        else infer_original_size(
+            source_path,
+            address=address,
+            binary_path=binary_path,
+            load_address=load_address,
+        )
     )
     object_path = object_path_for_source(repo, source_path)
     output_root = request.output_root or repo.out_dir / "asm-diff"

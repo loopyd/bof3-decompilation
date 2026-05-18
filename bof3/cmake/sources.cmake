@@ -294,6 +294,7 @@ set(BOF3_MODULE_GAME_00_SOURCES
     src/modules/game/00/func_80196ffc.c
     src/modules/game/00/func_80197068.c
     src/modules/game/00/func_801970ec.c
+    src/modules/game/00/func_801971e8.c
     src/modules/game/00/func_801a1ae4.c
     src/modules/game/00/func_801a1bc0.c
     src/modules/game/00/func_801a7704.c

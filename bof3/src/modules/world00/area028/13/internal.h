@@ -18,12 +18,11 @@ typedef struct World00Area028Work {
 #define WORLD00_AREA028_WORK_BASE     ((u8*)0x800e4800u)
 #define WORLD00_AREA028_PRIMITIVE_PTR VPPTR(u8, 0x8014598cu)
 #define WORLD00_AREA028_RING_X(index) \
-  VU16(0x800e4a04u + ((u32)(index) * 4u))
+  (*(volatile volatile u16 *)(0x800e4a04u + ((u32)(index) * 4u)))
 #define WORLD00_AREA028_RING_Y(index) \
-  VU16(0x800e4a06u + ((u32)(index) * 4u))
-#define WORLD00_AREA028_CENTER_X VU16(0x800e4a00u)
-#define WORLD00_AREA028_CENTER_Y VU16(0x800e4a02u)
-
+  (*(volatile volatile u16 *)(0x800e4a06u + ((u32)(index) * 4u)))
+extern vu16 WORLD00_AREA028_CENTER_X;
+extern vu16 WORLD00_AREA028_CENTER_Y;
 void func_801afe18(void* arg0);
 void func_801aff04(const void* arg0, void* arg1);
 u16  func_8017a620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);

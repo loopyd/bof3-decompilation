@@ -47,18 +47,53 @@ struct GameWorkArea {
 #define GLOBAL_WORK_PTR VPPTR(u8, 0x80146250u)
 
 /* Movement/position offset tables in main exe data section */
-#define MOVEMENT_OFFSET_0(i) VS32(0x80181B94u + (i) * 8)
-#define MOVEMENT_OFFSET_1(i) VS32(0x80181B98u + (i) * 8)
-#define MOVEMENT_THRESHOLD(i) VS16(0x80181B70u + (i) * 2)
+#define MOVEMENT_OFFSET_0(i) (*(volatile volatile s32 *)(0x80181B94u + (i) * 8))
+#define MOVEMENT_OFFSET_1(i) (*(volatile volatile s32 *)(0x80181B98u + (i) * 8))
+#define MOVEMENT_THRESHOLD(i) (*(volatile volatile s16 *)(0x80181B70u + (i) * 2))
 
-#define GAME_ENTRY0_STATE VU16(0x80143b90u)
-#define GAME_ENTRY0_SUBSTATE VU16(0x80143b92u)
-#define GAME_ENTRY0_WORLD_PHASE VU8(0x80143bb0u)
-#define BOF3_GAME_WORLD_STATE VU16(0x80143f00u)
-#define GAME_ENTRY0_SELECTION_SEED VU8(0x80143f1fu)
-#define GAME_ENTRY0_ACTIVE_SELECTION VU32(0x80144fc0u)
-#define GAME_FRONT_SELECTION VU8(0x80145029u)
-#define BOF3_GAME_PALETTE_STAGE_SERIAL VU8(0x80145988u)
+/* ---- RAM globals (DAT_ names match original game data patterns) ---- */
+
+/* does: entry-0 main state machine index */
+extern vu16 DAT_80143b90;
+/* does: entry-0 sub-state within current state */
+extern vu16 DAT_80143b92;
+/* does: world/phase index for entry-0 world dispatch */
+extern vu8 DAT_80143bb0;
+/* does: current world state ID for world/front routing */
+extern vu16 DAT_80143f00;
+/* does: world/front flags: bit0=scenario pending, bit3=alt front mode */
+extern vu8 DAT_80143f02;
+/* does: context selection seed passed to entry-0 ctx init */
+extern vu16 DAT_80143f10;
+/* does: context bundle word A — world/route identifier */
+extern vu32 DAT_80143f14;
+/* does: context bundle word B — secondary selector data */
+extern vu32 DAT_80143f18;
+/* does: context kind byte — dispatch type discriminator */
+extern vu8 DAT_80143f1c;
+/* does: pending request kind — selects next front operation */
+extern vu8 DAT_80143f1d;
+/* does: pending mode after request resolution */
+extern vu8 DAT_80143f1e;
+/* does: selection seed for the entry-0 front callback bank */
+extern vu8 DAT_80143f1f;
+/* does: active selection id from front-end picker */
+extern vu32 DAT_80144fc0;
+/* does: front-end selection index for menu routing */
+extern vu8 DAT_80145029;
+/* does: palette stage serial for GPU upload sequencing */
+extern vu8 DAT_80145988;
+/* does: world flags — bit0=pending scenario, bit5=???, bit6=force-reset, bit11=??? */
+extern vu16 DAT_8014625a;
+/* does: ??? flag byte cleared on request=0xFE */
+extern vu8 DAT_8014832e;
+/* does: signed world-coord X argument for scenario entry */
+extern s16 DAT_8014930a;
+/* does: signed world-coord Y argument for scenario entry */
+extern s16 DAT_8014930e;
+
+#include "symbols.h"
+
 #define BOF3_GAME_ALT_FRONT_CALLBACK_TABLE \
  CVPTR(GameEntry0StateHandler, 0x801c7b08u)
 #define BOF3_GAME_SELECTION_CALLBACK_TABLE \
@@ -169,6 +204,14 @@ void func_80196f78(void);
 void func_80196ffc(void);
 void func_80197068(void);
 void func_801970ec(void);
+void func_801971e8(void);
 void func_801a7704(u8 scenario_index);
+
+void func_8019faa0(u16 selection_seed, u32 context_a, u32 context_b,
+ u8 context_kind);
+void func_80198bc4(u32 arg0);
+void func_8014ecac(u16 local_mode);
+void func_801a0048(s16 a, s16 b);
+void func_801b3ccc(u32 arg0);
 
 #endif

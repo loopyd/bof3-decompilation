@@ -63,88 +63,88 @@ typedef struct Battle03QueuedSlot {
 #define BATTLE_QUEUED_SLOT_ARRAY \
  VPTR(Battle03QueuedSlot, 0x801ec330u)
 #define BATTLE_LOCAL_WORK_PTR VPPTR(Battle03LocalWork, 0x80146250u)
-#define BATTLE_LOCAL_BYTE_62EC VU8(0x801462ecu)
-#define BATTLE_GLOBAL_BYTE_62E0 VU8(0x801462e0u)
-#define BATTLE_GLOBAL_BYTE_62E1 VU8(0x801462e1u)
-#define BATTLE_GLOBAL_BYTE_62E2 VU8(0x801462e2u)
-#define BATTLE_GLOBAL_HALF_62E8 VU16(0x801462e8u)
-#define BATTLE_GLOBAL_BYTE_62EA VU8(0x801462eau)
-#define BATTLE_GLOBAL_BYTE_62EE VU8(0x801462eeu)
-#define BATTLE_GLOBAL_BYTE_62F0 VU8(0x801462f0u)
-#define BATTLE_GLOBAL_BYTE_62F4 VU8(0x801462f4u)
-#define BATTLE_GLOBAL_BYTE_62F3 VU8(0x801462f3u)
+extern vu8 BATTLE_LOCAL_BYTE_62EC;
+extern vu8 BATTLE_GLOBAL_BYTE_62E0;
+extern vu8 BATTLE_GLOBAL_BYTE_62E1;
+extern vu8 BATTLE_GLOBAL_BYTE_62E2;
+extern vu16 BATTLE_GLOBAL_HALF_62E8;
+extern vu8 BATTLE_GLOBAL_BYTE_62EA;
+extern vu8 BATTLE_GLOBAL_BYTE_62EE;
+extern vu8 BATTLE_GLOBAL_BYTE_62F0;
+extern vu8 BATTLE_GLOBAL_BYTE_62F4;
+extern vu8 BATTLE_GLOBAL_BYTE_62F3;
 #define BATTLE_GLOBAL_BYTE_62FC(index) \
- VU8(0x801462fcu + (u32)(index))
+ (*(volatile volatile u8 *)(0x801462fcu + (u32)(index)))
 #define BATTLE_GLOBAL_BYTE_62F6(index) \
- VU8(0x801462f6u + (u32)(index))
-#define BATTLE_GLOBAL_BYTE_6301 VU8(0x80146301u)
-#define BATTLE_GLOBAL_BYTE_6302 VU8(0x80146302u)
-#define BATTLE_GLOBAL_BYTE_6303 VU8(0x80146303u)
+ (*(volatile volatile u8 *)(0x801462f6u + (u32)(index)))
+extern vu8 BATTLE_GLOBAL_BYTE_6301;
+extern vu8 BATTLE_GLOBAL_BYTE_6302;
+extern vu8 BATTLE_GLOBAL_BYTE_6303;
 #define BATTLE_GLOBAL_BYTE_630C(index) \
- VU8(0x8014630cu + (u32)(index))
-#define BATTLE_GLOBAL_WORD_59F0 VU32(0x801459f0u)
-#define BATTLE_GLOBAL_WORD_598C VU32(0x8014598cu)
+ (*(volatile volatile u8 *)(0x8014630cu + (u32)(index)))
+extern vu32 BATTLE_GLOBAL_WORD_59F0;
+extern vu32 BATTLE_GLOBAL_WORD_598C;
 #define BATTLE_UI_CHAR_BUFFER VPTR(u8, 0x80145ad4u)
-#define BATTLE_SCRATCH_HALF_000 VU16(0x1f800000u)
-#define BATTLE_SCRATCH_BYTE_000 VU8(0x1f800000u)
-#define BATTLE_SCRATCH_BYTE_001 VU8(0x1f800001u)
-#define BATTLE_SCRATCH_BYTE_002 VU8(0x1f800002u)
-#define BATTLE_LOCAL_FLAG_63CE VU8(0x801463ceu)
-#define BATTLE_GLOBAL_BYTE_6325 VU8(0x80146325u)
-#define BATTLE_GLOBAL_BYTE_6327 VU8(0x80146327u)
-#define BATTLE_GLOBAL_BYTE_6328 VU8(0x80146328u)
-#define BATTLE_GLOBAL_WORD_632C VU32(0x8014632cu)
-#define BATTLE_GLOBAL_WORD_6330 VU32(0x80146330u)
+extern vu16 BATTLE_SCRATCH_HALF_000;
+extern vu8 BATTLE_SCRATCH_BYTE_000;
+extern vu8 BATTLE_SCRATCH_BYTE_001;
+extern vu8 BATTLE_SCRATCH_BYTE_002;
+extern vu8 BATTLE_LOCAL_FLAG_63CE;
+extern vu8 BATTLE_GLOBAL_BYTE_6325;
+extern vu8 BATTLE_GLOBAL_BYTE_6327;
+extern vu8 BATTLE_GLOBAL_BYTE_6328;
+extern vu32 BATTLE_GLOBAL_WORD_632C;
+extern vu32 BATTLE_GLOBAL_WORD_6330;
 #define BATTLE_GLOBAL_HALF_6334(index) \
- VU16(0x80146334u + ((u32)(index) * 2u))
+ (*(volatile volatile u16 *)(0x80146334u + ((u32)(index) * 2u)))
 #define BATTLE_GLOBAL_BYTE_6354(index) \
- VU8(0x80146354u + (u32)(index))
-#define BATTLE_GLOBAL_BYTE_6374 VU8(0x80146374u)
-#define BATTLE_GLOBAL_BYTE_6375 VU8(0x80146375u)
+ (*(volatile volatile u8 *)(0x80146354u + (u32)(index)))
+extern vu8 BATTLE_GLOBAL_BYTE_6374;
+extern vu8 BATTLE_GLOBAL_BYTE_6375;
 #define BATTLE_GLOBAL_PTR_6380 VPPTR(u8, 0x80146380u)
-#define BATTLE_GLOBAL_BYTE_6384 VU8(0x80146384u)
-#define BATTLE_GLOBAL_BYTE_6324 VU8(0x80146324u)
-#define BATTLE_GLOBAL_BYTE_6304 VU8(0x80146304u)
-#define BATTLE_GLOBAL_BYTE_6308 VU8(0x80146308u)
-#define BATTLE_GLOBAL_HALF_63B8 VU16(0x801463b8u)
-#define BATTLE_GLOBAL_BYTE_63BA VU8(0x801463bau)
-#define BATTLE_GLOBAL_HALF_63C0 VU16(0x801463c0u)
-#define BATTLE_GLOBAL_HALF_63C2 VU16(0x801463c2u)
-#define BATTLE_GLOBAL_BYTE_6322 VU8(0x80146322u)
-#define BATTLE_GLOBAL_BYTE_6323 VU8(0x80146323u)
-#define BATTLE_GLOBAL_BYTE_63CE VU8(0x801463ceu)
-#define BATTLE_GLOBAL_HALF_63DA VU16(0x801463dau)
-#define BATTLE_GLOBAL_BYTE_63CA VU8(0x801463cau)
-#define BATTLE_GLOBAL_HALF_63D0 VU16(0x801463d0u)
-#define BATTLE_GLOBAL_BYTE_C303 VU8(0x801ec303u)
-#define BATTLE_GLOBAL_BYTE_EC324 VU8(0x801ec324u)
-#define BATTLE_GLOBAL_HALF_EC30C VU16(0x801ec30cu)
-#define BATTLE_GLOBAL_HALF_EC2EE VU16(0x801ec2eeu)
-#define BATTLE_UI_BYTE_8356 VU8(0x80148356u)
-#define BATTLE_UI_BYTE_8357 VU8(0x80148357u)
-#define BATTLE_UI_HALF_8358 VU16(0x80148358u)
-#define BATTLE_UI_HALF_835A VU16(0x8014835au)
-#define BATTLE_UI_BYTE_835C VU8(0x8014835cu)
-#define BATTLE_UI_BYTE_835D VU8(0x8014835du)
-#define BATTLE_UI_BYTE_835E VU8(0x8014835eu)
-#define BATTLE_UI_BYTE_837A VU8(0x8014837au)
-#define BATTLE_UI_BYTE_837B VU8(0x8014837bu)
-#define BATTLE_UI_HALF_837C VU16(0x8014837cu)
-#define BATTLE_UI_HALF_837E VU16(0x8014837eu)
-#define BATTLE_UI_BYTE_839E VU8(0x8014839eu)
-#define BATTLE_UI_BYTE_839F VU8(0x8014839fu)
-#define BATTLE_UI_BYTE_83C2 VU8(0x801483c2u)
-#define BATTLE_UI_BYTE_83C3 VU8(0x801483c3u)
-#define BATTLE_UI_HALF_83C4 VU16(0x801483c4u)
-#define BATTLE_UI_HALF_83C6 VU16(0x801483c6u)
-#define BATTLE_UI_BYTE_8332 VU8(0x80148332u)
-#define BATTLE_UI_BYTE_8333 VU8(0x80148333u)
+extern vu8 BATTLE_GLOBAL_BYTE_6384;
+extern vu8 BATTLE_GLOBAL_BYTE_6324;
+extern vu8 BATTLE_GLOBAL_BYTE_6304;
+extern vu8 BATTLE_GLOBAL_BYTE_6308;
+extern vu16 BATTLE_GLOBAL_HALF_63B8;
+extern vu8 BATTLE_GLOBAL_BYTE_63BA;
+extern vu16 BATTLE_GLOBAL_HALF_63C0;
+extern vu16 BATTLE_GLOBAL_HALF_63C2;
+extern vu8 BATTLE_GLOBAL_BYTE_6322;
+extern vu8 BATTLE_GLOBAL_BYTE_6323;
+extern vu8 BATTLE_GLOBAL_BYTE_63CE;
+extern vu16 BATTLE_GLOBAL_HALF_63DA;
+extern vu8 BATTLE_GLOBAL_BYTE_63CA;
+extern vu16 BATTLE_GLOBAL_HALF_63D0;
+extern vu8 BATTLE_GLOBAL_BYTE_C303;
+extern vu8 BATTLE_GLOBAL_BYTE_EC324;
+extern vu16 BATTLE_GLOBAL_HALF_EC30C;
+extern vu16 BATTLE_GLOBAL_HALF_EC2EE;
+extern vu8 BATTLE_UI_BYTE_8356;
+extern vu8 BATTLE_UI_BYTE_8357;
+extern vu16 BATTLE_UI_HALF_8358;
+extern vu16 BATTLE_UI_HALF_835A;
+extern vu8 BATTLE_UI_BYTE_835C;
+extern vu8 BATTLE_UI_BYTE_835D;
+extern vu8 BATTLE_UI_BYTE_835E;
+extern vu8 BATTLE_UI_BYTE_837A;
+extern vu8 BATTLE_UI_BYTE_837B;
+extern vu16 BATTLE_UI_HALF_837C;
+extern vu16 BATTLE_UI_HALF_837E;
+extern vu8 BATTLE_UI_BYTE_839E;
+extern vu8 BATTLE_UI_BYTE_839F;
+extern vu8 BATTLE_UI_BYTE_83C2;
+extern vu8 BATTLE_UI_BYTE_83C3;
+extern vu16 BATTLE_UI_HALF_83C4;
+extern vu16 BATTLE_UI_HALF_83C6;
+extern vu8 BATTLE_UI_BYTE_8332;
+extern vu8 BATTLE_UI_BYTE_8333;
 #define BATTLE_UI_BYTE_8333_INDEX(index) \
- VU8(0x80148333u + ((u32)(index) * 0x24u))
+ (*(volatile volatile u8 *)(0x80148333u + ((u32)(index) * 0x24u)))
 #define BATTLE_UI_BYTE_833A(index) \
- VU8(0x8014833au + ((u32)(index) * 0x24u))
-#define BATTLE_UI_HALF_8334 VU16(0x80148334u)
-#define BATTLE_UI_HALF_8336 VU16(0x80148336u)
+ (*(volatile volatile u8 *)(0x8014833au + ((u32)(index) * 0x24u)))
+extern vu16 BATTLE_UI_HALF_8334;
+extern vu16 BATTLE_UI_HALF_8336;
 #define BATTLE_LOCAL_SCRATCH_PTR \
  VPPTR(Battle03LocalWork, 0x1f800044u)
 #define BATTLE_ENEMY_SCRATCH_PTR \
@@ -153,143 +153,143 @@ typedef struct Battle03QueuedSlot {
  VPPTR(Battle03EnemyWork, 0x801eb4e8u)
 #define BATTLE_CURRENT_QUEUED_SLOT_PTR \
  VPPTR(Battle03QueuedSlot, 0x801ec2e0u)
-#define BATTLE_CURRENT_QUEUED_WORD_4B20 VU32(0x801eb4e0u)
+extern vu32 BATTLE_CURRENT_QUEUED_WORD_4B20;
 #define BATTLE_CURRENT_QUEUED_PTR_4B20 VPPTR(u8, 0x801eb4e0u)
 #define BATTLE_SLOT_STORE_FLAG(index) \
- VU8(0x801ec339u + ((u32)(index) * 0x78u))
+ (*(volatile volatile u8 *)(0x801ec339u + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_PTR(index) \
- VU32(0x801ec3a4u + ((u32)(index) * 0x78u))
+ (*(volatile volatile u32 *)(0x801ec3a4u + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_WORD_34(index) \
- VU32(0x801ec364u + ((u32)(index) * 0x78u))
+ (*(volatile volatile u32 *)(0x801ec364u + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_WORD_38(index) \
- VU32(0x801ec368u + ((u32)(index) * 0x78u))
+ (*(volatile volatile u32 *)(0x801ec368u + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_WORD_3C(index) \
- VU32(0x801ec36cu + ((u32)(index) * 0x78u))
+ (*(volatile volatile u32 *)(0x801ec36cu + ((u32)(index) * 0x78u)))
 #define BATTLE_EVENT_SLOT_FLAG(index) \
- VU8(0x801eb4f0u + ((u32)(index) * 0x0cu))
+ (*(volatile volatile u8 *)(0x801eb4f0u + ((u32)(index) * 0x0cu)))
 #define BATTLE_EVENT_SLOT_A(index) \
- VU8(0x801eb4f1u + ((u32)(index) * 0x0cu))
+ (*(volatile volatile u8 *)(0x801eb4f1u + ((u32)(index) * 0x0cu)))
 #define BATTLE_EVENT_SLOT_B(index) \
- VU8(0x801eb4f2u + ((u32)(index) * 0x0cu))
+ (*(volatile volatile u8 *)(0x801eb4f2u + ((u32)(index) * 0x0cu)))
 #define BATTLE_EVENT_SLOT_C(index) \
- VU8(0x801eb4f3u + ((u32)(index) * 0x0cu))
+ (*(volatile volatile u8 *)(0x801eb4f3u + ((u32)(index) * 0x0cu)))
 #define BATTLE_EVENT_SLOT_KIND(index) \
- VU8(0x801eb4f5u + ((u32)(index) * 0x0cu))
+ (*(volatile volatile u8 *)(0x801eb4f5u + ((u32)(index) * 0x0cu)))
 #define BATTLE_EVENT_SLOT_MODE(index) \
- VU8(0x801eb4f6u + ((u32)(index) * 0x0cu))
+ (*(volatile volatile u8 *)(0x801eb4f6u + ((u32)(index) * 0x0cu)))
 #define BATTLE_EVENT_SLOT_WORD(index) \
- VU32(0x801eb4f4u + ((u32)(index) * 0x0cu))
+ (*(volatile volatile u32 *)(0x801eb4f4u + ((u32)(index) * 0x0cu)))
 #define BATTLE_EVENT_SLOT_HALF(index) \
- VU16(0x801eb4f8u + ((u32)(index) * 0x0cu))
+ (*(volatile volatile u16 *)(0x801eb4f8u + ((u32)(index) * 0x0cu)))
 #define BATTLE_EVENT_SLOT_BYTE(index) \
- VU8(0x801eb4fau + ((u32)(index) * 0x0cu))
+ (*(volatile volatile u8 *)(0x801eb4fau + ((u32)(index) * 0x0cu)))
 #define BATTLE_SLOT_STORE_BYTE_01(index) \
- VU8(0x801ec331u + ((u32)(index) * 0x78u))
+ (*(volatile volatile u8 *)(0x801ec331u + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_BYTE_02(index) \
- VU8(0x801ec332u + ((u32)(index) * 0x78u))
+ (*(volatile volatile u8 *)(0x801ec332u + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_BYTE_05(index) \
- VU8(0x801ec335u + ((u32)(index) * 0x78u))
+ (*(volatile volatile u8 *)(0x801ec335u + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_BYTE_06(index) \
- VU8(0x801ec336u + ((u32)(index) * 0x78u))
+ (*(volatile volatile u8 *)(0x801ec336u + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_BYTE_29(index) \
- VU8(0x801ec359u + ((u32)(index) * 0x78u))
+ (*(volatile volatile u8 *)(0x801ec359u + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_BYTE_5C(index) \
- VU8(0x801ec38cu + ((u32)(index) * 0x78u))
+ (*(volatile volatile u8 *)(0x801ec38cu + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_BYTE_5D(index) \
- VU8(0x801ec38du + ((u32)(index) * 0x78u))
+ (*(volatile volatile u8 *)(0x801ec38du + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_BYTE_5E(index) \
- VU8(0x801ec38eu + ((u32)(index) * 0x78u))
+ (*(volatile volatile u8 *)(0x801ec38eu + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_BYTE_5F(index) \
- VU8(0x801ec38fu + ((u32)(index) * 0x78u))
+ (*(volatile volatile u8 *)(0x801ec38fu + ((u32)(index) * 0x78u)))
 #define BATTLE_LOCAL_STATE_TABLE \
  CVPTR(Battle03Handler, 0x801eb120u)
 #define BATTLE_LOCAL_FLAGS_80(work) \
- VU16((volatile u8*)(work) + 0x80u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x80u))
 #define BATTLE_LOCAL_BYTE_79(work) \
- VU8((volatile u8*)(work) + 0x79u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x79u))
 #define BATTLE_LOCAL_BYTE_7A(work) \
- VU8((volatile u8*)(work) + 0x7au)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x7au))
 #define BATTLE_LOCAL_BYTE_82(work) \
- VU8((volatile u8*)(work) + 0x82u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x82u))
 #define BATTLE_LOCAL_BYTE_85(work) \
- VU8((volatile u8*)(work) + 0x85u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x85u))
 #define BATTLE_LOCAL_BYTE_86(work) \
- VU8((volatile u8*)(work) + 0x86u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x86u))
 #define BATTLE_LOCAL_BYTE_87(work) \
- VU8((volatile u8*)(work) + 0x87u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x87u))
 #define BATTLE_LOCAL_BYTE_4B(work) \
- VU8((volatile u8*)(work) + 0x4bu)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x4bu))
 #define BATTLE_LOCAL_BYTE_09(work) \
- VU8((volatile u8*)(work) + 9u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 9u))
 #define BATTLE_LOCAL_BYTE_0A(work) \
- VU8((volatile u8*)(work) + 10u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 10u))
 #define BATTLE_LOCAL_BYTE_119(work) \
- VU8((volatile u8*)(work) + 0x119u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x119u))
 #define BATTLE_LOCAL_BYTE_118(work) \
- VU8((volatile u8*)(work) + 0x118u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x118u))
 #define BATTLE_LOCAL_HALF_11A(work) \
- VU16((volatile u8*)(work) + 0x11au)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x11au))
 #define BATTLE_LOCAL_WORD_124(work) \
- VU32((volatile u8*)(work) + 0x124u)
+ (*(volatile volatile u32 *)((volatile u8*)(work) + 0x124u))
 #define BATTLE_LOCAL_WORD_128(work) \
- VU32((volatile u8*)(work) + 0x128u)
+ (*(volatile volatile u32 *)((volatile u8*)(work) + 0x128u))
 #define BATTLE_LOCAL_KIND_MASK(kind) \
- VU16(0x801ca71cu + ((u32)(kind) * 0x14u))
+ (*(volatile volatile u16 *)(0x801ca71cu + ((u32)(kind) * 0x14u)))
 #define BATTLE_PANEL_SLOT_MASK(kind) \
- VU8(0x801d90ebu + ((u32)(kind) * 0x18u))
+ (*(volatile volatile u8 *)(0x801d90ebu + ((u32)(kind) * 0x18u)))
 #define BATTLE_LOCAL_HALF_88(work) \
- VU16((volatile u8*)(work) + 0x88u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x88u))
 #define BATTLE_LOCAL_HALF_8A(work) \
- VU16((volatile u8*)(work) + 0x8au)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x8au))
 #define BATTLE_LOCAL_HALF_90(work) \
- VU16((volatile u8*)(work) + 0x90u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x90u))
 #define BATTLE_LOCAL_HALF_92(work) \
- VU16((volatile u8*)(work) + 0x92u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x92u))
 #define BATTLE_LOCAL_HALF_96(work) \
- VU16((volatile u8*)(work) + 0x96u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x96u))
 #define BATTLE_LOCAL_HALF_98(work) \
- VU16((volatile u8*)(work) + 0x98u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x98u))
 #define BATTLE_LOCAL_BYTE_8C(work) \
- VU8((volatile u8*)(work) + 0x8cu)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x8cu))
 #define BATTLE_LOCAL_BYTE_2A(work) \
- VU8((volatile u8*)(work) + 0x2au)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x2au))
 #define BATTLE_LOCAL_BYTE_9E(work) \
- VU8((volatile u8*)(work) + 0x9eu)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x9eu))
 #define BATTLE_LOCAL_BYTE_A6(work) \
- VU8((volatile u8*)(work) + 0xa6u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0xa6u))
 #define BATTLE_LOCAL_BYTE_A9(work) \
- VU8((volatile u8*)(work) + 0xa9u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0xa9u))
 #define BATTLE_LOCAL_BYTE_21(work) \
- VU8((volatile u8*)(work) + 0x21u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x21u))
 #define BATTLE_LOCAL_HALF_1C(work) \
- VU16((volatile u8*)(work) + 0x1cu)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x1cu))
 #define BATTLE_LOCAL_HALF_1E(work) \
- VU16((volatile u8*)(work) + 0x1eu)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x1eu))
 #define BATTLE_LOCAL_BYTE_136(work) \
- VU8((volatile u8*)(work) + 0x136u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x136u))
 #define BATTLE_LOCAL_BYTE_137(work) \
- VU8((volatile u8*)(work) + 0x137u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x137u))
 #define BATTLE_LOCAL_BYTE_138(work) \
- VU8((volatile u8*)(work) + 0x138u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x138u))
 #define BATTLE_LOCAL_BYTE_139(work) \
- VU8((volatile u8*)(work) + 0x139u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x139u))
 #define BATTLE_LOCAL_WORD_134(work) \
- VU32((volatile u8*)(work) + 0x134u)
+ (*(volatile volatile u32 *)((volatile u8*)(work) + 0x134u))
 #define BATTLE_LOCAL_BYTE_134(work) \
- VU8((volatile u8*)(work) + 0x134u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x134u))
 #define BATTLE_LOCAL_BYTE_120(work) \
- VU8((volatile u8*)(work) + 0x120u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x120u))
 #define BATTLE_LOCAL_BYTE_121(work) \
- VU8((volatile u8*)(work) + 0x121u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x121u))
 #define BATTLE_LOCAL_BYTE_122(work) \
- VU8((volatile u8*)(work) + 0x122u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x122u))
 #define BATTLE_LOCAL_BYTE_13C(work) \
- VU8((volatile u8*)(work) + 0x13cu)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x13cu))
 #define BATTLE_LOCAL_HALF_2C(work) \
- VU16((volatile u8*)(work) + 0x2cu)
-#define BATTLE_GLOBAL_BYTE_63C9 VU8(0x801463c9u)
-#define BATTLE_GLOBAL_BYTE_44F58 VU8(0x80144f58u)
-#define BATTLE_GLOBAL_BYTE_4952 VS8(0x80144952u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x2cu))
+extern vu8 BATTLE_GLOBAL_BYTE_63C9;
+extern vu8 BATTLE_GLOBAL_BYTE_44F58;
+extern s8 BATTLE_GLOBAL_BYTE_4952;
 #define BATTLE_LOCAL_STATE_TABLE_015C \
  CVPTR(Battle03Handler, 0x801eb15cu)
 #define BATTLE_LOCAL_STATE_TABLE_0188 \
@@ -315,61 +315,61 @@ typedef struct Battle03QueuedSlot {
 #define BATTLE_ENEMY_DISPATCH_TABLE_B \
  CVPTR(Battle03Handler, 0x801eb298u)
 #define BATTLE_ENEMY_FLAGS_82(work) \
- VU16((volatile u8*)(work) + 0x82u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x82u))
 #define BATTLE_ENEMY_FLAGS_80(work) \
- VU16((volatile u8*)(work) + 0x80u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x80u))
 #define BATTLE_ENEMY_BYTE_7E(work) \
- VU8((volatile u8*)(work) + 0x7eu)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x7eu))
 #define BATTLE_ENEMY_BYTE_7D(work) \
- VU8((volatile u8*)(work) + 0x7du)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x7du))
 #define BATTLE_ENEMY_BYTE_7C(work) \
- VU8((volatile u8*)(work) + 0x7cu)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x7cu))
 #define BATTLE_ENEMY_BYTE_7F(work) \
- VU8((volatile u8*)(work) + 0x7fu)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x7fu))
 #define BATTLE_ENEMY_BYTE_02(work) \
- VU8((volatile u8*)(work) + 2u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 2u))
 #define BATTLE_ENEMY_BYTE_03(work) \
- VU8((volatile u8*)(work) + 3u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 3u))
 #define BATTLE_ENEMY_BYTE_04(work) \
- VU8((volatile u8*)(work) + 4u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 4u))
 #define BATTLE_ENEMY_BYTE_05(work) \
- VU8((volatile u8*)(work) + 5u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 5u))
 #define BATTLE_ENEMY_HALF_AA(work) \
- VU16((volatile u8*)(work) + 0xaau)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0xaau))
 #define BATTLE_ENEMY_HALF_94(work) \
- VU16((volatile u8*)(work) + 0x94u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0x94u))
 #define BATTLE_ENEMY_BYTE_88(work) \
- VU8((volatile u8*)(work) + 0x88u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x88u))
 #define BATTLE_ENEMY_HALF_A8(work) \
- VU16((volatile u8*)(work) + 0xa8u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0xa8u))
 #define BATTLE_ENEMY_HALF_A0(work) \
- VU16((volatile u8*)(work) + 0xa0u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0xa0u))
 #define BATTLE_ENEMY_HALF_F8(work) \
- VU16((volatile u8*)(work) + 0xf8u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0xf8u))
 #define BATTLE_ENEMY_HALF_FA(work) \
- VU16((volatile u8*)(work) + 0xfau)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0xfau))
 #define BATTLE_ENEMY_BYTE_F5(work) \
- VU8((volatile u8*)(work) + 0xf5u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0xf5u))
 #define BATTLE_ENEMY_BYTE_FC(work) \
- VU8((volatile u8*)(work) + 0xfcu)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0xfcu))
 #define BATTLE_ENEMY_BYTE_FD(work) \
- VU8((volatile u8*)(work) + 0xfdu)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0xfdu))
 #define BATTLE_ENEMY_HALF_F6(work) \
- VU16((volatile u8*)(work) + 0xf6u)
+ (*(volatile volatile u16 *)((volatile u8*)(work) + 0xf6u))
 #define BATTLE_ENEMY_WORD_100(work) \
- VU32((volatile u8*)(work) + 0x100u)
+ (*(volatile volatile u32 *)((volatile u8*)(work) + 0x100u))
 #define BATTLE_ENEMY_BYTE_100(work) \
- VU8((volatile u8*)(work) + 0x100u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x100u))
 #define BATTLE_ENEMY_WORD_104(work) \
- VU32((volatile u8*)(work) + 0x104u)
+ (*(volatile volatile u32 *)((volatile u8*)(work) + 0x104u))
 #define BATTLE_ENEMY_BYTE_112(work) \
- VU8((volatile u8*)(work) + 0x112u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x112u))
 #define BATTLE_ENEMY_BYTE_114(work) \
- VU8((volatile u8*)(work) + 0x114u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x114u))
 #define BATTLE_ENEMY_BYTE_115(work) \
- VU8((volatile u8*)(work) + 0x115u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0x115u))
 #define BATTLE_ENEMY_BYTE_E6(work) \
- VU8((volatile u8*)(work) + 0xe6u)
+ (*(volatile volatile u8 *)((volatile u8*)(work) + 0xe6u))
 #define BATTLE_ENEMY_PTR_EC(work) \
  VPPTR(u8, (volatile u8*)(work) + 0xecu)
 #define BATTLE_WEIGHT_TABLE_0394 CVPTR(u8, 0x801eb394u)
@@ -393,11 +393,11 @@ typedef struct Battle03QueuedSlot {
 #define BATTLE_TRIGGER_TABLE_6178 ((volatile u32**)0x800b6178u)
 #define BATTLE_VARIANCE_TABLE_AF94 CVPTR(u8, 0x801eaf94u)
 #define BATTLE_TARGET_MODE_PACK(index) \
- VU8(0x800b51f8u + (u32)(index))
+ (*(volatile volatile u8 *)(0x800b51f8u + (u32)(index)))
 #define BATTLE_ENEMY_SLOT_KIND(index) \
- VU8(0x801eb6acu + ((u32)(index) * 0x118u))
+ (*(volatile volatile u8 *)(0x801eb6acu + ((u32)(index) * 0x118u)))
 #define BATTLE_KIND_BYTE_00(kind) \
- VU8(0x801ca718u + ((u32)(kind) * 0x14u))
+ (*(volatile volatile u8 *)(0x801ca718u + ((u32)(kind) * 0x14u)))
 #define BATTLE_LOCAL_PRESENTATION_STATE1_TABLE \
  CVPTR(Battle03Handler, 0x801eb3b0u)
 #define BATTLE_LOCAL_PRESENTATION_BYTE3_TABLE \
@@ -414,35 +414,35 @@ typedef struct Battle03QueuedSlot {
  CVPTR(Battle03ForwardingHandler, 0x801d0fecu)
 #define BATTLE_PANEL_TASK_PTR VPPTR(u8, 0x80148648u)
 #define BATTLE_PANEL_TASK_HALF_04 \
- VU16(BATTLE_PANEL_TASK_PTR + 4)
+ (*(volatile volatile u16 *)(BATTLE_PANEL_TASK_PTR + 4))
 #define BATTLE_PANEL_TASK_HALF_06 \
- VU16(BATTLE_PANEL_TASK_PTR + 6)
+ (*(volatile volatile u16 *)(BATTLE_PANEL_TASK_PTR + 6))
 #define BATTLE_PANEL_TASK_BYTE_03 \
- VU8(BATTLE_PANEL_TASK_PTR + 3)
+ (*(volatile volatile u8 *)(BATTLE_PANEL_TASK_PTR + 3))
 #define BATTLE_PANEL_TASK_BYTE_0F \
- VU8(BATTLE_PANEL_TASK_PTR + 0xf)
+ (*(volatile volatile u8 *)(BATTLE_PANEL_TASK_PTR + 0xf))
 #define BATTLE_PANEL_TASK_BYTE_0A \
- VU8(BATTLE_PANEL_TASK_PTR + 0x0au)
+ (*(volatile volatile u8 *)(BATTLE_PANEL_TASK_PTR + 0x0au))
 #define BATTLE_PANEL_TASK_BYTE_0B \
- VU8(BATTLE_PANEL_TASK_PTR + 0x0bu)
+ (*(volatile volatile u8 *)(BATTLE_PANEL_TASK_PTR + 0x0bu))
 #define BATTLE_PANEL_TASK_BYTE_0D \
- VU8(BATTLE_PANEL_TASK_PTR + 0x0du)
+ (*(volatile volatile u8 *)(BATTLE_PANEL_TASK_PTR + 0x0du))
 #define BATTLE_PANEL_TASK_HALF_10 \
- VU16(BATTLE_PANEL_TASK_PTR + 0x10)
+ (*(volatile volatile u16 *)(BATTLE_PANEL_TASK_PTR + 0x10))
 #define BATTLE_PANEL_TASK_HALF_12 \
- VU16(BATTLE_PANEL_TASK_PTR + 0x12)
-#define BATTLE_UI_RING_INDEX VU8(0x801ebf04u)
-#define BATTLE_UI_RING_TARGET VU8(0x801ec328u)
+ (*(volatile volatile u16 *)(BATTLE_PANEL_TASK_PTR + 0x12))
+extern vu8 BATTLE_UI_RING_INDEX;
+extern vu8 BATTLE_UI_RING_TARGET;
 #define BATTLE_UI_RING_BYTE0(index) \
- VU8(0x801eb5b0u + ((u32)(index) * 8u))
+ (*(volatile volatile u8 *)(0x801eb5b0u + ((u32)(index) * 8u)))
 #define BATTLE_UI_RING_BYTE1(index) \
- VU8(0x801eb5b1u + ((u32)(index) * 8u))
+ (*(volatile volatile u8 *)(0x801eb5b1u + ((u32)(index) * 8u)))
 #define BATTLE_UI_RING_WORD2(index) \
- VU32(0x801eb5b4u + ((u32)(index) * 8u))
+ (*(volatile volatile u32 *)(0x801eb5b4u + ((u32)(index) * 8u)))
 #define BATTLE_UI_RING_BYTE(index) \
- VU8(0x801eb4fau + ((u32)(index) * 0x0cu))
+ (*(volatile volatile u8 *)(0x801eb4fau + ((u32)(index) * 0x0cu)))
 #define BATTLE_UI_RING_WORD(index) \
- VU32(0x801eb4f4u + ((u32)(index) * 0x0cu))
+ (*(volatile volatile u32 *)(0x801eb4f4u + ((u32)(index) * 0x0cu)))
 #define BATTLE_UI_MODE_TABLE_AF27 CVPTR(u8, 0x801eaf27u)
 #define BATTLE_QUAD_OFFSET_TABLE_AD30 CVPTR(s16, 0x801ead30u)
 #define BATTLE_SPRITE_OFFSET_TABLE_AE50 CVPTR(s16, 0x801eae50u)
