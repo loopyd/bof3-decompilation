@@ -62,7 +62,9 @@ def candidate_targets(
         if not target_matches_module(row, module):
             continue
         size = target_size(row)
-        if size is None or size < min_size:
+        if size is None and min_size > 0:
+            continue
+        if size is not None and size < min_size:
             continue
         has_source = target_source_path(row) is not None
         if source == "missing" and has_source:

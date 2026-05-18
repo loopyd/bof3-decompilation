@@ -95,7 +95,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--asm-root",
         type=Path,
         default=layout.out_dir / "asm-diff",
-        help="directory containing out/asm-diff-style summary.json files",
+        help="directory containing output/asm-diff-style summary.json files",
     )
     parser.add_argument(
         "--ghidra-function-index",

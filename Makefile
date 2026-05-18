@@ -7,7 +7,7 @@ FORMAT_JOBS := $(shell nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/nul
 
 .DEFAULT_GOAL := help
 
-.PHONY: help venv doctor doctor-open setup-open setup pipeline extract inventory ghidra decomp-full-ready harness harness-ready lift-ready binary-parity configure build test fmt format format-c format-python
+.PHONY: help venv doctor doctor-open setup-open setup pipeline extract inventory ghidra decomp-full-ready harness harness-ready lift-ready configure build test fmt format format-c format-python
 
 help:
 	@printf '\n%s\n' 'Core'
@@ -24,9 +24,8 @@ help:
 	@printf '  %-16s %s\n' 'make decomp-full-ready' 'Refresh extraction, Ghidra, symbol indexes, and harness state'
 	@printf '\n%s\n' 'Harness'
 	@printf '  %-16s %s\n' 'make harness' 'Show harness status and next action'
-	@printf '  %-16s %s\n' 'make harness-ready' 'Refresh harness state, maps, reports, and dashboard'
+	@printf '  %-16s %s\n' 'make harness-ready' 'Refresh harness state, reports, and dashboard'
 	@printf '  %-16s %s\n' 'make lift-ready' 'Refresh cheap harness state for function lifting'
-	@printf '  %-16s %s\n' 'make binary-parity' 'Build and diff compiled raw .bin files against originals'
 	@printf '\n%s\n' 'Build'
 	@printf '  %-16s %s\n' 'make configure' 'Configure the BOF3 PSX CMake preset'
 	@printf '  %-16s %s\n' 'make build' 'Build the BOF3 PSX CMake preset'
@@ -77,16 +76,12 @@ decomp-full-ready: .venv/.ready
 
 harness: .venv/.ready
 	@$(BIN_DIR)/harness status
-	@$(BIN_DIR)/harness resume
 
 harness-ready: .venv/.ready
 	@$(BIN_DIR)/pipeline harness-ready
 
 lift-ready: .venv/.ready
 	@$(BIN_DIR)/pipeline lift-ready
-
-binary-parity: .venv/.ready
-	@$(BIN_DIR)/pipeline binary-parity
 
 configure:
 	@$(BIN_DIR)/configure

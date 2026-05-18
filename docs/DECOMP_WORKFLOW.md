@@ -34,14 +34,14 @@ Pick one C source file under `bof3/src/` and run:
 bin/asm-diff-one bof3/src/core/emi/func_80162178.c
 ```
 
-The harness equivalent records an event in `out/harness/harness.sqlite3` while
+The harness equivalent records an event in `output/harness/harness.sqlite3` while
 using the same asm-diff implementation:
 
 ```bash
 bin/harness verify function bof3/src/core/emi/func_80162178.c
 ```
 
-After `bin/harness analyze`, existing lifted source files are also available as
+After `bin/harness refresh`, existing lifted source files are also available as
 function queue targets. Use candidates to pick a target, then lift it before
 editing:
 
@@ -52,13 +52,13 @@ bin/harness lift <target-id>
 
 This loop uses the existing Ghidra export. Do not rerun Ghidra for normal
 function work. Ghidra headless writes are single-writer and must go through
-`bin/harness ghidra import-project` or `bin/harness ghidra export-symbols`, which
-are also what the Ghidra refresh pipelines use.
+`bin/harness ghidra import-project --no-analysis`,
+`bin/harness ghidra analyze`, or `bin/harness ghidra export`, which are also
+what the Ghidra refresh pipelines use.
 
 Use `func.m2c.c` as the first draft only. Edit or create one source file under
-`bof3/src/...`, then run `bin/harness verify function <source>`. For
-source-backed targets, `bin/harness diff <target-id>` runs the same asm-diff
-loop and records the result on the target. To scan an existing module, use:
+`bof3/src/...`, then run `bin/harness verify function <source>`. To scan an
+existing module, use:
 
 ```bash
 bin/harness verify module emi:ETC/GAME#0 --allow-different
@@ -69,27 +69,27 @@ The verify command:
 1. builds only that CMake object target,
 2. infers the original address from `@source` or `func_XXXXXXXX`,
 3. infers the byte size from the next sibling source file,
-4. extracts the original bytes from `build/extracted/SLUS_004.22` for core
-   sources or `build/extracted/LOGO/LOGO.EXE` for logo sources,
+4. extracts the original bytes from `output/extracted/SLUS_004.22` for core
+   sources or `output/extracted/LOGO/LOGO.EXE` for logo sources,
 5. writes extracted original asm, generated compiler asm, normalized asm, and a
-   unified diff under `out/asm-diff/<function>/`.
+   unified diff under `output/asm-diff/<function>/`.
 
 Important outputs:
 
-- `out/asm-diff/<function>/summary.json`
-- `out/asm-diff/<function>/diff.patch`
-- `out/asm-diff/<function>/original.objdump.s`
-- `out/asm-diff/<function>/current.compiler.s`
-- `out/asm-diff/<function>/current.objdump.s`
-- `out/asm-diff/<function>/original.normalized.s`
-- `out/asm-diff/<function>/current.normalized.s`
+- `output/asm-diff/<function>/summary.json`
+- `output/asm-diff/<function>/diff.patch`
+- `output/asm-diff/<function>/original.objdump.s`
+- `output/asm-diff/<function>/current.compiler.s`
+- `output/asm-diff/<function>/current.objdump.s`
+- `output/asm-diff/<function>/original.normalized.s`
+- `output/asm-diff/<function>/current.normalized.s`
 
 `bof3/src/...` is the authored decomp source tree. `bof3/asm/...` mirrors it
 for reviewed original assembly baselines or fallback assembly. Generated
-comparison artifacts stay in `out/asm-diff/...`.
+comparison artifacts stay in `output/asm-diff/...`.
 
 The m2c draft command writes target-local artifacts under
-`out/harness/workspaces/<target>/`:
+`output/harness/workspaces/<target>/`:
 
 - `original.s`
 - `m2c_context.c`

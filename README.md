@@ -116,15 +116,14 @@ decomp-profile verification as one inspectable recipe.
 - `bin/match-build`
 - `bin/match-diff`
 - `bin/match-report`
-- `bin/harness`: catalog targets, claim work, build context stubs, binary maps/diffs, report, and dashboard
+- `bin/bootstrap`: inspect the full extraction, Ghidra, symbol export, and harness refresh plan
+- `bin/harness`: refresh targets, claim work, build context/m2c drafts, verify functions, and report progress
 - `bin/harness candidates`: list good next function targets by module, size, and source status
 - `bin/harness lift <target>`: initialize workspace, build context, export original asm, and generate a target-local m2c draft
 - `bin/harness verify function <source>`: fast per-function asm-diff parity loop
 - `bin/harness verify module <module>`: verify all source-backed functions in one module and print match percentages
-- `bin/harness verify binary <target>`: later whole-`.bin` parity gate
 - `make lift-ready`: cheap harness refresh before function lifting; does not rerun Ghidra
-- `make harness-ready`: refresh harness state, binary maps, reports, and dashboard
-- `make binary-parity`: later-stage gate that builds compiler-produced raw `.bin` files and diffs them against extracted originals; no `.EMI` repack
+- `make harness-ready`: refresh harness state, reports, and dashboard
 
 See `docs/DECOMP_WORKFLOW.md` for the one-function decomp loop.
 Use `.agents/harness.md` for the current small-agent orchestration loop.
@@ -147,8 +146,8 @@ Image workflows require Pillow in the active Python environment.
 - `external/private-assets/`: optional private download and cache workspace only
 - `toolchains/`: staged or downloaded SDKs and compilers, including PsyQ under `toolchains/psyq/<version>/`
 - `build/`: generated local build tree
-- `out/`: generated extraction, inventory, planning, and review artifacts
-- `out/harness/`: generated harness SQLite state, workspaces, reports, and dashboard
+- `output/`: generated extraction, inventory, planning, and review artifacts
+- `output/harness/`: generated harness SQLite state, workspaces, reports, and dashboard
 
 ## Notes
 

@@ -56,7 +56,12 @@ def test_ghidra_ready_pipeline_runs_extract_inventory_bootstrap_and_doctor() -> 
         "doctor-ghidra",
     ]
     assert executor.calls[-2] == (
-        (str(root / "bin" / "harness"), "ghidra", "import-project"),
+        (
+            str(root / "bin" / "harness"),
+            "ghidra",
+            "import-project",
+            "--no-analysis",
+        ),
         root,
     )
     assert executor.calls[-1] == (
@@ -72,7 +77,7 @@ def test_decomp_ready_pipeline_imports_symbols_then_verifies_decomp_profile() ->
     build_decomp_ready_pipeline(root=root, executor=executor).run()
 
     assert executor.calls == [
-        ((str(root / "bin" / "harness"), "ghidra", "export-symbols"), root),
+        ((str(root / "bin" / "harness"), "ghidra", "export"), root),
         ((str(root / "bin" / "inventory-import-ghidra-symbols"),), root),
         ((str(root / "bin" / "doctor"), "--profile", "decomp"), root),
     ]

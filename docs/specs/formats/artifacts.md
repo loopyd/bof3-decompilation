@@ -5,11 +5,10 @@ Ghidra, matching, and the harness.
 
 ## Generated Roots
 
-- `build/extracted/`: local extracted disc files
-- `out/emi_raw/`: unpacked EMI archives
-- `out/inventory/`: generated inventory JSON and Markdown views
-- `out/ghidra-bootstrap/`: generated Ghidra import manifest inputs
-- `out/harness/`: generated decomp harness state, reports, workspaces, and dashboard
+- `output/extracted/`: local extracted disc files and unpacked EMI archives
+- `output/inventory/`: generated inventory JSON and Markdown views
+- `output/ghidra-bof3/`: generated Ghidra import manifest inputs
+- `output/harness/`: generated decomp harness state, reports, workspaces, and dashboard
 
 Generated roots are not durable source. Refresh them with `bin/` commands.
 
@@ -46,16 +45,14 @@ was queued or deprioritized.
 
 ## Harness State
 
-`bin/harness catalog` records EMI entries and build artifacts in SQLite.
-`bin/harness analyze` records existing lifted source functions under
+`bin/harness refresh` records EMI entries, build artifacts, configured migration
+targets, and existing lifted source functions under
 `bof3/src/**/*.c` and also imports Ghidra function rows when
-`out/inventory/ghidra_function_index.json` exists. `bin/harness split` records
-staged source migration targets without changing source directories unless
-called with `--create-source-dirs`.
+`output/inventory/ghidra_function_index.json` exists.
 
-Use `bin/harness lock acquire ghidra` before shared Ghidra project writes. The
-lock is a SQLite lease under `out/harness/harness.sqlite3`; it coordinates
-agents, not operating-system processes.
+Use `bin/harness ghidra ...` before shared Ghidra project writes. The harness
+takes a SQLite `ghidra` lease under `output/harness/harness.sqlite3`; it
+coordinates agents, not operating-system processes.
 
 ## First Migration Proof
 
@@ -69,42 +66,25 @@ compiled raw payload:
 
 | Role | Path |
 | --- | --- |
-| original | `out/emi_raw/BIN/BATTLE/BATTLE/3.bin` |
+| original | `output/extracted/BIN/BATTLE/BATTLE/3.bin` |
 | compiled | `build/default/artifacts/raw/BIN/BATTLE/BATTLE/03.bin` |
-
-`bin/harness verify binary emi:BATTLE/BATTLE#3` records this state under
-`out/harness/binary-diff/`. A mismatching compiled file reports `different`; a
-target without a compiled raw file reports `missing_compiled_bin`.
 
 This is a later-stage integration check. The fast decompile loop is
 function-level parity through `bin/harness verify function <source-file>` or
 `bin/asm-diff-one <source-file>`.
 
-`bin/harness diff <function-target>` runs that same one-function asm diff when
-the target was seeded from a lifted source file.
-
 Each code-bearing `.bin` should also have a map record:
 
-- file: `out/harness/binary-maps/<target>/binary-map.json`
+- file: `output/harness/binary-maps/<target>/binary-map.json`
 - database tables: `binary_maps`, `symbols`, and `xrefs`
 
-The map records functions from `out/inventory/ghidra_function_index.json`, from
+The map records functions from `output/inventory/ghidra_function_index.json`, from
 compiled raw-module metadata when present, and symbols/xrefs from
-`out/inventory/raw_ghidra_export.json` when those generated inputs exist.
+`output/inventory/raw_ghidra_export.json` when those generated inputs exist.
 
-`bin/harness context build <target>` writes a generated `context.h` plus
-target-local `symbols.h`, `structs.h`, `globals.h`, and `prototypes.h` stubs
-under `out/harness/context/<target>/`.
+`bin/harness lift <target>` writes context, original asm, and m2c draft outputs
+under `output/harness/workspaces/<target>/` and
+`output/harness/context/<target>/`.
 
-Use `bin/harness binary map --all --type emi` to refresh those records for all
-cataloged EMI `.bin` targets. Use
-`bin/harness verify binary --all --type emi` as the later whole-binary parity
-step once enough functions have been migrated and compiled raw `.bin` files
-exist.
-
-For the named workflow, use `make harness-ready` to refresh state and maps, then
-`make binary-parity` as the build-plus-diff gate. The Makefile targets are thin
-aliases; `bin/harness` remains the source of state and evidence.
-`make binary-parity` uses `--allow-different`, so mismatches are recorded
-without failing the pipeline. Missing inputs or missing compiled raw `.bin`
-files still fail.
+For the named workflow, use `make harness-ready` to refresh state. The Makefile
+target is a thin alias; `bin/harness` remains the source of state and evidence.

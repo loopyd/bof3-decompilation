@@ -312,6 +312,13 @@ def test_source_function_records_support_fast_iteration_without_ghidra(
     source = tmp_path / "bof3/src/modules/battle/03/func_801d0c20.c"
     source.parent.mkdir(parents=True)
     source.write_text("/* @source: 0x801d0c20 FUN_801d0c20 */\n", encoding="utf-8")
+    binary = tmp_path / "output/extracted/BIN/BATTLE/BATTLE/3.bin"
+    binary.parent.mkdir(parents=True)
+    binary.write_bytes(b"\x00" * 0x10)
+    (binary.parent / "emi.json").write_text(
+        json.dumps({"entries": [{"index": 3, "name": "3.bin", "ram_ptr": 0x801D0C00}]}),
+        encoding="utf-8",
+    )
     config = load_harness_config()
     config = config.__class__(**{**config.__dict__, "root": tmp_path})
 
@@ -353,6 +360,13 @@ def test_source_function_payload_infers_battle_03_size(tmp_path: Path) -> None:
     source_path.write_text(
         "/* @source: 0x801d9388 FUN_801d9388 */\n"
         "void func_801d9388(u8 arg0) {}\n",
+        encoding="utf-8",
+    )
+    binary = tmp_path / "output/extracted/BIN/BATTLE/BATTLE/3.bin"
+    binary.parent.mkdir(parents=True)
+    binary.write_bytes(b"\x00" * 0x100)
+    (binary.parent / "emi.json").write_text(
+        json.dumps({"entries": [{"index": 3, "name": "3.bin", "ram_ptr": 0x801D0C00}]}),
         encoding="utf-8",
     )
     raw_export = tmp_path / "output/inventory/raw_ghidra_export.json"
@@ -399,6 +413,13 @@ def test_source_function_payload_infers_battle_15_binary_and_size(
     source_path.write_text(
         "/* @source: 0x8009c868 FUN_8009c868 */\n"
         "u8 func_8009c868(volatile u8* entry, s32 bit_index) { return 0; }\n",
+        encoding="utf-8",
+    )
+    binary = tmp_path / "output/extracted/BIN/BATTLE/BATTLE/15.bin"
+    binary.parent.mkdir(parents=True)
+    binary.write_bytes(b"\x00" * 0x100)
+    (binary.parent / "emi.json").write_text(
+        json.dumps({"entries": [{"index": 15, "name": "15.bin", "ram_ptr": 0x80096800}]}),
         encoding="utf-8",
     )
     raw_export = tmp_path / "output/inventory/raw_ghidra_export.json"
@@ -529,14 +550,14 @@ def test_source_function_payload_uses_source_hint_for_duplicate_world_address(
                     {
                         "entry_hex": "0x801f3400",
                         "program_path": "/bins/WORLD01/AREA045/AREA045_e13_801f2c00.bin",
-                        "source_hint": "output/extracted/WORLD01/AREA045.EMI#13",
+                        "source_hint": "output/extracted/BIN/WORLD01/AREA045.EMI#13",
                         "name": "FUN_801f3400",
                         "name_source": "DEFAULT",
                     },
                     {
                         "entry_hex": "0x801f3400",
                         "program_path": "/bins/WORLD00/AREA016/AREA016_e13_801f2c00.bin",
-                        "source_hint": "output/extracted/WORLD00/AREA016.EMI#13",
+                        "source_hint": "output/extracted/BIN/WORLD00/AREA016.EMI#13",
                         "name": "FUN_801f3400",
                         "name_source": "DEFAULT",
                     },
@@ -575,7 +596,7 @@ def test_source_function_payload_uses_source_hint_for_duplicate_world_address(
     payload = source_function_payload(config, source_path)
 
     assert payload["program_path"] == "/bins/WORLD00/AREA016/AREA016_e13_801f2c00.bin"
-    assert payload["source_hint"] == "output/extracted/WORLD00/AREA016.EMI#13"
+    assert payload["source_hint"] == "output/extracted/BIN/WORLD00/AREA016.EMI#13"
     assert payload["binary_path"] == str(raw_binary)
     assert payload["load_address"] == 0x801F2C00
     assert payload["size"] == 0x1C
@@ -715,11 +736,38 @@ def test_candidate_targets_selects_large_missing_source_functions() -> None:
     ]
 
 
+def test_candidate_targets_allows_unknown_size_when_no_minimum() -> None:
+    rows = [
+        {
+            "id": "func:/bins/ETC/GAME/GAME_e00_80195800.bin@0x8019611c",
+            "type": "function",
+            "status": "queued",
+            "priority": 60,
+            "summary": "unknown size",
+            "program_path": "/bins/ETC/GAME/GAME_e00_80195800.bin",
+            "entry_hex": "0x8019611c",
+            "payload": {},
+        }
+    ]
+
+    selected = candidate_targets(
+        rows,
+        module="emi:ETC/GAME#0",
+        min_size=0,
+        source="missing",
+        limit=5,
+    )
+
+    assert [row["id"] for row in selected] == [
+        "func:/bins/ETC/GAME/GAME_e00_80195800.bin@0x8019611c"
+    ]
+
+
 def test_function_report_payload_reads_existing_source_diff(tmp_path: Path) -> None:
     source = tmp_path / "bof3/src/modules/game/00/func_8019611c.c"
     source.parent.mkdir(parents=True)
     source.write_text("/* @source: 0x8019611c FUN_8019611c */\n", encoding="utf-8")
-    summary = tmp_path / "out/asm-diff/func_8019611c/summary.json"
+    summary = tmp_path / "output/asm-diff/func_8019611c/summary.json"
     summary.parent.mkdir(parents=True)
     summary.write_text(json.dumps({"status": "different"}), encoding="utf-8")
     config = load_harness_config()
@@ -938,7 +986,7 @@ def test_m2c_canonicalizes_default_ghidra_names_for_context(tmp_path: Path) -> N
 
 
 def test_ghidra_coverage_reports_missing_manifest_programs(tmp_path: Path) -> None:
-    manifest = tmp_path / "out/ghidra-bof3/ghidra_import_manifest.json"
+    manifest = tmp_path / "output/ghidra-bof3/ghidra_import_manifest.json"
     manifest.parent.mkdir(parents=True)
     manifest.write_text(
         json.dumps(

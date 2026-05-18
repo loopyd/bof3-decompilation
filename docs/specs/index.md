@@ -50,4 +50,4 @@ Rules:
 
 - prefer shipped module names over synthetic names
 - for code-bearing archives, treat `archive + slot` as the module identity
-- keep durable facts here and leave generated manifests in `out/inventory/` or `out/harness/`
+- keep durable facts here and leave generated manifests in `output/inventory/` or `output/harness/`

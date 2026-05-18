@@ -41,9 +41,9 @@ Use shipped archive + slot naming for lifted code:
 
 ## Current Reports
 
-- `out/inventory/`
-- `out/harness/report.json`
-- `out/harness/dashboard/index.html`
+- `output/inventory/`
+- `output/harness/report.json`
+- `output/harness/dashboard/index.html`
 
 ## Next Targets
 

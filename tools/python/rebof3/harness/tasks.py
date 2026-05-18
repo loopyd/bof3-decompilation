@@ -106,8 +106,24 @@ def _source_hint(relative_path: Path) -> str | None:
         return "output/extracted/BIN/BATTLE/BATTLE.EMI#3"
     if parts[:4] == ("src", "modules", "battle", "15"):
         return "output/extracted/BIN/BATTLE/BATTLE.EMI#15"
+    if parts[:4] == ("src", "modules", "bate", "03"):
+        return "output/extracted/BIN/ETC/BATE.EMI#3"
+    if parts[:4] == ("src", "modules", "batl_re2", "01"):
+        return "output/extracted/BIN/BATTLE/BATL_RE2.EMI#1"
+    if parts[:4] == ("src", "modules", "commu00", "00"):
+        return "output/extracted/BIN/ETC/COMMU00.EMI#0"
+    if parts[:4] == ("src", "modules", "shop", "00"):
+        return "output/extracted/BIN/ETC/SHOP.EMI#0"
+    if parts[:4] == ("src", "modules", "sisyou", "00"):
+        return "output/extracted/BIN/ETC/SISYOU.EMI#0"
+    if parts[:4] == ("src", "modules", "scena00", "00"):
+        return "output/extracted/BIN/SCENARIO/SCENA00.EMI#0"
+    if parts[:4] == ("src", "modules", "scena16", "00"):
+        return "output/extracted/BIN/SCENARIO/SCENA16.EMI#0"
+    if parts[:4] == ("src", "modules", "sce10eff", "00"):
+        return "output/extracted/BIN/SCENARIO/SCE10EFF.EMI#0"
     if parts[:3] == ("src", "modules", "world00") and len(parts) >= 5:
-        return f"output/extracted/WORLD00/{parts[3].upper()}.EMI#{int(parts[4], 10)}"
+        return f"output/extracted/BIN/WORLD00/{parts[3].upper()}.EMI#{int(parts[4], 10)}"
     if parts[:2] == ("src", "core") or parts[:2] == ("src", "boot"):
         return "output/extracted/SLUS_004.22"
     if parts[:2] == ("src", "logo") or parts[:3] == ("src", "modules", "logo"):
@@ -183,28 +199,28 @@ def _binary_payload_for_program(config: HarnessConfig, program_path: str) -> dic
     return {}
 
 
+def _binary_path_from_source_hint(config: HarnessConfig, source_hint: str) -> Path | None:
+    if "#" in source_hint:
+        emi_path, entry = source_hint.rsplit("#", 1)
+        bin_dir = emi_path.removesuffix(".EMI")
+        return config.root / bin_dir / f"{entry}.bin"
+    return config.root / source_hint
+
+
 def _source_binary_payload(
     config: HarnessConfig, relative_path: Path, program_path: str | None = None
 ) -> dict[str, Any]:
-    parts = relative_path.parts
-    if parts[:4] == ("src", "modules", "battle", "03"):
-        return {
-            "binary_path": str(config.root / "output/extracted/BIN/BATTLE/BATTLE/3.bin"),
-            "load_address": 0x801D0C00,
-        }
-    if parts[:4] == ("src", "modules", "battle", "15"):
-        return {
-            "binary_path": str(config.root / "output/extracted/BIN/BATTLE/BATTLE/15.bin"),
-            "load_address": 0x80096800,
-        }
-    if program_path and program_path.startswith("/bins/"):
-        binary_path = _binary_path_from_program(config, program_path)
-        load_address = _load_address_from_manifest(binary_path)
-        return {
-            "binary_path": str(binary_path),
-            **({} if load_address is None else {"load_address": load_address}),
-        }
-    return {}
+    hint = _source_hint(relative_path)
+    if not hint:
+        return {}
+    binary_path = _binary_path_from_source_hint(config, hint)
+    if not binary_path:
+        return {}
+    load_address = _load_address_from_manifest(binary_path)
+    payload: dict[str, Any] = {"binary_path": str(binary_path)}
+    if load_address is not None:
+        payload["load_address"] = load_address
+    return payload
 
 
 def _binary_path_from_program(config: HarnessConfig, program_path: str) -> Path:

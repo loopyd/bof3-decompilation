@@ -202,15 +202,16 @@ Other supported commands:
 - `bin/ghidra-ui --ghidra-home /path/to/ghidra`
 - `bin/ghidra-install-extensions --user-dir /path/to/.ghidra_XX.Y <extension>`
 
-Generated planning artifacts live under `out/ghidra-bootstrap/`.
+Generated planning artifacts live under `output/ghidra-bof3/`.
 `bin/ghidra-import-project` also accepts `GHIDRA_HOME` when `--ghidra-home` is
 not passed.
 
 For shared project refreshes, prefer the harness wrappers:
 
 ```bash
-bin/harness ghidra import-project
-bin/harness ghidra export-symbols
+bin/harness ghidra import-project --no-analysis
+bin/harness ghidra analyze
+bin/harness ghidra export
 ```
 
 They serialize Ghidra headless access with the harness `ghidra` lock. Normal
@@ -274,9 +275,9 @@ Function matching:
 
 For the maintained one-function decomp loop, see `docs/DECOMP_WORKFLOW.md`.
 
-Build, match, harness, and later whole-binary parity recipes are available as
+Build, match, and harness recipes are available as
 `bin/pipeline build-ready`, `bin/pipeline match-loop`,
-`bin/pipeline harness-ready`, and `bin/pipeline binary-parity`. Inspect them
+`bin/pipeline harness-ready`. Inspect them
 first with `bin/pipeline <name> --plan`.
 
 Asset extraction and review:

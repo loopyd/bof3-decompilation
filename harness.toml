@@ -15,9 +15,9 @@ emi_root = "output/extracted/BIN"
 
 [commands]
 setup = "bin/setup"
-bootstrap = "bin/pipeline ghidra-bootstrap"
+bootstrap = "bin/bootstrap"
 catalog = "bin/inventory-build"
-analyze = "bin/pipeline decomp-ready"
+analyze = "bin/harness ghidra analyze"
 build = "bin/build"
 
 [[migration_targets]]

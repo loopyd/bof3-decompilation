@@ -98,7 +98,6 @@ def build_default_registry() -> PipelineRegistry:
     registry = PipelineRegistry()
     from .build_match import build_build_ready_pipeline, build_match_loop_pipeline
     from .harness import (
-        build_binary_parity_pipeline,
         build_harness_ready_pipeline,
         build_lift_ready_pipeline,
     )
@@ -128,18 +127,13 @@ def build_default_registry() -> PipelineRegistry:
     )
     registry.register(
         "harness-ready",
-        "Refresh harness state, binary maps, reports, and dashboard",
+        "Refresh harness state, reports, and dashboard",
         build_harness_ready_pipeline,
     )
     registry.register(
         "lift-ready",
         "Refresh cheap harness state for function lifting",
         build_lift_ready_pipeline,
-    )
-    registry.register(
-        "binary-parity",
-        "Build compiled raw bins and diff them against extracted EMI bins",
-        build_binary_parity_pipeline,
     )
     registry.register(
         "extract-assets",

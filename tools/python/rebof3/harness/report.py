@@ -75,7 +75,7 @@ def choose_resume_action(
     if not config.database.exists():
         return {
             "action": "setup",
-            "command": "bin/harness setup",
+            "command": "bin/harness refresh",
             "reason": "harness database does not exist",
         }
     counts = state.counts_by_status(conn)
@@ -83,7 +83,7 @@ def choose_resume_action(
     if total == 0:
         return {
             "action": "catalog",
-            "command": "bin/harness catalog",
+            "command": "bin/harness refresh",
             "reason": "no harness targets are recorded",
         }
     claims = state.active_claims(conn)
@@ -91,7 +91,7 @@ def choose_resume_action(
         claim = claims[0]
         return {
             "action": "continue-claim",
-            "command": f"bin/harness target init {claim['target_id']}",
+            "command": f"bin/harness lift {claim['target_id']}",
             "reason": f"active claim owned by {claim['owner']}",
             "target_id": claim["target_id"],
         }
@@ -107,12 +107,12 @@ def choose_resume_action(
     if blocked:
         return {
             "action": "review-blockers",
-            "command": "bin/harness report",
+            "command": "bin/harness report summary",
             "reason": "no queued targets remain, but blockers exist",
             "target_id": blocked[0]["id"],
         }
     return {
         "action": "checkpoint",
-        "command": "bin/harness checkpoint",
+        "command": "bin/harness status",
         "reason": "no queued targets or active claims remain",
     }

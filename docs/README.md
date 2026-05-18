@@ -42,7 +42,7 @@ The intended organic layout is:
 Use `bin/pipeline --list` to inspect the composable pipeline surface. Current
 high-level recipes include `setup-open`, `extract-assets`, `inventory-refresh`,
 `ghidra-bootstrap`, `ghidra-ready`, `decomp-ready`, `build-ready`, `match-loop`,
-`harness-ready`, and `binary-parity`. Use `bin/pipeline <name> --plan` before
+and `harness-ready`. Use `bin/pipeline <name> --plan` before
 running a pipeline when changing task order or adding new tasks.
 
 Ghidra, decompilation helpers, PsyQ staging, extracted disc data, inventory

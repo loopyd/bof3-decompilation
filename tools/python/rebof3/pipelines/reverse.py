@@ -105,7 +105,12 @@ def build_ghidra_ready_pipeline(
                 executor=executor,
                 name="ghidra-import-project",
                 description="Import bootstrap manifest binaries into a Ghidra project",
-                command=(_bin(repo_root, "harness"), "ghidra", "import-project"),
+                command=(
+                    _bin(repo_root, "harness"),
+                    "ghidra",
+                    "import-project",
+                    "--no-analysis",
+                ),
             ),
             _task(
                 root=repo_root,
@@ -133,7 +138,7 @@ def build_decomp_ready_pipeline(
                 executor=executor,
                 name="ghidra-export-symbols",
                 description="Export raw Ghidra function symbols from the project",
-                command=(_bin(repo_root, "harness"), "ghidra", "export-symbols"),
+                command=(_bin(repo_root, "harness"), "ghidra", "export"),
             ),
             _task(
                 root=repo_root,
@@ -177,14 +182,26 @@ def build_decomp_full_ready_pipeline(
                 executor=executor,
                 name="ghidra-import-project",
                 description="Import all code binaries into the one Ghidra project",
-                command=(_bin(repo_root, "harness"), "ghidra", "import-project"),
+                command=(
+                    _bin(repo_root, "harness"),
+                    "ghidra",
+                    "import-project",
+                    "--no-analysis",
+                ),
+            ),
+            _task(
+                root=repo_root,
+                executor=executor,
+                name="ghidra-analyze",
+                description="Analyze the imported Ghidra project",
+                command=(_bin(repo_root, "harness"), "ghidra", "analyze"),
             ),
             _task(
                 root=repo_root,
                 executor=executor,
                 name="ghidra-export-symbols",
                 description="Export raw Ghidra symbols from the project",
-                command=(_bin(repo_root, "harness"), "ghidra", "export-symbols"),
+                command=(_bin(repo_root, "harness"), "ghidra", "export"),
             ),
             _task(
                 root=repo_root,

@@ -41,12 +41,17 @@ _HELP_COMMANDS = [
     ("ghidra-import-project", "usage: ghidra import-project"),
     ("ghidra-export-symbols", "usage: ghidra export-symbols"),
     ("pipeline", "usage: pipeline"),
+    ("bootstrap", "usage: bootstrap"),
     ("download-psyq", "usage: download-psyq"),
     ("match-init", "usage: match init"),
     ("match-report", "usage: match report"),
     ("harness", "usage: harness"),
     ("harness claim", "usage: harness claim"),
     ("harness status", "usage: harness status"),
+    ("harness candidates", "usage: harness candidates"),
+    ("harness verify", "usage: harness verify"),
+    ("harness report", "usage: harness report"),
+    ("harness ghidra", "usage: harness ghidra"),
 ]
 
 

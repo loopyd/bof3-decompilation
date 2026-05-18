@@ -124,7 +124,7 @@ def build_binary_diff(
     next_action = "inspect binary asm diff"
     if not original_exists:
         status = "missing_original_bin"
-        next_action = "run bin/harness catalog after EMI unpack"
+        next_action = "run bin/harness refresh after EMI unpack"
     elif not compiled_exists:
         status = "missing_compiled_bin"
         next_action = "register a compiled raw .bin output path for this target"
