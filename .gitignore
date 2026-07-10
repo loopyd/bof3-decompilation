@@ -9,6 +9,7 @@ dist/
 *.egg-info/
 compile_commands.json
 .codex
+session-*.md
 
 # local supplied inputs
 disks/*

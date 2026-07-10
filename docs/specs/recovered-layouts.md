@@ -18,7 +18,7 @@ headers. `unk_*` and `pad_*` names record only an observed offset or gap.
 ## EMI transfer state
 
 `EmiTransferSlot` is declared in the lifted EXE function
-[`bof3/src/core/emi/func_80162b08.c`](../../bof3/src/core/emi/func_80162b08.c).
+[`src/core/emi/func_80162b08.c`](../../src/core/emi/func_80162b08.c).
 The function reads and writes these fields, so their offsets and widths are
 locally evidenced.
 
@@ -35,12 +35,10 @@ the meanings of the destination registers are **UNKNOWN**.
 ## `BATTLE.EMI#3` working arrays
 
 Legacy build metadata maps `BIN/BATTLE/BATTLE.EMI#3` to `0x801d0c00`
-([`bof3/cmake/modules/battle.cmake`](../../bof3/cmake/modules/battle.cmake)).
+([`cmake/modules/battle.cmake`](../../cmake/modules/battle.cmake)).
 The context for that module declares the following array bases and C layout
 strides. The byte layouts are evidenced by
-[`bof3/context/battle/03/structs.h`](../../bof3/context/battle/03/structs.h)
-and the bases by
-[`bof3/context/battle/03/symbols.h`](../../bof3/context/battle/03/symbols.h).
+[`src/modules/battle/03/internal.h`](../../src/modules/battle/03/internal.h).
 
 | Base | Declared element | Stride / minimum size | Confidence |
 | --- | --- | ---: | --- |

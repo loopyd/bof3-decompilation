@@ -31,18 +31,17 @@ ALL_OVERLAYS: list[tuple[str, str]] = [
 
 def _find_internal_h(module: str, entry: str) -> Path:
     if module == "logo":
-        p = PROJECT_ROOT / "bof3/src/modules/logo/internal.h"
+        p = PROJECT_ROOT / "src/modules/logo/internal.h"
     else:
-        p = PROJECT_ROOT / f"bof3/src/modules/{module}/{entry}/internal.h"
+        p = PROJECT_ROOT / f"src/modules/{module}/{entry}/internal.h"
     if not p.is_file():
         raise FileNotFoundError(f"no internal.h at {p}")
     return p
 
 
 def _context_dir(module: str, entry: str) -> Path:
-    if module == "logo":
-        return PROJECT_ROOT / "bof3/context/logo"
-    return PROJECT_ROOT / "bof3/context" / module / entry
+    target = "logo" if module == "logo" else f"{module}/{entry}"
+    return PROJECT_ROOT / "out/harness/context" / target
 
 
 def _strip_c_comments(text: str) -> str:

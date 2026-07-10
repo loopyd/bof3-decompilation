@@ -144,7 +144,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     ghidra_import.add_argument(
         "--manifest",
         type=Path,
-        default=Path("out/ghidra-bof3/ghidra_import_manifest.json"),
+        default=Path("out/ghidra/ghidra_import_manifest.json"),
     )
     ghidra_import.add_argument(
         "--project-dir",

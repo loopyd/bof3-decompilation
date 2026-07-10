@@ -24,19 +24,19 @@ build = "bin/build"
 id = "slus_004_22"
 label = "SLUS_004.22"
 program_path = "/boot/SLUS_004.22"
-source_dir = "bof3/src/slus_004_22/functions"
+source_dir = "src/exe/slus_004_22/functions"
 source_hint = "out/extracted/SLUS_004.22"
 
 [[migration_targets]]
 id = "logo_exe"
 label = "LOGO.EXE"
 program_path = "/boot/LOGO/LOGO.EXE"
-source_dir = "bof3/src/logo/logo_exe/functions"
+source_dir = "src/exe/logo/functions"
 source_hint = "out/extracted/LOGO/LOGO.EXE"
 
 [[migration_targets]]
 id = "battle_03"
 label = "BIN/BATTLE/BATTLE.EMI#3"
 program_path = "/bins/BIN/BATTLE/BATTLE/03.bin"
-source_dir = "bof3/src/modules/bin/battle/battle/entry_03/functions"
+source_dir = "src/emi/battle/battle/03/"
 source_hint = "out/extracted/BIN/BATTLE/BATTLE.EMI#3"

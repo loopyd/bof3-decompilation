@@ -17,16 +17,11 @@ _OVERLAY_PATHS: dict[str, str] = {
 
 
 def _overlay_context_dir(config: HarnessConfig, program_path: str) -> Path | None:
-    for key, rel in _OVERLAY_PATHS.items():
-        if key in program_path:
-            candidate = config.root / "bof3" / "context" / rel
-            if (candidate / "context.h").is_file():
-                return candidate
     return None
 
 
 def common_context_dir(config: HarnessConfig) -> Path:
-    return config.root / "bof3" / "context" / "common"
+    return config.root / "include" / "bof3"
 
 
 def ensure_common_context(config: HarnessConfig) -> Path:
@@ -63,7 +58,7 @@ def build_context_header(config: HarnessConfig, target: dict[str, Any]) -> Path:
             f"#ifndef {guard}\n"
             f"#define {guard}\n\n"
             '#include "bof3/context.h"\n'
-            '#include "bof3/context/common/scratchpad.h"\n\n'
+            '#include "bof3/scratchpad.h"\n\n'
             f"/* target: {target['id']} */\n"
             f"/* source: {target.get('source_hint') or ''} */\n"
             f"/* program: {target.get('program_path') or ''} */\n"
@@ -100,7 +95,7 @@ def build_context_header(config: HarnessConfig, target: dict[str, Any]) -> Path:
         f"#ifndef {guard}\n"
         f"#define {guard}\n\n"
         '#include "bof3/context.h"\n'
-        '#include "bof3/context/common/scratchpad.h"\n\n'
+        '#include "bof3/scratchpad.h"\n\n'
         f"/* target: {target['id']} */\n"
         f"/* source: {source_hint} */\n"
         f"/* program: {program_path} */\n"

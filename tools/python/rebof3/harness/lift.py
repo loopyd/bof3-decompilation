@@ -212,7 +212,7 @@ def function_report_payload(
     if source_text:
         next_action = "run bin/harness verify function <source>"
     elif m2c_draft:
-        next_action = "create bof3/src/... source from the m2c draft, then verify"
+        next_action = "create src/... source from the m2c draft, then verify"
     else:
         next_action = "run bin/harness lift <target>, then create source and verify"
     return {

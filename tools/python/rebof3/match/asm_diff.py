@@ -203,7 +203,6 @@ def object_path_for_source(layout: RepoLayout, source_path: Path) -> Path:
     return (
         layout.build_dir
         / "default"
-        / "bof3"
         / "CMakeFiles"
         / "bof3.dir"
         / source_relative_to_project
@@ -218,12 +217,12 @@ def build_target_for_source(layout: RepoLayout, source_path: Path) -> str:
     resolved_source = source_path.expanduser().resolve()
     source_relative_to_project = resolved_source.relative_to(layout.bof3_dir)
     source_rel_str = source_relative_to_project.as_posix()
-    default_target = f"bof3/CMakeFiles/bof3.dir/{source_rel_str}.obj"
+    default_target = f"CMakeFiles/bof3.dir/{source_rel_str}.obj"
     build_ninja = layout.build_dir / "default" / "build.ninja"
     if build_ninja.is_file():
         build_text = build_ninja.read_text(encoding="utf-8")
         for target_prefix in re.findall(
-            r"build (bof3/CMakeFiles/[^/]+\.dir)/",
+            r"build (?:bof3/)?(CMakeFiles/[^/]+\.dir)/",
             build_text,
         ):
             if f"{target_prefix}/{source_rel_str}.obj" in build_text:

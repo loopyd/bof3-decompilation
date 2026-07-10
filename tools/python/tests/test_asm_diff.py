@@ -86,14 +86,13 @@ def test_extract_original_bytes_reads_psx_exe_load_address(tmp_path: Path) -> No
 
 def test_object_path_matches_cmake_object_layout(tmp_path: Path) -> None:
     layout = repo_layout(tmp_path)
-    source = layout.bof3_dir / "src" / "core" / "emi" / "func_80162178.c"
+    source = layout.root / "src" / "core" / "emi" / "func_80162178.c"
     source.parent.mkdir(parents=True)
     source.write_text("void func_80162178(void) {}\n", encoding="utf-8")
 
     assert object_path_for_source(layout, source) == (
         layout.build_dir
         / "default"
-        / "bof3"
         / "CMakeFiles"
         / "bof3.dir"
         / "src"

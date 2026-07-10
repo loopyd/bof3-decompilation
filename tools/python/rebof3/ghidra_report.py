@@ -475,10 +475,10 @@ def queue_report(layout: RepoLayout, *, limit: int) -> dict[str, Any]:
                 "function": row.get("name"),
                 "score": size,
                 "size": size,
-                "source": f"bof3/{status['source']}",
+                "source": f"{status['source']}",
                 "source_hint": source_hint,
                 "status": status.get("status"),
-                "verify": f"bin/harness verify function bof3/{status['source']}",
+                "verify": f"bin/harness verify function {status['source']}",
             }
         )
     candidates.sort(
@@ -517,13 +517,13 @@ def module_report(layout: RepoLayout, source_hint: str) -> dict[str, Any]:
 
 
 def context_gaps(layout: RepoLayout) -> dict[str, Any]:
-    context_path = layout.bof3_dir / "include" / "bof3" / "context.h"
+    context_path = layout.root / "include" / "bof3" / "context.h"
     context_text = (
         context_path.read_text(encoding="utf-8") if context_path.is_file() else ""
     )
     context_names = set(identifier_names(context_text))
     modules: list[dict[str, Any]] = []
-    for internal in sorted((layout.bof3_dir / "src").rglob("internal.h")):
+    for internal in sorted((layout.root / "src").rglob("internal.h")):
         text = internal.read_text(encoding="utf-8", errors="ignore")
         names = sorted(set(identifier_names(text)))
         missing = [name for name in names if name not in context_names]

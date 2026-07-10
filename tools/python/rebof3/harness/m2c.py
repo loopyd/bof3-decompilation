@@ -309,7 +309,7 @@ def _collect_flat_context(
             if not inc_candidate.is_file():
                 inc_candidate = (root / inc_path).resolve()
             if not inc_candidate.is_file():
-                inc_candidate = (root / "bof3/include" / inc_path).resolve()
+                inc_candidate = (root / "include" / inc_path).resolve()
             if inc_candidate.is_file():
                 parts.append(f"/* from {inc_path} */")
                 parts.append(_collect_flat_context(inc_candidate, root, seen=seen))
@@ -485,7 +485,7 @@ def run_m2c_for_target(
             "notes": str(notes),
             "log": str(log_path),
         },
-        "next_action": "edit bof3/src/... then run bin/harness verify function <source>",
+        "next_action": "edit src/... then run bin/harness verify function <source>",
     }
     write_json(root / "m2c.json", payload)
     return payload, root / "m2c.json"

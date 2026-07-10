@@ -45,7 +45,7 @@ Ghidra import/analysis/export belongs to project setup and should normally be
 done once per extracted binary set with `bin/bootstrap`, or repeated
 only after binaries, Ghidra scripts, loader behavior, or symbol-export rules
 change. `refresh` records existing lifted source functions from
-`bof3/src/**/*.c`, then adds game-code rows from
+`src/**/*.c`, then adds game-code rows from
 `output/inventory/ghidra_function_index.json`.
 
 Imported GTE/BIOS/PsyQ/library rows are support symbols. Keep them in maps and
@@ -109,7 +109,7 @@ is the quickest way to find the next source function to improve.
 - Shared Ghidra project writes must go through `bin/harness ghidra ...` wrappers.
 - Use `output/harness/workspaces/` for scratch work and evidence.
 - Keep source changes small and reviewable.
-- Use PsyQ headers through `bof3/include/bof3/psyq_compat.h`.
+- Use PsyQ headers through `include/bof3/psyq_compat.h`.
 - Run the smallest relevant diff/build check before finishing.
 
 ## Target Identity
@@ -156,7 +156,7 @@ editable stubs for symbols, structs, globals, and prototypes.
 ## Source Migration
 
 `BATTLE.EMI#3` is the first representative source-migration proof. Its current
-source remains under `bof3/src/modules/battle/03/`, and the CMake artifact
+source remains under `src/modules/battle/03/`, and the CMake artifact
 registry emits a compiler-produced raw `03.bin` for `bof3_battle_03_raw`. Do
 not repack `BATTLE.EMI` for parity, and do not treat static archives such as
 `03.bin.a` as final matching artifacts.

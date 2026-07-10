@@ -16,10 +16,10 @@ bin/harness lift func:ETC/GAME#0@0x801ba678
 cat output/harness/workspaces/func:ETC:GAME#0@0x801ba678/func.m2c.c
 
 # 3. Write/edit C89 source
-#   bof3/src/modules/game/func_801ba678.c  +  #include "internal.h"
+#   src/modules/game/func_801ba678.c  +  #include "internal.h"
 
 # 4. Match
-bin/asm-diff-one bof3/src/modules/game/func_801ba678.c
+bin/asm-diff-one src/modules/game/func_801ba678.c
 
 # 5. Read results
 cat out/asm-diff/func_801ba678/summary.json

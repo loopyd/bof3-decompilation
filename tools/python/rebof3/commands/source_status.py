@@ -91,7 +91,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="source-status")
     parser.add_argument(
         "--module",
-        help="only include modules whose bof3/src-relative path contains this text",
+        help="only include modules whose src-relative path contains this text",
     )
     parser.add_argument(
         "--asm-root",

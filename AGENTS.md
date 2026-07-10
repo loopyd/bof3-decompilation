@@ -24,11 +24,16 @@ decompilation target.
 ## Repository layout
 
 ```text
+asm/                  reviewed original assembly baselines
 config/
   splat/              tracked binary layouts
   symbols/            tracked shared/authored symbols
 include/bof3/         shared C89 and PsyQ declarations
+cmake/                build modules and source listings
 src/
+  boot/               bootstrap code (startup.s, symbols.c)
+  core/               engine: disc, emi, callback_scheduler, game_front
+  modules/            game modules: battle, game, world00, ...
   exe/<binary>/       source for standalone PS-X executables
   emi/<family>/<archive>/<slot>/  source for confirmed EMI code targets
 out/

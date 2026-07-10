@@ -107,7 +107,7 @@ def repo_layout(
         inputs_dir=inputs_dir,
         docs_dir=resolved_root / "docs",
         downloads_dir=toolchains_dir / "downloads",
-        bof3_dir=resolved_root / "bof3",
+        bof3_dir=resolved_root,
         disc_dir=resolved_root / "disks",
         external_dir=inputs_dir / "external",
         private_assets_dir=resolved_root / "external" / "private-assets",

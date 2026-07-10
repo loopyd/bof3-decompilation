@@ -145,24 +145,22 @@ def _source_path_for_program(program_path: str, entry_hex: str) -> str | None:
     parsed = _staged_program_parts(program_path)
     if parsed is None:
         if program_path == "/boot/LOGO.EXE":
-            return (
-                f"bof3/src/modules/logo/func_{entry_hex.removeprefix('0x').lower()}.c"
-            )
+            return f"src/modules/logo/func_{entry_hex.removeprefix('0x').lower()}.c"
         if program_path == "/boot/SLUS_004.22":
-            return f"bof3/src/core/func_{entry_hex.removeprefix('0x').lower()}.c"
+            return f"src/core/func_{entry_hex.removeprefix('0x').lower()}.c"
         return None
 
     parts, entry, _load_address = parsed
     addr = entry_hex.removeprefix("0x").lower()
     if parts == ("ETC", "GAME"):
-        return f"bof3/src/modules/game/{entry:02d}/func_{addr}.c"
+        return f"src/modules/game/{entry:02d}/func_{addr}.c"
     if parts == ("BATTLE", "BATTLE"):
-        return f"bof3/src/modules/battle/{entry:02d}/func_{addr}.c"
+        return f"src/modules/battle/{entry:02d}/func_{addr}.c"
     if len(parts) == 2 and parts[0] == "WORLD00":
-        return f"bof3/src/modules/world00/{parts[1].lower()}/{entry:02d}/func_{addr}.c"
+        return f"src/modules/world00/{parts[1].lower()}/{entry:02d}/func_{addr}.c"
     if parts:
         module_parts = "/".join(part.lower() for part in parts)
-        return f"bof3/src/modules/{module_parts}/{entry:02d}/func_{addr}.c"
+        return f"src/modules/{module_parts}/{entry:02d}/func_{addr}.c"
     return None
 
 
@@ -298,11 +296,13 @@ def source_function_payload(
 ) -> dict[str, Any]:
     resolved = source_path if source_path.is_absolute() else config.root / source_path
     try:
-        relative_path = resolved.resolve().relative_to(config.root / "bof3")
+        relative_path = str(resolved.resolve().relative_to(config.root))
     except ValueError:
         return {}
     address = _source_address(resolved.resolve())
     rows_by_address = _function_row_index(config) if row_index is None else row_index
+    if relative_path.startswith("bof3/"):
+        relative_path = relative_path[5:]  # strip legacy bof3/ prefix
     inferred_source_hint = _source_hint(relative_path)
     index_row = _source_index_row(address, rows_by_address, inferred_source_hint)
     program_path = (
@@ -330,14 +330,16 @@ def source_function_payload(
 def source_function_target_id(config: HarnessConfig, source_path: Path) -> str | None:
     resolved = source_path if source_path.is_absolute() else config.root / source_path
     try:
-        relative_path = resolved.resolve().relative_to(config.root / "bof3")
+        relative_path = str(resolved.resolve().relative_to(config.root))
     except ValueError:
         return None
-    return f"func-src:{relative_path.as_posix()}"
+    if relative_path.startswith("bof3/"):
+        relative_path = relative_path[5:]
+    return f"func-src:{relative_path}"
 
 
 def source_function_target_records(config: HarnessConfig) -> list[dict[str, Any]]:
-    source_root = config.root / "bof3" / "src"
+    source_root = config.root / "src"
     if not source_root.is_dir():
         return []
     records: list[dict[str, Any]] = []
@@ -347,7 +349,7 @@ def source_function_target_records(config: HarnessConfig) -> list[dict[str, Any]
         address = _source_address(source_path)
         if address is None:
             continue
-        relative_path = source_path.relative_to(config.root / "bof3")
+        relative_path = source_path.relative_to(config.root)
         payload = source_function_payload(
             config, source_path, size_index=size_index, row_index=row_index
         )

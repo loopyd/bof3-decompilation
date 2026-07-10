@@ -1,11 +1,10 @@
 # Coding Rules
 - C89: `/* */` comments, declare vars at top of function
-- `REG32()`, `REG16()`, `REG8()` from `bof3/include/bof3/defines.h` for hardware register access
-- `DEFINE_FUNC_AT()` in `bof3/include/bof3/context.h` only for not-yet-lifted cross-module calls; remove when lifted
-- One function per `.c` file, self-contained with `#include "internal.h"`
-- No new headers in `bof3/include/bof3/modules/` — ALL declarations go in module's `internal.h`
+- `REG32()`, `REG16()`, `REG8()` from `include/bof3/defines.h` for hardware register access
+- `DEFINE_FUNC_AT()` in `include/bof3/context.h` only for not-yet-lifted cross-module calls; remove when lifted
+- No new headers in `include/bof3/modules/` — ALL declarations go in module's `internal.h`
 - Readable clean C > forcing 100% match when too complex
 - No inline assembly; prefer defines/structs/externs over magic addresses
 - Use `VU8/VU16/VU32/VS16/VS32` macros from `defines.h` for hardware register access (`REG32` etc.)
-- Fixed-address RAM globals: declare `extern type DAT_xxxxx;` in `internal.h` with a `/* does: ... */` comment, and place via `SYMBOL_AT(DAT_xxxxx, 0x8XXXXXXX)` in `bof3/src/boot/symbols.c` — never `#define DAT_xxxxx VUxx(addr)`
+- Fixed-address RAM globals: declare `extern type DAT_xxxxx;` in `internal.h` with a `/* does: ... */` comment, and place via `SYMBOL_AT(DAT_xxxxx, 0x8XXXXXXX)` in `src/boot/symbols.c` — never `#define DAT_xxxxx VUxx(addr)`
 - `DAT_xxx` defines live in `internal.h`; readable semantic name → `DAT_xxx` mappings live in `symbols.h` once promoted
