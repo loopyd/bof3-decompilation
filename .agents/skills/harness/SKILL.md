@@ -1,4 +1,9 @@
-# BOF3 Harness Guide
+---
+name: harness
+description: "Use the BOF3 harness (bin/harness) for function targeting, claiming, lifting, and binary mapping. Use when the user asks about targets, candidates, claims, or the harness workflow. Also use for module-level verification and binary parity."
+---
+
+# Harness Guide
 
 Use `bin/harness` as the small-agent entry point for BOF3 reverse/decomp work.
 It records targets, claims, context, reports, and dashboard output under

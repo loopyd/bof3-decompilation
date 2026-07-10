@@ -28,7 +28,9 @@ Read the doc you need with the Read tool. Don't pre-load all docs.
 - `docs/specs/content/` — game content analysis
 
 ### Workflow
-- `docs/DECOMP_WORKFLOW.md` — repeatable decomp loop: bootstrap, one-function loop, verification tiers
+- `docs/DECOMP_WORKFLOW.md` — repeatable decomp loop
+- `.agents/skills/harness/SKILL.md` — harness workflow
+- `.agents/rules/decomp.md` — C89 coding conventions (always-loaded rules)
 
 ## When to read each
 - **Setup environment?** → `docs/SETUP.md`
@@ -37,3 +39,5 @@ Read the doc you need with the Read tool. Don't pre-load all docs.
 - **What's been done?** → `docs/plan.md`, `docs/specs/status.md`
 - **Working on decomp?** → `docs/DECOMP_WORKFLOW.md`
 - **Binary format questions?** → `docs/specs/formats/`
+- **Harness workflow?** → `.agents/skills/harness/SKILL.md`
+- **Coding conventions?** → `.agents/rules/decomp.md`
