@@ -9,6 +9,7 @@ help:
     @just --list
 
 # Sync the locked repository-local Python environment.
+[private]
 venv:
     @if [ ! -x "{{python}}" ]; then \
         command -v uv >/dev/null && \
@@ -58,7 +59,7 @@ format-python: venv
 
 # Format authored C headers and functions.
 format-c:
-    @find src bof3/include bof3/src -type f \( -name '*.c' -o -name '*.h' \) -print0 2>/dev/null | xargs -0 -r clang-format -i
+    @find src include -type f \( -name '*.c' -o -name '*.h' \) -print0 2>/dev/null | xargs -0 -r clang-format -i
 
 # Remove generated build and analysis output.
 clean:
