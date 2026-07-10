@@ -99,35 +99,35 @@ def _source_program_path(relative_path: Path) -> str:
 def _source_hint(relative_path: Path) -> str | None:
     parts = relative_path.parts
     if parts[:4] == ("src", "modules", "game", "00"):
-        return "output/extracted/BIN/ETC/GAME.EMI#0"
+        return "out/extracted/BIN/ETC/GAME.EMI#0"
     if parts[:4] == ("src", "modules", "game", "01"):
-        return "output/extracted/BIN/ETC/GAME.EMI#1"
+        return "out/extracted/BIN/ETC/GAME.EMI#1"
     if parts[:4] == ("src", "modules", "battle", "03"):
-        return "output/extracted/BIN/BATTLE/BATTLE.EMI#3"
+        return "out/extracted/BIN/BATTLE/BATTLE.EMI#3"
     if parts[:4] == ("src", "modules", "battle", "15"):
-        return "output/extracted/BIN/BATTLE/BATTLE.EMI#15"
+        return "out/extracted/BIN/BATTLE/BATTLE.EMI#15"
     if parts[:4] == ("src", "modules", "bate", "03"):
-        return "output/extracted/BIN/ETC/BATE.EMI#3"
+        return "out/extracted/BIN/ETC/BATE.EMI#3"
     if parts[:4] == ("src", "modules", "batl_re2", "01"):
-        return "output/extracted/BIN/BATTLE/BATL_RE2.EMI#1"
+        return "out/extracted/BIN/BATTLE/BATL_RE2.EMI#1"
     if parts[:4] == ("src", "modules", "commu00", "00"):
-        return "output/extracted/BIN/ETC/COMMU00.EMI#0"
+        return "out/extracted/BIN/ETC/COMMU00.EMI#0"
     if parts[:4] == ("src", "modules", "shop", "00"):
-        return "output/extracted/BIN/ETC/SHOP.EMI#0"
+        return "out/extracted/BIN/ETC/SHOP.EMI#0"
     if parts[:4] == ("src", "modules", "sisyou", "00"):
-        return "output/extracted/BIN/ETC/SISYOU.EMI#0"
+        return "out/extracted/BIN/ETC/SISYOU.EMI#0"
     if parts[:4] == ("src", "modules", "scena00", "00"):
-        return "output/extracted/BIN/SCENARIO/SCENA00.EMI#0"
+        return "out/extracted/BIN/SCENARIO/SCENA00.EMI#0"
     if parts[:4] == ("src", "modules", "scena16", "00"):
-        return "output/extracted/BIN/SCENARIO/SCENA16.EMI#0"
+        return "out/extracted/BIN/SCENARIO/SCENA16.EMI#0"
     if parts[:4] == ("src", "modules", "sce10eff", "00"):
-        return "output/extracted/BIN/SCENARIO/SCE10EFF.EMI#0"
+        return "out/extracted/BIN/SCENARIO/SCE10EFF.EMI#0"
     if parts[:3] == ("src", "modules", "world00") and len(parts) >= 5:
-        return f"output/extracted/BIN/WORLD00/{parts[3].upper()}.EMI#{int(parts[4], 10)}"
+        return f"out/extracted/BIN/WORLD00/{parts[3].upper()}.EMI#{int(parts[4], 10)}"
     if parts[:2] == ("src", "core") or parts[:2] == ("src", "boot"):
-        return "output/extracted/SLUS_004.22"
+        return "out/extracted/SLUS_004.22"
     if parts[:2] == ("src", "logo") or parts[:3] == ("src", "modules", "logo"):
-        return "output/extracted/LOGO/LOGO.EXE"
+        return "out/extracted/LOGO/LOGO.EXE"
     return None
 
 
@@ -137,9 +137,7 @@ def _staged_program_parts(program_path: str) -> tuple[tuple[str, ...], int, int]
     if not match:
         return None
     parts = tuple(Path(program_path.removeprefix("/bins/")).parent.parts)
-    load_address = int(
-        match.group(0).removesuffix(".bin").rsplit("_", 1)[1], 16
-    )
+    load_address = int(match.group(0).removesuffix(".bin").rsplit("_", 1)[1], 16)
     return parts, int(match.group("entry"), 10), load_address
 
 
@@ -147,7 +145,9 @@ def _source_path_for_program(program_path: str, entry_hex: str) -> str | None:
     parsed = _staged_program_parts(program_path)
     if parsed is None:
         if program_path == "/boot/LOGO.EXE":
-            return f"bof3/src/modules/logo/func_{entry_hex.removeprefix('0x').lower()}.c"
+            return (
+                f"bof3/src/modules/logo/func_{entry_hex.removeprefix('0x').lower()}.c"
+            )
         if program_path == "/boot/SLUS_004.22":
             return f"bof3/src/core/func_{entry_hex.removeprefix('0x').lower()}.c"
         return None
@@ -170,21 +170,23 @@ def _source_hint_for_program(program_path: str) -> str | None:
     parsed = _staged_program_parts(program_path)
     if parsed is None:
         if program_path == "/boot/LOGO.EXE":
-            return "output/extracted/LOGO/LOGO.EXE"
+            return "out/extracted/LOGO/LOGO.EXE"
         if program_path == "/boot/SLUS_004.22":
-            return "output/extracted/SLUS_004.22"
+            return "out/extracted/SLUS_004.22"
         return None
     parts, entry, _load_address = parsed
     if parts:
-        return f"output/extracted/BIN/{'/'.join(parts)}.EMI#{entry}"
+        return f"out/extracted/BIN/{'/'.join(parts)}.EMI#{entry}"
     return None
 
 
-def _binary_payload_for_program(config: HarnessConfig, program_path: str) -> dict[str, Any]:
+def _binary_payload_for_program(
+    config: HarnessConfig, program_path: str
+) -> dict[str, Any]:
     if program_path == "/boot/LOGO.EXE":
-        return {"binary_path": str(config.root / "output/extracted/LOGO/LOGO.EXE")}
+        return {"binary_path": str(config.root / "out/extracted/LOGO/LOGO.EXE")}
     if program_path == "/boot/SLUS_004.22":
-        return {"binary_path": str(config.root / "output/extracted/SLUS_004.22")}
+        return {"binary_path": str(config.root / "out/extracted/SLUS_004.22")}
     if program_path.startswith("/bins/"):
         binary_path = _binary_path_from_program(config, program_path)
         load_address = _load_address_from_manifest(binary_path)
@@ -199,7 +201,9 @@ def _binary_payload_for_program(config: HarnessConfig, program_path: str) -> dic
     return {}
 
 
-def _binary_path_from_source_hint(config: HarnessConfig, source_hint: str) -> Path | None:
+def _binary_path_from_source_hint(
+    config: HarnessConfig, source_hint: str
+) -> Path | None:
     if "#" in source_hint:
         emi_path, entry = source_hint.rsplit("#", 1)
         bin_dir = emi_path.removesuffix(".EMI")
@@ -227,13 +231,16 @@ def _binary_path_from_program(config: HarnessConfig, program_path: str) -> Path:
     parts = list(Path(program_path.removeprefix("/bins/")).parts)
     if parts and parts[0] == "BIN":
         parts = parts[1:]
-    raw_path = config.root / "output/extracted/BIN" / Path(*parts)
+    raw_path = config.root / "out/extracted/BIN" / Path(*parts)
     if raw_path.is_file() or not parts:
         return raw_path
     match = STAGED_EMI_PROGRAM_RE.match(parts[-1])
     if match:
-        return config.root / "output/extracted/BIN" / Path(*parts[:-1]) / (
-            f"{int(match.group('entry'), 10)}.bin"
+        return (
+            config.root
+            / "out/extracted/BIN"
+            / Path(*parts[:-1])
+            / (f"{int(match.group('entry'), 10)}.bin")
         )
     return raw_path
 
@@ -249,7 +256,10 @@ def _load_address_from_manifest(binary_path: Path) -> int | None:
     for entry in entries:
         if not isinstance(entry, dict):
             continue
-        if str(entry.get("name") or f"{entry.get('index', '')}.bin") == binary_path.name:
+        if (
+            str(entry.get("name") or f"{entry.get('index', '')}.bin")
+            == binary_path.name
+        ):
             ram_ptr = entry.get("ram_ptr")
             return int(ram_ptr) if ram_ptr is not None else None
     return None
@@ -342,7 +352,9 @@ def source_function_target_records(config: HarnessConfig) -> list[dict[str, Any]
             config, source_path, size_index=size_index, row_index=row_index
         )
         source_hint = payload.get("source_hint") or _source_hint(relative_path)
-        program_path = payload.get("program_path") or _source_program_path(relative_path)
+        program_path = payload.get("program_path") or _source_program_path(
+            relative_path
+        )
         priority = 25 if source_hint and "BATTLE.EMI#3" in source_hint else 40
         records.append(
             {
@@ -503,10 +515,14 @@ def function_target_alias(row: dict[str, Any]) -> str | None:
         return None
     filename = parts[-1]
     if filename.endswith(".bin") and filename.removesuffix(".bin").isdigit():
-        return f"func:{'/'.join(parts[:-1])}#{filename.removesuffix('.bin')}@{entry_hex}"
+        return (
+            f"func:{'/'.join(parts[:-1])}#{filename.removesuffix('.bin')}@{entry_hex}"
+        )
     match = STAGED_EMI_PROGRAM_RE.match(filename)
     if match:
-        return f"func:{'/'.join(parts[:-1])}#{int(match.group('entry'), 10)}@{entry_hex}"
+        return (
+            f"func:{'/'.join(parts[:-1])}#{int(match.group('entry'), 10)}@{entry_hex}"
+        )
     return None
 
 
@@ -563,4 +579,6 @@ def target_matches_module(row: dict[str, Any], module: str | None) -> bool:
             row.get("program_path"),
         )
     )
-    return any(fragment and fragment in haystack for fragment in _module_fragments(module))
+    return any(
+        fragment and fragment in haystack for fragment in _module_fragments(module)
+    )

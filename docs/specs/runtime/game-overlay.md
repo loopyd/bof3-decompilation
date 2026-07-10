@@ -1,10 +1,17 @@
+---
+type: Overlay case study
+title: GAME.EMI overlay
+description: Runtime evidence for BOF3's title and front-controller overlay.
+tags: [runtime, overlay, game, emi]
+---
+
 # GAME.EMI Overlay
 
 This document records the first representative BOF3 overlay recovered far enough to guide PSX runtime recovery work.
 
 Target archive:
 
-- `emi_raw/BIN/ETC/GAME`
+- `out/extracted/BIN/ETC/GAME`
 
 Relevant entries:
 

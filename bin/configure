@@ -1,8 +1,0 @@
-#!/bin/sh
-set -eu
-
-REBOF3_SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
-REBOF3_ROOT_DIR="$(CDPATH= cd -- "${REBOF3_SCRIPT_DIR}/.." && pwd)"
-
-cd -- "${REBOF3_ROOT_DIR}"
-exec cmake --preset default "$@"

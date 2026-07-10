@@ -1,3 +1,10 @@
+---
+type: Payload format reference
+title: EMI audio payload semantics
+description: Evidence and confidence boundaries for EMI audio-side payload types.
+tags: [format, emi, audio]
+---
+
 # EMI Audio Payload Semantics
 
 This document tracks audio-side payload semantics carried inside EMI archives.

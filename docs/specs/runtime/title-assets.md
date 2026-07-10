@@ -1,3 +1,10 @@
+---
+type: Runtime content map
+title: Title assets
+description: BOF3 title-flow asset packs beneath the SLUS, FIRST, and GAME path.
+tags: [runtime, title, assets, emi]
+---
+
 # Title Assets
 
 This document captures the concrete title/menu asset packs that sit underneath
@@ -28,7 +35,7 @@ boot path starting at `SLUS_004.22`.
 
 Archive:
 
-- `emi_raw/BIN/ETC/FIRST`
+- `out/extracted/BIN/ETC/FIRST`
 
 Manifest summary:
 
@@ -71,7 +78,7 @@ Current local confirmation:
 
 Archive:
 
-- `emi_raw/BIN/ETC/DEMO`
+- `out/extracted/BIN/ETC/DEMO`
 
 Manifest summary:
 
@@ -319,9 +326,9 @@ The first title-art path now has one direct-EMI render that is locally
 validated:
 
 - source archives:
-  - `build/extracted/BIN/ETC/FIRST.EMI`
-  - `build/extracted/BIN/ETC/DEMO.EMI`
-  - `build/extracted/BIN/ETC/GAME.EMI`
+  - `out/extracted/BIN/ETC/FIRST.EMI`
+  - `out/extracted/BIN/ETC/DEMO.EMI`
+  - `out/extracted/BIN/ETC/GAME.EMI`
 - validated outputs:
   - `tmp/demo_validate/layout11_fix.png`
   - `tmp/demo_validate/layout12_fix.png`

@@ -1,3 +1,10 @@
+---
+type: Archive case study
+title: STATUS.EMI
+description: A mixed-content EMI archive retained as a menu-mode reference point.
+tags: [content, emi, status, menu]
+---
+
 # STATUS.EMI
 
 This document keeps one concrete mixed-content archive documented as a stable
@@ -5,7 +12,7 @@ reference point for menu-mode reverse engineering.
 
 Archive:
 
-- `emi_raw/BIN/ETC/STATUS`
+- `out/extracted/BIN/ETC/STATUS`
 
 ## Local Manifest
 

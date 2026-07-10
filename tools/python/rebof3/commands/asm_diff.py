@@ -22,7 +22,9 @@ def run_one(args: argparse.Namespace) -> int:
     outputs = payload["outputs"]
     instruct = payload["instruction_count"]
     print(f"status: {payload['status']}")
-    print(f"match: {instruct['match_percent']:.2f}% ({instruct['matching']}/{max(instruct['original'], instruct['current'])} instrs)")
+    print(
+        f"match: {instruct['match_percent']:.2f}% ({instruct['matching']}/{max(instruct['original'], instruct['current'])} instrs)"
+    )
     print(f"function: {payload['function']} {payload['address']}")
     print(f"summary: {outputs['summary_json']}")
     print(f"diff: {outputs['diff']}")

@@ -1,3 +1,10 @@
+---
+type: Reverse-engineering constraint
+title: Overlay duplication
+description: Evidence and handling rules for duplicate BOF3 overlay payloads.
+tags: [runtime, overlays, duplicates]
+---
+
 # Overlay Duplication
 
 This document captures a durable BOF3 reverse-engineering constraint: code duplication across EMI overlays is normal and should be expected.

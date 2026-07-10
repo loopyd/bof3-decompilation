@@ -1,3 +1,10 @@
+---
+type: Runtime pipeline
+title: EMI graphics pipeline
+description: Proven BOF3 extraction and runtime model for graphics-side EMI content.
+tags: [runtime, emi, graphics]
+---
+
 # EMI Graphics Pipeline
 
 This document records the current repo-local extraction model for BOF3
@@ -16,7 +23,7 @@ This pipeline only covers the graphics-side path that is currently proven.
 
 What it does cover:
 
-- direct parsing of original `.EMI` archives under `build/extracted/`
+- direct parsing of original `.EMI` archives under `out/extracted/`
 - loader-faithful reconstruction of type-`3` image uploads
 - indexed-image decode for `4bpp` and `8bpp` pages
 - CLUT decode from palette-side type-`0` blobs
@@ -36,7 +43,7 @@ archive bytes and the corresponding code-side mapping agree.
 
 Source of truth:
 
-- original `.EMI` archives under `build/extracted/BIN/**/*.EMI`
+- original `.EMI` archives under `out/extracted/BIN/**/*.EMI`
 
 The parser reads the TOC and exposes, per entry:
 

@@ -88,9 +88,7 @@ def _ghidra_lock(
             state.release_lock(conn, name="ghidra", owner=owner)
 
 
-def _target_row(
-    conn: sqlite3.Connection, target_id: str
-) -> dict[str, Any] | None:
+def _target_row(conn: sqlite3.Connection, target_id: str) -> dict[str, Any] | None:
     target = state.target_row(conn, target_id)
     if target is not None:
         return target
@@ -112,7 +110,7 @@ def _target_rows_for_module(
 
 
 def _analysis_db_path(config: HarnessConfig) -> Path:
-    return config.root / "output" / "analysis.sqlite3"
+    return config.root / "out" / "analysis.sqlite3"
 
 
 def _open_analysis_db(
@@ -216,7 +214,9 @@ def run_candidates(args: argparse.Namespace) -> int:
     lines = [f"{'target':<48} {'bytes':>7} {'status':<8} source"]
     lines.append("-" * 88)
     for row in selected:
-        payload_data = row.get("payload") if isinstance(row.get("payload"), dict) else {}
+        payload_data = (
+            row.get("payload") if isinstance(row.get("payload"), dict) else {}
+        )
         size = payload_data.get("size")
         if size is None:
             size = payload_data.get("original_size")
@@ -309,16 +309,15 @@ def run_claim(args: argparse.Namespace) -> int:
                 target_type=args.type,
             )
             rows = [
-                row for row in rows
+                row
+                for row in rows
                 if target_matches_module(row, args.module)
                 and str(row.get("status") or "") in ("queued", "ready", "analyzed")
             ]
 
             if edge_counts:
                 rows.sort(
-                    key=lambda r: edge_counts.get(
-                        str(r.get("entry_hex") or ""), 0
-                    )
+                    key=lambda r: edge_counts.get(str(r.get("entry_hex") or ""), 0)
                 )
 
             target = None
@@ -468,9 +467,7 @@ def run_diff(args: argparse.Namespace) -> int:
         else:
             target = _target_row(conn, str(target_id_or_source))
             if target is None:
-                raise LookupError(
-                    f"unknown target: {target_id_or_source}"
-                )
+                raise LookupError(f"unknown target: {target_id_or_source}")
             target_id = str(target["id"])
             raw_payload: Any = target.get("payload")
             payload_data: dict[str, Any] = (
@@ -478,21 +475,19 @@ def run_diff(args: argparse.Namespace) -> int:
             )
             source_str: str | None = payload_data.get("source_path")
             if not source_str:
-                raise ValueError(
-                    f"target {target_id} has no source_path in payload"
-                )
+                raise ValueError(f"target {target_id} has no source_path in payload")
             source_path = config.root / source_str
             address = (
-                parse_int(str(target["entry_hex"]))
-                if target.get("entry_hex")
-                else None
+                parse_int(str(target["entry_hex"])) if target.get("entry_hex") else None
             )
             size_raw: Any = payload_data.get("size")
             size = int(size_raw) if size_raw is not None else None
             bin_path_str: str | None = payload_data.get("binary_path")
             binary_path = config.root / bin_path_str if bin_path_str else None
             load_address_raw: Any = payload_data.get("load_address")
-            load_address = int(load_address_raw) if load_address_raw is not None else None
+            load_address = (
+                int(load_address_raw) if load_address_raw is not None else None
+            )
 
         if source_path is None:
             raise ValueError("could not resolve source path")
@@ -549,22 +544,40 @@ def _asm_diff_for_target_or_source(
     load_address: int | None = None
     target_id: str | None = None
 
-    if str(target_id_or_source).startswith("func-src:") or str(target_id_or_source).startswith("func:"):
+    if str(target_id_or_source).startswith("func-src:") or str(
+        target_id_or_source
+    ).startswith("func:"):
         target = _target_row(conn, str(target_id_or_source))
         if target is None:
             raise LookupError(f"unknown target: {target_id_or_source}")
         target_id = str(target["id"])
-        source_str: str | None = target["payload"].get("source_path") if isinstance(target.get("payload"), dict) else None
+        source_str: str | None = (
+            target["payload"].get("source_path")
+            if isinstance(target.get("payload"), dict)
+            else None
+        )
         if source_str:
             source_path = config.root / source_str
         address = (
             parse_int(str(target["entry_hex"])) if target.get("entry_hex") else None
         )
-        size_raw: Any = target["payload"].get("size") if isinstance(target.get("payload"), dict) else None
+        size_raw: Any = (
+            target["payload"].get("size")
+            if isinstance(target.get("payload"), dict)
+            else None
+        )
         size = int(size_raw) if size_raw is not None else None
-        bin_path_str: str | None = target["payload"].get("binary_path") if isinstance(target.get("payload"), dict) else None
+        bin_path_str: str | None = (
+            target["payload"].get("binary_path")
+            if isinstance(target.get("payload"), dict)
+            else None
+        )
         binary_path = config.root / bin_path_str if bin_path_str else None
-        load_address_raw: Any = target["payload"].get("load_address") if isinstance(target.get("payload"), dict) else None
+        load_address_raw: Any = (
+            target["payload"].get("load_address")
+            if isinstance(target.get("payload"), dict)
+            else None
+        )
         load_address = int(load_address_raw) if load_address_raw is not None else None
     elif target_id_or_source.suffix == ".c":
         source_path = (
@@ -607,9 +620,7 @@ def _asm_diff_for_target_or_source(
         bin_path_str: str | None = payload_data.get("binary_path")
         binary_path = config.root / bin_path_str if bin_path_str else None
         load_address_raw: Any = payload_data.get("load_address")
-        load_address = (
-            int(load_address_raw) if load_address_raw is not None else None
-        )
+        load_address = int(load_address_raw) if load_address_raw is not None else None
 
     if source_path is None:
         raise ValueError("could not resolve source path")
@@ -689,10 +700,7 @@ def run_verify_module(args: argparse.Namespace) -> int:
     lines.append("-" * 64)
     for result in results:
         match = result["instruction_count"]["match_percent"]
-        lines.append(
-            f"{match:>7.2f}% {str(result['status']):<12} "
-            f"{result['function']}"
-        )
+        lines.append(f"{match:>7.2f}% {str(result['status']):<12} {result['function']}")
     lines.append("")
     lines.append(f"verified: {len(results)}")
     lines.append(f"different: {failures}")
@@ -828,9 +836,7 @@ def run_seed(args: argparse.Namespace) -> int:
     return 0
 
 
-def _status_section(
-    lines: list[str], heading: str, entries: list[str]
-) -> None:
+def _status_section(lines: list[str], heading: str, entries: list[str]) -> None:
     if not entries:
         return
     lines.append(heading)
@@ -861,22 +867,14 @@ def run_status(args: argparse.Namespace) -> int:
     if claims:
         lines.append(f"active claims: {len(claims)}")
         for claim in claims:
-            lines.append(
-                f"  {claim['target_id']}  owner={claim['owner']}"
-            )
+            lines.append(f"  {claim['target_id']}  owner={claim['owner']}")
         lines.append("")
 
     per_module: dict[str, dict[str, int]] = {}
     with state.state_db(config.database) as conn:
-        all_targets = state.list_targets(
-            conn, limit=100000, target_type="function"
-        )
+        all_targets = state.list_targets(conn, limit=100000, target_type="function")
     for target in all_targets:
-        module = (
-            target.get("source_hint")
-            or target.get("program_path")
-            or "unknown"
-        )
+        module = target.get("source_hint") or target.get("program_path") or "unknown"
         module = str(module)
         if args.module and not target_matches_module(target, args.module):
             continue
@@ -907,9 +905,7 @@ def run_status(args: argparse.Namespace) -> int:
                 "SELECT COUNT(*) AS cnt FROM functions"
             ).fetchone()
             if func_count:
-                lines.append(
-                    f"analysis DB functions: {func_count['cnt']}"
-                )
+                lines.append(f"analysis DB functions: {func_count['cnt']}")
         except Exception:
             pass
         finally:
@@ -920,12 +916,9 @@ def run_status(args: argparse.Namespace) -> int:
         "counts_by_status": counts,
         "total_targets": total,
         "active_claims": [
-            {"target_id": c["target_id"], "owner": c["owner"]}
-            for c in claims
+            {"target_id": c["target_id"], "owner": c["owner"]} for c in claims
         ],
-        "per_module": {
-            m: {**c} for m, c in per_module.items()
-        },
+        "per_module": {m: {**c} for m, c in per_module.items()},
     }
     emit(args, payload, lines=lines)
     return 0
@@ -941,9 +934,7 @@ def run_export(args: argparse.Namespace) -> int:
 
         target_id = str(target["id"])
         payload_data = (
-            target.get("payload")
-            if isinstance(target.get("payload"), dict)
-            else {}
+            target.get("payload") if isinstance(target.get("payload"), dict) else {}
         )
         entry_hex = str(target.get("entry_hex") or "")
         program_path = str(target.get("program_path") or "")
@@ -1020,9 +1011,7 @@ def run_export(args: argparse.Namespace) -> int:
                 ).fetchall()
                 xrefs_from = [dict(r) for r in xref_from_rows]
 
-                dup_rows = analysis.execute(
-                    "SELECT * FROM duplicates"
-                ).fetchall()
+                dup_rows = analysis.execute("SELECT * FROM duplicates").fetchall()
                 for dup_row in dup_rows:
                     duplicate = dict(dup_row)
                     entries = json.loads(str(duplicate.get("entries_json") or "[]"))
@@ -1039,9 +1028,7 @@ def run_export(args: argparse.Namespace) -> int:
             result["callees"] = callees
             result["xrefs_to"] = xrefs_to
             result["xrefs_from"] = xrefs_from
-            result["duplicate_info"] = (
-                duplicates[0] if duplicates else {}
-            )
+            result["duplicate_info"] = duplicates[0] if duplicates else {}
 
             const_rows = (
                 analysis.execute(
@@ -1057,7 +1044,9 @@ def run_export(args: argparse.Namespace) -> int:
         finally:
             analysis.close()
 
-    emit(args, result, lines=[json.dumps(result, indent=2, sort_keys=True, default=str)])
+    emit(
+        args, result, lines=[json.dumps(result, indent=2, sort_keys=True, default=str)]
+    )
     return 0
 
 
@@ -1090,11 +1079,13 @@ def _run_list_programs(args: argparse.Namespace, config: HarnessConfig) -> int:
                 """
             ).fetchall()
             for row in rows:
-                programs.append({
-                    "program_path": row["path"],
-                    "program_name": row["name"],
-                    "analysis_funcs": row["func_count"],
-                })
+                programs.append(
+                    {
+                        "program_path": row["path"],
+                        "program_name": row["name"],
+                        "analysis_funcs": row["func_count"],
+                    }
+                )
         finally:
             analysis.close()
 
@@ -1123,7 +1114,9 @@ def _run_list_programs(args: argparse.Namespace, config: HarnessConfig) -> int:
             pass
 
     lines: list[str] = []
-    lines.append(f"{'program':<40} {'funcs':>6} {'done':>6} {'queued':>7} {'avg_match':>9}")
+    lines.append(
+        f"{'program':<40} {'funcs':>6} {'done':>6} {'queued':>7} {'avg_match':>9}"
+    )
     lines.append("-" * 72)
 
     payload_programs: list[dict[str, Any]] = []
@@ -1133,10 +1126,10 @@ def _run_list_programs(args: argparse.Namespace, config: HarnessConfig) -> int:
         total = sum(pt.values())
         done = pt.get("done", 0)
         queued = pt.get("queued", 0)
-        pct = f"{done/total*100:.0f}%" if total else "-"
+        pct = f"{done / total * 100:.0f}%" if total else "-"
 
         match_pcts = prog_events.get(pp, [])
-        avg = f"{sum(match_pcts)/len(match_pcts):.1f}%" if match_pcts else "-"
+        avg = f"{sum(match_pcts) / len(match_pcts):.1f}%" if match_pcts else "-"
 
         if args.module and not target_matches_module({"program_path": pp}, args.module):
             continue
@@ -1144,15 +1137,17 @@ def _run_list_programs(args: argparse.Namespace, config: HarnessConfig) -> int:
         lines.append(
             f"{pp:<40} {total or prog['analysis_funcs']:>6} {done:>6} {queued:>7} {avg:>9}"
         )
-        payload_programs.append({
-            "program_path": pp,
-            "name": prog["program_name"],
-            "funcs": total or prog["analysis_funcs"],
-            "done": done,
-            "queued": queued,
-            "completion_pct": pct,
-            "avg_match": avg,
-        })
+        payload_programs.append(
+            {
+                "program_path": pp,
+                "name": prog["program_name"],
+                "funcs": total or prog["analysis_funcs"],
+                "done": done,
+                "queued": queued,
+                "completion_pct": pct,
+                "avg_match": avg,
+            }
+        )
 
     payload = {"programs": payload_programs}
     emit(args, payload, lines=lines)
@@ -1194,16 +1189,16 @@ def _run_list_functions(args: argparse.Namespace, config: HarnessConfig) -> int:
         mp = match_pcts.get(tid)
         match_str = f"{mp:.1f}%" if mp is not None else "-"
 
-        lines.append(
-            f"{st:<8} {match_str:>8} {entry:>12}  {summary}"
+        lines.append(f"{st:<8} {match_str:>8} {entry:>12}  {summary}")
+        payload_funcs.append(
+            {
+                "target_id": tid,
+                "status": st,
+                "address": entry,
+                "name": summary,
+                "match_pct": mp,
+            }
         )
-        payload_funcs.append({
-            "target_id": tid,
-            "status": st,
-            "address": entry,
-            "name": summary,
-            "match_pct": mp,
-        })
 
     payload = {"functions": payload_funcs, "total": len(rows)}
     emit(args, payload, lines=lines)
@@ -1303,7 +1298,9 @@ def run_report_module(args: argparse.Namespace) -> int:
     lines.append(f"program: {program_filter}")
     lines.append("")
     lines.append(f"  total functions: {total}")
-    lines.append(f"  done: {done}/{total} ({done/total*100:.1f}%)" if total else "  done: 0")
+    lines.append(
+        f"  done: {done}/{total} ({done / total * 100:.1f}%)" if total else "  done: 0"
+    )
     for st_key in sorted(statuses):
         if st_key != "done":
             lines.append(f"  {st_key}: {statuses[st_key]}")

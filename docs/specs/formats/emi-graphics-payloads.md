@@ -1,3 +1,10 @@
+---
+type: Payload format reference
+title: EMI graphics payload semantics
+description: Evidence and confidence boundaries for EMI graphics-side payload types.
+tags: [format, emi, graphics]
+---
+
 # EMI Graphics Payload Semantics
 
 This document tracks graphics-side payload semantics carried inside EMI archives.

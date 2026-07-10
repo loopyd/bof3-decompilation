@@ -1,3 +1,10 @@
+---
+type: Runtime behavior
+title: Asset loading
+description: How the main executable turns EMI entries into live runtime assets.
+tags: [runtime, emi, loader]
+---
+
 # Asset Loading
 
 This document summarizes how `SLUS_004.22` turns EMI entries into live runtime assets.

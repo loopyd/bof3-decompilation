@@ -1,6 +1,13 @@
+---
+type: Runtime media reference
+title: STR playback
+description: BOF3 STR asset classes and extracted-sector playback constraints.
+tags: [runtime, str, xa, media]
+---
+
 # STR Playback
 
-BOF3 currently exposes four top-level `.STR` assets in `build/extracted/`.
+BOF3 currently exposes four top-level `.STR` assets in `out/extracted/`.
 They are not all the same kind of media:
 
 - `LOGO/CAPCOM30.STR` is the only proved video-bearing STR.

@@ -10,24 +10,28 @@ from pathlib import Path
 
 from ..commands._common import run_main
 
-DEFAULT_DB = Path("output/analysis.sqlite3")
-DEFAULT_HARNESS_DB = Path("output/harness/harness.sqlite3")
+DEFAULT_DB = Path("out/analysis.sqlite3")
+DEFAULT_HARNESS_DB = Path("out/harness/harness.sqlite3")
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Show project decompilation status."
-    )
+    parser = argparse.ArgumentParser(description="Show project decompilation status.")
     parser.add_argument(
-        "--module", metavar="NAME",
+        "--module",
+        metavar="NAME",
         help="Filter to a specific program/module name",
     )
     parser.add_argument(
-        "--json", dest="json_output", action="store_true",
+        "--json",
+        dest="json_output",
+        action="store_true",
         help="Machine-readable JSON output",
     )
     parser.add_argument(
-        "--db", type=Path, default=DEFAULT_DB, metavar="FILE",
+        "--db",
+        type=Path,
+        default=DEFAULT_DB,
+        metavar="FILE",
         help="Path to analysis.sqlite3",
     )
     parser.set_defaults(handler=main)
@@ -62,11 +66,7 @@ def _load_lifted_addrs(harness_db: Path) -> set[str]:
         rows = conn.execute(
             "SELECT entry_hex FROM targets WHERE status = 'done'"
         ).fetchall()
-        return {
-            _normalize_addr(r["entry_hex"])
-            for r in rows
-            if r["entry_hex"]
-        }
+        return {_normalize_addr(r["entry_hex"]) for r in rows if r["entry_hex"]}
     except sqlite3.OperationalError:
         return set()
     finally:
@@ -143,12 +143,14 @@ def _text_report(
             row["name"]
             for row in conn.execute("SELECT name, path FROM programs").fetchall()
             if filter_match in (row["name"] or "").lower()
-               or filter_match in (row["path"] or "").lower()
+            or filter_match in (row["path"] or "").lower()
         ]
     else:
         program_names = [
             row["name"]
-            for row in conn.execute("SELECT name FROM programs ORDER BY name").fetchall()
+            for row in conn.execute(
+                "SELECT name FROM programs ORDER BY name"
+            ).fetchall()
         ]
 
     # Sort: modules with functions first, then by name
@@ -199,17 +201,13 @@ def _text_report(
         ).fetchall()
         for e in edge_rows:
             if e["from_func"] in game_addrs:
-                callee_counts[e["from_func"]] = (
-                    callee_counts.get(e["from_func"], 0) + 1
-                )
+                callee_counts[e["from_func"]] = callee_counts.get(e["from_func"], 0) + 1
 
         # Get caller counts
         caller_counts: dict[str, int] = {}
         for e in edge_rows:
             if e["to_func"] in game_addrs:
-                caller_counts[e["to_func"]] = (
-                    caller_counts.get(e["to_func"], 0) + 1
-                )
+                caller_counts[e["to_func"]] = caller_counts.get(e["to_func"], 0) + 1
 
         # Find leaf functions (0 callees) that are not yet lifted
         leaf_candidates: list[tuple[sqlite3.Row, int, int]] = []
@@ -233,7 +231,9 @@ def _text_report(
         scored: list[tuple[int, int, str, str, str]] = []
         for f, n_callers, n_callees in leaf_candidates:
             ucallees = _unlifted_callees(f["address"])
-            scored.append((ucallees, n_callers, f["name"] or "", f["address"], f["program_path"]))
+            scored.append(
+                (ucallees, n_callers, f["name"] or "", f["address"], f["program_path"])
+            )
 
         scored.sort(key=lambda x: (x[0], x[1]))
 

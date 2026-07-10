@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-set -euo pipefail
-DIR="$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)"
-exec "${DIR}/_python_entry" rebof3.analysis_db.status "$@"

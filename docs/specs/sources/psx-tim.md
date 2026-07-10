@@ -1,3 +1,10 @@
+---
+type: Platform format reference
+title: PSX TIM baseline
+description: Standard TIM behavior used as a baseline for BOF3 graphics research.
+tags: [source, psx, tim, graphics]
+---
+
 # PSX TIM Baseline
 
 This page records standard PlayStation TIM behavior as a reference baseline for BOF3 image reverse engineering.

@@ -1,3 +1,10 @@
+---
+type: Runtime flow
+title: Boot sequence and state transitions
+description: Reverse-engineered boot flow from the main executable to game control.
+tags: [runtime, boot, slus, logo]
+---
+
 # Boot Sequence and State Transitions
 
 This document provides a complete reverse-engineered map of the boot sequence from SLUS entry point through the title/intro sequence to the main game controller, including all state transitions and callbacks.

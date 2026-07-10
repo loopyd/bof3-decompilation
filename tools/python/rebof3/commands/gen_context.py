@@ -13,7 +13,7 @@ import re
 import sys
 from pathlib import Path
 
-from ._common import ParserBuilder, run_main
+from ._common import run_main
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
@@ -58,7 +58,11 @@ def _join_continuation_lines(lines: list[str]) -> list[str]:
     for line in lines:
         stripped = line.rstrip()
         if buf:
-            buf.append(stripped.rstrip("\\").strip() if stripped.endswith("\\") else stripped.strip())
+            buf.append(
+                stripped.rstrip("\\").strip()
+                if stripped.endswith("\\")
+                else stripped.strip()
+            )
             if not stripped.endswith("\\"):
                 joined.append(" ".join(buf))
                 buf = []
@@ -115,9 +119,7 @@ def _categorize(
     cleaned = _strip_c_comments(text)
 
     # Remove include guard wrapper
-    cleaned = re.sub(
-        r"#ifndef\s+\S+\s*\n#define\s+\S+\s*\n", "", cleaned, count=1
-    )
+    cleaned = re.sub(r"#ifndef\s+\S+\s*\n#define\s+\S+\s*\n", "", cleaned, count=1)
     cleaned = re.sub(r"\n#endif\s*$", "", cleaned)
 
     # Join multi-line function prototypes onto single lines
@@ -225,13 +227,28 @@ def _categorize(
             # which is a function-like macro, not a prototype.
             # Heuristic: starts with known return type or a type keyword
             proto_prefixes = (
-                "void", "u8", "u16", "u32", "u64",
-                "s8", "s16", "s32", "s64",
-                "f32", "f64",
-                "bool", "char", "short", "int", "long",
-                "unsigned", "signed",
-                "size_t", "uintptr_t",
-                "const", "volatile",
+                "void",
+                "u8",
+                "u16",
+                "u32",
+                "u64",
+                "s8",
+                "s16",
+                "s32",
+                "s64",
+                "f32",
+                "f64",
+                "bool",
+                "char",
+                "short",
+                "int",
+                "long",
+                "unsigned",
+                "signed",
+                "size_t",
+                "uintptr_t",
+                "const",
+                "volatile",
             )
             first_word = raw.split()[0] if raw.split() else ""
             if first_word in proto_prefixes or first_word.endswith("*"):
@@ -287,9 +304,7 @@ def _categorize_define(raw: str, out: dict[str, list[str]]) -> None:
     out["symbols"].append(raw)
 
 
-def _generate_context_h(
-    module: str, entry: str, guard: str
-) -> str:
+def _generate_context_h(module: str, entry: str, guard: str) -> str:
     if module == "logo":
         inc_main = '#include "bof3/defines.h"'
         inc_stubs = "\n".join(f'#include "{s}"' for s in STUB_NAMES)
@@ -297,13 +312,7 @@ def _generate_context_h(
         inc_main = '#include "bof3/defines.h"'
         inc_stubs = "\n".join(f'#include "{s}"' for s in STUB_NAMES)
 
-    return (
-        f"#ifndef {guard}\n"
-        f"#define {guard}\n\n"
-        f"{inc_main}\n\n"
-        f"{inc_stubs}\n\n"
-        f"#endif\n"
-    )
+    return f"#ifndef {guard}\n#define {guard}\n\n{inc_main}\n\n{inc_stubs}\n\n#endif\n"
 
 
 def _write_stub(
@@ -316,11 +325,7 @@ def _write_stub(
     else:
         body = f"/* {description} */\n"
     path.write_text(
-        f"#ifndef {guard}\n"
-        f"#define {guard}\n\n"
-        f"/* {description} */\n\n"
-        f"{body}"
-        f"#endif\n",
+        f"#ifndef {guard}\n#define {guard}\n\n/* {description} */\n\n{body}#endif\n",
         encoding="utf-8",
     )
     return path

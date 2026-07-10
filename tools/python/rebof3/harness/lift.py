@@ -196,7 +196,7 @@ def function_report_payload(
         size = function_input.size
         source_text = target_source_path(target)
 
-    asm_diff_summary = config.root / "output/asm-diff" / function / "summary.json"
+    asm_diff_summary = config.root / "out/asm-diff" / function / "summary.json"
     asm_diff = read_json(asm_diff_summary) if asm_diff_summary.is_file() else None
     workspace_path = None if workspace is None else Path(workspace)
     original_asm = None

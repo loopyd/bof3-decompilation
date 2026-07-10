@@ -1,3 +1,10 @@
+---
+type: Payload format reference
+title: EMI mixed and unresolved payload semantics
+description: Classification constraints for mixed-purpose and unresolved EMI payloads.
+tags: [format, emi, evidence]
+---
+
 # EMI Mixed And Unresolved Payload Semantics
 
 This document tracks EMI payload classes that are mixed-purpose or still unresolved.

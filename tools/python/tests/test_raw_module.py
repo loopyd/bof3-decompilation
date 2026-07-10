@@ -14,7 +14,7 @@ def test_build_raw_image_places_object_text_by_function_address(
 ) -> None:
     objcopy = tmp_path / "objcopy"
     objcopy.write_text(
-        "#!/bin/sh\ncp \"$5\" \"$6\"\n",
+        '#!/bin/sh\ncp "$5" "$6"\n',
         encoding="utf-8",
     )
     objcopy.chmod(0o755)
@@ -41,7 +41,7 @@ def test_build_raw_image_can_truncate_overlapping_function_text(
 ) -> None:
     objcopy = tmp_path / "objcopy"
     objcopy.write_text(
-        "#!/bin/sh\ncp \"$5\" \"$6\"\n",
+        '#!/bin/sh\ncp "$5" "$6"\n',
         encoding="utf-8",
     )
     objcopy.chmod(0o755)

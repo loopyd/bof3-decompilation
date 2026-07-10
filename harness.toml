@@ -1,17 +1,17 @@
 [harness]
 schema = "rebof3-simple.harness/v1"
-out_dir = "output/harness"
-database = "output/harness/harness.sqlite3"
-workspace_dir = "output/harness/workspaces"
-context_dir = "output/harness/context"
-dashboard_dir = "output/harness/dashboard"
+out_dir = "out/harness"
+database = "out/harness/harness.sqlite3"
+workspace_dir = "out/harness/workspaces"
+context_dir = "out/harness/context"
+dashboard_dir = "out/harness/dashboard"
 
 [paths]
-emi_catalog = "output/inventory/emi_catalog.json"
-function_index = "output/inventory/ghidra_function_index.json"
-raw_ghidra_export = "output/inventory/raw_ghidra_export.json"
+emi_catalog = "out/inventory/emi_catalog.json"
+function_index = "out/inventory/ghidra_function_index.json"
+raw_ghidra_export = "out/inventory/raw_ghidra_export.json"
 artifact_manifest = "build/default/artifacts/metadata/artifacts.json"
-emi_root = "output/extracted/BIN"
+emi_root = "out/extracted/BIN"
 
 [commands]
 setup = "bin/setup"
@@ -25,18 +25,18 @@ id = "slus_004_22"
 label = "SLUS_004.22"
 program_path = "/boot/SLUS_004.22"
 source_dir = "bof3/src/slus_004_22/functions"
-source_hint = "output/extracted/SLUS_004.22"
+source_hint = "out/extracted/SLUS_004.22"
 
 [[migration_targets]]
 id = "logo_exe"
 label = "LOGO.EXE"
 program_path = "/boot/LOGO/LOGO.EXE"
 source_dir = "bof3/src/logo/logo_exe/functions"
-source_hint = "output/extracted/LOGO/LOGO.EXE"
+source_hint = "out/extracted/LOGO/LOGO.EXE"
 
 [[migration_targets]]
 id = "battle_03"
 label = "BIN/BATTLE/BATTLE.EMI#3"
 program_path = "/bins/BIN/BATTLE/BATTLE/03.bin"
 source_dir = "bof3/src/modules/bin/battle/battle/entry_03/functions"
-source_hint = "output/extracted/BIN/BATTLE/BATTLE.EMI#3"
+source_hint = "out/extracted/BIN/BATTLE/BATTLE.EMI#3"

@@ -1,3 +1,10 @@
+---
+type: External source summary
+title: BoF3-Data-Doc
+description: Scope and useful claims from the BoF3-Data-Doc reference project.
+tags: [source, emi, external]
+---
+
 # Source Summary: BoF3-Data-Doc
 
 Source repo:

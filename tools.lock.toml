@@ -1,0 +1,7 @@
+# Tool identities used by the reproducible setup workflow. Versions/checksums
+# are resolved by the setup implementation before installing into toolchains/.
+[tools.splat]
+package = "splat64"
+
+[tools.required]
+submodules = ["bof3-disk", "emi-ex", "asm-differ", "decomp-permuter", "m2c", "maspsx"]

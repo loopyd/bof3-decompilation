@@ -90,7 +90,7 @@ def load_harness_config(path: Path | None = None) -> HarnessConfig:
     harness = _table(payload, "harness")
     paths = _table(payload, "paths")
 
-    out_dir = _resolve(root, str(harness.get("out_dir", "output/harness")))
+    out_dir = _resolve(root, str(harness.get("out_dir", "out/harness")))
     return HarnessConfig(
         root=root,
         path=config_path,
@@ -122,7 +122,7 @@ def load_harness_config(path: Path | None = None) -> HarnessConfig:
             str(
                 paths.get(
                     "raw_ghidra_export",
-                    root / "output/inventory/raw_ghidra_export.json",
+                    root / "out/inventory/raw_ghidra_export.json",
                 )
             ),
         ),

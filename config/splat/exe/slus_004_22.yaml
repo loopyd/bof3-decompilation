@@ -1,0 +1,15 @@
+name: slus_004_22
+sha1: 5c709174b26f74629bf19e12360b918edac785c9
+options:
+  platform: psx
+  compiler: psyq
+  base_path: .
+  target_path: out/binaries/exe/slus_004_22.bin
+  asm_path: out/splat/exe/slus_004_22/asm
+  src_path: src/exe/slus_004_22
+  ld_script_path: out/splat/exe/slus_004_22/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - [0x0, bin]

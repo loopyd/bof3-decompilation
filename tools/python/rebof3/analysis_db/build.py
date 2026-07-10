@@ -56,8 +56,13 @@ def build_db(
 
         # Clear existing data
         for table in (
-            "duplicates", "constants", "call_edges", "xrefs",
-            "symbols", "functions", "programs",
+            "duplicates",
+            "constants",
+            "call_edges",
+            "xrefs",
+            "symbols",
+            "functions",
+            "programs",
         ):
             conn.execute(f"DELETE FROM {table}")
 
@@ -214,12 +219,16 @@ def build_parser() -> argparse.ArgumentParser:
         description="Build analysis.sqlite3 from a Ghidra analysis.json export."
     )
     parser.add_argument(
-        "--input", type=Path, default=DEFAULT_INPUT,
-        help="Path to analysis.json (default: output/inventory/analysis.json)",
+        "--input",
+        type=Path,
+        default=DEFAULT_INPUT,
+        help="Path to analysis.json (default: out/inventory/analysis.json)",
     )
     parser.add_argument(
-        "--db", type=Path, default=DEFAULT_DB,
-        help="Path to output SQLite database (default: output/analysis.sqlite3)",
+        "--db",
+        type=Path,
+        default=DEFAULT_DB,
+        help="Path to output SQLite database (default: out/analysis.sqlite3)",
     )
     parser.set_defaults(handler=main)
     return parser

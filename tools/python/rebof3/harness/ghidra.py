@@ -10,10 +10,10 @@ from .config import HarnessConfig
 def _program_path_from_payload(config: HarnessConfig, payload_path: str) -> str | None:
     path = Path(payload_path)
     try:
-        relative = path.resolve().relative_to(config.root / "output" / "extracted" / "BIN")
+        relative = path.resolve().relative_to(config.root / "out" / "extracted" / "BIN")
     except ValueError:
         try:
-            relative = path.resolve().relative_to(config.root / "output" / "extracted")
+            relative = path.resolve().relative_to(config.root / "out" / "extracted")
         except ValueError:
             return None
         if relative.as_posix() == "SLUS_004.22":
@@ -41,9 +41,9 @@ def _program_path_from_manifest_entry(
 
 
 def expected_manifest_program_aliases(config: HarnessConfig) -> dict[str, set[str]]:
-    if not (config.root / "output/ghidra-bof3/ghidra_import_manifest.json").is_file():
+    if not (config.root / "out/ghidra-bof3/ghidra_import_manifest.json").is_file():
         return {}
-    payload = read_json(config.root / "output/ghidra-bof3/ghidra_import_manifest.json")
+    payload = read_json(config.root / "out/ghidra-bof3/ghidra_import_manifest.json")
     imports = payload.get("imports", [])
     if not isinstance(imports, list):
         return {}

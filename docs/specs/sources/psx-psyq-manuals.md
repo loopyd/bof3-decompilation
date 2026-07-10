@@ -1,3 +1,10 @@
+---
+type: External source summary
+title: PSX and PsyQ manuals
+description: Platform-reference material used to interpret BOF3 runtime behavior.
+tags: [source, psx, psyq, external]
+---
+
 # Source Summary: PSX / PsyQ Manuals
 
 Source site:

@@ -1,10 +1,17 @@
+---
+type: Overlay case study
+title: SCENA16 overlay
+description: Runtime evidence for the first documented scenario overlay handoff.
+tags: [runtime, overlay, scenario, emi]
+---
+
 # SCENA16 Overlay
 
 This document records the first scenario overlay recovered far enough to guide PSX gameplay-flow recovery.
 
 Target archive:
 
-- `emi_raw/BIN/SCENARIO/SCENA16`
+- `out/extracted/BIN/SCENARIO/SCENA16`
 
 Relevant entry:
 

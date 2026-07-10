@@ -1,8 +1,15 @@
+---
+type: Input reference
+title: Disc images
+description: Known-good US v1.1 disc-image references for local verification.
+tags: [source, disc, input]
+---
+
 # Disc Images
 
 This file records known-good source image references for the canonical US v1.1 target.
 
-Use `out/inventory/` for generated disk inventory views and `bin/disk-verify`
+Use `out/catalog/` for generated disk inventory views and `bin/rebof3 disk verify`
 for automated local verification. Checksum output is generated under `out/`.
 
 ## Canonical Disk Set

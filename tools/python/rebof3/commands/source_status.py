@@ -70,7 +70,9 @@ def run_report(args: argparse.Namespace) -> int:
             )
             parts.extend(["\nfunctions:\n", function_rows])
         if args.top_complex > 0:
-            parts.extend(["\ncomplex candidates:\n", render_complex_table(complex_functions)])
+            parts.extend(
+                ["\ncomplex candidates:\n", render_complex_table(complex_functions)]
+            )
         if include_details:
             parts.extend(["\ndetails:\n", render_details(modules)])
         output = "".join(parts)
@@ -95,7 +97,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--asm-root",
         type=Path,
         default=layout.out_dir / "asm-diff",
-        help="directory containing output/asm-diff-style summary.json files",
+        help="directory containing out/asm-diff-style summary.json files",
     )
     parser.add_argument(
         "--ghidra-function-index",

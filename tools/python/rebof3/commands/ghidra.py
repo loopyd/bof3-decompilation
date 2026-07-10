@@ -246,7 +246,9 @@ def configure_export_symbols_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--project-dir", type=Path, default=DEFAULT_PROJECT_ROOT)
     parser.add_argument("--project-name", default=DEFAULT_PROJECT_NAME)
     parser.add_argument("--output", type=Path, default=DEFAULT_SYMBOL_EXPORT)
-    parser.add_argument("--script-path", type=Path, default=DEFAULT_SYMBOL_EXPORT_SCRIPT)
+    parser.add_argument(
+        "--script-path", type=Path, default=DEFAULT_SYMBOL_EXPORT_SCRIPT
+    )
     parser.add_argument("--process", default="/")
     parser.add_argument("--no-recursive", action="store_true")
     parser.set_defaults(handler=run_export_symbols)
@@ -257,7 +259,9 @@ def configure_export_analysis_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--project-dir", type=Path, default=DEFAULT_PROJECT_ROOT)
     parser.add_argument("--project-name", default=DEFAULT_PROJECT_NAME)
     parser.add_argument("--output", type=Path, default=DEFAULT_ANALYSIS_EXPORT)
-    parser.add_argument("--script-path", type=Path, default=DEFAULT_ANALYSIS_EXPORT_SCRIPT)
+    parser.add_argument(
+        "--script-path", type=Path, default=DEFAULT_ANALYSIS_EXPORT_SCRIPT
+    )
     parser.add_argument("--process", default="/")
     parser.add_argument("--no-recursive", action="store_true")
     parser.set_defaults(handler=run_export_analysis)

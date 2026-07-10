@@ -84,7 +84,9 @@ def _function_size_from_target(target: dict[str, Any], payload: dict[str, Any]) 
     raise ValueError(f"cannot infer function size for {target['id']}")
 
 
-def _function_name(target: dict[str, Any], payload: dict[str, Any], address: int) -> str:
+def _function_name(
+    target: dict[str, Any], payload: dict[str, Any], address: int
+) -> str:
     source_path = payload.get("source_path")
     if source_path:
         return Path(str(source_path)).stem
@@ -96,21 +98,21 @@ def _function_name(target: dict[str, Any], payload: dict[str, Any], address: int
 
 def _path_from_program(config: HarnessConfig, program_path: str) -> Path | None:
     if program_path == "/boot/SLUS_004.22":
-        return config.root / "output/extracted/SLUS_004.22"
+        return config.root / "out/extracted/SLUS_004.22"
     if program_path == "/boot/LOGO.EXE":
-        return config.root / "output/extracted/LOGO/LOGO.EXE"
+        return config.root / "out/extracted/LOGO/LOGO.EXE"
     if not program_path.startswith("/bins/"):
         return None
     parts = list(Path(program_path.removeprefix("/bins/")).parts)
     if parts and parts[0] == "BIN":
         parts = parts[1:]
-    raw_path = config.root / "output/extracted/BIN" / Path(*parts)
+    raw_path = config.root / "out/extracted/BIN" / Path(*parts)
     if raw_path.is_file() or not parts:
         return raw_path
     match = STAGED_EMI_PROGRAM_RE.match(parts[-1])
     if not match:
         return raw_path
-    raw_dir = config.root / "output/extracted/BIN" / Path(*parts[:-1])
+    raw_dir = config.root / "out/extracted/BIN" / Path(*parts[:-1])
     decimal_entry = int(match.group("entry"), 10)
     decimal_path = raw_dir / f"{decimal_entry}.bin"
     if decimal_path.is_file():
@@ -133,7 +135,10 @@ def _load_address_from_manifest(binary_path: Path) -> int | None:
     for entry in entries:
         if not isinstance(entry, dict):
             continue
-        if str(entry.get("name") or f"{entry.get('index', '')}.bin") == binary_path.name:
+        if (
+            str(entry.get("name") or f"{entry.get('index', '')}.bin")
+            == binary_path.name
+        ):
             ram_ptr = entry.get("ram_ptr")
             return int(ram_ptr) if ram_ptr is not None else None
     return None
@@ -253,11 +258,7 @@ def _strip_include_guard(text: str) -> str:
             endif_idx = i
 
     # Only strip if the #define IMMEDIATELY follows the #ifndef (typical guard)
-    if (
-        ifndef_idx != -1
-        and define_idx == ifndef_idx + 1
-        and endif_idx > define_idx
-    ):
+    if ifndef_idx != -1 and define_idx == ifndef_idx + 1 and endif_idx > define_idx:
         stripped = "\n".join(
             line
             for i, line in enumerate(lines)
@@ -295,7 +296,11 @@ def _collect_flat_context(
             # files AND haven't been preprocessed, so drop them entirely.
             if s[9:10] == "<":
                 continue
-            inc_path = s.split('"')[1] if '"' in s else (s.split()[1] if len(s.split()) > 1 else "")
+            inc_path = (
+                s.split('"')[1]
+                if '"' in s
+                else (s.split()[1] if len(s.split()) > 1 else "")
+            )
             if not inc_path:
                 continue
             # Try relative to including file first, then project root,
@@ -373,7 +378,9 @@ def run_m2c_for_target(
     original_bytes_path = root / "original.bin"
     original_bytes_path.write_bytes(original_bytes)
 
-    objdump_path = config.root / "toolchains/psn00b_toolchain/bin/mipsel-none-elf-objdump"
+    objdump_path = (
+        config.root / "toolchains/psn00b_toolchain/bin/mipsel-none-elf-objdump"
+    )
     original_objdump = disassemble_original(
         objdump_path=objdump_path,
         original_bytes_path=original_bytes_path,
@@ -392,9 +399,7 @@ def run_m2c_for_target(
 
     m2c_context = root / "m2c_context.c"
     m2c_context.write_text(
-        render_m2c_context(
-            target, context_header_path=context_h, root=config.root
-        ),
+        render_m2c_context(target, context_header_path=context_h, root=config.root),
         encoding="utf-8",
     )
     ghidra_json = root / "ghidra.json"

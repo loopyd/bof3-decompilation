@@ -79,7 +79,7 @@ require_project_python() {
 	fi
 
 	echo "missing project Python environment: ${REBOF3_PYTHON_BIN}" >&2
-	echo "run 'make venv' from ${REBOF3_ROOT_DIR}" >&2
+	echo "run 'just venv' from ${REBOF3_ROOT_DIR}" >&2
 	exit 1
 }
 

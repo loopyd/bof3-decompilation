@@ -18,7 +18,11 @@ from ._common import run_main
 
 
 def emit(args: argparse.Namespace, payload: dict) -> None:
-    text = json.dumps(payload, indent=2, sort_keys=True) + "\n" if args.format == "json" else render_markdown(payload)
+    text = (
+        json.dumps(payload, indent=2, sort_keys=True) + "\n"
+        if args.format == "json"
+        else render_markdown(payload)
+    )
     if args.output is None:
         print(text, end="")
         return
@@ -66,7 +70,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     function = subparsers.add_parser("function")
     function.add_argument("address")
-    function.add_argument("--source", help="source_hint to disambiguate duplicate addresses")
+    function.add_argument(
+        "--source", help="source_hint to disambiguate duplicate addresses"
+    )
     add_output_args(function)
     function.set_defaults(handler=run_function)
 

@@ -254,7 +254,9 @@ def _stage_import_path(
 
     folder = _entry_project_folder(entry)
     folder_parts = [part for part in folder.split("/") if part]
-    staged_path = staging_dir.expanduser().resolve().joinpath(*folder_parts, staged_name)
+    staged_path = (
+        staging_dir.expanduser().resolve().joinpath(*folder_parts, staged_name)
+    )
     staged_path.parent.mkdir(parents=True, exist_ok=True)
     if staged_path.exists() or staged_path.is_symlink():
         try:
@@ -297,7 +299,9 @@ def build_analyze_headless_import_commands(
     if not isinstance(imports, list):
         raise ValueError("manifest imports must be a list")
 
-    effective_analyze = bool(payload.get("analyze", True)) if analyze is None else analyze
+    effective_analyze = (
+        bool(payload.get("analyze", True)) if analyze is None else analyze
+    )
     project_location = project_dir.expanduser().resolve()
     analyze_headless = resolve_analyze_headless(ghidra_home)
 
@@ -468,7 +472,7 @@ def export_analysis(
     )
 
 
-DEFAULT_DUPLICATE_EXPORT = Path("output/harness/duplicate_groups.json")
+DEFAULT_DUPLICATE_EXPORT = Path("out/harness/duplicate_groups.json")
 DEFAULT_DUPLICATE_EXPORT_SCRIPT = (
     Path(__file__).resolve().parents[4]
     / "tools"

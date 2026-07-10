@@ -1,3 +1,10 @@
+---
+type: Runtime flow
+title: Logo boot path
+description: Secondary LOGO.EXE handoff from the main BOF3 executable.
+tags: [runtime, boot, logo, slus]
+---
+
 # Logo Boot Path
 
 This document records the currently proven boot-logo branch that is separate from the `GAME.EMI` front-controller path.

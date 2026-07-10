@@ -1,3 +1,10 @@
+---
+type: Binary container format
+title: EMI format
+description: BOF3 EMI container layout and payload-type semantics.
+tags: [format, emi, container]
+---
+
 # EMI Format
 
 This document describes the BOF3 EMI archive container itself. The game-specific loader behavior lives in `../runtime/emi-loader.md`.
@@ -12,7 +19,7 @@ This document describes the BOF3 EMI archive container itself. The game-specific
 
 ## Container Layout
 
-EMI is a sector-aligned archive format used throughout `build/extracted/BIN/`.
+EMI is a sector-aligned archive format used throughout `out/extracted/`.
 
 Header layout:
 
@@ -93,7 +100,7 @@ Notes:
 - handlers also exist in `SLUS_004.22` for types `4`, `5`, and `9`, but those meanings are not yet proven
 - current local EMI manifests contain many type `6`, `7`, `8`, and `10`
   payloads, but no concrete shipped type-`9` sample is currently confirmed
-- current local counts across `emi_raw/` are:
+- expected US-corpus counts, verified in the generated catalog, are:
   - type `6`: `1020`
   - type `7`: `1020`
   - type `8`: `904`
@@ -120,9 +127,3 @@ Current conclusion:
 - full distinction between raw textures, CLUTs, and other graphics-side blobs
 - any relocation or init convention for code-bearing payloads
 - exact 3D model format stored in character, world, or battle archives
-
-## Harness Naming
-
-Harness reports preserve the raw TOC value as `raw_type` and render a symbolic
-`emi_kind` for humans. The current symbolic names are documented in
-`artifacts.md`.

@@ -1,3 +1,10 @@
+---
+type: Overlay case study
+title: Representative battle overlay
+description: Runtime evidence for the representative BATTLE.EMI entry 3 overlay.
+tags: [runtime, overlay, battle, emi]
+---
+
 # Representative Battle Overlay: `/bins/BIN/BATTLE/BATTLE/3.bin`
 
 This document is the canonical runtime reference for the representative battle

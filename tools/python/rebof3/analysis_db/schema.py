@@ -97,6 +97,7 @@ CREATE INDEX IF NOT EXISTS idx_constants_xrefs
     ON constants(xref_count);
 """
 
+
 def init_db(conn: sqlite3.Connection) -> None:
     conn.executescript(CREATE_ALL)
     conn.execute(

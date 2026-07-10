@@ -5,7 +5,7 @@ Reads the Ghidra function index, groups game functions by body byte content,
 filters to cross-program duplicates only, and writes a JSON report.
 
 Usage: bin/detect-duplicates [--ghidra]
-Output: output/harness/duplicate_groups.json
+Output: out/harness/duplicate_groups.json
 
 With --ghidra: uses Ghidra headless for exact function byte comparison.
 Without --ghidra: uses the emi_catalog SHA256 + function body range fallback.
@@ -24,9 +24,7 @@ from .harness.config import load_harness_config
 from .jsonio import read_json, write_json
 
 
-EMI_SOURCE_RE = re.compile(
-    r"^output/extracted/(.+)/(.+)\.EMI(#(?P<slot>[0-9]+))?$"
-)
+EMI_SOURCE_RE = re.compile(r"^out/extracted/(.+)/(.+)\.EMI(#(?P<slot>[0-9]+))?$")
 
 
 def _load_function_index(path: Path) -> list[dict[str, Any]]:
@@ -53,33 +51,41 @@ def _resolve_binary(source_hint: str, config_root: Path) -> Path | None:
     """Resolve a source_hint to an actual binary file on disk.
 
     source_hint examples:
-      "output/extracted/SLUS_004.22"
-      "output/extracted/LOGO/LOGO.EXE"
-      "output/extracted/BATTLE/BATTLE.EMI#15"
+      "out/extracted/SLUS_004.22"
+      "out/extracted/LOGO/LOGO.EXE"
+      "out/extracted/BATTLE/BATTLE.EMI#15"
     """
     if not source_hint:
         return None
 
     # Core executables
-    if source_hint == "output/extracted/SLUS_004.22":
-        p = config_root / "output/extracted/SLUS_004.22"
+    if source_hint == "out/extracted/SLUS_004.22":
+        p = config_root / "out/extracted/SLUS_004.22"
         return p if p.is_file() else None
-    if "LOGO.EXE" in source_hint or source_hint == "output/extracted/LOGO/LOGO.EXE":
-        p = config_root / "output/extracted/LOGO/LOGO.EXE"
+    if "LOGO.EXE" in source_hint or source_hint == "out/extracted/LOGO/LOGO.EXE":
+        p = config_root / "out/extracted/LOGO/LOGO.EXE"
         return p if p.is_file() else None
 
-    # EMI entries: output/extracted/<FAMILY>/<ARCHIVE>.EMI#<SLOT>
+    # EMI entries: out/extracted/<FAMILY>/<ARCHIVE>.EMI#<SLOT>
     m = EMI_SOURCE_RE.match(source_hint)
     if m:
         family = m.group(1)
         archive = m.group(2)
         slot = m.group("slot") or "0"
-        # EMI raw path: output/extracted/<FAMILY>/<ARCHIVE>/<SLOT>.bin
+        # EMI raw path: out/extracted/<FAMILY>/<ARCHIVE>/<SLOT>.bin
         p = config_root / "output" / "extracted" / family / archive / f"{slot}.bin"
         if p.is_file():
             return p
         # Try with BIN prefix
-        p = config_root / "output" / "extracted" / "BIN" / family / archive / f"{slot}.bin"
+        p = (
+            config_root
+            / "output"
+            / "extracted"
+            / "BIN"
+            / family
+            / archive
+            / f"{slot}.bin"
+        )
         if p.is_file():
             return p
 
@@ -185,9 +191,7 @@ def run(report_path: Path | None = None) -> dict[str, Any]:
         "total_game_functions": len(game_rows),
         "skipped_not_resolved": skipped,
         "duplicate_group_count": len(groups),
-        "functions_in_duplicate_groups": sum(
-            g["occurrence_count"] for g in groups
-        ),
+        "functions_in_duplicate_groups": sum(g["occurrence_count"] for g in groups),
         "groups": groups,
     }
 

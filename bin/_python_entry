@@ -17,7 +17,7 @@ shift
 
 if [ ! -x "${REBOF3_PYTHON_BIN}" ]; then
   printf 'missing project Python environment: %s\n' "${REBOF3_PYTHON_BIN}" >&2
-  printf 'run `make venv` from %s\n' "${REBOF3_ROOT_DIR}" >&2
+  printf 'run `just venv` from %s\n' "${REBOF3_ROOT_DIR}" >&2
   exit 1
 fi
 

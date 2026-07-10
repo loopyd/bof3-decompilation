@@ -1,0 +1,1 @@
+# BOF3 symbols shared by independently linked binaries.

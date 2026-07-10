@@ -1,3 +1,10 @@
+---
+type: External source summary
+title: TCRF BOF3
+description: Scope and BOF3 research leads from The Cutting Room Floor.
+tags: [source, bof3, external]
+---
+
 # Source Summary: TCRF BOF3
 
 Source page:
@@ -23,13 +30,13 @@ In this repo it should be treated as:
 ## Current Local Corroboration
 
 - `out/inventory/` now resolves the full 887-entry top-level slot table, including:
-  - `build/extracted/BIN/WORLD04/AREA197.EMI`
-  - `build/extracted/BIN/WORLD04/AREA198.EMI`
-  - `build/extracted/BIN/WORLD04/AREA199.EMI`
-  - `build/extracted/LOGO/CAPCOM30.STR`
-  - `build/extracted/LOGO/LOGO.EXE`
-  - `build/extracted/SYSTEM.CNF`
-  - `build/extracted/SLUS_004.22`
+  - `out/extracted/BIN/WORLD04/AREA197.EMI`
+  - `out/extracted/BIN/WORLD04/AREA198.EMI`
+  - `out/extracted/BIN/WORLD04/AREA199.EMI`
+  - `out/extracted/LOGO/CAPCOM30.STR`
+  - `out/extracted/LOGO/LOGO.EXE`
+  - `out/extracted/SYSTEM.CNF`
+  - `out/extracted/SLUS_004.22`
 - `build/Breath of Fire III (v1.1).xml` confirms that these files are present in the shipped US v1.1 image layout.
 - `third_party/references/vast_violence/tables/pointers_formations_1.1.txt` and `third_party/references/vast_violence/tables/pointers_monsters_1.1.txt` both index data inside `AREA197.EMI`, `AREA198.EMI`, and `AREA199.EMI`.
 

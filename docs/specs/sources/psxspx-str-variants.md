@@ -1,3 +1,10 @@
+---
+type: External source summary
+title: PSXSPX STR variants
+description: STR header variants from the PSXSPX streaming-format reference.
+tags: [source, psx, str, external]
+---
+
 # PSXSPX STR Variants
 
 Source: https://problemkaputt.de/psxspx-cdrom-file-video-streaming-str-variants.htm

@@ -1,3 +1,10 @@
+---
+type: Overlay case study
+title: FIRST frontend pack
+description: EXE-side title bootstrap between LOGO.EXE and GAME.EMI.
+tags: [runtime, overlay, frontend, emi]
+---
+
 # FIRST Frontend Pack
 
 This document records the EXE-side title bootstrap that runs after
@@ -5,7 +12,7 @@ This document records the EXE-side title bootstrap that runs after
 
 Target archive:
 
-- `emi_raw/BIN/ETC/FIRST`
+- `out/extracted/BIN/ETC/FIRST`
 
 ## Proven `SLUS` Handoff
 

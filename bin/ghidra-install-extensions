@@ -1,9 +1,0 @@
-#!/bin/sh
-set -eu
-
-REBOF3_SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
-REBOF3_PYTHON_ENTRY="${REBOF3_SCRIPT_DIR}/_python_entry"
-REBOF3_ENTRY_MODULE="rebof3.commands.ghidra"
-REBOF3_ENTRY_ARG_1="install-extensions"
-
-exec "${REBOF3_PYTHON_ENTRY}" "${REBOF3_ENTRY_MODULE}" "${REBOF3_ENTRY_ARG_1}" "$@"

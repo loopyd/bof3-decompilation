@@ -53,7 +53,7 @@ def build_extract_assets_pipeline(
                 root=repo_root,
                 executor=executor,
                 name="emi-unpack",
-                description="Unpack extracted EMI archives inline into output/extracted",
+                description="Unpack extracted EMI archives inline into out/extracted",
                 command=(_bin(repo_root, "emi-unpack"),),
             ),
         ],

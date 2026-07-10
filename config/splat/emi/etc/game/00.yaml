@@ -1,0 +1,15 @@
+name: etc_game_00
+sha1: 54ae6416c382c3729c62a52add262ccdcb816018
+options:
+  platform: psx
+  compiler: psyq
+  base_path: .
+  target_path: out/extracted/BIN/ETC/GAME/0.bin
+  asm_path: out/splat/etc/game/00/asm
+  src_path: src/emi/etc/game/00
+  ld_script_path: out/splat/etc/game/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - [0x0, bin]

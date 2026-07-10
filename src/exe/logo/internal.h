@@ -1,0 +1,4 @@
+#ifndef BOF3_LOGO_INTERNAL_H
+#define BOF3_LOGO_INTERNAL_H
+
+#endif

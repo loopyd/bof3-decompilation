@@ -4,14 +4,13 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sqlite3
 import sys
 from pathlib import Path
 
 from ..commands._common import run_main
 
-DEFAULT_DB = Path("output/analysis.sqlite3")
+DEFAULT_DB = Path("out/analysis.sqlite3")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -19,15 +18,22 @@ def build_parser() -> argparse.ArgumentParser:
         description="Generate M2C context header for a function."
     )
     parser.add_argument(
-        "--addr", required=True, metavar="HEX",
+        "--addr",
+        required=True,
+        metavar="HEX",
         help="Function address (e.g. 0x80123456)",
     )
     parser.add_argument(
-        "--out", type=Path, metavar="FILE",
+        "--out",
+        type=Path,
+        metavar="FILE",
         help="Output file path (default: stdout)",
     )
     parser.add_argument(
-        "--db", type=Path, default=DEFAULT_DB, metavar="FILE",
+        "--db",
+        type=Path,
+        default=DEFAULT_DB,
+        metavar="FILE",
         help="Path to analysis.sqlite3",
     )
     parser.set_defaults(handler=main)
@@ -169,7 +175,9 @@ def _build_context(conn: sqlite3.Connection, addr: str) -> str:
                 ret, _, _, params = parsed
                 lines.append(f"extern {ret} {cname}{params};")
             elif external:
-                lines.append(f"/* DEFINE_FUNC_AT(???, {cname}, {caddr}, ???); — signature unknown */")
+                lines.append(
+                    f"/* DEFINE_FUNC_AT(???, {cname}, {caddr}, ???); — signature unknown */"
+                )
             else:
                 lines.append(f"/* extern {cname}(???); — signature unknown */")
             lines.append("")
@@ -240,9 +248,7 @@ def _build_context(conn: sqlite3.Connection, addr: str) -> str:
                 others.append(f"{ename} ({eprog})")
             if others:
                 lines.append(
-                    f"/*   {d['program_count']} programs: "
-                    + ", ".join(others)
-                    + " */"
+                    f"/*   {d['program_count']} programs: " + ", ".join(others) + " */"
                 )
         lines.append("")
 

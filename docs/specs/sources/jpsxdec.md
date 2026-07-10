@@ -1,3 +1,10 @@
+---
+type: External source summary
+title: jPSXdec
+description: Scope and useful claims from the jPSXdec media-reference project.
+tags: [source, str, xa, external]
+---
+
 # Source Summary: jPSXdec
 
 Source repo:

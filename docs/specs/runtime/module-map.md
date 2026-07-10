@@ -1,3 +1,10 @@
+---
+type: Module catalog
+title: Module map
+description: Conservatively documented BOF3 executables and code-bearing EMI modules.
+tags: [runtime, modules, overlays]
+---
+
 # Module Map
 
 Use shipped module names and archive slots.
@@ -45,8 +52,8 @@ executable-overlay subset.
 
 ## Ghidra Import Catalog
 
-For the broader practical Ghidra import set built from local EMI TOC metadata,
-see [emi-ghidra-import-catalog.md](runtime/emi-ghidra-import-catalog.md).
+Only confirmed code modules are imported as executable targets. The local
+catalog records other EMI entries as resources or unresolved payloads.
 
 ## Mixed-Content Archive Pattern
 
@@ -67,12 +74,6 @@ Example stable reference:
 
 ## Naming Rule For Recovered Source
 
-Recovered source should mirror shipped module identity:
-
-- `bof3/src/modules/game/00/` for `GAME.EMI#0`
-- `bof3/src/modules/game/01/` for `GAME.EMI#1`
-- `bof3/src/modules/commu00/00/` for `COMMU00.EMI#0`
-- `bof3/src/modules/battle/15/` for `BATTLE.EMI#15`
-
-Do not invent synthetic names like `GAME00` or `COMMON00`.
-Use the shipped archive name plus slot.
+Recovered source mirrors the promoted archive path and slot below `src/emi/`.
+Use `bin/rebof3 promote` to create the path; do not invent synthetic module
+names or create an executable target directly from TOC metadata.

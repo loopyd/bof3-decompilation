@@ -1,3 +1,10 @@
+---
+type: External source summary
+title: vast_violence
+description: Scope and useful BOF3 offset and structure evidence from the randomizer project.
+tags: [source, bof3, offsets, structures, external]
+---
+
 # Source Summary: vast_violence
 
 Source repo:

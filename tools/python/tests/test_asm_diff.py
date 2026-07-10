@@ -155,9 +155,9 @@ def test_normalize_disassembly_uses_relative_branch_targets() -> None:
     assert normalize_disassembly("  3c:\t10400003 \tbeqz\tv0,4c <LM11>\n") == [
         "beqz v0,16"
     ]
-    assert normalize_disassembly(
-        "8014b378:\t10400003 \tbeqz\tv0,0x8014b388\n"
-    ) == ["beqz v0,16"]
+    assert normalize_disassembly("8014b378:\t10400003 \tbeqz\tv0,0x8014b388\n") == [
+        "beqz v0,16"
+    ]
 
 
 def test_result_payload_reports_instruction_match_percent(tmp_path: Path) -> None:
@@ -174,9 +174,12 @@ def test_result_payload_reports_instruction_match_percent(tmp_path: Path) -> Non
         current_lines=["addiu sp,sp,-16", "move v0,zero", "nop"],
     )
 
-    assert matching_instruction_count(
-        ["addiu sp,sp,-16", "jr ra", "nop"],
-        ["addiu sp,sp,-16", "move v0,zero", "nop"],
-    ) == 2
+    assert (
+        matching_instruction_count(
+            ["addiu sp,sp,-16", "jr ra", "nop"],
+            ["addiu sp,sp,-16", "move v0,zero", "nop"],
+        )
+        == 2
+    )
     assert payload["instruction_count"]["matching"] == 2
     assert payload["instruction_count"]["match_percent"] == 66.67

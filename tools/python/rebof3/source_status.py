@@ -183,37 +183,41 @@ def decimal_suffix(part: str) -> str:
 def inferred_source_hint_for_module(module_name: str) -> str | None:
     parts = module_name.split("/")
     if parts[:1] == ["core"] or parts[:1] == ["boot"]:
-        return "output/extracted/SLUS_004.22"
+        return "out/extracted/SLUS_004.22"
     if parts == ["modules", "logo"]:
-        return "output/extracted/LOGO/LOGO.EXE"
+        return "out/extracted/LOGO/LOGO.EXE"
     if len(parts) == 3 and parts[:2] == ["modules", "game"]:
-        return f"output/extracted/ETC/GAME.EMI#{decimal_suffix(parts[2])}"
+        return f"out/extracted/ETC/GAME.EMI#{decimal_suffix(parts[2])}"
     if len(parts) == 3 and parts[:2] == ["modules", "commu00"]:
-        return f"output/extracted/ETC/COMMU00.EMI#{decimal_suffix(parts[2])}"
+        return f"out/extracted/ETC/COMMU00.EMI#{decimal_suffix(parts[2])}"
     if len(parts) == 3 and parts[:2] == ["modules", "bate"]:
-        return f"output/extracted/ETC/BATE.EMI#{decimal_suffix(parts[2])}"
+        return f"out/extracted/ETC/BATE.EMI#{decimal_suffix(parts[2])}"
     if len(parts) == 3 and parts[:2] == ["modules", "batl_re2"]:
-        return f"output/extracted/BATTLE/BATL_RE2.EMI#{decimal_suffix(parts[2])}"
+        return f"out/extracted/BATTLE/BATL_RE2.EMI#{decimal_suffix(parts[2])}"
     if len(parts) == 3 and parts[:2] == ["modules", "battle"]:
-        return f"output/extracted/BATTLE/BATTLE.EMI#{decimal_suffix(parts[2])}"
+        return f"out/extracted/BATTLE/BATTLE.EMI#{decimal_suffix(parts[2])}"
     if len(parts) == 3 and parts[:2] == ["modules", "sce10eff"]:
-        return f"output/extracted/SCENARIO/SCE10EFF.EMI#{decimal_suffix(parts[2])}"
+        return f"out/extracted/SCENARIO/SCE10EFF.EMI#{decimal_suffix(parts[2])}"
     if len(parts) == 3 and parts[:2] == ["modules", "scena16"]:
-        return f"output/extracted/SCENARIO/SCENA16.EMI#{decimal_suffix(parts[2])}"
+        return f"out/extracted/SCENARIO/SCENA16.EMI#{decimal_suffix(parts[2])}"
     if len(parts) == 4 and parts[:2] == ["modules", "world00"]:
         area = parts[2].upper()
-        return f"output/extracted/WORLD00/{area}.EMI#{decimal_suffix(parts[3])}"
+        return f"out/extracted/WORLD00/{area}.EMI#{decimal_suffix(parts[3])}"
     return None
 
 
-def group_ghidra_by_source(rows: list[GhidraFunctionStatus]) -> dict[str, list[GhidraFunctionStatus]]:
+def group_ghidra_by_source(
+    rows: list[GhidraFunctionStatus],
+) -> dict[str, list[GhidraFunctionStatus]]:
     grouped: dict[str, list[GhidraFunctionStatus]] = {}
     for row in rows:
         grouped.setdefault(source_group_for_ghidra(row), []).append(row)
     return grouped
 
 
-def group_ghidra_by_entry(rows: list[GhidraFunctionStatus]) -> dict[str, list[GhidraFunctionStatus]]:
+def group_ghidra_by_entry(
+    rows: list[GhidraFunctionStatus],
+) -> dict[str, list[GhidraFunctionStatus]]:
     grouped: dict[str, list[GhidraFunctionStatus]] = {}
     for row in rows:
         grouped.setdefault(row.entry, []).append(row)
@@ -222,7 +226,9 @@ def group_ghidra_by_entry(rows: list[GhidraFunctionStatus]) -> dict[str, list[Gh
 
 def strip_comment_lines(text: str) -> str:
     return "\n".join(
-        line for line in text.splitlines() if not line.strip().startswith(("/*", "*", "//"))
+        line
+        for line in text.splitlines()
+        if not line.strip().startswith(("/*", "*", "//"))
     )
 
 
@@ -261,7 +267,9 @@ def scan_names(paths: list[Path]) -> tuple[list[str], list[str]]:
     for path in paths:
         text = path.read_text(encoding="utf-8", errors="ignore")
         variables.update(match.group(0) for match in VARIABLE_RE.finditer(text))
-        variables.update(match.group("name") for match in ADDRESS_MACRO_RE.finditer(text))
+        variables.update(
+            match.group("name") for match in ADDRESS_MACRO_RE.finditer(text)
+        )
         for match in STRUCT_RE.finditer(text):
             name = match.group("typedef") or match.group("struct")
             if name:
@@ -356,7 +364,12 @@ def analyze_source_module(
             for address in sorted(address_strings)
             for row in ghidra_by_entry.get(address, [])
         ]
-    ghidra_rows = sorted({(row.entry, source_group_for_ghidra(row)): row for row in ghidra_rows}.values(), key=lambda row: row.entry)
+    ghidra_rows = sorted(
+        {
+            (row.entry, source_group_for_ghidra(row)): row for row in ghidra_rows
+        }.values(),
+        key=lambda row: row.entry,
+    )
     ghidra_lifted = sum(1 for row in ghidra_rows if row.entry in address_strings)
     ghidra_unlifted_samples = [
         f"{row.entry}:{row.name}"
@@ -460,7 +473,10 @@ def analyze_source_status(
     ghidra_by_source = group_ghidra_by_source(ghidra_rows)
     modules: list[ModuleStatus] = []
     for module_dir in sorted(path for path in source_root.rglob("*") if path.is_dir()):
-        if module_filter and module_filter not in module_dir.relative_to(source_root).as_posix():
+        if (
+            module_filter
+            and module_filter not in module_dir.relative_to(source_root).as_posix()
+        ):
             continue
         if not list(module_dir.glob("*.c")) and not list(module_dir.glob("*.h")):
             continue
@@ -501,15 +517,15 @@ def analyze_ghidra_programs(
     for source, rows in sorted(grouped.items()):
         if module_filter and module_filter not in source:
             matching_module_sources = {
-                program
-                for module in modules
-                for program in module.ghidra_programs
+                program for module in modules for program in module.ghidra_programs
             }
             if source not in matching_module_sources:
                 continue
         lifted = sum(1 for row in rows if row.entry in lifted_addresses)
         unlifted_samples = [
-            f"{row.entry}:{row.name}" for row in rows if row.entry not in lifted_addresses
+            f"{row.entry}:{row.name}"
+            for row in rows
+            if row.entry not in lifted_addresses
         ][:8]
         first = rows[0]
         program_statuses.append(
@@ -576,11 +592,7 @@ def analyze_all_ghidra_function_statuses(
 def top_complex_functions(
     modules: list[ModuleStatus], *, limit: int
 ) -> list[FunctionStatus]:
-    functions = [
-        status
-        for module in modules
-        for status in module.function_statuses
-    ]
+    functions = [status for module in modules for status in module.function_statuses]
     return sorted(
         functions,
         key=lambda status: (
@@ -652,11 +664,7 @@ def render_ghidra_program_table(programs: list[GhidraProgramStatus]) -> str:
 
 def render_function_table(modules: list[ModuleStatus]) -> str:
     return render_function_rows(
-        [
-            status
-            for module in modules
-            for status in module.merged_function_statuses
-        ]
+        [status for module in modules for status in module.merged_function_statuses]
     )
 
 
@@ -684,9 +692,7 @@ def render_function_rows(functions: list[MergedFunctionStatus]) -> str:
 
 
 def render_complex_table(functions: list[FunctionStatus]) -> str:
-    lines = [
-        "function\tsource\taddress\tscore\tloc\tbranches\tcalls\tmatch\texact"
-    ]
+    lines = ["function\tsource\taddress\tscore\tloc\tbranches\tcalls\tmatch\texact"]
     for status in functions:
         lines.append(
             "\t".join(
@@ -718,8 +724,7 @@ def render_details(modules: list[ModuleStatus]) -> str:
             lines.append("ghidra: " + ", ".join(module.ghidra_programs))
         if module.ghidra_unlifted_samples:
             lines.append(
-                "ghidra-unlifted-samples: "
-                + ", ".join(module.ghidra_unlifted_samples)
+                "ghidra-unlifted-samples: " + ", ".join(module.ghidra_unlifted_samples)
             )
         for status in module.merged_function_statuses:
             match = render_percent(status.match_percent) or "unmeasured"

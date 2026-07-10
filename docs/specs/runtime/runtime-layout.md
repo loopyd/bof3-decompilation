@@ -1,3 +1,10 @@
+---
+type: Runtime architecture
+title: Runtime layout
+description: High-level BOF3 runtime roles, executable boundaries, and loading model.
+tags: [runtime, architecture, slus, emi]
+---
+
 # Runtime Layout
 
 This document is the top-level runtime model for the US v1.1 game build.

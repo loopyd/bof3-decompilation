@@ -54,9 +54,7 @@ def build_context_header(config: HarnessConfig, target: dict[str, Any]) -> Path:
     context_root = config.context_dir / safe_name(str(target["id"]))
     context_root.mkdir(parents=True, exist_ok=True)
 
-    overlay_dir = _overlay_context_dir(
-        config, str(target.get("program_path") or "")
-    )
+    overlay_dir = _overlay_context_dir(config, str(target.get("program_path") or ""))
     if overlay_dir is not None:
         overlay_rel = overlay_dir.relative_to(config.root)
         path = context_root / "context.h"

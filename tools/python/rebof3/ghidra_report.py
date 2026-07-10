@@ -61,7 +61,9 @@ def is_reverse_function(row: dict[str, Any]) -> bool:
 
 
 def row_entry(row: dict[str, Any]) -> str | None:
-    return normalize_address(row.get("entry_hex") or row.get("entry") or row.get("address"))
+    return normalize_address(
+        row.get("entry_hex") or row.get("entry") or row.get("address")
+    )
 
 
 def row_body_bounds(row: dict[str, Any]) -> tuple[int, int] | None:
@@ -172,10 +174,16 @@ def load_raw_rows(layout: RepoLayout) -> list[dict[str, Any]]:
         return []
     payload = read_json(path)
     rows = payload.get("rows", [])
-    return [dict(row) for row in rows if isinstance(row, dict)] if isinstance(rows, list) else []
+    return (
+        [dict(row) for row in rows if isinstance(row, dict)]
+        if isinstance(rows, list)
+        else []
+    )
 
 
-def build_symbol_index(rows: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str, Any]]:
+def build_symbol_index(
+    rows: list[dict[str, Any]],
+) -> dict[tuple[str, str], dict[str, Any]]:
     symbols: dict[tuple[str, str], dict[str, Any]] = {}
     for row in rows:
         if row.get("kind") != "symbol":
@@ -186,7 +194,9 @@ def build_symbol_index(rows: list[dict[str, Any]]) -> dict[tuple[str, str], dict
     return symbols
 
 
-def build_source_status_index(layout: RepoLayout) -> dict[tuple[str, str], dict[str, Any]]:
+def build_source_status_index(
+    layout: RepoLayout,
+) -> dict[tuple[str, str], dict[str, Any]]:
     path = layout.out_dir / "source-status-full.json"
     if not path.is_file():
         return {}
@@ -235,7 +245,9 @@ def build_duplicate_groups(layout: RepoLayout) -> dict[str, Any]:
             "body_max": normalize_address(row.get("body_max")),
             "body_min": normalize_address(row.get("body_min")),
             "function": row.get("name"),
-            "lift_status": source_status.get((str(row.get("source_hint") or ""), str(entry or "")), {}).get("status", "missing"),
+            "lift_status": source_status.get(
+                (str(row.get("source_hint") or ""), str(entry or "")), {}
+            ).get("status", "missing"),
             "program_path": row.get("program_path"),
             "signature": row.get("signature"),
             "size": function_size(row),
@@ -266,10 +278,12 @@ def build_duplicate_groups(layout: RepoLayout) -> dict[str, Any]:
                 "families": sorted(
                     {
                         str(member.get("source_hint") or "")
-                        .removeprefix("output/extracted/")
+                        .removeprefix("out/extracted/")
                         .split("/", 1)[0]
                         for member in ordered
-                        if str(member.get("source_hint") or "").startswith("output/extracted/")
+                        if str(member.get("source_hint") or "").startswith(
+                            "out/extracted/"
+                        )
                     }
                 ),
                 "members": ordered,
@@ -289,7 +303,9 @@ def build_duplicate_groups(layout: RepoLayout) -> dict[str, Any]:
         "hashed_function_count": sum(len(members) for members in by_hash.values()),
         "missing_hash_count": missing,
         "duplicate_group_count": len(groups),
-        "duplicated_function_count": sum(int(group["function_count"]) for group in groups),
+        "duplicated_function_count": sum(
+            int(group["function_count"]) for group in groups
+        ),
         "groups": groups,
     }
 
@@ -302,7 +318,9 @@ def duplicate_action(members: list[dict[str, Any]]) -> str:
     return "lift one representative first; defer aliases until representative matches"
 
 
-def duplicate_group_by_member(duplicates: dict[str, Any]) -> dict[tuple[str, str], dict[str, Any]]:
+def duplicate_group_by_member(
+    duplicates: dict[str, Any],
+) -> dict[tuple[str, str], dict[str, Any]]:
     index: dict[tuple[str, str], dict[str, Any]] = {}
     for group in duplicates.get("groups", []):
         if not isinstance(group, dict):
@@ -332,7 +350,10 @@ def refs_for_function(
     data_refs: list[dict[str, Any]] = []
     incoming: list[dict[str, Any]] = []
     for ref in raw_rows:
-        if ref.get("kind") != "xref" or str(ref.get("program_path") or "") != program_path:
+        if (
+            ref.get("kind") != "xref"
+            or str(ref.get("program_path") or "") != program_path
+        ):
             continue
         from_addr = parse_int(ref.get("from_address"))
         to_addr = parse_int(ref.get("to_address"))
@@ -350,7 +371,11 @@ def refs_for_function(
                 calls.append(ref_record)
             else:
                 data_refs.append(ref_record)
-        if to_addr is not None and body_min <= to_addr <= body_max and from_addr not in (None, row_entry(row)):
+        if (
+            to_addr is not None
+            and body_min <= to_addr <= body_max
+            and from_addr not in (None, row_entry(row))
+        ):
             incoming.append(ref_record)
     return {
         "calls": calls[:24],
@@ -362,7 +387,9 @@ def refs_for_function(
     }
 
 
-def find_function(layout: RepoLayout, address: str, source_hint: str | None = None) -> dict[str, Any] | None:
+def find_function(
+    layout: RepoLayout, address: str, source_hint: str | None = None
+) -> dict[str, Any] | None:
     wanted = normalize_address(address)
     for row in load_function_rows(layout):
         if row_entry(row) != wanted:
@@ -373,7 +400,9 @@ def find_function(layout: RepoLayout, address: str, source_hint: str | None = No
     return None
 
 
-def function_report(layout: RepoLayout, address: str, source_hint: str | None = None) -> dict[str, Any]:
+def function_report(
+    layout: RepoLayout, address: str, source_hint: str | None = None
+) -> dict[str, Any]:
     row = find_function(layout, address, source_hint)
     if row is None:
         raise LookupError(f"unknown function: {address}")
@@ -382,7 +411,9 @@ def function_report(layout: RepoLayout, address: str, source_hint: str | None = 
     duplicates = build_duplicate_groups(layout)
     duplicate_index = duplicate_group_by_member(duplicates)
     entry = row_entry(row)
-    source_status = build_source_status_index(layout).get((str(row.get("source_hint") or ""), str(entry or "")))
+    source_status = build_source_status_index(layout).get(
+        (str(row.get("source_hint") or ""), str(entry or ""))
+    )
     binary = resolve_binary(layout, str(row.get("program_path") or ""))
     body_min, body_max = row_body_bounds(row) or (None, None)
     file_offset = None
@@ -409,7 +440,9 @@ def function_report(layout: RepoLayout, address: str, source_hint: str | None = 
         "comments": [
             text for text in (row.get("comment"), row.get("repeatable_comment")) if text
         ],
-        "parameters": row.get("parameters") if isinstance(row.get("parameters"), list) else [],
+        "parameters": row.get("parameters")
+        if isinstance(row.get("parameters"), list)
+        else [],
         "locals": row.get("locals") if isinstance(row.get("locals"), list) else [],
         "refs": refs_for_function(raw_rows, row, symbols=symbols),
         "next_action": next_action(source_status),
@@ -448,7 +481,9 @@ def queue_report(layout: RepoLayout, *, limit: int) -> dict[str, Any]:
                 "verify": f"bin/harness verify function bof3/{status['source']}",
             }
         )
-    candidates.sort(key=lambda item: (item["size"], item["source_hint"], item["address"]))
+    candidates.sort(
+        key=lambda item: (item["size"], item["source_hint"], item["address"])
+    )
     return {
         "schema": "rebof3-simple.ghidra-lift-queue/v1",
         "candidate_count": len(candidates),
@@ -457,7 +492,11 @@ def queue_report(layout: RepoLayout, *, limit: int) -> dict[str, Any]:
 
 
 def module_report(layout: RepoLayout, source_hint: str) -> dict[str, Any]:
-    rows = [row for row in load_function_rows(layout) if row.get("source_hint") == source_hint]
+    rows = [
+        row
+        for row in load_function_rows(layout)
+        if row.get("source_hint") == source_hint
+    ]
     source_status = build_source_status_index(layout)
     return {
         "schema": "rebof3-simple.ghidra-module-report/v1",
@@ -468,7 +507,9 @@ def module_report(layout: RepoLayout, source_hint: str) -> dict[str, Any]:
                 "address": row_entry(row),
                 "function": row.get("name"),
                 "size": function_size(row),
-                "status": source_status.get((source_hint, str(row_entry(row) or "")), {}).get("status", "missing"),
+                "status": source_status.get(
+                    (source_hint, str(row_entry(row) or "")), {}
+                ).get("status", "missing"),
             }
             for row in rows
         ],
@@ -477,7 +518,9 @@ def module_report(layout: RepoLayout, source_hint: str) -> dict[str, Any]:
 
 def context_gaps(layout: RepoLayout) -> dict[str, Any]:
     context_path = layout.bof3_dir / "include" / "bof3" / "context.h"
-    context_text = context_path.read_text(encoding="utf-8") if context_path.is_file() else ""
+    context_text = (
+        context_path.read_text(encoding="utf-8") if context_path.is_file() else ""
+    )
     context_names = set(identifier_names(context_text))
     modules: list[dict[str, Any]] = []
     for internal in sorted((layout.bof3_dir / "src").rglob("internal.h")):
@@ -551,21 +594,29 @@ def render_function_markdown(payload: dict[str, Any]) -> str:
     if payload.get("locals"):
         lines.append(f"- locals: {len(payload['locals'])}")
     refs = payload["refs"]
-    lines.extend([
-        "",
-        "## Evidence",
-        "",
-        f"- calls: {refs['call_count']}",
-        f"- data refs: {refs['data_ref_count']}",
-        f"- incoming refs: {refs['incoming_count']}",
-    ])
-    for label, key in (("Calls", "calls"), ("Data Refs", "data_refs"), ("Incoming", "incoming")):
+    lines.extend(
+        [
+            "",
+            "## Evidence",
+            "",
+            f"- calls: {refs['call_count']}",
+            f"- data refs: {refs['data_ref_count']}",
+            f"- incoming refs: {refs['incoming_count']}",
+        ]
+    )
+    for label, key in (
+        ("Calls", "calls"),
+        ("Data Refs", "data_refs"),
+        ("Incoming", "incoming"),
+    ):
         rows = refs.get(key) or []
         if rows:
             lines.extend(["", f"## {label}", ""])
             for row in rows[:12]:
                 symbol = f" `{row['symbol']}`" if row.get("symbol") else ""
-                lines.append(f"- `{row['from']}` -> `{row['to']}` `{row['type']}`{symbol}")
+                lines.append(
+                    f"- `{row['from']}` -> `{row['to']}` `{row['type']}`{symbol}"
+                )
     lines.extend(["", f"next: `{payload['next_action']}`", ""])
     return "\n".join(lines)
 
@@ -590,7 +641,11 @@ def render_duplicates_markdown(payload: dict[str, Any]) -> str:
 def render_queue_markdown(payload: dict[str, Any]) -> str:
     lines = ["# Lift Queue", ""]
     for task in payload["tasks"]:
-        duplicate = f" duplicate `{task['duplicate_group']}`" if task.get("duplicate_group") else ""
+        duplicate = (
+            f" duplicate `{task['duplicate_group']}`"
+            if task.get("duplicate_group")
+            else ""
+        )
         lines.append(
             f"- `{task['source']}` `{task['address']}` size `{task['size']}`{duplicate}: `{task['verify']}`"
         )
@@ -598,9 +653,16 @@ def render_queue_markdown(payload: dict[str, Any]) -> str:
 
 
 def render_module_markdown(payload: dict[str, Any]) -> str:
-    lines = [f"# {payload['source_hint']}", "", f"- functions: {payload['function_count']}", ""]
+    lines = [
+        f"# {payload['source_hint']}",
+        "",
+        f"- functions: {payload['function_count']}",
+        "",
+    ]
     for row in payload["functions"][:200]:
-        lines.append(f"- `{row['address']}` `{row['function']}` size `{row['size']}` status `{row['status']}`")
+        lines.append(
+            f"- `{row['address']}` `{row['function']}` size `{row['size']}` status `{row['status']}`"
+        )
     return "\n".join(lines) + "\n"
 
 

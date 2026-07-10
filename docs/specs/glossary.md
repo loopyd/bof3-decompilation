@@ -1,3 +1,10 @@
+---
+type: Glossary
+title: BOF3 reverse-engineering glossary
+description: Stable terms shared by BOF3 format, runtime, and content specifications.
+tags: [terminology, bof3, reverse-engineering]
+---
+
 # Glossary
 
 This file defines only stable shared terms used across multiple BOF3 specs.

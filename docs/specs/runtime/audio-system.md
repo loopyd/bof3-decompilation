@@ -1,3 +1,10 @@
+---
+type: Runtime subsystem
+title: Audio system
+description: BOF3 EMI audio-handler behavior and PSYQ call patterns.
+tags: [runtime, audio, psyq]
+---
+
 # Audio System Reverse Spec
 
 This document tracks the PSYQ audio call patterns used by BOF3's EMI handlers.
@@ -241,7 +248,7 @@ Bank state table (per-bank, indexed by `bank_id * 12`):
 
 ## DEMO.EMI Audio Assets
 
-Title screen music assets from `emi_raw/BIN/ETC/DEMO/emi.json`:
+Title screen music assets from `out/extracted/BIN/ETC/DEMO/emi.json`:
 
 | Entry | Type | Name | Size | Bank (`ram_ptr`) |
 | ---: | --- | --- | --- | --- |

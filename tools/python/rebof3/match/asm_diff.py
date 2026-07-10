@@ -222,7 +222,6 @@ def build_target_for_source(layout: RepoLayout, source_path: Path) -> str:
     build_ninja = layout.build_dir / "default" / "build.ninja"
     if build_ninja.is_file():
         build_text = build_ninja.read_text(encoding="utf-8")
-        source_pattern = f" {source_rel_str}"
         for target_prefix in re.findall(
             r"build (bof3/CMakeFiles/[^/]+\.dir)/",
             build_text,
@@ -235,29 +234,65 @@ def build_target_for_source(layout: RepoLayout, source_path: Path) -> str:
 # Source path prefix → (binary path relative to repo root, load_address)
 # Sources under src/core/ and src/boot/ map to SLUS_004.22 (handled above).
 _OVERLAY_BINARIES: dict[str, tuple[str, int]] = {
-    "src/modules/logo":                  ("output/extracted/LOGO/LOGO.EXE",  0x801ce000),
-    "src/modules/battle/03":             ("output/extracted/BIN/BATTLE/BATTLE/3.bin",  0x801d0c00),
-    "src/modules/battle/15":             ("output/extracted/BIN/BATTLE/BATTLE/15.bin", 0x80096800),
-    "src/modules/batl_re2/01":           ("output/extracted/BIN/BATTLE/BATL_RE2/1.bin", 0x80036e00),
-    "src/modules/bate/03":                ("output/extracted/BIN/ETC/BATE/3.bin",  0x801d0c00),
-    "src/modules/commu00/00":             ("output/extracted/BIN/ETC/COMMU00/0.bin", 0x801eec00),
-    "src/modules/game/00":                ("output/extracted/BIN/ETC/GAME/0.bin",  0x80195800),
-    "src/modules/game/01":                ("output/extracted/BIN/ETC/GAME/1.bin",  0x801d0c00),
-    "src/modules/logo":                  ("output/extracted/LOGO/LOGO.EXE",  0x801ce000),
-    "src/modules/sce10eff/00":           ("output/extracted/BIN/SCENARIO/SCE10EFF/0.bin", 0x801d0c00),
-    "src/modules/scena00/00":            ("output/extracted/BIN/SCENARIO/SCENA00/0.bin", 0x801f6c00),
-    "src/modules/scena16/00":            ("output/extracted/BIN/SCENARIO/SCENA16/0.bin", 0x801f6c00),
-    "src/modules/shop/00":               ("output/extracted/BIN/ETC/SHOP/0.bin",  0x801d0c00),
-    "src/modules/sisyou/00":             ("output/extracted/BIN/ETC/SISYOU/0.bin", 0x801d0c00),
-    "src/modules/world00/area008/13":    ("output/extracted/BIN/WORLD00/AREA008/13.bin", 0x801f2c00),
-    "src/modules/world00/area016/13":    ("output/extracted/BIN/WORLD00/AREA016/13.bin", 0x801f2c00),
-    "src/modules/world00/area024/14":    ("output/extracted/BIN/WORLD00/AREA024/14.bin", 0x801f2c00),
-    "src/modules/world00/area026/13":    ("output/extracted/BIN/WORLD00/AREA026/13.bin", 0x801f2c00),
-    "src/modules/world00/area027/13":    ("output/extracted/BIN/WORLD00/AREA027/13.bin", 0x801f2c00),
-    "src/modules/world00/area028/13":    ("output/extracted/BIN/WORLD00/AREA028/13.bin", 0x801f2c00),
-    "src/modules/world00/area030/04":    ("output/extracted/BIN/WORLD00/AREA030/4.bin",  0x801d0c00),
-    "src/modules/world00/area032/13":    ("output/extracted/BIN/WORLD00/AREA032/13.bin", 0x801f2c00),
+    "src/modules/logo": ("out/extracted/LOGO/LOGO.EXE", 0x801CE000),
+    "src/modules/battle/03": ("out/extracted/BIN/BATTLE/BATTLE/3.bin", 0x801D0C00),
+    "src/modules/battle/15": ("out/extracted/BIN/BATTLE/BATTLE/15.bin", 0x80096800),
+    "src/modules/batl_re2/01": (
+        "out/extracted/BIN/BATTLE/BATL_RE2/1.bin",
+        0x80036E00,
+    ),
+    "src/modules/bate/03": ("out/extracted/BIN/ETC/BATE/3.bin", 0x801D0C00),
+    "src/modules/commu00/00": ("out/extracted/BIN/ETC/COMMU00/0.bin", 0x801EEC00),
+    "src/modules/game/00": ("out/extracted/BIN/ETC/GAME/0.bin", 0x80195800),
+    "src/modules/game/01": ("out/extracted/BIN/ETC/GAME/1.bin", 0x801D0C00),
+    "src/modules/sce10eff/00": (
+        "out/extracted/BIN/SCENARIO/SCE10EFF/0.bin",
+        0x801D0C00,
+    ),
+    "src/modules/scena00/00": (
+        "out/extracted/BIN/SCENARIO/SCENA00/0.bin",
+        0x801F6C00,
+    ),
+    "src/modules/scena16/00": (
+        "out/extracted/BIN/SCENARIO/SCENA16/0.bin",
+        0x801F6C00,
+    ),
+    "src/modules/shop/00": ("out/extracted/BIN/ETC/SHOP/0.bin", 0x801D0C00),
+    "src/modules/sisyou/00": ("out/extracted/BIN/ETC/SISYOU/0.bin", 0x801D0C00),
+    "src/modules/world00/area008/13": (
+        "out/extracted/BIN/WORLD00/AREA008/13.bin",
+        0x801F2C00,
+    ),
+    "src/modules/world00/area016/13": (
+        "out/extracted/BIN/WORLD00/AREA016/13.bin",
+        0x801F2C00,
+    ),
+    "src/modules/world00/area024/14": (
+        "out/extracted/BIN/WORLD00/AREA024/14.bin",
+        0x801F2C00,
+    ),
+    "src/modules/world00/area026/13": (
+        "out/extracted/BIN/WORLD00/AREA026/13.bin",
+        0x801F2C00,
+    ),
+    "src/modules/world00/area027/13": (
+        "out/extracted/BIN/WORLD00/AREA027/13.bin",
+        0x801F2C00,
+    ),
+    "src/modules/world00/area028/13": (
+        "out/extracted/BIN/WORLD00/AREA028/13.bin",
+        0x801F2C00,
+    ),
+    "src/modules/world00/area030/04": (
+        "out/extracted/BIN/WORLD00/AREA030/4.bin",
+        0x801D0C00,
+    ),
+    "src/modules/world00/area032/13": (
+        "out/extracted/BIN/WORLD00/AREA032/13.bin",
+        0x801F2C00,
+    ),
 }
+
 
 def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
     """Resolve the original binary for a source file."""
@@ -282,7 +317,9 @@ def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
     return _resolve_overlay_binary_fallback(layout, source_rel)
 
 
-def overlay_load_address_for_source(layout: RepoLayout, source_path: Path) -> int | None:
+def overlay_load_address_for_source(
+    layout: RepoLayout, source_path: Path
+) -> int | None:
     """Return the load address for an overlay source file."""
     resolved_source = source_path.expanduser().resolve()
     try:
@@ -291,7 +328,7 @@ def overlay_load_address_for_source(layout: RepoLayout, source_path: Path) -> in
         return None
 
     if source_rel.startswith("src/modules/logo"):
-        return 0x801ce000
+        return 0x801CE000
 
     for prefix in sorted(_OVERLAY_BINARIES, key=len, reverse=True):
         if source_rel.startswith(prefix):
@@ -301,10 +338,11 @@ def overlay_load_address_for_source(layout: RepoLayout, source_path: Path) -> in
 
 def _resolve_overlay_binary_fallback(layout: RepoLayout, source_rel: str) -> Path:
     """Last-resort: search EMI catalog for payload_path."""
-    emi_catalog = layout.root / "output/inventory/emi_catalog.json"
+    emi_catalog = layout.root / "out/inventory/emi_catalog.json"
     if emi_catalog.is_file():
         try:
             from ..jsonio import read_json
+
             catalog = read_json(emi_catalog)
             for entry in catalog.get("entries", []):
                 if not entry.get("code_candidate"):
@@ -475,7 +513,7 @@ def apply_relocation(instruction: str, kind: str, symbol: str) -> str:
     if kind == "LO16":
         lo = mips_lo(address)
         if mnemonic == "ori":
-            return replace_final_immediate(instruction, f"0x{lo & 0xffff:x}")
+            return replace_final_immediate(instruction, f"0x{lo & 0xFFFF:x}")
         return replace_final_immediate(instruction, str(lo))
     return instruction
 

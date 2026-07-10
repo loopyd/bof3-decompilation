@@ -72,7 +72,7 @@ def build_bootstrap_pipeline(
                 root=repo_root,
                 executor=executor,
                 name="emi-unpack",
-                description="Unpack extracted EMI archives inline into output/extracted",
+                description="Unpack extracted EMI archives inline into out/extracted",
                 command=(_bin(repo_root, "emi-unpack"),),
             ),
             _task(
@@ -107,7 +107,7 @@ def build_bootstrap_pipeline(
                 root=repo_root,
                 executor=executor,
                 name="ghidra-export",
-                description="Export Ghidra symbols into output/inventory",
+                description="Export Ghidra symbols into out/inventory",
                 command=(harness, "ghidra", "export"),
             ),
             _task(

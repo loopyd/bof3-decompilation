@@ -1,13 +1,18 @@
 .pytest_cache/
 .venv/
+.uv-cache/
 __pycache__/
 build/
+!tools/python/rebof3/build/
+!tools/python/rebof3/build/*.py
 dist/
 *.egg-info/
 compile_commands.json
 .codex
 
 # local supplied inputs
+disks/*
+!disks/README.md
 inputs/disc/*
 !inputs/disc/README.md
 inputs/external/*
@@ -33,5 +38,5 @@ toolchains/psyq-stock/
 !toolchains/README.md
 
 # generated outputs
-output/*
-!output/README.md
+out/*
+!out/README.md

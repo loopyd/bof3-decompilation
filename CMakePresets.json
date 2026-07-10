@@ -9,7 +9,7 @@
     {
       "name": "default",
       "displayName": "BOF3 PSX",
-      "generator": "Ninja",
+      "generator": "Unix Makefiles",
       "toolchainFile": "${sourceDir}/cmake/toolchains/psyq.cmake",
       "binaryDir": "${sourceDir}/build/default",
       "cacheVariables": {

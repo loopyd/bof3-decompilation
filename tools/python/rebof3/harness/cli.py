@@ -144,18 +144,18 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     ghidra_import.add_argument(
         "--manifest",
         type=Path,
-        default=Path("output/ghidra-bof3/ghidra_import_manifest.json"),
+        default=Path("out/ghidra-bof3/ghidra_import_manifest.json"),
     )
     ghidra_import.add_argument(
         "--project-dir",
         type=Path,
-        default=Path("output/ghidra-project"),
+        default=Path("out/ghidra-project"),
     )
     ghidra_import.add_argument("--project-name", default="bof3_main")
     ghidra_import.add_argument(
         "--staging-dir",
         type=Path,
-        default=Path("output/ghidra-import-staging"),
+        default=Path("out/ghidra-import-staging"),
     )
     ghidra_import.add_argument("--script-path", type=Path)
     analyze_group = ghidra_import.add_mutually_exclusive_group()
@@ -174,7 +174,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     ghidra_analyze.add_argument(
         "--project-dir",
         type=Path,
-        default=Path("output/ghidra-project"),
+        default=Path("out/ghidra-project"),
     )
     ghidra_analyze.add_argument("--project-name", default="bof3_main")
     ghidra_analyze.add_argument("--max-cpu", type=int)
@@ -191,13 +191,13 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     ghidra_export.add_argument(
         "--project-dir",
         type=Path,
-        default=Path("output/ghidra-project"),
+        default=Path("out/ghidra-project"),
     )
     ghidra_export.add_argument("--project-name", default="bof3_main")
     ghidra_export.add_argument(
         "--output",
         type=Path,
-        default=Path("output/inventory/raw_ghidra_export.json"),
+        default=Path("out/inventory/raw_ghidra_export.json"),
     )
     ghidra_export.add_argument(
         "--script-path",

@@ -27,7 +27,7 @@ include(${BOF3_SHARED_CMAKE_DIR}/bof3_module_helpers.cmake)
 bof3_require_psx_profile("capcom97-bof3")
 bof3_require_psyq_layout()
 
-set(BOF3_EXTRACTED_DIR "output/extracted" CACHE STRING "Root of extracted disc + unpacked EMI files")
+set(BOF3_EXTRACTED_DIR "out/extracted" CACHE STRING "Root of extracted disc + unpacked EMI files")
 
 include(${BOF3_CMAKE_DIR}/sources.cmake)
 

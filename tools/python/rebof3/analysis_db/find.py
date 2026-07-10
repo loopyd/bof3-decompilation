@@ -60,6 +60,7 @@ def _output(rows: list[sqlite3.Row], json_output: bool) -> None:
 # func subcommand
 # ---------------------------------------------------------------------------
 
+
 def run_func(args: argparse.Namespace) -> int:
     conn = _connect(args.db)
     try:
@@ -93,13 +94,16 @@ def configure_func_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--name", help="LIKE pattern for function name")
     parser.add_argument("--addr", help="exact address match")
     parser.add_argument("--program", help="LIKE pattern for program_path")
-    parser.add_argument("--module", help="LIKE shorthand for program_path (e.g. GAME#0)")
+    parser.add_argument(
+        "--module", help="LIKE shorthand for program_path (e.g. GAME#0)"
+    )
     parser.set_defaults(handler=run_func)
 
 
 # ---------------------------------------------------------------------------
 # xrefs subcommand
 # ---------------------------------------------------------------------------
+
 
 def run_xrefs(args: argparse.Namespace) -> int:
     conn = _connect(args.db)
@@ -133,6 +137,7 @@ def configure_xrefs_parser(parser: argparse.ArgumentParser) -> None:
 # ---------------------------------------------------------------------------
 # calls subcommand
 # ---------------------------------------------------------------------------
+
 
 def run_calls(args: argparse.Namespace) -> int:
     conn = _connect(args.db)
@@ -188,8 +193,12 @@ def run_calls(args: argparse.Namespace) -> int:
 def configure_calls_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--from", dest="from_", help="functions called BY this address")
     parser.add_argument("--to", help="functions that CALL this address")
-    parser.add_argument("--leaves", action="store_true", help="leaf functions (call nothing)")
-    parser.add_argument("--entry", action="store_true", help="entry points (nothing calls them)")
+    parser.add_argument(
+        "--leaves", action="store_true", help="leaf functions (call nothing)"
+    )
+    parser.add_argument(
+        "--entry", action="store_true", help="entry points (nothing calls them)"
+    )
     parser.add_argument("--program", help="program_path filter for --leaves/--entry")
     parser.set_defaults(handler=run_calls)
 
@@ -197,6 +206,7 @@ def configure_calls_parser(parser: argparse.ArgumentParser) -> None:
 # ---------------------------------------------------------------------------
 # dups subcommand
 # ---------------------------------------------------------------------------
+
 
 def run_dups(args: argparse.Namespace) -> int:
     conn = _connect(args.db)
@@ -234,15 +244,20 @@ def run_dups(args: argparse.Namespace) -> int:
 
 
 def configure_dups_parser(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--min-files", type=int, help="duplicate groups spanning >=N programs")
+    parser.add_argument(
+        "--min-files", type=int, help="duplicate groups spanning >=N programs"
+    )
     parser.add_argument("--name", help="duplicates matching function name pattern")
-    parser.add_argument("--addr", help="duplicate groups containing this function address")
+    parser.add_argument(
+        "--addr", help="duplicate groups containing this function address"
+    )
     parser.set_defaults(handler=run_dups)
 
 
 # ---------------------------------------------------------------------------
 # const subcommand
 # ---------------------------------------------------------------------------
+
 
 def run_const(args: argparse.Namespace) -> int:
     conn = _connect(args.db)
@@ -281,6 +296,7 @@ def configure_const_parser(parser: argparse.ArgumentParser) -> None:
 # sym subcommand
 # ---------------------------------------------------------------------------
 
+
 def run_sym(args: argparse.Namespace) -> int:
     conn = _connect(args.db)
     try:
@@ -318,14 +334,20 @@ def configure_sym_parser(parser: argparse.ArgumentParser) -> None:
 # root parser
 # ---------------------------------------------------------------------------
 
+
 def configure_root_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
-        "--db", type=Path, default=DEFAULT_DB,
-        help="Path to analysis SQLite database (default: output/analysis.sqlite3)",
+        "--db",
+        type=Path,
+        default=DEFAULT_DB,
+        help="Path to analysis SQLite database (default: out/analysis.sqlite3)",
     )
     parser.add_argument(
-        "--json", dest="json_output", action=argparse.BooleanOptionalAction,
-        default=True, help="Output as JSON (default); --no-json for table",
+        "--json",
+        dest="json_output",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Output as JSON (default); --no-json for table",
     )
     subparsers = parser.add_subparsers(required=True)
 

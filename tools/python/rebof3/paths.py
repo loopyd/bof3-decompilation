@@ -89,7 +89,7 @@ def repo_layout(
     resolved_root = (root or Path(__file__).resolve().parents[3]).resolve()
     resolved_psyq_version = normalize_psyq_version(psyq_version)
     build_dir = resolved_root / "build"
-    out_dir = resolved_root / "output"
+    out_dir = resolved_root / "out"
     toolchains_dir = resolved_root / "toolchains"
     third_party_dir = resolved_root / "third_party"
     inputs_dir = resolved_root / "inputs"
@@ -108,7 +108,7 @@ def repo_layout(
         docs_dir=resolved_root / "docs",
         downloads_dir=toolchains_dir / "downloads",
         bof3_dir=resolved_root / "bof3",
-        disc_dir=inputs_dir / "disc",
+        disc_dir=resolved_root / "disks",
         external_dir=inputs_dir / "external",
         private_assets_dir=resolved_root / "external" / "private-assets",
         slus_path=extracted_dir / "SLUS_004.22",

@@ -23,12 +23,12 @@ def infer_source_hint(program_path: str, folder: str, program_name: str) -> str 
     normalized_folder = str(folder or "").strip("/")
     normalized_program = str(program_name or "")
     if normalized_folder == "boot" and normalized_program == "SLUS_004.22":
-        return "output/extracted/SLUS_004.22"
+        return "out/extracted/SLUS_004.22"
     if (
         normalized_folder in {"boot", "boot/logo"}
         and normalized_program.upper() == "LOGO.EXE"
     ):
-        return "output/extracted/LOGO/LOGO.EXE"
+        return "out/extracted/LOGO/LOGO.EXE"
     for prefix in ("bins/", "overlays/"):
         if not normalized_folder.startswith(prefix):
             continue
@@ -38,7 +38,7 @@ def infer_source_hint(program_path: str, folder: str, program_name: str) -> str 
         )
         if match is None or not archive_id:
             return None
-        return f"output/extracted/{archive_id}.EMI#{int(match.group('entry'))}"
+        return f"out/extracted/{archive_id}.EMI#{int(match.group('entry'))}"
     _ = program_path
     return None
 

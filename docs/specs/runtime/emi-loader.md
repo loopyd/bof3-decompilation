@@ -1,3 +1,10 @@
+---
+type: Runtime subsystem
+title: EMI loader
+description: Game-specific EMI loading and type dispatch in SLUS_004.22.
+tags: [runtime, emi, loader, slus]
+---
+
 # EMI Loader Reverse Spec
 
 This document tracks the game-specific EMI loading behavior implemented by `SLUS_004.22`.
@@ -462,7 +469,7 @@ At least one confirmed code-bearing type-`0` payload begins with an overlay-loca
 
 Confirmed local example:
 
-- archive: `emi_raw/BIN/BATTLE/BATTLE`
+- archive: `out/extracted/BIN/BATTLE/BATTLE`
 - entry: `15.bin`
 - load address: `0x80096800`
 - TOC `first4`: `17`
@@ -513,12 +520,12 @@ Confirmed sequence:
 3. the caller polls `0x80162d00`
 4. once ready, `0x8014ec94` executes `jal 0x801d0c04`
 
-`emi_raw/BIN/ETC/GAME/emi.json` shows:
+`out/extracted/BIN/ETC/GAME/emi.json` shows:
 
 - entry `0` -> `0x80195800`, size `229720`
 - entry `1` -> `0x801d0c00`, size `4404`
 
-`emi_raw/BIN/ETC/GAME/1.bin` begins with a non-code word `0x20` at `0x801d0c00`, and real code begins at `0x801d0c04`.
+`out/extracted/BIN/ETC/GAME/1.bin` begins with a non-code word `0x20` at `0x801d0c00`, and real code begins at `0x801d0c04`.
 
 Current interpretation:
 

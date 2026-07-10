@@ -1,12 +1,18 @@
+---
+type: Content family reference
+title: Asset families
+description: Observed roles of BOF3 BIN archive families and their content.
+tags: [content, emi, archives]
+---
+
 # Asset Families
 
 This document describes the major `BIN/` archive families and their current runtime roles.
 
 The goal is not to fully decode every file yet. The goal is to keep a stable map of what each family appears to contain and how it is likely used by the runtime.
 
-For generated archive counts and representative overlay maps, use `output/inventory/`
-as the canonical source. Harness queue and claim state lives under
-`output/harness/`.
+For generated archive counts and duplicate groups, use `out/catalog/emi.json`
+as the canonical local source.
 
 ## Family Roles
 
