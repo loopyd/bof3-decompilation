@@ -1,31 +1,46 @@
-# Disc Images
+# Legacy disc input
 
-Place exactly one Breath of Fire III disc image set in this directory when using the root `Makefile` or `bin/` commands:
+`inputs/disc/` is retained for compatibility with older local workspaces. The
+supported `just` and `bin/rebof3` workflows discover one user-owned BIN/CUE set
+under [`disks/`](../../disks/README.md).
 
-- One `.cue` file with the referenced track `.bin` files. This is the preferred input.
-- Two `.bin` files with a matching `.cue` sheet file beside it.
+## Expected files
 
-The tracked canonical US v1.1 files currently committed in this repo are:
+Use one complete Breath of Fire III disc set:
 
-- `Breath of Fire III (v1.1).cue`
-- `Breath of Fire III (v1.1) (Track 1).bin`
-- `Breath of Fire III (v1.1) (Track 2).bin`
+- one `.cue` sheet;
+- the two `.bin` tracks referenced by that cue sheet.
 
-The extract workflow auto-detects the single disc set under `inputs/disc/`; the cue sheet and track files only need to agree with each other and the committed checksum manifest.
+The cue filenames and its `FILE` entries must agree. Keep the original files
+unchanged: extraction, rebuilding, and strict comparison depend on the exact
+track bytes. Disc media is ignored and must never be committed.
 
-`inputs/disc/` is the active runtime input path.
-If you use the private importer flow, it downloads and extracts under `external/private-assets/...` first, then copies the selected cue/bin set here.
+## Legacy use
 
-## Strict Identity Notes
+Do not add new media here. Existing local files can be extracted explicitly:
 
-For a strict byte-identical rebuild check, compare the rebuilt combined image against `track01 + track02` bytes from the source cue/bin set.
+```sh
+PYTHONPATH=tools/python .venv/bin/python -m rebof3.commands.disk \
+  disk-extract --disc-dir inputs/disc --output out/extracted
+```
 
-When rebuilding from a staged extracted tree that contains repacked `.EMI` files, preserve original `.EMI` mtimes before rebuild. `make pack` does this automatically; otherwise use `cp -p` or `touch -r`. Without preserved mtimes, ISO metadata timestamps can differ even if all `.EMI` files are byte-identical.
+Move the set to `disks/` when normalizing the workspace so `just extract` and
+the default `bin/rebof3 disk` commands can discover it.
 
-## Checksums
+## Identity and checksums
 
-Run `make disk_checksums` to regenerate the tracked checksum manifest for the files in `inputs/disc/`.
+The repository does not track game-media hashes. Generate a local checksum
+manifest under `out/` when the exact input identity needs to be retained:
 
-Run `make verify_disk` to confirm your local cue/bin set matches the committed checksums in:
+```sh
+PYTHONPATH=tools/python .venv/bin/python -m rebof3.commands.disk \
+  disk-checksums --input-dir inputs/disc --output out/disk_checksums.json
+```
 
-- the tracked disk checksum manifest used by `make verify_disk`
+Verify the same files against that manifest with `disk-verify`, passing the
+same input directory and `--checksums out/disk_checksums.json`.
+
+For strict rebuild comparison, compare the rebuilt combined image with the
+source track bytes in cue order. When rebuilding from repacked EMI files,
+preserve their original mtimes; ISO metadata timestamps can otherwise differ
+even when the EMI payload bytes are identical.
