@@ -1,8 +1,8 @@
 ---
-type: Memory layout
+type: Runtime
 title: Recovered layouts
 description: Byte layouts required by current lifted code.
-tags: [layouts, offsets]
+tags: [runtime, offsets]
 ---
 
 # Recovered layouts
