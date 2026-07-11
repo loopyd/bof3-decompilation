@@ -42,5 +42,6 @@ Read the doc you need with the Read tool. Don't pre-load all docs.
 - **Understanding target identity?** → `CONTEXT.md`, `docs/specs/runtime/runtime-layout.md`
 - **What's verified?** → `docs/specs/index.md`, then the owning compact spec
 - **Working on decomp?** → `docs/reverse-engineering.md`, `docs/matching.md`, `.agents/skills/decomp-loop/SKILL.md`
+- **Finishing a module?** → `CONTEXT.md`, `docs/specs/programs/targets.md`, `docs/specs/runtime/runtime-layout.md`, `docs/reverse-engineering.md`, `docs/matching.md`, then the owning archive spec when present
 - **Binary format questions?** → `docs/specs/formats/`
 - **Coding conventions?** → `.agents/rules/decomp.md`
