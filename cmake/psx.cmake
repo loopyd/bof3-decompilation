@@ -1,11 +1,5 @@
 include_guard(GLOBAL)
 
-function(bof3_require_psx_profile expected_profile)
-    if(NOT BOF3_PSX_PROFILE STREQUAL expected_profile)
-        message(FATAL_ERROR "bof3 requires the ${expected_profile} profile.")
-    endif()
-endfunction()
-
 function(bof3_require_psyq_layout)
     if(NOT DEFINED BOF3_PSYQ_INCLUDE_DIR OR NOT DEFINED BOF3_PSYQ_LIB_DIR)
         message(FATAL_ERROR

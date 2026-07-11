@@ -8,8 +8,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
 option(BOF3_TARGET_PSX "Build bof3 PSX targets" OFF)
-set(BOF3_PSX_PROFILE "capcom97-bof3" CACHE STRING "PSX build profile for bof3")
-set_property(CACHE BOF3_PSX_PROFILE PROPERTY STRINGS capcom97-bof3)
 set(REBOF3_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 unset(BOF3_PSN00B_SDK_ROOT CACHE)
 set(BOF3_PSN00B_SDK_ROOT "${REBOF3_ROOT_DIR}/toolchains/psn00bsdk")
@@ -24,7 +22,6 @@ if(BOF3_TARGET_PSX)
     include("${BOF3_CMAKE_DIR}/artifact.cmake")
     include("${BOF3_CMAKE_DIR}/target.cmake")
 
-    bof3_require_psx_profile("capcom97-bof3")
     bof3_require_psyq_layout()
 
     set(BOF3_EXTRACTED_DIR "out/extracted" CACHE STRING "Root of extracted disc + unpacked EMI files")

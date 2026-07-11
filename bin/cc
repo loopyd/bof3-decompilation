@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+if [ -n "${PSX_CC_DRIVER:-}" ]; then
+    exec "${PSX_CC_DRIVER}" "$@"
+fi
+PYTHONPATH="${ROOT}/tools/python"
+export PYTHONPATH
+exec "${ROOT}/.venv/bin/python" -m rebof3.toolchain.cc "$@"

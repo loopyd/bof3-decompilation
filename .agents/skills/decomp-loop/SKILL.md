@@ -39,7 +39,7 @@ object as a tooling failure, not a comparison result.
 6. Use permutation search only after size, CFG, calls, and memory accesses agree.
 
 Do not trade readable, factual C for a percentage increase until the target,
-boundary, compiler profile, and diff normalization are proven correct.
+boundary, compiler command, and diff normalization are proven correct.
 
 ## Reading asm-diff output
 
@@ -59,7 +59,7 @@ boundary, compiler profile, and diff normalization are proven correct.
 | Wrong size or shifted labels | Recheck function boundaries before editing C |
 | Unsupported instruction | Read canonical Splat assembly; use Rizin or Ghidra as an optional hint |
 | Match 80–95% | Trace the first meaningful mismatch in `out/asm-diff/` |
-| Stuck on calling convention | Check the target Splat config and `capcom97-bof3` compiler profile |
+| Stuck on calling convention | Check the target Splat config and CMake compiler command |
 | Compiler-inserted NOP | Verify delay slots in original vs compiled |
 | Unresolved struct/global | Add `extern` to `internal.h` + `SYMBOL_AT` in `symbols.c` |
 | Match % won't budge | Use decomp-permuter only after size, CFG, and calls converge |
@@ -74,7 +74,7 @@ original bytes. Report function matches separately from whole-binary matching.
 
 | Tool | Role |
 |---|---|
-| bin/maspsx-cc | PsyQ-compiler with maspsx flag translation |
+| bin/cc | Native-style PSX compiler driver with MASPSX translation |
 | Splat/spimdisasm | Canonical binary segmentation and assembly |
 | m2c | Optional matching-oriented C seed |
 | asm-differ | Interactive instruction comparison |

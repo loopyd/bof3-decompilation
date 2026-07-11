@@ -16,15 +16,15 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "BOF3_TARGET_PSX": "ON",
-        "BOF3_PSX_PROFILE": "capcom97-bof3",
-        "BOF3_PSYQ_VERSION": "4.7"
+        "PSYQ_VERSION": "4.7"
       }
     }
   ],
   "buildPresets": [
     {
       "name": "default",
-      "configurePreset": "default"
+      "configurePreset": "default",
+      "jobs": 0
     }
   ]
 }
