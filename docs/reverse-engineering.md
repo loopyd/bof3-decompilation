@@ -31,15 +31,25 @@ never operates on an entire EMI container. Generated assembly belongs below
 ```bash
 bin/rebof3 scan
 bin/rebof3 candidates BATTLE
-bin/rebof3 promote BIN/BATTLE/BATTLE.EMI#3 --confirm-code
+bin/rebof3 promote "$ARCHIVE_ENTRY" --confirm-code
+bin/rebof3 inspect "$TARGET"
 bin/rebof3 next
-bin/rebof3 lift BIN/BATTLE/BATTLE.EMI#3@0x801d0c00
+bin/rebof3 lift "$TARGET@$ADDRESS"
+bin/rebof3 diff "$FUNCTION_SOURCE"
 ```
 
 Promotion is deliberately explicit. It creates one Splat configuration and one
 module source directory. Lifting creates one C-file work item and refuses an
 address outside the confirmed payload or an existing lift. Use the generated
 draft and disassembly as evidence, then keep the final C89 source readable.
+
+`inspect` is the diagnostic boundary before lifting. Verify its payload,
+checksum, load address, Splat configuration, and source directory rather than
+compensating for a mapping problem in C.
+
+`diff` builds the smallest available CMake object and writes comparison evidence
+under `out/asm-diff/`. A nonmatch is a normal iteration result; a build or target
+resolution failure must be fixed before changing source.
 
 ## Source conventions
 
@@ -49,6 +59,20 @@ draft and disassembly as evidence, then keep the final C89 source readable.
   `include/bof3/`.
 - Do not lift PsyQ library routines. Record verified PsyQ symbols in
   `config/symbols/psyq.txt`.
+
+## Promotion quality
+
+A promoted function must:
+
+- compile as clean, maintainable C89;
+- retain compact `@behavior` and `@source` trace fields;
+- replace `@behavior Pending analysis` with observable behavior rather than
+  instruction mechanics;
+- add at most one `@see docs/specs/...` path when a durable spec provides
+  material context; never link generated state;
+- place reusable structures, offsets, and mappings in the owning
+  `docs/specs/` concept;
+- pass `bin/rebof3 diff`, even when it is not yet an exact match.
 
 ## Evidence boundary
 

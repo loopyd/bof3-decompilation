@@ -55,7 +55,7 @@ headers.
 3. Promote only a reviewed code or mixed code/data EMI entry:
 
    ```sh
-   bin/rebof3 promote BIN/BATTLE/BATTLE.EMI#3 --confirm-code
+   bin/rebof3 promote "$ARCHIVE_ENTRY" --confirm-code
    ```
 
 4. Work one function at a time:
@@ -82,6 +82,13 @@ entry, never the archive file. A type-0 entry is not automatically code.
   assembly stays under `out/splat/`.
 - Preserve independent build targets: identical payload bytes at distinct load
   addresses are distinct until relocatability and symbol behaviour are proven.
+- Lifted functions require a compact trace comment with `@behavior` and
+  `@source`. Generated stubs use `@behavior Pending analysis`; replace that
+  text with a factual description before promotion. The owning source path
+  identifies the target, so do not add `@target`. Add at most one `@see` path
+  when a tracked `docs/specs/` page provides material context. Never link
+  generated state. Keep layouts and offset maps in the owning spec rather than
+  duplicating them in C.
 
 ## Commands and verification
 

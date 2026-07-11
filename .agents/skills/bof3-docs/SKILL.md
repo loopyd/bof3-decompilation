@@ -10,34 +10,34 @@ Read the doc you need with the Read tool. Don't pre-load all docs.
 
 ### Project
 - `docs/README.md` — docs overview
-- `docs/REPO_LAYOUT.md` — canonical directory names and file layout
-- `docs/plan.md` — living migration plan (completed, in-progress, next)
-- `docs/specs/status.md` — current project frontier
+- `README.md` — shortest setup and reversing path
+- `CONTEXT.md` — canonical binary and EMI terminology
 
 ### Setup & Troubleshooting
-- `docs/SETUP.md` — setup steps: toolchains, PsyQ, submodules, extraction, Ghidra bootstrap, configure, build
-- `docs/TROUBLESHOOTING.md` — common issues: doctor failures, build errors, Ghidra, extraction
+- `docs/setup.md` — toolchains, PsyQ, extraction, and verification
+- `docs/troubleshooting.md` — doctor, build, Ghidra, and extraction failures
 
 ### Reverse Specs
 - `docs/specs/index.md` — entry point for reverse-engineering knowledge
-- `docs/specs/glossary.md` — shared terms across specs (EMI, overlay, slot table, etc.)
-- `docs/specs/status.md` — per-module reverse status
-- `docs/specs/runtime/` — runtime behavior specs
-- `docs/specs/formats/` — binary format specs (EMI, PSX-EXE, etc.)
-- `docs/specs/sources/` — known source patterns and idioms
-- `docs/specs/content/` — game content analysis
+- `docs/specs/formats/emi.md` — EMI container and entry layout
+- `docs/specs/runtime/runtime-layout.md` — executable and overlay model
+- `docs/specs/runtime/emi-loader.md` — payload dispatch
+- `docs/specs/runtime/module-map.md` — confirmed executable targets
+- `docs/specs/recovered-layouts.md` — evidenced structure offsets
+- `docs/specs/assets/index.md` — archive-family roles
 
 ### Workflow
-- `docs/DECOMP_WORKFLOW.md` — repeatable decomp loop
-- `.agents/skills/harness/SKILL.md` — harness workflow
+- `docs/reverse-engineering.md` — repeatable target and function loop
+- `docs/matching.md` — function matching and result interpretation
+- `docs/tools.md` — supported tool roles and evidence authority
+- `.agents/skills/decomp-loop/SKILL.md` — function lifting and matching
 - `.agents/rules/decomp.md` — C89 coding conventions (always-loaded rules)
 
 ## When to read each
-- **Setup environment?** → `docs/SETUP.md`
-- **Build/diff failing?** → `docs/TROUBLESHOOTING.md`
-- **Understanding code structure?** → `docs/REPO_LAYOUT.md`, `docs/specs/glossary.md`
-- **What's been done?** → `docs/plan.md`, `docs/specs/status.md`
-- **Working on decomp?** → `docs/DECOMP_WORKFLOW.md`
+- **Setup environment?** → `docs/setup.md`
+- **Build/diff failing?** → `docs/troubleshooting.md`
+- **Understanding target identity?** → `CONTEXT.md`, `docs/specs/runtime/runtime-layout.md`
+- **What's verified?** → `docs/specs/index.md`, then the owning compact spec
+- **Working on decomp?** → `docs/reverse-engineering.md`, `docs/matching.md`, `.agents/skills/decomp-loop/SKILL.md`
 - **Binary format questions?** → `docs/specs/formats/`
-- **Harness workflow?** → `.agents/skills/harness/SKILL.md`
 - **Coding conventions?** → `.agents/rules/decomp.md`

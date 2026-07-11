@@ -1,79 +1,39 @@
 ---
-type: Module catalog
+type: Target map
 title: Module map
-description: Conservatively documented BOF3 executables and code-bearing EMI modules.
-tags: [runtime, modules, overlays]
+description: Confirmed BOF3 executable and EMI code targets.
+tags: [runtime, targets]
 ---
 
-# Module Map
+# Module map
 
-Use shipped module names and archive slots.
+## Executables
 
-For code-bearing EMI archives, the stable identity is:
-
-- archive name
-- entry slot
-- load address
-
-## Core Executables
-
-| Module | Current responsibility |
+| Target | Role |
 | --- | --- |
-| `SLUS_004.22` | boot/root executable; slot map, EMI streaming, callback/thread seam, shared runtime services |
-| `LOGO.EXE` | logo/movie branch and STR playback entry path |
+| `SLUS_004.22` | boot, loader, shared runtime |
+| `LOGO.EXE` | boot-logo and STR path |
 
-## Documented Code-Bearing EMI Modules
+## Confirmed EMI code targets
 
-| Module | Current responsibility | Content shape |
-| --- | --- | --- |
-| `GAME.EMI#0` | title-selection authoring, layout, hit-test, and selection-side support | code-bearing slot inside `GAME.EMI` |
-| `GAME.EMI#1` | title/front controller and pre-demo branch | code-bearing slot inside `GAME.EMI` |
-| `COMMU00.EMI#0` | shared menu/task substrate for frontend record/task flows | code-bearing slot inside `COMMU00.EMI` |
-| `BATTLE.EMI#3` | representative battle core loaded at `0x801d0c00` | code-bearing slot inside `BATTLE.EMI` |
-| `BATTLE.EMI#15` | battle selection corridor | code-bearing slot inside `BATTLE.EMI` |
-| `STATUS.EMI#0` | status-menu game-mode overlay | code-bearing slot inside `STATUS.EMI` |
-| `SCENA16.EMI#0` | first proven subordinate scenario module after the title/front path | code-bearing slot inside `SCENA16.EMI` |
+| Target | Role |
+| --- | --- |
+| `GAME.EMI#0` | title-selection support |
+| `GAME.EMI#1` | frontend controller |
+| `COMMU00.EMI#0` | shared menu/task runtime |
+| `BATTLE.EMI#3` | battle core |
+| `BATTLE.EMI#15` | battle selection path |
+| `STATUS.EMI#0` | status-menu overlay |
+| `SCENA16.EMI#0` | scenario controller |
 
-These rows are the conservative locally documented subset: archives or slots with
-runtime writeups that already defend executable responsibility, not just TOC
-metadata patterns.
+This is a conservative documented subset, not a complete generated inventory.
+Use `out/catalog/` for candidates and `bin/rebof3 promote` to create a tracked
+target only after review.
 
-## Required Resource Packs On The Boot Path
+## Source ownership
 
-| Module | Current responsibility | Content shape |
-| --- | --- | --- |
-| `FIRST.EMI` | common title/menu resource pack loaded before `GAME.EMI` | mixed archive; audio, images, and CPU-RAM tables/text, but not the title-state controller |
-| `DEMO.EMI` | title/demo presentation pack requested by `GAME.EMI` state `0` | mixed archive; audio, images, and presentation-side control data, but not a trustworthy code module |
-| `AFLDKWA.EMI` | duplicate resource payload also carried by `FIRST.EMI#11` | CPU-RAM text/table pack; do not treat it as an overlay root by default |
+- Standalone executables: `src/exe/<target>/`
+- Confirmed EMI targets: `src/emi/<family>/<archive>/<slot>/`
+- Existing targets awaiting identity normalization: `src/modules/`
 
-For full extraction/reverse/decompile, these packs should stay in scope as
-archive/data inputs even though they are not part of the conservative
-executable-overlay subset.
-
-## Ghidra Import Catalog
-
-Only confirmed code modules are imported as executable targets. The local
-catalog records other EMI entries as resources or unresolved payloads.
-
-## Mixed-Content Archive Pattern
-
-Recurring EMI shape:
-
-- one or more code-bearing slots (`type 0`)
-- image payloads, often `type 3`
-- small palette-like rows in the `0x80033xxx` range
-- optional audio bank pairs such as `VH` / `VB`
-
-Example stable reference:
-
-- `STATUS.EMI`
-  - one menu/game-mode overlay at `0x801d0c00`
-  - image payloads
-  - small palette-like blobs
-  - one `VH` plus one `VB`
-
-## Naming Rule For Recovered Source
-
-Recovered source mirrors the promoted archive path and slot below `src/emi/`.
-Use `bin/rebof3 promote` to create the path; do not invent synthetic module
-names or create an executable target directly from TOC metadata.
+Do not duplicate a function across these trees.

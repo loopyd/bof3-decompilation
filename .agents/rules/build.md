@@ -1,12 +1,15 @@
 # Build & Verify
-- `BOF3_SOURCES` in `sources.cmake` = core + common + all module sources → every `.c` has independent `.obj`
-- `BOF3_MODULE_*_SOURCES` per module; `cmake/modules/*.cmake` per family
-- New PLACEHOLDER modules don't need DECLARED_SOURCES
+
+- BOF3 binaries are independently loaded targets, not one link unit.
+- Keep every source file owned by its executable or promoted EMI target.
+- Build metadata belongs in CMake; Python must not construct `CMakeFiles/...` paths.
+- Generated build and comparison artifacts belong under `build/` and `out/`.
 
 ## Verification
+
 ```bash
-bin/asm-diff-one <source>   # per-function
-make build                   # full
-bin/doctor --strict          # env
-.venv/bin/python -m pytest -q -p no:cacheprovider tools/python/tests
+bin/rebof3 diff <source>
+just build
+just check
+bin/rebof3 doctor --strict
 ```

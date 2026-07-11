@@ -1,0 +1,34 @@
+# Reverse-engineering tools
+
+> Each tool has one role; original bytes and canonical Splat assembly remain
+> authoritative.
+
+| Tool | Role | Required |
+| --- | --- | --- |
+| Splat/spimdisasm | Split PSX binaries and produce canonical assembly | Yes |
+| historical GCC | Reproduce the BOF3 compiler family | Yes |
+| MASPSX/binutils | Produce inspectable matching ELF objects | Yes |
+| `emi-ex` | Extract BOF3 Capcom EMI containers | Yes |
+| asm-differ | Interactive instruction comparison | Yes |
+| m2c | Produce a matching-oriented C seed | Optional |
+| Rizin/rz-ghidra | Fast local CLI analysis | Optional |
+| Ghidra | Persistent deep analysis and manual review | Optional |
+| decomp-permuter | Search late-stage source variants | Optional |
+
+Pinned repository tools live under `third_party/`; generated installations and
+SDKs live under `toolchains/`. See `tools.lock.toml` for the local role of each
+submodule.
+
+## Historical PsyQ profile
+
+The current `capcom97-bof3` profile uses GCC 2.7.2, MASPSX configured for
+ASPSX 2.56 behavior, and staged PsyQ 4.7 headers and libraries. These versions
+represent separate compiler, assembler, header, and library choices; “PsyQ
+4.7” does not prove that BOF3 originally used the complete 4.7 SDK.
+
+Before changing the profile, compare candidate SDK releases against several
+small known BOF3 functions and linked PsyQ routines. Check instruction output,
+calling convention, library signatures, object layout, and relocations. Keep
+the current profile until an earlier available SDK produces stronger binary
+evidence. PsyQ 3.x or 4.0 are candidates for investigation, not verified BOF3
+facts.

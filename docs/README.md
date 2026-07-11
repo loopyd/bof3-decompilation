@@ -6,6 +6,8 @@
 | --- | --- |
 | Prepare a workstation and local disc input | [setup.md](setup.md) |
 | Classify, promote, and lift a binary | [reverse-engineering.md](reverse-engineering.md) |
+| Iterate on a lifted C function | [matching.md](matching.md) |
+| Understand the supported tool roles | [tools.md](tools.md) |
 | Resolve common local failures | [troubleshooting.md](troubleshooting.md) |
 | Browse retained format and runtime evidence | [specs/index.md](specs/index.md) |
 

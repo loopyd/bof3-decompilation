@@ -12,13 +12,15 @@
 ## Quick path
 
 ```bash
-just psyq
 just setup
 bin/rebof3 doctor --strict
 ```
 
-`just psyq` stages PsyQ 4.7 under `toolchains/psyq/4.7/`; it is required to
-compile. SDK files remain ignored and must not be committed.
+`just setup` prepares the required submodules and PSX tools, stages PsyQ 4.7,
+extracts the disc, unpacks EMI archives, and refreshes the catalog. SDK files
+remain ignored and must not be committed.
+
+Run `just psyq` separately only when restaging the SDK.
 
 Use these day-to-day targets after setup:
 
@@ -41,3 +43,7 @@ payloads, SDK files, or generated analysis output. See
 ## Verification
 
 After extraction, `bin/rebof3 scan` writes `out/catalog/emi.json`.
+`bin/rebof3 status` should then report the archive and code-status counts.
+
+Optional analysis and last-mile matching tools are not required for the core
+setup. Install or enable them only when the active function needs them.

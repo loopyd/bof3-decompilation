@@ -1,17 +1,29 @@
 # Reverse-engineering specs
 
-Human-maintained BOF3 facts, evidence, and unresolved questions.
+Verified BOF3 binary facts only. Generated evidence and active investigations
+belong under `out/`.
 
-## Core concepts
+## Formats
 
-* [Glossary](glossary.md) - Stable terms shared by the specifications.
-* [Evidence status](status.md) - Constraints that apply across the knowledge catalog.
-* [Recovered memory layouts](recovered-layouts.md) - Locally evidenced working byte layouts for lifts.
-* [Formats](formats/index.md) - EMI layout, payload semantics, and generated-artifact ownership.
-* [Runtime](runtime/index.md) - Executable roles, loader behavior, and reviewed overlays.
-* [Content](content/index.md) - Archive-family and mixed-content case studies.
-* [Sources](sources/index.md) - External references, kept distinct from local proof.
+- [EMI](formats/emi.md) — container and entry layout.
+- [Graphics](formats/graphics.md) — type-3 uploads and palettes.
+- [Generated artifacts](formats/artifacts.md) — output ownership.
 
-Use shipped archive path plus slot for an EMI entry. Add a load address only
-when recording a code-module target. Generated corpus state belongs in
-`out/catalog/`, not in this catalog.
+## Runtime
+
+- [Runtime model](runtime/runtime-layout.md) — executable and overlay boundaries.
+- [EMI loader](runtime/emi-loader.md) — loader dispatch and payload handling.
+- [Module map](runtime/module-map.md) — confirmed executable targets.
+- [STR playback](runtime/str-playback.md) — BOF3 sector layout.
+- [Recovered layouts](recovered-layouts.md) — evidenced structure offsets.
+- [Data tables](data-tables.md) — verified archive offsets and record layouts.
+
+## Assets
+
+- [Archive families](assets/index.md) — stable family roles.
+
+## Authoring rule
+
+Keep only facts supported by original bytes, tracked layouts, or confirmed
+runtime behavior. Store hypotheses, tool output, corpus tables, and progress in
+`out/work/`, `out/catalog/`, or `out/reports/`.

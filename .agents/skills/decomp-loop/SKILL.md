@@ -5,34 +5,24 @@ description: "Lift and match one function from PSX MIPS assembly to C89. Use whe
 
 # Decomp Loop
 
-## Quick CLI path (no harness)
+Use `bin/rebof3` as the only workflow entry point. Original bytes and canonical
+Splat assembly outrank decompiler output.
+
+## Function loop
 
 ```bash
-# 1. Get r2 decompilation at target address
-r2 -q -c 'pdg @ 0x801ba678' out/binaries/ETC/GAME/0.bin
-
-# 2. Lift via m2c
-bin/harness lift func:ETC/GAME#0@0x801ba678
-cat output/harness/workspaces/func:ETC:GAME#0@0x801ba678/func.m2c.c
-
-# 3. Write/edit C89 source
-#   src/modules/game/func_801ba678.c  +  #include "internal.h"
-
-# 4. Match
-bin/asm-diff-one src/modules/game/func_801ba678.c
-
-# 5. Read results
-cat out/asm-diff/func_801ba678/summary.json
-cat out/asm-diff/func_801ba678/diff.patch
+bin/rebof3 inspect <target>
+bin/rebof3 next [target]
+bin/rebof3 lift <target@address>
+bin/rebof3 diff <source>
 ```
 
-## Full harness path
-
-Target selection, claiming, lifecycle, module verification → see `.agents/skills/harness/SKILL.md`.
+Before editing C, verify the payload, load address, function range, and Splat
+configuration reported by `inspect`.
 
 ## Reading asm-diff output
 
-- `summary.json` → `"similarity": 0.95` = 95%
+- `summary.json` records the instruction match percentage and first mismatch.
 - `diff.patch` → `-` = original, `+` = compiled; common mismatches:
   - register / offset / instruction choice
   - `li` vs `lui+ori`, `move` vs `addiu $zero,`
@@ -43,24 +33,23 @@ Target selection, claiming, lifecycle, module verification → see `.agents/skil
 
 | Blocked by | Action |
 |---|---|
-| Unknown instruction | `r2 -q -c 'pdga @ <addr>'` for decompiler asm with regs |
-| Match 80–95% | Hand-trace with `r2 -q -c 'pD $(( <end> - <start> )) @ <start>'` |
-| Stuck on calling convention | Check compiler flags in `config/splat/*.yaml` `$maspsx_extra` |
+| Unsupported instruction | Read canonical Splat assembly; use Rizin or Ghidra as an optional hint |
+| Match 80–95% | Trace the first meaningful mismatch in `out/asm-diff/` |
+| Stuck on calling convention | Check the target Splat config and `capcom97-bof3` compiler profile |
 | Compiler-inserted NOP | Verify delay slots in original vs compiled |
-| Unknown struct/global | Add `extern` to `internal.h` + `SYMBOL_AT` in `symbols.c` |
-| Match % won't budge | Try decomp-permuter (Phase 2) for register/instruction variant search |
+| Unresolved struct/global | Add `extern` to `internal.h` + `SYMBOL_AT` in `symbols.c` |
+| Match % won't budge | Use decomp-permuter only after size, CFG, and calls converge |
 
 ## Tool chain
 
 | Tool | Role |
 |---|---|
-| r2 + r2ghidra 6.1.4 | MIPS decompiler (`pdg`/`pdga`) |
 | bin/maspsx-cc | PsyQ-compiler with maspsx flag translation |
-| splat (config/splat/) | Binary segmentation (6 yamls) |
-| m2c | C decompiler (via `harness lift`) |
-| bin/asm-diff-one | Compile + nbench + byte diff → summary.json + diff.patch |
-| decomp-permuter | Last-mile register/instruction variant search (Phase 2) |
-| bin/harness | Target selection, claiming, verified diff, reports |
+| Splat/spimdisasm | Canonical binary segmentation and assembly |
+| m2c | Optional matching-oriented C seed |
+| asm-differ | Interactive instruction comparison |
+| Rizin/Ghidra | Optional analysis hints |
+| decomp-permuter | Optional late-stage source search |
 
 ## Coding conventions
 

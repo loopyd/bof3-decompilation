@@ -17,3 +17,9 @@
 [submodule "third_party/maspsx"]
 	path = third_party/maspsx
 	url = https://github.com/raulcorreia7/maspsx.git
+[submodule "third_party/references/bof3-data-doc"]
+	path = third_party/references/bof3-data-doc
+	url = https://github.com/GlitchedDragon-dev/BoF3-Data-Doc.git
+[submodule "third_party/references/vast-violence"]
+	path = third_party/references/vast-violence
+	url = https://github.com/abyssonym/vast_violence.git
