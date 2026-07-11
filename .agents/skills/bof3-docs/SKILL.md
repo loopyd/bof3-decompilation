@@ -23,8 +23,10 @@ Read the doc you need with the Read tool. Don't pre-load all docs.
 - `docs/specs/runtime/runtime-layout.md` — executable and overlay model
 - `docs/specs/runtime/emi-loader.md` — payload dispatch
 - `docs/specs/runtime/module-map.md` — confirmed executable targets
-- `docs/specs/recovered-layouts.md` — evidenced structure offsets
+- `docs/specs/runtime/recovered-layouts.md` — evidenced structure offsets
 - `docs/specs/assets/index.md` — archive-family roles
+- `docs/specs/assets/file-map.md` — which EMI file owns each data domain
+- `docs/specs/tables/index.md` — verified archive offsets and record layouts
 
 ### Workflow
 - `docs/reverse-engineering.md` — repeatable target and function loop
