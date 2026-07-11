@@ -1,0 +1,32 @@
+{
+  "schema": "rebof3.compiler-flag-catalog/v1",
+  "provenance": [
+    "decomp.me PS1 compiler presets",
+    ".agents/skills/decomp-loop/references/matching-patterns.md"
+  ],
+  "candidates": [
+    ["-O0"],
+    ["-O1"],
+    ["-O2"],
+    ["-O3"],
+    ["-O2", "-g0"],
+    ["-O2", "-fsigned-char"],
+    ["-O2", "-fno-inline-functions"],
+    ["-O2", "-fno-strength-reduce"],
+    ["-O2", "-fno-thread-jumps"],
+    ["-O2", "-fno-cse-follow-jumps"],
+    ["-O2", "-fno-cse-skip-blocks"],
+    ["-O2", "-fno-function-cse"],
+    ["-O2", "-fno-schedule-insns"],
+    ["-O2", "-fno-delayed-branch"],
+    ["-O2", "-fno-rerun-cse-after-loop"],
+    ["-O2", "-fomit-frame-pointer"],
+    ["-O1", "-g0"],
+    ["-O1", "-fsigned-char"],
+    ["-O1", "-fno-inline-functions"],
+    ["-O1", "-fomit-frame-pointer"],
+    ["-O3", "-g0"],
+    ["-O3", "-fsigned-char"],
+    ["-O0", "-g0"]
+  ]
+}

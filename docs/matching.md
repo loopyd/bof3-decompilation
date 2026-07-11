@@ -7,11 +7,16 @@
 ```sh
 bin/rebof3 inspect "$TARGET"
 bin/rebof3 diff "$FUNCTION_SOURCE"
+bin/rebof3 flags "$FUNCTION_SOURCE"
 ```
 
 An exact match exits with status `0`. A valid nonmatch exits with status `1`
 and writes its evidence under `out/asm-diff/`. Invocation, mapping, build, and
 tool failures exit with status `2`.
+
+`flags` tests the reviewed PSX compiler-flag catalog against the source's
+target-specific CMake command. It reports every exact candidate and does not
+change the build configuration.
 
 Use `--json` when another local tool or agent consumes the result:
 

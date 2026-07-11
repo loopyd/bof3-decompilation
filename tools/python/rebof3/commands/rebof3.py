@@ -191,6 +191,26 @@ def run_diff(args: argparse.Namespace) -> int:
     return asm_diff.main(argv)
 
 
+def run_flags(args: argparse.Namespace) -> int:
+    from ..match.flag_search import search_flags
+
+    payload = search_flags(
+        layout=repo_layout(_root(args)),
+        source=args.source,
+        catalog_path=args.catalog
+        or _root(args) / "config" / "compiler" / "flag-catalog.json",
+    )
+    if args.json:
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    else:
+        exact = payload["exact_matches"]
+        for row in payload["results"]:
+            flags = " ".join(row["flags"])
+            print(f"{row['match_percent']:6.2f}%  {row['status']:13s}  {flags}")
+        print(f"exact matches: {len(exact)}")
+    return 0 if payload["exact_matches"] else 1
+
+
 def run_ghidra_sync(args: argparse.Namespace) -> int:
     catalog = read_json(_catalog_path(args))
     imports = [
@@ -315,6 +335,14 @@ def build_parser() -> argparse.ArgumentParser:
     diff.add_argument("source", type=Path)
     diff.add_argument("--json", action="store_true")
     diff.set_defaults(handler=run_diff)
+    flags = sub.add_parser("flags")
+    flags.add_argument("source", type=Path)
+    flags.add_argument(
+        "--catalog",
+        type=Path,
+    )
+    flags.add_argument("--json", action="store_true")
+    flags.set_defaults(handler=run_flags)
     ghidra = sub.add_parser("ghidra")
     ghidra_sub = ghidra.add_subparsers(dest="ghidra_command", required=True)
     ghidra_sync = ghidra_sub.add_parser("sync")

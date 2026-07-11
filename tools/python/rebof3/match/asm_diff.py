@@ -635,7 +635,12 @@ def run_asm_diff_one(
     )
     object_path = object_path_for_source(repo, source_path)
     output_root = request.output_root or repo.out_dir / "asm-diff"
-    output_dir = output_root / function_name
+    try:
+        owner = source_path.parent.relative_to(repo.root).as_posix()
+    except ValueError:
+        owner = source_path.parent.name
+    target_slug = re.sub(r"[^A-Za-z0-9_.-]+", "_", owner)
+    output_dir = output_root / target_slug / function_name
     if output_dir.is_dir():
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
