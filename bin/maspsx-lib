@@ -12,9 +12,6 @@ die() {
 # --- tool resolution ---
 
 resolve_tool() {
-    # resolve_tool NAME PATH MUST_EXIST
-    # Prints the absolute path. Exits if MUST_EXIST is 1 and the file
-    # is not executable.
     _rt_name="$1"
     _rt_path="$2"
     _rt_must_exist="${3:-1}"
@@ -25,44 +22,82 @@ resolve_tool() {
     printf '%s\n' "$_rt_path"
 }
 
-# --- directory helpers ---
-
-script_dir() {
-    # script_dir — print the absolute directory of the currently executing script.
-    _sd_path="$1"
-    ( cd "$(dirname "$_sd_path")" && pwd )
-}
-
-repo_root() {
-    # repo_root — print the absolute repository root given the script directory.
-    ( cd "$1/.." && pwd )
-}
-
-# --- flag helpers ---
-# Profile flags are stored as space-separated strings (CC_PROFILE_FLAGS,
-# AS_FLAGS, EXTRA_FLAGS). Unquoted expansion ($FLAGS without quotes)
-# splits on IFS (space/tab/newline) in POSIX sh. Use set -f (noglob) to
-# prevent accidental filename expansion of flags like -G0.
-
 # --- argument parsing helpers ---
 
 arg_required() {
-    # arg_required OPTION NEXT_ARG — fail if NEXT_ARG is empty.
     if [ $# -lt 2 ] || [ -z "$2" ]; then
         die "'$1' requires a value"
     fi
 }
 
 option_value() {
-    # option_value ARG PREFIX
-    # Extract the value from --prefix=value style argument.
     printf '%s\n' "$1" | sed "s|^$2||"
 }
 
-has_prefix() {
-    # has_prefix ARG PREFIX — test if ARG starts with PREFIX.
-    case "$1" in
-        "$2"*) return 0 ;;
-        *) return 1 ;;
-    esac
+# --- profile loading ---
+
+maspsx_load_profile() {
+    # Load the compiler profile TOML via maspsx-profile and eval the
+    # resulting shell variables. Sets CC_PATH, CC_PROFILE_FLAGS,
+    # PSYQ_VERSION, ASPSX_VERSION, MASPSX_SCRIPT, AS_TOOLCHAIN_BIN,
+    # AS_NAME, AS_FLAGS.
+    if [ ! -x "$MASPSX_PYTHON" ]; then
+        die "Python venv not found at $MASPSX_PYTHON (run 'just venv')"
+    fi
+    eval "$("$MASPSX_PYTHON" "$MASPSX_PROFILE_BIN" --root "$REBOF3_ROOT_DIR" "$PROFILE")"
+}
+
+# --- tool resolution ---
+
+maspsx_resolve_tools() {
+    # Resolve GCC, assembler, and PsyQ paths; set tool environment.
+    # Sets GCC, GCC_DIR, AS_BIN, AS, PSYQ_INCLUDE, ASPSX_VERSION,
+    # PATH, GCC_EXEC_PREFIX, COMPILER_PATH.
+    GCC="$(resolve_tool "gcc" "$CC_PATH")"
+    GCC_DIR="$(dirname "$GCC")"
+    AS_BIN="${AS_TOOLCHAIN_BIN}/${AS_NAME}"
+    AS="$(resolve_tool "as" "$AS_BIN")"
+
+    if [ -z "$PSYQ_ROOT" ]; then
+        PSYQ_ROOT="${REBOF3_ROOT_DIR}/toolchains/psyq/${PSYQ_VERSION}"
+    fi
+    PSYQ_INCLUDE="${PSYQ_ROOT}/include"
+    if [ ! -d "$PSYQ_INCLUDE" ]; then
+        die "missing PsyQ include root: $PSYQ_INCLUDE"
+    fi
+
+    if [ -z "$ASPSX_VERSION" ]; then
+        ASPSX_VERSION="${ASPSX_VERSION_DEFAULT:-2.56}"
+    fi
+
+    export PATH="${GCC_DIR}:${AS_TOOLCHAIN_BIN}:${PATH}"
+    export GCC_EXEC_PREFIX="${GCC_DIR}/"
+    export COMPILER_PATH="${GCC_DIR}"
+}
+
+# --- pipeline stages ---
+
+maspsx_run_preprocess() {
+    # shellcheck disable=SC2086
+    "$GCC" -I"$PSYQ_INCLUDE" $EXTRA_INC_FLAGS $CC_PROFILE_FLAGS $EXTRA_FLAGS \
+        $PREPROCESS_FLAGS -o "$OUTPUT" "$SOURCE" || die "gcc preprocess failed"
+}
+
+maspsx_run_assemble() {
+    # shellcheck disable=SC2086
+    "$AS" $AS_FLAGS -o "$OUTPUT" "$SOURCE" || die "assembly failed"
+}
+
+maspsx_run_compile() {
+    ASM_FILE="${OUTPUT}.s"
+
+    # shellcheck disable=SC2086
+    "$GCC" -I"$PSYQ_INCLUDE" $EXTRA_INC_FLAGS $CC_PROFILE_FLAGS $EXTRA_FLAGS \
+        -S -o "$ASM_FILE" "$SOURCE" || die "gcc compile failed"
+
+    # shellcheck disable=SC2086
+    if ! "$MASPSX_PYTHON" "$MASPSX_SCRIPT" --aspsx-version="$ASPSX_VERSION" "$ASM_FILE" | \
+        "$AS" $AS_FLAGS -o "$OUTPUT" - ; then
+        die "maspsx translation or assembly failed"
+    fi
 }

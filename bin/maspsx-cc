@@ -144,15 +144,9 @@ done
 # --- profile resolution ---
 
 if [ "$PROFILE" != "$MASPSX_DEFAULT_PROFILE" ]; then
-    # If it looks like a path (contains / or ends with .toml), use as-is.
-    # Otherwise look it up as a profile name under config/compiler/.
     case "$PROFILE" in
-        */*|*.toml)
-            # already a path
-            ;;
-        *)
-            PROFILE="${REBOF3_ROOT_DIR}/config/compiler/${PROFILE}.toml"
-            ;;
+        */*|*.toml) ;;
+        *) PROFILE="${REBOF3_ROOT_DIR}/config/compiler/${PROFILE}.toml" ;;
     esac
 fi
 
@@ -171,67 +165,24 @@ if [ ! -f "$SOURCE" ]; then
     die "source file not found: $SOURCE"
 fi
 
-# --- load profile ---
+# --- load profile and resolve tools ---
 
 MASPSX_PYTHON="${REBOF3_ROOT_DIR}/.venv/bin/python"
-if [ ! -x "$MASPSX_PYTHON" ]; then
-    die "Python venv not found at $MASPSX_PYTHON (run 'just venv')"
-fi
-
-eval "$("$MASPSX_PYTHON" "$MASPSX_PROFILE_BIN" --root "$REBOF3_ROOT_DIR" "$PROFILE")"
-
-# --- resolve tools ---
-
-GCC="$(resolve_tool "gcc" "$CC_PATH")"
-GCC_DIR="$(dirname "$GCC")"
-AS_BIN="${AS_TOOLCHAIN_BIN}/${AS_NAME}"
-AS="$(resolve_tool "as" "$AS_BIN")"
-
-if [ -z "$PSYQ_ROOT" ]; then
-    PSYQ_ROOT="${REBOF3_ROOT_DIR}/toolchains/psyq/${PSYQ_VERSION}"
-fi
-PSYQ_INCLUDE="${PSYQ_ROOT}/include"
-if [ ! -d "$PSYQ_INCLUDE" ]; then
-    die "missing PsyQ include root: $PSYQ_INCLUDE"
-fi
-
-if [ -z "$ASPSX_VERSION" ]; then
-    ASPSX_VERSION="${ASPSX_VERSION_DEFAULT:-2.56}"
-fi
-
-# --- tool environment ---
-
-export PATH="${GCC_DIR}:${AS_TOOLCHAIN_BIN}:${PATH}"
-export GCC_EXEC_PREFIX="${GCC_DIR}/"
-export COMPILER_PATH="${GCC_DIR}"
+maspsx_load_profile
+maspsx_resolve_tools
 
 # --- dispatch ---
 
 if [ "$MODE" = "preprocess" ]; then
-    # shellcheck disable=SC2086
-    "$GCC" -I"$PSYQ_INCLUDE" $EXTRA_INC_FLAGS $CC_PROFILE_FLAGS $EXTRA_FLAGS \
-        $PREPROCESS_FLAGS -o "$OUTPUT" "$SOURCE"
+    maspsx_run_preprocess
     exit 0
 fi
 
 case "$SOURCE" in
     *.s|*.S)
-        # shellcheck disable=SC2086
-        "$AS" $AS_FLAGS -o "$OUTPUT" "$SOURCE"
+        maspsx_run_assemble
         exit 0
         ;;
 esac
 
-# --- compile C ---
-
-ASM_FILE="${OUTPUT}.s"
-
-# shellcheck disable=SC2086
-"$GCC" -I"$PSYQ_INCLUDE" $EXTRA_INC_FLAGS $CC_PROFILE_FLAGS $EXTRA_FLAGS \
-    -S -o "$ASM_FILE" "$SOURCE" || die "gcc compile failed"
-
-# !pipefail equivalent for POSIX sh
-if ! "$MASPSX_PYTHON" "$MASPSX_SCRIPT" --aspsx-version="$ASPSX_VERSION" "$ASM_FILE" | \
-    "$AS" $AS_FLAGS -o "$OUTPUT" - ; then
-    die "maspsx translation or assembly failed"
-fi
+maspsx_run_compile
