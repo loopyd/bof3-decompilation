@@ -12,6 +12,7 @@ from rebof3.binaries import (
     promote_entry,
     resolve_entry,
     target_details,
+    target_progress,
     write_catalog,
 )
 
@@ -136,3 +137,47 @@ def test_target_details_derives_promoted_paths_without_duplicating_metadata(
     assert details["splat"] == "config/splat/emi/battle/battle/03.yaml"
     assert details["source"] == "src/emi/battle/battle/03"
     assert details["build"] is None
+    assert details["progress"] == {
+        "layout": "unsegmented",
+        "reviewed_functions": 0,
+        "lifted_functions": 0,
+        "matched_functions": 0,
+        "next_function": None,
+        "whole_payload_match": False,
+    }
+
+
+def test_target_progress_uses_reviewed_splat_c_subsegments(tmp_path: Path) -> None:
+    entry = {
+        "id": "WORLD00/AREA008#13",
+        "archive_id": "WORLD00/AREA008",
+        "slot": 13,
+        "payload_path": str(tmp_path / "13.bin"),
+        "sha256": "abc",
+        "load_address": 0x801F2C00,
+        "size": 0x100,
+        "code_status": "confirmed",
+    }
+    config = tmp_path / "config" / "splat" / "emi" / "world00" / "area008" / "13.yaml"
+    config.parent.mkdir(parents=True)
+    config.write_text(
+        "segments:\n"
+        "  - name: main\n"
+        "    type: code\n"
+        "    subsegments:\n"
+        "      - [0x14, c, func_801f2c14]\n"
+        "      - [0x58, c, func_801f2c58]\n",
+        encoding="utf-8",
+    )
+    source = tmp_path / "src" / "emi" / "world00" / "area008" / "13"
+    source.mkdir(parents=True)
+    (source / "func_801f2c14.c").write_text("void func_801f2c14(void) {}\n")
+
+    assert target_progress(entry, tmp_path) == {
+        "layout": "reviewed",
+        "reviewed_functions": 2,
+        "lifted_functions": 1,
+        "matched_functions": 0,
+        "next_function": 0x801F2C58,
+        "whole_payload_match": False,
+    }

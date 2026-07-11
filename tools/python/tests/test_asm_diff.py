@@ -5,12 +5,15 @@ from pathlib import Path
 
 from rebof3.match.asm_diff import (
     build_result_payload,
+    build_target_for_source,
+    default_binary_for_source,
     extract_original_bytes,
     infer_original_size,
     infer_size_from_sibling_sources,
     matching_instruction_count,
     normalize_disassembly,
     object_path_for_source,
+    overlay_load_address_for_source,
     parse_source_address,
 )
 from rebof3.paths import repo_layout
@@ -113,6 +116,67 @@ def test_object_path_matches_cmake_object_layout(tmp_path: Path) -> None:
         / "emi"
         / "func_80162178.c.obj"
     )
+    assert build_target_for_source(layout, source) == "src/core/emi/func_80162178.obj"
+
+
+def test_overlay_source_resolves_through_artifact_hint(tmp_path: Path) -> None:
+    layout = repo_layout(tmp_path)
+    source = layout.root / "src" / "emi" / "etc" / "game" / "00" / "func_80195800.c"
+    source.parent.mkdir(parents=True)
+    source.write_text("void func_80195800(void) {}\n", encoding="utf-8")
+    binary = layout.root / "out" / "extracted" / "BIN" / "ETC" / "GAME" / "0.bin"
+    binary.parent.mkdir(parents=True)
+    binary.write_bytes(b"overlay")
+    build_dir = layout.build_dir / "default"
+    build_dir.mkdir(parents=True)
+    (build_dir / "compile_commands.json").write_text(
+        json.dumps(
+            [
+                {
+                    "directory": str(build_dir),
+                    "file": str(source),
+                    "output": "CMakeFiles/bof3_game_00.dir/src/emi/etc/game/00/func_80195800.c.obj",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    manifest = build_dir / "artifacts" / "metadata" / "artifacts.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(
+        json.dumps(
+            {
+                "artifacts": [
+                    {
+                        "target": "bof3_game_00",
+                        "source_hint": "out/extracted/BIN/ETC/GAME.EMI#0",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    catalog = layout.root / "out" / "catalog" / "emi.json"
+    catalog.parent.mkdir(parents=True)
+    catalog.write_text(
+        json.dumps(
+            {
+                "entries": [
+                    {
+                        "id": "ETC/GAME#0",
+                        "archive_id": "ETC/GAME",
+                        "slot": 0,
+                        "payload_path": str(binary),
+                        "load_address": 0x80195800,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert default_binary_for_source(layout, source) == binary
+    assert overlay_load_address_for_source(layout, source) == 0x80195800
 
 
 def test_normalize_disassembly_keeps_only_instruction_text() -> None:
@@ -187,3 +251,13 @@ def test_result_payload_reports_instruction_match_percent(tmp_path: Path) -> Non
     )
     assert payload["instruction_count"]["matching"] == 2
     assert payload["instruction_count"]["match_percent"] == 66.67
+    assert payload["outputs"] == {
+        "directory": str(tmp_path),
+        "summary": str(tmp_path / "summary.json"),
+        "diff": str(tmp_path / "diff.patch"),
+        "original": str(tmp_path / "original.s"),
+        "current": str(tmp_path / "current.s"),
+        "compiler": str(tmp_path / "compiler.s"),
+        "original_bytes": str(tmp_path / "original.bin"),
+        "build_log": str(tmp_path / "build.log"),
+    }
