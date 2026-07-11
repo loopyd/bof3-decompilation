@@ -10,6 +10,7 @@
 | Understand the supported tool roles | [tools.md](tools.md) |
 | Resolve common local failures | [troubleshooting.md](troubleshooting.md) |
 | Browse retained format and runtime evidence | [specs/index.md](specs/index.md) |
+| Understand generated output ownership | [artifacts.md](artifacts.md) |
 
 `config/splat/` and `config/symbols/` are the tracked layout source of truth.
 `out/` is generated and may be deleted and regenerated. The command contract is

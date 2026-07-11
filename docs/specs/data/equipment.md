@@ -7,12 +7,13 @@ tags: [tables, equipment, emi]
 
 # Equipment and shop data
 
-All tables below live in `BIN/ETC/GAME.EMI`. No other file contains this
-data. Verified against US v1.1 disc with zero failures.
+All tables below live in entry `0` of `BIN/ETC/GAME.EMI`. Locations are raw
+archive offsets; subtract the entry payload start (`0x800`) for payload-relative
+offsets. Verified against the US v1.1 disc with zero boundary failures.
 
 ## Fixed table locations
 
-| Offset | Records | Size | Content |
+| Archive offset | Records | Size | Content |
 | ---: | ---: | ---: | --- |
 | `0x33964` | 92 | `0x12` | items |
 | `0x33fdc` | 16 | `0x10` | key items |
@@ -70,6 +71,8 @@ are special items.
 | ---: | ---: | --- |
 | `0x00` | `0x0c` | name (12-byte inline string) |
 | `0x0c` | 1 | equipability (see bitmask above) |
+| `0x0d` | 1 | unresolved byte |
+| `0x0e` | 1 | equip type: shield `2`, helmet `3`, body `4` |
 | `0x0f` | 1 | weight |
 | `0x10` | 1 | power (defense) |
 | `0x11` | 3 | unknown |
@@ -149,6 +152,6 @@ Item type codes: `0`=ItemObject, `1`=WeaponObject, `2`=ArmorObject,
 
 - Source file: `out/extracted/BIN/ETC/GAME.EMI`
 - Validation: `out/reports/vast-violence-1.1.json`
-- Struct definitions: `third_party/references/vast-violence/tables/struct_items.txt` etc.
+- Struct definitions: `third_party/references/vast-violence/tables/struct_*.txt`
 - Ability names: `third_party/references/vast-violence/ability_names.txt` (228 abilities)
 - Shop names: `third_party/references/vast-violence/tables/names_shops.txt` (40 shops)

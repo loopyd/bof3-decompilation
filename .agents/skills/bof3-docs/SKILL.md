@@ -20,13 +20,14 @@ Read the doc you need with the Read tool. Don't pre-load all docs.
 ### Reverse Specs
 - `docs/specs/index.md` — entry point for reverse-engineering knowledge
 - `docs/specs/formats/emi.md` — EMI container and entry layout
+- `docs/specs/formats/graphics.md` — type-3 VRAM and palette layout
 - `docs/specs/runtime/runtime-layout.md` — executable and overlay model
 - `docs/specs/runtime/emi-loader.md` — payload dispatch
-- `docs/specs/runtime/module-map.md` — confirmed executable targets
-- `docs/specs/runtime/recovered-layouts.md` — evidenced structure offsets
-- `docs/specs/assets/index.md` — archive-family roles
-- `docs/specs/assets/file-map.md` — which EMI file owns each data domain
-- `docs/specs/tables/index.md` — verified archive offsets and record layouts
+- `docs/specs/runtime/memory-layouts.md` — evidenced structure offsets
+- `docs/specs/programs/targets.md` — confirmed executable targets
+- `docs/specs/archives/` — archive roles, ownership, and duplication
+- `docs/specs/data/` — verified IDs, values, offsets, and records
+- `docs/specs/methods/` — discovery and verification procedures
 
 ### Workflow
 - `docs/reverse-engineering.md` — repeatable target and function loop

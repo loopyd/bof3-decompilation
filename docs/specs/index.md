@@ -14,21 +14,31 @@ belong under `out/`.
 
 - [EMI](formats/emi.md) — container and entry layout.
 - [Graphics](formats/graphics.md) — type-3 uploads and palettes.
-- [Generated artifacts](formats/artifacts.md) — output ownership.
+- [STR/XA](formats/str-xa.md) — media-sector representation.
+
+## Programs
+
+- [Targets](programs/targets.md) — standalone executables and confirmed overlays.
 
 ## Runtime
 
 - [Runtime model](runtime/runtime-layout.md) — executable and overlay boundaries.
 - [EMI loader](runtime/emi-loader.md) — loader dispatch and payload handling.
-- [Module map](runtime/module-map.md) — confirmed executable targets.
-- [STR playback](runtime/str-playback.md) — BOF3 sector layout.
-- [Recovered layouts](runtime/recovered-layouts.md) — evidenced structure offsets.
-- [Data tables](tables/index.md) — verified archive offsets and record layouts.
+- [Memory layouts](runtime/memory-layouts.md) — evidenced structure offsets.
 
-## Assets
+## Data
 
-- [Archive families](assets/index.md) — stable family roles.
-- [File source map](assets/file-map.md) — which EMI file owns each data domain.
+- [Game data](data/index.md) — verified IDs, values, offsets, and record layouts.
+
+## Archives
+
+- [Families](archives/families.md) — stable archive roles.
+- [Ownership](archives/ownership.md) — canonical and duplicate data locations.
+
+## Methods
+
+- [Discovery](methods/discovery.md) — locate and infer structures.
+- [Verification](methods/verification.md) — accept or reject findings.
 
 ## Authoring rule
 

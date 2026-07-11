@@ -1,5 +1,5 @@
 ---
-type: Format
+type: Reference
 title: Generated artifacts
 description: Ownership and regeneration boundaries for BOF3 build and analysis output.
 tags: [build, generated]

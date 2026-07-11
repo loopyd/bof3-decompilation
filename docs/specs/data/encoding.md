@@ -160,7 +160,7 @@ Value range 0–7. Value 0 = 0.8% (2^0/128).
 
 ### Monster resistance scale
 
-Values 0–7 per element (see monster resistance array in area-data.md).
+Values 0–7 per element (see the monster resistance array in [areas](areas.md)).
 Condition byte `0x63` (99) = unused block.
 
 ### Base stats signed bytes
@@ -171,29 +171,6 @@ Observed range for master stats: -6 to +4.
 ### Zenny from chests
 
 When `item_type = 0xFF`: zenny = `item_index × 40`.
-
-## EMI header format
-
-All 880 EMI files share a common header:
-
-| Offset | Size | Field |
-| ---: | ---: | --- |
-| 0 | 4 | entry count |
-| 4 | 4 | version (always 1) |
-| 8 | 8 | "MATH_TBL" signature |
-| 16 | 16 | first entry header |
-
-Each entry header (16 bytes):
-
-| Offset | Size | Field |
-| ---: | ---: | --- |
-| 0 | 4 | data size |
-| 4 | 4 | load address or count |
-| 8 | 4 | tag |
-| 12 | 2 | unknown |
-| 14 | 2 | padding (always 0x2E2E) |
-
-Load addresses are PSX RAM addresses (0x80000000–0x801FFFFF).
 
 ## Traps to avoid
 

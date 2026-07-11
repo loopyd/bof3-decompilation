@@ -9,5 +9,7 @@ tags: [index]
 
 - [Runtime model](runtime-layout.md) — executable roles and shared load regions.
 - [EMI loader](emi-loader.md) — archive-to-runtime dispatch.
-- [Module map](module-map.md) — confirmed code-bearing targets.
-- [STR playback](str-playback.md) — extracted sector representation.
+- [Memory layouts](memory-layouts.md) — evidenced live structure offsets.
+
+Executable targets live in [programs](../programs/index.md); media layouts live
+in [formats](../formats/index.md).

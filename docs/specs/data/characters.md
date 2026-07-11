@@ -9,8 +9,8 @@ tags: [tables, characters, masters]
 
 ## Base stats (164 bytes)
 
-Source: `BIN/ETC/START.EMI` @ `0x72914` (primary). `BIN/ETC/STATUS.EMI` @
-`0x1b114` holds a byte-identical copy.
+Raw archive location: `BIN/ETC/START.EMI` @ `0x72914` (primary).
+`BIN/ETC/STATUS.EMI` @ `0x1b114` holds a byte-identical copy.
 
 Full character save-state record. 8 records (one per playable character +
 whelp).

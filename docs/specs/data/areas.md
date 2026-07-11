@@ -23,8 +23,9 @@ There is no cross-area monster lookup.
 | `pointers_fairies.txt` | 720 | 12 | `0x09` |
 | `pointers_manillo_items_1.1.txt` | 165 | 3 | `0x08` |
 
-Pointer counts are identical between v1.0 and v1.1; only archive offsets
-within differ. `0x00000` and `0xFFFFF` indicate empty slots.
+Pointer-map locations are raw archive offsets. Pointer counts are identical
+between v1.0 and v1.1; archive offsets differ. `0x00000` and `0xFFFFF`
+indicate empty slots.
 
 ## Monsters (136 bytes)
 
@@ -120,6 +121,11 @@ Values 0–7 (resistance level). Condition byte `0x63` (99) = unused block.
 
 1,600 records across 200 area archives. Appearance rate 0 = boss
 formation / inactive.
+
+To identify monsters absent from normal encounters, collect the monster indexes
+from formations whose appearance rate is nonzero. A monster referenced only by
+zero-rate formations is a boss or otherwise inactive; confirm the caller before
+assigning a narrower semantic name.
 
 ## Genes (1 byte)
 

@@ -15,7 +15,7 @@ target; extracted entries are classified independently.
 | Offset | Size | Type | Meaning |
 | ---: | ---: | --- | --- |
 | `0x00` | 4 | `u32` | entry count |
-| `0x04` | 4 | `u32` | version/control word |
+| `0x04` | 4 | `u32` | format version (`1` in the US v1.1 corpus) |
 | `0x08` | 8 | `char[8]` | `MATH_TBL` |
 
 ## TOC entry
@@ -26,7 +26,7 @@ target; extracted entries are classified independently.
 | `0x04` | 4 | `u32` | type-dependent load argument |
 | `0x08` | 4 | `u32` | cached first payload word |
 | `0x0c` | 2 | `u16` | type id |
-| `0x0e` | 2 | `u16` | control word |
+| `0x0e` | 2 | `u16` | padding (`0x2e2e` in the US v1.1 corpus) |
 
 The first payload starts at `0x800`. Every payload starts on a `0x800` byte
 boundary:
