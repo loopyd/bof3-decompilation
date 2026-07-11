@@ -33,3 +33,14 @@ the current toolchain until an earlier available SDK produces stronger binary
 evidence. PsyQ 3.x or 4.0 are candidates for investigation, not verified BOF3
 facts. Use `PSX_CC_DRIVER` for a one-off compiler driver or `PSX_C_COMPILER`
 when configuring a separate CMake build directory.
+
+## Comparative projects
+
+- [`sozud/mmx4`](https://github.com/sozud/mmx4) is a work-in-progress
+  decompilation of Capcom's *Mega Man X4* for PlayStation. Its repository,
+  extraction, splitting, build, and diff patterns are a useful nearby reference
+  when evaluating BOF3 workflow or source organization.
+
+Treat comparative projects as design and tooling references only. Their binary
+layout, compiler flags, SDK assumptions, symbols, and runtime behavior are not
+evidence for BOF3 unless BOF3's own binaries independently confirm them.
