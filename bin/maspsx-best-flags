@@ -1,0 +1,209 @@
+#!/usr/bin/env python3
+"""Search compiler flag combinations for the best instruction match.
+
+Usage:
+  bin/maspsx-best-flags [--profile NAME] source.c
+  bin/maspsx-best-flags --list-flags
+
+For each candidate flag combination, compiles the source with maspsx-cc and
+compares the disassembly against the cached original normalized assembly from
+the asm-diff output.  Reports the best match percentage and flags.
+
+Exits 0 on exact match (100%), 1 on partial match, 2 on usage/io error.
+"""
+
+import os
+import re
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+_SCRIPT_DIR = Path(__file__).resolve().parent
+_REPO_ROOT = _SCRIPT_DIR.parent
+_sys_path_add = str(_REPO_ROOT / "tools" / "python")
+if _sys_path_add not in sys.path:
+    sys.path.insert(0, _sys_path_add)
+
+from rebof3.match.asm_diff import (
+    matching_instruction_count,
+    normalize_disassembly,
+)
+
+ROOT = _REPO_ROOT
+MASPSX_CC = str(ROOT / "bin" / "maspsx-cc")
+OBJDUMP = str(ROOT / "toolchains" / "psn00b_toolchain" / "bin" / "mipsel-none-elf-objdump")
+
+DEFAULT_PROFILE = "capcom97-bof3"
+PSYQ_ROOT = str(ROOT / "toolchains" / "psyq" / "4.7")
+INCLUDES = [str(ROOT / "include"), str(ROOT / "toolchains" / "psyq" / "4.7" / "include")]
+DEFINES = ["BOF3_TARGET_PSX=1"]
+ASPSX_VERSION = "2.56"
+
+# Flag candidates (description, flag_string).
+# Sourced from decomp.me PS1 GCC flags + known PsyQ variants.
+FLAG_LEVELS: list[tuple[str, str]] = [
+    ("-O0 (no opt)", "-O0"),
+    ("-O1", "-O1"),
+    ("-O2 (baseline)", "-O2"),
+    ("-O3", "-O3"),
+]
+
+FLAG_COMBOS: list[tuple[str, str]] = [
+    ("-O2 -g0 (no debug)", "-O2 -g0"),
+    ("-O2 -fsigned-char", "-O2 -fsigned-char"),
+    ("-O2 -fno-inline-functions", "-O2 -fno-inline-functions"),
+    ("-O2 -fno-strength-reduce", "-O2 -fno-strength-reduce"),
+    ("-O2 -fno-thread-jumps", "-O2 -fno-thread-jumps"),
+    ("-O2 -fno-cse-follow-jumps", "-O2 -fno-cse-follow-jumps"),
+    ("-O2 -fno-cse-skip-blocks", "-O2 -fno-cse-skip-blocks"),
+    ("-O2 -fno-function-cse", "-O2 -fno-function-cse"),
+    ("-O2 -fno-schedule-insns", "-O2 -fno-schedule-insns"),
+    ("-O2 -fno-delayed-branch", "-O2 -fno-delayed-branch"),
+    ("-O2 -fno-rerun-cse-after-loop", "-O2 -fno-rerun-cse-after-loop"),
+    ("-O2 -fomit-frame-pointer", "-O2 -fomit-frame-pointer"),
+    ("-O1 -g0", "-O1 -g0"),
+    ("-O1 -fsigned-char", "-O1 -fsigned-char"),
+    ("-O1 -fno-inline-functions", "-O1 -fno-inline-functions"),
+    ("-O1 -fomit-frame-pointer", "-O1 -fomit-frame-pointer"),
+    ("-O3 -g0", "-O3 -g0"),
+    ("-O3 -fsigned-char", "-O3 -fsigned-char"),
+    ("-O0 -g0", "-O0 -g0"),
+]
+
+
+def usage() -> None:
+    print(f"Usage: {sys.argv[0]} [--profile NAME] [--list-flags] source.c", file=sys.stderr)
+    sys.exit(2)
+
+
+def func_name_from_source(source: Path) -> str:
+    """Extract function name from source file basename (func_XXXXXXXX.c)."""
+    m = re.match(r"(func_[0-9a-fA-F]{8})\.c$", source.name)
+    return m.group(1) if m else source.stem
+
+
+def original_lines(func_name: str) -> list[str]:
+    """Read the cached normalized original assembly from asm-diff output."""
+    orig_path = ROOT / "out" / "asm-diff" / func_name / "original.s"
+    if not orig_path.is_file():
+        sys.exit(
+            f"ERROR: original assembly not found at {orig_path}\n"
+            f"Run 'bin/rebof3 diff {func_name}.c' first to generate it."
+        )
+    return [line.rstrip() for line in orig_path.read_text().splitlines() if line.strip()]
+
+
+def compile_with_flags(
+    source: Path, flags: str, profile: str = DEFAULT_PROFILE
+) -> list[str] | None:
+    """Compile source with extra flags, return normalized instructions or None."""
+    with tempfile.NamedTemporaryFile(suffix=".o", delete=False) as tmp:
+        obj_path = tmp.name
+    try:
+        cmd = [
+            MASPSX_CC,
+            "--profile", profile,
+            f"--psyq-root={PSYQ_ROOT}",
+            f"-Wa,--aspsx-version={ASPSX_VERSION}",
+            "-c",
+            *flags.split(),
+            "-o", obj_path,
+            str(source),
+        ]
+        for inc in INCLUDES:
+            cmd.insert(cmd.index("-c"), "-I")
+            cmd.insert(cmd.index("-c"), inc)
+        for d in DEFINES:
+            cmd.insert(cmd.index("-c"), "-D")
+            cmd.insert(cmd.index("-c"), d)
+
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(ROOT))
+        if result.returncode != 0:
+            return None
+
+        result = subprocess.run([OBJDUMP, "-d", obj_path], capture_output=True, text=True)
+        if result.returncode != 0:
+            return None
+        return normalize_disassembly(result.stdout)
+    finally:
+        try:
+            os.unlink(obj_path)
+        except OSError:
+            pass
+
+
+def list_flags() -> None:
+    print("Optimization levels:")
+    for desc, flags in FLAG_LEVELS:
+        print(f"  {desc:40s} {flags}")
+    print()
+    print("Flag combinations:")
+    for desc, flags in FLAG_COMBOS:
+        print(f"  {desc:40s} {flags}")
+
+
+def main() -> int:
+    profile = DEFAULT_PROFILE
+    args = list(sys.argv[1:])
+    source_path = None
+
+    while args:
+        a = args.pop(0)
+        if a == "--profile":
+            if not args:
+                usage()
+            profile = args.pop(0)
+        elif a.startswith("--profile="):
+            profile = a.split("=", 1)[1]
+        elif a == "--list-flags":
+            list_flags()
+            return 0
+        elif a.startswith("-"):
+            usage()
+        else:
+            source_path = a
+            break
+
+    if source_path is None:
+        usage()
+
+    source = Path(source_path)
+    if not source.is_file():
+        sys.exit(f"ERROR: source file not found: {source}")
+
+    func_name = func_name_from_source(source)
+    orig = original_lines(func_name)
+
+    best_pct = 0.0
+    best_combo = ""
+    all_combos = list(FLAG_LEVELS) + FLAG_COMBOS
+
+    for desc, flags in all_combos:
+        current = compile_with_flags(source, flags, profile)
+        if current is None:
+            print(f"FAIL {desc:45s} (compile error)")
+            continue
+
+        matches = matching_instruction_count(orig, current)
+        pct = round((matches / max(len(orig), len(current), 1)) * 100, 2)
+
+        if orig == current:
+            print(f"   {pct:6.2f}% {desc:45s} {flags:>10s}  *** EXACT MATCH ***")
+            best_pct = pct
+            best_combo = flags
+            break
+
+        if pct > best_pct:
+            best_pct = pct
+            best_combo = flags
+        marker = "← best" if pct == best_pct else ""
+        print(f"   {pct:6.2f}% {desc:45s} {flags:>10s}  {marker}")
+
+    print()
+    print(f"Best: {best_pct:.2f}%  {best_combo}")
+    return 0 if best_pct == 100.0 else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
