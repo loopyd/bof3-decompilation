@@ -14,7 +14,7 @@ def make_entry_point_label(
         "address": address_text,
         "name": f"{candidate_name}__tbl_{table_index:03d}",
         "comment": (
-            f"@source: {row.get('ram_ptr_hex')} {candidate_name} entry-table idx={table_index}"
+            f"Source: {row.get('ram_ptr_hex')} {candidate_name} entry-table idx={table_index}"
         ),
     }
 

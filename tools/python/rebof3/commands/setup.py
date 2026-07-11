@@ -28,8 +28,7 @@ def add_setup_option_flags(
     if include_force:
         parser.add_argument("--force", action="store_true")
     if include_skip_flags:
-        parser.add_argument("--skip-aspsx-binaries", action="store_true")
-        parser.add_argument("--skip-match-tools", action="store_true")
+        parser.add_argument("--with-ghidra-plan", action="store_true")
         parser.add_argument("--skip-psyq", action="store_true")
         parser.add_argument("--skip-extract", action="store_true")
         parser.add_argument("--skip-ghidra-plan", action="store_true")
@@ -47,11 +46,10 @@ def build_setup_options(args: argparse.Namespace) -> SetupOptions:
 
     return SetupOptions(
         force=bool(getattr(args, "force", False)),
-        include_aspsx_binaries=not bool(getattr(args, "skip_aspsx_binaries", False)),
-        include_match_tools=not bool(getattr(args, "skip_match_tools", False)),
         include_psyq=not skip_psyq,
         include_extract=not skip_extract,
-        include_ghidra_plan=not skip_ghidra_plan,
+        include_ghidra_plan=bool(getattr(args, "with_ghidra_plan", False))
+        and not skip_ghidra_plan,
         psyq_version=getattr(args, "psyq_version", None),
         psyq_source_root=getattr(args, "psyq_source_root", None),
         psyq_archive=getattr(args, "psyq_archive", None),

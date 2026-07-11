@@ -19,6 +19,7 @@ inputs/disc/*
 inputs/external/*
 !inputs/external/.gitkeep
 !inputs/README.md
+external/private-assets/
 
 # staged toolchains and downloads
 toolchains/downloads/

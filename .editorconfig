@@ -12,8 +12,8 @@ trim_trailing_whitespace = false
 
 [*.{c,h}]
 indent_style = space
-indent_size = 4
-tab_width = 4
+indent_size = 2
+tab_width = 8
 
 [*.{asm,s}]
 indent_style = tab
@@ -29,9 +29,12 @@ tab_width = 4
 indent_style = space
 indent_size = 2
 
+[*.cmake]
+indent_size = 4
+
 [CMakeLists.txt]
 indent_style = space
-indent_size = 2
+indent_size = 4
 
 [Makefile]
 indent_style = tab

@@ -89,7 +89,7 @@ require_maspsx() {
 	fi
 
 	echo "missing maspsx script: ${REBOF3_MASPSX_SCRIPT}" >&2
-	echo "run 'bin/setup-submodules' or 'bin/setup-open'" >&2
+	echo "run 'just setup'" >&2
 	exit 1
 }
 
@@ -103,7 +103,7 @@ resolve_toolchain_tool() {
 	fi
 
 	echo "missing repo-local toolchain binary: ${candidate}" >&2
-	echo "run 'bin/setup-psx-toolchain' or 'bin/setup-open'" >&2
+	echo "run 'just setup'" >&2
 	exit 1
 }
 
@@ -115,7 +115,7 @@ resolve_c_compiler() {
 	fi
 
 	echo "missing canonical PSX C compiler: ${compiler_root}/gcc" >&2
-	echo "run 'bin/setup-psx-toolchain' or 'bin/setup-open'" >&2
+	echo "run 'just setup'" >&2
 	exit 1
 }
 

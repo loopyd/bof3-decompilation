@@ -11,6 +11,7 @@ from rebof3.binaries import (
     normalize_executable,
     promote_entry,
     resolve_entry,
+    target_details,
     write_catalog,
 )
 
@@ -103,3 +104,35 @@ def test_normalize_executable_extracts_only_the_load_image(tmp_path: Path) -> No
 
     assert (tmp_path / "out" / "test.bin").read_bytes() == b"test"
     assert metadata["load_address"] == 0x80010000
+
+
+def test_target_details_derives_promoted_paths_without_duplicating_metadata(
+    tmp_path: Path,
+) -> None:
+    payload = tmp_path / "out" / "extracted" / "BIN" / "BATTLE" / "BATTLE" / "3.bin"
+    payload.parent.mkdir(parents=True)
+    payload.write_bytes(b"target")
+    config = tmp_path / "config" / "splat" / "emi" / "battle" / "battle" / "03.yaml"
+    config.parent.mkdir(parents=True)
+    config.write_text("name: battle\n", encoding="utf-8")
+    source = tmp_path / "src" / "emi" / "battle" / "battle" / "03"
+    source.mkdir(parents=True)
+
+    details = target_details(
+        {
+            "id": "BATTLE/BATTLE#3",
+            "archive_id": "BATTLE/BATTLE",
+            "slot": 3,
+            "payload_path": str(payload),
+            "sha256": "abc",
+            "load_address": 0x801D0C00,
+            "size": 6,
+            "code_status": "confirmed",
+        },
+        tmp_path,
+    )
+
+    assert details["payload"] == "out/extracted/BIN/BATTLE/BATTLE/3.bin"
+    assert details["splat"] == "config/splat/emi/battle/battle/03.yaml"
+    assert details["source"] == "src/emi/battle/battle/03"
+    assert details["build"] is None

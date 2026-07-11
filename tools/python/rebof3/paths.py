@@ -40,12 +40,8 @@ class RepoLayout:
     ghidra_bootstrap_dir: Path
     bof3_disk_src: Path
     emi_ex_src: Path
-    objdiff_src: Path
-    mipsmatch_src: Path
     bof3_disk_bin: Path
     emi_ex_bin: Path
-    objdiff_bin: Path
-    mipsmatch_bin: Path
     psn00b_toolchain_root: Path
     psn00b_sdk_root: Path
     gcc272_psx_root: Path
@@ -79,8 +75,6 @@ class RepoLayout:
     inventory_ghidra_symbols_md_path: Path
     inventory_ghidra_symbols_program_dir: Path
     disk_checksums_path: Path
-    aspsx_psyq_root: Path
-    aspsx_psyq_compat_root: Path
 
 
 def repo_layout(
@@ -120,12 +114,8 @@ def repo_layout(
         ghidra_bootstrap_dir=ghidra_bootstrap_dir,
         bof3_disk_src=third_party_dir / "bof3-disk",
         emi_ex_src=third_party_dir / "emi-ex",
-        objdiff_src=third_party_dir / "objdiff",
-        mipsmatch_src=third_party_dir / "mipsmatch",
         bof3_disk_bin=build_dir / "third_party" / "bof3-disk" / "bof3-disk",
         emi_ex_bin=build_dir / "tools" / "emi-ex-v2" / "emi-ex",
-        objdiff_bin=build_dir / "third_party" / "objdiff" / "release" / "objdiff-cli",
-        mipsmatch_bin=build_dir / "third_party" / "mipsmatch" / "release" / "mipsmatch",
         psn00b_toolchain_root=toolchains_dir / "psn00b_toolchain",
         psn00b_sdk_root=toolchains_dir / "psn00bsdk",
         gcc272_psx_root=toolchains_dir / "gcc-2.7.2-psx",
@@ -169,6 +159,4 @@ def repo_layout(
         inventory_ghidra_symbols_program_dir=inventory_artifacts_dir
         / "ghidra_symbols_programs",
         disk_checksums_path=out_dir / "disk_checksums.json",
-        aspsx_psyq_root=toolchains_dir / "aspsx-psyq-binaries",
-        aspsx_psyq_compat_root=third_party_dir / "maspsx" / "aspsx" / "psyq",
     )

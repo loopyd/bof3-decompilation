@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 from ..match.asm_diff import AsmDiffRequest, parse_int, run_asm_diff_one
@@ -19,6 +20,9 @@ def run_one(args: argparse.Namespace) -> int:
             output_root=args.output_root,
         )
     )
+    if args.json:
+        print(json.dumps(payload, indent=2, sort_keys=True))
+        return 0 if payload["exact_match"] else 1
     outputs = payload["outputs"]
     instruct = payload["instruction_count"]
     print(f"status: {payload['status']}")
@@ -38,7 +42,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--address",
         type=parse_int,
-        help="original function address; inferred from @source or func_XXXXXXXX when omitted",
+        help="original function address; read from @source or func_XXXXXXXX when omitted",
     )
     parser.add_argument(
         "--size",
@@ -61,6 +65,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=layout.out_dir / "asm-diff",
         help="directory for asm diff outputs",
     )
+    parser.add_argument("--json", action="store_true", help="print the result as JSON")
     parser.set_defaults(handler=run_one)
     return parser
 

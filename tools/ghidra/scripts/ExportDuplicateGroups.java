@@ -1,6 +1,5 @@
 // Export groups of duplicate functions across programs in the Ghidra project.
-// Groups by SHA256 of function body bytes. Outputs JSON consumed by
-// bin/detect-duplicates and the harness duplicate pipeline.
+// Groups by SHA256 of function body bytes for local duplicate analysis.
 //
 // Usage (headless):
 //   analyzeHeadless <project-dir> <project-name> -process / -recursive \

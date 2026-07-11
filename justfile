@@ -21,7 +21,7 @@ psyq: venv
     @PYTHONPATH={{pythonpath}} {{python}} -m rebof3.commands.toolchain psyq import
 
 # Prepare tools, extract the disc, and refresh binary evidence.
-setup: psyq extract
+setup: venv
     @PYTHONPATH={{pythonpath}} {{python}} -m rebof3.commands.setup
     @{{root}}/bin/rebof3 normalize
     @{{root}}/bin/rebof3 scan
@@ -40,13 +40,13 @@ scan: venv
 doctor: venv
     @{{root}}/bin/rebof3 doctor
 
-# Configure and build through Unix Makefiles using all available cores.
+# Configure and build every registered executable and overlay artifact.
 build:
     @cmake --fresh --preset default
-    @cmake --build --preset default --parallel
+    @cmake --build --preset default --parallel --target artifacts
 
 # Run focused repository checks.
-check: venv
+check: venv check-format-c
     @PYTHONDONTWRITEBYTECODE=1 PYTHONPATH={{pythonpath}} {{python}} -m pytest -q -p no:cacheprovider tools/python/tests
     @PYTHONPATH={{pythonpath}} {{python}} -m ruff check tools/python
     @{{root}}/bin/rebof3 doctor
@@ -59,7 +59,11 @@ format-python: venv
 
 # Format authored C headers and functions.
 format-c:
-    @find src include -type f \( -name '*.c' -o -name '*.h' \) -print0 2>/dev/null | xargs -0 -r clang-format -i
+    @find src include -type f \( -name '*.c' -o -name '*.h' \) -print0 2>/dev/null | xargs -0 -r -P 0 -n 32 clang-format -i
+
+# Check C formatting without rewriting source.
+check-format-c:
+    @find src include -type f \( -name '*.c' -o -name '*.h' \) -print0 2>/dev/null | xargs -0 -r -P 0 -n 32 clang-format --dry-run --Werror
 
 # Remove generated build and analysis output.
 clean:

@@ -4,7 +4,6 @@ import argparse
 from pathlib import Path
 
 from ..paths import repo_layout
-from ..toolchain.aspsx import ALL_ASPSX_PSYQ_VERSIONS, download_aspsx_binaries
 from ..toolchain.setup_disc import DEFAULT_BOF3_ARCHIVE_URL, import_bof3_disc
 from ..toolchain.setup_psyq import (
     DEFAULT_PSYQ_VERSION,
@@ -66,17 +65,6 @@ def run_disc_import(args: argparse.Namespace) -> int:
     print(f"extracted: {result.extracted_root}")
     print(f"cue: {result.cue_path}")
     print(f"staged: {', '.join(str(path) for path in result.staged_paths)}")
-    return 0
-
-
-def run_aspsx_download(args: argparse.Namespace) -> int:
-    result = download_aspsx_binaries(
-        repo_layout(),
-        versions=ALL_ASPSX_PSYQ_VERSIONS if args.all_versions else None,
-        force=args.force,
-    )
-    print(f"downloaded: {result.root}")
-    print(f"versions: {', '.join(result.versions)}")
     return 0
 
 
@@ -146,12 +134,6 @@ def configure_disc_import_parser(parser: argparse.ArgumentParser) -> None:
     parser.set_defaults(handler=run_disc_import)
 
 
-def configure_aspsx_download_parser(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--all-versions", action="store_true")
-    parser.add_argument("--force", action="store_true")
-    parser.set_defaults(handler=run_aspsx_download)
-
-
 def configure_root_parser(parser: argparse.ArgumentParser) -> None:
     subparsers = parser.add_subparsers(required=True)
 
@@ -172,12 +154,6 @@ def configure_root_parser(parser: argparse.ArgumentParser) -> None:
 
     disc_import = disc_subparsers.add_parser("import")
     configure_disc_import_parser(disc_import)
-
-    aspsx = subparsers.add_parser("aspsx")
-    aspsx_subparsers = aspsx.add_subparsers(required=True)
-
-    aspsx_download = aspsx_subparsers.add_parser("download")
-    configure_aspsx_download_parser(aspsx_download)
 
 
 def build_parser() -> argparse.ArgumentParser:

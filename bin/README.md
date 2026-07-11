@@ -10,8 +10,8 @@ rebof3 promote <archive#slot> --confirm-code
 rebof3 next [target]
 rebof3 lift <target@address>
 rebof3 diff <source>
-rebof3 ghidra sync|ui
-rebof3 assets list|extract|preview
+rebof3 ghidra sync
+rebof3 assets list
 rebof3 disk verify|rebuild
 ```
 

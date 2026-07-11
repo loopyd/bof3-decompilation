@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import re
 from collections import Counter
 from pathlib import Path
@@ -93,6 +94,33 @@ def run_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def run_inspect(args: argparse.Namespace) -> int:
+    from ..binaries import resolve_entry, target_details
+
+    catalog = read_json(_catalog_path(args))
+    details = target_details(resolve_entry(catalog, args.target), _root(args))
+    if args.json:
+        print(json.dumps(details, indent=2, sort_keys=True))
+        return 0
+    print(f"target: {details['id']}")
+    print(f"kind: {details['kind']}")
+    print(f"status: {details['code_status']}")
+    print(f"payload: {details['payload']}")
+    print(f"sha256: {details['sha256']}")
+    print(f"load address: 0x{details['load_address']:08x}")
+    print(f"size: {details['size']} bytes")
+    print(f"splat: {details['splat'] or '-'}")
+    print(f"source: {details['source'] or '-'}")
+    build = details["build"]
+    if build:
+        print(f"build target: {build['target']}")
+        print(f"build stage: {build['stage']}")
+        print(f"build output: {build['output'] or '-'}")
+    else:
+        print("build: not configured")
+    return 0
+
+
 def run_next(args: argparse.Namespace) -> int:
     catalog = read_json(_catalog_path(args))
     rows = [
@@ -138,7 +166,10 @@ def run_normalize(args: argparse.Namespace) -> int:
 def run_diff(args: argparse.Namespace) -> int:
     from . import asm_diff
 
-    return asm_diff.main([str(args.source)])
+    argv = [str(args.source)]
+    if args.json:
+        argv.append("--json")
+    return asm_diff.main(argv)
 
 
 def run_ghidra_sync(args: argparse.Namespace) -> int:
@@ -240,6 +271,10 @@ def build_parser() -> argparse.ArgumentParser:
     status = sub.add_parser("status")
     status.add_argument("target", nargs="?")
     status.set_defaults(handler=run_status)
+    inspect = sub.add_parser("inspect")
+    inspect.add_argument("target")
+    inspect.add_argument("--json", action="store_true")
+    inspect.set_defaults(handler=run_inspect)
     nxt = sub.add_parser("next")
     nxt.add_argument("target", nargs="?")
     nxt.set_defaults(handler=run_next)
@@ -259,39 +294,16 @@ def build_parser() -> argparse.ArgumentParser:
     doctor.set_defaults(handler=run_doctor)
     diff = sub.add_parser("diff")
     diff.add_argument("source", type=Path)
+    diff.add_argument("--json", action="store_true")
     diff.set_defaults(handler=run_diff)
-    permute = sub.add_parser("permute")
-    permute.add_argument("source", type=Path)
-    permute.set_defaults(
-        handler=lambda args: (_ for _ in ()).throw(
-            ValueError(
-                "permutation is available after a function has a buildable C target"
-            )
-        )
-    )
     ghidra = sub.add_parser("ghidra")
     ghidra_sub = ghidra.add_subparsers(dest="ghidra_command", required=True)
     ghidra_sync = ghidra_sub.add_parser("sync")
     ghidra_sync.set_defaults(handler=run_ghidra_sync)
-    ghidra_ui = ghidra_sub.add_parser("ui")
-    ghidra_ui.set_defaults(
-        handler=lambda args: (_ for _ in ()).throw(
-            ValueError(
-                "set GHIDRA_HOME and use bin/ghidra-ui until the loader is installed"
-            )
-        )
-    )
     assets = sub.add_parser("assets")
     assets_sub = assets.add_subparsers(dest="assets_command", required=True)
     assets_list = assets_sub.add_parser("list")
     assets_list.set_defaults(handler=run_assets_list)
-    for name in ("extract", "preview"):
-        command = assets_sub.add_parser(name)
-        command.set_defaults(
-            handler=lambda args, action=name: (_ for _ in ()).throw(
-                ValueError(f"use bin/emi-{action} for this asset operation")
-            )
-        )
     disk = sub.add_parser("disk")
     disk_sub = disk.add_subparsers(dest="disk_command", required=True)
     disk_verify = disk_sub.add_parser("verify")

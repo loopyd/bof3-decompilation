@@ -1,7 +1,36 @@
-# Tool identities used by the reproducible setup workflow. Versions/checksums
-# are resolved by the setup implementation before installing into toolchains/.
+# Exact submodule revisions are recorded by Git. This file defines why a tool
+# exists and whether the core workflow may require it.
 [tools.splat]
 package = "splat64"
+profile = "core"
+purpose = "PSX binary splitting and canonical spimdisasm assembly"
 
-[tools.required]
-submodules = ["bof3-disk", "emi-ex", "asm-differ", "decomp-permuter", "m2c", "maspsx"]
+[tools.bof3-disk]
+profile = "core"
+path = "third_party/bof3-disk"
+purpose = "BOF3 disc extraction and verification"
+
+[tools.emi-ex]
+profile = "core"
+path = "third_party/emi-ex"
+purpose = "Capcom BOF3 EMI extraction"
+
+[tools.maspsx]
+profile = "core"
+path = "third_party/maspsx"
+purpose = "PsyQ assembler compatibility for matching ELF objects"
+
+[tools.asm-differ]
+profile = "core"
+path = "third_party/asm-differ"
+purpose = "Interactive assembly comparison"
+
+[tools.m2c]
+profile = "analysis"
+path = "third_party/m2c"
+purpose = "Matching-oriented initial C reconstruction"
+
+[tools.decomp-permuter]
+profile = "matching"
+path = "third_party/decomp-permuter"
+purpose = "Late-stage local source search"

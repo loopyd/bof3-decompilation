@@ -277,6 +277,61 @@ def target_slug(entry: dict[str, Any]) -> str:
     )
 
 
+def internal_header_guard(slug: str) -> str:
+    return "BOF3_" + re.sub(r"[^A-Za-z0-9]", "_", slug).upper() + "_INTERNAL_H"
+
+
+def target_details(entry: dict[str, Any], root: Path) -> dict[str, Any]:
+    """Return the small, derived target view shared by CLI consumers."""
+    slug = target_slug(entry)
+    config = root / "config" / "splat" / "emi" / f"{slug}.yaml"
+    source = root / "src" / "emi" / slug
+    payload = Path(entry["payload_path"])
+    try:
+        payload = payload.resolve().relative_to(root.resolve())
+    except ValueError:
+        pass
+    artifact = _artifact_for_entry(entry, root)
+    return {
+        "id": entry["id"],
+        "kind": "emi",
+        "payload": payload.as_posix(),
+        "sha256": entry["sha256"],
+        "load_address": entry["load_address"],
+        "size": entry["size"],
+        "code_status": entry["code_status"],
+        "splat": config.relative_to(root).as_posix() if config.is_file() else None,
+        "source": source.relative_to(root).as_posix() if source.is_dir() else None,
+        "build": artifact,
+    }
+
+
+def _artifact_for_entry(entry: dict[str, Any], root: Path) -> dict[str, Any] | None:
+    manifest_path = (
+        root / "build" / "default" / "artifacts" / "metadata" / "artifacts.json"
+    )
+    if not manifest_path.is_file():
+        return None
+    manifest = read_json(manifest_path)
+    suffix = f"BIN/{entry['archive_id']}.EMI#{entry['slot']}"
+    matches = [
+        row
+        for row in manifest.get("artifacts", [])
+        if isinstance(row, dict) and str(row.get("source_hint", "")).endswith(suffix)
+    ]
+    if len(matches) != 1:
+        return None
+    row = matches[0]
+    output = str(row.get("output") or "")
+    output_path = Path(output) if output else None
+    return {
+        "target": row.get("target"),
+        "stage": row.get("build_stage"),
+        "output": output or None,
+        "exists": output_path.is_file() if output_path else False,
+    }
+
+
 def splat_config_text(entry: dict[str, Any], root: Path) -> str:
     source_path = Path(entry["payload_path"]).resolve()
     source = source_path.relative_to(root).as_posix()
@@ -325,8 +380,9 @@ def promote_entry(
     config_path.parent.mkdir(parents=True, exist_ok=True)
     source_dir.mkdir(parents=True, exist_ok=True)
     config_path.write_text(splat_config_text(entry, root), encoding="utf-8")
+    guard = internal_header_guard(slug)
     (source_dir / "internal.h").write_text(
-        "#ifndef BOF3_INTERNAL_H\n#define BOF3_INTERNAL_H\n\n#endif\n", encoding="utf-8"
+        f"#ifndef {guard}\n#define {guard}\n\n#endif\n", encoding="utf-8"
     )
     entry["code_status"] = "confirmed"
     entry["evidence"]["reviewed_config"] = str(config_path.relative_to(root))
@@ -362,7 +418,13 @@ def record_lift(*, root: Path, catalog_path: Path, target: str, address: int) ->
     if source.exists():
         raise ValueError(f"source already exists: {source}")
     source.write_text(
-        '#include "internal.h"\n\nvoid func_%08x(void) {\n}\n' % address,
+        (
+            '#include "internal.h"\n\n'
+            "/* @behavior Pending analysis.\n"
+            f" * @source 0x{address:08x} func_{address:08x}\n"
+            " */\n"
+            f"void func_{address:08x}(void) {{\n}}\n"
+        ),
         encoding="utf-8",
     )
     work = root / "out" / "work" / slug / f"func_{address:08x}"

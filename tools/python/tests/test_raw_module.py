@@ -2,11 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from rebof3.build.raw_module import build_raw_image, function_address_from_object
-
-
-def test_function_address_from_object_name() -> None:
-    assert function_address_from_object(Path("func_801d3844.c.obj")) == 0x801D3844
+from rebof3.build.raw_module import build_raw_image
 
 
 def test_build_raw_image_places_object_text_by_function_address(

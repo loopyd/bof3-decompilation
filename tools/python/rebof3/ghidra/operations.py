@@ -472,7 +472,7 @@ def export_analysis(
     )
 
 
-DEFAULT_DUPLICATE_EXPORT = Path("out/harness/duplicate_groups.json")
+DEFAULT_DUPLICATE_EXPORT = Path("out/ghidra/duplicate_groups.json")
 DEFAULT_DUPLICATE_EXPORT_SCRIPT = (
     Path(__file__).resolve().parents[4]
     / "tools"

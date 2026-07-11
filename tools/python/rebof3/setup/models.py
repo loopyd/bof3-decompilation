@@ -9,11 +9,9 @@ from ..paths import RepoLayout
 @dataclass(frozen=True)
 class SetupOptions:
     force: bool = False
-    include_aspsx_binaries: bool = True
-    include_match_tools: bool = True
     include_psyq: bool = True
     include_extract: bool = True
-    include_ghidra_plan: bool = True
+    include_ghidra_plan: bool = False
     psyq_version: str | None = None
     psyq_source_root: Path | None = None
     psyq_archive: Path | None = None

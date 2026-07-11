@@ -5,10 +5,16 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rebof3-simple"
 version = "0.1.0"
-description = "Minimal BOF3 inventory and Ghidra planning pipeline"
+description = "Local BOF3 PSX reverse-engineering tools"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["Pillow>=10.0"]
+dependencies = [
+    "Pillow>=10.0",
+    "colorama>=0.4.6",
+    "cxxfilt>=0.3.0",
+    "levenshtein>=0.27.0",
+    "watchdog>=6.0.0",
+]
 
 [project.optional-dependencies]
 dev = [

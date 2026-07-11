@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from rebof3.match.asm_diff import (
     build_result_payload,
-    compiler_asm_path_for_object,
     extract_original_bytes,
     infer_original_size,
     infer_size_from_sibling_sources,
@@ -29,7 +29,7 @@ def test_source_address_and_size_are_inferred_from_source_files(tmp_path: Path) 
     source_dir.mkdir(parents=True)
     current = source_dir / "func_80162178.c"
     current.write_text(
-        "/* @source: 0x80162178 FUN_80162178 */\nvoid func_80162178(void) {}\n",
+        "/* @source 0x80162178 FUN_80162178 */\nvoid func_80162178(void) {}\n",
         encoding="utf-8",
     )
     next_source = source_dir / "func_801621e8.c"
@@ -89,24 +89,29 @@ def test_object_path_matches_cmake_object_layout(tmp_path: Path) -> None:
     source = layout.root / "src" / "core" / "emi" / "func_80162178.c"
     source.parent.mkdir(parents=True)
     source.write_text("void func_80162178(void) {}\n", encoding="utf-8")
+    build_dir = layout.build_dir / "default"
+    build_dir.mkdir(parents=True)
+    (build_dir / "compile_commands.json").write_text(
+        json.dumps(
+            [
+                {
+                    "directory": str(build_dir),
+                    "file": str(source),
+                    "output": "CMakeFiles/bof3_main.dir/src/core/emi/func_80162178.c.obj",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
 
     assert object_path_for_source(layout, source) == (
-        layout.build_dir
-        / "default"
+        build_dir
         / "CMakeFiles"
-        / "bof3.dir"
+        / "bof3_main.dir"
         / "src"
         / "core"
         / "emi"
         / "func_80162178.c.obj"
-    )
-
-
-def test_compiler_asm_path_matches_maspsx_wrapper_output(tmp_path: Path) -> None:
-    object_path = tmp_path / "func_8009c868.c.obj"
-
-    assert compiler_asm_path_for_object(object_path) == (
-        tmp_path / "func_8009c868.c.obj.s"
     )
 
 

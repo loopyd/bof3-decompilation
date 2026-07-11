@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import difflib
+import json
 import os
 import re
 import shutil
@@ -15,7 +16,7 @@ from ..paths import RepoLayout, repo_layout
 
 PSX_EXE_MAGIC = b"PS-X EXE"
 PSX_EXE_HEADER_SIZE = 0x800
-SOURCE_ADDRESS_RE = re.compile(r"@source:\s*(0x[0-9a-fA-F]+|[0-9a-fA-F]{8})")
+SOURCE_ADDRESS_RE = re.compile(r"@source\s+(0x[0-9a-fA-F]+|[0-9a-fA-F]{8})")
 FUNC_NAME_RE = re.compile(r"func_([0-9a-fA-F]{8})")
 FUNC_SYMBOL_RE = re.compile(r"^func_([0-9a-fA-F]{8})$")
 SYMBOL_ADDRESS_RE = re.compile(r"(?:^|_)(?P<address>[0-9a-fA-F]{8})(?:$|_)")
@@ -82,7 +83,7 @@ def parse_source_address(source_path: Path) -> int:
     if match is not None:
         return int(match.group(1), 16)
     raise ValueError(
-        f"cannot infer original address from {source_path}; add an @source line or pass --address"
+        f"cannot infer original address from {source_path}; add @source or pass --address"
     )
 
 
@@ -193,20 +194,8 @@ def source_function_name(source_path: Path, address: int) -> str:
 
 
 def object_path_for_source(layout: RepoLayout, source_path: Path) -> Path:
-    resolved_source = source_path.expanduser().resolve()
-    try:
-        source_relative_to_project = resolved_source.relative_to(layout.bof3_dir)
-    except ValueError as exc:
-        raise ValueError(
-            f"source must live under {layout.bof3_dir}: {source_path}"
-        ) from exc
-    return (
-        layout.build_dir
-        / "default"
-        / "CMakeFiles"
-        / "bof3.dir"
-        / source_relative_to_project
-    ).with_suffix(source_relative_to_project.suffix + ".obj")
+    command = compile_command_for_source(layout, source_path)
+    return Path(command["directory"]) / command["output"]
 
 
 def compiler_asm_path_for_object(object_path: Path) -> Path:
@@ -214,20 +203,33 @@ def compiler_asm_path_for_object(object_path: Path) -> Path:
 
 
 def build_target_for_source(layout: RepoLayout, source_path: Path) -> str:
+    return compile_command_for_source(layout, source_path)["output"]
+
+
+def compile_command_for_source(layout: RepoLayout, source_path: Path) -> dict[str, str]:
+    commands_path = layout.build_dir / "default" / "compile_commands.json"
+    if not commands_path.is_file():
+        raise FileNotFoundError(f"missing {commands_path}; run `just build` first")
+    payload = json.loads(commands_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, list):
+        raise ValueError(f"expected a JSON array in {commands_path}")
     resolved_source = source_path.expanduser().resolve()
-    source_relative_to_project = resolved_source.relative_to(layout.bof3_dir)
-    source_rel_str = source_relative_to_project.as_posix()
-    default_target = f"CMakeFiles/bof3.dir/{source_rel_str}.obj"
-    build_ninja = layout.build_dir / "default" / "build.ninja"
-    if build_ninja.is_file():
-        build_text = build_ninja.read_text(encoding="utf-8")
-        for target_prefix in re.findall(
-            r"build (?:bof3/)?(CMakeFiles/[^/]+\.dir)/",
-            build_text,
-        ):
-            if f"{target_prefix}/{source_rel_str}.obj" in build_text:
-                return f"{target_prefix}/{source_rel_str}.obj"
-    return default_target
+    matches = [
+        row
+        for row in payload
+        if isinstance(row, dict)
+        and Path(str(row.get("file", ""))).resolve() == resolved_source
+        and isinstance(row.get("directory"), str)
+        and isinstance(row.get("output"), str)
+    ]
+    if len(matches) != 1:
+        raise ValueError(
+            f"expected one CMake compile command for {source_path}, found {len(matches)}"
+        )
+    return {
+        "directory": str(matches[0]["directory"]),
+        "output": str(matches[0]["output"]),
+    }
 
 
 # Source path prefix → (binary path relative to repo root, load_address)
@@ -407,12 +409,17 @@ def run_command(
 def run_build_object(
     layout: RepoLayout, source_path: Path, build_log_path: Path
 ) -> None:
-    build_ninja = layout.build_dir / "default" / "build.ninja"
-    if not build_ninja.is_file():
-        raise FileNotFoundError(f"missing {build_ninja}; run `bin/configure` first")
+    build_dir = layout.build_dir / "default"
+    if (
+        not (build_dir / "build.ninja").is_file()
+        and not (build_dir / "Makefile").is_file()
+    ):
+        raise FileNotFoundError(
+            f"no build.ninja or Makefile in {build_dir}; run `just build` first"
+        )
     target = build_target_for_source(layout, source_path)
     result = run_command(
-        ["cmake", "--build", "--preset", "default", "--target", target],
+        ["cmake", "--build", build_dir.as_posix(), "--target", target],
         cwd=layout.root,
     )
     log_text = result.stdout
@@ -688,11 +695,9 @@ def run_asm_diff_one(
     objdump_path = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-objdump"
     nm_path = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-nm"
     if not os.access(objdump_path, os.X_OK):
-        raise FileNotFoundError(
-            f"missing executable {objdump_path}; run `bin/setup-open`"
-        )
+        raise FileNotFoundError(f"missing executable {objdump_path}; run `just setup`")
     if not os.access(nm_path, os.X_OK):
-        raise FileNotFoundError(f"missing executable {nm_path}; run `bin/setup-open`")
+        raise FileNotFoundError(f"missing executable {nm_path}; run `just setup`")
     original_bytes_path = output_dir / "original.bin"
     original_bytes_path.write_bytes(
         extract_original_bytes(

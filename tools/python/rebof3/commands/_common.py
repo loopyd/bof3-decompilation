@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from typing import Callable
 
 
@@ -16,4 +17,8 @@ def run_main(
     handler = getattr(args, "handler", None)
     if handler is None:
         parser.error("missing command handler")
-    return handler(args)
+    try:
+        return handler(args)
+    except (FileNotFoundError, RuntimeError, ValueError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2

@@ -6,7 +6,7 @@ from rebof3.paths import repo_layout
 from rebof3.toolchain import psx as module
 
 
-def test_install_canonical_psx_toolchain_preserves_gitkeep_files(
+def test_install_canonical_psx_toolchain_makes_compilers_executable(
     tmp_path: Path, monkeypatch
 ) -> None:
     layout = repo_layout(tmp_path)
@@ -39,9 +39,6 @@ def test_install_canonical_psx_toolchain_preserves_gitkeep_files(
     assert result.psn00b_toolchain == layout.psn00b_toolchain_root
     assert result.psn00b_sdk == layout.psn00b_sdk_root
     assert result.gcc272_psx == layout.gcc272_psx_root
-    assert (layout.psn00b_toolchain_root / ".gitkeep").exists()
-    assert (layout.psn00b_sdk_root / ".gitkeep").exists()
-    assert (layout.gcc272_psx_root / ".gitkeep").exists()
     assert (
         layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-gcc"
     ).stat().st_mode & 0o111
