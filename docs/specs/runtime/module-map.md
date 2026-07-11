@@ -1,5 +1,5 @@
 ---
-type: Target map
+type: Runtime
 title: Module map
 description: Confirmed BOF3 executable and EMI code targets.
 tags: [runtime, targets]

@@ -1,6 +1,6 @@
 ---
-type: Runtime subsystem
-title: EMI loader
+type: Runtime
+title: Loader
 description: SLUS EMI entry dispatch and loading rules.
 tags: [runtime, emi, loader]
 ---

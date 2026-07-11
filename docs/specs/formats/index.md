@@ -1,3 +1,10 @@
+---
+type: Spec index
+title: Format specs
+description: Binary format specifications for BOF3 EMI containers, graphics, and generated artifacts.
+tags: [index]
+---
+
 # Format specs
 
 - [EMI](emi.md) — BOF3 archive header, TOC, alignment, and type meanings.

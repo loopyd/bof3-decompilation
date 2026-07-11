@@ -1,5 +1,5 @@
 ---
-type: Runtime model
+type: Runtime
 title: Runtime layout
 description: BOF3 executable, overlay, and load-region boundaries.
 tags: [runtime, overlays, psx]

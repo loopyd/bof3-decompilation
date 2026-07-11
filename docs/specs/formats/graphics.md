@@ -1,8 +1,8 @@
 ---
-type: Graphics format
-title: EMI graphics
+type: Format
+title: Graphics
 description: Type-3 VRAM upload and indexed-palette layout.
-tags: [emi, graphics, vram]
+tags: [graphics, vram]
 ---
 
 # EMI graphics

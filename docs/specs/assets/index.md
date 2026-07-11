@@ -1,8 +1,8 @@
 ---
-type: Archive family map
+type: Spec index
 title: Archive families
 description: Stable content roles of BOF3 BIN archive families.
-tags: [assets, emi]
+tags: [assets]
 ---
 
 # Archive families

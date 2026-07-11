@@ -1,8 +1,8 @@
 ---
-type: Generated artifact contract
+type: Format
 title: Generated artifacts
 description: Ownership and regeneration boundaries for BOF3 build and analysis output.
-tags: [artifacts, build, generated]
+tags: [build, generated]
 ---
 
 # Generated artifacts

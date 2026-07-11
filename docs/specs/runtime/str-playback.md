@@ -1,8 +1,8 @@
 ---
-type: Media format
+type: Runtime
 title: STR playback
 description: BOF3 extracted STR and XA sector representation.
-tags: [str, xa, media]
+tags: [runtime, str, xa]
 ---
 
 # STR playback

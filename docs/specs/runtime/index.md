@@ -1,3 +1,10 @@
+---
+type: Spec index
+title: Runtime specs
+description: BOF3 executable model, loader dispatch, module targets, and media playback.
+tags: [index]
+---
+
 # Runtime specs
 
 - [Runtime model](runtime-layout.md) — executable roles and shared load regions.

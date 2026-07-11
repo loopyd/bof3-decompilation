@@ -1,3 +1,10 @@
+---
+type: Spec index
+title: Reverse-engineering specs
+description: Verified BOF3 binary facts. Generated evidence and active investigations belong under out/.
+tags: [index]
+---
+
 # Reverse-engineering specs
 
 Verified BOF3 binary facts only. Generated evidence and active investigations
@@ -15,12 +22,13 @@ belong under `out/`.
 - [EMI loader](runtime/emi-loader.md) — loader dispatch and payload handling.
 - [Module map](runtime/module-map.md) — confirmed executable targets.
 - [STR playback](runtime/str-playback.md) — BOF3 sector layout.
-- [Recovered layouts](recovered-layouts.md) — evidenced structure offsets.
-- [Data tables](data-tables.md) — verified archive offsets and record layouts.
+- [Recovered layouts](runtime/recovered-layouts.md) — evidenced structure offsets.
+- [Data tables](tables/index.md) — verified archive offsets and record layouts.
 
 ## Assets
 
 - [Archive families](assets/index.md) — stable family roles.
+- [File source map](assets/file-map.md) — which EMI file owns each data domain.
 
 ## Authoring rule
 

@@ -1,6 +1,6 @@
 ---
-type: Binary format
-title: EMI
+type: Format
+title: EMI container
 description: BOF3 EMI container and entry layout.
 tags: [emi, format]
 ---
