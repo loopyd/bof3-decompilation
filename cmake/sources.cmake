@@ -319,9 +319,9 @@ set(BOF3_MODULE_GAME_01_SOURCES
 )
 
 set(BOF3_MODULE_WORLD00_AREA008_13_SOURCES
-    src/modules/world00/area008/13/func_801f3c2c.c
-    src/modules/world00/area008/13/func_801f3d18.c
-    src/modules/world00/area008/13/func_801f3d88.c
+    src/emi/world00/area008/13/func_801f3c2c.c
+    src/emi/world00/area008/13/func_801f3d18.c
+    src/emi/world00/area008/13/func_801f3d88.c
 )
 
 set(BOF3_MODULE_WORLD00_AREA016_13_SOURCES
