@@ -46,7 +46,7 @@ function(bof3_artifact_register target)
     cmake_parse_arguments(
         ARG
         "PLACEHOLDER"
-        "FOLDER;PROGRAM_NAME;PROGRAM_PATH;SOURCE_HINT;KIND;BUILD_STAGE"
+        "FOLDER;PROGRAM_NAME;PROGRAM_PATH;SOURCE_HINT;KIND;BUILD_STAGE;OUTPUT_PATH"
         "DECLARED_SOURCES"
         ${ARGN}
     )
@@ -70,6 +70,7 @@ function(bof3_artifact_register target)
         BOF3_ARTIFACT_PROGRAM_PATH "${program_path}"
         BOF3_ARTIFACT_SOURCE_HINT "${ARG_SOURCE_HINT}"
         BOF3_ARTIFACT_BUILD_STAGE "${ARG_BUILD_STAGE}"
+        BOF3_ARTIFACT_OUTPUT_PATH "${ARG_OUTPUT_PATH}"
         BOF3_ARTIFACT_PLACEHOLDER "${ARG_PLACEHOLDER}"
     )
     set_property(GLOBAL APPEND PROPERTY BOF3_ARTIFACT_TARGETS "${target}")
@@ -126,6 +127,7 @@ function(bof3_artifact_register_built target)
         SOURCE_HINT "${ARG_SOURCE_HINT}"
         KIND "${ARG_KIND}"
         BUILD_STAGE "raw"
+        OUTPUT_PATH "${raw_output_path}"
         DECLARED_SOURCES ${ARG_DECLARED_SOURCES}
     )
 
@@ -163,7 +165,7 @@ function(bof3_artifact_register_archive target)
     file(MAKE_DIRECTORY "${output_dir}")
 
     add_library("${target}" STATIC EXCLUDE_FROM_ALL ${ARG_DECLARED_SOURCES})
-    bof3_apply_common_target_settings("${target}")
+    bof3_apply_target_settings("${target}")
     set_target_properties("${target}" PROPERTIES
         PREFIX ""
         OUTPUT_NAME "${ARG_PROGRAM_NAME}"
@@ -178,6 +180,7 @@ function(bof3_artifact_register_archive target)
         SOURCE_HINT "${ARG_SOURCE_HINT}"
         KIND "${ARG_KIND}"
         BUILD_STAGE "archive"
+        OUTPUT_PATH "${output_dir}/${ARG_PROGRAM_NAME}.a"
         DECLARED_SOURCES ${ARG_DECLARED_SOURCES}
     )
 endfunction()
@@ -206,7 +209,7 @@ function(bof3_artifact_register_raw_module target)
 
     set(object_target "${target}_objects")
     add_library("${object_target}" OBJECT EXCLUDE_FROM_ALL ${ARG_DECLARED_SOURCES})
-    bof3_apply_common_target_settings("${object_target}")
+    bof3_apply_target_settings("${object_target}")
 
     bof3_artifact_resolve_paths(relative_path computed_program_path raw_output_path
         "${ARG_FOLDER}" "${ARG_PROGRAM_NAME}")
@@ -236,11 +239,12 @@ function(bof3_artifact_register_raw_module target)
             --truncate-overlaps
             --objcopy "$<SHELL_PATH:${CMAKE_OBJCOPY}>"
             --objects $<TARGET_OBJECTS:${object_target}>
-        DEPENDS $<TARGET_OBJECTS:${object_target}>
+        DEPENDS "${object_target}"
         VERBATIM
         COMMAND_EXPAND_LISTS
     )
     add_custom_target("${target}" DEPENDS "${raw_output_path}" "${metadata_path}")
+    add_dependencies("${target}" "${object_target}")
 
     set(kind "${ARG_KIND}")
     if(kind STREQUAL "")
@@ -254,6 +258,7 @@ function(bof3_artifact_register_raw_module target)
         SOURCE_HINT "${ARG_SOURCE_HINT}"
         KIND "${kind}"
         BUILD_STAGE "raw"
+        OUTPUT_PATH "${raw_output_path}"
         DECLARED_SOURCES ${ARG_DECLARED_SOURCES}
     )
 endfunction()
@@ -273,6 +278,7 @@ function(bof3_artifact_write_manifest out_var)
         bof3_artifact_get_target_property_or_empty(program_path "${target}" BOF3_ARTIFACT_PROGRAM_PATH)
         bof3_artifact_get_target_property_or_empty(source_hint "${target}" BOF3_ARTIFACT_SOURCE_HINT)
         bof3_artifact_get_target_property_or_empty(build_stage "${target}" BOF3_ARTIFACT_BUILD_STAGE)
+        bof3_artifact_get_target_property_or_empty(output_path "${target}" BOF3_ARTIFACT_OUTPUT_PATH)
         get_target_property(placeholder "${target}" BOF3_ARTIFACT_PLACEHOLDER)
 
         if(placeholder)
@@ -286,6 +292,7 @@ function(bof3_artifact_write_manifest out_var)
         bof3_artifact_escape_json_string(escaped_program_path "${program_path}")
         bof3_artifact_escape_json_string(escaped_source_hint "${source_hint}")
         bof3_artifact_escape_json_string(escaped_build_stage "${build_stage}")
+        bof3_artifact_escape_json_string(escaped_output_path "${output_path}")
 
         if(needs_separator)
             file(APPEND "${manifest_path}" ",")
@@ -296,6 +303,7 @@ function(bof3_artifact_write_manifest out_var)
             "      \"kind\": \"${escaped_kind}\",\n"
             "      \"program_path\": \"${escaped_program_path}\",\n"
             "      \"build_stage\": \"${escaped_build_stage}\",\n"
+            "      \"output\": \"${escaped_output_path}\",\n"
             "      \"source_hint\": \"${escaped_source_hint}\",\n"
             "      \"placeholder\": ${is_placeholder}\n"
             "    }"

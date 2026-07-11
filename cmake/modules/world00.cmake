@@ -1,5 +1,5 @@
-bof3_define_module_artifact(
-    bof3_world00_area008_13_raw
+bof3_add_artifact(
+    bof3_world00_area008_13
     DISC_FOLDER "BIN/WORLD00/AREA008"
     PROGRAM_NAME "13.bin"
     PROGRAM_PATH "/bins/BIN/WORLD00/AREA008/13.bin"
@@ -7,8 +7,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES ${BOF3_MODULE_WORLD00_AREA008_13_SOURCES}
 )
 
-bof3_define_module_artifact(
-    bof3_world00_area016_13_raw
+bof3_add_artifact(
+    bof3_world00_area016_13
     DISC_FOLDER "BIN/WORLD00/AREA016"
     PROGRAM_NAME "13.bin"
     PROGRAM_PATH "/bins/BIN/WORLD00/AREA016/13.bin"
@@ -16,8 +16,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES ${BOF3_MODULE_WORLD00_AREA016_13_SOURCES}
 )
 
-bof3_define_module_artifact(
-    bof3_world00_area024_14_raw
+bof3_add_artifact(
+    bof3_world00_area024_14
     DISC_FOLDER "BIN/WORLD00/AREA024"
     PROGRAM_NAME "14.bin"
     PROGRAM_PATH "/bins/BIN/WORLD00/AREA024/14.bin"
@@ -25,8 +25,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES ${BOF3_MODULE_WORLD00_AREA024_14_SOURCES}
 )
 
-bof3_define_module_artifact(
-    bof3_world00_area026_13_raw
+bof3_add_artifact(
+    bof3_world00_area026_13
     DISC_FOLDER "BIN/WORLD00/AREA026"
     PROGRAM_NAME "13.bin"
     PROGRAM_PATH "/bins/BIN/WORLD00/AREA026/13.bin"
@@ -34,8 +34,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES ${BOF3_MODULE_WORLD00_AREA026_13_SOURCES}
 )
 
-bof3_define_module_artifact(
-    bof3_world00_area027_13_raw
+bof3_add_artifact(
+    bof3_world00_area027_13
     DISC_FOLDER "BIN/WORLD00/AREA027"
     PROGRAM_NAME "13.bin"
     PROGRAM_PATH "/bins/BIN/WORLD00/AREA027/13.bin"
@@ -43,8 +43,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES ${BOF3_MODULE_WORLD00_AREA027_13_SOURCES}
 )
 
-bof3_define_module_artifact(
-    bof3_world00_area028_13_raw
+bof3_add_artifact(
+    bof3_world00_area028_13
     DISC_FOLDER "BIN/WORLD00/AREA028"
     PROGRAM_NAME "13.bin"
     PROGRAM_PATH "/bins/BIN/WORLD00/AREA028/13.bin"
@@ -52,8 +52,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES ${BOF3_MODULE_WORLD00_AREA028_13_SOURCES}
 )
 
-bof3_define_module_artifact(
-    bof3_world00_area030_04_raw
+bof3_add_artifact(
+    bof3_world00_area030_04
     DISC_FOLDER "BIN/WORLD00/AREA030"
     PROGRAM_NAME "04.bin"
     PROGRAM_PATH "/bins/BIN/WORLD00/AREA030/04.bin"
@@ -61,8 +61,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES ${BOF3_MODULE_WORLD00_AREA030_04_SOURCES}
 )
 
-bof3_define_module_artifact(
-    bof3_world00_area032_13_raw
+bof3_add_artifact(
+    bof3_world00_area032_13
     DISC_FOLDER "BIN/WORLD00/AREA032"
     PROGRAM_NAME "13.bin"
     PROGRAM_PATH "/bins/BIN/WORLD00/AREA032/13.bin"

@@ -1,5 +1,5 @@
-bof3_define_module_artifact(
-    bof3_game_00_raw
+bof3_add_artifact(
+    bof3_game_00
     DISC_FOLDER "BIN/ETC/GAME"
     PROGRAM_NAME "00.bin"
     PROGRAM_PATH "/bins/BIN/ETC/GAME/00.bin"
@@ -7,8 +7,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES ${BOF3_MODULE_GAME_00_SOURCES}
 )
 
-bof3_define_module_artifact(
-    bof3_game_01_raw
+bof3_add_artifact(
+    bof3_game_01
     DISC_FOLDER "BIN/ETC/GAME"
     PROGRAM_NAME "01.bin"
     PROGRAM_PATH "/bins/BIN/ETC/GAME/01.bin"

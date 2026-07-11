@@ -1,5 +1,5 @@
-bof3_define_module_artifact(
-    bof3_scenario_sce10eff_00_raw
+bof3_add_artifact(
+    bof3_scenario_sce10eff_00
     DISC_FOLDER "BIN/SCENARIO/SCE10EFF"
     PROGRAM_NAME "0.bin"
     PROGRAM_PATH "/bins/BIN/SCENARIO/SCE10EFF/0.bin"
@@ -7,8 +7,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES ${BOF3_MODULE_SCE10EFF_00_SOURCES}
 )
 
-bof3_define_module_artifact(
-    bof3_scena00_00_raw
+bof3_add_artifact(
+    bof3_scena00_00
     PLACEHOLDER
     DISC_FOLDER "BIN/SCENARIO/SCENA00"
     PROGRAM_NAME "00.bin"

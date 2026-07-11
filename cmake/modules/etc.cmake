@@ -1,5 +1,5 @@
-bof3_define_module_artifact(
-    bof3_shop_00_raw
+bof3_add_artifact(
+    bof3_shop_00
     PLACEHOLDER
     DISC_FOLDER "BIN/ETC/SHOP"
     PROGRAM_NAME "00.bin"
@@ -8,8 +8,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES ${BOF3_MODULE_SHOP_00_SOURCES}
 )
 
-bof3_define_module_artifact(
-    bof3_sisyou_00_raw
+bof3_add_artifact(
+    bof3_sisyou_00
     PLACEHOLDER
     DISC_FOLDER "BIN/ETC/SISYOU"
     PROGRAM_NAME "00.bin"

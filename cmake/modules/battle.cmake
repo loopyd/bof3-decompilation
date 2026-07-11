@@ -1,5 +1,5 @@
-bof3_define_module_artifact(
-    bof3_batl_re2_01_raw
+bof3_add_artifact(
+    bof3_batl_re2_01
     DISC_FOLDER "BIN/BATTLE/BATL_RE2"
     PROGRAM_NAME "1.bin"
     PROGRAM_PATH "/bins/BIN/BATTLE/BATL_RE2/1.bin"
@@ -7,8 +7,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES src/modules/batl_re2/01/func_80036e00.c
 )
 
-bof3_define_module_artifact(
-    bof3_battle_03_raw
+bof3_add_artifact(
+    bof3_battle_03
     RAW_BINARY
     DISC_FOLDER "BIN/BATTLE/BATTLE"
     PROGRAM_NAME "03.bin"
@@ -19,8 +19,8 @@ bof3_define_module_artifact(
     DECLARED_SOURCES ${BOF3_MODULE_BATTLE_03_SOURCES}
 )
 
-bof3_define_module_artifact(
-    bof3_battle_15_raw
+bof3_add_artifact(
+    bof3_battle_15
     PLACEHOLDER
     DISC_FOLDER "BIN/BATTLE/BATTLE"
     PROGRAM_NAME "15.bin"

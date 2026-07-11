@@ -1,5 +1,5 @@
-bof3_define_module_artifact(
-    bof3_scena16_00_raw
+bof3_add_artifact(
+    bof3_scena16_00
     DISC_FOLDER "BIN/ETC/SCENA16"
     PROGRAM_NAME "00.bin"
     PROGRAM_PATH "/bins/BIN/ETC/SCENA16/00.bin"

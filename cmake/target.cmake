@@ -1,32 +1,17 @@
 include_guard(GLOBAL)
 
-function(bof3_collect_sources_with_prefix out_var)
-    set(result)
-    foreach(source IN LISTS BOF3_BOOT_SOURCES BOF3_SOURCES)
-        foreach(prefix ${ARGN})
-            string(FIND "${source}" "${prefix}" prefix_index)
-            if(prefix_index EQUAL 0)
-                list(APPEND result "${source}")
-                break()
-            endif()
-        endforeach()
-    endforeach()
-    list(REMOVE_DUPLICATES result)
-    set(${out_var} "${result}" PARENT_SCOPE)
-endfunction()
-
-function(bof3_define_module_artifact target)
+function(bof3_add_artifact target)
     cmake_parse_arguments(
         ARG
         "PLACEHOLDER;RAW_BINARY"
         "DISC_FOLDER;PROGRAM_NAME;PROGRAM_PATH;SOURCE_HINT;KIND;LOAD_ADDRESS;RAW_SIZE"
-        "SOURCE_PREFIXES;DECLARED_SOURCES"
+        "DECLARED_SOURCES"
         ${ARGN}
     )
 
     if(NOT ARG_PROGRAM_NAME OR NOT ARG_PROGRAM_PATH OR NOT ARG_SOURCE_HINT OR NOT ARG_DISC_FOLDER)
         message(FATAL_ERROR
-            "bof3_define_module_artifact requires DISC_FOLDER, PROGRAM_NAME, PROGRAM_PATH, and SOURCE_HINT."
+            "bof3_add_artifact requires DISC_FOLDER, PROGRAM_NAME, PROGRAM_PATH, and SOURCE_HINT."
         )
     endif()
 
@@ -35,17 +20,10 @@ function(bof3_define_module_artifact target)
         set(kind "module")
     endif()
 
-    set(declared_sources ${ARG_DECLARED_SOURCES})
-    if(NOT declared_sources)
-        if(NOT ARG_SOURCE_PREFIXES)
-            if(NOT ARG_PLACEHOLDER)
-                message(FATAL_ERROR
-                    "bof3_define_module_artifact requires SOURCE_PREFIXES or DECLARED_SOURCES."
-                )
-            endif()
-        else()
-            bof3_collect_sources_with_prefix(declared_sources ${ARG_SOURCE_PREFIXES})
-        endif()
+    if(NOT ARG_DECLARED_SOURCES AND NOT ARG_PLACEHOLDER)
+        message(FATAL_ERROR
+            "bof3_add_artifact requires DECLARED_SOURCES."
+        )
     endif()
 
     if(ARG_PLACEHOLDER)
@@ -56,7 +34,7 @@ function(bof3_define_module_artifact target)
             PROGRAM_PATH "${ARG_PROGRAM_PATH}"
             SOURCE_HINT "${ARG_SOURCE_HINT}"
             KIND "${kind}"
-            DECLARED_SOURCES ${declared_sources}
+            DECLARED_SOURCES ${ARG_DECLARED_SOURCES}
         )
     elseif(ARG_RAW_BINARY)
         bof3_artifact_register_raw_module(
@@ -68,7 +46,7 @@ function(bof3_define_module_artifact target)
             KIND "${kind}"
             LOAD_ADDRESS "${ARG_LOAD_ADDRESS}"
             RAW_SIZE "${ARG_RAW_SIZE}"
-            DECLARED_SOURCES ${declared_sources}
+            DECLARED_SOURCES ${ARG_DECLARED_SOURCES}
         )
     else()
         bof3_artifact_register_archive(
@@ -78,7 +56,7 @@ function(bof3_define_module_artifact target)
             PROGRAM_PATH "${ARG_PROGRAM_PATH}"
             SOURCE_HINT "${ARG_SOURCE_HINT}"
             KIND "${kind}"
-            DECLARED_SOURCES ${declared_sources}
+            DECLARED_SOURCES ${ARG_DECLARED_SOURCES}
         )
     endif()
 endfunction()

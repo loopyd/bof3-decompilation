@@ -1,5 +1,5 @@
-bof3_define_module_artifact(
-    bof3_commu00_00_raw
+bof3_add_artifact(
+    bof3_commu00_00
     DISC_FOLDER "BIN/ETC/COMMU00"
     PROGRAM_NAME "00.bin"
     PROGRAM_PATH "/bins/BIN/ETC/COMMU00/00.bin"

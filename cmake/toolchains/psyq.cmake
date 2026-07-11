@@ -28,8 +28,7 @@ if(BOF3_PSX_PROFILE STREQUAL "capcom97-bof3")
     if(NOT EXISTS "${BOF3_ACTIVE_PSYQ_ROOT}/include/libgpu.h")
         message(FATAL_ERROR
             "PsyQ ${BOF3_PSYQ_VERSION} headers not found at ${BOF3_ACTIVE_PSYQ_ROOT}. "
-            "Run 'bin/download-psyq' for the default SDK, or "
-            "'bin/setup-psyq --version ${BOF3_PSYQ_VERSION} --archive <path>'.")
+            "Run 'just psyq' to stage the configured SDK.")
     endif()
 else()
     message(FATAL_ERROR "Unsupported BOF3_PSX_PROFILE='${BOF3_PSX_PROFILE}'.")
@@ -50,7 +49,7 @@ endif()
 if(NOT EXISTS "${BOF3_PSX_GCC_ROOT}/gcc")
     message(FATAL_ERROR
         "Canonical gcc-2.7.2-psx compiler not found at ${BOF3_PSX_GCC_ROOT}. "
-        "Run 'bin/setup-psx-toolchain' or 'bin/setup-open' first.")
+        "Run 'just setup' first.")
 endif()
 
 function(bof3_find_program out_var)
@@ -63,25 +62,25 @@ endfunction()
 
 bof3_find_program(MIPSEL_AS
     NAMES mipsel-none-elf-as
-    ERROR_MESSAGE "missing repo-local PSX assembler at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-as; run 'bin/setup-psx-toolchain'")
+    ERROR_MESSAGE "missing repo-local PSX assembler at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-as; run 'just setup'")
 bof3_find_program(MIPSEL_LD
     NAMES mipsel-none-elf-ld
-    ERROR_MESSAGE "missing repo-local PSX linker at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-ld; run 'bin/setup-psx-toolchain'")
+    ERROR_MESSAGE "missing repo-local PSX linker at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-ld; run 'just setup'")
 bof3_find_program(MIPSEL_AR
     NAMES mipsel-none-elf-ar
-    ERROR_MESSAGE "missing repo-local PSX archiver at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-ar; run 'bin/setup-psx-toolchain'")
+    ERROR_MESSAGE "missing repo-local PSX archiver at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-ar; run 'just setup'")
 bof3_find_program(MIPSEL_RANLIB
     NAMES mipsel-none-elf-ranlib
-    ERROR_MESSAGE "missing repo-local PSX ranlib at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-ranlib; run 'bin/setup-psx-toolchain'")
+    ERROR_MESSAGE "missing repo-local PSX ranlib at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-ranlib; run 'just setup'")
 bof3_find_program(MIPSEL_OBJCOPY
     NAMES mipsel-none-elf-objcopy
-    ERROR_MESSAGE "missing repo-local PSX objcopy at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-objcopy; run 'bin/setup-psx-toolchain'")
+    ERROR_MESSAGE "missing repo-local PSX objcopy at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-objcopy; run 'just setup'")
 bof3_find_program(MIPSEL_OBJDUMP
     NAMES mipsel-none-elf-objdump
-    ERROR_MESSAGE "missing repo-local PSX objdump at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-objdump; run 'bin/setup-psx-toolchain'")
+    ERROR_MESSAGE "missing repo-local PSX objdump at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-objdump; run 'just setup'")
 bof3_find_program(MIPSEL_NM
     NAMES mipsel-none-elf-nm
-    ERROR_MESSAGE "missing repo-local PSX nm at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-nm; run 'bin/setup-psx-toolchain'")
+    ERROR_MESSAGE "missing repo-local PSX nm at ${BOF3_LOCAL_TOOLCHAIN_BIN}/mipsel-none-elf-nm; run 'just setup'")
 
 set(CMAKE_C_COMPILER "${MASPSX_CC}")
 set(CMAKE_ASM_COMPILER ${MIPSEL_AS})
