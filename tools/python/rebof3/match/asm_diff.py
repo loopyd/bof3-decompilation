@@ -203,7 +203,8 @@ def compiler_asm_path_for_object(object_path: Path) -> Path:
 
 
 def build_target_for_source(layout: RepoLayout, source_path: Path) -> str:
-    return compile_command_for_source(layout, source_path)["output"]
+    source_rel = source_path.expanduser().resolve().relative_to(layout.root.resolve())
+    return source_rel.with_suffix(".obj").as_posix()
 
 
 def compile_command_for_source(layout: RepoLayout, source_path: Path) -> dict[str, str]:
@@ -232,67 +233,7 @@ def compile_command_for_source(layout: RepoLayout, source_path: Path) -> dict[st
     }
 
 
-# Source path prefix → (binary path relative to repo root, load_address)
-# Sources under src/core/ and src/boot/ map to SLUS_004.22 (handled above).
-_OVERLAY_BINARIES: dict[str, tuple[str, int]] = {
-    "src/modules/logo": ("out/extracted/LOGO/LOGO.EXE", 0x801CE000),
-    "src/modules/battle/03": ("out/extracted/BIN/BATTLE/BATTLE/3.bin", 0x801D0C00),
-    "src/modules/battle/15": ("out/extracted/BIN/BATTLE/BATTLE/15.bin", 0x80096800),
-    "src/modules/batl_re2/01": (
-        "out/extracted/BIN/BATTLE/BATL_RE2/1.bin",
-        0x80036E00,
-    ),
-    "src/modules/bate/03": ("out/extracted/BIN/ETC/BATE/3.bin", 0x801D0C00),
-    "src/modules/commu00/00": ("out/extracted/BIN/ETC/COMMU00/0.bin", 0x801EEC00),
-    "src/modules/game/00": ("out/extracted/BIN/ETC/GAME/0.bin", 0x80195800),
-    "src/modules/game/01": ("out/extracted/BIN/ETC/GAME/1.bin", 0x801D0C00),
-    "src/modules/sce10eff/00": (
-        "out/extracted/BIN/SCENARIO/SCE10EFF/0.bin",
-        0x801D0C00,
-    ),
-    "src/modules/scena00/00": (
-        "out/extracted/BIN/SCENARIO/SCENA00/0.bin",
-        0x801F6C00,
-    ),
-    "src/modules/scena16/00": (
-        "out/extracted/BIN/SCENARIO/SCENA16/0.bin",
-        0x801F6C00,
-    ),
-    "src/modules/shop/00": ("out/extracted/BIN/ETC/SHOP/0.bin", 0x801D0C00),
-    "src/modules/sisyou/00": ("out/extracted/BIN/ETC/SISYOU/0.bin", 0x801D0C00),
-    "src/modules/world00/area008/13": (
-        "out/extracted/BIN/WORLD00/AREA008/13.bin",
-        0x801F2C00,
-    ),
-    "src/modules/world00/area016/13": (
-        "out/extracted/BIN/WORLD00/AREA016/13.bin",
-        0x801F2C00,
-    ),
-    "src/modules/world00/area024/14": (
-        "out/extracted/BIN/WORLD00/AREA024/14.bin",
-        0x801F2C00,
-    ),
-    "src/modules/world00/area026/13": (
-        "out/extracted/BIN/WORLD00/AREA026/13.bin",
-        0x801F2C00,
-    ),
-    "src/modules/world00/area027/13": (
-        "out/extracted/BIN/WORLD00/AREA027/13.bin",
-        0x801F2C00,
-    ),
-    "src/modules/world00/area028/13": (
-        "out/extracted/BIN/WORLD00/AREA028/13.bin",
-        0x801F2C00,
-    ),
-    "src/modules/world00/area030/04": (
-        "out/extracted/BIN/WORLD00/AREA030/4.bin",
-        0x801D0C00,
-    ),
-    "src/modules/world00/area032/13": (
-        "out/extracted/BIN/WORLD00/AREA032/13.bin",
-        0x801F2C00,
-    ),
-}
+CMAKE_TARGET_RE = re.compile(r"(?:^|/)CMakeFiles/(?P<target>[^/]+)\.dir/")
 
 
 def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
@@ -310,12 +251,10 @@ def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
     if parts[:3] == ["src", "modules", "logo"]:
         return layout.logo_path
 
-    for prefix in sorted(_OVERLAY_BINARIES, key=len, reverse=True):
-        if source_rel.startswith(prefix):
-            return layout.root / _OVERLAY_BINARIES[prefix][0]
-
-    # Fallback: search EMI catalog for a .bin with matching address
-    return _resolve_overlay_binary_fallback(layout, source_rel)
+    artifact = _artifact_overlay_for_source(layout, source_path)
+    if artifact is not None:
+        return artifact[0]
+    raise ValueError(f"cannot resolve original binary for overlay source: {source_rel}")
 
 
 def overlay_load_address_for_source(
@@ -331,36 +270,44 @@ def overlay_load_address_for_source(
     if source_rel.startswith("src/modules/logo"):
         return 0x801CE000
 
-    for prefix in sorted(_OVERLAY_BINARIES, key=len, reverse=True):
-        if source_rel.startswith(prefix):
-            return _OVERLAY_BINARIES[prefix][1]
-    return None
+    artifact = _artifact_overlay_for_source(layout, source_path)
+    return artifact[1] if artifact is not None else None
 
 
-def _resolve_overlay_binary_fallback(layout: RepoLayout, source_rel: str) -> Path:
-    """Last-resort: search EMI catalog for payload_path."""
-    emi_catalog = layout.root / "out/inventory/emi_catalog.json"
-    if emi_catalog.is_file():
-        try:
-            from ..jsonio import read_json
-
-            catalog = read_json(emi_catalog)
-            for entry in catalog.get("entries", []):
-                if not entry.get("code_candidate"):
-                    continue
-                payload = entry.get("payload_path", "")
-                if not payload:
-                    continue
-                path = Path(payload)
-                if not path.is_file():
-                    continue
-                return path
-        except Exception:
-            pass
-    raise ValueError(
-        f"cannot resolve original binary for overlay source: {source_rel}; "
-        "pass --binary and --load-address explicitly"
+def _artifact_overlay_for_source(
+    layout: RepoLayout, source_path: Path
+) -> tuple[Path, int] | None:
+    """Resolve overlay ownership through CMake's artifact source hint."""
+    try:
+        output = compile_command_for_source(layout, source_path)["output"]
+    except (FileNotFoundError, ValueError):
+        return None
+    target_match = CMAKE_TARGET_RE.search(output)
+    if target_match is None:
+        return None
+    manifest_path = (
+        layout.build_dir / "default" / "artifacts" / "metadata" / "artifacts.json"
     )
+    catalog_path = layout.root / "out" / "catalog" / "emi.json"
+    if not manifest_path.is_file() or not catalog_path.is_file():
+        return None
+    target = target_match.group("target")
+    manifest = read_json(manifest_path)
+    rows = [row for row in manifest.get("artifacts", []) if row.get("target") == target]
+    if len(rows) != 1:
+        return None
+    source_hint = str(rows[0].get("source_hint", ""))
+    if ".EMI#" not in source_hint.upper():
+        return None
+    from ..binaries import resolve_entry
+
+    normalized_hint = source_hint.replace("\\", "/")
+    marker = "BIN/"
+    marker_offset = normalized_hint.upper().find(marker)
+    if marker_offset >= 0:
+        normalized_hint = normalized_hint[marker_offset:]
+    entry = resolve_entry(read_json(catalog_path), normalized_hint)
+    return Path(entry["payload_path"]), int(entry["load_address"])
 
 
 def extract_original_bytes(
@@ -430,6 +377,14 @@ def run_build_object(
     build_log_path.write_text(log_text, encoding="utf-8")
     if result.returncode != 0:
         raise RuntimeError(f"object build failed for {target}; see {build_log_path}")
+    object_path = object_path_for_source(layout, source_path)
+    if (
+        not object_path.is_file()
+        or object_path.stat().st_mtime < source_path.stat().st_mtime
+    ):
+        raise RuntimeError(
+            f"object build did not refresh {object_path}; see {build_log_path}"
+        )
 
 
 def disassemble_original(
@@ -617,7 +572,7 @@ def build_result_payload(
     denominator = max(len(original_lines), len(current_lines), 1)
     match_percent = round((matching_count / denominator) * 100, 2)
     return {
-        "schema": "rebof3-simple.asm-diff-one/v1",
+        "schema": "rebof3-simple.asm-diff-one/v2",
         "status": status,
         "exact_match": status == "exact_match",
         "source": str(source_path),
@@ -636,14 +591,11 @@ def build_result_payload(
         },
         "outputs": {
             "directory": str(output_dir),
-            "summary_json": str(output_dir / "summary.json"),
+            "summary": str(output_dir / "summary.json"),
             "diff": str(output_dir / "diff.patch"),
-            "original_asm": str(output_dir / "original.normalized.s"),
-            "current_asm": str(output_dir / "current.normalized.s"),
-            "original_extracted_asm": str(output_dir / "original.objdump.s"),
-            "current_compiler_asm": str(output_dir / "current.compiler.s"),
-            "original_objdump": str(output_dir / "original.objdump.s"),
-            "current_objdump": str(output_dir / "current.objdump.s"),
+            "original": str(output_dir / "original.s"),
+            "current": str(output_dir / "current.s"),
+            "compiler": str(output_dir / "compiler.s"),
             "original_bytes": str(output_dir / "original.bin"),
             "build_log": str(output_dir / "build.log"),
         },
@@ -684,6 +636,8 @@ def run_asm_diff_one(
     object_path = object_path_for_source(repo, source_path)
     output_root = request.output_root or repo.out_dir / "asm-diff"
     output_dir = output_root / function_name
+    if output_dir.is_dir():
+        shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     run_build_object(repo, source_path, output_dir / "build.log")
@@ -725,13 +679,11 @@ def run_asm_diff_one(
     current_lines = normalize_disassembly(current_objdump)
     current_size = current_symbol_size(nm_path, object_path, function_name)
 
-    (output_dir / "original.objdump.s").write_text(original_objdump, encoding="utf-8")
-    (output_dir / "current.objdump.s").write_text(current_objdump, encoding="utf-8")
-    shutil.copyfile(current_compiler_asm, output_dir / "current.compiler.s")
-    (output_dir / "original.normalized.s").write_text(
+    shutil.copyfile(current_compiler_asm, output_dir / "compiler.s")
+    (output_dir / "original.s").write_text(
         render_normalized(original_lines), encoding="utf-8"
     )
-    (output_dir / "current.normalized.s").write_text(
+    (output_dir / "current.s").write_text(
         render_normalized(current_lines), encoding="utf-8"
     )
     (output_dir / "diff.patch").write_text(

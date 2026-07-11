@@ -118,22 +118,41 @@ def run_inspect(args: argparse.Namespace) -> int:
         print(f"build output: {build['output'] or '-'}")
     else:
         print("build: not configured")
+    progress = details["progress"]
+    print(f"layout: {progress['layout']}")
+    print(
+        "functions: "
+        f"reviewed={progress['reviewed_functions']} "
+        f"lifted={progress['lifted_functions']} "
+        f"matched={progress['matched_functions']}"
+    )
+    next_function = progress["next_function"]
+    print(f"next function: {f'0x{next_function:08x}' if next_function else '-'}")
+    print(f"whole payload match: {'yes' if progress['whole_payload_match'] else 'no'}")
     return 0
 
 
 def run_next(args: argparse.Namespace) -> int:
+    from ..binaries import resolve_entry, target_progress
+
     catalog = read_json(_catalog_path(args))
     rows = [
         entry for entry in catalog["entries"] if entry["code_status"] == "confirmed"
     ]
     if args.target:
-        rows = [entry for entry in rows if entry["id"] == args.target]
+        resolved = resolve_entry(catalog, args.target)
+        rows = [entry for entry in rows if entry["id"] == resolved["id"]]
     if not rows:
         raise ValueError(
             "no confirmed target; run rebof3 promote <archive#slot> --confirm-code first"
         )
     entry = sorted(rows, key=lambda item: item["id"])[0]
-    print(f"rebof3 lift {entry['id']}@{entry['load_address_hex']}")
+    next_function = target_progress(entry, _root(args))["next_function"]
+    if next_function is None:
+        raise ValueError(
+            f"no unlifted reviewed function for {entry['id']}; review its Splat layout or inspect completion status"
+        )
+    print(f"rebof3 lift {entry['id']}@0x{next_function:08x}")
     return 0
 
 

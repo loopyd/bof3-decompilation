@@ -303,6 +303,74 @@ def target_details(entry: dict[str, Any], root: Path) -> dict[str, Any]:
         "splat": config.relative_to(root).as_posix() if config.is_file() else None,
         "source": source.relative_to(root).as_posix() if source.is_dir() else None,
         "build": artifact,
+        "progress": target_progress(entry, root),
+    }
+
+
+SPLAT_FUNCTION_SUBSEGMENT_RE = re.compile(
+    r"^\s*-\s*\[\s*(?P<offset>0x[0-9a-fA-F]+|[0-9]+)\s*,\s*(?:asm|c)(?:\s*,[^]]*)?\]"
+)
+
+
+def reviewed_function_addresses(entry: dict[str, Any], root: Path) -> list[int]:
+    """Return reviewed function starts declared as C subsegments in Splat."""
+    config = root / "config" / "splat" / "emi" / f"{target_slug(entry)}.yaml"
+    if not config.is_file():
+        return []
+    addresses: list[int] = []
+    for line in config.read_text(encoding="utf-8").splitlines():
+        match = SPLAT_FUNCTION_SUBSEGMENT_RE.match(line)
+        if match is not None:
+            addresses.append(entry["load_address"] + int(match.group("offset"), 0))
+    return sorted(set(addresses))
+
+
+def target_progress(entry: dict[str, Any], root: Path) -> dict[str, Any]:
+    """Summarize reviewed, lifted, matched, and whole-payload target progress."""
+    reviewed = reviewed_function_addresses(entry, root)
+    source_dir = root / "src" / "emi" / target_slug(entry)
+    lifted = (
+        {
+            int(match.group(1), 16)
+            for path in source_dir.glob("func_*.c")
+            if (match := re.fullmatch(r"func_([0-9a-fA-F]{8})\.c", path.name))
+        }
+        if source_dir.is_dir()
+        else set()
+    )
+    matched: set[int] = set()
+    for address in lifted:
+        summary = root / "out" / "asm-diff" / f"func_{address:08x}" / "summary.json"
+        if not summary.is_file():
+            continue
+        payload = read_json(summary)
+        if payload.get("instruction_count", {}).get("match_percent") == 100:
+            matched.add(address)
+
+    artifact = _artifact_for_entry(entry, root)
+    output = (
+        Path(str(artifact.get("output")))
+        if artifact and artifact.get("output")
+        else None
+    )
+    whole_payload_match = False
+    if (
+        output is not None
+        and output.is_file()
+        and output.stat().st_size == entry["size"]
+    ):
+        whole_payload_match = (
+            hashlib.sha256(output.read_bytes()).hexdigest() == entry["sha256"]
+        )
+
+    remaining = [address for address in reviewed if address not in lifted]
+    return {
+        "layout": "reviewed" if reviewed else "unsegmented",
+        "reviewed_functions": len(reviewed),
+        "lifted_functions": len(lifted & set(reviewed)),
+        "matched_functions": len(matched & set(reviewed)),
+        "next_function": remaining[0] if remaining else None,
+        "whole_payload_match": whole_payload_match,
     }
 
 

@@ -30,7 +30,7 @@ def run_one(args: argparse.Namespace) -> int:
         f"match: {instruct['match_percent']:.2f}% ({instruct['matching']}/{max(instruct['original'], instruct['current'])} instrs)"
     )
     print(f"function: {payload['function']} {payload['address']}")
-    print(f"summary: {outputs['summary_json']}")
+    print(f"summary: {outputs['summary']}")
     print(f"diff: {outputs['diff']}")
     return 0 if payload["exact_match"] else 1
 
