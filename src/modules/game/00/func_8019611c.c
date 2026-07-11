@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: loops over 20 local frontend records and resets each one through the
+/* @behavior loops over 20 local frontend records and resets each one through the
  * shared per-record clear helper.
- * @source: 0x8019611c FUN_8019611c
+ * @source 0x8019611c FUN_8019611c
  */
 void func_8019611c(void) {
   u8 record_index;

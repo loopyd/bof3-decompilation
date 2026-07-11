@@ -19,9 +19,9 @@ extern void func_80179068(void* object_work);
 
 extern u8 D_801492e8[];
 
-/* does: builds a temporary transform from scratchpad camera state and submits
+/* @behavior builds a temporary transform from scratchpad camera state and submits
  * it through the local scene object pipeline.
- * @source: 0x801d0ee0 FUN_801d0ee0
+ * @source 0x801d0ee0 FUN_801d0ee0
  */
 void func_801d0ee0(void) {
   ScenarioSce10effScratch* scratch;

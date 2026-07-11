@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: once the live grid gate clears, restores the battle owner tuple to the
+/* @behavior once the live grid gate clears, restores the battle owner tuple to the
  * shared selection root and reapplies the local panel-task band reset helper.
- * @source: 0x800975d4 FUN_800975d4
+ * @source 0x800975d4 FUN_800975d4
  */
 void NO_SIBLING_CALLS func_800975d4(void) {
   volatile u8* battle_selection_state;

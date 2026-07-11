@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: marks the current panel task active and advances its state byte.
- * @source: 0x801ea174 FUN_801ea174
+/* @behavior marks the current panel task active and advances its state byte.
+ * @source 0x801ea174 FUN_801ea174
  */
 void func_801ea174(void) {
   u8* volatile* root = (u8* volatile*)0x80150000u;

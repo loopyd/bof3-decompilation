@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: resolves one event id from the `0x801eb09c` script table and queues the
+/* @behavior resolves one event id from the `0x801eb09c` script table and queues the
  * standard event packet that plays it.
- * @source: 0x801debc4 FUN_801debc4
+ * @source 0x801debc4 FUN_801debc4
  */
 void func_801debc4(u32 arg0, u32 arg1) {
   const volatile u16* event_row;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: consumes up to two pending halfword events from the current enemy work,
+/* @behavior consumes up to two pending halfword events from the current enemy work,
  * accumulating counts in the shared tables at `0x80146334/0x80146354`.
- * @source: 0x801e531c FUN_801e531c
+ * @source 0x801e531c FUN_801e531c
  */
 void func_801e531c(void) {
   const u8* threshold_table;

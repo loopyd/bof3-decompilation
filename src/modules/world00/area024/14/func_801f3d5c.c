@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: draws the 16-entry spin table and advances each entry's size/fade
+/* @behavior draws the 16-entry spin table and advances each entry's size/fade
  * halfwords using the scratch byte at `0x1f80004d`.
- * @source: 0x801f3d5c FUN_801f3d5c
+ * @source 0x801f3d5c FUN_801f3d5c
  */
 void func_801f3d5c(void) {
   u8                      scratch[0x20];

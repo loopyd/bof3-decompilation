@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: updates the active AREA030 scratch record from the shared world state,
+/* @behavior updates the active AREA030 scratch record from the shared world state,
  * or clears scratch state byte `0x02` when the global mode byte is `1`.
- * @source: 0x801d11c0 FUN_801d11c0
+ * @source 0x801d11c0 FUN_801d11c0
  */
 void func_801d11c0(void) {
   volatile u8* scratch;

@@ -5,9 +5,9 @@ extern GameCallbackSlot           DAT_80143b40;
 
 void func_8014b900(int slot_index);
 
-/* does: walks the callback slot table and dispatches each non-empty slot by
+/* @behavior walks the callback slot table and dispatches each non-empty slot by
  * index.
- * @source: 0x8014b33c FUN_8014b33c
+ * @source 0x8014b33c FUN_8014b33c
  */
 void func_8014b33c(void) {
   GameCallbackSlot*          slot_end;

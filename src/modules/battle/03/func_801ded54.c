@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: scans the three local work records and runs the shared handler for each
+/* @behavior scans the three local work records and runs the shared handler for each
  * active entry that does not have flag `0x40` set.
- * @source: 0x801ded54 FUN_801ded54
+ * @source 0x801ded54 FUN_801ded54
  */
 void func_801ded54(void) {
   u8 index;

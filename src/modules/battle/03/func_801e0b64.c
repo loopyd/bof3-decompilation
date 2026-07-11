@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: refreshes each active local battler's display template fields from the
+/* @behavior refreshes each active local battler's display template fields from the
  * template table selected by byte `0x13c`, then rebuilds the local display
  * data.
- * @source: 0x801e0b64 FUN_801e0b64
+ * @source 0x801e0b64 FUN_801e0b64
  */
 void func_801e0b64(void) {
   const u8* template_base;

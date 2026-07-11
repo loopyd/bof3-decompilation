@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: returns the signed 2D cross product of the edge from `arg0` to `arg1`
+/* @behavior returns the signed 2D cross product of the edge from `arg0` to `arg1`
  * against the edge from `arg1` to `arg2`.
- * @source: 0x801f4158 FUN_801f4158
+ * @source 0x801f4158 FUN_801f4158
  */
 s16 func_801f4158(const s16* arg0, const s16* arg1, const s16* arg2) {
   struct {

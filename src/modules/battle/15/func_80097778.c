@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: chooses the first result-side substate from the committed selection
+/* @behavior chooses the first result-side substate from the committed selection
  * kind flags, refreshes the active slot family byte, clears the local
  * ring-reset halfword, and sets the shared pending-kind byte.
- * @source: 0x80097778 FUN_80097778
+ * @source 0x80097778 FUN_80097778
  */
 void func_80097778(void) {
   volatile u8* active_selection_slot;

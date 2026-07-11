@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: reports whether one battler should be treated as blocked, taking the
+/* @behavior reports whether one battler should be treated as blocked, taking the
  * global `0x10` suppression countdown into account before falling back to the
  * generic availability helper.
- * @source: 0x801d64c4 FUN_801d64c4
+ * @source 0x801d64c4 FUN_801d64c4
  */
 u8 func_801d64c4(u32 arg0) {
   u32 flags;

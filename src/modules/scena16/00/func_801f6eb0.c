@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: seeds one routed setup path and enters secondary state 2 on success.
- * @source: 0x801f6eb0 FUN_801f6eb0
+/* @behavior seeds one routed setup path and enters secondary state 2 on success.
+ * @source 0x801f6eb0 FUN_801f6eb0
  */
 void func_801f6eb0(void) {
   if (func_8015b5d4(BOF3_SCENA16_DAT_8014686c, 0) == 0) {

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: resolves one battler-kind-derived result code, updates the global kind
+/* @behavior resolves one battler-kind-derived result code, updates the global kind
  * selection, and returns one mode byte based on the chosen kind flags.
- * @source: 0x801d3844 FUN_801d3844
+ * @source 0x801d3844 FUN_801d3844
  */
 u8 func_801d3844(void) {
   u8  kind;

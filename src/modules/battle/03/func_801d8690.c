@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: draws one enemy status block, switching between panel-task text and a
+/* @behavior draws one enemy status block, switching between panel-task text and a
  * fallback numeric label, then shades the lower border with a darkened palette
  * triple.
- * @source: 0x801d8690 FUN_801d8690
+ * @source 0x801d8690 FUN_801d8690
  */
 void func_801d8690(s32 arg0, s32 arg1, s32 arg2) {
   volatile Battle03EnemyWork* battle_work;

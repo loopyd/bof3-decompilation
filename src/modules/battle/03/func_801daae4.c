@@ -5,9 +5,9 @@ typedef struct Battle03RankEntry {
   u16 index;
 } Battle03RankEntry;
 
-/* does: builds and sorts the mixed local/enemy ranking list used by the owner
+/* @behavior builds and sorts the mixed local/enemy ranking list used by the owner
  * selection bytes at `0x8014630c`, then resets the current owner cursor.
- * @source: 0x801daae4 FUN_801daae4
+ * @source 0x801daae4 FUN_801daae4
  */
 void func_801daae4(void) {
   Battle03RankEntry entries[11];

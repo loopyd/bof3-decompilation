@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: seeds one spinning local work entry from scratchpad position, applies
+/* @behavior seeds one spinning local work entry from scratchpad position, applies
  * three random Euler rotations to two fixed edge vectors, and clears the later
  * velocity/fade slots.
- * @source: 0x801f3be4 FUN_801f3be4
+ * @source 0x801f3be4 FUN_801f3be4
  */
 void func_801f3be4(void* arg0) {
   World00Area024SpinWork* work;

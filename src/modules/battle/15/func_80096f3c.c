@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: dispatches the confirm-selection substate byte through the function
+/* @behavior dispatches the confirm-selection substate byte through the function
  * table rooted at `battle_selection_confirm_substate_table`.
- * @source: 0x80096f3c FUN_80096f3c
+ * @source 0x80096f3c FUN_80096f3c
  */
 void NO_SIBLING_CALLS func_80096f3c(void) {
   volatile u8*                           substate_base;

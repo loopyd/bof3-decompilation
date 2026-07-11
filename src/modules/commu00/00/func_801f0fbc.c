@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: applies the type-9 record-specific task-slot variant.
- * @source: 0x801f0fbc
+/* @behavior applies the type-9 record-specific task-slot variant.
+ * @source 0x801f0fbc
  */
 void func_801f0fbc(u8 source_index, u8 task_index, u8 record_kind_index) {
   u32 record_state;

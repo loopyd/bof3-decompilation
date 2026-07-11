@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: selects one of several local-work-driven effect ids and forwards it to
+/* @behavior selects one of several local-work-driven effect ids and forwards it to
  * one of two EXE-side helpers, depending on the current battle-global flags.
- * @source: 0x801defe4 FUN_801defe4
+ * @source 0x801defe4 FUN_801defe4
  */
 void func_801defe4(void) {
   u16 flags;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: applies the current scratchpad damage modifiers, variance table, and
+/* @behavior applies the current scratchpad damage modifiers, variance table, and
  * optional battler-specific scale table to one signed damage value.
- * @source: 0x801dcd50 FUN_801dcd50
+ * @source 0x801dcd50 FUN_801dcd50
  */
 u32 func_801dcd50(u32 arg0, u8 arg1, s32 arg2) {
   s32 value;

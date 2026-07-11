@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: seeds one template-driven task slot using the current source index and
+/* @behavior seeds one template-driven task slot using the current source index and
  * task slot index.
- * @source: 0x801f0718 FUN_801f0718
+ * @source 0x801f0718 FUN_801f0718
  */
 void func_801f0718(u8 source_index, u8 task_index) {
   volatile Commu00TaskSlot* task_slot;

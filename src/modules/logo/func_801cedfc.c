@@ -4,9 +4,9 @@
 void func_801ceef4(void);
 
 /* possible name: logo_exe_main
- * does: enters LOGO.EXE, boots the CAPCOM30.STR stream, polls for skip or
+ * @behavior enters LOGO.EXE, boots the CAPCOM30.STR stream, polls for skip or
  * completion, then shuts the video branch down.
- * @source: 0x801cedfc FUN_801cedfc
+ * @source 0x801cedfc FUN_801cedfc
  */
 void func_801cedfc(void) {
   volatile u8 scratch[0x18];

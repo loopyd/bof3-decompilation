@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: evaluates whether one battler's countdown/retry state should trigger on
+/* @behavior evaluates whether one battler's countdown/retry state should trigger on
  * this frame using both the short counter table and the long retry table.
- * @source: 0x801ddcb4 FUN_801ddcb4
+ * @source 0x801ddcb4 FUN_801ddcb4
  */
 u8 func_801ddcb4(u32 arg0) {
   u8 counter;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: advances the UI ring index modulo 16 and reports whether it reached the
+/* @behavior advances the UI ring index modulo 16 and reports whether it reached the
  * current target index.
- * @source: 0x801eab38 FUN_801eab38
+ * @source 0x801eab38 FUN_801eab38
  */
 u8 func_801eab38(void) {
   u8* const base = (u8*)0x801f0000u;

@@ -3,9 +3,9 @@
 #define EMI_STREAM_INDEX_HINT (*(volatile u8*)0x80145024u)
 
 /* possible name: emi_family_slot
- * does: maps a BOF3 content family plus index into the slot id used by the EXE
+ * @behavior maps a BOF3 content family plus index into the slot id used by the EXE
  * loader path.
- * @source: 0x8016728c FUN_8016728c
+ * @source 0x8016728c FUN_8016728c
  */
 void func_8016728c(u8 index, u8 family) {
   u32 new_var;

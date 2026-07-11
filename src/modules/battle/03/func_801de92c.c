@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: reports whether the UI ring currently contains queued work.
- * @source: 0x801de92c FUN_801de92c
+/* @behavior reports whether the UI ring currently contains queued work.
+ * @source 0x801de92c FUN_801de92c
  */
 u8 func_801de92c(void) {
   volatile u8* const base = (volatile u8*)0x801f0000u;

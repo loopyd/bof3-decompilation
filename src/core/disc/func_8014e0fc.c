@@ -7,9 +7,9 @@ extern u32   DAT_80143e70[];
 extern void* DAT_80143e88;
 extern s32   DAT_80143e8c;
 
-/* does: reads one EXE file into RAM in two sector-sized steps and copies the
+/* @behavior reads one EXE file into RAM in two sector-sized steps and copies the
  * first staged header block into the boot scratch area.
- * @source: 0x8014e0fc FUN_8014e0fc
+ * @source 0x8014e0fc FUN_8014e0fc
  */
 s32 func_8014e0fc(const char* path) {
   CdlFILE     file;

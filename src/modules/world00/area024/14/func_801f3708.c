@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: seeds one local rotation triplet, applies it to four packed source
+/* @behavior seeds one local rotation triplet, applies it to four packed source
  * vertices, and writes the transformed positions back into the destination slot
  * relative to the current state origin.
- * @source: 0x801f3708 FUN_801f3708
+ * @source 0x801f3708 FUN_801f3708
  */
 void func_801f3708(void* arg0, const void* arg1, s16* arg2) {
   volatile u8*       dst;

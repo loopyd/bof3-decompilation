@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: reconciles the visible COMMU00 slot window for one requested row by
+/* @behavior reconciles the visible COMMU00 slot window for one requested row by
  * rate-limiting random slot spawns or clears against the current window
  * counters.
- * @source: 0x801eeef0 FUN_801eeef0
+ * @source 0x801eeef0 FUN_801eeef0
  */
 void func_801eeef0(u32 row_index) {
   s32 visible_slot_count;

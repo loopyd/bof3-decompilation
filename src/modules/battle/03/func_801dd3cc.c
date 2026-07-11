@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: rotates or mirrors the second point pair at offsets `0x18/0x1c` based
+/* @behavior rotates or mirrors the second point pair at offsets `0x18/0x1c` based
  * on the selector byte at offset `8`.
- * @source: 0x801dd3cc FUN_801dd3cc
+ * @source 0x801dd3cc FUN_801dd3cc
  */
 void func_801dd3cc(s32 arg0) {
   s32 mode;

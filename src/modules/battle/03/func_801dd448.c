@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: reports whether the current local work is eligible for the queued
+/* @behavior reports whether the current local work is eligible for the queued
  * branch, optionally applying the `0x40` global gate and one random threshold.
- * @source: 0x801dd448 FUN_801dd448
+ * @source 0x801dd448 FUN_801dd448
  */
 u8 func_801dd448(void) {
   if ((BATTLE_GLOBAL_HALF_62E8 & 0x40u) != 0u) {

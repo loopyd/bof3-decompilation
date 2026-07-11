@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: dispatches the current preview-sequence state under one temporary
+/* @behavior dispatches the current preview-sequence state under one temporary
  * global word setting, then restores the fixed word value.
- * @source: 0x801e6c84 FUN_801e6c84
+ * @source 0x801e6c84 FUN_801e6c84
  */
 void func_801e6c84(void) {
   struct PreviewSequenceTable {

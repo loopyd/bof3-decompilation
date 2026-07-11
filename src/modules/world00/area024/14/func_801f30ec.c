@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: walks the local eight-entry work array, runs the state handler selected
+/* @behavior walks the local eight-entry work array, runs the state handler selected
  * by byte `+0x01` for each active entry, then draws the entry and returns
  * whether any active work was processed.
- * @source: 0x801f30ec FUN_801f30ec
+ * @source 0x801f30ec FUN_801f30ec
  */
 s32 func_801f30ec(void) {
   u8  scratch[0x20];

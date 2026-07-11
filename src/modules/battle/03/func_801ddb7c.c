@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: walks active local and enemy battlers, reserving one queued slot for
+/* @behavior walks active local and enemy battlers, reserving one queued slot for
  * each and copying its current state record into that slot.
- * @source: 0x801ddb7c FUN_801ddb7c
+ * @source 0x801ddb7c FUN_801ddb7c
  */
 void func_801ddb7c(void) {
   u8 index;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: seeds the local 16-entry spin-work table at `0x800e5000` by calling
+/* @behavior seeds the local 16-entry spin-work table at `0x800e5000` by calling
  * the per-entry initializer on each `0x2c`-byte slot.
- * @source: 0x801f3d0c FUN_801f3d0c
+ * @source 0x801f3d0c FUN_801f3d0c
  */
 void func_801f3d0c(void) {
   u8* work;

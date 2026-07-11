@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: runs the secondary SCENA16 controller rooted at state 2.
- * @source: 0x801f7230 FUN_801f7230
+/* @behavior runs the secondary SCENA16 controller rooted at state 2.
+ * @source 0x801f7230 FUN_801f7230
  */
 void func_801f7230(void) {
   vu8* object;

@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: stores one frontend-local mode and installs the matching callback.
- * @source: 0x8014ecac
+/* @behavior stores one frontend-local mode and installs the matching callback.
+ * @source 0x8014ecac
  */
 void __attribute__((noinline)) func_8014ecac(u16 local_mode) {
   volatile u16* game_front;

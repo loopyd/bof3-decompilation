@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: updates the local ring-center point from the scaled work vector,
+/* @behavior updates the local ring-center point from the scaled work vector,
  * rejects the draw if that center falls outside the 32-point ring, and
  * otherwise emits one TILE_1 marker tinted from `field_08`.
- * @source: 0x801f2d3c FUN_801f2d3c
+ * @source 0x801f2d3c FUN_801f2d3c
  */
 void func_801f2d3c(void) {
   World00Area028Work* work;

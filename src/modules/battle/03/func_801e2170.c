@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: walks the eight enemy work records, makes each active one current, and
+/* @behavior walks the eight enemy work records, makes each active one current, and
  * dispatches through one of two enemy-side handler tables.
- * @source: 0x801e2170 FUN_801e2170
+ * @source 0x801e2170 FUN_801e2170
  */
 void func_801e2170(void) {
   Battle03Handler const volatile* table_b =

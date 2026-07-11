@@ -3,9 +3,9 @@
 extern vu32 DAT_8014648c;
 extern u8   DAT_80146498[];
 
-/* does: latches the last CdSync callback result bytes and marks the async sync
+/* @behavior latches the last CdSync callback result bytes and marks the async sync
  * status.
- * @source: 0x801621e8 FUN_801621e8
+ * @source 0x801621e8 FUN_801621e8
  */
 void func_801621e8(u8 status, u8* result) {
   bool has_more;

@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* possible name: battle_finalize_local_panel_command_band
- * does: deduplicates the staged local panel entry band by owner-kind/panel-id
+ * @behavior deduplicates the staged local panel entry band by owner-kind/panel-id
  * pairs, compacts the live entry array, and writes back the reduced count.
- * @source: 0x8009cfec FUN_8009cfec
+ * @source 0x8009cfec FUN_8009cfec
  */
 void func_8009cfec(void) {
   BattleLocalPanelEntry unique_entries[8];

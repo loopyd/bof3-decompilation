@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: submits one effect id selected from the current local work's halfword
+/* @behavior submits one effect id selected from the current local work's halfword
  * at `0x2c` and the caller's byte index.
- * @source: 0x801dd858 FUN_801dd858
+ * @source 0x801dd858 FUN_801dd858
  */
 void func_801dd858(u32 arg0) {
   func_8015df18(

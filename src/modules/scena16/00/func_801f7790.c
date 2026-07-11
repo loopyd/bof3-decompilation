@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: runs the secondary SCENA16 controller rooted at state 3.
- * @source: 0x801f7790 FUN_801f7790
+/* @behavior runs the secondary SCENA16 controller rooted at state 3.
+ * @source 0x801f7790 FUN_801f7790
  */
 void func_801f7790(void) {
   vu16* timer;

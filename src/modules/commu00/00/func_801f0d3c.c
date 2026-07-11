@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: applies the type-5 record-specific task-slot variant.
- * @source: 0x801f0d3c
+/* @behavior applies the type-5 record-specific task-slot variant.
+ * @source 0x801f0d3c
  */
 void func_801f0d3c(u8 task_index, u8 record_kind_index) {
   u8  record_kind_flag_1;

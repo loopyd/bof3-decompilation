@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: stages one secondary selection-ring record through the shared
+/* @behavior stages one secondary selection-ring record through the shared
  * frontend handle path, then advances the secondary substate byte.
- * @source: 0x800983c4 FUN_800983c4
+ * @source 0x800983c4 FUN_800983c4
  */
 void func_800983c4(void) {
   u32 name_handle;

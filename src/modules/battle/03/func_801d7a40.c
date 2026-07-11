@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: draws one five-slot icon strip plus the two optional trailing icons,
+/* @behavior draws one five-slot icon strip plus the two optional trailing icons,
  * choosing either a flat icon draw or the tile helper based on the current size
  * bytes.
- * @source: 0x801d7a40 FUN_801d7a40
+ * @source 0x801d7a40 FUN_801d7a40
  */
 void func_801d7a40(s16 arg0, s16 arg1) {
   u8  index;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: seeds one local scratch block, then emits four helper-driven slices
+/* @behavior seeds one local scratch block, then emits four helper-driven slices
  * using the local angle/offset tables.
- * @source: 0x801f2d5c FUN_801f2d5c
+ * @source 0x801f2d5c FUN_801f2d5c
  */
 void func_801f2d5c(const s32* arg0, s32 arg1) {
   u8 scratch[0x20];

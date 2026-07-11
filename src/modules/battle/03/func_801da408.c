@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: emits one flat-colored line/box primitive by writing rgb and two corner
+/* @behavior emits one flat-colored line/box primitive by writing rgb and two corner
  * points directly into the current primitive.
- * @source: 0x801da408 FUN_801da408
+ * @source 0x801da408 FUN_801da408
  */
 void func_801da408(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6) {

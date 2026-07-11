@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: builds one icon/tile primitive using the byte-sized clut table at
+/* @behavior builds one icon/tile primitive using the byte-sized clut table at
  * `0x801d0c64`, then queues it through the standard primitive path.
- * @source: 0x801d7d10 FUN_801d7d10
+ * @source 0x801d7d10 FUN_801d7d10
  */
 void func_801d7d10(u8 arg0, s16 arg1, s16 arg2, u16 arg3, u8 arg4, u8 arg5) {
   u16 primitive_id;

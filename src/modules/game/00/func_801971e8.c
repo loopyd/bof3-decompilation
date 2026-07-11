@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: applies the pending front/world selection context, resolves the next
+/* @behavior applies the pending front/world selection context, resolves the next
  * entry-0 mode from request flags, then advances to state 2.
- * @source: 0x801971e8 FUN_801971e8
+ * @source 0x801971e8 FUN_801971e8
  */
 void func_801971e8(void) {
   u16 context_seed;

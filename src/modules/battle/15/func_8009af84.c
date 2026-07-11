@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: initializes the secondary battle selection-grid scratch band from the
+/* @behavior initializes the secondary battle selection-grid scratch band from the
  * saved group/page/cursor bytes.
- * @source: 0x8009af84 FUN_8009af84
+ * @source 0x8009af84 FUN_8009af84
  */
 void func_8009af84(void) {
   volatile u8* panel;

@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: initializes one small ui state bundle with fixed bytes and halfwords.
- * @source: 0x801d9484 FUN_801d9484
+/* @behavior initializes one small ui state bundle with fixed bytes and halfwords.
+ * @source 0x801d9484 FUN_801d9484
  */
 void func_801d9484(void) {
   func_80158db8(0u, 3u);

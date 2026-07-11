@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: rebuilds one local/enemy movement delta from several battler-state
+/* @behavior rebuilds one local/enemy movement delta from several battler-state
  * bytes, then converts any non-zero result into the common queued followup
  * state.
- * @source: 0x801d5dcc FUN_801d5dcc
+ * @source 0x801d5dcc FUN_801d5dcc
  */
 u8 func_801d5dcc(void) {
   u8 index;

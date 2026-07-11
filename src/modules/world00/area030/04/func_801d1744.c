@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: emits one 16x32 vertical gradient quad at the supplied screen point.
- * @source: 0x801d1744 FUN_801d1744
+/* @behavior emits one 16x32 vertical gradient quad at the supplied screen point.
+ * @source 0x801d1744 FUN_801d1744
  */
 void func_801d1744(s16 arg0, s16 arg1, u8 arg2) {
   u32 primitive;

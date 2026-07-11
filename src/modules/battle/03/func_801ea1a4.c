@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: copies the queued halfwords into the active panel-task slots, clears
+/* @behavior copies the queued halfwords into the active panel-task slots, clears
  * the active flag byte, and backs the state byte up by one.
- * @source: 0x801ea1a4 FUN_801ea1a4
+ * @source 0x801ea1a4 FUN_801ea1a4
  */
 void func_801ea1a4(void) {
   u8* volatile* root;

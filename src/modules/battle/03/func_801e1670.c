@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: dispatches the current local state-2 class byte through its table.
- * @source: 0x801e1670 FUN_801e1670
+/* @behavior dispatches the current local state-2 class byte through its table.
+ * @source 0x801e1670 FUN_801e1670
  */
 void NO_SIBLING_CALLS func_801e1670(void) {
   volatile u8* scratch;

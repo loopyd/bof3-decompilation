@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: finds the current local battler inside the ranked owner list and, if it
+/* @behavior finds the current local battler inside the ranked owner list and, if it
  * is in the expected intermediate state, advances the paired counter table.
- * @source: 0x801ddfec FUN_801ddfec
+ * @source 0x801ddfec FUN_801ddfec
  */
 void func_801ddfec(u32 arg0) {
   u32 index;

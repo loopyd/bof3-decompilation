@@ -1,10 +1,10 @@
 #include "internal.h"
 
 /* possible name: battle_refresh_local_panel_command_band
- * does: walks the four current battler panel-rule rows, validates each rule
+ * @behavior walks the four current battler panel-rule rows, validates each rule
  * against the live battler state, stages accepted entries into the local panel
  * slots, and finalizes the panel band refresh.
- * @source: 0x8009bbe8 FUN_8009bbe8
+ * @source 0x8009bbe8 FUN_8009bbe8
  */
 void func_8009bbe8(void) {
   volatile u8* current_battler;

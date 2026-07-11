@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: draws one local frame, formats the scratchpad pair into the shared UI
+/* @behavior draws one local frame, formats the scratchpad pair into the shared UI
  * text buffer, then queues the three local UI labels.
- * @source: 0x801f3c2c FUN_801f3c2c
+ * @source 0x801f3c2c FUN_801f3c2c
  */
 void func_801f3c2c(void) {
   volatile World00Area008Scratch* scratch;

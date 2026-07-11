@@ -1,11 +1,11 @@
 #include "internal.h"
 
-/* does: transforms two sets of 3d world-space coordinates into screen-space
+/* @behavior transforms two sets of 3d world-space coordinates into screen-space
  * sprite positions, using a shared global object. subtracts 0x4000 from each
  * coordinate (centre offset), halves and negates the rotation angles, then
  * calls the projection helper for each set. assigns colour channel values to
  * the object and schedules a DMA transfer.
- * @source: 0x801f78ec FUN_801f78ec
+ * @source 0x801f78ec FUN_801f78ec
  */
 void func_801f78ec(s32 x0, s32 y0, s16 angle0, s32 x1, s32 y1, s16 angle1, u8 r,
                    u8 g, u8 b) {

@@ -4,9 +4,9 @@ s32 func_801a1bc0(void);
 s32 func_801bde14(s32 arg0, s32 arg1, u8 arg2);
 s32 func_801be0c0(s32 arg0, s32 arg1, u8 arg2);
 
-/* does: checks movement to a position determined by the route index,
+/* @behavior checks movement to a position determined by the route index,
  *        using two offset tables.
- * @source: 0x801a1ae4 FUN_801a1ae4
+ * @source 0x801a1ae4 FUN_801a1ae4
  */
 s32 func_801a1ae4(struct GameWorkArea* arg) {
   s32 s0;

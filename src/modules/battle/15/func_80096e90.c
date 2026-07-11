@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: aborts or backs out of the slot-selection input branch, stages the
+/* @behavior aborts or backs out of the slot-selection input branch, stages the
  * current message/resource slot, and restores the selection tuple to
  * `(2,0,0)`.
- * @source: 0x80096e90 FUN_80096e90
+ * @source 0x80096e90 FUN_80096e90
  */
 void func_80096e90(void) {
   battle_queue_frontend_cue(0x106u);

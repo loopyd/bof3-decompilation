@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: clears the key state bytes across all 0x30 queued-slot entries.
- * @source: 0x801e5a38 FUN_801e5a38
+/* @behavior clears the key state bytes across all 0x30 queued-slot entries.
+ * @source 0x801e5a38 FUN_801e5a38
  */
 void func_801e5a38(void) {
   u8 index;

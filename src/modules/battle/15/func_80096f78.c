@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: stages one selection-ring record for the current grid cursor and then
+/* @behavior stages one selection-ring record for the current grid cursor and then
  * advances the confirm-selection substate byte.
- * @source: 0x80096f78 FUN_80096f78
+ * @source 0x80096f78 FUN_80096f78
  */
 void func_80096f78(void) {
   u32 name_handle;

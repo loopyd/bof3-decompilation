@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: resets the current enemy scratch object's first two state bytes, clears
+/* @behavior resets the current enemy scratch object's first two state bytes, clears
  * one pending bit, and conditionally clears byte `0xf5` on the current enemy.
- * @source: 0x801e567c FUN_801e567c
+ * @source 0x801e567c FUN_801e567c
  */
 void func_801e567c(void) {
   BATTLE_ENEMY_SCRATCH_PTR->unk_01 = 2u;

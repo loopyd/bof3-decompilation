@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: rebuilds the active COMMU00 task-slot set from the 0x3c-entry source
+/* @behavior rebuilds the active COMMU00 task-slot set from the 0x3c-entry source
  * record table, with special label paths for kinds `0`, `10`, and `11`.
- * @source: 0x801f0534 FUN_801f0534
+ * @source 0x801f0534 FUN_801f0534
  */
 void func_801f0534(void) {
   u8                                  source_index;

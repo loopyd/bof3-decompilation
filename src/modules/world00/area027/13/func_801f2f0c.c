@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: emits a 31-segment Gouraud line strip across the projected trail,
+/* @behavior emits a 31-segment Gouraud line strip across the projected trail,
  * fading the leading endpoint from bright red toward black.
- * @source: 0x801f2f0c FUN_801f2f0c
+ * @source 0x801f2f0c FUN_801f2f0c
  */
 void func_801f2f0c(const void* arg0) {
   const u8* work;

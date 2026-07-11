@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: emits one fixed-size 16x8 marker primitive selected by the low byte of
+/* @behavior emits one fixed-size 16x8 marker primitive selected by the low byte of
  * the mode argument.
- * @source: 0x801da078 FUN_801da078
+ * @source 0x801da078 FUN_801da078
  */
 void func_801da078(s16 arg0, s16 arg1, s32 arg2) {
   u16 temp_v0;

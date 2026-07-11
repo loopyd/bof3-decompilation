@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: seeds one local sprite work entry from scratchpad positions and three
+/* @behavior seeds one local sprite work entry from scratchpad positions and three
  * random vector components, then normalizes the vector and installs fixed
  * mode bytes for the later draw path.
- * @source: 0x801f2fd4 FUN_801f2fd4
+ * @source 0x801f2fd4 FUN_801f2fd4
  */
 void func_801f2fd4(void* arg0) {
   World00Area024SpriteWork* work;

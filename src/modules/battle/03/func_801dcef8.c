@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: initializes the deferred local/enemy halfword countdown from the
+/* @behavior initializes the deferred local/enemy halfword countdown from the
  * current primary value when bit `0x80` is set.
- * @source: 0x801dcef8 FUN_801dcef8
+ * @source 0x801dcef8 FUN_801dcef8
  */
 void func_801dcef8(u32 arg0) {
   arg0 &= 0xffu;

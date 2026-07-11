@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: emits two short vertical gradient quads stacked four pixels apart.
- * @source: 0x801d1b88 FUN_801d1b88
+/* @behavior emits two short vertical gradient quads stacked four pixels apart.
+ * @source 0x801d1b88 FUN_801d1b88
  */
 void func_801d1b88(s16 arg0, s16 arg1, s16 arg2, u8 arg3) {
   u32 primitive;

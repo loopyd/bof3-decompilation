@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: advances one enemy `0x40` countdown path, clearing the flag and queuing
+/* @behavior advances one enemy `0x40` countdown path, clearing the flag and queuing
  * a followup event once one or more battlers complete.
- * @source: 0x801d57ac FUN_801d57ac
+ * @source 0x801d57ac FUN_801d57ac
  */
 u8 func_801d57ac(void) {
   u8 index;

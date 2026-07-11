@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: scans the newly exposed COMMU00 table range and queues one type-4
+/* @behavior scans the newly exposed COMMU00 table range and queues one type-4
  * and/or type-5 notification code when those tags appear for the first time in
  * the current pass.
- * @source: 0x801eedf8 FUN_801eedf8
+ * @source 0x801eedf8 FUN_801eedf8
  */
 void func_801eedf8(void) {
   u16 next_row;

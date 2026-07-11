@@ -1,11 +1,9 @@
 #include "internal.h"
 
 /* possible name: game_install_callback_slot
- * does: stores one callback entrypoint in the requested slot and marks it ready
+ * @behavior stores one callback entrypoint in the requested slot and marks it ready
  * for thread open state `2`.
- * @source: 0x8014b854 FUN_8014b854
- * @source: docs/specs/runtime/game-overlay.md
- * @source: processed/inventory/inventory.sqlite (function metadata and refs)
+ * @source 0x8014b854 FUN_8014b854
  */
 extern Bof3CallbackEntry DAT_80143b44;
 extern u16               DAT_80143b40;

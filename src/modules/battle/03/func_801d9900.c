@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: emits one fixed background strip primitive with constant dimensions and
+/* @behavior emits one fixed background strip primitive with constant dimensions and
  * constant grey rgb values.
- * @source: 0x801d9900 FUN_801d9900
+ * @source 0x801d9900 FUN_801d9900
  */
 void func_801d9900(void) {
   u32 primitive;

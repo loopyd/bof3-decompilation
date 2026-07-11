@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: counts the active COMMU00 source slots in the 0x3c-entry source table.
- * @source: 0x801f02e4 FUN_801f02e4
+/* @behavior counts the active COMMU00 source slots in the 0x3c-entry source table.
+ * @source 0x801f02e4 FUN_801f02e4
  */
 u8 func_801f02e4(void) {
   u8  count;

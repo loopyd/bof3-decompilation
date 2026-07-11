@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: recomputes the projected trail head from the current base position,
+/* @behavior recomputes the projected trail head from the current base position,
  * then fills the remaining 31 slots with that same head position.
- * @source: 0x801f304c FUN_801f304c
+ * @source 0x801f304c FUN_801f304c
  */
 void func_801f304c(void* arg0) {
   u8* work;

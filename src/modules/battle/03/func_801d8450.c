@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: draws one indexed panel frame and icon from the packed table at
+/* @behavior draws one indexed panel frame and icon from the packed table at
  * `0x801eaee8`, then submits the matching icon from `0x801eaeb0`.
- * @source: 0x801d8450 FUN_801d8450
+ * @source 0x801d8450 FUN_801d8450
  */
 void func_801d8450(u32 arg0) {
   s16 x;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: selects one graph-type-dependent drawmode, then emits one indexed
+/* @behavior selects one graph-type-dependent drawmode, then emits one indexed
  * translucent sprite using the local four-byte table at `0x801f513c`.
- * @source: 0x801f39d8 FUN_801f39d8
+ * @source 0x801f39d8 FUN_801f39d8
  */
 void func_801f39d8(s16 arg0, s16 arg1, u32 arg2) {
   u8* primitive;

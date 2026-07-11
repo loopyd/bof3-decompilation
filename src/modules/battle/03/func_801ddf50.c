@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: scans one trigger table selected by `arg1` for the given byte id and,
+/* @behavior scans one trigger table selected by `arg1` for the given byte id and,
  * on match, submits the associated effect id through `0x801636a0`.
- * @source: 0x801ddf50 FUN_801ddf50
+ * @source 0x801ddf50 FUN_801ddf50
  */
 u8 func_801ddf50(u16 arg0, u32 arg1) {
   u32* table;

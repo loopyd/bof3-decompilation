@@ -113,7 +113,6 @@ void func_801f1110(u8 task_index, u8 record_kind_index);
 void func_801f1204(u8 task_index, u8 record_kind_index);
 void func_801f1254(u8 task_index);
 
-/* from old bof3/include/bof3/modules/commu00/00.h */
 void func_801f0534(void);
 void func_801f0718(u8 source_index, u8 task_index);
 void func_801f08d8(u8 source_index, u8 task_index);

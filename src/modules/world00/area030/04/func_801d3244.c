@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: queues one AREA030 icon strip primitive, then optionally emits a small
+/* @behavior queues one AREA030 icon strip primitive, then optionally emits a small
  * red tile marker when `arg5` is set and the shared flag bit is still clear.
- * @source: 0x801d3244 FUN_801d3244
+ * @source 0x801d3244 FUN_801d3244
  */
 void func_801d3244(s16 arg0, s16 arg1, u8 arg2, s8 arg3, u8 arg4, s8 arg5) {
   u32 primitive;

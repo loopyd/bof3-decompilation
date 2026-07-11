@@ -1,4 +1,4 @@
-/* Original assembly baseline for bof3/src/modules/battle/15/func_8009c868.c.
+/* Original assembly baseline for src/modules/battle/15/func_8009c868.c.
  * Source: BIN/BATTLE/BATTLE.EMI entry 15, 15.bin, load 0x80096800.
  */
 

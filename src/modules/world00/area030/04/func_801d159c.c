@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: queues the fixed AREA030 labels, formats one countdown string into the
+/* @behavior queues the fixed AREA030 labels, formats one countdown string into the
  * shared UI buffer, then draws the local footer text and status panel.
- * @source: 0x801d159c FUN_801d159c
+ * @source 0x801d159c FUN_801d159c
  */
 void func_801d159c(s16 arg0, s16 arg1) {
   s32 value;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: reports whether any active alternate local work has a matching active
+/* @behavior reports whether any active alternate local work has a matching active
  * status record in the paired `0x801ec048` array.
- * @source: 0x801e7b34 FUN_801e7b34
+ * @source 0x801e7b34 FUN_801e7b34
  */
 u8 func_801e7b34(void) {
   u8 index;

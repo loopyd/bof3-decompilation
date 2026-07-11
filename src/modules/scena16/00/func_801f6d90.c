@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: routes the primary SCENA16 area path into one local helper branch.
- * @source: 0x801f6d90 FUN_801f6d90
+/* @behavior routes the primary SCENA16 area path into one local helper branch.
+ * @source 0x801f6d90 FUN_801f6d90
  */
 void func_801f6d90(void) {
   s8* state_base;

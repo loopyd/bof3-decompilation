@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: builds a small list of selectable ids from `3..10`, excluding blocked
+/* @behavior builds a small list of selectable ids from `3..10`, excluding blocked
  * entries and the requested id, then returns one random surviving choice.
- * @source: 0x801e29b4 FUN_801e29b4
+ * @source 0x801e29b4 FUN_801e29b4
  */
 u8 func_801e29b4(u8 arg0) {
   u8  choices[8];

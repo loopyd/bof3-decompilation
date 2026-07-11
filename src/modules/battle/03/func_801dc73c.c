@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: conditionally zeroes one local status bit after a random gate,
+/* @behavior conditionally zeroes one local status bit after a random gate,
  * otherwise passing through the signed damage value unchanged.
- * @source: 0x801dc73c FUN_801dc73c
+ * @source 0x801dc73c FUN_801dc73c
  */
 u32 func_801dc73c(s16 arg0, u32 arg1, u32 arg2) {
   u16 flags;

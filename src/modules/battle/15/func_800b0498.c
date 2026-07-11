@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: draws the battle local panel with three mode-specific rectangle
+/* @behavior draws the battle local panel with three mode-specific rectangle
  * regions, a cursor for the active battler, and optional preview placement
  * for the current selection state.
- * @source: 0x800b0498 FUN_800b0498
+ * @source 0x800b0498 FUN_800b0498
  */
 void func_800b0498(void) {
   volatile u8* task_root;

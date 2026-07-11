@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: commits one battle selection-kind flag class into the active slot byte
+/* @behavior commits one battle selection-kind flag class into the active slot byte
  * and routes into the later result/finalize substate corridor.
- * @source: 0x8009761c FUN_8009761c
+ * @source 0x8009761c FUN_8009761c
  */
 void func_8009761c(void) {
   u8* selection_kind_table;

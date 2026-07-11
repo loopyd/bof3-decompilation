@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: draws one local frame, formats the single-byte world value into the
+/* @behavior draws one local frame, formats the single-byte world value into the
  * shared UI text buffer, then queues the matching local label.
- * @source: 0x801f3d18 FUN_801f3d18
+ * @source 0x801f3d18 FUN_801f3d18
  */
 void func_801f3d18(void) {
   func_801f3d88(200, 0xa0, 0x22, 0x14, 1u);

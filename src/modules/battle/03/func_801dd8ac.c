@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: copies the current local battler's visible values and masked flags into
+/* @behavior copies the current local battler's visible values and masked flags into
  * the template record selected by byte `0x13c`.
- * @source: 0x801dd8ac FUN_801dd8ac
+ * @source 0x801dd8ac FUN_801dd8ac
  */
 void func_801dd8ac(u32 arg0) {
   volatile Battle03LocalWork* battle_work;

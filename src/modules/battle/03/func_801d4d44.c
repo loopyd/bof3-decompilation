@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: advances several battler-local countdown bytes and, when the global
+/* @behavior advances several battler-local countdown bytes and, when the global
  * suppression countdown expires, clears the shared `0x10` flag across all
  * currently available battlers.
- * @source: 0x801d4d44 FUN_801d4d44
+ * @source 0x801d4d44 FUN_801d4d44
  */
 void func_801d4d44(void) {
   u8 index;

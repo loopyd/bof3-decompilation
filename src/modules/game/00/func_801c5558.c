@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: ticks an animation-position counter, computes offset-adjusted
+/* @behavior ticks an animation-position counter, computes offset-adjusted
  *        coordinates, and sets a completion flag when the counter crosses a
  *        per-entity threshold.
- * @source: 0x801c5558 FUN_801c5558
+ * @source 0x801c5558 FUN_801c5558
  */
 void func_801c5558(void) {
   struct GameWorkArea* work;

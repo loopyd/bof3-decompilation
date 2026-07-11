@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: sums the active COMMU00 template weights for kinds 10 and 11 into the
+/* @behavior sums the active COMMU00 template weights for kinds 10 and 11 into the
  * two cached byte totals at `0x801455c5` and `0x801455c6`.
- * @source: 0x801f0320 FUN_801f0320
+ * @source 0x801f0320 FUN_801f0320
  */
 void func_801f0320(void) {
   volatile u8*       total;

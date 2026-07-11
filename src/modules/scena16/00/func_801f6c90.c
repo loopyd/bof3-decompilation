@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: dispatches through the primary SCENA16 state table.
- * @source: 0x801f6c90 FUN_801f6c90
+/* @behavior dispatches through the primary SCENA16 state table.
+ * @source 0x801f6c90 FUN_801f6c90
  */
 void func_801f6c90(void) {
   s8*              state_base;

@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: derives one base damage value from the queued base halfword, then
+/* @behavior derives one base damage value from the queued base halfword, then
  * adjusts it through the enemy-side variance path before handing it to
  * `func_801dcd50`.
- * @source: 0x801dcad8 FUN_801dcad8
+ * @source 0x801dcad8 FUN_801dcad8
  */
 u32 func_801dcad8(u8 arg0, u8 arg1, s8 arg2) {
   u32 battler;

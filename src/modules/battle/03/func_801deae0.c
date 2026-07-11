@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: chooses one event id from the small fixed table based on the current
+/* @behavior chooses one event id from the small fixed table based on the current
  * halfword mode at `0x801463d0`, then writes that event into slot `0`.
- * @source: 0x801deae0 FUN_801deae0
+ * @source 0x801deae0 FUN_801deae0
  */
 void func_801deae0(void) {
   const void* src;

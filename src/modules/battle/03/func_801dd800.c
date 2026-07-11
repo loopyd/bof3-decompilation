@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: oscillates the UI byte at `0x80146308` between rising and falling modes
+/* @behavior oscillates the UI byte at `0x80146308` between rising and falling modes
  * using the latch byte at `0x80146304`.
- * @source: 0x801dd800 FUN_801dd800
+ * @source 0x801dd800 FUN_801dd800
  */
 void func_801dd800(void) {
   volatile u8* value_ptr;

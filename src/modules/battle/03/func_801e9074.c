@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: dispatches the current panel-task root byte through its eight-entry
+/* @behavior dispatches the current panel-task root byte through its eight-entry
  * table.
- * @source: 0x801e9074 FUN_801e9074
+ * @source 0x801e9074 FUN_801e9074
  */
 void NO_SIBLING_CALLS func_801e9074(void) {
   struct PanelTaskRootTable {

@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: conditionally zeroes one enemy-side `0x10` status bit after the random
+/* @behavior conditionally zeroes one enemy-side `0x10` status bit after the random
  * gates for the stricter enemy-target path, otherwise passing the signed damage
  * value through unchanged.
- * @source: 0x801dc894 FUN_801dc894
+ * @source 0x801dc894 FUN_801dc894
  */
 u32 func_801dc894(s16 arg0, u8 arg1, u32 arg2) {
   u16 flags;

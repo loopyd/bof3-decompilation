@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: copies the current local battler templates selected by byte `0x13c`
+/* @behavior copies the current local battler templates selected by byte `0x13c`
  * into each active local work record's inline block at offset `0x74`.
- * @source: 0x801dd08c FUN_801dd08c
+ * @source 0x801dd08c FUN_801dd08c
  */
 void func_801dd08c(void) {
   u8 index;

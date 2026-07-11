@@ -9,10 +9,10 @@ void SetDispMask(int mask);
 void func_801ce758(void);
 void func_801ceef4(void);
 
-/* does: boots the LOGO.EXE stream path, polls for skip/completion, then shuts
+/* @behavior boots the LOGO.EXE stream path, polls for skip/completion, then shuts
  * the display branch down.
  * Not authoritative for LOGO.EXE source mapping; see
- * bof3/src/modules/logo/func_801cedfc.c for 0x801cedfc.
+ * src/modules/logo/func_801cedfc.c for 0x801cedfc.
  */
 const SlotTableEntry* slot_table_logo_str(void) {
   volatile u8 scratch[0x18];

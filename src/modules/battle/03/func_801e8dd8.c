@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: derives queued-slot position offsets from either the local or enemy
+/* @behavior derives queued-slot position offsets from either the local or enemy
  * source tables and writes them into the current queued object.
- * @source: 0x801e8dd8 FUN_801e8dd8
+ * @source 0x801e8dd8 FUN_801e8dd8
  */
 void func_801e8dd8(void) {
   volatile u8* slot;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: picks one target id from either the weighted global picker or the local
+/* @behavior picks one target id from either the weighted global picker or the local
  * picker, then stores the chosen result byte globally.
- * @source: 0x801e2948 FUN_801e2948
+ * @source 0x801e2948 FUN_801e2948
  */
 void func_801e2948(s8 arg0) {
   volatile u8* battle_globals;

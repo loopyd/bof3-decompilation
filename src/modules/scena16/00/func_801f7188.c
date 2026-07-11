@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: finalizes the secondary SCENA16 path and exits the local callback.
- * @source: 0x801f7188 FUN_801f7188
+/* @behavior finalizes the secondary SCENA16 path and exits the local callback.
+ * @source 0x801f7188 FUN_801f7188
  */
 void func_801f7188(void) {
   u32 selection;

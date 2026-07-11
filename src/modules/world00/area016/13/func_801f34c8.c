@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: dispatches through the local handler table selected by scratchpad
+/* @behavior dispatches through the local handler table selected by scratchpad
  * state byte `0x02`.
- * @source: 0x801f34c8 FUN_801f34c8
+ * @source 0x801f34c8 FUN_801f34c8
  */
 void func_801f34c8(void) {
   u32 index;

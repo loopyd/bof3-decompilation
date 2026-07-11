@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: projects the current center point and emits a 32-step white G3 fan,
+/* @behavior projects the current center point and emits a 32-step white G3 fan,
  * storing each projected outer point into the shared ring tables.
- * @source: 0x801f318c FUN_801f318c
+ * @source 0x801f318c FUN_801f318c
  */
 void func_801f318c(s16 arg0) {
   s32 point[3];

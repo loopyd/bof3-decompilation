@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: overwrites one event-queue slot directly from the caller's parameters
+/* @behavior overwrites one event-queue slot directly from the caller's parameters
  * and marks the slot active.
- * @source: 0x801de60c FUN_801de60c
+ * @source 0x801de60c FUN_801de60c
  */
 void func_801de60c(u32 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4, u32 arg5) {
   u32 offset;

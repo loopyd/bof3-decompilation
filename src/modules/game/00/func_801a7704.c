@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: stores a scenario index, clears adjacent state, requests SCENA[index],
+/* @behavior stores a scenario index, clears adjacent state, requests SCENA[index],
  * waits for loader readiness, then dispatches into the scenario-local jump
  * table.
- * @source: 0x801a7704 FUN_801a7704
+ * @source 0x801a7704 FUN_801a7704
  */
 void func_801a7704(u8 scenario_index) {
   volatile u8*  scenario_state;

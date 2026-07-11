@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: advances the local scratch state when the loader poll succeeds, then
+/* @behavior advances the local scratch state when the loader poll succeeds, then
  * emits the two fixed world markers through `func_801f3480`.
- * @source: 0x801f31cc FUN_801f31cc
+ * @source 0x801f31cc FUN_801f31cc
  */
 void func_801f31cc(void) {
   s16 point[3];

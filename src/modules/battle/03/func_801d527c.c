@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: closes out one local/enemy `0x4000` path once its countdown reaches
+/* @behavior closes out one local/enemy `0x4000` path once its countdown reaches
  * three, rebuilds the followup state bytes, and queues the common event if any
  * battler transitioned this frame.
- * @source: 0x801d527c FUN_801d527c
+ * @source 0x801d527c FUN_801d527c
  */
 u8 func_801d527c(void) {
   u8 index;

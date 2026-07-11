@@ -3,11 +3,9 @@
 extern GameCallbackSlot* DAT_80143d40;
 
 /* possible name: game_slot_scheduler_yield
- * does: arms the current callback slot with a countdown and forces one
+ * @behavior arms the current callback slot with a countdown and forces one
  * scheduler switch through thread id `0xff000000`.
- * @source: 0x8014b87c FUN_8014b87c
- * @source: docs/specs/runtime/game-overlay.md
- * @source: processed/inventory/inventory.sqlite (function metadata and refs)
+ * @source 0x8014b87c FUN_8014b87c
  */
 void NO_SIBLING_CALLS func_8014b87c(u16 countdown);
 

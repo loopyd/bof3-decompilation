@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: reports whether one enemy battler's `0xa8` value is large enough for
+/* @behavior reports whether one enemy battler's `0xa8` value is large enough for
  * the current average/max threshold pair.
- * @source: 0x801db3e4 FUN_801db3e4
+ * @source 0x801db3e4 FUN_801db3e4
  */
 u8 func_801db3e4(u32 arg0, u32 arg1, u32 arg2) {
   u32           index;

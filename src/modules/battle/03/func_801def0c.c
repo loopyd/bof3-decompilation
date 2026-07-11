@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: resets the current local work record's transient fields, copies the
+/* @behavior resets the current local work record's transient fields, copies the
  * current global selector byte, then stores the shared helper result.
- * @source: 0x801def0c FUN_801def0c
+ * @source 0x801def0c FUN_801def0c
  */
 void func_801def0c(void) {
   BATTLE_LOCAL_SCRATCH_PTR->unk_29 = 4u;

@@ -1,9 +1,8 @@
 #include "internal.h"
 
-/* does: decrements the local timer; once it expires, enters local mode `0`,
+/* @behavior decrements the local timer; once it expires, enters local mode `0`,
  * opens the selection FX, and advances the title state.
- * @source: 0x801d0df0 FUN_801d0df0
- * @source: docs/specs/runtime/game-overlay.md
+ * @source 0x801d0df0 FUN_801d0df0
  */
 void func_801d0df0(void) {
   u16 timer;

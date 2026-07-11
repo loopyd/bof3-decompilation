@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: initializes the three-byte mode tuple at `0x801462e0` for one specific
+/* @behavior initializes the three-byte mode tuple at `0x801462e0` for one specific
  * queued branch.
- * @source: 0x801ddf28 FUN_801ddf28
+ * @source 0x801ddf28 FUN_801ddf28
  */
 void func_801ddf28(void) {
   s32 new_var3;

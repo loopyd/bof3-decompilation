@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: picks the graph-type-specific draw mode, queues one fixed world marker,
+/* @behavior picks the graph-type-specific draw mode, queues one fixed world marker,
  * then emits the textured panel primitive through `func_801f3480`.
- * @source: 0x801f33a8 FUN_801f33a8
+ * @source 0x801f33a8 FUN_801f33a8
  */
 void func_801f33a8(void) {
   s16 point[3];

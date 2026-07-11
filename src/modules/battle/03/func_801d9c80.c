@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: builds one two-corner primitive using the sprite offset table selected
+/* @behavior builds one two-corner primitive using the sprite offset table selected
  * by the shape byte and the palette-derived rgb triple selected by `arg3`.
- * @source: 0x801d9c80 FUN_801d9c80
+ * @source 0x801d9c80 FUN_801d9c80
  */
 void func_801d9c80(s16 arg0, s16 arg1, s32 arg2, s32 arg3) {
   u32 primitive;

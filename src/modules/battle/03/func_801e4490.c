@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: dispatches the current local byte-3 presentation state through its
+/* @behavior dispatches the current local byte-3 presentation state through its
  * table.
- * @source: 0x801e4490 FUN_801e4490
+ * @source 0x801e4490 FUN_801e4490
  */
 void NO_SIBLING_CALLS func_801e4490(void) {
   volatile u8* scratch;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: draws the local status/icon strip set selected by the shared gate bits,
+/* @behavior draws the local status/icon strip set selected by the shared gate bits,
  * current world state helpers, and the marker-mask tables at `0x801f5194`.
- * @source: 0x801f3b00 FUN_801f3b00
+ * @source 0x801f3b00 FUN_801f3b00
  */
 void func_801f3b00(s32 arg0, s32 arg1) {
   s16 x;

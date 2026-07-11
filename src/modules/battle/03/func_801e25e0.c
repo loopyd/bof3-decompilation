@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: derives one enemy target mode from the packed mode byte and current
+/* @behavior derives one enemy target mode from the packed mode byte and current
  * enemy flags, runs one of two target-selection paths, optionally refreshes the
  * current enemy callback, then stores the final mode byte back to enemy work.
- * @source: 0x801e25e0 FUN_801e25e0
+ * @source 0x801e25e0 FUN_801e25e0
  */
 void func_801e25e0(u8 arg0) {
   volatile Battle03EnemyWork* battle_work;

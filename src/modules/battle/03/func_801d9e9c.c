@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: emits a paired horizontal UI bar using one of two tile templates,
+/* @behavior emits a paired horizontal UI bar using one of two tile templates,
  * depending on the final signed mode byte.
- * @source: 0x801d9e9c FUN_801d9e9c
+ * @source 0x801d9e9c FUN_801d9e9c
  */
 void func_801d9e9c(s16 arg0, s16 arg1, u16 arg2, u16 arg3, s8 arg4) {
   u32 primitive;

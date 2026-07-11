@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: dispatches the current panel-task byte-3 state through the four-entry
+/* @behavior dispatches the current panel-task byte-3 state through the four-entry
  * result-ring icon table.
- * @source: 0x801ea7dc FUN_801ea7dc
+ * @source 0x801ea7dc FUN_801ea7dc
  */
 void NO_SIBLING_CALLS func_801ea7dc(void) {
   Battle03Handler table[4];

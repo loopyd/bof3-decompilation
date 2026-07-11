@@ -13,8 +13,8 @@ typedef struct Scena16EffectBank80140000 {
   vu8 byte_6254;
 } Scena16EffectBank80140000;
 
-/* does: resets one local effect bank and marks the frontend flag byte.
- * @source: 0x801f84ac FUN_801f84ac
+/* @behavior resets one local effect bank and marks the frontend flag byte.
+ * @source 0x801f84ac FUN_801f84ac
  */
 void func_801f84ac(void) {
   u8 flags;

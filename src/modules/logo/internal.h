@@ -14,7 +14,6 @@ void logo_stream_boot(void* work_base, u_long disc_lba);
 bool logo_stream_tick(void);
 void logo_stream_shutdown(void);
 
-/* from old bof3/include/bof3/modules/logo.h */
 void func_801cedfc(void);
 
 #endif

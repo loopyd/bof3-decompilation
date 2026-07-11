@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: draws one enemy detail block, switching between a text strip and a
+/* @behavior draws one enemy detail block, switching between a text strip and a
  * numeric fallback, conditionally drawing the status icon only when the owner
  * slot is available.
- * @source: 0x801d8ae4 FUN_801d8ae4
+ * @source 0x801d8ae4 FUN_801d8ae4
  */
 void func_801d8ae4(s32 arg0, s32 arg1, s32 arg2) {
   volatile Battle03EnemyWork* battle_work;

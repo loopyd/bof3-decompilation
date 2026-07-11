@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: arms the active slot for the secondary grid, initializes the
+/* @behavior arms the active slot for the secondary grid, initializes the
  * secondary-selection grid scratch band, then advances back into the shared
  * root update.
- * @source: 0x80098408 FUN_80098408
+ * @source 0x80098408 FUN_80098408
  */
 void func_80098408(void) {
   u8* active_selection_slot;

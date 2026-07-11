@@ -2,9 +2,9 @@
 
 extern volatile Battle03QueuedSlot* DAT_801ec2e0;
 
-/* does: clears the current queued-slot entry's state bytes and late control
+/* @behavior clears the current queued-slot entry's state bytes and late control
  * bytes.
- * @source: 0x801e5988 FUN_801e5988
+ * @source 0x801e5988 FUN_801e5988
  */
 void func_801e5988(void) {
   ((volatile u8*)DAT_801ec2e0)[0x00] = 0u;

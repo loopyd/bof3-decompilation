@@ -8,9 +8,9 @@ extern vu8  DAT_801464a0[];
 extern vu8  DAT_80146840;
 extern s16  DAT_8014681a;
 
-/* does: initializes the EMI/CD bootstrap state before the first active entry
+/* @behavior initializes the EMI/CD bootstrap state before the first active entry
  * is installed.
- * @source: 0x80161f58 FUN_80161f58
+ * @source 0x80161f58 FUN_80161f58
  */
 void func_80161f58(void) {
   s32 i;

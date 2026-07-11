@@ -1,11 +1,10 @@
 #include "internal.h"
 
 /* possible name: game_state_finalize_exit
- * does: closes the current selection FX, restores layout bank `0`, installs
+ * @behavior closes the current selection FX, restores layout bank `0`, installs
  * the alternate frontend callback loop, then exits the active EXE callback
  * thread.
- * @source: 0x801d1000 FUN_801d1000
- * @source: docs/specs/runtime/game-overlay.md
+ * @source 0x801d1000 FUN_801d1000
  */
 void func_801d1000(void) {
   volatile u16* effect_busy;

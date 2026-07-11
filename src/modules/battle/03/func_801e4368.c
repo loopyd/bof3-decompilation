@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: reports whether the current enemy work satisfies the stricter queued
+/* @behavior reports whether the current enemy work satisfies the stricter queued
  * predicate under the current global mode bytes.
- * @source: 0x801e4368 FUN_801e4368
+ * @source 0x801e4368 FUN_801e4368
  */
 u8 func_801e4368(void) {
   if ((BATTLE_ENEMY_FLAGS_82(BATTLE_CURRENT_ENEMY_PTR) & 0x4064u) != 0u) {

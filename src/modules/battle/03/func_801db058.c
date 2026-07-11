@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: computes average/max thresholds for eligible enemy and local battlers,
+/* @behavior computes average/max thresholds for eligible enemy and local battlers,
  * then marks the battlers that pass each threshold pair with the shared
  * `0x8000` state bit.
- * @source: 0x801db058 FUN_801db058
+ * @source 0x801db058 FUN_801db058
  */
 u8 func_801db058(void) {
   u16 total;

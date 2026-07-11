@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: projects one origin point plus two rotated/scaled local offsets from
+/* @behavior projects one origin point plus two rotated/scaled local offsets from
  * the packed work record, then emits a translucent G3 with one grayscale end
  * faded against two black vertices.
- * @source: 0x801f3944 FUN_801f3944
+ * @source 0x801f3944 FUN_801f3944
  */
 void func_801f3944(const void* arg0) {
   const u8* work;

@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: clears the first three bytes of all eight event-queue slots.
- * @source: 0x801de804 FUN_801de804
+/* @behavior clears the first three bytes of all eight event-queue slots.
+ * @source 0x801de804 FUN_801de804
  */
 void func_801de804(void) {
   u8  index;

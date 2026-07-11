@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: initializes one small ui state bundle with fixed halfwords and one
+/* @behavior initializes one small ui state bundle with fixed halfwords and one
  * caller-provided byte.
- * @source: 0x801d9428 FUN_801d9428
+ * @source 0x801d9428 FUN_801d9428
  */
 void func_801d9428(u8 arg0) {
   volatile u8*  state8;

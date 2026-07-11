@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: copies the source quad table into the local work buffer, computes one
+/* @behavior copies the source quad table into the local work buffer, computes one
  * centroid and normalized local vector per slot, then recenters the copied
  * vertices around that centroid for all 27 entries.
- * @source: 0x801f3314 FUN_801f3314
+ * @source 0x801f3314 FUN_801f3314
  */
 void func_801f3314(void) {
   volatile u8*       dst;

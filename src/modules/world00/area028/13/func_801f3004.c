@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: scans the 32-entry AREA028 work table and returns the first slot whose
+/* @behavior scans the 32-entry AREA028 work table and returns the first slot whose
  * active byte at offset `0` is clear, or `NULL` if none are free.
- * @source: 0x801f3004 FUN_801f3004
+ * @source 0x801f3004 FUN_801f3004
  */
 void* func_801f3004(void) {
   u8 i;

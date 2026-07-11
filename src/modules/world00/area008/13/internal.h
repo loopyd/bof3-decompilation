@@ -19,7 +19,6 @@ void       func_8014f800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 void       func_8014e5a0(u8 arg0, u8 arg1);
 void       func_801aeba0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 
-/* from old bof3/include/bof3/modules/world00/area008/13.h */
 void func_801f3c2c(void);
 void func_801f3d18(void);
 void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4);

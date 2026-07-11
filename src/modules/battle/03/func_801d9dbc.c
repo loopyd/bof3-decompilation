@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: emits one colored sprite primitive using the sprite offset table and a
+/* @behavior emits one colored sprite primitive using the sprite offset table and a
  * packed 15-bit color argument.
- * @source: 0x801d9dbc FUN_801d9dbc
+ * @source 0x801d9dbc FUN_801d9dbc
  */
 void func_801d9dbc(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4) {
   u16 sprite_start;

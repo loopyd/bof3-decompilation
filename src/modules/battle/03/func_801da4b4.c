@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: allocates one primitive, assigns the rgb triple directly, stores two
+/* @behavior allocates one primitive, assigns the rgb triple directly, stores two
  * endpoints, then queues it with mode `1`.
- * @source: 0x801da4b4 FUN_801da4b4
+ * @source 0x801da4b4 FUN_801da4b4
  */
 void func_801da4b4(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6) {

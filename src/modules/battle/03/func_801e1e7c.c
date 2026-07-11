@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: dispatches the current default-class local byte through its table.
- * @source: 0x801e1e7c FUN_801e1e7c
+/* @behavior dispatches the current default-class local byte through its table.
+ * @source 0x801e1e7c FUN_801e1e7c
  */
 void NO_SIBLING_CALLS func_801e1e7c(void) {
   Battle03Handler handler;

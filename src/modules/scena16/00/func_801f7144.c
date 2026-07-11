@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: dispatches through the secondary SCENA16 state table.
- * @source: 0x801f7144 FUN_801f7144
+/* @behavior dispatches through the secondary SCENA16 state table.
+ * @source 0x801f7144 FUN_801f7144
  */
 void func_801f7144(void) {
   s8 state;

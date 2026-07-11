@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: resolves one proven BOF3 runtime slot to the original shipped file.
- * @source: 0x80182444 DAT_80182444
+/* @behavior resolves one proven BOF3 runtime slot to the original shipped file.
+ * @source 0x80182444 DAT_80182444
  */
 const SlotTableEntry* slot_table_find(u32 slot_id) {
   size_t index;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: dispatches the current panel-task icon state, refreshes the UI anchor,
+/* @behavior dispatches the current panel-task icon state, refreshes the UI anchor,
  * then submits the icon selected by panel-task byte `0x0a`.
- * @source: 0x801ea650 FUN_801ea650
+ * @source 0x801ea650 FUN_801ea650
  */
 void func_801ea650(void) {
   struct PanelTaskIconTable {

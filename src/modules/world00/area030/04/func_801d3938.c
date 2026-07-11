@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: advances the local scratch vertical offset and routes the next AREA030
+/* @behavior advances the local scratch vertical offset and routes the next AREA030
  * panel draw through the later helper at `0x801d9534`.
- * @source: 0x801d3938 FUN_801d3938
+ * @source 0x801d3938 FUN_801d3938
  */
 void func_801d3938(void) {
   volatile u8* scratch;

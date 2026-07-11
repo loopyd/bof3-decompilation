@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: updates the local battle selection grid cursor, refreshes the preview
+/* @behavior updates the local battle selection grid cursor, refreshes the preview
  * resource ring, and commits or cancels the current kind when the routed
  * buttons fire.
- * @source: 0x8009704c FUN_8009704c
+ * @source 0x8009704c FUN_8009704c
  */
 void func_8009704c(void) {
   volatile u8* active_selection_slot;

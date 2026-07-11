@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: arms the active selection slot for grid input, initializes the local
+/* @behavior arms the active selection slot for grid input, initializes the local
  * grid state, and advances from the confirm branch back into the root
  * selection update.
- * @source: 0x80096fbc FUN_80096fbc
+ * @source 0x80096fbc FUN_80096fbc
  */
 void func_80096fbc(void) {
   u32 active_selection_flags;

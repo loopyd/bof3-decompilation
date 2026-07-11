@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: refreshes the AREA030 HUD panel state, clamps the two tracked x
+/* @behavior refreshes the AREA030 HUD panel state, clamps the two tracked x
  * positions into their visible ranges, then routes the two marker helpers.
- * @source: 0x801d6b28 FUN_801d6b28
+ * @source 0x801d6b28 FUN_801d6b28
  */
 void func_801d6b28(s8 arg0) {
   volatile u8* scratch;

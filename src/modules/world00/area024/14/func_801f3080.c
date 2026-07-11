@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: seeds the local eight-entry work array at `0x800e4800` and calls the
+/* @behavior seeds the local eight-entry work array at `0x800e4800` and calls the
  * per-entry initializer for each `0x28`-byte slot.
- * @source: 0x801f3080 FUN_801f3080
+ * @source 0x801f3080 FUN_801f3080
  */
 void func_801f3080(void) {
   u8 i;

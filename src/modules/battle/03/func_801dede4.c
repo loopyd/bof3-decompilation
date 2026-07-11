@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: returns ready immediately when the local work flags allow it; otherwise
+/* @behavior returns ready immediately when the local work flags allow it; otherwise
  * delegates to the first EXE-side readiness helper.
- * @source: 0x801dede4 FUN_801dede4
+ * @source 0x801dede4 FUN_801dede4
  */
 u8 func_801dede4(void) {
   volatile Battle03LocalWork* battle_work = BATTLE_LOCAL_WORK_PTR;

@@ -49,7 +49,6 @@ void        func_8014f800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 s8          func_80166cb0(s16 arg0, s16 arg1);
 u8          func_801b6610(s16 arg0, s16 arg1);
 
-/* from old bof3/include/bof3/modules/world00/area016/13.h */
 void func_801f3400(void);
 void func_801f34c8(void);
 void func_801f35b8(void);

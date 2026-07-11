@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: advances one local state-0x800 countdown path, restores saved local
+/* @behavior advances one local state-0x800 countdown path, restores saved local
  * coordinates when it completes, and emits one followup event when any battler
  * finished.
- * @source: 0x801d54f8 FUN_801d54f8
+ * @source 0x801d54f8 FUN_801d54f8
  */
 u8 func_801d54f8(void) {
   u8 index;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: reports whether the current enemy work is immediately ready, otherwise
+/* @behavior reports whether the current enemy work is immediately ready, otherwise
  * delegating to the second EXE-side readiness helper.
- * @source: 0x801e3160 FUN_801e3160
+ * @source 0x801e3160 FUN_801e3160
  */
 u8 func_801e3160(void) {
   if (((BATTLE_ENEMY_FLAGS_82(BATTLE_CURRENT_ENEMY_PTR) & 0x44u) == 0u) &&

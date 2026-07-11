@@ -23,9 +23,9 @@ extern vu32 DAT_80146858;
 extern vu32 DAT_8014685c;
 extern void LAB_801621e8(void);
 extern void LAB_80162230(void);
-/* does: initializes EMI streaming state, refreshes the active LBA, and installs
+/* @behavior initializes EMI streaming state, refreshes the active LBA, and installs
  * CD callbacks.
- * @source: 0x80161fdc FUN_80161fdc
+ * @source 0x80161fdc FUN_80161fdc
  */
 void emi_stream_init_slot(u32 slot_id) {
   u32 cd_base;

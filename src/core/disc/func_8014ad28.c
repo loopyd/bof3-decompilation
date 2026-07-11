@@ -7,9 +7,9 @@ void func_8014b3c4(void);
 
 extern u8 DAT_8018b300;
 
-/* does: initializes the post-logo disc/event path and hands control to the
+/* @behavior initializes the post-logo disc/event path and hands control to the
  * first boot-side callback chain.
- * @source: 0x8014ad28 FUN_8014ad28
+ * @source 0x8014ad28 FUN_8014ad28
  */
 void func_8014ad28(void) {
   func_801748e4();

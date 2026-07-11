@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: draws three battle panel slots with labelled cursors. if the current
+/* @behavior draws three battle panel slots with labelled cursors. if the current
  * selection state targets a specific slot, that slot gets a redrawn preview
  * cursor using a dedicated palette row.
- * @source: 0x800b0b0c FUN_800b0b0c
+ * @source 0x800b0b0c FUN_800b0b0c
  */
 void func_800b0b0c(s16 base_x, s16 base_y) {
   volatile u16* palette_table;

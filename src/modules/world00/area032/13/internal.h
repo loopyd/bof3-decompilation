@@ -7,7 +7,6 @@
 
 void func_8014e5a0(u8 arg0, u8 arg1);
 
-/* from old bof3/include/bof3/modules/world00/area032/13.h */
 void func_801f2f04(s16 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4);
 
 #endif

@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: either advances the local AREA030 scratch record from the shared world
+/* @behavior either advances the local AREA030 scratch record from the shared world
  * state or falls back to the game-side helper when the countdown gate is not
  * active.
- * @source: 0x801d2ae0 FUN_801d2ae0
+ * @source 0x801d2ae0 FUN_801d2ae0
  */
 void func_801d2ae0(void) {
   volatile u8* scratch;

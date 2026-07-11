@@ -1,9 +1,8 @@
 #include "internal.h"
 
-/* does: selects layout bank `2`, requests `DEMO.EMI`, waits for the loader,
+/* @behavior selects layout bank `2`, requests `DEMO.EMI`, waits for the loader,
  * seeds cue `0x8d`, then arms the local fade/window state.
- * @source: 0x801d0c90 FUN_801d0c90
- * @source: docs/specs/runtime/game-overlay.md
+ * @source 0x801d0c90 FUN_801d0c90
  */
 void func_801d0c90(void) {
   u16 state;

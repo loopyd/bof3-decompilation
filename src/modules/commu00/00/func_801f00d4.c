@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: finds one free COMMU00 source slot from a random start, copies its
+/* @behavior finds one free COMMU00 source slot from a random start, copies its
  * 5-byte template seed into the active mirror, timestamps it, and appends the
  * slot id to the pending queue.
- * @source: 0x801f00d4 FUN_801f00d4
+ * @source 0x801f00d4 FUN_801f00d4
  */
 void func_801f00d4(void) {
   volatile Commu00ActiveRecord* active_record;

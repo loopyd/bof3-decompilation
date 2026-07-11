@@ -77,7 +77,6 @@ void func_801c1df0(u32 arg0);
 void func_801c601c(u32 arg0);
 void func_801c187c(s32 arg0);
 
-/* from old bof3/include/bof3/modules/scena16/00.h */
 void func_801f6c90(void);
 void func_801f6ccc(void);
 void func_801f6d90(void);

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: returns ready immediately when the current enemy work flags allow it;
+/* @behavior returns ready immediately when the current enemy work flags allow it;
  * otherwise delegates to the first EXE-side readiness helper.
- * @source: 0x801e30f8 FUN_801e30f8
+ * @source 0x801e30f8 FUN_801e30f8
  */
 u8 func_801e30f8(void) {
   u8 ready;

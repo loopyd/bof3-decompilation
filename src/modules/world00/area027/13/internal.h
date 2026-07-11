@@ -24,7 +24,6 @@ void func_8017aa94(void* arg0);
 void func_8017c2d8(void* arg0, s32 arg1, s32 arg2, s32 arg3, void* arg4);
 void func_8014e5a0(u8 arg0, u8 arg1);
 
-/* from old bof3/include/bof3/modules/world00/area027/13.h */
 void func_801f2e3c(void* arg0);
 void func_801f2f0c(const void* arg0);
 void func_801f304c(void* arg0);

@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: projects one local sprite work entry, centers a translucent FT4 on the
+/* @behavior projects one local sprite work entry, centers a translucent FT4 on the
  * projected point using the half-size derived from `+0x24`, then queues the
  * matching local effect.
- * @source: 0x801f2df8 FUN_801f2df8
+ * @source 0x801f2df8 FUN_801f2df8
  */
 void func_801f2df8(const void* arg0) {
   s16                             screen[2];

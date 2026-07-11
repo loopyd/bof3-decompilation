@@ -20,9 +20,9 @@ extern vu32 DAT_80146518[];
 extern vu8  DAT_801464a0[];
 extern vu32 DAT_80146808;
 
-/* does: services the active EMI CD-ready callback, validates the sector source,
+/* @behavior services the active EMI CD-ready callback, validates the sector source,
  * dispatches the current loader phase, and advances the streaming ring.
- * @source: 0x80162230 FUN_80162230
+ * @source 0x80162230 FUN_80162230
  */
 void func_80162230(u8 status, u8* result) {
   u16 state;

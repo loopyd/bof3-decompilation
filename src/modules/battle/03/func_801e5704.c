@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: conditionally raises the global `0x80` bit and allocates one queued
+/* @behavior conditionally raises the global `0x80` bit and allocates one queued
  * slot when the current enemy scratch flags allow it.
- * @source: 0x801e5704 FUN_801e5704
+ * @source 0x801e5704 FUN_801e5704
  */
 void func_801e5704(void) {
   if (((BATTLE_ENEMY_FLAGS_80(BATTLE_CURRENT_ENEMY_PTR) & 8u) != 0u) &&

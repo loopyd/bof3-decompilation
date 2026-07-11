@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: emits one colored sprite primitive using the sprite offset table and
+/* @behavior emits one colored sprite primitive using the sprite offset table and
  * the three scratch rgb bytes captured in scratchpad.
- * @source: 0x801d99ac FUN_801d99ac
+ * @source 0x801d99ac FUN_801d99ac
  */
 void func_801d99ac(s16 arg0, s16 arg1, s32 arg2) {
   u16 primitive_id;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: draws the two fixed header sprites and one local label resource when
+/* @behavior draws the two fixed header sprites and one local label resource when
  * the shared world-ui gate bits are enabled.
- * @source: 0x801f40c4 FUN_801f40c4
+ * @source 0x801f40c4 FUN_801f40c4
  */
 void func_801f40c4(s16 arg0, s16 arg1) {
   s16 y;

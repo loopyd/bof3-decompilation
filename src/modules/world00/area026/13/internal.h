@@ -11,7 +11,6 @@ void func_801afe18(void* arg0);
 void func_801aff04(const void* arg0, void* arg1);
 void func_80155a08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 
-/* from old bof3/include/bof3/modules/world00/area026/13.h */
 void func_801f2d5c(const s32* arg0, s32 arg1);
 void func_801f2e04(const s32* arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4);
 

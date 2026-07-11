@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: draws the local textured frame in four translucent FT4 strips, then
+/* @behavior draws the local textured frame in four translucent FT4 strips, then
  * queues the matching inner fill rectangle.
- * @source: 0x801f3d88 FUN_801f3d88
+ * @source 0x801f3d88 FUN_801f3d88
  */
 void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
   volatile RECT*     texture_window;

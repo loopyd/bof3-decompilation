@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: emits one 24x8 numeric/icon strip selected by the low byte of `arg3`
+/* @behavior emits one 24x8 numeric/icon strip selected by the low byte of `arg3`
  * and palette slot `arg2`.
- * @source: 0x801d9804 FUN_801d9804
+ * @source 0x801d9804 FUN_801d9804
  */
 void func_801d9804(s16 arg0, s16 arg1, s32 arg2, s32 arg3) {
   u32 packet;

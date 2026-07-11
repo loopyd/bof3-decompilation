@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: initializes the primary battle selection-grid scratch band from the
+/* @behavior initializes the primary battle selection-grid scratch band from the
  * current active message slot and the saved group/page/cursor bytes.
- * @source: 0x80097ec0 FUN_80097ec0
+ * @source 0x80097ec0 FUN_80097ec0
  */
 void func_80097ec0(void) {
   volatile u8* state;

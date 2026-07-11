@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: remaps the scratch pointer to the local line table, seeds one matrix,
+/* @behavior remaps the scratch pointer to the local line table, seeds one matrix,
  * then projects and queues each transformed line strip selected by the count
  * byte behind `0x80147aac`.
- * @source: 0x801f3e48 FUN_801f3e48
+ * @source 0x801f3e48 FUN_801f3e48
  */
 s32 func_801f3e48(u8 arg0) {
   volatile u8*      saved_scratch;

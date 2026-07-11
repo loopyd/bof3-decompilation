@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: chooses between the global weighted picker and the local picker based
+/* @behavior chooses between the global weighted picker and the local picker based
  * on one global mode byte.
- * @source: 0x801e2d4c FUN_801e2d4c
+ * @source 0x801e2d4c FUN_801e2d4c
  */
 u8 func_801e2d4c(s8 arg0) {
   u8 value;

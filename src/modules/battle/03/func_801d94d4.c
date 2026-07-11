@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: formats a short decimal string into the shared UI buffer, then emits a
+/* @behavior formats a short decimal string into the shared UI buffer, then emits a
  * run of 6x5 glyphs using palette slot `arg2` and the alternate template chosen
  * by `arg3`.
- * @source: 0x801d94d4 FUN_801d94d4
+ * @source 0x801d94d4 FUN_801d94d4
  */
 void func_801d94d4(s16 arg0, u16 arg1, s32 arg2, s16 arg3) {
   u8  index;

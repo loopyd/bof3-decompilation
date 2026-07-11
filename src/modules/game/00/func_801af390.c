@@ -5,11 +5,11 @@ u16  func_8017a620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8017c2d8(u32 arg0, s32 arg1, s32 arg2, u16 arg3, s32 arg4);
 void func_8014e5a0(u8 arg0, u8 arg1);
 
-/* does: iterates a packed sprite-record table (3 bytes per entry: x-offset,
+/* @behavior iterates a packed sprite-record table (3 bytes per entry: x-offset,
  * y-offset, sprite_id, terminated by sprite_id == 0xff), applies signed
  * offsets shifted by 3 to the base coordinates, and draws each sprite via
  * func_801af2a0.
- * @source: 0x801af390 FUN_801af390
+ * @source 0x801af390 FUN_801af390
  */
 void func_801af390(s16 base_x, s16 base_y, const u8* record_table, u8 flags) {
   s16 x;

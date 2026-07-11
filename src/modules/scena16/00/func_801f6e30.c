@@ -18,8 +18,8 @@ typedef struct Scena16Bank80150000 {
   vu16 half_932c;
 } Scena16Bank80150000;
 
-/* does: seeds one routed setup path and enters secondary state 3 on success.
- * @source: 0x801f6e30 FUN_801f6e30
+/* @behavior seeds one routed setup path and enters secondary state 3 on success.
+ * @source 0x801f6e30 FUN_801f6e30
  */
 void func_801f6e30(void) {
   u32 arg0;

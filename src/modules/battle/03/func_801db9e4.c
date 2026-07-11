@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: reports whether one battler slot is display-eligible under the current
+/* @behavior reports whether one battler slot is display-eligible under the current
  * owner mode byte, using the lighter local/enemy rejection mask set.
- * @source: 0x801db9e4 FUN_801db9e4
+ * @source 0x801db9e4 FUN_801db9e4
  */
 u8 func_801db9e4(u32 arg0) {
   if (arg0 < 3u) {

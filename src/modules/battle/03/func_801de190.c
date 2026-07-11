@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: marks one battler bit in the shared pending-bitset at `0x801463c2`.
- * @source: 0x801de190 FUN_801de190
+/* @behavior marks one battler bit in the shared pending-bitset at `0x801463c2`.
+ * @source 0x801de190 FUN_801de190
  */
 extern u16 DAT_801463c2;
 

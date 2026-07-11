@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: appends one triple `(byte, byte, word)` into the 16-entry UI ring and
+/* @behavior appends one triple `(byte, byte, word)` into the 16-entry UI ring and
  * advances the ring tail.
- * @source: 0x801de8c0 FUN_801de8c0
+ * @source 0x801de8c0 FUN_801de8c0
  */
 void func_801de8c0(s8 arg0, s8 arg1, u32 arg2) {
   u8 index;

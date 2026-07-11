@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: draws one local battler detail block with icon, numeric readouts, and a
+/* @behavior draws one local battler detail block with icon, numeric readouts, and a
  * two-stage shaded border based on the battler's local flags and values.
- * @source: 0x801d8df8 FUN_801d8df8
+ * @source 0x801d8df8 FUN_801d8df8
  */
 void func_801d8df8(s32 arg0, s32 arg1, u32 arg2) {
   volatile Battle03LocalWork* battle_work;

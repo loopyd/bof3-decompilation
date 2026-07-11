@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: emits one textured 16x8 strip with UV orientation selected by
+/* @behavior emits one textured 16x8 strip with UV orientation selected by
  * `arg2`, using the graph-type-specific tpage.
- * @source: 0x801d2c34 FUN_801d2c34
+ * @source 0x801d2c34 FUN_801d2c34
  */
 void func_801d2c34(s16 arg0, s16 arg1, s8 arg2, u8 arg3) {
   POLY_FT4* primitive;

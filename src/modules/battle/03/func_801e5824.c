@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: walks the 0x30 queued slot records, makes each active entry current,
+/* @behavior walks the 0x30 queued slot records, makes each active entry current,
  * stores its word at `0x74`, and dispatches through the queued-slot table.
- * @source: 0x801e5824 FUN_801e5824
+ * @source 0x801e5824 FUN_801e5824
  */
 void func_801e5824(void) {
   Battle03Handler table[4];

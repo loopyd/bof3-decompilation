@@ -12,9 +12,9 @@ extern s32 DAT_80145e24;
 extern s32 DAT_80145e28;
 extern s32 DAT_80145e2c;
 
-/* does: opens and enables the boot-side event set used after the logo path
+/* @behavior opens and enables the boot-side event set used after the logo path
  * hands back to the disc/runtime layer.
- * @source: 0x8014b1a4 FUN_8014b1a4
+ * @source 0x8014b1a4 FUN_8014b1a4
  */
 void func_8014b1a4(void) {
   func_8017ee0c();

@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: writes the pair of local bytes selected from one of two tables, emits a
+/* @behavior writes the pair of local bytes selected from one of two tables, emits a
  * shared effect id, reruns the common readiness helper, then advances the local
  * state byte.
- * @source: 0x801df914 FUN_801df914
+ * @source 0x801df914 FUN_801df914
  */
 void func_801df914(void) {
   u32 value;

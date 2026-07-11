@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: seeds one empty/default task label in the active task-slot table.
- * @source: 0x801f0bf4 FUN_801f0bf4
+/* @behavior seeds one empty/default task label in the active task-slot table.
+ * @source 0x801f0bf4 FUN_801f0bf4
  */
 void func_801f0bf4(u8 task_index) {
   volatile Commu00TaskSlot* task_slot;

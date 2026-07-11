@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: allocates one alternate primitive variant, assigns the rgb triple,
+/* @behavior allocates one alternate primitive variant, assigns the rgb triple,
  * stores two endpoints, then queues it with mode `1`.
- * @source: 0x801da5a8 FUN_801da5a8
+ * @source 0x801da5a8 FUN_801da5a8
  */
 void func_801da5a8(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6) {

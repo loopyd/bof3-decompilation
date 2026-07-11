@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: clears the small local/enemy action scratch flags for one battler and
+/* @behavior clears the small local/enemy action scratch flags for one battler and
  * removes it from the ranked owner list if present.
- * @source: 0x801dd14c FUN_801dd14c
+ * @source 0x801dd14c FUN_801dd14c
  */
 void func_801dd14c(u8 arg0) {
   u8 index;

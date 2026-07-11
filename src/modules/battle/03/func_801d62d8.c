@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: advances one local `0x2` movement path, either promoting it directly to
+/* @behavior advances one local `0x2` movement path, either promoting it directly to
  * a presentation state or converting the remaining distance into a queued
  * countdown substate.
- * @source: 0x801d62d8 FUN_801d62d8
+ * @source 0x801d62d8 FUN_801d62d8
  */
 u8 func_801d62d8(void) {
   u8 index;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: selects a target/result byte from the current enemy state and chosen
+/* @behavior selects a target/result byte from the current enemy state and chosen
  * enemy kind, delegating special cases to several smaller picker helpers.
- * @source: 0x801e2a88 FUN_801e2a88
+ * @source 0x801e2a88 FUN_801e2a88
  */
 s8 func_801e2a88(u8 arg0) {
   volatile Battle03EnemyWork* battle_work;

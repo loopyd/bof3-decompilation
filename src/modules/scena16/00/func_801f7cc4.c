@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: runs the secondary SCENA16 controller rooted at state 4.
- * @source: 0x801f7cc4 FUN_801f7cc4
+/* @behavior runs the secondary SCENA16 controller rooted at state 4.
+ * @source 0x801f7cc4 FUN_801f7cc4
  */
 void func_801f7cc4(void) {
   u8 advance_state;

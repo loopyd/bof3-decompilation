@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: applies the type-6 record-specific task-slot variant.
- * @source: 0x801f0e1c
+/* @behavior applies the type-6 record-specific task-slot variant.
+ * @source 0x801f0e1c
  */
 void func_801f0e1c(u8 task_index, u8 record_kind_index) {
   volatile Commu00TaskSlot* task_slot;

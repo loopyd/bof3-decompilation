@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: advances one local `0x40` countdown path, clearing the flag and queuing
+/* @behavior advances one local `0x40` countdown path, clearing the flag and queuing
  * a followup event once one or more battlers complete.
- * @source: 0x801d5658 FUN_801d5658
+ * @source 0x801d5658 FUN_801d5658
  */
 u8 func_801d5658(void) {
   u8 index;

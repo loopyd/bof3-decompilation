@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: prepares one UI/frame primitive group using the current palette-derived
+/* @behavior prepares one UI/frame primitive group using the current palette-derived
  * rgb triple, then emits the surrounding lines/boxes for that anchor.
- * @source: 0x801d7eb0 FUN_801d7eb0
+ * @source 0x801d7eb0 FUN_801d7eb0
  */
 void func_801d7eb0(s32 arg0, s32 arg1) {
   s16 width;

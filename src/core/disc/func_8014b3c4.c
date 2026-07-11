@@ -15,9 +15,9 @@ extern const void* PTR_DAT_8017f4b8[];
 extern const void* PTR_s_EXCEPTION_8017f504;
 extern const void* PTR_s_INTERRRUPT_8017f508[];
 
-/* does: displays the boot exception register dump and loops forever updating
+/* @behavior displays the boot exception register dump and loops forever updating
  * the double-buffered debug screen.
- * @source: 0x8014b3c4 FUN_8014b3c4
+ * @source 0x8014b3c4 FUN_8014b3c4
  */
 void func_8014b3c4(void) {
   const u32*   exception_frame;

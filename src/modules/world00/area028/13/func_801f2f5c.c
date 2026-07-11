@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: seeds the local 32-entry AREA028 work table and clears the active byte
+/* @behavior seeds the local 32-entry AREA028 work table and clears the active byte
  * at offset `0` for each `0x10`-byte slot.
- * @source: 0x801f2f5c FUN_801f2f5c
+ * @source 0x801f2f5c FUN_801f2f5c
  */
 void func_801f2f5c(void) {
   u8 i;

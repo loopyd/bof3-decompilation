@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: emits one 16x16 sprite marker with UV selected from the 4-entry table
+/* @behavior emits one 16x16 sprite marker with UV selected from the 4-entry table
  * at `0x801e1d0c`, using the current global phase bits.
- * @source: 0x801d1818 FUN_801d1818
+ * @source 0x801d1818 FUN_801d1818
  */
 void func_801d1818(s16 arg0, s16 arg1, u8 arg2) {
   u32 primitive;

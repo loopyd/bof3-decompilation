@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: once the secondary grid gate clears, restores the battle owner tuple
+/* @behavior once the secondary grid gate clears, restores the battle owner tuple
  * to the shared selection root and reapplies the local panel-task band reset
  * helper.
- * @source: 0x800989b4 FUN_800989b4
+ * @source 0x800989b4 FUN_800989b4
  */
 void NO_SIBLING_CALLS func_800989b4(void) {
   if (BATTLE_SELECTION_LOCKED != 0u) {

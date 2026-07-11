@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: submits one enemy battler script block through the common helper rooted
+/* @behavior submits one enemy battler script block through the common helper rooted
  * at `0x801490d8`.
- * @source: 0x801dea18 FUN_801dea18
+ * @source 0x801dea18 FUN_801dea18
  */
 void func_801dea18(u32 arg0) {
   arg0 &= 0xff;

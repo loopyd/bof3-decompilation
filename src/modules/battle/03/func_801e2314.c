@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: reads one or two bytes from the current enemy script pointer at `0xec`,
+/* @behavior reads one or two bytes from the current enemy script pointer at `0xec`,
  * forwards the low 7 bits through the shared effect helper, and stores the high
  * bit result into scratch byte `0x2a`.
- * @source: 0x801e2314 FUN_801e2314
+ * @source 0x801e2314 FUN_801e2314
  */
 void func_801e2314(u32 arg0) {
   volatile u8* script_ptr;

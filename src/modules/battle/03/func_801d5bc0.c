@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: resets one local/enemy `0x80` path, zeroes saved values, rebuilds the
+/* @behavior resets one local/enemy `0x80` path, zeroes saved values, rebuilds the
  * followup state bytes, and queues the common event when needed.
- * @source: 0x801d5bc0 FUN_801d5bc0
+ * @source 0x801d5bc0 FUN_801d5bc0
  */
 u8 func_801d5bc0(void) {
   u8 index;

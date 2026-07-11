@@ -1,10 +1,9 @@
 #include "internal.h"
 
 /* possible name: front_scene_pre_dispatch_gate
- * does: runs before the main GAME.EMI entry-1 state handler each frame and
+ * @behavior runs before the main GAME.EMI entry-1 state handler each frame and
  * redirects early start-button transitions into either state `2` or state `7`.
- * @source: 0x801d104c FUN_801d104c
- * @source: docs/specs/runtime/game-overlay.md
+ * @source 0x801d104c FUN_801d104c
  */
 void func_801d104c(void) {
   volatile u8* front_gate = (volatile u8*)0x80143c33u;

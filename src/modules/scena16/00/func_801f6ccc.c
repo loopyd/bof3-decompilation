@@ -9,8 +9,8 @@ extern vu32 DAT_80146864;
 extern vs8  DAT_80146872;
 extern vu8  DAT_8014832e;
 
-/* does: boots the primary SCENA16 state and waits for slot 6 to finish.
- * @source: 0x801f6ccc FUN_801f6ccc
+/* @behavior boots the primary SCENA16 state and waits for slot 6 to finish.
+ * @source 0x801f6ccc FUN_801f6ccc
  */
 void func_801f6ccc(void) {
   func_801c1df0(0u);

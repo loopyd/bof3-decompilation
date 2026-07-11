@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: initializes one battle-ui state bundle from the caller's byte and the
+/* @behavior initializes one battle-ui state bundle from the caller's byte and the
  * current global mode byte.
- * @source: 0x801d9304 FUN_801d9304
+ * @source 0x801d9304 FUN_801d9304
  */
 void func_801d9304(u8 arg0) {
   u8  mode;

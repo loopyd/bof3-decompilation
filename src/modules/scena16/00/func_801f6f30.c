@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: stages one routed resource/object setup sequence for area path 2.
- * @source: 0x801f6f30 FUN_801f6f30
+/* @behavior stages one routed resource/object setup sequence for area path 2.
+ * @source 0x801f6f30 FUN_801f6f30
  */
 void func_801f6f30(void) {
   if (func_8015b5d4(BOF3_SCENA16_DAT_8014686c, 2) == 0) {

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: walks the four local panel-task slots rooted at `0x80148330` for task
+/* @behavior walks the four local panel-task slots rooted at `0x80148330` for task
  * ids `0x10..0x13` and resets each one through the shared task reset helper.
- * @source: 0x8009b20c FUN_8009b20c
+ * @source 0x8009b20c FUN_8009b20c
  */
 void __attribute__((noinline)) func_8009b20c(void) {
   u8 panel_task_id;

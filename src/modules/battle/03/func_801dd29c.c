@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: advances through the ranked owner list, assigns the next valid owner to
+/* @behavior advances through the ranked owner list, assigns the next valid owner to
  * `0x801462ee`, and marks that owner's local bytes `0x118/0x119` for followup
  * processing.
- * @source: 0x801dd29c FUN_801dd29c
+ * @source 0x801dd29c FUN_801dd29c
  */
 void func_801dd29c(void) {
   volatile s8* global_byte_6303;

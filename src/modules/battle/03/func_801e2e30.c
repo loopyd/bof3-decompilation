@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: chooses one enabled slot by weighted random selection, using the two-
+/* @behavior chooses one enabled slot by weighted random selection, using the two-
  * or three-entry weight table selected by the global mode byte.
- * @source: 0x801e2e30 FUN_801e2e30
+ * @source 0x801e2e30 FUN_801e2e30
  */
 u8 func_801e2e30(void) {
   u8  total;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: emits one 8x8 sprite marker at the supplied point using fixed UV/clut
+/* @behavior emits one 8x8 sprite marker at the supplied point using fixed UV/clut
  * values for the AREA030 HUD path.
- * @source: 0x801d18cc FUN_801d18cc
+ * @source 0x801d18cc FUN_801d18cc
  */
 void func_801d18cc(s16 arg0, s16 arg1, u8 arg2) {
   u32 primitive;

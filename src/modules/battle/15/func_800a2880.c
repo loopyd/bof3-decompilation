@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: applies damage modifiers for a battler's attack, incorporating element
+/* @behavior applies damage modifiers for a battler's attack, incorporating element
  * affinity, randomness, defended status, and battle formation effects.
  * returns the final damage value as s16.
- * @source: 0x800a2880 FUN_800a2880
+ * @source 0x800a2880 FUN_800a2880
  */
 s16 func_800a2880(u8 battler_index, u16 base_value, u8 element_flag) {
   volatile s16* modifier_table;

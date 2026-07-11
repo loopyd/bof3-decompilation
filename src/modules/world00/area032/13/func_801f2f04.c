@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: allocates one translucent draw-mode primitive, then emits a 32-step
+/* @behavior allocates one translucent draw-mode primitive, then emits a 32-step
  * gouraud triangle ring around `(arg0, arg1)` using `arg2` as the radius.
- * @source: 0x801f2f04 FUN_801f2f04
+ * @source 0x801f2f04 FUN_801f2f04
  */
 void func_801f2f04(s16 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4) {
   u32 primitive;

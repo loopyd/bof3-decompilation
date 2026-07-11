@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: applies one signed damage packet to a local or enemy target, updates
+/* @behavior applies one signed damage packet to a local or enemy target, updates
  * current values and followup flags, and runs the local special-case hooks for
  * certain source states.
- * @source: 0x801dbb78 FUN_801dbb78
+ * @source 0x801dbb78 FUN_801dbb78
  */
 u32 func_801dbb78(u8 arg0, u8 arg1) {
   volatile Battle03LocalWork* local_work;

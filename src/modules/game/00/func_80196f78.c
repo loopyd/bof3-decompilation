@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: alternate GAME.EMI entry-0 callback loop installed by the title
+/* @behavior alternate GAME.EMI entry-0 callback loop installed by the title
  * finalize path; resets local loop state, then dispatches through the entry-0
  * callback table.
- * @source: 0x80196f78 FUN_80196f78
+ * @source 0x80196f78 FUN_80196f78
  */
 void func_80196f78(void) {
   DAT_80143b90 = 0u;

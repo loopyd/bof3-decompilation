@@ -5,10 +5,10 @@ typedef struct Battle03RankLocalEntry {
   u16 index;
 } Battle03RankLocalEntry;
 
-/* does: ranks the currently display-eligible local battlers by their `0x98`
+/* @behavior ranks the currently display-eligible local battlers by their `0x98`
  * value, then writes the surviving sorted indices into the three-byte owner
  * selection list at `0x801462f6`.
- * @source: 0x801da7d4 FUN_801da7d4
+ * @source 0x801da7d4 FUN_801da7d4
  */
 void func_801da7d4(void) {
   Battle03RankLocalEntry entries[3];

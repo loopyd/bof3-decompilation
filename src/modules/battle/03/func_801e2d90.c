@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: returns the unblocked local work index with the smallest halfword at
+/* @behavior returns the unblocked local work index with the smallest halfword at
  * offset `0x88` across the first three local records.
- * @source: 0x801e2d90 FUN_801e2d90
+ * @source 0x801e2d90 FUN_801e2d90
  */
 u8 func_801e2d90(void) {
   u8  result;

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: dispatches the current saved-preview/result task state through the
+/* @behavior dispatches the current saved-preview/result task state through the
  * fixed five-entry handler table.
- * @source: 0x801e7818 FUN_801e7818
+ * @source 0x801e7818 FUN_801e7818
  */
 void NO_SIBLING_CALLS func_801e7818(void) {
   Battle03Handler const* savedPreviewResultTable;

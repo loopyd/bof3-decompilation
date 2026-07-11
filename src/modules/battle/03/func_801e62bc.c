@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: rolls the current queued-slot digit counter and redraws each digit with
+/* @behavior rolls the current queued-slot digit counter and redraws each digit with
  * `func_801d9684`, using the queued-slot x/y/count fields.
- * @source: 0x801e62bc FUN_801e62bc
+ * @source 0x801e62bc FUN_801e62bc
  */
 void func_801e62bc(u8 arg0) {
   s16 counter;

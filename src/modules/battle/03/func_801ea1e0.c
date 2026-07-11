@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: dispatches through the fixed three-entry panel-task forwarding table,
+/* @behavior dispatches through the fixed three-entry panel-task forwarding table,
  * preserving the caller's argument block for the selected callee.
- * @source: 0x801ea1e0 FUN_801ea1e0
+ * @source 0x801ea1e0 FUN_801ea1e0
  */
 void func_801ea1e0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5,
                    s32 arg6, u8* selector) {

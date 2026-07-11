@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: advances the local state/velocity table across 27 slots, then feeds
+/* @behavior advances the local state/velocity table across 27 slots, then feeds
  * each updated slot through the shared transform helper.
- * @source: 0x801f362c FUN_801f362c
+ * @source 0x801f362c FUN_801f362c
  */
 void func_801f362c(void) {
   volatile s16*      state_base;

@@ -5,9 +5,9 @@ void func_8014e5a0(u32 arg0, u32 arg1);
 
 extern SPRT_8* DAT_8014598c;
 
-/* does: emits one 8x8 glyph sprite for each non-space byte in the string,
+/* @behavior emits one 8x8 glyph sprite for each non-space byte in the string,
  * advancing eight pixels per byte and wrapping on newline.
- * @source: 0x80150098 FUN_80150098
+ * @source 0x80150098 FUN_80150098
  */
 void func_80150098(s16 x, s16 y, u32 clut, const u8* text) {
   SPRT_8* primitive;

@@ -4,10 +4,10 @@ extern u8    DAT_80143d44;
 extern u8*   DAT_8014598c;
 extern void* DAT_801459d0[];
 
-/* does: appends the current primitive to one OT head and advances the shared
+/* @behavior appends the current primitive to one OT head and advances the shared
  * primitive cursor when the requested byte count still fits in the active
  * buffer.
- * @source: 0x8014e5a0 FUN_8014e5a0
+ * @source 0x8014e5a0 FUN_8014e5a0
  */
 void func_8014e5a0(u32 ot_index, u32 primitive_size) {
   u8* primitive;

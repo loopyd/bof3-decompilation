@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: dispatches the finalize-selection substate byte through the function
+/* @behavior dispatches the finalize-selection substate byte through the function
  * table rooted at `battle_selection_finalize_substate_table`.
- * @source: 0x80097d1c FUN_80097d1c
+ * @source 0x80097d1c FUN_80097d1c
  */
 void func_80097d1c(void) {
   volatile u8*                           substate_base;

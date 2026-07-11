@@ -1,8 +1,8 @@
 #include "internal.h"
 
 /* possible name: emi_ready
- * does: returns true only when the EXE-side EMI loader reached ready state 3.
- * @source: 0x80162d00 FUN_80162d00
+ * @behavior returns true only when the EXE-side EMI loader reached ready state 3.
+ * @source 0x80162d00 FUN_80162d00
  */
 bool func_80162d00(void) {
   volatile const u8* emi_state_base;

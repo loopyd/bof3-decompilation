@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: clears paired local/enemy flag bits and associated countdown bytes for
+/* @behavior clears paired local/enemy flag bits and associated countdown bytes for
  * the current battler, except under two specific global mode/kind combinations.
- * @source: 0x801d4850 FUN_801d4850
+ * @source 0x801d4850 FUN_801d4850
  */
 void func_801d4850(void) {
   if ((BATTLE_GLOBAL_BYTE_6375 != 4u) || (BATTLE_GLOBAL_HALF_63C0 != 0x27u)) {

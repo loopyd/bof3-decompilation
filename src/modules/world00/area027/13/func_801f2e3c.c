@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: shifts the 32-entry projected trail by one slot, then recomputes the
+/* @behavior shifts the 32-entry projected trail by one slot, then recomputes the
  * current projected head from the base position, scale, and angle.
- * @source: 0x801f2e3c FUN_801f2e3c
+ * @source 0x801f2e3c FUN_801f2e3c
  */
 void func_801f2e3c(void* arg0) {
   u8* work;

@@ -1,6 +1,6 @@
-/* does: returns `0xff` under one global mode byte, otherwise forwards a
+/* @behavior returns `0xff` under one global mode byte, otherwise forwards a
  * selection index offset by `3` into the local picker helper.
- * @source: 0x801e30b8 FUN_801e30b8
+ * @source 0x801e30b8 FUN_801e30b8
  */
 __asm__(
     "\n\

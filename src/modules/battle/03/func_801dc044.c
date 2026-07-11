@@ -4,9 +4,9 @@ typedef struct Battle03DamageScaleTable {
   u8 values[8];
 } __attribute__((packed)) Battle03DamageScaleTable;
 
-/* does: computes one final signed damage value from source/target state, queued
+/* @behavior computes one final signed damage value from source/target state, queued
  * base damage, status flags, and the current scratchpad damage modifiers.
- * @source: 0x801dc044 FUN_801dc044
+ * @source 0x801dc044 FUN_801dc044
  */
 u32 func_801dc044(u8 arg0, u8 arg1, u16 arg2) {
   Battle03DamageScaleTable damage_scale_table;

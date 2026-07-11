@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: refreshes the current active AREA028 slots, retiring any whose scale
+/* @behavior refreshes the current active AREA028 slots, retiring any whose scale
  * falls below `0x80`, then spawns up to two new slots into the first free
  * entries.
- * @source: 0x801f3060 FUN_801f3060
+ * @source 0x801f3060 FUN_801f3060
  */
 void func_801f3060(void) {
   u8 scratch[0x20];

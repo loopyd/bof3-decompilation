@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: draws one full battler status strip for the current local battler
+/* @behavior draws one full battler status strip for the current local battler
  * count, including frame pieces, bars, numeric readouts, and the surrounding
  * border.
- * @source: 0x801d750c FUN_801d750c
+ * @source 0x801d750c FUN_801d750c
  */
 void func_801d750c(s32 arg0, s32 arg1) {
   u8  index;

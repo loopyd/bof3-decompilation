@@ -6,9 +6,9 @@ void func_8017a904(u32 arg0, s32 arg1);
 u16  func_8017a6f0(s32 arg0, s32 arg1);
 void func_8014e5a0(u8 arg0, u8 arg1);
 
-/* does: draws one sprite by filling a GT quad primitive from a rect-table
+/* @behavior draws one sprite by filling a GT quad primitive from a rect-table
  * entry, selecting CLUT by the bit-1 flag, then appending to the OT.
- * @source: 0x801af2a0 FUN_801af2a0
+ * @source 0x801af2a0 FUN_801af2a0
  */
 void func_801af2a0(s16 x, s16 y, u8 sprite_id, u8 flags) {
   u8* rect;

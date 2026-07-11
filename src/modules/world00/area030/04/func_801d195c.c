@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: draws the AREA030 footer marker stack, including the fixed gradient
+/* @behavior draws the AREA030 footer marker stack, including the fixed gradient
  * bar, the moving sprite marker, one flat quad, and an optional 8x8 icon.
- * @source: 0x801d195c FUN_801d195c
+ * @source 0x801d195c FUN_801d195c
  */
 void func_801d195c(s16 arg0, s16 arg1) {
   s16 icon_y;

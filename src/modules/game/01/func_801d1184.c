@@ -1,9 +1,8 @@
 #include "internal.h"
 
-/* does: closes the current selection-specific EXE effect and clears the active
+/* @behavior closes the current selection-specific EXE effect and clears the active
  * selection byte.
- * @source: 0x801d1184 FUN_801d1184
- * @source: docs/specs/runtime/game-overlay.md
+ * @source 0x801d1184 FUN_801d1184
  */
 void __attribute__((noinline)) func_801d1184(void) {
   u32 selection = (u32)GAME_FRONT_SELECTION;

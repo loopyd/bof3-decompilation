@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: projects one radial step pair, then emits four translucent `POLY_F3`
+/* @behavior projects one radial step pair, then emits four translucent `POLY_F3`
  * slices around the source point using the supplied local offsets.
- * @source: 0x801f2e04 FUN_801f2e04
+ * @source 0x801f2e04 FUN_801f2e04
  */
 void func_801f2e04(const s32* arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4) {
   s32      point[3];

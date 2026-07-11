@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: allocates one slot-store entry and copies the current scratch object's
+/* @behavior allocates one slot-store entry and copies the current scratch object's
  * pointer plus words `0x34/0x38/0x3c` into that entry.
- * @source: 0x801ddaf0 FUN_801ddaf0
+ * @source 0x801ddaf0 FUN_801ddaf0
  */
 void func_801ddaf0(void) {
   u32 index;

@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* possible name: battle_panel_condition_mask_is_ready
- * does: validates one local panel rule mask against the current battler state
+ * @behavior validates one local panel rule mask against the current battler state
  * and the active panel-rule pass mode bytes.
- * @source: 0x8009c8ac FUN_8009c8ac
+ * @source 0x8009c8ac FUN_8009c8ac
  */
 u8 func_8009c8ac(u16 required_mask) {
   volatile u8* current_battler;

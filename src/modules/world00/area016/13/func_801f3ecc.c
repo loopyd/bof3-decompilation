@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: builds one transformed local G4 panel around the supplied screen
+/* @behavior builds one transformed local G4 panel around the supplied screen
  * anchor using the rotation seed at `0x801492d8`.
- * @source: 0x801f3ecc FUN_801f3ecc
+ * @source 0x801f3ecc FUN_801f3ecc
  */
 void func_801f3ecc(s16 arg0, s16 arg1) {
   MATRIX        matrix;

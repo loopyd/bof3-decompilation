@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: draws one compact frame using the shared border helpers and the current
+/* @behavior draws one compact frame using the shared border helpers and the current
  * palette-derived rgb triple.
- * @source: 0x801d8270 FUN_801d8270
+ * @source 0x801d8270 FUN_801d8270
  */
 void func_801d8270(s32 arg0, s32 arg1) {
   u16 color;

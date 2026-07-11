@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: dispatches the current result-ui aux state byte through one of two
+/* @behavior dispatches the current result-ui aux state byte through one of two
  * fixed handlers.
- * @source: 0x801e862c FUN_801e862c
+ * @source 0x801e862c FUN_801e862c
  */
 void NO_SIBLING_CALLS func_801e862c(void) {
   Battle03Handler handler;

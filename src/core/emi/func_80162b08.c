@@ -18,9 +18,9 @@ extern vu32             DAT_8014645c;
 extern vu16             DAT_80146460;
 extern vu32             DAT_8014646c;
 
-/* does: selects one pending EMI transfer slot and copies its staged transfer
+/* @behavior selects one pending EMI transfer slot and copies its staged transfer
  * state into the active loader registers.
- * @source: 0x80162b08 FUN_80162b08
+ * @source 0x80162b08 FUN_80162b08
  */
 s32 func_80162b08(u8 slot) {
   u8               slot_index;

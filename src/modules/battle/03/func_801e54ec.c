@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: finalizes one current enemy scratch event, updates shared counters,
+/* @behavior finalizes one current enemy scratch event, updates shared counters,
  * clears ownership/state bits, and runs the follow-up ranking/event helpers.
- * @source: 0x801e54ec FUN_801e54ec
+ * @source 0x801e54ec FUN_801e54ec
  */
 void func_801e54ec(void) {
   BATTLE_ENEMY_SCRATCH_PTR->unk_00 |= 0x40u;

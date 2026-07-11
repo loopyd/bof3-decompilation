@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: applies the type-8 record-specific task-slot variant.
- * @source: 0x801f0f08
+/* @behavior applies the type-8 record-specific task-slot variant.
+ * @source 0x801f0f08
  */
 void func_801f0f08(u8 source_index, u8 task_index, u8 record_kind_index) {
   u32 delta;

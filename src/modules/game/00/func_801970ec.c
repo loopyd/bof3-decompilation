@@ -25,9 +25,9 @@ void func_8019fa28(u16 selection_seed, u32 context_a, u32 context_b,
                    u8 context_kind);
 void func_801c1400(u32 arg0);
 
-/* does: resets front-state globals, then seeds the authored selection byte from
+/* @behavior resets front-state globals, then seeds the authored selection byte from
  * the active EXE-side selection when one already exists.
- * @source: 0x801970ec FUN_801970ec
+ * @source 0x801970ec FUN_801970ec
  */
 void func_801970ec(void) {
   u16 selection_seed;

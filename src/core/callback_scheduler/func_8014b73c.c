@@ -4,11 +4,9 @@ extern volatile GameCallbackSlot* DAT_80143d40;
 extern GameCallbackSlot           DAT_80143b40;
 
 /* possible name: game_slot_scheduler_tick
- * does: walks the EXE callback slot table, opens ready threads, decrements
+ * @behavior walks the EXE callback slot table, opens ready threads, decrements
  * yield timers, and switches into any thread whose slot reached dispatch state.
- * @source: 0x8014b73c FUN_8014b73c
- * @source: docs/specs/runtime/game-overlay.md
- * @source: docs/specs/runtime/boot-sequence.md
+ * @source 0x8014b73c FUN_8014b73c
  */
 void func_8014b73c(void) {
   u16                        new_var;

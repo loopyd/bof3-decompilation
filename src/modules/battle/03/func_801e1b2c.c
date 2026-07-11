@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: conditionally runs the current scratch-object reset helper when global
+/* @behavior conditionally runs the current scratch-object reset helper when global
  * bit `0x4` is set.
- * @source: 0x801e1b2c FUN_801e1b2c
+ * @source 0x801e1b2c FUN_801e1b2c
  */
 void func_801e1b2c(void) {
   volatile u8* battle_global_base;

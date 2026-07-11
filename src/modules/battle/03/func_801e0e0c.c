@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: reports whether all active local battlers satisfy the strict ready
+/* @behavior reports whether all active local battlers satisfy the strict ready
  * predicate used by the later queued branch.
- * @source: 0x801e0e0c FUN_801e0e0c
+ * @source 0x801e0e0c FUN_801e0e0c
  */
 u8 func_801e0e0c(void) {
   u8 index;

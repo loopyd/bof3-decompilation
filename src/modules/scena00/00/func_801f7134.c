@@ -1,10 +1,10 @@
 #include "internal.h"
 
-/* does: selects and positions a 3d model based on game progression state.
+/* @behavior selects and positions a 3d model based on game progression state.
  * determines a colour palette id from the current chapter, configures a
  * sprite object with size/position/colour data from scratchpad tables,
  * and submits it for rendering.
- * @source: 0x801f7134 FUN_801f7134
+ * @source 0x801f7134 FUN_801f7134
  */
 void func_801f7134(s32 chapter_id) {
   volatile void* global_obj;

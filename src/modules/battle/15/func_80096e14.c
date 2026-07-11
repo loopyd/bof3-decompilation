@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: begins the slot-selection input branch, arms the active slot/message
+/* @behavior begins the slot-selection input branch, arms the active slot/message
  * side bytes, clears the local selection tuple, and advances the shared battle
  * progression byte.
- * @source: 0x80096e14 FUN_80096e14
+ * @source 0x80096e14 FUN_80096e14
  */
 void func_80096e14(void) {
   volatile u8* battle_selection_state;

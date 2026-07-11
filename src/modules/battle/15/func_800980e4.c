@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: reseeds the active selection slot, stages attack-name slot 2, clears
+/* @behavior reseeds the active selection slot, stages attack-name slot 2, clears
  * the local ring-reset halfword, and advances the top-level selection state.
- * @source: 0x800980e4 FUN_800980e4
+ * @source 0x800980e4 FUN_800980e4
  */
 void func_800980e4(void) {
   *BATTLE_ACTIVE_SELECTION_SLOT_PTR = battle_resolve_selection_slot(3u);

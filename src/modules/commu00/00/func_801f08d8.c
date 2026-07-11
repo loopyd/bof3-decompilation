@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: seeds one record-driven task slot, dispatches its type-specific setup,
+/* @behavior seeds one record-driven task slot, dispatches its type-specific setup,
  * and advances the per-record-kind variant rotation.
- * @source: 0x801f08d8 FUN_801f08d8
+ * @source 0x801f08d8 FUN_801f08d8
  */
 void func_801f08d8(u8 source_index, u8 task_index) {
   const volatile Commu00ActiveRecord* source_record;

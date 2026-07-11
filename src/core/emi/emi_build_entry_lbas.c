@@ -1,7 +1,7 @@
 #include "internal.h"
 
 /* possible name: emi_build_entry_lba_table
- * does: derives per-entry LBAs from the base header LBA and TOC sizes.
+ * @behavior derives per-entry LBAs from the base header LBA and TOC sizes.
  */
 void emi_build_entry_lbas(u32 base_lba, const EmiTocEntry* entries,
                           size_t entry_count, u32* entry_lbas) {

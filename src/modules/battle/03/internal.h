@@ -491,7 +491,6 @@ u32  func_801e590c(u32 arg0, u32 arg1);
 u8   func_801e2e30(void);
 s16  func_8015477c(s32 arg0, s32 arg1);
 
-/* from old bof3/include/bof3/modules/battle/03.h */
 void func_801dece0(void);
 void func_801ded54(void);
 u8   func_801dede4(void);

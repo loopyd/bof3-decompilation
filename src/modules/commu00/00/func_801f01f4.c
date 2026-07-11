@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: finds one active COMMU00 source slot from a random start, prefers not
+/* @behavior finds one active COMMU00 source slot from a random start, prefers not
  * to clear kind-9 rows until one full wrap, then appends the removed slot id
  * to the removal queue.
- * @source: 0x801f01f4 FUN_801f01f4
+ * @source 0x801f01f4 FUN_801f01f4
  */
 void func_801f01f4(void) {
   s32 active_offset;

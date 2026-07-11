@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: scans one six-entry threshold row and returns the first index whose
+/* @behavior scans one six-entry threshold row and returns the first index whose
  * value exceeds the input byte, or `6` if none match.
- * @source: 0x801db434 FUN_801db434
+ * @source 0x801db434 FUN_801db434
  */
 u32 func_801db434(u8 arg0, u32 arg1) {
   const volatile u8* row;

@@ -1,7 +1,7 @@
 #include "internal.h"
 
-/* does: applies the type-13 record-specific task-slot variant.
- * @source: 0x801f1254
+/* @behavior applies the type-13 record-specific task-slot variant.
+ * @source 0x801f1254
  */
 void func_801f1254(u8 task_index) {
   COMMU00_SCRATCH_SLOT->active = 1u;

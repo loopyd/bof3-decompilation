@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: copies each active local/enemy battler into a queued slot entry when
+/* @behavior copies each active local/enemy battler into a queued slot entry when
  * its `0x8` flag is clear, then initializes the queued-slot state bytes.
- * @source: 0x801de1d4 FUN_801de1d4
+ * @source 0x801de1d4 FUN_801de1d4
  */
 void func_801de1d4(void) {
   u8                           index;

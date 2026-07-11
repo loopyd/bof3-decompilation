@@ -1,8 +1,8 @@
 #include "internal.h"
 
-/* does: scans ids `3..10` and returns the unblocked id with the smallest enemy
+/* @behavior scans ids `3..10` and returns the unblocked id with the smallest enemy
  * halfword at offset `0x94`.
- * @source: 0x801e2ca4 FUN_801e2ca4
+ * @source 0x801e2ca4 FUN_801e2ca4
  */
 u8 func_801e2ca4(void) {
   u8  result;

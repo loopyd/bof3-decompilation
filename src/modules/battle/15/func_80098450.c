@@ -1,9 +1,9 @@
 #include "internal.h"
 
-/* does: updates the secondary battle selection grid cursor, refreshes the
+/* @behavior updates the secondary battle selection grid cursor, refreshes the
  * preview ring handle, handles confirm/cancel, and routes into either the
  * prompt branch or the next shared owner state.
- * @source: 0x80098450 FUN_80098450
+ * @source 0x80098450 FUN_80098450
  */
 void func_80098450(void) {
   volatile u8* active_message_slot;
