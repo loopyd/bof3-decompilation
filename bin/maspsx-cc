@@ -1,264 +1,237 @@
-#!/bin/bash
-set -euo pipefail
+#!/bin/sh
+# maspsx-cc — PSX C compiler wrapper (GCC 2.7.2 → maspsx ASPSX translator → GNU as)
+#
+# Usage: maspsx-cc [--profile NAME|PATH] [--psyq-root PATH] [--psyq-version V]
+#                  [-Wa,--aspsx-version=V] [-c] [-E] [-P] [-dD] [-I DIR] [-D DEF]
+#                  [-o OUTPUT] [gcc-flags...] source.{c,s,S}
+#
+# Profiles are TOML files under config/compiler/ (looked up relative to the
+# repository root). The default is 'capcom97-bof3'.
+#
+# Extra unknown flags are passed transparently to GCC after the profile flags
+# so that the "last flag wins" rule lets you override e.g. -O2 with -O1.
+#
+# POSIX sh. Requires maspsx-profile (Python + toml) for profile loading.
 
-REBOF3_SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REBOF3_ROOT_DIR="$(cd "${REBOF3_SCRIPT_DIR}/.." && pwd)"
-REBOF3_PYTHON_BIN="${REBOF3_ROOT_DIR}/.venv/bin/python"
-REBOF3_MASPSX_SCRIPT="${REBOF3_ROOT_DIR}/third_party/maspsx/maspsx.py"
-REBOF3_COMPILER_ROOT="${REBOF3_ROOT_DIR}/toolchains/gcc-2.7.2-psx"
-REBOF3_TOOLCHAIN_BIN="${REBOF3_ROOT_DIR}/toolchains/psn00b_toolchain/bin"
-REBOF3_DEFAULT_PSYQ_VERSION="4.7"
-REBOF3_DEFAULT_PROFILE="capcom97-bof3"
-REBOF3_CAPCOM97_PROFILE="capcom97-bof3"
-REBOF3_CAPCOM97_ASPSX_VERSION="2.56"
-REBOF3_AS_LOCAL_NAME="mipsel-none-elf-as"
-REBOF3_PROFILE_FLAGS=(-O2 -G0 -funsigned-char -msoft-float -gcoff)
-REBOF3_ASSEMBLER_FLAGS=(-G0 -EL -mips1)
-REBOF3_MODE_COMPILE="compile"
-REBOF3_MODE_PREPROCESS="preprocess"
-REBOF3_USAGE="Usage: $0 [--profile PROFILE] [--psyq-version VERSION | --psyq-root PATH] [-Wa,--aspsx-version=VERSION] [-c | -E] source.c -o output.o [flags...]"
+set -euf
 
-require_value_arg() {
-	local option="$1"
-	local value="${2-}"
-	if [[ -z "${value}" ]]; then
-		echo "${option} requires a value" >&2
-		echo "${REBOF3_USAGE}" >&2
-		exit 1
-	fi
-}
+# --- locate ourselves ---
 
-set_unique_value() {
-	local variable="$1"
-	local label="$2"
-	local value="$3"
-	local current_value="${!variable}"
+MASPSX_SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REBOF3_ROOT_DIR="$(cd "$MASPSX_SCRIPT_DIR/.." && pwd)"
+MASPSX_LIB="${MASPSX_SCRIPT_DIR}/maspsx-lib"
+MASPSX_PROFILE_BIN="${MASPSX_SCRIPT_DIR}/maspsx-profile"
+MASPSX_USAGE="Usage: $0 [--profile NAME|PATH] [--psyq-root PATH] [--psyq-version V] [-Wa,--aspsx-version=V] [-c] [-E] source.{c,s,S} -o output.o [flags...]"
 
-	if [[ -n "${current_value}" && "${current_value}" != "${value}" ]]; then
-		echo "conflicting ${label}: ${current_value} vs ${value}" >&2
-		exit 1
-	fi
+. "$MASPSX_LIB"
 
-	printf -v "${variable}" '%s' "${value}"
-}
+# --- default profile ---
 
-normalize_path_value() {
-	local value="$1"
+MASPSX_DEFAULT_PROFILE="${REBOF3_ROOT_DIR}/config/compiler/capcom97-bof3.toml"
 
-	if [[ -d "${value}" ]]; then
-		cd "${value}" && pwd
-		return 0
-	fi
-	if [[ "${value}" == /* ]]; then
-		printf '%s\n' "${value}"
-	else
-		printf '%s/%s\n' "$(pwd)" "${value}"
-	fi
-}
+# --- parse CLI ---
 
-set_compile_mode() {
-	if [[ "${MODE}" == "${REBOF3_MODE_PREPROCESS}" ]]; then
-		echo "conflicting modes: -c cannot be combined with -E" >&2
-		exit 1
-	fi
-	MODE="${REBOF3_MODE_COMPILE}"
-	COMPILE_MODE_REQUESTED=1
-}
-
-set_preprocess_mode() {
-	if [[ "${COMPILE_MODE_REQUESTED}" -eq 1 ]]; then
-		echo "conflicting modes: -E cannot be combined with -c" >&2
-		exit 1
-	fi
-	MODE="${REBOF3_MODE_PREPROCESS}"
-}
-
-require_project_python() {
-	if [[ -x "${REBOF3_PYTHON_BIN}" ]]; then
-		return 0
-	fi
-
-	echo "missing project Python environment: ${REBOF3_PYTHON_BIN}" >&2
-	echo "run 'just venv' from ${REBOF3_ROOT_DIR}" >&2
-	exit 1
-}
-
-require_maspsx() {
-	if [[ -f "${REBOF3_MASPSX_SCRIPT}" ]]; then
-		return 0
-	fi
-
-	echo "missing maspsx script: ${REBOF3_MASPSX_SCRIPT}" >&2
-	echo "run 'just setup'" >&2
-	exit 1
-}
-
-resolve_toolchain_tool() {
-	local local_name="$1"
-	local candidate="${REBOF3_TOOLCHAIN_BIN}/${local_name}"
-
-	if [[ -x "${candidate}" ]]; then
-		printf '%s\n' "${candidate}"
-		return 0
-	fi
-
-	echo "missing repo-local toolchain binary: ${candidate}" >&2
-	echo "run 'just setup'" >&2
-	exit 1
-}
-
-resolve_c_compiler() {
-	local compiler_root="${REBOF3_COMPILER_ROOT}"
-	if [[ -x "${compiler_root}/gcc" ]]; then
-		printf '%s\n' "${compiler_root}/gcc"
-		return 0
-	fi
-
-	echo "missing canonical PSX C compiler: ${compiler_root}/gcc" >&2
-	echo "run 'just setup'" >&2
-	exit 1
-}
-
-resolve_profile_settings() {
-	case "$1" in
-		"${REBOF3_CAPCOM97_PROFILE}")
-			if [[ -z "${PSYQ_ROOT}" ]]; then
-				PSYQ_ROOT="${REBOF3_ROOT_DIR}/toolchains/psyq/${REBOF3_DEFAULT_PSYQ_VERSION}"
-			fi
-			if [[ -z "${ASPSX_VERSION}" ]]; then
-				ASPSX_VERSION="${REBOF3_CAPCOM97_ASPSX_VERSION}"
-			fi
-			;;
-		*)
-			echo "unsupported BOF3 PSX profile: $1" >&2
-			exit 1
-			;;
-	esac
-	PSYQ_INCLUDE="${PSYQ_ROOT}/include"
-}
-
-require_project_python
-require_maspsx
-
-GCC="$(resolve_c_compiler)"
-GCC_DIR="$(cd "$(dirname "${GCC}")" && pwd)"
-AS="$(resolve_toolchain_tool "${REBOF3_AS_LOCAL_NAME}")"
-PROFILE="${REBOF3_DEFAULT_PROFILE}"
+PROFILE="${MASPSX_DEFAULT_PROFILE}"
 PSYQ_ROOT=""
 ASPSX_VERSION=""
-MODE="${REBOF3_MODE_COMPILE}"
-COMPILE_MODE_REQUESTED=0
+MODE="compile"
+_COMPILE_REQUESTED=0
 SOURCE=""
 OUTPUT=""
-EXTRA_INCLUDE_FLAGS=()
-EXTRA_FLAGS=()
-PREPROCESS_FLAGS=()
+EXTRA_FLAGS=""
+EXTRA_INC_FLAGS=""
+PREPROCESS_FLAGS=""
 
-while [[ $# -gt 0 ]]; do
-	case $1 in
-		--profile)
-			require_value_arg "$1" "${2-}"
-			PROFILE="$2"
-			shift 2
-			;;
-		--profile=*)
-			PROFILE="${1#--profile=}"
-			shift
-			;;
-		--psyq-root)
-			require_value_arg "$1" "${2-}"
-			set_unique_value PSYQ_ROOT "PsyQ root" "$(normalize_path_value "$2")"
-			shift 2
-			;;
-		--psyq-root=*)
-			set_unique_value PSYQ_ROOT "PsyQ root" "$(normalize_path_value "${1#--psyq-root=}")"
-			shift
-			;;
-		--psyq-version)
-			require_value_arg "$1" "${2-}"
-			set_unique_value PSYQ_ROOT "PsyQ root" "${REBOF3_ROOT_DIR}/toolchains/psyq/$2"
-			shift 2
-			;;
-		--psyq-version=*)
-			set_unique_value PSYQ_ROOT "PsyQ root" "${REBOF3_ROOT_DIR}/toolchains/psyq/${1#--psyq-version=}"
-			shift
-			;;
-		-Wa,--aspsx-version=*)
-			set_unique_value ASPSX_VERSION "ASPSX version" "${1#-Wa,--aspsx-version=}"
-			shift
-			;;
-		--aspsx-version)
-			require_value_arg "$1" "${2-}"
-			set_unique_value ASPSX_VERSION "ASPSX version" "$2"
-			shift 2
-			;;
-		--aspsx-version=*)
-			set_unique_value ASPSX_VERSION "ASPSX version" "${1#--aspsx-version=}"
-			shift
-			;;
-		-o)
-			require_value_arg "$1" "${2-}"
-			OUTPUT="$2"
-			shift 2
-			;;
-		-c)
-			set_compile_mode
-			shift
-			;;
-		-E)
-			set_preprocess_mode
-			PREPROCESS_FLAGS+=("$1")
-			shift
-			;;
-		-P|-dD)
-			PREPROCESS_FLAGS+=("$1")
-			shift
-			;;
-		*)
-			if [[ "$1" == -* ]] || [[ -n "${SOURCE}" ]]; then
-				EXTRA_FLAGS+=("$1")
-			else
-				SOURCE="$1"
-			fi
-			shift
-			;;
-	esac
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --profile)
+            arg_required "$1" "${2-}"
+            PROFILE="$2"
+            shift 2
+            ;;
+        --profile=*)
+            PROFILE="$(option_value "$1" "--profile=")"
+            shift
+            ;;
+        --psyq-root)
+            arg_required "$1" "${2-}"
+            PSYQ_ROOT="$2"
+            shift 2
+            ;;
+        --psyq-root=*)
+            PSYQ_ROOT="$(option_value "$1" "--psyq-root=")"
+            shift
+            ;;
+        --psyq-version)
+            arg_required "$1" "${2-}"
+            PSYQ_ROOT="${REBOF3_ROOT_DIR}/toolchains/psyq/$2"
+            shift 2
+            ;;
+        --psyq-version=*)
+            PSYQ_ROOT="${REBOF3_ROOT_DIR}/toolchains/psyq/$(option_value "$1" "--psyq-version=")"
+            shift
+            ;;
+        -Wa,--aspsx-version=*)
+            ASPSX_VERSION="$(option_value "$1" "-Wa,--aspsx-version=")"
+            shift
+            ;;
+        --aspsx-version)
+            arg_required "$1" "${2-}"
+            ASPSX_VERSION="$2"
+            shift 2
+            ;;
+        --aspsx-version=*)
+            ASPSX_VERSION="$(option_value "$1" "--aspsx-version=")"
+            shift
+            ;;
+        -o)
+            arg_required "$1" "${2-}"
+            OUTPUT="$2"
+            shift 2
+            ;;
+        -c)
+            if [ "$MODE" = "preprocess" ]; then
+                die "-c cannot be combined with -E"
+            fi
+            MODE="compile"
+            _COMPILE_REQUESTED=1
+            shift
+            ;;
+        -E)
+            if [ "$_COMPILE_REQUESTED" = "1" ]; then
+                die "-E cannot be combined with -c"
+            fi
+            MODE="preprocess"
+            PREPROCESS_FLAGS="$PREPROCESS_FLAGS $1"
+            shift
+            ;;
+        -P|-dD)
+            PREPROCESS_FLAGS="$PREPROCESS_FLAGS $1"
+            shift
+            ;;
+        -I)
+            arg_required "$1" "${2-}"
+            EXTRA_INC_FLAGS="$EXTRA_INC_FLAGS -I$2"
+            shift 2
+            ;;
+        -I*)
+            EXTRA_INC_FLAGS="$EXTRA_INC_FLAGS $1"
+            shift
+            ;;
+        -D)
+            arg_required "$1" "${2-}"
+            EXTRA_FLAGS="$EXTRA_FLAGS -D$2"
+            shift 2
+            ;;
+        -D*)
+            EXTRA_FLAGS="$EXTRA_FLAGS $1"
+            shift
+            ;;
+        -*)
+            EXTRA_FLAGS="$EXTRA_FLAGS $1"
+            shift
+            ;;
+        *)
+            if [ -n "$SOURCE" ]; then
+                die "multiple source files: $SOURCE and $1"
+            fi
+            SOURCE="$1"
+            shift
+            ;;
+    esac
 done
 
-resolve_profile_settings "${PROFILE}"
+# --- profile resolution ---
 
-if [[ -z "${SOURCE}" ]] || [[ -z "${OUTPUT}" ]]; then
-	echo "${REBOF3_USAGE}" >&2
-	exit 1
+if [ "$PROFILE" != "$MASPSX_DEFAULT_PROFILE" ]; then
+    # If it looks like a path (contains / or ends with .toml), use as-is.
+    # Otherwise look it up as a profile name under config/compiler/.
+    case "$PROFILE" in
+        */*|*.toml)
+            # already a path
+            ;;
+        *)
+            PROFILE="${REBOF3_ROOT_DIR}/config/compiler/${PROFILE}.toml"
+            ;;
+    esac
 fi
 
-if [[ ! -d "${PSYQ_INCLUDE}" ]]; then
-	echo "missing PsyQ include root for profile ${PROFILE}: ${PSYQ_INCLUDE}" >&2
-	exit 1
+if [ ! -f "$PROFILE" ]; then
+    die "profile not found: $PROFILE"
 fi
 
-export PATH="${GCC_DIR}:${REBOF3_TOOLCHAIN_BIN}"
+# --- validate ---
+
+if [ -z "$SOURCE" ] || [ -z "$OUTPUT" ]; then
+    echo "$MASPSX_USAGE" >&2
+    exit 1
+fi
+
+if [ ! -f "$SOURCE" ]; then
+    die "source file not found: $SOURCE"
+fi
+
+# --- load profile ---
+
+MASPSX_PYTHON="${REBOF3_ROOT_DIR}/.venv/bin/python"
+if [ ! -x "$MASPSX_PYTHON" ]; then
+    die "Python venv not found at $MASPSX_PYTHON (run 'just venv')"
+fi
+
+eval "$("$MASPSX_PYTHON" "$MASPSX_PROFILE_BIN" --root "$REBOF3_ROOT_DIR" "$PROFILE")"
+
+# --- resolve tools ---
+
+GCC="$(resolve_tool "gcc" "$CC_PATH")"
+GCC_DIR="$(dirname "$GCC")"
+AS_BIN="${AS_TOOLCHAIN_BIN}/${AS_NAME}"
+AS="$(resolve_tool "as" "$AS_BIN")"
+
+if [ -z "$PSYQ_ROOT" ]; then
+    PSYQ_ROOT="${REBOF3_ROOT_DIR}/toolchains/psyq/${PSYQ_VERSION}"
+fi
+PSYQ_INCLUDE="${PSYQ_ROOT}/include"
+if [ ! -d "$PSYQ_INCLUDE" ]; then
+    die "missing PsyQ include root: $PSYQ_INCLUDE"
+fi
+
+if [ -z "$ASPSX_VERSION" ]; then
+    ASPSX_VERSION="${ASPSX_VERSION_DEFAULT:-2.56}"
+fi
+
+# --- tool environment ---
+
+export PATH="${GCC_DIR}:${AS_TOOLCHAIN_BIN}:${PATH}"
 export GCC_EXEC_PREFIX="${GCC_DIR}/"
 export COMPILER_PATH="${GCC_DIR}"
 
-EXTRA_INCLUDE_FLAGS+=("-I${PSYQ_INCLUDE}")
+# --- dispatch ---
 
-if [[ "${MODE}" == "${REBOF3_MODE_PREPROCESS}" ]]; then
-	"${GCC}" "${EXTRA_INCLUDE_FLAGS[@]}" "${REBOF3_PROFILE_FLAGS[@]}" "${EXTRA_FLAGS[@]}" \
-		"${PREPROCESS_FLAGS[@]}" -o "${OUTPUT}" "${SOURCE}"
-	exit 0
+if [ "$MODE" = "preprocess" ]; then
+    # shellcheck disable=SC2086
+    "$GCC" -I"$PSYQ_INCLUDE" $EXTRA_INC_FLAGS $CC_PROFILE_FLAGS $EXTRA_FLAGS \
+        $PREPROCESS_FLAGS -o "$OUTPUT" "$SOURCE"
+    exit 0
 fi
 
-case "${SOURCE}" in
-	*.s|*.S)
-		"${AS}" "${REBOF3_ASSEMBLER_FLAGS[@]}" -o "${OUTPUT}" "${SOURCE}"
-		exit 0
-		;;
+case "$SOURCE" in
+    *.s|*.S)
+        # shellcheck disable=SC2086
+        "$AS" $AS_FLAGS -o "$OUTPUT" "$SOURCE"
+        exit 0
+        ;;
 esac
+
+# --- compile C ---
 
 ASM_FILE="${OUTPUT}.s"
 
-"${GCC}" "${EXTRA_INCLUDE_FLAGS[@]}" "${REBOF3_PROFILE_FLAGS[@]}" "${EXTRA_FLAGS[@]}" -S -o "${ASM_FILE}" "${SOURCE}"
+# shellcheck disable=SC2086
+"$GCC" -I"$PSYQ_INCLUDE" $EXTRA_INC_FLAGS $CC_PROFILE_FLAGS $EXTRA_FLAGS \
+    -S -o "$ASM_FILE" "$SOURCE" || die "gcc compile failed"
 
-"${REBOF3_PYTHON_BIN}" "${REBOF3_MASPSX_SCRIPT}" --aspsx-version="${ASPSX_VERSION}" "${ASM_FILE}" | \
-	"${AS}" "${REBOF3_ASSEMBLER_FLAGS[@]}" -o "${OUTPUT}" -
+# !pipefail equivalent for POSIX sh
+if ! "$MASPSX_PYTHON" "$MASPSX_SCRIPT" --aspsx-version="$ASPSX_VERSION" "$ASM_FILE" | \
+    "$AS" $AS_FLAGS -o "$OUTPUT" - ; then
+    die "maspsx translation or assembly failed"
+fi

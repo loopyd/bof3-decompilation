@@ -1,0 +1,68 @@
+# maspsx-lib — shared POSIX sh functions for maspsx-cc
+#
+# Source this file; do not execute it directly.
+
+# --- error handling ---
+
+die() {
+    echo "maspsx-cc: $*" >&2
+    exit 1
+}
+
+# --- tool resolution ---
+
+resolve_tool() {
+    # resolve_tool NAME PATH MUST_EXIST
+    # Prints the absolute path. Exits if MUST_EXIST is 1 and the file
+    # is not executable.
+    _rt_name="$1"
+    _rt_path="$2"
+    _rt_must_exist="${3:-1}"
+
+    if [ ! -x "$_rt_path" ] && [ "$_rt_must_exist" = "1" ]; then
+        die "$_rt_name not found at $_rt_path (run 'just setup')"
+    fi
+    printf '%s\n' "$_rt_path"
+}
+
+# --- directory helpers ---
+
+script_dir() {
+    # script_dir — print the absolute directory of the currently executing script.
+    _sd_path="$1"
+    ( cd "$(dirname "$_sd_path")" && pwd )
+}
+
+repo_root() {
+    # repo_root — print the absolute repository root given the script directory.
+    ( cd "$1/.." && pwd )
+}
+
+# --- flag helpers ---
+# Profile flags are stored as space-separated strings (CC_PROFILE_FLAGS,
+# AS_FLAGS, EXTRA_FLAGS). Unquoted expansion ($FLAGS without quotes)
+# splits on IFS (space/tab/newline) in POSIX sh. Use set -f (noglob) to
+# prevent accidental filename expansion of flags like -G0.
+
+# --- argument parsing helpers ---
+
+arg_required() {
+    # arg_required OPTION NEXT_ARG — fail if NEXT_ARG is empty.
+    if [ $# -lt 2 ] || [ -z "$2" ]; then
+        die "'$1' requires a value"
+    fi
+}
+
+option_value() {
+    # option_value ARG PREFIX
+    # Extract the value from --prefix=value style argument.
+    printf '%s\n' "$1" | sed "s|^$2||"
+}
+
+has_prefix() {
+    # has_prefix ARG PREFIX — test if ARG starts with PREFIX.
+    case "$1" in
+        "$2"*) return 0 ;;
+        *) return 1 ;;
+    esac
+}
