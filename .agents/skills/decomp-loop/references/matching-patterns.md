@@ -44,13 +44,50 @@ one source property at a time and compare the first meaningful mismatch.
   register use; prefer the period-correct SDK form when it matches behavior.
 - Keep opaque data binary-backed until its type and ownership are evidenced.
 
+## Compiler scheduling limits ("hard tail")
+
+Even when a function is structurally converged (correct CFG, calls, size,
+types), the PsyQ/GCC scheduler can reorder argument evaluation, register moves,
+and delay-slot fill relative to the original binary. This is a known gcc
+register-allocation–bound class of mismatch observed in other PSX matching
+decompilations:
+
+- **NFSHS-PSX-decomp** (Caesar0007, splat + maspsx + real PsyQ cc1 2.8.0)
+  explicitly documents *"5 near-misses left, all gcc register-allocation /
+  induction-variable bound — the hard tail"* — functions that resist 100%
+  match even with the original compiler.
+  <https://github.com/Caesar0007/NFSHS-PSX-decomp> (README.md §Status,
+  METHODOLOGY.md)
+- **SOTN decomp** (Xeeynamo) uses per-function `//!` optimization-flag
+  annotations and a custom permuter to close scheduling gaps.
+  <https://github.com/Xeeynamo/sotn-decomp> (tools/builds/gen.py,
+  permuter_settings.us.toml)
+
+Common scheduling symptoms:
+- `move $a0,$s0` placed before other argument loads instead of in a `jal`
+  delay slot.
+- Reordered independent loads (`lui`/`lw`/`lbu`) that are semantically
+  identical but produce different instruction sequences.
+- Argument-load interleaving that shifts instruction pairing relative to
+  branch delay slots.
+
+The available mitigations in ascending cost:
+1. Permutation search for a source shape that nudges the scheduler.
+2. Per-function compiler flags (e.g. `-O1` for one function).
+3. `INCLUDE_ASM` / assembly stubs for the resistant function (standard
+   practice in NFSHS-PSX-decomp and many N64 projects).
+4. Accept the near-match when the C is readable and functionally correct
+   and the bytes are indistinguishable at the ABI level.
+
 ## Escalation
 
 1. Confirm target, compiler profile, function start, and size.
 2. Compare canonical assembly and normalized asm-diff output.
-3. Use Ghidra, Rizin, or m2c only to test a concrete hypothesis.
-4. Resolve symbols and local structures that obscure access shape.
-5. Use decomp-permuter only for a structurally converged function.
+3. Check whether mismatch is a structural issue (wrong CFG, missing call,
+   incorrect type/width) or a scheduling-only residue (see above).
+4. Use Ghidra, Rizin, or m2c only to test a concrete hypothesis.
+5. Resolve symbols and local structures that obscure access shape.
+6. Use decomp-permuter only for a structurally converged function.
 
 Reject a source permutation that improves the score by depending on undefined
 behavior, false types, misleading names, or unexplained magic addresses.
