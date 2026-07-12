@@ -5,19 +5,25 @@
  * @source 0x801f3c2c FUN_801f3c2c
  */
 void func_801f3c2c(void) {
-  volatile World00Area008Scratch* scratch;
+  World00Area008Scratch* scratch;
+  char*                  buf;
+  s32                    field_5d;
+  s32                    field_5e;
 
   func_801f3d88(0x78, 0x38, 0x46, 0x14, 1u);
 
-  scratch = WORLD00_AREA008_SCRATCH_PTR;
-  func_8017e3f4((void*)WORLD00_AREA008_UI_CHAR_BUFFER, (const void*)0x801f2c04u,
-                (s32)scratch->field_5e, ((s32)scratch->field_5d * 100) / 30);
+  scratch = (World00Area008Scratch*)WORLD00_AREA008_SCRATCH_PTR;
+  field_5d = scratch->field_5d;
+  field_5e = scratch->field_5e;
+  buf = (char*)WORLD00_AREA008_DAT_80145AD4;
+  func_8017e3f4(buf, (const char*)WORLD00_AREA008_DAT_801F2C04, field_5e,
+                (field_5d * 100) / 30);
 
-  func_8014ff0c(0x86, 0x3b, 0, (const void*)WORLD00_AREA008_UI_CHAR_BUFFER);
+  func_8014ff0c(0x86, 0x3b, 0, buf);
 
-  WORLD00_AREA008_UI_CHAR_BUFFER[0] = 0x3eu;
-  WORLD00_AREA008_UI_CHAR_BUFFER[1] = 0u;
+  buf[0] = 0x3eu;
+  buf[1] = 0u;
 
-  func_8014f800(0x97, 0x35, 0, 0xffu, (u32)WORLD00_AREA008_UI_CHAR_BUFFER);
-  func_8014f800(0x97, 0x39, 0, 0xffu, (u32)WORLD00_AREA008_UI_CHAR_BUFFER);
+  func_8014f800(0x97, 0x35, 0, 0xffu, (u32)buf);
+  func_8014f800(0x97, 0x39, 0, 0xffu, (u32)buf);
 }

@@ -1,5 +1,5 @@
-#ifndef BOF3_SRC_MODULES_WORLD00_AREA008_13_INTERNAL_H
-#define BOF3_SRC_MODULES_WORLD00_AREA008_13_INTERNAL_H
+#ifndef BOF3_SRC_EMI_WORLD00_AREA008_13_INTERNAL_H
+#define BOF3_SRC_EMI_WORLD00_AREA008_13_INTERNAL_H
 
 #include "bof3/bof3.h"
 
@@ -9,11 +9,11 @@ typedef struct World00Area008Scratch {
   s8 field_5e;
 } World00Area008Scratch;
 
-#define WORLD00_AREA008_SCRATCH_PTR    VPPTR(World00Area008Scratch, 0x1f800044u)
-#define WORLD00_AREA008_PRIMITIVE_PTR  VPPTR(u8, 0x8014598cu)
-#define WORLD00_AREA008_UI_CHAR_BUFFER VPTR(u8, 0x80145ad4u)
+#define WORLD00_AREA008_SCRATCH_PTR   VPPTR(World00Area008Scratch, 0x1f800044u)
+#define WORLD00_AREA008_PRIMITIVE_PTR VPPTR(u8, 0x8014598cu)
 extern vu8 WORLD00_AREA008_DAT_80146867;
 extern u8  WORLD00_AREA008_DAT_80145AD4[];
+extern u8  WORLD00_AREA008_DAT_801F2C04[];
 extern u8  WORLD00_AREA008_DAT_801F2C10[];
 s32        func_8017e3f4(char* buffer, const char* format, ...);
 void       func_8014ff0c(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
