@@ -11,11 +11,11 @@ from rebof3.match.asm_diff import (
     infer_original_size,
     infer_size_from_sibling_sources,
     matching_instruction_count,
-    normalize_disassembly,
     object_path_for_source,
     overlay_load_address_for_source,
     parse_source_address,
 )
+from rebof3.match._asm_disasm import extract_instructions
 from rebof3.paths import repo_layout
 
 
@@ -179,53 +179,32 @@ def test_overlay_source_resolves_through_artifact_hint(tmp_path: Path) -> None:
     assert overlay_load_address_for_source(layout, source) == 0x80195800
 
 
-def test_normalize_disassembly_keeps_only_instruction_text() -> None:
+def test_extract_instructions_strips_addresses_and_bytes() -> None:
     disassembly = """
-00000000 <func_80162178>:
-   0:\t27bdffe8 \taddiu\tsp,sp,-24
-   4:\t3c040000 \tlui\ta0,0x0
-\t\t\t4: R_MIPS_HI16\tDAT_80146808
-   8:\t0c000000 \tjal\t0 <func_80162178>
-\t\t\t8: R_MIPS_26\tCdIntToPos
+801f3c2c <func_801f3c2c>:
+801f3c2c:\t27bdffe0 \taddiu\tsp,sp,-32
+801f3c30:\t24040078 \tli\ta0,120
+801f3c4c:\t0c07cf62 \tjal\t801f3d88 <func_801f3d88>
 """
 
-    assert normalize_disassembly(disassembly) == [
-        "addiu sp,sp,-24",
-        "lui a0,0x8014",
-        "jal CdIntToPos",
+    assert extract_instructions(disassembly) == [
+        "addiu sp,sp,-32",
+        "li a0,120",
+        "jal 0x801f3d88",
     ]
 
 
-def test_normalize_disassembly_canonicalizes_func_relocations() -> None:
+def test_extract_instructions_normalizes_hex() -> None:
+    disassembly = "801f3ce0:\ta0205ad5 \tsb\tzero,0x5ad5(at)\n"
+    assert extract_instructions(disassembly) == ["sb zero,0x5ad5(at)"]
+
+
+def test_extract_instructions_skips_relocation_lines() -> None:
     disassembly = """
-   0:\t0c05636e \tjal\t0 <func_80158db8>
-\t\t\t0: R_MIPS_26\tfunc_80158db8
+801f3c4c:\t0c000000 \tjal\t0 <func_801f3d88>
+\t\t\t801f3c4c: R_MIPS_26\tfunc_801f3d88
 """
-
-    assert normalize_disassembly(disassembly) == ["jal 0x80158db8"]
-
-
-def test_normalize_disassembly_resolves_symbol_lo_relocations() -> None:
-    disassembly = """
-  20:\t3c010000 \tlui\tat,0x0
-\t\t\t20: R_MIPS_HI16\tDAT_80143d40
-  24:\tac220000 \tsw\tv0,0(at)
-\t\t\t24: R_MIPS_LO16\tDAT_80143d40
-"""
-
-    assert normalize_disassembly(disassembly) == [
-        "lui at,0x8014",
-        "sw v0,15680(at)",
-    ]
-
-
-def test_normalize_disassembly_uses_relative_branch_targets() -> None:
-    assert normalize_disassembly("  3c:\t10400003 \tbeqz\tv0,4c <LM11>\n") == [
-        "beqz v0,16"
-    ]
-    assert normalize_disassembly("8014b378:\t10400003 \tbeqz\tv0,0x8014b388\n") == [
-        "beqz v0,16"
-    ]
+    assert extract_instructions(disassembly) == ["jal 0"]
 
 
 def test_result_payload_reports_instruction_match_percent(tmp_path: Path) -> None:

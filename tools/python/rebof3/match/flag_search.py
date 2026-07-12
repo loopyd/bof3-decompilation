@@ -12,9 +12,10 @@ from typing import Any
 from .asm_diff import (
     AsmDiffRequest,
     matching_instruction_count,
-    normalize_disassembly,
     run_asm_diff_one,
 )
+from ._asm_disasm import extract_instructions, disassemble_linked
+from ._asm_link import function_bytes_match
 from ..paths import RepoLayout
 
 
@@ -64,6 +65,9 @@ def search_flags(
     source = source.expanduser().resolve()
     baseline = run_asm_diff_one(AsmDiffRequest(source_path=source), layout=layout)
     original_path = Path(baseline["outputs"]["original"])
+    original_size = baseline["original_size"]
+    original_bytes = Path(baseline["outputs"]["original_bytes"]).read_bytes()
+    address = int(baseline["address"], 16)
     original = [
         line for line in original_path.read_text(encoding="utf-8").splitlines() if line
     ]
@@ -89,21 +93,33 @@ def search_flags(
                     {"flags": flags, "status": "compile_error", "match_percent": 0.0}
                 )
                 continue
-            dump_result = subprocess.run(
-                [objdump, "-dr", str(object_path)], capture_output=True, text=True
-            )
-            if dump_result.returncode != 0:
+            try:
+                byte_match, _compiled = function_bytes_match(
+                    object_path,
+                    address=address,
+                    size=original_size,
+                    original_bytes=original_bytes,
+                    layout=layout,
+                )
+                linked_path = object_path.with_suffix(".linked.o")
+                linked_dump = disassemble_linked(
+                    objdump_path=Path(objdump), linked_path=linked_path
+                )
+                current = extract_instructions(linked_dump)
+                matches = matching_instruction_count(original, current)
+                percent = round(
+                    (matches / max(len(original), len(current), 1)) * 100, 2
+                )
+                status = "exact_match" if byte_match else "different"
+            except RuntimeError:
                 results.append(
-                    {"flags": flags, "status": "objdump_error", "match_percent": 0.0}
+                    {"flags": flags, "status": "link_error", "match_percent": 0.0}
                 )
                 continue
-            current = normalize_disassembly(dump_result.stdout)
-            matches = matching_instruction_count(original, current)
-            percent = round((matches / max(len(original), len(current), 1)) * 100, 2)
             results.append(
                 {
                     "flags": flags,
-                    "status": "exact_match" if original == current else "different",
+                    "status": status,
                     "match_percent": percent,
                 }
             )
