@@ -13,7 +13,7 @@
 
 ```bash
 just setup
-bin/rebof3 doctor --strict
+bin/harness doctor --strict
 ```
 
 `just setup` prepares the required submodules and PSX tools, stages PsyQ 4.7,
@@ -42,8 +42,8 @@ payloads, SDK files, or generated analysis output. See
 
 ## Verification
 
-After extraction, `bin/rebof3 scan` writes `out/catalog/emi.json`.
-`bin/rebof3 status` should then report the archive and code-status counts.
+After extraction, `bin/harness scan` writes `out/catalog/emi.json` and
+`bin/harness index build` writes `out/index/harness.sqlite`.
 
 Optional analysis and last-mile matching tools are not required for the core
 setup. Install or enable them only when the active function needs them.

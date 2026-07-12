@@ -8,8 +8,8 @@
 ## Verification
 
 ```bash
-bin/rebof3 diff <source>
+bin/harness diff <source>
 just build
 just check
-bin/rebof3 doctor --strict
+bin/harness doctor --strict
 ```

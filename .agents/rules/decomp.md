@@ -8,7 +8,7 @@
 - No inline assembly; prefer defines/structs/externs over magic addresses
 - Fixed-address RAM globals: declare `extern type DAT_xxxxx;` in `internal.h`
   with a `/* @behavior ... */` comment, and place them with
-  `SYMBOL_AT(DAT_xxxxx, 0x8XXXXXXX)` in `src/boot/symbols.c`; never use
+  `SYMBOL_AT(DAT_xxxxx, 0x8XXXXXXX)` in the owning executable's `symbols.c`; never use
   `#define DAT_xxxxx VUxx(addr)`.
 - `DAT_xxx` defines live in `internal.h`; readable semantic name → `DAT_xxx` mappings live in `symbols.h` once promoted
 

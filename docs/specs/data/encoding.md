@@ -192,5 +192,5 @@ When `item_type = 0xFF`: zenny = `item_index × 40`.
 
 ## Evidence
 
-- Binary verification: `out/reports/vast-violence-1.1.json`
+- Binary verification: `out/index/vast-violence-1.1.json`
 - Struct definitions: `third_party/references/vast-violence/tables/struct_*.txt`

@@ -1,4 +1,4 @@
-# rebof3-simple
+# bof3-harness
 
 BOF3 is modeled as independently loaded binaries: the main EXE, `LOGO.EXE`,
 and reviewed EMI payloads. EMI archives are containers; an entry only becomes
@@ -10,16 +10,16 @@ Place a user-owned US disc image in `disks/`, then run:
 
 ```sh
 just setup
-bin/rebof3 status
-bin/rebof3 next
+bin/harness target list
+bin/harness index build
 ```
 
 To inspect and reverse a confirmed target:
 
 ```sh
-bin/rebof3 inspect "$TARGET"
-bin/rebof3 lift "$TARGET@$ADDRESS"
-bin/rebof3 diff "$FUNCTION_SOURCE"
+bin/harness show "$TARGET"
+bin/harness lift "$TARGET" "$ADDRESS"
+bin/harness diff "$TARGET@$ADDRESS"
 ```
 
 Generated files live in `out/`; user-owned disc media lives in `disks/`.

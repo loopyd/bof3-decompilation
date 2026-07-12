@@ -5,13 +5,13 @@
 ## Quick path
 
 ```sh
-bin/rebof3 inspect "$TARGET"
-bin/rebof3 diff "$FUNCTION_SOURCE"
-bin/rebof3 flags "$FUNCTION_SOURCE"
+bin/harness show "$TARGET"
+bin/harness diff "$FUNCTION_SOURCE"
+bin/harness flags "$FUNCTION_SOURCE"
 ```
 
 An exact match exits with status `0`. A valid nonmatch exits with status `1`
-and writes its evidence under `out/asm-diff/`. Invocation, mapping, build, and
+and writes its evidence under `out/matching/`. Invocation, mapping, build, and
 tool failures exit with status `2`.
 
 `flags` tests the reviewed PSX compiler-flag catalog against the source's
@@ -21,7 +21,7 @@ change the build configuration.
 Use `--json` when another local tool or agent consumes the result:
 
 ```sh
-bin/rebof3 diff "$FUNCTION_SOURCE" --json
+bin/harness diff "$FUNCTION_SOURCE" --json
 ```
 
 ## Iteration order
@@ -41,5 +41,5 @@ mapping.
 ```sh
 just build
 just check
-bin/rebof3 doctor --strict
+bin/harness doctor --strict
 ```

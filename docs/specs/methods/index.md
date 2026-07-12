@@ -11,4 +11,4 @@ tags: [index]
 - [Verification](verification.md) — validate boundaries, values, and duplicates.
 
 Game-specific layouts and decoding rules belong in [data specs](../data/index.md).
-Generated results belong in `out/reports/`.
+Generated results belong in `out/index/`.

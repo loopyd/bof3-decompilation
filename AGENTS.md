@@ -1,4 +1,4 @@
-# AGENTS.md — rebof3-simple
+# AGENTS.md — bof3-harness
 
 BOF3 is a set of independently loaded binaries, not one link target. Read
 [CONTEXT.md](CONTEXT.md) before naming or changing a binary, EMI entry, or
@@ -31,16 +31,15 @@ config/
 include/bof3/         shared C89 and PsyQ declarations
 cmake/                build modules and source listings
 src/
-  boot/               bootstrap code (startup.s, symbols.c)
-  core/               engine: disc, emi, callback_scheduler, game_front
-  modules/            game modules: battle, game, world00, ...
   exe/<binary>/       source for standalone PS-X executables
   emi/<family>/<archive>/<slot>/  source for confirmed EMI code targets
 out/
   extracted/          disc tree and unpacked EMI entries
   binaries/           normalized raw executable images
-  catalog/            generated EMI evidence and duplicate maps
-  splat/, ghidra/, work/, assets/  generated analysis products
+  catalog/            raw EMI extraction evidence
+  index/              repository-backed evidence graph and reports
+  context/, lift/, matching/  retained decompilation evidence
+  splat/, ghidra/, assets/  generated analysis products
 ```
 
 Keep one `internal.h` beside each target's functions. Each lifted function is
@@ -50,21 +49,20 @@ headers.
 ## Binary workflow
 
 1. Place the user-owned disc image in `disks/`, then run `just setup`.
-2. Inspect generated evidence with `bin/rebof3 status` or
-   `bin/rebof3 candidates [family]`.
+2. Inspect targets and generated evidence with `bin/harness target list` and
+   `bin/harness index build`.
 3. Promote only a reviewed code or mixed code/data EMI entry:
 
    ```sh
-   bin/rebof3 promote "$ARCHIVE_ENTRY" --confirm-code
+   bin/harness target promote "$ARCHIVE_ENTRY" --confirm-code
    ```
 
 4. Work one function at a time:
 
    ```sh
-   bin/rebof3 next [target]
-   bin/rebof3 lift <target@address>
+   bin/harness lift <target> <function>
    # edit the printed C file
-   bin/rebof3 diff <source>
+   bin/harness diff <source>
    ```
 
 An EMI archive is a container; Splat and matching consume its extracted raw
@@ -99,11 +97,11 @@ just check         # tests, Ruff, and workspace doctor
 just format        # all authored formatting
 just format-python # Python tooling only
 just format-c      # C headers and functions only
-bin/rebof3 doctor --strict
+bin/harness doctor --strict
 ```
 
 Run the smallest relevant command while iterating, then `just check` and
-`bin/rebof3 doctor --strict` before handoff when the required inputs/toolchain
+`bin/harness doctor --strict` before handoff when the required inputs/toolchain
 are available. State any skipped check and why.
 
 ## Scope discipline

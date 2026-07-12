@@ -14,4 +14,4 @@
 
 `config/splat/` and `config/symbols/` are the tracked layout source of truth.
 `out/` is generated and may be deleted and regenerated. The command contract is
-`bin/rebof3 --help` and the root `justfile`.
+`bin/harness --help` and the root `justfile`.

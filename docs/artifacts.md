@@ -13,12 +13,13 @@ tags: [build, generated]
 | --- | --- |
 | `out/extracted/` | Disc tree and unpacked EMI entries |
 | `out/binaries/` | Normalized PS-X executable load images and header metadata |
-| `out/catalog/` | EMI entry catalog, duplicate groups, and lift records |
+| `out/catalog/` | Raw EMI entry catalog used for promotion review |
+| `out/index/` | SQLite evidence graph, PsyQ indexes, and compact reports |
 | `out/splat/` | Generated assembly, data, and linker artifacts |
 | `out/ghidra/` | Ghidra project/export data |
-| `out/work/` | Per-function drafts and comparison output |
+| `out/context/`, `out/lift/`, `out/matching/` | Per-function context, lift, and comparison evidence |
 | `out/assets/` | Decoded asset previews |
-| `build/default/bof3.exe` | Reconstructed main PS-X executable |
+| `build/default/slus_004_22.exe` | Reconstructed main PS-X executable |
 | `build/default/artifacts/raw/` | Raw images for targets with confirmed load layouts |
 | `build/default/artifacts/compiled/` | Intermediate object sets for targets without confirmed raw layouts |
 | `build/default/artifacts/metadata/artifacts.json` | Registered target and build-stage manifest |

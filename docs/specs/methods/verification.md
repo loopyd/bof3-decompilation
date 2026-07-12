@@ -15,7 +15,7 @@ tags: [methods, verification]
 4. Decode known sentinel and representative records.
 5. Check field widths and signedness against runtime instructions.
 6. Compare known duplicate ranges by hash and bytes.
-7. Record complete generated evidence under `out/reports/`.
+7. Record complete generated evidence under `out/index/`.
 8. Promote only stable layouts and values into tracked specs.
 
 ## Required coordinate names
@@ -36,7 +36,7 @@ the canonical source.
 
 ## Failure conditions
 
-Reject or return a finding to `out/work/` when:
+Reject or return a finding to `out/` when:
 
 - the selected version is ambiguous;
 - an offset uses an unstated coordinate system;

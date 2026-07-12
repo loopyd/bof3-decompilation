@@ -179,4 +179,4 @@ randomization. v1.0 and v1.1 use different seed sizes.
 ## Evidence
 
 - Source files: `out/extracted/BIN/ETC/START.EMI`, `STATUS.EMI`, `SISYOU.EMI`, `AFLDKWA.EMI`, `FIRST.EMI`
-- Validation: `out/reports/vast-violence-1.1.json`
+- Validation: `out/index/vast-violence-1.1.json`

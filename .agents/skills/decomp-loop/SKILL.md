@@ -5,7 +5,7 @@ description: "Discover, lift, and exactly match PSX MIPS functions or complete o
 
 # Decomp Loop
 
-Use `bin/rebof3` as the workflow entry point. Original bytes and canonical Splat
+Use `bin/harness` as the workflow entry point. Original bytes and canonical Splat
 assembly outrank function indexes, decompilers, and source guesses.
 
 For exact-match tactics and compiler pitfalls, read
@@ -16,10 +16,10 @@ still nonmatching.
 ## Function loop
 
 ```bash
-bin/rebof3 inspect <target>
-bin/rebof3 next [target]
-bin/rebof3 lift <target@address>
-bin/rebof3 diff <source>
+bin/harness target show <target>
+bin/harness next [target]
+bin/harness lift <target> <function>
+bin/harness diff <source>
 ```
 
 Before editing C, verify the payload, load address, function range, Splat
@@ -58,7 +58,7 @@ boundary, compiler command, and diff normalization are proven correct.
 |---|---|
 | Wrong size or shifted labels | Recheck function boundaries before editing C |
 | Unsupported instruction | Read canonical Splat assembly; use Rizin or Ghidra as an optional hint |
-| Match 80–95% | Trace the first meaningful mismatch in `out/asm-diff/` |
+| Match 80–95% | Trace the first meaningful mismatch in `out/matching/` |
 | Stuck on calling convention | Check the target Splat config and CMake compiler command |
 | Compiler-inserted NOP | Verify delay slots in original vs compiled |
 | Unresolved struct/global | Add `extern` to `internal.h` + `SYMBOL_AT` in `symbols.c` |

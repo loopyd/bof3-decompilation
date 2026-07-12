@@ -51,14 +51,12 @@ and [matching](docs/matching.md). For retained technical evidence, start at
 | --- | --- |
 | `src/exe/` | Authored source for standalone PS-X executables. |
 | `src/emi/` | Authored source for confirmed EMI code targets. |
-| `src/core/`, `src/boot/` | Shared engine and bootstrap source retained under their current ownership. |
-| `src/modules/` | Legacy lifted targets awaiting normalization into `src/exe/` or `src/emi/`. |
 | `include/bof3/` | Shared C89, hardware, and PsyQ declarations. |
 | `config/splat/` | Tracked binary segment layouts consumed by Splat. |
 | `config/symbols/` | Tracked authored and verified symbol information. |
 | `asm/` | Reviewed original assembly baselines. |
 | `cmake/` | PSX build rules, source registration, target definitions, and artifact assembly. |
-| `tools/python/` | Implementation of repository automation and the `rebof3` command surface. |
+| `tools/python/` | Implementation of repository automation and the `harness` command surface. |
 | `bin/` | Thin command entry points and PSX compiler/binutils adapters. |
 | `docs/specs/` | Durable, reviewed format, runtime, program, and data findings. |
 | `third_party/` | Pinned source dependencies used for extraction, analysis, and matching. |
@@ -84,18 +82,15 @@ include/bof3/
 Keep the archive and slot in the path even after a subsystem is understood;
 they define the independently loaded binary and prevent accidental cross-target
 linkage. Within a target, recovered filenames, types, and shared declarations
-may increasingly use game-domain names as evidence improves. `src/modules/` is
-legacy source awaiting target-identity normalization, not the destination for
-new lifts. Migrate it one confirmed target at a time, reconciling its
-`internal.h`, Splat `src_path`, CMake source registration, and binary diff
-before removing the old path.
+may increasingly use game-domain names as evidence improves. New lifts belong
+directly under their canonical executable or promoted EMI target.
 
 ## Tool roles
 
 | Tool | How this project uses it |
 | --- | --- |
 | `just` | Provides the short task interface for setup, extraction, building, checks, and formatting. |
-| `bin/rebof3` | Coordinates BOF3-specific discovery, inspection, promotion, lifting, matching, Ghidra sync, assets, and disc operations. |
+| `bin/harness` | Coordinates BOF3-specific discovery, inspection, promotion, lifting, matching, Ghidra sync, assets, and disc operations. |
 | Splat / spimdisasm | Splits normalized binaries from tracked layouts and produces the canonical assembly used as matching evidence. |
 | CMake | Registers independent PSX targets, applies verified compiler flags, and builds their objects or reconstructed artifacts. |
 | Historical GCC + MASPSX/binutils | Reproduces the period PSX compilation and assembly pipeline used for binary matching. |
@@ -111,7 +106,7 @@ The authoritative chain is original bytes, tracked layout, canonical Splat
 assembly, then compiled comparison. Decompiler output and automated source
 search assist that chain but do not override it. Tool versions and roles are
 recorded in `tools.lock.toml`; supported commands are defined by `just --list`
-and `bin/rebof3 --help`.
+and `bin/harness --help`.
 
 ## Binaries
 

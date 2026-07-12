@@ -21,7 +21,7 @@ facts, not source-code ownership.
 - 20 record layouts validated
 - 0 mismatches
 
-Evidence: `out/reports/vast-violence-1.1.json`
+Evidence: `out/index/vast-violence-1.1.json`
 
 ## Location catalog
 

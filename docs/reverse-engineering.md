@@ -29,13 +29,13 @@ never operates on an entire EMI container. Generated assembly belongs below
 ## Review loop
 
 ```bash
-bin/rebof3 scan
-bin/rebof3 candidates BATTLE
-bin/rebof3 promote "$ARCHIVE_ENTRY" --confirm-code
-bin/rebof3 inspect "$TARGET"
-bin/rebof3 next
-bin/rebof3 lift "$TARGET@$ADDRESS"
-bin/rebof3 diff "$FUNCTION_SOURCE"
+bin/harness scan
+bin/harness candidates BATTLE
+bin/harness promote "$ARCHIVE_ENTRY" --confirm-code
+bin/harness show "$TARGET"
+bin/harness next
+bin/harness lift "$TARGET" "$ADDRESS"
+bin/harness diff "$FUNCTION_SOURCE"
 ```
 
 Promotion is deliberately explicit. It creates one Splat configuration and one
@@ -48,7 +48,7 @@ checksum, load address, Splat configuration, and source directory rather than
 compensating for a mapping problem in C.
 
 `diff` builds the smallest available CMake object and writes comparison evidence
-under `out/asm-diff/`. A nonmatch is a normal iteration result; a build or target
+under `out/matching/`. A nonmatch is a normal iteration result; a build or target
 resolution failure must be fixed before changing source.
 
 ## Source conventions
@@ -72,7 +72,7 @@ A promoted function must:
   material context; never link generated state;
 - place reusable structures, offsets, and mappings in the owning
   `docs/specs/` concept;
-- pass `bin/rebof3 diff`, even when it is not yet an exact match.
+- pass `bin/harness diff`, even when it is not yet an exact match.
 
 ## Evidence boundary
 

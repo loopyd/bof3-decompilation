@@ -44,4 +44,5 @@ belong under `out/`.
 
 Keep only facts supported by original bytes, tracked layouts, or confirmed
 runtime behavior. Store hypotheses, tool output, corpus tables, and progress in
-`out/work/`, `out/catalog/`, or `out/reports/`.
+`out/index/`, `out/catalog/`, or the relevant retained workflow directory under
+`out/`.

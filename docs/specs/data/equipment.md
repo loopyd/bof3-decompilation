@@ -151,7 +151,7 @@ Item type codes: `0`=ItemObject, `1`=WeaponObject, `2`=ArmorObject,
 ## Evidence
 
 - Source file: `out/extracted/BIN/ETC/GAME.EMI`
-- Validation: `out/reports/vast-violence-1.1.json`
+- Validation: `out/index/vast-violence-1.1.json`
 - Struct definitions: `third_party/references/vast-violence/tables/struct_*.txt`
 - Ability names: `third_party/references/vast-violence/ability_names.txt` (228 abilities)
 - Shop names: `third_party/references/vast-violence/tables/names_shops.txt` (40 shops)

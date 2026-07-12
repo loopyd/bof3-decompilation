@@ -21,18 +21,33 @@ cmake --preset default -DPSX_C_COMPILER=/path/to/cc
 cmake --build --preset default
 ```
 
-`rebof3` is the BOF3 command surface:
+`harness` is the BOF3 command surface:
 
 ```sh
-rebof3 scan
-rebof3 status [target]
-rebof3 candidates [family]
-rebof3 promote <archive#slot> --confirm-code
-rebof3 next [target]
-rebof3 lift <target@address>
-rebof3 diff <source>
-rebof3 flags <source>
-rebof3 ghidra sync
-rebof3 assets list
-rebof3 disk verify|rebuild
+harness target list|show|doctor
+harness index build
+harness find <term>
+harness show <id>
+harness related <id>
+harness graph <id>
+harness profile list|show|resolve
+harness context build|show <target> <function>
+harness lift <target> <function>
+harness diff <source-or-function-id>
+harness permute <source-or-function-id>
+harness adopt <candidate> --function <function-id> --apply
+```
+
+Disc discovery and asset operations are also available:
+
+```sh
+harness scan
+harness status [target]
+harness candidates [family]
+harness promote <archive#slot> --confirm-code
+harness next [target]
+harness flags <source>
+harness ghidra sync
+harness assets list
+harness disk verify|rebuild
 ```
