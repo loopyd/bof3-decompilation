@@ -271,7 +271,7 @@ wheels = [
 ]
 
 [[package]]
-name = "rebof3-simple"
+name = "bof3-harness"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

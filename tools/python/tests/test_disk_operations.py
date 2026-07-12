@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from rebof3.disk.operations import disk_extract
+from harness.disk.operations import disk_extract
 
 
 def test_disk_extract_imports_archive_when_disc_inputs_are_missing(
@@ -22,9 +22,9 @@ def test_disk_extract_imports_archive_when_disc_inputs_are_missing(
         calls.append(command)
 
     monkeypatch.setattr(
-        "rebof3.disk.operations.import_bof3_disc", fake_import_bof3_disc
+        "harness.disk.operations.import_bof3_disc", fake_import_bof3_disc
     )
-    monkeypatch.setattr("rebof3.disk.operations.run_command", fake_run_command)
+    monkeypatch.setattr("harness.disk.operations.run_command", fake_run_command)
 
     input_path = disk_extract(
         tool_path=tmp_path / "build" / "third_party" / "bof3-disk",

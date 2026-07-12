@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from rebof3.binaries import (
+from harness.binaries import (
     build_emi_catalog,
     normalize_executable,
     promote_entry,
@@ -89,6 +89,12 @@ def test_promotion_requires_explicit_code_confirmation(tmp_path: Path) -> None:
         == tmp_path / "config" / "splat" / "emi" / "battle" / "battle" / "03.yaml"
     )
     assert (source / "internal.h").is_file()
+    normalized = tmp_path / "out" / "binaries" / "emi" / "battle" / "battle" / "03.bin"
+    assert (
+        normalized.read_bytes()
+        == (emi_root / "BATTLE" / "BATTLE" / "3.bin").read_bytes()
+    )
+    assert "target_path: out/binaries/emi/battle/battle/03.bin" in config.read_text()
 
 
 def test_normalize_executable_extracts_only_the_load_image(tmp_path: Path) -> None:

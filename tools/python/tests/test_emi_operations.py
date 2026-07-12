@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from rebof3.emi.operations import emi_pack, emi_unpack
+from harness.emi.operations import emi_pack, emi_unpack
 
 
 def test_emi_unpack_extracts_all_archives_into_mirrored_dirs(
@@ -17,7 +17,7 @@ def test_emi_unpack_extracts_all_archives_into_mirrored_dirs(
     def fake_run_command(command: list[str], *, cwd, env=None) -> None:
         calls.append(command)
 
-    monkeypatch.setattr("rebof3.emi.operations.run_command", fake_run_command)
+    monkeypatch.setattr("harness.emi.operations.run_command", fake_run_command)
 
     archive_count = emi_unpack(
         tool_path=tmp_path / "build" / "tools" / "emi-ex",
@@ -70,7 +70,7 @@ def test_emi_pack_packs_all_manifests_back_into_extracted_tree(
     def fake_run_command(command: list[str], *, cwd, env=None) -> None:
         calls.append(command)
 
-    monkeypatch.setattr("rebof3.emi.operations.run_command", fake_run_command)
+    monkeypatch.setattr("harness.emi.operations.run_command", fake_run_command)
 
     archive_count = emi_pack(
         tool_path=tmp_path / "build" / "tools" / "emi-ex",

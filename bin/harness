@@ -1,0 +1,19 @@
+#!/bin/sh
+# harness — BOF3 workspace command surface
+set -eu
+
+HARNESS_SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
+HARNESS_ROOT_DIR="$(CDPATH= cd -- "${HARNESS_SCRIPT_DIR}/.." && pwd)"
+HARNESS_PYTHON_BIN="${HARNESS_ROOT_DIR}/.venv/bin/python"
+HARNESS_PYTHONPATH_ROOT="${HARNESS_ROOT_DIR}/tools/python"
+
+if [ ! -x "${HARNESS_PYTHON_BIN}" ]; then
+  printf 'missing project Python environment: %s\n' "${HARNESS_PYTHON_BIN}" >&2
+  printf 'run `just venv` from %s\n' "${HARNESS_ROOT_DIR}" >&2
+  exit 1
+fi
+
+PYTHONPATH="${HARNESS_PYTHONPATH_ROOT}"
+export PYTHONPATH
+
+exec "${HARNESS_PYTHON_BIN}" -m harness.commands.harness "$@"

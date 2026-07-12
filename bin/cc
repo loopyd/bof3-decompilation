@@ -7,4 +7,4 @@ if [ -n "${PSX_CC_DRIVER:-}" ]; then
 fi
 PYTHONPATH="${ROOT}/tools/python"
 export PYTHONPATH
-exec "${ROOT}/.venv/bin/python" -m rebof3.toolchain.cc "$@"
+exec "${ROOT}/.venv/bin/python" -m harness.toolchain.cc "$@"

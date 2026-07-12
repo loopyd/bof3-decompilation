@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from rebof3.build.raw_module import build_raw_image
+from harness.build.raw_module import build_raw_image
 
 
 def test_build_raw_image_places_object_text_by_function_address(

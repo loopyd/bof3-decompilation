@@ -3,8 +3,8 @@ from __future__ import annotations
 import zipfile
 from pathlib import Path
 
-from rebof3.toolchain import setup_disc as disc_lib
-from rebof3.toolchain.setup_disc import import_bof3_disc
+from harness.toolchain import setup_disc as disc_lib
+from harness.toolchain.setup_disc import import_bof3_disc
 
 
 def make_fake_bof3_archive(path: Path) -> None:

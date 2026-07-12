@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from rebof3.setup import SetupOptions, plan_setup_tasks
+from harness.setup import SetupOptions, plan_setup_tasks
 
 
 def test_plan_setup_tasks_full_workspace() -> None:

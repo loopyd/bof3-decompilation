@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from rebof3.paths import repo_layout
-from rebof3.toolchain import psx as module
+from harness.paths import repo_layout
+from harness.toolchain import psx as module
 
 
 def test_install_canonical_psx_toolchain_makes_compilers_executable(

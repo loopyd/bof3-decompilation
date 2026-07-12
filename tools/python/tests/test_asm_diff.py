@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from rebof3.match.asm_diff import (
+from harness.match.asm_diff import (
     build_result_payload,
     build_target_for_source,
     default_binary_for_source,
@@ -15,8 +15,8 @@ from rebof3.match.asm_diff import (
     overlay_load_address_for_source,
     parse_source_address,
 )
-from rebof3.match._asm_disasm import extract_instructions
-from rebof3.paths import repo_layout
+from harness.match._asm_disasm import extract_instructions
+from harness.paths import repo_layout
 
 
 def write_psx_exe(path: Path, *, load_address: int, payload: bytes) -> None:
@@ -28,7 +28,7 @@ def write_psx_exe(path: Path, *, load_address: int, payload: bytes) -> None:
 
 
 def test_source_address_and_size_are_inferred_from_source_files(tmp_path: Path) -> None:
-    source_dir = tmp_path / "bof3" / "src" / "core" / "emi"
+    source_dir = tmp_path / "bof3" / "src" / "exe" / "slus_004_22"
     source_dir.mkdir(parents=True)
     current = source_dir / "func_80162178.c"
     current.write_text(
@@ -45,7 +45,7 @@ def test_source_address_and_size_are_inferred_from_source_files(tmp_path: Path) 
 def test_implausible_sibling_gap_falls_back_to_binary_return(
     tmp_path: Path,
 ) -> None:
-    source_dir = tmp_path / "bof3" / "src" / "modules" / "game" / "00"
+    source_dir = tmp_path / "bof3" / "src" / "exe" / "slus_004_22"
     source_dir.mkdir(parents=True)
     current = source_dir / "func_801971e8.c"
     current.write_text("void func_801971e8(void) {}\n", encoding="utf-8")
@@ -89,7 +89,7 @@ def test_extract_original_bytes_reads_psx_exe_load_address(tmp_path: Path) -> No
 
 def test_object_path_matches_cmake_object_layout(tmp_path: Path) -> None:
     layout = repo_layout(tmp_path)
-    source = layout.root / "src" / "core" / "emi" / "func_80162178.c"
+    source = layout.root / "src" / "exe" / "slus_004_22" / "func_80162178.c"
     source.parent.mkdir(parents=True)
     source.write_text("void func_80162178(void) {}\n", encoding="utf-8")
     build_dir = layout.build_dir / "default"
@@ -100,7 +100,7 @@ def test_object_path_matches_cmake_object_layout(tmp_path: Path) -> None:
                 {
                     "directory": str(build_dir),
                     "file": str(source),
-                    "output": "CMakeFiles/bof3_main.dir/src/core/emi/func_80162178.c.obj",
+                    "output": "CMakeFiles/slus_004_22_core.dir/src/exe/slus_004_22/func_80162178.c.obj",
                 }
             ]
         ),
@@ -110,13 +110,16 @@ def test_object_path_matches_cmake_object_layout(tmp_path: Path) -> None:
     assert object_path_for_source(layout, source) == (
         build_dir
         / "CMakeFiles"
-        / "bof3_main.dir"
+        / "slus_004_22_core.dir"
         / "src"
-        / "core"
-        / "emi"
+        / "exe"
+        / "slus_004_22"
         / "func_80162178.c.obj"
     )
-    assert build_target_for_source(layout, source) == "src/core/emi/func_80162178.obj"
+    assert (
+        build_target_for_source(layout, source)
+        == "src/exe/slus_004_22/func_80162178.obj"
+    )
 
 
 def test_overlay_source_resolves_through_artifact_hint(tmp_path: Path) -> None:
@@ -135,7 +138,7 @@ def test_overlay_source_resolves_through_artifact_hint(tmp_path: Path) -> None:
                 {
                     "directory": str(build_dir),
                     "file": str(source),
-                    "output": "CMakeFiles/bof3_game_00.dir/src/emi/etc/game/00/func_80195800.c.obj",
+                    "output": "CMakeFiles/harness_game_00.dir/src/emi/etc/game/00/func_80195800.c.obj",
                 }
             ]
         ),
@@ -148,7 +151,7 @@ def test_overlay_source_resolves_through_artifact_hint(tmp_path: Path) -> None:
             {
                 "artifacts": [
                     {
-                        "target": "bof3_game_00",
+                        "target": "harness_game_00",
                         "source_hint": "out/extracted/BIN/ETC/GAME.EMI#0",
                     }
                 ]
