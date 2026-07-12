@@ -1,40 +1,40 @@
 include_guard(GLOBAL)
 
-unset(BOF3_ARTIFACT_ROOT_DIR CACHE)
-set(BOF3_ARTIFACT_ROOT_DIR "${CMAKE_BINARY_DIR}/artifacts")
+unset(HARNESS_ARTIFACT_ROOT_DIR CACHE)
+set(HARNESS_ARTIFACT_ROOT_DIR "${CMAKE_BINARY_DIR}/artifacts")
 
-set(BOF3_ARTIFACT_RAW_ROOT_DIR "${BOF3_ARTIFACT_ROOT_DIR}/raw")
-set(BOF3_ARTIFACT_METADATA_DIR "${BOF3_ARTIFACT_ROOT_DIR}/metadata")
+set(HARNESS_ARTIFACT_RAW_ROOT_DIR "${HARNESS_ARTIFACT_ROOT_DIR}/raw")
+set(HARNESS_ARTIFACT_METADATA_DIR "${HARNESS_ARTIFACT_ROOT_DIR}/metadata")
 
-function(bof3_artifact_normalize_folder out_var folder)
+function(harness_artifact_normalize_folder out_var folder)
     string(REGEX REPLACE "^/+" "" normalized "${folder}")
     string(REGEX REPLACE "/+$" "" normalized "${normalized}")
     set(${out_var} "${normalized}" PARENT_SCOPE)
 endfunction()
 
-function(bof3_artifact_resolve_paths out_relative_path out_program_path out_raw_output_path folder program_name)
-    bof3_artifact_normalize_folder(normalized_folder "${folder}")
+function(harness_artifact_resolve_paths out_relative_path out_program_path out_raw_output_path folder program_name)
+    harness_artifact_normalize_folder(normalized_folder "${folder}")
     if(normalized_folder STREQUAL "")
         set(relative_path "${program_name}")
     else()
         set(relative_path "${normalized_folder}/${program_name}")
     endif()
     set(program_path "/${relative_path}")
-    set(raw_output_path "${BOF3_ARTIFACT_RAW_ROOT_DIR}/${relative_path}")
+    set(raw_output_path "${HARNESS_ARTIFACT_RAW_ROOT_DIR}/${relative_path}")
 
     set(${out_relative_path} "${relative_path}" PARENT_SCOPE)
     set(${out_program_path} "${program_path}" PARENT_SCOPE)
     set(${out_raw_output_path} "${raw_output_path}" PARENT_SCOPE)
 endfunction()
 
-function(bof3_artifact_escape_json_string out_var value)
+function(harness_artifact_escape_json_string out_var value)
     string(REPLACE "\\" "\\\\" escaped "${value}")
     string(REPLACE "\"" "\\\"" escaped "${escaped}")
     string(REPLACE "\n" "\\n" escaped "${escaped}")
     set(${out_var} "${escaped}" PARENT_SCOPE)
 endfunction()
 
-function(bof3_artifact_get_target_property_or_empty out_var target property_name)
+function(harness_artifact_get_target_property_or_empty out_var target property_name)
     get_target_property(value "${target}" "${property_name}")
     if(value STREQUAL "${property_name}-NOTFOUND")
         set(value "")
@@ -42,7 +42,7 @@ function(bof3_artifact_get_target_property_or_empty out_var target property_name
     set(${out_var} "${value}" PARENT_SCOPE)
 endfunction()
 
-function(bof3_artifact_register target)
+function(harness_artifact_register target)
     cmake_parse_arguments(
         ARG
         "PLACEHOLDER"
@@ -55,10 +55,10 @@ function(bof3_artifact_register target)
         message(FATAL_ERROR "Artifact target `${target}` must exist before registration.")
     endif()
     if(NOT DEFINED ARG_PROGRAM_NAME OR ARG_PROGRAM_NAME STREQUAL "")
-        message(FATAL_ERROR "bof3_artifact_register requires PROGRAM_NAME.")
+        message(FATAL_ERROR "harness_artifact_register requires PROGRAM_NAME.")
     endif()
 
-    bof3_artifact_resolve_paths(relative_path computed_program_path raw_output_path
+    harness_artifact_resolve_paths(relative_path computed_program_path raw_output_path
         "${ARG_FOLDER}" "${ARG_PROGRAM_NAME}")
     set(program_path "${ARG_PROGRAM_PATH}")
     if(program_path STREQUAL "")
@@ -66,17 +66,17 @@ function(bof3_artifact_register target)
     endif()
 
     set_target_properties("${target}" PROPERTIES
-        BOF3_ARTIFACT_KIND "${ARG_KIND}"
-        BOF3_ARTIFACT_PROGRAM_PATH "${program_path}"
-        BOF3_ARTIFACT_SOURCE_HINT "${ARG_SOURCE_HINT}"
-        BOF3_ARTIFACT_BUILD_STAGE "${ARG_BUILD_STAGE}"
-        BOF3_ARTIFACT_OUTPUT_PATH "${ARG_OUTPUT_PATH}"
-        BOF3_ARTIFACT_PLACEHOLDER "${ARG_PLACEHOLDER}"
+        HARNESS_ARTIFACT_KIND "${ARG_KIND}"
+        HARNESS_ARTIFACT_PROGRAM_PATH "${program_path}"
+        HARNESS_ARTIFACT_SOURCE_HINT "${ARG_SOURCE_HINT}"
+        HARNESS_ARTIFACT_BUILD_STAGE "${ARG_BUILD_STAGE}"
+        HARNESS_ARTIFACT_OUTPUT_PATH "${ARG_OUTPUT_PATH}"
+        HARNESS_ARTIFACT_PLACEHOLDER "${ARG_PLACEHOLDER}"
     )
-    set_property(GLOBAL APPEND PROPERTY BOF3_ARTIFACT_TARGETS "${target}")
+    set_property(GLOBAL APPEND PROPERTY HARNESS_ARTIFACT_TARGETS "${target}")
 endfunction()
 
-function(bof3_artifact_register_placeholder target)
+function(harness_artifact_register_placeholder target)
     cmake_parse_arguments(
         ARG
         ""
@@ -86,7 +86,7 @@ function(bof3_artifact_register_placeholder target)
     )
 
     add_custom_target("${target}")
-    bof3_artifact_register(
+    harness_artifact_register(
         "${target}"
         PLACEHOLDER
         FOLDER "${ARG_FOLDER}"
@@ -99,7 +99,7 @@ function(bof3_artifact_register_placeholder target)
     )
 endfunction()
 
-function(bof3_artifact_register_built target)
+function(harness_artifact_register_built target)
     cmake_parse_arguments(
         ARG
         ""
@@ -109,17 +109,17 @@ function(bof3_artifact_register_built target)
     )
 
     if(NOT ARG_BUILT_OUTPUT)
-        message(FATAL_ERROR "bof3_artifact_register_built requires BUILT_OUTPUT.")
+        message(FATAL_ERROR "harness_artifact_register_built requires BUILT_OUTPUT.")
     endif()
 
-    bof3_artifact_resolve_paths(relative_path computed_program_path raw_output_path
+    harness_artifact_resolve_paths(relative_path computed_program_path raw_output_path
         "${ARG_FOLDER}" "${ARG_PROGRAM_NAME}")
     set(program_path "${ARG_PROGRAM_PATH}")
     if(program_path STREQUAL "")
         set(program_path "${computed_program_path}")
     endif()
 
-    bof3_artifact_register(
+    harness_artifact_register(
         "${target}"
         FOLDER "${ARG_FOLDER}"
         PROGRAM_NAME "${ARG_PROGRAM_NAME}"
@@ -143,7 +143,7 @@ function(bof3_artifact_register_built target)
     )
 endfunction()
 
-function(bof3_artifact_register_archive target)
+function(harness_artifact_register_archive target)
     cmake_parse_arguments(
         ARG
         ""
@@ -153,26 +153,26 @@ function(bof3_artifact_register_archive target)
     )
 
     if(NOT ARG_DECLARED_SOURCES)
-        message(FATAL_ERROR "bof3_artifact_register_archive requires DECLARED_SOURCES.")
+        message(FATAL_ERROR "harness_artifact_register_archive requires DECLARED_SOURCES.")
     endif()
 
-    bof3_artifact_normalize_folder(normalized_folder "${ARG_FOLDER}")
+    harness_artifact_normalize_folder(normalized_folder "${ARG_FOLDER}")
     if(normalized_folder STREQUAL "")
-        set(output_dir "${BOF3_ARTIFACT_ROOT_DIR}/compiled")
+        set(output_dir "${HARNESS_ARTIFACT_ROOT_DIR}/compiled")
     else()
-        set(output_dir "${BOF3_ARTIFACT_ROOT_DIR}/compiled/${normalized_folder}")
+        set(output_dir "${HARNESS_ARTIFACT_ROOT_DIR}/compiled/${normalized_folder}")
     endif()
     file(MAKE_DIRECTORY "${output_dir}")
 
     add_library("${target}" STATIC EXCLUDE_FROM_ALL ${ARG_DECLARED_SOURCES})
-    bof3_apply_target_settings("${target}")
+    harness_apply_target_settings("${target}")
     set_target_properties("${target}" PROPERTIES
         PREFIX ""
         OUTPUT_NAME "${ARG_PROGRAM_NAME}"
         ARCHIVE_OUTPUT_DIRECTORY "${output_dir}"
     )
 
-    bof3_artifact_register(
+    harness_artifact_register(
         "${target}"
         FOLDER "${ARG_FOLDER}"
         PROGRAM_NAME "${ARG_PROGRAM_NAME}"
@@ -185,7 +185,7 @@ function(bof3_artifact_register_archive target)
     )
 endfunction()
 
-function(bof3_artifact_register_raw_module target)
+function(harness_artifact_register_raw_module target)
     cmake_parse_arguments(
         ARG
         ""
@@ -195,10 +195,10 @@ function(bof3_artifact_register_raw_module target)
     )
 
     if(NOT ARG_DECLARED_SOURCES)
-        message(FATAL_ERROR "bof3_artifact_register_raw_module requires DECLARED_SOURCES.")
+        message(FATAL_ERROR "harness_artifact_register_raw_module requires DECLARED_SOURCES.")
     endif()
     if(NOT ARG_LOAD_ADDRESS)
-        message(FATAL_ERROR "bof3_artifact_register_raw_module requires LOAD_ADDRESS.")
+        message(FATAL_ERROR "harness_artifact_register_raw_module requires LOAD_ADDRESS.")
     endif()
     if(NOT CMAKE_OBJCOPY)
         message(FATAL_ERROR "CMAKE_OBJCOPY must be set for raw module artifacts.")
@@ -209,9 +209,9 @@ function(bof3_artifact_register_raw_module target)
 
     set(object_target "${target}_objects")
     add_library("${object_target}" OBJECT EXCLUDE_FROM_ALL ${ARG_DECLARED_SOURCES})
-    bof3_apply_target_settings("${object_target}")
+    harness_apply_target_settings("${object_target}")
 
-    bof3_artifact_resolve_paths(relative_path computed_program_path raw_output_path
+    harness_artifact_resolve_paths(relative_path computed_program_path raw_output_path
         "${ARG_FOLDER}" "${ARG_PROGRAM_NAME}")
     set(program_path "${ARG_PROGRAM_PATH}")
     if(program_path STREQUAL "")
@@ -229,9 +229,9 @@ function(bof3_artifact_register_raw_module target)
         OUTPUT "${raw_output_path}" "${metadata_path}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "$<SHELL_PATH:${raw_output_dir}>"
         COMMAND ${CMAKE_COMMAND} -E env
-            "PYTHONPATH=$<SHELL_PATH:${REBOF3_ROOT_DIR}/tools/python>"
+            "PYTHONPATH=$<SHELL_PATH:${HARNESS_ROOT_DIR}/tools/python>"
             "$<SHELL_PATH:${Python3_EXECUTABLE}>"
-            -m rebof3.build.raw_module
+            -m harness.build.raw_module
             --output "$<SHELL_PATH:${raw_output_path}>"
             --metadata "$<SHELL_PATH:${metadata_path}>"
             --base-address "${ARG_LOAD_ADDRESS}"
@@ -250,7 +250,7 @@ function(bof3_artifact_register_raw_module target)
     if(kind STREQUAL "")
         set(kind "module")
     endif()
-    bof3_artifact_register(
+    harness_artifact_register(
         "${target}"
         FOLDER "${ARG_FOLDER}"
         PROGRAM_NAME "${ARG_PROGRAM_NAME}"
@@ -263,10 +263,10 @@ function(bof3_artifact_register_raw_module target)
     )
 endfunction()
 
-function(bof3_artifact_write_manifest out_var)
-    get_property(registered_targets GLOBAL PROPERTY BOF3_ARTIFACT_TARGETS)
+function(harness_artifact_write_manifest out_var)
+    get_property(registered_targets GLOBAL PROPERTY HARNESS_ARTIFACT_TARGETS)
 
-    set(manifest_path "${BOF3_ARTIFACT_METADATA_DIR}/artifacts.json")
+    set(manifest_path "${HARNESS_ARTIFACT_METADATA_DIR}/artifacts.json")
     get_filename_component(manifest_dir "${manifest_path}" DIRECTORY)
     file(MAKE_DIRECTORY "${manifest_dir}")
 
@@ -274,12 +274,12 @@ function(bof3_artifact_write_manifest out_var)
 
     set(needs_separator OFF)
     foreach(target IN LISTS registered_targets)
-        bof3_artifact_get_target_property_or_empty(kind "${target}" BOF3_ARTIFACT_KIND)
-        bof3_artifact_get_target_property_or_empty(program_path "${target}" BOF3_ARTIFACT_PROGRAM_PATH)
-        bof3_artifact_get_target_property_or_empty(source_hint "${target}" BOF3_ARTIFACT_SOURCE_HINT)
-        bof3_artifact_get_target_property_or_empty(build_stage "${target}" BOF3_ARTIFACT_BUILD_STAGE)
-        bof3_artifact_get_target_property_or_empty(output_path "${target}" BOF3_ARTIFACT_OUTPUT_PATH)
-        get_target_property(placeholder "${target}" BOF3_ARTIFACT_PLACEHOLDER)
+        harness_artifact_get_target_property_or_empty(kind "${target}" HARNESS_ARTIFACT_KIND)
+        harness_artifact_get_target_property_or_empty(program_path "${target}" HARNESS_ARTIFACT_PROGRAM_PATH)
+        harness_artifact_get_target_property_or_empty(source_hint "${target}" HARNESS_ARTIFACT_SOURCE_HINT)
+        harness_artifact_get_target_property_or_empty(build_stage "${target}" HARNESS_ARTIFACT_BUILD_STAGE)
+        harness_artifact_get_target_property_or_empty(output_path "${target}" HARNESS_ARTIFACT_OUTPUT_PATH)
+        get_target_property(placeholder "${target}" HARNESS_ARTIFACT_PLACEHOLDER)
 
         if(placeholder)
             set(is_placeholder "true")
@@ -287,12 +287,12 @@ function(bof3_artifact_write_manifest out_var)
             set(is_placeholder "false")
         endif()
 
-        bof3_artifact_escape_json_string(escaped_target "${target}")
-        bof3_artifact_escape_json_string(escaped_kind "${kind}")
-        bof3_artifact_escape_json_string(escaped_program_path "${program_path}")
-        bof3_artifact_escape_json_string(escaped_source_hint "${source_hint}")
-        bof3_artifact_escape_json_string(escaped_build_stage "${build_stage}")
-        bof3_artifact_escape_json_string(escaped_output_path "${output_path}")
+        harness_artifact_escape_json_string(escaped_target "${target}")
+        harness_artifact_escape_json_string(escaped_kind "${kind}")
+        harness_artifact_escape_json_string(escaped_program_path "${program_path}")
+        harness_artifact_escape_json_string(escaped_source_hint "${source_hint}")
+        harness_artifact_escape_json_string(escaped_build_stage "${build_stage}")
+        harness_artifact_escape_json_string(escaped_output_path "${output_path}")
 
         if(needs_separator)
             file(APPEND "${manifest_path}" ",")

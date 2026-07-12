@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-function(bof3_add_artifact target)
+function(harness_add_artifact target)
     cmake_parse_arguments(
         ARG
         "PLACEHOLDER;RAW_BINARY"
@@ -11,7 +11,7 @@ function(bof3_add_artifact target)
 
     if(NOT ARG_PROGRAM_NAME OR NOT ARG_PROGRAM_PATH OR NOT ARG_SOURCE_HINT OR NOT ARG_DISC_FOLDER)
         message(FATAL_ERROR
-            "bof3_add_artifact requires DISC_FOLDER, PROGRAM_NAME, PROGRAM_PATH, and SOURCE_HINT."
+            "harness_add_artifact requires DISC_FOLDER, PROGRAM_NAME, PROGRAM_PATH, and SOURCE_HINT."
         )
     endif()
 
@@ -22,12 +22,12 @@ function(bof3_add_artifact target)
 
     if(NOT ARG_DECLARED_SOURCES AND NOT ARG_PLACEHOLDER)
         message(FATAL_ERROR
-            "bof3_add_artifact requires DECLARED_SOURCES."
+            "harness_add_artifact requires DECLARED_SOURCES."
         )
     endif()
 
     if(ARG_PLACEHOLDER)
-        bof3_artifact_register_placeholder(
+        harness_artifact_register_placeholder(
             "${target}"
             FOLDER "${ARG_DISC_FOLDER}"
             PROGRAM_NAME "${ARG_PROGRAM_NAME}"
@@ -37,7 +37,7 @@ function(bof3_add_artifact target)
             DECLARED_SOURCES ${ARG_DECLARED_SOURCES}
         )
     elseif(ARG_RAW_BINARY)
-        bof3_artifact_register_raw_module(
+        harness_artifact_register_raw_module(
             "${target}"
             FOLDER "${ARG_DISC_FOLDER}"
             PROGRAM_NAME "${ARG_PROGRAM_NAME}"
@@ -49,7 +49,7 @@ function(bof3_add_artifact target)
             DECLARED_SOURCES ${ARG_DECLARED_SOURCES}
         )
     else()
-        bof3_artifact_register_archive(
+        harness_artifact_register_archive(
             "${target}"
             FOLDER "${ARG_DISC_FOLDER}"
             PROGRAM_NAME "${ARG_PROGRAM_NAME}"

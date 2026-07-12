@@ -15,8 +15,8 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "BOF3_TARGET_PSX": "ON",
-        "PSYQ_VERSION": "4.7"
+        "HARNESS_TARGET_PSX": "ON",
+        "HARNESS_PROFILE": "native/capcom97"
       }
     }
   ],

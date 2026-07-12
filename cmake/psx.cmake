@@ -1,23 +1,23 @@
 include_guard(GLOBAL)
 
-function(bof3_require_psyq_layout)
-    if(NOT DEFINED BOF3_PSYQ_INCLUDE_DIR OR NOT DEFINED BOF3_PSYQ_LIB_DIR)
+function(harness_require_psyq_layout)
+    if(NOT DEFINED HARNESS_PSYQ_INCLUDE_DIR OR NOT DEFINED HARNESS_PSYQ_LIB_DIR)
         message(FATAL_ERROR
-            "The selected PSX toolchain must define BOF3_PSYQ_INCLUDE_DIR and BOF3_PSYQ_LIB_DIR."
+            "The selected PSX toolchain must define HARNESS_PSYQ_INCLUDE_DIR and HARNESS_PSYQ_LIB_DIR."
         )
     endif()
-    if(NOT EXISTS "${BOF3_PSYQ_INCLUDE_DIR}/libgpu.h")
-        message(FATAL_ERROR "PsyQ headers not found at ${BOF3_PSYQ_INCLUDE_DIR}.")
+    if(NOT EXISTS "${HARNESS_PSYQ_INCLUDE_DIR}/libgpu.h")
+        message(FATAL_ERROR "PsyQ headers not found at ${HARNESS_PSYQ_INCLUDE_DIR}.")
     endif()
-    if(NOT IS_DIRECTORY "${BOF3_PSYQ_LIB_DIR}")
-        message(FATAL_ERROR "PsyQ libraries not found at ${BOF3_PSYQ_LIB_DIR}.")
+    if(NOT IS_DIRECTORY "${HARNESS_PSYQ_LIB_DIR}")
+        message(FATAL_ERROR "PsyQ libraries not found at ${HARNESS_PSYQ_LIB_DIR}.")
     endif()
 endfunction()
 
-function(bof3_find_sdk_tool out_var tool_name)
-    set(search_roots "${BOF3_PSN00B_SDK_ROOT}")
-    if(IS_DIRECTORY "${BOF3_PSN00B_SDK_ROOT}")
-        file(GLOB sdk_children LIST_DIRECTORIES true "${BOF3_PSN00B_SDK_ROOT}/*")
+function(harness_find_sdk_tool out_var tool_name)
+    set(search_roots "${HARNESS_PSN00B_SDK_ROOT}")
+    if(IS_DIRECTORY "${HARNESS_PSN00B_SDK_ROOT}")
+        file(GLOB sdk_children LIST_DIRECTORIES true "${HARNESS_PSN00B_SDK_ROOT}/*")
         list(APPEND search_roots ${sdk_children})
     endif()
 
@@ -29,22 +29,22 @@ function(bof3_find_sdk_tool out_var tool_name)
     endforeach()
 
     message(FATAL_ERROR
-        "Required PSX SDK tool `${tool_name}` was not found under ${BOF3_PSN00B_SDK_ROOT}. Run 'just setup'."
+        "Required PSX SDK tool `${tool_name}` was not found under ${HARNESS_PSN00B_SDK_ROOT}. Run 'just setup'."
     )
 endfunction()
 
-function(bof3_apply_target_settings target)
+function(harness_apply_target_settings target)
     cmake_parse_arguments(ARG "" "INCLUDE_VISIBILITY" "COMPILE_DEFINITIONS" ${ARGN})
     if(NOT ARG_INCLUDE_VISIBILITY)
         set(ARG_INCLUDE_VISIBILITY PRIVATE)
     endif()
 
     target_include_directories("${target}" ${ARG_INCLUDE_VISIBILITY}
-        "${BOF3_INCLUDE_DIR}"
-        "${BOF3_PSYQ_INCLUDE_DIR}"
+        "${HARNESS_INCLUDE_DIR}"
+        "${HARNESS_PSYQ_INCLUDE_DIR}"
     )
     target_compile_definitions("${target}" PRIVATE
-        BOF3_TARGET_PSX=1
+        HARNESS_TARGET_PSX=1
         ${ARG_COMPILE_DEFINITIONS}
     )
 endfunction()

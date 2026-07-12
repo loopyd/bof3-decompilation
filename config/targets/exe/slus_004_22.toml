@@ -1,0 +1,17 @@
+schema = "harness.target/v1"
+id = "exe/slus_004_22"
+disc_id = "SLUS_004.22"
+kind = "executable"
+source_dir = "src/exe/slus_004_22"
+binary = "out/binaries/exe/slus_004_22.bin"
+splat = "config/splat/exe/slus_004_22.yaml"
+load_address = 0x80010000
+profile = "native/capcom97"
+
+[psyq]
+headers = "headers/psyq-4.7"
+
+[psyq.libraries.LIBGPU]
+members = ["psyq/4.0/libgpu/ext.obj"]
+confidence = "high"
+evidence = ["psyq/4.0/libgpu/ext.obj/SetDefDrawEnv"]

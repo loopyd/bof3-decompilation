@@ -4,10 +4,10 @@ options:
   platform: psx
   compiler: psyq
   base_path: .
-  target_path: out/extracted/BIN/BATTLE/BATTLE/3.bin
-  asm_path: out/splat/battle/battle/03/asm
+  target_path: out/binaries/emi/battle/battle/03.bin
+  asm_path: out/splat/emi/battle/battle/03/asm
   src_path: src/emi/battle/battle/03
-  ld_script_path: out/splat/battle/battle/03/linker.ld
+  ld_script_path: out/splat/emi/battle/battle/03/linker.ld
   symbol_addrs_path:
     - config/symbols/psyq.txt
     - config/symbols/shared.txt

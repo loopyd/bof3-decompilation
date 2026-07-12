@@ -1,0 +1,9 @@
+schema = "harness.target/v1"
+id = "emi/battle/battle/15"
+disc_id = "BIN/BATTLE/BATTLE.EMI#15"
+kind = "emi"
+source_dir = "src/emi/battle/battle/15"
+binary = "out/binaries/emi/battle/battle/15.bin"
+splat = "config/splat/emi/battle/battle/15.yaml"
+load_address = 0x80096ab0
+profile = "native/capcom97"
