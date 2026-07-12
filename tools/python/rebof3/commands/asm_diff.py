@@ -32,6 +32,10 @@ def run_one(args: argparse.Namespace) -> int:
     print(f"function: {payload['function']} {payload['address']}")
     print(f"summary: {outputs['summary']}")
     print(f"diff: {outputs['diff']}")
+    if args.show_diff:
+        diff_path = Path(outputs["diff"])
+        if diff_path.is_file():
+            print(diff_path.read_text(encoding="utf-8"))
     return 0 if payload["exact_match"] else 1
 
 
@@ -66,6 +70,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="directory for asm diff outputs",
     )
     parser.add_argument("--json", action="store_true", help="print the result as JSON")
+    parser.add_argument(
+        "--show-diff",
+        action="store_true",
+        help="print the unified diff of normalized instructions",
+    )
     parser.set_defaults(handler=run_one)
     return parser
 

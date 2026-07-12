@@ -188,6 +188,8 @@ def run_diff(args: argparse.Namespace) -> int:
     argv = [str(args.source)]
     if args.json:
         argv.append("--json")
+    if args.show_diff:
+        argv.append("--show-diff")
     return asm_diff.main(argv)
 
 
@@ -334,6 +336,7 @@ def build_parser() -> argparse.ArgumentParser:
     diff = sub.add_parser("diff")
     diff.add_argument("source", type=Path)
     diff.add_argument("--json", action="store_true")
+    diff.add_argument("--show-diff", action="store_true")
     diff.set_defaults(handler=run_diff)
     flags = sub.add_parser("flags")
     flags.add_argument("source", type=Path)
