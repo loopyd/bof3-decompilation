@@ -8,7 +8,7 @@
 //
 // Output sections: functions, symbols, xrefs, call_edges, constants, duplicates
 //
-// Output schema: rebof3-simple.ghidra-analysis-export/v1
+// Output schema: harness.ghidra-analysis-export/v1
 
 import ghidra.app.script.GhidraScript;
 import ghidra.framework.model.DomainFile;
@@ -324,7 +324,7 @@ public class ExportAnalysisJson extends GhidraScript {
                            List<ConstRec> constants,
                            Map<String, List<DupEntry>> dupGroups) {
         w.println("{");
-        w.println("  \"schema\": \"rebof3-simple.ghidra-analysis-export/v1\",");
+        w.println("  \"schema\": \"harness.ghidra-analysis-export/v1\",");
         w.println("  \"project_name\": " + js(state.getProject().getName()) + ",");
 
         writeFunctions(w, functions);

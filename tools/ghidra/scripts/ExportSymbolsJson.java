@@ -183,7 +183,7 @@ public class ExportSymbolsJson extends GhidraScript {
 
     private void writeJson(PrintWriter writer, String projectName, List<Row> rows) {
         writer.println("{");
-        writer.println("  \"schema\": \"rebof3-simple.ghidra-symbol-export/v1\",");
+        writer.println("  \"schema\": \"harness.ghidra-symbol-export/v1\",");
         writer.println("  \"project_name\": " + jsonString(projectName) + ",");
         writer.println("  \"rows\": [");
         for (int index = 0; index < rows.size(); index++) {

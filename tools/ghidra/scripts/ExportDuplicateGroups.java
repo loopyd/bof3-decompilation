@@ -10,7 +10,7 @@
 //   output-json   - path where duplicate_groups.json is written
 //   project-path  - optional Ghidra project path filter (default: "/")
 //
-// Output schema: rebof3-simple.ghidra-duplicate-groups/v1
+// Output schema: harness.ghidra-duplicate-groups/v1
 
 import ghidra.app.script.GhidraScript;
 import ghidra.framework.model.DomainFile;
@@ -210,7 +210,7 @@ public class ExportDuplicateGroups extends GhidraScript {
                 .thenComparing(e -> e.getKey()));
 
         writer.println("{");
-        writer.println("  \"schema\": \"rebof3-simple.ghidra-duplicate-groups/v1\",");
+        writer.println("  \"schema\": \"harness.ghidra-duplicate-groups/v1\",");
         writer.print("  \"groups\": [");
 
         int groupIdx = 0;

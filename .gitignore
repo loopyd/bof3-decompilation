@@ -3,8 +3,8 @@
 .uv-cache/
 __pycache__/
 build/
-!tools/python/rebof3/build/
-!tools/python/rebof3/build/*.py
+!tools/python/harness/build/
+!tools/python/harness/build/*.py
 dist/
 *.egg-info/
 compile_commands.json

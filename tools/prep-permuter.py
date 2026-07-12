@@ -15,7 +15,7 @@ def preprocess(source: Path) -> str:
         str(ROOT / "bin/cc"),
         "-E",
         "-P",
-        "-DBOF3_TARGET_PSX=1",
+        "-DHARNESS_TARGET_PSX=1",
         "-I",
         str(ROOT / "include"),
         "-I",
@@ -40,7 +40,7 @@ ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 INPUT="${1:?missing input C file}"
 [[ "${2:-}" == "-o" ]] || { echo "expected -o" >&2; exit 2; }
 OUTPUT="${3:?missing output object}"
-"$ROOT/bin/cc" -DBOF3_TARGET_PSX=1 \
+"$ROOT/bin/cc" -DHARNESS_TARGET_PSX=1 \
   -I "$ROOT/include" -I "$ROOT/toolchains/psyq/4.7/include" \
   -O2 -G0 -funsigned-char -msoft-float -gcoff \
   -Wa,--aspsx-version=2.56 -Wa,-G0,-EL,-mips1 \
