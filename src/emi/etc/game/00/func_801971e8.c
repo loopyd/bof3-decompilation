@@ -10,6 +10,7 @@ void func_801971e8(void) {
   u32 context_b;
   u8  context_kind;
   u16 world_flags;
+  u16 final_world_flags;
   u8  request_kind;
   s32 pending_world;
 
@@ -30,27 +31,28 @@ void func_801971e8(void) {
   if ((u8)(request_kind + 2u) >= 2u) {
     func_8014ecac(request_kind);
     func_80198bc4(1u);
-    if (DAT_80143f02 & 1u) {
+    if (*(u8*)&DAT_80143f02 & 1u) {
       func_801a0048(DAT_8014930a, DAT_8014930e);
     }
   } else if (request_kind == 0xfeu) {
     DAT_8014832e = 0u;
   }
 
-  if (DAT_80143f02 & 1u) {
+  if (*(u8*)&DAT_80143f02 & 1u) {
     DAT_80143f1e = 10u;
-  } else if (DAT_80143f00 == 0xbd) {
+  } else if (*(u16*)&DAT_80143f00 == 0xbdu) {
     DAT_80143f1e = 20u;
   } else {
     DAT_80143f1e = 0u;
   }
 
-  pending_world = DAT_80143f00;
+  pending_world = *(u16*)&DAT_80143f00;
   if (pending_world != 0xbd) {
     func_801b3ccc(1u);
   }
 
+  final_world_flags = DAT_8014625a;
   DAT_80143bb0 = 0u;
   DAT_80143b90 = 2u;
-  DAT_8014625a = DAT_8014625a & 0xffbfu;
+  DAT_8014625a = final_world_flags & 0xffbfu;
 }

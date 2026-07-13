@@ -5,6 +5,19 @@
 
 typedef void (*GameEntry0StateHandler)(void);
 
+typedef struct GameScenarioState {
+  s8  scenario_id;
+  u8  field_01;
+  u8  field_02;
+  u8  field_03;
+  u8  field_04;
+  u8  field_05;
+  u16 field_06;
+  u16 field_08;
+} GameScenarioState;
+
+extern GameScenarioState GAME_SCENARIO_STATE;
+
 typedef struct AbilityObject {
   u8 name[0x0c];
   u8 targeting_flags;
