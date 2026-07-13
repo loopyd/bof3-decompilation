@@ -1,6 +1,6 @@
 #include "internal.h"
 
-void func_801f3b00(s32 arg0, s32 arg1);
+extern void func_801f3b00(s32 arg0, s32 arg1);
 
 /* @behavior advances local scratch state `0x02` when the shared byte reaches `2`,
  * then calls the `0x801f3b00` local step with the scratch halfword at `0x2e`.

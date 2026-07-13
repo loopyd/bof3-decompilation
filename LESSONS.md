@@ -115,6 +115,15 @@ Durable findings that make the BOF3 lift-and-match loop faster and safer.
   's#^.*/(func_[0-9a-f]+)\\.c$#\\1#' | sort | uniq -d`. Repeated declarations
   in different target headers are not automatically duplicates: overlay and
   PsyQ copies can share a role while having different addresses or bytes.
+- In reversed `func_*.c` files, write local forward declarations with explicit
+  `extern` for readability. C gives file-scope function prototypes external
+  linkage by default, so this is a style/documentation choice, not a codegen
+  change; it does not replace the need for one canonical header declaration.
+- When batch-running `bin/harness diff`, redirect each invocation's stdin from
+  `/dev/null`. The compiler wrapper inherits stdin; if it consumes a piped file
+  list, later candidates can be passed as malformed assembler input. Record
+  each candidate's pre-edit match, edit, then re-run the same isolated diff and
+  compare instruction count, size, and first mismatch.
 
 ## Record the hard tail precisely
 

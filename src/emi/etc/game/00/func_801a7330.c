@@ -1,11 +1,11 @@
 #include "internal.h"
 
-void func_801a4aa8(void);
-void func_8014dd3c(u16);
-s16  func_8015477c(s32 x, s32 y);
-void func_801a4990(const u8* data);
-void func_801a4bc0(s16 x, s16 y, u32 size);
-void func_8014d6b8(u32 flag);
+extern void func_801a4aa8(void);
+extern void func_8014dd3c(u16);
+extern s16  func_8015477c(s32 x, s32 y);
+extern void func_801a4990(const u8* data);
+extern void func_801a4bc0(s16 x, s16 y, u32 size);
+extern void func_8014d6b8(u32 flag);
 
 #define ENTITY_MAX       30
 #define ENTITY_SLOT_SIZE 0x98

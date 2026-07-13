@@ -5,7 +5,7 @@ typedef struct World00Area008State {
   u8 mode;
 } World00Area008State;
 
-void func_8014d6b8(u32 flag);
+extern void func_8014d6b8(u32 flag);
 
 /* @behavior Selects disabled mode when the shared high-bit flag is set;
  * otherwise installs and enables the area resource, then selects mode 2.

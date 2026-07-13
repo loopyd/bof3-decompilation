@@ -1,8 +1,8 @@
 #include "bof3/context.h"
 #include "internal.h"
 
-void func_8014b1a4(void);
-void func_8014b3c4(void);
+extern void func_8014b1a4(void);
+extern void func_8014b3c4(void);
 
 /* @behavior initializes the post-logo disc/event path and hands control to the
  * first boot-side callback chain.

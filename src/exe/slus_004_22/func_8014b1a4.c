@@ -1,7 +1,7 @@
 #include "bof3/context.h"
 #include "internal.h"
 
-void func_8017e028(s32 arg0);
+extern void func_8017e028(s32 arg0);
 
 extern s32 DAT_80145e14;
 extern s32 DAT_80145e18;

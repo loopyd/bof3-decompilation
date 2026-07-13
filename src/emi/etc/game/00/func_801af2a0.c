@@ -1,10 +1,10 @@
 #include "internal.h"
 
-u8*  func_801af270(u8 sprite_id, u8 flags);
-void func_8017aa1c(u32 arg0);
-void func_8017a904(u32 arg0, s32 arg1);
-u16  func_8017a6f0(s32 arg0, s32 arg1);
-void func_8014e5a0(u8 arg0, u8 arg1);
+extern u8*  func_801af270(u8 sprite_id, u8 flags);
+extern void func_8017aa1c(u32 arg0);
+extern void func_8017a904(u32 arg0, s32 arg1);
+extern u16  func_8017a6f0(s32 arg0, s32 arg1);
+extern void func_8014e5a0(u8 arg0, u8 arg1);
 
 /* @behavior draws one sprite by filling a GT quad primitive from a rect-table
  * entry, selecting CLUT by the bit-1 flag, then appending to the OT.

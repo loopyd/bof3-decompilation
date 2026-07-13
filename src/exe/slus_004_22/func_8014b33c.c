@@ -3,7 +3,7 @@
 extern volatile GameCallbackSlot* DAT_80143d40;
 extern GameCallbackSlot           DAT_80143b40;
 
-void func_8014b900(int slot_index);
+extern void func_8014b900(int slot_index);
 
 /* @behavior walks the callback slot table and dispatches each non-empty slot by
  * index.

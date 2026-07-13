@@ -1,6 +1,6 @@
 #include "internal.h"
 
-void* func_8014e0a8(s32 size, void* buffer, s32 sectors);
+extern void* func_8014e0a8(s32 size, void* buffer, s32 sectors);
 
 extern void* DAT_801459f8;
 extern u32   DAT_80143e70[];

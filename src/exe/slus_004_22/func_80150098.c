@@ -1,7 +1,7 @@
 #include "bof3/context.h"
 #include "internal.h"
 
-void func_8014e5a0(u32 arg0, u32 arg1);
+extern void func_8014e5a0(u32 arg0, u32 arg1);
 
 extern SPRT_8* DAT_8014598c;
 

@@ -1,8 +1,8 @@
 #include "internal.h"
 
-s32 func_801a1bc0(void);
-s32 func_801bde14(s32 arg0, s32 arg1, u8 arg2);
-s32 func_801be0c0(s32 arg0, s32 arg1, u8 arg2);
+extern s32 func_801a1bc0(void);
+extern s32 func_801bde14(s32 arg0, s32 arg1, u8 arg2);
+extern s32 func_801be0c0(s32 arg0, s32 arg1, u8 arg2);
 
 /* @behavior checks movement to a position determined by the route index,
  *        using two offset tables.

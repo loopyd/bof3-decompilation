@@ -1,9 +1,9 @@
 #include "bof3/context.h"
 #include "internal.h"
 
-void InitCARD2(s32 arg0);
-void _patch_card(void);
-void _patch_card2(void);
+extern void InitCARD2(s32 arg0);
+extern void _patch_card(void);
+extern void _patch_card2(void);
 
 /* @behavior resets PAD clearing, applies the boot-side memory card init/patch
  * sequence under the event guard, then restores the event state.

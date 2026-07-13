@@ -21,9 +21,9 @@ extern vu8  DAT_80146881;
 extern vu8  DAT_8014832e;
 extern vu8  DAT_8014933e;
 
-void func_8019fa28(u16 selection_seed, u32 context_a, u32 context_b,
-                   u8 context_kind);
-void func_801c1400(u32 arg0);
+void        func_8019fa28(u16 selection_seed, u32 context_a, u32 context_b,
+                          u8 context_kind);
+extern void func_801c1400(u32 arg0);
 
 /* @behavior resets front-state globals, then seeds the authored selection byte from
  * the active EXE-side selection when one already exists.

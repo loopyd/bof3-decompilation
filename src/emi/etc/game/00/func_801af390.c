@@ -1,9 +1,9 @@
 #include "internal.h"
 
-void func_801af2a0(s16 x, s16 y, u8 sprite_id, u8 flags);
-u16  func_8017a620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-void func_8017c2d8(u32 arg0, s32 arg1, s32 arg2, u16 arg3, s32 arg4);
-void func_8014e5a0(u8 arg0, u8 arg1);
+extern void func_801af2a0(s16 x, s16 y, u8 sprite_id, u8 flags);
+extern u16  func_8017a620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+extern void func_8017c2d8(u32 arg0, s32 arg1, s32 arg2, u16 arg3, s32 arg4);
+extern void func_8014e5a0(u8 arg0, u8 arg1);
 
 /* @behavior iterates a packed sprite-record table (3 bytes per entry: x-offset,
  * y-offset, sprite_id, terminated by sprite_id == 0xff), applies signed
