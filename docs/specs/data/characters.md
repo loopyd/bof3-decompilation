@@ -117,25 +117,25 @@ canonical `-O2` profile and is not promoted as an exact replacement.
 Masters are identified by array index (0-16). No explicit ID field exists
 in the binary; the index IS the ID.
 
-| ID | Name | HP | AP | PWR | DFN | AGI | INT | Skills |
+| ID | Name | HP | AP | PWR | DFN | AGI | INT | Skills (`ability_id:level`) |
 | --: | --- | --: | --: | --: | --: | --: | --: | --- |
-| 0 | Bunyan | +2 | -2 | +2 | +1 | +0 | -3 | L17:02 L39:05 L03:08 L20:0A |
-| 1 | Mygas | +0 | +1 | -1 | -1 | +0 | +2 | L19:01 L16:04 L17:06 L20:08 |
-| 2 | Yggdrasil | -1 | +1 | -2 | +1 | +0 | +2 | L05:02 L03:05 L18:08 |
-| 3 | D'lonzo | -1 | -2 | +1 | +0 | +1 | +0 | L16:02 L17:03 L21:04 |
-| 4 | Fahl | +4 | +0 | +1 | +3 | -3 | -3 | L01:02 L02:04 L15:06 |
-| 5 | Durandal | +0 | +0 | +0 | +0 | +0 | +0 | L01:01 L16:02 L16:03 |
-| 6 | Giotto | +4 | +3 | -1 | -1 | -1 | -1 | L14:02 L04:05 L06:08 |
-| 7 | Hondara | +0 | +1 | -2 | +0 | +0 | +1 | L17:02 L20:05 L16:08 |
-| 8 | Emitai | +0 | +4 | -2 | -2 | +0 | +4 | L18:02 L00:04 L04:06 |
-| 9 | Deis | -3 | +3 | +1 | -3 | +1 | +3 | L19:02 L19:05 L20:08 L20:0B L06:0F |
-| 10 | Hachio | +2 | -2 | +2 | +1 | -1 | -1 | L15:02 L15:04 |
-| 11 | Bais | +0 | +0 | +1 | +0 | +0 | +0 | L17:05 L03:08 L00:0C |
-| 12 | Lang | +0 | +0 | +0 | +1 | +0 | +0 | L17:05 L03:08 L00:0C |
-| 13 | Lee | +0 | +0 | +0 | +0 | +0 | +1 | L17:05 L03:08 L00:0C |
-| 14 | Wynn | +1 | +0 | +0 | +0 | +0 | +0 | L17:05 L03:08 L00:0C |
-| 15 | Ladon | -6 | -6 | +2 | +2 | +1 | +2 | L04:03 L15:05 L04:07 L01:09 |
-| 16 | Meryleep | -1 | +0 | -1 | -1 | +2 | +0 | L15:02 L17:05 L03:08 |
+| 0 | Bunyan | +2 | -2 | +2 | +1 | +0 | -3 | `0xaa:2 0x27:5 0x03:8 0x14:10` |
+| 1 | Mygas | +0 | +1 | -1 | -1 | +0 | +2 | `0xc4:1 0xa3:4 0xac:6 0xcb:8` |
+| 2 | Yggdrasil | -1 | +1 | -2 | +1 | +0 | +2 | `0x3a:2 0x24:5 0xb9:8` |
+| 3 | D'lonzo | -1 | -2 | +1 | +0 | +1 | +0 | `0xa6:2 0xad:3 0xd8:4` |
+| 4 | Fahl | +4 | +0 | +1 | +3 | -3 | -3 | `0x0f:2 0x1a:4 0x99:6` |
+| 5 | Durandal | +0 | +0 | +0 | +0 | +0 | +0 | `0x0a:1 0xa4:2 0xa5:3` |
+| 6 | Giotto | +4 | +3 | -1 | -1 | -1 | -1 | `0x8c:2 0x29:5 0x3f:8` |
+| 7 | Hondara | +0 | +1 | -2 | +0 | +0 | +1 | `0xb3:2 0xcf:5 0xa9:8` |
+| 8 | Emitai | +0 | +4 | -2 | -2 | +0 | +4 | `0xbc:2 0x06:4 0x28:6` |
+| 9 | Deis | -3 | +3 | +1 | -3 | +1 | +3 | `0xc3:2 0xc6:5 0xc9:8 0xce:11 0x3e:15` |
+| 10 | Hachio | +2 | -2 | +2 | +1 | -1 | -1 | `0x9a:2 0x9d:4` |
+| 11 | Bais | +0 | +0 | +1 | +0 | +0 | +0 | `0xaa:5 0x27:8 0x03:12` |
+| 12 | Lang | +0 | +0 | +0 | +1 | +0 | +0 | `0xaa:5 0x27:8 0x03:12` |
+| 13 | Lee | +0 | +0 | +0 | +0 | +0 | +1 | `0xaa:5 0x27:8 0x03:12` |
+| 14 | Wynn | +1 | +0 | +0 | +0 | +0 | +0 | `0xaa:5 0x27:8 0x03:12` |
+| 15 | Ladon | -6 | -6 | +2 | +2 | +1 | +2 | `0x2a:3 0x9c:5 0x2b:7 0x13:9` |
+| 16 | Meryleep | -1 | +0 | -1 | -1 | +2 | +0 | `0x9e:2 0xab:5 0x26:8` |
 
 Indices 11–14 (Bais, Lang, Lee, Wynn) are restricted and cannot have
 skills randomized.
@@ -146,16 +146,16 @@ Source: `BIN/ETC/SISYOU.EMI` @ `0x3C88`.
 
 | Offset | Size | Field |
 | ---: | ---: | --- |
-| `0x00` | `0x0c` | skill levels — 6 × 2-byte (level<<8|skill_id) pairs |
+| `0x00` | `0x0c` | skill levels — 6 × 2-byte little-endian pairs (`level | ability << 8`) |
 
 17 records, one per master. Record index is the master id. `0xFF` in high byte
 = empty slot.
 
 ### Encoding
 
-12 bytes per master, 6 skill slots, 2 bytes each:
-- High byte = level required (0x63 = unused slot)
-- Low byte = ability ID (index into abilities table)
+12 bytes per master, 6 skill slots, 2 bytes each. The low byte is the required
+level and the high byte is the ability index. A high byte of `0xff` is empty;
+the editor uses low-byte `0x63` for an unused slot.
 
 ## Master stats (6 bytes)
 
@@ -175,7 +175,7 @@ Source: `BIN/ETC/SISYOU.EMI` @ `0x3D54`.
 
 ## Master name locations
 
-- `AFLDKWA.EMI` @ 0x1BE0: 17 null-terminated ASCII strings (primary)
+- `AFLDKWA.EMI` @ 0x1BE0: 17 null-terminated custom-encoded strings (primary)
 - `FIRST.EMI` @ 0x3CBE0: same list (copy)
 - `SISYOU.EMI` @ 0x3C88: master skills (no names)
 - `SISYOU.EMI` @ 0x3D54: master stats (no names)
@@ -187,21 +187,27 @@ determined dynamically at runtime, not stored in the base stats record.
 
 | Offset | Size | Content |
 | ---: | ---: | --- |
-| 0x1C018 | 20 bytes | 10 x uint16 — dragon pointers (runtime addresses) |
-| 0x1C02C | 600 bytes | 100 x 6 bytes — dragon growth table |
+| 0x1C018 | 40 bytes | 10 x uint32 pointer candidates (runtime addresses) |
+| 0x1C040 | unresolved | mixed values and additional pointer candidates |
 
-Dragon pointers (0x1C018) are game-memory addresses, not table indices.
-Dragon growth (0x1C02C) format is not yet fully decoded.
+The ten values at `0x1C018` are little-endian 32-bit pointer candidates, not
+table indices. The following region is unresolved; the old `0x1C02C`/100×6
+growth interpretation overlapped these pointers and is not promoted.
 
-## Randomizer seeds
+## Randomizer seed slots
 
-| Offset | Size | Version |
-| ---: | ---: | --- |
-| 0x23998 | 6 bytes | v1.1 seed |
-| 0x285D4 | 13 bytes | v1.0 seed |
+The randomizer writes two encoded ASCII seed values into both `AFLDKWA.EMI`
+and `FIRST.EMI`. These are archive-local offsets, not STATUS.EMI offsets.
 
-Seed format: raw bytes used by the randomizer for reproducible
-randomization. v1.0 and v1.1 use different seed sizes.
+| Version | Seed 1 offset / size | Seed 2 offset / size |
+| --- | ---: | ---: |
+| v1.1 | `0x1571` / `0x14` | `0x1598` / `0x0c` |
+| v1.0 | `0x156b` / `0x14` | `0x1592` / `0x0c` |
+
+The first value is the `Seed: ` display slot; spaces are encoded as `0xff`
+and the colon as `0x8f`. The second value is the decimal seed slot. The
+corresponding `AFLDKWA`/`FIRST` mirror offsets are `0x3c571`/`0x3c598` in
+v1.1 and `0x3c56b`/`0x3c592` in v1.0.
 
 ## Evidence
 

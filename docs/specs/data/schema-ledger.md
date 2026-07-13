@@ -51,8 +51,8 @@ so there is no layout, ID namespace, or runtime C contract to recover yet.
 | characters | master skills | `SISYOU.EMI#0 @ 0x3c88` | 17 × `0x0c` | storage | pending | partial | empty-slot and level/ability interpretation |
 | characters | master stats | `SISYOU.EMI#0 @ 0x3d54` | 17 × `0x06` | storage | pending | partial | signed application and clamping |
 | characters | master names | `AFLDKWA.EMI @ 0x1be0` | 17 strings | storage | pending | partial | ownership versus duplicate in `FIRST.EMI` |
-| characters | dragon pointers | `STATUS.EMI#0 @ 0x1c018` | 10 × `u16` | storage | pending | unresolved | runtime-address meaning |
-| characters | dragon growth | `STATUS.EMI#0 @ 0x1c02c` | 100 × `0x06` | storage | pending | unresolved | dimensions and all six fields |
+| characters | dragon pointer candidates | `STATUS.EMI#0 @ 0x1c018` | 10 × `u32` | storage | pending | unresolved | pointer ownership and consumer |
+| characters | following STATUS region | `STATUS.EMI#0 @ 0x1c040` | unresolved | observed | pending | unresolved | boundaries and meaning |
 | area | monsters | versioned pointer maps | 1,400 × `0x88` | storage | pending | partial | AI parameters, unknown ranges, ID/index split |
 | area | formations | versioned pointer maps | 1,600 × `0x09` | storage | pending | partial | appearance-rate and inactive/boss semantics |
 | area | chests | versioned pointer maps | 224 × `0x03` | storage | pending | partial | memory-address byte and save-state mapping |
@@ -90,7 +90,7 @@ LevelObject[693]    = u16 exp; u8 hp; u8 ap; u8 power_defense;
 ShopObject[40]      = u8 item_count; ShopItemRef slots[11];
 ShopItemRef         = u8 item_type; u8 item_index;
 FairyGiftObject[20] = le16 num_battles; u8 item_index; u8 item_type;
-FairyItemObject[48] = u8 item_index; u8 item_type;
+FairyExploreObject[48] = u8 item_index; u8 item_type;
 ```
 
 The names above are storage-family names only. Runtime code may copy one of
@@ -125,10 +125,9 @@ BaseStatsObject[8] =
   u8 attack_abilities[10]; u8 skill_abilities[10];
   u8 unknown_84; u8 level_up_modifiers[6]; u8 unknown[0x19];
 
-MasterSkillsObject[17] = u8 skill_levels[6][2];
+MasterSkillsObject[17] = u8 skill_levels[6][2]; /* LE: level | ability << 8 */
 MasterStatsObject[17]  = u8 stat_bonus[6];
-DragonPointers         = le16 pointer[10];
-DragonGrowth           = u8 record[100][6];
+DragonPointers         = le32 pointer[10];
 ```
 
 The two `unknown` groups in `BaseStatsObject` at offsets `0x28` and `0x48`,
@@ -178,6 +177,7 @@ the consuming instruction stream agree. They are not shared engine headers.
 | `BATTLE.EMI#3 @ 0x801d3844` | ability records are `0x14` bytes; `+0x0c` is the selector flag byte; state at `0x801463c0` is a `u16` | 376/376 byte exact match |
 | `BATTLE.EMI#3 @ 0x801e4368` | `0x80146374` and `0x80146375` are byte globals; `0x801463c0` is a halfword; random helper result is signed 32-bit for `% 100` | 296/296 byte exact match |
 | `GAME.EMI#0 @ 0x80196ffc` | payload base is `0x80195800` (the target's first function is `0x8019611c`); entry state at `+0x3b90` is `u16`, palette serial at `+0x5988` is `u8` | 85.71% candidate; width contract confirmed, scheduler residue remains |
+| `SLUS_004.22 @ 0x800df548` | category/index dispatch selects item, weapon, armor, accessory, or key-item bases with strides `0x12`, `0x18`, `0x16`, `0x14`, and `0x10`; category values `>=5` fall back to items | reviewed disassembly; target-local C candidate is 70.21% with equal size |
 | `SLUS_004.22 @ 0x800df5ec` | key-item index is masked to `u8`, scaled by `0x10`, and added to `0x801c8fdc` | disassembly contract confirmed; C candidate is 16.67% without inline assembly |
 
 ## Validated consumers outside exact-match promotions

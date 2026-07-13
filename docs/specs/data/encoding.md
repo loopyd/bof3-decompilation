@@ -48,14 +48,18 @@ Used in weapon and ability records.
 
 | Bit | Value | Meaning |
 | ---: | ---: | --- |
-| 7 | `0x80` | target_enemy |
-| 6 | `0x40` | target_ally |
-| 5 | `0x20` | selectable_target |
-| 4 | `0x10` | target_all |
-| 3 | `0x08` | unknown_3 |
-| 2 | `0x04` | unknown_2 |
-| 1 | `0x02` | usable_battle |
-| 0 | `0x01` | usable_menu |
+| 7 | `0x80` | usable_menu |
+| 6 | `0x40` | show_animation |
+| 5 | `0x20` | show_name |
+| 4 | `0x10` | story_item |
+| 3 | `0x08` | target_all |
+| 2 | `0x04` | target_enemy_default |
+| 1 | `0x02` | target_selectable |
+| 0 | `0x01` | target_both |
+
+These are the storage labels from the table definition. The narrower runtime
+meanings of the target bits remain consumer-dependent until a call site proves
+them.
 
 ### Ability flags (1 byte, offset 0x11 in AbilityObject)
 
@@ -98,10 +102,11 @@ is 12 bytes, null-terminated with padding zeros.
 | `0x06` | NOCOLOR (reset) |
 | `0x01` | newline (weapon name display) |
 
-### Plain ASCII
+### Plain and custom-encoded names
 
-Used for master names (AFLDKWA.EMI, FIRST.EMI), fairy names, and area
-dialogue text. Standard null-terminated ASCII with no special bytes.
+Fairy names and area dialogue use null-terminated ASCII-compatible bytes.
+Master names in `AFLDKWA.EMI` and `FIRST.EMI` use the same table encoding for
+punctuation (for example `0x8e` is an apostrophe in `D'lonzo`).
 
 ### Trailing bytes after names
 
@@ -123,10 +128,11 @@ Values are 0–15 per nibble. Full stat = base_stat + nibble_value.
 
 | Bits | Field |
 | ---: | --- |
-| 15–8 | level required |
-| 7–0 | ability index |
+| 15–8 | ability index |
+| 7–0 | level required |
 
-`0xFF` in high byte = empty slot.
+`0xFF` in the high byte = empty slot; `0x63` in the low byte is the
+unused-level marker used by the table editor.
 
 ### Shop item reference (2 bytes per slot)
 
@@ -163,10 +169,12 @@ Value range 0–7. Value 0 = 0.8% (2^0/128).
 Values 0–7 per element (see the monster resistance array in [areas](areas.md)).
 Condition byte `0x63` (99) = unused block.
 
-### Base stats signed bytes
+### Signed byte bonuses and modifiers
 
-Values 0x80–0xFF are negative (signed byte): `value - 256`.
-Observed range for master stats: -6 to +4.
+Only `MasterStatsObject` bonuses and the `BaseStatsObject` level-up modifier
+bytes at `0x85`–`0x8a` are established signed-byte fields. Values `0x80`–`0xff`
+decode as `value - 256`; observed master-stat range is -6 to +4. Base stat
+fields themselves are little-endian 16-bit values.
 
 ### Zenny from chests
 
@@ -176,11 +184,11 @@ When `item_type = 0xFF`: zenny = `item_index × 40`.
 
 - **Two encoding systems**: Don't assume plain ASCII for game-data names.
   The custom encoding uses special bytes for punctuation and colors.
-- **Name field padding**: Names shorter than 12 bytes are padded with
-  `0x00`. Trailing non-zero bytes after visible text are struct fields,
-  not name characters.
-- **Signed vs unsigned**: Stat values (master stats, base stats) use
-  signed bytes. Raw hex `0xFE` = -2, not 254.
+- **Name field padding**: Original names use `0x00` terminators/padding;
+  rewritten randomizer names may use `0xff` fill. Trailing non-zero bytes
+  after visible text are struct fields, not name characters.
+- **Signed vs unsigned**: Do not reinterpret BaseStatsObject halfwords as
+  signed bytes. Raw `0xfe` is -2 only in the proven signed-byte fields.
 - **Pointer validity**: Not all pointer slots are filled. `0x00000` and
   `0xFFFFF` indicate empty/unused entries.
 - **Cross-version differences**: v1.0 and v1.1 have different offsets

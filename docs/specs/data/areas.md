@@ -15,16 +15,17 @@ There is no cross-area monster lookup.
 
 | Source map | Records | Archives | Record size |
 | --- | ---: | ---: | ---: |
-| `pointers_monsters_1.1.txt` | 1,400 | 200 | `0x88` |
-| `pointers_formations_1.1.txt` | 1,600 | 200 | `0x09` |
-| `pointers_chests_1.1.txt` | 224 | 77 | `0x03` |
+| `pointers_monsters_1.1.txt` | 1,400 (`1.0`: 1,386) | 200 (`1.0`: 198) | `0x88` |
+| `pointers_formations_1.1.txt` | 1,600 (`1.0`: 1,584) | 200 (`1.0`: 198) | `0x09` |
+| `pointers_chests_1.1.txt` | 224 (`1.0`: 216) | 77 (`1.0`: 76) | `0x03` |
 | `pointers_genes.txt` | 17 | 15 | `0x01` |
 | `pointers_chrysm.txt` | 13 | 13 | `0x01` |
 | `pointers_fairies.txt` | 720 | 12 | `0x09` |
 | `pointers_manillo_items_1.1.txt` | 165 | 3 | `0x08` |
 
-Pointer-map locations are raw archive offsets. Pointer counts are identical
-between v1.0 and v1.1; archive offsets differ. `0x00000` and `0xFFFFF`
+Pointer-map locations are raw archive offsets. v1.1 adds AREA063 and AREA154
+records for monsters and formations, and the Central Wyndia battlefield chest
+records; layouts and record sizes remain unchanged. `0x00000` and `0xFFFFF`
 indicate empty slots.
 
 ## Monsters (136 bytes)
