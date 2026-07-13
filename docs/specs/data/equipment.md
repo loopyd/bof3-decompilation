@@ -26,6 +26,26 @@ offsets. Verified against the US v1.1 disc with zero boundary failures.
 
 ## Record layouts
 
+### Runtime item-reference dispatch
+
+`SLUS_004.22` function `0x800df548` masks the category and dispatches record
+address calculation. The five handled categories use the fixed runtime bases
+and strides below; the function then enters a shared continuation at
+`0x80165dfc`.
+
+| Item type | Record family | Runtime base | Stride | Index calculation |
+| ---: | --- | ---: | ---: | --- |
+| `0` | item | `0x801c8964` | `0x12` | `index × 18` |
+| `1` | weapon | `0x801c90dc` | `0x18` | `index × 24` |
+| `2` | armor | `0x801c98a4` | `0x16` | `index × 22` |
+| `3` | accessory | `0x801c9e7c` | `0x14` | `index × 20` |
+| `4` | key item | `0x801c8fdc` | `0x10` | `index × 16` |
+
+This verifies the five non-empty item-type codes and their record families,
+consistent with the shop and inventory reference encoding. The `0xff`
+empty/zenny value is handled by callers outside this dispatcher and remains
+context-dependent.
+
 ### Items (18 bytes)
 
 | Offset | Size | Field |
@@ -112,6 +132,53 @@ Verified: `Nue Stomp` (01) stype=0x13 (attack+examinable), `Gambit` (02) stype=0
 
 Indices 0xAE–0xD6 are copies of 0x46–0x70 (master skill variants).
 
+#### Battle selection-kind view
+
+Battle selection code indexes the same `0x14`-byte stride beginning at
+`0x801ca70c + 0x0c`:
+
+| Runtime address | Ability-record offset | Selection use | Evidence |
+| ---: | ---: | --- | --- |
+| `0x801ca718 + kind × 0x14` | `0x0c` | selection flags; tested with `0x40`, `0x10`, `0x80`, `0x20` | `BATTLE.EMI#15 @ 0x8009761c` |
+| `0x801ca71c + kind × 0x14` | `0x10` | selection mask, loaded as `u16` | `BATTLE.EMI#15` internal contract |
+| `0x801ca71e + kind × 0x14` | `0x12` | selection name/resource ID, loaded as `u16` | `BATTLE.EMI#15` internal contract |
+
+This proves an alternate runtime view of the ability-stride table. It does
+not replace the ability-table field names: a shared C declaration must preserve
+the byte offsets and support both consumers.
+
+#### Code-level confirmations
+
+| Target and address | Access | Confirmed interpretation |
+| --- | --- | --- |
+| `BATTLE.EMI#3 @ 0x801d3844` | `ability[kind] + 0x0c` | selection flags drive the returned target/mode code |
+| `BATTLE.EMI#3 @ 0x801daae4` | `ability[kind] + 0x0d` | skill type separates attack, assist, and healing rank bonuses |
+| `BATTLE.EMI#15 @ 0x8009761c` | `+0x0c`, `+0x10`, `+0x12` | selection flags, mask, and 16-bit selector resource value |
+| `SLUS_004.22 @ 0x800df5ec` | `item_index & 0xff`, then `× 0x10` | key-item record accessor at `0x801c8fdc` |
+
+`SLUS_004.22 @ 0x800df604` is a second category-indexed accessor. For the
+handled equipment categories it reads item `+0x0d`, weapon `+0x0e`, armor
+`+0x0e`, and accessory `+0x0e`; the accessory result is masked to its low
+nibble. Categories outside those branches fall through to a shared runtime
+continuation and are not assigned a shared field name here.
+
+`GAME.EMI#0 @ 0x801af5b0` indexes the ability table as `kind × 0x14`. It tests
+`+0x0c` bit `0` for one selection mode and bit `1` for another, then loads
+`+0x10` as a halfword and tests bit `0x400` in the second mode. These are
+runtime flag uses; their public names remain candidates. A readable target-local
+candidate now exists at `src/emi/etc/game/00/func_801af5b0.c`; it measures
+51.35% under canonical `-O2`, so the ability-gate names and exact function
+replacement remain unpromoted.
+
+These are consumer facts, not a claim that every byte has one global semantic
+name. The target-local `Battle03AbilityRecordView` keeps the proven offsets
+typed while preserving the `+0x10` byte/halfword overlay.
+
+The `BATTLE.EMI#3 @ 0x801d3844` lift now matches all 376 bytes. The exact
+match required real external array symbols for the random tables and ability
+records, plus a retained pointer to the halfword state global; these bindings
+are target-local and do not promote a shared runtime ABI.
+
 ### Level growth (8 bytes)
 
 | Offset | Size | Field |
@@ -122,11 +189,27 @@ Indices 0xAE–0xD6 are copies of 0x46–0x70 (master skill variants).
 | `0x04` | 1 | power + defense (packed: pwr<<4|dfn) |
 | `0x05` | 1 | agility + intellect (packed: agi<<4|int) |
 | `0x06` | 1 | ability (slot unlock indicator) |
-| `0x07` | 1 | unknown |
+| `0x07` | 1 | second ability-related byte (candidate) |
 
 693 records. 99 levels × 7 characters (Ryu, Nina, Garr, Teepo, Rei, Momo,
 Peco). Character index = `record_index // 99`. Level = `(record_index % 99) + 1`.
 Ability `0x00` = no skill unlocked; non-zero = ability index learned at that level.
+
+#### Runtime consumer
+
+`GAME.EMI#0 @ 0x801addd4` confirms the serialized widths and packed-byte
+accesses. The function computes a character block as `character_index × 99`,
+then reads `u16` at record offset `0x00` while walking level counters from `1`
+through `< 99`. The same record base is subsequently read as `u8` at offsets
+`0x02` and `0x03`, as packed nibbles at offsets `0x04` and `0x05`, and as
+individual bytes at offsets `0x06` and `0x07`. The runtime base used by those
+loads is `0x801cb8dc`, matching the payload coordinate in the index.
+
+This proves the access widths and that both trailing bytes participate in level
+processing. Both trailing values are passed independently to the same ability
+registration call, so `0x07` is retained as an ability-related candidate rather
+than an unused byte; final semantic names remain unresolved until the full
+consumer is lifted.
 
 ### Shops (23 bytes)
 
@@ -151,6 +234,7 @@ Item type codes: `0`=ItemObject, `1`=WeaponObject, `2`=ArmorObject,
 ## Evidence
 
 - Source file: `out/extracted/BIN/ETC/GAME.EMI`
+- Runtime dispatch: `SLUS_004.22` @ `0x800df548`
 - Validation: `out/index/vast-violence-1.1.json`
 - Struct definitions: `third_party/references/vast-violence/tables/struct_*.txt`
 - Ability names: `third_party/references/vast-violence/ability_names.txt` (228 abilities)

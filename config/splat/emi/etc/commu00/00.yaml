@@ -1,0 +1,15 @@
+name: etc_commu00_00
+sha1: 9194f952f747f67935b44048690ee954d50f4daa
+options:
+  platform: psx
+  compiler: psyq
+  base_path: .
+  target_path: out/binaries/emi/etc/commu00/00.bin
+  asm_path: out/splat/emi/etc/commu00/00/asm
+  src_path: src/emi/etc/commu00/00
+  ld_script_path: out/splat/emi/etc/commu00/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - [0x0, bin]

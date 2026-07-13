@@ -9,6 +9,9 @@ tags: [tables, characters, masters]
 
 ## Base stats (164 bytes)
 
+The table-list name `BaseStats2Object` refers to the byte-identical STATUS.EMI
+copy of this record (`STATUS.EMI#0 @ 0x1b114`); it is not a second layout.
+
 Raw archive location: `BIN/ETC/START.EMI` @ `0x72914` (primary).
 `BIN/ETC/STATUS.EMI` @ `0x1b114` holds a byte-identical copy.
 
@@ -68,7 +71,9 @@ whelp).
 | `0x66` | 10 | assist abilities |
 | `0x70` | 10 | attack abilities |
 | `0x7a` | 10 | skill abilities |
-| `0x84` | `0x20` | unknown |
+| `0x84` | 1 | unknown |
+| `0x85` | 6 | level-up stat modifiers (runtime use) |
+| `0x8b` | `0x19` | unknown |
 
 ### Verified character data
 
@@ -84,6 +89,28 @@ whelp).
 | 7 | Whelp | 0 | 15 | 15 | 10 | 8 | 4 | 8 |
 
 Note: Whelp has character_index=10, not 7.
+
+### Runtime level-up contract
+
+`GAME.EMI#0 @ 0x801addd4` operates on the mutable character array at runtime
+`0x80144968`, with the same `0xa4` stride as `BaseStatsObject`. For the input
+character index it reads level at record offset `0x06` and experience at
+`0x08`, then indexes `GAME#0` level-growth rows as `character × 99 + level`.
+
+For each newly reached level it updates and clamps to `999` the six base-stat
+halfwords at offsets `0x3c`, `0x3e`, `0x40`, `0x42`, `0x44`, and `0x46`
+(base HP, AP, power, defense, agility, and intellect). The six signed modifier
+bytes at offsets `0x85`–`0x8a` are added to the corresponding level-growth
+values; these bytes are part of the previously unresolved trailing `0x20`
+bytes, not padding. The function writes the new level at `0x06`, invokes the
+shared character recalculation routine, and passes both level-record bytes at
+`0x06` and `0x07` to the ability-registration call.
+
+This contract is disassembly-backed; an exact C lift remains pending, so the
+remaining trailing bytes and recalculation semantics stay target-local. A
+readable target-local candidate now exists at
+`src/emi/etc/game/00/func_801addd4.c`; it currently measures 39.71% under the
+canonical `-O2` profile and is not promoted as an exact replacement.
 
 ## Master IDs
 

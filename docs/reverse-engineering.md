@@ -47,9 +47,39 @@ draft and disassembly as evidence, then keep the final C89 source readable.
 checksum, load address, Splat configuration, and source directory rather than
 compensating for a mapping problem in C.
 
+Promotion creates `internal.h` only when the target source directory does not
+already provide one; reviewed target-local declarations are preserved.
+
 `diff` builds the smallest available CMake object and writes comparison evidence
 under `out/matching/`. A nonmatch is a normal iteration result; a build or target
 resolution failure must be fixed before changing source.
+
+## Candidate replacement loop
+
+Structs, symbols, and functions can be recovered incrementally without making
+an unproven shared ABI:
+
+1. Keep an address-only binding in the owning target's `symbols.c` when the
+   instruction stream proves an address but not a semantic name.
+2. Express a recovered record as a target-local C89 view, preserving raw pads
+   and byte/halfword overlays until consumers prove their meaning.
+3. Lift one consumer against that binding and run `bin/harness diff` after
+   every source change. Use `bin/harness flags` or a bounded candidate search
+   only to test compiler shape; generated candidates stay under `out/`.
+   Keep the authored lift in C89; do not use inline assembly to force register
+   allocation or fill an executable function.
+4. Promote a real function or named field only when its bytes match and its
+   behavior agrees with the owning spec. Until then, retain the candidate and
+   its measured match percentage in the spec ledger.
+5. Replace existing declarations one target at a time. Identical payload bytes
+   at different load addresses do not share a symbol or struct contract until
+   relocatability and runtime behavior are proven.
+
+`bin/harness flags` is an experiment boundary, not a promotion mechanism. For
+example, `src/emi/etc/game/00/func_801970ec.c` is 95.31% under the canonical
+`-O2` profile but reaches an exact match with `-O2 -fno-schedule-insns`; keep
+that result as compiler evidence until the target's original per-function flags
+are independently established.
 
 ## Source conventions
 

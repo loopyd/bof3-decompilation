@@ -11,14 +11,16 @@ Game data tables embedded in EMI archives. All offsets, record sizes, and
 field layouts were verified against the US v1.1 disc (`BOF3_1.1`,
 md5 `9dd9a7c934b8b59d0ce76b0f25d18176`) with zero failures.
 
-No C struct definitions exist for these tables yet. These are game-data
-facts, not source-code ownership.
+No shared C struct definitions exist for these tables yet. One target-local
+battle overlay (`Battle03AbilityRecordView`) records the proven ability-table
+offsets; the data specs remain the source of truth for serialized layouts.
 
 ## Verification
 
 - 16 fixed tables located and byte-matched
 - 7 pointer sets resolved across 200+ archives
-- 20 record layouts validated
+- 23 populated record layouts validated (the catalog's two zero-byte
+  placeholders are tracked separately)
 - 0 mismatches
 
 Evidence: `out/index/vast-violence-1.1.json`
@@ -27,6 +29,33 @@ Evidence: `out/index/vast-violence-1.1.json`
 
 Offsets below are raw US v1.1 archive offsets. Versioned pointer maps are the
 location source for area-local records.
+
+For fixed tables, the archive-relative location is converted to the extracted
+payload coordinate by subtracting the first-payload offset (`0x800`). All
+`GAME.EMI` tables below are in `ETC/GAME#0`, whose loader destination is
+`0x80195800`; the corresponding runtime address is therefore
+`0x80195800 + (archive_offset - 0x800)`. The runtime addresses are layout
+coordinates, not shared C declarations.
+
+| Domain | EMI entry | Payload-relative | Runtime address |
+| --- | --- | ---: | ---: |
+| items | `ETC/GAME#0` | `0x33164` | `0x801c8964` |
+| key items | `ETC/GAME#0` | `0x337dc` | `0x801c8fdc` |
+| weapons | `ETC/GAME#0` | `0x338dc` | `0x801c90dc` |
+| armor | `ETC/GAME#0` | `0x340a4` | `0x801c98a4` |
+| accessories | `ETC/GAME#0` | `0x3467c` | `0x801c9e7c` |
+| shops | `ETC/GAME#0` | `0x34a8c` | `0x801ca28c` |
+| abilities | `ETC/GAME#0` | `0x34f0c` | `0x801ca70c` |
+| level growth | `ETC/GAME#0` | `0x360dc` | `0x801cb8dc` |
+
+Additional fixed reward tables use archive coordinates because their runtime
+entry mapping is not shared with the GAME tables:
+
+| Domain | EMI archive | Archive offset | Records × size | Layout |
+| --- | --- | ---: | ---: | --- |
+| fairy gifts | `ETC/COMMU00.EMI` | `0x848` | 20 × `0x04` | [fairy reward data](fairies.md#fairy-gifts) |
+| fairy exploration items | `ETC/COMMU00.EMI` | `0x4218` | 48 × `0x02` | [fairy reward data](fairies.md#exploration-items-and-prizes) |
+| fairy prizes | `ETC/COMMU02.EMI` | `0x2d900` | 48 × `0x02` | [fairy reward data](fairies.md#exploration-items-and-prizes) |
 
 | Domain | Archive or pointer map | Location | Records | Layout |
 | --- | --- | ---: | ---: | --- |
@@ -55,7 +84,10 @@ location source for area-local records.
 
 ## Detailed references
 
+- [Schema ledger](schema-ledger.md) — data-first recovery status for every record family
+- [IDs and encodings](ids.md) — namespaces, masks, packed values, and sentinels
 - [Equipment](equipment.md) — items, weapons, armor, accessories, abilities, shops, level growth (`GAME.EMI`)
+- [Fairy reward data](fairies.md) — fairy gifts, exploration items, and prizes (`COMMU00.EMI`, `COMMU02.EMI`)
 - [Characters](characters.md) — base stats, master skills/stats/names, dragon data, randomizer seeds
 - [Area data](areas.md) — monsters, formations, chests, genes, chrysms, fairies, manillo items
 - [Encoding](encoding.md) — bitmasks, name encoding, stat packing, and formulas
