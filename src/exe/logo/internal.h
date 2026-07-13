@@ -3,14 +3,14 @@
 
 #include "bof3/bof3.h"
 
-extern u32 DAT_8003b800;
-void       SetDispMask(int mask);
-
 void func_801ce758(void);
-void logo_stream_boot(void* work_base, u_long disc_lba);
-bool logo_stream_tick(void);
-void logo_stream_shutdown(void);
-
+void func_801ce760(void* work_base, u_long disc_lba);
+s32  func_801cea98(void);
+void func_801cebfc(void);
 void func_801cedfc(void);
+u_long func_801ceecc(s32 port);
+void func_801ceef4(void);
+
+extern u_long DAT_801d8bb0;
 
 #endif

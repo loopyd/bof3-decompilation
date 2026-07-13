@@ -12,4 +12,19 @@ options:
     - config/symbols/psyq.txt
     - config/symbols/shared.txt
 segments:
-  - [0x0, bin]
+  - [0x0, bin, pre_runtime_stub]
+  - name: runtime_stub
+    type: code
+    start: 0x758
+    vram: 0x801ce758
+    subsegments:
+      - [0x758, c, func_801ce758]
+  - [0x760, bin, pre_main]
+  - name: main
+    type: code
+    start: 0xdfc
+    vram: 0x801cedfc
+    subsegments:
+      - [0xdfc, c, func_801cedfc]
+  - [0xe7c, bin, post_main]
+  - [0x1d800]

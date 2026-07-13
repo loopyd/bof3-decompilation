@@ -14,6 +14,11 @@ tags: [runtime, targets]
 | `SLUS_004.22` | `exe/slus_004_22` | `src/exe/slus_004_22/` |
 | `LOGO/LOGO.EXE` | `exe/logo` | `src/exe/logo/` |
 
+`LOGO.EXE` is tracked as an independent executable at its PS-X header load
+address, `0x801ce000`. Its reviewed `0x801ce758` runtime stub and
+`0x801cedfc` main function are split and exact-matching; the remaining ranges
+are still binary-backed and must be reviewed before promotion.
+
 ## Confirmed EMI code targets
 
 | Shipped identity | Target ID | Source |
