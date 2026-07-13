@@ -2,7 +2,6 @@
 #include "internal.h"
 
 void func_8017e028(s32 arg0);
-void _bu_init(void);
 
 extern s32 DAT_80145e14;
 extern s32 DAT_80145e18;

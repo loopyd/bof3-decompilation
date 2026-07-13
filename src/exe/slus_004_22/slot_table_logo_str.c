@@ -4,8 +4,6 @@
 
 extern u_long DAT_801d8bb0;
 
-void SetDispMask(int mask);
-
 /* @behavior boots the LOGO.EXE stream path, polls for skip/completion, then shuts
  * the display branch down.
  * Not authoritative for LOGO.EXE source mapping; see
