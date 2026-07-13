@@ -66,8 +66,6 @@ void func_8015c088(void);
 void func_8015c100(void);
 void func_80166e88(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8016c0c0(s32 arg0, s32 arg1);
-void func_80161c20(u8 selection_id, s32 cue_level, s32 cue_shape);
-void func_80161cd0(u8 selection_id, s32 cue_level, s32 cue_shape);
 void func_80161bbc(u32 slot_id);
 u8   func_8019601c(void);
 void func_8019fa28(u16 selection_seed, u32 context_a, u32 context_b,
