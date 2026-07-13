@@ -5,17 +5,26 @@
  * @source 0x801dd8ac FUN_801dd8ac
  */
 void func_801dd8ac(u32 arg0) {
-  volatile Battle03LocalWork* battle_work;
-  volatile u8*                dst;
+  u32 local_offset;
+  u32 product;
+  u32 record_offset;
+  u16 flags;
 
-  battle_work = &BATTLE_LOCAL_WORK_ARRAY[arg0 & 0xffu];
-  if ((battle_work->flags_00 & 1u) != 0u) {
-    dst = (volatile u8*)(0x80144968u +
-                         ((u32)BATTLE_LOCAL_BYTE_13C(battle_work) * 0xa4u));
-    *(volatile u16*)(dst + 0x14) = BATTLE_LOCAL_HALF_88(battle_work);
-    *(volatile u16*)(dst + 0x16) = BATTLE_LOCAL_HALF_8A(battle_work);
-    *(volatile u8*)(dst + 0x18) = BATTLE_LOCAL_BYTE_8C(battle_work);
-    *(volatile u16*)(dst + 0x0c) = BATTLE_LOCAL_FLAGS_80(battle_work) & 0x60a0u;
-    BATTLE_LOCAL_FLAGS_80(battle_work) &= 0x60a0u;
+  local_offset = arg0 & 0xffu;
+  product = local_offset << 2;
+  product += local_offset;
+  local_offset = product << 6;
+  if ((*(volatile u8*)(local_offset + 0x80140000u + 0x5e90u) & 1u) != 0u) {
+    record_offset =
+        *(volatile u8*)(0x80140000u + local_offset + 0x5fccu) * 0xa4u;
+    *(volatile u16*)(0x80140000u + record_offset + 0x497cu) =
+        *(volatile u16*)(0x80140000u + local_offset + 0x5f18u);
+    *(volatile u16*)(0x80140000u + record_offset + 0x497eu) =
+        *(volatile u16*)(0x80140000u + local_offset + 0x5f1au);
+    *(volatile u8*)(0x80140000u + record_offset + 0x4980u) =
+        *(volatile u8*)(0x80140000u + local_offset + 0x5f1cu);
+    flags = *(volatile u16*)(0x80140000u + local_offset + 0x5f10u) & 0x60a0u;
+    *(volatile u16*)(0x80140000u + local_offset + 0x5f10u) = flags;
+    *(volatile u16*)(0x80140000u + record_offset + 0x4974u) = flags;
   }
 }
