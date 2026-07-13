@@ -27,7 +27,7 @@ void func_80162d18(void) {
     src++;
     dst++;
   } while (src != end);
-  callbacks[8] = src->values[0];
+  *(vu32*)dst = src->values[0];
 
   ((EmiLoaderCallback)callbacks[DAT_8014648a])();
 }
