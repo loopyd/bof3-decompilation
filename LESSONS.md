@@ -108,6 +108,13 @@ Durable findings that make the BOF3 lift-and-match loop faster and safer.
   target-scoped and allowlisted. A blind `sed` over `func_XXXXXXXX` or
   `DAT_XXXXXXXX` can silently merge independently loaded binaries or break
   m2c/permuter traceability; run the target's exact diff after each rename.
+- For duplicate-function discovery, `bin/harness analysis graph` writes exact
+  and relocation-aware groups to `out/analysis/graph.json`; inspect them with
+  `jq '.duplicate_groups' out/analysis/graph.json`. A source-only sanity check
+  is `rg --files src -g 'func_*.c' | sed -E
+  's#^.*/(func_[0-9a-f]+)\\.c$#\\1#' | sort | uniq -d`. Repeated declarations
+  in different target headers are not automatically duplicates: overlay and
+  PsyQ copies can share a role while having different addresses or bytes.
 
 ## Record the hard tail precisely
 
