@@ -106,8 +106,7 @@ extern s16 DAT_8014930a;
 extern s16 DAT_8014930e;
 
 extern const GameEntry0StateHandler BOF3_GAME_ALT_FRONT_CALLBACK_TABLE[];
-#define BOF3_GAME_SELECTION_CALLBACK_TABLE \
-  CVPTR(GameEntry0StateHandler, 0x801c7b14u)
+extern const GameEntry0StateHandler BOF3_GAME_SELECTION_CALLBACK_TABLE[];
 
 /* @behavior clears one local GAME entry-0 record slot by index.
  * @source 0x801960c0
