@@ -21,7 +21,7 @@ void func_8014aac8(void) {
     func_8017ba40(DAT_80143e68 + 0x14);
     func_8014e22c();
     func_8014e6d0();
-    func_8017b9cc(DAT_80143e68 + 0x8c);
+    DrawOTag((u_long*)(DAT_80143e68 + 0x8c));
     func_8014afc0();
     func_8015d044();
 
@@ -49,7 +49,7 @@ void func_8014aac8(void) {
     func_8014b73c();
     func_80163010();
     DAT_80143ef8 = func_80174700(1);
-    func_8017b3cc(0);
+    DrawSync(0);
     func_8014b0f0();
     DAT_80143e6c++;
   }

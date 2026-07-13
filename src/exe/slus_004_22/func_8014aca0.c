@@ -16,7 +16,7 @@ void func_8014aca0(void) {
   DAT_80143d44 = 0;
   DAT_80143e68 = work;
   func_8014e564(0, 0, 0x400, 0x200);
-  func_8017b3cc(0);
-  func_8017b330(1);
+  DrawSync(0);
+  SetDispMask(1);
   func_8014b020();
 }
