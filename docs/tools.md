@@ -8,7 +8,8 @@
 | Splat/spimdisasm | Split PSX binaries and produce canonical assembly | Yes |
 | historical GCC | Reproduce the BOF3 compiler family | Yes |
 | MASPSX/binutils | Produce inspectable matching ELF objects | Yes |
-| `emi-ex` | Extract BOF3 Capcom EMI containers | Yes |
+| Rust `emi-ex` | Canonical BOF3 EMI extractor through `bin/harness emi unpack` | Yes |
+| Rust `bof3-disk` | Canonical disc extraction/checksum tool used by setup | Yes |
 | asm-differ | Interactive instruction comparison | Yes |
 | m2c | Produce a matching-oriented C seed | Optional |
 | Rizin/rz-ghidra | Fast local CLI analysis | Optional |
@@ -18,6 +19,13 @@
 Pinned repository tools live under `third_party/`; generated installations and
 SDKs live under `toolchains/`. See `tools.lock.toml` for the local role of each
 submodule.
+
+The canonical command binaries are pure Rust and retain the names `bof3-disk`
+and `emi-ex`. Setup builds them with Cargo's lockfiles into
+`build/tools/rust/`. `emi-ex` has byte-identical extraction evidence across all
+880 archives on the BOF3 disc. `bof3-disk` is canonical for extraction and
+checksums; its `rebuild` command is not yet a parity replacement for the legacy
+mkpsxiso path and fails explicitly rather than producing an unverified image.
 
 ## Historical PsyQ toolchain
 

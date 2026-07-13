@@ -112,10 +112,15 @@ def repo_layout(
         rebuilt_dir=rebuilt_dir,
         raw_emi_dir=raw_emi_dir,
         ghidra_bootstrap_dir=ghidra_bootstrap_dir,
-        harness_disk_src=third_party_dir / "bof3-disk",
-        emi_ex_src=third_party_dir / "emi-ex",
-        harness_disk_bin=build_dir / "third_party" / "bof3-disk" / "bof3-disk",
-        emi_ex_bin=build_dir / "tools" / "emi-ex-v2" / "emi-ex",
+        harness_disk_src=third_party_dir / "bof3-disk-v2",
+        emi_ex_src=third_party_dir / "emi-ex-v2",
+        harness_disk_bin=build_dir
+        / "tools"
+        / "rust"
+        / "bof3-disk"
+        / "release"
+        / "bof3-disk",
+        emi_ex_bin=build_dir / "tools" / "rust" / "emi-ex" / "release" / "emi-ex",
         psn00b_toolchain_root=toolchains_dir / "psn00b_toolchain",
         psn00b_sdk_root=toolchains_dir / "psn00bsdk",
         gcc272_psx_root=toolchains_dir / "gcc-2.7.2-psx",

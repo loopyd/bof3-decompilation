@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from ..binaries import (
+    materialize_promoted_emi_targets,
     normalize_executable,
     parse_number,
     promote_entry,
@@ -22,6 +23,7 @@ from ..binaries import (
 from ..jsonio import read_json
 from ..paths import repo_layout
 from ._common import run_main
+from .emi import configure_unpack_parser
 
 
 def _target_manifests(args: argparse.Namespace):
@@ -887,6 +889,9 @@ def run_normalize(args: argparse.Namespace) -> int:
             root / "config" / "splat" / "exe" / f"{name}.yaml", image
         )
         print(f"normalized {name}: {metadata['image']}")
+    catalog = write_catalog(root / "out" / "extracted" / "BIN", _catalog_path(args))
+    for image in materialize_promoted_emi_targets(root=root, catalog=catalog):
+        print(f"normalized EMI: {image}")
     return 0
 
 
@@ -1184,6 +1189,10 @@ def build_parser() -> argparse.ArgumentParser:
     context_show = context_sub.add_parser("show")
     context_show.add_argument("target")
     context_show.set_defaults(handler=run_context_show)
+
+    emi = sub.add_parser("emi")
+    emi_sub = emi.add_subparsers(dest="emi_command", required=True)
+    configure_unpack_parser(emi_sub.add_parser("unpack"))
 
     accept = sub.add_parser("accept")
     accept.add_argument("candidate", type=Path)

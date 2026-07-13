@@ -40,7 +40,7 @@ setup: venv
 # Extract the disc and unpack every EMI archive into out/extracted.
 extract: venv
     @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.disk disk-extract --output {{ root }}/out/extracted
-    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.emi emi-unpack --input-dir {{ root }}/out/extracted --output-dir {{ root }}/out/extracted
+    @{{ root }}/bin/harness emi unpack
 
 # Refresh the EMI catalog.
 scan: venv
@@ -54,7 +54,8 @@ doctor: venv
 # Configure and build every registered executable and overlay artifact.
 build:
     @cmake --fresh --preset default
-    @cmake --build --preset default --parallel --target artifacts
+    # Historical PsyQ compilation is not output-race safe within one target.
+    @cmake --build --preset default --parallel 1 --target artifacts
 
 # Run focused repository checks.
 check: venv check-format-c
@@ -76,6 +77,7 @@ format-c:
 check-format-c:
     @find src include -type f \( -name '*.c' -o -name '*.h' \) -print0 2>/dev/null | xargs -0 -r -P 0 -n 32 clang-format --dry-run --Werror
 
-# Remove generated build and analysis output.
+# Remove rebuildable compiler output. Retained reverse-engineering evidence under
+# out/ is intentionally never part of a generic clean operation.
 clean:
-    @rm -rf build out
+    @cmake -E rm -rf "{{ root }}/build"

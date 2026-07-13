@@ -8,6 +8,7 @@ import pytest
 
 from harness.binaries import (
     build_emi_catalog,
+    materialize_promoted_emi_targets,
     normalize_executable,
     promote_entry,
     resolve_entry,
@@ -15,6 +16,45 @@ from harness.binaries import (
     target_progress,
     write_catalog,
 )
+
+
+def test_materialize_promoted_emi_targets_restores_deleted_binary(
+    tmp_path: Path,
+) -> None:
+    emi_root = tmp_path / "out" / "extracted" / "BIN"
+    payload = b"promoted EMI payload"
+    write_entry(emi_root, "ETC/GAME", 1, payload, 0x801D0C00)
+    target = tmp_path / "config" / "targets" / "emi" / "etc" / "game" / "01.toml"
+    target.parent.mkdir(parents=True)
+    target.write_text(
+        "\n".join(
+            [
+                'schema = "harness.target/v1"',
+                'id = "emi/etc/game/01"',
+                'disc_id = "BIN/ETC/GAME.EMI#1"',
+                'kind = "emi"',
+                'source_dir = "src/emi/etc/game/01"',
+                'binary = "out/binaries/emi/etc/game/01.bin"',
+                'splat = "config/splat/emi/etc/game/01.yaml"',
+                "load_address = 0x801D0C00",
+                'profile = "native/capcom97"',
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    catalog = build_emi_catalog(emi_root)
+
+    images = materialize_promoted_emi_targets(root=tmp_path, catalog=catalog)
+
+    image = tmp_path / "out" / "binaries" / "emi" / "etc" / "game" / "01.bin"
+    assert images == [image]
+    assert image.read_bytes() == payload
+    image.unlink()
+    materialize_promoted_emi_targets(root=tmp_path, catalog=catalog)
+    assert image.read_bytes() == payload
+    metadata = json.loads(image.with_suffix(".bin.json").read_text(encoding="utf-8"))
+    assert metadata["load_address"] == 0x801D0C00
 
 
 def write_entry(

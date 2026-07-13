@@ -248,6 +248,46 @@ def write_catalog(emi_root: Path, catalog_path: Path) -> dict[str, Any]:
     return catalog
 
 
+def materialize_promoted_emi_targets(
+    *, root: Path, catalog: dict[str, Any]
+) -> list[Path]:
+    """Restore normalized images for every tracked EMI target manifest."""
+    from .domain import load_target_manifests
+
+    images: list[Path] = []
+    manifests = sorted(
+        load_target_manifests(root).values(), key=lambda manifest: manifest.id.value
+    )
+    for manifest in manifests:
+        if manifest.kind != "emi":
+            continue
+        entry = resolve_entry(catalog, manifest.disc_id)
+        source = Path(entry["payload_path"])
+        if not source.is_file():
+            raise FileNotFoundError(
+                f"unpacked payload missing for {manifest.disc_id}: {source}"
+            )
+        payload = source.read_bytes()
+        image = root / manifest.binary
+        image.parent.mkdir(parents=True, exist_ok=True)
+        if not image.is_file() or image.read_bytes() != payload:
+            image.write_bytes(payload)
+        digest = hashlib.sha256(payload).hexdigest()
+        write_json(
+            image.with_suffix(".bin.json"),
+            {
+                "schema": "harness.normalized-emi/v1",
+                "source": str(source),
+                "source_sha256": digest,
+                "image": str(image),
+                "image_sha256": digest,
+                "load_address": manifest.load_address,
+            },
+        )
+        images.append(image)
+    return images
+
+
 def resolve_entry(catalog: dict[str, Any], identifier: str) -> dict[str, Any]:
     from .domain import normalize_target_id
 

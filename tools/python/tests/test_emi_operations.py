@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from harness.commands.harness import build_parser
 from harness.emi.operations import emi_pack, emi_unpack
 
 
@@ -56,6 +57,42 @@ def test_emi_unpack_fails_when_no_archives_are_present(tmp_path: Path) -> None:
         return
 
     raise AssertionError("expected emi_unpack to fail without EMI archives")
+
+
+def test_harness_emi_unpack_delegates_to_domain_operation(
+    monkeypatch, tmp_path: Path
+) -> None:
+    calls = []
+
+    def fake_emi_unpack(**kwargs) -> int:
+        calls.append(kwargs)
+        return 3
+
+    monkeypatch.setattr("harness.commands.emi.emi_unpack", fake_emi_unpack)
+    args = build_parser().parse_args(
+        [
+            "emi",
+            "unpack",
+            "--input-dir",
+            str(tmp_path / "input"),
+            "--output-dir",
+            str(tmp_path / "output"),
+            "--tool",
+            str(tmp_path / "emi-ex"),
+            "--cwd",
+            str(tmp_path),
+        ]
+    )
+
+    assert args.handler(args) == 0
+    assert calls == [
+        {
+            "tool_path": tmp_path / "emi-ex",
+            "cwd": tmp_path,
+            "extracted_dir": tmp_path / "input",
+            "raw_emi_dir": tmp_path / "output",
+        }
+    ]
 
 
 def test_emi_pack_packs_all_manifests_back_into_extracted_tree(

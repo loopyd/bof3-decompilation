@@ -8,33 +8,27 @@ def run(context: SetupContext) -> None:
     build_dir = context.layout.build_dir
     run_command(
         [
-            "cmake",
-            "-S",
-            str(context.layout.harness_disk_src),
-            "-B",
-            str(build_dir / "third_party" / "bof3-disk"),
-            "-DCMAKE_BUILD_TYPE=Release",
+            "cargo",
+            "build",
+            "--locked",
+            "--release",
+            "--manifest-path",
+            str(context.layout.harness_disk_src / "Cargo.toml"),
+            "--target-dir",
+            str(build_dir / "tools" / "rust" / "bof3-disk"),
         ],
-        cwd=context.layout.root,
-    )
-    run_command(
-        ["cmake", "--build", str(build_dir / "third_party" / "bof3-disk")],
         cwd=context.layout.root,
     )
     run_command(
         [
-            "cmake",
-            "-S",
-            str(context.layout.emi_ex_src),
-            "-B",
-            str(build_dir / "tools" / "emi-ex-v2"),
-            "-DCMAKE_BUILD_TYPE=Release",
-            "-DEMI_BUILD_CLI=ON",
-            "-DEMI_BUILD_TESTS=ON",
+            "cargo",
+            "build",
+            "--locked",
+            "--release",
+            "--manifest-path",
+            str(context.layout.emi_ex_src / "Cargo.toml"),
+            "--target-dir",
+            str(build_dir / "tools" / "rust" / "emi-ex"),
         ],
-        cwd=context.layout.root,
-    )
-    run_command(
-        ["cmake", "--build", str(build_dir / "tools" / "emi-ex-v2")],
         cwd=context.layout.root,
     )

@@ -7,12 +7,12 @@ purpose = "PSX binary splitting and canonical spimdisasm assembly"
 
 [tools.bof3-disk]
 profile = "core"
-path = "third_party/bof3-disk"
+path = "third_party/bof3-disk-v2"
 purpose = "BOF3 disc extraction and verification"
 
 [tools.emi-ex]
 profile = "core"
-path = "third_party/emi-ex"
+path = "third_party/emi-ex-v2"
 purpose = "Capcom BOF3 EMI extraction"
 
 [tools.maspsx]
