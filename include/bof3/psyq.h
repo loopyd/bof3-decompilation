@@ -27,7 +27,7 @@ typedef unsigned long u_long;
 /*
  * Include PsyQ headers for type definitions only (SVECTOR, RECT, etc.).
  * PsyQ function declarations in these headers are tolerated; our own
- * SYMBOL_AT bindings (in symbols.c) provide the correct original-binary
+ * WEAK_SYMBOL_AT bindings (in symbols.c) provide the original-binary
  * addresses at link time.
  */
 /* clang-format off */

@@ -722,6 +722,86 @@ def run_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def run_decomp_status(args: argparse.Namespace) -> int:
+    from ..domain import normalize_target_id
+    from ..evidence import build_index, connect_index
+
+    root = _root(args)
+    database = root / "out" / "index" / "harness.sqlite"
+    build_index(root, database)
+    connection = connect_index(database)
+    try:
+        parameters: tuple[str, ...] = ()
+        where = ""
+        if args.target:
+            where = "WHERE target_id = ?"
+            parameters = (normalize_target_id(args.target).value,)
+        rows = connection.execute(
+            f"SELECT target_id, address, source, behavior FROM functions {where} "
+            "ORDER BY target_id, address",
+            parameters,
+        ).fetchall()
+    finally:
+        connection.close()
+
+    files = []
+    missing = 0
+    for row in rows:
+        source = row["source"]
+        if not source:
+            missing += 1
+            continue
+        source_path = Path(source)
+        summary = (
+            root
+            / "out"
+            / "matching"
+            / str(source_path.parent).replace("/", "_")
+            / source_path.stem
+            / "summary.json"
+        )
+        match = read_json(summary) if summary.is_file() else {}
+        percent = match.get("instruction_count", {}).get("match_percent")
+        state = (
+            "matched"
+            if match.get("exact_match")
+            else "different"
+            if percent is not None
+            else "unchecked"
+        )
+        files.append(
+            {
+                "target": row["target_id"],
+                "address": f"0x{row['address']:08x}",
+                "source": source,
+                "status": state,
+                "match_percent": percent,
+            }
+        )
+    totals = Counter(row["status"] for row in files)
+    payload = {
+        "files": files,
+        "totals": {**totals, "missing": missing, "total": len(rows)},
+    }
+    if args.json:
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    else:
+        for row in files:
+            percent = (
+                f" {row['match_percent']:.2f}%"
+                if row["match_percent"] is not None
+                else ""
+            )
+            print(f"{row['status'].upper():7s}{percent:8s} {row['source']}")
+        print(
+            "TOTAL "
+            f"files={len(rows)} matched={totals['matched']} "
+            f"different={totals['different']} unchecked={totals['unchecked']} "
+            f"missing={missing}"
+        )
+    return 0
+
+
 def run_inspect(args: argparse.Namespace) -> int:
     from ..binaries import resolve_entry, target_details
 
@@ -814,6 +894,7 @@ def run_diff(args: argparse.Namespace) -> int:
     from ..domain import load_target_manifests, parse_function_id
     from ..match.asm_diff import AsmDiffRequest, run_asm_diff_one
     from ..match.asm_differ import write_bundle
+    from ._asm_diff_output import format_asm_diff_summary
 
     root = _root(args)
     source = Path(args.source)
@@ -834,10 +915,7 @@ def run_diff(args: argparse.Namespace) -> int:
     if args.json:
         print(json.dumps(payload, indent=2, sort_keys=True))
     else:
-        result = payload["instruction_count"]
-        print(f"{payload['status'].upper()}  code={result['match_percent']:.2f}%")
-        print(f"{payload['function']} {payload['address']}")
-        print(f"diff: {payload['outputs']['diff']}")
+        print(format_asm_diff_summary(payload, root=root))
         if args.show_diff:
             print(Path(payload["outputs"]["diff"]).read_text(encoding="utf-8"))
     return 0 if payload["exact_match"] else 1
@@ -880,6 +958,22 @@ def run_ghidra_sync(args: argparse.Namespace) -> int:
 
     write_json(output, {"schema": "harness.ghidra-imports/v1", "imports": imports})
     print(f"Ghidra import manifest: {output}")
+    return 0
+
+
+def run_analysis(args: argparse.Namespace) -> int:
+    from ..analysis import doctor, export_project, initialize_project, query_project
+
+    root = _root(args)
+    if args.analysis_command == "doctor":
+        payload = doctor()
+    elif args.analysis_command == "init":
+        payload = initialize_project(root, args.target, args.engine)
+    elif args.analysis_command == "export":
+        payload = export_project(root, args.target, args.engine)
+    else:
+        payload = query_project(root, args.target, args.query, args.engine)
+    print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
 
 
@@ -1122,6 +1216,10 @@ def build_parser() -> argparse.ArgumentParser:
     status = sub.add_parser("status")
     status.add_argument("target", nargs="?")
     status.set_defaults(handler=run_status)
+    decomp_status = sub.add_parser("decomp-status")
+    decomp_status.add_argument("target", nargs="?")
+    decomp_status.add_argument("--json", action="store_true")
+    decomp_status.set_defaults(handler=run_decomp_status)
     inspect = sub.add_parser("inspect")
     inspect.add_argument("target")
     inspect.add_argument("--json", action="store_true")
@@ -1166,6 +1264,22 @@ def build_parser() -> argparse.ArgumentParser:
     ghidra_sync.set_defaults(handler=run_ghidra_sync)
     ghidra_export = ghidra_sub.add_parser("export")
     ghidra_export.set_defaults(handler=run_ghidra_sync)
+    analysis = sub.add_parser("analysis")
+    analysis_sub = analysis.add_subparsers(dest="analysis_command", required=True)
+    analysis_doctor = analysis_sub.add_parser("doctor")
+    analysis_doctor.set_defaults(handler=run_analysis)
+    for command in ("init", "export"):
+        analysis_command = analysis_sub.add_parser(command)
+        analysis_command.add_argument("target")
+        analysis_command.add_argument("--engine", choices=("rizin", "r2"))
+        analysis_command.set_defaults(handler=run_analysis)
+    analysis_query = analysis_sub.add_parser("query")
+    analysis_query.add_argument("target")
+    analysis_query.add_argument(
+        "query", help="functions, strings, xrefs, types, or a JSON command"
+    )
+    analysis_query.add_argument("--engine", choices=("rizin", "r2"))
+    analysis_query.set_defaults(handler=run_analysis)
     assets = sub.add_parser("assets")
     assets_sub = assets.add_subparsers(dest="assets_command", required=True)
     assets_list = assets_sub.add_parser("list")

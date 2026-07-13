@@ -54,6 +54,7 @@ and [matching](docs/matching.md). For retained technical evidence, start at
 | `include/bof3/` | Shared C89, hardware, and PsyQ declarations. |
 | `config/splat/` | Tracked binary segment layouts consumed by Splat. |
 | `config/symbols/` | Tracked authored and verified symbol information. |
+| `config/analysis/` | Reviewed analyzer replay commands and analysis-only type layouts. |
 | `asm/` | Reviewed original assembly baselines. |
 | `cmake/` | PSX build rules, source registration, target definitions, and artifact assembly. |
 | `tools/python/` | Implementation of repository automation and the `harness` command surface. |
@@ -151,6 +152,9 @@ and `bin/harness --help`.
   source.
 - A lifted function is one `func_XXXXXXXX.c` file; target-local declarations
   belong in its adjacent `internal.h`.
+- `config/analysis/` is reproducible analyzer input, not compiled source or a
+  substitute for Splat layouts. Generated projects and exports remain under
+  `out/analysis/`.
 - PsyQ routines are library code: declare and use them, but do not lift them.
 - `out/` is the only generated-artifact root: extraction, normalized images,
   catalogs, Splat products, Ghidra state, drafts/diffs, and asset previews.

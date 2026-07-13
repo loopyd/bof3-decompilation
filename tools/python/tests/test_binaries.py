@@ -68,6 +68,11 @@ def test_promotion_requires_explicit_code_confirmation(tmp_path: Path) -> None:
     catalog_path = tmp_path / "out" / "catalog" / "emi.json"
     write_catalog(emi_root, catalog_path)
     (tmp_path / "config" / "symbols").mkdir(parents=True)
+    existing_header = (
+        tmp_path / "src" / "emi" / "battle" / "battle" / "03" / "internal.h"
+    )
+    existing_header.parent.mkdir(parents=True)
+    existing_header.write_text("/* reviewed declarations */\n", encoding="utf-8")
 
     with pytest.raises(ValueError, match="--confirm-code"):
         promote_entry(
@@ -89,6 +94,9 @@ def test_promotion_requires_explicit_code_confirmation(tmp_path: Path) -> None:
         == tmp_path / "config" / "splat" / "emi" / "battle" / "battle" / "03.yaml"
     )
     assert (source / "internal.h").is_file()
+    assert (source / "internal.h").read_text(encoding="utf-8") == (
+        "/* reviewed declarations */\n"
+    )
     normalized = tmp_path / "out" / "binaries" / "emi" / "battle" / "battle" / "03.bin"
     assert (
         normalized.read_bytes()

@@ -74,6 +74,7 @@ def current_symbol_size(
 
 
 _COMMENT_RE = re.compile(r"\s*<[^>]*>")
+_BRANCH_TARGET_RE = re.compile(r"(?<=,)([0-9a-fA-F]{8})(?=$|[ <])")
 
 
 def extract_instructions(disassembly: str) -> list[str]:
@@ -92,6 +93,7 @@ def extract_instructions(disassembly: str) -> list[str]:
 
 
 def _normalize_hex(instruction: str) -> str:
+    instruction = _BRANCH_TARGET_RE.sub(r"0x\1", instruction)
     parts = instruction.split()
     normalized: list[str] = []
     for p in parts:

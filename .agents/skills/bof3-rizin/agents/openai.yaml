@@ -1,0 +1,4 @@
+interface:
+  display_name: "BOF3 Rizin Analysis"
+  short_description: "Maintain BOF3 Rizin projects and evidence"
+  default_prompt: "Use $bof3-rizin to create or update a BOF3 analysis project and export reviewed evidence."

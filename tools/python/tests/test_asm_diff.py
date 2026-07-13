@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 from harness.match.asm_diff import (
     build_result_payload,
@@ -17,6 +18,7 @@ from harness.match.asm_diff import (
 )
 from harness.match._asm_disasm import extract_instructions
 from harness.paths import repo_layout
+from harness.symbols import load_weak_symbol_bindings
 
 
 def write_psx_exe(path: Path, *, load_address: int, payload: bytes) -> None:
@@ -25,6 +27,16 @@ def write_psx_exe(path: Path, *, load_address: int, payload: bytes) -> None:
     header[0x18:0x1C] = load_address.to_bytes(4, byteorder="little")
     header[0x1C:0x20] = len(payload).to_bytes(4, byteorder="little")
     path.write_bytes(bytes(header) + payload)
+
+
+def test_weak_symbol_bindings_are_loaded_for_matching(tmp_path: Path) -> None:
+    symbols = tmp_path / "symbols.c"
+    symbols.write_text(
+        "WEAK_SYMBOL_AT(GAME_TABLE, 0x801ca70c);\n",
+        encoding="utf-8",
+    )
+
+    assert load_weak_symbol_bindings(symbols) == {"GAME_TABLE": 0x801CA70C}
 
 
 def test_source_address_and_size_are_inferred_from_source_files(tmp_path: Path) -> None:
@@ -68,6 +80,29 @@ def test_implausible_sibling_gap_falls_back_to_binary_return(
             load_address=0x80195800,
         )
         == 0x190
+    )
+
+
+def test_binary_return_beats_sparse_sibling_boundary(tmp_path: Path) -> None:
+    source_dir = tmp_path / "bof3" / "src" / "emi" / "etc" / "commu00" / "00"
+    source_dir.mkdir(parents=True)
+    current = source_dir / "func_801f18f8.c"
+    current.write_text("void func_801f18f8(void) {}\n", encoding="utf-8")
+    next_source = source_dir / "func_801f1bc8.c"
+    next_source.write_text("void func_801f1bc8(void) {}\n", encoding="utf-8")
+    binary = tmp_path / "0.bin"
+    payload = bytearray(0x400)
+    payload[0x200:0x204] = (0x03E00008).to_bytes(4, byteorder="little")
+    binary.write_bytes(payload)
+
+    assert (
+        infer_original_size(
+            current,
+            address=0x801F18F8,
+            binary_path=binary,
+            load_address=0x801F18F8,
+        )
+        == 0x208
     )
 
 
@@ -182,6 +217,43 @@ def test_overlay_source_resolves_through_artifact_hint(tmp_path: Path) -> None:
     assert overlay_load_address_for_source(layout, source) == 0x80195800
 
 
+def test_overlay_manifest_uses_catalog_payload_base(
+    tmp_path: Path, monkeypatch
+) -> None:
+    layout = repo_layout(tmp_path)
+    source = layout.root / "src" / "emi" / "etc" / "game" / "00" / "func_80196ffc.c"
+    source.parent.mkdir(parents=True)
+    source.write_text("void func_80196ffc(void) {}\n", encoding="utf-8")
+    catalog = layout.root / "out" / "catalog" / "emi.json"
+    catalog.parent.mkdir(parents=True)
+    catalog.write_text(
+        json.dumps(
+            {
+                "entries": [
+                    {
+                        "id": "ETC/GAME#0",
+                        "archive_id": "ETC/GAME",
+                        "slot": 0,
+                        "load_address": 0x80195800,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    manifest = SimpleNamespace(
+        source_dir="src/emi/etc/game/00",
+        disc_id="ETC/GAME#0",
+        load_address=0x8019611C,
+    )
+    monkeypatch.setattr(
+        "harness.domain.load_target_manifests",
+        lambda _root: {"emi/etc/game/00": manifest},
+    )
+
+    assert overlay_load_address_for_source(layout, source) == 0x80195800
+
+
 def test_extract_instructions_strips_addresses_and_bytes() -> None:
     disassembly = """
 801f3c2c <func_801f3c2c>:
@@ -200,6 +272,11 @@ def test_extract_instructions_strips_addresses_and_bytes() -> None:
 def test_extract_instructions_normalizes_hex() -> None:
     disassembly = "801f3ce0:\ta0205ad5 \tsb\tzero,0x5ad5(at)\n"
     assert extract_instructions(disassembly) == ["sb zero,0x5ad5(at)"]
+
+
+def test_extract_instructions_normalizes_branch_target_after_registers() -> None:
+    disassembly = "801d3858:\t14620008\tbne\tv1,v0,801d3884\n"
+    assert extract_instructions(disassembly) == ["bne v1,v0,0x801d3884"]
 
 
 def test_extract_instructions_skips_relocation_lines() -> None:
@@ -233,6 +310,14 @@ def test_result_payload_reports_instruction_match_percent(tmp_path: Path) -> Non
     )
     assert payload["instruction_count"]["matching"] == 2
     assert payload["instruction_count"]["match_percent"] == 66.67
+    assert payload["first_mismatch"] == {
+        "original_index": 1,
+        "current_index": 1,
+        "original_offset": 4,
+        "current_offset": 4,
+        "original": "jr ra",
+        "current": "move v0,zero",
+    }
     assert payload["outputs"] == {
         "directory": str(tmp_path),
         "summary": str(tmp_path / "summary.json"),
@@ -243,3 +328,24 @@ def test_result_payload_reports_instruction_match_percent(tmp_path: Path) -> Non
         "original_bytes": str(tmp_path / "original.bin"),
         "build_log": str(tmp_path / "build.log"),
     }
+
+
+def test_result_payload_uses_byte_match_as_authority(tmp_path: Path) -> None:
+    payload = build_result_payload(
+        source_path=tmp_path / "func_80000000.c",
+        function_name="func_80000000",
+        address=0x80000000,
+        original_size=4,
+        current_size=4,
+        byte_match=True,
+        binary_path=tmp_path / "0.bin",
+        object_path=tmp_path / "func_80000000.c.obj",
+        output_dir=tmp_path,
+        original_lines=["beq v0,v1,0x80000010"],
+        current_lines=["beq v0,v1,80000010"],
+    )
+
+    assert payload["exact_match"] is True
+    assert payload["byte_match"] is True
+    assert payload["instruction_count"]["match_percent"] == 100.0
+    assert payload["first_mismatch"] is not None

@@ -19,6 +19,8 @@ def run_main(
         parser.error("missing command handler")
     try:
         return handler(args)
+    except BrokenPipeError:
+        return 0
     except (FileNotFoundError, RuntimeError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

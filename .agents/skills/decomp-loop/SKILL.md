@@ -61,7 +61,7 @@ boundary, compiler command, and diff normalization are proven correct.
 | Match 80–95% | Trace the first meaningful mismatch in `out/matching/` |
 | Stuck on calling convention | Check the target Splat config and CMake compiler command |
 | Compiler-inserted NOP | Verify delay slots in original vs compiled |
-| Unresolved struct/global | Add `extern` to `internal.h` + `SYMBOL_AT` in `symbols.c` |
+| Unresolved struct/global | Add `extern` to `internal.h` + `WEAK_SYMBOL_AT` in `symbols.c` |
 | Match % won't budge | Use decomp-permuter only after size, CFG, and calls converge |
 
 ## Module completion
@@ -83,7 +83,7 @@ original bytes. Report function matches separately from whole-binary matching.
 
 ## Coding conventions
 
-`.agents/rules/decomp.md` (C89, REG32, DAT_xxx, internal.h, SYMBOL_AT)  
-`.agents/rules/build.md` (module registration, sources.cmake, targets)  
+`.agents/rules/decomp.md` (C89, REG32, DAT_xxx, internal.h, WEAK_SYMBOL_AT)
+`.agents/rules/build.md` (module registration, sources.cmake, targets)
 
 Do not duplicate convention rules here.

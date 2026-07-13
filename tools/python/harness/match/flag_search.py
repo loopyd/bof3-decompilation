@@ -99,6 +99,7 @@ def search_flags(
                     address=address,
                     size=original_size,
                     original_bytes=original_bytes,
+                    symbols_c_path=source.parent / "symbols.c",
                     layout=layout,
                 )
                 linked_path = object_path.with_suffix(".linked.o")

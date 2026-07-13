@@ -2,13 +2,16 @@
 - Format authored C with the root `.clang-format`: compact K&R braces, two-space indentation, 80 columns, and left-bound pointers.
 - C89: `/* */` comments, declare vars at top of function
 - `REG32()`, `REG16()`, `REG8()` from `include/bof3/defines.h` for hardware register access
-- `DEFINE_FUNC_AT()` in `include/bof3/context.h` only for not-yet-lifted cross-module calls; remove when lifted
+- Keep function declarations as ordinary `extern` declarations; place any
+  original-address fallback in the calling target's `symbols.c` with
+  `WEAK_SYMBOL_AT()`.
 - No new headers in `include/bof3/modules/` — ALL declarations go in module's `internal.h`
 - Readable clean C > forcing 100% match when too complex
-- No inline assembly; prefer defines/structs/externs over magic addresses
+- No inline assembly in function bodies. `WEAK_SYMBOL_AT()` is the sole
+  assembly helper and is allowed only in target-owned `symbols.c` files.
 - Fixed-address RAM globals: declare `extern type DAT_xxxxx;` in `internal.h`
   with a `/* @behavior ... */` comment, and place them with
-  `SYMBOL_AT(DAT_xxxxx, 0x8XXXXXXX)` in the owning executable's `symbols.c`; never use
+  `WEAK_SYMBOL_AT(DAT_xxxxx, 0x8XXXXXXX)` in the owning executable's `symbols.c`; never use
   `#define DAT_xxxxx VUxx(addr)`.
 - `DAT_xxx` defines live in `internal.h`; readable semantic name → `DAT_xxx` mappings live in `symbols.h` once promoted
 

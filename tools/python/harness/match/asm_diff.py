@@ -47,6 +47,7 @@ __all__ = [
     "collect_source_addresses",
     "default_binary_for_source",
     "extract_original_bytes",
+    "first_instruction_mismatch",
     "infer_original_size",
     "infer_size_from_sibling_sources",
     "matching_instruction_count",
@@ -93,6 +94,34 @@ def matching_instruction_count(
     return sum(block.size for block in matcher.get_matching_blocks())
 
 
+def first_instruction_mismatch(
+    original_lines: list[str], current_lines: list[str]
+) -> dict[str, Any] | None:
+    matcher = difflib.SequenceMatcher(a=original_lines, b=current_lines, autojunk=False)
+    for (
+        tag,
+        original_start,
+        original_end,
+        current_start,
+        current_end,
+    ) in matcher.get_opcodes():
+        if tag == "equal":
+            continue
+        original_index = original_start if original_start < original_end else None
+        current_index = current_start if current_start < current_end else None
+        return {
+            "original_index": original_index,
+            "current_index": current_index,
+            "original_offset": (None if original_index is None else original_index * 4),
+            "current_offset": None if current_index is None else current_index * 4,
+            "original": (
+                None if original_index is None else original_lines[original_index]
+            ),
+            "current": None if current_index is None else current_lines[current_index],
+        }
+    return None
+
+
 # -- result -----------------------------------------------------------------------------
 
 
@@ -103,6 +132,7 @@ def build_result_payload(
     address: int,
     original_size: int,
     current_size: int | None,
+    byte_match: bool | None = None,
     binary_path: Path,
     object_path: Path,
     output_dir: Path,
@@ -110,14 +140,20 @@ def build_result_payload(
     current_lines: list[str],
     linked_path: Path | None = None,
 ) -> dict[str, Any]:
-    status = "exact_match" if original_lines == current_lines else "different"
+    exact_match = (
+        byte_match if byte_match is not None else original_lines == current_lines
+    )
+    status = "exact_match" if exact_match else "different"
     matching_count = matching_instruction_count(original_lines, current_lines)
     denominator = max(len(original_lines), len(current_lines), 1)
-    match_percent = round((matching_count / denominator) * 100, 2)
+    match_percent = (
+        100.0 if byte_match else round((matching_count / denominator) * 100, 2)
+    )
     payload: dict[str, Any] = {
         "schema": "harness.asm-diff-one/v2",
         "status": status,
-        "exact_match": status == "exact_match",
+        "exact_match": exact_match,
+        "byte_match": byte_match,
         "source": str(source_path),
         "function": function_name,
         "address": format_hex(address),
@@ -132,6 +168,7 @@ def build_result_payload(
             "matching": matching_count,
             "match_percent": match_percent,
         },
+        "first_mismatch": first_instruction_mismatch(original_lines, current_lines),
         "outputs": {
             "directory": str(output_dir),
             "summary": str(output_dir / "summary.json"),
@@ -261,6 +298,7 @@ def run_asm_diff_one(
         address=address,
         size=original_size,
         original_bytes=original_bytes,
+        symbols_c_path=source_path.parent / "symbols.c",
         layout=repo,
     )
     linked_path = object_path.with_suffix(".linked.o")
@@ -297,6 +335,7 @@ def run_asm_diff_one(
         address=address,
         original_size=original_size,
         current_size=current_size,
+        byte_match=byte_match,
         binary_path=binary_path,
         object_path=object_path,
         output_dir=output_dir,

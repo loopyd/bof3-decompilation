@@ -5,27 +5,16 @@ import subprocess
 from pathlib import Path
 
 from ..paths import RepoLayout, repo_layout
+from ..symbols import load_weak_symbol_bindings
 
 _HEX_SUFFIX_RE = re.compile(r"(?:func|DAT)_([0-9a-fA-F]{8})$")
-_SYMBOL_AT_RE = re.compile(r"SYMBOL_AT\((\w+),\s*(0x[0-9a-fA-F]+)\)")
 
 
 def resolve_symbol_address(name: str, *, symbols_c_path: Path) -> int | None:
     m = _HEX_SUFFIX_RE.search(name)
     if m is not None:
         return int(m.group(1), 16)
-    return _parse_symbols_c(symbols_c_path).get(name)
-
-
-def _parse_symbols_c(path: Path) -> dict[str, int]:
-    if not path.is_file():
-        return {}
-    entries: dict[str, int] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
-        m = _SYMBOL_AT_RE.search(line)
-        if m is not None:
-            entries[m.group(1)] = int(m.group(2), 16)
-    return entries
+    return load_weak_symbol_bindings(symbols_c_path).get(name)
 
 
 def link_object_at_address(
@@ -33,12 +22,13 @@ def link_object_at_address(
     object_path: Path,
     address: int,
     undefined_symbols: list[str],
+    symbols_c_path: Path | None = None,
     layout: RepoLayout | None = None,
     output_path: Path | None = None,
 ) -> Path:
     repo = layout or repo_layout()
     ld = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-ld"
-    symbols_c = repo.root / "src" / "boot" / "symbols.c"
+    symbols_c = symbols_c_path or (repo.root / "src" / "boot" / "symbols.c")
     defsym_args: list[str] = []
     for sym in undefined_symbols:
         addr = resolve_symbol_address(sym, symbols_c_path=symbols_c)
@@ -86,6 +76,7 @@ def function_bytes_match(
     address: int,
     size: int,
     original_bytes: bytes,
+    symbols_c_path: Path | None = None,
     layout: RepoLayout | None = None,
 ) -> tuple[bool, bytes]:
     repo = layout or repo_layout()
@@ -102,6 +93,7 @@ def function_bytes_match(
         object_path=object_path,
         address=address,
         undefined_symbols=undefined,
+        symbols_c_path=symbols_c_path,
         layout=repo,
     )
     compiled = extract_function_bytes(linked, size=size, layout=repo)

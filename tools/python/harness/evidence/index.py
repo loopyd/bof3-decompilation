@@ -8,20 +8,20 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path
 import re
 import sqlite3
+from pathlib import Path
 from typing import Any, Iterable
 
 from ..domain import load_profiles, load_target_manifests, normalize_target_id
 from ..jsonio import read_json, write_json
+from ..symbols import parse_weak_symbol_bindings
 from .schema import _table_sql, connect, create_schema
 
 
 SCHEMA_VERSION = "harness.evidence/v1"
 FUNCTION_RE = re.compile(r"func_([0-9a-fA-F]{8})\.c$")
 CALL_RE = re.compile(r"\b(func_[0-9a-fA-F]{8})\s*\(")
-SYMBOL_RE = re.compile(r"SYMBOL_AT\(([^,]+),\s*(0x[0-9a-fA-F]+)\)")
 
 
 def _sha256(path: Path) -> str:
@@ -223,15 +223,15 @@ def build_index(root: Path, database: Path | None = None) -> dict[str, Any]:
             symbol_source = root / manifest.source_dir / "symbols.c"
             if symbol_source.is_file():
                 symbol_text = symbol_source.read_text(encoding="utf-8")
-                for name, address_text in SYMBOL_RE.findall(symbol_text):
-                    symbol_id = f"{target_id}::{name.strip()}"
-                    symbol_ids[name.strip()] = symbol_id
+                for name, address in parse_weak_symbol_bindings(symbol_text).items():
+                    symbol_id = f"{target_id}::{name}"
+                    symbol_ids[name] = symbol_id
                     repository.insert(
                         "symbols",
                         {
                             "id": symbol_id,
-                            "name": name.strip(),
-                            "address": int(address_text, 16),
+                            "name": name,
+                            "address": address,
                             "target_id": target_id,
                         },
                     )

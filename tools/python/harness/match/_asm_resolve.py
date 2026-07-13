@@ -154,15 +154,18 @@ def infer_original_size(
     binary_path: Path,
     load_address: int | None,
 ) -> int:
-    sibling_size = infer_size_from_sibling_sources(source_path, address)
-    if sibling_size is not None:
-        return sibling_size
     try:
         return _infer_size_from_function_index(source_path, address)
     except ValueError:
-        return infer_size_from_binary_return(
-            binary_path, address=address, load_address=load_address
-        )
+        try:
+            return infer_size_from_binary_return(
+                binary_path, address=address, load_address=load_address
+            )
+        except ValueError:
+            sibling_size = infer_size_from_sibling_sources(source_path, address)
+            if sibling_size is not None:
+                return sibling_size
+            raise
 
 
 def source_function_name(source_path: Path, address: int) -> str:
@@ -254,7 +257,9 @@ def overlay_load_address_for_source(
     source_dir = str(Path(source_rel).parent)
     for manifest in load_target_manifests(layout.root).values():
         if manifest.source_dir == source_dir:
-            return manifest.load_address
+            return (
+                _catalog_load_address(layout, manifest.disc_id) or manifest.load_address
+            )
 
     artifact = _artifact_overlay_for_source(layout, source_path)
     return artifact[1] if artifact is not None else None
@@ -290,7 +295,8 @@ def _artifact_overlay_for_source(
         if target_manifest.id.value == target:
             return (
                 layout.root / target_manifest.binary,
-                target_manifest.load_address,
+                _catalog_load_address(layout, target_manifest.disc_id)
+                or target_manifest.load_address,
             )
     # Keep extracted-catalog fallback for isolated fixtures and workspaces
     # created before a target manifest was promoted.
@@ -305,6 +311,19 @@ def _artifact_overlay_for_source(
         normalized_hint = normalized_hint[marker_offset:]
     entry = resolve_entry(read_json(catalog_path), normalized_hint)
     return Path(entry["payload_path"]), int(entry["load_address"])
+
+
+def _catalog_load_address(layout: RepoLayout, disc_id: str) -> int | None:
+    """Return the payload base, which may precede a target's first function."""
+    catalog_path = layout.root / "out" / "catalog" / "emi.json"
+    if not catalog_path.is_file():
+        return None
+    from ..binaries import resolve_entry
+
+    try:
+        return int(resolve_entry(read_json(catalog_path), disc_id)["load_address"])
+    except (KeyError, ValueError):
+        return None
 
 
 def extract_original_bytes(

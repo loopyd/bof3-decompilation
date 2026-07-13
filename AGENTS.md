@@ -15,6 +15,8 @@ decompilation target.
 - `build/`, `out/`, and `toolchains/` are local/generated state. Never put
   authored source there.
 - Durable binary-layout inputs live in `config/splat/` and `config/symbols/`.
+  Reviewed analyzer replay and analysis-only type inputs live in
+  `config/analysis/`; they do not override layouts or compiled types.
   Generated assembly, normalized images, catalogs, Ghidra state, diffs, and
   asset previews belong under `out/`.
 - Before adding a path that might be ignored, run
@@ -28,6 +30,7 @@ asm/                  reviewed original assembly baselines
 config/
   splat/              tracked binary layouts
   symbols/            tracked shared/authored symbols
+  analysis/           tracked reviewed analyzer replay and type inputs
 include/bof3/         shared C89 and PsyQ declarations
 cmake/                build modules and source listings
 src/
@@ -40,6 +43,7 @@ out/
   index/              repository-backed evidence graph and reports
   context/, lift/, matching/  retained decompilation evidence
   splat/, ghidra/, assets/  generated analysis products
+  analysis/            generated analyzer projects and deterministic exports
 ```
 
 Keep one `internal.h` beside each target's functions. Each lifted function is

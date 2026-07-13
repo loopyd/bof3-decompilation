@@ -496,10 +496,12 @@ def promote_entry(
     config_path.write_text(
         splat_config_text(entry, root, target_path=normalized_path), encoding="utf-8"
     )
-    guard = internal_header_guard(slug)
-    (source_dir / "internal.h").write_text(
-        f"#ifndef {guard}\n#define {guard}\n\n#endif\n", encoding="utf-8"
-    )
+    header_path = source_dir / "internal.h"
+    if not header_path.exists():
+        guard = internal_header_guard(slug)
+        header_path.write_text(
+            f"#ifndef {guard}\n#define {guard}\n\n#endif\n", encoding="utf-8"
+        )
     entry["code_status"] = "confirmed"
     entry["evidence"]["reviewed_config"] = str(config_path.relative_to(root))
     catalog["code_status_counts"] = dict(

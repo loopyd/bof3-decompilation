@@ -52,7 +52,7 @@ typedef volatile s32       vs32;
  * Volatile RAM accessors.
  *
  * Use REG8/REG16/REG32 for hardware I/O (0x1f80xxxx).
- * Use extern type DAT_xxxxx; + SYMBOL_AT(name, addr) for fixed-address
+ * Use extern type DAT_xxxxx; + WEAK_SYMBOL_AT(name, addr) for fixed-address
  * RAM globals (0x800xxxxx .. 0x801xxxxx).
  */
 #define VPTR(type, addr)  ((volatile type*)(addr))

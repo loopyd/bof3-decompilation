@@ -8,6 +8,7 @@ from ..match.asm_diff import AsmDiffRequest, parse_int, run_asm_diff_one
 from ..match.asm_differ import write_bundle
 from ..paths import repo_layout
 from ._common import run_main
+from ._asm_diff_output import format_asm_diff_summary
 
 
 def run_one(args: argparse.Namespace) -> int:
@@ -26,14 +27,7 @@ def run_one(args: argparse.Namespace) -> int:
         print(json.dumps(payload, indent=2, sort_keys=True))
         return 0 if payload["exact_match"] else 1
     outputs = payload["outputs"]
-    instruct = payload["instruction_count"]
-    print(f"status: {payload['status']}")
-    print(
-        f"match: {instruct['match_percent']:.2f}% ({instruct['matching']}/{max(instruct['original'], instruct['current'])} instrs)"
-    )
-    print(f"function: {payload['function']} {payload['address']}")
-    print(f"summary: {outputs['summary']}")
-    print(f"diff: {outputs['diff']}")
+    print(format_asm_diff_summary(payload, root=repo_layout().root))
     if args.show_diff:
         diff_path = Path(outputs["diff"])
         if diff_path.is_file():
