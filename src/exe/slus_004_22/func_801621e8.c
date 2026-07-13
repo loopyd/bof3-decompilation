@@ -13,6 +13,9 @@ void func_801621e8(s32 status, u8* result) {
   result += (i = 7);
 
   do {
+    /* The folded pair preserves the original GCC setup scheduling. */
+    i++;
+    i--;
     DAT_80146498[i] = *result--;
   } while (i-- != 0);
 
