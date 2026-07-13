@@ -15,15 +15,16 @@ extern vu32   DAT_80146808;
  */
 void func_80162178(void) {
   volatile u8* read_progress;
+  s8           state;
   u32          lba;
 
   read_progress = &DAT_80146494;
   *read_progress = 0;
   lba = DAT_80146808;
   DAT_80146490 = 0;
-  CdIntToPos(lba, (CdlLOC*)(read_progress + 0x2e4));
+  CdIntToPos(lba, (CdlLOC*)(&DAT_80146494 + 0x2e4));
   DAT_80146492 = 3;
   DAT_80146480 = 0;
-  lba = (DAT_8014648b == 1) ? 6 : 1;
-  DAT_8014648a = lba;
+  state = DAT_8014648b;
+  DAT_8014648a = state == 1 ? 6 : 1;
 }
