@@ -25,7 +25,7 @@ authoritative.
 6. Use `bin/harness analysis query <target> ...` for focused strings,
    functions, xrefs, and type-placement questions.
 7. Run `bin/harness analysis graph` to fingerprint every available promoted
-   binary, derive call edges, list PsyQ API usage, and group exact-byte or
+   binary, derive call edges, resolve PsyQ callsites, and group exact-byte or
    relocation-masked duplicate functions. Read `out/analysis/graph.json` for
    the detailed graph; skipped targets are reported when their normalized raw
    payload is not present locally.

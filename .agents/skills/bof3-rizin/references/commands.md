@@ -47,8 +47,9 @@ and name so repeated exports are diffable.
 
 Use `bin/harness analysis graph [TARGET]` for the repository-wide report. It
 records raw-function addresses and sizes, exact SHA-256 groups, relocation-
-masked candidate groups, MIPS call edges derived from `axlj`, PsyQ header API
-usage in lifted source, and canonical type usage. The report is generated at
+masked candidate groups, MIPS call edges derived from `axlj`, binary callsites
+resolved to reviewed PsyQ symbols, and binary xrefs to reviewed type
+placements. The report is generated at
 `out/analysis/graph.json`; missing local payloads are listed as skipped rather
 than guessed.
 

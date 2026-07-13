@@ -190,8 +190,54 @@ def _relocation_fingerprint(data: bytes) -> str:
     return hashlib.sha256(normalized).hexdigest()
 
 
+def _load_psyq_symbols(root: Path, names: set[str]) -> dict[int, str]:
+    """Read reviewed PsyQ names from locally linked ELF symbol tables."""
+
+    nm_candidates = (
+        shutil.which("mipsel-none-elf-nm"),
+        root / "toolchains/psn00b_toolchain/bin/mipsel-none-elf-nm",
+        root / "toolchains/psn00b_toolchain/mipsel-none-elf/bin/nm",
+    )
+    nm = next(
+        (Path(item) for item in nm_candidates if item and Path(item).is_file()), None
+    )
+    if nm is None:
+        return {}
+    symbols: dict[int, str] = {}
+    for binary in sorted((root / "build").glob("**/*.elf")):
+        result = subprocess.run(
+            [str(nm), "-n", str(binary)], capture_output=True, text=True
+        )
+        for line in result.stdout.splitlines():
+            match = re.match(r"^([0-9a-fA-F]+)\s+[A-Za-z]\s+(\S+)$", line)
+            if match and match.group(2) in names:
+                symbols[int(match.group(1), 16)] = match.group(2)
+    return symbols
+
+
+def _analysis_type_bindings(
+    root: Path, manifest: TargetManifest
+) -> list[dict[str, Any]]:
+    replay = root / "config" / "analysis" / f"{manifest.id.value}.r2"
+    if not replay.is_file():
+        return []
+    bindings = []
+    for match in re.finditer(
+        r"^\s*tl\s+(\w+)\s*=\s*(0x[0-9a-fA-F]+)\s*$",
+        replay.read_text(encoding="utf-8"),
+        re.M,
+    ):
+        bindings.append({"type": match.group(1), "address": int(match.group(2), 16)})
+    return bindings
+
+
 def _target_snapshot(
-    root: Path, manifest: TargetManifest, engine: str, executable: Path
+    root: Path,
+    manifest: TargetManifest,
+    engine: str,
+    executable: Path,
+    psyq_symbols: dict[int, str],
+    type_bindings: list[dict[str, Any]],
 ) -> dict[str, Any]:
     project_dir, _ = _paths(root, engine, manifest)
     functions = _json_output(
@@ -223,10 +269,14 @@ def _target_snapshot(
             "exact_sha256": exact_hash,
             "relocation_sha256": reloc_hash,
         }
+        source = root / manifest.source_dir / f"func_{address:08x}.c"
+        if source.is_file():
+            item["source"] = str(source.relative_to(root))
         function_rows.append(item)
         exact.setdefault(f"{size}:{exact_hash}", []).append(function_id)
         reloc.setdefault(f"{size}:{reloc_hash}", []).append(function_id)
     calls: set[tuple[str, str]] = set()
+    psyq_calls: list[dict[str, Any]] = []
     for ref in xrefs if isinstance(xrefs, list) else []:
         if str(ref.get("type", "")).upper() != "CALL":
             continue
@@ -239,6 +289,41 @@ def _target_snapshot(
                     f"{manifest.id.value}@{callee:08x}",
                 )
             )
+        symbol = psyq_symbols.get(int(ref.get("addr", 0)))
+        if caller is not None and symbol is not None:
+            psyq_calls.append(
+                {
+                    "caller": f"{manifest.id.value}@{caller:08x}",
+                    "from": int(ref.get("from", 0)),
+                    "address": int(ref.get("addr", 0)),
+                    "function": symbol,
+                }
+            )
+    xref_counts: dict[str, int] = {}
+    for ref in xrefs if isinstance(xrefs, list) else []:
+        kind = str(ref.get("type", "UNKNOWN")).upper()
+        xref_counts[kind] = xref_counts.get(kind, 0) + 1
+    type_xrefs: list[dict[str, Any]] = []
+    for binding in type_bindings:
+        refs = []
+        for ref in xrefs if isinstance(xrefs, list) else []:
+            if int(ref.get("addr", -1)) != binding["address"]:
+                continue
+            caller = _containing(ranges, int(ref.get("from", 0)))
+            if caller is not None:
+                refs.append(
+                    {
+                        "function": f"{manifest.id.value}@{caller:08x}",
+                        "from": int(ref.get("from", 0)),
+                        "kind": str(ref.get("type", "UNKNOWN")).upper(),
+                    }
+                )
+        type_xrefs.append(
+            {
+                **binding,
+                "xrefs": sorted(refs, key=lambda row: row["from"]),
+            }
+        )
     return {
         "target": manifest.id.value,
         "binary": manifest.binary,
@@ -248,6 +333,11 @@ def _target_snapshot(
             [{"caller": caller, "callee": callee} for caller, callee in calls],
             key=lambda row: (row["caller"], row["callee"]),
         ),
+        "psyq_calls": sorted(
+            psyq_calls, key=lambda row: (row["caller"], row["address"], row["from"])
+        ),
+        "xref_counts": dict(sorted(xref_counts.items())),
+        "type_xrefs": type_xrefs,
         "exact_groups": sorted(
             (group for group in exact.values() if len(group) > 1),
             key=lambda group: group[0],
@@ -275,9 +365,6 @@ def graph_analysis(
         if not (root / manifest.binary).is_file()
     ]
     selected = [manifest for manifest in selected if (root / manifest.binary).is_file()]
-    snapshots = [
-        _target_snapshot(root, manifest, engine, executable) for manifest in selected
-    ]
     psyq_versions: dict[str, dict[str, Any]] = {}
     for manifest in selected:
         version = {
@@ -311,42 +398,22 @@ def graph_analysis(
             and "__asm__" not in decl.get("return_type", "")
         }
     )
-    type_names = sorted(
-        {
-            name
-            for graph in psyq_versions.values()
-            for name in (item["name"] for item in graph["types"])
-        }
-        | set(
-            re.findall(
-                r"typedef\s+struct\s+(\w+)",
-                (root / "config" / "analysis" / "bof3_objects.h").read_text(
-                    encoding="utf-8"
-                ),
-            )
+    psyq_symbols = _load_psyq_symbols(root, set(psyq_functions))
+    type_bindings = {
+        manifest.id.value: _analysis_type_bindings(root, manifest)
+        for manifest in selected
+    }
+    snapshots = [
+        _target_snapshot(
+            root,
+            manifest,
+            engine,
+            executable,
+            psyq_symbols,
+            type_bindings[manifest.id.value],
         )
-    )
-    psyq_usage: list[dict[str, str]] = []
-    type_usage: list[dict[str, str]] = []
-    for manifest in selected:
-        source_dir = root / manifest.source_dir
-        for path in sorted(source_dir.glob("*.c")):
-            text = path.read_text(encoding="utf-8")
-            source = str(path.relative_to(root))
-            for name in psyq_functions:
-                if re.search(rf"\b{re.escape(name)}\s*\(", text):
-                    psyq_usage.append(
-                        {
-                            "target": manifest.id.value,
-                            "source": source,
-                            "function": name,
-                        }
-                    )
-            for name in type_names:
-                if re.search(rf"\b{re.escape(name)}\b", text):
-                    type_usage.append(
-                        {"target": manifest.id.value, "source": source, "type": name}
-                    )
+        for manifest in selected
+    ]
     exact_groups: dict[tuple[int, str], list[str]] = {}
     reloc_groups: dict[tuple[int, str], list[str]] = {}
     for snapshot in snapshots:
@@ -362,6 +429,10 @@ def graph_analysis(
         "engine": engine,
         "targets": snapshots,
         "skipped_targets": skipped,
+        "psyq_symbols": [
+            {"address": address, "function": name}
+            for address, name in sorted(psyq_symbols.items())
+        ],
         "duplicate_groups": {
             "exact": sorted(
                 (group for group in exact_groups.values() if len(group) > 1),
@@ -373,12 +444,11 @@ def graph_analysis(
             ),
         },
         "psyq_functions": psyq_functions,
-        "psyq_usage": sorted(
-            psyq_usage, key=lambda row: (row["target"], row["source"], row["function"])
-        ),
-        "type_usage": sorted(
-            type_usage, key=lambda row: (row["target"], row["source"], row["type"])
-        ),
+        "type_bindings": [
+            {"target": target, **binding}
+            for target, bindings in sorted(type_bindings.items())
+            for binding in bindings
+        ],
     }
     output = root / "out" / "analysis" / "graph.json"
     write_json(output, payload)
@@ -394,6 +464,10 @@ def graph_analysis(
             payload["duplicate_groups"]["relocation_candidates"]
         ),
         "psyq_functions": len(psyq_functions),
-        "psyq_usages": len(psyq_usage),
-        "type_usages": len(type_usage),
+        "psyq_calls": sum(len(snapshot["psyq_calls"]) for snapshot in snapshots),
+        "type_xrefs": sum(
+            len(ref["xrefs"])
+            for snapshot in snapshots
+            for ref in snapshot["type_xrefs"]
+        ),
     }

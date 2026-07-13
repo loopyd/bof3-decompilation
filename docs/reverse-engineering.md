@@ -56,8 +56,8 @@ resolution failure must be fixed before changing source.
 
 For cross-target navigation, run `bin/harness analysis graph`. It writes
 `out/analysis/graph.json` with raw function fingerprints, exact and
-relocation-masked duplicate candidates, call edges, PsyQ API usage, and
-canonical type usage. Use `bin/harness analysis query TARGET xrefs` for a
+relocation-masked duplicate candidates, call edges, binary PsyQ callsites, and
+binary xrefs to reviewed type placements. Use `bin/harness analysis query TARGET xrefs` for a
 focused binary reference view; skipped graph targets mean their normalized
 payload is not available locally.
 
