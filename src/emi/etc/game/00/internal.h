@@ -5,6 +5,19 @@
 
 typedef void (*GameEntry0StateHandler)(void);
 
+typedef struct AbilityObject {
+  u8 name[0x0c];
+  u8 targeting_flags;
+  u8 skill_type;
+  u8 cost;
+  u8 power;
+  u8 element;
+  u8 ability_flags;
+  u8 control_12[2];
+} AbilityObject;
+
+extern const volatile AbilityObject ABILITY_OBJECTS[];
+
 /* Work area struct accessed via scratchpad pointer (0x1F800044) */
 struct GameWorkArea {
   u8  flags_00;       /* 0x00 - entity flags */

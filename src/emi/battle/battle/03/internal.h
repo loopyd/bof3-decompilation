@@ -9,6 +9,32 @@ typedef void (*Battle03ForwardingHandler)(s32 arg0, s32 arg1, s32 arg2,
                                           s32 arg3, s32 arg4, s32 arg5,
                                           s32 arg6, u8* selector);
 
+/*
+ * The battle selector overlays the last eight bytes of each GAME ability
+ * record.  The same bytes are consumed as element/ability flags by menu and
+ * effect code, or as a 16-bit selection mask by battle code.  Keep the
+ * overlay explicit until a caller proves a single semantic type.
+ */
+typedef union AbilityObjectTail {
+  struct {
+    u8 element;
+    u8 ability_flags;
+  } ability;
+  u16 selection_mask;
+} AbilityObjectTail;
+
+typedef struct AbilityObject {
+  u8                name[0x0c];
+  u8                targeting_flags;
+  u8                skill_type;
+  u8                cost;
+  u8                power;
+  AbilityObjectTail tail_10;
+  u8                control_12[2];
+} AbilityObject;
+
+extern volatile AbilityObject ABILITY_OBJECTS[];
+
 typedef struct Battle03LocalWork {
   u8  flags_00;
   u8  unk_01;
@@ -226,8 +252,9 @@ extern vu32 BATTLE_CURRENT_QUEUED_WORD_4B20;
   (*(volatile volatile u32*)((volatile u8*)(work) + 0x124u))
 #define BATTLE_LOCAL_WORD_128(work) \
   (*(volatile volatile u32*)((volatile u8*)(work) + 0x128u))
+#define BATTLE_ABILITY_RECORD_TABLE ABILITY_OBJECTS
 #define BATTLE_LOCAL_KIND_MASK(kind) \
-  (*(volatile volatile u16*)(0x801ca71cu + ((u32)(kind) * 0x14u)))
+  (BATTLE_ABILITY_RECORD_TABLE[(kind)].tail_10.selection_mask)
 #define BATTLE_PANEL_SLOT_MASK(kind) \
   (*(volatile volatile u8*)(0x801d90ebu + ((u32)(kind) * 0x18u)))
 #define BATTLE_LOCAL_HALF_88(work) \
@@ -353,11 +380,13 @@ extern s8  BATTLE_GLOBAL_BYTE_4952;
   (*(volatile volatile u8*)((volatile u8*)(work) + 0x115u))
 #define BATTLE_ENEMY_BYTE_E6(work) \
   (*(volatile volatile u8*)((volatile u8*)(work) + 0xe6u))
-#define BATTLE_ENEMY_PTR_EC(work)      VPPTR(u8, (volatile u8*)(work) + 0xecu)
-#define BATTLE_WEIGHT_TABLE_0394       CVPTR(u8, 0x801eb394u)
-#define BATTLE_WEIGHT_TABLE_039C       CVPTR(u8, 0x801eb39cu)
-#define BATTLE_RANDOM_TABLE_AC58       CVPTR(u8, 0x801eac58u)
-#define BATTLE_RANDOM_TABLE_AC78       CVPTR(u8, 0x801eac78u)
+#define BATTLE_ENEMY_PTR_EC(work) VPPTR(u8, (volatile u8*)(work) + 0xecu)
+#define BATTLE_WEIGHT_TABLE_0394  CVPTR(u8, 0x801eb394u)
+#define BATTLE_WEIGHT_TABLE_039C  CVPTR(u8, 0x801eb39cu)
+#define BATTLE_RANDOM_TABLE_AC58  CVPTR(u8, 0x801eac58u)
+#define BATTLE_RANDOM_TABLE_AC78  CVPTR(u8, 0x801eac78u)
+extern volatile u8 BATTLE_RANDOM_TABLE_AC58_DATA[];
+extern volatile u8 BATTLE_RANDOM_TABLE_AC78_DATA[];
 #define BATTLE_RETRY_TABLE_AFF4        CVPTR(u8, 0x801eaff4u)
 #define BATTLE_COUNTER_TABLE_AFFC      CVPTR(u8, 0x801eaffcu)
 #define BATTLE_PERCENT_TABLE_AF3C      CVPTR(u16, 0x801eaf3cu)
@@ -437,11 +466,14 @@ extern vu8 BATTLE_UI_RING_TARGET;
 #define BATTLE_PREVIEW_SEQUENCE_TABLE     CVPTR(Battle03Handler, 0x801d0f44u)
 #define BATTLE_SAVED_PREVIEW_RESULT_TABLE CVPTR(Battle03Handler, 0x801d0f6cu)
 
+extern u8 func_8017e3d4(void);
+extern u8 func_800a94a8(void);
+extern u8 func_800a955c(void);
+
 void func_8014d290(void);
 void func_8014d5f0(u8 arg0, u32 arg1, s32 arg2);
 void func_8014f800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 u16  func_8017a620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-u8   func_8017e3d4(void);
 void func_8017a904(u32 arg0, s32 arg1);
 void func_8017a9a4(u32 arg0);
 void func_8017a9b8(u32 arg0);

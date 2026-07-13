@@ -9,7 +9,8 @@ u8 func_801e4368(void) {
     return 0u;
   }
   if (BATTLE_GLOBAL_BYTE_6374 < 3u) {
-    if ((BATTLE_GLOBAL_BYTE_6375 == 4u) && (BATTLE_GLOBAL_HALF_63C0 == 0xa1u)) {
+    if ((*(u8*)&BATTLE_GLOBAL_BYTE_6375 == 4u) &&
+        (*(u16*)&BATTLE_GLOBAL_HALF_63C0 == 0xa1u)) {
       return 0u;
     }
     if ((BATTLE_GLOBAL_BYTE_63CE != 0u) &&
@@ -22,7 +23,7 @@ u8 func_801e4368(void) {
     if ((BATTLE_ENEMY_WORD_100(BATTLE_CURRENT_ENEMY_PTR) & 0x8000u) != 0u) {
       return 1u;
     }
-    if ((func_8017e3d4() % 100) < 0x46) {
+    if ((((s32 (*)(void))func_8017e3d4)() % 100) < 0x46) {
       return 1u;
     }
   }

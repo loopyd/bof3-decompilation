@@ -3,9 +3,16 @@
 
 #include "bof3/bof3.h"
 
+typedef struct KeyItemObject {
+  u8 name[0x0c];
+  u8 unknown_0c[4];
+} KeyItemObject;
+
+extern const KeyItemObject KEY_ITEM_OBJECTS[];
+
 /* LOGO.EXE is loaded independently; this call targets its reviewed entry
  * address rather than linking LOGO.EXE implementation into SLUS_004.22. */
-DEFINE_FUNC_AT(void, func_801ce758, 0x801ce758, (void));
+extern void func_801ce758(void);
 
 typedef void (*Bof3CallbackEntry)(void);
 
