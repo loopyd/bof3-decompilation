@@ -105,8 +105,7 @@ extern s16 DAT_8014930a;
 /* @behavior signed world-coord Y argument for scenario entry */
 extern s16 DAT_8014930e;
 
-#define BOF3_GAME_ALT_FRONT_CALLBACK_TABLE \
-  CVPTR(GameEntry0StateHandler, 0x801c7b08u)
+extern const GameEntry0StateHandler BOF3_GAME_ALT_FRONT_CALLBACK_TABLE[];
 #define BOF3_GAME_SELECTION_CALLBACK_TABLE \
   CVPTR(GameEntry0StateHandler, 0x801c7b14u)
 
