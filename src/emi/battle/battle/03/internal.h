@@ -467,8 +467,6 @@ extern vu8 BATTLE_UI_RING_TARGET;
 #define BATTLE_SAVED_PREVIEW_RESULT_TABLE CVPTR(Battle03Handler, 0x801d0f6cu)
 
 extern u8 func_8017e3d4(void);
-extern u8 func_800a94a8(void);
-extern u8 func_800a955c(void);
 
 void func_8014d290(void);
 void func_8014d5f0(u8 arg0, u32 arg1, s32 arg2);
