@@ -19,8 +19,7 @@ void func_8014b0f0(void) {
   work_offset = 0x70;
   do {
     AddPrims(DAT_80143e68 + work_offset,
-             (void*)(((u32)DAT_80143d44 << 5) + (u32)packet),
-             *ordering_table);
+             (void*)(((u32)DAT_80143d44 << 5) + (u32)packet), *ordering_table);
     ordering_table++;
     index++;
     packet += 4;
