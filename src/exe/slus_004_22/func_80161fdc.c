@@ -72,6 +72,6 @@ void func_80161fdc(u32 slot_id) {
   DAT_80146454 = 0x800;
   DAT_80146494 = 0;
   CdReadyCallback(emi_cd_ready_callback);
-  CdSyncCallback(emi_cd_sync_callback);
+  CdSyncCallback((CdlCB)emi_cd_sync_callback);
   func_80162178();
 }

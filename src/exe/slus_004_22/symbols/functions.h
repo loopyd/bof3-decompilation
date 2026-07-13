@@ -35,7 +35,7 @@ void func_80161f58(void);
 void func_80161fdc(u32 slot_id);
 u32  func_80162160(u32 slot_id);
 void func_80162178(void);
-void func_801621e8(u8 status, u8* result);
+void func_801621e8(s32 status, u8* result);
 void func_80162230(u8 status, u8* result);
 void func_80162500(void);
 void func_801625e4(void);

@@ -7,7 +7,7 @@ extern u8   DAT_80146498[];
  * status.
  * @source 0x801621e8 FUN_801621e8
  */
-void func_801621e8(u8 status, u8* result) {
+void func_801621e8(s32 status, u8* result) {
   s32 i;
 
   result += (i = 7);
