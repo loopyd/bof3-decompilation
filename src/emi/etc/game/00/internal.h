@@ -1,5 +1,5 @@
-#ifndef BOF3_SRC_EMI_GAME_00_INTERNAL_H
-#define BOF3_SRC_EMI_GAME_00_INTERNAL_H
+#ifndef EMI_GAME_00_INTERNAL_H
+#define EMI_GAME_00_INTERNAL_H
 
 #include "bof3/bof3.h"
 
@@ -82,7 +82,7 @@ struct GameWorkArea {
 extern vu16 DAT_80143b90;
 extern u16  DAT_80143c40;
 /* @behavior entry-0 sub-state within current state */
-extern vu16 DAT_80143b92;
+extern u16 DAT_80143b92;
 /* @behavior world/phase index for entry-0 world dispatch */
 extern u8 DAT_80143bb0;
 /* @behavior current world state ID for world/front routing */
@@ -107,6 +107,7 @@ extern u8 DAT_80143f1f;
 extern vu32 DAT_80144fc0;
 /* @behavior front-end selection index for menu routing */
 extern u8  DAT_80145029;
+extern u8  DAT_80145024;
 extern u32 DAT_8014502c;
 /* @behavior palette stage serial for GPU upload sequencing */
 extern vu8 DAT_80145988;
@@ -132,6 +133,7 @@ extern u8       DAT_80148650;
 extern u8       DAT_80148651;
 extern u8       DAT_80148652;
 extern s8       DAT_8014865c;
+extern u8       DAT_80149332;
 extern const u8 DAT_80181eba[];
 extern const u8 DAT_80181ebb[];
 /* @behavior signed world-coord X argument for scenario entry */
@@ -140,12 +142,26 @@ extern s16 DAT_8014930a;
 extern s16  DAT_8014930e;
 extern s16  DAT_801492d8;
 extern s16  DAT_801492dc;
+extern s16  DAT_8014932e;
+extern u8   DAT_80146329;
+extern u8   DAT_801462e3;
+extern u8   DAT_801462e4;
+extern u8   DAT_801462f0;
+extern u8   DAT_801462ec;
+extern u8   DAT_80146325;
+extern u32  DAT_80149318;
+extern s16  DAT_80149330;
+extern u8   DAT_80149333;
+extern u8   DAT_8014933e;
+extern u8   DAT_8014933f;
+extern u32  DAT_801cd954;
+extern const s8 DAT_801c7b74[];
 extern vu16 DAT_801490a4;
 
 extern const GameEntry0StateHandler DAT_801c7b08[];
 extern const GameEntry0StateHandler DAT_801c7b14[];
-#define BOF3_GAME_ALT_FRONT_CALLBACK_TABLE DAT_801c7b08
-#define BOF3_GAME_SELECTION_CALLBACK_TABLE DAT_801c7b14
+#define GAME_ALT_FRONT_CALLBACK_TABLE DAT_801c7b08
+#define GAME_SELECTION_CALLBACK_TABLE DAT_801c7b14
 extern const GameEntry0StateHandler DAT_801c7b44[];
 extern const GameEntry0StateHandler DAT_801c7b54[];
 extern const GameEntry0StateHandler DAT_801c7b7c[];
@@ -256,6 +272,11 @@ void func_80197378(void);
 void func_801975e4(void);
 void func_801979d4(void);
 void func_80197a24(void);
+void func_80197a60(void);
+void func_80197aa4(void);
+void func_80197c1c(void);
+void func_80197e54(void);
+void func_80197efc(void);
 void func_80198170(void);
 void func_801981b4(void);
 void func_801981d4(void);
@@ -268,6 +289,16 @@ void func_80199230(void);
 void func_80198f1c(void);
 void func_801990d0(void);
 void func_801991b8(void);
+void func_801bedd0(void);
+s32  func_801bee5c(void);
+void func_801a06d8(void);
+u8   func_801bf11c(void);
+void func_801bf8e0(void);
+void func_801bfac4(void);
+u8   func_801bf78c(void);
+u8   func_801bdb7c(u8 mode);
+void func_80161808(u32 layout_bank);
+void func_8016728c(u32 slot_id, u32 mode);
 void func_8015d4f8(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
 void func_8015d404(u8 arg0, u8 arg1);
 void func_801a7704(u8 scenario_index);

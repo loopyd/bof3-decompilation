@@ -14,7 +14,7 @@ void func_80196f78(void) {
   func_80158e50();
 
   while (1) {
-    callbacks = BOF3_GAME_ALT_FRONT_CALLBACK_TABLE;
+    callbacks = GAME_ALT_FRONT_CALLBACK_TABLE;
     func_8014b87c(1u);
     callbacks[DAT_80143b90]();
     func_80158c80();

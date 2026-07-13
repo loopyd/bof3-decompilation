@@ -21,7 +21,7 @@ void func_80197068(void) {
   func_80158e50();
 
   while (1) {
-    callbacks = BOF3_GAME_SELECTION_CALLBACK_TABLE;
+    callbacks = GAME_SELECTION_CALLBACK_TABLE;
     callbacks[GAME_SEL_STATE->state]();
     func_80198cac();
     func_8014b87c(1u);
