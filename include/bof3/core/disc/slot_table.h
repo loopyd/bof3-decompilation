@@ -1,5 +1,5 @@
-#ifndef SLOT_TABLE_H
-#define SLOT_TABLE_H
+#ifndef CORE_DISC_SLOT_TABLE_H
+#define CORE_DISC_SLOT_TABLE_H
 
 #include "bof3/defines.h"
 

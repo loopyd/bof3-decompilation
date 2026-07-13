@@ -1,5 +1,5 @@
-#ifndef BOF3_EXE_LOGO_INTERNAL_H
-#define BOF3_EXE_LOGO_INTERNAL_H
+#ifndef EXE_LOGO_INTERNAL_H
+#define EXE_LOGO_INTERNAL_H
 
 #include "bof3/bof3.h"
 

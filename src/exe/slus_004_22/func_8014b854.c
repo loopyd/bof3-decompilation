@@ -5,13 +5,13 @@
  * for thread open state `2`.
  * @source 0x8014b854 FUN_8014b854
  */
-extern Bof3CallbackEntry DAT_80143b44;
+extern GameCallbackEntry DAT_80143b44;
 extern u16               DAT_80143b40;
 
-void func_8014b854(int slot_index, Bof3CallbackEntry callback) {
+void func_8014b854(int slot_index, GameCallbackEntry callback) {
   int slot_offset = slot_index << 7;
 
-  *(volatile Bof3CallbackEntry*)((u8*)&DAT_80143b44 + slot_offset) = callback;
+  *(volatile GameCallbackEntry*)((u8*)&DAT_80143b44 + slot_offset) = callback;
   *(volatile u16*)((u8*)&DAT_80143b40 + slot_offset) =
       GAME_CALLBACK_SLOT_STATE_OPEN;
 }

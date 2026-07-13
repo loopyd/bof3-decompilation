@@ -1,5 +1,5 @@
-#ifndef BOF3_SLUS_004_22_INTERNAL_H
-#define BOF3_SLUS_004_22_INTERNAL_H
+#ifndef SLUS_004_22_INTERNAL_H
+#define SLUS_004_22_INTERNAL_H
 
 #include "bof3/bof3.h"
 
@@ -58,7 +58,7 @@ extern const KeyItemObject   KEY_ITEM_OBJECTS[];
 typedef struct GameCallbackSlot {
   u16               state;
   u16               countdown;
-  Bof3CallbackEntry callback;
+  GameCallbackEntry callback;
   s32               thread_id;
   u32               unk_0c;
   u32               open_arg;
@@ -79,18 +79,6 @@ enum {
 #define GAME_CALLBACK_SLOTS        VPTR(GameCallbackSlot, 0x80143b40u)
 #define GAME_CALLBACK_CURSOR       VPTR(GameCallbackSlot*, 0x80143d40u)
 #define GAME_CALLBACK_END          VPTR(GameCallbackSlot, 0x80143d40u)
-
-#define EMI_SECTOR_SIZE  0x800u
-#define EMI_MAGIC_OFFSET 0x08u
-#define EMI_MAGIC_SIZE   8u
-
-typedef struct EmiTocEntry {
-  u32 size;
-  u32 load_arg;
-  u32 first_word;
-  u16 type;
-  u16 unk;
-} EmiTocEntry;
 
 typedef struct EmiActiveEntry {
   u32  active_lba;

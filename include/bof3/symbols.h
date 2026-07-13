@@ -1,5 +1,5 @@
-#ifndef BOF3_SYMBOLS_H
-#define BOF3_SYMBOLS_H
+#ifndef SYMBOLS_H
+#define SYMBOLS_H
 
 /*
  * Weak original-binary address bindings. A normal strong C definition with

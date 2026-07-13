@@ -1,5 +1,5 @@
-#ifndef BOF3_BOF3_H
-#define BOF3_BOF3_H
+#ifndef BOF3_H
+#define BOF3_H
 
 #include "bof3/compiler.h"
 #include "bof3/context.h"

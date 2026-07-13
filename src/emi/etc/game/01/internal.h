@@ -1,5 +1,5 @@
-#ifndef BOF3_SRC_EMI_GAME_01_INTERNAL_H
-#define BOF3_SRC_EMI_GAME_01_INTERNAL_H
+#ifndef EMI_GAME_01_INTERNAL_H
+#define EMI_GAME_01_INTERNAL_H
 
 #include "bof3/bof3.h"
 
@@ -74,7 +74,6 @@ void game_stop_selection_fx(u32 effect_group, s32 effect_id);
 /* @behavior starts streaming one archive slot through the EXE-side EMI loader.
  * @source 0x80161fdc
  */
-void emi_stream_init_slot(u32 slot_id);
 
 /* @behavior copies the shared CPU-side palette bank before the corresponding VRAM
  * upload path.

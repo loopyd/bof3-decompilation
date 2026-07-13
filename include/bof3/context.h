@@ -1,5 +1,5 @@
-#ifndef BOF3_CONTEXT_H
-#define BOF3_CONTEXT_H
+#ifndef CONTEXT_H
+#define CONTEXT_H
 
 #include "bof3/compiler.h"
 #include "bof3/defines.h"

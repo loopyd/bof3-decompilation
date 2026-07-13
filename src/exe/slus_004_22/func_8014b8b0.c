@@ -11,7 +11,7 @@ extern GameCallbackSlot* DAT_80143d40;
 void NO_SIBLING_CALLS func_8014b8b0(void) {
   DAT_80143d40->state = GAME_CALLBACK_SLOT_STATE_EMPTY;
   func_8017ee0c();
-  func_8017edac(DAT_80143d40->thread_id);
+  CloseTh(DAT_80143d40->thread_id);
   func_8017ee1c();
   ChangeTh(GAME_CALLBACK_FORCE_SWITCH);
 }

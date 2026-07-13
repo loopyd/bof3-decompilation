@@ -1,9 +1,9 @@
-#ifndef BOF3_SLUS_004_22_SYMBOLS_FUNCTIONS_H
-#define BOF3_SLUS_004_22_SYMBOLS_FUNCTIONS_H
+#ifndef SLUS_004_22_SYMBOLS_FUNCTIONS_H
+#define SLUS_004_22_SYMBOLS_FUNCTIONS_H
 
 #include "bof3/bof3.h"
 
-typedef void (*Bof3CallbackEntry)(void);
+typedef void (*GameCallbackEntry)(void);
 
 void* func_800df548(s32 item_type, s32 item_index);
 
@@ -17,6 +17,7 @@ void func_8014aca0(void);
 void func_8014ad28(void);
 void func_8014ae08(void);
 void func_8014ae9c(u8* work);
+void func_8014b17c(void);
 void func_8014aee0(void);
 void func_8014afc0(void);
 void func_8014b020(void);
@@ -65,9 +66,6 @@ void func_8017b9cc(void* arg0);
 void func_8017ba40(void* arg0);
 void func_8017bc98(void* arg0);
 void func_8017e3d4(void);
-s32  func_8017ed9c(Bof3CallbackEntry callback, u32 open_arg, u32 open_arg_2);
-s32  func_8017edac(s32 thread_id);
-
 /* Semantic aliases preserve address-based names for analyzer and matching
  * tools while making reviewed call sites readable. */
 #define emi_cd_sync_callback  func_801621e8

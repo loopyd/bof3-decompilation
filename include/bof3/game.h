@@ -1,5 +1,5 @@
-#ifndef BOF3_GAME_H
-#define BOF3_GAME_H
+#ifndef GAME_H
+#define GAME_H
 
 /*
  * Game-layer shared declarations — promoted from internal.h as cross-module

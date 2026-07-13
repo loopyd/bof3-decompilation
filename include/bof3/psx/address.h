@@ -1,5 +1,5 @@
-#ifndef BOF3_PSX_ADDRESS_H
-#define BOF3_PSX_ADDRESS_H
+#ifndef PSX_ADDRESS_H
+#define PSX_ADDRESS_H
 
 /*
  * Address casts keep recovered PSX memory maps explicit at call sites.  The

@@ -1,5 +1,5 @@
-#ifndef BOF3_DEFINES_H
-#define BOF3_DEFINES_H
+#ifndef DEFINES_H
+#define DEFINES_H
 
 #include <stddef.h>
 

@@ -1,5 +1,5 @@
-#ifndef BOF3_CORE_GAME_FRONT_H
-#define BOF3_CORE_GAME_FRONT_H
+#ifndef CORE_GAME_FRONT_H
+#define CORE_GAME_FRONT_H
 
 #include "bof3/defines.h"
 

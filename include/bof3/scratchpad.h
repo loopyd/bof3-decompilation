@@ -1,5 +1,5 @@
-#ifndef BOF3_CONTEXT_COMMON_SCRATCHPAD_H
-#define BOF3_CONTEXT_COMMON_SCRATCHPAD_H
+#ifndef SCRATCHPAD_H
+#define SCRATCHPAD_H
 
 /* PS1 scratchpad pointer - points to a per-overlay work area */
 #define SCRATCH_PTR ((volatile void**)0x1F800044u)

@@ -1,5 +1,5 @@
-#ifndef BOF3_COMPILER_H
-#define BOF3_COMPILER_H
+#ifndef COMPILER_H
+#define COMPILER_H
 
 /* Prevent sibling calls so the compiler emits exact jal instructions
  * matching the original binary's call graph. */
