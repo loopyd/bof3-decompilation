@@ -12,7 +12,7 @@ void func_801f83b0(u32 intensity) {
   intensity &= 0xffu;
   limit = intensity & 0xffffu;
   dst_offset = 0u;
-  src = (const u16*)BOF3_SCENA16_PALETTE_SRC;
+  src = (const u16*)SCENA16_PALETTE_SRC;
   src_end = (const u16*)0x80033820u;
 
   do {
@@ -52,5 +52,5 @@ void func_801f83b0(u32 intensity) {
     dst_offset += 2u;
   } while (src < src_end);
 
-  BOF3_SCENA16_DAT_80145988 = (u8)(BOF3_SCENA16_DAT_80145988 + 1u);
+  SCENA16_DAT_80145988 = (u8)(SCENA16_DAT_80145988 + 1u);
 }

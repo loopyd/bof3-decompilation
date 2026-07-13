@@ -7,5 +7,5 @@ void func_801f7144(void) {
   s8 state;
 
   state = *(s8*)0x80146874u;
-  BOF3_SCENA16_PTR_FUN_801f8558[state]();
+  SCENA16_PTR_FUN_801f8558[state]();
 }

@@ -11,8 +11,8 @@ void func_801f845c(void) {
   vu8*       serial_base;
 
   i = 0;
-  dst = (u16*)BOF3_SCENA16_PALETTE_DST;
-  src = (const u16*)BOF3_SCENA16_PALETTE_SRC;
+  dst = (u16*)SCENA16_PALETTE_DST;
+  src = (const u16*)SCENA16_PALETTE_SRC;
 
   do {
     dst[i] = src[i];
