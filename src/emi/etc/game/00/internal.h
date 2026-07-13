@@ -263,7 +263,6 @@ s16 func_80154f28(s32 x, s32 y);
 u8 func_8014d978(void);
 
 void func_8019611c(void);
-void func_80196f78(void);
 void func_80196ffc(void);
 void func_80197068(void);
 void func_801970ec(void);
@@ -297,7 +296,6 @@ void func_801bf8e0(void);
 void func_801bfac4(void);
 u8   func_801bf78c(void);
 u8   func_801bdb7c(u8 mode);
-void func_80161808(u32 layout_bank);
 void func_8016728c(u32 slot_id, u32 mode);
 void func_8015d4f8(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
 void func_8015d404(u8 arg0, u8 arg1);
@@ -308,7 +306,6 @@ void func_80164a44(volatile void* character_state);
 void func_8019faa0(u16 selection_seed, u32 context_a, u32 context_b,
                    u8 context_kind);
 void func_80198bc4(u32 arg0);
-void func_8014ecac(u16 local_mode);
 void func_801a0048(s16 a, s16 b);
 void func_801b3ccc(u32 arg0);
 
