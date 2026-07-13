@@ -6,12 +6,12 @@
  * @source 0x801c5558 FUN_801c5558
  */
 void func_801c5558(void) {
-  struct GameWorkArea* work;
+  volatile struct GameWorkArea* work;
   u32                  route;
   u32                  offs_a;
   u32                  offs_b;
   s16                  result;
-  u8*                  global_work;
+  volatile u8*         global_work;
   s16                  threshold;
 
   work = SCRATCH_WORK;

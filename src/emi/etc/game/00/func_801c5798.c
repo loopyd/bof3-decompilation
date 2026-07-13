@@ -1,5 +1,9 @@
 #include "internal.h"
 
+/* @behavior clears three consecutive words at offsets 0x0c through 0x14 in
+ * the work record referenced by scratchpad pointer slot 17.
+ * @source 0x801c5798 FUN_801c5798
+ */
 void func_801c5798(void) {
   struct GameWorkArea** base;
   struct GameWorkArea*  temp_v0;

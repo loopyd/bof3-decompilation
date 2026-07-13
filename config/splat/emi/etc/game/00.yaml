@@ -12,4 +12,46 @@ options:
     - config/symbols/psyq.txt
     - config/symbols/shared.txt
 segments:
-  - [0x0, bin]
+  - [0x0, bin, header]
+  - name: main
+    type: code
+    start: 0x91c
+    vram: 0x8019611c
+    subsegments:
+      - [0x91c, c, func_8019611c]
+      - [0x95c, asm, func_8019615c]
+      - [0x1778, c, func_80196f78]
+      - [0x17fc, c, func_80196ffc]
+      - [0x1868, c, func_80197068]
+      - [0x18ec, c, func_801970ec]
+      - [0x19e8, c, func_801971e8]
+      - [0x1b78, c, func_80197378]
+      - [0x1de4, c, func_801975e4]
+      - [0x21d4, c, func_801979d4]
+      - [0x2224, c, func_80197a24]
+      - [0x2970, c, func_80198170]
+      - [0x29b4, c, func_801981b4]
+      - [0x29d4, c, func_801981d4]
+      - [0x2a34, c, func_80198234]
+      - [0x2cac, c, func_801984ac]
+      - [0x2f44, c, func_80198744]
+      - [0x3104, c, func_80198904]
+      - [0x32c4, c, func_80198ac4]
+      - [0x33c4, c, func_80198bc4]
+      - [0x3438, asm, func_80198c38]
+      - [0xc2e4, c, func_801a1ae4]
+      - [0xc3c0, c, func_801a1bc0]
+      - [0x11b30, c, func_801a7330]
+      - [0x11f04, c, func_801a7704]
+      - [0x12004, c, func_801a7804]
+      - [0x185d4, c, func_801addd4]
+      - [0x19a70, c, func_801af270]
+      - [0x19aa0, c, func_801af2a0]
+      - [0x19b90, c, func_801af390]
+      - [0x19db0, c, func_801af5b0]
+      - [0x2fd58, c, func_801c5558]
+      - [0x2ff98, c, func_801c5798]
+      - [0x31988, c, func_801c7188]
+      - [0x319ac, c, func_801c71ac]
+  - [0x319c4, bin, data]
+  - [0x38158]

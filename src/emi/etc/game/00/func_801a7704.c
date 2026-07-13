@@ -40,7 +40,7 @@ void func_801a7704(u8 scenario_index) {
   *(u32*)0x8014686cu = (u32)scenario_record;
   func_801a7804();
 
-  while (!((s32 (*)(void))func_80162d00)()) {
+  while (!emi_loader_is_ready()) {
     if ((DAT_80143f00 != 0xffffu) && (DAT_80143bb0 != 5u)) {
       func_801992b8();
     }

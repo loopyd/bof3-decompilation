@@ -3,14 +3,19 @@
 /* @behavior opens the selection-specific EXE effect using the current selection.
  * @source 0x801d1134 FUN_801d1134
  */
-void __attribute__((noinline)) func_801d1134(void) {
-  u32 selection = (u32)GAME_FRONT_SELECTION;
+void func_801d1134(void) {
+  s32 selection;
+
+  selection = GAME_FRONT_SELECTION;
 
   if (selection != 0xffu) {
-    u32 selection_offset = selection << 2;
+    u32 selection_offset;
+    s32 effect_group;
+    s32 effect_id;
 
-    game_start_selection_fx(
-        GAME_FRONT_SELECTION_FX_TABLE[selection_offset + 0u],
-        GAME_FRONT_SELECTION_FX_TABLE[selection_offset + 1u], 100, 0x10);
+    selection_offset = selection << 2;
+    effect_group = GAME_FRONT_SELECTION_FX_TABLE[selection_offset];
+    effect_id = GAME_FRONT_SELECTION_FX_TABLE[selection_offset + 1u];
+    game_start_selection_fx(effect_group, effect_id, 100, 0x10);
   }
 }

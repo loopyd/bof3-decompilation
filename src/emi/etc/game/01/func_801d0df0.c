@@ -5,10 +5,13 @@
  * @source 0x801d0df0 FUN_801d0df0
  */
 void func_801d0df0(void) {
-  u16 timer;
+  volatile u16* timer_ptr;
+  u16           timer;
 
-  timer = GAME_FRONT_TIMER - 1u;
-  GAME_FRONT_TIMER = timer;
+  timer_ptr = (volatile u16*)0x80140000u;
+  timer_ptr += 0x1e10;
+  timer = *timer_ptr - 1u;
+  *timer_ptr = timer;
 
   if ((s32)(timer << 0x10) == 0) {
     func_8014ecac(0);

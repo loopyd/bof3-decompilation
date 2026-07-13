@@ -3,8 +3,12 @@
 s32 func_801a1c5c(s32 x, s32 y, s32 route, s32 arg3);
 s32 func_801a1ed8(s32 x, s32 y, s32 route, s32 arg3);
 
+/* @behavior projects the supplied coordinates along the active scratch route,
+ * dispatches by movement speed, and returns the low byte of the result.
+ * @source 0x801a1bc0 FUN_801a1bc0
+ */
 s32 func_801a1bc0(struct GameWorkArea* arg0) {
-  struct GameWorkArea* work;
+  volatile struct GameWorkArea* work;
   u8                   speed;
   s32                  route;
   s32                  x;

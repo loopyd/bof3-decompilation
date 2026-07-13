@@ -17,6 +17,10 @@ void func_8014d6b8(u32 flag);
 
 #define GAME_STATE_BASE 0x80140000u
 
+/* @behavior initializes the next free entity slot from one packed spawn
+ * record, applies its saved-state gate, and advances the entity count.
+ * @source 0x801a7330 FUN_801a7330
+ */
 s32 func_801a7330(const u8* spawn_data) {
   struct GameWorkArea* work;
   s32                  coord_x;

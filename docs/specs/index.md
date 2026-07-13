@@ -24,6 +24,7 @@ belong under `out/`.
 
 - [Runtime model](runtime/runtime-layout.md) — executable and overlay boundaries.
 - [EMI loader](runtime/emi-loader.md) — loader dispatch and payload handling.
+- [Frontend flow](runtime/frontend.md) — reviewed title, menu, and attract-path transitions.
 - [Memory layouts](runtime/memory-layouts.md) — evidenced structure offsets.
 
 ## Data

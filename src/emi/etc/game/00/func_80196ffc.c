@@ -21,7 +21,7 @@ void func_80196ffc(void) {
 
   emi_stream_init_slot(0x268u);
 
-  while (!((s32 (*)(void))func_80162d00)()) {
+  while (!emi_loader_is_ready()) {
     func_8014b87c(1u);
   }
 

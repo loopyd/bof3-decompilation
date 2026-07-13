@@ -72,18 +72,19 @@ struct GameWorkArea {
 #define GLOBAL_WORK_PTR VPPTR(u8, 0x80146250u)
 
 /* Movement/position offset tables in main exe data section */
-#define MOVEMENT_OFFSET_0(i)  (*(volatile volatile s32*)(0x80181B94u + (i) * 8))
-#define MOVEMENT_OFFSET_1(i)  (*(volatile volatile s32*)(0x80181B98u + (i) * 8))
-#define MOVEMENT_THRESHOLD(i) (*(volatile volatile s16*)(0x80181B70u + (i) * 2))
+#define MOVEMENT_OFFSET_0(i)  (*(volatile s32*)(0x80181B94u + (i) * 8))
+#define MOVEMENT_OFFSET_1(i)  (*(volatile s32*)(0x80181B98u + (i) * 8))
+#define MOVEMENT_THRESHOLD(i) (*(volatile s16*)(0x80181B70u + (i) * 2))
 
 /* ---- RAM globals (DAT_ names match original game data patterns) ---- */
 
 /* @behavior entry-0 main state machine index */
 extern vu16 DAT_80143b90;
+extern u16 DAT_80143c40;
 /* @behavior entry-0 sub-state within current state */
 extern vu16 DAT_80143b92;
 /* @behavior world/phase index for entry-0 world dispatch */
-extern vu8 DAT_80143bb0;
+extern u8 DAT_80143bb0;
 /* @behavior current world state ID for world/front routing */
 extern vu16 DAT_80143f00;
 /* @behavior world/front flags: bit0=scenario pending, bit3=alt front mode */
@@ -99,27 +100,59 @@ extern vu8 DAT_80143f1c;
 /* @behavior pending request kind — selects next front operation */
 extern vu8 DAT_80143f1d;
 /* @behavior pending mode after request resolution */
-extern vu8 DAT_80143f1e;
+extern u8 DAT_80143f1e;
 /* @behavior selection seed for the entry-0 front callback bank */
-extern vu8 DAT_80143f1f;
+extern u8 DAT_80143f1f;
 /* @behavior active selection id from front-end picker */
 extern vu32 DAT_80144fc0;
 /* @behavior front-end selection index for menu routing */
-extern vu8 DAT_80145029;
+extern u8 DAT_80145029;
+extern u32 DAT_8014502c;
 /* @behavior palette stage serial for GPU upload sequencing */
 extern vu8 DAT_80145988;
-/* @behavior world flags — bit0=pending scenario, bit5=???, bit6=force-reset,
- * bit11=??? */
-extern vu16 DAT_8014625a;
-/* @behavior ??? flag byte cleared on request=0xFE */
+/* @behavior world flags — bit0=pending scenario, bit6=force-reset.
+ * UNKNOWN: roles of observed bits 5 and 11. */
+extern u16 DAT_8014625a;
+extern vu8  DAT_80146256;
+/* @behavior flag byte cleared on request 0xFE.
+ * UNKNOWN: the flag's owning subsystem. */
 extern vu8 DAT_8014832e;
+extern u8 DAT_801462e0;
+extern u8 DAT_801462e1;
+extern u8 DAT_801462e2;
+extern u8 DAT_80145e9b;
+extern u8 DAT_80145fdb;
+extern u8 DAT_8014611b;
+extern u8 DAT_8014626c;
+extern u8 DAT_8014626d;
+extern u8 DAT_8014626e;
+extern u8 DAT_8014626f;
+extern u8 DAT_80146270;
+extern u8 DAT_80148650;
+extern u8 DAT_80148651;
+extern u8 DAT_80148652;
+extern s8 DAT_8014865c;
+extern const u8 DAT_80181eba[];
+extern const u8 DAT_80181ebb[];
 /* @behavior signed world-coord X argument for scenario entry */
 extern s16 DAT_8014930a;
 /* @behavior signed world-coord Y argument for scenario entry */
-extern s16 DAT_8014930e;
+extern s16  DAT_8014930e;
+extern s16 DAT_801492d8;
+extern s16 DAT_801492dc;
+extern vu16 DAT_801490a4;
 
-extern const GameEntry0StateHandler BOF3_GAME_ALT_FRONT_CALLBACK_TABLE[];
-extern const GameEntry0StateHandler BOF3_GAME_SELECTION_CALLBACK_TABLE[];
+extern const GameEntry0StateHandler DAT_801c7b08[];
+extern const GameEntry0StateHandler DAT_801c7b14[];
+#define BOF3_GAME_ALT_FRONT_CALLBACK_TABLE DAT_801c7b08
+#define BOF3_GAME_SELECTION_CALLBACK_TABLE DAT_801c7b14
+extern const GameEntry0StateHandler DAT_801c7b44[];
+extern const GameEntry0StateHandler DAT_801c7b54[];
+extern const GameEntry0StateHandler DAT_801c7b7c[];
+extern const GameEntry0StateHandler DAT_801c7b88[];
+extern const GameEntry0StateHandler DAT_801c7b98[];
+extern const GameEntry0StateHandler DAT_801c7ba4[];
+extern const GameEntry0StateHandler DAT_801c7bb0[];
 
 /* @behavior clears one local GAME entry-0 record slot by index.
  * @source 0x801960c0
@@ -165,14 +198,6 @@ void func_8019fa28(u16 selection_seed, u32 context_a, u32 context_b,
  */
 void func_8014e284(void);
 
-/* @behavior starts streaming one archive slot through the EXE-side EMI loader.
- * @source 0x80161fdc
- */
-void emi_stream_init_slot(u32 slot_id);
-
-/* alias for exact assembly matching via normalization */
-void func_80161fdc(u32 slot_id);
-
 /* @behavior begins streaming the currently selected SCENA pack for the seeded
  * scenario state.
  * @source 0x801a7804
@@ -215,7 +240,8 @@ void func_801af390(s16 base_x, s16 base_y, const u8* record_table, u8 flags);
  */
 s16 func_80154f28(s32 x, s32 y);
 
-/* @behavior ??? placeholder for externally-defined work; called with no args.
+/* @behavior external no-argument update called after movement completion checks.
+ * UNKNOWN: its owning subsystem and return-value meaning.
  * @source 0x8014d978
  */
 u8 func_8014d978(void);
@@ -226,7 +252,27 @@ void func_80196ffc(void);
 void func_80197068(void);
 void func_801970ec(void);
 void func_801971e8(void);
+void func_80197378(void);
+void func_801975e4(void);
+void func_801979d4(void);
+void func_80197a24(void);
+void func_80198170(void);
+void func_801981b4(void);
+void func_801981d4(void);
+void func_80198234(void);
+void func_801984ac(void);
+void func_80198744(void);
+void func_80198904(void);
+void func_80198ac4(void);
+void func_80199230(void);
+void func_80198f1c(void);
+void func_801990d0(void);
+void func_801991b8(void);
+void func_8015d4f8(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
+void func_8015d404(u8 arg0, u8 arg1);
 void func_801a7704(u8 scenario_index);
+void func_801651dc(s32 ability_id, s32 character_id, s32 arg2, s32 arg3);
+void func_80164a44(volatile void* character_state);
 
 void func_8019faa0(u16 selection_seed, u32 context_a, u32 context_b,
                    u8 context_kind);

@@ -9,6 +9,7 @@ tags: [index]
 
 - [Runtime model](runtime-layout.md) — executable roles and shared load regions.
 - [EMI loader](emi-loader.md) — archive-to-runtime dispatch.
+- [Frontend flow](frontend.md) — reviewed title, menu, and attract-path transitions.
 - [Memory layouts](memory-layouts.md) — evidenced live structure offsets.
 
 Executable targets live in [programs](../programs/index.md); media layouts live
