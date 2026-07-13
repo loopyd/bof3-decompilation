@@ -5,7 +5,7 @@ kind = "executable"
 source_dir = "src/exe/slus_004_22"
 binary = "out/binaries/exe/slus_004_22.bin"
 splat = "config/splat/exe/slus_004_22.yaml"
-load_address = 0x80010000
+load_address = 0x80096800
 profile = "native/capcom97"
 
 [psyq]
@@ -15,3 +15,16 @@ headers = "headers/psyq-4.7"
 members = ["psyq/4.0/libgpu/ext.obj"]
 confidence = "high"
 evidence = ["psyq/4.0/libgpu/ext.obj/SetDefDrawEnv"]
+
+[psyq.libraries.LIBCD]
+members = [
+    "psyq/4.7/libcd/s_002.o",
+    "psyq/4.7/libcd/s_012.o",
+    "psyq/4.7/libcd/s_013.o",
+    "psyq/4.7/libcd/s_014.o",
+    "psyq/4.7/libcd/s_015.o",
+    "psyq/4.7/libcd/s_021.o",
+    "psyq/4.7/libcd/sys.o",
+]
+confidence = "high"
+evidence = ["SLUS_004.22 EMI loader call targets and PsyQ 4.7 libcd.a symbols"]

@@ -22,6 +22,11 @@ tags: [runtime, emi, loader]
 
 ## Core functions
 
+The tracked loader module is the contiguous SLUS range
+`0x80161f58..0x80162d9c`. The range currently has nineteen reviewed function
+boundaries. Functions outside that range are callers or neighboring EXE
+services, even when an EMI overlay calls them.
+
 | Address | Proven role |
 | --- | --- |
 | `0x80161f58` | initialize EMI/CD loader state |
@@ -31,7 +36,23 @@ tags: [runtime, emi, loader]
 | `0x801621e8` | CD sync callback |
 | `0x80162230` | service the active entry |
 | `0x80162d00` | return whether loader state is ready |
-| `0x8016728c` | map a content family/index to a slot |
+
+## EXE-side callers and neighboring services
+
+These addresses belong to `SLUS_004.22`, not to a loaded EMI entry. An EMI
+target may bind them at its fixed EXE address, but that does not transfer source
+ownership to the overlay.
+
+| Address | Proven role | Ownership |
+| --- | --- | --- |
+| `0x80161808` | select the frontend layout-bank pointer set | neighboring EXE service |
+| `0x80161c20` | start and record a selection cue | neighboring EXE service |
+| `0x80161cd0` | update a selection cue with level and shape arguments | neighboring EXE service; semantic distinction from `0x80161c20` remains unresolved |
+| `0x8016728c` | map a content family/index to a slot and start its stream | EXE-side loader caller |
+
+`0x8016728c` is therefore part of the wider EMI dispatch path, but not part of
+the contiguous loader module above. Keep its compiled name address-based until
+its public role and argument vocabulary are reviewed.
 
 ## Graphics
 

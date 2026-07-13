@@ -1,11 +1,8 @@
 #include "bof3/context.h"
 #include "internal.h"
 
-void func_80161f58(void);
 void func_8014b1a4(void);
 void func_8014b3c4(void);
-
-extern u8 DAT_8018b300;
 
 /* @behavior initializes the post-logo disc/event path and hands control to the
  * first boot-side callback chain.
@@ -13,7 +10,7 @@ extern u8 DAT_8018b300;
  */
 void func_8014ad28(void) {
   func_801748e4();
-  func_80161f58();
+  emi_loader_initialize();
 
   if (DAT_8018b300 == 0) {
     func_80174700(0);

@@ -1,17 +1,14 @@
-#include "bof3/context.h"
 #include "internal.h"
-
-void func_8014e0fc(const char* path);
-void func_8014ad28(void);
-void func_8014e564(int x, int y, int width, int height);
 
 extern u32    DAT_80143ea0;
 extern u32    DAT_80143ea4;
 extern u_long DAT_80143db8;
 
-static const char s__LOGO_LOGO_EXE_1_80149800[] = "\\LOGO\\LOGO.EXE;1";
-
-const SlotTableEntry* func_8014aee0(void) {
+/* @behavior loads and transfers control to LOGO.EXE, then restores the boot
+ * rendering path after the loaded executable returns.
+ * @source 0x8014aee0 FUN_8014aee0
+ */
+void func_8014aee0(void) {
   u_long* ordering_table;
   u32*    exec_state;
 
@@ -25,7 +22,7 @@ const SlotTableEntry* func_8014aee0(void) {
   PadStop();
   func_8017e0b4();
   func_8017ee0c();
-  Exec(exec_state - 8, 0, 0);
+  Exec((struct EXEC*)(exec_state - 8), 0, 0);
   func_8017ee1c();
   func_8014ad28();
 

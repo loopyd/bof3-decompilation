@@ -1,8 +1,5 @@
 #include "internal.h"
 
-u32         func_80162160(u32 arg0);
-void        func_80162178(void);
-void        func_80162b08(u8 arg0);
 extern u8   DAT_800e4800;
 extern vu32 DAT_80146454;
 extern vu32 DAT_80146464;
@@ -21,13 +18,11 @@ extern u8   DAT_80146840;
 extern vu32 DAT_80146808;
 extern vu32 DAT_80146858;
 extern vu32 DAT_8014685c;
-extern void LAB_801621e8(void);
-extern void LAB_80162230(void);
 /* @behavior initializes EMI streaming state, refreshes the active LBA, and installs
  * CD callbacks.
  * @source 0x80161fdc FUN_80161fdc
  */
-void emi_stream_init_slot(u32 slot_id) {
+void func_80161fdc(u32 slot_id) {
   u32 cd_base;
   u32 active_lba;
   u32 current_lba;
@@ -76,7 +71,7 @@ void emi_stream_init_slot(u32 slot_id) {
 
   DAT_80146454 = 0x800;
   DAT_80146494 = 0;
-  CdReadyCallback((CdlCB)&LAB_80162230);
-  CdSyncCallback((CdlCB)&LAB_801621e8);
+  CdReadyCallback(emi_cd_ready_callback);
+  CdSyncCallback(emi_cd_sync_callback);
   func_80162178();
 }
