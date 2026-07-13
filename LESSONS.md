@@ -104,6 +104,10 @@ Durable findings that make the BOF3 lift-and-match loop faster and safer.
 - Preserve useful pre-promotion evidence with an `INFERRED:` comment beside the
   owning address-based declaration. State what was observed and what would
   verify promotion; do not create a semantic alias from a hint alone.
+- Use `rg` for repository-wide candidate inventory, but keep replacements
+  target-scoped and allowlisted. A blind `sed` over `func_XXXXXXXX` or
+  `DAT_XXXXXXXX` can silently merge independently loaded binaries or break
+  m2c/permuter traceability; run the target's exact diff after each rename.
 
 ## Record the hard tail precisely
 
