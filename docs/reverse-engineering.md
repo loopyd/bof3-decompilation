@@ -54,6 +54,13 @@ already provide one; reviewed target-local declarations are preserved.
 under `out/matching/`. A nonmatch is a normal iteration result; a build or target
 resolution failure must be fixed before changing source.
 
+For cross-target navigation, run `bin/harness analysis graph`. It writes
+`out/analysis/graph.json` with raw function fingerprints, exact and
+relocation-masked duplicate candidates, call edges, PsyQ API usage, and
+canonical type usage. Use `bin/harness analysis query TARGET xrefs` for a
+focused binary reference view; skipped graph targets mean their normalized
+payload is not available locally.
+
 ## Candidate replacement loop
 
 Structs, symbols, and functions can be recovered incrementally without making

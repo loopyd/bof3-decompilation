@@ -43,6 +43,15 @@ compatibility and must test differences against the detected version.
 Prefer JSON commands in scripts and exports. Sort exported records by address
 and name so repeated exports are diffable.
 
+## Cross-target graph
+
+Use `bin/harness analysis graph [TARGET]` for the repository-wide report. It
+records raw-function addresses and sizes, exact SHA-256 groups, relocation-
+masked candidate groups, MIPS call edges derived from `axlj`, PsyQ header API
+usage in lifted source, and canonical type usage. The report is generated at
+`out/analysis/graph.json`; missing local payloads are listed as skipped rather
+than guessed.
+
 ## Projects
 
 Project commands vary by engine and release. Current radare2 uses `P+ NAME` or

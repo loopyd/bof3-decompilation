@@ -962,7 +962,13 @@ def run_ghidra_sync(args: argparse.Namespace) -> int:
 
 
 def run_analysis(args: argparse.Namespace) -> int:
-    from ..analysis import doctor, export_project, initialize_project, query_project
+    from ..analysis import (
+        doctor,
+        export_project,
+        graph_analysis,
+        initialize_project,
+        query_project,
+    )
 
     root = _root(args)
     if args.analysis_command == "doctor":
@@ -971,6 +977,8 @@ def run_analysis(args: argparse.Namespace) -> int:
         payload = initialize_project(root, args.target, args.engine)
     elif args.analysis_command == "export":
         payload = export_project(root, args.target, args.engine)
+    elif args.analysis_command == "graph":
+        payload = graph_analysis(root, args.target, args.engine)
     else:
         payload = query_project(root, args.target, args.query, args.engine)
     print(json.dumps(payload, indent=2, sort_keys=True))
@@ -1273,6 +1281,10 @@ def build_parser() -> argparse.ArgumentParser:
         analysis_command.add_argument("target")
         analysis_command.add_argument("--engine", choices=("rizin", "r2"))
         analysis_command.set_defaults(handler=run_analysis)
+    analysis_graph = analysis_sub.add_parser("graph")
+    analysis_graph.add_argument("target", nargs="?")
+    analysis_graph.add_argument("--engine", choices=("rizin", "r2"))
+    analysis_graph.set_defaults(handler=run_analysis)
     analysis_query = analysis_sub.add_parser("query")
     analysis_query.add_argument("target")
     analysis_query.add_argument(

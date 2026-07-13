@@ -24,7 +24,12 @@ authoritative.
    `bin/harness analysis export <target>`. Do not hand-edit exports.
 6. Use `bin/harness analysis query <target> ...` for focused strings,
    functions, xrefs, and type-placement questions.
-7. Verify every promoted fact against disassembly or raw bytes. Move durable
+7. Run `bin/harness analysis graph` to fingerprint every available promoted
+   binary, derive call edges, list PsyQ API usage, and group exact-byte or
+   relocation-masked duplicate functions. Read `out/analysis/graph.json` for
+   the detailed graph; skipped targets are reported when their normalized raw
+   payload is not present locally.
+8. Verify every promoted fact against disassembly or raw bytes. Move durable
    findings into `config/splat/`, `config/symbols/`, source declarations, or
    `docs/specs/`; leave hypotheses in generated evidence.
 
