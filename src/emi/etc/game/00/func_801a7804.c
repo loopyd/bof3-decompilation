@@ -5,7 +5,7 @@ struct ScenarioState {
   s8 scenario_id;
 };
 
-#define SCENARIO_STATE ((volatile struct ScenarioState*)0x80140000u)
+#define SCENARIO_STATE ((struct ScenarioState*)0x80140000u)
 
 void func_801a7804(void) {
   func_80161fdc(SCENARIO_STATE->scenario_id + 661);
