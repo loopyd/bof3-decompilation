@@ -17,7 +17,9 @@ endif()
 include("${HARNESS_GENERATED_SOURCES}")
 
 set(HARNESS_CORE_SOURCES ${HARNESS_TARGET_EXE_SLUS_004_22_SOURCES})
-set(HARNESS_BOOT_SOURCES ${HARNESS_TARGET_EXE_SLUS_004_22_SOURCES})
 list(FILTER HARNESS_CORE_SOURCES EXCLUDE REGEX "/startup\\.s$")
-list(FILTER HARNESS_CORE_SOURCES EXCLUDE REGEX "/symbols\\.c$")
-list(FILTER HARNESS_BOOT_SOURCES INCLUDE REGEX "/(startup\\.s|symbols\\.c)$")
+list(FILTER HARNESS_CORE_SOURCES EXCLUDE REGEX "/symbols(/[^/]+)?\\.c$")
+# This historical probe duplicates LOGO.EXE behavior and calls LOGO-local
+# functions. Preserve it as investigation evidence, but never link it into the
+# independently loaded SLUS target.
+list(FILTER HARNESS_CORE_SOURCES EXCLUDE REGEX "/slot_table_logo_str\\.c$")

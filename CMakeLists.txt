@@ -14,6 +14,11 @@ set(HARNESS_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 unset(HARNESS_PSN00B_SDK_ROOT CACHE)
 set(HARNESS_PSN00B_SDK_ROOT "${HARNESS_ROOT_DIR}/toolchains/psn00bsdk")
 
+option(HARNESS_BUILD_RUST_TOOLS "Expose canonical Rust extraction tool targets" ON)
+if(HARNESS_BUILD_RUST_TOOLS)
+    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/rust-tools.cmake")
+endif()
+
 if(HARNESS_TARGET_PSX)
     set(HARNESS_CMAKE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
     set(HARNESS_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -29,53 +34,6 @@ if(HARNESS_TARGET_PSX)
     set(HARNESS_EXTRACTED_DIR "out/extracted" CACHE STRING "Root of extracted disc + unpacked EMI files")
 
     include("${HARNESS_CMAKE_DIR}/sources.cmake")
-
-    add_library(slus_004_22_core STATIC ${HARNESS_CORE_SOURCES})
-    harness_apply_target_settings(slus_004_22_core INCLUDE_VISIBILITY PUBLIC)
-
-    harness_find_sdk_tool(HARNESS_ELF2X elf2x)
-    set(HARNESS_EXE_LINKER_SCRIPT "${HARNESS_CMAKE_DIR}/toolchains/psx-exe.ld")
-    set(HARNESS_PSYQ_RUNTIME_LIBS
-        "${HARNESS_PSYQ_LIB_DIR}/libapi.a"
-        "${HARNESS_PSYQ_LIB_DIR}/libc.a"
-        "${HARNESS_PSYQ_LIB_DIR}/libcard.a"
-        "${HARNESS_PSYQ_LIB_DIR}/libcd.a"
-        "${HARNESS_PSYQ_LIB_DIR}/libetc.a"
-        "${HARNESS_PSYQ_LIB_DIR}/libgpu.a"
-        "${HARNESS_PSYQ_LIB_DIR}/libgte.a"
-        "${HARNESS_PSYQ_LIB_DIR}/libpad.a"
-    )
-    foreach(psyq_lib IN LISTS HARNESS_PSYQ_RUNTIME_LIBS)
-        if(NOT EXISTS "${psyq_lib}")
-            message(FATAL_ERROR "Required PsyQ runtime library not found: ${psyq_lib}")
-        endif()
-    endforeach()
-
-    add_executable(slus_004_22 ${HARNESS_BOOT_SOURCES})
-    set_target_properties(slus_004_22 PROPERTIES
-        OUTPUT_NAME "slus_004_22"
-        SUFFIX ".elf"
-    )
-    harness_apply_target_settings(slus_004_22)
-    target_link_libraries(slus_004_22 PRIVATE
-        slus_004_22_core
-        --start-group
-        ${HARNESS_PSYQ_RUNTIME_LIBS}
-        --end-group
-    )
-    target_link_options(slus_004_22 PRIVATE
-        "-T$<SHELL_PATH:${HARNESS_EXE_LINKER_SCRIPT}>"
-    )
-    add_custom_command(
-        TARGET slus_004_22 POST_BUILD
-        COMMAND
-            ${HARNESS_ELF2X} -q
-            $<SHELL_PATH:$<TARGET_FILE:slus_004_22>>
-            $<SHELL_PATH:${CMAKE_CURRENT_BINARY_DIR}/slus_004_22.exe>
-        BYPRODUCTS
-            ${CMAKE_CURRENT_BINARY_DIR}/slus_004_22.exe
-        VERBATIM
-    )
 
     include("${HARNESS_CMAKE_DIR}/targets.cmake")
 

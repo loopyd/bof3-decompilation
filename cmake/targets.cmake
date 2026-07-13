@@ -1,11 +1,10 @@
-harness_artifact_register_built(
+harness_artifact_register_archive(
     slus_004_22
     FOLDER ""
     PROGRAM_NAME "SLUS_004.22"
     PROGRAM_PATH "/boot/SLUS_004.22"
     SOURCE_HINT "${HARNESS_EXTRACTED_DIR}/SLUS_004.22"
     KIND "boot"
-    BUILT_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/slus_004_22.exe"
     DECLARED_SOURCES ${HARNESS_CORE_SOURCES}
 )
 
