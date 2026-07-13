@@ -5,6 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -13,7 +15,34 @@ from typing import Any
 
 from ..domain import load_target_manifests, normalize_target_id, parse_address
 from ..match._asm_resolve import compile_command_for_source
+from ..match._asm_resolve import (
+    default_binary_for_source,
+    extract_original_bytes,
+    infer_original_size,
+    overlay_load_address_for_source,
+)
 from ..paths import repo_layout
+
+
+def _repair_psyq_register_parameters(source: str) -> str:
+    """Undo asm.h's `fp` macro only where it corrupts pointer parameters."""
+
+    return re.sub(r"([*&]\s*)\$30\b", r"\1fp", source)
+
+
+def _original_target_assembly(function_name: str, original: bytes) -> str:
+    if len(original) % 4:
+        raise ValueError("MIPS function byte length must be word-aligned")
+    words = [
+        f"    .word 0x{int.from_bytes(original[i : i + 4], 'little'):08x}"
+        for i in range(0, len(original), 4)
+    ]
+    return (
+        ".section .text\n"
+        f".globl {function_name}\n.type {function_name}, @function\n"
+        f"{function_name}:\n" + "\n".join(words) + "\n"
+        f".size {function_name}, .-{function_name}\n"
+    )
 
 
 def _resolve_source(root: Path, source_or_function: str) -> tuple[str, Path, int]:
@@ -54,32 +83,141 @@ def prepare_permuter(
     output = (work_root or root / "out" / "matching").resolve()
     bundle = output / target_id / f"func_{address:08x}" / "permuter"
     bundle.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(source, bundle / "base.c")
-    target_object: Path | None = None
-    compile_script = "#!/bin/sh\nset -eu\n"
+    base_source = bundle / "base.c"
+    preprocess = subprocess.run(
+        [
+            "cpp",
+            "-P",
+            "-I",
+            str(source.parent),
+            "-I",
+            str(root / "include"),
+            "-I",
+            str(root / "toolchains" / "psyq" / "4.7" / "include"),
+            str(source),
+        ],
+        cwd=root,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if preprocess.returncode != 0:
+        raise RuntimeError(
+            f"failed to preprocess {source} for permuter: {preprocess.stderr.strip()}"
+        )
+    # PsyQ asm.h defines `fp` as register `$30`, including inside prototypes
+    # from libcd.h.  Keep asm strings intact while repairing pointer parameters
+    # which pycparser otherwise cannot tokenize.
+    preprocessed = _repair_psyq_register_parameters(preprocess.stdout)
+    base_source.write_text(preprocessed, encoding="utf-8")
+
+    function_name = f"func_{address:08x}"
+    stripped = subprocess.run(
+        [
+            sys.executable,
+            str(root / "third_party" / "decomp-permuter" / "strip_other_fns.py"),
+            str(base_source),
+            function_name,
+        ],
+        cwd=root,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if stripped.returncode != 0:
+        raise RuntimeError(
+            f"failed to isolate {function_name} for permuter: {stripped.stderr.strip()}"
+        )
+
+    layout = repo_layout(root)
+    binary_path = default_binary_for_source(layout, source)
+    load_address = overlay_load_address_for_source(layout, source)
+    size = infer_original_size(
+        source,
+        address=address,
+        binary_path=binary_path,
+        load_address=load_address,
+    )
+    original = extract_original_bytes(
+        binary_path, address=address, size=size, load_address=load_address
+    )
+    target_asm = bundle / "target.s"
+    target_asm.write_text(
+        _original_target_assembly(function_name, original),
+        encoding="ascii",
+    )
+    assembler = layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-as"
+    assembled = subprocess.run(
+        [
+            str(assembler),
+            "-EL",
+            "-march=r3000",
+            "-mips1",
+            str(target_asm),
+            "-o",
+            str(bundle / "target.o"),
+        ],
+        cwd=root,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if assembled.returncode != 0:
+        raise RuntimeError(
+            f"failed to assemble permuter target: {assembled.stderr.strip()}"
+        )
+
+    compile_script = (
+        '#!/bin/sh\nset -eu\nBUNDLE="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"\n'
+    )
     try:
         command = compile_command_for_source(repo_layout(root), source)
     except (FileNotFoundError, ValueError):
         command = None
     if command is not None:
-        target_object = Path(command["directory"]) / command["output"]
-        if target_object.is_file():
-            shutil.copyfile(target_object, bundle / "target.o")
         raw_command = command.get("command")
         if raw_command:
-            command_line = raw_command.replace(str(source), '"$PWD/base.c"')
-            command_line = command_line.replace(str(target_object), '"$PWD/current.o"')
-            command_line = command_line.replace(command["output"], '"$PWD/current.o"')
-            compile_script += f"exec {command_line}\n"
+            argv = shlex.split(raw_command)
+            output = command["output"]
+            argv = [
+                (
+                    '"$INPUT"'
+                    if Path(arg).resolve() == source
+                    else (
+                        '"$OUTPUT"'
+                        if arg == output
+                        or Path(arg).resolve()
+                        == (Path(command["directory"]) / output).resolve()
+                        else shlex.quote(arg)
+                    )
+                )
+                for arg in argv
+            ]
+            compile_script += 'test "${2:-}" = "-o"\n'
+            compile_script += (
+                'case "$1" in /*) INPUT="$1" ;; *) INPUT="$PWD/$1" ;; esac\n'
+            )
+            compile_script += (
+                'case "$3" in /*) OUTPUT="$3" ;; *) OUTPUT="$PWD/$3" ;; esac\n'
+            )
+            # decomp-permuter reserves the output path before invoking the
+            # compiler; the PsyQ driver refuses to replace that empty file.
+            compile_script += 'rm -f -- "$OUTPUT"\n'
+            compile_script += f"cd {shlex.quote(command['directory'])}\n"
+            compile_script += f"exec {' '.join(argv)}\n"
         else:
             compile_script += "# compile_commands.json has no shell command.\n"
     else:
         compile_script += "# Build metadata is unavailable; run `just build` first.\n"
     (bundle / "compile.sh").write_text(compile_script, encoding="utf-8")
     (bundle / "compile.sh").chmod(0o755)
+    objdump = root / "bin" / "objdump"
     (bundle / "settings.toml").write_text(
         'algorithm = "levenshtein"\nbetter_only = true\nbest_only = true\n'
-        "stop_on_zero = true\nstack_diffs = true\nno_context_output = true\n",
+        "stop_on_zero = true\nstack_diffs = true\nno_context_output = true\n"
+        f'func_name = "{function_name}"\n'
+        'compiler_type = "gcc"\n'
+        f'objdump_command = "{objdump} -drz"\n',
         encoding="utf-8",
     )
     metadata = {
@@ -143,6 +281,10 @@ def run_permuter(
         "-j",
         str(jobs or 1),
     ]
+    if show_errors:
+        command.append("--show-errors")
+    if show_timings:
+        command.append("--show-timings")
     started = time.perf_counter()
     completed = subprocess.run(
         command,
