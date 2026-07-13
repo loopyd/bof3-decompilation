@@ -8,7 +8,52 @@ typedef struct KeyItemObject {
   u8 unknown_0c[4];
 } KeyItemObject;
 
-extern const KeyItemObject KEY_ITEM_OBJECTS[];
+typedef struct ItemObject {
+  u8  name[0x0c];
+  u8  flags;
+  u8  unknown_0d[3];
+  u16 price;
+} ItemObject;
+
+typedef struct WeaponObject {
+  u8  name[0x0c];
+  u8  equipability;
+  u8  unknown_0d[2];
+  u8  element;
+  u8  weight;
+  u8  unknown_11;
+  u8  power;
+  u8  unknown_13[3];
+  u16 price;
+} WeaponObject;
+
+typedef struct ArmorObject {
+  u8  name[0x0c];
+  u8  equipability;
+  u8  unknown_0d;
+  u8  equip_type;
+  u8  weight;
+  u8  power;
+  u8  unknown_11[3];
+  u16 price;
+} ArmorObject;
+
+typedef struct AccessoryObject {
+  u8  name[0x0c];
+  u8  equipability;
+  u8  unknown_0d[2];
+  u8  weight;
+  u8  unknown_10[2];
+  u16 price;
+} AccessoryObject;
+
+extern const ItemObject      ITEM_OBJECTS[];
+extern const WeaponObject    WEAPON_OBJECTS[];
+extern const ArmorObject     ARMOR_OBJECTS[];
+extern const AccessoryObject ACCESSORY_OBJECTS[];
+extern const KeyItemObject   KEY_ITEM_OBJECTS[];
+
+void* func_800df548(s32 item_type, s32 item_index);
 
 /* LOGO.EXE is loaded independently; this call targets its reviewed entry
  * address rather than linking LOGO.EXE implementation into SLUS_004.22. */
