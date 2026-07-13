@@ -119,8 +119,9 @@ Durable findings that make the BOF3 lift-and-match loop faster and safer.
   authoritative.
 - Use bounded decomp-permuter runs whenever they may produce a better source
   shape, including early searches for the correct instruction count and size.
-  Prioritize it at `90%+`, where remaining differences are more likely expression
-  shape, declaration order, register allocation, or scheduling.
+  It is especially useful once the remaining differences are expression shape,
+  declaration order, register allocation, or scheduling; no score threshold is
+  required.
 - Retain a permuter result only when it preserves factual, readable C89. Exact
   bytes remain authoritative; semantic-equivalence reporting must not weaken the
   exact-match criterion.

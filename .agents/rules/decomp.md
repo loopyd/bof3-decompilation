@@ -1,5 +1,8 @@
 # Coding Rules
 - Format authored C with the root `.clang-format`: compact K&R braces, two-space indentation, 80 columns, and left-bound pointers.
+- Derive header guards from the shortest unambiguous authored path, for example
+  `CORE_EMI_H` or `EMI_GAME_01_INTERNAL_H`. Do not add a redundant
+  repository-wide `BOF3_` prefix.
 - C89: `/* */` comments, declare vars at top of function
 - `REG32()`, `REG16()`, `REG8()` from `include/bof3/defines.h` for hardware register access
 - Keep function declarations as ordinary `extern` declarations; place any

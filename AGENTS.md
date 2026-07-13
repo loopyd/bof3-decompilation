@@ -55,6 +55,8 @@ target-local `psyq.h` when official PsyQ headers already declare the API.
 Absolute bindings may be split into ordinary shallow `symbols/*.c` units;
 retain `symbols.c` as the canonical target binding entry point. Do not use
 `.inc` binding fragments or introduce competing declaration barrels.
+For shared header guards, derive a short path-scoped name such as `CORE_EMI_H`;
+do not repeat the repository name as a `BOF3_` prefix.
 
 ## Binary workflow
 
@@ -133,6 +135,12 @@ bin/harness doctor --strict
 Run the smallest relevant command while iterating, then `just check` and
 `bin/harness doctor --strict` before handoff when the required inputs/toolchain
 are available. State any skipped check and why.
+
+When a newly lifted function reaches a canonical 100% instruction/byte match,
+re-run its diff and commit it immediately as a small focused change. Include
+only the function and its required layout, declaration, or address binding;
+exclude unrelated cleanup and generated evidence. Do not push unless explicitly
+requested.
 
 ## Scope discipline
 

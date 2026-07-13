@@ -31,8 +31,20 @@ just check
 just format
 ```
 
-`just build` uses parallel Unix Makefiles. A restricted sandbox may block the
-legacy PSX compiler; run the build outside that sandbox in that case.
+`just build` compiles historical PsyQ objects serially. Parallel compilation can
+race a transient compiler output and leave a misleading partial archive.
+
+To rerun only extraction or rematerialize normalized images:
+
+```bash
+just extract
+bin/harness emi unpack
+bin/harness normalize
+```
+
+`bin/harness normalize` restores both executable load images and all tracked
+EMI target images from the extracted payloads; it does not recover missing disc
+input.
 
 ## Local input
 
