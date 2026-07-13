@@ -39,7 +39,20 @@ segments:
     vram: 0x8014aee0
     subsegments:
       - [0xb46e0, c, func_8014aee0]
-  - [0xb47c0, bin, pre_emi_loader]
+  - [0xb47c0, bin, pre_boot_frame_update]
+  - name: boot_frame_tables
+    type: code
+    start: 0xb48f0
+    vram: 0x8014b0f0
+    subsegments:
+      - [0xb48f0, c, func_8014b0f0]
+  - name: vblank_capture
+    type: code
+    start: 0xb497c
+    vram: 0x8014b17c
+    subsegments:
+      - [0xb497c, c, func_8014b17c]
+  - [0xb49a4, bin, pre_emi_loader]
   - name: emi_loader
     type: code
     start: 0xcb758
