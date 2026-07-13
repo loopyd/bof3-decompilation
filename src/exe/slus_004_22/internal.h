@@ -53,13 +53,7 @@ extern const ArmorObject     ARMOR_OBJECTS[];
 extern const AccessoryObject ACCESSORY_OBJECTS[];
 extern const KeyItemObject   KEY_ITEM_OBJECTS[];
 
-void* func_800df548(s32 item_type, s32 item_index);
-
-/* LOGO.EXE is loaded independently; this call targets its reviewed entry
- * address rather than linking LOGO.EXE implementation into SLUS_004.22. */
-extern void func_801ce758(void);
-
-typedef void (*Bof3CallbackEntry)(void);
+#include "symbols/symbols.h"
 
 typedef struct GameCallbackSlot {
   u16               state;
@@ -86,26 +80,6 @@ enum {
 #define GAME_CALLBACK_CURSOR       VPTR(GameCallbackSlot*, 0x80143d40u)
 #define GAME_CALLBACK_END          VPTR(GameCallbackSlot, 0x80143d40u)
 
-s32 func_8017ed9c(Bof3CallbackEntry callback, u32 open_arg, u32 open_arg_2);
-s32 func_8017edac(s32 thread_id);
-
-typedef enum RuntimePathKind {
-  RUNTIME_PATH_EMI = 0,
-  RUNTIME_PATH_STR = 1,
-  RUNTIME_PATH_PSX_EXE = 2,
-  RUNTIME_PATH_OTHER = 3,
-} RuntimePathKind;
-
-struct SlotTableEntry {
-  u32             slot_id;
-  u32             disc_lba;
-  const char*     relative_path;
-  RuntimePathKind kind;
-};
-
-extern const struct SlotTableEntry g_slot_table[];
-extern const size_t                g_slot_table_count;
-
 #define EMI_SECTOR_SIZE  0x800u
 #define EMI_MAGIC_OFFSET 0x08u
 #define EMI_MAGIC_SIZE   8u
@@ -127,14 +101,20 @@ typedef struct EmiActiveEntry {
   bool header_mode;
 } EmiActiveEntry;
 
+typedef struct EmiLoaderEntry {
+  u32 unknown_00;
+  u32 source;
+  u32 destination;
+  u32 alternate_destination;
+  s16 resource_id;
+  u16 flags;
+} EmiLoaderEntry;
+
 bool emi_header_is_valid(const void* header, size_t size);
 u32  emi_next_payload_offset(u32 current_offset, u32 current_size);
 void emi_build_entry_lbas(u32 base_lba, const EmiTocEntry* entries,
                           size_t entry_count, u32* entry_lbas);
-void emi_stream_init_slot(u32 slot_id);
 u32  emi_slot_to_lba(const u32* slot_lba_table, size_t slot_count, u32 slot_id);
-void func_8016728c(u8 index, u8 family);
-
 #define GAME_FRONT_EFFECT_BUSY VPTR(u16, 0x80143c40u)
 #define GAME_FRONT_LOCAL_MODE  VPTR(u16, 0x80143c90u)
 

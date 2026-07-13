@@ -26,4 +26,18 @@ def parse_weak_symbol_bindings(text: str) -> dict[str, int]:
 def load_weak_symbol_bindings(path: Path) -> dict[str, int]:
     if not path.is_file():
         return {}
-    return parse_weak_symbol_bindings(path.read_text(encoding="utf-8"))
+
+    bindings: dict[str, int] = {}
+    sources = [path, *sorted((path.parent / "symbols").glob("*.c"))]
+    for source in sources:
+        for name, address in parse_weak_symbol_bindings(
+            source.read_text(encoding="utf-8")
+        ).items():
+            previous = bindings.get(name)
+            if previous is not None and previous != address:
+                raise ValueError(
+                    f"conflicting weak bindings for {name}: "
+                    f"{previous:#x} and {address:#x}"
+                )
+            bindings[name] = address
+    return bindings

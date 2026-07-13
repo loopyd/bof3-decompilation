@@ -27,9 +27,17 @@ def test_repository_schema_contains_graph_tables(tmp_path: Path) -> None:
 
 def test_repository_index_uses_canonical_manifests() -> None:
     root = Path(__file__).resolve().parents[3]
+    database = root / "out" / "index" / "test-harness.sqlite"
     manifests = load_target_manifests(root)
     profiles = load_profiles(root)
-    summary = build_index(root, root / "out" / "index" / "test-harness.sqlite")
+    summary = build_index(root, database)
     assert "exe/slus_004_22" in manifests
     assert "native/capcom97" in profiles
     assert summary["targets"] == len(manifests)
+    with EvidenceRepository(database) as repository:
+        indexed = repository.execute(
+            "SELECT address FROM symbols WHERE target_id = ? AND name = ?",
+            ("exe/slus_004_22", "CdSync"),
+        ).fetchone()
+    assert indexed is not None
+    assert indexed[0] == 0x80175640

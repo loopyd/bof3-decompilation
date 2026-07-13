@@ -25,8 +25,9 @@ def generate_build_manifest(root: Path, output: Path | None = None) -> Path:
         source_root = root / manifest.source_dir
         files = sorted(
             path
+            for directory in (source_root, source_root / "symbols")
             for pattern in ("*.c", "*.s")
-            for path in source_root.glob(pattern)
+            for path in directory.glob(pattern)
             if path.is_file()
         )
         variable = f"HARNESS_TARGET_{_cmake_name(target_id)}_SOURCES"

@@ -16,6 +16,5 @@ typedef struct SlotTableEntry SlotTableEntry;
 
 const SlotTableEntry* slot_table_find(u32 slot_id);
 const SlotTableEntry* slot_table_logo_str(void);
-const SlotTableEntry* func_8014aee0(void);
 
 #endif

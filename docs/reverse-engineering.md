@@ -66,8 +66,9 @@ payload is not available locally.
 Structs, symbols, and functions can be recovered incrementally without making
 an unproven shared ABI:
 
-1. Keep an address-only binding in the owning target's `symbols.c` when the
-   instruction stream proves an address but not a semantic name.
+1. Keep an address-only binding in the owning target's `symbols.c` or shallow
+   `symbols/*.c` units when the instruction stream proves an address but not a
+   semantic name. Use ordinary C translation units, not `.inc` fragments.
 2. Express a recovered record as a target-local C89 view, preserving raw pads
    and byte/halfword overlays until consumers prove their meaning.
 3. Lift one consumer against that binding and run `bin/harness diff` after
@@ -94,6 +95,10 @@ are independently established.
 - `src/emi/<family>/<archive>/<slot>/` holds a confirmed EMI module.
 - Each module owns an `internal.h`; shared C89/PsyQ declarations belong under
   `include/bof3/`.
+- A large target may have `internal.h` include `symbols/symbols.h`, which is the
+  only barrel for focused `functions.h`, `variables.h`, and `files.h` headers.
+  Do not add a target-local PsyQ declaration header when the official SDK
+  header already owns the declaration.
 - Do not lift PsyQ library routines. Record verified PsyQ symbols in
   `config/symbols/psyq.txt`.
 

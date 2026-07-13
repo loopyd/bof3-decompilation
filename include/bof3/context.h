@@ -10,7 +10,7 @@ extern void func_8014b020(void);
 extern void func_8014b0f0(void);
 extern void func_8014fc00(s32);
 extern void func_80174668(s32);
-extern void func_80174700(s32);
+extern s32  func_80174700(s32);
 extern void func_801748e4(void);
 extern void func_801753c4(s32);
 extern s32  func_801753ec(void);
@@ -27,9 +27,6 @@ extern void func_8017ed7c(s32);
 extern void func_8017ee0c(void);
 extern void func_8017ee1c(void);
 extern void func_8017eebc(s32);
-extern void func_801ce760(void*, u_long);
-extern int  func_801cea98(void);
-extern void func_801cebfc(void);
 extern void func_80196f78(void);
 
 #endif

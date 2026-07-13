@@ -1,0 +1,21 @@
+#include "bof3/context.h"
+
+/* PsyQ addresses are local to SLUS_004.22. SDK declarations remain canonical. */
+WEAK_SYMBOL_AT(CdSync, 0x80175640);
+WEAK_SYMBOL_AT(CdReady, 0x80175660);
+WEAK_SYMBOL_AT(CdSyncCallback, 0x80175680);
+WEAK_SYMBOL_AT(CdReadyCallback, 0x80175698);
+WEAK_SYMBOL_AT(CdGetSector, 0x80175a78);
+WEAK_SYMBOL_AT(CdIntToPos, 0x80175adc);
+WEAK_SYMBOL_AT(CdPosToInt, 0x80175be0);
+WEAK_SYMBOL_AT(ChangeTh, 0x8017edbc);
+WEAK_SYMBOL_AT(ClearImage, 0x8017b560);
+WEAK_SYMBOL_AT(StopCallback, 0x801749d8);
+WEAK_SYMBOL_AT(PadStop, 0x801746e0);
+WEAK_SYMBOL_AT(Exec, 0x8017ecdc);
+WEAK_SYMBOL_AT(ClearOTag, 0x8017b81c);
+WEAK_SYMBOL_AT(DrawOTag, 0x8017b9cc);
+WEAK_SYMBOL_AT(DrawSync, 0x8017b3cc);
+WEAK_SYMBOL_AT(SetDispMask, 0x8017b330);
+WEAK_SYMBOL_AT(SetDefDrawEnv, 0x8017a514);
+WEAK_SYMBOL_AT(SetDefDispEnv, 0x8017a5e4);

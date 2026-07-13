@@ -47,8 +47,14 @@ out/
 ```
 
 Keep one `internal.h` beside each target's functions. Each lifted function is
-one `func_XXXXXXXX.c` file. Do not introduce alternate per-module declaration
-headers.
+one `func_XXXXXXXX.c` file. A large target may place focused declarations under
+an adjacent `symbols/` directory. Keep the include path layered and singular:
+`internal.h` includes `symbols/symbols.h`, which is the barrel for focused
+`functions.h`, `variables.h`, and `files.h` declarations. Do not add a
+target-local `psyq.h` when official PsyQ headers already declare the API.
+Absolute bindings may be split into ordinary shallow `symbols/*.c` units;
+retain `symbols.c` as the canonical target binding entry point. Do not use
+`.inc` binding fragments or introduce competing declaration barrels.
 
 ## Binary workflow
 
@@ -72,6 +78,13 @@ headers.
 An EMI archive is a container; Splat and matching consume its extracted raw
 entry, never the archive file. A type-0 entry is not automatically code.
 
+Before declaring an executable address absent or zero-filled, read the PS-X EXE
+header `t_addr` at offset `0x18` and compare it with the target manifest and
+generated normalized-image metadata. `SLUS_004.22` loads at `0x80096800`, not
+the common `0x80010000`; subtracting the wrong base maps real EMI-loader code
+into unrelated zero padding. Original bytes and the PS-X header outrank target
+metadata when they disagree; correct the tracked manifest before lifting.
+
 ## C and decompilation constraints
 
 - Use C89 and readable, period-appropriate PSX C.
@@ -80,6 +93,19 @@ entry, never the archive file. A type-0 entry is not automatically code.
   addresses or values. Verify claims with Ghidra or disassembly before
   promoting them to shared declarations.
 - PsyQ is library code: include/declare it as needed; do not lift or replace it.
+- PsyQ addresses are target-local unless independently verified in each binary;
+  record official SDK names and archive members, not one shared runtime address.
+- Keep compiled function/data symbols address-based (`func_XXXXXXXX`,
+  `DAT_XXXXXXXX`) so m2c, permuter, asm-diff, and analyzer replay remain
+  traceable. Once meaning is proven, add a semantic alias in the owning
+  `internal.h` or symbol layer and use it at readable call sites. Remove `LAB_`
+  aliases once a callback or control-flow role is proven. `symbols.c` and its
+  shallow `symbols/*.c` units own target-local address bindings; they are not a
+  substitute for naming evidence.
+- For an evidence-backed but unproven meaning, retain the address-based symbol
+  and add a concise `INFERRED:` comment with the evidence and a verification
+  path. Do not put hypotheses in `@behavior`, expose them as public contracts,
+  or rename the symbol until the interpretation is reviewed.
 - Do not use handwritten assembly to fill executable functions. Generated
   assembly stays under `out/splat/`.
 - Preserve independent build targets: identical payload bytes at distinct load
@@ -115,3 +141,6 @@ are available. State any skipped check and why.
 - Keep documentation factual and minimal: specs, verified findings, metadata,
   and durable learnings. Put generated tables and transient investigation notes
   in `out/`, not tracked docs.
+- Add reusable, evidence-backed reverse-engineering gotchas and loop
+  improvements to `LESSONS.md`. Keep transient hypotheses and raw command output
+  under `out/`.

@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 from harness.match.asm_diff import (
     build_result_payload,
     build_target_for_source,
@@ -37,6 +39,42 @@ def test_weak_symbol_bindings_are_loaded_for_matching(tmp_path: Path) -> None:
     )
 
     assert load_weak_symbol_bindings(symbols) == {"GAME_TABLE": 0x801CA70C}
+
+
+def test_weak_symbol_bindings_load_shallow_target_symbol_units(tmp_path: Path) -> None:
+    units_dir = tmp_path / "symbols"
+    units_dir.mkdir()
+    symbols = tmp_path / "symbols.c"
+    symbols.write_text("/* Canonical binding entry point. */\n", encoding="utf-8")
+    (units_dir / "functions.c").write_text(
+        "WEAK_SYMBOL_AT(func_80100000, 0x80100000);\n", encoding="utf-8"
+    )
+    (units_dir / "variables.c").write_text(
+        "WEAK_SYMBOL_AT(DAT_80110000, 0x80110000);\n", encoding="utf-8"
+    )
+
+    assert load_weak_symbol_bindings(symbols) == {
+        "func_80100000": 0x80100000,
+        "DAT_80110000": 0x80110000,
+    }
+
+
+def test_weak_symbol_units_reject_conflicting_bindings(
+    tmp_path: Path,
+) -> None:
+    units_dir = tmp_path / "symbols"
+    units_dir.mkdir()
+    (units_dir / "functions.c").write_text(
+        "WEAK_SYMBOL_AT(func_80100000, 0x80100004);\n", encoding="utf-8"
+    )
+    symbols = tmp_path / "symbols.c"
+    symbols.write_text(
+        "WEAK_SYMBOL_AT(func_80100000, 0x80100000);\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="conflicting weak bindings"):
+        load_weak_symbol_bindings(symbols)
 
 
 def test_source_address_and_size_are_inferred_from_source_files(tmp_path: Path) -> None:

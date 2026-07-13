@@ -30,6 +30,8 @@ typedef unsigned long u_long;
  * WEAK_SYMBOL_AT bindings (in symbols.c) provide the original-binary
  * addresses at link time.
  */
+struct EXEC;
+
 /* clang-format off */
 #include <libgte.h>
 #include <libgpu.h>

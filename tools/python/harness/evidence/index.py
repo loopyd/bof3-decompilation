@@ -15,7 +15,7 @@ from typing import Any, Iterable
 
 from ..domain import load_profiles, load_target_manifests, normalize_target_id
 from ..jsonio import read_json, write_json
-from ..symbols import parse_weak_symbol_bindings
+from ..symbols import load_weak_symbol_bindings
 from .schema import _table_sql, connect, create_schema
 
 
@@ -222,8 +222,7 @@ def build_index(root: Path, database: Path | None = None) -> dict[str, Any]:
                 ).read_text(encoding="utf-8")
             symbol_source = root / manifest.source_dir / "symbols.c"
             if symbol_source.is_file():
-                symbol_text = symbol_source.read_text(encoding="utf-8")
-                for name, address in parse_weak_symbol_bindings(symbol_text).items():
+                for name, address in load_weak_symbol_bindings(symbol_source).items():
                     symbol_id = f"{target_id}::{name}"
                     symbol_ids[name] = symbol_id
                     repository.insert(
