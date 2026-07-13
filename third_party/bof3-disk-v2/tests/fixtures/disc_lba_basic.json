@@ -1,0 +1,28 @@
+{
+  "entries": [
+    {
+      "archive_name": "HELLO",
+      "archive_type": "TXT",
+      "bytes": 5,
+      "family": "unknown",
+      "lba": 21,
+      "length": 1,
+      "name": "HELLO.TXT",
+      "row_type": "File",
+      "source_path": "extract/HELLO.TXT",
+      "timecode": "00:02:21"
+    },
+    {
+      "archive_name": "DATA",
+      "archive_type": "BIN",
+      "bytes": 3,
+      "family": "unknown",
+      "lba": 23,
+      "length": 1,
+      "name": "DATA.BIN",
+      "row_type": "File",
+      "source_path": "extract/DIR/DATA.BIN",
+      "timecode": "00:02:23"
+    }
+  ]
+}
