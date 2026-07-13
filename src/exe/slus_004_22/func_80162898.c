@@ -6,7 +6,7 @@ extern u8 DAT_80140000[];
 
 extern vu32           DAT_8014646c;
 extern vu8            DAT_80146483;
-extern signed char     DAT_80146489;
+extern signed char    DAT_80146489;
 extern vu8            DAT_801464a0[];
 extern vu32           DAT_80146478;
 extern vu8            DAT_80146481;
@@ -31,8 +31,8 @@ void func_80162898(void) {
     func_80173818(DAT_8014677c[DAT_80146483].resource_id);
     entry_index = DAT_80146483;
     if ((s16)func_80173c50(DAT_8014677c[entry_index].source,
-                          DAT_8014677c[entry_index].resource_id,
-                          DAT_8014677c[entry_index].unknown_00) == -1) {
+                           DAT_8014677c[entry_index].resource_id,
+                           DAT_8014677c[entry_index].unknown_00) == -1) {
       DAT_80146480 = 2;
       DAT_80146494 = 0;
       return;

@@ -27,7 +27,6 @@ void func_801f2c88(void) {
   REG8(0x801460e8) |= 0x40;
   func_8014d6b8(0x10);
   REG8(0x80146866) = 1;
-  *(volatile World00Area008State**)0x1f800044 =
-      (World00Area008State*)previous;
+  *(volatile World00Area008State**)0x1f800044 = (World00Area008State*)previous;
   previous->mode = 2;
 }

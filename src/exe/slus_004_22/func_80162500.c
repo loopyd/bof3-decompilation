@@ -12,17 +12,17 @@ extern const u8 DAT_80183224[];
  * @source 0x80162500 func_80162500
  */
 void func_80162500(void) {
-  u8*  header;
-  u8*  tag;
-  s32  tag_count;
-  s32  tag_index;
-  u32* entry;
-  u32* offsets;
-  u32* sector_offsets;
-  s32* entry_count;
-  u32  next_offset;
-  u32  header_address;
-  u8*  loader_state;
+  u8*   header;
+  u8*   tag;
+  s32   tag_count;
+  s32   tag_index;
+  u32*  entry;
+  u32*  offsets;
+  u32*  sector_offsets;
+  s32*  entry_count;
+  u32   next_offset;
+  u32   header_address;
+  u8*   loader_state;
   vu32* loader_word;
 
   tag_index = 7;

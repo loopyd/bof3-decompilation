@@ -22,7 +22,7 @@ extern s8            DAT_80148fc0[];
  * @source 0x80162790 FUN_80162790
  */
 void func_80162790(void) {
-  u8 unused_stack[64];
+  u8   unused_stack[64];
   u32* table_word;
 
   if (DAT_8014646c == 0) {

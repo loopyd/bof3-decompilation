@@ -9,10 +9,10 @@ s32 func_801a1ed8(s32 x, s32 y, s32 route, s32 arg3);
  */
 s32 func_801a1bc0(struct GameWorkArea* arg0) {
   volatile struct GameWorkArea* work;
-  u8                   speed;
-  s32                  route;
-  s32                  x;
-  s32                  y;
+  u8                            speed;
+  s32                           route;
+  s32                           x;
+  s32                           y;
 
   work = SCRATCH_WORK;
   speed = work->speed_70;

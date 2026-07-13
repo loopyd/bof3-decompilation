@@ -1,13 +1,13 @@
 #include "internal.h"
 
-extern u8   DAT_80146480;
-extern u8   DAT_8014648a;
-extern s8   DAT_8014648b;
-extern u16  DAT_80146490;
-extern u16  DAT_80146492;
-extern u8   DAT_80146494;
+extern u8     DAT_80146480;
+extern u8     DAT_8014648a;
+extern s8     DAT_8014648b;
+extern u16    DAT_80146490;
+extern u16    DAT_80146492;
+extern u8     DAT_80146494;
 extern CdlLOC DAT_80146778;
-extern vu32 DAT_80146808;
+extern vu32   DAT_80146808;
 
 /* @behavior resets EMI transfer counters, converts the current LBA to CdlLOC, and
  * arms the next loader phase.
@@ -15,7 +15,7 @@ extern vu32 DAT_80146808;
  */
 void func_80162178(void) {
   volatile u8* read_progress;
-  u32 lba;
+  u32          lba;
 
   read_progress = &DAT_80146494;
   *read_progress = 0;

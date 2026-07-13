@@ -80,7 +80,7 @@ struct GameWorkArea {
 
 /* @behavior entry-0 main state machine index */
 extern vu16 DAT_80143b90;
-extern u16 DAT_80143c40;
+extern u16  DAT_80143c40;
 /* @behavior entry-0 sub-state within current state */
 extern vu16 DAT_80143b92;
 /* @behavior world/phase index for entry-0 world dispatch */
@@ -106,40 +106,40 @@ extern u8 DAT_80143f1f;
 /* @behavior active selection id from front-end picker */
 extern vu32 DAT_80144fc0;
 /* @behavior front-end selection index for menu routing */
-extern u8 DAT_80145029;
+extern u8  DAT_80145029;
 extern u32 DAT_8014502c;
 /* @behavior palette stage serial for GPU upload sequencing */
 extern vu8 DAT_80145988;
 /* @behavior world flags — bit0=pending scenario, bit6=force-reset.
  * UNKNOWN: roles of observed bits 5 and 11. */
 extern u16 DAT_8014625a;
-extern vu8  DAT_80146256;
+extern vu8 DAT_80146256;
 /* @behavior flag byte cleared on request 0xFE.
  * UNKNOWN: the flag's owning subsystem. */
-extern vu8 DAT_8014832e;
-extern u8 DAT_801462e0;
-extern u8 DAT_801462e1;
-extern u8 DAT_801462e2;
-extern u8 DAT_80145e9b;
-extern u8 DAT_80145fdb;
-extern u8 DAT_8014611b;
-extern u8 DAT_8014626c;
-extern u8 DAT_8014626d;
-extern u8 DAT_8014626e;
-extern u8 DAT_8014626f;
-extern u8 DAT_80146270;
-extern u8 DAT_80148650;
-extern u8 DAT_80148651;
-extern u8 DAT_80148652;
-extern s8 DAT_8014865c;
+extern vu8      DAT_8014832e;
+extern u8       DAT_801462e0;
+extern u8       DAT_801462e1;
+extern u8       DAT_801462e2;
+extern u8       DAT_80145e9b;
+extern u8       DAT_80145fdb;
+extern u8       DAT_8014611b;
+extern u8       DAT_8014626c;
+extern u8       DAT_8014626d;
+extern u8       DAT_8014626e;
+extern u8       DAT_8014626f;
+extern u8       DAT_80146270;
+extern u8       DAT_80148650;
+extern u8       DAT_80148651;
+extern u8       DAT_80148652;
+extern s8       DAT_8014865c;
 extern const u8 DAT_80181eba[];
 extern const u8 DAT_80181ebb[];
 /* @behavior signed world-coord X argument for scenario entry */
 extern s16 DAT_8014930a;
 /* @behavior signed world-coord Y argument for scenario entry */
 extern s16  DAT_8014930e;
-extern s16 DAT_801492d8;
-extern s16 DAT_801492dc;
+extern s16  DAT_801492d8;
+extern s16  DAT_801492dc;
 extern vu16 DAT_801490a4;
 
 extern const GameEntry0StateHandler DAT_801c7b08[];

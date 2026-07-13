@@ -1,18 +1,18 @@
 #include "internal.h"
 
-extern u32 DAT_80146454;
+extern u32  DAT_80146454;
 extern vu32 DAT_80146458;
-extern u32 DAT_80146464;
-extern s8  DAT_80146489;
+extern u32  DAT_80146464;
+extern s8   DAT_80146489;
 
 /* @behavior copies the next EMI transfer chunk from the CD sector buffer,
  * wrapping into the active slot's sector when a partial sector remains.
  * @source 0x80162c14 func_80162c14
  */
 void func_80162c14(void) {
-  u32 transfer_words;
-  u32 transfer_size;
-  u32 transfer_address;
+  u32  transfer_words;
+  u32  transfer_size;
+  u32  transfer_address;
   u32* transfer_size_ptr;
 
   transfer_size_ptr = &DAT_80146454;

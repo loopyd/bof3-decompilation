@@ -23,7 +23,7 @@ extern vu32             DAT_8014646c;
  * @source 0x80162b08 FUN_80162b08
  */
 s32 func_80162b08(u8 slot) {
-  u8               slot_index;
+  u8                        slot_index;
   volatile EmiTransferSlot* slot_table;
 
   slot_index = slot;

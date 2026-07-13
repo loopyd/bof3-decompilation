@@ -17,7 +17,7 @@ void func_80162d18(void) {
   EmiCallbackGroup*       dst;
   const EmiCallbackGroup* src;
   const EmiCallbackGroup* end;
-  u32 callbacks[9];
+  u32                     callbacks[9];
 
   dst = (EmiCallbackGroup*)callbacks;
   src = (const EmiCallbackGroup*)DAT_80149c3c;

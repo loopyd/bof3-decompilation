@@ -7,12 +7,12 @@
  */
 void func_801c5558(void) {
   volatile struct GameWorkArea* work;
-  u32                  route;
-  u32                  offs_a;
-  u32                  offs_b;
-  s16                  result;
-  volatile u8*         global_work;
-  s16                  threshold;
+  u32                           route;
+  u32                           offs_a;
+  u32                           offs_b;
+  s16                           result;
+  volatile u8*                  global_work;
+  s16                           threshold;
 
   work = SCRATCH_WORK;
   route = work->route_index_08 * 8;

@@ -13,10 +13,10 @@ extern u16  DAT_8014681a;
  * @source 0x80161f58 FUN_80161f58
  */
 void func_80161f58(void) {
-  s32 i;
-  u8* slot_state;
-  u32 bootstrap_address;
-  u8  empty_state;
+  s32   i;
+  u8*   slot_state;
+  u32   bootstrap_address;
+  u8    empty_state;
   vu32* loader_state;
 
   while (func_801753ec() == 0) {

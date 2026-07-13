@@ -2,31 +2,31 @@
 
 extern void (*DAT_80183248[])(void);
 extern CdlLOC DAT_8018b490;
-extern vu32 DAT_80146450;
-extern vu32 DAT_80146454;
-extern vu32 DAT_8014645c;
-extern vu16 DAT_80146460;
-extern vu32 DAT_80146464;
-extern vu32 DAT_8014646c;
-extern vu8  DAT_80146480;
-extern vu8  DAT_80146481;
-extern s8   DAT_80146489;
-extern u8   DAT_80146494;
-extern vu32 DAT_80146518[];
-extern vu8  DAT_801464a0[];
-extern vu32 DAT_80146808;
+extern vu32   DAT_80146450;
+extern vu32   DAT_80146454;
+extern vu32   DAT_8014645c;
+extern vu16   DAT_80146460;
+extern vu32   DAT_80146464;
+extern vu32   DAT_8014646c;
+extern vu8    DAT_80146480;
+extern vu8    DAT_80146481;
+extern s8     DAT_80146489;
+extern u8     DAT_80146494;
+extern vu32   DAT_80146518[];
+extern vu8    DAT_801464a0[];
+extern vu32   DAT_80146808;
 
 /* @behavior services the active EMI CD-ready callback, validates the sector source,
  * dispatches the current loader phase, and advances the streaming ring.
  * @source 0x80162230 FUN_80162230
  */
 void func_80162230(u8 status, u8* result) {
-  u8*          read_progress;
-  CdlLOC*      current_pos;
-  s32          callback_ready;
-  u32          transfer_size;
-  u16          state;
-  s32          slot;
+  u8*     read_progress;
+  CdlLOC* current_pos;
+  s32     callback_ready;
+  u32     transfer_size;
+  u16     state;
+  s32     slot;
 
   read_progress = &DAT_80146494;
   callback_ready = *read_progress;
