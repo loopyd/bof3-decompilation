@@ -1,14 +1,223 @@
 ---
 type: Reference
-title: Reverse engineering algorithms
-description: Algorithms and processes used to extract and verify game data from BOF3 PSX binary archives.
-tags: [algorithms, extraction, verification]
+title: Verified pseudocode index
+description: Source-backed runtime and data-extraction algorithms for BOF3 PSX binaries.
+tags: [algorithms, runtime, extraction, verification]
 ---
 
-# Pseudocode: reverse engineering algorithms
+# Verified pseudocode index
 
-Algorithms and processes used to extract and verify game data from BOF3
-PSX binary archives. Each section documents the technique, not the code.
+Compact algorithms derived from reviewed source, original-byte analysis, and
+owning specs. Pseudocode explains control and data flow; it is not a replacement
+for exact-match C or the linked binary-layout evidence. The [format conversion
+map](formats/conversion.md) identifies lossless interchange, preview formats,
+validators, and provenance that each flow must retain.
+
+## Runtime index
+
+| Flow | Evidence owner | Confidence boundary |
+| --- | --- | --- |
+| EMI loading and dispatch | [EMI loader](runtime/emi-loader.md), [EMI format](formats/emi.md) | Handler roles are bounded; types 4 and 5 remain unresolved. |
+| Type-3 texture upload and palettes | [EMI graphics](formats/graphics.md) | Upload geometry is verified; palette association is draw-state-owned. |
+| Sprites and GPU primitives | [Frontend flow](runtime/frontend.md), reviewed source | Construction examples are verified; there is no single universal sprite format. |
+| VAB, sequence, and STR/XA media | [EMI loader](runtime/emi-loader.md), [STR/XA](formats/str-xa.md) | Container roles are verified; runtime CDDA control is not recovered. |
+| Monsters and formations | [Area data](data/areas.md), [archive ownership](archives/ownership.md) | Storage extraction is verified; enemy runtime lifecycle is out of scope here. |
+
+## Runtime flows
+
+### EMI archive loading and entry dispatch
+
+```text
+function load_emi_archive(slot):
+    begin_stream(slot)
+    while loader_is_not_ready():
+        service_scheduler_once()
+
+    for entry in archive_toc:
+        assert entry_payload_is_0x800_aligned
+        dispatch_by_type(entry)
+
+function dispatch_by_type(entry):
+    if entry.type == 0:
+        copy_payload_to_ram(entry.load_argument)
+    else if entry.type in {1, 2}:
+        queue_ram_transfer(entry)
+    else if entry.type == 3:
+        queue_vram_chunks(entry)
+    else if entry.type in {4, 5}:
+        invoke_shared_special_handler(entry)  # semantics unresolved
+    else if entry.type == 6:
+        stage_vab_header(entry)
+    else if entry.type == 7:
+        stage_vab_body(entry)
+    else if entry.type == 8:
+        stage_auxiliary_audio_payload(entry)
+    else if entry.type in {9, 10}:
+        stage_sequence_side_payload(entry)
+```
+
+The archive is never the executable target: classify each extracted entry
+independently. Type `0` permits a RAM copy but does not prove code. Exact
+handlers and addresses are listed in the [loader dispatch table](runtime/emi-loader.md#entry-dispatch).
+
+Testable invariants:
+
+- `just extract && bin/harness scan` must regenerate the EMI entry catalog from
+  the extracted archives; generated evidence remains under `out/`.
+- Every payload offset is `0x800`-aligned and every next offset uses
+  `(size + 0x7ff) & ~0x7ff`.
+- A promoted entry's archive path, slot, payload hash, and load address must
+  agree with its target manifest before any function diff is meaningful.
+
+### Type-3 VRAM upload and separate palette mapping
+
+```text
+function queue_vram_chunks(entry):
+    descriptor = entry.load_argument
+    base_x_words = ((descriptor >> 24) & 0x3f) * 32
+    base_y_rows = ((descriptor >> 16) & 0x1f) * 32
+    chunks_per_row = (descriptor >> 8) & 0x3f
+
+    for each 0x800-byte payload chunk with chunk_index:
+        column = chunk_index % chunks_per_row
+        row = chunk_index // chunks_per_row
+        destination = {
+            x_words: base_x_words + column * 32,
+            y_rows: base_y_rows + row * 32,
+            width_words: 32,
+            height_rows: 32,
+        }
+        upload_0x800_bytes_to_vram(destination)
+
+function decode_psx_color(raw_u16):
+    return {
+        red5: raw_u16 & 0x1f,
+        green5: (raw_u16 >> 5) & 0x1f,
+        blue5: (raw_u16 >> 10) & 0x1f,
+        stp: (raw_u16 >> 15) & 1,
+    }
+```
+
+Each chunk is `32x32` 16-bit VRAM words: `128x32` pixels at 4bpp, `64x32`
+at 8bpp, or `32x32` at 16bpp. CLUT bytes commonly arrive through a separate,
+small type-`0` RAM payload. The texture payload does not identify its palette;
+primitive/draw data supplies the CLUT selection. See [EMI graphics](formats/graphics.md#palette).
+
+Testable invariants:
+
+- Each queued full chunk consumes exactly `0x800` bytes and covers `32 * 32`
+  16-bit VRAM words.
+- A 4bpp CLUT row is `0x20` bytes; an 8bpp CLUT row is `0x200` bytes.
+- Reconstructing the same texture with a different CLUT may change displayed
+  colors but must not change the type-`3` texture bytes.
+
+### Sprite and primitive construction
+
+```text
+function draw_indexed_sprite(x, y, sprite_id, flags):
+    rectangle = lookup_sprite_rectangle(sprite_id, flags & 1)
+    primitive = allocate_gt_quad()
+    initialize_gpu_primitive(primitive)
+    set_semitransparency(primitive, disabled)
+    set_xy_and_uv_from_rectangle(primitive, x, y, rectangle)
+    primitive.clut = choose_clut(flags bit 1)
+    append_primitive_to_ordering_table(primitive)
+
+function tint_primitive(primitive, alpha):
+    primitive.red = alpha
+    primitive.green = alpha
+    primitive.blue = alpha
+```
+
+The first flow is evidenced by exact-matching `GAME.EMI#0 @ 0x801af2a0`;
+the tint helper is exact at `GAME.EMI#1 @ 0x801d18e8`. Frontend glyph geometry
+is table-driven, but its constructor at `0x801d17d8` is not yet an exact C
+match. Do not generalize these layouts to every PSX primitive.
+
+Executable checks:
+
+```sh
+bin/harness diff src/emi/etc/game/00/func_801af2a0.c
+bin/harness diff src/emi/etc/game/01/func_801d18e8.c
+```
+
+Both checks must report exact instruction and byte matches. A visual render is
+supporting evidence only; it does not replace the canonical binary diff.
+
+### Audio and sector media
+
+```text
+function rewrap_extracted_str_xa(sector_2336):
+    assert len(sector_2336) == 2336
+    assert sector_2336 == xa_subheader_8 + payload_2324 + edc_4
+    return raw_cd_sync_12 + raw_cd_header_4 + sector_2336
+
+function align_desktop_audio(video_frames, fps, audio_samples, sample_rate):
+    video_seconds = video_frames / fps
+    audio_seconds = audio_samples / sample_rate
+    pad_samples = max(0, round((video_seconds - audio_seconds) * sample_rate))
+    padded_audio = append_silence_per_channel(audio_samples, pad_samples)
+    assert durations_equal_within_one_sample(video_seconds, padded_audio)
+    return padded_audio
+```
+
+EMI types `6` and `7` form VAB header/body pairs; type `10` is sequence data.
+Extracted STR/XA files omit the outer 16 raw-sector bytes, so generic 2352-byte
+tools require rewrapping without changing the inner payload. Channel/file
+demultiplexing and decoding remain tool concerns. No source-backed CDDA runtime
+control algorithm is currently recovered; do not treat XA and CDDA as synonyms.
+
+Testable invariants:
+
+- Extracted STR/XA size is divisible by `2336`; rewrapped size is sector count
+  times `2352`; each inner 2336-byte sector is preserved byte-for-byte.
+- Preserve the original extracted bytes and hash as the archival source. The
+  desktop derivative is Matroska with lossless H.264 (`libx264 -qp 0`) plus
+  FLAC, without scaling or pixel-format/range changes.
+- A decoder-generated A/V file belongs under `out/analysis/media/`. Compare
+  decoded timing with a bounded probe:
+
+  ```sh
+  ffprobe -v error -count_frames \
+    -show_entries stream=index,codec_type,nb_read_frames,duration,r_frame_rate,sample_rate \
+    -of json out/analysis/media/CAPCOM30.mkv
+  ```
+
+- The measured `CAPCOM30.STR` has exactly 1155 2336-byte sectors. Lossless
+  wrapping yields 231 video frames and 143 main stereo XA packets at 37800 Hz.
+  ffmpeg's default time base reproduces the naïve desktop half-speed symptom,
+  but it is not a canonical duration for the asset.
+- Missing end padding is not supported: the extracted size is exact and the
+  wrapper preserves all sectors. As a worked example, 231 frames at 30 fps and
+  1155 sectors at 2x CD rate each give 7.700 seconds. Applying the generic
+  formula to the 7.626667-second main stereo decode derives 0.073333 seconds of
+  padding, or 2772 samples per channel at 37800 Hz; both mux tracks then measure
+  7.700 seconds within the stated tolerance.
+- `INFERRED:` 30 fps/2x delivery is the strongly supported conversion setting,
+  not yet a proven game-runtime contract. Verify scheduler behavior in the
+  unresolved LOGO functions `0x801ce760` and `0x801cea98` before promoting it.
+  `ffprobe` cannot read the extracted 2336-byte STR directly, so probing raw
+  `CAPCOM30.STR` is not a valid timing test.
+
+### Enemy-data boundary
+
+Enemy facts in this page are storage algorithms: [monster extraction](#3-monster-id-extraction),
+[formation decoding](#9-formation-record-decoding), and [BENEMY mapping](#19-benemy-file-mapping).
+Area archives own monster and formation records. `BENEMY` archives are audio
+banks, not executable enemy overlays. Runtime AI, spawning, and battle lifecycle
+need separate reviewed call-chain evidence and are not inferred from these tables.
+
+Testable invariants:
+
+- Monster records are exactly `0x88` bytes and formation records are exactly
+  9 bytes; every non-`0xff` formation slot is an area-local monster index, not
+  a global monster ID.
+- Repeated pointers may resolve to the same monster ID. Conflicting IDs must be
+  reported as variants rather than silently deduplicated.
+- The `monster ID N -> ENEMY{N-1}.EMI` relation remains bounded by the verified
+  corpus; confirm a runtime caller and bounds before encoding it in game code.
+
+## Data extraction algorithms
 
 ## 1. Name decoding (custom encoding)
 
