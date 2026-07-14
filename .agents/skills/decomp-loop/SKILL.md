@@ -13,6 +13,10 @@ For exact-match tactics and compiler pitfalls, read
 before changing source when control flow already looks correct but the diff is
 still nonmatching.
 
+Read [psx-mips-correctness.md](references/psx-mips-correctness.md) before
+promoting control flow, unaligned access, GP-relative data, DMA/MMIO, cache, or
+COP2/GTE behavior.
+
 ## Function loop
 
 ```bash
@@ -61,11 +65,16 @@ agent the machine-wide worker count. Prefer one well-fed run over several
 oversubscribed runs; reduce or defer permutation when the reserved headroom is
 already consumed.
 
+Omit `--seed` for independent exploration: the harness generates and reports a
+system-random base seed, then derives per-worker seeds. Supply and record a
+specific seed only to reproduce a useful candidate or diagnose a failed run;
+an unexplained fixed default repeatedly explores the same search path.
+
 When a newly lifted function reaches a canonical 100% instruction and byte
-match, re-run `bin/harness diff` and commit it immediately in a small focused
-commit. Include only its required Splat boundary, declaration, and address
-binding; exclude unrelated cleanup and generated evidence. A commit does not
-authorize a push.
+match, re-run `bin/harness diff` and prepare a small focused change. Include
+only its required Splat boundary, declaration, and address binding; exclude
+unrelated cleanup and generated evidence. Commit or push only when explicitly
+authorized.
 
 Do not trade readable, factual C for a percentage increase until the target,
 boundary, compiler command, and diff normalization are proven correct.
@@ -108,7 +117,7 @@ original bytes. Report function matches separately from whole-binary matching.
 | Splat/spimdisasm | Canonical binary segmentation and assembly |
 | m2c | Optional matching-oriented C seed |
 | asm-differ | Interactive instruction comparison |
-| Rizin/Ghidra | Optional analysis hints |
+| Rizin/radare2 and Ghidra | Optional analysis hints |
 | decomp-permuter | Optional bounded source-shape search |
 
 ## Coding conventions

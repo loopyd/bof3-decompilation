@@ -1,22 +1,30 @@
-# rzpipe automation
+# r2pipe automation
+
+## Contents
+
+- [Bindings and Python API](#official-binding-ecosystem)
+- [Transport choices](#transport-choices)
+- [PSX automation](#high-value-psx-automations)
+- [Safe batch shape](#safe-batch-shape)
+- [JSON and token discipline](#json-validation-and-token-discipline)
+- [Errors and Rizin compatibility](#error-and-lifecycle-rules)
 
 Use the native CLI for focused interactive analysis and one-shot commands. Use
-rzpipe when the job needs typed JSON parsing, iteration across many independently
+r2pipe when the job needs typed JSON parsing, iteration across many independently
 mapped blobs, correlation, validation, deterministic export, or regression tests.
 
-## Available bindings
+## Official binding ecosystem
 
-The official Rizin project advertises rzpipe bindings for six languages:
-Python, Haskell, OCaml, Ruby, Rust, and Go. The current handbook feature matrix
-explicitly details Python, Haskell, OCaml, and Rust and also provides a Ruby
-example; verify the maintenance/version state of a chosen binding before adding
-it to durable tooling.
+The official `radare2-r2pipe` repository contains bindings or examples for many
+languages, including Python, Rust, Go, TypeScript/Node.js, C/C++, Java, Ruby,
+Swift, Zig, and others. Presence in the repository is not a promise of equal
+maturity; verify the selected binding, release, and installed radare2 version.
 
 Choose by repository pressure:
 
 | Binding | Prefer when |
 | --- | --- |
-| Python `rzpipe` | Existing Python harness, fast scripting, JSON correlation, tests |
+| Python `r2pipe` | Existing Python harness, fast scripting, JSON correlation, tests |
 | Rust | Long-running typed tooling where async/concurrency and strong models pay off |
 | Go | Standalone concurrent scanner with simple distribution |
 | Haskell/OCaml | Existing codebase or type-heavy analysis pipeline already uses it |
@@ -26,37 +34,57 @@ For this repository, Python is the default because the harness and its tests are
 already Python. Do not add another language or a new package merely to wrap one
 or two commands.
 
+If `r2pipe` is absent, prefer the existing subprocess adapter over an
+implicit install. Invoke an argument list (never a shell string) with explicit
+raw mapping flags and one or more `-c` JSON commands, capture stdout/stderr and
+timeout, validate JSON, then close the process. Use a persistent pipe only when
+measured startup cost or stateful interaction justifies the extra lifecycle
+surface.
+
 ## Python API
 
-The official package is `rzpipe`:
+The official package is `r2pipe`:
 
 ```sh
-python -m pip install rzpipe
+python -m pip install r2pipe
 ```
 
 Dependency installation is an explicit project decision; first check whether
 the repository already declares it. Core use:
 
 ```python
-import rzpipe
+import r2pipe
 
 flags = [
+    "-2",  # close inherited stderr after capability/preflight checks
     "-a", "mips",
     "-b", "32",
     "-e", "cfg.bigendian=false",
+    "-e", "scr.color=0",  # stable JSON/text without ANSI escapes
     "-m", f"0x{load_address:08x}",
 ]
-with rzpipe.open(binary_path, flags=flags, cmd_timeout_secs=30) as rz:
-    rz.cmd("aa")
-    functions = rz.cmdj("aflj")
-    info = rz.cmdj("ij")
+with r2pipe.open(binary_path, flags=flags) as r2:
+    r2.cmd("aa")
+    functions = r2.cmdj("aflj")
+    info = r2.cmdj("ij")
 ```
 
 The official Python implementation accepts `flags`, inserts them into the
-spawned `rizin` command before its own `-q0`, accepts `rizin_home` for an
-alternate executable directory, supports `cmd_timeout_secs`/`set_timeout()`, and
-implements a context manager that quits the process. It launches `rizin`, not
-radare2; use the separate `r2pipe` binding for a radare2 fallback.
+spawned radare2 command before its own `-q0`, accepts `radare2home` for an
+alternate executable directory, and implements a context manager that quits the
+process. The installed synchronous API does not expose a command-timeout
+parameter; enforce wall-clock bounds in the harness/process supervisor.
+Its spawned process also inherits stderr. For stable routine automation, `-2`
+prevents terminal-control/warning noise after a separate capability preflight;
+for diagnosis, omit `-2` and use the subprocess adapter so stderr is captured to
+an artifact instead of leaking into LLM/stdout output.
+
+Disabling color is an automation boundary, not an interactive default. Native
+terminal sessions should inherit the user's color configuration. Set
+`scr.color=0` only for JSON, persisted evidence, tests, and LLM-bounded output,
+where ANSI bytes add noise and can break parsing. Probe `e scr.color=?` before
+depending on nonzero numeric modes; related color keys differ by engine and
+version.
 
 `cmd()` returns text. `cmdj()` parses JSON into Python values. The Python package
 also documents `cmdJ()` named-tuple conversion, but plain `cmdj()` is preferable
@@ -67,16 +95,16 @@ the installed binding API/version before relying on newer options, or
 spawn/connect to an engine started with the verified CLI:
 
 ```sh
-rizin -q0 -a mips -b 32 -e cfg.bigendian=false -m 0xBASE RAW.bin
+r2 -N -n -q0 -a mips -b 32 -e cfg.bigendian=false -m 0xBASE RAW.bin
 ```
 
 Never open a raw blob with default settings and repair addresses after analysis.
 
 ## Transport choices
 
-The official handbook documents these connection styles:
+The official r2pipe implementation supports these connection styles:
 
-- spawned pipe (`rizin -0`): best local default and process isolation;
+- spawned radare2 pipe: best local default and process isolation;
 - HTTP: useful for remote/cloud-style queries, with explicit trust boundaries;
 - TCP: supported by some bindings;
 - RAP/native remote protocol: binding-dependent;
@@ -89,7 +117,7 @@ ordinary repository analysis.
 
 ## High-value PSX automations
 
-Python rzpipe can improve this workflow in these areas:
+Python r2pipe can improve this workflow in these areas:
 
 1. **Capability probe**: capture engine version, MIPS/32/LE settings, `pdg?`,
    project commands, and required JSON command schemas.
@@ -111,7 +139,7 @@ Python rzpipe can improve this workflow in these areas:
    ranked rows, omitted counts, and artifact paths to stdout.
 
 These belong behind existing harness seams when they are repository workflows;
-do not leave repeated one-off rzpipe scripts scattered around the tree.
+do not leave repeated one-off r2pipe scripts scattered around the tree.
 
 ## Safe batch shape
 
@@ -156,28 +184,21 @@ repository scan. Never let one target's address→name map overwrite another's.
   official Python implementation invokes them through `shell=True`. Prefer
   Python subprocess argument lists at the harness boundary.
 
-## Rizin plugins versus rzpipe
+## Rizin compatibility
 
-Rizin also supports in-process Python plugins via `rzlang`. Use a plugin only
-when new engine commands or architecture/analysis behavior genuinely require an
-in-process extension. For repository orchestration, rzpipe keeps failure and
-version boundaries clearer and is easier to test. Cutter Python plugins are a
-GUI integration choice, not a replacement for deterministic headless exports.
+`r2pipe` drives radare2, not Rizin. When the harness selects Rizin, use its
+verified subprocess adapter or the separate `rzpipe` package behind the same
+internal analyzer interface. Do not pass one engine's project/type commands to
+the other. Rizin in-process Python plugins and Cutter plugins are separate
+extension choices, not replacements for deterministic headless exports.
 
 ## Official sources
 
-- Rizin rzpipe handbook and feature matrix:
-  https://book.rizin.re/src/scripting/rz-pipe.html
-- Rizin scripting overview:
-  https://book.rizin.re/src/scripting/intro.html
-- Official Rizin repository (advertised language bindings):
-  https://github.com/rizinorg/rizin
-- Official Python package:
-  https://pypi.org/project/rzpipe/
-- Official Python source and examples:
-  https://github.com/rizinorg/rz-pipe/tree/master/python
-  https://github.com/rizinorg/rz-pipe/tree/master/python/examples
-- Rizin Python plugins (`rzlang`):
-  https://book.rizin.re/src/plugins/python.html
-- radare2 r2pipe reference for fallback automation:
+- Official r2pipe repository and binding inventory:
+  https://github.com/radareorg/radare2-r2pipe
+- Official Python implementation:
+  https://github.com/radareorg/radare2-r2pipe/tree/master/python
+- Official Python examples:
+  https://github.com/radareorg/radare2-r2pipe/tree/master/python/examples
+- Official radare2 r2pipe reference:
   https://book.rada.re/scripting/r2pipe.html

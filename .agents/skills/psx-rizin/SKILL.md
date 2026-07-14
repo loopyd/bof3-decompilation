@@ -1,6 +1,6 @@
 ---
 name: psx-rizin
-description: "Create and maintain reproducible Rizin or radare2 analysis projects for PlayStation 1 MIPS binaries and arbitrary mapped code/data blobs, including PS-X EXEs, overlays, library members, embedded code ranges, rz-ghidra/r2ghidra decompilation, cross-binary function/type correlation, symbol mapping, xrefs, and deterministic evidence export. Use for PSX reverse engineering, raw MIPS analysis, persistent analyzer projects, shared-function or shared-type discovery, PsyQ signature correlation, or Rizin/radare2 automation."
+description: "Create and maintain reproducible Rizin or radare2 analysis projects for PlayStation 1 MIPS binaries and mapped code/data blobs. Use for raw mapping, bounded analysis, functions, flags, comments, xrefs, graphs, rz-ghidra/r2ghidra, project replay, deterministic export, or r2pipe automation; use a domain skill to interpret or promote the resulting evidence."
 ---
 
 # PSX Rizin Analysis
@@ -15,21 +15,15 @@ replay commands, and compiled source remain authoritative.
 
 - Read [psx-inputs.md](references/psx-inputs.md) before opening a PS-X EXE,
   normalized executable image, or extracted overlay.
+- Use `$decomp-loop` and its PSX MIPS correctness reference before interpreting
+  pipeline hazards, MMIO/DMA, scratchpad/cache, or COP2/GTE instructions. This
+  analyzer skill records evidence; it does not own CPU-semantic policy.
 - Read [commands.md](references/commands.md) before native Rizin/radare2 work.
 - Read [projects-and-replay.md](references/projects-and-replay.md) before saving
   projects or promoting analyzer state.
 - Read [decompilers.md](references/decompilers.md) before using rz-ghidra or
   r2ghidra.
-- Read [evidence.md](references/evidence.md) before promoting names, types,
-  boundaries, constants, PsyQ identities, or cross-target matches.
-- Read [symbol-type-mapping.md](references/symbol-type-mapping.md) when mapping
-  semantic binary/PsyQ evidence back to address symbols or adding typedef aliases.
-- Read [cross-binary-correlation.md](references/cross-binary-correlation.md) when
-  finding shared functions, compatible signatures, types, constants, or library
-  identities across independently mapped blobs.
-- Read [github-research.md](references/github-research.md) when inspecting
-  upstream versions, releases, source, or issues with GitHub CLI.
-- Read [rzpipe-automation.md](references/rzpipe-automation.md) before building
+- Read [r2pipe-automation.md](references/r2pipe-automation.md) before building
   batch correlation, deterministic export, project verification, or analyzer
   regression tooling around Rizin/radare2.
 
@@ -48,10 +42,10 @@ replay commands, and compiled source remain authoritative.
    analyzer guesses as facts.
 5. Replay reviewed target-local function names, data flags, comments, C types,
    and type placements from tracked inputs. Keep address-based names until the
-   semantic name is proven.
-6. Use strings, xrefs, call shapes, access widths, repeated layouts, and
-   official SDK declarations to form hypotheses. Check each promoted fact
-   against disassembly or raw bytes.
+   owning domain workflow approves a semantic interpretation.
+6. Export strings, xrefs, call shapes, access widths, and repeated layouts as
+   bounded supporting evidence. Interpretation and promotion belong to the
+   owning domain workflow.
 7. Use rz-ghidra/r2ghidra only after function boundaries and calling context are
    credible. Decompiler output is a control-flow and naming hint, not matching
    authority or a compilable-source guarantee.
@@ -78,20 +72,16 @@ bin/harness analysis graph [target]
 
 Projects belong under `out/analysis/projects/`; deterministic exports belong
 under `out/analysis/exports/`. Reviewed replay commands live under
-`config/analysis/<target>.r2`; analysis-only shared C types live in
+`config/analysis/<target-path>.r2`; analysis-only shared C types live in
 `config/analysis/bof3_objects.h`. Reinitialize after changing tracked replay or
 types. Do not hand-edit generated exports.
 
-## Naming and PsyQ policy
+## Analyzer naming policy
 
 - Keep separate projects and target-local bindings for separate executables or
   overlays, even when bytes or addresses repeat.
 - Keep compiled symbols address-based (`func_XXXXXXXX`, `DAT_XXXXXXXX`) until a
   meaning is reviewed. Add semantic aliases without losing address traceability.
-- Promote a PsyQ identity only when the official SDK prototype, call shape, and
-  assembly agree. A library name does not prove a runtime address.
-- Record PsyQ archive/header provenance and target-local address independently.
-  Do not lift library code or assume the same offset across binaries.
 - Preserve unknown struct fields and exact offsets. Do not force a decompiler
   guess into a public type.
 

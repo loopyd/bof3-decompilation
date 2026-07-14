@@ -1,5 +1,13 @@
 # PSX input mapping
 
+## Contents
+
+- [Choose the input](#choose-the-input)
+- [Record identity and bounds](#record-identity-and-bounds)
+- [Map a raw image](#map-a-raw-runtime-image)
+- [Validate analysis](#validate-before-auto-analysis)
+- [Project isolation](#project-isolation)
+
 Analyze the runtime image, not whichever container happened to carry it. Record
 the input hash, byte range, and verified runtime address before creating a
 project. Original bytes and tracked target metadata outrank analyzer guesses.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "BOF3 Docs"
+  short_description: "Route BOF3 project knowledge efficiently"
+  default_prompt: "Use $bof3-docs to find the smallest authoritative BOF3 repository document for this question."

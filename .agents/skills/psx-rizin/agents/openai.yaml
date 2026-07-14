@@ -1,4 +1,4 @@
 interface:
   display_name: "PSX Rizin Analysis"
-  short_description: "Map PSX MIPS binaries with Rizin and rz-ghidra"
+  short_description: "Maintain reproducible PSX analyzer projects"
   default_prompt: "Use $psx-rizin to create or update a reproducible PSX analysis project and export reviewed evidence."

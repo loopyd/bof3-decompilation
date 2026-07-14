@@ -1,47 +1,48 @@
 ---
 name: bof3-docs
-description: Project documentation for BOF3 reverse engineering. Use when you need to understand the project structure, setup steps, specs, or troubleshooting. Loads the relevant doc file from docs/ on demand.
+description: Locate the smallest authoritative BOF3 repository document. Use for documentation lookup, repository orientation, setup instructions, workflow references, specifications, generated-artifact ownership, or troubleshooting routes; use a domain skill to interpret the retrieved facts.
 ---
 
-## How to use
-Read the doc you need with the Read tool. Don't pre-load all docs.
+# BOF3 project documentation
 
-## Doc index
+Load only the documents needed for the question. Prefer an index first when the
+owning concept is unclear; do not preload the documentation tree.
 
-### Project
-- `docs/README.md` — docs overview
-- `README.md` — shortest setup and reversing path
-- `CONTEXT.md` — canonical binary and EMI terminology
+## Routing workflow
 
-### Setup & Troubleshooting
-- `docs/setup.md` — toolchains, PsyQ, extraction, and verification
-- `docs/troubleshooting.md` — doctor, build, Ghidra, and extraction failures
+1. Classify the question with the table below.
+2. Read the primary route. Follow one linked concept when it owns the answer.
+3. If no route fits, search headings and frontmatter descriptions with
+   `rg -n '<term>' docs CONTEXT.md README.md`, then open only the best matches.
 
-### Reverse Specs
-- `docs/specs/index.md` — entry point for reverse-engineering knowledge
-- `docs/specs/formats/emi.md` — EMI container and entry layout
-- `docs/specs/formats/graphics.md` — type-3 VRAM and palette layout
-- `docs/specs/runtime/runtime-layout.md` — executable and overlay model
-- `docs/specs/runtime/emi-loader.md` — payload dispatch
-- `docs/specs/runtime/memory-layouts.md` — evidenced structure offsets
-- `docs/specs/programs/targets.md` — confirmed executable targets
-- `docs/specs/archives/` — archive roles, ownership, and duplication
-- `docs/specs/data/` — verified IDs, values, offsets, and records
-- `docs/specs/methods/` — discovery and verification procedures
+## Routes
 
-### Workflow
-- `docs/reverse-engineering.md` — repeatable target and function loop
-- `docs/matching.md` — function matching and result interpretation
-- `docs/tools.md` — supported tool roles and evidence authority
-- `.agents/skills/decomp-loop/SKILL.md` — function lifting and matching
-- `.agents/rules/decomp.md` — C89 coding conventions (always-loaded rules)
+| Need | Read first | Add only when needed |
+| --- | --- | --- |
+| Documentation map | `docs/README.md` | — |
+| Repository quick start | `README.md` | `docs/setup.md` |
+| Binary, archive, EMI-entry, or target identity | `CONTEXT.md` | `docs/specs/runtime/runtime-layout.md` |
+| Setup, disc input, toolchains, PsyQ SDK | `docs/setup.md` | `docs/tools.md` |
+| Build, extraction, doctor, diff, or analysis failure | `docs/troubleshooting.md` | The workflow page named by the failure |
+| Classify, promote, inspect, or lift code | `docs/reverse-engineering.md` | `docs/specs/programs/targets.md` |
+| Match a lifted function | `docs/matching.md` | `docs/tools.md` |
+| Tool roles and evidence authority | `docs/tools.md` | `docs/artifacts.md` |
+| Generated versus tracked output ownership | `docs/artifacts.md` | `AGENTS.md` |
+| Verified reverse-engineering knowledge | `docs/specs/index.md` | The owning section index below |
+| EMI, graphics, STR, or XA format | `docs/specs/formats/index.md` | The linked format concept |
+| Runtime loading, EMI dispatch, frontend flow, or memory layout | `docs/specs/runtime/index.md` | The linked runtime concept |
+| Executables and confirmed overlays | `docs/specs/programs/index.md` | `docs/specs/programs/targets.md` |
+| Archive families, ownership, or duplicate data | `docs/specs/archives/index.md` | The linked archive concept |
+| IDs, encodings, records, tables, characters, equipment, or area data | `docs/specs/data/index.md` | The linked domain concept |
+| Field-semantic confidence or unresolved data work | `docs/specs/data/schema-ledger.md` | The owning data concept |
+| Discovery or verification procedure | `docs/specs/methods/index.md` | The linked method concept |
+| Algorithm-level recovered behavior | `docs/specs/pseudocode.md` | The owning format/runtime/data spec |
 
-## When to read each
-- **Setup environment?** → `docs/setup.md`
-- **Build/diff failing?** → `docs/troubleshooting.md`
-- **Understanding target identity?** → `CONTEXT.md`, `docs/specs/runtime/runtime-layout.md`
-- **What's verified?** → `docs/specs/index.md`, then the owning compact spec
-- **Working on decomp?** → `docs/reverse-engineering.md`, `docs/matching.md`, `.agents/skills/decomp-loop/SKILL.md`
-- **Finishing a module?** → `CONTEXT.md`, `docs/specs/programs/targets.md`, `docs/specs/runtime/runtime-layout.md`, `docs/reverse-engineering.md`, `docs/matching.md`, then the owning archive spec when present
-- **Binary format questions?** → `docs/specs/formats/`
-- **Coding conventions?** → `.agents/rules/decomp.md`
+## Reading discipline
+
+- Prefer the nearest `index.md` over enumerating its directory; indexes carry
+  current concept descriptions and links.
+- Read long ledgers or pseudocode selectively by heading or `rg`, not in full,
+  unless the task spans the whole document.
+- Follow direct Markdown links instead of guessing filenames.
+- Report the documents and evidence actually inspected; state skipped checks.

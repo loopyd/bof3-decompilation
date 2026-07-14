@@ -1,6 +1,9 @@
 # Reverse-engineering lessons
 
 Durable findings that make the BOF3 lift-and-match loop faster and safer.
+Domain contracts belong in `docs/specs/`; repeatable procedures belong in the
+owning `.agents/skills/` reference. This file retains concrete cross-cutting
+gotchas that are easy to repeat or misdiagnose.
 
 ## Verify boundaries before lifting
 
@@ -38,6 +41,11 @@ Durable findings that make the BOF3 lift-and-match loop faster and safer.
   shipped SLUS load image and populated at runtime. Recover their consumers and
   producers from code/xrefs; do not treat the static zero-filled EXE bytes as
   evidence that the callbacks are absent.
+- A callback table owned by one EMI payload may intentionally contain targets
+  in the concurrently loaded companion overlay. `GAME.EMI#0` tables mix local
+  `0x8019...` targets with `0x801d...`/`0x801e...` targets. Preserve the pointer
+  as a reviewed table entry, but do not create a local function boundary or
+  reject the table merely because the target lies outside the payload map.
 
 ## Cross-check executable metadata
 
@@ -132,19 +140,8 @@ Durable findings that make the BOF3 lift-and-match loop faster and safer.
   an exact byte match. Keep readable C unless a bounded source permutation
   produces the original instruction without false types or undefined behavior.
 
-## Use matching tools throughout convergence
+## Diagnose permuter integration failures
 
-- Use m2c with the generated function context as a reconstruction hint or to
-  cross-check control flow, calls, and access widths; canonical assembly remains
-  authoritative.
-- Use bounded decomp-permuter runs whenever they may produce a better source
-  shape, including early searches for the correct instruction count and size.
-  It is especially useful once the remaining differences are expression shape,
-  declaration order, register allocation, or scheduling; no score threshold is
-  required.
-- Retain a permuter result only when it preserves factual, readable C89. Exact
-  bytes remain authoritative; semantic-equivalence reporting must not weaken the
-  exact-match criterion.
 - Generated permuter settings must name `bin/objdump`; the repository wrapper
   resolves the staged MIPS objdump even when it is absent from the user's PATH.
 - A permuter `target.o` copied from the current C object creates a false
@@ -170,10 +167,3 @@ Durable findings that make the BOF3 lift-and-match loop faster and safer.
   without a source diagnostic. Re-run the same original-source and permuter-base
   compile outside that sandbox before blaming generated C; a successful base
   compile with real candidates proves the bundle is usable.
-- Budget permuter workers from current capacity, not logical cores alone. Keep
-  at least four cores or 25% of logical cores free, subtract current load from
-  that ceiling, and divide the remainder across concurrent permuter runs.
-- Promote an official PsyQ alias only when the SDK prototype, call shape, and
-  assembly agree. EMI targets do not automatically link PsyQ archive members,
-  so retain or add a proven target-local address binding and verify the target
-  link plus isolated pre/post diff.

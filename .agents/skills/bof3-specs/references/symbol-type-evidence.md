@@ -1,4 +1,16 @@
-# Mapping symbols and types without losing addresses
+# BOF3 symbol and type evidence
+
+## Contents
+
+- [Result model](#result-model)
+- [Establish the exact target](#1-establish-the-exact-target)
+- [Inventory semantic evidence](#2-inventory-semantic-evidence)
+- [Recover callers, callees, and data shape](#3-recover-callers-callees-and-data-shape-in-rizin)
+- [Correlate signatures and PsyQ](#4-correlate-a-function-signature)
+- [Recover and apply types](#6-recover-structures-and-values-safely)
+- [Aliases and replay](#7-add-semantic-aliases-while-retaining-traceability)
+- [Duplicates, promotion, and validation](#9-handle-duplicate-code-across-binaries-and-emi-entries)
+- [Stop conditions](#stop-conditions)
 
 This workflow maps semantic evidence from any PSX executable, overlay, raw code
 or data blob, PsyQ header/library, string, and repeated binary back to original
@@ -247,6 +259,12 @@ Before moving a type into compiled headers, verify:
 - array length/stride across more than one xref;
 - that the type is shared semantically, not merely byte-identical.
 
+Record layout confidence independently from source-match confidence. A reviewed
+`lb`/`lbu`, `lh`/`lhu`, or `lw` access can prove a field offset, width, and
+signedness even while the current C reconstruction is non-exact. It does not by
+itself prove a semantic field name. Keep unknown names/padding, cite the raw
+consumer evidence, and report the C match status separately.
+
 Keep a target-specific type in its `internal.h`. Move it to `include/bof3/`
 only when multiple compiled targets use the same reviewed contract. Keep
 analysis-only cross-target catalogs in `config/analysis/`; they do not override
@@ -306,7 +324,7 @@ If a semantic analyzer flag is useful, place it in a distinct reviewed
 flagspace and retain the canonical address flag. Test export/replay first;
 flag-name collisions and namespaces differ between Rizin/radare2 versions.
 
-Store reviewed commands in `config/analysis/<target>.r2`, grouped in stable
+Store reviewed commands in `config/analysis/<target-path>.r2`, grouped in stable
 order: functions, data, type import/placement, comments. Generate projects and
 exports under `out/analysis/`:
 
@@ -359,7 +377,7 @@ Promote the smallest fact to the narrowest owner:
 
 1. Correct boundary/load information in tracked target layout.
 2. Add reviewed analyzer function/data/comment/type placement to
-   `config/analysis/<target>.r2`.
+   `config/analysis/<target-path>.r2`.
 3. Add unresolved target-local absolute binding to `symbols.c` or its shallow
    `symbols/functions.c` / `symbols/variables.c` units.
 4. Add the address-based declaration to the target symbol barrel or

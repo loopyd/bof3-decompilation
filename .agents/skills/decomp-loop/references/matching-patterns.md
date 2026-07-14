@@ -12,7 +12,19 @@ one source property at a time and compare the first meaningful mismatch.
   differently.
 - Check the instruction in every branch and call delay slot. A moved assignment
   can explain a distant-looking mismatch.
+- Check the consumer after every load: the PSX R3000A exposes a load delay as
+  well as branch/jump delay slots. A scheduler mismatch may therefore appear one
+  instruction after the load rather than at the source expression.
 - Distinguish tail calls from ordinary calls followed by a return.
+- Remember that MIPS I has no integer condition-code or carry flag. Comparisons,
+  overflow/carry tests, and multiword arithmetic are explicit instructions;
+  source reconstructed around an implicit flag model is structurally wrong.
+- Treat assembler pseudo-instructions as renderings, not one-instruction facts:
+  `li`, `la`, `move`, and relational branches may expand or select different
+  real instructions. Compare normalized emitted instructions and bytes.
+- For `j`/`jal`, reconstruct the destination from the low 26-bit instruction
+  field plus the caller PC region. Do not mistake that encoding for a complete
+  absolute address or mask it as an ordinary immediate.
 
 ## Types and memory
 
@@ -74,10 +86,11 @@ Common scheduling symptoms:
 The available mitigations in ascending cost:
 1. Permutation search for a source shape that nudges the scheduler.
 2. Per-function compiler flags (e.g. `-O1` for one function).
-3. `INCLUDE_ASM` / assembly stubs for the resistant function (standard
-   practice in NFSHS-PSX-decomp and many N64 projects).
-4. Accept the near-match when the C is readable and functionally correct
-   and the bytes are indistinguishable at the ABI level.
+3. Preserve a compiling factual near-match with its exact residual diff and
+   classify it as a scheduler/register-allocation hard tail for later work.
+
+Do not insert handwritten assembly or call a near-match exact. A hard-tail
+classification is a progress record, not a relaxation of the acceptance gate.
 
 ## Escalation
 
@@ -91,3 +104,11 @@ The available mitigations in ascending cost:
 
 Reject a source permutation that improves the score by depending on undefined
 behavior, false types, misleading names, or unexplained magic addresses.
+
+## Architecture references
+
+- [psx-spx CPU specifications](https://psx-spx.consoledev.net/cpuspecifications/)
+  documents the PSX R3000A/MIPS I execution model and delay behavior.
+- [MIPS R3000 architecture manual](https://archive.org/details/bitsavers_mipsR3000R_6835608)
+  is the instruction-encoding authority; verify pseudo-instruction expansions
+  against the assembler actually used by this project.

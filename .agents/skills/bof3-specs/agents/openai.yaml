@@ -1,0 +1,4 @@
+interface:
+  display_name: "BOF3 Specifications"
+  short_description: "Interpret BOF3 binaries, formats, and evidence"
+  default_prompt: "Use $bof3-specs to interpret this BOF3 payload or claim from reviewed formats, layouts, and evidence rules."

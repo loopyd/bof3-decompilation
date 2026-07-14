@@ -1,4 +1,14 @@
-# Cross-binary function, signature, and type correlation
+# BOF3 cross-binary correlation
+
+## Contents
+
+- [Questions](#questions-this-workflow-answers)
+- [Normalize inputs](#normalize-the-comparison-set)
+- [Identity and relocation tiers](#function-identity-tiers)
+- [Project follow-up](#project-follow-up)
+- [Functions, structures, and values](#recover-a-shared-function-signature)
+- [PsyQ](#psyq-correlation-across-all-blobs)
+- [Promotion and automation](#promotion-rules)
 
 Use this workflow for any independently mapped PSX blob: executable load image,
 overlay, extracted archive entry, library member, embedded code range, or an
@@ -44,17 +54,36 @@ Use increasingly weaker evidence tiers:
 Only tier 1 proves exact implementation bytes. No tier by itself proves shared
 runtime address, ownership, or relocatability.
 
-## Repository-wide discovery
+### Safe PSX MIPS relocation masking
 
-Use the existing graph before inventing another scan:
+Never mask every immediate or address-looking operand. Build a relocation-site
+list and retain it with the fingerprint:
 
-```sh
-bin/harness analysis graph
-jq '.duplicate_groups' out/analysis/graph.json
-```
+- For `j`/`jal` (opcodes 2/3), only the low 26-bit target field is a relocation
+  candidate; preserve the opcode and verify the reconstructed target within the
+  caller's 256 MiB jump region. A matching masked call is still only a candidate
+  until the callee relationship agrees.
+- For `lui` plus `addiu`/load/store LO16, pair HI16/LO16 before masking. A signed
+  low half may carry into HI16: reconstruct using the signed low value and check
+  the corresponding `((value + 0x8000) >> 16)` high adjustment.
+- For `lui` plus `ori`, the low half is zero-extended and has no signed carry.
+- Prefer explicit archive/object relocation records (`R_MIPS_26`,
+  `R_MIPS_HI16`, `R_MIPS_LO16`) when available. Raw linked blobs lack those
+  records, so require a known symbol/reference and a consistent target-to-target
+  delta before treating an instruction pair as relocated.
+- Do not automatically mask PC-relative branches, arithmetic constants,
+  structure offsets, GP-relative loads/stores, hardware addresses, or table
+  indices. These often carry semantic identity.
 
-The graph reports exact and relocation-aware candidates across available
-promoted targets. Follow up in each target's project:
+A relocation-aware fingerprint must record original words, masks, paired sites,
+reconstructed targets, and the proposed relocation delta. Existing graph
+relocation groups are ranked candidates, not proof; review their sites before
+promotion.
+
+## Project follow-up
+
+Use the project's existing correlation index before inventing another scan.
+Follow up each ranked candidate in every independently mapped project:
 
 ```text
 pdf @ 0xFUNCTION

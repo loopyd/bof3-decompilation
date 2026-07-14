@@ -1,5 +1,14 @@
 # Rizin and radare2 command guide
 
+## Contents
+
+- [Capability detection](#capability-detection)
+- [Raw PSX opening](#raw-psx-opening)
+- [Navigation and staged analysis](#navigation-and-inspection)
+- [Names, xrefs, and search](#names-flags-namespaces-and-comments)
+- [Types](#types-and-calling-conventions)
+- [Headless automation](#headless-and-scripting)
+
 This reference targets current Rizin and radare2. Probe the installed version
 and native help before relying on a spelling. Rizin and radare2 share ancestry,
 not a stable command-level compatibility contract. Prefer repository adapters
@@ -159,17 +168,21 @@ offsets, signedness, and the MIPS calling convention against instructions.
 ## Headless and scripting
 
 ```sh
-rizin -q0 -a mips -b 32 -e cfg.bigendian=false -m 0xLOAD \
+rizin -q0 -a mips -b 32 -e cfg.bigendian=false -e scr.color=0 -m 0xLOAD \
   -i reviewed.r2 -c 'aflj' RAW.bin
-r2 -N -q0 -a mips -b 32 -e cfg.bigendian=false -m 0xLOAD \
+r2 -N -n -q0 -a mips -b 32 -e cfg.bigendian=false -e scr.color=0 -m 0xLOAD \
   -i reviewed.r2 -c 'aflj' RAW.bin
 ```
 
-Use no-user-config mode where the engine supports it, disable color, capture
-tool/plugin versions, prefer `j` JSON commands or `*` replay commands, and sort
-exported records by stable keys. `rzpipe`/`r2pipe` expose `cmd()` and parsed
-`cmdj()`; validate schemas and errors rather than assuming all `j` output is
-identical across releases.
+Use no-user-config mode where the engine supports it. Preserve configured color
+in interactive terminal sessions; disable it only at automation boundaries so
+JSON, persisted evidence, tests, and LLM output contain no ANSI escapes. Probe
+`e scr.color=?` for supported numeric modes instead of assuming other color keys
+exist across engines. Capture tool/plugin versions, prefer `j` JSON commands or
+`*` replay commands, and sort exported records by stable keys. Python `r2pipe` exposes `cmd()` and parsed
+`cmdj()` for radare2 automation; use a separate verified adapter for Rizin.
+Validate schemas and errors rather than assuming all `j` output is identical
+across releases.
 
 ## Official sources
 
