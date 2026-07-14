@@ -1,8 +1,5 @@
 #include "bof3/context.h"
 
-/* Shared executable entry points. */
-WEAK_SYMBOL_AT(func_801ce758, 0x801ce758);
-
 /* SLUS startup, callback scheduler, and executable-file loading. */
 WEAK_SYMBOL_AT(func_8014aa04, 0x8014aa04);
 WEAK_SYMBOL_AT(func_8014ae08, 0x8014ae08);
