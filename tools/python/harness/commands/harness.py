@@ -991,6 +991,7 @@ def run_analysis(args: argparse.Namespace) -> int:
         export_project,
         generate_replay,
         graph_analysis,
+        hotspot_analysis,
         initialize_project,
         query_project,
     )
@@ -1004,6 +1005,8 @@ def run_analysis(args: argparse.Namespace) -> int:
         payload = export_project(root, args.target, args.engine)
     elif args.analysis_command == "graph":
         payload = graph_analysis(root, args.target, args.engine)
+    elif args.analysis_command == "hotspots":
+        payload = hotspot_analysis(root, args.target)
     elif args.analysis_command == "generate":
         if args.target:
             payload = generate_replay(root, args.target)
@@ -1392,6 +1395,9 @@ def build_parser() -> argparse.ArgumentParser:
     analysis_generate = analysis_sub.add_parser("generate")
     analysis_generate.add_argument("target", nargs="?")
     analysis_generate.set_defaults(handler=run_analysis)
+    analysis_hotspots = analysis_sub.add_parser("hotspots")
+    analysis_hotspots.add_argument("target", nargs="?")
+    analysis_hotspots.set_defaults(handler=run_analysis)
     analysis_graph = analysis_sub.add_parser("graph")
     analysis_graph.add_argument("target", nargs="?")
     analysis_graph.add_argument("--engine", choices=("rizin", "r2"))
