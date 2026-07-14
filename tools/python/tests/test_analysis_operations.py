@@ -29,7 +29,8 @@ def _write_inputs(root: Path) -> TargetManifest:
     for relative, content in (
         (manifest.binary, b"binary"),
         (manifest.splat, b"subsegments:\n  - [0x4, c, func_801d0c04]\n"),
-        ("config/analysis/bof3_objects.h", b"typedef int Example;\n"),
+        ("config/analysis/shared/bof3_objects.h", b"typedef int Example;\n"),
+        ("config/analysis/shared/hwregs.r2", b"fs functions\n"),
     ):
         path = root / relative
         path.parent.mkdir(parents=True, exist_ok=True)

@@ -989,6 +989,7 @@ def run_analysis(args: argparse.Namespace) -> int:
     from ..analysis import (
         doctor,
         export_project,
+        generate_replay,
         graph_analysis,
         initialize_project,
         query_project,
@@ -1003,6 +1004,18 @@ def run_analysis(args: argparse.Namespace) -> int:
         payload = export_project(root, args.target, args.engine)
     elif args.analysis_command == "graph":
         payload = graph_analysis(root, args.target, args.engine)
+    elif args.analysis_command == "generate":
+        if args.target:
+            payload = generate_replay(root, args.target)
+        else:
+            from ..domain import load_target_manifests
+
+            manifests = load_target_manifests(root)
+            results = []
+            for target_id in sorted(manifests):
+                if (root / manifests[target_id].binary).is_file():
+                    results.append(generate_replay(root, target_id))
+            payload = {"targets": len(results), "results": results}
     else:
         payload = query_project(root, args.target, args.query, args.engine)
     print(json.dumps(payload, indent=2, sort_keys=True))
@@ -1376,6 +1389,9 @@ def build_parser() -> argparse.ArgumentParser:
         analysis_command.add_argument("target")
         analysis_command.add_argument("--engine", choices=("rizin", "r2"))
         analysis_command.set_defaults(handler=run_analysis)
+    analysis_generate = analysis_sub.add_parser("generate")
+    analysis_generate.add_argument("target", nargs="?")
+    analysis_generate.set_defaults(handler=run_analysis)
     analysis_graph = analysis_sub.add_parser("graph")
     analysis_graph.add_argument("target", nargs="?")
     analysis_graph.add_argument("--engine", choices=("rizin", "r2"))

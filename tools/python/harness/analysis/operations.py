@@ -62,16 +62,23 @@ def _sha256(path: Path) -> str | None:
 
 def _analysis_inputs(root: Path, manifest: TargetManifest) -> dict[str, Any]:
     binary = root / manifest.binary
-    replay = root / "config" / "analysis" / f"{manifest.id.value}.r2"
-    types = root / "config" / "analysis" / "bof3_objects.h"
+    target_dir = root / "config" / "analysis" / manifest.id.value
+    reviewed = target_dir / "reviewed.r2"
+    generated = target_dir / "generated.r2"
+    types = root / "config" / "analysis" / "shared" / "bof3_objects.h"
+    hwregs = root / "config" / "analysis" / "shared" / "hwregs.r2"
     splat = root / manifest.splat
     return {
         "binary": str(binary.relative_to(root)),
         "binary_sha256": _sha256(binary),
-        "replay": str(replay.relative_to(root)) if replay.is_file() else None,
-        "replay_sha256": _sha256(replay),
+        "reviewed": str(reviewed.relative_to(root)) if reviewed.is_file() else None,
+        "reviewed_sha256": _sha256(reviewed),
+        "generated": str(generated.relative_to(root)) if generated.is_file() else None,
+        "generated_sha256": _sha256(generated),
         "types": str(types.relative_to(root)) if types.is_file() else None,
         "types_sha256": _sha256(types),
+        "hwregs": str(hwregs.relative_to(root)) if hwregs.is_file() else None,
+        "hwregs_sha256": _sha256(hwregs),
         "splat": str(splat.relative_to(root)) if splat.is_file() else None,
         "splat_sha256": _sha256(splat),
     }
@@ -101,6 +108,149 @@ def _reviewed_analysis_commands(addresses: list[int], binary_end: int) -> list[s
         if span > 0:
             commands.append(f"aar 0x{span:x} @ 0x{address:08x}")
     return commands
+
+
+def _psyq_bindings(source_dir: Path) -> list[tuple[str, int, str]]:
+    """Return (name, address, library) tuples from symbols/psyq.c or psyq.c."""
+    for candidate in (source_dir / "symbols" / "psyq.c", source_dir / "psyq.c"):
+        if candidate.is_file():
+            psyq_path = candidate
+            break
+    else:
+        return []
+    text = psyq_path.read_text(encoding="utf-8")
+    results: list[tuple[str, int, str]] = []
+    current_lib = "???"
+    for line in text.splitlines():
+        lib_match = re.match(r"/\*\s*(LIB\w+)\s*\*/", line)
+        if lib_match:
+            current_lib = lib_match.group(1)
+        bind_match = re.match(
+            r"WEAK_SYMBOL_AT\((\w+),\s*(0x[0-9a-fA-F]+)\)", line
+        )
+        if bind_match:
+            results.append(
+                (bind_match.group(1), int(bind_match.group(2), 16), current_lib)
+            )
+    return results
+
+
+def _function_bindings(source_dir: Path) -> list[tuple[str, int]]:
+    """Return (name, address) func_XXXXXXXX entries from symbols/functions.c and symbols/symbols.c (checked at both target-root and symbols/ subdirectory)."""
+    results: list[tuple[str, int]] = []
+    for filename in ("functions.c", "symbols.c"):
+        for base in (source_dir / "symbols", source_dir):
+            path = base / filename
+            if not path.is_file():
+                continue
+            for match in re.finditer(
+                r"WEAK_SYMBOL_AT\((func_[0-9a-fA-F]{8}),\s*(0x[0-9a-fA-F]+)\)",
+                path.read_text(encoding="utf-8"),
+            ):
+                name = match.group(1)
+                addr = int(match.group(2), 16)
+                results.append((name, addr))
+    return results
+
+
+def _data_refs(source_dir: Path) -> set[int]:
+    """Return set of DAT_XXXXXXXX addresses referenced in decompiled C files."""
+    data: set[int] = set()
+    for c_file in sorted(source_dir.glob("func_*.c")):
+        for match in re.finditer(r"DAT_([0-9a-fA-F]{8})", c_file.read_text(encoding="utf-8")):
+            data.add(int(match.group(1), 16))
+    return data
+
+
+def _promoted_data_bindings(source_dir: Path) -> list[tuple[str, int]]:
+    """Return (name, address) non-func_ WEAK_SYMBOL_AT entries from symbols.c (checked at both target-root and symbols/ subdirectory)."""
+    results: list[tuple[str, int]] = []
+    for base in (source_dir / "symbols", source_dir):
+        path = base / "symbols.c"
+        if not path.is_file():
+            continue
+        for match in re.finditer(
+            r"WEAK_SYMBOL_AT\((\w+),\s*(0x[0-9a-fA-F]+)\)",
+            path.read_text(encoding="utf-8"),
+        ):
+            name = match.group(1)
+            if re.match(r"^(func_|DAT_)[0-9a-fA-F]{8}$", name):
+                continue
+            results.append((name, int(match.group(2), 16)))
+    return results
+
+
+def generate_replay(root: Path, target: str) -> dict[str, Any]:
+    """Auto-generate {target}/generated.r2 from Splat, symbols, and decompiled C."""
+    manifest = _target(root, target)
+    source_dir = root / manifest.source_dir
+    splat = root / manifest.splat
+    binary_end = manifest.load_address + (root / manifest.binary).stat().st_size
+
+    commands: list[str] = ["# Auto-generated — do not edit"]
+    seen: set[int] = set()
+
+    # 1. afn from Splat func_ subsegments
+    if splat.is_file():
+        for addr in sorted({
+            int(m.group(1), 16)
+            for m in re.finditer(r"\bfunc_([0-9a-fA-F]{8})\b", splat.read_text(encoding="utf-8"))
+        }):
+            commands.append(f"afn func_{addr:08x} @ 0x{addr:08x}")
+            seen.add(addr)
+
+    # 2. afn from symbols/functions.c and symbols/symbols.c (in-range only)
+    for name, addr in sorted(set(_function_bindings(source_dir)), key=lambda x: x[1]):
+        if addr in seen or addr < manifest.load_address or addr >= binary_end:
+            continue
+        commands.append(f"afn {name} @ 0x{addr:08x}")
+        commands.append(f'CC "{name}" @ 0x{addr:08x}')
+        seen.add(addr)
+
+    # 3. PsyQ flags from symbols/psyq.c
+    psyq = _psyq_bindings(source_dir)
+    if psyq:
+        commands.append("")
+        commands.append("fs psyq")
+        current_lib = ""
+        for name, addr, library in sorted(psyq, key=lambda x: (x[2], x[1])):
+            if library != current_lib:
+                commands.append(f"# {library}")
+                current_lib = library
+            commands.append(f"f psyq.{name} 1 @ 0x{addr:08x}")
+
+    # 4. DAT_ flags from decompiled C
+    dat_addrs = _data_refs(source_dir)
+    if dat_addrs:
+        commands.append("")
+        commands.append("fs data")
+        for addr in sorted(dat_addrs):
+            commands.append(f"f data.DAT_{addr:08x} 4 @ 0x{addr:08x}")
+
+    # 5. Promoted data names from symbols/symbols.c
+    promoted = _promoted_data_bindings(source_dir)
+    if promoted:
+        if not dat_addrs:
+            commands.append("")
+            commands.append("fs data")
+        for name, addr in sorted(promoted, key=lambda x: x[1]):
+            commands.append(f"f data.{name} 4 @ 0x{addr:08x}")
+
+    commands.append("")
+    commands.append("fs functions")
+    commands.append("")
+
+    output = root / "config" / "analysis" / manifest.id.value / "generated.r2"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text("\n".join(commands), encoding="utf-8")
+
+    return {
+        "target": manifest.id.value,
+        "output": str(output.relative_to(root)),
+        "splat_funcs": len(seen),
+        "psyq_funcs": len(psyq),
+        "data_flags": len(dat_addrs) + len(promoted),
+    }
 
 
 def _sentinel(inputs: dict[str, Any]) -> str:
@@ -235,15 +385,26 @@ def initialize_project(
     project = _project_reference(engine, project_dir, manifest)
     inputs = _analysis_inputs(root, manifest)
     sentinel = _sentinel(inputs)
-    addresses = _reviewed_function_addresses(root, manifest)
+    splat_addrs = _reviewed_function_addresses(root, manifest)
+    source_dir = root / manifest.source_dir
     binary_end = manifest.load_address + (root / manifest.binary).stat().st_size
+    for _name, addr in _function_bindings(source_dir):
+        if addr not in splat_addrs and addr >= manifest.load_address and addr < binary_end:
+            splat_addrs.append(addr)
+    addresses = sorted(set(splat_addrs))
     commands = _reviewed_analysis_commands(addresses, binary_end)
-    types = root / "config" / "analysis" / "bof3_objects.h"
+    types = root / "config" / "analysis" / "shared" / "bof3_objects.h"
     if types.is_file():
         commands.append(f"to {types}")
-    replay = root / "config" / "analysis" / f"{manifest.id.value}.r2"
-    if replay.is_file():
-        commands.append(f". {replay}")
+    hwregs = root / "config" / "analysis" / "shared" / "hwregs.r2"
+    if hwregs.is_file():
+        commands.append(f". {hwregs}")
+    generated = root / "config" / "analysis" / manifest.id.value / "generated.r2"
+    if generated.is_file():
+        commands.append(f". {generated}")
+    reviewed = root / "config" / "analysis" / manifest.id.value / "reviewed.r2"
+    if reviewed.is_file():
+        commands.append(f". {reviewed}")
     # Generated projects are disposable snapshots; replace the named snapshot.
     if engine == "rizin":
         commands.extend((f"f+ {sentinel} 1", f"Ps {project}"))
@@ -278,7 +439,8 @@ def initialize_project(
         "engine": engine,
         "target": manifest.id.value,
         "project": str(project_dir.relative_to(root)),
-        "replay": inputs["replay"],
+        "reviewed": inputs["reviewed"],
+        "generated": inputs["generated"],
         "reviewed_function_starts": len(addresses),
         "verified_reopen": True,
     }
@@ -494,13 +656,13 @@ def _load_psyq_symbols(root: Path, names: set[str]) -> dict[int, str]:
 def _analysis_type_bindings(
     root: Path, manifest: TargetManifest
 ) -> list[dict[str, Any]]:
-    replay = root / "config" / "analysis" / f"{manifest.id.value}.r2"
-    if not replay.is_file():
+    reviewed = root / "config" / "analysis" / manifest.id.value / "reviewed.r2"
+    if not reviewed.is_file():
         return []
     bindings = []
     for match in re.finditer(
         r"^\s*tl\s+(\w+)\s*=\s*(0x[0-9a-fA-F]+)\s*$",
-        replay.read_text(encoding="utf-8"),
+        reviewed.read_text(encoding="utf-8"),
         re.M,
     ):
         bindings.append({"type": match.group(1), "address": int(match.group(2), 16)})
@@ -516,11 +678,20 @@ def _target_snapshot(
     type_bindings: list[dict[str, Any]],
 ) -> dict[str, Any]:
     project_dir, _ = _paths(root, engine, manifest)
+    splat_addrs = _reviewed_function_addresses(root, manifest)
+    source_dir = root / manifest.source_dir
+    binary_end = manifest.load_address + (root / manifest.binary).stat().st_size
+    for _name, addr in _function_bindings(source_dir):
+        if addr not in splat_addrs and addr >= manifest.load_address and addr < binary_end:
+            splat_addrs.append(addr)
+    addresses = sorted(set(splat_addrs))
+    af_cmds = [f"af @ 0x{a:08x}" for a in addresses]
+    base_cmds = af_cmds + ["aaa"]
     functions = _json_output(
-        _run(executable, manifest, root, ["aaa", "aflj"], project_dir=project_dir)
+        _run(executable, manifest, root, base_cmds + ["aflj"], project_dir=project_dir)
     )
     xrefs = _json_output(
-        _run(executable, manifest, root, ["aaa", "axlj"], project_dir=project_dir)
+        _run(executable, manifest, root, base_cmds + ["axlj"], project_dir=project_dir)
     )
     ranges = _function_ranges(functions if isinstance(functions, list) else [])
     binary = (root / manifest.binary).read_bytes()
@@ -556,8 +727,9 @@ def _target_snapshot(
     for ref in xrefs if isinstance(xrefs, list) else []:
         if str(ref.get("type", "")).upper() != "CALL":
             continue
+        callee_addr = int(ref.get("to", ref.get("addr", 0)))
         caller = _containing(ranges, int(ref.get("from", 0)))
-        callee = _containing(ranges, int(ref.get("addr", 0)))
+        callee = _containing(ranges, callee_addr)
         if caller is not None and callee is not None and caller != callee:
             calls.add(
                 (
@@ -565,13 +737,13 @@ def _target_snapshot(
                     f"{manifest.id.value}@{callee:08x}",
                 )
             )
-        symbol = psyq_symbols.get(int(ref.get("addr", 0)))
+        symbol = psyq_symbols.get(callee_addr)
         if caller is not None and symbol is not None:
             psyq_calls.append(
                 {
                     "caller": f"{manifest.id.value}@{caller:08x}",
                     "from": int(ref.get("from", 0)),
-                    "address": int(ref.get("addr", 0)),
+                    "address": callee_addr,
                     "function": symbol,
                 }
             )
@@ -583,7 +755,7 @@ def _target_snapshot(
     for binding in type_bindings:
         refs = []
         for ref in xrefs if isinstance(xrefs, list) else []:
-            if int(ref.get("addr", -1)) != binding["address"]:
+            if int(ref.get("to", ref.get("addr", -1))) != binding["address"]:
                 continue
             caller = _containing(ranges, int(ref.get("from", 0)))
             if caller is not None:

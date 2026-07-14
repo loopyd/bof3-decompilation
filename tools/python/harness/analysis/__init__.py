@@ -3,6 +3,7 @@
 from .operations import (
     doctor,
     export_project,
+    generate_replay,
     graph_analysis,
     initialize_project,
     query_project,
@@ -11,6 +12,7 @@ from .operations import (
 __all__ = [
     "doctor",
     "export_project",
+    "generate_replay",
     "graph_analysis",
     "initialize_project",
     "query_project",
