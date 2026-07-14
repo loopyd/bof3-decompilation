@@ -50,7 +50,7 @@ def _slug(manifest: TargetManifest) -> str:
 
 def _paths(root: Path, engine: str, manifest: TargetManifest) -> tuple[Path, Path]:
     project = root / "out" / "analysis" / "projects" / engine / _slug(manifest)
-    export = root / "out" / "analysis" / "exports" / _slug(manifest)
+    export = root / "out" / "analysis" / "exports" / engine / _slug(manifest)
     return project, export
 
 
@@ -356,12 +356,55 @@ def query_project(
     )
 
 
+def _classify_analyzer_string(value: Any) -> str:
+    """Classify analyzer string guesses without treating them as decoded text."""
+
+    if not isinstance(value, str) or not value:
+        return "data_pattern"
+
+    codepoints = [ord(character) for character in value]
+    printable_ascii = all(0x20 <= point <= 0x7E for point in codepoints)
+    repeated = len(set(codepoints)) == 1
+    if repeated and (len(codepoints) >= 8 or not printable_ascii):
+        return "repeated_fill"
+
+    if len(codepoints) >= 4:
+        deltas = [right - left for left, right in zip(codepoints, codepoints[1:])]
+        if len(set(deltas)) == 1 and abs(deltas[0]) == 1 and not printable_ascii:
+            return "sequential_table"
+
+    if any(
+        point < 0x20 or point == 0x7F or 0x80 <= point <= 0x9F for point in codepoints
+    ):
+        return "control_bytes"
+
+    if (
+        printable_ascii
+        and len(value) >= 3
+        and any(character.isalnum() for character in value)
+    ):
+        return "text_candidate"
+    return "data_pattern"
+
+
+def _classify_string_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        {
+            "index": index,
+            "classification": _classify_analyzer_string(row.get("string")),
+        }
+        for index, row in enumerate(rows)
+    ]
+
+
 def export_project(
     root: Path, target: str, requested: str | None = None
 ) -> dict[str, Any]:
     engine, _ = _engine(requested)
     manifest = _target(root, target)
     _, export_dir = _paths(root, engine, manifest)
+    strings = query_project(root, target, "strings", engine)
+    string_classifications = _classify_string_rows(strings)
     payload = {
         "schema": "bof3.analysis/v1",
         "engine": engine,
@@ -369,12 +412,30 @@ def export_project(
         "binary": manifest.binary,
         "load_address": manifest.load_address,
         "functions": query_project(root, target, "functions", engine),
-        "strings": query_project(root, target, "strings", engine),
+        "strings": strings,
+        "string_classifications": string_classifications,
         "xrefs": query_project(root, target, "xrefs", engine),
     }
     output = export_dir / "analysis.json"
     write_json(output, payload)
-    return {"output": str(output.relative_to(root)), **payload}
+    classification_counts: dict[str, int] = {}
+    for row in string_classifications:
+        classification = row["classification"]
+        classification_counts[classification] = (
+            classification_counts.get(classification, 0) + 1
+        )
+    return {
+        "schema": payload["schema"],
+        "engine": engine,
+        "target": manifest.id.value,
+        "output": str(output.relative_to(root)),
+        "counts": {
+            "functions": len(payload["functions"]),
+            "strings": len(payload["strings"]),
+            "xrefs": len(payload["xrefs"]),
+            "string_classifications": dict(sorted(classification_counts.items())),
+        },
+    }
 
 
 def _function_ranges(functions: list[dict[str, Any]]) -> list[tuple[int, int, int]]:

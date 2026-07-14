@@ -181,6 +181,81 @@ def test_query_reopens_verified_project_without_reanalysis(
     ]
 
 
+def test_export_writes_full_evidence_but_returns_compact_summary(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    manifest = _manifest()
+    monkeypatch.setattr(operations, "_engine", lambda _: ("rizin", Path("/fake/rizin")))
+    monkeypatch.setattr(operations, "_target", lambda *_: manifest)
+
+    rows = {
+        "functions": [{"offset": 1}],
+        "strings": [{"string": "\u00ae\u00af\u00b0\u00b1"}, {"string": "menu"}],
+        "xrefs": [{"from": 1, "to": 2}],
+    }
+    monkeypatch.setattr(
+        operations,
+        "query_project",
+        lambda _root, _target, query, _engine: rows[query],
+    )
+
+    result = operations.export_project(tmp_path, manifest.id.value, "rizin")
+
+    assert result == {
+        "schema": "bof3.analysis/v1",
+        "engine": "rizin",
+        "target": manifest.id.value,
+        "output": "out/analysis/exports/rizin/emi__etc__game__01/analysis.json",
+        "counts": {
+            "functions": 1,
+            "strings": 2,
+            "xrefs": 1,
+            "string_classifications": {
+                "sequential_table": 1,
+                "text_candidate": 1,
+            },
+        },
+    }
+    artifact = json.loads((tmp_path / result["output"]).read_text())
+    assert artifact["strings"] == rows["strings"]
+    assert artifact["string_classifications"] == [
+        {"index": 0, "classification": "sequential_table"},
+        {"index": 1, "classification": "text_candidate"},
+    ]
+
+
+def test_analysis_paths_isolate_engine_specific_state(tmp_path: Path) -> None:
+    manifest = _manifest()
+
+    rizin_paths = operations._paths(tmp_path, "rizin", manifest)
+    radare2_paths = operations._paths(tmp_path, "r2", manifest)
+
+    assert rizin_paths != radare2_paths
+    assert rizin_paths[1] == (
+        tmp_path / "out/analysis/exports/rizin/emi__etc__game__01"
+    )
+    assert radare2_paths[1] == (tmp_path / "out/analysis/exports/r2/emi__etc__game__01")
+
+
+@pytest.mark.parametrize(
+    ("value", "classification"),
+    [
+        ("Load Game", "text_candidate"),
+        ("\x00\x02", "control_bytes"),
+        ("\xff\xff", "repeated_fill"),
+        ("\xae\xaf\xb0\xb1", "sequential_table"),
+        ("\xae\xaf", "data_pattern"),
+        ("+-", "data_pattern"),
+        ("ok", "data_pattern"),
+        (None, "data_pattern"),
+    ],
+)
+def test_classifies_analyzer_string_guesses_conservatively(
+    value: object, classification: str
+) -> None:
+    assert operations._classify_analyzer_string(value) == classification
+
+
 def test_query_rejects_stale_inputs(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
