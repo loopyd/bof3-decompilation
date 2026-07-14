@@ -31,8 +31,8 @@ never operates on an entire EMI container. Generated assembly belongs below
 ```bash
 bin/harness scan
 bin/harness candidates BATTLE
-bin/harness promote "$ARCHIVE_ENTRY" --confirm-code
-bin/harness show "$TARGET"
+bin/harness target promote "$ARCHIVE_ENTRY" --confirm-code
+bin/harness target show "$TARGET"
 bin/harness next
 bin/harness lift "$TARGET" "$ADDRESS"
 bin/harness diff "$FUNCTION_SOURCE"

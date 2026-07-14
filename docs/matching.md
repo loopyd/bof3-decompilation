@@ -5,7 +5,7 @@
 ## Quick path
 
 ```sh
-bin/harness show "$TARGET"
+bin/harness target show "$TARGET"
 bin/harness diff "$FUNCTION_SOURCE"
 bin/harness flags "$FUNCTION_SOURCE"
 ```
