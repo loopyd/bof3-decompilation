@@ -28,3 +28,17 @@ members = [
 ]
 confidence = "high"
 evidence = ["SLUS_004.22 EMI loader call targets and PsyQ 4.7 libcd.a symbols"]
+
+[psyq.libraries.LIBAPI]
+members = ["psyq/4.7/libapi/a08.o", "psyq/4.7/libapi/a12.o", "psyq/4.7/libapi/a91.o"]
+confidence = "high"
+evidence = ["SLUS_004.22 BIOS-vector call targets match PsyQ 4.7 libapi.a symbols"]
+
+[psyq.libraries.LIBCARD]
+members = [
+    "psyq/4.7/libcard/a74.o",
+    "psyq/4.7/libcard/c112.o",
+    "psyq/4.7/libcard/patch.o",
+]
+confidence = "high"
+evidence = ["SLUS_004.22 card-init call targets match PsyQ 4.7 libcard.a symbols"]
