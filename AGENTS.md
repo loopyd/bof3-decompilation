@@ -77,6 +77,13 @@ do not repeat the repository name as a `BOF3_` prefix.
    bin/harness diff <source>
    ```
 
+   After the lift compiles and its boundary and rough control flow are credible,
+   run a bounded `bin/harness permute <source>` pass. Prefer this early for a
+   same-size or >=80% candidate, then manually fix factual/type/control-flow
+   issues and permute again when useful. Permuter output is not guaranteed to
+   compile: require a successful base compile, real compiled candidates, and a
+   fresh canonical `diff` before adopting it.
+
 An EMI archive is a container; Splat and matching consume its extracted raw
 entry, never the archive file. A type-0 entry is not automatically code.
 

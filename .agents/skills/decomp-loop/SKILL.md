@@ -20,6 +20,8 @@ bin/harness target show <target>
 bin/harness next [target]
 bin/harness lift <target> <function>
 bin/harness diff <source>
+# Once the lift compiles and its boundaries/structure are credible:
+bin/harness permute <source> -j <bounded-jobs>
 ```
 
 Before editing C, verify the payload, load address, function range, Splat
@@ -36,9 +38,20 @@ object as a tooling failure, not a comparison result.
 3. Match access widths, signedness, constants, and argument promotion.
 4. Match expression shape and declaration order for register allocation.
 5. Diagnose only the first meaningful mismatch after each compile.
-6. Use bounded permutation only after the target, boundary, compiler command,
-   and original-byte comparison are proven. It may search for the right size or
-   source shape early; prioritize it for the scheduling hard tail.
+6. Once the lift compiles and its boundaries and rough control flow are
+   credible, run a bounded permutation pass. Use its best result as a candidate,
+   manually correct factual types/control flow/readability, then permute again
+   when expression shape, allocation, or scheduling remains.
+7. Run permutation earlier for same-size or >=80% functions, but do not treat
+   that threshold as a requirement when a bounded search may find the right
+   instruction count or source shape.
+
+The permuter does not guarantee compilable output. First verify that its
+generated `base.c` compiles and that it evaluates real candidates. Reject runs
+that fail the base compile, report zero compiled candidates, compare against a
+current-object copy, or depend on invalid C/ABI guesses. Re-run
+`bin/harness diff` on any adopted candidate; the canonical diff remains the
+acceptance gate.
 
 When a newly lifted function reaches a canonical 100% instruction and byte
 match, re-run `bin/harness diff` and commit it immediately in a small focused
@@ -66,11 +79,12 @@ boundary, compiler command, and diff normalization are proven correct.
 | --- | --- |
 | Wrong size or shifted labels | Recheck function boundaries before editing C |
 | Unsupported instruction | Read Splat assembly; use an analyzer as a hint |
-| Match 80–95% | Trace the first meaningful mismatch in `out/matching/` |
+| Match >=80% or same size | Trace the first mismatch, then run bounded permutation |
 | Calling convention | Check Splat config and the CMake compile command |
 | Compiler-inserted NOP | Verify delay slots in original vs compiled |
 | Unresolved symbol | Add a target-local declaration and address binding |
-| Score is stuck | Run a bounded permutation; reject false candidates |
+| Permuter base/candidates fail to compile | Fix the bundle/compiler context; continue manually |
+| Score is stuck | Re-run bounded permutation after factual manual fixes |
 
 ## Module completion
 

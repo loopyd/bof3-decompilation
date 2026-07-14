@@ -162,3 +162,7 @@ Durable findings that make the BOF3 lift-and-match loop faster and safer.
 - Validate the bundle with a real bounded run, not preparation alone. A working
   loader bundle reached a stable nonzero base score and compiled more than 100
   candidates against an original-byte-derived target object.
+- A lifted function compiling through `bin/harness diff` does not guarantee the
+  generated permuter `base.c` will compile. Treat a base compile exit with zero
+  candidates as a bundle/tooling failure, keep the tracked source unchanged,
+  and diagnose preprocessing/compiler context before trusting permuter output.
