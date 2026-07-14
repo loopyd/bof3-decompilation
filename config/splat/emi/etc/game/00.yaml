@@ -80,6 +80,7 @@ segments:
       - [0x19aa0, c, func_801af2a0]
       - [0x19b90, c, func_801af390]
       - [0x19db0, c, func_801af5b0]
+      - [0x260e8, c, func_801bb8e8]
       - [0x2fd58, c, func_801c5558]
       - [0x2ff98, c, func_801c5798]
       - [0x31988, c, func_801c7188]

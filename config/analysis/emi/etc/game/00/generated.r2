@@ -61,12 +61,15 @@ afn func_801af270 @ 0x801af270
 afn func_801af2a0 @ 0x801af2a0
 afn func_801af390 @ 0x801af390
 afn func_801af5b0 @ 0x801af5b0
+afn func_801bb8e8 @ 0x801bb8e8
 afn func_801c5558 @ 0x801c5558
 afn func_801c5798 @ 0x801c5798
 afn func_801c7188 @ 0x801c7188
 afn func_801c71ac @ 0x801c71ac
 afn func_801a06d8 @ 0x801a06d8
 CC "func_801a06d8" @ 0x801a06d8
+afn func_801b5bdc @ 0x801b5bdc
+CC "func_801b5bdc" @ 0x801b5bdc
 afn func_801bdb7c @ 0x801bdb7c
 CC "func_801bdb7c" @ 0x801bdb7c
 afn func_801bedd0 @ 0x801bedd0
