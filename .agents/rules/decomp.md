@@ -1,4 +1,5 @@
-# Coding Rules
+# Authored decompilation policy
+
 - Format authored C with the root `.clang-format`: compact K&R braces, two-space indentation, 80 columns, and left-bound pointers.
 - Derive header guards from the shortest unambiguous authored path, for example
   `CORE_EMI_H` or `EMI_GAME_01_INTERNAL_H`. Do not add a redundant
@@ -8,11 +9,19 @@
 - Keep function declarations as ordinary `extern` declarations; place any
   original-address fallback in the calling target's `symbols.c` or shallow
   `symbols/*.c` units with `WEAK_SYMBOL_AT()`.
-- No new headers in `include/bof3/modules/` — ALL declarations go in module's `internal.h`
-- Readable clean C > forcing 100% match when too complex
+- Preserve factual, readable C while seeking exact matches; do not improve a
+  score with a false type, boundary, ABI, or semantic claim.
 - Large targets use one layered declaration path: `internal.h` includes
   `symbols/symbols.h`, which includes focused `functions.h`, `variables.h`, and
   `files.h` headers. Do not add `psyq.h` when official PsyQ headers suffice.
+- Keep the same concise subsystem separators in each barrel header and the
+  matching `symbols/*.c` binding unit. Order canonical `DAT_XXXXXXXX`
+  declarations/bindings by ascending address within that section; order
+  compatibility aliases alphabetically. Preserve PsyQ SDK include order because
+  those headers have transitive dependencies.
+- A `symbols/psyq.h` barrel may express target-local PsyQ binding ownership,
+  but it must only include the official SDK wrapper and never redeclare PsyQ
+  APIs.
 - No inline assembly in function bodies. `WEAK_SYMBOL_AT()` is the sole
   assembly helper and is allowed only in target-owned `symbols.c` and shallow
   `symbols/*.c` files. Use ordinary C units, never `.inc` binding fragments.
@@ -20,7 +29,10 @@
   with a `/* @behavior ... */` comment, and place them with
   `WEAK_SYMBOL_AT(DAT_xxxxx, 0x8XXXXXXX)` in the owning executable's symbol
   binding units; never use `#define DAT_xxxxx VUxx(addr)`.
-- `DAT_xxx` defines live in `internal.h`; readable semantic name → `DAT_xxx` mappings live in `symbols.h` once promoted
+- `DAT_xxx` declarations live in the target's singular declaration path:
+  directly in `internal.h`, or in focused `symbols/variables.h` included by
+  `symbols/symbols.h`. Readable semantic name → `DAT_xxx` aliases live in that
+  symbol layer once promoted.
 - Before promotion, keep an address-based `func_XXXXXXXX`/`DAT_XXXXXXXX` name.
   When evidence supports a useful hint but does not prove the meaning, add one
   concise `INFERRED:` comment beside the owning declaration with the observed
@@ -51,8 +63,9 @@ Promoted functions keep one compact comment immediately above the definition:
   provides material context that should not be duplicated in C.
 - Do not link generated state, investigation output, or another C file.
 - Describe observable behavior; do not narrate instructions or register movement.
-- Do not add confidence or uncertainty markers to source comments. Keep
-  unresolved findings in generated analysis until the evidence is sufficient.
+- Do not add confidence or uncertainty markers to the promoted function trace
+  comment. Keep unresolved analysis under `out/`; when a durable source-level
+  hint is useful, use the single `INFERRED:` declaration-comment policy above.
 - Put layouts, offsets, and cross-function mappings in the owning OKF spec and
   reference its relative path instead of copying a long explanation into C.
 - Remove speculative names and stale `possible name` comments when promoting.
