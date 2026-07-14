@@ -6,8 +6,8 @@ extern int  sprintf(char* buffer, const char* format, ...);
 
 extern u8          DAT_80145ad4[];
 extern const char  DAT_80149990[];
-extern const void* PTR_DAT_8017f470[];
-extern const void* PTR_DAT_8017f4b8[];
+extern const void* DAT_8017f470[];
+extern const void* DAT_8017f4b8[];
 extern const void* PTR_s_EXCEPTION_8017f504;
 extern const void* PTR_s_INTERRRUPT_8017f508[];
 
@@ -47,7 +47,7 @@ void func_8014b3c4(void) {
 
     PutDispEnv((DISPENV*)DAT_80143e68);
     PutDrawEnv((DRAWENV*)(DAT_80143e68 + 0x14));
-    label_table = PTR_DAT_8017f470;
+    label_table = DAT_8017f470;
     DrawOTag((u_long*)(DAT_80143e68 + 0x8c));
 
     DAT_80143d44 = DAT_80143d44 ^ 1;
@@ -64,7 +64,7 @@ void func_8014b3c4(void) {
     }
 
     y = 0x3c;
-    label_table = PTR_DAT_8017f4b8;
+    label_table = DAT_8017f4b8;
 
     for (i = 0x12; ((unsigned long)i) < 0x25; i++) {
       func_80150098(0xa0, y, 0, (void*)label_table[i - 0x12]);

@@ -3,6 +3,7 @@
 
 /* Target-local declaration barrel. PsyQ declarations remain in the SDK. */
 #include "functions.h"
+#include "psyq.h"
 #include "variables.h"
 
 #endif
