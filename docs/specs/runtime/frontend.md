@@ -52,9 +52,10 @@ yet identify the transition that selects area 31.
 
 ## GAME.EMI#0 lift queue
 
-The callback-table and direct-call recovery pass established these facts:
+The callback-table and direct-call recovery pass established these boundaries:
 
-- `0x80197378` is lifted and matches exactly.
+- `0x80197378` is lifted and structurally near-exact; instruction scheduling
+  remains to be resolved.
 - `0x80198170`, `0x801981b4`, and `0x801981d4` split the former
   `0x80198170..0x80198234` span and match exactly.
 - `0x80198bc4` is an exact function ending at `0x80198c38`; the following
@@ -67,29 +68,18 @@ The callback-table and direct-call recovery pass established these facts:
   finalizing the shared frontend frame. `0x801c7b7c[1]`,
   `0x801c7b98[1]`, and `0x801c7ba4[1]` likewise point to `0x80199398`,
   `0x801993f0`, and `0x80199418` respectively.
-- `0x8019615c..0x80196f78` contains 13 reviewed functions. Every promoted
-  start follows a `jr $ra` return; 11 also have a direct `jal` caller.
-- `0x80198c38..0x801a1ae4` contains 161 reviewed functions. Every promoted
-  start follows a `jr $ra` return; 54 also have direct `jal` callers and 108
-  are referenced by payload-resident function-pointer tables.
-- The nine callback-table starts at `0x801c7b08..0x801c7bb0` have reviewed
-  extents and dispatch owners recorded in analyzer replay. Some entries target
-  the currently loaded companion overlay, so an out-of-payload pointer is not
-  by itself corrupt table data.
+- `0x8019615c..0x80196f78` is split into 13 reviewed function boundaries.
 
-Both former aggregate spans are reviewed code and each function can now be
-lifted independently. The boundaries do not prove semantic callback names or
-the frontend transition that each callback implements.
+The remaining `asm` entries are unresolved spans, not proven single functions.
+Recover internal code/data boundaries from the original payload before changing
+any span to C.
 
 | Priority | Tracked span | Size | Reason |
 | --- | --- | ---: | --- |
-| 1 | callbacks referenced from `0x801c7bec..0x801c81dc` | — | Recover the state machines behind the large payload-resident callback-table family. |
-| 2 | `0x8019615c..0x80196f78` | `0xe1c` | Lift the 13 reviewed early entry-state functions individually. |
-| 3 | `0x80198c38..0x80199440` | `0x808` | Lift directly called post-dispatch helpers first; several already have target-local callsites. |
+| 1 | `0x80199440..0x801A1AE4` | `0x86A4` | Large unresolved code/data span after the recovered callback/update entries; split code, tables, strings, and padding before lifting. |
+| 2 | `0x8019615C..0x80196F78` | `0xE1C` | Lift the 13 reviewed early entry-state functions individually. |
+| 3 | `0x80197378` | — | Lifted callback is structurally near-exact; resolve the remaining instruction scheduling difference. |
 
 For the name-entry path, prioritize xrefs from the callback tables above and
 writes to `0x80144968..0x8014496C`. For the inactivity path, begin at the title
 timer transition and trace the callback installed after the 900-tick expiry.
-The newly split spans do not directly materialize `0x80144968` with a
-`lui`/`addiu` pair, so their boundaries alone do not identify the name editor;
-an indirect work-buffer copy remains possible and must be proven from data flow.
