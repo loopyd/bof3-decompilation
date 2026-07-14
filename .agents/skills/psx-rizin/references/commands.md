@@ -35,11 +35,14 @@ Do not infer plugin availability from an executable named `rz-ghidra` or
 
 ```sh
 rizin -q0 -a mips -b 32 -e cfg.bigendian=false -m 0xLOAD RAW.bin
-r2    -q0 -a mips -b 32 -e cfg.bigendian=false -m 0xLOAD RAW.bin
+r2    -N -n -q0 -a mips -b 32 -e cfg.bigendian=false -m 0xLOAD RAW.bin
 ```
 
 Use `-m` to map raw/unknown-header bytes. `-B` overrides a base address for a
-recognized binary format and is not the raw-blob mapping switch. Check
+recognized binary format and is not the raw-blob mapping switch. On modern
+radare2, `-N` avoids user configuration and `-n` skips RBin metadata loading for
+the explicitly configured raw blob, preventing noisy/incorrect magic parsing.
+Check
 `references/psx-inputs.md` before selecting the input or address.
 
 ## Navigation and inspection

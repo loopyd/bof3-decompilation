@@ -77,13 +77,16 @@ endian explicitly, and use `-m` to map the file at its runtime load address:
 rizin -a mips -b 32 -e cfg.bigendian=false -m 0x80096800 \
   out/binaries/exe/slus_004_22.bin
 
-r2 -a mips -b 32 -e cfg.bigendian=false -m 0x80195800 \
+r2 -N -n -q0 -a mips -b 32 -e cfg.bigendian=false -m 0x80195800 \
   out/binaries/emi/etc/game/00.bin
 ```
 
 Use `-m` for these headerless raw images. `-B` changes the base used by the
 binary-format loader (notably PIE/parsed binaries); it does not replace raw-file
 mapping. Mixing them can yield convincing disassembly at the wrong addresses.
+For modern radare2 raw analysis, `-N` suppresses user configuration and `-n`
+skips RBin metadata/magic parsing; the architecture and map are supplied
+explicitly instead.
 
 The PlayStation CPU is a little-endian MIPS R3000A/MIPS I target. CPU-profile
 names vary by engine/plugin version, so inspect the available values before
