@@ -61,6 +61,28 @@ binary xrefs to reviewed type placements. Use `bin/harness analysis query TARGET
 focused binary reference view; skipped graph targets mean their normalized
 payload is not available locally.
 
+`bin/harness analysis hotspots [TARGET]` ranks functions across all targets (or
+one target) from the binary call graph via rizin/r2. It reports `hot` (highest
+caller in-degree — most depended-on), `leaves` (out-degree 0, no outgoing
+calls — safe bottom-up lift candidates), plus `roots` (no incoming calls),
+`shallow` (known, low degree), `unknown` (called but not in any function map),
+`discovery` (known functions with unknown callees), and exact / relocation
+duplicates. Output is JSON (`schema: bof3.hotspots/v1`); addresses are `0x` hex strings
+matching `func_XXXXXXXX` / Splat conventions.
+
+The command is configurable. `--kind` selects one ranking; `--top N` limits the
+returned entries; `--min-callers` / `--max-out` filter by call-graph degree
+(`--max-out 0` isolates leaves); `--min-size` / `--max-size` filter by byte
+size; `--status {known,unknown}` filters by lifted status; `--sort` chooses the
+sort key (default `callers` for `hot`/`leaves`, `address` for `roots`). For
+example, the ten most-called leaves across all binaries:
+
+```bash
+bin/harness analysis hotspots --kind leaves --top 10 --sort callers
+```
+
+Use the result to feed `bin/harness next` / `bin/harness lift` prioritization.
+
 ## Candidate replacement loop
 
 Structs, symbols, and functions can be recovered incrementally without making

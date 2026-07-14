@@ -1006,7 +1006,27 @@ def run_analysis(args: argparse.Namespace) -> int:
     elif args.analysis_command == "graph":
         payload = graph_analysis(root, args.target, args.engine)
     elif args.analysis_command == "hotspots":
-        payload = hotspot_analysis(root, args.target)
+        payload = hotspot_analysis(
+            root,
+            args.target,
+            kind=getattr(args, "kind", None),
+            top=getattr(args, "top", 40),
+            min_callers=getattr(args, "min_callers", 0),
+            max_out=getattr(args, "max_out", None),
+            min_size=getattr(args, "min_size", None),
+            max_size=getattr(args, "max_size", None),
+            status=getattr(args, "status", "all"),
+            sort=getattr(args, "sort", None),
+        )
+        if getattr(args, "kind", None) is not None and payload.get("selection") is not None:
+            payload = {
+                "schema": payload["schema"],
+                "engine": payload["engine"],
+                "targets_analyzed": payload["targets_analyzed"],
+                "selection_kind": payload["selection_kind"],
+                "selection_params": payload["selection_params"],
+                "selection": payload["selection"],
+            }
     elif args.analysis_command == "generate":
         if args.target:
             payload = generate_replay(root, args.target)
@@ -1152,7 +1172,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="harness")
     parser.add_argument("--root", type=Path, default=layout.root)
     sub = parser.add_subparsers(dest="command", required=True)
-    target = sub.add_parser("target")
+    target = sub.add_parser("target", help="inspect and promote binary targets (list/show/promote/doctor)")
     target_sub = target.add_subparsers(dest="target_command", required=True)
     target_list = target_sub.add_parser("list")
     target_list.add_argument("--json", action="store_true")
@@ -1169,7 +1189,7 @@ def build_parser() -> argparse.ArgumentParser:
     target_doctor.add_argument("--strict", action="store_true")
     target_doctor.set_defaults(handler=run_doctor)
 
-    index = sub.add_parser("index")
+    index = sub.add_parser("index", help="build and query the local evidence index (build/find/show/related)")
     index_sub = index.add_subparsers(dest="index_command", required=True)
     index_build = index_sub.add_parser("build")
     index_build.add_argument("--json", action="store_true")
@@ -1187,30 +1207,30 @@ def build_parser() -> argparse.ArgumentParser:
     index_related.add_argument("identifier")
     index_related.set_defaults(handler=run_index_related)
 
-    find = sub.add_parser("find")
+    find = sub.add_parser("find", help="search the evidence index by term or value")
     find.add_argument("term", nargs="?")
     find.add_argument("--value")
     find.add_argument("--json", action="store_true")
     find.set_defaults(handler=run_index_find)
-    show = sub.add_parser("show")
+    show = sub.add_parser("show", help="show one index entry by identifier")
     show.add_argument("identifier")
     show.add_argument("--json", action="store_true")
     show.set_defaults(handler=run_index_show)
-    related = sub.add_parser("related")
+    related = sub.add_parser("related", help="show entries related to an identifier")
     related.add_argument("identifier")
     related.set_defaults(handler=run_index_related)
-    graph = sub.add_parser("graph")
+    graph = sub.add_parser("graph", help="show the call/reference graph for an entry")
     graph.add_argument("identifier")
     graph.add_argument("--depth", type=int, default=2)
     graph.add_argument("--json", action="store_true")
     graph.set_defaults(handler=run_graph)
-    path = sub.add_parser("path")
+    path = sub.add_parser("path", help="find a reference path between two entries")
     path.add_argument("left")
     path.add_argument("right")
     path.add_argument("--json", action="store_true")
     path.set_defaults(handler=run_path)
 
-    profile = sub.add_parser("profile")
+    profile = sub.add_parser("profile", help="list/show/resolve compiler profiles (list/show/resolve)")
     profile_sub = profile.add_subparsers(dest="profile_command", required=True)
     profile_list = profile_sub.add_parser("list")
     profile_list.add_argument("--json", action="store_true")
@@ -1228,7 +1248,7 @@ def build_parser() -> argparse.ArgumentParser:
     profile_resolve.add_argument("--runner")
     profile_resolve.set_defaults(handler=run_profile)
 
-    psyq = sub.add_parser("psyq")
+    psyq = sub.add_parser("psyq", help="import or inventory the PsyQ SDK (import/inventory)")
     psyq_sub = psyq.add_subparsers(dest="psyq_command", required=True)
     psyq_import = psyq_sub.add_parser("import")
     psyq_import.add_argument("--version", default="4.7")
@@ -1255,18 +1275,18 @@ def build_parser() -> argparse.ArgumentParser:
         command_parser.add_argument("--right")
         command_parser.set_defaults(handler=run_psyq_inventory)
 
-    toolchain = sub.add_parser("toolchain")
+    toolchain = sub.add_parser("toolchain", help="probe toolchain components (probe/compare-probes/matrix)")
     toolchain_sub = toolchain.add_subparsers(dest="toolchain_command", required=True)
     for command in ("probe", "compare-probes", "matrix"):
         toolchain_command = toolchain_sub.add_parser(command)
         toolchain_command.set_defaults(handler=run_toolchain_probe)
 
-    bench = sub.add_parser("bench")
+    bench = sub.add_parser("bench", help="run workspace benchmarks (workspace)")
     bench_sub = bench.add_subparsers(dest="bench_command", required=True)
     bench_workspace = bench_sub.add_parser("workspace")
     bench_workspace.set_defaults(handler=run_bench_workspace)
 
-    context = sub.add_parser("context")
+    context = sub.add_parser("context", help="build/show per-function decomp context (build/show)")
     context_sub = context.add_subparsers(dest="context_command", required=True)
     context_build = context_sub.add_parser("build")
     context_build.add_argument("target")
@@ -1279,17 +1299,17 @@ def build_parser() -> argparse.ArgumentParser:
     context_show.add_argument("target")
     context_show.set_defaults(handler=run_context_show)
 
-    emi = sub.add_parser("emi")
+    emi = sub.add_parser("emi", help="unpack and inspect EMI archives (unpack)")
     emi_sub = emi.add_subparsers(dest="emi_command", required=True)
     configure_unpack_parser(emi_sub.add_parser("unpack"))
 
-    accept = sub.add_parser("accept")
+    accept = sub.add_parser("accept", help="accept a decomp candidate for a target/function")
     accept.add_argument("candidate", type=Path)
     accept.add_argument("--target", required=True)
     accept.add_argument("--function", required=True)
     accept.set_defaults(handler=run_accept)
 
-    permute = sub.add_parser("permute")
+    permute = sub.add_parser("permute", help="run a bounded permuter search over a source")
     permute.add_argument("source")
     permute.add_argument("--work-root", type=Path)
     permute.add_argument("--prepare-only", action="store_true")
@@ -1308,45 +1328,45 @@ def build_parser() -> argparse.ArgumentParser:
     )
     permute.add_argument("--json", action="store_true")
     permute.set_defaults(handler=run_permute)
-    adopt = sub.add_parser("adopt")
+    adopt = sub.add_parser("adopt", help="adopt a permuter candidate into a function")
     adopt.add_argument("candidate", type=Path)
     adopt.add_argument("--function")
     adopt.add_argument("--apply", action="store_true")
     adopt.add_argument("--allow-nonmatch", action="store_true")
     adopt.set_defaults(handler=run_adopt)
 
-    scan = sub.add_parser("scan")
+    scan = sub.add_parser("scan", help="scan disc inputs for binaries and entries")
     scan.add_argument(
         "--emi-root", type=Path, default=layout.out_dir / "extracted" / "BIN"
     )
     scan.set_defaults(handler=run_scan)
-    promote = sub.add_parser("promote")
+    promote = sub.add_parser("promote", help="promote an EMI archive entry to a confirmed module")
     promote.add_argument("target")
     promote.add_argument("--confirm-code", action="store_true")
     promote.set_defaults(handler=run_promote)
-    candidates = sub.add_parser("candidates")
+    candidates = sub.add_parser("candidates", help="list candidate entries, optionally by family")
     candidates.add_argument("family", nargs="?")
     candidates.set_defaults(handler=run_candidates)
-    status = sub.add_parser("status")
+    status = sub.add_parser("status", help="show build/decomp status for a target")
     status.add_argument("target", nargs="?")
     status.set_defaults(handler=run_status)
-    decomp_status = sub.add_parser("decomp-status")
+    decomp_status = sub.add_parser("decomp-status", help="show decompilation status for a target")
     decomp_status.add_argument("target", nargs="?")
     decomp_status.add_argument("--json", action="store_true")
     decomp_status.set_defaults(handler=run_decomp_status)
-    inspect = sub.add_parser("inspect")
+    inspect = sub.add_parser("inspect", help="inspect a target payload and Splat config")
     inspect.add_argument("target")
     inspect.add_argument("--json", action="store_true")
     inspect.set_defaults(handler=run_inspect)
-    nxt = sub.add_parser("next")
+    nxt = sub.add_parser("next", help="show the next function to lift for a target")
     nxt.add_argument("target", nargs="?")
     nxt.set_defaults(handler=run_next)
-    lift = sub.add_parser("lift")
+    lift = sub.add_parser("lift", help="create a lift work item (C draft) for a function")
     lift.add_argument("target")
     lift.add_argument("function", nargs="?")
     lift.add_argument("--seed")
     lift.set_defaults(handler=run_lift_workflow)
-    normalize = sub.add_parser("normalize")
+    normalize = sub.add_parser("normalize", help="normalize a binary image or payload")
     normalize.add_argument(
         "--slus", type=Path, default=layout.out_dir / "extracted" / "SLUS_004.22"
     )
@@ -1354,10 +1374,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--logo", type=Path, default=layout.out_dir / "extracted" / "LOGO" / "LOGO.EXE"
     )
     normalize.set_defaults(handler=run_normalize)
-    doctor = sub.add_parser("doctor")
+    doctor = sub.add_parser("doctor", help="check workspace/toolchain health")
     doctor.add_argument("--strict", action="store_true")
     doctor.set_defaults(handler=run_doctor)
-    diff = sub.add_parser("diff")
+    diff = sub.add_parser("diff", help="compare a lifted source against the original bytes")
     diff.add_argument("source", type=Path)
     diff.add_argument("--json", action="store_true")
     diff.add_argument("--show", "--show-diff", dest="show_diff", action="store_true")
@@ -1369,7 +1389,7 @@ def build_parser() -> argparse.ArgumentParser:
     diff.add_argument("--html", action="store_true")
     diff.add_argument("--watch", action="store_true")
     diff.set_defaults(handler=run_diff)
-    flags = sub.add_parser("flags")
+    flags = sub.add_parser("flags", help="experiment with per-function compiler flags")
     flags.add_argument("source", type=Path)
     flags.add_argument(
         "--catalog",
@@ -1377,39 +1397,109 @@ def build_parser() -> argparse.ArgumentParser:
     )
     flags.add_argument("--json", action="store_true")
     flags.set_defaults(handler=run_flags)
-    ghidra = sub.add_parser("ghidra")
+    ghidra = sub.add_parser("ghidra", help="sync/export Ghidra project data (sync/export)")
     ghidra_sub = ghidra.add_subparsers(dest="ghidra_command", required=True)
     ghidra_sync = ghidra_sub.add_parser("sync")
     ghidra_sync.set_defaults(handler=run_ghidra_sync)
     ghidra_export = ghidra_sub.add_parser("export")
     ghidra_export.set_defaults(handler=run_ghidra_sync)
-    analysis = sub.add_parser("analysis")
+    analysis = sub.add_parser(
+        "analysis",
+        help="cross-target binary analysis (doctor/init/export/generate/hotspots/graph/query)",
+        description="Cross-target binary call-graph and fingerprint analysis powered by rizin/r2.",
+    )
     analysis_sub = analysis.add_subparsers(dest="analysis_command", required=True)
-    analysis_doctor = analysis_sub.add_parser("doctor")
+    analysis_doctor = analysis_sub.add_parser(
+        "doctor", help="check the analysis engine (rizin/r2) availability"
+    )
     analysis_doctor.set_defaults(handler=run_analysis)
+    _ANALYSIS_INIT_EXPORT_HELP = {
+        "init": "initialize a per-target analyzer project",
+        "export": "export a deterministic analyzer project JSON",
+    }
     for command in ("init", "export"):
-        analysis_command = analysis_sub.add_parser(command)
-        analysis_command.add_argument("target")
-        analysis_command.add_argument("--engine", choices=("rizin", "r2"))
+        analysis_command = analysis_sub.add_parser(
+            command, help=_ANALYSIS_INIT_EXPORT_HELP[command]
+        )
+        analysis_command.add_argument("target", help="target id")
+        analysis_command.add_argument(
+            "--engine",
+            choices=("rizin", "r2"),
+            help="analysis engine: rizin (default) or r2",
+        )
         analysis_command.set_defaults(handler=run_analysis)
-    analysis_generate = analysis_sub.add_parser("generate")
-    analysis_generate.add_argument("target", nargs="?")
+    analysis_generate = analysis_sub.add_parser(
+        "generate", help="generate replay commands for a target"
+    )
+    analysis_generate.add_argument("target", nargs="?", help="target id; omit for all targets")
     analysis_generate.set_defaults(handler=run_analysis)
-    analysis_hotspots = analysis_sub.add_parser("hotspots")
-    analysis_hotspots.add_argument("target", nargs="?")
+    analysis_hotspots = analysis_sub.add_parser(
+        "hotspots",
+        help="rank functions by callers (hot), leaves (no outgoing calls), and duplicates; configurable via filters",
+    )
+    analysis_hotspots.add_argument("target", nargs="?", help="optional target id; omit for all targets")
+    analysis_hotspots.add_argument(
+        "--kind",
+        choices=(
+            "hot",
+            "leaves",
+            "roots",
+            "shallow",
+            "unknown",
+            "discovery",
+            "exact_duplicates",
+            "relocation_duplicates",
+        ),
+        help="which ranking to surface/filter (default: all sections)",
+    )
+    analysis_hotspots.add_argument("--top", type=int, default=40, help="max entries in the selection (default 40)")
+    analysis_hotspots.add_argument(
+        "--min-callers",
+        type=int,
+        default=0,
+        help="keep entries with at least N callers (in-degree)",
+    )
+    analysis_hotspots.add_argument(
+        "--max-out",
+        type=int,
+        default=None,
+        help="keep entries with at most N outgoing calls (0 = leaves)",
+    )
+    analysis_hotspots.add_argument("--min-size", type=int, default=None, help="keep functions at least N bytes")
+    analysis_hotspots.add_argument("--max-size", type=int, default=None, help="keep functions at most N bytes")
+    analysis_hotspots.add_argument(
+        "--status",
+        choices=("all", "known", "unknown"),
+        default="all",
+        help="filter by lifted (known) status",
+    )
+    analysis_hotspots.add_argument(
+        "--sort",
+        choices=("callers", "size", "cross", "address", "out_degree"),
+        default=None,
+        help="sort key (default per kind: leaves/hot by callers, roots by address)",
+    )
     analysis_hotspots.set_defaults(handler=run_analysis)
-    analysis_graph = analysis_sub.add_parser("graph")
-    analysis_graph.add_argument("target", nargs="?")
-    analysis_graph.add_argument("--engine", choices=("rizin", "r2"))
+    analysis_graph = analysis_sub.add_parser(
+        "graph", help="write out/analysis/graph.json with fingerprints, duplicates, and xrefs"
+    )
+    analysis_graph.add_argument("target", nargs="?", help="optional target id; omit for all targets")
+    analysis_graph.add_argument(
+        "--engine", choices=("rizin", "r2"), help="analysis engine: rizin (default) or r2"
+    )
     analysis_graph.set_defaults(handler=run_analysis)
-    analysis_query = analysis_sub.add_parser("query")
-    analysis_query.add_argument("target")
+    analysis_query = analysis_sub.add_parser(
+        "query", help="run a focused binary query (functions/strings/xrefs/types/JSON)"
+    )
+    analysis_query.add_argument("target", help="target id")
     analysis_query.add_argument(
         "query", help="functions, strings, xrefs, types, or a JSON command"
     )
-    analysis_query.add_argument("--engine", choices=("rizin", "r2"))
+    analysis_query.add_argument(
+        "--engine", choices=("rizin", "r2"), help="analysis engine: rizin (default) or r2"
+    )
     analysis_query.set_defaults(handler=run_analysis)
-    assets = sub.add_parser("assets")
+    assets = sub.add_parser("assets", help="list/validate/convert assets (list/str)")
     assets_sub = assets.add_subparsers(dest="assets_command", required=True)
     assets_list = assets_sub.add_parser("list")
     assets_list.set_defaults(handler=run_assets_list)
@@ -1428,7 +1518,7 @@ def build_parser() -> argparse.ArgumentParser:
     assets_str_convert.add_argument("--output-dir", type=Path)
     assets_str_convert.add_argument("--json", action="store_true")
     assets_str_convert.set_defaults(handler=run_assets_str_convert)
-    disk = sub.add_parser("disk")
+    disk = sub.add_parser("disk", help="verify or rebuild disc images (verify/rebuild)")
     disk_sub = disk.add_subparsers(dest="disk_command", required=True)
     disk_verify = disk_sub.add_parser("verify")
     disk_verify.set_defaults(handler=run_disk_verify)

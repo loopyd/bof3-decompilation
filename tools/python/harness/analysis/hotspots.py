@@ -86,8 +86,56 @@ def _known_addresses(
     return addrs
 
 
-def hotspot_analysis(root: Path, target: str | None = None) -> dict[str, Any]:
-    """Run cross-target hotspot analysis."""
+def _hx(addr: int) -> str:
+    return f"0x{addr:08x}"
+
+
+def _default_sort(kind: str | None) -> str:
+    return {
+        "hot": "callers",
+        "leaves": "callers",
+        "roots": "address",
+        "shallow": "out_degree",
+        "unknown": "callers",
+        "discovery": "callers",
+        "exact_duplicates": "size",
+        "relocation_duplicates": "size",
+    }.get(kind or "", "callers")
+
+
+def _sort_key(entry: dict[str, Any], key: str) -> int:
+    if key == "callers":
+        return int(entry.get("callers", entry.get("in_degree", 0)))
+    if key == "size":
+        return int(entry.get("size", 0))
+    if key == "cross":
+        return int(entry.get("cross_target_callers", 0))
+        if key == "address":
+            return int(str(entry.get("address", "0x0")), 16)
+    if key == "out_degree":
+        return int(entry.get("out_degree", 0))
+    return 0
+
+
+def hotspot_analysis(
+    root: Path,
+    target: str | None = None,
+    *,
+    kind: str | None = None,
+    top: int = 40,
+    min_callers: int = 0,
+    max_out: int | None = None,
+    min_size: int | None = None,
+    max_size: int | None = None,
+    status: str = "all",
+    sort: str | None = None,
+) -> dict[str, Any]:
+    """Run cross-target hotspot analysis.
+
+    When ``kind`` is given, the returned ``selection`` is the matching ranking
+    filtered/sorted/limited by the supplied parameters; otherwise all rankings are
+    returned unchanged.
+    """
     engine_name, executable = _engine()
     manifests = load_target_manifests(root)
 
@@ -169,7 +217,7 @@ def hotspot_analysis(root: Path, target: str | None = None) -> dict[str, Any]:
             continue
         cross = sum(1 for ca in c if ca in func_map and func_map[ca]["target"] != info["target"])
         hot.append({
-            "address": addr,
+            "address": _hx(addr),
             "target": info["target"],
             "size": info["size"],
             "name": info["name"],
@@ -187,7 +235,7 @@ def hotspot_analysis(root: Path, target: str | None = None) -> dict[str, Any]:
         out_deg = len(callees.get(addr, set()))
         in_deg = len(callers.get(addr, set()))
         entry = {
-            "address": addr,
+            "address": _hx(addr),
             "target": info["target"],
             "size": info["size"],
             "name": info["name"],
@@ -210,9 +258,9 @@ def hotspot_analysis(root: Path, target: str | None = None) -> dict[str, Any]:
     for to_addr, from_set in callers.items():
         if to_addr not in func_map:
             unknown.append({
-                "address": to_addr,
+                "address": _hx(to_addr),
                 "callers": len(from_set),
-                "sample_callers": sorted(from_set)[:5],
+                "sample_callers": [_hx(a) for a in sorted(from_set)[:5]],
             })
     unknown.sort(key=lambda x: -x["callers"])
 
@@ -223,7 +271,7 @@ def hotspot_analysis(root: Path, target: str | None = None) -> dict[str, Any]:
             key = f"{info['size']}:{info['sha256']}"
             sha_groups[key].append(addr)
     exact_dupes = [
-        {"size": int(k.split(":")[0]), "functions": v}
+        {"size": int(k.split(":")[0]), "functions": [_hx(a) for a in v]}
         for k, v in sha_groups.items()
         if len(v) > 1
     ]
@@ -236,7 +284,7 @@ def hotspot_analysis(root: Path, target: str | None = None) -> dict[str, Any]:
             key = f"{info['size']}:{info['reloc_sha256']}"
             reloc_groups[key].append(addr)
     reloc_dupes = [
-        {"size": int(k.split(":")[0]), "functions": v}
+        {"size": int(k.split(":")[0]), "functions": [_hx(a) for a in v]}
         for k, v in reloc_groups.items()
         if len(v) > 1
     ]
@@ -252,7 +300,7 @@ def hotspot_analysis(root: Path, target: str | None = None) -> dict[str, Any]:
         known_out = sum(1 for ca in out if ca in func_map)
         if unknown_out > 0:
             discovery.append({
-                "address": addr,
+                "address": _hx(addr),
                 "target": info["target"],
                 "name": info["name"],
                 "total_callees": len(out),
@@ -261,6 +309,41 @@ def hotspot_analysis(root: Path, target: str | None = None) -> dict[str, Any]:
                 "callers": len(callers.get(addr, set())),
             })
     discovery.sort(key=lambda x: (-x["unknown_callees"], -x["callers"]))
+
+    selection: list[dict[str, Any]] | None = None
+    if kind is not None:
+        base = {
+            "hot": hot,
+            "leaves": leaves,
+            "roots": roots,
+            "shallow": shallow,
+            "unknown": unknown,
+            "discovery": discovery,
+            "exact_duplicates": exact_dupes,
+            "relocation_duplicates": reloc_dupes,
+        }[kind]
+        items = list(base)
+        callery_kinds = ("hot", "leaves", "roots", "shallow", "unknown", "discovery")
+        outdegree_kinds = ("leaves", "roots", "shallow", "discovery")
+        known_kinds = ("hot", "leaves", "roots", "shallow")
+        if kind in callery_kinds and min_callers > 0:
+            items = [
+                e for e in items
+                if e.get("callers", e.get("in_degree", 0)) >= min_callers
+            ]
+        if kind in outdegree_kinds and max_out is not None:
+            items = [e for e in items if e.get("out_degree", 0) <= max_out]
+        if kind in known_kinds and status != "all":
+            want = status == "known"
+            items = [e for e in items if bool(e.get("is_known", False)) == want]
+        if min_size is not None:
+            items = [e for e in items if e.get("size", 0) >= min_size]
+        if max_size is not None:
+            items = [e for e in items if e.get("size", 0) <= max_size]
+        sort_key = sort or _default_sort(kind)
+        reverse = sort_key != "address"
+        items.sort(key=lambda e: _sort_key(e, sort_key), reverse=reverse)
+        selection = items[:top]
 
     return {
         "schema": "bof3.hotspots/v1",
@@ -276,6 +359,18 @@ def hotspot_analysis(root: Path, target: str | None = None) -> dict[str, Any]:
         "exact_duplicates": exact_dupes[:20],
         "relocation_duplicates": reloc_dupes[:20],
         "discovery": discovery[:30],
+        "selection_kind": kind,
+        "selection_params": {
+            "kind": kind,
+            "top": top,
+            "min_callers": min_callers,
+            "max_out": max_out,
+            "min_size": min_size,
+            "max_size": max_size,
+            "status": status,
+            "sort": sort or _default_sort(kind),
+        },
+        "selection": selection,
     }
 
 
