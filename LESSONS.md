@@ -166,3 +166,7 @@ Durable findings that make the BOF3 lift-and-match loop faster and safer.
   generated permuter `base.c` will compile. Treat a base compile exit with zero
   candidates as a bundle/tooling failure, keep the tracked source unchanged,
   and diagnose preprocessing/compiler context before trusting permuter output.
+- Promote an official PsyQ alias only when the SDK prototype, call shape, and
+  assembly agree. EMI targets do not automatically link PsyQ archive members,
+  so retain or add a proven target-local address binding and verify the target
+  link plus isolated pre/post diff.
