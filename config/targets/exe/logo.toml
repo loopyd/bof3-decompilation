@@ -10,3 +10,18 @@ profile = "native/capcom97"
 
 [psyq]
 headers = "headers/psyq-4.7"
+
+[psyq.libraries.LIBCD]
+members = ["psyq/4.7/libcd/event.o"]
+confidence = "high"
+evidence = ["LOGO.EXE 0x801cfc30 matches CdInit in PsyQ 4.7 libcd.a"]
+
+[psyq.libraries.LIBETC]
+members = ["psyq/4.7/libetc/intr.o"]
+confidence = "high"
+evidence = ["LOGO.EXE 0x801cf1ec matches StopCallback in PsyQ 4.7 libetc.a"]
+
+[psyq.libraries.LIBGPU]
+members = ["psyq/4.7/libgpu/sys.o"]
+confidence = "high"
+evidence = ["LOGO.EXE 0x801d4174 matches SetDispMask in PsyQ 4.7 libgpu.a"]
