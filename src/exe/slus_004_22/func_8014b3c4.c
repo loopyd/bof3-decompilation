@@ -1,8 +1,7 @@
 #include "bof3/context.h"
 #include "internal.h"
 
-extern void func_80150098(s16 x, s16 y, u32 arg2, void* arg3);
-extern int  sprintf(char* buffer, const char* format, ...);
+extern int sprintf(char* buffer, const char* format, ...);
 
 extern u8          DAT_80145ad4[];
 extern const char  DAT_80149990[];

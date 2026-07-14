@@ -24,6 +24,15 @@ WEAK_SYMBOL_AT(func_80162230, 0x80162230);
 WEAK_SYMBOL_AT(func_80162d00, 0x80162d00);
 WEAK_SYMBOL_AT(func_80163010, 0x80163010);
 
+/* Newly discovered SLUS services — pending decompilation. */
+WEAK_SYMBOL_AT(func_8014b87c, 0x8014b87c);
+WEAK_SYMBOL_AT(func_8014e5a0, 0x8014e5a0);
+WEAK_SYMBOL_AT(func_8014f514, 0x8014f514);
+WEAK_SYMBOL_AT(func_8014f704, 0x8014f704);
+WEAK_SYMBOL_AT(func_80150098, 0x80150098);
+WEAK_SYMBOL_AT(func_8015df18, 0x8015df18);
+WEAK_SYMBOL_AT(func_801655f4, 0x801655f4);
+
 /* Remaining reviewed SLUS services, kept address-traceable pending promotion. */
 WEAK_SYMBOL_AT(func_80174700, 0x80174700);
 WEAK_SYMBOL_AT(func_8017b2d4, 0x8017b2d4);

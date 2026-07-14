@@ -32,6 +32,15 @@ void func_8014ea80(void);
 void func_8015cebc(void);
 void func_8015d044(void);
 
+/* Newly discovered SLUS services — pending decompilation. */
+void func_8014b87c(u16 countdown);
+void func_8014e5a0(u32 ot_index, u32 primitive_size);
+void func_8014f514(void);
+void func_8014f704(void);
+void func_80150098(s16 x, s16 y, u32 clut, const u8* text);
+void func_8015df18(void);
+s32  func_801655f4(u8* counter, s32 delta);
+
 /* EMI loader and CD callback path. */
 void    func_80161f58(void);
 DiscLba func_80162160(EmiLoaderSlotId slot_id);
