@@ -1,0 +1,15 @@
+#include "bof3/context.h"
+
+/* LIBGTE */
+WEAK_SYMBOL_AT(PushMatrix, 0x80178b78);
+WEAK_SYMBOL_AT(PopMatrix, 0x80178c18);
+WEAK_SYMBOL_AT(SetRotMatrix, 0x80178fd8);
+WEAK_SYMBOL_AT(SetTransMatrix, 0x80179068);
+WEAK_SYMBOL_AT(RotTransPers4, 0x80179588);
+WEAK_SYMBOL_AT(RotMatrix, 0x80179738);
+
+/* LIBGPU */
+WEAK_SYMBOL_AT(SetSemiTrans, 0x8017a904);
+WEAK_SYMBOL_AT(SetSprt, 0x8017aa1c);
+WEAK_SYMBOL_AT(SetPolyG4, 0x8017a9cc);
+WEAK_SYMBOL_AT(SetDrawMode, 0x8017c2d8);

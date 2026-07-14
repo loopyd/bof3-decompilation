@@ -3,6 +3,8 @@
 
 #include "bof3/bof3.h"
 
+#include "symbols/symbols.h"
+
 typedef void (*World00Area016Handler)(void);
 
 typedef struct World00Area016MarkerEntry {
