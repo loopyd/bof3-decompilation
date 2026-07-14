@@ -103,8 +103,7 @@ u32  emi_next_payload_offset(u32 current_offset, u32 current_size);
 void emi_build_entry_lbas(u32 base_lba, const EmiTocEntry* entries,
                           size_t entry_count, u32* entry_lbas);
 u32  emi_slot_to_lba(const u32* slot_lba_table, size_t slot_count, u32 slot_id);
-#define GAME_FRONT_EFFECT_BUSY VPTR(u16, 0x80143c40u)
-#define GAME_FRONT_LOCAL_MODE  VPTR(u16, 0x80143c90u)
+#define GAME_FRONT_LOCAL_MODE VPTR(u16, 0x80143c90u)
 
 void game_front_local_mode_callback_loop(void);
 
