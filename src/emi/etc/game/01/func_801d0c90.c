@@ -18,8 +18,8 @@ void func_801d0c90(void) {
   GAME_FRONT_PALETTE_STAGE_SERIAL += 1u;
   game_set_active_selection_cue(0x8du, 100, 8);
 
-  GAME_FRONT_FADE_PHASE = 1u;
   state = GAME_FRONT_STATE;
+  GAME_FRONT_FADE_PHASE = 1u;
   GAME_FRONT_BANNER_SCROLL = 200u;
   GAME_FRONT_BANNER_ALPHA = 0u;
   GAME_FRONT_WINDOW_PHASE = 0u;
