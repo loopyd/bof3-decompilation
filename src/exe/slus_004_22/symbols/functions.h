@@ -5,12 +5,14 @@
 
 typedef void (*GameCallbackEntry)(void);
 
+/* Shared executable entry points. */
 void* func_800df548(s32 item_type, s32 item_index);
 
 /* LOGO.EXE is loaded independently; this call targets its reviewed entry
  * address rather than linking LOGO.EXE implementation into SLUS_004.22. */
 void func_801ce758(void);
 
+/* SLUS startup, callback scheduler, and executable-file loading. */
 void func_8014aa04(void);
 void func_8014aac8(void);
 void func_8014aca0(void);
@@ -29,24 +31,28 @@ void func_8014e6d0(void);
 void func_8014ea80(void);
 void func_8015cebc(void);
 void func_8015d044(void);
-void func_80161f58(void);
-u32  func_80162160(u32 slot_id);
-void func_80162178(void);
-void func_801621e8(s32 status, u8* result);
-void func_80162230(u8 status, u8* result);
-void func_80162500(void);
-void func_801625e4(void);
-void func_80162618(void);
-void func_80162698(void);
-void func_80162790(void);
-void func_80162898(void);
-void func_801629f0(void);
-void func_80162a6c(void);
-s32  func_80162b08(u8 slot);
-void func_80162c14(void);
-void func_80162cd8(void);
-void func_80162d18(void);
-void func_80163010(void);
+
+/* EMI loader and CD callback path. */
+void    func_80161f58(void);
+DiscLba func_80162160(EmiLoaderSlotId slot_id);
+void    func_80162178(void);
+void    func_801621e8(s32 status, u8* result);
+void    func_80162230(u8 status, u8* result);
+void    func_80162500(void);
+void    func_801625e4(void);
+void    func_80162618(void);
+void    func_80162698(void);
+void    func_80162790(void);
+void    func_80162898(void);
+void    func_801629f0(void);
+void    func_80162a6c(void);
+s32     func_80162b08(u8 slot);
+void    func_80162c14(void);
+void    func_80162cd8(void);
+void    func_80162d18(void);
+void    func_80163010(void);
+
+/* Remaining reviewed SLUS services, kept address-traceable pending promotion. */
 void func_8016728c(u8 index, u8 family);
 void func_801690b8(s32 arg);
 void func_8016ad2c(s32 owner);

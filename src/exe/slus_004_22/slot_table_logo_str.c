@@ -4,10 +4,9 @@
 
 extern u_long DAT_801d8bb0;
 
-/* @behavior boots the LOGO.EXE stream path, polls for skip/completion, then shuts
- * the display branch down.
- * Not authoritative for LOGO.EXE source mapping; see
- * src/exe/logo/func_801cedfc.c for 0x801cedfc.
+/* @behavior probes the independently loaded LOGO.EXE stream path for the authored
+ * SLUS boot harness.
+ * @source Not native SLUS code: 0x801ce760 and 0x801cea98 belong to LOGO.EXE.
  */
 const SlotTableEntry* slot_table_logo_str(void) {
   volatile u8 scratch[0x18];

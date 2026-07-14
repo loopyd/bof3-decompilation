@@ -1,9 +1,10 @@
 #include "internal.h"
 
-/* @behavior resolves one proven BOF3 runtime slot to the original shipped file.
- * @source 0x80182444 DAT_80182444
+/* @behavior resolves one selected native loader slot to authored shipped-file
+ * metadata.
+ * @source DAT_80182444 is the native u32 LBA table; this helper is authored.
  */
-const SlotTableEntry* slot_table_find(u32 slot_id) {
+const SlotTableEntry* slot_table_find(EmiLoaderSlotId slot_id) {
   size_t index;
 
   for (index = 0; index < g_slot_table_count; ++index) {

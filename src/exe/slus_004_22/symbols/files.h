@@ -11,8 +11,8 @@ typedef enum RuntimePathKind {
 } RuntimePathKind;
 
 struct SlotTableEntry {
-  u32             slot_id;
-  u32             disc_lba;
+  EmiLoaderSlotId slot_id;
+  DiscLba         disc_lba;
   const char*     relative_path;
   RuntimePathKind kind;
 };
