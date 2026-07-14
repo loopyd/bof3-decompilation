@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import subprocess
 from types import SimpleNamespace
 
 import pytest
@@ -21,6 +22,7 @@ from harness.match.asm_diff import (
     parse_source_address,
 )
 from harness.match._asm_disasm import extract_instructions
+from harness.match._asm_link import link_object_at_address
 from harness.paths import repo_layout
 from harness.symbols import load_weak_symbol_bindings
 
@@ -130,6 +132,32 @@ def test_weak_symbol_bindings_are_loaded_for_matching(tmp_path: Path) -> None:
     )
 
     assert load_weak_symbol_bindings(symbols) == {"GAME_TABLE": 0x801CA70C}
+
+
+def test_linker_places_reviewed_object_section(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    commands: list[list[str]] = []
+
+    def fake_run(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess:
+        commands.append(command)
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    monkeypatch.setattr("harness.match._asm_link.subprocess.run", fake_run)
+    layout = SimpleNamespace(
+        root=tmp_path,
+        psn00b_toolchain_root=tmp_path / "toolchain",
+    )
+
+    link_object_at_address(
+        object_path=tmp_path / "function.o",
+        address=0x80197378,
+        undefined_symbols=[],
+        layout=layout,
+        section_addresses={".rodata": 0x80195830},
+    )
+
+    assert "--section-start=.rodata=0x80195830" in commands[0]
 
 
 def test_weak_symbol_bindings_load_shallow_target_symbol_units(tmp_path: Path) -> None:

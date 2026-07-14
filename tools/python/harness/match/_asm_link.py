@@ -25,6 +25,7 @@ def link_object_at_address(
     symbols_c_path: Path | None = None,
     layout: RepoLayout | None = None,
     output_path: Path | None = None,
+    section_addresses: dict[str, int] | None = None,
 ) -> Path:
     repo = layout or repo_layout()
     ld = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-ld"
@@ -40,6 +41,12 @@ def link_object_at_address(
             str(ld),
             "-EL",
             f"-Ttext={address:#x}",
+            *[
+                f"--section-start={section}={section_address:#x}"
+                for section, section_address in sorted(
+                    (section_addresses or {}).items()
+                )
+            ],
             *defsym_args,
             str(object_path),
             "-o",
@@ -70,6 +77,23 @@ def extract_function_bytes(
     return flat.stdout[:size]
 
 
+def extract_section_bytes(
+    linked_path: Path,
+    *,
+    section: str,
+    layout: RepoLayout | None = None,
+) -> bytes:
+    repo = layout or repo_layout()
+    objcopy = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-objcopy"
+    flat = subprocess.run(
+        [str(objcopy), "-O", "binary", "-j", section, str(linked_path), "/dev/stdout"],
+        capture_output=True,
+    )
+    if flat.returncode != 0:
+        raise RuntimeError(f"objcopy failed: {flat.stderr.decode()}")
+    return flat.stdout
+
+
 def function_bytes_match(
     object_path: Path,
     *,
@@ -78,6 +102,7 @@ def function_bytes_match(
     original_bytes: bytes,
     symbols_c_path: Path | None = None,
     layout: RepoLayout | None = None,
+    section_addresses: dict[str, int] | None = None,
 ) -> tuple[bool, bytes]:
     repo = layout or repo_layout()
     nm = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-nm"
@@ -95,6 +120,7 @@ def function_bytes_match(
         undefined_symbols=undefined,
         symbols_c_path=symbols_c_path,
         layout=repo,
+        section_addresses=section_addresses,
     )
     compiled = extract_function_bytes(linked, size=size, layout=repo)
     return compiled == original_bytes, compiled

@@ -18,7 +18,7 @@ from ._asm_disasm import (
     render_normalized,
     run_command,
 )
-from ._asm_link import function_bytes_match
+from ._asm_link import extract_section_bytes, function_bytes_match
 from ._asm_resolve import (
     PsxExeInfo,  # noqa: F401 — re-exported for backward compat
     build_target_for_source,
@@ -287,6 +287,22 @@ def run_asm_diff_one(
     )
     original_bytes_path.write_bytes(original_bytes)
 
+    from ..domain import load_target_manifests
+
+    source_directory = source_path.parent.relative_to(repo.root).as_posix()
+    manifest = next(
+        (
+            value
+            for value in load_target_manifests(repo.root).values()
+            if value.source_dir == source_directory
+        ),
+        None,
+    )
+    placements = () if manifest is None else manifest.section_placements.get(address, ())
+    section_addresses = {
+        placement.section: placement.address for placement in placements
+    }
+
     current_compiler_asm = compiler_asm_path_for_object(object_path)
     if not current_compiler_asm.is_file():
         raise FileNotFoundError(
@@ -300,8 +316,24 @@ def run_asm_diff_one(
         original_bytes=original_bytes,
         symbols_c_path=source_path.parent / "symbols.c",
         layout=repo,
+        section_addresses=section_addresses,
     )
     linked_path = object_path.with_suffix(".linked.o")
+    for placement in placements:
+        linked_section = extract_section_bytes(
+            linked_path, section=placement.section, layout=repo
+        )
+        original_section = extract_original_bytes(
+            binary_path,
+            address=placement.address,
+            size=placement.size,
+            load_address=load_address,
+        )
+        if len(linked_section) != placement.size or linked_section != original_section:
+            raise RuntimeError(
+                f"reviewed {placement.section} placement for {function_name} does not "
+                "match original bytes"
+            )
     current_size = current_symbol_size(nm_path, object_path, function_name)
 
     shutil.copyfile(current_compiler_asm, output_dir / "compiler.s")
