@@ -20,6 +20,9 @@ _QUERY_COMMANDS = {
     "types": "tj",
 }
 
+_PROJECT_STATE_SCHEMA = "bof3.analysis-project/v2"
+_PROJECT_STATE_FILE = "state.json"
+
 
 def _engine(requested: str | None = None) -> tuple[str, Path]:
     candidates = (requested,) if requested else ("rizin", "r2")
@@ -51,6 +54,70 @@ def _paths(root: Path, engine: str, manifest: TargetManifest) -> tuple[Path, Pat
     return project, export
 
 
+def _sha256(path: Path) -> str | None:
+    if not path.is_file():
+        return None
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _analysis_inputs(root: Path, manifest: TargetManifest) -> dict[str, Any]:
+    binary = root / manifest.binary
+    replay = root / "config" / "analysis" / f"{manifest.id.value}.r2"
+    types = root / "config" / "analysis" / "bof3_objects.h"
+    splat = root / manifest.splat
+    return {
+        "binary": str(binary.relative_to(root)),
+        "binary_sha256": _sha256(binary),
+        "replay": str(replay.relative_to(root)) if replay.is_file() else None,
+        "replay_sha256": _sha256(replay),
+        "types": str(types.relative_to(root)) if types.is_file() else None,
+        "types_sha256": _sha256(types),
+        "splat": str(splat.relative_to(root)) if splat.is_file() else None,
+        "splat_sha256": _sha256(splat),
+    }
+
+
+def _reviewed_function_addresses(root: Path, manifest: TargetManifest) -> list[int]:
+    """Return function starts already reviewed into the target's Splat layout."""
+
+    splat = root / manifest.splat
+    if not splat.is_file():
+        return []
+    return sorted(
+        {
+            int(match.group(1), 16)
+            for match in re.finditer(r"\bfunc_([0-9a-fA-F]{8})\b", splat.read_text())
+        }
+    )
+
+
+def _reviewed_analysis_commands(addresses: list[int], binary_end: int) -> list[str]:
+    commands: list[str] = []
+    for index, address in enumerate(addresses):
+        commands.append(f"af @ 0x{address:08x}")
+        next_address = addresses[index + 1] if index + 1 < len(addresses) else None
+        next_boundary = binary_end if next_address is None else next_address
+        span = min(next_boundary - address, 0x1000)
+        if span > 0:
+            commands.append(f"aar 0x{span:x} @ 0x{address:08x}")
+    return commands
+
+
+def _sentinel(inputs: dict[str, Any]) -> str:
+    payload = json.dumps(inputs, sort_keys=True, separators=(",", ":")).encode()
+    return f"harness.sentinel_{hashlib.sha256(payload).hexdigest()[:16]}"
+
+
+def _project_reference(engine: str, project_dir: Path, manifest: TargetManifest) -> str:
+    if engine == "rizin":
+        return str(project_dir / f"{_slug(manifest)}.rzdb")
+    return _slug(manifest)
+
+
+def _flag_json_command(engine: str) -> str:
+    return "fs *;flj" if engine == "rizin" else "fs *;fj"
+
+
 def _run(
     executable: Path,
     manifest: TargetManifest,
@@ -58,6 +125,8 @@ def _run(
     commands: list[str],
     *,
     project_dir: Path,
+    project: str | None = None,
+    timeout: int = 120,
 ) -> str:
     arguments = [
         str(executable),
@@ -75,20 +144,81 @@ def _run(
         "-m",
         f"0x{manifest.load_address:08x}",
     ]
+    if project is not None:
+        arguments.extend(("-p", project))
     for command in commands:
         arguments.extend(("-c", command))
     arguments.append(str(root / manifest.binary))
-    result = subprocess.run(arguments, check=True, capture_output=True, text=True)
+    result = subprocess.run(
+        arguments, check=True, capture_output=True, text=True, timeout=timeout
+    )
     return result.stdout.rstrip("\x00\n")
+
+
+def _probe(executable: Path, commands: list[str]) -> subprocess.CompletedProcess[str]:
+    arguments = [str(executable), "-q0", "-N"]
+    for command in commands:
+        arguments.extend(("-c", command))
+    arguments.append("/dev/null")
+    return subprocess.run(arguments, capture_output=True, text=True, timeout=10)
+
+
+def _probe_engine(path: str) -> dict[str, Any]:
+    executable = Path(path)
+    version_result = subprocess.run(
+        [path, "-v"], capture_output=True, text=True, timeout=10
+    )
+    version = (version_result.stdout or version_result.stderr).splitlines()
+    mips = _probe(
+        executable,
+        [
+            "e asm.arch=mips",
+            "e asm.bits=32",
+            "e cfg.bigendian=false",
+            "e asm.arch",
+            "e asm.bits",
+            "e cfg.bigendian",
+        ],
+    )
+    json_probe = _probe(executable, ["aflj", "tj"])
+    project_probe = _probe(executable, ["P?"])
+    decompiler_probe = _probe(executable, ["pdg?"])
+    mips_lines = [line.strip() for line in mips.stdout.splitlines() if line.strip()]
+    json_lines = [
+        line.strip() for line in json_probe.stdout.splitlines() if line.strip()
+    ]
+    json_ok = json_probe.returncode == 0 and len(json_lines) >= 2
+    if json_ok:
+        try:
+            json.loads(json_lines[-2])
+            json.loads(json_lines[-1])
+        except json.JSONDecodeError:
+            json_ok = False
+    return {
+        "available": True,
+        "path": path,
+        "version": version[0] if version else None,
+        "capabilities": {
+            "mips32_little_endian": mips.returncode == 0
+            and mips_lines[-3:] == ["mips", "32", "false"],
+            "json": json_ok,
+            "projects": project_probe.returncode == 0
+            and "Project management" in project_probe.stdout,
+            "decompiler": decompiler_probe.returncode == 0
+            and "decompiler" in decompiler_probe.stdout.lower(),
+        },
+    }
 
 
 def doctor() -> dict[str, Any]:
     tools: dict[str, dict[str, Any]] = {}
     for name in ("rizin", "r2"):
         path = shutil.which(name)
-        tools[name] = {"available": path is not None, "path": path}
-    for name in ("rz-ghidra", "r2ghidra"):
-        tools[name] = {"available": shutil.which(name) is not None}
+        tools[name] = (
+            _probe_engine(path)
+            if path is not None
+            else {"available": False, "path": None, "version": None}
+        )
     return {
         "preferred": "rizin" if tools["rizin"]["available"] else "r2",
         "tools": tools,
@@ -102,7 +232,12 @@ def initialize_project(
     manifest = _target(root, target)
     project_dir, _ = _paths(root, engine, manifest)
     project_dir.mkdir(parents=True, exist_ok=True)
-    commands = ["aaa"]
+    project = _project_reference(engine, project_dir, manifest)
+    inputs = _analysis_inputs(root, manifest)
+    sentinel = _sentinel(inputs)
+    addresses = _reviewed_function_addresses(root, manifest)
+    binary_end = manifest.load_address + (root / manifest.binary).stat().st_size
+    commands = _reviewed_analysis_commands(addresses, binary_end)
     types = root / "config" / "analysis" / "bof3_objects.h"
     if types.is_file():
         commands.append(f"to {types}")
@@ -110,13 +245,42 @@ def initialize_project(
     if replay.is_file():
         commands.append(f". {replay}")
     # Generated projects are disposable snapshots; replace the named snapshot.
-    commands.extend((f"P-{_slug(manifest)}", f"Ps {_slug(manifest)}"))
+    if engine == "rizin":
+        commands.extend((f"f+ {sentinel} 1", f"Ps {project}"))
+    else:
+        commands.extend((f"f {sentinel}=1", f"P- {project}", f"Ps {project}"))
     _run(executable, manifest, root, commands, project_dir=project_dir)
+    reopened = _run(
+        executable,
+        manifest,
+        root,
+        [_flag_json_command(engine)],
+        project_dir=project_dir,
+        project=project,
+    )
+    flags = _json_output(reopened)
+    if not isinstance(flags, list) or sentinel not in {
+        row.get("name") for row in flags
+    }:
+        raise RuntimeError(f"analysis project failed reopen verification: {project}")
+    state = {
+        "schema": _PROJECT_STATE_SCHEMA,
+        "engine": engine,
+        "engine_path": str(executable),
+        "target": manifest.id.value,
+        "project": project,
+        "sentinel": sentinel,
+        "reviewed_function_starts": len(addresses),
+        "inputs": inputs,
+    }
+    write_json(project_dir / _PROJECT_STATE_FILE, state)
     return {
         "engine": engine,
         "target": manifest.id.value,
         "project": str(project_dir.relative_to(root)),
-        "replay": str(replay.relative_to(root)) if replay.is_file() else None,
+        "replay": inputs["replay"],
+        "reviewed_function_starts": len(addresses),
+        "verified_reopen": True,
     }
 
 
@@ -129,15 +293,66 @@ def _json_output(output: str) -> Any:
     return value
 
 
+def _verified_project(
+    root: Path,
+    engine: str,
+    executable: Path,
+    manifest: TargetManifest,
+) -> tuple[Path, str]:
+    project_dir, _ = _paths(root, engine, manifest)
+    state_path = project_dir / _PROJECT_STATE_FILE
+    if not state_path.is_file():
+        raise RuntimeError(
+            f"analysis project is not initialized: run analysis init {manifest.id.value}"
+        )
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    expected_inputs = _analysis_inputs(root, manifest)
+    stale = (
+        state.get("schema") != _PROJECT_STATE_SCHEMA
+        or state.get("engine") != engine
+        or state.get("engine_path") != str(executable)
+        or state.get("target") != manifest.id.value
+        or state.get("inputs") != expected_inputs
+    )
+    if stale:
+        raise RuntimeError(
+            f"analysis project is stale: rerun analysis init {manifest.id.value}"
+        )
+    project = str(state.get("project", ""))
+    sentinel = str(state.get("sentinel", ""))
+    flags = _json_output(
+        _run(
+            executable,
+            manifest,
+            root,
+            [_flag_json_command(engine)],
+            project_dir=project_dir,
+            project=project,
+        )
+    )
+    if not isinstance(flags, list) or sentinel not in {
+        row.get("name") for row in flags
+    }:
+        raise RuntimeError(f"analysis project reopen sentinel missing: {project}")
+    return project_dir, project
+
+
 def query_project(
     root: Path, target: str, query: str, requested: str | None = None
 ) -> Any:
     engine, executable = _engine(requested)
     manifest = _target(root, target)
-    project_dir, _ = _paths(root, engine, manifest)
+    project_dir, project = _verified_project(root, engine, executable, manifest)
     command = _QUERY_COMMANDS.get(query, query)
     return _json_output(
-        _run(executable, manifest, root, ["aaa", command], project_dir=project_dir)
+        _run(
+            executable,
+            manifest,
+            root,
+            [command],
+            project_dir=project_dir,
+            project=project,
+        )
     )
 
 
