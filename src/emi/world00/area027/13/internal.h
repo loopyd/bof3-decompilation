@@ -3,6 +3,8 @@
 
 #include "bof3/bof3.h"
 
+#include "symbols/symbols.h"
+
 #define WORLD00_AREA027_PRIMITIVE_PTR VPPTR(u8, 0x8014598cu)
 #define WORLD00_AREA027_SCRATCH_PTR   VPPTR(u8, 0x1f800044u)
 #define WORLD00_AREA027_MATRIX_92E8   ((MATRIX*)0x801492e8u)
