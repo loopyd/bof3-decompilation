@@ -298,7 +298,9 @@ def run_asm_diff_one(
         ),
         None,
     )
-    placements = () if manifest is None else manifest.section_placements.get(address, ())
+    placements = (
+        () if manifest is None else manifest.section_placements.get(address, ())
+    )
     section_addresses = {
         placement.section: placement.address for placement in placements
     }

@@ -132,7 +132,9 @@ def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
             if not re.fullmatch(r"\.[A-Za-z0-9_.]+", placement.section):
                 raise ValueError(f"invalid matching section name: {placement.section}")
             if placement.function % 4 or placement.address % 4:
-                raise ValueError("matching function and section addresses must be aligned")
+                raise ValueError(
+                    "matching function and section addresses must be aligned"
+                )
             if placement.size <= 0:
                 raise ValueError("matching section placement size must be positive")
             if key in seen_placements:
