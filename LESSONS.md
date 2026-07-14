@@ -166,6 +166,13 @@ Durable findings that make the BOF3 lift-and-match loop faster and safer.
   generated permuter `base.c` will compile. Treat a base compile exit with zero
   candidates as a bundle/tooling failure, keep the tracked source unchanged,
   and diagnose preprocessing/compiler context before trusting permuter output.
+- Historical PSX GCC can exit `225`/`159` under the managed syscall sandbox
+  without a source diagnostic. Re-run the same original-source and permuter-base
+  compile outside that sandbox before blaming generated C; a successful base
+  compile with real candidates proves the bundle is usable.
+- Budget permuter workers from current capacity, not logical cores alone. Keep
+  at least four cores or 25% of logical cores free, subtract current load from
+  that ceiling, and divide the remainder across concurrent permuter runs.
 - Promote an official PsyQ alias only when the SDK prototype, call shape, and
   assembly agree. EMI targets do not automatically link PsyQ archive members,
   so retain or add a proven target-local address binding and verify the target

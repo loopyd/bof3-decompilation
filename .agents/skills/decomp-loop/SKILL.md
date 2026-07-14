@@ -53,6 +53,14 @@ current-object copy, or depend on invalid C/ABI guesses. Re-run
 `bin/harness diff` on any adopted candidate; the canonical diff remains the
 acceptance gate.
 
+Before choosing `-j`, inspect logical cores and the current one-minute load.
+Reserve at least `max(4, 25% of logical cores)` for interactive/system work.
+Use only the remaining capacity after current load, divide it across all
+concurrent permuter agents, and recheck load during long runs. Do not give every
+agent the machine-wide worker count. Prefer one well-fed run over several
+oversubscribed runs; reduce or defer permutation when the reserved headroom is
+already consumed.
+
 When a newly lifted function reaches a canonical 100% instruction and byte
 match, re-run `bin/harness diff` and commit it immediately in a small focused
 commit. Include only its required Splat boundary, declaration, and address

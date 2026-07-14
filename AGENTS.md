@@ -84,6 +84,11 @@ do not repeat the repository name as a `BOF3_` prefix.
    compile: require a successful base compile, real compiled candidates, and a
    fresh canonical `diff` before adopting it.
 
+   Before setting permuter `-j`, check logical cores and current load. Reserve
+   at least four cores or 25% of logical cores, whichever is larger; subtract
+   current load from the usable ceiling and divide the remainder across active
+   permuter agents. Recheck long runs and avoid concurrent oversubscription.
+
 An EMI archive is a container; Splat and matching consume its extracted raw
 entry, never the archive file. A type-0 entry is not automatically code.
 
