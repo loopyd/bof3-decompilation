@@ -8,10 +8,12 @@ from ..match.asm_diff import AsmDiffRequest, parse_int, run_asm_diff_one
 from ..match.asm_differ import write_bundle
 from ..paths import repo_layout
 from ._common import run_main
-from ._asm_diff_output import format_asm_diff_summary
+from ._asm_diff_output import format_asm_diff_llm, format_asm_diff_summary
 
 
 def run_one(args: argparse.Namespace) -> int:
+    if args.llm and (args.json or args.show_diff):
+        raise ValueError("--llm cannot be combined with --json or --show-diff")
     payload = run_asm_diff_one(
         AsmDiffRequest(
             source_path=args.source,
@@ -27,7 +29,10 @@ def run_one(args: argparse.Namespace) -> int:
         print(json.dumps(payload, indent=2, sort_keys=True))
         return 0 if payload["exact_match"] else 1
     outputs = payload["outputs"]
-    print(format_asm_diff_summary(payload, root=repo_layout().root))
+    if args.llm:
+        print(format_asm_diff_llm(payload, root=repo_layout().root))
+    else:
+        print(format_asm_diff_summary(payload, root=repo_layout().root))
     if args.show_diff:
         diff_path = Path(outputs["diff"])
         if diff_path.is_file():
@@ -70,6 +75,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--show-diff",
         action="store_true",
         help="print the unified diff of normalized instructions",
+    )
+    parser.add_argument(
+        "--llm",
+        action="store_true",
+        help="print a bounded first diff hunk and the full artifact path",
     )
     parser.add_argument("--html", action="store_true")
     parser.set_defaults(handler=run_one)

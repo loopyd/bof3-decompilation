@@ -6,6 +6,8 @@ from types import SimpleNamespace
 
 import pytest
 
+from harness.commands._asm_diff_output import format_asm_diff_llm
+from harness.commands.harness import run_diff
 from harness.match.asm_diff import (
     build_result_payload,
     build_target_for_source,
@@ -21,6 +23,95 @@ from harness.match.asm_diff import (
 from harness.match._asm_disasm import extract_instructions
 from harness.paths import repo_layout
 from harness.symbols import load_weak_symbol_bindings
+
+
+def asm_diff_output_payload(diff_path: Path, *, exact: bool = False) -> dict:
+    return {
+        "exact_match": exact,
+        "function": "func_80100000",
+        "address": "0x80100000",
+        "original_size": 16,
+        "current_size": 16,
+        "size_delta": 0,
+        "instruction_count": {
+            "original": 4,
+            "current": 4,
+            "matching": 3 if not exact else 4,
+            "match_percent": 75.0 if not exact else 100.0,
+        },
+        "first_mismatch": (
+            None
+            if exact
+            else {
+                "original_index": 1,
+                "current_index": 1,
+                "original_offset": 4,
+                "current_offset": 4,
+            }
+        ),
+        "outputs": {"diff": str(diff_path)},
+    }
+
+
+def test_llm_diff_exact_is_summary_and_artifact_path(tmp_path: Path) -> None:
+    diff_path = tmp_path / "diff.patch"
+    diff_path.write_text("\n", encoding="utf-8")
+
+    output = format_asm_diff_llm(
+        asm_diff_output_payload(diff_path, exact=True), root=tmp_path
+    )
+
+    assert output.startswith("MATCH func_80100000@0x80100000")
+    assert output.endswith("full-diff=diff.patch")
+    assert "@@" not in output
+
+
+def test_llm_diff_prints_one_bounded_hunk_and_omission_count(
+    tmp_path: Path,
+) -> None:
+    diff_path = tmp_path / "diff.patch"
+    diff_path.write_text(
+        "--- original\n"
+        "+++ current\n"
+        "@@ -1,4 +1,4 @@\n"
+        " same-1\n"
+        "-old-1\n"
+        "+new-1\n"
+        " same-2\n"
+        "@@ -20,2 +20,2 @@\n"
+        "-old-2\n"
+        "+new-2\n",
+        encoding="utf-8",
+    )
+
+    output = format_asm_diff_llm(
+        asm_diff_output_payload(diff_path), root=tmp_path, max_hunk_lines=3
+    )
+
+    assert "--- original\n+++ current\n@@ -1,4 +1,4 @@\n same-1\n-old-1" in output
+    assert "+new-1" not in output
+    assert "@@ -20,2 +20,2 @@" not in output
+    assert "... omitted 1 hunk(s), 5 line(s)" in output
+    assert output.endswith("full-diff=diff.patch")
+
+
+def test_llm_diff_without_hunks_remains_bounded(tmp_path: Path) -> None:
+    diff_path = tmp_path / "diff.patch"
+    diff_path.write_text("unexpected diff output\n" * 100, encoding="utf-8")
+
+    output = format_asm_diff_llm(asm_diff_output_payload(diff_path), root=tmp_path)
+
+    assert "unexpected diff output" not in output
+    assert output.endswith("full-diff=diff.patch")
+
+
+@pytest.mark.parametrize("conflict", ["json", "show_diff"])
+def test_llm_diff_rejects_conflicting_output_modes(conflict: str) -> None:
+    args = SimpleNamespace(llm=True, json=False, show_diff=False)
+    setattr(args, conflict, True)
+
+    with pytest.raises(ValueError, match="--llm cannot be combined"):
+        run_diff(args)
 
 
 def write_psx_exe(path: Path, *, load_address: int, payload: bytes) -> None:

@@ -899,7 +899,10 @@ def run_diff(args: argparse.Namespace) -> int:
     from ..domain import load_target_manifests, parse_function_id
     from ..match.asm_diff import AsmDiffRequest, run_asm_diff_one
     from ..match.asm_differ import write_bundle
-    from ._asm_diff_output import format_asm_diff_summary
+    from ._asm_diff_output import format_asm_diff_llm, format_asm_diff_summary
+
+    if args.llm and (args.json or args.show_diff):
+        raise ValueError("--llm cannot be combined with --json or --show-diff")
 
     root = _root(args)
     source = Path(args.source)
@@ -919,6 +922,8 @@ def run_diff(args: argparse.Namespace) -> int:
     write_bundle(root, payload, html_output=args.html)
     if args.json:
         print(json.dumps(payload, indent=2, sort_keys=True))
+    elif args.llm:
+        print(format_asm_diff_llm(payload, root=root))
     else:
         print(format_asm_diff_summary(payload, root=root))
         if args.show_diff:
@@ -1264,6 +1269,11 @@ def build_parser() -> argparse.ArgumentParser:
     diff.add_argument("source", type=Path)
     diff.add_argument("--json", action="store_true")
     diff.add_argument("--show", "--show-diff", dest="show_diff", action="store_true")
+    diff.add_argument(
+        "--llm",
+        action="store_true",
+        help="print a bounded first diff hunk and the full artifact path",
+    )
     diff.add_argument("--html", action="store_true")
     diff.add_argument("--watch", action="store_true")
     diff.set_defaults(handler=run_diff)
