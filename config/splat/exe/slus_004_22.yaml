@@ -3,7 +3,8 @@ sha1: 5c709174b26f74629bf19e12360b918edac785c9
 options:
   platform: psx
   compiler: psyq
-  base_path: .
+  basename: slus_004_22
+  base_path: ../../..
   target_path: out/binaries/exe/slus_004_22.bin
   asm_path: out/splat/exe/slus_004_22/asm
   src_path: src/exe/slus_004_22

@@ -3,7 +3,8 @@ sha1: 54ae6416c382c3729c62a52add262ccdcb816018
 options:
   platform: psx
   compiler: psyq
-  base_path: .
+  basename: etc_game_00
+  base_path: ../../../../..
   target_path: out/binaries/emi/etc/game/00.bin
   asm_path: out/splat/emi/etc/game/00/asm
   src_path: src/emi/etc/game/00

@@ -3,7 +3,8 @@ sha1: 36803dffa90dc5de61bc195aa2f7465051fabbad
 options:
   platform: psx
   compiler: psyq
-  base_path: .
+  basename: world00_area008_13
+  base_path: ../../../../..
   target_path: out/binaries/emi/world00/area008/13.bin
   asm_path: out/splat/emi/world00/area008/13/asm
   src_path: src/emi/world00/area008/13

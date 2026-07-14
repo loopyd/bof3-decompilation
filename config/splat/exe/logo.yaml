@@ -3,7 +3,8 @@ sha1: d8a873d947e386bbdb18767b74d52d9975437250
 options:
   platform: psx
   compiler: psyq
-  base_path: .
+  basename: logo
+  base_path: ../../..
   target_path: out/binaries/exe/logo.bin
   asm_path: out/splat/exe/logo/asm
   src_path: src/exe/logo
