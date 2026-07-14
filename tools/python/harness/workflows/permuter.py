@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import shlex
@@ -11,6 +12,7 @@ import shutil
 import subprocess
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
 from ..domain import load_target_manifests, normalize_target_id, parse_address
@@ -252,8 +254,11 @@ def run_permuter(
     verbose: bool = False,
     show_errors: bool = False,
     show_timings: bool = False,
+    iterations: int = 100,
+    timeout: float = 300.0,
+    seed: int = 0,
 ) -> dict[str, Any]:
-    """Run the pinned permuter and retain only strict score improvements."""
+    """Run bounded, deterministic permuter attempts and retain improvements."""
 
     root = root.resolve()
     bundle = Path(metadata["bundle"])
@@ -267,7 +272,45 @@ def run_permuter(
     tool = root / "third_party" / "decomp-permuter" / "permuter.py"
     if not tool.is_file():
         raise RuntimeError(f"decomp-permuter is missing: {tool}")
-    command = [
+    if iterations < 1:
+        raise ValueError("permuter iterations must be at least 1")
+    if timeout <= 0:
+        raise ValueError("permuter timeout must be greater than 0")
+    worker_count = jobs or 1
+    if worker_count < 1:
+        raise ValueError("permuter jobs must be at least 1")
+    worker_count = min(worker_count, iterations, os.cpu_count() or 1)
+
+    # Fail before spending an iteration budget. decomp-permuter also compiles
+    # the base internally, but its error is otherwise buried in a long log.
+    preflight_object = bundle / "base-preflight.o"
+    preflight_object.unlink(missing_ok=True)
+    try:
+        preflight = subprocess.run(
+            [
+                str(bundle / "compile.sh"),
+                str(bundle / "base.c"),
+                "-o",
+                str(preflight_object),
+            ],
+            cwd=bundle,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=min(timeout, 30.0),
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            f"permuter base compile timed out after {min(timeout, 30.0):g}s; see {bundle}"
+        ) from exc
+    if preflight.returncode != 0 or not preflight_object.is_file():
+        detail = (
+            preflight.stderr or preflight.stdout or "compiler produced no object"
+        ).strip()
+        raise RuntimeError(f"permuter base compile failed: {detail}; see {bundle}")
+    preflight_object.unlink()
+
+    base_command = [
         sys.executable,
         str(tool),
         str(bundle),
@@ -279,37 +322,66 @@ def run_permuter(
         "--algorithm",
         "levenshtein",
         "-j",
-        str(jobs or 1),
+        "1",
+        "--quiet",
     ]
     if show_errors:
-        command.append("--show-errors")
+        base_command.append("--show-errors")
     if show_timings:
-        command.append("--show-timings")
+        base_command.append("--show-timings")
+
+    existing_outputs = set(bundle.glob("output-*/"))
     started = time.perf_counter()
-    completed = subprocess.run(
-        command,
-        cwd=root,
-        text=True,
-        capture_output=not verbose,
-        check=False,
-    )
+    deadline = started + timeout
+
+    def run_iteration(
+        index: int,
+    ) -> tuple[int, subprocess.CompletedProcess[str] | None, str | None]:
+        remaining = deadline - time.perf_counter()
+        if remaining <= 0:
+            return index, None, "deadline reached before iteration started"
+        command = [*base_command, "--seed", str(seed + index)]
+        try:
+            completed = subprocess.run(
+                command,
+                cwd=root,
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=remaining,
+            )
+        except subprocess.TimeoutExpired:
+            return index, None, "wall-clock timeout"
+        return index, completed, None
+
+    with ThreadPoolExecutor(max_workers=worker_count) as executor:
+        attempts = list(executor.map(run_iteration, range(iterations)))
     elapsed = time.perf_counter() - started
-    if not verbose:
-        (bundle / "permuter.stdout").write_text(
-            completed.stdout or "", encoding="utf-8"
-        )
-        (bundle / "permuter.stderr").write_text(
-            completed.stderr or "", encoding="utf-8"
-        )
-    if completed.returncode != 0:
-        raise RuntimeError(
-            f"decomp-permuter failed with exit code {completed.returncode}; see {bundle}"
-        )
+    completed_attempts = [item for item in attempts if item[1] is not None]
+    successful_attempts = [
+        item for item in completed_attempts if item[1].returncode == 0
+    ]
+    failures = [
+        {"iteration": index, "reason": reason or f"exit {completed.returncode}"}
+        for index, completed, reason in attempts
+        if completed is None or completed.returncode != 0
+    ]
+    stdout = "".join(completed.stdout or "" for _, completed, _ in completed_attempts)
+    stderr = "".join(completed.stderr or "" for _, completed, _ in completed_attempts)
+    (bundle / "permuter.stdout").write_text(stdout, encoding="utf-8")
+    (bundle / "permuter.stderr").write_text(stderr, encoding="utf-8")
+    if verbose:
+        if stdout:
+            print(stdout, end="")
+        if stderr:
+            print(stderr, end="", file=sys.stderr)
 
     candidates = bundle / "candidates"
     candidates.mkdir(exist_ok=True)
     retained: list[dict[str, Any]] = []
-    for output in sorted(bundle.glob("output-*/")):
+    new_outputs = set(bundle.glob("output-*/")) - existing_outputs
+    scored_outputs: list[tuple[int, Path]] = []
+    for output in new_outputs:
         source = output / "source.c"
         score_path = output / "score.txt"
         if not source.is_file() or not score_path.is_file():
@@ -318,9 +390,13 @@ def run_permuter(
             score = int(score_path.read_text(encoding="utf-8").strip())
         except ValueError:
             continue
+        scored_outputs.append((score, output))
+    for score, output in sorted(scored_outputs, reverse=True):
+        source = output / "source.c"
         if retained and score >= retained[-1]["score"]:
             continue
-        candidate_dir = candidates / f"{len(retained) + 1:04d}"
+        candidate_index = len(list(candidates.glob("[0-9][0-9][0-9][0-9]"))) + 1
+        candidate_dir = candidates / f"{candidate_index:04d}"
         candidate_dir.mkdir(exist_ok=True)
         shutil.copyfile(source, candidate_dir / "source.c")
         (candidate_dir / "score.txt").write_text(f"{score}\n", encoding="utf-8")
@@ -334,7 +410,7 @@ def run_permuter(
                 {
                     "schema": "harness.permuter-candidate/v1",
                     "function": metadata["function"],
-                    "seed": metadata.get("seed"),
+                    "seed": seed,
                     "elapsed_seconds": round(elapsed, 3),
                     **candidate,
                 },
@@ -357,9 +433,24 @@ def run_permuter(
         "improvements": len(retained),
         "best": retained[-1] if retained else None,
         "elapsed_seconds": round(elapsed, 3),
+        "iterations_requested": iterations,
+        "iterations_completed": len(successful_attempts),
+        "jobs": worker_count,
+        "seed": seed,
+        "timeout_seconds": timeout,
+        "failures": failures[:10],
+        "failure_count": len(failures),
         "show_errors": show_errors,
         "show_timings": show_timings,
-        "status": "improved" if retained else "no-improvement",
+        "status": (
+            "failed"
+            if failures and not successful_attempts
+            else "partial"
+            if failures
+            else "improved"
+            if retained
+            else "no-improvement"
+        ),
     }
     (bundle / "result.json").write_text(
         json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"

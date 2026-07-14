@@ -397,7 +397,9 @@ def run_permute(args: argparse.Namespace) -> int:
         work_root = _root(args) / work_root
     metadata = prepare_permuter(_root(args), source, work_root)
     if args.prepare_only:
-        if not args.silent:
+        if args.json:
+            print(json.dumps(metadata, indent=2, sort_keys=True))
+        elif not args.silent:
             print(f"READY  bundle={metadata['bundle']}")
         return 0
     result = run_permuter(
@@ -407,7 +409,17 @@ def run_permute(args: argparse.Namespace) -> int:
         verbose=args.verbose,
         show_errors=args.show_errors,
         show_timings=args.show_timings,
+        iterations=args.iterations,
+        timeout=args.timeout,
+        seed=args.seed,
     )
+    if args.json:
+        print(json.dumps(result, indent=2, sort_keys=True))
+        return (
+            2
+            if result["status"] in {"failed", "partial"}
+            else (0 if result["best"] else 1)
+        )
     if not args.silent:
         if args.quiet:
             if result["best"]:
@@ -424,7 +436,9 @@ def run_permute(args: argparse.Namespace) -> int:
             print(f"candidate: {result['best']['path']}")
         else:
             print("DONE  no improvement")
-    return 0 if result["best"] else 1
+    return (
+        2 if result["status"] in {"failed", "partial"} else (0 if result["best"] else 1)
+    )
 
 
 def run_adopt(args: argparse.Namespace) -> int:
@@ -1215,6 +1229,10 @@ def build_parser() -> argparse.ArgumentParser:
     permute.add_argument("--show-errors", action="store_true")
     permute.add_argument("--show-timings", action="store_true")
     permute.add_argument("-j", "--jobs", type=int)
+    permute.add_argument("--iterations", type=int, default=100)
+    permute.add_argument("--timeout", type=float, default=300.0)
+    permute.add_argument("--seed", type=int, default=0)
+    permute.add_argument("--json", action="store_true")
     permute.set_defaults(handler=run_permute)
     adopt = sub.add_parser("adopt")
     adopt.add_argument("candidate", type=Path)

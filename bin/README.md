@@ -34,9 +34,16 @@ harness profile list|show|resolve
 harness context build|show <target> <function>
 harness lift <target> <function>
 harness diff <source-or-function-id>
-harness permute <source-or-function-id>
+harness permute <source-or-function-id> [--iterations 100] [--timeout 300] [--seed 0] [-j JOBS] [--json]
 harness adopt <candidate> --function <function-id> --apply
 ```
+
+`harness permute` first compiles the generated `base.c`, then runs a bounded,
+deterministic set of candidates. The defaults are 100 iterations, a 300-second
+shared deadline, seed 0, and one worker. Use `--json` for bounded run metadata;
+exit 0 means an improvement, 1 means a clean run with no improvement, and 2
+means setup, timeout, or permuter failure. Candidate source and full logs remain
+under the reported `out/matching/.../permuter` bundle.
 
 Disc discovery and asset operations are also available:
 
