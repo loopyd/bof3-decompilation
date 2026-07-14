@@ -22,6 +22,6 @@ s32 func_8014e0a8(s32 size, void* buffer, s32 sectors) {
       return status;
     }
 
-    func_80174700(0);
+    VSync(0);
   }
 }

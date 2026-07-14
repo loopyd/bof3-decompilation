@@ -15,10 +15,10 @@ void func_8014aac8(void) {
   func_8014b854(0, func_8014ea80);
 
   for (;;) {
-    func_80174700(2);
+    VSync(2);
     func_8017e3d4();
-    func_8017bc98(DAT_80143e68);
-    func_8017ba40(DAT_80143e68 + 0x14);
+    PutDispEnv((DISPENV*)DAT_80143e68);
+    PutDrawEnv((DRAWENV*)(DAT_80143e68 + 0x14));
     func_8014e22c();
     func_8014e6d0();
     DrawOTag((u_long*)(DAT_80143e68 + 0x8c));
@@ -28,7 +28,7 @@ void func_8014aac8(void) {
     DAT_80143d44 ^= 1;
     work = DAT_80143d48 + DAT_80143d44 * 0x90;
     DAT_80143e68 = work;
-    func_8017b8d4(work + 0x70, 8);
+    ClearOTagR((u_long*)(work + 0x70), 8);
     func_8014b020();
 
     if ((DAT_80145aa4 & 0x900) == 0x900) {
@@ -48,7 +48,7 @@ void func_8014aac8(void) {
 
     func_8014b73c();
     func_80163010();
-    DAT_80143ef8 = func_80174700(1);
+    DAT_80143ef8 = VSync(1);
     DrawSync(0);
     func_8014b0f0();
     DAT_80143e6c++;

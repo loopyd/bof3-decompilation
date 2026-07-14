@@ -13,7 +13,7 @@ void func_8014ad28(void) {
   emi_loader_initialize();
 
   if (DAT_8018b300 == 0) {
-    func_80174700(0);
+    VSync(0);
     func_8017af0c(0);
     func_801753c4(0);
     DAT_8018b300 = 1;
@@ -21,7 +21,7 @@ void func_8014ad28(void) {
     func_8017ed7c(func_8017ed3c(0xF0000010, 0x1000, 0x1000, func_8014b3c4));
     func_8017ee1c();
   } else {
-    func_80174700(0);
+    VSync(0);
     func_8017af0c(3);
   }
 

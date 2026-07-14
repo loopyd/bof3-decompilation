@@ -22,7 +22,7 @@ void func_80161f58(void) {
   while (func_801753ec() == 0) {
   }
 
-  func_80174700(3);
+  VSync(3);
 
   bootstrap_address = 0x800E4800;
   empty_state = 0xff;
