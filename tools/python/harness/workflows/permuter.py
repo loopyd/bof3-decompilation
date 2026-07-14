@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import re
+import secrets
 import shlex
 import shutil
 import subprocess
@@ -256,9 +257,9 @@ def run_permuter(
     show_timings: bool = False,
     iterations: int = 100,
     timeout: float = 300.0,
-    seed: int = 0,
+    seed: int | None = None,
 ) -> dict[str, Any]:
-    """Run bounded, deterministic permuter attempts and retain improvements."""
+    """Run bounded permuter attempts and retain improvements."""
 
     root = root.resolve()
     bundle = Path(metadata["bundle"])
@@ -280,6 +281,7 @@ def run_permuter(
     if worker_count < 1:
         raise ValueError("permuter jobs must be at least 1")
     worker_count = min(worker_count, iterations, os.cpu_count() or 1)
+    resolved_seed = seed if seed is not None else secrets.randbits(63)
 
     # Fail before spending an iteration budget. decomp-permuter also compiles
     # the base internally, but its error is otherwise buried in a long log.
@@ -340,7 +342,7 @@ def run_permuter(
         remaining = deadline - time.perf_counter()
         if remaining <= 0:
             return index, None, "deadline reached before iteration started"
-        command = [*base_command, "--seed", str(seed + index)]
+        command = [*base_command, "--seed", str(resolved_seed + index)]
         try:
             completed = subprocess.run(
                 command,
@@ -410,7 +412,7 @@ def run_permuter(
                 {
                     "schema": "harness.permuter-candidate/v1",
                     "function": metadata["function"],
-                    "seed": seed,
+                    "seed": resolved_seed,
                     "elapsed_seconds": round(elapsed, 3),
                     **candidate,
                 },
@@ -436,7 +438,8 @@ def run_permuter(
         "iterations_requested": iterations,
         "iterations_completed": len(successful_attempts),
         "jobs": worker_count,
-        "seed": seed,
+        "seed": resolved_seed,
+        "seed_generated": seed is None,
         "timeout_seconds": timeout,
         "failures": failures[:10],
         "failure_count": len(failures),

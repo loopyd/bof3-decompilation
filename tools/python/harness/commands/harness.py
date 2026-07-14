@@ -1016,6 +1016,60 @@ def run_assets_list(args: argparse.Namespace) -> int:
     return 0
 
 
+def _str_output_dir(args: argparse.Namespace) -> Path:
+    source = args.source if args.source.is_absolute() else _root(args) / args.source
+    if args.output_dir is None:
+        return _root(args) / "out" / "assets" / "str" / source.stem
+    return (
+        args.output_dir
+        if args.output_dir.is_absolute()
+        else _root(args) / args.output_dir
+    )
+
+
+def run_assets_str_validate(args: argparse.Namespace) -> int:
+    import shutil
+
+    from ..assets.str_media import validate_str
+
+    source = args.source if args.source.is_absolute() else _root(args) / args.source
+    result = validate_str(
+        source,
+        _str_output_dir(args),
+        expected_fps=args.expected_fps,
+        ffprobe=shutil.which("ffprobe"),
+    )
+    if args.json:
+        print(json.dumps(result, indent=2, sort_keys=True))
+    else:
+        print(
+            f"STR {result['status']} sectors={result['sector_count']} "
+            f"frames={result['frame_count']} audio={len(result['audio_streams'])} "
+            f"manifest={result['manifest']}"
+        )
+    return 1 if result["status"] == "fail" else 0
+
+
+def run_assets_str_convert(args: argparse.Namespace) -> int:
+    from ..assets.str_media import convert_str
+
+    source = args.source if args.source.is_absolute() else _root(args) / args.source
+    output = args.output
+    if output is not None and not output.is_absolute():
+        output = _root(args) / output
+    result = convert_str(
+        source,
+        _str_output_dir(args),
+        fps=args.fps,
+        output=output,
+    )
+    if args.json:
+        print(json.dumps(result, indent=2, sort_keys=True))
+    else:
+        print(f"STR converted output={result['output']} manifest={result['manifest']}")
+    return 1 if result.get("status") == "fail" else 0
+
+
 def run_disk_verify(args: argparse.Namespace) -> int:
     from . import disk
 
@@ -1231,7 +1285,11 @@ def build_parser() -> argparse.ArgumentParser:
     permute.add_argument("-j", "--jobs", type=int)
     permute.add_argument("--iterations", type=int, default=100)
     permute.add_argument("--timeout", type=float, default=300.0)
-    permute.add_argument("--seed", type=int, default=0)
+    permute.add_argument(
+        "--seed",
+        type=int,
+        help="base random seed (default: generate and report a system-random seed)",
+    )
     permute.add_argument("--json", action="store_true")
     permute.set_defaults(handler=run_permute)
     adopt = sub.add_parser("adopt")
@@ -1333,6 +1391,21 @@ def build_parser() -> argparse.ArgumentParser:
     assets_sub = assets.add_subparsers(dest="assets_command", required=True)
     assets_list = assets_sub.add_parser("list")
     assets_list.set_defaults(handler=run_assets_list)
+    assets_str = assets_sub.add_parser("str")
+    assets_str_sub = assets_str.add_subparsers(dest="assets_str_command", required=True)
+    assets_str_validate = assets_str_sub.add_parser("validate")
+    assets_str_validate.add_argument("source", type=Path)
+    assets_str_validate.add_argument("--expected-fps", type=float)
+    assets_str_validate.add_argument("--output-dir", type=Path)
+    assets_str_validate.add_argument("--json", action="store_true")
+    assets_str_validate.set_defaults(handler=run_assets_str_validate)
+    assets_str_convert = assets_str_sub.add_parser("convert")
+    assets_str_convert.add_argument("source", type=Path)
+    assets_str_convert.add_argument("--fps", type=float, required=True)
+    assets_str_convert.add_argument("--output", type=Path)
+    assets_str_convert.add_argument("--output-dir", type=Path)
+    assets_str_convert.add_argument("--json", action="store_true")
+    assets_str_convert.set_defaults(handler=run_assets_str_convert)
     disk = sub.add_parser("disk")
     disk_sub = disk.add_subparsers(dest="disk_command", required=True)
     disk_verify = disk_sub.add_parser("verify")

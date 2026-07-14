@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import subprocess
 
@@ -73,6 +74,8 @@ def test_run_permuter_preflights_and_bounds_deterministic_iterations(
 
     assert [command[-1] for command in commands[1:]] == ["40", "41", "42"]
     assert result["iterations_completed"] == 3
+    assert result["seed"] == 40
+    assert result["seed_generated"] is False
     assert result["status"] == "improved"
     assert result["best"]["score"] == 7
     assert not (bundle / "base-preflight.o").exists()
@@ -97,3 +100,32 @@ def test_run_permuter_reports_timeout_as_failure(
     assert result["failure_count"] == 1
     assert result["iterations_completed"] == 0
     assert (bundle / "result.json").is_file()
+
+
+def test_repeated_permuter_runs_generate_and_record_distinct_seeds_when_omitted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    bundle, metadata = _permuter_fixture(tmp_path)
+    commands: list[list[str]] = []
+    generated = iter((700, 900))
+    monkeypatch.setattr(
+        "harness.workflows.permuter.secrets.randbits", lambda _: next(generated)
+    )
+
+    def fake_run(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        commands.append(command)
+        if command[0].endswith("compile.sh"):
+            Path(command[-1]).write_bytes(b"object")
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+
+    first = run_permuter(tmp_path, metadata, iterations=1, timeout=10)
+    second = run_permuter(tmp_path, metadata, iterations=1, timeout=10)
+
+    assert [commands[1][-1], commands[3][-1]] == ["700", "900"]
+    assert first["seed"] == 700
+    assert second["seed"] == 900
+    assert first["seed_generated"] is True
+    assert second["seed_generated"] is True
+    assert second == json.loads((bundle / "result.json").read_text())

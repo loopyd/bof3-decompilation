@@ -10,3 +10,4 @@ tags: [index]
 - [EMI](emi.md) — BOF3 archive header, TOC, alignment, and type meanings.
 - [Graphics](graphics.md) — BOF3 type-3 upload and CLUT layout.
 - [STR/XA](str-xa.md) — extracted media-sector representation.
+- [Conversion map](conversion.md) — lossless interchange, previews, validators, and required provenance.

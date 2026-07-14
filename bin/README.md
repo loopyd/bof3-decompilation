@@ -34,13 +34,14 @@ harness profile list|show|resolve
 harness context build|show <target> <function>
 harness lift <target> <function>
 harness diff <source-or-function-id>
-harness permute <source-or-function-id> [--iterations 100] [--timeout 300] [--seed 0] [-j JOBS] [--json]
+harness permute <source-or-function-id> [--iterations 100] [--timeout 300] [--seed SEED] [-j JOBS] [--json]
 harness adopt <candidate> --function <function-id> --apply
 ```
 
-`harness permute` first compiles the generated `base.c`, then runs a bounded,
-deterministic set of candidates. The defaults are 100 iterations, a 300-second
-shared deadline, seed 0, and one worker. Use `--json` for bounded run metadata;
+`harness permute` first compiles the generated `base.c`, then runs a bounded set
+of candidates. The defaults are 100 iterations, a 300-second shared deadline, a
+reported system-random seed, and one worker. Pass `--seed SEED` to reproduce a
+run. Use `--json` for bounded run metadata, including the effective seed;
 exit 0 means an improvement, 1 means a clean run with no improvement, and 2
 means setup, timeout, or permuter failure. Candidate source and full logs remain
 under the reported `out/matching/.../permuter` bundle.
@@ -56,5 +57,21 @@ harness next [target]
 harness flags <source>
 harness ghidra sync
 harness assets list
+harness assets str validate <path> [--expected-fps FPS] [--json]
+harness assets str convert <path> --fps FPS [--output PATH] [--json]
 harness disk verify|rebuild
 ```
+
+STR validation preserves the extracted 2336-byte-sector source and writes a
+2352-byte-sector FFmpeg wrapper plus JSON evidence under `out/assets/str/`.
+Without `--expected-fps`, validation only reports observed structure and timing.
+With an expected rate, the observational timing comparison allows two video
+frames or two primary XA audio sectors. Conversion requires an explicit
+frame rate and writes a widely supported lossless H.264/FLAC Matroska file. It
+keeps the decoded dimensions and chroma layout, performs no scaling, and uses
+frame-index timestamps so conversion neither drops nor duplicates frames. The
+extracted 2336-byte STR remains the canonical source asset.
+When the primary XA audio ends before the requested video duration, conversion
+appends the calculated number of silent samples to that decoded audio stream;
+it reports the padding in `conversion.json` and leaves other XA channels
+separate.
