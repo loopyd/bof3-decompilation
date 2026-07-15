@@ -1,0 +1,17 @@
+name: scenario_scena00_00
+sha1: 0d16dda28b89d58ea04e1552174c21a453cc0077
+options:
+  platform: psx
+  compiler: psyq
+  basename: scenario_scena00_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/scenario/scena00/00.bin
+  asm_path: out/splat/emi/scenario/scena00/00/asm
+  src_path: src/emi/scenario/scena00/00
+  ld_script_path: out/splat/emi/scenario/scena00/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - [0x0, bin]
+  - [0x6F70]

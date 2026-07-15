@@ -1,0 +1,17 @@
+name: etc_sisyou_00
+sha1: 4b2966f7fb129ed097fad383f3930175afa7260c
+options:
+  platform: psx
+  compiler: psyq
+  basename: etc_sisyou_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/etc/sisyou/00.bin
+  asm_path: out/splat/emi/etc/sisyou/00/asm
+  src_path: src/emi/etc/sisyou/00
+  ld_script_path: out/splat/emi/etc/sisyou/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - [0x0, bin]
+  - [0x368B]

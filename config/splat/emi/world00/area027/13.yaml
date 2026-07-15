@@ -1,0 +1,17 @@
+name: world00_area027_13
+sha1: 01a5283eecec11937760e912e76b32a702d7d66b
+options:
+  platform: psx
+  compiler: psyq
+  basename: world00_area027_13
+  base_path: ../../../../..
+  target_path: out/binaries/emi/world00/area027/13.bin
+  asm_path: out/splat/emi/world00/area027/13/asm
+  src_path: src/emi/world00/area027/13
+  ld_script_path: out/splat/emi/world00/area027/13/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - [0x0, bin]
+  - [0x2164]
