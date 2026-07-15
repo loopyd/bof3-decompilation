@@ -48,7 +48,7 @@ def test_inventory_classifies_data_bindings(tmp_path: Path) -> None:
     source_dir = tmp_path / "src"
     source_dir.mkdir()
     (source_dir / "symbols.c").write_text(
-        "WEAK_SYMBOL_AT(DAT_80143b40, 0x80143b40)\n"
+        "WEAK_SYMBOL_AT(D_80143b40, 0x80143b40)\n"
         "WEAK_SYMBOL_AT(func_801d0c00, 0x801d0c00)\n",
         encoding="utf-8",
     )
@@ -57,7 +57,7 @@ def test_inventory_classifies_data_bindings(tmp_path: Path) -> None:
 
     assert len(inv.data) == 1
     assert inv.data[0].address == 0x80143B40
-    assert inv.data[0].name == "DAT_80143b40"
+    assert inv.data[0].name == "D_80143b40"
 
 
 def test_inventory_uses_declarations_for_semantic_function_aliases(
@@ -67,12 +67,12 @@ def test_inventory_uses_declarations_for_semantic_function_aliases(
     source_dir.mkdir()
     (source_dir / "internal.h").write_text(
         "void game_random_u16(void);\n"
-        "extern u16 DAT_80143b40;\n",
+        "extern u16 D_80143b40;\n",
         encoding="utf-8",
     )
     (source_dir / "symbols.c").write_text(
         "WEAK_SYMBOL_AT(game_random_u16, 0x8017e3d4)\n"
-        "WEAK_SYMBOL_AT(DAT_80143b40, 0x80143b40)\n",
+        "WEAK_SYMBOL_AT(D_80143b40, 0x80143b40)\n",
         encoding="utf-8",
     )
 

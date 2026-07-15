@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import os
 import shutil
 import subprocess
 from dataclasses import dataclass
@@ -147,19 +148,23 @@ def find_engine(name: str = "rizin") -> EngineIdentity:
     )
 
 
-def find_best_engine() -> EngineIdentity:
-    """Find the best available engine for general analysis.
+def find_best_engine(engine_name: str | None = None) -> EngineIdentity:
+    """Select an explicitly requested engine or use the automatic fallback."""
 
-    Prefers Rizin for its project support and modern API.
-    Falls back to radare2 if Rizin is not available.
-    """
-
-    for name in ("rizin", "r2"):
+    selected = engine_name or os.environ.get("HARNESS_ANALYZER_ENGINE", "auto")
+    if selected not in {"auto", "rizin", "r2"}:
+        raise ValueError(
+            "HARNESS_ANALYZER_ENGINE must be one of: auto, rizin, r2"
+        )
+    candidates = ("rizin", "r2") if selected == "auto" else (selected,)
+    for name in candidates:
         try:
             return find_engine(name)
         except (FileNotFoundError, RuntimeError):
             continue
-    raise FileNotFoundError("neither rizin nor r2 found on PATH")
+    if selected == "auto":
+        raise FileNotFoundError("neither rizin nor r2 found on PATH")
+    raise FileNotFoundError(f"requested analyzer engine is unavailable: {selected}")
 
 
 def _run_subprocess_query(
@@ -168,6 +173,7 @@ def _run_subprocess_query(
     load_address: int,
     query_command: str,
     *,
+    setup_commands: list[str] | None = None,
     timeout: int = 120,
 ) -> Any:
     argv = [
@@ -180,9 +186,10 @@ def _run_subprocess_query(
         "-e", "cfg.bigendian=false",
         "-m", f"0x{load_address:08x}",
         "-c", "aa",
-        "-c", query_command,
-        str(binary_path),
     ]
+    for command in setup_commands or []:
+        argv.extend(["-c", command])
+    argv.extend(["-c", query_command, str(binary_path)])
     result = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
     lines = [line for line in result.stdout.splitlines() if line.strip()]
     if lines:
@@ -207,6 +214,7 @@ def query_project(
     load_address: int,
     query: str,
     *,
+    setup_commands: list[str] | None = None,
     timeout: int = 120,
 ) -> Any:
     """Run a named read-only query against a target."""
@@ -217,7 +225,12 @@ def query_project(
         )
     command = _QUERY_COMMANDS[query]
     return _run_subprocess_query(
-        engine, binary_path, load_address, command, timeout=timeout
+        engine,
+        binary_path,
+        load_address,
+        command,
+        setup_commands=setup_commands,
+        timeout=timeout,
     )
 
 
@@ -234,8 +247,16 @@ def build_snapshot(
     """Build a portable snapshot from one stateless analyzer invocation set."""
 
     binary = binary_path.read_bytes()
+    setup_commands = [
+        f"af @ 0x{address:08x}" for address in sorted(reviewed_addresses or set())
+    ]
     raw_functions = query_project(
-        engine, binary_path, load_address, "functions", timeout=timeout
+        engine,
+        binary_path,
+        load_address,
+        "functions",
+        setup_commands=setup_commands,
+        timeout=timeout,
     )
     functions: list[SnapshotFunction] = []
     function_ids: dict[int, str] = {}
@@ -272,7 +293,14 @@ def build_snapshot(
     functions.sort(key=lambda function: function.address)
     calls: list[SnapshotCall] = []
     unresolved: list[SnapshotUnresolvedCall] = []
-    raw_xrefs = query_project(engine, binary_path, load_address, "xrefs", timeout=timeout)
+    raw_xrefs = query_project(
+        engine,
+        binary_path,
+        load_address,
+        "xrefs",
+        setup_commands=setup_commands,
+        timeout=timeout,
+    )
     for raw in raw_xrefs if isinstance(raw_xrefs, list) else []:
         if str(raw.get("type", "")).upper() not in {"CALL", "C"}:
             continue

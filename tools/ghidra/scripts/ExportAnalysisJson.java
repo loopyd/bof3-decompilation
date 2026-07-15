@@ -273,7 +273,7 @@ public class ExportAnalysisJson extends GhidraScript {
                 }
                 // only address labels that look like data references
                 String name = sym.getName();
-                if (name == null || !name.startsWith("DAT_")) {
+                if (name == null || !name.startsWith("D_")) {
                     continue;
                 }
                 Address addr = sym.getAddress();

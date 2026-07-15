@@ -145,7 +145,9 @@ def test_find_engine_bad_json_capability(
 # ---------------------------------------------------------------------------
 
 
-def test_find_best_engine_prefers_rizin(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_find_best_engine_auto_selects_available_engine(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     def fake_find(name: str) -> EngineIdentity:
         if name == "rizin":
             return EngineIdentity(
@@ -186,6 +188,28 @@ def test_find_best_engine_falls_back_to_r2(
     best = find_best_engine()
     assert best.name == "r2"
     assert calls == ["rizin", "r2"]
+
+
+def test_find_best_engine_honors_explicit_engine(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[str] = []
+
+    def fake_find(name: str) -> EngineIdentity:
+        calls.append(name)
+        return EngineIdentity(
+            name=name,
+            executable=Path(f"/usr/bin/{name}"),
+            version="test",
+            capabilities={"mips32_little_endian": True, "json": True},
+        )
+
+    monkeypatch.setattr(analyzer, "find_engine", fake_find)
+    assert find_best_engine("r2").name == "r2"
+    assert calls == ["r2"]
+
+
+def test_find_best_engine_rejects_unknown_engine() -> None:
+    with pytest.raises(ValueError, match="must be one of"):
+        find_best_engine("ghidra")
 
 
 def test_find_best_engine_fails_when_neither_available(
@@ -264,6 +288,32 @@ def test_query_project_analyzes_before_query(monkeypatch: pytest.MonkeyPatch) ->
     )
     analyzer.query_project(engine, Path("out/test.bin"), 0x801D0C00, "functions")
     assert commands_seen == ["aa", "aflj"]
+
+
+def test_query_project_seeds_reviewed_functions(monkeypatch: pytest.MonkeyPatch) -> None:
+    commands_seen: list[str] = []
+
+    def fake_run(cmd: list[str], **kwargs: object) -> _FakeResult:
+        commands_seen.extend(_extract_commands(cmd))
+        return _FakeResult(stdout="[]\n")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    engine = EngineIdentity(
+        name="rizin",
+        executable=Path("/usr/bin/rizin"),
+        version="rizin 0.8.2",
+        capabilities={"mips32_little_endian": True, "json": True},
+    )
+
+    analyzer.query_project(
+        engine,
+        Path("out/test.bin"),
+        0x801D0C00,
+        "functions",
+        setup_commands=["af @ 0x801D0C00"],
+    )
+
+    assert commands_seen == ["aa", "af @ 0x801D0C00", "aflj"]
 
 
 # ---------------------------------------------------------------------------

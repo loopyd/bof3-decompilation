@@ -22,7 +22,7 @@ _WEAK_SYMBOL_AT_RE = re.compile(
     r"WEAK_SYMBOL_AT\((?P<name>\w+)\s*,\s*(?P<address>0x[0-9a-fA-F]+)\)"
 )
 _FUNC_NAME_RE = re.compile(r"^func_[0-9a-fA-F]{8}$")
-_DAT_NAME_RE = re.compile(r"^DAT_[0-9a-fA-F]{8}$")
+_D_NAME_RE = re.compile(r"^D_[0-9A-F]{8}$")
 _FUNCTION_FILE_RE = re.compile(r"func_([0-9a-fA-F]{8})\.c$")
 _EXTERN_FUNC_RE = re.compile(
     r"^\s*(?:extern\s+)?"
@@ -201,7 +201,7 @@ def build_source_inventory(source_dir: Path, target_id: str) -> SourceInventory:
         pieces.append(text.encode("utf-8"))
         for match in _EXTERN_FUNC_RE.finditer(text):
             name = match.group("name")
-            if _FUNC_NAME_RE.match(name) or _DAT_NAME_RE.match(name):
+            if _FUNC_NAME_RE.match(name) or _D_NAME_RE.match(name):
                 continue
             # Find the address from bindings.
             addr = all_bindings.get(name)
@@ -210,7 +210,7 @@ def build_source_inventory(source_dir: Path, target_id: str) -> SourceInventory:
                 declaration_paths.setdefault(addr, header_path)
         for match in _EXTERN_DATA_RE.finditer(text):
             name = match.group("name")
-            if _DAT_NAME_RE.match(name):
+            if _D_NAME_RE.match(name):
                 continue
             addr = all_bindings.get(name)
             if addr is not None:
@@ -264,7 +264,7 @@ def build_source_inventory(source_dir: Path, target_id: str) -> SourceInventory:
 
     # c. Semantic bindings that share an address with a func_ binding.
     for name, address in sorted(all_bindings.items()):
-        if _FUNC_NAME_RE.match(name) or _DAT_NAME_RE.match(name):
+        if _FUNC_NAME_RE.match(name) or _D_NAME_RE.match(name):
             continue
         if address in func_addresses:
             func_semantic.setdefault(address, name)
@@ -275,9 +275,9 @@ def build_source_inventory(source_dir: Path, target_id: str) -> SourceInventory:
         # Undeclared semantic binding: leave as potential data or ignore.
         # It will be picked up in the data pass below if declared as data.
 
-    # d. DAT_ bindings always create data declarations.
+    # d. D_ bindings always create data declarations.
     for name, address in sorted(all_bindings.items()):
-        if _DAT_NAME_RE.match(name):
+        if _D_NAME_RE.match(name):
             data_addresses.setdefault(address, name)
 
     # e. Semantic data declarations from headers that don't match functions.
@@ -285,9 +285,9 @@ def build_source_inventory(source_dir: Path, target_id: str) -> SourceInventory:
         if address not in func_addresses:
             data_addresses.setdefault(address, name)
 
-    # f. Semantic bindings that share an address with a DAT_ binding.
+    # f. Semantic bindings that share an address with a D_ binding.
     for name, address in sorted(all_bindings.items()):
-        if _FUNC_NAME_RE.match(name) or _DAT_NAME_RE.match(name):
+        if _FUNC_NAME_RE.match(name) or _D_NAME_RE.match(name):
             continue
         if address in data_addresses:
             continue

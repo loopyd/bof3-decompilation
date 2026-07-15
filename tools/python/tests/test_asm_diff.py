@@ -170,12 +170,12 @@ def test_weak_symbol_bindings_load_shallow_target_symbol_units(tmp_path: Path) -
         "WEAK_SYMBOL_AT(func_80100000, 0x80100000);\n", encoding="utf-8"
     )
     (units_dir / "variables.c").write_text(
-        "WEAK_SYMBOL_AT(DAT_80110000, 0x80110000);\n", encoding="utf-8"
+        "WEAK_SYMBOL_AT(D_80110000, 0x80110000);\n", encoding="utf-8"
     )
 
     assert load_weak_symbol_bindings(symbols) == {
         "func_80100000": 0x80100000,
-        "DAT_80110000": 0x80110000,
+        "D_80110000": 0x80110000,
     }
 
 
@@ -361,6 +361,7 @@ def test_run_build_object_invokes_make_for_canonical_object(
             [
                 "make",
                 "--no-print-directory",
+                "BUILD_DIR=build",
                 "build/src/exe/slus_004_22/func_80162178.o",
             ],
             layout.root,

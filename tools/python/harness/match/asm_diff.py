@@ -203,7 +203,14 @@ def run_build_object(
         )
 
     build_log_path.parent.mkdir(parents=True, exist_ok=True)
-    result = run_command(["make", "--no-print-directory", target], cwd=layout.root)
+    # The Makefile's default is an absolute BUILD_DIR, while target names are
+    # intentionally repository-relative. Keep both forms relative so its
+    # object pattern rule matches and cannot silently reuse a stale object.
+    build_dir = layout.build_dir.relative_to(layout.root.resolve()).as_posix()
+    result = run_command(
+        ["make", "--no-print-directory", f"BUILD_DIR={build_dir}", target],
+        cwd=layout.root,
+    )
     log_text = result.stdout
     if result.stderr:
         if log_text:
