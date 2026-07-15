@@ -1,17 +1,47 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
 .pytest_cache/
 .venv/
 .uv-cache/
-__pycache__/
+dist/
+*.egg-info/
+
+# Build artifacts
 build/
 !tools/python/harness/build/
 !tools/python/harness/build/*.py
-dist/
-*.egg-info/
-compile_commands.json
-.codex
-session-*.md
 
-# local supplied inputs
+# Editor / IDE
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Generated outputs (regenerable)
+out/*
+!out/README.md
+
+# Splat-generated
+undefined_funcs_auto.txt
+undefined_syms_auto.txt
+
+# Splat-generated assembly macros
+include/gte_macros.inc
+include/include_asm.h
+include/labels.inc
+include/macro.inc
+
+# Debug artifacts
+debug_*.o
+debug_*.c
+
+# Extracted assets
+assets/
+
+# Local inputs (user-owned disc media)
 inputs/disc/*
 !inputs/disc/README.md
 inputs/external/*
@@ -20,7 +50,7 @@ inputs/external/*
 !inputs/external/private-assets/
 inputs/external/private-assets/*
 
-# staged toolchains and downloads
+# Toolchains (staged downloads)
 toolchains/downloads/
 toolchains/gcc-2.7.2-psx/*
 !toolchains/gcc-2.7.2-psx/.gitkeep
@@ -38,15 +68,14 @@ toolchains/psyq-stock/
 !toolchains/psyq/4.7/.gitkeep
 !toolchains/README.md
 
-# generated outputs
-out/*
-!out/README.md
-undefined_funcs_auto.txt
-undefined_syms_auto.txt
-assets/
-debug_compiled_object.o
-debug_source.c
-include/gte_macros.inc
-include/include_asm.h
-include/labels.inc
-include/macro.inc
+# Session / agent artifacts
+session-*.md
+.codex
+
+# Compiled binaries
+*.o
+*.elf
+*.map
+
+# Cache
+compile_commands.json
