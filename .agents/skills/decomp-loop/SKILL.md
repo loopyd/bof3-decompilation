@@ -22,7 +22,7 @@ COP2/GTE behavior.
 
 ```bash
 bin/harness targets <target>
-bin/harness reverse <target>@<function> --run
+bin/harness reverse <target>@<8-digit-address> --run
 bin/asmdiff <source>
 ```
 

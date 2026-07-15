@@ -45,6 +45,29 @@ always-on policy here.
 - Header guards are short and path-scoped, such as `CORE_EMI_H`; do not add a
   redundant repository prefix.
 
+## Skills
+
+The repository maintains three local skills under `.agents/skills/`. Load the
+narrowest one before starting work; subagents do **not** inherit parent skills
+and must either read the skill files themselves or receive skill content in
+their prompt.
+
+| Skill | Path | When to load |
+| --- | --- | --- |
+| `$decomp-loop` | `.agents/skills/decomp-loop/SKILL.md` | Lifting, matching, or improving a PSX MIPS function in C89. Also read `references/matching-patterns.md` and `references/psx-mips-correctness.md`. |
+| `$psx-rizin` | `.agents/skills/psx-rizin/SKILL.md` | Creating or querying Rizin/radare2 analysis projects. Also read `references/commands.md`, `references/psx-inputs.md`, and `references/projects-and-replay.md`. |
+| `$bof3-specs` | `.agents/skills/bof3-specs/SKILL.md` | Interpreting payloads, EMI types, graphics, or cross-binary evidence. Also read `references/payload-map.md` and `references/evidence-promotion.md`. |
+
+The harness command surface (`bin/harness`) is the primary workflow entry point
+documented in `$decomp-loop`. Key commands:
+
+```bash
+bin/harness targets <target>
+bin/harness reverse <target>@<8-digit-address> --run
+bin/harness diff <source> --llm
+bin/asmdiff <source>
+```
+
 ## Reverse-engineering invariants
 
 - Use readable, period-appropriate C89 and the repository hardware-register
