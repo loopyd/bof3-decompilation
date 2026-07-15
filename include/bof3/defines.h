@@ -59,4 +59,20 @@ typedef volatile s32       vs32;
 #define CVPTR(type, addr) ((const volatile type*)(addr))
 #define VPPTR(type, addr) (*(volatile type**)(addr))
 
+/*
+ * PS1 scratchpad pointer — points to a per-overlay work area.
+ * Global work pointer used by front-end/game modules.
+ */
+#define SCRATCH_PTR ((volatile void**)0x1F800044u)
+#define SCRATCH     ((volatile u8*)0x1F800044u)
+#define GLOBAL_WORK (*(volatile u8**)0x80146250u)
+
+/* Prevent sibling calls so the compiler emits exact jal instructions
+ * matching the original binary's call graph. */
+#if defined(__GNUC__)
+#define NO_SIBLING_CALLS __attribute__((optimize("no-optimize-sibling-calls")))
+#else
+#define NO_SIBLING_CALLS
+#endif
+
 #endif

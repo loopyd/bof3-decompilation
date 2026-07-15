@@ -47,7 +47,7 @@ always-on policy here.
 
 ## Skills
 
-The repository maintains four local skills under `.agents/skills/`. Load the
+The repository maintains five local skills under `.agents/skills/`. Load the
 narrowest one before starting work; subagents do **not** inherit parent skills
 and must either read the skill files themselves or receive skill content in
 their prompt.
@@ -58,6 +58,7 @@ their prompt.
 | `$decomp-loop` | `.agents/skills/decomp-loop/SKILL.md` | Lifting, matching, or improving a PSX MIPS function in C89. Also read `references/matching-patterns.md` and `references/psx-mips-correctness.md`. |
 | `$psx-rizin` | `.agents/skills/psx-rizin/SKILL.md` | Querying target-qualified analyzer evidence with direct Rizin, direct radare2, or the stateless harness adapter. Select adapter engines with `HARNESS_ANALYZER_ENGINE=rizin|r2|auto`. Also read `references/commands.md`, `references/psx-inputs.md`, and `references/projects-and-replay.md`. |
 | `$bof3-specs` | `.agents/skills/bof3-specs/SKILL.md` | Interpreting payloads, EMI types, graphics, or cross-binary evidence. Also read `references/payload-map.md` and `references/evidence-promotion.md`. |
+| `$psx1-hw` | `.agents/skills/psx1-hw/SKILL.md` | PSX1 hardware reference: memory map, registers, DMA, GPU, GTE, SPU, timers, CD-ROM, interrupts, and calling conventions. Read when touching hardware registers or MMIO. |
 
 The harness command surface (`bin/harness`) is the primary workflow entry point
 documented in `$decomp-loop`. Key commands:

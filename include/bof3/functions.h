@@ -1,13 +1,21 @@
-#ifndef CONTEXT_H
-#define CONTEXT_H
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
 
 #include "bof3/defines.h"
-#include "bof3/psyq.h"
-#include "bof3/symbols.h"
 
+/*
+ * Cross-module function declarations.
+ *
+ * Organized by address range / suspected subsystem. Move to a confirmed
+ * subsystem barrel once the owning target and behavior are proven.
+ */
+
+/* ---- core (0x8014xxxx) ---- */
 extern void func_8014b020(void);
 extern void func_8014b0f0(void);
 extern void func_8014fc00(s32);
+
+/* ---- game (0x8017xxxx–0x8019xxxx) ---- */
 extern void func_80174668(s32);
 extern s32  func_80174700(s32);
 extern void func_801748e4(void);
