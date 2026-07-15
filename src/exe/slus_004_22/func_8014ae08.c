@@ -7,7 +7,7 @@
 void func_8014ae08(void) {
   u8* work;
 
-  work = DAT_80143d48 + 0x14;
+  work = D_80143D48 + 0x14;
   SetDefDrawEnv((DRAWENV*)work, 0, 0, 0x140, 0xf0);
   SetDefDispEnv((DISPENV*)(work - 0x14), 0, 0xf0, 0x140, 0xf0);
   SetDefDrawEnv((DRAWENV*)(work + 0x90), 0, 0xf0, 0x140, 0xf0);

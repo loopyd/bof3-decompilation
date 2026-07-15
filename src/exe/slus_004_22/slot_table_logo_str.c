@@ -2,7 +2,7 @@
 #include "bof3/defines.h"
 #include "internal.h"
 
-extern u_long DAT_801d8bb0;
+extern u_long D_801D8BB0;
 
 /* @behavior probes the independently loaded LOGO.EXE stream path for the authored
  * SLUS boot harness.
@@ -16,7 +16,7 @@ const SlotTableEntry* slot_table_logo_str(void) {
   (void)scratch;
   func_801ce758();
   CdInit();
-  func_801ce760((void*)0x8003b800, DAT_801d8bb0);
+  func_801ce760((void*)0x8003b800, D_801D8BB0);
   do {
     pad_state = PadRead(0);
     if ((pad_state & 0x800) != 0) {

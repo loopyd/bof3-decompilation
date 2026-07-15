@@ -4,5 +4,5 @@
  * @source 0x8014b17c func_8014b17c
  */
 void func_8014b17c(void) {
-  DAT_80143efc = VSync(1);
+  D_80143EFC = VSync(1);
 }

@@ -11,10 +11,10 @@ typedef struct World00Area008Scratch {
 
 #define WORLD00_AREA008_SCRATCH_PTR   VPPTR(World00Area008Scratch, 0x1f800044u)
 #define WORLD00_AREA008_PRIMITIVE_PTR VPPTR(u8, 0x8014598cu)
-extern vu8 WORLD00_AREA008_DAT_80146867;
-extern u8  WORLD00_AREA008_DAT_80145AD4[];
-extern u8  WORLD00_AREA008_DAT_801F2C04[];
-extern u8  WORLD00_AREA008_DAT_801F2C10[];
+extern vu8 WORLD00_AREA008_D_80146867;
+extern u8  WORLD00_AREA008_D_80145AD4[];
+extern u8  WORLD00_AREA008_D_801F2C04[];
+extern u8  WORLD00_AREA008_D_801F2C10[];
 s32        func_8017e3f4(char* buffer, const char* format, ...);
 void       func_8014ff0c(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 void       func_8014f800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);

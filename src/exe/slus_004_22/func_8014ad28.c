@@ -12,11 +12,11 @@ void func_8014ad28(void) {
   func_801748e4();
   emi_loader_initialize();
 
-  if (DAT_8018b300 == 0) {
+  if (D_8018B300 == 0) {
     VSync(0);
     func_8017af0c(0);
     func_801753c4(0);
-    DAT_8018b300 = 1;
+    D_8018B300 = 1;
     func_8017ee0c();
     func_8017ed7c(func_8017ed3c(0xF0000010, 0x1000, 0x1000, func_8014b3c4));
     func_8017ee1c();

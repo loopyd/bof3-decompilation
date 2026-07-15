@@ -10,12 +10,12 @@ void func_80198bc4(u32 arg0) {
   force_update = arg0;
   while (1) {
     func_8014b87c(1);
-    if (DAT_80143c40 == 0 && force_update == 0) {
+    if (D_80143C40 == 0 && force_update == 0) {
       func_8014b87c(1);
       break;
     }
     func_801991b8();
-    if (DAT_80143c40 == 0) {
+    if (D_80143C40 == 0) {
       break;
     }
   }

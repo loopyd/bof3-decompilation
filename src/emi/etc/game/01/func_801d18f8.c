@@ -61,7 +61,7 @@ void func_801d18f8(void) {
     } else {
       flags = ((marker & 0x3ff) >> 6) | 0x80;
     }
-    func_8017c2d8(DAT_8014598c, 0, 0, flags, 0);
+    func_8017c2d8(D_8014598C, 0, 0, flags, 0);
 
     func_8014e5a0(2, 12);
     primitive = func_801d17d8((s16)x, 24, (u8)(i + 11), 2, 0);

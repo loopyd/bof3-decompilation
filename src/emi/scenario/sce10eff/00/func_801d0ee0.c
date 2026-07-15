@@ -1,6 +1,6 @@
 #include "internal.h"
 
-extern u8 D_801492e8[];
+extern u8 D_801492E8[];
 
 /* @behavior builds a temporary transform from scratchpad camera state and submits
  * it through the local scene object pipeline.
@@ -34,7 +34,7 @@ void func_801d0ee0(void) {
 
   func_80179558(rotation, matrix, vector);
   func_80179738(translation, object_work);
-  func_80178cb8(D_801492e8, object_work);
+  func_80178cb8(D_801492E8, object_work);
   func_80178fd8(object_work);
   func_80179068(object_work);
 }

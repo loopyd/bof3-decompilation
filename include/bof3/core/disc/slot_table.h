@@ -3,7 +3,7 @@
 
 #include "bof3/defines.h"
 
-/* Native loader input: an index into the u32 LBA table at DAT_80182444. */
+/* Native loader input: an index into the u32 LBA table at D_80182444. */
 typedef u32 EmiLoaderSlotId;
 typedef u32 DiscLba;
 

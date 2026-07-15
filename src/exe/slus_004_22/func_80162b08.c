@@ -7,16 +7,16 @@ typedef struct EmiTransferSlot {
   u16 state;
 } EmiTransferSlot;
 
-extern u32*             DAT_80146848;
-extern u8               DAT_80146854;
-extern EmiTransferSlot* DAT_80146844;
-extern u32              DAT_80146678[];
-extern vu32             DAT_80146450;
-extern vu32             DAT_80146454;
-extern vu32             DAT_80146458;
-extern vu32             DAT_8014645c;
-extern vu16             DAT_80146460;
-extern u32              DAT_8014646c;
+extern u32*             D_80146848;
+extern u8               D_80146854;
+extern EmiTransferSlot* D_80146844;
+extern u32              D_80146678[];
+extern vu32             D_80146450;
+extern vu32             D_80146454;
+extern vu32             D_80146458;
+extern vu32             D_8014645C;
+extern vu16             D_80146460;
+extern u32              D_8014646C;
 
 /* @behavior selects one pending EMI transfer slot and copies its staged transfer
  * state into the active loader registers.
@@ -25,25 +25,25 @@ extern u32              DAT_8014646c;
 s32 func_80162b08(u8 slot) {
   volatile EmiTransferSlot* slot_table;
 
-  if ((*DAT_80146848 < slot) ||
-      (((DAT_80146854 & 0x20u) != 0) && (DAT_80146844[slot].state < 6u))) {
+  if ((*D_80146848 < slot) ||
+      (((D_80146854 & 0x20u) != 0) && (D_80146844[slot].state < 6u))) {
     return 0;
   }
 
   if (slot == 0u) {
-    DAT_80146454 = 0x800;
-    DAT_80146460 = 5;
-    DAT_8014646c = 1;
-    DAT_80146450 = DAT_80146678[0];
+    D_80146454 = 0x800;
+    D_80146460 = 5;
+    D_8014646C = 1;
+    D_80146450 = D_80146678[0];
   } else {
-    DAT_80146450 = DAT_80146678[slot];
+    D_80146450 = D_80146678[slot];
     /* Preserve the original compiler's slot-address register allocation. */
-    slot_table = DAT_80146844 - -slot;
-    DAT_80146454 = slot_table->size;
-    DAT_80146458 = slot_table->remaining_size;
-    DAT_8014645c = slot_table->read_offset;
-    DAT_8014646c = 0;
-    DAT_80146460 = slot_table->state;
+    slot_table = D_80146844 - -slot;
+    D_80146454 = slot_table->size;
+    D_80146458 = slot_table->remaining_size;
+    D_8014645C = slot_table->read_offset;
+    D_8014646C = 0;
+    D_80146460 = slot_table->state;
   }
 
   return 1;

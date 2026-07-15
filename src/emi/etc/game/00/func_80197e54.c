@@ -12,15 +12,15 @@ void func_80197e54(void) {
   func_801a06d8();
   func_801992b8();
   if (emi_loader_is_ready() && local_ready) {
-    DAT_8014932e = 0;
-    DAT_80146329 = 0;
-    DAT_801462e0 = 0;
-    DAT_801462e1 = 0;
-    DAT_801462e2 = 0;
-    DAT_801462e3 = 0;
-    DAT_801462e4 = 0;
-    DAT_801462f0 = func_801bdb7c(1);
-    state = &DAT_80143b92;
+    D_8014932E = 0;
+    D_80146329 = 0;
+    D_801462E0 = 0;
+    D_801462E1 = 0;
+    D_801462E2 = 0;
+    D_801462E3 = 0;
+    D_801462E4 = 0;
+    D_801462F0 = func_801bdb7c(1);
+    state = &D_80143B92;
     (*state)++;
   }
 }

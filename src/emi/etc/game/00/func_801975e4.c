@@ -7,6 +7,6 @@
 void func_801975e4(void) {
   u16 state;
 
-  state = DAT_80143b92;
-  DAT_801c7b44[state]();
+  state = D_80143B92;
+  D_801C7B44[state]();
 }

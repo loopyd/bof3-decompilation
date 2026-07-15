@@ -5,5 +5,5 @@
  * @source 0x801984ac func_801984ac
  */
 void func_801984ac(void) {
-  DAT_801c7b88[DAT_80143b92]();
+  D_801C7B88[D_80143B92]();
 }

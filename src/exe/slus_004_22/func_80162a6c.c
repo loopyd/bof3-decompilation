@@ -1,14 +1,14 @@
 #include "internal.h"
 
-extern u8 DAT_80140000[];
+extern u8 D_80140000[];
 
-#define EMI_LOADER_STEP (*(volatile u32*)(DAT_80140000 + 0x646c))
+#define EMI_LOADER_STEP (*(volatile u32*)(D_80140000 + 0x646c))
 
-extern vu8            DAT_80146483;
-extern vu32           DAT_80146458;
-extern EmiLoaderEntry DAT_8014677c[];
-extern u32            DAT_80146788[];
-extern u16            DAT_8014678e[];
+extern vu8            D_80146483;
+extern vu32           D_80146458;
+extern EmiLoaderEntry D_8014677C[];
+extern u32            D_80146788[];
+extern u16            D_8014678E[];
 
 /* @behavior selects the current EMI entry's alternate destination, marks the
  * entry with flag 2, advances the loader state machine, and advances the step.
@@ -18,9 +18,9 @@ void func_80162a6c(void) {
   u32 entry_offset;
 
   if (EMI_LOADER_STEP == 0) {
-    entry_offset = DAT_80146483 * sizeof(EmiLoaderEntry);
-    DAT_80146458 = *(u32*)((u8*)DAT_80146788 + entry_offset);
-    *(u16*)((u8*)DAT_8014678e + entry_offset) |= 2;
+    entry_offset = D_80146483 * sizeof(EmiLoaderEntry);
+    D_80146458 = *(u32*)((u8*)D_80146788 + entry_offset);
+    *(u16*)((u8*)D_8014678E + entry_offset) |= 2;
   }
 
   func_80162c14();

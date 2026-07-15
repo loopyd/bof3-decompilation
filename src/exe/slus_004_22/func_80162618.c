@@ -1,9 +1,9 @@
 #include "internal.h"
 
-extern u32 DAT_80146458;
-extern u32 DAT_8014646c;
-extern vs8 DAT_80146489;
-extern vs8 DAT_801464a0[];
+extern u32 D_80146458;
+extern u32 D_8014646C;
+extern vs8 D_80146489;
+extern vs8 D_801464A0[];
 
 /* @behavior records the current EMI dispatch handler for the active ring slot,
  * marks that slot active, and advances the loader step.
@@ -13,14 +13,14 @@ void func_80162618(void) {
   s8*           active_slot;
   volatile u32* dispatches;
 
-  active_slot = (s8*)&DAT_80146489;
+  active_slot = (s8*)&D_80146489;
   dispatches = (volatile u32*)(active_slot + 0x2f);
-  dispatches[*active_slot] = DAT_80146458;
-  DAT_801464a0[*active_slot] = 1;
+  dispatches[*active_slot] = D_80146458;
+  D_801464A0[*active_slot] = 1;
 
-  if (DAT_8014646c == 0) {
-    DAT_801464a0[*active_slot] = 2;
+  if (D_8014646C == 0) {
+    D_801464A0[*active_slot] = 2;
   }
 
-  DAT_8014646c += 1;
+  D_8014646C += 1;
 }

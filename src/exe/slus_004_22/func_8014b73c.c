@@ -1,7 +1,7 @@
 #include "internal.h"
 
-extern volatile GameCallbackSlot* DAT_80143d40;
-extern GameCallbackSlot           DAT_80143b40;
+extern volatile GameCallbackSlot* D_80143D40;
+extern GameCallbackSlot           D_80143B40;
 
 /* possible name: game_slot_scheduler_tick
  * @behavior walks the EXE callback slot table, opens ready threads, decrements
@@ -16,24 +16,24 @@ void func_8014b73c(void) {
   unsigned short             countdown;
 
   state = 0x80143d40u;
-  current_slot = (DAT_80143d40 = &DAT_80143b40);
+  current_slot = (D_80143D40 = &D_80143B40);
 
   do {
-    state = DAT_80143d40->state;
+    state = D_80143D40->state;
 
     switch (state) {
       case GAME_CALLBACK_SLOT_STATE_OPEN:
         func_8017ee0c();
-        (current_slot = DAT_80143d40)->thread_id =
-            OpenTh((long (*)())DAT_80143d40->callback, DAT_80143d40->open_arg,
-                   DAT_80143d40->open_arg_2);
+        (current_slot = D_80143D40)->thread_id =
+            OpenTh((long (*)())D_80143D40->callback, D_80143D40->open_arg,
+                   D_80143D40->open_arg_2);
         func_8017ee1c();
         goto dispatch;
 
       case GAME_CALLBACK_SLOT_STATE_YIELD:
-        new_var = DAT_80143d40->countdown;
+        new_var = D_80143D40->countdown;
         countdown = (u16)(new_var - 1u);
-        DAT_80143d40->countdown = countdown;
+        D_80143D40->countdown = countdown;
         if (countdown != 0u) {
           break;
         }
@@ -41,8 +41,8 @@ void func_8014b73c(void) {
 
       case GAME_CALLBACK_SLOT_STATE_SWITCH:
       dispatch:
-        DAT_80143d40->state = (state = GAME_CALLBACK_SLOT_STATE_IDLE);
-        countdown = DAT_80143d40->thread_id;
+        D_80143D40->state = (state = GAME_CALLBACK_SLOT_STATE_IDLE);
+        countdown = D_80143D40->thread_id;
         ChangeTh(countdown);
         break;
 
@@ -50,7 +50,7 @@ void func_8014b73c(void) {
         break;
     }
 
-    next_slot = DAT_80143d40 + 1;
-    DAT_80143d40 = next_slot;
+    next_slot = D_80143D40 + 1;
+    D_80143D40 = next_slot;
   } while (next_slot < ((u32)((volatile GameCallbackSlot*)state)));
 }

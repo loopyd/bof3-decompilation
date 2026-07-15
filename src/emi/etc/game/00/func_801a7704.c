@@ -41,7 +41,7 @@ void func_801a7704(u8 scenario_index) {
   func_801a7804();
 
   while (!emi_loader_is_ready()) {
-    if ((DAT_80143f00 != 0xffffu) && (DAT_80143bb0 != 5u)) {
+    if ((D_80143F00 != 0xffffu) && (D_80143BB0 != 5u)) {
       func_801992b8();
     }
     func_8014b87c(1u);

@@ -1,12 +1,12 @@
 #include "bof3/context.h"
 #include "internal.h"
 
-extern vu32 DAT_80146464;
-extern vu8  DAT_8014648a;
-extern vu32 DAT_8014648c;
-extern vu8  DAT_801464a0[];
-extern vu8  DAT_80146840;
-extern u16  DAT_8014681a;
+extern vu32 D_80146464;
+extern vu8  D_8014648A;
+extern vu32 D_8014648C;
+extern vu8  D_801464A0[];
+extern vu8  D_80146840;
+extern u16  D_8014681A;
 
 /* @behavior initializes the EMI/CD bootstrap state before the first active entry
  * is installed.
@@ -27,14 +27,14 @@ void func_80161f58(void) {
   bootstrap_address = 0x800E4800;
   empty_state = 0xff;
   i = 0x17;
-  loader_state = &DAT_80146464;
+  loader_state = &D_80146464;
   slot_state = (u8*)loader_state + 0x53;
 
   *loader_state = bootstrap_address;
-  DAT_80146840 = 0;
-  DAT_8014648a = 0;
-  DAT_8014648c = 0;
-  DAT_8014681a = 0xffff;
+  D_80146840 = 0;
+  D_8014648A = 0;
+  D_8014648C = 0;
+  D_8014681A = 0xffff;
 
   do {
     *slot_state = empty_state;

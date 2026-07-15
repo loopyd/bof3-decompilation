@@ -17,29 +17,29 @@ extern vu8  GAME_FRONT_WINDOW_PHASE;
 extern vu8  GAME_FRONT_INPUT_GATE;
 extern u8   GAME_FRONT_SELECTION;
 extern vu8  GAME_FRONT_PALETTE_STAGE_SERIAL;
-extern vu16 DAT_80143b40;
-extern vu16 DAT_80143f20;
-extern vu8  DAT_80144fc0;
-extern vu8  DAT_80144fc1;
-extern vu8  DAT_80144fc2;
-extern vu8  DAT_80144fc3;
-extern vu8  DAT_80145024;
-extern vu8  DAT_80146874;
-extern vu8  DAT_8014832e;
-extern vu16 DAT_80143b90;
-extern vu8  DAT_80143bb0;
-extern vu8  DAT_80143c30;
-extern vu32 GAME_FRONT_POPUP_WORD __asm__("DAT_80143c30");
-extern vu32 DAT_8014598c;
-extern vu16 DAT_80143c2a;
+extern vu16 D_80143B40;
+extern vu16 D_80143F20;
+extern vu8  D_80144FC0;
+extern vu8  D_80144FC1;
+extern vu8  D_80144FC2;
+extern vu8  D_80144FC3;
+extern vu8  D_80145024;
+extern vu8  D_80146874;
+extern vu8  D_8014832E;
+extern vu16 D_80143B90;
+extern vu8  D_80143BB0;
+extern vu8  D_80143C30;
+extern vu32 GAME_FRONT_POPUP_WORD __asm__("D_80143C30");
+extern vu32 D_8014598C;
+extern vu16 D_80143C2A;
 #define GAME_FRONT_START_MASK         0x0800u
 #define GAME_FRONT_POPUP_PENDING_MASK 0x00ffff00u
 #define GAME_FRONT_POPUP_PENDING_OPEN 0x00020000u
 #define GAME_FRONT_SELECTION_FX_TABLE CVPTR(u8, 0x80181ebau)
 
 typedef void (*GameFrontStateHandler)(void);
-extern GameFrontStateHandler DAT_801d1c4c[];
-#define GAME_FRONT_STATE_HANDLERS DAT_801d1c4c
+extern GameFrontStateHandler D_801D1C4C[];
+#define GAME_FRONT_STATE_HANDLERS D_801D1C4C
 
 void func_8014ba04(void);
 void func_801d18f8(void);

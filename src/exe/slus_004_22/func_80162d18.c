@@ -6,8 +6,8 @@ typedef struct EmiCallbackGroup {
   u32 values[4];
 } EmiCallbackGroup;
 
-extern s8        DAT_8014648a;
-extern const u32 DAT_80149c3c[];
+extern s8        D_8014648A;
+extern const u32 D_80149C3C[];
 
 /* @behavior snapshots the target-local EMI callback table and invokes the
  * callback selected by the current loader mode.
@@ -20,7 +20,7 @@ void func_80162d18(void) {
   u32                     callbacks[9];
 
   dst = (EmiCallbackGroup*)callbacks;
-  src = (const EmiCallbackGroup*)DAT_80149c3c;
+  src = (const EmiCallbackGroup*)D_80149C3C;
   end = src + 2;
   do {
     *dst = *src;
@@ -29,5 +29,5 @@ void func_80162d18(void) {
   } while (src != end);
   *(vu32*)dst = src->values[0];
 
-  ((EmiLoaderCallback)callbacks[DAT_8014648a])();
+  ((EmiLoaderCallback)callbacks[D_8014648A])();
 }

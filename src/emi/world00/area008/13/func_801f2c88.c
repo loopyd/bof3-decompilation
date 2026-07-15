@@ -14,7 +14,7 @@ extern void func_8014d6b8(u32 flag);
 void func_801f2c88(void) {
   volatile World00Area008State* previous;
 
-  if ((WORLD00_AREA008_DAT_80146867 & 0x80u) != 0u) {
+  if ((WORLD00_AREA008_D_80146867 & 0x80u) != 0u) {
     (*(volatile World00Area008State**)0x1f800044)->mode = 9;
     return;
   }

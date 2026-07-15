@@ -1,7 +1,7 @@
 #include "internal.h"
 
-extern vu32 DAT_8014648c;
-extern u8   DAT_80146498[];
+extern vu32 D_8014648C;
+extern u8   D_80146498[];
 
 /* @behavior latches the last CdSync callback result bytes and marks the async sync
  * status.
@@ -16,12 +16,12 @@ void func_801621e8(s32 status, u8* result) {
     /* The folded pair preserves the original GCC setup scheduling. */
     i++;
     i--;
-    DAT_80146498[i] = *result--;
+    D_80146498[i] = *result--;
   } while (i-- != 0);
 
   if (status == CdlComplete) {
-    DAT_8014648c = 1;
+    D_8014648C = 1;
   } else {
-    DAT_8014648c = -1;
+    D_8014648C = -1;
   }
 }

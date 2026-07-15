@@ -3,7 +3,7 @@
 
 extern void func_8014e5a0(u32 arg0, u32 arg1);
 
-extern SPRT_8* DAT_8014598c;
+extern SPRT_8* D_8014598C;
 
 /* @behavior emits one 8x8 glyph sprite for each non-space byte in the string,
  * advancing eight pixels per byte and wrapping on newline.
@@ -21,7 +21,7 @@ void func_80150098(s16 x, s16 y, u32 clut, const u8* text) {
   clut &= 0x3fu;
   primitive_clut = (u16)(clut | 0x7800u);
   start_x = x;
-  primitive = DAT_8014598c;
+  primitive = D_8014598C;
 
   do {
     if ((*text) == 10) {
@@ -48,7 +48,7 @@ void func_80150098(s16 x, s16 y, u32 clut, const u8* text) {
       SetSprt8(primitive);
       SetSemiTrans(primitive, 1);
       func_8014e5a0(1, 0x10);
-      primitive = DAT_8014598c;
+      primitive = D_8014598C;
     }
 
     text += 1;

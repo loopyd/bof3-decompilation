@@ -1,7 +1,7 @@
 #include "internal.h"
 
-extern u16 DAT_80143b40;
-extern s32 DAT_80143b48;
+extern u16 D_80143B40;
+extern s32 D_80143B48;
 
 /* @behavior clears one callback slot and closes its thread inside the scheduler
  * critical section.
@@ -11,8 +11,8 @@ void func_8014b900(s32 slot_index) {
   s32 slot_offset;
 
   slot_offset = slot_index << 7;
-  *(u16*)((u8*)&DAT_80143b40 + slot_offset) = 0;
+  *(u16*)((u8*)&D_80143B40 + slot_offset) = 0;
   func_8017ee0c();
-  CloseTh(*(s32*)((u8*)&DAT_80143b48 + slot_offset));
+  CloseTh(*(s32*)((u8*)&D_80143B48 + slot_offset));
   func_8017ee1c();
 }

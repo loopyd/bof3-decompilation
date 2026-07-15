@@ -9,7 +9,7 @@ void func_801d16dc(s16 x, s16 y, u8 selected, u8 alpha) {
   s32 marker_x;
 
   marker_x = func_8017b2b4() == 1 ? 683 : (func_8017b2b4() == 2 ? 683 : 187);
-  func_8017c2d8(DAT_8014598c, 0, 0, marker_x, 0);
+  func_8017c2d8(D_8014598C, 0, 0, marker_x, 0);
   func_8014e5a0(2, 12);
   primitive = func_801d17d8(x, y, 2, 2, selected);
   func_801d18e8(primitive, alpha);

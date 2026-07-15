@@ -76,99 +76,134 @@ struct GameWorkArea {
 #define MOVEMENT_OFFSET_1(i)  (*(volatile s32*)(0x80181B98u + (i) * 8))
 #define MOVEMENT_THRESHOLD(i) (*(volatile s16*)(0x80181B70u + (i) * 2))
 
-/* ---- RAM globals (DAT_ names match original game data patterns) ---- */
+/* ---- RAM globals (D_ names match original game data patterns) ---- */
 
 /* @behavior entry-0 main state machine index */
-extern vu16 DAT_80143b90;
-extern u16  DAT_80143c40;
+extern vu16 D_80143B90;
+extern u16  D_80143C40;
 /* @behavior entry-0 sub-state within current state */
-extern u16 DAT_80143b92;
+extern u16 D_80143B92;
 /* @behavior world/phase index for entry-0 world dispatch */
-extern u8 DAT_80143bb0;
+extern u8 D_80143BB0;
 /* @behavior current world state ID for world/front routing */
-extern vu16 DAT_80143f00;
+extern vu16 D_80143F00;
 /* @behavior world/front flags: bit0=scenario pending, bit3=alt front mode */
-extern vu8 DAT_80143f02;
+extern vu8 D_80143F02;
 /* @behavior context selection seed passed to entry-0 ctx init */
-extern vu16 DAT_80143f10;
+extern vu16 D_80143F10;
 /* @behavior context bundle word A — world/route identifier */
-extern vu32 DAT_80143f14;
+extern vu32 D_80143F14;
 /* @behavior context bundle word B — secondary selector data */
-extern vu32 DAT_80143f18;
+extern vu32 D_80143F18;
 /* @behavior context kind byte — dispatch type discriminator */
-extern vu8 DAT_80143f1c;
+extern vu8 D_80143F1C;
 /* @behavior pending request kind — selects next front operation */
-extern vu8 DAT_80143f1d;
+extern vu8 D_80143F1D;
 /* @behavior pending mode after request resolution */
-extern u8 DAT_80143f1e;
+extern u8 D_80143F1E;
 /* @behavior selection seed for the entry-0 front callback bank */
-extern u8 DAT_80143f1f;
+extern u8 D_80143F1F;
 /* @behavior active selection id from front-end picker */
-extern vu32 DAT_80144fc0;
+extern vu32 D_80144FC0;
 /* @behavior front-end selection index for menu routing */
-extern u8  DAT_80145029;
-extern u8  DAT_80145024;
-extern u32 DAT_8014502c;
+extern u8  D_80145029;
+extern u8  D_80145024;
+extern u32 D_8014502C;
 /* @behavior palette stage serial for GPU upload sequencing */
-extern vu8 DAT_80145988;
+extern vu8 D_80145988;
 /* @behavior world flags — bit0=pending scenario, bit6=force-reset.
  * UNKNOWN: roles of observed bits 5 and 11. */
-extern u16 DAT_8014625a;
-extern vu8 DAT_80146256;
+extern u16 D_8014625A;
+extern vu8 D_80146256;
 /* @behavior flag byte cleared on request 0xFE.
  * UNKNOWN: the flag's owning subsystem. */
-extern vu8      DAT_8014832e;
-extern u8       DAT_801462e0;
-extern u8       DAT_801462e1;
-extern u8       DAT_801462e2;
-extern u8       DAT_80145e9b;
-extern u8       DAT_80145fdb;
-extern u8       DAT_8014611b;
-extern u8       DAT_8014626c;
-extern u8       DAT_8014626d;
-extern u8       DAT_8014626e;
-extern u8       DAT_8014626f;
-extern u8       DAT_80146270;
-extern u8       DAT_80148650;
-extern u8       DAT_80148651;
-extern u8       DAT_80148652;
-extern s8       DAT_8014865c;
-extern u8       DAT_80149332;
-extern const u8 DAT_80181eba[];
-extern const u8 DAT_80181ebb[];
+extern vu8      D_8014832E;
+extern u8       D_801462E0;
+extern u8       D_801462E1;
+extern u8       D_801462E2;
+extern u8       D_80145E9B;
+extern u8       D_80145FDB;
+extern u8       D_8014611B;
+extern u8       D_8014626C;
+extern u8       D_8014626D;
+extern u8       D_8014626E;
+extern u8       D_8014626F;
+extern u8       D_80146270;
+extern u8       D_80148650;
+extern u8       D_80148651;
+extern u8       D_80148652;
+extern s8       D_8014865C;
+extern u8       D_80149332;
+extern const u8 D_80181EBA[];
+extern const u8 D_80181EBB[];
 /* @behavior signed world-coord X argument for scenario entry */
-extern s16 DAT_8014930a;
+extern s16 D_8014930A;
 /* @behavior signed world-coord Y argument for scenario entry */
-extern s16      DAT_8014930e;
-extern s16      DAT_801492d8;
-extern s16      DAT_801492dc;
-extern s16      DAT_8014932e;
-extern u8       DAT_80146329;
-extern u8       DAT_801462e3;
-extern u8       DAT_801462e4;
-extern u8       DAT_801462f0;
-extern u8       DAT_801462ec;
-extern u8       DAT_80146325;
-extern u32      DAT_80149318;
-extern s16      DAT_80149330;
-extern u8       DAT_80149333;
-extern u8       DAT_8014933e;
-extern u8       DAT_8014933f;
-extern u32      DAT_801cd954;
-extern const s8 DAT_801c7b74[];
-extern vu16     DAT_801490a4;
+extern s16      D_8014930E;
+extern s16      D_801492D8;
+extern s16      D_801492DC;
+extern s16      D_8014932E;
+extern u8       D_80146329;
+extern u8       D_801462E3;
+extern u8       D_801462E4;
+extern u8       D_801462F0;
+extern u8       D_801462EC;
+extern u8       D_80146325;
+extern u32      D_80149318;
+extern s16      D_80149330;
+extern u8       D_80149333;
+extern u8       D_8014933E;
+extern u8       D_8014933F;
+extern u32      D_801CD954;
+extern const s8 D_801C7B74[];
+extern vu16     D_801490A4;
 
-extern const GameEntry0StateHandler DAT_801c7b08[];
-extern const GameEntry0StateHandler DAT_801c7b14[];
-#define GAME_ALT_FRONT_CALLBACK_TABLE DAT_801c7b08
-#define GAME_SELECTION_CALLBACK_TABLE DAT_801c7b14
-extern const GameEntry0StateHandler DAT_801c7b44[];
-extern const GameEntry0StateHandler DAT_801c7b54[];
-extern const GameEntry0StateHandler DAT_801c7b7c[];
-extern const GameEntry0StateHandler DAT_801c7b88[];
-extern const GameEntry0StateHandler DAT_801c7b98[];
-extern const GameEntry0StateHandler DAT_801c7ba4[];
-extern const GameEntry0StateHandler DAT_801c7bb0[];
+typedef struct GamePaletteEntry {
+  u8  flags;
+  u8  field_01;
+  u8  red_offset;
+  u8  green_offset;
+  u8  blue_offset;
+  u8  table_index;
+  u8  step;
+  u8  field_07;
+  u8* target;
+} GamePaletteEntry;
+
+typedef struct GamePaletteSlot {
+  u8  flags;
+  u8  field_01;
+  u8  field_02;
+  u8  field_03;
+  u8* source_table;
+  u8* current_entry;
+  u8* owner;
+} GamePaletteSlot;
+
+/* INFERRED: palette work records use the observed 12-byte and 16-byte strides;
+ * confirm field meanings against their setup paths. */
+extern volatile u16     D_80037800[];
+extern GamePaletteEntry D_80145BD4[];
+extern u8               D_80145D54[][16];
+extern GamePaletteSlot  D_80145D94[];
+extern const u8         D_801C7AC0[];
+extern const u8         D_801C7AC8[];
+extern const u8         D_801C7AD0[];
+extern const u8         D_801C7AD8[];
+extern const u8         D_801C7AE0[];
+extern const u8         D_801C7AE8[];
+
+extern const GameEntry0StateHandler D_801C7B08[];
+extern const GameEntry0StateHandler D_801C7B14[];
+#define GAME_ALT_FRONT_CALLBACK_TABLE D_801C7B08
+#define GAME_SELECTION_CALLBACK_TABLE D_801C7B14
+extern const GameEntry0StateHandler D_801C7B44[];
+extern const GameEntry0StateHandler D_801C7B54[];
+extern const GameEntry0StateHandler D_801C7B7C[];
+extern const GameEntry0StateHandler D_801C7B88[];
+extern const GameEntry0StateHandler D_801C7B98[];
+extern const GameEntry0StateHandler D_801C7BA4[];
+extern const GameEntry0StateHandler D_801C7BB0[];
 
 /* @behavior clears one local GAME entry-0 record slot by index.
  * @source 0x801960c0
@@ -263,6 +298,11 @@ s16 func_80154f28(s32 x, s32 y);
 u8 func_8014d978(void);
 
 void func_8019611c(void);
+void func_8019625c(void);
+u8   func_801968bc(u8 mode);
+u8   func_80196b20(u8 value);
+void func_80196b9c(void);
+u8   func_80196cf0(u8* owner, u8* source_table);
 void func_80196ffc(void);
 void func_80197068(void);
 void func_801970ec(void);

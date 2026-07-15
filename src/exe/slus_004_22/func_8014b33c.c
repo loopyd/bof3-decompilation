@@ -1,7 +1,7 @@
 #include "internal.h"
 
-extern volatile GameCallbackSlot* DAT_80143d40;
-extern GameCallbackSlot           DAT_80143b40;
+extern volatile GameCallbackSlot* D_80143D40;
+extern GameCallbackSlot           D_80143B40;
 
 extern void func_8014b900(int slot_index);
 
@@ -15,15 +15,15 @@ void func_8014b33c(void) {
   s32                        slot_index;
 
   slot_index = 0;
-  DAT_80143d40 = &DAT_80143b40;
-  slot_end = &DAT_80143b40 + 4;
+  D_80143D40 = &D_80143B40;
+  slot_end = &D_80143B40 + 4;
 
   do {
-    if (DAT_80143d40->state != GAME_CALLBACK_SLOT_STATE_EMPTY) {
+    if (D_80143D40->state != GAME_CALLBACK_SLOT_STATE_EMPTY) {
       func_8014b900(slot_index & 0xff);
     }
 
-    next_slot = DAT_80143d40 + 1;
-    DAT_80143d40 = next_slot;
+    next_slot = D_80143D40 + 1;
+    D_80143D40 = next_slot;
   } while ((slot_index += 1, next_slot < slot_end));
 }

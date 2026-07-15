@@ -11,6 +11,6 @@ void func_80197efc(void) {
   func_801bfac4();
   func_801a06d8();
   func_801992b8();
-  state = &DAT_80143b92;
+  state = &D_80143B92;
   (*state)++;
 }

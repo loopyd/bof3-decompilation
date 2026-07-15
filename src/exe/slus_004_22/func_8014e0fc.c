@@ -2,10 +2,10 @@
 
 extern void* func_8014e0a8(s32 size, void* buffer, s32 sectors);
 
-extern void* DAT_801459f8;
-extern u32   DAT_80143e70[];
-extern void* DAT_80143e88;
-extern s32   DAT_80143e8c;
+extern void* D_801459F8;
+extern u32   D_80143E70[];
+extern void* D_80143E88;
+extern s32   D_80143E8C;
 
 /* @behavior reads one EXE file into RAM in two sector-sized steps and copies the
  * first staged header block into the boot scratch area.
@@ -23,14 +23,14 @@ s32 func_8014e0fc(const char* path) {
 
   current_path = path;
   sectors = 0x80;
-  exe_size = &DAT_80143e8c;
+  exe_size = &D_80143E8C;
   attempts = 0;
   while (1) {
     if (CdSearchFile(&file, current_path) != NULL) {
       CdControl(2, (u_char*)&file, NULL);
-      if (func_8014e0a8(0x800, DAT_801459f8, sectors) == 0) {
-        src = DAT_801459f8;
-        dst = DAT_80143e70;
+      if (func_8014e0a8(0x800, D_801459F8, sectors) == 0) {
+        src = D_801459F8;
+        dst = D_80143E70;
         end = src + 0x20;
 
         do {
@@ -59,7 +59,7 @@ s32 func_8014e0fc(const char* path) {
         CdControlB(2, (u_char*)&file, NULL);
 
         attempts += 1;
-        if (func_8014e0a8(exe_size[0], DAT_80143e88, sectors) == 0) {
+        if (func_8014e0a8(exe_size[0], D_80143E88, sectors) == 0) {
           return 0;
         }
 

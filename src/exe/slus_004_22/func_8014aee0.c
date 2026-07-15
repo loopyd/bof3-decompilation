@@ -1,8 +1,8 @@
 #include "internal.h"
 
-extern u32    DAT_80143ea0;
-extern u32    DAT_80143ea4;
-extern u_long DAT_80143db8;
+extern u32    D_80143EA0;
+extern u32    D_80143EA4;
+extern u_long D_80143DB8;
 
 /* @behavior loads and transfers control to LOGO.EXE, then restores the boot
  * rendering path after the loaded executable returns.
@@ -14,9 +14,9 @@ void func_8014aee0(void) {
 
   func_8014e0fc(s__LOGO_LOGO_EXE_1_80149800);
 
-  exec_state = &DAT_80143ea0;
+  exec_state = &D_80143EA0;
   *exec_state = 0x801FF000;
-  DAT_80143ea4 = 0;
+  D_80143EA4 = 0;
 
   StopCallback();
   PadStop();
@@ -26,7 +26,7 @@ void func_8014aee0(void) {
   func_8017ee1c();
   func_8014ad28();
 
-  ordering_table = &DAT_80143db8;
+  ordering_table = &D_80143DB8;
   ClearOTag(ordering_table, 8);
   DrawOTag(ordering_table);
   ordering_table += 0x24;

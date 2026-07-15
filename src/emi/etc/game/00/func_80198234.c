@@ -8,7 +8,7 @@ void func_80198234(void) {
   GameEntry0StateHandler callback;
   u16                    state;
 
-  state = DAT_80143b92;
-  callback = DAT_801c7b7c[state];
+  state = D_80143B92;
+  callback = D_801C7B7C[state];
   callback();
 }

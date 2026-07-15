@@ -14,45 +14,45 @@ void func_801971e8(void) {
   u8  request_kind;
   s32 pending_world;
 
-  context_seed = DAT_80143f10;
-  context_a = DAT_80143f14;
-  world_flags = DAT_8014625a;
-  context_b = DAT_80143f18;
-  context_kind = DAT_80143f1c;
-  DAT_8014625a = world_flags & 0xfff7u;
+  context_seed = D_80143F10;
+  context_a = D_80143F14;
+  world_flags = D_8014625A;
+  context_b = D_80143F18;
+  context_kind = D_80143F1C;
+  D_8014625A = world_flags & 0xfff7u;
   func_8019faa0(context_seed, context_a, context_b, context_kind);
 
-  if (DAT_80143f02 & 8u) {
-    DAT_80143b90 = 8u;
+  if (D_80143F02 & 8u) {
+    D_80143B90 = 8u;
     return;
   }
 
-  request_kind = DAT_80143f1d;
+  request_kind = D_80143F1D;
   if ((u8)(request_kind + 2u) >= 2u) {
     func_8014ecac(request_kind);
     func_80198bc4(1u);
-    if (*(u8*)&DAT_80143f02 & 1u) {
-      func_801a0048(DAT_8014930a, DAT_8014930e);
+    if (*(u8*)&D_80143F02 & 1u) {
+      func_801a0048(D_8014930A, D_8014930E);
     }
   } else if (request_kind == 0xfeu) {
-    DAT_8014832e = 0u;
+    D_8014832E = 0u;
   }
 
-  if (*(u8*)&DAT_80143f02 & 1u) {
-    DAT_80143f1e = 10u;
-  } else if (*(u16*)&DAT_80143f00 == 0xbdu) {
-    DAT_80143f1e = 20u;
+  if (*(u8*)&D_80143F02 & 1u) {
+    D_80143F1E = 10u;
+  } else if (*(u16*)&D_80143F00 == 0xbdu) {
+    D_80143F1E = 20u;
   } else {
-    DAT_80143f1e = 0u;
+    D_80143F1E = 0u;
   }
 
-  pending_world = *(u16*)&DAT_80143f00;
+  pending_world = *(u16*)&D_80143F00;
   if (pending_world != 0xbd) {
     func_801b3ccc(1u);
   }
 
-  final_world_flags = DAT_8014625a;
-  DAT_80143bb0 = 0u;
-  DAT_80143b90 = 2u;
-  DAT_8014625a = final_world_flags & 0xffbfu;
+  final_world_flags = D_8014625A;
+  D_80143BB0 = 0u;
+  D_80143B90 = 2u;
+  D_8014625A = final_world_flags & 0xffbfu;
 }

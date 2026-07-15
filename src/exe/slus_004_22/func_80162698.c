@@ -1,14 +1,14 @@
 #include "internal.h"
 
-extern u32 DAT_80146458;
-extern u32 DAT_8014646c;
-extern s8  DAT_80146489;
-extern u8  DAT_801464a0[];
-extern u32 DAT_801464b8[];
-extern u8  DAT_8018b4a0;
-extern u8  DAT_8018b4a4;
-extern u8  DAT_8018b4a8;
-extern u8  DAT_8018b4ac;
+extern u32 D_80146458;
+extern u32 D_8014646C;
+extern s8  D_80146489;
+extern u8  D_801464A0[];
+extern u32 D_801464B8[];
+extern u8  D_8018B4A0;
+extern u8  D_8018B4A4;
+extern u8  D_8018B4A8;
+extern u8  D_8018B4AC;
 
 /* @behavior derives a packed EMI dispatch word, records it for the active ring
  * slot, advances the packed-word cursor, and advances the loader step.
@@ -21,26 +21,26 @@ void func_80162698(void) {
   u32  state;
   u8   next_index;
 
-  loader_step = &DAT_8014646c;
+  loader_step = &D_8014646C;
   if (*loader_step == 0) {
-    DAT_8018b4ac = 0;
-    packed = DAT_80146458;
-    DAT_8018b4a0 = (packed >> 24) & 0x3f;
-    DAT_8018b4a4 = (packed >> 16) & 0x1f;
-    DAT_8018b4a8 = (packed >> 8) & 0x3f;
+    D_8018B4AC = 0;
+    packed = D_80146458;
+    D_8018B4A0 = (packed >> 24) & 0x3f;
+    D_8018B4A4 = (packed >> 16) & 0x1f;
+    D_8018B4A8 = (packed >> 8) & 0x3f;
   }
 
   state = 3;
-  DAT_801464a0[DAT_80146489] = state;
-  next_index = DAT_8018b4ac + 1;
-  dispatch = (DAT_8018b4ac + DAT_8018b4a0) << 24;
-  DAT_8018b4ac = next_index;
-  dispatch += DAT_8018b4a4 << 16;
-  DAT_801464b8[DAT_80146489] = dispatch;
+  D_801464A0[D_80146489] = state;
+  next_index = D_8018B4AC + 1;
+  dispatch = (D_8018B4AC + D_8018B4A0) << 24;
+  D_8018B4AC = next_index;
+  dispatch += D_8018B4A4 << 16;
+  D_801464B8[D_80146489] = dispatch;
 
-  if (next_index >= DAT_8018b4a8) {
-    DAT_8018b4ac = 0;
-    DAT_8018b4a4++;
+  if (next_index >= D_8018B4A8) {
+    D_8018B4AC = 0;
+    D_8018B4A4++;
   }
 
   *loader_step = *loader_step + 1;

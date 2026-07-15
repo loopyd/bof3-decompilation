@@ -15,8 +15,8 @@ void func_801f3c2c(void) {
   scratch = (World00Area008Scratch*)WORLD00_AREA008_SCRATCH_PTR;
   field_5d = scratch->field_5d;
   field_5e = scratch->field_5e;
-  buf = (char*)WORLD00_AREA008_DAT_80145AD4;
-  func_8017e3f4(buf, (const char*)WORLD00_AREA008_DAT_801F2C04, field_5e,
+  buf = (char*)WORLD00_AREA008_D_80145AD4;
+  func_8017e3f4(buf, (const char*)WORLD00_AREA008_D_801F2C04, field_5e,
                 (field_5d * 100) / 30);
 
   func_8014ff0c(0x86, 0x3b, 0, buf);

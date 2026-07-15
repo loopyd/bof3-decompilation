@@ -14,7 +14,7 @@ extern u32 func_8014d8d4(u8 arg0);
 void func_801b5bdc(u8 arg0) {
   u32 index;
 
-  if (!(DAT_80143f02 & 1)) {
+  if (!(D_80143F02 & 1)) {
     func_8014d8d4(arg0);
     return;
   }

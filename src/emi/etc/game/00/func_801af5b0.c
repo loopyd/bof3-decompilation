@@ -12,39 +12,41 @@ extern s32 func_80166a10(u8 character_index, u8 ability_kind, u8 mode);
  * @see docs/specs/data/equipment.md
  */
 s32 func_801af5b0(s32 item_category, s32 character_index, s32 ability_kind) {
-  s32                           saved_character;
   s32                           saved_kind;
+  s32                           saved_character;
   const volatile AbilityObject* ability;
   u8                            mapped_character;
   u32                           character_offset;
   u32                           learned_level;
   u32                           required_level;
 
-  saved_character = character_index;
   saved_kind = ability_kind;
+  saved_character = character_index;
   if ((u8)saved_kind == 0u) {
     return 0;
   }
 
   ability = &ABILITY_OBJECTS[(u8)saved_kind];
 
-  switch ((u8)item_category) {
-    case 1u:
-      mapped_character =
-          GAME_ABILITY_MAP[GAME_CHARACTER_MAP[(u8)saved_character]];
-      character_offset = (u32)mapped_character * 0xa4u;
-      required_level =
-          func_80166a10(mapped_character, (u8)saved_kind, 0u) & 0xffu;
-      learned_level =
-          *(const volatile u16*)(GAME_RAM_BASE + character_offset + 0x497eu);
-      if (learned_level < required_level) {
-        return 0;
-      }
-      return (ability->targeting_flags & 1u) != 0u;
-    case 2u:
-      break;
-    default:
+  if ((u8)item_category == 1u) {
+    mapped_character =
+        GAME_ABILITY_MAP[GAME_CHARACTER_MAP[(u8)saved_character]];
+    character_offset = (u32)mapped_character * 0xa4u;
+    required_level =
+        func_80166a10(mapped_character, (u8)saved_kind, 0u) & 0xffu;
+    learned_level =
+        *(const volatile u16*)(GAME_RAM_BASE + character_offset + 0x497eu);
+    if (learned_level < required_level) {
+      return 0;
+    }
+    if (ability->targeting_flags & 1u) {
       return 1;
+    }
+    return 0;
+  } else if ((u8)item_category < 2u) {
+    return 1;
+  } else if ((u8)item_category != 2u) {
+    return 1;
   }
 
   character_offset = (u32)(u8)saved_character * 0x140u;
