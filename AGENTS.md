@@ -65,11 +65,25 @@ documented in `$decomp-loop`. Key commands:
 
 ```bash
 bin/harness targets <target>
-bin/harness reverse <target>@<8-digit-address> --run
-bin/harness diff <source> --llm
-bin/asmdiff <source>
-bin/permute <source> -j <bounded-jobs>
+bin/harness analyze [--top N] [--target <target>]
+bin/harness reverse --all --strategy leaf --functions 10
+bin/harness normalize
 ```
+
+### Lifting workflow (controlled loop)
+
+One function at a time, no heavy AI automation for bulk work:
+
+```bash
+bin/m2c <source>                # 1. get C seed from Splat ASM
+                                # 2. clean up: C89, project types, struct access
+bin/asmdiff <source>            # 3. check match (acceptance gate)
+bin/permute <source> -j <N>     # 4. bounded source-shape search
+                                # 5. adopt best candidate, fix, repeat from 3
+```
+
+Do not use `bin/harness reverse <target>@<addr> --run` for bulk lifting —
+it launches a full AI mission. Use it only when manual analysis is stuck.
 
 `bin/permute` is the sole permuter entry point: one function, one generated
 workspace, and one upstream decomp-permuter coordinator receiving the complete

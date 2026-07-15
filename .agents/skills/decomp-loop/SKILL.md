@@ -18,39 +18,68 @@ Read [psx-mips-correctness.md](references/psx-mips-correctness.md) before
 promoting control flow, unaligned access, GP-relative data, DMA/MMIO, cache, or
 COP2/GTE behavior.
 
-## Function loop
+## Function discovery and lifting workflow
+
+The correct workflow for new functions discovered by rizin:
 
 ```bash
-bin/harness targets <target>
-bin/m2c <source>                       # automated C seed
-bin/asmdiff <source>                   # validate
-bin/permute <source> --prepare-only    # optional late-stage search
-bin/permute <source> -j <bounded-jobs>
+# 1. Discover candidates across all targets
+bin/harness reverse --all --strategy leaf --functions 10
+
+# 2. Analyze a single target to classify all functions
+bin/harness analyze --target emi/etc/game/00
+
+# 3. Bulk-populate Splat: add all missing functions as asm subsegments
+#    Compute file offsets: file_offset = code_start + (vram - vram_base)
+#    Insert into config/splat/...yaml in ascending offset order
+
+# 4. Regenerate Splat assembly
+bin/splat split config/splat/<target>.yaml
+
+# 5. For each function — the controlled loop:
+#    m2c seed → manual cleanup → asmdiff → permute → fix → asmdiff
 ```
 
-`bin/permute` is the only supported permuter path. It owns one function
-workspace and forwards `-j` once to one upstream decomp-permuter coordinator.
-Independent functions may run concurrently, but the wrapper rejects a second
-coordinator for the same function workspace. Budget the sum of all active `-j`
-worker counts against available capacity.
+**Do NOT skip Splat.** The correct path for a new function:
 
-Use upstream `PERM_*` directives for focused interacting alternatives after
-manual factual fixes. Run `--prepare-only`, edit the generated workspace
-`base.c`, then run with `--prepared`; an ordinary run regenerates `base.c`.
-Remember that any multi-choice directive disables automatic randomization unless
-the intended region is wrapped in `PERM_RANDOMIZE`.
+1. Rizin/radare2 identifies a candidate address and size
+2. Add the function to the Splat config (`config/splat/...yaml`) as a code subsegment
+3. Run `bin/harness split <target>` to regenerate Splat assembly
+4. Run `bin/m2c` on the new assembly to get a C seed
+5. Refine with `bin/asmdiff` as the acceptance gate
 
-The generated `base.c` must be a compilable pruned translation unit: the target
-function plus only declarations, types, and macros required by that function.
-Generate it with the real target compiler's preprocessing and flags. Keep
-`PERM_*` directives in the selected function while the context remains stable.
+Functions detected by rizin but not in Splat are **false positives** if they
+fall outside code ranges. The `analyze` and `reverse --all` commands filter
+these automatically using `_get_code_ranges()`.
 
-Before editing C, verify the payload, load address, function range, Splat
-configuration, and that the proposed address is code rather than embedded data.
-Do not infer a boundary from a lone prologue, `jr ra`, or decompiler label.
-`bin/asmdiff` must build Make's per-source `.o` target and verify that an edited
-source refreshed its object. Treat an empty successful build with a stale object
-as a tooling failure, not a comparison result.
+## Function loop
+
+The controlled lifting loop — one function at a time, no heavy automation:
+
+```bash
+# 1. Get the m2c seed from Splat assembly
+bin/m2c <source>                       # generates C from ASM
+
+# 2. Clean up the seed manually (C89, project conventions, internal.h types)
+#    - Replace M2C_FIELD with struct member access
+#    - Use SCRATCH_WORK, GLOBAL_WORK_PTR macros where applicable
+#    - Declare vars at top of function
+#    - Add @behavior / @source trace comment
+
+# 3. Check the match
+bin/asmdiff <source>                   # validate — this is the acceptance gate
+
+# 4. If match is incomplete, run permuter with safe defaults
+bin/permute <source> -j <bounded-jobs> # bounded source-shape search
+
+# 5. Adopt the best candidate, fix factual issues, repeat from step 3
+```
+
+**Do not use `bin/harness reverse <target>@<addr> --run` for bulk lifting.**
+The `--run` flag launches a full AI mission — too slow and heavy for routine
+work. Use it only for targeted exploration when manual analysis is stuck.
+
+**Do not skip Splat.** The correct path for a new function:
 
 ## Exact-match order
 
@@ -130,10 +159,13 @@ original bytes. Report function matches separately from whole-binary matching.
 | --- | --- |
 | bin/m2c | Automated matching-oriented C seed from Splat assembly |
 | bin/cc | Native-style PSX compiler driver with MASPSX translation |
+| bin/asmdiff | Validate match against canonical assembly (acceptance gate) |
+| bin/permute | Bounded source-shape search (decomp-permuter wrapper) |
 | Splat/spimdisasm | Canonical binary segmentation and assembly |
-| asm-differ | Interactive instruction comparison |
-| Rizin/radare2 and Ghidra | Optional analysis hints |
-| decomp-permuter | Optional bounded source-shape search |
+| bin/harness reverse | Discover and rank function candidates across targets |
+| bin/harness analyze | Mass-analyze all targets, classify functions, write report |
+| bin/harness normalize | Materialize binaries for all promoted targets |
+| Rizin/radare2 and Ghidra | Optional analysis hints (not for bulk lifting) |
 
 ## Coding conventions
 
