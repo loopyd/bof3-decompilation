@@ -31,9 +31,9 @@ replay commands, and compiled source remain authoritative.
 
 1. Identify one exact input and record its hash, kind, target identity, runtime
    load address, and known entry point or function boundary.
-2. Detect tools and versions. In this repository run
-   `bin/harness analysis doctor`; natively record `rizin -V` or `r2 -v` and
-   probe required commands with `<command>?`.
+2. Detect tools and versions through the stateless
+   `harness.analyzer.find_best_engine()` adapter; natively record `rizin -V` or
+   `r2 -v` and probe required commands with `<command>?`.
 3. Open raw input as MIPS, 32-bit, little-endian at its verified load address.
    Never open a container archive as code. Validate several known instructions
    before analysis.
@@ -60,21 +60,12 @@ engine/version differences remain in one place. Drop to the detected native
 engine for focused interactive work or commands the adapter does not expose,
 then capture reviewed results in replay rather than relying on session state:
 
-```sh
-bin/harness analysis doctor
-bin/harness analysis init <target>
-bin/harness analysis query <target> functions
-bin/harness analysis query <target> strings
-bin/harness analysis query <target> xrefs
-bin/harness analysis export <target>
-bin/harness analysis graph [target]
-```
-
-Projects belong under `out/analysis/projects/`; deterministic exports belong
-under `out/analysis/exports/`. Reviewed replay commands live under
-`config/analysis/<target-path>.r2`; analysis-only shared C types live in
-`config/analysis/bof3_objects.h`. Reinitialize after changing tracked replay or
-types. Do not hand-edit generated exports.
+Use the stateless Python adapters in
+`tools/python/harness/analyzer.py` and `snapshot.py` for repeatable queries and
+normalized output. Generated snapshots belong under
+`out/reverse/<target>/snapshot.json`; reviewed replay commands and analysis-only
+types remain under `config/analysis/`. Do not create persistent analyzer
+projects or hand-edit generated snapshots.
 
 ## Analyzer naming policy
 

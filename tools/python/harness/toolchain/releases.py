@@ -5,7 +5,7 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
-from ..common import ensure_parent
+from ..io import ensure_parent
 
 
 def github_release_asset_url(*, repo: str, tag: str, asset_name: str) -> str:

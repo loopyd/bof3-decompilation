@@ -11,7 +11,7 @@ from ..disk import (
     disk_verify,
     resolve_project_xml_path,
 )
-from ..paths import repo_layout
+from ..io import repo_layout
 from ._common import run_main
 
 

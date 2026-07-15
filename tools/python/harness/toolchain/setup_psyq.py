@@ -8,7 +8,7 @@ import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..paths import DEFAULT_PSYQ_VERSION, normalize_psyq_version
+from ..io import DEFAULT_PSYQ_VERSION, normalize_psyq_version
 from .archive import (
     archive_path_looks_valid as archive_file_looks_valid,
     archive_stem,

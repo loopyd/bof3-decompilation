@@ -4,7 +4,6 @@ from ..interfaces import SetupTaskSpec
 from ..models import SetupContext, SetupOptions, SetupTask
 from . import (
     extract,
-    ghidra_bootstrap,
     native_tools,
     psyq,
     psx_toolchain,
@@ -25,13 +24,9 @@ def when_extract_enabled(options: SetupOptions) -> bool:
     return options.include_extract
 
 
-def when_ghidra_plan_enabled(options: SetupOptions) -> bool:
-    return options.include_ghidra_plan
-
-
 SETUP_TASK_SPECS: tuple[SetupTaskSpec, ...] = (
     SetupTaskSpec(
-        task=SetupTask("submodules", "Initialize git submodules"),
+        task=SetupTask("submodules", "Initialize pinned repository submodules"),
         runner=submodules.run,
         enabled=always_enabled,
     ),
@@ -61,14 +56,6 @@ SETUP_TASK_SPECS: tuple[SetupTaskSpec, ...] = (
         task=SetupTask("unpack", "Unpack EMI archives"),
         runner=unpack.run,
         enabled=when_extract_enabled,
-    ),
-    SetupTaskSpec(
-        task=SetupTask(
-            "ghidra-bootstrap",
-            "Generate inventory, duplicate groups, and a Ghidra import manifest",
-        ),
-        runner=ghidra_bootstrap.run,
-        enabled=when_ghidra_plan_enabled,
     ),
 )
 

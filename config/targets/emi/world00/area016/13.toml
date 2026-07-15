@@ -1,7 +1,9 @@
-schema = "harness.target/v1"
+schema = "harness.target/v2"
 id = "emi/world00/area016/13"
 disc_id = "BIN/WORLD00/AREA016.EMI#13"
 kind = "emi"
+status = "quarantined"
+quarantine_reason = "whole-payload bootstrap layout pending reviewed boundaries"
 source_dir = "src/emi/world00/area016/13"
 binary = "out/binaries/emi/world00/area016/13.bin"
 splat = "config/splat/emi/world00/area016/13.yaml"
@@ -10,7 +12,6 @@ profile = "native/capcom97"
 
 [psyq]
 headers = "headers/psyq-4.7"
-
 [psyq.libraries.LIBGTE]
 members = [
     "psyq/4.7/libgte/cmb_00.o",
@@ -21,7 +22,6 @@ members = [
 ]
 confidence = "high"
 evidence = ["AREA016#13 direct call targets match PsyQ 4.7 libgte.a symbols"]
-
 [psyq.libraries.LIBGPU]
 members = [
     "psyq/4.7/libgpu/p10.o",

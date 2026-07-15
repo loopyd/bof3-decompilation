@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ...common import run_command
+from ...io import run_command
 from ..models import SetupContext
 
 

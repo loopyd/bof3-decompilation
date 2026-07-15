@@ -29,12 +29,10 @@ never operates on an entire EMI container. Generated assembly belongs below
 ## Review loop
 
 ```bash
-bin/harness scan
-bin/harness candidates BATTLE
-bin/harness target promote "$ARCHIVE_ENTRY" --confirm-code
-bin/harness target show "$TARGET"
-bin/harness next
-bin/harness lift "$TARGET" "$ADDRESS"
+bin/harness discover
+bin/harness promote "$ARCHIVE_ENTRY" --confirm-code
+bin/harness targets "$TARGET"
+bin/harness reverse "$TARGET"@"$ADDRESS" --run
 bin/harness diff "$FUNCTION_SOURCE"
 ```
 
@@ -43,7 +41,7 @@ module source directory. Lifting creates one C-file work item and refuses an
 address outside the confirmed payload or an existing lift. Use the generated
 draft and disassembly as evidence, then keep the final C89 source readable.
 
-`inspect` is the diagnostic boundary before lifting. Verify its payload,
+`targets` is the diagnostic boundary before lifting. Verify its payload,
 checksum, load address, Splat configuration, and source directory rather than
 compensating for a mapping problem in C.
 
@@ -54,59 +52,11 @@ already provide one; reviewed target-local declarations are preserved.
 under `out/matching/`. A nonmatch is a normal iteration result; a build or target
 resolution failure must be fixed before changing source.
 
-For cross-target navigation, run `bin/harness analysis graph`. It reads
-normalized snapshots from `out/analysis/snapshots/rizin/` and writes
-`out/analysis/graph.json` with target-qualified function fingerprints,
-exact duplicate groups, internal calls, and unresolved external calls.
-Skipped targets mean their normalized snapshot is not available locally.
-
-`bin/harness analysis hotspots` ranks functions across all targets from
-the canonical graph. It reports `hot` (highest caller in-degree),
-`leaves` (out-degree 0, safe bottom-up lift candidates), `roots` (no
-incoming calls), `shallow` (reviewed, low degree), `discovery` (reviewed
-functions with unresolved callees), `unknown_targets` (unresolved
-call targets grouped by caller target and address), and
-`exact_duplicates`. Output is JSON (`schema: bof3.analysis-hotspots/v2`);
-addresses are `0x` hex strings.
-
-The command is configurable. `--kind` selects one ranking; `--top N` limits
-the returned entries; `--min-callers` / `--max-out` filter by call-graph
-degree (`--max-out 0` isolates leaves); `--min-size` / `--max-size` filter
-by byte size; `--status {all,reviewed,lifted,unreviewed,unlifted}` filters
-by declaration state; `--sort` chooses the sort key (default `callers` for
-`hot`/`leaves`, `address` for `roots`). For example, the ten most-called
-leaves across all binaries:
-
-```bash
-bin/harness analysis hotspots --kind leaves --top 10 --sort callers
-```
-
-Use the result to feed `bin/harness next` / `bin/harness lift` prioritization.
-
-The analysis pipeline is:
-
-```text
-replay → snapshot → graph → hotspots
-```
-
-Each stage is explicit and can be run independently:
-
-```bash
-bin/harness analysis replay TARGET   # render generated replay
-bin/harness analysis snapshot TARGET # run analyzer, write normalized snapshot
-bin/harness analysis graph           # merge snapshots into global graph
-bin/harness analysis hotspots        # derive rankings from graph
-bin/harness analysis build           # convenience: all stages
-```
-
-Generated analyzer replay lives under `out/analysis/replay/<target>.r2`;
-normalized snapshots under `out/analysis/snapshots/rizin/<target>.json`.
-`config/analysis/` only carries reviewed replay and the analysis-only
-shared types (`config/analysis/shared/bof3_objects.h`,
-`config/analysis/shared/hwregs.r2`). Same runtime addresses in different
-targets are never merged — every analysis object is keyed by
-`<target>@<address>` and cross-target calls are not inferred from equal
-addresses.
+The stateless analyzer and snapshot models are Python APIs under
+`tools/python/harness/analyzer.py` and `snapshot.py`. Generated snapshots use
+`out/reverse/<target>/snapshot.json`; target-qualified addresses are never
+merged across binaries. There is intentionally no persistent analyzer project
+or removed `harness analysis` command surface.
 
 ## Candidate replacement loop
 
@@ -119,8 +69,8 @@ an unproven shared ABI:
 2. Express a recovered record as a target-local C89 view, preserving raw pads
    and byte/halfword overlays until consumers prove their meaning.
 3. Lift one consumer against that binding and run `bin/harness diff` after
-   every source change. Use `bin/harness flags` or a bounded candidate search
-   only to test compiler shape; generated candidates stay under `out/`.
+   every source change. Use `bin/harness reverse` to select a bounded mission;
+   generated candidates stay under `out/`.
    Keep the authored lift in C89; do not use inline assembly to force register
    allocation or fill an executable function.
 4. Promote a real function or named field only when its bytes match and its
@@ -130,11 +80,9 @@ an unproven shared ABI:
    at different load addresses do not share a symbol or struct contract until
    relocatability and runtime behavior are proven.
 
-`bin/harness flags` is an experiment boundary, not a promotion mechanism. For
-example, `src/emi/etc/game/00/func_801970ec.c` is 95.31% under the canonical
-`-O2` profile but reaches an exact match with `-O2 -fno-schedule-insns`; keep
-that result as compiler evidence until the target's original per-function flags
-are independently established.
+`bin/harness reverse` is an orchestration boundary, not a promotion mechanism.
+Keep compiler-shape hypotheses as generated evidence until the target's
+original per-function flags are independently established.
 
 ## Source conventions
 

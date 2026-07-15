@@ -8,12 +8,14 @@ import pytest
 
 from harness.binaries import (
     build_emi_catalog,
-    materialize_promoted_emi_targets,
     normalize_executable,
-    promote_entry,
     resolve_entry,
     target_details,
     target_progress,
+)
+from harness.targets import (
+    materialize_promoted_emi_targets,
+    promote_entry,
     write_catalog,
 )
 
@@ -29,7 +31,7 @@ def test_materialize_promoted_emi_targets_restores_deleted_binary(
     target.write_text(
         "\n".join(
             [
-                'schema = "harness.target/v1"',
+                'schema = "harness.target/v2"',
                 'id = "emi/etc/game/01"',
                 'disc_id = "BIN/ETC/GAME.EMI#1"',
                 'kind = "emi"',

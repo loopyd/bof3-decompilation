@@ -1,28 +1,17 @@
-harness_artifact_register_archive(
-    slus_004_22
-    FOLDER ""
-    PROGRAM_NAME "SLUS_004.22"
-    PROGRAM_PATH "/boot/SLUS_004.22"
-    SOURCE_HINT "${HARNESS_EXTRACTED_DIR}/SLUS_004.22"
-    KIND "boot"
-    DECLARED_SOURCES ${HARNESS_CORE_SOURCES}
-)
+include_guard(GLOBAL)
 
-harness_artifact_register_archive(
-    logo
-    FOLDER "LOGO"
-    PROGRAM_NAME "LOGO.EXE"
-    PROGRAM_PATH "/boot/LOGO/LOGO.EXE"
-    SOURCE_HINT "${HARNESS_EXTRACTED_DIR}/LOGO/LOGO.EXE"
-    KIND "logo"
-    DECLARED_SOURCES ${HARNESS_TARGET_EXE_LOGO_SOURCES}
+# Artifact target registration is generated from config/targets/*.toml.  Keeping
+# this adapter tiny prevents CMake and the Python registry from drifting apart.
+set(HARNESS_GENERATED_TARGETS "${HARNESS_ROOT_DIR}/out/build/targets.cmake")
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E env
+        "PYTHONPATH=${HARNESS_ROOT_DIR}/tools/python"
+        "${Python3_EXECUTABLE}" -c
+        "from pathlib import Path; from harness.registry import generate_target_manifest; generate_target_manifest(Path('.'))"
+    WORKING_DIRECTORY "${HARNESS_ROOT_DIR}"
+    RESULT_VARIABLE HARNESS_TARGET_REGISTRY_RESULT
 )
-
-include("${CMAKE_CURRENT_LIST_DIR}/modules/game.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/modules/battle.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/modules/bate.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/modules/commu00.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/modules/etc.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/modules/scenario.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/modules/scena16.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/modules/world00.cmake")
+if(NOT HARNESS_TARGET_REGISTRY_RESULT EQUAL 0 OR NOT EXISTS "${HARNESS_GENERATED_TARGETS}")
+    message(FATAL_ERROR "failed to generate ${HARNESS_GENERATED_TARGETS} from target manifests")
+endif()
+include("${HARNESS_GENERATED_TARGETS}")

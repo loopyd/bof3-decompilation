@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 from ..emi import emi_pack, emi_unpack
-from ..paths import repo_layout
+from ..io import repo_layout
 from ._common import run_main
 
 

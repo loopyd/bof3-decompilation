@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ..common import ensure_parent, run_command
+from ..io import ensure_parent, run_command
 from ..toolchain.setup_disc import import_bof3_disc
 from .inputs import detect_disk_inputs, resolve_disc_input_path
 

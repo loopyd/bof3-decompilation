@@ -6,7 +6,7 @@ from pathlib import Path
 
 from ..match.asm_diff import AsmDiffRequest, parse_int, run_asm_diff_one
 from ..match.asm_differ import write_bundle
-from ..paths import repo_layout
+from ..io import repo_layout
 from ._common import run_main
 from ._asm_diff_output import format_asm_diff_llm, format_asm_diff_summary
 

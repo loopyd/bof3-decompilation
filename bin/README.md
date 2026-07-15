@@ -24,48 +24,21 @@ cmake --build --preset default
 `harness` is the BOF3 command surface:
 
 ```sh
-harness target list|show|doctor
-harness index build
-harness find <term>
-harness show <id>
-harness related <id>
-harness graph <id>
-harness profile list|show|resolve
-harness context build|show <target> <function>
-harness lift <target> <function>
+harness setup [options]
+harness discover
+harness targets [target] [--json]
+harness promote <archive#slot> --confirm-code
+harness reverse <target[@address]> [--run]
 harness diff <source-or-function-id>
-harness permute <source-or-function-id> [--iterations 100] [--timeout 300] [--seed SEED] [-j JOBS] [--json]
-harness adopt <candidate> --function <function-id> --apply
 ```
-
-`harness permute` first compiles the generated `base.c`, then runs a bounded set
-of candidates. The defaults are 100 iterations, a 300-second shared deadline, a
-reported system-random seed, and one worker. Pass `--seed SEED` to reproduce a
-run. Use `--json` for bounded run metadata, including the effective seed;
-exit 0 means an improvement, 1 means a clean run with no improvement, and 2
-means setup, timeout, or permuter failure. Candidate source and full logs remain
-under the reported `out/matching/.../permuter` bundle.
 
 Disc discovery and asset operations are also available:
 
 ```sh
-harness scan
-harness status [target]
-harness candidates [family]
-harness promote <archive#slot> --confirm-code
-harness next [target]
-harness flags <source>
-harness analysis doctor
-harness analysis init <target>
-harness analysis generate [target]
-harness analysis hotspots [--kind leaves] [--top 10] [--min-callers N] [--max-out N] [--min-size N] [--max-size N] [--status reviewed|lifted|unreviewed|unlifted] [--sort callers]
-harness analysis graph
-harness analysis query <target> <query>
-harness ghidra sync
-harness assets list
-harness assets str validate <path> [--expected-fps FPS] [--json]
-harness assets str convert <path> --fps FPS [--output PATH] [--json]
-harness disk verify|rebuild
+harness doctor [--strict]
+harness assets list|str validate|str convert
+harness psyq import
+harness emi unpack
 ```
 
 STR validation preserves the extracted 2336-byte-sector source and writes a

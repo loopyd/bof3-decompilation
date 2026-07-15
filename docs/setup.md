@@ -16,16 +16,32 @@ just setup
 bin/harness doctor --strict
 ```
 
-`just setup` prepares the required submodules and PSX tools, stages PsyQ 4.7,
-extracts the disc, unpacks EMI archives, and refreshes the catalog. SDK files
-remain ignored and must not be committed.
+`just setup` initializes pinned submodules, prepares the PSX tools, stages PsyQ
+4.7, extracts the disc, unpacks
+EMI archives, and refreshes the catalog. SDK files remain ignored and must not
+be committed.
 
 Run `just psyq` separately only when restaging the SDK.
+
+## Choose the starting state
+
+- Fresh or newly cloned checkout: run `just doctor` first, place the US BIN/CUE
+  media in `disks/`, then run `just setup`.
+- Existing checkout with generated media: run `just doctor`, then `just check`
+  or `just build`; use `just discover` only when the extracted catalog changed.
+- Existing checkout with a missing generated stage: run `just extract` for disc
+  extraction or `just unpack` for EMI unpacking, then `just discover`.
+
+`just doctor` validates tracked configuration and does not require disc media or
+an existing catalog. Strict mode also accepts missing quarantined payloads, but
+active target payloads must be present and hash-valid.
 
 Use these day-to-day targets after setup:
 
 ```bash
 just extract
+just unpack
+just discover
 just build
 just check
 just format
@@ -34,17 +50,17 @@ just format
 `just build` compiles historical PsyQ objects serially. Parallel compilation can
 race a transient compiler output and leave a misleading partial archive.
 
-To rerun only extraction or rematerialize normalized images:
+To rerun only disc extraction or EMI unpacking:
 
 ```bash
 just extract
-bin/harness emi unpack
-bin/harness normalize
+just unpack
 ```
 
-`bin/harness normalize` restores both executable load images and all tracked
-EMI target images from the extracted payloads; it does not recover missing disc
-input.
+`just extract` builds the native extraction tools and extracts the disc into
+`out/extracted/`. `just unpack` expects that extracted tree and writes unpacked
+EMI entries below the same generated root. Use `just setup` for the complete
+toolchain, extraction, unpack, and catalog workflow.
 
 ## Local input
 
@@ -54,8 +70,7 @@ payloads, SDK files, or generated analysis output. See
 
 ## Verification
 
-After extraction, `bin/harness scan` writes `out/catalog/emi.json` and
-`bin/harness index build` writes `out/index/harness.sqlite`.
+After extraction, `bin/harness discover` writes `out/catalog/emi.json`.
 
 Optional analysis and last-mile matching tools are not required for the core
 setup. Install or enable them only when the active function needs them.

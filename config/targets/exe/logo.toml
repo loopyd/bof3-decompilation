@@ -1,7 +1,8 @@
-schema = "harness.target/v1"
+schema = "harness.target/v2"
 id = "exe/logo"
 disc_id = "LOGO/LOGO.EXE"
 kind = "executable"
+status = "active"
 source_dir = "src/exe/logo"
 binary = "out/binaries/exe/logo.bin"
 splat = "config/splat/exe/logo.yaml"
@@ -10,17 +11,14 @@ profile = "native/capcom97"
 
 [psyq]
 headers = "headers/psyq-4.7"
-
 [psyq.libraries.LIBCD]
 members = ["psyq/4.7/libcd/event.o"]
 confidence = "high"
 evidence = ["LOGO.EXE 0x801cfc30 matches CdInit in PsyQ 4.7 libcd.a"]
-
 [psyq.libraries.LIBETC]
 members = ["psyq/4.7/libetc/intr.o"]
 confidence = "high"
 evidence = ["LOGO.EXE 0x801cf1ec matches StopCallback in PsyQ 4.7 libetc.a"]
-
 [psyq.libraries.LIBGPU]
 members = ["psyq/4.7/libgpu/sys.o"]
 confidence = "high"

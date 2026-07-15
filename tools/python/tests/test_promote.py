@@ -9,8 +9,8 @@ from pathlib import Path
 
 import pytest
 
-from harness.binaries import (
-    splat_config_text,
+from harness.binaries import splat_config_text
+from harness.targets import (
     promote_entry,
     write_catalog,
 )
@@ -61,7 +61,7 @@ def test_splat_config_text_emits_complete_splat_041_layout(tmp_path: Path) -> No
     assert re.search(r"-\s*\[0x[0-9a-fA-F]+\]\s*$", text, re.M) is not None
 
 
-def test_promote_writes_manifest_and_bootstrap_splat(tmp_path: Path) -> None:
+def test_promote_writes_manifest_and_tracked_splat(tmp_path: Path) -> None:
     emi_root = tmp_path / "out" / "extracted" / "BIN"
     _write_entry(emi_root, "BATTLE/BATTLE", 3, 0x801D0C00)
     catalog_path = tmp_path / "out" / "catalog" / "emi.json"
@@ -88,6 +88,7 @@ def test_promote_writes_manifest_and_bootstrap_splat(tmp_path: Path) -> None:
     assert 'id = "emi/battle/battle/03"' in manifest
     assert 'disc_id = "BIN/BATTLE/BATTLE.EMI#3"' in manifest
     assert 'kind = "emi"' in manifest
+    assert 'status = "quarantined"' in manifest
     assert 'source_dir = "src/emi/battle/battle/03"' in manifest
     assert 'splat = "config/splat/emi/battle/battle/03.yaml"' in manifest
     assert "load_address = 0x801d0c00" in manifest

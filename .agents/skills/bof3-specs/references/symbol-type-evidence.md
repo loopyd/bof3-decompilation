@@ -48,10 +48,8 @@ Before correlating anything, record:
 Prefer the repository adapter:
 
 ```sh
-bin/harness target show exe/slus_004_22
-bin/harness analysis doctor
-bin/harness analysis init exe/slus_004_22
-bin/harness analysis query exe/slus_004_22 functions
+bin/harness targets exe/slus_004_22
+bin/harness reverse exe/slus_004_22 --run
 ```
 
 For native inspection, use the verified load address:
@@ -325,13 +323,12 @@ flagspace and retain the canonical address flag. Test export/replay first;
 flag-name collisions and namespaces differ between Rizin/radare2 versions.
 
 Store reviewed commands in `config/analysis/<target-path>.r2`, grouped in stable
-order: functions, data, type import/placement, comments. Generate projects and
-exports under `out/analysis/`:
+order: functions, data, type import/placement, comments. Use the stateless
+analyzer adapter for target-scoped queries:
 
 ```sh
-bin/harness analysis init exe/slus_004_22
-bin/harness analysis export exe/slus_004_22
-bin/harness analysis graph exe/slus_004_22
+PYTHONPATH=tools/python python -c \
+  'from harness.analyzer import find_best_engine; print(find_best_engine())'
 ```
 
 Reinitialize from clean input and replay, then compare deterministic exports.
@@ -352,7 +349,7 @@ compare:
 Useful repository and analyzer checks:
 
 ```sh
-bin/harness analysis graph
+bin/harness targets
 rg -n 'func_XXXXXXXX|semantic_alias' src config include
 ```
 

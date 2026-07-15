@@ -8,8 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from ..jsonio import write_json
-from ..paths import RepoLayout, repo_layout
+from ..io import write_json, RepoLayout, repo_layout
 from ._asm_disasm import (
     current_symbol_size,
     disassemble_linked,
@@ -287,7 +286,7 @@ def run_asm_diff_one(
     )
     original_bytes_path.write_bytes(original_bytes)
 
-    from ..domain import load_target_manifests
+    from ..targets import load_target_manifests
 
     source_directory = source_path.parent.relative_to(repo.root).as_posix()
     manifest = next(

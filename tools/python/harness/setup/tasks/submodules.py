@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-from ...common import run_command
-from ...private_assets import list_required_submodule_paths
+from ...io import run_command
 from ..models import SetupContext
 
 
 def run(context: SetupContext) -> None:
-    paths = list_required_submodule_paths(context.layout.root)
-    if not paths:
-        return
+    """Initialize the repository's pinned tool submodules before building them."""
+
     run_command(
-        ["git", "submodule", "update", "--init", "--recursive", "--", *paths],
+        ["git", "submodule", "update", "--init", "--recursive"],
         cwd=context.layout.root,
     )

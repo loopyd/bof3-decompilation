@@ -16,7 +16,7 @@ from .asm_diff import (
 )
 from ._asm_disasm import extract_instructions, disassemble_linked
 from ._asm_link import function_bytes_match
-from ..paths import RepoLayout
+from ..io import RepoLayout
 
 
 OPTIMIZATION_RE = re.compile(r"^-O(?:[0-3s]|fast)$")

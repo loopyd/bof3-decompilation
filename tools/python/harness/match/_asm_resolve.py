@@ -7,8 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from ..jsonio import read_json
-from ..paths import RepoLayout, repo_layout
+from ..io import read_json, RepoLayout, repo_layout
 
 IMPLAUSIBLE_SIBLING_FUNCTION_SIZE = 0x1000
 MIPS_JR_RA = 0x03E00008
@@ -230,7 +229,7 @@ def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
         source_rel = resolved_source.relative_to(layout.harness_dir).as_posix()
     except ValueError:
         source_rel = ""
-    from ..domain import load_target_manifests
+    from ..targets import load_target_manifests
 
     source_dir = str(Path(source_rel).parent)
     for manifest in load_target_manifests(layout.root).values():
@@ -252,7 +251,7 @@ def overlay_load_address_for_source(
     except ValueError:
         return None
 
-    from ..domain import load_target_manifests
+    from ..targets import load_target_manifests
 
     source_dir = str(Path(source_rel).parent)
     for manifest in load_target_manifests(layout.root).values():
@@ -289,7 +288,7 @@ def _artifact_overlay_for_source(
     source_hint = str(rows[0].get("source_hint", ""))
     if ".EMI#" not in source_hint.upper():
         return None
-    from ..domain import load_target_manifests
+    from ..targets import load_target_manifests
 
     for target_manifest in load_target_manifests(layout.root).values():
         if target_manifest.id.value == target:

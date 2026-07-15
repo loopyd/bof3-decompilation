@@ -9,7 +9,7 @@ function(harness_add_artifact target)
         ${ARGN}
     )
 
-    if(NOT ARG_PROGRAM_NAME OR NOT ARG_PROGRAM_PATH OR NOT ARG_SOURCE_HINT OR NOT ARG_DISC_FOLDER)
+    if(NOT ARG_PROGRAM_NAME OR NOT ARG_PROGRAM_PATH OR NOT ARG_SOURCE_HINT OR NOT DEFINED ARG_DISC_FOLDER)
         message(FATAL_ERROR
             "harness_add_artifact requires DISC_FOLDER, PROGRAM_NAME, PROGRAM_PATH, and SOURCE_HINT."
         )

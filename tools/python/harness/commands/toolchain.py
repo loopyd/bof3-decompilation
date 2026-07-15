@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from ..paths import repo_layout
+from ..io import repo_layout
 from ..toolchain.setup_disc import DEFAULT_BOF3_ARCHIVE_URL, import_bof3_disc
 from ..toolchain.setup_psyq import (
     DEFAULT_PSYQ_VERSION,

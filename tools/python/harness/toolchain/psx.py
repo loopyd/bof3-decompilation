@@ -4,7 +4,7 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..paths import RepoLayout
+from ..io import RepoLayout
 from .releases import (
     download_file,
     extract_tar_gz,

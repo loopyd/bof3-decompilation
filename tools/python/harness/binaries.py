@@ -15,8 +15,8 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-from .inventory.scan import file_sha256, parse_psx_exe
-from .jsonio import read_json, write_json
+from .discovery import file_sha256, parse_psx_exe
+from .io import read_json, write_json
 
 
 CATALOG_SCHEMA = "harness.catalog.emi/v2"
@@ -56,14 +56,22 @@ def normalize_executable(source: Path, destination: Path) -> dict[str, Any]:
     return metadata
 
 
-def set_splat_expected_hash(config_path: Path, image_path: Path) -> None:
-    """Record the expected raw-image SHA-1 in the tracked Splat configuration."""
+def verify_splat_hash(config_path: Path, image_path: Path) -> None:
+    """Verify the tracked Splat SHA-1 matches the normalized image.
+
+    Raises ValueError on mismatch; never rewrites the tracked config.
+    """
     digest = hashlib.sha1(image_path.read_bytes()).hexdigest()
     text = config_path.read_text(encoding="utf-8")
-    if re.search(r"^sha1:.*$", text, flags=re.M) is None:
+    match = re.search(r"^sha1:\s*([0-9a-f]{40})$", text, flags=re.M)
+    if match is None:
         raise ValueError(f"missing sha1 field in Splat config: {config_path}")
-    updated = re.sub(r"^sha1:.*$", f"sha1: {digest}", text, count=1, flags=re.M)
-    config_path.write_text(updated, encoding="utf-8")
+    expected = match.group(1)
+    if expected != digest:
+        raise ValueError(
+            f"hash mismatch in {config_path}: tracked={expected} image={digest}; "
+            "reviewed Splat layouts must not drift from catalog bytes"
+        )
 
 
 def _mips_instruction_density(payload: Path) -> float:
@@ -539,9 +547,7 @@ def splat_config_text(
     slug = target_slug(entry)
     digest = hashlib.sha1(normalized_path.read_bytes()).hexdigest()
     psyq_path, shared_path = _splat_symbol_addrs_path()
-    base_path = _splat_base_path(
-        Path("config/splat/emi") / f"{slug}.yaml"
-    )
+    base_path = _splat_base_path(Path("config/splat/emi") / f"{slug}.yaml")
     header = "\n".join(
         [
             f"name: {_splat_basename(slug)}",
@@ -584,7 +590,7 @@ def promote_entry(
         )
     slug = target_slug(entry)
     target_id = f"emi/{slug}"
-    config_path = root / "config" / "splat" / "emi" / (slug + ".yaml")
+    config_path = root / "config" / "splat" / "emi" / f"{slug}.yaml"
     manifest_path = root / "config" / "targets" / "emi" / (slug + ".toml")
     source_dir = root / "src" / "emi" / slug
     normalized_path = root / "out" / "binaries" / "emi" / f"{slug}.bin"
@@ -674,10 +680,12 @@ def _render_manifest(
     """Render a canonical target manifest for a promoted EMI entry."""
 
     lines = [
-        'schema = "harness.target/v1"',
+        'schema = "harness.target/v2"',
         f'id = "{target_id}"',
         f'disc_id = "BIN/{entry["archive_id"].upper()}.EMI#{entry["slot"]}"',
         'kind = "emi"',
+        'status = "quarantined"',
+        'quarantine_reason = "whole-payload bootstrap layout pending reviewed boundaries"',
         f'source_dir = "src/emi/{slug}"',
         f'binary = "out/binaries/emi/{slug}.bin"',
         f'splat = "config/splat/emi/{slug}.yaml"',

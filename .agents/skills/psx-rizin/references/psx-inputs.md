@@ -32,10 +32,9 @@ For BOF3, resolve the input through the harness instead of copying files into an
 analysis directory:
 
 ```sh
-bin/harness target list
-bin/harness analysis doctor
-bin/harness analysis init exe/slus_004_22
-bin/harness analysis init emi/etc/game/00
+bin/harness targets
+bin/harness targets exe/slus_004_22
+bin/harness targets emi/etc/game/00
 ```
 
 The target manifest supplies the canonical normalized path and load address.
@@ -148,8 +147,8 @@ canonical disassembly or raw bytes.
 
 ## Project isolation
 
-Create one generated project per target identity: normalized input hash, load
-address, and entry convention. Never reuse a project merely because two files
+Create one generated snapshot per target identity: normalized input hash, load
+address, and entry convention. Never reuse a snapshot merely because two files
 have equal bytes. Address-based flags, xrefs, types, and function boundaries
 become invalid when the same payload is mapped elsewhere.
 
@@ -157,15 +156,12 @@ Use the harness so Rizin/radare2 version differences and project paths remain
 centralized:
 
 ```sh
-bin/harness analysis init TARGET
-bin/harness analysis query TARGET functions
-bin/harness analysis export TARGET
+python -c 'from harness.analyzer import find_best_engine, query_project'
 ```
 
-Projects belong under `out/analysis/projects/`; deterministic exports belong
-under `out/analysis/exports/`. Reviewed replay commands belong under
-`config/analysis/`. Never treat disposable project state as the only copy of a
-name or type decision.
+Snapshots belong under `out/reverse/<target>/`; reviewed replay commands belong
+under `config/analysis/`. Never treat disposable snapshot state as the only copy
+of a name or type decision.
 
 ## Sources
 

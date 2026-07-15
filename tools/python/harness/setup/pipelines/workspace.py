@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ...paths import RepoLayout, repo_layout
+from ...io import RepoLayout, repo_layout
 from ..models import SetupContext, SetupOptions
 from ..tasks import iter_setup_task_specs, run_setup_task
 

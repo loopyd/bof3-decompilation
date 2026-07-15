@@ -1,7 +1,8 @@
-schema = "harness.target/v1"
+schema = "harness.target/v2"
 id = "exe/slus_004_22"
 disc_id = "SLUS_004.22"
 kind = "executable"
+status = "active"
 source_dir = "src/exe/slus_004_22"
 binary = "out/binaries/exe/slus_004_22.bin"
 splat = "config/splat/exe/slus_004_22.yaml"
@@ -10,12 +11,10 @@ profile = "native/capcom97"
 
 [psyq]
 headers = "headers/psyq-4.7"
-
 [psyq.libraries.LIBGPU]
 members = ["psyq/4.0/libgpu/ext.obj"]
 confidence = "high"
 evidence = ["psyq/4.0/libgpu/ext.obj/SetDefDrawEnv"]
-
 [psyq.libraries.LIBCD]
 members = [
     "psyq/4.7/libcd/s_002.o",
@@ -28,12 +27,14 @@ members = [
 ]
 confidence = "high"
 evidence = ["SLUS_004.22 EMI loader call targets and PsyQ 4.7 libcd.a symbols"]
-
 [psyq.libraries.LIBAPI]
-members = ["psyq/4.7/libapi/a08.o", "psyq/4.7/libapi/a12.o", "psyq/4.7/libapi/a91.o"]
+members = [
+    "psyq/4.7/libapi/a08.o",
+    "psyq/4.7/libapi/a12.o",
+    "psyq/4.7/libapi/a91.o",
+]
 confidence = "high"
 evidence = ["SLUS_004.22 BIOS-vector call targets match PsyQ 4.7 libapi.a symbols"]
-
 [psyq.libraries.LIBCARD]
 members = [
     "psyq/4.7/libcard/a74.o",

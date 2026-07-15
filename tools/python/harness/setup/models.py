@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..paths import RepoLayout
+from ..io import RepoLayout
 
 
 @dataclass(frozen=True)

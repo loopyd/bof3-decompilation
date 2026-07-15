@@ -20,12 +20,9 @@ COP2/GTE behavior.
 ## Function loop
 
 ```bash
-bin/harness target show <target>
-bin/harness next [target]
-bin/harness lift <target> <function>
+bin/harness targets <target>
+bin/harness reverse <target>@<function> --run
 bin/harness diff <source>
-# Once the lift compiles and its boundaries/structure are credible:
-bin/harness permute <source> -j <bounded-jobs>
 ```
 
 Before editing C, verify the payload, load address, function range, Splat

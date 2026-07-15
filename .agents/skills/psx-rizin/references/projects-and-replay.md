@@ -102,15 +102,12 @@ a stable cross-engine command contract.
 ## Repository example
 
 ```sh
-bin/harness analysis doctor
-bin/harness analysis init emi/etc/game/00
-bin/harness analysis query emi/etc/game/00 functions
-bin/harness analysis export emi/etc/game/00
-bin/harness analysis graph emi/etc/game/00
+PYTHONPATH=tools/python python -c \
+  'from harness.analyzer import find_best_engine; print(find_best_engine())'
 ```
 
-The adapter owns engine differences. Generated projects and exports stay under
-`out/analysis/`; reviewed commands/types stay under `config/analysis/`.
+The stateless adapter owns engine differences. Generated snapshots stay under
+`out/reverse/<target>/`; reviewed commands/types stay under `config/analysis/`.
 
 ## Official sources
 

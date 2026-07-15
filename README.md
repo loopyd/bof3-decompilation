@@ -10,32 +10,24 @@ Place user-owned US BIN/CUE media in `disks/`, then run:
 ```sh
 just setup
 bin/harness doctor --strict
-bin/harness target list
+bin/harness targets
 ```
 
 `just setup` builds the canonical Rust extractors, extracts the disc, unpacks
-EMI archives, normalizes both PS-X executables and every tracked EMI target,
-and refreshes the catalog and evidence index. Generated state stays under
+EMI archives, and refreshes the catalog. Generated state stays under
 `build/`, `out/`, and `toolchains/`.
 
 ## Reverse one function
 
 ```sh
-bin/harness target show "$TARGET"
-bin/harness next "$TARGET"
-bin/harness lift "$TARGET" "$ADDRESS"
-# Edit the emitted src/.../func_XXXXXXXX.c file.
+bin/harness targets "$TARGET"
+bin/harness reverse "$TARGET"@"$ADDRESS" --run
 bin/harness diff "$SOURCE"
 ```
 
-Original bytes and canonical Splat assembly are authoritative. Once the target,
-load address, boundary, and compiler command are proven, use generated context
-or bounded permutation when they help:
-
-```sh
-bin/harness context build "$TARGET" "$ADDRESS"
-bin/harness permute "$SOURCE" --jobs 8
-```
+Original bytes and canonical Splat assembly are authoritative. The reverse
+mission is an orchestration aid; exact function matching and whole-payload
+matching remain separate completion claims.
 
 Keep a candidate only when it preserves factual, readable C89. Exact function
 matching and whole-payload matching are separate completion claims.
@@ -44,11 +36,11 @@ matching and whole-payload matching are separate completion claims.
 
 | Command | Result |
 | --- | --- |
-| `just extract` | Extract the disc, then unpack every EMI archive. |
+| `just doctor` | Validate tracked configuration; safe before media extraction. |
+| `just extract` | Build the native extractor and extract the disc. |
+| `just unpack` | Unpack EMI archives from the extracted disc tree. |
 | `bin/harness emi unpack` | Run Rust `emi-ex`; supports `--tool`. |
-| `bin/harness normalize` | Restore normalized EXE and tracked EMI images. |
-| `bin/harness scan` | Refresh `out/catalog/emi.json`. |
-| `bin/harness index build` | Refresh the repository evidence graph. |
+| `bin/harness discover` | Refresh `out/catalog/emi.json`. |
 | `just build` | Run the historical PsyQ validation build serially. |
 | `just check` | Run format checks, tests, Ruff, and doctor. |
 | `just clean` | Remove `build/`; preserve evidence under `out/`. |

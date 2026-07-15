@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ...disk import disk_extract
+from ...disc import disk_extract
 from ..models import SetupContext
 
 

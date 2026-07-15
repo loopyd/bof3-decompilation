@@ -15,7 +15,7 @@ or target binary.
 
 | Stored bytes | Runtime interpretation | Logical asset | Lossless interchange | Lossless desktop derivative | Validator | Unresolved boundary |
 | --- | --- | --- | --- | --- | --- | --- |
-| EMI archive | Sector-aligned container and TOC | Ordered entry set | Original `.EMI` plus extracted entry bytes and manifest | Catalog only | `bin/harness emi unpack`; `bin/harness scan` | Archive is not one executable or asset. |
+| EMI archive | Sector-aligned container and TOC | Ordered entry set | Original `.EMI` plus extracted entry bytes and manifest | Catalog only | `bin/harness emi unpack`; `bin/harness discover` | Archive is not one executable or asset. |
 | EMI type `0` | Direct RAM payload | Code, data, palette, or other bytes | Raw `.bin` | Domain-specific only | Catalog hash/load argument; promoted-target diff for code | Type does not identify content. |
 | EMI types `1`, `2` | Queued RAM transfer | Code or data bytes with loader bookkeeping | Raw `.bin` | Domain-specific only | Catalog hash/load argument and reviewed loader state | Exact semantic difference between types remains bounded by loader behavior. |
 | EMI type `3` | Packed VRAM upload descriptor plus raw chunks | Texture-page words | Raw `.img`/`.bin` plus descriptor | PNG after texture mode and CLUT are proven | `0x800` chunk geometry; [graphics invariants](../pseudocode.md#type-3-vram-upload-and-separate-palette-mapping) | Payload has no TIM header and does not name its palette. |
@@ -46,7 +46,8 @@ Retain enough information to reconstruct and audit every conversion:
 
 ```sh
 just extract
-bin/harness scan
+just unpack
+bin/harness discover
 bin/harness assets list
 just check
 ```

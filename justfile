@@ -32,24 +32,28 @@ psyq: venv
 # Prepare tools, extract the disc, and refresh binary evidence.
 setup: venv
     @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup
-    @{{ root }}/bin/harness normalize
-    @{{ root }}/bin/harness scan
-    @{{ root }}/bin/harness index build
+    @{{ root }}/bin/harness discover
     @{{ root }}/bin/harness doctor
 
-# Extract the disc and unpack every EMI archive into out/extracted.
+# Extract the disc into out/extracted. Builds the native extractor first.
 extract: venv
-    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.disk disk-extract --output {{ root }}/out/extracted
-    @{{ root }}/bin/harness emi unpack
+    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task submodules
+    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task native-tools
+    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task extract
+
+# Unpack EMI archives from the extracted disc tree into out/extracted.
+unpack: venv
+    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task submodules
+    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task native-tools
+    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task unpack
 
 # Refresh the EMI catalog.
-scan: venv
-    @{{ root }}/bin/harness scan
-    @{{ root }}/bin/harness index build
+discover: venv
+    @{{ root }}/bin/harness discover
 
 # Validate tracked workspace configuration.
-doctor: venv
-    @{{ root }}/bin/harness doctor
+doctor *args: venv
+    @{{ root }}/bin/harness doctor {{args}}
 
 # Configure and build every registered executable and overlay artifact.
 build:

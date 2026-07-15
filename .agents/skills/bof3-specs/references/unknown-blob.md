@@ -29,18 +29,16 @@ padding.
 ## Read-only discovery commands
 
 ```sh
-bin/harness target list
-bin/harness scan
-bin/harness candidates <family>
-bin/harness target show <target-or-entry>
-bin/harness analysis graph
+bin/harness targets
+bin/harness discover
+bin/harness targets <target-or-entry>
 sha256sum <payload>
 stat -c '%n %s bytes' <payload>
 git check-ignore -v <proposed-path>
 ```
 
-Use `bin/harness analysis init/query/export` only for an existing target. Native
-raw analysis must set MIPS, 32-bit, little-endian, and the verified mapping base.
+Use the stateless `harness.analyzer` API only for an existing target. Native raw
+analysis must set MIPS, 32-bit, little-endian, and the verified mapping base.
 
 ## Stop conditions
 

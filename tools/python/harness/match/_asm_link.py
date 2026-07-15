@@ -4,7 +4,7 @@ import re
 import subprocess
 from pathlib import Path
 
-from ..paths import RepoLayout, repo_layout
+from ..io import RepoLayout, repo_layout
 from ..symbols import load_weak_symbol_bindings
 
 _HEX_SUFFIX_RE = re.compile(r"(?:func|DAT)_([0-9a-fA-F]{8})$")

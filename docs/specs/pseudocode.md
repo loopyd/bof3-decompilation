@@ -62,7 +62,7 @@ handlers and addresses are listed in the [loader dispatch table](runtime/emi-loa
 
 Testable invariants:
 
-- `just extract && bin/harness scan` must regenerate the EMI entry catalog from
+- `just extract && just unpack && bin/harness discover` must regenerate the EMI entry catalog from
   the extracted archives; generated evidence remains under `out/`.
 - Every payload offset is `0x800`-aligned and every next offset uses
   `(size + 0x7ff) & ~0x7ff`.

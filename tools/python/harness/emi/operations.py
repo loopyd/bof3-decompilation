@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ..common import run_command
+from ..io import run_command
 
 
 def _find_emi_archives(extracted_dir: Path) -> list[Path]:

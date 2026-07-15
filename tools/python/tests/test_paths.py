@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from harness.paths import repo_layout
+from harness.io import repo_layout
 
 
 def test_repo_layout_uses_canonical_rust_extraction_tools(tmp_path: Path) -> None:

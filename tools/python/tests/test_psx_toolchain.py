@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from harness.paths import repo_layout
+from harness.io import repo_layout
 from harness.toolchain import psx as module
 
 

@@ -23,7 +23,7 @@ from harness.match.asm_diff import (
 )
 from harness.match._asm_disasm import extract_instructions
 from harness.match._asm_link import link_object_at_address
-from harness.paths import repo_layout
+from harness.io import repo_layout
 from harness.symbols import load_weak_symbol_bindings
 
 
@@ -404,7 +404,7 @@ def test_overlay_manifest_uses_catalog_payload_base(
         load_address=0x8019611C,
     )
     monkeypatch.setattr(
-        "harness.domain.load_target_manifests",
+        "harness.targets.load_target_manifests",
         lambda _root: {"emi/etc/game/00": manifest},
     )
 
