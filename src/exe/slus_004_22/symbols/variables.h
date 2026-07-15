@@ -19,4 +19,12 @@ extern u8  D_8014B17C;
 /* Static target data. */
 extern u8 D_8018B300;
 
+/* Function-local data for func_801729d0. */
+extern u16 D_8018E7EE;
+extern u8  D_8018E264;
+extern u32 D_8018E258;
+extern u32 D_8018E250;
+extern u32 D_8018E25C;
+extern u8  D_8018E0E8[];
+
 #endif
