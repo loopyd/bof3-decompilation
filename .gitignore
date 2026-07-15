@@ -41,3 +41,12 @@ toolchains/psyq-stock/
 # generated outputs
 out/*
 !out/README.md
+undefined_funcs_auto.txt
+undefined_syms_auto.txt
+assets/
+debug_compiled_object.o
+debug_source.c
+include/gte_macros.inc
+include/include_asm.h
+include/labels.inc
+include/macro.inc
