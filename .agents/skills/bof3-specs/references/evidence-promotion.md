@@ -20,8 +20,8 @@ evidence.
 | --- | --- |
 | Binary segment, load address, boundary | `config/splat/` or target manifest |
 | Shared/authored symbol | `config/symbols/` or target `symbols.c` |
-| Reviewed analyzer rename/comment/type placement | `config/analysis/<target-path>.r2` |
-| Analysis-only cross-target type catalog | `config/analysis/bof3_objects.h` |
+| Reviewed analyzer rename/comment/type placement | `config/analysis/<target-path>/reviewed.r2` |
+| Analysis-only cross-target type catalog | `config/analysis/shared/bof3_objects.h` |
 | Recovered compiled type | owning `internal.h` or `include/bof3/` |
 | Layout, ID, enum, runtime contract | `docs/specs/` |
 | Projects, strings, xrefs, pseudocode, guesses | `out/analysis/` |

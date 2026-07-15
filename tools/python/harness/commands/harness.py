@@ -152,6 +152,23 @@ def run_reverse(args: argparse.Namespace) -> int:
     if target_id not in manifests:
         raise ValueError(f"unknown target: {target_id}")
 
+    if args.functions is not None and args.functions < 1:
+        raise ValueError("--functions must be at least 1")
+    if args.time is not None and args.time < 1:
+        raise ValueError("--time must be at least 1 minute")
+    if args.depth is not None and args.depth < 0:
+        raise ValueError("--depth must not be negative")
+    if args.run and args.functions not in (None, 1):
+        raise ValueError("--run currently supports exactly one function")
+
+    if args.run and address is None:
+        selected = reverse.select_next_function(root, target_id)
+        if selected is None:
+            raise ValueError(f"no eligible function found for target: {target_id}")
+        address, selected_goal = selected
+        if args.goal is None:
+            args.goal = selected_goal
+
     plan_kwargs: dict[str, Any] = {"strategy": args.strategy}
     if args.goal is not None:
         plan_kwargs["goal"] = args.goal
@@ -179,10 +196,12 @@ def run_reverse(args: argparse.Namespace) -> int:
     print(f"Status: {mission.status}")
 
     if args.run:
-        from ..agents import run_mission
-        bundle = run_mission(root, mission.to_dict())
-        import json
-        print(json.dumps(bundle, indent=2, sort_keys=True))
+        from ..opencode_runner import run_opencode_mission
+
+        result = run_opencode_mission(root, mission)
+        print(json.dumps(result.payload, indent=2, sort_keys=True))
+        print(f"Artifacts: {result.artifact_dir}")
+        return result.exit_code
 
     return 0
 
@@ -413,7 +432,9 @@ def build_parser() -> argparse.ArgumentParser:
     reverse.add_argument("--functions", type=int)
     reverse.add_argument("--time", type=int, help="duration in minutes")
     reverse.add_argument("--depth", type=int)
-    reverse.add_argument("--run", action="store_true", help="start the mission")
+    reverse.add_argument(
+        "--run", action="store_true", help="launch one bounded OpenCode mission"
+    )
     reverse.set_defaults(handler=run_reverse)
 
     diff = sub.add_parser("diff", help="compare a lifted source against the original bytes")

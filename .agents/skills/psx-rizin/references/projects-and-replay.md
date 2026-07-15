@@ -1,49 +1,16 @@
-# Projects, replay, and deterministic export
+# Replay and deterministic export
 
 ## Ownership model
 
 Use three layers with different trust:
 
-1. Generated native project database: convenient local cache, disposable.
+1. Transient native analyzer session: disposable investigation only.
 2. Tracked reviewed replay and C type inputs: durable analyzer intent.
 3. Deterministic generated exports: reproducible evidence for comparison.
 
-Never make a native project database the only copy of a reviewed name, comment,
-function boundary, or type placement. Project serialization and commands differ
-between Rizin/radare2 versions, and radare2's official book explicitly warns
-that projects have historical stability limitations.
-
-## Native Rizin
-
-Probe `P?` on the installed version. Current documented commands include:
-
-```text
-Ps path/project.rzdb       # save
-Po path/project.rzdb       # open
-Pi path/project.rzdb       # inspect project information
-Poo path/project.rzdb      # open over currently loaded binaries, where supported
-```
-
-Startup supports `rizin -p path/project.rzdb`. Save only after raw mapping,
-architecture, width, endianness, and input identity are correct.
-
-## Native radare2
-
-Probe `P?`; current official book documents:
-
-```text
-P+ NAME                    # save without change check
-Ps NAME                    # save
-P NAME                     # open
-P- NAME                    # delete
-Pl                          # list
-Pz e project.zrp           # inspect exact native help; export archive
-Pz i project.zrp           # inspect exact native help; import archive
-```
-
-Projects live below `dir.projects`; `r2 -p NAME` opens one. Keep `prj.files`
-disabled unless intentionally copying the binary, and disable native project VCS
-when the repository already owns provenance.
+Never make a native session the only copy of a reviewed name, comment, function
+boundary, or type placement. Do not save analyzer project databases; replay and
+exports must recreate reviewed state from the exact input and load mapping.
 
 ## Reviewed replay order
 

@@ -23,7 +23,10 @@ COP2/GTE behavior.
 ```bash
 bin/harness targets <target>
 bin/harness reverse <target>@<8-digit-address> --run
+bin/harness diff <source> --llm
 bin/asmdiff <source>
+bin/permute <source> --prepare-only
+bin/permute <source> -j <bounded-jobs>
 ```
 
 Before editing C, verify the payload, load address, function range, Splat
@@ -63,7 +66,7 @@ agent the machine-wide worker count. Prefer one well-fed run over several
 oversubscribed runs; reduce or defer permutation when the reserved headroom is
 already consumed.
 
-Omit `--seed` for independent exploration: the harness generates and reports a
+Omit `--seed` for independent exploration: `bin/permute` generates and reports a
 system-random base seed, then derives per-worker seeds. Supply and record a
 specific seed only to reproduce a useful candidate or diagnose a failed run;
 an unexplained fixed default repeatedly explores the same search path.

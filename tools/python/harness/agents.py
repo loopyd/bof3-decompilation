@@ -25,13 +25,16 @@ class LocalRunner:
 def get_runner() -> Runner:
     """Return a runner based on ``HARNESS_AGENT_RUNNER``.
 
-    Defaults to ``"subagent"`` and currently always returns a
-    :class:`LocalRunner`.
+    The legacy mission helpers are in-process only. Real OpenCode execution is
+    owned by :mod:`harness.opencode_runner` and is selected by the CLI.
     """
-    runner_name = os.environ.get("HARNESS_AGENT_RUNNER", "subagent")
-    if runner_name in ("local", "subagent"):
+    runner_name = os.environ.get("HARNESS_AGENT_RUNNER", "local")
+    if runner_name == "local":
         return LocalRunner()
-    return LocalRunner()
+    raise ValueError(
+        f"unsupported legacy agent runner {runner_name!r}; use local or "
+        "bin/harness reverse --run"
+    )
 
 
 DiffFn = Callable[[Any], dict[str, Any]]

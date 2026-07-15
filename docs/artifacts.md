@@ -16,6 +16,7 @@ tags: [build, generated]
 | `out/catalog/` | Raw EMI entry catalog used for promotion review |
 | `out/splat/` | Generated assembly, data, and linker artifacts |
 | `out/reverse/<target>/snapshot.json` | Normalized per-target stateless analyzer snapshot |
+| `out/reverse/<target>/functions/func_<address>/` | Reverse mission prompt, OpenCode events, result, and function evidence |
 | `out/context/`, `out/lift/`, `out/matching/` | Per-function context, lift, and comparison evidence |
 | `out/assets/` | Decoded asset previews |
 | `out/rebuilt/` | Transitional function-text-only images and metadata |

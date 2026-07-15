@@ -36,8 +36,9 @@ bin/harness reverse <target[@address]> [--run]
 bin/asmdiff <source-or-function-id>
 ```
 
-Focused workflows are standalone entry points and do not require the command
-dispatcher:
+`reverse --run` resolves one function and launches a bounded OpenCode mission.
+Without `--run`, it only previews the selected work. Focused workflows are
+standalone entry points and do not require the command dispatcher:
 
 ```sh
 bin/asmdiff src/exe/logo/func_801ce758.c

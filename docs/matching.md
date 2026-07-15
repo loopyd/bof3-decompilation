@@ -25,8 +25,14 @@ bin/asmdiff "$FUNCTION_SOURCE" --json
 2. Fix function boundaries and control flow before register allocation.
 3. Check signedness, access width, constants, calls, and delay slots.
 4. Use decompiler output only as a hint.
-5. Use decomp-permuter only after the function compiles and is structurally
-   close.
+5. Once the source compiles and its boundary/control flow are credible, use a
+   bounded permuter run when source shape or scheduling remains the issue:
+
+```sh
+bin/permute "$FUNCTION_SOURCE" --prepare-only
+bin/permute "$FUNCTION_SOURCE" -j "$BOUNDED_JOBS"
+bin/asmdiff "$FUNCTION_SOURCE"
+```
 
 Do not edit C to compensate for a constant address delta or incorrect target
 mapping.
@@ -34,7 +40,8 @@ mapping.
 ## Verification
 
 ```sh
-just build
 just check
-bin/harness doctor --strict
 ```
+
+`just check` includes `bin/harness doctor --strict`. Run `just verify "$TARGET"`
+only when claiming a whole-target byte match.

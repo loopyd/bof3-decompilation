@@ -22,4 +22,4 @@ rule loading and must not contain the only copy of a safety invariant.
 - `bof3-docs` — locate the smallest authoritative repository document
 - `bof3-specs` — interpret BOF3 binaries, formats, layouts, and evidence
 - `decomp-loop` — lift and exactly match functions or targets
-- `psx-rizin` — maintain reproducible PSX analyzer projects and exports
+- `psx-rizin` — collect reproducible PSX analyzer snapshots and replay evidence

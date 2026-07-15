@@ -49,7 +49,7 @@ Prefer the repository adapter:
 
 ```sh
 bin/harness targets exe/slus_004_22
-bin/harness reverse exe/slus_004_22 --run
+bin/harness reverse exe/slus_004_22@8014aac8 --run
 ```
 
 For native inspection, use the verified load address:
@@ -234,11 +234,11 @@ typedef struct EmiTransferSlot {
 
 Promote a field name only when multiple accesses establish its role. Preserve
 unknown padding explicitly so offsets remain visible. For an analysis-only
-draft, use fixed-width C declarations in `config/analysis/bof3_objects.h` and
+draft, use fixed-width C declarations in `config/analysis/shared/bof3_objects.h` and
 apply them to the exact address:
 
 ```text
-to config/analysis/bof3_objects.h
+to config/analysis/shared/bof3_objects.h
 ts EmiTransferSlot
 tp EmiTransferSlot 0x8014677c
 avga DAT_8014677c EmiTransferSlot @ 0x8014677c
@@ -322,7 +322,7 @@ If a semantic analyzer flag is useful, place it in a distinct reviewed
 flagspace and retain the canonical address flag. Test export/replay first;
 flag-name collisions and namespaces differ between Rizin/radare2 versions.
 
-Store reviewed commands in `config/analysis/<target-path>.r2`, grouped in stable
+Store reviewed commands in `config/analysis/<target-path>/reviewed.r2`, grouped in stable
 order: functions, data, type import/placement, comments. Use the stateless
 analyzer adapter for target-scoped queries:
 
@@ -374,7 +374,7 @@ Promote the smallest fact to the narrowest owner:
 
 1. Correct boundary/load information in tracked target layout.
 2. Add reviewed analyzer function/data/comment/type placement to
-   `config/analysis/<target-path>.r2`.
+   `config/analysis/<target-path>/reviewed.r2`.
 3. Add unresolved target-local absolute binding to `symbols.c` or its shallow
    `symbols/functions.c` / `symbols/variables.c` units.
 4. Add the address-based declaration to the target symbol barrel or
@@ -391,7 +391,7 @@ The repository already demonstrates this split:
   semantic aliases;
 - `src/exe/logo/symbols.c` binds verified PsyQ names at LOGO.EXE-local
   addresses while official SDK declarations remain canonical;
-- `config/analysis/bof3_objects.h` contains analysis-only recovered layouts.
+- `config/analysis/shared/bof3_objects.h` contains analysis-only recovered layouts.
 
 Do not duplicate declarations across `internal.h` and focused symbol headers.
 Keep the include path singular: `internal.h` includes `symbols/symbols.h`, which

@@ -1,0 +1,4 @@
+interface:
+  display_name: "BOF3 Documentation Navigation"
+  short_description: "Locate authoritative BOF3 workflow documents"
+  default_prompt: "Use $bof3-docs to locate the smallest authoritative BOF3 repository document."

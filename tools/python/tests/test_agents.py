@@ -8,6 +8,7 @@ from harness.agents import (
     CampaignResult,
     ToolingRepairMission,
     detect_tooling_blocker,
+    get_runner,
     queue_followups,
     run_campaign,
 )
@@ -23,6 +24,21 @@ from harness.snapshot import (
 # ---------------------------------------------------------------------------
 # ToolingRepairMission
 # ---------------------------------------------------------------------------
+
+
+def test_get_runner_defaults_to_local(monkeypatch) -> None:
+    monkeypatch.delenv("HARNESS_AGENT_RUNNER", raising=False)
+    assert type(get_runner()).__name__ == "LocalRunner"
+
+
+def test_get_runner_rejects_unknown_value(monkeypatch) -> None:
+    monkeypatch.setenv("HARNESS_AGENT_RUNNER", "subagent")
+    try:
+        get_runner()
+    except ValueError as exc:
+        assert "unsupported" in str(exc)
+    else:
+        raise AssertionError("unknown runner was accepted")
 
 
 def test_tooling_repair_mission_fields() -> None:

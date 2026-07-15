@@ -52,7 +52,7 @@ CPU address, packed graphics descriptor, or audio selector. Never map an entry
 at its first function: leading headers, tables, control words, and padding are
 part of the payload layout.
 
-Original bytes and headers outrank manifests, analyzer projects, and prose.
+Original bytes and headers outrank manifests, analyzer sessions, and prose.
 
 ## Interpretation workflow
 
@@ -76,7 +76,8 @@ Original bytes and headers outrank manifests, analyzer projects, and prose.
 
 | Evidence | Owner |
 | --- | --- |
-| Binary layouts and load boundaries | `config/splat/` and target manifests |
+| Target identity, payload, and load address | `config/targets/` |
+| Binary layouts and segment boundaries | `config/splat/` |
 | Authored/shared symbols | `config/symbols/` and target `symbols*.c` |
 | Reviewed analyzer replay/types | `config/analysis/` |
 | Executable and promoted-overlay C | `src/exe/` and `src/emi/` |

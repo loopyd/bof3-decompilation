@@ -1,13 +1,13 @@
 ---
 name: psx-rizin
-description: "Create and maintain reproducible Rizin or radare2 analysis projects for PlayStation 1 MIPS binaries and mapped code/data blobs. Use for raw mapping, bounded analysis, functions, flags, comments, xrefs, graphs, rz-ghidra/r2ghidra, project replay, deterministic export, or r2pipe automation; use a domain skill to interpret or promote the resulting evidence."
+description: "Create reproducible stateless Rizin or radare2 analysis evidence for PlayStation 1 MIPS binaries and mapped code/data blobs. Use for raw mapping, bounded analysis, functions, flags, comments, xrefs, graphs, rz-ghidra/r2ghidra, replay, deterministic export, or r2pipe automation; use a domain skill to interpret or promote the resulting evidence."
 ---
 
 # PSX Rizin Analysis
 
 Use the current installed Rizin command surface when available and modern
 radare2 as a version-checked fallback. Do not teach historical commands as the
-default merely because the projects share ancestry. Treat the analyzer project
+default merely because the projects share ancestry. Treat every analyzer session
 as a disposable workbench: original bytes, reviewed binary layouts, tracked
 replay commands, and compiled source remain authoritative.
 
@@ -19,8 +19,8 @@ replay commands, and compiled source remain authoritative.
   pipeline hazards, MMIO/DMA, scratchpad/cache, or COP2/GTE instructions. This
   analyzer skill records evidence; it does not own CPU-semantic policy.
 - Read [commands.md](references/commands.md) before native Rizin/radare2 work.
-- Read [projects-and-replay.md](references/projects-and-replay.md) before saving
-  projects or promoting analyzer state.
+- Read [projects-and-replay.md](references/projects-and-replay.md) before
+  recording replay or promoting analyzer state.
 - Read [decompilers.md](references/decompilers.md) before using rz-ghidra or
   r2ghidra.
 - Read [r2pipe-automation.md](references/r2pipe-automation.md) before building
@@ -49,7 +49,7 @@ replay commands, and compiled source remain authoritative.
 7. Use rz-ghidra/r2ghidra only after function boundaries and calling context are
    credible. Decompiler output is a control-flow and naming hint, not matching
    authority or a compilable-source guarantee.
-8. Save generated project state under the generated-artifact root. Export JSON
+8. Write snapshots and exports under the generated-artifact root. Export JSON
    deterministically, sort by address/name, and ensure a clean input plus
    tracked replay/types can reproduce the reviewed state.
 
@@ -64,12 +64,12 @@ Use the stateless Python adapters in
 `tools/python/harness/analyzer.py` and `snapshot.py` for repeatable queries and
 normalized output. Generated snapshots belong under
 `out/reverse/<target>/snapshot.json`; reviewed replay commands and analysis-only
-types remain under `config/analysis/`. Do not create persistent analyzer
+types remain under `config/analysis/`. Do not rely on persistent analyzer
 projects or hand-edit generated snapshots.
 
 ## Analyzer naming policy
 
-- Keep separate projects and target-local bindings for separate executables or
+- Keep separate target-qualified sessions and bindings for separate executables or
   overlays, even when bytes or addresses repeat.
 - Keep compiled symbols address-based (`func_XXXXXXXX`, `DAT_XXXXXXXX`) until a
   meaning is reviewed. Add semantic aliases without losing address traceability.

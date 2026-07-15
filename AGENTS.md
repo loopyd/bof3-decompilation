@@ -47,15 +47,16 @@ always-on policy here.
 
 ## Skills
 
-The repository maintains three local skills under `.agents/skills/`. Load the
+The repository maintains four local skills under `.agents/skills/`. Load the
 narrowest one before starting work; subagents do **not** inherit parent skills
 and must either read the skill files themselves or receive skill content in
 their prompt.
 
 | Skill | Path | When to load |
 | --- | --- | --- |
+| `$bof3-docs` | `.agents/skills/bof3-docs/SKILL.md` | Locating the smallest authoritative repository document or command reference. |
 | `$decomp-loop` | `.agents/skills/decomp-loop/SKILL.md` | Lifting, matching, or improving a PSX MIPS function in C89. Also read `references/matching-patterns.md` and `references/psx-mips-correctness.md`. |
-| `$psx-rizin` | `.agents/skills/psx-rizin/SKILL.md` | Creating or querying Rizin/radare2 analysis projects. Also read `references/commands.md`, `references/psx-inputs.md`, and `references/projects-and-replay.md`. |
+| `$psx-rizin` | `.agents/skills/psx-rizin/SKILL.md` | Querying Rizin/radare2 through stateless target-qualified analyzer evidence. Also read `references/commands.md`, `references/psx-inputs.md`, and `references/projects-and-replay.md`. |
 | `$bof3-specs` | `.agents/skills/bof3-specs/SKILL.md` | Interpreting payloads, EMI types, graphics, or cross-binary evidence. Also read `references/payload-map.md` and `references/evidence-promotion.md`. |
 
 The harness command surface (`bin/harness`) is the primary workflow entry point
@@ -66,6 +67,7 @@ bin/harness targets <target>
 bin/harness reverse <target>@<8-digit-address> --run
 bin/harness diff <source> --llm
 bin/asmdiff <source>
+bin/permute <source> -j <bounded-jobs>
 ```
 
 ## Reverse-engineering invariants
@@ -81,14 +83,14 @@ bin/asmdiff <source>
 - Promoted functions require factual `@behavior` and address-preserving
   `@source`; use at most one material tracked `docs/specs/` `@see` link.
 - Use `.agents/rules/` for detailed authored-C/build policy, `$bof3-specs` for
-  payload interpretation, `$psx-rizin` for analyzer projects, and `$decomp-loop`
-  for lifting, matching, permutation, and module completion.
+  payload interpretation, `$psx-rizin` for stateless analyzer evidence, and
+  `$decomp-loop` for lifting, matching, permutation, and module completion.
 
 ## Verification and commits
 
 - Run the narrowest build/diff while iterating. Before handoff run `just check`
-  and `bin/harness doctor --strict` when inputs/toolchains are available; state
-  skipped checks and reasons.
+  when available; it includes `bin/harness doctor --strict`. State skipped
+  checks and reasons. Use `just verify <target>` only for a whole-target claim.
 - When a newly lifted function reaches canonical 100% instruction and byte
   match, rerun its diff and prepare a focused change containing only the
   function plus required boundary, declaration, or binding.

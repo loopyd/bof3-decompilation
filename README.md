@@ -22,12 +22,15 @@ EMI archives, and refreshes the catalog. Generated state stays under
 ```sh
 bin/harness targets "$TARGET"
 bin/harness reverse "$TARGET"@"$ADDRESS" --run
-bin/harness diff "$SOURCE"
+bin/harness diff "$SOURCE" --llm
+bin/asmdiff "$SOURCE"
+bin/permute "$SOURCE" -j "$BOUNDED_JOBS"
 ```
 
-Original bytes and canonical Splat assembly are authoritative. The reverse
-mission is an orchestration aid; exact function matching and whole-payload
-matching remain separate completion claims.
+Original bytes and canonical Splat assembly are authoritative. `--run` launches
+one bounded OpenCode mission and records generated prompt/output evidence under
+`out/reverse/`; exact function matching and whole-payload matching remain
+separate completion claims.
 
 Keep a candidate only when it preserves factual, readable C89. Exact function
 matching and whole-payload matching are separate completion claims.

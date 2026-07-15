@@ -7,13 +7,13 @@
 - Generated build and comparison artifacts belong under `build/` and `out/`.
 
 Use the narrowest check while iterating. Before handoff, run all available
-repository gates and state any skipped gate with its reason.
+repository gates and state any skipped gate with its reason. `just check`
+includes `bin/harness doctor --strict`; use `just verify <target>` only for a
+whole-target completion claim.
 
 ```bash
 bin/asmdiff <source>
-just build
 just check
-bin/harness doctor --strict
 ```
 
 When a newly lifted function reaches a canonical 100% instruction and byte

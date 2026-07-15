@@ -13,8 +13,8 @@
 | asm-differ | Interactive instruction comparison | Yes |
 | m2c | Produce a matching-oriented C seed | Optional |
 | Rizin/rz-ghidra | Fast local CLI analysis | Optional |
-| Ghidra | Persistent deep analysis and manual review | Optional |
-| decomp-permuter | Search late-stage source variants | Optional |
+| Ghidra | Optional transient deep analysis and manual review | Optional |
+| decomp-permuter | Search credible compiling source variants | Optional |
 
 Pinned repository tools live under `third_party/`; generated installations and
 SDKs live under `toolchains/`. See `tools.lock.toml` for the local role of each

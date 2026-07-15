@@ -36,10 +36,11 @@ bin/harness reverse "$TARGET"@"$ADDRESS" --run
 bin/asmdiff "$FUNCTION_SOURCE"
 ```
 
-Promotion is deliberately explicit. It creates one Splat configuration and one
-module source directory. Lifting creates one C-file work item and refuses an
-address outside the confirmed payload or an existing lift. Use the generated
-draft and disassembly as evidence, then keep the final C89 source readable.
+Promotion is deliberately explicit. It creates target metadata, one Splat
+configuration, and one module source directory. `reverse TARGET@ADDRESS --run`
+launches one bounded OpenCode mission; it resolves a target-only invocation to
+one candidate before launch. Use the generated draft and disassembly as
+evidence, then keep the final C89 source readable.
 
 `targets` is the diagnostic boundary before lifting. Verify its payload,
 checksum, load address, Splat configuration, and source directory rather than
@@ -55,8 +56,8 @@ or target resolution failure must be fixed before changing source.
 The stateless analyzer and snapshot models are Python APIs under
 `tools/python/harness/analyzer.py` and `snapshot.py`. Generated snapshots use
 `out/reverse/<target>/snapshot.json`; target-qualified addresses are never
-merged across binaries. There is intentionally no persistent analyzer project
-or removed `harness analysis` command surface.
+merged across binaries. Native analyzer sessions are disposable; reviewed replay
+and deterministic snapshots are the durable/reproducible evidence surface.
 
 ## Candidate replacement loop
 
@@ -69,7 +70,7 @@ an unproven shared ABI:
 2. Express a recovered record as a target-local C89 view, preserving raw pads
    and byte/halfword overlays until consumers prove their meaning.
 3. Lift one consumer against that binding and run `bin/asmdiff` after
-   every source change. Use `bin/harness reverse` to select a bounded mission;
+    every source change. Use `bin/harness reverse` to preview or launch one bounded mission;
    generated candidates stay under `out/`.
    Keep the authored lift in C89; do not use inline assembly to force register
    allocation or fill an executable function.
@@ -109,7 +110,7 @@ A promoted function must:
   material context; never link generated state;
 - place reusable structures, offsets, and mappings in the owning
   `docs/specs/` concept;
-- pass `bin/asmdiff`, even when it is not yet an exact match.
+- produce a valid `bin/asmdiff` result, even when it is not yet an exact match.
 
 ## Evidence boundary
 

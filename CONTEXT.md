@@ -52,6 +52,7 @@ and [matching](docs/matching.md). For retained technical evidence, start at
 | `src/exe/` | Authored source for standalone PS-X executables. |
 | `src/emi/` | Authored source for confirmed EMI code targets. |
 | `include/bof3/` | Shared C89, hardware, and PsyQ declarations. |
+| `config/targets/` | Tracked target identity, payload, load-address, and activation manifests. |
 | `config/splat/` | Tracked binary segment layouts consumed by Splat. |
 | `config/symbols/` | Tracked authored and verified symbol information. |
 | `config/analysis/` | Reviewed analyzer replay commands and analysis-only type layouts. |
@@ -91,7 +92,7 @@ directly under their canonical executable or promoted EMI target.
 | Tool | How this project uses it |
 | --- | --- |
 | `just` | Provides the short task interface for setup, extraction, building, checks, and formatting. |
-| `bin/harness` | Coordinates BOF3-specific discovery, inspection, promotion, lifting, matching, Ghidra sync, assets, and disc operations. |
+| `bin/harness` | Coordinates BOF3-specific discovery, inspection, promotion, bounded OpenCode lifting missions, matching, assets, and disc operations. |
 | Splat / spimdisasm | Splits normalized binaries from tracked layouts and produces the canonical assembly used as matching evidence. |
 | `Makefile` | Builds independent PSX objects and drives focused matching/check workflows. |
 | Historical GCC + MASPSX/binutils | Reproduces the period PSX compilation and assembly pipeline used for binary matching. |
@@ -99,7 +100,7 @@ directly under their canonical executable or promoted EMI target.
 | asm-differ | Compares a compiled function with the original instructions during the normal edit/match loop. |
 | `emi-ex` and BOF3 disc tools | Extract disc content and unpack EMI containers before classification. |
 | m2c | Optionally creates an initial C reconstruction; its output is a hint, not authoritative source. |
-| Ghidra or Rizin | Optionally supports deeper control-flow, data, reference, and symbol analysis. |
+| Ghidra or Rizin | Optionally supports transient control-flow, data, reference, and symbol analysis. |
 | decomp-permuter | Optionally searches source variants after a function is already structurally close to matching. |
 | Ruff, pytest, and clang-format | Validate and format the Python tooling and authored C source. |
 
@@ -153,8 +154,8 @@ and `bin/harness --help`.
 - A lifted function is one `func_XXXXXXXX.c` file; target-local declarations
   belong in its adjacent `internal.h`.
 - `config/analysis/` is reproducible analyzer input, not compiled source or a
-  substitute for Splat layouts. Generated projects and exports remain under
-  `out/analysis/`.
+  substitute for Splat layouts. Target snapshots and mission exports remain
+  under `out/reverse/<target>/`.
 - PsyQ routines are library code: declare and use them, but do not lift them.
 - `out/` is the only generated-artifact root: extraction, normalized images,
   catalogs, Splat products, Ghidra state, drafts/diffs, and asset previews.

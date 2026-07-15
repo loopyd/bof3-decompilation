@@ -27,7 +27,7 @@ Resume
    active work, manifests, source, specs, generated evidence, and available
    tools. Preserve user/unrelated changes.
 2. Use $bof3-docs to locate repository documentation, $bof3-specs to interpret
-   BOF3 payloads/claims, $psx-rizin to maintain analyzer projects/evidence, and
+   BOF3 payloads/claims, $psx-rizin to collect analyzer snapshots/replay evidence, and
    $decomp-loop to lift/match. Read each selected skill completely and keep its
    responsibility boundary.
 3. Derive a live inventory of executables and promoted EMI targets, reviewed
@@ -41,8 +41,8 @@ Execution
 
 - Preserve distinct executable/archive/entry/target identities. Original bytes
   and headers outrank metadata; reviewed layouts outrank analyzer guesses.
-- Maintain one reproducible analyzer project per independently mapped target.
-  Put generated state under out/ and only reviewed deterministic replay/types
+- Maintain one reproducible stateless analyzer evidence set per independently mapped target.
+  Put generated snapshots/exports under out/ and only reviewed deterministic replay/types
   under config/analysis/. Add names, functions, comments, types, and xrefs only
   as supported facts; preserve func_XXXXXXXX/DAT_XXXXXXXX traceability.
 - Use call graphs and xrefs to prove the requested startup path. Correlate
@@ -60,7 +60,9 @@ Execution
 
 Delegation
 
-- Delegate independent, bounded targets or evidence lanes. Give each agent exact
+- Delegate independent, bounded targets or evidence lanes. Require each subagent
+  to load its own applicable skill and required references; subagents do not
+  inherit skills. Give each agent exact
   ownership, addresses/files, acceptance commands, output bounds, and mutation
   limits. Avoid shared-file collisions and share one CPU budget.
 - Require pre/post evidence, facts versus inferences, checks, changed files, and
