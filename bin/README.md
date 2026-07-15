@@ -12,33 +12,33 @@ Repository-local tools are the defaults. Override a complete compiler driver
 with `PSX_CC_DRIVER`, or individual tools with `PSX_GCC`, `PSX_AS`, `PSX_LD`,
 `PSX_AR`, `PSX_RANLIB`, `PSX_NM`, `PSX_OBJCOPY`, and `PSX_OBJDUMP`.
 
-CMake supplies the verified BOF3 compiler and assembler flags. Both
-`just build` and the default build preset use the native build tool's full
-parallelism. Configure a separate compiler experiment with:
+CMake supplies the verified BOF3 compiler and assembler flags. `just build`
+intentionally compiles serially because historical PsyQ compilation is not
+output-race safe. Configure a separate compiler experiment with:
 
 ```sh
 cmake --preset default -DPSX_C_COMPILER=/path/to/cc
 cmake --build --preset default
 ```
 
-`harness` is the BOF3 command surface:
+`bin/harness` is the BOF3 command surface:
 
 ```sh
-harness setup [options]
-harness discover
-harness targets [target] [--json]
-harness promote <archive#slot> --confirm-code
-harness reverse <target[@address]> [--run]
-harness diff <source-or-function-id>
+bin/harness setup [options]
+bin/harness discover
+bin/harness targets [target] [--json]
+bin/harness promote <archive#slot> --confirm-code
+bin/harness reverse <target[@address]> [--run]
+bin/harness diff <source-or-function-id>
 ```
 
 Disc discovery and asset operations are also available:
 
 ```sh
-harness doctor [--strict]
-harness assets list|str validate|str convert
-harness psyq import
-harness emi unpack
+bin/harness doctor [--strict]
+bin/harness assets list|str validate|str convert
+bin/harness psyq import
+bin/harness emi unpack
 ```
 
 STR validation preserves the extracted 2336-byte-sector source and writes a

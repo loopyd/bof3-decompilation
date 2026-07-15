@@ -7,7 +7,7 @@ source_dir = "src/exe/logo"
 binary = "out/binaries/exe/logo.bin"
 splat = "config/splat/exe/logo.yaml"
 load_address = 0x801ce000
-profile = "native/capcom97"
+profile = "compat/capcom97"
 
 [psyq]
 headers = "headers/psyq-4.7"

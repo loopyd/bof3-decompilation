@@ -11,10 +11,12 @@ sector ranges, both-endian ISO9660 fields, directory records, and output names
 before writing.
 
 ```sh
-cargo build --manifest-path third_party/bof3-disk-v2/Cargo.toml --release
-cargo test --manifest-path third_party/bof3-disk-v2/Cargo.toml
-third_party/bof3-disk-v2/target/release/bof3-disk extract \
-  -i disc.cue -o out/extracted-v2
+CARGO_TARGET_DIR=build/third_party/bof3-disk-v2 \
+  cargo build --manifest-path third_party/bof3-disk-v2/Cargo.toml --release
+CARGO_TARGET_DIR=build/third_party/bof3-disk-v2 \
+  cargo test --manifest-path third_party/bof3-disk-v2/Cargo.toml
+build/third_party/bof3-disk-v2/release/bof3-disk extract \
+  -i inputs/disc/disc.cue -o out/extracted-v2
 ```
 
 `just clean` in this directory runs Cargo cleanup for this crate only; it never
@@ -25,7 +27,7 @@ v1 comparison without changing the active harness integration:
 
 ```sh
 just --justfile third_party/bof3-disk-v2/Justfile check
-just --justfile third_party/bof3-disk-v2/Justfile equivalence disks/disc.cue
+just --justfile third_party/bof3-disk-v2/Justfile equivalence inputs/disc/disc.cue
 ```
 
 `disk-equivalence` hashes and compares every ordinary ISO9660 payload emitted

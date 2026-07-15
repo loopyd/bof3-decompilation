@@ -69,7 +69,7 @@ kind = "runner"
 [components."runner/wine"]
 kind = "runner"
 
-[profiles."native/capcom97"]
+[profiles."compat/capcom97"]
 compiler = "compiler/gcc-2.7.2-psx"
 compiler_flags = ["-O2", "-G0", "-funsigned-char", "-msoft-float", "-gcoff"]
 assembler = "assembler/maspsx-2.56"

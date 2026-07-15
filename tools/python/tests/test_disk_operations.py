@@ -9,7 +9,7 @@ def test_disk_extract_imports_archive_when_disc_inputs_are_missing(
     monkeypatch, tmp_path: Path
 ) -> None:
     disc_dir = tmp_path / "inputs" / "disc"
-    private_assets_root = tmp_path / "external" / "private-assets"
+    private_assets_root = tmp_path / "inputs" / "external" / "private-assets"
     extracted_dir = tmp_path / "build" / "extracted"
     calls: list[list[str]] = []
 

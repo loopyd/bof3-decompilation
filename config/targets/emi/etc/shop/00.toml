@@ -8,4 +8,4 @@ source_dir = "src/emi/etc/shop/00"
 binary = "out/binaries/emi/etc/shop/00.bin"
 splat = "config/splat/emi/etc/shop/00.yaml"
 load_address = 0x801d0dd4
-profile = "native/capcom97"
+profile = "compat/capcom97"

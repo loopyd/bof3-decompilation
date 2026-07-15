@@ -39,7 +39,7 @@ def test_materialize_promoted_emi_targets_restores_deleted_binary(
                 'binary = "out/binaries/emi/etc/game/01.bin"',
                 'splat = "config/splat/emi/etc/game/01.yaml"',
                 "load_address = 0x801D0C00",
-                'profile = "native/capcom97"',
+                'profile = "compat/capcom97"',
                 "",
             ]
         ),

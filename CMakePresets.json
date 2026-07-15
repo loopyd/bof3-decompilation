@@ -16,7 +16,7 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "HARNESS_TARGET_PSX": "ON",
-        "HARNESS_PROFILE": "native/capcom97"
+        "HARNESS_PROFILE": "compat/capcom97"
       }
     }
   ],

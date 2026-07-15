@@ -8,4 +8,4 @@ source_dir = "src/emi/etc/commu00/00"
 binary = "out/binaries/emi/etc/commu00/00.bin"
 splat = "config/splat/emi/etc/commu00/00.yaml"
 load_address = 0x801d0c00
-profile = "native/capcom97"
+profile = "compat/capcom97"

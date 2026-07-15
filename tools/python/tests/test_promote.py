@@ -92,7 +92,7 @@ def test_promote_writes_manifest_and_tracked_splat(tmp_path: Path) -> None:
     assert 'source_dir = "src/emi/battle/battle/03"' in manifest
     assert 'splat = "config/splat/emi/battle/battle/03.yaml"' in manifest
     assert "load_address = 0x801d0c00" in manifest
-    assert 'profile = "native/capcom97"' in manifest
+    assert 'profile = "compat/capcom97"' in manifest
 
     splat = config.read_text(encoding="utf-8")
     assert "basename: battle_battle_03" in splat

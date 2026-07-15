@@ -18,9 +18,10 @@ def make_fake_bof3_archive(path: Path) -> None:
 
 def test_import_bof3_disc_stages_active_disc_set(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr(disc_lib, "REPO_ROOT", tmp_path)
-    archive_path = tmp_path / "BreathOfFireIII.zip"
-    private_root = tmp_path / "private-assets"
+    archive_path = tmp_path / "inputs" / "BreathOfFireIII.zip"
+    private_root = tmp_path / "inputs" / "external" / "private-assets"
     disc_dir = tmp_path / "inputs" / "disc"
+    archive_path.parent.mkdir(parents=True)
     make_fake_bof3_archive(archive_path)
 
     result = import_bof3_disc(
@@ -37,13 +38,14 @@ def test_import_bof3_disc_stages_active_disc_set(monkeypatch, tmp_path: Path) ->
     assert (disc_dir / "game.bin").read_bytes() == b"fake-disc"
 
 
-def test_discover_disc_archive_rejects_outside_repo(tmp_path: Path) -> None:
-    archive_path = tmp_path / "BreathOfFireIII.zip"
+def test_discover_disc_archive_rejects_outside_inputs(tmp_path: Path) -> None:
+    archive_path = tmp_path / "disks" / "BreathOfFireIII.zip"
+    archive_path.parent.mkdir()
     archive_path.write_bytes(b"zip")
 
     try:
         disc_lib.discover_disc_archive(archive_path)
     except ValueError as exc:
-        assert "must stay inside the repo workspace" in str(exc)
+        assert "must stay under the repo's inputs/ tree" in str(exc)
     else:
-        raise AssertionError("expected outside-repo archive to be rejected")
+        raise AssertionError("expected non-input archive to be rejected")

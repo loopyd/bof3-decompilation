@@ -81,21 +81,22 @@ def _dedupe_paths(candidates: list[Path]) -> list[Path]:
     return deduped
 
 
-def _is_repo_local_path(path: Path) -> bool:
+def _is_allowed_input_path(path: Path) -> bool:
     candidate = path.expanduser().resolve(strict=False)
-    return candidate == REPO_ROOT or REPO_ROOT in candidate.parents
+    inputs_root = (REPO_ROOT / "inputs").resolve()
+    return candidate == inputs_root or inputs_root in candidate.parents
 
 
 def _filter_repo_local_paths(candidates: list[Path]) -> list[Path]:
     return _dedupe_paths(
-        [candidate for candidate in candidates if _is_repo_local_path(candidate)]
+        [candidate for candidate in candidates if _is_allowed_input_path(candidate)]
     )
 
 
 def _validate_repo_local_input(path: Path, *, label: str) -> Path:
-    if not _is_repo_local_path(path):
+    if not _is_allowed_input_path(path):
         raise ValueError(
-            f"{label} must stay inside the repo workspace under inputs/ or inputs/external/private-assets: {path}"
+            f"{label} must stay under the repo's inputs/ tree: {path}"
         )
     return path.expanduser()
 
@@ -320,7 +321,7 @@ def stage_psyq_sdk(
     source_input = discover_source_input(source_root, archive, version=psyq_version)
     if source_input is None:
         raise FileNotFoundError(
-            f"missing PsyQ {psyq_version} source tree or archive under inputs/ or inputs/external/private-assets; pass --source-root or --archive with a repo-local path"
+            f"missing PsyQ {psyq_version} source tree or archive under inputs/; pass --source-root or --archive with a path under inputs/"
         )
 
     dest_root = (dest or psyq_dest(psyq_version)).resolve()
@@ -404,7 +405,7 @@ def import_psyq_sdk(
             archive_url = archive_url or default_psyq_archive_url(psyq_version)
             if archive_url is None:
                 raise FileNotFoundError(
-                    f"missing PsyQ {psyq_version} source archive under inputs/ or inputs/external/private-assets; pass --archive or --archive-url"
+                    f"missing PsyQ {psyq_version} source archive under inputs/; pass --archive or --archive-url"
                 )
             archive_name = Path(urllib.parse.urlparse(archive_url).path).name
             if not archive_name:

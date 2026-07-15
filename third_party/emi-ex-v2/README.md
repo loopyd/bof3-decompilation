@@ -6,8 +6,8 @@ C++ implementation remains available only as a parity oracle.
 ```sh
 cargo build --manifest-path third_party/emi-ex-v2/Cargo.toml --release
 cargo test --manifest-path third_party/emi-ex-v2/Cargo.toml
-target/release/emi-ex extract [-e] [-o DIR] ARCHIVE.EMI [INDEX]
-target/release/emi-ex pack -o ARCHIVE.EMI -J DIR/emi.json DIR
+build/third_party/emi-ex-v2/release/emi-ex extract [-e] [-o DIR] ARCHIVE.EMI [INDEX]
+build/third_party/emi-ex-v2/release/emi-ex pack -o ARCHIVE.EMI -J DIR/emi.json DIR
 ```
 
 `just clean` in this directory runs Cargo cleanup for this crate only; it never

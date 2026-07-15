@@ -576,7 +576,7 @@ def promote_entry(
     identifier: str,
     root: Path,
     confirm_code: bool,
-    profile: str = "native/capcom97",
+    profile: str = "compat/capcom97",
 ) -> tuple[Path, Path]:
     if not confirm_code:
         raise ValueError(
