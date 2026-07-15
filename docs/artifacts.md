@@ -16,6 +16,10 @@ tags: [build, generated]
 | `out/catalog/` | Raw EMI entry catalog used for promotion review |
 | `out/index/` | SQLite evidence graph, PsyQ indexes, and compact reports |
 | `out/splat/` | Generated assembly, data, and linker artifacts |
+| `out/analysis/replay/` | Generated analyzer replay per target (derived; not reviewed evidence) |
+| `out/analysis/snapshots/rizin/` | Normalized per-target analyzer snapshots (derived) |
+| `out/analysis/graph.json` | Cross-target function graph, calls, and duplicate groups |
+| `out/analysis/projects/` | Disposable analyzer project databases keyed by engine and target |
 | `out/ghidra/` | Ghidra project/export data |
 | `out/context/`, `out/lift/`, `out/matching/` | Per-function context, lift, and comparison evidence |
 | `out/assets/` | Decoded asset previews |

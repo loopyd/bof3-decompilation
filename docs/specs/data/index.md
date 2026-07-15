@@ -11,10 +11,10 @@ Game data tables embedded in EMI archives. All offsets, record sizes, and
 field layouts were verified against the US v1.1 disc (`BOF3_1.1`,
 md5 `9dd9a7c934b8b59d0ce76b0f25d18176`) with zero failures.
 
-The analysis catalog in `config/analysis/bof3_objects.h` records packed storage
-layouts and canonical names. Compiled declarations remain target-owned until
-their ABI is confirmed by consumers; one target-local battle overlay records
-the proven alternate ability-table interpretation.
+The analysis catalog in `config/analysis/shared/bof3_objects.h` records
+packed storage layouts and canonical names. Compiled declarations remain
+target-owned until their ABI is confirmed by consumers; one target-local
+battle overlay records the proven alternate ability-table interpretation.
 
 ## Verification
 

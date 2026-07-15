@@ -54,34 +54,59 @@ already provide one; reviewed target-local declarations are preserved.
 under `out/matching/`. A nonmatch is a normal iteration result; a build or target
 resolution failure must be fixed before changing source.
 
-For cross-target navigation, run `bin/harness analysis graph`. It writes
-`out/analysis/graph.json` with raw function fingerprints, exact and
-relocation-masked duplicate candidates, call edges, binary PsyQ callsites, and
-binary xrefs to reviewed type placements. Use `bin/harness analysis query TARGET xrefs` for a
-focused binary reference view; skipped graph targets mean their normalized
-payload is not available locally.
+For cross-target navigation, run `bin/harness analysis graph`. It reads
+normalized snapshots from `out/analysis/snapshots/rizin/` and writes
+`out/analysis/graph.json` with target-qualified function fingerprints,
+exact duplicate groups, internal calls, and unresolved external calls.
+Skipped targets mean their normalized snapshot is not available locally.
 
-`bin/harness analysis hotspots [TARGET]` ranks functions across all targets (or
-one target) from the binary call graph via rizin/r2. It reports `hot` (highest
-caller in-degree — most depended-on), `leaves` (out-degree 0, no outgoing
-calls — safe bottom-up lift candidates), plus `roots` (no incoming calls),
-`shallow` (known, low degree), `unknown` (called but not in any function map),
-`discovery` (known functions with unknown callees), and exact / relocation
-duplicates. Output is JSON (`schema: bof3.hotspots/v1`); addresses are `0x` hex strings
-matching `func_XXXXXXXX` / Splat conventions.
+`bin/harness analysis hotspots` ranks functions across all targets from
+the canonical graph. It reports `hot` (highest caller in-degree),
+`leaves` (out-degree 0, safe bottom-up lift candidates), `roots` (no
+incoming calls), `shallow` (reviewed, low degree), `discovery` (reviewed
+functions with unresolved callees), `unknown_targets` (unresolved
+call targets grouped by caller target and address), and
+`exact_duplicates`. Output is JSON (`schema: bof3.analysis-hotspots/v2`);
+addresses are `0x` hex strings.
 
-The command is configurable. `--kind` selects one ranking; `--top N` limits the
-returned entries; `--min-callers` / `--max-out` filter by call-graph degree
-(`--max-out 0` isolates leaves); `--min-size` / `--max-size` filter by byte
-size; `--status {known,unknown}` filters by lifted status; `--sort` chooses the
-sort key (default `callers` for `hot`/`leaves`, `address` for `roots`). For
-example, the ten most-called leaves across all binaries:
+The command is configurable. `--kind` selects one ranking; `--top N` limits
+the returned entries; `--min-callers` / `--max-out` filter by call-graph
+degree (`--max-out 0` isolates leaves); `--min-size` / `--max-size` filter
+by byte size; `--status {all,reviewed,lifted,unreviewed,unlifted}` filters
+by declaration state; `--sort` chooses the sort key (default `callers` for
+`hot`/`leaves`, `address` for `roots`). For example, the ten most-called
+leaves across all binaries:
 
 ```bash
 bin/harness analysis hotspots --kind leaves --top 10 --sort callers
 ```
 
 Use the result to feed `bin/harness next` / `bin/harness lift` prioritization.
+
+The analysis pipeline is:
+
+```text
+replay → snapshot → graph → hotspots
+```
+
+Each stage is explicit and can be run independently:
+
+```bash
+bin/harness analysis replay TARGET   # render generated replay
+bin/harness analysis snapshot TARGET # run analyzer, write normalized snapshot
+bin/harness analysis graph           # merge snapshots into global graph
+bin/harness analysis hotspots        # derive rankings from graph
+bin/harness analysis build           # convenience: all stages
+```
+
+Generated analyzer replay lives under `out/analysis/replay/<target>.r2`;
+normalized snapshots under `out/analysis/snapshots/rizin/<target>.json`.
+`config/analysis/` only carries reviewed replay and the analysis-only
+shared types (`config/analysis/shared/bof3_objects.h`,
+`config/analysis/shared/hwregs.r2`). Same runtime addresses in different
+targets are never merged — every analysis object is keyed by
+`<target>@<address>` and cross-target calls are not inferred from equal
+addresses.
 
 ## Candidate replacement loop
 

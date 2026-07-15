@@ -56,12 +56,11 @@ harness promote <archive#slot> --confirm-code
 harness next [target]
 harness flags <source>
 harness analysis doctor
-harness analysis init <target> [--engine rizin|r2]
-harness analysis export <target> [--engine rizin|r2]
+harness analysis init <target>
 harness analysis generate [target]
-harness analysis hotspots [target] [--kind leaves] [--top 10] [--min-callers N] [--max-out N] [--min-size N] [--max-size N] [--status known|unknown] [--sort callers]
-harness analysis graph [target] [--engine rizin|r2]
-harness analysis query <target> <query> [--engine rizin|r2]
+harness analysis hotspots [--kind leaves] [--top 10] [--min-callers N] [--max-out N] [--min-size N] [--max-size N] [--status reviewed|lifted|unreviewed|unlifted] [--sort callers]
+harness analysis graph
+harness analysis query <target> <query>
 harness ghidra sync
 harness assets list
 harness assets str validate <path> [--expected-fps FPS] [--json]
