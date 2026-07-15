@@ -125,7 +125,7 @@ def repo_layout(
         / "bof3-disk"
         / "release"
         / "bof3-disk",
-        emi_ex_bin=build_dir / "tools" / "rust" / "emi-ex" / "release" / "emi-ex",
+        emi_ex_bin=third_party_dir / "emi-ex-v2" / "target" / "release" / "emi-ex",
         psn00b_toolchain_root=toolchains_dir / "psn00b_toolchain",
         psn00b_sdk_root=toolchains_dir / "psn00bsdk",
         gcc272_psx_root=toolchains_dir / "gcc-2.7.2-psx",
