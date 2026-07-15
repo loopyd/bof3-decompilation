@@ -31,12 +31,16 @@ fn run(mut args: Vec<OsString>) -> Result<(), String> {
             args.remove(0);
             "pack"
         }
+        Some("list") => {
+            args.remove(0);
+            "list"
+        }
         _ => "extract",
     };
-    if mode == "pack" {
-        run_pack(&args)
-    } else {
-        run_extract(&args)
+    match mode {
+        "pack" => run_pack(&args),
+        "list" => run_list(&args),
+        _ => run_extract(&args),
     }
 }
 
@@ -403,4 +407,71 @@ fn print_usage() {
     println!("Usage: emi-ex [extract] [OPTIONS] <archive.EMI> [index]");
     println!("       emi-ex pack -o <archive.EMI> [-J [manifest]] <folder>");
     println!("       emi-ex pack -o <archive.EMI> [-t N] -i <files...>");
+    println!("       emi-ex list <archive.EMI>");
+}
+
+/// Read a 4-byte little-endian word from an entry payload at `offset`.
+fn entry_word(archive: &Path, entry: &emi_ex_v2::Entry, offset: u64) -> Option<u32> {
+    use std::fs::File;
+    use std::io::{Read, Seek, SeekFrom};
+    let mut file = File::open(archive).ok()?;
+    file.seek(SeekFrom::Start(entry.offset + offset)).ok()?;
+    let mut buf = [0u8; 4];
+    file.read_exact(&mut buf).ok()?;
+    Some(u32::from_le_bytes(buf))
+}
+
+/// For a code-bearing entry, the payload header stores the text/code base at
+/// offset 0x18 (`t_addr`). The code begins at file offset `t_addr - ram_ptr`
+/// within the entry. Returns that offset when `t_addr` looks like a RAM vram.
+fn entry_code_start(archive: &Path, entry: &emi_ex_v2::Entry) -> Option<u64> {
+    let t_addr = entry_word(archive, entry, 0x18)?;
+    // Plausible RAM vram: kernel/data range 0x80000000+ or low RAM 0x00000000.
+    let looks_like_vram = (t_addr & 0x80000000 != 0) || t_addr < 0x00800000;
+    if !looks_like_vram {
+        return None;
+    }
+    let start = t_addr as i64 - entry.ram_ptr as i64;
+    if start < 0 || start as u64 > entry.size as u64 {
+        None
+    } else {
+        Some(start as u64)
+    }
+}
+
+fn run_list(args: &[OsString]) -> Result<(), String> {
+    let mut positionals: Vec<&OsStr> = Vec::new();
+    for arg in args {
+        let value = arg.to_str().unwrap_or("");
+        if value.starts_with('-') {
+            return Err(format!("unknown option {value}"));
+        }
+        positionals.push(arg);
+    }
+    if positionals.len() != 1 {
+        return Err("usage: emi-ex list <archive.EMI>".into());
+    }
+    let source = PathBuf::from(positionals[0]);
+    let archive =
+        Archive::open(&source).map_err(|error| format!("{}: {error}", source.display()))?;
+    println!(
+        "{:<5} {:<10} {:<12} {:<10} {:<6} {:<10} {}",
+        "IDX", "OFFSET", "RAM_PTR", "SIZE", "TYPE", "CODE_OFF", "FIRST4"
+    );
+    for (index, entry) in archive.entries().iter().enumerate() {
+        let code_off = entry_code_start(&source, entry)
+            .map(|off| format!("{off:#x}"))
+            .unwrap_or_else(|| "-".to_string());
+        println!(
+            "{:<5} {:<10} {:<#12x} {:<#10x} {:<6} {:<10} {:#x}",
+            index,
+            format!("{:#x}", entry.offset),
+            entry.ram_ptr,
+            entry.size,
+            entry.file_type,
+            code_off,
+            entry.first4,
+        );
+    }
+    Ok(())
 }
