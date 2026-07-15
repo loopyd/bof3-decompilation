@@ -12,14 +12,13 @@ compile_commands.json
 session-*.md
 
 # local supplied inputs
-disks/*
-!disks/README.md
 inputs/disc/*
 !inputs/disc/README.md
 inputs/external/*
 !inputs/external/.gitkeep
 !inputs/README.md
-external/private-assets/
+!inputs/external/private-assets/
+inputs/external/private-assets/*
 
 # staged toolchains and downloads
 toolchains/downloads/

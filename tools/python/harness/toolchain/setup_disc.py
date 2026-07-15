@@ -17,7 +17,7 @@ from .archive import (
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 DEFAULT_DISC_DIR = REPO_ROOT / "inputs" / "disc"
-DEFAULT_PRIVATE_ASSETS_ROOT = REPO_ROOT / "external" / "private-assets"
+DEFAULT_PRIVATE_ASSETS_ROOT = REPO_ROOT / "inputs" / "external" / "private-assets"
 DEFAULT_BOF3_ARCHIVE_URL = "https://archive.org/download/BreathOfFireIIIv1.1.7z"
 
 AUTO_DISCOVERY_ARCHIVES = (
@@ -59,7 +59,7 @@ def _is_repo_local_path(path: Path) -> bool:
 def _validate_repo_local_input(path: Path, *, label: str) -> Path:
     if not _is_repo_local_path(path):
         raise ValueError(
-            f"{label} must stay inside the repo workspace under inputs/ or external/private-assets: {path}"
+            f"{label} must stay inside the repo workspace under inputs/ or inputs/external/private-assets: {path}"
         )
     return path.expanduser()
 

@@ -5,7 +5,7 @@ and reviewed EMI payloads.
 
 ## Quick path
 
-Place user-owned US BIN/CUE media in `disks/`, then run:
+Place user-owned US BIN/CUE media in `inputs/disc/`, then run:
 
 ```sh
 just setup

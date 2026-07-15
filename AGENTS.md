@@ -8,7 +8,7 @@ always-on policy here.
 ## Workspace
 
 - Work only in this repository; never edit the sibling `rebof3/` checkout.
-- `disks/` is ignored user media and must never be committed.
+- `inputs/` is ignored user media/private input and must never be committed.
 - Authored inputs live under `src/`, `include/`, `cmake/`, `config/`, `asm/`,
   and `docs/`. `build/`, `out/`, and `toolchains/` are local/generated state.
 - `out/` is the sole generated-artifact root. Do not invent a second output

@@ -5,7 +5,7 @@
 ## Contract
 
 - Host: Linux x86_64.
-- Game input: user-owned US BIN/CUE media under `disks/`; it is ignored by Git.
+- Game input: user-owned US BIN/CUE media under `inputs/disc/`; it is ignored by Git.
 - Generated files: `build/`, `out/`, and `toolchains/`.
 - Tracked binary layout: `config/splat/` and `config/symbols/`.
 
@@ -26,7 +26,7 @@ Run `just psyq` separately only when restaging the SDK.
 ## Choose the starting state
 
 - Fresh or newly cloned checkout: run `just doctor` first, place the US BIN/CUE
-  media in `disks/`, then run `just setup`.
+  media in `inputs/disc/`, then run `just setup`.
 - Existing checkout with generated media: run `just doctor`, then `just check`
   or `just build`; use `just discover` only when the extracted catalog changed.
 - Existing checkout with a missing generated stage: run `just extract` for disc
@@ -64,9 +64,9 @@ toolchain, extraction, unpack, and catalog workflow.
 
 ## Local input
 
-Keep the original US disc files in `disks/`. Do not commit game data, extracted
+Keep the original US disc files in `inputs/disc/`. Do not commit game data, extracted
 payloads, SDK files, or generated analysis output. See
-[../disks/README.md](../disks/README.md) for the input boundary.
+[../inputs/disc/README.md](../inputs/disc/README.md) for the input boundary.
 
 ## Verification
 

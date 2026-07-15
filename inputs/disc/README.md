@@ -1,8 +1,7 @@
-# Legacy disc input
+# Disc input
 
-`inputs/disc/` is retained for compatibility with older local workspaces. The
-supported `just` and `bin/harness` workflows discover one user-owned BIN/CUE set
-under [`disks/`](../../disks/README.md).
+The supported `just` and `bin/harness` workflows discover one user-owned BIN/CUE
+set under `inputs/disc/`.
 
 ## Expected files
 
@@ -14,18 +13,6 @@ Use one complete Breath of Fire III disc set:
 The cue filenames and its `FILE` entries must agree. Keep the original files
 unchanged: extraction, rebuilding, and strict comparison depend on the exact
 track bytes. Disc media is ignored and must never be committed.
-
-## Legacy use
-
-Do not add new media here. Existing local files can be extracted explicitly:
-
-```sh
-PYTHONPATH=tools/python .venv/bin/python -m harness.commands.disk \
-  disk-extract --disc-dir inputs/disc --output out/extracted
-```
-
-Move the set to `disks/` when normalizing the workspace so `just extract` and
-the default `bin/harness disk` commands can discover it.
 
 ## Identity and checksums
 

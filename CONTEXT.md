@@ -62,7 +62,7 @@ and [matching](docs/matching.md). For retained technical evidence, start at
 | `docs/specs/` | Durable, reviewed format, runtime, program, and data findings. |
 | `third_party/` | Pinned source dependencies used for extraction, analysis, and matching. |
 | `toolchains/` | Generated/staged compilers, SDKs, and related local tools. |
-| `disks/` | Ignored user-owned disc media. |
+| `inputs/` | Ignored user-owned disc media and private setup inputs. |
 | `out/` | Regenerable extraction and analysis evidence. |
 | `build/` | Regenerable CMake build products. |
 
@@ -111,7 +111,7 @@ and `bin/harness --help`.
 
 ## Binaries
 
-- **Disc input**: user-owned US BIN/CUE media in `disks/`; never tracked.
+- **Disc input**: user-owned US BIN/CUE media in `inputs/disc/`; never tracked.
 - **PS-X executable**: a header-wrapped executable on disc, including
   `SLUS_004.22` and `LOGO.EXE`.
 - **Load image**: the headerless raw image extracted from a PS-X executable.

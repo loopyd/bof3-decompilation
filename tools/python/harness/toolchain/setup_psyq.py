@@ -30,7 +30,7 @@ def psyq_dest(version: str | None = None) -> Path:
 
 
 def default_private_assets_root() -> Path:
-    return REPO_ROOT / "external" / "private-assets"
+    return REPO_ROOT / "inputs" / "external" / "private-assets"
 
 
 def psyq_archive_stem(version: str | None = None) -> str:
@@ -95,7 +95,7 @@ def _filter_repo_local_paths(candidates: list[Path]) -> list[Path]:
 def _validate_repo_local_input(path: Path, *, label: str) -> Path:
     if not _is_repo_local_path(path):
         raise ValueError(
-            f"{label} must stay inside the repo workspace under inputs/ or external/private-assets: {path}"
+            f"{label} must stay inside the repo workspace under inputs/ or inputs/external/private-assets: {path}"
         )
     return path.expanduser()
 
@@ -320,7 +320,7 @@ def stage_psyq_sdk(
     source_input = discover_source_input(source_root, archive, version=psyq_version)
     if source_input is None:
         raise FileNotFoundError(
-            f"missing PsyQ {psyq_version} source tree or archive under inputs/ or external/private-assets; pass --source-root or --archive with a repo-local path"
+            f"missing PsyQ {psyq_version} source tree or archive under inputs/ or inputs/external/private-assets; pass --source-root or --archive with a repo-local path"
         )
 
     dest_root = (dest or psyq_dest(psyq_version)).resolve()
@@ -404,7 +404,7 @@ def import_psyq_sdk(
             archive_url = archive_url or default_psyq_archive_url(psyq_version)
             if archive_url is None:
                 raise FileNotFoundError(
-                    f"missing PsyQ {psyq_version} source archive under inputs/ or external/private-assets; pass --archive or --archive-url"
+                    f"missing PsyQ {psyq_version} source archive under inputs/ or inputs/external/private-assets; pass --archive or --archive-url"
                 )
             archive_name = Path(urllib.parse.urlparse(archive_url).path).name
             if not archive_name:
