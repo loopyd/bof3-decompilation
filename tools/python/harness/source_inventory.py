@@ -39,7 +39,7 @@ _EXTERN_DATA_RE = re.compile(
     r"(?P<type>"
     r"volatile\s+)?"
     r"(?P<base_type>u8|u16|u32|s8|s16|s32|vu8|vu16|vu32|vs8|vs16|vs32)\s+"
-    r"(?P<name>\w+)\s*;",
+    r"(?P<name>\w+)\s*(?:\[\])?\s*\*?\s*;",
     re.M,
 )
 
@@ -175,13 +175,14 @@ def build_source_inventory(source_dir: Path, target_id: str) -> SourceInventory:
     # 1. Inventory lifted function source files.
     source_files: dict[int, Path] = {}
     if source_dir.is_dir():
-        for path in source_dir.glob("func_*.c"):
+        for path in sorted(source_dir.glob("func_*.c")):
             match = _FUNCTION_FILE_RE.match(path.name)
             if match is None:
                 continue
             address = int(match.group(1), 16)
             source_files[address] = path
-            pieces.append(path.read_bytes())
+    for address in sorted(source_files):
+        pieces.append(source_files[address].read_bytes())
 
     # 2. Read weak bindings from the canonical entry point.
     all_bindings: dict[str, int] = {}

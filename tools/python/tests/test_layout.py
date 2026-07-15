@@ -31,9 +31,9 @@ def test_parse_splat_layout_extracts_reviewed_c_subsegments(tmp_path: Path) -> N
                 "    start: 0x4",
                 "    vram: 0x80196118",
                 "    subsegments:",
-                "      - [0x4, c, func_8019611c]",
-                "      - [0x44, asm, func_8019615c]",
-                "      - [0xa44, asm, func_80196b5c]",
+                "      - [0x4, c, func_80196118]",
+                "      - [0x44, asm, func_80196158]",
+                "      - [0xa44, asm, func_80196b58]",
                 "  - [0xd1c, bin, data]",
                 "  - [0xe70]",
             ]
@@ -45,9 +45,9 @@ def test_parse_splat_layout_extracts_reviewed_c_subsegments(tmp_path: Path) -> N
 
     assert layout.has_reviewed_functions
     assert layout.load_address == 0x80196118
-    assert 0x8019611c in layout.reviewed_function_addresses
-    assert 0x8019615c in layout.reviewed_function_addresses
-    assert 0x80196b5c in layout.reviewed_function_addresses
+    assert 0x80196118 in layout.reviewed_function_addresses
+    assert 0x80196158 in layout.reviewed_function_addresses
+    assert 0x80196b58 in layout.reviewed_function_addresses
 
 
 def test_parse_splat_layout_computes_virtual_address_from_vram(tmp_path: Path) -> None:
@@ -62,7 +62,8 @@ def test_parse_splat_layout_computes_virtual_address_from_vram(tmp_path: Path) -
                 "    start: 0x18",
                 "    vram: 0x801f2be8",
                 "    subsegments:",
-                "      - [0x18, c, func_801f2c00]",
+                "      - [0x18, c, func_801f2be8]",
+                "      - [0x30, c, func_801f2c00]",
                 "  - [0x100]",
             ]
         ),
@@ -102,8 +103,8 @@ def test_parse_splat_layout_boundaries_have_file_end(tmp_path: Path) -> None:
                 "    start: 0x4",
                 "    vram: 0x80196118",
                 "    subsegments:",
-                "      - [0x4, c, func_8019611c]",
-                "      - [0x44, asm, func_8019615c]",
+                "      - [0x4, c, func_80196118]",
+                "      - [0x44, asm, func_80196158]",
                 "  - [0xa0]",
             ]
         ),
@@ -112,12 +113,12 @@ def test_parse_splat_layout_boundaries_have_file_end(tmp_path: Path) -> None:
 
     layout = parse_splat_layout(splat, 0x80196118)
 
-    func = layout.boundary_starting_at(0x8019611c)
+    func = layout.boundary_starting_at(0x80196118)
     assert func is not None
     assert func.file_end == 0x44
     assert func.file_size == 0x40
 
-    func2 = layout.boundary_starting_at(0x8019615c)
+    func2 = layout.boundary_starting_at(0x80196158)
     assert func2 is not None
     assert func2.file_end == 0xA0
     assert func2.file_size == 0x5C
@@ -135,8 +136,8 @@ def test_parse_splat_layout_containing(tmp_path: Path) -> None:
                 "    start: 0x4",
                 "    vram: 0x80196118",
                 "    subsegments:",
-                "      - [0x4, c, func_8019611c]",
-                "      - [0x44, asm, func_8019615c]",
+                "      - [0x4, c, func_80196118]",
+                "      - [0x44, asm, func_80196158]",
                 "  - [0xa0]",
             ]
         ),
@@ -148,12 +149,12 @@ def test_parse_splat_layout_containing(tmp_path: Path) -> None:
     # Inside the first function.
     b = layout.boundary_containing(0x80196130)
     assert b is not None
-    assert b.name == "func_8019611c"
+    assert b.name == "func_80196118"
 
     # Inside the second function.
     b = layout.boundary_containing(0x80196160)
     assert b is not None
-    assert b.name == "func_8019615c"
+    assert b.name == "func_80196158"
 
 
 def test_parse_splat_layout_function_address_from_name(tmp_path: Path) -> None:
@@ -196,9 +197,9 @@ def test_parse_splat_layout_real_area008(tmp_path: Path) -> None:
                 "    start: 0x18",
                 "    vram: 0x801f2be8",
                 "    subsegments:",
-                "      - [0x18, c, func_801f2c00]",
-                "      - [0x5c, c, func_801f2c44]",
-                "      - [0x124, asm, func_801f2d0c]",
+                "      - [0x18, c, func_801f2be8]",
+                "      - [0x5c, c, func_801f2c2c]",
+                "      - [0x124, asm, func_801f2cf4]",
                 "  - [0x1a74, bin, data]",
                 "  - [0x27f8]",
             ]
@@ -208,12 +209,12 @@ def test_parse_splat_layout_real_area008(tmp_path: Path) -> None:
 
     layout = parse_splat_layout(splat, 0x801f2be8)
 
-    assert 0x801f2c00 in layout.reviewed_function_addresses
-    assert 0x801f2c44 in layout.reviewed_function_addresses
-    assert 0x801f2d0c in layout.reviewed_function_addresses
+    assert 0x801f2be8 in layout.reviewed_function_addresses
+    assert 0x801f2c2c in layout.reviewed_function_addresses
+    assert 0x801f2cf4 in layout.reviewed_function_addresses
 
-    func = layout.boundary_starting_at(0x801f2c00)
+    func = layout.boundary_starting_at(0x801f2be8)
     assert func is not None
-    assert func.name == "func_801f2c00"
+    assert func.name == "func_801f2be8"
     assert func.file_end == 0x5c
     assert func.file_size == 0x44

@@ -334,10 +334,6 @@ def target_slug(entry: dict[str, Any]) -> str:
     )
 
 
-def internal_header_guard(slug: str) -> str:
-    return "BOF3_" + re.sub(r"[^A-Za-z0-9]", "_", slug).upper() + "_INTERNAL_H"
-
-
 def target_details(entry: dict[str, Any], root: Path) -> dict[str, Any]:
     """Return the small, derived target view shared by CLI consumers."""
     slug = target_slug(entry)

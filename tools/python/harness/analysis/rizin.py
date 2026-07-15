@@ -198,9 +198,9 @@ def _run_rizin(
     rz = rzpipe.open(str(resolved.binary_path), flags=flags)
     try:
         for command in plan.commands:
-            rz.cmd(command)
+            rz.cmd(command, timeout=timeout)
 
-        functions_raw = rz.cmdj("aflj") or []
+        functions_raw = rz.cmdj("aflj", timeout=timeout) or []
         functions = tuple(
             RawFunction(
                 addr=int(row.get("offset", 0)),
@@ -211,7 +211,7 @@ def _run_rizin(
             if isinstance(row, dict) and row.get("offset") is not None
         )
 
-        xrefs_raw = rz.cmdj("axlj") or []
+        xrefs_raw = rz.cmdj("axlj", timeout=timeout) or []
         xrefs = tuple(
             RawXref(
                 from_addr=int(row.get("from", 0)),
@@ -222,7 +222,7 @@ def _run_rizin(
             if isinstance(row, dict) and row.get("from") is not None
         )
 
-        strings_raw = rz.cmdj("izzj") or []
+        strings_raw = rz.cmdj("izzj", timeout=timeout) or []
         strings = tuple(
             RawString(
                 vaddr=int(row.get("vaddr", 0)),
@@ -417,14 +417,14 @@ def _init_rizin(
     rz = rzpipe.open(str(resolved.binary_path), flags=flags)
     try:
         for command in plan.commands:
-            rz.cmd(command)
-        rz.cmd(f"f+ {sentinel} 1")
-        rz.cmd(f"Ps {project_path}")
+            rz.cmd(command, timeout=timeout)
+        rz.cmd(f"f+ {sentinel} 1", timeout=timeout)
+        rz.cmd(f"Ps {project_path}", timeout=timeout)
 
         rz2 = rzpipe.open(str(resolved.binary_path), flags=flags)
         try:
-            rz2.cmd(f"-p {project_path}")
-            flags_raw = rz2.cmdj("fs *;flj") or []
+            rz2.cmd(f"-p {project_path}", timeout=timeout)
+            flags_raw = rz2.cmdj("fs *;flj", timeout=timeout) or []
             flag_names = {row.get("name") for row in flags_raw if isinstance(row, dict)}
             return sentinel in flag_names
         finally:

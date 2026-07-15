@@ -15,7 +15,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..domain import TargetManifest
+from ..domain.ids import TargetId
 from ..domain.registry import ResolvedTarget
 from ..layout import ReviewedLayout
 from ..source_inventory import SourceInventory
@@ -57,16 +57,16 @@ class ReplayPlan:
     commands: tuple[str, ...]
 
 
-def replay_output_path(root: Path, manifest: TargetManifest) -> Path:
+def replay_output_path(root: Path, target_id: TargetId) -> Path:
     """Return the generated replay artifact path under ``out/analysis/replay``."""
 
-    return root / "out" / "analysis" / "replay" / f"{manifest.id.value}.r2"
+    return root / "out" / "analysis" / "replay" / f"{target_id.value}.r2"
 
 
-def reviewed_replay_path(root: Path, manifest: TargetManifest) -> Path:
+def reviewed_replay_path(root: Path, target_id: TargetId) -> Path:
     """Return the reviewed replay path under ``config/analysis``."""
 
-    return root / "config" / "analysis" / manifest.id.value / "reviewed.r2"
+    return root / "config" / "analysis" / target_id.value / "reviewed.r2"
 
 
 def _sha256(path: Path) -> str | None:
@@ -177,7 +177,10 @@ def write_generated_replay(
     layout: ReviewedLayout,
     inventory: SourceInventory,
 ) -> Path:
-    """Render and write the generated replay under ``out/analysis/replay``."""
+    """Render and atomically write the generated replay under ``out/analysis/replay``."""
+
+    import os
+    import tempfile
 
     rendered = render_generated_replay(
         layout=layout,
@@ -187,7 +190,19 @@ def write_generated_replay(
     )
     output = replay_output_path(root, resolved.id)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(rendered, encoding="utf-8")
+    descriptor, temp_name = tempfile.mkstemp(
+        dir=output.parent, prefix=f".{output.name}.", suffix=".tmp"
+    )
+    temp_path = Path(temp_name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as f:
+            f.write(rendered)
+            f.flush()
+            os.fsync(f.fileno())
+        temp_path.replace(output)
+    except BaseException:
+        temp_path.unlink(missing_ok=True)
+        raise
     return output
 
 

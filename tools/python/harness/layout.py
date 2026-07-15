@@ -92,12 +92,18 @@ class ReviewedLayout:
         )
 
     def boundary_containing(self, address: int) -> LayoutBoundary | None:
-        """Return the first reviewed boundary containing ``address``."""
+        """Return the first reviewed boundary containing ``address``.
+
+        The last boundary may be open-ended (``virtual_end is None``)
+        if no EOF sentinel was present; such boundaries match any
+        address at or after their start.
+        """
 
         for b in self.boundaries:
             if b.virtual_end is None:
-                continue
-            if b.virtual_start <= address < b.virtual_end:
+                if b.virtual_start <= address:
+                    return b
+            elif b.virtual_start <= address < b.virtual_end:
                 return b
         return None
 
@@ -132,15 +138,16 @@ def _parse_boundaries(text: str, load_address: int) -> list[LayoutBoundary]:
     """Extract reviewed boundaries from Splat YAML text.
 
     The formula for computing virtual addresses is:
-        virtual = vram + file_offset
-    where ``vram`` is the runtime address at file offset 0 of the
-    code segment.  The ``start`` field is informational and indicates
-    where code begins in the file.
+        virtual = segment_vram + (file_offset - segment_start)
+    where ``segment_vram`` is the runtime address at the segment's
+    ``start`` file offset.  When no ``start`` is specified, the
+    segment start defaults to 0.
     """
 
     lines = text.splitlines()
     boundaries: list[LayoutBoundary] = []
     segment_vram: int | None = None
+    segment_start: int = 0
     in_segments = False
     in_code_segment = False
 
@@ -154,6 +161,7 @@ def _parse_boundaries(text: str, load_address: int) -> list[LayoutBoundary]:
         # Code segment header: extract vram and start offset.
         if _CODE_SEGMENT_RE.match(line):
             in_code_segment = True
+            segment_start = 0
             continue
 
         if in_code_segment:
@@ -163,7 +171,7 @@ def _parse_boundaries(text: str, load_address: int) -> list[LayoutBoundary]:
                 continue
             m = _START_RE.match(line)
             if m:
-                # Start is informational; we use vram + file_offset.
+                segment_start = _parse_int(m.group(1))
                 continue
 
         # Inline [offset, kind, name] subsegment.
@@ -174,7 +182,7 @@ def _parse_boundaries(text: str, load_address: int) -> list[LayoutBoundary]:
             name = m.group("name")
 
             if in_code_segment and segment_vram is not None:
-                virtual_start = segment_vram + file_start
+                virtual_start = segment_vram + (file_start - segment_start)
             else:
                 virtual_start = file_start
 
@@ -206,7 +214,7 @@ def _parse_boundaries(text: str, load_address: int) -> list[LayoutBoundary]:
         if m:
             file_end = _parse_int(m.group(1))
             virtual_end = (
-                segment_vram + file_end
+                segment_vram + (file_end - segment_start)
                 if in_code_segment and segment_vram is not None
                 else file_end
             )
@@ -225,17 +233,6 @@ def _parse_boundaries(text: str, load_address: int) -> list[LayoutBoundary]:
             in_segments = False
             in_code_segment = False
             continue
-
-    # Close the last boundary with an open end if no EOF sentinel exists.
-    if boundaries and boundaries[-1].file_end is None:
-        boundaries[-1] = LayoutBoundary(
-            file_start=boundaries[-1].file_start,
-            file_end=None,
-            virtual_start=boundaries[-1].virtual_start,
-            virtual_end=None,
-            kind=boundaries[-1].kind,
-            name=boundaries[-1].name,
-        )
 
     return boundaries
 

@@ -33,12 +33,12 @@ class SnapshotFunction:
     address: int
     analyzer_size: int
     analyzer_name: str
-    source_name: str | None
-    semantic_name: str | None
-    is_reviewed: bool
-    is_lifted: bool
-    source: str | None
     exact_sha256: str
+    source_name: str | None = None
+    semantic_name: str | None = None
+    is_reviewed: bool = False
+    is_lifted: bool = False
+    source: str | None = None
 
     def to_row(self) -> dict[str, Any]:
         row: dict[str, Any] = {

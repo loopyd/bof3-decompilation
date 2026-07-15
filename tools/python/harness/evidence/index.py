@@ -254,6 +254,10 @@ def build_index(root: Path, database: Path | None = None) -> dict[str, Any]:
                 callsite = int(uc.get("callsite", 0))
                 kind = uc.get("kind", "unknown")
                 symbol = uc.get("symbol")
+                uc_key = (caller_id, target_addr, callsite)
+                if uc_key in seen_edges:
+                    continue
+                seen_edges.add(uc_key)
                 repository.execute(
                     "INSERT OR IGNORE INTO unresolved_calls"
                     "(caller_id, target_address, callsite, kind, symbol) "

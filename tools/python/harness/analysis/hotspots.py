@@ -112,6 +112,8 @@ def build_hotspots(graph: AnalysisGraph) -> dict[str, Any]:
                 "address": f"0x{func.address:08x}",
                 "target": func.target,
                 "name": func.analyzer_name,
+                "is_reviewed": func.is_reviewed,
+                "is_lifted": func.is_lifted,
                 "total_callees": total_callees,
                 "unknown_callees": count,
                 "known_callees": total_callees - count,
@@ -259,6 +261,7 @@ _SORTABLE_KINDS = {
 
 _SUPPORTED_FILTER_KINDS = {"hot", "leaves", "roots", "shallow", "discovery"}
 _SUPPORTED_DEGREE_KINDS = {"leaves", "roots", "shallow", "discovery"}
+_SUPPORTED_SIZE_KINDS = {"hot", "leaves", "roots", "shallow"}
 _STATUS_KINDS = {"hot", "leaves", "roots", "shallow", "discovery"}
 _SORT_CHOICES = ("callers", "size", "address", "out_degree")
 
@@ -313,10 +316,11 @@ def _filter_row(
     if kind in _SUPPORTED_FILTER_KINDS and min_callers > 0:
         if int(row.get("callers", row.get("in_degree", 0))) < min_callers:
             return False
-    if min_size is not None and int(row.get("size", 0)) < min_size:
-        return False
-    if max_size is not None and int(row.get("size", 0)) > max_size:
-        return False
+    if kind in _SUPPORTED_SIZE_KINDS:
+        if min_size is not None and int(row.get("size", 0)) < min_size:
+            return False
+        if max_size is not None and int(row.get("size", 0)) > max_size:
+            return False
     if kind in _STATUS_KINDS and status != "all":
         is_reviewed = bool(row.get("is_reviewed"))
         is_lifted = bool(row.get("is_lifted"))
