@@ -10,103 +10,1596 @@ options:
   src_path: src/emi/etc/game/00
   ld_script_path: out/splat/emi/etc/game/00/linker.ld
   symbol_addrs_path:
-    - config/symbols/psyq.txt
-    - config/symbols/shared.txt
+  - config/symbols/psyq.txt
+  - config/symbols/shared.txt
 segments:
-  - [0x0, bin, header]
-  - name: main
-    type: code
-    start: 0x91c
-    vram: 0x8019611c
-    subsegments:
-      - [0x91c, c, func_8019611c]
-      - [0x95c, asm, func_8019615c]
-      - [0xa5c, c, func_8019625c]
-      - [0xd1c, asm, func_8019651c]
-      - [0xe70, asm, func_80196670]
-      - [0xf18, asm, func_80196718]
-      - [0xf84, asm, func_80196784]
-      - [0x10bc, c, func_801968bc]
-      - [0x1320, c, func_80196b20]
-      - [0x139c, c, func_80196b9c]
-      - [0x148c, asm, func_80196c8c]
-      - [0x14f0, c, func_80196cf0]
-      - [0x1584, asm, func_80196d84]
-      - [0x1674, asm, func_80196e74]
-      - [0x1778, c, func_80196f78]
-      - [0x17fc, c, func_80196ffc]
-      - [0x1868, c, func_80197068]
-      - [0x18ec, c, func_801970ec]
-      - [0x19e8, c, func_801971e8]
-      - [0x1b78, c, func_80197378]
-      - [0x1de4, c, func_801975e4]
-      - [0x21d4, c, func_801979d4]
-      - [0x2224, c, func_80197a24]
-      - [0x2260, c, func_80197a60]
-      - [0x22a4, c, func_80197aa4]
-      - [0x241c, c, func_80197c1c]
-      - [0x2494, asm, func_80197c94]
-      - [0x2654, c, func_80197e54]
-      - [0x26fc, c, func_80197efc]
-      - [0x2748, asm, func_80197f48]
-      - [0x2970, c, func_80198170]
-      - [0x29b4, c, func_801981b4]
-      - [0x29d4, c, func_801981d4]
-      - [0x2a34, c, func_80198234]
-      - [0x2cac, c, func_801984ac]
-      - [0x2f44, c, func_80198744]
-      - [0x3104, c, func_80198904]
-      - [0x32c4, c, func_80198ac4]
-      - [0x33c4, c, func_80198bc4]
-      - [0x3438, asm, func_80198c38]
-      - [0x34ac, asm, func_80198cac]
-      - [0x371c, asm, func_80198f1c]
-      - [0x38d0, asm, func_801990d0]
-      - [0x39b8, asm, func_801991b8]
-      - [0x3a30, asm, func_80199230]
-      - [0x3ab8, asm, func_801992b8]
-      - [0x3b08, asm, func_80199308]
-      - [0x3b68, asm, func_80199368]
-      - [0x3b98, asm, func_80199398]
-      - [0x3bf0, asm, func_801993f0]
-      - [0x3c18, asm, func_80199418]
-      - [0x3c40, asm, func_80199440]
-      - [0x48e4, asm, func_8019a0e4]
-      - [0xa228, asm, func_8019fa28]
-      - [0xa3f8, asm, func_8019fbf8]
-      - [0xaae8, asm, func_801a02e8]
-      - [0xab80, asm, func_801a0380]
-      - [0xad14, c, func_801a0514]
-      - [0xaed8, asm, func_801a06d8]
-      - [0xc2e4, c, func_801a1ae4]
-      - [0xc3c0, c, func_801a1bc0]
-      - [0x11b30, c, func_801a7330]
-      - [0x11f04, c, func_801a7704]
-      - [0x12004, c, func_801a7804]
-      - [0x1202c, asm, func_801a782c]
-      - [0x123f0, asm, func_801a7bf0]
-      - [0x185d4, c, func_801addd4]
-      - [0x19a70, c, func_801af270]
-      - [0x19aa0, c, func_801af2a0]
-      - [0x19b90, c, func_801af390]
-      - [0x19db0, c, func_801af5b0]
-      - [0x1d500, asm, func_801b2d00]
-      - [0x260e8, c, func_801bb8e8]
-      - [0x282b8, asm, func_801bdab8]
-      - [0x2837c, asm, func_801bdb7c]
-      - [0x29000, asm, func_801be800]
-      - [0x295d0, asm, func_801bedd0]
-      - [0x29670, asm, func_801bee70]
-      - [0x2991c, asm, func_801bf11c]
-      - [0x29f8c, asm, func_801bf78c]
-      - [0x2a0e0, asm, func_801bf8e0]
-      - [0x2a2c4, asm, func_801bfac4]
-      - [0x2ba54, asm, func_801c1254]
-      - [0x2bc00, asm, func_801c1400]
-      - [0x2fd58, c, func_801c5558]
-      - [0x2ff98, c, func_801c5798]
-      - [0x2fff4, asm, func_801c57f4]
-      - [0x31988, c, func_801c7188]
-      - [0x319ac, c, func_801c71ac]
-  - [0x319c4, bin, data]
-  - [0x38158]
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 2332
+  vram: 2149146908
+  subsegments:
+  - - 2332
+    - c
+    - func_8019611c
+  - - 2396
+    - asm
+    - func_8019615c
+  - - 2652
+    - c
+    - func_8019625c
+  - - 3356
+    - asm
+    - func_8019651c
+  - - 3696
+    - asm
+    - func_80196670
+  - - 3864
+    - asm
+    - func_80196718
+  - - 3972
+    - asm
+    - func_80196784
+  - - 4284
+    - c
+    - func_801968bc
+  - - 4896
+    - c
+    - func_80196b20
+  - - 5020
+    - c
+    - func_80196b9c
+  - - 5260
+    - asm
+    - func_80196c8c
+  - - 5360
+    - c
+    - func_80196cf0
+  - - 5508
+    - asm
+    - func_80196d84
+  - - 5748
+    - asm
+    - func_80196e74
+  - - 6008
+    - c
+    - func_80196f78
+  - - 6140
+    - c
+    - func_80196ffc
+  - - 6248
+    - c
+    - func_80197068
+  - - 6380
+    - c
+    - func_801970ec
+  - - 6632
+    - c
+    - func_801971e8
+  - - 7032
+    - c
+    - func_80197378
+  - - 7652
+    - c
+    - func_801975e4
+  - - 8660
+    - c
+    - func_801979d4
+  - - 8740
+    - c
+    - func_80197a24
+  - - 8800
+    - c
+    - func_80197a60
+  - - 8868
+    - c
+    - func_80197aa4
+  - - 9244
+    - c
+    - func_80197c1c
+  - - 9364
+    - asm
+    - func_80197c94
+  - - 9812
+    - c
+    - func_80197e54
+  - - 9980
+    - c
+    - func_80197efc
+  - - 10056
+    - asm
+    - func_80197f48
+  - - 10608
+    - c
+    - func_80198170
+  - - 10676
+    - c
+    - func_801981b4
+  - - 10708
+    - c
+    - func_801981d4
+  - - 10804
+    - c
+    - func_80198234
+  - - 11436
+    - c
+    - func_801984ac
+  - - 12100
+    - c
+    - func_80198744
+  - - 12548
+    - c
+    - func_80198904
+  - - 12996
+    - c
+    - func_80198ac4
+  - - 13252
+    - c
+    - func_80198bc4
+  - - 13368
+    - asm
+    - func_80198c38
+  - - 13484
+    - asm
+    - func_80198cac
+  - - 14108
+    - asm
+    - func_80198f1c
+  - - 14544
+    - asm
+    - func_801990d0
+  - - 14776
+    - asm
+    - func_801991b8
+  - - 14896
+    - asm
+    - func_80199230
+  - - 15032
+    - asm
+    - func_801992b8
+  - - 15112
+    - asm
+    - func_80199308
+  - - 15208
+    - asm
+    - func_80199368
+  - - 15256
+    - asm
+    - func_80199398
+  - - 15344
+    - asm
+    - func_801993f0
+  - - 15384
+    - asm
+    - func_80199418
+  - - 15424
+    - asm
+    - func_80199440
+  - - 15704
+    - asm
+    - func_80199558
+  - - 15772
+    - asm
+    - func_8019959c
+  - - 15780
+    - asm
+    - func_801995a4
+  - - 15864
+    - asm
+    - func_801995f8
+  - - 15928
+    - asm
+    - func_80199638
+  - - 15992
+    - asm
+    - func_80199678
+  - - 16040
+    - asm
+    - func_801996a8
+  - - 16124
+    - asm
+    - func_801996fc
+  - - 16188
+    - asm
+    - func_8019973c
+  - - 16252
+    - asm
+    - func_8019977c
+  - - 16364
+    - asm
+    - func_801997ec
+  - - 16428
+    - asm
+    - func_8019982c
+  - - 16492
+    - asm
+    - func_8019986c
+  - - 16696
+    - asm
+    - func_80199938
+  - - 16760
+    - asm
+    - func_80199978
+  - - 16824
+    - asm
+    - func_801999b8
+  - - 16888
+    - asm
+    - func_801999f8
+  - - 18660
+    - asm
+    - func_8019a0e4
+  - - 18836
+    - asm
+    - func_8019a194
+  - - 18900
+    - asm
+    - func_8019a1d4
+  - - 18960
+    - asm
+    - func_8019a210
+  - - 19032
+    - asm
+    - func_8019a258
+  - - 19104
+    - asm
+    - func_8019a2a0
+  - - 19176
+    - asm
+    - func_8019a2e8
+  - - 19248
+    - asm
+    - func_8019a330
+  - - 19312
+    - asm
+    - func_8019a370
+  - - 19384
+    - asm
+    - func_8019a3b8
+  - - 19452
+    - asm
+    - func_8019a3fc
+  - - 19772
+    - asm
+    - func_8019a53c
+  - - 19840
+    - asm
+    - func_8019a580
+  - - 20016
+    - asm
+    - func_8019a630
+  - - 20140
+    - asm
+    - func_8019a6ac
+  - - 20436
+    - asm
+    - func_8019a7d4
+  - - 20484
+    - asm
+    - func_8019a804
+  - - 20552
+    - asm
+    - func_8019a848
+  - - 20660
+    - asm
+    - func_8019a8b4
+  - - 20740
+    - asm
+    - func_8019a904
+  - - 21060
+    - asm
+    - func_8019aa44
+  - - 21244
+    - asm
+    - func_8019aafc
+  - - 21340
+    - asm
+    - func_8019ab5c
+  - - 21424
+    - asm
+    - func_8019abb0
+  - - 21556
+    - asm
+    - func_8019ac34
+  - - 21636
+    - asm
+    - func_8019ac84
+  - - 21748
+    - asm
+    - func_8019acf4
+  - - 21872
+    - asm
+    - func_8019ad70
+  - - 21924
+    - asm
+    - func_8019ada4
+  - - 21992
+    - asm
+    - func_8019ade8
+  - - 22300
+    - asm
+    - func_8019af1c
+  - - 22564
+    - asm
+    - func_8019b024
+  - - 22764
+    - asm
+    - func_8019b0ec
+  - - 22796
+    - asm
+    - func_8019b10c
+  - - 22864
+    - asm
+    - func_8019b150
+  - - 23016
+    - asm
+    - func_8019b1e8
+  - - 23172
+    - asm
+    - func_8019b284
+  - - 23396
+    - asm
+    - func_8019b364
+  - - 23464
+    - asm
+    - func_8019b3a8
+  - - 23712
+    - asm
+    - func_8019b4a0
+  - - 24324
+    - asm
+    - func_8019b704
+  - - 25508
+    - asm
+    - func_8019bba4
+  - - 26152
+    - asm
+    - func_8019be28
+  - - 26364
+    - asm
+    - func_8019befc
+  - - 26488
+    - asm
+    - func_8019bf78
+  - - 26580
+    - asm
+    - func_8019bfd4
+  - - 26664
+    - asm
+    - func_8019c028
+  - - 26916
+    - asm
+    - func_8019c124
+  - - 27108
+    - asm
+    - func_8019c1e4
+  - - 27204
+    - asm
+    - func_8019c244
+  - - 27460
+    - asm
+    - func_8019c344
+  - - 27888
+    - asm
+    - func_8019c4f0
+  - - 28192
+    - asm
+    - func_8019c620
+  - - 28260
+    - asm
+    - func_8019c664
+  - - 28564
+    - asm
+    - func_8019c794
+  - - 28944
+    - asm
+    - func_8019c910
+  - - 29012
+    - asm
+    - func_8019c954
+  - - 29364
+    - asm
+    - func_8019cab4
+  - - 29588
+    - asm
+    - func_8019cb94
+  - - 29656
+    - asm
+    - func_8019cbd8
+  - - 29880
+    - asm
+    - func_8019ccb8
+  - - 30428
+    - asm
+    - func_8019cedc
+  - - 30668
+    - asm
+    - func_8019cfcc
+  - - 30804
+    - asm
+    - func_8019d054
+  - - 31244
+    - asm
+    - func_8019d20c
+  - - 31344
+    - asm
+    - func_8019d270
+  - - 31932
+    - asm
+    - func_8019d4bc
+  - - 32328
+    - asm
+    - func_8019d648
+  - - 32768
+    - asm
+    - func_8019d800
+  - - 32960
+    - asm
+    - func_8019d8c0
+  - - 33216
+    - asm
+    - func_8019d9c0
+  - - 33440
+    - asm
+    - func_8019daa0
+  - - 33900
+    - asm
+    - func_8019dc6c
+  - - 34252
+    - asm
+    - func_8019ddcc
+  - - 34320
+    - asm
+    - func_8019de10
+  - - 34388
+    - asm
+    - func_8019de54
+  - - 34700
+    - asm
+    - func_8019df8c
+  - - 34740
+    - asm
+    - func_8019dfb4
+  - - 35232
+    - asm
+    - func_8019e1a0
+  - - 35428
+    - asm
+    - func_8019e264
+  - - 35496
+    - asm
+    - func_8019e2a8
+  - - 35692
+    - asm
+    - func_8019e36c
+  - - 35876
+    - asm
+    - func_8019e424
+  - - 35944
+    - asm
+    - func_8019e468
+  - - 36008
+    - asm
+    - func_8019e4a8
+  - - 36308
+    - asm
+    - func_8019e5d4
+  - - 36600
+    - asm
+    - func_8019e6f8
+  - - 36736
+    - asm
+    - func_8019e780
+  - - 36804
+    - asm
+    - func_8019e7c4
+  - - 36996
+    - asm
+    - func_8019e884
+  - - 37144
+    - asm
+    - func_8019e918
+  - - 37212
+    - asm
+    - func_8019e95c
+  - - 37472
+    - asm
+    - func_8019ea60
+  - - 37588
+    - asm
+    - func_8019ead4
+  - - 37620
+    - asm
+    - func_8019eaf4
+  - - 37688
+    - asm
+    - func_8019eb38
+  - - 37920
+    - asm
+    - func_8019ec20
+  - - 38208
+    - asm
+    - func_8019ed40
+  - - 38416
+    - asm
+    - func_8019ee10
+  - - 38628
+    - asm
+    - func_8019eee4
+  - - 39628
+    - asm
+    - func_8019f2cc
+  - - 39696
+    - asm
+    - func_8019f310
+  - - 39812
+    - asm
+    - func_8019f384
+  - - 39984
+    - asm
+    - func_8019f430
+  - - 40184
+    - asm
+    - func_8019f4f8
+  - - 40376
+    - asm
+    - func_8019f5b8
+  - - 40796
+    - asm
+    - func_8019f75c
+  - - 40984
+    - asm
+    - func_8019f818
+  - - 41024
+    - asm
+    - func_8019f840
+  - - 41356
+    - asm
+    - func_8019f98c
+  - - 41424
+    - asm
+    - func_8019f9d0
+  - - 41512
+    - asm
+    - func_8019fa28
+  - - 41632
+    - asm
+    - func_8019faa0
+  - - 41976
+    - asm
+    - func_8019fbf8
+  - - 42888
+    - asm
+    - func_8019ff88
+  - - 43080
+    - asm
+    - func_801a0048
+  - - 43752
+    - asm
+    - func_801a02e8
+  - - 43848
+    - asm
+    - func_801a0348
+  - - 43904
+    - asm
+    - func_801a0380
+  - - 44176
+    - asm
+    - func_801a0490
+  - - 44308
+    - c
+    - func_801a0514
+  - - 44760
+    - asm
+    - func_801a06d8
+  - - 45796
+    - asm
+    - func_801a0ae4
+  - - 46332
+    - asm
+    - func_801a0cfc
+  - - 46884
+    - asm
+    - func_801a0f24
+  - - 47436
+    - asm
+    - func_801a114c
+  - - 48004
+    - asm
+    - func_801a1384
+  - - 49056
+    - asm
+    - func_801a17a0
+  - - 49352
+    - asm
+    - func_801a18c8
+  - - 49700
+    - asm
+    - func_801a1a24
+  - - 49752
+    - asm
+    - func_801a1a58
+  - - 49892
+    - c
+    - func_801a1ae4
+  - - 50112
+    - c
+    - func_801a1bc0
+  - - 72496
+    - c
+    - func_801a7330
+  - - 73476
+    - c
+    - func_801a7704
+  - - 73732
+    - c
+    - func_801a7804
+  - - 73772
+    - asm
+    - func_801a782c
+  - - 73848
+    - asm
+    - func_801a7878
+  - - 73976
+    - asm
+    - func_801a78f8
+  - - 74004
+    - asm
+    - func_801a7914
+  - - 74148
+    - asm
+    - func_801a79a4
+  - - 74292
+    - asm
+    - func_801a7a34
+  - - 74456
+    - asm
+    - func_801a7ad8
+  - - 74736
+    - asm
+    - func_801a7bf0
+  - - 74796
+    - asm
+    - func_801a7c2c
+  - - 74924
+    - asm
+    - func_801a7cac
+  - - 74984
+    - asm
+    - func_801a7ce8
+  - - 74992
+    - asm
+    - func_801a7cf0
+  - - 75348
+    - asm
+    - func_801a7e54
+  - - 75820
+    - asm
+    - func_801a802c
+  - - 76536
+    - asm
+    - func_801a82f8
+  - - 76700
+    - asm
+    - func_801a839c
+  - - 76764
+    - asm
+    - func_801a83dc
+  - - 77100
+    - asm
+    - func_801a852c
+  - - 77524
+    - asm
+    - func_801a86d4
+  - - 77588
+    - asm
+    - func_801a8714
+  - - 77608
+    - asm
+    - func_801a8728
+  - - 78488
+    - asm
+    - func_801a8a98
+  - - 78724
+    - asm
+    - func_801a8b84
+  - - 79028
+    - asm
+    - func_801a8cb4
+  - - 79160
+    - asm
+    - func_801a8d38
+  - - 79764
+    - asm
+    - func_801a8f94
+  - - 81636
+    - asm
+    - func_801a96e4
+  - - 82244
+    - asm
+    - func_801a9944
+  - - 83432
+    - asm
+    - func_801a9de8
+  - - 85104
+    - asm
+    - func_801aa470
+  - - 86784
+    - asm
+    - func_801aab00
+  - - 89176
+    - asm
+    - func_801ab458
+  - - 90288
+    - asm
+    - func_801ab8b0
+  - - 90660
+    - asm
+    - func_801aba24
+  - - 91048
+    - asm
+    - func_801abba8
+  - - 91496
+    - asm
+    - func_801abd68
+  - - 91872
+    - asm
+    - func_801abee0
+  - - 91952
+    - asm
+    - func_801abf30
+  - - 92320
+    - asm
+    - func_801ac0a0
+  - - 92636
+    - asm
+    - func_801ac1dc
+  - - 92988
+    - asm
+    - func_801ac33c
+  - - 94056
+    - asm
+    - func_801ac768
+  - - 94448
+    - asm
+    - func_801ac8f0
+  - - 94672
+    - asm
+    - func_801ac9d0
+  - - 94740
+    - asm
+    - func_801aca14
+  - - 94912
+    - asm
+    - func_801acac0
+  - - 95172
+    - asm
+    - func_801acbc4
+  - - 95240
+    - asm
+    - func_801acc08
+  - - 95448
+    - asm
+    - func_801accd8
+  - - 95760
+    - asm
+    - func_801ace10
+  - - 95900
+    - asm
+    - func_801ace9c
+  - - 95932
+    - asm
+    - func_801acebc
+  - - 96044
+    - asm
+    - func_801acf2c
+  - - 96492
+    - asm
+    - func_801ad0ec
+  - - 96644
+    - asm
+    - func_801ad184
+  - - 96792
+    - asm
+    - func_801ad218
+  - - 96972
+    - asm
+    - func_801ad2cc
+  - - 97116
+    - asm
+    - func_801ad35c
+  - - 97204
+    - asm
+    - func_801ad3b4
+  - - 97356
+    - asm
+    - func_801ad44c
+  - - 97388
+    - asm
+    - func_801ad46c
+  - - 97500
+    - asm
+    - func_801ad4dc
+  - - 97948
+    - asm
+    - func_801ad69c
+  - - 97980
+    - asm
+    - func_801ad6bc
+  - - 98100
+    - asm
+    - func_801ad734
+  - - 98572
+    - asm
+    - func_801ad90c
+  - - 98756
+    - asm
+    - func_801ad9c4
+  - - 98800
+    - asm
+    - func_801ad9f0
+  - - 99008
+    - asm
+    - func_801adac0
+  - - 99480
+    - asm
+    - func_801adc98
+  - - 99572
+    - asm
+    - func_801adcf4
+  - - 99796
+    - c
+    - func_801addd4
+  - - 105072
+    - c
+    - func_801af270
+  - - 105120
+    - c
+    - func_801af2a0
+  - - 105360
+    - c
+    - func_801af390
+  - - 105904
+    - c
+    - func_801af5b0
+  - - 120064
+    - asm
+    - func_801b2d00
+  - - 120148
+    - asm
+    - func_801b2d54
+  - - 120208
+    - asm
+    - func_801b2d90
+  - - 120284
+    - asm
+    - func_801b2ddc
+  - - 120776
+    - asm
+    - func_801b2fc8
+  - - 121180
+    - asm
+    - func_801b315c
+  - - 121328
+    - asm
+    - func_801b31f0
+  - - 121440
+    - asm
+    - func_801b3260
+  - - 121508
+    - asm
+    - func_801b32a4
+  - - 121552
+    - asm
+    - func_801b32d0
+  - - 121620
+    - asm
+    - func_801b3314
+  - - 121736
+    - asm
+    - func_801b3388
+  - - 121796
+    - asm
+    - func_801b33c4
+  - - 121856
+    - asm
+    - func_801b3400
+  - - 121916
+    - asm
+    - func_801b343c
+  - - 121992
+    - asm
+    - func_801b3488
+  - - 122176
+    - asm
+    - func_801b3540
+  - - 122244
+    - asm
+    - func_801b3584
+  - - 122288
+    - asm
+    - func_801b35b0
+  - - 122348
+    - asm
+    - func_801b35ec
+  - - 122480
+    - asm
+    - func_801b3670
+  - - 122512
+    - asm
+    - func_801b3690
+  - - 122652
+    - asm
+    - func_801b371c
+  - - 122728
+    - asm
+    - func_801b3768
+  - - 123452
+    - asm
+    - func_801b3a3c
+  - - 123900
+    - asm
+    - func_801b3bfc
+  - - 123964
+    - asm
+    - func_801b3c3c
+  - - 124108
+    - asm
+    - func_801b3ccc
+  - - 124592
+    - asm
+    - func_801b3eb0
+  - - 125264
+    - asm
+    - func_801b4150
+  - - 125904
+    - asm
+    - func_801b43d0
+  - - 126100
+    - asm
+    - func_801b4494
+  - - 126172
+    - asm
+    - func_801b44dc
+  - - 127972
+    - asm
+    - func_801b4be4
+  - - 128380
+    - asm
+    - func_801b4d7c
+  - - 130124
+    - asm
+    - func_801b544c
+  - - 130496
+    - asm
+    - func_801b55c0
+  - - 130692
+    - asm
+    - func_801b5684
+  - - 130904
+    - asm
+    - func_801b5758
+  - - 131064
+    - asm
+    - func_801b57f8
+  - - 131204
+    - asm
+    - func_801b5884
+  - - 131344
+    - asm
+    - func_801b5910
+  - - 131508
+    - asm
+    - func_801b59b4
+  - - 131812
+    - asm
+    - func_801b5ae4
+  - - 132060
+    - asm
+    - func_801b5bdc
+  - - 132180
+    - asm
+    - func_801b5c54
+  - - 132696
+    - asm
+    - func_801b5e58
+  - - 132796
+    - asm
+    - func_801b5ebc
+  - - 132968
+    - asm
+    - func_801b5f68
+  - - 133188
+    - asm
+    - func_801b6044
+  - - 133340
+    - asm
+    - func_801b60dc
+  - - 133720
+    - asm
+    - func_801b6258
+  - - 134168
+    - asm
+    - func_801b6418
+  - - 134256
+    - asm
+    - func_801b6470
+  - - 134672
+    - asm
+    - func_801b6610
+  - - 134772
+    - asm
+    - func_801b6674
+  - - 135436
+    - asm
+    - func_801b690c
+  - - 135616
+    - asm
+    - func_801b69c0
+  - - 135684
+    - asm
+    - func_801b6a04
+  - - 135856
+    - asm
+    - func_801b6ab0
+  - - 136136
+    - asm
+    - func_801b6bc8
+  - - 136988
+    - asm
+    - func_801b6f1c
+  - - 137180
+    - asm
+    - func_801b6fdc
+  - - 137252
+    - asm
+    - func_801b7024
+  - - 137340
+    - asm
+    - func_801b707c
+  - - 137428
+    - asm
+    - func_801b70d4
+  - - 137836
+    - asm
+    - func_801b726c
+  - - 137904
+    - asm
+    - func_801b72b0
+  - - 138052
+    - asm
+    - func_801b7344
+  - - 138160
+    - asm
+    - func_801b73b0
+  - - 138228
+    - asm
+    - func_801b73f4
+  - - 138316
+    - asm
+    - func_801b744c
+  - - 138840
+    - asm
+    - func_801b7658
+  - - 138996
+    - asm
+    - func_801b76f4
+  - - 139292
+    - asm
+    - func_801b781c
+  - - 139444
+    - asm
+    - func_801b78b4
+  - - 139532
+    - asm
+    - func_801b790c
+  - - 139600
+    - asm
+    - func_801b7950
+  - - 139656
+    - asm
+    - func_801b7988
+  - - 139768
+    - asm
+    - func_801b79f8
+  - - 140116
+    - asm
+    - func_801b7b54
+  - - 140304
+    - asm
+    - func_801b7c10
+  - - 140376
+    - asm
+    - func_801b7c58
+  - - 140448
+    - asm
+    - func_801b7ca0
+  - - 140544
+    - asm
+    - func_801b7d00
+  - - 140612
+    - asm
+    - func_801b7d44
+  - - 140676
+    - asm
+    - func_801b7d84
+  - - 140736
+    - asm
+    - func_801b7dc0
+  - - 140796
+    - asm
+    - func_801b7dfc
+  - - 140856
+    - asm
+    - func_801b7e38
+  - - 140916
+    - asm
+    - func_801b7e74
+  - - 141040
+    - asm
+    - func_801b7ef0
+  - - 141280
+    - asm
+    - func_801b7fe0
+  - - 141492
+    - asm
+    - func_801b80b4
+  - - 141804
+    - asm
+    - func_801b81ec
+  - - 141876
+    - asm
+    - func_801b8234
+  - - 141964
+    - asm
+    - func_801b828c
+  - - 142092
+    - asm
+    - func_801b830c
+  - - 142228
+    - asm
+    - func_801b8394
+  - - 142712
+    - asm
+    - func_801b8578
+  - - 142784
+    - asm
+    - func_801b85c0
+  - - 143116
+    - asm
+    - func_801b870c
+  - - 143212
+    - asm
+    - func_801b876c
+  - - 143288
+    - asm
+    - func_801b87b8
+  - - 143884
+    - asm
+    - func_801b8a0c
+  - - 144028
+    - asm
+    - func_801b8a9c
+  - - 144484
+    - asm
+    - func_801b8c64
+  - - 144664
+    - asm
+    - func_801b8d18
+  - - 145480
+    - asm
+    - func_801b9048
+  - - 145568
+    - asm
+    - func_801b90a0
+  - - 145664
+    - asm
+    - func_801b9100
+  - - 145868
+    - asm
+    - func_801b91cc
+  - - 145936
+    - asm
+    - func_801b9210
+  - - 146552
+    - asm
+    - func_801b9478
+  - - 146840
+    - asm
+    - func_801b9598
+  - - 146912
+    - asm
+    - func_801b95e0
+  - - 149256
+    - asm
+    - func_801b9f08
+  - - 150136
+    - asm
+    - func_801ba278
+  - - 151160
+    - asm
+    - func_801ba678
+  - - 154040
+    - asm
+    - func_801bb1b8
+  - - 154296
+    - asm
+    - func_801bb2b8
+  - - 155376
+    - asm
+    - func_801bb6f0
+  - - 155488
+    - asm
+    - func_801bb760
+  - - 155568
+    - asm
+    - func_801bb7b0
+  - - 155676
+    - asm
+    - func_801bb81c
+  - - 155756
+    - asm
+    - func_801bb86c
+  - - 155880
+    - c
+    - func_801bb8e8
+  - - 164536
+    - asm
+    - func_801bdab8
+  - - 164732
+    - asm
+    - func_801bdb7c
+  - - 164804
+    - asm
+    - func_801bdbc4
+  - - 165112
+    - asm
+    - func_801bdcf8
+  - - 165208
+    - asm
+    - func_801bdd58
+  - - 165396
+    - asm
+    - func_801bde14
+  - - 165640
+    - asm
+    - func_801bdf08
+  - - 166080
+    - asm
+    - func_801be0c0
+  - - 166320
+    - asm
+    - func_801be1b0
+  - - 167284
+    - asm
+    - func_801be574
+  - - 167696
+    - asm
+    - func_801be710
+  - - 167736
+    - asm
+    - func_801be738
+  - - 167936
+    - asm
+    - func_801be800
+  - - 168224
+    - asm
+    - func_801be920
+  - - 168880
+    - asm
+    - func_801bebb0
+  - - 169424
+    - asm
+    - func_801bedd0
+  - - 169564
+    - asm
+    - func_801bee5c
+  - - 169584
+    - asm
+    - func_801bee70
+  - - 170268
+    - asm
+    - func_801bf11c
+  - - 171080
+    - asm
+    - func_801bf448
+  - - 171432
+    - asm
+    - func_801bf5a8
+  - - 171916
+    - asm
+    - func_801bf78c
+  - - 172256
+    - asm
+    - func_801bf8e0
+  - - 172740
+    - asm
+    - func_801bfac4
+  - - 172852
+    - asm
+    - func_801bfb34
+  - - 173620
+    - asm
+    - func_801bfe34
+  - - 173980
+    - asm
+    - func_801bff9c
+  - - 175532
+    - asm
+    - func_801c05ac
+  - - 175960
+    - asm
+    - func_801c0758
+  - - 176396
+    - asm
+    - func_801c090c
+  - - 176744
+    - asm
+    - func_801c0a68
+  - - 176820
+    - asm
+    - func_801c0ab4
+  - - 177372
+    - asm
+    - func_801c0cdc
+  - - 177460
+    - asm
+    - func_801c0d34
+  - - 177492
+    - asm
+    - func_801c0d54
+  - - 177736
+    - asm
+    - func_801c0e48
+  - - 178076
+    - asm
+    - func_801c0f9c
+  - - 178772
+    - asm
+    - func_801c1254
+  - - 179200
+    - asm
+    - func_801c1400
+  - - 179760
+    - asm
+    - func_801c1630
+  - - 179896
+    - asm
+    - func_801c16b8
+  - - 180288
+    - asm
+    - func_801c1840
+  - - 180348
+    - asm
+    - func_801c187c
+  - - 180924
+    - asm
+    - func_801c1abc
+  - - 181744
+    - asm
+    - func_801c1df0
+  - - 181820
+    - asm
+    - func_801c1e3c
+  - - 181896
+    - asm
+    - func_801c1e88
+  - - 182092
+    - asm
+    - func_801c1f4c
+  - - 182296
+    - asm
+    - func_801c2018
+  - - 183000
+    - asm
+    - func_801c22d8
+  - - 183352
+    - asm
+    - func_801c2438
+  - - 183504
+    - asm
+    - func_801c24d0
+  - - 183608
+    - asm
+    - func_801c2538
+  - - 184080
+    - asm
+    - func_801c2710
+  - - 184288
+    - asm
+    - func_801c27e0
+  - - 184468
+    - asm
+    - func_801c2894
+  - - 184736
+    - asm
+    - func_801c29a0
+  - - 185004
+    - asm
+    - func_801c2aac
+  - - 185164
+    - asm
+    - func_801c2b4c
+  - - 185324
+    - asm
+    - func_801c2bec
+  - - 185908
+    - asm
+    - func_801c2e34
+  - - 186508
+    - asm
+    - func_801c308c
+  - - 186708
+    - asm
+    - func_801c3154
+  - - 186884
+    - asm
+    - func_801c3204
+  - - 187036
+    - asm
+    - func_801c329c
+  - - 187800
+    - asm
+    - func_801c3598
+  - - 187980
+    - asm
+    - func_801c364c
+  - - 188304
+    - asm
+    - func_801c3790
+  - - 188380
+    - asm
+    - func_801c37dc
+  - - 188456
+    - asm
+    - func_801c3828
+  - - 188660
+    - asm
+    - func_801c38f4
+  - - 188888
+    - asm
+    - func_801c39d8
+  - - 188952
+    - asm
+    - func_801c3a18
+  - - 189304
+    - asm
+    - func_801c3b78
+  - - 190016
+    - asm
+    - func_801c3e40
+  - - 190080
+    - asm
+    - func_801c3e80
+  - - 190528
+    - asm
+    - func_801c4040
+  - - 190928
+    - asm
+    - func_801c41d0
+  - - 192300
+    - asm
+    - func_801c472c
+  - - 192364
+    - asm
+    - func_801c476c
+  - - 192764
+    - asm
+    - func_801c48fc
+  - - 193608
+    - asm
+    - func_801c4c48
+  - - 193820
+    - asm
+    - func_801c4d1c
+  - - 193880
+    - asm
+    - func_801c4d58
+  - - 194068
+    - asm
+    - func_801c4e14
+  - - 194244
+    - asm
+    - func_801c4ec4
+  - - 194440
+    - asm
+    - func_801c4f88
+  - - 194528
+    - asm
+    - func_801c4fe0
+  - - 194992
+    - asm
+    - func_801c51b0
+  - - 195084
+    - asm
+    - func_801c520c
+  - - 195484
+    - asm
+    - func_801c539c
+  - - 195700
+    - asm
+    - func_801c5474
+  - - 195928
+    - c
+    - func_801c5558
+  - - 196504
+    - c
+    - func_801c5798
+  - - 196596
+    - asm
+    - func_801c57f4
+  - - 196656
+    - asm
+    - func_801c5830
+  - - 196664
+    - asm
+    - func_801c5838
+  - - 196724
+    - asm
+    - func_801c5874
+  - - 197560
+    - asm
+    - func_801c5bb8
+  - - 197756
+    - asm
+    - func_801c5c7c
+  - - 197812
+    - asm
+    - func_801c5cb4
+  - - 197992
+    - asm
+    - func_801c5d68
+  - - 198140
+    - asm
+    - func_801c5dfc
+  - - 198684
+    - asm
+    - func_801c601c
+  - - 198880
+    - asm
+    - func_801c60e0
+  - - 199600
+    - asm
+    - func_801c63b0
+  - - 200280
+    - asm
+    - func_801c6658
+  - - 200840
+    - asm
+    - func_801c6888
+  - - 201160
+    - asm
+    - func_801c69c8
+  - - 201340
+    - asm
+    - func_801c6a7c
+  - - 201452
+    - asm
+    - func_801c6aec
+  - - 201652
+    - asm
+    - func_801c6bb4
+  - - 202188
+    - asm
+    - func_801c6dcc
+  - - 202464
+    - asm
+    - func_801c6ee0
+  - - 202708
+    - asm
+    - func_801c6fd4
+  - - 202852
+    - asm
+    - func_801c7064
+  - - 203144
+    - c
+    - func_801c7188
+  - - 203180
+    - c
+    - func_801c71ac
+- - 203204
+  - bin
+  - data
+- - 229720

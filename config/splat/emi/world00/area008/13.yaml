@@ -10,61 +10,171 @@ options:
   src_path: src/emi/world00/area008/13
   ld_script_path: out/splat/emi/world00/area008/13/linker.ld
   symbol_addrs_path:
-    - config/symbols/psyq.txt
-    - config/symbols/shared.txt
+  - config/symbols/psyq.txt
+  - config/symbols/shared.txt
 segments:
-  - [0x0, bin, header]
-  - [0x14, bin, entry_header]
-  - name: main
-    type: code
-    start: 0x18
-    vram: 0x801f2c18
-    subsegments:
-      - [0x18, c, func_801f2c18]
-      - [0x5c, c, func_801f2c5c]
-      - [0x88, c, func_801f2c88]
-      - [0x124, asm, func_801f2d24]
-      - [0x21c, asm, func_801f2e1c]
-      - [0x324, asm, func_801f2f24]
-      - [0x378, asm, func_801f2f78]
-      - [0x410, asm, func_801f3010]
-      - [0x4b8, asm, func_801f30b8]
-      - [0x57c, asm, func_801f317c]
-      - [0x5d0, asm, func_801f31d0]
-      - [0x688, asm, func_801f3288]
-      - [0x6ac, asm, func_801f32ac]
-      - [0x744, asm, func_801f3344]
-      - [0x7f0, asm, func_801f33f0]
-      - [0x8fc, asm, func_801f34fc]
-      - [0x97c, asm, func_801f357c]
-      - [0xa54, asm, func_801f3654]
-      - [0xa5c, asm, func_801f365c]
-      - [0xadc, asm, func_801f36dc]
-      - [0xbb4, asm, func_801f37b4]
-      - [0xbbc, asm, func_801f37bc]
-      - [0xc5c, asm, func_801f385c]
-      - [0xcdc, asm, func_801f38dc]
-      - [0xdb4, asm, func_801f39b4]
-      - [0xdbc, asm, func_801f39bc]
-      - [0xea8, asm, func_801f3aa8]
-      - [0xee8, asm, func_801f3ae8]
-      - [0xfb4, asm, func_801f3bb4]
-      - [0x102c, c, func_801f3c2c]
-      - [0x1118, c, func_801f3d18]
-      - [0x1188, c, func_801f3d88]
-      - [0x16d4, asm, func_801f42d4]
-      - [0x1734, asm, func_801f4334]
-      - [0x177c, asm, func_801f437c]
-      - [0x17c8, asm, func_801f43c8]
-      - [0x1824, asm, func_801f4424]
-      - [0x190c, asm, func_801f450c]
-      - [0x1934, asm, func_801f4534]
-      - [0x1960, asm, func_801f4560]
-      - [0x1978, asm, func_801f4578]
-      - [0x19a0, asm, func_801f45a0]
-      - [0x19cc, asm, func_801f45cc]
-      - [0x19e4, asm, func_801f45e4]
-      - [0x1a00, asm, func_801f4600]
-      - [0x1a1c, asm, func_801f461c]
-  - [0x1a74, bin, data]
-  - [0x27f8]
+- - 0
+  - bin
+  - header
+- - 20
+  - bin
+  - entry_header
+- name: main
+  type: code
+  start: 24
+  vram: 2149526552
+  subsegments:
+  - - 24
+    - c
+    - func_801f2c18
+  - - 92
+    - c
+    - func_801f2c5c
+  - - 136
+    - c
+    - func_801f2c88
+  - - 292
+    - asm
+    - func_801f2d24
+  - - 540
+    - asm
+    - func_801f2e1c
+  - - 804
+    - asm
+    - func_801f2f24
+  - - 888
+    - asm
+    - func_801f2f78
+  - - 1040
+    - asm
+    - func_801f3010
+  - - 1208
+    - asm
+    - func_801f30b8
+  - - 1404
+    - asm
+    - func_801f317c
+  - - 1488
+    - asm
+    - func_801f31d0
+  - - 1604
+    - asm
+    - func_801f3244
+  - - 1672
+    - asm
+    - func_801f3288
+  - - 1708
+    - asm
+    - func_801f32ac
+  - - 1860
+    - asm
+    - func_801f3344
+  - - 2032
+    - asm
+    - func_801f33f0
+  - - 2300
+    - asm
+    - func_801f34fc
+  - - 2428
+    - asm
+    - func_801f357c
+  - - 2644
+    - asm
+    - func_801f3654
+  - - 2652
+    - asm
+    - func_801f365c
+  - - 2780
+    - asm
+    - func_801f36dc
+  - - 2996
+    - asm
+    - func_801f37b4
+  - - 3004
+    - asm
+    - func_801f37bc
+  - - 3164
+    - asm
+    - func_801f385c
+  - - 3292
+    - asm
+    - func_801f38dc
+  - - 3508
+    - asm
+    - func_801f39b4
+  - - 3516
+    - asm
+    - func_801f39bc
+  - - 3684
+    - asm
+    - func_801f3a64
+  - - 3752
+    - asm
+    - func_801f3aa8
+  - - 3816
+    - asm
+    - func_801f3ae8
+  - - 4020
+    - asm
+    - func_801f3bb4
+  - - 4140
+    - c
+    - func_801f3c2c
+  - - 4376
+    - c
+    - func_801f3d18
+  - - 4488
+    - c
+    - func_801f3d88
+  - - 5844
+    - asm
+    - func_801f42d4
+  - - 5940
+    - asm
+    - func_801f4334
+  - - 6012
+    - asm
+    - func_801f437c
+  - - 6088
+    - asm
+    - func_801f43c8
+  - - 6180
+    - asm
+    - func_801f4424
+  - - 6412
+    - asm
+    - func_801f450c
+  - - 6452
+    - asm
+    - func_801f4534
+  - - 6492
+    - asm
+    - func_801f455c
+  - - 6496
+    - asm
+    - func_801f4560
+  - - 6520
+    - asm
+    - func_801f4578
+  - - 6560
+    - asm
+    - func_801f45a0
+  - - 6600
+    - asm
+    - func_801f45c8
+  - - 6604
+    - asm
+    - func_801f45cc
+  - - 6628
+    - asm
+    - func_801f45e4
+  - - 6656
+    - asm
+    - func_801f4600
+  - - 6684
+    - asm
+    - func_801f461c
+- - 6772
+  - bin
+  - data
+- - 10232
