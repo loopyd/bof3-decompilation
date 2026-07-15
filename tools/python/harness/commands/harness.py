@@ -1000,15 +1000,14 @@ def run_analysis(args: argparse.Namespace) -> int:
     if args.analysis_command == "doctor":
         payload = doctor()
     elif args.analysis_command == "init":
-        payload = initialize_project(root, args.target, args.engine)
+        payload = initialize_project(root, args.target)
     elif args.analysis_command == "export":
-        payload = export_project(root, args.target, args.engine)
+        payload = export_project(root, args.target)
     elif args.analysis_command == "graph":
-        payload = graph_analysis(root, args.target, args.engine)
+        payload = graph_analysis(root, args.target)
     elif args.analysis_command == "hotspots":
         payload = hotspot_analysis(
             root,
-            args.target,
             kind=getattr(args, "kind", None),
             top=getattr(args, "top", 40),
             min_callers=getattr(args, "min_callers", 0),
@@ -1021,7 +1020,6 @@ def run_analysis(args: argparse.Namespace) -> int:
         if getattr(args, "kind", None) is not None and payload.get("selection") is not None:
             payload = {
                 "schema": payload["schema"],
-                "engine": payload["engine"],
                 "targets_analyzed": payload["targets_analyzed"],
                 "selection_kind": payload["selection_kind"],
                 "selection_params": payload["selection_params"],
@@ -1040,7 +1038,7 @@ def run_analysis(args: argparse.Namespace) -> int:
                     results.append(generate_replay(root, target_id))
             payload = {"targets": len(results), "results": results}
     else:
-        payload = query_project(root, args.target, args.query, args.engine)
+        payload = query_project(root, args.target, args.query)
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
 
@@ -1422,11 +1420,6 @@ def build_parser() -> argparse.ArgumentParser:
             command, help=_ANALYSIS_INIT_EXPORT_HELP[command]
         )
         analysis_command.add_argument("target", help="target id")
-        analysis_command.add_argument(
-            "--engine",
-            choices=("rizin", "r2"),
-            help="analysis engine: rizin (default) or r2",
-        )
         analysis_command.set_defaults(handler=run_analysis)
     analysis_generate = analysis_sub.add_parser(
         "generate", help="generate replay commands for a target"
@@ -1437,7 +1430,6 @@ def build_parser() -> argparse.ArgumentParser:
         "hotspots",
         help="rank functions by callers (hot), leaves (no outgoing calls), and duplicates; configurable via filters",
     )
-    analysis_hotspots.add_argument("target", nargs="?", help="optional target id; omit for all targets")
     analysis_hotspots.add_argument(
         "--kind",
         choices=(
@@ -1445,10 +1437,9 @@ def build_parser() -> argparse.ArgumentParser:
             "leaves",
             "roots",
             "shallow",
-            "unknown",
+            "unknown_targets",
             "discovery",
             "exact_duplicates",
-            "relocation_duplicates",
         ),
         help="which ranking to surface/filter (default: all sections)",
     )
@@ -1469,13 +1460,13 @@ def build_parser() -> argparse.ArgumentParser:
     analysis_hotspots.add_argument("--max-size", type=int, default=None, help="keep functions at most N bytes")
     analysis_hotspots.add_argument(
         "--status",
-        choices=("all", "known", "unknown"),
+        choices=("all", "reviewed", "lifted", "unreviewed", "unlifted"),
         default="all",
-        help="filter by lifted (known) status",
+        help="filter by reviewed or lifted status",
     )
     analysis_hotspots.add_argument(
         "--sort",
-        choices=("callers", "size", "cross", "address", "out_degree"),
+        choices=("callers", "size", "address", "out_degree"),
         default=None,
         help="sort key (default per kind: leaves/hot by callers, roots by address)",
     )
@@ -1484,19 +1475,14 @@ def build_parser() -> argparse.ArgumentParser:
         "graph", help="write out/analysis/graph.json with fingerprints, duplicates, and xrefs"
     )
     analysis_graph.add_argument("target", nargs="?", help="optional target id; omit for all targets")
-    analysis_graph.add_argument(
-        "--engine", choices=("rizin", "r2"), help="analysis engine: rizin (default) or r2"
-    )
     analysis_graph.set_defaults(handler=run_analysis)
     analysis_query = analysis_sub.add_parser(
-        "query", help="run a focused binary query (functions/strings/xrefs/types/JSON)"
+        "query", help="run a focused binary query (functions/strings/xrefs/types)"
     )
     analysis_query.add_argument("target", help="target id")
     analysis_query.add_argument(
-        "query", help="functions, strings, xrefs, types, or a JSON command"
-    )
-    analysis_query.add_argument(
-        "--engine", choices=("rizin", "r2"), help="analysis engine: rizin (default) or r2"
+        "query", choices=("functions", "strings", "xrefs", "types"),
+        help="read-only analyzer query to run on the initialized project",
     )
     analysis_query.set_defaults(handler=run_analysis)
     assets = sub.add_parser("assets", help="list/validate/convert assets (list/str)")

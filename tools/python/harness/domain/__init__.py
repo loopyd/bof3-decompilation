@@ -15,11 +15,17 @@ from .manifests import (
     load_profiles,
     load_target_manifests,
 )
+from .registry import (
+    ResolvedTarget,
+    resolve_all_targets,
+    resolve_target,
+)
 
 __all__ = [
     "FunctionId",
     "Component",
     "Profile",
+    "ResolvedTarget",
     "TargetId",
     "TargetManifest",
     "load_profiles",
@@ -28,4 +34,6 @@ __all__ = [
     "normalize_target_id",
     "parse_address",
     "parse_function_id",
+    "resolve_all_targets",
+    "resolve_target",
 ]

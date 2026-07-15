@@ -466,37 +466,115 @@ def _artifact_for_entry(entry: dict[str, Any], root: Path) -> dict[str, Any] | N
     }
 
 
-def splat_config_text(
-    entry: dict[str, Any], root: Path, *, target_path: Path | None = None
-) -> str:
-    source_path = Path(entry["payload_path"]).resolve()
-    normalized_path = target_path or source_path
-    source = normalized_path.resolve().relative_to(root).as_posix()
-    slug = target_slug(entry)
+def _splat_base_path(config_relpath: Path) -> str:
+    """Return the relative ``base_path`` Splat needs for ``config_relpath``.
+
+    Splat 0.41 resolves ``base_path`` against the directory holding the
+    YAML, not the repository root.  The path must climb one level per
+    parent directory between the YAML and the repository root, which
+    equals the number of directories in the YAML's repo-relative path.
+    """
+
+    depth = len(config_relpath.parts) - 1
+    if depth <= 0:
+        return "."
+    return "/".join([".."] * depth)
+
+
+def _splat_target_path(slug: str) -> str:
+    return f"out/binaries/emi/{slug}.bin"
+
+
+def _splat_asm_path(slug: str) -> str:
+    return f"out/splat/emi/{slug}/asm"
+
+
+def _splat_src_path(slug: str) -> str:
+    return f"src/emi/{slug}"
+
+
+def _splat_ld_path(slug: str) -> str:
+    return f"out/splat/emi/{slug}/linker.ld"
+
+
+def _splat_basename(slug: str) -> str:
+    return slug.replace("/", "_")
+
+
+def _splat_symbol_addrs_path() -> tuple[str, str]:
+    return ("config/symbols/psyq.txt", "config/symbols/shared.txt")
+
+
+def _splat_bootstrap_segments(payload: bytes) -> str:
+    """Return a complete bin/eof segment pair for an unsegmented payload.
+
+    Splat 0.41 raises ``next_start UnboundLocalError`` on bare
+    ``[0x0, bin]`` configs, so every bootstrap config must close with
+    a terminal offset that exactly matches the payload size.  We keep
+    the layout minimal so reviewers can refine it without inheriting
+    guessed function boundaries.
+    """
+
+    end_offset = f"0x{len(payload):x}"
     return "\n".join(
         [
-            "name: " + slug.replace("/", "_"),
-            "sha1: " + hashlib.sha1(normalized_path.read_bytes()).hexdigest(),
-            "options:",
-            "  platform: psx",
-            "  compiler: psyq",
-            "  base_path: .",
-            "  target_path: " + source,
-            "  asm_path: out/splat/emi/" + slug + "/asm",
-            "  src_path: src/emi/" + slug,
-            "  ld_script_path: out/splat/emi/" + slug + "/linker.ld",
-            "  symbol_addrs_path:",
-            "    - config/symbols/psyq.txt",
-            "    - config/symbols/shared.txt",
             "segments:",
             "  - [0x0, bin]",
+            f"  - [{end_offset}]",
             "",
         ]
     )
 
 
+def splat_config_text(
+    entry: dict[str, Any], root: Path, *, target_path: Path | None = None
+) -> str:
+    """Render a Splat 0.41 bootstrap config for a promoted EMI entry.
+
+    The output is intentionally an unsegmented bin layout with the
+    correct ``basename`` and depth-correct ``base_path``.  Reviewers
+    refine boundaries in place from there; nothing in the harness
+    overwrites this file once it has been written.
+    """
+
+    source_path = Path(entry["payload_path"]).resolve()
+    normalized_path = target_path or source_path
+    source = normalized_path.resolve().relative_to(root).as_posix()
+    slug = target_slug(entry)
+    digest = hashlib.sha1(normalized_path.read_bytes()).hexdigest()
+    psyq_path, shared_path = _splat_symbol_addrs_path()
+    base_path = _splat_base_path(
+        Path("config/splat/emi") / f"{slug}.yaml"
+    )
+    header = "\n".join(
+        [
+            f"name: {_splat_basename(slug)}",
+            f"sha1: {digest}",
+            "options:",
+            "  platform: psx",
+            "  compiler: psyq",
+            f"  basename: {_splat_basename(slug)}",
+            f"  base_path: {base_path}",
+            f"  target_path: {source}",
+            f"  asm_path: {_splat_asm_path(slug)}",
+            f"  src_path: {_splat_src_path(slug)}",
+            f"  ld_script_path: {_splat_ld_path(slug)}",
+            "  symbol_addrs_path:",
+            f"    - {psyq_path}",
+            f"    - {shared_path}",
+        ]
+    )
+    payload = normalized_path.read_bytes()
+    return f"{header}\n{_splat_bootstrap_segments(payload)}"
+
+
 def promote_entry(
-    *, catalog_path: Path, identifier: str, root: Path, confirm_code: bool
+    *,
+    catalog_path: Path,
+    identifier: str,
+    root: Path,
+    confirm_code: bool,
+    profile: str = "native/capcom97",
 ) -> tuple[Path, Path]:
     if not confirm_code:
         raise ValueError(
@@ -509,46 +587,109 @@ def promote_entry(
             f"{identifier} is cataloged as {entry['payload_kind']}, not code or mixed code/data"
         )
     slug = target_slug(entry)
+    target_id = f"emi/{slug}"
     config_path = root / "config" / "splat" / "emi" / (slug + ".yaml")
+    manifest_path = root / "config" / "targets" / "emi" / (slug + ".toml")
     source_dir = root / "src" / "emi" / slug
-    if config_path.exists():
-        raise ValueError(f"target already promoted: {config_path}")
-    # Keep the normalized image addressable by its canonical target slug.  The
-    # slot is already the final component of ``slug`` (for example ``03``),
-    # so the generated artifact is ``.../03.bin`` rather than a misleading
-    # ``.../03/bin`` directory.
     normalized_path = root / "out" / "binaries" / "emi" / f"{slug}.bin"
-    normalized_path.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(entry["payload_path"], normalized_path)
-    write_json(
-        normalized_path.with_suffix(".bin.json"),
-        {
-            "schema": "harness.normalized-emi/v1",
-            "source": entry["payload_path"],
-            "source_sha256": entry["sha256"],
-            "image": str(normalized_path),
-            "image_sha256": hashlib.sha256(normalized_path.read_bytes()).hexdigest(),
-            "load_address": entry["load_address"],
-        },
-    )
-    config_path.parent.mkdir(parents=True, exist_ok=True)
-    source_dir.mkdir(parents=True, exist_ok=True)
-    config_path.write_text(
-        splat_config_text(entry, root, target_path=normalized_path), encoding="utf-8"
-    )
-    header_path = source_dir / "internal.h"
-    if not header_path.exists():
-        guard = internal_header_guard(slug)
-        header_path.write_text(
-            f"#ifndef {guard}\n#define {guard}\n\n#endif\n", encoding="utf-8"
+    normalized_metadata = normalized_path.with_suffix(".bin.json")
+    for path in (config_path, manifest_path, normalized_path, normalized_metadata):
+        if path.exists():
+            raise ValueError(
+                f"target already promoted; refusing to overwrite: {path.relative_to(root)}"
+            )
+
+    # Prepare all content in memory before writing any files.
+    payload = Path(entry["payload_path"]).read_bytes()
+    payload_sha256 = hashlib.sha256(payload).hexdigest()
+    guard = _short_header_guard(slug)
+    header_text = f"#ifndef {guard}\n#define {guard}\n\n#endif\n"
+
+    # Track created paths for rollback on failure.
+    created: list[Path] = []
+    try:
+        normalized_path.parent.mkdir(parents=True, exist_ok=True)
+        normalized_path.write_bytes(payload)
+        created.append(normalized_path)
+
+        write_json(
+            normalized_metadata,
+            {
+                "schema": "harness.normalized-emi/v1",
+                "source": entry["payload_path"],
+                "source_sha256": entry["sha256"],
+                "image": str(normalized_path),
+                "image_sha256": payload_sha256,
+                "load_address": entry["load_address"],
+            },
         )
-    entry["code_status"] = "confirmed"
-    entry["evidence"]["reviewed_config"] = str(config_path.relative_to(root))
-    catalog["code_status_counts"] = dict(
-        sorted(Counter(item["code_status"] for item in catalog["entries"]).items())
-    )
-    write_json(catalog_path, catalog)
+        created.append(normalized_metadata)
+
+        # Splat text requires the normalized image to exist for SHA-1.
+        splat_text = splat_config_text(entry, root, target_path=normalized_path)
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        config_path.write_text(splat_text, encoding="utf-8")
+        created.append(config_path)
+
+        manifest_text = _render_manifest(entry, slug, target_id, profile)
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(manifest_text, encoding="utf-8")
+        created.append(manifest_path)
+
+        source_dir.mkdir(parents=True, exist_ok=True)
+        header_path = source_dir / "internal.h"
+        if not header_path.exists():
+            header_path.write_text(header_text, encoding="utf-8")
+            created.append(header_path)
+
+        entry["code_status"] = "confirmed"
+        entry["evidence"]["reviewed_config"] = str(config_path.relative_to(root))
+        catalog["code_status_counts"] = dict(
+            sorted(Counter(item["code_status"] for item in catalog["entries"]).items())
+        )
+        write_json(catalog_path, catalog)
+    except BaseException:
+        # Roll back only paths created by this invocation.
+        for path in reversed(created):
+            try:
+                path.unlink()
+            except OSError:
+                pass
+        raise
+
     return config_path, source_dir
+
+
+def _short_header_guard(slug: str) -> str:
+    """Return a short path-scoped header guard without the ``BOF3_`` prefix.
+
+    Example: ``emi/etc/game/01`` → ``EMI_GAME_01_INTERNAL_H``
+    """
+
+    return re.sub(r"[^A-Za-z0-9]", "_", slug).upper() + "_INTERNAL_H"
+
+
+def _render_manifest(
+    entry: dict[str, Any],
+    slug: str,
+    target_id: str,
+    profile: str,
+) -> str:
+    """Render a canonical target manifest for a promoted EMI entry."""
+
+    lines = [
+        'schema = "harness.target/v1"',
+        f'id = "{target_id}"',
+        f'disc_id = "BIN/{entry["archive_id"].upper()}.EMI#{entry["slot"]}"',
+        'kind = "emi"',
+        f'source_dir = "src/emi/{slug}"',
+        f'binary = "out/binaries/emi/{slug}.bin"',
+        f'splat = "config/splat/emi/{slug}.yaml"',
+        f"load_address = 0x{entry['load_address']:08x}",
+        f'profile = "{profile}"',
+        "",
+    ]
+    return "\n".join(lines)
 
 
 def record_lift(*, root: Path, catalog_path: Path, target: str, address: int) -> Path:
