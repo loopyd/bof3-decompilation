@@ -25,27 +25,34 @@ venv:
         UV_CACHE_DIR="{{ root }}/.uv-cache" uv sync --extra dev --frozen; \
     fi
 
-# Download and stage the required PsyQ 4.7 SDK.
-psyq: venv
-    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.toolchain psyq import
+# Setup is orchestration; each dependency has its own small entry point.
+setup: venv setup-toolchain setup-psyq setup-rust setup-wibo extract unpack discover doctor
+    @printf '%s\n' 'workspace setup complete'
 
-# Prepare tools, extract the disc, and refresh binary evidence.
-setup: venv
-    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup
-    @{{ root }}/bin/harness discover
-    @{{ root }}/bin/harness doctor
+setup-toolchain: venv
+    @{{ root }}/bin/setup-toolchain
+
+setup-psyq: venv
+    @{{ root }}/bin/setup-psyq
+
+setup-rust:
+    @{{ root }}/bin/setup-rust
+
+setup-wibo:
+    @{{ root }}/bin/setup-wibo --download
 
 # Extract the disc into out/extracted. Builds the native extractor first.
-extract: venv
+extract: venv setup-rust
     @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task submodules
-    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task native-tools
     @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task extract
 
 # Unpack EMI archives from the extracted disc tree into out/extracted.
-unpack: venv
-    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task submodules
-    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task native-tools
+unpack: venv setup-rust
     @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task unpack
+
+# Split one tracked Splat layout into generated assembly/data evidence.
+split CONFIG: venv
+    @{{ root }}/bin/splat split {{CONFIG}}
 
 # Refresh the EMI catalog.
 discover: venv
@@ -55,17 +62,31 @@ discover: venv
 doctor *args: venv
     @{{ root }}/bin/harness doctor {{args}}
 
-# Configure and build every registered executable and overlay artifact.
+# Compile every authored C and assembly source into build/src/.
 build:
-    @cmake --fresh --preset default
-    # Historical PsyQ compilation is not output-race safe within one target.
-    @cmake --build --preset default --parallel 1 --target artifacts
+    @make --no-print-directory all
 
-# Run focused repository checks.
+# Compile one source without invoking the full build.
+build-one FUNC:
+    @make --no-print-directory build-one FUNC={{FUNC}}
+
+# Run the focused function comparison.
+diff FUNC:
+    @make --no-print-directory diff FUNC={{FUNC}}
+
+# Prepare and run the focused decomp-permuter workflow.
+permute FUNC:
+    @make --no-print-directory permute FUNC={{FUNC}}
+
+# Run matching checks, Python checks, formatting checks, and workspace validation.
 check: venv check-format-c
+    @make --no-print-directory check
     @PYTHONDONTWRITEBYTECODE=1 PYTHONPATH={{ pythonpath }} {{ python }} -m pytest -q -p no:cacheprovider tools/python/tests
     @PYTHONPATH={{ pythonpath }} {{ python }} -m ruff check tools/python
-    @{{ root }}/bin/harness doctor
+    @{{ root }}/bin/harness doctor --strict
+
+verify:
+    @make --no-print-directory verify
 
 format: format-python format-c
 
@@ -81,7 +102,30 @@ format-c:
 check-format-c:
     @find src include -type f \( -name '*.c' -o -name '*.h' \) -print0 2>/dev/null | xargs -0 -r -P 0 -n 32 clang-format --dry-run --Werror
 
-# Remove rebuildable compiler output. Retained reverse-engineering evidence under
-# out/ is intentionally never part of a generic clean operation.
+# Generate IDE compile commands by observing the Make build.
+compile-commands:
+    @if command -v compiledb >/dev/null 2>&1; then \
+        compiledb make --no-print-directory all; \
+    elif command -v bear >/dev/null 2>&1; then \
+        bear -- make --no-print-directory all; \
+    else \
+        printf '%s\n' 'compiledb or bear is required for compile_commands.json' >&2; \
+        exit 1; \
+    fi
+
+# Harness shortcuts retained for workflows that are not project builds.
+targets: venv
+    @{{ root }}/bin/harness targets
+
+assets *args: venv
+    @{{ root }}/bin/harness assets {{args}}
+
+promote *args: venv
+    @{{ root }}/bin/harness promote {{args}}
+
+reverse *args: venv
+    @{{ root }}/bin/harness reverse {{args}}
+
+# Remove only compiler output; preserve generated evidence under out/.
 clean:
-    @cmake -E rm -rf "{{ root }}/build"
+    @make --no-print-directory clean

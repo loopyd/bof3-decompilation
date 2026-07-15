@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""Run the canonical function diff for every active authored target source."""
+
+from __future__ import annotations
+
+import argparse
+import os
+from pathlib import Path
+import shutil
+import sys
+
+
+ROOT = Path(__file__).resolve().parent.parent
+TOOLS_PYTHON = ROOT / "tools" / "python"
+PROJECT_PYTHON = ROOT / ".venv" / "bin" / "python"
+
+
+def use_project_python() -> None:
+    if not PROJECT_PYTHON.is_file():
+        print(
+            f"missing project Python environment: {PROJECT_PYTHON}\n"
+            f"run `just venv` from {ROOT}",
+            file=sys.stderr,
+        )
+        raise SystemExit(1)
+    if Path(sys.executable).resolve() != PROJECT_PYTHON.resolve():
+        environment = os.environ.copy()
+        environment["PYTHONPATH"] = str(TOOLS_PYTHON)
+        os.execve(
+            str(PROJECT_PYTHON),
+            [str(PROJECT_PYTHON), str(Path(__file__).resolve()), *sys.argv[1:]],
+            environment,
+        )
+    os.environ["PYTHONPATH"] = str(TOOLS_PYTHON)
+    sys.path.insert(0, str(TOOLS_PYTHON))
+
+
+use_project_python()
+
+from harness.commands._asm_diff_output import format_asm_diff_summary  # noqa: E402
+from harness.io import repo_layout  # noqa: E402
+from harness.match._asm_resolve import collect_source_addresses  # noqa: E402
+from harness.match.asm_diff import AsmDiffRequest, run_asm_diff_one  # noqa: E402
+from harness.match.asm_differ import write_bundle  # noqa: E402
+from harness.targets import load_target_manifests, normalize_target_id  # noqa: E402
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Run the canonical source diff for all active target functions."
+    )
+    parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument("--target", help="check one active target manifest")
+    parser.add_argument(
+        "--show-diff", action="store_true", help="print each normalized diff"
+    )
+    return parser
+
+
+def selected_manifests(root: Path, target: str | None):
+    manifests = load_target_manifests(root)
+    if not manifests:
+        raise ValueError(
+            f"no target manifests found under {root / 'config' / 'targets'}"
+        )
+    if target is not None:
+        normalized = normalize_target_id(target).value
+        manifest = manifests.get(normalized)
+        if manifest is None:
+            raise ValueError(f"unknown target: {target}")
+        if manifest.status != "active":
+            raise ValueError(f"target is not active: {normalized}")
+        return [(normalized, manifest)]
+    return [
+        (target_id, manifest)
+        for target_id, manifest in sorted(manifests.items())
+        if manifest.status == "active"
+    ]
+
+
+def collect_sources(root: Path, manifests) -> list[tuple[str, Path]]:
+    sources: list[tuple[str, Path]] = []
+    missing: list[str] = []
+    for target_id, manifest in manifests:
+        source_dir = root / manifest.source_dir
+        if not source_dir.is_dir():
+            missing.append(f"missing source directory for {target_id}: {source_dir}")
+            continue
+        sources.extend(
+            (target_id, source_path)
+            for source_path, _address in collect_source_addresses(source_dir)
+        )
+    if missing:
+        raise FileNotFoundError("; ".join(missing))
+    if not sources:
+        raise ValueError("no authored function sources found in active targets")
+    return sorted(sources, key=lambda item: (item[0], item[1].as_posix()))
+
+
+def check_prerequisites(root: Path, manifests, sources: list[tuple[str, Path]]) -> None:
+    missing: list[str] = []
+    if not (root / "Makefile").is_file():
+        missing.append(f"missing project Makefile: {root / 'Makefile'}")
+    if shutil.which("make") is None:
+        missing.append("missing executable make")
+    for target_id, manifest in manifests:
+        if any(source_target == target_id for source_target, _ in sources):
+            binary = root / manifest.binary
+            if not binary.is_file():
+                missing.append(f"missing original binary for {target_id}: {binary}")
+    toolchain = root / "toolchains" / "psn00b_toolchain" / "bin"
+    for name in ("mipsel-none-elf-objdump", "mipsel-none-elf-nm"):
+        path = toolchain / name
+        if not path.is_file() or not os.access(path, os.X_OK):
+            missing.append(f"missing executable {path}; run `just setup`")
+    if missing:
+        raise FileNotFoundError("; ".join(missing))
+
+
+def run(args: argparse.Namespace) -> int:
+    root = args.root.resolve()
+    manifests = selected_manifests(root, args.target)
+    sources = collect_sources(root, manifests)
+    check_prerequisites(root, manifests, sources)
+
+    matched = 0
+    mismatched = 0
+    errors = 0
+    layout = repo_layout(root)
+    for target_id, source_path in sources:
+        try:
+            payload = run_asm_diff_one(
+                AsmDiffRequest(
+                    source_path=source_path,
+                    output_root=root / "out" / "matching",
+                ),
+                layout=layout,
+            )
+            write_bundle(root, payload)
+        except (FileNotFoundError, RuntimeError, ValueError) as exc:
+            errors += 1
+            print(f"ERROR {target_id} {source_path}: {exc}")
+            continue
+
+        print(format_asm_diff_summary(payload, root=root))
+        if payload["exact_match"]:
+            matched += 1
+        else:
+            mismatched += 1
+            if args.show_diff:
+                diff_path = Path(payload["outputs"]["diff"])
+                if diff_path.is_file():
+                    print(diff_path.read_text(encoding="utf-8"), end="")
+
+    print(
+        f"checked {len(sources)} function(s): "
+        f"{matched} matched, {mismatched} mismatched, {errors} error(s)"
+    )
+    if errors:
+        return 2
+    return 1 if mismatched else 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    try:
+        return run(args)
+    except (FileNotFoundError, RuntimeError, ValueError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

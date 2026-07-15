@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+"""Pack every unpacked EMI manifest back into the extracted disc tree."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+import sys
+
+
+ROOT = Path(__file__).resolve().parent.parent
+TOOLS_PYTHON = ROOT / "tools" / "python"
+PROJECT_PYTHON = ROOT / ".venv" / "bin" / "python"
+
+
+def bootstrap() -> None:
+    if not PROJECT_PYTHON.is_file():
+        raise SystemExit(f"missing project Python environment: {PROJECT_PYTHON}; run `just venv`")
+    if Path(sys.executable).resolve() != PROJECT_PYTHON.resolve():
+        import os
+
+        environment = os.environ.copy()
+        environment["PYTHONPATH"] = str(TOOLS_PYTHON)
+        os.execve(
+            str(PROJECT_PYTHON),
+            [str(PROJECT_PYTHON), str(Path(__file__).resolve()), *sys.argv[1:]],
+            environment,
+        )
+    sys.path.insert(0, str(TOOLS_PYTHON))
+
+
+bootstrap()
+
+from harness.emi.operations import emi_pack  # noqa: E402
+from harness.io import repo_layout  # noqa: E402
+
+
+def main(argv: list[str] | None = None) -> int:
+    layout = repo_layout(ROOT)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--input-dir", type=Path, default=layout.raw_emi_dir)
+    parser.add_argument("--output-dir", type=Path, default=layout.extracted_dir)
+    args = parser.parse_args(argv)
+    count = emi_pack(
+        tool_path=ROOT / "bin" / "emi-ex",
+        cwd=ROOT,
+        raw_emi_dir=args.input_dir,
+        extracted_dir=args.output_dir,
+    )
+    print(f"packed {count} EMI archives into {args.output_dir}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

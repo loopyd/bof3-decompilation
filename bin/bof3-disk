@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+
+ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+exec "${PSX_BOF3_DISK:-${ROOT}/build/tools/rust/bof3-disk/release/bof3-disk}" "$@"

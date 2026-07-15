@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+PYTHON="${PSX_PYTHON:-${MASPSX_PYTHON:-python3}}"
+MASPSX="${PSX_MASPSX:-${MASPSX:-${ROOT}/third_party/maspsx/maspsx.py}}"
+exec "$PYTHON" "$MASPSX" "$@"

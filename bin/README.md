@@ -12,13 +12,13 @@ Repository-local tools are the defaults. Override a complete compiler driver
 with `PSX_CC_DRIVER`, or individual tools with `PSX_GCC`, `PSX_AS`, `PSX_LD`,
 `PSX_AR`, `PSX_RANLIB`, `PSX_NM`, `PSX_OBJCOPY`, and `PSX_OBJDUMP`.
 
-CMake supplies the verified BOF3 compiler and assembler flags. `just build`
+The Makefile supplies the verified BOF3 compiler and assembler flags. `just build`
 intentionally compiles serially because historical PsyQ compilation is not
-output-race safe. Configure a separate compiler experiment with:
+output-race safe. Select a compiler profile with:
 
 ```sh
-cmake --preset default -DPSX_C_COMPILER=/path/to/cc
-cmake --build --preset default
+PROFILE=compat/capcom97 make all
+PROFILE=original/psyq40 make diff FUNC=src/exe/slus_004_22/func_XXXXXXXX.c
 ```
 
 `bin/harness` is the BOF3 command surface:
@@ -29,7 +29,27 @@ bin/harness discover
 bin/harness targets [target] [--json]
 bin/harness promote <archive#slot> --confirm-code
 bin/harness reverse <target[@address]> [--run]
-bin/harness diff <source-or-function-id>
+bin/asmdiff <source-or-function-id>
+```
+
+Focused workflows are standalone entry points and do not require the command
+dispatcher:
+
+```sh
+bin/asmdiff src/exe/logo/func_801ce758.c
+bin/permute src/exe/logo/func_801ce758.c --prepare-only
+bin/check-all --target exe/logo
+bin/progress
+bin/splat split config/splat/exe/logo.yaml
+```
+
+Dependency setup is split by responsibility:
+
+```sh
+bin/setup-toolchain
+bin/setup-psyq
+bin/setup-rust
+bin/setup-wibo --download
 ```
 
 Disc discovery and asset operations are also available:
