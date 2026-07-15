@@ -40,7 +40,9 @@ calling convention, library signatures, object layout, and relocations. Keep
 the current toolchain until an earlier available SDK produces stronger binary
 evidence. PsyQ 3.x or 4.0 are candidates for investigation, not verified BOF3
 facts. Use `PSX_CC_DRIVER` for a one-off compiler driver or `PROFILE=...` when
-selecting a supported compiler profile in Make.
+selecting the supported compatibility profile in Make. The original PsyQ
+profile entries remain disabled until their native compiler, assembler, and
+wibo runtime are staged.
 
 ## Comparative projects
 

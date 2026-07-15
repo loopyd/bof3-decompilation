@@ -50,6 +50,10 @@ extract: venv setup-rust
 unpack: venv setup-rust
     @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup --task unpack
 
+# Repack unpacked EMI manifests into the extracted disc tree.
+pack: venv setup-rust
+    @{{ root }}/bin/emi-pack
+
 # Split one tracked Splat layout into generated assembly/data evidence.
 split CONFIG: venv
     @{{ root }}/bin/splat split {{CONFIG}}
@@ -78,6 +82,10 @@ diff FUNC:
 permute FUNC:
     @make --no-print-directory permute FUNC={{FUNC}}
 
+# Rebuild one target using the transitional function-text-only workflow.
+rebuild TARGET: venv
+    @{{ root }}/bin/rebuild {{TARGET}}
+
 # Run matching checks, Python checks, formatting checks, and workspace validation.
 check: venv check-format-c
     @make --no-print-directory check
@@ -85,8 +93,9 @@ check: venv check-format-c
     @PYTHONPATH={{ pythonpath }} {{ python }} -m ruff check tools/python
     @{{ root }}/bin/harness doctor --strict
 
-verify:
-    @make --no-print-directory verify
+# Verify one target, or all active targets when TARGET is omitted.
+verify *args: venv
+    @{{ root }}/bin/verify {{args}}
 
 format: format-python format-c
 

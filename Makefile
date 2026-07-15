@@ -56,10 +56,14 @@ permute:
 check:
 	$(ROOT)/bin/check-all
 
+rebuild:
+	@test -n "$(TARGET)" || { printf '%s\n' 'usage: make rebuild TARGET=exe/logo' >&2; exit 2; }
+	$(ROOT)/bin/rebuild $(TARGET)
+
 verify:
-	@printf '%s\n' 'full linkage and SHA1 verification are planned for Phase 2'
+	$(ROOT)/bin/verify $(if $(TARGET),$(TARGET),--all)
 
 clean:
 	rm -rf $(BUILD_DIR)/src
 
-.PHONY: all build-one diff permute check verify clean
+.PHONY: all build-one diff permute check rebuild verify clean

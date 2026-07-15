@@ -197,6 +197,34 @@ def test_weak_symbol_units_reject_conflicting_bindings(
         load_weak_symbol_bindings(symbols)
 
 
+def test_reviewed_target_bindings_cover_previous_link_errors() -> None:
+    root = Path(__file__).resolve().parents[3]
+    expected = {
+        "src/emi/etc/game/00/symbols.c": {
+            "D_801CCE84": 0x801CCE84,
+            "D_801CCF7C": 0x801CCF7C,
+        },
+        "src/emi/world00/area008/13/symbols.c": {
+            "GetClut": 0x8017A6F0,
+            "SetSemiTrans": 0x8017A904,
+            "SetPolyFT4": 0x8017A9B8,
+            "GetGraphType": 0x8017B2B4,
+            "SetDrawMode": 0x8017C2D8,
+        },
+        "src/exe/slus_004_22/symbols.c": {
+            "sprintf": 0x8017E3F4,
+            "SetSprt8": 0x8017A9F4,
+            "SetSemiTrans": 0x8017A904,
+            "game_front_local_mode_callback_loop": 0x8014ED6C,
+        },
+    }
+
+    for relative_path, bindings in expected.items():
+        actual = load_weak_symbol_bindings(root / relative_path)
+        for name, address in bindings.items():
+            assert actual[name] == address
+
+
 def test_source_address_and_size_are_inferred_from_source_files(tmp_path: Path) -> None:
     source_dir = tmp_path / "bof3" / "src" / "exe" / "slus_004_22"
     source_dir.mkdir(parents=True)

@@ -39,10 +39,13 @@ matching and whole-payload matching are separate completion claims.
 | `just doctor` | Validate tracked configuration; safe before media extraction. |
 | `just extract` | Build the native extractor and extract the disc. |
 | `just unpack` | Unpack EMI archives from the extracted disc tree. |
+| `just pack` | Repack unpacked EMI manifests into the extracted disc tree. |
 | `bin/harness emi unpack` | Run Rust `emi-ex`; supports `--tool`. |
 | `bin/harness discover` | Refresh `out/catalog/emi.json`. |
 | `just build` | Run the historical PsyQ validation build serially. |
 | `just check` | Run format checks, tests, Ruff, and doctor. |
+| `just rebuild TARGET` | Write a transitional rebuilt target image under `out/rebuilt/`. |
+| `just verify [TARGET]` | Compare rebuilt target bytes, length, and SHA1. |
 | `just clean` | Remove `build/`; preserve evidence under `out/`. |
 
 The global disc slot/LBA catalog covers EMI archives, executables, STR media,

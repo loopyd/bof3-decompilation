@@ -40,6 +40,7 @@ Use these day-to-day targets after setup:
 ```bash
 just extract
 just unpack
+just pack
 just discover
 just build
 just check

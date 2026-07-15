@@ -18,8 +18,12 @@ output-race safe. Select a compiler profile with:
 
 ```sh
 PROFILE=compat/capcom97 make all
-PROFILE=original/psyq40 make diff FUNC=src/exe/slus_004_22/func_XXXXXXXX.c
 ```
+
+The `original/psyq36` and `original/psyq40` entries are candidate metadata
+only. They remain disabled until their native compiler, assembler, and wibo
+runtime are staged; Make rejects those profiles rather than silently using the
+compatibility compiler.
 
 `bin/harness` is the BOF3 command surface:
 
@@ -41,7 +45,14 @@ bin/permute src/exe/logo/func_801ce758.c --prepare-only
 bin/check-all --target exe/logo
 bin/progress
 bin/splat split config/splat/exe/logo.yaml
+bin/rebuild exe/logo --allow-nonmatching
+bin/verify exe/logo --allow-nonmatching
 ```
+
+`rebuild` writes under `out/rebuilt/` and intentionally zero-fills unmatched
+regions until full source-only linkage is available. `verify` requires
+an exact byte, length, and SHA1 match; the transitional rebuild is expected to
+fail that check until every target region is reconstructed.
 
 Dependency setup is split by responsibility:
 

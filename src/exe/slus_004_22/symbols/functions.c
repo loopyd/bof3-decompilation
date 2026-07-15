@@ -15,6 +15,7 @@ WEAK_SYMBOL_AT(func_8014b854, 0x8014b854);
 WEAK_SYMBOL_AT(func_8014e22c, 0x8014e22c);
 WEAK_SYMBOL_AT(func_8014e6d0, 0x8014e6d0);
 WEAK_SYMBOL_AT(func_8014ea80, 0x8014ea80);
+WEAK_SYMBOL_AT(game_front_local_mode_callback_loop, 0x8014ed6c);
 WEAK_SYMBOL_AT(func_8015cebc, 0x8015cebc);
 WEAK_SYMBOL_AT(func_8015d044, 0x8015d044);
 
