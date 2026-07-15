@@ -2,6 +2,11 @@
 
 The database is an index, never an authored source of binary truth.  Every
 record that points outside SQLite retains the source path and a content hash.
+
+Schema: ``harness.evidence/v2`` — calls and unresolved calls come from the
+analysis graph (``out/analysis/graph.json``), which is the single source of
+truth for cross-target relationships.  If the graph does not exist, the index
+still builds but omits call edges.
 """
 
 from __future__ import annotations
@@ -19,9 +24,8 @@ from ..symbols import load_weak_symbol_bindings
 from .schema import _table_sql, connect, create_schema
 
 
-SCHEMA_VERSION = "harness.evidence/v1"
+SCHEMA_VERSION = "harness.evidence/v2"
 FUNCTION_RE = re.compile(r"func_([0-9a-fA-F]{8})\.c$")
-CALL_RE = re.compile(r"\b(func_[0-9a-fA-F]{8})\s*\(")
 
 
 def _sha256(path: Path) -> str:
@@ -97,9 +101,6 @@ def build_index(root: Path, database: Path | None = None) -> dict[str, Any]:
         repository.execute(
             "INSERT INTO metadata(key, value) VALUES (?, ?)", ("root", str(root))
         )
-        function_sources: dict[str, str] = {}
-        function_ids: set[str] = set()
-        symbol_ids: dict[str, str] = {}
         payload_hashes: dict[str, list[str]] = {}
         entry_hashes: dict[str, list[str]] = {}
         for target_id, manifest in sorted(manifests.items()):
@@ -216,15 +217,10 @@ def build_index(root: Path, database: Path | None = None) -> dict[str, Any]:
                         "value": function["source_sha256"],
                     },
                 )
-                function_ids.add(function["id"])
-                function_sources[function["id"]] = (
-                    root / function["source"]
-                ).read_text(encoding="utf-8")
             symbol_source = root / manifest.source_dir / "symbols.c"
             if symbol_source.is_file():
                 for name, address in load_weak_symbol_bindings(symbol_source).items():
                     symbol_id = f"{target_id}::{name}"
-                    symbol_ids[name] = symbol_id
                     repository.insert(
                         "symbols",
                         {
@@ -235,24 +231,58 @@ def build_index(root: Path, database: Path | None = None) -> dict[str, Any]:
                         },
                     )
                     repository.edge(target_id, "CONTAINS", symbol_id)
-        for function_id, source_text in sorted(function_sources.items()):
-            target_id = function_id.split("@", 1)[0]
-            for name in sorted(set(CALL_RE.findall(source_text))):
-                callee_id = f"{target_id}@{name.removeprefix('func_').lower()}"
-                if callee_id not in function_ids or callee_id == function_id:
+        graph_path = root / "out" / "analysis" / "graph.json"
+        if graph_path.is_file():
+            graph = json.loads(graph_path.read_text(encoding="utf-8"))
+            seen_edges: set[tuple[str, str]] = set()
+            for call in graph.get("calls", ()):
+                caller_id = call["caller"]
+                callee_id = call["callee"]
+                edge_key = (caller_id, callee_id)
+                if edge_key in seen_edges:
                     continue
+                seen_edges.add(edge_key)
                 repository.execute(
-                    "INSERT OR IGNORE INTO calls(caller_id, callee_id) VALUES (?, ?)",
-                    (function_id, callee_id),
+                    "INSERT OR IGNORE INTO calls(caller_id, callee_id) "
+                    "VALUES (?, ?)",
+                    (caller_id, callee_id),
                 )
-                repository.edge(function_id, "CALLS", callee_id)
-            for name, symbol_id in sorted(symbol_ids.items()):
-                if re.search(rf"\b{re.escape(name)}\b", source_text):
+                repository.edge(caller_id, "CALLS", callee_id)
+            for uc in graph.get("unresolved_calls", ()):
+                caller_id = uc["caller"]
+                target_addr = int(uc["target_address"])
+                callsite = int(uc.get("callsite", 0))
+                kind = uc.get("kind", "unknown")
+                symbol = uc.get("symbol")
+                repository.execute(
+                    "INSERT OR IGNORE INTO unresolved_calls"
+                    "(caller_id, target_address, callsite, kind, symbol) "
+                    "VALUES (?, ?, ?, ?, ?)",
+                    (caller_id, target_addr, callsite, kind, symbol),
+                )
+                if symbol:
+                    symbol_id = f"{caller_id.split('@', 1)[0]}::{symbol}"
                     repository.execute(
-                        'INSERT OR IGNORE INTO "references"(function_id, symbol_id) VALUES (?, ?)',
-                        (function_id, symbol_id),
+                        'INSERT OR IGNORE INTO "references"'
+                        "(function_id, symbol_id) VALUES (?, ?)",
+                        (caller_id, symbol_id),
                     )
-                    repository.edge(function_id, "REFERENCES", symbol_id)
+                    repository.edge(caller_id, "REFERENCES", symbol_id)
+            for group in graph.get("duplicate_groups", ()):
+                if len(group) < 2:
+                    continue
+                group_id = f"exact-dup:{group[0]}"
+                repository.insert(
+                    "duplicate_groups",
+                    {
+                        "id": group_id,
+                        "kind": "exact-sha256",
+                        "fingerprint": None,
+                    },
+                    ignore=True,
+                )
+                for func_id in group:
+                    repository.edge(group_id, "SAME_BYTES", func_id)
         for entry in _catalog_entries(root):
             entry_id = str(entry["id"])
             container_id = str(entry.get("archive_id", ""))
