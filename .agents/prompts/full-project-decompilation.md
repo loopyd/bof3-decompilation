@@ -44,7 +44,7 @@ Execution
 - Maintain one reproducible stateless analyzer evidence set per independently mapped target.
   Put generated snapshots/exports under out/ and only reviewed deterministic replay/types
   under config/analysis/. Add names, functions, comments, types, and xrefs only
-  as supported facts; preserve func_XXXXXXXX/DAT_XXXXXXXX traceability.
+  as supported facts; preserve func_XXXXXXXX/D_XXXXXXXX traceability.
 - Use call graphs and xrefs to prove the requested startup path. Correlate
   repeated implementations, layouts, callbacks, constants, strings, and PsyQ
   identities without merging target-local addresses or ownership.
@@ -53,7 +53,8 @@ Execution
   bounded permutation when useful. A candidate requires canonical revalidation.
 - Omit permuter --seed for fresh exploration. Set and record a seed only to
   reproduce/debug a useful or failed run. Budget workers from current cores and
-  load using the decomp-loop headroom rule across all agents.
+  load using the decomp-loop headroom rule. Permit one `bin/permute` coordinator
+  per function workspace and budget total `-j` workers across concurrent runs.
 - At a verified 100% match, prepare one focused change containing only the
   function and required layout/declarations/bindings. Commit or push only with
   explicit authorization.

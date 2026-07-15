@@ -140,7 +140,7 @@ Correlate layouts by observed behavior rather than field names:
 
 Start with fixed-width unknown fields and promote semantic names incrementally.
 Two targets may share a struct layout while using different global addresses.
-Share the type only; keep `DAT_XXXXXXXX` bindings target-local.
+Share the type only; keep `D_XXXXXXXX` bindings target-local.
 
 For constants and enums, distinguish source-level SDK definitions from emitted
 runtime values. Compiler folding can erase the original macro/type provenance.
@@ -185,7 +185,7 @@ Use `pdg` only after boundaries and call context are credible.
   merging data symbols.
 - PsyQ identities require official prototype plus call/body evidence and
   target-local provenance.
-- Preserve `func_XXXXXXXX`/`DAT_XXXXXXXX` traceability in compiled source,
+- Preserve `func_XXXXXXXX`/`D_XXXXXXXX` traceability in compiled source,
   analyzer replay, and cross-target reports.
 - Re-run canonical pre/post diffs for every compiled declaration/type/alias
   promotion and rebuild analyzer state from tracked replay.

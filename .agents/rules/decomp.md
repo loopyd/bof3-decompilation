@@ -15,7 +15,7 @@
   `symbols/symbols.h`, which includes focused `functions.h`, `variables.h`, and
   `files.h` headers. Do not add `psyq.h` when official PsyQ headers suffice.
 - Keep the same concise subsystem separators in each barrel header and the
-  matching `symbols/*.c` binding unit. Order canonical `DAT_XXXXXXXX`
+  matching `symbols/*.c` binding unit. Order canonical `D_XXXXXXXX`
   declarations/bindings by ascending address within that section; order
   compatibility aliases alphabetically. Preserve PsyQ SDK include order because
   those headers have transitive dependencies.
@@ -25,15 +25,15 @@
 - No inline assembly in function bodies. `WEAK_SYMBOL_AT()` is the sole
   assembly helper and is allowed only in target-owned `symbols.c` and shallow
   `symbols/*.c` files. Use ordinary C units, never `.inc` binding fragments.
-- Fixed-address RAM globals: declare `extern type DAT_xxxxx;` in `internal.h`
+- Fixed-address RAM globals: declare `extern type D_xxxxx;` in `internal.h`
   with a `/* @behavior ... */` comment, and place them with
-  `WEAK_SYMBOL_AT(DAT_xxxxx, 0x8XXXXXXX)` in the owning executable's symbol
-  binding units; never use `#define DAT_xxxxx VUxx(addr)`.
-- `DAT_xxx` declarations live in the target's singular declaration path:
+  `WEAK_SYMBOL_AT(D_xxxxx, 0x8XXXXXXX)` in the owning executable's symbol
+  binding units; never use `#define D_xxxxx VUxx(addr)`.
+- `D_xxx` declarations live in the target's singular declaration path:
   directly in `internal.h`, or in focused `symbols/variables.h` included by
-  `symbols/symbols.h`. Readable semantic name → `DAT_xxx` aliases live in that
+  `symbols/symbols.h`. Readable semantic name → `D_xxx` aliases live in that
   symbol layer once promoted.
-- Before promotion, keep an address-based `func_XXXXXXXX`/`DAT_XXXXXXXX` name.
+- Before promotion, keep an address-based `func_XXXXXXXX`/`D_XXXXXXXX` name.
   When evidence supports a useful hint but does not prove the meaning, add one
   concise `INFERRED:` comment beside the owning declaration with the observed
   evidence and the check needed to promote it. Do not encode the hint as a

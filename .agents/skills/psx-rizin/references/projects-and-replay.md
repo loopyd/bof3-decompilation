@@ -25,7 +25,7 @@ af func_XXXXXXXX 0xXXXXXXXX
 CC "Reviewed alias: semantic_name; canonical func_XXXXXXXX retained" @ 0xXXXXXXXX
 
 # 2. Reviewed data flags and sizes
-f DAT_XXXXXXXX 4 @ 0xXXXXXXXX
+f D_XXXXXXXX 4 @ 0xXXXXXXXX
 
 # 3. Type imports and version-checked type placements
 to <reviewed-analysis-types.h>
@@ -69,7 +69,7 @@ a stable cross-engine command contract.
 ## Repository example
 
 ```sh
-PYTHONPATH=tools/python python -c \
+PYTHONPATH=tools/python HARNESS_ANALYZER_ENGINE=r2 python -c \
   'from harness.analyzer import find_best_engine; print(find_best_engine())'
 ```
 

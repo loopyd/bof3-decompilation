@@ -22,12 +22,28 @@ COP2/GTE behavior.
 
 ```bash
 bin/harness targets <target>
-bin/harness reverse <target>@<8-digit-address> --run
-bin/harness diff <source> --llm
-bin/asmdiff <source>
-bin/permute <source> --prepare-only
+bin/m2c <source>                       # automated C seed
+bin/asmdiff <source>                   # validate
+bin/permute <source> --prepare-only    # optional late-stage search
 bin/permute <source> -j <bounded-jobs>
 ```
+
+`bin/permute` is the only supported permuter path. It owns one function
+workspace and forwards `-j` once to one upstream decomp-permuter coordinator.
+Independent functions may run concurrently, but the wrapper rejects a second
+coordinator for the same function workspace. Budget the sum of all active `-j`
+worker counts against available capacity.
+
+Use upstream `PERM_*` directives for focused interacting alternatives after
+manual factual fixes. Run `--prepare-only`, edit the generated workspace
+`base.c`, then run with `--prepared`; an ordinary run regenerates `base.c`.
+Remember that any multi-choice directive disables automatic randomization unless
+the intended region is wrapped in `PERM_RANDOMIZE`.
+
+The generated `base.c` must be a compilable pruned translation unit: the target
+function plus only declarations, types, and macros required by that function.
+Generate it with the real target compiler's preprocessing and flags. Keep
+`PERM_*` directives in the selected function while the context remains stable.
 
 Before editing C, verify the payload, load address, function range, Splat
 configuration, and that the proposed address is code rather than embedded data.
@@ -60,11 +76,9 @@ acceptance gate.
 
 Before choosing `-j`, inspect logical cores and the current one-minute load.
 Reserve at least `max(4, 25% of logical cores)` for interactive/system work.
-Use only the remaining capacity after current load, divide it across all
-concurrent permuter agents, and recheck load during long runs. Do not give every
-agent the machine-wide worker count. Prefer one well-fed run over several
-oversubscribed runs; reduce or defer permutation when the reserved headroom is
-already consumed.
+Use only the remaining capacity after current load, divided across all active
+function coordinators. Recheck load during long runs. Reduce or defer
+permutation when the reserved headroom is already consumed.
 
 Omit `--seed` for independent exploration: `bin/permute` generates and reports a
 system-random base seed, then derives per-worker seeds. Supply and record a
@@ -114,16 +128,16 @@ original bytes. Report function matches separately from whole-binary matching.
 
 | Tool | Role |
 | --- | --- |
+| bin/m2c | Automated matching-oriented C seed from Splat assembly |
 | bin/cc | Native-style PSX compiler driver with MASPSX translation |
 | Splat/spimdisasm | Canonical binary segmentation and assembly |
-| m2c | Optional matching-oriented C seed |
 | asm-differ | Interactive instruction comparison |
 | Rizin/radare2 and Ghidra | Optional analysis hints |
 | decomp-permuter | Optional bounded source-shape search |
 
 ## Coding conventions
 
-`.agents/rules/decomp.md` (C89, REG32, DAT_xxx, internal.h, WEAK_SYMBOL_AT)
+`.agents/rules/decomp.md` (C89, REG32, D_xxx, internal.h, WEAK_SYMBOL_AT)
 `.agents/rules/build.md` (module ownership, Make targets, matching checks)
 
 Keep authored header guards short and path-scoped (`CORE_EMI_H`), without

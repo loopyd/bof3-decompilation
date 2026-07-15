@@ -30,7 +30,7 @@ evidence.
 
 - Verify target identity and runtime load address.
 - Verify the address is code or data and its exact boundary/size.
-- Keep `func_XXXXXXXX`/`DAT_XXXXXXXX` traceability until meaning is reviewed.
+- Keep `func_XXXXXXXX`/`D_XXXXXXXX` traceability until meaning is reviewed.
 - Use callsites, xrefs, access widths, strings, state transitions, and duplicate
   evidence together; do not rename from one decompiler label.
 - Keep the binding target-local unless independent cross-target evidence proves

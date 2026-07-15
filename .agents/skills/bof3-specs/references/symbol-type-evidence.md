@@ -14,9 +14,9 @@
 
 This workflow maps semantic evidence from any PSX executable, overlay, raw code
 or data blob, PsyQ header/library, string, and repeated binary back to original
-`func_XXXXXXXX` and `DAT_XXXXXXXX` symbols. EMI entries are one application,
+`func_XXXXXXXX` and `D_XXXXXXXX` symbols. EMI entries are one application,
 not the boundary of the method.
-The address name remains the stable identity used by Splat, asm-diff, m2c,
+The address name remains the stable identity used by Splat, asm-diff,
 permuter, analyzer replay, and cross-target comparison. A semantic name is an
 evidence-backed alias, not a replacement for that identity.
 
@@ -27,7 +27,7 @@ Keep four facts separate:
 | Fact | Example | Owner |
 | --- | --- | --- |
 | Binary identity | `exe/slus_004_22`, `0x80161fdc` | target/layout metadata |
-| Address symbol | `func_80161fdc`, `DAT_8014677c` | Splat symbols and compiled declarations |
+| Address symbol | `func_80161fdc`, `D_8014677c` | Splat symbols and compiled declarations |
 | Semantic interpretation | `emi_stream_init_slot` | target/shared header alias or analyzer comment |
 | Type/signature | `void (u32)`, `EmiTocEntry *` | owning `internal.h` or reviewed shared header |
 
@@ -75,7 +75,7 @@ and raw-image mapping. Do not reinterpret zero padding as evidence.
 Search source and reviewed declarations before inventing a name:
 
 ```sh
-rg -n 'emi_|Emi|func_80161fdc|DAT_8014677c' include src config docs/specs
+rg -n 'emi_|Emi|func_80161fdc|D_8014677c' include src config docs/specs
 rg -n 'typedef .*\(\*|struct |enum ' include/bof3 src/emi src/exe
 rg -n 'WEAK_SYMBOL_AT\(|#define .*func_' src include/bof3
 ```
@@ -241,7 +241,7 @@ apply them to the exact address:
 to config/analysis/shared/bof3_objects.h
 ts EmiTransferSlot
 tp EmiTransferSlot 0x8014677c
-avga DAT_8014677c EmiTransferSlot @ 0x8014677c
+avga D_8014677c EmiTransferSlot @ 0x8014677c
 avg
 ```
 
@@ -281,14 +281,14 @@ For compiled data, retain the address object and introduce a semantic macro
 only after its type and role are reviewed:
 
 ```c
-extern EmiTocEntry DAT_8014677c[];
-#define emi_slot_table DAT_8014677c
+extern EmiTocEntry D_8014677c[];
+#define emi_slot_table D_8014677c
 ```
 
 The binding remains address-based:
 
 ```c
-WEAK_SYMBOL_AT(DAT_8014677c, 0x8014677c);
+WEAK_SYMBOL_AT(D_8014677c, 0x8014677c);
 ```
 
 This preserves searchable source, linker bindings, matching-tool inputs, and a
@@ -301,7 +301,7 @@ concise comment:
 
 ```c
 /* INFERRED: slot table from 0x10-byte indexed accesses; verify all writers. */
-extern u8 DAT_8014677c[];
+extern u8 D_8014677c[];
 ```
 
 Do not promote an inferred name into a public shared header.
@@ -314,7 +314,7 @@ comment unless the selected export preserves aliases reliably:
 ```text
 af func_80161fdc 0x80161fdc
 CC "Reviewed alias: emi_stream_init_slot; u32 slot_id" @ 0x80161fdc
-f DAT_8014677c 0xSIZE @ 0x8014677c
+f D_8014677c 0xSIZE @ 0x8014677c
 CC "Reviewed type: EmiTocEntry[]; target-local address" @ 0x8014677c
 ```
 

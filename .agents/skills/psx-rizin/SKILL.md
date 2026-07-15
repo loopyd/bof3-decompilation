@@ -5,8 +5,8 @@ description: "Create reproducible stateless Rizin or radare2 analysis evidence f
 
 # PSX Rizin Analysis
 
-Use the current installed Rizin command surface when available and modern
-radare2 as a version-checked fallback. Do not teach historical commands as the
+Use direct Rizin, direct modern radare2, or the stateless harness adapter as
+appropriate for the evidence needed. Do not teach historical commands as the
 default merely because the projects share ancestry. Treat every analyzer session
 as a disposable workbench: original bytes, reviewed binary layouts, tracked
 replay commands, and compiled source remain authoritative.
@@ -31,9 +31,10 @@ replay commands, and compiled source remain authoritative.
 
 1. Identify one exact input and record its hash, kind, target identity, runtime
    load address, and known entry point or function boundary.
-2. Detect tools and versions through the stateless
-   `harness.analyzer.find_best_engine()` adapter; natively record `rizin -V` or
-   `r2 -v` and probe required commands with `<command>?`.
+2. Select `rizin`, `r2`, or automatic fallback through the stateless
+   `harness.analyzer.find_best_engine()` adapter or
+   `HARNESS_ANALYZER_ENGINE`; natively record `rizin -V` or `r2 -v` and probe
+   required commands with `<command>?`.
 3. Open raw input as MIPS, 32-bit, little-endian at its verified load address.
    Never open a container archive as code. Validate several known instructions
    before analysis.
@@ -55,10 +56,11 @@ replay commands, and compiled source remain authoritative.
 
 ## Repository adapter
 
-For this repository prefer the adapter for repeatable operations so
-engine/version differences remain in one place. Drop to the detected native
-engine for focused interactive work or commands the adapter does not expose,
-then capture reviewed results in replay rather than relying on session state:
+For this repository use the adapter for repeatable normalized snapshots, or use
+direct Rizin/radare2 for focused interactive evidence and commands the adapter
+does not expose. The adapter has no engine preference: select `rizin`, `r2`, or
+`auto` with `HARNESS_ANALYZER_ENGINE`, then capture reviewed results in replay
+rather than relying on session state:
 
 Use the stateless Python adapters in
 `tools/python/harness/analyzer.py` and `snapshot.py` for repeatable queries and
@@ -71,7 +73,7 @@ projects or hand-edit generated snapshots.
 
 - Keep separate target-qualified sessions and bindings for separate executables or
   overlays, even when bytes or addresses repeat.
-- Keep compiled symbols address-based (`func_XXXXXXXX`, `DAT_XXXXXXXX`) until a
+- Keep compiled symbols address-based (`func_XXXXXXXX`, `D_XXXXXXXX`) until a
   meaning is reviewed. Add semantic aliases without losing address traceability.
 - Preserve unknown struct fields and exact offsets. Do not force a decompiler
   guess into a public type.
