@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+M2C="$ROOT/third_party/m2c/m2c.py"
+
+usage() {
+  cat <<'EOF'
+usage: bin/m2c <source> [--void]
+
+Produce a matching-oriented C seed from the Splat assembly for a function.
+
+The source file must be a func_XXXXXXXX.c path. The matching Splat assembly
+is located automatically from out/splat/.
+
+Options:
+  --void    Assume the function returns void.
+EOF
+  exit 1
+}
+
+VOID_FLAG=""
+SOURCE=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --void) VOID_FLAG="--void"; shift ;;
+    -h|--help) usage ;;
+    -*) echo "unknown flag: $1" >&2; exit 1 ;;
+    *) SOURCE="$1"; shift ;;
+  esac
+done
+
+[[ -n "$SOURCE" ]] || usage
+
+FUNC="$(basename "$SOURCE" .c)"
+
+# Resolve the Splat assembly path from the source path.
+# Source: src/<target>/func_XXXXXXXX.c
+# Splat: out/splat/<target>/asm/func_XXXXXXXX.s
+SOURCE_REL="${SOURCE#"$ROOT/"}"
+TARGET_DIR="$(dirname "$SOURCE_REL")"
+TARGET_DIR="${TARGET_DIR#src/}"
+ASM="$ROOT/out/splat/$TARGET_DIR/asm/$FUNC.s"
+
+if [[ ! -f "$ASM" ]]; then
+  echo "error: Splat assembly not found: $ASM" >&2
+  echo "run 'just split' or 'bin/splat split' first" >&2
+  exit 1
+fi
+
+# m2c matches function names case-sensitively. Splat asm uses uppercase
+# hex labels (func_80196CF0) while source files use lowercase (func_80196cf0).
+# Extract the actual label from the asm file.
+ASM_LABEL="$(grep -oP 'glabel\s+\K\S+' "$ASM" | head -1)"
+if [[ -z "$ASM_LABEL" ]]; then
+  echo "error: no glabel found in $ASM" >&2
+  exit 1
+fi
+
+python3 "$M2C" \
+  -t mipsel-gcc-c \
+  -f "$ASM_LABEL" \
+  --globals none \
+  --valid-syntax \
+  --knr \
+  --deterministic-vars \
+  --no-unk-inference \
+  --no-casts \
+  --comment-style none \
+  $VOID_FLAG \
+  "$ASM"
