@@ -9,7 +9,7 @@ always-on policy here.
 
 - Work only in this repository; never edit the sibling `rebof3/` checkout.
 - `inputs/` is ignored user media/private input and must never be committed.
-- Authored inputs live under `src/`, `include/`, `cmake/`, `config/`, `asm/`,
+- Authored inputs live under `src/`, `include/`, `Makefile`, `config/`, `asm/`,
   and `docs/`. `build/`, `out/`, and `toolchains/` are local/generated state.
 - `out/` is the sole generated-artifact root. Do not invent a second output
   tree or hand-edit generated catalogs, projects, exports, or binaries.

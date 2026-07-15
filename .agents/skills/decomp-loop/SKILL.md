@@ -5,8 +5,9 @@ description: "Discover, lift, and exactly match PSX MIPS functions or complete o
 
 # Decomp Loop
 
-Use `bin/harness` as the workflow entry point. Original bytes and canonical Splat
-assembly outrank function indexes, decompilers, and source guesses.
+Use `bin/harness` for workspace orchestration and `bin/asmdiff` for the focused
+matching loop. Original bytes and canonical Splat assembly outrank function
+indexes, decompilers, and source guesses.
 
 For exact-match tactics and compiler pitfalls, read
 [`references/matching-patterns.md`](references/matching-patterns.md). Read it
@@ -22,15 +23,15 @@ COP2/GTE behavior.
 ```bash
 bin/harness targets <target>
 bin/harness reverse <target>@<function> --run
-bin/harness diff <source>
+bin/asmdiff <source>
 ```
 
 Before editing C, verify the payload, load address, function range, Splat
 configuration, and that the proposed address is code rather than embedded data.
 Do not infer a boundary from a lone prologue, `jr ra`, or decompiler label.
-`diff` must build CMake's per-source `.obj` target and verify that an edited
-source refreshed its object. Treat an empty successful build with a stale
-object as a tooling failure, not a comparison result.
+`bin/asmdiff` must build Make's per-source `.o` target and verify that an edited
+source refreshed its object. Treat an empty successful build with a stale object
+as a tooling failure, not a comparison result.
 
 ## Exact-match order
 
@@ -51,7 +52,7 @@ The permuter does not guarantee compilable output. First verify that its
 generated `base.c` compiles and that it evaluates real candidates. Reject runs
 that fail the base compile, report zero compiled candidates, compare against a
 current-object copy, or depend on invalid C/ABI guesses. Re-run
-`bin/harness diff` on any adopted candidate; the canonical diff remains the
+`bin/asmdiff` on any adopted candidate; the canonical diff remains the
 acceptance gate.
 
 Before choosing `-j`, inspect logical cores and the current one-minute load.
@@ -68,7 +69,7 @@ specific seed only to reproduce a useful candidate or diagnose a failed run;
 an unexplained fixed default repeatedly explores the same search path.
 
 When a newly lifted function reaches a canonical 100% instruction and byte
-match, re-run `bin/harness diff` and prepare a small focused change. Include
+match, re-run `bin/asmdiff` and prepare a small focused change. Include
 only its required Splat boundary, declaration, and address binding; exclude
 unrelated cleanup and generated evidence. Commit or push only when explicitly
 authorized.
@@ -94,7 +95,7 @@ boundary, compiler command, and diff normalization are proven correct.
 | Wrong size or shifted labels | Recheck function boundaries before editing C |
 | Unsupported instruction | Read Splat assembly; use an analyzer as a hint |
 | Match >=80% or same size | Trace the first mismatch, then run bounded permutation |
-| Calling convention | Check Splat config and the CMake compile command |
+| Calling convention | Check Splat config and the Make compile command |
 | Compiler-inserted NOP | Verify delay slots in original vs compiled |
 | Unresolved symbol | Add a target-local declaration and address binding |
 | Permuter base/candidates fail to compile | Fix the bundle/compiler context; continue manually |
@@ -120,7 +121,7 @@ original bytes. Report function matches separately from whole-binary matching.
 ## Coding conventions
 
 `.agents/rules/decomp.md` (C89, REG32, DAT_xxx, internal.h, WEAK_SYMBOL_AT)
-`.agents/rules/build.md` (module registration, sources.cmake, targets)
+`.agents/rules/build.md` (module ownership, Make targets, matching checks)
 
 Keep authored header guards short and path-scoped (`CORE_EMI_H`), without
 a redundant repository-name prefix.

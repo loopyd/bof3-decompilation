@@ -6,7 +6,7 @@
 
 ```sh
 bin/harness targets "$TARGET"
-bin/harness diff "$FUNCTION_SOURCE"
+bin/asmdiff "$FUNCTION_SOURCE"
 ```
 
 An exact match exits with status `0`. A valid nonmatch exits with status `1`
@@ -16,7 +16,7 @@ tool failures exit with status `2`.
 Use `--json` when another local tool or agent consumes the result:
 
 ```sh
-bin/harness diff "$FUNCTION_SOURCE" --json
+bin/asmdiff "$FUNCTION_SOURCE" --json
 ```
 
 ## Iteration order

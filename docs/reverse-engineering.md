@@ -33,7 +33,7 @@ bin/harness discover
 bin/harness promote "$ARCHIVE_ENTRY" --confirm-code
 bin/harness targets "$TARGET"
 bin/harness reverse "$TARGET"@"$ADDRESS" --run
-bin/harness diff "$FUNCTION_SOURCE"
+bin/asmdiff "$FUNCTION_SOURCE"
 ```
 
 Promotion is deliberately explicit. It creates one Splat configuration and one
@@ -48,9 +48,9 @@ compensating for a mapping problem in C.
 Promotion creates `internal.h` only when the target source directory does not
 already provide one; reviewed target-local declarations are preserved.
 
-`diff` builds the smallest available CMake object and writes comparison evidence
-under `out/matching/`. A nonmatch is a normal iteration result; a build or target
-resolution failure must be fixed before changing source.
+`bin/asmdiff` builds the smallest available Make object and writes comparison
+evidence under `out/matching/`. A nonmatch is a normal iteration result; a build
+or target resolution failure must be fixed before changing source.
 
 The stateless analyzer and snapshot models are Python APIs under
 `tools/python/harness/analyzer.py` and `snapshot.py`. Generated snapshots use
@@ -68,7 +68,7 @@ an unproven shared ABI:
    semantic name. Use ordinary C translation units, not `.inc` fragments.
 2. Express a recovered record as a target-local C89 view, preserving raw pads
    and byte/halfword overlays until consumers prove their meaning.
-3. Lift one consumer against that binding and run `bin/harness diff` after
+3. Lift one consumer against that binding and run `bin/asmdiff` after
    every source change. Use `bin/harness reverse` to select a bounded mission;
    generated candidates stay under `out/`.
    Keep the authored lift in C89; do not use inline assembly to force register
@@ -109,7 +109,7 @@ A promoted function must:
   material context; never link generated state;
 - place reusable structures, offsets, and mappings in the owning
   `docs/specs/` concept;
-- pass `bin/harness diff`, even when it is not yet an exact match.
+- pass `bin/asmdiff`, even when it is not yet an exact match.
 
 ## Evidence boundary
 

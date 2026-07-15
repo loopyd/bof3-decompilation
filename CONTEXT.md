@@ -56,7 +56,7 @@ and [matching](docs/matching.md). For retained technical evidence, start at
 | `config/symbols/` | Tracked authored and verified symbol information. |
 | `config/analysis/` | Reviewed analyzer replay commands and analysis-only type layouts. |
 | `asm/` | Reviewed original assembly baselines. |
-| `cmake/` | PSX build rules, source registration, target definitions, and artifact assembly. |
+| `Makefile` | PSX compiler, assembler, object, matching, and verification build rules. |
 | `tools/python/` | Implementation of repository automation and the `harness` command surface. |
 | `bin/` | Thin command entry points and PSX compiler/binutils adapters. |
 | `docs/specs/` | Durable, reviewed format, runtime, program, and data findings. |
@@ -64,7 +64,7 @@ and [matching](docs/matching.md). For retained technical evidence, start at
 | `toolchains/` | Generated/staged compilers, SDKs, and related local tools. |
 | `inputs/` | Ignored user-owned disc media and private setup inputs. |
 | `out/` | Regenerable extraction and analysis evidence. |
-| `build/` | Regenerable CMake build products. |
+| `build/` | Regenerable compiler objects and local tool products. |
 
 New authored binary layout belongs in `config/`; new recovered code belongs in
 the owning target under `src/`; reusable declarations belong in `include/`;
@@ -93,7 +93,7 @@ directly under their canonical executable or promoted EMI target.
 | `just` | Provides the short task interface for setup, extraction, building, checks, and formatting. |
 | `bin/harness` | Coordinates BOF3-specific discovery, inspection, promotion, lifting, matching, Ghidra sync, assets, and disc operations. |
 | Splat / spimdisasm | Splits normalized binaries from tracked layouts and produces the canonical assembly used as matching evidence. |
-| CMake | Registers independent PSX targets, applies verified compiler flags, and builds their objects or reconstructed artifacts. |
+| `Makefile` | Builds independent PSX objects and drives focused matching/check workflows. |
 | Historical GCC + MASPSX/binutils | Reproduces the period PSX compilation and assembly pipeline used for binary matching. |
 | PsyQ | Supplies the external headers and libraries expected by the game; its library routines are not lifted. |
 | asm-differ | Compares a compiled function with the original instructions during the normal edit/match loop. |

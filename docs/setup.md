@@ -17,11 +17,10 @@ bin/harness doctor --strict
 ```
 
 `just setup` initializes pinned submodules, prepares the PSX tools, stages PsyQ
-4.7, extracts the disc, unpacks
-EMI archives, and refreshes the catalog. SDK files remain ignored and must not
-be committed.
+4.7, builds the native Rust tools, extracts the disc, unpacks EMI archives, and
+refreshes the catalog. SDK files remain ignored and must not be committed.
 
-Run `just psyq` separately only when restaging the SDK.
+Run `just setup-psyq` separately only when restaging the SDK.
 
 ## Choose the starting state
 

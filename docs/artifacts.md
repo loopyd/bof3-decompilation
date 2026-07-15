@@ -18,19 +18,18 @@ tags: [build, generated]
 | `out/reverse/<target>/snapshot.json` | Normalized per-target stateless analyzer snapshot |
 | `out/context/`, `out/lift/`, `out/matching/` | Per-function context, lift, and comparison evidence |
 | `out/assets/` | Decoded asset previews |
-| `build/default/artifacts/raw/` | Raw images for targets with confirmed load layouts |
-| `build/default/artifacts/compiled/SLUS_004.22.a` | SLUS lifted-source validation archive; not a reconstructed executable |
-| `build/default/artifacts/compiled/` | Intermediate object sets for targets without confirmed raw layouts |
-| `build/default/artifacts/metadata/artifacts.json` | Registered target and build-stage manifest |
+| `build/src/` | Per-source PSX compiler and assembler objects |
+| `build/src/**/*.o.s` | Preserved historical compiler assembly for matching review |
+| `out/matching/` | Per-function comparison evidence and summaries |
 
 Tracked Splat configuration and authored symbols live in `config/`; authored C
 source lives in `src/`. A partial build must report uncovered executable bytes;
 it must not fill them by copying original code.
 
-`just build` builds every registered artifact. A target may emit a raw blob only
-after its load address and object placement are confirmed. Until then, its
-compiled `.a` is an intermediate object set and must not be presented as a
-reconstructed EMI payload or PS-X executable.
+`just build` compiles every authored source into `build/src/`. Full target
+linkage and reconstructed payload verification remain a separate Phase 2
+workflow; object compilation must not be presented as a reconstructed EMI
+payload or PS-X executable.
 
 The repository does not currently reconstruct the original SLUS CRT or link
 layout. Its historical `startup.s` probe and the duplicate LOGO streaming

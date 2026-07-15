@@ -8,7 +8,7 @@
 | Splat/spimdisasm | Split PSX binaries and produce canonical assembly | Yes |
 | historical GCC | Reproduce the BOF3 compiler family | Yes |
 | MASPSX/binutils | Produce inspectable matching ELF objects | Yes |
-| Rust `emi-ex` | Canonical BOF3 EMI extractor through `bin/harness emi unpack` | Yes |
+| Rust `emi-ex` | Canonical BOF3 EMI extractor through `bin/emi-unpack` | Yes |
 | Rust `bof3-disk` | Canonical disc extraction/checksum tool used by setup | Yes |
 | asm-differ | Interactive instruction comparison | Yes |
 | m2c | Produce a matching-oriented C seed | Optional |
@@ -39,8 +39,8 @@ small known BOF3 functions and linked PsyQ routines. Check instruction output,
 calling convention, library signatures, object layout, and relocations. Keep
 the current toolchain until an earlier available SDK produces stronger binary
 evidence. PsyQ 3.x or 4.0 are candidates for investigation, not verified BOF3
-facts. Use `PSX_CC_DRIVER` for a one-off compiler driver or `PSX_C_COMPILER`
-when configuring a separate CMake build directory.
+facts. Use `PSX_CC_DRIVER` for a one-off compiler driver or `PROFILE=...` when
+selecting a supported compiler profile in Make.
 
 ## Comparative projects
 
