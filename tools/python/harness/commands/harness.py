@@ -124,9 +124,31 @@ def run_reverse(args: argparse.Namespace) -> int:
 
     root = _root(args)
     target_str = getattr(args, "target", None)
+    scan_all = getattr(args, "all", False)
+
+    if scan_all:
+        count = args.functions or 10
+        candidates = reverse.score_candidates_all(
+            root,
+            strategy=args.strategy,
+            limit=count,
+        )
+        if not candidates:
+            print("No eligible functions found across all targets.")
+            return 1
+        print(f"Top {len(candidates)} candidates across all targets "
+              f"(strategy={args.strategy}):")
+        print()
+        for i, c in enumerate(candidates, 1):
+            print(
+                f"  {i:2d}. {c['target_id']}@{c['address']:08x}  "
+                f"size={c['size']:4d}  in={c['calls_in']:2d}  out={c['calls_out']}  "
+                f"score={c['score']:4d}  state={c['state']}"
+            )
+        return 0
 
     if target_str is None:
-        print("Usage: harness reverse TARGET[@ADDRESS]")
+        print("Usage: harness reverse TARGET[@ADDRESS]  (or --all for global scan)")
         manifests = load_target_manifests(root)
         if manifests:
             print("Active targets:")
@@ -254,6 +276,208 @@ def run_normalize(args: argparse.Namespace) -> int:
     catalog = write_catalog(root / "out" / "extracted" / "BIN", _catalog_path(args))
     for image in materialize_promoted_emi_targets(root=root, catalog=catalog):
         print(f"normalized EMI: {image}")
+    return 0
+
+
+def run_analyze(args: argparse.Namespace) -> int:
+    """Mass-analyze all promoted targets: classify every function, write report."""
+
+    from ..analyzer import build_snapshot, find_best_engine
+    from ..domain import load_target_manifests
+    from ..binaries import SPLAT_FUNCTION_SUBSEGMENT_RE
+    from ..reverse import _get_code_ranges
+
+    root = _root(args)
+    manifests = load_target_manifests(root)
+    engine = find_best_engine()
+
+    all_functions: list[dict[str, Any]] = []
+    target_stats: dict[str, dict[str, int]] = {}
+
+    for target_id, manifest in sorted(manifests.items()):
+        binary_path = root / manifest.binary
+        if not binary_path.is_file():
+            continue
+
+        # Get code ranges from splat config to filter out false positives.
+        code_ranges = _get_code_ranges(root / manifest.splat, manifest.load_address)
+
+        reviewed: set[int] = set()
+        splat_path = root / manifest.splat
+        if splat_path.is_file():
+            for line in splat_path.read_text(encoding="utf-8").splitlines():
+                match = SPLAT_FUNCTION_SUBSEGMENT_RE.match(line)
+                if match is not None:
+                    reviewed.add(
+                        manifest.load_address + int(match.group("offset"), 0)
+                    )
+
+        try:
+            snapshot = build_snapshot(
+                engine,
+                binary_path,
+                manifest.load_address,
+                target_id,
+                reviewed_addresses=reviewed,
+                source_dir=root / manifest.source_dir,
+                timeout=60,
+            )
+        except Exception:
+            continue
+
+        # Count incoming calls per function (foundational = called by many).
+        callers_out: dict[str, int] = {}
+        calls_in: dict[str, int] = {}
+        for call in snapshot.calls:
+            callers_out[call.caller] = callers_out.get(call.caller, 0) + 1
+            calls_in[call.callee] = calls_in.get(call.callee, 0) + 1
+
+        # Target infrastructure: count lifted functions in this target.
+        lifted_count = sum(1 for f in snapshot.functions if f.source is not None)
+        target_has_context = lifted_count >= 10
+
+        stats: dict[str, int] = {
+            "total": 0, "leaf": 0, "caller": 0, "hub": 0,
+            "trivial": 0, "lifted": 0, "reviewed": 0,
+        }
+
+        for func in snapshot.functions:
+            # Filter out false positives: only include functions within code ranges.
+            if code_ranges:
+                in_code = any(
+                    start <= func.address < end for start, end in code_ranges
+                )
+                if not in_code:
+                    continue
+
+            n_out = callers_out.get(func.id, 0)
+            n_in = calls_in.get(func.id, 0)
+            size = func.analyzer_size
+            is_leaf = n_out == 0
+
+            # Classify
+            if size < 32:
+                func_type = "trivial"
+            elif n_in >= 3 and n_out >= 3:
+                func_type = "hub"
+            elif n_out >= 2:
+                func_type = "caller"
+            else:
+                func_type = "leaf"
+
+            source_exists = func.source is not None
+            state = "lifted" if source_exists else "not_lifted"
+            if func.is_reviewed:
+                state = "reviewed" if not source_exists else "lifted+reviewed"
+
+            # --- Scoring (must match reverse.score_candidates_all) ---
+            score = size
+            if is_leaf:
+                score += size
+            if not source_exists:
+                score += 300
+            if func.is_reviewed:
+                score += 25
+            score += n_in * 50
+            if target_has_context:
+                score += 100
+            if size < 32:
+                score -= 200 - size
+
+            entry = {
+                "target_id": target_id,
+                "address": func.address,
+                "address_hex": f"0x{func.address:08x}",
+                "name": func.analyzer_name,
+                "size": size,
+                "calls_in": n_in,
+                "calls_out": n_out,
+                "type": func_type,
+                "is_leaf": is_leaf,
+                "is_reviewed": func.is_reviewed,
+                "is_lifted": source_exists,
+                "score": score,
+                "state": state,
+                "source": func.source,
+                "load_address": manifest.load_address,
+                "binary": str(manifest.binary),
+            }
+            all_functions.append(entry)
+
+            stats["total"] += 1
+            stats[func_type] = stats.get(func_type, 0) + 1
+            if is_leaf:
+                stats["leaf"] += 1
+            if source_exists:
+                stats["lifted"] += 1
+            if func.is_reviewed:
+                stats["reviewed"] += 1
+
+        target_stats[target_id] = stats
+
+    # Sort by score descending
+    all_functions.sort(key=lambda f: -f["score"])
+
+    # Write JSON report
+    report_dir = root / "out" / "analysis"
+    report_dir.mkdir(parents=True, exist_ok=True)
+    report_path = report_dir / "functions.json"
+    report_path.write_text(
+        json.dumps(all_functions, indent=2), encoding="utf-8"
+    )
+
+    top_k = getattr(args, "top", 10)
+
+    # Print summary
+    total = len(all_functions)
+    lifted = sum(1 for f in all_functions if f["is_lifted"])
+    leaf_count = sum(1 for f in all_functions if f["is_leaf"])
+    by_type: dict[str, int] = {}
+    for f in all_functions:
+        by_type[f["type"]] = by_type.get(f["type"], 0) + 1
+
+    print(f"Analyzed {len(target_stats)} targets, {total} functions")
+    print(f"  Lifted: {lifted}/{total} ({100*lifted//max(total,1)}%)")
+    print(f"  Leaf:   {leaf_count}")
+    print(f"  Types:  {by_type}")
+    print()
+
+    def _print_table(title: str, rows: list[dict[str, Any]]) -> None:
+        if not rows:
+            print(f"  {title}: (none)")
+            print()
+            return
+        print(f"  {title}:")
+        print(f"  {'#':>3}  {'Target':<30} {'Addr':>10} {'Size':>5} {'In':>3} {'Out':>3} {'Type':<8} {'Score':>5} {'State'}")
+        print(f"  {'---':>3}  {'-'*30} {'-'*10} {'-'*5} {'-'*3} {'-'*3} {'-'*8} {'-'*5} {'-'*16}")
+        for i, f in enumerate(rows[:top_k], 1):
+            print(
+                f"  {i:3d}  {f['target_id']:<30} {f['address']:08x}  "
+                f"{f['size']:5d} {f['calls_in']:3d} {f['calls_out']:3d} "
+                f"{f['type']:<8} {f['score']:5d} {f['state']}"
+            )
+        print()
+
+    # Top K overall
+    _print_table(f"Top {top_k} overall (by score)", all_functions)
+
+    # Top K per type
+    types_seen = sorted(by_type.keys())
+    for t in types_seen:
+        typed = [f for f in all_functions if f["type"] == t]
+        _print_table(f"Top {top_k} {t} ({by_type[t]} total)", typed)
+
+    # Top K per target (only targets with >5 functions)
+    print("  Per-target top functions:")
+    print()
+    for tid, s in sorted(target_stats.items()):
+        if s["total"] < 5:
+            continue
+        target_funcs = [f for f in all_functions if f["target_id"] == tid]
+        target_funcs.sort(key=lambda f: -f["score"])
+        _print_table(f"{tid} ({s['total']} funcs, {s['lifted']} lifted)", target_funcs[:5])
+
+    print(f"Full report: {report_path.relative_to(root)}")
     return 0
 
 
@@ -419,6 +643,18 @@ def build_parser() -> argparse.ArgumentParser:
     targets.add_argument("--json", action="store_true")
     targets.set_defaults(handler=run_targets)
 
+    normalize = sub.add_parser(
+        "normalize",
+        help="normalize promoted binaries and materialize out/binaries/",
+    )
+    normalize.add_argument(
+        "--slus", type=Path, default=layout.slus_path
+    )
+    normalize.add_argument(
+        "--logo", type=Path, default=layout.logo_path
+    )
+    normalize.set_defaults(handler=run_normalize)
+
     reverse = sub.add_parser("reverse", help="reverse-engineer a target or function")
     reverse.add_argument("target", nargs="?")
     reverse.add_argument(
@@ -426,14 +662,25 @@ def build_parser() -> argparse.ArgumentParser:
     )
     reverse.add_argument(
         "--strategy",
-        choices=["balanced", "hot", "leaf", "root", "shallow", "easy"],
-        default="balanced",
+        choices=["best", "leaf", "caller", "hub", "complex", "quick"],
+        default="best",
     )
     reverse.add_argument("--functions", type=int)
     reverse.add_argument("--time", type=int, help="duration in minutes")
     reverse.add_argument("--depth", type=int)
     reverse.add_argument(
         "--run", action="store_true", help="launch one bounded OpenCode mission"
+    )
+    reverse.add_argument(
+        "--all", action="store_true",
+        help="scan all promoted targets and rank candidates globally",
+    )
+    reverse.add_argument(
+        "--type", dest="func_type",
+        choices=["leaf", "caller", "hub", "trivial", "any"],
+        default="any",
+        help="filter by function type (--all only): leaf=0 out calls, "
+             "caller=many out calls, hub=high in+out, trivial=size<32",
     )
     reverse.set_defaults(handler=run_reverse)
 
@@ -453,6 +700,16 @@ def build_parser() -> argparse.ArgumentParser:
     doctor = sub.add_parser("doctor", help="check workspace/toolchain health")
     doctor.add_argument("--strict", action="store_true")
     doctor.set_defaults(handler=run_doctor)
+
+    analyze = sub.add_parser(
+        "analyze",
+        help="mass-analyze all promoted targets and classify every function",
+    )
+    analyze.add_argument(
+        "--top", type=int, default=10,
+        help="show top-K functions per category (default: 10)",
+    )
+    analyze.set_defaults(handler=run_analyze)
 
     assets = sub.add_parser("assets", help="list/validate/convert assets (list/str)")
     assets_sub = assets.add_subparsers(dest="assets_command", required=True)

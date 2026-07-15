@@ -409,6 +409,203 @@ def score_candidates(root: Path, target_id: str) -> list[dict[str, Any]]:
     return sorted(candidates, key=lambda c: (-c["score"], c["address"]))
 
 
+def _get_code_ranges(splat_path: Path, load_address: int) -> list[tuple[int, int]]:
+    """Return list of (start_addr, end_addr) for code segments from splat config.
+
+    Filters out false-positive function detections from data areas.
+    """
+
+    import re
+
+    if not splat_path.is_file():
+        return []
+
+    text = splat_path.read_text(encoding="utf-8")
+    lines = text.splitlines()
+
+    # Find all code segments and their vram addresses.
+    code_segments: list[int] = []
+    for i, line in enumerate(lines):
+        if "type: code" not in line:
+            continue
+        for j in range(max(0, i - 5), i + 1):
+            m = re.search(r"vram:\s+0x([0-9a-fA-F]+)", lines[j])
+            if m:
+                code_segments.append(int(m.group(1), 16))
+                break
+
+    # Find all segment boundaries.
+    boundaries: list[int] = []
+    for line in lines:
+        m = re.match(r"\s+-\s+\[0x([0-9a-fA-F]+)", line)
+        if m:
+            boundaries.append(load_address + int(m.group(1), 16))
+
+    # Build code ranges: each code segment ends at the next boundary or
+    # next code segment start.
+    ranges: list[tuple[int, int]] = []
+    for i, vram in enumerate(code_segments):
+        end = None
+        for b in boundaries:
+            if b > vram:
+                end = b
+                break
+        if i + 1 < len(code_segments):
+            next_vram = code_segments[i + 1]
+            if end is None or next_vram < end:
+                end = next_vram
+        if end is not None:
+            ranges.append((vram, end))
+
+    return ranges
+
+
+def score_candidates_all(
+    root: Path,
+    *,
+    strategy: str = "leaf",
+    limit: int = 10,
+) -> list[dict[str, Any]]:
+    """Scan all promoted targets with rizin and rank leaf/root/hot candidates.
+
+    Scoring metric (higher = more valuable to decompile):
+
+        score = size                                     # code surface
+              + (size if is_leaf else 0)                 # leaf bonus: self-contained
+              + (300 if not lifted else 0)               # prefer new work
+              + (25 if reviewed_boundary else 0)         # confirmed boundary
+              + calls_in * 50                            # foundational: called by many
+              + (100 if target_has_context else 0)       # target infra bonus
+              - (max(0, 200 - size) if size < 32 else 0) # stub penalty
+
+    A leaf function of 500 bytes, not yet lifted, called by 5 others, in a
+    target with good infrastructure scores:
+        500 + 500 + 300 + 0 + 250 + 100 = 1675
+    """
+
+    from .analyzer import build_snapshot, find_best_engine
+    from .domain import load_target_manifests
+
+    manifests = load_target_manifests(root)
+    engine = find_best_engine()
+    all_candidates: list[dict[str, Any]] = []
+
+    for target_id, manifest in sorted(manifests.items()):
+        binary_path = root / manifest.binary
+        if not binary_path.is_file():
+            continue
+
+        # Get code ranges from splat config to filter out false positives.
+        code_ranges = _get_code_ranges(root / manifest.splat, manifest.load_address)
+
+        reviewed: set[int] = set()
+        splat_path = root / manifest.splat
+        if splat_path.is_file():
+            from .binaries import SPLAT_FUNCTION_SUBSEGMENT_RE
+
+            for line in splat_path.read_text(encoding="utf-8").splitlines():
+                match = SPLAT_FUNCTION_SUBSEGMENT_RE.match(line)
+                if match is not None:
+                    reviewed.add(
+                        manifest.load_address + int(match.group("offset"), 0)
+                    )
+
+        try:
+            snapshot = build_snapshot(
+                engine,
+                binary_path,
+                manifest.load_address,
+                target_id,
+                reviewed_addresses=reviewed,
+                source_dir=root / manifest.source_dir,
+                timeout=60,
+            )
+        except Exception:
+            continue
+
+        # Count incoming calls per function (foundational = called by many).
+        callers_out: dict[str, int] = {}
+        calls_in: dict[str, int] = {}
+        for call in snapshot.calls:
+            callers_out[call.caller] = callers_out.get(call.caller, 0) + 1
+            calls_in[call.callee] = calls_in.get(call.callee, 0) + 1
+
+        # Target infrastructure: count lifted functions in this target.
+        lifted_count = sum(1 for f in snapshot.functions if f.source is not None)
+        target_has_context = lifted_count >= 10
+
+        for func in snapshot.functions:
+            # Filter out false positives: only include functions within code ranges.
+            if code_ranges:
+                in_code = any(
+                    start <= func.address < end for start, end in code_ranges
+                )
+                if not in_code:
+                    continue
+
+            is_leaf = func.id not in callers_out
+            n_calls_out = callers_out.get(func.id, 0)
+            n_calls_in = calls_in.get(func.id, 0)
+
+            if strategy == "leaf" and not is_leaf:
+                continue
+            if strategy == "root" and n_calls_out == 0:
+                continue
+
+            source_exists = func.source is not None
+            state = "lifted" if source_exists else "not_lifted"
+            if func.is_reviewed:
+                state = "reviewed" if not source_exists else "lifted+reviewed"
+
+            size = func.analyzer_size
+
+            # --- Scoring ---
+            score = size
+
+            # Leaf bonus: self-contained, no call dependencies.
+            if is_leaf:
+                score += size
+
+            # Prefer unlifted functions (new work).
+            if not source_exists:
+                score += 300
+
+            # Reviewed boundary bonus (confirmed function range).
+            if func.is_reviewed:
+                score += 25
+
+            # Foundational bonus: functions called by many others.
+            score += n_calls_in * 50
+
+            # Target infrastructure bonus.
+            if target_has_context:
+                score += 100
+
+            # Stub penalty: tiny functions are likely alignment/stubs.
+            if size < 32:
+                score -= 200 - size
+
+            all_candidates.append(
+                {
+                    "target_id": target_id,
+                    "address": func.address,
+                    "name": func.analyzer_name,
+                    "size": size,
+                    "calls_out": n_calls_out,
+                    "calls_in": n_calls_in,
+                    "is_leaf": is_leaf,
+                    "is_reviewed": func.is_reviewed,
+                    "is_lifted": source_exists,
+                    "score": score,
+                    "state": state,
+                    "source": func.source,
+                }
+            )
+
+    all_candidates.sort(key=lambda c: -c["score"])
+    return all_candidates[:limit]
+
+
 def select_next_function(root: Path, target_id: str) -> tuple[int, str] | None:
     candidates = score_candidates(root, target_id)
     if not candidates:
