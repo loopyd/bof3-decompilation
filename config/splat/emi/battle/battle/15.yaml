@@ -10,8 +10,1500 @@ options:
   src_path: src/emi/battle/battle/15
   ld_script_path: out/splat/emi/battle/battle/15/linker.ld
   symbol_addrs_path:
-    - config/symbols/psyq.txt
-    - config/symbols/shared.txt
+  - config/symbols/psyq.txt
+  - config/symbols/shared.txt
 segments:
-  - [0x0, bin]
-  - [0x208C4]
+- name: main
+  type: code
+  start: 0
+  vram: 2148100096
+  subsegments:
+  - - 0
+    - asm
+    - T_80096800
+  - - 688
+    - asm
+    - func_80096AB0
+  - - 744
+    - asm
+    - func_80096AE8
+  - - 804
+    - asm
+    - func_80096B24
+  - - 892
+    - asm
+    - func_80096B7C
+  - - 1224
+    - asm
+    - func_80096CC8
+  - - 1556
+    - asm
+    - func_80096E14
+  - - 1680
+    - asm
+    - func_80096E90
+  - - 1792
+    - asm
+    - func_80096F00
+  - - 1852
+    - asm
+    - func_80096F3C
+  - - 1912
+    - asm
+    - func_80096F78
+  - - 1980
+    - asm
+    - func_80096FBC
+  - - 2124
+    - asm
+    - func_8009704C
+  - - 3444
+    - asm
+    - func_80097574
+  - - 3540
+    - asm
+    - func_800975D4
+  - - 3612
+    - asm
+    - func_8009761C
+  - - 3900
+    - asm
+    - func_8009773C
+  - - 3960
+    - asm
+    - func_80097778
+  - - 4164
+    - asm
+    - func_80097844
+  - - 4580
+    - asm
+    - func_800979E4
+  - - 5132
+    - asm
+    - func_80097C0C
+  - - 5308
+    - asm
+    - func_80097CBC
+  - - 5404
+    - asm
+    - func_80097D1C
+  - - 5464
+    - asm
+    - func_80097D58
+  - - 5568
+    - asm
+    - func_80097DC0
+  - - 5816
+    - asm
+    - func_80097EB8
+  - - 5824
+    - asm
+    - func_80097EC0
+  - - 6120
+    - asm
+    - func_80097FE8
+  - - 6312
+    - asm
+    - func_800980A8
+  - - 6372
+    - asm
+    - func_800980E4
+  - - 6468
+    - asm
+    - func_80098144
+  - - 6740
+    - asm
+    - func_80098254
+  - - 6884
+    - asm
+    - func_800982E4
+  - - 6988
+    - asm
+    - func_8009834C
+  - - 7048
+    - asm
+    - func_80098388
+  - - 7108
+    - asm
+    - func_800983C4
+  - - 7176
+    - asm
+    - func_80098408
+  - - 7248
+    - asm
+    - func_80098450
+  - - 8628
+    - asm
+    - func_800989B4
+  - - 8700
+    - asm
+    - func_800989FC
+  - - 8968
+    - asm
+    - func_80098B08
+  - - 9028
+    - asm
+    - func_80098B44
+  - - 9240
+    - asm
+    - func_80098C18
+  - - 9668
+    - asm
+    - func_80098DC4
+  - - 10196
+    - asm
+    - func_80098FD4
+  - - 10516
+    - asm
+    - func_80099114
+  - - 10616
+    - asm
+    - func_80099178
+  - - 10676
+    - asm
+    - func_800991B4
+  - - 10824
+    - asm
+    - func_80099248
+  - - 11048
+    - asm
+    - func_80099328
+  - - 11108
+    - asm
+    - func_80099364
+  - - 11624
+    - asm
+    - func_80099568
+  - - 12336
+    - asm
+    - func_80099830
+  - - 13172
+    - asm
+    - func_80099B74
+  - - 13952
+    - asm
+    - func_80099E80
+  - - 14224
+    - asm
+    - func_80099F90
+  - - 14284
+    - asm
+    - func_80099FCC
+  - - 14500
+    - asm
+    - func_8009A0A4
+  - - 14932
+    - asm
+    - func_8009A254
+  - - 15464
+    - asm
+    - func_8009A468
+  - - 15640
+    - asm
+    - func_8009A518
+  - - 15760
+    - asm
+    - func_8009A590
+  - - 15820
+    - asm
+    - func_8009A5CC
+  - - 15972
+    - asm
+    - func_8009A664
+  - - 16196
+    - asm
+    - func_8009A744
+  - - 17128
+    - asm
+    - func_8009AAE8
+  - - 17432
+    - asm
+    - func_8009AC18
+  - - 18300
+    - asm
+    - func_8009AF7C
+  - - 18308
+    - asm
+    - func_8009AF84
+  - - 18492
+    - asm
+    - func_8009B03C
+  - - 18784
+    - asm
+    - func_8009B160
+  - - 18956
+    - asm
+    - func_8009B20C
+  - - 19060
+    - asm
+    - func_8009B274
+  - - 19120
+    - asm
+    - func_8009B2B0
+  - - 19532
+    - asm
+    - func_8009B44C
+  - - 19592
+    - asm
+    - func_8009B488
+  - - 20224
+    - asm
+    - func_8009B700
+  - - 20372
+    - asm
+    - func_8009B794
+  - - 20520
+    - asm
+    - func_8009B828
+  - - 20836
+    - asm
+    - func_8009B964
+  - - 20896
+    - asm
+    - func_8009B9A0
+  - - 21116
+    - asm
+    - func_8009BA7C
+  - - 21196
+    - asm
+    - func_8009BACC
+  - - 21480
+    - asm
+    - func_8009BBE8
+  - - 22468
+    - asm
+    - func_8009BFC4
+  - - 24468
+    - asm
+    - func_8009C794
+  - - 24680
+    - asm
+    - func_8009C868
+  - - 24700
+    - asm
+    - func_8009C87C
+  - - 24748
+    - asm
+    - func_8009C8AC
+  - - 24980
+    - asm
+    - func_8009C994
+  - - 25788
+    - asm
+    - func_8009CCBC
+  - - 26496
+    - asm
+    - func_8009CF80
+  - - 26604
+    - asm
+    - func_8009CFEC
+  - - 27032
+    - asm
+    - func_8009D198
+  - - 29332
+    - asm
+    - func_8009DA94
+  - - 29364
+    - asm
+    - func_8009DAB4
+  - - 29604
+    - asm
+    - func_8009DBA4
+  - - 29804
+    - asm
+    - func_8009DC6C
+  - - 29896
+    - asm
+    - func_8009DCC8
+  - - 29984
+    - asm
+    - func_8009DD20
+  - - 30032
+    - asm
+    - func_8009DD50
+  - - 30232
+    - asm
+    - func_8009DE18
+  - - 30288
+    - asm
+    - func_8009DE50
+  - - 30308
+    - asm
+    - func_8009DE64
+  - - 30328
+    - asm
+    - func_8009DE78
+  - - 30348
+    - asm
+    - func_8009DE8C
+  - - 30576
+    - asm
+    - func_8009DF70
+  - - 30652
+    - asm
+    - func_8009DFBC
+  - - 30700
+    - asm
+    - func_8009DFEC
+  - - 30748
+    - asm
+    - func_8009E01C
+  - - 30796
+    - asm
+    - func_8009E04C
+  - - 30844
+    - asm
+    - func_8009E07C
+  - - 31108
+    - asm
+    - func_8009E184
+  - - 31200
+    - asm
+    - func_8009E1E0
+  - - 31232
+    - asm
+    - func_8009E200
+  - - 31268
+    - asm
+    - func_8009E224
+  - - 31304
+    - asm
+    - func_8009E248
+  - - 32000
+    - asm
+    - func_8009E500
+  - - 32708
+    - asm
+    - func_8009E7C4
+  - - 32740
+    - asm
+    - func_8009E7E4
+  - - 32772
+    - asm
+    - func_8009E804
+  - - 32804
+    - asm
+    - func_8009E824
+  - - 32836
+    - asm
+    - func_8009E844
+  - - 33164
+    - asm
+    - func_8009E98C
+  - - 33328
+    - asm
+    - func_8009EA30
+  - - 33420
+    - asm
+    - func_8009EA8C
+  - - 33484
+    - asm
+    - func_8009EACC
+  - - 33576
+    - asm
+    - func_8009EB28
+  - - 33864
+    - asm
+    - func_8009EC48
+  - - 34228
+    - asm
+    - func_8009EDB4
+  - - 34508
+    - asm
+    - func_8009EECC
+  - - 34568
+    - asm
+    - func_8009EF08
+  - - 34600
+    - asm
+    - func_8009EF28
+  - - 34744
+    - asm
+    - func_8009EFB8
+  - - 34832
+    - asm
+    - func_8009F010
+  - - 34980
+    - asm
+    - func_8009F0A4
+  - - 35260
+    - asm
+    - func_8009F1BC
+  - - 35416
+    - asm
+    - func_8009F258
+  - - 35448
+    - asm
+    - func_8009F278
+  - - 35504
+    - asm
+    - func_8009F2B0
+  - - 35560
+    - asm
+    - func_8009F2E8
+  - - 35616
+    - asm
+    - func_8009F320
+  - - 35804
+    - asm
+    - func_8009F3DC
+  - - 35860
+    - asm
+    - func_8009F414
+  - - 35916
+    - asm
+    - func_8009F44C
+  - - 35972
+    - asm
+    - func_8009F484
+  - - 36028
+    - asm
+    - func_8009F4BC
+  - - 36084
+    - asm
+    - func_8009F4F4
+  - - 36140
+    - asm
+    - func_8009F52C
+  - - 36196
+    - asm
+    - func_8009F564
+  - - 36252
+    - asm
+    - func_8009F59C
+  - - 36308
+    - asm
+    - func_8009F5D4
+  - - 36364
+    - asm
+    - func_8009F60C
+  - - 36420
+    - asm
+    - func_8009F644
+  - - 36476
+    - asm
+    - func_8009F67C
+  - - 36532
+    - asm
+    - func_8009F6B4
+  - - 36588
+    - asm
+    - func_8009F6EC
+  - - 36696
+    - asm
+    - func_8009F758
+  - - 36844
+    - asm
+    - func_8009F7EC
+  - - 36884
+    - asm
+    - func_8009F814
+  - - 36924
+    - asm
+    - func_8009F83C
+  - - 36964
+    - asm
+    - func_8009F864
+  - - 36996
+    - asm
+    - func_8009F884
+  - - 37240
+    - asm
+    - func_8009F978
+  - - 37272
+    - asm
+    - func_8009F998
+  - - 37304
+    - asm
+    - func_8009F9B8
+  - - 37344
+    - asm
+    - func_8009F9E0
+  - - 37408
+    - asm
+    - func_8009FA20
+  - - 37604
+    - asm
+    - func_8009FAE4
+  - - 37688
+    - asm
+    - func_8009FB38
+  - - 38416
+    - asm
+    - func_8009FE10
+  - - 38512
+    - asm
+    - func_8009FE70
+  - - 38532
+    - asm
+    - func_8009FE84
+  - - 38552
+    - asm
+    - func_8009FE98
+  - - 38572
+    - asm
+    - func_8009FEAC
+  - - 38608
+    - asm
+    - func_8009FED0
+  - - 38644
+    - asm
+    - func_8009FEF4
+  - - 38780
+    - asm
+    - func_8009FF7C
+  - - 38836
+    - asm
+    - func_8009FFB4
+  - - 38884
+    - asm
+    - func_8009FFE4
+  - - 38904
+    - asm
+    - func_8009FFF8
+  - - 38912
+    - asm
+    - func_800A0000
+  - - 39304
+    - asm
+    - func_800A0188
+  - - 39492
+    - asm
+    - func_800A0244
+  - - 39656
+    - asm
+    - func_800A02E8
+  - - 39800
+    - asm
+    - func_800A0378
+  - - 39980
+    - asm
+    - func_800A042C
+  - - 40292
+    - asm
+    - func_800A0564
+  - - 40544
+    - asm
+    - func_800A0660
+  - - 40912
+    - asm
+    - func_800A07D0
+  - - 41112
+    - asm
+    - func_800A0898
+  - - 41248
+    - asm
+    - func_800A0920
+  - - 41476
+    - asm
+    - func_800A0A04
+  - - 41536
+    - asm
+    - func_800A0A40
+  - - 41772
+    - asm
+    - func_800A0B2C
+  - - 41972
+    - asm
+    - func_800A0BF4
+  - - 42052
+    - asm
+    - func_800A0C44
+  - - 42088
+    - asm
+    - func_800A0C68
+  - - 42340
+    - asm
+    - func_800A0D64
+  - - 42600
+    - asm
+    - func_800A0E68
+  - - 42692
+    - asm
+    - func_800A0EC4
+  - - 44052
+    - asm
+    - func_800A1414
+  - - 44212
+    - asm
+    - func_800A14B4
+  - - 44508
+    - asm
+    - func_800A15DC
+  - - 44804
+    - asm
+    - func_800A1704
+  - - 44964
+    - asm
+    - func_800A17A4
+  - - 45432
+    - asm
+    - func_800A1978
+  - - 45616
+    - asm
+    - func_800A1A30
+  - - 45776
+    - asm
+    - func_800A1AD0
+  - - 45880
+    - asm
+    - func_800A1B38
+  - - 46052
+    - asm
+    - func_800A1BE4
+  - - 46260
+    - asm
+    - func_800A1CB4
+  - - 46468
+    - asm
+    - func_800A1D84
+  - - 47392
+    - asm
+    - func_800A2120
+  - - 47568
+    - asm
+    - func_800A21D0
+  - - 47820
+    - asm
+    - func_800A22CC
+  - - 48076
+    - asm
+    - func_800A23CC
+  - - 48132
+    - asm
+    - func_800A2404
+  - - 48188
+    - asm
+    - func_800A243C
+  - - 48396
+    - asm
+    - func_800A250C
+  - - 48480
+    - asm
+    - func_800A2560
+  - - 48536
+    - asm
+    - func_800A2598
+  - - 48744
+    - asm
+    - func_800A2668
+  - - 48880
+    - asm
+    - func_800A26F0
+  - - 49280
+    - asm
+    - func_800A2880
+  - - 49888
+    - asm
+    - func_800A2AE0
+  - - 50544
+    - asm
+    - func_800A2D70
+  - - 50928
+    - asm
+    - func_800A2EF0
+  - - 51296
+    - asm
+    - func_800A3060
+  - - 51432
+    - asm
+    - func_800A30E8
+  - - 51680
+    - asm
+    - func_800A31E0
+  - - 52792
+    - asm
+    - func_800A3638
+  - - 52872
+    - asm
+    - func_800A3688
+  - - 52924
+    - asm
+    - func_800A36BC
+  - - 52976
+    - asm
+    - func_800A36F0
+  - - 53684
+    - asm
+    - func_800A39B4
+  - - 53776
+    - asm
+    - func_800A3A10
+  - - 54124
+    - asm
+    - func_800A3B6C
+  - - 54428
+    - asm
+    - func_800A3C9C
+  - - 54776
+    - asm
+    - func_800A3DF8
+  - - 55080
+    - asm
+    - func_800A3F28
+  - - 55356
+    - asm
+    - func_800A403C
+  - - 55504
+    - asm
+    - func_800A40D0
+  - - 55648
+    - asm
+    - func_800A4160
+  - - 55768
+    - asm
+    - func_800A41D8
+  - - 55864
+    - asm
+    - func_800A4238
+  - - 55956
+    - asm
+    - func_800A4294
+  - - 56408
+    - asm
+    - func_800A4458
+  - - 56968
+    - asm
+    - func_800A4688
+  - - 57028
+    - asm
+    - func_800A46C4
+  - - 57088
+    - asm
+    - func_800A4700
+  - - 57156
+    - asm
+    - func_800A4744
+  - - 57260
+    - asm
+    - func_800A47AC
+  - - 57600
+    - asm
+    - func_800A4900
+  - - 57660
+    - asm
+    - func_800A493C
+  - - 58064
+    - asm
+    - func_800A4AD0
+  - - 58120
+    - asm
+    - func_800A4B08
+  - - 58156
+    - asm
+    - func_800A4B2C
+  - - 58292
+    - asm
+    - func_800A4BB4
+  - - 58376
+    - asm
+    - func_800A4C08
+  - - 58436
+    - asm
+    - func_800A4C44
+  - - 58480
+    - asm
+    - func_800A4C70
+  - - 58684
+    - asm
+    - func_800A4D3C
+  - - 59352
+    - asm
+    - func_800A4FD8
+  - - 59576
+    - asm
+    - func_800A50B8
+  - - 59680
+    - asm
+    - func_800A5120
+  - - 59748
+    - asm
+    - func_800A5164
+  - - 59972
+    - asm
+    - func_800A5244
+  - - 60100
+    - asm
+    - func_800A52C4
+  - - 60160
+    - asm
+    - func_800A5300
+  - - 60208
+    - asm
+    - func_800A5330
+  - - 61468
+    - asm
+    - func_800A581C
+  - - 61556
+    - asm
+    - func_800A5874
+  - - 61684
+    - asm
+    - func_800A58F4
+  - - 61868
+    - asm
+    - func_800A59AC
+  - - 61928
+    - asm
+    - func_800A59E8
+  - - 61976
+    - asm
+    - func_800A5A18
+  - - 62180
+    - asm
+    - func_800A5AE4
+  - - 62720
+    - asm
+    - func_800A5D00
+  - - 62944
+    - asm
+    - func_800A5DE0
+  - - 63060
+    - asm
+    - func_800A5E54
+  - - 63128
+    - asm
+    - func_800A5E98
+  - - 63360
+    - asm
+    - func_800A5F80
+  - - 63472
+    - asm
+    - func_800A5FF0
+  - - 63532
+    - asm
+    - func_800A602C
+  - - 63656
+    - asm
+    - func_800A60A8
+  - - 63708
+    - asm
+    - func_800A60DC
+  - - 64300
+    - asm
+    - func_800A632C
+  - - 64648
+    - asm
+    - func_800A6488
+  - - 64956
+    - asm
+    - func_800A65BC
+  - - 65648
+    - asm
+    - func_800A6870
+  - - 65700
+    - asm
+    - func_800A68A4
+  - - 66604
+    - asm
+    - func_800A6C2C
+  - - 66808
+    - asm
+    - func_800A6CF8
+  - - 66948
+    - asm
+    - func_800A6D84
+  - - 67092
+    - asm
+    - func_800A6E14
+  - - 69192
+    - asm
+    - func_800A7648
+  - - 69268
+    - asm
+    - func_800A7694
+  - - 69816
+    - asm
+    - func_800A78B8
+  - - 70464
+    - asm
+    - func_800A7B40
+  - - 70676
+    - asm
+    - func_800A7C14
+  - - 71772
+    - asm
+    - func_800A805C
+  - - 72352
+    - asm
+    - func_800A82A0
+  - - 72440
+    - asm
+    - func_800A82F8
+  - - 72544
+    - asm
+    - func_800A8360
+  - - 72696
+    - asm
+    - func_800A83F8
+  - - 72784
+    - asm
+    - func_800A8450
+  - - 72956
+    - asm
+    - func_800A84FC
+  - - 73024
+    - asm
+    - func_800A8540
+  - - 73128
+    - asm
+    - func_800A85A8
+  - - 73232
+    - asm
+    - func_800A8610
+  - - 73336
+    - asm
+    - func_800A8678
+  - - 73684
+    - asm
+    - func_800A87D4
+  - - 74280
+    - asm
+    - func_800A8A28
+  - - 74560
+    - asm
+    - func_800A8B40
+  - - 74704
+    - asm
+    - func_800A8BD0
+  - - 74848
+    - asm
+    - func_800A8C60
+  - - 74952
+    - asm
+    - func_800A8CC8
+  - - 75068
+    - asm
+    - func_800A8D3C
+  - - 75136
+    - asm
+    - func_800A8D80
+  - - 75240
+    - asm
+    - func_800A8DE8
+  - - 75448
+    - asm
+    - func_800A8EB8
+  - - 75608
+    - asm
+    - func_800A8F58
+  - - 76548
+    - asm
+    - func_800A9304
+  - - 76968
+    - asm
+    - func_800A94A8
+  - - 77148
+    - asm
+    - func_800A955C
+  - - 77328
+    - asm
+    - func_800A9610
+  - - 77856
+    - asm
+    - func_800A9820
+  - - 78252
+    - asm
+    - func_800A99AC
+  - - 78468
+    - asm
+    - func_800A9A84
+  - - 78660
+    - asm
+    - func_800A9B44
+  - - 78808
+    - asm
+    - func_800A9BD8
+  - - 79812
+    - asm
+    - func_800A9FC4
+  - - 80744
+    - asm
+    - func_800AA368
+  - - 81396
+    - asm
+    - func_800AA5F4
+  - - 81824
+    - asm
+    - func_800AA7A0
+  - - 82036
+    - asm
+    - func_800AA874
+  - - 82084
+    - asm
+    - func_800AA8A4
+  - - 82172
+    - asm
+    - func_800AA8FC
+  - - 82548
+    - asm
+    - func_800AAA74
+  - - 83080
+    - asm
+    - func_800AAC88
+  - - 83644
+    - asm
+    - func_800AAEBC
+  - - 84152
+    - asm
+    - func_800AB0B8
+  - - 85104
+    - asm
+    - func_800AB470
+  - - 85180
+    - asm
+    - func_800AB4BC
+  - - 85240
+    - asm
+    - func_800AB4F8
+  - - 85360
+    - asm
+    - func_800AB570
+  - - 85644
+    - asm
+    - func_800AB68C
+  - - 85856
+    - asm
+    - func_800AB760
+  - - 86068
+    - asm
+    - func_800AB834
+  - - 86288
+    - asm
+    - func_800AB910
+  - - 86948
+    - asm
+    - func_800ABBA4
+  - - 87008
+    - asm
+    - func_800ABBE0
+  - - 87080
+    - asm
+    - func_800ABC28
+  - - 87088
+    - asm
+    - func_800ABC30
+  - - 87264
+    - asm
+    - func_800ABCE0
+  - - 87900
+    - asm
+    - func_800ABF5C
+  - - 88092
+    - asm
+    - func_800AC01C
+  - - 88600
+    - asm
+    - func_800AC218
+  - - 89860
+    - asm
+    - func_800AC704
+  - - 89940
+    - asm
+    - func_800AC754
+  - - 90064
+    - asm
+    - func_800AC7D0
+  - - 90180
+    - asm
+    - func_800AC844
+  - - 90224
+    - asm
+    - func_800AC870
+  - - 90420
+    - asm
+    - func_800AC934
+  - - 90468
+    - asm
+    - func_800AC964
+  - - 92032
+    - asm
+    - func_800ACF80
+  - - 92148
+    - asm
+    - func_800ACFF4
+  - - 92228
+    - asm
+    - func_800AD044
+  - - 92276
+    - asm
+    - func_800AD074
+  - - 92328
+    - asm
+    - func_800AD0A8
+  - - 92780
+    - asm
+    - func_800AD26C
+  - - 92908
+    - asm
+    - func_800AD2EC
+  - - 93236
+    - asm
+    - func_800AD434
+  - - 93396
+    - asm
+    - func_800AD4D4
+  - - 93640
+    - asm
+    - func_800AD5C8
+  - - 93820
+    - asm
+    - func_800AD67C
+  - - 93852
+    - asm
+    - func_800AD69C
+  - - 93980
+    - asm
+    - func_800AD71C
+  - - 94216
+    - asm
+    - func_800AD808
+  - - 94424
+    - asm
+    - func_800AD8D8
+  - - 94512
+    - asm
+    - func_800AD930
+  - - 94636
+    - asm
+    - func_800AD9AC
+  - - 94668
+    - asm
+    - func_800AD9CC
+  - - 94796
+    - asm
+    - func_800ADA4C
+  - - 95092
+    - asm
+    - func_800ADB74
+  - - 95396
+    - asm
+    - func_800ADCA4
+  - - 95428
+    - asm
+    - func_800ADCC4
+  - - 95556
+    - asm
+    - func_800ADD44
+  - - 95852
+    - asm
+    - func_800ADE6C
+  - - 96156
+    - asm
+    - func_800ADF9C
+  - - 96188
+    - asm
+    - func_800ADFBC
+  - - 96276
+    - asm
+    - func_800AE014
+  - - 96364
+    - asm
+    - func_800AE06C
+  - - 96412
+    - asm
+    - func_800AE09C
+  - - 96520
+    - asm
+    - func_800AE108
+  - - 96760
+    - asm
+    - func_800AE1F8
+  - - 96864
+    - asm
+    - func_800AE260
+  - - 96980
+    - asm
+    - func_800AE2D4
+  - - 97100
+    - asm
+    - func_800AE34C
+  - - 97168
+    - asm
+    - func_800AE390
+  - - 97216
+    - asm
+    - func_800AE3C0
+  - - 97336
+    - asm
+    - func_800AE438
+  - - 97396
+    - asm
+    - func_800AE474
+  - - 97488
+    - asm
+    - func_800AE4D0
+  - - 97652
+    - asm
+    - func_800AE574
+  - - 97856
+    - asm
+    - func_800AE640
+  - - 97992
+    - asm
+    - func_800AE6C8
+  - - 98088
+    - asm
+    - func_800AE728
+  - - 98184
+    - asm
+    - func_800AE788
+  - - 98348
+    - asm
+    - func_800AE82C
+  - - 98756
+    - asm
+    - func_800AE9C4
+  - - 99676
+    - asm
+    - func_800AED5C
+  - - 100040
+    - asm
+    - func_800AEEC8
+  - - 100248
+    - asm
+    - func_800AEF98
+  - - 100372
+    - asm
+    - func_800AF014
+  - - 100600
+    - asm
+    - func_800AF0F8
+  - - 101044
+    - asm
+    - func_800AF2B4
+  - - 101280
+    - asm
+    - func_800AF3A0
+  - - 101536
+    - asm
+    - func_800AF4A0
+  - - 101712
+    - asm
+    - func_800AF550
+  - - 101884
+    - asm
+    - func_800AF5FC
+  - - 101996
+    - asm
+    - func_800AF66C
+  - - 102072
+    - asm
+    - func_800AF6B8
+  - - 102176
+    - asm
+    - func_800AF720
+  - - 102244
+    - asm
+    - func_800AF764
+  - - 102420
+    - asm
+    - func_800AF814
+  - - 102640
+    - asm
+    - func_800AF8F0
+  - - 102868
+    - asm
+    - func_800AF9D4
+  - - 103096
+    - asm
+    - func_800AFAB8
+  - - 103240
+    - asm
+    - func_800AFB48
+  - - 103508
+    - asm
+    - func_800AFC54
+  - - 103576
+    - asm
+    - func_800AFC98
+  - - 103836
+    - asm
+    - func_800AFD9C
+  - - 104344
+    - asm
+    - func_800AFF98
+  - - 104536
+    - asm
+    - func_800B0058
+  - - 104728
+    - asm
+    - func_800B0118
+  - - 104832
+    - asm
+    - func_800B0180
+  - - 104944
+    - asm
+    - func_800B01F0
+  - - 105040
+    - asm
+    - func_800B0250
+  - - 105368
+    - asm
+    - func_800B0398
+  - - 105488
+    - asm
+    - func_800B0410
+  - - 105624
+    - asm
+    - func_800B0498
+  - - 106228
+    - asm
+    - func_800B06F4
+  - - 106956
+    - asm
+    - func_800B09CC
+  - - 107052
+    - asm
+    - func_800B0A2C
+  - - 107092
+    - asm
+    - func_800B0A54
+  - - 107184
+    - asm
+    - func_800B0AB0
+  - - 107276
+    - asm
+    - func_800B0B0C
+  - - 107748
+    - asm
+    - func_800B0CE4
+  - - 107860
+    - asm
+    - func_800B0D54
+  - - 108068
+    - asm
+    - func_800B0E24
+  - - 108140
+    - asm
+    - func_800B0E6C
+  - - 108228
+    - asm
+    - func_800B0EC4
+  - - 108336
+    - asm
+    - func_800B0F30
+  - - 108444
+    - asm
+    - func_800B0F9C
+  - - 109452
+    - asm
+    - func_800B138C
+  - - 109548
+    - asm
+    - func_800B13EC
+  - - 109756
+    - asm
+    - func_800B14BC
+  - - 109828
+    - asm
+    - func_800B1504
+  - - 109916
+    - asm
+    - func_800B155C
+  - - 110012
+    - asm
+    - func_800B15BC
+  - - 110180
+    - asm
+    - func_800B1664
+  - - 110288
+    - asm
+    - func_800B16D0
+  - - 110376
+    - asm
+    - func_800B1728
+  - - 111220
+    - asm
+    - func_800B1A74
+  - - 112044
+    - asm
+    - func_800B1DAC
+  - - 112388
+    - asm
+    - func_800B1F04
+  - - 112776
+    - asm
+    - func_800B2088
+  - - 112844
+    - asm
+    - func_800B20CC
+  - - 112852
+    - asm
+    - func_800B20D4
+  - - 112900
+    - asm
+    - func_800B2104
+  - - 112984
+    - asm
+    - func_800B2158
+  - - 113048
+    - asm
+    - func_800B2198
+  - - 113112
+    - asm
+    - func_800B21D8
+  - - 113176
+    - asm
+    - func_800B2218
+  - - 113240
+    - asm
+    - func_800B2258
+  - - 113324
+    - asm
+    - func_800B22AC
+  - - 113388
+    - asm
+    - func_800B22EC
+  - - 113452
+    - asm
+    - func_800B232C
+  - - 113592
+    - asm
+    - func_800B23B8
+  - - 113656
+    - asm
+    - func_800B23F8
+  - - 113720
+    - asm
+    - func_800B2438
+  - - 113784
+    - asm
+    - func_800B2478
+  - - 113868
+    - asm
+    - func_800B24CC
+  - - 113932
+    - asm
+    - func_800B250C
+  - - 113996
+    - asm
+    - func_800B254C
+  - - 114060
+    - asm
+    - func_800B258C
+  - - 114112
+    - asm
+    - func_800B25C0
+  - - 115856
+    - asm
+    - func_800B2C90
+  - - 117356
+    - asm
+    - func_800B326C
+  - - 117540
+    - asm
+    - func_800B3324
+  - - 119528
+    - asm
+    - func_800B3AE8
+  - - 121376
+    - asm
+    - func_800B4220
+  - - 121784
+    - asm
+    - T_800B43B8
+- - 133316
+  - bin
+  - data
+- - 133316
