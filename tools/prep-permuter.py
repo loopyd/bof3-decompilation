@@ -2,6 +2,7 @@
 """Create a minimal decomp-permuter workspace for one BOF3 function."""
 
 import argparse
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -26,20 +27,33 @@ def preprocess(source: Path) -> str:
 
 
 def keep_function_body(source: str, function: str) -> str:
-    """Keep all declarations, but only the selected function body."""
+    """Prune context to declarations and types used by the selected function."""
     sys.path.insert(0, str(PERMUTER))
-    from strip_other_fns import strip_other_fns
+    from src import ast_util
 
-    return strip_other_fns(source, function)
+    try:
+        ast = ast_util.parse_c(source, from_import=True)
+        selected, _ = ast_util.extract_fn(ast, function)
+        ast_util.prune_ast(selected, ast)
+        return ast_util.to_c_raw(ast)
+    except Exception as exc:
+        from strip_other_fns import strip_other_fns
+
+        print(
+            f"warning: AST context pruning failed for {function}: {exc}; "
+            "keeping all declarations",
+            file=sys.stderr,
+        )
+        return strip_other_fns(source, function)
 
 
 def write_compile_script(directory: Path) -> None:
-    script = """#!/usr/bin/env bash
+    script = f"""#!/usr/bin/env bash
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
-INPUT="${1:?missing input C file}"
-[[ "${2:-}" == "-o" ]] || { echo "expected -o" >&2; exit 2; }
-OUTPUT="${3:?missing output object}"
+ROOT="{ROOT}"
+INPUT="${{1:?missing input C file}}"
+[[ "${{2:-}}" == "-o" ]] || {{ echo "expected -o" >&2; exit 2; }}
+OUTPUT="${{3:?missing output object}}"
 "$ROOT/bin/cc" -DHARNESS_TARGET_PSX=1 \
   -I "$ROOT/include" -I "$ROOT/toolchains/psyq/4.7/include" \
   -O2 -G0 -funsigned-char -msoft-float -gcoff \
@@ -53,9 +67,22 @@ OUTPUT="${3:?missing output object}"
 
 def assemble_target(directory: Path) -> None:
     source = (directory / "target.s").read_text(encoding="ascii")
-    source = "\n".join(
-        line for line in source.splitlines() if line.strip() != ".set gp=64"
-    )
+    prepared_lines: list[str] = []
+    for line in source.splitlines():
+        stripped = line.strip()
+        # Splat's macro include only supplies metadata directives. The target
+        # object needs ordinary assembler syntax for the function label.
+        if stripped in {'.include "macro.inc"', ".set gp=64"}:
+            continue
+        if stripped.startswith("nonmatching ") or stripped.startswith("endlabel "):
+            continue
+        match = re.fullmatch(r"glabel\s+(\S+)", stripped)
+        if match is not None:
+            name = match.group(1)
+            prepared_lines.extend((f".globl {name}", f"{name}:"))
+            continue
+        prepared_lines.append(line)
+    source = "\n".join(prepared_lines)
     prepared = directory / "target.permuter.s"
     prepared.write_text(source + "\n", encoding="ascii")
     subprocess.run(

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import fcntl
 import os
 from pathlib import Path
 import re
@@ -58,14 +59,33 @@ def build_parser() -> argparse.ArgumentParser:
         help="existing permuter directory; defaults under out/permuter/",
     )
     parser.add_argument("--prepare-only", action="store_true")
+    parser.add_argument(
+        "--prepared",
+        action="store_true",
+        help="run the existing workspace without regenerating base.c or target.o",
+    )
     parser.add_argument("--show-errors", action="store_true")
     parser.add_argument("--show-timings", action="store_true")
     parser.add_argument("--print-diffs", action="store_true")
     parser.add_argument("--abort-exceptions", action="store_true")
     parser.add_argument("--better-only", action="store_true")
-    parser.add_argument("--best-only", action="store_true")
+    parser.add_argument("--best-only", dest="best_only", action="store_true")
+    parser.add_argument(
+        "--all-improvements",
+        dest="best_only",
+        action="store_false",
+        help="report every candidate no worse than the base",
+    )
     parser.add_argument("--stop-on-zero", action="store_true")
-    parser.add_argument("--quiet", action="store_true")
+    parser.add_argument(
+        "--quiet", dest="quiet", action="store_true", help="hide iteration progress"
+    )
+    parser.add_argument(
+        "--verbose",
+        dest="quiet",
+        action="store_false",
+        help="show decomp-permuter iteration progress",
+    )
     parser.add_argument("--stack-diffs", action="store_true")
     parser.add_argument("--no-context-output", action="store_true")
     parser.add_argument("--no-ignore-branch-targets", action="store_true")
@@ -76,6 +96,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--seed")
     parser.add_argument("-j", "--jobs", type=int)
     parser.add_argument("--debug", action="store_true")
+    parser.set_defaults(quiet=True, best_only=True)
     return parser
 
 
@@ -195,30 +216,57 @@ def permuter_arguments(args: argparse.Namespace) -> list[str]:
 
 def run(args: argparse.Namespace) -> int:
     source, function, directory, permuter = validate(args)
-    ensure_target_assembly(source, function, directory)
-    prepare = subprocess.run(
-        [
+    if args.jobs is not None and args.jobs < 0:
+        raise ValueError("--jobs must not be negative")
+    if args.prepare_only and args.prepared:
+        raise ValueError("--prepare-only cannot be combined with --prepared")
+
+    directory.mkdir(parents=True, exist_ok=True)
+    lock_path = directory / ".coordinator.lock"
+    with lock_path.open("w", encoding="ascii") as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as exc:
+            raise RuntimeError(
+                f"another decomp-permuter coordinator is already running for "
+                f"{source.relative_to(ROOT)}"
+            ) from exc
+        lock.write(f"pid={os.getpid()} source={source.relative_to(ROOT)}\n")
+        lock.flush()
+
+        if not args.prepared:
+            ensure_target_assembly(source, function, directory)
+            prepare = subprocess.run(
+                [
+                    str(PROJECT_PYTHON),
+                    str(PREPARER),
+                    str(source),
+                    function,
+                    str(directory),
+                ],
+                cwd=ROOT,
+                check=False,
+            )
+            if prepare.returncode != 0:
+                return prepare.returncode
+        else:
+            required = ("base.c", "target.o", "compile.sh", "settings.toml")
+            missing = [name for name in required if not (directory / name).is_file()]
+            if missing:
+                raise FileNotFoundError(
+                    f"prepared workspace is missing: {', '.join(missing)}"
+                )
+        if args.prepare_only:
+            return 0
+        command = [
             str(PROJECT_PYTHON),
-            str(PREPARER),
-            str(source),
-            function,
+            "-u",
+            str(permuter),
+            *permuter_arguments(args),
             str(directory),
-        ],
-        cwd=ROOT,
-        check=False,
-    )
-    if prepare.returncode != 0:
-        return prepare.returncode
-    if args.prepare_only:
-        return 0
-    command = [
-        str(PROJECT_PYTHON),
-        str(permuter),
-        *permuter_arguments(args),
-        str(directory),
-    ]
-    result = subprocess.run(command, cwd=permuter.parent, check=False)
-    return result.returncode
+        ]
+        result = subprocess.run(command, cwd=permuter.parent, check=False)
+        return result.returncode
 
 
 def main(argv: list[str] | None = None) -> int:

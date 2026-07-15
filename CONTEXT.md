@@ -99,16 +99,28 @@ directly under their canonical executable or promoted EMI target.
 | PsyQ | Supplies the external headers and libraries expected by the game; its library routines are not lifted. |
 | asm-differ | Compares a compiled function with the original instructions during the normal edit/match loop. |
 | `emi-ex` and BOF3 disc tools | Extract disc content and unpack EMI containers before classification. |
-| m2c | Optionally creates an initial C reconstruction; its output is a hint, not authoritative source. |
+| m2c | Produces an initial C seed from Splat assembly via `bin/m2c`; its output is a starting point for refinement. |
 | Ghidra or Rizin | Optionally supports transient control-flow, data, reference, and symbol analysis. |
 | decomp-permuter | Optionally searches source variants after a function is already structurally close to matching. |
 | Ruff, pytest, and clang-format | Validate and format the Python tooling and authored C source. |
 
-The authoritative chain is original bytes, tracked layout, canonical Splat
-assembly, then compiled comparison. Decompiler output and automated source
-search assist that chain but do not override it. Tool versions and roles are
-recorded in `tools.lock.toml`; supported commands are defined by `just --list`
-and `bin/harness --help`.
+The workflow is:
+
+```text
+original bytes
+  -> Splat layout and assembly
+  -> m2c seed (automated)
+  -> refine into authored C
+  -> target compiler
+  -> bin/asmdiff (acceptance)
+```
+
+`bin/asmdiff` compares compiled bytes directly with the original image and is
+the function acceptance gate. m2c produces the initial C seed from Splat
+assembly; its output is refined, not trusted as-is. Analyzer output is
+separate discovery evidence and never enters the compile or matching path.
+Tool versions and roles are recorded in `tools.lock.toml`; supported commands
+are defined by `just --list` and `bin/harness --help`.
 
 ## Binaries
 

@@ -1,7 +1,7 @@
 # Reverse-engineering tools
 
-> Each tool has one role; original bytes and canonical Splat assembly remain
-> authoritative.
+> Each tool has one role. Original bytes and reviewed Splat layouts define the
+> target; `bin/asmdiff` decides whether compiled function bytes match.
 
 | Tool | Role | Required |
 | --- | --- | --- |
@@ -11,7 +11,7 @@
 | Rust `emi-ex` | Canonical BOF3 EMI extractor through `bin/emi-unpack` | Yes |
 | Rust `bof3-disk` | Canonical disc extraction/checksum tool used by setup | Yes |
 | asm-differ | Interactive instruction comparison | Yes |
-| m2c | Produce a matching-oriented C seed | Optional |
+| m2c | Produce initial C seed from Splat assembly | Yes |
 | Rizin/rz-ghidra | Fast local CLI analysis | Optional |
 | Ghidra | Optional transient deep analysis and manual review | Optional |
 | decomp-permuter | Search credible compiling source variants | Optional |

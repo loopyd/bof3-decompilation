@@ -26,9 +26,9 @@ path = "third_party/asm-differ"
 purpose = "Interactive assembly comparison"
 
 [tools.m2c]
-profile = "analysis"
+profile = "core"
 path = "third_party/m2c"
-purpose = "Matching-oriented initial C reconstruction"
+purpose = "Automated assembly-to-C seed generation"
 
 [tools.decomp-permuter]
 profile = "matching"

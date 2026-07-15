@@ -56,7 +56,7 @@ their prompt.
 | --- | --- | --- |
 | `$bof3-docs` | `.agents/skills/bof3-docs/SKILL.md` | Locating the smallest authoritative repository document or command reference. |
 | `$decomp-loop` | `.agents/skills/decomp-loop/SKILL.md` | Lifting, matching, or improving a PSX MIPS function in C89. Also read `references/matching-patterns.md` and `references/psx-mips-correctness.md`. |
-| `$psx-rizin` | `.agents/skills/psx-rizin/SKILL.md` | Querying Rizin/radare2 through stateless target-qualified analyzer evidence. Also read `references/commands.md`, `references/psx-inputs.md`, and `references/projects-and-replay.md`. |
+| `$psx-rizin` | `.agents/skills/psx-rizin/SKILL.md` | Querying target-qualified analyzer evidence with direct Rizin, direct radare2, or the stateless harness adapter. Select adapter engines with `HARNESS_ANALYZER_ENGINE=rizin|r2|auto`. Also read `references/commands.md`, `references/psx-inputs.md`, and `references/projects-and-replay.md`. |
 | `$bof3-specs` | `.agents/skills/bof3-specs/SKILL.md` | Interpreting payloads, EMI types, graphics, or cross-binary evidence. Also read `references/payload-map.md` and `references/evidence-promotion.md`. |
 
 The harness command surface (`bin/harness`) is the primary workflow entry point
@@ -69,6 +69,11 @@ bin/harness diff <source> --llm
 bin/asmdiff <source>
 bin/permute <source> -j <bounded-jobs>
 ```
+
+`bin/permute` is the sole permuter entry point: one function, one generated
+workspace, and one upstream decomp-permuter coordinator receiving the complete
+`-j` worker count. Different functions may run independently, but never start
+two coordinators for the same function workspace.
 
 ## Reverse-engineering invariants
 

@@ -41,6 +41,7 @@ Without `--run`, it only previews the selected work. Focused workflows are
 standalone entry points and do not require the command dispatcher:
 
 ```sh
+bin/m2c src/exe/logo/func_801ce758.c
 bin/asmdiff src/exe/logo/func_801ce758.c
 bin/permute src/exe/logo/func_801ce758.c --prepare-only
 bin/check-all --target exe/logo
