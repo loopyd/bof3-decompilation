@@ -63,6 +63,7 @@ struct GameWorkArea {
   u8  speed_70;       /* 0x70 */
   u8  pad_71[0x03];   /* 0x71-0x73 */
   u16 anim_state_74;  /* 0x74 */
+  u8  pad_76[0x22];   /* 0x76-0x97 (work area slot is 0x98 bytes) */
 };
 
 /* Scratchpad work pointer (PS1 hardware register at 0x1F800044) */
@@ -153,6 +154,7 @@ extern u32      D_80149318;
 extern s16      D_80149330;
 extern u8       D_80149333;
 extern u8       D_8014933E;
+extern struct GameWorkArea D_80146888[30];
 extern u8       D_8014933F;
 extern u32      D_801CD954;
 extern const s8 D_801C7B74[];
@@ -349,6 +351,10 @@ void func_8019faa0(u16 selection_seed, u32 context_a, u32 context_b,
                    u8 context_kind);
 void func_80198bc4(u32 arg0);
 void func_801a0048(s16 a, s16 b);
+/* @behavior Iterates active entity slots and dispatches per-type handlers.
+ * @source 0x801a0514
+ */
+void func_801a0514(void);
 void func_801b3ccc(u32 arg0);
 
 #endif
