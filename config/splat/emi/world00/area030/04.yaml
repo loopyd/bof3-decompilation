@@ -10,8 +10,540 @@ options:
   src_path: src/emi/world00/area030/04
   ld_script_path: out/splat/emi/world00/area030/04/linker.ld
   symbol_addrs_path:
-    - config/symbols/psyq.txt
-    - config/symbols/shared.txt
+  - config/symbols/psyq.txt
+  - config/symbols/shared.txt
 segments:
-  - [0x0, bin]
-  - [0x12615]
+- name: main
+  type: code
+  start: 0
+  vram: 2149387264
+  subsegments:
+  - - 0
+    - asm
+    - T_801D0C00
+  - - 1472
+    - asm
+    - func_801D11C0
+  - - 2460
+    - asm
+    - func_801D159C
+  - - 2884
+    - asm
+    - func_801D1744
+  - - 3096
+    - asm
+    - func_801D1818
+  - - 3276
+    - asm
+    - func_801D18CC
+  - - 3420
+    - asm
+    - func_801D195C
+  - - 3976
+    - asm
+    - func_801D1B88
+  - - 5172
+    - asm
+    - func_801D2034
+  - - 6124
+    - asm
+    - func_801D23EC
+  - - 7904
+    - asm
+    - func_801D2AE0
+  - - 8244
+    - asm
+    - func_801D2C34
+  - - 9796
+    - asm
+    - func_801D3244
+  - - 11576
+    - asm
+    - func_801D3938
+  - - 20296
+    - asm
+    - func_801D5B48
+  - - 20336
+    - asm
+    - func_801D5B70
+  - - 20552
+    - asm
+    - func_801D5C48
+  - - 20620
+    - asm
+    - func_801D5C8C
+  - - 20872
+    - asm
+    - func_801D5D88
+  - - 21504
+    - asm
+    - func_801D6000
+  - - 21572
+    - asm
+    - func_801D6044
+  - - 21800
+    - asm
+    - func_801D6128
+  - - 22548
+    - asm
+    - func_801D6414
+  - - 22760
+    - asm
+    - func_801D64E8
+  - - 22868
+    - asm
+    - func_801D6554
+  - - 22936
+    - asm
+    - func_801D6598
+  - - 23172
+    - asm
+    - func_801D6684
+  - - 24040
+    - asm
+    - func_801D69E8
+  - - 24108
+    - asm
+    - func_801D6A2C
+  - - 24360
+    - asm
+    - func_801D6B28
+  - - 24752
+    - asm
+    - func_801D6CB0
+  - - 25284
+    - asm
+    - func_801D6EC4
+  - - 25352
+    - asm
+    - func_801D6F08
+  - - 25396
+    - asm
+    - func_801D6F34
+  - - 26340
+    - asm
+    - func_801D72E4
+  - - 27524
+    - asm
+    - func_801D7784
+  - - 28060
+    - asm
+    - func_801D799C
+  - - 28516
+    - asm
+    - func_801D7B64
+  - - 28688
+    - asm
+    - func_801D7C10
+  - - 29032
+    - asm
+    - func_801D7D68
+  - - 29360
+    - asm
+    - func_801D7EB0
+  - - 30280
+    - asm
+    - func_801D8248
+  - - 30564
+    - asm
+    - func_801D8364
+  - - 31968
+    - asm
+    - func_801D88E0
+  - - 33136
+    - asm
+    - func_801D8D70
+  - - 34044
+    - asm
+    - func_801D90FC
+  - - 34636
+    - asm
+    - func_801D934C
+  - - 35124
+    - asm
+    - func_801D9534
+  - - 35268
+    - asm
+    - func_801D95C4
+  - - 35648
+    - asm
+    - func_801D9740
+  - - 36628
+    - asm
+    - func_801D9B14
+  - - 36696
+    - asm
+    - func_801D9B58
+  - - 36764
+    - asm
+    - func_801D9B9C
+  - - 36940
+    - asm
+    - func_801D9C4C
+  - - 37020
+    - asm
+    - func_801D9C9C
+  - - 37108
+    - asm
+    - func_801D9CF4
+  - - 37176
+    - asm
+    - func_801D9D38
+  - - 37384
+    - asm
+    - func_801D9E08
+  - - 37440
+    - asm
+    - func_801D9E40
+  - - 37864
+    - asm
+    - func_801D9FE8
+  - - 37976
+    - asm
+    - func_801DA058
+  - - 38248
+    - asm
+    - func_801DA168
+  - - 38560
+    - asm
+    - func_801DA2A0
+  - - 38900
+    - asm
+    - func_801DA3F4
+  - - 39064
+    - asm
+    - func_801DA498
+  - - 39176
+    - asm
+    - func_801DA508
+  - - 39348
+    - asm
+    - func_801DA5B4
+  - - 39416
+    - asm
+    - func_801DA5F8
+  - - 39480
+    - asm
+    - func_801DA638
+  - - 39700
+    - asm
+    - func_801DA714
+  - - 39820
+    - asm
+    - func_801DA78C
+  - - 40168
+    - asm
+    - func_801DA8E8
+  - - 40236
+    - asm
+    - func_801DA92C
+  - - 40412
+    - asm
+    - func_801DA9DC
+  - - 41532
+    - asm
+    - func_801DAE3C
+  - - 41604
+    - asm
+    - func_801DAE84
+  - - 41684
+    - asm
+    - func_801DAED4
+  - - 41752
+    - asm
+    - func_801DAF18
+  - - 41916
+    - asm
+    - func_801DAFBC
+  - - 42060
+    - asm
+    - func_801DB04C
+  - - 42156
+    - asm
+    - func_801DB0AC
+  - - 42304
+    - asm
+    - func_801DB140
+  - - 43348
+    - asm
+    - func_801DB554
+  - - 43552
+    - asm
+    - func_801DB620
+  - - 43832
+    - asm
+    - func_801DB738
+  - - 44040
+    - asm
+    - func_801DB808
+  - - 44272
+    - asm
+    - func_801DB8F0
+  - - 44692
+    - asm
+    - func_801DBA94
+  - - 44972
+    - asm
+    - func_801DBBAC
+  - - 45420
+    - asm
+    - func_801DBD6C
+  - - 45788
+    - asm
+    - func_801DBEDC
+  - - 46024
+    - asm
+    - func_801DBFC8
+  - - 46284
+    - asm
+    - func_801DC0CC
+  - - 46664
+    - asm
+    - func_801DC248
+  - - 47220
+    - asm
+    - func_801DC474
+  - - 47288
+    - asm
+    - func_801DC4B8
+  - - 47380
+    - asm
+    - func_801DC514
+  - - 47464
+    - asm
+    - func_801DC568
+  - - 47504
+    - asm
+    - func_801DC590
+  - - 47572
+    - asm
+    - func_801DC5D4
+  - - 47692
+    - asm
+    - func_801DC64C
+  - - 47760
+    - asm
+    - func_801DC690
+  - - 47880
+    - asm
+    - func_801DC708
+  - - 47948
+    - asm
+    - func_801DC74C
+  - - 48108
+    - asm
+    - func_801DC7EC
+  - - 48184
+    - asm
+    - func_801DC838
+  - - 48264
+    - asm
+    - func_801DC888
+  - - 48388
+    - asm
+    - func_801DC904
+  - - 48444
+    - asm
+    - func_801DC93C
+  - - 49268
+    - asm
+    - func_801DCC74
+  - - 49328
+    - asm
+    - func_801DCCB0
+  - - 49396
+    - asm
+    - func_801DCCF4
+  - - 49592
+    - asm
+    - func_801DCDB8
+  - - 50128
+    - asm
+    - func_801DCFD0
+  - - 51812
+    - asm
+    - func_801DD664
+  - - 52172
+    - asm
+    - func_801DD7CC
+  - - 52492
+    - asm
+    - func_801DD90C
+  - - 52572
+    - asm
+    - func_801DD95C
+  - - 52640
+    - asm
+    - func_801DD9A0
+  - - 53108
+    - asm
+    - func_801DDB74
+  - - 53192
+    - asm
+    - func_801DDBC8
+  - - 53260
+    - asm
+    - func_801DDC0C
+  - - 53332
+    - asm
+    - func_801DDC54
+  - - 53432
+    - asm
+    - func_801DDCB8
+  - - 53496
+    - asm
+    - func_801DDCF8
+  - - 53580
+    - asm
+    - func_801DDD4C
+  - - 53692
+    - asm
+    - func_801DDDBC
+  - - 53804
+    - asm
+    - func_801DDE2C
+  - - 53908
+    - asm
+    - func_801DDE94
+  - - 53996
+    - asm
+    - func_801DDEEC
+  - - 54140
+    - asm
+    - func_801DDF7C
+  - - 54228
+    - asm
+    - func_801DDFD4
+  - - 54296
+    - asm
+    - func_801DE018
+  - - 54720
+    - asm
+    - func_801DE1C0
+  - - 55468
+    - asm
+    - func_801DE4AC
+  - - 55788
+    - asm
+    - func_801DE5EC
+  - - 56364
+    - asm
+    - func_801DE82C
+  - - 57284
+    - asm
+    - func_801DEBC4
+  - - 57564
+    - asm
+    - func_801DECDC
+  - - 59188
+    - asm
+    - func_801DF334
+  - - 62376
+    - asm
+    - func_801DFFA8
+  - - 62444
+    - asm
+    - func_801DFFEC
+  - - 62532
+    - asm
+    - func_801E0044
+  - - 62688
+    - asm
+    - func_801E00E0
+  - - 62756
+    - asm
+    - func_801E0124
+  - - 62940
+    - asm
+    - func_801E01DC
+  - - 63036
+    - asm
+    - func_801E023C
+  - - 63084
+    - asm
+    - func_801E026C
+  - - 63188
+    - asm
+    - func_801E02D4
+  - - 63380
+    - asm
+    - func_801E0394
+  - - 63480
+    - asm
+    - func_801E03F8
+  - - 64128
+    - asm
+    - func_801E0680
+  - - 64368
+    - asm
+    - func_801E0770
+  - - 64588
+    - asm
+    - func_801E084C
+  - - 64948
+    - asm
+    - func_801E09B4
+  - - 65072
+    - asm
+    - func_801E0A30
+  - - 65212
+    - asm
+    - func_801E0ABC
+  - - 65388
+    - asm
+    - func_801E0B6C
+  - - 65488
+    - asm
+    - func_801E0BD0
+  - - 65568
+    - asm
+    - func_801E0C20
+  - - 65600
+    - asm
+    - func_801E0C40
+  - - 65664
+    - asm
+    - func_801E0C80
+  - - 65996
+    - asm
+    - func_801E0DCC
+  - - 66256
+    - asm
+    - func_801E0ED0
+  - - 66380
+    - asm
+    - func_801E0F4C
+  - - 66564
+    - asm
+    - func_801E1004
+  - - 67360
+    - asm
+    - func_801E1320
+  - - 68140
+    - asm
+    - func_801E162C
+  - - 68316
+    - asm
+    - func_801E16DC
+  - - 68440
+    - asm
+    - func_801E1758
+  - - 69068
+    - asm
+    - func_801E19CC
+  - - 69648
+    - asm
+    - func_801E1C10
+  - - 69756
+    - asm
+    - func_801E1C7C
+  - - 69844
+    - asm
+    - T_801E1CD4
+  - - 74820
+    - asm
+    - T_801E3044
+- - 75284
+  - bin
+  - data
+- - 75285

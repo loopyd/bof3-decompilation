@@ -10,8 +10,93 @@ options:
   src_path: src/emi/world00/area024/14
   ld_script_path: out/splat/emi/world00/area024/14/linker.ld
   symbol_addrs_path:
-    - config/symbols/psyq.txt
-    - config/symbols/shared.txt
+  - config/symbols/psyq.txt
+  - config/symbols/shared.txt
 segments:
-  - [0x0, bin]
-  - [0x2F04]
+- name: main
+  type: code
+  start: 0
+  vram: 2149526528
+  subsegments:
+  - - 0
+    - asm
+    - func_801F2C00
+  - - 88
+    - asm
+    - func_801F2C58
+  - - 176
+    - asm
+    - func_801F2CB0
+  - - 348
+    - asm
+    - func_801F2D5C
+  - - 436
+    - asm
+    - func_801F2DB4
+  - - 472
+    - asm
+    - func_801F2DD8
+  - - 504
+    - asm
+    - func_801F2DF8
+  - - 980
+    - asm
+    - func_801F2FD4
+  - - 1152
+    - asm
+    - func_801F3080
+  - - 1260
+    - asm
+    - func_801F30EC
+  - - 1460
+    - asm
+    - func_801F31B4
+  - - 1616
+    - asm
+    - func_801F3250
+  - - 1748
+    - asm
+    - func_801F32D4
+  - - 1780
+    - asm
+    - func_801F32F4
+  - - 1812
+    - asm
+    - func_801F3314
+  - - 2604
+    - asm
+    - func_801F362C
+  - - 2824
+    - asm
+    - func_801F3708
+  - - 3396
+    - asm
+    - func_801F3944
+  - - 4068
+    - asm
+    - func_801F3BE4
+  - - 4364
+    - asm
+    - func_801F3D0C
+  - - 4444
+    - asm
+    - func_801F3D5C
+  - - 4680
+    - asm
+    - func_801F3E48
+  - - 5464
+    - asm
+    - func_801F4158
+  - - 5592
+    - asm
+    - func_801F41D8
+  - - 5612
+    - asm
+    - func_801F41EC
+  - - 5632
+    - asm
+    - T_801F4200
+- - 12036
+  - bin
+  - data
+- - 12036
