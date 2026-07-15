@@ -5,6 +5,220 @@ ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
 if [ -n "${PSX_CC_DRIVER:-}" ]; then
     exec "${PSX_CC_DRIVER}" "$@"
 fi
-PYTHONPATH="${ROOT}/tools/python"
-export PYTHONPATH
-exec "${ROOT}/.venv/bin/python" -m harness.toolchain.cc "$@"
+
+gcc=${PSX_GCC:-${ROOT}/toolchains/gcc-2.7.2-psx/gcc}
+assembler=${PSX_AS:-${ROOT}/bin/as}
+maspsx=${PSX_MASPSX:-${ROOT}/third_party/maspsx/maspsx.py}
+maspsx_python=${MASPSX_PYTHON:-python3}
+
+setup_gcc_environment() {
+    gcc_path=$gcc
+    case "$gcc_path" in
+        */*) ;;
+        *) gcc_path=$(command -v "$gcc_path") ;;
+    esac
+    gcc_dir=$(CDPATH='' cd -- "$(dirname "$gcc_path")" && pwd)
+    toolchain_bin=${ROOT}/toolchains/psn00b_toolchain/bin
+    PATH=${gcc_dir}:${toolchain_bin}:${PATH-}
+    GCC_EXEC_PREFIX=${gcc_dir}/
+    COMPILER_PATH=${gcc_dir}
+    export PATH GCC_EXEC_PREFIX COMPILER_PATH
+}
+
+run_gcc_direct() {
+    setup_gcc_environment
+    exec "$gcc" "$@"
+}
+
+run_gcc_compile() {
+    compile_source=$1
+    compile_output=$2
+    shift 2
+
+    aspsx_version=${ASPSX_VERSION-2.56}
+    first_arg=1
+    skip_output=0
+    for arg in "$@"; do
+        if [ "$first_arg" -eq 1 ]; then
+            set --
+            first_arg=0
+        fi
+        if [ "$skip_output" -eq 1 ]; then
+            skip_output=0
+            continue
+        fi
+        case "$arg" in
+            -c)
+                ;;
+            -o)
+                skip_output=1
+                ;;
+            -o?*)
+                ;;
+            -Wa,*)
+                wa=${arg#-Wa,}
+                kept_wa=
+                while [ -n "$wa" ]; do
+                    case "$wa" in
+                        *,*)
+                            wa_arg=${wa%%,*}
+                            wa=${wa#*,}
+                            ;;
+                        *)
+                            wa_arg=$wa
+                            wa=
+                            ;;
+                    esac
+                    case "$wa_arg" in
+                        --aspsx-version=*)
+                            aspsx_version=${wa_arg#--aspsx-version=}
+                            ;;
+                        *)
+                            if [ -n "$kept_wa" ]; then
+                                kept_wa=${kept_wa},${wa_arg}
+                            else
+                                kept_wa=$wa_arg
+                            fi
+                            ;;
+                    esac
+                done
+                if [ -n "$kept_wa" ]; then
+                    set -- "$@" "-Wa,$kept_wa"
+                fi
+                ;;
+            *)
+                set -- "$@" "$arg"
+                ;;
+        esac
+    done
+
+    setup_gcc_environment
+    "$gcc" "$@" -S -o "${compile_output}.s"
+}
+
+run_assembler() {
+    assemble_source=$1
+    assemble_output=$2
+    shift 2
+
+    first_arg=1
+    for arg in "$@"; do
+        if [ "$first_arg" -eq 1 ]; then
+            set --
+            first_arg=0
+        fi
+        case "$arg" in
+            -Wa,*)
+                wa=${arg#-Wa,}
+                while [ -n "$wa" ]; do
+                    case "$wa" in
+                        *,*)
+                            wa_arg=${wa%%,*}
+                            wa=${wa#*,}
+                            ;;
+                        *)
+                            wa_arg=$wa
+                            wa=
+                            ;;
+                    esac
+                    case "$wa_arg" in
+                        --aspsx-version=*)
+                            ;;
+                        *)
+                            set -- "$@" "$wa_arg"
+                            ;;
+                    esac
+                done
+                ;;
+        esac
+    done
+
+    "$assembler" "$@" -o "$assemble_output" "$assemble_source"
+}
+
+run_c_compile() {
+    compile_source=$1
+    compile_output=$2
+    shift 2
+
+    output_dir=$(dirname "$compile_output")
+    mkdir -p "$output_dir"
+    compiler_asm=${compile_output}.s
+
+    run_gcc_compile "$compile_source" "$compile_output" "$@"
+
+    translated_asm=
+    trap 'status=$?; cleanup; exit "$status"' 0 1 2 3 15
+    translated_asm=$(mktemp "${compile_output}.translated.XXXXXX")
+    "$maspsx_python" "$maspsx" \
+        "--aspsx-version=${aspsx_version}" <"$compiler_asm" \
+        >"$translated_asm"
+    run_assembler "$translated_asm" "$compile_output" "$@"
+}
+
+cleanup() {
+    if [ -n "$translated_asm" ]; then
+        rm -f "$translated_asm"
+    fi
+}
+
+for arg in "$@"; do
+    case "$arg" in
+        -E|-M|-MM|-S)
+            run_gcc_direct "$@"
+            ;;
+    esac
+done
+
+has_compile=0
+source_count=0
+source=
+output=
+has_output=0
+expect_output=0
+for arg in "$@"; do
+    if [ "$expect_output" -eq 1 ]; then
+        output=$arg
+        has_output=1
+        expect_output=0
+        continue
+    fi
+    case "$arg" in
+        -c)
+            has_compile=1
+            ;;
+        -o)
+            expect_output=1
+            ;;
+        -o?*)
+            output=${arg#-o}
+            has_output=1
+            ;;
+        *.c|*.s|*.S)
+            source=$arg
+            source_count=$((source_count + 1))
+            ;;
+    esac
+done
+
+if [ "$has_compile" -eq 0 ]; then
+    printf '%s\n' \
+        'cc: link mode is unsupported; compile with -c and link with bin/ld' \
+        >&2
+    exit 2
+fi
+if [ "$source_count" -ne 1 ] || [ "$has_output" -eq 0 ]; then
+    printf '%s\n' \
+        'cc: -c requires exactly one C/assembly source and one -o output' \
+        >&2
+    exit 2
+fi
+
+case "$source" in
+    *.s|*.S)
+        run_assembler "$source" "$output" "$@"
+        ;;
+    *.c)
+        run_c_compile "$source" "$output" "$@"
+        ;;
+esac

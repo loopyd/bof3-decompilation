@@ -20,6 +20,7 @@ from harness.match.asm_diff import (
     object_path_for_source,
     overlay_load_address_for_source,
     parse_source_address,
+    run_build_object,
 )
 from harness.match._asm_disasm import extract_instructions
 from harness.match._asm_link import link_object_at_address
@@ -279,99 +280,65 @@ def test_extract_original_bytes_reads_psx_exe_load_address(tmp_path: Path) -> No
     )
 
 
-def test_object_path_matches_cmake_object_layout(tmp_path: Path) -> None:
+def test_object_path_matches_make_object_layout(tmp_path: Path) -> None:
     layout = repo_layout(tmp_path)
     source = layout.root / "src" / "exe" / "slus_004_22" / "func_80162178.c"
     source.parent.mkdir(parents=True)
     source.write_text("void func_80162178(void) {}\n", encoding="utf-8")
-    build_dir = layout.build_dir / "default"
-    build_dir.mkdir(parents=True)
-    (build_dir / "compile_commands.json").write_text(
-        json.dumps(
-            [
-                {
-                    "directory": str(build_dir),
-                    "file": str(source),
-                    "output": "CMakeFiles/slus_004_22_core.dir/src/exe/slus_004_22/func_80162178.c.obj",
-                }
-            ]
-        ),
-        encoding="utf-8",
-    )
 
     assert object_path_for_source(layout, source) == (
-        build_dir
-        / "CMakeFiles"
-        / "slus_004_22_core.dir"
-        / "src"
-        / "exe"
-        / "slus_004_22"
-        / "func_80162178.c.obj"
+        layout.build_dir / "src" / "exe" / "slus_004_22" / "func_80162178.o"
     )
+    assert object_path_for_source(
+        layout, Path("src/exe/slus_004_22/func_80162178.c")
+    ) == object_path_for_source(layout, source)
     assert (
         build_target_for_source(layout, source)
-        == "src/exe/slus_004_22/func_80162178.obj"
+        == "build/src/exe/slus_004_22/func_80162178.o"
     )
 
 
-def test_overlay_source_resolves_through_artifact_hint(tmp_path: Path) -> None:
+def test_object_path_rejects_source_outside_repository(tmp_path: Path) -> None:
+    layout = repo_layout(tmp_path / "repo")
+    outside_source = tmp_path / "outside.c"
+
+    with pytest.raises(ValueError, match="outside repository"):
+        object_path_for_source(layout, outside_source)
+
+
+def test_run_build_object_invokes_make_for_canonical_object(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     layout = repo_layout(tmp_path)
-    source = layout.root / "src" / "emi" / "etc" / "game" / "00" / "func_80195800.c"
+    source = layout.root / "src" / "exe" / "slus_004_22" / "func_80162178.c"
     source.parent.mkdir(parents=True)
-    source.write_text("void func_80195800(void) {}\n", encoding="utf-8")
-    binary = layout.root / "out" / "extracted" / "BIN" / "ETC" / "GAME" / "0.bin"
-    binary.parent.mkdir(parents=True)
-    binary.write_bytes(b"overlay")
-    build_dir = layout.build_dir / "default"
-    build_dir.mkdir(parents=True)
-    (build_dir / "compile_commands.json").write_text(
-        json.dumps(
-            [
-                {
-                    "directory": str(build_dir),
-                    "file": str(source),
-                    "output": "CMakeFiles/harness_game_00.dir/src/emi/etc/game/00/func_80195800.c.obj",
-                }
-            ]
-        ),
-        encoding="utf-8",
-    )
-    manifest = build_dir / "artifacts" / "metadata" / "artifacts.json"
-    manifest.parent.mkdir(parents=True)
-    manifest.write_text(
-        json.dumps(
-            {
-                "artifacts": [
-                    {
-                        "target": "harness_game_00",
-                        "source_hint": "out/extracted/BIN/ETC/GAME.EMI#0",
-                    }
-                ]
-            }
-        ),
-        encoding="utf-8",
-    )
-    catalog = layout.root / "out" / "catalog" / "emi.json"
-    catalog.parent.mkdir(parents=True)
-    catalog.write_text(
-        json.dumps(
-            {
-                "entries": [
-                    {
-                        "id": "ETC/GAME#0",
-                        "archive_id": "ETC/GAME",
-                        "slot": 0,
-                        "payload_path": str(binary),
-                        "load_address": 0x80195800,
-                    }
-                ]
-            }
-        ),
-        encoding="utf-8",
-    )
+    source.write_text("void func_80162178(void) {}\n", encoding="utf-8")
+    (layout.root / "Makefile").write_text("all:\n", encoding="utf-8")
+    object_path = object_path_for_source(layout, source)
+    calls: list[tuple[list[str], Path | None]] = []
 
-    assert default_binary_for_source(layout, source) == binary
-    assert overlay_load_address_for_source(layout, source) == 0x80195800
+    def fake_run(command: list[str], **kwargs: object) -> subprocess.CompletedProcess:
+        calls.append((command, kwargs.get("cwd")))
+        object_path.parent.mkdir(parents=True, exist_ok=True)
+        object_path.write_bytes(b"object")
+        return subprocess.CompletedProcess(command, 0, "built\n", "warning\n")
+
+    monkeypatch.setattr("harness.match.asm_diff.run_command", fake_run)
+    build_log = layout.out_dir / "matching" / "build.log"
+
+    run_build_object(layout, source, build_log)
+
+    assert calls == [
+        (
+            [
+                "make",
+                "--no-print-directory",
+                "build/src/exe/slus_004_22/func_80162178.o",
+            ],
+            layout.root,
+        )
+    ]
+    assert build_log.read_text(encoding="utf-8") == "built\n\nwarning\n"
 
 
 def test_overlay_manifest_uses_catalog_payload_base(
@@ -400,6 +367,7 @@ def test_overlay_manifest_uses_catalog_payload_base(
     )
     manifest = SimpleNamespace(
         source_dir="src/emi/etc/game/00",
+        binary="out/binaries/emi/etc/game/00.bin",
         disc_id="ETC/GAME#0",
         load_address=0x8019611C,
     )
@@ -408,6 +376,10 @@ def test_overlay_manifest_uses_catalog_payload_base(
         lambda _root: {"emi/etc/game/00": manifest},
     )
 
+    assert (
+        default_binary_for_source(layout, source)
+        == layout.root / "out/binaries/emi/etc/game/00.bin"
+    )
     assert overlay_load_address_for_source(layout, source) == 0x80195800
 
 

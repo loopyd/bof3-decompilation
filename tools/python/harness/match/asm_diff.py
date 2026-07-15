@@ -190,19 +190,20 @@ def build_result_payload(
 def run_build_object(
     layout: RepoLayout, source_path: Path, build_log_path: Path
 ) -> None:
-    build_dir = layout.build_dir / "default"
-    if (
-        not (build_dir / "build.ninja").is_file()
-        and not (build_dir / "Makefile").is_file()
-    ):
-        raise FileNotFoundError(
-            f"no build.ninja or Makefile in {build_dir}; run `just build` first"
-        )
     target = build_target_for_source(layout, source_path)
-    result = run_command(
-        ["cmake", "--build", build_dir.as_posix(), "--target", target],
-        cwd=layout.root,
-    )
+    object_path = object_path_for_source(layout, source_path)
+    makefile_path = layout.root / "Makefile"
+    if not makefile_path.is_file():
+        raise FileNotFoundError(
+            f"repository Makefile not found at {makefile_path}; cannot build {target}"
+        )
+    if shutil.which("make") is None:
+        raise FileNotFoundError(
+            f"make executable not found in PATH; cannot build {target}"
+        )
+
+    build_log_path.parent.mkdir(parents=True, exist_ok=True)
+    result = run_command(["make", "--no-print-directory", target], cwd=layout.root)
     log_text = result.stdout
     if result.stderr:
         if log_text:
@@ -211,7 +212,6 @@ def run_build_object(
     build_log_path.write_text(log_text, encoding="utf-8")
     if result.returncode != 0:
         raise RuntimeError(f"object build failed for {target}; see {build_log_path}")
-    object_path = object_path_for_source(layout, source_path)
     if (
         not object_path.is_file()
         or object_path.stat().st_mtime < source_path.stat().st_mtime

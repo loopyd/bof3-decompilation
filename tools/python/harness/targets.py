@@ -17,10 +17,6 @@ from .domain.manifests import (
     load_target_manifests,
 )
 from .domain.registry import ResolvedTarget
-from .registry.build import (
-    generate_build_manifest,
-    generate_target_manifest,
-)
 
 __all__ = [
     "TargetId",
@@ -32,8 +28,6 @@ __all__ = [
     "load_profiles",
     "ResolvedTarget",
     "promote_entry",
-    "generate_build_manifest",
-    "generate_target_manifest",
     "write_catalog",
     "materialize_promoted_emi_targets",
 ]

@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-import json
 import re
-import shlex
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 from ..io import read_json, RepoLayout, repo_layout
 
@@ -15,7 +12,6 @@ PSX_EXE_MAGIC = b"PS-X EXE"
 PSX_EXE_HEADER_SIZE = 0x800
 SOURCE_ADDRESS_RE = re.compile(r"@source\s+(0x[0-9a-fA-F]+|[0-9a-fA-F]{8})")
 FUNC_NAME_RE = re.compile(r"func_([0-9a-fA-F]{8})")
-CMAKE_TARGET_RE = re.compile(r"(?:^|/)CMakeFiles/(?P<target>[^/]+)\.dir/")
 
 
 @dataclass(frozen=True)
@@ -174,9 +170,25 @@ def source_function_name(source_path: Path, address: int) -> str:
     return f"func_{address:08x}"
 
 
+def _source_relative_path(layout: RepoLayout, source_path: Path) -> Path:
+    resolved_root = layout.root.expanduser().resolve()
+    expanded_source = source_path.expanduser()
+    resolved_source = (
+        expanded_source.resolve()
+        if expanded_source.is_absolute()
+        else (resolved_root / expanded_source).resolve()
+    )
+    try:
+        return resolved_source.relative_to(resolved_root)
+    except ValueError as exc:
+        raise ValueError(
+            f"source path {source_path} is outside repository {resolved_root}"
+        ) from exc
+
+
 def object_path_for_source(layout: RepoLayout, source_path: Path) -> Path:
-    command = compile_command_for_source(layout, source_path)
-    return Path(command["directory"]) / command["output"]
+    source_rel = _source_relative_path(layout, source_path)
+    return layout.build_dir / source_rel.with_suffix(".o")
 
 
 def compiler_asm_path_for_object(object_path: Path) -> Path:
@@ -184,43 +196,8 @@ def compiler_asm_path_for_object(object_path: Path) -> Path:
 
 
 def build_target_for_source(layout: RepoLayout, source_path: Path) -> str:
-    source_rel = source_path.expanduser().resolve().relative_to(layout.root.resolve())
-    return source_rel.with_suffix(".obj").as_posix()
-
-
-def compile_command_for_source(layout: RepoLayout, source_path: Path) -> dict[str, str]:
-    commands_path = layout.build_dir / "default" / "compile_commands.json"
-    if not commands_path.is_file():
-        raise FileNotFoundError(f"missing {commands_path}; run `just build` first")
-    payload: Any = json.loads(commands_path.read_text(encoding="utf-8"))
-    if not isinstance(payload, list):
-        raise ValueError(f"expected a JSON array in {commands_path}")
-    resolved_source = source_path.expanduser().resolve()
-    matches = [
-        row
-        for row in payload
-        if isinstance(row, dict)
-        and Path(str(row.get("file", ""))).resolve() == resolved_source
-        and isinstance(row.get("directory"), str)
-        and isinstance(row.get("output"), str)
-    ]
-    if len(matches) != 1:
-        raise ValueError(
-            f"expected one CMake compile command for {source_path}, found {len(matches)}"
-        )
-    result = {
-        "directory": str(matches[0]["directory"]),
-        "output": str(matches[0]["output"]),
-    }
-    command = matches[0].get("command")
-    arguments = matches[0].get("arguments")
-    if isinstance(command, str):
-        result["command"] = command
-    elif isinstance(arguments, list) and all(
-        isinstance(argument, str) for argument in arguments
-    ):
-        result["command"] = shlex.join(arguments)
-    return result
+    object_path = object_path_for_source(layout, source_path)
+    return object_path.relative_to(layout.root.resolve()).as_posix()
 
 
 def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
@@ -236,9 +213,6 @@ def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
         if manifest.source_dir == source_dir:
             return layout.root / manifest.binary
 
-    artifact = _artifact_overlay_for_source(layout, source_path)
-    if artifact is not None:
-        return artifact[0]
     raise ValueError(f"cannot resolve original binary for overlay source: {source_rel}")
 
 
@@ -260,56 +234,7 @@ def overlay_load_address_for_source(
                 _catalog_load_address(layout, manifest.disc_id) or manifest.load_address
             )
 
-    artifact = _artifact_overlay_for_source(layout, source_path)
-    return artifact[1] if artifact is not None else None
-
-
-def _artifact_overlay_for_source(
-    layout: RepoLayout, source_path: Path
-) -> tuple[Path, int] | None:
-    try:
-        output = compile_command_for_source(layout, source_path)["output"]
-    except (FileNotFoundError, ValueError):
-        return None
-    target_match = CMAKE_TARGET_RE.search(output)
-    if target_match is None:
-        return None
-    manifest_path = (
-        layout.build_dir / "default" / "artifacts" / "metadata" / "artifacts.json"
-    )
-    catalog_path = layout.root / "out" / "catalog" / "emi.json"
-    if not manifest_path.is_file():
-        return None
-    target = target_match.group("target")
-    manifest = read_json(manifest_path)
-    rows = [row for row in manifest.get("artifacts", []) if row.get("target") == target]
-    if len(rows) != 1:
-        return None
-    source_hint = str(rows[0].get("source_hint", ""))
-    if ".EMI#" not in source_hint.upper():
-        return None
-    from ..targets import load_target_manifests
-
-    for target_manifest in load_target_manifests(layout.root).values():
-        if target_manifest.id.value == target:
-            return (
-                layout.root / target_manifest.binary,
-                _catalog_load_address(layout, target_manifest.disc_id)
-                or target_manifest.load_address,
-            )
-    # Keep extracted-catalog fallback for isolated fixtures and workspaces
-    # created before a target manifest was promoted.
-    if not catalog_path.is_file():
-        return None
-    from ..binaries import resolve_entry
-
-    normalized_hint = source_hint.replace("\\", "/")
-    marker = "BIN/"
-    marker_offset = normalized_hint.upper().find(marker)
-    if marker_offset >= 0:
-        normalized_hint = normalized_hint[marker_offset:]
-    entry = resolve_entry(read_json(catalog_path), normalized_hint)
-    return Path(entry["payload_path"]), int(entry["load_address"])
+    return None
 
 
 def _catalog_load_address(layout: RepoLayout, disc_id: str) -> int | None:
