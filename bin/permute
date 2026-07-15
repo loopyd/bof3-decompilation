@@ -96,7 +96,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--seed")
     parser.add_argument("-j", "--jobs", type=int)
     parser.add_argument("--debug", action="store_true")
-    parser.set_defaults(quiet=True, best_only=True)
+    parser.set_defaults(quiet=False, best_only=True)
     return parser
 
 
