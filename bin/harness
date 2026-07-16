@@ -1,0 +1,27 @@
+#!/bin/sh
+# Narrow compatibility entry point retained solely for Psy-Q signature evidence.
+set -eu
+
+ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+PYTHON="${PSX_PYTHON:-${ROOT}/.venv/bin/python}"
+if [ ! -x "$PYTHON" ]; then
+    printf 'missing project Python environment: %s\n' "$PYTHON" >&2
+    exit 2
+fi
+if [ "${1-}" = "--help" ] || [ "${1-}" = "-h" ]; then
+    printf '%s\n' 'usage: bin/harness psyq {scan|calls} --all'
+    exit 0
+fi
+if [ "${1-}" = "--example" ]; then
+    printf '%s\n' 'bin/harness psyq scan --all'
+    printf '%s\n' 'bin/harness psyq calls --all'
+    exit 0
+fi
+if [ "${1-}" != "psyq" ]; then
+    printf '%s\n' 'usage: bin/harness psyq {scan|calls} --all' >&2
+    exit 2
+fi
+shift
+PYTHONPATH="${ROOT}/tools/python${PYTHONPATH:+:${PYTHONPATH}}"
+export PYTHONPATH
+exec "$PYTHON" -m harness.commands.psyq "$@"
