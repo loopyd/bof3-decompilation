@@ -19,7 +19,12 @@ segments:
     vram: 0x801ce758
     subsegments:
       - [0x758, c, func_801ce758]
-  - [0x760, bin, pre_main]
+  - name: pre_main
+    type: code
+    start: 0x760
+    vram: 0x801ce760
+    subsegments:
+      - [0x760, c, func_801ce760]
   - name: main
     type: code
     start: 0xdfc
