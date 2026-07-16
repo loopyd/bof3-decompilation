@@ -17,9 +17,9 @@ struct ScenarioState {
 /* @behavior stores a scenario index, clears adjacent state, requests SCENA[index],
  * waits for loader readiness, then dispatches into the scenario-local jump
  * table.
- * @source 0x801a7704 FUN_801a7704
+ * @source 0x801A7704
  */
-void func_801a7704(u8 scenario_index) {
+void func_801A7704(u8 scenario_index) {
   s8*  scenario_state;
   s32  stored_index;
   u32* scenario_record;
@@ -38,14 +38,14 @@ void func_801a7704(u8 scenario_index) {
   stored_index = scenario_state[0];
   scenario_record = (u32*)((u8*)0x80144e88u + (stored_index * 8));
   *(u32*)0x8014686cu = (u32)scenario_record;
-  func_801a7804();
+  func_801A7804();
 
   while (!emi_loader_is_ready()) {
     if ((D_80143F00 != 0xffffu) && (D_80143BB0 != 5u)) {
-      func_801992b8();
+      func_801992B8();
     }
-    func_8014b87c(1u);
+    func_8014B87C(1u);
   }
 
-  func_801a782c();
+  func_801A782C();
 }

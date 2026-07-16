@@ -1,0 +1,14 @@
+#!/bin/sh
+# psyq-find — read-only PsyQ archive provenance scan
+set -eu
+
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(CDPATH= cd -- "${SCRIPT_DIR}/.." && pwd)"
+PYTHON_BIN="${ROOT_DIR}/.venv/bin/python"
+
+if [ ! -x "${PYTHON_BIN}" ]; then
+  printf 'missing project Python environment: %s\n' "${PYTHON_BIN}" >&2
+  exit 2
+fi
+
+PYTHONPATH="${ROOT_DIR}/tools/python" exec "${PYTHON_BIN}" -m harness.commands.psyq_find "$@"

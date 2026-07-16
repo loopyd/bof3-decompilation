@@ -2,9 +2,9 @@
 
 /* @behavior applies the current scratchpad damage modifiers, variance table, and
  * optional battler-specific scale table to one signed damage value.
- * @source 0x801dcd50 FUN_801dcd50
+ * @source 0x801DCD50
  */
-u32 func_801dcd50(u32 arg0, u8 arg1, s32 arg2) {
+u32 func_801DCD50(u32 arg0, u8 arg1, s32 arg2) {
   s32 value;
   s32 scale;
   u16 scratch_flags;
@@ -15,12 +15,12 @@ u32 func_801dcd50(u32 arg0, u8 arg1, s32 arg2) {
   }
 
   value = (((arg2 * 0x100) * value) >> 8) *
-              BATTLE_VARIANCE_TABLE_AFA0[func_8017e3d4() & 7u] >>
+              BATTLE_VARIANCE_TABLE_AFA0[func_8017E3D4() & 7u] >>
           8;
 
   scratch_flags = *(volatile u16*)0x1f800000u;
   if ((scratch_flags & 0x1fu) != 0u) {
-    value = (value * (s16)func_800a2ae0(arg1)) / 100;
+    value = (value * (s16)func_800A2AE0(arg1)) / 100;
   }
   if ((scratch_flags & 0x20u) != 0u) {
     if (arg1 < 3u) {

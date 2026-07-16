@@ -2,9 +2,9 @@
 
 /* @behavior dispatches the result-selection substate byte through the function
  * table rooted at `battle_selection_result_substate_table`.
- * @source 0x8009773c FUN_8009773c
+ * @source 0x8009773C
  */
-void func_8009773c(void) {
+void func_8009773C(void) {
   volatile u8*                           substate_base;
   u32                                    substate;
   BattleSelectionHandler const volatile* table;

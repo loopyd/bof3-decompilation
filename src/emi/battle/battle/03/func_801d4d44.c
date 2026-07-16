@@ -3,9 +3,9 @@
 /* @behavior advances several battler-local countdown bytes and, when the global
  * suppression countdown expires, clears the shared `0x10` flag across all
  * currently available battlers.
- * @source 0x801d4d44 FUN_801d4d44
+ * @source 0x801D4D44
  */
-void func_801d4d44(void) {
+void func_801D4D44(void) {
   u8 index;
 
   index = 0u;
@@ -13,7 +13,7 @@ void func_801d4d44(void) {
     volatile Battle03LocalWork* battle_work;
 
     battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
-    if (func_801d64c4(index) == 0u) {
+    if (func_801D64C4(index) == 0u) {
       if (((battle_work->flags_00 & 1u) != 0u) &&
           (BATTLE_LOCAL_BYTE_136(battle_work) < 6u)) {
         BATTLE_LOCAL_BYTE_136(battle_work) += 1u;
@@ -35,7 +35,7 @@ void func_801d4d44(void) {
     volatile Battle03EnemyWork* battle_work;
 
     battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
-    if ((func_801d64c4(index) == 0u) &&
+    if ((func_801D64C4(index) == 0u) &&
         ((BATTLE_ENEMY_WORD_104(battle_work) & 0x4000u) != 0u) &&
         (BATTLE_ENEMY_BYTE_112(battle_work) < 3u)) {
       BATTLE_ENEMY_BYTE_112(battle_work) += 1u;
@@ -51,7 +51,7 @@ void func_801d4d44(void) {
         volatile Battle03LocalWork* battle_work;
 
         battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
-        if (func_801db524(index) == 0u) {
+        if (func_801DB524(index) == 0u) {
           BATTLE_LOCAL_WORD_128(battle_work) &= 0xffffffefu;
         }
         index += 1u;
@@ -62,7 +62,7 @@ void func_801d4d44(void) {
         volatile Battle03EnemyWork* battle_work;
 
         battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
-        if (func_801db524(index) == 0u) {
+        if (func_801DB524(index) == 0u) {
           BATTLE_ENEMY_WORD_104(battle_work) &= 0xffffffefu;
         }
         index += 1u;

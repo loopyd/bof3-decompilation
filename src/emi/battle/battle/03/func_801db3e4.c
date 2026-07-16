@@ -2,9 +2,9 @@
 
 /* @behavior reports whether one enemy battler's `0xa8` value is large enough for
  * the current average/max threshold pair.
- * @source 0x801db3e4 FUN_801db3e4
+ * @source 0x801DB3E4
  */
-u8 func_801db3e4(u32 arg0, u32 arg1, u32 arg2) {
+u8 func_801DB3E4(u32 arg0, u32 arg1, u32 arg2) {
   u32           index;
   u32           value;
   volatile u16* ptr;

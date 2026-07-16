@@ -2,9 +2,9 @@
 
 /* @behavior counts tokens in a zero-terminated message stream, skipping one extra
  * byte after control codes `0x12`, `0x13`, and `0x15`.
- * @source 0x801eab6c FUN_801eab6c
+ * @source 0x801EAB6C
  */
-s8 func_801eab6c(u8* arg0) {
+s8 func_801EAB6C(u8* arg0) {
   s8  count;
   u32 value;
 

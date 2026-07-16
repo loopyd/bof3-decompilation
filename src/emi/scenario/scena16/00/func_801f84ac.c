@@ -14,12 +14,12 @@ typedef struct Scena16EffectBank80140000 {
 } Scena16EffectBank80140000;
 
 /* @behavior resets one local effect bank and marks the frontend flag byte.
- * @source 0x801f84ac FUN_801f84ac
+ * @source 0x801F84AC
  */
-void func_801f84ac(void) {
+void func_801F84AC(void) {
   u8 flags;
 
-  func_80166e88(10, 0xff, 0xff, 0);
+  func_80166E88(10, 0xff, 0xff, 0);
   flags = ((volatile Scena16EffectBank80140000*)0x80140000u)->byte_4f59;
   ((volatile Scena16EffectBank80140000*)0x80140000u)->byte_4f5a = 0xffu;
   ((volatile Scena16EffectBank80140000*)0x80140000u)->byte_4f5b = 0xffu;
@@ -30,5 +30,5 @@ void func_801f84ac(void) {
   ((volatile Scena16EffectBank80140000*)0x80140000u)->byte_6254 = 0u;
   ((volatile Scena16EffectBank80140000*)0x80140000u)->byte_4f59 =
       (u8)(flags | 7u);
-  func_801c187c(10);
+  func_801C187C(10);
 }

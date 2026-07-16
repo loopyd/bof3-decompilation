@@ -1,8 +1,8 @@
 #include "internal.h"
 
 /* @behavior captures the current vertical-blank counter for the boot frame.
- * @source 0x8014b17c func_8014b17c
+ * @source 0x8014B17C
  */
-void func_8014b17c(void) {
+void func_8014B17C(void) {
   D_80143EFC = VSync(1);
 }

@@ -268,9 +268,10 @@ The remaining work is ordered by evidence already available in this checkout:
    source directory. Their storage layouts are complete, but no consumer
    contract is recorded yet.
 
-Each queue item remains a candidate until `bin/harness diff` reports an exact
-byte match; an address-only symbol or target-local view is preferred while
-field semantics remain unresolved.
+Each queue item remains a candidate until `bin/asm-diff TARGET@0xADDRESS` and
+`bin/byte-match TARGET@0xADDRESS` both report an exact match; an address-only
+symbol or target-local view is preferred while field semantics remain
+unresolved.
 
 ## Acceptance criteria
 

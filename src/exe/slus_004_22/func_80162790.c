@@ -19,7 +19,7 @@ extern s8            D_80148FC0[];
 
 /* @behavior selects the next EMI entry, transfers its dispatch metadata into
  * loader state, releases any prior owner, and advances the loader step.
- * @source 0x80162790 FUN_80162790
+ * @source 0x80162790
  */
 void func_80162790(void) {
   u8   unused_stack[64];
@@ -33,13 +33,13 @@ void func_80162790(void) {
     D_80146780[D_80146483].state = 0;
 
     if (D_80148FC0[D_80146483] != -1) {
-      func_8016debc(0);
-      func_8016ad2c(D_80148FC0[D_80146482]);
+      func_8016DEBC(0);
+      func_8016AD2C(D_80148FC0[D_80146482]);
       D_80148FC0[D_80146483] = -1;
     }
   }
 
-  func_80162c14();
+  func_80162C14();
   {
     u32* loader_step;
     loader_step = &D_8014646C;

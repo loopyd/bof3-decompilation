@@ -3,14 +3,14 @@
 /* @behavior waits for the selected frontend route, configures its scenario
  * coordinates and stream mode, then advances the New Game/load preparation
  * chain.
- * @source 0x80197aa4 func_80197aa4
+ * @source 0x80197AA4
  */
-void func_80197aa4(void) {
+void func_80197AA4(void) {
   s32 local_ready;
 
-  local_ready = func_801bee5c();
-  func_801a06d8();
-  func_801992b8();
+  local_ready = func_801BEE5C();
+  func_801A06D8();
+  func_801992B8();
   if (local_ready) {
     func_80161808(1);
     if ((D_80146325 & 1) == 0) {
@@ -21,9 +21,9 @@ void func_80197aa4(void) {
     }
     if ((D_80146325 & 0x10) == 0) {
       if ((D_801462EC & 2) != 0) {
-        func_8016728c(D_80145024 & 0x7f, 2);
+        func_8016728C(D_80145024 & 0x7f, 2);
       } else {
-        func_8016728c(D_80145024 & 0x7f, 1);
+        func_8016728C(D_80145024 & 0x7f, 1);
       }
     }
     D_8014933E = 4;

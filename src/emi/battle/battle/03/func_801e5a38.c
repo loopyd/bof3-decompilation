@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior clears the key state bytes across all 0x30 queued-slot entries.
- * @source 0x801e5a38 FUN_801e5a38
+ * @source 0x801E5A38
  */
-void func_801e5a38(void) {
+void func_801E5A38(void) {
   u8 index;
 
   index = 0u;

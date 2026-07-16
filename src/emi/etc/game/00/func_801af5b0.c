@@ -4,14 +4,14 @@
 #define GAME_CHARACTER_MAP ((const volatile u8*)0x80144f5au)
 #define GAME_ABILITY_MAP   ((const volatile u8*)0x80181b10u)
 
-extern s32 func_80166a10(u8 character_index, u8 ability_kind, u8 mode);
+extern s32 func_80166A10(u8 character_index, u8 ability_kind, u8 mode);
 
 /* @behavior checks whether an ability kind is currently selectable for a
  * character/category, applying learned-level, flag, and story-state gates.
- * @source 0x801af5b0 FUN_801af5b0
+ * @source 0x801AF5B0
  * @see docs/specs/data/equipment.md
  */
-s32 func_801af5b0(s32 item_category, s32 character_index, s32 ability_kind) {
+s32 func_801AF5B0(s32 item_category, s32 character_index, s32 ability_kind) {
   s32                           saved_kind;
   s32                           saved_character;
   const volatile AbilityObject* ability;
@@ -33,7 +33,7 @@ s32 func_801af5b0(s32 item_category, s32 character_index, s32 ability_kind) {
         GAME_ABILITY_MAP[GAME_CHARACTER_MAP[(u8)saved_character]];
     character_offset = (u32)mapped_character * 0xa4u;
     required_level =
-        func_80166a10(mapped_character, (u8)saved_kind, 0u) & 0xffu;
+        func_80166A10(mapped_character, (u8)saved_kind, 0u) & 0xffu;
     learned_level =
         *(const volatile u16*)(GAME_RAM_BASE + character_offset + 0x497eu);
     if (learned_level < required_level) {
@@ -51,7 +51,7 @@ s32 func_801af5b0(s32 item_category, s32 character_index, s32 ability_kind) {
 
   character_offset = (u32)(u8)saved_character * 0x140u;
   required_level =
-      func_80166a10((u8)saved_character, (u8)saved_kind, 1u) & 0xffu;
+      func_80166A10((u8)saved_character, (u8)saved_kind, 1u) & 0xffu;
   learned_level =
       *(const volatile u16*)(GAME_RAM_BASE + character_offset + 0x5f1au);
   if (learned_level < required_level) {

@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior routes the primary SCENA16 area path into one local helper branch.
- * @source 0x801f6d90 FUN_801f6d90
+ * @source 0x801F6D90
  */
-void func_801f6d90(void) {
+void func_801F6D90(void) {
   s8* state_base;
   u32 area_archive_id;
 
@@ -19,7 +19,7 @@ void func_801f6d90(void) {
   }
 
   if (area_archive_id == 2u) {
-    func_801f6f30();
+    func_801F6F30();
     goto store_one;
   }
 
@@ -27,14 +27,14 @@ void func_801f6d90(void) {
 
 area_5_or_more:
   if (area_archive_id == 0x1fu) {
-    func_801f6e30();
+    func_801F6E30();
     *(vu8*)(state_base + 0x3c30) = 0u;
   }
 
   goto store_state;
 
 area_4:
-  func_801f6eb0();
+  func_801F6EB0();
 
 store_one:
   *(vu8*)(state_base + 0x3c30) = 1u;

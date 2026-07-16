@@ -208,153 +208,153 @@ extern const GameEntry0StateHandler D_801C7BA4[];
 extern const GameEntry0StateHandler D_801C7BB0[];
 
 /* @behavior clears one local GAME entry-0 record slot by index.
- * @source 0x801960c0
+ * @source 0x801960C0
  */
-void func_801960c0(u8 record_index);
+void func_801960C0(u8 record_index);
 
 /* @behavior seeds the shared callback/frame dispatch prologue before the entry-0
  * callback tables begin running.
- * @source 0x8014ba04
+ * @source 0x8014BA04
  */
-void func_8014ba04(void);
+void func_8014BA04(void);
 
 /* @behavior begins one shared front-end frame/update slice.
- * @source 0x80158e50
+ * @source 0x80158E50
  */
-void func_80158e50(void);
+void func_80158E50(void);
 
 /* @behavior finalizes one shared front-end frame/update slice.
- * @source 0x80158c80
+ * @source 0x80158C80
  */
-void func_80158c80(void);
+void func_80158C80(void);
 
 /* @behavior runs one selection-side post-dispatch update slice.
- * @source 0x80198cac
+ * @source 0x80198CAC
  */
-void func_80198cac(void);
+void func_80198CAC(void);
 
 /* @behavior resets the entry-0 front script/runtime bank for the requested mode.
- * @source 0x801c1400
+ * @source 0x801C1400
  */
-void func_801c1400(u32 mode);
+void func_801C1400(u32 mode);
 
 /* @behavior copies the active front selector/context bundle into the entry-0 local
  * runtime state.
- * @source 0x8019fa28
+ * @source 0x8019FA28
  */
-void func_8019fa28(u16 selection_seed, u32 context_a, u32 context_b,
+void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
                    u8 context_kind);
 
 /* @behavior copies the shared CPU-side palette bank before the corresponding VRAM
  * upload path.
- * @source 0x8014e284
+ * @source 0x8014E284
  */
-void func_8014e284(void);
+void func_8014E284(void);
 
 /* @behavior begins streaming the currently selected SCENA pack for the seeded
  * scenario state.
- * @source 0x801a7804
+ * @source 0x801A7804
  */
-void func_801a7804(void);
+void func_801A7804(void);
 
 /* @behavior enters the loaded scenario-local dispatch path after the SCENA loader
  * completes.
- * @source 0x801a782c
+ * @source 0x801A782C
  */
-void func_801a782c(void);
+void func_801A782C(void);
 
 /* @behavior ticks the shared world/front waiting path while the scenario loader is
  * still pending.
- * @source 0x801992b8
+ * @source 0x801992B8
  */
-void func_801992b8(void);
+void func_801992B8(void);
 
 /* @behavior returns a pointer into one of two sprite-rect tables indexed by
  * sprite_id * 4, with the table chosen by flags & 1.
- * @source 0x801af270
+ * @source 0x801AF270
  */
-u8* func_801af270(u8 sprite_id, u8 flags);
+u8* func_801AF270(u8 sprite_id, u8 flags);
 
 /* @behavior draws one sprite by filling a GT quad primitive from a rect-table
  * entry, selecting CLUT by flags & 2, then appending to the OT.
- * @source 0x801af2a0
+ * @source 0x801AF2A0
  */
-void func_801af2a0(s16 x, s16 y, u8 sprite_id, u8 flags);
+void func_801AF2A0(s16 x, s16 y, u8 sprite_id, u8 flags);
 
 /* @behavior iterates a packed sprite-record table and draws each sprite via
- * func_801af2a0 with signed offsets shifted by 3 applied to base coords.
- * @source 0x801af390
+ * func_801AF2A0 with signed offsets shifted by 3 applied to base coords.
+ * @source 0x801AF390
  */
-void func_801af390(s16 base_x, s16 base_y, const u8* record_table, u8 flags);
+void func_801AF390(s16 base_x, s16 base_y, const u8* record_table, u8 flags);
 
 /* @behavior computes a screen-space position from an entity's offset-adjusted
  * coordinates; returns the result as a signed 16-bit value.
- * @source 0x80154f28
+ * @source 0x80154F28
  */
-s16 func_80154f28(s32 x, s32 y);
+s16 func_80154F28(s32 x, s32 y);
 
 /* @behavior external no-argument update called after movement completion checks.
  * UNKNOWN: its owning subsystem and return-value meaning.
- * @source 0x8014d978
+ * @source 0x8014D978
  */
-u8 func_8014d978(void);
+u8 func_8014D978(void);
 
-void func_8019611c(void);
-void func_8019625c(void);
-u8   func_801968bc(u8 mode);
-u8   func_80196b20(u8 value);
-void func_80196b9c(void);
-u8   func_80196cf0(u8* owner, u8* source_table);
-void func_80196ffc(void);
+void func_8019611C(void);
+void func_8019625C(void);
+u8   func_801968BC(u8 mode);
+u8   func_80196B20(u8 value);
+void func_80196B9C(void);
+u8   func_80196CF0(u8* owner, u8* source_table);
+void func_80196FFC(void);
 void func_80197068(void);
-void func_801970ec(void);
-void func_801971e8(void);
+void func_801970EC(void);
+void func_801971E8(void);
 void func_80197378(void);
-void func_801975e4(void);
-void func_801979d4(void);
-void func_80197a24(void);
-void func_80197a60(void);
-void func_80197aa4(void);
-void func_80197c1c(void);
-void func_80197e54(void);
-void func_80197efc(void);
+void func_801975E4(void);
+void func_801979D4(void);
+void func_80197A24(void);
+void func_80197A60(void);
+void func_80197AA4(void);
+void func_80197C1C(void);
+void func_80197E54(void);
+void func_80197EFC(void);
 void func_80198170(void);
-void func_801981b4(void);
-void func_801981d4(void);
+void func_801981B4(void);
+void func_801981D4(void);
 void func_80198234(void);
-void func_801984ac(void);
+void func_801984AC(void);
 void func_80198744(void);
 void func_80198904(void);
-void func_80198ac4(void);
+void func_80198AC4(void);
 void func_80199230(void);
-void func_80198f1c(void);
-void func_801990d0(void);
-void func_801991b8(void);
-void func_801bedd0(void);
-s32  func_801bee5c(void);
-void func_801a06d8(void);
-void func_801b5bdc(u8 arg0);
-u8   func_801bf11c(void);
-void func_801bf8e0(void);
-void func_801bfac4(void);
-u8   func_801bf78c(void);
-u8   func_801bdb7c(u8 mode);
-void func_801bb8e8(u8 arg_a, u8 arg_b, u8 arg_c);
-void func_8016728c(u32 slot_id, u32 mode);
-void func_8015d4f8(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
-void func_8015d404(u8 arg0, u8 arg1);
-void func_801a7704(u8 scenario_index);
-void func_801651dc(s32 ability_id, s32 character_id, s32 arg2, s32 arg3);
-void func_80164a44(volatile void* character_state);
+void func_80198F1C(void);
+void func_801990D0(void);
+void func_801991B8(void);
+void func_801BEDD0(void);
+s32  func_801BEE5C(void);
+void func_801A06D8(void);
+void func_801B5BDC(u8 arg0);
+u8   func_801BF11C(void);
+void func_801BF8E0(void);
+void func_801BFAC4(void);
+u8   func_801BF78C(void);
+u8   func_801BDB7C(u8 mode);
+void func_801BB8E8(u8 arg_a, u8 arg_b, u8 arg_c);
+void func_8016728C(u32 slot_id, u32 mode);
+void func_8015D4F8(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
+void func_8015D404(u8 arg0, u8 arg1);
+void func_801A7704(u8 scenario_index);
+void func_801651DC(s32 ability_id, s32 character_id, s32 arg2, s32 arg3);
+void func_80164A44(volatile void* character_state);
 
-void func_8019faa0(u16 selection_seed, u32 context_a, u32 context_b,
+void func_8019FAA0(u16 selection_seed, u32 context_a, u32 context_b,
                    u8 context_kind);
-void func_80198bc4(u32 arg0);
-void func_801a0048(s16 a, s16 b);
+void func_80198BC4(u32 arg0);
+void func_801A0048(s16 a, s16 b);
 /* @behavior Iterates active entity slots and dispatches per-type handlers.
- * @source 0x801a0514
+ * @source 0x801A0514
  */
-void func_801a0514(void);
-void func_801b3ccc(u32 arg0);
+void func_801A0514(void);
+void func_801B3CCC(u32 arg0);
 
 #endif

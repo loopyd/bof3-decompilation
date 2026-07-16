@@ -2,9 +2,9 @@
 
 /* @behavior advances the local scratch vertical offset and routes the next AREA030
  * panel draw through the later helper at `0x801d9534`.
- * @source 0x801d3938 FUN_801d3938
+ * @source 0x801D3938
  */
-void func_801d3938(void) {
+void func_801D3938(void) {
   volatile u8* scratch;
   s16          y;
 
@@ -21,5 +21,5 @@ void func_801d3938(void) {
   }
 
   y = *(volatile s16*)(scratch + 0x30u);
-  func_801d9534(0x14, y, 0x118, 0x13, 0);
+  func_801D9534(0x14, y, 0x118, 0x13, 0);
 }

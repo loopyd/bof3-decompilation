@@ -41,66 +41,66 @@ typedef void (*GameFrontStateHandler)(void);
 extern GameFrontStateHandler D_801D1C4C[];
 #define GAME_FRONT_STATE_HANDLERS D_801D1C4C
 
-void func_8014ba04(void);
-void func_801d18f8(void);
-void func_801d1b00(void);
-void func_8019611c(void);
-void func_801a7704(u8 scenario_index);
+void func_8014BA04(void);
+void func_801D18F8(void);
+void func_801D1B00(void);
+void func_8019611C(void);
+void func_801A7704(u8 scenario_index);
 void func_80197068(void);
-int  func_8017b2b4(void);
-void func_8017c2d8(u32 object, s32 x, s32 y, s32 flags, s32 arg4);
-void func_8017aa1c(u8* primitive);
-void func_8017a904(u8* primitive, u8 flags);
-void func_8014e5a0(s32 group, s32 id);
-u8*  func_801d17d8(s32 x, s32 y, s32 width, s32 height, u8 flags);
-void func_801d18e8(u8* primitive, u8 alpha);
+int  func_8017B2B4(void);
+void func_8017C2D8(u32 object, s32 x, s32 y, s32 flags, s32 arg4);
+void func_8017AA1C(u8* primitive);
+void func_8017A904(u8* primitive, u8 flags);
+void func_8014E5A0(s32 group, s32 id);
+u8*  func_801D17D8(s32 x, s32 y, s32 width, s32 height, u8 flags);
+void func_801D18E8(u8* primitive, u8 alpha);
 
 /* @behavior slot-2 frontend-local callback body selected by the local mode byte.
- * @source 0x8014ed6c
+ * @source 0x8014ED6C
  */
 void game_front_local_mode_callback_loop(void);
 
 /* @behavior starts one selection-specific frontend effect by table id pair.
- * @source 0x8015d4f8
+ * @source 0x8015D4F8
  */
 void game_start_selection_fx(u32 effect_group, s32 effect_id, s32 duration,
                              s32 fade_step);
 
 /* @behavior stops one selection-specific frontend effect by table id pair.
- * @source 0x8015d404
+ * @source 0x8015D404
  */
 void game_stop_selection_fx(u32 effect_group, s32 effect_id);
 
 /* @behavior starts streaming one archive slot through the EXE-side EMI loader.
- * @source 0x80161fdc
+ * @source 0x80161FDC
  */
 
 /* @behavior copies the shared CPU-side palette bank before the corresponding VRAM
  * upload path.
- * @source 0x8014e284
+ * @source 0x8014E284
  */
 void game_stage_shared_palette_bank(void);
 
 /* @behavior queues one frontend cue/event id through the EXE-side dispatcher.
- * @source 0x8015df18
+ * @source 0x8015DF18
  */
 void game_queue_frontend_cue(u32 cue_id);
 
-void func_801d0c90(void);
-void func_801d0c04(void);
-void func_801d0d5c(void);
-void func_801d0d94(void);
-void func_801d0e54(void);
-void func_801d0f00(void);
-void func_801d0fb8(void);
-void func_801d11e4(void);
-void func_801d12cc(u8 selected, u8 alpha);
-void func_801d150c(s16 x, s16 y, u8 selected, u8 alpha);
-void func_801d16dc(s16 x, s16 y, u8 selected, u8 alpha);
-void func_801d0df0(void);
-void func_801d1134(void);
-void func_801d1184(void);
-void func_801d1000(void);
-void func_801d104c(void);
+void func_801D0C90(void);
+void func_801D0C04(void);
+void func_801D0D5C(void);
+void func_801D0D94(void);
+void func_801D0E54(void);
+void func_801D0F00(void);
+void func_801D0FB8(void);
+void func_801D11E4(void);
+void func_801D12CC(u8 selected, u8 alpha);
+void func_801D150C(s16 x, s16 y, u8 selected, u8 alpha);
+void func_801D16DC(s16 x, s16 y, u8 selected, u8 alpha);
+void func_801D0DF0(void);
+void func_801D1134(void);
+void func_801D1184(void);
+void func_801D1000(void);
+void func_801D104C(void);
 
 #endif

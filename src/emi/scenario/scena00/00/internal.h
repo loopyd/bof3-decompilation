@@ -3,8 +3,8 @@
 
 #include "bof3/bof3.h"
 
-void func_801f7134(s32 chapter_id);
-void func_801f78ec(s32 x0, s32 y0, s16 angle0, s32 x1, s32 y1, s16 angle1, u8 r,
+void func_801F7134(s32 chapter_id);
+void func_801F78EC(s32 x0, s32 y0, s16 angle0, s32 x1, s32 y1, s16 angle1, u8 r,
                    u8 g, u8 b);
 
 #endif

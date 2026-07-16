@@ -3,9 +3,9 @@
 /* @behavior draws the battle local panel with three mode-specific rectangle
  * regions, a cursor for the active battler, and optional preview placement
  * for the current selection state.
- * @source 0x800b0498 FUN_800b0498
+ * @source 0x800B0498
  */
-void func_800b0498(void) {
+void func_800B0498(void) {
   volatile u8* task_root;
   volatile u8* message_slot;
   volatile u8* panel_base;

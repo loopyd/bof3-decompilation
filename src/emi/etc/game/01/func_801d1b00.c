@@ -2,9 +2,9 @@
 
 /* @behavior advances the two frontend window fades, promotes the fade phase
  * once both channels saturate, and draws the visible menu/window layers.
- * @source 0x801d1b00 func_801d1b00
+ * @source 0x801D1B00
  */
-void func_801d1b00(void) {
+void func_801D1B00(void) {
   vu8* phase;
   s32  primary_active;
   s32  secondary_active;
@@ -40,8 +40,8 @@ void func_801d1b00(void) {
   }
 
   if (*phase != 0u) {
-    func_801d12cc((u8)secondary_active, *CVPTR(u8, 0x80143c28u));
-    func_801d16dc(26, 24, (u8)secondary_active, *CVPTR(u8, 0x80143c28u));
-    func_801d150c(-6, 28, (u8)primary_active, *CVPTR(u8, 0x80143c26u));
+    func_801D12CC((u8)secondary_active, *CVPTR(u8, 0x80143c28u));
+    func_801D16DC(26, 24, (u8)secondary_active, *CVPTR(u8, 0x80143c28u));
+    func_801D150C(-6, 28, (u8)primary_active, *CVPTR(u8, 0x80143c26u));
   }
 }

@@ -1,0 +1,55 @@
+set shell := ["bash", "-euo", "pipefail", "-c"]
+set script-interpreter := ["bash", "-euo", "pipefail"]
+set tempdir := "/tmp"
+
+crate := justfile_directory()
+repo := crate + "/../../.."
+manifest := crate + "/Cargo.toml"
+target_dir := repo + "/build/tools/rust/bof3-disk"
+v1_default := repo + "/build/third_party/deprecated/bof3-disk/bof3-disk"
+
+default:
+    @just --list
+
+build:
+    cargo build --locked --release --manifest-path "{{ manifest }}" --target-dir "{{ target_dir }}"
+
+test:
+    cargo test --locked --manifest-path "{{ manifest }}" --target-dir "{{ target_dir }}"
+
+check:
+    cargo fmt --manifest-path "{{ manifest }}" --check
+    cargo clippy --locked --manifest-path "{{ manifest }}" --all-targets -- -D warnings
+    cargo test --locked --manifest-path "{{ manifest }}" --target-dir "{{ target_dir }}"
+
+format:
+    cargo fmt --manifest-path "{{ manifest }}"
+
+# Cargo scopes cleanup to this crate's target directory.
+clean:
+    cargo clean --manifest-path "{{ manifest }}" --target-dir "{{ target_dir }}"
+
+# Compare every v2 ISO9660 payload with the corresponding v1 output.
+# v1-only project XML, audio-track, and license artifacts are outside this slice.
+[script]
+equivalence image v1=v1_default:
+    test -x "{{ v1 }}" || { echo "v1 bof3-disk not found: {{ v1 }}" >&2; exit 1; }
+    image="$(realpath "{{ image }}")"
+    test -f "$image"
+    cargo build --quiet --locked --release --manifest-path "{{ manifest }}" --target-dir "{{ target_dir }}"
+    work="$(mktemp -d "${TMPDIR:-/tmp}/bof3-disk-equivalence.XXXXXX")"
+    case "$work" in "${TMPDIR:-/tmp}"/bof3-disk-equivalence.*) ;; *) echo "unsafe work directory: $work" >&2; exit 1;; esac
+    test -n "$work" && test "$work" != "{{ repo }}" && test "$work" != "{{ repo }}/out"
+    trap 'rm -rf "$work"' EXIT
+    "{{ v1 }}" extract -q -i "$image" -o "$work/v1" -p "$work/v1-project.xml"
+    "{{ target_dir }}/release/bof3-disk" extract -q -i "$image" -o "$work/v2"
+    count=0
+    while IFS= read -r -d '' actual; do
+        relative="${actual#"$work/v2/"}"
+        expected="$work/v1/$relative"
+        test -f "$expected" || { echo "missing from v1 output: $relative" >&2; exit 1; }
+        cmp "$expected" "$actual"
+        sha256sum "$actual"
+        count=$((count + 1))
+    done < <(find "$work/v2" -type f -print0 | sort -z)
+    echo "byte-identical ISO9660 payloads: $count files"

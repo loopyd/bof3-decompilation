@@ -2,9 +2,9 @@
 
 /* @behavior finds the first free event slot in the eight-entry event queue and
  * populates it with the caller's parameters.
- * @source 0x801de560 FUN_801de560
+ * @source 0x801DE560
  */
-void func_801de560(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u32 arg4) {
+void func_801DE560(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u32 arg4) {
   u8  index;
   u8  value;
   u32 offset;

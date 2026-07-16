@@ -11,10 +11,10 @@ struct GameData {
 
 /* @behavior waits for the streamed slot, advances the game entry and palette
  * serials, then records the next ready state.
- * @source 0x80196ffc FUN_80196FFC
+ * @source 0x80196FFC
  * @see docs/specs/data/schema-ledger.md
  */
-void func_80196ffc(void) {
+void func_80196FFC(void) {
   volatile u16* const ent = (volatile u16*)((volatile u8*)GAME_DATA + 0x3b90u);
   u16                 ev;
   u8                  pv;
@@ -22,10 +22,10 @@ void func_80196ffc(void) {
   emi_stream_init_slot(0x268u);
 
   while (!emi_loader_is_ready()) {
-    func_8014b87c(1u);
+    func_8014B87C(1u);
   }
 
-  func_8014e284();
+  func_8014E284();
 
   pv = GAME_DATA->palette_serial;
   ev = *ent;

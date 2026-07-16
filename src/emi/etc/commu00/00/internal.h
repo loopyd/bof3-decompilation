@@ -104,26 +104,26 @@ void commu00_apply_slot_palette(u16 palette_id);
 void commu00_prime_slot_resource(u8 resource_id);
 s32  commu00_check_selector_flag(const void* table_base, s32 selector_id);
 
-void func_801eedf8(void);
-void func_801eeef0(u32 row_index);
-void func_801f00d4(void);
-void func_801f01f4(void);
-u8   func_801f02e4(void);
-void func_801f0320(void);
-void func_801f0c6c(u8 task_index, u8 record_kind_index);
-void func_801f0d3c(u8 task_index, u8 record_kind_index);
-void func_801f0e1c(u8 task_index, u8 record_kind_index);
-void func_801f0ec8(u8 task_index);
-void func_801f0f08(u8 source_index, u8 task_index, u8 record_kind_index);
-void func_801f0fbc(u8 source_index, u8 task_index, u8 record_kind_index);
-void func_801f1064(u8 task_index, u8 record_kind_index);
-void func_801f1110(u8 task_index, u8 record_kind_index);
-void func_801f1204(u8 task_index, u8 record_kind_index);
-void func_801f1254(u8 task_index);
+void func_801EEDF8(void);
+void func_801EEEF0(u32 row_index);
+void func_801F00D4(void);
+void func_801F01F4(void);
+u8   func_801F02E4(void);
+void func_801F0320(void);
+void func_801F0C6C(u8 task_index, u8 record_kind_index);
+void func_801F0D3C(u8 task_index, u8 record_kind_index);
+void func_801F0E1C(u8 task_index, u8 record_kind_index);
+void func_801F0EC8(u8 task_index);
+void func_801F0F08(u8 source_index, u8 task_index, u8 record_kind_index);
+void func_801F0FBC(u8 source_index, u8 task_index, u8 record_kind_index);
+void func_801F1064(u8 task_index, u8 record_kind_index);
+void func_801F1110(u8 task_index, u8 record_kind_index);
+void func_801F1204(u8 task_index, u8 record_kind_index);
+void func_801F1254(u8 task_index);
 
-void func_801f0534(void);
-void func_801f0718(u8 source_index, u8 task_index);
-void func_801f08d8(u8 source_index, u8 task_index);
-void func_801f0bf4(u8 task_index);
+void func_801F0534(void);
+void func_801F0718(u8 source_index, u8 task_index);
+void func_801F08D8(u8 source_index, u8 task_index);
+void func_801F0BF4(u8 task_index);
 
 #endif

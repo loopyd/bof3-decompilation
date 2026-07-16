@@ -2,9 +2,9 @@
 
 /* @behavior resolves one battler-kind-derived result code, updates the global kind
  * selection, and returns one mode byte based on the chosen kind flags.
- * @source 0x801d3844 FUN_801d3844
+ * @source 0x801D3844
  */
-u8 func_801d3844(void) {
+u8 func_801D3844(void) {
   u16* state;
   u8   kind;
   u8   kind_flags;
@@ -14,13 +14,13 @@ u8 func_801d3844(void) {
   state = (u16*)&BATTLE_GLOBAL_HALF_63C0;
 
   if (*state == 36) {
-    kind = BATTLE_RANDOM_TABLE_AC58_DATA[func_8017e3d4() & 0x1fu];
+    kind = BATTLE_RANDOM_TABLE_AC58_DATA[func_8017E3D4() & 0x1fu];
   } else {
     kind = 0u;
   }
 
   if ((*state == 37) || (*state == 140)) {
-    kind = BATTLE_RANDOM_TABLE_AC78_DATA[func_8017e3d4() & 0x1fu];
+    kind = BATTLE_RANDOM_TABLE_AC78_DATA[func_8017E3D4() & 0x1fu];
   }
 
   kind_flags = ABILITY_OBJECTS[kind].targeting_flags;
@@ -54,11 +54,11 @@ u8 func_801d3844(void) {
 
   if (BATTLE_GLOBAL_BYTE_6374 < 3u) {
     if ((kind_flags & 0x20u) != 0u) {
-      return func_800a955c();
+      return func_800A955C();
     }
   } else if ((kind_flags & 0x20u) == 0u) {
-    return func_800a955c();
+    return func_800A955C();
   }
 
-  return func_800a94a8();
+  return func_800A94A8();
 }

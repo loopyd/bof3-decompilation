@@ -2,9 +2,9 @@
 
 /* @behavior scans the three local work records and runs the shared handler for each
  * active entry that does not have flag `0x40` set.
- * @source 0x801ded54 FUN_801ded54
+ * @source 0x801DED54
  */
-void func_801ded54(void) {
+void func_801DED54(void) {
   u8 index;
 
   index = 0;
@@ -17,7 +17,7 @@ void func_801ded54(void) {
 
     if (((battle_work->flags_00 & 1u) != 0u) &&
         ((battle_work->flags_00 & 0x40u) == 0u)) {
-      func_8014d290();
+      func_8014D290();
     }
 
     index += 1u;

@@ -5,9 +5,9 @@
  *   negative delta: decrement counter, floor at 0
  *   zero delta:     set counter to 7 (special max)
  * Returns 1 if the counter value changed, 0 otherwise.
- * @source 0x801655f4
+ * @source 0x801655F4
  */
-s32 func_801655f4(u8* counter, s32 delta) {
+s32 func_801655F4(u8* counter, s32 delta) {
   s32 signed_delta;
 
   signed_delta = (s32)(s8)delta;

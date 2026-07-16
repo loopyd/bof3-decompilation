@@ -46,7 +46,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Prepare and optionally run decomp-permuter for one function."
     )
-    parser.add_argument("source", type=Path)
+    parser.add_argument(
+        "source",
+        type=Path,
+        nargs="?",
+        help="TARGET@0xADDRESS (preferred) or an existing src/.../func_ADDRESS.c path",
+    )
+    parser.add_argument(
+        "--example", action="store_true", help="print a minimal invocation"
+    )
     parser.add_argument(
         "function",
         nargs="?",
@@ -95,6 +103,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--speed", type=int, nargs="?", const=100)
     parser.add_argument("--seed")
     parser.add_argument("-j", "--jobs", type=int)
+    parser.add_argument(
+        "--time-limit",
+        type=float,
+        metavar="SECONDS",
+        help="stop this coordinator after SECONDS (the upstream permuter has no native timer)",
+    )
     parser.add_argument("--debug", action="store_true")
     parser.set_defaults(quiet=False, best_only=True)
     return parser
@@ -123,9 +137,16 @@ def default_directory(source: Path) -> Path:
 
 def assembly_path(source: Path, function: str) -> Path:
     target_relative = source.parent.relative_to(ROOT / "src")
-    return (
-        ROOT / "out" / "splat" / target_relative / "asm" / f"{function}.s"
-    )
+    directory = ROOT / "out" / "splat" / target_relative / "asm"
+    exact = directory / f"{function}.s"
+    if exact.is_file():
+        return exact
+    match = re.fullmatch(r"func_([0-9a-fA-F]{8})", function)
+    if match is not None:
+        upper = directory / f"func_{match.group(1).upper()}.s"
+        if upper.is_file():
+            return upper
+    return exact
 
 
 def ensure_target_assembly(source: Path, function: str, directory: Path) -> None:
@@ -218,6 +239,8 @@ def run(args: argparse.Namespace) -> int:
     source, function, directory, permuter = validate(args)
     if args.jobs is not None and args.jobs < 0:
         raise ValueError("--jobs must not be negative")
+    if args.time_limit is not None and args.time_limit <= 0:
+        raise ValueError("--time-limit must be positive")
     if args.prepare_only and args.prepared:
         raise ValueError("--prepare-only cannot be combined with --prepared")
 
@@ -265,13 +288,44 @@ def run(args: argparse.Namespace) -> int:
             *permuter_arguments(args),
             str(directory),
         ]
-        result = subprocess.run(command, cwd=permuter.parent, check=False)
+        try:
+            result = subprocess.run(
+                command,
+                cwd=permuter.parent,
+                check=False,
+                timeout=args.time_limit,
+            )
+        except subprocess.TimeoutExpired:
+            print(
+                f"time limit reached after {args.time_limit:g}s; retained workspace {directory.relative_to(ROOT)}",
+                file=sys.stderr,
+            )
+            return 0
         return result.returncode
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        if args.example:
+            print("bin/permute exe/logo@0x801CE758 --time-limit 300")
+            return 0
+        if args.source is None:
+            raise ValueError("TARGET@0xADDRESS is required")
+        raw_source = str(args.source)
+        if "@" in raw_source:
+            from harness.domain import parse_function_id
+            from harness.domain.manifests import load_target_manifests
+
+            function_id = parse_function_id(raw_source)
+            manifest = load_target_manifests(ROOT).get(function_id.target.value)
+            if manifest is None:
+                raise ValueError(f"unknown target: {function_id.target.value}")
+            args.source = (
+                ROOT / manifest.source_dir / f"func_{function_id.address:08x}.c"
+            )
+            if args.function is None:
+                args.function = f"func_{function_id.address:08X}"
         return run(args)
     except (FileNotFoundError, RuntimeError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)

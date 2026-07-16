@@ -3,9 +3,9 @@
 /* @behavior rotates one local anchor around the shared matrix at `0x801492e8`,
  * projects a fixed textured quad into the current primitive, then fills the
  * texture state through the local helper at `0x80155560`.
- * @source 0x801f3480 FUN_801f3480
+ * @source 0x801F3480
  */
-void func_801f3480(const void* arg0, s32 arg1, u32 arg2) {
+void func_801F3480(const void* arg0, s32 arg1, u32 arg2) {
   const World00Area027Point* point;
   MATRIX                     matrix;
   VECTOR                     translation;

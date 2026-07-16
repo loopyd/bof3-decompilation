@@ -4,9 +4,9 @@ extern u8 D_801492E8[];
 
 /* @behavior builds a temporary transform from scratchpad camera state and submits
  * it through the local scene object pipeline.
- * @source 0x801d0ee0 FUN_801d0ee0
+ * @source 0x801D0EE0
  */
-void func_801d0ee0(void) {
+void func_801D0EE0(void) {
   ScenarioSce10effScratch* scratch;
   s16                      rotation[3];
   s16                      translation[3];
@@ -14,7 +14,7 @@ void func_801d0ee0(void) {
   u32                      matrix[3];
   u32                      vector[2];
 
-  func_80178b78();
+  func_80178B78();
 
   scratch = *(ScenarioSce10effScratch* volatile*)0x1f800044;
 
@@ -34,7 +34,7 @@ void func_801d0ee0(void) {
 
   func_80179558(rotation, matrix, vector);
   func_80179738(translation, object_work);
-  func_80178cb8(D_801492E8, object_work);
-  func_80178fd8(object_work);
+  func_80178CB8(D_801492E8, object_work);
+  func_80178FD8(object_work);
   func_80179068(object_work);
 }

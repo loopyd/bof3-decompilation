@@ -2,9 +2,9 @@
 
 /* @behavior selects the next local-state handler from one of two tables and calls
  * it immediately.
- * @source 0x801df8ac FUN_801df8ac
+ * @source 0x801DF8AC
  */
-void NO_SIBLING_CALLS func_801df8ac(void) {
+void NO_SIBLING_CALLS func_801DF8AC(void) {
   const volatile u8* state_table_base;
   Battle03Handler    handler;
   u32                state_index;

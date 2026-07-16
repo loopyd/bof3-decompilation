@@ -7,9 +7,9 @@ typedef struct Battle03RankEntry {
 
 /* @behavior builds and sorts the mixed local/enemy ranking list used by the owner
  * selection bytes at `0x8014630c`, then resets the current owner cursor.
- * @source 0x801daae4 FUN_801daae4
+ * @source 0x801DAAE4
  */
-void func_801daae4(void) {
+void func_801DAAE4(void) {
   Battle03RankEntry entries[11];
   u16               max_local_value;
   u8                count;
@@ -23,7 +23,7 @@ void func_801daae4(void) {
     battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
     if ((BATTLE_GLOBAL_BYTE_63BA == 0u) ||
         ((BATTLE_LOCAL_WORD_128(battle_work) & 0x8000u) != 0u)) {
-      if ((func_801db9e4(index) != 0u) &&
+      if ((func_801DB9E4(index) != 0u) &&
           (max_local_value < BATTLE_LOCAL_HALF_98(battle_work))) {
         max_local_value = BATTLE_LOCAL_HALF_98(battle_work);
       }
@@ -40,7 +40,7 @@ void func_801daae4(void) {
     battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
     if ((BATTLE_GLOBAL_BYTE_63BA == 0u) ||
         ((BATTLE_LOCAL_WORD_128(battle_work) & 0x8000u) != 0u)) {
-      if (func_801db9e4(index) != 0u) {
+      if (func_801DB9E4(index) != 0u) {
         score = 0;
         if (BATTLE_LOCAL_BYTE_119(battle_work) == 4u) {
           u8 kind_mode;
@@ -57,7 +57,7 @@ void func_801daae4(void) {
         if (BATTLE_LOCAL_BYTE_119(battle_work) == 5u) {
           score = 1;
         }
-        score = (s16)((score * BATTLE_PERCENT_TABLE_AF3C[func_801db434(
+        score = (s16)((score * BATTLE_PERCENT_TABLE_AF3C[func_801DB434(
                                    BATTLE_LOCAL_BYTE_7A(battle_work), 1u)]) /
                       100);
         entries[count].value = (s16)(score + BATTLE_LOCAL_HALF_98(battle_work));
@@ -75,13 +75,13 @@ void func_801daae4(void) {
     battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
     if ((BATTLE_GLOBAL_BYTE_63BA == 0u) ||
         ((BATTLE_ENEMY_WORD_104(battle_work) & 0x8000u) != 0u)) {
-      if (func_801db9e4(index) != 0u) {
+      if (func_801DB9E4(index) != 0u) {
         u32 rank;
         s8  random_bonus;
 
-        rank = func_801db434(BATTLE_ENEMY_BYTE_88(battle_work), 0u);
+        rank = func_801DB434(BATTLE_ENEMY_BYTE_88(battle_work), 0u);
         random_bonus = BATTLE_RANDOM_BONUS_TABLE_AF48[(rank * 0x10u) +
-                                                      (func_8017e3d4() & 0xfu)];
+                                                      (func_8017E3D4() & 0xfu)];
         entries[count].value =
             (s16)(BATTLE_ENEMY_HALF_A8(battle_work) + random_bonus);
         entries[count].index = index;

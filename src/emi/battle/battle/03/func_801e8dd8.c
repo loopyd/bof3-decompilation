@@ -2,9 +2,9 @@
 
 /* @behavior derives queued-slot position offsets from either the local or enemy
  * source tables and writes them into the current queued object.
- * @source 0x801e8dd8 FUN_801e8dd8
+ * @source 0x801E8DD8
  */
-void func_801e8dd8(void) {
+void func_801E8DD8(void) {
   volatile u8* slot;
   s8           offset_x;
   u8           offset_y;

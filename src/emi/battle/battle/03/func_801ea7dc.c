@@ -2,9 +2,9 @@
 
 /* @behavior dispatches the current panel-task byte-3 state through the four-entry
  * result-ring icon table.
- * @source 0x801ea7dc FUN_801ea7dc
+ * @source 0x801EA7DC
  */
-void NO_SIBLING_CALLS func_801ea7dc(void) {
+void NO_SIBLING_CALLS func_801EA7DC(void) {
   Battle03Handler table[4];
 
   table[0] = *(Battle03Handler const volatile*)0x801d1004u;

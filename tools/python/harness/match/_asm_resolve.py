@@ -4,7 +4,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..io import read_json, RepoLayout, repo_layout
+from ..io import read_json, RepoLayout
 
 IMPLAUSIBLE_SIBLING_FUNCTION_SIZE = 0x1000
 MIPS_JR_RA = 0x03E00008
@@ -123,25 +123,6 @@ def infer_size_from_binary_return(
     )
 
 
-def _infer_size_from_function_index(source_path: Path, address: int) -> int:
-    layout = repo_layout()
-    func_index = layout.out_dir / "inventory" / "ghidra_function_index.json"
-    if func_index.is_file():
-        payload = read_json(func_index)
-        rows = payload.get("rows", [])
-        entry_hex = f"0x{address:08x}"
-        for row in rows:
-            if row.get("entry_hex") != entry_hex:
-                continue
-            body_min = row.get("body_min", "")
-            body_max = row.get("body_max", "")
-            if body_min and body_max:
-                return int(body_max, 16) - int(body_min, 16) + 1
-    raise ValueError(
-        f"cannot infer original size for {source_path}; pass --size or add the next source in the same directory"
-    )
-
-
 def infer_original_size(
     source_path: Path,
     *,
@@ -150,24 +131,21 @@ def infer_original_size(
     load_address: int | None,
 ) -> int:
     try:
-        return _infer_size_from_function_index(source_path, address)
+        return infer_size_from_binary_return(
+            binary_path, address=address, load_address=load_address
+        )
     except ValueError:
-        try:
-            return infer_size_from_binary_return(
-                binary_path, address=address, load_address=load_address
-            )
-        except ValueError:
-            sibling_size = infer_size_from_sibling_sources(source_path, address)
-            if sibling_size is not None:
-                return sibling_size
-            raise
+        sibling_size = infer_size_from_sibling_sources(source_path, address)
+        if sibling_size is not None:
+            return sibling_size
+        raise
 
 
 def source_function_name(source_path: Path, address: int) -> str:
     match = FUNC_NAME_RE.search(source_path.stem)
     if match is not None:
-        return f"func_{match.group(1).lower()}"
-    return f"func_{address:08x}"
+        return f"func_{match.group(1).upper()}"
+    return f"func_{address:08X}"
 
 
 def _source_relative_path(layout: RepoLayout, source_path: Path) -> Path:
@@ -203,7 +181,7 @@ def build_target_for_source(layout: RepoLayout, source_path: Path) -> str:
 def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
     resolved_source = source_path.expanduser().resolve()
     try:
-        source_rel = resolved_source.relative_to(layout.harness_dir).as_posix()
+        source_rel = resolved_source.relative_to(layout.root).as_posix()
     except ValueError:
         source_rel = ""
     from ..targets import load_target_manifests
@@ -221,7 +199,7 @@ def overlay_load_address_for_source(
 ) -> int | None:
     resolved_source = source_path.expanduser().resolve()
     try:
-        source_rel = resolved_source.relative_to(layout.harness_dir).as_posix()
+        source_rel = resolved_source.relative_to(layout.root).as_posix()
     except ValueError:
         return None
 

@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior clears one local/enemy ranking scratch set across all battlers.
- * @source 0x801db494 FUN_801db494
+ * @source 0x801DB494
  */
-void func_801db494(void) {
+void func_801DB494(void) {
   u8 index;
 
   index = 0u;

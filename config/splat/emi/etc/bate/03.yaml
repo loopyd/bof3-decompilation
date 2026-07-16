@@ -10,8 +10,7 @@ options:
   src_path: src/emi/etc/bate/03
   ld_script_path: out/splat/emi/etc/bate/03/linker.ld
   symbol_addrs_path:
-    - config/symbols/psyq.txt
-    - config/symbols/shared.txt
+    - config/symbols/emi/etc/bate/03.txt
 segments:
   - [0x0, bin]
   - [0x200]

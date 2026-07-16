@@ -10,21 +10,21 @@ extern vs8  D_80146872;
 extern vu8  D_8014832E;
 
 /* @behavior boots the primary SCENA16 state and waits for slot 6 to finish.
- * @source 0x801f6ccc FUN_801f6ccc
+ * @source 0x801F6CCC
  */
-void func_801f6ccc(void) {
-  func_801c1df0(0u);
+void func_801F6CCC(void) {
+  func_801C1DF0(0u);
   D_8014832E = 0x1fu;
-  func_8019fa28(4u, 0x1a0000u, 0x88000u, 5u);
+  func_8019FA28(4u, 0x1a0000u, 0x88000u, 5u);
   D_801448FC = 4u;
   D_80144900 = 0x1a0000u;
   D_80146258 |= 0x240u;
   D_80144904 = 0x88000u;
   D_801448FF = 5u;
-  func_80161bbc(6u);
+  func_80161BBC(6u);
 
-  while (!func_80162d00()) {
-    func_8014b87c(1u);
+  while (!func_80162D00()) {
+    func_8014B87C(1u);
   }
 
   D_80146864 = 0u;

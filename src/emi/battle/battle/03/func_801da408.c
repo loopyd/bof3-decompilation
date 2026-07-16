@@ -2,9 +2,9 @@
 
 /* @behavior emits one flat-colored line/box primitive by writing rgb and two corner
  * points directly into the current primitive.
- * @source 0x801da408 FUN_801da408
+ * @source 0x801DA408
  */
-void func_801da408(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
+void func_801DA408(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6) {
   u32 primitive;
   u8  color0;
@@ -23,7 +23,7 @@ void func_801da408(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
   y0 = arg1;
   x1 = arg2;
   y1 = arg3;
-  func_8017aa80(primitive);
+  func_8017AA80(primitive);
   *(u8*)(primitive + 4) = color0;
   *(u8*)(primitive + 5) = color1;
   *(u8*)(primitive + 6) = color2;
@@ -31,5 +31,5 @@ void func_801da408(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
   *(s16*)(primitive + 10) = y0;
   *(s16*)(primitive + 12) = x1;
   *(s16*)(primitive + 14) = y1;
-  func_8014e5a0(1u, 0x10u);
+  func_8014E5A0(1u, 0x10u);
 }

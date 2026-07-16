@@ -2,9 +2,9 @@
 
 /* @behavior initializes both display/draw environment pairs used by the
  * boot-side double buffer.
- * @source 0x8014ae08 func_8014ae08
+ * @source 0x8014AE08
  */
-void func_8014ae08(void) {
+void func_8014AE08(void) {
   u8* work;
 
   work = D_80143D48 + 0x14;

@@ -2,9 +2,9 @@
 
 /* @behavior appends one triple `(byte, byte, word)` into the 16-entry UI ring and
  * advances the ring tail.
- * @source 0x801de8c0 FUN_801de8c0
+ * @source 0x801DE8C0
  */
-void func_801de8c0(s8 arg0, s8 arg1, u32 arg2) {
+void func_801DE8C0(s8 arg0, s8 arg1, u32 arg2) {
   u8 index;
 
   *(volatile u8*)(0x801f0000u +

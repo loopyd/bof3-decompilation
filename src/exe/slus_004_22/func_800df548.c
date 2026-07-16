@@ -3,10 +3,10 @@
 /* @behavior selects the runtime equipment record base and scales the masked
  * item index by the serialized record stride. Invalid categories fall back to
  * the item table, matching the original dispatch.
- * @source 0x800df548 FUN_800df548
+ * @source 0x800DF548
  * @see docs/specs/data/equipment.md
  */
-void* func_800df548(s32 item_type, s32 item_index) {
+void* func_800DF548(s32 item_type, s32 item_index) {
   u8 category;
   u8 index;
 

@@ -1,8 +1,8 @@
 #include "internal.h"
 
 /* @behavior Pending analysis
- * @source 0x8014f704
+ * @source 0x8014F704
  */
-void func_8014f704(void) {
+void func_8014F704(void) {
   /* Pending decompilation */
 }

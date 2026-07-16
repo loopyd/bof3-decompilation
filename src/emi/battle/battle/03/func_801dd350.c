@@ -2,9 +2,9 @@
 
 /* @behavior rotates or mirrors the first point pair at offsets `0x0c/0x10` based on
  * the selector byte at offset `8`.
- * @source 0x801dd350 FUN_801dd350
+ * @source 0x801DD350
  */
-void func_801dd350(s32 arg0) {
+void func_801DD350(s32 arg0) {
   s32 mode;
   s32 value_0c;
   s32 value_10;

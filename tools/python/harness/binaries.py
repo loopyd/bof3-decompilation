@@ -684,8 +684,6 @@ def _render_manifest(
         f'id = "{target_id}"',
         f'disc_id = "BIN/{entry["archive_id"].upper()}.EMI#{entry["slot"]}"',
         'kind = "emi"',
-        'status = "quarantined"',
-        'quarantine_reason = "whole-payload bootstrap layout pending reviewed boundaries"',
         f'source_dir = "src/emi/{slug}"',
         f'binary = "out/binaries/emi/{slug}.bin"',
         f'splat = "config/splat/emi/{slug}.yaml"',

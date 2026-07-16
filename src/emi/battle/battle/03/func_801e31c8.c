@@ -2,9 +2,9 @@
 
 /* @behavior dispatches the current local presentation state-1 byte through its
  * table.
- * @source 0x801e31c8 FUN_801e31c8
+ * @source 0x801E31C8
  */
-void NO_SIBLING_CALLS func_801e31c8(void) {
+void NO_SIBLING_CALLS func_801E31C8(void) {
   volatile u8**    scratch_root;
   volatile u8*     scratch;
   Battle03Handler* table;

@@ -7,9 +7,9 @@ extern void* D_801459D0[];
 /* @behavior appends the current primitive to one OT head and advances the shared
  * primitive cursor when the requested byte count still fits in the active
  * buffer.
- * @source 0x8014e5a0 FUN_8014e5a0
+ * @source 0x8014E5A0
  */
-void func_8014e5a0(u32 ot_index, u32 primitive_size) {
+void func_8014E5A0(u32 ot_index, u32 primitive_size) {
   u8* primitive;
   u8  size;
 

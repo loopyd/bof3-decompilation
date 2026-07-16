@@ -2,9 +2,9 @@
 
 /* @behavior closes the current selection-specific EXE effect and clears the active
  * selection byte.
- * @source 0x801d1184 FUN_801d1184
+ * @source 0x801D1184
  */
-void func_801d1184(void) {
+void func_801D1184(void) {
   volatile u8* selection_ptr = &GAME_FRONT_SELECTION;
   s32          selection = *selection_ptr;
 

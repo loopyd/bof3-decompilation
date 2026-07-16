@@ -40,6 +40,7 @@ belong under `out/`.
 
 - [Discovery](methods/discovery.md) — locate and infer structures.
 - [Verification](methods/verification.md) — accept or reject findings.
+- [Source retention audit](migration.md) — audited C retention/removal record.
 
 ## Authoring rule
 

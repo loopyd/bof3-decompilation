@@ -2,9 +2,9 @@
 
 /* @behavior advances the UI ring index modulo 16 and reports whether it reached the
  * current target index.
- * @source 0x801eab38 FUN_801eab38
+ * @source 0x801EAB38
  */
-u8 func_801eab38(void) {
+u8 func_801EAB38(void) {
   u8* const base = (u8*)0x801f0000u;
   s16       target_offset;
   s16       index_offset;

@@ -20,9 +20,9 @@ extern vu32 D_80146858;
 extern vu32 D_8014685C;
 /* @behavior initializes EMI streaming state, refreshes the active LBA, and installs
  * CD callbacks.
- * @source 0x80161fdc FUN_80161fdc
+ * @source 0x80161FDC
  */
-void func_80161fdc(u32 slot_id) {
+void func_80161FDC(u32 slot_id) {
   u32 cd_base;
   u32 active_lba;
   u32 current_lba;
@@ -67,7 +67,7 @@ void func_80161fdc(u32 slot_id) {
   D_80146678 = current_lba;
   D_80146808 = current_lba;
   D_80146481 = slot + 1;
-  func_80162b08(slot);
+  func_80162B08(slot);
 
   D_80146454 = 0x800;
   D_80146494 = 0;

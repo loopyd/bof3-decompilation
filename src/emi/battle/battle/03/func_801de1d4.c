@@ -2,9 +2,9 @@
 
 /* @behavior copies each active local/enemy battler into a queued slot entry when
  * its `0x8` flag is clear, then initializes the queued-slot state bytes.
- * @source 0x801de1d4 FUN_801de1d4
+ * @source 0x801DE1D4
  */
-void func_801de1d4(void) {
+void func_801DE1D4(void) {
   u8                           index;
   volatile Battle03QueuedSlot* queued_slots;
 
@@ -25,7 +25,7 @@ void func_801de1d4(void) {
         u32                          work_ptr;
         volatile u8*                 queued_slot_bytes;
 
-        slot = func_801e590c(0u, 7u) & 0xffu;
+        slot = func_801E590C(0u, 7u) & 0xffu;
         queued_slot = &queued_slots[slot];
         dst = (volatile u32*)queued_slot;
         src = (const volatile u32*)(0x80145e90u + work_offset);
@@ -65,7 +65,7 @@ void func_801de1d4(void) {
       u32 work_offset;
 
       work_index = (u32)index - 3u;
-      if ((func_801db524(index) == 0u) &&
+      if ((func_801DB524(index) == 0u) &&
           ((*(volatile u32*)(0x801eb734u + (work_index * 0x118u)) & 8u) ==
            0u)) {
         u32                          slot;
@@ -77,7 +77,7 @@ void func_801de1d4(void) {
         volatile u8*                 queued_slot_bytes;
 
         work_offset = work_index * 0x118u;
-        slot = func_801e590c(0u, 7u) & 0xffu;
+        slot = func_801E590C(0u, 7u) & 0xffu;
         queued_slot = &queued_slots[slot];
         dst = (volatile u32*)queued_slot;
         src = (const volatile u32*)(0x801eb630u + work_offset);

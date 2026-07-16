@@ -1,6 +1,6 @@
 #include "internal.h"
 
-extern void* func_8014e0a8(s32 size, void* buffer, s32 sectors);
+extern void* func_8014E0A8(s32 size, void* buffer, s32 sectors);
 
 extern void* D_801459F8;
 extern u32   D_80143E70[];
@@ -9,9 +9,9 @@ extern s32   D_80143E8C;
 
 /* @behavior reads one EXE file into RAM in two sector-sized steps and copies the
  * first staged header block into the boot scratch area.
- * @source 0x8014e0fc FUN_8014e0fc
+ * @source 0x8014E0FC
  */
-s32 func_8014e0fc(const char* path) {
+s32 func_8014E0FC(const char* path) {
   CdlFILE     file;
   u32*        src;
   u32*        dst;
@@ -28,7 +28,7 @@ s32 func_8014e0fc(const char* path) {
   while (1) {
     if (CdSearchFile(&file, current_path) != NULL) {
       CdControl(2, (u_char*)&file, NULL);
-      if (func_8014e0a8(0x800, D_801459F8, sectors) == 0) {
+      if (func_8014E0A8(0x800, D_801459F8, sectors) == 0) {
         src = D_801459F8;
         dst = D_80143E70;
         end = src + 0x20;
@@ -59,7 +59,7 @@ s32 func_8014e0fc(const char* path) {
         CdControlB(2, (u_char*)&file, NULL);
 
         attempts += 1;
-        if (func_8014e0a8(exe_size[0], D_80143E88, sectors) == 0) {
+        if (func_8014E0A8(exe_size[0], D_80143E88, sectors) == 0) {
           return 0;
         }
 

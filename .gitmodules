@@ -1,14 +1,14 @@
 [submodule "third_party/asm-differ"]
 	path = third_party/asm-differ
 	url = https://github.com/raulcorreia7/asm-differ.git
-[submodule "third_party/bof3-disk"]
-	path = third_party/bof3-disk
+[submodule "third_party/deprecated/bof3-disk"]
+	path = third_party/deprecated/bof3-disk
 	url = https://github.com/raulcorreia7/rebof3-disk.git
 [submodule "third_party/decomp-permuter"]
 	path = third_party/decomp-permuter
 	url = https://github.com/raulcorreia7/decomp-permuter.git
-[submodule "third_party/emi-ex"]
-	path = third_party/emi-ex
+[submodule "third_party/deprecated/emi-ex"]
+	path = third_party/deprecated/emi-ex
 	url = https://github.com/raulcorreia7/emi-ex.git
 	branch = main
 [submodule "third_party/m2c"]

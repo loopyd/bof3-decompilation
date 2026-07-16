@@ -4,9 +4,9 @@
  * work area. If bit 0 is set the value is left unchanged. If the current
  * value matches arg_a or arg_b, the byte is set to arg_c; otherwise it is
  * set to arg_c ^ 4.
- * @source 0x801bb8e8 FUN_801bb8e8
+ * @source 0x801BB8E8
  */
-void func_801bb8e8(u8 arg_a, u8 arg_b, u8 arg_c) {
+void func_801BB8E8(u8 arg_a, u8 arg_b, u8 arg_c) {
   struct GameWorkArea* work;
   u8                   current;
 

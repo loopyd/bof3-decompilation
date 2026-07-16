@@ -2,9 +2,9 @@
 
 /* @behavior seeds the local scratchpad halfwords at `0x2e` and `0x30` with the
  * fixed area defaults.
- * @source 0x801f3400 FUN_801f3400
+ * @source 0x801F3400
  */
-void func_801f3400(void) {
+void func_801F3400(void) {
   World00Area016Scratch* scratch;
 
   scratch = WORLD00_AREA016_SCRATCH_PTR;

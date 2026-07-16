@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior Clears scratch byte 9 and local state, then enables scratch byte 1.
- * @source 0x801f2c5c func_801f2c5c
+ * @source 0x801F2C5C
  */
-void func_801f2c5c(void) {
+void func_801F2C5C(void) {
   u8* scratch;
 
   scratch = *(u8**)0x1f800044u;

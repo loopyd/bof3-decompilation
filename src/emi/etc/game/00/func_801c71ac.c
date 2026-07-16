@@ -2,9 +2,9 @@
 
 /* @behavior classifies the signed low 16 bits as negative, zero, or positive
  * and returns -1, 0, or 1 respectively.
- * @source 0x801c71ac FUN_801c71ac
+ * @source 0x801C71AC
  */
-s32 func_801c71ac(s32 arg0) {
+s32 func_801C71AC(s32 arg0) {
   s32 v0;
   s32 v1;
 

@@ -41,29 +41,7 @@ $(BUILD_DIR)/src/%.o: $(ROOT)/src/%.S
 	@mkdir -p $(dir $@)
 	$(AS) $(ASFLAGS) -o $@ $<
 
-build-one:
-	@test -n "$(FUNC)" || { printf '%s\n' 'usage: make build-one FUNC=src/.../function.c' >&2; exit 2; }
-	$(MAKE) --no-print-directory $(BUILD_DIR)/$(FUNC:.c=.o)
-
-diff:
-	@test -n "$(FUNC)" || { printf '%s\n' 'usage: make diff FUNC=src/.../function.c' >&2; exit 2; }
-	$(ROOT)/bin/asmdiff $(FUNC)
-
-permute:
-	@test -n "$(FUNC)" || { printf '%s\n' 'usage: make permute FUNC=src/.../function.c' >&2; exit 2; }
-	$(ROOT)/bin/permute $(FUNC)
-
-check:
-	$(ROOT)/bin/check-all
-
-rebuild:
-	@test -n "$(TARGET)" || { printf '%s\n' 'usage: make rebuild TARGET=exe/logo' >&2; exit 2; }
-	$(ROOT)/bin/rebuild $(TARGET)
-
-verify:
-	$(ROOT)/bin/verify $(if $(TARGET),$(TARGET),--all)
-
 clean:
 	rm -rf $(BUILD_DIR)/src
 
-.PHONY: all build-one diff permute check rebuild verify clean
+.PHONY: all clean

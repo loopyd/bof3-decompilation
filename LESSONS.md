@@ -3,11 +3,9 @@
 > Durable cross-cutting gotchas that make the BOF3 lift-and-match loop faster and safer.
 
 Domain contracts belong in `docs/specs/`; repeatable procedures belong in the
-owning `.agents/skills/` reference. This file retains concrete findings that
-are easy to repeat or misdiagnose across targets. Use the
-[`matching workflow`](docs/matching.md) and
-[`decomp-loop matching reference`](.agents/skills/decomp-loop/references/matching-patterns.md)
-for matching and permuter procedures.
+owning operating reference. This file retains concrete findings that are easy
+to repeat or misdiagnose across targets. Use the
+[`matching workflow`](docs/matching.md) for matching and permuter procedures.
 
 ## Evidence and boundaries
 
@@ -35,8 +33,8 @@ for matching and permuter procedures.
   loads at `0x801d0c00`, begins with a control word, and does not reach the
   title setup handler until payload offset `0x90` (`0x801d0c90`). Using that
   handler as the target load address shifts every payload offset. Normalize and
-  split the entry through the harness, then verify boundaries against
-  canonical lift assembly.
+  split the entry through the target's tracked Splat layout, then verify
+  boundaries against canonical lift assembly.
 - `GAME.EMI#0` loads at `0x80195800`; its first reviewed function is at payload
   offset `0x91c` (`0x8019611c`). Configuring the target at the first function
   silently shifts direct byte reads and analyzer addresses by `0x91c`.
@@ -76,9 +74,10 @@ for matching and permuter procedures.
 
 ### Diagnose toolchain failures before changing candidate C
 
-- If `bin/harness diff` cannot compile a new lift, compile one known existing
-  source from the same target. The same failure on both sources indicates a
-  workspace or toolchain problem, not evidence that the candidate C is wrong.
+- If `bin/asm-diff TARGET@0xADDRESS` cannot compile a new lift, diff one known
+  existing function from the same target. The same failure on both functions
+  indicates a workspace or toolchain problem, not evidence that the candidate
+  C is wrong.
 - A compiler exit without diagnostics is not a comparison result. Preserve the
   last verified diff and fix the compile path before tuning source shape.
 - The historical compiler is a statically linked 32-bit i386 executable. Under
@@ -110,13 +109,12 @@ for matching and permuter procedures.
 - PsyQ library code can be linked more than once at different addresses across
   executables and EMI payloads. An address verified in `SLUS_004.22` is not a
   shared address contract for another binary.
-- Use official PsyQ function names and record the verified archive member in the
-  owning target manifest. Put any runtime address fallback in that target's
-  `symbols.c`.
-- Replace analyzer `LAB_` aliases once behavior and signature are proven, but
-  retain the compiled `func_XXXXXXXX`/`DAT_XXXXXXXX` identifier. Expose the
-  verified meaning through a simple semantic alias so tools and humans can both
-  trace the original address.
+- Use official PsyQ function names and record the verified archive member in
+  the owning target's symbol map. Generated weak bindings receive the runtime
+  address from that map.
+- Replace analyzer aliases only after behavior and signature are proven. Raw
+  `func_XXXXXXXX`/`D_XXXXXXXX` map names are replaced directly by a reviewed
+  semantic name; do not maintain compatibility aliases.
 - Preserve useful pre-promotion evidence with an `INFERRED:` comment beside the
   owning address-based declaration. State what was observed and what would
   verify promotion; do not create a semantic alias from a hint alone.

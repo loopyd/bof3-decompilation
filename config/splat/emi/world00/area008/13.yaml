@@ -10,8 +10,7 @@ options:
   src_path: src/emi/world00/area008/13
   ld_script_path: out/splat/emi/world00/area008/13/linker.ld
   symbol_addrs_path:
-  - config/symbols/psyq.txt
-  - config/symbols/shared.txt
+  - config/symbols/emi/world00/area008/13.txt
 segments:
 - - 0
   - bin

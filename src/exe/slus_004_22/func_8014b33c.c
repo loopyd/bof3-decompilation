@@ -3,13 +3,13 @@
 extern volatile GameCallbackSlot* D_80143D40;
 extern GameCallbackSlot           D_80143B40;
 
-extern void func_8014b900(int slot_index);
+extern void func_8014B900(int slot_index);
 
 /* @behavior walks the callback slot table and dispatches each non-empty slot by
  * index.
- * @source 0x8014b33c FUN_8014b33c
+ * @source 0x8014B33C
  */
-void func_8014b33c(void) {
+void func_8014B33C(void) {
   GameCallbackSlot*          slot_end;
   volatile GameCallbackSlot* next_slot;
   s32                        slot_index;
@@ -20,7 +20,7 @@ void func_8014b33c(void) {
 
   do {
     if (D_80143D40->state != GAME_CALLBACK_SLOT_STATE_EMPTY) {
-      func_8014b900(slot_index & 0xff);
+      func_8014B900(slot_index & 0xff);
     }
 
     next_slot = D_80143D40 + 1;

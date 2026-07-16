@@ -2,9 +2,9 @@
 
 /* @behavior once the live grid gate clears, restores the battle owner tuple to the
  * shared selection root and reapplies the local panel-task band reset helper.
- * @source 0x800975d4 FUN_800975d4
+ * @source 0x800975D4
  */
-void NO_SIBLING_CALLS func_800975d4(void) {
+void NO_SIBLING_CALLS func_800975D4(void) {
   volatile u8* battle_selection_state;
   volatile u8* battle_selection_lock;
 
@@ -17,5 +17,5 @@ void NO_SIBLING_CALLS func_800975d4(void) {
   battle_selection_state[0x62e1u] = 1u;
   battle_selection_state[0x62e2u] = 0u;
   battle_selection_state[0x62e3u] = 0u;
-  func_8009b20c();
+  func_8009B20C();
 }

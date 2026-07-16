@@ -5,9 +5,9 @@ extern u32* D_801459D0[];
 
 /* @behavior links the active frame's eight ordering-table heads to their
  * packet chains with the PsyQ AddPrims helper.
- * @source 0x8014b0f0 func_8014b0f0
+ * @source 0x8014B0F0
  */
-void func_8014b0f0(void) {
+void func_8014B0F0(void) {
   s32   index;
   u32** ordering_table;
   u8*   packet;

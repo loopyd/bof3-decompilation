@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior opens the selection-specific EXE effect using the current selection.
- * @source 0x801d1134 FUN_801d1134
+ * @source 0x801D1134
  */
-void func_801d1134(void) {
+void func_801D1134(void) {
   s32 selection;
 
   selection = GAME_FRONT_SELECTION;

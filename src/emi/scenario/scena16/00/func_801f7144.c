@@ -1,11 +1,11 @@
 #include "internal.h"
 
 /* @behavior dispatches through the secondary SCENA16 state table.
- * @source 0x801f7144 FUN_801f7144
+ * @source 0x801F7144
  */
-void func_801f7144(void) {
+void func_801F7144(void) {
   s8 state;
 
   state = *(s8*)0x80146874u;
-  SCENA16_PTR_FUN_801f8558[state]();
+  SCENA16_PTR_801F8558[state]();
 }

@@ -2,9 +2,9 @@
 
 /* @behavior draws the local textured frame in four translucent FT4 strips, then
  * queues the matching inner fill rectangle.
- * @source 0x801f3d88 FUN_801f3d88
+ * @source 0x801F3D88
  */
-void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
+void func_801F3D88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
   volatile RECT*     texture_window;
   volatile POLY_FT4* primitive;
   s16                left_x;
@@ -32,7 +32,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
 
   SetDrawMode((DR_MODE*)WORLD00_AREA008_PRIMITIVE_PTR, 0, 1, 0xf,
               (RECT*)texture_window);
-  func_8014e5a0(1u, 0x0cu);
+  func_8014E5A0(1u, 0x0cu);
 
   left_x = arg0;
   top_y = arg1;
@@ -72,7 +72,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
     GetGraphType();
   }
 
-  func_8014e5a0(1u, 0x28u);
+  func_8014E5A0(1u, 0x28u);
 
   half_width = (s16)(((u16)(arg2 + 1u) - 4u) >> 1);
   odd_width = ((u16)(arg2 - 3u)) & 1u;
@@ -108,7 +108,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
     GetGraphType();
   }
 
-  func_8014e5a0(1u, 0x28u);
+  func_8014E5A0(1u, 0x28u);
 
   right_inner_x = left_inner_x + half_width;
   right_x = left_inner_x + half_width + half_width + (s16)odd_width;
@@ -144,7 +144,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
     GetGraphType();
   }
 
-  func_8014e5a0(1u, 0x28u);
+  func_8014E5A0(1u, 0x28u);
 
   right_x = arg0 + arg2 + 1;
 
@@ -179,7 +179,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
     GetGraphType();
   }
 
-  func_8014e5a0(1u, 0x28u);
+  func_8014E5A0(1u, 0x28u);
 
   texture_window = (volatile RECT*)WORLD00_AREA008_PRIMITIVE_PTR;
   WORLD00_AREA008_PRIMITIVE_PTR =
@@ -195,7 +195,7 @@ void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4) {
 
   SetDrawMode((DR_MODE*)WORLD00_AREA008_PRIMITIVE_PTR, 0, 1, 0xf,
               (RECT*)texture_window);
-  func_8014e5a0(1u, 0x0cu);
-  func_801aeba0((s16)(arg0 + 2), (s16)(arg1 + 2), (s16)(arg2 - 4),
+  func_8014E5A0(1u, 0x0cu);
+  func_801AEBA0((s16)(arg0 + 2), (s16)(arg1 + 2), (s16)(arg2 - 4),
                 (s16)(arg3 - 4), 0);
 }

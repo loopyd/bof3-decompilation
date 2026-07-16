@@ -3,9 +3,9 @@
 /* @behavior configures a battle action target, setting the action state for the
  * given battler. resolves actor index, target reference, and initialises
  * approach/motion flags depending on target defensive state.
- * @source 0x800aaebc FUN_800aaebc
+ * @source 0x800AAEBC
  */
-void func_800aaebc(s16 target_index, u8 battler_index) {
+void func_800AAEBC(s16 target_index, u8 battler_index) {
   volatile u8* battler_data;
   u8           action_slot;
   u8           target_flags;

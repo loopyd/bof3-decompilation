@@ -10,20 +10,20 @@ struct GameSelState {
 
 /* @behavior resets selection state and continuously dispatches the current
  * selection callback before advancing the front-end loop.
- * @source 0x80197068 FUN_80197068
+ * @source 0x80197068
  */
 void func_80197068(void) {
   const GameEntry0StateHandler* callbacks;
 
   GAME_SEL_STATE->state = 0u;
   GAME_SEL_STATE->substate = 0u;
-  func_8014ba04();
-  func_80158e50();
+  func_8014BA04();
+  func_80158E50();
 
   while (1) {
     callbacks = GAME_SELECTION_CALLBACK_TABLE;
     callbacks[GAME_SEL_STATE->state]();
-    func_80198cac();
-    func_8014b87c(1u);
+    func_80198CAC();
+    func_8014B87C(1u);
   }
 }

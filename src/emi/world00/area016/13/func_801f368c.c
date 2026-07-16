@@ -7,9 +7,9 @@ typedef struct World00Area016Overlay801f0000 {
 
 /* @behavior dispatches through the second local handler table selected by
  * scratchpad state byte `0x03`.
- * @source 0x801f368c FUN_801f368c
+ * @source 0x801F368C
  */
-void func_801f368c(void) {
+void func_801F368C(void) {
   World00Area016Scratch*         scratch;
   World00Area016Overlay801f0000* overlay;
 

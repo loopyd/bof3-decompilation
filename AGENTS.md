@@ -1,126 +1,70 @@
-# AGENTS.md — bof3-harness
+# AGENTS.md — BOF3
 
-BOF3 is a set of independently loaded binaries, not one link target. Read
-[CONTEXT.md](CONTEXT.md) before naming or changing a binary, EMI entry, or
-decompilation target. Load the narrowest workflow or domain skill needed; keep
-always-on policy here.
+BOF3 is a set of independently loaded binaries, not one link target. Work on
+one exact target and function at a time.
 
-## Workspace
+## Ownership
 
-- Work only in this repository; never edit the sibling `rebof3/` checkout.
-- `inputs/` is ignored user media/private input and must never be committed.
-- Authored inputs live under `src/`, `include/`, `Makefile`, `config/`, `asm/`,
-  and `docs/`. `build/`, `out/`, and `toolchains/` are local/generated state.
-- `out/` is the sole generated-artifact root. Do not invent a second output
-  tree or hand-edit generated catalogs, projects, exports, or binaries.
-- `config/splat/` and `config/symbols/` own durable layouts/symbols.
-  `config/analysis/` owns reviewed replay and analysis-only types; it never
-  overrides binary layouts or compiled declarations.
-- Before adding a possibly ignored path, run `git check-ignore -v <path>` and
-  use the narrowest exception if authored content must be tracked.
+- Work only in this repository. `inputs/` is ignored user media and is never
+  committed.
+- `out/`, `build/`, and `toolchains/` are generated. Do not hand-edit them or
+  add another generated-artifact root.
+- `config/targets/<target>.toml` owns binary identity, image, and load address.
+  `config/splat/` owns reviewed segment layouts. `config/symbols/<target>.txt`
+  owns target-local symbols. `config/analysis/` owns reviewed Rizin replay.
+- Analyze the executable image or extracted EMI entry, never an EMI archive.
+  Identical addresses or bytes in different targets remain separate facts.
+- Original bytes and PS-X headers outrank analyzer output. Verify PS-X `t_addr`;
+  do not assume `0x80010000`.
 
-## Target and source ownership
+## Source and symbols
 
-- An executable, EMI archive, extracted entry, and promoted target are distinct
-  objects. Analyze/build the exact executable payload or extracted entry, never
-  an archive container. Preserve separate targets at separate load addresses.
-- Original bytes and PS-X headers outrank metadata; reviewed tracked layouts
-  outrank analyzer guesses. For PS-X executables, verify `t_addr` rather than
-  assuming `0x80010000`.
-- Keep one `func_XXXXXXXX.c` per lifted function and one adjacent `internal.h`.
-  Large targets may use one singular barrel path:
-  `internal.h -> symbols/symbols.h -> functions.h|variables.h|files.h`.
-- Keep the same concise subsystem separators in each barrel header and its
-  corresponding `symbols/*.c` binding unit, so declarations and absolute
-  bindings remain navigable together.
-- Order address-based `DAT_XXXXXXXX` declarations and bindings by ascending
-  address within their owner section. Keep compatibility aliases alphabetical;
-  order PsyQ SDK includes by their natural dependency order, then alphabetically
-  when independent.
-- Keep `symbols.c` as the target binding entry point; shallow `symbols/*.c`
-  units are allowed. Do not use `.inc` binding fragments or target-local PsyQ
-  headers when official SDK headers declare the API.
-- A `symbols/psyq.h` barrel may record PsyQ binding ownership, but it only
-  includes the official SDK wrapper; it never redeclares PsyQ APIs.
-- Header guards are short and path-scoped, such as `CORE_EMI_H`; do not add a
-  redundant repository prefix.
+- Lifted source is one `func_XXXXXXXX.c` per function with an adjacent
+  `internal.h`. `src/exe/` owns executables; `src/emi/` owns EMI entries.
+- Raw functions are `func_80143B40`; raw data is `D_80143B40`. Hex is eight
+  uppercase digits in maps and documentation. Semantic/PsyQ names replace raw
+  map names after review; lifted filenames stay address-based.
+- Maps use `name = 0xADDRESS;`, sorted by address. Run `bin/symbols check`;
+  normalize only with `bin/symbols normalize [TARGET] --write`.
+- Generated weak bindings are `out/bindings/<target>/symbols.c`. Never edit or
+  track them. PsyQ is external code: use official declarations and target-local
+  map entries; do not lift it or reuse its address across binaries.
+- Write readable C89. Do not use handwritten assembly to force a match.
 
-## Skills
+## Daily loop
 
-The repository maintains five local skills under `.agents/skills/`. Load the
-narrowest one before starting work; subagents do **not** inherit parent skills
-and must either read the skill files themselves or receive skill content in
-their prompt.
-
-| Skill | Path | When to load |
-| --- | --- | --- |
-| `$bof3-docs` | `.agents/skills/bof3-docs/SKILL.md` | Locating the smallest authoritative repository document or command reference. |
-| `$decomp-loop` | `.agents/skills/decomp-loop/SKILL.md` | Lifting, matching, or improving a PSX MIPS function in C89. Also read `references/matching-patterns.md` and `references/psx-mips-correctness.md`. |
-| `$psx-rizin` | `.agents/skills/psx-rizin/SKILL.md` | Querying target-qualified analyzer evidence with direct Rizin, direct radare2, or the stateless harness adapter. Select adapter engines with `HARNESS_ANALYZER_ENGINE=rizin|r2|auto`. Also read `references/commands.md`, `references/psx-inputs.md`, and `references/projects-and-replay.md`. |
-| `$bof3-specs` | `.agents/skills/bof3-specs/SKILL.md` | Interpreting payloads, EMI types, graphics, or cross-binary evidence. Also read `references/payload-map.md` and `references/evidence-promotion.md`. |
-| `$psx1-hw` | `.agents/skills/psx1-hw/SKILL.md` | PSX1 hardware reference: memory map, registers, DMA, GPU, GTE, SPU, timers, CD-ROM, interrupts, and calling conventions. Read when touching hardware registers or MMIO. |
-
-The harness command surface (`bin/harness`) is the primary workflow entry point
-documented in `$decomp-loop`. Key commands:
-
-```bash
-bin/harness targets <target>
-bin/harness analyze [--top N] [--target <target>]
-bin/harness reverse --all --strategy leaf --functions 10
-bin/harness normalize
+```sh
+bin/splat TARGET
+bin/m2ctx TARGET@0xADDRESS
+bin/m2c TARGET@0xADDRESS > candidate.c
+# edit src/<target>/func_address.c
+bin/asm-diff TARGET@0xADDRESS
+bin/byte-match TARGET@0xADDRESS
+bin/permute TARGET@0xADDRESS --time-limit 300
+bin/promote TARGET@0xADDRESS candidate.c
 ```
 
-### Lifting workflow (controlled loop)
+`bin/promote` validates a candidate only: it formats, compiles, links, diffs,
+and byte-checks, then prints the manual edits required. It does not modify
+reviewed source, layouts, or maps. Run one permuter coordinator per function.
 
-One function at a time, no heavy AI automation for bulk work:
+## Rizin and evidence
 
-```bash
-bin/m2c <source>                # 1. get C seed from Splat ASM
-                                # 2. clean up: C89, project types, struct access
-bin/asmdiff <source>            # 3. check match (acceptance gate)
-bin/permute <source> -j <N>     # 4. bounded source-shape search
-                                # 5. adopt best candidate, fix, repeat from 3
-```
+- Use `bin/rz-project open|status|rebuild|export|analyze TARGET`. Each target
+  gets an isolated generated project under `out/`; never combine overlapping
+  binary mappings.
+- `export` prints a deterministic patch. `--write` is the explicit mutation
+  path after validation. Deep analysis makes candidates, not reviewed facts.
+- Build the cross-target cache only with `just index`; query it with
+  `bin/rev-query`. A stale or incomplete Rizin export must fail indexing.
+- Use the retained `$psx-rizin` skill for target-qualified analyzer procedure.
+  Put stable findings in `docs/specs/` and reusable evidence-backed gotchas in
+  `LESSONS.md`.
 
-Do not use `bin/harness reverse <target>@<addr> --run` for bulk lifting —
-it launches a full AI mission. Use it only when manual analysis is stuck.
+## Verification
 
-`bin/permute` is the sole permuter entry point: one function, one generated
-workspace, and one upstream decomp-permuter coordinator receiving the complete
-`-j` worker count. Different functions may run independently, but never start
-two coordinators for the same function workspace.
-
-## Reverse-engineering invariants
-
-- Use readable, period-appropriate C89 and the repository hardware-register
-  helpers. Never fill executable functions with handwritten assembly.
-- Keep compiled names address-based (`func_XXXXXXXX`, `DAT_XXXXXXXX`) for tool
-  traceability. Add a semantic alias only after review; keep unproven meaning as
-  a concise `INFERRED:` comment with evidence and a verification path.
-- PsyQ code is external library code: use official declarations, prove identity
-  from prototype plus assembly/call shape, and bind addresses target-locally.
-  Do not lift PsyQ or assume addresses repeat across targets.
-- Promoted functions require factual `@behavior` and address-preserving
-  `@source`; use at most one material tracked `docs/specs/` `@see` link.
-- Use `.agents/rules/` for detailed authored-C/build policy, `$bof3-specs` for
-  payload interpretation, `$psx-rizin` for stateless analyzer evidence, and
-  `$decomp-loop` for lifting, matching, permutation, and module completion.
-
-## Verification and commits
-
-- Run the narrowest build/diff while iterating. Before handoff run `just check`
-  when available; it includes `bin/harness doctor --strict`. State skipped
-  checks and reasons. Use `just verify <target>` only for a whole-target claim.
-- When a newly lifted function reaches canonical 100% instruction and byte
-  match, rerun its diff and prepare a focused change containing only the
-  function plus required boundary, declaration, or binding.
-- Do not stage, commit, push, or mutate external systems unless explicitly
-  authorized.
-
-## Knowledge hygiene
-
-- Put stable reviewed findings in the owning compact `docs/specs/` concept and
-  reusable evidence-backed gotchas in `LESSONS.md`. Keep raw output, generated
-  tables, and transient hypotheses under `out/`.
-- Preserve unrelated/user changes in a dirty worktree. Do not commit discs,
-  generated artifacts, toolchains, or unrelated cleanup.
+- Use the narrowest check while iterating: `bin/asm-diff` for instruction
+  evidence and `bin/byte-match` for raw equality. Nonmatches are normal and
+  exit 1; usage/config failures exit 2.
+- Before handoff, run `just check` when practical and state skipped checks.
+- Do not stage, commit, push, or mutate external systems without approval.

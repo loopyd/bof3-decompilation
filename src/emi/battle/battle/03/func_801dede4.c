@@ -2,9 +2,9 @@
 
 /* @behavior returns ready immediately when the local work flags allow it; otherwise
  * delegates to the first EXE-side readiness helper.
- * @source 0x801dede4 FUN_801dede4
+ * @source 0x801DEDE4
  */
-u8 func_801dede4(void) {
+u8 func_801DEDE4(void) {
   volatile Battle03LocalWork* battle_work = BATTLE_LOCAL_WORK_PTR;
   volatile u8*                battle_global = (volatile u8*)0x80140000u;
 
@@ -17,5 +17,5 @@ u8 func_801dede4(void) {
     return 1u;
   }
 
-  return func_8014d978();
+  return func_8014D978();
 }

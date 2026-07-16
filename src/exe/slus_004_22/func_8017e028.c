@@ -7,13 +7,13 @@ extern void _patch_card2(void);
 
 /* @behavior resets PAD clearing, applies the boot-side memory card init/patch
  * sequence under the event guard, then restores the event state.
- * @source 0x8017e028 FUN_8017e028
+ * @source 0x8017E028
  */
-void func_8017e028(s32 arg0) {
+void func_8017E028(s32 arg0) {
   ChangeClearPAD(0);
-  func_8017ee0c();
+  func_8017EE0C();
   InitCARD2(arg0);
   _patch_card();
   _patch_card2();
-  func_8017ee1c();
+  func_8017EE1C();
 }

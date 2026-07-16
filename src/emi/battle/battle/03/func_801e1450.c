@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior dispatches the current alternate local state-3 byte through its table.
- * @source 0x801e1450 FUN_801e1450
+ * @source 0x801E1450
  */
-void NO_SIBLING_CALLS func_801e1450(void) {
+void NO_SIBLING_CALLS func_801E1450(void) {
   volatile Battle03LocalWork* work;
   Battle03Handler             handler;
   u32                         state_index;

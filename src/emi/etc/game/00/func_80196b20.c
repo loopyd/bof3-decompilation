@@ -2,9 +2,9 @@
 
 /* @behavior Finds value in four 16-byte palette maps and stores its row and
  * column in scratchpad bytes zero and one.
- * @source 0x80196b20 FUN_80196b20
+ * @source 0x80196B20
  */
-u8 func_80196b20(u8 value) {
+u8 func_80196B20(u8 value) {
   volatile u8* scratch;
   u8           row;
   u8           column;

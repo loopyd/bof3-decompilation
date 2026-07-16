@@ -2,9 +2,9 @@
 
 /* @behavior scans the 32-entry AREA028 work table and returns the first slot whose
  * active byte at offset `0` is clear, or `NULL` if none are free.
- * @source 0x801f3004 FUN_801f3004
+ * @source 0x801F3004
  */
-void* func_801f3004(void) {
+void* func_801F3004(void) {
   u8 i;
 
   WORLD00_AREA028_WORK_PTR = (World00Area028Work*)WORLD00_AREA028_WORK_BASE;

@@ -11,7 +11,7 @@ extern vu32   D_80146808;
 
 /* @behavior resets EMI transfer counters, converts the current LBA to CdlLOC, and
  * arms the next loader phase.
- * @source 0x80162178 FUN_80162178
+ * @source 0x80162178
  */
 void func_80162178(void) {
   volatile u8* read_progress;

@@ -1,10 +1,10 @@
 #include "internal.h"
 
 /* @behavior rolls the current queued-slot digit counter and redraws each digit with
- * `func_801d9684`, using the queued-slot x/y/count fields.
- * @source 0x801e62bc FUN_801e62bc
+ * `func_801D9684`, using the queued-slot x/y/count fields.
+ * @source 0x801E62BC
  */
-void func_801e62bc(u8 arg0) {
+void func_801E62BC(u8 arg0) {
   s16 counter;
   s16 current_digit;
   s16 y;
@@ -22,7 +22,7 @@ void func_801e62bc(u8 arg0) {
     current_digit =
         *(volatile s16*)((volatile s8*)BATTLE_CURRENT_QUEUED_SLOT_PTR + 0x32);
     y = *(volatile s16*)((volatile s8*)BATTLE_CURRENT_QUEUED_SLOT_PTR + 0x3a);
-    func_801d9684(
+    func_801D9684(
         (s16)(*(volatile u16*)((volatile s8*)BATTLE_CURRENT_QUEUED_SLOT_PTR +
                                0x36) +
               (digit_index * -8) - 0x0cu),

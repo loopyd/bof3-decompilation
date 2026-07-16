@@ -15,12 +15,12 @@ or target binary.
 
 | Stored bytes | Runtime interpretation | Logical asset | Lossless interchange | Lossless desktop derivative | Validator | Unresolved boundary |
 | --- | --- | --- | --- | --- | --- | --- |
-| EMI archive | Sector-aligned container and TOC | Ordered entry set | Original `.EMI` plus extracted entry bytes and manifest | Catalog only | `bin/harness emi unpack`; `bin/harness discover` | Archive is not one executable or asset. |
+| EMI archive | Sector-aligned container and TOC | Ordered entry set | Original `.EMI` plus extracted entry bytes and manifest | Catalog only | `bin/emi-ex`; extracted-entry hashes | Archive is not one executable or asset. |
 | EMI type `0` | Direct RAM payload | Code, data, palette, or other bytes | Raw `.bin` | Domain-specific only | Catalog hash/load argument; promoted-target diff for code | Type does not identify content. |
 | EMI types `1`, `2` | Queued RAM transfer | Code or data bytes with loader bookkeeping | Raw `.bin` | Domain-specific only | Catalog hash/load argument and reviewed loader state | Exact semantic difference between types remains bounded by loader behavior. |
 | EMI type `3` | Packed VRAM upload descriptor plus raw chunks | Texture-page words | Raw `.img`/`.bin` plus descriptor | PNG after texture mode and CLUT are proven | `0x800` chunk geometry; [graphics invariants](../pseudocode.md#type-3-vram-upload-and-separate-palette-mapping) | Payload has no TIM header and does not name its palette. |
 | Type-`0` palette bytes | CPU-side PSX color words later selected by draw state | 4bpp or 8bpp CLUT row/bank | Little-endian `u16` word dump plus RAM destination | PNG palette strip; RGBA JSON if useful | 16 colors=`0x20`; 256 colors=`0x200`; round-trip raw words | Never pair texture and palette by archive adjacency alone. |
-| PSX indexed texture + verified TPage/CLUT | GPU texture sampling | Resolved image region | Texture words, palette words, TPage, CLUT, UV rectangle | PNG | `bin/harness assets list`; compare metadata and raw-source hashes | Transparency/STP interpretation and draw blend state remain separate. |
+| PSX indexed texture + verified TPage/CLUT | GPU texture sampling | Resolved image region | Texture words, palette words, TPage, CLUT, UV rectangle | PNG | Compare reviewed metadata and raw-source hashes | Transparency/STP interpretation and draw blend state remain separate. |
 | Sprite draw data | Runtime primitive plus table-selected geometry | Resolved sprite instance or atlas | Source texture/CLUT plus table bytes and draw parameters | PNG atlas and metadata JSON | Reviewed table xrefs; exact C diff where promoted | There is no universal BOF3 sprite-file format. |
 | Extracted STR/XA sectors | 2336-byte inner sectors | MDEC video and/or XA channels | Original stream plus reversible 2352-byte wrapper | Lossless H.264 (`-qp 0`) + FLAC MKV | Sector round-trip, codec/pixel-format probe, and exact endpoint comparison; [timing evidence](str-xa.md#capcom30-timing-evidence) | Runtime scheduling and channel selection need code evidence. |
 | EMI types `6`, `7` | VAB header/body pair | PsyQ sound bank | Original `.vh` and `.vb` pair | Compatible VAB player/exporter output | Header/body identity, hashes, selector, and pair ownership | Pairing and playback parameters require caller evidence. |
@@ -45,15 +45,13 @@ Retain enough information to reconstruct and audit every conversion:
 ## Repository commands
 
 ```sh
-just extract
-just unpack
-bin/harness discover
-bin/harness assets list
+bin/emi-ex --help
+bin/str-media inspect INPUT
 just check
 ```
 
 The canonical Rust EMI extractor is documented in
-[`third_party/emi-ex-v2/README.md`](../../../third_party/emi-ex-v2/README.md).
+[`tools/rust/emi-ex/README.md`](../../../tools/rust/emi-ex/README.md).
 Use the [verified pseudocode index](../pseudocode.md) for executable invariants
 and the owning [EMI](emi.md), [graphics](graphics.md), and [STR/XA](str-xa.md)
 specs for byte-level meaning.

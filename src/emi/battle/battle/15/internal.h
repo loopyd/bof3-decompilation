@@ -133,17 +133,17 @@ u16  battle_resolve_secondary_choice_resource(u32 group_index, u32 choice_id);
 u8   battle_try_commit_secondary_choice(u32 panel_kind, u32 zero_arg,
                                         u32 group_index, u32 choice_id);
 
-void __attribute__((noinline)) func_8009b20c(void);
-u8                             func_8009c8ac(u16 required_mask);
-void                           func_8009cfec(void);
+void __attribute__((noinline)) func_8009B20C(void);
+u8                             func_8009C8AC(u16 required_mask);
+void                           func_8009CFEC(void);
 
-s16  func_800a2880(u8 battler_index, u16 base_value, u8 element_flag);
-s16  func_800a2ae0(u8 battler_index, u16 element_mask);
-u16  func_800a36f0(u8 battler_index, u16 flags);
-void func_800a4458(void);
-void func_800aaa74(void);
-void func_800aaebc(s16 target_index, u8 battler_index);
-void func_800b0498(void);
-void func_800b0b0c(s16 base_x, s16 base_y);
+s16  func_800A2880(u8 battler_index, u16 base_value, u8 element_flag);
+s16  func_800A2AE0(u8 battler_index, u16 element_mask);
+u16  func_800A36F0(u8 battler_index, u16 flags);
+void func_800A4458(void);
+void func_800AAA74(void);
+void func_800AAEBC(s16 target_index, u8 battler_index);
+void func_800B0498(void);
+void func_800B0B0C(s16 base_x, s16 base_y);
 
 #endif

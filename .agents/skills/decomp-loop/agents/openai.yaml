@@ -1,4 +1,0 @@
-interface:
-  display_name: "PSX Decompilation Loop"
-  short_description: "Lift and exactly match PSX MIPS functions"
-  default_prompt: "Use $decomp-loop to lift, compile, compare, and improve this PSX function or target."

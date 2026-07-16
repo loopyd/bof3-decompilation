@@ -3,9 +3,9 @@
 /* @behavior sums elemental resistance modifiers for a battler based on a bitmask
  * of active elements. each element slot in the battler's data holds an index
  * into a s16 modifier table at 0x800b493c.
- * @source 0x800a2ae0 FUN_800a2ae0
+ * @source 0x800A2AE0
  */
-s16 func_800a2ae0(u8 battler_index, u16 element_mask) {
+s16 func_800A2AE0(u8 battler_index, u16 element_mask) {
   volatile s16* modifier_table;
   s16           result;
   u8            element_slot;

@@ -9,7 +9,7 @@ extern const u8 D_80183224[];
 
 /* @behavior validates the active EMI header tag and builds cumulative sector
  * offsets for its entries; invalid tags disable the active load.
- * @source 0x80162500 func_80162500
+ * @source 0x80162500
  */
 void func_80162500(void) {
   u8*   header;

@@ -2,9 +2,9 @@
 
 /* @behavior scans one trigger table selected by `arg1` for the given byte id and,
  * on match, submits the associated effect id through `0x801636a0`.
- * @source 0x801ddf50 FUN_801ddf50
+ * @source 0x801DDF50
  */
-u8 func_801ddf50(u16 arg0, u32 arg1) {
+u8 func_801DDF50(u16 arg0, u32 arg1) {
   u32* table;
   u32* entry;
   u16  id;
@@ -23,7 +23,7 @@ u8 func_801ddf50(u16 arg0, u32 arg1) {
       }
 
       if (*entry != 0xffffffffu) {
-        func_801636a0((*entry & 0xffffu) + 0x1000u, 1u);
+        func_801636A0((*entry & 0xffffu) + 0x1000u, 1u);
         return 0u;
       }
     }

@@ -1,13 +1,27 @@
-#!/bin/sh
-set -eu
+#!/usr/bin/env python3
+"""Split one manifest-owned target with Splat."""
 
-ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-PYTHON="${PSX_PYTHON:-${ROOT}/.venv/bin/python}"
-if [ ! -x "$PYTHON" ]; then
-    printf 'missing project Python environment: %s\n' "$PYTHON" >&2
-    printf '%s\n' 'run `just venv` first' >&2
-    exit 1
-fi
-PYTHONPATH="${ROOT}/tools/python${PYTHONPATH:+:${PYTHONPATH}}"
-export PYTHONPATH
-exec "$PYTHON" -m splat "$@"
+from __future__ import annotations
+
+import os
+from pathlib import Path
+import sys
+
+
+ROOT = Path(__file__).resolve().parent.parent
+TOOLS = ROOT / "tools" / "python"
+PYTHON = ROOT / ".venv" / "bin" / "python"
+
+
+def main() -> int:
+    if PYTHON.is_file() and Path(sys.executable).resolve() != PYTHON.resolve():
+        environment = os.environ.copy()
+        environment["PYTHONPATH"] = str(TOOLS)
+        os.execve(str(PYTHON), [str(PYTHON), str(Path(__file__).resolve()), *sys.argv[1:]], environment)
+    sys.path.insert(0, str(TOOLS))
+    from harness.commands.splat import main as splat_main
+
+    return splat_main()
+
+
+raise SystemExit(main())

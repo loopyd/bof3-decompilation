@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior Pending analysis
- * @source 0x801729d0 func_801729d0
+ * @source 0x801729D0
  */
-s16 func_801729d0(s16 arg0, s16 arg1, s16 arg2, s16 arg3)
+s16 func_801729D0(s16 arg0, s16 arg1, s16 arg2, s16 arg3)
 {
     s16 t2, t0, a2, v0, v1, t1;
     s16 a0, a3, t7;

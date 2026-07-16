@@ -10,8 +10,7 @@ options:
   src_path: src/exe/logo
   ld_script_path: out/splat/exe/logo/linker.ld
   symbol_addrs_path:
-    - config/symbols/psyq.txt
-    - config/symbols/shared.txt
+    - config/symbols/exe/logo.txt
 segments:
   - [0x0, bin, pre_runtime_stub]
   - name: runtime_stub

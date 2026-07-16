@@ -1,13 +1,13 @@
 #include "bof3/context.h"
 #include "internal.h"
 
-extern void func_8014e5a0(u32 arg0, u32 arg1);
+extern void func_8014E5A0(u32 arg0, u32 arg1);
 
 extern SPRT_8* D_8014598C;
 
 /* @behavior emits one 8x8 glyph sprite for each non-space byte in the string,
  * advancing eight pixels per byte and wrapping on newline.
- * @source 0x80150098 FUN_80150098
+ * @source 0x80150098
  */
 void func_80150098(s16 x, s16 y, u32 clut, const u8* text) {
   SPRT_8* primitive;
@@ -16,7 +16,7 @@ void func_80150098(s16 x, s16 y, u32 clut, const u8* text) {
   s32     text_char;
   u16     primitive_clut;
 
-  func_8014fc00(0);
+  func_8014FC00(0);
 
   clut &= 0x3fu;
   primitive_clut = (u16)(clut | 0x7800u);
@@ -47,7 +47,7 @@ void func_80150098(s16 x, s16 y, u32 clut, const u8* text) {
 
       SetSprt8(primitive);
       SetSemiTrans(primitive, 1);
-      func_8014e5a0(1, 0x10);
+      func_8014E5A0(1, 0x10);
       primitive = D_8014598C;
     }
 

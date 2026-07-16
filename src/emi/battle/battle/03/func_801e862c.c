@@ -2,9 +2,9 @@
 
 /* @behavior dispatches the current result-ui aux state byte through one of two
  * fixed handlers.
- * @source 0x801e862c FUN_801e862c
+ * @source 0x801E862C
  */
-void NO_SIBLING_CALLS func_801e862c(void) {
+void NO_SIBLING_CALLS func_801E862C(void) {
   Battle03Handler handler;
   Battle03Handler table[2];
 

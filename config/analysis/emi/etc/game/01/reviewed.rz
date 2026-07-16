@@ -1,0 +1,5 @@
+# Frontend label drawing globals.
+f data.D_8014598C 4 @ 0x8014598c
+CC "label primitive context" @ 0x8014598c
+
+fs functions

@@ -3,9 +3,9 @@
 /* @behavior initialises battle stat display fields for the first three player
  * slots from a shared template at 0x801ebef0. copies screen-position
  * coordinates, element-resistance indices, and palette/colour values.
- * @source 0x800a4458 FUN_800a4458
+ * @source 0x800A4458
  */
-void func_800a4458(void) {
+void func_800A4458(void) {
   volatile s16* template_s16;
   volatile u8*  template_u8;
   volatile u8*  player_base;

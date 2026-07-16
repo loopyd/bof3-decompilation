@@ -1,4 +1,0 @@
-interface:
-  display_name: "PSX1 Hardware Reference"
-  short_description: "PlayStation 1 hardware registers and memory map"
-  default_prompt: "Use $psx1-hw when lifting PSX MIPS functions that touch hardware registers, DMA, GPU, GTE, SPU, timers, CD-ROM, or interrupts."

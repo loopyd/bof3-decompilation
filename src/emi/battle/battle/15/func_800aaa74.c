@@ -3,9 +3,9 @@
 /* @behavior handles battle camera adjustment during the selection phase. depending
  * on the current mode (1=defend, 2=attack, 3=examine, 4=escape), adjusts
  * camera-position variables and resets per-character visual offsets.
- * @source 0x800aaa74 FUN_800aaa74
+ * @source 0x800AAA74
  */
-void func_800aaa74(void) {
+void func_800AAA74(void) {
   volatile u8*  state_base;
   volatile u16* panel_offset;
   u8            mode;

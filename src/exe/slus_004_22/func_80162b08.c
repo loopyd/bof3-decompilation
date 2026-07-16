@@ -20,9 +20,9 @@ extern u32              D_8014646C;
 
 /* @behavior selects one pending EMI transfer slot and copies its staged transfer
  * state into the active loader registers.
- * @source 0x80162b08 FUN_80162b08
+ * @source 0x80162B08
  */
-s32 func_80162b08(u8 slot) {
+s32 func_80162B08(u8 slot) {
   volatile EmiTransferSlot* slot_table;
 
   if ((*D_80146848 < slot) ||

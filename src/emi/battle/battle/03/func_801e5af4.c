@@ -2,9 +2,9 @@
 
 /* @behavior copies the active-slot table-0 handlers to a local stack table, then
  * dispatches through the current queued-slot byte `5` selector.
- * @source 0x801e5af4 FUN_801e5af4
+ * @source 0x801E5AF4
  */
-void NO_SIBLING_CALLS func_801e5af4(void) {
+void NO_SIBLING_CALLS func_801E5AF4(void) {
   Battle03Handler table[19];
   u8              index;
 

@@ -1,12 +1,12 @@
 #include "internal.h"
 
-extern void func_801f3b00(s32 arg0, s32 arg1);
+extern void func_801F3B00(s32 arg0, s32 arg1);
 
 /* @behavior advances local scratch state `0x02` when the shared byte reaches `2`,
  * then calls the `0x801f3b00` local step with the scratch halfword at `0x2e`.
- * @source 0x801f35b8 FUN_801f35b8
+ * @source 0x801F35B8
  */
-void func_801f35b8(void) {
+void func_801F35B8(void) {
   const u8* global;
   u32       state;
 
@@ -20,6 +20,6 @@ void func_801f35b8(void) {
     World00Area016Scratch* scratch;
 
     scratch = WORLD00_AREA016_SCRATCH_PTR;
-    func_801f3b00(0x10, scratch->field_2e);
+    func_801F3B00(0x10, scratch->field_2e);
   }
 }

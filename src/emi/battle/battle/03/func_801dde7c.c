@@ -2,9 +2,9 @@
 
 /* @behavior advances one byte counter in the selected `0x801c8950` table and stores
  * the caller's packed byte into the parallel table at `0x801c893c`.
- * @source 0x801dde7c FUN_801dde7c
+ * @source 0x801DDE7C
  */
-u8 func_801dde7c(u32 arg0, u32 arg1) {
+u8 func_801DDE7C(u32 arg0, u32 arg1) {
   u32   table_index;
   char* counter_table;
   char* value_table;

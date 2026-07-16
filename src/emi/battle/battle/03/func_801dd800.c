@@ -2,9 +2,9 @@
 
 /* @behavior oscillates the UI byte at `0x80146308` between rising and falling modes
  * using the latch byte at `0x80146304`.
- * @source 0x801dd800 FUN_801dd800
+ * @source 0x801DD800
  */
-void func_801dd800(void) {
+void func_801DD800(void) {
   volatile u8* value_ptr;
   u8           value;
   u8           next;

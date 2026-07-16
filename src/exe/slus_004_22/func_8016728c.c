@@ -5,9 +5,9 @@
 /* possible name: emi_family_slot
  * @behavior maps a BOF3 content family plus index into the slot id used by the EXE
  * loader path.
- * @source 0x8016728c FUN_8016728c
+ * @source 0x8016728C
  */
-void func_8016728c(u8 index, u8 family) {
+void func_8016728C(u8 index, u8 family) {
   u32 new_var;
   u32 slot_id;
 

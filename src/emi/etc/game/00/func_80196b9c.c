@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior Marks the current palette range's source colors as high-bit colors.
- * @source 0x80196b9c FUN_80196b9c
+ * @source 0x80196B9C
  */
-void func_80196b9c(void) {
+void func_80196B9C(void) {
   volatile u8* work;
   u8           table_index;
   u32          value;

@@ -1,21 +1,21 @@
 #include "internal.h"
 
 /* @behavior runs the secondary SCENA16 controller rooted at state 3.
- * @source 0x801f7790 FUN_801f7790
+ * @source 0x801F7790
  */
-void func_801f7790(void) {
+void func_801F7790(void) {
   vu16* timer;
 
   switch (SCENA16_D_80146875) {
     case 0:
       if (SCENA16_D_80143C40 == 0u) {
-        func_8014ecac(1u);
+        func_8014ECAC(1u);
         goto increment_state;
       }
       break;
 
     case 1:
-      func_8014f800(0x50, 0x50, 0, 0xffu,
+      func_8014F800(0x50, 0x50, 0, 0xffu,
                     0x80010000u + (u32)SCENA16_D_80010004);
       if (SCENA16_D_80143C40 == 0u) {
         SCENA16_D_80146876 = 0x7fu;
@@ -24,26 +24,26 @@ void func_801f7790(void) {
       break;
 
     case 2:
-      func_8014f800(0x50, 0x50, 0, 0xffu,
+      func_8014F800(0x50, 0x50, 0, 0xffu,
                     0x80010000u + (u32)SCENA16_D_80010004);
       SCENA16_D_80146876 = (u16)(SCENA16_D_80146876 - 1u);
       if (SCENA16_D_80146876 == 0u) {
-        func_8014ecac(0u);
+        func_8014ECAC(0u);
         goto increment_state;
       }
       break;
 
     case 3:
       if (SCENA16_D_80143C40 != 0u) {
-        func_8014f800(0x50, 0x50, 0, 0xffu,
+        func_8014F800(0x50, 0x50, 0, 0xffu,
                       0x80010000u + (u32)SCENA16_D_80010004);
         break;
       }
 
-      func_8014ecac(1u);
+      func_8014ECAC(1u);
       SCENA16_D_80146866 = 0x30u;
       SCENA16_D_8014832E = 0x1fu;
-      *(vu8*)0x1f800000u = func_8019601c();
+      *(vu8*)0x1f800000u = func_8019601C();
 
       if (*(vu8*)0x1f800000u != 0xffu) {
         vu8* object;
@@ -69,20 +69,20 @@ void func_801f7790(void) {
       break;
 
     case 5:
-      func_8014f800(0x48, 0x50, 0, 0xffu,
+      func_8014F800(0x48, 0x50, 0, 0xffu,
                     0x80010000u + (u32)SCENA16_D_80010006);
       timer = (vu16*)0x80146876u;
       *timer = (u16)(*timer + 1u);
       if (*timer != 0x20u) {
-        func_801f83b0((u32)((u8)*timer));
+        func_801F83B0((u32)((u8)*timer));
         break;
       }
-      func_801f845c();
+      func_801F845C();
       *timer = 0x7fu;
       goto increment_state;
 
     case 6:
-      func_8014f800(0x48, 0x50, 0, 0xffu,
+      func_8014F800(0x48, 0x50, 0, 0xffu,
                     0x80010000u + (u32)SCENA16_D_80010006);
       SCENA16_D_80146876 = (u16)(SCENA16_D_80146876 - 1u);
       if (SCENA16_D_80146876 == 0u) {
@@ -95,12 +95,12 @@ void func_801f7790(void) {
       timer = (vu16*)0x80146876u;
       *timer = (u16)(*timer - 1u);
       if (*timer != 0u) {
-        func_8014f800(0x48, 0x50, 0, 0xffu,
+        func_8014F800(0x48, 0x50, 0, 0xffu,
                       0x80010000u + (u32)SCENA16_D_80010006);
-        func_801f83b0((u32)(*(vu8*)timer));
+        func_801F83B0((u32)(*(vu8*)timer));
         break;
       }
-      func_801f845c();
+      func_801F845C();
       *timer = 0x1eu;
       goto increment_state;
 
@@ -112,8 +112,8 @@ void func_801f7790(void) {
       break;
 
     case 9:
-      func_80161c20(2u, 100, 0x20);
-      func_8019fa28(2u, 0x340000u, 0x430000u, 3u);
+      func_80161C20(2u, 100, 0x20);
+      func_8019FA28(2u, 0x340000u, 0x430000u, 3u);
       SCENA16_D_80146874 = 4;
       SCENA16_D_80146875 = 0u;
       break;

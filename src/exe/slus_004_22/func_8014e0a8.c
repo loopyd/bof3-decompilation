@@ -3,9 +3,9 @@
 
 /* @behavior starts one disc read sized from a byte count and waits until the read
  * finishes or returns a terminal status.
- * @source 0x8014e0a8 FUN_8014e0a8
+ * @source 0x8014E0A8
  */
-s32 func_8014e0a8(s32 size, void* buffer, s32 sectors) {
+s32 func_8014E0A8(s32 size, void* buffer, s32 sectors) {
   s32 sector_count;
   s32 status;
 

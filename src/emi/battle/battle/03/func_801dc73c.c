@@ -2,9 +2,9 @@
 
 /* @behavior conditionally zeroes one local status bit after a random gate,
  * otherwise passing through the signed damage value unchanged.
- * @source 0x801dc73c FUN_801dc73c
+ * @source 0x801DC73C
  */
-u32 func_801dc73c(s16 arg0, u32 arg1, u32 arg2) {
+u32 func_801DC73C(s16 arg0, u32 arg1, u32 arg2) {
   u16 flags;
   u8  threshold;
   u32 enemy;
@@ -24,13 +24,13 @@ u32 func_801dc73c(s16 arg0, u32 arg1, u32 arg2) {
   }
 
   if ((flags & 8u) != 0u) {
-    if ((func_8017e3d4() & 2u) != 0u) {
+    if ((func_8017E3D4() & 2u) != 0u) {
       goto clear_flag;
     }
   }
 
   threshold = *(volatile u8*)(0x801f0000u - 0x3cfdu);
-  if (threshold < (func_8017e3d4() % 100)) {
+  if (threshold < (func_8017E3D4() % 100)) {
     return (u32)(s32)arg0;
   }
 

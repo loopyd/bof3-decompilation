@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior dispatches through the primary SCENA16 state table.
- * @source 0x801f6c90 FUN_801f6c90
+ * @source 0x801F6C90
  */
-void func_801f6c90(void) {
+void func_801F6C90(void) {
   s8*              state_base;
   Scena16Callback* table;
 

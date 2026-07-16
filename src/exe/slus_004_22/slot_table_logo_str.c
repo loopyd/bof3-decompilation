@@ -14,17 +14,17 @@ const SlotTableEntry* slot_table_logo_str(void) {
   int         stream_finished;
 
   (void)scratch;
-  func_801ce758();
+  func_801CE758();
   CdInit();
-  func_801ce760((void*)0x8003b800, D_801D8BB0);
+  func_801CE760((void*)0x8003b800, D_801D8BB0);
   do {
     pad_state = PadRead(0);
     if ((pad_state & 0x800) != 0) {
       break;
     }
-    stream_finished = func_801cea98();
+    stream_finished = func_801CEA98();
   } while (stream_finished == 0);
-  func_801cebfc();
+  func_801CEBFC();
   StopCallback();
   PadStop();
   SetDispMask(0);

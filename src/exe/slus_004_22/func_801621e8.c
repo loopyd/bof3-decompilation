@@ -5,9 +5,9 @@ extern u8   D_80146498[];
 
 /* @behavior latches the last CdSync callback result bytes and marks the async sync
  * status.
- * @source 0x801621e8 FUN_801621e8
+ * @source 0x801621E8
  */
-void func_801621e8(s32 status, u8* result) {
+void func_801621E8(s32 status, u8* result) {
   s32 i;
 
   result += (i = 7);

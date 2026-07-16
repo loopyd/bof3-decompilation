@@ -70,6 +70,7 @@ class AsmDiffRequest:
     binary_path: Path | None = None
     load_address: int | None = None
     output_root: Path | None = None
+    symbols_c_path: Path | None = None
 
 
 # -- diff -------------------------------------------------------------------------------
@@ -322,7 +323,7 @@ def run_asm_diff_one(
         address=address,
         size=original_size,
         original_bytes=original_bytes,
-        symbols_c_path=source_path.parent / "symbols.c",
+        symbols_c_path=request.symbols_c_path or source_path.parent / "symbols.c",
         layout=repo,
         section_addresses=section_addresses,
     )

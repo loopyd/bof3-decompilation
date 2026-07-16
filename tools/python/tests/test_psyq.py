@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 import zipfile
 
+from harness.commands.symbols import main as symbols_main
+from harness.psyq.discovery import _matches
 from harness.toolchain import setup_psyq as psyq_lib
 from harness.toolchain.setup_psyq import import_psyq_sdk, stage_psyq_sdk
 
@@ -64,3 +66,59 @@ def test_find_psyq_source_rejects_explicit_paths_outside_inputs(tmp_path: Path) 
         assert "must stay under the repo's inputs/ tree" in str(exc)
     else:
         raise AssertionError("expected non-input source to be rejected")
+
+
+def test_relocation_aware_match_is_not_an_exact_match() -> None:
+    function = {
+        "payload": b"abcdefghijklmnoq",
+        "relocations": [(8, 12)],
+        "relocation_hash": "",
+    }
+    from harness.psyq.fingerprints import relocation_masked_hash
+
+    function["relocation_hash"] = relocation_masked_hash(
+        function["payload"], function["relocations"]
+    )
+
+    assert list(_matches(b"abcdefghWXYZmnoq", function)) == [(0, "relocation_aware")]
+
+
+def test_symbols_import_psyq_requires_write_and_replaces_raw_name(
+    tmp_path: Path,
+) -> None:
+    manifest = tmp_path / "config" / "targets" / "exe" / "logo.toml"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(
+        'schema = "harness.target/v2"\n'
+        'id = "exe/logo"\n'
+        'kind = "executable"\n'
+        'source_dir = "src/exe/logo"\n'
+        'binary = "out/binaries/exe/logo.bin"\n'
+        'splat = "config/splat/exe/logo.yaml"\n'
+        "load_address = 0x801CE000\n"
+        'profile = "compat/capcom97"\n',
+        encoding="utf-8",
+    )
+    target_map = tmp_path / "config" / "symbols" / "exe" / "logo.txt"
+    target_map.parent.mkdir(parents=True)
+    target_map.write_text("func_801CE758 = 0x801CE758;\n", encoding="utf-8")
+    proposal = tmp_path / "proposal.json"
+    proposal.write_text(
+        '{"schema":"bof3.psyq-find/v1","matches":['
+        '{"target":"exe/logo","address":"0x801CE758","name":"CdInit",'
+        '"confidence":"exact","external":true}'
+        "]}",
+        encoding="utf-8",
+    )
+
+    args = [
+        "--root",
+        str(tmp_path),
+        "import-psyq",
+        str(proposal),
+        "exe/logo@0x801CE758",
+    ]
+    assert symbols_main(args) == 1
+    assert "func_801CE758" in target_map.read_text(encoding="utf-8")
+    assert symbols_main([*args, "--write"]) == 0
+    assert target_map.read_text(encoding="utf-8") == "CdInit = 0x801CE758;\n"

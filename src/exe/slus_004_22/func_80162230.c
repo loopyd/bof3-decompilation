@@ -18,7 +18,7 @@ extern vu32   D_80146808;
 
 /* @behavior services the active EMI CD-ready callback, validates the sector source,
  * dispatches the current loader phase, and advances the streaming ring.
- * @source 0x80162230 FUN_80162230
+ * @source 0x80162230
  */
 void func_80162230(u8 status, u8* result) {
   u8*     read_progress;
@@ -89,8 +89,8 @@ void func_80162230(u8 status, u8* result) {
     if (D_80146454 == 0) {
       slot = D_80146481;
       D_80146481 = slot + 1;
-      if (func_80162b08(slot) == 0) {
-        func_80162cd8();
+      if (func_80162B08(slot) == 0) {
+        func_80162CD8();
       }
     }
 

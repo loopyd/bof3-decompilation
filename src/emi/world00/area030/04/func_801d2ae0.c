@@ -3,9 +3,9 @@
 /* @behavior either advances the local AREA030 scratch record from the shared world
  * state or falls back to the game-side helper when the countdown gate is not
  * active.
- * @source 0x801d2ae0 FUN_801d2ae0
+ * @source 0x801D2AE0
  */
-void func_801d2ae0(void) {
+void func_801D2AE0(void) {
   volatile u8* scratch;
   volatile u8* world;
 
@@ -32,5 +32,5 @@ void func_801d2ae0(void) {
   *(volatile u32*)(scratch + 0x54u) = *(volatile u32*)(world + 0x401cu);
   *(volatile u16*)(scratch + 0x58u) = *(volatile u16*)(world + 0x4020u);
   *(volatile u16*)(scratch + 0x5au) = *(volatile u16*)(world + 0x4022u);
-  func_8014d290();
+  func_8014D290();
 }

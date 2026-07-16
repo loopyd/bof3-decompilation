@@ -1,11 +1,11 @@
 #include "internal.h"
 
-extern void func_801a4aa8(void);
-extern void func_8014dd3c(u16);
-extern s16  func_8015477c(s32 x, s32 y);
-extern void func_801a4990(const u8* data);
-extern void func_801a4bc0(s16 x, s16 y, u32 size);
-extern void func_8014d6b8(u32 flag);
+extern void func_801A4AA8(void);
+extern void func_8014DD3C(u16);
+extern s16  func_8015477C(s32 x, s32 y);
+extern void func_801A4990(const u8* data);
+extern void func_801A4BC0(s16 x, s16 y, u32 size);
+extern void func_8014D6B8(u32 flag);
 
 #define ENTITY_MAX       30
 #define ENTITY_SLOT_SIZE 0x98
@@ -19,9 +19,9 @@ extern void func_8014d6b8(u32 flag);
 
 /* @behavior initializes the next free entity slot from one packed spawn
  * record, applies its saved-state gate, and advances the entity count.
- * @source 0x801a7330 FUN_801a7330
+ * @source 0x801A7330
  */
-s32 func_801a7330(const u8* spawn_data) {
+s32 func_801A7330(const u8* spawn_data) {
   struct GameWorkArea* work;
   s32                  coord_x;
   s32                  coord_y;
@@ -42,8 +42,8 @@ s32 func_801a7330(const u8* spawn_data) {
 
   ENTITY_ENTRY_DATA = (u16)(spawn_data[1] << 8) | spawn_data[2];
 
-  func_801a4aa8();
-  func_8014dd3c(ENTITY_ENTRY_DATA);
+  func_801A4AA8();
+  func_8014DD3C(ENTITY_ENTRY_DATA);
 
   work->flags_00 = 1;
 
@@ -66,7 +66,7 @@ s32 func_801a7330(const u8* spawn_data) {
   ((volatile s32*)(GAME_STATE_BASE + (s32)slot_index * ENTITY_SLOT_SIZE +
                    0x6910u))[0] = 0;
 
-  dist = func_8015477c(work->coord_x_34, work->coord_y_38);
+  dist = func_8015477C(work->coord_x_34, work->coord_y_38);
   work->unk_01 = 6;
   work->counter_3E = dist;
   work->flags_02 = 0;
@@ -78,7 +78,7 @@ s32 func_801a7330(const u8* spawn_data) {
   ((volatile u8*)(GAME_STATE_BASE + (s32)slot_index * ENTITY_SLOT_SIZE +
                   0x691Cu))[0] = 0x7F;
 
-  func_801a4990(spawn_data + 0xB);
+  func_801A4990(spawn_data + 0xB);
 
   if (spawn_data[3] & 0x80) {
     work->flags_00 |= 0x20;
@@ -110,14 +110,14 @@ s32 func_801a7330(const u8* spawn_data) {
     }
     result = 1;
     if ((u16)work->coord_x_34 == 0 && (u16)work->coord_y_38 == 0) {
-      func_801a4bc0((s16)work->coord_x_34, (s16)work->coord_y_38, 0x10);
+      func_801A4BC0((s16)work->coord_x_34, (s16)work->coord_y_38, 0x10);
       result = 1;
     }
   } else {
     result = 0;
   }
 
-  func_8014d6b8(result);
+  func_8014D6B8(result);
 
   ENTITY_COUNTER = ENTITY_COUNTER + 1;
   return 0;

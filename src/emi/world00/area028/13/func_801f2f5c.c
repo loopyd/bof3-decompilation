@@ -2,9 +2,9 @@
 
 /* @behavior seeds the local 32-entry AREA028 work table and clears the active byte
  * at offset `0` for each `0x10`-byte slot.
- * @source 0x801f2f5c FUN_801f2f5c
+ * @source 0x801F2F5C
  */
-void func_801f2f5c(void) {
+void func_801F2F5C(void) {
   u8 i;
 
   WORLD00_AREA028_WORK_PTR = (World00Area028Work*)WORLD00_AREA028_WORK_BASE;

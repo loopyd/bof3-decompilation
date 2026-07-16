@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior copies one 16-word palette block and bumps the stage serial.
- * @source 0x801f845c FUN_801f845c
+ * @source 0x801F845C
  */
-void func_801f845c(void) {
+void func_801F845C(void) {
   u16*       dst;
   const u16* src;
   s32        i;

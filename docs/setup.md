@@ -1,76 +1,67 @@
-# Setup
+# Setup and tools
 
-> Set up the supported BOF3 reverse-engineering workspace.
-
-## Contract
-
-- Host: Linux x86_64.
-- Game input: user-owned US BIN/CUE media under `inputs/disc/`; it is ignored by Git.
-- Generated files: `build/`, `out/`, and `toolchains/`.
-- Tracked binary layout: `config/splat/` and `config/symbols/`.
+Set up the supported local BOF3 toolchain. Game media, staged SDK files, and
+all generated output remain untracked.
 
 ## Quick path
 
-```bash
+```sh
 just setup
-bin/harness doctor --strict
+just doctor
+just binaries
 ```
 
-`just setup` initializes pinned submodules, prepares the PSX tools, stages PsyQ
-4.7, builds the native Rust tools, extracts the disc, unpacks EMI archives, and
-refreshes the catalog. SDK files remain ignored and must not be committed.
+`just setup` initializes retained submodules, stages the supported PSX/PsyQ
+compatibility toolchain, and builds the first-party `bof3-disk` and `emi-ex`
+tools. It does not create a disc image, unpack every archive, or link a
+reconstructed executable image.
 
-Run `just setup-psyq` separately only when restaging the SDK.
+Place user-owned US BIN/CUE media under `inputs/disc/` when using the read-only
+disc tools. Never commit media, `build/`, `out/`, or `toolchains/`.
 
-## Choose the starting state
+## Command contracts
 
-- Fresh or newly cloned checkout: run `just doctor` first, place the US BIN/CUE
-  media in `inputs/disc/`, then run `just setup`.
-- Existing checkout with generated media: run `just doctor`, then `just check`
-  or `just build`; use `just discover` only when the extracted catalog changed.
-- Existing checkout with a missing generated stage: run `just extract` for disc
-  extraction or `just unpack` for EMI unpacking, then `just discover`.
+Repository-wide recipes are:
 
-`just doctor` validates tracked configuration and does not require disc media or
-an existing catalog. Strict mode also accepts missing quarantined payloads, but
-active target payloads must be present and hash-valid.
-
-Use these day-to-day targets after setup:
-
-```bash
-just extract
-just unpack
-just pack
-just discover
-just build
-just check
-just format
+```text
+just setup doctor binaries build check format index clean
 ```
 
-`just build` compiles historical PsyQ objects serially. Parallel compilation can
-race a transient compiler output and leave a misleading partial archive.
+Focused tools are:
 
-To rerun only disc extraction or EMI unpacking:
-
-```bash
-just extract
-just unpack
+```text
+bin/splat        bin/bof3-disk     bin/emi-ex        bin/psyq-import
+bin/psyq-find    bin/symbols       bin/rz-project    bin/rev-query
+bin/m2ctx        bin/m2c           bin/asm-diff      bin/byte-match
+bin/permute      bin/flag-search   bin/promote       bin/str-media
 ```
 
-`just extract` builds the native extraction tools and extracts the disc into
-`out/extracted/`. `just unpack` expects that extracted tree and writes unpacked
-EMI entries below the same generated root. Use `just setup` for the complete
-toolchain, extraction, unpack, and catalog workflow.
+Run `--help` or `--example` for exact operands. Focused tools use stdout for
+results, stderr for diagnostics, no pager or color when non-interactive, and
+exit 0 for success, 1 for a valid negative result, and 2 for usage/config/tool
+errors. Mutating commands require `--write`.
 
-## Local input
+## Tool roles
 
-Keep the original US disc files in `inputs/disc/`. Do not commit game data, extracted
-payloads, SDK files, or generated analysis output. See
-[../inputs/disc/README.md](../inputs/disc/README.md) for the input boundary.
+| Tool | Role |
+| --- | --- |
+| Splat | Split the mapped binary into generated assembly. |
+| `bin/cc` and PSX binutils adapters | Compile C90 source with the supported compatibility profile. |
+| `bin/bof3-disk`, `bin/emi-ex` | Read-only disc extraction and EMI inspection/extraction. |
+| `bin/str-media` | Inspect, validate, and convert STR/XA media. |
+| `bin/symbols` | Validate, normalize, import, and generate disposable weak bindings. |
+| `bin/psyq-find` | Produce PsyQ provenance proposals across available SDK archives and targets. |
+| Rizin and `bin/rz-project` | Build isolated, reproducible target analysis evidence. |
+| `bin/asm-diff`, `bin/byte-match` | Compare compiler output by instruction and raw bytes. |
+| m2c and `bin/permute` | Produce and refine a one-function C candidate. |
 
-## Verification
+PsyQ 4.7 is the build-facing header baseline, not proof of the game’s SDK
+provenance. Use `bin/psyq-find` and reviewed `bin/symbols import-psyq` results
+to record per-target evidence; never infer an SDK address in another target.
 
-After extraction, `bin/harness discover` writes `out/catalog/emi.json`.
+## Checks
 
-Optional analysis and last-mile matching tools are not required for the core
-setup. Install or enable them only when the active function needs them.
+`just check` runs the small Python quality suite, `bin/symbols check`, and the
+target-qualified link/diff audit for every retained C file.
+Use a function’s `bin/asm-diff` and `bin/byte-match` while iterating; no
+full-image rebuild or verification command is supported.

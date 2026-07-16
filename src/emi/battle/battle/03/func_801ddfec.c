@@ -2,9 +2,9 @@
 
 /* @behavior finds the current local battler inside the ranked owner list and, if it
  * is in the expected intermediate state, advances the paired counter table.
- * @source 0x801ddfec FUN_801ddfec
+ * @source 0x801DDFEC
  */
-void func_801ddfec(u32 arg0) {
+void func_801DDFEC(u32 arg0) {
   u32 index;
   u32 battler;
 
@@ -20,7 +20,7 @@ void func_801ddfec(u32 arg0) {
         if ((index >> 8) != 0u) {
           return;
         }
-        func_801dde7c(BATTLE_LOCAL_BYTE_122(&BATTLE_LOCAL_WORK_ARRAY[battler]),
+        func_801DDE7C(BATTLE_LOCAL_BYTE_122(&BATTLE_LOCAL_WORK_ARRAY[battler]),
                       index);
         return;
       }

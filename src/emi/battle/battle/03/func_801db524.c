@@ -2,9 +2,9 @@
 
 /* @behavior reports whether one local/enemy battler slot is unavailable, either
  * because it is inactive or because its corresponding `0x4000` flag is set.
- * @source 0x801db524 FUN_801db524
+ * @source 0x801DB524
  */
-u8 func_801db524(u8 arg0) {
+u8 func_801DB524(u8 arg0) {
   if (arg0 < 3u) {
     volatile Battle03LocalWork* battle_work;
 

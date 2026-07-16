@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+PYTHON="${PSX_PYTHON:-${ROOT}/.venv/bin/python}"
+if [ ! -x "$PYTHON" ]; then
+    printf 'missing project Python environment: %s\n' "$PYTHON" >&2
+    exit 2
+fi
+PYTHONPATH="${ROOT}/tools/python${PYTHONPATH:+:${PYTHONPATH}}"
+export PYTHONPATH
+exec "$PYTHON" -m harness.commands.flag_search "$@"

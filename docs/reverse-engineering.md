@@ -1,119 +1,57 @@
-# Reverse engineering
+# Rizin and reverse index
 
-> BOF3 is a set of independently loaded binaries and resources, not one linked C program.
+Rizin evidence is target-qualified, reproducible, and disposable. Tracked
+layouts, maps, replay, and original bytes remain authoritative.
 
-## Binary model
+## Per-target Rizin project
 
-| Item | Identity | Durable location |
-| --- | --- | --- |
-| Main executable | `SLUS_004.22` load image | `out/binaries/exe/slus_004_22.bin` |
-| Logo executable | `LOGO.EXE` load image | `out/binaries/exe/logo.bin` |
-| EMI archive | shipped archive path | `out/extracted/` |
-| EMI entry | archive path + slot | `out/catalog/emi.json` |
-| Confirmed code module | entry plus runtime address | `config/splat/emi/`, `src/emi/` |
-
-Splat operates on normalized executable images or extracted EMI entries. It
-never operates on an entire EMI container. Generated assembly belongs below
-`out/splat/`; authored functions are C files below `src/`.
-
-## Classification rules
-
-- An EMI type is evidence, not a code verdict. Type `0` may be code, CPU-RAM
-  data, or palette data.
-- The catalog records `payload_kind`, `code_status`, and evidence separately.
-- Exact content identity uses the payload SHA-256. A build target additionally
-  includes its load address and entry convention.
-- Identical bytes at different load addresses remain distinct targets until
-  relocatability and symbol behavior are proven.
-
-## Review loop
-
-```bash
-bin/harness discover
-bin/harness promote "$ARCHIVE_ENTRY" --confirm-code
-bin/harness targets "$TARGET"
-bin/harness reverse "$TARGET"@"$ADDRESS" --run
-bin/asmdiff "$FUNCTION_SOURCE"
+```sh
+bin/rz-project rebuild TARGET
+bin/rz-project analyze TARGET
+bin/rz-project status TARGET
+bin/rz-project export TARGET
 ```
 
-Promotion is deliberately explicit. It creates target metadata, one Splat
-configuration, and one module source directory. `reverse TARGET@ADDRESS --run`
-launches one bounded OpenCode mission; it resolves a target-only invocation to
-one candidate before launch. Use the generated draft and disassembly as
-evidence, then keep the final C89 source readable.
+One generated project exists under `out/rizin/<target>/` for each binary. Never
+open multiple overlapping load mappings in one project. `rebuild` imports the
+target manifest, Splat boundaries, canonical map, and reviewed replay.
 
-`targets` is the diagnostic boundary before lifting. Verify its payload,
-checksum, load address, Splat configuration, and source directory rather than
-compensating for a mapping problem in C.
+`analyze` is bounded by default. `analyze --deep` creates candidate evidence
+only. Use the generated snapshot and deterministic export to review facts;
+native database state is not durable evidence.
 
-Promotion creates `internal.h` only when the target source directory does not
-already provide one; reviewed target-local declarations are preserved.
+`export TARGET` prints the deterministic patch. `export TARGET --write` is the
+only path that changes reviewed replay after validation. `open TARGET` starts
+an isolated interactive Rizin session.
 
-`bin/asmdiff` builds the smallest available Make object and writes comparison
-evidence under `out/matching/`. A nonmatch is a normal iteration result; a build
-or target resolution failure must be fixed before changing source.
+## Index and queries
 
-The stateless analyzer and snapshot models are Python APIs under
-`tools/python/harness/analyzer.py` and `snapshot.py`. Generated snapshots use
-`out/reverse/<target>/snapshot.json`; target-qualified addresses are never
-merged across binaries. Native analyzer sessions are disposable; reviewed replay
-and deterministic snapshots are the durable/reproducible evidence surface.
+```sh
+just index
+bin/rev-query symbols NAME
+bin/rev-query xrefs TARGET@0xADDRESS
+bin/rev-query calls TARGET@0xADDRESS
+bin/rev-query duplicates
+bin/rev-query hotspots
+bin/rev-query leafs
+bin/rev-query variables
+bin/rev-query status
+```
 
-## Candidate replacement loop
+`just index` rebuilds `out/index/reverse.sqlite` atomically from fresh,
+complete target exports. It fails when evidence is missing, stale, or
+incomplete, leaving the last complete index intact.
 
-Structs, symbols, and functions can be recovered incrementally without making
-an unproven shared ABI:
+The cache contains target-local symbols, functions, calls, xrefs, data
+references, exact hashes, duplicate groups, PsyQ evidence, and project
+metadata. `bin/rev-query` is its only query surface; pass `--json` for stable
+structured output.
 
-1. Keep an address-only binding in the owning target's `symbols.c` or shallow
-   `symbols/*.c` units when the instruction stream proves an address but not a
-   semantic name. Use ordinary C translation units, not `.inc` fragments.
-2. Express a recovered record as a target-local C89 view, preserving raw pads
-   and byte/halfword overlays until consumers prove their meaning.
-3. Lift one consumer against that binding and run `bin/asmdiff` after
-    every source change. Use `bin/harness reverse` to preview or launch one bounded mission;
-   generated candidates stay under `out/`.
-   Keep the authored lift in C89; do not use inline assembly to force register
-   allocation or fill an executable function.
-4. Promote a real function or named field only when its bytes match and its
-   behavior agrees with the owning spec. Until then, retain the candidate and
-   its measured match percentage in the spec ledger.
-5. Replace existing declarations one target at a time. Identical payload bytes
-   at different load addresses do not share a symbol or struct contract until
-   relocatability and runtime behavior are proven.
+## Evidence rules
 
-`bin/harness reverse` is an orchestration boundary, not a promotion mechanism.
-Keep compiler-shape hypotheses as generated evidence until the target's
-original per-function flags are independently established.
-
-## Source conventions
-
-- `src/exe/` holds source for standalone PS-X executables.
-- `src/emi/<family>/<archive>/<slot>/` holds a confirmed EMI module.
-- Each module owns an `internal.h`; shared C89/PsyQ declarations belong under
-  `include/bof3/`.
-- A large target may have `internal.h` include `symbols/symbols.h`, which is the
-  only barrel for focused `functions.h`, `variables.h`, and `files.h` headers.
-  Do not add a target-local PsyQ declaration header when the official SDK
-  header already owns the declaration.
-- Do not lift PsyQ library routines. Record verified PsyQ symbols in
-  `config/symbols/psyq.txt`.
-
-## Promotion quality
-
-A promoted function must:
-
-- compile as clean, maintainable C89;
-- retain compact `@behavior` and `@source` trace fields;
-- replace `@behavior Pending analysis` with observable behavior rather than
-  instruction mechanics;
-- add at most one `@see docs/specs/...` path when a durable spec provides
-  material context; never link generated state;
-- place reusable structures, offsets, and mappings in the owning
-  `docs/specs/` concept;
-- produce a valid `bin/asmdiff` result, even when it is not yet an exact match.
-
-## Evidence boundary
-
-The local catalog is generated from user input and is not committed. Retained
-research notes live in [specs/](specs/index.md); label unresolved conclusions
-as such and keep generated tables out of documentation.
+- Retain separate targets even when their bytes, addresses, or names coincide.
+- Keep raw `func_XXXXXXXX` and `D_XXXXXXXX` names until semantics are reviewed.
+- Rizin and decompiler output support a claim; they never override bytes,
+  target mapping, reviewed Splat layout, or C matching.
+- Put reusable, reviewed conclusions in `docs/specs/`; keep raw exports and
+  transient hypotheses under `out/`.

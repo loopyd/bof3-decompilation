@@ -37,7 +37,7 @@ bof3_boot_main:
 	addiu	$sp, $sp, -16
 	sw	$ra, 12($sp)
 
-	jal	func_8014aee0
+	jal	func_8014AEE0
 	nop
 	move	$t0, $v0
 

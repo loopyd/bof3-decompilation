@@ -12,9 +12,9 @@ extern u16            D_8014678E[];
 
 /* @behavior selects the current EMI entry's alternate destination, marks the
  * entry with flag 2, advances the loader state machine, and advances the step.
- * @source 0x80162a6c FUN_80162a6c
+ * @source 0x80162A6C
  */
-void func_80162a6c(void) {
+void func_80162A6C(void) {
   u32 entry_offset;
 
   if (EMI_LOADER_STEP == 0) {
@@ -23,6 +23,6 @@ void func_80162a6c(void) {
     *(u16*)((u8*)D_8014678E + entry_offset) |= 2;
   }
 
-  func_80162c14();
+  func_80162C14();
   EMI_LOADER_STEP += 1;
 }

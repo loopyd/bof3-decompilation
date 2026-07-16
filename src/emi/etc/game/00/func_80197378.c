@@ -2,20 +2,20 @@
 
 /* @behavior advances the world-front state machine, coordinating selection
  * transitions, front effects, and shared scenario updates.
- * @source 0x80197378 func_80197378
+ * @source 0x80197378
  */
 void func_80197378(void) {
   u32* counter;
 
-  func_801a782c();
-  func_801991b8();
+  func_801A782C();
+  func_801991B8();
 
   switch (D_80143BB0) {
     case 0:
       break;
     case 1:
-      func_8014ecac(2);
-      func_80198bc4(0);
+      func_8014ECAC(2);
+      func_80198BC4(0);
       D_80143B90 = 3;
       D_80143B92 = 0;
       break;
@@ -43,16 +43,16 @@ void func_80197378(void) {
       D_8014625A |= 0x40;
       selection = D_80145029;
       if (selection != 0xff && D_80143F1F != selection) {
-        func_8015d4f8(D_80181EBA[selection * 4], D_80181EBB[selection * 4],
+        func_8015D4F8(D_80181EBA[selection * 4], D_80181EBB[selection * 4],
                       100, 16);
       }
       if (D_80143F1E != 0xff) {
-        func_8014ecac(D_80143F1E);
-        func_80198bc4(0);
+        func_8014ECAC(D_80143F1E);
+        func_80198BC4(0);
       }
       selection = D_80145029;
       if (selection != 0xff && D_80143F1F != selection) {
-        func_8015d404(D_80181EBA[selection * 4], D_80181EBB[selection * 4]);
+        func_8015D404(D_80181EBA[selection * 4], D_80181EBB[selection * 4]);
       }
       D_80143B90 = 1;
       break;

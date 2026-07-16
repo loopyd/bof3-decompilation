@@ -10,8 +10,7 @@ options:
   src_path: src/emi/etc/game/00
   ld_script_path: out/splat/emi/etc/game/00/linker.ld
   symbol_addrs_path:
-  - config/symbols/psyq.txt
-  - config/symbols/shared.txt
+  - config/symbols/emi/etc/game/00.txt
 segments:
 - - 0
   - bin

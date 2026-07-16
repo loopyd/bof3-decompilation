@@ -2,9 +2,9 @@
 
 /* @behavior conditionally runs the current scratch-object reset helper when global
  * bit `0x4` is set.
- * @source 0x801e1b2c FUN_801e1b2c
+ * @source 0x801E1B2C
  */
-void func_801e1b2c(void) {
+void func_801E1B2C(void) {
   volatile u8* battle_global_base;
 
   battle_global_base = (volatile u8*)0x80140000u;
@@ -12,5 +12,5 @@ void func_801e1b2c(void) {
     return;
   }
 
-  func_801e1dd4();
+  func_801E1DD4();
 }

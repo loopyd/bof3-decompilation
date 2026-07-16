@@ -1,7 +1,7 @@
 # Disc input
 
-The supported `just` and `bin/harness` workflows discover one user-owned BIN/CUE
-set under `inputs/disc/`.
+The read-only `bin/bof3-disk` workflow uses one user-owned BIN/CUE set under
+`inputs/disc/`.
 
 ## Expected files
 
@@ -11,23 +11,11 @@ Use one complete Breath of Fire III disc set:
 - the two `.bin` tracks referenced by that cue sheet.
 
 The cue filenames and its `FILE` entries must agree. Keep the original files
-unchanged: extraction, rebuilding, and strict comparison depend on the exact
-track bytes. Disc media is ignored and must never be committed.
+unchanged: extraction and any local comparison depend on the exact track
+bytes. Disc media is ignored and must never be committed.
 
 ## Identity and checksums
 
-The repository does not track game-media hashes. Generate a local checksum
-manifest under `out/` when the exact input identity needs to be retained:
-
-```sh
-PYTHONPATH=tools/python .venv/bin/python -m harness.commands.disk \
-  disk-checksums --input-dir inputs/disc --output out/disk_checksums.json
-```
-
-Verify the same files against that manifest with `disk-verify`, passing the
-same input directory and `--checksums out/disk_checksums.json`.
-
-For strict rebuild comparison, compare the rebuilt combined image with the
-source track bytes in cue order. When rebuilding from repacked EMI files,
-preserve their original mtimes; ISO metadata timestamps can otherwise differ
-even when the EMI payload bytes are identical.
+The repository does not track game-media hashes. Use `bin/bof3-disk --help`
+for its read-only extraction and checksum operations. Keep any local checksum
+manifest below `out/`; it is evidence, not tracked project state.

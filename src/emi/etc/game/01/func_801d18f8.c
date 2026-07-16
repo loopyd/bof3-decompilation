@@ -9,9 +9,9 @@ typedef struct GameFrontBannerState {
 
 /* @behavior advances the four-panel frontend banner fade and draws each
  * visible panel with its current alpha.
- * @source 0x801d18f8 func_801d18f8
+ * @source 0x801D18F8
  */
-void func_801d18f8(void) {
+void func_801D18F8(void) {
   volatile GameFrontBannerState* state;
   vu16*                          alpha;
   s32                            i;
@@ -54,17 +54,17 @@ void func_801d18f8(void) {
       continue;
     }
 
-    if (func_8017b2b4() == 1) {
+    if (func_8017B2B4() == 1) {
       flags = ((marker & 0x3ff) >> 6) | 0x200;
-    } else if (func_8017b2b4() == 2) {
+    } else if (func_8017B2B4() == 2) {
       flags = ((marker & 0x3ff) >> 6) | 0x200;
     } else {
       flags = ((marker & 0x3ff) >> 6) | 0x80;
     }
-    func_8017c2d8(D_8014598C, 0, 0, flags, 0);
+    func_8017C2D8(D_8014598C, 0, 0, flags, 0);
 
-    func_8014e5a0(2, 12);
-    primitive = func_801d17d8((s16)x, 24, (u8)(i + 11), 2, 0);
+    func_8014E5A0(2, 12);
+    primitive = func_801D17D8((s16)x, 24, (u8)(i + 11), 2, 0);
     primitive[4] = *alpha;
     primitive[5] = *alpha;
     primitive[6] = *alpha;

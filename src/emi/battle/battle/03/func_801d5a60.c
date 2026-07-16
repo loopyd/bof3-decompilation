@@ -2,9 +2,9 @@
 
 /* @behavior advances one enemy `0x20` countdown path, clearing the flag and queuing
  * a followup event once one or more battlers complete.
- * @source 0x801d5a60 FUN_801d5a60
+ * @source 0x801D5A60
  */
-u8 func_801d5a60(void) {
+u8 func_801D5A60(void) {
   u8 index;
   u8 count;
   u8 last_index;
@@ -16,9 +16,9 @@ u8 func_801d5a60(void) {
     volatile Battle03EnemyWork* battle_work;
 
     battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
-    if ((func_801d64c4(index) == 0u) &&
+    if ((func_801D64C4(index) == 0u) &&
         ((BATTLE_ENEMY_FLAGS_82(battle_work) & 0x20u) != 0u)) {
-      if (func_801ddcb4(index) == 0u) {
+      if (func_801DDCB4(index) == 0u) {
         BATTLE_ENEMY_BYTE_FD(battle_work) += 1u;
       } else {
         BATTLE_ENEMY_BYTE_FD(battle_work) = 0u;
@@ -33,14 +33,14 @@ u8 func_801d5a60(void) {
   if (count != 0u) {
     u32 event_id;
 
-    func_801d9484();
+    func_801D9484();
     event_id = 0x2au;
     if (count == 1u) {
-      func_801dea18(last_index);
+      func_801DEA18(last_index);
       event_id = 0x28u;
     }
-    event_id = func_801502d0(event_id);
-    func_801de560(2u, 0u, 0u, 0x2du, event_id);
+    event_id = func_801502D0(event_id);
+    func_801DE560(2u, 0u, 0u, 0x2du, event_id);
     return 1u;
   }
 

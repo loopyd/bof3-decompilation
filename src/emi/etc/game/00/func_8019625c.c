@@ -2,9 +2,9 @@
 
 /* @behavior Advances active palette work records and writes their adjusted
  * colors into the shared palette buffer.
- * @source 0x8019625c FUN_8019625c
+ * @source 0x8019625C
  */
-void func_8019625c(void) {
+void func_8019625C(void) {
   GamePaletteEntry* entry;
   s32               entry_index;
   s32               color_index;

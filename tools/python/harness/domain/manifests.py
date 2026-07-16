@@ -47,8 +47,6 @@ class TargetManifest:
     splat: str
     load_address: int
     profile: str
-    status: str = "active"
-    quarantine_reason: str = ""
     psyq_headers: str | None = None
     libraries: dict[str, tuple[str, ...]] = field(default_factory=dict)
     library_confidence: dict[str, str] = field(default_factory=dict)
@@ -60,10 +58,6 @@ class TargetManifest:
     def __post_init__(self) -> None:
         if self.kind not in {"executable", "emi"}:
             raise ValueError(f"unsupported target kind: {self.kind}")
-        if self.status not in {"active", "quarantined"}:
-            raise ValueError(f"unsupported target status: {self.status}")
-        if self.status == "quarantined" and not self.quarantine_reason.strip():
-            raise ValueError(f"quarantined target requires a reason: {self.id.value}")
 
 
 def _load_toml(path: Path) -> dict[str, Any]:
@@ -163,8 +157,6 @@ def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
             splat=str(raw["splat"]),
             load_address=int(raw.get("load_address", 0)),
             profile=str(raw["profile"]),
-            status=str(raw.get("status", "active")),
-            quarantine_reason=str(raw.get("quarantine_reason", "")),
             psyq_headers=(
                 None if psyq.get("headers") is None else str(psyq["headers"])
             ),

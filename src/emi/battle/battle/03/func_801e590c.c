@@ -2,9 +2,9 @@
 
 /* @behavior finds the first free queued-slot entry, marks it active, and stores the
  * caller's pair of mode bytes into offsets `5/6`.
- * @source 0x801e590c FUN_801e590c
+ * @source 0x801E590C
  */
-u32 func_801e590c(u32 arg0, u32 arg1) {
+u32 func_801E590C(u32 arg0, u32 arg1) {
   u8  index;
   u8  flags;
   u32 offset;

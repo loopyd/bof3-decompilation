@@ -1,8 +1,8 @@
 #include "internal.h"
 
 /* @behavior returns zero.
- * @source 0x801f83a8 FUN_801f83a8
+ * @source 0x801F83A8
  */
-s32 func_801f83a8(void) {
+s32 func_801F83A8(void) {
   return 0;
 }

@@ -11,9 +11,9 @@ extern const u32 D_80149C3C[];
 
 /* @behavior snapshots the target-local EMI callback table and invokes the
  * callback selected by the current loader mode.
- * @source 0x80162d18 func_80162d18
+ * @source 0x80162D18
  */
-void func_80162d18(void) {
+void func_80162D18(void) {
   EmiCallbackGroup*       dst;
   const EmiCallbackGroup* src;
   const EmiCallbackGroup* end;

@@ -6,9 +6,9 @@ extern GameCallbackSlot           D_80143B40;
 /* possible name: game_slot_scheduler_tick
  * @behavior walks the EXE callback slot table, opens ready threads, decrements
  * yield timers, and switches into any thread whose slot reached dispatch state.
- * @source 0x8014b73c FUN_8014b73c
+ * @source 0x8014B73C
  */
-void func_8014b73c(void) {
+void func_8014B73C(void) {
   u16                        new_var;
   GameCallbackSlot*          current_slot;
   volatile GameCallbackSlot* next_slot;
@@ -23,11 +23,11 @@ void func_8014b73c(void) {
 
     switch (state) {
       case GAME_CALLBACK_SLOT_STATE_OPEN:
-        func_8017ee0c();
+        func_8017EE0C();
         (current_slot = D_80143D40)->thread_id =
             OpenTh((long (*)())D_80143D40->callback, D_80143D40->open_arg,
                    D_80143D40->open_arg_2);
-        func_8017ee1c();
+        func_8017EE1C();
         goto dispatch;
 
       case GAME_CALLBACK_SLOT_STATE_YIELD:

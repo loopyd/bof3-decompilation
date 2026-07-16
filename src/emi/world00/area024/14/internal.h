@@ -60,31 +60,31 @@ extern vu16 WORLD00_AREA024_GLOBAL_HALF_3E6C;
 #define WORLD00_AREA024_SCRATCH_BYTE_09 \
   (*(volatile volatile u8*)(0x1f800044u + 9u))
 
-void func_8015b410(void* arg0);
-void func_8015b4b0(void* arg0);
-void func_801aff64(void* arg0);
-void func_801afe18(void* arg0);
-void func_801aff04(const void* arg0, void* arg1);
-void func_801affd8(const void* arg0, void* arg1, void* arg2);
-u16  func_8017a6f0(s32 arg0, s32 arg1);
-u16  func_8017a620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-void func_8017a97c(void* arg0);
-void func_8017a904(void* arg0, s32 arg1);
-void func_8017a9b8(void* arg0);
-void func_8017aae8(void* arg0);
-void func_80155a08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void func_8015B410(void* arg0);
+void func_8015B4B0(void* arg0);
+void func_801AFF64(void* arg0);
+void func_801AFE18(void* arg0);
+void func_801AFF04(const void* arg0, void* arg1);
+void func_801AFFD8(const void* arg0, void* arg1, void* arg2);
+u16  func_8017A6F0(s32 arg0, s32 arg1);
+u16  func_8017A620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void func_8017A97C(void* arg0);
+void func_8017A904(void* arg0, s32 arg1);
+void func_8017A9B8(void* arg0);
+void func_8017AAE8(void* arg0);
+void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 
-void func_801f2df8(const void* arg0);
-void func_801f2fd4(void* arg0);
-void func_801f3080(void);
-s32  func_801f30ec(void);
-void func_801f362c(void);
-void func_801f3708(void* arg0, const void* arg1, s16* arg2);
-void func_801f3944(const void* arg0);
-void func_801f3be4(void* arg0);
-void func_801f3d0c(void);
-void func_801f3d5c(void);
-s32  func_801f3e48(u8 arg0);
-s16  func_801f4158(const s16* arg0, const s16* arg1, const s16* arg2);
+void func_801F2DF8(const void* arg0);
+void func_801F2FD4(void* arg0);
+void func_801F3080(void);
+s32  func_801F30EC(void);
+void func_801F362C(void);
+void func_801F3708(void* arg0, const void* arg1, s16* arg2);
+void func_801F3944(const void* arg0);
+void func_801F3BE4(void* arg0);
+void func_801F3D0C(void);
+void func_801F3D5C(void);
+s32  func_801F3E48(u8 arg0);
+s16  func_801F4158(const s16* arg0, const s16* arg1, const s16* arg2);
 
 #endif

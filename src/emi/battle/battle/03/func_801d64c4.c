@@ -3,9 +3,9 @@
 /* @behavior reports whether one battler should be treated as blocked, taking the
  * global `0x10` suppression countdown into account before falling back to the
  * generic availability helper.
- * @source 0x801d64c4 FUN_801d64c4
+ * @source 0x801D64C4
  */
-u8 func_801d64c4(u32 arg0) {
+u8 func_801D64C4(u32 arg0) {
   u32 flags;
 
   if (arg0 < 3u) {
@@ -24,5 +24,5 @@ u8 func_801d64c4(u32 arg0) {
     }
   }
 
-  return func_801db524((u8)arg0) != 0u;
+  return func_801DB524((u8)arg0) != 0u;
 }

@@ -62,8 +62,8 @@ handlers and addresses are listed in the [loader dispatch table](runtime/emi-loa
 
 Testable invariants:
 
-- `just extract && just unpack && bin/harness discover` must regenerate the EMI entry catalog from
-  the extracted archives; generated evidence remains under `out/`.
+- `bin/emi-ex` can extract and inspect an EMI archive without changing tracked
+  target facts; generated evidence remains under `out/`.
 - Every payload offset is `0x800`-aligned and every next offset uses
   `(size + 0x7ff) & ~0x7ff`.
 - A promoted entry's archive path, slot, payload hash, and load address must
@@ -137,8 +137,10 @@ match. Do not generalize these layouts to every PSX primitive.
 Executable checks:
 
 ```sh
-bin/harness diff src/emi/etc/game/00/func_801af2a0.c
-bin/harness diff src/emi/etc/game/01/func_801d18e8.c
+bin/asm-diff emi/etc/game/00@0x801AF2A0
+bin/byte-match emi/etc/game/00@0x801AF2A0
+bin/asm-diff emi/etc/game/01@0x801D18E8
+bin/byte-match emi/etc/game/01@0x801D18E8
 ```
 
 Both checks must report exact instruction and byte matches. A visual render is

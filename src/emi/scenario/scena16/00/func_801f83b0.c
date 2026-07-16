@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior copies one palette window while clamping each component to one limit.
- * @source 0x801f83b0 FUN_801f83b0
+ * @source 0x801F83B0
  */
-void func_801f83b0(u32 intensity) {
+void func_801F83B0(u32 intensity) {
   const u16* src;
   const u16* src_end;
   u32        dst_offset;

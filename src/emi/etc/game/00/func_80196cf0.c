@@ -2,9 +2,9 @@
 
 /* @behavior Allocates one inactive palette slot and initializes it with the
  * supplied owner and source-table pointers.
- * @source 0x80196cf0 FUN_80196cf0
+ * @source 0x80196CF0
  */
-u8 func_80196cf0(u8* owner, u8* source_table) {
+u8 func_80196CF0(u8* owner, u8* source_table) {
   u8 slot_index;
 
   for (slot_index = 0u; slot_index < 8u; slot_index++) {

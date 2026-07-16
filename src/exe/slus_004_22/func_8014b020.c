@@ -11,9 +11,9 @@ extern u32  D_801459FC;
 
 /* @behavior rebuilds the active boot-frame ordering-table and packet-pointer
  * tables, then restores the two fixed packet arena bounds.
- * @source 0x8014b020 func_8014b020
+ * @source 0x8014B020
  */
-void func_8014b020(void) {
+void func_8014B020(void) {
   s32   index;
   u32   buffer_index;
   u8*   packet;

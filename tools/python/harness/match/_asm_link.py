@@ -7,7 +7,7 @@ from pathlib import Path
 from ..io import RepoLayout, repo_layout
 from ..symbols import load_weak_symbol_bindings
 
-_HEX_SUFFIX_RE = re.compile(r"(?:func|DAT)_([0-9a-fA-F]{8})$")
+_HEX_SUFFIX_RE = re.compile(r"(?:func|D)_([0-9a-fA-F]{8})$")
 
 
 def resolve_symbol_address(name: str, *, symbols_c_path: Path) -> int | None:

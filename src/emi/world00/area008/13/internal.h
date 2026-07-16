@@ -15,14 +15,14 @@ extern vu8 WORLD00_AREA008_D_80146867;
 extern u8  WORLD00_AREA008_D_80145AD4[];
 extern u8  WORLD00_AREA008_D_801F2C04[];
 extern u8  WORLD00_AREA008_D_801F2C10[];
-s32        func_8017e3f4(char* buffer, const char* format, ...);
-void       func_8014ff0c(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
-void       func_8014f800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
-void       func_8014e5a0(u8 arg0, u8 arg1);
-void       func_801aeba0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
+s32        func_8017E3F4(char* buffer, const char* format, ...);
+void       func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
+void       func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
+void       func_8014E5A0(u8 arg0, u8 arg1);
+void       func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 
-void func_801f3c2c(void);
-void func_801f3d18(void);
-void func_801f3d88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4);
+void func_801F3C2C(void);
+void func_801F3D18(void);
+void func_801F3D88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4);
 
 #endif

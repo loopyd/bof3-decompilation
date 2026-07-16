@@ -2,9 +2,9 @@
 
 /* @behavior reports whether the current enemy slot can reuse a UI owner slot
  * without conflicting with another non-hidden slot carrying the same kind byte.
- * @source 0x801da69c FUN_801da69c
+ * @source 0x801DA69C
  */
-u8 func_801da69c(u32 arg0) {
+u8 func_801DA69C(u32 arg0) {
   s8 owner_index;
   u8 slot_kind;
 

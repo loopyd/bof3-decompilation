@@ -1,13 +1,16 @@
 #include "internal.h"
 
+/* @behavior UNKNOWN: verify this recovered game-work loop against target assembly.
+ * @source 0x801A0514
+ */
 #define ENTITY_MAX       30
 #define ENTITY_SLOT_SIZE 0x98
 
-extern u8 DAT_8014933e;
+extern u8 D_8014933E;
 extern void func_8014D290(struct GameWorkArea *arg0);
 extern void func_8015A944(struct GameWorkArea *arg0);
 
-void func_801a0514(void) {
+void func_801A0514(void) {
     s32 var_s0_15;
     s32 var_v1_19;
     struct GameWorkArea *temp_a0_28;
@@ -29,13 +32,13 @@ void func_801a0514(void) {
                 if (temp_a0_28->pad_1C[8] & 0x10) {
                     temp_a0_28->unk_29 = 4;
                 } else {
-                    temp_a0_28->unk_29 = DAT_8014933e;
+                    temp_a0_28->unk_29 = D_8014933E;
                 }
 
                 goto block_7;
             }
 
-            if (DAT_8014933e != 4) {
+            if (D_8014933E != 4) {
             block_7:
                 {
                   struct GameWorkArea *scratch;

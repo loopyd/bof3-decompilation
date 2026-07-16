@@ -2,52 +2,52 @@
 
 /* @behavior draws both New Game/Load prompt panels, their labels and selection
  * marker; when the popup is open, pulses the active marker primitive.
- * @source 0x801d12cc FUN_801d12cc
+ * @source 0x801D12CC
  */
-void func_801d12cc(u8 selected, u8 alpha) {
+void func_801D12CC(u8 selected, u8 alpha) {
   u8* primitive;
   s32 marker_x;
   s32 pulse;
   s32 pulse_counter;
 
   marker_x = 47;
-  if (func_8017b2b4() == 1) {
+  if (func_8017B2B4() == 1) {
     marker_x = 143;
-  } else if (func_8017b2b4() == 2) {
+  } else if (func_8017B2B4() == 2) {
     marker_x = 143;
   }
-  func_8017c2d8(D_8014598C, 0, 0, marker_x, 0);
-  func_8014e5a0(1, 12);
-  primitive = func_801d17d8(262, 130, 1, 1, selected);
-  func_801d18e8(primitive, alpha);
+  func_8017C2D8(D_8014598C, 0, 0, marker_x, 0);
+  func_8014E5A0(1, 12);
+  primitive = func_801D17D8(262, 130, 1, 1, selected);
+  func_801D18E8(primitive, alpha);
 
   marker_x = 189;
-  if (func_8017b2b4() == 1) {
+  if (func_8017B2B4() == 1) {
     marker_x = 685;
-  } else if (func_8017b2b4() == 2) {
+  } else if (func_8017B2B4() == 2) {
     marker_x = 685;
   }
-  func_8017c2d8(D_8014598C, 0, 0, marker_x, 0);
-  func_8014e5a0(2, 12);
-  primitive = func_801d17d8(12, 200, 8, 2, selected);
-  func_801d18e8(primitive, alpha);
+  func_8017C2D8(D_8014598C, 0, 0, marker_x, 0);
+  func_8014E5A0(2, 12);
+  primitive = func_801D17D8(12, 200, 8, 2, selected);
+  func_801D18E8(primitive, alpha);
 
   marker_x = 189;
-  if (func_8017b2b4() == 1) {
+  if (func_8017B2B4() == 1) {
     marker_x = 685;
-  } else if (func_8017b2b4() == 2) {
+  } else if (func_8017B2B4() == 2) {
     marker_x = 685;
   }
-  func_8017c2d8(D_8014598C, 0, 0, marker_x, 0);
-  func_8014e5a0(2, 12);
-  primitive = func_801d17d8(12, 212, 19, 2, selected);
-  func_801d18e8(primitive, alpha);
-  primitive = func_801d17d8(172, 212, 9, 2, selected);
-  func_801d18e8(primitive, alpha);
+  func_8017C2D8(D_8014598C, 0, 0, marker_x, 0);
+  func_8014E5A0(2, 12);
+  primitive = func_801D17D8(12, 212, 19, 2, selected);
+  func_801D18E8(primitive, alpha);
+  primitive = func_801D17D8(172, 212, 9, 2, selected);
+  func_801D18E8(primitive, alpha);
 
   if ((GAME_FRONT_POPUP_WORD & GAME_FRONT_POPUP_PENDING_MASK) ==
       GAME_FRONT_POPUP_PENDING_OPEN) {
-    primitive = func_801d17d8(48, 184, 7, 2, 0);
+    primitive = func_801D17D8(48, 184, 7, 2, 0);
     pulse_counter = D_80143C2A + 1u;
     D_80143C2A = pulse_counter;
     pulse = (pulse_counter & 0x20u) != 0u

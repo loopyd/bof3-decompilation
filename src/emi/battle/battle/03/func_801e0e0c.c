@@ -2,9 +2,9 @@
 
 /* @behavior reports whether all active local battlers satisfy the strict ready
  * predicate used by the later queued branch.
- * @source 0x801e0e0c FUN_801e0e0c
+ * @source 0x801E0E0C
  */
-u8 func_801e0e0c(void) {
+u8 func_801E0E0C(void) {
   u8 index;
 
   index = 0u;

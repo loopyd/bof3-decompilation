@@ -1,13 +1,13 @@
 #include "internal.h"
 
 /* @behavior submits one effect id unless the caller passes `-1`.
- * @source 0x801e52f0 FUN_801e52f0
+ * @source 0x801E52F0
  */
-void func_801e52f0(s16 arg0) {
+void func_801E52F0(s16 arg0) {
   u16 effect_id;
 
   effect_id = (u16)arg0;
   if (effect_id != 0xffffu) {
-    func_8015df18(effect_id);
+    func_8015DF18(effect_id);
   }
 }

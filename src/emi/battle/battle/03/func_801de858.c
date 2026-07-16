@@ -2,9 +2,9 @@
 
 /* @behavior reports whether any event-queue slot is active for the given event type
  * byte.
- * @source 0x801de858 FUN_801de858
+ * @source 0x801DE858
  */
-u8 func_801de858(s8 arg0) {
+u8 func_801DE858(s8 arg0) {
   u8  index;
   u32 offset;
 

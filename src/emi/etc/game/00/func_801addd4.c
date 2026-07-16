@@ -6,10 +6,10 @@
 /* @behavior applies each newly reached level's packed growth row to the mutable
  * character record, clamps the six base stats to 0..999, registers both ability
  * bytes, then recalculates the character.
- * @source 0x801addd4 FUN_801addd4
+ * @source 0x801ADDD4
  * @see docs/specs/data/characters.md
  */
-void func_801addd4(s32 arg0) {
+void func_801ADDD4(s32 arg0) {
   s32 character_value;
   u8  character;
   u8  current_level;
@@ -140,15 +140,15 @@ void func_801addd4(s32 arg0) {
       *(volatile u16*)(GAME_RAM_BASE + character_offset + 0x49aeu) = 999u;
     }
 
-    func_801651dc(*(const volatile u8*)(GAME_LEVEL_BASE + level_offset +
+    func_801651DC(*(const volatile u8*)(GAME_LEVEL_BASE + level_offset +
                                         (u32)level * 8u - 0x471eu),
                   character, 0, 0);
-    func_801651dc(*(const volatile u8*)(GAME_LEVEL_BASE + level_offset +
+    func_801651DC(*(const volatile u8*)(GAME_LEVEL_BASE + level_offset +
                                         (u32)level * 8u - 0x471du),
                   character, 0, 0);
     level++;
   }
 
   *(volatile u8*)(GAME_RAM_BASE + character_offset + 0x496eu) = new_level;
-  func_80164a44((volatile u8*)(GAME_RAM_BASE + character_offset + 0x4968u));
+  func_80164A44((volatile u8*)(GAME_RAM_BASE + character_offset + 0x4968u));
 }

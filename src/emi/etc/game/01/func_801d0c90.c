@@ -2,16 +2,16 @@
 
 /* @behavior selects layout bank `2`, requests `DEMO.EMI`, waits for the loader,
  * seeds cue `0x8d`, then arms the local fade/window state.
- * @source 0x801d0c90 FUN_801d0c90
+ * @source 0x801D0C90
  */
-void func_801d0c90(void) {
+void func_801D0C90(void) {
   u16 state;
 
   game_set_frontend_layout_bank(2u);
   emi_stream_init_slot(0x25fu);
 
-  while (!func_80162d00()) {
-    func_8014b87c(1u);
+  while (!func_80162D00()) {
+    func_8014B87C(1u);
   }
 
   game_stage_shared_palette_bank();

@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior runs the secondary SCENA16 controller rooted at state 4.
- * @source 0x801f7cc4 FUN_801f7cc4
+ * @source 0x801F7CC4
  */
-void func_801f7cc4(void) {
+void func_801F7CC4(void) {
   u8 advance_state;
 
   advance_state = 0u;
@@ -47,17 +47,17 @@ void func_801f7cc4(void) {
 
       progress = (u16)(0x130u - SCENA16_D_80146876);
       if (progress < 0xbfu) {
-        func_8014f800(0x48, 0x50, 0, 0xffu,
+        func_8014F800(0x48, 0x50, 0, 0xffu,
                       0x80010000u + (u32)SCENA16_D_80010006);
         if (progress < 0x20u) {
-          func_801f83b0((u32)(progress & 0xffu));
+          func_801F83B0((u32)(progress & 0xffu));
         } else if (progress == 0x20u) {
-          func_801f845c();
+          func_801F845C();
         } else if (progress > 0x9fu) {
-          func_801f83b0((u32)((0xbfu - progress) & 0xffu));
+          func_801F83B0((u32)((0xbfu - progress) & 0xffu));
         }
       } else if (progress == 0xbfu) {
-        func_801f845c();
+        func_801F845C();
       }
 
       next_counter = (u16)(SCENA16_D_80146876 - 1u);
@@ -76,7 +76,7 @@ void func_801f7cc4(void) {
       if (SCENA16_D_80146864_BYTE != 5u) {
         return;
       }
-      *(vu8*)0x1f800000u = func_8019601c();
+      *(vu8*)0x1f800000u = func_8019601C();
       if (*(vu8*)0x1f800000u != 0xffu) {
         vu8* object;
         u32  object_index;
@@ -97,7 +97,7 @@ void func_801f7cc4(void) {
       if (SCENA16_D_80146864_BYTE != 8u) {
         break;
       }
-      *(vu8*)0x1f800000u = func_8019601c();
+      *(vu8*)0x1f800000u = func_8019601C();
       if (*(vu8*)0x1f800000u != 0xffu) {
         vu8* object;
         u32  object_index;
@@ -131,7 +131,7 @@ void func_801f7cc4(void) {
 
     case 8:
       if (SCENA16_D_80146864_BYTE == 0x0bu) {
-        func_8014ecac(0u);
+        func_8014ECAC(0u);
         SCENA16_D_80146876 = 0u;
         advance_state = 1u;
       }
@@ -142,13 +142,13 @@ void func_801f7cc4(void) {
         return;
       }
       SCENA16_D_8014832E = 0u;
-      func_8014ecac(1u);
-      func_80161cd0(2u, 0x6e, 0x20);
+      func_8014ECAC(1u);
+      func_80161CD0(2u, 0x6e, 0x20);
       advance_state = 1u;
       break;
 
     case 10:
-      func_8014f800(0x46, 100, 0, 0xffu,
+      func_8014F800(0x46, 100, 0, 0xffu,
                     0x80010000u + (u32)SCENA16_D_80010008);
       if (SCENA16_D_80143C40 == 0u) {
         SCENA16_D_80146876 = 0x7fu;
@@ -157,13 +157,13 @@ void func_801f7cc4(void) {
       break;
 
     case 11:
-      func_8014f800(0x46, 100, 0, 0xffu,
+      func_8014F800(0x46, 100, 0, 0xffu,
                     0x80010000u + (u32)SCENA16_D_80010008);
       SCENA16_D_80146876 = (u16)(SCENA16_D_80146876 - 1u);
       if (SCENA16_D_80146876 != 0u) {
         return;
       }
-      func_8014ecac(0u);
+      func_8014ECAC(0u);
       advance_state = 1u;
       break;
 
@@ -172,7 +172,7 @@ void func_801f7cc4(void) {
         SCENA16_D_80146874 = 1;
         SCENA16_D_80146875 = 0u;
       } else {
-        func_8014f800(0x46, 100, 0, 0xffu,
+        func_8014F800(0x46, 100, 0, 0xffu,
                       0x80010000u + (u32)SCENA16_D_80010008);
       }
       break;

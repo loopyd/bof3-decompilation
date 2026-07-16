@@ -2,9 +2,9 @@
 
 /* @behavior dispatches through the local handler table selected by scratchpad
  * state byte `0x02`.
- * @source 0x801f34c8 FUN_801f34c8
+ * @source 0x801F34C8
  */
-void func_801f34c8(void) {
+void func_801F34C8(void) {
   u32 index;
 
   index = (u32)WORLD00_AREA016_SCRATCH_PTR->state_02 << 2;

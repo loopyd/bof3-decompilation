@@ -2,9 +2,9 @@
 
 /* @behavior reports whether one battler slot is minimally eligible for the ranking
  * path, using only the active bit and the base local/enemy rejection masks.
- * @source 0x801db2f8 FUN_801db2f8
+ * @source 0x801DB2F8
  */
-u8 func_801db2f8(u32 arg0) {
+u8 func_801DB2F8(u32 arg0) {
   if (arg0 < 3u) {
     volatile Battle03LocalWork* battle_work;
 

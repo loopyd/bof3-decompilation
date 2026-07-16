@@ -86,7 +86,7 @@ def resolve_target(root: Path, value: str) -> ResolvedTarget:
         source_dir=root / manifest.source_dir,
         binary_path=binary,
         splat_path=root / manifest.splat,
-        reviewed_replay_path=root / "config" / "analysis" / manifest.id.value / "reviewed.r2",
+        reviewed_replay_path=root / "config" / "analysis" / manifest.id.value / "reviewed.rz",
         load_address=manifest.load_address,
         profile=manifest.profile,
     )

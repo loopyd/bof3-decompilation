@@ -2,9 +2,9 @@
 
 /* @behavior Scans four 16-byte palette maps for an 0xff range selected by mode
  * and records its row and column in scratchpad bytes zero and one.
- * @source 0x801968bc FUN_801968bc
+ * @source 0x801968BC
  */
-u8 func_801968bc(u8 mode) {
+u8 func_801968BC(u8 mode) {
   u8 row;
   u8 column;
   u8 end;

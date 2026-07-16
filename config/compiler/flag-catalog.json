@@ -2,7 +2,7 @@
   "schema": "harness.compiler-flag-catalog/v1",
   "provenance": [
     "decomp.me PS1 compiler presets",
-    ".agents/skills/decomp-loop/references/matching-patterns.md"
+    "docs/matching.md"
   ],
   "candidates": [
     ["-O0"],

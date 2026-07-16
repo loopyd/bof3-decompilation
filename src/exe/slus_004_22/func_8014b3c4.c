@@ -12,9 +12,9 @@ extern const void* PTR_s_INTERRRUPT_8017f508[];
 
 /* @behavior displays the boot exception register dump and loops forever updating
  * the double-buffered debug screen.
- * @source 0x8014b3c4 FUN_8014b3c4
+ * @source 0x8014B3C4
  */
-void func_8014b3c4(void) {
+void func_8014B3C4(void) {
   const u32*   exception_frame;
   const u32*   exception_pc;
   const u32*   src;
@@ -37,7 +37,7 @@ void func_8014b3c4(void) {
     dst += 4;
   } while (src != exception_frame + 48);
 
-  func_8017ee1c();
+  func_8017EE1C();
 
   while (1) {
     exception_pc = (const u32*)exception_frame[0x22];
@@ -53,7 +53,7 @@ void func_8014b3c4(void) {
     D_80143E68 = &D_80143D48[D_80143D44 * 0x90];
 
     ClearOTagR((u_long*)(D_80143E68 + 0x70), 8);
-    func_8014b020();
+    func_8014B020();
 
     for (i = 0; ((unsigned int)0x12) > i; i++) {
       func_80150098(0x14, y, 0, (void*)label_table[i]);
@@ -83,7 +83,7 @@ void func_8014b3c4(void) {
     func_80150098(0x8e, 0x24, 4, (void*)D_80145AD4);
 
     DrawSync(0);
-    func_8014b0f0();
+    func_8014B0F0();
     D_80143E6C += 1;
   }
 }

@@ -4,9 +4,9 @@ extern volatile Battle03QueuedSlot* D_801EC2E0;
 
 /* @behavior clears the current queued-slot entry's state bytes and late control
  * bytes.
- * @source 0x801e5988 FUN_801e5988
+ * @source 0x801E5988
  */
-void func_801e5988(void) {
+void func_801E5988(void) {
   ((volatile u8*)D_801EC2E0)[0x00] = 0u;
   ((volatile u8*)D_801EC2E0)[0x05] = 0u;
   ((volatile u8*)D_801EC2E0)[0x06] = 0u;

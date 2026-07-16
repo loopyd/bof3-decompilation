@@ -4,9 +4,9 @@
  * a battler's status word. for the magic-defence bit (0x20), copies three
  * defence values from a shared table into the battler's slot.
  * returns the updated status word.
- * @source 0x800a36f0 FUN_800a36f0
+ * @source 0x800A36F0
  */
-u16 func_800a36f0(u8 battler_index, u16 flags) {
+u16 func_800A36F0(u8 battler_index, u16 flags) {
   volatile u8*  player_base;
   volatile u16* status_slot;
   u16           status;

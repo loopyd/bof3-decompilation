@@ -2,9 +2,9 @@
 
 /* @behavior applies the pending front/world selection context, resolves the next
  * entry-0 mode from request flags, then advances to state 2.
- * @source 0x801971e8 FUN_801971e8
+ * @source 0x801971E8
  */
-void func_801971e8(void) {
+void func_801971E8(void) {
   u16 context_seed;
   u32 context_a;
   u32 context_b;
@@ -20,7 +20,7 @@ void func_801971e8(void) {
   context_b = D_80143F18;
   context_kind = D_80143F1C;
   D_8014625A = world_flags & 0xfff7u;
-  func_8019faa0(context_seed, context_a, context_b, context_kind);
+  func_8019FAA0(context_seed, context_a, context_b, context_kind);
 
   if (D_80143F02 & 8u) {
     D_80143B90 = 8u;
@@ -29,10 +29,10 @@ void func_801971e8(void) {
 
   request_kind = D_80143F1D;
   if ((u8)(request_kind + 2u) >= 2u) {
-    func_8014ecac(request_kind);
-    func_80198bc4(1u);
+    func_8014ECAC(request_kind);
+    func_80198BC4(1u);
     if (*(u8*)&D_80143F02 & 1u) {
-      func_801a0048(D_8014930A, D_8014930E);
+      func_801A0048(D_8014930A, D_8014930E);
     }
   } else if (request_kind == 0xfeu) {
     D_8014832E = 0u;
@@ -48,7 +48,7 @@ void func_801971e8(void) {
 
   pending_world = *(u16*)&D_80143F00;
   if (pending_world != 0xbd) {
-    func_801b3ccc(1u);
+    func_801B3CCC(1u);
   }
 
   final_world_flags = D_8014625A;

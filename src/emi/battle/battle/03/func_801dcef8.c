@@ -2,9 +2,9 @@
 
 /* @behavior initializes the deferred local/enemy halfword countdown from the
  * current primary value when bit `0x80` is set.
- * @source 0x801dcef8 FUN_801dcef8
+ * @source 0x801DCEF8
  */
-void func_801dcef8(u32 arg0) {
+void func_801DCEF8(u32 arg0) {
   arg0 &= 0xffu;
   if (arg0 < 3u) {
     volatile Battle03LocalWork* battle_work;

@@ -7,15 +7,15 @@ struct scratchpad_state {
 
 /* @behavior seeds the AREA030 scratch record for the later menu phase and bumps
  * scratch state byte `0x03`.
- * @source 0x801d6a2c FUN_801d6a2c
+ * @source 0x801D6A2C
  */
-void func_801d6a2c(void) {
+void func_801D6A2C(void) {
   volatile u8* temp_a0;
   volatile u8* temp_v0;
   volatile u8* temp_v1;
   volatile u8* temp_v1_2;
 
-  func_8014dd3c(0x47);
+  func_8014DD3C(0x47);
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x24] = 0x80;
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x29] = 1;
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x2a] = 0;

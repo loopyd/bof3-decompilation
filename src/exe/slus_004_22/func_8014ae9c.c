@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior clears one ordering table and resets its four boot render flags.
- * @source 0x8014ae9c func_8014ae9c
+ * @source 0x8014AE9C
  */
-void func_8014ae9c(u8* work) {
+void func_8014AE9C(u8* work) {
   ClearOTagR((u_long*)(work + 0x70), 8);
   work[0x2c] = 1;
   work[0x2d] = 0;

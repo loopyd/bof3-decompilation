@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior dispatches one record callback selected by byte 0x7a.
- * @source 0x801f8358 FUN_801f8358
+ * @source 0x801F8358
  */
-void func_801f8358(void* record) {
+void func_801F8358(void* record) {
   Scena16RecordCallback* table;
   u8                     callback_index;
   u32                    arg1;

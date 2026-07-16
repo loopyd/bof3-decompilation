@@ -1,5 +1,0 @@
-#!/bin/sh
-set -eu
-
-ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-exec "${PSX_GCC:-${ROOT}/toolchains/gcc-2.7.2-psx/gcc}" "$@"

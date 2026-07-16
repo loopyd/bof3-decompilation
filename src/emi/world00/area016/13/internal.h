@@ -46,18 +46,18 @@ extern vu8  WORLD00_AREA016_STREAM_HINT;
 #define WORLD00_AREA016_G4_VERTEX2 ((SVECTOR*)0x1f800024u)
 #define WORLD00_AREA016_G4_VERTEX3 ((SVECTOR*)0x1f80002cu)
 extern vu16 WORLD00_AREA016_BOOT_HALF_0008;
-void        func_8014e5a0(u8 arg0, u8 arg1);
-void        func_8014f800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
-s8          func_80166cb0(s16 arg0, s16 arg1);
-u8          func_801b6610(s16 arg0, s16 arg1);
+void        func_8014E5A0(u8 arg0, u8 arg1);
+void        func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
+s8          func_80166CB0(s16 arg0, s16 arg1);
+u8          func_801B6610(s16 arg0, s16 arg1);
 
-void func_801f3400(void);
-void func_801f34c8(void);
-void func_801f35b8(void);
-void func_801f368c(void);
-void func_801f39d8(s16 arg0, s16 arg1, u32 arg2);
-void func_801f3b00(s32 arg0, s32 arg1);
-void func_801f3ecc(s16 arg0, s16 arg1);
-void func_801f40c4(s16 arg0, s16 arg1);
+void func_801F3400(void);
+void func_801F34C8(void);
+void func_801F35B8(void);
+void func_801F368C(void);
+void func_801F39D8(s16 arg0, s16 arg1, u32 arg2);
+void func_801F3B00(s32 arg0, s32 arg1);
+void func_801F3ECC(s16 arg0, s16 arg1);
+void func_801F40C4(s16 arg0, s16 arg1);
 
 #endif

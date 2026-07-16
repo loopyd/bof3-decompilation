@@ -1,81 +1,31 @@
-#!/usr/bin/env bash
-set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-M2C="$ROOT/third_party/m2c/m2c.py"
+#!/usr/bin/env python3
+"""Produce a C90 m2c seed for one target-qualified function."""
 
-usage() {
-  cat <<'EOF'
-usage: bin/m2c <source> [--void] [-o <output>] [-c <context>]
+from __future__ import annotations
 
-Produce a matching-oriented C seed from the Splat assembly for a function.
+import os
+from pathlib import Path
+import sys
 
-The source file must be a func_XXXXXXXX.c path. The matching Splat assembly
-is located automatically from out/splat/.
 
-Options:
-  --void       Assume the function returns void.
-  -o FILE      Write the seed to FILE instead of stdout.
-  -c CONTEXT   Pass a C context file (structs/globals) to m2c. Repeatable.
-EOF
-  exit 1
-}
+ROOT = Path(__file__).resolve().parent.parent
+TOOLS = ROOT / "tools" / "python"
+PYTHON = ROOT / ".venv" / "bin" / "python"
 
-VOID_FLAG=""
-OUTPUT=""
-SOURCE=""
-CONTEXTS=()
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --void) VOID_FLAG="--void"; shift ;;
-    -o) OUTPUT="$2"; shift 2 ;;
-    -c) CONTEXTS+=("$2"); shift 2 ;;
-    -h|--help) usage ;;
-    -*) echo "unknown flag: $1" >&2; exit 1 ;;
-    *) SOURCE="$1"; shift ;;
-  esac
-done
 
-[[ -n "$SOURCE" ]] || usage
-[[ -n "$OUTPUT" ]] || OUTPUT="/dev/stdout"
+def main() -> int:
+    if PYTHON.is_file() and Path(sys.executable).resolve() != PYTHON.resolve():
+        environment = os.environ.copy()
+        environment["PYTHONPATH"] = str(TOOLS)
+        os.execve(
+            str(PYTHON),
+            [str(PYTHON), str(Path(__file__).resolve()), *sys.argv[1:]],
+            environment,
+        )
+    sys.path.insert(0, str(TOOLS))
+    from harness.commands.lift import main as lift_main
 
-FUNC="$(basename "$SOURCE" .c)"
+    return lift_main("m2c")
 
-# Resolve the Splat assembly path from the source path.
-# Source: src/<target>/func_XXXXXXXX.c
-# Splat: out/splat/<target>/asm/func_XXXXXXXX.s
-SOURCE_REL="${SOURCE#"$ROOT/"}"
-TARGET_DIR="$(dirname "$SOURCE_REL")"
-TARGET_DIR="${TARGET_DIR#src/}"
-ASM="$ROOT/out/splat/$TARGET_DIR/asm/$FUNC.s"
 
-if [[ ! -f "$ASM" ]]; then
-  echo "error: Splat assembly not found: $ASM" >&2
-  echo "run 'just split' or 'bin/splat split' first" >&2
-  exit 1
-fi
-
-# m2c matches function names case-sensitively. Splat asm uses uppercase
-# hex labels (func_80196CF0) while source files use lowercase (func_80196cf0).
-# Extract the actual label from the asm file.
-ASM_LABEL="$(grep -oP 'glabel\s+\K\S+' "$ASM" | head -1)"
-if [[ -z "$ASM_LABEL" ]]; then
-  echo "error: no glabel found in $ASM" >&2
-  exit 1
-fi
-
-CONTEXT_ARGS=()
-for ctx in "${CONTEXTS[@]}"; do
-  CONTEXT_ARGS+=(--context "$ctx")
-done
-
-python3 "$M2C" \
-  -t mipsel-gcc-c \
-  -f "$ASM_LABEL" \
-  --globals used \
-  --valid-syntax \
-  --knr \
-  --deterministic-vars \
-  --comment-style multiline \
-  "${CONTEXT_ARGS[@]}" \
-  $VOID_FLAG \
-  "$ASM" > "$OUTPUT"
+raise SystemExit(main())

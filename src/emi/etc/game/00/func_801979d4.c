@@ -2,9 +2,9 @@
 
 /* @behavior advances the front-end into state 2 when the shared input/status
  * flag is set, then runs the common state update.
- * @source 0x801979d4 func_801979d4
+ * @source 0x801979D4
  */
-void func_801979d4(void) {
+void func_801979D4(void) {
   if ((D_801490A4 & 2u) != 0u) {
     D_80146256 = 0x10u;
     D_80143BB0 = 0u;

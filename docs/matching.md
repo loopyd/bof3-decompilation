@@ -1,79 +1,51 @@
-# Matching a function
+# Matching one function
 
-> Compile one lifted function and compare it with the original PSX/MIPS code.
+Compile and compare one target-qualified PSX/MIPS function. Exact instruction
+and raw-byte equality are separate facts.
 
 ## Quick path
 
 ```sh
-bin/harness targets "$TARGET"
-bin/m2c "$FUNCTION_SOURCE"       # automated C seed
-# refine the seed into func_XXXXXXXX.c
-bin/asmdiff "$FUNCTION_SOURCE"
+bin/splat TARGET
+bin/m2ctx TARGET@0xADDRESS
+bin/m2c TARGET@0xADDRESS > candidate.c
+# edit src/<target>/func_address.c
+bin/asm-diff TARGET@0xADDRESS
+bin/byte-match TARGET@0xADDRESS
 ```
 
-The workflow is:
+`TARGET@0xADDRESS` prevents same-address functions in independent overlays
+from being confused. The owned source path is always
+`src/<target>/func_XXXXXXXX.c`.
 
-```text
-Splat .s assembly
-  -> bin/m2c (automated matching-oriented C seed)
-  -> refine into authored C
-  -> target compiler
-  -> bin/asmdiff (acceptance)
-```
+## Loop
 
-bin/m2c produces a compilable C seed using m2c's matching-oriented
-decompiler. Its output uses macros from `m2c_macros.h` for unknowns.
-Refine the seed into the target source file, then validate with `bin/asmdiff`.
+1. Confirm the manifest image, load address, Splat split, and map with
+   `bin/symbols check` before changing C.
+2. Use `bin/m2ctx` and `bin/m2c` for a target-local C seed. m2c output is a
+   starting point, not a source of layout facts.
+3. Fix boundary, signedness, access width, calls, and delay-slot behavior in
+   readable C89.
+4. Run `bin/asm-diff TARGET@0xADDRESS` for the vendored asm-differ result and
+   `bin/byte-match TARGET@0xADDRESS` for independent raw equality.
+5. If control flow is credible but source shape remains wrong, use one bounded
+   coordinator: `bin/permute TARGET@0xADDRESS --time-limit 300`.
 
-For focused manual search, run `--prepare-only`, edit the generated `base.c`
-with upstream `PERM_*` directives, then run the same source with `--prepared` so
-the wrapper does not overwrite those directives:
+`bin/permute` owns a deterministic workspace below `out/permuter/`; do not run
+two coordinators for the same function. Its score ranks candidates but never
+accepts a match.
+
+## Candidate review
 
 ```sh
-bin/permute "$FUNCTION_SOURCE" --prepare-only
-# Edit out/permuter/<source-without-extension>/base.c.
-bin/permute "$FUNCTION_SOURCE" --prepared -j "$BOUNDED_JOBS"
+bin/promote TARGET@0xADDRESS candidate.c
 ```
 
-The prepared `base.c` contains the function and only the declarations and types
-needed to compile it. It is generated from the real target compiler context.
+Promotion is validate-only. It formats, compiles, links at the original
+address, runs both comparison tools, and prints any required manual source,
+Splat, or map edits. It never copies a candidate into `src/` or mutates tracked
+configuration.
 
-An exact match exits with status `0`. A valid nonmatch exits with status `1`
-and writes its evidence under `out/matching/`. Invocation, mapping, build, and
-tool failures exit with status `2`.
-
-Use `--json` when another local tool or agent consumes the result:
-
-```sh
-bin/asmdiff "$FUNCTION_SOURCE" --json
-```
-
-## Iteration order
-
-1. Verify the payload and load address with `bin/harness targets "$TARGET"`.
-2. Generate a C seed with `bin/m2c "$FUNCTION_SOURCE"`.
-3. Fix function boundaries and control flow before register allocation.
-4. Check signedness, access width, constants, calls, and delay slots.
-5. Once the source compiles and its boundary/control flow are credible, use a
-   bounded permuter run when source shape or scheduling remains the issue:
-
-```sh
-bin/permute "$FUNCTION_SOURCE" --prepare-only
-bin/permute "$FUNCTION_SOURCE" -j "$BOUNDED_JOBS"
-bin/asmdiff "$FUNCTION_SOURCE"
-```
-
-Run one permuter coordinator per function workspace. Its score ranks candidates;
-only `bin/asmdiff` can accept a match.
-
-Do not edit C to compensate for a constant address delta or incorrect target
-mapping.
-
-## Verification
-
-```sh
-just check
-```
-
-`just check` includes `bin/harness doctor --strict`. Run `just verify "$TARGET"`
-only when claiming a whole-target byte match.
+Use `--json` for structured output and `--example` for an exact invocation.
+Exit 0 means success/match, 1 is a valid nonmatch or pending write, and 2 is a
+usage, configuration, or tool failure.

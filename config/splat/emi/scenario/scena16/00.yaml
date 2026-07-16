@@ -10,8 +10,7 @@ options:
   src_path: src/emi/scenario/scena16/00
   ld_script_path: out/splat/emi/scenario/scena16/00/linker.ld
   symbol_addrs_path:
-  - config/symbols/psyq.txt
-  - config/symbols/shared.txt
+  - config/symbols/emi/scenario/scena16/00.txt
 segments:
 - - 0
   - bin

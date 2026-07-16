@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior clears one rectangular display region.
- * @source 0x8014e564 FUN_8014e564
+ * @source 0x8014E564
  */
-void func_8014e564(s16 x, s16 y, s16 width, s16 height) {
+void func_8014E564(s16 x, s16 y, s16 width, s16 height) {
   RECT rect;
 
   rect.x = x;

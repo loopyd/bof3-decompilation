@@ -1,15 +1,9 @@
-"""Subprocess-based stateless analyzer adapters.
-
-Replaces persistent analyzer projects with subprocess-based stateless
-snapshots.  Supports Rizin and radare2 via subprocess, with capability-based
-engine selection.
-"""
+"""Subprocess-based, target-qualified Rizin snapshots."""
 
 from __future__ import annotations
 
 import json
 import hashlib
-import os
 import shutil
 import subprocess
 from dataclasses import dataclass
@@ -43,12 +37,8 @@ _REQUIRED_CAPABILITIES = {
 }
 
 
-def _get_version_flag(name: str) -> str:
-    return "-V" if name == "rizin" else "-v"
-
-
-def _get_version(executable: Path, name: str) -> str:
-    flag = _get_version_flag(name)
+def _get_version(executable: Path) -> str:
+    flag = "-V"
     result = subprocess.run(
         [str(executable), flag],
         capture_output=True,
@@ -57,7 +47,7 @@ def _get_version(executable: Path, name: str) -> str:
     )
     output = (result.stdout or result.stderr).strip()
     if not output:
-        raise RuntimeError(f"{name} {flag} returned empty output")
+        raise RuntimeError(f"rizin {flag} returned empty output")
     return output.splitlines()[0]
 
 
@@ -80,7 +70,7 @@ def _run_probe(executable: Path, commands: list[str]) -> str:
     return result.stdout or ""
 
 
-def _probe_capabilities(executable: Path, name: str) -> dict[str, bool]:
+def _probe_capabilities(executable: Path) -> dict[str, bool]:
     """Probe the analyzer for required MIPS analysis capabilities."""
 
     capabilities: dict[str, bool] = {}
@@ -123,14 +113,16 @@ def find_engine(name: str = "rizin") -> EngineIdentity:
     ``RuntimeError`` if it lacks required capabilities.
     """
 
-    path = shutil.which(name)
+    if name != "rizin":
+        raise ValueError("only rizin is supported")
+    path = shutil.which("rizin")
     if path is None:
         raise FileNotFoundError(
             f"{name} not found; install it and ensure it is on PATH"
         )
     executable = Path(path)
-    version = _get_version(executable, name)
-    capabilities = _probe_capabilities(executable, name)
+    version = _get_version(executable)
+    capabilities = _probe_capabilities(executable)
     missing = [
         capability
         for capability, expected in _REQUIRED_CAPABILITIES.items()
@@ -138,34 +130,14 @@ def find_engine(name: str = "rizin") -> EngineIdentity:
     ]
     if missing:
         raise RuntimeError(
-            f"{name} lacks required capabilities: {', '.join(sorted(missing))}"
+            f"rizin lacks required capabilities: {', '.join(sorted(missing))}"
         )
     return EngineIdentity(
-        name=name,
+        name="rizin",
         executable=executable,
         version=version,
         capabilities=capabilities,
     )
-
-
-def find_best_engine(engine_name: str | None = None) -> EngineIdentity:
-    """Select an explicitly requested engine or use the automatic fallback."""
-
-    selected = engine_name or os.environ.get("HARNESS_ANALYZER_ENGINE", "auto")
-    if selected not in {"auto", "rizin", "r2"}:
-        raise ValueError(
-            "HARNESS_ANALYZER_ENGINE must be one of: auto, rizin, r2"
-        )
-    candidates = ("rizin", "r2") if selected == "auto" else (selected,)
-    for name in candidates:
-        try:
-            return find_engine(name)
-        except (FileNotFoundError, RuntimeError):
-            continue
-    if selected == "auto":
-        raise FileNotFoundError("neither rizin nor r2 found on PATH")
-    raise FileNotFoundError(f"requested analyzer engine is unavailable: {selected}")
-
 
 def _run_subprocess_query(
     engine: EngineIdentity,
@@ -348,7 +320,7 @@ def write_target_snapshot(root: Path, target_id: str, *, timeout: int = 120) -> 
     binary_path = root / manifest.binary
     if not binary_path.is_file():
         raise FileNotFoundError(f"target binary not found: {manifest.binary}")
-    engine = find_best_engine()
+    engine = find_engine()
     reviewed: set[int] = set()
     splat_path = root / manifest.splat
     if splat_path.is_file():
@@ -376,20 +348,9 @@ def doctor() -> dict[str, Any]:
     """Check analyzer availability and capabilities."""
 
     try:
-        identity = find_engine("rizin")
+        identity = find_engine()
         return {
             "engine": "rizin",
-            "available": True,
-            "path": str(identity.executable),
-            "version": identity.version,
-            "capabilities": identity.capabilities,
-        }
-    except (FileNotFoundError, RuntimeError):
-        pass
-    try:
-        identity = find_engine("r2")
-        return {
-            "engine": "r2",
             "available": True,
             "path": str(identity.executable),
             "version": identity.version,
@@ -407,7 +368,6 @@ __all__ = [
     "EngineIdentity",
     "build_snapshot",
     "doctor",
-    "find_best_engine",
     "find_engine",
     "query_project",
     "write_target_snapshot",

@@ -13,11 +13,11 @@ typedef struct ScenarioSce10effScratch {
   s16 unk_3e;
 } ScenarioSce10effScratch;
 
-void func_80178b78(void);
+void func_80178B78(void);
 void func_80179558(s16* rotation, void* matrix, void* vector);
 void func_80179738(s16* translation, void* object_work);
-void func_80178cb8(void* scene, void* object_work);
-void func_80178fd8(void* object_work);
+void func_80178CB8(void* scene, void* object_work);
+void func_80178FD8(void* object_work);
 void func_80179068(void* object_work);
 
 #endif

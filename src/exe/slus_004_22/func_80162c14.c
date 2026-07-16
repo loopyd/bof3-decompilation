@@ -7,9 +7,9 @@ extern s8   D_80146489;
 
 /* @behavior copies the next EMI transfer chunk from the CD sector buffer,
  * wrapping into the active slot's sector when a partial sector remains.
- * @source 0x80162c14 func_80162c14
+ * @source 0x80162C14
  */
-void func_80162c14(void) {
+void func_80162C14(void) {
   u32  transfer_words;
   u32  transfer_size;
   u32  transfer_address;

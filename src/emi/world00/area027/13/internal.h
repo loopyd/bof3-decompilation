@@ -15,22 +15,22 @@ typedef struct World00Area027Point {
   s16 z;
 } World00Area027Point;
 
-void func_801afe18(void* arg0);
-void func_801aff04(const void* arg0, void* arg1);
-void func_80155a08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void func_801AFE18(void* arg0);
+void func_801AFF04(const void* arg0, void* arg1);
+void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 s32  func_80155560(u32 arg0, void* arg1, s32 arg2);
-s32  func_8015b5d4(u32 arg0, s32 arg1);
-u16  func_8017a620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-void func_8017a904(void* arg0, s32 arg1);
-void func_8017aa94(void* arg0);
-void func_8017c2d8(void* arg0, s32 arg1, s32 arg2, s32 arg3, void* arg4);
-void func_8014e5a0(u8 arg0, u8 arg1);
+s32  func_8015B5D4(u32 arg0, s32 arg1);
+u16  func_8017A620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void func_8017A904(void* arg0, s32 arg1);
+void func_8017AA94(void* arg0);
+void func_8017C2D8(void* arg0, s32 arg1, s32 arg2, s32 arg3, void* arg4);
+void func_8014E5A0(u8 arg0, u8 arg1);
 
-void func_801f2e3c(void* arg0);
-void func_801f2f0c(const void* arg0);
-void func_801f304c(void* arg0);
-void func_801f31cc(void);
-void func_801f33a8(void);
-void func_801f3480(const void* arg0, s32 arg1, u32 arg2);
+void func_801F2E3C(void* arg0);
+void func_801F2F0C(const void* arg0);
+void func_801F304C(void* arg0);
+void func_801F31CC(void);
+void func_801F33A8(void);
+void func_801F3480(const void* arg0, s32 arg1, u32 arg2);
 
 #endif

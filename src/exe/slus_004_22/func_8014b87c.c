@@ -5,11 +5,11 @@ extern GameCallbackSlot* D_80143D40;
 /* possible name: game_slot_scheduler_yield
  * @behavior arms the current callback slot with a countdown and forces one
  * scheduler switch through thread id `0xff000000`.
- * @source 0x8014b87c FUN_8014b87c
+ * @source 0x8014B87C
  */
-extern void NO_SIBLING_CALLS func_8014b87c(u16 countdown);
+extern void NO_SIBLING_CALLS func_8014B87C(u16 countdown);
 
-void NO_SIBLING_CALLS func_8014b87c(u16 countdown) {
+void NO_SIBLING_CALLS func_8014B87C(u16 countdown) {
   GameCallbackSlot* slot;
 
   slot = D_80143D40;

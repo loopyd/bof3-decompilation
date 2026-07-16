@@ -1,9 +1,9 @@
 #include "internal.h"
 
 /* @behavior dispatches the current local substate-3 byte through its table.
- * @source 0x801e046c FUN_801e046c
+ * @source 0x801E046C
  */
-void NO_SIBLING_CALLS func_801e046c(void) {
+void NO_SIBLING_CALLS func_801E046C(void) {
   (*(Battle03Handler const volatile*)((volatile u8*)0x801f0000u +
                                       ((u32)BATTLE_LOCAL_SCRATCH_PTR->unk_03
                                        << 2) -

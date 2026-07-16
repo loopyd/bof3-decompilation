@@ -3,9 +3,9 @@
 /* @behavior applies damage modifiers for a battler's attack, incorporating element
  * affinity, randomness, defended status, and battle formation effects.
  * returns the final damage value as s16.
- * @source 0x800a2880 FUN_800a2880
+ * @source 0x800A2880
  */
-s16 func_800a2880(u8 battler_index, u16 base_value, u8 element_flag) {
+s16 func_800A2880(u8 battler_index, u16 base_value, u8 element_flag) {
   volatile s16* modifier_table;
   volatile u8*  player_state;
   u16           rule_selection;
@@ -38,7 +38,7 @@ s16 func_800a2880(u8 battler_index, u16 base_value, u8 element_flag) {
       element_mod = ((s16 (*)(u8, u16, u32))0x800a2ef0u)(
           battler_index, rule_selection, 0x51eb851fu);
     } else {
-      element_mod = func_800a2ae0(battler_index, rule_selection);
+      element_mod = func_800A2AE0(battler_index, rule_selection);
     }
     adjusted_value = (adjusted_value * (u16)element_mod) / 100u;
   }

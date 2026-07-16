@@ -23,7 +23,7 @@ OPTIMIZATION_RE = re.compile(r"^-O(?:[0-3s]|fast)$")
 
 
 def _compile_command(layout: RepoLayout, source: Path) -> tuple[list[str], Path]:
-    database = layout.build_dir / "default" / "compile_commands.json"
+    database = layout.root / "compile_commands.json"
     if not database.is_file():
         raise FileNotFoundError(f"missing {database}; run `just build` first")
     rows = json.loads(database.read_text(encoding="utf-8"))

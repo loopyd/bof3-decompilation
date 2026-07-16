@@ -2,9 +2,9 @@
 
 /* @behavior copies the current local battler's visible values and masked flags into
  * the template record selected by byte `0x13c`.
- * @source 0x801dd8ac FUN_801dd8ac
+ * @source 0x801DD8AC
  */
-void func_801dd8ac(u32 arg0) {
+void func_801DD8AC(u32 arg0) {
   u32 local_offset;
   u32 product;
   u32 record_offset;

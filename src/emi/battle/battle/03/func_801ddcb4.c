@@ -2,9 +2,9 @@
 
 /* @behavior evaluates whether one battler's countdown/retry state should trigger on
  * this frame using both the short counter table and the long retry table.
- * @source 0x801ddcb4 FUN_801ddcb4
+ * @source 0x801DDCB4
  */
-u8 func_801ddcb4(u32 arg0) {
+u8 func_801DDCB4(u32 arg0) {
   u8 counter;
   u8 retry_index;
 
@@ -19,11 +19,11 @@ u8 func_801ddcb4(u32 arg0) {
   }
 
   if (counter < 3u) {
-    if ((func_8017e3d4() % 100) <= BATTLE_COUNTER_TABLE_AFFC[counter]) {
+    if ((func_8017E3D4() % 100) <= BATTLE_COUNTER_TABLE_AFFC[counter]) {
       return 1u;
     }
   } else {
-    if ((func_8017e3d4() % 100) < 0x4cu) {
+    if ((func_8017E3D4() % 100) < 0x4cu) {
       return 1u;
     }
   }
@@ -35,6 +35,6 @@ u8 func_801ddcb4(u32 arg0) {
         BATTLE_ENEMY_BYTE_E6(&BATTLE_ENEMY_WORK_ARRAY[(arg0 - 3u) & 0xffu]);
   }
 
-  return (func_8017e3d4() % 10000) <=
+  return (func_8017E3D4() % 10000) <=
          (10000 - ((s32)BATTLE_RETRY_TABLE_AFF4[retry_index] * 50));
 }

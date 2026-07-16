@@ -12,7 +12,7 @@ extern u8  D_8018B4AC;
 
 /* @behavior derives a packed EMI dispatch word, records it for the active ring
  * slot, advances the packed-word cursor, and advances the loader step.
- * @source 0x80162698 FUN_80162698
+ * @source 0x80162698
  */
 void func_80162698(void) {
   u32* loader_step;

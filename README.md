@@ -1,61 +1,77 @@
-# bof3-harness
+# BOF3 reverse-engineering workspace
 
-Reverse-engineering workspace for the independently loaded BOF3 executables
-and reviewed EMI payloads.
+One reproducible path for independently loaded BOF3 binaries:
+
+```text
+binary -> target map -> Splat/Rizin evidence -> C candidate
+       -> compile -> generated weak bindings -> link at address
+       -> asm diff + byte match
+```
+
+Original bytes and target manifests are authoritative. An EMI archive is a
+container, not an analysis target.
 
 ## Quick path
 
-Place user-owned US BIN/CUE media in `inputs/disc/`, then run:
-
 ```sh
 just setup
-bin/harness doctor --strict
-bin/harness targets
+just doctor
+bin/splat TARGET
+bin/m2ctx TARGET@0xADDRESS
+bin/m2c TARGET@0xADDRESS > candidate.c
+# edit src/<target>/func_address.c
+bin/asm-diff TARGET@0xADDRESS
+bin/byte-match TARGET@0xADDRESS
+bin/permute TARGET@0xADDRESS --time-limit 300
+bin/promote TARGET@0xADDRESS src/<target>/func_address.c
 ```
 
-`just setup` builds the canonical Rust extractors, extracts the disc, unpacks
-EMI archives, and refreshes the catalog. Generated state stays under
-`build/`, `out/`, and `toolchains/`.
+`bin/promote` validates only; it never copies a candidate or changes reviewed
+source, Splat layouts, or maps.
 
-## Reverse one function
+## Ownership
+
+| Fact | Owner |
+| --- | --- |
+| Binary identity, image, base address | `config/targets/<target>.toml` |
+| Canonical target-local symbols | `config/symbols/<target>.txt` |
+| Generated assembly | `out/splat/<target>/` |
+| Generated weak bindings | `out/bindings/<target>/symbols.c` |
+| Rizin replay/project/snapshot | `config/analysis/<target>/`, `out/rizin/<target>/`, `out/reverse/<target>/` |
+| Cross-target query cache | `out/index/reverse.sqlite` |
+
+Raw names are `func_80143B40` and `D_80143B40`: eight uppercase hexadecimal
+digits. Proven semantic/PsyQ names replace raw map names directly.
+
+## Commands
+
+Repository-wide recipes are deliberately limited to:
+
+```text
+just setup doctor binaries build check format index clean
+```
+
+Focused tools are `bin/splat`, `bin/bof3-disk`, `bin/emi-ex`, `bin/psyq-import`,
+`bin/psyq-find`, `bin/symbols`, `bin/rz-project`, `bin/rev-query`, `bin/m2ctx`,
+`bin/m2c`, `bin/asm-diff`, `bin/byte-match`, `bin/permute`, `bin/flag-search`,
+`bin/promote`, and `bin/str-media`.
+
+Run `--help` or `--example` on a focused tool for its accepted operands.
+
+## Rizin and index
+
+Each binary has its own generated Rizin recipe and snapshot. Never combine
+overlapping load addresses in one session.
 
 ```sh
-bin/harness targets "$TARGET"
-bin/harness reverse "$TARGET"@"$ADDRESS" --run
-bin/harness diff "$SOURCE" --llm
-bin/asmdiff "$SOURCE"
-bin/permute "$SOURCE" -j "$BOUNDED_JOBS"
+bin/rz-project rebuild TARGET
+bin/rz-project analyze TARGET
+just index
+bin/rev-query hotspots
 ```
 
-Original bytes and canonical Splat assembly are authoritative. `--run` launches
-one bounded OpenCode mission and records generated prompt/output evidence under
-`out/reverse/`; exact function matching and whole-payload matching remain
-separate completion claims.
+`just index` accepts only fresh, complete Rizin exports and atomically replaces
+the SQLite cache. The previous complete index survives a failed rebuild.
 
-Keep a candidate only when it preserves factual, readable C89. Exact function
-matching and whole-payload matching are separate completion claims.
-
-## Common commands
-
-| Command | Result |
-| --- | --- |
-| `just doctor` | Validate tracked configuration; safe before media extraction. |
-| `just extract` | Build the native extractor and extract the disc. |
-| `just unpack` | Unpack EMI archives from the extracted disc tree. |
-| `just pack` | Repack unpacked EMI manifests into the extracted disc tree. |
-| `bin/harness emi unpack` | Run Rust `emi-ex`; supports `--tool`. |
-| `bin/harness discover` | Refresh `out/catalog/emi.json`. |
-| `just build` | Run the historical PsyQ validation build serially. |
-| `just check` | Run format checks, tests, Ruff, and doctor. |
-| `just rebuild TARGET` | Write a transitional rebuilt target image under `out/rebuilt/`. |
-| `just verify [TARGET]` | Compare rebuilt target bytes, length, and SHA1. |
-| `just clean` | Remove `build/`; preserve evidence under `out/`. |
-
-The global disc slot/LBA catalog covers EMI archives, executables, STR media,
-and other disc files. EMI parsing is a separate layer that may depend on that
-catalog; an EMI archive itself is never a decompilation target.
-
-Durable layouts and source live in `config/splat/`, `config/symbols/`,
-`src/exe/`, and `src/emi/`. See [setup](docs/setup.md),
-[reverse engineering](docs/reverse-engineering.md),
-[matching](docs/matching.md), and [troubleshooting](docs/troubleshooting.md).
+See [matching](docs/matching.md), [Rizin/index workflow](docs/reverse-engineering.md),
+and [setup/tools](docs/setup.md) for details.

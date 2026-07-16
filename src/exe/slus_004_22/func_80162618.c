@@ -7,7 +7,7 @@ extern vs8 D_801464A0[];
 
 /* @behavior records the current EMI dispatch handler for the active ring slot,
  * marks that slot active, and advances the loader step.
- * @source 0x80162618 FUN_80162618
+ * @source 0x80162618
  */
 void func_80162618(void) {
   s8*           active_slot;

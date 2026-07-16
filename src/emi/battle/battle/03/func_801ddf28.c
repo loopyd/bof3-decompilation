@@ -2,9 +2,9 @@
 
 /* @behavior initializes the three-byte mode tuple at `0x801462e0` for one specific
  * queued branch.
- * @source 0x801ddf28 FUN_801ddf28
+ * @source 0x801DDF28
  */
-void func_801ddf28(void) {
+void func_801DDF28(void) {
   s32 new_var3;
   u32 new_var2;
   s32 new_var;

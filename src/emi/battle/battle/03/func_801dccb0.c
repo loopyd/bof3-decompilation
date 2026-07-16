@@ -2,9 +2,9 @@
 
 /* @behavior averages the current local battler `0x96` values and blends the result
  * with the queued halfword at `0x801ec2ee`.
- * @source 0x801dccb0 FUN_801dccb0
+ * @source 0x801DCCB0
  */
-u32 func_801dccb0(void) {
+u32 func_801DCCB0(void) {
   s32 total;
   u32 count;
   u8  index;

@@ -2,9 +2,9 @@
 
 /* @behavior dispatches the slot-selection substate byte through the function table
  * rooted at `battle_selection_slot_substate_table`.
- * @source 0x80096ae8 FUN_80096ae8
+ * @source 0x80096AE8
  */
-void func_80096ae8(void) {
+void func_80096AE8(void) {
   volatile u8*                           substate_base;
   u32                                    substate;
   BattleSelectionHandler const volatile* table;

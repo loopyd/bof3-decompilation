@@ -10,16 +10,16 @@ extern u16  D_8014681A;
 
 /* @behavior initializes the EMI/CD bootstrap state before the first active entry
  * is installed.
- * @source 0x80161f58 FUN_80161f58
+ * @source 0x80161F58
  */
-void func_80161f58(void) {
+void func_80161F58(void) {
   s32   i;
   u8*   slot_state;
   u32   bootstrap_address;
   u8    empty_state;
   vu32* loader_state;
 
-  while (func_801753ec() == 0) {
+  while (func_801753EC() == 0) {
   }
 
   VSync(3);

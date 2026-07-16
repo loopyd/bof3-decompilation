@@ -2,9 +2,9 @@
 
 /* @behavior counts down the frontend timer; at zero it selects fade phase `3`,
  * opens the window phase, rearms 900 ticks, and advances the state.
- * @source 0x801d0d94 FUN_801d0d94
+ * @source 0x801D0D94
  */
-void func_801d0d94(void) {
+void func_801D0D94(void) {
   volatile u16* timer_ptr;
   u16           timer;
 

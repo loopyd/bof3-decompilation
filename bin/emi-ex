@@ -2,4 +2,8 @@
 set -eu
 
 ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+if [ "$#" -eq 1 ] && [ "$1" = "--example" ]; then
+    printf '%s\n' 'bin/emi-ex extract -o out/extracted INPUT.EMI'
+    exit 0
+fi
 exec "${PSX_EMI_EX:-${ROOT}/build/tools/rust/emi-ex/release/emi-ex}" "$@"

@@ -2,9 +2,9 @@
 
 /* @behavior chooses the next enabled bit from the current target's `0x58` mask,
  * starting just after the scratch byte `0x0b` and wrapping modulo 16.
- * @source 0x801e8fa8 FUN_801e8fa8
+ * @source 0x801E8FA8
  */
-u8 func_801e8fa8(void) {
+u8 func_801E8FA8(void) {
   volatile u8* slot;
   u16          mask;
   u8           index;

@@ -2,9 +2,9 @@
 
 /* @behavior emits a 31-segment Gouraud line strip across the projected trail,
  * fading the leading endpoint from bright red toward black.
- * @source 0x801f2f0c FUN_801f2f0c
+ * @source 0x801F2F0C
  */
-void func_801f2f0c(const void* arg0) {
+void func_801F2F0C(const void* arg0) {
   const u8* work;
   u8        i;
   u32       primitive;
@@ -13,15 +13,15 @@ void func_801f2f0c(const void* arg0) {
 
   work = (const u8*)arg0;
 
-  func_8017c2d8((void*)WORLD00_AREA027_PRIMITIVE_PTR, 0, 0,
-                func_8017a620(0, 1, 0x380, 0x100), 0);
-  func_8014e5a0(1u, 0x0cu);
+  func_8017C2D8((void*)WORLD00_AREA027_PRIMITIVE_PTR, 0, 0,
+                func_8017A620(0, 1, 0x380, 0x100), 0);
+  func_8014E5A0(1u, 0x0cu);
 
   i = 0u;
   do {
     primitive = (u32)WORLD00_AREA027_PRIMITIVE_PTR;
-    func_8017aa94((void*)primitive);
-    func_8017a904((void*)primitive, 1);
+    func_8017AA94((void*)primitive);
+    func_8017A904((void*)primitive, 1);
 
     *(volatile s16*)(primitive + 8) =
         *(const s16*)(work + ((u32)i * 4u) + 0x18u);
@@ -47,7 +47,7 @@ void func_801f2f0c(const void* arg0) {
     *(volatile u8*)(primitive + 0xc) = (u8)red1;
     *(volatile u8*)(primitive + 0xd) = 0u;
     *(volatile u8*)(primitive + 0xe) = 0u;
-    func_8014e5a0(1u, 0x14u);
+    func_8014E5A0(1u, 0x14u);
 
     i += 1u;
   } while (i < 0x1fu);
