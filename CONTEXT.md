@@ -30,6 +30,8 @@ targets until relocatability is proven.
 | Rizin project/snapshot | `out/rizin/<target>/`, `out/reverse/<target>/` |
 | Weak bindings | `out/bindings/<target>/symbols.c` |
 | Cross-target index | `out/index/reverse.sqlite` |
+| PsyQ object-signature matches | `out/psyq/index.json` |
+| PsyQ matched callsites | `out/psyq/calls.json` |
 
 Original bytes and PS-X headers outrank generated analyzer output. In
 particular, read `t_addr` rather than assuming `0x80010000`.
@@ -45,6 +47,10 @@ particular, read `t_addr` rather than assuming `0x80010000`.
   only after review. Lifted filenames remain address-based.
 - PsyQ routines are external library code. Use official headers and
   target-local binding/map evidence; do not lift them.
+- The pinned signature database identifies complete PsyQ objects/functions at
+  target-local addresses. It is separate from PsyQ 4.7 headers (declarations)
+  and Rizin snapshots (callsites/xrefs); a signature match is not a provenance
+  claim for one SDK version.
 
 ## Operational path
 
@@ -56,12 +62,19 @@ binary -> target map -> Splat/Rizin evidence -> C candidate
 
 Use `bin/m2ctx`, `bin/m2c`, `bin/asm-diff`, `bin/byte-match`, and optionally
 `bin/permute` for exactly one `TARGET@0xADDRESS`. `bin/promote` only validates
-a candidate and prints required manual edits. See [matching](docs/matching.md).
+a candidate and prints required manual edits. `bin/decomp-status [TARGET...]`
+recompiles every tracked lift and reports its exact, partial, or invalid state.
+See [matching](docs/matching.md).
 
 Rizin sessions are isolated by target. `bin/rz-project` regenerates their
 projects and snapshots; `just index` accepts only fresh complete exports and
 `bin/rev-query` queries the resulting cache. See
 [Rizin and reverse index](docs/reverse-engineering.md).
+
+To scan every target manifest against the pinned PsyQ signatures, initialize
+submodules and run `bin/harness psyq scan --all`; then run
+`bin/harness psyq calls --all` to join matches with target-local Rizin calls.
+This limited adapter does not reintroduce the removed general harness workflow.
 
 ## Repository map
 

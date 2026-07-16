@@ -29,6 +29,12 @@ one exact target and function at a time.
 - Generated weak bindings are `out/bindings/<target>/symbols.c`. Never edit or
   track them. PsyQ is external code: use official declarations and target-local
   map entries; do not lift it or reuse its address across binaries.
+- `bin/harness psyq scan --all` writes disposable object-signature evidence to
+  `out/psyq/index.json`; `bin/harness psyq calls --all` writes the Rizin call
+  join to `out/psyq/calls.json`. Treat both as evidence, not map edits.
+- Keep the evidence sources separate: signatures identify matched objects and
+  addresses, official PsyQ 4.7 headers provide C declarations, and target-local
+  Rizin snapshots provide callsites/xrefs.
 - Write readable C89. Do not use handwritten assembly to force a match.
 
 ## Daily loop
@@ -42,11 +48,14 @@ bin/asm-diff TARGET@0xADDRESS
 bin/byte-match TARGET@0xADDRESS
 bin/permute TARGET@0xADDRESS --time-limit 300
 bin/promote TARGET@0xADDRESS candidate.c
+bin/decomp-status TARGET
 ```
 
 `bin/promote` validates a candidate only: it formats, compiles, links, diffs,
 and byte-checks, then prints the manual edits required. It does not modify
 reviewed source, layouts, or maps. Run one permuter coordinator per function.
+`bin/decomp-status` recompiles every tracked lift in scope and reports exact,
+partial, and invalid results; its Rizin-index coverage is supplementary.
 
 ## Rizin and evidence
 
@@ -60,11 +69,16 @@ reviewed source, layouts, or maps. Run one permuter coordinator per function.
 - Use the retained `$psx-rizin` skill for target-qualified analyzer procedure.
   Put stable findings in `docs/specs/` and reusable evidence-backed gotchas in
   `LESSONS.md`.
+- `bin/harness psyq` is the sole supported harness adapter. Initialize its
+  pinned signature submodule before scanning; do not restore other harness
+  workflows or infer a single SDK version from an object match.
 
 ## Verification
 
 - Use the narrowest check while iterating: `bin/asm-diff` for instruction
   evidence and `bin/byte-match` for raw equality. Nonmatches are normal and
   exit 1; usage/config failures exit 2.
+- Use `bin/decomp-status [TARGET...]` for a complete live lift audit. Valid
+  partial lifts exit 0; invalid lifts exit 2. Pass `--json` for structured use.
 - Before handoff, run `just check` when practical and state skipped checks.
 - Do not stage, commit, push, or mutate external systems without approval.

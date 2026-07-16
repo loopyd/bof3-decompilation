@@ -47,6 +47,44 @@ references, exact hashes, duplicate groups, PsyQ evidence, and project
 metadata. `bin/rev-query` is its only query surface; pass `--json` for stable
 structured output.
 
+## Psy-Q signatures
+
+The pinned `toolchains/psx_psyq_signatures/` submodule is an object-signature
+database, not a source of C declarations. Initialize it, then scan every
+current target manifest and join the matches to target-local analyzer calls:
+
+```sh
+git submodule update --init
+bin/harness psyq scan --all
+bin/harness psyq calls --all
+```
+
+`bin/harness psyq` is a deliberately limited compatibility adapter; the
+focused tools remain the normal command surface. `scan --all` reads each
+manifest's image and load address, including the executable targets and every
+promoted EMI binary target. It checks complete four-byte-aligned `LIB` and
+`OBJ` signatures for Psy-Q versions `3610`, `3611`, `370`, `400`, `410`, `420`,
+`430`, `440`, `450`, `460`, and `470`, then merges identical target/address/
+object results across versions.
+
+The generated `out/psyq/index.json` records target-local address, library,
+object, matching versions, and recovered label symbols. `calls --all` reads
+the existing Rizin snapshot xref evidence and writes matching callsites to
+`out/psyq/calls.json`. Both files are disposable generated evidence: never
+edit or commit them.
+
+Keep these sources separate:
+
+| Source | Owns |
+| --- | --- |
+| Psy-Q signatures | Matched objects, symbols, and target-local addresses. |
+| Psy-Q 4.7 headers | C types, prototypes, constants, and macros. |
+| Rizin snapshots | Callsites and xrefs joined by `calls --all`. |
+
+Preserve every matching SDK version. A match does not prove that BOF3 used one
+of the available signature versions, and it never authorizes a cross-target
+address reuse or a Psy-Q source lift.
+
 ## Evidence rules
 
 - Retain separate targets even when their bytes, addresses, or names coincide.

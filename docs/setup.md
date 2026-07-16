@@ -16,6 +16,17 @@ compatibility toolchain, and builds the first-party `bof3-disk` and `emi-ex`
 tools. It does not create a disc image, unpack every archive, or link a
 reconstructed executable image.
 
+The Psy-Q object-signature scan additionally needs its pinned database:
+
+```sh
+git submodule update --init
+bin/harness psyq scan --all
+bin/harness psyq calls --all
+```
+
+This is the only supported `bin/harness` adapter. It does not replace the
+focused command surface or restore the former general harness workflow.
+
 Place user-owned US BIN/CUE media under `inputs/disc/` when using the read-only
 disc tools. Never commit media, `build/`, `out/`, or `toolchains/`.
 
@@ -33,7 +44,8 @@ Focused tools are:
 bin/splat        bin/bof3-disk     bin/emi-ex        bin/psyq-import
 bin/psyq-find    bin/symbols       bin/rz-project    bin/rev-query
 bin/m2ctx        bin/m2c           bin/asm-diff      bin/byte-match
-bin/permute      bin/flag-search   bin/promote       bin/str-media
+bin/permute      bin/flag-search   bin/promote       bin/decomp-status
+bin/str-media
 ```
 
 Run `--help` or `--example` for exact operands. Focused tools use stdout for
@@ -51,17 +63,24 @@ errors. Mutating commands require `--write`.
 | `bin/str-media` | Inspect, validate, and convert STR/XA media. |
 | `bin/symbols` | Validate, normalize, import, and generate disposable weak bindings. |
 | `bin/psyq-find` | Produce PsyQ provenance proposals across available SDK archives and targets. |
+| `bin/harness psyq` | Match pinned complete Psy-Q objects and join matches to Rizin call evidence. |
 | Rizin and `bin/rz-project` | Build isolated, reproducible target analysis evidence. |
 | `bin/asm-diff`, `bin/byte-match` | Compare compiler output by instruction and raw bytes. |
 | m2c and `bin/permute` | Produce and refine a one-function C candidate. |
+| `bin/decomp-status` | Recompute exact/partial/invalid lift status and report supplementary index coverage. |
 
 PsyQ 4.7 is the build-facing header baseline, not proof of the game’s SDK
 provenance. Use `bin/psyq-find` and reviewed `bin/symbols import-psyq` results
 to record per-target evidence; never infer an SDK address in another target.
+The signature adapter scans versions 3.6–4.7 and retains all matching versions;
+it writes disposable `out/psyq/index.json` and `out/psyq/calls.json`. See
+[Psy-Q signatures](reverse-engineering.md#psy-q-signatures).
 
 ## Checks
 
 `just check` runs the small Python quality suite, `bin/symbols check`, and the
 target-qualified link/diff audit for every retained C file.
 Use a function’s `bin/asm-diff` and `bin/byte-match` while iterating; no
-full-image rebuild or verification command is supported.
+full-image rebuild or verification command is supported. Use
+`bin/decomp-status [TARGET...]` when the complete current lift report is needed;
+valid partial lifts are reported without failing the command.

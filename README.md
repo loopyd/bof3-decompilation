@@ -24,10 +24,13 @@ bin/asm-diff TARGET@0xADDRESS
 bin/byte-match TARGET@0xADDRESS
 bin/permute TARGET@0xADDRESS --time-limit 300
 bin/promote TARGET@0xADDRESS src/<target>/func_address.c
+bin/decomp-status TARGET
 ```
 
 `bin/promote` validates only; it never copies a candidate or changes reviewed
 source, Splat layouts, or maps.
+`bin/decomp-status` recompiles all tracked lifts in scope, reports each as
+exact, partial, or invalid, and adds Rizin-index coverage when it is fresh.
 
 ## Ownership
 
@@ -54,9 +57,13 @@ just setup doctor binaries build check format index clean
 Focused tools are `bin/splat`, `bin/bof3-disk`, `bin/emi-ex`, `bin/psyq-import`,
 `bin/psyq-find`, `bin/symbols`, `bin/rz-project`, `bin/rev-query`, `bin/m2ctx`,
 `bin/m2c`, `bin/asm-diff`, `bin/byte-match`, `bin/permute`, `bin/flag-search`,
-`bin/promote`, and `bin/str-media`.
+`bin/promote`, `bin/decomp-status`, and `bin/str-media`.
 
 Run `--help` or `--example` on a focused tool for its accepted operands.
+
+`bin/harness psyq` is the one retained harness adapter: it matches pinned Psy-Q
+object signatures and joins those matches to Rizin call evidence. It is not a
+general workflow command; see [Psy-Q signatures](docs/reverse-engineering.md#psy-q-signatures).
 
 ## Rizin and index
 

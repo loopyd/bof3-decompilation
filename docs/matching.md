@@ -18,6 +18,35 @@ bin/byte-match TARGET@0xADDRESS
 from being confused. The owned source path is always
 `src/<target>/func_XXXXXXXX.c`.
 
+## Workspace status
+
+Run a current status scan for every tracked lift, or limit it to one or more
+targets:
+
+```sh
+bin/decomp-status
+bin/decomp-status exe/logo --json -o out/status.json
+```
+
+The text report gives a repository summary, a per-target summary, and one
+deterministically ordered result for each lifted source. Each result is one of:
+
+| Status | Meaning |
+| --- | --- |
+| `exact` | The source compiled and linked at its owned address; its instructions and raw bytes match the original. |
+| `partial` | The source compiled and linked at its owned address, but its instruction diff and/or raw bytes do not yet match. |
+| `invalid` | Required metadata, source resolution, compilation, linking, or comparison failed; the report includes the actionable reason. |
+
+It also shows each target's tracked lifts against functions in the Rizin index.
+That coverage is progress context, not proof that every indexed function is
+lifted. If the index is missing or stale, the live lift results still run and
+coverage is reported as unavailable.
+
+Use `--json` for the same complete report in structured form. `-o/--out FILE`
+writes that JSON result to a file. The command exits `0` when every scanned
+lift is valid (including `partial` results), and `2` for invalid lifts, target
+operands, configuration, or tool failures.
+
 ## Loop
 
 1. Confirm the manifest image, load address, Splat split, and map with
