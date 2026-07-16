@@ -23,3 +23,6 @@
 [submodule "third_party/references/vast-violence"]
 	path = third_party/references/vast-violence
 	url = https://github.com/abyssonym/vast_violence.git
+[submodule "toolchains/psx_psyq_signatures"]
+	path = toolchains/psx_psyq_signatures
+	url = https://github.com/lab313ru/psx_psyq_signatures.git
