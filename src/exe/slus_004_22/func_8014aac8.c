@@ -11,12 +11,12 @@ void func_8014AAC8(void) {
   D_8018B300 = 0;
   func_8014ACA0();
   func_8014AEE0();
-  func_8017B2D4(&D_8014B17C);
+  DrawSyncCallback(&D_8014B17C);
   func_8014B854(0, func_8014EA80);
 
   for (;;) {
     VSync(2);
-    func_8017E3D4();
+    rand();
     PutDispEnv((DISPENV*)D_80143E68);
     PutDrawEnv((DRAWENV*)(D_80143E68 + 0x14));
     func_8014E22C();

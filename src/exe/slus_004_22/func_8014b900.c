@@ -12,7 +12,7 @@ void func_8014B900(s32 slot_index) {
 
   slot_offset = slot_index << 7;
   *(u16*)((u8*)&D_80143B40 + slot_offset) = 0;
-  func_8017EE0C();
+  EnterCriticalSection();
   CloseTh(*(s32*)((u8*)&D_80143B48 + slot_offset));
-  func_8017EE1C();
+  ExitCriticalSection();
 }

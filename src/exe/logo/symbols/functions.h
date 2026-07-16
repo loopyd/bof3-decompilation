@@ -12,9 +12,6 @@ s32    func_801CED48(void);
 s32    func_801CEA98(void);
 void   func_801CEBFC(void);
 void   func_801CEDFC(void);
-s32    func_801CEE7C(s32 port);
-u_long func_801CEECC(s32 port);
 void   func_801CEEF4(void);
-s32    func_801D209C(s32 arg0, s32 arg1);
 
 #endif

@@ -23,11 +23,11 @@ void func_8014B73C(void) {
 
     switch (state) {
       case GAME_CALLBACK_SLOT_STATE_OPEN:
-        func_8017EE0C();
+        EnterCriticalSection();
         (current_slot = D_80143D40)->thread_id =
             OpenTh((long (*)())D_80143D40->callback, D_80143D40->open_arg,
                    D_80143D40->open_arg_2);
-        func_8017EE1C();
+        ExitCriticalSection();
         goto dispatch;
 
       case GAME_CALLBACK_SLOT_STATE_YIELD:

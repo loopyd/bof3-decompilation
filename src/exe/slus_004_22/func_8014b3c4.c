@@ -37,7 +37,7 @@ void func_8014B3C4(void) {
     dst += 4;
   } while (src != exception_frame + 48);
 
-  func_8017EE1C();
+  ExitCriticalSection();
 
   while (1) {
     exception_pc = (const u32*)exception_frame[0x22];

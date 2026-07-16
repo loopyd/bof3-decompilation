@@ -63,16 +63,14 @@ void    func_80163010(void);
 
 /* Remaining reviewed SLUS services, kept address-traceable pending promotion. */
 void func_8016728C(u8 index, u8 family);
-void func_801690B8(s32 arg);
+void SpuSetTransferMode(s32 arg);
 void func_8016AD2C(s32 owner);
-void func_8016DEBC(s32 arg);
-void func_80173818(s32 resource_id);
-s16  func_80173C50(u32 source, s32 resource_id, u32 destination);
-void func_8017B2D4(void* arg0);
+void SsUtAllKeyOff(s32 arg);
+void SsVabClose(s32 resource_id);
+s16  SsVabOpenHeadSticky(u32 source, s32 resource_id, u32 destination);
 void func_8017B8D4(void* arg0, s32 arg1);
 void func_8017BA40(void* arg0);
 void func_8017BC98(void* arg0);
-void func_8017E3D4(void);
 /* Semantic aliases preserve address-based names for analyzer and matching
  * tools while making reviewed call sites readable. */
 #define emi_cd_sync_callback  func_801621E8

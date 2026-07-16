@@ -16,7 +16,7 @@ extern s32 D_80145E2C;
  * @source 0x8014B1A4
  */
 void func_8014B1A4(void) {
-  func_8017EE0C();
+  EnterCriticalSection();
   D_80145E14 = OpenEvent(0xF4000001u, 4, 0x2000, NULL);
   D_80145E18 = OpenEvent(0xF4000001u, 0x100, 0x2000, NULL);
   D_80145E1C = OpenEvent(0xF4000001u, 0x2000, 0x2000, NULL);
@@ -24,7 +24,7 @@ void func_8014B1A4(void) {
   D_80145E24 = OpenEvent(0xF0000011u, 4, 0x2000, NULL);
   D_80145E28 = OpenEvent(0xF0000011u, 0x100, 0x2000, NULL);
   D_80145E2C = OpenEvent(0xF0000011u, 0x8000, 0x2000, NULL);
-  func_8017EE1C();
+  ExitCriticalSection();
   EnableEvent(D_80145E14);
   EnableEvent(D_80145E18);
   EnableEvent(D_80145E1C);

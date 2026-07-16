@@ -27,10 +27,10 @@ void func_80162898(void) {
   u8  source_index;
 
   if (EMI_LOADER_STEP == 0) {
-    func_801690B8(0);
-    func_80173818(D_8014677C[D_80146483].resource_id);
+    SpuSetTransferMode(0);
+    SsVabClose(D_8014677C[D_80146483].resource_id);
     entry_index = D_80146483;
-    if ((s16)func_80173C50(D_8014677C[entry_index].source,
+    if ((s16)SsVabOpenHeadSticky(D_8014677C[entry_index].source,
                            D_8014677C[entry_index].resource_id,
                            D_8014677C[entry_index].unknown_00) == -1) {
       D_80146480 = 2;

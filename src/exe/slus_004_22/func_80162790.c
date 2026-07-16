@@ -33,7 +33,7 @@ void func_80162790(void) {
     D_80146780[D_80146483].state = 0;
 
     if (D_80148FC0[D_80146483] != -1) {
-      func_8016DEBC(0);
+      SsUtAllKeyOff(0);
       func_8016AD2C(D_80148FC0[D_80146482]);
       D_80148FC0[D_80146483] = -1;
     }

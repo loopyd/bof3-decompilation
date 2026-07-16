@@ -14,8 +14,8 @@ void func_801CE760(s32 work_base, u_long disc_lba) {
   D_801EB454 = 0;
   D_801EB44C = work_base + 0xA500;
   D_801EB450 = work_base + 0x10480;
-  func_801D209C(0, 0);
-  func_801CEE7C(0);
+  CdReadSync(0, 0);
+  PadInit(0);
   func_801CE7F4();
   func_801CE930(disc_lba);
   func_801CED48();

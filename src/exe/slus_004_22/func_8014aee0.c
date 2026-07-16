@@ -21,9 +21,9 @@ void func_8014AEE0(void) {
   StopCallback();
   PadStop();
   func_8017E0B4();
-  func_8017EE0C();
+  EnterCriticalSection();
   Exec((struct EXEC*)(exec_state - 8), 0, 0);
-  func_8017EE1C();
+  ExitCriticalSection();
   func_8014AD28();
 
   ordering_table = &D_80143DB8;
