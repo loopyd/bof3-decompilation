@@ -60,9 +60,9 @@ void func_80162230(u8 status, u8* result) {
     transfer_size = D_80146454;
     if (transfer_size >= 0x801) {
       D_80146454 = transfer_size - 0x800;
-      ((vu32*)((u8*)read_progress + 132))[slot] = 0x800;
+      D_80146518[slot] = 0x800;
     } else {
-      ((vu32*)((u8*)read_progress + 132))[slot] = transfer_size;
+      D_80146518[slot] = transfer_size;
       D_80146454 = 0;
     }
 

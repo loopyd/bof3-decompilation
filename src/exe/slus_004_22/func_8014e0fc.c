@@ -27,7 +27,7 @@ s32 func_8014E0FC(const char* path) {
   attempts = 0;
   while (1) {
     if (CdSearchFile(&file, current_path) != NULL) {
-      CdControl(2, (u_char*)&file, NULL);
+      CdControl(CdlSetloc, (u_char*)&file, NULL);
       if (func_8014E0A8(0x800, D_801459F8, sectors) == 0) {
         src = D_801459F8;
         dst = D_80143E70;
@@ -56,7 +56,7 @@ s32 func_8014E0FC(const char* path) {
         dst[0] = src[0];
         dst[1] = src[1];
         CdIntToPos(CdPosToInt(&file.pos) + 1, &file.pos);
-        CdControlB(2, (u_char*)&file, NULL);
+        CdControlB(CdlSetloc, (u_char*)&file, NULL);
 
         attempts += 1;
         if (func_8014E0A8(exe_size[0], D_80143E88, sectors) == 0) {

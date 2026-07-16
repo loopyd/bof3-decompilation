@@ -15,10 +15,11 @@ void func_8014AD28(void) {
   if (D_8018B300 == 0) {
     VSync(0);
     ResetGraph(0);
-    SetVideoMode(0);
+    SetVideoMode(MODE_NTSC);
     D_8018B300 = 1;
     EnterCriticalSection();
-    func_8017ED7C(func_8017ED3C(0xF0000010, 0x1000, 0x1000, func_8014B3C4));
+    func_8017ED7C(
+        func_8017ED3C(HwCPU, EvSpTRAP, EvMdINTR, func_8014B3C4));
     ExitCriticalSection();
   } else {
     VSync(0);

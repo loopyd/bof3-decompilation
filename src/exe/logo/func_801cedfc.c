@@ -16,7 +16,7 @@ void func_801CEDFC(void) {
   func_801CE760((void*)0x8003b800, D_801D8BB0);
   do {
     pad_state = PadRead(0);
-    if ((pad_state & 0x800) != 0) {
+    if ((pad_state & PADstart) != 0) {
       break;
     }
     stream_finished = func_801CEA98();

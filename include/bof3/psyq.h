@@ -35,6 +35,7 @@ struct EXEC;
 /* clang-format off */
 #include <libgte.h>
 #include <libgpu.h>
+#include <kernel.h>
 #include <libapi.h>
 #include <libcd.h>
 #include <libetc.h>
