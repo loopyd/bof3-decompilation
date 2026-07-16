@@ -104,11 +104,6 @@ def write_settings(directory: Path, function: str) -> None:
     settings = f'''func_name = "{function}"
 compiler_type = "gcc"
 objdump_command = "{objdump} -drz -m mips:3000"
-
-[weight_overrides]
-perm_randomize_external_type = 0
-perm_randomize_function_type = 0
-perm_remove_ast = 0
 '''
     (directory / "settings.toml").write_text(settings, encoding="ascii")
 
