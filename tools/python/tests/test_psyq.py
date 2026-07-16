@@ -173,6 +173,31 @@ def test_signature_scan_merges_versions_and_calls_rizin_xrefs(tmp_path: Path) ->
             "labels": [{"name": "CdInit", "address": "0x801CE004"}],
         }
     ]
+    assert index["version_evidence"] == [
+        {
+            "target": "exe/logo",
+            "match_count": 1,
+            "best_versions": ["460", "470"],
+            "alignment_best_versions": ["460", "470"],
+            "version_alignment_scores": [
+                {"version": version, "score": 0.5 if version in {"460", "470"} else 0.0}
+                for version in (
+                    "260", "300", "330", "340", "350", "3610", "3611", "370", "400", "410", "420", "430", "440", "450", "460", "470"
+                )
+            ],
+            "historical_primary_versions": ["3610", "3611", "370", "400"],
+            "historical_best_versions": [],
+            "regional_rebuild_versions": ["410"],
+            "version_match_counts": [
+                {"version": version, "matches": int(version in {"460", "470"})}
+                for version in (
+                    "260", "300", "330", "340", "350", "3610", "3611", "370", "400", "410", "420", "430", "440", "450", "460", "470"
+                )
+            ],
+            "disagreement_count": 0,
+            "disagreements": [],
+        }
+    ]
     index_path = tmp_path / "out/psyq/index.json"
     index_path.parent.mkdir(parents=True)
     import json

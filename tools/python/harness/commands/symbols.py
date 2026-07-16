@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import re
 import sys
 
 from ..canonical import (
@@ -18,6 +19,12 @@ from ..canonical import (
 from ..domain import load_target_manifests, normalize_target_id, parse_function_id
 from ..io import repo_layout
 from ._common import run_main
+
+
+_WEAK_BINDING = re.compile(
+    r"WEAK_SYMBOL_AT\(\s*(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*,\s*"
+    r"(?P<address>0x[0-9A-Fa-f]+)\s*\)"
+)
 
 
 def _root(args: argparse.Namespace) -> Path:
@@ -70,6 +77,7 @@ def run_check(args: argparse.Namespace) -> int:
             errors.append(str(exc))
             continue
         addresses = {symbol.address for symbol in symbols}
+        by_address = {symbol.address: symbol for symbol in symbols}
         source_dir = root / manifest.source_dir
         for source in source_dir.glob("func_*.c"):
             encoded = source.stem.removeprefix("func_")
@@ -85,6 +93,17 @@ def run_check(args: argparse.Namespace) -> int:
                 errors.append(
                     f"source/map drift: {source.relative_to(root)} has no map address"
                 )
+        bindings_dir = source_dir / "symbols"
+        if bindings_dir.is_dir():
+            for binding in sorted(bindings_dir.rglob("*.c")):
+                for match in _WEAK_BINDING.finditer(binding.read_text(encoding="utf-8")):
+                    address = int(match.group("address"), 0)
+                    expected = by_address.get(address)
+                    if expected is None or expected.canonical_name != match.group("name"):
+                        errors.append(
+                            f"binding/map drift: {binding.relative_to(root)} "
+                            f"has {match.group('name')} at 0x{address:08X}"
+                        )
     if errors:
         raise ValueError("; ".join(errors))
     print("symbol maps: OK")

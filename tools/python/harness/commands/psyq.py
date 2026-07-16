@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 
 from ..io import repo_layout
-from ..psyq.signatures import write_calls, write_index
+from ..psyq.signatures import write_calls, write_index, write_promotion_proposal
 from ._common import run_main
 
 
@@ -19,7 +19,14 @@ def _require_all(args: argparse.Namespace) -> None:
 def run_scan(args: argparse.Namespace) -> int:
     _require_all(args)
     payload = write_index(args.root.resolve())
-    print(f"targets={len(payload['targets'])} matches={len(payload['matches'])}")
+    profiled = [row for row in payload["version_evidence"] if row["best_versions"]]
+    historical = [row for row in profiled if row["historical_best_versions"]]
+    disagreements = sum(row["disagreement_count"] for row in profiled)
+    print(
+        f"targets={len(payload['targets'])} matches={len(payload['matches'])} "
+        f"profiled={len(profiled)} historical={len(historical)} "
+        f"disagreements={disagreements}"
+    )
     return 0
 
 
@@ -30,6 +37,13 @@ def run_calls(args: argparse.Namespace) -> int:
     return 0
 
 
+def run_proposal(args: argparse.Namespace) -> int:
+    _require_all(args)
+    payload = write_promotion_proposal(args.root.resolve())
+    print(f"candidates={len(payload['matches'])}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="bin/harness psyq")
     parser.add_argument("--root", type=Path, default=repo_layout().root)
@@ -37,6 +51,7 @@ def build_parser() -> argparse.ArgumentParser:
     for name, handler, help_text in (
         ("scan", run_scan, "scan all manifests against complete Psy-Q object signatures"),
         ("calls", run_calls, "join Rizin call xrefs with generated Psy-Q signatures"),
+        ("proposal", run_proposal, "write exact external-symbol map candidates"),
     ):
         command = sub.add_parser(name, help=help_text)
         command.add_argument("--all", action="store_true", help="operate on every target manifest")
