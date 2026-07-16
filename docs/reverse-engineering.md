@@ -63,12 +63,23 @@ bin/harness psyq calls --all
 focused tools remain the normal command surface. `scan --all` reads each
 manifest's image and load address, including the executable targets and every
 promoted EMI binary target. It checks complete four-byte-aligned `LIB` and
-`OBJ` signatures for Psy-Q versions `3610`, `3611`, `370`, `400`, `410`, `420`,
-`430`, `440`, `450`, `460`, and `470`, then merges identical target/address/
-object results across versions.
+`OBJ` signatures for every pinned database release: `260`, `300`, `330`,
+`340`, `350`, `3610`, `3611`, `370`, `400`, `410`, `420`, `430`, `440`, `450`,
+`460`, and `470`, then merges identical target/address/object results across
+versions.
+
+The scanner also writes an exact-name catalog of the official Psy-Q 4.7 header
+baseline under `out/psyq/4.7/headers.json`. This catalog can attach declaration
+evidence to a signature label, but headers do not prove an object identity and
+signature labels do not license a declaration or map edit by themselves.
 
 The generated `out/psyq/index.json` records target-local address, library,
-object, matching versions, and recovered label symbols. `calls --all` reads
+object, matching versions, recovered label symbols, and per-target
+best-compatible-version counts. It separately ranks the repository's primary
+historical comparison window (`3610`, `3611`, `370`, `400`) and records `410`
+as a possible regional-rebuild comparison. These are review priorities, not
+provenance claims. It also records complete-object matches that do not support
+the most-compatible version as discrepancies for review. `calls --all` reads
 the existing Rizin snapshot xref evidence and writes matching callsites to
 `out/psyq/calls.json`. Both files are disposable generated evidence: never
 edit or commit them.
@@ -84,6 +95,11 @@ Keep these sources separate:
 Preserve every matching SDK version. A match does not prove that BOF3 used one
 of the available signature versions, and it never authorizes a cross-target
 address reuse or a Psy-Q source lift.
+
+The index also exposes an alignment score for every scanned release. A complete
+object matching `N` releases contributes `1/N` to each, so version-specific
+objects carry more weight than unchanged library code. Use that score together
+with the historical window; neither score establishes an SDK provenance claim.
 
 ## Evidence rules
 

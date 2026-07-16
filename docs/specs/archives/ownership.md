@@ -1,7 +1,7 @@
 ---
 type: Archive ownership map
 title: Data ownership and duplication
-description: Canonical and duplicate BOF3 data locations for US v1.1.
+description: Canonical and duplicate BOF3 data locations for the US BOF3_1.1 corpus.
 tags: [archives, ownership, duplication]
 ---
 

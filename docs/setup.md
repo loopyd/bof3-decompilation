@@ -62,7 +62,7 @@ errors. Mutating commands require `--write`.
 | `bin/bof3-disk`, `bin/emi-ex` | Read-only disc extraction and EMI inspection/extraction. |
 | `bin/str-media` | Inspect, validate, and convert STR/XA media. |
 | `bin/symbols` | Validate, normalize, import, and generate disposable weak bindings. |
-| `bin/psyq-find` | Produce PsyQ provenance proposals across available SDK archives and targets. |
+| `bin/psyq-find` | Produce read-only PsyQ archive provenance evidence across available SDK archives and targets. |
 | `bin/harness psyq` | Match pinned complete Psy-Q objects and join matches to Rizin call evidence. |
 | Rizin and `bin/rz-project` | Build isolated, reproducible target analysis evidence. |
 | `bin/asm-diff`, `bin/byte-match` | Compare compiler output by instruction and raw bytes. |
@@ -70,9 +70,12 @@ errors. Mutating commands require `--write`.
 | `bin/decomp-status` | Recompute exact/partial/invalid lift status and report supplementary index coverage. |
 
 PsyQ 4.7 is the build-facing header baseline, not proof of the game’s SDK
-provenance. Use `bin/psyq-find` and reviewed `bin/symbols import-psyq` results
-to record per-target evidence; never infer an SDK address in another target.
-The signature adapter scans versions 3.6–4.7 and retains all matching versions;
+provenance. `bin/psyq-find` scans staged archive members; `bin/harness psyq`
+scans the pinned JSON object-signature database. Review either result before
+using `bin/symbols import-psyq --write` to change a target-local map; never
+infer an SDK address in another target.
+The signature adapter scans every pinned release from 2.60 through 4.70 and
+retains all matching versions plus per-target best-compatible-version evidence;
 it writes disposable `out/psyq/index.json` and `out/psyq/calls.json`. See
 [Psy-Q signatures](reverse-engineering.md#psy-q-signatures).
 

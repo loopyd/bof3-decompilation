@@ -8,8 +8,10 @@ tags: [index]
 # Data tables
 
 Game data tables embedded in EMI archives. All offsets, record sizes, and
-field layouts were verified against the US v1.1 disc (`BOF3_1.1`,
+field layouts were verified against the US `BOF3_1.1` corpus (`SLUS-00422`,
 md5 `9dd9a7c934b8b59d0ce76b0f25d18176`) with zero failures.
+`BOF3_1.1` is the vast-violence corpus label associated with that exact hash,
+not a claim about a separately catalogued US retail revision.
 
 The analysis catalog in `config/analysis/shared/bof3_objects.h` records
 packed storage layouts and canonical names. Compiled declarations remain
@@ -28,7 +30,7 @@ Evidence: `out/index/vast-violence-1.1.json`
 
 ## Location catalog
 
-Offsets below are raw US v1.1 archive offsets. Versioned pointer maps are the
+Offsets below are raw US `BOF3_1.1` corpus archive offsets. Versioned pointer maps are the
 location source for area-local records.
 
 For fixed tables, the archive-relative location is converted to the extracted

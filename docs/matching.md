@@ -58,11 +58,17 @@ operands, configuration, or tool failures.
 4. Run `bin/asm-diff TARGET@0xADDRESS` for the vendored asm-differ result and
    `bin/byte-match TARGET@0xADDRESS` for independent raw equality.
 5. If control flow is credible but source shape remains wrong, use one bounded
-   coordinator: `bin/permute TARGET@0xADDRESS --time-limit 300`.
+   coordinator: `bin/permute TARGET@0xADDRESS --time-limit 300 -j N`, where
+   `N` is the worker count to give that one coordinator.
 
 `bin/permute` owns a deterministic workspace below `out/permuter/`; do not run
-two coordinators for the same function. Its score ranks candidates but never
-accepts a match.
+two coordinators for the same function. A normal run regenerates the workspace
+and uses upstream decomp-permuter's GCC weights; `--prepared` deliberately
+reuses the existing `base.c`, target object, and settings. Its score compares
+relocatable objects using the PSX R3000 disassembly command
+`mipsel-none-elf-objdump -drz -m mips:3000`; it ranks candidates but never
+accepts a match. Always compile/link the selected candidate and use
+`bin/asm-diff` plus `bin/byte-match` as the acceptance gate.
 
 ## Candidate review
 

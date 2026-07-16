@@ -54,6 +54,8 @@ bin/decomp-status TARGET
 `bin/promote` validates a candidate only: it formats, compiles, links, diffs,
 and byte-checks, then prints the manual edits required. It does not modify
 reviewed source, layouts, or maps. Run one permuter coordinator per function.
+Prepared permuter workspaces use upstream compiler defaults; a candidate is
+never reviewed source until `bin/promote` validates it.
 `bin/decomp-status` recompiles every tracked lift in scope and reports exact,
 partial, and invalid results; its Rizin-index coverage is supplementary.
 
@@ -66,12 +68,12 @@ partial, and invalid results; its Rizin-index coverage is supplementary.
   path after validation. Deep analysis makes candidates, not reviewed facts.
 - Build the cross-target cache only with `just index`; query it with
   `bin/rev-query`. A stale or incomplete Rizin export must fail indexing.
-- Use the retained `$psx-rizin` skill for target-qualified analyzer procedure.
-  Put stable findings in `docs/specs/` and reusable evidence-backed gotchas in
-  `LESSONS.md`.
-- `bin/harness psyq` is the sole supported harness adapter. Initialize its
-  pinned signature submodule before scanning; do not restore other harness
-  workflows or infer a single SDK version from an object match.
+- The only local workflow skill is `$psx-rizin`; use it for target-qualified
+  analyzer procedure. Put stable findings in `docs/specs/` and reusable
+  evidence-backed gotchas in `LESSONS.md`.
+- Initialize the pinned Psy-Q signature database before using
+  `bin/harness psyq`. Object matches do not establish one SDK version for the
+  whole game.
 
 ## Verification
 

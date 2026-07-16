@@ -31,6 +31,8 @@ bin/decomp-status TARGET
 source, Splat layouts, or maps.
 `bin/decomp-status` recompiles all tracked lifts in scope, reports each as
 exact, partial, or invalid, and adds Rizin-index coverage when it is fresh.
+Permuter workspaces use upstream compiler defaults; their score is search
+guidance, and `bin/promote` remains the candidate acceptance gate.
 
 ## Ownership
 
@@ -61,9 +63,10 @@ Focused tools are `bin/splat`, `bin/bof3-disk`, `bin/emi-ex`, `bin/psyq-import`,
 
 Run `--help` or `--example` on a focused tool for its accepted operands.
 
-`bin/harness psyq` is the one retained harness adapter: it matches pinned Psy-Q
-object signatures and joins those matches to Rizin call evidence. It is not a
-general workflow command; see [Psy-Q signatures](docs/reverse-engineering.md#psy-q-signatures).
+`bin/harness psyq scan --all` matches pinned Psy-Q object signatures and
+`bin/harness psyq calls --all` joins them to Rizin call evidence. Both produce
+disposable evidence rather than symbol-map edits; see
+[Psy-Q signatures](docs/reverse-engineering.md#psy-q-signatures).
 
 ## Rizin and index
 

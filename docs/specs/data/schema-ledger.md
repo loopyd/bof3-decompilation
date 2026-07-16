@@ -13,7 +13,9 @@ tags: [tables, schemas, evidence]
 
 This ledger covers the fixed and pointer-backed record families listed in the
 data specs. Record sizes, counts, locations, and byte boundaries are storage
-verified against the US v1.1 corpus. Field semantics are tracked separately:
+verified against the US `BOF3_1.1` corpus. The label is pinned to the input's
+exact Track 1 MD5 by vast-violence, not to a separately catalogued US retail
+revision. Field semantics are tracked separately:
 the pinned `vast-violence` layouts and existing specs identify candidates, but
 runtime loads, stores, indexing, and behavior are required before a semantic
 name becomes a C contract.

@@ -17,7 +17,9 @@ record fits inside the named archive.
 parse row -> resolve archive -> check offset + record_size -> decode record
 ```
 
-For BOF3 US v1.1, select `_1.1` maps whenever a versioned map exists.
+For the current US `BOF3_1.1` corpus, select `_1.1` maps whenever a versioned
+map exists. This identifies the exact pinned vast-violence hash corpus; it does
+not assert a separately catalogued US retail revision.
 
 ## String anchors
 

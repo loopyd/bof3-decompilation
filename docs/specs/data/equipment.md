@@ -9,7 +9,9 @@ tags: [tables, equipment, emi]
 
 All tables below live in entry `0` of `BIN/ETC/GAME.EMI`. Locations are raw
 archive offsets; subtract the entry payload start (`0x800`) for payload-relative
-offsets. Verified against the US v1.1 disc with zero boundary failures.
+offsets. Verified against the US `BOF3_1.1` corpus with zero boundary failures.
+Here, `1.1` is the pinned vast-violence corpus label for the input's exact Track
+1 MD5; it is not a claim about a separately catalogued US retail revision.
 
 ## Fixed table locations
 
