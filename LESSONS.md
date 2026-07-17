@@ -94,6 +94,23 @@ to repeat or misdiagnose across targets. Use the
 - Resolve and validate the temporary path before cleanup, install a scoped
   trap, and reject empty, root, repository, or repository-`out` cleanup targets.
 
+### Do not use `bin/rz-project export --write` on a curated `reviewed.rz`
+
+- `bin/rz-project export TARGET --write` overwrites the entire
+  `config/analysis/<TARGET>/reviewed.rz` with a flat `fs bof3` dump generated
+  from `_rizin_replay()`. This destroys all curated annotations: `fs semantic`,
+  `fs constants`, `fs data` sections, `CC` comment strings, manual `f` flags,
+  and the structure of flagspaces.
+- The `reviewed.rz` file is the authoritative replay source for the generated
+  `project.rzdb` (`rizin_project.py:110-117`). It should hold only curated
+  semantic/data annotations and PsyQ `f` flags. Function entry points (`af @`)
+  come from the splat config's code segments via `build_snapshot()` — they do
+  NOT need to be in `reviewed.rz`.
+- Workflow: run `bin/rz-project export TARGET` to see the diff of new splat-
+  discovered addresses, then manually add only the new game-function entries
+  to the existing `reviewed.rz` as `af @`/`afn` in the `fs functions` section.
+  Never use `--write` on a file that contains manual curation.
+
 ### Do not synthesize an executable link model
 
 - A partial set of lifted SLUS objects is a validation archive, not a rebuilt
