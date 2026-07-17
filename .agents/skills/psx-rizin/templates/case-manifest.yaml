@@ -1,0 +1,28 @@
+case_id: ""
+created_at: ""
+question: ""
+scope: ""
+legal_authorization_note: "User supplied/authorized inputs; do not redistribute proprietary payloads."
+region: ""
+revision: ""
+disc:
+  path: ""
+  sha256: ""
+  serial: ""
+  system_cnf_boot: ""
+bios:
+  path: ""
+  sha256: ""
+tools:
+  rizin: ""
+  rz_ghidra: ""
+  cutter: ""
+  pcsx_redux: ""
+  bizhawk: ""
+  duckstation: ""
+  ghidra: ""
+  python: ""
+address_model_notes: ""
+known_symbol_sources: []
+known_replay_sources: []
+open_questions: []

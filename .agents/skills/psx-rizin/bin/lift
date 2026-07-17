@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+INPUT=""
+BASE=""
+OUT=""
+HEADLESS=0
+EXTRA=()
+
+usage() {
+  cat <<'USAGE'
+Usage: lift <PS-X-EXE-or-raw-binary> [--base 0xADDR] [--out payload.bin] [--headless] [-- <rizin args>]
+
+PS-X EXE inputs are inspected and their text payload is extracted automatically.
+Raw overlays require --base. The file is opened as little-endian 32-bit MIPS.
+USAGE
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --base) BASE="${2:?missing value for --base}"; shift 2 ;;
+    --out) OUT="${2:?missing value for --out}"; shift 2 ;;
+    --headless) HEADLESS=1; shift ;;
+    --) shift; EXTRA+=("$@"); break ;;
+    -h|--help) usage; exit 0 ;;
+    -*) echo "error: unknown option: $1" >&2; usage >&2; exit 2 ;;
+    *)
+      if [[ -n "$INPUT" ]]; then
+        echo "error: multiple input files" >&2; exit 2
+      fi
+      INPUT="$1"; shift ;;
+  esac
+done
+
+[[ -n "$INPUT" ]] || { usage >&2; exit 2; }
+[[ -f "$INPUT" ]] || { echo "error: file not found: $INPUT" >&2; exit 2; }
+command -v rizin >/dev/null 2>&1 || { echo "error: rizin not found in PATH" >&2; exit 2; }
+
+MAGIC="$(LC_ALL=C head -c 8 "$INPUT" || true)"
+TARGET="$INPUT"
+if [[ "$MAGIC" == "PS-X EXE" ]]; then
+  if [[ -z "$OUT" ]]; then
+    stem="$(basename -- "$INPUT")"
+    work="${PSX_RIZIN_WORKDIR:-.agent-work/psx-rizin/lift}"
+    mkdir -p "$work"
+    OUT="$work/${stem}.payload.bin"
+  fi
+  python3 "$ROOT/scripts/psx_exe.py" extract "$INPUT" -o "$OUT" >/dev/null
+  if [[ -z "$BASE" ]]; then
+    BASE="$(python3 - "$ROOT" "$INPUT" <<'PY'
+import json
+import subprocess
+import sys
+root, path = sys.argv[1], sys.argv[2]
+output = subprocess.check_output([sys.executable, f"{root}/scripts/psx_exe.py", "inspect", path, "--json"], text=True)
+print(hex(json.loads(output)["text_address"]))
+PY
+)"
+  fi
+  TARGET="$OUT"
+else
+  [[ -n "$BASE" ]] || { echo "error: raw binary requires --base" >&2; exit 2; }
+fi
+
+ARGS=(
+  -a mips
+  -b 32
+  -e cfg.bigendian=false
+  -m "$BASE"
+  -i "$ROOT/assets/rizin/psx-init.rz"
+)
+if [[ "$HEADLESS" -eq 1 ]]; then
+  ARGS+=( -q -c 'aflj;q' )
+fi
+ARGS+=( "${EXTRA[@]}" "$TARGET" )
+
+printf 'Opening %s at %s\n' "$TARGET" "$BASE" >&2
+exec rizin "${ARGS[@]}"

@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+sha256_file() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$1" | awk '{print $1}'
+  elif command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 "$1" | awk '{print $1}'
+  else
+    python3 - "$1" <<'PY'
+import hashlib, pathlib, sys
+p = pathlib.Path(sys.argv[1])
+h = hashlib.sha256()
+with p.open('rb') as f:
+    for chunk in iter(lambda: f.read(1024 * 1024), b''):
+        h.update(chunk)
+print(h.hexdigest())
+PY
+  fi
+}
+
+BUILD_CMD="${PSX_BUILD_CMD:-}"
+EXPECTED="${PSX_EXPECTED:-}"
+ACTUAL="${PSX_ACTUAL:-}"
+DIFF_CMD="${PSX_DIFF_CMD:-}"
+REPORT="${PSX_DIFF_REPORT:-.agent-work/psx-rizin/build-diff.txt}"
+
+if [[ -n "$BUILD_CMD" ]]; then
+  echo "+ $BUILD_CMD"
+  bash -lc "$BUILD_CMD"
+fi
+
+if [[ -n "$DIFF_CMD" ]]; then
+  echo "+ $DIFF_CMD"
+  bash -lc "$DIFF_CMD"
+  exit $?
+fi
+
+if [[ -z "$EXPECTED" || -z "$ACTUAL" ]]; then
+  cat >&2 <<'USAGE'
+error: configure either PSX_DIFF_CMD or both PSX_EXPECTED and PSX_ACTUAL.
+Example:
+  PSX_BUILD_CMD='ninja -C build' \
+  PSX_EXPECTED=expected/SLUS.bin \
+  PSX_ACTUAL=build/SLUS.bin \
+  bin/build-diff
+USAGE
+  exit 2
+fi
+
+[[ -f "$EXPECTED" ]] || { echo "error: missing expected file: $EXPECTED" >&2; exit 2; }
+[[ -f "$ACTUAL" ]] || { echo "error: missing actual file: $ACTUAL" >&2; exit 2; }
+mkdir -p "$(dirname -- "$REPORT")"
+
+expected_hash="$(sha256_file "$EXPECTED")"
+actual_hash="$(sha256_file "$ACTUAL")"
+{
+  echo "expected=$EXPECTED"
+  echo "actual=$ACTUAL"
+  echo "expected_sha256=$expected_hash"
+  echo "actual_sha256=$actual_hash"
+  echo "expected_size=$(wc -c < "$EXPECTED" | tr -d ' ')"
+  echo "actual_size=$(wc -c < "$ACTUAL" | tr -d ' ')"
+} > "$REPORT"
+
+if cmp -s "$EXPECTED" "$ACTUAL"; then
+  echo "status=matching" | tee -a "$REPORT"
+  echo "$REPORT"
+  exit 0
+fi
+
+echo "status=different" | tee -a "$REPORT"
+{
+  echo
+  echo "first_byte_differences (decimal positions; cmp format):"
+  cmp -l "$EXPECTED" "$ACTUAL" 2>/dev/null | head -100 || true
+} >> "$REPORT"
+
+if command -v rz-diff >/dev/null 2>&1; then
+  {
+    echo
+    echo "rz-diff summary:"
+    rz-diff "$EXPECTED" "$ACTUAL" 2>&1 | head -200 || true
+  } >> "$REPORT"
+fi
+
+echo "$REPORT"
+exit 1
