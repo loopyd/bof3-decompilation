@@ -1,0 +1,4 @@
+#ifndef PLCHAR_PLP056_00_INTERNAL_H
+#define PLCHAR_PLP056_00_INTERNAL_H
+
+#endif

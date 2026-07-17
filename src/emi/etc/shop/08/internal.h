@@ -1,0 +1,4 @@
+#ifndef ETC_SHOP_08_INTERNAL_H
+#define ETC_SHOP_08_INTERNAL_H
+
+#endif

@@ -1,0 +1,9 @@
+schema = "harness.target/v2"
+id = "emi/plchar/plp257/00"
+disc_id = "BIN/PLCHAR/PLP257.EMI#0"
+kind = "emi"
+source_dir = "src/emi/plchar/plp257/00"
+binary = "out/binaries/emi/plchar/plp257/00.bin"
+splat = "config/splat/emi/plchar/plp257/00.yaml"
+load_address = 0x801ce400
+profile = "compat/capcom97"

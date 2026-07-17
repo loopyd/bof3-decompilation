@@ -1,0 +1,30 @@
+name: boss_boss018_16
+sha1: c1e78acc918fe8c90fdf8f7b342869678a2164dc
+options:
+  platform: psx
+  compiler: psyq
+  basename: boss_boss018_16
+  base_path: ../../../../..
+  target_path: out/binaries/emi/boss/boss018/16.bin
+  asm_path: out/splat/emi/boss/boss018/16/asm
+  src_path: src/emi/boss/boss018/16
+  ld_script_path: out/splat/emi/boss/boss018/16/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2148276224
+    subsegments:
+      - - 4524
+        - asm
+        - func_800C29AC
+      - - 4672
+        - asm
+        - func_800C2A40
+      - - 4772
+        - asm
+        - func_800C2AA4
+  - - 0x15d4

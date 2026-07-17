@@ -1,0 +1,33 @@
+name: plchar_plp478_00
+sha1: a87ba56ec1434ae56d2ed2138b91f58b954f3dd9
+options:
+  platform: psx
+  compiler: psyq
+  basename: plchar_plp478_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/plchar/plp478/00.bin
+  asm_path: out/splat/emi/plchar/plp478/00/asm
+  src_path: src/emi/plchar/plp478/00
+  ld_script_path: out/splat/emi/plchar/plp478/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149377024
+    subsegments:
+      - - 0
+        - asm
+        - func_801CE400
+      - - 2668
+        - asm
+        - func_801CEE6C
+      - - 3172
+        - asm
+        - func_801CF064
+      - - 3400
+        - asm
+        - func_801CF148
+  - - 0x1328

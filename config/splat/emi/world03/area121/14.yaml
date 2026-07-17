@@ -1,0 +1,105 @@
+name: world03_area121_14
+sha1: 62f17d404f34b7802f0bcb40b7174ed9c645a6b4
+options:
+  platform: psx
+  compiler: psyq
+  basename: world03_area121_14
+  base_path: ../../../../..
+  target_path: out/binaries/emi/world03/area121/14.bin
+  asm_path: out/splat/emi/world03/area121/14/asm
+  src_path: src/emi/world03/area121/14
+  ld_script_path: out/splat/emi/world03/area121/14/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149526528
+    subsegments:
+      - - 2072
+        - asm
+        - func_801F3418
+      - - 2272
+        - asm
+        - func_801F34E0
+      - - 2512
+        - asm
+        - func_801F35D0
+      - - 2724
+        - asm
+        - func_801F36A4
+      - - 3568
+        - asm
+        - func_801F39F0
+      - - 3864
+        - asm
+        - func_801F3B18
+      - - 4836
+        - asm
+        - func_801F3EE4
+      - - 5340
+        - asm
+        - func_801F40DC
+      - - 8012
+        - asm
+        - func_801F4B4C
+      - - 9080
+        - asm
+        - func_801F4F78
+      - - 9256
+        - asm
+        - func_801F5028
+      - - 9460
+        - asm
+        - func_801F50F4
+      - - 9832
+        - asm
+        - func_801F5268
+      - - 10112
+        - asm
+        - func_801F5380
+      - - 10616
+        - asm
+        - func_801F5578
+      - - 10732
+        - asm
+        - func_801F55EC
+      - - 10828
+        - asm
+        - func_801F564C
+      - - 10884
+        - asm
+        - func_801F5684
+      - - 11060
+        - asm
+        - func_801F5734
+      - - 11160
+        - asm
+        - func_801F5798
+      - - 11612
+        - asm
+        - func_801F595C
+      - - 11936
+        - asm
+        - func_801F5AA0
+      - - 12176
+        - asm
+        - func_801F5B90
+      - - 12412
+        - asm
+        - func_801F5C7C
+      - - 12844
+        - asm
+        - func_801F5E2C
+      - - 13004
+        - asm
+        - func_801F5ECC
+      - - 13304
+        - asm
+        - func_801F5FF8
+      - - 13556
+        - asm
+        - func_801F60F4
+  - - 0x3cbb

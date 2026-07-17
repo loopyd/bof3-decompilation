@@ -1,0 +1,105 @@
+name: scenario_scena08_00
+sha1: 30febc0683fd2ca00eff92837c8f6a98c98f48f1
+options:
+  platform: psx
+  compiler: psyq
+  basename: scenario_scena08_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/scenario/scena08/00.bin
+  asm_path: out/splat/emi/scenario/scena08/00/asm
+  src_path: src/emi/scenario/scena08/00
+  ld_script_path: out/splat/emi/scenario/scena08/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149542912
+    subsegments:
+      - - 4
+        - asm
+        - func_801F6C04
+      - - 2996
+        - asm
+        - func_801F77B4
+      - - 4524
+        - asm
+        - func_801F7DAC
+      - - 4584
+        - asm
+        - func_801F7DE8
+      - - 4628
+        - asm
+        - func_801F7E14
+      - - 5164
+        - asm
+        - func_801F802C
+      - - 5384
+        - asm
+        - func_801F8108
+      - - 5620
+        - asm
+        - func_801F81F4
+      - - 5692
+        - asm
+        - func_801F823C
+      - - 6452
+        - asm
+        - func_801F8534
+      - - 6640
+        - asm
+        - func_801F85F0
+      - - 7524
+        - asm
+        - func_801F8964
+      - - 7912
+        - asm
+        - func_801F8AE8
+      - - 7956
+        - asm
+        - func_801F8B14
+      - - 8016
+        - asm
+        - func_801F8B50
+      - - 8184
+        - asm
+        - func_801F8BF8
+      - - 8600
+        - asm
+        - func_801F8D98
+      - - 9416
+        - asm
+        - func_801F90C8
+      - - 10272
+        - asm
+        - func_801F9420
+      - - 10352
+        - asm
+        - func_801F9470
+      - - 10888
+        - asm
+        - func_801F9688
+      - - 13196
+        - asm
+        - func_801F9F8C
+      - - 13724
+        - asm
+        - func_801FA19C
+      - - 14124
+        - asm
+        - func_801FA32C
+      - - 25724
+        - asm
+        - func_801FD07C
+      - - 29572
+        - asm
+        - func_801FDF84
+      - - 29996
+        - asm
+        - func_801FE12C
+      - - 31744
+        - asm
+        - func_801FE800
+  - - 0x7e80

@@ -1,0 +1,66 @@
+name: scenario_sce15ef3_00
+sha1: 148955ca1ad999c3d3486f35c87177fa93bd5fd8
+options:
+  platform: psx
+  compiler: psyq
+  basename: scenario_sce15ef3_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/scenario/sce15ef3/00.bin
+  asm_path: out/splat/emi/scenario/sce15ef3/00/asm
+  src_path: src/emi/scenario/sce15ef3/00
+  ld_script_path: out/splat/emi/scenario/sce15ef3/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149387264
+    subsegments:
+      - - 2780
+        - asm
+        - func_801D16DC
+      - - 2844
+        - asm
+        - func_801D171C
+      - - 2904
+        - asm
+        - func_801D1758
+      - - 3276
+        - asm
+        - func_801D18CC
+      - - 3488
+        - asm
+        - func_801D19A0
+      - - 3680
+        - asm
+        - func_801D1A60
+      - - 4012
+        - asm
+        - func_801D1BAC
+      - - 4384
+        - asm
+        - func_801D1D20
+      - - 5112
+        - asm
+        - func_801D1FF8
+      - - 5900
+        - asm
+        - func_801D230C
+      - - 6060
+        - asm
+        - func_801D23AC
+      - - 6180
+        - asm
+        - func_801D2424
+      - - 6592
+        - asm
+        - func_801D25C0
+      - - 6636
+        - asm
+        - func_801D25EC
+      - - 6708
+        - asm
+        - func_801D2634
+  - - 0x1c18

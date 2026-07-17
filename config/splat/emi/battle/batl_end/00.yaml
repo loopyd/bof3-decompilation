@@ -1,0 +1,45 @@
+name: battle_batl_end_00
+sha1: 0599f28de0ba49b4369f007e292038e314ff087d
+options:
+  platform: psx
+  compiler: psyq
+  basename: battle_batl_end_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/battle/batl_end/00.bin
+  asm_path: out/splat/emi/battle/batl_end/00/asm
+  src_path: src/emi/battle/batl_end/00
+  ld_script_path: out/splat/emi/battle/batl_end/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149510144
+    subsegments:
+      - - 0
+        - asm
+        - func_801EEC00
+      - - 424
+        - asm
+        - func_801EEDA8
+      - - 2752
+        - asm
+        - func_801EF6C0
+      - - 3368
+        - asm
+        - func_801EF928
+      - - 3560
+        - asm
+        - func_801EF9E8
+      - - 6044
+        - asm
+        - func_801F039C
+      - - 7796
+        - asm
+        - func_801F0A74
+      - - 8112
+        - asm
+        - func_801F0BB0
+  - - 0x20e1

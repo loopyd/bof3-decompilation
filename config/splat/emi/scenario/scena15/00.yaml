@@ -1,0 +1,93 @@
+name: scenario_scena15_00
+sha1: a8b37488f93fc050dc6925307e635275ef38f0a1
+options:
+  platform: psx
+  compiler: psyq
+  basename: scenario_scena15_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/scenario/scena15/00.bin
+  asm_path: out/splat/emi/scenario/scena15/00/asm
+  src_path: src/emi/scenario/scena15/00
+  ld_script_path: out/splat/emi/scenario/scena15/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149542912
+    subsegments:
+      - - 1456
+        - asm
+        - func_801F71B0
+      - - 2348
+        - asm
+        - func_801F752C
+      - - 2476
+        - asm
+        - func_801F75AC
+      - - 2520
+        - asm
+        - func_801F75D8
+      - - 2888
+        - asm
+        - func_801F7748
+      - - 3524
+        - asm
+        - func_801F79C4
+      - - 4380
+        - asm
+        - func_801F7D1C
+      - - 5116
+        - asm
+        - func_801F7FFC
+      - - 5592
+        - asm
+        - func_801F81D8
+      - - 6060
+        - asm
+        - func_801F83AC
+      - - 6916
+        - asm
+        - func_801F8704
+      - - 7512
+        - asm
+        - func_801F8958
+      - - 9248
+        - asm
+        - func_801F9020
+      - - 9968
+        - asm
+        - func_801F92F0
+      - - 10496
+        - asm
+        - func_801F9500
+      - - 11212
+        - asm
+        - func_801F97CC
+      - - 11808
+        - asm
+        - func_801F9A20
+      - - 15036
+        - asm
+        - func_801FA6BC
+      - - 15444
+        - asm
+        - func_801FA854
+      - - 21760
+        - asm
+        - func_801FC100
+      - - 24124
+        - asm
+        - func_801FCA3C
+      - - 28548
+        - asm
+        - func_801FDB84
+      - - 28688
+        - asm
+        - func_801FDC10
+      - - 28780
+        - asm
+        - func_801FDC6C
+  - - 0x7b58

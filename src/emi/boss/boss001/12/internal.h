@@ -1,0 +1,4 @@
+#ifndef BOSS_BOSS001_12_INTERNAL_H
+#define BOSS_BOSS001_12_INTERNAL_H
+
+#endif

@@ -1,0 +1,24 @@
+name: etc_commu04_06
+sha1: d88e46a0bd749ff186a6e935cbe5a9ac100b2d4f
+options:
+  platform: psx
+  compiler: psyq
+  basename: etc_commu04_06
+  base_path: ../../../../..
+  target_path: out/binaries/emi/etc/commu04/06.bin
+  asm_path: out/splat/emi/etc/commu04/06/asm
+  src_path: src/emi/etc/commu04/06
+  ld_script_path: out/splat/emi/etc/commu04/06/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149387264
+    subsegments:
+      - - 2724
+        - asm
+        - func_801D16A4
+  - - 0xb78

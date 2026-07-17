@@ -1,0 +1,9 @@
+schema = "harness.target/v2"
+id = "emi/etc/commu01/07"
+disc_id = "BIN/ETC/COMMU01.EMI#7"
+kind = "emi"
+source_dir = "src/emi/etc/commu01/07"
+binary = "out/binaries/emi/etc/commu01/07.bin"
+splat = "config/splat/emi/etc/commu01/07.yaml"
+load_address = 0x801d0c00
+profile = "compat/capcom97"

@@ -1,0 +1,9 @@
+schema = "harness.target/v2"
+id = "emi/battle/batl_ovr/00"
+disc_id = "BIN/BATTLE/BATL_OVR.EMI#0"
+kind = "emi"
+source_dir = "src/emi/battle/batl_ovr/00"
+binary = "out/binaries/emi/battle/batl_ovr/00.bin"
+splat = "config/splat/emi/battle/batl_ovr/00.yaml"
+load_address = 0x801eec00
+profile = "compat/capcom97"

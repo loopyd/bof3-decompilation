@@ -1,0 +1,117 @@
+name: world02_area104_14
+sha1: 651ffb708b0f79ecdcb04e515650dd21f47e6607
+options:
+  platform: psx
+  compiler: psyq
+  basename: world02_area104_14
+  base_path: ../../../../..
+  target_path: out/binaries/emi/world02/area104/14.bin
+  asm_path: out/splat/emi/world02/area104/14/asm
+  src_path: src/emi/world02/area104/14
+  ld_script_path: out/splat/emi/world02/area104/14/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149526528
+    subsegments:
+      - - 2244
+        - asm
+        - func_801F34C4
+      - - 2444
+        - asm
+        - func_801F358C
+      - - 2684
+        - asm
+        - func_801F367C
+      - - 2896
+        - asm
+        - func_801F3750
+      - - 3740
+        - asm
+        - func_801F3A9C
+      - - 4036
+        - asm
+        - func_801F3BC4
+      - - 5008
+        - asm
+        - func_801F3F90
+      - - 5512
+        - asm
+        - func_801F4188
+      - - 6664
+        - asm
+        - func_801F4608
+      - - 7732
+        - asm
+        - func_801F4A34
+      - - 7908
+        - asm
+        - func_801F4AE4
+      - - 8112
+        - asm
+        - func_801F4BB0
+      - - 8484
+        - asm
+        - func_801F4D24
+      - - 8764
+        - asm
+        - func_801F4E3C
+      - - 9268
+        - asm
+        - func_801F5034
+      - - 9384
+        - asm
+        - func_801F50A8
+      - - 9480
+        - asm
+        - func_801F5108
+      - - 9536
+        - asm
+        - func_801F5140
+      - - 9712
+        - asm
+        - func_801F51F0
+      - - 9812
+        - asm
+        - func_801F5254
+      - - 10264
+        - asm
+        - func_801F5418
+      - - 10588
+        - asm
+        - func_801F555C
+      - - 10828
+        - asm
+        - func_801F564C
+      - - 11064
+        - asm
+        - func_801F5738
+      - - 11496
+        - asm
+        - func_801F58E8
+      - - 11656
+        - asm
+        - func_801F5988
+      - - 11956
+        - asm
+        - func_801F5AB4
+      - - 12208
+        - asm
+        - func_801F5BB0
+      - - 14184
+        - asm
+        - func_801F6368
+      - - 14700
+        - asm
+        - func_801F656C
+      - - 15056
+        - asm
+        - func_801F66D0
+      - - 15220
+        - asm
+        - func_801F6774
+  - - 0x3f5c

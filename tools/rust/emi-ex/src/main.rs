@@ -2,6 +2,7 @@ use emi_ex_v2::{
     guess_type, pack, pack_folder, pack_manifest_from, type_extension, Archive, PackEntry,
     PackFolderOptions,
 };
+use serde::Serialize;
 use std::env;
 use std::ffi::{OsStr, OsString};
 use std::fs;
@@ -439,21 +440,60 @@ fn entry_code_start(archive: &Path, entry: &emi_ex_v2::Entry) -> Option<u64> {
     }
 }
 
+#[derive(Serialize)]
+struct ListEntry {
+    index: usize,
+    offset: u64,
+    ram_ptr: u32,
+    size: u32,
+    file_type: u16,
+    code_off: Option<u64>,
+    first4: u32,
+}
+
 fn run_list(args: &[OsString]) -> Result<(), String> {
+    let mut json = false;
     let mut positionals: Vec<&OsStr> = Vec::new();
     for arg in args {
         let value = arg.to_str().unwrap_or("");
+        if value == "--json" {
+            json = true;
+            continue;
+        }
         if value.starts_with('-') {
             return Err(format!("unknown option {value}"));
         }
         positionals.push(arg);
     }
     if positionals.len() != 1 {
-        return Err("usage: emi-ex list <archive.EMI>".into());
+        return Err("usage: emi-ex list [--json] <archive.EMI>".into());
     }
     let source = PathBuf::from(positionals[0]);
     let archive =
         Archive::open(&source).map_err(|error| format!("{}: {error}", source.display()))?;
+
+    if json {
+        let entries: Vec<ListEntry> = archive
+            .entries()
+            .iter()
+            .enumerate()
+            .map(|(index, entry)| ListEntry {
+                index,
+                offset: entry.offset,
+                ram_ptr: entry.ram_ptr,
+                size: entry.size,
+                file_type: entry.file_type,
+                code_off: entry_code_start(&source, entry),
+                first4: entry.first4,
+            })
+            .collect();
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&entries).map_err(|e| e.to_string())?
+        );
+        return Ok(());
+    }
+
     println!(
         "{:<5} {:<10} {:<12} {:<10} {:<6} {:<10} {}",
         "IDX", "OFFSET", "RAM_PTR", "SIZE", "TYPE", "CODE_OFF", "FIRST4"

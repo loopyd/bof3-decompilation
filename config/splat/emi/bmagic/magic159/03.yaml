@@ -1,0 +1,24 @@
+name: bmagic_magic159_03
+sha1: 2d847122d8c982cab54ce344579feea96d764390
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic159_03
+  base_path: ../../../../..
+  target_path: out/binaries/emi/bmagic/magic159/03.bin
+  asm_path: out/splat/emi/bmagic/magic159/03/asm
+  src_path: src/emi/bmagic/magic159/03
+  ld_script_path: out/splat/emi/bmagic/magic159/03/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149510144
+    subsegments:
+      - - 1164
+        - asm
+        - func_801EF08C
+  - - 0x834

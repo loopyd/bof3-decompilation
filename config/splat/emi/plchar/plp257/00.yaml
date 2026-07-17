@@ -1,0 +1,39 @@
+name: plchar_plp257_00
+sha1: 912fcf96ee02c04bfc8777a8cb4300f4d0a052f9
+options:
+  platform: psx
+  compiler: psyq
+  basename: plchar_plp257_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/plchar/plp257/00.bin
+  asm_path: out/splat/emi/plchar/plp257/00/asm
+  src_path: src/emi/plchar/plp257/00
+  ld_script_path: out/splat/emi/plchar/plp257/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149377024
+    subsegments:
+      - - 1196
+        - asm
+        - func_801CE8AC
+      - - 1552
+        - asm
+        - func_801CEA10
+      - - 1760
+        - asm
+        - func_801CEAE0
+      - - 5700
+        - asm
+        - func_801CFA44
+      - - 6204
+        - asm
+        - func_801CFC3C
+      - - 6432
+        - asm
+        - func_801CFD20
+  - - 0x1b38

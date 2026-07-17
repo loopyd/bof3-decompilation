@@ -1,4 +1,0 @@
-#ifndef EMI_ETC_BATE_03_INTERNAL_H
-#define EMI_ETC_BATE_03_INTERNAL_H
-
-#endif

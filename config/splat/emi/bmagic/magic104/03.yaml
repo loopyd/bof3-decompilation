@@ -1,0 +1,36 @@
+name: bmagic_magic104_03
+sha1: 02446afeff4bd3e8d289b8877c51e383e57e3b35
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic104_03
+  base_path: ../../../../..
+  target_path: out/binaries/emi/bmagic/magic104/03.bin
+  asm_path: out/splat/emi/bmagic/magic104/03/asm
+  src_path: src/emi/bmagic/magic104/03
+  ld_script_path: out/splat/emi/bmagic/magic104/03/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149510144
+    subsegments:
+      - - 1904
+        - asm
+        - func_801EF370
+      - - 3668
+        - asm
+        - func_801EFA54
+      - - 3884
+        - asm
+        - func_801EFB2C
+      - - 4660
+        - asm
+        - func_801EFE34
+      - - 6084
+        - asm
+        - func_801F03C4
+  - - 0x1d08

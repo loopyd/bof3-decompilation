@@ -1,0 +1,36 @@
+name: world04_area191_13
+sha1: ecd455b1c12f5cc8809587f2eb19eb0b3121cb62
+options:
+  platform: psx
+  compiler: psyq
+  basename: world04_area191_13
+  base_path: ../../../../..
+  target_path: out/binaries/emi/world04/area191/13.bin
+  asm_path: out/splat/emi/world04/area191/13/asm
+  src_path: src/emi/world04/area191/13
+  ld_script_path: out/splat/emi/world04/area191/13/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149526528
+    subsegments:
+      - - 0
+        - asm
+        - func_801F2C00
+      - - 564
+        - asm
+        - func_801F2E34
+      - - 3364
+        - asm
+        - func_801F3924
+      - - 3500
+        - asm
+        - func_801F39AC
+      - - 3760
+        - asm
+        - func_801F3AB0
+  - - 0x17e4

@@ -1,0 +1,33 @@
+name: world02_area112_13
+sha1: 60590cbb902ed094e464a902517440ae50ef2789
+options:
+  platform: psx
+  compiler: psyq
+  basename: world02_area112_13
+  base_path: ../../../../..
+  target_path: out/binaries/emi/world02/area112/13.bin
+  asm_path: out/splat/emi/world02/area112/13/asm
+  src_path: src/emi/world02/area112/13
+  ld_script_path: out/splat/emi/world02/area112/13/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149526528
+    subsegments:
+      - - 680
+        - asm
+        - func_801F2EA8
+      - - 1652
+        - asm
+        - func_801F3274
+      - - 4336
+        - asm
+        - func_801F3CF0
+      - - 4844
+        - asm
+        - func_801F3EEC
+  - - 0x1d44

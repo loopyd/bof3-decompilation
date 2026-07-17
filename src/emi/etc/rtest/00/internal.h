@@ -1,0 +1,4 @@
+#ifndef ETC_RTEST_00_INTERNAL_H
+#define ETC_RTEST_00_INTERNAL_H
+
+#endif

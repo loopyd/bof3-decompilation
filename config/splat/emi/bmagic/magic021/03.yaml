@@ -1,0 +1,39 @@
+name: bmagic_magic021_03
+sha1: f60ba08b358024afc75e3d9ee4c0cc185efb308e
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic021_03
+  base_path: ../../../../..
+  target_path: out/binaries/emi/bmagic/magic021/03.bin
+  asm_path: out/splat/emi/bmagic/magic021/03/asm
+  src_path: src/emi/bmagic/magic021/03
+  ld_script_path: out/splat/emi/bmagic/magic021/03/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149510144
+    subsegments:
+      - - 1864
+        - asm
+        - func_801EF348
+      - - 2356
+        - asm
+        - func_801EF534
+      - - 3068
+        - asm
+        - func_801EF7FC
+      - - 3656
+        - asm
+        - func_801EFA48
+      - - 4428
+        - asm
+        - func_801EFD4C
+      - - 4528
+        - asm
+        - func_801EFDB0
+  - - 0x3014

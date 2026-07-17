@@ -1,0 +1,45 @@
+name: world01_area065_13
+sha1: 69171ed3a69e374adf8303b674a1f0e81e79075c
+options:
+  platform: psx
+  compiler: psyq
+  basename: world01_area065_13
+  base_path: ../../../../..
+  target_path: out/binaries/emi/world01/area065/13.bin
+  asm_path: out/splat/emi/world01/area065/13/asm
+  src_path: src/emi/world01/area065/13
+  ld_script_path: out/splat/emi/world01/area065/13/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149526528
+    subsegments:
+      - - 2104
+        - asm
+        - func_801F3438
+      - - 2304
+        - asm
+        - func_801F3500
+      - - 2544
+        - asm
+        - func_801F35F0
+      - - 2756
+        - asm
+        - func_801F36C4
+      - - 3600
+        - asm
+        - func_801F3A10
+      - - 3896
+        - asm
+        - func_801F3B38
+      - - 4868
+        - asm
+        - func_801F3F04
+      - - 5372
+        - asm
+        - func_801F40FC
+  - - 0x2756

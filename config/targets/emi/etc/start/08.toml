@@ -1,0 +1,9 @@
+schema = "harness.target/v2"
+id = "emi/etc/start/08"
+disc_id = "BIN/ETC/START.EMI#8"
+kind = "emi"
+source_dir = "src/emi/etc/start/08"
+binary = "out/binaries/emi/etc/start/08.bin"
+splat = "config/splat/emi/etc/start/08.yaml"
+load_address = 0x801d0c00
+profile = "compat/capcom97"

@@ -1,0 +1,42 @@
+name: plchar_plp278_00
+sha1: b06a5739c9ff7b16222b891b111e17c6b4e72875
+options:
+  platform: psx
+  compiler: psyq
+  basename: plchar_plp278_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/plchar/plp278/00.bin
+  asm_path: out/splat/emi/plchar/plp278/00/asm
+  src_path: src/emi/plchar/plp278/00
+  ld_script_path: out/splat/emi/plchar/plp278/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149377024
+    subsegments:
+      - - 0
+        - asm
+        - func_801CE400
+      - - 1196
+        - asm
+        - func_801CE8AC
+      - - 1552
+        - asm
+        - func_801CEA10
+      - - 1760
+        - asm
+        - func_801CEAE0
+      - - 4168
+        - asm
+        - func_801CF448
+      - - 4672
+        - asm
+        - func_801CF640
+      - - 4900
+        - asm
+        - func_801CF724
+  - - 0x190c

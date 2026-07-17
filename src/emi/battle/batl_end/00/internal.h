@@ -1,0 +1,4 @@
+#ifndef BATTLE_BATL_END_00_INTERNAL_H
+#define BATTLE_BATL_END_00_INTERNAL_H
+
+#endif

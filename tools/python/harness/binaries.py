@@ -530,25 +530,14 @@ def _splat_bootstrap_segments(payload: bytes) -> str:
     )
 
 
-def splat_config_text(
-    entry: dict[str, Any], root: Path, *, target_path: Path | None = None
-) -> str:
-    """Render a Splat 0.41 bootstrap config for a promoted EMI entry.
-
-    The output is intentionally an unsegmented bin layout with the
-    correct ``basename`` and depth-correct ``base_path``.  Reviewers
-    refine boundaries in place from there; nothing in the harness
-    overwrites this file once it has been written.
-    """
-
-    source_path = Path(entry["payload_path"]).resolve()
-    normalized_path = target_path or source_path
+def _splat_header(entry: dict[str, Any], root: Path, normalized_path: Path) -> str:
+    """Render the options/header block shared by every EMI splat config."""
     source = normalized_path.resolve().relative_to(root).as_posix()
     slug = target_slug(entry)
     digest = hashlib.sha1(normalized_path.read_bytes()).hexdigest()
     psyq_path, shared_path = _splat_symbol_addrs_path()
     base_path = _splat_base_path(Path("config/splat/emi") / f"{slug}.yaml")
-    header = "\n".join(
+    return "\n".join(
         [
             f"name: {_splat_basename(slug)}",
             f"sha1: {digest}",
@@ -566,8 +555,105 @@ def splat_config_text(
             f"    - {shared_path}",
         ]
     )
+
+
+def splat_config_text(
+    entry: dict[str, Any], root: Path, *, target_path: Path | None = None
+) -> str:
+    """Render a Splat 0.41 bootstrap config for a promoted EMI entry.
+
+    The output is intentionally an unsegmented bin layout with the
+    correct ``basename`` and depth-correct ``base_path``.  Reviewers
+    refine boundaries in place from there; nothing in the harness
+    overwrites this file once it has been written.
+    """
+
+    source_path = Path(entry["payload_path"]).resolve()
+    normalized_path = target_path or source_path
+    header = _splat_header(entry, root, normalized_path)
     payload = normalized_path.read_bytes()
     return f"{header}\n{_splat_bootstrap_segments(payload)}"
+
+
+def scan_entry_functions(entry: dict[str, Any], root: Path) -> list[dict[str, Any]]:
+    """Scan rizin for functions in a code-blob entry's normalized image.
+
+    Returns functions sorted by file offset, each ``{"vma", "offset",
+    "size"}``.  The caller must have materialized the normalized image at
+    ``out/binaries/emi/<slug>.bin`` first (see ``promote_entry``).
+    """
+    import json as _json
+    import subprocess as _subprocess
+    import tempfile as _tempfile
+
+    slug = target_slug(entry)
+    image = root / "out" / "binaries" / "emi" / f"{slug}.bin"
+    if not image.is_file():
+        raise FileNotFoundError(f"normalized image missing for {slug}: {image}")
+    ram_ptr = int(entry["load_address"])
+    payload = image.read_bytes()
+    with _tempfile.NamedTemporaryFile(suffix=".bin", delete=False) as tf:
+        tf.write(payload)
+        tmp = tf.name
+    try:
+        r = _subprocess.run(
+            ["rizin", "-N", "-n", "-a", "mips", "-b", "32",
+             "-e", "cfg.bigendian=false", "-m", f"0x{ram_ptr:08X}",
+             "-c", "aaa; aflj", "-q", tmp],
+            capture_output=True, text=True, timeout=300, cwd=str(root),
+        )
+    finally:
+        import os as _os
+        _os.unlink(tmp)
+    if r.returncode != 0:
+        return []
+    try:
+        raw = _json.loads(r.stdout[r.stdout.find("["):r.stdout.rfind("]") + 1])
+    except (ValueError, _json.JSONDecodeError):
+        return []
+    funcs: list[dict[str, Any]] = []
+    for f in raw:
+        addr = int(f.get("offset", 0))
+        off = addr - ram_ptr
+        if 0 <= off < len(payload):
+            funcs.append({"vma": addr, "offset": off, "size": int(f.get("size", 0))})
+    funcs.sort(key=lambda x: x["offset"])
+    return funcs
+
+
+def splat_config_with_functions(
+    entry: dict[str, Any], root: Path, funcs: list[dict[str, Any]],
+    *, target_path: Path | None = None,
+) -> str:
+    """Render a Splat config that maps each rizin-detected function as a subsegment.
+
+    Reuses the proven header/options from :func:`_splat_header` and the
+    function offsets from :func:`scan_entry_functions`.  EMI code blobs
+    carry no PS-X header, so the single ``code`` segment starts at offset 0
+    and closes at the payload size.
+    """
+
+    source_path = Path(entry["payload_path"]).resolve()
+    normalized_path = target_path or source_path
+    header = _splat_header(entry, root, normalized_path)
+    payload = normalized_path.read_bytes()
+    size = len(payload)
+    ram_ptr = int(entry["load_address"])
+    lines = [
+        "segments:",
+        "  - name: main",
+        "    type: code",
+        "    start: 0",
+        f"    vram: {ram_ptr}",
+    ]
+    if funcs:
+        lines.append("    subsegments:")
+        for fn in funcs:
+            lines.append(f"      - - {fn['offset']}")
+            lines.append("        - asm")
+            lines.append(f"        - func_{fn['vma']:08X}")
+    lines.append(f"  - - 0x{size:x}")
+    return f"{header}\n" + "\n".join(lines) + "\n"
 
 
 def promote_entry(

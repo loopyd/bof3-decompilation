@@ -1,0 +1,33 @@
+name: plchar_plp578_00
+sha1: 63c398c3831ab9bfad347a9d640f1d9ef4344fa3
+options:
+  platform: psx
+  compiler: psyq
+  basename: plchar_plp578_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/plchar/plp578/00.bin
+  asm_path: out/splat/emi/plchar/plp578/00/asm
+  src_path: src/emi/plchar/plp578/00
+  ld_script_path: out/splat/emi/plchar/plp578/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149377024
+    subsegments:
+      - - 0
+        - asm
+        - func_801CE400
+      - - 3660
+        - asm
+        - func_801CF24C
+      - - 4164
+        - asm
+        - func_801CF444
+      - - 4392
+        - asm
+        - func_801CF528
+  - - 0x1714

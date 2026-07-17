@@ -1,0 +1,45 @@
+name: plchar_plp016_00
+sha1: 28999fe6b51d4e50618bc7dff46149d3240507f0
+options:
+  platform: psx
+  compiler: psyq
+  basename: plchar_plp016_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/plchar/plp016/00.bin
+  asm_path: out/splat/emi/plchar/plp016/00/asm
+  src_path: src/emi/plchar/plp016/00
+  ld_script_path: out/splat/emi/plchar/plp016/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149377024
+    subsegments:
+      - - 0
+        - asm
+        - func_801CE400
+      - - 2332
+        - asm
+        - func_801CED1C
+      - - 2836
+        - asm
+        - func_801CEF14
+      - - 3064
+        - asm
+        - func_801CEFF8
+      - - 6436
+        - asm
+        - func_801CFD24
+      - - 6960
+        - asm
+        - func_801CFF30
+      - - 7840
+        - asm
+        - func_801D02A0
+      - - 8260
+        - asm
+        - func_801D0444
+  - - 0x22a8

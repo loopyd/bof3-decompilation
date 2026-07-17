@@ -1,0 +1,51 @@
+name: etc_shop_08
+sha1: 976bd4c58708d3022453c90dc9a85faecd6177b7
+options:
+  platform: psx
+  compiler: psyq
+  basename: etc_shop_08
+  base_path: ../../../../..
+  target_path: out/binaries/emi/etc/shop/08.bin
+  asm_path: out/splat/emi/etc/shop/08/asm
+  src_path: src/emi/etc/shop/08
+  ld_script_path: out/splat/emi/etc/shop/08/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149510144
+    subsegments:
+      - - 712
+        - asm
+        - func_801EEEC8
+      - - 832
+        - asm
+        - func_801EEF40
+      - - 928
+        - asm
+        - func_801EEFA0
+      - - 1016
+        - asm
+        - func_801EEFF8
+      - - 1088
+        - asm
+        - func_801EF040
+      - - 1204
+        - asm
+        - func_801EF0B4
+      - - 1352
+        - asm
+        - func_801EF148
+      - - 3436
+        - asm
+        - func_801EF96C
+      - - 3908
+        - asm
+        - func_801EFB44
+      - - 4264
+        - asm
+        - func_801EFCA8
+  - - 0x1494

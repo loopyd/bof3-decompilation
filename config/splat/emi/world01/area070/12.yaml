@@ -1,0 +1,27 @@
+name: world01_area070_12
+sha1: 62d5c8e5fab974ce52680479e9112ce9345e4d20
+options:
+  platform: psx
+  compiler: psyq
+  basename: world01_area070_12
+  base_path: ../../../../..
+  target_path: out/binaries/emi/world01/area070/12.bin
+  asm_path: out/splat/emi/world01/area070/12/asm
+  src_path: src/emi/world01/area070/12
+  ld_script_path: out/splat/emi/world01/area070/12/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2148548608
+    subsegments:
+      - - 0
+        - asm
+        - func_80104000
+      - - 32
+        - asm
+        - func_80104020
+  - - 0xe63c

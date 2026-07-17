@@ -1,0 +1,156 @@
+name: etc_commu02_08
+sha1: 196ca5196dd2505698c01d35d7dd26cf096d14df
+options:
+  platform: psx
+  compiler: psyq
+  basename: etc_commu02_08
+  base_path: ../../../../..
+  target_path: out/binaries/emi/etc/commu02/08.bin
+  asm_path: out/splat/emi/etc/commu02/08/asm
+  src_path: src/emi/etc/commu02/08
+  ld_script_path: out/splat/emi/etc/commu02/08/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149387264
+    subsegments:
+      - - 0
+        - asm
+        - func_801D0C00
+      - - 6812
+        - asm
+        - func_801D269C
+      - - 6992
+        - asm
+        - func_801D2750
+      - - 7060
+        - asm
+        - func_801D2794
+      - - 7280
+        - asm
+        - func_801D2870
+      - - 7432
+        - asm
+        - func_801D2908
+      - - 7876
+        - asm
+        - func_801D2AC4
+      - - 8440
+        - asm
+        - func_801D2CF8
+      - - 8720
+        - asm
+        - func_801D2E10
+      - - 8800
+        - asm
+        - func_801D2E60
+      - - 8924
+        - asm
+        - func_801D2EDC
+      - - 9124
+        - asm
+        - func_801D2FA4
+      - - 9604
+        - asm
+        - func_801D3184
+      - - 9888
+        - asm
+        - func_801D32A0
+      - - 15632
+        - asm
+        - func_801D4910
+      - - 16096
+        - asm
+        - func_801D4AE0
+      - - 17060
+        - asm
+        - func_801D4EA4
+      - - 17288
+        - asm
+        - func_801D4F88
+      - - 20176
+        - asm
+        - func_801D5AD0
+      - - 20268
+        - asm
+        - func_801D5B2C
+      - - 29284
+        - asm
+        - func_801D7E64
+      - - 29344
+        - asm
+        - func_801D7EA0
+      - - 29424
+        - asm
+        - func_801D7EF0
+      - - 29784
+        - asm
+        - func_801D8058
+      - - 29996
+        - asm
+        - func_801D812C
+      - - 30116
+        - asm
+        - func_801D81A4
+      - - 30476
+        - asm
+        - func_801D830C
+      - - 31004
+        - asm
+        - func_801D851C
+      - - 31580
+        - asm
+        - func_801D875C
+      - - 31908
+        - asm
+        - func_801D88A4
+      - - 32104
+        - asm
+        - func_801D8968
+      - - 32320
+        - asm
+        - func_801D8A40
+      - - 33676
+        - asm
+        - func_801D8F8C
+      - - 34008
+        - asm
+        - func_801D90D8
+      - - 34320
+        - asm
+        - func_801D9210
+      - - 34480
+        - asm
+        - func_801D92B0
+      - - 34548
+        - asm
+        - func_801D92F4
+      - - 34632
+        - asm
+        - func_801D9348
+      - - 35024
+        - asm
+        - func_801D94D0
+      - - 35784
+        - asm
+        - func_801D97C8
+      - - 36552
+        - asm
+        - func_801D9AC8
+      - - 36736
+        - asm
+        - func_801D9B80
+      - - 38164
+        - asm
+        - func_801DA114
+      - - 39844
+        - asm
+        - func_801DA7A4
+      - - 40168
+        - asm
+        - func_801DA8E8
+  - - 0xa4e0

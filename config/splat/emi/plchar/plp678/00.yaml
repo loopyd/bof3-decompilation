@@ -1,0 +1,45 @@
+name: plchar_plp678_00
+sha1: 76063d3a009347de020198a9e26de7a8f97eeb46
+options:
+  platform: psx
+  compiler: psyq
+  basename: plchar_plp678_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/plchar/plp678/00.bin
+  asm_path: out/splat/emi/plchar/plp678/00/asm
+  src_path: src/emi/plchar/plp678/00
+  ld_script_path: out/splat/emi/plchar/plp678/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149377024
+    subsegments:
+      - - 0
+        - asm
+        - func_801CE400
+      - - 2088
+        - asm
+        - func_801CEC28
+      - - 2612
+        - asm
+        - func_801CEE34
+      - - 3492
+        - asm
+        - func_801CF1A4
+      - - 3912
+        - asm
+        - func_801CF348
+      - - 6392
+        - asm
+        - func_801CFCF8
+      - - 6896
+        - asm
+        - func_801CFEF0
+      - - 7124
+        - asm
+        - func_801CFFD4
+  - - 0x21dc

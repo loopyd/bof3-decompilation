@@ -1,0 +1,9 @@
+schema = "harness.target/v2"
+id = "emi/scenario/scena03/00"
+disc_id = "BIN/SCENARIO/SCENA03.EMI#0"
+kind = "emi"
+source_dir = "src/emi/scenario/scena03/00"
+binary = "out/binaries/emi/scenario/scena03/00.bin"
+splat = "config/splat/emi/scenario/scena03/00.yaml"
+load_address = 0x801f6c00
+profile = "compat/capcom97"

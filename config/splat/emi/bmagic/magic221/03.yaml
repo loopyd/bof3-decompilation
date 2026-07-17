@@ -1,0 +1,45 @@
+name: bmagic_magic221_03
+sha1: 634bdaf7e6b759f9c150816601adfd2fa4e10a8e
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic221_03
+  base_path: ../../../../..
+  target_path: out/binaries/emi/bmagic/magic221/03.bin
+  asm_path: out/splat/emi/bmagic/magic221/03/asm
+  src_path: src/emi/bmagic/magic221/03
+  ld_script_path: out/splat/emi/bmagic/magic221/03/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149510144
+    subsegments:
+      - - 3384
+        - asm
+        - func_801EF938
+      - - 3568
+        - asm
+        - func_801EF9F0
+      - - 4160
+        - asm
+        - func_801EFC40
+      - - 4960
+        - asm
+        - func_801EFF60
+      - - 5764
+        - asm
+        - func_801F0284
+      - - 5940
+        - asm
+        - func_801F0334
+      - - 6696
+        - asm
+        - func_801F0628
+      - - 6796
+        - asm
+        - func_801F068C
+  - - 0x3910

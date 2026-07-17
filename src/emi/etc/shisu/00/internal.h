@@ -1,0 +1,4 @@
+#ifndef ETC_SHISU_00_INTERNAL_H
+#define ETC_SHISU_00_INTERNAL_H
+
+#endif

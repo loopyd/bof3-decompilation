@@ -1,0 +1,84 @@
+name: world04_area189_13
+sha1: a95c3fe3576c036b5cfe6a9fe2bf4dd25802755c
+options:
+  platform: psx
+  compiler: psyq
+  basename: world04_area189_13
+  base_path: ../../../../..
+  target_path: out/binaries/emi/world04/area189/13.bin
+  asm_path: out/splat/emi/world04/area189/13/asm
+  src_path: src/emi/world04/area189/13
+  ld_script_path: out/splat/emi/world04/area189/13/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149526528
+    subsegments:
+      - - 0
+        - asm
+        - func_801F2C00
+      - - 480
+        - asm
+        - func_801F2DE0
+      - - 1912
+        - asm
+        - func_801F3378
+      - - 2324
+        - asm
+        - func_801F3514
+      - - 3072
+        - asm
+        - func_801F3800
+      - - 5456
+        - asm
+        - func_801F4150
+      - - 6120
+        - asm
+        - func_801F43E8
+      - - 7548
+        - asm
+        - func_801F497C
+      - - 7684
+        - asm
+        - func_801F4A04
+      - - 8036
+        - asm
+        - func_801F4B64
+      - - 9612
+        - asm
+        - func_801F518C
+      - - 10416
+        - asm
+        - func_801F54B0
+      - - 10652
+        - asm
+        - func_801F559C
+      - - 10752
+        - asm
+        - func_801F5600
+      - - 12576
+        - asm
+        - func_801F5D20
+      - - 12652
+        - asm
+        - func_801F5D6C
+      - - 12968
+        - asm
+        - func_801F5EA8
+      - - 13088
+        - asm
+        - func_801F5F20
+      - - 13116
+        - asm
+        - func_801F5F3C
+      - - 13348
+        - asm
+        - func_801F6024
+      - - 13448
+        - asm
+        - func_801F6088
+  - - 0x378e

@@ -1,0 +1,9 @@
+schema = "harness.target/v2"
+id = "emi/etc/rtest/00"
+disc_id = "BIN/ETC/RTEST.EMI#0"
+kind = "emi"
+source_dir = "src/emi/etc/rtest/00"
+binary = "out/binaries/emi/etc/rtest/00.bin"
+splat = "config/splat/emi/etc/rtest/00.yaml"
+load_address = 0x80195800
+profile = "compat/capcom97"

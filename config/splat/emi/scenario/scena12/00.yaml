@@ -1,0 +1,30 @@
+name: scenario_scena12_00
+sha1: ec4e1ac777375f9629ec1da8492f235777fd1dbb
+options:
+  platform: psx
+  compiler: psyq
+  basename: scenario_scena12_00
+  base_path: ../../../../..
+  target_path: out/binaries/emi/scenario/scena12/00.bin
+  asm_path: out/splat/emi/scenario/scena12/00/asm
+  src_path: src/emi/scenario/scena12/00
+  ld_script_path: out/splat/emi/scenario/scena12/00/linker.ld
+  symbol_addrs_path:
+    - config/symbols/psyq.txt
+    - config/symbols/shared.txt
+segments:
+  - name: main
+    type: code
+    start: 0
+    vram: 2149542912
+    subsegments:
+      - - 2540
+        - asm
+        - func_801F75EC
+      - - 2652
+        - asm
+        - func_801F765C
+      - - 4660
+        - asm
+        - func_801F7E34
+  - - 0x668a

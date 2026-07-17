@@ -1,0 +1,9 @@
+schema = "harness.target/v2"
+id = "emi/scenario/sce15ef2/00"
+disc_id = "BIN/SCENARIO/SCE15EF2.EMI#0"
+kind = "emi"
+source_dir = "src/emi/scenario/sce15ef2/00"
+binary = "out/binaries/emi/scenario/sce15ef2/00.bin"
+splat = "config/splat/emi/scenario/sce15ef2/00.yaml"
+load_address = 0x801d0c00
+profile = "compat/capcom97"

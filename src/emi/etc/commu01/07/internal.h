@@ -1,0 +1,4 @@
+#ifndef ETC_COMMU01_07_INTERNAL_H
+#define ETC_COMMU01_07_INTERNAL_H
+
+#endif

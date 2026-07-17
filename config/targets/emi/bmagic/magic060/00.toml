@@ -1,0 +1,9 @@
+schema = "harness.target/v2"
+id = "emi/bmagic/magic060/00"
+disc_id = "BIN/BMAGIC/MAGIC060.EMI#0"
+kind = "emi"
+source_dir = "src/emi/bmagic/magic060/00"
+binary = "out/binaries/emi/bmagic/magic060/00.bin"
+splat = "config/splat/emi/bmagic/magic060/00.yaml"
+load_address = 0x801eec00
+profile = "compat/capcom97"
