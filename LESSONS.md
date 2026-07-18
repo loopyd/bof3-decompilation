@@ -167,6 +167,89 @@ to repeat or misdiagnose across targets. Use the
   preserve such investigation evidence only outside the compiled SLUS source
   set.
 
+### Document `MATCHING_AID` matching hacks
+
+- Every artificial matching-aid comment must say exactly what it controls, why
+  it is needed, and what future evidence would remove it. This ensures the hack
+  is removable, not permanent.
+- Do not mark obvious workarounds such as `barrier()`; reserve `MATCHING_AID`
+  for shape decisions that are opaque to a reader without the matching diff.
+
+```c
+/*
+ * MATCHING_AID:
+ * Hoisting the slot pointer keeps the index temporary in $a1.
+ * Without this local, GCC allocates $v1 for the index and the store
+ * at +0x34 uses a different base.
+ */
+slots = *slotTable;
+```
+
+The full convention is documented in `docs/matching-playbook.md` §4.
+
+### Use the register pinning ladder as a last resort
+
+- `register type name asm("$N")` binds a local to a specific MIPS register but
+  changes the entire register web. A pinned local remains live across the whole
+  function and can displace unrelated variables, creating new mismatches.
+- Use this escalation before pinning:
+  1. Correct types and declarations.
+  2. Correct control-flow structure.
+  3. Reorder declarations and statements.
+  4. Introduce or remove temporaries.
+  5. Hoist pointer dereferences.
+  6. Try a separate loop counter vs pointer induction variable.
+  7. Run the permuter.
+  8. Only then use `register ... asm("$N")`.
+  9. Prefer to remove pins after discovering a structural solution.
+- Never create a macro such as `FORCE_REG(type, name, reg)` — that would make
+  register pinning too easy to spread.
+- The `CLOBBER_A0()`/`CLOBBER_V0()`/`CLOBBER_A1()` macros in `defines.h`
+  are empty-asm barriers for delay-slot ordering, not register pinning. They
+  are lighter and safer when only placement matters.
+- All inline `__asm__` must go through a named, `__GNUC__`-guarded macro in
+  `defines.h` (`barrier()`, `CLOBBER_A0()`, `CLOBBER_V0()`, `CLOBBER_A1()`).
+  Never write raw `__asm__ __volatile__(...)` in a `.c` file. The `CLOBBER_*`
+  macros tell the compiler the named register is clobbered, which prevents it
+  from hoisting a `move`/constant load out of a `jal`/branch delay slot.
+  Example: `func_801970EC` needed `CLOBBER_A0();` before
+  `func_801C1400(0u)` so `move a0,zero` stayed in the `jal` delay slot (100%).
+- Rule of thumb: `barrier()` when the issue is volatile-access ordering across
+  a call; `CLOBBER_A0()/V0()/A1()` when the issue is which register holds a
+  value in a delay slot.
+
+### Reach fixed RAM through `PSX_PTR`/`PSX_REF`, never raw casts or `vu8`
+
+- All fixed-address access goes through the `include/bof3/` macros. The
+  `vu8`/`vu16`/`vu32` typedefs are gone; write `volatile u8`/`u16`/`u32`
+  directly on the `type` argument (`PSX_REF(volatile u16, 0x80143B90u)`).
+- Hardware registers use `REG8/16/32` only. Scratchpad RAM (`0x1F800000`) uses
+  `SPAD_ADDR`/`SPAD_REF`/`SPAD_PTR_SLOT` — never `REG*`. Full reference and the
+  old→new migration table are in `docs/memory-api.md`.
+
+### Keep `SPAD_PTR_SLOT` cell non-volatile to match constant-address codegen
+
+- `SPAD_PTR_SLOT(type, off)` expands to a **non-volatile** pointer cell
+  (`PSX_REF(type *, addr)`). The compiler then emits a single `lui` for the
+  scratchpad base plus an offset `lw`/`lh`/`lb` (`lw v1,68(v1)` for
+  `0x1F800044`), matching the original binary.
+- Marking the slot `volatile` (e.g. `PSX_REF(type * volatile, addr)`) forces
+  `lui + ori + lw`, adding an `ori` and breaking the match. `func_801B5BDC`
+  dropped from 100% to a mismatch under the volatile slot and recovered only
+  after the cell stayed non-volatile.
+- To force a per-evaluation reload, qualify the pointee, not the cell:
+  `SPAD_PTR_SLOT(volatile Entity, off)` (gives `volatile Entity **`) instead of
+  a volatile cell.
+
+### Hoist pointer dereferences to control register allocation
+
+- Instead of repeated `(*table)[index]` accesses, hoist the dereference into a
+  local: `entries = *table; value = entries[index];`. This can free the
+  allocator to place an unrelated value in the required register and enable a
+  clean, pin-free match.
+- The full technique with expression splitting, named-constant reuse, and
+  induction-variable alternatives is in `docs/matching-playbook.md` §5.
+
 ## Target ownership and symbols
 
 - PsyQ library code can be linked more than once at different addresses across

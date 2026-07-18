@@ -3,12 +3,12 @@
 
 #include "bof3/bof3.h"
 
-#define WORLD00_AREA026_13_PRIMITIVE_PTR PTR_SLOT_AT(volatile u8, 0x8014598cu)
+#define WORLD00_AREA026_13_PRIMITIVE_PTR PSX_REF(volatile u8 *, 0x8014598cu)
 #define WORLD00_AREA026_13_TABLE_33FC    ((const s32*)0x801f33fcu)
 #define WORLD00_AREA026_13_TABLE_340C    ((const s32*)0x801f340cu)
 
-extern vu16 WORLD00_AREA026_13_D_8014932A;
-extern vu8  WORLD00_AREA026_13_D_80149333;
+extern volatile u16 WORLD00_AREA026_13_D_8014932A;
+extern volatile u8  WORLD00_AREA026_13_D_80149333;
 
 void func_801AFE18(void* arg0);
 void func_801AFF04(const void* arg0, void* arg1);

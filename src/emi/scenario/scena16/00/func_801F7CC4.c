@@ -76,18 +76,18 @@ void func_801F7CC4(void) {
       if (SCENA16_D_80146864_BYTE != 5u) {
         return;
       }
-      *(vu8*)0x1f800000u = func_8019601C();
-      if (*(vu8*)0x1f800000u != 0xffu) {
-        vu8* object;
+      *(volatile u8*)0x1f800000u = func_8019601C();
+      if (*(volatile u8*)0x1f800000u != 0xffu) {
+        volatile u8* object;
         u32  object_index;
 
-        object_index = (u32) * (vu8*)0x1f800000u;
-        object = (vu8*)(0x80143fc8u + (object_index * 0x74u));
+        object_index = (u32) * (volatile u8*)0x1f800000u;
+        object = (volatile u8*)(0x80143fc8u + (object_index * 0x74u));
         object[0] = 1u;
         object[5] = 0x13u;
-        *(vs32*)(object + 0x64) = -0x34a;
-        *(vs32*)(object + 0x68) = (s32)(s16)SCENA16_D_801492DA;
-        *(vs32*)(object + 0x6c) = (s32)(s16)SCENA16_D_801492DC;
+        *(volatile s32*)(object + 0x64) = -0x34a;
+        *(volatile s32*)(object + 0x68) = (s32)(s16)SCENA16_D_801492DA;
+        *(volatile s32*)(object + 0x6c) = (s32)(s16)SCENA16_D_801492DC;
         object[9] = 0x60u;
       }
       advance_state = 1u;
@@ -97,18 +97,18 @@ void func_801F7CC4(void) {
       if (SCENA16_D_80146864_BYTE != 8u) {
         break;
       }
-      *(vu8*)0x1f800000u = func_8019601C();
-      if (*(vu8*)0x1f800000u != 0xffu) {
-        vu8* object;
+      *(volatile u8*)0x1f800000u = func_8019601C();
+      if (*(volatile u8*)0x1f800000u != 0xffu) {
+        volatile u8* object;
         u32  object_index;
 
-        object_index = (u32) * (vu8*)0x1f800000u;
-        object = (vu8*)(0x80143fc8u + (object_index * 0x74u));
+        object_index = (u32) * (volatile u8*)0x1f800000u;
+        object = (volatile u8*)(0x80143fc8u + (object_index * 0x74u));
         object[0] = 1u;
         object[5] = 0x13u;
-        *(vs32*)(object + 0x64) = -0x2ac;
-        *(vs32*)(object + 0x68) = (s32)(s16)SCENA16_D_801492DA;
-        *(vs32*)(object + 0x6c) = (s32)(s16)SCENA16_D_801492DC;
+        *(volatile s32*)(object + 0x64) = -0x2ac;
+        *(volatile s32*)(object + 0x68) = (s32)(s16)SCENA16_D_801492DA;
+        *(volatile s32*)(object + 0x6c) = (s32)(s16)SCENA16_D_801492DC;
         object[9] = 0x20u;
       }
       SCENA16_D_80146876 = 0x200u;

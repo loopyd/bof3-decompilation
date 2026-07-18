@@ -2,7 +2,7 @@
 
 extern u8*      D_80146844;
 extern u8*      D_80146848;
-extern vu32     D_80146464;
+extern volatile u32     D_80146464;
 extern u32      D_80146678;
 extern u32      D_8014667C;
 extern const u8 D_80183224[];
@@ -23,7 +23,7 @@ void func_80162500(void) {
   u32   next_offset;
   u32   header_address;
   u8*   loader_state;
-  vu32* loader_word;
+  volatile u32* loader_word;
 
   tag_index = 7;
   loader_word = &D_80146464;

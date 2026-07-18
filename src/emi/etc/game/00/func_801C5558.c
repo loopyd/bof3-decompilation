@@ -24,7 +24,7 @@ void func_801C5558(void) {
 
   result = func_80154F28(work->coord_x_34 + offs_a, work->coord_y_38 + offs_b);
 
-  global_work = GLOBAL_WORK_PTR;
+  global_work = g_game_work;
   threshold = MOVEMENT_THRESHOLD(global_work[0x79]);
 
   work = SCRATCH_WORK;

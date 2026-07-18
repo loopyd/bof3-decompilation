@@ -13,14 +13,14 @@ typedef struct GameFrontBannerState {
  */
 void func_801D18F8(void) {
   volatile GameFrontBannerState* state;
-  vu16*                          alpha;
+  volatile u16*                          alpha;
   s32                            i;
   s32                            x;
   s32                            marker;
   s32                            flags;
   u8*                            primitive;
 
-  state = PTR_AT(volatile GameFrontBannerState, 0x80143c22u);
+  state = PSX_PTR(volatile GameFrontBannerState, 0x80143c22u);
   if (state->phase == 0) {
     return;
   }

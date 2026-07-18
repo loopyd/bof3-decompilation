@@ -5,12 +5,12 @@
  * @source 0x801D1B00
  */
 void func_801D1B00(void) {
-  vu8* phase;
+  volatile u8* phase;
   s32  primary_active;
   s32  secondary_active;
   u16  alpha;
 
-  phase = PTR_AT(volatile u8, 0x80143c32u);
+  phase = PSX_PTR(volatile u8, 0x80143c32u);
   primary_active = 1;
   secondary_active = 1;
 
@@ -41,10 +41,10 @@ void func_801D1B00(void) {
 
   if (*phase != 0u) {
     func_801D12CC((u8)secondary_active,
-                  *PTR_AT(const volatile u8, 0x80143c28u));
+                  *PSX_PTR(const volatile u8, 0x80143c28u));
     func_801D16DC(26, 24, (u8)secondary_active,
-                  *PTR_AT(const volatile u8, 0x80143c28u));
+                  *PSX_PTR(const volatile u8, 0x80143c28u));
     func_801D150C(-6, 28, (u8)primary_active,
-                  *PTR_AT(const volatile u8, 0x80143c26u));
+                  *PSX_PTR(const volatile u8, 0x80143c26u));
   }
 }

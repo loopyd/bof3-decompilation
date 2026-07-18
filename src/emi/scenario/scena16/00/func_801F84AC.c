@@ -2,15 +2,15 @@
 
 typedef struct Scena16EffectBank80140000 {
   u8  pad_0000_4f58[0x4f59];
-  vu8 byte_4f59;
-  vu8 byte_4f5a;
-  vu8 byte_4f5b;
-  vu8 byte_4f5c;
-  vu8 byte_4f5d;
-  vu8 byte_4f5e;
-  vu8 byte_4f5f;
+  volatile u8 byte_4f59;
+  volatile u8 byte_4f5a;
+  volatile u8 byte_4f5b;
+  volatile u8 byte_4f5c;
+  volatile u8 byte_4f5d;
+  volatile u8 byte_4f5e;
+  volatile u8 byte_4f5f;
   u8  pad_4f60_6253[0x6254 - 0x4f60];
-  vu8 byte_6254;
+  volatile u8 byte_6254;
 } Scena16EffectBank80140000;
 
 /* @behavior resets one local effect bank and marks the frontend flag byte.

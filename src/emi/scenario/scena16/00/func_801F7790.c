@@ -4,7 +4,7 @@
  * @source 0x801F7790
  */
 void func_801F7790(void) {
-  vu16* timer;
+  volatile u16* timer;
 
   switch (SCENA16_D_80146875) {
     case 0:
@@ -43,19 +43,19 @@ void func_801F7790(void) {
       func_8014ECAC(1u);
       SCENA16_D_80146866 = 0x30u;
       SCENA16_D_8014832E = 0x1fu;
-      *(vu8*)0x1f800000u = func_8019601C();
+      *(volatile u8*)0x1f800000u = func_8019601C();
 
-      if (*(vu8*)0x1f800000u != 0xffu) {
-        vu8* object;
+      if (*(volatile u8*)0x1f800000u != 0xffu) {
+        volatile u8* object;
         u32  object_index;
 
-        object_index = (u32) * (vu8*)0x1f800000u;
-        object = (vu8*)(0x80143fc8u + (object_index * 0x74u));
+        object_index = (u32) * (volatile u8*)0x1f800000u;
+        object = (volatile u8*)(0x80143fc8u + (object_index * 0x74u));
         object[0] = 1u;
         object[5] = 0x13u;
-        *(vs32*)(object + 0x64) = (s32)((s16)SCENA16_D_801492D8 + 0x1c0);
-        *(vs32*)(object + 0x68) = (s32)(s16)SCENA16_D_801492DA;
-        *(vs32*)(object + 0x6c) = (s32)(s16)SCENA16_D_801492DC;
+        *(volatile s32*)(object + 0x64) = (s32)((s16)SCENA16_D_801492D8 + 0x1c0);
+        *(volatile s32*)(object + 0x68) = (s32)(s16)SCENA16_D_801492DA;
+        *(volatile s32*)(object + 0x6c) = (s32)(s16)SCENA16_D_801492DC;
         object[9] = 0xffu;
       }
 
@@ -71,7 +71,7 @@ void func_801F7790(void) {
     case 5:
       func_8014F800(0x48, 0x50, 0, 0xffu,
                     0x80010000u + (u32)SCENA16_D_80010006);
-      timer = (vu16*)0x80146876u;
+      timer = (volatile u16*)0x80146876u;
       *timer = (u16)(*timer + 1u);
       if (*timer != 0x20u) {
         func_801F83B0((u32)((u8)*timer));
@@ -92,12 +92,12 @@ void func_801F7790(void) {
       break;
 
     case 7:
-      timer = (vu16*)0x80146876u;
+      timer = (volatile u16*)0x80146876u;
       *timer = (u16)(*timer - 1u);
       if (*timer != 0u) {
         func_8014F800(0x48, 0x50, 0, 0xffu,
                       0x80010000u + (u32)SCENA16_D_80010006);
-        func_801F83B0((u32)(*(vu8*)timer));
+        func_801F83B0((u32)(*(volatile u8*)timer));
         break;
       }
       func_801F845C();

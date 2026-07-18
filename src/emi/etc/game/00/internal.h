@@ -86,45 +86,45 @@ extern struct GameWorkArea* volatile g_game_work;
 /* ---- RAM globals (D_ names match original game data patterns) ---- */
 
 /* @behavior entry-0 main state machine index */
-extern vu16 D_80143B90;
+extern volatile u16 D_80143B90;
 extern u16  D_80143C40;
 /* @behavior entry-0 sub-state within current state */
 extern u16 D_80143B92;
 /* @behavior world/phase index for entry-0 world dispatch */
 extern u8 D_80143BB0;
 /* @behavior current world state ID for world/front routing */
-extern vu16 D_80143F00;
+extern volatile u16 D_80143F00;
 /* @behavior world/front flags: bit0=scenario pending, bit3=alt front mode */
-extern vu8 D_80143F02;
+extern volatile u8 D_80143F02;
 /* @behavior context selection seed passed to entry-0 ctx init */
-extern vu16 D_80143F10;
+extern volatile u16 D_80143F10;
 /* @behavior context bundle word A — world/route identifier */
-extern vu32 D_80143F14;
+extern volatile u32 D_80143F14;
 /* @behavior context bundle word B — secondary selector data */
-extern vu32 D_80143F18;
+extern volatile u32 D_80143F18;
 /* @behavior context kind byte — dispatch type discriminator */
-extern vu8 D_80143F1C;
+extern volatile u8 D_80143F1C;
 /* @behavior pending request kind — selects next front operation */
-extern vu8 D_80143F1D;
+extern volatile u8 D_80143F1D;
 /* @behavior pending mode after request resolution */
 extern u8 D_80143F1E;
 /* @behavior selection seed for the entry-0 front callback bank */
 extern u8 D_80143F1F;
 /* @behavior active selection id from front-end picker */
-extern vu32 D_80144FC0;
+extern volatile u32 D_80144FC0;
 /* @behavior front-end selection index for menu routing */
 extern u8  D_80145029;
 extern u8  D_80145024;
 extern u32 D_8014502C;
 /* @behavior palette stage serial for GPU upload sequencing */
-extern vu8 D_80145988;
+extern volatile u8 D_80145988;
 /* @behavior world flags — bit0=pending scenario, bit6=force-reset.
  * UNKNOWN: roles of observed bits 5 and 11. */
 extern u16 D_8014625A;
-extern vu8 D_80146256;
+extern volatile u8 D_80146256;
 /* @behavior flag byte cleared on request 0xFE.
  * UNKNOWN: the flag's owning subsystem. */
-extern vu8      D_8014832E;
+extern volatile u8      D_8014832E;
 extern u8       D_801462E0;
 extern u8       D_801462E1;
 extern u8       D_801462E2;
@@ -164,7 +164,7 @@ extern struct GameWorkArea D_80146888[30];
 extern u8                  D_8014933F;
 extern u32                 D_801CD954;
 extern const s8            D_801C7B74[];
-extern vu16                D_801490A4;
+extern volatile u16                D_801490A4;
 
 typedef struct GamePaletteEntry {
   u8  flags;

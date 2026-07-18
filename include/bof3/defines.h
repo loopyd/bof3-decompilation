@@ -6,39 +6,30 @@
 #ifndef __cplusplus
 typedef unsigned char bool;
 
-#define true  1
 #define false 0
+#define true  1
 #endif
 
 /* clang-format off */
-typedef unsigned char      u8;
-typedef unsigned short     u16;
-typedef unsigned int       u32;
-typedef unsigned long long u64;
-
 typedef signed char        s8;
 typedef signed short       s16;
 typedef signed int         s32;
 typedef signed long long   s64;
 
+typedef unsigned char      u8;
+typedef unsigned short     u16;
+typedef unsigned int       u32;
+typedef unsigned long long u64;
+
 typedef float              f32;
 typedef double             f64;
-
-typedef volatile u8        vu8;
-typedef volatile u16       vu16;
-typedef volatile u32       vu32;
-
-typedef volatile s8        vs8;
-typedef volatile s16       vs16;
-typedef volatile s32       vs32;
 /* clang-format on */
 
 #define ARRAY_COUNT(array) (sizeof(array) / sizeof((array)[0]))
 
 /*
- * C89-compatible layout assertions.
+ * C89-compatible compile-time assertions.
  */
-
 #define DECOMP_JOIN_IMPL(a, b) a##b
 #define DECOMP_JOIN(a, b)      DECOMP_JOIN_IMPL(a, b)
 
@@ -53,14 +44,32 @@ typedef volatile s32       vs32;
 
 /*
  * Prevent sibling-call optimization when the original binary contains
- * a real call instruction.
+ * a real call instruction rather than a tail call.
  */
 #if defined(__GNUC__)
-#define NO_SIBLING_CALLS __attribute__((optimize("no-optimize-sibling-calls")))
-#define barrier()        __asm__ __volatile__("" : : : "memory")
+#define NO_SIBLING_CALLS \
+  __attribute__((optimize("no-optimize-sibling-calls")))
+
+#define barrier() __asm__ __volatile__("" : : : "memory")
 #else
 #define NO_SIBLING_CALLS
 #define barrier()
+#endif
+
+/*
+ * Register-clobber barriers for MIPS delay-slot ordering.
+ *
+ * These prevent the compiler from hoisting a register assignment out
+ * of a jal/branch delay slot, matching original binary codegen.
+ */
+#if defined(__GNUC__)
+#define CLOBBER_A0() __asm__ __volatile__("" : : : "a0")
+#define CLOBBER_V0() __asm__ __volatile__("" : : : "v0")
+#define CLOBBER_A1() __asm__ __volatile__("" : : : "a1")
+#else
+#define CLOBBER_A0()
+#define CLOBBER_V0()
+#define CLOBBER_A1()
 #endif
 
 #endif

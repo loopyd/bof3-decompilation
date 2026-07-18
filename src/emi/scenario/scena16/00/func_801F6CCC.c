@@ -1,13 +1,13 @@
 #include "internal.h"
 
-extern vu16 D_801448FC;
-extern vu8  D_801448FF;
-extern vu32 D_80144900;
-extern vu32 D_80144904;
-extern vu16 D_80146258;
-extern vu32 D_80146864;
-extern vs8  D_80146872;
-extern vu8  D_8014832E;
+extern volatile u16 D_801448FC;
+extern volatile u8  D_801448FF;
+extern volatile u32 D_80144900;
+extern volatile u32 D_80144904;
+extern volatile u16 D_80146258;
+extern volatile u32 D_80146864;
+extern volatile s8  D_80146872;
+extern volatile u8  D_8014832E;
 
 /* @behavior boots the primary SCENA16 state and waits for slot 6 to finish.
  * @source 0x801F6CCC

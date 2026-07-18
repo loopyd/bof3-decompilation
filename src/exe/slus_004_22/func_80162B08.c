@@ -11,11 +11,11 @@ extern u32*             D_80146848;
 extern u8               D_80146854;
 extern EmiTransferSlot* D_80146844;
 extern u32              D_80146678[];
-extern vu32             D_80146450;
-extern vu32             D_80146454;
-extern vu32             D_80146458;
-extern vu32             D_8014645C;
-extern vu16             D_80146460;
+extern volatile u32             D_80146450;
+extern volatile u32             D_80146454;
+extern volatile u32             D_80146458;
+extern volatile u32             D_8014645C;
+extern volatile u16             D_80146460;
 extern u32              D_8014646C;
 
 /* @behavior selects one pending EMI transfer slot and copies its staged transfer

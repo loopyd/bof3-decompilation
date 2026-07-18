@@ -2,8 +2,8 @@
 
 extern u32 D_80146458;
 extern u32 D_8014646C;
-extern vs8 D_80146489;
-extern vs8 D_801464A0[];
+extern volatile s8 D_80146489;
+extern volatile s8 D_801464A0[];
 
 /* @behavior records the current EMI dispatch handler for the active ring slot,
  * marks that slot active, and advances the loader step.

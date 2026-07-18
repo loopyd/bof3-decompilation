@@ -5,8 +5,8 @@
 
 #include "symbols/symbols.h"
 
-#define WORLD00_AREA027_PRIMITIVE_PTR PTR_SLOT_AT(volatile u8, 0x8014598cu)
-#define WORLD00_AREA027_SCRATCH_PTR   PTR_SLOT_AT(volatile u8, 0x1f800044u)
+#define WORLD00_AREA027_PRIMITIVE_PTR PSX_REF(volatile u8 *, 0x8014598cu)
+#define WORLD00_AREA027_SCRATCH_PTR   PSX_REF(volatile u8 *, 0x1f800044u)
 #define WORLD00_AREA027_MATRIX_92E8   ((MATRIX*)0x801492e8u)
 
 typedef struct World00Area027Point {

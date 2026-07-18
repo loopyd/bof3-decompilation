@@ -9,6 +9,6 @@ void func_801F2C5C(void) {
   scratch = *(u8**)0x1f800044u;
   scratch[9] = 0u;
   scratch = *(u8**)0x1f800044u;
-  MMIO8(0x801f53f4u) = 0u;
+  REG8(0x801f53f4u) = 0u;
   scratch[1] = 1u;
 }

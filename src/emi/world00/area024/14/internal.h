@@ -42,22 +42,22 @@ typedef struct World00Area024SpinWork {
   s16     field_2a;
 } World00Area024SpinWork;
 
-#define WORLD00_AREA024_PRIMITIVE_PTR  PTR_SLOT_AT(volatile u8, 0x8014598cu)
-#define WORLD00_AREA024_WORK_PTR       PTR_SLOT_AT(volatile u8, 0x801f5b00u)
+#define WORLD00_AREA024_PRIMITIVE_PTR  PSX_REF(volatile u8 *, 0x8014598cu)
+#define WORLD00_AREA024_WORK_PTR       PSX_REF(volatile u8 *, 0x801f5b00u)
 #define WORLD00_AREA024_WORK_BASE      ((u8*)0x800e4800u)
 #define WORLD00_AREA024_SPIN_WORK_BASE ((u8*)0x800e5000u)
-#define WORLD00_AREA024_STATE_BASE     PTR_AT(volatile s16, 0x800e4940u)
-#define WORLD00_AREA024_STATE_OFFSET   PTR_AT(volatile s16, 0x800e4944u)
-#define WORLD00_AREA024_VERTEX_DST     PTR_AT(volatile u8, 0x800e4bc8u)
+#define WORLD00_AREA024_STATE_BASE     PSX_PTR(volatile s16, 0x800e4940u)
+#define WORLD00_AREA024_STATE_OFFSET   PSX_PTR(volatile s16, 0x800e4944u)
+#define WORLD00_AREA024_VERTEX_DST     PSX_PTR(volatile u8, 0x800e4bc8u)
 #define WORLD00_AREA024_VERTEX_SRC     ((const volatile u8*)0x80147aa8u)
-#define WORLD00_AREA024_SCRATCH_REMAP  PTR_AT(volatile u8, 0x80147a58u)
-#define WORLD00_AREA024_PTR_7AA8       PTR_SLOT_AT(volatile u8, 0x80147aa8u)
-#define WORLD00_AREA024_PTR_7AAC       PTR_SLOT_AT(volatile u8, 0x80147aacu)
-extern vu16 WORLD00_AREA024_GLOBAL_HALF_3E6C;
+#define WORLD00_AREA024_SCRATCH_REMAP  PSX_PTR(volatile u8, 0x80147a58u)
+#define WORLD00_AREA024_PTR_7AA8       PSX_REF(volatile u8 *, 0x80147aa8u)
+#define WORLD00_AREA024_PTR_7AAC       PSX_REF(volatile u8 *, 0x80147aacu)
+extern volatile u16 WORLD00_AREA024_GLOBAL_HALF_3E6C;
 #define WORLD00_AREA024_STATE_TABLE \
   ((World00Area024Handler const volatile*)0x801f4214u)
 #define WORLD00_AREA024_SCRATCH_PTR \
-  PTR_SLOT_AT(volatile World00Area024Scratch, 0x1f800044u)
+  PSX_REF(volatile World00Area024Scratch *, 0x1f800044u)
 #define WORLD00_AREA024_SCRATCH_BYTE_09 \
   (*(volatile volatile u8*)(0x1f800044u + 9u))
 

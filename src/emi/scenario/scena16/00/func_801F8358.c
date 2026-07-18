@@ -10,6 +10,6 @@ void func_801F8358(void* record) {
 
   table = (Scena16RecordCallback*)0x801f856cu;
   callback_index = ((const u8*)record)[0x7a];
-  arg1 = ((vu32*)0x80140000u)[0x686c / 4];
+  arg1 = ((volatile u32*)0x80140000u)[0x686c / 4];
   table[callback_index](record, arg1);
 }

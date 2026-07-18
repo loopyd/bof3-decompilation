@@ -6,50 +6,50 @@
 typedef void (*Scena16Callback)(void);
 typedef void (*Scena16RecordCallback)(void* record, u32 arg1);
 
-extern vu8  SCENA16_D_80143C30;
-extern vu16 SCENA16_D_80143C40;
-extern vu8  SCENA16_D_80143BB0;
-extern vu16 SCENA16_D_80143F00;
-extern vu8  SCENA16_D_80143F03;
+extern volatile u8  SCENA16_D_80143C30;
+extern volatile u16 SCENA16_D_80143C40;
+extern volatile u8  SCENA16_D_80143BB0;
+extern volatile u16 SCENA16_D_80143F00;
+extern volatile u8  SCENA16_D_80143F03;
 extern s32  SCENA16_D_80143F80;
-extern vu8  SCENA16_D_80144F59;
-extern vu8  SCENA16_D_80144F5A;
-extern vu8  SCENA16_D_80144F5B;
-extern vu8  SCENA16_D_80144F5C;
-extern vu8  SCENA16_D_80144F5D;
-extern vu8  SCENA16_D_80144F5E;
-extern vu8  SCENA16_D_80144F5F;
-extern vu8  SCENA16_D_80145029;
-extern vu8  SCENA16_D_80145988;
-extern vu8  SCENA16_D_80146254;
-extern vu16 SCENA16_D_80146258;
-extern vu8  SCENA16_D_80146866;
-extern vu8  SCENA16_D_80146867;
-extern vu32 SCENA16_D_80146864;
-#define SCENA16_D_80146864_BYTE (*(vu8*)&SCENA16_D_80146864)
+extern volatile u8  SCENA16_D_80144F59;
+extern volatile u8  SCENA16_D_80144F5A;
+extern volatile u8  SCENA16_D_80144F5B;
+extern volatile u8  SCENA16_D_80144F5C;
+extern volatile u8  SCENA16_D_80144F5D;
+extern volatile u8  SCENA16_D_80144F5E;
+extern volatile u8  SCENA16_D_80144F5F;
+extern volatile u8  SCENA16_D_80145029;
+extern volatile u8  SCENA16_D_80145988;
+extern volatile u8  SCENA16_D_80146254;
+extern volatile u16 SCENA16_D_80146258;
+extern volatile u8  SCENA16_D_80146866;
+extern volatile u8  SCENA16_D_80146867;
+extern volatile u32 SCENA16_D_80146864;
+#define SCENA16_D_80146864_BYTE (*(volatile u8*)&SCENA16_D_80146864)
 extern s8   SCENA16_D_80146872;
 extern s8   SCENA16_D_80146874;
-extern vu8  SCENA16_D_80146875;
-extern vu16 SCENA16_D_80146876;
-extern vu32 SCENA16_D_8014686C;
-extern vu8  SCENA16_D_8014832E;
-extern vu16 SCENA16_D_801492D8;
-extern vu16 SCENA16_D_801492DA;
-extern vu16 SCENA16_D_801492DC;
-extern vu16 SCENA16_D_8014932C;
+extern volatile u8  SCENA16_D_80146875;
+extern volatile u16 SCENA16_D_80146876;
+extern volatile u32 SCENA16_D_8014686C;
+extern volatile u8  SCENA16_D_8014832E;
+extern volatile u16 SCENA16_D_801492D8;
+extern volatile u16 SCENA16_D_801492DA;
+extern volatile u16 SCENA16_D_801492DC;
+extern volatile u16 SCENA16_D_8014932C;
 extern s32  SCENA16_D_8014930C;
-extern vu32 SCENA16_D_80149314;
-extern vu16 SCENA16_D_80149322;
+extern volatile u32 SCENA16_D_80149314;
+extern volatile u16 SCENA16_D_80149322;
 extern s32  SCENA16_D_80147A90;
-extern vu8  SCENA16_D_80143F1D;
-extern vu16 SCENA16_D_80010004;
-extern vu16 SCENA16_D_80010006;
-extern vu16 SCENA16_D_80010008;
-extern vu16 SCENA16_D_80010020;
-extern vu16 SCENA16_D_80010022;
-#define SCENA16_SELECTION_FX_TABLE PTR_AT(const volatile u8, 0x80181ebau)
-#define SCENA16_PALETTE_SRC        PTR_AT(const volatile u16, 0x80033800u)
-#define SCENA16_PALETTE_DST        PTR_AT(volatile u16, 0x80037800u)
+extern volatile u8  SCENA16_D_80143F1D;
+extern volatile u16 SCENA16_D_80010004;
+extern volatile u16 SCENA16_D_80010006;
+extern volatile u16 SCENA16_D_80010008;
+extern volatile u16 SCENA16_D_80010020;
+extern volatile u16 SCENA16_D_80010022;
+#define SCENA16_SELECTION_FX_TABLE PSX_PTR(const volatile u8, 0x80181ebau)
+#define SCENA16_PALETTE_SRC        PSX_PTR(const volatile u16, 0x80033800u)
+#define SCENA16_PALETTE_DST        PSX_PTR(volatile u16, 0x80037800u)
 #define SCENA16_PTR_801F854C       ((Scena16Callback*)0x801f854cu)
 #define SCENA16_PTR_801F8558       ((Scena16Callback*)0x801f8558u)
 #define SCENA16_PTR_801F856C       ((Scena16RecordCallback*)0x801f856cu)

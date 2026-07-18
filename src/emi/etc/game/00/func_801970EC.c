@@ -1,25 +1,25 @@
 #include "internal.h"
 
-extern vu16 D_80143B90;
-extern vu16 D_80143F00;
-extern vu8  D_80143F1F;
-extern vu8  D_80143F49;
-extern vu8  D_80143F4A;
-extern vu8  D_80143F4B;
-extern vu16 D_801448FC;
-extern vu8  D_801448FF;
-extern vu32 D_80144900;
-extern vu32 D_80144904;
-extern vu32 D_80144FC0;
-extern vu8  D_80145029;
-extern vu8  D_80146256;
-extern vu16 D_8014625A;
-extern vu8  D_801462EA;
-extern vu8  D_80146325;
-extern vu8  D_80146880;
-extern vu8  D_80146881;
-extern vu8  D_8014832E;
-extern vu8  D_8014933E;
+extern volatile u16 D_80143B90;
+extern volatile u16 D_80143F00;
+extern volatile u8  D_80143F1F;
+extern volatile u8  D_80143F49;
+extern volatile u8  D_80143F4A;
+extern volatile u8  D_80143F4B;
+extern volatile u16 D_801448FC;
+extern volatile u8  D_801448FF;
+extern volatile u32 D_80144900;
+extern volatile u32 D_80144904;
+extern volatile u32 D_80144FC0;
+extern volatile u8  D_80145029;
+extern volatile u8  D_80146256;
+extern volatile u16 D_8014625A;
+extern volatile u8  D_801462EA;
+extern volatile u8  D_80146325;
+extern volatile u8  D_80146880;
+extern volatile u8  D_80146881;
+extern volatile u8  D_8014832E;
+extern volatile u8  D_8014933E;
 
 void        func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
                           u8 context_kind);
@@ -38,6 +38,7 @@ void func_801970EC(void) {
 
   D_8014832E = 0x1fu;
   D_8014933E = 6u;
+  CLOBBER_A0();
   func_801C1400(0u);
   selection_seed = D_801448FC;
   D_80143F00 = 0xffffu;

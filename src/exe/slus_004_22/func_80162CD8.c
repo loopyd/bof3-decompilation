@@ -1,8 +1,8 @@
 #include "internal.h"
 
-extern vu8 D_8014648A;
-extern vu8 D_8014648B;
-extern vu8 D_80146494;
+extern volatile u8 D_8014648A;
+extern volatile u8 D_8014648B;
+extern volatile u8 D_80146494;
 
 /* @behavior selects EMI loader mode 6 and phase 2, then clears its busy flag.
  * @source 0x80162CD8

@@ -2,20 +2,20 @@
 
 typedef struct Scena16Bank80140000 {
   u8   pad_0000_686b[0x686c];
-  vu32 word_686c;
+  volatile u32 word_686c;
   u8   pad_6870_6873[4];
-  vs8  byte_6874;
+  volatile s8  byte_6874;
   u8   pad_6875_832d[0x832e - 0x6875];
-  vu8  byte_832e;
+  volatile u8  byte_832e;
 } Scena16Bank80140000;
 
 typedef struct Scena16Bank80150000 {
   u8   pad_0000_92d7[0x92d8];
-  vu16 half_92d8;
-  vu16 half_92da;
-  vu16 half_92dc;
+  volatile u16 half_92d8;
+  volatile u16 half_92da;
+  volatile u16 half_92dc;
   u8   pad_92de_932b[0x932c - 0x92de];
-  vu16 half_932c;
+  volatile u16 half_932c;
 } Scena16Bank80150000;
 
 /* @behavior seeds one routed setup path and enters secondary state 3 on success.

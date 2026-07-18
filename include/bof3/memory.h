@@ -12,12 +12,12 @@
  *
  * Add const and volatile directly to the type:
  *
- *     PTR_AT(u32, address)
- *     PTR_AT(const u32, address)
- *     PTR_AT(volatile u32, address)
- *     PTR_AT(const volatile u32, address)
+ *     PSX_PTR(u32, address)
+ *     PSX_PTR(const u32, address)
+ *     PSX_PTR(volatile u32, address)
+ *     PSX_PTR(const volatile u32, address)
  */
-#define PTR_AT(type, address) ((type*)(address))
+#define PSX_PTR(type, address) ((type *)(address))
 
 /*
  * Direct object access
@@ -25,59 +25,31 @@
  *
  * Produce an lvalue for an object stored directly at an address.
  *
- *     OBJECT_AT(u32, address) = value;
- *     value = OBJECT_AT(volatile u16, address);
+ *     PSX_REF(u32, address) = value;
+ *     value = PSX_REF(volatile u16, address);
  */
-#define OBJECT_AT(type, address) (*PTR_AT(type, address))
+#define PSX_REF(type, address) (*PSX_PTR(type, address))
 
 /*
- * Pointer-slot access
- * -------------------
+ * Byte-offset field access
+ * ------------------------
  *
- * A pointer slot is a memory location containing a pointer.
+ * Use while a structure is incomplete or its fields are not yet named.
+ * Replace with real struct members once the layout is understood.
  *
- * PTR_SLOT_AT:
- *     The pointer cell is an ordinary object.
- *
- * VOLATILE_PTR_SLOT_AT:
- *     The pointer cell is volatile and is reloaded on every evaluation.
- *
- * Target qualifiers are specified as part of type:
- *
- *     PTR_SLOT_AT(Entity, address)
- *         Entity **
- *
- *     PTR_SLOT_AT(volatile Entity, address)
- *         volatile Entity **
- *
- *     VOLATILE_PTR_SLOT_AT(Entity, address)
- *         Entity * volatile *
- *
- *     VOLATILE_PTR_SLOT_AT(volatile Entity, address)
- *         volatile Entity * volatile *
+ *     FIELD_ADDR(volatile u16, base, 0x80u)
+ *     value = FIELD_REF(u32, work, 0x18u)
  */
-#define PTR_SLOT_AT(type, address) OBJECT_AT(type*, address)
+#define FIELD_ADDR(type, base, byte_offset) \
+  PSX_PTR(type, (u8 *)(base) + (u32)(byte_offset))
 
-#define VOLATILE_PTR_SLOT_AT(type, address) OBJECT_AT(type* volatile, address)
+#define FIELD_REF(type, base, byte_offset) \
+  (*FIELD_ADDR(type, base, byte_offset))
 
 /*
- * Byte-offset access
- * ------------------
+ * Fixed-address function pointer.
  *
- * Useful while a structure is incomplete or its fields are not understood.
- */
-#define BYTE_OFFSET(base, byte_offset) ((u8*)(base) + (u32)(byte_offset))
-
-#define FIELD_PTR(type, base, byte_offset) \
-  PTR_AT(type, BYTE_OFFSET(base, byte_offset))
-
-#define FIELD_AT(type, base, byte_offset) \
-  OBJECT_AT(type, BYTE_OFFSET(base, byte_offset))
-
-/*
- * Fixed-address function conversion.
- *
- * Always use a function-pointer typedef as function_type.
+ * Always use a function-pointer typedef as function_type:
  *
  *     typedef void (*Handler)(void);
  *     FUNCTION_AT(Handler, 0x80123456u)();
@@ -85,15 +57,15 @@
 #define FUNCTION_AT(function_type, address) ((function_type)(address))
 
 /*
- * PS1 memory-mapped I/O
- * ---------------------
+ * PS1 memory-mapped hardware registers.
  *
- * These macros are for hardware registers, not scratchpad RAM.
+ * These are for hardware registers, not scratchpad RAM.
+ * Use scratchpad.h for 0x1F800000-0x1F8003FF accesses.
  */
-#define MMIO8(address) OBJECT_AT(volatile u8, address)
+#define REG8(address)  PSX_REF(volatile u8, address)
 
-#define MMIO16(address) OBJECT_AT(volatile u16, address)
+#define REG16(address) PSX_REF(volatile u16, address)
 
-#define MMIO32(address) OBJECT_AT(volatile u32, address)
+#define REG32(address) PSX_REF(volatile u32, address)
 
 #endif

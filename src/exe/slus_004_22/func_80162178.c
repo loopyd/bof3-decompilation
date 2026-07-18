@@ -7,7 +7,7 @@ extern u16    D_80146490;
 extern u16    D_80146492;
 extern u8     D_80146494;
 extern CdlLOC D_80146778;
-extern vu32   D_80146808;
+extern volatile u32   D_80146808;
 
 /* @behavior resets EMI transfer counters, converts the current LBA to CdlLOC, and
  * arms the next loader phase.

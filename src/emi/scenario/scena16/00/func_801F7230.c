@@ -4,7 +4,7 @@
  * @source 0x801F7230
  */
 void func_801F7230(void) {
-  vu8* object;
+  volatile u8* object;
   u8   object_index;
 
   switch (SCENA16_D_80146875) {
@@ -107,15 +107,15 @@ void func_801F7230(void) {
     case 10:
       if (SCENA16_D_80146866 == 0x23u) {
         object_index = func_8019601C();
-        *(vu8*)0x1f800000u = object_index;
+        *(volatile u8*)0x1f800000u = object_index;
 
         if (object_index != 0xffu) {
-          object = (vu8*)(0x80143fc8u + ((u32)object_index * 0x74u));
+          object = (volatile u8*)(0x80143fc8u + ((u32)object_index * 0x74u));
           object[0] = 1u;
           object[5] = 0x13u;
-          *(vs32*)(object + 0x64) = (s32)((s16)SCENA16_D_801492D8 + 0x180);
-          *(vs32*)(object + 0x68) = (s32)(s16)SCENA16_D_801492DA;
-          *(vs32*)(object + 0x6c) = (s32)(s16)SCENA16_D_801492DC;
+          *(volatile s32*)(object + 0x64) = (s32)((s16)SCENA16_D_801492D8 + 0x180);
+          *(volatile s32*)(object + 0x68) = (s32)(s16)SCENA16_D_801492DA;
+          *(volatile s32*)(object + 0x6c) = (s32)(s16)SCENA16_D_801492DC;
           object[9] = 0x60u;
         }
 

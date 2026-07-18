@@ -1,23 +1,23 @@
 #include "internal.h"
 
 extern u8   D_800E4800;
-extern vu32 D_80146454;
-extern vu32 D_80146464;
-extern vu32 D_80146468;
-extern vu8  D_80146481;
-extern vu8  D_80146482;
-extern vu8  D_80146486;
-extern vu8  D_80146488;
-extern vu8  D_80146489;
-extern vu8  D_8014648B;
-extern vu8  D_80146494;
+extern volatile u32 D_80146454;
+extern volatile u32 D_80146464;
+extern volatile u32 D_80146468;
+extern volatile u8  D_80146481;
+extern volatile u8  D_80146482;
+extern volatile u8  D_80146486;
+extern volatile u8  D_80146488;
+extern volatile u8  D_80146489;
+extern volatile u8  D_8014648B;
+extern volatile u8  D_80146494;
 extern u8   D_80146498[];
-extern vu8  D_801464A0[];
-extern vu32 D_80146678;
+extern volatile u8  D_801464A0[];
+extern volatile u32 D_80146678;
 extern u8   D_80146840;
-extern vu32 D_80146808;
-extern vu32 D_80146858;
-extern vu32 D_8014685C;
+extern volatile u32 D_80146808;
+extern volatile u32 D_80146858;
+extern volatile u32 D_8014685C;
 /* @behavior initializes EMI streaming state, refreshes the active LBA, and installs
  * CD callbacks.
  * @source 0x80161FDC
