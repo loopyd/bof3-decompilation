@@ -10,6 +10,6 @@ void func_80198234(void) {
 
   state = D_80143B92;
   callback = D_801C7B7C[state];
-  COMPILER_BARRIER;
+  barrier();
   callback();
 }

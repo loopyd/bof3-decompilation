@@ -8,6 +8,6 @@ void func_80197A24(void) {
   u16 state;
 
   state = D_80143B92;
-  COMPILER_BARRIER;
+  barrier();
   D_801C7B54[state]();
 }

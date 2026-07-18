@@ -80,10 +80,10 @@ typedef volatile s32       vs32;
  * matching the original binary's call graph. */
 #if defined(__GNUC__)
 #define NO_SIBLING_CALLS __attribute__((optimize("no-optimize-sibling-calls")))
-#define COMPILER_BARRIER __asm__ __volatile__("" : : : "memory")
+#define barrier() __asm__ __volatile__("" : : : "memory")
 #else
 #define NO_SIBLING_CALLS
-#define COMPILER_BARRIER
+#define barrier()
 #endif
 
 #endif

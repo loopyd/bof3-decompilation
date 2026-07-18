@@ -85,6 +85,36 @@ to repeat or misdiagnose across targets. Use the
   even for `--version`. Re-run the repository `bin/cc` driver with its approved
   out-of-sandbox permission; do not add flags or rewrite C to address the exit.
 
+### Force global read/store order with a local when m2c reorders
+
+- m2c commonly reorders independent global accesses. A source like
+  `flag = 2; counter += 0x14;` may emit the constant-load and `sb` store before
+  the `lhu` read of `counter`, breaking byte-match even though the semantics
+  match.
+- Introduce a local to pin the original load-then-store order:
+  `count = counter; flag = 2; counter = (u16)(count + 0x14);` reproduces the
+  original read-before-store stream. Keep the narrow-width cast so the store
+  width matches. This byte-matched `func_801F4578`/`func_801F3258`
+  (0x8014932A/0x80149333 pair) across `emi/world00/area008/13` and
+  `emi/world00/area026/13`.
+
+### Force global-read ordering with `barrier()` when the psn00b scheduler diverges
+
+- PsyQ GCC 2.7.2 schedules `addiu sp,sp,-24` / `sw ra,16(sp)` **after** a global
+  `lhu` read but before an indirect call. psn00b GCC 12.3.0 moves the prologue
+  before the read, producing a 3-instruction offset (80% match).
+- `__asm__ __volatile__("" : : : "memory")` emits zero instructions and only
+  prevents compiler reordering across the barrier. This is the **standard
+  practice** across PS1 decomp (SOTN, Frogger, Skullmonkeys) and the Linux
+  kernel (`barrier()` macro in `include/linux/compiler-gcc.h`).
+- `volatile` on the variable or a volatile handler-slot cast does **not** fix
+  the scheduling — tested at 66.67% match. `-fno-schedule-insns2` has no effect
+  on psn00b GCC.
+- Sources:
+  - [GCC internals — `"memory"` clobber](https://www.chiark.greenend.org.uk/doc/gcc-4.3-doc/gccint.html)
+  - [Stack Overflow — `asm volatile("": : :"memory")` vs `__sync_synchronize`](https://stackoverflow.com/questions/19965076)
+  - [Decompedia — PS1 platform](https://decomp.wiki/platforms/playstation)
+
 ### Preserve fixed-RAM pointer ownership before permuting source shape
 
 - When m2c exposes a fixed-RAM address as a pointer-valued `D_XXXXXXXX`
