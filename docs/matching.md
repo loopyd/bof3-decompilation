@@ -34,6 +34,21 @@ Use `bin/rev-query duplicates TARGET@0xADDRESS --json` to inspect the complete
 exact-byte candidate group. Match one deterministic representative, then
 validate each reviewed member in its owning target.
 
+Use this promotion sequence:
+
+1. Verify every candidate range has the same reviewed size and bytes.
+2. Choose one representative and iterate until it byte-matches. A partial lift,
+   even with a good percentage, is only a candidate source shape.
+3. Copy that shape to one other member, adapting only target-local symbols and
+   declarations, and make it byte-match independently.
+4. Extract a shared body only after both members match with the same C shape.
+5. Add remaining members one at a time, retaining independent byte checks.
+
+If the representative is still far from matching, skip the group unless its
+size and expected reuse justify the decompilation effort. Never multiply a
+partial implementation across the group merely because the original bytes are
+identical.
+
 Normalize names from evidence before sharing code:
 
 - Use one semantic role for the group and the same names for equivalent

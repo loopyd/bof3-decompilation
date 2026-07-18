@@ -60,7 +60,7 @@ segments:
     - asm
     - func_80097574
   - - 3540
-    - asm
+    - c
     - func_800975D4
   - - 3612
     - asm
@@ -132,7 +132,7 @@ segments:
     - asm
     - func_80098450
   - - 8628
-    - asm
+    - c
     - func_800989B4
   - - 8700
     - asm

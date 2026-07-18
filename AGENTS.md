@@ -39,7 +39,12 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 ## Exact duplicates
 
 - Treat `(analyzer-range SHA-256, size)` as a reuse candidate, not shared
-  ownership. Confirm reviewed boundaries and one exact representative first.
+  ownership. Confirm reviewed boundaries, then iterate on one representative.
+- A tracked or partial lift is not a reusable implementation. Use its match
+  percentage only to prioritize the next edit; do not promote other members
+  from it.
+- Port the representative C shape to a second member only after the first
+  byte-matches. Keep both sources independent until both byte-match.
 - Normalize proven roles, parameters, local names, struct names, and field
   names across group members. Keep unknown fields offset-based (`unk_XX`).
 - After two members independently byte-match with the same C shape, move only

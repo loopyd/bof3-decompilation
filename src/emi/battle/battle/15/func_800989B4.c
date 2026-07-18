@@ -1,10 +1,10 @@
 #include "internal.h"
 
-/* @behavior when the byte at 0x80148573 is clear, writes 1, 0, 0 to
+/* @source 0x800989B4
+ * @behavior when the byte at 0x80148573 is clear, writes 1, 0, 0 to
  * 0x801462E1..0x801462E3 and calls func_8009B20C.
- * @source 0x800975D4
  */
-void NO_SIBLING_CALLS func_800975D4(void) {
+void NO_SIBLING_CALLS func_800989B4(void) {
   volatile u8* battle_selection_state;
   volatile u8* battle_selection_lock;
 

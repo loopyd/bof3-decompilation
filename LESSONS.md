@@ -104,6 +104,11 @@ to repeat or misdiagnose across targets. Use the
 
 - Exact bytes make a strong source-shape reuse candidate. They do not make one
   function address, extern declaration, or semantic provenance global.
+- "Has authored C" is not the same as "has a matching lift." This run rejected
+  a 7.95% representative despite exact group bytes; match percentage ranks
+  effort but does not authorize propagation.
+- Validate a second member independently before sharing code so target-local
+  compiler context cannot become hidden plumbing.
 - Normalize equivalent variables and struct fields before extracting a shared
   body. A shared implementation with divergent local vocabulary only hides
   unresolved understanding.

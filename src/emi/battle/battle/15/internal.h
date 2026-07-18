@@ -134,6 +134,8 @@ u16  battle_resolve_secondary_choice_resource(u32 group_index, u32 choice_id);
 u8   battle_try_commit_secondary_choice(u32 panel_kind, u32 zero_arg,
                                         u32 group_index, u32 choice_id);
 
+void                           func_800975D4(void);
+void                           func_800989B4(void);
 void __attribute__((noinline)) func_8009B20C(void);
 u8                             func_8009C8AC(u16 required_mask);
 void                           func_8009CFEC(void);
