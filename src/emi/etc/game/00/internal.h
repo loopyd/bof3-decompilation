@@ -69,8 +69,16 @@ struct GameWorkArea {
   u8  pad_76[0x22];   /* 0x76-0x97 (work area slot is 0x98 bytes) */
 };
 
-/* Scratchpad work pointer (PS1 hardware register at 0x1F800044) */
-extern struct GameWorkArea* volatile g_scratch_work;
+/*
+ * Work area pointer stored in scratchpad slot 0x1F800044.
+ * Declared as a weak extern so the linker emits %hi/%lo relocations,
+ * matching the original binary's codegen. For new code consider
+ * SPAD_VPTR_SLOT(struct GameWorkArea, 0x44u) instead.
+ */
+extern struct GameWorkArea* volatile g_game_work;
+
+/* Legacy alias for already‑matched functions that dereference 0x1F800044
+ * via a literal‑address macro (lui+ori+lw 0(base) codegen). */
 #define SCRATCH_WORK VPPTR(struct GameWorkArea, 0x1F800044u)
 
 /* Global work pointer in main exe data section */
@@ -211,12 +219,31 @@ extern const GameEntry0StateHandler D_801C7B98[];
 extern const GameEntry0StateHandler D_801C7BA4[];
 extern const GameEntry0StateHandler D_801C7BB0[];
 
-/* @behavior clears one local GAME entry-0 record slot by index.
+/* Entry table at 0x80143FC8 — 20 records × 0x74 bytes each.
+ * Only the first 5 fields are known; the rest is padding. */
+typedef struct RecordSlot {
+    u8 flags_00;
+    u8 unk_01;
+    u8 unk_02;
+    u8 unk_03;
+    u8 unk_04;
+    u8 pad[0x6F];       /* 0x74 - 5 */
+} RecordSlot;
+
+extern RecordSlot D_80143FC8[20];
+
+/* @behavior finds the first unused record slot by scanning the
+ * entry table at D_80143FC8; returns its index (0‑19) or 0xFF
+ * when all slots are occupied.
+ * @source 0x8019601C
+ */
+u8 func_8019601C(u8 mode);
+
+/* @behavior clears bytes 0‑4 of the record slot at record_index.
  * @source 0x801960C0
  */
 void func_801960C0(u8 record_index);
 
-void func_8019601C(u8 mode);
 void func_80196070(void);
 
 /* @behavior seeds the shared callback/frame dispatch prologue before the entry-0

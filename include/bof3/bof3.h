@@ -5,6 +5,7 @@
 #include "bof3/defines.h"
 #include "bof3/engine.h"
 #include "bof3/psyq.h"
+#include "bof3/scratchpad.h"
 #include "bof3/symbols.h"
 
 #endif

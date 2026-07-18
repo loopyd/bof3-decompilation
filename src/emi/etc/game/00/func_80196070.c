@@ -4,9 +4,9 @@
  * @source 0x80196070
  */
 void func_80196070(void) {
-    g_scratch_work->flags_00 = 0;
-    g_scratch_work->unk_01 = 0;
-    g_scratch_work->flags_02 = 0;
-    g_scratch_work->pad_03[0] = 0;
-    g_scratch_work->pad_03[1] = 0;
+    g_game_work->flags_00 = 0;
+    g_game_work->unk_01 = 0;
+    g_game_work->flags_02 = 0;
+    g_game_work->pad_03[0] = 0;
+    g_game_work->pad_03[1] = 0;
 }

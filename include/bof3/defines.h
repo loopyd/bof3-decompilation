@@ -57,14 +57,23 @@ typedef volatile s32       vs32;
  */
 #define VPTR(type, addr)  ((volatile type*)(addr))
 #define CVPTR(type, addr) ((const volatile type*)(addr))
+
+/* DEPRECATED: VPPTR uses (volatile type**) which makes only the target
+ * object volatile, NOT the pointer cell. For scratchpad slots the cell
+ * should be volatile too; use SPAD_PTR_SLOT / SPAD_VPTR_SLOT instead.
+ * Kept for existing matched functions. */
 #define VPPTR(type, addr) (*(volatile type**)(addr))
 
 /*
- * PS1 scratchpad pointer — points to a per-overlay work area.
- * Global work pointer used by front-end/game modules.
+ * PS1 scratchpad pointer cell at 0x1F800044 — holds a pointer to the
+ * overlay's work area (different struct per overlay).
+ *
+ * See include/bof3/scratchpad.h for the preferred SPAD_* macros.
+ *
+ * For relocation-sensitive matching, each overlay declares a typed extern
+ * (e.g. extern struct GameWorkArea* volatile g_game_work;) and adds
+ * WEAK_SYMBOL_AT(g_game_work, 0x1F800044) in its symbols.c.
  */
-#define SCRATCH_PTR ((volatile void**)0x1F800044u)
-#define SCRATCH     ((volatile u8*)0x1F800044u)
 #define GLOBAL_WORK (*(volatile u8**)0x80146250u)
 
 /* Prevent sibling calls so the compiler emits exact jal instructions
