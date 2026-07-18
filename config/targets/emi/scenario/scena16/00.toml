@@ -5,5 +5,5 @@ kind = "emi"
 source_dir = "src/emi/scenario/scena16/00"
 binary = "out/binaries/emi/scenario/scena16/00.bin"
 splat = "config/splat/emi/scenario/scena16/00.yaml"
-load_address = 0x801f6c90
+load_address = 0x801f6c00
 profile = "compat/capcom97"

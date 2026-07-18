@@ -7,8 +7,13 @@ from pathlib import Path
 import pytest
 
 from harness.reverse_index import index_path, rebuild
-from harness.rizin_project import prepare_project, status
-from harness.snapshot import SNAPSHOT_SCHEMA, SnapshotFunction, TargetSnapshot, write_snapshot
+from harness.rizin_project import prepare_target, status
+from harness.snapshot import (
+    SNAPSHOT_SCHEMA,
+    SnapshotFunction,
+    TargetSnapshot,
+    write_snapshot,
+)
 
 
 TARGET = "emi/test/archive/00"
@@ -34,7 +39,9 @@ def _manifest(root: Path) -> tuple[Path, Path]:
     splat.write_text("segments:\n  - [0, c, func_80100000]\n", encoding="utf-8")
     symbols = root / "config/symbols/emi/test/archive/00.txt"
     symbols.parent.mkdir(parents=True)
-    symbols.write_text("func_80100000 = 0x80100000;\nD_80100010 = 0x80100010;\n", encoding="utf-8")
+    symbols.write_text(
+        "func_80100000 = 0x80100000;\nD_80100010 = 0x80100010;\n", encoding="utf-8"
+    )
     return binary, config
 
 
@@ -43,7 +50,10 @@ def _snapshot(root: Path, binary: Path) -> None:
         schema=SNAPSHOT_SCHEMA,
         target=TARGET,
         engine={"name": "rizin", "version": "test"},
-        inputs={"binary_sha256": hashlib.sha256(binary.read_bytes()).hexdigest()},
+        inputs={
+            "binary_sha256": hashlib.sha256(binary.read_bytes()).hexdigest(),
+            "replay_sha256": prepare_target(root, TARGET).replay_sha256,
+        },
         functions=(
             SnapshotFunction(
                 id=f"{TARGET}@80100000",
@@ -59,14 +69,14 @@ def _snapshot(root: Path, binary: Path) -> None:
     write_snapshot(snapshot, root / "out/reverse/emi/test/archive/00/snapshot.json")
 
 
-def test_project_recipe_is_target_qualified(tmp_path: Path) -> None:
+def test_project_recipe_is_target_qualified_and_read_only(tmp_path: Path) -> None:
     _manifest(tmp_path)
-    project = prepare_project(tmp_path, TARGET)
-    assert project.project_path == tmp_path / "out/rizin/emi/test/archive/00/project.rzdb"
-    text = project.project_path.read_text(encoding="utf-8")
-    assert "afn func_80100000 0x80100000" in text
-    assert "f D_80100010 4 @ 0x80100010" in text
+    project = prepare_target(tmp_path, TARGET)
+    assert "afn func_80100000 0x80100000" in project.replay
+    assert "f D_80100010 4 @ 0x80100010" in project.replay
+    assert project.replay_sha256 == hashlib.sha256(project.replay.encode()).hexdigest()
     assert status(tmp_path, TARGET)["fresh"] is False
+    assert not (tmp_path / "out/rizin").exists()
 
 
 def test_rebuild_is_atomic_when_a_snapshot_is_stale(tmp_path: Path) -> None:

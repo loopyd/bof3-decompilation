@@ -294,7 +294,7 @@ def run_asm_diff_one(
     )
     original_bytes_path.write_bytes(original_bytes)
 
-    from ..targets import load_target_manifests
+    from ..domain.manifests import load_target_manifests
 
     source_directory = source_path.parent.relative_to(repo.root).as_posix()
     manifest = next(

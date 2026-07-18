@@ -1,9 +1,0 @@
-schema = "harness.target/v2"
-id = "emi/world02/area108/14"
-disc_id = "BIN/WORLD02/AREA108.EMI#14"
-kind = "emi"
-source_dir = "src/emi/world02/area108/14"
-binary = "out/binaries/emi/world02/area108/14.bin"
-splat = "config/splat/emi/world02/area108/14.yaml"
-load_address = 0x801f2c00
-profile = "compat/capcom97"

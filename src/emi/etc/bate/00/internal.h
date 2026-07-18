@@ -1,4 +1,0 @@
-#ifndef ETC_BATE_00_INTERNAL_H
-#define ETC_BATE_00_INTERNAL_H
-
-#endif

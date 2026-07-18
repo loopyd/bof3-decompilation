@@ -1,0 +1,9 @@
+schema = "harness.target/v2"
+id = "emi/etc/bate/03"
+disc_id = "BIN/ETC/BATE.EMI#3"
+kind = "emi"
+source_dir = "src/emi/etc/bate/03"
+binary = "out/binaries/emi/etc/bate/03.bin"
+splat = "config/splat/emi/etc/bate/03.yaml"
+load_address = 0x80033a00
+profile = "compat/capcom97"

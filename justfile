@@ -20,9 +20,9 @@ setup: venv
 doctor: venv
     @{{ root }}/bin/symbols check
 
-# Verify that normalized binary evidence is present for every known target.
+# Restore reviewed EMI images, then verify every normalized binary is present.
 binaries: venv
-    @PYTHONPATH={{ pythonpath }} {{ python }} -c 'from pathlib import Path; from harness.domain import load_target_manifests; root = Path("{{ root }}"); missing = [m.binary for m in load_target_manifests(root).values() if not (root / m.binary).is_file()]; print("binaries: OK" if not missing else "missing binaries: " + ", ".join(missing)); raise SystemExit(bool(missing))'
+    @PYTHONPATH={{ pythonpath }} {{ python }} -c 'from pathlib import Path; from harness.domain import load_target_manifests; from harness.emi.catalog import load_catalog, materialize_reviewed_targets; root = Path("{{ root }}"); materialize_reviewed_targets(root=root, catalog=load_catalog(root)); missing = [m.binary for m in load_target_manifests(root).values() if not (root / m.binary).is_file()]; print("binaries: OK" if not missing else "missing binaries: " + ", ".join(missing)); raise SystemExit(bool(missing))'
 
 build:
     @make --no-print-directory all

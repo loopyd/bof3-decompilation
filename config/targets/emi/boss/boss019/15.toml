@@ -1,9 +1,0 @@
-schema = "harness.target/v2"
-id = "emi/boss/boss019/15"
-disc_id = "BIN/BOSS/BOSS019.EMI#15"
-kind = "emi"
-source_dir = "src/emi/boss/boss019/15"
-binary = "out/binaries/emi/boss/boss019/15.bin"
-splat = "config/splat/emi/boss/boss019/15.yaml"
-load_address = 0x80096800
-profile = "compat/capcom97"

@@ -1,9 +1,0 @@
-schema = "harness.target/v2"
-id = "emi/battle/battle2/03"
-disc_id = "BIN/BATTLE/BATTLE2.EMI#3"
-kind = "emi"
-source_dir = "src/emi/battle/battle2/03"
-binary = "out/binaries/emi/battle/battle2/03.bin"
-splat = "config/splat/emi/battle/battle2/03.yaml"
-load_address = 0x801d0c00
-profile = "compat/capcom97"

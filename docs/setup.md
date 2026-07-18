@@ -42,7 +42,7 @@ Focused tools are:
 
 ```text
 bin/splat        bin/bof3-disk     bin/emi-ex        bin/psyq-import
-bin/psyq-find    bin/symbols       bin/rz-project    bin/rev-query
+bin/emi-target   bin/psyq-find     bin/symbols       bin/rz-project
 bin/m2ctx        bin/m2c           bin/asm-diff      bin/byte-match
 bin/permute      bin/flag-search   bin/promote       bin/decomp-status
 bin/str-media
@@ -51,7 +51,7 @@ bin/str-media
 Run `--help` or `--example` for exact operands. Focused tools use stdout for
 results, stderr for diagnostics, no pager or color when non-interactive, and
 exit 0 for success, 1 for a valid negative result, and 2 for usage/config/tool
-errors. Mutating commands require `--write`.
+errors. Mutating commands require an explicit `--write` or `--apply`.
 
 ## Tool roles
 
@@ -60,6 +60,7 @@ errors. Mutating commands require `--write`.
 | Splat | Split the mapped binary into generated assembly. |
 | `bin/cc` and PSX binutils adapters | Compile C90 source with the supported compatibility profile. |
 | `bin/bof3-disk`, `bin/emi-ex` | Read-only disc extraction and EMI inspection/extraction. |
+| `bin/emi-target` | Preview or create one conservative bin-only EMI target. |
 | `bin/str-media` | Inspect, validate, and convert STR/XA media. |
 | `bin/symbols` | Validate, normalize, import, and generate disposable weak bindings. |
 | `bin/psyq-find` | Produce read-only PsyQ archive provenance evidence across available SDK archives and targets. |

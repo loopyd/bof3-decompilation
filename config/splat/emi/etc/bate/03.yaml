@@ -1,0 +1,16 @@
+name: etc_bate_03
+sha1: e7a11211f40add99999996f84927b89fc3924a6b
+options:
+  platform: psx
+  compiler: psyq
+  basename: etc_bate_03
+  base_path: ../../../../..
+  target_path: out/binaries/emi/etc/bate/03.bin
+  asm_path: out/splat/emi/etc/bate/03/asm
+  src_path: src/emi/etc/bate/03
+  ld_script_path: out/splat/emi/etc/bate/03/linker.ld
+  symbol_addrs_path:
+    - config/symbols/emi/etc/bate/03.txt
+segments:
+  - [0x0, bin]
+  - [0x200]

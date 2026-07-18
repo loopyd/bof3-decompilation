@@ -61,11 +61,10 @@ partial, and invalid results; its Rizin-index coverage is supplementary.
 
 ## Rizin and evidence
 
-- Use `bin/rz-project open|status|rebuild|export|analyze TARGET`. Each target
-  gets an isolated generated project under `out/`; never combine overlapping
-  binary mappings.
-- `export` prints a deterministic patch. `--write` is the explicit mutation
-  path after validation. Deep analysis makes candidates, not reviewed facts.
+- Use `bin/rz-project open|status|analyze TARGET`. Each target gets an isolated
+  in-memory recipe and generated snapshot; never combine overlapping mappings.
+- Rizin snapshots are generated evidence. Accepted Splat roots, target-local
+  maps, reviewed overlays, and original bytes remain authoritative.
 - Build the cross-target cache only with `just index`; query it with
   `bin/rev-query`. A stale or incomplete Rizin export must fail indexing.
 - The only local workflow skill is `$psx-rizin`; use it for target-qualified

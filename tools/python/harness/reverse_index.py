@@ -103,11 +103,6 @@ def _schema(connection: sqlite3.Connection) -> None:
             evidence TEXT NOT NULL,
             PRIMARY KEY(target_id, address, name)
         );
-        CREATE TABLE project_metadata (
-            target_id TEXT PRIMARY KEY REFERENCES targets(id),
-            project TEXT NOT NULL,
-            fresh INTEGER NOT NULL
-        );
         """
     )
 
@@ -119,13 +114,24 @@ def _snapshot_for(root: Path, target: str, binary: Path):
     snapshot = read_snapshot(path)
     errors = validate_snapshot_identity(snapshot)
     if errors:
-        raise ValueError(f"invalid Rizin snapshot {path.relative_to(root)}: {'; '.join(errors)}")
+        raise ValueError(
+            f"invalid Rizin snapshot {path.relative_to(root)}: {'; '.join(errors)}"
+        )
     if snapshot.target != target:
         raise ValueError(f"stale Rizin snapshot target: {path.relative_to(root)}")
     if snapshot.engine.get("name") != "rizin":
-        raise ValueError(f"snapshot was not produced by Rizin: {path.relative_to(root)}")
+        raise ValueError(
+            f"snapshot was not produced by Rizin: {path.relative_to(root)}"
+        )
     if snapshot.inputs.get("binary_sha256") != _hash(binary):
         raise ValueError(f"stale Rizin snapshot bytes: {path.relative_to(root)}")
+    from .rizin_project import prepare_target
+
+    if (
+        snapshot.inputs.get("replay_sha256")
+        != prepare_target(root, target).replay_sha256
+    ):
+        raise ValueError(f"stale Rizin snapshot recipe: {path.relative_to(root)}")
     return path, snapshot
 
 
@@ -141,14 +147,18 @@ def rebuild(root: Path) -> Path:
         records.append((target, manifest, binary, *_snapshot_for(root, target, binary)))
     output = index_path(root)
     output.parent.mkdir(parents=True, exist_ok=True)
-    descriptor, temporary = tempfile.mkstemp(dir=output.parent, prefix=".reverse.", suffix=".sqlite")
+    descriptor, temporary = tempfile.mkstemp(
+        dir=output.parent, prefix=".reverse.", suffix=".sqlite"
+    )
     os.close(descriptor)
     temporary_path = Path(temporary)
     try:
         connection = sqlite3.connect(temporary_path)
         try:
             _schema(connection)
-            connection.execute("INSERT INTO metadata VALUES (?, ?)", ("schema", SCHEMA_VERSION))
+            connection.execute(
+                "INSERT INTO metadata VALUES (?, ?)", ("schema", SCHEMA_VERSION)
+            )
             for target, manifest, binary, path, snapshot in records:
                 connection.execute(
                     "INSERT INTO targets VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -163,7 +173,11 @@ def rebuild(root: Path) -> Path:
                     ),
                 )
                 for symbol in load_map(map_path(root, target)):
-                    kind = "function" if symbol.canonical_name.startswith("func_") else "data"
+                    kind = (
+                        "function"
+                        if symbol.canonical_name.startswith("func_")
+                        else "data"
+                    )
                     connection.execute(
                         "INSERT INTO symbols VALUES (?, ?, ?, ?)",
                         (target, symbol.address, symbol.canonical_name, kind),
@@ -184,21 +198,46 @@ def rebuild(root: Path) -> Path:
                         ),
                     )
                 for call in snapshot.calls:
-                    connection.execute("INSERT INTO calls VALUES (?, ?, ?)", (call.caller, call.callee, call.callsite))
-                    connection.execute("INSERT OR IGNORE INTO xrefs VALUES (?, ?, ?, ?)", (target, call.callsite, int(call.callee.rsplit("@", 1)[1], 16), "call"))
+                    connection.execute(
+                        "INSERT INTO calls VALUES (?, ?, ?)",
+                        (call.caller, call.callee, call.callsite),
+                    )
+                    connection.execute(
+                        "INSERT OR IGNORE INTO xrefs VALUES (?, ?, ?, ?)",
+                        (
+                            target,
+                            call.callsite,
+                            int(call.callee.rsplit("@", 1)[1], 16),
+                            "call",
+                        ),
+                    )
                 for unresolved in snapshot.unresolved_calls:
-                    connection.execute("INSERT OR IGNORE INTO xrefs VALUES (?, ?, ?, ?)", (target, unresolved.callsite, unresolved.target_address, unresolved.kind))
-                project = root / "out" / "rizin" / target / "project.rzdb"
-                connection.execute("INSERT INTO project_metadata VALUES (?, ?, ?)", (target, project.relative_to(root).as_posix(), 1))
-            rows = connection.execute("SELECT exact_sha256, size, id FROM functions ORDER BY exact_sha256, id").fetchall()
+                    connection.execute(
+                        "INSERT OR IGNORE INTO xrefs VALUES (?, ?, ?, ?)",
+                        (
+                            target,
+                            unresolved.callsite,
+                            unresolved.target_address,
+                            unresolved.kind,
+                        ),
+                    )
+            rows = connection.execute(
+                "SELECT exact_sha256, size, id FROM functions ORDER BY exact_sha256, id"
+            ).fetchall()
             groups: dict[tuple[str, int], list[str]] = defaultdict(list)
             for digest, size, function_id in rows:
                 groups[(digest, size)].append(function_id)
             for (digest, size), members in groups.items():
                 if len(members) < 2:
                     continue
-                connection.execute("INSERT INTO duplicate_groups VALUES (?, ?, ?)", (digest, size, len(members)))
-                connection.executemany("INSERT INTO duplicate_members VALUES (?, ?)", ((digest, member) for member in members))
+                connection.execute(
+                    "INSERT INTO duplicate_groups VALUES (?, ?, ?)",
+                    (digest, size, len(members)),
+                )
+                connection.executemany(
+                    "INSERT INTO duplicate_members VALUES (?, ?)",
+                    ((digest, member) for member in members),
+                )
             connection.commit()
         finally:
             connection.close()
@@ -212,13 +251,17 @@ def rebuild(root: Path) -> Path:
 def connect(root: Path) -> sqlite3.Connection:
     path = index_path(root)
     if not path.is_file():
-        raise FileNotFoundError(f"reverse index not found: {path.relative_to(root)}; run just index")
+        raise FileNotFoundError(
+            f"reverse index not found: {path.relative_to(root)}; run just index"
+        )
     connection = sqlite3.connect(path)
     connection.row_factory = sqlite3.Row
     return connection
 
 
-def rows(connection: sqlite3.Connection, query: str, params: Iterable[object] = ()) -> list[dict[str, object]]:
+def rows(
+    connection: sqlite3.Connection, query: str, params: Iterable[object] = ()
+) -> list[dict[str, object]]:
     return [dict(row) for row in connection.execute(query, tuple(params))]
 
 

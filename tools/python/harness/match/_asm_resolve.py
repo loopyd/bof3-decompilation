@@ -184,7 +184,7 @@ def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
         source_rel = resolved_source.relative_to(layout.root).as_posix()
     except ValueError:
         source_rel = ""
-    from ..targets import load_target_manifests
+    from ..domain.manifests import load_target_manifests
 
     source_dir = str(Path(source_rel).parent)
     for manifest in load_target_manifests(layout.root).values():
@@ -203,7 +203,7 @@ def overlay_load_address_for_source(
     except ValueError:
         return None
 
-    from ..targets import load_target_manifests
+    from ..domain.manifests import load_target_manifests
 
     source_dir = str(Path(source_rel).parent)
     for manifest in load_target_manifests(layout.root).values():
@@ -220,7 +220,7 @@ def _catalog_load_address(layout: RepoLayout, disc_id: str) -> int | None:
     catalog_path = layout.root / "out" / "catalog" / "emi.json"
     if not catalog_path.is_file():
         return None
-    from ..binaries import resolve_entry
+    from ..emi.catalog import resolve_entry
 
     try:
         return int(resolve_entry(read_json(catalog_path), disc_id)["load_address"])

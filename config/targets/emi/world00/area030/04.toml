@@ -5,5 +5,5 @@ kind = "emi"
 source_dir = "src/emi/world00/area030/04"
 binary = "out/binaries/emi/world00/area030/04.bin"
 splat = "config/splat/emi/world00/area030/04.yaml"
-load_address = 0x801d11c0
+load_address = 0x801d0c00
 profile = "compat/capcom97"

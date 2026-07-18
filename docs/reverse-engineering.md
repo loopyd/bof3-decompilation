@@ -3,26 +3,33 @@
 Rizin evidence is target-qualified, reproducible, and disposable. Tracked
 layouts, maps, replay, and original bytes remain authoritative.
 
-## Per-target Rizin project
+## Bootstrap one extracted EMI entry
 
 ```sh
-bin/rz-project rebuild TARGET
-bin/rz-project analyze TARGET
-bin/rz-project status TARGET
-bin/rz-project export TARGET
+bin/emi-target BIN/BATTLE/BATL_END.EMI#0
+bin/emi-target BIN/BATTLE/BATL_END.EMI#0 --apply
 ```
 
-One generated project exists under `out/rizin/<target>/` for each binary. Never
-open multiple overlapping load mappings in one project. `rebuild` imports the
-target manifest, Splat boundaries, canonical map, and reviewed replay.
+The default prints the exact bin-only target plan. `--apply` revalidates the
+payload identity and creates only the normalized image and identity metadata,
+manifest, Splat layout, and empty target-local map. It refuses existing targets
+and never infers code ranges or creates C source.
 
-`analyze` is bounded by default. `analyze --deep` creates candidate evidence
-only. Use the generated snapshot and deterministic export to review facts;
-native database state is not durable evidence.
+## Per-target Rizin analysis
 
-`export TARGET` prints the deterministic patch. `export TARGET --write` is the
-only path that changes reviewed replay after validation. `open TARGET` starts
-an isolated interactive Rizin session.
+```sh
+bin/rz-project analyze TARGET
+bin/rz-project status TARGET
+bin/rz-project open TARGET
+```
+
+The command composes the target manifest, Splat boundaries, canonical map, and
+reviewed overlay in memory. Never open multiple overlapping load mappings in
+one session.
+
+`analyze` uses accepted roots before one bounded analysis pass and writes a
+snapshot only when every required JSON query succeeds. Native database state
+is not durable evidence; `open TARGET` starts an isolated interactive session.
 
 ## Index and queries
 
@@ -43,7 +50,7 @@ complete target exports. It fails when evidence is missing, stale, or
 incomplete, leaving the last complete index intact.
 
 The cache contains target-local symbols, functions, calls, xrefs, data
-references, exact hashes, duplicate groups, PsyQ evidence, and project
+references, exact hashes, duplicate groups, and PsyQ evidence
 metadata. `bin/rev-query` is its only query surface; pass `--json` for stable
 structured output.
 

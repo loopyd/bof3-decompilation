@@ -1,4 +1,0 @@
-#ifndef ETC_START_09_INTERNAL_H
-#define ETC_START_09_INTERNAL_H
-
-#endif

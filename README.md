@@ -42,7 +42,7 @@ guidance, and `bin/promote` remains the candidate acceptance gate.
 | Canonical target-local symbols | `config/symbols/<target>.txt` |
 | Generated assembly | `out/splat/<target>/` |
 | Generated weak bindings | `out/bindings/<target>/symbols.c` |
-| Rizin replay/project/snapshot | `config/analysis/<target>/`, `out/rizin/<target>/`, `out/reverse/<target>/` |
+| Rizin reviewed overlay/snapshot | `config/analysis/<target>/`, `out/reverse/<target>/` |
 | Cross-target query cache | `out/index/reverse.sqlite` |
 
 Raw names are `func_80143B40` and `D_80143B40`: eight uppercase hexadecimal
@@ -56,7 +56,7 @@ Repository-wide recipes are deliberately limited to:
 just setup doctor binaries build check format index clean
 ```
 
-Focused tools are `bin/splat`, `bin/bof3-disk`, `bin/emi-ex`, `bin/psyq-import`,
+Focused tools are `bin/splat`, `bin/bof3-disk`, `bin/emi-ex`, `bin/emi-target`, `bin/psyq-import`,
 `bin/psyq-find`, `bin/symbols`, `bin/rz-project`, `bin/rev-query`, `bin/m2ctx`,
 `bin/m2c`, `bin/asm-diff`, `bin/byte-match`, `bin/permute`, `bin/flag-search`,
 `bin/promote`, `bin/decomp-status`, and `bin/str-media`.
@@ -70,11 +70,10 @@ disposable evidence rather than symbol-map edits; see
 
 ## Rizin and index
 
-Each binary has its own generated Rizin recipe and snapshot. Never combine
+Each binary has its own in-memory Rizin recipe and generated snapshot. Never combine
 overlapping load addresses in one session.
 
 ```sh
-bin/rz-project rebuild TARGET
 bin/rz-project analyze TARGET
 just index
 bin/rev-query hotspots

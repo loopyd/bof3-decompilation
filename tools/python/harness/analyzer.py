@@ -17,7 +17,6 @@ from .snapshot import (
     SnapshotUnresolvedCall,
     TargetSnapshot,
     snapshot_path,
-    write_snapshot,
 )
 
 
@@ -139,71 +138,53 @@ def find_engine(name: str = "rizin") -> EngineIdentity:
         capabilities=capabilities,
     )
 
-def _run_subprocess_query(
+
+def _run_analysis(
     engine: EngineIdentity,
     binary_path: Path,
     load_address: int,
-    query_command: str,
     *,
-    setup_commands: list[str] | None = None,
+    replay_commands: list[str],
     timeout: int = 120,
-) -> Any:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Run one staged analysis and return functions and xrefs or fail closed."""
+
     argv = [
         str(engine.executable),
         "-q0",
         "-N",
         "-n",
-        "-a", "mips",
-        "-b", "32",
-        "-e", "cfg.bigendian=false",
-        "-m", f"0x{load_address:08x}",
-        "-c", "aa",
+        "-a",
+        "mips",
+        "-b",
+        "32",
+        "-e",
+        "cfg.bigendian=false",
+        "-m",
+        f"0x{load_address:08x}",
     ]
-    for command in setup_commands or []:
+    for command in replay_commands:
         argv.extend(["-c", command])
-    argv.extend(["-c", query_command, str(binary_path)])
+    argv.extend(["-c", "aa", "-c", "aflj", "-c", "axlj", str(binary_path)])
     result = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
-    lines = [line for line in result.stdout.splitlines() if line.strip()]
-    if lines:
-        try:
-            return json.loads(lines[-1])
-        except json.JSONDecodeError:
-            pass
-    return []
-
-
-_QUERY_COMMANDS = {
-    "functions": "aflj",
-    "strings": "izzj",
-    "xrefs": "axlj",
-    "types": "tj",
-}
-
-
-def query_project(
-    engine: EngineIdentity,
-    binary_path: Path,
-    load_address: int,
-    query: str,
-    *,
-    setup_commands: list[str] | None = None,
-    timeout: int = 120,
-) -> Any:
-    """Run a named read-only query against a target."""
-
-    if query not in _QUERY_COMMANDS:
-        raise ValueError(
-            f"unsupported query {query!r}; allowed: {sorted(_QUERY_COMMANDS)}"
+    if result.returncode != 0:
+        diagnostic = (result.stderr or result.stdout).strip()
+        raise RuntimeError(
+            f"rizin analysis failed with exit code {result.returncode}: {diagnostic}"
         )
-    command = _QUERY_COMMANDS[query]
-    return _run_subprocess_query(
-        engine,
-        binary_path,
-        load_address,
-        command,
-        setup_commands=setup_commands,
-        timeout=timeout,
-    )
+    payloads: list[Any] = []
+    for line in result.stdout.splitlines():
+        if not line.strip().startswith(("[", "{")):
+            continue
+        try:
+            payloads.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    if len(payloads) < 2 or not all(isinstance(value, list) for value in payloads[-2:]):
+        raise RuntimeError(
+            "rizin analysis did not return function and xref JSON arrays"
+        )
+    return payloads[-2], payloads[-1]
 
 
 def build_snapshot(
@@ -213,21 +194,22 @@ def build_snapshot(
     target_id: str,
     *,
     reviewed_addresses: set[int] | None = None,
+    replay_commands: list[str] | None = None,
+    replay_sha256: str | None = None,
     source_dir: Path | None = None,
     timeout: int = 120,
 ) -> TargetSnapshot:
     """Build a portable snapshot from one stateless analyzer invocation set."""
 
     binary = binary_path.read_bytes()
-    setup_commands = [
+    commands = replay_commands or [
         f"af @ 0x{address:08x}" for address in sorted(reviewed_addresses or set())
     ]
-    raw_functions = query_project(
+    raw_functions, raw_xrefs = _run_analysis(
         engine,
         binary_path,
         load_address,
-        "functions",
-        setup_commands=setup_commands,
+        replay_commands=commands,
         timeout=timeout,
     )
     functions: list[SnapshotFunction] = []
@@ -265,21 +247,17 @@ def build_snapshot(
     functions.sort(key=lambda function: function.address)
     calls: list[SnapshotCall] = []
     unresolved: list[SnapshotUnresolvedCall] = []
-    raw_xrefs = query_project(
-        engine,
-        binary_path,
-        load_address,
-        "xrefs",
-        setup_commands=setup_commands,
-        timeout=timeout,
-    )
     for raw in raw_xrefs if isinstance(raw_xrefs, list) else []:
         if str(raw.get("type", "")).upper() not in {"CALL", "C"}:
             continue
         callsite = int(raw.get("from", raw.get("fcn_addr", 0)))
         target = int(raw.get("to", raw.get("addr", 0)))
         caller = next(
-            (function_id for start, end, function_id in ranges if start <= callsite < end),
+            (
+                function_id
+                for start, end, function_id in ranges
+                if start <= callsite < end
+            ),
             None,
         )
         if caller is None:
@@ -301,7 +279,10 @@ def build_snapshot(
         schema=SNAPSHOT_SCHEMA,
         target=target_id,
         engine={"name": engine.name, "version": engine.version},
-        inputs={"binary_sha256": hashlib.sha256(binary).hexdigest()},
+        inputs={
+            "binary_sha256": hashlib.sha256(binary).hexdigest(),
+            "replay_sha256": replay_sha256,
+        },
         functions=tuple(functions),
         calls=tuple(sorted(set(calls), key=lambda call: (call.caller, call.callsite))),
         unresolved_calls=tuple(unresolved),
@@ -320,27 +301,11 @@ def write_target_snapshot(root: Path, target_id: str, *, timeout: int = 120) -> 
     binary_path = root / manifest.binary
     if not binary_path.is_file():
         raise FileNotFoundError(f"target binary not found: {manifest.binary}")
-    engine = find_engine()
-    reviewed: set[int] = set()
-    splat_path = root / manifest.splat
-    if splat_path.is_file():
-        from .binaries import SPLAT_FUNCTION_SUBSEGMENT_RE
+    from .rizin_project import analyze_project
 
-        for line in splat_path.read_text(encoding="utf-8").splitlines():
-            match = SPLAT_FUNCTION_SUBSEGMENT_RE.match(line)
-            if match is not None:
-                reviewed.add(manifest.load_address + int(match.group("offset"), 0))
-    snapshot = build_snapshot(
-        engine,
-        binary_path,
-        manifest.load_address,
-        normalized,
-        reviewed_addresses=reviewed,
-        source_dir=root / manifest.source_dir,
-        timeout=timeout,
-    )
+    # Keep this legacy entry point on the same composed replay as rz-project.
+    analyze_project(root, normalized, timeout=timeout)
     output = snapshot_path(root, normalized)
-    write_snapshot(snapshot, output)
     return output
 
 
@@ -369,6 +334,5 @@ __all__ = [
     "build_snapshot",
     "doctor",
     "find_engine",
-    "query_project",
     "write_target_snapshot",
 ]

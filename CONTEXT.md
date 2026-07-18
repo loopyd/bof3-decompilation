@@ -27,7 +27,7 @@ targets until relocatability is proven.
 | Reviewed Rizin replay | `config/analysis/<target>/` |
 | C89 source | `src/exe/` or `src/emi/` |
 | Generated assembly | `out/splat/<target>/` |
-| Rizin project/snapshot | `out/rizin/<target>/`, `out/reverse/<target>/` |
+| Rizin reviewed overlay/snapshot | `config/analysis/<target>/`, `out/reverse/<target>/` |
 | Weak bindings | `out/bindings/<target>/symbols.c` |
 | Cross-target index | `out/index/reverse.sqlite` |
 | PsyQ object-signature matches | `out/psyq/index.json` |
@@ -66,8 +66,8 @@ a candidate and prints required manual edits. `bin/decomp-status [TARGET...]`
 recompiles every tracked lift and reports its exact, partial, or invalid state.
 See [matching](docs/matching.md).
 
-Rizin sessions are isolated by target. `bin/rz-project` regenerates their
-projects and snapshots; `just index` accepts only fresh complete exports and
+Rizin sessions are isolated by target. `bin/rz-project` composes recipes in
+memory and regenerates snapshots; `just index` accepts only fresh complete snapshots and
 `bin/rev-query` queries the resulting cache. See
 [Rizin and reverse index](docs/reverse-engineering.md).
 
