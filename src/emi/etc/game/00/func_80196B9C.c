@@ -4,17 +4,17 @@
  * @source 0x80196B9C
  */
 void func_80196B9C(void) {
-  volatile u8* work;
-  u8           table_index;
-  u32          value;
-  u32          quotient;
-  u32          remainder;
-  u32          start;
-  u32          stride;
+  volatile u8*  work;
+  u8            table_index;
+  u32           value;
+  u32           quotient;
+  u32           remainder;
+  u32           start;
+  u32           stride;
   volatile u16* colors;
-  u32          color_index;
+  u32           color_index;
 
-  work = VPPTR(u8, 0x1f800044u);
+  work = SPAD_PTR_SLOT(volatile u8, 0x44u);
   table_index = work[0x28];
   value = work[0x27];
   quotient = value / D_801C7AE0[table_index];

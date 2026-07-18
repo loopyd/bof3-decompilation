@@ -3,7 +3,7 @@
 
 #include "bof3/bof3.h"
 
-#define WORLD00_AREA032_13_PRIMITIVE_PTR VPPTR(u8, 0x8014598cu)
+#define WORLD00_AREA032_13_PRIMITIVE_PTR PTR_SLOT_AT(volatile u8, 0x8014598cu)
 
 void func_8014E5A0(u8 arg0, u8 arg1);
 

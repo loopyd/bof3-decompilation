@@ -12,8 +12,8 @@ u8 func_801968BC(u8 mode) {
   for (row = 0u; row < 4u; row++) {
     for (column = 0u; column < 0x10u; column++) {
       if (D_80145D54[row][column] == 0xffu) {
-        VPTR(u8, 0x1f800000u)[0] = row;
-        VPTR(u8, 0x1f800001u)[0] = column;
+        SPAD_OBJECT(volatile u8, 0x00u) = row;
+        SPAD_OBJECT(volatile u8, 0x01u) = column;
         switch (mode) {
           case 0u:
             return (u8)(column + row * 16u - 0x40u);

@@ -8,12 +8,12 @@
  * @source 0x8019601C
  */
 u8 func_8019601C(u8 mode) {
-    u8 i;
+  u8 i;
 
-    for (i = 0; i < 20; i++) {
-        if (D_80143FC8[i].flags_00 == 0) {
-            return i;
-        }
+  for (i = 0; i < 20; i++) {
+    if (D_80143FC8[i].flags_00 == 0) {
+      return i;
     }
-    return 0xFF;
+  }
+  return 0xFF;
 }

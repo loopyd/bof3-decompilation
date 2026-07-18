@@ -77,8 +77,8 @@ void func_8019625C(void) {
           destination[destination_index] = 0u;
         } else {
           destination[destination_index + color_index] =
-              (u16)((high_bit << 15) | ((u8)blue << 10) |
-                    ((u8)green << 5) | (u8)red);
+              (u16)((high_bit << 15) | ((u8)blue << 10) | ((u8)green << 5) |
+                    (u8)red);
         }
         source_index++;
       }

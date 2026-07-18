@@ -24,9 +24,9 @@ void func_801F2C88(void) {
       (World00Area008State*)0x80145fd0;
   *(volatile World00Area008State**)0x1f800044 =
       (World00Area008State*)0x80145fd0;
-  REG8(0x801460e8) |= 0x40;
+  MMIO8(0x801460e8) |= 0x40;
   func_8014D6B8(0x10);
-  REG8(0x80146866) = 1;
+  MMIO8(0x80146866) = 1;
   *(volatile World00Area008State**)0x1f800044 = (World00Area008State*)previous;
   previous->mode = 2;
 }

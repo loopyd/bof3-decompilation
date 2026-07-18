@@ -76,9 +76,9 @@ enum {
 };
 
 #define GAME_CALLBACK_FORCE_SWITCH ((s32)0xff000000u)
-#define GAME_CALLBACK_SLOTS        VPTR(GameCallbackSlot, 0x80143b40u)
-#define GAME_CALLBACK_CURSOR       VPTR(GameCallbackSlot*, 0x80143d40u)
-#define GAME_CALLBACK_END          VPTR(GameCallbackSlot, 0x80143d40u)
+#define GAME_CALLBACK_SLOTS  PTR_AT(volatile GameCallbackSlot, 0x80143b40u)
+#define GAME_CALLBACK_CURSOR PTR_AT(volatile GameCallbackSlot*, 0x80143d40u)
+#define GAME_CALLBACK_END    PTR_AT(volatile GameCallbackSlot, 0x80143d40u)
 
 typedef struct EmiActiveEntry {
   u32  active_lba;
@@ -103,7 +103,7 @@ u32  emi_next_payload_offset(u32 current_offset, u32 current_size);
 void emi_build_entry_lbas(u32 base_lba, const EmiTocEntry* entries,
                           size_t entry_count, u32* entry_lbas);
 u32  emi_slot_to_lba(const u32* slot_lba_table, size_t slot_count, u32 slot_id);
-#define GAME_FRONT_LOCAL_MODE VPTR(u16, 0x80143c90u)
+#define GAME_FRONT_LOCAL_MODE PTR_AT(volatile u16, 0x80143c90u)
 
 void game_front_local_mode_callback_loop(void);
 

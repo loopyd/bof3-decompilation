@@ -15,44 +15,44 @@ s16 func_800A2AE0(u8 battler_index, u16 element_mask) {
 
   if (battler_index < 3u) {
     if (element_mask & 1u) {
-      element_slot = REG8(0x80145f2fu + ((u32)battler_index * 0x140u));
+      element_slot = MMIO8(0x80145f2fu + ((u32)battler_index * 0x140u));
       result += modifier_table[element_slot];
     }
     if (element_mask & 2u) {
-      element_slot = REG8(0x80145f30u + ((u32)battler_index * 0x140u));
+      element_slot = MMIO8(0x80145f30u + ((u32)battler_index * 0x140u));
       result += modifier_table[element_slot];
     }
     if (element_mask & 4u) {
-      element_slot = REG8(0x80145f31u + ((u32)battler_index * 0x140u));
+      element_slot = MMIO8(0x80145f31u + ((u32)battler_index * 0x140u));
       result += modifier_table[element_slot];
     }
     if (element_mask & 8u) {
-      element_slot = REG8(0x80145f32u + ((u32)battler_index * 0x140u));
+      element_slot = MMIO8(0x80145f32u + ((u32)battler_index * 0x140u));
       result += modifier_table[element_slot];
     }
     if (element_mask & 0x10u) {
-      element_slot = REG8(0x80145f33u + ((u32)battler_index * 0x140u));
+      element_slot = MMIO8(0x80145f33u + ((u32)battler_index * 0x140u));
       result += modifier_table[element_slot];
     }
   } else {
     if (element_mask & 1u) {
-      element_slot = REG8(0x801eb6dfu + ((u32)(battler_index - 3u) * 0x118u));
+      element_slot = MMIO8(0x801eb6dfu + ((u32)(battler_index - 3u) * 0x118u));
       result += modifier_table[element_slot];
     }
     if (element_mask & 2u) {
-      element_slot = REG8(0x801eb6e0u + ((u32)(battler_index - 3u) * 0x118u));
+      element_slot = MMIO8(0x801eb6e0u + ((u32)(battler_index - 3u) * 0x118u));
       result += modifier_table[element_slot];
     }
     if (element_mask & 4u) {
-      element_slot = REG8(0x801eb6e1u + ((u32)(battler_index - 3u) * 0x118u));
+      element_slot = MMIO8(0x801eb6e1u + ((u32)(battler_index - 3u) * 0x118u));
       result += modifier_table[element_slot];
     }
     if (element_mask & 8u) {
-      element_slot = REG8(0x801eb6e2u + ((u32)(battler_index - 3u) * 0x118u));
+      element_slot = MMIO8(0x801eb6e2u + ((u32)(battler_index - 3u) * 0x118u));
       result += modifier_table[element_slot];
     }
     if (element_mask & 0x10u) {
-      element_slot = REG8(0x801eb6e3u + ((u32)(battler_index - 3u) * 0x118u));
+      element_slot = MMIO8(0x801eb6e3u + ((u32)(battler_index - 3u) * 0x118u));
       result += modifier_table[element_slot];
     }
   }

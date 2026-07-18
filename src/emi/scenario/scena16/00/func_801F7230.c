@@ -19,8 +19,7 @@ void func_801F7230(void) {
       break;
 
     case 1:
-      func_8014F800(0x7a, 100, 0, 0xffu,
-                    0x80010000u + (u32)SCENA16_D_80010020);
+      func_8014F800(0x7a, 100, 0, 0xffu, 0x80010000u + (u32)SCENA16_D_80010020);
       if (SCENA16_D_80143C40 == 0u) {
         SCENA16_D_80146876 = 0u;
         SCENA16_D_80146875 = (u8)(SCENA16_D_80146875 + 1u);
@@ -29,10 +28,8 @@ void func_801F7230(void) {
 
     case 2:
       SCENA16_D_80146876 = (u16)(SCENA16_D_80146876 + 1u);
-      func_8016C0C0((s32)(s16)SCENA16_D_80146876,
-                    (s32)(s16)SCENA16_D_80146876);
-      func_8014F800(0x7a, 100, 0, 0xffu,
-                    0x80010000u + (u32)SCENA16_D_80010020);
+      func_8016C0C0((s32)(s16)SCENA16_D_80146876, (s32)(s16)SCENA16_D_80146876);
+      func_8014F800(0x7a, 100, 0, 0xffu, 0x80010000u + (u32)SCENA16_D_80010020);
       if (SCENA16_D_80146876 == 0x7fu) {
         func_8014ECAC(0u);
         SCENA16_D_80146876 = 0u;

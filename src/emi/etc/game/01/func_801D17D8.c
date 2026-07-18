@@ -1,7 +1,7 @@
 #include "internal.h"
 
-#define GAME_FRONT_PRIMITIVE       VPTR(u8, 0x8014598cu)
-#define GAME_FRONT_GLYPH_GEOMETRY  CVPTR(u16, 0x801d1c6cu)
+#define GAME_FRONT_PRIMITIVE       PTR_AT(volatile u8, 0x8014598cu)
+#define GAME_FRONT_GLYPH_GEOMETRY  PTR_AT(const volatile u16, 0x801d1c6cu)
 #define GAME_FRONT_GEOMETRY_STRIDE 5
 
 /* @behavior initializes the shared frontend primitive and applies one indexed

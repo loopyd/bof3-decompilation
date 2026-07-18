@@ -9,7 +9,7 @@ u8 func_80196B20(u8 value) {
   u8           row;
   u8           column;
 
-  scratch = VPTR(u8, 0x1f800000u);
+  scratch = SPAD_PTR(volatile u8, 0x00u);
   for (row = 0u; row < 4u; row++) {
     for (column = 0u; column < 0x10u; column++) {
       if (D_80145D54[row][column] == value) {

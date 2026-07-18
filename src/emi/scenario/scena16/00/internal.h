@@ -47,12 +47,12 @@ extern vu16 SCENA16_D_80010006;
 extern vu16 SCENA16_D_80010008;
 extern vu16 SCENA16_D_80010020;
 extern vu16 SCENA16_D_80010022;
-#define SCENA16_SELECTION_FX_TABLE CVPTR(u8, 0x80181ebau)
-#define SCENA16_PALETTE_SRC        CVPTR(u16, 0x80033800u)
-#define SCENA16_PALETTE_DST        VPTR(u16, 0x80037800u)
-#define SCENA16_PTR_801F854C   ((Scena16Callback*)0x801f854cu)
-#define SCENA16_PTR_801F8558   ((Scena16Callback*)0x801f8558u)
-#define SCENA16_PTR_801F856C   ((Scena16RecordCallback*)0x801f856cu)
+#define SCENA16_SELECTION_FX_TABLE PTR_AT(const volatile u8, 0x80181ebau)
+#define SCENA16_PALETTE_SRC        PTR_AT(const volatile u16, 0x80033800u)
+#define SCENA16_PALETTE_DST        PTR_AT(volatile u16, 0x80037800u)
+#define SCENA16_PTR_801F854C       ((Scena16Callback*)0x801f854cu)
+#define SCENA16_PTR_801F8558       ((Scena16Callback*)0x801f8558u)
+#define SCENA16_PTR_801F856C       ((Scena16RecordCallback*)0x801f856cu)
 
 void game_stop_selection_fx(u32 effect_group, s32 effect_id);
 void game_queue_frontend_cue(u32 cue_id);

@@ -1,36 +1,50 @@
 #ifndef BOF3_SCRATCHPAD_H
 #define BOF3_SCRATCHPAD_H
 
+#include "bof3/memory.h"
+
 /*
- * PS1 scratchpad (0x1F800000–0x1F8003FF) access helpers.
+ * PS1 scratchpad RAM
+ * ------------------
  *
- * The scratchpad is 1 KB of on-chip RAM, NOT hardware I/O.
- * Use these macros instead of raw address casts.
+ * Address range:
+ *     0x1F800000-0x1F8003FF
  *
- * Reference: https://psx-spx.consoledev.net/memorymap/
+ * All offsets are byte offsets.
  */
-
 #define PSX_SPAD_BASE 0x1F800000u
+#define PSX_SPAD_SIZE 0x00000400u
 
-/* Address of an object stored directly in scratchpad. */
-#define SPAD_ADDR(type, byte_offset) \
-    ((type *)(PSX_SPAD_BASE + (byte_offset)))
-
-/* Same, with volatile access to the object. */
-#define SPAD_VADDR(type, byte_offset) \
-    ((volatile type *)(PSX_SPAD_BASE + (byte_offset)))
+#define SPAD_ADDRESS(byte_offset) (PSX_SPAD_BASE + (u32)(byte_offset))
 
 /*
- * Load a pointer stored in a scratchpad slot.
+ * Pointer to an object stored directly in scratchpad.
  *
- * The pointer cell itself is volatile, so every evaluation reloads it.
- * The pointed-to object is not volatile.
+ * No memory read occurs.
+ */
+#define SPAD_PTR(type, byte_offset) PTR_AT(type, SPAD_ADDRESS(byte_offset))
+
+/*
+ * Lvalue for an object stored directly in scratchpad.
+ */
+#define SPAD_OBJECT(type, byte_offset) \
+  OBJECT_AT(type, SPAD_ADDRESS(byte_offset))
+
+/*
+ * Pointer stored in a scratchpad slot.
+ *
+ * SPAD_PTR_SLOT:
+ *     Ordinary pointer cell.
+ *
+ * SPAD_VOLATILE_PTR_SLOT:
+ *     Volatile pointer cell, reloaded on every evaluation.
+ *
+ * Add volatile to type when the pointed-to object is also volatile.
  */
 #define SPAD_PTR_SLOT(type, byte_offset) \
-    (*(type * volatile *)(PSX_SPAD_BASE + (byte_offset)))
+  PTR_SLOT_AT(type, SPAD_ADDRESS(byte_offset))
 
-/* Both the pointer cell and pointed-to object are volatile. */
-#define SPAD_VPTR_SLOT(type, byte_offset) \
-    (*(volatile type * volatile *)(PSX_SPAD_BASE + (byte_offset)))
+#define SPAD_VOLATILE_PTR_SLOT(type, byte_offset) \
+  VOLATILE_PTR_SLOT_AT(type, SPAD_ADDRESS(byte_offset))
 
 #endif

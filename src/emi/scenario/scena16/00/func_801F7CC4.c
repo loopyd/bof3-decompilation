@@ -148,8 +148,7 @@ void func_801F7CC4(void) {
       break;
 
     case 10:
-      func_8014F800(0x46, 100, 0, 0xffu,
-                    0x80010000u + (u32)SCENA16_D_80010008);
+      func_8014F800(0x46, 100, 0, 0xffu, 0x80010000u + (u32)SCENA16_D_80010008);
       if (SCENA16_D_80143C40 == 0u) {
         SCENA16_D_80146876 = 0x7fu;
         advance_state = 1u;
@@ -157,8 +156,7 @@ void func_801F7CC4(void) {
       break;
 
     case 11:
-      func_8014F800(0x46, 100, 0, 0xffu,
-                    0x80010000u + (u32)SCENA16_D_80010008);
+      func_8014F800(0x46, 100, 0, 0xffu, 0x80010000u + (u32)SCENA16_D_80010008);
       SCENA16_D_80146876 = (u16)(SCENA16_D_80146876 - 1u);
       if (SCENA16_D_80146876 != 0u) {
         return;

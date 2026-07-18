@@ -83,10 +83,12 @@ typedef struct Battle03QueuedSlot {
   u32 unk_74;
 } Battle03QueuedSlot;
 
-#define BATTLE_LOCAL_WORK_ARRAY  VPTR(Battle03LocalWork, 0x80145e90u)
-#define BATTLE_ENEMY_WORK_ARRAY  VPTR(Battle03EnemyWork, 0x801eb630u)
-#define BATTLE_QUEUED_SLOT_ARRAY VPTR(Battle03QueuedSlot, 0x801ec330u)
-#define BATTLE_LOCAL_WORK_PTR    VPPTR(Battle03LocalWork, 0x80146250u)
+#define BATTLE_LOCAL_WORK_ARRAY PTR_AT(volatile Battle03LocalWork, 0x80145e90u)
+#define BATTLE_ENEMY_WORK_ARRAY PTR_AT(volatile Battle03EnemyWork, 0x801eb630u)
+#define BATTLE_QUEUED_SLOT_ARRAY \
+  PTR_AT(volatile Battle03QueuedSlot, 0x801ec330u)
+#define BATTLE_LOCAL_WORK_PTR \
+  PTR_SLOT_AT(volatile Battle03LocalWork, 0x80146250u)
 extern vu8  BATTLE_LOCAL_BYTE_62EC;
 extern vu8  BATTLE_GLOBAL_BYTE_62E0;
 extern vu8  BATTLE_GLOBAL_BYTE_62E1;
@@ -108,7 +110,7 @@ extern vu8 BATTLE_GLOBAL_BYTE_6303;
   (*(volatile volatile u8*)(0x8014630cu + (u32)(index)))
 extern vu32 BATTLE_GLOBAL_WORD_59F0;
 extern vu32 BATTLE_GLOBAL_WORD_598C;
-#define BATTLE_UI_CHAR_BUFFER VPTR(u8, 0x80145ad4u)
+#define BATTLE_UI_CHAR_BUFFER PTR_AT(volatile u8, 0x80145ad4u)
 extern vu16 BATTLE_SCRATCH_HALF_000;
 extern vu8  BATTLE_SCRATCH_BYTE_000;
 extern vu8  BATTLE_SCRATCH_BYTE_001;
@@ -125,7 +127,7 @@ extern vu32 BATTLE_GLOBAL_WORD_6330;
   (*(volatile volatile u8*)(0x80146354u + (u32)(index)))
 extern vu8 BATTLE_GLOBAL_BYTE_6374;
 extern vu8 BATTLE_GLOBAL_BYTE_6375;
-#define BATTLE_GLOBAL_PTR_6380 VPPTR(u8, 0x80146380u)
+#define BATTLE_GLOBAL_PTR_6380 PTR_SLOT_AT(volatile u8, 0x80146380u)
 extern vu8  BATTLE_GLOBAL_BYTE_6384;
 extern vu8  BATTLE_GLOBAL_BYTE_6324;
 extern vu8  BATTLE_GLOBAL_BYTE_6304;
@@ -169,12 +171,16 @@ extern vu8  BATTLE_UI_BYTE_8333;
   (*(volatile volatile u8*)(0x8014833au + ((u32)(index) * 0x24u)))
 extern vu16 BATTLE_UI_HALF_8334;
 extern vu16 BATTLE_UI_HALF_8336;
-#define BATTLE_LOCAL_SCRATCH_PTR       VPPTR(Battle03LocalWork, 0x1f800044u)
-#define BATTLE_ENEMY_SCRATCH_PTR       VPPTR(Battle03EnemyWork, 0x1f800044u)
-#define BATTLE_CURRENT_ENEMY_PTR       VPPTR(Battle03EnemyWork, 0x801eb4e8u)
-#define BATTLE_CURRENT_QUEUED_SLOT_PTR VPPTR(Battle03QueuedSlot, 0x801ec2e0u)
+#define BATTLE_LOCAL_SCRATCH_PTR \
+  PTR_SLOT_AT(volatile Battle03LocalWork, 0x1f800044u)
+#define BATTLE_ENEMY_SCRATCH_PTR \
+  PTR_SLOT_AT(volatile Battle03EnemyWork, 0x1f800044u)
+#define BATTLE_CURRENT_ENEMY_PTR \
+  PTR_SLOT_AT(volatile Battle03EnemyWork, 0x801eb4e8u)
+#define BATTLE_CURRENT_QUEUED_SLOT_PTR \
+  PTR_SLOT_AT(volatile Battle03QueuedSlot, 0x801ec2e0u)
 extern vu32 BATTLE_CURRENT_QUEUED_WORD_4B20;
-#define BATTLE_CURRENT_QUEUED_PTR_4B20 VPPTR(u8, 0x801eb4e0u)
+#define BATTLE_CURRENT_QUEUED_PTR_4B20 PTR_SLOT_AT(volatile u8, 0x801eb4e0u)
 #define BATTLE_SLOT_STORE_FLAG(index) \
   (*(volatile volatile u8*)(0x801ec339u + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_PTR(index) \
@@ -221,7 +227,8 @@ extern vu32 BATTLE_CURRENT_QUEUED_WORD_4B20;
   (*(volatile volatile u8*)(0x801ec38eu + ((u32)(index) * 0x78u)))
 #define BATTLE_SLOT_STORE_BYTE_5F(index) \
   (*(volatile volatile u8*)(0x801ec38fu + ((u32)(index) * 0x78u)))
-#define BATTLE_LOCAL_STATE_TABLE CVPTR(Battle03Handler, 0x801eb120u)
+#define BATTLE_LOCAL_STATE_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801eb120u)
 #define BATTLE_LOCAL_FLAGS_80(work) \
   (*(volatile volatile u16*)((volatile u8*)(work) + 0x80u))
 #define BATTLE_LOCAL_BYTE_79(work) \
@@ -310,20 +317,30 @@ extern vu32 BATTLE_CURRENT_QUEUED_WORD_4B20;
 extern vu8 BATTLE_GLOBAL_BYTE_63C9;
 extern vu8 BATTLE_GLOBAL_BYTE_44F58;
 extern s8  BATTLE_GLOBAL_BYTE_4952;
-#define BATTLE_LOCAL_STATE_TABLE_015C CVPTR(Battle03Handler, 0x801eb15cu)
+#define BATTLE_LOCAL_STATE_TABLE_015C \
+  PTR_AT(const volatile Battle03Handler, 0x801eb15cu)
 #define BATTLE_LOCAL_STATE_TABLE_0188 \
   (*(Battle03Handler const volatile*)0x801eb188u)
-#define BATTLE_LOCAL_BYTE_TABLE_018C       CVPTR(u8, 0x801eb18cu)
-#define BATTLE_LOCAL_BYTE_TABLE_0198       CVPTR(u8, 0x801eb198u)
-#define BATTLE_LOCAL_SUBSTATE3_TABLE       CVPTR(Battle03Handler, 0x801eb1e0u)
-#define BATTLE_LOCAL_STATE4_TABLE          CVPTR(Battle03Handler, 0x801eb210u)
-#define BATTLE_LOCAL_ALT_STATE3_TABLE      CVPTR(Battle03Handler, 0x801eb218u)
-#define BATTLE_LOCAL_STATE2_CLASS_TABLE    CVPTR(Battle03Handler, 0x801eb224u)
-#define BATTLE_LOCAL_STATE2_EVENT_TABLE    CVPTR(Battle03Handler, 0x801eb26cu)
-#define BATTLE_LOCAL_STATE2_FOLLOWUP_TABLE CVPTR(Battle03Handler, 0x801eb274u)
-#define BATTLE_LOCAL_DEFAULT_CLASS_TABLE   CVPTR(Battle03Handler, 0x801eb27cu)
-#define BATTLE_ENEMY_DISPATCH_TABLE_A      CVPTR(Battle03Handler, 0x801eb294u)
-#define BATTLE_ENEMY_DISPATCH_TABLE_B      CVPTR(Battle03Handler, 0x801eb298u)
+#define BATTLE_LOCAL_BYTE_TABLE_018C PTR_AT(const volatile u8, 0x801eb18cu)
+#define BATTLE_LOCAL_BYTE_TABLE_0198 PTR_AT(const volatile u8, 0x801eb198u)
+#define BATTLE_LOCAL_SUBSTATE3_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801eb1e0u)
+#define BATTLE_LOCAL_STATE4_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801eb210u)
+#define BATTLE_LOCAL_ALT_STATE3_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801eb218u)
+#define BATTLE_LOCAL_STATE2_CLASS_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801eb224u)
+#define BATTLE_LOCAL_STATE2_EVENT_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801eb26cu)
+#define BATTLE_LOCAL_STATE2_FOLLOWUP_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801eb274u)
+#define BATTLE_LOCAL_DEFAULT_CLASS_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801eb27cu)
+#define BATTLE_ENEMY_DISPATCH_TABLE_A \
+  PTR_AT(const volatile Battle03Handler, 0x801eb294u)
+#define BATTLE_ENEMY_DISPATCH_TABLE_B \
+  PTR_AT(const volatile Battle03Handler, 0x801eb298u)
 #define BATTLE_ENEMY_FLAGS_82(work) \
   (*(volatile volatile u16*)((volatile u8*)(work) + 0x82u))
 #define BATTLE_ENEMY_FLAGS_80(work) \
@@ -380,29 +397,30 @@ extern s8  BATTLE_GLOBAL_BYTE_4952;
   (*(volatile volatile u8*)((volatile u8*)(work) + 0x115u))
 #define BATTLE_ENEMY_BYTE_E6(work) \
   (*(volatile volatile u8*)((volatile u8*)(work) + 0xe6u))
-#define BATTLE_ENEMY_PTR_EC(work) VPPTR(u8, (volatile u8*)(work) + 0xecu)
-#define BATTLE_WEIGHT_TABLE_0394  CVPTR(u8, 0x801eb394u)
-#define BATTLE_WEIGHT_TABLE_039C  CVPTR(u8, 0x801eb39cu)
-#define BATTLE_RANDOM_TABLE_AC58  CVPTR(u8, 0x801eac58u)
-#define BATTLE_RANDOM_TABLE_AC78  CVPTR(u8, 0x801eac78u)
+#define BATTLE_ENEMY_PTR_EC(work) \
+  PTR_SLOT_AT(volatile u8, (volatile u8*)(work) + 0xecu)
+#define BATTLE_WEIGHT_TABLE_0394 PTR_AT(const volatile u8, 0x801eb394u)
+#define BATTLE_WEIGHT_TABLE_039C PTR_AT(const volatile u8, 0x801eb39cu)
+#define BATTLE_RANDOM_TABLE_AC58 PTR_AT(const volatile u8, 0x801eac58u)
+#define BATTLE_RANDOM_TABLE_AC78 PTR_AT(const volatile u8, 0x801eac78u)
 extern volatile u8 BATTLE_RANDOM_TABLE_AC58_DATA[];
 extern volatile u8 BATTLE_RANDOM_TABLE_AC78_DATA[];
-#define BATTLE_RETRY_TABLE_AFF4        CVPTR(u8, 0x801eaff4u)
-#define BATTLE_COUNTER_TABLE_AFFC      CVPTR(u8, 0x801eaffcu)
-#define BATTLE_PERCENT_TABLE_AF3C      CVPTR(u16, 0x801eaf3cu)
-#define BATTLE_RANDOM_BONUS_TABLE_AF48 CVPTR(s8, 0x801eaf48u)
-#define BATTLE_RANK_TABLE_AF88         CVPTR(u8, 0x801eaf88u)
-#define BATTLE_VARIANCE_TABLE_AFA0     CVPTR(s32, 0x801eafa0u)
-#define BATTLE_SCALE_TABLE_AFC0        CVPTR(s16, 0x801eafc0u)
-#define BATTLE_DAMAGE_SCALE_TABLE_0C7C CVPTR(u8, 0x801d0c7cu)
-#define BATTLE_EFFECT_TABLE_AFD0       CVPTR(u16, 0x801eafd0u)
-#define BATTLE_EVENT_PICK_TABLE_0C98   CVPTR(u8, 0x801d0c98u)
-#define BATTLE_EVENT_PICK_TABLE_0CB8   CVPTR(u8, 0x801d0cb8u)
-#define BATTLE_EVENT_SCRIPT_TABLE_B09C CVPTR(u16, 0x801eb09cu)
+#define BATTLE_RETRY_TABLE_AFF4        PTR_AT(const volatile u8, 0x801eaff4u)
+#define BATTLE_COUNTER_TABLE_AFFC      PTR_AT(const volatile u8, 0x801eaffcu)
+#define BATTLE_PERCENT_TABLE_AF3C      PTR_AT(const volatile u16, 0x801eaf3cu)
+#define BATTLE_RANDOM_BONUS_TABLE_AF48 PTR_AT(const volatile s8, 0x801eaf48u)
+#define BATTLE_RANK_TABLE_AF88         PTR_AT(const volatile u8, 0x801eaf88u)
+#define BATTLE_VARIANCE_TABLE_AFA0     PTR_AT(const volatile s32, 0x801eafa0u)
+#define BATTLE_SCALE_TABLE_AFC0        PTR_AT(const volatile s16, 0x801eafc0u)
+#define BATTLE_DAMAGE_SCALE_TABLE_0C7C PTR_AT(const volatile u8, 0x801d0c7cu)
+#define BATTLE_EFFECT_TABLE_AFD0       PTR_AT(const volatile u16, 0x801eafd0u)
+#define BATTLE_EVENT_PICK_TABLE_0C98   PTR_AT(const volatile u8, 0x801d0c98u)
+#define BATTLE_EVENT_PICK_TABLE_0CB8   PTR_AT(const volatile u8, 0x801d0cb8u)
+#define BATTLE_EVENT_SCRIPT_TABLE_B09C PTR_AT(const volatile u16, 0x801eb09cu)
 #define BATTLE_COUNTER_PTR_TABLE_893C  ((volatile u32**)0x801c893cu)
 #define BATTLE_COUNTER_BYTE_TABLE_8950 ((volatile u8**)0x801c8950u)
 #define BATTLE_TRIGGER_TABLE_6178      ((volatile u32**)0x800b6178u)
-#define BATTLE_VARIANCE_TABLE_AF94     CVPTR(u8, 0x801eaf94u)
+#define BATTLE_VARIANCE_TABLE_AF94     PTR_AT(const volatile u8, 0x801eaf94u)
 #define BATTLE_TARGET_MODE_PACK(index) \
   (*(volatile volatile u8*)(0x800b51f8u + (u32)(index)))
 #define BATTLE_ENEMY_SLOT_KIND(index) \
@@ -410,16 +428,20 @@ extern volatile u8 BATTLE_RANDOM_TABLE_AC78_DATA[];
 #define BATTLE_KIND_BYTE_00(kind) \
   (*(volatile volatile u8*)(0x801ca718u + ((u32)(kind) * 0x14u)))
 #define BATTLE_LOCAL_PRESENTATION_STATE1_TABLE \
-  CVPTR(Battle03Handler, 0x801eb3b0u)
+  PTR_AT(const volatile Battle03Handler, 0x801eb3b0u)
 #define BATTLE_LOCAL_PRESENTATION_BYTE3_TABLE \
-  CVPTR(Battle03Handler, 0x801eb430u)
-#define BATTLE_QUEUED_RESULT_SUBSTATE_TABLE CVPTR(Battle03Handler, 0x801eb454u)
-#define BATTLE_ACTIVE_SLOT_TABLE_0          CVPTR(Battle03Handler, 0x801d0cd0u)
-#define BATTLE_QUEUED_SLOT_TABLE            CVPTR(Battle03Handler, 0x801d0cc0u)
-#define BATTLE_PANEL_TASK_ROOT_TABLE        CVPTR(Battle03Handler, 0x801d0f80u)
+  PTR_AT(const volatile Battle03Handler, 0x801eb430u)
+#define BATTLE_QUEUED_RESULT_SUBSTATE_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801eb454u)
+#define BATTLE_ACTIVE_SLOT_TABLE_0 \
+  PTR_AT(const volatile Battle03Handler, 0x801d0cd0u)
+#define BATTLE_QUEUED_SLOT_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801d0cc0u)
+#define BATTLE_PANEL_TASK_ROOT_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801d0f80u)
 #define BATTLE_PANEL_TASK_ARG_DISPATCH_TABLE \
-  CVPTR(Battle03ForwardingHandler, 0x801d0fecu)
-#define BATTLE_PANEL_TASK_PTR VPPTR(u8, 0x80148648u)
+  PTR_AT(const volatile Battle03ForwardingHandler, 0x801d0fecu)
+#define BATTLE_PANEL_TASK_PTR PTR_SLOT_AT(volatile u8, 0x80148648u)
 #define BATTLE_PANEL_TASK_HALF_04 \
   (*(volatile volatile u16*)(BATTLE_PANEL_TASK_PTR + 4))
 #define BATTLE_PANEL_TASK_HALF_06 \
@@ -450,21 +472,24 @@ extern vu8 BATTLE_UI_RING_TARGET;
   (*(volatile volatile u8*)(0x801eb4fau + ((u32)(index) * 0x0cu)))
 #define BATTLE_UI_RING_WORD(index) \
   (*(volatile volatile u32*)(0x801eb4f4u + ((u32)(index) * 0x0cu)))
-#define BATTLE_UI_MODE_TABLE_AF27         CVPTR(u8, 0x801eaf27u)
-#define BATTLE_QUAD_OFFSET_TABLE_AD30     CVPTR(s16, 0x801ead30u)
-#define BATTLE_SPRITE_OFFSET_TABLE_AE50   CVPTR(s16, 0x801eae50u)
-#define BATTLE_ICON_OFFSET_TABLE_AE94     CVPTR(u8, 0x801eae94u)
-#define BATTLE_PANEL_FRAME_TABLE_AEE8     CVPTR(s16, 0x801eaee8u)
-#define BATTLE_PANEL_ICON_TABLE_AEB0      CVPTR(u32, 0x801eaeb0u)
-#define BATTLE_ICON_CLUT_TABLE_0C64       CVPTR(u8, 0x801d0c64u)
-#define BATTLE_GLOBAL_PTR_BF08            VPPTR(u8, 0x801ebf08u)
-#define BATTLE_LOCAL_ALT_WORK_ARRAY       VPTR(u8, 0x801ebf20u)
-#define BATTLE_LOCAL_STATUS_ARRAY         VPTR(u8, 0x801ec048u)
-#define BATTLE_PANEL_TASK_ICON_TABLE      CVPTR(Battle03Handler, 0x801d0ff8u)
-#define BATTLE_RESULT_UI_AUX_HANDLER_0    ((Battle03Handler)0x801e8684u)
-#define BATTLE_RESULT_UI_AUX_HANDLER_1    ((Battle03Handler)0x801e8d04u)
-#define BATTLE_PREVIEW_SEQUENCE_TABLE     CVPTR(Battle03Handler, 0x801d0f44u)
-#define BATTLE_SAVED_PREVIEW_RESULT_TABLE CVPTR(Battle03Handler, 0x801d0f6cu)
+#define BATTLE_UI_MODE_TABLE_AF27       PTR_AT(const volatile u8, 0x801eaf27u)
+#define BATTLE_QUAD_OFFSET_TABLE_AD30   PTR_AT(const volatile s16, 0x801ead30u)
+#define BATTLE_SPRITE_OFFSET_TABLE_AE50 PTR_AT(const volatile s16, 0x801eae50u)
+#define BATTLE_ICON_OFFSET_TABLE_AE94   PTR_AT(const volatile u8, 0x801eae94u)
+#define BATTLE_PANEL_FRAME_TABLE_AEE8   PTR_AT(const volatile s16, 0x801eaee8u)
+#define BATTLE_PANEL_ICON_TABLE_AEB0    PTR_AT(const volatile u32, 0x801eaeb0u)
+#define BATTLE_ICON_CLUT_TABLE_0C64     PTR_AT(const volatile u8, 0x801d0c64u)
+#define BATTLE_GLOBAL_PTR_BF08          PTR_SLOT_AT(volatile u8, 0x801ebf08u)
+#define BATTLE_LOCAL_ALT_WORK_ARRAY     PTR_AT(volatile u8, 0x801ebf20u)
+#define BATTLE_LOCAL_STATUS_ARRAY       PTR_AT(volatile u8, 0x801ec048u)
+#define BATTLE_PANEL_TASK_ICON_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801d0ff8u)
+#define BATTLE_RESULT_UI_AUX_HANDLER_0 ((Battle03Handler)0x801e8684u)
+#define BATTLE_RESULT_UI_AUX_HANDLER_1 ((Battle03Handler)0x801e8d04u)
+#define BATTLE_PREVIEW_SEQUENCE_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801d0f44u)
+#define BATTLE_SAVED_PREVIEW_RESULT_TABLE \
+  PTR_AT(const volatile Battle03Handler, 0x801d0f6cu)
 
 extern u8 func_8017E3D4(void);
 

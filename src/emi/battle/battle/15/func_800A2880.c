@@ -17,15 +17,15 @@ s16 func_800A2880(u8 battler_index, u16 base_value, u8 element_flag) {
   u32           defence_bonus;
   s16           result;
 
-  raw_def_rate = REG16(0x801ec312u) + 0x64u;
+  raw_def_rate = MMIO16(0x801ec312u) + 0x64u;
   scale = (raw_def_rate * 0x64u) / 100u;
 
-  rule_selection = REG16(0x801463c0u);
+  rule_selection = MMIO16(0x801463c0u);
   rule_selection = (rule_selection * 0x14u) + 0x801d0000u;
-  rule_selection = REG16(rule_selection - 0x58e4u) & 0x1ffu;
+  rule_selection = MMIO16(rule_selection - 0x58e4u) & 0x1ffu;
 
   adjusted_value = ((u32)base_value * scale) / 100u;
-  scale = REG16(0x801ec2f2u) / 5u;
+  scale = MMIO16(0x801ec2f2u) / 5u;
   if ((s32)(0x64u - scale) < 0x32) {
     scale = 0x32u;
   } else {
@@ -48,7 +48,7 @@ s16 func_800A2880(u8 battler_index, u16 base_value, u8 element_flag) {
       (volatile s16*)(0x800b0000u + (((random_bonus & 7u) * 2u) + 0x492cu));
   defence_bonus = (adjusted_value * (u32)*modifier_table) / 10000u;
 
-  if ((REG8(0x80146394u) < 3u) && (REG8(0x80144f58u) == 2u) &&
+  if ((MMIO8(0x80146394u) < 3u) && (MMIO8(0x80144f58u) == 2u) &&
       (defence_bonus > 0u)) {
     defence_bonus -= (adjusted_value * (u32)*modifier_table) / 40000u;
   }
@@ -56,21 +56,21 @@ s16 func_800A2880(u8 battler_index, u16 base_value, u8 element_flag) {
   player_state = (volatile u8*)0x80140000u;
   if (battler_index < 3u) {
     defence_bonus /= 2u;
-    if (REG32(0x80145fb4u + ((u32)battler_index * 0x140u) + 4u) & 0x200u) {
+    if (MMIO32(0x80145fb4u + ((u32)battler_index * 0x140u) + 4u) & 0x200u) {
       defence_bonus /= 2u;
     }
-    if (REG32(0x80145fb4u + ((u32)battler_index * 0x140u)) & 0x10000u) {
+    if (MMIO32(0x80145fb4u + ((u32)battler_index * 0x140u)) & 0x10000u) {
       result = 0;
     } else {
       result = (s16)defence_bonus;
     }
   } else {
     defence_bonus /= 2u;
-    if (REG32(0x801eb6d0u + ((u32)(battler_index - 3u) * 0x118u) + 4u) &
+    if (MMIO32(0x801eb6d0u + ((u32)(battler_index - 3u) * 0x118u) + 4u) &
         0x200u) {
       defence_bonus /= 2u;
     }
-    if (REG32(0x801eb6d0u + ((u32)(battler_index - 3u) * 0x118u)) & 0x10000u) {
+    if (MMIO32(0x801eb6d0u + ((u32)(battler_index - 3u) * 0x118u)) & 0x10000u) {
       result = 0;
     } else {
       result = (s16)defence_bonus;

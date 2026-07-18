@@ -10,7 +10,7 @@ void func_801D1B00(void) {
   s32  secondary_active;
   u16  alpha;
 
-  phase = VPTR(u8, 0x80143c32u);
+  phase = PTR_AT(volatile u8, 0x80143c32u);
   primary_active = 1;
   secondary_active = 1;
 
@@ -40,8 +40,11 @@ void func_801D1B00(void) {
   }
 
   if (*phase != 0u) {
-    func_801D12CC((u8)secondary_active, *CVPTR(u8, 0x80143c28u));
-    func_801D16DC(26, 24, (u8)secondary_active, *CVPTR(u8, 0x80143c28u));
-    func_801D150C(-6, 28, (u8)primary_active, *CVPTR(u8, 0x80143c26u));
+    func_801D12CC((u8)secondary_active,
+                  *PTR_AT(const volatile u8, 0x80143c28u));
+    func_801D16DC(26, 24, (u8)secondary_active,
+                  *PTR_AT(const volatile u8, 0x80143c28u));
+    func_801D150C(-6, 28, (u8)primary_active,
+                  *PTR_AT(const volatile u8, 0x80143c26u));
   }
 }

@@ -5,5 +5,5 @@
  * and clears the preceding state byte when the clamp is reached.
  */
 #define BOF3_PANEL_TASK_FUNCTION func_801E3EF4
-#define BOF3_PANEL_LIMIT 17
+#define BOF3_PANEL_LIMIT         17
 #include "shared/ui/advance_panel_task_x.inc"

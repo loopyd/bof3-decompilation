@@ -18,8 +18,7 @@ void func_8014AD28(void) {
     SetVideoMode(MODE_NTSC);
     D_8018B300 = 1;
     EnterCriticalSection();
-    func_8017ED7C(
-        func_8017ED3C(HwCPU, EvSpTRAP, EvMdINTR, func_8014B3C4));
+    func_8017ED7C(func_8017ED3C(HwCPU, EvSpTRAP, EvMdINTR, func_8014B3C4));
     ExitCriticalSection();
   } else {
     VSync(0);

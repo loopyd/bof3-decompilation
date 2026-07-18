@@ -13,9 +13,10 @@ typedef struct World00Area028Work {
   s16 field_0e;
 } World00Area028Work;
 
-#define WORLD00_AREA028_WORK_PTR      VPPTR(World00Area028Work, 0x801f3e00u)
+#define WORLD00_AREA028_WORK_PTR \
+  PTR_SLOT_AT(volatile World00Area028Work, 0x801f3e00u)
 #define WORLD00_AREA028_WORK_BASE     ((u8*)0x800e4800u)
-#define WORLD00_AREA028_PRIMITIVE_PTR VPPTR(u8, 0x8014598cu)
+#define WORLD00_AREA028_PRIMITIVE_PTR PTR_SLOT_AT(volatile u8, 0x8014598cu)
 #define WORLD00_AREA028_RING_X(index) \
   (*(volatile volatile u16*)(0x800e4a04u + ((u32)(index) * 4u)))
 #define WORLD00_AREA028_RING_Y(index) \

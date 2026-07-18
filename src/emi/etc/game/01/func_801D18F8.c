@@ -20,7 +20,7 @@ void func_801D18F8(void) {
   s32                            flags;
   u8*                            primitive;
 
-  state = VPTR(GameFrontBannerState, 0x80143c22u);
+  state = PTR_AT(volatile GameFrontBannerState, 0x80143c22u);
   if (state->phase == 0) {
     return;
   }

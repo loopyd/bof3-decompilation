@@ -35,7 +35,7 @@ extern vu16 D_80143C2A;
 #define GAME_FRONT_START_MASK         0x0800u
 #define GAME_FRONT_POPUP_PENDING_MASK 0x00ffff00u
 #define GAME_FRONT_POPUP_PENDING_OPEN 0x00020000u
-#define GAME_FRONT_SELECTION_FX_TABLE CVPTR(u8, 0x80181ebau)
+#define GAME_FRONT_SELECTION_FX_TABLE PTR_AT(const volatile u8, 0x80181ebau)
 
 typedef void (*GameFrontStateHandler)(void);
 extern GameFrontStateHandler D_801D1C4C[];

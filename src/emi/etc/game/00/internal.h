@@ -69,20 +69,14 @@ struct GameWorkArea {
   u8  pad_76[0x22];   /* 0x76-0x97 (work area slot is 0x98 bytes) */
 };
 
-/*
- * Work area pointer stored in scratchpad slot 0x1F800044.
+/* Work area pointer in scratchpad slot 0x1F800044 (offset 0x44).
  * Declared as a weak extern so the linker emits %hi/%lo relocations,
- * matching the original binary's codegen. For new code consider
- * SPAD_VPTR_SLOT(struct GameWorkArea, 0x44u) instead.
- */
+ * matching the original binary's codegen. */
 extern struct GameWorkArea* volatile g_game_work;
 
 /* Legacy alias for already‑matched functions that dereference 0x1F800044
  * via a literal‑address macro (lui+ori+lw 0(base) codegen). */
-#define SCRATCH_WORK VPPTR(struct GameWorkArea, 0x1F800044u)
-
-/* Global work pointer in main exe data section */
-#define GLOBAL_WORK_PTR VPPTR(u8, 0x80146250u)
+#define SCRATCH_WORK SPAD_PTR_SLOT(volatile struct GameWorkArea, 0x44u)
 
 /* Movement/position offset tables in main exe data section */
 #define MOVEMENT_OFFSET_0(i)  (*(volatile s32*)(0x80181B94u + (i) * 8))
@@ -152,25 +146,25 @@ extern const u8 D_80181EBB[];
 /* @behavior signed world-coord X argument for scenario entry */
 extern s16 D_8014930A;
 /* @behavior signed world-coord Y argument for scenario entry */
-extern s16      D_8014930E;
-extern s16      D_801492D8;
-extern s16      D_801492DC;
-extern s16      D_8014932E;
-extern u8       D_80146329;
-extern u8       D_801462E3;
-extern u8       D_801462E4;
-extern u8       D_801462F0;
-extern u8       D_801462EC;
-extern u8       D_80146325;
-extern u32      D_80149318;
-extern s16      D_80149330;
-extern u8       D_80149333;
-extern u8       D_8014933E;
+extern s16                 D_8014930E;
+extern s16                 D_801492D8;
+extern s16                 D_801492DC;
+extern s16                 D_8014932E;
+extern u8                  D_80146329;
+extern u8                  D_801462E3;
+extern u8                  D_801462E4;
+extern u8                  D_801462F0;
+extern u8                  D_801462EC;
+extern u8                  D_80146325;
+extern u32                 D_80149318;
+extern s16                 D_80149330;
+extern u8                  D_80149333;
+extern u8                  D_8014933E;
 extern struct GameWorkArea D_80146888[30];
-extern u8       D_8014933F;
-extern u32      D_801CD954;
-extern const s8 D_801C7B74[];
-extern vu16     D_801490A4;
+extern u8                  D_8014933F;
+extern u32                 D_801CD954;
+extern const s8            D_801C7B74[];
+extern vu16                D_801490A4;
 
 typedef struct GamePaletteEntry {
   u8  flags;
@@ -222,12 +216,12 @@ extern const GameEntry0StateHandler D_801C7BB0[];
 /* Entry table at 0x80143FC8 — 20 records × 0x74 bytes each.
  * Only the first 5 fields are known; the rest is padding. */
 typedef struct RecordSlot {
-    u8 flags_00;
-    u8 unk_01;
-    u8 unk_02;
-    u8 unk_03;
-    u8 unk_04;
-    u8 pad[0x6F];       /* 0x74 - 5 */
+  u8 flags_00;
+  u8 unk_01;
+  u8 unk_02;
+  u8 unk_03;
+  u8 unk_04;
+  u8 pad[0x6F]; /* 0x74 - 5 */
 } RecordSlot;
 
 extern RecordSlot D_80143FC8[20];
