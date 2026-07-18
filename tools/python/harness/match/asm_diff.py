@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from ..build import build, cmake_target_for_source
 from ..io import write_json, RepoLayout, repo_layout
 from ._asm_disasm import (
     current_symbol_size,
@@ -15,7 +16,6 @@ from ._asm_disasm import (
     disassemble_original,
     extract_instructions,
     render_normalized,
-    run_command,
 )
 from ._asm_link import extract_section_bytes, function_bytes_match
 from ._asm_resolve import (
@@ -191,27 +191,15 @@ def build_result_payload(
 def run_build_object(
     layout: RepoLayout, source_path: Path, build_log_path: Path
 ) -> None:
-    target = build_target_for_source(layout, source_path)
+    target = cmake_target_for_source(layout.root, source_path)
     object_path = object_path_for_source(layout, source_path)
-    makefile_path = layout.root / "Makefile"
-    if not makefile_path.is_file():
+    if shutil.which("cmake") is None:
         raise FileNotFoundError(
-            f"repository Makefile not found at {makefile_path}; cannot build {target}"
-        )
-    if shutil.which("make") is None:
-        raise FileNotFoundError(
-            f"make executable not found in PATH; cannot build {target}"
+            f"cmake executable not found in PATH; cannot build {target}"
         )
 
     build_log_path.parent.mkdir(parents=True, exist_ok=True)
-    # The Makefile's default is an absolute BUILD_DIR, while target names are
-    # intentionally repository-relative. Keep both forms relative so its
-    # object pattern rule matches and cannot silently reuse a stale object.
-    build_dir = layout.build_dir.relative_to(layout.root.resolve()).as_posix()
-    result = run_command(
-        ["make", "--no-print-directory", f"BUILD_DIR={build_dir}", target],
-        cwd=layout.root,
-    )
+    result = build(layout.root, target)
     log_text = result.stdout
     if result.stderr:
         if log_text:

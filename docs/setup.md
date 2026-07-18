@@ -31,12 +31,20 @@ just setup doctor binaries build check format index clean
 Focused tools:
 
 ```text
-bin/splat       bin/bof3-disk  bin/emi-ex       bin/emi-target
+bin/build       bin/splat      bin/bof3-disk    bin/emi-ex
+bin/emi-target
 bin/str-media   bin/symbols    bin/psyq-import  bin/psyq-find
 bin/rz-project  bin/rev-query  bin/m2ctx        bin/m2c
 bin/asm-diff    bin/byte-match bin/permute      bin/flag-search
 bin/promote     bin/decomp-status
 ```
+
+`bin/build` compiles every lift through CMake, selecting Ninja when available.
+`bin/build TARGET` compiles all authored objects owned by one independently
+loaded binary (a target without authored sources is a successful no-op), and
+`bin/build TARGET@0xADDRESS` compiles one authored function. The compatibility
+Makefile produces the same objects under `build/src/`; neither frontend links
+separate BOF3 images together.
 
 Use `--help` or `--example`. Commands write results to stdout and diagnostics
 to stderr. Exit codes are `0` success, `1` valid negative result, and `2`
