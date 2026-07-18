@@ -15,10 +15,18 @@ segments:
 - - 0
   - bin
   - header
+- name: header_functions
+  type: code
+  start: 2076
+  vram: 0x8019601C
+  subsegments:
+  - [2076, c, func_8019601C]
+  - [2160, c, func_80196070]
+  - [2240, c, func_801960C0]
 - name: main
   type: code
   start: 2332
-  vram: 2149146908
+  vram: 0x8019611C
   subsegments:
   - - 2332
     - c
