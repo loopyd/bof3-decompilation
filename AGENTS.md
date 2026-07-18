@@ -47,10 +47,13 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
   byte-matches. Keep both sources independent until both byte-match.
 - Normalize proven roles, parameters, local names, struct names, and field
   names across group members. Keep unknown fields offset-based (`unk_XX`).
-- After two members independently byte-match with the same C shape, move only
-  the common body to `include/bof3/duplicates/<role>.inc`. Keep one
+- After two cross-target members independently byte-match with the same C
+  shape, move only a worthwhile common body to
+  `src/shared/<domain>/<role>.inc`. Keep one
   address-based `func_XXXXXXXX.c` wrapper per member to provide its raw symbol
   and any compile-time parameters.
+- Put stable shared types in `include/bof3/<domain>/`. A shared template is
+  compiled into every owning image; it is not a runtime engine service.
 - Never reuse an extern address across targets. Each wrapper retains its
   target-local map, declaration, Splat boundary, and independent
   `asm-diff`/`byte-match` validation.
@@ -64,7 +67,9 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 - Run `just check` before handoff when practical; state skipped checks.
 - Do not stage, commit, push, or mutate external systems without approval.
 
-Use [matching](docs/matching.md), [Rizin evidence](docs/reverse-engineering.md),
-and `$psx-rizin` for procedures. Store reviewed findings in `docs/specs/` and
+Use `$bof3-re` for lifting and promotion, `$psx-rizin` for explicitly requested
+generic analyzer work, and `$workflow-review` for explicitly requested
+two-reviewer audits. Use [matching](docs/matching.md) and
+[Rizin evidence](docs/reverse-engineering.md) for procedures. Store reviewed findings in `docs/specs/` and
 reusable evidence-backed gotchas in `LESSONS.md`. Use the
 [repository map](CONTEXT.md#repository-map) to locate tracked and ignored state.

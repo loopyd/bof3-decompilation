@@ -60,8 +60,8 @@ Normalize names from evidence before sharing code:
 - Keep constants as template parameters only when group members genuinely
   differ; exact members should normally use the same readable constants.
 
-After two members independently match, the common body may live in
-`include/bof3/duplicates/<role>.inc`. Each `func_XXXXXXXX.c` remains as a small
+After two cross-target members independently match, a worthwhile common body
+may live in `src/shared/<domain>/<role>.inc`. Each `func_XXXXXXXX.c` remains as a small
 address-owned wrapper that defines the raw function macro and any explicit
 parameters before including the template. Do not use a wrapper call or one
 linked extern function: either can change instructions or cross independently
@@ -78,7 +78,8 @@ Splat `c` boundary, `bin/asm-diff`, and `bin/byte-match` result.
   EMI callsite evidence to that address. Keep its C under
   `src/exe/slus_004_22/`; promote only its stable contract to
   `include/bof3/core/`.
-- Do not add generic `src/engine/` or `src/shared/` ownership until a real link
+- `src/shared/` owns embedded implementation templates, never standalone
+  runtime objects. Do not add generic `src/engine/` ownership until a real link
   target exists for it.
 
 ## Validate a candidate

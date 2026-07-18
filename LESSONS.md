@@ -94,7 +94,7 @@ to repeat or misdiagnose across targets. Use the
 - Match qualifiers to the observed contract. An unjustified `volatile`
   pointee can change register allocation and move stores across comparisons;
   `func_800B2218` matched only after `D_80148648` became a named
-  `BattleLocalPanelTask*`. Add `volatile` only when asynchronous or hardware
+  `Bof3PanelTask*`. Add `volatile` only when asynchronous or hardware
   mutation is part of the evidence.
 - Recover stable field offsets into a target-local struct before trying
   permutations. Keep addresses, masks, and encoded values hexadecimal; write
@@ -112,7 +112,8 @@ to repeat or misdiagnose across targets. Use the
 - Normalize equivalent variables and struct fields before extracting a shared
   body. A shared implementation with divergent local vocabulary only hides
   unresolved understanding.
-- Use a compile-time `.inc` body after two independently matching members.
+- Use a semantic `src/shared/<domain>/*.inc` body after two independently
+  matching cross-target members when the reuse offsets the indirection.
   Keep address-based wrappers so each target still compiles and validates its
   own symbol; do not introduce a runtime wrapper call merely to remove repeated
   source text.

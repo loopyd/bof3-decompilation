@@ -132,14 +132,15 @@ source but never edits source, maps, or layouts.
 2. Make one representative byte-match.
 3. Independently make a second member byte-match.
 4. Normalize evidence-backed roles, types, fields, and constants.
-5. Share an embedded body only when repeated maintenance justifies an `.inc`;
+5. Share a cross-target embedded body under `src/shared/<domain>/` only when
+   repeated maintenance justifies an `.inc`;
    retain every address-owned wrapper and target-local check.
 
 An implementation embedded in several EMIs is compile-time source reuse, not
 an engine service. A real engine service exists once in `SLUS_004.22`; keep its
 implementation in `src/exe/slus_004_22/` and put only its proven public contract
-under `include/bof3/core/`. Do not create an orphan `src/engine/` or link one EMI
-against another.
+under `include/bof3/core/`. `src/shared/` templates compile into each owning
+image; do not create an orphan `src/engine/` or link one EMI against another.
 
 ### 7. Audit and hand off
 

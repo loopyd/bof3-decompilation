@@ -41,6 +41,8 @@ output.
   hand-edited as reviewed evidence improves.
 - Shared declarations belong in `include/bof3/` only when multiple targets or
   an external contract require them.
+- Cross-target embedded implementations may live as non-standalone templates
+  under `src/shared/`; address-owned wrappers remain in each target directory.
 - PsyQ signatures identify objects and addresses; official headers provide C
   declarations; Rizin snapshots provide callsites and xrefs. None substitutes
   for another.
