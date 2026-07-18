@@ -36,6 +36,20 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 - Never edit or track generated weak bindings under `out/bindings/`.
 - Write readable C89. Do not use handwritten assembly to force a match.
 
+## Exact duplicates
+
+- Treat `(analyzer-range SHA-256, size)` as a reuse candidate, not shared
+  ownership. Confirm reviewed boundaries and one exact representative first.
+- Normalize proven roles, parameters, local names, struct names, and field
+  names across group members. Keep unknown fields offset-based (`unk_XX`).
+- After two members independently byte-match with the same C shape, move only
+  the common body to `include/bof3/duplicates/<role>.inc`. Keep one
+  address-based `func_XXXXXXXX.c` wrapper per member to provide its raw symbol
+  and any compile-time parameters.
+- Never reuse an extern address across targets. Each wrapper retains its
+  target-local map, declaration, Splat boundary, and independent
+  `asm-diff`/`byte-match` validation.
+
 ## Verification
 
 - Use `bin/asm-diff` for instruction evidence and `bin/byte-match` for bytes.

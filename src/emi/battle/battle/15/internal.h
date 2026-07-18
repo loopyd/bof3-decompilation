@@ -2,6 +2,7 @@
 #define EMI_BATTLE_15_INTERNAL_H
 
 #include "bof3/bof3.h"
+#include "bof3/duplicates/panel_task.h"
 
 typedef void (*BattleSelectionHandler)(void);
 
@@ -10,12 +11,6 @@ typedef struct BattleLocalPanelEntry {
   u8  unk_01;
   u16 panel_id;
 } BattleLocalPanelEntry;
-
-typedef struct BattleLocalPanelTask {
-  u8  unk_00[3];
-  u8  state;
-  u16 x;
-} BattleLocalPanelTask;
 
 extern vu8  BATTLE_SELECTION_PHASE;
 extern vu8  BATTLE_SELECTION_OWNER_STATE;
@@ -84,7 +79,7 @@ extern vu8  BATTLE_SECONDARY_CURSOR_LIMIT;
 extern vu16 BATTLE_SECONDARY_FLAG_MASK;
 extern vu8  BATTLE_SELECTION_CURSOR_ROWS;
 extern vu8  BATTLE_SELECTION_CURSOR_MODE;
-extern BattleLocalPanelTask* D_80148648;
+extern Bof3PanelTask* D_80148648;
 extern vu8  BATTLE_SECONDARY_SAVED_GROUP;
 extern vu8  BATTLE_SECONDARY_SAVED_PAGE_BASE;
 extern vu8  BATTLE_SECONDARY_SAVED_CURSOR;
@@ -153,6 +148,7 @@ void func_800B0498(void);
 void func_800B0B0C(s16 base_x, s16 base_y);
 void func_800B2218(void);
 void func_800B22AC(void);
+void func_800B23F8(void);
 void func_800B250C(void);
 
 #endif

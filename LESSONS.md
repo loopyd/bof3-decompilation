@@ -100,6 +100,18 @@ to repeat or misdiagnose across targets. Use the
   permutations. Keep addresses, masks, and encoded values hexadecimal; write
   human quantities such as the 32-pixel step and 320-pixel clamp in decimal.
 
+### Share duplicate behavior, not target ownership
+
+- Exact bytes make a strong source-shape reuse candidate. They do not make one
+  function address, extern declaration, or semantic provenance global.
+- Normalize equivalent variables and struct fields before extracting a shared
+  body. A shared implementation with divergent local vocabulary only hides
+  unresolved understanding.
+- Use a compile-time `.inc` body after two independently matching members.
+  Keep address-based wrappers so each target still compiles and validates its
+  own symbol; do not introduce a runtime wrapper call merely to remove repeated
+  source text.
+
 ### Keep equivalence-test output isolated
 
 - Extractor parity tests must create a unique directory under `/tmp` and remove

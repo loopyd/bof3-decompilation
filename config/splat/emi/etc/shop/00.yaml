@@ -549,7 +549,7 @@ segments:
     - asm
     - func_801E2C9C
   - - 73948
-    - asm
+    - c
     - func_801E2CDC
   - - 74012
     - asm
@@ -639,7 +639,7 @@ segments:
     - asm
     - func_801E3EB4
   - - 78580
-    - asm
+    - c
     - func_801E3EF4
   - - 78644
     - asm

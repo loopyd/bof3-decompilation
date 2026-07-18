@@ -28,6 +28,33 @@ bin/byte-match TARGET@0xADDRESS
 Permuter scores rank candidates; they do not accept a match. Do not run two
 coordinators for one function.
 
+## Reuse exact duplicate groups
+
+Use `bin/rev-query duplicates TARGET@0xADDRESS --json` to inspect the complete
+exact-byte candidate group. Match one deterministic representative, then
+validate each reviewed member in its owning target.
+
+Normalize names from evidence before sharing code:
+
+- Use one semantic role for the group and the same names for equivalent
+  parameters, locals, structs, and fields.
+- Name unknown struct fields by offset (`unk_00`, `unk_04`) until behavior
+  supports a semantic name.
+- Keep addresses and raw function symbols target-local. Identical bytes do not
+  make one module's extern address valid in another module.
+- Keep constants as template parameters only when group members genuinely
+  differ; exact members should normally use the same readable constants.
+
+After two members independently match, the common body may live in
+`include/bof3/duplicates/<role>.inc`. Each `func_XXXXXXXX.c` remains as a small
+address-owned wrapper that defines the raw function macro and any explicit
+parameters before including the template. Do not use a wrapper call or one
+linked extern function: either can change instructions or cross independently
+loaded binary ownership.
+
+Every promoted member still requires its own source declaration, target map,
+Splat `c` boundary, `bin/asm-diff`, and `bin/byte-match` result.
+
 ## Validate a candidate
 
 ```sh
