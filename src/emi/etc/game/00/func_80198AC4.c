@@ -8,6 +8,6 @@ void func_80198AC4(void) {
   u16 state;
 
   state = D_80143B92;
-  __asm__ __volatile__("" : : : "memory");
+  COMPILER_BARRIER;
   D_801C7BB0[state]();
 }
