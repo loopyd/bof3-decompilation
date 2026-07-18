@@ -72,10 +72,10 @@ segments:
     - asm
     - func_801F31EC
   - - 1584
-    - asm
+    - c
     - func_801F3230
   - - 1624
-    - asm
+    - c
     - func_801F3258
   - - 1664
     - asm

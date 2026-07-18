@@ -153,10 +153,10 @@ segments:
     - asm
     - func_801F4560
   - - 6520
-    - asm
+    - c
     - func_801F4578
   - - 6560
-    - asm
+    - c
     - func_801F45A0
   - - 6600
     - asm
