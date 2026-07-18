@@ -39,64 +39,64 @@ typedef struct Commu00ActiveRecord {
   u32 progress_anchor;
 } Commu00ActiveRecord;
 
-#define COMMU00_TASK_SLOTS PTR_AT(volatile Commu00TaskSlot, 0x80146888u)
+#define COMMU00_TASK_SLOTS PSX_PTR(volatile Commu00TaskSlot, 0x80146888u)
 
 #define COMMU00_ACTIVE_RECORD_BASE   ((u32)0x801455c8u)
-#define COMMU00_RECORD_KIND_TABLE    PTR_AT(const volatile u8, 0x801457a8u)
+#define COMMU00_RECORD_KIND_TABLE    PSX_PTR(const volatile u8, 0x801457a8u)
 #define COMMU00_ACTIVE_TEMPLATE_BASE ((u32)0x801457e8u)
-#define COMMU00_FAIRY_PROGRESS       PTR_AT(volatile u8, 0x801448ecu)
-#define COMMU00_FAIRY_SLOT_INDEX     PTR_AT(volatile u8, 0x801448edu)
-#define COMMU00_BATTLE_COUNT         PTR_AT(volatile u32, 0x8014502cu)
-#define COMMU00_STATE                PTR_AT(volatile u8, 0x80143bb0u)
-#define COMMU00_ITEM_NAME            PTR_AT(volatile u8, 0x801490d8u)
-#define COMMU00_ACTIVE_UI            PTR_SLOT_AT(volatile u8, 0x801f2948u)
-extern vu16 COMMU00_LAST_NOTIFICATION_ROW;
+#define COMMU00_FAIRY_PROGRESS       PSX_PTR(volatile u8, 0x801448ecu)
+#define COMMU00_FAIRY_SLOT_INDEX     PSX_PTR(volatile u8, 0x801448edu)
+#define COMMU00_BATTLE_COUNT         PSX_PTR(volatile u32, 0x8014502cu)
+#define COMMU00_STATE                PSX_PTR(volatile u8, 0x80143bb0u)
+#define COMMU00_ITEM_NAME            PSX_PTR(volatile u8, 0x801490d8u)
+#define COMMU00_ACTIVE_UI            PSX_REF(volatile u8 *, 0x801f2948u)
+extern volatile u16 COMMU00_LAST_NOTIFICATION_ROW;
 extern s8   COMMU00_VISIBLE_SLOT_COUNT;
-extern vu32 COMMU00_LAST_WINDOW_STEP_TICK;
-extern vu32 COMMU00_WINDOW_ANCHOR_TICK;
-#define COMMU00_REMOVAL_QUEUE PTR_AT(volatile u8, 0x80145e30u)
-extern vu8 COMMU00_REMOVAL_QUEUE_COUNT;
-#define COMMU00_PENDING_QUEUE PTR_AT(volatile u8, 0x80145e48u)
-extern vu8 COMMU00_PENDING_QUEUE_COUNT;
-extern vu8 COMMU00_NOTIFICATION_QUEUE_COUNT;
-#define COMMU00_TYPE45_NOTIFICATION_TABLE PTR_AT(const volatile u8, 0x801f2458u)
+extern volatile u32 COMMU00_LAST_WINDOW_STEP_TICK;
+extern volatile u32 COMMU00_WINDOW_ANCHOR_TICK;
+#define COMMU00_REMOVAL_QUEUE PSX_PTR(volatile u8, 0x80145e30u)
+extern volatile u8 COMMU00_REMOVAL_QUEUE_COUNT;
+#define COMMU00_PENDING_QUEUE PSX_PTR(volatile u8, 0x80145e48u)
+extern volatile u8 COMMU00_PENDING_QUEUE_COUNT;
+extern volatile u8 COMMU00_NOTIFICATION_QUEUE_COUNT;
+#define COMMU00_TYPE45_NOTIFICATION_TABLE PSX_PTR(const volatile u8, 0x801f2458u)
 #define COMMU00_TASK_SLOT_BASE            ((u32)0x80146888u)
-#define COMMU00_TASK_TEMPLATE_TABLE       PTR_AT(const volatile u8, 0x801f2568u)
-#define COMMU00_SLOT_TEMPLATE_TABLE       PTR_AT(const volatile u8, 0x801f2700u)
-#define COMMU00_TYPE8_LABEL_TABLE  PTR_AT(const volatile u16, 0x801f2930u)
-#define COMMU00_SLOT_PALETTE_TABLE PTR_AT(const volatile u16, 0x801f24fcu)
-#define COMMU00_RECORD_VARIANTS    PTR_AT(const volatile u8, 0x801f25a4u)
-#define COMMU00_VARIANT_ROTATION   PTR_AT(volatile u8, 0x801f2928u)
-extern vu32 COMMU00_PROGRESS_COUNTER;
-extern vu16 COMMU00_WORLD_STATE;
-extern vu8  COMMU00_TYPE10_TOTAL;
-extern vu8  COMMU00_TYPE11_TOTAL;
-#define COMMU00_SCRATCH_SLOT PTR_SLOT_AT(volatile Commu00TaskSlot, 0x1f800044u)
+#define COMMU00_TASK_TEMPLATE_TABLE       PSX_PTR(const volatile u8, 0x801f2568u)
+#define COMMU00_SLOT_TEMPLATE_TABLE       PSX_PTR(const volatile u8, 0x801f2700u)
+#define COMMU00_TYPE8_LABEL_TABLE  PSX_PTR(const volatile u16, 0x801f2930u)
+#define COMMU00_SLOT_PALETTE_TABLE PSX_PTR(const volatile u16, 0x801f24fcu)
+#define COMMU00_RECORD_VARIANTS    PSX_PTR(const volatile u8, 0x801f25a4u)
+#define COMMU00_VARIANT_ROTATION   PSX_PTR(volatile u8, 0x801f2928u)
+extern volatile u32 COMMU00_PROGRESS_COUNTER;
+extern volatile u16 COMMU00_WORLD_STATE;
+extern volatile u8  COMMU00_TYPE10_TOTAL;
+extern volatile u8  COMMU00_TYPE11_TOTAL;
+#define COMMU00_SCRATCH_SLOT PSX_REF(volatile Commu00TaskSlot *, 0x1f800044u)
 
 static inline volatile Commu00TaskSlot* commu00_task_slot(u8 task_index) {
-  return PTR_AT(volatile Commu00TaskSlot,
+  return PSX_PTR(volatile Commu00TaskSlot,
                 COMMU00_TASK_SLOT_BASE + ((u32)task_index * 0x98u));
 }
 
 static inline const volatile Commu00ActiveRecord* commu00_active_record(
     u8 source_index) {
-  return PTR_AT(const volatile Commu00ActiveRecord,
+  return PSX_PTR(const volatile Commu00ActiveRecord,
                 COMMU00_ACTIVE_RECORD_BASE + ((u32)source_index * 8u));
 }
 
 static inline volatile Commu00ActiveRecord* commu00_mutable_active_record(
     u8 source_index) {
-  return PTR_AT(volatile Commu00ActiveRecord,
+  return PSX_PTR(volatile Commu00ActiveRecord,
                 COMMU00_ACTIVE_RECORD_BASE + ((u32)source_index * 8u));
 }
 
 static inline volatile u8* commu00_active_template(u8 source_index) {
-  return PTR_AT(volatile u8,
+  return PSX_PTR(volatile u8,
                 COMMU00_ACTIVE_TEMPLATE_BASE + ((u32)source_index * 5u));
 }
 
 static inline volatile u8* commu00_notification_queue_slot(u8 queue_index) {
-  return PTR_AT(volatile u8, 0x80145e60u + ((u32)queue_index * 2u));
+  return PSX_PTR(volatile u8, 0x80145e60u + ((u32)queue_index * 2u));
 }
 
 u16  game_random_u16(void);

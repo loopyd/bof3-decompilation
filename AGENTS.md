@@ -14,13 +14,13 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 
 ## Ownership
 
-| Fact | Owner |
-| --- | --- |
+| Fact                             | Owner                          |
+| -------------------------------- | ------------------------------ |
 | Binary identity and load address | `config/targets/<target>.toml` |
-| Reviewed layout | `config/splat/` |
-| Target-local symbols | `config/symbols/<target>.txt` |
-| Reviewed Rizin annotations | `config/analysis/<target>/` |
-| Authored lifts | `src/exe/`, `src/emi/` |
+| Reviewed layout                  | `config/splat/`                |
+| Target-local symbols             | `config/symbols/<target>.txt`  |
+| Reviewed Rizin annotations       | `config/analysis/<target>/`    |
+| Authored lifts                   | `src/exe/`, `src/emi/`         |
 
 ## Source and symbols
 

@@ -103,3 +103,75 @@ Results are `exact`, `partial`, or `invalid`. Valid partial lifts exit `0`;
 invalid metadata, compilation, linking, or comparison exits `2`. Rizin-index
 coverage is supplementary and may be unavailable without invalidating the live
 lift audit.
+
+## Unmatched functions (INCLUDE_ASM)
+
+When a function cannot yet be represented in clean matching C, use INCLUDE_ASM
+as a first-class fallback. This preserves section selection, alignment, symbol
+metadata, and separate read-only data inclusion — enabling incremental progress
+without producing low-quality fake matches.
+
+A clean unmatched function is better than unreadable C filled with arbitrary
+hacks.
+
+### Usage
+
+Replace the function body in `func_XXXXXXXX.c`:
+
+```c
+#include "internal.h"
+#include "bof3/asm.h"
+
+// func_8014AEE0 is not yet matched — see adjacent .s file.
+INCLUDE_ASM(func_8014AEE0);
+```
+
+The macro marks the call site with a global symbol declaration. The actual
+implementation lives in an adjacent assembly file compiled into the same target:
+
+```text
+src/exe/<target>/func_XXXXXXXX.c    (declarations + INCLUDE_ASM marker)
+src/exe/<target>/func_XXXXXXXX.s    (raw disassembly)
+```
+
+### Assembly file format
+
+```asm
+.set noreorder
+.set noat
+
+.section .text.func_8014AEE0, "ax", @progbits
+.align 2
+.globl func_8014AEE0
+.ent   func_8014AEE0
+func_8014AEE0:
+    # raw disassembly here — preserve original instruction order
+.end   func_8014AEE0
+.set reorder
+```
+
+The section name (`.text.func_XXXXXXXX`) must match the Splat boundary to ensure
+correct placement in the linked binary. Use `"ax"` flags for code, `"aw" @nobits`
+for BSS, and `"a" @progbits` for read-only data.
+
+### Adjacent .rodata
+
+For functions with adjacent `.rodata` (jump tables, string literals):
+
+- Include the `.rodata` section before `.text` in the same `.s` file, or
+- Place it in a companion `func_XXXXXXXX.rodata.s` file and include both from
+  the build system.
+
+### Promotion path
+
+When reconstruction succeeds:
+
+1. Replace `INCLUDE_ASM(func_XXXXXXXX);` with matching C body.
+2. Remove `func_XXXXXXXX.s`.
+3. Update the Splat boundary from `"a"` (asm) to `"c"` (C).
+4. Run `bin/byte-match TARGET@0xADDRESS` to validate.
+
+### Build integration
+
+The build system must compile adjacent `.s` files alongside their `.c`
+counterparts for each target directory containing INCLUDE_ASM markers.

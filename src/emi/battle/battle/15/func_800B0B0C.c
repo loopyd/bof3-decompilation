@@ -28,9 +28,9 @@ void func_800B0B0C(s16 base_x, s16 base_y) {
 
     ((void (*)(s32, s32, s32, s32, s32, s32))0x801ae3f0u)(
         (s32)(u16)slot_x, (s32)(u16)slot_y, 0x2du, 0x14u, 0u,
-        (s32)MMIO8(0x80144952u));
+        (s32)REG8(0x80144952u));
 
-    selection_byte = MMIO8(0x801462e5u);
+    selection_byte = REG8(0x801462e5u);
 
     if (selection_byte & 0x80u) {
       active_slot = selection_byte & 0x7fu;
@@ -56,7 +56,7 @@ void func_800B0B0C(s16 base_x, s16 base_y) {
     slot += 1u;
   } while (slot < 3u);
 
-  selection_byte = MMIO8(0x801462e5u);
+  selection_byte = REG8(0x801462e5u);
 
   if (!(selection_byte & 0x80u)) {
     active_slot = selection_byte & 0x7fu;
