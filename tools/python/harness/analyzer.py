@@ -226,7 +226,7 @@ def build_snapshot(
         function_id = f"{target_id}@{address:08x}"
         source = None
         if source_dir is not None:
-            candidate = source_dir / f"func_{address:08x}.c"
+            candidate = source_dir / f"func_{address:08X}.c"
             if candidate.is_file():
                 source = str(candidate)
         functions.append(

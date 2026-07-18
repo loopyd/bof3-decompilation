@@ -41,7 +41,7 @@ def test_target_qualified_lift_resolves_only_its_owner(
 
     assert function.address == 0x801CE758
     assert manifest.id.value == "exe/logo"
-    assert source == tmp_path / "src/exe/logo/func_801ce758.c"
+    assert source == tmp_path / "src/exe/logo/func_801CE758.c"
 
 
 def test_context_keeps_symbols_target_local(tmp_path: Path, monkeypatch) -> None:

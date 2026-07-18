@@ -29,8 +29,9 @@ are still binary-backed and must be reviewed before promotion.
 
 Every manifest denotes a known target. Splat segments own its reviewed
 lifecycle. Use extracted evidence and the
-target map before adding source; `bin/promote TARGET@0xADDRESS candidate.c`
-validates a candidate but does not create source, layouts, or maps.
+target map before adding source; after manually installing a candidate, use
+`bin/promote TARGET@0xADDRESS src/<target>/func_XXXXXXXX.c` to validate it.
+The command does not create source, layouts, or maps.
 
 ## Source ownership
 

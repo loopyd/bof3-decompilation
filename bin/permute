@@ -314,16 +314,9 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError("TARGET@0xADDRESS is required")
         raw_source = str(args.source)
         if "@" in raw_source:
-            from harness.domain import parse_function_id
-            from harness.domain.manifests import load_target_manifests
+            from harness.commands.lift import resolve_function
 
-            function_id = parse_function_id(raw_source)
-            manifest = load_target_manifests(ROOT).get(function_id.target.value)
-            if manifest is None:
-                raise ValueError(f"unknown target: {function_id.target.value}")
-            args.source = (
-                ROOT / manifest.source_dir / f"func_{function_id.address:08x}.c"
-            )
+            function_id, _, args.source = resolve_function(raw_source)
             if args.function is None:
                 args.function = f"func_{function_id.address:08X}"
         return run(args)

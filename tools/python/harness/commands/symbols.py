@@ -81,7 +81,7 @@ def run_check(args: argparse.Namespace) -> int:
         source_dir = root / manifest.source_dir
         for source in source_dir.glob("func_*.c"):
             encoded = source.stem.removeprefix("func_")
-            if len(encoded) != 8:
+            if len(encoded) != 8 or encoded != encoded.upper():
                 errors.append(f"invalid lifted filename: {source.relative_to(root)}")
                 continue
             try:

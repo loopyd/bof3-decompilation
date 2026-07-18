@@ -109,7 +109,7 @@ shared character recalculation routine, and passes both level-record bytes at
 This contract is disassembly-backed; an exact C lift remains pending, so the
 remaining trailing bytes and recalculation semantics stay target-local. A
 readable target-local candidate now exists at
-`src/emi/etc/game/00/func_801addd4.c`; it currently measures 39.71% under the
+`src/emi/etc/game/00/func_801ADDD4.c`; it currently measures 39.71% under the
 canonical `-O2` profile and is not promoted as an exact replacement.
 
 ## Master IDs

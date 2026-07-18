@@ -16,13 +16,13 @@ numeric form remains part of the match evidence.
 
 | Lifted use | Official declaration | Owner |
 | --- | --- | --- |
-| `SwCARD`, `HwCARD`, `HwCPU` | `kernel.h` descriptors | `src/exe/slus_004_22/func_8014b1a4.c`, `func_8014ad28.c` |
-| `EvSpIOE`, `EvSpTIMOUT`, `EvSpNEW`, `EvSpERROR` | `kernel.h` event specifications | `func_8014b1a4.c` |
-| `EvMdNOINTR`, `EvMdINTR`, `EvSpTRAP` | `kernel.h` event modes/specification | `func_8014b1a4.c`, `func_8014ad28.c` |
-| `PADstart` | `libetc.h` controller bit `1 << 11` | `src/exe/logo/func_801cedfc.c`, `src/exe/slus_004_22/slot_table_logo_str.c` |
-| `CdlSetloc` | `libcd.h` command `0x02` | `src/exe/slus_004_22/func_8014e0fc.c` |
-| `MODE_NTSC` | `libetc.h` video mode `0` | `src/exe/slus_004_22/func_8014ad28.c` |
-| `CdlComplete` | `libcd.h` callback status `0x02` | `src/exe/slus_004_22/func_801621e8.c` |
+| `SwCARD`, `HwCARD`, `HwCPU` | `kernel.h` descriptors | `src/exe/slus_004_22/func_8014B1A4.c`, `func_8014AD28.c` |
+| `EvSpIOE`, `EvSpTIMOUT`, `EvSpNEW`, `EvSpERROR` | `kernel.h` event specifications | `func_8014B1A4.c` |
+| `EvMdNOINTR`, `EvMdINTR`, `EvSpTRAP` | `kernel.h` event modes/specification | `func_8014B1A4.c`, `func_8014AD28.c` |
+| `PADstart` | `libetc.h` controller bit `1 << 11` | `src/exe/logo/func_801CEDFC.c`, `src/exe/slus_004_22/slot_table_logo_str.c` |
+| `CdlSetloc` | `libcd.h` command `0x02` | `src/exe/slus_004_22/func_8014E0FC.c` |
+| `MODE_NTSC` | `libetc.h` video mode `0` | `src/exe/slus_004_22/func_8014AD28.c` |
+| `CdlComplete` | `libcd.h` callback status `0x02` | `src/exe/slus_004_22/func_801621E8.c` |
 
 Each of these changes is required to preserve the original instruction and
 byte match. The project wrapper [include/bof3/psyq.h](../../../include/bof3/psyq.h)

@@ -19,7 +19,7 @@ from .snapshot import read_snapshot, snapshot_path, validate_snapshot_identity
 _SOURCE = re.compile(r"@source 0x[0-9A-F]{8}\b")
 _BEHAVIOR = re.compile(r"@behavior (?:UNKNOWN: .+|[^\n]+)")
 _UNDEFINED = re.compile(r"undefined reference to `([^']+)'")
-_FUNCTION = re.compile(r"func_[0-9A-Fa-f]{8}\Z")
+_FUNCTION = re.compile(r"func_[0-9A-F]{8}\Z")
 
 DiffRunner = Callable[[AsmDiffRequest], dict[str, Any]]
 

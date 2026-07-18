@@ -9,7 +9,7 @@ from harness.match._asm_link import _target_map_bindings, resolve_symbol_address
 
 def test_maps_normalize_raw_data_and_function_spelling() -> None:
     symbols = parse_map(
-        "func_80143b44 = 0x80143B44;\nDAT_80143b40 = 0x80143B40;\n"
+        "func_80143B44 = 0x80143B44;\nDAT_80143b40 = 0x80143B40;\n"
     )
 
     assert format_map(symbols) == (

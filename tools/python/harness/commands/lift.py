@@ -38,7 +38,7 @@ def resolve_function(value: str) -> tuple[FunctionId, TargetManifest, Path]:
     manifest = manifests.get(function.target.value)
     if manifest is None:
         raise ValueError(f"unknown target: {function.target.value}")
-    source = root / manifest.source_dir / f"func_{function.address:08x}.c"
+    source = root / manifest.source_dir / f"func_{function.address:08X}.c"
     return function, manifest, source
 
 
@@ -48,10 +48,6 @@ def splat_assembly(manifest: TargetManifest, address: int) -> Path:
     expected = directory / f"func_{address:08X}.s"
     if expected.is_file():
         return expected
-    # Splat historically emitted lower-case labels in a few local layouts.
-    fallback = directory / f"func_{address:08x}.s"
-    if fallback.is_file():
-        return fallback
     raise FileNotFoundError(
         f"Splat assembly not found: {expected}; run the target's Splat split first"
     )

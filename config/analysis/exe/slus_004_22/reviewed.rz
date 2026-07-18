@@ -46,7 +46,7 @@ CC "absolute frame counter" @ 0x80143e6c
 f data.D_8018B300 4 @ 0x8018b300
 CC "boot-level init flag" @ 0x8018b300
 
-# Event handles from func_8014b1a4 event setup.
+# Event handles from func_8014B1A4 event setup.
 f data.D_80145E14 4 @ 0x80145e14
 f data.D_80145E18 4 @ 0x80145e18
 f data.D_80145E1C 4 @ 0x80145e1c
@@ -54,6 +54,6 @@ f data.D_80145E20 4 @ 0x80145e20
 f data.D_80145E24 4 @ 0x80145e24
 f data.D_80145E28 4 @ 0x80145e28
 f data.D_80145E2C 4 @ 0x80145e2c
-CC "SwCARD/HwCARD event handles (func_8014b1a4)" @ 0x80145e14
+CC "SwCARD/HwCARD event handles (func_8014B1A4)" @ 0x80145e14
 
 fs functions

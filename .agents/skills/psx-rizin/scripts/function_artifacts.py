@@ -36,6 +36,8 @@ def main() -> int:
     parser.add_argument("--rizin", default="rizin")
     parser.add_argument("--no-analysis", action="store_true")
     args = parser.parse_args()
+    if not args.binary.is_file():
+        parser.error(f"binary not found: {args.binary}")
     args.out.mkdir(parents=True, exist_ok=True)
     analyze = not args.no_analysis
     addr = f"0x{args.address:x}"

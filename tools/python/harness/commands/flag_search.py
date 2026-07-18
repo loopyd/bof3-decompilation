@@ -19,7 +19,7 @@ def run(args: argparse.Namespace) -> int:
     manifest = load_target_manifests(layout.root).get(function.target.value)
     if manifest is None:
         raise ValueError(f"unknown target: {function.target.value}")
-    source = layout.root / manifest.source_dir / f"func_{function.address:08x}.c"
+    source = layout.root / manifest.source_dir / f"func_{function.address:08X}.c"
     if not source.is_file():
         raise FileNotFoundError(f"lifted source does not exist: {source}")
     payload = search_flags(

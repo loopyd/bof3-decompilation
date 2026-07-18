@@ -140,6 +140,13 @@ def main() -> int:
     parser.add_argument("--json", type=Path, help="write JSON to file instead of stdout")
     args = parser.parse_args()
 
+    if not args.input.is_file():
+        parser.error(f"input not found: {args.input}")
+    if args.ram_size <= 0:
+        parser.error("--ram-size must be positive")
+    if args.limit < 0:
+        parser.error("--limit must be non-negative")
+
     result = scan(args.input, args.base, args.ram_size, args.limit)
     encoded = json.dumps(result, indent=2, sort_keys=True)
     if args.json:

@@ -24,11 +24,14 @@ def main() -> int:
     parser.add_argument("--no-analysis", action="store_true")
     args = parser.parse_args()
 
+    if not args.binary.is_file():
+        parser.error(f"binary not found: {args.binary}")
+
     args.out.mkdir(parents=True, exist_ok=True)
     commands = {
         "info": "ij",
         "functions": "aflj",
-        "strings": "izj",
+        "strings": "izzj",
         "xrefs": "axlj",
     }
     manifest: dict[str, object] = {

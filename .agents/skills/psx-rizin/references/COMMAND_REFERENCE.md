@@ -42,7 +42,7 @@ pd <instructions>        disassemble instruction count
 pD <bytes>               disassemble byte count
 pdf                      function disassembly
 px <bytes>               hex
-izj                      strings JSON
+izzj                     raw strings JSON
 aflj                     functions JSON
 axlj                     xrefs JSON
 ```
@@ -100,7 +100,7 @@ pdgs                     languages
 
 ```bash
 rizin -q -a mips -b 32 -e cfg.bigendian=false -m 0x80010000 \
-  -c 'aa;aar;aaf;aflj;q' payload.bin
+  -c 'aa;aac;aar;aflj;q' payload.bin
 ```
 
 For production scripts, prefer one JSON command per controlled invocation or `rzpipe`; store stderr separately.

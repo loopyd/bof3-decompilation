@@ -31,11 +31,13 @@ def run_rizin(
     timeout: int = 300,
 ) -> tuple[str, str]:
     executable = require_tool(rizin)
-    analysis = "aa;aar;aaf;aac;aad;" if analyze else ""
+    analysis = "aa;aac;aar;" if analyze else ""
     full_command = f"{analysis}{command};q"
     argv = [
         executable,
         "-q",
+        "-N",
+        "-n",
         "-a",
         "mips",
         "-b",
@@ -48,14 +50,17 @@ def run_rizin(
         full_command,
         str(binary),
     ]
-    completed = subprocess.run(
-        argv,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        timeout=timeout,
-        check=False,
-    )
+    try:
+        completed = subprocess.run(
+            argv,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=timeout,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RizinError(f"Rizin command timed out after {timeout}s: {command}") from exc
     if completed.returncode != 0:
         raise RizinError(
             f"Rizin command failed ({completed.returncode}): {command}\n{completed.stderr.strip()}"

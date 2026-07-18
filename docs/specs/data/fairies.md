@@ -59,8 +59,8 @@ The separate `COMMU00.EMI#0 @ 0x801f1bc8` consumer indexes runtime
 `0x801f2618` with `row × 2` and loads the two bytes independently, confirming
 the `FairyExploreObject` item-index and item-type widths. Target-local
 candidates now exist at
-`src/emi/etc/commu00/00/func_801f18f8.c` (23.26%) and
-`src/emi/etc/commu00/00/func_801f1bc8.c` (22.22%) under canonical `-O2`;
+`src/emi/etc/commu00/00/func_801F18F8.c` (23.26%) and
+`src/emi/etc/commu00/00/func_801F1BC8.c` (22.22%) under canonical `-O2`;
 the gift-row widths and exploration progression behavior are recorded, but
 exact function promotion remains pending.
 

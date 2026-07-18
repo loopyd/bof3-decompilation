@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+usage() {
+  cat <<'USAGE'
+Usage: build-diff
+
+Configure PSX_DIFF_CMD, or PSX_EXPECTED and PSX_ACTUAL. Optional variables:
+PSX_BUILD_CMD and PSX_DIFF_REPORT.
+USAGE
+}
+
+case "${1:-}" in
+  -h|--help) usage; exit 0 ;;
+  "") ;;
+  *) echo "error: unexpected argument: $1" >&2; usage >&2; exit 2 ;;
+esac
+
 sha256_file() {
   if command -v sha256sum >/dev/null 2>&1; then
     sha256sum "$1" | awk '{print $1}'
@@ -37,14 +52,8 @@ if [[ -n "$DIFF_CMD" ]]; then
 fi
 
 if [[ -z "$EXPECTED" || -z "$ACTUAL" ]]; then
-  cat >&2 <<'USAGE'
-error: configure either PSX_DIFF_CMD or both PSX_EXPECTED and PSX_ACTUAL.
-Example:
-  PSX_BUILD_CMD='ninja -C build' \
-  PSX_EXPECTED=expected/SLUS.bin \
-  PSX_ACTUAL=build/SLUS.bin \
-  bin/build-diff
-USAGE
+  echo "error: configure PSX_DIFF_CMD or both PSX_EXPECTED and PSX_ACTUAL" >&2
+  usage >&2
   exit 2
 fi
 

@@ -25,154 +25,154 @@ segments:
   subsegments:
   - - 24
     - c
-    - func_801f2c18
+    - func_801F2C18
   - - 92
     - c
-    - func_801f2c5c
+    - func_801F2C5C
   - - 136
     - c
-    - func_801f2c88
+    - func_801F2C88
   - - 292
     - asm
-    - func_801f2d24
+    - func_801F2D24
   - - 540
     - asm
-    - func_801f2e1c
+    - func_801F2E1C
   - - 804
     - asm
-    - func_801f2f24
+    - func_801F2F24
   - - 888
     - asm
-    - func_801f2f78
+    - func_801F2F78
   - - 1040
     - asm
-    - func_801f3010
+    - func_801F3010
   - - 1208
     - asm
-    - func_801f30b8
+    - func_801F30B8
   - - 1404
     - asm
-    - func_801f317c
+    - func_801F317C
   - - 1488
     - asm
-    - func_801f31d0
+    - func_801F31D0
   - - 1604
     - asm
-    - func_801f3244
+    - func_801F3244
   - - 1672
     - asm
-    - func_801f3288
+    - func_801F3288
   - - 1708
     - asm
-    - func_801f32ac
+    - func_801F32AC
   - - 1860
     - asm
-    - func_801f3344
+    - func_801F3344
   - - 2032
     - asm
-    - func_801f33f0
+    - func_801F33F0
   - - 2300
     - asm
-    - func_801f34fc
+    - func_801F34FC
   - - 2428
     - asm
-    - func_801f357c
+    - func_801F357C
   - - 2644
     - asm
-    - func_801f3654
+    - func_801F3654
   - - 2652
     - asm
-    - func_801f365c
+    - func_801F365C
   - - 2780
     - asm
-    - func_801f36dc
+    - func_801F36DC
   - - 2996
     - asm
-    - func_801f37b4
+    - func_801F37B4
   - - 3004
     - asm
-    - func_801f37bc
+    - func_801F37BC
   - - 3164
     - asm
-    - func_801f385c
+    - func_801F385C
   - - 3292
     - asm
-    - func_801f38dc
+    - func_801F38DC
   - - 3508
     - asm
-    - func_801f39b4
+    - func_801F39B4
   - - 3516
     - asm
-    - func_801f39bc
+    - func_801F39BC
   - - 3684
     - asm
-    - func_801f3a64
+    - func_801F3A64
   - - 3752
     - asm
-    - func_801f3aa8
+    - func_801F3AA8
   - - 3816
     - asm
-    - func_801f3ae8
+    - func_801F3AE8
   - - 4020
     - asm
-    - func_801f3bb4
+    - func_801F3BB4
   - - 4140
     - c
-    - func_801f3c2c
+    - func_801F3C2C
   - - 4376
     - c
-    - func_801f3d18
+    - func_801F3D18
   - - 4488
     - c
-    - func_801f3d88
+    - func_801F3D88
   - - 5844
     - asm
-    - func_801f42d4
+    - func_801F42D4
   - - 5940
     - asm
-    - func_801f4334
+    - func_801F4334
   - - 6012
     - asm
-    - func_801f437c
+    - func_801F437C
   - - 6088
     - asm
-    - func_801f43c8
+    - func_801F43C8
   - - 6180
     - asm
-    - func_801f4424
+    - func_801F4424
   - - 6412
     - asm
-    - func_801f450c
+    - func_801F450C
   - - 6452
     - asm
-    - func_801f4534
+    - func_801F4534
   - - 6492
     - asm
-    - func_801f455c
+    - func_801F455C
   - - 6496
     - asm
-    - func_801f4560
+    - func_801F4560
   - - 6520
     - asm
-    - func_801f4578
+    - func_801F4578
   - - 6560
     - asm
-    - func_801f45a0
+    - func_801F45A0
   - - 6600
     - asm
-    - func_801f45c8
+    - func_801F45C8
   - - 6604
     - asm
-    - func_801f45cc
+    - func_801F45CC
   - - 6628
     - asm
-    - func_801f45e4
+    - func_801F45E4
   - - 6656
     - asm
-    - func_801f4600
+    - func_801F4600
   - - 6684
     - asm
-    - func_801f461c
+    - func_801F461C
 - - 6772
   - bin
   - data

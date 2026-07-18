@@ -183,10 +183,10 @@ def build_status_shared_metadata(
     metadata["shared_tables_available"] = True
     metadata["shared_game_archive"] = str(game_archive_path)
     metadata["shared_sprite_tables"] = {
-        "D_801cce84": extract_game_shared_sprite_table(
+        "D_801CCE84": extract_game_shared_sprite_table(
             game_payload, GAME_SHARED_STATUS_TABLE_A
         ),
-        "D_801ccf7c": extract_game_shared_sprite_table(
+        "D_801CCF7C": extract_game_shared_sprite_table(
             game_payload, GAME_SHARED_STATUS_TABLE_B
         ),
     }

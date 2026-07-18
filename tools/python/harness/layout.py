@@ -3,10 +3,15 @@
 from __future__ import annotations
 
 import hashlib
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
+
+
+_RAW_FUNCTION = re.compile(r"func_[0-9A-F]{8}\Z")
+_MIXED_CASE_RAW_FUNCTION = re.compile(r"func_[0-9A-Fa-f]{8}\Z")
 
 
 @dataclass(frozen=True)
@@ -100,10 +105,13 @@ def _integer(value: object, *, field: str) -> int:
 def _row(value: object) -> tuple[int, str, str | None] | None:
     if not isinstance(value, list) or len(value) < 2 or not isinstance(value[1], str):
         return None
+    name = str(value[2]) if len(value) >= 3 else None
+    if name and _MIXED_CASE_RAW_FUNCTION.fullmatch(name) and not _RAW_FUNCTION.fullmatch(name):
+        raise ValueError(f"non-canonical Splat function name: {name}")
     return (
         _integer(value[0], field="offset"),
         value[1],
-        (str(value[2]) if len(value) >= 3 else None),
+        name,
     )
 
 

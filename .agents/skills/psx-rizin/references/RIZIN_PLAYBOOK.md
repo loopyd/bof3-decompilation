@@ -49,7 +49,7 @@ pdf @ <func>            disassemble function
 pd 20 @ <addr>          20 instructions
 pD 80 @ <addr>          80 bytes interpreted as disassembly
 px 64 @ <addr>          64-byte hex dump
-iz / izz / izj          strings
+iz / izz / izj / izzj   strings; use `izzj` JSON for raw images
 ```
 
 `pd` counts instructions; `pD` counts bytes.
@@ -189,7 +189,7 @@ Prefer JSON outputs for durable tooling:
 ij       core/binary information
 aflj     functions
 axlj     xrefs
-izj      strings
+izzj     raw strings
 afij     current/function info
 axtj     xrefs to
 axfj     xrefs from

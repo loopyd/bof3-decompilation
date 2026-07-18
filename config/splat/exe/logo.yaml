@@ -18,24 +18,24 @@ segments:
     start: 0x758
     vram: 0x801ce758
     subsegments:
-      - [0x758, c, func_801ce758]
+      - [0x758, c, func_801CE758]
   - name: pre_main
     type: code
     start: 0x760
     vram: 0x801ce760
     subsegments:
-      - [0x760, c, func_801ce760]
-      - [0x7f4, asm, func_801ce7f4]
-      - [0x930, asm, func_801ce930]
-      - [0xa98, asm, func_801cea98]
-      - [0xbfc, asm, func_801cebfc]
-      - [0xd48, asm, func_801ced48]
-      - [0xda4, asm, func_801ceda4]
+      - [0x760, c, func_801CE760]
+      - [0x7f4, asm, func_801CE7F4]
+      - [0x930, asm, func_801CE930]
+      - [0xa98, asm, func_801CEA98]
+      - [0xbfc, asm, func_801CEBFC]
+      - [0xd48, asm, func_801CED48]
+      - [0xda4, asm, func_801CEDA4]
   - name: main
     type: code
     start: 0xdfc
     vram: 0x801cedfc
     subsegments:
-      - [0xdfc, c, func_801cedfc]
+      - [0xdfc, c, func_801CEDFC]
   - [0xe7c, bin, post_main]
   - [0x1d800]
