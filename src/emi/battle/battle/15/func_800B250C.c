@@ -6,4 +6,4 @@
  */
 #define BOF3_PANEL_TASK_FUNCTION func_800B250C
 #define BOF3_PANEL_LIMIT 320
-#include "bof3/duplicates/advance_panel_task_x.inc"
+#include "shared/ui/advance_panel_task_x.inc"

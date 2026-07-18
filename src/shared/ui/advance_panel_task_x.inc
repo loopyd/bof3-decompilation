@@ -1,5 +1,5 @@
 #if !defined(BOF3_PANEL_TASK_FUNCTION) || !defined(BOF3_PANEL_LIMIT)
-#error "define BOF3_PANEL_TASK_FUNCTION and BOF3_PANEL_LIMIT before including"
+#error "define BOF3_PANEL_TASK_FUNCTION and BOF3_PANEL_LIMIT before including this template"
 #endif
 
 void BOF3_PANEL_TASK_FUNCTION(void) {

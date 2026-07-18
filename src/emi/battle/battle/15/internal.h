@@ -2,7 +2,7 @@
 #define EMI_BATTLE_15_INTERNAL_H
 
 #include "bof3/bof3.h"
-#include "bof3/duplicates/panel_task.h"
+#include "bof3/ui/panel_task.h"
 
 typedef void (*BattleSelectionHandler)(void);
 

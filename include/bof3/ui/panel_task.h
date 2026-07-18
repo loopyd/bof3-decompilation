@@ -1,5 +1,5 @@
-#ifndef BOF3_DUPLICATES_PANEL_TASK_H
-#define BOF3_DUPLICATES_PANEL_TASK_H
+#ifndef BOF3_UI_PANEL_TASK_H
+#define BOF3_UI_PANEL_TASK_H
 
 #include "bof3/defines.h"
 
