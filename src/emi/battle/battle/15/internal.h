@@ -153,5 +153,6 @@ void func_800B0498(void);
 void func_800B0B0C(s16 base_x, s16 base_y);
 void func_800B2218(void);
 void func_800B22AC(void);
+void func_800B250C(void);
 
 #endif

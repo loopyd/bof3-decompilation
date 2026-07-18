@@ -198,7 +198,7 @@ segments:
     - asm
     - func_801996A8
   - - 16124
-    - asm
+    - c
     - func_801996FC
   - - 16188
     - asm

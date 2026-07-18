@@ -5,6 +5,14 @@
 
 typedef void (*GameEntry0StateHandler)(void);
 
+typedef struct GameLocalPanelTask {
+  u8  unk_00[3];
+  u8  state;
+  u16 x;
+} GameLocalPanelTask;
+
+extern GameLocalPanelTask* D_80148648;
+
 typedef struct GameScenarioState {
   s8  scenario_id;
   u8  field_01;
@@ -356,5 +364,6 @@ void func_801A0048(s16 a, s16 b);
  */
 void func_801A0514(void);
 void func_801B3CCC(u32 arg0);
+void func_801996FC(void);
 
 #endif
