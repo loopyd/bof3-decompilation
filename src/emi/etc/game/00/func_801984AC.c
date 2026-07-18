@@ -1,9 +1,13 @@
 #include "internal.h"
 
-/* @behavior dispatches the current front-end sub-state through its local
+/* @behavior dispatches the current front-end sub-state through the fourth local
  * state-handler table.
  * @source 0x801984AC
  */
 void func_801984AC(void) {
-  D_801C7B88[D_80143B92]();
+  u16 state;
+
+  state = D_80143B92;
+  __asm__ __volatile__("" : : : "memory");
+  D_801C7B88[state]();
 }
