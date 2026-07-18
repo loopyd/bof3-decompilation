@@ -4,7 +4,7 @@ ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 BUILD_DIR ?= $(ROOT)/build
 
 ifeq ($(PROFILE),compat/capcom97)
-  CPPFLAGS ?= -DHARNESS_TARGET_PSX=1 -I$(ROOT)/include -I$(ROOT)/toolchains/psyq/4.7/include
+  CPPFLAGS ?= -DHARNESS_TARGET_PSX=1 -I$(ROOT)/src -I$(ROOT)/include -I$(ROOT)/toolchains/psyq/4.7/include
   CFLAGS ?= -O2 -G0 -funsigned-char -msoft-float -gcoff
   ASPSX_VERSION ?= 2.56
 else
@@ -21,6 +21,7 @@ ASFLAGS ?= -G0 -EL -mips1
 
 C_SOURCES := $(shell find $(ROOT)/src -type f -name '*.c' -print | sort)
 ASM_SOURCES := $(shell find $(ROOT)/src -type f \( -name '*.s' -o -name '*.S' \) -print | sort)
+SHARED_INPUTS := $(shell find $(ROOT)/src/shared -type f \( -name '*.h' -o -name '*.inc' \) -print 2>/dev/null | sort)
 C_OBJECTS := $(patsubst $(ROOT)/src/%.c,$(BUILD_DIR)/src/%.o,$(C_SOURCES))
 ASM_OBJECTS := $(foreach source,$(ASM_SOURCES),$(BUILD_DIR)/src/$(patsubst $(ROOT)/src/%,%,$(basename $(source))).o)
 OBJECTS := $(C_OBJECTS) $(ASM_OBJECTS)
@@ -29,7 +30,7 @@ OBJECTS := $(C_OBJECTS) $(ASM_OBJECTS)
 
 all: $(OBJECTS)
 
-$(BUILD_DIR)/src/%.o: $(ROOT)/src/%.c
+$(BUILD_DIR)/src/%.o: $(ROOT)/src/%.c $(SHARED_INPUTS)
 	@mkdir -p $(dir $@)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(CC_ASFLAGS) -c $< -o $@
 

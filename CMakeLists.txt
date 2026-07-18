@@ -12,6 +12,7 @@ set(BOF3_CC "${CMAKE_SOURCE_DIR}/bin/cc")
 set(BOF3_AS "${CMAKE_SOURCE_DIR}/bin/as")
 set(BOF3_CPPFLAGS
     -DHARNESS_TARGET_PSX=1
+    -I${CMAKE_SOURCE_DIR}/src
     -I${CMAKE_SOURCE_DIR}/include
     -I${CMAKE_SOURCE_DIR}/toolchains/psyq/4.7/include)
 set(BOF3_CFLAGS -O2 -G0 -funsigned-char -msoft-float -gcoff)
@@ -23,6 +24,8 @@ file(GLOB_RECURSE BOF3_ASM_SOURCES CONFIGURE_DEPENDS
      "${CMAKE_SOURCE_DIR}/src/*.s" "${CMAKE_SOURCE_DIR}/src/*.S")
 file(GLOB_RECURSE BOF3_SHARED_HEADERS CONFIGURE_DEPENDS
      "${CMAKE_SOURCE_DIR}/include/*.h" "${CMAKE_SOURCE_DIR}/include/*.inc")
+file(GLOB_RECURSE BOF3_SHARED_SOURCES CONFIGURE_DEPENDS
+     "${CMAKE_SOURCE_DIR}/src/shared/*.h" "${CMAKE_SOURCE_DIR}/src/shared/*.inc")
 
 set(BOF3_OBJECTS)
 set(BOF3_SOURCE_DIRECTORIES)
@@ -42,6 +45,7 @@ foreach(source IN LISTS BOF3_C_SOURCES BOF3_ASM_SOURCES)
       COMMAND "${BOF3_CC}" ${BOF3_CPPFLAGS} ${BOF3_CFLAGS} ${BOF3_CC_ASFLAGS}
               -c "${source}" -o "${object}"
       DEPENDS "${source}" ${source_headers} ${BOF3_SHARED_HEADERS}
+              ${BOF3_SHARED_SOURCES}
       COMMENT "Compiling ${relative}"
       VERBATIM)
   else()

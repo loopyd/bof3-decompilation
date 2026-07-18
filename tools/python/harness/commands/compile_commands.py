@@ -17,6 +17,7 @@ def run(args: argparse.Namespace) -> int:
     common = [
         str(compiler),
         "-DHARNESS_TARGET_PSX=1",
+        f"-I{root / 'src'}",
         f"-I{root / 'include'}",
         f"-I{root / 'toolchains' / 'psyq' / '4.7' / 'include'}",
         "-O2",
