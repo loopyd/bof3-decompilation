@@ -69,9 +69,10 @@ def test_report_orders_lifts_and_aggregates_match_states(
         "emi/alpha/00",
         "exe/zeta",
     ]
-    assert [
-        record["function"] for record in report["targets"][0]["functions"]
-    ] == ["func_80100010", "func_80100020"]
+    assert [record["function"] for record in report["targets"][0]["functions"]] == [
+        "func_80100010",
+        "func_80100020",
+    ]
     assert report["lifts"] == {
         "exact": 1,
         "partial": 1,
@@ -93,9 +94,7 @@ def test_report_filters_to_requested_target(tmp_path: Path, monkeypatch) -> None
         lambda _root, _manifests: {"exe/keep": 1},
     )
 
-    report = decomp_status.build_report(
-        tmp_path, ("exe/keep",), diff_runner=_diff
-    )
+    report = decomp_status.build_report(tmp_path, ("exe/keep",), diff_runner=_diff)
 
     assert [target["target"] for target in report["targets"]] == ["exe/keep"]
     assert report["lifts"]["total"] == 1
@@ -123,3 +122,33 @@ def test_report_keeps_live_results_when_index_is_unavailable(
     assert report["indexed_functions"] is None
     assert report["coverage_error"] == "reverse index not found; run just index"
     assert "index coverage: unavailable" in decomp_status.render_text(report)
+
+
+def test_context_detail_keeps_full_report_available() -> None:
+    report = {
+        "schema": "bof3.decomp-status/v1",
+        "lifts": {"exact": 1, "partial": 0, "invalid": 0, "total": 1},
+        "indexed_functions": 3,
+        "coverage_error": None,
+        "targets": [
+            {
+                "target": "exe/test",
+                "lifts": {"exact": 1, "partial": 0, "invalid": 0, "total": 1},
+                "indexed_functions": 3,
+                "functions": [
+                    {
+                        "status": "exact",
+                        "function": "func_80100010",
+                        "address": "0x80100010",
+                    }
+                ],
+            }
+        ],
+    }
+
+    assert decomp_status.render_text(report, "minimal") == (
+        "lifts: exact=1 partial=0 invalid=0 total=1"
+    )
+    normal = decomp_status.project_report(report, "normal")
+    assert normal["targets"][0]["invalid"] == []
+    assert decomp_status.project_report(report, "full") is report

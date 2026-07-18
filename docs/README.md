@@ -2,6 +2,7 @@
 
 | Need | Read |
 | --- | --- |
+| Ordered use of every workflow tool | [Tool usage](usage.md) |
 | Setup and command contracts | [Setup and tools](setup.md) |
 | One-function lift loop | [Matching](matching.md) |
 | EMI bootstrap, Rizin, index, PsyQ evidence | [Rizin and reverse index](reverse-engineering.md) |

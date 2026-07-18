@@ -36,10 +36,10 @@ bin/rev-query xrefs TARGET@0xADDRESS
 bin/rev-query calls TARGET@0xADDRESS
 bin/rev-query duplicates
 bin/rev-query metrics TARGET@0xADDRESS
-bin/rev-query quick-wins --unlifted
-bin/rev-query hotspots
-bin/rev-query leafs --unlifted
-bin/rev-query pareto --unlifted
+bin/rev-query quick-wins --unlifted --detail minimal --limit 5
+bin/rev-query hotspots --detail minimal --limit 5
+bin/rev-query leafs --unlifted --detail minimal --limit 5
+bin/rev-query pareto --unlifted --detail normal
 bin/rev-query status
 ```
 

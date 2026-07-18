@@ -20,6 +20,8 @@ from ..domain.manifests import TargetManifest, load_target_manifests
 from ..io import repo_layout
 from ..match.asm_diff import AsmDiffRequest, run_asm_diff_one
 from ..match.asm_differ import write_bundle
+from ..output import add_detail_argument, resolve_detail
+from ._asm_diff_output import format_asm_diff_llm, format_asm_diff_summary
 
 
 _FUNC = re.compile(r"^func_[0-9a-fA-F]{8}$")
@@ -211,9 +213,14 @@ def _run_match(function: FunctionId, source: Path) -> dict[str, object]:
 
 
 def _print_match(
-    payload: dict[str, object], *, json_output: bool, bytes_only: bool
+    payload: dict[str, object],
+    *,
+    json_output: bool,
+    bytes_only: bool,
+    detail: str | None = None,
 ) -> int:
     exact = bool(payload["byte_match"])
+    resolved = resolve_detail(requested=detail, json_output=json_output)
     if json_output:
         if bytes_only:
             print(
@@ -233,15 +240,51 @@ def _print_match(
                 )
             )
         else:
-            print(json.dumps(payload, indent=2, sort_keys=True))
+            projected = payload
+            if resolved == "minimal":
+                projected = {
+                    key: payload[key]
+                    for key in (
+                        "schema",
+                        "function",
+                        "address",
+                        "status",
+                        "byte_match",
+                        "instruction_count",
+                    )
+                }
+            elif resolved == "normal":
+                projected = {
+                    key: payload[key]
+                    for key in (
+                        "schema",
+                        "function",
+                        "address",
+                        "status",
+                        "byte_match",
+                        "instruction_count",
+                        "original_size",
+                        "current_size",
+                        "size_delta",
+                        "first_mismatch",
+                    )
+                }
+                projected["diff"] = payload["outputs"]["diff"]
+            print(json.dumps(projected, indent=2, sort_keys=True))
     elif bytes_only:
         status = "MATCH" if exact else "DIFFER"
         print(f"{status} {payload['function']}@{payload['address']} bytes")
     else:
-        status = "MATCH" if exact else "DIFFER"
-        print(
-            f"{status} {payload['function']}@{payload['address']} {payload['instruction_count']['match_percent']}%"
-        )
+        root = repo_layout().root
+        if resolved == "minimal":
+            print(format_asm_diff_summary(payload, root=root))
+        elif resolved == "normal":
+            print(format_asm_diff_llm(payload, root=root))
+        else:
+            diff = Path(payload["outputs"]["diff"])
+            print(format_asm_diff_summary(payload, root=root))
+            if diff.is_file() and diff.stat().st_size:
+                print(diff.read_text(encoding="utf-8"), end="")
     return 0 if exact else 1
 
 
@@ -250,7 +293,10 @@ def run_asm_diff(args: argparse.Namespace) -> int:
     if not source.is_file():
         raise FileNotFoundError(f"lifted source does not exist: {source}")
     return _print_match(
-        _run_match(function, source), json_output=args.json, bytes_only=False
+        _run_match(function, source),
+        json_output=args.json,
+        bytes_only=False,
+        detail=args.detail,
     )
 
 
@@ -286,7 +332,9 @@ def run_promote(args: argparse.Namespace) -> int:
             f"candidate is not clang-format clean: {format_check.stderr}"
         )
     payload = _run_match(function, source)
-    result = _print_match(payload, json_output=args.json, bytes_only=False)
+    result = _print_match(
+        payload, json_output=args.json, bytes_only=False, detail=args.detail
+    )
     if result == 0 and not args.json:
         print(
             "validated; manually retain the source, Splat boundary, and symbol-map edits"
@@ -318,6 +366,8 @@ def main(command: str, argv: list[str] | None = None) -> int:
     elif command in {"asm-diff", "byte-match"}:
         parser.add_argument("function", nargs="?")
         parser.add_argument("--json", action="store_true")
+        if command == "asm-diff":
+            add_detail_argument(parser)
         parser.set_defaults(
             handler=run_asm_diff if command == "asm-diff" else run_byte_match
         )
@@ -325,6 +375,7 @@ def main(command: str, argv: list[str] | None = None) -> int:
         parser.add_argument("function", nargs="?")
         parser.add_argument("candidate", nargs="?")
         parser.add_argument("--json", action="store_true")
+        add_detail_argument(parser)
         parser.set_defaults(handler=run_promote)
     else:
         raise ValueError(f"unknown lift command: {command}")

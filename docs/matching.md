@@ -8,7 +8,7 @@ unrelated until proven otherwise.
 ```sh
 bin/splat TARGET
 bin/m2ctx TARGET@0xADDRESS
-bin/m2c TARGET@0xADDRESS -o candidate.c
+bin/m2c TARGET@0xADDRESS -o out/candidate.c
 # edit src/<target>/func_XXXXXXXX.c
 bin/asm-diff TARGET@0xADDRESS
 bin/byte-match TARGET@0xADDRESS
@@ -70,6 +70,17 @@ loaded binary ownership.
 Every promoted member still requires its own source declaration, target map,
 Splat `c` boundary, `bin/asm-diff`, and `bin/byte-match` result.
 
+### Engine promotion
+
+- Identical code embedded in multiple EMIs remains target-owned. Reuse its C
+  body at compile time only when that reduces maintenance.
+- A runtime engine service must have one implementation in `SLUS_004.22` and
+  EMI callsite evidence to that address. Keep its C under
+  `src/exe/slus_004_22/`; promote only its stable contract to
+  `include/bof3/core/`.
+- Do not add generic `src/engine/` or `src/shared/` ownership until a real link
+  target exists for it.
+
 ## Validate a candidate
 
 ```sh
@@ -77,8 +88,8 @@ bin/promote TARGET@0xADDRESS src/<target>/func_XXXXXXXX.c
 ```
 
 After manually installing the candidate in its canonical source file,
-`bin/promote` formats, compiles, links, compares, and prints required manual
-edits. It never changes reviewed source, Splat, or maps.
+`bin/promote` requires format-clean source, then compiles, links, and compares
+it. It never changes reviewed source, Splat, or maps.
 
 ## Audit lifts
 

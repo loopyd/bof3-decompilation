@@ -80,12 +80,16 @@ def collect_lifts(
         source_dir = root / manifest.source_dir
         for source in sorted(source_dir.glob("func_*.c")):
             if _FUNCTION.fullmatch(source.stem) is None:
-                records.append(_invalid_record(root, target, source, "invalid lifted filename"))
+                records.append(
+                    _invalid_record(root, target, source, "invalid lifted filename")
+                )
                 continue
             try:
                 address = int(source.stem.removeprefix("func_"), 16)
             except ValueError:
-                records.append(_invalid_record(root, target, source, "invalid lifted filename"))
+                records.append(
+                    _invalid_record(root, target, source, "invalid lifted filename")
+                )
                 continue
             try:
                 text = source.read_text(encoding="utf-8")
@@ -94,7 +98,9 @@ def collect_lifts(
                 continue
             if _SOURCE.search(text) is None or _BEHAVIOR.search(text) is None:
                 records.append(
-                    _invalid_record(root, target, source, "missing required metadata", address)
+                    _invalid_record(
+                        root, target, source, "missing required metadata", address
+                    )
                 )
                 continue
             try:
@@ -146,7 +152,9 @@ def index_coverage(
 
     path = index_path(root)
     if not path.is_file():
-        raise FileNotFoundError(f"reverse index not found: {path.relative_to(root)}; run just index")
+        raise FileNotFoundError(
+            f"reverse index not found: {path.relative_to(root)}; run just index"
+        )
     index_mtime = path.stat().st_mtime_ns
     try:
         connection = sqlite3.connect(path)
@@ -169,14 +177,20 @@ def index_coverage(
                 snapshot = read_snapshot(snapshot_file)
                 errors = validate_snapshot_identity(snapshot)
                 if errors or snapshot.target != target:
-                    raise ValueError("reverse index has invalid Rizin snapshot; run just index")
+                    raise ValueError(
+                        "reverse index has invalid Rizin snapshot; run just index"
+                    )
                 if snapshot.inputs.get("binary_sha256") != _binary_hash(binary):
-                    raise ValueError("reverse index has stale Rizin snapshot; run just index")
+                    raise ValueError(
+                        "reverse index has stale Rizin snapshot; run just index"
+                    )
                 row = connection.execute(
                     "SELECT binary_sha256 FROM targets WHERE id = ?", (target,)
                 ).fetchone()
                 if row is None or row[0] != _binary_hash(binary):
-                    raise ValueError("reverse index is incomplete or stale; run just index")
+                    raise ValueError(
+                        "reverse index is incomplete or stale; run just index"
+                    )
                 counts[target] = connection.execute(
                     "SELECT COUNT(*) FROM functions WHERE target_id = ?", (target,)
                 ).fetchone()[0]
@@ -208,7 +222,10 @@ def build_report(
     totals = {"exact": 0, "partial": 0, "invalid": 0}
     for target, _ in manifests:
         functions = [record for record in records if record["target"] == target]
-        counts = {status: sum(row["status"] == status for row in functions) for status in totals}
+        counts = {
+            status: sum(row["status"] == status for row in functions)
+            for status in totals
+        }
         for status, count in counts.items():
             totals[status] += count
         targets.append(
@@ -229,8 +246,8 @@ def build_report(
     }
 
 
-def render_text(report: dict[str, Any]) -> str:
-    """Render a complete deterministic human report without generated paths."""
+def render_text(report: dict[str, Any], detail: str = "full") -> str:
+    """Render deterministic status at the requested context budget."""
 
     lifts = report["lifts"]
     coverage = (
@@ -239,17 +256,17 @@ def render_text(report: dict[str, Any]) -> str:
         else f"unavailable ({report['coverage_error']})"
     )
     lines = [
-        "decompilation status",
         f"lifts: exact={lifts['exact']} partial={lifts['partial']} invalid={lifts['invalid']} total={lifts['total']}",
-        f"index coverage: {coverage}",
     ]
+    if detail == "minimal":
+        return lines[0]
+    lines.insert(0, "decompilation status")
+    lines.append(f"index coverage: {coverage}")
     for target in report["targets"]:
         counts = target["lifts"]
         indexed = target["indexed_functions"]
         target_coverage = (
-            f"{counts['total']}/{indexed}"
-            if indexed is not None
-            else "unavailable"
+            f"{counts['total']}/{indexed}" if indexed is not None else "unavailable"
         )
         lines.append(
             f"{target['target']}: exact={counts['exact']} partial={counts['partial']} invalid={counts['invalid']} lifts={counts['total']} indexed={target_coverage}"
@@ -260,6 +277,8 @@ def render_text(report: dict[str, Any]) -> str:
                     f"  INVALID {function['function']}@{function['address'] or '?'} {function['reason']}"
                 )
                 continue
+            if detail != "full":
+                continue
             instructions = function["instruction_count"]
             lines.append(
                 f"  {function['status'].upper()} {function['function']}@{function['address']} "
@@ -268,6 +287,35 @@ def render_text(report: dict[str, Any]) -> str:
                 f"bytes={function['original_size']}->{function['current_size']}({function['size_delta']:+d})"
             )
     return "\n".join(lines)
+
+
+def project_report(report: dict[str, Any], detail: str) -> dict[str, Any]:
+    """Project display JSON without changing the complete persisted report."""
+
+    if detail == "full":
+        return report
+    projected: dict[str, Any] = {
+        "schema": report["schema"],
+        "lifts": report["lifts"],
+        "indexed_functions": report["indexed_functions"],
+        "coverage_error": report["coverage_error"],
+    }
+    if detail == "minimal":
+        return projected
+    projected["targets"] = [
+        {
+            "target": target["target"],
+            "lifts": target["lifts"],
+            "indexed_functions": target["indexed_functions"],
+            "invalid": [
+                function
+                for function in target["functions"]
+                if function["status"] == "invalid"
+            ],
+        }
+        for target in report["targets"]
+    ]
+    return projected
 
 
 def write_report(path: Path, report: dict[str, Any]) -> None:

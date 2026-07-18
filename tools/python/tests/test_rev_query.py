@@ -6,8 +6,10 @@ from harness.commands.rev_query import (
     _dominates,
     _enrich_graph,
     _function_metrics,
+    _project_rows,
     _sccs,
     build_parser,
+    main,
 )
 from harness.reverse_index import _schema
 
@@ -57,6 +59,65 @@ def test_rank_options_work_after_the_subcommand() -> None:
     assert args.unlifted
     assert args.json
     assert args.limit == 0
+
+
+def test_rank_detail_projects_context_fields() -> None:
+    row = {
+        "id": "t@00000001",
+        "instruction_count": 8,
+        "cyclomatic_complexity": 1,
+        "unique_callers": 2,
+        "duplicate_leverage": 3,
+        "leaf_status": "analyzer_no_edge",
+        "lifted": False,
+        "exact_sha256": "a" * 64,
+    }
+
+    assert _project_rows([row], command="quick-wins", detail="minimal") == [
+        {
+            "id": "t@00000001",
+            "instruction_count": 8,
+            "cyclomatic_complexity": 1,
+            "unique_callers": 2,
+            "duplicate_leverage": 3,
+            "leaf_status": "analyzer_no_edge",
+            "lifted": False,
+        }
+    ]
+    assert _project_rows([row], command="quick-wins", detail="full") == [row]
+
+
+def test_xrefs_are_filtered_by_target(capsys, monkeypatch) -> None:
+    connection = sqlite3.connect(":memory:")
+    connection.row_factory = sqlite3.Row
+    _schema(connection)
+    for target in ("exe/one", "exe/two"):
+        connection.execute(
+            "INSERT INTO targets VALUES (?, 'b', 'h', 0, 'rizin', 'v', 's', 'sh')",
+            (target,),
+        )
+        connection.execute(
+            "INSERT INTO xrefs VALUES (?, 0x80100010, 0x80100020, 'data')",
+            (target,),
+        )
+    monkeypatch.setattr("harness.commands.rev_query.connect", lambda _root: connection)
+
+    assert main(["xrefs", "exe/one@0x80100020"]) == 0
+
+    output = capsys.readouterr().out
+    assert "exe/one" in output
+    assert "exe/two" not in output
+
+
+def test_xrefs_require_target_qualified_address(capsys, monkeypatch) -> None:
+    connection = sqlite3.connect(":memory:")
+    connection.row_factory = sqlite3.Row
+    _schema(connection)
+    monkeypatch.setattr("harness.commands.rev_query.connect", lambda _root: connection)
+
+    assert main(["xrefs", "0x80100020"]) == 2
+
+    assert "function ID must be TARGET@8-digit-address" in capsys.readouterr().err
 
 
 def test_metrics_distinguish_recursive_leaf_with_unresolved_evidence() -> None:

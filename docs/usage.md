@@ -1,0 +1,187 @@
+# Tool usage
+
+Use one target-qualified function at a time. Commands default to bounded human
+output; generated evidence under `out/` retains full detail.
+
+## Output budget
+
+Context-heavy commands accept `--detail minimal|normal|full`:
+
+| Level | Use | Output |
+| --- | --- | --- |
+| `minimal` | candidate scouting, small models | decision fields or one summary line |
+| `normal` | daily iteration | labeled metrics or the first bounded diff hunk |
+| `full` | debugging/tool development | complete rows, function records, or diff |
+
+`normal` is the text default. Existing `--json` without `--detail` remains full
+for automation compatibility. `-o FILE` always writes the complete artifact.
+Do not truncate payload commands such as `m2c`; write them with `-o` and load
+only the relevant file when editing.
+
+## Ordered workflow
+
+### 1. Prepare the repository
+
+```sh
+just setup
+just doctor
+just binaries
+```
+
+`setup` prepares dependencies and tools. `doctor` validates symbol maps.
+`binaries` materializes every reviewed target from user-owned media.
+
+Use `bin/bof3-disk` to inspect original disc media, `bin/emi-ex` to list or
+extract an EMI archive, and `bin/str-media inspect|validate|convert` for STR
+media. These are acquisition tools, not function-analysis inputs.
+
+### 2. Bootstrap one new EMI target
+
+```sh
+bin/emi-target BIN/BATTLE/BATL_END.EMI#0
+bin/emi-target BIN/BATTLE/BATL_END.EMI#0 --apply
+bin/symbols check
+bin/splat TARGET
+```
+
+`emi-target` previews before `--apply`; it refuses an existing target and
+creates a new identity plus bin-only reviewed layout. `symbols` validates
+target-local maps. `splat` regenerates assembly and linker inputs for new or
+existing reviewed targets; add `--verbose` only for complete Splat diagnostics.
+
+### 3. Build analysis evidence
+
+```sh
+bin/rz-project analyze TARGET
+bin/rz-project status TARGET
+just index
+```
+
+`rz-project` keeps each independently loaded image isolated. Analyze every
+stale or missing target snapshot before `just index`; indexing fails unless all
+manifest snapshots are fresh, then atomically rebuilds the cross-target cache.
+Use `bin/rz-project open TARGET` only for interactive investigation.
+
+Optional PsyQ evidence:
+
+```sh
+bin/psyq-import --example
+bin/psyq-find TARGET -o out/psyq/find.json
+bin/harness psyq scan --all
+bin/harness psyq calls --all
+```
+
+Signatures identify candidate library objects; official headers own
+declarations. Evidence does not edit maps automatically.
+
+### 4. Select one function
+
+```sh
+bin/rev-query quick-wins --unlifted --detail minimal --limit 5
+bin/rev-query leafs --unlifted --detail minimal --limit 5
+bin/rev-query duplicates --unlifted --detail normal --limit 5
+bin/rev-query metrics TARGET@0xADDRESS --detail normal
+```
+
+Use `quick-wins` for low effort, `hotspots` for caller impact, `leafs` for
+bounded call dependencies, `pareto` for visible effort/value trade-offs, and
+`duplicates` for exact-byte leverage. Rankings are hints, not promotion proof.
+
+Supporting queries:
+
+```sh
+bin/rev-query calls TARGET@0xADDRESS
+bin/rev-query xrefs TARGET@0xADDRESS
+bin/rev-query symbols NAME
+bin/rev-query variables NAME
+bin/rev-query status
+```
+
+Addresses are target-qualified where identity matters; overlapping addresses
+in different images never share query results.
+
+### 5. Lift and iterate
+
+```sh
+bin/m2ctx TARGET@0xADDRESS
+bin/m2c TARGET@0xADDRESS -o out/candidate.c
+# edit src/<target>/func_XXXXXXXX.c and adjacent target evidence
+bin/asm-diff TARGET@0xADDRESS --detail normal
+bin/byte-match TARGET@0xADDRESS
+```
+
+`m2ctx` materializes target-owned declarations. `m2c` creates a complete seed,
+not reviewed C. `asm-diff` prints a bounded diagnostic and keeps the full patch
+under `out/asm-diff/`; `byte-match` is the acceptance check.
+
+When readable semantics are credible but code shape differs:
+
+```sh
+bin/flag-search TARGET@0xADDRESS
+bin/permute TARGET@0xADDRESS --time-limit 300 --quiet -j N
+bin/promote TARGET@0xADDRESS src/<target>/func_XXXXXXXX.c --detail normal
+```
+
+`flag-search` suggests compiler flags from known profiles. `permute` searches
+source shapes in a disposable workspace. `promote` validates the canonical
+source but never edits source, maps, or layouts.
+
+### 6. Promote duplicate knowledge
+
+1. Verify group bytes and reviewed boundaries.
+2. Make one representative byte-match.
+3. Independently make a second member byte-match.
+4. Normalize evidence-backed roles, types, fields, and constants.
+5. Share an embedded body only when repeated maintenance justifies an `.inc`;
+   retain every address-owned wrapper and target-local check.
+
+An implementation embedded in several EMIs is compile-time source reuse, not
+an engine service. A real engine service exists once in `SLUS_004.22`; keep its
+implementation in `src/exe/slus_004_22/` and put only its proven public contract
+under `include/bof3/core/`. Do not create an orphan `src/engine/` or link one EMI
+against another.
+
+### 7. Audit and hand off
+
+```sh
+bin/build TARGET@0xADDRESS
+bin/build TARGET
+bin/decomp-status TARGET --detail normal
+just check
+git diff --check
+```
+
+`build` compiles authored objects; it does not reconstruct a complete image.
+`decomp-status --detail minimal` prints totals, `normal` adds target totals and
+invalid details, and `full` prints every function. `just check` runs repository
+tests, lint, maps, and a full compile/link/compare audit of retained lifts.
+
+## Command ownership
+
+| Command | Why it exists | Primary artifacts |
+| --- | --- | --- |
+| `bin/bof3-disk` | inspect/extract original disc files | chosen output |
+| `bin/emi-ex` | list, extract, or explicitly repack EMI archives | chosen output |
+| `bin/str-media` | inspect, validate, or convert STR media | chosen output |
+| `bin/emi-target` | preview/create one EMI target | only with `--apply` |
+| `bin/build` | compile all, one target, or one function | `build/` |
+| `bin/splat` | regenerate reviewed segment output | `out/splat/` |
+| `bin/symbols` | check/normalize maps and generate bindings | explicit subcommand |
+| `bin/rz-project` | isolated Rizin analyze/status/open | `out/reverse/` on analyze |
+| `bin/index` | rebuild the fresh cross-target query cache | `out/index/` |
+| `bin/rev-query` | query fresh indexed evidence | none |
+| `bin/m2ctx`, `bin/m2c` | generate target context and C seed | `out/` or `-o` |
+| `bin/asm-diff`, `bin/byte-match` | compare one authored lift | `out/asm-diff/`, `out/matching/`, `out/bindings/`, `build/` |
+| `bin/flag-search` | rank known compiler flag profiles | report plus `out/matching/` baseline |
+| `bin/permute` | bounded source-shape search | `out/permuter/` |
+| `bin/promote` | validate canonical candidate | generated comparison only |
+| `bin/decomp-status` | audit exact/partial/invalid lifts | `out/matching/`; full JSON with `-o` |
+| `bin/psyq-import`, `bin/psyq-find` | stage/query PsyQ evidence | explicit destination |
+| `bin/harness psyq` | join object signatures and Rizin call evidence | `out/psyq/` |
+
+`bin/cc`, `as`, `ld`, `ar`, `nm`, `objcopy`, `objdump`, `ranlib`, `strip`, and
+`maspsx` are build adapters. Workflow users should call `bin/build` and the
+matching commands instead of invoking these adapters directly.
+
+See [matching](matching.md) for C iteration rules, [Rizin evidence](reverse-engineering.md)
+for analyzer contracts, and [context](../CONTEXT.md) for ownership.

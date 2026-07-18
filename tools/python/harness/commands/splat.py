@@ -20,11 +20,28 @@ def run(args: argparse.Namespace) -> int:
         raise ValueError(f"unknown target: {args.target}")
     executable = root / ".venv" / "bin" / "splat"
     if not executable.is_file():
-        raise FileNotFoundError(f"missing Splat executable: {executable}; run just setup")
+        raise FileNotFoundError(
+            f"missing Splat executable: {executable}; run just setup"
+        )
     result = subprocess.run(
-        [str(executable), "split", "--make-full-disasm-for-code", str(root / manifest.splat)],
+        [
+            str(executable),
+            "split",
+            "--make-full-disasm-for-code",
+            str(root / manifest.splat),
+        ],
         cwd=root,
+        capture_output=not args.verbose,
+        text=not args.verbose,
     )
+    if not args.verbose:
+        if result.returncode:
+            if result.stdout:
+                print(result.stdout, end="", file=sys.stderr)
+            if result.stderr:
+                print(result.stderr, end="", file=sys.stderr)
+        else:
+            print(f"{target}: splat OK")
     return result.returncode
 
 
@@ -33,6 +50,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--root", type=Path, default=repo_layout().root)
     parser.add_argument("target", help="target id, for example exe/logo")
     parser.add_argument("--example", action="store_true")
+    parser.add_argument("--verbose", action="store_true", help="show full Splat output")
     parser.set_defaults(handler=run)
     return parser
 

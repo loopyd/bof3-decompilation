@@ -22,6 +22,9 @@ bin/harness psyq calls --all
 
 ## Commands
 
+The canonical ordered command guide is [tool usage](usage.md). This page owns
+installation and verification only.
+
 Repository recipes:
 
 ```text
@@ -47,12 +50,14 @@ Makefile produces the same objects under `build/src/`; neither frontend links
 separate BOF3 images together.
 
 Use `--help` or `--example`. Commands write results to stdout and diagnostics
-to stderr. Exit codes are `0` success, `1` valid negative result, and `2`
-usage/configuration/tool failure. Mutations require `--write` or `--apply`.
+to stderr. Python analysis commands use `0` for success, `1` for a valid
+negative match, and `2` for usage/configuration failure; native and upstream
+tools may return their own codes. Mutations require `--write` or `--apply`.
 
 ## Verification
 
-- `just check`: Python checks, symbol maps, and every retained C lift.
+- `just check`: Python checks, symbol maps, and a full compile/link/compare of
+  every retained C lift.
 - `bin/asm-diff` and `bin/byte-match`: one function while iterating.
 - `bin/decomp-status [TARGET...]`: complete exact/partial/invalid lift report.
 

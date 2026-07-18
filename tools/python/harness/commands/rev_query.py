@@ -11,6 +11,7 @@ from typing import Any
 
 from ..domain import normalize_target_id, parse_function_id
 from ..io import repo_layout
+from ..output import add_detail_argument, resolve_detail
 from ..reverse_index import connect, rows
 from ._common import run_main
 
@@ -19,12 +20,73 @@ def _root(args: argparse.Namespace) -> Path:
     return args.root.resolve()
 
 
-def _print(payload: list[dict[str, object]], as_json: bool) -> None:
+_RANK_FIELDS = {
+    "minimal": {
+        "duplicates": (
+            "representative",
+            "members",
+            "unlifted_members",
+            "estimated_saved_instructions",
+        ),
+        "default": (
+            "id",
+            "instruction_count",
+            "cyclomatic_complexity",
+            "unique_callers",
+            "duplicate_leverage",
+            "leaf_status",
+            "lifted",
+        ),
+    },
+    "normal": {
+        "duplicates": (
+            "representative",
+            "size",
+            "members",
+            "unlifted_members",
+            "targets",
+            "estimated_saved_instructions",
+            "functions",
+        ),
+        "default": (
+            "id",
+            "size",
+            "instruction_count",
+            "basic_blocks",
+            "cyclomatic_complexity",
+            "loops",
+            "unique_callers",
+            "unique_callees",
+            "unresolved_calls",
+            "duplicate_leverage",
+            "leaf_status",
+            "lifted",
+            "metric_missing",
+        ),
+    },
+}
+
+
+def _project_rows(
+    payload: list[dict[str, Any]], *, command: str, detail: str
+) -> list[dict[str, Any]]:
+    if detail == "full":
+        return payload
+    fields = _RANK_FIELDS[detail].get(command, _RANK_FIELDS[detail]["default"])
+    return [{key: row[key] for key in fields if key in row} for row in payload]
+
+
+def _print(
+    payload: list[dict[str, object]], as_json: bool, *, labeled: bool = False
+) -> None:
     if as_json:
         print(json.dumps(payload, indent=2, sort_keys=True))
         return
     for row in payload:
-        print("\t".join(str(value) for value in row.values()))
+        if labeled:
+            print(" ".join(f"{key}={value}" for key, value in row.items()))
+        else:
+            print("\t".join(str(value) for value in row.values()))
 
 
 def _function_metrics(connection, target: str | None) -> list[dict[str, Any]]:
@@ -179,11 +241,7 @@ def _enrich_graph(connection, metrics: list[dict[str, Any]]) -> None:
                     0, row["unlifted_duplicate_members"] - (0 if row["lifted"] else 1)
                 ),
                 metric_missing=metric_missing,
-                confidence_band=(
-                    "partial"
-                    if metric_missing
-                    else "analyzer_only"
-                ),
+                confidence_band=("partial" if metric_missing else "analyzer_only"),
                 score_version="reverse-priority/v1",
             )
 
@@ -296,9 +354,12 @@ def run_query(args: argparse.Namespace) -> int:
     try:
         if getattr(args, "target", None):
             args.target = normalize_target_id(args.target).value
-            if connection.execute(
-                "SELECT 1 FROM targets WHERE id = ?", (args.target,)
-            ).fetchone() is None:
+            if (
+                connection.execute(
+                    "SELECT 1 FROM targets WHERE id = ?", (args.target,)
+                ).fetchone()
+                is None
+            ):
                 raise ValueError(f"unknown target: {args.target}")
         if getattr(args, "function", None):
             args.function = str(parse_function_id(args.function))
@@ -312,10 +373,11 @@ def run_query(args: argparse.Namespace) -> int:
                 (pattern, sql_limit),
             )
         elif args.command == "xrefs":
+            function = parse_function_id(args.function)
             payload = rows(
                 connection,
-                "SELECT target_id, printf('0x%08X', source) AS source, printf('0x%08X', destination) AS destination, kind FROM xrefs WHERE destination = ? ORDER BY target_id, source LIMIT ?",
-                (int(args.address, 0), sql_limit),
+                "SELECT target_id, printf('0x%08X', source) AS source, printf('0x%08X', destination) AS destination, kind FROM xrefs WHERE target_id = ? AND destination = ? ORDER BY source LIMIT ?",
+                (function.target.value, function.address, sql_limit),
             )
         elif args.command == "duplicates":
             metrics = _function_metrics(connection, None)
@@ -357,7 +419,9 @@ def run_query(args: argparse.Namespace) -> int:
                         "estimated_saved_instructions": representative[
                             "instruction_count"
                         ]
-                        * max(0, len(unlifted) - (0 if representative["lifted"] else 1)),
+                        * max(
+                            0, len(unlifted) - (0 if representative["lifted"] else 1)
+                        ),
                         "functions": [row["id"] for row in members],
                         "score_version": "reverse-priority/v1",
                     }
@@ -391,7 +455,19 @@ def run_query(args: argparse.Namespace) -> int:
                 connection,
                 "SELECT t.id, t.engine, COUNT(DISTINCT f.id) AS functions, COUNT(DISTINCT s.address) AS symbols FROM targets t LEFT JOIN functions f ON f.target_id = t.id LEFT JOIN symbols s ON s.target_id = t.id GROUP BY t.id ORDER BY t.id",
             )
-        _print(payload, args.json)
+        detail = "full"
+        ranked = args.command in {
+            "metrics",
+            "hotspots",
+            "leafs",
+            "quick-wins",
+            "pareto",
+            "duplicates",
+        }
+        if ranked:
+            detail = resolve_detail(requested=args.detail, json_output=args.json)
+            payload = _project_rows(payload, command=args.command, detail=detail)
+        _print(payload, args.json, labeled=ranked and detail != "full")
     finally:
         connection.close()
     return 0
@@ -414,8 +490,10 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     symbols = sub.add_parser("symbols", help="find canonical target-local symbols")
     symbols.add_argument("pattern", nargs="?")
-    xrefs = sub.add_parser("xrefs", help="find indexed references to an address")
-    xrefs.add_argument("address")
+    xrefs = sub.add_parser(
+        "xrefs", help="find target-local indexed references to an address"
+    )
+    xrefs.add_argument("function", metavar="TARGET@ADDRESS")
     calls = sub.add_parser("calls", help="show calls to or from TARGET@ADDRESS")
     calls.add_argument("function")
     variables = sub.add_parser("variables", help="list mapped data symbols")
@@ -432,6 +510,7 @@ def build_parser() -> argparse.ArgumentParser:
         command = sub.add_parser(name, help=help_text)
         command.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
         command.add_argument("--limit", type=nonnegative, default=argparse.SUPPRESS)
+        add_detail_argument(command)
         command.add_argument("--target")
         command.add_argument("--unlifted", action="store_true")
         if name != "duplicates":
