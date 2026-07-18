@@ -1,0 +1,6 @@
+interface:
+  display_name: "Workflow Review"
+  short_description: "Run two adversarial workflow reviews"
+  default_prompt: "Use $workflow-review to adversarially review this workflow and hand back actionable findings."
+policy:
+  allow_implicit_invocation: false

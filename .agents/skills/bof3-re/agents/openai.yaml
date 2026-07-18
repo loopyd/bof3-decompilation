@@ -1,0 +1,6 @@
+interface:
+  display_name: "BOF3 Reverse Engineering"
+  short_description: "Lift and promote BOF3 functions safely"
+  default_prompt: "Use $bof3-re to lift and validate one BOF3 function or duplicate group."
+policy:
+  allow_implicit_invocation: false
