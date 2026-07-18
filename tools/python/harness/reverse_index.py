@@ -19,7 +19,7 @@ from .domain import load_target_manifests
 from .snapshot import read_snapshot, snapshot_path, validate_snapshot_identity
 
 
-SCHEMA_VERSION = "bof3.reverse-index/v1"
+SCHEMA_VERSION = "bof3.reverse-index/v2"
 
 
 def index_path(root: Path) -> Path:
@@ -28,6 +28,12 @@ def index_path(root: Path) -> Path:
 
 def _hash(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _trivial_kind(data: bytes) -> str | None:
+    if data == b"\x08\x00\xe0\x03\x00\x00\x00\x00":
+        return "return_void"
+    return None
 
 
 def _schema(connection: sqlite3.Connection) -> None:
@@ -42,7 +48,8 @@ def _schema(connection: sqlite3.Connection) -> None:
             load_address INTEGER NOT NULL,
             engine TEXT NOT NULL,
             engine_version TEXT NOT NULL,
-            snapshot TEXT NOT NULL
+            snapshot TEXT NOT NULL,
+            snapshot_sha256 TEXT NOT NULL
         );
         CREATE TABLE symbols (
             target_id TEXT NOT NULL REFERENCES targets(id),
@@ -61,7 +68,16 @@ def _schema(connection: sqlite3.Connection) -> None:
             exact_sha256 TEXT NOT NULL,
             reviewed INTEGER NOT NULL,
             lifted INTEGER NOT NULL,
-            source TEXT
+            source TEXT,
+            instruction_count INTEGER NOT NULL,
+            basic_blocks INTEGER,
+            cfg_edges INTEGER,
+            cyclomatic_complexity INTEGER,
+            loops INTEGER,
+            stack_frame INTEGER,
+            local_count INTEGER,
+            argument_count INTEGER,
+            trivial_kind TEXT
         );
         CREATE INDEX functions_target_address ON functions(target_id, address);
         CREATE INDEX functions_hash ON functions(exact_sha256);
@@ -77,6 +93,13 @@ def _schema(connection: sqlite3.Connection) -> None:
             destination INTEGER NOT NULL,
             kind TEXT NOT NULL,
             PRIMARY KEY(target_id, source, destination, kind)
+        );
+        CREATE TABLE unresolved_calls (
+            caller TEXT NOT NULL REFERENCES functions(id),
+            target_address INTEGER NOT NULL,
+            callsite INTEGER NOT NULL,
+            kind TEXT NOT NULL,
+            PRIMARY KEY(caller, target_address, callsite, kind)
         );
         CREATE TABLE data_references (
             target_id TEXT NOT NULL REFERENCES targets(id),
@@ -160,8 +183,9 @@ def rebuild(root: Path) -> Path:
                 "INSERT INTO metadata VALUES (?, ?)", ("schema", SCHEMA_VERSION)
             )
             for target, manifest, binary, path, snapshot in records:
+                binary_bytes = binary.read_bytes()
                 connection.execute(
-                    "INSERT INTO targets VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO targets VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                     (
                         target,
                         manifest.binary,
@@ -170,6 +194,7 @@ def rebuild(root: Path) -> Path:
                         snapshot.engine["name"],
                         snapshot.engine.get("version", ""),
                         path.relative_to(root).as_posix(),
+                        _hash(path),
                     ),
                 )
                 for symbol in load_map(map_path(root, target)):
@@ -184,7 +209,13 @@ def rebuild(root: Path) -> Path:
                     )
                 for function in snapshot.functions:
                     connection.execute(
-                        "INSERT INTO functions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        """INSERT INTO functions (
+                            id, target_id, address, size, name, exact_sha256,
+                            reviewed, lifted, source, instruction_count,
+                            basic_blocks, cfg_edges, cyclomatic_complexity,
+                            loops, stack_frame, local_count, argument_count,
+                            trivial_kind
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                         (
                             function.id,
                             target,
@@ -195,6 +226,21 @@ def rebuild(root: Path) -> Path:
                             int(function.is_reviewed),
                             int(function.is_lifted),
                             function.source,
+                            (function.analyzer_size + 3) // 4,
+                            function.basic_blocks,
+                            function.edges,
+                            function.cyclomatic_complexity,
+                            function.loops,
+                            function.stack_frame,
+                            function.local_count,
+                            function.argument_count,
+                            _trivial_kind(
+                                binary_bytes[
+                                    function.address - manifest.load_address :
+                                    function.address - manifest.load_address
+                                    + function.analyzer_size
+                                ]
+                            ),
                         ),
                     )
                 for call in snapshot.calls:
@@ -212,6 +258,15 @@ def rebuild(root: Path) -> Path:
                         ),
                     )
                 for unresolved in snapshot.unresolved_calls:
+                    connection.execute(
+                        "INSERT INTO unresolved_calls VALUES (?, ?, ?, ?)",
+                        (
+                            unresolved.caller,
+                            unresolved.target_address,
+                            unresolved.callsite,
+                            unresolved.kind,
+                        ),
+                    )
                     connection.execute(
                         "INSERT OR IGNORE INTO xrefs VALUES (?, ?, ?, ?)",
                         (
@@ -256,6 +311,36 @@ def connect(root: Path) -> sqlite3.Connection:
         )
     connection = sqlite3.connect(path)
     connection.row_factory = sqlite3.Row
+    try:
+        row = connection.execute(
+            "SELECT value FROM metadata WHERE key = 'schema'"
+        ).fetchone()
+    except sqlite3.Error as exc:
+        connection.close()
+        raise ValueError(
+            "invalid reverse index; run just index"
+        ) from exc
+    if row is None or row[0] != SCHEMA_VERSION:
+        connection.close()
+        found = row[0] if row is not None else "missing"
+        raise ValueError(
+            f"reverse index schema mismatch: expected {SCHEMA_VERSION}, got {found}; run just index"
+        )
+    try:
+        indexed_targets = connection.execute(
+            "SELECT id, binary, binary_sha256, snapshot, snapshot_sha256 FROM targets"
+        )
+        for target, binary_name, binary_digest, snapshot_name, snapshot_digest in indexed_targets:
+            binary = root / binary_name
+            snapshot = root / snapshot_name
+            if not binary.is_file() or _hash(binary) != binary_digest:
+                raise ValueError(f"stale reverse index binary for {target}; run just index")
+            if not snapshot.is_file() or _hash(snapshot) != snapshot_digest:
+                raise ValueError(f"stale reverse index snapshot for {target}; run just index")
+            _snapshot_for(root, target, binary)
+    except BaseException:
+        connection.close()
+        raise
     return connection
 
 

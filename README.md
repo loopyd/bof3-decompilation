@@ -10,7 +10,7 @@ just setup
 just doctor
 bin/splat TARGET
 bin/m2ctx TARGET@0xADDRESS
-bin/m2c TARGET@0xADDRESS > candidate.c
+bin/m2c TARGET@0xADDRESS -o candidate.c
 # edit src/<target>/func_XXXXXXXX.c and its local evidence
 bin/asm-diff TARGET@0xADDRESS
 bin/byte-match TARGET@0xADDRESS

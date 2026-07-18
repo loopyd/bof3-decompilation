@@ -11,6 +11,12 @@ typedef struct BattleLocalPanelEntry {
   u16 panel_id;
 } BattleLocalPanelEntry;
 
+typedef struct BattleLocalPanelTask {
+  u8  unk_00[3];
+  u8  state;
+  u16 x;
+} BattleLocalPanelTask;
+
 extern vu8  BATTLE_SELECTION_PHASE;
 extern vu8  BATTLE_SELECTION_OWNER_STATE;
 extern vu8  BATTLE_SELECTION_ROOT_STATE;
@@ -78,7 +84,7 @@ extern vu8  BATTLE_SECONDARY_CURSOR_LIMIT;
 extern vu16 BATTLE_SECONDARY_FLAG_MASK;
 extern vu8  BATTLE_SELECTION_CURSOR_ROWS;
 extern vu8  BATTLE_SELECTION_CURSOR_MODE;
-#define BATTLE_LOCAL_PANEL_TASK_ROOT VPPTR(u8, 0x80148648u)
+extern BattleLocalPanelTask* D_80148648;
 extern vu8  BATTLE_SECONDARY_SAVED_GROUP;
 extern vu8  BATTLE_SECONDARY_SAVED_PAGE_BASE;
 extern vu8  BATTLE_SECONDARY_SAVED_CURSOR;
@@ -145,5 +151,7 @@ void func_800AAA74(void);
 void func_800AAEBC(s16 target_index, u8 battler_index);
 void func_800B0498(void);
 void func_800B0B0C(s16 base_x, s16 base_y);
+void func_800B2218(void);
+void func_800B22AC(void);
 
 #endif

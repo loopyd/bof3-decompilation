@@ -1443,13 +1443,13 @@ segments:
     - asm
     - func_800B21D8
   - - 113176
-    - asm
+    - c
     - func_800B2218
   - - 113240
     - asm
     - func_800B2258
   - - 113324
-    - asm
+    - c
     - func_800B22AC
   - - 113388
     - asm

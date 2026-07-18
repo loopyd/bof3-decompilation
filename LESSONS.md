@@ -85,6 +85,21 @@ to repeat or misdiagnose across targets. Use the
   even for `--version`. Re-run the repository `bin/cc` driver with its approved
   out-of-sandbox permission; do not add flags or rewrite C to address the exit.
 
+### Preserve fixed-RAM pointer ownership before permuting source shape
+
+- When m2c exposes a fixed-RAM address as a pointer-valued `D_XXXXXXXX`
+  global, add that raw symbol to the target-local map and declare its narrowest
+  evidence-backed type in the target `internal.h`. Do not hide a known RAM
+  global behind an anonymous address macro.
+- Match qualifiers to the observed contract. An unjustified `volatile`
+  pointee can change register allocation and move stores across comparisons;
+  `func_800B2218` matched only after `D_80148648` became a named
+  `BattleLocalPanelTask*`. Add `volatile` only when asynchronous or hardware
+  mutation is part of the evidence.
+- Recover stable field offsets into a target-local struct before trying
+  permutations. Keep addresses, masks, and encoded values hexadecimal; write
+  human quantities such as the 32-pixel step and 320-pixel clamp in decimal.
+
 ### Keep equivalence-test output isolated
 
 - Extractor parity tests must create a unique directory under `/tmp` and remove

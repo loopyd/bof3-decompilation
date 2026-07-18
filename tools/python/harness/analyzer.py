@@ -36,6 +36,15 @@ _REQUIRED_CAPABILITIES = {
 }
 
 
+def _optional_integer(
+    row: dict[str, Any], key: str, *, minimum: int = 0
+) -> int | None:
+    value = row.get(key)
+    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
+        return None
+    return value
+
+
 def _get_version(executable: Path) -> str:
     flag = "-V"
     result = subprocess.run(
@@ -239,6 +248,13 @@ def build_snapshot(
                 is_reviewed=address in reviewed,
                 is_lifted=source is not None,
                 source=source,
+                basic_blocks=_optional_integer(raw, "nbbs", minimum=1),
+                cyclomatic_complexity=_optional_integer(raw, "cc", minimum=1),
+                edges=_optional_integer(raw, "edges"),
+                loops=_optional_integer(raw, "loops"),
+                stack_frame=_optional_integer(raw, "stackframe"),
+                local_count=_optional_integer(raw, "nlocals"),
+                argument_count=_optional_integer(raw, "nargs"),
             )
         )
         function_ids[address] = function_id

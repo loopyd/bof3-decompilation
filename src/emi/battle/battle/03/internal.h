@@ -610,6 +610,7 @@ void func_801DE1B0(u32 arg0);
 void func_801DE1D4(void);
 void func_801DE60C(u32 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4, u32 arg5);
 void func_801DE690(void);
+void func_801DE7FC(void);
 void func_801DE804(void);
 u8   func_801DE858(s8 arg0);
 void func_801DE8C0(s8 arg0, s8 arg1, u32 arg2);

@@ -26,6 +26,8 @@ _FUNC = re.compile(r"^func_[0-9a-fA-F]{8}$")
 
 
 def _example(command: str) -> str:
+    if command == "m2c":
+        return "bin/m2c exe/logo@0x801CE758 -o candidate.c"
     return f"bin/{command} exe/logo@0x801CE758"
 
 

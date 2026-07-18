@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-SNAPSHOT_SCHEMA = "bof3.analysis-snapshot/v1"
+SNAPSHOT_SCHEMA = "bof3.analysis-snapshot/v2"
 
 
 def snapshot_path(root: Path, target_id: str) -> Path:
@@ -37,6 +37,13 @@ class SnapshotFunction:
     is_reviewed: bool = False
     is_lifted: bool = False
     source: str | None = None
+    basic_blocks: int | None = None
+    cyclomatic_complexity: int | None = None
+    edges: int | None = None
+    loops: int | None = None
+    stack_frame: int | None = None
+    local_count: int | None = None
+    argument_count: int | None = None
 
     def to_row(self) -> dict[str, Any]:
         row: dict[str, Any] = {
@@ -54,6 +61,17 @@ class SnapshotFunction:
             row["semantic_name"] = self.semantic_name
         if self.source is not None:
             row["source"] = self.source
+        row.update(
+            {
+                "basic_blocks": self.basic_blocks,
+                "cyclomatic_complexity": self.cyclomatic_complexity,
+                "edges": self.edges,
+                "loops": self.loops,
+                "stack_frame": self.stack_frame,
+                "local_count": self.local_count,
+                "argument_count": self.argument_count,
+            }
+        )
         return row
 
 
@@ -199,6 +217,27 @@ def validate_snapshot_identity(snapshot: TargetSnapshot) -> list[str]:
             errors.append(f"call references unknown caller: {call.caller}")
         if call.callee not in function_ids:
             errors.append(f"call references unknown callee: {call.callee}")
+
+    metric_names = (
+        "basic_blocks",
+        "cyclomatic_complexity",
+        "edges",
+        "loops",
+        "stack_frame",
+        "local_count",
+        "argument_count",
+    )
+    for function in snapshot.functions:
+        for name in metric_names:
+            value = getattr(function, name)
+            if value is not None and (
+                isinstance(value, bool) or not isinstance(value, int) or value < 0
+            ):
+                errors.append(f"invalid {name} for {function.id}: {value!r}")
+        if function.basic_blocks == 0:
+            errors.append(f"invalid basic_blocks for {function.id}: 0")
+        if function.cyclomatic_complexity == 0:
+            errors.append(f"invalid cyclomatic_complexity for {function.id}: 0")
 
     return errors
 

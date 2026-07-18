@@ -35,13 +35,33 @@ bin/rev-query symbols NAME
 bin/rev-query xrefs TARGET@0xADDRESS
 bin/rev-query calls TARGET@0xADDRESS
 bin/rev-query duplicates
+bin/rev-query metrics TARGET@0xADDRESS
+bin/rev-query quick-wins --unlifted
 bin/rev-query hotspots
+bin/rev-query leafs --unlifted
+bin/rev-query pareto --unlifted
 bin/rev-query status
 ```
 
 `just index` atomically replaces `out/index/reverse.sqlite` only when every
 snapshot is fresh and complete. Use `bin/rev-query --help` for query variants
 and `--json` for structured output.
+
+Ranking queries expose their raw inputs: instructions, CFG blocks/edges,
+cyclomatic complexity, loops, stack/locals/arguments, callers/callees,
+unresolved calls, and exact-byte duplicate leverage.
+`quick-wins` orders low-effort candidates; `hotspots` orders impact;
+`pareto` returns candidates not dominated on the visible effort/value axes.
+`leafs` collapses recursion and reports `analyzer_no_edge`, `unresolved_edge`,
+or `non_leaf`; it never treats analyzer silence as proof. Derived fields carry a
+`score_version`, while JSON remains the stable automation output.
+Exact `jr ra; nop` return stubs remain visible in `metrics` and `duplicates`
+but are excluded from rankings unless `--include-trivial` is explicit.
+
+`duplicates` groups exact analyzer-range bytes by hash and size, chooses a
+deterministic representative, and reports unlifted members and estimated saved
+instructions. Each member still requires target-local byte validation; shared
+bytes do not transfer names, types, or ownership.
 
 ## PsyQ evidence
 
