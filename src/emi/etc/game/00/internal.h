@@ -2,7 +2,7 @@
 #define EMI_GAME_00_INTERNAL_H
 
 #include "bof3/bof3.h"
-#include "bof3/duplicates/panel_task.h"
+#include "bof3/ui/panel_task.h"
 
 typedef void (*GameEntry0StateHandler)(void);
 
@@ -70,6 +70,7 @@ struct GameWorkArea {
 };
 
 /* Scratchpad work pointer (PS1 hardware register at 0x1F800044) */
+extern struct GameWorkArea* volatile g_scratch_work;
 #define SCRATCH_WORK VPPTR(struct GameWorkArea, 0x1F800044u)
 
 /* Global work pointer in main exe data section */
@@ -214,6 +215,9 @@ extern const GameEntry0StateHandler D_801C7BB0[];
  * @source 0x801960C0
  */
 void func_801960C0(u8 record_index);
+
+void func_8019601C(u8 mode);
+void func_80196070(void);
 
 /* @behavior seeds the shared callback/frame dispatch prologue before the entry-0
  * callback tables begin running.

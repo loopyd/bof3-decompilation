@@ -1,5 +1,8 @@
 #include "internal.h"
 
+/* ---- Scratchpad work pointer (PS1 hardware register) ---- */
+WEAK_SYMBOL_AT(g_scratch_work, 0x1F800044);
+
 /* ---- Palette work data ---- */
 
 WEAK_SYMBOL_AT(D_80037800, 0x80037800);
