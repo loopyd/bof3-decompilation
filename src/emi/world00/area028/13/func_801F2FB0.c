@@ -1,7 +1,5 @@
 #include "internal.h"
 
-extern int rand(void);
-
 /* @behavior initialises one AREA028 sprite slot: marks it active (offset 0 = 1),
  * assigns two signed random offsets in [-128, 127] at offsets 4 and 6, and
  * sets a fixed 0x280 halfword bound at offset 8.

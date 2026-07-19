@@ -50,6 +50,8 @@ extern volatile u32 COMMU00_PROGRESS_COUNTER;
 extern volatile u16 COMMU00_WORLD_STATE;
 extern volatile u8  COMMU00_TYPE10_TOTAL;
 extern volatile u8  COMMU00_TYPE11_TOTAL;
+extern u16           D_80146904[1];
+extern volatile u8   D_801F2928[1];
 
 u16  game_random_u16(void);
 u16  commu00_pack_slot_anchor(s32 x, s32 y);

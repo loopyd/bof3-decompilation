@@ -3,6 +3,8 @@
 
 #include "bof3/bof3.h"
 
+#include <rand.h>
+
 typedef struct World00Area028Work {
   u8  unk_00[4];
   s16 field_04;
