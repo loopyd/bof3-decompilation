@@ -5,7 +5,7 @@
  * @source 0x801D0D5C
  */
 void func_801D0D5C(void) {
-  if (*(volatile unsigned char*)0x80143c31u == 2) {
+  if (GAME_FRONT_FADE_PHASE == 2) {
     GAME_FRONT_TIMER = 360u;
     GAME_FRONT_STATE = GAME_FRONT_STATE + 1u;
   }

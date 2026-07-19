@@ -13,7 +13,7 @@ void func_801F83B0(u32 intensity) {
   limit = intensity & 0xffffu;
   dst_offset = 0u;
   src = (const u16*)SCENA16_PALETTE_SRC;
-  src_end = (const u16*)0x80033820u;
+  src_end = PSX_PTR(const u16, 0x80033820u);
 
   do {
     u16  color;
@@ -42,7 +42,7 @@ void func_801F83B0(u32 intensity) {
       shift += 5u;
     } while (component_index < 3);
 
-    dst = (u16*)(0x80037800u + dst_offset);
+    dst = (u16*)((volatile u8*)SCENA16_PALETTE_DST + dst_offset);
     *dst = (u16)packed;
     if ((next_packed & 0xffffu) != 0u || component != 0u) {
       *dst = (u16)(packed | 0x8000u);

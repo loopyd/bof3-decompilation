@@ -7,7 +7,7 @@ void func_801F6D90(void) {
   s8* state_base;
   u32 area_archive_id;
 
-  state_base = (s8*)0x80140000u;
+  state_base = PSX_PTR(s8, 0x80140000u);
   area_archive_id = *(volatile u16*)(state_base + 0x3f00);
 
   if (area_archive_id == 4u) {

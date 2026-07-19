@@ -11,7 +11,7 @@ void func_801EA1A4(void) {
   u16           value_10;
   u16           value_12;
 
-  root = (u8* volatile*)0x80150000u;
+  root = BATTLE_PANEL_ROOT_BASE;
   temp_v0 = root[-0x1e6e];
   value_10 = *(volatile u16*)(temp_v0 + 0x10);
   value_12 = *(volatile u16*)(temp_v0 + 0x12);

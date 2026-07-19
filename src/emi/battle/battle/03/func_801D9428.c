@@ -9,8 +9,8 @@ void func_801D9428(u8 arg0) {
   volatile u16* state16;
 
   func_80158DB8(4, 3);
-  state8 = (volatile u8*)0x80140000;
-  state16 = (volatile u16*)0x80140000;
+  state8 = BATTLE_GLOBAL_RAM_U8;
+  state16 = BATTLE_GLOBAL_RAM_U16;
   state8[0x83c2] = 3;
   state16[0x41e2] = 0x7c;
   state8[0x83c3] = arg0;

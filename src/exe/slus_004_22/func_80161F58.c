@@ -6,17 +6,17 @@ extern volatile u8  D_8014648A;
 extern volatile u32 D_8014648C;
 extern volatile u8  D_801464A0[];
 extern volatile u8  D_80146840;
-extern u16  D_8014681A;
+extern u16          D_8014681A;
 
 /* @behavior initializes the EMI/CD bootstrap state before the first active entry
  * is installed.
  * @source 0x80161F58
  */
 void func_80161F58(void) {
-  s32   i;
-  u8*   slot_state;
-  u32   bootstrap_address;
-  u8    empty_state;
+  s32           i;
+  u8*           slot_state;
+  u32           bootstrap_address;
+  u8            empty_state;
   volatile u32* loader_state;
 
   while (func_801753EC() == 0) {

@@ -17,7 +17,7 @@
  *     PSX_PTR(volatile u32, address)
  *     PSX_PTR(const volatile u32, address)
  */
-#define PSX_PTR(type, address) ((type *)(address))
+#define PSX_PTR(type, address) ((type*)(address))
 
 /*
  * Direct object access
@@ -41,7 +41,7 @@
  *     value = FIELD_REF(u32, work, 0x18u)
  */
 #define FIELD_ADDR(type, base, byte_offset) \
-  PSX_PTR(type, (u8 *)(base) + (u32)(byte_offset))
+  PSX_PTR(type, (u8*)(base) + (u32)(byte_offset))
 
 #define FIELD_REF(type, base, byte_offset) \
   (*FIELD_ADDR(type, base, byte_offset))
@@ -62,7 +62,7 @@
  * These are for hardware registers, not scratchpad RAM.
  * Use scratchpad.h for 0x1F800000-0x1F8003FF accesses.
  */
-#define REG8(address)  PSX_REF(volatile u8, address)
+#define REG8(address) PSX_REF(volatile u8, address)
 
 #define REG16(address) PSX_REF(volatile u16, address)
 

@@ -16,15 +16,12 @@ u8 func_801E8FA8(void) {
   kind = slot[5];
 
   if (kind < 3u) {
-    offset = (u32)kind;
-    offset = offset * 0x140u;
-    mask = *(volatile u16*)(0x80145f10u + offset);
+    mask = BATTLE_LOCAL_ABS_HALF_5F10(kind);
   } else {
-    offset = (((u32)kind - 3u) & 0xffu) * 0x118u;
-    mask = *(volatile u16*)(0x801eb6b2u + offset);
+    mask = BATTLE_ENEMY_ABS_HALF_6B2(((u32)kind - 3u) & 0xffu);
   }
 
-  start = (*(volatile u8**)0x1f800044u)[0xb];
+  start = BATTLE_SCRATCH_CELL_U8PTR[0xb];
   mask &= 0x58u;
   index = ((u32)start + 1u) & 0x0fu;
   if (index != (u32)start) {
@@ -36,5 +33,5 @@ u8 func_801E8FA8(void) {
     } while (index != (u32)start);
   }
 
-  return (*(volatile u8**)0x1f800044u)[0xb];
+  return BATTLE_SCRATCH_CELL_U8PTR[0xb];
 }

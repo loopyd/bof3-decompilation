@@ -18,7 +18,7 @@ u32 func_801DCD50(u32 arg0, u8 arg1, s32 arg2) {
               BATTLE_VARIANCE_TABLE_AFA0[func_8017E3D4() & 7u] >>
           8;
 
-  scratch_flags = *(volatile u16*)0x1f800000u;
+  scratch_flags = BATTLE_SCRATCH_FLAGS;
   if ((scratch_flags & 0x1fu) != 0u) {
     value = (value * (s16)func_800A2AE0(arg1)) / 100;
   }

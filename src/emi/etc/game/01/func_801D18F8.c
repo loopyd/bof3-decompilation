@@ -13,7 +13,7 @@ typedef struct GameFrontBannerState {
  */
 void func_801D18F8(void) {
   volatile GameFrontBannerState* state;
-  volatile u16*                          alpha;
+  volatile u16*                  alpha;
   s32                            i;
   s32                            x;
   s32                            marker;

@@ -47,8 +47,7 @@ typedef double             f64;
  * a real call instruction rather than a tail call.
  */
 #if defined(__GNUC__)
-#define NO_SIBLING_CALLS \
-  __attribute__((optimize("no-optimize-sibling-calls")))
+#define NO_SIBLING_CALLS __attribute__((optimize("no-optimize-sibling-calls")))
 
 #define barrier() __asm__ __volatile__("" : : : "memory")
 #else

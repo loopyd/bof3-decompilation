@@ -1,9 +1,9 @@
 #include "internal.h"
 
-extern u32  D_80146454;
+extern u32          D_80146454;
 extern volatile u32 D_80146458;
-extern u32  D_80146464;
-extern s8   D_80146489;
+extern u32          D_80146464;
+extern s8           D_80146489;
 
 /* @behavior copies the next EMI transfer chunk from the CD sector buffer,
  * wrapping into the active slot's sector when a partial sector remains.

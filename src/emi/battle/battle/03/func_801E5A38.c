@@ -12,16 +12,16 @@ void func_801E5A38(void) {
 
     offset = (u32)index * 0x78u;
     index += 1u;
-    *(volatile u8*)(0x801ec330u + offset) = 0u;
-    *(volatile u8*)(0x801ec335u + offset) = 0u;
-    *(volatile u8*)(0x801ec336u + offset) = 0u;
-    *(volatile u8*)(0x801ec331u + offset) = 0u;
-    *(volatile u8*)(0x801ec332u + offset) = 0u;
-    *(volatile u8*)(0x801ec333u + offset) = 0u;
-    *(volatile u8*)(0x801ec334u + offset) = 0u;
-    *(volatile u8*)(0x801ec378u + offset) = 0u;
-    *(volatile u8*)(0x801ec38du + offset) = 0u;
-    *(volatile u8*)(0x801ec38eu + offset) = 0u;
-    *(volatile u8*)(0x801ec38fu + offset) = 0u;
+    BATTLE_SLOT_STORE_BYTE_00(index) = 0u;
+    BATTLE_SLOT_STORE_BYTE_05(index) = 0u;
+    BATTLE_SLOT_STORE_BYTE_06(index) = 0u;
+    BATTLE_SLOT_STORE_BYTE_01(index) = 0u;
+    BATTLE_SLOT_STORE_BYTE_02(index) = 0u;
+    BATTLE_SLOT_STORE_BYTE_03(index) = 0u;
+    BATTLE_SLOT_STORE_BYTE_04(index) = 0u;
+    BATTLE_SLOT_STORE_BYTE_48(index) = 0u;
+    BATTLE_SLOT_STORE_BYTE_5D(index) = 0u;
+    BATTLE_SLOT_STORE_BYTE_5E(index) = 0u;
+    BATTLE_SLOT_STORE_BYTE_5F(index) = 0u;
   } while (index < 0x30u);
 }

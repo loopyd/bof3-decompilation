@@ -6,7 +6,7 @@
  */
 u8 func_801DEDE4(void) {
   volatile Battle03LocalWork* battle_work = BATTLE_LOCAL_WORK_PTR;
-  volatile u8*                battle_global = (volatile u8*)0x80140000u;
+  volatile u8*                battle_global = BATTLE_GLOBAL_RAM_U8;
 
   if ((BATTLE_LOCAL_FLAGS_80(battle_work) & 4u) != 0u) {
     return 1u;

@@ -3,3 +3,8 @@
 /* SLUS addresses called by this independently loaded overlay. */
 WEAK_SYMBOL_AT(game_stop_selection_fx, 0x8015d404);
 WEAK_SYMBOL_AT(game_queue_frontend_cue, 0x8015df18);
+
+/* Main-RAM globals owned by the loaded image. */
+WEAK_SYMBOL_AT(SCENA16_D_80145EC4, 0x80145ec4);
+WEAK_SYMBOL_AT(SCENA16_D_80145EC8, 0x80145ec8);
+WEAK_SYMBOL_AT(SCENA16_D_80149308, 0x80149308);

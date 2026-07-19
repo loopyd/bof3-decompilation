@@ -9,8 +9,8 @@ void func_8009773C(void) {
   u32                                    substate;
   BattleSelectionHandler const volatile* table;
 
-  substate_base = (volatile u8*)0x80140000u;
+  substate_base = BATTLE_GAME_RAM_BASE;
   substate = substate_base[0x62e4];
-  table = (BattleSelectionHandler const volatile*)0x800b0000u;
+  table = BATTLE_SELECTION_TABLE_BASE;
   table[substate + 0x10fdu]();
 }

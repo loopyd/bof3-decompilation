@@ -13,8 +13,8 @@ void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_801F2D5C(const s32* arg0, s32 arg1);
 void func_801F2E04(const s32* arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4);
 
-#define WORLD00_AREA026_13_PRIMITIVE_PTR PSX_REF(volatile u8 *, 0x8014598cu)
-#define WORLD00_AREA026_13_TABLE_33FC    ((const s32*)0x801f33fcu)
-#define WORLD00_AREA026_13_TABLE_340C    ((const s32*)0x801f340cu)
+#define WORLD00_AREA026_13_PRIMITIVE_PTR PSX_REF(volatile u8*, 0x8014598cu)
+#define WORLD00_AREA026_13_TABLE_33FC    PSX_PTR(const s32, 0x801f33fcu)
+#define WORLD00_AREA026_13_TABLE_340C    PSX_PTR(const s32, 0x801f340cu)
 
 #endif

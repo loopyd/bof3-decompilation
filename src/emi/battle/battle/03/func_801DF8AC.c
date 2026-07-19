@@ -9,7 +9,7 @@ void NO_SIBLING_CALLS func_801DF8AC(void) {
   Battle03Handler    handler;
   u32                state_index;
 
-  state_table_base = (const volatile u8*)0x801f0000u;
+  state_table_base = BATTLE_HIGH_RAM_U8;
 
   if ((BATTLE_LOCAL_WORD_128(BATTLE_LOCAL_WORK_PTR) & 1u) != 0u) {
     handler = *(Battle03Handler const volatile*)(state_table_base - 0x4e78u);

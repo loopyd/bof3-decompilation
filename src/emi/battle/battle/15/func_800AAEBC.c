@@ -11,16 +11,18 @@ void func_800AAEBC(s16 target_index, u8 battler_index) {
   u8           target_flags;
   u8           enemy;
 
-  action_slot = (u8)((s32 (*)(s32, s32))0x801e590cu)(0, 1);
+  action_slot = (u8)FUNCTION_AT(s32 (*)(s32, s32), 0x801e590cu)(0, 1);
 
   REG8(0x801ec33bu + ((u32)action_slot * 0x78u)) = 1u;
 
   if (battler_index < 3u) {
-    battler_data = (volatile u8*)(0x80145e90u + ((u32)battler_index * 0x140u));
+    battler_data = (volatile u8*)((u32)BATTLE_PLAYER_BATTLER_BASE +
+                                  ((u32)battler_index * 0x140u));
     target_flags = REG8(0x80145fb0u + ((u32)battler_index * 0x140u));
   } else {
     enemy = battler_index - 3u;
-    battler_data = (volatile u8*)(0x801eb2e8u + ((u32)enemy * 0x118u));
+    battler_data =
+        (volatile u8*)((u32)BATTLE_ENEMY_BATTLER_BASE + ((u32)enemy * 0x118u));
     target_flags = REG8(0x801eb72cu + ((u32)enemy * 0x118u));
   }
 

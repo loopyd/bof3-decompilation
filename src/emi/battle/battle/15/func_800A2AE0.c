@@ -10,7 +10,7 @@ s16 func_800A2AE0(u8 battler_index, u16 element_mask) {
   s16           result;
   u8            element_slot;
 
-  modifier_table = (volatile s16*)0x800b493cu;
+  modifier_table = BATTLE_MODIFIER_TABLE;
   result = 0;
 
   if (battler_index < 3u) {

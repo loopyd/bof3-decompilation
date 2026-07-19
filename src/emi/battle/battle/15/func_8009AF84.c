@@ -11,14 +11,14 @@ void func_8009AF84(void) {
   u8           cursor;
   u8           rows;
 
-  panel = (volatile u8*)0x80150000u;
+  panel = BATTLE_LOCK_RAM_BASE;
   panel -= 0x7a90u;
   panel[0] = 1u;
   panel[3] = 2u;
   panel[8] = 2u;
-  group = *(volatile u8*)0x801454fdu;
-  page_base = *(volatile u8*)0x801454feu;
-  cursor = *(volatile u8*)0x801454ffu;
+  group = BATTLE_SELECTION_SAVED_GROUP(3);
+  page_base = BATTLE_SELECTION_SAVED_SCROLL(3);
+  cursor = BATTLE_SELECTION_SAVED_CURSOR(3);
   rows = 8u;
   panel[2] = 1u;
   panel[0xd] = 0xffu;

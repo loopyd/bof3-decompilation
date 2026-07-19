@@ -8,6 +8,5 @@ void func_801F34C8(void) {
   u32 index;
 
   index = (u32)WORLD00_AREA016_SCRATCH_PTR->state_02 << 2;
-  (*(World00Area016Handler const volatile*)((u8*)0x801f0000 + 0x511c +
-                                            index))();
+  WORLD00_AREA016_STATE_TABLE[index]();
 }

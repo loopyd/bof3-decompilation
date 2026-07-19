@@ -11,8 +11,8 @@ void func_801DDF28(void) {
 
   new_var3 = 2;
   new_var = 0;
-  ((volatile u8*)0x801462e0u)[new_var] = 5u;
+  BATTLE_MODE_TUPLE_62E0[new_var] = 5u;
   new_var2 = 1;
-  ((volatile u8*)0x801462e0u)[new_var2] = 3u;
-  ((volatile u8*)0x801462e0u)[new_var3] = 0u;
+  BATTLE_MODE_TUPLE_62E0[new_var2] = 3u;
+  BATTLE_MODE_TUPLE_62E0[new_var3] = 0u;
 }

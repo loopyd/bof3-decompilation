@@ -11,15 +11,14 @@ u32 func_801DCCB0(void) {
 
   total = 0;
   index = 0u;
-  count = *(volatile u8*)(0x80140000u + 0x62f0u);
+  count = BATTLE_GLOBAL_BYTE_62F0;
   if (count != 0u) {
     do {
-      total += *(volatile u16*)(0x80140000u + ((u32)index * 0x140u) + 0x5f26u);
+      total += BATTLE_LOCAL_ABS_HALF_5F26(index);
       index += 1u;
     } while ((u32)index < count);
   }
 
-  return ((((u16)total / *(volatile u8*)(0x80140000u + 0x62f0u))) +
-          *(volatile u16*)(0x801f0000u - 0x3d12u)) >>
-         1;
+  return ((((u16)total / BATTLE_GLOBAL_BYTE_62F0) + BATTLE_GLOBAL_HALF_EC2EE) >>
+          1);
 }

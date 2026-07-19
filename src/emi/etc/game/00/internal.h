@@ -96,8 +96,8 @@ typedef struct RecordSlot {
   u8 pad[0x6F]; /* 0x74 - 5 */
 } RecordSlot;
 
-extern Bof3PanelTask* D_80148648;
-extern GameScenarioState GAME_SCENARIO_STATE;
+extern Bof3PanelTask*               D_80148648;
+extern GameScenarioState            GAME_SCENARIO_STATE;
 extern const volatile AbilityObject ABILITY_OBJECTS[];
 
 /* Work area pointer in scratchpad slot 0x1F800044 (offset 0x44).
@@ -107,7 +107,7 @@ extern struct GameWorkArea* volatile g_game_work;
 
 /* @behavior entry-0 main state machine index */
 extern volatile u16 D_80143B90;
-extern u16  D_80143C40;
+extern u16          D_80143C40;
 /* @behavior entry-0 sub-state within current state */
 extern u16 D_80143B92;
 /* @behavior world/phase index for entry-0 world dispatch */
@@ -140,29 +140,29 @@ extern u32 D_8014502C;
 extern volatile u8 D_80145988;
 /* @behavior world flags — bit0=pending scenario, bit6=force-reset.
  * UNKNOWN: roles of observed bits 5 and 11. */
-extern u16 D_8014625A;
+extern u16         D_8014625A;
 extern volatile u8 D_80146256;
 /* @behavior flag byte cleared on request 0xFE.
  * UNKNOWN: the flag's owning subsystem. */
-extern volatile u8      D_8014832E;
-extern u8       D_801462E0;
-extern u8       D_801462E1;
-extern u8       D_801462E2;
-extern u8       D_80145E9B;
-extern u8       D_80145FDB;
-extern u8       D_8014611B;
-extern u8       D_8014626C;
-extern u8       D_8014626D;
-extern u8       D_8014626E;
-extern u8       D_8014626F;
-extern u8       D_80146270;
-extern u8       D_80148650;
-extern u8       D_80148651;
-extern u8       D_80148652;
-extern s8       D_8014865C;
-extern u8       D_80149332;
-extern const u8 D_80181EBA[];
-extern const u8 D_80181EBB[];
+extern volatile u8 D_8014832E;
+extern u8          D_801462E0;
+extern u8          D_801462E1;
+extern u8          D_801462E2;
+extern u8          D_80145E9B;
+extern u8          D_80145FDB;
+extern u8          D_8014611B;
+extern u8          D_8014626C;
+extern u8          D_8014626D;
+extern u8          D_8014626E;
+extern u8          D_8014626F;
+extern u8          D_80146270;
+extern u8          D_80148650;
+extern u8          D_80148651;
+extern u8          D_80148652;
+extern s8          D_8014865C;
+extern u8          D_80149332;
+extern const u8    D_80181EBA[];
+extern const u8    D_80181EBB[];
 /* @behavior signed world-coord X argument for scenario entry */
 extern s16 D_8014930A;
 /* @behavior signed world-coord Y argument for scenario entry */
@@ -184,7 +184,7 @@ extern struct GameWorkArea D_80146888[30];
 extern u8                  D_8014933F;
 extern u32                 D_801CD954;
 extern const s8            D_801C7B74[];
-extern volatile u16                D_801490A4;
+extern volatile u16        D_801490A4;
 
 /* INFERRED: palette work records use the observed 12-byte and 16-byte strides;
  * confirm field meanings against their setup paths. */
@@ -376,10 +376,27 @@ void func_8019982C(void);
  * via a literal‑address macro (lui+ori+lw 0(base) codegen). */
 #define SCRATCH_WORK SPAD_PTR_SLOT(volatile struct GameWorkArea, 0x44u)
 
+/* Scratchpad entity-spawn counters (0x1F800000 / 0x1F800002). */
+#define GAME_ENTITY_COUNTER    SPAD_REF(s16, 0x0u)
+#define GAME_ENTITY_ENTRY_DATA SPAD_REF(u16, 0x2u)
+
+/* Work-area pointer cell in RAM at 0x80146884 (immediately before the
+ * D_80146888 work-area array). */
+#define GAME_WORK_AREA_PTR PSX_REF(volatile struct GameWorkArea*, 0x80146884u)
+
+/* Per-record spawn-gate byte table at 0x80144FC4, indexed by byte. */
+#define GAME_SPAWN_GATE_BYTE(index) \
+  PSX_REF(volatile u8, 0x80144FC4u + (u32)(index))
+
 /* Movement/position offset tables in main exe data section */
-#define MOVEMENT_OFFSET_0(i)  (*(volatile s32*)(0x80181B94u + (i) * 8))
-#define MOVEMENT_OFFSET_1(i)  (*(volatile s32*)(0x80181B98u + (i) * 8))
-#define MOVEMENT_THRESHOLD(i) (*(volatile s16*)(0x80181B70u + (i) * 2))
+#define MOVEMENT_OFFSET_0(i)  PSX_REF(volatile s32, 0x80181B94u + (i) * 8)
+#define MOVEMENT_OFFSET_1(i)  PSX_REF(volatile s32, 0x80181B98u + (i) * 8)
+#define MOVEMENT_THRESHOLD(i) PSX_REF(volatile s16, 0x80181B70u + (i) * 2)
+
+/* Misc. single fixed-address globals (read-only status flags) */
+#define GAME_UNK_80145558 PSX_REF(const volatile u32, 0x80145558u)
+#define GAME_UNK_80145554 PSX_REF(const volatile u32, 0x80145554u)
+#define GAME_UNK_801462EA PSX_REF(const volatile u8,  0x801462eau)
 
 /* ---- RAM globals (D_ names match original game data patterns) ---- */
 

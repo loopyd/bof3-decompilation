@@ -7,11 +7,11 @@
 void func_801D9804(s16 arg0, s16 arg1, s32 arg2, s32 arg3) {
   u32 packet;
 
-  func_8017C2D8(*(volatile u32*)0x8014598c, 0, 0, func_8017A620(0, 0, 0x3c0, 0),
+  func_8017C2D8(BATTLE_GLOBAL_WORD_598C, 0, 0, func_8017A620(0, 0, 0x3c0, 0),
                 0);
   func_8014E5A0(1, 0xc);
 
-  packet = *(volatile u32*)(0x80140000 + 0x598c);
+  packet = BATTLE_GLOBAL_WORD_598C;
   *(volatile u16*)(packet + 0xe) = func_8017A6F0((arg2 & 0xff) << 4, 0x1e0);
   *(volatile u8*)(packet + 4) = 0x80;
   *(volatile u8*)(packet + 5) = 0x80;

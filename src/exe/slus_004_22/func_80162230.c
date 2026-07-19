@@ -1,20 +1,20 @@
 #include "internal.h"
 
 extern void (*D_80183248[])(void);
-extern CdlLOC D_8018B490;
-extern volatile u32   D_80146450;
-extern volatile u32   D_80146454;
-extern volatile u32   D_8014645C;
-extern volatile u16   D_80146460;
-extern volatile u32   D_80146464;
-extern volatile u32   D_8014646C;
-extern volatile u8    D_80146480;
-extern volatile u8    D_80146481;
-extern s8     D_80146489;
-extern u8     D_80146494;
-extern volatile u32   D_80146518[];
-extern volatile u8    D_801464A0[];
-extern volatile u32   D_80146808;
+extern CdlLOC       D_8018B490;
+extern volatile u32 D_80146450;
+extern volatile u32 D_80146454;
+extern volatile u32 D_8014645C;
+extern volatile u16 D_80146460;
+extern volatile u32 D_80146464;
+extern volatile u32 D_8014646C;
+extern volatile u8  D_80146480;
+extern volatile u8  D_80146481;
+extern s8           D_80146489;
+extern u8           D_80146494;
+extern volatile u32 D_80146518[];
+extern volatile u8  D_801464A0[];
+extern volatile u32 D_80146808;
 
 /* @behavior services the active EMI CD-ready callback, validates the sector source,
  * dispatches the current loader phase, and advances the streaming ring.

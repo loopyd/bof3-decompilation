@@ -28,15 +28,15 @@ extern volatile u16 WORLD00_AREA016_GLOBAL_HALF_5AC0;
 extern volatile u16 WORLD00_AREA016_GLOBAL_HALF_6258;
 extern volatile u16 WORLD00_AREA016_GLOBAL_HALF_625A;
 extern volatile u8  WORLD00_AREA016_GLOBAL_BYTE_832E;
-extern s16  WORLD00_AREA016_GLOBAL_HALF_930A;
-extern s16  WORLD00_AREA016_GLOBAL_HALF_930E;
+extern s16          WORLD00_AREA016_GLOBAL_HALF_930A;
+extern s16          WORLD00_AREA016_GLOBAL_HALF_930E;
 extern volatile u8  WORLD00_AREA016_STREAM_HINT;
 extern volatile u16 WORLD00_AREA016_BOOT_HALF_0008;
 
-void        func_8014E5A0(u8 arg0, u8 arg1);
-void        func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
-s8          func_80166CB0(s16 arg0, s16 arg1);
-u8          func_801B6610(s16 arg0, s16 arg1);
+void func_8014E5A0(u8 arg0, u8 arg1);
+void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
+s8   func_80166CB0(s16 arg0, s16 arg1);
+u8   func_801B6610(s16 arg0, s16 arg1);
 
 void func_801F3400(void);
 void func_801F34C8(void);
@@ -48,19 +48,19 @@ void func_801F3ECC(s16 arg0, s16 arg1);
 void func_801F40C4(s16 arg0, s16 arg1);
 
 #define WORLD00_AREA016_SCRATCH_PTR \
-  PSX_REF(volatile World00Area016Scratch *, 0x1f800044u)
-#define WORLD00_AREA016_PRIMITIVE_PTR PSX_REF(volatile u8 *, 0x8014598cu)
+  PSX_REF(volatile World00Area016Scratch*, 0x1f800044u)
+#define WORLD00_AREA016_PRIMITIVE_PTR PSX_REF(volatile u8*, 0x8014598cu)
 #define WORLD00_AREA016_STATE_TABLE \
-  ((World00Area016Handler const volatile*)0x801f511cu)
+  PSX_PTR(const volatile World00Area016Handler, 0x801f511cu)
 #define WORLD00_AREA016_STATE_TABLE_03 \
-  ((World00Area016Handler const volatile*)0x801f512cu)
-#define WORLD00_AREA016_SPRT_TABLE ((const volatile u8*)0x801f513cu)
+  PSX_PTR(const volatile World00Area016Handler, 0x801f512cu)
+#define WORLD00_AREA016_SPRT_TABLE PSX_PTR(const volatile u8, 0x801f513cu)
 #define WORLD00_AREA016_MARKER_TABLE \
-  ((const volatile World00Area016MarkerEntry*)0x801f5194u)
-#define WORLD00_AREA016_ROTATION   ((SVECTOR*)0x801492d8u)
-#define WORLD00_AREA016_G4_VERTEX0 ((SVECTOR*)0x1f800014u)
-#define WORLD00_AREA016_G4_VERTEX1 ((SVECTOR*)0x1f80001cu)
-#define WORLD00_AREA016_G4_VERTEX2 ((SVECTOR*)0x1f800024u)
-#define WORLD00_AREA016_G4_VERTEX3 ((SVECTOR*)0x1f80002cu)
+  PSX_PTR(const volatile World00Area016MarkerEntry, 0x801f5194u)
+#define WORLD00_AREA016_ROTATION   PSX_PTR(SVECTOR, 0x801492d8u)
+#define WORLD00_AREA016_G4_VERTEX0 SPAD_ADDR(SVECTOR, 0x14u)
+#define WORLD00_AREA016_G4_VERTEX1 SPAD_ADDR(SVECTOR, 0x1cu)
+#define WORLD00_AREA016_G4_VERTEX2 SPAD_ADDR(SVECTOR, 0x24u)
+#define WORLD00_AREA016_G4_VERTEX3 SPAD_ADDR(SVECTOR, 0x2cu)
 
 #endif

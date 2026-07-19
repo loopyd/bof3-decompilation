@@ -4,17 +4,17 @@ extern u8 D_80140000[];
 
 #define EMI_LOADER_STEP (*(volatile u32*)(D_80140000 + 0x646c))
 
-extern volatile u32           D_8014646C;
-extern volatile u8            D_80146483;
+extern volatile u32   D_8014646C;
+extern volatile u8    D_80146483;
 extern signed char    D_80146489;
-extern volatile u8            D_801464A0[];
-extern volatile u32           D_80146478;
-extern volatile u8            D_80146481;
-extern volatile u8            D_80146485;
-extern volatile u8            D_80146486;
-extern volatile u8            D_80146480;
-extern volatile u8            D_80146494;
-extern volatile u32           D_80146454;
+extern volatile u8    D_801464A0[];
+extern volatile u32   D_80146478;
+extern volatile u8    D_80146481;
+extern volatile u8    D_80146485;
+extern volatile u8    D_80146486;
+extern volatile u8    D_80146480;
+extern volatile u8    D_80146494;
+extern volatile u32   D_80146454;
 extern EmiLoaderEntry D_8014677C[];
 
 /* @behavior starts the current EMI entry transfer and records either its

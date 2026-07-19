@@ -5,35 +5,35 @@
 
 typedef void (*GameFrontStateHandler)(void);
 
-extern volatile u16 GAME_FRONT_EFFECT_BUSY;
-extern volatile u16 GAME_FRONT_PAD_STATE;
-extern volatile u16 GAME_FRONT_STATE;
-extern volatile u16 GAME_FRONT_SUBSTATE;
-extern volatile u16 GAME_FRONT_TIMER;
-extern volatile u16 GAME_FRONT_BANNER_SCROLL;
-extern volatile u16 GAME_FRONT_BANNER_ALPHA;
-extern volatile u16 GAME_FRONT_WINDOW_ALPHA_PRIMARY;
-extern volatile u16 GAME_FRONT_WINDOW_ALPHA_SECONDARY;
-extern volatile u8  GAME_FRONT_FADE_PHASE;
-extern volatile u8  GAME_FRONT_WINDOW_PHASE;
-extern volatile u8  GAME_FRONT_INPUT_GATE;
-extern u8   GAME_FRONT_SELECTION;
-extern volatile u8  GAME_FRONT_PALETTE_STAGE_SERIAL;
-extern volatile u16 D_80143B40;
-extern volatile u16 D_80143F20;
-extern volatile u8  D_80144FC0;
-extern volatile u8  D_80144FC1;
-extern volatile u8  D_80144FC2;
-extern volatile u8  D_80144FC3;
-extern volatile u8  D_80145024;
-extern volatile u8  D_80146874;
-extern volatile u8  D_8014832E;
-extern volatile u16 D_80143B90;
-extern volatile u8  D_80143BB0;
-extern volatile u8  D_80143C30;
-extern volatile u32 GAME_FRONT_POPUP_WORD __asm__("D_80143C30");
-extern volatile u32 D_8014598C;
-extern volatile u16 D_80143C2A;
+extern volatile u16          GAME_FRONT_EFFECT_BUSY;
+extern volatile u16          GAME_FRONT_PAD_STATE;
+extern volatile u16          GAME_FRONT_STATE;
+extern volatile u16          GAME_FRONT_SUBSTATE;
+extern volatile u16          GAME_FRONT_TIMER;
+extern volatile u16          GAME_FRONT_BANNER_SCROLL;
+extern volatile u16          GAME_FRONT_BANNER_ALPHA;
+extern volatile u16          GAME_FRONT_WINDOW_ALPHA_PRIMARY;
+extern volatile u16          GAME_FRONT_WINDOW_ALPHA_SECONDARY;
+extern volatile u8           GAME_FRONT_FADE_PHASE;
+extern volatile u8           GAME_FRONT_WINDOW_PHASE;
+extern volatile u8           GAME_FRONT_INPUT_GATE;
+extern u8                    GAME_FRONT_SELECTION;
+extern volatile u8           GAME_FRONT_PALETTE_STAGE_SERIAL;
+extern volatile u16          D_80143B40;
+extern volatile u16          D_80143F20;
+extern volatile u8           D_80144FC0;
+extern volatile u8           D_80144FC1;
+extern volatile u8           D_80144FC2;
+extern volatile u8           D_80144FC3;
+extern volatile u8           D_80145024;
+extern volatile u8           D_80146874;
+extern volatile u8           D_8014832E;
+extern volatile u16          D_80143B90;
+extern volatile u8           D_80143BB0;
+extern volatile u8           D_80143C30;
+extern volatile u32          GAME_FRONT_POPUP_WORD __asm__("D_80143C30");
+extern volatile u32          D_8014598C;
+extern volatile u16          D_80143C2A;
 extern GameFrontStateHandler D_801D1C4C[];
 
 void func_8014BA04(void);
@@ -102,6 +102,6 @@ void func_801D104C(void);
 #define GAME_FRONT_POPUP_PENDING_MASK 0x00ffff00u
 #define GAME_FRONT_POPUP_PENDING_OPEN 0x00020000u
 #define GAME_FRONT_SELECTION_FX_TABLE PSX_PTR(const volatile u8, 0x80181ebau)
-#define GAME_FRONT_STATE_HANDLERS D_801D1C4C
+#define GAME_FRONT_STATE_HANDLERS     D_801D1C4C
 
 #endif

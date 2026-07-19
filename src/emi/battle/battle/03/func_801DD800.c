@@ -9,7 +9,7 @@ void func_801DD800(void) {
   u8           value;
   u8           next;
 
-  value_ptr = (volatile u8*)(0x80140000u + 0x6308u);
+  value_ptr = BATTLE_GLOBAL_RAM_U8 + 0x6308u;
   value = *value_ptr;
   if (value > 0x1eu) {
     *(value_ptr - 4) = 1u;

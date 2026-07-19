@@ -12,10 +12,10 @@ void func_801DEAE0(void) {
   u32         temp;
   u8*         table;
 
-  src = (const void*)0x801d0000u;
-  mode_ptr = (u32*)0x80140000u;
+  src = BATTLE_ROM_BASE_D0000;
+  mode_ptr = BATTLE_GLOBAL_RAM_U32;
   __builtin_memcpy(local_18, (const u8*)src + 0xc98, sizeof(local_18));
-  mode = *(volatile u32*)((u8*)mode_ptr + 0x63d0);
+  mode = *(volatile u32*)((u8*)mode_ptr + 0x63d0u);
 
   if (mode == 1u) {
     temp = ((u32 (*)(void))func_8017E3D4)();

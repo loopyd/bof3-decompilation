@@ -15,9 +15,9 @@ void func_800A4458(void) {
   s16           base_x;
   s16           base_x_adj;
 
-  template_s16 = (volatile s16*)0x801ebef0u;
-  template_u8 = (volatile u8*)0x801ebef0u;
-  player_base = (volatile u8*)0x80140000u;
+  template_s16 = (volatile s16*)BATTLE_TEMPLATE_BASE;
+  template_u8 = BATTLE_TEMPLATE_BASE;
+  player_base = BATTLE_GAME_RAM_BASE;
 
   slot = 0u;
   do {

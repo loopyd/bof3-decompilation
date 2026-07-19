@@ -1,7 +1,7 @@
 #include "internal.h"
 
 extern volatile u32 D_8014648C;
-extern u8   D_80146498[];
+extern u8           D_80146498[];
 
 /* @behavior latches the last CdSync callback result bytes and marks the async sync
  * status.

@@ -10,10 +10,7 @@ extern void func_8014D6B8(u32 flag);
 #define ENTITY_MAX       30
 #define ENTITY_SLOT_SIZE 0x98
 
-#define ENTITY_COUNTER    (*(volatile s16*)0x1F800000u)
-#define ENTITY_ENTRY_DATA (*(volatile u16*)0x1F800002u)
-#define WORK_AREA_BASE    ((struct GameWorkArea* volatile)0x80146888u)
-#define WORK_AREA_PTR     (*(volatile struct GameWorkArea**)0x80146884u)
+#define WORK_AREA_BASE ((struct GameWorkArea* volatile)0x80146888u)
 
 #define GAME_STATE_BASE 0x80140000u
 
@@ -31,19 +28,19 @@ s32 func_801A7330(const u8* spawn_data) {
   u8                   check_byte;
   u8                   spawn_flags;
 
-  slot_index = ENTITY_COUNTER;
+  slot_index = GAME_ENTITY_COUNTER;
   if (slot_index >= ENTITY_MAX) {
     return 0;
   }
 
   work = WORK_AREA_BASE + slot_index;
   SCRATCH_WORK = work;
-  WORK_AREA_PTR = work;
+  GAME_WORK_AREA_PTR = work;
 
-  ENTITY_ENTRY_DATA = (u16)(spawn_data[1] << 8) | spawn_data[2];
+  GAME_ENTITY_ENTRY_DATA = (u16)(spawn_data[1] << 8) | spawn_data[2];
 
   func_801A4AA8();
-  func_8014DD3C(ENTITY_ENTRY_DATA);
+  func_8014DD3C(GAME_ENTITY_ENTRY_DATA);
 
   work->flags_00 = 1;
 
@@ -101,9 +98,7 @@ s32 func_801A7330(const u8* spawn_data) {
   check_byte = work->field_05;
   spawn_flags = spawn_data[0xC];
 
-  if ((((volatile u8*)(0x80144FC4u + (u32)(check_byte >> 3)))[0] >>
-       (check_byte & 7)) &
-      1) {
+  if (((GAME_SPAWN_GATE_BYTE(check_byte >> 3) >> (check_byte & 7)) & 1)) {
     if (spawn_flags & 1) {
       work->flags_00 = 0;
       return 0;
@@ -119,6 +114,6 @@ s32 func_801A7330(const u8* spawn_data) {
 
   func_8014D6B8(result);
 
-  ENTITY_COUNTER = ENTITY_COUNTER + 1;
+  GAME_ENTITY_COUNTER = GAME_ENTITY_COUNTER + 1;
   return 0;
 }

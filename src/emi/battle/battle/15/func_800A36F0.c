@@ -14,7 +14,7 @@ u16 func_800A36F0(u8 battler_index, u16 flags) {
   u8            player;
   u8            enemy;
 
-  player_base = (volatile u8*)0x80140000u;
+  player_base = BATTLE_GAME_RAM_BASE;
 
   if (battler_index < 3u) {
     status = REG16(0x80145f10u + ((u32)battler_index * 0x140u));
@@ -73,22 +73,25 @@ u16 func_800A36F0(u8 battler_index, u16 flags) {
 
   if (battler_index < 3u) {
     player = battler_index;
-    ((void (*)(volatile u8*))0x80196718u)(player_base + ((u32)player * 0x140u) +
-                                          0x5e90u);
-    scratchpad_saved = REG32(0x1f800044u);
+    FUNCTION_AT(void (*)(volatile u8*),
+                0x80196718u)(player_base + ((u32)player * 0x140u) + 0x5e90u);
+    scratchpad_saved = (u32)*BATTLE_SCRATCHPAD_PTR;
     REG16(0x80145f10u + ((u32)player * 0x140u)) = status;
-    REG32(0x1f800044u) = (u32)(player_base + ((u32)player * 0x140u) + 0x5e90u);
+    *BATTLE_SCRATCHPAD_PTR =
+        (volatile u8*)(u32)(player_base + ((u32)player * 0x140u) + 0x5e90u);
   } else {
     enemy = battler_index - 3u;
-    ((void (*)(volatile u8*))0x80196718u)(
-        (volatile u8*)(0x801eb2e8u + ((u32)enemy * 0x118u)));
-    scratchpad_saved = REG32(0x1f800044u);
+    FUNCTION_AT(void (*)(volatile u8*), 0x80196718u)(
+        (volatile u8*)((u32)BATTLE_ENEMY_BATTLER_BASE + ((u32)enemy * 0x118u)));
+    scratchpad_saved = (u32)*BATTLE_SCRATCHPAD_PTR;
     REG16(0x801eb6b2u + ((u32)enemy * 0x118u)) = status;
-    REG32(0x1f800044u) = (u32)(0x801eb2e8u + ((u32)enemy * 0x118u));
+    *BATTLE_SCRATCHPAD_PTR =
+        (volatile u8*)(u32)((u32)BATTLE_ENEMY_BATTLER_BASE +
+                            ((u32)enemy * 0x118u));
   }
 
-  ((void (*)(u16))0x801ddab4u)(status);
-  REG32(0x1f800044u) = scratchpad_saved;
+  FUNCTION_AT(void (*)(u16), 0x801ddab4u)(status);
+  *BATTLE_SCRATCHPAD_PTR = (volatile u8*)scratchpad_saved;
 
   return status;
 }

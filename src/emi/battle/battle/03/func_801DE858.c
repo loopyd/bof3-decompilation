@@ -5,14 +5,12 @@
  * @source 0x801DE858
  */
 u8 func_801DE858(s8 arg0) {
-  u8  index;
-  u32 offset;
+  u8 index;
 
   index = 0u;
   while (index < 8u) {
-    offset = (u32)index * 0xcu;
-    if ((((volatile u8*)0x801f0000u)[offset - 0x4b10u] != 0u) &&
-        (((volatile u8*)0x801f0000u)[offset - 0x4b0fu] == (u8)arg0)) {
+    if ((BATTLE_EVENT_SLOT_FLAG(index) != 0u) &&
+        (BATTLE_EVENT_SLOT_A(index) == (u8)arg0)) {
       return 0u;
     }
     index += 1u;

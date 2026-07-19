@@ -8,19 +8,19 @@ void func_801DD08C(void) {
   u8 index;
 
   index = 0u;
-  if (*(volatile u8*)(0x80140000u + 0x62f0u) != 0) {
+  if (BATTLE_GLOBAL_BYTE_62F0 != 0) {
     do {
-      u32           work_offset;
-      u8            template_index;
-      const u32*    src;
-      volatile u32* dst;
-      const u32*    end;
+      u32                 work_offset;
+      u8                  template_index;
+      const volatile u32* src;
+      volatile u32*       dst;
+      const volatile u32* end;
 
       work_offset = (u32)index * 0x140u;
-      template_index = *(volatile u8*)(0x80140000u + 0x5fccu + work_offset);
-      src = (const u32*)(0x80140000u + 0x4968u + ((u32)template_index * 0xa4u));
-      dst = (volatile u32*)(0x80140000u + 0x5f04u + work_offset);
-      end = (const u32*)((u32)src + 0xa0u);
+      template_index = BATTLE_LOCAL_ABS_BYTE_5FCC(index);
+      src = BATTLE_TEMPLATE_ABS_WORD_4968(template_index);
+      dst = BATTLE_LOCAL_ABS_WORD_5F04(index);
+      end = (const volatile u32*)((u32)src + 0xa0u);
       do {
         u32 word0;
         u32 word1;
@@ -40,6 +40,6 @@ void func_801DD08C(void) {
       } while (src != end);
       *dst = *src;
       index += 1u;
-    } while (index < *(volatile u8*)(0x80140000u + 0x62f0u));
+    } while (index < BATTLE_GLOBAL_BYTE_62F0);
   }
 }

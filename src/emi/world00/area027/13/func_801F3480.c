@@ -31,7 +31,7 @@ void func_801F3480(const void* arg0, s32 arg1, u32 arg2) {
   SetPolyFT4(primitive);
   SetShadeTex(primitive, 0);
 
-  scratch = (volatile s16*)0x1f800014u;
+  scratch = SPAD_ADDR(volatile s16, 0x14u);
   scratch[0] = 0;
   scratch[1] = 0;
   scratch[2] = -0x17e;
@@ -49,8 +49,8 @@ void func_801F3480(const void* arg0, s32 arg1, u32 arg2) {
   scratch[14] = 0;
   scratch[15] = 0;
 
-  RotTransPers4((SVECTOR*)0x1f800014u, (SVECTOR*)0x1f80001cu,
-                (SVECTOR*)0x1f800024u, (SVECTOR*)0x1f80002cu,
+  RotTransPers4(SPAD_ADDR(SVECTOR, 0x14u), SPAD_ADDR(SVECTOR, 0x1cu),
+                SPAD_ADDR(SVECTOR, 0x24u), SPAD_ADDR(SVECTOR, 0x2cu),
                 (long*)((u8*)primitive + 8), (long*)((u8*)primitive + 0x10),
                 (long*)((u8*)primitive + 0x18), (long*)((u8*)primitive + 0x20),
                 &depth, &flag);

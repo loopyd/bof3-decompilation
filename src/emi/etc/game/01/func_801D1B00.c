@@ -6,9 +6,9 @@
  */
 void func_801D1B00(void) {
   volatile u8* phase;
-  s32  primary_active;
-  s32  secondary_active;
-  u16  alpha;
+  s32          primary_active;
+  s32          secondary_active;
+  u16          alpha;
 
   phase = PSX_PTR(volatile u8, 0x80143c32u);
   primary_active = 1;

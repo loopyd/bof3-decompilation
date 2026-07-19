@@ -1,6 +1,6 @@
 #include "internal.h"
 
-extern u8   D_800E4800;
+extern u8           D_800E4800;
 extern volatile u32 D_80146454;
 extern volatile u32 D_80146464;
 extern volatile u32 D_80146468;
@@ -11,10 +11,10 @@ extern volatile u8  D_80146488;
 extern volatile u8  D_80146489;
 extern volatile u8  D_8014648B;
 extern volatile u8  D_80146494;
-extern u8   D_80146498[];
+extern u8           D_80146498[];
 extern volatile u8  D_801464A0[];
 extern volatile u32 D_80146678;
-extern u8   D_80146840;
+extern u8           D_80146840;
 extern volatile u32 D_80146808;
 extern volatile u32 D_80146858;
 extern volatile u32 D_8014685C;

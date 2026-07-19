@@ -72,10 +72,10 @@ s32 func_801AF5B0(s32 item_category, s32 character_index, s32 ability_kind) {
                             0x5f1eu) >= 5u) {
     return 0;
   }
-  if ((u8)saved_kind == 21u && *(const volatile u32*)0x80145558u != 0u) {
+  if ((u8)saved_kind == 21u && GAME_UNK_80145558 != 0u) {
     return 0;
   }
-  if ((u8)saved_kind == 62u && *(const volatile u32*)0x80145554u != 0u) {
+  if ((u8)saved_kind == 62u && GAME_UNK_80145554 != 0u) {
     return 0;
   }
   if ((u8)saved_kind == 140u &&
@@ -83,7 +83,7 @@ s32 func_801AF5B0(s32 item_category, s32 character_index, s32 ability_kind) {
                              0x5f1au) != 0u) {
     return 0;
   }
-  if ((u8)saved_kind == 151u && *(const volatile u8*)0x801462eau == 0x25u) {
+  if ((u8)saved_kind == 151u && GAME_UNK_801462EA == 0x25u) {
     return 0;
   }
 

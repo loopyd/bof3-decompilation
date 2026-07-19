@@ -8,8 +8,8 @@ void NO_SIBLING_CALLS func_800989B4(void) {
   volatile u8* battle_selection_state;
   volatile u8* battle_selection_lock;
 
-  battle_selection_state = (volatile u8*)0x80140000u;
-  battle_selection_lock = (volatile u8*)0x80150000u;
+  battle_selection_state = BATTLE_GAME_RAM_BASE;
+  battle_selection_lock = BATTLE_LOCK_RAM_BASE;
   if (battle_selection_lock[-0x7a8d] != 0u) {
     return;
   }

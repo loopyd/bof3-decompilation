@@ -6,8 +6,8 @@
 typedef void (*Battle03Handler)(void);
 typedef void (*Battle03EnemyModeHandler)(s32 arg0);
 typedef void (*Battle03ForwardingHandler)(s32 arg0, s32 arg1, s32 arg2,
-                                           s32 arg3, s32 arg4, s32 arg5,
-                                           s32 arg6, u8* selector);
+                                          s32 arg3, s32 arg4, s32 arg5,
+                                          s32 arg6, u8* selector);
 
 /*
  * The battle selector overlays the last eight bytes of each GAME ability
@@ -82,81 +82,77 @@ typedef struct Battle03QueuedSlot {
 } Battle03QueuedSlot;
 
 extern volatile AbilityObject ABILITY_OBJECTS[];
-extern volatile u8  BATTLE_LOCAL_BYTE_62EC;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62E0;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62E1;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62E2;
-extern volatile u16 BATTLE_GLOBAL_HALF_62E8;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62EA;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62EE;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62F0;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62F4;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62F3;
-extern volatile u8 BATTLE_GLOBAL_BYTE_6301;
-extern volatile u8 BATTLE_GLOBAL_BYTE_6302;
-extern volatile u8 BATTLE_GLOBAL_BYTE_6303;
-extern volatile u32 BATTLE_GLOBAL_WORD_59F0;
-extern volatile u32 BATTLE_GLOBAL_WORD_598C;
-extern volatile u16 BATTLE_SCRATCH_HALF_000;
-extern volatile u8  BATTLE_SCRATCH_BYTE_000;
-extern volatile u8  BATTLE_SCRATCH_BYTE_001;
-extern volatile u8  BATTLE_SCRATCH_BYTE_002;
-extern volatile u8  BATTLE_LOCAL_FLAG_63CE;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6325;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6327;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6328;
-extern volatile u32 BATTLE_GLOBAL_WORD_632C;
-extern volatile u32 BATTLE_GLOBAL_WORD_6330;
-extern volatile u8 BATTLE_GLOBAL_BYTE_6374;
-extern volatile u8 BATTLE_GLOBAL_BYTE_6375;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6384;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6324;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6304;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6308;
-extern volatile u16 BATTLE_GLOBAL_HALF_63B8;
-extern volatile u8  BATTLE_GLOBAL_BYTE_63BA;
-extern volatile u16 BATTLE_GLOBAL_HALF_63C0;
-extern volatile u16 BATTLE_GLOBAL_HALF_63C2;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6322;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6323;
-extern volatile u8  BATTLE_GLOBAL_BYTE_63CE;
-extern volatile u16 BATTLE_GLOBAL_HALF_63DA;
-extern volatile u8  BATTLE_GLOBAL_BYTE_63CA;
-extern volatile u16 BATTLE_GLOBAL_HALF_63D0;
-extern volatile u8  BATTLE_GLOBAL_BYTE_C303;
-extern volatile u8  BATTLE_GLOBAL_BYTE_EC324;
-extern volatile u16 BATTLE_GLOBAL_HALF_EC30C;
-extern volatile u16 BATTLE_GLOBAL_HALF_EC2EE;
-extern volatile u8  BATTLE_UI_BYTE_8356;
-extern volatile u8  BATTLE_UI_BYTE_8357;
-extern volatile u16 BATTLE_UI_HALF_8358;
-extern volatile u16 BATTLE_UI_HALF_835A;
-extern volatile u8  BATTLE_UI_BYTE_835C;
-extern volatile u8  BATTLE_UI_BYTE_835D;
-extern volatile u8  BATTLE_UI_BYTE_835E;
-extern volatile u8  BATTLE_UI_BYTE_837A;
-extern volatile u8  BATTLE_UI_BYTE_837B;
-extern volatile u16 BATTLE_UI_HALF_837C;
-extern volatile u16 BATTLE_UI_HALF_837E;
-extern volatile u8  BATTLE_UI_BYTE_839E;
-extern volatile u8  BATTLE_UI_BYTE_839F;
-extern volatile u8  BATTLE_UI_BYTE_83C2;
-extern volatile u8  BATTLE_UI_BYTE_83C3;
-extern volatile u16 BATTLE_UI_HALF_83C4;
-extern volatile u16 BATTLE_UI_HALF_83C6;
-extern volatile u8  BATTLE_UI_BYTE_8332;
-extern volatile u8  BATTLE_UI_BYTE_8333;
-extern volatile u16 BATTLE_UI_HALF_8334;
-extern volatile u16 BATTLE_UI_HALF_8336;
-extern volatile u32 BATTLE_CURRENT_QUEUED_WORD_4B20;
-extern volatile u8 BATTLE_GLOBAL_BYTE_63C9;
-extern volatile u8 BATTLE_GLOBAL_BYTE_44F58;
-extern volatile s8  BATTLE_GLOBAL_BYTE_4952;
-extern volatile u8 BATTLE_RANDOM_TABLE_AC58_DATA[];
-extern volatile u8 BATTLE_RANDOM_TABLE_AC78_DATA[];
-extern volatile u8 BATTLE_UI_RING_INDEX;
-extern volatile u8 BATTLE_UI_RING_TARGET;
-extern u8 func_8017E3D4(void);
+extern volatile u8            BATTLE_LOCAL_BYTE_62EC;
+extern volatile u8            BATTLE_GLOBAL_BYTE_62E0;
+extern volatile u8            BATTLE_GLOBAL_BYTE_62E1;
+extern volatile u8            BATTLE_GLOBAL_BYTE_62E2;
+extern volatile u16           BATTLE_GLOBAL_HALF_62E8;
+extern volatile u8            BATTLE_GLOBAL_BYTE_62EA;
+extern volatile u8            BATTLE_GLOBAL_BYTE_62EE;
+extern volatile u8            BATTLE_GLOBAL_BYTE_62F4;
+extern volatile u8            BATTLE_GLOBAL_BYTE_62F3;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6301;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6302;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6303;
+extern volatile u32           BATTLE_GLOBAL_WORD_59F0;
+extern volatile u16           BATTLE_SCRATCH_HALF_000;
+extern volatile u8            BATTLE_SCRATCH_BYTE_000;
+extern volatile u8            BATTLE_SCRATCH_BYTE_001;
+extern volatile u8            BATTLE_SCRATCH_BYTE_002;
+extern volatile u8            BATTLE_LOCAL_FLAG_63CE;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6325;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6327;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6328;
+extern volatile u32           BATTLE_GLOBAL_WORD_632C;
+extern volatile u32           BATTLE_GLOBAL_WORD_6330;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6374;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6375;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6384;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6324;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6304;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6308;
+extern volatile u16           BATTLE_GLOBAL_HALF_63B8;
+extern volatile u8            BATTLE_GLOBAL_BYTE_63BA;
+extern volatile u16           BATTLE_GLOBAL_HALF_63C0;
+extern volatile u16           BATTLE_GLOBAL_HALF_63C2;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6322;
+extern volatile u8            BATTLE_GLOBAL_BYTE_6323;
+extern volatile u8            BATTLE_GLOBAL_BYTE_63CE;
+extern volatile u16           BATTLE_GLOBAL_HALF_63DA;
+extern volatile u8            BATTLE_GLOBAL_BYTE_63CA;
+extern volatile u16           BATTLE_GLOBAL_HALF_63D0;
+extern volatile u8            BATTLE_GLOBAL_BYTE_EC324;
+extern volatile u16           BATTLE_GLOBAL_HALF_EC30C;
+extern volatile u8            BATTLE_UI_BYTE_8356;
+extern volatile u8            BATTLE_UI_BYTE_8357;
+extern volatile u16           BATTLE_UI_HALF_8358;
+extern volatile u16           BATTLE_UI_HALF_835A;
+extern volatile u8            BATTLE_UI_BYTE_835C;
+extern volatile u8            BATTLE_UI_BYTE_835D;
+extern volatile u8            BATTLE_UI_BYTE_835E;
+extern volatile u8            BATTLE_UI_BYTE_837A;
+extern volatile u8            BATTLE_UI_BYTE_837B;
+extern volatile u16           BATTLE_UI_HALF_837C;
+extern volatile u16           BATTLE_UI_HALF_837E;
+extern volatile u8            BATTLE_UI_BYTE_839E;
+extern volatile u8            BATTLE_UI_BYTE_839F;
+extern volatile u8            BATTLE_UI_BYTE_83C2;
+extern volatile u8            BATTLE_UI_BYTE_83C3;
+extern volatile u16           BATTLE_UI_HALF_83C4;
+extern volatile u16           BATTLE_UI_HALF_83C6;
+extern volatile u8            BATTLE_UI_BYTE_8332;
+extern volatile u8            BATTLE_UI_BYTE_8333;
+extern volatile u16           BATTLE_UI_HALF_8334;
+extern volatile u16           BATTLE_UI_HALF_8336;
+extern volatile u32           BATTLE_CURRENT_QUEUED_WORD_4B20;
+extern volatile u8            BATTLE_GLOBAL_BYTE_63C9;
+extern volatile u8            BATTLE_GLOBAL_BYTE_44F58;
+extern volatile s8            BATTLE_GLOBAL_BYTE_4952;
+extern volatile u8            BATTLE_RANDOM_TABLE_AC58_DATA[];
+extern volatile u8            BATTLE_RANDOM_TABLE_AC78_DATA[];
+extern volatile u8            BATTLE_UI_RING_INDEX;
+extern volatile u8            BATTLE_UI_RING_TARGET;
+extern u8                     func_8017E3D4(void);
 
 void func_8014D290(void);
 void func_8014D5F0(u8 arg0, u32 arg1, s32 arg2);
@@ -375,21 +371,21 @@ extern u8  D_801EB4E0;
 #define BATTLE_LOCAL_WORK_PTR \
   SPAD_PTR_SLOT(volatile Battle03LocalWork, 0x80146250u)
 #define BATTLE_GLOBAL_BYTE_62FC(index) \
-  (*(volatile volatile u8*)(0x801462fcu + (u32)(index)))
+  PSX_REF(volatile u8, 0x801462fcu + (u32)(index))
 #define BATTLE_GLOBAL_BYTE_62F6(index) \
-  (*(volatile volatile u8*)(0x801462f6u + (u32)(index)))
+  PSX_REF(volatile u8, 0x801462f6u + (u32)(index))
 #define BATTLE_GLOBAL_BYTE_630C(index) \
-  (*(volatile volatile u8*)(0x8014630cu + (u32)(index)))
+  PSX_REF(volatile u8, 0x8014630cu + (u32)(index))
 #define BATTLE_UI_CHAR_BUFFER PSX_PTR(volatile u8, 0x80145ad4u)
 #define BATTLE_GLOBAL_HALF_6334(index) \
-  (*(volatile volatile u16*)(0x80146334u + ((u32)(index) * 2u)))
+  PSX_REF(volatile u16, 0x80146334u + ((u32)(index) * 2u))
 #define BATTLE_GLOBAL_BYTE_6354(index) \
-  (*(volatile volatile u8*)(0x80146354u + (u32)(index)))
+  PSX_REF(volatile u8, 0x80146354u + (u32)(index))
 #define BATTLE_GLOBAL_PTR_6380 SPAD_PTR_SLOT(volatile u8, 0x80146380u)
 #define BATTLE_UI_BYTE_8333_INDEX(index) \
-  (*(volatile volatile u8*)(0x80148333u + ((u32)(index) * 0x24u)))
+  PSX_REF(volatile u8, 0x80148333u + ((u32)(index) * 0x24u))
 #define BATTLE_UI_BYTE_833A(index) \
-  (*(volatile volatile u8*)(0x8014833au + ((u32)(index) * 0x24u)))
+  PSX_REF(volatile u8, 0x8014833au + ((u32)(index) * 0x24u))
 #define BATTLE_LOCAL_SCRATCH_PTR \
   SPAD_PTR_SLOT(volatile Battle03LocalWork, 0x1f800044u)
 #define BATTLE_ENEMY_SCRATCH_PTR \
@@ -400,51 +396,51 @@ extern u8  D_801EB4E0;
   SPAD_PTR_SLOT(volatile Battle03QueuedSlot, 0x801ec2e0u)
 #define BATTLE_CURRENT_QUEUED_PTR_4B20 SPAD_PTR_SLOT(volatile u8, 0x801eb4e0u)
 #define BATTLE_SLOT_STORE_FLAG(index) \
-  (*(volatile volatile u8*)(0x801ec339u + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u8, 0x801ec339u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_PTR(index) \
-  (*(volatile volatile u32*)(0x801ec3a4u + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u32, 0x801ec3a4u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_WORD_34(index) \
-  (*(volatile volatile u32*)(0x801ec364u + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u32, 0x801ec364u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_WORD_38(index) \
-  (*(volatile volatile u32*)(0x801ec368u + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u32, 0x801ec368u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_WORD_3C(index) \
-  (*(volatile volatile u32*)(0x801ec36cu + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u32, 0x801ec36cu + ((u32)(index) * 0x78u))
 #define BATTLE_EVENT_SLOT_FLAG(index) \
-  (*(volatile volatile u8*)(0x801eb4f0u + ((u32)(index) * 0x0cu)))
+  PSX_REF(volatile u8, 0x801eb4f0u + ((u32)(index) * 0x0cu))
 #define BATTLE_EVENT_SLOT_A(index) \
-  (*(volatile volatile u8*)(0x801eb4f1u + ((u32)(index) * 0x0cu)))
+  PSX_REF(volatile u8, 0x801eb4f1u + ((u32)(index) * 0x0cu))
 #define BATTLE_EVENT_SLOT_B(index) \
-  (*(volatile volatile u8*)(0x801eb4f2u + ((u32)(index) * 0x0cu)))
+  PSX_REF(volatile u8, 0x801eb4f2u + ((u32)(index) * 0x0cu))
 #define BATTLE_EVENT_SLOT_C(index) \
-  (*(volatile volatile u8*)(0x801eb4f3u + ((u32)(index) * 0x0cu)))
+  PSX_REF(volatile u8, 0x801eb4f3u + ((u32)(index) * 0x0cu))
 #define BATTLE_EVENT_SLOT_KIND(index) \
-  (*(volatile volatile u8*)(0x801eb4f5u + ((u32)(index) * 0x0cu)))
+  PSX_REF(volatile u8, 0x801eb4f5u + ((u32)(index) * 0x0cu))
 #define BATTLE_EVENT_SLOT_MODE(index) \
-  (*(volatile volatile u8*)(0x801eb4f6u + ((u32)(index) * 0x0cu)))
+  PSX_REF(volatile u8, 0x801eb4f6u + ((u32)(index) * 0x0cu))
 #define BATTLE_EVENT_SLOT_WORD(index) \
-  (*(volatile volatile u32*)(0x801eb4f4u + ((u32)(index) * 0x0cu)))
+  PSX_REF(volatile u32, 0x801eb4f4u + ((u32)(index) * 0x0cu))
 #define BATTLE_EVENT_SLOT_HALF(index) \
-  (*(volatile volatile u16*)(0x801eb4f8u + ((u32)(index) * 0x0cu)))
+  PSX_REF(volatile u16, 0x801eb4f8u + ((u32)(index) * 0x0cu))
 #define BATTLE_EVENT_SLOT_BYTE(index) \
-  (*(volatile volatile u8*)(0x801eb4fau + ((u32)(index) * 0x0cu)))
+  PSX_REF(volatile u8, 0x801eb4fau + ((u32)(index) * 0x0cu))
 #define BATTLE_SLOT_STORE_BYTE_01(index) \
-  (*(volatile volatile u8*)(0x801ec331u + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u8, 0x801ec331u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_BYTE_02(index) \
-  (*(volatile volatile u8*)(0x801ec332u + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u8, 0x801ec332u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_BYTE_05(index) \
-  (*(volatile volatile u8*)(0x801ec335u + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u8, 0x801ec335u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_BYTE_06(index) \
-  (*(volatile volatile u8*)(0x801ec336u + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u8, 0x801ec336u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_BYTE_29(index) \
-  (*(volatile volatile u8*)(0x801ec359u + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u8, 0x801ec359u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_BYTE_5C(index) \
-  (*(volatile volatile u8*)(0x801ec38cu + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u8, 0x801ec38cu + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_BYTE_5D(index) \
-  (*(volatile volatile u8*)(0x801ec38du + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u8, 0x801ec38du + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_BYTE_5E(index) \
-  (*(volatile volatile u8*)(0x801ec38eu + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u8, 0x801ec38eu + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_BYTE_5F(index) \
-  (*(volatile volatile u8*)(0x801ec38fu + ((u32)(index) * 0x78u)))
+  PSX_REF(volatile u8, 0x801ec38fu + ((u32)(index) * 0x78u))
 #define BATTLE_LOCAL_STATE_TABLE \
   PSX_PTR(const volatile Battle03Handler, 0x801eb120u)
 #define BATTLE_LOCAL_FLAGS_80(work) \
@@ -481,7 +477,7 @@ extern u8  D_801EB4E0;
 #define BATTLE_LOCAL_KIND_MASK(kind) \
   (BATTLE_ABILITY_RECORD_TABLE[(kind)].tail_10.selection_mask)
 #define BATTLE_PANEL_SLOT_MASK(kind) \
-  (*(volatile volatile u8*)(0x801d90ebu + ((u32)(kind) * 0x18u)))
+  PSX_REF(volatile u8, 0x801d90ebu + ((u32)(kind) * 0x18u))
 #define BATTLE_LOCAL_HALF_88(work) \
   (*(volatile volatile u16*)((volatile u8*)(work) + 0x88u))
 #define BATTLE_LOCAL_HALF_8A(work) \
@@ -535,7 +531,7 @@ extern u8  D_801EB4E0;
 #define BATTLE_LOCAL_STATE_TABLE_015C \
   PSX_PTR(const volatile Battle03Handler, 0x801eb15cu)
 #define BATTLE_LOCAL_STATE_TABLE_0188 \
-  (*(Battle03Handler const volatile*)0x801eb188u)
+  PSX_PTR(const volatile Battle03Handler, 0x801eb188u)
 #define BATTLE_LOCAL_BYTE_TABLE_018C PSX_PTR(const volatile u8, 0x801eb18cu)
 #define BATTLE_LOCAL_BYTE_TABLE_0198 PSX_PTR(const volatile u8, 0x801eb198u)
 #define BATTLE_LOCAL_SUBSTATE3_TABLE \
@@ -614,10 +610,10 @@ extern u8  D_801EB4E0;
   (*(volatile volatile u8*)((volatile u8*)(work) + 0xe6u))
 #define BATTLE_ENEMY_PTR_EC(work) \
   SPAD_PTR_SLOT(volatile u8, (volatile u8*)(work) + 0xecu)
-#define BATTLE_WEIGHT_TABLE_0394 PSX_PTR(const volatile u8, 0x801eb394u)
-#define BATTLE_WEIGHT_TABLE_039C PSX_PTR(const volatile u8, 0x801eb39cu)
-#define BATTLE_RANDOM_TABLE_AC58 PSX_PTR(const volatile u8, 0x801eac58u)
-#define BATTLE_RANDOM_TABLE_AC78 PSX_PTR(const volatile u8, 0x801eac78u)
+#define BATTLE_WEIGHT_TABLE_0394       PSX_PTR(const volatile u8, 0x801eb394u)
+#define BATTLE_WEIGHT_TABLE_039C       PSX_PTR(const volatile u8, 0x801eb39cu)
+#define BATTLE_RANDOM_TABLE_AC58       PSX_PTR(const volatile u8, 0x801eac58u)
+#define BATTLE_RANDOM_TABLE_AC78       PSX_PTR(const volatile u8, 0x801eac78u)
 #define BATTLE_RETRY_TABLE_AFF4        PSX_PTR(const volatile u8, 0x801eaff4u)
 #define BATTLE_COUNTER_TABLE_AFFC      PSX_PTR(const volatile u8, 0x801eaffcu)
 #define BATTLE_PERCENT_TABLE_AF3C      PSX_PTR(const volatile u16, 0x801eaf3cu)
@@ -635,11 +631,11 @@ extern u8  D_801EB4E0;
 #define BATTLE_TRIGGER_TABLE_6178      ((volatile u32**)0x800b6178u)
 #define BATTLE_VARIANCE_TABLE_AF94     PSX_PTR(const volatile u8, 0x801eaf94u)
 #define BATTLE_TARGET_MODE_PACK(index) \
-  (*(volatile volatile u8*)(0x800b51f8u + (u32)(index)))
+  PSX_REF(volatile u8, 0x800b51f8u + (u32)(index))
 #define BATTLE_ENEMY_SLOT_KIND(index) \
-  (*(volatile volatile u8*)(0x801eb6acu + ((u32)(index) * 0x118u)))
+  PSX_REF(volatile u8, 0x801eb6acu + ((u32)(index) * 0x118u))
 #define BATTLE_KIND_BYTE_00(kind) \
-  (*(volatile volatile u8*)(0x801ca718u + ((u32)(kind) * 0x14u)))
+  PSX_REF(volatile u8, 0x801ca718u + ((u32)(kind) * 0x14u))
 #define BATTLE_LOCAL_PRESENTATION_STATE1_TABLE \
   PSX_PTR(const volatile Battle03Handler, 0x801eb3b0u)
 #define BATTLE_LOCAL_PRESENTATION_BYTE3_TABLE \
@@ -674,15 +670,15 @@ extern u8  D_801EB4E0;
 #define BATTLE_PANEL_TASK_HALF_12 \
   (*(volatile volatile u16*)(BATTLE_PANEL_TASK_PTR + 0x12))
 #define BATTLE_UI_RING_BYTE0(index) \
-  (*(volatile volatile u8*)(0x801eb5b0u + ((u32)(index) * 8u)))
+  PSX_REF(volatile u8, 0x801eb5b0u + ((u32)(index) * 8u))
 #define BATTLE_UI_RING_BYTE1(index) \
-  (*(volatile volatile u8*)(0x801eb5b1u + ((u32)(index) * 8u)))
+  PSX_REF(volatile u8, 0x801eb5b1u + ((u32)(index) * 8u))
 #define BATTLE_UI_RING_WORD2(index) \
-  (*(volatile volatile u32*)(0x801eb5b4u + ((u32)(index) * 8u)))
+  PSX_REF(volatile u32, 0x801eb5b4u + ((u32)(index) * 8u))
 #define BATTLE_UI_RING_BYTE(index) \
-  (*(volatile volatile u8*)(0x801eb4fau + ((u32)(index) * 0x0cu)))
+  PSX_REF(volatile u8, 0x801eb4fau + ((u32)(index) * 0x0cu))
 #define BATTLE_UI_RING_WORD(index) \
-  (*(volatile volatile u32*)(0x801eb4f4u + ((u32)(index) * 0x0cu)))
+  PSX_REF(volatile u32, 0x801eb4f4u + ((u32)(index) * 0x0cu))
 #define BATTLE_UI_MODE_TABLE_AF27       PSX_PTR(const volatile u8, 0x801eaf27u)
 #define BATTLE_QUAD_OFFSET_TABLE_AD30   PSX_PTR(const volatile s16, 0x801ead30u)
 #define BATTLE_SPRITE_OFFSET_TABLE_AE50 PSX_PTR(const volatile s16, 0x801eae50u)
@@ -701,5 +697,129 @@ extern u8  D_801EB4E0;
   PSX_PTR(const volatile Battle03Handler, 0x801d0f44u)
 #define BATTLE_SAVED_PREVIEW_RESULT_TABLE \
   PSX_PTR(const volatile Battle03Handler, 0x801d0f6cu)
+
+/* Scratchpad flags at 0x1F800000 (u16). */
+#define BATTLE_SCRATCH_FLAGS SPAD_REF(volatile u16, 0u)
+
+/* Scratchpad pointer cell at 0x1F800044, read as several cell types. */
+#define BATTLE_SCRATCH_CELL_U8PTR PSX_REF(volatile u8*, 0x1f800044u)
+#define BATTLE_SCRATCH_CELL_WORKPTR \
+  PSX_REF(volatile Battle03LocalWork*, 0x1f800044u)
+#define BATTLE_SCRATCH_CELL_WORD PSX_REF(volatile u32, 0x1f800044u)
+
+/* Local-work-array (0x80145e90, stride 0x140) absolute-field accessors. */
+#define BATTLE_LOCAL_ABS_BYTE_5E90(index) \
+  PSX_REF(volatile u8, 0x80145e90u + ((u32)(index) * 0x140u))
+#define BATTLE_LOCAL_ABS_HALF_5F10(index) \
+  PSX_REF(volatile u16, 0x80145f10u + ((u32)(index) * 0x140u))
+#define BATTLE_LOCAL_ABS_HALF_5F18(index) \
+  PSX_REF(volatile u16, 0x80145f18u + ((u32)(index) * 0x140u))
+#define BATTLE_LOCAL_ABS_HALF_5F1A(index) \
+  PSX_REF(volatile u16, 0x80145f1au + ((u32)(index) * 0x140u))
+#define BATTLE_LOCAL_ABS_BYTE_5F1C(index) \
+  PSX_REF(volatile u8, 0x80145f1cu + ((u32)(index) * 0x140u))
+#define BATTLE_LOCAL_ABS_BYTE_5FB0(index) \
+  PSX_REF(volatile u8, 0x80145fb0u + ((u32)(index) * 0x140u))
+#define BATTLE_LOCAL_ABS_HALF_5F26(index) \
+  PSX_REF(volatile u16, 0x80145f26u + ((u32)(index) * 0x140u))
+#define BATTLE_LOCAL_ABS_HALF_5F28(index) \
+  PSX_REF(volatile u16, 0x80145f28u + ((u32)(index) * 0x140u))
+#define BATTLE_LOCAL_ABS_BYTE_5FCC(index) \
+  PSX_REF(volatile u8, 0x80145fccu + ((u32)(index) * 0x140u))
+#define BATTLE_LOCAL_ABS_WORD_5F04(index) \
+  PSX_PTR(volatile u32, 0x80145f04u + ((u32)(index) * 0x140u))
+#define BATTLE_LOCAL_ABS_WORD_5FB8(index) \
+  PSX_REF(volatile u32, 0x80145fb8u + ((u32)(index) * 0x140u))
+
+/* Ability template records (0x80144968, stride 0xa4) absolute-field accessors. */
+#define BATTLE_TEMPLATE_ABS_WORD_4968(index) \
+  PSX_PTR(const volatile u32, 0x80144968u + ((u32)(index) * 0xa4u))
+#define BATTLE_TEMPLATE_ABS_HALF_497C(index) \
+  PSX_REF(volatile u16, 0x8014497cu + ((u32)(index) * 0xa4u))
+#define BATTLE_TEMPLATE_ABS_HALF_497E(index) \
+  PSX_REF(volatile u16, 0x8014497eu + ((u32)(index) * 0xa4u))
+#define BATTLE_TEMPLATE_ABS_HALF_4974(index) \
+  PSX_REF(volatile u16, 0x80144974u + ((u32)(index) * 0xa4u))
+#define BATTLE_TEMPLATE_ABS_BYTE_4980(index) \
+  PSX_REF(volatile u8, 0x80144980u + ((u32)(index) * 0xa4u))
+
+/* Enemy-work-array (0x801eb630, stride 0x118) absolute-field accessors. */
+#define BATTLE_ENEMY_ABS_HALF_6B2(index) \
+  PSX_REF(volatile u16, 0x801eb6b2u + ((u32)(index) * 0x118u))
+#define BATTLE_ENEMY_ABS_WORD_734(index) \
+  PSX_REF(volatile u32, 0x801eb734u + ((u32)(index) * 0x118u))
+
+/* Queued-slot (0x801ec330, stride 0x78) missing byte-field accessors. */
+#define BATTLE_SLOT_STORE_BYTE_00(index) \
+  PSX_REF(volatile u8, 0x801ec330u + ((u32)(index) * 0x78u))
+#define BATTLE_SLOT_STORE_BYTE_03(index) \
+  PSX_REF(volatile u8, 0x801ec333u + ((u32)(index) * 0x78u))
+#define BATTLE_SLOT_STORE_BYTE_04(index) \
+  PSX_REF(volatile u8, 0x801ec334u + ((u32)(index) * 0x78u))
+#define BATTLE_SLOT_STORE_BYTE_48(index) \
+  PSX_REF(volatile u8, 0x801ec378u + ((u32)(index) * 0x78u))
+
+/* UI ring head byte at 0x801ec328. */
+#define BATTLE_UI_RING_HEAD PSX_REF(volatile u8, 0x801ec328u)
+
+/* Local-state dispatch tables reached as (0x801f0000 - offset) + index*4. */
+#define BATTLE_DISPATCH_STATE4(index) \
+  PSX_PTR(const volatile Battle03Handler, 0x801eb110u + ((u32)(index) * 4u))
+#define BATTLE_DISPATCH_STATE2_CLASS(index) \
+  PSX_PTR(const volatile Battle03Handler, 0x801eb124u + ((u32)(index) * 4u))
+#define BATTLE_DISPATCH_STATE2_EVENT(index) \
+  PSX_PTR(const volatile Battle03Handler, 0x801eb16cu + ((u32)(index) * 4u))
+#define BATTLE_DISPATCH_STATE2_FOLLOWUP(index) \
+  PSX_PTR(const volatile Battle03Handler, 0x801eb174u + ((u32)(index) * 4u))
+#define BATTLE_DISPATCH_DEFAULT_CLASS(index) \
+  PSX_PTR(const volatile Battle03Handler, 0x801eb17cu + ((u32)(index) * 4u))
+#define BATTLE_DISPATCH_PRESENTATION_BYTE3(index) \
+  PSX_PTR(const volatile Battle03Handler, 0x801eb24cu + ((u32)(index) * 4u))
+#define BATTLE_DISPATCH_QUEUED_RESULT(index) \
+  PSX_PTR(const volatile Battle03Handler, 0x801eb270u + ((u32)(index) * 4u))
+
+/* Offset/position tables for queued-slot rendering (func_801E8DD8). */
+#define BATTLE_OFFSET_TABLE_0B10(a, b) \
+  PSX_REF(volatile s8, 0x801eb0b0u + ((u32)(a) * 2u) + ((u32)(b) * 8u))
+#define BATTLE_ENEMY_OFFSET_TABLE_0B08(b) \
+  PSX_REF(volatile u8, 0x801eb108u + ((u32)(b) * 2u))
+#define BATTLE_ENEMY_OFFSET_TABLE_0B09(b) \
+  PSX_REF(volatile u8, 0x801eb109u + ((u32)(b) * 2u))
+#define BATTLE_ENEMY_OFFSET_U8_0B10(index) \
+  PSX_REF(volatile u8, 0x801eb710u + ((u32)(index) * 0x118u))
+#define BATTLE_ENEMY_OFFSET_S8_0B12(index) \
+  PSX_REF(volatile s8, 0x801eb712u + ((u32)(index) * 0x118u))
+#define BATTLE_CLASS_OFFSET_0C0CB(b) \
+  PSX_REF(volatile u8, 0x800e40cbu + ((u32)(b) * 0x88u))
+
+/* Panel-task root pointer cell at 0x801485c8 (u8* volatile). */
+#define BATTLE_PANEL_ROOT_CELL PSX_REF(u8* volatile, 0x801485c8u)
+#define BATTLE_PANEL_ROOT_BASE PSX_PTR(u8* volatile, 0x80150000u)
+
+/* Base-pointer accessors for fixed RAM regions (preserve lui+offset codegen). */
+#define BATTLE_GLOBAL_RAM_U8  PSX_PTR(volatile u8, 0x80140000u)
+#define BATTLE_GLOBAL_RAM_U16 PSX_PTR(volatile u16, 0x80140000u)
+#define BATTLE_GLOBAL_RAM_U32 PSX_PTR(volatile u32, 0x80140000u)
+#define BATTLE_HIGH_RAM_U8    PSX_PTR(volatile u8, 0x801f0000u)
+#define BATTLE_HIGH_RAM_U16   PSX_PTR(volatile u16, 0x801f0000u)
+#define BATTLE_HIGH_RAM_U32   PSX_PTR(volatile u32, 0x801f0000u)
+
+/* Additional fixed-base tables and dispatch helpers. */
+#define BATTLE_ENEMY_TABLE_6D8    PSX_PTR(volatile u16, 0x801eb6d8u)
+#define BATTLE_MODE_TUPLE_62E0    PSX_PTR(volatile u8, 0x801462e0u)
+#define BATTLE_TABLE_81B10        PSX_PTR(volatile u8, 0x80181b10u)
+#define BATTLE_SCRIPT_TABLE_490D8 PSX_PTR(void, 0x801490d8u)
+#define BATTLE_ROM_BASE_D0000     PSX_PTR(const u8, 0x801d0000u)
+#define BATTLE_DISPATCH_SUBSTATE3(index) \
+  PSX_PTR(const volatile Battle03Handler, 0x801eb1e0u + ((u32)(index) * 4u))
+#define BATTLE_SCRIPT_TABLE_492B8 PSX_PTR(void, 0x801492b8u)
+#define BATTLE_SCRIPT_TABLE_0B00D PSX_PTR(const void, 0x801eb00du)
+
+/* Single fixed-address globals (inline; no symbol binding required). */
+#define BATTLE_GLOBAL_WORD_598C  PSX_REF(u32, 0x8014598cu)
+#define BATTLE_GLOBAL_BYTE_62F0  PSX_REF(volatile u8, 0x801462f0u)
+#define BATTLE_GLOBAL_BYTE_62F3  PSX_REF(u8, 0x801462f3u)
+#define BATTLE_GLOBAL_BYTE_C303  PSX_REF(volatile u8, 0x801ec303u)
+#define BATTLE_GLOBAL_HALF_EC2EE PSX_REF(volatile u16, 0x801ec2eeu)
 
 #endif

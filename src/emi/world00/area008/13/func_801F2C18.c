@@ -5,10 +5,10 @@
  * @source 0x801F2C18
  */
 void func_801F2C18(void) {
-  void (**handlers)(void);
-  u8 mode;
+  World00Area008Handler* handlers;
+  u8                     mode;
 
   mode = ((volatile u8*)WORLD00_AREA008_SCRATCH_PTR)[1];
-  handlers = (void (**)(void))0x801f4688u;
+  handlers = WORLD00_AREA008_HANDLER_TABLE;
   handlers[mode]();
 }

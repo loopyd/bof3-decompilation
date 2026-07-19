@@ -16,7 +16,7 @@ void func_801F7790(void) {
 
     case 1:
       func_8014F800(0x50, 0x50, 0, 0xffu,
-                    0x80010000u + (u32)SCENA16_D_80010004);
+                    SCENA16_VRAM_BASE + (u32)SCENA16_D_80010004);
       if (SCENA16_D_80143C40 == 0u) {
         SCENA16_D_80146876 = 0x7fu;
         goto increment_state;
@@ -25,7 +25,7 @@ void func_801F7790(void) {
 
     case 2:
       func_8014F800(0x50, 0x50, 0, 0xffu,
-                    0x80010000u + (u32)SCENA16_D_80010004);
+                    SCENA16_VRAM_BASE + (u32)SCENA16_D_80010004);
       SCENA16_D_80146876 = (u16)(SCENA16_D_80146876 - 1u);
       if (SCENA16_D_80146876 == 0u) {
         func_8014ECAC(0u);
@@ -36,24 +36,25 @@ void func_801F7790(void) {
     case 3:
       if (SCENA16_D_80143C40 != 0u) {
         func_8014F800(0x50, 0x50, 0, 0xffu,
-                      0x80010000u + (u32)SCENA16_D_80010004);
+                      SCENA16_VRAM_BASE + (u32)SCENA16_D_80010004);
         break;
       }
 
       func_8014ECAC(1u);
       SCENA16_D_80146866 = 0x30u;
       SCENA16_D_8014832E = 0x1fu;
-      *(volatile u8*)0x1f800000u = func_8019601C();
+      SPAD_REF(volatile u8, 0x0u) = func_8019601C();
 
-      if (*(volatile u8*)0x1f800000u != 0xffu) {
+      if (SPAD_REF(volatile u8, 0x0u) != 0xffu) {
         volatile u8* object;
-        u32  object_index;
+        u32          object_index;
 
-        object_index = (u32) * (volatile u8*)0x1f800000u;
-        object = (volatile u8*)(0x80143fc8u + (object_index * 0x74u));
+        object_index = (u32)SPAD_REF(volatile u8, 0x0u);
+        object = PSX_PTR(volatile u8, 0x80143fc8u) + (object_index * 0x74u);
         object[0] = 1u;
         object[5] = 0x13u;
-        *(volatile s32*)(object + 0x64) = (s32)((s16)SCENA16_D_801492D8 + 0x1c0);
+        *(volatile s32*)(object + 0x64) =
+            (s32)((s16)SCENA16_D_801492D8 + 0x1c0);
         *(volatile s32*)(object + 0x68) = (s32)(s16)SCENA16_D_801492DA;
         *(volatile s32*)(object + 0x6c) = (s32)(s16)SCENA16_D_801492DC;
         object[9] = 0xffu;
@@ -70,8 +71,8 @@ void func_801F7790(void) {
 
     case 5:
       func_8014F800(0x48, 0x50, 0, 0xffu,
-                    0x80010000u + (u32)SCENA16_D_80010006);
-      timer = (volatile u16*)0x80146876u;
+                    SCENA16_VRAM_BASE + (u32)SCENA16_D_80010006);
+      timer = &SCENA16_D_80146876;
       *timer = (u16)(*timer + 1u);
       if (*timer != 0x20u) {
         func_801F83B0((u32)((u8)*timer));
@@ -83,7 +84,7 @@ void func_801F7790(void) {
 
     case 6:
       func_8014F800(0x48, 0x50, 0, 0xffu,
-                    0x80010000u + (u32)SCENA16_D_80010006);
+                    SCENA16_VRAM_BASE + (u32)SCENA16_D_80010006);
       SCENA16_D_80146876 = (u16)(SCENA16_D_80146876 - 1u);
       if (SCENA16_D_80146876 == 0u) {
         SCENA16_D_80146876 = 0x20u;
@@ -92,11 +93,11 @@ void func_801F7790(void) {
       break;
 
     case 7:
-      timer = (volatile u16*)0x80146876u;
+      timer = &SCENA16_D_80146876;
       *timer = (u16)(*timer - 1u);
       if (*timer != 0u) {
         func_8014F800(0x48, 0x50, 0, 0xffu,
-                      0x80010000u + (u32)SCENA16_D_80010006);
+                      SCENA16_VRAM_BASE + (u32)SCENA16_D_80010006);
         func_801F83B0((u32)(*(volatile u8*)timer));
         break;
       }

@@ -12,15 +12,15 @@ void func_801DE560(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u32 arg4) {
   index = 2u;
   while (index < 8u) {
     offset = (u32)index * 0xcu;
-    value = *(volatile u8*)(0x801eb4f0u + offset);
+    value = BATTLE_EVENT_SLOT_FLAG(index);
     if (value == 0u) {
-      *(volatile u8*)(0x801eb4f0u + offset) = value | 1u;
-      *(volatile u8*)(0x801eb4f1u + offset) = arg0;
-      *(volatile u8*)(0x801eb4f2u + offset) = arg1;
-      *(volatile u8*)(0x801eb4f3u + offset) = arg2;
-      *(volatile u16*)(0x801eb4f8u + offset) = arg3;
-      *(volatile u32*)(0x801eb4f4u + offset) = arg4;
-      *(volatile u8*)(0x801eb4fau + offset) = 0u;
+      BATTLE_EVENT_SLOT_FLAG(index) = value | 1u;
+      BATTLE_EVENT_SLOT_A(index) = arg0;
+      BATTLE_EVENT_SLOT_B(index) = arg1;
+      BATTLE_EVENT_SLOT_C(index) = arg2;
+      BATTLE_EVENT_SLOT_HALF(index) = arg3;
+      BATTLE_EVENT_SLOT_WORD(index) = arg4;
+      BATTLE_EVENT_SLOT_BYTE(index) = 0u;
       return;
     }
     index += 1u;

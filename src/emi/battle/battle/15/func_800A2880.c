@@ -35,7 +35,7 @@ s16 func_800A2880(u8 battler_index, u16 base_value, u8 element_flag) {
 
   if (rule_selection != 0u) {
     if (element_flag != 0u) {
-      element_mod = ((s16 (*)(u8, u16, u32))0x800a2ef0u)(
+      element_mod = FUNCTION_AT(s16 (*)(u8, u16, u32), 0x800a2ef0u)(
           battler_index, rule_selection, 0x51eb851fu);
     } else {
       element_mod = func_800A2AE0(battler_index, rule_selection);
@@ -43,9 +43,9 @@ s16 func_800A2880(u8 battler_index, u16 base_value, u8 element_flag) {
     adjusted_value = (adjusted_value * (u16)element_mod) / 100u;
   }
 
-  random_bonus = ((u32 (*)())0x8017e3d4u)();
-  modifier_table =
-      (volatile s16*)(0x800b0000u + (((random_bonus & 7u) * 2u) + 0x492cu));
+  random_bonus = FUNCTION_AT(u32 (*)(void), 0x8017e3d4u)();
+  modifier_table = (volatile s16*)((u32)BATTLE_SELECTION_TABLE_BASE +
+                                   (((random_bonus & 7u) * 2u) + 0x492cu));
   defence_bonus = (adjusted_value * (u32)*modifier_table) / 10000u;
 
   if ((REG8(0x80146394u) < 3u) && (REG8(0x80144f58u) == 2u) &&
@@ -53,7 +53,7 @@ s16 func_800A2880(u8 battler_index, u16 base_value, u8 element_flag) {
     defence_bonus -= (adjusted_value * (u32)*modifier_table) / 40000u;
   }
 
-  player_state = (volatile u8*)0x80140000u;
+  player_state = BATTLE_GAME_RAM_BASE;
   if (battler_index < 3u) {
     defence_bonus /= 2u;
     if (REG32(0x80145fb4u + ((u32)battler_index * 0x140u) + 4u) & 0x200u) {

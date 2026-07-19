@@ -16,18 +16,18 @@ void func_801D2AE0(void) {
     return;
   }
 
-  scratch = ((volatile u8**)0x1f800000u)[0x11];
+  scratch = WORLD00_AREA030_SCRATCH_PTR;
   *(volatile u32*)(scratch + 0x34u) = *(volatile u32*)(world + 0x3ffcu);
   *(volatile u32*)(scratch + 0x38u) = *(volatile u32*)(world + 0x4000u);
   scratch[0x2au] = world[0x3ff2u];
 
-  scratch = ((volatile u8**)0x1f800000u)[0x11];
+  scratch = WORLD00_AREA030_SCRATCH_PTR;
   scratch[0x49u] = world[0x4011u];
-  scratch = ((volatile u8**)0x1f800000u)[0x11];
+  scratch = WORLD00_AREA030_SCRATCH_PTR;
   scratch[0x4au] = world[0x4012u];
-  scratch = ((volatile u8**)0x1f800000u)[0x11];
+  scratch = WORLD00_AREA030_SCRATCH_PTR;
   scratch[0x4bu] = world[0x4013u];
-  scratch = ((volatile u8**)0x1f800000u)[0x11];
+  scratch = WORLD00_AREA030_SCRATCH_PTR;
   *(volatile u32*)(scratch + 0x50u) = *(volatile u32*)(world + 0x4018u);
   *(volatile u32*)(scratch + 0x54u) = *(volatile u32*)(world + 0x401cu);
   *(volatile u16*)(scratch + 0x58u) = *(volatile u16*)(world + 0x4020u);

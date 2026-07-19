@@ -7,13 +7,9 @@
 void func_801DE8C0(s8 arg0, s8 arg1, u32 arg2) {
   u8 index;
 
-  *(volatile u8*)(0x801f0000u +
-                  ((u32)(*(volatile u8*)(0x801f0000u - 0x3cd8u)) << 3) -
-                  0x4a50u) = (u8)arg0;
-  *(volatile u8*)(0x801f0000u +
-                  ((u32)(*(volatile u8*)(0x801f0000u - 0x3cd8u)) << 3) -
-                  0x4a4fu) = (u8)arg1;
-  index = *(volatile u8*)(0x801f0000u - 0x3cd8u);
-  *(volatile u32*)(0x801f0000u + ((u32)index << 3) - 0x4a4cu) = arg2;
-  *(volatile u8*)(0x801f0000u - 0x3cd8u) = (index + 1u) & 0x0fu;
+  BATTLE_UI_RING_BYTE0(BATTLE_UI_RING_HEAD) = (u8)arg0;
+  BATTLE_UI_RING_BYTE1(BATTLE_UI_RING_HEAD) = (u8)arg1;
+  index = BATTLE_UI_RING_HEAD;
+  BATTLE_UI_RING_WORD2(index) = arg2;
+  BATTLE_UI_RING_HEAD = (index + 1u) & 0x0fu;
 }

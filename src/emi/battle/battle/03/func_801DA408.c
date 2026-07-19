@@ -15,7 +15,7 @@ void func_801DA408(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
   s16 x1;
   s16 y1;
 
-  primitive = *(u32*)(0x80140000 + 0x598c);
+  primitive = BATTLE_GLOBAL_WORD_598C;
   color0 = arg4;
   color1 = arg5;
   color2 = arg6;

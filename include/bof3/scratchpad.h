@@ -53,6 +53,6 @@
  *         volatile Entity **
  */
 #define SPAD_PTR_SLOT(type, byte_offset) \
-  PSX_REF(type *, SPAD_ADDRESS(byte_offset))
+  PSX_REF(type*, SPAD_ADDRESS(byte_offset))
 
 #endif

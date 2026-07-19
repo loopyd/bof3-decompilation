@@ -8,7 +8,7 @@
 void func_800AE34C(void) {
   void* sp_ptr;
 
-  (*(volatile u8*)0x1F800044u) = 0;
-  sp_ptr = *(void**)0x1F800044u;
+  SPAD_REF(u8, 0x44u) = 0;
+  sp_ptr = *(void**)SPAD_ADDRESS(0x44u);
   (*(volatile u8*)((u32)sp_ptr + 1))++;
 }

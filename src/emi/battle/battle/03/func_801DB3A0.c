@@ -9,8 +9,7 @@ u8 func_801DB3A0(u32 arg0, u32 arg1, u32 arg2) {
 
   arg1 &= 0xffffu;
   arg0 &= 0xffu;
-  value =
-      *(volatile u16*)(0x80140000u + ((((arg0 << 2) + arg0) << 6) + 0x5f28u));
+  value = BATTLE_LOCAL_ABS_HALF_5F28(arg0);
   if ((arg1 << 1) > value) {
     return 0;
   }

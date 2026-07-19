@@ -9,18 +9,16 @@ u32 func_801DC73C(s16 arg0, u32 arg1, u32 arg2) {
   u8  threshold;
   u32 enemy;
 
-  if ((*(volatile u16*)(0x80140000u + 0x62e8u) & 0x80u) != 0u) {
+  if ((BATTLE_GLOBAL_HALF_62E8 & 0x80u) != 0u) {
     return (u32)(s32)arg0;
   }
 
   arg1 &= 0xffu;
   if (arg1 < 3u) {
-    flags = *(volatile u16*)(0x80140000u + ((arg1 * 5u) << 6) + 0x5f10u);
+    flags = BATTLE_LOCAL_ABS_HALF_5F10(arg1);
   } else {
     enemy = arg1 - 3u;
-    flags = *(volatile u16*)(0x801f0000u +
-                             (((((enemy << 3) + enemy) << 2) - enemy) << 3) -
-                             0x494eu);
+    flags = BATTLE_ENEMY_ABS_HALF_6B2(enemy);
   }
 
   if ((flags & 8u) != 0u) {
@@ -29,13 +27,12 @@ u32 func_801DC73C(s16 arg0, u32 arg1, u32 arg2) {
     }
   }
 
-  threshold = *(volatile u8*)(0x801f0000u - 0x3cfdu);
+  threshold = BATTLE_GLOBAL_BYTE_C303;
   if (threshold < (func_8017E3D4() % 100)) {
     return (u32)(s32)arg0;
   }
 
 clear_flag:
-  *(volatile u8*)(0x80140000u + (((arg2 & 0xffu) * 5u) << 6) + 0x5fb0u) &=
-      0xefu;
+  BATTLE_LOCAL_ABS_BYTE_5FB0(arg2) &= 0xefu;
   return 0u;
 }

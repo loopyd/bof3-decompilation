@@ -48,7 +48,7 @@ void func_801F7CC4(void) {
       progress = (u16)(0x130u - SCENA16_D_80146876);
       if (progress < 0xbfu) {
         func_8014F800(0x48, 0x50, 0, 0xffu,
-                      0x80010000u + (u32)SCENA16_D_80010006);
+                      SCENA16_VRAM_BASE + (u32)SCENA16_D_80010006);
         if (progress < 0x20u) {
           func_801F83B0((u32)(progress & 0xffu));
         } else if (progress == 0x20u) {
@@ -76,13 +76,13 @@ void func_801F7CC4(void) {
       if (SCENA16_D_80146864_BYTE != 5u) {
         return;
       }
-      *(volatile u8*)0x1f800000u = func_8019601C();
-      if (*(volatile u8*)0x1f800000u != 0xffu) {
+      SPAD_REF(volatile u8, 0x0u) = func_8019601C();
+      if (SPAD_REF(volatile u8, 0x0u) != 0xffu) {
         volatile u8* object;
-        u32  object_index;
+        u32          object_index;
 
-        object_index = (u32) * (volatile u8*)0x1f800000u;
-        object = (volatile u8*)(0x80143fc8u + (object_index * 0x74u));
+        object_index = (u32)SPAD_REF(volatile u8, 0x0u);
+        object = PSX_PTR(volatile u8, 0x80143fc8u) + (object_index * 0x74u);
         object[0] = 1u;
         object[5] = 0x13u;
         *(volatile s32*)(object + 0x64) = -0x34a;
@@ -97,13 +97,13 @@ void func_801F7CC4(void) {
       if (SCENA16_D_80146864_BYTE != 8u) {
         break;
       }
-      *(volatile u8*)0x1f800000u = func_8019601C();
-      if (*(volatile u8*)0x1f800000u != 0xffu) {
+      SPAD_REF(volatile u8, 0x0u) = func_8019601C();
+      if (SPAD_REF(volatile u8, 0x0u) != 0xffu) {
         volatile u8* object;
-        u32  object_index;
+        u32          object_index;
 
-        object_index = (u32) * (volatile u8*)0x1f800000u;
-        object = (volatile u8*)(0x80143fc8u + (object_index * 0x74u));
+        object_index = (u32)SPAD_REF(volatile u8, 0x0u);
+        object = PSX_PTR(volatile u8, 0x80143fc8u) + (object_index * 0x74u);
         object[0] = 1u;
         object[5] = 0x13u;
         *(volatile s32*)(object + 0x64) = -0x2ac;
@@ -148,7 +148,8 @@ void func_801F7CC4(void) {
       break;
 
     case 10:
-      func_8014F800(0x46, 100, 0, 0xffu, 0x80010000u + (u32)SCENA16_D_80010008);
+      func_8014F800(0x46, 100, 0, 0xffu,
+                    SCENA16_VRAM_BASE + (u32)SCENA16_D_80010008);
       if (SCENA16_D_80143C40 == 0u) {
         SCENA16_D_80146876 = 0x7fu;
         advance_state = 1u;
@@ -156,7 +157,8 @@ void func_801F7CC4(void) {
       break;
 
     case 11:
-      func_8014F800(0x46, 100, 0, 0xffu, 0x80010000u + (u32)SCENA16_D_80010008);
+      func_8014F800(0x46, 100, 0, 0xffu,
+                    SCENA16_VRAM_BASE + (u32)SCENA16_D_80010008);
       SCENA16_D_80146876 = (u16)(SCENA16_D_80146876 - 1u);
       if (SCENA16_D_80146876 != 0u) {
         return;
@@ -171,7 +173,7 @@ void func_801F7CC4(void) {
         SCENA16_D_80146875 = 0u;
       } else {
         func_8014F800(0x46, 100, 0, 0xffu,
-                      0x80010000u + (u32)SCENA16_D_80010008);
+                      SCENA16_VRAM_BASE + (u32)SCENA16_D_80010008);
       }
       break;
   }

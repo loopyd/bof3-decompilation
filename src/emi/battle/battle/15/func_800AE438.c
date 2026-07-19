@@ -8,7 +8,7 @@ void func_800AE438(void) {
   void* sp_ptr;
 
   if (D_801462E8 & 4) {
-    sp_ptr = *(void**)0x1F800044u;
+    sp_ptr = *(void**)SPAD_ADDRESS(0x44u);
     (*(volatile u8*)((u32)sp_ptr + 1))++;
   }
 }

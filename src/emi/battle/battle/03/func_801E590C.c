@@ -12,12 +12,12 @@ u32 func_801E590C(u32 arg0, u32 arg1) {
   index = 0u;
   while (index < 0x30u) {
     offset = (u32)index * 0x78u;
-    flags = *(volatile u8*)(0x801ec330u + offset);
+    flags = BATTLE_SLOT_STORE_BYTE_00(index);
     if ((flags & 1u) == 0u) {
       flags = (u8)(flags | 1u);
-      *(volatile u8*)(0x801ec330u + offset) = flags;
-      *(volatile u8*)(0x801ec336u + offset) = (u8)arg0;
-      *(volatile u8*)(0x801ec335u + offset) = (u8)arg1;
+      BATTLE_SLOT_STORE_BYTE_00(index) = flags;
+      BATTLE_SLOT_STORE_BYTE_06(index) = (u8)arg0;
+      BATTLE_SLOT_STORE_BYTE_05(index) = (u8)arg1;
       return index;
     }
     index += 1u;

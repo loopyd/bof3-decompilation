@@ -4,8 +4,5 @@
  * @source 0x801E046C
  */
 void NO_SIBLING_CALLS func_801E046C(void) {
-  (*(Battle03Handler const volatile*)((volatile u8*)0x801f0000u +
-                                      ((u32)BATTLE_LOCAL_SCRATCH_PTR->unk_03
-                                       << 2) -
-                                      0x4e20u))();
+  (*BATTLE_DISPATCH_SUBSTATE3(BATTLE_LOCAL_SCRATCH_PTR->unk_03))();
 }

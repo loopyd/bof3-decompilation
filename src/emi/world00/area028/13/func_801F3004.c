@@ -11,7 +11,7 @@ void* func_801F3004(void) {
   i = 0u;
   do {
     if (WORLD00_AREA028_WORK_PTR->unk_00[0] != 0u) {
-      (*(volatile World00Area028Work**)0x801f3e00u) =
+      WORLD00_AREA028_WORK_PTR =
           (World00Area028Work*)((u8*)WORLD00_AREA028_WORK_PTR + 0x10u);
       i += 1u;
     } else {

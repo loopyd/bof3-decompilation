@@ -1,28 +1,28 @@
 #include "internal.h"
 
-extern u8*      D_80146844;
-extern u8*      D_80146848;
-extern volatile u32     D_80146464;
-extern u32      D_80146678;
-extern u32      D_8014667C;
-extern const u8 D_80183224[];
+extern u8*          D_80146844;
+extern u8*          D_80146848;
+extern volatile u32 D_80146464;
+extern u32          D_80146678;
+extern u32          D_8014667C;
+extern const u8     D_80183224[];
 
 /* @behavior validates the active EMI header tag and builds cumulative sector
  * offsets for its entries; invalid tags disable the active load.
  * @source 0x80162500
  */
 void func_80162500(void) {
-  u8*   header;
-  u8*   tag;
-  s32   tag_count;
-  s32   tag_index;
-  u32*  entry;
-  u32*  offsets;
-  u32*  sector_offsets;
-  s32*  entry_count;
-  u32   next_offset;
-  u32   header_address;
-  u8*   loader_state;
+  u8*           header;
+  u8*           tag;
+  s32           tag_count;
+  s32           tag_index;
+  u32*          entry;
+  u32*          offsets;
+  u32*          sector_offsets;
+  s32*          entry_count;
+  u32           next_offset;
+  u32           header_address;
+  u8*           loader_state;
   volatile u32* loader_word;
 
   tag_index = 7;

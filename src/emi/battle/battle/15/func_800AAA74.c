@@ -13,26 +13,26 @@ void func_800AAA74(void) {
   u8            active_count;
   s32           slot_offset;
 
-  state_base = (volatile u8*)0x80140000u;
+  state_base = BATTLE_GAME_RAM_BASE;
   mode = REG8(0x80144f58u);
 
   switch (mode) {
     case 1u:
-      ((void (*)(volatile u16*, u32))0x801654f4u)(
-          (volatile u16*)0x80145f44u, (u32)(REG16(0x80145f44u) >> 1u));
-      ((void (*)(volatile u16*, s32))0x801654f4u)(
-          (volatile u16*)0x80145f46u, -(s32)(REG16(0x80145f46u) >> 2u));
-      ((void (*)(volatile u8*, u8))0x80165694u)((volatile u8*)0x80145f59u,
-                                                REG8(0x80145f59u));
+      FUNCTION_AT(void (*)(volatile u16*, u32), 0x801654f4u)(
+          BATTLE_UNK_80145F44, (u32)(REG16(0x80145f44u) >> 1u));
+      FUNCTION_AT(void (*)(volatile u16*, s32), 0x801654f4u)(
+          BATTLE_UNK_80145F46, -(s32)(REG16(0x80145f46u) >> 2u));
+      FUNCTION_AT(void (*)(volatile u8*, u8), 0x80165694u)(BATTLE_UNK_80145F59,
+                                                           REG8(0x80145f59u));
       return;
     case 2u:
       active_count = REG8(0x801462f0u);
       slot = 0u;
       while (slot < active_count) {
-        if (!((s32 (*)(s32))0x801db524u)((s32)slot)) {
+        if (!FUNCTION_AT(s32 (*)(s32), 0x801db524u)((s32)slot)) {
           slot_offset = (u32)slot * 0x140u;
           panel_offset = (volatile u16*)(state_base + slot_offset + 0x5f04u);
-          ((void (*)(volatile u16*, s32))0x801654f4u)(
+          FUNCTION_AT(void (*)(volatile u16*, s32), 0x801654f4u)(
               panel_offset + (0x44u / 2u),
               -(s32)(REG16(0x80145f48u + slot_offset) >> 2u));
         }
@@ -43,11 +43,11 @@ void func_800AAA74(void) {
       active_count = REG8(0x801462f0u);
       slot = 0u;
       while (slot < active_count) {
-        if (!((s32 (*)(s32))0x801db524u)((s32)slot)) {
+        if (!FUNCTION_AT(s32 (*)(s32), 0x801db524u)((s32)slot)) {
           slot_offset = (u32)slot * 0x140u;
           REG16(0x80145f48u + slot_offset) = REG16(0x80145f48u);
           panel_offset = (volatile u16*)(state_base + slot_offset + 0x5f04u);
-          ((void (*)(volatile u16*, s32))0x801654f4u)(
+          FUNCTION_AT(void (*)(volatile u16*, s32), 0x801654f4u)(
               panel_offset + (0x42u / 2u),
               -(s32)(REG16(0x80145f46u + slot_offset) >> 1u));
         }
@@ -55,12 +55,12 @@ void func_800AAA74(void) {
       }
       break;
     case 4u:
-      ((void (*)(volatile u16*, u32))0x801654f4u)(
-          (volatile u16*)0x801461cau, (u32)(REG16(0x801461cau) >> 1u));
-      ((void (*)(volatile u16*, s32))0x801654f4u)(
-          (volatile u16*)0x80145f4au, -(s32)(REG16(0x80145f4au) >> 2u));
-      ((void (*)(volatile u16*, s32))0x801654f4u)(
-          (volatile u16*)0x80145f44u, -(s32)(REG16(0x80145f44u) >> 2u));
+      FUNCTION_AT(void (*)(volatile u16*, u32), 0x801654f4u)(
+          BATTLE_UNK_801461CA, (u32)(REG16(0x801461cau) >> 1u));
+      FUNCTION_AT(void (*)(volatile u16*, s32), 0x801654f4u)(
+          BATTLE_UNK_80145F4A, -(s32)(REG16(0x80145f4au) >> 2u));
+      FUNCTION_AT(void (*)(volatile u16*, s32), 0x801654f4u)(
+          BATTLE_UNK_80145F44, -(s32)(REG16(0x80145f44u) >> 2u));
       break;
   }
 }

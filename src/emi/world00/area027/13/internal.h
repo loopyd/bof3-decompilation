@@ -29,8 +29,8 @@ void func_801F31CC(void);
 void func_801F33A8(void);
 void func_801F3480(const void* arg0, s32 arg1, u32 arg2);
 
-#define WORLD00_AREA027_PRIMITIVE_PTR PSX_REF(volatile u8 *, 0x8014598cu)
-#define WORLD00_AREA027_SCRATCH_PTR   PSX_REF(volatile u8 *, 0x1f800044u)
-#define WORLD00_AREA027_MATRIX_92E8   ((MATRIX*)0x801492e8u)
+#define WORLD00_AREA027_PRIMITIVE_PTR PSX_REF(volatile u8*, 0x8014598cu)
+#define WORLD00_AREA027_SCRATCH_PTR   PSX_REF(volatile u8*, 0x1f800044u)
+#define WORLD00_AREA027_MATRIX_92E8   PSX_PTR(MATRIX, 0x801492e8u)
 
 #endif

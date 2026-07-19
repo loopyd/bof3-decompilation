@@ -10,9 +10,9 @@ void func_801DE804(void) {
   index = 0u;
   do {
     offset = (u32)index * 0xcu;
-    *(volatile u8*)(0x801eb4f0u + offset) = 0u;
-    *(volatile u8*)(0x801eb4f1u + offset) = 0u;
-    *(volatile u8*)(0x801eb4f2u + offset) = 0u;
+    BATTLE_EVENT_SLOT_FLAG(index) = 0u;
+    BATTLE_EVENT_SLOT_A(index) = 0u;
+    BATTLE_EVENT_SLOT_B(index) = 0u;
     index += 1u;
   } while (index < 8u);
 }

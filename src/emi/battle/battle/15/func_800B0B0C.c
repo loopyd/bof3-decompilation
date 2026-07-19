@@ -17,7 +17,7 @@ void func_800B0B0C(s16 base_x, s16 base_y) {
   s32           slot_offset;
   s32           palette_index;
 
-  palette_table = (volatile u16*)0x800b6d30u;
+  palette_table = BATTLE_PALETTE_TABLE;
   cursor_y = base_y + 3;
   slot = 0u;
 
@@ -26,7 +26,7 @@ void func_800B0B0C(s16 base_x, s16 base_y) {
     slot_x = base_x + (s16)slot_offset;
     slot_y = base_y;
 
-    ((void (*)(s32, s32, s32, s32, s32, s32))0x801ae3f0u)(
+    FUNCTION_AT(void (*)(s32, s32, s32, s32, s32, s32), 0x801ae3f0u)(
         (s32)(u16)slot_x, (s32)(u16)slot_y, 0x2du, 0x14u, 0u,
         (s32)REG8(0x80144952u));
 
@@ -35,22 +35,22 @@ void func_800B0B0C(s16 base_x, s16 base_y) {
     if (selection_byte & 0x80u) {
       active_slot = selection_byte & 0x7fu;
       if (slot == active_slot) {
-        ((void (*)(s16, s16, s32, s32, volatile u16*))0x8014f800u)(
+        FUNCTION_AT(void (*)(s16, s16, s32, s32, volatile u16*), 0x8014f800u)(
             (s16)(slot_x + 4), cursor_y, 0u, 0x10u,
             palette_table + (slot * 6u));
-        palette_index = (s32)0x800b6d28u;
+        palette_index = (s32)BATTLE_PALETTE_ROW_28;
       } else {
-        ((void (*)(s16, s16, s32, s32))0x8014f800u)((s16)(slot_x + 4), cursor_y,
-                                                    7u, 0x10u);
-        palette_index = (s32)0x800b6d20u;
+        FUNCTION_AT(void (*)(s16, s16, s32, s32), 0x8014f800u)(
+            (s16)(slot_x + 4), cursor_y, 7u, 0x10u);
+        palette_index = (s32)BATTLE_PALETTE_ROW_20;
       }
     } else {
-      ((void (*)(s16, s16, s32, s32))0x8014f800u)((s16)(slot_x + 4), cursor_y,
-                                                  0u, 0x10u);
-      palette_index = (s32)0x800b6d20u;
+      FUNCTION_AT(void (*)(s16, s16, s32, s32), 0x8014f800u)(
+          (s16)(slot_x + 4), cursor_y, 0u, 0x10u);
+      palette_index = (s32)BATTLE_PALETTE_ROW_20;
     }
 
-    ((void (*)(s16, s16, volatile void*, s32))0x801af390u)(
+    FUNCTION_AT(void (*)(s16, s16, volatile void*, s32), 0x801af390u)(
         slot_x, base_y, (volatile void*)palette_index, 1u);
 
     slot += 1u;
@@ -60,7 +60,7 @@ void func_800B0B0C(s16 base_x, s16 base_y) {
 
   if (!(selection_byte & 0x80u)) {
     active_slot = selection_byte & 0x7fu;
-    ((void (*)(s32, s32, s32))0x801647c4u)(
+    FUNCTION_AT(void (*)(s32, s32, s32), 0x801647c4u)(
         (s32)(u16)(base_x + (s16)((u32)active_slot * 0x30u)),
         (s32)(u16)(base_y + 4u), 0u);
   }

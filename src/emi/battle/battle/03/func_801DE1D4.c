@@ -15,8 +15,8 @@ void func_801DE1D4(void) {
       u32 work_offset;
 
       work_offset = ((u32)index * 5u) << 6;
-      if (((*(volatile u8*)(0x80145e90u + work_offset) & 1u) != 0u) &&
-          ((*(volatile u32*)(0x80145fb8u + work_offset) & 8u) == 0u)) {
+      if (((BATTLE_LOCAL_ABS_BYTE_5E90(index) & 1u) != 0u) &&
+          ((BATTLE_LOCAL_ABS_WORD_5FB8(index) & 8u) == 0u)) {
         u32                          slot;
         volatile Battle03QueuedSlot* queued_slot;
         volatile u32*                dst;
@@ -28,8 +28,12 @@ void func_801DE1D4(void) {
         slot = func_801E590C(0u, 7u) & 0xffu;
         queued_slot = &queued_slots[slot];
         dst = (volatile u32*)queued_slot;
-        src = (const volatile u32*)(0x80145e90u + work_offset);
-        end = (const volatile u32*)(0x80145f00u + work_offset);
+        src =
+            (const volatile u32*)((const volatile u8*)BATTLE_LOCAL_WORK_ARRAY +
+                                  work_offset);
+        end =
+            (const volatile u32*)((const volatile u8*)BATTLE_LOCAL_WORK_ARRAY +
+                                  work_offset + 0x70u);
         do {
           u32 word_01;
           u32 word_02;
@@ -46,9 +50,9 @@ void func_801DE1D4(void) {
           dst += 4;
         } while (src != end);
         dst[0] = src[0];
-        work_ptr = 0x80145e90u + work_offset;
+        work_ptr = (u32)((volatile u8*)BATTLE_LOCAL_WORK_ARRAY + work_offset);
         queued_slot->unk_74 = work_ptr;
-        (*(volatile u32*)0x1f800044u) = work_ptr;
+        BATTLE_SCRATCH_CELL_WORD = work_ptr;
         queued_slot_bytes = (volatile u8*)queued_slot;
         queued_slot_bytes[5] = 7u;
         queued_slot_bytes[6] = 0u;
@@ -66,8 +70,7 @@ void func_801DE1D4(void) {
 
       work_index = (u32)index - 3u;
       if ((func_801DB524(index) == 0u) &&
-          ((*(volatile u32*)(0x801eb734u + (work_index * 0x118u)) & 8u) ==
-           0u)) {
+          ((BATTLE_ENEMY_ABS_WORD_734(work_index) & 8u) == 0u)) {
         u32                          slot;
         volatile Battle03QueuedSlot* queued_slot;
         volatile u32*                dst;
@@ -80,8 +83,12 @@ void func_801DE1D4(void) {
         slot = func_801E590C(0u, 7u) & 0xffu;
         queued_slot = &queued_slots[slot];
         dst = (volatile u32*)queued_slot;
-        src = (const volatile u32*)(0x801eb630u + work_offset);
-        end = (const volatile u32*)(0x801eb6a0u + work_offset);
+        src =
+            (const volatile u32*)((const volatile u8*)BATTLE_ENEMY_WORK_ARRAY +
+                                  work_offset);
+        end =
+            (const volatile u32*)((const volatile u8*)BATTLE_ENEMY_WORK_ARRAY +
+                                  work_offset + 0x70u);
         do {
           u32 word_01;
           u32 word_02;
@@ -98,9 +105,9 @@ void func_801DE1D4(void) {
           dst += 4;
         } while (src != end);
         dst[0] = src[0];
-        work_ptr = 0x801eb2e8u + ((u32)index * 0x118u);
+        work_ptr = (u32)&BATTLE_ENEMY_WORK_ARRAY[work_index];
         queued_slot->unk_74 = work_ptr;
-        (*(volatile u32*)0x1f800044u) = work_ptr;
+        BATTLE_SCRATCH_CELL_WORD = work_ptr;
         queued_slot_bytes = (volatile u8*)queued_slot;
         queued_slot_bytes[5] = 7u;
         queued_slot_bytes[6] = 0u;

@@ -5,10 +5,7 @@
  * @source 0x801E1B2C
  */
 void func_801E1B2C(void) {
-  volatile u8* battle_global_base;
-
-  battle_global_base = (volatile u8*)0x80140000u;
-  if ((*(volatile u16*)(battle_global_base + 0x62e8u) & 4u) == 0u) {
+  if ((BATTLE_GLOBAL_HALF_62E8 & 4u) == 0u) {
     return;
   }
 

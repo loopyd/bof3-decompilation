@@ -1,7 +1,7 @@
 #include "internal.h"
 
-extern u32 D_80146458;
-extern u32 D_8014646C;
+extern u32         D_80146458;
+extern u32         D_8014646C;
 extern volatile s8 D_80146489;
 extern volatile s8 D_801464A0[];
 

@@ -59,23 +59,23 @@
 
 #ifndef INCLUDE_ASM
 #define INCLUDE_ASM(FOLDER, NAME)        \
-    __asm__(                             \
-        ".section .text\n"               \
-        "    .set noat\n"                \
-        "    .set noreorder\n"           \
-        "    .include \"" FOLDER "/" #NAME \
-        ".s\"\n"                         \
-        "    .set reorder\n"             \
-        "    .set at\n")
+  __asm__(                               \
+      ".section .text\n"                 \
+      "    .set noat\n"                  \
+      "    .set noreorder\n"             \
+      "    .include \"" FOLDER "/" #NAME \
+      ".s\"\n"                           \
+      "    .set reorder\n"               \
+      "    .set at\n")
 #endif
 
 #ifndef INCLUDE_RODATA
 #define INCLUDE_RODATA(FOLDER, NAME)     \
-    __asm__(                             \
-        ".section .rodata\n"             \
-        "    .include \"" FOLDER "/" #NAME \
-        ".s\"\n"                         \
-        ".section .text")
+  __asm__(                               \
+      ".section .rodata\n"               \
+      "    .include \"" FOLDER "/" #NAME \
+      ".s\"\n"                           \
+      ".section .text")
 #endif
 
 #else /* M2CTX or PERMUTER */

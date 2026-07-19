@@ -10,13 +10,10 @@ void func_801DDAF0(void) {
 
   index = func_801E590C(0u, 6u) & 0xffu;
   offset = index * 0x78u;
-  *(volatile u8*)(0x801f0000u + offset - 0x3cc7u) = 0u;
-  *(volatile u32*)(0x801f0000u + offset - 0x3c5cu) =
-      (u32)BATTLE_LOCAL_SCRATCH_PTR;
-  *(volatile u32*)(0x801f0000u + offset - 0x3c9cu) =
-      BATTLE_LOCAL_SCRATCH_PTR->unk_34;
-  *(volatile u32*)(0x801f0000u + offset - 0x3c98u) =
-      BATTLE_LOCAL_SCRATCH_PTR->unk_38;
-  *(volatile u32*)(0x801f0000u + offset - 0x3c94u) =
+  BATTLE_SLOT_STORE_FLAG(index) = 0u;
+  BATTLE_SLOT_STORE_PTR(index) = (u32)BATTLE_LOCAL_SCRATCH_PTR;
+  BATTLE_SLOT_STORE_WORD_34(index) = BATTLE_LOCAL_SCRATCH_PTR->unk_34;
+  BATTLE_SLOT_STORE_WORD_38(index) = BATTLE_LOCAL_SCRATCH_PTR->unk_38;
+  BATTLE_SLOT_STORE_WORD_3C(index) =
       *(volatile u32*)((volatile u8*)BATTLE_LOCAL_SCRATCH_PTR + 0x3cu);
 }

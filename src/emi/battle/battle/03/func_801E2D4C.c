@@ -7,7 +7,7 @@
 u8 func_801E2D4C(s8 arg0) {
   u8 value;
 
-  if (((u8*)0x80140000u)[0x62f3] == 1u) {
+  if (BATTLE_GLOBAL_BYTE_62F3 == 1u) {
     value = func_801E2E30();
   } else {
     value = func_801E29B4((u8)(arg0 + 3));

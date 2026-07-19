@@ -10,7 +10,7 @@ u8 func_801DB3E4(u32 arg0, u32 arg1, u32 arg2) {
   volatile u16* ptr;
 
   index = (arg0 & 0xffu) - 3u;
-  ptr = (volatile u16*)0x801eb6d8u;
+  ptr = BATTLE_ENEMY_TABLE_6D8;
   value = ptr[index * 0x8cu];
   return (((arg1 & 0xffffu) << 1) <= value) && ((arg2 & 0xffffu) <= value);
 }

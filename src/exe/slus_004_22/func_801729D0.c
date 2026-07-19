@@ -14,7 +14,7 @@ s16 func_801729D0(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
   a2 = arg2;
 
   v0 = (arg0 & 0xff) << 2;
-  v1 = *(s16*)(0x80190308 + v0);
+  v1 = *(s16*)((u8*)EMI_UNK_80190308 + v0);
 
   v0 = ((arg0 & 0xff00) >> 8);
   v0 = (v0 << 1) + v0;
@@ -26,7 +26,7 @@ s16 func_801729D0(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
 
   t1 = v1 + v0;
 
-  *(s16*)0x8018E7EE = t7;
+  EMI_UNK_8018E7EE = t7;
 
   if (t0 == 0) {
     t0 = 1;
@@ -52,12 +52,12 @@ s16 func_801729D0(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
 
   v0 = arg3;
   if (v0 != 1) {
-    return *(s16*)0x8018E7EE;
+    return EMI_UNK_8018E7EE;
   }
 
-  v0 = *(u8*)0x8018E264;
+  v0 = EMI_UNK_8018E264;
   if (v0 == 0) {
-    return *(s16*)0x8018E7EE;
+    return EMI_UNK_8018E7EE;
   }
 
   t2 = 0;
@@ -69,10 +69,10 @@ s16 func_801729D0(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
     v0 = v0 + v1;
     v0 = v0 << 2;
 
-    u0 = *(u16*)(0x8018DBFE + v0);
+    u0 = *(u16*)((u8*)EMI_UNK_8018DBFE + v0);
 
     a0 = *(u8*)(t1 + 0x12);
-    v1 = *(s16*)(0x8018DBF8 + (a0 << 1));
+    v1 = *(s16*)((u8*)EMI_UNK_8018DBF8 + (a0 << 1));
     v0 = (a0 << 1) + t1;
     v0 = *(s16*)(v0 + 0x4e);
 
@@ -90,7 +90,7 @@ s16 func_801729D0(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
     v0 = (v0 << 30) >> 31;
     v1 = v1 - v0;
 
-    v0 = *(s32*)0x8018E258;
+    v0 = EMI_UNK_8018E258;
     v0 = *(u8*)(v0 + 0x18);
     v1 = v0 * v1;
 
@@ -103,20 +103,20 @@ s16 func_801729D0(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
     v1 = (s32)(s16)s1 >> 31;
     a3 = v0 - v1;
 
-    v0 = *(s16*)(0x8018DC02 + (a0 << 1));
-    a0 = *(s32*)0x8018E250;
+    v0 = *(s16*)((u8*)EMI_UNK_8018DC02 + (a0 << 1));
+    a0 = EMI_UNK_8018E250;
     v0 = v0 << 4;
     v0 = v0 + a0;
     v0 = *(u8*)(v0 + 1);
 
     a3 = a3 * v0;
 
-    a2 = *(s16*)(0x8018DC00 + (a0 << 1));
-    v0 = *(s16*)(0x8018DC04 + (a0 << 1));
+    a2 = *(s16*)((u8*)EMI_UNK_8018DC00 + (a0 << 1));
+    v0 = *(s16*)((u8*)EMI_UNK_8018DC04 + (a0 << 1));
     a2 = a2 << 4;
     a2 = a2 + v0;
 
-    v0 = *(s32*)0x8018E25C;
+    v0 = EMI_UNK_8018E25C;
     a2 = a2 << 5;
     a2 = a2 + v0;
 
@@ -157,20 +157,20 @@ s16 func_801729D0(s16 arg0, s16 arg1, s16 arg2, s16 arg3) {
       a2 = (v0 + (0x7f - v1) * a0) >> 5;
     }
 
-    *(s16*)(0x8018E8C8 + (t2 << 4)) = a3;
-    *(s16*)(0x8018E8CA + (t2 << 4)) = a2;
+    *(s16*)((u8*)EMI_UNK_8018E8C8 + (t2 << 4)) = a3;
+    *(s16*)((u8*)EMI_UNK_8018E8CA + (t2 << 4)) = a2;
 
-    v0 = *(u8*)(0x8018E0E8 + t2);
+    v0 = *(u8*)((u8*)EMI_UNK_8018E0E8 + t2);
     v0 = v0 | 3;
-    *(u8*)(0x8018E0E8 + t2) = v0;
+    *(u8*)((u8*)EMI_UNK_8018E0E8 + t2) = v0;
 
     if (u0 == (t7 & 0xffff)) {
       break;
     }
 
     t2++;
-    v0 = *(u8*)0x8018E264;
+    v0 = EMI_UNK_8018E264;
   } while (t2 < (s16)v0);
 
-  return *(s16*)0x8018E7EE;
+  return EMI_UNK_8018E7EE;
 }

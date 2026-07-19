@@ -1,7 +1,5 @@
 #include "internal.h"
 
-#define EMI_STREAM_INDEX_HINT (*(volatile u8*)0x80145024u)
-
 /* possible name: emi_family_slot
  * @behavior maps a BOF3 content family plus index into the slot id used by the EXE
  * loader path.
