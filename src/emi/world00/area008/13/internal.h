@@ -9,15 +9,13 @@ typedef struct World00Area008Scratch {
   s8 field_5e;
 } World00Area008Scratch;
 
-#define WORLD00_AREA008_SCRATCH_PTR \
-  PSX_REF(volatile World00Area008Scratch *, 0x1f800044u)
-#define WORLD00_AREA008_PRIMITIVE_PTR PSX_REF(volatile u8 *, 0x8014598cu)
 extern volatile u8  WORLD00_AREA008_D_80146867;
 extern volatile u16 WORLD00_AREA008_D_8014932A;
 extern volatile u8  WORLD00_AREA008_D_80149333;
 extern u8   WORLD00_AREA008_D_80145AD4[];
 extern u8   WORLD00_AREA008_D_801F2C04[];
 extern u8   WORLD00_AREA008_D_801F2C10[];
+
 s32         func_8017E3F4(char* buffer, const char* format, ...);
 void        func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 void        func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
@@ -27,5 +25,9 @@ void        func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 void func_801F3C2C(void);
 void func_801F3D18(void);
 void func_801F3D88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4);
+
+#define WORLD00_AREA008_SCRATCH_PTR \
+  PSX_REF(volatile World00Area008Scratch *, 0x1f800044u)
+#define WORLD00_AREA008_PRIMITIVE_PTR PSX_REF(volatile u8 *, 0x8014598cu)
 
 #endif

@@ -18,6 +18,12 @@ shape, temporaries, pinning).
   Splat ranges.
 - Treat m2c, Rizin, signatures, rankings, and partial matches as hypotheses.
 - Write readable C89; never use handwritten assembly to force a match.
+- Keep each target `internal.h` a structured barrel in this order: include
+  guard → `#include`s → types (`typedef`/`struct`/`enum`) → external variables
+  (`extern`) → external function prototypes → `#define` macros and `static
+  inline` helpers at the bottom. A `typedef` used by an `extern` precedes it; a
+  `static inline` that uses a `#define` follows that macro. See
+  `docs/decomp-foundation.md` §Header barrel convention.
 - Add no tests for lifted game behavior. Add only the least tooling-contract
   test when tooling changes require one.
 - Never commit unless the current user explicitly requests a commit.
@@ -60,8 +66,9 @@ matching hacks.
 
 ## Address and scratchpad access
 
-Use the single source of truth in `include/bof3/`; full reference and the
-old→new migration table are in `docs/memory-api.md`.
+Use the single source of truth in `include/bof3/`; the authoritative standard
+is `docs/decomp-foundation.md` (repo adaptation of the standard), and the full
+macro reference is in `docs/memory-api.md`.
 
 - `PSX_PTR(type, addr)` / `PSX_REF(type, addr)` — fixed-address pointer / lvalue.
   Qualify with `const`/`volatile` on the type: `PSX_REF(volatile u16, 0x80143B90u)`.

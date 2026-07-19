@@ -2,8 +2,6 @@
 
 The headers under `include/bof3/` are the single source of truth for reaching
 fixed RAM addresses, PS1 hardware registers, and scratchpad RAM from lifted C.
-They replaced the older `PTR_AT`/`OBJECT_AT`/`MMIO8-32`/`SPAD_PTR`/`SPAD_OBJECT`
-macros and the `vu8`/`vu16`/`vu32` typedefs.
 
 All macros are plain casts; none perform a memory access on their own. Qualify
 `const` and `volatile` by writing them directly on the `type` argument.
@@ -82,14 +80,5 @@ delay-slot placement.
 - `PSX_REF(type * volatile, addr)` — volatile cell; reloaded on every evaluation.
 - `SPAD_PTR_SLOT(type, off)` is the non-volatile form by design.
 
-## Migration map
-
-| Old                       | New                                  |
-| ------------------------- | ------------------------------------ |
-| `vu8`/`vu16`/`vu32`       | `volatile u8`/`u16`/`u32`            |
-| `PTR_AT(type, addr)`      | `PSX_PTR(type, addr)`                |
-| `OBJECT_AT(type, addr)`   | `PSX_REF(type, addr)`                |
-| `MMIO8/16/32(addr)`       | `REG8/16/32(addr)`                   |
-| `SPAD_PTR(type, off)`     | `SPAD_ADDR(type, off)`               |
-| `SPAD_OBJECT(type, off)`  | `SPAD_REF(type, off)`                |
-| `PTR_SLOT_AT(type, addr)` | `PSX_REF(type *, addr)`              |
+The repo adaptation of the matching-decomp foundation is
+`docs/decomp-foundation.md`.

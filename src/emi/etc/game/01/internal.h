@@ -3,6 +3,8 @@
 
 #include "bof3/bof3.h"
 
+typedef void (*GameFrontStateHandler)(void);
+
 extern volatile u16 GAME_FRONT_EFFECT_BUSY;
 extern volatile u16 GAME_FRONT_PAD_STATE;
 extern volatile u16 GAME_FRONT_STATE;
@@ -32,14 +34,7 @@ extern volatile u8  D_80143C30;
 extern volatile u32 GAME_FRONT_POPUP_WORD __asm__("D_80143C30");
 extern volatile u32 D_8014598C;
 extern volatile u16 D_80143C2A;
-#define GAME_FRONT_START_MASK         0x0800u
-#define GAME_FRONT_POPUP_PENDING_MASK 0x00ffff00u
-#define GAME_FRONT_POPUP_PENDING_OPEN 0x00020000u
-#define GAME_FRONT_SELECTION_FX_TABLE PSX_PTR(const volatile u8, 0x80181ebau)
-
-typedef void (*GameFrontStateHandler)(void);
 extern GameFrontStateHandler D_801D1C4C[];
-#define GAME_FRONT_STATE_HANDLERS D_801D1C4C
 
 void func_8014BA04(void);
 void func_801D18F8(void);
@@ -102,5 +97,11 @@ void func_801D1134(void);
 void func_801D1184(void);
 void func_801D1000(void);
 void func_801D104C(void);
+
+#define GAME_FRONT_START_MASK         0x0800u
+#define GAME_FRONT_POPUP_PENDING_MASK 0x00ffff00u
+#define GAME_FRONT_POPUP_PENDING_OPEN 0x00020000u
+#define GAME_FRONT_SELECTION_FX_TABLE PSX_PTR(const volatile u8, 0x80181ebau)
+#define GAME_FRONT_STATE_HANDLERS D_801D1C4C
 
 #endif

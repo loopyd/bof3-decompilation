@@ -3,6 +3,8 @@
 
 #include "bof3/bof3.h"
 
+#include "symbols/symbols.h"
+
 typedef struct KeyItemObject {
   u8 name[0x0c];
   u8 unknown_0c[4];
@@ -47,14 +49,6 @@ typedef struct AccessoryObject {
   u16 price;
 } AccessoryObject;
 
-extern const ItemObject      ITEM_OBJECTS[];
-extern const WeaponObject    WEAPON_OBJECTS[];
-extern const ArmorObject     ARMOR_OBJECTS[];
-extern const AccessoryObject ACCESSORY_OBJECTS[];
-extern const KeyItemObject   KEY_ITEM_OBJECTS[];
-
-#include "symbols/symbols.h"
-
 typedef struct GameCallbackSlot {
   u16               state;
   u16               countdown;
@@ -66,19 +60,6 @@ typedef struct GameCallbackSlot {
   u32               open_arg_2;
   u8                pad_48[0x38];
 } GameCallbackSlot;
-
-enum {
-  GAME_CALLBACK_SLOT_STATE_EMPTY = 0,
-  GAME_CALLBACK_SLOT_STATE_YIELD = 1,
-  GAME_CALLBACK_SLOT_STATE_OPEN = 2,
-  GAME_CALLBACK_SLOT_STATE_SWITCH = 4,
-  GAME_CALLBACK_SLOT_STATE_IDLE = 0x7f,
-};
-
-#define GAME_CALLBACK_FORCE_SWITCH ((s32)0xff000000u)
-#define GAME_CALLBACK_SLOTS  PSX_PTR(volatile GameCallbackSlot, 0x80143b40u)
-#define GAME_CALLBACK_CURSOR PSX_PTR(volatile GameCallbackSlot*, 0x80143d40u)
-#define GAME_CALLBACK_END    PSX_PTR(volatile GameCallbackSlot, 0x80143d40u)
 
 typedef struct EmiActiveEntry {
   u32  active_lba;
@@ -98,13 +79,32 @@ typedef struct EmiLoaderEntry {
   u16 flags;
 } EmiLoaderEntry;
 
+enum {
+  GAME_CALLBACK_SLOT_STATE_EMPTY = 0,
+  GAME_CALLBACK_SLOT_STATE_YIELD = 1,
+  GAME_CALLBACK_SLOT_STATE_OPEN = 2,
+  GAME_CALLBACK_SLOT_STATE_SWITCH = 4,
+  GAME_CALLBACK_SLOT_STATE_IDLE = 0x7f,
+};
+
+extern const ItemObject      ITEM_OBJECTS[];
+extern const WeaponObject    WEAPON_OBJECTS[];
+extern const ArmorObject     ARMOR_OBJECTS[];
+extern const AccessoryObject ACCESSORY_OBJECTS[];
+extern const KeyItemObject   KEY_ITEM_OBJECTS[];
+
 bool emi_header_is_valid(const void* header, size_t size);
 u32  emi_next_payload_offset(u32 current_offset, u32 current_size);
 void emi_build_entry_lbas(u32 base_lba, const EmiTocEntry* entries,
                           size_t entry_count, u32* entry_lbas);
 u32  emi_slot_to_lba(const u32* slot_lba_table, size_t slot_count, u32 slot_id);
-#define GAME_FRONT_LOCAL_MODE PSX_PTR(volatile u16, 0x80143c90u)
 
 void game_front_local_mode_callback_loop(void);
+
+#define GAME_CALLBACK_FORCE_SWITCH ((s32)0xff000000u)
+#define GAME_CALLBACK_SLOTS  PSX_PTR(volatile GameCallbackSlot, 0x80143b40u)
+#define GAME_CALLBACK_CURSOR PSX_PTR(volatile GameCallbackSlot*, 0x80143d40u)
+#define GAME_CALLBACK_END    PSX_PTR(volatile GameCallbackSlot, 0x80143d40u)
+#define GAME_FRONT_LOCAL_MODE PSX_PTR(volatile u16, 0x80143c90u)
 
 #endif

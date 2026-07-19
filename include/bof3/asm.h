@@ -2,38 +2,33 @@
 #define BOF3_ASM_H
 
 /*
- * Unmatched function fallback.
+ * Unmatched-function fallback.
  *
  * Provides a first-class path for functions that cannot yet be represented in
- * clean matching C. Preserves:
+ * clean matching C. The macros pull the original disassembly from an adjacent
+ * `.s` file compiled into the same translation unit, preserving:
  *     - section selection and alignment
  *     - .set noreorder / .set noat directives
  *     - symbol metadata (.globl, .ent/.end)
  *     - separate read-only data inclusion
  *
  * This enables incremental reconstruction without producing low-quality fake
- * matches. A clean unmatched function is better than unreadable C filled with
- * arbitrary hacks.
+ * matches. A clean unmatched function is better than unreadable C held
+ * together by undocumented register hacks.
  *
  * ---- Usage ----
  *
- * When a function cannot be matched, replace the C body with INCLUDE_ASM:
- *
- *     #include "internal.h"
- *     #include "bof3/asm.h"
+ * When a function cannot be matched, replace its C body with INCLUDE_ASM and
+ * keep the original disassembly in an adjacent .s file:
  *
  *     // func_8014AEE0 is not yet matched — see adjacent .s file.
- *     INCLUDE_ASM(func_8014AEE0);
- *
- * The macro marks the call site with a global symbol declaration. The actual
- * implementation lives in an adjacent assembly file compiled into the same
- * target:
+ *     INCLUDE_ASM("asm/nonmatchings/battle", func_8014AEE0);
  *
  *     src/exe/<target>/func_XXXXXXXX.c    (declarations + INCLUDE_ASM marker)
- *     src/exe/<target>/func_XXXXXXXX.s    (raw disassembly)
+ *     asm/nonmatchings/<module>/func_XXXXXXXX.s  (raw disassembly)
  *
- * When reconstruction succeeds, replace both files with matching C and remove
- * the .s file. The Splat boundary transitions from "a" (asm) to "c" (C).
+ * When reconstruction succeeds, replace the .c with matching C and remove the
+ * .s file. The Splat boundary transitions from "a" (asm) to "c" (C).
  *
  * ---- Assembly file format ----
  *
@@ -49,24 +44,67 @@
  *     .end   func_XXXXXXXX
  *     .set reorder
  *
- * The section name (.text.func_XXXXXXXX) must match the Splat boundary to
- * ensure correct placement in the linked binary. Use "ax" flags for code,
- * "aw" @nobits for BSS, and "a" @progbits for read-only data.
- *
  * For functions with adjacent .rodata (jump tables, string literals):
- *     - Include the .rodata section before .text in the same .s file, or
- *     - Place it in a companion func_XXXXXXXX.rodata.s file and include both
- *       from the build system.
  *
- * ---- Build integration ----
+ *     INCLUDE_RODATA("asm/nonmatchings/battle", func_XXXXXXXX);
  *
- * The build system must compile adjacent .s files alongside their .c
- * counterparts for each target directory containing INCLUDE_ASM markers.
- * See Makefile or build scripts for per-target assembly inclusion rules.
+ * ---- Tooling modes ----
+ *
+ * Under M2CTX or PERMUTER (context extraction / permuter search) the macros
+ * expand to nothing so the C body is analyzed in isolation without pulling in
+ * raw assembly.
  */
 
+#if !defined(M2CTX) && !defined(PERMUTER)
+
 #ifndef INCLUDE_ASM
-#define INCLUDE_ASM(name) __asm__( ".globl " #name )
+#define INCLUDE_ASM(FOLDER, NAME)        \
+    __asm__(                             \
+        ".section .text\n"               \
+        "    .set noat\n"                \
+        "    .set noreorder\n"           \
+        "    .include \"" FOLDER "/" #NAME \
+        ".s\"\n"                         \
+        "    .set reorder\n"             \
+        "    .set at\n")
 #endif
 
+#ifndef INCLUDE_RODATA
+#define INCLUDE_RODATA(FOLDER, NAME)     \
+    __asm__(                             \
+        ".section .rodata\n"             \
+        "    .include \"" FOLDER "/" #NAME \
+        ".s\"\n"                         \
+        ".section .text")
 #endif
+
+#else /* M2CTX or PERMUTER */
+
+#ifndef INCLUDE_ASM
+#define INCLUDE_ASM(FOLDER, NAME)
+#endif
+
+#ifndef INCLUDE_RODATA
+#define INCLUDE_RODATA(FOLDER, NAME)
+#endif
+
+#endif /* !defined(M2CTX) && !defined(PERMUTER) */
+
+/*
+ * Mark a function body as intentionally not matched.
+ * Use to annotate a C stub that is a placeholder, distinct from a clean
+ * partial match. Expands to nothing in normal builds.
+ */
+#ifndef NON_MATCHING
+#define NON_MATCHING
+#endif
+
+/*
+ * Skip compiling the following function from C; its implementation lives
+ * entirely in assembly. Pair with INCLUDE_ASM for the active definition.
+ */
+#ifndef SKIP_ASM
+#define SKIP_ASM
+#endif
+
+#endif /* BOF3_ASM_H */

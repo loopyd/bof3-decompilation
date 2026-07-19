@@ -69,7 +69,10 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 
 Use `$bof3-re` for lifting and promotion, `$psx-rizin` for explicitly requested
 generic analyzer work, and `$workflow-review` for explicitly requested
-two-reviewer audits. Use [matching](docs/matching.md) and
-[Rizin evidence](docs/reverse-engineering.md) for procedures. Store reviewed findings in `docs/specs/` and
+two-reviewer audits. Use [matching](docs/matching.md),
+[foundation](docs/decomp-foundation.md), and
+[Rizin evidence](docs/reverse-engineering.md) for procedures. See
+[docs/memory-api.md](docs/memory-api.md) for the memory-macro reference. Store
+reviewed findings in `docs/specs/` and
 reusable evidence-backed gotchas in `LESSONS.md`. Use the
 [repository map](CONTEXT.md#repository-map) to locate tracked and ignored state.

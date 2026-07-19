@@ -6,8 +6,6 @@
 
 typedef void (*GameEntry0StateHandler)(void);
 
-extern Bof3PanelTask* D_80148648;
-
 typedef struct GameScenarioState {
   s8  scenario_id;
   u8  field_01;
@@ -19,8 +17,6 @@ typedef struct GameScenarioState {
   u16 field_08;
 } GameScenarioState;
 
-extern GameScenarioState GAME_SCENARIO_STATE;
-
 typedef struct AbilityObject {
   u8 name[0x0c];
   u8 targeting_flags;
@@ -31,8 +27,6 @@ typedef struct AbilityObject {
   u8 ability_flags;
   u8 control_12[2];
 } AbilityObject;
-
-extern const volatile AbilityObject ABILITY_OBJECTS[];
 
 /* Work area struct accessed via scratchpad pointer (0x1F800044) */
 struct GameWorkArea {
@@ -69,21 +63,47 @@ struct GameWorkArea {
   u8  pad_76[0x22];   /* 0x76-0x97 (work area slot is 0x98 bytes) */
 };
 
+typedef struct GamePaletteEntry {
+  u8  flags;
+  u8  field_01;
+  u8  red_offset;
+  u8  green_offset;
+  u8  blue_offset;
+  u8  table_index;
+  u8  step;
+  u8  field_07;
+  u8* target;
+} GamePaletteEntry;
+
+typedef struct GamePaletteSlot {
+  u8  flags;
+  u8  field_01;
+  u8  field_02;
+  u8  field_03;
+  u8* source_table;
+  u8* current_entry;
+  u8* owner;
+} GamePaletteSlot;
+
+/* Entry table at 0x80143FC8 — 20 records × 0x74 bytes each.
+ * Only the first 5 fields are known; the rest is padding. */
+typedef struct RecordSlot {
+  u8 flags_00;
+  u8 unk_01;
+  u8 unk_02;
+  u8 unk_03;
+  u8 unk_04;
+  u8 pad[0x6F]; /* 0x74 - 5 */
+} RecordSlot;
+
+extern Bof3PanelTask* D_80148648;
+extern GameScenarioState GAME_SCENARIO_STATE;
+extern const volatile AbilityObject ABILITY_OBJECTS[];
+
 /* Work area pointer in scratchpad slot 0x1F800044 (offset 0x44).
  * Declared as a weak extern so the linker emits %hi/%lo relocations,
  * matching the original binary's codegen. */
 extern struct GameWorkArea* volatile g_game_work;
-
-/* Legacy alias for already‑matched functions that dereference 0x1F800044
- * via a literal‑address macro (lui+ori+lw 0(base) codegen). */
-#define SCRATCH_WORK SPAD_PTR_SLOT(volatile struct GameWorkArea, 0x44u)
-
-/* Movement/position offset tables in main exe data section */
-#define MOVEMENT_OFFSET_0(i)  (*(volatile s32*)(0x80181B94u + (i) * 8))
-#define MOVEMENT_OFFSET_1(i)  (*(volatile s32*)(0x80181B98u + (i) * 8))
-#define MOVEMENT_THRESHOLD(i) (*(volatile s16*)(0x80181B70u + (i) * 2))
-
-/* ---- RAM globals (D_ names match original game data patterns) ---- */
 
 /* @behavior entry-0 main state machine index */
 extern volatile u16 D_80143B90;
@@ -166,28 +186,6 @@ extern u32                 D_801CD954;
 extern const s8            D_801C7B74[];
 extern volatile u16                D_801490A4;
 
-typedef struct GamePaletteEntry {
-  u8  flags;
-  u8  field_01;
-  u8  red_offset;
-  u8  green_offset;
-  u8  blue_offset;
-  u8  table_index;
-  u8  step;
-  u8  field_07;
-  u8* target;
-} GamePaletteEntry;
-
-typedef struct GamePaletteSlot {
-  u8  flags;
-  u8  field_01;
-  u8  field_02;
-  u8  field_03;
-  u8* source_table;
-  u8* current_entry;
-  u8* owner;
-} GamePaletteSlot;
-
 /* INFERRED: palette work records use the observed 12-byte and 16-byte strides;
  * confirm field meanings against their setup paths. */
 extern volatile u16     D_80037800[];
@@ -203,8 +201,6 @@ extern const u8         D_801C7AE8[];
 
 extern const GameEntry0StateHandler D_801C7B08[];
 extern const GameEntry0StateHandler D_801C7B14[];
-#define GAME_ALT_FRONT_CALLBACK_TABLE D_801C7B08
-#define GAME_SELECTION_CALLBACK_TABLE D_801C7B14
 extern const GameEntry0StateHandler D_801C7B44[];
 extern const GameEntry0StateHandler D_801C7B54[];
 extern const GameEntry0StateHandler D_801C7B7C[];
@@ -212,17 +208,6 @@ extern const GameEntry0StateHandler D_801C7B88[];
 extern const GameEntry0StateHandler D_801C7B98[];
 extern const GameEntry0StateHandler D_801C7BA4[];
 extern const GameEntry0StateHandler D_801C7BB0[];
-
-/* Entry table at 0x80143FC8 — 20 records × 0x74 bytes each.
- * Only the first 5 fields are known; the rest is padding. */
-typedef struct RecordSlot {
-  u8 flags_00;
-  u8 unk_01;
-  u8 unk_02;
-  u8 unk_03;
-  u8 unk_04;
-  u8 pad[0x6F]; /* 0x74 - 5 */
-} RecordSlot;
 
 extern RecordSlot D_80143FC8[20];
 
@@ -386,5 +371,19 @@ void func_801A0514(void);
 void func_801B3CCC(u32 arg0);
 void func_801996FC(void);
 void func_8019982C(void);
+
+/* Legacy alias for already‑matched functions that dereference 0x1F800044
+ * via a literal‑address macro (lui+ori+lw 0(base) codegen). */
+#define SCRATCH_WORK SPAD_PTR_SLOT(volatile struct GameWorkArea, 0x44u)
+
+/* Movement/position offset tables in main exe data section */
+#define MOVEMENT_OFFSET_0(i)  (*(volatile s32*)(0x80181B94u + (i) * 8))
+#define MOVEMENT_OFFSET_1(i)  (*(volatile s32*)(0x80181B98u + (i) * 8))
+#define MOVEMENT_THRESHOLD(i) (*(volatile s16*)(0x80181B70u + (i) * 2))
+
+/* ---- RAM globals (D_ names match original game data patterns) ---- */
+
+#define GAME_ALT_FRONT_CALLBACK_TABLE D_801C7B08
+#define GAME_SELECTION_CALLBACK_TABLE D_801C7B14
 
 #endif

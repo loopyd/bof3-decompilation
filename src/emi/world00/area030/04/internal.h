@@ -3,10 +3,6 @@
 
 #include "bof3/bof3.h"
 
-#define WORLD00_AREA030_PRIMITIVE_PTR  PSX_REF(volatile u8 *, 0x8014598cu)
-#define WORLD00_AREA030_SCRATCH_PTR    PSX_REF(volatile u8 *, 0x1f800044u)
-#define WORLD00_AREA030_UI_CHAR_BUFFER PSX_PTR(volatile u8, 0x80145ad4u)
-
 extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_3FC9;
 extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_4002;
 extern volatile u8  WORLD00_AREA030_GLOBAL_HALF_3FF2;
@@ -31,7 +27,6 @@ extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_5EEA;
 extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_4020;
 extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_4022;
 extern s16  WORLD00_AREA030_GLOBAL_HALF_930E;
-#define WORLD00_AREA030_SPRT_TABLE ((const volatile u8*)0x801e1d0cu)
 
 void func_8014D290(void);
 void func_8014D4E0(void);
@@ -58,5 +53,10 @@ void func_801D3244(s16 arg0, s16 arg1, u8 arg2, s8 arg3, u8 arg4, s8 arg5);
 void func_801D3938(void);
 void func_801D6A2C(void);
 void func_801D6B28(s8 arg0);
+
+#define WORLD00_AREA030_PRIMITIVE_PTR  PSX_REF(volatile u8 *, 0x8014598cu)
+#define WORLD00_AREA030_SCRATCH_PTR    PSX_REF(volatile u8 *, 0x1f800044u)
+#define WORLD00_AREA030_UI_CHAR_BUFFER PSX_PTR(volatile u8, 0x80145ad4u)
+#define WORLD00_AREA030_SPRT_TABLE ((const volatile u8*)0x801e1d0cu)
 
 #endif

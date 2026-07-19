@@ -153,4 +153,24 @@ void func_800B22AC(void);
 void func_800B23F8(void);
 void func_800B250C(void);
 
+/* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
+ * equal the symbol-name addresses. */
+extern volatile u32 D_80144F60[];
+extern volatile u32 D_80144F80[];
+extern volatile u32 D_80145FAA;
+extern volatile u32 D_80146250;
+extern volatile u32 *D_801462E3;
+extern volatile u32 *D_801462E4;
+extern volatile u32 D_801462E5;
+extern volatile u32 D_801462E6;
+extern volatile u32 D_801462E8;
+extern volatile u32 D_801463A0;
+extern volatile u32 D_801483C3;
+extern volatile u32 D_80148597;
+extern volatile u32 D_801485BB;
+extern volatile u32 D_801485DF;
+extern volatile u32 D_801485E0;
+extern volatile u32 D_80148627;
+extern volatile u32 D_8014862E;
+
 #endif

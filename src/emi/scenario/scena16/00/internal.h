@@ -26,9 +26,8 @@ extern volatile u16 SCENA16_D_80146258;
 extern volatile u8  SCENA16_D_80146866;
 extern volatile u8  SCENA16_D_80146867;
 extern volatile u32 SCENA16_D_80146864;
-#define SCENA16_D_80146864_BYTE (*(volatile u8*)&SCENA16_D_80146864)
-extern s8   SCENA16_D_80146872;
-extern s8   SCENA16_D_80146874;
+extern volatile u8  SCENA16_D_80146872;
+extern volatile u8  SCENA16_D_80146874;
 extern volatile u8  SCENA16_D_80146875;
 extern volatile u16 SCENA16_D_80146876;
 extern volatile u32 SCENA16_D_8014686C;
@@ -47,12 +46,6 @@ extern volatile u16 SCENA16_D_80010006;
 extern volatile u16 SCENA16_D_80010008;
 extern volatile u16 SCENA16_D_80010020;
 extern volatile u16 SCENA16_D_80010022;
-#define SCENA16_SELECTION_FX_TABLE PSX_PTR(const volatile u8, 0x80181ebau)
-#define SCENA16_PALETTE_SRC        PSX_PTR(const volatile u16, 0x80033800u)
-#define SCENA16_PALETTE_DST        PSX_PTR(volatile u16, 0x80037800u)
-#define SCENA16_PTR_801F854C       ((Scena16Callback*)0x801f854cu)
-#define SCENA16_PTR_801F8558       ((Scena16Callback*)0x801f8558u)
-#define SCENA16_PTR_801F856C       ((Scena16RecordCallback*)0x801f856cu)
 
 void game_stop_selection_fx(u32 effect_group, s32 effect_id);
 void game_queue_frontend_cue(u32 cue_id);
@@ -95,5 +88,13 @@ s32  func_801F83A8(void);
 void func_801F845C(void);
 void func_801F84AC(void);
 void func_801F8530(void);
+
+#define SCENA16_D_80146864_BYTE (*(volatile u8*)&SCENA16_D_80146864)
+#define SCENA16_SELECTION_FX_TABLE PSX_PTR(const volatile u8, 0x80181ebau)
+#define SCENA16_PALETTE_SRC        PSX_PTR(const volatile u16, 0x80033800u)
+#define SCENA16_PALETTE_DST        PSX_PTR(volatile u16, 0x80037800u)
+#define SCENA16_PTR_801F854C       ((Scena16Callback*)0x801f854cu)
+#define SCENA16_PTR_801F8558       ((Scena16Callback*)0x801f8558u)
+#define SCENA16_PTR_801F856C       ((Scena16RecordCallback*)0x801f856cu)
 
 #endif
