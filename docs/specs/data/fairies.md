@@ -21,8 +21,9 @@ coordinates; they are not offsets into the extracted fairy roster pointer map.
 | `FairyExploreObject` | `BIN/ETC/COMMU00.EMI` | `0x4218` | 48 × `0x02` | `0x4218`–`0x4277` | loaded with COMMU00 entry 0 |
 | `FairyPrizeObject` | `BIN/ETC/COMMU02.EMI` | `0x2d900` | 48 × `0x02` | `0x2d900`–`0x2d95f` | archive-owned prize data; runtime load mapping unresolved |
 
-The ranges and row hashes are verified by
-`out/reports/vast-violence-1.1.json`. The COMMU00 entry-0 payload is loaded at
+The ranges and row hashes are verified by the generated lift-report artifacts
+(`bin/decomp-status` → `out/matching/`, `out/reports/`). The COMMU00 entry-0
+payload is loaded at
 `0x801eec00`, so its payload-relative coordinates are `0x48` and `0x3a18`,
 with runtime layout addresses `0x801eec48` and `0x801f2618`. COMMU02 is a
 multi-entry archive whose prize table is retained in archive coordinates until
@@ -68,7 +69,8 @@ exact function promotion remains pending.
 
 - Storage: `third_party/references/vast-violence/tables/tables_list_1.1.txt`
   and `struct_fairy_{gift,item}.txt`.
-- Byte ranges and hashes: `out/reports/vast-violence-1.1.json`.
+- Byte ranges and hashes: generated lift-report artifacts (`out/reports/`,
+  `out/matching/`).
 - Runtime COMMU00 payload base: `out/catalog/emi.json` entry
   `ETC/COMMU00#0`.
 - Runtime consumer semantics and COMMU02 entry mapping remain unresolved.

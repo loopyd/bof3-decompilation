@@ -26,7 +26,7 @@ battle overlay records the proven alternate ability-table interpretation.
   placeholders are tracked separately)
 - 0 mismatches
 
-Evidence: `out/index/vast-violence-1.1.json`
+Evidence: generated cross-target index (`bin/index` → `out/index/`)
 
 ## Location catalog
 
@@ -49,7 +49,7 @@ coordinates, not shared C declarations.
 | accessories | `ETC/GAME#0` | `0x3467c` | `0x801c9e7c` |
 | shops | `ETC/GAME#0` | `0x34a8c` | `0x801ca28c` |
 | abilities | `ETC/GAME#0` | `0x34f0c` | `0x801ca70c` |
-| level growth | `ETC/GAME#0` | `0x360dc` | `0x801cb8dc` |
+| level growth | `ETC/GAME#0` | `0x368dc` | `0x801cb8dc` |
 
 Additional fixed reward tables use archive coordinates because their runtime
 entry mapping is not shared with the GAME tables:

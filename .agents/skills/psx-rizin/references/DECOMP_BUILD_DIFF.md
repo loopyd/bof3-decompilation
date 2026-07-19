@@ -50,15 +50,19 @@ Evidence comes from library signatures, startup code, generated idioms, object m
 A practical matching project separates:
 
 ```text
-config/             splat/build configuration
-include/            recovered headers/types
-src/                decompiled C
-a sm/               nonmatching or hand assembly
-assets/             extracted non-code assets (not redistributed improperly)
-build/              generated objects/binaries
-expected/           local hashes or original slices, not public proprietary data
-tools/              pinned helper scripts
+config/splat/        reviewed segment/boundary layout
+config/targets/      target identity, image path, load address
+config/symbols/      target-local symbol maps
+include/bof3/        generic PS1 memory/accessor headers
+src/exe/<name>/      executable lifts (func_XXXXXXXX.c + internal.h)
+src/emi/<fam>/<arc>/<slot>/   one EMI entry
+src/shared/<domain>/ cross-target embedded templates
+build/               generated objects/binaries
+out/                 disposable snapshots, index, matching workspaces
 ```
+
+In the BOF3 repository these replace the generic `config/ src/ a sm/ tools/`
+layout; see `CONTEXT.md` and `docs/usage.md` for the canonical map.
 
 ## Function iteration
 
@@ -88,24 +92,30 @@ tools/              pinned helper scripts
 - section/order/relocation mismatch
 - data symbol alignment
 
-## `bin/build-diff`
+## Build comparison
 
-The wrapper reads environment variables rather than imposing a build system:
+> The `bin/build-diff` dispatcher is not wired in the BOF3 repository. Use the
+> repo's wired entrypoints instead:
+
+```bash
+bin/asm-diff TARGET@0xADDRESS        # instruction-level diff of one authored lift
+bin/byte-match TARGET@0xADDRESS       # raw byte-equality acceptance check
+bin/permute TARGET@0xADDRESS --time-limit 300   # bounded source-shape search
+bin/decomp-status TARGET              # exact/partial/invalid lift audit
+```
+
+For generic projects outside this repo, a `build-diff`-style wrapper reads
+environment variables rather than imposing a build system:
 
 ```bash
 PSX_BUILD_CMD='ninja -C build' \
 PSX_EXPECTED=expected/SLUS.bin \
 PSX_ACTUAL=build/SLUS.bin \
-bin/build-diff
+build-diff
 ```
 
-Optional:
-
-```bash
-PSX_DIFF_CMD='objdiff-cli diff ...' bin/build-diff
-```
-
-The wrapper records SHA-256 and byte differences. A repository-specific script should supersede it when one already exists.
+Such a wrapper records SHA-256 and byte differences; prefer the repository's
+`bin/asm-diff` / `bin/byte-match` when they already cover the comparison.
 
 ## Reproducibility
 

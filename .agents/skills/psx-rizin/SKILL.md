@@ -29,8 +29,12 @@ output as hypotheses until corroborated.
    instructions, and runtime evidence where practical.
 8. Keep independently loaded overlays in separate namespaces.
 9. Record symbol/signature provenance and confidence; preserve source names.
-10. Use the repository's workspace and commands when present; otherwise use
-    `.agent-work/psx-rizin/<case-id>/`.
+10. In this repository, use the repo's workspace and commands: Rizin snapshots
+     land under `out/reverse/<target>/` (via `bin/rz-project`), the cross-target
+     query cache under `out/index/`, and matching evidence under
+     `out/matching/`, `out/permuter/`, and `out/asm-diff/`. The generic scripts
+     below are skill-local helpers; prefer the wired `bin/` entrypoints when they
+     cover the task.
 
 ## Route the task
 
@@ -86,10 +90,22 @@ proprietary inputs from distributable artifacts.
 
 ## Utilities
 
+Repository-wired entrypoints (prefer these):
+
 ```text
-bin/psx-rizin                   utility dispatcher
-bin/lift                        inspect/extract/map an executable or overlay
-bin/build-diff                  repository-configured build comparison
+bin/rz-project      target-qualified Rizin analyze/status/open (writes out/reverse/<target>/)
+bin/rev-query       query the generated cross-target index (out/index/)
+bin/asm-diff        instruction-level diff of one authored lift
+bin/byte-match      raw byte-equality acceptance check
+bin/permute         bounded source-shape search (out/permuter/)
+bin/decomp-status   exact/partial/invalid lift audit
+bin/symbols         check/normalize target-local maps
+bin/splat           regenerate reviewed segment output
+```
+
+Generic skill-local helpers (run from `.agents/skills/psx-rizin/`):
+
+```text
 scripts/psx_exe.py              PS-X EXE inspection and address conversion
 scripts/scan_mips.py            raw MIPS triage
 scripts/rizin_export.py         Rizin JSON export
@@ -97,3 +113,7 @@ scripts/function_artifacts.py   per-function evidence bundle
 scripts/symbols_to_rizin.py     reviewed-symbol conversion
 scripts/replay_coverage.py      replay-matrix validation
 ```
+
+> Note: this skill's earlier `bin/psx-rizin`, `bin/lift`, and `bin/build-diff`
+> dispatchers are not wired in this repository. Use the repo `bin/` entrypoints
+> above; the `scripts/*.py` helpers remain available for generic Rizin work.

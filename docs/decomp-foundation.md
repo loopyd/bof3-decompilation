@@ -112,8 +112,8 @@ objects own their local statics, BSS, initialized globals, and private rodata.
   `symbols.h` under `include/bof3/`); compatibility macros removed.
 - [x] Unmatched-assembly pipeline (`INCLUDE_ASM`, `INCLUDE_RODATA`, `SKIP_ASM`,
   `NON_MATCHING`, `PERMUTER`, `M2CTX`) in `include/bof3/asm.h`.
-- [x] Compiler profiles in `config/compiler-profiles/flag-catalog.json` +
-  per-target config; inspect with `bin/flag-search TARGET@0xADDRESS`.
+- [x] Compiler profiles in `config/compiler/flag-catalog.json` +
+   per-target config; inspect with `bin/flag-search TARGET@0xADDRESS`.
 - [ ] Semantic subsystem accessors kept per-target in `internal.h`.
 - [ ] Automated verification rejects regressions in matched functions
   (`bin/decomp-status`, `bin/asm-diff`, `bin/byte-match`).
@@ -164,8 +164,8 @@ this doc stays usable without silent drift.
    `SKIP_ASM`, `NON_MATCHING`, `PERMUTER`, and `M2CTX` support. The former
    `include/include_asm.h` is now a thin wrapper over `bof3/asm.h`.
 
-4. **Compiler profiles** live in `config/compiler-profiles/flag-catalog.json`
-   plus per-target config under `config/targets/` (standard §9 intent).
+4. **Compiler profiles** live in `config/compiler/flag-catalog.json`
+    plus per-target config under `config/targets/` (standard §9 intent).
 
 5. **Scratchpad pointer cell is non-volatile by design.** `SPAD_PTR_SLOT`
    expands to `PSX_REF(type *, addr)` (non-volatile cell) to match

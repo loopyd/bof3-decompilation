@@ -290,5 +290,5 @@ signedness. Remaining behavior-only questions stay explicitly `unresolved`.
 - [Characters](characters.md)
 - [Area data](areas.md)
 - [Encoding](encoding.md)
-- `out/reports/vast-violence-1.1.json`
+- generated lift-report artifacts (`out/reports/`, `out/matching/`)
 - `third_party/references/vast-violence/tables/struct_*.txt`

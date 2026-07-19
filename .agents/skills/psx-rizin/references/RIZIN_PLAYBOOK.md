@@ -1,5 +1,11 @@
 # Rizin playbook for PS1 binaries
 
+> In the BOF3 repository, prefer the wired `bin/rz-project` wrapper:
+> `bin/rz-project analyze TARGET`, `bin/rz-project status TARGET`,
+> `bin/rz-project open TARGET`. The generic `rizin` invocations below are the
+> skill-local fallback for work outside the repo's `out/reverse/<target>/`
+> workspace.
+
 ## Canonical raw mapping
 
 Extract a PS-X EXE payload or identify a raw overlay base, then open:

@@ -57,11 +57,17 @@ The frontmatter and instructions intentionally say not to auto-trigger the skill
 
 ## Direct utility use
 
+> This skill's `bin/psx-rizin` and `bin/lift` dispatchers are not wired in the
+> BOF3 repository. Use the repo's entrypoints instead, and the generic
+> `scripts/*.py` helpers for Rizin-specific work.
+
 ```bash
-bin/psx-rizin inspect-exe GAME.EXE
-bin/psx-rizin extract-exe GAME.EXE -o GAME.payload.bin
-bin/psx-rizin scan OVERLAY.BIN --base 0x80180000
-bin/lift GAME.EXE
+bin/rz-project analyze TARGET            # target-qualified Rizin analysis
+bin/asm-diff TARGET@0xADDRESS            # instruction-level diff
+bin/byte-match TARGET@0xADDRESS          # byte-equality acceptance
+bin/permute TARGET@0xADDRESS --time-limit 300
+python3 scripts/psx_exe.py GAME.EXE      # generic PS-X EXE inspection
+python3 scripts/scan_mips.py OVERLAY.BIN --base 0x80180000
 ```
 
 ## Scope and legal note

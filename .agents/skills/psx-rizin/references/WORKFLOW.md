@@ -19,7 +19,11 @@ Record scope, expected deliverables, and what constitutes proof. A task such as 
 2. Hash disc tracks, executable files, overlays, BIOS, symbols, replay files, and any sibling revision.
 3. Record extraction tools and commands.
 4. Keep original inputs read-only.
-5. Store generated files in `.agent-work/psx-rizin/<case-id>/`.
+5. In the BOF3 repository, store generated files under the repo's disposable
+   `out/` tree: Rizin snapshots in `out/reverse/<target>/` (via `bin/rz-project`),
+   the query cache in `out/index/`, and matching workspaces in `out/matching/`,
+   `out/permuter/`, and `out/asm-diff/`. Outside this repo, use
+   `.agent-work/psx-rizin/<case-id>/` if present.
 
 Recommended manifest fields are in `templates/case-manifest.yaml`.
 

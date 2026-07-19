@@ -1,5 +1,10 @@
 # Command reference
 
+> In the BOF3 repository, prefer the wired `bin/rz-project`,
+> `bin/asm-diff`, `bin/byte-match`, and `bin/permute` entrypoints. The
+> `scripts/*.py` helpers below are the skill-local fallback for generic Rizin
+> work outside the repo's `out/reverse/<target>/` workspace.
+
 ## Bundled tools
 
 ```bash
