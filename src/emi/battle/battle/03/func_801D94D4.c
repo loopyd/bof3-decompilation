@@ -15,13 +15,13 @@ void func_801D94D4(s16 arg0, u16 arg1, s32 arg2, s16 arg3) {
   index = 0;
   arg3_u16 = (u16)arg3;
   if (arg3_u16 == 0xffff) {
-    func_8017E3F4((void*)(BATTLE_GLOBAL_RAM_U8 + 0x5ad4),
-                  (const void*)(BATTLE_ROM_BASE_D0000 + 0xc70));
+    sprintf((void*)(BATTLE_GLOBAL_RAM_U8 + 0x5ad4),
+                  (const char*)(BATTLE_ROM_BASE_D0000 + 0xc70));
   } else {
-    func_8017E3F4((void*)(BATTLE_GLOBAL_RAM_U8 + 0x5ad4),
-                  (const void*)(BATTLE_ROM_BASE_D0000 + 0xc74), arg3_u16);
+    sprintf((void*)(BATTLE_GLOBAL_RAM_U8 + 0x5ad4),
+                  (const char*)(BATTLE_ROM_BASE_D0000 + 0xc74), arg3_u16);
   }
-  func_8017C2D8(BATTLE_GLOBAL_WORD_598C, 0, 0, func_8017A620(0, 0, 0x3c0, 0),
+  SetDrawMode((DR_MODE*)BATTLE_GLOBAL_WORD_598C, 0, 0, GetTPage(0, 0, 0x3c0, 0),
                 0);
   func_8014E5A0(1, 0xc);
 
@@ -34,7 +34,7 @@ void func_801D94D4(s16 arg0, u16 arg1, s32 arg2, s16 arg3) {
     if (temp != ' ') {
       BATTLE_GLOBAL_RAM_U8[0x5ad4u + index] = temp - 0x30;
       packet = (u8*)BATTLE_GLOBAL_WORD_598C;
-      value = func_8017A6F0((arg2 & 0xff) << 4, 0x1e0);
+      value = GetClut((arg2 & 0xff) << 4, 0x1e0);
       *(u16*)(packet + 0xe) = value;
       packet[4] = 0x80;
       packet[5] = 0x80;
@@ -46,7 +46,7 @@ void func_801D94D4(s16 arg0, u16 arg1, s32 arg2, s16 arg3) {
       *(u16*)(packet + 0x10) = 6;
       *(u16*)(packet + 0x12) = 5;
       packet[0xc] = (temp * 6) - 0x50;
-      func_8017AA1C();
+      SetSprt((SPRT*)packet);
       func_8014E5A0(1, 0x14);
     }
 

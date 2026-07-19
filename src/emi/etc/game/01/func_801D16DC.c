@@ -8,8 +8,8 @@ void func_801D16DC(s16 x, s16 y, u8 selected, u8 alpha) {
   u8* primitive;
   s32 marker_x;
 
-  marker_x = func_8017B2B4() == 1 ? 683 : (func_8017B2B4() == 2 ? 683 : 187);
-  func_8017C2D8(D_8014598C, 0, 0, marker_x, 0);
+  marker_x = GetGraphType() == 1 ? 683 : (GetGraphType() == 2 ? 683 : 187);
+  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(2, 12);
   primitive = func_801D17D8(x, y, 2, 2, selected);
   func_801D18E8(primitive, alpha);

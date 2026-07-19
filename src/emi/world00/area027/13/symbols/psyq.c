@@ -1,15 +1,6 @@
-#include "bof3/context.h"
+/* Verified PsyQ/BIOS weak bindings; hand-reviewed. */
+#include "bof3/symbols.h"
 
-/* LIBGTE */
-WEAK_SYMBOL_AT(PushMatrix, 0x80178b78);
-WEAK_SYMBOL_AT(PopMatrix, 0x80178c18);
-WEAK_SYMBOL_AT(MulMatrix2, 0x80178cb8);
-WEAK_SYMBOL_AT(SetRotMatrix, 0x80178fd8);
-WEAK_SYMBOL_AT(SetTransMatrix, 0x80179068);
-WEAK_SYMBOL_AT(RotTrans, 0x80179558);
-WEAK_SYMBOL_AT(RotTransPers4, 0x80179588);
-WEAK_SYMBOL_AT(RotMatrix, 0x80179738);
-
-/* LIBGPU */
-WEAK_SYMBOL_AT(SetShadeTex, 0x8017a92c);
-WEAK_SYMBOL_AT(SetPolyFT4, 0x8017a9b8);
+WEAK_SYMBOL_AT(GetTPage, 0x8017A620);
+WEAK_SYMBOL_AT(SetSemiTrans, 0x8017A904);
+WEAK_SYMBOL_AT(SetDrawMode, 0x8017C2D8);

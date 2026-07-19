@@ -7,12 +7,12 @@
 void func_801D9804(s16 arg0, s16 arg1, s32 arg2, s32 arg3) {
   u32 packet;
 
-  func_8017C2D8(BATTLE_GLOBAL_WORD_598C, 0, 0, func_8017A620(0, 0, 0x3c0, 0),
+  SetDrawMode((DR_MODE*)BATTLE_GLOBAL_WORD_598C, 0, 0, GetTPage(0, 0, 0x3c0, 0),
                 0);
   func_8014E5A0(1, 0xc);
 
   packet = BATTLE_GLOBAL_WORD_598C;
-  *(volatile u16*)(packet + 0xe) = func_8017A6F0((arg2 & 0xff) << 4, 0x1e0);
+  *(volatile u16*)(packet + 0xe) = GetClut((arg2 & 0xff) << 4, 0x1e0);
   *(volatile u8*)(packet + 4) = 0x80;
   *(volatile u8*)(packet + 5) = 0x80;
   *(volatile u8*)(packet + 6) = 0x80;
@@ -22,6 +22,6 @@ void func_801D9804(s16 arg0, s16 arg1, s32 arg2, s32 arg3) {
   *(volatile s16*)(packet + 8) = arg0;
   *(volatile s16*)(packet + 10) = arg1;
   *(volatile u16*)(packet + 0x12) = 8;
-  ((void (*)(volatile void*))func_8017AA1C)((volatile void*)packet);
+  ((void (*)(volatile void*))SetSprt)((volatile void*)packet);
   func_8014E5A0(1, 0x14);
 }

@@ -14,7 +14,7 @@ void func_801D0EE0(void) {
   u32                      matrix[3];
   u32                      vector[2];
 
-  func_80178B78();
+  PushMatrix();
 
   scratch = *(ScenarioSce10effScratch* volatile*)0x1f800044;
 
@@ -32,9 +32,9 @@ void func_801D0EE0(void) {
       (s16)((-(s32)scratch->unk_3e + ((u32)(-(s32)scratch->unk_3e) >> 31)) >>
             1);
 
-  func_80179558(rotation, matrix, vector);
-  func_80179738(translation, object_work);
-  func_80178CB8(D_801492E8, object_work);
-  func_80178FD8(object_work);
-  func_80179068(object_work);
+  RotTrans((SVECTOR*)rotation, (VECTOR*)matrix, (long*)vector);
+  RotMatrix((SVECTOR*)translation, (MATRIX*)object_work);
+  MulMatrix2((MATRIX*)D_801492E8, (MATRIX*)object_work);
+  SetRotMatrix((MATRIX*)object_work);
+  SetTransMatrix((MATRIX*)object_work);
 }

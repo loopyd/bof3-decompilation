@@ -1,5 +1,6 @@
 #include "internal.h"
 
+extern int rand(void);
 typedef struct Battle03RankEntry {
   s16 value;
   u16 index;
@@ -81,7 +82,7 @@ void func_801DAAE4(void) {
 
         rank = func_801DB434(BATTLE_ENEMY_BYTE_88(battle_work), 0u);
         random_bonus = BATTLE_RANDOM_BONUS_TABLE_AF48[(rank * 0x10u) +
-                                                      (func_8017E3D4() & 0xfu)];
+                                                      (rand() & 0xfu)];
         entries[count].value =
             (s16)(BATTLE_ENEMY_HALF_A8(battle_work) + random_bonus);
         entries[count].index = index;

@@ -1,9 +1,6 @@
 #include "internal.h"
 
 extern u8*  func_801AF270(u8 sprite_id, u8 flags);
-extern void func_8017AA1C(u32 arg0);
-extern void func_8017A904(u32 arg0, s32 arg1);
-extern u16  func_8017A6F0(s32 arg0, s32 arg1);
 extern void func_8014E5A0(u8 arg0, u8 arg1);
 
 /* @behavior draws one sprite by filling a GT quad primitive from a rect-table
@@ -17,8 +14,8 @@ void func_801AF2A0(s16 x, s16 y, u8 sprite_id, u8 flags) {
   rect = func_801AF270(sprite_id, flags & 1);
   packet = (u8*)*(u32*)0x8014598c;
 
-  func_8017AA1C((u32)packet);
-  func_8017A904((u32)packet, 0);
+  SetSprt((SPRT*)packet);
+  SetSemiTrans((void*)packet, 0);
 
   *(s16*)(packet + 8) = x;
   *(s16*)(packet + 10) = y;
@@ -29,9 +26,9 @@ void func_801AF2A0(s16 x, s16 y, u8 sprite_id, u8 flags) {
   *(s16*)(packet + 18) = rect[3];
 
   if (!(flags & 2)) {
-    *(u16*)(packet + 14) = func_8017A6F0(176, 481);
+    *(u16*)(packet + 14) = GetClut(176, 481);
   } else {
-    *(u16*)(packet + 14) = func_8017A6F0(128, 482);
+    *(u16*)(packet + 14) = GetClut(128, 482);
   }
 
   packet[4] = 128;

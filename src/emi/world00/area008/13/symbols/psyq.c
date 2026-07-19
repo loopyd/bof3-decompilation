@@ -1,8 +1,4 @@
-#include "bof3/context.h"
+/* Verified PsyQ/BIOS weak bindings; hand-reviewed. */
+#include "bof3/symbols.h"
 
-/* LIBGPU */
-WEAK_SYMBOL_AT(GetClut, 0x8017a6f0);
-WEAK_SYMBOL_AT(SetSemiTrans, 0x8017a904);
-WEAK_SYMBOL_AT(SetPolyFT4, 0x8017a9b8);
-WEAK_SYMBOL_AT(GetGraphType, 0x8017b2b4);
-WEAK_SYMBOL_AT(SetDrawMode, 0x8017c2d8);
+WEAK_SYMBOL_AT(sprintf, 0x8017E3F4);

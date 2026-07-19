@@ -11,34 +11,34 @@ void func_801D12CC(u8 selected, u8 alpha) {
   s32 pulse_counter;
 
   marker_x = 47;
-  if (func_8017B2B4() == 1) {
+  if (GetGraphType() == 1) {
     marker_x = 143;
-  } else if (func_8017B2B4() == 2) {
+  } else if (GetGraphType() == 2) {
     marker_x = 143;
   }
-  func_8017C2D8(D_8014598C, 0, 0, marker_x, 0);
+  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(1, 12);
   primitive = func_801D17D8(262, 130, 1, 1, selected);
   func_801D18E8(primitive, alpha);
 
   marker_x = 189;
-  if (func_8017B2B4() == 1) {
+  if (GetGraphType() == 1) {
     marker_x = 685;
-  } else if (func_8017B2B4() == 2) {
+  } else if (GetGraphType() == 2) {
     marker_x = 685;
   }
-  func_8017C2D8(D_8014598C, 0, 0, marker_x, 0);
+  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(2, 12);
   primitive = func_801D17D8(12, 200, 8, 2, selected);
   func_801D18E8(primitive, alpha);
 
   marker_x = 189;
-  if (func_8017B2B4() == 1) {
+  if (GetGraphType() == 1) {
     marker_x = 685;
-  } else if (func_8017B2B4() == 2) {
+  } else if (GetGraphType() == 2) {
     marker_x = 685;
   }
-  func_8017C2D8(D_8014598C, 0, 0, marker_x, 0);
+  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(2, 12);
   primitive = func_801D17D8(12, 212, 19, 2, selected);
   func_801D18E8(primitive, alpha);

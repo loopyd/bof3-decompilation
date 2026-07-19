@@ -10,8 +10,8 @@ void func_801F3060(void) {
   u8 i;
 
   func_801AFE18(scratch);
-  func_8017C2D8((void*)WORLD00_AREA028_PRIMITIVE_PTR, 0, 1,
-                func_8017A620(0, 1, 0x3c0, 0), 0);
+  SetDrawMode((DR_MODE*)WORLD00_AREA028_PRIMITIVE_PTR, 0, 1,
+                GetTPage(0, 1, 0x3c0, 0), 0);
   func_8014E5A0(3u, 0x0cu);
 
   WORLD00_AREA028_WORK_PTR = (World00Area028Work*)WORLD00_AREA028_WORK_BASE;

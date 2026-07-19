@@ -211,6 +211,9 @@ extern const GameEntry0StateHandler D_801C7BB0[];
 
 extern RecordSlot D_80143FC8[20];
 
+/* @behavior per-mode 3-byte record table. Expected stride: mode * 3 bytes. */
+extern u8 D_80144F5A[];
+
 /* @behavior finds the first unused record slot by scanning the
  * entry table at D_80143FC8; returns its index (0‑19) or 0xFF
  * when all slots are occupied.

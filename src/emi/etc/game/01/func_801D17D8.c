@@ -13,8 +13,8 @@ u8* func_801D17D8(s32 x, s32 y, s32 glyph, s32 palette, u8 flags) {
   s32 geometry_offset;
 
   primitive = (u8*)GAME_FRONT_PRIMITIVE;
-  func_8017AA1C(primitive);
-  func_8017A904(primitive, flags);
+  SetSprt((SPRT*)primitive);
+  SetSemiTrans((void*)primitive, flags);
 
   primitive[4] = 0x80u;
   primitive[5] = 0x80u;

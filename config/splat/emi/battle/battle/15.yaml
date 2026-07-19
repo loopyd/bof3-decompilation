@@ -48,7 +48,7 @@ segments:
     - asm
     - func_80096F3C
   - - 1912
-    - asm
+    - c
     - func_80096F78
   - - 1980
     - asm
@@ -123,7 +123,7 @@ segments:
     - asm
     - func_80098388
   - - 7108
-    - asm
+    - c
     - func_800983C4
   - - 7176
     - asm

@@ -10,9 +10,9 @@ void func_801D11E4(void) {
   }
 
   if (D_8014832E != 0u && D_80143C30 != 0u) {
-    func_8017C2D8(
-        D_8014598C, 0, 0,
-        func_8017B2B4() == 1 ? 557 : (func_8017B2B4() == 2 ? 557 : 157), 0);
+    SetDrawMode(
+        (DR_MODE*)D_8014598C, 0, 0,
+        GetGraphType() == 1 ? 557 : (GetGraphType() == 2 ? 557 : 157), 0);
     func_8014E5A0(2, 12);
     func_801D17D8(192, 4, 10, 2, 0);
   }

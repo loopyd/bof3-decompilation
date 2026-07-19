@@ -17,8 +17,8 @@ void func_801F2DF8(const void* arg0) {
   object = (const void*)((const u8*)arg0 + 4u);
   primitive = (u32)WORLD00_AREA024_PRIMITIVE_PTR;
 
-  func_8017A9B8((void*)primitive);
-  func_8017A904((void*)primitive, 1);
+  SetPolyFT4((POLY_FT4*)primitive);
+  SetSemiTrans((void*)primitive, 1);
 
   func_801AFF04(object, screen);
   size[0] = *(const volatile u16*)&work->field_24;
@@ -45,8 +45,8 @@ void func_801F2DF8(const void* arg0) {
   *(volatile u8*)(primitive + 0x25) = 0x4fu;
   *(volatile s16*)(primitive + 0x22) =
       (screen[1] - ((s16)size[1] >> 1)) + (s16)size[1];
-  *(volatile u16*)(primitive + 0xe) = func_8017A6F0(0xa0, 0x1e3);
-  *(volatile u16*)(primitive + 0x16) = func_8017A620(0, 1, 0x2c0, 0x100);
+  *(volatile u16*)(primitive + 0xe) = GetClut(0xa0, 0x1e3);
+  *(volatile u16*)(primitive + 0x16) = GetTPage(0, 1, 0x2c0, 0x100);
   color = work->field_03;
   *(volatile u8*)(primitive + 4) = color;
   color = work->field_03;

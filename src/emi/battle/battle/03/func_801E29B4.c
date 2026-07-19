@@ -1,5 +1,6 @@
 #include "internal.h"
 
+extern int rand(void);
 /* @behavior builds a small list of selectable ids from `3..10`, excluding blocked
  * entries and the requested id, then returns one random surviving choice.
  * @source 0x801E29B4
@@ -20,7 +21,7 @@ u8 func_801E29B4(u8 arg0) {
     slot += 1u;
   } while (slot < 0x0bu);
 
-  random_value = func_8017E3D4();
+  random_value = rand();
 
   return choices[random_value % count];
 }

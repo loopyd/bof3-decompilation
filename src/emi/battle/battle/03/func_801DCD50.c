@@ -1,5 +1,6 @@
 #include "internal.h"
 
+extern int rand(void);
 /* @behavior applies the current scratchpad damage modifiers, variance table, and
  * optional battler-specific scale table to one signed damage value.
  * @source 0x801DCD50
@@ -15,7 +16,7 @@ u32 func_801DCD50(u32 arg0, u8 arg1, s32 arg2) {
   }
 
   value = (((arg2 * 0x100) * value) >> 8) *
-              BATTLE_VARIANCE_TABLE_AFA0[func_8017E3D4() & 7u] >>
+              BATTLE_VARIANCE_TABLE_AFA0[rand() & 7u] >>
           8;
 
   scratch_flags = BATTLE_SCRATCH_FLAGS;

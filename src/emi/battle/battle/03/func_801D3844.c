@@ -1,5 +1,6 @@
 #include "internal.h"
 
+extern int rand(void);
 /* @behavior resolves one battler-kind-derived result code, updates the global kind
  * selection, and returns one mode byte based on the chosen kind flags.
  * @source 0x801D3844
@@ -14,13 +15,13 @@ u8 func_801D3844(void) {
   state = (u16*)&BATTLE_GLOBAL_HALF_63C0;
 
   if (*state == 36) {
-    kind = BATTLE_RANDOM_TABLE_AC58_DATA[func_8017E3D4() & 0x1fu];
+    kind = BATTLE_RANDOM_TABLE_AC58_DATA[rand() & 0x1fu];
   } else {
     kind = 0u;
   }
 
   if ((*state == 37) || (*state == 140)) {
-    kind = BATTLE_RANDOM_TABLE_AC78_DATA[func_8017E3D4() & 0x1fu];
+    kind = BATTLE_RANDOM_TABLE_AC78_DATA[rand() & 0x1fu];
   }
 
   kind_flags = ABILITY_OBJECTS[kind].targeting_flags;

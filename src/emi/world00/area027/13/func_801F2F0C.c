@@ -13,15 +13,15 @@ void func_801F2F0C(const void* arg0) {
 
   work = (const u8*)arg0;
 
-  func_8017C2D8((void*)WORLD00_AREA027_PRIMITIVE_PTR, 0, 0,
-                func_8017A620(0, 1, 0x380, 0x100), 0);
+  SetDrawMode((DR_MODE*)WORLD00_AREA027_PRIMITIVE_PTR, 0, 0,
+                GetTPage(0, 1, 0x380, 0x100), 0);
   func_8014E5A0(1u, 0x0cu);
 
   i = 0u;
   do {
     primitive = (u32)WORLD00_AREA027_PRIMITIVE_PTR;
     func_8017AA94((void*)primitive);
-    func_8017A904((void*)primitive, 1);
+    SetSemiTrans((void*)primitive, 1);
 
     *(volatile s16*)(primitive + 8) =
         *(const s16*)(work + ((u32)i * 4u) + 0x18u);

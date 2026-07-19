@@ -1,5 +1,6 @@
 #include "internal.h"
 
+extern int rand(void);
 /* @behavior conditionally zeroes one local status bit after a random gate,
  * otherwise passing through the signed damage value unchanged.
  * @source 0x801DC73C
@@ -22,13 +23,13 @@ u32 func_801DC73C(s16 arg0, u32 arg1, u32 arg2) {
   }
 
   if ((flags & 8u) != 0u) {
-    if ((func_8017E3D4() & 2u) != 0u) {
+    if ((rand() & 2u) != 0u) {
       goto clear_flag;
     }
   }
 
   threshold = BATTLE_GLOBAL_BYTE_C303;
-  if (threshold < (func_8017E3D4() % 100)) {
+  if (threshold < (rand() % 100)) {
     return (u32)(s32)arg0;
   }
 

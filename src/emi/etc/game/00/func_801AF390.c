@@ -1,8 +1,6 @@
 #include "internal.h"
 
 extern void func_801AF2A0(s16 x, s16 y, u8 sprite_id, u8 flags);
-extern u16  func_8017A620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
-extern void func_8017C2D8(u32 arg0, s32 arg1, s32 arg2, u16 arg3, s32 arg4);
 extern void func_8014E5A0(u8 arg0, u8 arg1);
 
 /* @behavior iterates a packed sprite-record table (3 bytes per entry: x-offset,
@@ -21,12 +19,12 @@ void func_801AF390(s16 base_x, s16 base_y, const u8* record_table, u8 flags) {
   u8* s0;
 
   if (flags & 1) {
-    dord = func_8017A620(0, 0, 832, 256);
+    dord = GetTPage(0, 0, 832, 256);
   } else {
-    dord = func_8017A620(0, 0, 896, 256);
+    dord = GetTPage(0, 0, 896, 256);
   }
 
-  func_8017C2D8(*(u32*)0x8014598c, 0, 0, dord, 0);
+  SetDrawMode((DR_MODE*)(*(u32*)0x8014598c), 0, 0, dord, 0);
   func_8014E5A0(1, 12);
 
   s0 = (u8*)record_table;

@@ -1,5 +1,7 @@
 #include "internal.h"
 
+extern int rand(void);
+
 /* @behavior chooses one event id from the small fixed table based on the current
  * halfword mode at `0x801463d0`, then writes that event into slot `0`.
  * @source 0x801DEAE0
@@ -18,7 +20,7 @@ void func_801DEAE0(void) {
   mode = *(volatile u32*)((u8*)mode_ptr + 0x63d0u);
 
   if (mode == 1u) {
-    temp = ((u32 (*)(void))func_8017E3D4)();
+    temp = ((u32 (*)(void))rand)();
     table = local_18;
   } else {
     if ((mode == 0u) || (mode >= 5u)) {
@@ -26,7 +28,7 @@ void func_801DEAE0(void) {
     } else {
       table = &local_18[2];
     }
-    temp = ((u32 (*)(void))func_8017E3D4)();
+    temp = ((u32 (*)(void))rand)();
   }
   func_801DE60C(0u, 2u, 0u, 0u, 0xffu, func_801502D0(table[temp & 1u]));
 }

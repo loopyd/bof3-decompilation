@@ -152,6 +152,7 @@ void func_800B2218(void);
 void func_800B22AC(void);
 void func_800B23F8(void);
 void func_800B250C(void);
+void func_801DE94C(s32 arg0, s32 arg1);
 
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
  * equal the symbol-name addresses. */

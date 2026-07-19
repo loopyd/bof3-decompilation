@@ -1,5 +1,7 @@
 #include "internal.h"
 
+extern int rand(void);
+
 /* @behavior reports whether the current enemy work satisfies the stricter queued
  * predicate under the current global mode bytes.
  * @source 0x801E4368
@@ -23,7 +25,7 @@ u8 func_801E4368(void) {
     if ((BATTLE_ENEMY_WORD_100(BATTLE_CURRENT_ENEMY_PTR) & 0x8000u) != 0u) {
       return 1u;
     }
-    if ((((s32 (*)(void))func_8017E3D4)() % 100) < 0x46) {
+    if ((((s32 (*)(void))rand)() % 100) < 0x46) {
       return 1u;
     }
   }

@@ -1,5 +1,7 @@
 #include "internal.h"
 
+extern int rand(void);
+
 /* @behavior reports whether the current local work is eligible for the queued
  * branch, optionally applying the `0x40` global gate and one random threshold.
  * @source 0x801DD448
@@ -35,7 +37,7 @@ u8 func_801DD448(void) {
   }
   if ((BATTLE_LOCAL_WORD_124(BATTLE_LOCAL_WORK_PTR) & 0x8000u) == 0u) {
     threshold = BATTLE_LOCAL_BYTE_A9(BATTLE_LOCAL_WORK_PTR);
-    return (((s32 (*)(void))func_8017E3D4)() % 100) < threshold;
+    return (((s32 (*)(void))rand)() % 100) < threshold;
   }
   return 1u;
 }

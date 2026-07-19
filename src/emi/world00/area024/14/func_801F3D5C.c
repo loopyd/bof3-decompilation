@@ -9,8 +9,8 @@ void func_801F3D5C(void) {
   World00Area024SpinWork* work;
   u8                      i;
 
-  func_8017C2D8((void*)WORLD00_AREA024_PRIMITIVE_PTR, 0, 0,
-                func_8017A620(0, 1, 0x380, 0x100), 0);
+  SetDrawMode((DR_MODE*)WORLD00_AREA024_PRIMITIVE_PTR, 0, 0,
+                GetTPage(0, 1, 0x380, 0x100), 0);
   func_8014E5A0(1u, 0x0cu);
   func_801AFE18(scratch);
 
