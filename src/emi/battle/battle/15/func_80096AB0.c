@@ -5,7 +5,7 @@
  * build uses default `-fschedule-insns`, which hoists the `sb` cell-store past
  * the `lw ra` load. The original battle/15 object was built with
  * `-fno-schedule-insns` (program-order scheduling); restoring that per-target
- * profile makes this match. CLOBBER_*/barrier() do not apply (they govern
+ * profile makes this match. CLOBBER_* / barrier() do not apply (they govern
  * jal/branch delay slots, not the epilogue).
  */
 void func_80096AB0(void) {
