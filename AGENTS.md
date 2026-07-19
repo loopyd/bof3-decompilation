@@ -32,7 +32,14 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
   reviewed Splat boundaries as evidence improves. Keep declarations local
   unless a demonstrated cross-target contract requires sharing.
 - Keep PsyQ external: use official declarations and target-local map evidence;
-  never lift it or reuse an address across targets.
+  never lift its bodies. The PsyQ/BIOS runtime is a shared SDK linked once in
+  the main exe; EMI overlays call those functions at the same fixed addresses,
+  so their `psyq.c` bindings legitimately reuse the exe's PsyQ name/address set.
+  This cross-target reuse is authorized by the pinned SDK version
+  (`docs/reverse-engineering.md`), not by coinciding game bytes. Treat the
+  extracted SDK symbols as a switchable weak-binding layer
+  (`config/sdk/psyq-*.txt`, `WEAK_SYMBOL_AT`) that a real SDK library can later
+  override one symbol at a time.
 - Never edit or track generated weak bindings under `out/bindings/`.
 - Write readable C89. Do not use handwritten assembly to force a match.
 
@@ -54,9 +61,10 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
   and any compile-time parameters.
 - Put stable shared types in `include/bof3/<domain>/`. A shared template is
   compiled into every owning image; it is not a runtime engine service.
-- Never reuse an extern address across targets. Each wrapper retains its
-  target-local map, declaration, Splat boundary, and independent
-  `asm-diff`/`byte-match` validation.
+- Never reuse a game-specific extern address across targets. Each wrapper
+  retains its target-local map, declaration, Splat boundary, and independent
+  `asm-diff`/`byte-match` validation. The shared PsyQ/BIOS runtime is exempt
+  (see above).
 
 ## Verification
 

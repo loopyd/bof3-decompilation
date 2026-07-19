@@ -1,0 +1,36 @@
+/* PsyQ SDK symbol catalog (reference binary: exe/logo).
+ *
+ * Logo binary instance of the shared SDK-symbol layer. Offsets differ from
+ * slus_004_22 because logo is a separate load layout. EMI overlays reuse the
+ * slus instance (psyq-slus-symbols.txt). See that file header for the switch/
+ * override contract.
+ *
+ * Native splat format: name = 0xADDRESS;
+ */
+
+/* libapi */
+GPU_cw = 0x801D792C;
+_96_remove = 0x801D7944;
+DeliverEvent = 0x801D795C;
+PAD_dr = 0x801D796C;
+ReturnFromException = 0x801D797C;
+ResetEntryInt = 0x801D798C;
+HookEntryInt = 0x801D799C;
+ChangeClearRCnt = 0x801D79DC;
+InitPAD2 = 0x801D7CE4;
+StartPAD2 = 0x801D7CF4;
+StopPAD2 = 0x801D7D04;
+PAD_init2 = 0x801D7D14;
+SysEnqIntRP = 0x801D7D24;
+SysDeqIntRP = 0x801D7D34;
+
+/* libc */
+puts = 0x801D78E4;
+setjmp = 0x801D78FC;
+memcpy = 0x801D790C;
+printf = 0x801D791C;
+
+/* libgpu */
+SetLineF3 = 0x801D38EC;
+SetLineF4 = 0x801D392C;
+SetDrawMove = 0x801D3A20;
