@@ -57,3 +57,17 @@ WEAK_SYMBOL_AT(OpenTh, 0x8017ed9c);
 WEAK_SYMBOL_AT(CloseTh, 0x8017edac);
 WEAK_SYMBOL_AT(ChangeTh, 0x8017edbc);
 WEAK_SYMBOL_AT(ChangeClearPAD, 0x8017eebc);
+
+/* LIBCARD */
+WEAK_SYMBOL_AT(StopCARD2, 0x8017e104);
+
+/* LIBETC */
+WEAK_SYMBOL_AT(FlushCache, 0x8017ecec);
+WEAK_SYMBOL_AT(StopPAD2, 0x8017f37c);
+WEAK_SYMBOL_AT(SysDeqIntRP, 0x8017f3ac);
+WEAK_SYMBOL_AT(ExitCriticalSection, 0x8017ee1c);
+
+/* BIOS/kernel traps: jump into the resident BIOS vector table. These are not
+ * archive members; they are verified entry shims identified by disassembly. */
+WEAK_SYMBOL_AT(bios_JumpVector_0x8017EC04, 0x8017ec04);
+WEAK_SYMBOL_AT(bios_JumpVector_0x8017F3D0, 0x8017f3d0);
