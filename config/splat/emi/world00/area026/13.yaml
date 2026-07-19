@@ -27,10 +27,10 @@ segments:
     - asm
     - func_801F2C94
   - - 284
-    - asm
+    - c
     - func_801F2D1C
   - - 316
-    - asm
+    - c
     - func_801F2D3C
   - - 348
     - asm

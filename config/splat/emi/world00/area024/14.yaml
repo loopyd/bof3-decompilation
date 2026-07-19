@@ -33,7 +33,7 @@ segments:
     - asm
     - func_801F2DB4
   - - 472
-    - asm
+    - c
     - func_801F2DD8
   - - 504
     - asm

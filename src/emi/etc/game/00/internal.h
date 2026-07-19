@@ -227,6 +227,7 @@ u8 func_8019601C(u8 mode);
 void func_801960C0(u8 record_index);
 
 void func_80196070(void);
+void func_8019EAD4(void);
 
 /* @behavior seeds the shared callback/frame dispatch prologue before the entry-0
  * callback tables begin running.

@@ -14,5 +14,11 @@ extern volatile u32 D_801490A4[];
 
 void func_801E2CDC(void);
 void func_801E3EF4(void);
+void func_801E31C4(void);
+void func_801E3774(void);
+void func_801E3BF8(void);
+void func_801E3D4C(void);
+void func_801E438C(void);
+void func_801E4540(void);
 
 #endif

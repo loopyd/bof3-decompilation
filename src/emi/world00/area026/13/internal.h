@@ -7,6 +7,7 @@ extern volatile u16 WORLD00_AREA026_13_D_8014932A;
 extern volatile u8  WORLD00_AREA026_13_D_80149333;
 
 void func_801AFE18(void* arg0);
+void func_80196070(void);
 void func_801AFF04(const void* arg0, void* arg1);
 void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 

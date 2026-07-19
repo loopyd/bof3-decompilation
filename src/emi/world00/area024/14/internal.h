@@ -46,6 +46,7 @@ extern volatile u16 WORLD00_AREA024_GLOBAL_HALF_3E6C;
 
 void func_8015B410(void* arg0);
 void func_8015B4B0(void* arg0);
+void func_80196070(void);
 void func_801AFF64(void* arg0);
 void func_801AFE18(void* arg0);
 void func_801AFF04(const void* arg0, void* arg1);

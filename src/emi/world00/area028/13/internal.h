@@ -20,6 +20,7 @@ extern volatile u16 WORLD00_AREA028_CENTER_Y;
 extern u8           D_800E4800[1];
 
 void func_801AFE18(void* arg0);
+void func_80196070(void);
 void func_801AFF04(const void* arg0, void* arg1);
 u16  func_8017A620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8017A97C(void* arg0);
