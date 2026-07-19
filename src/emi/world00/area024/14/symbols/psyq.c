@@ -1,18 +1,4 @@
-/* Generated PsyQ/BIOS weak bindings; do not edit. */
+/* Verified PsyQ/BIOS weak bindings; hand-reviewed. */
 #include "bof3/symbols.h"
 
-WEAK_SYMBOL_AT(PadStop, 0x801CEE7C);
-WEAK_SYMBOL_AT(CdDataSync, 0x801CEEF4);
-WEAK_SYMBOL_AT(CdFlush, 0x801CEEF4);
-WEAK_SYMBOL_AT(CdReady, 0x801CEEF4);
-WEAK_SYMBOL_AT(CdSync, 0x801CEEF4);
-WEAK_SYMBOL_AT(DsClose, 0x801CEEF4);
-WEAK_SYMBOL_AT(DsDataSync, 0x801CEEF4);
-WEAK_SYMBOL_AT(DsShellOpen, 0x801CEEF4);
-WEAK_SYMBOL_AT(GsSetProjection, 0x801CEEF4);
-WEAK_SYMBOL_AT(SendPAD, 0x801CEEF4);
-WEAK_SYMBOL_AT(SsQuit, 0x801CEEF4);
-WEAK_SYMBOL_AT(SsSetNoiseOff, 0x801CEEF4);
-WEAK_SYMBOL_AT(__builtin_vec_delete, 0x801CEEF4);
-WEAK_SYMBOL_AT(__builtin_vec_new, 0x801CEEF4);
-WEAK_SYMBOL_AT(atol, 0x801CEEF4);
+WEAK_SYMBOL_AT(TermPrim, 0x8017A620);
