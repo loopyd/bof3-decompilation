@@ -49,9 +49,9 @@ class ResolvedTarget:
             self.binary_path.read_bytes() if self.binary_path.is_file() else b"",
             self.splat_path.read_bytes() if self.splat_path.is_file() else b"",
         ]
-        return hashlib.sha256(b"\x00".join(
-            hashlib.sha256(piece).digest() for piece in pieces
-        )).hexdigest()[:16]
+        return hashlib.sha256(
+            b"\x00".join(hashlib.sha256(piece).digest() for piece in pieces)
+        ).hexdigest()[:16]
 
 
 def resolve_target(root: Path, value: str) -> ResolvedTarget:
@@ -66,18 +66,14 @@ def resolve_target(root: Path, value: str) -> ResolvedTarget:
     manifests = load_target_manifests(root)
     manifest = manifests.get(target_id.value)
     if manifest is None:
-        raise ValueError(
-            f"unknown target: {value!r} (canonical: {target_id.value!r})"
-        )
+        raise ValueError(f"unknown target: {value!r} (canonical: {target_id.value!r})")
     manifest_path = root / "config" / "targets" / f"{target_id.value}.toml"
     if not manifest_path.is_file():
         raise FileNotFoundError(f"target manifest missing: {manifest_path}")
     _validate_manifest_identity(root, target_id, manifest, manifest_path)
     binary = root / manifest.binary
     if not binary.is_file():
-        raise FileNotFoundError(
-            f"target binary missing: {manifest.binary}"
-        )
+        raise FileNotFoundError(f"target binary missing: {manifest.binary}")
     return ResolvedTarget(
         id=target_id,
         manifest_path=manifest_path,
@@ -86,7 +82,11 @@ def resolve_target(root: Path, value: str) -> ResolvedTarget:
         source_dir=root / manifest.source_dir,
         binary_path=binary,
         splat_path=root / manifest.splat,
-        reviewed_replay_path=root / "config" / "analysis" / manifest.id.value / "reviewed.rz",
+        reviewed_replay_path=root
+        / "config"
+        / "analysis"
+        / manifest.id.value
+        / "reviewed.rz",
         load_address=manifest.load_address,
         profile=manifest.profile,
     )

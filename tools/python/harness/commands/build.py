@@ -40,8 +40,7 @@ def run(args: argparse.Namespace) -> int:
             raise ValueError(f"unknown target: {target_id.value}")
         source_directory = root / manifest.source_dir
         if not any(
-            path.suffix in {".c", ".s", ".S"}
-            for path in source_directory.glob("*")
+            path.suffix in {".c", ".s", ".S"} for path in source_directory.glob("*")
         ):
             print(f"{target_id.value}: no authored sources")
             return 0

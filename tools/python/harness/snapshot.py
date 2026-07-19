@@ -166,13 +166,10 @@ def read_snapshot(path: Path) -> TargetSnapshot:
             f"snapshot schema mismatch: expected {SNAPSHOT_SCHEMA!r}, "
             f"got {raw.get('schema')!r}"
         )
-    functions = tuple(
-        SnapshotFunction(**row) for row in raw.get("functions", [])
-    )
+    functions = tuple(SnapshotFunction(**row) for row in raw.get("functions", []))
     calls = tuple(SnapshotCall(**row) for row in raw.get("calls", []))
     unresolved = tuple(
-        SnapshotUnresolvedCall(**row)
-        for row in raw.get("unresolved_calls", [])
+        SnapshotUnresolvedCall(**row) for row in raw.get("unresolved_calls", [])
     )
     return TargetSnapshot(
         schema=raw["schema"],
@@ -200,8 +197,7 @@ def validate_snapshot_identity(snapshot: TargetSnapshot) -> list[str]:
     errors: list[str] = []
     if snapshot.schema != SNAPSHOT_SCHEMA:
         errors.append(
-            f"schema mismatch: expected {SNAPSHOT_SCHEMA!r}, "
-            f"got {snapshot.schema!r}"
+            f"schema mismatch: expected {SNAPSHOT_SCHEMA!r}, got {snapshot.schema!r}"
         )
     if not snapshot.target:
         errors.append("missing target identifier")
@@ -257,15 +253,13 @@ def validate_snapshot_freshness(
     errors: list[str] = []
     if expected_target is not None and snapshot.target != expected_target:
         errors.append(
-            f"target mismatch: expected {expected_target!r}, "
-            f"got {snapshot.target!r}"
+            f"target mismatch: expected {expected_target!r}, got {snapshot.target!r}"
         )
     if expected_engine is not None:
         engine_name = snapshot.engine.get("name", "")
         if engine_name != expected_engine:
             errors.append(
-                f"engine mismatch: expected {expected_engine!r}, "
-                f"got {engine_name!r}"
+                f"engine mismatch: expected {expected_engine!r}, got {engine_name!r}"
             )
     if not snapshot.inputs:
         errors.append("missing input hashes")

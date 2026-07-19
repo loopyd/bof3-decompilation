@@ -25,7 +25,13 @@ def _print(payload: object, as_json: bool) -> None:
     if as_json:
         print(json.dumps(payload, indent=2, sort_keys=True))
     elif isinstance(payload, dict):
-        print(" ".join(f"{key}={value}" for key, value in payload.items() if not isinstance(value, (list, dict))))
+        print(
+            " ".join(
+                f"{key}={value}"
+                for key, value in payload.items()
+                if not isinstance(value, (list, dict))
+            )
+        )
 
 
 def run_inspect(args: argparse.Namespace) -> int:
@@ -34,7 +40,12 @@ def run_inspect(args: argparse.Namespace) -> int:
 
 
 def run_validate(args: argparse.Namespace) -> int:
-    result = validate_str(_source(args), _output(args), expected_fps=args.expected_fps, ffprobe=shutil.which("ffprobe"))
+    result = validate_str(
+        _source(args),
+        _output(args),
+        expected_fps=args.expected_fps,
+        ffprobe=shutil.which("ffprobe"),
+    )
     _print(result, args.json)
     return 1 if result["status"] == "fail" else 0
 
@@ -50,7 +61,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--root", type=Path, default=repo_layout().root)
     parser.add_argument("--example", action="store_true")
     sub = parser.add_subparsers(dest="command")
-    for name, handler in (("inspect", run_inspect), ("validate", run_validate), ("convert", run_convert)):
+    for name, handler in (
+        ("inspect", run_inspect),
+        ("validate", run_validate),
+        ("convert", run_convert),
+    ):
         command = sub.add_parser(name)
         command.add_argument("source", type=Path)
         command.add_argument("--output-dir", type=Path)

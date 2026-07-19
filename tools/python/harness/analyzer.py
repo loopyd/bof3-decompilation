@@ -36,9 +36,7 @@ _REQUIRED_CAPABILITIES = {
 }
 
 
-def _optional_integer(
-    row: dict[str, Any], key: str, *, minimum: int = 0
-) -> int | None:
+def _optional_integer(row: dict[str, Any], key: str, *, minimum: int = 0) -> int | None:
     value = row.get(key)
     if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
         return None

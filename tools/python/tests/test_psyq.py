@@ -140,12 +140,12 @@ def _signature_fixture(root: Path) -> None:
         'source_dir = "src/exe/logo"\n'
         'binary = "out/binaries/exe/logo.bin"\n'
         'splat = "config/splat/exe/logo.yaml"\n'
-        "load_address = 0x801CE000\nprofile = \"test\"\n",
+        'load_address = 0x801CE000\nprofile = "test"\n',
         encoding="utf-8",
     )
     binary = root / "out/binaries/exe/logo.bin"
     binary.parent.mkdir(parents=True)
-    binary.write_bytes(b"\0\0\0\0\x10\x20\x30\x40\xAA\xBB\xCC\xDD")
+    binary.write_bytes(b"\0\0\0\0\x10\x20\x30\x40\xaa\xbb\xcc\xdd")
     for version in ("460", "470"):
         document = root / "toolchains/psx_psyq_signatures" / version / "LIBCD.LIB.json"
         document.parent.mkdir(parents=True, exist_ok=True)
@@ -154,7 +154,9 @@ def _signature_fixture(root: Path) -> None:
             '"labels":[{"name":"CdInit","offset":0},{"name":"loc_4","offset":4}]}]',
             encoding="utf-8",
         )
-    (root / "toolchains/psx_psyq_signatures/.git").write_text("gitdir: fake\n", encoding="utf-8")
+    (root / "toolchains/psx_psyq_signatures/.git").write_text(
+        "gitdir: fake\n", encoding="utf-8"
+    )
 
 
 def test_signature_scan_merges_versions_and_calls_rizin_xrefs(tmp_path: Path) -> None:
@@ -182,7 +184,22 @@ def test_signature_scan_merges_versions_and_calls_rizin_xrefs(tmp_path: Path) ->
             "version_alignment_scores": [
                 {"version": version, "score": 0.5 if version in {"460", "470"} else 0.0}
                 for version in (
-                    "260", "300", "330", "340", "350", "3610", "3611", "370", "400", "410", "420", "430", "440", "450", "460", "470"
+                    "260",
+                    "300",
+                    "330",
+                    "340",
+                    "350",
+                    "3610",
+                    "3611",
+                    "370",
+                    "400",
+                    "410",
+                    "420",
+                    "430",
+                    "440",
+                    "450",
+                    "460",
+                    "470",
                 )
             ],
             "historical_primary_versions": ["3610", "3611", "370", "400"],
@@ -191,7 +208,22 @@ def test_signature_scan_merges_versions_and_calls_rizin_xrefs(tmp_path: Path) ->
             "version_match_counts": [
                 {"version": version, "matches": int(version in {"460", "470"})}
                 for version in (
-                    "260", "300", "330", "340", "350", "3610", "3611", "370", "400", "410", "420", "430", "440", "450", "460", "470"
+                    "260",
+                    "300",
+                    "330",
+                    "340",
+                    "350",
+                    "3610",
+                    "3611",
+                    "370",
+                    "400",
+                    "410",
+                    "420",
+                    "430",
+                    "440",
+                    "450",
+                    "460",
+                    "470",
                 )
             ],
             "disagreement_count": 0,
@@ -211,7 +243,9 @@ def test_signature_scan_merges_versions_and_calls_rizin_xrefs(tmp_path: Path) ->
         functions=(),
         calls=(),
         unresolved_calls=(
-            SnapshotUnresolvedCall("exe/logo@801CE000", 0x801CE004, 0x801CE000, "unknown"),
+            SnapshotUnresolvedCall(
+                "exe/logo@801CE000", 0x801CE004, 0x801CE000, "unknown"
+            ),
         ),
     )
     write_snapshot(snapshot, tmp_path / "out/reverse/exe/logo/snapshot.json")

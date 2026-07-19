@@ -143,7 +143,10 @@ def _signature_entries(root: Path) -> list[dict[str, Any]]:
             continue
         seen_versions.add(version)
         paths = sorted(
-            [*version_directory.glob("*.LIB.json"), *version_directory.glob("*.OBJ.json")]
+            [
+                *version_directory.glob("*.LIB.json"),
+                *version_directory.glob("*.OBJ.json"),
+            ]
         )
         for path in paths:
             raw = json.loads(path.read_text(encoding="utf-8"))
@@ -174,12 +177,16 @@ def _signature_entries(root: Path) -> list[dict[str, Any]]:
                 "object": object_name,
                 "data": data,
                 "mask": mask,
-                "symbols": tuple(sorted(merged["symbols"], key=lambda row: (row[1], row[0]))),
+                "symbols": tuple(
+                    sorted(merged["symbols"], key=lambda row: (row[1], row[0]))
+                ),
                 "versions": sorted(merged["versions"]),
                 "anchor": fixed,
             }
         )
-    return sorted(entries, key=lambda row: (row["library"], row["object"], row["versions"]))
+    return sorted(
+        entries, key=lambda row: (row["library"], row["object"], row["versions"])
+    )
 
 
 def _longest_fixed_run(data: bytes, mask: bytes) -> tuple[int, bytes]:
@@ -195,7 +202,9 @@ def _longest_fixed_run(data: bytes, mask: bytes) -> tuple[int, bytes]:
     return best_start, data[best_start:best_end]
 
 
-def _matches(payload: bytes, data: bytes, mask: bytes, anchor: tuple[int, bytes]) -> Iterable[int]:
+def _matches(
+    payload: bytes, data: bytes, mask: bytes, anchor: tuple[int, bytes]
+) -> Iterable[int]:
     anchor_offset, needle = anchor
     if len(data) > len(payload):
         return
@@ -213,7 +222,10 @@ def _matches(payload: bytes, data: bytes, mask: bytes, anchor: tuple[int, bytes]
         if offset < 0 or offset % 4 or offset + len(data) > len(payload):
             continue
         candidate = payload[offset : offset + len(data)]
-        if all(not required or candidate[index] == data[index] for index, required in enumerate(mask)):
+        if all(
+            not required or candidate[index] == data[index]
+            for index, required in enumerate(mask)
+        ):
             yield offset
 
 
@@ -236,7 +248,9 @@ def scan(root: Path) -> dict[str, Any]:
             raise FileNotFoundError(f"missing target binary: {manifest.binary}")
         payload = binary.read_bytes()
         for entry in entries:
-            for offset in _matches(payload, entry["data"], entry["mask"], entry["anchor"]):
+            for offset in _matches(
+                payload, entry["data"], entry["mask"], entry["anchor"]
+            ):
                 labels = []
                 for name, label_offset in entry["symbols"]:
                     label: dict[str, Any] = {
@@ -260,7 +274,11 @@ def scan(root: Path) -> dict[str, Any]:
                 )
     results.sort(
         key=lambda row: (
-            row["target"], int(row["address"], 16), row["library"], row["object"], row["versions"]
+            row["target"],
+            int(row["address"], 16),
+            row["library"],
+            row["object"],
+            row["versions"],
         )
     )
     version_evidence = _version_evidence(sorted(manifests), results)
@@ -303,7 +321,11 @@ def _version_evidence(
             for version in SIGNATURE_VERSIONS
         }
         maximum = max(counts.values(), default=0)
-        best = [version for version in SIGNATURE_VERSIONS if maximum and counts[version] == maximum]
+        best = [
+            version
+            for version in SIGNATURE_VERSIONS
+            if maximum and counts[version] == maximum
+        ]
         alignment_maximum = max(alignment_scores.values(), default=0.0)
         alignment_best = [
             version
@@ -319,10 +341,7 @@ def _version_evidence(
             if historical_maximum and counts[version] == historical_maximum
         ]
         disagreements = [
-            {
-                key: match[key]
-                for key in ("address", "library", "object", "versions")
-            }
+            {key: match[key] for key in ("address", "library", "object", "versions")}
             for match in target_matches
             if best and not any(version in match["versions"] for version in best)
         ]
@@ -377,9 +396,13 @@ def find_calls(root: Path) -> dict[str, Any]:
 
     path = index_path(root)
     if not path.is_file():
-        raise FileNotFoundError(f"Psy-Q index not found: {path.relative_to(root)}; run bin/harness psyq scan --all")
+        raise FileNotFoundError(
+            f"Psy-Q index not found: {path.relative_to(root)}; run bin/harness psyq scan --all"
+        )
     index = json.loads(path.read_text(encoding="utf-8"))
-    if index.get("schema") != INDEX_SCHEMA or not isinstance(index.get("matches"), list):
+    if index.get("schema") != INDEX_SCHEMA or not isinstance(
+        index.get("matches"), list
+    ):
         raise ValueError(f"invalid Psy-Q index: {path.relative_to(root)}")
     labels: dict[tuple[str, int], list[dict[str, Any]]] = defaultdict(list)
     for match in index["matches"]:
@@ -387,7 +410,11 @@ def find_calls(root: Path) -> dict[str, Any]:
             raise ValueError(f"invalid Psy-Q index match: {path.relative_to(root)}")
         target = match.get("target")
         for label in match.get("labels", []):
-            if isinstance(target, str) and isinstance(label, dict) and isinstance(label.get("address"), str):
+            if (
+                isinstance(target, str)
+                and isinstance(label, dict)
+                and isinstance(label.get("address"), str)
+            ):
                 labels[(target, int(label["address"], 0))].append(
                     {
                         "library": match.get("library"),
@@ -400,10 +427,14 @@ def find_calls(root: Path) -> dict[str, Any]:
     for target in sorted(index.get("targets", [])):
         snapshot_file = snapshot_path(root, target)
         if not snapshot_file.is_file():
-            raise FileNotFoundError(f"missing Rizin snapshot: {snapshot_file.relative_to(root)}")
+            raise FileNotFoundError(
+                f"missing Rizin snapshot: {snapshot_file.relative_to(root)}"
+            )
         snapshot = read_snapshot(snapshot_file)
         if snapshot.target != target or snapshot.engine.get("name") != "rizin":
-            raise ValueError(f"snapshot is not target-qualified Rizin evidence: {snapshot_file.relative_to(root)}")
+            raise ValueError(
+                f"snapshot is not target-qualified Rizin evidence: {snapshot_file.relative_to(root)}"
+            )
         for caller, callsite, destination in _call_addresses(snapshot):
             for symbol in labels.get((target, destination), []):
                 calls.append(
@@ -415,7 +446,15 @@ def find_calls(root: Path) -> dict[str, Any]:
                         **symbol,
                     }
                 )
-    calls.sort(key=lambda row: (row["target"], int(row["callsite"], 16), row["symbol"], row["library"], row["object"]))
+    calls.sort(
+        key=lambda row: (
+            row["target"],
+            int(row["callsite"], 16),
+            row["symbol"],
+            row["library"],
+            row["object"],
+        )
+    )
     return {"schema": CALLS_SCHEMA, "calls": calls}
 
 
@@ -466,14 +505,21 @@ def promotion_proposal(root: Path) -> dict[str, Any]:
         )
     candidates: list[dict[str, Any]] = []
     for target, manifest in sorted(load_target_manifests(root).items()):
-        current = {symbol.address: symbol for symbol in load_map(map_path(root, target))}
-        current_names = {symbol.canonical_name: symbol.address for symbol in current.values()}
+        current = {
+            symbol.address: symbol for symbol in load_map(map_path(root, target))
+        }
+        current_names = {
+            symbol.canonical_name: symbol.address for symbol in current.values()
+        }
         for (label_target, address, name), evidence in sorted(labels.items()):
             if label_target != target or names[(target, address)] != {name}:
                 continue
             label = evidence[0]["label"]
             declaration = label.get("declaration")
-            if not isinstance(declaration, dict) or declaration.get("kind") != "function":
+            if (
+                not isinstance(declaration, dict)
+                or declaration.get("kind") != "function"
+            ):
                 continue
             existing = current.get(address)
             if existing is not None and not existing.is_raw:
@@ -493,15 +539,14 @@ def promotion_proposal(root: Path) -> dict[str, Any]:
                     "external": True,
                     "declaration": declaration,
                     "objects": sorted(
-                        {
-                            f"{match['library']}:{match['object']}"
-                            for match in matches
-                        }
+                        {f"{match['library']}:{match['object']}" for match in matches}
                     ),
                     "versions": sorted(
                         {version for match in matches for version in match["versions"]}
                     ),
-                    "calls": sorted(evidence_calls, key=lambda row: (row["caller"], row["callsite"])),
+                    "calls": sorted(
+                        evidence_calls, key=lambda row: (row["caller"], row["callsite"])
+                    ),
                 }
             )
     candidates.sort(key=lambda row: (row["target"], row["address"], row["name"]))

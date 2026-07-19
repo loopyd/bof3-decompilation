@@ -42,7 +42,9 @@ def build_parser() -> argparse.ArgumentParser:
         description="scan staged PsyQ archives against target binaries",
     )
     parser.add_argument("targets", nargs="*", metavar="TARGET")
-    parser.add_argument("--json", action="store_true", help="emit evidence JSON to stdout")
+    parser.add_argument(
+        "--json", action="store_true", help="emit evidence JSON to stdout"
+    )
     parser.add_argument("-o", "--out", type=Path, help="write JSON evidence to FILE")
     parser.add_argument("--root", type=Path, default=repo_layout().root)
     parser.add_argument("--example", action="store_true")

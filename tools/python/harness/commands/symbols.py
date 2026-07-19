@@ -96,10 +96,14 @@ def run_check(args: argparse.Namespace) -> int:
         bindings_dir = source_dir / "symbols"
         if bindings_dir.is_dir():
             for binding in sorted(bindings_dir.rglob("*.c")):
-                for match in _WEAK_BINDING.finditer(binding.read_text(encoding="utf-8")):
+                for match in _WEAK_BINDING.finditer(
+                    binding.read_text(encoding="utf-8")
+                ):
                     address = int(match.group("address"), 0)
                     expected = by_address.get(address)
-                    if expected is None or expected.canonical_name != match.group("name"):
+                    if expected is None or expected.canonical_name != match.group(
+                        "name"
+                    ):
                         errors.append(
                             f"binding/map drift: {binding.relative_to(root)} "
                             f"has {match.group('name')} at 0x{address:08X}"

@@ -26,7 +26,9 @@ _VARIABLE_RE = re.compile(rf"\b({_IDENTIFIER})\s*(?:\[[^]]*\])?\s*;")
 def _without_comments(text: str) -> str:
     """Remove comments while retaining newlines for stable source locations."""
 
-    text = re.sub(r"/\*.*?\*/", lambda match: "\n" * match.group(0).count("\n"), text, flags=re.S)
+    text = re.sub(
+        r"/\*.*?\*/", lambda match: "\n" * match.group(0).count("\n"), text, flags=re.S
+    )
     return re.sub(r"//[^\n]*", "", text)
 
 
@@ -129,7 +131,9 @@ def _declarations(text: str, source: str) -> list[dict[str, str | int]]:
             # first parameter list.  Function-pointer variables are excluded
             # because their name is preceded by `(*`, not a declaration name.
             match = _FUNCTION_RE.search(compact)
-            if match and not re.search(rf"\(\s*\*\s*{re.escape(match.group(1))}\s*\)", compact):
+            if match and not re.search(
+                rf"\(\s*\*\s*{re.escape(match.group(1))}\s*\)", compact
+            ):
                 records.append(
                     _record(
                         name=match.group(1),
@@ -186,10 +190,14 @@ def parse_headers(include_root: Path) -> dict[str, Any]:
     return {"schema": HEADER_SCHEMA, "declarations": unique}
 
 
-def declarations_by_name(catalog: dict[str, Any]) -> dict[str, tuple[dict[str, str | int], ...]]:
+def declarations_by_name(
+    catalog: dict[str, Any],
+) -> dict[str, tuple[dict[str, str | int], ...]]:
     """Index a validated catalog for exact, case-sensitive lookup."""
 
-    if catalog.get("schema") != HEADER_SCHEMA or not isinstance(catalog.get("declarations"), list):
+    if catalog.get("schema") != HEADER_SCHEMA or not isinstance(
+        catalog.get("declarations"), list
+    ):
         raise ValueError("invalid Psy-Q header catalog")
     indexed: dict[str, list[dict[str, str | int]]] = {}
     for record in catalog["declarations"]:
@@ -199,9 +207,7 @@ def declarations_by_name(catalog: dict[str, Any]) -> dict[str, tuple[dict[str, s
     return {name: tuple(records) for name, records in indexed.items()}
 
 
-def declaration_for(
-    catalog: dict[str, Any], name: str
-) -> dict[str, str | int] | None:
+def declaration_for(catalog: dict[str, Any], name: str) -> dict[str, str | int] | None:
     """Return one declaration only when an exact name has one clear kind."""
 
     return declaration_from_index(declarations_by_name(catalog), name)
@@ -223,8 +229,14 @@ def index_headers(root: Path, version: str) -> Path:
     """Write the generated catalog; callers never edit this disposable output."""
 
     include_root = root / "toolchains" / "psyq" / version / "include"
-    payload = parse_headers(include_root) if include_root.is_dir() else {"schema": HEADER_SCHEMA, "declarations": []}
+    payload = (
+        parse_headers(include_root)
+        if include_root.is_dir()
+        else {"schema": HEADER_SCHEMA, "declarations": []}
+    )
     output = root / "out" / "psyq" / version / "headers.json"
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    output.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     return output

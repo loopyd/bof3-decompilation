@@ -41,7 +41,9 @@ class RepoLayout:
     psyq_root: Path
 
 
-def repo_layout(root: Path | None = None, *, psyq_version: str | None = None) -> RepoLayout:
+def repo_layout(
+    root: Path | None = None, *, psyq_version: str | None = None
+) -> RepoLayout:
     resolved = (root or Path(__file__).resolve().parents[3]).resolve()
     build = resolved / "build"
     toolchains = resolved / "toolchains"
@@ -58,7 +60,12 @@ def repo_layout(root: Path | None = None, *, psyq_version: str | None = None) ->
         private_assets_dir=inputs / "external" / "private-assets",
         harness_disk_src=resolved / "tools" / "rust" / "bof3-disk",
         emi_ex_src=resolved / "tools" / "rust" / "emi-ex",
-        harness_disk_bin=build / "tools" / "rust" / "bof3-disk" / "release" / "bof3-disk",
+        harness_disk_bin=build
+        / "tools"
+        / "rust"
+        / "bof3-disk"
+        / "release"
+        / "bof3-disk",
         emi_ex_bin=build / "tools" / "rust" / "emi-ex" / "release" / "emi-ex",
         psn00b_toolchain_root=toolchains / "psn00b_toolchain",
         psn00b_sdk_root=toolchains / "psn00bsdk",
@@ -77,7 +84,9 @@ def read_json(path: Path) -> dict[str, Any]:
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     content = json.dumps(payload, indent=2, sort_keys=True) + "\n"
-    descriptor, temporary_name = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+    descriptor, temporary_name = tempfile.mkstemp(
+        dir=path.parent, prefix=f".{path.name}.", suffix=".tmp"
+    )
     temporary = Path(temporary_name)
     try:
         with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
@@ -90,13 +99,17 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
         raise
 
 
-def run_command(command: list[str], *, cwd: Path | None = None, env: dict[str, str] | None = None) -> None:
+def run_command(
+    command: list[str], *, cwd: Path | None = None, env: dict[str, str] | None = None
+) -> None:
     full_env = os.environ.copy()
     if env is not None:
         full_env.update(env)
     result = subprocess.run(command, cwd=cwd, env=full_env, check=False)
     if result.returncode != 0:
-        raise RuntimeError(f"command failed with exit code {result.returncode}: {' '.join(command)}")
+        raise RuntimeError(
+            f"command failed with exit code {result.returncode}: {' '.join(command)}"
+        )
 
 
 def ensure_parent(path: Path) -> None:

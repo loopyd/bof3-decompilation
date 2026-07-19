@@ -8,9 +8,7 @@ from harness.match._asm_link import _target_map_bindings, resolve_symbol_address
 
 
 def test_maps_normalize_raw_data_and_function_spelling() -> None:
-    symbols = parse_map(
-        "func_80143B44 = 0x80143B44;\nDAT_80143b40 = 0x80143B40;\n"
-    )
+    symbols = parse_map("func_80143B44 = 0x80143B44;\nDAT_80143b40 = 0x80143B40;\n")
 
     assert format_map(symbols) == (
         "D_80143B40 = 0x80143B40;\nfunc_80143B44 = 0x80143B44;\n"
@@ -27,11 +25,14 @@ def test_maps_normalize_and_render_weak_bindings() -> None:
 
 
 def test_semantic_map_symbol_resolves_without_authored_binding(tmp_path: Path) -> None:
-    assert resolve_symbol_address(
-        "PadRead",
-        symbols_c_path=tmp_path / "symbols.c",
-        canonical_bindings={"PadRead": 0x801CE760},
-    ) == 0x801CE760
+    assert (
+        resolve_symbol_address(
+            "PadRead",
+            symbols_c_path=tmp_path / "symbols.c",
+            canonical_bindings={"PadRead": 0x801CE760},
+        )
+        == 0x801CE760
+    )
 
 
 def test_source_target_uses_its_canonical_map_for_link_bindings(tmp_path: Path) -> None:

@@ -25,7 +25,8 @@ def run(args: argparse.Namespace) -> int:
     payload = search_flags(
         layout=layout,
         source=source,
-        catalog_path=args.catalog or layout.root / "config" / "compiler" / "flag-catalog.json",
+        catalog_path=args.catalog
+        or layout.root / "config" / "compiler" / "flag-catalog.json",
     )
     text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
     if args.out:

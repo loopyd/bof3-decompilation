@@ -6,7 +6,9 @@ from harness.psyq.headers import declaration_for, parse_headers
 from harness.psyq.signatures import scan
 
 
-def test_header_catalog_and_signature_evidence_are_exact_name_only(tmp_path: Path) -> None:
+def test_header_catalog_and_signature_evidence_are_exact_name_only(
+    tmp_path: Path,
+) -> None:
     include = tmp_path / "toolchains/psyq/4.7/include"
     include.mkdir(parents=True)
     (include / "libcd.h").write_text(
@@ -72,14 +74,12 @@ def test_header_catalog_keeps_c_linkage_prototypes_and_gte_function_macros(
     include.mkdir()
     (include / "libetc.h").write_text(
         '#if defined(__cplusplus)\nextern "C" {\n#endif\n'
-        'unsigned long PadRead(int id);\n'
-        '#if defined(__cplusplus)\n}\n#endif\n',
+        "unsigned long PadRead(int id);\n"
+        "#if defined(__cplusplus)\n}\n#endif\n",
         encoding="utf-8",
     )
     (include / "inline_c.h").write_text(
-        "#define gte_rtps() __asm__ volatile ( \\\n"
-        '    "nop;" \\\n'
-        "    : : : )\n",
+        '#define gte_rtps() __asm__ volatile ( \\\n    "nop;" \\\n    : : : )\n',
         encoding="utf-8",
     )
 

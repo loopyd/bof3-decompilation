@@ -49,12 +49,18 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--root", type=Path, default=repo_layout().root)
     sub = parser.add_subparsers(dest="command", required=True)
     for name, handler, help_text in (
-        ("scan", run_scan, "scan all manifests against complete Psy-Q object signatures"),
+        (
+            "scan",
+            run_scan,
+            "scan all manifests against complete Psy-Q object signatures",
+        ),
         ("calls", run_calls, "join Rizin call xrefs with generated Psy-Q signatures"),
         ("proposal", run_proposal, "write exact external-symbol map candidates"),
     ):
         command = sub.add_parser(name, help=help_text)
-        command.add_argument("--all", action="store_true", help="operate on every target manifest")
+        command.add_argument(
+            "--all", action="store_true", help="operate on every target manifest"
+        )
         command.set_defaults(handler=handler)
     return parser
 

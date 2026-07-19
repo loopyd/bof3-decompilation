@@ -95,9 +95,7 @@ def _filter_repo_local_paths(candidates: list[Path]) -> list[Path]:
 
 def _validate_repo_local_input(path: Path, *, label: str) -> Path:
     if not _is_allowed_input_path(path):
-        raise ValueError(
-            f"{label} must stay under the repo's inputs/ tree: {path}"
-        )
+        raise ValueError(f"{label} must stay under the repo's inputs/ tree: {path}")
     return path.expanduser()
 
 

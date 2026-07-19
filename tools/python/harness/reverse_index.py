@@ -236,8 +236,9 @@ def rebuild(root: Path) -> Path:
                             function.argument_count,
                             _trivial_kind(
                                 binary_bytes[
-                                    function.address - manifest.load_address :
-                                    function.address - manifest.load_address
+                                    function.address
+                                    - manifest.load_address : function.address
+                                    - manifest.load_address
                                     + function.analyzer_size
                                 ]
                             ),
@@ -317,9 +318,7 @@ def connect(root: Path) -> sqlite3.Connection:
         ).fetchone()
     except sqlite3.Error as exc:
         connection.close()
-        raise ValueError(
-            "invalid reverse index; run just index"
-        ) from exc
+        raise ValueError("invalid reverse index; run just index") from exc
     if row is None or row[0] != SCHEMA_VERSION:
         connection.close()
         found = row[0] if row is not None else "missing"
@@ -330,13 +329,23 @@ def connect(root: Path) -> sqlite3.Connection:
         indexed_targets = connection.execute(
             "SELECT id, binary, binary_sha256, snapshot, snapshot_sha256 FROM targets"
         )
-        for target, binary_name, binary_digest, snapshot_name, snapshot_digest in indexed_targets:
+        for (
+            target,
+            binary_name,
+            binary_digest,
+            snapshot_name,
+            snapshot_digest,
+        ) in indexed_targets:
             binary = root / binary_name
             snapshot = root / snapshot_name
             if not binary.is_file() or _hash(binary) != binary_digest:
-                raise ValueError(f"stale reverse index binary for {target}; run just index")
+                raise ValueError(
+                    f"stale reverse index binary for {target}; run just index"
+                )
             if not snapshot.is_file() or _hash(snapshot) != snapshot_digest:
-                raise ValueError(f"stale reverse index snapshot for {target}; run just index")
+                raise ValueError(
+                    f"stale reverse index snapshot for {target}; run just index"
+                )
             _snapshot_for(root, target, binary)
     except BaseException:
         connection.close()
