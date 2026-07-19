@@ -374,6 +374,8 @@ void func_801A0048(s16 a, s16 b);
 void func_801A0514(void);
 void func_801B3CCC(u32 arg0);
 void func_801996FC(void);
+void func_801995F8(void);
+void func_801997EC(void);
 void func_8019982C(void);
 
 /* Legacy alias for already‑matched functions that dereference 0x1F800044

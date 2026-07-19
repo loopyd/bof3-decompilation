@@ -194,7 +194,7 @@ segments:
     - asm
     - func_801995A4
   - - 15864
-    - asm
+    - c
     - func_801995F8
   - - 15928
     - asm
@@ -215,7 +215,7 @@ segments:
     - asm
     - func_8019977C
   - - 16364
-    - asm
+    - c
     - func_801997EC
   - - 16428
     - c

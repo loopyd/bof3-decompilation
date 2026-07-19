@@ -28,5 +28,6 @@ void func_801E3BF8(void);
 void func_801E3D4C(void);
 void func_801E438C(void);
 void func_801E4540(void);
+void func_801E3CB8(void);
 
 #endif

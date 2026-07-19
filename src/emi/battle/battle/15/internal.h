@@ -150,6 +150,7 @@ void func_800B0498(void);
 void func_800B0B0C(s16 base_x, s16 base_y);
 void func_800B2218(void);
 void func_800B22AC(void);
+void func_800B23B8(void);
 void func_800B23F8(void);
 void func_800B250C(void);
 void func_801DE94C(s32 arg0, s32 arg1);
