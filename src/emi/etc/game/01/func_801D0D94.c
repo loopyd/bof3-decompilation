@@ -5,13 +5,13 @@
  * @source 0x801D0D94
  */
 void func_801D0D94(void) {
-  volatile u16* timer_ptr;
-  u16           timer;
+  u16* timer_ptr;
+  u16  timer;
 
   timer_ptr = &GAME_FRONT_TIMER;
   timer = *timer_ptr - 1u;
-
   *timer_ptr = timer;
+
   if ((s32)(timer << 16) == 0) {
     GAME_FRONT_FADE_PHASE = 3u;
     GAME_FRONT_WINDOW_PHASE = 1u;

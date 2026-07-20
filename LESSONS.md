@@ -250,6 +250,22 @@ The full convention is documented in `docs/matching-playbook.md` §4.
 - The full technique with expression splitting, named-constant reuse, and
   induction-variable alternatives is in `docs/matching-playbook.md` §5.
 
+### Index fixed tables through a real array symbol, not a `PSX_PTR` cast
+
+- A table macro built on `PSX_PTR(type, addr)` expands to a cast constant
+  `((type*)(addr))`. Indexing it (`TABLE[i]`) makes GCC fold the constant base
+  and emit `addu at,v0,at` (index + base), which mismatches the original
+  `addu at,at,v0` (base + index) and mis-schedules the surrounding loads.
+- Declare the table as a real linker array symbol (`extern u8 D_80181EBA[];`)
+  bound with `WEAK_SYMBOL_AT` to its reviewed address. Indexing
+  `D_80181EBA[i]` then uses `%hi`/`%lo` relocations and emits the canonical
+  `lui at,%hi; addu at,at,v0; lbu a0,%lo(at)` order.
+- Worked: `func_801D1134`/`func_801D1184` jumped from ~76%/92% to byte-match
+  once `GAME_FRONT_SELECTION_FX_TABLE` (a `PSX_PTR` macro) was replaced with the
+  raw `D_80181EBA[]` array symbol already present in the target map.
+- Prefer the raw map symbol for indexed table access; keep `PSX_PTR`/`PSX_REF`
+  for single fixed-address scalar cells.
+
 ## Target ownership and symbols
 
 - PsyQ library code can be linked more than once at different addresses across

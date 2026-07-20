@@ -1,18 +1,7 @@
 #include "internal.h"
 
-struct ScenarioState {
-  u8  pad[0x6870];
-  s8  scenario_id;
-  u8  field_6871;
-  u8  field_6872;
-  u8  field_6873;
-  u8  field_6874;
-  u8  field_6875;
-  u16 field_6876;
-  u16 field_6878;
-};
-
-#define SCENARIO_STATE ((struct ScenarioState*)0x80140000u)
+extern u32  D_80144E88[];
+extern u32* D_8014686C;
 
 /* @behavior stores a scenario index, clears adjacent state, requests SCENA[index],
  * waits for loader readiness, then dispatches into the scenario-local jump
@@ -20,28 +9,32 @@ struct ScenarioState {
  * @source 0x801A7704
  */
 void func_801A7704(u8 scenario_index) {
-  s8*  scenario_state;
-  s32  stored_index;
-  u32* scenario_record;
+  GameScenarioState* state;
+  u8*                base;
+  s32                index8;
+  u16                none_sel;
+  u8                 ready_phase;
 
-  scenario_state = &SCENARIO_STATE->scenario_id;
-  scenario_state[0] = scenario_index;
-  scenario_state[2] = 0u;
-  scenario_state[3] = 0u;
-  scenario_state[4] = 0u;
-  *(u16*)(scenario_state + 6) = 0u;
-  scenario_state[5] = 0u;
-  scenario_state[1] = 0u;
-  *(u16*)(scenario_state + 8) = 0u;
+  none_sel = 0xffffu;
+  state = &GAME_SCENARIO_STATE;
+  state->scenario_id = (s8)scenario_index;
+  index8 = (s32)((s8)scenario_index) * 8;
+  base = (u8*)D_80144E88;
+  state->field_02 = 0u;
+  state->field_03 = 0u;
+  state->field_04 = 0u;
+  state->field_06 = 0u;
+  state->field_05 = 0u;
+  state->field_01 = 0u;
+  state->field_08 = 0u;
 
-  *(u32*)((u8*)0x80144e88u + ((s8)scenario_index * 8)) = 0u;
-  stored_index = scenario_state[0];
-  scenario_record = (u32*)((u8*)0x80144e88u + (stored_index * 8));
-  *(u32*)0x8014686cu = (u32)scenario_record;
+  *(u32*)(base + index8) = 0u;
+  D_8014686C = (u32*)(base + ((s32)state->scenario_id * 8));
+  ready_phase = 5u;
   func_801A7804();
 
   while (!emi_loader_is_ready()) {
-    if ((D_80143F00 != 0xffffu) && (D_80143BB0 != 5u)) {
+    if ((D_80143F00 != none_sel) && (D_80143BB0 != ready_phase)) {
       func_801992B8();
     }
     func_8014B87C(1u);

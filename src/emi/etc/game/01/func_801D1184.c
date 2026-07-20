@@ -1,19 +1,19 @@
 #include "internal.h"
 
+extern u8 D_80181EBA[];
+
 /* @behavior closes the current selection-specific EXE effect and clears the active
  * selection byte.
  * @source 0x801D1184
  */
 void func_801D1184(void) {
-  volatile u8* selection_ptr = &GAME_FRONT_SELECTION;
-  s32          selection = *selection_ptr;
+  u8* selection_ptr = &GAME_FRONT_SELECTION;
+  u8  selection = *selection_ptr;
 
   if (selection != 0xffu) {
-    s32 selection_offset = selection << 2;
+    u32 offset = selection << 2;
 
-    game_stop_selection_fx(
-        GAME_FRONT_SELECTION_FX_TABLE[selection_offset + 0u],
-        GAME_FRONT_SELECTION_FX_TABLE[selection_offset + 1u]);
+    game_stop_selection_fx(D_80181EBA[offset], D_80181EBA[offset + 1u]);
     *selection_ptr = 0xffu;
   }
 }

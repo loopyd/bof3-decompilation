@@ -17,6 +17,8 @@ void func_801D0E54(void) {
     D_80144FC1 = 0u;
     D_80144FC0 = 0u;
     D_8014832E = 0u;
+    /* MATCHING_AID: keep a0=16 in jal delay slot after flag clears */
+    CLOBBER_A0();
     func_801A7704(16);
     func_8014B854(0, func_80197068);
     GAME_FRONT_STATE = GAME_FRONT_STATE + 1u;

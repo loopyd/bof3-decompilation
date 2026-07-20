@@ -18,7 +18,7 @@ extern volatile u8           GAME_FRONT_FADE_PHASE;
 extern volatile u8           GAME_FRONT_WINDOW_PHASE;
 extern volatile u8           GAME_FRONT_INPUT_GATE;
 extern u8                    GAME_FRONT_SELECTION;
-extern volatile u8           GAME_FRONT_PALETTE_STAGE_SERIAL;
+extern u8                    GAME_FRONT_PALETTE_STAGE_SERIAL;
 extern volatile u16          D_80143B40;
 extern volatile u16          D_80143F20;
 extern volatile u8           D_80144FC0;

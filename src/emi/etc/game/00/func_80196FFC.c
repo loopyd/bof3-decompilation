@@ -1,23 +1,14 @@
 #include "internal.h"
 
-struct GameData {
-  u8           pad_3b90[0x3b90];
-  volatile u16 entry0_state;
-  u8           pad_3b92_5988[0x1df6];
-  volatile u8  palette_serial;
-};
-
-#define GAME_DATA ((struct GameData*)0x80140000)
-
 /* @behavior waits for the streamed slot, advances the game entry and palette
  * serials, then records the next ready state.
  * @source 0x80196FFC
  * @see docs/specs/data/schema-ledger.md
  */
 void func_80196FFC(void) {
-  volatile u16* const ent = (volatile u16*)((volatile u8*)GAME_DATA + 0x3b90u);
-  u16                 ev;
-  u8                  pv;
+  u16* ent;
+  u16  ev;
+  u8   pv;
 
   emi_stream_init_slot(0x268u);
 
@@ -27,10 +18,12 @@ void func_80196FFC(void) {
 
   func_8014E284();
 
-  pv = GAME_DATA->palette_serial;
+  ent = (u16*)&D_80143B90;
+  ev = D_80145988;
+  pv = ev;
   ev = *ent;
   pv++;
   ev++;
-  GAME_DATA->palette_serial = pv;
+  D_80145988 = pv;
   *ent = ev;
 }

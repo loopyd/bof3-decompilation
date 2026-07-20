@@ -8,8 +8,7 @@ void func_801D0DF0(void) {
   volatile u16* timer_ptr;
   u16           timer;
 
-  timer_ptr = (volatile u16*)0x80140000u;
-  timer_ptr += 0x1e10;
+  timer_ptr = &GAME_FRONT_TIMER;
   timer = *timer_ptr - 1u;
   *timer_ptr = timer;
 

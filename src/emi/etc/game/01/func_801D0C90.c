@@ -15,8 +15,11 @@ void func_801D0C90(void) {
   }
 
   game_stage_shared_palette_bank();
-  GAME_FRONT_PALETTE_STAGE_SERIAL += 1u;
-  game_set_active_selection_cue(0x8du, 100, 8);
+  /* MATCHING_AID: serial +=1 folded into a2 via comma so the store schedules
+   * before the call and a2=8 lands in the jal delay slot; serial is
+   * non-volatile here (only user in this overlay). */
+  game_set_active_selection_cue(0x8du, 100u,
+                                (GAME_FRONT_PALETTE_STAGE_SERIAL += 1u, 8u));
 
   state = GAME_FRONT_STATE;
   GAME_FRONT_FADE_PHASE = 1u;
