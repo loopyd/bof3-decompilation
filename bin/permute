@@ -84,7 +84,18 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_false",
         help="report every candidate no worse than the base",
     )
-    parser.add_argument("--stop-on-zero", action="store_true")
+    parser.add_argument(
+        "--stop-on-zero",
+        dest="stop_on_zero",
+        action="store_true",
+        help="stop as soon as a perfect (score 0) match is found (default)",
+    )
+    parser.add_argument(
+        "--no-stop-on-zero",
+        dest="stop_on_zero",
+        action="store_false",
+        help="keep running after a perfect match is found",
+    )
     parser.add_argument(
         "--quiet", dest="quiet", action="store_true", help="hide iteration progress"
     )
@@ -110,7 +121,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="stop this coordinator after SECONDS (the upstream permuter has no native timer)",
     )
     parser.add_argument("--debug", action="store_true")
-    parser.set_defaults(quiet=False, best_only=True)
+    parser.set_defaults(quiet=False, best_only=True, stop_on_zero=True)
     return parser
 
 
@@ -246,9 +257,12 @@ def run(args: argparse.Namespace) -> int:
 
     directory.mkdir(parents=True, exist_ok=True)
     lock_path = directory / ".coordinator.lock"
-    with lock_path.open("w", encoding="ascii") as lock:
+    acquired = False
+    lock = lock_path.open("w", encoding="ascii")
+    try:
         try:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            acquired = True
         except BlockingIOError as exc:
             raise RuntimeError(
                 f"another decomp-permuter coordinator is already running for "
@@ -302,6 +316,13 @@ def run(args: argparse.Namespace) -> int:
             )
             return 0
         return result.returncode
+    finally:
+        lock.close()
+        if acquired:
+            try:
+                lock_path.unlink()
+            except FileNotFoundError:
+                pass
 
 
 def main(argv: list[str] | None = None) -> int:
