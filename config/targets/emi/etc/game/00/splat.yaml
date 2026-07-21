@@ -229,7 +229,7 @@ segments:
     - c
     - func_80199938
   - - 16760
-    - asm
+    - c
     - func_80199978
   - - 16824
     - asm
@@ -823,7 +823,7 @@ segments:
     - asm
     - func_801AD3B4
   - - 97356
-    - asm
+    - c
     - func_801AD44C
   - - 97388
     - asm
@@ -832,7 +832,7 @@ segments:
     - asm
     - func_801AD4DC
   - - 97948
-    - asm
+    - c
     - func_801AD69C
   - - 97980
     - asm

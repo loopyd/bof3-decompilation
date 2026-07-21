@@ -1,10 +1,10 @@
 #include "internal.h"
 
-/* @source 0x801E2988
+/* @source 0x80199978
  * @behavior advances the panel task field_06 by 0x10, clamps to max 0x10, and
  *         clears state when the clamp is reached.
  */
-void func_801E2988(void) {
+void func_80199978(void) {
     PanelTask* task;
     u16 next;
 

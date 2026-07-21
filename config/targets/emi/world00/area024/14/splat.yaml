@@ -56,10 +56,10 @@ segments:
     - asm
     - func_801F3250
   - - 1748
-    - asm
+    - c
     - func_801F32D4
   - - 1780
-    - asm
+    - c
     - func_801F32F4
   - - 1812
     - asm
@@ -89,10 +89,10 @@ segments:
     - asm
     - func_801F4158
   - - 5592
-    - asm
+    - c
     - func_801F41D8
   - - 5612
-    - asm
+    - c
     - func_801F41EC
   - - 5632
     - asm
