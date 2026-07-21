@@ -105,10 +105,13 @@ def shared_map_path(root: Path) -> Path:
 
 
 def load_target_symbols(root: Path, target: str) -> list[Symbol]:
-    """Compose shared base + target-local symbols. Local wins on conflict."""
+    """Compose shared base + PSX SDK + target-local symbols. Local wins on conflict."""
     shared = load_map(shared_map_path(root))
+    psx = load_map(map_path(root, target).parent / "psx.txt")
     local = load_map(map_path(root, target))
     by_addr: dict[int, Symbol] = {s.address: s for s in shared}
+    for s in psx:
+        by_addr[s.address] = s
     for s in local:
         by_addr[s.address] = s
     return sorted(by_addr.values())

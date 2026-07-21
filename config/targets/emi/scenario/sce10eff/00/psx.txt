@@ -1,0 +1,6 @@
+MulMatrix2 = 0x80178CB8;
+PushMatrix = 0x80178B78;
+RotMatrix = 0x80179738;
+RotTrans = 0x80179558;
+SetRotMatrix = 0x80178FD8;
+SetTransMatrix = 0x80179068;

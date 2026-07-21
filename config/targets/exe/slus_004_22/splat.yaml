@@ -11,7 +11,8 @@ options:
   ld_script_path: out/splat/exe/slus_004_22/linker.ld
   symbol_addrs_path:
   - config/targets/shared/symbols.txt
-    - config/targets/exe/slus_004_22/symbols.txt
+  - config/targets/exe/slus_004_22/psx.txt
+  - config/targets/exe/slus_004_22/symbols.txt
 segments:
   - [0x0, bin, pre_boot]
   - name: boot

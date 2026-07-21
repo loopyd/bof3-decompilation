@@ -11,6 +11,7 @@ options:
   ld_script_path: out/splat/emi/etc/game/00/linker.ld
   symbol_addrs_path:
   - config/targets/shared/symbols.txt
+  - config/targets/emi/etc/game/00/psx.txt
   - config/targets/emi/etc/game/00/symbols.txt
 segments:
 - - 0
