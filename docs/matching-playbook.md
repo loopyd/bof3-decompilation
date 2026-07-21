@@ -453,11 +453,12 @@ or low-level SDK code — not as a normal C matching technique.
 
 ---
 
-## 16. Register pinning ladder
+## 16. Register allocation ladder (no pinning)
 
-Bare MIPS register pinning (`register type name asm("$N")`) is a valid
-technique but changes the register web globally. Use this ladder, escalating
-only after exhausting earlier steps:
+Bare MIPS register pinning (`register type name asm("$N")`) and `INCLUDE_ASM`
+are **banned unless the user explicitly approves them** for a specific function.
+They change the register web globally and mask the real cause. Escalate through
+this ladder instead, and only ask for a pin after exhausting it:
 
 1. Correct types and declarations
 2. Correct control-flow structure
@@ -465,9 +466,14 @@ only after exhausting earlier steps:
 4. Introduce or remove temporaries
 5. Hoist pointer dereferences
 6. Try separate loop counter vs pointer induction variable
-7. Run the permuter ([§18](#18-permuter-gotchas))
-8. Only then use `register ... asm("$N")`
-9. Prefer to remove pins after discovering a structural solution
+7. Use `barrier()` / `CLOBBER_*` for ordering and delay-slot placement
+8. Check the compiler profile (`bin/flag-search`); if a non-canonical profile
+   byte-matches clean C, record it in `config/compiler/object-flags.cmake`
+   (per-object override) rather than pinning
+9. Bind fixed-address symbols with `WEAK_SYMBOL_AT` in `symbols.c`, not
+   `extern X asm("NAME")` renames
+10. If nothing matches, report it as a documented residual and ask the user
+    before adding any pin or `INCLUDE_ASM`
 
 A pinned local may remain live across the whole function and displace unrelated
 variables — pinning one register can create several new mismatches elsewhere.

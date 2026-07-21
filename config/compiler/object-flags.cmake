@@ -21,3 +21,12 @@
 # Example: set(BOF3_OBJFLAGS_emi_etc_game_01_func_801D0D5C_c -O1)
 
 set(BOF3_OBJFLAGS_emi_etc_game_01_func_801D0D5C_c -O1)
+
+# func_801D104C keeps &GAME_FRONT_INPUT_GATE in a base register and reaches the
+# nearby front-state fields as negative displacements (lhu/sh -0xF3/-0x23/-0x13).
+# The canonical second CSE pass (-frerun-cse-after-loop, implied by -O2) folds
+# `front_gate - 0xF3` (front_gate is the fixed address &GAME_FRONT_INPUT_GATE)
+# into a fresh symbol-relative lui+lhu per access. Disabling that pass keeps the
+# access register-relative off the single base, matching the original byte-for-
+# byte with no register pinning. Verified by bin/flag-search (100% exact).
+set(BOF3_OBJFLAGS_emi_etc_game_01_func_801D104C_c -O2 -fno-rerun-cse-after-loop)
