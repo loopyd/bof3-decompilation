@@ -372,6 +372,7 @@ void func_801996FC(void);
 void func_801995F8(void);
 void func_801997EC(void);
 void func_8019982C(void);
+void func_80199938(void);
 
 /* Legacy alias for already‑matched functions that dereference 0x1F800044
  * via a literal‑address macro (lui+ori+lw 0(base) codegen). */

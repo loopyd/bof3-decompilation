@@ -56,10 +56,24 @@
     PanelTask* task_root;                                                      \
     u16        next_val;                                                       \
     task_root = D_80148648;                                                    \
-    next_val = (u16)((*(volatile u16*)((u8*)task_root + 6)) + 0x10);           \
-    *(volatile u16*)((u8*)task_root + 6) = next_val;                           \
+    next_val = (u16)(*((volatile u16*)((u8*)task_root + 6)) + 0x10);           \
+    *((volatile u16*)((u8*)task_root + 6)) = next_val;                         \
     if ((s16)next_val >= (limit) + 1) {                                        \
-      *(volatile u16*)((u8*)task_root + 6) = (limit);                          \
+      *((volatile u16*)((u8*)task_root + 6)) = (limit);                          \
+      task_root->state = 0;                                                    \
+    }                                                                          \
+  }
+
+#define PANEL_RETREAT_FIELD6(func, step, min)                                  \
+  void func(void) {                                                            \
+    PanelTask* task_root;                                                      \
+    s16        next_val;                                                       \
+    task_root = D_80148648;                                                    \
+    next_val = (s16)(task_root->field_06 - (step));                            \
+    task_root->field_06 = (u16)next_val;                                       \
+    if (next_val < (min)) {                                                    \
+      next_val = (min);                                                        \
+      task_root->field_06 = (u16)next_val;                                     \
       task_root->state = 0;                                                    \
     }                                                                          \
   }

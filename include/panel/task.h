@@ -8,6 +8,7 @@ typedef struct PanelTask {
   u8  unk_00[3];
   u8  state;
   u16 x;
+  u16 field_06;
 } PanelTask;
 
 #define g_PanelTaskRoot PSX_REF(PanelTask*, 0x80148648u)
