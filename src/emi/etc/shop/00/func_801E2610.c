@@ -4,5 +4,5 @@
  * @behavior increments D_80148652.
  */
 void func_801E2610(void) {
-  D_80148652[0] += 1;
+  D_80148652 += 1;
 }

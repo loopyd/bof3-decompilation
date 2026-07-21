@@ -188,7 +188,7 @@ segments:
     - asm
     - func_801D6D6C
   - - 25236
-    - asm
+    - c
     - func_801D6E94
   - - 25344
     - asm
@@ -392,7 +392,7 @@ segments:
     - asm
     - func_801DF6A8
   - - 60684
-    - asm
+    - c
     - func_801DF90C
   - - 60792
     - asm
@@ -410,7 +410,7 @@ segments:
     - asm
     - func_801DFDF4
   - - 62504
-    - asm
+    - c
     - func_801E0028
   - - 62572
     - asm
@@ -491,7 +491,7 @@ segments:
     - asm
     - func_801E2590
   - - 72140
-    - asm
+    - c
     - func_801E25CC
   - - 72208
     - asm
@@ -548,7 +548,7 @@ segments:
     - asm
     - func_801E2C18
   - - 73884
-    - asm
+    - c
     - func_801E2C9C
   - - 73948
     - c
@@ -563,7 +563,7 @@ segments:
     - asm
     - func_801E2DB4
   - - 74288
-    - asm
+    - c
     - func_801E2E30
   - - 74352
     - asm
@@ -638,7 +638,7 @@ segments:
     - asm
     - func_801E3E4C
   - - 78516
-    - asm
+    - c
     - func_801E3EB4
   - - 78580
     - c
