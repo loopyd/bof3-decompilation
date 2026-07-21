@@ -4,7 +4,7 @@ options:
   platform: psx
   compiler: psyq
   basename: etc_commu00_00
-  base_path: ../../../../..
+  base_path: ../../../../../..
   target_path: out/binaries/emi/etc/commu00/00.bin
   asm_path: out/splat/emi/etc/commu00/00/asm
   src_path: src/emi/etc/commu00/00
@@ -178,7 +178,4 @@ segments:
   - - 14588
     - asm
     - T_801F24FC
-- - 15696
-  - bin
-  - data
 - - 15696

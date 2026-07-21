@@ -4,7 +4,7 @@ options:
   platform: psx
   compiler: psyq
   basename: etc_shop_00
-  base_path: ../../../../..
+  base_path: ../../../../../..
   target_path: out/binaries/emi/etc/shop/00.bin
   asm_path: out/splat/emi/etc/shop/00/asm
   src_path: src/emi/etc/shop/00
@@ -515,7 +515,7 @@ segments:
     - asm
     - func_801E2808
   - - 73032
-    - asm
+    - c
     - func_801E2948
   - - 73096
     - asm
@@ -524,7 +524,7 @@ segments:
     - asm
     - func_801E29C8
   - - 73264
-    - asm
+    - c
     - func_801E2A30
   - - 73328
     - asm
@@ -709,7 +709,4 @@ segments:
   - - 83268
     - asm
     - T_801E5144
-- - 87660
-  - bin
-  - data
 - - 87660

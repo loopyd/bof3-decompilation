@@ -4,7 +4,7 @@ options:
   platform: psx
   compiler: psyq
   basename: world00_area028_13
-  base_path: ../../../../..
+  base_path: ../../../../../..
   target_path: out/binaries/emi/world00/area028/13.bin
   asm_path: out/splat/emi/world00/area028/13/asm
   src_path: src/emi/world00/area028/13
@@ -61,7 +61,4 @@ segments:
   - - 2216
     - asm
     - T_801F34A8
-- - 4612
-  - bin
-  - data
 - - 4612

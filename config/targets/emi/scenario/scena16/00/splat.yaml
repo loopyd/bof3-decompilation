@@ -4,7 +4,7 @@ options:
   platform: psx
   compiler: psyq
   basename: scenario_scena16_00
-  base_path: ../../../../..
+  base_path: ../../../../../..
   target_path: out/binaries/emi/scenario/scena16/00.bin
   asm_path: out/splat/emi/scenario/scena16/00/asm
   src_path: src/emi/scenario/scena16/00
@@ -58,7 +58,4 @@ segments:
   - - 6456
     - asm
     - func_801F8538
-- - 6520
-  - bin
-  - data
 - - 6520

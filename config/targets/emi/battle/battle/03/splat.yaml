@@ -4,7 +4,7 @@ options:
   platform: psx
   compiler: psyq
   basename: battle_battle_03
-  base_path: ../../../../..
+  base_path: ../../../../../..
   target_path: out/binaries/emi/battle/battle/03.bin
   asm_path: out/splat/emi/battle/battle/03/asm
   src_path: src/emi/battle/battle/03
@@ -1108,7 +1108,4 @@ segments:
   - - 106424
     - asm
     - T_801EABB8
-- - 118224
-  - bin
-  - data
 - - 118224

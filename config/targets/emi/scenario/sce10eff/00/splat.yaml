@@ -4,7 +4,7 @@ options:
   platform: psx
   compiler: psyq
   basename: scenario_sce10eff_00
-  base_path: ../../../../..
+  base_path: ../../../../../..
   target_path: out/binaries/emi/scenario/sce10eff/00.bin
   asm_path: out/splat/emi/scenario/sce10eff/00/asm
   src_path: src/emi/scenario/sce10eff/00
@@ -94,7 +94,4 @@ segments:
   - - 6920
     - asm
     - func_801D2708
-- - 6984
-  - bin
-  - data
 - - 6984

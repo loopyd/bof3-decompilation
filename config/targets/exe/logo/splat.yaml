@@ -4,7 +4,7 @@ options:
   platform: psx
   compiler: psyq
   basename: logo
-  base_path: ../../..
+  base_path: ../../../..
   target_path: out/binaries/exe/logo.bin
   asm_path: out/splat/exe/logo/asm
   src_path: src/exe/logo
