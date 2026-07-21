@@ -19,6 +19,7 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 | Binary identity and load address | `config/targets/<target>/target.toml` |
 | Reviewed layout                  | `config/targets/<target>/splat.yaml`                |
 | Target-local symbols             | `config/targets/<target>/symbols.txt`  |
+| Shared SDK symbol maps           | `config/sdk/psyq-{slus,logo}.txt` |
 | Reviewed Rizin annotations       | `config/targets/<target>/reviewed.rz`    |
 | Authored lifts                   | `src/exe/`, `src/emi/`         |
 
@@ -31,17 +32,31 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 - Edit `func_XXXXXXXX.c`, its target `internal.h`, the target-local map, and
   reviewed Splat boundaries as evidence improves. Keep declarations local
   unless a demonstrated cross-target contract requires sharing.
-- Keep PsyQ external: use official declarations and target-local map evidence;
-  never lift its bodies. The PsyQ/BIOS runtime is a shared SDK linked once in
-  the main exe; EMI overlays call those functions at the same fixed addresses,
-  so their `psyq.c` bindings legitimately reuse the exe's PsyQ name/address set.
-  This cross-target reuse is authorized by the pinned SDK version
-  (see `docs/usage.md` §3), not by coinciding game bytes. Treat the
-  extracted SDK symbols as a switchable weak-binding layer
-  (`config/sdk/psyq-*.txt`, `WEAK_SYMBOL_AT`) that a real SDK library can later
-  override one symbol at a time.
-- Never edit or track generated weak bindings under `out/bindings/`.
-- Write readable C89. Do not use handwritten assembly to force a match.
+- Keep PsyQ external: use official declarations and the shared SDK symbol maps;
+  never lift its bodies. The PsyQ/BIOS runtime is a shared SDK linked into the
+  main exe (`SLUS_004.22`); every EMI overlay calls those functions at the same
+  fixed addresses, so they share one `slus` SDK space
+  (`config/sdk/psyq-slus.txt`). `LOGO.EXE` is a separate executable with its own
+  SDK copy, so it owns a distinct `logo` space (`config/sdk/psyq-logo.txt`); a
+  target selects its space via the manifest `[psyq] space` key (default `slus`).
+  This cross-target reuse is authorized by the pinned SDK version (the
+  `toolchains/psyq/4.7` include path in `CMakeLists.txt` and
+  `docs/specs/runtime/psyq-constants.md`), not by coinciding game bytes. Treat
+  the SDK maps as a switchable weak-binding layer (`WEAK_SYMBOL_AT`) that a real
+  SDK library can later override one symbol at a time.
+- `src/<target>/symbols/psyq.c` is generated from the SDK map by
+  `bin/symbols psyq-bindings` and is tracked only because the build compiles it
+  (CMake globs `src/*.c`); regenerate it, never hand-edit it. The full-composed
+  bindings under `out/bindings/` (regenerated on every match) stay disposable
+  and untracked.
+- Write readable C89. Inline assembly is banned in lifted source except the
+  sanctioned helpers: `barrier()`/`CLOBBER_*` (`include/bof3/defines.h`) for
+  access ordering and delay-slot placement, and `WEAK_SYMBOL_AT` (target
+  `symbols.c` only) for address binding. Do not use `register X asm("$N")`
+  register pinning, `extern X asm("NAME")` symbol renames, or handwritten
+  assembly; bind symbols with a plain `extern` in `internal.h` plus a
+  `WEAK_SYMBOL_AT` entry in `symbols.c`. A register pin or `INCLUDE_ASM` needs
+  explicit user approval.
 
 ## Exact duplicates
 
@@ -75,10 +90,11 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 - Run `just check` before handoff when practical; state skipped checks.
 - Do not stage, commit, push, or mutate external systems without approval.
 
-Use `$bof3-re` for lifting and promotion, `$psx-rizin` for explicitly requested
-generic analyzer work. Use [matching](docs/matching.md) and
-[tool usage](docs/usage.md) for procedures. See
-[docs/memory-api.md](docs/memory-api.md) for the memory-macro reference. Store
+Load `$bof3-re` for ANY lifting, matching, duplicate-normalization, or promotion
+task — it enforces the [memory API](docs/memory-api.md) inline-assembly ban and
+the [matching](docs/matching.md) loop. Use `$psx-rizin` only for explicitly
+requested generic analyzer work. See [tool usage](docs/usage.md) for procedures
+and [docs/memory-api.md](docs/memory-api.md) for the memory-macro reference. Store
 reviewed findings in `docs/specs/` and
 reusable evidence-backed gotchas in `LESSONS.md`. Use the
 [repository map](CONTEXT.md#repository-map) to locate tracked and ignored state.

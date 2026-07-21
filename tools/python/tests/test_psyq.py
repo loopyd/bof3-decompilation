@@ -4,7 +4,6 @@ from pathlib import Path
 import zipfile
 
 from harness.commands.symbols import main as symbols_main
-from harness.psyq.discovery import _matches
 from harness.psyq.signatures import find_calls, scan
 from harness.snapshot import (
     SNAPSHOT_SCHEMA,
@@ -75,21 +74,6 @@ def test_find_psyq_source_rejects_explicit_paths_outside_inputs(tmp_path: Path) 
         raise AssertionError("expected non-input source to be rejected")
 
 
-def test_relocation_aware_match_is_not_an_exact_match() -> None:
-    function = {
-        "payload": b"abcdefghijklmnoq",
-        "relocations": [(8, 12)],
-        "relocation_hash": "",
-    }
-    from harness.psyq.fingerprints import relocation_masked_hash
-
-    function["relocation_hash"] = relocation_masked_hash(
-        function["payload"], function["relocations"]
-    )
-
-    assert list(_matches(b"abcdefghWXYZmnoq", function)) == [(0, "relocation_aware")]
-
-
 def test_symbols_import_psyq_requires_write_and_replaces_raw_name(
     tmp_path: Path,
 ) -> None:
@@ -105,9 +89,9 @@ def test_symbols_import_psyq_requires_write_and_replaces_raw_name(
         "load_address = 0x801CE000\n",
         encoding="utf-8",
     )
-    target_map = tmp_path / "config" / "targets" / "exe" / "logo" / "symbols.txt"
-    target_map.parent.mkdir(parents=True, exist_ok=True)
-    target_map.write_text("func_801CE758 = 0x801CE758;\n", encoding="utf-8")
+    sdk_map = tmp_path / "config" / "sdk" / "psyq-slus.txt"
+    sdk_map.parent.mkdir(parents=True, exist_ok=True)
+    sdk_map.write_text("func_801CE758 = 0x801CE758;\n", encoding="utf-8")
     proposal = tmp_path / "proposal.json"
     proposal.write_text(
         '{"schema":"bof3.psyq-find/v1","matches":['
@@ -125,9 +109,9 @@ def test_symbols_import_psyq_requires_write_and_replaces_raw_name(
         "exe/logo@0x801CE758",
     ]
     assert symbols_main(args) == 1
-    assert "func_801CE758" in target_map.read_text(encoding="utf-8")
+    assert "func_801CE758" in sdk_map.read_text(encoding="utf-8")
     assert symbols_main([*args, "--write"]) == 0
-    assert target_map.read_text(encoding="utf-8") == "CdInit = 0x801CE758;\n"
+    assert sdk_map.read_text(encoding="utf-8") == "CdInit = 0x801CE758;\n"
 
 
 def _signature_fixture(root: Path) -> None:

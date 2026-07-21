@@ -77,7 +77,7 @@ Splat `c` boundary, `bin/asm-diff`, and `bin/byte-match` result.
 - A runtime engine service must have one implementation in `SLUS_004.22` and
   EMI callsite evidence to that address. Keep its C under
   `src/exe/slus_004_22/`; promote only its stable contract to
-  `include/bof3/core/`.
+  `include/bof3/core.h`.
 - `src/shared/` owns embedded implementation templates, never standalone
   runtime objects. Do not add generic `src/engine/` ownership until a real link
   target exists for it.

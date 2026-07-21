@@ -37,7 +37,7 @@ evidence, not automatic semantic renames.
 
 Psy-Q `CdGetSector` counts 32-bit words. The SDK names its word unit
 `SECTOR_SIZE = 512`; BOF3's `EMI_SECTOR_SIZE = 0x800` in
-`include/bof3/core/emi.h` is the corresponding byte size. The remaining
+`include/bof3/core.h` is the corresponding byte size. The remaining
 `0x200` call arguments and `>> 11` address arithmetic are retained until each
 caller has an owned, match-validated name; do not silently treat them as the
 same unit.

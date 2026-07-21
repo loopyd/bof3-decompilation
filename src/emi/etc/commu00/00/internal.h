@@ -53,7 +53,6 @@ extern volatile u8  COMMU00_TYPE11_TOTAL;
 extern u16          D_80146904[1];
 extern volatile u8  D_801F2928[1];
 
-u16  game_random_u16(void);
 u16  commu00_pack_slot_anchor(s32 x, s32 y);
 void commu00_apply_slot_palette(u16 palette_id);
 void commu00_prime_slot_resource(u8 resource_id);

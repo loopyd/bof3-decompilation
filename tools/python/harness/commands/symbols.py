@@ -14,6 +14,7 @@ from ..canonical import (
     load_map,
     load_target_symbols,
     map_path,
+    sdk_map_path,
     shared_map_path,
     weak_bindings_c,
     write_map,
@@ -79,7 +80,12 @@ def run_check(args: argparse.Namespace) -> int:
             errors.append(str(exc))
             continue
         addresses = {symbol.address for symbol in symbols}
-        by_address = {symbol.address: symbol for symbol in symbols}
+        # Bindings may reference shared engine globals and PSX SDK symbols, not
+        # just the target-local map; validate them against the composed set.
+        by_address = {
+            symbol.address: symbol
+            for symbol in load_target_symbols(root, target)
+        }
         source_dir = root / manifest.source_dir
         for source in source_dir.glob("func_*.c"):
             encoded = source.stem.removeprefix("func_")
@@ -177,18 +183,25 @@ def _import_rows(args: argparse.Namespace) -> list[dict[str, object]]:
 
 
 def run_import_psyq(args: argparse.Namespace) -> int:
+    """Apply reviewed exact PsyQ provenance to the shared SDK map.
+
+    PsyQ symbols are owned by the SDK space (slus/logo), not by one target, so
+    candidates are grouped by the proposing target's space and written to
+    config/sdk/psyq-<space>.txt where every target in that space picks them up.
+    """
     root = _root(args)
     manifests = load_target_manifests(root)
     selected = _import_rows(args)
-    by_target: dict[str, list[dict[str, object]]] = {}
+    by_space: dict[str, list[dict[str, object]]] = {}
     for row in selected:
         target = normalize_target_id(str(row["target"])).value
         if target not in manifests:
             raise ValueError(f"proposal names an unknown target: {target}")
-        by_target.setdefault(target, []).append(row)
+        by_space.setdefault(manifests[target].psyq_space, []).append(row)
     changed = False
-    for target, rows in sorted(by_target.items()):
-        existing = load_map(map_path(root, target))
+    for space, rows in sorted(by_space.items()):
+        path = sdk_map_path(root, space)
+        existing = load_map(path)
         by_address = {symbol.address: symbol for symbol in existing}
         by_name = {symbol.canonical_name: symbol for symbol in existing}
         replacement: dict[int, Symbol] = {}
@@ -201,7 +214,7 @@ def run_import_psyq(args: argparse.Namespace) -> int:
             same_name = by_name.get(candidate.canonical_name)
             if same_name is not None and same_name.address != address:
                 raise ValueError(
-                    f"{target}: PsyQ name already belongs to "
+                    f"{space}: PsyQ name already belongs to "
                     f"0x{same_name.address:08X}: {candidate.canonical_name}"
                 )
             if (
@@ -211,14 +224,14 @@ def run_import_psyq(args: argparse.Namespace) -> int:
                 continue
             if current is not None and not current.is_raw:
                 raise ValueError(
-                    f"{target}: address 0x{address:08X} already has semantic name "
+                    f"{space}: address 0x{address:08X} already has semantic name "
                     f"{current.canonical_name}"
                 )
             replacement[address] = candidate
             by_address[address] = candidate
             by_name[candidate.canonical_name] = candidate
         if not replacement:
-            print(f"unchanged {map_path(root, target).relative_to(root)}")
+            print(f"unchanged {path.relative_to(root)}")
             continue
         changed = True
         updated = [replacement.get(symbol.address, symbol) for symbol in existing]
@@ -226,13 +239,68 @@ def run_import_psyq(args: argparse.Namespace) -> int:
             if not any(old.address == address for old in existing):
                 updated.append(symbol)
         format_map(updated)
-        path = map_path(root, target)
         if args.write:
             write_map(path, updated)
             print(f"wrote {path.relative_to(root)}")
         else:
             print(f"would write {path.relative_to(root)}")
     return 1 if changed and not args.write else 0
+
+
+def run_psyq_bindings(args: argparse.Namespace) -> int:
+    """Generate src/<target>/symbols/psyq.c weak bindings from the SDK map.
+
+    The build compiles these (CMake globs src/*.c); they provide link-time
+    addresses for the PSX SDK functions each target calls. Only psyq.c is
+    written, so authored semantic binding files are never touched.
+    """
+    root = _root(args)
+    manifests = load_target_manifests(root)
+    for target in _targets(root, args.target):
+        space = manifests[target].psyq_space
+        content = weak_bindings_c(load_map(sdk_map_path(root, space)))
+        output = root / manifests[target].source_dir / "symbols" / "psyq.c"
+        if args.write:
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_text(content, encoding="utf-8")
+            print(output.relative_to(root))
+        else:
+            print(content, end="")
+    return 0
+
+
+def run_psyq_report(args: argparse.Namespace) -> int:
+    """Report which SDK symbols each target's game code actually references.
+
+    Regenerated on demand; this preserves the per-target "what it calls"
+    evidence that generating the full SDK binding set otherwise discards.
+    Scans lifted func_*.c and internal.h, not the generated bindings.
+    """
+    root = _root(args)
+    manifests = load_target_manifests(root)
+    for target in _targets(root, args.target):
+        space = manifests[target].psyq_space
+        sdk = load_map(sdk_map_path(root, space))
+        source_dir = root / manifests[target].source_dir
+        haystacks = sorted(source_dir.glob("func_*.c"))
+        internal = source_dir / "internal.h"
+        if internal.is_file():
+            haystacks.append(internal)
+        text = "".join(path.read_text(encoding="utf-8") for path in haystacks)
+        referenced = sorted(
+            (
+                symbol
+                for symbol in sdk
+                if re.search(rf"\b{re.escape(symbol.canonical_name)}\b", text)
+            ),
+            key=lambda symbol: symbol.address,
+        )
+        print(
+            f"{target} ({space}): {len(referenced)}/{len(sdk)} SDK symbols referenced"
+        )
+        for symbol in referenced:
+            print(f"  {symbol.canonical_name} = 0x{symbol.address:08X}")
+    return 0
 
 
 def run_dedupe(args: argparse.Namespace) -> int:
@@ -296,6 +364,19 @@ def build_parser() -> argparse.ArgumentParser:
     bindings.add_argument("target", nargs="?")
     bindings.add_argument("--write", action="store_true")
     bindings.set_defaults(handler=run_bindings)
+    psyq_bindings = sub.add_parser(
+        "psyq-bindings",
+        help="generate src/<target>/symbols/psyq.c from the SDK map",
+    )
+    psyq_bindings.add_argument("target", nargs="?")
+    psyq_bindings.add_argument("--write", action="store_true")
+    psyq_bindings.set_defaults(handler=run_psyq_bindings)
+    psyq_report = sub.add_parser(
+        "psyq-report",
+        help="report which SDK symbols each target's game code references",
+    )
+    psyq_report.add_argument("target", nargs="?")
+    psyq_report.set_defaults(handler=run_psyq_report)
     import_psyq = sub.add_parser(
         "import-psyq", help="apply reviewed exact PsyQ provenance to target maps"
     )

@@ -8,7 +8,6 @@ splat = "config/targets/exe/slus_004_22/splat.yaml"
 load_address = 0x80096800
 
 [psyq]
-headers = "headers/psyq-4.7"
 [psyq.libraries.LIBGPU]
 members = ["psyq/4.0/libgpu/ext.obj"]
 confidence = "high"

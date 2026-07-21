@@ -23,12 +23,15 @@ addresses as separate targets until relocatability is proven.
 | Binary identity and load address | `config/targets/<target>/target.toml` |
 | Segment boundaries | `config/targets/<target>/splat.yaml` |
 | Target-local symbols | `config/targets/<target>/symbols.txt` |
+| Shared SDK symbol maps | `config/sdk/psyq-{slus,logo}.txt` |
 | Reviewed Rizin annotations | `config/targets/<target>/reviewed.rz` |
 | C89 source and local declarations | `src/exe/`, `src/emi/` |
 | Reviewed findings | `docs/specs/`, `LESSONS.md` |
 
 Generated evidence and working candidates live under `out/` and are
 disposable. They may be edited while iterating but are never durable facts.
+The one exception is `src/<target>/symbols/psyq.c`: generated from the SDK map
+but tracked because the build compiles it as a source input.
 Original bytes, PS-X headers, and reviewed configuration outrank analyzer
 output.
 
@@ -54,6 +57,7 @@ See [matching](docs/matching.md) and [tool usage](docs/usage.md) for procedures.
 | Path | Contents | Tracked? |
 | --- | --- | --- |
 | `config/targets/` | Target identity, layout, symbols, analysis | Yes |
+| `config/sdk/` | Shared PsyQ SDK symbol maps (slus/logo) | Yes |
 | `src/`, `include/` | Authored C89 and declarations | Yes |
 | `docs/specs/`, `LESSONS.md` | Reviewed findings and gotchas | Yes |
 | `bin/`, `tools/` | Command entrypoints and implementations | Yes |

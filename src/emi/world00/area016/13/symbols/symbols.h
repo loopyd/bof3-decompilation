@@ -1,6 +1,4 @@
 #ifndef EMI_WORLD00_AREA016_13_SYMBOLS_H
 #define EMI_WORLD00_AREA016_13_SYMBOLS_H
 
-#include "psyq.h"
-
 #endif

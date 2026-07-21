@@ -28,7 +28,7 @@ class TargetManifest:
     binary: str
     splat: str
     load_address: int
-    psyq_headers: str | None = None
+    psyq_space: str = "slus"
     libraries: dict[str, tuple[str, ...]] = field(default_factory=dict)
     library_confidence: dict[str, str] = field(default_factory=dict)
     library_evidence: dict[str, tuple[str, ...]] = field(default_factory=dict)
@@ -39,6 +39,8 @@ class TargetManifest:
     def __post_init__(self) -> None:
         if self.kind not in {"executable", "emi"}:
             raise ValueError(f"unsupported target kind: {self.kind}")
+        if self.psyq_space not in {"slus", "logo"}:
+            raise ValueError(f"unsupported psyq space: {self.psyq_space}")
 
 
 def _load_toml(path: Path) -> dict[str, Any]:
@@ -106,9 +108,7 @@ def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
             binary=str(raw["binary"]),
             splat=str(raw["splat"]),
             load_address=int(raw.get("load_address", 0)),
-            psyq_headers=(
-                None if psyq.get("headers") is None else str(psyq["headers"])
-            ),
+            psyq_space=str(psyq.get("space", "slus")),
             libraries=libraries,
             library_confidence=library_confidence,
             library_evidence=library_evidence,

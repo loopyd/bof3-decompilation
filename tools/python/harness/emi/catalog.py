@@ -324,7 +324,10 @@ def bootstrap_plan(
         f"  basename: {basename}\n  base_path: {_base_path(Path(splat))}\n"
         f"  target_path: {binary}\n  asm_path: out/splat/emi/{slug}/asm\n"
         f"  src_path: src/emi/{slug}\n  ld_script_path: out/splat/emi/{slug}/linker.ld\n"
-        f"  symbol_addrs_path:\n  - {symbols}\n"
+        "  symbol_addrs_path:\n"
+        "  - config/targets/shared/symbols.txt\n"
+        "  - config/sdk/psyq-slus.txt\n"
+        f"  - {symbols}\n"
         f"segments:\n- [0x0, bin]\n- [0x{entry['size']:X}]\n"
     )
     return {

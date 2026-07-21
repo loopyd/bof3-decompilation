@@ -1,7 +1,6 @@
 # Third-party tools
 
-Pinned tool repositories live here. Git records their exact revisions;
-[`tools.lock.toml`](../tools.lock.toml) records their workflow profile and role.
+Pinned tool repositories live here. Git records their exact revisions.
 
 Treat these as third-party code, not as the home for repo-owned tooling.
 Do not patch a fork without documenting the BOF3-specific reason and comparing

@@ -8,7 +8,7 @@ splat = "config/targets/exe/logo/splat.yaml"
 load_address = 0x801ce000
 
 [psyq]
-headers = "headers/psyq-4.7"
+space = "logo"
 [psyq.libraries.LIBCD]
 members = ["psyq/4.7/libcd/event.o"]
 confidence = "high"

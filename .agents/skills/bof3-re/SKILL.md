@@ -56,9 +56,11 @@ When the semantic C is correct but instruction bytes differ, consult
 3. Change loop shape (`while`, `do`, `for`, `goto`).
 4. Use early returns instead of result variables.
 5. Hoist pointer dereferences; introduce or remove temporaries.
-6. Check compiler profile (`bin/flag-search`) and signedness.
+6. Check compiler profile (`bin/flag-search`) and signedness; if a non-canonical
+   profile byte-matches clean C, record it in `config/compiler/object-flags.cmake`.
 7. Run the permuter as a bounded search, not a structural fix.
-8. Only then consider register pinning or `INCLUDE_ASM`.
+8. Register pinning (`register X asm("$N")`) and `INCLUDE_ASM` are banned unless
+   the user explicitly approves them; report a documented residual instead.
 
 Document every artificial matching aid with a `MATCHING_AID` comment (see
 `docs/matching-playbook.md` §4). Do not add generic macros to headers for
@@ -80,9 +82,14 @@ macro reference is in `docs/memory-api.md`.
 Rules:
 
 - No `vu8`/`vu16`/`vu32` aliases — write `volatile u8` etc. directly.
-- No raw inline `__asm__` — use `barrier()` (access ordering) or
-  `CLOBBER_A0()/CLOBBER_V0()/CLOBBER_A1()` (delay-slot register placement) from
-  `include/bof3/defines.h`. See `LESSONS.md` for worked examples.
+- No inline `__asm__` of any kind in lifted source — that includes
+  `register X asm("$N")` register pins and `extern X asm("NAME")` symbol renames,
+  both of which need explicit user approval. The only sanctioned helpers are
+  `barrier()` (access ordering) and `CLOBBER_A0()/CLOBBER_V0()/CLOBBER_A1()`
+  (delay-slot register placement) from `include/bof3/defines.h`. Bind
+  fixed-address symbols with a plain `extern` in `internal.h` plus
+  `WEAK_SYMBOL_AT(name, addr)` in the target `symbols.c` (see
+  `docs/memory-api.md`). See `LESSONS.md` for worked examples.
 - Pointer cells: `PSX_REF(type *, addr)` (non-volatile) vs
   `PSX_REF(type * volatile, addr)` (volatile cell, reloaded each evaluation).
   `SPAD_PTR_SLOT` is intentionally non-volatile — the constant-address codegen
@@ -105,7 +112,7 @@ Rules:
 A shared template compiles into each owning EMI code blob. It is not a runtime
 engine service. A real service has one implementation under
 `src/exe/slus_004_22/` plus EMI callsite evidence; promote only its proven
-contract to `include/bof3/core/`. Never cross-link EMIs or invent `src/engine/`
+contract to `include/bof3/core.h`. Never cross-link EMIs or invent `src/engine/`
 ownership.
 
 ## Verify and hand off

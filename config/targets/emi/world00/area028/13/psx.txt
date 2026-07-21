@@ -1,3 +1,0 @@
-GetTPage = 0x8017A620;
-SetDrawMode = 0x8017C2D8;
-rand = 0x8017E3D4;

@@ -1,7 +1,0 @@
-GetTPage = 0x8017A620;
-GetClut = 0x8017A6F0;
-SetSprt = 0x8017AA1C;
-SetDrawMode = 0x8017C2D8;
-strcat = 0x8017E364;
-rand = 0x8017E3D4;
-sprintf = 0x8017E3F4;

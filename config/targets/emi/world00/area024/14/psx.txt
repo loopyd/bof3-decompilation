@@ -1,5 +1,0 @@
-GetTPage = 0x8017A620;
-GetClut = 0x8017A6F0;
-SetSemiTrans = 0x8017A904;
-SetPolyFT4 = 0x8017A9B8;
-SetDrawMode = 0x8017C2D8;

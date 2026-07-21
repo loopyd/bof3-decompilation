@@ -11,7 +11,7 @@ options:
   ld_script_path: out/splat/emi/world00/area008/13/linker.ld
   symbol_addrs_path:
   - config/targets/shared/symbols.txt
-  - config/targets/emi/world00/area008/13/psx.txt
+  - config/sdk/psyq-slus.txt
   - config/targets/emi/world00/area008/13/symbols.txt
 segments:
 - - 0

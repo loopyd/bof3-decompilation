@@ -104,13 +104,24 @@ def shared_map_path(root: Path) -> Path:
     return root / "config" / "targets" / "shared" / "symbols.txt"
 
 
+def sdk_map_path(root: Path, space: str) -> Path:
+    return root / "config" / "sdk" / f"psyq-{space}.txt"
+
+
 def load_target_symbols(root: Path, target: str) -> list[Symbol]:
-    """Compose shared base + PSX SDK + target-local symbols. Local wins on conflict."""
+    """Compose shared base + PSX SDK (by target space) + target-local symbols.
+
+    Local wins on conflict.
+    """
+    from .domain import load_target_manifests  # local import avoids a module cycle
+
+    manifests = load_target_manifests(root)
+    space = manifests[target].psyq_space if target in manifests else "slus"
     shared = load_map(shared_map_path(root))
-    psx = load_map(map_path(root, target).parent / "psx.txt")
+    sdk = load_map(sdk_map_path(root, space))
     local = load_map(map_path(root, target))
     by_addr: dict[int, Symbol] = {s.address: s for s in shared}
-    for s in psx:
+    for s in sdk:
         by_addr[s.address] = s
     for s in local:
         by_addr[s.address] = s

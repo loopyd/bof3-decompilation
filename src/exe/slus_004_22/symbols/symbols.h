@@ -5,7 +5,6 @@
  * C units; PsyQ declarations come from the official SDK headers. */
 #include "files.h"
 #include "functions.h"
-#include "psyq.h"
 #include "variables.h"
 
 #endif

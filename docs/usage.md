@@ -66,9 +66,9 @@ Optional PsyQ evidence:
 
 ```sh
 bin/psyq-import --example
-bin/psyq-find TARGET -o out/psyq/find.json
 bin/harness psyq scan --all
 bin/harness psyq calls --all
+bin/harness psyq proposal --all
 ```
 
 Signatures identify candidate library objects; official headers own
@@ -139,7 +139,7 @@ source but never edits source, maps, or layouts.
 An implementation embedded in several EMIs is compile-time source reuse, not
 an engine service. A real engine service exists once in `SLUS_004.22`; keep its
 implementation in `src/exe/slus_004_22/` and put only its proven public contract
-under `include/bof3/core/`. `src/shared/` templates compile into each owning
+in `include/bof3/core.h`. `src/shared/` templates compile into each owning
 image; do not create an orphan `src/engine/` or link one EMI against another.
 
 ### 7. Audit and hand off
@@ -177,8 +177,8 @@ tests, lint, maps, and a full compile/link/compare audit of retained lifts.
 | `bin/permute` | bounded source-shape search | `out/permuter/` |
 | `bin/promote` | validate canonical candidate | generated comparison only |
 | `bin/decomp-status` | audit exact/partial/invalid lifts | `out/matching/`; full JSON with `-o` |
-| `bin/psyq-import`, `bin/psyq-find` | stage/query PsyQ evidence | explicit destination |
-| `bin/harness psyq` | join object signatures and Rizin call evidence | `out/psyq/` |
+| `bin/psyq-import` | stage PsyQ build headers | explicit destination |
+| `bin/harness psyq` | scan/calls/proposal PsyQ object signatures | `out/psyq/` |
 
 `bin/cc`, `as`, `ld`, `ar`, `nm`, `objcopy`, `objdump`, `ranlib`, `strip`, and
 `maspsx` are build adapters. Workflow users should call `bin/build` and the

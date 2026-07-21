@@ -9,7 +9,7 @@ if [ ! -x "$PYTHON" ]; then
     exit 2
 fi
 if [ "${1-}" = "--help" ] || [ "${1-}" = "-h" ]; then
-    printf '%s\n' 'usage: bin/harness psyq {scan|calls} --all'
+    printf '%s\n' 'usage: bin/harness psyq {scan|calls|proposal} --all'
     exit 0
 fi
 if [ "${1-}" = "--example" ]; then
@@ -18,7 +18,7 @@ if [ "${1-}" = "--example" ]; then
     exit 0
 fi
 if [ "${1-}" != "psyq" ]; then
-    printf '%s\n' 'usage: bin/harness psyq {scan|calls} --all' >&2
+    printf '%s\n' 'usage: bin/harness psyq {scan|calls|proposal} --all' >&2
     exit 2
 fi
 shift

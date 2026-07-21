@@ -1,4 +1,0 @@
-SetSemiTrans = 0x8017A904;
-SetSprt = 0x8017AA1C;
-GetGraphType = 0x8017B2B4;
-SetDrawMode = 0x8017C2D8;

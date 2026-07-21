@@ -8,7 +8,6 @@ splat = "config/targets/emi/world00/area016/13/splat.yaml"
 load_address = 0x801f2c00
 
 [psyq]
-headers = "headers/psyq-4.7"
 [psyq.libraries.LIBGTE]
 members = [
     "psyq/4.7/libgte/cmb_00.o",
