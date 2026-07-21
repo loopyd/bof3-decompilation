@@ -45,52 +45,52 @@ extern volatile u16 BATTLE_SELECTION_CURSOR_X;
 extern volatile u16 BATTLE_SELECTION_CURSOR_Y;
 extern volatile u8  BATTLE_SELECTION_SOURCE_SLOT;
 extern volatile u8  BATTLE_PANEL_ICON_RING_HEAD;
-#define BATTLE_SELECTION_SLOT_SUBSTATE_TABLE \
+#define BATTLE_SELECTION_SLOT_SUBSTATE_TABLE                                   \
   PSX_PTR(const volatile BattleSelectionHandler, 0x800b43c0u)
-#define BATTLE_SELECTION_CONFIRM_SUBSTATE_TABLE \
+#define BATTLE_SELECTION_CONFIRM_SUBSTATE_TABLE                                \
   PSX_PTR(const volatile BattleSelectionHandler, 0x800b43ecu)
-#define BATTLE_SELECTION_RESULT_SUBSTATE_TABLE \
+#define BATTLE_SELECTION_RESULT_SUBSTATE_TABLE                                 \
   PSX_PTR(const volatile BattleSelectionHandler, 0x800b43f4u)
-#define BATTLE_SELECTION_FINALIZE_SUBSTATE_TABLE \
+#define BATTLE_SELECTION_FINALIZE_SUBSTATE_TABLE                               \
   PSX_PTR(const volatile BattleSelectionHandler, 0x800b4408u)
-#define BATTLE_SELECTION_SECONDARY_SUBSTATE_TABLE \
+#define BATTLE_SELECTION_SECONDARY_SUBSTATE_TABLE                              \
   PSX_PTR(const volatile BattleSelectionHandler, 0x800b4450u)
-#define BATTLE_SELECTION_RING_FLAG(index) \
+#define BATTLE_SELECTION_RING_FLAG(index)                                      \
   PSX_REF(volatile u8, 0x801eb5b1u + ((index) * 8u))
-#define BATTLE_SELECTION_RING_HANDLE(index) \
+#define BATTLE_SELECTION_RING_HANDLE(index)                                    \
   PSX_REF(volatile u32, 0x801eb5b4u + ((index) * 8u))
-#define BATTLE_SELECTION_SAVED_GROUP(index) \
+#define BATTLE_SELECTION_SAVED_GROUP(index)                                    \
   PSX_REF(volatile u8, 0x801454f4u + ((index) * 3u))
-#define BATTLE_SELECTION_SAVED_SCROLL(index) \
+#define BATTLE_SELECTION_SAVED_SCROLL(index)                                   \
   PSX_REF(volatile u8, 0x801454f5u + ((index) * 3u))
-#define BATTLE_SELECTION_SAVED_CURSOR(index) \
+#define BATTLE_SELECTION_SAVED_CURSOR(index)                                   \
   PSX_REF(volatile u8, 0x801454f6u + ((index) * 3u))
-#define BATTLE_SELECTION_KIND_FLAGS(kind) \
+#define BATTLE_SELECTION_KIND_FLAGS(kind)                                      \
   PSX_REF(volatile u8, 0x801ca718u + ((kind) * 0x14u))
-#define BATTLE_SELECTION_KIND_MASK(kind) \
+#define BATTLE_SELECTION_KIND_MASK(kind)                                       \
   PSX_REF(volatile u16, 0x801ca71cu + ((kind) * 0x14u))
-#define BATTLE_SELECTION_KIND_NAME_ID(kind) \
+#define BATTLE_SELECTION_KIND_NAME_ID(kind)                                    \
   PSX_REF(volatile u16, 0x801ca71eu + ((kind) * 0x14u))
-extern volatile u8    BATTLE_SECONDARY_PANEL_ACTIVE;
-extern volatile u8    BATTLE_SECONDARY_PANEL_ROWS;
-extern volatile u8    BATTLE_SECONDARY_PANEL_KIND;
-extern volatile u8    BATTLE_SECONDARY_STATE_KIND;
-extern volatile u8    BATTLE_SECONDARY_SOURCE_GROUP;
-extern volatile u8    BATTLE_SECONDARY_PAGE_BASE;
-extern volatile u8    BATTLE_SECONDARY_CURSOR_INDEX;
-extern volatile u8    BATTLE_SECONDARY_CURSOR_LIMIT;
-extern volatile u16   BATTLE_SECONDARY_FLAG_MASK;
-extern volatile u8    BATTLE_SELECTION_CURSOR_ROWS;
-extern volatile u8    BATTLE_SELECTION_CURSOR_MODE;
-extern PanelTask* D_80148648;
+extern volatile u8  BATTLE_SECONDARY_PANEL_ACTIVE;
+extern volatile u8  BATTLE_SECONDARY_PANEL_ROWS;
+extern volatile u8  BATTLE_SECONDARY_PANEL_KIND;
+extern volatile u8  BATTLE_SECONDARY_STATE_KIND;
+extern volatile u8  BATTLE_SECONDARY_SOURCE_GROUP;
+extern volatile u8  BATTLE_SECONDARY_PAGE_BASE;
+extern volatile u8  BATTLE_SECONDARY_CURSOR_INDEX;
+extern volatile u8  BATTLE_SECONDARY_CURSOR_LIMIT;
+extern volatile u16 BATTLE_SECONDARY_FLAG_MASK;
+extern volatile u8  BATTLE_SELECTION_CURSOR_ROWS;
+extern volatile u8  BATTLE_SELECTION_CURSOR_MODE;
+extern PanelTask*   D_80148648;
 #define D_80148648 g_PanelTaskRoot
-extern volatile u8    BATTLE_SECONDARY_SAVED_GROUP;
-extern volatile u8    BATTLE_SECONDARY_SAVED_PAGE_BASE;
-extern volatile u8    BATTLE_SECONDARY_SAVED_CURSOR;
-extern volatile u16   BATTLE_SECONDARY_MOVE_SFX;
-#define BATTLE_SECONDARY_GROUP_TABLE(index) \
+extern volatile u8  BATTLE_SECONDARY_SAVED_GROUP;
+extern volatile u8  BATTLE_SECONDARY_SAVED_PAGE_BASE;
+extern volatile u8  BATTLE_SECONDARY_SAVED_CURSOR;
+extern volatile u16 BATTLE_SECONDARY_MOVE_SFX;
+#define BATTLE_SECONDARY_GROUP_TABLE(index)                                    \
   PSX_REF(volatile u8*, 0x801c893cu + ((index) * 4u))
-#define BATTLE_SELECTION_PANEL_FLAGS(index) \
+#define BATTLE_SELECTION_PANEL_FLAGS(index)                                    \
   PSX_REF(volatile u32, 0x80145fb4u + ((index) * 0x140u))
 extern volatile u8  BATTLE_SECONDARY_PROMPT_ACTIVE;
 extern volatile u8  BATTLE_SECONDARY_PROMPT_ROWS;
@@ -103,17 +103,17 @@ extern volatile u8  BATTLE_PANEL_PROMPT_STATE;
 extern volatile u8  BATTLE_PANEL_RULE_PASS_KIND;
 extern volatile u8  BATTLE_PANEL_RULE_PASS_SLOT;
 extern volatile u16 BATTLE_PANEL_RULE_PASS_SELECTION;
-#define BATTLE_LOCAL_PANEL_RULE(class_id, slot_index)             \
-  PSX_PTR(volatile u8, (0x800e407cu + ((u32)(class_id) * 0x88u) + \
+#define BATTLE_LOCAL_PANEL_RULE(class_id, slot_index)                          \
+  PSX_PTR(volatile u8, (0x800e407cu + ((u32)(class_id) * 0x88u) +              \
                         ((u32)(slot_index) * 0x10u)))
-#define BATTLE_PANEL_SLOT_KIND(slot_index) \
+#define BATTLE_PANEL_SLOT_KIND(slot_index)                                     \
   PSX_REF(volatile u8, 0x80145f12u + ((u32)(slot_index) * 0x140u))
-#define BATTLE_PANEL_SLOT_MASK(kind) \
+#define BATTLE_PANEL_SLOT_MASK(kind)                                           \
   PSX_REF(volatile u8, 0x801c90ebu + ((u32)(kind) * 0x18u))
 extern volatile u8 BATTLE_LOCAL_PANEL_ENTRY_COUNT;
-#define BATTLE_LOCAL_PANEL_OWNER_KIND(index) \
+#define BATTLE_LOCAL_PANEL_OWNER_KIND(index)                                   \
   PSX_REF(volatile u8, 0x801eb6acu + ((u32)(index) * 0x118u))
-#define BATTLE_LOCAL_PANEL_ENTRY(index) \
+#define BATTLE_LOCAL_PANEL_ENTRY(index)                                        \
   PSX_REF(volatile BattleLocalPanelEntry, 0x801ed9b0u + ((u32)(index) * 4u))
 
 void battle_stage_attack_name_message(s32 slot_index, s32 queue_kind);
@@ -199,7 +199,7 @@ void func_8014E5A0(u32 ot_index, u32 primitive_size);
  * here; function bodies reference these named accessors. */
 #define BATTLE_GAME_RAM_BASE PSX_PTR(volatile u8, 0x80140000u)
 #define BATTLE_LOCK_RAM_BASE PSX_PTR(volatile u8, 0x80150000u)
-#define BATTLE_SELECTION_TABLE_BASE \
+#define BATTLE_SELECTION_TABLE_BASE                                            \
   PSX_PTR(const volatile BattleSelectionHandler, 0x800b0000u)
 #define BATTLE_MODIFIER_TABLE      PSX_PTR(volatile s16, 0x800b493cu)
 #define BATTLE_TEMPLATE_BASE       PSX_PTR(volatile u8, 0x801ebef0u)

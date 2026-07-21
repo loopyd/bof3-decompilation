@@ -28,6 +28,7 @@ AlignConsecutiveMacros:
   Enabled: true
   AcrossEmptyLines: false
   AcrossComments: false
+AlignEscapedNewlines: Right
 IndentCaseLabels: true
 IndentPPDirectives: None
 ReflowComments: false

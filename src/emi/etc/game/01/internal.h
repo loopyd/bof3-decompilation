@@ -7,40 +7,40 @@
 
 typedef void (*GameFrontStateHandler)(void);
 
-extern volatile u16          GAME_FRONT_EFFECT_BUSY;
-extern volatile u16          GAME_FRONT_PAD_STATE;
-extern volatile u16          GAME_FRONT_STATE;
-extern volatile u16          GAME_FRONT_SUBSTATE;
-extern volatile u16          GAME_FRONT_TIMER;
-extern volatile u16          GAME_FRONT_BANNER_SCROLL;
-extern volatile u16          GAME_FRONT_BANNER_ALPHA;
-extern volatile u16          GAME_FRONT_WINDOW_ALPHA_PRIMARY;
-extern volatile u16          GAME_FRONT_WINDOW_ALPHA_SECONDARY;
+extern volatile u16 GAME_FRONT_EFFECT_BUSY;
+extern volatile u16 GAME_FRONT_PAD_STATE;
+extern volatile u16 GAME_FRONT_STATE;
+extern volatile u16 GAME_FRONT_SUBSTATE;
+extern volatile u16 GAME_FRONT_TIMER;
+extern volatile u16 GAME_FRONT_BANNER_SCROLL;
+extern volatile u16 GAME_FRONT_BANNER_ALPHA;
+extern volatile u16 GAME_FRONT_WINDOW_ALPHA_PRIMARY;
+extern volatile u16 GAME_FRONT_WINDOW_ALPHA_SECONDARY;
 /* Low-byte u8 views of the two u16 alpha globals at the same address. The
  * draw calls read a single symbol-relative `lui/lbu` of the low byte; reading
  * `(u8)` of the volatile u16 emits `lhu+andi` instead. These raw data aliases
  * resolve by their hex suffix (no map entry: the address-keyed map allows only
  * one name per address), and are bound in symbols.c for the full build. */
-extern volatile u8           D_80143C26;
-extern volatile u8           D_80143C28;
-extern volatile u8           GAME_FRONT_FADE_PHASE;
-extern volatile u8           GAME_FRONT_WINDOW_PHASE;
-extern volatile u8           GAME_FRONT_INPUT_GATE;
-extern u8                    GAME_FRONT_SELECTION;
-extern u8                    GAME_FRONT_PALETTE_STAGE_SERIAL;
-extern volatile u16          D_80143B40;
-extern volatile u16          D_80143F20;
-extern volatile u8           D_80144FC0;
-extern volatile u8           D_80144FC1;
-extern volatile u8           D_80144FC2;
-extern volatile u8           D_80144FC3;
-extern volatile u8           D_80145024;
+extern volatile u8  D_80143C26;
+extern volatile u8  D_80143C28;
+extern volatile u8  GAME_FRONT_FADE_PHASE;
+extern volatile u8  GAME_FRONT_WINDOW_PHASE;
+extern volatile u8  GAME_FRONT_INPUT_GATE;
+extern u8           GAME_FRONT_SELECTION;
+extern u8           GAME_FRONT_PALETTE_STAGE_SERIAL;
+extern volatile u16 D_80143B40;
+extern volatile u16 D_80143F20;
+extern volatile u8  D_80144FC0;
+extern volatile u8  D_80144FC1;
+extern volatile u8  D_80144FC2;
+extern volatile u8  D_80144FC3;
+extern volatile u8  D_80145024;
 #define D_80145024 g_StreamHint
-extern volatile u8           D_80146874;
-extern volatile u8           D_8014832E;
+extern volatile u8 D_80146874;
+extern volatile u8 D_8014832E;
 #define D_8014832E g_GlobalFlag832E
-extern volatile u16          D_80143B90;
-extern volatile u8           D_80143BB0;
+extern volatile u16 D_80143B90;
+extern volatile u8  D_80143BB0;
 #define D_80143BB0 g_GameState
 extern volatile u8           D_80143C30;
 extern volatile u32          GAME_FRONT_POPUP_WORD;

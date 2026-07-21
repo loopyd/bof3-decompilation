@@ -1,9 +1,4 @@
 #include "internal.h"
+#include "ui/panel_task.h"
 
-/* @source 0x801E3BF8
- * @behavior advances the local panel task X position by 32 pixels, clamps it
- * to 320, and clears the preceding state byte when the clamp is reached.
- */
-#define PANEL_TASK_FUNC func_801E3BF8
-#define PANEL_LIMIT         320
-#include "shared/ui/advance_panel_task_x.inc"
+PANEL_ADVANCE_X(func_801E3BF8, 320)

@@ -7,7 +7,7 @@
  */
 void func_801E4580(void) {
   PanelTask* task_root;
-  u16            next_val;
+  u16        next_val;
 
   task_root = D_80148648;
   next_val = (u16)(task_root->x - 0x20);

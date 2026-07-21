@@ -38,11 +38,11 @@ typedef struct EmiTocEntry {
 } EmiTocEntry;
 
 typedef struct EmiActiveEntry {
-  u32 active_lba;
-  u32 remaining_size;
-  u32 load_arg;
-  u32 first_word;
-  u16 type;
+  u32  active_lba;
+  u32  remaining_size;
+  u32  load_arg;
+  u32  first_word;
+  u16  type;
   bool header_mode;
 } EmiActiveEntry;
 
