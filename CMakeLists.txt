@@ -19,6 +19,16 @@ set(BOF3_CFLAGS -O2 -G0 -funsigned-char -msoft-float -gcoff)
 set(BOF3_CC_ASFLAGS -Wa,--aspsx-version=2.56 -Wa,-G0,-EL,-mips1)
 set(BOF3_ASFLAGS -G0 -EL -mips1)
 
+# Per-object compiler-flag overrides. BOF3_CFLAGS_BASE is the canonical set with
+# the -O level removed; an override re-adds the verified optimization/scheduling
+# flags for one source (see config/compiler/object-flags.cmake). Sources without
+# an override compile with the untouched canonical BOF3_CFLAGS.
+set(BOF3_CFLAGS_BASE ${BOF3_CFLAGS})
+list(FILTER BOF3_CFLAGS_BASE EXCLUDE REGEX "^-O")
+set(BOF3_OBJECT_FLAGS_FILE "${CMAKE_SOURCE_DIR}/config/compiler/object-flags.cmake")
+include("${BOF3_OBJECT_FLAGS_FILE}" OPTIONAL)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${BOF3_OBJECT_FLAGS_FILE}")
+
 file(GLOB_RECURSE BOF3_C_SOURCES CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/src/*.c")
 file(GLOB_RECURSE BOF3_ASM_SOURCES CONFIGURE_DEPENDS
      "${CMAKE_SOURCE_DIR}/src/*.s" "${CMAKE_SOURCE_DIR}/src/*.S")
@@ -39,10 +49,16 @@ foreach(source IN LISTS BOF3_C_SOURCES BOF3_ASM_SOURCES)
   get_filename_component(source_parent "${source}" DIRECTORY)
   file(GLOB source_headers CONFIGURE_DEPENDS "${source_parent}/*.h")
   if(extension STREQUAL ".c")
+    string(MAKE_C_IDENTIFIER "${relative}" object_flags_key)
+    if(DEFINED BOF3_OBJFLAGS_${object_flags_key})
+      set(object_cflags ${BOF3_CFLAGS_BASE} ${BOF3_OBJFLAGS_${object_flags_key}})
+    else()
+      set(object_cflags ${BOF3_CFLAGS})
+    endif()
     add_custom_command(
       OUTPUT "${object}"
       COMMAND "${CMAKE_COMMAND}" -E make_directory "${object_directory}"
-      COMMAND "${BOF3_CC}" ${BOF3_CPPFLAGS} ${BOF3_CFLAGS} ${BOF3_CC_ASFLAGS}
+      COMMAND "${BOF3_CC}" ${BOF3_CPPFLAGS} ${object_cflags} ${BOF3_CC_ASFLAGS}
               -c "${source}" -o "${object}"
       DEPENDS "${source}" ${source_headers} ${BOF3_SHARED_HEADERS}
               ${BOF3_SHARED_SOURCES}

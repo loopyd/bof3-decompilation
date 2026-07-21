@@ -50,6 +50,22 @@ Profile levers that affect matching:
 - `--expand-div` (division hardening)
 - COMMON-section behavior (`-fcommon`, `--use-comm-section`)
 
+When `flag-search` proves an original was compiled at a non-canonical profile,
+record it in `config/compiler/object-flags.cmake` so the object actually builds
+with that profile instead of bridging to canonical `-O2` with C aids:
+
+```cmake
+set(BOF3_OBJFLAGS_emi_etc_game_01_func_801D0D5C_c -O1)
+```
+
+The key is the source path relative to `src/` with non-alphanumerics replaced by
+underscores; the value is a `flag-search` candidate that replaces the canonical
+`-O` level (the `-G0 -funsigned-char ...` base is kept). CMake and the
+`compile_commands` generator both read this file, so the build and `flag-search`
+stay in sync. Sources without an entry keep the canonical flags. Only add an
+entry after `flag-search` reports an exact byte-match, then re-confirm with
+`bin/byte-match`.
+
 ---
 
 ## 2. Pointer vs array declaration
