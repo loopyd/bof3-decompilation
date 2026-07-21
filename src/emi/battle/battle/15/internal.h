@@ -158,12 +158,19 @@ void func_800B22AC(void);
 void func_800B23B8(void);
 void func_800B23F8(void);
 void func_800B250C(void);
+void func_800A4238(s32 arg0);
+s16  func_801DC044(u8 arg0, u8 arg1, u32 arg2);
+void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
 void func_801DE94C(s32 arg0, s32 arg1);
 void func_80158E20(void);
 u32  func_801502D0(u32 arg0);
 void func_801DE8C0(u8 arg0, u8 arg1, u32 arg2);
 u8   func_801DB5CC(s32 arg0);
 void func_801E5988(void);
+
+/* Scratchpad work-area pointer (volatile cell at 0x1F800044).
+ * Reloaded per access to match original codegen. */
+extern u8* volatile g_battle_work;
 
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
  * equal the symbol-name addresses. */
@@ -179,6 +186,8 @@ extern u8            D_80148330[];
 extern volatile u32  D_801462E5;
 extern volatile u32  D_801462E6;
 extern volatile u32  D_801462E8;
+extern volatile u8   D_80146374;
+extern volatile u8   D_80146394;
 extern volatile u32  D_801463A0;
 extern volatile u32  D_801483C3;
 extern volatile u32  D_80148597;

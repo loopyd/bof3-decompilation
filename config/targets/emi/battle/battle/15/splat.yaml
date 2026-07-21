@@ -311,7 +311,7 @@ segments:
     - asm
     - func_8009DBA4
   - - 29804
-    - asm
+    - c
     - func_8009DC6C
   - - 29896
     - asm
@@ -617,7 +617,7 @@ segments:
     - asm
     - func_800A0D64
   - - 42600
-    - asm
+    - c
     - func_800A0E68
   - - 42692
     - asm
@@ -1121,7 +1121,7 @@ segments:
     - asm
     - func_800ACF80
   - - 92148
-    - asm
+    - c
     - func_800ACFF4
   - - 92228
     - asm
@@ -1430,7 +1430,7 @@ segments:
     - asm
     - func_800B20CC
   - - 112852
-    - asm
+    - c
     - func_800B20D4
   - - 112900
     - asm
@@ -1478,7 +1478,7 @@ segments:
     - c
     - func_800B250C
   - - 113996
-    - asm
+    - c
     - func_800B254C
   - - 114060
     - asm
