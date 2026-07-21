@@ -60,9 +60,13 @@ addresses, hardware registers, and scratchpad. Legacy aliases live in
 | --- | --- |
 | `include/base/` | Common types and barrier helpers |
 | `include/memory/` | PSX_PTR/PSX_REF address macros |
-| `include/gpu/` | GPU and VRAM structures |
-| `include/frontend/` | Title/menu state |
+| `include/gpu/` | GPU primitives, palette, VRAM upload |
+| `include/frontend/` | Title/menu state and selection FX |
 | `include/callback/` | VSync and engine callbacks |
-| `include/loader/` | EMI loading interface |
-| `include/panel/` | Panel/dialogue system |
-| `include/battle/` | Battle state and structures |
+| `include/loader/` | EMI archive, disc LBA, slot table |
+| `include/panel/` | PanelTask struct and root pointer |
+| `include/battle/` | Battle RAM layout, AbilityObject |
+| `include/data/` | Game record structs, encoding constants |
+| `include/media/` | STR/XA sector layout |
+| `include/ui/` | Panel-task animation macros (shared templates) |
+| `include/game/` | Counter-step and workarea macros (shared templates) |
