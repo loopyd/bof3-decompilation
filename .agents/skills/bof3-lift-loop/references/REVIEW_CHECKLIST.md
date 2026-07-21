@@ -13,14 +13,20 @@ for the rules. Return a verdict with concrete, file:line findings.
    comment; no generic header macros added for matching hacks.
 4. **PsyQ external**: no lifted SDK bodies; SDK calls use official names +
    bindings, not reinvented `func_8017XXXX`.
-5. **Naming/structure**: raw `func_<ADDR>.c` filename kept; unknown struct fields
+5. **No duplicate declarations**: every new struct, typedef, extern, `#define`,
+   or symbol was checked against the target `internal.h`, `symbols.txt`,
+   `include/bof3/`, SDK maps, and `bin/rev-query symbols`/`variables` before
+   creation. No second name for an already-mapped address; no parallel struct
+   duplicating an existing one with the same offsets; no local redefinition of
+   a shared `include/bof3/` macro or known PsyQ declaration.
+6. **Naming/structure**: raw `func_<ADDR>.c` filename kept; unknown struct fields
    are `unk_XX`; canonical symbol names; `internal.h` barrel order correct.
-6. **Semantic correctness**: the C reflects original behavior, not just bytes —
+7. **Semantic correctness**: the C reflects original behavior, not just bytes —
    no unjustified hardcoded magic, proper struct/type recovery, correct
    signedness (`lb` vs `lbu`), no dead code masking a mismatch.
-7. **Map/Splat consistency**: `symbols.txt` entry present + normalized
+8. **Map/Splat consistency**: `symbols.txt` entry present + normalized
    (`bin/symbols check`); reviewed Splat boundary intact.
-8. **Hygiene**: no secrets or `inputs/` media staged; `git diff --check` clean.
+9. **Hygiene**: no secrets or `inputs/` media staged; `git diff --check` clean.
 
 ## Verdict
 
