@@ -1,10 +1,10 @@
-PopMatrix = 0x80178C18;
 PushMatrix = 0x80178B78;
-RotMatrix = 0x80179738;
-RotTransPers4 = 0x80179588;
-SetDrawMode = 0x8017C2D8;
-SetPolyG4 = 0x8017A9CC;
+PopMatrix = 0x80178C18;
 SetRotMatrix = 0x80178FD8;
-SetSemiTrans = 0x8017A904;
-SetSprt = 0x8017AA1C;
 SetTransMatrix = 0x80179068;
+RotTransPers4 = 0x80179588;
+RotMatrix = 0x80179738;
+SetSemiTrans = 0x8017A904;
+SetPolyG4 = 0x8017A9CC;
+SetSprt = 0x8017AA1C;
+SetDrawMode = 0x8017C2D8;
