@@ -353,6 +353,7 @@ u8   func_801BF78C(void);
 u8   func_801BDB7C(u8 mode);
 void func_801BB8E8(u8 arg_a, u8 arg_b, u8 arg_c);
 void func_8016728C(u32 slot_id, u32 mode);
+void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
 void func_8015D4F8(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
 void func_8015D404(u8 arg0, u8 arg1);
 void func_801A7704(u8 scenario_index);

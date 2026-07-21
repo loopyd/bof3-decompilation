@@ -60,6 +60,7 @@ typedef struct Battle03QueuedSlot {
 } Battle03QueuedSlot;
 
 extern volatile AbilityObject ABILITY_OBJECTS[];
+extern u8* volatile           g_battle03_work;
 extern volatile u8            BATTLE_LOCAL_BYTE_62EC;
 extern volatile u8            BATTLE_GLOBAL_BYTE_62E0;
 extern volatile u8            BATTLE_GLOBAL_BYTE_62E1;

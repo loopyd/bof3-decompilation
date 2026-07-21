@@ -147,6 +147,7 @@ void                           func_8009CFEC(void);
 s16  func_800A2880(u8 battler_index, u16 base_value, u8 element_flag);
 s16  func_800A2AE0(u8 battler_index, u16 element_mask);
 u16  func_800A36F0(u8 battler_index, u16 flags);
+void func_800A3F28(void);
 u8   func_801DB524(u8 arg0);
 void func_800A4458(void);
 void func_800AAA74(void);

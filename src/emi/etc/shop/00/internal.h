@@ -25,6 +25,8 @@ extern u8* D_8014598C;
  * func_8014E5A0 is a game primitive-append helper (lifted in exe/slus_004_22). */
 void func_8014E5A0(u32 ot_index, u32 primitive_size);
 
+void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
+
 void func_801E2CDC(void);
 void func_801E3EF4(void);
 void func_801E31C4(void);
