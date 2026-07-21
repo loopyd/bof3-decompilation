@@ -76,9 +76,7 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 - Do not stage, commit, push, or mutate external systems without approval.
 
 Use `$bof3-re` for lifting and promotion, `$psx-rizin` for explicitly requested
-generic analyzer work, and `$workflow-review` for explicitly requested
-two-reviewer audits. Use [matching](docs/matching.md),
-[foundation](docs/decomp-foundation.md), and
+generic analyzer work. Use [matching](docs/matching.md) and
 [tool usage](docs/usage.md) for procedures. See
 [docs/memory-api.md](docs/memory-api.md) for the memory-macro reference. Store
 reviewed findings in `docs/specs/` and

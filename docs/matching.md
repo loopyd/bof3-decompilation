@@ -175,3 +175,32 @@ When reconstruction succeeds:
 
 The build system must compile adjacent `.s` files alongside their `.c`
 counterparts for each target directory containing INCLUDE_ASM markers.
+
+## Local matching aids
+
+Aids stay local to the function and carry a `MATCHING_AID` comment. Acceptable:
+temporaries, pointer hoists, early returns, if/else inversion, duplicated
+assignments, manual `goto` loops, reordered independent statements. Never
+promote these into generic macros (no `FORCE_REGISTER`, `KEEP_TEMP`, etc.).
+
+Register pinning and inline assembly are the last C-level resort, after
+declarations, symbol representation, branch direction, loop shape, temporaries,
+deref hoists, statement reordering, and the permuter are exhausted. Remove
+speculative pins once a structural match is found.
+
+## Data materialization
+
+When a function byte-matches, materialize its owned data: zero-init owned BSS
+globals, define owned initialized data with original bytes, keep other objects'
+globals `extern`, and confirm following symbol addresses stay correct.
+
+## Header barrel convention (`internal.h`)
+
+Every target `internal.h` is a structured barrel, ordered:
+
+1. Include guard (`#ifndef`/`#define`).
+2. `#include` lines.
+3. Types: `typedef`, `struct`, `enum` definitions.
+4. External variables: every `extern ...;`.
+5. External functions: free function prototypes.
+6. `#define` macros and `static inline` helpers at the bottom.

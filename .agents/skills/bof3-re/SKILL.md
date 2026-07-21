@@ -23,7 +23,7 @@ shape, temporaries, pinning).
   (`extern`) → external function prototypes → `#define` macros and `static
   inline` helpers at the bottom. A `typedef` used by an `extern` precedes it; a
   `static inline` that uses a `#define` follows that macro. See
-  `docs/decomp-foundation.md` §Header barrel convention.
+  `docs/matching.md` §Header barrel convention.
 - Add no tests for lifted game behavior. Add only the least tooling-contract
   test when tooling changes require one.
 - Never commit unless the current user explicitly requests a commit.
@@ -67,7 +67,7 @@ matching hacks.
 ## Address and scratchpad access
 
 Use the single source of truth in `include/bof3/`; the authoritative standard
-is `docs/decomp-foundation.md` (repo adaptation of the standard), and the full
+is `docs/matching.md` (matching loop and header convention), and the full
 macro reference is in `docs/memory-api.md`.
 
 - `PSX_PTR(type, addr)` / `PSX_REF(type, addr)` — fixed-address pointer / lvalue.

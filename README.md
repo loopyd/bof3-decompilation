@@ -24,11 +24,11 @@ target manifests are authoritative.
 | Task | Reference |
 | --- | --- |
 | Follow the complete ordered tool workflow | [Tool usage](docs/usage.md) |
-| Install and inspect tools | [Setup and tools](docs/setup.md) |
 | Lift and match one function | [Matching](docs/matching.md) |
-| Bootstrap EMI and reproduce Rizin evidence | [Rizin and reverse index](docs/reverse-engineering.md) |
+| Resolve asm-diff symptoms | [Matching playbook](docs/matching-playbook.md) |
+| Memory macros and qualifiers | [Memory API](docs/memory-api.md) |
 | Understand target identity and ownership | [Context](CONTEXT.md) |
-| Read reviewed format/runtime/data findings | [Specs](docs/specs/index.md) |
+| Read reviewed format/runtime/data findings | [Specs](docs/specs/) |
 | Avoid known reverse-engineering mistakes | [Lessons](LESSONS.md) |
 
 Run `--help` or `--example` on commands. Run `just check` before handoff.

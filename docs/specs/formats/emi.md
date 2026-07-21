@@ -68,7 +68,7 @@ Local archives and `SLUS_004.22` remain authoritative.
 
 ## Canonical data
 
-- Tracked layouts: `config/splat/`
-- Tracked symbols: `config/symbols/`
+- Tracked layouts: `config/targets/<target>/splat.yaml`
+- Tracked symbols: `config/targets/<target>/symbols.txt`
 - Generated entry catalog: `out/catalog/`
 - Extracted entries: `out/extracted/`

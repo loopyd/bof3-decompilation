@@ -81,4 +81,4 @@ delay-slot placement.
 - `SPAD_PTR_SLOT(type, off)` is the non-volatile form by design.
 
 The repo adaptation of the matching-decomp foundation is
-`docs/decomp-foundation.md`.
+`docs/matching.md`.

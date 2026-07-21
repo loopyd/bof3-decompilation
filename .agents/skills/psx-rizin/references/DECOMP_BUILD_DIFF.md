@@ -50,9 +50,8 @@ Evidence comes from library signatures, startup code, generated idioms, object m
 A practical matching project separates:
 
 ```text
-config/splat/        reviewed segment/boundary layout
+config/targets/      per-target identity, layout, symbols
 config/targets/      target identity, image path, load address
-config/symbols/      target-local symbol maps
 include/bof3/        generic PS1 memory/accessor headers
 src/exe/<name>/      executable lifts (func_XXXXXXXX.c + internal.h)
 src/emi/<fam>/<arc>/<slot>/   one EMI entry
