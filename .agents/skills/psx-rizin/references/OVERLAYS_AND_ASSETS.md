@@ -114,7 +114,7 @@ A script opcode table can explain indirect call fan-out; a replay/save can expos
 ## Bulk overlay workflow
 
 1. Hash and classify all candidate files.
-2. Run `scripts/scan_mips.py` with no base first for density statistics.
+2. Run a raw MIPS scan with no base first for density statistics.
 3. Obtain load bases from loader/runtime evidence.
 4. Re-run scans with bases to decode jump/call candidates.
 5. Extract/decompress with a documented tool/script.

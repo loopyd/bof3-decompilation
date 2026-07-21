@@ -1,42 +1,9 @@
 # Command reference
 
 > In the BOF3 repository, prefer the wired `bin/rz-project`,
-> `bin/asm-diff`, `bin/byte-match`, and `bin/permute` entrypoints. The
-> `scripts/*.py` helpers below are the skill-local fallback for generic Rizin
-> work outside the repo's `out/reverse/<target>/` workspace.
-
-## Bundled tools
-
-```bash
-# Inspect header
-python3 scripts/psx_exe.py inspect GAME.EXE
-
-# JSON output
-python3 scripts/psx_exe.py inspect GAME.EXE --json
-
-# Extract payload
-python3 scripts/psx_exe.py extract GAME.EXE -o GAME.payload.bin
-
-# File/runtime conversion
-python3 scripts/psx_exe.py offset-to-addr GAME.EXE 0x1234
-python3 scripts/psx_exe.py addr-to-offset GAME.EXE 0x80010a34
-
-# Raw MIPS triage
-python3 scripts/scan_mips.py OVERLAY.BIN --base 0x80180000 --json scan.json
-
-# Rizin inventory
-python3 scripts/rizin_export.py GAME.payload.bin --base 0x80010000 --out out/inventory
-
-# Per-function artifact bundle
-python3 scripts/function_artifacts.py GAME.payload.bin 0x80012340 \
-  --base 0x80010000 --out out/functions/80012340
-
-# Convert reviewed symbols
-python3 scripts/symbols_to_rizin.py symbols.csv -o imported-symbols.rz
-
-# Replay coverage
-python3 scripts/replay_coverage.py replay-matrix.csv --report replay-report.md
-```
+> `bin/asm-diff`, `bin/byte-match`, and `bin/permute` entrypoints. The Rizin
+> command summaries below are a generic reference for work outside the repo's
+> `out/reverse/<target>/` workspace.
 
 ## Rizin essentials
 

@@ -105,7 +105,7 @@ Switch cases and bit tests are evidence for constrained values. Name values base
 
 ## Rizin import format
 
-The bundled `scripts/symbols_to_rizin.py` accepts CSV with:
+Reviewed-symbol import uses a CSV with:
 
 ```text
 name,address,kind,size,comment,source,confidence

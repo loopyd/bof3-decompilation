@@ -41,7 +41,7 @@ For every candidate executable/module:
 - compare against loader read sizes and CD sector requests
 - record whether data is raw, compressed, encrypted, relocated, or interpreted
 
-Use `scripts/scan_mips.py` only as triage. Its candidates are not proof of executable code.
+Use raw MIPS scanning only as triage. Its candidates are not proof of executable code.
 
 ## Phase 3 — Establish the address model
 
@@ -61,7 +61,7 @@ For each address seen in notes, state one of:
 - physical RAM offset
 - overlay-relative offset
 
-Use `scripts/psx_exe.py` for PS-X EXE conversions. Never apply the 0x800-header formula to an arbitrary overlay.
+Use a PS-X EXE parser for header conversions. Never apply the 0x800-header formula to an arbitrary overlay.
 
 ## Phase 4 — Static baseline
 

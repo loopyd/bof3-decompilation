@@ -103,17 +103,6 @@ bin/symbols         check/normalize target-local maps
 bin/splat           regenerate reviewed segment output
 ```
 
-Generic skill-local helpers (run from `.agents/skills/psx-rizin/`):
-
-```text
-scripts/psx_exe.py              PS-X EXE inspection and address conversion
-scripts/scan_mips.py            raw MIPS triage
-scripts/rizin_export.py         Rizin JSON export
-scripts/function_artifacts.py   per-function evidence bundle
-scripts/symbols_to_rizin.py     reviewed-symbol conversion
-scripts/replay_coverage.py      replay-matrix validation
-```
-
-> Note: this skill's earlier `bin/psx-rizin`, `bin/lift`, and `bin/build-diff`
-> dispatchers are not wired in this repository. Use the repo `bin/` entrypoints
-> above; the `scripts/*.py` helpers remain available for generic Rizin work.
+> Note: this skill's earlier `bin/psx-rizin`, `bin/lift`, `bin/build-diff`, and
+> `scripts/*.py` helpers are not wired in this repository. Use the repo `bin/`
+> entrypoints above for analysis, symbol import, and replay coverage.
