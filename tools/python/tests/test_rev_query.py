@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sqlite3
 
 from harness.commands.rev_query import (
@@ -167,3 +168,62 @@ def test_metrics_distinguish_recursive_leaf_with_unresolved_evidence() -> None:
 
     assert {row["scc_id"] for row in metrics} == {"t@00000001"}
     assert {row["leaf_status"] for row in metrics} == {"unresolved_edge"}
+
+
+def test_mission_composes_sdk_callees_callers_and_risk(
+    capsys, monkeypatch, tmp_path
+) -> None:
+    manifest = tmp_path / "config" / "targets" / "exe" / "t" / "target.toml"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(
+        'schema = "harness.target/v2"\nid = "exe/t"\nkind = "executable"\n'
+        'source_dir = "src/exe/t"\nbinary = "out/binaries/exe/t.bin"\n'
+        'splat = "config/targets/exe/t/splat.yaml"\nload_address = 0x80100000\n',
+        encoding="utf-8",
+    )
+    sdk = tmp_path / "config" / "sdk"
+    sdk.mkdir(parents=True)
+    (sdk / "psyq-slus.txt").write_text("PadInit = 0x80174668;\n", encoding="utf-8")
+
+    connection = sqlite3.connect(":memory:")
+    connection.row_factory = sqlite3.Row
+    _schema(connection)
+    connection.execute(
+        "INSERT INTO targets VALUES ('exe/t', 'b', 'h', 0x80100000, 'rizin', 'v', 's', 'sh')"
+    )
+    columns = "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?"
+    connection.execute(
+        f"INSERT INTO functions VALUES ({columns})",
+        ("exe/t@80100000", "exe/t", 0x80100000, 16, "func_80100000", "a" * 64,
+         1, 0, None, 6, 2, 1, 2, 1, 0, 1, 1, None),
+    )
+    connection.execute(
+        f"INSERT INTO functions VALUES ({columns})",
+        ("exe/t@80174668", "exe/t", 0x80174668, 8, "PadInit", "b" * 64,
+         1, 0, None, 2, 1, 0, 1, 0, 0, 0, 0, None),
+    )
+    connection.execute(
+        f"INSERT INTO functions VALUES ({columns})",
+        ("exe/t@80100100", "exe/t", 0x80100100, 8, "func_80100100", "c" * 64,
+         1, 0, None, 2, 1, 0, 1, 0, 0, 0, 0, None),
+    )
+    connection.execute(
+        "INSERT INTO calls VALUES ('exe/t@80100000', 'exe/t@80174668', 0x80100004)"
+    )
+    connection.execute(
+        "INSERT INTO calls VALUES ('exe/t@80100100', 'exe/t@80100000', 0x80100104)"
+    )
+    connection.execute(
+        "INSERT INTO unresolved_calls VALUES ('exe/t@80100000', 0x80174668, 0x80100008, 'unknown')"
+    )
+    monkeypatch.setattr("harness.commands.rev_query.connect", lambda _root: connection)
+
+    assert main(["--root", str(tmp_path), "mission", "exe/t@0x80100000", "--json"]) == 0
+
+    out = json.loads(capsys.readouterr().out)
+    assert out["function"] == "exe/t@80100000"
+    assert out["psyq_space"] == "slus"
+    assert {"address": "0x80174668", "name": "PadInit"} in out["sdk_callees"]
+    assert {"address": "0x80174668", "name": "PadInit"} in out["sdk_unresolved"]
+    assert any(c["caller"] == "exe/t@80100100" for c in out["callers"])
+    assert any(c["callee"] == "exe/t@80174668" for c in out["callees"])
