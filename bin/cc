@@ -36,6 +36,7 @@ run_gcc_compile() {
     shift 2
 
     aspsx_version=${ASPSX_VERSION-2.56}
+    expand_div=
     first_arg=1
     skip_output=0
     for arg in "$@"; do
@@ -72,6 +73,9 @@ run_gcc_compile() {
                     case "$wa_arg" in
                         --aspsx-version=*)
                             aspsx_version=${wa_arg#--aspsx-version=}
+                            ;;
+                        --expand-div)
+                            expand_div=1
                             ;;
                         *)
                             if [ -n "$kept_wa" ]; then
@@ -124,6 +128,8 @@ run_assembler() {
                     case "$wa_arg" in
                         --aspsx-version=*)
                             ;;
+                        --expand-div)
+                            ;;
                         *)
                             set -- "$@" "$wa_arg"
                             ;;
@@ -150,8 +156,12 @@ run_c_compile() {
     translated_asm=
     trap 'status=$?; cleanup; exit "$status"' 0 1 2 3 15
     translated_asm=$(mktemp "${compile_output}.translated.XXXXXX")
+    maspsx_div_flag=
+    if [ -n "$expand_div" ]; then
+        maspsx_div_flag="--expand-div"
+    fi
     "$maspsx_python" "$maspsx" \
-        "--aspsx-version=${aspsx_version}" <"$compiler_asm" \
+        "--aspsx-version=${aspsx_version}" $maspsx_div_flag <"$compiler_asm" \
         >"$translated_asm"
     run_assembler "$translated_asm" "$compile_output" "$@"
 }

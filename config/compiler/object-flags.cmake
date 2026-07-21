@@ -30,3 +30,9 @@ set(BOF3_OBJFLAGS_emi_etc_game_01_func_801D0D5C_c -O1)
 # access register-relative off the single base, matching the original byte-for-
 # byte with no register pinning. Verified by bin/flag-search (100% exact).
 set(BOF3_OBJFLAGS_emi_etc_game_01_func_801D104C_c -O2 -fno-rerun-cse-after-loop)
+
+# func_801E29B4 uses a signed modulo (rand() % count) whose original expansion
+# includes the full MIPS division-trap sequence (break 7 / break 6). The
+# canonical maspsx pass omits these traps; --expand-div restores them.
+# Verified by bin/flag-search (no -O variant matches) + manual maspsx test.
+set(BOF3_OBJFLAGS_emi_battle_battle_03_func_801E29B4_c -O2 -Wa,--expand-div)
