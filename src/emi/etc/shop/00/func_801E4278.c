@@ -6,7 +6,7 @@
  *         clears state when reached.
  */
 void func_801E4278(void) {
-  Bof3PanelTask* task_root;
+  PanelTask* task_root;
   u16            next_val;
   s16            clamp_val;
 

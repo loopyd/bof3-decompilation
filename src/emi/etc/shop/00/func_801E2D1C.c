@@ -6,7 +6,7 @@
  *         clears state when reached.
  */
 void func_801E2D1C(void) {
-  Bof3PanelTask* task_root;
+  PanelTask* task_root;
   u16            next_val;
 
   task_root = D_80148648;

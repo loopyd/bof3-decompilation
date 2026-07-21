@@ -2,6 +2,9 @@
 #define SLUS_004_22_INTERNAL_H
 
 #include "bof3/bof3.h"
+#include "callback/scheduler.h"
+#include "loader/emi.h"
+#include "frontend/state.h"
 
 #include "symbols/symbols.h"
 
@@ -60,24 +63,6 @@ typedef struct GameCallbackSlot {
   u32               open_arg_2;
   u8                pad_48[0x38];
 } GameCallbackSlot;
-
-typedef struct EmiActiveEntry {
-  u32  active_lba;
-  u32  remaining_size;
-  u32  load_arg;
-  u32  first_word;
-  u16  type;
-  bool header_mode;
-} EmiActiveEntry;
-
-typedef struct EmiLoaderEntry {
-  u32 unknown_00;
-  u32 source;
-  u32 destination;
-  u32 alternate_destination;
-  s16 resource_id;
-  u16 flags;
-} EmiLoaderEntry;
 
 enum {
   GAME_CALLBACK_SLOT_STATE_EMPTY = 0,

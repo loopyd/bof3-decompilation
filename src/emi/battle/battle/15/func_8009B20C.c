@@ -9,7 +9,7 @@ void func_8009B20C(void) {
   base = D_80148330;
   do {
     ptr = (u8*)((u32)i * 0x24u + (u32)base);
-    D_80148648 = (Bof3PanelTask*)ptr;
+    D_80148648 = (PanelTask*)ptr;
     i += 1;
     func_80158E20();
   } while (i < 0x14);

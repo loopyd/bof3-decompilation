@@ -50,8 +50,9 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
   bindings under `out/bindings/` (regenerated on every match) stay disposable
   and untracked.
 - Write readable C89. Inline assembly is banned in lifted source except the
-  sanctioned helpers: `barrier()`/`CLOBBER_*` (`include/bof3/defines.h`) for
-  access ordering and delay-slot placement, and `WEAK_SYMBOL_AT` (target
+  sanctioned helpers: `barrier()`/`CLOBBER_*` (`include/base/barrier.h`,
+  forwarding alias `include/bof3/defines.h`) for access ordering and
+  delay-slot placement, and `WEAK_SYMBOL_AT` (target
   `symbols.c` only) for address binding. Do not use `register X asm("$N")`
   register pinning, `extern X asm("NAME")` symbol renames, or handwritten
   assembly; bind symbols with a plain `extern` in `internal.h` plus a
@@ -74,8 +75,10 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
   `src/shared/<domain>/<role>.inc`. Keep one
   address-based `func_XXXXXXXX.c` wrapper per member to provide its raw symbol
   and any compile-time parameters.
-- Put stable shared types in `include/bof3/<domain>/`. A shared template is
-  compiled into every owning image; it is not a runtime engine service.
+- Put stable shared types in `include/<subsystem>/` (e.g. `include/battle/`,
+  `include/gpu/`; legacy forwarding aliases remain under `include/bof3/`).
+  A shared template is compiled into every owning image; it is not a runtime
+  engine service.
 - Never reuse a game-specific extern address across targets. Each wrapper
   retains its target-local map, declaration, Splat boundary, and independent
   `asm-diff`/`byte-match` validation. The shared PsyQ/BIOS runtime is exempt
@@ -93,8 +96,9 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 Load `$bof3-re` for ANY lifting, matching, duplicate-normalization, or promotion
 task — it enforces the [memory API](docs/memory-api.md) inline-assembly ban and
 the [matching](docs/matching.md) loop. Use `$psx-rizin` only for explicitly
-requested generic analyzer work. See [tool usage](docs/usage.md) for procedures
-and [docs/memory-api.md](docs/memory-api.md) for the memory-macro reference. Store
+requested generic analyzer work. See the [docs index](docs/index.md) for the
+full documentation map, [tool usage](docs/usage.md) for procedures, and
+[docs/memory-api.md](docs/memory-api.md) for the memory-macro reference. Store
 reviewed findings in `docs/specs/` and
 reusable evidence-backed gotchas in `LESSONS.md`. Use the
 [repository map](CONTEXT.md#repository-map) to locate tracked and ignored state.

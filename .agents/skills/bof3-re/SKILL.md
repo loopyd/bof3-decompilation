@@ -14,11 +14,12 @@ Read these before any lift. Do not skip to C edits.
 **Always (every lift):**
 
 1. `AGENTS.md` — boundaries, ownership, verification rules.
-2. `docs/usage.md` — tool commands and output budgets.
-3. `docs/matching.md` — the iteration loop, header barrel, data rules.
-4. `docs/matching-playbook.md` — symptom-to-lever table, all 18 sections.
-5. `docs/memory-api.md` — PSX_PTR/PSX_REF/SPAD macros, inline-asm ban.
-6. `LESSONS.md` — worked examples of past gotchas.
+2. `docs/index.md` — documentation map (start here to find any spec).
+3. `docs/usage.md` — tool commands and output budgets.
+4. `docs/matching.md` — the iteration loop, header barrel, data rules.
+5. `docs/matching-playbook.md` — symptom-to-lever table, all 18 sections.
+6. `docs/memory-api.md` — PSX_PTR/PSX_REF/SPAD macros, inline-asm ban.
+7. `LESSONS.md` — worked examples of past gotchas.
 
 **When the function touches a domain (read the matching spec):**
 

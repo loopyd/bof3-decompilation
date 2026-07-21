@@ -23,6 +23,11 @@ extern u8           WORLD00_AREA008_D_80145AD4[];
 extern u8           WORLD00_AREA008_D_801F2C04[];
 extern u8           WORLD00_AREA008_D_801F2C10[];
 
+/* Shared primitive cursor (PsyQ SDK global, owned by the main exe). A named
+ * symbol (not a fixed-address macro) so codegen emits the symbol-relative
+ * `lui + lw reg, %lo(reg)` load the original binary uses. */
+extern u8* D_8014598C;
+
 s32  func_8017E3F4(char* buffer, const char* format, ...);
 void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
@@ -31,11 +36,10 @@ void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 
 void func_801F3C2C(void);
 void func_801F3D18(void);
-void func_801F3D88(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4);
+void func_801F3D88(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
 
 #define WORLD00_AREA008_SCRATCH_PTR \
   PSX_REF(volatile World00Area008State*, 0x1f800044u)
-#define WORLD00_AREA008_PRIMITIVE_PTR PSX_REF(volatile u8*, 0x8014598cu)
 #define WORLD00_AREA008_STATE_PTR \
   PSX_REF(volatile World00Area008State*, 0x80146250u)
 #define WORLD00_AREA008_STATE_BASE PSX_PTR(World00Area008State, 0x80145fd0u)

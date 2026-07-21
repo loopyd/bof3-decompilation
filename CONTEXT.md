@@ -42,8 +42,10 @@ output.
 - Each lift is `func_XXXXXXXX.c` with adjacent target-local `internal.h`.
 - Function C, local headers, maps, and Splat layouts are intentionally
   hand-edited as reviewed evidence improves.
-- Shared declarations belong in `include/bof3/` only when multiple targets or
-  an external contract require them.
+- Shared declarations belong in `include/<subsystem>/` (e.g. `include/base/`,
+  `include/memory/`, `include/gpu/`, `include/battle/`) only when multiple
+  targets or an external contract require them. Legacy forwarding aliases
+  remain under `include/bof3/`.
 - Cross-target embedded implementations may live as non-standalone templates
   under `src/shared/`; address-owned wrappers remain in each target directory.
 - PsyQ signatures identify objects and addresses; official headers provide C

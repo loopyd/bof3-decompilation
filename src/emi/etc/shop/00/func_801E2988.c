@@ -6,7 +6,7 @@
  *         clears state when the clamp is reached.
  */
 void func_801E2988(void) {
-  Bof3PanelTask* task_root;
+  PanelTask* task_root;
   u16            next_val;
 
   task_root = D_80148648;

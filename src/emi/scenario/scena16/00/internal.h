@@ -2,6 +2,9 @@
 #define EMI_SCENA16_00_INTERNAL_H
 
 #include "bof3/bof3.h"
+#include "frontend/state.h"
+#include "frontend/selection.h"
+#include "gpu/palette.h"
 
 typedef void (*Scena16Callback)(void);
 typedef void (*Scena16RecordCallback)(void* record, u32 arg1);
@@ -9,6 +12,7 @@ typedef void (*Scena16RecordCallback)(void* record, u32 arg1);
 extern volatile u8  SCENA16_D_80143C30;
 extern volatile u16 SCENA16_D_80143C40;
 extern volatile u8  SCENA16_D_80143BB0;
+#define SCENA16_D_80143BB0 g_GameState
 extern volatile u16 SCENA16_D_80143F00;
 extern volatile u8  SCENA16_D_80143F03;
 extern s32          SCENA16_D_80143F80;
@@ -32,6 +36,7 @@ extern volatile u8  SCENA16_D_80146875;
 extern volatile u16 SCENA16_D_80146876;
 extern volatile u32 SCENA16_D_8014686C;
 extern volatile u8  SCENA16_D_8014832E;
+#define SCENA16_D_8014832E g_GlobalFlag832E
 extern volatile u16 SCENA16_D_801492D8;
 extern volatile u16 SCENA16_D_801492DA;
 extern volatile u16 SCENA16_D_801492DC;

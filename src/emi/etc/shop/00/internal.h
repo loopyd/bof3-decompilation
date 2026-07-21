@@ -3,8 +3,11 @@
 
 #include "bof3/context.h"
 #include "bof3/ui/panel_task.h"
+#include "panel/task.h"
+#include "gpu/prim.h"
 
-extern Bof3PanelTask* D_80148648;
+extern PanelTask* D_80148648;
+#define D_80148648 g_PanelTaskRoot
 
 /* Absolute-address globals. */
 extern volatile u32 D_80148650[];
@@ -14,6 +17,7 @@ extern volatile u32 D_801490A4[];
 
 /* Shared primitive cursor (PsyQ SDK, owned by the main exe). */
 extern u8* D_8014598C;
+#define D_8014598C g_PrimCursor
 
 /* PsyQ SDK primitive setup helpers called by this target.
  * SetSprt8 / SetSemiTrans are declared by <libgpu.h> (via bof3/psyq.h);

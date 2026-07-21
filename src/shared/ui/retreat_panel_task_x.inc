@@ -7,7 +7,7 @@
  * -170, and clears the panel task state byte when the clamp is reached.
  */
 void BOF3_PANEL_TASK_FUNCTION(void) {
-  Bof3PanelTask* task_root;
+  PanelTask* task_root;
   s16            next_x;
 
   task_root = D_80148648;

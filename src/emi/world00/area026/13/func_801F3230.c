@@ -1,13 +1,4 @@
 #include "internal.h"
+#include "shared/game/counter_step.inc"
 
-/* @behavior writes a fixed mode byte then advances the tracked u16 counter by
- * a fixed stride (subtract) and stores it back.
- * @source 0x801F3230
- */
-void func_801F3230(void) {
-  u16 count;
-
-  count = WORLD00_AREA026_13_D_8014932A;
-  WORLD00_AREA026_13_D_80149333 = 2;
-  WORLD00_AREA026_13_D_8014932A = (u16)(count - 0x14);
-}
+COUNTER_SUB(func_801F3230, WORLD00_AREA026_13_D_8014932A, WORLD00_AREA026_13_D_80149333)

@@ -1,15 +1,17 @@
-# Memory API (`include/bof3/`)
+# Memory API (`include/` subsystem headers)
 
-The headers under `include/bof3/` are the single source of truth for reaching
-fixed RAM addresses, PS1 hardware registers, and scratchpad RAM from lifted C.
+The subsystem headers under `include/` (`include/memory/`, `include/base/`,
+etc.) are the single source of truth for reaching fixed RAM addresses, PS1
+hardware registers, and scratchpad RAM from lifted C. The legacy paths under
+`include/bof3/` remain as thin forwarding headers for backward compatibility.
 
 All macros are plain casts; none perform a memory access on their own. Qualify
 `const` and `volatile` by writing them directly on the `type` argument.
 
-## `defines.h`
+## `defines.h` (`include/base/types.h`, `include/base/barrier.h`)
 
 Base integer types and the only two inline-assembly helpers allowed in lifted
-code.
+code. Forwarding alias: `include/bof3/defines.h`.
 
 - `u8`..`u64`, `s8`..`s64`, `f32`, `f64` — fixed-width scalar types.
 - `NO_SIBLING_CALLS` — `__attribute__((optimize("no-optimize-sibling-calls")))`
@@ -40,7 +42,9 @@ requires user approval — first try the per-object compiler-profile override in
 Rule of thumb: `barrier()` for access ordering, `CLOBBER_A0/V0/A1()` for
 delay-slot placement, `WEAK_SYMBOL_AT` for address binding.
 
-## `memory.h` — address conversion
+## `memory.h` — address conversion (`include/memory/access.h`)
+
+Forwarding alias: `include/bof3/memory.h`.
 
 - `PSX_PTR(type, address)` — typed pointer to a fixed address.
   ```c
@@ -68,7 +72,9 @@ delay-slot placement, `WEAK_SYMBOL_AT` for address binding.
 - `REG8/16/32(address)` — PS1 memory-mapped **hardware registers only**. These
   are `volatile`; never use them for scratchpad RAM.
 
-## `scratchpad.h` — 0x1F800000–0x1F8003FF
+## `scratchpad.h` — 0x1F800000–0x1F8003FF (`include/memory/scratchpad.h`)
+
+Forwarding alias: `include/bof3/scratchpad.h`.
 
 - `SPAD_BASE` (`0x1F800000u`), `SPAD_SIZE` (`0x400u`).
 - `SPAD_ADDRESS(byte_offset)` — absolute address of a scratchpad byte offset.

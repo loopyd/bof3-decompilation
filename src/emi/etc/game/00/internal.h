@@ -3,6 +3,11 @@
 
 #include "bof3/bof3.h"
 #include "bof3/ui/panel_task.h"
+#include "panel/task.h"
+#include "battle/ability.h"
+#include "frontend/state.h"
+#include "frontend/selection.h"
+#include "gpu/palette.h"
 
 typedef void (*GameEntry0StateHandler)(void);
 
@@ -16,17 +21,6 @@ typedef struct GameScenarioState {
   u16 field_06;
   u16 field_08;
 } GameScenarioState;
-
-typedef struct AbilityObject {
-  u8 name[0x0c];
-  u8 targeting_flags;
-  u8 skill_type;
-  u8 cost;
-  u8 power;
-  u8 element;
-  u8 ability_flags;
-  u8 control_12[2];
-} AbilityObject;
 
 /* Work area struct accessed via scratchpad pointer (0x1F800044) */
 struct GameWorkArea {
@@ -96,7 +90,8 @@ typedef struct RecordSlot {
   u8 pad[0x6F]; /* 0x74 - 5 */
 } RecordSlot;
 
-extern Bof3PanelTask*               D_80148648;
+extern PanelTask*               D_80148648;
+#define D_80148648 g_PanelTaskRoot
 extern GameScenarioState            GAME_SCENARIO_STATE;
 extern const volatile AbilityObject ABILITY_OBJECTS[];
 

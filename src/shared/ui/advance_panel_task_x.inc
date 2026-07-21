@@ -3,7 +3,7 @@
 #endif
 
 void BOF3_PANEL_TASK_FUNCTION(void) {
-  Bof3PanelTask* task_root;
+  PanelTask* task_root;
   u16            next_x;
 
   task_root = D_80148648;

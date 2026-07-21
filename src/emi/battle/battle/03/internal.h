@@ -2,36 +2,14 @@
 #define EMI_BATTLE_03_INTERNAL_H
 
 #include "bof3/bof3.h"
+#include "battle/ability.h"
+#include "battle/ram.h"
 
 typedef void (*Battle03Handler)(void);
 typedef void (*Battle03EnemyModeHandler)(s32 arg0);
 typedef void (*Battle03ForwardingHandler)(s32 arg0, s32 arg1, s32 arg2,
                                           s32 arg3, s32 arg4, s32 arg5,
                                           s32 arg6, u8* selector);
-
-/*
- * The battle selector overlays the last eight bytes of each GAME ability
- * record.  The same bytes are consumed as element/ability flags by menu and
- * effect code, or as a 16-bit selection mask by battle code.  Keep the
- * overlay explicit until a caller proves a single semantic type.
- */
-typedef union AbilityObjectTail {
-  struct {
-    u8 element;
-    u8 ability_flags;
-  } ability;
-  u16 selection_mask;
-} AbilityObjectTail;
-
-typedef struct AbilityObject {
-  u8                name[0x0c];
-  u8                targeting_flags;
-  u8                skill_type;
-  u8                cost;
-  u8                power;
-  AbilityObjectTail tail_10;
-  u8                control_12[2];
-} AbilityObject;
 
 typedef struct Battle03LocalWork {
   u8  flags_00;

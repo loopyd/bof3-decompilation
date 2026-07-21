@@ -3,6 +3,9 @@
 
 #include "bof3/bof3.h"
 #include "bof3/ui/panel_task.h"
+#include "panel/task.h"
+#include "gpu/prim.h"
+#include "battle/ram.h"
 
 typedef void (*BattleSelectionHandler)(void);
 
@@ -79,7 +82,8 @@ extern volatile u8    BATTLE_SECONDARY_CURSOR_LIMIT;
 extern volatile u16   BATTLE_SECONDARY_FLAG_MASK;
 extern volatile u8    BATTLE_SELECTION_CURSOR_ROWS;
 extern volatile u8    BATTLE_SELECTION_CURSOR_MODE;
-extern Bof3PanelTask* D_80148648;
+extern PanelTask* D_80148648;
+#define D_80148648 g_PanelTaskRoot
 extern volatile u8    BATTLE_SECONDARY_SAVED_GROUP;
 extern volatile u8    BATTLE_SECONDARY_SAVED_PAGE_BASE;
 extern volatile u8    BATTLE_SECONDARY_SAVED_CURSOR;
@@ -184,6 +188,7 @@ extern volatile u32  D_8014862E;
 
 /* Shared primitive cursor (PsyQ SDK, owned by the main exe). */
 extern u8* D_8014598C;
+#define D_8014598C g_PrimCursor
 
 /* PsyQ SDK primitive setup helpers called by this target.
  * SetSprt8 / SetSemiTrans are declared by <libgpu.h> (via bof3/psyq.h);
