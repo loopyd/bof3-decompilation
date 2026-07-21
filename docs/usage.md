@@ -62,17 +62,26 @@ stale or missing target snapshot before `just index`; indexing fails unless all
 manifest snapshots are fresh, then atomically rebuilds the cross-target cache.
 Use `bin/rz-project open TARGET` only for interactive investigation.
 
-Optional PsyQ evidence:
+PsyQ SDK evidence and application:
 
 ```sh
+# Gather provenance (signatures identify objects; official headers own declarations)
 bin/psyq-import --example
 bin/harness psyq scan --all
 bin/harness psyq calls --all
 bin/harness psyq proposal --all
+
+# Apply reviewed provenance, then regenerate and audit bindings
+bin/symbols import-psyq out/psyq/proposal.json --all-qualified --write
+bin/symbols psyq-bindings --write          # regenerate src/<t>/symbols/psyq.c
+bin/symbols psyq-report TARGET             # which SDK symbols the code references
 ```
 
-Signatures identify candidate library objects; official headers own
-declarations. Evidence does not edit maps automatically.
+The SDK maps live in `config/sdk/psyq-{slus,logo}.txt`; a target selects its
+space via the manifest `[psyq] space` key (default `slus`). `import-psyq` writes
+reviewed exact candidates into the space's SDK map; `psyq-bindings` regenerates
+the compiled `src/<t>/symbols/psyq.c` from it. Nothing edits maps without
+`--write`.
 
 ### 4. Select one function
 
@@ -167,7 +176,7 @@ tests, lint, maps, and a full compile/link/compare audit of retained lifts.
 | `bin/emi-target` | preview/create one EMI target | only with `--apply` |
 | `bin/build` | compile all, one target, or one function | `build/` |
 | `bin/splat` | regenerate reviewed segment output | `out/splat/` |
-| `bin/symbols` | check/normalize maps and generate bindings | explicit subcommand |
+| `bin/symbols` | map check/normalize, bindings, PsyQ import/bindings/report | explicit subcommand |
 | `bin/rz-project` | isolated Rizin analyze/status/open | `out/reverse/` on analyze |
 | `bin/index` | rebuild the fresh cross-target query cache | `out/index/` |
 | `bin/rev-query` | query fresh indexed evidence | none |

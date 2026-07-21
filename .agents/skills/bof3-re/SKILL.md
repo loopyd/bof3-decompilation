@@ -31,20 +31,37 @@ shape, temporaries, pinning).
 ## Choose scope
 
 - Obey an explicit function or duplicate-group choice.
-- When asked for guidance, show at most five `--detail minimal` candidates with
-  effort, complexity, callers/callees, duplicate leverage, and confidence.
+- When asked for guidance, rank candidates with `bin/rev-query` (`quick-wins`,
+  `leafs`, `duplicates`, `hotspots`, `pareto`) using `--unlifted --detail
+  minimal --limit 5`, and report effort (`instruction_count`,
+  `cyclomatic_complexity`), callers/callees, `duplicate_leverage`, and
+  confidence (`confidence_band`/`metric_missing`).
 - When the user has not chosen, recommend but wait for their selection before
   editing. Do not silently choose a different scope.
 
 ## Lift
 
-1. Validate the manifest, load address, reviewed boundary, and target map.
-2. Run `bin/splat TARGET`, `bin/m2ctx TARGET@0xADDRESS`, and
-   `bin/m2c TARGET@0xADDRESS -o out/candidate.c` as needed.
-3. Edit the address-owned C file and only evidence-required local header, map,
+1. Validate the manifest, reviewed boundary, and target map. Confirm the load
+   address: `runtime_address − load_address == payload_offset` (read `t_addr`
+   from the PS-X header at offset `0x18`). A green diff does NOT validate a
+   wrong load address (`LESSONS.md`).
+2. Gather evidence with `bin/rev-query calls TARGET@0xADDRESS` and
+   `bin/rev-query duplicates TARGET@0xADDRESS`: callees supply prototypes to
+   declare, callers fix the signature/ABI, a duplicate group seeds the shape,
+   and `unresolved_calls`/`metric_missing` flag risk.
+3. Run `bin/splat TARGET`, `bin/m2ctx TARGET@0xADDRESS`, and
+   `bin/m2c TARGET@0xADDRESS -o out/candidate.c` as needed. The m2c seed emits
+   only stub signatures (`extern void func_…()`); recover real types from
+   callees/callers — never trust the seed's signatures.
+4. Name SDK calls correctly: before writing `func_8017XXXX`, check the SDK map
+   (`config/sdk/psyq-<space>.txt`) or `bin/symbols psyq-report TARGET`. If it is
+   a known PsyQ/BIOS symbol, use the official name and header declaration; never
+   lift its body. After any SDK-map edit, regenerate bindings with
+   `bin/symbols psyq-bindings TARGET --write`.
+5. Edit the address-owned C file and only evidence-required local header, map,
    or Splat entries.
-4. Iterate with `bin/asm-diff TARGET@0xADDRESS --detail normal`.
-5. Accept only `bin/byte-match TARGET@0xADDRESS` equality.
+6. Iterate with `bin/asm-diff TARGET@0xADDRESS --detail normal`.
+7. Accept only `bin/byte-match TARGET@0xADDRESS` equality (exit 0).
 
 ### Resolving asm-diff mismatches
 
@@ -65,6 +82,24 @@ When the semantic C is correct but instruction bytes differ, consult
 Document every artificial matching aid with a `MATCHING_AID` comment (see
 `docs/matching-playbook.md` §4). Do not add generic macros to headers for
 matching hacks.
+
+### Reading `asm-diff` output
+
+`bin/asm-diff` prints `MATCH|DIFF <fn>@<addr> insn=O/C(N%) bytes=O->C(+D)
+first=+0xOFF[idx] diff=…` and exits 0 only on an exact byte match. `first=` is
+the offset (and instruction index) of the first mismatch — start there.
+`--detail normal` shows only the first hunk (≤24 lines); the full
+original-vs-current diff is under `out/asm-diff/`. Treat the original side as
+ground truth and converge the current side onto it.
+
+### Recovering structs and data
+
+Infer struct layout from consumers before naming: collect the offsets each
+caller/callee accesses, name unknown fields `unk_XX` by byte offset, pin the
+layout with `ASSERT_OFFSET`/`ASSERT_SIZE`, then promote `unk_XX` to
+evidence-backed names (`docs/matching-playbook.md` §2/§10,
+`docs/specs/methods.md`). Define target-owned data (zero-init BSS included);
+keep data you do not own `extern` (`docs/matching.md`).
 
 ## Address and scratchpad access
 
