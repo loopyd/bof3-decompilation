@@ -10,6 +10,7 @@ options:
   src_path: src/emi/world00/area024/14
   ld_script_path: out/splat/emi/world00/area024/14/linker.ld
   symbol_addrs_path:
+  - config/targets/shared/symbols.txt
   - config/targets/emi/world00/area024/14/symbols.txt
 segments:
 - name: main

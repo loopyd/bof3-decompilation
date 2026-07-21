@@ -100,6 +100,20 @@ def map_path(root: Path, target: str) -> Path:
     return root / "config" / "targets" / target / "symbols.txt"
 
 
+def shared_map_path(root: Path) -> Path:
+    return root / "config" / "targets" / "shared" / "symbols.txt"
+
+
+def load_target_symbols(root: Path, target: str) -> list[Symbol]:
+    """Compose shared base + target-local symbols. Local wins on conflict."""
+    shared = load_map(shared_map_path(root))
+    local = load_map(map_path(root, target))
+    by_addr: dict[int, Symbol] = {s.address: s for s in shared}
+    for s in local:
+        by_addr[s.address] = s
+    return sorted(by_addr.values())
+
+
 def write_map(path: Path, symbols: list[Symbol]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(format_map(symbols), encoding="utf-8")

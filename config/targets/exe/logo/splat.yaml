@@ -10,6 +10,7 @@ options:
   src_path: src/exe/logo
   ld_script_path: out/splat/exe/logo/linker.ld
   symbol_addrs_path:
+  - config/targets/shared/symbols.txt
     - config/targets/exe/logo/symbols.txt
 segments:
   - [0x0, bin, pre_runtime_stub]

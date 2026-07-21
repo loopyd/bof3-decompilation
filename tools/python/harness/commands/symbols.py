@@ -12,7 +12,9 @@ from ..canonical import (
     Symbol,
     format_map,
     load_map,
+    load_target_symbols,
     map_path,
+    shared_map_path,
     weak_bindings_c,
     write_map,
 )
@@ -118,7 +120,7 @@ def run_bindings(args: argparse.Namespace) -> int:
     root = _root(args)
     for target in _targets(root, args.target):
         output = root / "out" / "bindings" / target / "symbols.c"
-        content = weak_bindings_c(load_map(map_path(root, target)))
+        content = weak_bindings_c(load_target_symbols(root, target))
         if args.write:
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(content, encoding="utf-8")
@@ -233,6 +235,53 @@ def run_import_psyq(args: argparse.Namespace) -> int:
     return 1 if changed and not args.write else 0
 
 
+def run_dedupe(args: argparse.Namespace) -> int:
+    """Extract symbols duplicated across N+ targets into the shared base."""
+    root = _root(args)
+    threshold = args.threshold
+    manifests = load_target_manifests(root)
+    targets = sorted(manifests.keys())
+
+    addr_count: dict[int, int] = {}
+    addr_symbol: dict[int, Symbol] = {}
+    for target in targets:
+        seen: set[int] = set()
+        for symbol in load_map(map_path(root, target)):
+            if symbol.address not in seen:
+                addr_count[symbol.address] = addr_count.get(symbol.address, 0) + 1
+                addr_symbol[symbol.address] = symbol
+                seen.add(symbol.address)
+
+    shared_existing = load_map(shared_map_path(root))
+    shared_addrs = {s.address for s in shared_existing}
+    new_shared = [
+        addr_symbol[addr]
+        for addr, count in sorted(addr_count.items())
+        if count >= threshold and addr not in shared_addrs
+    ]
+    if not new_shared:
+        print(f"no symbols duplicated in {threshold}+ targets")
+        return 0
+
+    merged = sorted(shared_existing + new_shared)
+    print(f"extracting {len(new_shared)} symbols into shared base ({len(merged)} total)")
+    if args.write:
+        write_map(shared_map_path(root), merged)
+        for target in targets:
+            local = load_map(map_path(root, target))
+            trimmed = [s for s in local if s.address not in {x.address for x in new_shared}]
+            if len(trimmed) < len(local):
+                write_map(map_path(root, target), trimmed)
+        print(f"wrote {shared_map_path(root).relative_to(root)}")
+    else:
+        for s in new_shared[:10]:
+            print(f"  {s.canonical_name} = 0x{s.address:08X}; ({addr_count[s.address]}×)")
+        if len(new_shared) > 10:
+            print(f"  ... and {len(new_shared) - 10} more")
+        print("pass --write to apply")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="symbols")
     parser.add_argument("--root", type=Path, default=repo_layout().root)
@@ -255,6 +304,12 @@ def build_parser() -> argparse.ArgumentParser:
     import_psyq.add_argument("--all-qualified", action="store_true")
     import_psyq.add_argument("--write", action="store_true")
     import_psyq.set_defaults(handler=run_import_psyq)
+    dedupe = sub.add_parser(
+        "dedupe", help="extract symbols duplicated across N+ targets into shared base"
+    )
+    dedupe.add_argument("--threshold", type=int, default=5)
+    dedupe.add_argument("--write", action="store_true")
+    dedupe.set_defaults(handler=run_dedupe)
     return parser
 
 

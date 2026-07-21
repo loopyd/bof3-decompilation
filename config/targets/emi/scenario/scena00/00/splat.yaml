@@ -10,6 +10,7 @@ options:
   src_path: src/emi/scenario/scena00/00
   ld_script_path: out/splat/emi/scenario/scena00/00/linker.ld
   symbol_addrs_path:
+  - config/targets/shared/symbols.txt
   - config/targets/emi/scenario/scena00/00/symbols.txt
 segments:
 - - 0

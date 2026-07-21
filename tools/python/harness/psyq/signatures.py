@@ -15,7 +15,7 @@ import tempfile
 from typing import Any, Iterable
 
 from ..domain import load_target_manifests
-from ..canonical import load_map, map_path
+from ..canonical import load_target_symbols
 from ..snapshot import read_snapshot, snapshot_path
 from .headers import (
     HEADER_SCHEMA,
@@ -506,7 +506,7 @@ def promotion_proposal(root: Path) -> dict[str, Any]:
     candidates: list[dict[str, Any]] = []
     for target, manifest in sorted(load_target_manifests(root).items()):
         current = {
-            symbol.address: symbol for symbol in load_map(map_path(root, target))
+            symbol.address: symbol for symbol in load_target_symbols(root, target)
         }
         current_names = {
             symbol.canonical_name: symbol.address for symbol in current.values()

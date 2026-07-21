@@ -5,7 +5,7 @@ import subprocess
 from collections.abc import Mapping
 from pathlib import Path
 
-from ..canonical import load_map, map_path
+from ..canonical import load_target_symbols
 from ..io import RepoLayout, repo_layout
 from ..symbols import load_weak_symbol_bindings
 
@@ -21,7 +21,7 @@ def _target_map_bindings(repo: RepoLayout, symbols_c_path: Path) -> dict[str, in
         return {}
     return {
         symbol.canonical_name: symbol.address
-        for symbol in load_map(map_path(repo.root, target))
+        for symbol in load_target_symbols(repo.root, target)
     }
 
 

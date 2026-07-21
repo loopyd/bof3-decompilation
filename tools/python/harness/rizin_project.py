@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .analyzer import EngineIdentity, build_snapshot, find_engine
-from .canonical import Symbol, load_map, map_path
+from .canonical import Symbol, load_target_symbols
 from .domain import load_target_manifests, normalize_target_id
 from .layout import parse_splat_layout
 from .snapshot import snapshot_path, write_snapshot
@@ -84,7 +84,7 @@ def prepare_target(root: Path, target_id: str) -> RizinTarget:
         rendered = ", ".join(f"0x{address:08X}" for address in invalid_roots)
         raise ValueError(f"reviewed function roots outside target image: {rendered}")
     overlay = root / "config" / "targets" / target / "reviewed.rz"
-    replay = _baseline(load_map(map_path(root, target)), roots) + _reviewed_overlay(
+    replay = _baseline(load_target_symbols(root, target), roots) + _reviewed_overlay(
         overlay
     )
     return RizinTarget(

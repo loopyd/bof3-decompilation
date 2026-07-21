@@ -2,13 +2,21 @@
   "schema": "harness.compiler-flag-catalog/v1",
   "provenance": [
     "decomp.me PS1 compiler presets",
-    "docs/matching.md"
+    "docs/matching.md",
+    "docs/matching-playbook.md §1 profile levers"
+  ],
+  "note": [
+    "Candidates are deltas applied on top of the canonical build flags",
+    "(-O2 -G0 -funsigned-char -msoft-float -gcoff): flag-search strips the",
+    "base -O level and appends each candidate, so every entry must carry an",
+    "explicit -O. A later -G overrides the base -G0."
   ],
   "candidates": [
     ["-O0"],
     ["-O1"],
     ["-O2"],
     ["-O3"],
+    ["-Os"],
     ["-O2", "-g0"],
     ["-O2", "-fsigned-char"],
     ["-O2", "-fno-inline-functions"],
@@ -27,6 +35,40 @@
     ["-O1", "-fomit-frame-pointer"],
     ["-O3", "-g0"],
     ["-O3", "-fsigned-char"],
-    ["-O0", "-g0"]
+    ["-O0", "-g0"],
+    ["-Os", "-g0"],
+
+    ["-O2", "-fno-schedule-insns", "-fno-delayed-branch"],
+    ["-O2", "-fno-cse-follow-jumps", "-fno-cse-skip-blocks"],
+    ["-O2", "-fno-function-cse", "-fno-rerun-cse-after-loop"],
+    ["-O2", "-fno-cse-follow-jumps", "-fno-cse-skip-blocks", "-fno-function-cse"],
+    ["-O2", "-fno-strength-reduce", "-fno-thread-jumps"],
+    ["-O2", "-fomit-frame-pointer", "-fno-schedule-insns"],
+    ["-O2", "-fno-inline-functions", "-fno-schedule-insns"],
+
+    ["-O1", "-fno-schedule-insns"],
+    ["-O1", "-fno-delayed-branch"],
+    ["-O1", "-fno-schedule-insns", "-fno-delayed-branch"],
+    ["-O1", "-fno-strength-reduce"],
+    ["-O1", "-fno-thread-jumps"],
+    ["-O1", "-fno-function-cse"],
+    ["-O1", "-fno-cse-follow-jumps", "-fno-cse-skip-blocks"],
+
+    ["-O3", "-fno-inline-functions"],
+    ["-O3", "-fno-schedule-insns"],
+    ["-O3", "-fno-delayed-branch"],
+    ["-O3", "-fno-schedule-insns", "-fno-delayed-branch"],
+
+    ["-O0", "-fno-delayed-branch"],
+
+    ["-O2", "-G0"],
+    ["-O2", "-G4"],
+    ["-O2", "-G8"],
+    ["-O1", "-G4"],
+    ["-O1", "-G8"],
+
+    ["-O2", "-mno-split-addresses"],
+    ["-O1", "-mno-split-addresses"],
+    ["-O2", "-mno-split-addresses", "-fno-schedule-insns", "-fno-delayed-branch"]
   ]
 }

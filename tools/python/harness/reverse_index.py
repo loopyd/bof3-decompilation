@@ -14,7 +14,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Iterable
 
-from .canonical import load_map, map_path
+from .canonical import load_target_symbols
 from .domain import load_target_manifests
 from .snapshot import read_snapshot, snapshot_path, validate_snapshot_identity
 
@@ -197,7 +197,7 @@ def rebuild(root: Path) -> Path:
                         _hash(path),
                     ),
                 )
-                for symbol in load_map(map_path(root, target)):
+                for symbol in load_target_symbols(root, target):
                     kind = (
                         "function"
                         if symbol.canonical_name.startswith("func_")
