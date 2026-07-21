@@ -106,6 +106,13 @@ bin/rev-query variables NAME
 bin/rev-query status
 ```
 
+`bin/rev-query mission TARGET@0xADDRESS` composes a single-function lifting
+brief (metrics, callers/callees, duplicate group, SDK callees, and risk flags) —
+the input to the autonomous lift loop. To lift a batch unattended, restart
+opencode and run `$bof3-lift-loop` (see
+`.agents/skills/bof3-lift-loop/README.md`); it gates each exact match through a
+reviewer and commits only reviewed lifts.
+
 Addresses are target-qualified where identity matters; overlapping addresses
 in different images never share query results.
 
