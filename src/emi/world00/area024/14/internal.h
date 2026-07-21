@@ -83,9 +83,9 @@ s16  func_801F4158(const s16* arg0, const s16* arg1, const s16* arg2);
 #define WORLD00_AREA024_SCRATCH_REMAP  PSX_PTR(volatile u8, 0x80147a58u)
 #define WORLD00_AREA024_PTR_7AA8       PSX_REF(volatile u8*, 0x80147aa8u)
 #define WORLD00_AREA024_PTR_7AAC       PSX_REF(volatile u8*, 0x80147aacu)
-#define WORLD00_AREA024_STATE_TABLE \
+#define WORLD00_AREA024_STATE_TABLE                                            \
   PSX_PTR(const volatile World00Area024Handler, 0x801f4214u)
-#define WORLD00_AREA024_SCRATCH_PTR \
+#define WORLD00_AREA024_SCRATCH_PTR                                            \
   PSX_REF(volatile World00Area024Scratch*, 0x1f800044u)
 #define WORLD00_AREA024_SCRATCH_BYTE_09 PSX_REF(volatile u8, 0x1f80004du)
 

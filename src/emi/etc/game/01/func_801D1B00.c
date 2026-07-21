@@ -25,8 +25,8 @@ void func_801D1B00(void) {
    * cc1 fold the constant 1 out of s1 (`nop ; bne v1,s1`) and reorder the save.
    * The promote test and draw calls still emit `andi ...,0xff` because the u8
    * value lives in a 32-bit register used in a word context. */
-  u8  primary_active;
-  u8  secondary_active;
+  u8 primary_active;
+  u8 secondary_active;
   /* MATCHING_AID: the fade increment is a full-word local. The original keeps
    * the incremented value in v0 across the store and sign-extends v0 in place:
    * `lhu v0 ; addiu v0,4 ; sh v0 ; sll v0,16 ; sra v0,16 ; slti v0,128`. A u16

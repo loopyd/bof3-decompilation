@@ -47,15 +47,15 @@ void func_801F3B00(s32 arg0, s32 arg1);
 void func_801F3ECC(s16 arg0, s16 arg1);
 void func_801F40C4(s16 arg0, s16 arg1);
 
-#define WORLD00_AREA016_SCRATCH_PTR \
+#define WORLD00_AREA016_SCRATCH_PTR                                            \
   PSX_REF(volatile World00Area016Scratch*, 0x1f800044u)
 #define WORLD00_AREA016_PRIMITIVE_PTR PSX_REF(volatile u8*, 0x8014598cu)
-#define WORLD00_AREA016_STATE_TABLE \
+#define WORLD00_AREA016_STATE_TABLE                                            \
   PSX_PTR(const volatile World00Area016Handler, 0x801f511cu)
-#define WORLD00_AREA016_STATE_TABLE_03 \
+#define WORLD00_AREA016_STATE_TABLE_03                                         \
   PSX_PTR(const volatile World00Area016Handler, 0x801f512cu)
 #define WORLD00_AREA016_SPRT_TABLE PSX_PTR(const volatile u8, 0x801f513cu)
-#define WORLD00_AREA016_MARKER_TABLE \
+#define WORLD00_AREA016_MARKER_TABLE                                           \
   PSX_PTR(const volatile World00Area016MarkerEntry, 0x801f5194u)
 #define WORLD00_AREA016_ROTATION   PSX_PTR(SVECTOR, 0x801492d8u)
 #define WORLD00_AREA016_G4_VERTEX0 SPAD_ADDR(SVECTOR, 0x14u)

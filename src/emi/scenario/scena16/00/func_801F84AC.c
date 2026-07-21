@@ -13,7 +13,7 @@ typedef struct Scena16EffectBank80140000 {
   volatile u8 byte_6254;
 } Scena16EffectBank80140000;
 
-#define SCENA16_EFFECT_BANK \
+#define SCENA16_EFFECT_BANK                                                    \
   PSX_PTR(volatile Scena16EffectBank80140000, 0x80140000u)
 
 /* @behavior resets one local effect bank and marks the frontend flag byte.

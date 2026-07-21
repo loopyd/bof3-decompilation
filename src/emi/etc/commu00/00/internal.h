@@ -93,7 +93,7 @@ void func_801F0BF4(u8 task_index);
 #define COMMU00_ACTIVE_UI            PSX_REF(volatile u8*, 0x801f2948u)
 #define COMMU00_REMOVAL_QUEUE        PSX_PTR(volatile u8, 0x80145e30u)
 #define COMMU00_PENDING_QUEUE        PSX_PTR(volatile u8, 0x80145e48u)
-#define COMMU00_TYPE45_NOTIFICATION_TABLE \
+#define COMMU00_TYPE45_NOTIFICATION_TABLE                                      \
   PSX_PTR(const volatile u8, 0x801f2458u)
 #define COMMU00_TASK_SLOT_BASE      ((u32)0x80146888u)
 #define COMMU00_TASK_TEMPLATE_TABLE PSX_PTR(const volatile u8, 0x801f2568u)

@@ -40,10 +40,10 @@
  *     FIELD_ADDR(volatile u16, base, 0x80u)
  *     value = FIELD_REF(u32, work, 0x18u)
  */
-#define FIELD_ADDR(type, base, byte_offset) \
+#define FIELD_ADDR(type, base, byte_offset)                                    \
   PSX_PTR(type, (u8*)(base) + (u32)(byte_offset))
 
-#define FIELD_REF(type, base, byte_offset) \
+#define FIELD_REF(type, base, byte_offset)                                     \
   (*FIELD_ADDR(type, base, byte_offset))
 
 /*

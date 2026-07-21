@@ -14,7 +14,7 @@ void func_801D104C(void) {
    *   GAME_FRONT_TIMER (0x80143C20) = sh -0x13(s0)
    * EFFECT_BUSY, PAD_STATE and POPUP_WORD are genuine standalone globals (each
    * its own `lui`) and stay declared as such. */
-  volatile u8* front_gate = &GAME_FRONT_INPUT_GATE;
+  volatile u8*  front_gate = &GAME_FRONT_INPUT_GATE;
   volatile u16* busy = (volatile u16*)(front_gate - 0xF3);
   volatile u16* state = (volatile u16*)(front_gate - 0x23);
   volatile u16* timer = (volatile u16*)(front_gate - 0x13);

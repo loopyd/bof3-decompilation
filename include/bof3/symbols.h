@@ -7,7 +7,7 @@
  * replaced one at a time without changing their callers. This is the only
  * authored assembly helper; never use it inside an executable function body.
  */
-#define WEAK_SYMBOL_AT(name, addr) \
+#define WEAK_SYMBOL_AT(name, addr)                                             \
   asm(".weak " #name "\n.set " #name ", " #addr "\n")
 
 #endif

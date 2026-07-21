@@ -91,7 +91,7 @@ void func_801D18F8(void) {
       continue;
     }
 
-    flags = GetGraphType() == 1 ? ((marker & 0x3ff) >> 6) | 0x200
+    flags = GetGraphType() == 1   ? ((marker & 0x3ff) >> 6) | 0x200
             : GetGraphType() == 2 ? ((marker & 0x3ff) >> 6) | 0x200
                                   : ((marker & 0x3ff) >> 6) | 0x80;
     SetDrawMode((DR_MODE*)D_8014598C, 0, 0, flags, 0);

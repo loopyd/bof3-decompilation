@@ -36,13 +36,13 @@ void* func_801F3004(void);
 void  func_801F3060(void);
 void  func_801F318C(s16 arg0);
 
-#define WORLD00_AREA028_WORK_PTR \
+#define WORLD00_AREA028_WORK_PTR                                               \
   PSX_REF(volatile World00Area028Work*, 0x801f3e00u)
 #define WORLD00_AREA028_WORK_BASE     ((u8*)&D_800E4800)
 #define WORLD00_AREA028_PRIMITIVE_PTR PSX_REF(volatile u8*, 0x8014598cu)
-#define WORLD00_AREA028_RING_X(index) \
+#define WORLD00_AREA028_RING_X(index)                                          \
   PSX_REF(volatile u16, 0x800e4a04u + ((u32)(index) * 4u))
-#define WORLD00_AREA028_RING_Y(index) \
+#define WORLD00_AREA028_RING_Y(index)                                          \
   PSX_REF(volatile u16, 0x800e4a06u + ((u32)(index) * 4u))
 
 #endif

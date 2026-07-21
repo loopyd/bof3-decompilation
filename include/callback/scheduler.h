@@ -28,9 +28,9 @@ enum {
 
 #define CALLBACK_FORCE_SWITCH ((s32)0xff000000u)
 
-#define g_CallbackSlots PSX_PTR(volatile CallbackSlot, 0x80143b40u)
+#define g_CallbackSlots  PSX_PTR(volatile CallbackSlot, 0x80143b40u)
 #define g_CallbackCursor PSX_PTR(volatile CallbackSlot*, 0x80143d40u)
-#define g_CallbackEnd PSX_PTR(volatile CallbackSlot, 0x80143d40u)
+#define g_CallbackEnd    PSX_PTR(volatile CallbackSlot, 0x80143d40u)
 
 #define CbSchedInit     func_8014B73C
 #define CbSchedRegister func_8014B854

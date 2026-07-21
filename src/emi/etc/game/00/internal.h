@@ -90,7 +90,7 @@ typedef struct RecordSlot {
   u8 pad[0x6F]; /* 0x74 - 5 */
 } RecordSlot;
 
-extern PanelTask*               D_80148648;
+extern PanelTask* D_80148648;
 #define D_80148648 g_PanelTaskRoot
 extern GameScenarioState            GAME_SCENARIO_STATE;
 extern const volatile AbilityObject ABILITY_OBJECTS[];
@@ -386,7 +386,7 @@ void func_8019982C(void);
 #define GAME_WORK_AREA_PTR PSX_REF(volatile struct GameWorkArea*, 0x80146884u)
 
 /* Per-record spawn-gate byte table at 0x80144FC4, indexed by byte. */
-#define GAME_SPAWN_GATE_BYTE(index) \
+#define GAME_SPAWN_GATE_BYTE(index)                                            \
   PSX_REF(volatile u8, 0x80144FC4u + (u32)(index))
 
 /* Movement/position offset tables in main exe data section */

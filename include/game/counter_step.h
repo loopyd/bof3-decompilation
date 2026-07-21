@@ -13,7 +13,7 @@
 
 #include "base/types.h"
 
-#define COUNTER_ADVANCE(func, counter, flag)                                       \
+#define COUNTER_ADVANCE(func, counter, flag)                                   \
   void func(void) {                                                            \
     u16 count_;                                                                \
     count_ = (counter);                                                        \
@@ -21,7 +21,7 @@
     (counter) = (u16)(count_ + 0x14);                                          \
   }
 
-#define COUNTER_RETREAT(func, counter, flag)                                       \
+#define COUNTER_RETREAT(func, counter, flag)                                   \
   void func(void) {                                                            \
     u16 count_;                                                                \
     count_ = (counter);                                                        \

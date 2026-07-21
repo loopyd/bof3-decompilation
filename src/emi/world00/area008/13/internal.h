@@ -38,12 +38,12 @@ void func_801F3C2C(void);
 void func_801F3D18(void);
 void func_801F3D88(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
 
-#define WORLD00_AREA008_SCRATCH_PTR \
+#define WORLD00_AREA008_SCRATCH_PTR                                            \
   PSX_REF(volatile World00Area008State*, 0x1f800044u)
-#define WORLD00_AREA008_STATE_PTR \
+#define WORLD00_AREA008_STATE_PTR                                              \
   PSX_REF(volatile World00Area008State*, 0x80146250u)
 #define WORLD00_AREA008_STATE_BASE PSX_PTR(World00Area008State, 0x80145fd0u)
-#define WORLD00_AREA008_HANDLER_TABLE \
+#define WORLD00_AREA008_HANDLER_TABLE                                          \
   PSX_PTR(World00Area008Handler, 0x801f4688u)
 
 #endif

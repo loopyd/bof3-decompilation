@@ -14,8 +14,8 @@
  */
 
 enum {
-  BTL_LOCAL_WORK_STRIDE  = 0x140,
-  BTL_ENEMY_WORK_STRIDE  = 0x118,
+  BTL_LOCAL_WORK_STRIDE = 0x140,
+  BTL_ENEMY_WORK_STRIDE = 0x118,
   BTL_QUEUED_SLOT_STRIDE = 0x78,
   BTL_RING_RECORD_STRIDE = 0x08,
   BTL_KIND_RECORD_STRIDE = 0x14,
@@ -25,22 +25,22 @@ enum {
 #define BTL_ENEMY_WORK_BASE  0x801EB630u
 #define BTL_QUEUED_SLOT_BASE 0x801EC330u
 
-#define BtlLocalWork(i) \
+#define BtlLocalWork(i)                                                        \
   PSX_PTR(volatile u8, BTL_LOCAL_WORK_BASE + (u32)(i) * BTL_LOCAL_WORK_STRIDE)
-#define BtlEnemyWork(i) \
+#define BtlEnemyWork(i)                                                        \
   PSX_PTR(volatile u8, BTL_ENEMY_WORK_BASE + (u32)(i) * BTL_ENEMY_WORK_STRIDE)
-#define BtlQueuedSlot(i) \
+#define BtlQueuedSlot(i)                                                       \
   PSX_PTR(volatile u8, BTL_QUEUED_SLOT_BASE + (u32)(i) * BTL_QUEUED_SLOT_STRIDE)
 
 #define g_BtlCurrentBattler PSX_REF(volatile u8*, 0x801EB4E8u)
 #define g_BtlMessageSlot    PSX_REF(volatile u8*, 0x801EBF08u)
 
-#define BtlRingFlag(i) \
+#define BtlRingFlag(i)                                                         \
   PSX_REF(volatile u8, 0x801EB5B1u + (u32)(i) * BTL_RING_RECORD_STRIDE)
-#define BtlRingHandle(i) \
+#define BtlRingHandle(i)                                                       \
   PSX_REF(volatile u32, 0x801EB5B4u + (u32)(i) * BTL_RING_RECORD_STRIDE)
 
-#define BtlKindFlags(kind) \
+#define BtlKindFlags(kind)                                                     \
   PSX_REF(volatile u8, 0x801CA718u + (u32)(kind) * BTL_KIND_RECORD_STRIDE)
 
 #define g_BtlActiveCount PSX_REF(volatile u8, 0x801462F0u)

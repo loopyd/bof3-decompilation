@@ -33,13 +33,13 @@ typedef double             f64;
 #define DECOMP_JOIN_IMPL(a, b) a##b
 #define DECOMP_JOIN(a, b)      DECOMP_JOIN_IMPL(a, b)
 
-#define STATIC_ASSERT(condition) \
+#define STATIC_ASSERT(condition)                                               \
   typedef char DECOMP_JOIN(static_assertion_, __LINE__)[(condition) ? 1 : -1]
 
-#define ASSERT_SIZE(type, expected_size) \
+#define ASSERT_SIZE(type, expected_size)                                       \
   STATIC_ASSERT(sizeof(type) == (expected_size))
 
-#define ASSERT_OFFSET(type, member, expected_offset) \
+#define ASSERT_OFFSET(type, member, expected_offset)                           \
   STATIC_ASSERT(offsetof(type, member) == (expected_offset))
 
 #endif
