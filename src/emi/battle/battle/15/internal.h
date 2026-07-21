@@ -163,6 +163,7 @@ void func_80158E20(void);
 u32  func_801502D0(u32 arg0);
 void func_801DE8C0(u8 arg0, u8 arg1, u32 arg2);
 u8   func_801DB5CC(s32 arg0);
+void func_801E5988(void);
 
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
  * equal the symbol-name addresses. */

@@ -1148,7 +1148,7 @@ segments:
     - asm
     - func_800AD5C8
   - - 93820
-    - asm
+    - c
     - func_800AD67C
   - - 93852
     - asm
@@ -1166,7 +1166,7 @@ segments:
     - asm
     - func_800AD930
   - - 94636
-    - asm
+    - c
     - func_800AD9AC
   - - 94668
     - asm
@@ -1178,7 +1178,7 @@ segments:
     - asm
     - func_800ADB74
   - - 95396
-    - asm
+    - c
     - func_800ADCA4
   - - 95428
     - asm
@@ -1190,7 +1190,7 @@ segments:
     - asm
     - func_800ADE6C
   - - 96156
-    - asm
+    - c
     - func_800ADF9C
   - - 96188
     - asm
