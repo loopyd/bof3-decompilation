@@ -55,6 +55,9 @@ Prefer the repo `bin/` entrypoints over generic psx-rizin scripts.
   inline` helpers at the bottom. A `typedef` used by an `extern` precedes it; a
   `static inline` that uses a `#define` follows that macro. See
   `docs/matching.md` §Header barrel convention.
+- Follow the naming convention in `docs/matching.md` §Naming convention:
+  PascalCase structs, snake_case members, `(1 << N)` bitflags, `g_` globals,
+  hex for addresses/offsets, decimal for human quantities.
 - Add no tests for lifted game behavior. Add only the least tooling-contract
   test when tooling changes require one.
 - Never commit unless the current user explicitly requests a commit.

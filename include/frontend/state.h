@@ -12,4 +12,6 @@
 
 #define FrontendSetMode func_8014ECAC
 
+void func_80196070(void);
+
 #endif

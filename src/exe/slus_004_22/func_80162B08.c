@@ -1,12 +1,5 @@
 #include "internal.h"
 
-typedef struct EmiTransferSlot {
-  u32 size;
-  u32 remaining_size;
-  u32 read_offset;
-  u16 state;
-} EmiTransferSlot;
-
 extern u32*             D_80146848;
 extern u8               D_80146854;
 extern EmiTransferSlot* D_80146844;

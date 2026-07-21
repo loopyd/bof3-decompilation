@@ -8,5 +8,5 @@
  * semi-transparency via SetSemiTrans (flag 0), then appends the 0x10-byte
  * primitive to OT index 1 via func_8014E5A0.
  */
-#define BOF3_INIT_ICON_PRIM_FUNC func_801D2520
+#define ICON_PRIM_FUNC func_801D2520
 #include "shared/ui/init_icon_prim.inc"

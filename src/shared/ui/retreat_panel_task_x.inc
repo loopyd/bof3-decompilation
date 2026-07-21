@@ -1,12 +1,12 @@
-#if !defined(BOF3_PANEL_TASK_FUNCTION)
-#error "define BOF3_PANEL_TASK_FUNCTION before including this template"
+#if !defined(PANEL_TASK_FUNC)
+#error "define PANEL_TASK_FUNC before including this template"
 #endif
 
 /* @source varies across EMI code blobs (byte-identical group)
  * @behavior decrements the panel task X coordinate by 32 pixels, clamps it to
  * -170, and clears the panel task state byte when the clamp is reached.
  */
-void BOF3_PANEL_TASK_FUNCTION(void) {
+void PANEL_TASK_FUNC(void) {
   PanelTask* task_root;
   s16            next_x;
 
@@ -20,4 +20,4 @@ void BOF3_PANEL_TASK_FUNCTION(void) {
   }
 }
 
-#undef BOF3_PANEL_TASK_FUNCTION
+#undef PANEL_TASK_FUNC

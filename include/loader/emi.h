@@ -58,4 +58,31 @@ typedef struct EmiLoaderEntry {
 #define LdrStreamInitSlot func_80161FDC
 #define LdrIsReady        func_80162D00
 
+#define EMI_MAGIC_STR "MATH_TBL"
+
+#define EMI_ALIGN(size) (((u32)(size) + 0x7FFu) & ~0x7FFu)
+
+#define EMI_DATA_OFFSET 0x800u
+
+typedef enum EmiEntryType {
+  EMI_ENTRY_TYPE_0 = 0,
+  EMI_ENTRY_TYPE_1 = 1,
+  EMI_ENTRY_TYPE_2 = 2,
+  EMI_ENTRY_TYPE_3 = 3,
+  EMI_ENTRY_TYPE_4 = 4,
+  EMI_ENTRY_TYPE_5 = 5,
+  EMI_ENTRY_TYPE_6 = 6,
+  EMI_ENTRY_TYPE_7 = 7,
+  EMI_ENTRY_TYPE_8 = 8,
+  EMI_ENTRY_TYPE_9 = 9,
+  EMI_ENTRY_TYPE_10 = 10,
+} EmiEntryType;
+
+typedef struct EmiTransferSlot {
+  u32 size;
+  u32 remaining_size;
+  u32 read_offset;
+  u16 state;
+} EmiTransferSlot;
+
 #endif

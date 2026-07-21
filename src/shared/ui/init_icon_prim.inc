@@ -1,5 +1,5 @@
-#if !defined(BOF3_INIT_ICON_PRIM_FUNC)
-#error "define BOF3_INIT_ICON_PRIM_FUNC before including this template"
+#if !defined(ICON_PRIM_FUNC)
+#error "define ICON_PRIM_FUNC before including this template"
 #endif
 
 /* Shared icon/sprite primitive initializer (see each wrapper's @source).
@@ -17,12 +17,12 @@ typedef struct {
     s8  unk_0C;
     s8  unk_0D;
     u16 unk_0E;
-} Bof3IconInit;
+} IconPrim;
 
-void BOF3_INIT_ICON_PRIM_FUNC(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u16 arg4, u8 arg5) {
-    Bof3IconInit* icon;
+void ICON_PRIM_FUNC(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u16 arg4, u8 arg5) {
+    IconPrim* icon;
 
-    icon = (Bof3IconInit*)D_8014598C;
+    icon = (IconPrim*)D_8014598C;
     SetSprt8((SPRT_8*)icon);
     icon->unk_08 = arg0;
     icon->unk_0A = arg1;
@@ -36,4 +36,4 @@ void BOF3_INIT_ICON_PRIM_FUNC(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u16 arg4, 
     func_8014E5A0(1, 0x10);
 }
 
-#undef BOF3_INIT_ICON_PRIM_FUNC
+#undef ICON_PRIM_FUNC

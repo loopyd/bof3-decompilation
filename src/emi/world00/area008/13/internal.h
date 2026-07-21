@@ -2,6 +2,7 @@
 #define EMI_WORLD00_AREA008_13_INTERNAL_H
 
 #include "bof3/bof3.h"
+#include "gpu/prim.h"
 
 typedef struct World00Area008Scratch {
   u8 unk_00[0x5d];
@@ -31,7 +32,6 @@ extern u8* D_8014598C;
 s32  func_8017E3F4(char* buffer, const char* format, ...);
 void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
-void func_8014E5A0(u8 arg0, u8 arg1);
 void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 
 void func_801F3C2C(void);

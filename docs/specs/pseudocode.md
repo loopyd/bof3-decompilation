@@ -379,11 +379,11 @@ function decode_master_skills(record):
     skills = []
     for i in 0..5:
         value = read_uint16(record, i * 2)
-        if value == 0x63FF:
-            skills.append(null)  # empty slot
+        if value == 0xFF63:
+            skills.append(null)  # empty slot (ability=0xFF, level=0x63)
         else:
-            level = (value >> 8) & 0xFF  # high byte = required level
-            skill_id = value & 0xFF       # low byte = ability ID
+            level = value & 0xFF          # low byte = required level
+            skill_id = (value >> 8) & 0xFF # high byte = ability ID
             skills.append({ level, skill_id })
     return skills
 ```
@@ -391,6 +391,9 @@ function decode_master_skills(record):
 **How it was built**: The randomizer's `struct_master_skills.txt` defined
 the format. Verified by checking that Deis (index 9) has 5 skills
 (unlike other masters with 3-4), matching her known skill set.
+Byte order confirmed against `SISYOU.EMI @ 0x3C88`: empty slots are
+`0xFF63` (high=0xFF ability, low=0x63 unused level), matching
+`docs/specs/data/encoding.md` bits 15-8=ability, 7-0=level.
 
 ## 7. Shop item reference decoding
 

@@ -107,7 +107,7 @@ to repeat or misdiagnose across targets. Use the
 - Match qualifiers to the observed contract. An unjustified `volatile`
   pointee can change register allocation and move stores across comparisons;
   `func_800B2218` matched only after `D_80148648` became a named
-  `Bof3PanelTask*`. Add `volatile` only when asynchronous or hardware
+  `PanelTask*`. Add `volatile` only when asynchronous or hardware
   mutation is part of the evidence.
 - Recover stable field offsets into a target-local struct before trying
   permutations. Keep addresses, masks, and encoded values hexadecimal; write
@@ -139,7 +139,8 @@ usage, pointer hoisting, and table indexing are fully documented in
 
 ### Reach fixed RAM through `PSX_PTR`/`PSX_REF`, never raw casts or `vu8`
 
-- All fixed-address access goes through the `include/bof3/` macros. The
+- All fixed-address access goes through the `include/memory/` and `include/base/`
+  subsystem headers (legacy aliases remain under `include/bof3/`). The
   `vu8`/`vu16`/`vu32` typedefs are gone; write `volatile u8`/`u16`/`u32`
   directly on the `type` argument (`PSX_REF(volatile u16, 0x80143B90u)`).
 - Hardware registers use `REG8/16/32` only. Scratchpad RAM (`0x1F800000`) uses

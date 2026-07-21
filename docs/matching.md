@@ -204,3 +204,24 @@ Every target `internal.h` is a structured barrel, ordered:
 4. External variables: every `extern ...;`.
 5. External functions: free function prototypes.
 6. `#define` macros and `static inline` helpers at the bottom.
+
+## Naming convention (PSX-era Capcom style)
+
+| Element | Style | Example |
+| --- | --- | --- |
+| Structs / typedefs | PascalCase | `PanelTask`, `AbilityObject` |
+| Struct members | snake_case | `targeting_flags`, `item_type` |
+| Function aliases | PascalCase, abbreviated domain prefix | `GpuAppendPrim`, `CbSchedTick` |
+| Constants / macros | SCREAMING_SNAKE_CASE | `EMI_SECTOR_SIZE`, `EQUIP_RYU` |
+| Single-bit flags | `(1 << N)` shift form | `#define ELEM_FIRE (1 << 0)` |
+| Globals (fixed-address) | `g_` + PascalCase | `g_PrimCursor`, `g_GameState` |
+| Filenames | `func_XXXXXXXX.c` (address-based) | `func_8014E5A0.c` |
+
+Values:
+
+| Kind | Representation | Example |
+| --- | --- | --- |
+| Addresses, bitmasks, struct offsets/sizes | Hexadecimal | `0x8014598Cu`, `0x140` |
+| Human quantities (pixels, counts, loop bounds) | Decimal | `32`, `228`, `92` |
+| Encoded values, sentinels | Hexadecimal | `0xFF63`, `0x7f` |
+| Sequential ordinals, state codes | Decimal in enum | `SKILL_CLASS_HEALING = 0` |
