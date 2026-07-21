@@ -1,4 +1,0 @@
-interface:
-  display_name: "PSX Rizin"
-  short_description: "Evidence-driven PS1 reverse engineering"
-  default_prompt: "$psx-rizin inventory and analyze the supplied PS1 binaries, preserve address/overlay provenance, recover xrefs and arguments, and propose the next runtime replay experiments."

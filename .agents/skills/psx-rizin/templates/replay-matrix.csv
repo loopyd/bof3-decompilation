@@ -1,1 +1,0 @@
-replay_id,source,source_sha256,status,emulator,emulator_version,core,disc_sha256,bios_sha256,region,initial_state,controller_config,sync_settings,frame_start,frame_end,expected_event,overlays_loaded,functions_expected,functions_hit,watched_ranges,trace_path,result_notes
