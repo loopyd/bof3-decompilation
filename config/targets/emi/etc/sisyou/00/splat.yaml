@@ -104,7 +104,7 @@ segments:
     - asm
     - func_801D2C24
   - - 8292
-    - asm
+    - c
     - func_801D2C64
   - - 8356
     - asm
@@ -116,7 +116,7 @@ segments:
     - asm
     - func_801D3148
   - - 9816
-    - asm
+    - c
     - func_801D3258
   - - 9940
     - asm
@@ -125,7 +125,7 @@ segments:
     - asm
     - func_801D3310
   - - 10064
-    - asm
+    - c
     - func_801D3350
   - - 10128
     - asm
@@ -137,7 +137,7 @@ segments:
     - asm
     - func_801D3798
   - - 11432
-    - asm
+    - c
     - func_801D38A8
   - - 11556
     - asm
