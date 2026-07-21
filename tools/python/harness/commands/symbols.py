@@ -83,8 +83,7 @@ def run_check(args: argparse.Namespace) -> int:
         # Bindings may reference shared engine globals and PSX SDK symbols, not
         # just the target-local map; validate them against the composed set.
         by_address = {
-            symbol.address: symbol
-            for symbol in load_target_symbols(root, target)
+            symbol.address: symbol for symbol in load_target_symbols(root, target)
         }
         source_dir = root / manifest.source_dir
         for source in source_dir.glob("func_*.c"):
@@ -332,18 +331,24 @@ def run_dedupe(args: argparse.Namespace) -> int:
         return 0
 
     merged = sorted(shared_existing + new_shared)
-    print(f"extracting {len(new_shared)} symbols into shared base ({len(merged)} total)")
+    print(
+        f"extracting {len(new_shared)} symbols into shared base ({len(merged)} total)"
+    )
     if args.write:
         write_map(shared_map_path(root), merged)
         for target in targets:
             local = load_map(map_path(root, target))
-            trimmed = [s for s in local if s.address not in {x.address for x in new_shared}]
+            trimmed = [
+                s for s in local if s.address not in {x.address for x in new_shared}
+            ]
             if len(trimmed) < len(local):
                 write_map(map_path(root, target), trimmed)
         print(f"wrote {shared_map_path(root).relative_to(root)}")
     else:
         for s in new_shared[:10]:
-            print(f"  {s.canonical_name} = 0x{s.address:08X}; ({addr_count[s.address]}×)")
+            print(
+                f"  {s.canonical_name} = 0x{s.address:08X}; ({addr_count[s.address]}×)"
+            )
         if len(new_shared) > 10:
             print(f"  ... and {len(new_shared) - 10} more")
         print("pass --write to apply")

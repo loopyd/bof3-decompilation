@@ -160,7 +160,9 @@ def build_catalog(emi_root: Path) -> dict[str, Any]:
     root = emi_root.resolve().parents[2] if emi_root.name == "BIN" else None
     if root is not None:
         for entry in entries:
-            config = root / "config" / "targets" / "emi" / target_slug(entry) / "splat.yaml"
+            config = (
+                root / "config" / "targets" / "emi" / target_slug(entry) / "splat.yaml"
+            )
             if config.is_file():
                 entry["code_status"] = "confirmed"
                 entry["evidence"]["reviewed_config"] = str(config.relative_to(root))

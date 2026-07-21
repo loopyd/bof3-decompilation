@@ -497,7 +497,9 @@ def _print_mission(brief: dict[str, Any]) -> None:
         names = ", ".join(f"{c['name']}@{c['address']}" for c in brief["sdk_callees"])
         print(f"  SDK callees: {names}")
     if brief["sdk_unresolved"]:
-        names = ", ".join(f"{c['name']}@{c['address']}" for c in brief["sdk_unresolved"])
+        names = ", ".join(
+            f"{c['name']}@{c['address']}" for c in brief["sdk_unresolved"]
+        )
         print(f"  SDK unresolved: {names}")
     if brief["callers"]:
         print(

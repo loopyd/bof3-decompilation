@@ -46,7 +46,6 @@ def write_bundle(
         "architecture": "mipsel",
         "function": function,
         "address": f"0x{address}",
-
         "expected": str((bundle / "original.s").relative_to(root)),
         "current": str((bundle / "current.s").relative_to(root)),
         "build_command": "harness diff",

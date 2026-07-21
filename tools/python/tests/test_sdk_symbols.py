@@ -67,9 +67,7 @@ def test_psyq_bindings_generator_writes_sdk_bindings(tmp_path: Path) -> None:
     _write_sdk(tmp_path, "logo", "PadInit = 0x801CEE7C;\n")
 
     assert (
-        symbols_main(
-            ["--root", str(tmp_path), "psyq-bindings", "exe/logo", "--write"]
-        )
+        symbols_main(["--root", str(tmp_path), "psyq-bindings", "exe/logo", "--write"])
         == 0
     )
 

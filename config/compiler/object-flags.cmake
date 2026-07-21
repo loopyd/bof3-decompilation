@@ -36,3 +36,8 @@ set(BOF3_OBJFLAGS_emi_etc_game_01_func_801D104C_c -O2 -fno-rerun-cse-after-loop)
 # canonical maspsx pass omits these traps; --expand-div restores them.
 # Verified by bin/flag-search (no -O variant matches) + manual maspsx test.
 set(BOF3_OBJFLAGS_emi_battle_battle_03_func_801E29B4_c -O2 -Wa,--expand-div)
+
+# func_800AB760 is a byte-identical duplicate of func_801E29B4 (battle/03).
+# Same signed modulo (rand() % count) requiring --expand-div for the MIPS
+# division-trap sequence.
+set(BOF3_OBJFLAGS_emi_battle_battle_15_func_800AB760_c -O2 -Wa,--expand-div)
