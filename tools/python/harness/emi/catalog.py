@@ -160,7 +160,7 @@ def build_catalog(emi_root: Path) -> dict[str, Any]:
     root = emi_root.resolve().parents[2] if emi_root.name == "BIN" else None
     if root is not None:
         for entry in entries:
-            config = root / "config/splat/emi" / f"{target_slug(entry)}.yaml"
+            config = root / "config" / "targets" / "emi" / target_slug(entry) / "splat.yaml"
             if config.is_file():
                 entry["code_status"] = "confirmed"
                 entry["evidence"]["reviewed_config"] = str(config.relative_to(root))
@@ -263,9 +263,9 @@ def _eligibility(root: Path, entry: dict[str, Any]) -> list[str]:
         reasons.append("empty-payload")
     slug = target_slug(entry)
     tracked = [
-        root / f"config/targets/emi/{slug}.toml",
-        root / f"config/splat/emi/{slug}.yaml",
-        root / f"config/symbols/emi/{slug}.txt",
+        root / f"config/targets/emi/{slug}/target.toml",
+        root / f"config/targets/emi/{slug}/splat.yaml",
+        root / f"config/targets/emi/{slug}/symbols.txt",
         root / f"src/emi/{slug}",
     ]
     if any(path.exists() for path in tracked):
@@ -287,9 +287,9 @@ def bootstrap_plan(
     slug = target_slug(entry)
     target = f"emi/{slug}"
     binary = f"out/binaries/emi/{slug}.bin"
-    manifest = f"config/targets/emi/{slug}.toml"
-    splat = f"config/splat/emi/{slug}.yaml"
-    symbols = f"config/symbols/emi/{slug}.txt"
+    manifest = f"config/targets/emi/{slug}/target.toml"
+    splat = f"config/targets/emi/{slug}/splat.yaml"
+    symbols = f"config/targets/emi/{slug}/symbols.txt"
     basename = slug.replace("/", "_")
     payload = Path(entry["payload_path"])
     source = payload.relative_to(root).as_posix()
@@ -317,7 +317,6 @@ def bootstrap_plan(
         f'binary = "{binary}"\n'
         f'splat = "{splat}"\n'
         f"load_address = 0x{entry['load_address']:08X}\n"
-        'profile = "compat/capcom97"\n'
     )
     splat_text = (
         f"name: {basename}\nsha1: {hashlib.sha1(payload.read_bytes()).hexdigest()}\n"
@@ -391,7 +390,7 @@ def apply_bootstrap(
         manifests = load_target_manifests(root)
         if fresh["target"] not in manifests:
             raise ValueError("created target manifest did not load")
-        load_map(root / f"config/symbols/{fresh['target']}.txt")
+        load_map(root / f"config/targets/{fresh['target']}/symbols.txt")
         return created
     except BaseException:
         for path in reversed(created):

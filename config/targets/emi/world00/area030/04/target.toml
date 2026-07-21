@@ -1,0 +1,8 @@
+schema = "harness.target/v2"
+id = "emi/world00/area030/04"
+disc_id = "BIN/WORLD00/AREA030.EMI#4"
+kind = "emi"
+source_dir = "src/emi/world00/area030/04"
+binary = "out/binaries/emi/world00/area030/04.bin"
+splat = "config/targets/emi/world00/area030/04/splat.yaml"
+load_address = 0x801d0c00

@@ -23,22 +23,21 @@ def _manifest(root: Path) -> tuple[Path, Path]:
     binary = root / "out/binaries/emi/test/archive/00.bin"
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b"\0" * 32)
-    config = root / "config/targets/emi/test/archive/00.toml"
+    config = root / "config/targets/emi/test/archive/00/target.toml"
     config.parent.mkdir(parents=True)
     config.write_text(
         "schema = 'harness.target/v2'\n"
         f"id = '{TARGET}'\n"
         "kind = 'emi'\nsource_dir = 'src/emi/test/archive/00'\n"
         "binary = 'out/binaries/emi/test/archive/00.bin'\n"
-        "splat = 'config/splat/emi/test/archive/00.yaml'\n"
-        "load_address = 0x80100000\nprofile = 'test'\n",
+        "splat = 'config/targets/emi/test/archive/00/splat.yaml'\n",
         encoding="utf-8",
     )
-    splat = root / "config/splat/emi/test/archive/00.yaml"
-    splat.parent.mkdir(parents=True)
+    splat = root / "config/targets/emi/test/archive/00/splat.yaml"
+    splat.parent.mkdir(parents=True, exist_ok=True)
     splat.write_text("segments:\n  - [0, c, func_80100000]\n", encoding="utf-8")
-    symbols = root / "config/symbols/emi/test/archive/00.txt"
-    symbols.parent.mkdir(parents=True)
+    symbols = root / "config/targets/emi/test/archive/00/symbols.txt"
+    symbols.parent.mkdir(parents=True, exist_ok=True)
     symbols.write_text(
         "func_80100000 = 0x80100000;\nD_80100010 = 0x80100010;\n", encoding="utf-8"
     )

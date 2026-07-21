@@ -38,7 +38,7 @@ def test_semantic_map_symbol_resolves_without_authored_binding(tmp_path: Path) -
 def test_source_target_uses_its_canonical_map_for_link_bindings(tmp_path: Path) -> None:
     source = tmp_path / "src" / "exe" / "logo"
     source.mkdir(parents=True)
-    target_map = tmp_path / "config" / "symbols" / "exe" / "logo.txt"
+    target_map = tmp_path / "config" / "targets" / "exe" / "logo" / "symbols.txt"
     target_map.parent.mkdir(parents=True)
     target_map.write_text("PadRead = 0x801CE760;\n", encoding="utf-8")
 

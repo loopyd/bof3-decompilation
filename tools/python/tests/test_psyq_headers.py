@@ -36,15 +36,14 @@ def test_header_catalog_and_signature_evidence_are_exact_name_only(
     assert declaration_for(catalog, "CdlFILE")["kind"] == "type"
     assert declaration_for(catalog, "CdReadSync2") is None
 
-    manifest = tmp_path / "config/targets/exe/logo.toml"
+    manifest = tmp_path / "config/targets/exe/logo/target.toml"
     manifest.parent.mkdir(parents=True)
     manifest.write_text(
         'schema = "harness.target/v2"\n'
         'id = "exe/logo"\nkind = "executable"\n'
         'source_dir = "src/exe/logo"\n'
         'binary = "out/binaries/exe/logo.bin"\n'
-        'splat = "config/splat/exe/logo.yaml"\n'
-        'load_address = 0x801CE000\nprofile = "test"\n',
+        'splat = "config/targets/exe/logo/splat.yaml"\n',
         encoding="utf-8",
     )
     binary = tmp_path / "out/binaries/exe/logo.bin"

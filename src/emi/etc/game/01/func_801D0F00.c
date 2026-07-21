@@ -13,7 +13,7 @@ void func_801D0F00(void) {
 
   if (func_80162D00() && GAME_FRONT_EFFECT_BUSY == 0u &&
       (GAME_FRONT_PAD_STATE & 0x09ffu) != 0u) {
-    u8 sel;
+    u8  sel;
     u16 bank;
     D_80146874 = 1u;
     /* MATCHING_AID: keep a0=4 in the jal delay slot */

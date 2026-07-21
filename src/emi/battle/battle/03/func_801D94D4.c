@@ -16,13 +16,13 @@ void func_801D94D4(s16 arg0, u16 arg1, s32 arg2, s16 arg3) {
   arg3_u16 = (u16)arg3;
   if (arg3_u16 == 0xffff) {
     sprintf((void*)(BATTLE_GLOBAL_RAM_U8 + 0x5ad4),
-                  (const char*)(BATTLE_ROM_BASE_D0000 + 0xc70));
+            (const char*)(BATTLE_ROM_BASE_D0000 + 0xc70));
   } else {
     sprintf((void*)(BATTLE_GLOBAL_RAM_U8 + 0x5ad4),
-                  (const char*)(BATTLE_ROM_BASE_D0000 + 0xc74), arg3_u16);
+            (const char*)(BATTLE_ROM_BASE_D0000 + 0xc74), arg3_u16);
   }
   SetDrawMode((DR_MODE*)BATTLE_GLOBAL_WORD_598C, 0, 0, GetTPage(0, 0, 0x3c0, 0),
-                0);
+              0);
   func_8014E5A0(1, 0xc);
 
   for (;;) {

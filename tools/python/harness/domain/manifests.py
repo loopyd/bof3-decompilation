@@ -1,4 +1,4 @@
-"""TOML-backed target and toolchain profile manifests."""
+"""TOML-backed target manifests."""
 
 from __future__ import annotations
 
@@ -9,24 +9,6 @@ from typing import Any
 import re
 
 from .ids import TargetId, normalize_target_id
-
-
-@dataclass(frozen=True)
-class Profile:
-    id: str
-    compiler: str
-    compiler_flags: tuple[str, ...]
-    assembler: str
-    linker: str
-    runner: str
-    headers: str | None = None
-    objects: str | None = None
-
-
-@dataclass(frozen=True)
-class Component:
-    id: str
-    kind: str
 
 
 @dataclass(frozen=True)
@@ -46,7 +28,6 @@ class TargetManifest:
     binary: str
     splat: str
     load_address: int
-    profile: str
     psyq_headers: str | None = None
     libraries: dict[str, tuple[str, ...]] = field(default_factory=dict)
     library_confidence: dict[str, str] = field(default_factory=dict)
@@ -63,37 +44,6 @@ class TargetManifest:
 def _load_toml(path: Path) -> dict[str, Any]:
     with path.open("rb") as stream:
         return tomllib.load(stream)
-
-
-def load_profiles(root: Path) -> dict[str, Profile]:
-    path = root / "config" / "toolchains" / "profiles.toml"
-    if not path.is_file():
-        return {}
-    payload = _load_toml(path)
-    profiles: dict[str, Profile] = {}
-    for profile_id, raw in payload.get("profiles", {}).items():
-        profiles[profile_id] = Profile(
-            id=profile_id,
-            compiler=str(raw["compiler"]),
-            compiler_flags=tuple(str(flag) for flag in raw.get("compiler_flags", [])),
-            assembler=str(raw["assembler"]),
-            linker=str(raw["linker"]),
-            runner=str(raw["runner"]),
-            headers=None if raw.get("headers") is None else str(raw["headers"]),
-            objects=None if raw.get("objects") is None else str(raw["objects"]),
-        )
-    return profiles
-
-
-def load_components(root: Path) -> dict[str, Component]:
-    path = root / "config" / "toolchains" / "profiles.toml"
-    if not path.is_file():
-        return {}
-    payload = _load_toml(path)
-    return {
-        component_id: Component(component_id, str(raw["kind"]))
-        for component_id, raw in payload.get("components", {}).items()
-    }
 
 
 def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
@@ -156,7 +106,6 @@ def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
             binary=str(raw["binary"]),
             splat=str(raw["splat"]),
             load_address=int(raw.get("load_address", 0)),
-            profile=str(raw["profile"]),
             psyq_headers=(
                 None if psyq.get("headers") is None else str(psyq["headers"])
             ),

@@ -8,11 +8,7 @@ from .ids import (
     parse_function_id,
 )
 from .manifests import (
-    Component,
-    Profile,
     TargetManifest,
-    load_components,
-    load_profiles,
     load_target_manifests,
 )
 from .registry import (
@@ -23,13 +19,9 @@ from .registry import (
 
 __all__ = [
     "FunctionId",
-    "Component",
-    "Profile",
     "ResolvedTarget",
     "TargetId",
     "TargetManifest",
-    "load_profiles",
-    "load_components",
     "load_target_manifests",
     "normalize_target_id",
     "parse_address",

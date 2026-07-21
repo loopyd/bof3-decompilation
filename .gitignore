@@ -10,8 +10,6 @@ dist/
 
 # Build artifacts
 build/
-!tools/python/harness/build/
-!tools/python/harness/build/*.py
 
 # Editor / IDE
 *.swp
@@ -27,12 +25,6 @@ out/*
 # Splat-generated
 undefined_funcs_auto.txt
 undefined_syms_auto.txt
-
-# Splat-generated assembly macros
-include/gte_macros.inc
-include/include_asm.h
-include/labels.inc
-include/macro.inc
 
 # Debug artifacts
 debug_*.o
@@ -56,16 +48,15 @@ toolchains/gcc-2.7.2-psx/*
 !toolchains/gcc-2.7.2-psx/.gitkeep
 toolchains/psn00b_toolchain/*
 !toolchains/psn00b_toolchain/.gitkeep
-!toolchains/psn00b_toolchain/bin/as
 toolchains/psn00bsdk/*
 !toolchains/psn00bsdk/.gitkeep
 toolchains/aspsx-psyq-binaries/*
 toolchains/psyq/*
 !toolchains/psyq/4.7/
 toolchains/psyq/4.7/*
+!toolchains/psyq/4.7/.gitkeep
 toolchains/psyq-original/
 toolchains/psyq-stock/
-!toolchains/psyq/4.7/.gitkeep
 !toolchains/README.md
 
 # Session / agent artifacts

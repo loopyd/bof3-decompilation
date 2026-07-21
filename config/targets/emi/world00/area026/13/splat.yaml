@@ -1,0 +1,98 @@
+name: world00_area026_13
+sha1: 46d12af918a938368b06a5091400871e192f140a
+options:
+  platform: psx
+  compiler: psyq
+  basename: world00_area026_13
+  base_path: ../../../../..
+  target_path: out/binaries/emi/world00/area026/13.bin
+  asm_path: out/splat/emi/world00/area026/13/asm
+  src_path: src/emi/world00/area026/13
+  ld_script_path: out/splat/emi/world00/area026/13/linker.ld
+  symbol_addrs_path:
+  - config/targets/emi/world00/area026/13/symbols.txt
+segments:
+- name: main
+  type: code
+  start: 0
+  vram: 2149526528
+  subsegments:
+  - - 0
+    - asm
+    - T_801F2C00
+  - - 72
+    - asm
+    - func_801F2C48
+  - - 148
+    - asm
+    - func_801F2C94
+  - - 284
+    - c
+    - func_801F2D1C
+  - - 316
+    - c
+    - func_801F2D3C
+  - - 348
+    - asm
+    - func_801F2D5C
+  - - 516
+    - asm
+    - func_801F2E04
+  - - 1036
+    - asm
+    - func_801F300C
+  - - 1116
+    - asm
+    - func_801F305C
+  - - 1180
+    - asm
+    - func_801F309C
+  - - 1236
+    - asm
+    - func_801F30D4
+  - - 1276
+    - asm
+    - func_801F30FC
+  - - 1316
+    - asm
+    - func_801F3124
+  - - 1356
+    - asm
+    - func_801F314C
+  - - 1396
+    - asm
+    - func_801F3174
+  - - 1436
+    - asm
+    - func_801F319C
+  - - 1476
+    - asm
+    - func_801F31C4
+  - - 1516
+    - asm
+    - func_801F31EC
+  - - 1584
+    - c
+    - func_801F3230
+  - - 1624
+    - c
+    - func_801F3258
+  - - 1664
+    - asm
+    - func_801F3280
+  - - 1720
+    - asm
+    - func_801F32B8
+  - - 1848
+    - asm
+    - func_801F3338
+  - - 1888
+    - asm
+    - func_801F3360
+  - - 2028
+    - asm
+    - T_801F33EC
+- - 8420
+  - bin
+  - data
+- - 8421

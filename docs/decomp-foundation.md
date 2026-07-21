@@ -147,7 +147,7 @@ this doc stays usable without silent drift.
 1. **No `include/subsystems/` or `include/psyq/` trees.** The standard shows
    these as example layout. This repo keeps per-subsystem semantic accessors in
    each target's `internal.h` and target-local symbol files
-   (`config/symbols/<target>.txt`), per `AGENTS.md` ownership.
+   (`config/targets/<target>/symbols.txt`), per `AGENTS.md` ownership.
    `include/bof3/psyq.h` wraps the PsyQ SDK headers instead of `include/psyq/`.
 
 2. **Repo-extension matching aids are retained.** Evidence-backed and not in the
@@ -161,8 +161,7 @@ this doc stays usable without silent drift.
    (pulled in for every TU via `include/bof3/bof3.h`) is the single canonical
    definition: 2-arg `INCLUDE_ASM(FOLDER, NAME)` /
    `INCLUDE_RODATA(FOLDER, NAME)` that `.include` the adjacent `.s` file, plus
-   `SKIP_ASM`, `NON_MATCHING`, `PERMUTER`, and `M2CTX` support. The former
-   `include/include_asm.h` is now a thin wrapper over `bof3/asm.h`.
+   `SKIP_ASM`, `NON_MATCHING`, `PERMUTER`, and `M2CTX` support.
 
 4. **Compiler profiles** live in `config/compiler/flag-catalog.json`
     plus per-target config under `config/targets/` (standard §9 intent).

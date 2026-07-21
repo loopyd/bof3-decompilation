@@ -402,7 +402,7 @@ void func_8019982C(void);
 /* Misc. single fixed-address globals (read-only status flags) */
 #define GAME_UNK_80145558 PSX_REF(const volatile u32, 0x80145558u)
 #define GAME_UNK_80145554 PSX_REF(const volatile u32, 0x80145554u)
-#define GAME_UNK_801462EA PSX_REF(const volatile u8,  0x801462eau)
+#define GAME_UNK_801462EA PSX_REF(const volatile u8, 0x801462eau)
 
 /* ---- RAM globals (D_ names match original game data patterns) ---- */
 

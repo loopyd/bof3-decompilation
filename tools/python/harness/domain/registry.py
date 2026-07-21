@@ -28,7 +28,6 @@ class ResolvedTarget:
     splat_path: Path
     reviewed_replay_path: Path
     load_address: int
-    profile: str
 
     @property
     def binary_end(self) -> int:
@@ -67,7 +66,7 @@ def resolve_target(root: Path, value: str) -> ResolvedTarget:
     manifest = manifests.get(target_id.value)
     if manifest is None:
         raise ValueError(f"unknown target: {value!r} (canonical: {target_id.value!r})")
-    manifest_path = root / "config" / "targets" / f"{target_id.value}.toml"
+    manifest_path = root / "config" / "targets" / target_id.value / "target.toml"
     if not manifest_path.is_file():
         raise FileNotFoundError(f"target manifest missing: {manifest_path}")
     _validate_manifest_identity(root, target_id, manifest, manifest_path)
@@ -84,11 +83,10 @@ def resolve_target(root: Path, value: str) -> ResolvedTarget:
         splat_path=root / manifest.splat,
         reviewed_replay_path=root
         / "config"
-        / "analysis"
+        / "targets"
         / manifest.id.value
         / "reviewed.rz",
         load_address=manifest.load_address,
-        profile=manifest.profile,
     )
 
 
@@ -97,15 +95,12 @@ def _validate_manifest_identity(
 ) -> None:
     """Catch manifest/identity inconsistencies early."""
 
-    # The manifest file path must correspond to the canonical target ID.
-    expected_dir = root / "config" / "targets" / target_id.value
-    expected_path = expected_dir.parent / f"{expected_dir.name}.toml"
+    expected_path = root / "config" / "targets" / target_id.value / "target.toml"
     if manifest_path != expected_path:
         raise RuntimeError(
             f"manifest path {manifest_path.relative_to(root)} does not match "
             f"target ID {target_id.value!r}"
         )
-    # Kind and ID prefix must agree.
     if target_id.kind == "executable" and manifest.kind != "executable":
         raise RuntimeError(
             f"ID {target_id.value!r} has executable kind but manifest is {manifest.kind!r}"

@@ -17,7 +17,7 @@ void func_801F3C2C(void) {
   field_5e = scratch->field_5e;
   buf = (char*)WORLD00_AREA008_D_80145AD4;
   sprintf(buf, (const char*)WORLD00_AREA008_D_801F2C04, field_5e,
-                (field_5d * 100) / 30);
+          (field_5d * 100) / 30);
 
   func_8014FF0C(0x86, 0x3b, 0, buf);
 

@@ -1,0 +1,128 @@
+name: world00_area016_13
+sha1: 8038c035e9553a2b330fcde0e39911b32b8c7828
+options:
+  platform: psx
+  compiler: psyq
+  basename: world00_area016_13
+  base_path: ../../../../..
+  target_path: out/binaries/emi/world00/area016/13.bin
+  asm_path: out/splat/emi/world00/area016/13/asm
+  src_path: src/emi/world00/area016/13
+  ld_script_path: out/splat/emi/world00/area016/13/linker.ld
+  symbol_addrs_path:
+  - config/targets/emi/world00/area016/13/symbols.txt
+segments:
+- name: main
+  type: code
+  start: 0
+  vram: 2149526528
+  subsegments:
+  - - 0
+    - asm
+    - T_801F2C00
+  - - 56
+    - asm
+    - func_801F2C38
+  - - 748
+    - asm
+    - func_801F2EEC
+  - - 1120
+    - asm
+    - func_801F3060
+  - - 1260
+    - asm
+    - func_801F30EC
+  - - 1572
+    - asm
+    - func_801F3224
+  - - 1696
+    - asm
+    - func_801F32A0
+  - - 1888
+    - asm
+    - func_801F3360
+  - - 2048
+    - asm
+    - func_801F3400
+  - - 2076
+    - asm
+    - func_801F341C
+  - - 2144
+    - asm
+    - func_801F3460
+  - - 2208
+    - asm
+    - func_801F34A0
+  - - 2248
+    - asm
+    - func_801F34C8
+  - - 2316
+    - asm
+    - func_801F350C
+  - - 2396
+    - asm
+    - func_801F355C
+  - - 2488
+    - asm
+    - func_801F35B8
+  - - 2568
+    - asm
+    - func_801F3608
+  - - 2700
+    - asm
+    - func_801F368C
+  - - 2768
+    - asm
+    - func_801F36D0
+  - - 2896
+    - asm
+    - func_801F3750
+  - - 3112
+    - asm
+    - func_801F3828
+  - - 3368
+    - asm
+    - func_801F3928
+  - - 3544
+    - asm
+    - func_801F39D8
+  - - 3840
+    - asm
+    - func_801F3B00
+  - - 4812
+    - asm
+    - func_801F3ECC
+  - - 5316
+    - asm
+    - func_801F40C4
+  - - 5496
+    - asm
+    - func_801F4178
+  - - 5564
+    - asm
+    - func_801F41BC
+  - - 5880
+    - asm
+    - func_801F42F8
+  - - 6440
+    - asm
+    - func_801F4528
+  - - 6604
+    - asm
+    - func_801F45CC
+  - - 6672
+    - asm
+    - func_801F4610
+  - - 6976
+    - asm
+    - func_801F4740
+  - - 7016
+    - asm
+    - func_801F4768
+  - - 8572
+    - asm
+    - T_801F4D7C
+- - 9696
+  - bin
+  - data
+- - 9698

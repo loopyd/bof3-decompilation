@@ -208,7 +208,7 @@ def _run_match(function: FunctionId, source: Path) -> dict[str, object]:
             symbols_c_path=bindings,
         )
     )
-    write_bundle(root, payload, target=function.target.value, profile=manifest.profile)
+    write_bundle(root, payload, target=function.target.value)
     return payload
 
 

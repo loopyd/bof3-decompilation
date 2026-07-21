@@ -83,7 +83,7 @@ def prepare_target(root: Path, target_id: str) -> RizinTarget:
     if invalid_roots:
         rendered = ", ".join(f"0x{address:08X}" for address in invalid_roots)
         raise ValueError(f"reviewed function roots outside target image: {rendered}")
-    overlay = root / "config/analysis" / target / "reviewed.rz"
+    overlay = root / "config" / "targets" / target / "reviewed.rz"
     replay = _baseline(load_map(map_path(root, target)), roots) + _reviewed_overlay(
         overlay
     )

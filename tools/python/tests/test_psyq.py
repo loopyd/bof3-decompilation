@@ -93,7 +93,7 @@ def test_relocation_aware_match_is_not_an_exact_match() -> None:
 def test_symbols_import_psyq_requires_write_and_replaces_raw_name(
     tmp_path: Path,
 ) -> None:
-    manifest = tmp_path / "config" / "targets" / "exe" / "logo.toml"
+    manifest = tmp_path / "config" / "targets" / "exe" / "logo" / "target.toml"
     manifest.parent.mkdir(parents=True)
     manifest.write_text(
         'schema = "harness.target/v2"\n'
@@ -101,13 +101,12 @@ def test_symbols_import_psyq_requires_write_and_replaces_raw_name(
         'kind = "executable"\n'
         'source_dir = "src/exe/logo"\n'
         'binary = "out/binaries/exe/logo.bin"\n'
-        'splat = "config/splat/exe/logo.yaml"\n'
-        "load_address = 0x801CE000\n"
-        'profile = "compat/capcom97"\n',
+        'splat = "config/targets/exe/logo/splat.yaml"\n'
+        "load_address = 0x801CE000\n",
         encoding="utf-8",
     )
-    target_map = tmp_path / "config" / "symbols" / "exe" / "logo.txt"
-    target_map.parent.mkdir(parents=True)
+    target_map = tmp_path / "config" / "targets" / "exe" / "logo" / "symbols.txt"
+    target_map.parent.mkdir(parents=True, exist_ok=True)
     target_map.write_text("func_801CE758 = 0x801CE758;\n", encoding="utf-8")
     proposal = tmp_path / "proposal.json"
     proposal.write_text(
@@ -132,15 +131,15 @@ def test_symbols_import_psyq_requires_write_and_replaces_raw_name(
 
 
 def _signature_fixture(root: Path) -> None:
-    manifest = root / "config/targets/exe/logo.toml"
+    manifest = root / "config/targets/exe/logo/target.toml"
     manifest.parent.mkdir(parents=True)
     manifest.write_text(
         'schema = "harness.target/v2"\n'
         'id = "exe/logo"\nkind = "executable"\n'
         'source_dir = "src/exe/logo"\n'
         'binary = "out/binaries/exe/logo.bin"\n'
-        'splat = "config/splat/exe/logo.yaml"\n'
-        'load_address = 0x801CE000\nprofile = "test"\n',
+        'splat = "config/targets/exe/logo/splat.yaml"\n'
+        "load_address = 0x801CE000\n",
         encoding="utf-8",
     )
     binary = root / "out/binaries/exe/logo.bin"

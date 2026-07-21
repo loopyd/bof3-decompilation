@@ -14,53 +14,65 @@ typedef struct GameFrontBannerState {
 void func_801D18F8(void) {
   volatile GameFrontBannerState* state;
   volatile u16*                  alpha;
+  volatile u8*                   phase_addr;
   s32                            i;
   s32                            x;
   s32                            marker;
   s32                            flags;
+  s32                            a;
+  s32                            sc;
+  u8                             phase;
   u8*                            primitive;
 
-  state = PSX_PTR(volatile GameFrontBannerState, 0x80143c22u);
-  if (state->phase == 0) {
+  /* MATCHING_AID: anchor the banner state on the fade-phase byte. cc1
+   * materializes &GAME_FRONT_FADE_PHASE once and derives the scroll base
+   * (-15) and alpha cell (-13) from it via addiu, reproducing the original
+   * lui/addiu v1 ; addiu s0,v1,-15 ; addiu s4,v1,-13 prologue. */
+  phase_addr = &GAME_FRONT_FADE_PHASE;
+  if (*phase_addr == 0) {
     return;
   }
+  state = (volatile GameFrontBannerState*)(phase_addr - 15);
+  alpha = (volatile u16*)(phase_addr - 13);
 
-  alpha = &state->alpha;
-  state->scroll += 2;
-  x = 320 - state->scroll;
+  sc = GAME_FRONT_BANNER_SCROLL + 2;
+  x = 320 - sc;
+  GAME_FRONT_BANNER_SCROLL = sc;
 
   for (i = 0, marker = 320; i < 4; i++, marker += 128, x += 255) {
     if (i < (s16)state->scroll / 640) {
       continue;
     }
 
-    if (state->phase == 1) {
-      (*alpha)++;
-      if ((s16)*alpha >= 128) {
-        *alpha = 128;
+    /* MATCHING_AID: read the dispatch phase through a non-volatile view so
+     * cc1 does not emit an andi 0xff zero-extension before the == 1 / == 3
+     * compares (the original lbu feeds bne directly). */
+    phase = *(u8*)&state->phase;
+    if (phase == 1) {
+      a = state->alpha + 1;
+      state->alpha = a;
+      if ((s16)a >= 128) {
+        state->alpha = 128;
         state->phase = 2;
       }
-    } else if (state->phase == 2) {
-      (*alpha)--;
-      if ((s16)*alpha <= 0) {
-        *alpha = 0;
+    } else if (phase == 3) {
+      a = state->alpha - 1;
+      state->alpha = a;
+      if ((s16)a <= 0) {
+        state->alpha = 0;
         state->phase = 0;
       }
     } else {
-      *alpha = 128;
+      state->alpha = 128;
     }
 
-    if (state->phase == 0) {
+    if (GAME_FRONT_FADE_PHASE == 0) {
       continue;
     }
 
-    if (GetGraphType() == 1) {
-      flags = ((marker & 0x3ff) >> 6) | 0x200;
-    } else if (GetGraphType() == 2) {
-      flags = ((marker & 0x3ff) >> 6) | 0x200;
-    } else {
-      flags = ((marker & 0x3ff) >> 6) | 0x80;
-    }
+    flags = GetGraphType() == 1 ? ((marker & 0x3ff) >> 6) | 0x200
+            : GetGraphType() == 2 ? ((marker & 0x3ff) >> 6) | 0x200
+                                  : ((marker & 0x3ff) >> 6) | 0x80;
     SetDrawMode((DR_MODE*)D_8014598C, 0, 0, flags, 0);
 
     func_8014E5A0(2, 12);

@@ -7,7 +7,7 @@ from harness.commands import lift
 
 
 def _target(root: Path) -> None:
-    target = root / "config" / "targets" / "exe" / "logo.toml"
+    target = root / "config" / "targets" / "exe" / "logo" / "target.toml"
     target.parent.mkdir(parents=True)
     target.write_text(
         "\n".join(
@@ -17,9 +17,8 @@ def _target(root: Path) -> None:
                 'kind = "executable"',
                 'source_dir = "src/exe/logo"',
                 'binary = "out/binaries/exe/logo.bin"',
-                'splat = "config/splat/exe/logo.yaml"',
+                'splat = "config/targets/exe/logo/splat.yaml"',
                 "load_address = 0x801CE000",
-                'profile = "compat/capcom97"',
             )
         )
         + "\n",
@@ -46,9 +45,9 @@ def test_target_qualified_lift_resolves_only_its_owner(
 
 def test_context_keeps_symbols_target_local(tmp_path: Path, monkeypatch) -> None:
     _target(tmp_path)
-    symbols = tmp_path / "config" / "symbols" / "exe"
-    symbols.mkdir(parents=True)
-    (symbols / "logo.txt").write_text(
+    symbols = tmp_path / "config" / "targets" / "exe" / "logo"
+    symbols.mkdir(parents=True, exist_ok=True)
+    (symbols / "symbols.txt").write_text(
         "func_801CE758 = 0x801CE758;\nD_801D0000 = 0x801D0000;\n",
         encoding="utf-8",
     )

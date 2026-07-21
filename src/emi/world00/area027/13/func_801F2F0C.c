@@ -14,7 +14,7 @@ void func_801F2F0C(const void* arg0) {
   work = (const u8*)arg0;
 
   SetDrawMode((DR_MODE*)WORLD00_AREA027_PRIMITIVE_PTR, 0, 0,
-                GetTPage(0, 1, 0x380, 0x100), 0);
+              GetTPage(0, 1, 0x380, 0x100), 0);
   func_8014E5A0(1u, 0x0cu);
 
   i = 0u;

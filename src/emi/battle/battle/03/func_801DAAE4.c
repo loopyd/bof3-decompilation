@@ -81,8 +81,8 @@ void func_801DAAE4(void) {
         s8  random_bonus;
 
         rank = func_801DB434(BATTLE_ENEMY_BYTE_88(battle_work), 0u);
-        random_bonus = BATTLE_RANDOM_BONUS_TABLE_AF48[(rank * 0x10u) +
-                                                      (rand() & 0xfu)];
+        random_bonus =
+            BATTLE_RANDOM_BONUS_TABLE_AF48[(rank * 0x10u) + (rand() & 0xfu)];
         entries[count].value =
             (s16)(BATTLE_ENEMY_HALF_A8(battle_work) + random_bonus);
         entries[count].index = index;

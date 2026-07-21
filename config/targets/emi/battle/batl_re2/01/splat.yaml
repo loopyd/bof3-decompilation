@@ -1,0 +1,16 @@
+name: battle_batl_re2_01
+sha1: 2f4e15377b50ac5091fd7815c15c93e7ed80a777
+options:
+  platform: psx
+  compiler: psyq
+  basename: battle_batl_re2_01
+  base_path: ../../../../..
+  target_path: out/binaries/emi/battle/batl_re2/01.bin
+  asm_path: out/splat/emi/battle/batl_re2/01/asm
+  src_path: src/emi/battle/batl_re2/01
+  ld_script_path: out/splat/emi/battle/batl_re2/01/linker.ld
+  symbol_addrs_path:
+    - config/targets/emi/battle/batl_re2/01/symbols.txt
+segments:
+  - [0x0, bin]
+  - [0x200]

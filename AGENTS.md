@@ -16,10 +16,10 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 
 | Fact                             | Owner                          |
 | -------------------------------- | ------------------------------ |
-| Binary identity and load address | `config/targets/<target>.toml` |
-| Reviewed layout                  | `config/splat/`                |
-| Target-local symbols             | `config/symbols/<target>.txt`  |
-| Reviewed Rizin annotations       | `config/analysis/<target>/`    |
+| Binary identity and load address | `config/targets/<target>/target.toml` |
+| Reviewed layout                  | `config/targets/<target>/splat.yaml`                |
+| Target-local symbols             | `config/targets/<target>/symbols.txt`  |
+| Reviewed Rizin annotations       | `config/targets/<target>/reviewed.rz`    |
 | Authored lifts                   | `src/exe/`, `src/emi/`         |
 
 ## Source and symbols
@@ -36,7 +36,7 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
   the main exe; EMI overlays call those functions at the same fixed addresses,
   so their `psyq.c` bindings legitimately reuse the exe's PsyQ name/address set.
   This cross-target reuse is authorized by the pinned SDK version
-  (`docs/reverse-engineering.md`), not by coinciding game bytes. Treat the
+  (see `docs/usage.md` §3), not by coinciding game bytes. Treat the
   extracted SDK symbols as a switchable weak-binding layer
   (`config/sdk/psyq-*.txt`, `WEAK_SYMBOL_AT`) that a real SDK library can later
   override one symbol at a time.
@@ -79,7 +79,7 @@ Use `$bof3-re` for lifting and promotion, `$psx-rizin` for explicitly requested
 generic analyzer work, and `$workflow-review` for explicitly requested
 two-reviewer audits. Use [matching](docs/matching.md),
 [foundation](docs/decomp-foundation.md), and
-[Rizin evidence](docs/reverse-engineering.md) for procedures. See
+[tool usage](docs/usage.md) for procedures. See
 [docs/memory-api.md](docs/memory-api.md) for the memory-macro reference. Store
 reviewed findings in `docs/specs/` and
 reusable evidence-backed gotchas in `LESSONS.md`. Use the

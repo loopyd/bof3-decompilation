@@ -9,6 +9,6 @@
  * jal/branch delay slots, not the epilogue).
  */
 void func_80096AB0(void) {
-    func_801DE94C(0, 0);
-    PSX_REF(volatile u8, (u32)&D_801462E3) += 1;
+  func_801DE94C(0, 0);
+  PSX_REF(volatile u8, (u32)&D_801462E3) += 1;
 }

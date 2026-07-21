@@ -98,23 +98,6 @@ to repeat or misdiagnose across targets. Use the
   (0x8014932A/0x80149333 pair) across `emi/world00/area008/13` and
   `emi/world00/area026/13`.
 
-### Force global-read ordering with `barrier()` when the psn00b scheduler diverges
-
-- PsyQ GCC 2.7.2 schedules `addiu sp,sp,-24` / `sw ra,16(sp)` **after** a global
-  `lhu` read but before an indirect call. psn00b GCC 12.3.0 moves the prologue
-  before the read, producing a 3-instruction offset (80% match).
-- `__asm__ __volatile__("" : : : "memory")` emits zero instructions and only
-  prevents compiler reordering across the barrier. This is the **standard
-  practice** across PS1 decomp (SOTN, Frogger, Skullmonkeys) and the Linux
-  kernel (`barrier()` macro in `include/linux/compiler-gcc.h`).
-- `volatile` on the variable or a volatile handler-slot cast does **not** fix
-  the scheduling — tested at 66.67% match. `-fno-schedule-insns2` has no effect
-  on psn00b GCC.
-- Sources:
-  - [GCC internals — `"memory"` clobber](https://www.chiark.greenend.org.uk/doc/gcc-4.3-doc/gccint.html)
-  - [Stack Overflow — `asm volatile("": : :"memory")` vs `__sync_synchronize`](https://stackoverflow.com/questions/19965076)
-  - [Decompedia — PS1 platform](https://decomp.wiki/platforms/playstation)
-
 ### Preserve fixed-RAM pointer ownership before permuting source shape
 
 - When m2c exposes a fixed-RAM address as a pointer-valued `D_XXXXXXXX`
@@ -148,75 +131,11 @@ to repeat or misdiagnose across targets. Use the
   own symbol; do not introduce a runtime wrapper call merely to remove repeated
   source text.
 
-### Keep equivalence-test output isolated
+### Matching technique reference
 
-- Extractor parity tests must create a unique directory under `/tmp` and remove
-  only that exact directory. Never use repository `out/` as scratch output or a
-  cleanup root: it contains the user's extracted media and retained local
-  reverse-engineering evidence.
-- Resolve and validate the temporary path before cleanup, install a scoped
-  trap, and reject empty, root, repository, or repository-`out` cleanup targets.
-
-### Do not synthesize an executable link model
-
-- A partial set of lifted SLUS objects is a validation archive, not a rebuilt
-  PS-X executable. Do not invent a CRT entry point, linker layout, or probe loop
-  to make it link.
-- `LOGO.EXE` is independently loaded. A SLUS helper that copies its streaming
-  loop and calls LOGO-local addresses crosses the binary ownership boundary;
-  preserve such investigation evidence only outside the compiled SLUS source
-  set.
-
-### Document `MATCHING_AID` matching hacks
-
-- Every artificial matching-aid comment must say exactly what it controls, why
-  it is needed, and what future evidence would remove it. This ensures the hack
-  is removable, not permanent.
-- Do not mark obvious workarounds such as `barrier()`; reserve `MATCHING_AID`
-  for shape decisions that are opaque to a reader without the matching diff.
-
-```c
-/*
- * MATCHING_AID:
- * Hoisting the slot pointer keeps the index temporary in $a1.
- * Without this local, GCC allocates $v1 for the index and the store
- * at +0x34 uses a different base.
- */
-slots = *slotTable;
-```
-
-The full convention is documented in `docs/matching-playbook.md` §4.
-
-### Use the register pinning ladder as a last resort
-
-- `register type name asm("$N")` binds a local to a specific MIPS register but
-  changes the entire register web. A pinned local remains live across the whole
-  function and can displace unrelated variables, creating new mismatches.
-- Use this escalation before pinning:
-  1. Correct types and declarations.
-  2. Correct control-flow structure.
-  3. Reorder declarations and statements.
-  4. Introduce or remove temporaries.
-  5. Hoist pointer dereferences.
-  6. Try a separate loop counter vs pointer induction variable.
-  7. Run the permuter.
-  8. Only then use `register ... asm("$N")`.
-  9. Prefer to remove pins after discovering a structural solution.
-- Never create a macro such as `FORCE_REG(type, name, reg)` — that would make
-  register pinning too easy to spread.
-- The `CLOBBER_A0()`/`CLOBBER_V0()`/`CLOBBER_A1()` macros in `defines.h`
-  are empty-asm barriers for delay-slot ordering, not register pinning. They
-  are lighter and safer when only placement matters.
-- All inline `__asm__` must go through a named, `__GNUC__`-guarded macro in
-  `defines.h` (`barrier()`, `CLOBBER_A0()`, `CLOBBER_V0()`, `CLOBBER_A1()`).
-  Never write raw `__asm__ __volatile__(...)` in a `.c` file. The `CLOBBER_*`
-  macros tell the compiler the named register is clobbered, which prevents it
-  from hoisting a `move`/constant load out of a `jal`/branch delay slot.
-  Example: `func_801970EC` needed `CLOBBER_A0();` before
-  `func_801C1400(0u)` so `move a0,zero` stayed in the `jal` delay slot (100%).
-- Rule of thumb: `barrier()` when the issue is volatile-access ordering across
-  a call; `CLOBBER_A0()/V0()/A1()` when the issue is which register holds a
-  value in a delay slot.
+Register pinning ladder, `MATCHING_AID` convention, `barrier()`/`CLOBBER_*`
+usage, pointer hoisting, and table indexing are fully documented in
+`docs/matching-playbook.md` §§2,4,5,16 and `docs/memory-api.md`.
 
 ### Reach fixed RAM through `PSX_PTR`/`PSX_REF`, never raw casts or `vu8`
 
@@ -224,47 +143,14 @@ The full convention is documented in `docs/matching-playbook.md` §4.
   `vu8`/`vu16`/`vu32` typedefs are gone; write `volatile u8`/`u16`/`u32`
   directly on the `type` argument (`PSX_REF(volatile u16, 0x80143B90u)`).
 - Hardware registers use `REG8/16/32` only. Scratchpad RAM (`0x1F800000`) uses
-  `SPAD_ADDR`/`SPAD_REF`/`SPAD_PTR_SLOT` — never `REG*`. Full reference and the
-  old→new migration table are in `docs/memory-api.md`.
+  `SPAD_ADDR`/`SPAD_REF`/`SPAD_PTR_SLOT` — never `REG*`. Full reference in
+  `docs/memory-api.md`.
 
 ### Keep `SPAD_PTR_SLOT` cell non-volatile to match constant-address codegen
 
-- `SPAD_PTR_SLOT(type, off)` expands to a **non-volatile** pointer cell
-  (`PSX_REF(type *, addr)`). The compiler then emits a single `lui` for the
-  scratchpad base plus an offset `lw`/`lh`/`lb` (`lw v1,68(v1)` for
-  `0x1F800044`), matching the original binary.
-- Marking the slot `volatile` (e.g. `PSX_REF(type * volatile, addr)`) forces
-  `lui + ori + lw`, adding an `ori` and breaking the match. `func_801B5BDC`
-  dropped from 100% to a mismatch under the volatile slot and recovered only
-  after the cell stayed non-volatile.
-- To force a per-evaluation reload, qualify the pointee, not the cell:
-  `SPAD_PTR_SLOT(volatile Entity, off)` (gives `volatile Entity **`) instead of
-  a volatile cell.
-
-### Hoist pointer dereferences to control register allocation
-
-- Instead of repeated `(*table)[index]` accesses, hoist the dereference into a
-  local: `entries = *table; value = entries[index];`. This can free the
-  allocator to place an unrelated value in the required register and enable a
-  clean, pin-free match.
-- The full technique with expression splitting, named-constant reuse, and
-  induction-variable alternatives is in `docs/matching-playbook.md` §5.
-
-### Index fixed tables through a real array symbol, not a `PSX_PTR` cast
-
-- A table macro built on `PSX_PTR(type, addr)` expands to a cast constant
-  `((type*)(addr))`. Indexing it (`TABLE[i]`) makes GCC fold the constant base
-  and emit `addu at,v0,at` (index + base), which mismatches the original
-  `addu at,at,v0` (base + index) and mis-schedules the surrounding loads.
-- Declare the table as a real linker array symbol (`extern u8 D_80181EBA[];`)
-  bound with `WEAK_SYMBOL_AT` to its reviewed address. Indexing
-  `D_80181EBA[i]` then uses `%hi`/`%lo` relocations and emits the canonical
-  `lui at,%hi; addu at,at,v0; lbu a0,%lo(at)` order.
-- Worked: `func_801D1134`/`func_801D1184` jumped from ~76%/92% to byte-match
-  once `GAME_FRONT_SELECTION_FX_TABLE` (a `PSX_PTR` macro) was replaced with the
-  raw `D_80181EBA[]` array symbol already present in the target map.
-- Prefer the raw map symbol for indexed table access; keep `PSX_PTR`/`PSX_REF`
-  for single fixed-address scalar cells.
+- Marking the slot `volatile` forces `lui + ori + lw`, breaking the match.
+  To force a per-evaluation reload, qualify the pointee, not the cell:
+  `SPAD_PTR_SLOT(volatile Entity, off)`.
 
 ## Target ownership and symbols
 

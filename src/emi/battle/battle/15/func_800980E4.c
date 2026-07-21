@@ -7,16 +7,16 @@
  * restoring that per-target profile makes this match.
  */
 void func_800980E4(void) {
-    u8 result;
-    u8 *game_ram;
+  u8  result;
+  u8* game_ram;
 
-    result = func_801DB5CC(3);
-    *BATTLE_ACTIVE_SELECTION_SLOT_PTR = result;
+  result = func_801DB5CC(3);
+  *BATTLE_ACTIVE_SELECTION_SLOT_PTR = result;
 
-    func_801DE94C(2, 0);
+  func_801DE94C(2, 0);
 
-    D_801462EF = 1;
-    D_80145AC8 = 0;
-    game_ram = (u8 *)BATTLE_GAME_RAM_BASE;
-    game_ram[0x62E3] = (u8)(game_ram[0x62E3] + 1u);
+  D_801462EF = 1;
+  D_80145AC8 = 0;
+  game_ram = (u8*)BATTLE_GAME_RAM_BASE;
+  game_ram[0x62E3] = (u8)(game_ram[0x62E3] + 1u);
 }

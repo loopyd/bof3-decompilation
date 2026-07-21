@@ -20,10 +20,10 @@ addresses as separate targets until relocatability is proven.
 
 | Fact | Owner |
 | --- | --- |
-| Binary identity and load address | `config/targets/<target>.toml` |
-| Segment boundaries | `config/splat/` |
-| Target-local symbols | `config/symbols/<target>.txt` |
-| Reviewed Rizin annotations | `config/analysis/<target>/` |
+| Binary identity and load address | `config/targets/<target>/target.toml` |
+| Segment boundaries | `config/targets/<target>/splat.yaml` |
+| Target-local symbols | `config/targets/<target>/symbols.txt` |
+| Reviewed Rizin annotations | `config/targets/<target>/reviewed.rz` |
 | C89 source and local declarations | `src/exe/`, `src/emi/` |
 | Reviewed findings | `docs/specs/`, `LESSONS.md` |
 
@@ -47,17 +47,13 @@ output.
   declarations; Rizin snapshots provide callsites and xrefs. None substitutes
   for another.
 
-See [setup](docs/setup.md), [matching](docs/matching.md), and
-[Rizin evidence](docs/reverse-engineering.md) for procedures.
+See [matching](docs/matching.md) and [tool usage](docs/usage.md) for procedures.
 
 ## Repository map
 
 | Path | Contents | Tracked? |
 | --- | --- | --- |
-| `config/targets/` | Target identity, image path, load address | Yes |
-| `config/splat/` | Reviewed binary layout | Yes |
-| `config/symbols/` | Target-local symbol maps | Yes |
-| `config/analysis/` | Reviewed Rizin annotations | Yes |
+| `config/targets/` | Target identity, layout, symbols, analysis | Yes |
 | `src/`, `include/` | Authored C89 and declarations | Yes |
 | `docs/specs/`, `LESSONS.md` | Reviewed findings and gotchas | Yes |
 | `bin/`, `tools/` | Command entrypoints and implementations | Yes |

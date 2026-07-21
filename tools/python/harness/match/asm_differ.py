@@ -14,7 +14,6 @@ def write_bundle(
     payload: dict[str, Any],
     *,
     target: str | None = None,
-    profile: str | None = None,
     html_output: bool = False,
 ) -> Path:
     """Materialize the normalized diff and adapter settings under ``out``."""
@@ -47,7 +46,7 @@ def write_bundle(
         "architecture": "mipsel",
         "function": function,
         "address": f"0x{address}",
-        "profile": profile,
+
         "expected": str((bundle / "original.s").relative_to(root)),
         "current": str((bundle / "current.s").relative_to(root)),
         "build_command": "harness diff",

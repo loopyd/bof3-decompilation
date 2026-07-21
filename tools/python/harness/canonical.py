@@ -97,7 +97,7 @@ def format_map(symbols: list[Symbol]) -> str:
 
 
 def map_path(root: Path, target: str) -> Path:
-    return root / "config" / "symbols" / f"{target}.txt"
+    return root / "config" / "targets" / target / "symbols.txt"
 
 
 def write_map(path: Path, symbols: list[Symbol]) -> None:

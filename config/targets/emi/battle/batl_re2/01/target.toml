@@ -1,0 +1,8 @@
+schema = "harness.target/v2"
+id = "emi/battle/batl_re2/01"
+disc_id = "BIN/BATTLE/BATL_RE2.EMI#1"
+kind = "emi"
+source_dir = "src/emi/battle/batl_re2/01"
+binary = "out/binaries/emi/battle/batl_re2/01.bin"
+splat = "config/targets/emi/battle/batl_re2/01/splat.yaml"
+load_address = 0x80036e00

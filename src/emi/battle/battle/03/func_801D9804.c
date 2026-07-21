@@ -8,7 +8,7 @@ void func_801D9804(s16 arg0, s16 arg1, s32 arg2, s32 arg3) {
   u32 packet;
 
   SetDrawMode((DR_MODE*)BATTLE_GLOBAL_WORD_598C, 0, 0, GetTPage(0, 0, 0x3c0, 0),
-                0);
+              0);
   func_8014E5A0(1, 0xc);
 
   packet = BATTLE_GLOBAL_WORD_598C;

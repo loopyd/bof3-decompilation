@@ -32,7 +32,7 @@ Different targets — and sometimes different objects within one target — can 
 different compiler versions, optimization levels, `-G` values, and signed-char
 settings.
 
-See `config/compiler-profiles/` for per-source-group profiles. To test a profile:
+To test a profile:
 
 ```sh
 bin/flag-search TARGET@0xADDRESS

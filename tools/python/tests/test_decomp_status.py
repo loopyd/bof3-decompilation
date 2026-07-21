@@ -6,7 +6,7 @@ from harness import decomp_status
 
 
 def _target(root: Path, target: str, source_dir: str) -> None:
-    manifest = root / "config" / "targets" / f"{target}.toml"
+    manifest = root / "config" / "targets" / target / "target.toml"
     manifest.parent.mkdir(parents=True, exist_ok=True)
     manifest.write_text(
         "schema = 'harness.target/v2'\n"
@@ -14,9 +14,8 @@ def _target(root: Path, target: str, source_dir: str) -> None:
         "kind = 'executable'\n"
         f"source_dir = '{source_dir}'\n"
         f"binary = 'out/binaries/{target}.bin'\n"
-        f"splat = 'config/splat/{target}.yaml'\n"
-        "load_address = 0x80100000\n"
-        "profile = 'test'\n",
+        f"splat = 'config/targets/{target}/splat.yaml'\n"
+        "load_address = 0x80100000\n",
         encoding="utf-8",
     )
 

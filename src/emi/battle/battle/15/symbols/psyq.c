@@ -1,3 +1,2 @@
 /* Verified PsyQ/BIOS weak bindings; hand-reviewed. */
 #include "bof3/symbols.h"
-
