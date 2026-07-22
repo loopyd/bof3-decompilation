@@ -21,10 +21,15 @@ typedef struct {
     uint8_t min_note;
     uint8_t max_note;
     uint8_t center_note;
+    uint8_t shift;
+    uint8_t vol;
+    uint8_t pan;
+    uint8_t pitch_bend_min;
+    uint8_t pitch_bend_max;
     uint16_t adsr1;
     uint16_t adsr2;
-    uint16_t vag_size;
-    uint16_t vag_offset;
+    uint32_t vag_size;
+    uint32_t vag_offset;
 } VabTone;
 
 typedef struct {
@@ -45,7 +50,11 @@ typedef struct {
 } SepEvent;
 
 typedef struct {
+    int seq_id;
     int resolution;
+    int tempo_us;
+    int time_num;
+    int time_den;
     SepEvent *events;
     int event_count;
 } SepSequence;
@@ -65,6 +74,11 @@ typedef struct {
     int sustain_rate;
     int release_rate;
     int sustain_level;
+    int32_t counter;
+    int32_t counter_inc;
+    int32_t step;
+    int decreasing;
+    int exponential;
 } SpuAdsr;
 
 typedef struct {
@@ -87,6 +101,9 @@ int xa_inspect(const uint8_t *data, size_t len, XaStreamInfo *streams, int max);
 int vab_parse_vh(const uint8_t *data, size_t len, VabHeader *hdr);
 int vab_decode_vag(const uint8_t *vb, size_t vb_len, const VabHeader *hdr,
                    int vag_index, int16_t **pcm);
+int vab_decode_vag_ex(const uint8_t *vb, size_t vb_len, const VabHeader *hdr,
+                      int vag_index, int16_t **pcm,
+                      int64_t *loop_start, int64_t *loop_end);
 
 int sep_parse(const uint8_t *data, size_t len, SepFile *sep);
 int sep_to_midi(const SepFile *sep, int seq_index, const char *path);
@@ -98,29 +115,11 @@ int spu_adsr_tick(SpuAdsr *adsr);
 
 int wav_write_mono(const char *path, const int16_t *pcm, int64_t count, int rate);
 int wav_write_stereo(const char *path, const int16_t *pcm, int64_t frames, int rate);
+int ogg_write_stereo(const char *path, const int16_t *pcm, int64_t frames, int rate);
+int flac_write_stereo(const char *path, const int16_t *pcm, int64_t frames, int rate);
 
-/* --- EMI container --- */
-
-#define EMI_MAX_ENTRIES 64
-#define EMI_TYPE_VH  6
-#define EMI_TYPE_VB  7
-#define EMI_TYPE_AUX 8
-#define EMI_TYPE_SEQ 10
-
-typedef struct {
-    uint32_t size;
-    uint32_t offset;
-    uint16_t type;
-} EmiEntry;
-
-typedef struct {
-    int count;
-    EmiEntry entries[EMI_MAX_ENTRIES];
-    const uint8_t *data;
-    size_t data_len;
-} EmiFile;
-
-int emi_parse(const uint8_t *data, size_t len, EmiFile *emi);
-const uint8_t *emi_find_type(const EmiFile *emi, int type, uint32_t *size);
+int vab_to_sf2(const uint8_t *vh_data, size_t vh_len,
+               const uint8_t *vb_data, size_t vb_len,
+               const char *output_path, const char *name);
 
 #endif

@@ -9,15 +9,33 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 add_library(psx_audio STATIC
-    psx_adpcm.c
-    psx_wav.c
-    psx_xa.c
-    psx_vab.c
-    psx_sep.c
-    psx_spu.c
-    psx_render.c
+    adpcm.c
+    wav.c
+    ogg.c
+    flac.c
+    xa.c
+    vab.c
+    sep.c
+    spu.c
+    emi.c
+    render.c
+    sf2.c
 )
 target_include_directories(psx_audio PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+find_library(VORBISENC_LIB vorbisenc)
+find_library(VORBIS_LIB vorbis)
+find_library(OGG_LIB ogg)
+if(VORBISENC_LIB AND VORBIS_LIB AND OGG_LIB)
+    target_compile_definitions(psx_audio PRIVATE HAVE_VORBIS=1)
+    target_link_libraries(psx_audio PUBLIC ${VORBISENC_LIB} ${VORBIS_LIB} ${OGG_LIB})
+endif()
+
+find_library(FLAC_LIB FLAC)
+if(FLAC_LIB)
+    target_compile_definitions(psx_audio PRIVATE HAVE_FLAC=1)
+    target_link_libraries(psx_audio PUBLIC ${FLAC_LIB})
+endif()
 
 add_executable(bof3-audio main.c)
 target_link_libraries(bof3-audio psx_audio)

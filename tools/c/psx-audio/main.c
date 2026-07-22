@@ -4,8 +4,12 @@
 
 #ifdef _WIN32
 #include <direct.h>
+#include <windows.h>
+#define MKDIR(d) _mkdir(d)
 #else
 #include <sys/stat.h>
+#include <dirent.h>
+#define MKDIR(d) mkdir(d, 0755)
 #endif
 
 #define MINIAUDIO_IMPLEMENTATION
@@ -13,6 +17,103 @@
 
 #include "audio.h"
 #include "util.h"
+#include "emi.h"
+
+/* ── audio source abstraction ─────────────────────────────────────── */
+
+static int ends_with(const char *s, const char *suffix)
+{
+    size_t sl = strlen(s), xl = strlen(suffix);
+    if (xl > sl) return 0;
+    for (size_t i = 0; i < xl; i++) {
+        char a = s[sl - xl + i], b = suffix[i];
+        if (a >= 'A' && a <= 'Z') a += 32;
+        if (b >= 'A' && b <= 'Z') b += 32;
+        if (a != b) return 0;
+    }
+    return 1;
+}
+
+typedef struct {
+    uint8_t *owned;
+    const uint8_t *vh, *vb, *sep;
+    uint32_t vh_sz, vb_sz, sep_sz;
+} AudioSource;
+
+static void source_free(AudioSource *s) { free(s->owned); memset(s, 0, sizeof(*s)); }
+
+static int source_from_emi(AudioSource *s, const char *path)
+{
+    size_t len;
+    EmiFile emi;
+    s->owned = read_file(path, &len);
+    if (!s->owned) return -1;
+    if (emi_parse(s->owned, len, &emi) != 0) { free(s->owned); s->owned = NULL; return -1; }
+    s->vh  = emi_find_type(&emi, EMI_TYPE_VH,  &s->vh_sz);
+    s->vb  = emi_find_type(&emi, EMI_TYPE_VB,  &s->vb_sz);
+    s->sep = emi_find_type(&emi, EMI_TYPE_SEQ, &s->sep_sz);
+    if (!s->vh || !s->vb) { source_free(s); return -1; }
+    return 0;
+}
+
+static int source_from_raw(AudioSource *s, const char *vh_p, const char *vb_p, const char *sep_p)
+{
+    size_t vl, bl, sl;
+    uint8_t *vh = read_file(vh_p, &vl);
+    uint8_t *vb = read_file(vb_p, &bl);
+    uint8_t *sep = sep_p ? read_file(sep_p, &sl) : NULL;
+    if (!vh || !vb) { free(vh); free(vb); free(sep); return -1; }
+    s->owned = vh;
+    s->vh = vh; s->vh_sz = (uint32_t)vl;
+    s->vb = vb; s->vb_sz = (uint32_t)bl;
+    s->sep = sep; s->sep_sz = sep ? (uint32_t)sl : 0;
+    return 0;
+}
+
+static int source_from_dir(AudioSource *s, const char *dir)
+{
+    char vh_p[512], vb_p[512], sep_p[512];
+    int found_vh = 0, found_vb = 0, found_sep = 0;
+#ifndef _WIN32
+    DIR *d = opendir(dir);
+    struct dirent *ent;
+    if (!d) return -1;
+    while ((ent = readdir(d)) != NULL) {
+        char full[600];
+        uint8_t hdr[4];
+        FILE *f;
+        if (!ends_with(ent->d_name, ".bin")) continue;
+        snprintf(full, sizeof(full), "%s/%s", dir, ent->d_name);
+        f = fopen(full, "rb");
+        if (!f) continue;
+        if (fread(hdr, 1, 4, f) != 4) { fclose(f); continue; }
+        fclose(f);
+        if (memcmp(hdr, "\x70\x42\x41\x56", 4) == 0) { snprintf(vh_p, sizeof(vh_p), "%s", full); found_vh = 1; }
+        else if (memcmp(hdr, "\x70\x51\x45\x53", 4) == 0) { snprintf(sep_p, sizeof(sep_p), "%s", full); found_sep = 1; }
+        else { snprintf(vb_p, sizeof(vb_p), "%s", full); found_vb = 1; }
+    }
+    closedir(d);
+#endif
+    if (!found_vh || !found_vb) return -1;
+    return source_from_raw(s, vh_p, vb_p, found_sep ? sep_p : NULL);
+}
+
+static int source_auto(AudioSource *s, const char *path)
+{
+    FILE *f = fopen(path, "rb");
+    if (f) {
+        uint8_t hdr[16];
+        size_t n = fread(hdr, 1, 16, f);
+        fclose(f);
+        if (n >= 16 && emi_check_magic(hdr, n))
+            return source_from_emi(s, path);
+    }
+    if (source_from_dir(s, path) == 0)
+        return 0;
+    return source_from_emi(s, path);
+}
+
+/* ── playback ─────────────────────────────────────────────────────── */
 
 static int16_t *g_pcm;
 static int64_t g_pos, g_total;
@@ -24,489 +125,687 @@ static void data_callback(ma_device *dev, void *out, const void *in, ma_uint32 f
     int needed = (int)(frames * (ma_uint32)g_channels);
     int avail = (int)(g_total - g_pos);
     int n = needed < avail ? needed : avail;
-    (void)dev;
-    (void)in;
-    if (n > 0) {
-        memcpy(dst, g_pcm + g_pos, (size_t)n * sizeof(int16_t));
-        g_pos += n;
-    }
-    if (n < needed)
-        memset(dst + n, 0, (size_t)(needed - n) * sizeof(int16_t));
+    (void)dev; (void)in;
+    if (n > 0) { memcpy(dst, g_pcm + g_pos, (size_t)n * sizeof(int16_t)); g_pos += n; }
+    if (n < needed) memset(dst + n, 0, (size_t)(needed - n) * sizeof(int16_t));
 }
 
-static int play_pcm_buffer(int16_t *pcm, int64_t frames, int channels, int rate, float gain)
+static int play_buffer(int16_t *pcm, int64_t frames, int channels, int rate, float gain)
 {
-    ma_device_config config;
-    ma_device device;
-    int64_t i, total_samples = frames * channels;
+    ma_device_config cfg;
+    ma_device dev;
 
     if (gain != 1.0f) {
-        for (i = 0; i < total_samples; i++) {
+        int64_t total = frames * channels;
+        for (int64_t i = 0; i < total; i++) {
             float v = (float)pcm[i] * gain;
-            if (v > 32767.0f) v = 32767.0f;
-            if (v < -32768.0f) v = -32768.0f;
-            pcm[i] = (int16_t)v;
+            pcm[i] = (int16_t)(v > 32767.0f ? 32767 : v < -32768.0f ? -32768 : v);
         }
     }
 
-    g_pcm = pcm;
-    g_pos = 0;
-    g_total = total_samples;
-    g_channels = channels;
+    g_pcm = pcm; g_pos = 0; g_total = frames * channels; g_channels = channels;
+    cfg = ma_device_config_init(ma_device_type_playback);
+    cfg.playback.format = ma_format_s16;
+    cfg.playback.channels = (ma_uint32)channels;
+    cfg.sampleRate = (ma_uint32)rate;
+    cfg.dataCallback = data_callback;
 
-    config = ma_device_config_init(ma_device_type_playback);
-    config.playback.format = ma_format_s16;
-    config.playback.channels = (ma_uint32)channels;
-    config.sampleRate = (ma_uint32)rate;
-    config.dataCallback = data_callback;
-
-    if (ma_device_init(NULL, &config, &device) != MA_SUCCESS) {
-        fprintf(stderr, "error: failed to init audio device\n");
+    if (ma_device_init(NULL, &cfg, &dev) != MA_SUCCESS) {
+        fprintf(stderr, "error: audio device init failed\n");
         return -1;
     }
-
-    if (ma_device_start(&device) != MA_SUCCESS) {
-        fprintf(stderr, "error: failed to start audio device\n");
-        ma_device_uninit(&device);
-        return -1;
-    }
-
-    while (g_pos < g_total)
-        ma_sleep(100);
-
-    ma_device_uninit(&device);
+    ma_device_start(&dev);
+    printf("  \xe2\x96\xb6 %.1fs  %dHz  %s  gain=%.1f  [Ctrl+C]\n",
+           (double)frames / rate, rate, channels == 2 ? "stereo" : "mono", gain);
+    while (g_pos < g_total) ma_sleep(50);
+    ma_device_uninit(&dev);
     return 0;
 }
 
-static const char *arg_flag(int argc, char **argv, const char *flag)
+static int write_stereo_output(const char *path, const int16_t *pcm,
+                               int64_t frames, int rate)
 {
-    int i;
-    for (i = 1; i < argc - 1; i++) {
-        if (strcmp(argv[i], flag) == 0)
-            return argv[i + 1];
+    if (ends_with(path, ".ogg"))
+        return ogg_write_stereo(path, pcm, frames, rate);
+    if (ends_with(path, ".flac"))
+        return flac_write_stereo(path, pcm, frames, rate);
+    return wav_write_stereo(path, pcm, frames, rate);
+}
+
+static int play_source(AudioSource *s, int seq_idx, float gain, const char *outpath)
+{
+    if (s->sep) {
+        RenderOutput ro;
+        if (render_bgm(s->sep, s->sep_sz, s->vh, s->vh_sz, s->vb, s->vb_sz,
+                       seq_idx, 44100, &ro) != 0) {
+            fprintf(stderr, "error: render failed\n");
+            return -1;
+        }
+        int rc;
+        if (outpath) {
+            if (gain != 1.0f) {
+                int64_t total = ro.frames * 2;
+                for (int64_t i = 0; i < total; i++) {
+                    float v = (float)ro.pcm[i] * gain;
+                    ro.pcm[i] = (int16_t)(v > 32767.0f ? 32767 : v < -32768.0f ? -32768 : v);
+                }
+            }
+            if (write_stereo_output(outpath, ro.pcm, ro.frames, ro.rate) != 0) {
+                fprintf(stderr, "error: failed to write %s\n", outpath);
+                free(ro.pcm);
+                return -1;
+            }
+            printf("  wrote %s (%.1fs, %dHz stereo)\n", outpath, (double)ro.frames / ro.rate, ro.rate);
+            rc = 0;
+        } else {
+            rc = play_buffer(ro.pcm, ro.frames, 2, ro.rate, gain);
+        }
+        free(ro.pcm);
+        return rc;
     }
+    VabHeader hdr;
+    int16_t *pcm = NULL;
+    if (vab_parse_vh(s->vh, s->vh_sz, &hdr) != 0) return -1;
+    int n = vab_decode_vag(s->vb, s->vb_sz, &hdr, 0, &pcm);
+    if (n <= 0 || !pcm) return -1;
+    int rc;
+    if (outpath) {
+        wav_write_mono(outpath, pcm, n, 44100);
+        printf("  wrote %s (%d samples, 44100Hz mono)\n", outpath, n);
+        rc = 0;
+    } else {
+        rc = play_buffer(pcm, n, 1, 44100, gain);
+    }
+    free(pcm);
+    return rc;
+}
+
+/* ── args ─────────────────────────────────────────────────────────── */
+
+static const char *arg_str(int argc, char **argv, const char *flag)
+{
+    for (int i = 1; i < argc - 1; i++)
+        if (strcmp(argv[i], flag) == 0) return argv[i + 1];
     return NULL;
 }
-
 static int arg_int(int argc, char **argv, const char *flag, int def)
+{ const char *v = arg_str(argc, argv, flag); return v ? atoi(v) : def; }
+static float arg_flt(int argc, char **argv, const char *flag, float def)
+{ const char *v = arg_str(argc, argv, flag); return v ? (float)atof(v) : def; }
+
+static float arg_gain(int argc, char **argv)
 {
-    const char *v = arg_flag(argc, argv, flag);
-    return v ? atoi(v) : def;
+    const char *v = arg_str(argc, argv, "--gain");
+    return v ? (float)atof(v) : arg_flt(argc, argv, "-g", 1.0f);
 }
 
-static float arg_float(int argc, char **argv, const char *flag, float def)
+/* ── BGM directory scanning ───────────────────────────────────────── */
+
+typedef struct {
+    char name[64];
+    char path[512];
+    int events;
+    int tones;
+} TrackInfo;
+
+static int find_bgm_dir(char *out, size_t sz)
 {
-    const char *v = arg_flag(argc, argv, flag);
-    return v ? (float)atof(v) : def;
+    const char *cands[] = {
+        "out/extracted/BIN/BGM", "../out/extracted/BIN/BGM",
+        "../../out/extracted/BIN/BGM", NULL
+    };
+    for (int i = 0; cands[i]; i++) {
+#ifndef _WIN32
+        DIR *d = opendir(cands[i]);
+        if (d) { closedir(d); snprintf(out, sz, "%s", cands[i]); return 0; }
+#endif
+    }
+    return -1;
 }
 
-static void make_dir(const char *d)
+static int scan_tracks(const char *dir, TrackInfo *tracks, int max)
 {
-#ifdef _WIN32
-    _mkdir(d);
+#ifndef _WIN32
+    DIR *d = opendir(dir);
+    struct dirent *ent;
+    int count = 0;
+    if (!d) return 0;
+    while ((ent = readdir(d)) != NULL && count < max) {
+        char path[512];
+        AudioSource s;
+        if (!ends_with(ent->d_name, ".emi")) continue;
+        snprintf(path, sizeof(path), "%s/%s", dir, ent->d_name);
+        if (source_from_emi(&s, path) != 0) continue;
+        TrackInfo *t = &tracks[count];
+        memset(t, 0, sizeof(*t));
+        strncpy(t->name, ent->d_name, sizeof(t->name) - 5);
+        char *dot = strrchr(t->name, '.');
+        if (dot) *dot = '\0';
+        strncpy(t->path, path, sizeof(t->path) - 1);
+        if (s.vh) {
+            VabHeader hdr;
+            if (vab_parse_vh(s.vh, s.vh_sz, &hdr) == 0)
+                t->tones = (int)hdr.ps_count;
+        }
+        if (s.sep) {
+            SepFile sep;
+            if (sep_parse(s.sep, s.sep_sz, &sep) == 0 && sep.sequence_count > 0) {
+                t->events = sep.sequences[0].event_count;
+                sep_free(&sep);
+            }
+        }
+        source_free(&s);
+        count++;
+    }
+    closedir(d);
+    for (int i = 0; i < count - 1; i++)
+        for (int j = i + 1; j < count; j++)
+            if (strcmp(tracks[i].name, tracks[j].name) > 0) {
+                TrackInfo tmp = tracks[i]; tracks[i] = tracks[j]; tracks[j] = tmp;
+            }
+    return count;
 #else
-    mkdir(d, 0755);
+    (void)dir; (void)tracks; (void)max; return 0;
 #endif
 }
 
-static void usage(void)
+static int find_track_path(const char *name, char *out, size_t sz)
 {
-    fprintf(stderr,
-        "usage: bof3-audio <command> [args]\n"
-        "\n"
-        "  play <vh> <vb> <sep> [-s SEQ] [-g GAIN]     render BGM + play\n"
-        "  play-xa <str> [-c CHANNEL] [-g GAIN]        decode XA + play\n"
-        "  play-vag <vh> <vb> [-v VAG] [-g GAIN]       play VAG sample(s)\n"
-        "  render <vh> <vb> <sep> -o out.wav [-s SEQ]   render BGM to WAV\n"
-        "  xa-decode <str> -o out.wav [-c CHANNEL]      decode XA to WAV\n"
-        "  xa-inspect <str>                             list XA streams\n"
-        "  vab-extract <vh> <vb> -o DIR                 extract VAGs to WAV\n"
-        "  vab-inspect <vh>                             show VAB info\n"
-        "  sep-inspect <sep>                            show SEP info\n"
-        "  sep2mid <sep> -o out.mid [-s SEQ]            export to MIDI\n");
+    char dir[512], upper[128];
+    strncpy(upper, name, sizeof(upper) - 1);
+    upper[sizeof(upper) - 1] = '\0';
+    for (char *p = upper; *p; p++) if (*p >= 'a' && *p <= 'z') *p -= 32;
+    if (ends_with(upper, ".EMI"))
+        upper[strlen(upper) - 4] = '\0';
+
+    if (find_bgm_dir(dir, sizeof(dir)) != 0) return -1;
+
+    const char *pats[] = { "%s/%s.EMI", "%s/BGM%s.EMI", "%s/%s", "%s/BGM%s", NULL };
+    for (int i = 0; pats[i]; i++) {
+        snprintf(out, sz, pats[i], dir, upper);
+        FILE *f = fopen(out, "rb");
+        if (f) { fclose(f); return 0; }
+    }
+    return -1;
 }
 
-static int cmd_play(int argc, char **argv)
+/* ── commands ─────────────────────────────────────────────────────── */
+
+static int cmd_list(int argc, char **argv)
 {
-    uint8_t *vh, *vb, *sep;
-    size_t vh_len, vb_len, sep_len;
-    int seq_idx;
-    float gain;
-    RenderOutput ro;
+    char dir[512];
+    const char *filter = argc > 2 ? argv[2] : NULL;
+    TrackInfo *tracks;
+    int max = 256;
 
-    if (argc < 5) { usage(); return 1; }
-
-    vh = read_file(argv[2], &vh_len);
-    vb = read_file(argv[3], &vb_len);
-    sep = read_file(argv[4], &sep_len);
-    if (!vh || !vb || !sep) {
-        fprintf(stderr, "error: failed to read input files\n");
+    if (find_bgm_dir(dir, sizeof(dir)) != 0) {
+        fprintf(stderr, "error: out/extracted/BIN/BGM not found\n");
         return 1;
     }
+    tracks = calloc(max, sizeof(TrackInfo));
+    if (!tracks) return 1;
+    int count = scan_tracks(dir, tracks, max);
 
-    seq_idx = arg_int(argc, argv, "-s", 0);
-    gain = arg_float(argc, argv, "-g", 1.0f);
+    printf("\n  BGM Tracks (%d)\n", count);
+    printf("  %.*s\n", 62, "──────────────────────────────────────────────────────────────");
+    printf("  %4s  %-20s %7s %6s\n", "#", "Name", "Events", "Tones");
+    printf("  %4s  %-20s %7s %6s\n", "───", "────────────────────", "──────", "─────");
 
-    if (render_bgm(sep, sep_len, vh, vh_len, vb, vb_len, seq_idx, 44100, &ro) != 0) {
-        fprintf(stderr, "error: render failed\n");
-        return 1;
+    int shown = 0;
+    for (int i = 0; i < count; i++) {
+        if (filter) {
+            char un[64], uf[64];
+            strncpy(un, tracks[i].name, 63); un[63] = '\0';
+            strncpy(uf, filter, 63); uf[63] = '\0';
+            for (char *p = un; *p; p++) if (*p >= 'a' && *p <= 'z') *p -= 32;
+            for (char *p = uf; *p; p++) if (*p >= 'a' && *p <= 'z') *p -= 32;
+            if (!strstr(un, uf)) continue;
+        }
+        printf("  %4d  %-20s %6d  %5d\n", shown, tracks[i].name, tracks[i].events, tracks[i].tones);
+        shown++;
     }
-
-    printf("playing %lld frames at %d Hz...\n", (long long)ro.frames, ro.rate);
-    play_pcm_buffer(ro.pcm, ro.frames, 2, ro.rate, gain);
-    free(ro.pcm);
-    free(vh);
-    free(vb);
-    free(sep);
+    printf("  %.*s\n", 62, "──────────────────────────────────────────────────────────────");
+    printf("  bin/psx-audio play <name>    e.g. bin/psx-audio play BGM000\n\n");
+    free(tracks);
     return 0;
+}
+
+static int cmd_play_bgm(int argc, char **argv)
+{
+    AudioSource s;
+    int seq = arg_int(argc, argv, "-s", 0);
+    float gain = arg_gain(argc, argv);
+    const char *outpath = arg_str(argc, argv, "-o");
+    char path[512];
+    const char *target = argv[2];
+    int rc;
+
+    if (ends_with(target, ".emi") || ends_with(target, ".EMI")) {
+        printf("  %s\n", target);
+        if (source_from_emi(&s, target) != 0) {
+            fprintf(stderr, "error: no audio in %s\n", target); return 1;
+        }
+    } else if (argc >= 5 && !ends_with(target, ".bin") == 0) {
+        if (source_from_raw(&s, argv[2], argv[3], argv[4]) != 0) {
+            fprintf(stderr, "error: failed to read files\n"); return 1;
+        }
+        printf("  %s + %s + %s\n", argv[2], argv[3], argv[4]);
+    } else {
+        if (find_track_path(target, path, sizeof(path)) != 0) {
+            fprintf(stderr, "error: track '%s' not found (try: bin/psx-audio list)\n", target);
+            return 1;
+        }
+        printf("  %s\n", path);
+        if (source_auto(&s, path) != 0) {
+            fprintf(stderr, "error: no audio in %s\n", path); return 1;
+        }
+    }
+
+    rc = play_source(&s, seq, gain, outpath);
+    source_free(&s);
+    return rc != 0 ? 1 : 0;
 }
 
 static int cmd_play_xa(int argc, char **argv)
 {
-    uint8_t *data;
-    size_t len;
-    int16_t *pcm = NULL;
-    int rate, nch, channel;
-    float gain;
-
-    if (argc < 3) { usage(); return 1; }
+    uint8_t *data; size_t len;
+    int16_t *pcm = NULL; int rate, nch;
+    int channel = arg_int(argc, argv, "-c", 0);
+    float gain = arg_gain(argc, argv);
+    const char *outpath = arg_str(argc, argv, "-o");
 
     data = read_file(argv[2], &len);
-    if (!data) { fprintf(stderr, "error: failed to read file\n"); return 1; }
-
-    channel = arg_int(argc, argv, "-c", 0);
-    gain = arg_float(argc, argv, "-g", 1.0f);
-
-    if (xa_decode_channel(data, len, channel, &pcm, &rate, &nch) != 0) {
-        fprintf(stderr, "error: XA decode failed\n");
-        free(data);
-        return 1;
-    }
-
-    {
-        int64_t frames = (int64_t)(len / 2336) * 224 / (int64_t)nch;
-        if (frames < 1) frames = 1;
-        printf("playing XA channel %d (%d Hz, %d ch)...\n", channel, rate, nch);
-        play_pcm_buffer(pcm, frames, nch, rate, gain);
-    }
-
-    free(pcm);
+    if (!data) { fprintf(stderr, "error: read failed\n"); return 1; }
+    int64_t frames = xa_decode_channel(data, len, channel, &pcm, &rate, &nch);
     free(data);
+    if (frames <= 0) { fprintf(stderr, "error: decode failed (ch %d)\n", channel); return 1; }
+    if (outpath) {
+        if (nch == 1) wav_write_mono(outpath, pcm, frames, rate);
+        else wav_write_stereo(outpath, pcm, frames, rate);
+        printf("  wrote %s (%.1fs, %dHz, %s)\n", outpath, (double)frames / rate, rate,
+               nch == 2 ? "stereo" : "mono");
+    } else {
+        printf("  %s — ch %d\n", argv[2], channel);
+        play_buffer(pcm, frames, nch, rate, gain);
+    }
+    free(pcm);
     return 0;
 }
 
 static int cmd_play_vag(int argc, char **argv)
 {
-    uint8_t *vh, *vb;
-    size_t vh_len, vb_len;
+    AudioSource s;
     VabHeader hdr;
-    int vag_idx, i;
-    float gain;
+    int vag = arg_int(argc, argv, "-v", -1);
+    float gain = arg_gain(argc, argv);
 
-    if (argc < 4) { usage(); return 1; }
-
-    vh = read_file(argv[2], &vh_len);
-    vb = read_file(argv[3], &vb_len);
-    if (!vh || !vb) { fprintf(stderr, "error: failed to read files\n"); return 1; }
-
-    if (vab_parse_vh(vh, vh_len, &hdr) != 0) {
-        fprintf(stderr, "error: failed to parse VH\n");
-        return 1;
+    if (source_from_raw(&s, argv[2], argv[3], NULL) != 0) {
+        fprintf(stderr, "error: read failed\n"); return 1;
+    }
+    if (vab_parse_vh(s.vh, s.vh_sz, &hdr) != 0) {
+        fprintf(stderr, "error: bad VH\n"); source_free(&s); return 1;
     }
 
-    vag_idx = arg_int(argc, argv, "-v", -1);
-    gain = arg_float(argc, argv, "-g", 1.0f);
-
-    if (vag_idx >= 0) {
+    if (vag >= 0) {
         int16_t *pcm = NULL;
-        int n = vab_decode_vag(vb, vb_len, &hdr, vag_idx, &pcm);
+        const char *outpath = arg_str(argc, argv, "-o");
+        int n = vab_decode_vag(s.vb, s.vb_sz, &hdr, vag, &pcm);
         if (n > 0 && pcm) {
-            printf("playing VAG %d (%d frames)...\n", vag_idx, n);
-            play_pcm_buffer(pcm, n, 1, 44100, gain);
+            if (outpath) {
+                wav_write_mono(outpath, pcm, n, 44100);
+                printf("  wrote %s (%d samples)\n", outpath, n);
+            } else {
+                printf("  VAG %d (%d samples)\n", vag, n);
+                play_buffer(pcm, n, 1, 44100, gain);
+            }
             free(pcm);
         }
     } else {
-        for (i = 0; i < (int)hdr.ps_count; i++) {
+        for (int i = 0; i < (int)hdr.ps_count; i++) {
             int16_t *pcm = NULL;
-            int n = vab_decode_vag(vb, vb_len, &hdr, i, &pcm);
+            int n = vab_decode_vag(s.vb, s.vb_sz, &hdr, i, &pcm);
             if (n > 0 && pcm) {
-                printf("playing VAG %d/%d (%d frames)...\n", i, (int)hdr.ps_count, n);
-                play_pcm_buffer(pcm, n, 1, 44100, gain);
+                printf("  VAG %d/%d\n", i, (int)hdr.ps_count);
+                play_buffer(pcm, n, 1, 44100, gain);
                 free(pcm);
             }
         }
     }
-
-    free(vh);
-    free(vb);
+    source_free(&s);
     return 0;
+}
+
+static int cmd_play(int argc, char **argv)
+{
+    if (argc < 3) { fprintf(stderr, "usage: play <track|file> [-s N] [-g GAIN]\n"); return 1; }
+    if (ends_with(argv[2], ".str") || ends_with(argv[2], ".STR"))
+        return cmd_play_xa(argc, argv);
+    return cmd_play_bgm(argc, argv);
 }
 
 static int cmd_render(int argc, char **argv)
 {
-    uint8_t *vh, *vb, *sep;
-    size_t vh_len, vb_len, sep_len;
-    const char *outpath;
-    int seq_idx;
+    const char *outpath = arg_str(argc, argv, "-o");
+    int seq = arg_int(argc, argv, "-s", 0);
+    float gain = arg_gain(argc, argv);
+    AudioSource s;
     RenderOutput ro;
+    char path[512];
 
-    if (argc < 5) { usage(); return 1; }
-
-    outpath = arg_flag(argc, argv, "-o");
     if (!outpath) { fprintf(stderr, "error: -o required\n"); return 1; }
 
-    vh = read_file(argv[2], &vh_len);
-    vb = read_file(argv[3], &vb_len);
-    sep = read_file(argv[4], &sep_len);
-    if (!vh || !vb || !sep) {
-        fprintf(stderr, "error: failed to read input files\n");
-        return 1;
+    if (argc >= 5 && source_from_raw(&s, argv[2], argv[3], argv[4]) == 0) {
+        /* raw files */
+    } else if (source_auto(&s, argv[2]) == 0) {
+        /* EMI or directory */
+    } else if (find_track_path(argv[2], path, sizeof(path)) == 0 &&
+               source_auto(&s, path) == 0) {
+        /* resolved track name */
+    } else {
+        fprintf(stderr, "error: cannot load audio from %s\n", argv[2]); return 1;
     }
 
-    seq_idx = arg_int(argc, argv, "-s", 0);
-
-    if (render_bgm(sep, sep_len, vh, vh_len, vb, vb_len, seq_idx, 44100, &ro) != 0) {
-        fprintf(stderr, "error: render failed\n");
-        return 1;
+    if (!s.sep) { fprintf(stderr, "error: no sequence data\n"); source_free(&s); return 1; }
+    if (render_bgm(s.sep, s.sep_sz, s.vh, s.vh_sz, s.vb, s.vb_sz, seq, 44100, &ro) != 0) {
+        fprintf(stderr, "error: render failed\n"); source_free(&s); return 1;
     }
-
-    if (wav_write_stereo(outpath, ro.pcm, ro.frames, ro.rate) != 0) {
-        fprintf(stderr, "error: failed to write WAV\n");
+    if (gain != 1.0f) {
+        int64_t count = ro.frames * 2;
+        for (int64_t i = 0; i < count; i++) {
+            float value = (float)ro.pcm[i] * gain;
+            ro.pcm[i] = (int16_t)(value > 32767.0f ? 32767 : value < -32768.0f ? -32768 : value);
+        }
+    }
+    if (write_stereo_output(outpath, ro.pcm, ro.frames, ro.rate) != 0) {
+        fprintf(stderr, "error: failed to write %s (compressed output requires its codec library)\n", outpath);
         free(ro.pcm);
+        source_free(&s);
         return 1;
     }
-
-    printf("wrote %s (%lld frames, %d Hz)\n", outpath, (long long)ro.frames, ro.rate);
+    printf("  wrote %s (%.1fs, %dHz stereo)\n", outpath, (double)ro.frames / ro.rate, ro.rate);
     free(ro.pcm);
-    free(vh);
-    free(vb);
-    free(sep);
-    return 0;
-}
-
-static int cmd_xa_decode(int argc, char **argv)
-{
-    uint8_t *data;
-    size_t len;
-    const char *outpath;
-    int16_t *pcm = NULL;
-    int rate, nch, channel;
-
-    if (argc < 3) { usage(); return 1; }
-
-    outpath = arg_flag(argc, argv, "-o");
-    if (!outpath) { fprintf(stderr, "error: -o required\n"); return 1; }
-
-    data = read_file(argv[2], &len);
-    if (!data) { fprintf(stderr, "error: failed to read file\n"); return 1; }
-
-    channel = arg_int(argc, argv, "-c", 0);
-
-    if (xa_decode_channel(data, len, channel, &pcm, &rate, &nch) != 0) {
-        fprintf(stderr, "error: XA decode failed\n");
-        free(data);
-        return 1;
-    }
-
-    {
-        int64_t frames = (int64_t)(len / 2336) * 224 / (int64_t)nch;
-        if (frames < 1) frames = 1;
-        if (nch == 1)
-            wav_write_mono(outpath, pcm, frames, rate);
-        else
-            wav_write_stereo(outpath, pcm, frames, rate);
-        printf("wrote %s (%lld frames, %d Hz, %d ch)\n", outpath, (long long)frames, rate, nch);
-    }
-
-    free(pcm);
-    free(data);
+    source_free(&s);
     return 0;
 }
 
 static int cmd_xa_inspect(int argc, char **argv)
 {
-    uint8_t *data;
-    size_t len;
+    uint8_t *data; size_t len;
     XaStreamInfo streams[32];
-    int count, i;
-
-    if (argc < 3) { usage(); return 1; }
-
     data = read_file(argv[2], &len);
-    if (!data) { fprintf(stderr, "error: failed to read file\n"); return 1; }
+    if (!data) { fprintf(stderr, "error: read failed\n"); return 1; }
+    int count = xa_inspect(data, len, streams, 32);
+    printf("  %s (%zu bytes)\n", argv[2], len);
+    for (int i = 0; i < count; i++)
+        printf("    ch %d: %dHz %s  %.1fs\n", i, streams[i].rate,
+               streams[i].channels == 2 ? "stereo" : "mono  ",
+               (double)streams[i].frame_count / streams[i].rate);
+    free(data);
+    return 0;
+}
 
-    count = xa_inspect(data, len, streams, 32);
-    printf("XA file: %s (%zu bytes, %d streams)\n", argv[2], len, count);
-    for (i = 0; i < count; i++) {
-        printf("  stream %d: %d Hz, %d ch, %d frames\n",
-               i, streams[i].rate, streams[i].channels, streams[i].frame_count);
+static int cmd_xa_decode(int argc, char **argv)
+{
+    const char *outpath = arg_str(argc, argv, "-o");
+    int channel = arg_int(argc, argv, "-c", 0);
+    uint8_t *data; size_t len;
+    int16_t *pcm = NULL; int rate, nch;
+
+    if (!outpath) { fprintf(stderr, "error: -o required\n"); return 1; }
+    data = read_file(argv[2], &len);
+    if (!data) { fprintf(stderr, "error: read failed\n"); return 1; }
+    int64_t frames = xa_decode_channel(data, len, channel, &pcm, &rate, &nch);
+    free(data);
+    if (frames <= 0) { fprintf(stderr, "error: decode failed\n"); return 1; }
+    if (nch == 1) wav_write_mono(outpath, pcm, frames, rate);
+    else wav_write_stereo(outpath, pcm, frames, rate);
+    printf("  wrote %s (%.1fs, %dHz, %s)\n", outpath, (double)frames / rate, rate,
+           nch == 2 ? "stereo" : "mono");
+    free(pcm);
+    return 0;
+}
+
+static int cmd_vab_inspect(int argc, char **argv)
+{
+    uint8_t *data; size_t len;
+    VabHeader hdr;
+    data = read_file(argv[2], &len);
+    if (!data) { fprintf(stderr, "error: read failed\n"); return 1; }
+    if (vab_parse_vh(data, len, &hdr) != 0) { fprintf(stderr, "error: bad VH\n"); free(data); return 1; }
+    printf("  %s: %u tones, body=%u bytes\n", argv[2], hdr.ps_count, hdr.body_size);
+    for (int i = 0; i < (int)hdr.ps_count; i++) {
+        VabTone *t = &hdr.tones[i];
+        printf("    [%2d] prog=%d note=%d-%d center=%d vag=%u+%u adsr=%04X/%04X\n",
+               i, t->prog, t->min_note, t->max_note, t->center_note,
+               t->vag_offset, t->vag_size, t->adsr1, t->adsr2);
     }
-
     free(data);
     return 0;
 }
 
 static int cmd_vab_extract(int argc, char **argv)
 {
-    uint8_t *vh, *vb;
-    size_t vh_len, vb_len;
-    const char *outdir;
+    const char *outdir = arg_str(argc, argv, "-o");
+    AudioSource s;
     VabHeader hdr;
-    int i;
-
-    if (argc < 4) { usage(); return 1; }
-
-    outdir = arg_flag(argc, argv, "-o");
     if (!outdir) { fprintf(stderr, "error: -o required\n"); return 1; }
-
-    vh = read_file(argv[2], &vh_len);
-    vb = read_file(argv[3], &vb_len);
-    if (!vh || !vb) { fprintf(stderr, "error: failed to read files\n"); return 1; }
-
-    if (vab_parse_vh(vh, vh_len, &hdr) != 0) {
-        fprintf(stderr, "error: failed to parse VH\n");
-        return 1;
+    if (source_from_raw(&s, argv[2], argv[3], NULL) != 0) {
+        fprintf(stderr, "error: read failed\n"); return 1;
     }
-
-    make_dir(outdir);
-
-    for (i = 0; i < (int)hdr.ps_count; i++) {
+    if (vab_parse_vh(s.vh, s.vh_sz, &hdr) != 0) {
+        fprintf(stderr, "error: bad VH\n"); source_free(&s); return 1;
+    }
+    MKDIR(outdir);
+    int extracted = 0;
+    for (int i = 0; i < (int)hdr.ps_count; i++) {
         int16_t *pcm = NULL;
-        int n = vab_decode_vag(vb, vb_len, &hdr, i, &pcm);
+        int n = vab_decode_vag(s.vb, s.vb_sz, &hdr, i, &pcm);
         if (n > 0 && pcm) {
             char path[512];
             snprintf(path, sizeof(path), "%s/vag_%03d.wav", outdir, i);
             wav_write_mono(path, pcm, n, 44100);
-            printf("  %s (%d frames)\n", path, n);
+            extracted++;
             free(pcm);
         }
     }
-
-    printf("extracted %d VAGs to %s\n", (int)hdr.ps_count, outdir);
-    free(vh);
-    free(vb);
-    return 0;
-}
-
-static int cmd_vab_inspect(int argc, char **argv)
-{
-    uint8_t *vh;
-    size_t vh_len;
-    VabHeader hdr;
-    int i;
-
-    if (argc < 3) { usage(); return 1; }
-
-    vh = read_file(argv[2], &vh_len);
-    if (!vh) { fprintf(stderr, "error: failed to read file\n"); return 1; }
-
-    if (vab_parse_vh(vh, vh_len, &hdr) != 0) {
-        fprintf(stderr, "error: failed to parse VH\n");
-        free(vh);
-        return 1;
-    }
-
-    printf("VAB: %s\n", argv[2]);
-    printf("  version: %u\n", hdr.version);
-    printf("  tones: %u\n", hdr.ps_count);
-    printf("  body_size: %u\n", hdr.body_size);
-
-    for (i = 0; i < (int)hdr.ps_count; i++) {
-        VabTone *t = &hdr.tones[i];
-        printf("  [%3d] prog=%d note=%d-%d center=%d vag_off=%u vag_sz=%u adsr1=0x%02X adsr2=0x%02X\n",
-               i, t->prog, t->min_note, t->max_note, t->center_note,
-               t->vag_offset, t->vag_size, t->adsr1, t->adsr2);
-    }
-
-    free(vh);
+    printf("  extracted %d/%u VAGs to %s/\n", extracted, hdr.ps_count, outdir);
+    source_free(&s);
     return 0;
 }
 
 static int cmd_sep_inspect(int argc, char **argv)
 {
-    uint8_t *data;
-    size_t len;
+    uint8_t *data; size_t len;
     SepFile sep;
-    int i;
-
-    if (argc < 3) { usage(); return 1; }
-
     data = read_file(argv[2], &len);
-    if (!data) { fprintf(stderr, "error: failed to read file\n"); return 1; }
-
-    if (sep_parse(data, len, &sep) != 0) {
-        fprintf(stderr, "error: failed to parse SEP\n");
-        free(data);
-        return 1;
-    }
-
-    printf("SEP: %s (%zu bytes)\n", argv[2], len);
-    printf("  sequences: %d\n", sep.sequence_count);
-
-    for (i = 0; i < sep.sequence_count; i++) {
-        SepSequence *s = &sep.sequences[i];
-        printf("  [%d] resolution=%d events=%d\n",
-               i, s->resolution, s->event_count);
-    }
-
-    sep_free(&sep);
-    free(data);
+    if (!data) { fprintf(stderr, "error: read failed\n"); return 1; }
+    if (sep_parse(data, len, &sep) != 0) { fprintf(stderr, "error: bad SEP\n"); free(data); return 1; }
+    printf("  %s: %d sequence(s)\n", argv[2], sep.sequence_count);
+    for (int i = 0; i < sep.sequence_count; i++)
+        printf("    [%d] res=%d events=%d\n", i, sep.sequences[i].resolution, sep.sequences[i].event_count);
+    sep_free(&sep); free(data);
     return 0;
 }
 
 static int cmd_sep2mid(int argc, char **argv)
 {
-    uint8_t *data;
-    size_t len;
-    const char *outpath;
+    const char *outpath = arg_str(argc, argv, "-o");
+    int seq = arg_int(argc, argv, "-s", 0);
+    uint8_t *data; size_t len;
     SepFile sep;
-    int seq_idx;
-
-    if (argc < 3) { usage(); return 1; }
-
-    outpath = arg_flag(argc, argv, "-o");
     if (!outpath) { fprintf(stderr, "error: -o required\n"); return 1; }
-
     data = read_file(argv[2], &len);
-    if (!data) { fprintf(stderr, "error: failed to read file\n"); return 1; }
+    if (!data) { fprintf(stderr, "error: read failed\n"); return 1; }
+    if (sep_parse(data, len, &sep) != 0) { fprintf(stderr, "error: bad SEP\n"); free(data); return 1; }
+    if (sep_to_midi(&sep, seq, outpath) != 0) fprintf(stderr, "error: export failed\n");
+    else printf("  wrote %s (seq %d)\n", outpath, seq);
+    sep_free(&sep); free(data);
+    return 0;
+}
 
-    if (sep_parse(data, len, &sep) != 0) {
-        fprintf(stderr, "error: failed to parse SEP\n");
-        free(data);
-        return 1;
-    }
-
-    seq_idx = arg_int(argc, argv, "-s", 0);
-
-    if (sep_to_midi(&sep, seq_idx, outpath) != 0) {
-        fprintf(stderr, "error: MIDI export failed\n");
-        sep_free(&sep);
-        free(data);
-        return 1;
-    }
-
-    printf("wrote %s (sequence %d)\n", outpath, seq_idx);
-    sep_free(&sep);
+static int cmd_emi_inspect(int argc, char **argv)
+{
+    uint8_t *data; size_t len;
+    EmiFile emi;
+    data = read_file(argv[2], &len);
+    if (!data) { fprintf(stderr, "error: read failed\n"); return 1; }
+    if (emi_parse(data, len, &emi) != 0) { fprintf(stderr, "error: not an EMI file\n"); free(data); return 1; }
+    printf("  %s: %d entries\n", argv[2], emi.count);
+    for (int i = 0; i < emi.count; i++)
+        printf("    [%d] type=%2d %-12s size=%-8u offset=0x%X\n",
+               i, emi.entries[i].type, emi_type_name(emi.entries[i].type),
+               emi.entries[i].size, emi.entries[i].offset);
     free(data);
     return 0;
 }
 
+static int cmd_vab2sf2(int argc, char **argv)
+{
+    const char *outpath = arg_str(argc, argv, "-o");
+    const char *name = arg_str(argc, argv, "--name");
+    AudioSource s;
+
+    if (!outpath) { fprintf(stderr, "error: -o required\n"); return 1; }
+    if (!name) name = "BOF3";
+
+    if (argc >= 4 && source_from_raw(&s, argv[2], argv[3], NULL) == 0) {
+        /* raw VH + VB files */
+    } else if (source_auto(&s, argv[2]) == 0) {
+        /* EMI or directory */
+    } else {
+        fprintf(stderr, "error: cannot load VAB from %s\n", argv[2]);
+        return 1;
+    }
+
+    if (vab_to_sf2(s.vh, s.vh_sz, s.vb, s.vb_sz, outpath, name) != 0) {
+        fprintf(stderr, "error: SF2 export failed\n");
+        source_free(&s);
+        return 1;
+    }
+    printf("  wrote %s\n", outpath);
+    source_free(&s);
+    return 0;
+}
+
+/* ── help ─────────────────────────────────────────────────────────── */
+
+static void usage(void)
+{
+    printf(
+        "bof3-audio — PSX audio player, decoder, and exporter\n"
+        "\n"
+        "usage: bof3-audio <command> [args]\n"
+        "\n"
+        "browse:\n"
+        "  list [filter]                         list BGM tracks\n"
+        "  emi-inspect <file.EMI>                show EMI contents\n"
+        "\n"
+        "play:\n"
+        "  play <target> [-s N] [-g GAIN]        play (auto-detects format)\n"
+        "  play-bgm <track|EMI|vh vb sep>        play BGM music\n"
+        "  play-xa <file.STR> [-c CH]            play XA stream\n"
+        "  play-vag <vh> <vb> [-v N]             play VAB samples\n"
+        "\n"
+        "export:\n"
+        "  render <target> -o FILE                render BGM to WAV, Ogg Vorbis, or FLAC\n"
+        "  xa-decode <str> -o out.wav [-c CH]    decode XA to WAV\n"
+        "  vab-extract <vh> <vb> -o DIR          extract VAGs to WAV\n"
+        "  vab2sf2 <vh> <vb|EMI> -o out.sf2     export SoundFont 2\n"
+        "  sep2mid <sep> -o out.mid [-s N]       export to MIDI\n"
+        "\n"
+        "inspect:\n"
+        "  xa-inspect <str>                      list XA streams\n"
+        "  vab-inspect <vh>                      show VAB info\n"
+        "  sep-inspect <sep>                     show SEP info\n"
+        "\n"
+        "options:\n"
+        "  -s N       sequence index (default: 0)\n"
+        "  -g, --gain GAIN  playback gain (default: 1.0)\n"
+        "  -c CH      XA channel (default: 0)\n"
+        "  -v N       VAG index\n"
+        "  -o PATH    output file\n"
+        "\n"
+        "run 'bof3-audio --examples' for usage examples\n");
+}
+
+static void examples(void)
+{
+    printf(
+        "examples:\n"
+        "\n"
+        "  # browse all BGM tracks\n"
+        "  bin/psx-audio list\n"
+        "  bin/psx-audio list BAT          # filter by name\n"
+        "\n"
+        "  # play BGM by track name (searches out/extracted/BIN/BGM/)\n"
+        "  bin/psx-audio play BGM000\n"
+        "  bin/psx-audio play BGMBAT06 -g 0.5\n"
+        "  bin/psx-audio play BGMBAT02 --gain 0.7\n"
+        "  bin/psx-audio play BGMOPN -s 1  # play sequence 1\n"
+        "\n"
+        "  # play directly from EMI archive (no extraction needed)\n"
+        "  bin/psx-audio play out/extracted/BIN/BGM/BGM000.EMI\n"
+        "  bin/psx-audio play-bgm out/extracted/BIN/BGM/BGMBAT06.EMI\n"
+        "\n"
+        "  # play from extracted directory\n"
+        "  bin/psx-audio play out/extracted/BIN/BGM/BGM000\n"
+        "\n"
+        "  # play from raw files\n"
+        "  bin/psx-audio play-bgm 0.bin 2.bin 1.bin\n"
+        "\n"
+        "  # play XA streaming audio\n"
+        "  bin/psx-audio play out/extracted/BIN/SCE_XA/VOICE.STR -c 0\n"
+        "  bin/psx-audio play-xa out/extracted/BIN/SCE_XA/S_XA00.STR -c 3\n"
+        "\n"
+        "  # play individual VAB samples\n"
+        "  bin/psx-audio play-vag 0.bin 2.bin -v 0\n"
+        "\n"
+        "  # render to WAV\n"
+        "  bin/psx-audio render BGM000 -o bgm000.wav\n"
+        "  bin/psx-audio render BGM000 -o bgm000.ogg\n"
+        "  bin/psx-audio render BGM000 -o bgm000.flac\n"
+        "  bin/psx-audio render out/extracted/BIN/BGM/BGMOPN.EMI -o opening.wav\n"
+        "\n"
+        "  # export\n"
+        "  bin/psx-audio xa-decode VOICE.STR -o voice_ch0.wav -c 0\n"
+        "  bin/psx-audio vab-extract 0.bin 2.bin -o samples/\n"
+        "  bin/psx-audio vab2sf2 BGM000.EMI -o bgm000.sf2\n"
+        "  bin/psx-audio sep2mid 1.bin -o track.mid\n"
+        "\n"
+        "  # inspect\n"
+        "  bin/psx-audio emi-inspect out/extracted/BIN/BGM/BGM000.EMI\n"
+        "  bin/psx-audio xa-inspect out/extracted/BIN/SCE_XA/VOICE.STR\n"
+        "  bin/psx-audio vab-inspect 0.bin\n"
+        "  bin/psx-audio sep-inspect 1.bin\n");
+}
+
+/* ── main ─────────────────────────────────────────────────────────── */
+
 int main(int argc, char **argv)
 {
-    if (argc < 2) { usage(); return 1; }
+    if (argc < 2) { usage(); return 0; }
 
-    if (strcmp(argv[1], "play") == 0) return cmd_play(argc, argv);
-    if (strcmp(argv[1], "play-xa") == 0) return cmd_play_xa(argc, argv);
-    if (strcmp(argv[1], "play-vag") == 0) return cmd_play_vag(argc, argv);
-    if (strcmp(argv[1], "render") == 0) return cmd_render(argc, argv);
-    if (strcmp(argv[1], "xa-decode") == 0) return cmd_xa_decode(argc, argv);
-    if (strcmp(argv[1], "xa-inspect") == 0) return cmd_xa_inspect(argc, argv);
-    if (strcmp(argv[1], "vab-extract") == 0) return cmd_vab_extract(argc, argv);
-    if (strcmp(argv[1], "vab-inspect") == 0) return cmd_vab_inspect(argc, argv);
-    if (strcmp(argv[1], "sep-inspect") == 0) return cmd_sep_inspect(argc, argv);
-    if (strcmp(argv[1], "sep2mid") == 0) return cmd_sep2mid(argc, argv);
+    const char *cmd = argv[1];
 
-    fprintf(stderr, "unknown command: %s\n", argv[1]);
+    if (strcmp(cmd, "list") == 0)         return cmd_list(argc, argv);
+    if (strcmp(cmd, "play") == 0)         return cmd_play(argc, argv);
+    if (strcmp(cmd, "play-bgm") == 0)     return cmd_play_bgm(argc, argv);
+    if (strcmp(cmd, "play-xa") == 0)      return cmd_play_xa(argc, argv);
+    if (strcmp(cmd, "play-vag") == 0)     return cmd_play_vag(argc, argv);
+    if (strcmp(cmd, "render") == 0)       return cmd_render(argc, argv);
+    if (strcmp(cmd, "xa-decode") == 0)    return cmd_xa_decode(argc, argv);
+    if (strcmp(cmd, "xa-inspect") == 0)   return cmd_xa_inspect(argc, argv);
+    if (strcmp(cmd, "vab-extract") == 0)  return cmd_vab_extract(argc, argv);
+    if (strcmp(cmd, "vab-inspect") == 0)  return cmd_vab_inspect(argc, argv);
+    if (strcmp(cmd, "sep-inspect") == 0)  return cmd_sep_inspect(argc, argv);
+    if (strcmp(cmd, "sep2mid") == 0)      return cmd_sep2mid(argc, argv);
+    if (strcmp(cmd, "emi-inspect") == 0)  return cmd_emi_inspect(argc, argv);
+    if (strcmp(cmd, "vab2sf2") == 0)      return cmd_vab2sf2(argc, argv);
+    if (strcmp(cmd, "--examples") == 0)   { examples(); return 0; }
+    if (strcmp(cmd, "--help") == 0 || strcmp(cmd, "-h") == 0 || strcmp(cmd, "help") == 0)
+        { usage(); return 0; }
+
+    fprintf(stderr, "unknown command: %s\n\n", cmd);
     usage();
     return 1;
 }

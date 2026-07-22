@@ -55,32 +55,44 @@ static int write_vlq(FILE *f, uint32_t v)
 int sep_parse(const uint8_t *data, size_t len, SepFile *sep)
 {
     uint32_t magic;
-    uint16_t nseq;
     size_t pos;
-    int si;
+    int si, nseq = 0;
 
     memset(sep, 0, sizeof(*sep));
 
-    if (len < 8)
+    if (len < 6 + 13)
         return -1;
 
     magic = rd_u32be(data);
     if (magic != SEP_MAGIC)
         return -1;
+    if (rd_u16be(data + 4) != 0)
+        return -1;
 
-    nseq = rd_u16be(data + 6);
+    pos = 6;
+
+    /* Count sequences first: 13-byte headers, each with its own data_size. */
+    {
+        size_t p = pos;
+        while (p + 13 <= len) {
+            uint32_t ds = rd_u32be(data + p + 9);
+            if (ds == 0 || p + 13 + ds > len)
+                break;
+            p += 13 + ds;
+            nseq++;
+        }
+    }
+
     if (nseq == 0)
-        nseq = 1;
-    pos  = 8;
+        return -1;
 
-    sep->sequences = calloc(nseq, sizeof(*sep->sequences));
+    sep->sequences = calloc((size_t)nseq, sizeof(*sep->sequences));
     if (!sep->sequences)
         return -1;
     sep->sequence_count = nseq;
 
     for (si = 0; si < nseq; si++) {
         SepSequence *seq = &sep->sequences[si];
-        uint16_t resolution;
         uint32_t data_size;
         const uint8_t *ev, *ev_end;
         uint8_t running = 0;
@@ -89,15 +101,18 @@ int sep_parse(const uint8_t *data, size_t len, SepFile *sep)
         if (pos + 13 > len)
             goto fail;
 
-        resolution = rd_u16be(data + pos);
-        data_size  = rd_u32be(data + pos + 7);
-        pos += 12;
+        seq->seq_id     = rd_u16be(data + pos);
+        seq->resolution = rd_u16be(data + pos + 2);
+        seq->tempo_us   = (int)rd_u24be(data + pos + 4);
+        seq->time_num   = data[pos + 7];
+        seq->time_den   = data[pos + 8];
+        data_size       = rd_u32be(data + pos + 9);
+        pos += 13;
 
         if (pos + data_size > len)
             goto fail;
 
-        seq->resolution = resolution;
-        seq->events = malloc(cap * sizeof(*seq->events));
+        seq->events = malloc((size_t)cap * sizeof(*seq->events));
         if (!seq->events)
             goto fail;
         seq->event_count = 0;
@@ -137,22 +152,20 @@ int sep_parse(const uint8_t *data, size_t len, SepFile *sep)
             e->type  = status;
 
             if (status == 0xFF) {
-                uint32_t mlen;
-
                 if (ev >= ev_end)
                     break;
                 e->meta_type = *ev++;
-                mlen = read_vlq(ev, ev_end, &used);
-                ev += used;
-                e->meta_len = (int)mlen;
-                if (mlen > 0) {
-                    e->meta = malloc(mlen);
+                if (e->meta_type == 0x51) {
+                    e->meta_len = 3;
+                    if (ev + 3 > ev_end)
+                        break;
+                    e->meta = malloc(3);
                     if (!e->meta)
                         goto fail;
-                    if (ev + mlen > ev_end)
-                        mlen = (uint32_t)(ev_end - ev);
-                    memcpy(e->meta, ev, mlen);
-                    ev += mlen;
+                    memcpy(e->meta, ev, 3);
+                    ev += 3;
+                } else if (e->meta_type != 0x2F) {
+                    break;
                 }
             } else {
                 dlen = midi_data_len(status);

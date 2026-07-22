@@ -1,5 +1,5 @@
 #include <string.h>
-#include "audio.h"
+#include "emi.h"
 #include "util.h"
 
 int emi_parse(const uint8_t *data, size_t len, EmiFile *emi)

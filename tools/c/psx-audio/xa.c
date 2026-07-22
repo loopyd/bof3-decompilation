@@ -16,7 +16,7 @@
 static void xa_decode_group(const uint8_t *d, int16_t *out, int sf,
                             int16_t *p1, int16_t *p2)
 {
-    int shift  = 12 - (sf & 0x0F);
+    int shift  = sf & 0x0F;
     int filter = (sf >> 4) & 0x03;
     int fp = PSX_FILTER_POS[filter], fn = PSX_FILTER_NEG[filter];
     int i;
