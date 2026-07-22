@@ -17,9 +17,11 @@ typedef struct {
     int pitch_bend_max;
     int priority;
     uint64_t generation;
+    int seq_idx;
 } Voice;
 
 #define MAX_VOICES 24
+#define MAX_SEQUENCES 8
 
 typedef struct {
     int channel;
@@ -32,6 +34,7 @@ typedef struct {
     float pan;
     int bend;
     int is_bend;
+    int seq_idx;
 } NoteEvent;
 
 typedef struct {
@@ -120,6 +123,123 @@ static int trace_enabled(void)
     return cached;
 }
 
+static int compare_events(const void *a, const void *b)
+{
+    const NoteEvent *ea = (const NoteEvent *)a;
+    const NoteEvent *eb = (const NoteEvent *)b;
+    if (ea->frame != eb->frame)
+        return (ea->frame < eb->frame) ? -1 : 1;
+    {
+        int ea_order = ea->is_bend ? 0 : (ea->is_on ? 1 : 2);
+        int eb_order = eb->is_bend ? 0 : (eb->is_on ? 1 : 2);
+        return ea_order - eb_order;
+    }
+}
+
+static void build_seq_events(SepSequence *seq, int seq_idx,
+                             NoteEvent **events, int *event_count, int *event_cap,
+                             ChannelState *channels, int output_rate)
+{
+    int resolution = seq->resolution > 0 ? seq->resolution : 48;
+    double tempo_us = seq->tempo_us > 0 ? (double)seq->tempo_us : 500000.0;
+    double elapsed_seconds = 0.0;
+    int64_t tempo_tick = 0;
+    int64_t tick = 0;
+    int i, ch, expanded_ch;
+    double seconds;
+    int64_t frame;
+
+    for (i = 0; i < (int)seq->event_count; i++) {
+        SepEvent *ev = &seq->events[i];
+        tick += ev->delta;
+
+        if (ev->type == 0xFF && ev->meta_type == 0x51 && ev->meta_len >= 3) {
+            elapsed_seconds += (double)(tick - tempo_tick) * tempo_us /
+                               (1000000.0 * resolution);
+            tempo_tick = tick;
+            tempo_us = (double)((ev->meta[0] << 16) | (ev->meta[1] << 8) |
+                                ev->meta[2]);
+            continue;
+        }
+
+        ch = ev->type & 0x0F;
+        expanded_ch = seq_idx * 16 + ch;
+
+        if ((ev->type & 0xF0) == 0xC0) {
+            channels[expanded_ch].program = ev->data1;
+            continue;
+        }
+        if ((ev->type & 0xF0) == 0xB0) {
+            if (ev->data1 == 7)
+                channels[expanded_ch].volume = ev->data2 / 127.0f;
+            else if (ev->data1 == 10)
+                channels[expanded_ch].pan = (float)ev->data2;
+            continue;
+        }
+
+        seconds = elapsed_seconds + (double)(tick - tempo_tick) * tempo_us /
+                                    (1000000.0 * resolution);
+        frame = (int64_t)(seconds * output_rate);
+
+        if ((ev->type & 0xF0) == 0xE0) {
+            channels[expanded_ch].bend = ev->data2;
+            if (*event_count >= *event_cap) {
+                *event_cap = *event_cap ? *event_cap * 2 : 1024;
+                *events = (NoteEvent *)realloc(
+                    *events, (size_t)*event_cap * sizeof(NoteEvent));
+            }
+            memset(&(*events)[*event_count], 0, sizeof(NoteEvent));
+            (*events)[*event_count].channel = ch;
+            (*events)[*event_count].frame = frame;
+            (*events)[*event_count].bend = channels[expanded_ch].bend;
+            (*events)[*event_count].is_bend = 1;
+            (*events)[*event_count].seq_idx = seq_idx;
+            (*event_count)++;
+            continue;
+        }
+
+        if ((ev->type & 0xF0) == 0x90 && ev->data2 > 0) {
+            if (*event_count >= *event_cap) {
+                *event_cap = *event_cap ? *event_cap * 2 : 1024;
+                *events = (NoteEvent *)realloc(
+                    *events, (size_t)*event_cap * sizeof(NoteEvent));
+            }
+            memset(&(*events)[*event_count], 0, sizeof(NoteEvent));
+            (*events)[*event_count].channel = ch;
+            (*events)[*event_count].note = ev->data1;
+            (*events)[*event_count].velocity = ev->data2;
+            (*events)[*event_count].frame = frame;
+            (*events)[*event_count].is_on = 1;
+            (*events)[*event_count].program =
+                channels[expanded_ch].program;
+            (*events)[*event_count].volume =
+                channels[expanded_ch].volume;
+            (*events)[*event_count].pan = channels[expanded_ch].pan;
+            (*events)[*event_count].bend = channels[expanded_ch].bend;
+            (*events)[*event_count].seq_idx = seq_idx;
+            (*event_count)++;
+            continue;
+        }
+
+        if ((ev->type & 0xF0) == 0x80 ||
+            ((ev->type & 0xF0) == 0x90 && ev->data2 == 0)) {
+            if (*event_count >= *event_cap) {
+                *event_cap = *event_cap ? *event_cap * 2 : 1024;
+                *events = (NoteEvent *)realloc(
+                    *events, (size_t)*event_cap * sizeof(NoteEvent));
+            }
+            memset(&(*events)[*event_count], 0, sizeof(NoteEvent));
+            (*events)[*event_count].channel = ch;
+            (*events)[*event_count].note = ev->data1;
+            (*events)[*event_count].velocity = 0;
+            (*events)[*event_count].frame = frame;
+            (*events)[*event_count].is_on = 0;
+            (*events)[*event_count].seq_idx = seq_idx;
+            (*event_count)++;
+        }
+    }
+}
+
 int render_bgm(const uint8_t *sep_data, size_t sep_len,
                const uint8_t *vh_data, size_t vh_len,
                const uint8_t *vb_data, size_t vb_len,
@@ -154,7 +274,7 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
     if (sep_parse(sep_data, sep_len, &sep) != 0)
         return -1;
 
-    if (seq_index < 0 || seq_index >= (int)sep.sequence_count) {
+    if (seq_index < -1 || seq_index >= (int)sep.sequence_count) {
         sep_free(&sep);
         return -1;
     }
@@ -179,93 +299,32 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
     }
 
     {
-        SepSequence *seq = &sep.sequences[seq_index];
-        int resolution = seq->resolution > 0 ? seq->resolution : 48;
-        double tempo_us = seq->tempo_us > 0 ? (double)seq->tempo_us : 500000.0;
-        double elapsed_seconds = 0.0;
-        int64_t tempo_tick = 0;
-        int64_t tick = 0;
+        ChannelState channels[MAX_SEQUENCES * 16];
+        int si;
 
-        for (i = 0; i < (int)seq->event_count; i++) {
-            SepEvent *ev = &seq->events[i];
-            tick += ev->delta;
-
-            if (ev->type == 0xFF && ev->meta_type == 0x51 && ev->meta_len >= 3) {
-                elapsed_seconds += (double)(tick - tempo_tick) * tempo_us /
-                                   (1000000.0 * resolution);
-                tempo_tick = tick;
-                tempo_us = (double)((ev->meta[0] << 16) | (ev->meta[1] << 8) | ev->meta[2]);
-                continue;
-            }
-
-            if ((ev->type & 0xF0) == 0xC0) {
-                channels[ev->type & 0x0F].program = ev->data1;
-                continue;
-            }
-
-            if ((ev->type & 0xF0) == 0xB0) {
-                if (ev->data1 == 7)
-                    channels[ev->type & 0x0F].volume = ev->data2 / 127.0f;
-                else if (ev->data1 == 10)
-                    channels[ev->type & 0x0F].pan = (float)ev->data2;
-                continue;
-            }
-
-            if ((ev->type & 0xF0) == 0xE0) {
-                int channel = ev->type & 0x0F;
-                double seconds = elapsed_seconds + (double)(tick - tempo_tick) * tempo_us /
-                                                    (1000000.0 * resolution);
-                channels[channel].bend = ev->data2;
-                if (event_count >= event_cap) {
-                    event_cap = event_cap ? event_cap * 2 : 1024;
-                    events = (NoteEvent *)realloc(events, (size_t)event_cap * sizeof(NoteEvent));
-                }
-                memset(&events[event_count], 0, sizeof(events[event_count]));
-                events[event_count].channel = channel;
-                events[event_count].frame = (int64_t)(seconds * output_rate);
-                events[event_count].bend = channels[channel].bend;
-                events[event_count].is_bend = 1;
-                event_count++;
-                continue;
-            }
-
-            if ((ev->type & 0xF0) == 0x90 && ev->data2 > 0) {
-                double seconds = elapsed_seconds + (double)(tick - tempo_tick) * tempo_us /
-                                                    (1000000.0 * resolution);
-                int64_t frame = (int64_t)(seconds * output_rate);
-                if (event_count >= event_cap) {
-                    event_cap = event_cap ? event_cap * 2 : 1024;
-                    events = (NoteEvent *)realloc(events, (size_t)event_cap * sizeof(NoteEvent));
-                }
-                events[event_count].channel = ev->type & 0x0F;
-                events[event_count].note = ev->data1;
-                events[event_count].velocity = ev->data2;
-                events[event_count].frame = frame;
-                events[event_count].is_on = 1;
-                events[event_count].is_bend = 0;
-                events[event_count].program = channels[ev->type & 0x0F].program;
-                events[event_count].volume = channels[ev->type & 0x0F].volume;
-                events[event_count].pan = channels[ev->type & 0x0F].pan;
-                events[event_count].bend = channels[ev->type & 0x0F].bend;
-                event_count++;
-            } else if (((ev->type & 0xF0) == 0x80) ||
-                       ((ev->type & 0xF0) == 0x90 && ev->data2 == 0)) {
-                double seconds = elapsed_seconds + (double)(tick - tempo_tick) * tempo_us /
-                                                    (1000000.0 * resolution);
-                int64_t frame = (int64_t)(seconds * output_rate);
-                if (event_count >= event_cap) {
-                    event_cap = event_cap ? event_cap * 2 : 1024;
-                    events = (NoteEvent *)realloc(events, (size_t)event_cap * sizeof(NoteEvent));
-                }
-                events[event_count].channel = ev->type & 0x0F;
-                events[event_count].note = ev->data1;
-                events[event_count].velocity = 0;
-                events[event_count].frame = frame;
-                events[event_count].is_on = 0;
-                events[event_count].is_bend = 0;
-                event_count++;
-            }
+        for (i = 0; i < MAX_SEQUENCES * 16; i++) {
+            channels[i].program = 0;
+            channels[i].volume = 1.0f;
+            channels[i].pan = 64.0f;
+            channels[i].bend = 64;
         }
+
+        if (seq_index == -1) {
+            for (si = 0; si < (int)sep.sequence_count && si < MAX_SEQUENCES;
+                 si++) {
+                if (sep.sequences[si].event_count > 0)
+                    build_seq_events(&sep.sequences[si], si, &events,
+                                     &event_count, &event_cap, channels,
+                                     output_rate);
+            }
+        } else {
+            build_seq_events(&sep.sequences[seq_index], 0, &events,
+                             &event_count, &event_cap, channels, output_rate);
+        }
+
+        if (seq_index == -1 && sep.sequence_count > 1 && event_count > 1)
+            qsort(events, (size_t)event_count, sizeof(NoteEvent),
+                  compare_events);
     }
 
     if (event_count == 0) {
@@ -295,7 +354,9 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                 NoteEvent *ne = &events[ev_idx];
                 if (ne->is_bend) {
                     for (i = 0; i < MAX_VOICES; i++) {
-                        if (voices[i].active && voices[i].channel == ne->channel) {
+                        if (voices[i].active &&
+                            voices[i].channel == ne->channel &&
+                            voices[i].seq_idx == ne->seq_idx) {
                             voices[i].bend = ne->bend;
                             voices[i].pitch = voice_pitch(&voices[i], ne->bend);
                             if (write_voice_register(spu, i,
@@ -379,6 +440,7 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                         pan_gains((int)eff_pan, &left_gain, &right_gain);
                         v->active = 1;
                         v->channel = ne->channel;
+                        v->seq_idx = ne->seq_idx;
                         v->note = ne->note;
                         v->center_note = t->center_note;
                         v->center_shift = t->shift;
@@ -394,10 +456,12 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                         v->pitch = voice_pitch(v, v->bend);
                         if (trace_enabled())
                             fprintf(stderr,
-                                    "note-on frame=%lld ch=%d prog=%d note=%d "
+                                    "note-on frame=%lld seq=%d ch=%d "
+                                    "prog=%d note=%d "
                                     "tone=%d/%d center=%d shift=%d pb=%d/%d "
                                     "pitch=0x%04x vag=%u\n",
-                                    (long long)ne->frame, ne->channel,
+                                    (long long)ne->frame, ne->seq_idx,
+                                    ne->channel,
                                     ne->program, ne->note, t->storage_block,
                                     t->tone_slot, t->center_note, t->shift,
                                     t->pitch_bend_min, t->pitch_bend_max,
@@ -430,7 +494,8 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                     for (i = 0; i < MAX_VOICES; i++) {
                         if (voices[i].active &&
                             voices[i].channel == ne->channel &&
-                            voices[i].note == ne->note) {
+                            voices[i].note == ne->note &&
+                            voices[i].seq_idx == ne->seq_idx) {
                             if (write_key_mask(spu, i, 0) != 0)
                                 render_failed = 1;
                         }
