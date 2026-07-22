@@ -11,13 +11,12 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 add_library(psx_audio STATIC
-    audio_render.c
     audio_audit.c
+    audio_engine.c
     adpcm.c
     wav.c
     ogg.c
     flac.c
-    game_render.c
     psf.c
     psx_machine.c
     xa.c
@@ -25,6 +24,7 @@ add_library(psx_audio STATIC
     sep.c
     spu.c
     spu_device.c
+    spu_reverb_nocash.c
     emi.c
     render.c
     sf2.c
@@ -48,7 +48,7 @@ if(FLAC_LIB)
     target_link_libraries(psx_audio PUBLIC ${FLAC_LIB})
 endif()
 
-add_executable(bof3-audio main.c)
+add_executable(bof3-audio main.c commands.c export.c tui.c)
 target_link_libraries(bof3-audio psx_audio)
 target_include_directories(bof3-audio PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -67,9 +67,6 @@ if(BUILD_TESTING)
     add_executable(psx_machine_test psx_machine_test.c)
     target_link_libraries(psx_machine_test psx_audio)
     add_test(NAME psx_machine_test COMMAND psx_machine_test)
-    add_executable(audio_core_test audio_core_test.c)
-    target_link_libraries(audio_core_test psx_audio)
-    add_test(NAME audio_core_test COMMAND audio_core_test)
     add_executable(spu_device_test spu_device_test.c)
     target_link_libraries(spu_device_test psx_audio)
     add_test(NAME spu_device_test COMMAND spu_device_test)

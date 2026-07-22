@@ -6,65 +6,74 @@
 #include <stdlib.h>
 #include <string.h>
 
-static inline uint16_t rd_u16le(const uint8_t *p) {
-    return (uint16_t)(p[0] | (p[1] << 8));
+static inline uint16_t rd_u16le(const uint8_t* p) {
+  return (uint16_t)(p[0] | (p[1] << 8));
 }
-static inline int16_t rd_i16le(const uint8_t *p) {
-    return (int16_t)rd_u16le(p);
+static inline int16_t rd_i16le(const uint8_t* p) {
+  return (int16_t)rd_u16le(p);
 }
-static inline uint32_t rd_u32le(const uint8_t *p) {
-    return (uint32_t)p[0] | ((uint32_t)p[1] << 8) |
-           ((uint32_t)p[2] << 16) | ((uint32_t)p[3] << 24);
+static inline uint32_t rd_u32le(const uint8_t* p) {
+  return (uint32_t)p[0] | ((uint32_t)p[1] << 8) | ((uint32_t)p[2] << 16) |
+         ((uint32_t)p[3] << 24);
 }
-static inline uint16_t rd_u16be(const uint8_t *p) {
-    return (uint16_t)((p[0] << 8) | p[1]);
+static inline uint16_t rd_u16be(const uint8_t* p) {
+  return (uint16_t)((p[0] << 8) | p[1]);
 }
-static inline uint32_t rd_u24be(const uint8_t *p) {
-    return ((uint32_t)p[0] << 16) | ((uint32_t)p[1] << 8) | (uint32_t)p[2];
+static inline uint32_t rd_u24be(const uint8_t* p) {
+  return ((uint32_t)p[0] << 16) | ((uint32_t)p[1] << 8) | (uint32_t)p[2];
 }
-static inline uint32_t rd_u32be(const uint8_t *p) {
-    return ((uint32_t)p[0] << 24) | ((uint32_t)p[1] << 16) |
-           ((uint32_t)p[2] << 8) | (uint32_t)p[3];
-}
-
-static inline void wr_u16le(FILE *f, uint16_t v) {
-    uint8_t b[2] = { (uint8_t)(v & 0xFF), (uint8_t)(v >> 8) };
-    fwrite(b, 1, 2, f);
-}
-static inline void wr_u32le(FILE *f, uint32_t v) {
-    uint8_t b[4] = { (uint8_t)(v & 0xFF), (uint8_t)((v >> 8) & 0xFF),
-                     (uint8_t)((v >> 16) & 0xFF), (uint8_t)((v >> 24) & 0xFF) };
-    fwrite(b, 1, 4, f);
-}
-static inline void wr_u16be(FILE *f, uint16_t v) {
-    uint8_t b[2] = { (uint8_t)(v >> 8), (uint8_t)(v & 0xFF) };
-    fwrite(b, 1, 2, f);
-}
-static inline void wr_u32be(FILE *f, uint32_t v) {
-    uint8_t b[4] = { (uint8_t)((v >> 24) & 0xFF), (uint8_t)((v >> 16) & 0xFF),
-                     (uint8_t)((v >> 8) & 0xFF), (uint8_t)(v & 0xFF) };
-    fwrite(b, 1, 4, f);
+static inline uint32_t rd_u32be(const uint8_t* p) {
+  return ((uint32_t)p[0] << 24) | ((uint32_t)p[1] << 16) |
+         ((uint32_t)p[2] << 8) | (uint32_t)p[3];
 }
 
-static inline uint8_t *read_file(const char *path, size_t *len) {
-    FILE *f = fopen(path, "rb");
-    if (!f) return NULL;
-    fseek(f, 0, SEEK_END);
-    long sz = ftell(f);
-    fseek(f, 0, SEEK_SET);
-    if (sz < 0) { fclose(f); return NULL; }
-    uint8_t *buf = (uint8_t *)malloc((size_t)sz);
-    if (!buf) { fclose(f); return NULL; }
-    if (fread(buf, 1, (size_t)sz, f) != (size_t)sz) {
-        free(buf); fclose(f); return NULL;
-    }
+static inline void wr_u16le(FILE* f, uint16_t v) {
+  uint8_t b[2] = {(uint8_t)(v & 0xFF), (uint8_t)(v >> 8)};
+  fwrite(b, 1, 2, f);
+}
+static inline void wr_u32le(FILE* f, uint32_t v) {
+  uint8_t b[4] = {(uint8_t)(v & 0xFF), (uint8_t)((v >> 8) & 0xFF),
+                  (uint8_t)((v >> 16) & 0xFF), (uint8_t)((v >> 24) & 0xFF)};
+  fwrite(b, 1, 4, f);
+}
+static inline void wr_u16be(FILE* f, uint16_t v) {
+  uint8_t b[2] = {(uint8_t)(v >> 8), (uint8_t)(v & 0xFF)};
+  fwrite(b, 1, 2, f);
+}
+static inline void wr_u32be(FILE* f, uint32_t v) {
+  uint8_t b[4] = {(uint8_t)((v >> 24) & 0xFF), (uint8_t)((v >> 16) & 0xFF),
+                  (uint8_t)((v >> 8) & 0xFF), (uint8_t)(v & 0xFF)};
+  fwrite(b, 1, 4, f);
+}
+
+static inline uint8_t* read_file(const char* path, size_t* len) {
+  FILE* f = fopen(path, "rb");
+  if (!f)
+    return NULL;
+  fseek(f, 0, SEEK_END);
+  long sz = ftell(f);
+  fseek(f, 0, SEEK_SET);
+  if (sz < 0) {
     fclose(f);
-    *len = (size_t)sz;
-    return buf;
+    return NULL;
+  }
+  uint8_t* buf = (uint8_t*)malloc((size_t)sz);
+  if (!buf) {
+    fclose(f);
+    return NULL;
+  }
+  if (fread(buf, 1, (size_t)sz, f) != (size_t)sz) {
+    free(buf);
+    fclose(f);
+    return NULL;
+  }
+  fclose(f);
+  *len = (size_t)sz;
+  return buf;
 }
 
-static const int PSX_FILTER_POS[5] = { 0, 60, 115, 98, 122 };
-static const int PSX_FILTER_NEG[5] = { 0, 0, -52, -55, -60 };
+static const int PSX_FILTER_POS[5] = {0, 60, 115, 98, 122};
+static const int PSX_FILTER_NEG[5] = {0, 0, -52, -55, -60};
 
 /* clang-format off */
 /* PS1 SPU 4-point gaussian interpolation table (512 entries).
@@ -138,18 +147,18 @@ static const int16_t PSX_GAUSS[512] = {
 };
 /* clang-format on */
 
-static inline int32_t psx_gauss_interp(const int16_t *src, int64_t src_len,
+static inline int32_t psx_gauss_interp(const int16_t* src, int64_t src_len,
                                        int64_t idx, int frac) {
-    int32_t out;
-    int16_t oldest = (idx - 3 >= 0 && idx - 3 < src_len) ? src[idx - 3] : 0;
-    int16_t older  = (idx - 2 >= 0 && idx - 2 < src_len) ? src[idx - 2] : 0;
-    int16_t old    = (idx - 1 >= 0 && idx - 1 < src_len) ? src[idx - 1] : 0;
-    int16_t new_   = (idx >= 0 && idx < src_len)          ? src[idx]     : 0;
-    out  = (PSX_GAUSS[0x0FF - frac] * oldest) >> 15;
-    out += (PSX_GAUSS[0x1FF - frac] * older)  >> 15;
-    out += (PSX_GAUSS[0x100 + frac] * old)    >> 15;
-    out += (PSX_GAUSS[0x000 + frac] * new_)   >> 15;
-    return out;
+  int32_t out;
+  int16_t oldest = (idx - 3 >= 0 && idx - 3 < src_len) ? src[idx - 3] : 0;
+  int16_t older = (idx - 2 >= 0 && idx - 2 < src_len) ? src[idx - 2] : 0;
+  int16_t old = (idx - 1 >= 0 && idx - 1 < src_len) ? src[idx - 1] : 0;
+  int16_t new_ = (idx >= 0 && idx < src_len) ? src[idx] : 0;
+  out = (PSX_GAUSS[0x0FF - frac] * oldest) >> 15;
+  out += (PSX_GAUSS[0x1FF - frac] * older) >> 15;
+  out += (PSX_GAUSS[0x100 + frac] * old) >> 15;
+  out += (PSX_GAUSS[0x000 + frac] * new_) >> 15;
+  return out;
 }
 
 #endif

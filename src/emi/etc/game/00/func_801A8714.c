@@ -4,6 +4,6 @@
  * @source 0x801A8714
  */
 s32 func_801A8714(void) {
-    D_80146864 = 0xF0;
-    return 0;
+  D_80146864 = 0xF0;
+  return 0;
 }

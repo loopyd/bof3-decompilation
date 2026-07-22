@@ -33,3 +33,6 @@ inspect TRACK="BGM000": build
 
 lint:
     gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -fsyntax-only *.c -I. -Ithird_party
+
+format:
+    clang-format -i *.c *.h

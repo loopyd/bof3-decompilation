@@ -1,0 +1,17 @@
+#!/bin/sh
+set -eu
+ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+OUT="${1:-${ROOT}/psx-audio.zip}"
+
+TMPDIR="$(mktemp -d)"
+trap 'rm -rf "$TMPDIR"' EXIT
+
+git -C "$ROOT" ls-files -- tools/c/psx-audio/ | while IFS= read -r f; do
+    dest="$TMPDIR/psx-audio/${f#tools/c/psx-audio/}"
+    mkdir -p "$(dirname "$dest")"
+    cp "$ROOT/$f" "$dest"
+done
+
+rm -f "$OUT"
+(cd "$TMPDIR" && zip -qr "$OUT" psx-audio)
+printf 'wrote %s\n' "$OUT"
