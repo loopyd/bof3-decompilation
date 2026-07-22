@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(bof3-audio C)
 
+include(CTest)
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
@@ -9,19 +11,26 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 add_library(psx_audio STATIC
+    audio_render.c
     adpcm.c
     wav.c
     ogg.c
     flac.c
+    psf.c
+    psx_machine.c
     xa.c
     vab.c
     sep.c
     spu.c
+    spu_device.c
     emi.c
     render.c
     sf2.c
 )
 target_include_directories(psx_audio PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+find_package(ZLIB REQUIRED)
+target_link_libraries(psx_audio PUBLIC ZLIB::ZLIB)
 
 find_library(VORBISENC_LIB vorbisenc)
 find_library(VORBIS_LIB vorbis)
@@ -47,6 +56,15 @@ target_include_directories(bof3-audio PRIVATE
 find_library(MATH_LIB m)
 if(MATH_LIB)
     target_link_libraries(bof3-audio ${MATH_LIB})
+endif()
+
+if(BUILD_TESTING)
+    add_executable(psf_test psf_test.c)
+    target_link_libraries(psf_test psx_audio)
+    add_test(NAME psf_test COMMAND psf_test)
+    add_executable(psx_machine_test psx_machine_test.c)
+    target_link_libraries(psx_machine_test psx_audio)
+    add_test(NAME psx_machine_test COMMAND psx_machine_test)
 endif()
 
 if(WIN32)

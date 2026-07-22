@@ -40,13 +40,16 @@ int vab_parse_vh(const uint8_t *data, size_t len, VabHeader *hdr)
             const uint8_t *tn = data + VAB_TONE_OFF +
                                 (p * VAB_TONES_PER_PROG + t) * VAB_TONE_SIZE;
             uint8_t vol = tn[2];
+            int16_t prog = rd_i16le(tn + 20);
             int16_t vag = rd_i16le(tn + 22);
             if (vag == 0 && vol == 0)
                 continue;
             if (vag < 1 || vag > (int)vs)
                 continue;
+            if (prog < 0 || prog > 127)
+                continue;
 
-            hdr->tones[ti].prog        = (uint8_t)p;
+            hdr->tones[ti].prog        = (uint8_t)prog;
             hdr->tones[ti].min_note    = tn[6];
             hdr->tones[ti].max_note    = tn[7];
             hdr->tones[ti].center_note = tn[4];

@@ -10,6 +10,34 @@ typedef struct {
     int rate;
 } RenderOutput;
 
+typedef enum {
+    AUDIO_ENGINE_FAST = 0,
+    AUDIO_ENGINE_GAME = 1
+} AudioEngine;
+
+typedef enum {
+    AUDIO_STATUS_OK = 0,
+    AUDIO_STATUS_INVALID_ARGUMENT,
+    AUDIO_STATUS_UNSUPPORTED_ENGINE,
+    AUDIO_STATUS_RENDER_FAILED
+} AudioStatus;
+
+typedef struct {
+    AudioEngine engine;
+    const uint8_t *sep_data;
+    size_t sep_len;
+    const uint8_t *vh_data;
+    size_t vh_len;
+    const uint8_t *vb_data;
+    size_t vb_len;
+    int sequence;
+    int output_rate;
+} AudioRenderRequest;
+
+typedef struct {
+    RenderOutput audio;
+} AudioRenderResult;
+
 typedef struct {
     int rate;
     int channels;
@@ -93,6 +121,9 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                const uint8_t *vh_data, size_t vh_len,
                const uint8_t *vb_data, size_t vb_len,
                int seq_index, int output_rate, RenderOutput *out);
+AudioStatus audio_render(const AudioRenderRequest *request,
+                         AudioRenderResult *result);
+const char *audio_status_string(AudioStatus status);
 
 int xa_decode_channel(const uint8_t *data, size_t len, int channel,
                       int16_t **pcm, int *rate, int *nch);

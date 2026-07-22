@@ -18,6 +18,8 @@
 #include "audio.h"
 #include "util.h"
 #include "emi.h"
+#include "psf.h"
+#include "psx_machine.h"
 
 /* ── audio source abstraction ─────────────────────────────────────── */
 
@@ -172,35 +174,52 @@ static int write_stereo_output(const char *path, const int16_t *pcm,
     return wav_write_stereo(path, pcm, frames, rate);
 }
 
-static int play_source(AudioSource *s, int seq_idx, float gain, const char *outpath)
+static int play_source(AudioSource *s, int seq_idx, AudioEngine engine,
+                       float gain, const char *outpath)
 {
     if (s->sep) {
-        RenderOutput ro;
-        if (render_bgm(s->sep, s->sep_sz, s->vh, s->vh_sz, s->vb, s->vb_sz,
-                       seq_idx, 44100, &ro) != 0) {
-            fprintf(stderr, "error: render failed\n");
+        AudioRenderRequest request;
+        AudioRenderResult result;
+        AudioStatus status;
+        RenderOutput *ro;
+
+        memset(&request, 0, sizeof(request));
+        request.engine = engine;
+        request.sep_data = s->sep;
+        request.sep_len = s->sep_sz;
+        request.vh_data = s->vh;
+        request.vh_len = s->vh_sz;
+        request.vb_data = s->vb;
+        request.vb_len = s->vb_sz;
+        request.sequence = seq_idx;
+        request.output_rate = 44100;
+        status = audio_render(&request, &result);
+        if (status != AUDIO_STATUS_OK) {
+            fprintf(stderr, "error: %s\n", audio_status_string(status));
             return -1;
         }
+        ro = &result.audio;
         int rc;
         if (outpath) {
             if (gain != 1.0f) {
-                int64_t total = ro.frames * 2;
+                int64_t total = ro->frames * 2;
                 for (int64_t i = 0; i < total; i++) {
-                    float v = (float)ro.pcm[i] * gain;
-                    ro.pcm[i] = (int16_t)(v > 32767.0f ? 32767 : v < -32768.0f ? -32768 : v);
+                    float v = (float)ro->pcm[i] * gain;
+                    ro->pcm[i] = (int16_t)(v > 32767.0f ? 32767 : v < -32768.0f ? -32768 : v);
                 }
             }
-            if (write_stereo_output(outpath, ro.pcm, ro.frames, ro.rate) != 0) {
+            if (write_stereo_output(outpath, ro->pcm, ro->frames, ro->rate) != 0) {
                 fprintf(stderr, "error: failed to write %s\n", outpath);
-                free(ro.pcm);
+                free(ro->pcm);
                 return -1;
             }
-            printf("  wrote %s (%.1fs, %dHz stereo)\n", outpath, (double)ro.frames / ro.rate, ro.rate);
+            printf("  wrote %s (%.1fs, %dHz stereo)\n", outpath,
+                   (double)ro->frames / ro->rate, ro->rate);
             rc = 0;
         } else {
-            rc = play_buffer(ro.pcm, ro.frames, 2, ro.rate, gain);
+            rc = play_buffer(ro->pcm, ro->frames, 2, ro->rate, gain);
         }
-        free(ro.pcm);
+        free(ro->pcm);
         return rc;
     }
     VabHeader hdr;
@@ -228,6 +247,13 @@ static const char *arg_str(int argc, char **argv, const char *flag)
         if (strcmp(argv[i], flag) == 0) return argv[i + 1];
     return NULL;
 }
+static int arg_has(int argc, char **argv, const char *flag)
+{
+    int i;
+    for (i = 1; i < argc; i++)
+        if (strcmp(argv[i], flag) == 0) return 1;
+    return 0;
+}
 static int arg_int(int argc, char **argv, const char *flag, int def)
 { const char *v = arg_str(argc, argv, flag); return v ? atoi(v) : def; }
 static float arg_flt(int argc, char **argv, const char *flag, float def)
@@ -237,6 +263,21 @@ static float arg_gain(int argc, char **argv)
 {
     const char *v = arg_str(argc, argv, "--gain");
     return v ? (float)atof(v) : arg_flt(argc, argv, "-g", 1.0f);
+}
+
+static int arg_engine(int argc, char **argv, AudioEngine *engine)
+{
+    const char *value = arg_str(argc, argv, "--engine");
+
+    if (!value || strcmp(value, "fast") == 0) {
+        *engine = AUDIO_ENGINE_FAST;
+        return 0;
+    }
+    if (strcmp(value, "game") == 0) {
+        *engine = AUDIO_ENGINE_GAME;
+        return 0;
+    }
+    return -1;
 }
 
 /* ── BGM directory scanning ───────────────────────────────────────── */
@@ -373,12 +414,18 @@ static int cmd_list(int argc, char **argv)
 static int cmd_play_bgm(int argc, char **argv)
 {
     AudioSource s;
+    AudioEngine engine;
     int seq = arg_int(argc, argv, "-s", 0);
     float gain = arg_gain(argc, argv);
     const char *outpath = arg_str(argc, argv, "-o");
     char path[512];
     const char *target = argv[2];
     int rc;
+
+    if (arg_engine(argc, argv, &engine) != 0) {
+        fprintf(stderr, "error: --engine must be fast or game\n");
+        return 1;
+    }
 
     if (ends_with(target, ".emi") || ends_with(target, ".EMI")) {
         printf("  %s\n", target);
@@ -401,7 +448,7 @@ static int cmd_play_bgm(int argc, char **argv)
         }
     }
 
-    rc = play_source(&s, seq, gain, outpath);
+    rc = play_source(&s, seq, engine, gain, outpath);
     source_free(&s);
     return rc != 0 ? 1 : 0;
 }
@@ -489,10 +536,18 @@ static int cmd_render(int argc, char **argv)
     int seq = arg_int(argc, argv, "-s", 0);
     float gain = arg_gain(argc, argv);
     AudioSource s;
-    RenderOutput ro;
+    AudioEngine engine;
+    AudioRenderRequest request;
+    AudioRenderResult result;
+    AudioStatus status;
+    RenderOutput *ro;
     char path[512];
 
     if (!outpath) { fprintf(stderr, "error: -o required\n"); return 1; }
+    if (arg_engine(argc, argv, &engine) != 0) {
+        fprintf(stderr, "error: --engine must be fast or game\n");
+        return 1;
+    }
 
     if (argc >= 5 && source_from_raw(&s, argv[2], argv[3], argv[4]) == 0) {
         /* raw files */
@@ -506,24 +561,39 @@ static int cmd_render(int argc, char **argv)
     }
 
     if (!s.sep) { fprintf(stderr, "error: no sequence data\n"); source_free(&s); return 1; }
-    if (render_bgm(s.sep, s.sep_sz, s.vh, s.vh_sz, s.vb, s.vb_sz, seq, 44100, &ro) != 0) {
-        fprintf(stderr, "error: render failed\n"); source_free(&s); return 1;
-    }
-    if (gain != 1.0f) {
-        int64_t count = ro.frames * 2;
-        for (int64_t i = 0; i < count; i++) {
-            float value = (float)ro.pcm[i] * gain;
-            ro.pcm[i] = (int16_t)(value > 32767.0f ? 32767 : value < -32768.0f ? -32768 : value);
-        }
-    }
-    if (write_stereo_output(outpath, ro.pcm, ro.frames, ro.rate) != 0) {
-        fprintf(stderr, "error: failed to write %s (compressed output requires its codec library)\n", outpath);
-        free(ro.pcm);
+    memset(&request, 0, sizeof(request));
+    request.engine = engine;
+    request.sep_data = s.sep;
+    request.sep_len = s.sep_sz;
+    request.vh_data = s.vh;
+    request.vh_len = s.vh_sz;
+    request.vb_data = s.vb;
+    request.vb_len = s.vb_sz;
+    request.sequence = seq;
+    request.output_rate = 44100;
+    status = audio_render(&request, &result);
+    if (status != AUDIO_STATUS_OK) {
+        fprintf(stderr, "error: %s\n", audio_status_string(status));
         source_free(&s);
         return 1;
     }
-    printf("  wrote %s (%.1fs, %dHz stereo)\n", outpath, (double)ro.frames / ro.rate, ro.rate);
-    free(ro.pcm);
+    ro = &result.audio;
+    if (gain != 1.0f) {
+        int64_t count = ro->frames * 2;
+        for (int64_t i = 0; i < count; i++) {
+            float value = (float)ro->pcm[i] * gain;
+            ro->pcm[i] = (int16_t)(value > 32767.0f ? 32767 : value < -32768.0f ? -32768 : value);
+        }
+    }
+    if (write_stereo_output(outpath, ro->pcm, ro->frames, ro->rate) != 0) {
+        fprintf(stderr, "error: failed to write %s (compressed output requires its codec library)\n", outpath);
+        free(ro->pcm);
+        source_free(&s);
+        return 1;
+    }
+    printf("  wrote %s (%.1fs, %dHz stereo)\n", outpath,
+           (double)ro->frames / ro->rate, ro->rate);
+    free(ro->pcm);
     source_free(&s);
     return 0;
 }
@@ -621,8 +691,43 @@ static int cmd_sep_inspect(int argc, char **argv)
     if (!data) { fprintf(stderr, "error: read failed\n"); return 1; }
     if (sep_parse(data, len, &sep) != 0) { fprintf(stderr, "error: bad SEP\n"); free(data); return 1; }
     printf("  %s: %d sequence(s)\n", argv[2], sep.sequence_count);
-    for (int i = 0; i < sep.sequence_count; i++)
+    for (int i = 0; i < sep.sequence_count; i++) {
         printf("    [%d] res=%d events=%d\n", i, sep.sequences[i].resolution, sep.sequences[i].event_count);
+        if (arg_has(argc, argv, "--programs")) {
+            int programs[16] = { 0 };
+            int note_count[128] = { 0 };
+            int min_note[128];
+            int max_note[128];
+            int event_index;
+            int program;
+
+            for (program = 0; program < 128; program++) {
+                min_note[program] = 128;
+                max_note[program] = -1;
+            }
+            for (event_index = 0;
+                 event_index < sep.sequences[i].event_count;
+                 event_index++) {
+                SepEvent *event = &sep.sequences[i].events[event_index];
+                int channel = event->type & 0x0f;
+                if ((event->type & 0xf0) == 0xc0) {
+                    programs[channel] = event->data1;
+                } else if ((event->type & 0xf0) == 0x90 && event->data2 != 0) {
+                    program = programs[channel];
+                    note_count[program]++;
+                    if (event->data1 < min_note[program])
+                        min_note[program] = event->data1;
+                    if (event->data1 > max_note[program])
+                        max_note[program] = event->data1;
+                }
+            }
+            for (program = 0; program < 128; program++)
+                if (note_count[program] != 0)
+                    printf("      program=%d notes=%d range=%d-%d\n",
+                           program, note_count[program], min_note[program],
+                           max_note[program]);
+        }
+    }
     sep_free(&sep); free(data);
     return 0;
 }
@@ -657,6 +762,99 @@ static int cmd_emi_inspect(int argc, char **argv)
                emi.entries[i].size, emi.entries[i].offset);
     free(data);
     return 0;
+}
+
+static int cmd_psf_inspect(int argc, char **argv)
+{
+    Psf1Image image;
+    Psf1Status status;
+
+    if (argc < 3) {
+        fprintf(stderr, "usage: psf-inspect <file.psf>\n");
+        return 1;
+    }
+    status = psf1_load_file(argv[2], &image);
+    if (status != PSF1_OK) {
+        fprintf(stderr, "error: %s\n", psf1_status_string(status));
+        return 1;
+    }
+    printf("  %s\n", argv[2]);
+    printf("    PC:      0x%08X\n", image.initial_pc);
+    printf("    SP:      0x%08X\n", image.initial_sp);
+    printf("    RAM:     0x%05X-0x%05X\n", image.loaded_min,
+           image.loaded_max);
+    printf("    refresh: %dHz\n", image.refresh_rate);
+    psf1_image_free(&image);
+    return 0;
+}
+
+static int cmd_psf_pack(int argc, char **argv)
+{
+    const char *outpath = arg_str(argc, argv, "-o");
+    uint8_t *exe;
+    size_t exe_size;
+    Psf1Status status;
+
+    if (argc < 3 || !outpath) {
+        fprintf(stderr, "usage: psf-pack <PS-X EXE> -o <file.psflib>\n");
+        return 1;
+    }
+    exe = read_file(argv[2], &exe_size);
+    if (!exe) {
+        fprintf(stderr, "error: cannot read %s\n", argv[2]);
+        return 1;
+    }
+    status = psf1_write_file(outpath, exe, exe_size, NULL);
+    free(exe);
+    if (status != PSF1_OK) {
+        fprintf(stderr, "error: %s\n", psf1_status_string(status));
+        return 1;
+    }
+    printf("  wrote %s\n", outpath);
+    return 0;
+}
+
+static int cmd_psf_run(int argc, char **argv)
+{
+    int instructions = arg_int(argc, argv, "-n", 100000);
+    Psf1Image image;
+    Psf1Status image_status;
+    PsxSpu *spu;
+    PsxMachine *machine;
+    PsxMachineStatus machine_status;
+
+    if (argc < 3 || instructions < 0) {
+        fprintf(stderr, "usage: psf-run <file.psf> [-n INSTRUCTIONS]\n");
+        return 1;
+    }
+    image_status = psf1_load_file(argv[2], &image);
+    if (image_status != PSF1_OK) {
+        fprintf(stderr, "error: %s\n", psf1_status_string(image_status));
+        return 1;
+    }
+    spu = psx_spu_create();
+    machine = psx_machine_create(&image, spu);
+    psf1_image_free(&image);
+    if (!spu || !machine) {
+        psx_machine_destroy(machine);
+        psx_spu_destroy(spu);
+        fprintf(stderr, "error: cannot allocate PSX machine\n");
+        return 1;
+    }
+    machine_status = psx_machine_run(machine, (uint64_t)instructions);
+    printf("  cycles:     %llu\n",
+           (unsigned long long)psx_machine_cycles(machine));
+    printf("  PC:         0x%08X\n", psx_machine_pc(machine));
+    printf("  SPU writes: %zu\n", psx_spu_write_count(spu));
+    if (machine_status != PSX_MACHINE_OK) {
+        const PsxMachineFault *fault = psx_machine_fault(machine);
+        fprintf(stderr, "error: %s at PC=0x%08X instruction=0x%08X address=0x%08X\n",
+                psx_machine_status_string(machine_status), fault->pc,
+                fault->instruction, fault->address);
+    }
+    psx_machine_destroy(machine);
+    psx_spu_destroy(spu);
+    return machine_status == PSX_MACHINE_OK ? 0 : 1;
 }
 
 static int cmd_vab2sf2(int argc, char **argv)
@@ -699,6 +897,8 @@ static void usage(void)
         "browse:\n"
         "  list [filter]                         list BGM tracks\n"
         "  emi-inspect <file.EMI>                show EMI contents\n"
+        "  psf-inspect <file.psf>                load PSF1/MiniPSF image\n"
+        "  psf-run <file.psf> [-n N]             run bounded PSF1 instructions\n"
         "\n"
         "play:\n"
         "  play <target> [-s N] [-g GAIN]        play (auto-detects format)\n"
@@ -708,6 +908,7 @@ static void usage(void)
         "\n"
         "export:\n"
         "  render <target> -o FILE                render BGM to WAV, Ogg Vorbis, or FLAC\n"
+        "  psf-pack <PS-X EXE> -o FILE            package a PSF1 executable\n"
         "  xa-decode <str> -o out.wav [-c CH]    decode XA to WAV\n"
         "  vab-extract <vh> <vb> -o DIR          extract VAGs to WAV\n"
         "  vab2sf2 <vh> <vb|EMI> -o out.sf2     export SoundFont 2\n"
@@ -716,9 +917,10 @@ static void usage(void)
         "inspect:\n"
         "  xa-inspect <str>                      list XA streams\n"
         "  vab-inspect <vh>                      show VAB info\n"
-        "  sep-inspect <sep>                     show SEP info\n"
+        "  sep-inspect <sep> [--programs]        show SEP info\n"
         "\n"
         "options:\n"
+        "  --engine fast|game  BGM renderer (default: fast)\n"
         "  -s N       sequence index (default: 0)\n"
         "  -g, --gain GAIN  playback gain (default: 1.0)\n"
         "  -c CH      XA channel (default: 0)\n"
@@ -800,6 +1002,9 @@ int main(int argc, char **argv)
     if (strcmp(cmd, "sep-inspect") == 0)  return cmd_sep_inspect(argc, argv);
     if (strcmp(cmd, "sep2mid") == 0)      return cmd_sep2mid(argc, argv);
     if (strcmp(cmd, "emi-inspect") == 0)  return cmd_emi_inspect(argc, argv);
+    if (strcmp(cmd, "psf-inspect") == 0)  return cmd_psf_inspect(argc, argv);
+    if (strcmp(cmd, "psf-pack") == 0)     return cmd_psf_pack(argc, argv);
+    if (strcmp(cmd, "psf-run") == 0)      return cmd_psf_run(argc, argv);
     if (strcmp(cmd, "vab2sf2") == 0)      return cmd_vab2sf2(argc, argv);
     if (strcmp(cmd, "--examples") == 0)   { examples(); return 0; }
     if (strcmp(cmd, "--help") == 0 || strcmp(cmd, "-h") == 0 || strcmp(cmd, "help") == 0)
