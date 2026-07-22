@@ -1540,8 +1540,10 @@ static int cmd_tui(int argc, char **argv)
                 break;
             case 'r': case 'R':
                 if (have_src) {
-                    while (!tui_render_ready && tui_load_gen > 0) ma_sleep(16);
-                    tui_apply_async();
+                    if (!tui_pb.pcm) {
+                        while (!tui_render_ready && tui_load_gen > 0) ma_sleep(16);
+                        tui_apply_async();
+                    }
                     if (tui_pb.pcm) {
                         char outpath[512];
                         snprintf(outpath, sizeof(outpath), "%s.%s", tracks[cur].name, tui_fmt_names[tui_fmt_idx]);
@@ -1628,7 +1630,7 @@ static void usage(void)
         "\n"
         "options:\n"
         "  --engine fast|game  BGM renderer (default: fast)\n"
-        "  -s N       sequence index (default: 0)\n"
+        "  -s N       sequence index (-1 = all, default)\n"
         "  -g, --gain GAIN  playback gain (default: 1.0)\n"
         "  -c CH      XA channel (default: 0)\n"
         "  -v N       VAG index\n"
