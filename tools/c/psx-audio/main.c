@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #ifdef _WIN32
 #include <direct.h>
@@ -1174,6 +1175,9 @@ static int16_t *tui_render_result;
 static int64_t tui_render_frames;
 static int tui_render_rate;
 static int tui_load_gen;
+static int tui_pending_render;
+static char tui_render_msg[128];
+static int tui_render_msg_ticks;
 
 #ifndef _WIN32
 
@@ -1348,6 +1352,7 @@ static int tui_read_key(void)
 #else
 
 static struct termios tui_orig_term;
+static int tui_pb_char = -1;
 
 static void tui_raw_mode(void)
 {
@@ -1369,26 +1374,65 @@ static int tui_read_key(void)
 {
     struct pollfd pfd = { STDIN_FILENO, POLLIN, 0 };
     unsigned char c;
+    if (tui_pb_char >= 0) {
+        c = tui_pb_char; tui_pb_char = -1; return c;
+    }
     if (poll(&pfd, 1, 0) <= 0) return -1;
     if (read(STDIN_FILENO, &c, 1) != 1) return -1;
     if (c == 27) {
         unsigned char seq[2];
         if (read(STDIN_FILENO, &seq[0], 1) != 1) return 27;
-        if (read(STDIN_FILENO, &seq[1], 1) != 1) return 27;
         if (seq[0] == '[') {
+            if (read(STDIN_FILENO, &seq[1], 1) != 1) return 27;
             switch (seq[1]) {
                 case 'A': return 'k';
                 case 'B': return 'j';
                 case 'C': return 'l';
                 case 'D': return 'h';
             }
+            return 27;
         }
+        tui_pb_char = seq[0];
         return 27;
     }
     return c;
 }
 
 #endif
+
+/* ── search ──────────────────────────────────────────────────────── */
+
+static char tui_query[64];
+static int tui_search_active;
+
+static int match_substring(const char *name, const char *query)
+{
+    if (!*query) return 1;
+    while (*name) {
+        const char *a = name, *b = query;
+        while (*a && *b && tolower(*a) == tolower(*b)) { a++; b++; }
+        if (!*b) return 1;
+        name++;
+    }
+    return 0;
+}
+
+static int next_match(int cur, int count, const TrackInfo *tracks, const char *query, int dir)
+{
+    if (!*query) return (cur + dir + count) % count;
+    int i = (cur + dir + count) % count;
+    while (i != cur) {
+        if (match_substring(tracks[i].name, query)) return i;
+        i = (i + dir + count) % count;
+    }
+    return cur;
+}
+
+static int jump_to_first_match(int cur, int count, const TrackInfo *tracks, const char *query)
+{
+    if (match_substring(tracks[cur].name, query)) return cur;
+    return next_match(cur, count, tracks, query, 1);
+}
 
 static void tui_draw(const TrackInfo *tracks, int count, int cur, int scroll)
 {
@@ -1431,6 +1475,16 @@ static void tui_draw(const TrackInfo *tracks, int count, int cur, int scroll)
            bar_len - filled, "--------------------------------",
            elapsed, duration);
     printf("  gain: %.2f  fmt: %s\n", tui_pb.gain, tui_fmt_names[tui_fmt_idx]);
+    if (tui_search_active) {
+        printf("  \033[7m/: %s\xe2\x96\x88\033[0m\n", tui_query);
+        printf("  \033[2mESC:cancel  Enter:accept\033[0m\n");
+    } else {
+        printf("  \033[2m/:search\033[0m\n");
+    }
+    if (tui_render_msg_ticks > 0) {
+        printf("  %s\n", tui_render_msg);
+        tui_render_msg_ticks--;
+    }
     printf("\n  \033[2mj/k:\xe2\x86\x91\xe2\x86\x93  space:play/pause  s:stop  n/p:next/prev  +/-:gain  f:fmt  r:render  q:quit\033[0m\n");
     fflush(stdout);
 }
@@ -1478,6 +1532,13 @@ static int cmd_tui(int argc, char **argv)
             tui_pb.gain = arg_gain(argc, argv);
     }
 
+    tui_pending_render = 0;
+    tui_search_active = 0;
+    tui_query[0] = 0;
+    tui_render_msg[0] = 0;
+    tui_render_msg_ticks = 0;
+    tui_pb_char = -1;
+
     cfg = ma_device_config_init(ma_device_type_playback);
     cfg.playback.format = ma_format_s16;
     cfg.playback.channels = 2;
@@ -1497,74 +1558,100 @@ static int cmd_tui(int argc, char **argv)
         int need_load = 0;
 
         if (key >= 0) {
-            switch (key) {
-            case 'q': case 3:
-                tui_save_state(tracks[cur].name, tui_pb.gain);
-                running = 0;
-                break;
-            case 'j':
-                cur = (cur + 1) % count; need_load = 1;
-                break;
-            case 'k':
-                cur = (cur - 1 + count) % count; need_load = 1;
-                break;
-            case 'n': case 'l':
-                cur = (cur + 1) % count; need_load = 1;
-                break;
-            case 'p': case 'h':
-                cur = (cur - 1 + count) % count; need_load = 1;
-                break;
-            case ' ':
-                if (tui_pb.playing) {
-                    tui_pb.playing = 0;
-                } else if (tui_pb.pcm && tui_pb.pos < tui_pb.total) {
-                    tui_pb.playing = 1;
-                } else {
+            if (tui_search_active) {
+                if (key == 27) {
+                    tui_search_active = 0;
+                    tui_query[0] = 0;
+                } else if (key == '\r' || key == '\n') {
+                    tui_search_active = 0;
+                } else if (key == 127 || key == '\b') {
+                    int len = (int)strlen(tui_query);
+                    if (len > 0) { tui_query[len - 1] = 0; }
+                } else if (key >= 32 && key < 127) {
+                    int len = (int)strlen(tui_query);
+                    if (len < 63) { tui_query[len] = key; tui_query[len + 1] = 0; }
+                }
+                if (!tui_search_active && tui_query[0]) {
+                    cur = jump_to_first_match(0, count, tracks, tui_query);
                     need_load = 1;
                 }
-                break;
-            case 's':
-                tui_pb.playing = 0;
-                tui_pb.pos = 0;
-                break;
-            case '+': case '=':
-                tui_pb.gain += 0.1f;
-                if (tui_pb.gain > 3.0f) tui_pb.gain = 3.0f;
-                break;
-            case '-': case '_':
-                tui_pb.gain -= 0.1f;
-                if (tui_pb.gain < 0.0f) tui_pb.gain = 0.0f;
-                break;
-            case 'f': case 'F':
-                tui_fmt_idx = (tui_fmt_idx + 1) % 3;
-                break;
-            case 'r': case 'R':
-                if (have_src) {
-                    if (!tui_pb.pcm) {
-                        while (!tui_render_ready && tui_load_gen > 0) ma_sleep(16);
-                        tui_apply_async();
-                    }
-                    if (tui_pb.pcm) {
-                        char outpath[512];
-                        snprintf(outpath, sizeof(outpath), "%s.%s", tracks[cur].name, tui_fmt_names[tui_fmt_idx]);
-                        tui_restore_mode();
-                        printf("\033[2J\033[H  rendering %s -> %s ...\n", tracks[cur].name, outpath);
-                        write_stereo_output(outpath, tui_pb.pcm, tui_pb.total / 2, tui_pb.rate);
-                        printf("  wrote %s (%.1fs)\n", outpath, (double)(tui_pb.total / 2) / tui_pb.rate);
-                        fflush(stdout);
-                        ma_sleep(800);
-                        tui_raw_mode();
-                    }
+                if (tui_search_active && tui_query[0]) {
+                    cur = jump_to_first_match(cur, count, tracks, tui_query);
+                    need_load = 1;
                 }
-                break;
-            case '\r': case '\n':
-                need_load = 1;
-                break;
+            } else {
+                switch (key) {
+                case 'q': case 3:
+                    tui_save_state(tracks[cur].name, tui_pb.gain);
+                    running = 0;
+                    break;
+                case '/':
+                    tui_search_active = 1;
+                    tui_query[0] = 0;
+                    break;
+                case 'j': case 'n':
+                    if (tui_query[0]) {
+                        cur = next_match(cur, count, tracks, tui_query, 1);
+                    } else {
+                        cur = (cur + 1) % count;
+                    }
+                    need_load = 1;
+                    break;
+                case 'k': case 'p':
+                    if (tui_query[0]) {
+                        cur = next_match(cur, count, tracks, tui_query, -1);
+                    } else {
+                        cur = (cur - 1 + count) % count;
+                    }
+                    need_load = 1;
+                    break;
+                case ' ':
+                    if (tui_pb.playing) {
+                        tui_pb.playing = 0;
+                    } else if (tui_pb.pcm && tui_pb.pos < tui_pb.total) {
+                        tui_pb.playing = 1;
+                    } else {
+                        need_load = 1;
+                    }
+                    break;
+                case 's':
+                    tui_pb.playing = 0;
+                    tui_pb.pos = 0;
+                    break;
+                case '+': case '=':
+                    tui_pb.gain += 0.1f;
+                    if (tui_pb.gain > 3.0f) tui_pb.gain = 3.0f;
+                    break;
+                case '-': case '_':
+                    tui_pb.gain -= 0.1f;
+                    if (tui_pb.gain < 0.0f) tui_pb.gain = 0.0f;
+                    break;
+                case 'f': case 'F':
+                    tui_fmt_idx = (tui_fmt_idx + 1) % 3;
+                    break;
+                case 'r': case 'R':
+                    if (have_src) {
+                        if (tui_pb.pcm) {
+                            char outpath[512];
+                            snprintf(outpath, sizeof(outpath), "%s.%s", tracks[cur].name, tui_fmt_names[tui_fmt_idx]);
+                            write_stereo_output(outpath, tui_pb.pcm, tui_pb.total / 2, tui_pb.rate);
+                            snprintf(tui_render_msg, sizeof(tui_render_msg), "wrote %s (%.1fs)", outpath, (double)(tui_pb.total / 2) / tui_pb.rate);
+                            tui_render_msg_ticks = 120;
+                        } else {
+                            tui_pending_render = 1;
+                        }
+                    }
+                    break;
+                case '\r': case '\n':
+                    need_load = 1;
+                    break;
+                }
             }
         }
 
         if (need_load) {
             tui_pb.playing = 0;
+            tui_pending_render = 0;
             if (have_src) { source_free(&src); have_src = 0; }
             if (source_from_emi(&src, tracks[cur].path) == 0) {
                 have_src = 1;
@@ -1573,6 +1660,15 @@ static int cmd_tui(int argc, char **argv)
         }
 
         tui_apply_async();
+
+        if (tui_pending_render && tui_pb.pcm) {
+            tui_pending_render = 0;
+            char outpath[512];
+            snprintf(outpath, sizeof(outpath), "%s.%s", tracks[cur].name, tui_fmt_names[tui_fmt_idx]);
+            write_stereo_output(outpath, tui_pb.pcm, tui_pb.total / 2, tui_pb.rate);
+            snprintf(tui_render_msg, sizeof(tui_render_msg), "wrote %s (%.1fs)", outpath, (double)(tui_pb.total / 2) / tui_pb.rate);
+            tui_render_msg_ticks = 120;
+        }
 
         if (cur < scroll) scroll = cur;
         if (cur >= scroll + vis_rows) scroll = cur - vis_rows + 1;
