@@ -1,12 +1,4 @@
 #!/bin/sh
 set -eu
 ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-BIN="${ROOT}/tools/c/psx-audio/build/bof3-audio"
-if [ ! -x "$BIN" ]; then
-    printf 'building psx-audio...\n' >&2
-    cmake -S "${ROOT}/tools/c/psx-audio" -B "${ROOT}/tools/c/psx-audio/build" \
-        -DCMAKE_BUILD_TYPE=Release >/dev/null 2>&1
-    cmake --build "${ROOT}/tools/c/psx-audio/build" \
-        -j"$(nproc 2>/dev/null || echo 4)" >/dev/null 2>&1
-fi
-exec "$BIN" "$@"
+exec "${ROOT}/tools/c/psx-audio/psx-audio" --dir "$ROOT" "$@"
