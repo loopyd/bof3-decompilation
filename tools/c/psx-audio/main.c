@@ -23,6 +23,8 @@
 
 /* ── audio source abstraction ─────────────────────────────────────── */
 
+static char g_root_dir[512] = ".";
+
 static int ends_with(const char *s, const char *suffix)
 {
     size_t sl = strlen(s), xl = strlen(suffix);
@@ -336,14 +338,26 @@ typedef struct {
 
 static int find_bgm_dir(char *out, size_t sz)
 {
-    const char *cands[] = {
+    char cand[600];
+    const char *suffixes[] = {
+        "out/extracted/BIN/BGM", NULL
+    };
+    const char *rel_cands[] = {
         "out/extracted/BIN/BGM", "../out/extracted/BIN/BGM",
         "../../out/extracted/BIN/BGM", NULL
     };
-    for (int i = 0; cands[i]; i++) {
+
+    snprintf(cand, sizeof(cand), "%s/%s", g_root_dir, suffixes[0]);
 #ifndef _WIN32
-        DIR *d = opendir(cands[i]);
-        if (d) { closedir(d); snprintf(out, sz, "%s", cands[i]); return 0; }
+    {
+        DIR *d = opendir(cand);
+        if (d) { closedir(d); snprintf(out, sz, "%s", cand); return 0; }
+    }
+#endif
+    for (int i = 0; rel_cands[i]; i++) {
+#ifndef _WIN32
+        DIR *d = opendir(rel_cands[i]);
+        if (d) { closedir(d); snprintf(out, sz, "%s", rel_cands[i]); return 0; }
 #endif
     }
     return -1;
