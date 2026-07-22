@@ -179,6 +179,7 @@ extern struct GameWorkArea D_80146888[30];
 extern u8                  D_8014933F;
 extern u32                 D_801CD954;
 extern const s8            D_801C7B74[];
+extern volatile u8         D_80146864;
 extern volatile u16        D_801490A4;
 
 /* INFERRED: palette work records use the observed 12-byte and 16-byte strides;
