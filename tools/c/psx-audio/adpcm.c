@@ -13,7 +13,8 @@ int psx_adpcm_decode_block(const uint8_t block[16], int16_t *out, PsxAdpcmState 
     int32_t prev1 = st->prev1;
     int32_t prev2 = st->prev2;
 
-    if (filter > 4) filter = 4;
+    if (shift > 12) shift = 9;
+    if (filter > 4) filter = 0;
     f0 = PSX_FILTER_POS[filter];
     f1 = PSX_FILTER_NEG[filter];
 
