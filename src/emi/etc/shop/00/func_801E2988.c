@@ -5,14 +5,14 @@
  *         clears state when the clamp is reached.
  */
 void func_801E2988(void) {
-    PanelTask* task;
-    u16 next;
+  PanelTask* task;
+  u16        next;
 
-    task = D_80148648;
-    next = task->field_06 + 0x10;
-    task->field_06 = next;
-    if ((s16)next >= 0x11) {
-        task->field_06 = 0x10;
-        task->state = 0;
-    }
+  task = D_80148648;
+  next = task->field_06 + 0x10;
+  task->field_06 = next;
+  if ((s16)next >= 0x11) {
+    task->field_06 = 0x10;
+    task->state = 0;
+  }
 }

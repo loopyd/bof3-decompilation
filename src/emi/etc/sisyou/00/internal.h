@@ -14,7 +14,7 @@ extern u8 D_801448ED;
 
 /* EMI-local data. */
 extern u16 D_801D41BC[];
-extern u8 D_801D4285;
+extern u8  D_801D4285;
 
 /* PsyQ SDK primitive setup helpers called by this target.
  * SetSprt8 / SetSemiTrans are declared by <libgpu.h> (via bof3/psyq.h);

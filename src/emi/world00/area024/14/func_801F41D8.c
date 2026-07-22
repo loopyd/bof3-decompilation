@@ -4,5 +4,5 @@
  * @source 0x801F41D8
  */
 void func_801F41D8(void) {
-    D_801490A8 = 0xFFFF;
+  D_801490A8 = 0xFFFF;
 }

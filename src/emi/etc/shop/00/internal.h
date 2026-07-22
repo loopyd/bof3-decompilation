@@ -10,10 +10,10 @@ extern PanelTask* D_80148648;
 #define D_80148648 g_PanelTaskRoot
 
 /* Absolute-address globals (byte-width counters/flags). */
-extern volatile u8 D_80148650;
-extern volatile u8 D_80148651;
-extern volatile u8 D_80148652;
-extern volatile u8 D_80148654;
+extern volatile u8  D_80148650;
+extern volatile u8  D_80148651;
+extern volatile u8  D_80148652;
+extern volatile u8  D_80148654;
 extern volatile u32 D_801490A4[];
 
 /* Shared primitive cursor (PsyQ SDK, owned by the main exe). */

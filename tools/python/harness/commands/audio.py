@@ -87,7 +87,10 @@ def run_play(args: argparse.Namespace) -> int:
     sep = parse_sep(sep_data)
     seq_idx = args.seq
     if seq_idx >= len(sep.sequences):
-        print(f"error: seq {seq_idx} not found ({len(sep.sequences)} available)", file=sys.stderr)
+        print(
+            f"error: seq {seq_idx} not found ({len(sep.sequences)} available)",
+            file=sys.stderr,
+        )
         return 1
     seq = sep.sequences[seq_idx]
     bpm = 60_000_000 / seq.tempo_us if seq.tempo_us else 0
@@ -123,7 +126,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command")
 
     play_p = sub.add_parser("play", help="render and play a BGM track")
-    play_p.add_argument("track", help='track name or BGM id (e.g. "Battle 2" or BGMBAT04)')
+    play_p.add_argument(
+        "track", help='track name or BGM id (e.g. "Battle 2" or BGMBAT04)'
+    )
     play_p.add_argument("--seq", type=int, default=0, help="sequence index within SEP")
     play_p.add_argument("--gain", type=float, default=1.0, help="volume gain (0.0-1.0)")
     play_p.set_defaults(handler=run_play)

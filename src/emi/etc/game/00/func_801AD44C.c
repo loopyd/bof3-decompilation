@@ -4,8 +4,8 @@
  * @source 0x801AD44C
  */
 void func_801AD44C(void) {
-    struct GameWorkArea* work;
+  struct GameWorkArea* work;
 
-    work = GAME_WORK_AREA_PTR;
-    *(u8*)&work->anim_state_74 &= 0xFE;
+  work = GAME_WORK_AREA_PTR;
+  *(u8*)&work->anim_state_74 &= 0xFE;
 }

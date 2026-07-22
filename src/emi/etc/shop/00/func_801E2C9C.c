@@ -5,12 +5,12 @@
  *           state when the clamp fires.
  */
 void func_801E2C9C(void) {
-    PanelTask *task = D_80148648;
-    u16 val = task->x - 0x20;
-    task->x = val;
-    if ((s16)val < -0x96) {
-        s16 clamped = -0x96;
-        task->x = clamped;
-        task->state = 0;
-    }
+  PanelTask* task = D_80148648;
+  u16        val = task->x - 0x20;
+  task->x = val;
+  if ((s16)val < -0x96) {
+    s16 clamped = -0x96;
+    task->x = clamped;
+    task->state = 0;
+  }
 }
