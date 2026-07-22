@@ -14,16 +14,18 @@ banks + SEP sequences) driven by the PsyQ `libsnd`/`libspu` runtime.
 ## Quick start
 
 ```sh
-bin/psx-audio play VH.bin VB.bin SEP.bin        # render BGM + play speakers
-bin/psx-audio play-xa VOICE.STR -c 0             # play XA voice channel 0
-bin/psx-audio play-vag VH.bin VB.bin -v 1        # play VAG sample 1
-bin/psx-audio render VH.bin VB.bin SEP.bin -o out.wav
-bin/psx-audio xa-inspect VOICE.STR
-bin/psx-audio vab-inspect VH.bin
-bin/psx-audio sep-inspect SEP.bin
-bin/psx-audio sep2mid SEP.bin -o out.mid
-bin/psx-audio vab-extract VH.bin VB.bin -o samples/
-bin/psx-audio xa-decode VOICE.STR -o voice.wav -c 0
+bin/psx-audio list                        # browse all 81 BGM tracks
+bin/psx-audio play BGM000                 # play by track name (auto-resolves)
+bin/psx-audio play BGMBAT02 --gain 0.7    # adjust playback/render volume
+bin/psx-audio render BGMBAT04 -o track.ogg # compressed Ogg Vorbis output
+bin/psx-audio render BGMBAT04 -o track.flac # lossless compressed output
+bin/psx-audio play BGM000.EMI             # play directly from EMI (zero-copy)
+bin/psx-audio play BGM000 -o out.wav      # render to WAV instead of speakers
+bin/psx-audio play VOICE.STR -c 0         # play XA voice channel 0
+bin/psx-audio render BGM000.EMI -o out.wav
+bin/psx-audio vab2sf2 BGM000.EMI -o bank.sf2
+bin/psx-audio emi-inspect BGM000.EMI
+bin/psx-audio --examples
 ```
 
 Python wrapper (includes track browser with 81 BGM names):
@@ -129,14 +131,20 @@ EOF sectors (submode & 0x80) are valid audio.
 | ProgAtr region | After VabHdr | Padded to 0x800 bytes |
 | VagAtr start | After ProgAtr | Fixed at **0x820** |
 | VagAtr count | `ts` (flat) | **`ps × 16`** (2D) |
-| VAG offset units | 16-byte | **8-byte** |
-| VAG data prefix | None | 16 bytes of zeros |
+| VAG size units | 8-byte | 8-byte |
+| VAG pointer table | Per-sample sizes | Per-sample sizes; accumulate preceding entries for offsets |
+| VAG data prefix | None | 16 bytes of zeros per size-delimited sample |
 
 ### VagAtr (32 bytes each, at 0x820)
 
-Key fields: vol (byte 2), pan (3), center note (4), shift (5),
+Key fields: vol (byte 2), pan (3), center note (4), unsigned pitch tune (5,
+clamped to 127 and added to playback pitch as `tune / 128` semitones),
 min/max note (6–7), adsr1 (bytes 16–17 u16 LE), adsr2 (18–19),
 vag index (22–23 i16 LE, 1-based).
+Pitch bend range is tone-local: bytes 12–13 hold the downward/upward range in
+semitones; the SEP bend value scales that range rather than a fixed MIDI ±2.
+At playback, PsyQ `SsPitchFromNote` quantizes combined fine tune to 16 steps
+per semitone and writes an integer SPU pitch value (`0x1000` = 44100 Hz).
 
 ## SEP format (Sequence Package)
 
@@ -154,8 +162,12 @@ seq_id (u16 BE), resolution (u16 BE, always 48), tempo (3 bytes BE,
 
 ### Event encoding
 
-Standard MIDI: VLQ delta times, running status, note on/off,
-program change, control change, pitch bend. Only meta: EOT (`FF 2F 00`).
+MIDI-like: VLQ delta times, running status, note on/off,
+program change, control change, pitch bend. Only meta events are tempo and EOT.
+
+Pitch bend occupies two MIDI-style data bytes, but PsyQ `libsnd` ignores the
+first and uses the second as a 7-bit value centered at 64. Meta events omit
+SMF lengths: tempo is `FF 51 tt tt tt` and EOT is `FF 2F`.
 
 NRPN extensions: loop start (20), loop end (30), VAB attribute control.
 
@@ -181,6 +193,10 @@ Filter coefficients:
 | 2 | 115 | −52 |
 | 3 | 98 | −55 |
 | 4 | 122 | −60 |
+
+Reserved shifts 13–15 decode as shift 9; reserved filters 5–15 use zero
+coefficients. ADPCM predictor and Gaussian sample history continue across loop
+jumps rather than resetting at the loop-start block.
 
 ### Gaussian interpolation
 
