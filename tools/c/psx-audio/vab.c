@@ -23,6 +23,8 @@ int vab_parse_vh(const uint8_t *data, size_t len, VabHeader *hdr)
 
     hdr->version   = rd_u32le(data + 4);
     hdr->body_size = rd_u32le(data + 0x0C);
+    hdr->master_vol = data[0x18];
+    hdr->master_pan = data[0x19];
     ps = rd_u16le(data + 0x12);
     vs = rd_u16le(data + 0x16);
     hdr->ps_count = ps;
@@ -50,6 +52,8 @@ int vab_parse_vh(const uint8_t *data, size_t len, VabHeader *hdr)
                 continue;
 
             hdr->tones[ti].prog        = (uint8_t)prog;
+            hdr->tones[ti].program_vol = data[0x20 + (size_t)prog * 16 + 1];
+            hdr->tones[ti].program_pan = data[0x20 + (size_t)prog * 16 + 4];
             hdr->tones[ti].min_note    = tn[6];
             hdr->tones[ti].max_note    = tn[7];
             hdr->tones[ti].center_note = tn[4];

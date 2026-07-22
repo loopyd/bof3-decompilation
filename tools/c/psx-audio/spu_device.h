@@ -7,8 +7,10 @@
 #define PSX_SPU_REGISTER_BASE 0x1f801c00u
 #define PSX_SPU_REGISTER_SIZE 0x200u
 #define PSX_SPU_RAM_SIZE 0x80000u
-#define PSX_SPU_TRANSFER_ADDRESS 0x1f801daau
-#define PSX_SPU_TRANSFER_FIFO 0x1f801dacu
+#define PSX_SPU_TRANSFER_ADDRESS 0x1f801da6u
+#define PSX_SPU_TRANSFER_FIFO 0x1f801da8u
+#define PSX_SPU_CONTROL 0x1f801daau
+#define PSX_SPU_TRANSFER_CONTROL 0x1f801dacu
 
 typedef struct {
     uint64_t cycle;

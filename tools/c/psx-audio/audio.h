@@ -46,6 +46,8 @@ typedef struct {
 
 typedef struct {
     uint8_t prog;
+    uint8_t program_vol;
+    uint8_t program_pan;
     uint8_t min_note;
     uint8_t max_note;
     uint8_t center_note;
@@ -64,6 +66,8 @@ typedef struct {
     uint32_t version;
     uint32_t ps_count;
     uint32_t body_size;
+    uint8_t master_vol;
+    uint8_t master_pan;
     VabTone tones[256];
 } VabHeader;
 
@@ -143,6 +147,7 @@ void sep_free(SepFile *sep);
 void spu_adsr_key_on(SpuAdsr *adsr, uint16_t adsr1, uint16_t adsr2);
 void spu_adsr_key_off(SpuAdsr *adsr);
 int spu_adsr_tick(SpuAdsr *adsr);
+uint16_t spu_pitch_from_note(int note, int fine, int center, int shift);
 
 int wav_write_mono(const char *path, const int16_t *pcm, int64_t count, int rate);
 int wav_write_stereo(const char *path, const int16_t *pcm, int64_t frames, int rate);

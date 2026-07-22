@@ -63,6 +63,10 @@ toolchains/psyq-stock/
 session-*.md
 .codex
 
+# Audio outputs
+*.wav
+*.ogg
+
 # Compiled binaries
 *.o
 *.elf

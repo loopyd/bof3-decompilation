@@ -19,12 +19,16 @@ bin/psx-audio play BGM000                 # play by track name (auto-resolves)
 bin/psx-audio play BGMBAT02 --gain 0.7    # adjust playback/render volume
 bin/psx-audio render BGMBAT04 -o track.ogg # compressed Ogg Vorbis output
 bin/psx-audio render BGMBAT04 -o track.flac # lossless compressed output
+bin/psx-audio render BGMBAT04 --engine fast -o track.wav
 bin/psx-audio play BGM000.EMI             # play directly from EMI (zero-copy)
 bin/psx-audio play BGM000 -o out.wav      # render to WAV instead of speakers
 bin/psx-audio play VOICE.STR -c 0         # play XA voice channel 0
 bin/psx-audio render BGM000.EMI -o out.wav
 bin/psx-audio vab2sf2 BGM000.EMI -o bank.sf2
 bin/psx-audio emi-inspect BGM000.EMI
+bin/psx-audio psf-pack out/extracted/SLUS_004.22 -o out/audio/bof3.psflib
+bin/psx-audio psf-inspect out/audio/bof3.psflib
+bin/psx-audio psf-run out/audio/bof3.psflib -n 100000
 bin/psx-audio --examples
 ```
 
@@ -124,6 +128,9 @@ EOF sectors (submode & 0x80) are valid audio.
 | `0x18` | 1 | mvol |
 | `0x19` | 1 | pan |
 
+The `fast` renderer applies this bank volume and pan together with the selected
+program and tone attributes. It does not apply a post-render bass boost or EQ.
+
 ### BOF3 quirks vs standard PsyQ
 
 | Aspect | Standard PsyQ | BOF3 |
@@ -140,11 +147,15 @@ EOF sectors (submode & 0x80) are valid audio.
 Key fields: vol (byte 2), pan (3), center note (4), unsigned pitch tune (5,
 clamped to 127 and added to playback pitch as `tune / 128` semitones),
 min/max note (6–7), adsr1 (bytes 16–17 u16 LE), adsr2 (18–19),
-vag index (22–23 i16 LE, 1-based).
+parent program (20–21 i16 LE), and vag index (22–23 i16 LE, 1-based). The
+parent program selects the `ProgAtr` volume and pan used by the renderer.
 Pitch bend range is tone-local: bytes 12–13 hold the downward/upward range in
 semitones; the SEP bend value scales that range rather than a fixed MIDI ±2.
 At playback, PsyQ `SsPitchFromNote` quantizes combined fine tune to 16 steps
-per semitone and writes an integer SPU pitch value (`0x1000` = 44100 Hz).
+per semitone and uses the linked integer lookup table before writing the SPU
+pitch value (`0x1000` = 44100 Hz). The `fast` renderer uses that exact table;
+the same 193-entry table occurs at `0x800FDA84` and `0x800FDC5C` in
+`SLUS_004.22`.
 
 ## SEP format (Sequence Package)
 
@@ -172,6 +183,29 @@ SMF lengths: tempo is `FF 51 tt tt tt` and EOT is `FF 2F`.
 NRPN extensions: loop start (20), loop end (30), VAB attribute control.
 
 ## PS1 SPU emulation
+
+### Renderer architecture
+
+`audio_render()` is the stable rendering seam. `AUDIO_ENGINE_FAST` delegates to
+the direct SEP/VAB renderer. `AUDIO_ENGINE_GAME` is reserved for execution of
+the linked BOF3 sound code and currently returns an explicit unsupported-engine
+status; it must not silently fall back to the approximate renderer.
+
+The exact path is split below that seam:
+
+| Module | Contract | Current state |
+| --- | --- | --- |
+| `psf.c` | PSF1/MiniPSF load, overlay, CRC, PC/SP, and package | Implemented and tested |
+| `psx_machine.c` | Bounded R3000 execution and PSF hardware boundary | Partial vertical slice |
+| `spu_device.c` | SPU registers, timestamped writes, sound RAM, FIFO/DMA transfer | Partial vertical slice |
+| `render.c` | Direct SEP/VAB rendering | Implemented, approximate `fast` engine |
+
+The machine intentionally faults on unsupported instructions, BIOS calls, and
+hardware addresses. The complete game PSF currently reaches its first CD-ROM
+register access at `PC=0x80176E80` after 33,470 interpreted instructions. PSF1
+does not provide CD-ROM hardware, so the exact player requires a bootstrap that
+installs audio assets before entering the game sound runtime; emulating the full
+game boot is not the target architecture.
 
 ### ADPCM decode
 
@@ -247,6 +281,49 @@ bits7-6=sustain_step, bit5=release_mode, bits4-0=release_shift.
 | 8 | `func_801629F0` | Copy auxiliary audio (ADSR override table, `INFERRED`) |
 | 9, 10 | `func_80162A6C` | Copy sequence to RAM |
 
+### Executable sound control
+
+The following behavior is derived from `SLUS_004.22` instructions and game
+callers, not from PsyQ object implementations:
+
+| Address | Binary-supported role |
+| ---: | --- |
+| `0x8015CEBC` | Audio shutdown/reset: all-key-off, closes active VAB IDs, releases seven active slots through a linked routine, disables reverb, and ends the sound runtime |
+| `0x8015D044` | Polls the key state of all 24 SPU voices into the game voice-state table |
+| `0x8015DF18` | Queued cue dispatcher used by overlays; its cases issue `SsUtKeyOnV` and detailed voice-volume operations |
+| `0x80161BBC` | Ensures one logical audio bank is active, starting the EMI stream when the selected bank differs |
+| `0x80161C20` | Starts and records a selected cue through game wrappers at `0x8015D300` and `0x8015D49C` |
+| `0x80161CD0` | Updates a selected cue through the game wrapper at `0x8015D554` |
+
+`0x8015CEBC` is therefore not the music scheduler or bootstrap entry point. A
+standalone PSF bootstrap must reproduce the tables populated by the EMI audio
+lifecycle before calling the cue-start path.
+
+The linked calls observed below the game wrappers include addresses
+`0x8016AE7C`, `0x8016B9CC`, `0x8016D6C4`, and `0x8016DBA0`. Their exact roles
+and signatures remain address-based until all game-binary callers agree.
+
+### PSF1 image contract
+
+The PSF1 module enforces:
+
+- PSF version `0x01`, compressed-program CRC, and bounded zlib expansion.
+- A valid PS-X EXE program no larger than the PSF1 limit.
+- Text overlays fully contained in 2 MiB PlayStation RAM.
+- `_lib` recursion limited to 10 levels.
+- `_lib`, current image, then contiguous `_lib2` and later overlay order.
+- Initial PC/SP inherited from the first/deepest base image.
+- First applicable `_refresh` tag, otherwise the outer EXE region marker.
+
+For the local BOF3 executable, `psf-pack` followed by `psf-inspect` reports:
+
+```text
+PC:      0x8014AA0C
+SP:      0x801FFFF0
+RAM:     0x96800-0x1F7000
+refresh: 60Hz
+```
+
 ## Tooling
 
 ### C tool (`tools/c/psx-audio/`)
@@ -270,6 +347,13 @@ bin/psx-audio <command>           # auto-builds on first run
 | `vab-inspect <vh>` | Show VAB info |
 | `sep-inspect <sep>` | Show SEP info |
 | `sep2mid <sep> -o out.mid` | Export to Standard MIDI |
+| `psf-pack <PS-X EXE> -o out.psflib` | Package a PSF1 executable |
+| `psf-inspect <file.psf>` | Validate and compose a PSF1/MiniPSF image |
+| `psf-run <file.psf> [-n N]` | Run a bounded machine diagnostic |
+
+`--engine fast|game` selects the BGM engine. `fast` is the current default.
+`game` remains unavailable until the BOF3 bootstrap, PSF machine, and SPU
+synthesis path pass differential validation.
 
 ### Python wrapper (`tools/python/harness/`)
 
@@ -297,10 +381,13 @@ ffmpeg -f psxstr -i wrapped_2352.str -vn output.wav
 | Path | Content |
 | --- | --- |
 | `tools/c/psx-audio/` | C library + CLI source |
-| `tools/c/psx-audio/psx_util.h` | Shared helpers + gaussian table |
-| `tools/c/psx-audio/psx_adpcm.c` | ADPCM decode core |
-| `tools/c/psx-audio/psx_spu.c` | ADSR envelope |
-| `tools/c/psx-audio/psx_render.c` | BGM renderer |
+| `tools/c/psx-audio/util.h` | Shared helpers and Gaussian table |
+| `tools/c/psx-audio/adpcm.c` | ADPCM decode core |
+| `tools/c/psx-audio/spu.c` | ADSR envelope |
+| `tools/c/psx-audio/spu_device.c` | Register-driven SPU device under construction |
+| `tools/c/psx-audio/psx_machine.c` | Bounded PSF1 R3000 runtime under construction |
+| `tools/c/psx-audio/psf.c` | PSF1/MiniPSF image loader and writer |
+| `tools/c/psx-audio/render.c` | Approximate `fast` BGM renderer |
 | `tools/c/psx-audio/third_party/miniaudio.h` | Audio playback (v0.11.25) |
 | `tools/python/harness/assets/audio/` | Python decoders |
 | `tools/python/harness/commands/audio.py` | Python CLI |
@@ -312,8 +399,10 @@ ffmpeg -f psxstr -i wrapped_2352.str -vn output.wav
 
 ## Open questions
 
-- Sequence playback pipeline: `SsSeqOpen` absent from SDK maps; BOF3 may
-  use a custom player. Runtime track selection unproven.
+- Standalone bootstrap: recover the EMI-populated bank/sequence tables needed
+  by `0x80161C20` and the callback cadence that services active sequences.
+- Linked sequence calls: prove names and signatures for `0x8016AE7C`,
+  `0x8016B9CC`, `0x8016D6C4`, and `0x8016DBA0` from game-binary callers.
 - Type-8 semantics: ADSR override table structure plausible but unconfirmed.
 - SPU RAM layout: VAB base addresses not documented.
 - Area→BGM mapping: lives in scenario controller code, not yet lifted.

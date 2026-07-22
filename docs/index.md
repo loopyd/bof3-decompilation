@@ -42,6 +42,7 @@
 ### Formats
 
 - [EMI container](specs/formats/emi.md) — EMI container and entry layout
+- [Audio formats and runtime](specs/formats/audio.md) — XA, VAB, SEP, PSF1, and SPU tooling
 - [STR playback](specs/formats/str-xa.md) — extracted STR and XA sector representation
 - [Graphics](specs/formats/graphics.md) — type-3 VRAM upload and indexed-palette layout
 - [Format conversion](specs/formats/conversion.md) — lossless interchange, derivatives, and provenance

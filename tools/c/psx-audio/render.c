@@ -29,9 +29,10 @@ typedef struct {
     int bend;
     int pitch_bend_min;
     int pitch_bend_max;
+    uint64_t generation;
 } Voice;
 
-#define MAX_VOICES 64
+#define MAX_VOICES 24
 
 typedef struct {
     int channel;
@@ -67,11 +68,6 @@ static double voice_pitch(const Voice *v, int bend)
     int bend_value = bend - 64;
     int note = v->note;
     int fine = 0;
-    int fine_index;
-    int semitone;
-    int octave;
-    int table_index;
-    int pitch;
 
     if (bend_value < 0) {
         int scaled = bend_value * v->pitch_bend_min;
@@ -83,28 +79,8 @@ static double voice_pitch(const Voice *v, int bend)
         fine = 2 * (scaled % 63);
     }
 
-    fine_index = fine + v->center_shift;
-    if (fine_index < 0)
-        fine_index += 7;
-    fine_index >>= 3;
-
-    semitone = 0;
-    if (fine_index > 15) {
-        semitone = 1;
-        fine_index -= 16;
-    }
-
-    semitone += note - (v->center_note - 60);
-    table_index = 16 * (semitone % 12) + fine_index;
-    octave = semitone / 12 - 5;
-    pitch = (int)(4096.0 * pow(2.0, (double)table_index / 192.0));
-    if (octave > 0)
-        pitch <<= octave;
-    else if (octave < 0)
-        pitch >>= -octave;
-    if (pitch > 0x4000)
-        pitch = 0x4000;
-    return (double)pitch / 4096.0;
+    return (double)spu_pitch_from_note(note, fine, v->center_note,
+                                       v->center_shift) / 4096.0;
 }
 
 int render_bgm(const uint8_t *sep_data, size_t sep_len,
@@ -119,6 +95,7 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
     ChannelState channels[16];
     NoteEvent *events = NULL;
     int event_count = 0, event_cap = 0;
+    uint64_t next_generation = 1;
     double *mix_l = NULL, *mix_r = NULL;
     int64_t total_frames = 0;
     int i, j, ch;
@@ -335,11 +312,11 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                             }
                         }
                         if (slot < 0) {
+                            uint64_t oldest = UINT64_MAX;
                             for (i = 0; i < MAX_VOICES; i++) {
-                                if (voices[i].channel == ne->channel &&
-                                    voices[i].note == ne->note) {
+                                if (voices[i].generation < oldest) {
+                                    oldest = voices[i].generation;
                                     slot = i;
-                                    break;
                                 }
                             }
                         }
@@ -354,8 +331,13 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                         v->pos = 0.0;
                         v->volume = ne->volume *
                                     (ne->velocity / 127.0f) *
+                                    (vhdr.master_vol / 127.0f) *
+                                    (t->program_vol / 127.0f) *
                                     (t->vol / 127.0f);
-                        eff_pan = (float)t->pan + (ne->pan - 64.0f);
+                        eff_pan = (float)t->pan +
+                                  ((float)t->program_pan - 64.0f) +
+                                  ((float)vhdr.master_pan - 64.0f) +
+                                  (ne->pan - 64.0f);
                         if (eff_pan < 0.0f) eff_pan = 0.0f;
                         if (eff_pan > 127.0f) eff_pan = 127.0f;
                         v->pan = eff_pan;
@@ -367,6 +349,7 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                         v->bend = ne->bend;
                         v->pitch_bend_min = t->pitch_bend_min;
                         v->pitch_bend_max = t->pitch_bend_max;
+                        v->generation = next_generation++;
                         v->pitch_factor = voice_pitch(v, v->bend);
                         memset(&v->adsr, 0, sizeof(SpuAdsr));
                         spu_adsr_key_on(&v->adsr, t->adsr1, t->adsr2);
@@ -441,13 +424,7 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
     }
 
     {
-        double peak = 0.0;
         int16_t *pcm;
-
-        for (i = 0; i < (int64_t)total_frames; i++) {
-            if (fabs(mix_l[i]) > peak) peak = fabs(mix_l[i]);
-            if (fabs(mix_r[i]) > peak) peak = fabs(mix_r[i]);
-        }
 
         pcm = (int16_t *)malloc((size_t)total_frames * 2 * sizeof(int16_t));
         if (!pcm) {
@@ -460,10 +437,9 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
         }
 
         {
-            double scale = (peak > 30000.0) ? (30000.0 / peak) : 1.0;
             for (i = 0; i < (int64_t)total_frames; i++) {
-                double l = mix_l[i] * scale;
-                double r = mix_r[i] * scale;
+                double l = mix_l[i];
+                double r = mix_r[i];
                 if (l > 32767.0) l = 32767.0;
                 if (l < -32768.0) l = -32768.0;
                 if (r > 32767.0) r = 32767.0;

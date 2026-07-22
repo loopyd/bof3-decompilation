@@ -57,11 +57,15 @@ int main(void)
              psx_spu_ram(spu)[17] != 0x34 ||
              psx_spu_ram(spu)[18] != 0x56 ||
              psx_spu_ram(spu)[19] != 0x78;
+    failed = failed ||
+             psx_spu_write16(spu, PSX_SPU_CONTROL, 0x8000, 13) != 0 ||
+             psx_spu_write16(spu, PSX_SPU_TRANSFER_CONTROL, 4, 14) != 0 ||
+             psx_spu_ram(spu)[20] != 0;
     {
         const uint8_t dma[] = { 0xaa, 0xbb, 0xcc, 0xdd };
         failed = failed ||
-                 psx_spu_write16(spu, PSX_SPU_TRANSFER_ADDRESS, 4, 13) != 0 ||
-                 psx_spu_dma_write(spu, dma, sizeof(dma), 14) != 0 ||
+                  psx_spu_write16(spu, PSX_SPU_TRANSFER_ADDRESS, 4, 15) != 0 ||
+                  psx_spu_dma_write(spu, dma, sizeof(dma), 16) != 0 ||
                  psx_spu_ram(spu)[32] != 0xaa ||
                  psx_spu_ram(spu)[33] != 0xbb ||
                  psx_spu_ram(spu)[34] != 0xcc ||
