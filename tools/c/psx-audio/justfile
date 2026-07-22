@@ -1,0 +1,35 @@
+# psx-audio build tasks
+
+build:
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+    cmake --build build -j
+
+debug:
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_FLAGS="-fsanitize=address,undefined -g"
+    cmake --build build -j
+
+clean:
+    rm -rf build
+
+test: build
+    ./build/bof3-audio --help
+    ./build/bof3-audio --examples
+
+# run against extracted game data (requires out/extracted/)
+list: build
+    cd ../.. && tools/c/psx-audio/build/bof3-audio list
+
+play TRACK="BGM000": build
+    cd ../.. && tools/c/psx-audio/build/bof3-audio play {{TRACK}}
+
+render TRACK="BGM000" OUT="/tmp/psx_render.wav": build
+    cd ../.. && tools/c/psx-audio/build/bof3-audio render out/extracted/BIN/BGM/{{TRACK}}.EMI -o {{OUT}}
+
+sf2 TRACK="BGM000" OUT="/tmp/psx_bank.sf2": build
+    cd ../.. && tools/c/psx-audio/build/bof3-audio vab2sf2 out/extracted/BIN/BGM/{{TRACK}}.EMI -o {{OUT}}
+
+inspect TRACK="BGM000": build
+    cd ../.. && tools/c/psx-audio/build/bof3-audio emi-inspect out/extracted/BIN/BGM/{{TRACK}}.EMI
+
+lint:
+    gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -fsyntax-only *.c -I. -Ithird_party
