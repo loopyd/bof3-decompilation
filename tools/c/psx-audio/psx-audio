@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+DIR="$(CDPATH='' cd -- "$(dirname "$0")" && pwd)"
+BIN="${DIR}/build/bof3-audio"
+if [ ! -x "$BIN" ]; then
+    printf 'error: %s not found (run cmake --build %s/build)\n' "$BIN" "$DIR" >&2
+    exit 1
+fi
+exec "$BIN" "$@"

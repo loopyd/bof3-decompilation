@@ -369,7 +369,11 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                         v->note = ne->note;
                         v->center_note = t->center_note;
                         v->center_shift = t->shift;
-                        v->bend = ne->bend;
+                        /* libsnd note-on uses base pitch (fine = 0). Pitch bend
+                           is applied only by bend events to already-active voices
+                           (_SsVmPitchBend -> _SsVmPBVoice), so the channel's stored
+                           bend must not be folded into a newly keyed-on note. */
+                        v->bend = 64;
                         v->pitch_bend_min = t->pitch_bend_min;
                         v->pitch_bend_max = t->pitch_bend_max;
                         v->priority = t->program_priority + t->priority;
