@@ -19,7 +19,7 @@ int emi_parse(const uint8_t *data, size_t len, EmiFile *emi)
 
     emi->data = data;
     emi->data_len = len;
-    emi->count = (int)count;
+    emi->count = 0;
 
     off = 0x800;
     for (i = 0; i < count; i++) {
@@ -30,9 +30,12 @@ int emi_parse(const uint8_t *data, size_t len, EmiFile *emi)
             break;
 
         size = rd_u32le(toc);
+        if (off > len || size > len - off)
+            return -1;
         emi->entries[i].size   = size;
         emi->entries[i].offset = (uint32_t)off;
         emi->entries[i].type   = rd_u16le(toc + 12);
+        emi->count++;
 
         off += ((size_t)size + 0x7FF) & ~(size_t)0x7FF;
     }

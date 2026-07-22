@@ -1,8 +1,8 @@
 # BOF3 PSX audio tool
 
 This directory contains the C11 audio library and CLI behind `bin/psx-audio`.
-It decodes BOF3 XA, VAB, and SEP data, provides an approximate direct music
-renderer, and hosts the executable-backed PSF/R3000/SPU path under development.
+It decodes BOF3 XA, VAB, and SEP data, drives a register-backed SPU music
+renderer, and hosts the executable-backed PSF/R3000 path under development.
 
 The durable format and hardware specification is
 [`docs/specs/formats/audio.md`](../../../docs/specs/formats/audio.md). This page
@@ -33,13 +33,14 @@ ambiguous.
   oldest voice.
 - Saturate the final mix instead of globally peak-normalizing it. Runtime gain
   remains a user playback/output option.
-- Use the exact 193-entry linked note-to-pitch table found twice in
-  `SLUS_004.22`, not floating-point `pow()` pitch conversion.
+- Use the exact 193-entry table referenced by linked pitch conversion at
+  `SLUS_004.22@0x80171B20`, not floating-point `pow()` conversion. The table is
+  at runtime `0x8018445C` and byte-matches the one compiled into `spu.c`.
 - Apply bank, program, tone, sequence-channel, velocity, and pan attributes.
 - Keep the tone fine shift as the unsigned byte declared by PsyQ `VagAtr`.
-- Keep pitch bend on `SepEvent.data2` for now. Swapping to `data1` caused an
-  audible regression. `_SsSetPitchBend@0x8016A4A4` must be traced from the
-  linked game parser/caller before changing the parsed field again.
+- Keep pitch bend on `SepEvent.data2`. The linked bend path receives this
+  centered coarse value; `data1` is the MIDI-style fine byte and replacing the
+  coarse value with it causes an audible regression.
 - Zero ADPCM predictor and Gaussian history on key-on. DuckStation identifies
   this specifically as necessary to avoid clicks in *Breath of Fire III*.
 
@@ -57,36 +58,53 @@ These are human observations, not byte-level proof:
 | `BGMBAT05` | Current baseline is very close; `data1` pitch bend was worse |
 | `BGM099`, `BGM127`, `BGM131` | Strings remain useful loop/effect regression fixtures |
 
-Default-sequence audits for `BGM054`, `BGM067`, and `BGMBAT04` found that used
-notes are covered by declared VAB tone ranges. A simple missing-range fallback
-is therefore not the main remaining defect. `BGM054` and `BGM067` sequence 0
-are identical but use different VAB/sample banks. Relevant tones inspected in
-those tracks have zero vibrato and portamento fields.
+The corpus audit found valid VH/VB sizes, VAG ranges, per-sample zero prefixes,
+and ADPCM end flags in all 81 BGM archives. `BGMBAT04` has 63 intentionally
+unmapped program-0/note-38 events; the linked selector returns no voice for
+these, so `fast` no longer invents a nearest-center fallback. `BGM054` and
+`BGM067` sequence 0 are identical but use different VAB/sample banks. All BGM
+tone vibrato and portamento fields are zero.
 
 ## Likely remaining fast-path differences
 
 Prioritize evidence and audible impact in this order:
 
-1. Reverse the linked `SLUS_004.22` note-to-pitch routine completely. Prove
-   signed fine-tune handling, center/shift combination, octave folding, table
-   indexing, and output clamping. The table bytes themselves are already exact.
-2. Add a note-to-tone audit reporting exact range matches, layers, fallback,
-   center/shift, sample, bend range, and resulting SPU pitch for every used
-   `(program, note)` pair.
-3. Make `fast` loop samples through live ADPCM state. Its cached PCM loop reuses
-   samples decoded with first-pass predictor history; hardware carries ADPCM
-   predictor and Gaussian history from loop end into loop start. Sustained
-   strings are the highest-risk fixture for this difference.
-4. Trace pitch bend end to end through the linked SEP parser, event dispatch,
-   `_SsSetPitchBend@0x8016A4A4`, `_SsVmPitchBend@0x801728E0`, and
-   `_SsVmPBVoice@0x801726E0`. Do not infer parser field ownership from one
-   callee's argument alone.
-5. Determine from linked writes and VAB mode fields whether affected voices use
+1. Determine from linked writes and VAB mode fields whether affected voices use
    reverb, pitch modulation, noise, or volume sweeps before implementing them.
-6. Implement hardware reverb as the documented SPU-RAM half-rate feedback
+2. Implement hardware reverb as the documented SPU-RAM half-rate feedback
    pipeline, not generic post-render reverb.
-7. Match libsnd priority and voice allocation only if voice-pressure traces show
+3. Match libsnd priority and voice allocation only if voice-pressure traces show
    current oldest-voice stealing changes the affected passages.
+
+## Reversed linked pitch conversion
+
+`exe/slus_004_22@0x80171B20` is called by `_SsVmPBVoice@0x801726E0`. Its MIPS
+instructions prove this contract:
+
+```text
+fine_index = ((uint16_t)fine + tone.shift) / 8
+carry = fine_index >= 16
+fine_index -= carry * 16
+semitone = (int16_t)(note + 60 - tone.center + carry)
+octave = semitone / 12
+remainder = semitone - octave * 12
+pitch = table[remainder * 16 + fine_index]
+pitch = octave > 5 ? pitch << (octave - 5) : pitch >> (5 - octave)
+return (uint16_t)pitch
+```
+
+The routine does not clamp to `0x4000`; that limit belongs to SPU pitch-counter
+playback. The direct renderer clamps after conversion, matching that layer
+boundary. The table occupies 386 bytes at runtime `0x8018445C`, raw payload
+offset `0xEDC5C`, and hashes to
+`293278b74970e97b814ab68b63edf21d4dcdc6630bd5394fce250aec6cd955b2`.
+
+Analysis identity: raw payload
+`out/binaries/exe/slus_004_22.bin`, SHA-256
+`677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff`,
+mapped at `0x80096800` by `config/targets/exe/slus_004_22/target.toml` and
+inspected with Rizin 0.8.2. Ghidra pseudocode was unavailable in the installed
+Rizin build; conclusions above come from the MIPS instructions and delay slots.
 
 The hardware contract and coverage matrix are maintained in the main audio
 spec. Primary external references are
@@ -116,7 +134,7 @@ entire game boot.
 bin/psx-audio emi-inspect out/extracted/BIN/BGM/BGM054.EMI
 bin/psx-audio vab-inspect out/extracted/BIN/BGM/BGM054/0.bin
 bin/psx-audio sep-inspect out/extracted/BIN/BGM/BGM054/1.bin --programs --notes
-bin/psx-audio render-bgm BGM054 --engine fast -o out/audio/BGM054-fast.wav
+bin/psx-audio render BGM054 --engine fast -o out/audio/BGM054-fast.wav
 bin/psx-audio play-bgm BGMBAT05 --gain 0.1
 ```
 

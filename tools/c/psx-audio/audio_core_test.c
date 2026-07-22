@@ -38,11 +38,13 @@ static int test_vab_program_attributes(void)
 
     put_u32le(data, 0x56414270u);
     put_u16le(data + 0x12, 1);
+    put_u16le(data + 0x14, 1);
     put_u16le(data + 0x16, 1);
     data[0x18] = 120;
     data[0x19] = 61;
 
     program = data + 0x20 + 13 * 16;
+    program[0] = 1;
     program[1] = 105;
     program[4] = 70;
 
@@ -59,7 +61,9 @@ static int test_vab_program_attributes(void)
     memset(&header, 0, sizeof(header));
     if (vab_parse_vh(data, size, &header) != 0)
         goto done;
-    if (header.ps_count != 1 || header.master_vol != 120 ||
+    if (header.program_count != 1 || header.tone_count != 1 ||
+        header.declared_tone_count != 1 || header.vag_count != 1 ||
+        header.master_vol != 120 ||
         header.master_pan != 61)
         goto done;
     if (header.tones[0].prog != 13 || header.tones[0].program_vol != 105 ||
@@ -82,6 +86,8 @@ static int test_pitch_table(void)
     if (spu_pitch_from_note(60, 0, 60, 127) != 4323)
         return 1;
     if (spu_pitch_from_note(72, 0, 60, 0) != 8192)
+        return 1;
+    if (spu_pitch_from_note(96, 0, 60, 0) != 32768)
         return 1;
     return 0;
 }

@@ -36,13 +36,11 @@ static const uint16_t pitch_table[193] = {
 
 uint16_t spu_pitch_from_note(int note, int fine, int center, int shift)
 {
-    int fine_index = fine + shift;
+    int fine_index = (uint16_t)fine + shift;
     int semitone;
     int octave;
     uint32_t pitch;
 
-    if (fine_index < 0)
-        fine_index += 7;
     fine_index >>= 3;
 
     semitone = 0;
@@ -58,8 +56,6 @@ uint16_t spu_pitch_from_note(int note, int fine, int center, int shift)
         pitch <<= octave;
     else if (octave < 0)
         pitch >>= -octave;
-    if (pitch > 0x4000)
-        pitch = 0x4000;
     return (uint16_t)pitch;
 }
 

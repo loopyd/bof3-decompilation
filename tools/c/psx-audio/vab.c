@@ -10,35 +10,43 @@
 
 int vab_parse_vh(const uint8_t *data, size_t len, VabHeader *hdr)
 {
-    uint32_t ps, vs;
+    uint32_t ps, ts, vs;
     size_t off;
     uint32_t vag_offsets[256];
     uint32_t ti = 0;
     uint32_t p, t;
 
-    if (len < VAB_TONE_OFF)
+    if (!data || !hdr || len < VAB_TONE_OFF)
         return -1;
     if (rd_u32le(data) != VAB_MAGIC)
         return -1;
 
+    memset(hdr, 0, sizeof(*hdr));
     hdr->version   = rd_u32le(data + 4);
-    hdr->body_size = rd_u32le(data + 0x0C);
+    hdr->file_size = rd_u32le(data + 0x0C);
     hdr->master_vol = data[0x18];
     hdr->master_pan = data[0x19];
     ps = rd_u16le(data + 0x12);
+    ts = rd_u16le(data + 0x14);
     vs = rd_u16le(data + 0x16);
-    hdr->ps_count = ps;
+    if (ps > 128 || ts > 2048 || vs > 255)
+        return -1;
+    hdr->program_count = (uint16_t)ps;
+    hdr->declared_tone_count = (uint16_t)ts;
+    hdr->vag_count = (uint16_t)vs;
+    for (p = 0; p < 128; p++)
+        hdr->program_tone_count[p] = data[0x20 + p * 16];
 
     off = VAB_TONE_OFF + (size_t)ps * VAB_TONES_PER_PROG * VAB_TONE_SIZE;
-    if (off + 512 > len || vs > 255)
+    if (off + 512 > len)
         return -1;
 
     vag_offsets[0] = 0;
     for (p = 1; p <= vs; p++)
         vag_offsets[p] = vag_offsets[p - 1] + (uint32_t)rd_u16le(data + off + p * 2) * 8;
 
-    for (p = 0; p < ps && ti < 256; p++) {
-        for (t = 0; t < VAB_TONES_PER_PROG && ti < 256; t++) {
+    for (p = 0; p < ps && ti < 2048; p++) {
+        for (t = 0; t < VAB_TONES_PER_PROG && ti < 2048; t++) {
             const uint8_t *tn = data + VAB_TONE_OFF +
                                 (p * VAB_TONES_PER_PROG + t) * VAB_TONE_SIZE;
             uint8_t vol = tn[2];
@@ -50,10 +58,14 @@ int vab_parse_vh(const uint8_t *data, size_t len, VabHeader *hdr)
                 continue;
             if (prog < 0 || prog > 127)
                 continue;
-
             hdr->tones[ti].prog        = (uint8_t)prog;
+            hdr->tones[ti].storage_block = (uint8_t)p;
+            hdr->tones[ti].tone_slot  = (uint8_t)t;
             hdr->tones[ti].program_vol = data[0x20 + (size_t)prog * 16 + 1];
             hdr->tones[ti].program_pan = data[0x20 + (size_t)prog * 16 + 4];
+            hdr->tones[ti].program_priority =
+                data[0x20 + (size_t)prog * 16 + 2];
+            hdr->tones[ti].priority    = tn[0];
             hdr->tones[ti].min_note    = tn[6];
             hdr->tones[ti].max_note    = tn[7];
             hdr->tones[ti].center_note = tn[4];
@@ -75,7 +87,7 @@ int vab_parse_vh(const uint8_t *data, size_t len, VabHeader *hdr)
         }
     }
 
-    hdr->ps_count = ti;
+    hdr->tone_count = (uint16_t)ti;
     return 0;
 }
 
@@ -97,17 +109,17 @@ int vab_decode_vag_ex(const uint8_t *vb, size_t vb_len, const VabHeader *hdr,
     int64_t ls = -1, le = -1;
     PsxAdpcmState st;
 
-    if (vag_index < 0 || vag_index >= (int)hdr->ps_count)
+    if (vag_index < 0 || vag_index >= (int)hdr->tone_count)
         return -1;
 
     start = hdr->tones[vag_index].vag_offset;
     sz    = hdr->tones[vag_index].vag_size;
 
-    if (sz <= 16 || start + sz > vb_len)
+    if (sz < 16 || start + sz > vb_len)
         return -1;
 
-    src  = vb + start + 16;
-    nblk = (sz - 16) / 16;
+    src  = vb + start;
+    nblk = sz / 16;
 
     decoded_blocks = nblk;
     for (i = 0; i < nblk; i++) {

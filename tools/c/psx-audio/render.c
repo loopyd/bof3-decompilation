@@ -1,34 +1,20 @@
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 #include "audio.h"
+#include "spu_device.h"
 #include "util.h"
 
 typedef struct {
-    int16_t *samples;
-    int64_t len;
-    int64_t loop_start;
-    int64_t loop_end;
-} VagCache;
-
-typedef struct {
-    int16_t *samples;
-    int64_t len;
-    int64_t loop_start;
-    int64_t loop_end;
-    double pos;
-    SpuAdsr adsr;
-    float volume;
-    float pan;
     int active;
     int channel;
     int note;
     int center_note;
     int center_shift;
-    double pitch_factor;
+    uint16_t pitch;
     int bend;
     int pitch_bend_min;
     int pitch_bend_max;
+    int priority;
     uint64_t generation;
 } Voice;
 
@@ -63,11 +49,12 @@ static void pan_gains(int pan_psx, float *l, float *r)
     *r = (pan_psx > 64) ? 1.0f : (float)pan_psx / 64.0f;
 }
 
-static double voice_pitch(const Voice *v, int bend)
+static uint16_t voice_pitch(const Voice *v, int bend)
 {
     int bend_value = bend - 64;
     int note = v->note;
     int fine = 0;
+    uint16_t pitch;
 
     if (bend_value < 0) {
         int scaled = bend_value * v->pitch_bend_min;
@@ -79,8 +66,45 @@ static double voice_pitch(const Voice *v, int bend)
         fine = 2 * (scaled % 63);
     }
 
-    return (double)spu_pitch_from_note(note, fine, v->center_note,
-                                       v->center_shift) / 4096.0;
+    pitch = spu_pitch_from_note(note, fine, v->center_note,
+                                v->center_shift);
+    if (pitch > 0x4000)
+        pitch = 0x4000;
+    return pitch;
+}
+
+static uint32_t voice_register_address(int voice, uint32_t offset)
+{
+    return PSX_SPU_REGISTER_BASE + (uint32_t)voice * PSX_SPU_VOICE_STRIDE +
+           offset;
+}
+
+static int write_voice_register(PsxSpu *spu, int voice, uint32_t offset,
+                                uint16_t value)
+{
+    return psx_spu_write16(spu, voice_register_address(voice, offset), value,
+                           0);
+}
+
+static int write_key_mask(PsxSpu *spu, int voice, int key_on)
+{
+    uint32_t address;
+    uint16_t mask = (uint16_t)(1u << (voice & 15));
+
+    if (key_on)
+        address = voice < 16 ? PSX_SPU_KEY_ON_LOW : PSX_SPU_KEY_ON_HIGH;
+    else
+        address = voice < 16 ? PSX_SPU_KEY_OFF_LOW : PSX_SPU_KEY_OFF_HIGH;
+    return psx_spu_write16(spu, address, mask, 0);
+}
+
+static uint16_t fixed_voice_volume(float gain)
+{
+    if (gain <= 0.0f)
+        return 0;
+    if (gain >= 1.0f)
+        return 0x3fff;
+    return (uint16_t)(gain * gain * 16383.0f);
 }
 
 int render_bgm(const uint8_t *sep_data, size_t sep_len,
@@ -90,17 +114,18 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
 {
     SepFile sep;
     VabHeader vhdr;
-    VagCache *vag_cache = NULL;
+    PsxSpu *spu = NULL;
     Voice voices[MAX_VOICES];
     ChannelState channels[16];
     NoteEvent *events = NULL;
     int event_count = 0, event_cap = 0;
     uint64_t next_generation = 1;
-    double *mix_l = NULL, *mix_r = NULL;
+    int16_t *pcm = NULL;
     int64_t total_frames = 0;
     int i, j, ch;
 
-    if (!sep_data || !vh_data || !vb_data || !out)
+    if (!sep_data || !vh_data || !vb_data || !out || output_rate != 44100 ||
+        vb_len > PSX_SPU_RAM_SIZE)
         return -1;
 
     memset(out, 0, sizeof(*out));
@@ -126,22 +151,18 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
         return -1;
     }
 
-    vag_cache = (VagCache *)calloc(vhdr.ps_count, sizeof(VagCache));
-    if (!vag_cache) {
+    spu = psx_spu_create();
+    if (!spu) {
         sep_free(&sep);
         return -1;
     }
-
-    for (i = 0; i < (int)vhdr.ps_count; i++) {
-        int16_t *pcm = NULL;
-        int64_t ls, le;
-        int n = vab_decode_vag_ex(vb_data, vb_len, &vhdr, i, &pcm, &ls, &le);
-        if (n > 0 && pcm) {
-            vag_cache[i].samples = pcm;
-            vag_cache[i].len = n;
-            vag_cache[i].loop_start = ls;
-            vag_cache[i].loop_end = le;
-        }
+    if (psx_spu_write16(spu, PSX_SPU_TRANSFER_ADDRESS, 0, 0) != 0 ||
+        psx_spu_dma_write(spu, vb_data, vb_len, 0) != 0 ||
+        psx_spu_write16(spu, PSX_SPU_MAIN_VOLUME_LEFT, 0x3fff, 0) != 0 ||
+        psx_spu_write16(spu, PSX_SPU_MAIN_VOLUME_RIGHT, 0x3fff, 0) != 0) {
+        psx_spu_destroy(spu);
+        sep_free(&sep);
+        return -1;
     }
 
     {
@@ -236,85 +257,93 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
 
     if (event_count == 0) {
         free(events);
-        for (i = 0; i < (int)vhdr.ps_count; i++)
-            free(vag_cache[i].samples);
-        free(vag_cache);
+        psx_spu_destroy(spu);
         sep_free(&sep);
         return -1;
     }
 
     total_frames = events[event_count - 1].frame + (int64_t)output_rate * 2;
 
-    mix_l = (double *)calloc((size_t)total_frames, sizeof(double));
-    mix_r = (double *)calloc((size_t)total_frames, sizeof(double));
-    if (!mix_l || !mix_r) {
-        free(mix_l); free(mix_r); free(events);
-        for (i = 0; i < (int)vhdr.ps_count; i++)
-            free(vag_cache[i].samples);
-        free(vag_cache);
+    pcm = (int16_t *)calloc((size_t)total_frames * 2, sizeof(*pcm));
+    if (!pcm) {
+        free(events);
+        psx_spu_destroy(spu);
         sep_free(&sep);
         return -1;
     }
 
     {
         int ev_idx = 0;
-        int64_t frame;
+        int64_t frame = 0;
+        int render_failed = 0;
 
-        for (frame = 0; frame < total_frames; frame++) {
+        while (frame < total_frames && !render_failed) {
             while (ev_idx < event_count && events[ev_idx].frame <= frame) {
                 NoteEvent *ne = &events[ev_idx];
                 if (ne->is_bend) {
                     for (i = 0; i < MAX_VOICES; i++) {
-                        if (voices[i].active && voices[i].channel == ne->channel)
+                        if (voices[i].active && voices[i].channel == ne->channel) {
                             voices[i].bend = ne->bend;
+                            voices[i].pitch = voice_pitch(&voices[i], ne->bend);
+                            if (write_voice_register(spu, i,
+                                                     PSX_SPU_VOICE_PITCH,
+                                                     voices[i].pitch) != 0)
+                                render_failed = 1;
+                        }
                     }
                 } else if (ne->is_on) {
                     int prog = ne->program;
                     int matching = 0;
-                    int fallback = -1;
-                    int best_dist = 999;
 
-                    for (i = 0; i < (int)vhdr.ps_count; i++) {
+                    for (i = 0; i < (int)vhdr.tone_count; i++) {
                         VabTone *t = &vhdr.tones[i];
                         if (t->prog == prog &&
                             ne->note >= t->min_note &&
                             ne->note <= t->max_note)
                             matching++;
-                        if (t->prog == prog) {
-                            int dist = abs(ne->note - t->center_note);
-                            if (dist < best_dist) {
-                                best_dist = dist;
-                                fallback = i;
-                            }
-                        }
                     }
 
-                    for (j = 0; j < (int)vhdr.ps_count; j++) {
+                    for (j = 0; j < (int)vhdr.tone_count; j++) {
                         VabTone *t = &vhdr.tones[j];
                         Voice *v;
                         int slot = -1;
                         float eff_pan;
+                        float volume;
+                        float left_gain, right_gain;
 
-                        if (matching > 0) {
-                            if (t->prog != prog || ne->note < t->min_note ||
-                                ne->note > t->max_note)
-                                continue;
-                        } else if (j != fallback) {
+                        if (matching == 0 || t->prog != prog ||
+                            ne->note < t->min_note || ne->note > t->max_note) {
                             continue;
                         }
-                        if (!vag_cache[j].samples)
-                            continue;
 
                         for (i = 0; i < MAX_VOICES; i++) {
+                            if (voices[i].active &&
+                                !psx_spu_voice_active(spu, (unsigned int)i))
+                                voices[i].active = 0;
                             if (!voices[i].active) {
                                 slot = i;
                                 break;
                             }
                         }
                         if (slot < 0) {
+                            int lowest_priority = 256;
+                            uint16_t smallest_envelope = UINT16_MAX;
                             uint64_t oldest = UINT64_MAX;
                             for (i = 0; i < MAX_VOICES; i++) {
-                                if (voices[i].generation < oldest) {
+                                uint16_t envelope = 0;
+                                psx_spu_read16(
+                                    spu,
+                                    voice_register_address(
+                                        i, PSX_SPU_VOICE_ADSR_VOLUME),
+                                    &envelope);
+                                if (voices[i].priority < lowest_priority ||
+                                    (voices[i].priority == lowest_priority &&
+                                     envelope < smallest_envelope) ||
+                                    (voices[i].priority == lowest_priority &&
+                                     envelope == smallest_envelope &&
+                                     voices[i].generation < oldest)) {
+                                    lowest_priority = voices[i].priority;
+                                    smallest_envelope = envelope;
                                     oldest = voices[i].generation;
                                     slot = i;
                                 }
@@ -324,23 +353,17 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                             break;
 
                         v = &voices[slot];
-                        v->samples = vag_cache[j].samples;
-                        v->len = vag_cache[j].len;
-                        v->loop_start = vag_cache[j].loop_start;
-                        v->loop_end = vag_cache[j].loop_end;
-                        v->pos = 0.0;
-                        v->volume = ne->volume *
-                                    (ne->velocity / 127.0f) *
-                                    (vhdr.master_vol / 127.0f) *
-                                    (t->program_vol / 127.0f) *
-                                    (t->vol / 127.0f);
+                        volume = ne->volume * (ne->velocity / 127.0f) *
+                                 (vhdr.master_vol / 127.0f) *
+                                 (t->program_vol / 127.0f) *
+                                 (t->vol / 127.0f);
                         eff_pan = (float)t->pan +
                                   ((float)t->program_pan - 64.0f) +
                                   ((float)vhdr.master_pan - 64.0f) +
                                   (ne->pan - 64.0f);
                         if (eff_pan < 0.0f) eff_pan = 0.0f;
                         if (eff_pan > 127.0f) eff_pan = 127.0f;
-                        v->pan = eff_pan;
+                        pan_gains((int)eff_pan, &left_gain, &right_gain);
                         v->active = 1;
                         v->channel = ne->channel;
                         v->note = ne->note;
@@ -349,117 +372,73 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                         v->bend = ne->bend;
                         v->pitch_bend_min = t->pitch_bend_min;
                         v->pitch_bend_max = t->pitch_bend_max;
+                        v->priority = t->program_priority + t->priority;
                         v->generation = next_generation++;
-                        v->pitch_factor = voice_pitch(v, v->bend);
-                        memset(&v->adsr, 0, sizeof(SpuAdsr));
-                        spu_adsr_key_on(&v->adsr, t->adsr1, t->adsr2);
+                        v->pitch = voice_pitch(v, v->bend);
+                        if (write_voice_register(
+                                spu, slot, PSX_SPU_VOICE_VOLUME_LEFT,
+                                fixed_voice_volume(volume * left_gain)) != 0 ||
+                            write_voice_register(
+                                spu, slot, PSX_SPU_VOICE_VOLUME_RIGHT,
+                                fixed_voice_volume(volume * right_gain)) != 0 ||
+                            write_voice_register(spu, slot,
+                                                 PSX_SPU_VOICE_PITCH,
+                                                 v->pitch) != 0 ||
+                            write_voice_register(
+                                spu, slot, PSX_SPU_VOICE_START_ADDRESS,
+                                (uint16_t)(t->vag_offset >> 3)) != 0 ||
+                            write_voice_register(spu, slot,
+                                                 PSX_SPU_VOICE_ADSR1,
+                                                 t->adsr1) != 0 ||
+                            write_voice_register(spu, slot,
+                                                 PSX_SPU_VOICE_ADSR2,
+                                                 t->adsr2) != 0 ||
+                            write_voice_register(
+                                spu, slot, PSX_SPU_VOICE_REPEAT_ADDRESS,
+                                (uint16_t)(t->vag_offset >> 3)) != 0 ||
+                            write_key_mask(spu, slot, 1) != 0)
+                            render_failed = 1;
                     }
                 } else {
                     for (i = 0; i < MAX_VOICES; i++) {
                         if (voices[i].active &&
                             voices[i].channel == ne->channel &&
                             voices[i].note == ne->note) {
-                            spu_adsr_key_off(&voices[i].adsr);
+                            if (write_key_mask(spu, i, 0) != 0)
+                                render_failed = 1;
                         }
                     }
                 }
                 ev_idx++;
             }
-
-            for (i = 0; i < MAX_VOICES; i++) {
-                Voice *v = &voices[i];
-                int32_t sample;
-                int level;
-                double s;
-                float lg, rg;
-                int64_t idx;
-                int frac;
-                double src_pos;
-
-                if (!v->active)
-                    continue;
-
-                level = spu_adsr_tick(&v->adsr);
-                if (v->adsr.phase >= 4) {
-                    v->active = 0;
-                    continue;
-                }
-
-                v->pitch_factor = voice_pitch(v, v->bend);
-
-                src_pos = v->pos;
-                idx = (int64_t)src_pos;
-
-                if (v->loop_start >= 0 && idx >= v->loop_end) {
-                    int64_t loop_len = v->loop_end - v->loop_start;
-                    if (loop_len > 0) {
-                        src_pos = (double)v->loop_start +
-                                  fmod(src_pos - (double)v->loop_end, (double)loop_len);
-                        v->pos = src_pos;
-                        idx = (int64_t)src_pos;
-                    } else {
-                        v->active = 0;
-                        continue;
-                    }
-                } else if (idx >= v->len) {
-                    v->active = 0;
-                    continue;
-                }
-
-                frac = (int)((src_pos - (double)idx) * 256.0);
-                if (frac > 255) frac = 255;
-
-                sample = psx_gauss_interp(v->samples, v->len, idx, frac);
-                v->pos += v->pitch_factor;
-
-                s = (double)sample * ((double)level / 32767.0) * (double)v->volume;
-                pan_gains((int)v->pan, &lg, &rg);
-
-                if (frame < total_frames) {
-                    mix_l[frame] += s * lg;
-                    mix_r[frame] += s * rg;
-                }
+            if (!render_failed) {
+                int64_t next_frame = ev_idx < event_count
+                                         ? events[ev_idx].frame
+                                         : total_frames;
+                if (next_frame > total_frames)
+                    next_frame = total_frames;
+                if (next_frame <= frame)
+                    next_frame = frame + 1;
+                if (psx_spu_render(spu, pcm + frame * 2,
+                                   (size_t)(next_frame - frame)) != 0)
+                    render_failed = 1;
+                frame = next_frame;
             }
         }
-    }
-
-    {
-        int16_t *pcm;
-
-        pcm = (int16_t *)malloc((size_t)total_frames * 2 * sizeof(int16_t));
-        if (!pcm) {
-            free(mix_l); free(mix_r); free(events);
-            for (i = 0; i < (int)vhdr.ps_count; i++)
-                free(vag_cache[i].samples);
-            free(vag_cache);
+        if (render_failed) {
+            free(pcm);
+            free(events);
+            psx_spu_destroy(spu);
             sep_free(&sep);
             return -1;
         }
-
-        {
-            for (i = 0; i < (int64_t)total_frames; i++) {
-                double l = mix_l[i];
-                double r = mix_r[i];
-                if (l > 32767.0) l = 32767.0;
-                if (l < -32768.0) l = -32768.0;
-                if (r > 32767.0) r = 32767.0;
-                if (r < -32768.0) r = -32768.0;
-                pcm[i * 2] = (int16_t)l;
-                pcm[i * 2 + 1] = (int16_t)r;
-            }
-        }
-
-        out->pcm = pcm;
-        out->frames = total_frames;
-        out->rate = output_rate;
     }
 
-    free(mix_l);
-    free(mix_r);
+    out->pcm = pcm;
+    out->frames = total_frames;
+    out->rate = output_rate;
     free(events);
-    for (i = 0; i < (int)vhdr.ps_count; i++)
-        free(vag_cache[i].samples);
-    free(vag_cache);
+    psx_spu_destroy(spu);
     sep_free(&sep);
 
     return 0;

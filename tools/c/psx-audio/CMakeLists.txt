@@ -12,6 +12,7 @@ endif()
 
 add_library(psx_audio STATIC
     audio_render.c
+    audio_audit.c
     adpcm.c
     wav.c
     ogg.c

@@ -140,7 +140,7 @@ program and tone attributes. It does not apply a post-render bass boost or EQ.
 | VagAtr count | `ts` (flat) | **`ps × 16`** (2D) |
 | VAG size units | 8-byte | 8-byte |
 | VAG pointer table | Per-sample sizes | Per-sample sizes; accumulate preceding entries for offsets |
-| VAG data prefix | None | 16 bytes of zeros per size-delimited sample |
+| VAG first block | Format-dependent | 16 bytes of zero ADPCM data; transferred and played, not stripped |
 
 ### VagAtr (32 bytes each, at 0x820)
 
@@ -154,14 +154,76 @@ Pitch bend range is tone-local: bytes 12–13 hold the downward/upward range in
 semitones; the SEP bend value scales that range rather than a fixed MIDI ±2.
 At playback, PsyQ `SsPitchFromNote` quantizes combined fine tune to 16 steps
 per semitone and uses the linked integer lookup table before writing the SPU
-pitch value (`0x1000` = 44100 Hz). The `fast` renderer uses that exact table;
-the same 193-entry table occurs at `0x800FDA84` and `0x800FDC5C` in
-`SLUS_004.22`.
+pitch value (`0x1000` = 44100 Hz). The linked implementation is
+`exe/slus_004_22@0x80171B20`; its 193-entry table is at runtime address
+`0x8018445C` (raw payload offset `0xEDC5C`). The table's 386 bytes and the table
+compiled into `spu.c` have the same SHA-256,
+`293278b74970e97b814ab68b63edf21d4dcdc6630bd5394fce250aec6cd955b2`.
+Addresses `0x800FDA84` and `0x800FDC5C`, previously attributed to this table,
+contain zeros in the mapped raw payload and are not pitch-table evidence.
+
+The linked routine masks the fine argument to 16 bits, adds the unsigned tone
+shift, divides by 8, and carries one semitone when the result reaches 16. It
+then forms a signed 16-bit semitone from `note + 60 - center + carry`, divides
+that value by 12 with truncation toward zero, and indexes
+`table[(remainder * 16) + fine_index]`. The quotient minus five shifts the
+table value by octaves. It returns the low 16 bits without clamping; the
+`0x4000` maximum belongs to the SPU pitch-counter step and is applied by each
+renderer at playback.
+
+### Note-on pitch and tone selection (libsnd voice manager)
+
+BOF3 BGM is stock PsyQ `libsnd` SEP playback wrapped by a Capcom EMI bank
+loader; there is no custom Capcom sequence language. The normal music note-on
+path is `_SsNoteOn -> _SsVmKeyOn -> _SsVmSelectToneAndVag`, which is distinct
+from the explicit-tone SFX dispatcher `SsUtKeyOnV` (the routine at `0x8016E400`
+that calls `note2pitch` at `0x8016E73C` with a caller-supplied tone). The BGM
+renderer must not be modeled on the SFX path.
+
+Verified against the linked binary and corroborated by VGMTrans and stock
+libsnd:
+
+- **Initial pitch uses `fine = 0`.** The normal note-on call is
+  `note2pitch(note, 0, center, shift)`. The channel's current pitch bend is
+  **not** folded into a new note. Bend is applied only when a pitch-bend event
+  arrives, via `_SsVmPitchBend` (`0x801728E0`) iterating active voices through
+  `_SsVmPBVoice` (`0x801726E0`, which has a single caller). Folding the stored
+  channel bend into note-on pitch makes notes sound sharp until the next bend
+  event.
+- **Tone selection layers every matching tone.** For a logical program and
+  note, `_SsVmSelectToneAndVag` walks the program's up-to-16 tones and selects
+  **all** with `VagAtr.min <= note <= VagAtr.max`, allocating one SPU voice per
+  layer. It does not pick only the first match, the nearest center note, or a
+  fallback tone.
+- **Logical program -> physical tone block is packed.** Tone blocks are stored
+  only for non-empty programs; the physical block is the count of non-empty
+  programs preceding the logical program (stock libsnd caches it in
+  `ProgAtr.reserved1`). The embedded `VagAtr.prog` (bytes 20-21) names the
+  logical program and is the renderer's lookup key.
+
+#### Fast-path pitch faithfulness audit (BGMBAT04 off-key investigation)
+
+| Component | Status | Evidence |
+| --- | --- | --- |
+| EMI -> VH/VB/SEP loading | byte-identical to direct bins | SHA-256 (VH@0x800, SEP@0x3000, VB@0x8800) |
+| `spu_pitch_from_note` | faithful | disasm `0x80171B20` |
+| `pitch_table` | byte-identical | dump @`0x8018445C` |
+| `voice_pitch` bend arithmetic | faithful | disasm `_SsVmPBVoice@0x801726E0` |
+| SPU pitch counter / Gaussian / key-on | matches | psx-spx + DuckStation |
+| VagAtr center/shift parse | correct (`[4]`/`[5]`) | disasm + VGMTrans |
+| note-on bend folding | **bug** | libsnd uses base pitch; bend only via events |
+
+Differential: `BGMBAT02.EMI` sounds correct while `BGMBAT04.EMI` is sharp; both
+share the same code and structurally similar VABs (single-note piano tones with
+`center > note` and `shift` 54/59/62), so the defect is data-triggered rather
+than a per-tone formula error. Piano (prog 0) has `pbmin = pbmax = 0` and
+disjoint tone ranges, so the bend-fold fix does not change its pitch; if piano
+remains sharp after the fix, a renderer pitch trace must pinpoint the cause.
 
 ## SEP format (Sequence Package)
 
 The EMI catalog labels type 10 as "SEQ", but the container is **SEP**
-(multi-track). All 119 BOF3 files have exactly 4 sequences.
+(multi-track). All 81 BOF3 music files have exactly 4 sequences.
 
 ### File header (6 bytes)
 
@@ -177,11 +239,9 @@ seq_id (u16 BE), resolution (u16 BE, always 48), tempo (3 bytes BE,
 MIDI-like: VLQ delta times, running status, note on/off,
 program change, control change, pitch bend. Only meta events are tempo and EOT.
 
-Pitch bend occupies two MIDI-style data bytes. The direct renderer currently
-uses the second as a 7-bit value centered at 64. Linked
-`_SsSetPitchBend@0x8016A4A4` appears to consume one byte, but its relationship
-to the two parsed SEP fields still requires a caller/parser trace; do not change
-the selected field from the routine body alone. Meta events omit SMF lengths:
+Pitch bend occupies two MIDI-style data bytes. The direct renderer uses the
+second as the 7-bit coarse value centered at 64; the first is the fine byte and
+is not consumed by the linked coarse bend calculation. Meta events omit SMF lengths:
 tempo is `FF 51 tt tt tt` and EOT is `FF 2F`.
 
 NRPN extensions: loop start (20), loop end (30), VAB attribute control.
@@ -217,7 +277,7 @@ The exact path is split below that seam:
 | `psf.c` | PSF1/MiniPSF load, overlay, CRC, PC/SP, and package | Implemented and tested |
 | `psx_machine.c` | Bounded R3000 execution and PSF hardware boundary | Partial vertical slice |
 | `spu_device.c` | SPU registers, 24 voices, live ADPCM, pitch, Gaussian interpolation, ADSR, sound RAM, FIFO/DMA | Implemented except reverb, noise, modulation, and volume sweeps |
-| `render.c` | Direct SEP/VAB rendering | Implemented, approximate `fast` engine with 24-voice stealing and saturating output |
+| `render.c` | Direct SEP/VAB scheduling into `spu_device.c` | Implemented `fast` engine with 24-voice stealing and register-driven output |
 
 The machine intentionally faults on unsupported instructions, BIOS calls, and
 hardware addresses. The complete game PSF currently reaches its first CD-ROM
@@ -236,15 +296,15 @@ execution but not to an offline `fast` event scheduled on output frames.
 | Hardware contract | Register-driven `spu_device.c` | Direct `fast` renderer |
 | --- | --- | --- |
 | 24 equivalent voices | Implemented | Implemented; oldest voice is stolen when full |
-| 512 KiB SPU RAM and 8-byte address units | Implemented with wrapping | VAB samples are decoded outside SPU RAM |
-| 16-byte ADPCM blocks, 28 samples | Live decode | Predecoded and cached |
-| Loop start/end/repeat flags and ENDX | Implemented | Reduced to cached PCM loop bounds; no ENDX |
-| Predictor and interpolation history across loops | Preserved by live decode | Not exact: cached loop-start PCM was decoded only once |
+| 512 KiB SPU RAM and 8-byte address units | Implemented with wrapping | Uses the same register-driven SPU RAM |
+| 16-byte ADPCM blocks, 28 samples | Live decode | Uses the same live decoder |
+| Loop start/end/repeat flags and ENDX | Implemented | Uses the same flag and ENDX path |
+| Predictor and interpolation history across loops | Preserved by live decode | Preserved by live decode |
 | Zero interpolation history on key-on | Implemented | Implemented by zero-padding before sample index zero |
 | `VxPitch`: `0x1000` = 44.1 kHz, clamp above `0x4000` | Implemented | Equivalent ratio after PsyQ note conversion |
-| 4-point, 512-entry Gaussian interpolation | Implemented | Implemented |
-| ADSR attack/decay/sustain/release | Implemented | Implemented |
-| Signed fixed voice/main volume | Implemented | Uses VAB/SEP gain and pan directly |
+| 4-point, 512-entry Gaussian interpolation | Implemented | Uses the same implementation |
+| ADSR attack/decay/sustain/release | Implemented | Uses the same implementation |
+| Signed fixed voice/main volume | Implemented | Writes fixed SPU voice/main volume registers |
 | Volume sweep mode | Not implemented; sweep values currently mute | Not implemented |
 | KON, KOFF, ENDX | Implemented | Modeled as note events, not registers |
 | Pitch modulation (PMON) | Not implemented | Not implemented |
@@ -255,11 +315,9 @@ execution but not to an offline `fast` event scheduled on output frames.
 | CD/XA and external-input mixing/capture | Not implemented | Separate XA decoder; not mixed through SPU |
 
 DuckStation explicitly zeroes the previous-block interpolation samples at key-on
-to avoid clicks in *Breath of Fire III*. Keep this as a BOF3 regression invariant
-in both renderers. For sustained strings and other loop-heavy tones, live ADPCM
-looping is the next higher-value fidelity improvement: hardware decodes the loop
-start again using predictor and Gaussian history retained from the loop end,
-whereas `fast` currently replays PCM decoded with the first-pass history.
+to avoid clicks in *Breath of Fire III*. Keep this as a BOF3 regression invariant.
+The fast path now decodes loop starts again with predictor and Gaussian history
+retained from the loop end instead of replaying a predecoded PCM loop.
 
 ### ADPCM decode
 
@@ -267,7 +325,7 @@ Hardware-verified formula (from DuckStation, matching nocash PSX specs):
 
 ```c
 sample = (int16_t)(nibble << 12) >> shift;   // sign-extend + shift
-sample += (prev1 * filter_pos) >> 6;          // no +32 rounding
+sample += (prev1 * filter_pos) >> 6;
 sample += (prev2 * filter_neg) >> 6;
 clamp(sample, -32768, 32767);
 ```
@@ -494,6 +552,3 @@ ffmpeg -f psxstr -i wrapped_2352.str -vn output.wav
 - Type-8 semantics: ADSR override table structure plausible but unconfirmed.
 - SPU RAM layout: VAB base addresses not documented.
 - Area→BGM mapping: lives in scenario controller code, not yet lifted.
-- Pitch-bend byte ownership: trace the linked SEP parser through
-  `_SsSetPitchBend@0x8016A4A4` before changing `SepEvent.data2`; the routine body
-  alone does not identify which of the parser's two stored bytes reaches it.

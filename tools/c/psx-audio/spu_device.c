@@ -302,6 +302,13 @@ const uint8_t *psx_spu_ram(const PsxSpu *spu)
     return spu ? spu->ram : NULL;
 }
 
+int psx_spu_voice_active(const PsxSpu *spu, unsigned int voice)
+{
+    if (!spu || voice >= PSX_SPU_VOICE_COUNT)
+        return 0;
+    return spu->voices[voice].active;
+}
+
 int psx_spu_render(PsxSpu *spu, int16_t *stereo, size_t frames)
 {
     size_t frame;

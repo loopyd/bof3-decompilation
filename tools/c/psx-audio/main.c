@@ -37,20 +37,31 @@ static int ends_with(const char *s, const char *suffix)
 }
 
 typedef struct {
-    uint8_t *owned;
+    uint8_t *owned_vh, *owned_vb, *owned_sep;
     const uint8_t *vh, *vb, *sep;
     uint32_t vh_sz, vb_sz, sep_sz;
 } AudioSource;
 
-static void source_free(AudioSource *s) { free(s->owned); memset(s, 0, sizeof(*s)); }
+static void source_free(AudioSource *s)
+{
+    free(s->owned_vh);
+    free(s->owned_vb);
+    free(s->owned_sep);
+    memset(s, 0, sizeof(*s));
+}
 
 static int source_from_emi(AudioSource *s, const char *path)
 {
     size_t len;
     EmiFile emi;
-    s->owned = read_file(path, &len);
-    if (!s->owned) return -1;
-    if (emi_parse(s->owned, len, &emi) != 0) { free(s->owned); s->owned = NULL; return -1; }
+
+    memset(s, 0, sizeof(*s));
+    s->owned_vh = read_file(path, &len);
+    if (!s->owned_vh) return -1;
+    if (emi_parse(s->owned_vh, len, &emi) != 0) {
+        source_free(s);
+        return -1;
+    }
     s->vh  = emi_find_type(&emi, EMI_TYPE_VH,  &s->vh_sz);
     s->vb  = emi_find_type(&emi, EMI_TYPE_VB,  &s->vb_sz);
     s->sep = emi_find_type(&emi, EMI_TYPE_SEQ, &s->sep_sz);
@@ -61,11 +72,15 @@ static int source_from_emi(AudioSource *s, const char *path)
 static int source_from_raw(AudioSource *s, const char *vh_p, const char *vb_p, const char *sep_p)
 {
     size_t vl, bl, sl;
+
+    memset(s, 0, sizeof(*s));
     uint8_t *vh = read_file(vh_p, &vl);
     uint8_t *vb = read_file(vb_p, &bl);
     uint8_t *sep = sep_p ? read_file(sep_p, &sl) : NULL;
     if (!vh || !vb) { free(vh); free(vb); free(sep); return -1; }
-    s->owned = vh;
+    s->owned_vh = vh;
+    s->owned_vb = vb;
+    s->owned_sep = sep;
     s->vh = vh; s->vh_sz = (uint32_t)vl;
     s->vb = vb; s->vb_sz = (uint32_t)bl;
     s->sep = sep; s->sep_sz = sep ? (uint32_t)sl : 0;
@@ -356,7 +371,7 @@ static int scan_tracks(const char *dir, TrackInfo *tracks, int max)
         if (s.vh) {
             VabHeader hdr;
             if (vab_parse_vh(s.vh, s.vh_sz, &hdr) == 0)
-                t->tones = (int)hdr.ps_count;
+                t->tones = (int)hdr.tone_count;
         }
         if (s.sep) {
             SepFile sep;
@@ -462,7 +477,7 @@ static int cmd_play_bgm(int argc, char **argv)
         if (source_from_emi(&s, target) != 0) {
             fprintf(stderr, "error: no audio in %s\n", target); return 1;
         }
-    } else if (argc >= 5 && !ends_with(target, ".bin") == 0) {
+    } else if (argc >= 5 && ends_with(target, ".bin")) {
         if (source_from_raw(&s, argv[2], argv[3], argv[4]) != 0) {
             fprintf(stderr, "error: failed to read files\n"); return 1;
         }
@@ -538,11 +553,11 @@ static int cmd_play_vag(int argc, char **argv)
             free(pcm);
         }
     } else {
-        for (int i = 0; i < (int)hdr.ps_count; i++) {
+        for (int i = 0; i < (int)hdr.tone_count; i++) {
             int16_t *pcm = NULL;
             int n = vab_decode_vag(s.vb, s.vb_sz, &hdr, i, &pcm);
             if (n > 0 && pcm) {
-                printf("  VAG %d/%d\n", i, (int)hdr.ps_count);
+                printf("  VAG %d/%d\n", i, (int)hdr.tone_count);
                 play_buffer(pcm, n, 1, 44100, gain);
                 free(pcm);
             }
@@ -581,7 +596,8 @@ static int cmd_render(int argc, char **argv)
         return 1;
     }
 
-    if (argc >= 5 && source_from_raw(&s, argv[2], argv[3], argv[4]) == 0) {
+    if (argc >= 5 && ends_with(argv[2], ".bin") &&
+        source_from_raw(&s, argv[2], argv[3], argv[4]) == 0) {
         /* raw files */
     } else if (source_auto(&s, argv[2]) == 0) {
         /* EMI or directory */
@@ -685,12 +701,14 @@ static int cmd_vab_inspect(int argc, char **argv)
     data = read_file(argv[2], &len);
     if (!data) { fprintf(stderr, "error: read failed\n"); return 1; }
     if (vab_parse_vh(data, len, &hdr) != 0) { fprintf(stderr, "error: bad VH\n"); free(data); return 1; }
-    printf("  %s: %u tones, body=%u bytes\n", argv[2], hdr.ps_count, hdr.body_size);
-    for (int i = 0; i < (int)hdr.ps_count; i++) {
+    printf("  %s: programs=%u tones=%u vags=%u file=%u bytes\n", argv[2],
+           hdr.program_count, hdr.tone_count, hdr.vag_count, hdr.file_size);
+    for (int i = 0; i < (int)hdr.tone_count; i++) {
         VabTone *t = &hdr.tones[i];
-        printf("    [%2d] prog=%d note=%d-%d center=%d shift=%d bend=%d/%d "
+        printf("    [%2d] prog=%d block=%d/%d note=%d-%d center=%d shift=%d bend=%d/%d "
                "vib=%d/%d por=%d/%d mode=%02X vag=%u+%u adsr=%04X/%04X\n",
-               i, t->prog, t->min_note, t->max_note, t->center_note,
+               i, t->prog, t->storage_block, t->tone_slot,
+               t->min_note, t->max_note, t->center_note,
                t->shift, t->pitch_bend_min, t->pitch_bend_max,
                t->vibrato_width, t->vibrato_time,
                t->portamento_width, t->portamento_time, t->mode,
@@ -698,6 +716,60 @@ static int cmd_vab_inspect(int argc, char **argv)
     }
     free(data);
     return 0;
+}
+
+static int cmd_bgm_audit(int argc, char **argv)
+{
+    AudioSource source;
+    AudioAuditReport report;
+    int program, note;
+
+    if (argc < 3) {
+        fprintf(stderr, "usage: bgm-audit <track|EMI|directory>\n");
+        return 1;
+    }
+    memset(&source, 0, sizeof(source));
+    if (source_auto(&source, argv[2]) != 0 || !source.sep) {
+        fprintf(stderr, "%s: error=missing-or-invalid-EMI/VH/VB/SEP\n", argv[2]);
+        source_free(&source);
+        return 1;
+    }
+    if (audio_audit_bgm(source.vh, source.vh_sz, source.vb, source.vb_sz,
+                        source.sep, source.sep_sz, &report) != 0) {
+        fprintf(stderr, "%s: error=invalid-VH/VB/SEP\n", argv[2]);
+        source_free(&source);
+        return 1;
+    }
+    printf("%s: vh=%u+%u/%u programs=%u tones=%u vags=%u seq=%d "
+           "remap=%d missing-note-events=%d layered-note-events=%d "
+           "bad-vag=%d bad-prefix=%d missing-end=%d reverb-tones=%d "
+           "modulation-tones=%d bend-lsb-events=%d ignored-controls=%d "
+           "loop-controls=%d\n",
+           argv[2], report.vh_size, report.vb_size,
+           report.declared_file_size, report.program_count,
+           report.tone_count, report.vag_count, report.sequence_count,
+           report.remapped_tones, report.missing_note_events,
+           report.layered_note_events, report.bad_vag_ranges,
+           report.bad_sample_prefixes, report.samples_without_end,
+           report.reverb_tones, report.modulation_tones,
+           report.bend_lsb_events, report.ignored_control_events,
+           report.loop_control_events);
+    if (arg_has(argc, argv, "--details") && report.missing_note_events) {
+        printf("  missing:");
+        for (program = 0; program < 128; program++)
+            for (note = 0; note < 128; note++)
+                if (report.missing_notes[program][note])
+                    printf(" p%d/n%d:%d", program, note,
+                           report.missing_notes[program][note]);
+        printf("\n");
+    }
+
+    source_free(&source);
+    return report.bad_vag_ranges || report.bad_sample_prefixes ||
+                   report.samples_without_end ||
+                   report.declared_file_size != report.vh_size + report.vb_size
+               ? 1
+               : 0;
 }
 
 static int cmd_vab_extract(int argc, char **argv)
@@ -714,7 +786,7 @@ static int cmd_vab_extract(int argc, char **argv)
     }
     MKDIR(outdir);
     int extracted = 0;
-    for (int i = 0; i < (int)hdr.ps_count; i++) {
+    for (int i = 0; i < (int)hdr.tone_count; i++) {
         int16_t *pcm = NULL;
         int n = vab_decode_vag(s.vb, s.vb_sz, &hdr, i, &pcm);
         if (n > 0 && pcm) {
@@ -725,7 +797,7 @@ static int cmd_vab_extract(int argc, char **argv)
             free(pcm);
         }
     }
-    printf("  extracted %d/%u VAGs to %s/\n", extracted, hdr.ps_count, outdir);
+    printf("  extracted %d/%u tones to %s/\n", extracted, hdr.tone_count, outdir);
     source_free(&s);
     return 0;
 }
@@ -785,6 +857,80 @@ static int cmd_sep_inspect(int argc, char **argv)
                         printf("\n");
                     }
                 }
+        }
+        if (arg_has(argc, argv, "--bends")) {
+            int bend_count[16] = { 0 };
+            int min_data1[16], max_data1[16];
+            int min_data2[16], max_data2[16];
+            int event_index;
+            int channel;
+
+            for (channel = 0; channel < 16; channel++) {
+                min_data1[channel] = min_data2[channel] = 128;
+                max_data1[channel] = max_data2[channel] = -1;
+            }
+            for (event_index = 0;
+                 event_index < sep.sequences[i].event_count;
+                 event_index++) {
+                SepEvent *event = &sep.sequences[i].events[event_index];
+                if ((event->type & 0xf0) != 0xe0)
+                    continue;
+                channel = event->type & 0x0f;
+                bend_count[channel]++;
+                if (event->data1 < min_data1[channel])
+                    min_data1[channel] = event->data1;
+                if (event->data1 > max_data1[channel])
+                    max_data1[channel] = event->data1;
+                if (event->data2 < min_data2[channel])
+                    min_data2[channel] = event->data2;
+                if (event->data2 > max_data2[channel])
+                    max_data2[channel] = event->data2;
+            }
+            for (channel = 0; channel < 16; channel++)
+                if (bend_count[channel] != 0)
+                    printf("      bend ch=%d events=%d data1=%d-%d data2=%d-%d\n",
+                           channel, bend_count[channel], min_data1[channel],
+                           max_data1[channel], min_data2[channel],
+                           max_data2[channel]);
+            if (arg_has(argc, argv, "--events")) {
+                uint32_t tick = 0;
+                for (event_index = 0;
+                     event_index < sep.sequences[i].event_count;
+                     event_index++) {
+                    SepEvent *event = &sep.sequences[i].events[event_index];
+                    tick += event->delta;
+                    if ((event->type & 0xf0) == 0xe0)
+                        printf("        bend-event tick=%u ch=%d data1=%u data2=%u\n",
+                               tick, event->type & 0x0f, event->data1,
+                               event->data2);
+                }
+            }
+        }
+        if (arg_has(argc, argv, "--controls")) {
+            int controls[128][128] = { { 0 } };
+            int event_index;
+            int control;
+            int value;
+
+            for (event_index = 0;
+                 event_index < sep.sequences[i].event_count;
+                 event_index++) {
+                SepEvent *event = &sep.sequences[i].events[event_index];
+                if ((event->type & 0xf0) == 0xb0)
+                    controls[event->data1][event->data2]++;
+            }
+            for (control = 0; control < 128; control++) {
+                int count = 0;
+                for (value = 0; value < 128; value++)
+                    count += controls[control][value];
+                if (count == 0)
+                    continue;
+                printf("      control=%d events=%d values:", control, count);
+                for (value = 0; value < 128; value++)
+                    if (controls[control][value] != 0)
+                        printf(" %d:%d", value, controls[control][value]);
+                printf("\n");
+            }
         }
     }
     sep_free(&sep); free(data);
@@ -984,7 +1130,10 @@ static void usage(void)
         "inspect:\n"
         "  xa-inspect <str>                      list XA streams\n"
         "  vab-inspect <vh>                      show VAB info\n"
-        "  sep-inspect <sep> [--programs]        show SEP info\n"
+        "  bgm-audit <track|EMI|directory> [--details]\n"
+        "                                        audit VAB/SEP consistency and renderer gaps\n"
+        "  sep-inspect <sep> [--programs] [--notes] [--bends] [--controls] [--events]\n"
+        "                                        show SEP events and histograms\n"
         "\n"
         "options:\n"
         "  --engine fast|game  BGM renderer (default: fast)\n"
@@ -1066,6 +1215,7 @@ int main(int argc, char **argv)
     if (strcmp(cmd, "xa-inspect") == 0)   return cmd_xa_inspect(argc, argv);
     if (strcmp(cmd, "vab-extract") == 0)  return cmd_vab_extract(argc, argv);
     if (strcmp(cmd, "vab-inspect") == 0)  return cmd_vab_inspect(argc, argv);
+    if (strcmp(cmd, "bgm-audit") == 0)    return cmd_bgm_audit(argc, argv);
     if (strcmp(cmd, "sep-inspect") == 0)  return cmd_sep_inspect(argc, argv);
     if (strcmp(cmd, "sep2mid") == 0)      return cmd_sep2mid(argc, argv);
     if (strcmp(cmd, "emi-inspect") == 0)  return cmd_emi_inspect(argc, argv);

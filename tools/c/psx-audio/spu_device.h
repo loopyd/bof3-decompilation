@@ -55,5 +55,6 @@ const uint8_t *psx_spu_ram(const PsxSpu *spu);
    remain readable and logged. Noise, pitch modulation, and reverb do not alter
    output yet; a sweep-mode volume contributes zero gain. */
 int psx_spu_render(PsxSpu *spu, int16_t *stereo, size_t frames);
+int psx_spu_voice_active(const PsxSpu *spu, unsigned int voice);
 
 #endif

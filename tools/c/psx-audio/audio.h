@@ -42,6 +42,28 @@ typedef struct {
 } AudioRenderResult;
 
 typedef struct {
+    uint32_t vh_size;
+    uint32_t vb_size;
+    uint32_t declared_file_size;
+    uint16_t program_count;
+    uint16_t tone_count;
+    uint16_t vag_count;
+    uint16_t sequence_count;
+    uint32_t remapped_tones;
+    uint32_t missing_note_events;
+    uint32_t layered_note_events;
+    uint32_t bad_vag_ranges;
+    uint32_t bad_sample_prefixes;
+    uint32_t samples_without_end;
+    uint32_t reverb_tones;
+    uint32_t modulation_tones;
+    uint32_t bend_lsb_events;
+    uint32_t ignored_control_events;
+    uint32_t loop_control_events;
+    uint32_t missing_notes[128][128];
+} AudioAuditReport;
+
+typedef struct {
     int rate;
     int channels;
     int frame_count;
@@ -49,8 +71,12 @@ typedef struct {
 
 typedef struct {
     uint8_t prog;
+    uint8_t storage_block;
+    uint8_t tone_slot;
     uint8_t program_vol;
     uint8_t program_pan;
+    uint8_t program_priority;
+    uint8_t priority;
     uint8_t min_note;
     uint8_t max_note;
     uint8_t center_note;
@@ -72,11 +98,15 @@ typedef struct {
 
 typedef struct {
     uint32_t version;
-    uint32_t ps_count;
-    uint32_t body_size;
+    uint32_t file_size;
+    uint16_t program_count;
+    uint16_t declared_tone_count;
+    uint16_t vag_count;
+    uint16_t tone_count;
     uint8_t master_vol;
     uint8_t master_pan;
-    VabTone tones[256];
+    uint8_t program_tone_count[128];
+    VabTone tones[2048];
 } VabHeader;
 
 typedef struct {
@@ -137,6 +167,10 @@ int render_game_bgm(const AudioRenderRequest *request, RenderOutput *out);
 AudioStatus audio_render(const AudioRenderRequest *request,
                          AudioRenderResult *result);
 const char *audio_status_string(AudioStatus status);
+int audio_audit_bgm(const uint8_t *vh_data, size_t vh_len,
+                    const uint8_t *vb_data, size_t vb_len,
+                    const uint8_t *sep_data, size_t sep_len,
+                    AudioAuditReport *report);
 
 int xa_decode_channel(const uint8_t *data, size_t len, int channel,
                       int16_t **pcm, int *rate, int *nch);

@@ -102,7 +102,9 @@ static int test_render_arguments_and_logging(void)
              psx_spu_render(spu, NULL, 0) != 0 ||
              write_register(spu, PSX_SPU_KEY_ON_LOW, 1) != 0 ||
              psx_spu_write_count(spu) != 1 ||
-             psx_spu_writes(spu)[0].address != PSX_SPU_KEY_ON_LOW;
+             psx_spu_writes(spu)[0].address != PSX_SPU_KEY_ON_LOW ||
+             !psx_spu_voice_active(spu, 0) ||
+             psx_spu_voice_active(spu, PSX_SPU_VOICE_COUNT);
     psx_spu_destroy(spu);
     return failed;
 }

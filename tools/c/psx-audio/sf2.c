@@ -94,7 +94,7 @@ int vab_to_sf2(const uint8_t *vh_data, size_t vh_len,
     if (vab_parse_vh(vh_data, vh_len, &hdr) != 0)
         return -1;
 
-    nt = (int)hdr.ps_count;
+    nt = (int)hdr.tone_count;
     if (nt == 0)
         return -1;
 
