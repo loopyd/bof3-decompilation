@@ -57,7 +57,12 @@ int vab_parse_vh(const uint8_t *data, size_t len, VabHeader *hdr)
             hdr->tones[ti].min_note    = tn[6];
             hdr->tones[ti].max_note    = tn[7];
             hdr->tones[ti].center_note = tn[4];
-            hdr->tones[ti].shift       = tn[5] > 127 ? 127 : tn[5];
+            hdr->tones[ti].shift       = tn[5];
+            hdr->tones[ti].mode        = tn[1];
+            hdr->tones[ti].vibrato_width = tn[8];
+            hdr->tones[ti].vibrato_time = tn[9];
+            hdr->tones[ti].portamento_width = tn[10];
+            hdr->tones[ti].portamento_time = tn[11];
             hdr->tones[ti].vol         = tn[2];
             hdr->tones[ti].pan         = tn[3];
             hdr->tones[ti].pitch_bend_min = tn[12];

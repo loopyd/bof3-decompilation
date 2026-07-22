@@ -55,6 +55,11 @@ typedef struct {
     uint8_t max_note;
     uint8_t center_note;
     uint8_t shift;
+    uint8_t mode;
+    uint8_t vibrato_width;
+    uint8_t vibrato_time;
+    uint8_t portamento_width;
+    uint8_t portamento_time;
     uint8_t vol;
     uint8_t pan;
     uint8_t pitch_bend_min;

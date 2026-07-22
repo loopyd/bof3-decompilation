@@ -688,8 +688,12 @@ static int cmd_vab_inspect(int argc, char **argv)
     printf("  %s: %u tones, body=%u bytes\n", argv[2], hdr.ps_count, hdr.body_size);
     for (int i = 0; i < (int)hdr.ps_count; i++) {
         VabTone *t = &hdr.tones[i];
-        printf("    [%2d] prog=%d note=%d-%d center=%d vag=%u+%u adsr=%04X/%04X\n",
+        printf("    [%2d] prog=%d note=%d-%d center=%d shift=%d bend=%d/%d "
+               "vib=%d/%d por=%d/%d mode=%02X vag=%u+%u adsr=%04X/%04X\n",
                i, t->prog, t->min_note, t->max_note, t->center_note,
+               t->shift, t->pitch_bend_min, t->pitch_bend_max,
+               t->vibrato_width, t->vibrato_time,
+               t->portamento_width, t->portamento_time, t->mode,
                t->vag_offset, t->vag_size, t->adsr1, t->adsr2);
     }
     free(data);
@@ -739,6 +743,7 @@ static int cmd_sep_inspect(int argc, char **argv)
         if (arg_has(argc, argv, "--programs")) {
             int programs[16] = { 0 };
             int note_count[128] = { 0 };
+            int note_histogram[128][128] = { { 0 } };
             int min_note[128];
             int max_note[128];
             int event_index;
@@ -758,6 +763,7 @@ static int cmd_sep_inspect(int argc, char **argv)
                 } else if ((event->type & 0xf0) == 0x90 && event->data2 != 0) {
                     program = programs[channel];
                     note_count[program]++;
+                    note_histogram[program][event->data1]++;
                     if (event->data1 < min_note[program])
                         min_note[program] = event->data1;
                     if (event->data1 > max_note[program])
@@ -765,10 +771,20 @@ static int cmd_sep_inspect(int argc, char **argv)
                 }
             }
             for (program = 0; program < 128; program++)
-                if (note_count[program] != 0)
+                if (note_count[program] != 0) {
                     printf("      program=%d notes=%d range=%d-%d\n",
                            program, note_count[program], min_note[program],
                            max_note[program]);
+                    if (arg_has(argc, argv, "--notes")) {
+                        int note;
+                        printf("        note-counts:");
+                        for (note = 0; note < 128; note++)
+                            if (note_histogram[program][note] != 0)
+                                printf(" %d:%d", note,
+                                       note_histogram[program][note]);
+                        printf("\n");
+                    }
+                }
         }
     }
     sep_free(&sep); free(data);

@@ -145,7 +145,8 @@ program and tone attributes. It does not apply a post-render bass boost or EQ.
 ### VagAtr (32 bytes each, at 0x820)
 
 Key fields: vol (byte 2), pan (3), center note (4), unsigned pitch tune (5,
-clamped to 127 and added to playback pitch as `tune / 128` semitones),
+preserved as the full byte and added to playback pitch as `tune / 128`
+semitones),
 min/max note (6–7), adsr1 (bytes 16–17 u16 LE), adsr2 (18–19),
 parent program (20–21 i16 LE), and vag index (22–23 i16 LE, 1-based). The
 parent program selects the `ProgAtr` volume and pan used by the renderer.
@@ -176,13 +177,31 @@ seq_id (u16 BE), resolution (u16 BE, always 48), tempo (3 bytes BE,
 MIDI-like: VLQ delta times, running status, note on/off,
 program change, control change, pitch bend. Only meta events are tempo and EOT.
 
-Pitch bend occupies two MIDI-style data bytes, but PsyQ `libsnd` ignores the
-first and uses the second as a 7-bit value centered at 64. Meta events omit
-SMF lengths: tempo is `FF 51 tt tt tt` and EOT is `FF 2F`.
+Pitch bend occupies two MIDI-style data bytes. The direct renderer currently
+uses the second as a 7-bit value centered at 64. Linked
+`_SsSetPitchBend@0x8016A4A4` appears to consume one byte, but its relationship
+to the two parsed SEP fields still requires a caller/parser trace; do not change
+the selected field from the routine body alone. Meta events omit SMF lengths:
+tempo is `FF 51 tt tt tt` and EOT is `FF 2F`.
 
 NRPN extensions: loop start (20), loop end (30), VAB attribute control.
 
 ## PS1 SPU emulation
+
+### Evidence boundary
+
+Use each source only for the layer it owns:
+
+| Evidence | Owns | Does not establish |
+| --- | --- | --- |
+| Original `SLUS_004.22` bytes and linked routines | BOF3/PsyQ SEP parsing, VAB interpretation, note-to-pitch conversion, voice allocation, and scheduler behavior | Undocumented electrical/timing behavior inside the SPU |
+| Sony PsyQ 4.7 headers in `toolchains/psyq/4.7/include/` | Public structure layouts, field types, and API contracts | Linked implementation details or BOF3 call policy |
+| [psx-spx SPU specification](https://psx-spx.consoledev.net/soundprocessingunitspu/) | Hardware registers, ADPCM, pitch counter, interpolation, ADSR, volume, transfer, noise, modulation, and reverb behavior | BOF3's sequence semantics or game scheduler |
+| [DuckStation `src/core/spu.cpp`](https://github.com/stenzek/duckstation/blob/master/src/core/spu.cpp) | Tested implementation cross-check for the hardware specification | BOF3/PsyQ-specific parsing and allocation |
+
+External implementations are corroboration, not code to import blindly. Preserve
+their license boundaries and verify constants or algorithms against psx-spx and,
+where possible, original bytes or hardware traces.
 
 ### Renderer architecture
 
@@ -207,6 +226,41 @@ does not provide CD-ROM hardware, so the exact player requires a bootstrap that
 installs audio assets before entering the game sound runtime; emulating the full
 game boot is not the target architecture.
 
+### Hardware coverage
+
+The SPU advances at 44.1 kHz, or once per `0x300` CPU clocks. Voice and main
+register changes are therefore sample-clocked on hardware; the current device
+applies most writes immediately. This timing difference matters to exact game
+execution but not to an offline `fast` event scheduled on output frames.
+
+| Hardware contract | Register-driven `spu_device.c` | Direct `fast` renderer |
+| --- | --- | --- |
+| 24 equivalent voices | Implemented | Implemented; oldest voice is stolen when full |
+| 512 KiB SPU RAM and 8-byte address units | Implemented with wrapping | VAB samples are decoded outside SPU RAM |
+| 16-byte ADPCM blocks, 28 samples | Live decode | Predecoded and cached |
+| Loop start/end/repeat flags and ENDX | Implemented | Reduced to cached PCM loop bounds; no ENDX |
+| Predictor and interpolation history across loops | Preserved by live decode | Not exact: cached loop-start PCM was decoded only once |
+| Zero interpolation history on key-on | Implemented | Implemented by zero-padding before sample index zero |
+| `VxPitch`: `0x1000` = 44.1 kHz, clamp above `0x4000` | Implemented | Equivalent ratio after PsyQ note conversion |
+| 4-point, 512-entry Gaussian interpolation | Implemented | Implemented |
+| ADSR attack/decay/sustain/release | Implemented | Implemented |
+| Signed fixed voice/main volume | Implemented | Uses VAB/SEP gain and pan directly |
+| Volume sweep mode | Not implemented; sweep values currently mute | Not implemented |
+| KON, KOFF, ENDX | Implemented | Modeled as note events, not registers |
+| Pitch modulation (PMON) | Not implemented | Not implemented |
+| Noise source (NON) | Not implemented | Not implemented |
+| Per-voice and master reverb | Not implemented | Not implemented |
+| SPUCNT enable/mute and delayed status | Registers stored; behavior/timing incomplete | Not applicable |
+| Manual/DMA transfer FIFO timing and IRQ | Data transfer implemented; FIFO timing and IRQ incomplete | Not applicable |
+| CD/XA and external-input mixing/capture | Not implemented | Separate XA decoder; not mixed through SPU |
+
+DuckStation explicitly zeroes the previous-block interpolation samples at key-on
+to avoid clicks in *Breath of Fire III*. Keep this as a BOF3 regression invariant
+in both renderers. For sustained strings and other loop-heavy tones, live ADPCM
+looping is the next higher-value fidelity improvement: hardware decodes the loop
+start again using predictor and Gaussian history retained from the loop end,
+whereas `fast` currently replays PCM decoded with the first-pass history.
+
 ### ADPCM decode
 
 Hardware-verified formula (from DuckStation, matching nocash PSX specs):
@@ -229,8 +283,9 @@ Filter coefficients:
 | 4 | 122 | −60 |
 
 Reserved shifts 13–15 decode as shift 9; reserved filters 5–15 use zero
-coefficients. ADPCM predictor and Gaussian sample history continue across loop
-jumps rather than resetting at the loop-start block.
+coefficients. On hardware, ADPCM predictor and Gaussian sample history continue
+across loop jumps rather than resetting at the loop-start block. This is true in
+the register-driven device but not yet exact in the predecoded `fast` cache.
 
 ### Gaussian interpolation
 
@@ -243,6 +298,11 @@ out += (gauss[0x1FF - i] * older)  >> 15;
 out += (gauss[0x100 + i] * old)    >> 15;
 out += (gauss[0x000 + i] * new)    >> 15;
 ```
+
+The interpolation index is pitch-counter bits 4–11. Bits 12 and above select
+the decoded source sample. Steps above `0x4000` clamp to `0x4000` after optional
+pitch modulation, so high pitches may skip decoded samples while still using
+the same four-point interpolation window.
 
 ### ADSR envelope
 
@@ -271,6 +331,31 @@ bits7-4=decay_shift, bits3-0=sustain_level (`(N+1)*0x800`).
 
 ADSR2: bit15=sustain_mode, bit14=sustain_dir, bits12-8=sustain_shift,
 bits7-6=sustain_step, bit5=release_mode, bits4-0=release_shift.
+
+### Voice and transfer invariants
+
+- KON clears the corresponding ENDX bit, resets ADSR level to zero, resets
+  interpolation/predictor history, and starts attack from the configured start
+  address. Writing a start address does not redirect an already playing voice.
+- KOFF enters release from any ADSR phase. It does not immediately silence the
+  voice.
+- ADPCM flag bit 0 sets ENDX after the current block. With repeat bit 1 set it
+  jumps to the repeat address; otherwise playback ends and release begins.
+  Flag bit 2 copies the current block address into the repeat address.
+- Fixed volume is signed and negative values invert phase. Bit 15 selects a
+  separate sweep envelope, not a fixed magnitude.
+- SPU RAM is not CPU-mapped. Transfer and voice addresses are in 8-byte units;
+  the transfer FIFO port moves 16-bit values and the hardware FIFO holds 32
+  halfwords. DMA uses channel 4.
+- SPUCNT controls enable/mute, transfer mode, reverb, noise clock, and CD or
+  external input. SPUSTAT reflects several changes after hardware delay rather
+  than immediately.
+
+PMON modulates voice `n` from voice `n-1`; voice 0 cannot be modulated. NON
+replaces ADPCM with a shared hardware noise source, so `VxPitch` does not set
+noise frequency. Reverb is a half-rate SPU-RAM feedback pipeline with per-voice
+send bits and master enable/output controls. These features should be ported as
+coherent units from the hardware contract, not approximated by post-render DSP.
 
 ## Runtime loading
 
@@ -345,7 +430,7 @@ bin/psx-audio <command>           # auto-builds on first run
 | `xa-inspect <str>` | List XA streams |
 | `vab-extract <vh> <vb> -o DIR` | Extract VAGs to WAV |
 | `vab-inspect <vh>` | Show VAB info |
-| `sep-inspect <sep>` | Show SEP info |
+| `sep-inspect <sep> [--programs] [--notes]` | Show SEP info and optional program/note histograms |
 | `sep2mid <sep> -o out.mid` | Export to Standard MIDI |
 | `psf-pack <PS-X EXE> -o out.psflib` | Package a PSF1 executable |
 | `psf-inspect <file.psf>` | Validate and compose a PSF1/MiniPSF image |
@@ -409,3 +494,6 @@ ffmpeg -f psxstr -i wrapped_2352.str -vn output.wav
 - Type-8 semantics: ADSR override table structure plausible but unconfirmed.
 - SPU RAM layout: VAB base addresses not documented.
 - Area→BGM mapping: lives in scenario controller code, not yet lifted.
+- Pitch-bend byte ownership: trace the linked SEP parser through
+  `_SsSetPitchBend@0x8016A4A4` before changing `SepEvent.data2`; the routine body
+  alone does not identify which of the parser's two stored bytes reaches it.
