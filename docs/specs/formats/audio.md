@@ -197,8 +197,8 @@ The exact path is split below that seam:
 | --- | --- | --- |
 | `psf.c` | PSF1/MiniPSF load, overlay, CRC, PC/SP, and package | Implemented and tested |
 | `psx_machine.c` | Bounded R3000 execution and PSF hardware boundary | Partial vertical slice |
-| `spu_device.c` | SPU registers, timestamped writes, sound RAM, FIFO/DMA transfer | Partial vertical slice |
-| `render.c` | Direct SEP/VAB rendering | Implemented, approximate `fast` engine |
+| `spu_device.c` | SPU registers, 24 voices, live ADPCM, pitch, Gaussian interpolation, ADSR, sound RAM, FIFO/DMA | Implemented except reverb, noise, modulation, and volume sweeps |
+| `render.c` | Direct SEP/VAB rendering | Implemented, approximate `fast` engine with 24-voice stealing and saturating output |
 
 The machine intentionally faults on unsupported instructions, BIOS calls, and
 hardware addresses. The complete game PSF currently reaches its first CD-ROM
@@ -352,8 +352,11 @@ bin/psx-audio <command>           # auto-builds on first run
 | `psf-run <file.psf> [-n N]` | Run a bounded machine diagnostic |
 
 `--engine fast|game` selects the BGM engine. `fast` is the current default.
-`game` remains unavailable until the BOF3 bootstrap, PSF machine, and SPU
-synthesis path pass differential validation.
+`game` now executes the linked initialization, VAB upload, SEP open/play, and
+manual scheduler path, but refuses to emit a file while that scheduler produces
+no audible voice-register state. It never falls back to `fast`. The remaining
+bootstrap work is to reproduce the game-owned scheduler/table state that turns
+parsed SEP events into nonzero voice volume/key writes.
 
 ### Python wrapper (`tools/python/harness/`)
 

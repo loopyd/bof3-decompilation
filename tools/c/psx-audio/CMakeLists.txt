@@ -16,6 +16,7 @@ add_library(psx_audio STATIC
     wav.c
     ogg.c
     flac.c
+    game_render.c
     psf.c
     psx_machine.c
     xa.c
@@ -68,6 +69,9 @@ if(BUILD_TESTING)
     add_executable(audio_core_test audio_core_test.c)
     target_link_libraries(audio_core_test psx_audio)
     add_test(NAME audio_core_test COMMAND audio_core_test)
+    add_executable(spu_device_test spu_device_test.c)
+    target_link_libraries(spu_device_test psx_audio)
+    add_test(NAME spu_device_test COMMAND spu_device_test)
 endif()
 
 if(WIN32)

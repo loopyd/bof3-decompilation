@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#include "psf.h"
+
 typedef struct {
     int16_t *pcm;
     int64_t frames;
@@ -32,6 +34,7 @@ typedef struct {
     size_t vb_len;
     int sequence;
     int output_rate;
+    const Psf1Image *game_image;
 } AudioRenderRequest;
 
 typedef struct {
@@ -125,6 +128,7 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                const uint8_t *vh_data, size_t vh_len,
                const uint8_t *vb_data, size_t vb_len,
                int seq_index, int output_rate, RenderOutput *out);
+int render_game_bgm(const AudioRenderRequest *request, RenderOutput *out);
 AudioStatus audio_render(const AudioRenderRequest *request,
                          AudioRenderResult *result);
 const char *audio_status_string(AudioStatus status);

@@ -31,7 +31,8 @@ static PsxMachineStatus memory_pointer(PsxMachine *machine, uint32_t address,
 static int io_range_supported(uint32_t address, size_t size)
 {
     uint32_t end = address + (uint32_t)size;
-    return (address >= 0x1f801070u && end <= 0x1f801078u) ||
+    return (address >= 0x1f801000u && end <= 0x1f801024u) ||
+           (address >= 0x1f801070u && end <= 0x1f801078u) ||
            (address >= 0x1f8010c0u && end <= 0x1f8010d0u) ||
            (address >= 0x1f8010f0u && end <= 0x1f8010f8u) ||
            (address >= 0x1f801100u && end <= 0x1f801130u);
@@ -257,6 +258,35 @@ static int32_t sign_extend16(uint32_t value)
     return (int16_t)(value & 0xffffu);
 }
 
+static int instruction_writes_register(uint32_t instruction, unsigned reg)
+{
+    unsigned opcode = instruction >> 26;
+    unsigned rt = (instruction >> 16) & 31u;
+
+    if (reg == 0)
+        return 0;
+    if (opcode == 0) {
+        unsigned function = instruction & 63u;
+        unsigned rd = (instruction >> 11) & 31u;
+        if (function == 0x09)
+            return (rd ? rd : 31u) == reg;
+        if (function == 0x00 || function == 0x02 || function == 0x03 ||
+            function == 0x04 || function == 0x06 || function == 0x07 ||
+            function == 0x10 || function == 0x12 ||
+            (function >= 0x20 && function <= 0x27) ||
+            function == 0x2a || function == 0x2b)
+            return rd == reg;
+        return 0;
+    }
+    if (opcode == 0x01)
+        return (rt == 16 || rt == 17) && reg == 31;
+    if (opcode == 0x03)
+        return reg == 31;
+    if (opcode >= 0x08 && opcode <= 0x0f)
+        return rt == reg;
+    return 0;
+}
+
 static PsxMachineStatus execute_special(PsxMachine *machine, uint32_t instruction)
 {
     unsigned rs = (instruction >> 21) & 31u;
@@ -357,6 +387,21 @@ static PsxMachineStatus execute(PsxMachine *machine, uint32_t instruction)
     if (opcode == 0)
         return execute_special(machine, instruction);
     switch (opcode) {
+    case 0x01: {
+        int take;
+        if (rt == 0 || rt == 16)
+            take = (int32_t)machine->registers[rs] < 0;
+        else if (rt == 1 || rt == 17)
+            take = (int32_t)machine->registers[rs] >= 0;
+        else
+            return PSX_MACHINE_ERROR_INSTRUCTION;
+        if (rt == 16 || rt == 17)
+            machine->registers[31] = machine->next_pc;
+        if (take)
+            machine->next_pc = machine->pc +
+                               ((uint32_t)sign_extend16(immediate) << 2);
+        break;
+    }
     case 0x02:
         machine->next_pc = (machine->pc & 0xf0000000u) |
                            ((instruction & 0x03ffffffu) << 2);
@@ -373,6 +418,16 @@ static PsxMachineStatus execute(PsxMachine *machine, uint32_t instruction)
     case 0x05:
         if (machine->registers[rs] != machine->registers[rt])
             machine->next_pc = machine->pc + ((uint32_t)sign_extend16(immediate) << 2);
+        break;
+    case 0x06:
+        if ((int32_t)machine->registers[rs] <= 0)
+            machine->next_pc = machine->pc +
+                               ((uint32_t)sign_extend16(immediate) << 2);
+        break;
+    case 0x07:
+        if ((int32_t)machine->registers[rs] > 0)
+            machine->next_pc = machine->pc +
+                               ((uint32_t)sign_extend16(immediate) << 2);
         break;
     case 0x08:
     case 0x09: machine->registers[rt] = machine->registers[rs] + (uint32_t)sign_extend16(immediate); break;
@@ -446,7 +501,18 @@ static PsxMachineStatus execute_bios(PsxMachine *machine)
         return PSX_MACHINE_OK;
     }
     if (vector == 0xa0u && (function == 0x39u || function == 0x3fu ||
-                            function == 0x72u)) {
+                             function == 0x72u)) {
+        machine->pc = machine->registers[31];
+        machine->next_pc = machine->pc + 4;
+        return PSX_MACHINE_OK;
+    }
+    if (vector == 0xa0u && function > 0xffu) {
+        machine->pc = machine->registers[31];
+        machine->next_pc = machine->pc + 4;
+        return PSX_MACHINE_OK;
+    }
+    if (vector == 0xb0u && function >= 0x07u && function <= 0x0du) {
+        machine->registers[2] = 1;
         machine->pc = machine->registers[31];
         machine->next_pc = machine->pc + 4;
         return PSX_MACHINE_OK;
@@ -527,7 +593,8 @@ PsxMachineStatus psx_machine_run(PsxMachine *machine,
         machine->next_pc += 4;
         machine->pending_load_valid = 0;
         status = execute(machine, instruction);
-        if (delayed_valid && delayed_register != 0)
+        if (delayed_valid && delayed_register != 0 &&
+            !instruction_writes_register(instruction, delayed_register))
             machine->registers[delayed_register] = delayed_value;
         machine->registers[0] = 0;
         machine->cycles++;
@@ -538,6 +605,51 @@ PsxMachineStatus psx_machine_run(PsxMachine *machine,
         }
     }
     return PSX_MACHINE_OK;
+}
+
+PsxMachineStatus psx_machine_write_ram(PsxMachine *machine, uint32_t address,
+                                       const void *data, size_t size)
+{
+    uint8_t *destination;
+    PsxMachineStatus status;
+
+    if (!machine || (!data && size != 0))
+        return PSX_MACHINE_ERROR_ARGUMENT;
+    status = memory_pointer(machine, address, size, &destination);
+    if (status != PSX_MACHINE_OK)
+        return status;
+    memcpy(destination, data, size);
+    return PSX_MACHINE_OK;
+}
+
+PsxMachineStatus psx_machine_call(PsxMachine *machine, uint32_t address,
+                                  const uint32_t arguments[4],
+                                  uint64_t instruction_limit)
+{
+    static const uint32_t return_address = 0x8000fff0u;
+    uint64_t i;
+
+    if (!machine || !arguments || instruction_limit == 0)
+        return PSX_MACHINE_ERROR_ARGUMENT;
+    machine->pc = address;
+    machine->next_pc = address + 4;
+    machine->registers[4] = arguments[0];
+    machine->registers[5] = arguments[1];
+    machine->registers[6] = arguments[2];
+    machine->registers[7] = arguments[3];
+    machine->registers[31] = return_address;
+    machine->pending_load_valid = 0;
+
+    for (i = 0; i < instruction_limit; i++) {
+        PsxMachineStatus status;
+        if (machine->pc == return_address)
+            return PSX_MACHINE_OK;
+        status = psx_machine_run(machine, 1);
+        if (status != PSX_MACHINE_OK)
+            return status;
+    }
+    machine->fault.pc = machine->pc;
+    return PSX_MACHINE_ERROR_LIMIT;
 }
 
 uint32_t psx_machine_pc(const PsxMachine *machine)
@@ -570,6 +682,7 @@ const char *psx_machine_status_string(PsxMachineStatus status)
     case PSX_MACHINE_ERROR_INSTRUCTION: return "unsupported instruction";
     case PSX_MACHINE_ERROR_DEVICE: return "device access failed";
     case PSX_MACHINE_ERROR_BIOS: return "unsupported BIOS call";
+    case PSX_MACHINE_ERROR_LIMIT: return "instruction limit reached";
     default: return "unknown machine error";
     }
 }

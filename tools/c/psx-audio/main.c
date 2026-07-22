@@ -174,14 +174,34 @@ static int write_stereo_output(const char *path, const int16_t *pcm,
     return wav_write_stereo(path, pcm, frames, rate);
 }
 
+static int load_game_image(const char *preferred, Psf1Image *image)
+{
+    static const char *const paths[] = {
+        "out/audio/bof3.psflib",
+        "../out/audio/bof3.psflib",
+        "../../out/audio/bof3.psflib",
+        NULL
+    };
+    int i;
+
+    if (preferred)
+        return psf1_load_file(preferred, image) == PSF1_OK ? 0 : -1;
+    for (i = 0; paths[i]; i++)
+        if (psf1_load_file(paths[i], image) == PSF1_OK)
+            return 0;
+    return -1;
+}
+
 static int play_source(AudioSource *s, int seq_idx, AudioEngine engine,
                        float gain, const char *outpath)
 {
     if (s->sep) {
         AudioRenderRequest request;
         AudioRenderResult result;
+        Psf1Image game_image;
         AudioStatus status;
         RenderOutput *ro;
+        int has_game_image = 0;
 
         memset(&request, 0, sizeof(request));
         request.engine = engine;
@@ -193,7 +213,17 @@ static int play_source(AudioSource *s, int seq_idx, AudioEngine engine,
         request.vb_len = s->vb_sz;
         request.sequence = seq_idx;
         request.output_rate = 44100;
+        if (engine == AUDIO_ENGINE_GAME) {
+            if (load_game_image(NULL, &game_image) != 0) {
+                fprintf(stderr, "error: cannot load out/audio/bof3.psflib\n");
+                return -1;
+            }
+            request.game_image = &game_image;
+            has_game_image = 1;
+        }
         status = audio_render(&request, &result);
+        if (has_game_image)
+            psf1_image_free(&game_image);
         if (status != AUDIO_STATUS_OK) {
             fprintf(stderr, "error: %s\n", audio_status_string(status));
             return -1;
@@ -539,9 +569,11 @@ static int cmd_render(int argc, char **argv)
     AudioEngine engine;
     AudioRenderRequest request;
     AudioRenderResult result;
+    Psf1Image game_image;
     AudioStatus status;
     RenderOutput *ro;
     char path[512];
+    int has_game_image = 0;
 
     if (!outpath) { fprintf(stderr, "error: -o required\n"); return 1; }
     if (arg_engine(argc, argv, &engine) != 0) {
@@ -571,7 +603,18 @@ static int cmd_render(int argc, char **argv)
     request.vb_len = s.vb_sz;
     request.sequence = seq;
     request.output_rate = 44100;
+    if (engine == AUDIO_ENGINE_GAME) {
+        if (load_game_image(arg_str(argc, argv, "--psflib"), &game_image) != 0) {
+            fprintf(stderr, "error: cannot load game PSFLib\n");
+            source_free(&s);
+            return 1;
+        }
+        request.game_image = &game_image;
+        has_game_image = 1;
+    }
     status = audio_render(&request, &result);
+    if (has_game_image)
+        psf1_image_free(&game_image);
     if (status != AUDIO_STATUS_OK) {
         fprintf(stderr, "error: %s\n", audio_status_string(status));
         source_free(&s);
@@ -817,6 +860,7 @@ static int cmd_psf_pack(int argc, char **argv)
 static int cmd_psf_run(int argc, char **argv)
 {
     int instructions = arg_int(argc, argv, "-n", 100000);
+    const char *call_value = arg_str(argc, argv, "--call");
     Psf1Image image;
     Psf1Status image_status;
     PsxSpu *spu;
@@ -841,7 +885,14 @@ static int cmd_psf_run(int argc, char **argv)
         fprintf(stderr, "error: cannot allocate PSX machine\n");
         return 1;
     }
-    machine_status = psx_machine_run(machine, (uint64_t)instructions);
+    if (call_value) {
+        uint32_t arguments[4] = { 0, 0, 0, 0 };
+        uint32_t address = (uint32_t)strtoul(call_value, NULL, 0);
+        machine_status = psx_machine_call(machine, address, arguments,
+                                          (uint64_t)instructions);
+    } else {
+        machine_status = psx_machine_run(machine, (uint64_t)instructions);
+    }
     printf("  cycles:     %llu\n",
            (unsigned long long)psx_machine_cycles(machine));
     printf("  PC:         0x%08X\n", psx_machine_pc(machine));
@@ -898,7 +949,7 @@ static void usage(void)
         "  list [filter]                         list BGM tracks\n"
         "  emi-inspect <file.EMI>                show EMI contents\n"
         "  psf-inspect <file.psf>                load PSF1/MiniPSF image\n"
-        "  psf-run <file.psf> [-n N]             run bounded PSF1 instructions\n"
+        "  psf-run <file.psf> [-n N] [--call A]  run or call into a bounded PSF1 image\n"
         "\n"
         "play:\n"
         "  play <target> [-s N] [-g GAIN]        play (auto-detects format)\n"

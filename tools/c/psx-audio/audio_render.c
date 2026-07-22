@@ -11,8 +11,13 @@ AudioStatus audio_render(const AudioRenderRequest *request,
 
     memset(result, 0, sizeof(*result));
 
-    if (request->engine == AUDIO_ENGINE_GAME)
-        return AUDIO_STATUS_UNSUPPORTED_ENGINE;
+    if (request->engine == AUDIO_ENGINE_GAME) {
+        if (!request->game_image)
+            return AUDIO_STATUS_INVALID_ARGUMENT;
+        if (render_game_bgm(request, &result->audio) != 0)
+            return AUDIO_STATUS_RENDER_FAILED;
+        return AUDIO_STATUS_OK;
+    }
     if (request->engine != AUDIO_ENGINE_FAST)
         return AUDIO_STATUS_INVALID_ARGUMENT;
 
