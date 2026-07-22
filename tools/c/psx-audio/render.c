@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "audio.h"
@@ -105,6 +106,18 @@ static uint16_t fixed_voice_volume(float gain)
     if (gain >= 1.0f)
         return 0x3fff;
     return (uint16_t)(gain * gain * 16383.0f);
+}
+
+/* Diagnostic: set PSX_AUDIO_TRACE=1 to log one line per keyed-on voice so the
+   renderer's tone/pitch choices can be diffed against the linked libsnd. */
+static int trace_enabled(void)
+{
+    static int cached = -1;
+    if (cached < 0) {
+        const char *env = getenv("PSX_AUDIO_TRACE");
+        cached = (env && env[0] != '\0' && env[0] != '0') ? 1 : 0;
+    }
+    return cached;
 }
 
 int render_bgm(const uint8_t *sep_data, size_t sep_len,
@@ -379,6 +392,16 @@ int render_bgm(const uint8_t *sep_data, size_t sep_len,
                         v->priority = t->program_priority + t->priority;
                         v->generation = next_generation++;
                         v->pitch = voice_pitch(v, v->bend);
+                        if (trace_enabled())
+                            fprintf(stderr,
+                                    "note-on frame=%lld ch=%d prog=%d note=%d "
+                                    "tone=%d/%d center=%d shift=%d pb=%d/%d "
+                                    "pitch=0x%04x vag=%u\n",
+                                    (long long)ne->frame, ne->channel,
+                                    ne->program, ne->note, t->storage_block,
+                                    t->tone_slot, t->center_note, t->shift,
+                                    t->pitch_bend_min, t->pitch_bend_max,
+                                    v->pitch, t->vag_offset);
                         if (write_voice_register(
                                 spu, slot, PSX_SPU_VOICE_VOLUME_LEFT,
                                 fixed_voice_volume(volume * left_gain)) != 0 ||
