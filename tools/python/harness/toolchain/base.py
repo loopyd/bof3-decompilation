@@ -106,8 +106,24 @@ class ExecutableToolchain(Toolchain):
         capture_output: bool = False,
         text: bool = False,
         timeout: float | None = None,
+        quiet: bool = False,
     ) -> subprocess.CompletedProcess[str]:
-        """Execute the tool in its owned environment without raising on failure."""
+        """Execute the tool in its owned environment without raising on failure.
+
+        *quiet* — redirect stdout/stderr to DEVNULL (ignores *capture_output*
+        when True to keep verification quiet while normal capture or streaming
+        callers pass quiet=False, the default).
+        """
+        if quiet:
+            return subprocess.run(
+                self.invocation(arguments),
+                cwd=self.working_directory,
+                env=self.environment,
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=timeout,
+            )
         return subprocess.run(
             self.invocation(arguments),
             cwd=self.working_directory,
@@ -146,7 +162,7 @@ class PythonSubmoduleToolchain(SubmoduleToolchain, ExecutableToolchain):
     def verify(self) -> str:
         if not self.executable.is_file():
             raise FileNotFoundError(f"missing {self.label} executable: {self.executable}")
-        result = self.execute(["--version"])
+        result = self.execute(["--version"], quiet=True)
         if result.returncode:
             raise RuntimeError(f"{self.label} exited {result.returncode}")
         return self.label

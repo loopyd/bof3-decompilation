@@ -39,7 +39,7 @@ class MaspsxToolchain(ExecutableToolchain):
             raise FileNotFoundError(f"missing maspsx source: {self.executable}")
         if not self.python.is_file():
             raise FileNotFoundError(f"missing project Python environment: {self.python}")
-        result = self.execute(["--help"])
+        result = self.execute(["--help"], quiet=True)
         if result.returncode:
             raise RuntimeError(f"maspsx exited {result.returncode}")
         return self.label

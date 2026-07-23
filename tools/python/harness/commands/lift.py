@@ -18,6 +18,7 @@ from ..canonical import load_target_symbols, weak_bindings_c
 from ..domain import FunctionId, parse_function_id
 from ..domain.manifests import TargetManifest, load_target_manifests
 from ..io import repo_layout
+from ..toolchain.m2c import M2cToolchain
 from ..match.asm_diff import AsmDiffRequest, run_asm_diff_one
 from ..match.asm_differ import write_bundle
 from ..output import add_detail_argument, resolve_detail
@@ -146,9 +147,8 @@ def run_m2c(args: argparse.Namespace) -> int:
     context.parent.mkdir(parents=True, exist_ok=True)
     context.write_text(render_context(function, manifest), encoding="utf-8")
     root = repo_layout().root
-    command = [
-        sys.executable,
-        str(root / "third_party" / "m2c" / "m2c.py"),
+    m2c = M2cToolchain(root)
+    arguments: list[str] = [
         "-t",
         "mipsel-gcc-c",
         "-f",
@@ -164,11 +164,11 @@ def run_m2c(args: argparse.Namespace) -> int:
         str(context),
     ]
     for extra in args.context:
-        command.extend(("--context", extra))
+        arguments.extend(("--context", extra))
     if args.void:
-        command.append("--void")
-    command.append(str(assembly))
-    result = subprocess.run(command, cwd=root, capture_output=True, text=True)
+        arguments.append("--void")
+    arguments.append(str(assembly))
+    result = m2c.execute(arguments, capture_output=True, text=True)
     seed = re.sub(
         r"\bfunc_([0-9A-Fa-f]{8})\b",
         lambda match: f"func_{match.group(1).upper()}",

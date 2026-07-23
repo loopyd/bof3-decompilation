@@ -23,8 +23,13 @@ class DecompPermuterToolchain(SubmoduleToolchain, ExecutableToolchain):
     def working_directory(self) -> Path:
         return self.source
 
+    @property
+    def interpreter_flags(self) -> tuple[str, ...]:
+        """Flags passed to the Python interpreter before the script."""
+        return ("-u",)
+
     def invocation(self, arguments: Sequence[str] = ()) -> list[str]:
-        return [str(self.python), str(self.executable), *arguments]
+        return [str(self.python), *self.interpreter_flags, str(self.executable), *arguments]
 
     def install(self, *, force: bool = False) -> str:
         super().install(force=force)
@@ -39,7 +44,7 @@ class DecompPermuterToolchain(SubmoduleToolchain, ExecutableToolchain):
     def verify(self) -> str:
         if not self.executable.is_file():
             raise FileNotFoundError(f"missing decomp-permuter executable: {self.executable}")
-        result = self.execute(["--help"])
+        result = self.execute(["--help"], quiet=True)
         if result.returncode:
             raise RuntimeError(f"decomp-permuter exited {result.returncode}")
         return self.label

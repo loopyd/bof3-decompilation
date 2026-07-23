@@ -24,7 +24,7 @@ class AsmDifferToolchain(PythonSubmoduleToolchain):
     def verify(self) -> str:
         if not self.executable.is_file():
             raise FileNotFoundError(f"missing asm-differ executable: {self.executable}")
-        result = self.execute(["--help"])
+        result = self.execute(["--help"], quiet=True)
         if result.returncode:
             raise RuntimeError(f"asm-differ exited {result.returncode}")
         return self.label

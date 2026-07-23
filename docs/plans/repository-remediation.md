@@ -118,9 +118,10 @@ not filename counts; no unreviewed cross-target sharing exists.
 
 Current evidence: doctor passes all registered tools. Splat, spimdisasm,
 asm-differ, and decomp-permuter recently received local-source lifecycle work.
-The inventory below distinguishes external tool launchers from build adapters
-and workflow dispatchers, so wrapper simplification does not remove required
-compiler behavior.
+The tables below classify every externally callable `bin/` wrapper into one of
+four categories, with the retention rationale for each.
+
+### Toolchain-owned executables (install/verify/invoke owners)
 
 | Toolchain | Install source | Owned executable/invocation | Wrapper decision |
 | --- | --- | --- | --- |
@@ -129,20 +130,60 @@ compiler behavior.
 | Rizin | pinned archive | `toolchains/rizin/bin/rizin` | owner-dispatched wrapper implemented |
 | maspsx | `third_party/maspsx` | script through project Python | owner-dispatched wrapper implemented; `cc` stays a build adapter |
 | m2c / asm-differ | pinned submodules | m2c script / installed console entry point | `bin/m2c` and `bin/asm-diff` remain target-qualified lifting workflows |
-| decomp-permuter | pinned submodule + `toml` | script through project Python, source cwd | retain workflow wrapper pending command extraction |
+| decomp-permuter | pinned submodule + `toml` | script through project Python, source cwd with `-u` unbuffered flag | coordinator extracted into `harness.commands.permute`; final invocation delegates to `DecompPermuterToolchain.execute()` |
 | splat | pinned submodule installed into `.venv` | `.venv/bin/splat` | command already resolves the owned executable; wrapper only bootstraps harness |
 | spimdisasm | pinned submodule installed into `.venv` | `.venv/bin/spimdisasm` | owner-dispatched wrapper implemented |
 | PsyQ signatures | submodule plus `bin/symbols` | repository command, not independent external CLI | retain repository command path |
+
+### Full bin/ wrapper classification (35 wrappers)
+
+| Wrapper | Classification | Owner / rationale |
+| --- | --- | --- |
+| `rizin` | raw dispatcher | `harness.commands.tool` — thin shell bootstrap for RizinToolchain |
+| `maspsx` | raw dispatcher | `harness.commands.tool` — thin shell bootstrap for MaspsxToolchain |
+| `spimdisasm` | raw dispatcher | `harness.commands.tool` — thin shell bootstrap for SpimdisasmToolchain |
+| `splat` | target-qualified workflow | delegates to `harness.commands.splat`; uses `SplatToolchain.execute()`; resolves target and manifest |
+| `m2c` | target-qualified workflow | delegates to `harness.commands.lift.run_m2c`; maintains target context, flags, assembly resolution |
+| `asm-diff` | target-qualified workflow | delegates to `harness.commands.lift.run_asm_diff`; target-qualified diff with outputs bundling |
+| `byte-match` | target-qualified workflow | delegates to `harness.commands.lift.run_byte_match`; target-qualified bytes-only comparison |
+| `promote` | target-qualified workflow | delegates to `harness.commands.lift.run_promote`; validates clang-format, runs match, reports acceptance |
+| `m2ctx` | target-qualified workflow | delegates to `harness.commands.lift.run_m2ctx`; generates target-local context from symbols |
+| `rz-project` | target-qualified workflow | delegates to `harness.commands.rizin_project`; target-qualified Rizin project lifecycle |
+| `cc` | build adapter | compiler environment and maspsx integration; retains gcc setup, assembler selection, maspsx pipeline |
+| `as` | build adapter | thin `$PSX_AS` redirect to PSn00b toolchain bin |
+| `ld` | build adapter | thin `$PSX_LD` redirect to PSn00b toolchain bin |
+| `ar` | build adapter | thin `$PSX_AR` redirect to PSn00b toolchain bin |
+| `nm` | build adapter | thin `$PSX_NM` redirect to PSn00b toolchain bin |
+| `objcopy` | build adapter | thin `$PSX_OBJCOPY` redirect to PSn00b toolchain bin |
+| `objdump` | build adapter | thin `$PSX_OBJDUMP` redirect to PSn00b toolchain bin |
+| `ranlib` | build adapter | thin `$PSX_RANLIB` redirect to PSn00b toolchain bin |
+| `strip` | build adapter | thin `$PSX_STRIP` redirect to PSn00b toolchain bin |
+| `decomp-status` | repository command | `harness.commands.decomp_status`; live matching report; not an external CLI launcher |
+| `rev-query` | repository command | `harness.commands.rev_query`; reverse-index query and ranking; not an external CLI launcher |
+| `symbols` | repository command | `harness.commands.symbols`; map normalization, drift check, binding generation |
+| `flag-search` | repository command | `harness.commands.flag_search`; compiler-flag search utility |
+| `index` | repository command | `harness.commands.rebuild_index`; snapshot rebuild and reverse-index refresh |
+| `harness` | repository command | narrow entry for `harness.commands.psyq` (PsyQ signature scan/calls/proposal) |
+| `str-media` | repository command | `harness.commands.str_media`; string/media extraction utility |
+| `permute` | raw dispatcher | thin shell bootstrap for `harness.commands.permute`; coordinator extracted into harness command |
+| `psx-audio` | repository command | thin exec to `tools/c/psx-audio/psx-audio` compiled binary; not a managed toolchain |
+| `psx-audio-bin` | repository command | compiled ELF binary tracked in repository; direct exec |
+| `package-psx-audio` | repository command | shell packaging script for psx-audio artifact |
+| `psyq-import` | repository command | bootstrap for `harness.commands.psyq_import` |
+| `emi-ex` | repository command | bootstrap for the EMI extraction binary; retained as is |
+| `emi-target` | repository command | bootstrap for `harness.commands.emi_target` |
+| `bof3-disk` | repository command | bootstrap for `harness.commands.disc`; media extraction/checksum workflow |
+| `build` | repository command | bootstrap for CMake configure and build; build-system orchestration |
 
 | ID | Status | Work | Validation |
 | --- | --- | --- | --- |
 | 5.1 | complete | Keep setup and doctor independently exercising registered toolchains. | `harness.commands.doctor --root .` |
 | 5.2 | complete | Inventory every `tools/python/harness/toolchain/*.py`, its setup/doctor registration, executable, install source, verification command, required cwd, and environment. The reviewed inventory distinguishes true toolchain launchers from build adapters and workflow dispatchers. | Inventory above; `harness.commands.doctor --root .` |
-| 5.3 | active | Define the minimum common API for managed execution: executable path, working directory, and environment overlay, while preserving specialized install/build behavior. `ExecutableToolchain` now supplies owned invocation/execute hooks; complete representative archive/native coverage before marking this done. | Focused unit tests for representative Python, submodule, archive, and native toolchains |
-| 5.4 | active | Move duplicated project-Python selection, `PYTHONPATH`, third-party paths, and executable construction from eligible `bin/` wrappers into their owning toolchains. `rizin`, `maspsx`, and `spimdisasm` now dispatch through `harness.commands.tool`; retain workflow wrappers until their command-layer ownership is extracted. | Wrapper tests; direct toolchain invocation; doctor |
-| 5.5 | active | Convert eligible wrappers incrementally, beginning with `splat`, `spimdisasm`, `asm-diff`, `m2c`, and `permute`; preserve public CLI behavior and error messages. `spimdisasm` is complete; `splat`, `asm-diff`, and `m2c` are workflow wrappers, while `permute` needs command extraction before its toolchain can own invocation. | Per-wrapper `--help`/example checks plus focused tests |
-| 5.6 | pending | Audit non-Python wrappers (`as`, `cc`, `ld`, `maspsx`, Rizin, PSn00b, PsyQ, media tools) and centralize only behavior already owned by a corresponding toolchain. Leave compiler/linker wrappers alone when they are build-system adapters rather than toolchain launchers. | Inventory decision recorded; doctor and build smoke check |
-| 5.7 | pending | Make setup and doctor consume the same owned verification contract where practical, without hiding individual tool failures. | Focused setup/doctor tests; doctor output remains concise |
+| 5.3 | complete | Define the minimum common API for managed execution: executable path, working directory, environment overlay, quiet verification, and the `execute` contract. `ExecutableToolchain` supplies owned `invocation`/`execute` hooks with `quiet` mode for silent verification. M2c, asm-differ, permuter, and maspsx all use this contract. | Focused lifecycle and contract tests; doctor is quiet (`0` leaked help lines) |
+| 5.4 | active | Move duplicated project-Python selection, `PYTHONPATH`, third-party paths, and executable construction from eligible `bin/` wrappers into their owning toolchains. `rizin`, `maspsx`, `spimdisasm` now dispatch through `harness.commands.tool`; `commands/splat` now delegates to `SplatToolchain.execute()`. Retain workflow wrappers until their command-layer ownership is extracted. | Wrapper tests; direct toolchain invocation; doctor |
+| 5.5 | active | Convert eligible wrappers incrementally, beginning with `splat`, `spimdisasm`, `asm-diff`, `m2c`, and `permute`; preserve public CLI behavior and error messages. `spimdisasm`, `splat`, and `permute` commands are complete. `run_m2c` delegates through `M2cToolchain.execute()`. `asm-diff` remains a target-qualified workflow wrapper. | Per-wrapper `--help`/example checks plus focused tests |
+| 5.6 | complete | Audit non-Python wrappers (`as`, `cc`, `ld`, `maspsx`, Rizin, PSn00b, PsyQ, media tools) and centralize only behavior already owned by a corresponding toolchain. Every wrapper is classified as raw dispatcher, target-qualified workflow, build adapter, or repository command in the Phase 5 inventory. | Evidence-backed inventory; `git diff --check` |
+| 5.7 | complete | Make setup and doctor consume the same owned verification contract where practical, without hiding individual tool failures. Added a minimal `_managed_toolchains()` factory shared by setup and doctor that preserves per-tool failure names and independent task rendering. | Factory-order assertion; doctor failure isolation test; 46-suite focused test pass; doctor `5/5` |
 
 ### 5B — Disc and audio contracts
 

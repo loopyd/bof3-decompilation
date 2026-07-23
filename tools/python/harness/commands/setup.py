@@ -16,18 +16,9 @@ from ..domain import load_target_manifests
 from ..emi.catalog import load_catalog, materialize_reviewed_targets
 from ..emi.operations import emi_unpack
 from ..io import RepoLayout, repo_layout
+from ..toolchain import managed_toolchains
 from ..toolchain.disc import DiscToolchain, find_disc_set
-from ..toolchain.gcc import GccToolchain
-from ..toolchain.maspsx import MaspsxToolchain
-from ..toolchain.psn00b import Psn00bToolchain
 from ..toolchain.psyq import PsyqToolchain
-from ..toolchain.asm_differ import AsmDifferToolchain
-from ..toolchain.m2c import M2cToolchain
-from ..toolchain.permuter import DecompPermuterToolchain
-from ..toolchain.rizin import RizinToolchain
-from ..toolchain.signatures import PsyqSignaturesToolchain
-from ..toolchain.splat import SplatToolchain
-from ..toolchain.spimdisasm import SpimdisasmToolchain
 from ._common import run_main
 from .compile_commands import run as write_compile_commands
 
@@ -208,18 +199,7 @@ def _disc(state: SetupState) -> str:
 
 @setup_task("toolchain")
 def _toolchain(state: SetupState) -> str:
-    for toolchain in (
-        Psn00bToolchain(state.layout),
-        GccToolchain(state.layout),
-        MaspsxToolchain(state.root),
-        RizinToolchain(state.layout),
-        M2cToolchain(state.root),
-        AsmDifferToolchain(state.root),
-        DecompPermuterToolchain(state.root),
-        PsyqSignaturesToolchain(state.root),
-        SplatToolchain(state.root),
-        SpimdisasmToolchain(state.root),
-    ):
+    for toolchain in managed_toolchains(state.root, state.layout):
         toolchain.run(force=state.args.force)
     return "PSn00b, GCC 2.7.2, maspsx, Rizin, m2c, asm-differ, decomp-permuter, splat, spimdisasm"
 

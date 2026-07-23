@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
-import subprocess
 import sys
 
 from ..domain import load_target_manifests, normalize_target_id
@@ -19,17 +18,11 @@ def run(args: argparse.Namespace) -> int:
     manifest = load_target_manifests(root).get(target)
     if manifest is None:
         raise ValueError(f"unknown target: {args.target}")
-    executable = SplatToolchain(root).executable
-    if not executable.is_file():
-        raise FileNotFoundError(f"missing Splat executable: {executable}; run just setup")
-    result = subprocess.run(
-        [
-            str(executable),
-            "split",
-            "--make-full-disasm-for-code",
-            str(root / manifest.splat),
-        ],
-        cwd=root,
+    toolchain = SplatToolchain(root)
+    if not toolchain.executable.is_file():
+        raise FileNotFoundError(f"missing Splat executable: {toolchain.executable}; run just setup")
+    result = toolchain.execute(
+        ["split", "--make-full-disasm-for-code", str(root / manifest.splat)],
         capture_output=not args.verbose,
         text=not args.verbose,
     )

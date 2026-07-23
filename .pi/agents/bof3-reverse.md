@@ -9,7 +9,7 @@ systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: true
 defaultContext: fresh
-timeoutMs: 1800000
+timeoutMs: 3600000
 defaultProgress: true
 ---
 

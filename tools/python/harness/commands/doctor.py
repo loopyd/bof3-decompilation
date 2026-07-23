@@ -11,18 +11,9 @@ from pathlib import Path
 
 from ..domain import load_target_manifests
 from ..io import repo_layout
+from ..toolchain import managed_toolchains
 from ..toolchain.disc import DiscToolchain
-from ..toolchain.gcc import GccToolchain
-from ..toolchain.maspsx import MaspsxToolchain
-from ..toolchain.psn00b import Psn00bToolchain
 from ..toolchain.psyq import PsyqToolchain
-from ..toolchain.asm_differ import AsmDifferToolchain
-from ..toolchain.m2c import M2cToolchain
-from ..toolchain.permuter import DecompPermuterToolchain
-from ..toolchain.rizin import RizinToolchain
-from ..toolchain.signatures import PsyqSignaturesToolchain
-from ..toolchain.splat import SplatToolchain
-from ..toolchain.spimdisasm import SpimdisasmToolchain
 from ._common import run_main
 from .setup import REQUIRED_TOOLS, _psyq_47_members
 
@@ -57,21 +48,7 @@ def _require(root: Path, paths: tuple[Path, ...]) -> str:
 @doctor_task("toolchain")
 def _toolchain(root: Path) -> str:
     layout = repo_layout(root)
-    return ", ".join(
-        toolchain.verify()
-        for toolchain in (
-            Psn00bToolchain(layout),
-            GccToolchain(layout),
-            MaspsxToolchain(root),
-            RizinToolchain(layout),
-            M2cToolchain(root),
-            AsmDifferToolchain(root),
-            DecompPermuterToolchain(root),
-            PsyqSignaturesToolchain(root),
-            SplatToolchain(root),
-            SpimdisasmToolchain(root),
-        )
-    )
+    return ", ".join(toolchain.verify() for toolchain in managed_toolchains(root, layout))
 
 
 @doctor_task("PsyQ 4.7")
