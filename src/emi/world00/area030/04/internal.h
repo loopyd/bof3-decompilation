@@ -42,7 +42,7 @@ int  func_8017E3F4(char* buffer, char* fmt, ...);
 void func_801D195C(s16 arg0, s16 arg1);
 void func_801D18CC(s16 arg0, s16 arg1, u8 arg2);
 void func_801E0C80(s32 arg0, s32 arg1);
-s32  func_801E0DCC(s32 arg0, s32 arg1, s16 arg2, s16 arg3);
+u8*  func_801E0DCC(s32 arg0, s32 arg1, s16 arg2, s16 arg3);
 s32  func_801D9534(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 s32  func_80196070(void);
 s16  func_8015477C(u16 arg0, u16 arg1);
