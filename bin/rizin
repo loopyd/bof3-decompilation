@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+RIZIN="${PSX_RIZIN:-${ROOT}/toolchains/rizin/bin/rizin}"
+if [ ! -x "$RIZIN" ]; then
+    printf 'missing project Rizin: %s\n' "$RIZIN" >&2
+    printf '%s\n' 'run `just setup` first' >&2
+    exit 2
+fi
+exec "$RIZIN" "$@"

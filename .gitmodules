@@ -19,3 +19,6 @@
 [submodule "toolchains/psx_psyq_signatures"]
 	path = toolchains/psx_psyq_signatures
 	url = https://github.com/lab313ru/psx_psyq_signatures.git
+[submodule "third_party/rizin"]
+	path = third_party/rizin
+	url = https://github.com/rizinorg/rizin.git

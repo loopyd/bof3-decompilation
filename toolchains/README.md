@@ -10,6 +10,11 @@ converted per-object form because reviewed target manifests name individual
 remain separate from the signature database, and do not prove that the shipped
 game used that SDK.
 
+`third_party/rizin/` is a pinned Rizin source submodule. `just setup` builds and
+stages it under `toolchains/rizin/`; use `bin/rizin` rather than a host
+installation. `just doctor` verifies its MIPS and JSON-analysis capabilities
+before snapshots are used.
+
 The signature submodule is used only by the limited adapter:
 
 ```sh

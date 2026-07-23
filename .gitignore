@@ -48,6 +48,7 @@ toolchains/psn00b_toolchain/*
 !toolchains/psn00b_toolchain/.gitkeep
 toolchains/psn00bsdk/*
 !toolchains/psn00bsdk/.gitkeep
+toolchains/rizin/*
 toolchains/aspsx-psyq-binaries/*
 toolchains/psyq/*
 !toolchains/psyq/4.7/

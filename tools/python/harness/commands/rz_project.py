@@ -20,7 +20,7 @@ def _root(args: argparse.Namespace) -> Path:
 
 def run_open(args: argparse.Namespace) -> int:
     project = prepare_target(_root(args), args.target)
-    engine = find_engine("rizin")
+    engine = find_engine("rizin", root=_root(args))
     os.execv(str(engine.executable), rizin_argv(project, engine))
     return 2
 

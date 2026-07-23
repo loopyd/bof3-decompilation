@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import json
 import hashlib
-import shutil
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+from .io import repo_layout
 
 from .snapshot import (
     SNAPSHOT_SCHEMA,
@@ -66,8 +67,8 @@ def _run_probe(executable: Path, commands: list[str]) -> str:
         "mips",
         "-b",
         "32",
-        "-e",
-        "cfg.bigendian=false",
+        "-E",
+        "little",
     ]
     for command in commands:
         argv.extend(["-c", command])
@@ -112,7 +113,7 @@ def _probe_capabilities(executable: Path) -> dict[str, bool]:
     return capabilities
 
 
-def find_engine(name: str = "rizin") -> EngineIdentity:
+def find_engine(name: str = "rizin", *, root: Path | None = None) -> EngineIdentity:
     """Locate and verify the installed analyzer engine.
 
     Raises ``FileNotFoundError`` if the engine is not installed, or
@@ -121,12 +122,9 @@ def find_engine(name: str = "rizin") -> EngineIdentity:
 
     if name != "rizin":
         raise ValueError("only rizin is supported")
-    path = shutil.which("rizin")
-    if path is None:
-        raise FileNotFoundError(
-            f"{name} not found; install it and ensure it is on PATH"
-        )
-    executable = Path(path)
+    executable = repo_layout(root).toolchains_dir / "rizin" / "bin" / "rizin"
+    if not executable.is_file():
+        raise FileNotFoundError(f"missing project Rizin: {executable}; run `just setup`")
     version = _get_version(executable)
     capabilities = _probe_capabilities(executable)
     missing = [
@@ -165,8 +163,8 @@ def _run_analysis(
         "mips",
         "-b",
         "32",
-        "-e",
-        "cfg.bigendian=false",
+        "-E",
+        "little",
         "-m",
         f"0x{load_address:08x}",
     ]

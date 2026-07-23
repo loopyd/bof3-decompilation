@@ -8,7 +8,8 @@ import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..io import DEFAULT_PSYQ_VERSION, normalize_psyq_version
+from ..io import DEFAULT_PSYQ_VERSION, RepoLayout, normalize_psyq_version
+from .base import Toolchain
 from .archive import (
     archive_path_looks_valid as archive_file_looks_valid,
     archive_stem,
@@ -472,3 +473,38 @@ def stage_psyq_converted_sdk(
         if source_library.is_dir():
             shutil.copytree(source_library, dest_root / source_library.name.lower(), dirs_exist_ok=True)
     return dest_root
+
+
+class PsyqToolchain(Toolchain):
+    label = "PsyQ 4.7"
+
+    def __init__(
+        self,
+        layout: RepoLayout,
+        *,
+        archive: Path | None = None,
+        archive_url: str | None = None,
+    ) -> None:
+        self.layout = layout
+        self.archive = archive
+        self.archive_url = archive_url
+
+    def install(self, *, force: bool = False) -> str:
+        import_psyq_sdk(
+            dest=self.layout.psyq_root,
+            archive=self.archive,
+            archive_url=self.archive_url,
+            private_assets_root=self.layout.private_assets_dir,
+            force=force,
+        )
+        stage_psyq_converted_sdk(
+            dest=self.layout.psyq_root,
+            private_assets_root=self.layout.private_assets_dir,
+            force=force,
+        )
+        return ""
+
+    def verify(self) -> str:
+        if not original_sdk_is_ready(self.layout.psyq_root):
+            raise FileNotFoundError(f"missing PsyQ SDK: {self.layout.psyq_root}")
+        return "headers, libraries, reviewed objects"

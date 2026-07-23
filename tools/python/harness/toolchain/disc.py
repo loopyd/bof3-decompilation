@@ -7,6 +7,7 @@ import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
+from .base import Toolchain
 from .archive import (
     archive_path_looks_valid,
     archive_stem,
@@ -191,3 +192,25 @@ def import_bof3_disc(
         cue_path=cue_path,
         staged_paths=(cue_path, *bin_paths),
     )
+
+
+class DiscToolchain(Toolchain):
+    label = "disc media"
+
+    def __init__(self, root: Path) -> None:
+        self.root = root
+        self.cue_path: Path | None = None
+
+    def install(self, *, force: bool = False) -> str:
+        disc_root = self.root / "inputs" / "external"
+        try:
+            self.cue_path, tracks = find_disc_set(disc_root)
+        except FileNotFoundError:
+            result = import_bof3_disc(dest=disc_root, force=force)
+            self.cue_path, tracks = result.cue_path, list(result.staged_paths[1:])
+        return f"{self.cue_path.name}, {len(tracks)} tracks"
+
+    def verify(self) -> str:
+        cue, tracks = find_disc_set(self.root / "inputs" / "external")
+        self.cue_path = cue
+        return f"{cue.name}, {len(tracks)} tracks"

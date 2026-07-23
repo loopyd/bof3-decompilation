@@ -11,7 +11,16 @@ from pathlib import Path
 
 from ..domain import load_target_manifests
 from ..io import repo_layout
-from ..toolchain.disc import find_disc_set
+from ..toolchain.disc import DiscToolchain
+from ..toolchain.gcc import GccToolchain
+from ..toolchain.maspsx import MaspsxToolchain
+from ..toolchain.psn00b import Psn00bToolchain
+from ..toolchain.psyq import PsyqToolchain
+from ..toolchain.asm_differ import AsmDifferToolchain
+from ..toolchain.m2c import M2cToolchain
+from ..toolchain.permuter import DecompPermuterToolchain
+from ..toolchain.rizin import RizinToolchain
+from ..toolchain.signatures import PsyqSignaturesToolchain
 from ._common import run_main
 from .setup import REQUIRED_TOOLS, _psyq_47_members
 
@@ -46,21 +55,25 @@ def _require(root: Path, paths: tuple[Path, ...]) -> str:
 @doctor_task("toolchain")
 def _toolchain(root: Path) -> str:
     layout = repo_layout(root)
-    return _require(
-        root,
-        (
-            layout.gcc272_psx_root / "gcc",
-            layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-as",
-            layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-ld",
-            root / "third_party" / "maspsx" / "maspsx.py",
-        ),
+    return ", ".join(
+        toolchain.verify()
+        for toolchain in (
+            Psn00bToolchain(layout),
+            GccToolchain(layout),
+            MaspsxToolchain(root),
+            RizinToolchain(layout),
+            M2cToolchain(root),
+            AsmDifferToolchain(root),
+            DecompPermuterToolchain(root),
+            PsyqSignaturesToolchain(root),
+        )
     )
 
 
 @doctor_task("PsyQ 4.7")
 def _psyq(root: Path) -> str:
     layout = repo_layout(root)
-    _require(root, (layout.psyq_root / "include" / "libgpu.h", layout.psyq_root / "lib"))
+    PsyqToolchain(layout).verify()
     members = _psyq_47_members(root)
     _require(root, tuple(members))
     return f"headers, libraries, {len(members)} reviewed members"
@@ -68,8 +81,7 @@ def _psyq(root: Path) -> str:
 
 @doctor_task("disc media")
 def _disc(root: Path) -> str:
-    cue, tracks = find_disc_set(root / "inputs" / "external")
-    return f"{cue.name}, {len(tracks)} tracks"
+    return DiscToolchain(root).verify()
 
 
 @doctor_task("target images")
@@ -91,6 +103,7 @@ def _tools(root: Path) -> str:
     commands = (
         (root / "bin" / "cc", "-x", "c", "-E", "-"),
         *((root / tool, "--version") for tool in REQUIRED_TOOLS),
+        (root / "bin" / "rizin", "-V"),
         (layout.harness_disk_bin, "--help"),
         (layout.emi_ex_bin, "--help"),
     )

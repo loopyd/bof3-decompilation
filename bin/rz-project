@@ -10,5 +10,6 @@ if [ ! -x "$PYTHON" ]; then
     exit 2
 fi
 PYTHONPATH="${ROOT}/tools/python${PYTHONPATH:+:${PYTHONPATH}}"
-export PYTHONPATH
+PATH="${ROOT}/toolchains/rizin/bin:${PATH}"
+export PYTHONPATH PATH
 exec "$PYTHON" -m harness.commands.rz_project "$@"

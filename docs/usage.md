@@ -185,6 +185,7 @@ tests, lint, maps, and a full compile/link/compare audit of retained lifts.
 | `bin/build` | compile all, one target, or one function | `build/` |
 | `bin/splat` | regenerate reviewed segment output | `out/splat/` |
 | `bin/symbols` | map check/normalize, bindings, PsyQ import/bindings/report | explicit subcommand |
+| `bin/rizin` | pinned local Rizin analyzer | terminal output only |
 | `bin/rz-project` | isolated Rizin analyze/status/open | `out/reverse/` on analyze |
 | `bin/index` | rebuild the fresh cross-target query cache | `out/index/` |
 | `bin/rev-query` | query fresh indexed evidence | none |

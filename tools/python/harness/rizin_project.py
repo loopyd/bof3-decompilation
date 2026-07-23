@@ -101,7 +101,7 @@ def prepare_target(root: Path, target_id: str) -> RizinTarget:
 
 def analyze_project(root: Path, target_id: str, *, timeout: int = 120) -> RizinTarget:
     target = prepare_target(root, target_id)
-    engine = find_engine("rizin")
+    engine = find_engine("rizin", root=root)
     snapshot = build_snapshot(
         engine,
         target.binary,
