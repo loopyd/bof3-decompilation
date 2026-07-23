@@ -524,7 +524,7 @@ segments:
     - asm
     - func_801E162C
   - - 68316
-    - asm
+    - c
     - func_801E16DC
   - - 68440
     - asm
