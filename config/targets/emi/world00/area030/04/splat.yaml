@@ -503,7 +503,7 @@ segments:
     - asm
     - func_801E0C40
   - - 65664
-    - asm
+    - c
     - func_801E0C80
   - - 65996
     - asm

@@ -2,8 +2,14 @@
 #define EMI_WORLD00_AREA030_04_INTERNAL_H
 
 #include "bof3/bof3.h"
+#include "gpu/prim.h"
 
 extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_3FC9;
+extern u8           D_801E2384[];
+extern u8           D_801E2388[];
+extern u8           D_801E238C[];
+extern u8           D_801E2390[];
+extern u8*          D_8014598C;
 extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_4002;
 extern volatile u8  WORLD00_AREA030_GLOBAL_HALF_3FF2;
 extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_3FFC;
@@ -54,7 +60,7 @@ void func_801D3938(void);
 void func_801D6A2C(void);
 void func_801D6B28(s8 arg0);
 
-#define WORLD00_AREA030_PRIMITIVE_PTR  PSX_REF(volatile u8*, 0x8014598cu)
+#define WORLD00_AREA030_PRIMITIVE_PTR  D_8014598C
 #define WORLD00_AREA030_SCRATCH_PTR    PSX_REF(volatile u8*, 0x1f800044u)
 #define WORLD00_AREA030_UI_CHAR_BUFFER PSX_PTR(volatile u8, 0x80145ad4u)
 #define WORLD00_AREA030_SPRT_TABLE     PSX_PTR(const volatile u8, 0x801e1d0cu)
