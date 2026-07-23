@@ -30,9 +30,13 @@ Confirm before starting:
 python3 .pi/skills/bof3-lift-loop/scripts/loop-status.py --selection hotspots
 ```
 
-The read-only dashboard combines worktree/staged state, reverse-index readiness,
-the existing journal, and ranked candidates in one JSON document. Do not dispatch
-when it reports a dirty tree or index failure. When the gates pass:
+The dashboard combines worktree/staged state, the existing journal, and ranked
+candidates in one JSON document. When candidate selection finds stale generated
+Rizin/index evidence, it automatically refreshes stale snapshots with
+`bin/rz-project analyze` and rebuilds the generated reverse index with
+`bin/index`; it never edits authored or tracked files. Use `--no-recover` only
+to diagnose without refreshing. Do not dispatch when it still reports a dirty
+tree or index failure. When the gates pass:
 
 ```sh
 bin/decomp-status --json -o out/lift-loop/baseline.json
