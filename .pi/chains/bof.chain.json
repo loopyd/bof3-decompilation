@@ -1,0 +1,151 @@
+{
+  "name": "bof",
+  "description": "BOF3 reverse-engineering pipeline: recon \u2192 plan \u2192 implement \u2192 review",
+  "chain": [
+    {
+      "agent": "classifier",
+      "phase": "Routing",
+      "label": "Classify task",
+      "as": "classification",
+      "task": "Classify the request into exactly one project category. Return only the category name. Use the classification to guide the downstream context and planning agents.",
+      "output": "classification.md"
+    },
+    {
+      "phase": "Recon",
+      "label": "Gather parallel context",
+      "parallel": [
+        {
+          "agent": "context-builder",
+          "as": "contextResult",
+          "task": "Analyze the codebase and produce a structured context + meta-prompt handoff for: {task}\n\nTask category: {outputs.classification}\n\nMap relevant files, patterns, dependencies, constraints, and risks. Follow imports, callers, tests, and configs until the problem space, likely solution, and validation path are clear.\n\nProduce both a context handoff and a meta-prompt handoff. The meta-prompt should be a compact contract the planner can use directly.",
+          "output": "context.md"
+        },
+        {
+          "agent": "scout",
+          "as": "scoutResult",
+          "task": "Perform focused read-only reconnaissance for: {task}\n\nTask category: {outputs.classification}\n\nMap entry points, relevant files, data flow, existing patterns, constraints, and risks. Return concise evidence with exact paths and line ranges. Do not modify project source files.",
+          "output": "scout-context.md"
+        },
+        {
+          "agent": "researcher",
+          "as": "researchResult",
+          "task": "Research external documentation, specifications, or authoritative references only where they materially affect this request: {task}\n\nTask category: {outputs.classification}\n\nFor codebase-specific facts, prioritize repository evidence; use focused external sources for toolchain, library, API, or protocol behavior. Return a concise sourced brief and clearly identify gaps.",
+          "output": "research.md"
+        }
+      ],
+      "concurrency": 3
+    },
+    {
+      "agent": "planner",
+      "phase": "Planning",
+      "label": "Create implementation plan",
+      "as": "planNarrative",
+      "task": "Create a concrete implementation plan from the context-builder, scout, and researcher handoffs for: {task}\n\nClassification: {outputs.classification}\nContext-builder: {outputs.contextResult}\nScout: {outputs.scoutResult}\nResearcher: {outputs.researchResult}\n\nSurface ambiguities instead of guessing. Name exact files. Prefer small, ordered, independently implementable tasks with non-overlapping file targets.\n\nWrite the narrative plan to plan.md. The oracle will validate and split it into executable tasks for fanout.",
+      "output": "plan.md"
+    },
+    {
+      "agent": "oracle",
+      "phase": "Decision check",
+      "label": "Validate and split plan",
+      "as": "plan",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "goal": {
+            "type": "string",
+            "description": "One-sentence goal"
+          },
+          "tasks": {
+            "type": "array",
+            "description": "Independent implementation tasks with non-overlapping file targets",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Short kebab-case id"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Single-sentence task description"
+                },
+                "files": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Files to touch"
+                },
+                "acceptance": {
+                  "type": "string",
+                  "description": "How to verify success"
+                }
+              },
+              "required": [
+                "id",
+                "description"
+              ]
+            }
+          }
+        },
+        "required": [
+          "tasks"
+        ]
+      },
+      "task": "Review the plan from the planner ({outputs.planNarrative}) for decision consistency against the inherited context.\n\nContext: {outputs.contextResult}\n\nReconstruct inherited decisions, constraints, and open questions. Identify any drift, contradictions, or hidden assumptions in the plan. Call out where the plan conflicts with established patterns or prior decisions.\n\nIf the plan is consistent, state that clearly. If issues exist, provide narrow, specific corrections \u2014 do not rewrite the whole plan.\n\nWrite oracle.md with your analysis.\n\nThen call structured_output({ value: <plan-json> }) to split the validated plan into independently implementable tasks. The JSON must include:\n- goal: one-sentence goal\n- tasks[]: each with id (kebab-case), description, files[], acceptance\n\nEach task must be independently implementable with non-overlapping file targets. The chain fans out parallel workers from these tasks.\n\nIMPORTANT: Produce at most 5 tasks. Merge related work into fewer, larger tasks. Tasks must have non-overlapping file targets.",
+      "output": "oracle.md"
+    },
+    {
+      "agent": "delegate",
+      "phase": "Handoff",
+      "label": "Prepare execution handoff",
+      "as": "executionHandoff",
+      "task": "Prepare a concise execution handoff from the validated oracle plan for the implementation workers.\n\nValidated oracle plan: {outputs.plan}\nTask category: {outputs.classification}\nContext: {outputs.contextResult}\n\nPreserve the goal, task boundaries, target files, acceptance criteria, constraints, and required validation. Do not invent scope or modify project source files.",
+      "output": "delegate.md",
+      "outputMode": "file-only"
+    },
+    {
+      "phase": "Implementation",
+      "label": "Worker fanout",
+      "expand": {
+        "from": {
+          "output": "plan",
+          "path": "/tasks"
+        },
+        "item": "task",
+        "maxItems": 5,
+        "onEmpty": "skip"
+      },
+      "parallel": {
+        "agent": "worker",
+        "task": "Implement task {task.id}: {task.description}\n\nExecution handoff: {outputs.executionHandoff}\n\nFrom the oracle review: {previous}\n\nOracle guidance: {outputs.plan}\n\nTarget files: {task.files}\nAcceptance: {task.acceptance}\n\nExecute the task. Follow existing project patterns. Validate with build, test, or diff before marking complete.\n\nReport:\n- Changed files with line references\n- Commands run with exit codes\n- Validation evidence\n- Surprises or risks\n- Decisions needing approval",
+        "output": "worker_{task.id}.md",
+        "outputMode": "file-only"
+      },
+      "collect": {
+        "as": "workerResults"
+      },
+      "concurrency": 3
+    },
+    {
+      "agent": "reviewer",
+      "phase": "Review",
+      "label": "Inspect all worker implementations",
+      "task": "Review all worker implementations against the oracle's validated plan.\n\nWorker results: {outputs.workerResults}\nOracle guidance: {outputs.plan}\n\n1. Inspect every changed file directly \u2014 do not rely on worker reasoning\n2. Verify each task's acceptance criteria against the actual code\n3. Check for regressions, missed edge cases, and pattern violations\n4. Do NOT modify files \u2014 findings only\n\nFor each finding, report:\n- taskId: which plan task this relates to\n- severity: blocker | fixNow | optional | defer\n- file: path with line references\n- description: what is wrong\n- suggestion: minimal fix (one line if possible)\n- confidence: high | medium | low\n\nFinal verdict: PASS (all tasks verified clean) or FAIL (blocker or fixNow issues remain)\nIf no issues found, state PASS explicitly.",
+      "output": "review.md",
+      "outputMode": "file-only",
+      "progress": true,
+      "as": "reviewResult"
+    },
+    {
+      "agent": "worker",
+      "phase": "Fix",
+      "label": "Apply reviewer fixes",
+      "task": "Read the reviewer's findings and apply all blocker and fixNow issues.\n\nReviewer findings: {outputs.reviewResult}\nWorker results: {outputs.workerResults}\nOracle guidance: {outputs.plan}\n\n1. Scan review findings for all blocker and fixNow severity items\n2. Apply each fix directly to the target files\n3. Do NOT apply optional or defer items unless they are one-line safe changes\n4. Re-run build/test to validate after all fixes\n\nReport:\n- Fixes applied with file:line references and which finding each addresses\n- Commands run with exit codes\n- Validation evidence\n- Final status: PASS if all blocker + fixNow resolved, FAIL with remaining gaps",
+      "output": "fixes.md",
+      "outputMode": "file-only",
+      "progress": true,
+      "as": "fixResult"
+    }
+  ]
+}

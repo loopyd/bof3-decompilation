@@ -63,6 +63,33 @@ toolchains/psyq-stock/
 session-*.md
 .codex
 
+# Project Pi runtime state (tracked configuration lives in .pi/)
+.pi/sessions/
+.pi/memory/*.db
+.pi/memory/*.db-shm
+.pi/memory/*.db-wal
+.pi/qmd-ledger.config.json
+.pi/vcc-config.json
+.pi/bin/
+.pi/npm/
+.pi/git/*
+!.pi/git/.gitignore
+.pi/batch-state.json
+.pi/batch-history.json
+.pi/lane-state-*
+.pi/merge-result-*
+.pi/merge-request-*
+.pi/worker-conversation-*
+.pi/orch-logs/
+.pi/orch-abort-signal
+.pi/mailbox/
+.pi/diagnostics/
+.pi/supervisor/
+.pi/telemetry/
+.pi/verification/
+.pi/runtime/
+.pi-subagents/
+
 # Audio outputs
 *.wav
 *.ogg
