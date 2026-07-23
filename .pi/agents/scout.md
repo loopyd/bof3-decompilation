@@ -7,7 +7,8 @@ tools: read,grep,find,ls,bash,write,intercom,memory_search,session_search,qmd_se
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
-timeoutMs: 1800000
+timeoutMs: 3600000
+turnBudget: {"maxTurns":50,"graceTurns":10}
 output: context.md
 defaultProgress: true
 ---

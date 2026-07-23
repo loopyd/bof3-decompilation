@@ -3,11 +3,12 @@ name: researcher
 description: Focused sourced research
 model: ninerouter/qwen-combo
 thinking: off
-tools: read,write,intercom,memory_search,session_search,qmd_search,web_search,fetch_content,get_search_content,mcp,mcp:github-mcp-server,mcp:context7,mcp:markitdown,ctx_batch_execute,ctx_execute,ctx_search,ctx_fetch_and_index
+tools: read,write,intercom,memory_search,session_search,qmd_search,web_search,fetch_content,get_search_content,mcp,mcp:github-mcp-server,mcp:context7,mcp:markitdown
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
-timeoutMs: 1800000
+timeoutMs: 3600000
+turnBudget: {"maxTurns":50,"graceTurns":10}
 output: research.md
 defaultProgress: true
 ---

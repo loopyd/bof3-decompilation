@@ -9,6 +9,7 @@ import sys
 
 from ..domain import load_target_manifests, normalize_target_id
 from ..io import repo_layout
+from ..toolchain.splat import SplatToolchain
 from ._common import run_main
 
 
@@ -18,11 +19,9 @@ def run(args: argparse.Namespace) -> int:
     manifest = load_target_manifests(root).get(target)
     if manifest is None:
         raise ValueError(f"unknown target: {args.target}")
-    executable = root / ".venv" / "bin" / "splat"
+    executable = SplatToolchain(root).executable
     if not executable.is_file():
-        raise FileNotFoundError(
-            f"missing Splat executable: {executable}; run just setup"
-        )
+        raise FileNotFoundError(f"missing Splat executable: {executable}; run just setup")
     result = subprocess.run(
         [
             str(executable),

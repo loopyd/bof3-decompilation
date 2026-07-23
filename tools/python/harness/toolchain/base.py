@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+import os
 import subprocess
 import sys
+from collections.abc import Sequence
 from pathlib import Path
 
 
@@ -45,7 +47,7 @@ class SubmoduleToolchain(Toolchain):
     command: tuple[str, ...]
 
     def __init__(self, root: Path) -> None:
-        self.root = root
+        self.root = root.resolve()
 
     @property
     def source(self) -> Path:
@@ -76,9 +78,75 @@ class SubmoduleToolchain(Toolchain):
 
 
 class ExecutableToolchain(Toolchain):
-    """A toolchain exposing one repository-owned executable."""
+    """A toolchain that owns executable invocation as well as installation."""
 
     @property
     @abstractmethod
     def executable(self) -> Path:
         """The executable managed by this toolchain."""
+
+    @property
+    def working_directory(self) -> Path:
+        """The sole working directory used for this tool's invocations."""
+        return self.executable.parent
+
+    @property
+    def environment(self) -> dict[str, str]:
+        """The environment supplied to this tool's invocations."""
+        return os.environ.copy()
+
+    def invocation(self, arguments: Sequence[str] = ()) -> list[str]:
+        """Build the owned command without exposing executable-path policy."""
+        return [str(self.executable), *arguments]
+
+    def execute(
+        self,
+        arguments: Sequence[str] = (),
+        *,
+        capture_output: bool = False,
+        text: bool = False,
+        timeout: float | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        """Execute the tool in its owned environment without raising on failure."""
+        return subprocess.run(
+            self.invocation(arguments),
+            cwd=self.working_directory,
+            env=self.environment,
+            check=False,
+            capture_output=capture_output,
+            text=text,
+            timeout=timeout,
+        )
+
+
+class PythonSubmoduleToolchain(SubmoduleToolchain, ExecutableToolchain):
+    """A pinned Python source submodule installed into the project virtual environment."""
+
+    install_target: str
+
+    @property
+    def python(self) -> Path:
+        return self.root / ".venv" / "bin" / "python"
+
+    @property
+    def working_directory(self) -> Path:
+        return self.root
+
+    def install(self, *, force: bool = False) -> str:
+        super().install(force=force)
+        if not self.python.is_file():
+            raise FileNotFoundError(f"missing project Python environment: {self.python}")
+        command = ["uv", "pip", "install", "--python", str(self.python)]
+        if force:
+            command.append("--reinstall")
+        command.append(str(self.root / self.install_target))
+        subprocess.run(command, cwd=self.root, check=True)
+        return self.label
+
+    def verify(self) -> str:
+        if not self.executable.is_file():
+            raise FileNotFoundError(f"missing {self.label} executable: {self.executable}")
+        result = self.execute(["--version"])
+        if result.returncode:
+            raise RuntimeError(f"{self.label} exited {result.returncode}")
+        return self.label

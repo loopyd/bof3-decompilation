@@ -15,6 +15,14 @@ stages it under `toolchains/rizin/`; use `bin/rizin` rather than a host
 installation. `just doctor` verifies its MIPS and JSON-analysis capabilities
 before snapshots are used.
 
+`third_party/splat` (tag `0.41.1`) and `third_party/spimdisasm` (tag `1.42.2`)
+are pinned Python source submodules. `just setup` installs both, including
+Splat's MIPS extras, into `.venv`. `third_party/decomp-permuter` is likewise a
+pinned submodule; setup installs its required `toml` module into `.venv`.
+It similarly installs the pinned `asm-differ` submodule and its declared
+dependencies. Use `bin/splat`, `bin/spimdisasm`, `bin/permute`, and
+`bin/asm-diff` rather than host installs.
+
 The signature submodule is used only by the limited adapter:
 
 ```sh

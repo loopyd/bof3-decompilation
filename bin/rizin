@@ -1,11 +1,12 @@
 #!/bin/sh
 set -eu
-
 ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-RIZIN="${PSX_RIZIN:-${ROOT}/toolchains/rizin/bin/rizin}"
-if [ ! -x "$RIZIN" ]; then
-    printf 'missing project Rizin: %s\n' "$RIZIN" >&2
+PYTHON="${PSX_PYTHON:-${ROOT}/.venv/bin/python}"
+if [ ! -x "$PYTHON" ]; then
+    printf 'missing project Python environment: %s\n' "$PYTHON" >&2
     printf '%s\n' 'run `just setup` first' >&2
     exit 2
 fi
-exec "$RIZIN" "$@"
+PYTHONPATH="${ROOT}/tools/python${PYTHONPATH:+:${PYTHONPATH}}"
+export PYTHONPATH
+exec "$PYTHON" -m harness.commands.tool rizin -- "$@"

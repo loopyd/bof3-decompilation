@@ -184,6 +184,7 @@ tests, lint, maps, and a full compile/link/compare audit of retained lifts.
 | `bin/emi-target` | preview/create one EMI target | only with `--apply` |
 | `bin/build` | compile all, one target, or one function | `build/` |
 | `bin/splat` | regenerate reviewed segment output | `out/splat/` |
+| `bin/spimdisasm` | disassemble MIPS images directly | terminal output or explicit destination |
 | `bin/symbols` | map check/normalize, bindings, PsyQ import/bindings/report | explicit subcommand |
 | `bin/rizin` | pinned local Rizin analyzer | terminal output only |
 | `bin/rz-project` | isolated Rizin analyze/status/open | `out/reverse/` on analyze |

@@ -20,6 +20,10 @@ class RizinToolchain(ExecutableToolchain):
         self.prefix = layout.toolchains_dir / "rizin"
 
     @property
+    def root(self) -> Path:
+        return self.layout.root
+
+    @property
     def executable(self) -> Path:
         return self.prefix / "bin" / "rizin"
 
@@ -73,13 +77,7 @@ class RizinToolchain(ExecutableToolchain):
     def verify(self) -> str:
         if not self.executable.is_file():
             raise FileNotFoundError(f"missing Rizin executable: {self.executable}")
-        result = subprocess.run(
-            [str(self.executable), "-V"],
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=10,
-        )
+        result = self.execute(["-V"], capture_output=True, text=True, timeout=10)
         if result.returncode:
             raise RuntimeError(f"Rizin version check failed: {result.stderr.strip()}")
         original_path = os.environ.get("PATH", "")

@@ -3,12 +3,13 @@ name: oracle
 description: Validate plan consistency and split tasks
 model: ninerouter/gpt-combo
 thinking: low
-tools: read,grep,find,ls,bash,write,intercom,memory_search,session_search,qmd_search,mcp,mcp:sqlitecloud-mcp-server,mcp:context7,ctx_batch_execute,ctx_execute,ctx_search,structured_output
+tools: read,grep,find,ls,bash,write,intercom,memory_search,session_search,qmd_search,mcp,mcp:sqlitecloud-mcp-server,mcp:context7,structured_output
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
 defaultContext: fork
-timeoutMs: 1800000
+timeoutMs: 3600000
+turnBudget: {"maxTurns":50,"graceTurns":10}
 output: oracle.md
 ---
 

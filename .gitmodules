@@ -22,3 +22,9 @@
 [submodule "third_party/rizin"]
 	path = third_party/rizin
 	url = https://github.com/rizinorg/rizin.git
+[submodule "third_party/splat"]
+	path = third_party/splat
+	url = https://github.com/ethteck/splat.git
+[submodule "third_party/spimdisasm"]
+	path = third_party/spimdisasm
+	url = https://github.com/Decompollaborate/spimdisasm.git

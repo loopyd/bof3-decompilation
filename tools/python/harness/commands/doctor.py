@@ -21,6 +21,8 @@ from ..toolchain.m2c import M2cToolchain
 from ..toolchain.permuter import DecompPermuterToolchain
 from ..toolchain.rizin import RizinToolchain
 from ..toolchain.signatures import PsyqSignaturesToolchain
+from ..toolchain.splat import SplatToolchain
+from ..toolchain.spimdisasm import SpimdisasmToolchain
 from ._common import run_main
 from .setup import REQUIRED_TOOLS, _psyq_47_members
 
@@ -66,6 +68,8 @@ def _toolchain(root: Path) -> str:
             AsmDifferToolchain(root),
             DecompPermuterToolchain(root),
             PsyqSignaturesToolchain(root),
+            SplatToolchain(root),
+            SpimdisasmToolchain(root),
         )
     )
 
@@ -104,6 +108,8 @@ def _tools(root: Path) -> str:
         (root / "bin" / "cc", "-x", "c", "-E", "-"),
         *((root / tool, "--version") for tool in REQUIRED_TOOLS),
         (root / "bin" / "rizin", "-V"),
+        (root / "bin" / "maspsx", "--help"),
+        (root / "bin" / "spimdisasm", "--version"),
         (layout.harness_disk_bin, "--help"),
         (layout.emi_ex_bin, "--help"),
     )

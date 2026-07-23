@@ -105,7 +105,8 @@ reusable evidence-backed gotchas in `LESSONS.md`. Use the
 
 ## Planning
 
-For repository implementation plans or plan-management requests, read and
-update [`PLAN.md`](PLAN.md). Keep it phased, evidence-backed, and aligned with
-live `bin/decomp-status`, `bin/symbols check`, and validation results; durable
-runtime or format findings still belong in `docs/specs/`.
+For repository implementation plans or plan-management requests, read
+[`PLAN.md`](PLAN.md), then create or update a scoped plan under
+[`docs/plans/`](docs/plans/). Keep plans phased, evidence-backed, and aligned
+with live `bin/decomp-status`, `bin/symbols check`, and validation results;
+durable runtime or format findings still belong in `docs/specs/`.

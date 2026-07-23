@@ -26,6 +26,8 @@ from ..toolchain.m2c import M2cToolchain
 from ..toolchain.permuter import DecompPermuterToolchain
 from ..toolchain.rizin import RizinToolchain
 from ..toolchain.signatures import PsyqSignaturesToolchain
+from ..toolchain.splat import SplatToolchain
+from ..toolchain.spimdisasm import SpimdisasmToolchain
 from ._common import run_main
 from .compile_commands import run as write_compile_commands
 
@@ -215,9 +217,11 @@ def _toolchain(state: SetupState) -> str:
         AsmDifferToolchain(state.root),
         DecompPermuterToolchain(state.root),
         PsyqSignaturesToolchain(state.root),
+        SplatToolchain(state.root),
+        SpimdisasmToolchain(state.root),
     ):
         toolchain.run(force=state.args.force)
-    return "PSn00b, GCC 2.7.2, maspsx, Rizin, m2c, asm-differ, decomp-permuter"
+    return "PSn00b, GCC 2.7.2, maspsx, Rizin, m2c, asm-differ, decomp-permuter, splat, spimdisasm"
 
 
 @setup_task("PsyQ 4.7")

@@ -9,4 +9,4 @@ if [ ! -x "$PYTHON" ]; then
 fi
 PYTHONPATH="${ROOT}/tools/python${PYTHONPATH:+:${PYTHONPATH}}"
 export PYTHONPATH
-exec "$PYTHON" -m harness.commands.tool maspsx -- "$@"
+exec "$PYTHON" -m harness.commands.tool spimdisasm -- "$@"
