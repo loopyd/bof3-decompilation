@@ -11,15 +11,29 @@ from pathlib import Path
 
 from ..domain import load_target_manifests
 from ..io import repo_layout
-from ..toolchain.setup_disc import find_disc_set
+from ..toolchain.disc import find_disc_set
 from ._common import run_main
 from .setup import REQUIRED_TOOLS, _psyq_47_members
 
 
+Task = Callable[[Path], str]
+
+
 @dataclass(frozen=True)
-class Check:
+class DoctorTask:
     label: str
-    run: Callable[[Path], str]
+    run: Task
+
+
+TASKS: list[DoctorTask] = []
+
+
+def doctor_task(label: str) -> Callable[[Task], Task]:
+    def register(run: Task) -> Task:
+        TASKS.append(DoctorTask(label, run))
+        return run
+
+    return register
 
 
 def _require(root: Path, paths: tuple[Path, ...]) -> str:
@@ -29,6 +43,7 @@ def _require(root: Path, paths: tuple[Path, ...]) -> str:
     return f"{len(paths)} present"
 
 
+@doctor_task("toolchain")
 def _toolchain(root: Path) -> str:
     layout = repo_layout(root)
     return _require(
@@ -42,6 +57,7 @@ def _toolchain(root: Path) -> str:
     )
 
 
+@doctor_task("PsyQ 4.7")
 def _psyq(root: Path) -> str:
     layout = repo_layout(root)
     _require(root, (layout.psyq_root / "include" / "libgpu.h", layout.psyq_root / "lib"))
@@ -50,11 +66,13 @@ def _psyq(root: Path) -> str:
     return f"headers, libraries, {len(members)} reviewed members"
 
 
+@doctor_task("disc media")
 def _disc(root: Path) -> str:
     cue, tracks = find_disc_set(root / "inputs" / "external")
     return f"{cue.name}, {len(tracks)} tracks"
 
 
+@doctor_task("target images")
 def _target_images(root: Path) -> str:
     manifests = load_target_manifests(root)
     missing = [
@@ -67,6 +85,7 @@ def _target_images(root: Path) -> str:
     return f"{len(manifests)} images"
 
 
+@doctor_task("tool wrappers")
 def _tools(root: Path) -> str:
     layout = repo_layout(root)
     commands = (
@@ -89,29 +108,20 @@ def _tools(root: Path) -> str:
     return f"{len(commands)} commands"
 
 
-CHECKS = (
-    Check("toolchain", _toolchain),
-    Check("PsyQ 4.7", _psyq),
-    Check("disc media", _disc),
-    Check("target images", _target_images),
-    Check("tool wrappers", _tools),
-)
-
-
 def _render(status: str, label: str, detail: str) -> None:
-    print(f"[{status}] {label:<16} {detail}")
+    print(f"[{status}] {label:<{max(len(task.label) for task in TASKS)}}  {detail}")
 
 
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     failed = 0
-    for check in CHECKS:
+    for task in TASKS:
         try:
-            _render("PASS", check.label, check.run(root))
+            _render("PASS", task.label, task.run(root))
         except (FileNotFoundError, RuntimeError, ValueError, tomllib.TOMLDecodeError) as exc:
             failed += 1
-            _render("FAIL", check.label, str(exc).replace("\n", "; "))
-    print(f"doctor: {len(CHECKS) - failed}/{len(CHECKS)} checks passed")
+            _render("FAIL", task.label, str(exc).replace("\n", "; "))
+    print(f"doctor: {len(TASKS) - failed}/{len(TASKS)} checks passed")
     return 2 if failed else 0
 
 

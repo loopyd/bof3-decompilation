@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 
 from ..io import repo_layout
-from ..toolchain.setup_psyq import DEFAULT_PSYQ_VERSION, import_psyq_sdk
+from ..toolchain.psyq import DEFAULT_PSYQ_VERSION, import_psyq_sdk
 from ._common import run_main
 
 

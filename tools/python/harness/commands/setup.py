@@ -13,9 +13,10 @@ from ..emi.catalog import load_catalog, materialize_reviewed_targets
 from ..emi.operations import emi_unpack
 from ..io import repo_layout
 from ..toolchain.psx import install_canonical_psx_toolchain
-from ..toolchain.setup_disc import find_disc_set, import_bof3_disc
-from ..toolchain.setup_psyq import import_psyq_sdk, stage_psyq_converted_sdk
+from ..toolchain.disc import find_disc_set, import_bof3_disc
+from ..toolchain.psyq import import_psyq_sdk, stage_psyq_converted_sdk
 from ._common import run_main
+from .compile_commands import run as write_compile_commands
 
 
 REQUIRED_TOOLS = (
@@ -176,6 +177,7 @@ def run(args: argparse.Namespace) -> int:
         force=args.force,
     )
     _build_local_tools(root)
+    write_compile_commands(argparse.Namespace(root=root))
     _extract_and_materialize(root, cue, force=args.force)
     verify_setup(root)
     print("setup: complete")

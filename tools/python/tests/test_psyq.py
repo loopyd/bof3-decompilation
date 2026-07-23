@@ -11,8 +11,8 @@ from harness.snapshot import (
     TargetSnapshot,
     write_snapshot,
 )
-from harness.toolchain import setup_psyq as psyq_lib
-from harness.toolchain.setup_psyq import import_psyq_sdk, stage_psyq_sdk
+from harness.toolchain import psyq as psyq_lib
+from harness.toolchain.psyq import import_psyq_sdk, stage_psyq_sdk
 
 
 def make_fake_psyq_tree(root: Path) -> None:
