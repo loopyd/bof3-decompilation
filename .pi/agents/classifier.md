@@ -6,6 +6,7 @@ thinking: off
 tools: read,grep,find,ls
 inheritProjectContext: true
 inheritSkills: false
+timeoutMs: 1800000
 ---
 
 Classify the full request into exactly one category; return only its name:

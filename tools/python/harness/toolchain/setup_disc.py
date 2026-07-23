@@ -16,16 +16,12 @@ from .archive import (
 
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-DEFAULT_DISC_DIR = REPO_ROOT / "inputs" / "disc"
-DEFAULT_PRIVATE_ASSETS_ROOT = REPO_ROOT / "inputs" / "external" / "private-assets"
+DEFAULT_DISC_DIR = REPO_ROOT / "inputs" / "external"
+DEFAULT_PRIVATE_ASSETS_ROOT = DEFAULT_DISC_DIR / "private-assets"
 DEFAULT_BOF3_ARCHIVE_URL = "https://archive.org/download/BreathOfFireIIIv1.1.7z"
 
 AUTO_DISCOVERY_ARCHIVES = (
-    DEFAULT_PRIVATE_ASSETS_ROOT / "bof3" / "source-media",
-    DEFAULT_PRIVATE_ASSETS_ROOT / "bof3" / "BreathOfFireIIIv1.1.7z",
-    REPO_ROOT / "inputs" / "external",
-    REPO_ROOT / "inputs" / "external" / "BreathOfFireIIIv1.1.7z",
-    REPO_ROOT / "inputs",
+    DEFAULT_DISC_DIR / "BreathOfFireIIIv1.1.7z",
 )
 
 FILE_PATTERN = re.compile(r'^\s*FILE\s+"([^"]+)"\s+\S+', re.IGNORECASE)
@@ -166,27 +162,6 @@ def find_disc_set(root: Path) -> tuple[Path, list[Path]]:
     return cue_path, bin_paths
 
 
-def clear_staged_disc_inputs(dest: Path) -> None:
-    dest.mkdir(parents=True, exist_ok=True)
-    for pattern in ("*.cue", "*.bin", "*.iso"):
-        for path in dest.glob(pattern):
-            if path.is_file() or path.is_symlink():
-                path.unlink()
-
-
-def stage_disc_set(
-    cue_path: Path, bin_paths: list[Path], dest: Path
-) -> tuple[Path, ...]:
-    clear_staged_disc_inputs(dest)
-    staged_paths = [dest / cue_path.name]
-    shutil.copy2(cue_path, staged_paths[0])
-    for bin_path in bin_paths:
-        staged_bin_path = dest / bin_path.name
-        shutil.copy2(bin_path, staged_bin_path)
-        staged_paths.append(staged_bin_path)
-    return tuple(staged_paths)
-
-
 def import_bof3_disc(
     *,
     dest: Path = DEFAULT_DISC_DIR,
@@ -210,10 +185,9 @@ def import_bof3_disc(
         extract_archive(archive_path, extracted_root)
 
     cue_path, bin_paths = find_disc_set(extracted_root)
-    staged_paths = stage_disc_set(cue_path, bin_paths, dest)
     return DiscImportResult(
         archive_path=archive_path,
         extracted_root=extracted_root,
         cue_path=cue_path,
-        staged_paths=staged_paths,
+        staged_paths=(cue_path, *bin_paths),
     )

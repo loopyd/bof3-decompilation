@@ -25,11 +25,13 @@ only the relevant file when editing.
 ```sh
 just setup
 just doctor
-just binaries
 ```
 
-`setup` prepares dependencies and tools. `doctor` validates symbol maps.
-`binaries` materializes every reviewed target from user-owned media.
+`setup` validates one complete CUE/BIN set under `inputs/external/`. If it is
+not present, it accepts `inputs/external/BreathOfFireIIIv1.1.7z` and extracts it
+to the private-assets cache. It then downloads/stages the required toolchains,
+extracts reviewed target images, and validates the result. `doctor` repeats
+setup validation. Run `bin/symbols check` separately to validate symbol maps.
 
 Use `bin/bof3-disk` to inspect original disc media, `bin/emi-ex` to list or
 extract an EMI archive, and `bin/str-media inspect|validate|convert` for STR
@@ -108,10 +110,9 @@ bin/rev-query status
 
 `bin/rev-query mission TARGET@0xADDRESS` composes a single-function lifting
 brief (metrics, callers/callees, duplicate group, SDK callees, and risk flags) —
-the input to the autonomous lift loop. To lift a batch unattended, restart
-opencode and run `$bof3-lift-loop` (see
-`.agents/skills/bof3-lift-loop/README.md`); it gates each exact match through a
-reviewer and commits only reviewed lifts.
+the input to the autonomous lift loop. To lift a batch unattended, run
+`/skill:bof3-lift-loop` (see `.agents/skills/bof3-lift-loop/README.md`); it
+gates each exact match through a reviewer and commits only reviewed lifts.
 
 Addresses are target-qualified where identity matters; overlapping addresses
 in different images never share query results.

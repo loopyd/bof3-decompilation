@@ -16,7 +16,7 @@ CARGO_TARGET_DIR=build/tools/rust/bof3-disk \
 CARGO_TARGET_DIR=build/tools/rust/bof3-disk \
   cargo test --manifest-path tools/rust/bof3-disk/Cargo.toml
 build/tools/rust/bof3-disk/release/bof3-disk extract \
-  -i inputs/disc/disc.cue -o out/extracted-v2
+  -i inputs/external/disc.cue -o out/extracted-v2
 ```
 
 `just clean` in this directory runs Cargo cleanup for this crate only; it never
@@ -27,7 +27,7 @@ v1 comparison without changing the active harness integration:
 
 ```sh
 just --justfile tools/rust/bof3-disk/Justfile check
-just --justfile tools/rust/bof3-disk/Justfile equivalence inputs/disc/disc.cue
+just --justfile tools/rust/bof3-disk/Justfile equivalence inputs/external/disc.cue
 ```
 
 `disk-equivalence` hashes and compares every ordinary ISO9660 payload emitted

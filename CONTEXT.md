@@ -64,7 +64,7 @@ See [matching](docs/matching.md) and [tool usage](docs/usage.md) for procedures.
 | `docs/specs/`, `LESSONS.md` | Reviewed findings and gotchas | Yes |
 | `bin/`, `tools/` | Command entrypoints and implementations | Yes |
 | `third_party/` | Pinned upstream source | Yes |
-| `inputs/disc/`, `inputs/external/` | User-owned media and private inputs | No |
+| `inputs/external/` | User-owned CUE/BIN media or `BreathOfFireIIIv1.1.7z`, plus private inputs | No |
 | `out/binaries/`, `out/extracted/` | Normalized images and extracted entries | No |
 | `out/splat/`, `out/reverse/`, `out/index/` | Generated assembly, snapshots, index | No |
 | `out/m2ctx/`, `out/matching/`, `out/permuter/` | Disposable matching workspaces | No |

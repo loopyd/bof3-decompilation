@@ -7,6 +7,7 @@ tools: read,grep,find,ls,bash,write,web_search,intercom,memory_search,memory_rem
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
+timeoutMs: 1800000
 output: context.md
 defaultProgress: true
 ---

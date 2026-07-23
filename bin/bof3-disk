@@ -3,7 +3,7 @@ set -eu
 
 ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
 if [ "$#" -eq 1 ] && [ "$1" = "--example" ]; then
-    printf '%s\n' 'bin/bof3-disk extract -i inputs/disc/disc.cue -o out/extracted'
+    printf '%s\n' 'bin/bof3-disk extract -i inputs/external/disc.cue -o out/extracted'
     exit 0
 fi
 exec "${PSX_BOF3_DISK:-${ROOT}/build/tools/rust/bof3-disk/release/bof3-disk}" "$@"

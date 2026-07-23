@@ -1,27 +1,3 @@
 {
-  "project": {
-    "name": "rebof3-simple",
-    "cwd": "/mnt/PROJECTS/repos/rebof3-simple"
-  },
-  "mcpConfig": ".pi/mcp.json",
-  "contextFiles": [
-    "AGENTS.md",
-    "CONTEXT.md",
-    ".pi/agents/planner.md",
-    ".pi/agents/scout.md",
-    ".pi/agents/reviewer.md",
-    ".pi/agents/worker.md"
-  ],
-  "taskCategories": [
-    "decompilation",
-    "tool_development",
-    "build_system",
-    "reference_work",
-    "target_configuration",
-    "symbol_management"
-  ],
-  "sessionDir": ".pi/sessions",
-  "pi-memory": {
-    "localPath": ".pi/memory"
-  }
+  "sessionDir": "sessions"
 }

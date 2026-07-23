@@ -7,6 +7,7 @@ tools: read,grep,find,ls,bash,write,contact_supervisor,memory_search,session_sea
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
+timeoutMs: 1800000
 defaultReads: plan.md,progress.md
 ---
 

@@ -7,6 +7,7 @@ tools: read,write,intercom,memory_search,session_search,qmd_search,web_search,fe
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
+timeoutMs: 1800000
 output: research.md
 defaultProgress: true
 ---

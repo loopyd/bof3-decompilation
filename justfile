@@ -13,12 +13,12 @@ venv:
     @if [ -n "${VIRTUAL_ENV:-}" ]; then test -x "{{ python }}"; \
     elif [ ! -x "{{ python }}" ]; then UV_CACHE_DIR="{{ root }}/.uv-cache" uv sync --extra dev --frozen; fi
 
-# Initialize retained dependencies and the local analysis environment.
+# Initialize retained dependencies, user-authorized media, and local toolchains.
 setup: venv
-    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.bootstrap
+    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.setup
 
 doctor: venv
-    @{{ root }}/bin/symbols check
+    @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.doctor
 
 # Restore reviewed EMI images, then verify every normalized binary is present.
 binaries: venv

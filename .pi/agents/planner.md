@@ -8,6 +8,7 @@ systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
 defaultContext: fork
+timeoutMs: 1800000
 output: plan.md
 defaultReads: context.md
 ---

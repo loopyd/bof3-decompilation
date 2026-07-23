@@ -93,10 +93,10 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 - Run `just check` before handoff when practical; state skipped checks.
 - Do not stage, commit, push, or mutate external systems without approval.
 
-Load `$bof3-re` for ANY lifting, matching, duplicate-normalization, or promotion
-task — it enforces the [memory API](docs/memory-api.md) inline-assembly ban and
-the [matching](docs/matching.md) loop. Use `$psx-rizin` only for explicitly
-requested generic analyzer work. See the [docs index](docs/index.md) for the
+Load `/skill:bof3-re` for ANY lifting, matching, duplicate-normalization, or
+promotion task — it enforces the [memory API](docs/memory-api.md)
+inline-assembly ban and the [matching](docs/matching.md) loop. Use
+`/skill:psx-rizin` only for explicitly requested generic analyzer work. See the [docs index](docs/index.md) for the
 full documentation map, [tool usage](docs/usage.md) for procedures, and
 [docs/memory-api.md](docs/memory-api.md) for the memory-macro reference. Store
 reviewed findings in `docs/specs/` and

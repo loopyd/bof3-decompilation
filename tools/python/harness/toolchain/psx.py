@@ -31,7 +31,7 @@ class CanonicalPsxToolchainResult:
 
 def ensure_gitkeep(root: Path) -> None:
     root.mkdir(parents=True, exist_ok=True)
-    (root / ".gitkeep").touch(exist_ok=True)
+    (root / ".gitkeep").write_text("\n", encoding="utf-8")
 
 
 def ensure_bin_files_executable(bin_dir: Path) -> None:

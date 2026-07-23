@@ -33,14 +33,12 @@ debug_*.c
 # Extracted assets
 assets/
 
-# Local inputs (user-owned disc media)
+# Local inputs (user-owned CUE/BIN media or BreathOfFireIIIv1.1.7z)
 inputs/disc/*
 !inputs/disc/README.md
 inputs/external/*
 !inputs/external/.gitkeep
 !inputs/README.md
-!inputs/external/private-assets/
-inputs/external/private-assets/*
 
 # Toolchains (staged downloads)
 toolchains/downloads/

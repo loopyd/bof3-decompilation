@@ -22,7 +22,12 @@ REPO_ROOT = Path(__file__).resolve().parents[4]
 INCLUDE_FILE_NAMES = ("LIBGPU.H", "libgpu.h")
 LIB_FILE_NAMES = ("LIBGPU.LIB", "libgpu.lib", "libgpu.a")
 TEXT_FILE_SUFFIXES = {".c", ".cc", ".cpp", ".h", ".hpp", ".inc", ".inl", ".s", ".txt"}
-DEFAULT_PSYQ_ARCHIVE_URL = "https://psx.arthus.net/sdk/Psy-Q/psyq-4.7-converted-full.7z"
+# Official source media: headers and PsyQ .LIB archives.
+DEFAULT_PSYQ_ARCHIVE_URL = "https://archive.org/download/ps1_sdks/Runtime%20Library%204.7.zip"
+# Converted extraction: per-object .o files required by reviewed signature evidence.
+DEFAULT_PSYQ_CONVERTED_ARCHIVE_URL = (
+    "https://psx.arthus.net/sdk/Psy-Q/psyq-4.7-converted-full.7z"
+)
 
 
 def psyq_dest(version: str | None = None) -> Path:
@@ -36,13 +41,19 @@ def default_private_assets_root() -> Path:
 def psyq_archive_stem(version: str | None = None) -> str:
     resolved_version = normalize_psyq_version(version)
     if resolved_version == DEFAULT_PSYQ_VERSION:
-        return "psyq-4.7-converted-full"
+        return "Runtime Library 4.7"
     return f"psyq-{resolved_version}"
 
 
 def default_psyq_archive_url(version: str | None = None) -> str | None:
     if normalize_psyq_version(version) == DEFAULT_PSYQ_VERSION:
         return DEFAULT_PSYQ_ARCHIVE_URL
+    return None
+
+
+def default_psyq_converted_archive_url(version: str | None = None) -> str | None:
+    if normalize_psyq_version(version) == DEFAULT_PSYQ_VERSION:
+        return DEFAULT_PSYQ_CONVERTED_ARCHIVE_URL
     return None
 
 
@@ -392,29 +403,19 @@ def import_psyq_sdk(
             force=force,
         )
     else:
-        resolved_archive = discover_source_archive(version=psyq_version)
-        if resolved_archive is not None:
-            source_archive = sync_archive_into_store(
-                resolved_archive,
-                archive_store / resolved_archive.name,
-                force=force,
+        archive_url = default_psyq_archive_url(psyq_version)
+        if archive_url is None:
+            raise FileNotFoundError(
+                f"missing PsyQ {psyq_version} source archive; pass --archive or --archive-url"
             )
-        else:
-            archive_url = archive_url or default_psyq_archive_url(psyq_version)
-            if archive_url is None:
-                raise FileNotFoundError(
-                    f"missing PsyQ {psyq_version} source archive under inputs/; pass --archive or --archive-url"
-                )
-            archive_name = Path(urllib.parse.urlparse(archive_url).path).name
-            if not archive_name:
-                raise ValueError(
-                    f"could not derive archive name from URL: {archive_url}"
-                )
-            source_archive = download_archive(
-                archive_url,
-                archive_store / archive_name,
-                force=force,
-            )
+        archive_name = Path(urllib.parse.urlparse(archive_url).path).name
+        if not archive_name:
+            raise ValueError(f"could not derive archive name from URL: {archive_url}")
+        source_archive = download_archive(
+            archive_url,
+            archive_store / archive_name,
+            force=force,
+        )
 
     source_root = cache_root / "source-tree" / archive_stem(source_archive)
     if force and source_root.exists():
@@ -431,3 +432,43 @@ def import_psyq_sdk(
         version=psyq_version,
         force=force,
     )
+
+
+def stage_psyq_converted_sdk(
+    *,
+    dest: Path | None = None,
+    private_assets_root: Path | None = None,
+    version: str | None = None,
+    force: bool = False,
+) -> Path:
+    """Stage converted per-object members needed by reviewed SDK evidence."""
+    psyq_version = normalize_psyq_version(version)
+    private_root = private_assets_root or default_private_assets_root()
+    cache_root = psyq_private_cache_root(private_root, psyq_version)
+    archive_url = default_psyq_converted_archive_url(psyq_version)
+    if archive_url is None:
+        raise FileNotFoundError(f"no converted PsyQ archive is configured for {psyq_version}")
+    archive_name = Path(urllib.parse.urlparse(archive_url).path).name
+    archive = download_archive(archive_url, cache_root / "source-media" / archive_name, force=force)
+    source_root = cache_root / "source-tree" / archive_stem(archive)
+    if force and source_root.exists():
+        shutil.rmtree(source_root)
+    if not source_root.exists() or not any(source_root.iterdir()):
+        extract_archive(archive, source_root)
+    library_root = next(
+        (
+            candidate
+            for candidate in sorted(source_root.rglob("*"))
+            if candidate.is_dir()
+            and candidate.name.lower() == "lib"
+            and any(child.is_dir() for child in candidate.iterdir())
+        ),
+        None,
+    )
+    if library_root is None:
+        raise RuntimeError(f"converted PsyQ {psyq_version} archive has no library directory")
+    dest_root = (dest or psyq_dest(psyq_version)).resolve()
+    for source_library in library_root.iterdir():
+        if source_library.is_dir():
+            shutil.copytree(source_library, dest_root / source_library.name.lower(), dirs_exist_ok=True)
+    return dest_root
