@@ -42,6 +42,21 @@ Read these before any lift. Do not skip to C edits.
 
 Prefer the repo `bin/` entrypoints over generic psx-rizin scripts.
 
+## Scripted evidence
+
+Before dispatching a lift or reading several command outputs, run the bundled
+read-only brief once:
+
+```sh
+python3 .pi/skills/bof3-re/scripts/function-brief.py TARGET@0xADDRESS
+```
+
+It emits one JSON document containing target identity, manifest load address and
+payload offset, binary hash, local declaration hints, Rizin freshness, the
+indexed mission, and—when a lift already exists—live status, asm diff, and byte
+match results. It does not edit tracked files. Add `--prepare` only when you
+need fresh disposable Splat/m2c evidence under `out/skill-evidence/`.
+
 ## Rules
 
 - Qualify identity as `TARGET@0xADDRESS`; original bytes and PS-X headers win.
@@ -75,10 +90,10 @@ Prefer the repo `bin/` entrypoints over generic psx-rizin scripts.
 
 ## Lift
 
-1. Validate the manifest, reviewed boundary, and target map. Confirm the load
-   address: `runtime_address − load_address == payload_offset` (read `t_addr`
-   from the PS-X header at offset `0x18`). A green diff does NOT validate a
-   wrong load address (`LESSONS.md`).
+1. Run `function-brief.py TARGET@0xADDRESS`, then validate its manifest,
+   reviewed boundary, and payload offset. For an EXE, confirm `t_addr` from the
+   PS-X header at offset `0x18`; a green diff does NOT validate a wrong load
+   address (`LESSONS.md`).
 2. Gather evidence with `bin/rev-query calls TARGET@0xADDRESS` and
    `bin/rev-query duplicates TARGET@0xADDRESS`: callees supply prototypes to
    declare, callers fix the signature/ABI, a duplicate group seeds the shape,

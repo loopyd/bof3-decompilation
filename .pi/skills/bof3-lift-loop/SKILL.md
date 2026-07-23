@@ -27,7 +27,14 @@ Confirm before starting:
 ## Phase 2 — Baseline
 
 ```sh
-git status --short                      # tree must be clean before starting
+python3 .pi/skills/bof3-lift-loop/scripts/loop-status.py --selection hotspots
+```
+
+The read-only dashboard combines worktree/staged state, reverse-index readiness,
+the existing journal, and ranked candidates in one JSON document. Do not dispatch
+when it reports a dirty tree or index failure. When the gates pass:
+
+```sh
 bin/decomp-status --json -o out/lift-loop/baseline.json
 ```
 
@@ -38,9 +45,10 @@ Initialize the journal `out/lift-loop/results.tsv` with the header
 
 Repeat until the budget is spent, no candidates remain, or a stop rule fires:
 
-1. **Pick** the next candidate:
-   `bin/rev-query <selection> --unlifted --detail minimal --limit 1 --json`.
-2. **Brief** it: `bin/rev-query mission TARGET@0xADDRESS --json`.
+1. **Pick** the next candidate from `loop-status.py` (or, when refreshing,
+   `bin/rev-query <selection> --unlifted --detail minimal --limit 1 --json`).
+2. **Brief** it with
+   `python3 .pi/skills/bof3-re/scripts/function-brief.py TARGET@0xADDRESS`.
 3. **Dispatch** one `bof3-reverse` subagent with the mission brief (template
    below). The executor lifts the function and returns a structured result.
 4. **Verify** independently in the parent:

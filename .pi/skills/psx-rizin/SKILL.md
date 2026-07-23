@@ -36,6 +36,20 @@ output as hypotheses until corroborated.
      below are skill-local helpers; prefer the wired `bin/` entrypoints when they
      cover the task.
 
+## Snapshot readiness
+
+For one target—or all configured targets—run the bundled read-only summary
+before analysis or index work:
+
+```sh
+python3 .pi/skills/psx-rizin/scripts/snapshot-status.py [TARGET]
+```
+
+It emits manifest identity, binary hash, Rizin snapshot freshness, and reverse
+index readiness in one JSON document. It never runs analysis or changes files.
+For each stale target, run the reported `bin/rz-project analyze TARGET`, then
+rebuild the index explicitly with `bin/index`.
+
 ## Route the task
 
 Interpret explicit calls as the nearest mode:
