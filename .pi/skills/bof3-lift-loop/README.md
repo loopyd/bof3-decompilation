@@ -7,23 +7,24 @@ reviewed exact lifts.
 
 ## What runs
 
-- **`bof3-reverse`** (executor) — lifts one `TARGET@0xADDRESS` to byte-match.
-  Edits only that function's source/header/map/Splat. Never commits.
-- **`bof3-review`** (reviewer) — read-only guideline + correctness gate
-  (`pass` / `needs-fix` / `block`).
+- **`bof3-reverse`** (executor) — loads `/skill:bof3-re`, then lifts one
+  `TARGET@0xADDRESS` to byte-match. Edits only that function's
+  source/header/map/Splat. Never commits.
+- **`bof3-review`** — loads `/skill:bof3-re` and performs the read-only
+  guideline + correctness gate (`pass` / `needs-fix` / `block`).
 - **Parent loop** (this skill) — owns selection, verification, git, and the journal.
 
 ## Prerequisites
 
 1. Reverse index built: `bin/rz-project analyze TARGET` for any stale target,
    then `bin/index` (`bin/rev-query status` shows coverage).
-2. **Restart opencode** so it loads `bof3-reverse`, `bof3-review`, and this
-   skill (config is read once at startup).
+2. Restart Pi after adding or changing project-local agents or skills so it
+   reloads the resources.
 
 ## Launch
 
 ```
-$bof3-lift-loop
+/skill:bof3-lift-loop
 ```
 
 It confirms targets / selection (`quick-wins` default) / budget (3–5) / commit
@@ -46,11 +47,11 @@ pick quick-win → rev-query mission → bof3-reverse lifts → byte-match verif
 
 - `stale Rizin snapshot` → `bin/rz-project analyze TARGET`, then `bin/index`.
 - `reverse index not found` → `bin/index`.
-- Subagents not visible → restart opencode.
+- Project agents or skills not visible → trust the project, then restart Pi.
 
 ## See also
 
 - `SKILL.md` — full loop protocol + subagent brief templates.
 - `references/MISSION_PROTOCOL.md` — executor procedure.
 - `references/REVIEW_CHECKLIST.md` — reviewer checks.
-- `$bof3-re` — hand-guided single-function lifting.
+- `/skill:bof3-re` — hand-guided single-function lifting.

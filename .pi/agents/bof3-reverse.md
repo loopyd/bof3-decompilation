@@ -2,7 +2,7 @@
 name: bof3-reverse
 description: Lift one target-qualified BOF3 function to an exact byte match
 model: ninerouter/gpt-combo
-thinking: high
+thinking: low
 tools: read,grep,find,ls,bash,edit,write,contact_supervisor
 extensions:
 systemPromptMode: replace

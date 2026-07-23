@@ -1,7 +1,8 @@
 # Review checklist — bof3-review reviewer
 
-You review ONE just-matched lift `TARGET@0xADDRESS`, read-only. Load `$bof3-re`
-for the rules. Return a verdict with concrete, file:line findings.
+You review ONE just-matched lift `TARGET@0xADDRESS`, read-only. Load
+`/skill:bof3-re` for the rules. Return a verdict with concrete, file:line
+findings.
 
 ## Checks
 
@@ -15,7 +16,7 @@ for the rules. Return a verdict with concrete, file:line findings.
    bindings, not reinvented `func_8017XXXX`.
 5. **No duplicate declarations**: every new struct, typedef, extern, `#define`,
    or symbol was checked against the target `internal.h`, `symbols.txt`,
-   `include/bof3/`, SDK maps, and `bin/rev-query symbols`/`variables` before
+   `include/`, SDK maps, and `bin/rev-query symbols`/`variables` before
    creation. No second name for an already-mapped address; no parallel struct
    duplicating an existing one with the same offsets; no local redefinition of
    a shared `include/bof3/` macro or known PsyQ declaration.

@@ -1,6 +1,6 @@
 ---
 name: bof3-re
-description: Execute BOF3 target-qualified function lifting, exact matching, duplicate-group normalization, and evidence-gated source promotion. Use when the user invokes `$bof3-re` to select or lift BOF3 functions, update reviewed target source, Splat layouts or maps, or promote proven cross-target duplicate bodies.
+description: Execute BOF3 target-qualified function lifting, exact matching, duplicate-group normalization, and evidence-gated source promotion. Use via `/skill:bof3-re` or when explicitly asked to select or lift BOF3 functions, update reviewed target source, Splat layouts or maps, or promote proven cross-target duplicate bodies.
 ---
 
 # BOF3 Reverse Engineering
@@ -33,12 +33,12 @@ Read these before any lift. Do not skip to C edits.
 
 **When doing analyzer or disassembly work, read psx-rizin references:**
 
-- Full RE workflow phases → `.agents/skills/psx-rizin/references/WORKFLOW.md`
-- Matching decompilation and build/diff → `.agents/skills/psx-rizin/references/DECOMP_BUILD_DIFF.md`
-- Rizin commands and staged analysis → `.agents/skills/psx-rizin/references/RIZIN_PLAYBOOK.md`
-- PSX ABI, addressing, delay slots → `.agents/skills/psx-rizin/references/PSX_ABI_AND_ADDRESSING.md`
-- Symbols, signatures, types → `.agents/skills/psx-rizin/references/SYMBOLS_SIGNATURES_AND_TYPES.md`
-- Overlays and assets → `.agents/skills/psx-rizin/references/OVERLAYS_AND_ASSETS.md`
+- Full RE workflow phases → `../psx-rizin/references/WORKFLOW.md`
+- Matching decompilation and build/diff → `../psx-rizin/references/DECOMP_BUILD_DIFF.md`
+- Rizin commands and staged analysis → `../psx-rizin/references/RIZIN_PLAYBOOK.md`
+- PSX ABI, addressing, delay slots → `../psx-rizin/references/PSX_ABI_AND_ADDRESSING.md`
+- Symbols, signatures, types → `../psx-rizin/references/SYMBOLS_SIGNATURES_AND_TYPES.md`
+- Overlays and assets → `../psx-rizin/references/OVERLAYS_AND_ASSETS.md`
 
 Prefer the repo `bin/` entrypoints over generic psx-rizin scripts.
 
@@ -107,9 +107,10 @@ divergent types, and wasted effort.
 
 **Search order (fastest first):**
 
-1. **Target `internal.h`** — grep the target's `src/<target>/internal.h` for
-   the address, name, or a similar type/struct. If a struct with the same
-   offsets exists, reuse it; extend it only with new evidence-backed fields.
+1. **Target `internal.h`** — read the target manifest and grep
+   `<source_dir>/internal.h` for the address, name, or a similar type/struct.
+   If a struct with the same offsets exists, reuse it; extend it only with new
+   evidence-backed fields.
 2. **Target `symbols.txt`** — grep `config/targets/<target>/symbols.txt` for
    the address or name. If the symbol is already mapped, use the existing name.
 3. **Shared headers** — grep `include/bof3/` for shared types, macros, and
