@@ -9,7 +9,9 @@ Autonomously lift BOF3 functions to exact byte-match behind an independent
 review gate. Read `AGENTS.md` and load `/skill:bof3-re` first. The loop
 orchestrates two bounded project agents: `bof3-reverse` (one-function
 executor) and read-only `bof3-review`. The parent workflow owns all git
-operations; subagents never commit.
+operations; subagents never commit. The project agent definitions own model,
+thinking, and tool policy: both use `ninerouter/gpt-combo` at `high`; keep only
+native tools plus `contact_supervisor` in their strict allowlists.
 
 ## Phase 1 — Setup (interactive)
 
@@ -44,13 +46,17 @@ Repeat until the budget is spent, no candidates remain, or a stop rule fires:
 4. **Verify** independently in the parent:
    `bin/byte-match TARGET@0xADDRESS` exits 0 AND
    `bin/decomp-status TARGET --json` reports `status == "exact"`.
-5. **Review gate**: dispatch one read-only `bof3-review` subagent on the
+5. **Supervisor decision**: when a child calls `contact_supervisor`, the parent
+   detaches. Reply with `subagent_supervisor({ action: "reply", replyTo:
+   REQUEST_ID, message: "..." })`, then wait for that run before resuming the
+   loop. Do not use generic `intercom`.
+6. **Review gate**: dispatch one read-only `bof3-review` subagent on the
    function. On `needs-fix`, re-dispatch `bof3-reverse` with the findings
    (≤2 bounded retries), then re-verify and re-review. On `block`, escalate.
-6. **Commit** only if verified exact AND review `pass`: `git add` that
+7. **Commit** only if verified exact AND review `pass`: `git add` that
    function's files (`src/<t>/func_*.c`, its `internal.h`, target map, Splat
    boundary) and commit with a concise `feat(decomp): byte-match <function>`.
-7. **Journal** the result (function, status, commit sha, notes).
+8. **Journal** the result (function, status, commit sha, notes).
 
 ## Phase 4 — Report
 
@@ -61,6 +67,9 @@ committed lifts, and next steps.
 
 - Commit ONLY exact byte-matched lifts that passed review — never partial/invalid.
 - Subagents never commit/push/reset/clean or run setup; the parent owns git.
+- Leave the agent extension list unspecified so Pi retains the parent extension
+  set and native supervisor channel. `tools` is an allowlist, not an extension
+  loader; do not add unavailable context-mode tools.
 - Serial execution: functions in the same target share `internal.h`, so never run
   two executors on one target concurrently.
 - Never commit secrets or `inputs/` media.

@@ -1,9 +1,10 @@
 ---
 name: bof3-reverse
 description: Lift one target-qualified BOF3 function to an exact byte match
-model: ninerouter/ds-combo
-thinking: medium
-tools: read,grep,find,ls,bash,edit,write,contact_supervisor,ctx_batch_execute,ctx_execute,ctx_execute_file
+model: ninerouter/gpt-combo
+thinking: high
+tools: read,grep,find,ls,bash,edit,write,contact_supervisor
+extensions:
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: true

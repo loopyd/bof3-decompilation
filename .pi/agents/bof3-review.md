@@ -3,7 +3,8 @@ name: bof3-review
 description: Read-only review of one exact BOF3 target-qualified function lift
 model: ninerouter/gpt-combo
 thinking: high
-tools: read,grep,find,ls,bash,contact_supervisor,ctx_batch_execute,ctx_execute,ctx_execute_file
+tools: read,grep,find,ls,bash,contact_supervisor
+extensions:
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: true
