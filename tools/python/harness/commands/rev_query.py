@@ -282,7 +282,7 @@ def _candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
 
     manifests = load_target_manifests(root)
     manifest = manifests[row["target"]]
-    address = row["address"]
+    address = int(str(row["address"]), 0)
     binary = root / manifest.binary
     if not binary.is_file():
         return "missing_binary"
