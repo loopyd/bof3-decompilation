@@ -13,6 +13,7 @@ from harness.commands.rev_query import (
     main,
 )
 from harness.reverse_index import _schema
+from harness.commands.rev_query import _candidate_exclusion
 
 
 def test_sccs_are_deterministic_and_collapse_recursion() -> None:
@@ -86,6 +87,37 @@ def test_rank_detail_projects_context_fields() -> None:
         }
     ]
     assert _project_rows([row], command="quick-wins", detail="full") == [row]
+
+
+def test_candidate_exclusion_rejects_data_pointers_and_sdk(tmp_path) -> None:
+    target = "exe/t"
+    config = tmp_path / "config" / "targets" / "exe" / "t"
+    config.mkdir(parents=True)
+    (config / "target.toml").write_text(
+        'schema = "harness.target/v2"\n'
+        'id = "exe/t"\nkind = "executable"\n'
+        'source_dir = "src/exe/t"\n'
+        'binary = "out/binaries/exe/t.bin"\n'
+        'splat = "config/targets/exe/t/splat.yaml"\n'
+        'load_address = 0x80100000\n',
+        encoding="utf-8",
+    )
+    (config / "splat.yaml").write_text(
+        "segments:\n  - [0, c, func_80100000]\n  - [8, c, func_80100008]\n  - [16]\n",
+        encoding="utf-8",
+    )
+    binary = tmp_path / "out/binaries/exe/t.bin"
+    binary.parent.mkdir(parents=True)
+    binary.write_bytes(
+        b"\x08\x00\xe0\x03\x00\x00\x00\x00"  # jr ra; nop
+        + b"\x00\x00\x10\x80\x04\x00\x10\x80"  # in-image pointers
+    )
+    sdk = tmp_path / "config/sdk"
+    sdk.mkdir(parents=True)
+    (sdk / "psyq-slus.txt").write_text("SdkFn = 0x80100000;\n", encoding="utf-8")
+    row = {"target": target, "address": 0x80100000, "size": 8}
+    assert _candidate_exclusion(tmp_path, row) == "shared_sdk_symbol"
+    assert _candidate_exclusion(tmp_path, {**row, "address": 0x80100008}) == "in_image_pointer_table"
 
 
 def test_xrefs_are_filtered_by_target(capsys, monkeypatch) -> None:
