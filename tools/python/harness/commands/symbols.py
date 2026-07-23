@@ -34,12 +34,12 @@ def _root(args: argparse.Namespace) -> Path:
     return args.root.resolve()
 
 
-def _targets(root: Path, target: str | None) -> list[str]:
-    manifests = load_target_manifests(root)
+def _targets(root: Path, target: str | None, *, manifests: dict | None = None) -> list[str]:
+    pool = manifests if manifests is not None else load_target_manifests(root)
     if target is None:
-        return sorted(manifests)
+        return sorted(pool)
     normalized = normalize_target_id(target).value
-    if normalized not in manifests:
+    if normalized not in pool:
         raise ValueError(f"unknown target: {target}")
     return [normalized]
 
@@ -67,7 +67,8 @@ def run_check(args: argparse.Namespace) -> int:
     root = _root(args)
     manifests = load_target_manifests(root)
     errors: list[str] = []
-    for target, manifest in sorted(manifests.items()):
+    for target in _targets(root, args.target, manifests=manifests):
+        manifest = manifests[target]
         path = map_path(root, target)
         if not path.is_file():
             errors.append(f"missing target map: {path.relative_to(root)}")
@@ -363,7 +364,8 @@ def build_parser() -> argparse.ArgumentParser:
     normalize.add_argument("target", nargs="?")
     normalize.add_argument("--write", action="store_true")
     normalize.set_defaults(handler=run_normalize)
-    check = sub.add_parser("check", help="validate all target maps")
+    check = sub.add_parser("check", help="validate target map(s)")
+    check.add_argument("target", nargs="?")
     check.set_defaults(handler=run_check)
     bindings = sub.add_parser("bindings", help="generate target weak bindings")
     bindings.add_argument("target", nargs="?")

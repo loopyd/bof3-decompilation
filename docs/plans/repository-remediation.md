@@ -62,7 +62,7 @@ reviewed Splat boundaries, target-local map, and `bin/symbols check` output.
 
 | ID | Status | Work | Validation |
 | --- | --- | --- | --- |
-| 2.1 | pending | Add a target selector to `symbols check` only if the existing command cannot diagnose one target without unrelated output. Reuse canonical validation; do not create a parallel checker. | New focused CLI test; full `bin/symbols check` unchanged |
+| 2.1 | complete | Add a target selector to `symbols check` only if the existing command cannot diagnose one target without unrelated output. Reuse canonical validation; do not create a parallel checker. | Test+lint passed: pytest 13/13, ruff clean. Scoped `bin/symbols check emi/battle/battle/15` isolates battle/15 only (exit 2). Full `bin/symbols check` remains exit 2 with all-target baseline (battle/03, battle/15, shop/00, SLUS, game/01). Unknown-target `exe/no_such_target` uses standard error path (exit 2). `git diff --check` clean. |
 | 2.2 | pending | Reconcile battle/15 source-to-map ownership one reviewed address at a time, starting from the reported missing map addresses. | Target-scoped check; `bin/symbols check`; no exact-match regression |
 | 2.3 | pending | Reconcile shop/00 source-to-map ownership one reviewed address at a time. | Same as 2.2 |
 | 2.4 | pending | Reconcile battle/03 source-to-map ownership one reviewed address at a time. | Same as 2.2 |
