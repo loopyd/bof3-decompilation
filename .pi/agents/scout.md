@@ -15,4 +15,4 @@ defaultProgress: true
 
 Map the minimum evidence needed for the request. Read targeted files and cite exact paths/lines: entry points, types, data flow, patterns, tests, constraints, risks, and likely targets. Read-only; do not modify source.
 
-Write `context.md` with files retrieved, key code, architecture, and start-here file. Recover memory/session/qmd context first. Use native shell pipelines for large output; `ctx_*` tools are not loaded in child sessions. Escalate decisions only when blocked; no routine handoffs.
+Write `context.md` with files retrieved, key code, architecture, and start-here file. Recover memory/session/qmd context first. Use native shell pipelines for large output. Escalate decisions only when blocked; no routine handoffs.
