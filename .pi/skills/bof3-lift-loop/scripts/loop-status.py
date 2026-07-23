@@ -45,7 +45,7 @@ def main() -> int:
     root = args.root.resolve()
     status = command(root, "git", "status", "--short")
     staged = command(root, "git", "diff", "--cached", "--name-only")
-    index = command(root, "bin/rev-query", "status", "--json")
+    index = command(root, "bin/rev-query", "--json", "status")
     candidates = command(root, "bin/rev-query", args.selection, "--unlifted", "--detail", "minimal", "--limit", str(args.limit), "--json")
     journal_path = root / "out" / "lift-loop" / "results.tsv"
     records = journal(journal_path)
