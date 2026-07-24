@@ -47,8 +47,48 @@ First return mission JSON:
 `{"function", "status": "exact"|"partial"|"escalated", "match_percent",
 "files_changed": [...], "matching_aids": [...], "notes"}`.
 
-When the executor prompt also includes an `## Acceptance Contract`, finish with the
-required fenced `acceptance-report` JSON. Copy the supplied criterion IDs exactly;
-include actual commands and validation evidence; use empty arrays for non-applicable
-files/tests; and set `noStagedFiles` from a fresh index check. This is required even
-for `status: "escalated"` with no retained changes.
+When the executor prompt includes an `## Acceptance Contract`, finish with a fenced
+`acceptance-report` JSON. Copy the supplied criterion IDs exactly and include actual
+commands, validation evidence, residual risks, and a fresh staged-index result.
+
+For the dedicated lift executor's outcome-aware criterion, report `satisfied` only
+when **either** terminal outcome is true without widened scope:
+
+- **Exact:** byte match passed; retained target-local source/map/Splat facts are
+  listed in both mission `files_changed` and report `changedFiles`.
+- **Escalated:** the mission JSON says `status: "escalated"`; every mission edit
+  was restored/removed; both `files_changed` and `changedFiles` are `[]`; and the
+  report records the first mismatch, restoration commands, a non-empty residual
+  risk, and a no-retained-changes `diffSummary`.
+
+Use `testsAddedOrUpdated: []` when no test changes apply and always set
+`noStagedFiles` from a fresh index check. A missing fence, missing evidence, or an
+escalation falsely claimed as exact remains a failed acceptance report.
+
+```acceptance-report
+{
+  "criteriaSatisfied": [
+    {
+      "id": "criterion-1",
+      "status": "satisfied",
+      "evidence": "Exact byte match passed, or evidence-backed escalation restored every mission edit."
+    }
+  ],
+  "changedFiles": [],
+  "testsAddedOrUpdated": [],
+  "commandsRun": [
+    {
+      "command": "bin/asm-diff TARGET@0xADDRESS --detail full",
+      "result": "passed",
+      "summary": "Exact evidence or the diagnosed first mismatch."
+    }
+  ],
+  "validationOutput": [
+    "Exact byte-match result, or restored-worktree mismatch evidence."],
+  "residualRisks": ["None for an exact lift, or the documented clean-C residual."],
+  "noStagedFiles": true,
+  "diffSummary": "Retained exact lift facts, or no retained mission changes after escalation.",
+  "reviewFindings": [],
+  "manualNotes": "Target-qualified outcome and follow-up boundary."
+}
+```

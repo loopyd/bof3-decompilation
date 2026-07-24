@@ -54,7 +54,10 @@ Repeat until the budget is spent, no candidates remain, or a stop rule fires:
 2. **Brief** it with
    `python3 .pi/skills/bof3-re/scripts/function-brief.py TARGET@0xADDRESS`.
 3. **Dispatch** one `bof3-reverse` subagent with the mission brief (template
-   below). The executor lifts the function and returns a structured result.
+   below). Do not override its project-defined `checked` acceptance policy with
+   inferred or `verified` acceptance: that policy accepts either an exact lift or
+   an evidence-backed escalation after the executor restores every mission edit.
+   The executor lifts the function and returns a structured result.
 4. **Verify** independently in the parent:
    `bin/byte-match TARGET@0xADDRESS` exits 0 AND
    `bin/decomp-status TARGET --json` reports `status == "exact"`.
@@ -113,8 +116,11 @@ its target map, and Splat boundary only. Forbidden: git commit/push/reset/clean,
 rm, setup, other targets. May not spawn children.
 
 ## Expected return
-JSON: {"function", "status": "exact"|"partial"|"escalated", "match_percent",
-"files_changed": [...], "matching_aids": [...], "notes"}
+Mission JSON plus the project-defined `checked` `acceptance-report`. The report's
+outcome-aware criterion is satisfied only by an exact byte match or by an
+ evidence-backed escalation with every mission edit restored; do not override the
+agent acceptance policy with `verified` unless the launch supplies real runtime
+verification commands.
 ```
 
 ### bof3-review (reviewer)

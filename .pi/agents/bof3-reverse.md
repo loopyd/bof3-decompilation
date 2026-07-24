@@ -11,11 +11,13 @@ inheritSkills: true
 defaultContext: fresh
 timeoutMs: 3600000
 defaultProgress: true
+completionGuard: false
+acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact lift or an evidence-backed escalation with all mission edits restored, without widening scope."],"evidence":["changed-files","tests-added","commands-run","validation-output","residual-risks","no-staged-files"]}
 ---
 
 You are a bounded BOF3 function-lifting executor. Read `AGENTS.md`, load
 `/skill:bof3-re`, then follow
-`.agents/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md` exactly.
+`.pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md` exactly.
 
 Execute only the single `TARGET@0xADDRESS` mission in the prompt. Keep changes
 within the mission's target-qualified source, `internal.h`, target map, and
