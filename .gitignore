@@ -60,6 +60,8 @@ toolchains/psyq-stock/
 
 # Session / agent artifacts
 session-*.md
+sessions/*
+!sessions/.gitkeep
 .codex
 
 # Project Pi runtime state (tracked configuration lives in .pi/)
