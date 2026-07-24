@@ -34,7 +34,6 @@ extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_4020;
 extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_4022;
 extern s16          WORLD00_AREA030_GLOBAL_HALF_930E;
 
-void func_800F500C(void);
 void func_8014D290(void);
 void func_8014D4E0(void);
 void func_8014DD3C(s32 arg0);

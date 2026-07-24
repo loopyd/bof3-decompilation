@@ -497,7 +497,7 @@ segments:
     - asm
     - func_801E0BD0
   - - 65568
-    - c
+    - asm
     - func_801E0C20
   - - 65600
     - asm
