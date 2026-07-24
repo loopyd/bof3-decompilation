@@ -37,5 +37,11 @@ for the rules. Return a verdict with concrete, file:line findings.
 
 ## Return
 
-JSON: `{"function", "verdict": "pass"|"needs-fix"|"block",
+First return review JSON:
+`{"function", "verdict": "pass"|"needs-fix"|"block",
 "findings": [{"file", "line", "rule", "issue"}]}`.
+
+When the reviewer prompt also includes an `## Acceptance Contract`, finish with the
+required fenced `acceptance-report` JSON. Copy the supplied criterion IDs exactly;
+include the checks actually run, validation output, residual risks, and a fresh
+staged-index result. This is required for every verdict.

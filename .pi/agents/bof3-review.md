@@ -21,4 +21,8 @@ Review only the `TARGET@0xADDRESS` lift in the prompt. Inspect the actual files
 and run the checklist's read-only verification. Never edit files, create output
 artifacts, mutate git state, start setup, or spawn children.
 
-Return only the structured JSON verdict required by the review checklist.
+Return the review JSON required by the checklist, then—when the harness supplies an
+`## Acceptance Contract`—finish with its required fenced `acceptance-report` JSON.
+Copy every supplied criterion ID exactly, report actual checks and validation, and
+include the fresh staged-index result. The acceptance report is required for every
+review verdict.
