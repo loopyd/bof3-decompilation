@@ -43,5 +43,12 @@ authority scope.
 
 ## Return
 
-JSON: `{"function", "status": "exact"|"partial"|"escalated", "match_percent",
+First return mission JSON:
+`{"function", "status": "exact"|"partial"|"escalated", "match_percent",
 "files_changed": [...], "matching_aids": [...], "notes"}`.
+
+When the executor prompt also includes an `## Acceptance Contract`, finish with the
+required fenced `acceptance-report` JSON. Copy the supplied criterion IDs exactly;
+include actual commands and validation evidence; use empty arrays for non-applicable
+files/tests; and set `noStagedFiles` from a fresh index check. This is required even
+for `status: "escalated"` with no retained changes.

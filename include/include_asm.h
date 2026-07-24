@@ -4,31 +4,29 @@
 #if !defined(M2CTX) && !defined(PERMUTER)
 
 #ifndef INCLUDE_ASM
-#define INCLUDE_ASM(FOLDER, NAME)                                              \
-  __asm__(                                                                     \
-      ".section .text\n"                                                       \
-      "    .set noat\n"                                                        \
-      "    .set noreorder\n"                                                   \
-      "    .include \"" FOLDER "/" #NAME                                       \
-      ".s\"\n"                                                                 \
-      "    .set reorder\n"                                                     \
-      "    .set at\n")
+#define INCLUDE_ASM(FOLDER, NAME) \
+    __asm__( \
+        ".section .text\n" \
+        "    .set noat\n" \
+        "    .set noreorder\n" \
+        "    .include \"" FOLDER "/" #NAME ".s\"\n" \
+        "    .set reorder\n" \
+        "    .set at\n" \
+    )
 #endif
 #ifndef INCLUDE_RODATA
-#define INCLUDE_RODATA(FOLDER, NAME)                                           \
-  __asm__(                                                                     \
-      ".section .rodata\n"                                                     \
-      "    .include \"" FOLDER "/" #NAME                                       \
-      ".s\"\n"                                                                 \
-      ".section .text")
+#define INCLUDE_RODATA(FOLDER, NAME) \
+    __asm__( \
+        ".section .rodata\n" \
+        "    .include \"" FOLDER "/" #NAME ".s\"\n" \
+        ".section .text" \
+    )
 #endif
 
 #if INCLUDE_ASM_USE_MACRO_INC
-__asm__(
-    ".include \"/home/rcorreia/projects/rebof3-simple/include/macro.inc\"\n");
+__asm__(".include \"/mnt/PROJECTS/repos/rebof3-simple/include/macro.inc\"\n");
 #else
-__asm__(
-    ".include \"/home/rcorreia/projects/rebof3-simple/include/labels.inc\"\n");
+__asm__(".include \"/mnt/PROJECTS/repos/rebof3-simple/include/labels.inc\"\n");
 #endif
 
 #else

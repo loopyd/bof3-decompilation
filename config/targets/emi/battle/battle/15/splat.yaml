@@ -326,7 +326,7 @@ segments:
     - asm
     - func_8009DE18
   - - 30288
-    - asm
+    - c
     - func_8009DE50
   - - 30308
     - asm
@@ -359,7 +359,7 @@ segments:
     - asm
     - func_8009E184
   - - 31200
-    - asm
+    - c
     - func_8009E1E0
   - - 31232
     - asm
@@ -374,7 +374,7 @@ segments:
     - asm
     - func_8009E500
   - - 32708
-    - asm
+    - c
     - func_8009E7C4
   - - 32740
     - asm

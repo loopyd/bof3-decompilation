@@ -17,8 +17,9 @@ Baseline reviewed on 2026-07-23:
   rev-query pass (19 tests); the current Python toolchain-focused suite passes
   (4 tests).
 - `bin/symbols check` fails on source/map drift in battle/03, battle/15,
-  shop/00, and SLUS; it also reports an unnormalized game/01 map and one SLUS
-  binding/map drift. These must be repaired at their owning targets.
+  shop/00, and SLUS plus one SLUS binding/map drift. Game/01 was normalized
+  locally in Phase 2.6; the remaining failures must be repaired at their owning
+  targets.
 - `bin/decomp-status --json` exceeded a 45-second audit timeout. Treat its
   aggregate counts as stale until its runtime is profiled or target-scoped
   reports provide a repeatable baseline.
@@ -50,7 +51,7 @@ the decomp-status timeout are recorded above.
 | 1.1 | complete | Keep `decomp-status` invalid records and target ordering machine-readable. | `test_decomp_status.py` |
 | 1.2 | complete | Keep canonical symbol-map normalization and source/binding drift checks covered. | `test_canonical_symbols.py`; `bin/symbols check` |
 | 1.3 | complete | Record the live health baseline rather than carrying the old lift-count snapshot forward. | Commands in Scope and evidence baseline |
-| 1.4 | pending | Profile the full `bin/decomp-status --json` timeout; if necessary, add a bounded target-scoped aggregate mode without changing report semantics. | Repeated complete report or focused timing regression |
+| 1.4 | complete | Profiled the full audit: `bin/decomp-status --json --detail minimal` exceeded a 300-second bound (exit 124, no JSON). No new mode was needed: existing positional target selection already provides the bounded aggregate (`bin/decomp-status TARGET --json --detail minimal`) without changing report semantics; battle/15 completed in 20.87 seconds (exit 2 only for known invalid lifts) and emitted valid aggregate JSON. | Full timeout evidence plus target-scoped valid JSON baseline |
 
 **Exit gate:** the current baseline, including known failures, is reproducible
 and does not rely on obsolete numerical totals.
@@ -62,12 +63,12 @@ reviewed Splat boundaries, target-local map, and `bin/symbols check` output.
 
 | ID | Status | Work | Validation |
 | --- | --- | --- | --- |
-| 2.1 | complete | Add a target selector to `symbols check` only if the existing command cannot diagnose one target without unrelated output. Reuse canonical validation; do not create a parallel checker. | Test+lint passed: pytest 13/13, ruff clean. Scoped `bin/symbols check emi/battle/battle/15` isolates battle/15 only (exit 2). Full `bin/symbols check` remains exit 2 with all-target baseline (battle/03, battle/15, shop/00, SLUS, game/01). Unknown-target `exe/no_such_target` uses standard error path (exit 2). `git diff --check` clean. |
-| 2.2 | pending | Reconcile battle/15 source-to-map ownership one reviewed address at a time, starting from the reported missing map addresses. | Target-scoped check; `bin/symbols check`; no exact-match regression |
+| 2.1 | complete | Add a target selector to `symbols check` only if the existing command cannot diagnose one target without unrelated output. Reuse canonical validation; do not create a parallel checker. | Test+lint passed: pytest 13/13, ruff clean. Scoped `bin/symbols check emi/battle/battle/15` isolates battle/15 only (exit 2). Full `bin/symbols check` remains exit 2 with all-target baseline (battle/03, battle/15, shop/00, SLUS; game/01 was normalized in Phase 2.6). Unknown-target `exe/no_such_target` uses standard error path (exit 2). `git diff --check` clean. |
+| 2.2 | active | Reconcile battle/15 source-to-map ownership one reviewed address at a time. Promoted only `func_8009E1E0`, `func_8009E7C4`, and `func_8009DE50` after manifest load `0x80096800`, reviewed offsets `0x79E0`, `0x7FC4`, and `0x7650` (= address minus load), original exact-match evidence, and required `@behavior` metadata; coupled each raw local-map entry with only its unchanged-boundary Splat `asm`→`c` classification. DE50's original five instructions/20 bytes require a signed `s16` store of `-20` at byte offset 4 through the existing `D_801463A0` pointer value. | Scoped check now reports the remaining 34 drifts only (expected exit 2); `bin/splat emi/battle/battle/15` passed; DE50 full asm diff and byte match passed (5/5 instructions, 20/20 bytes); target status reports DE50 exact (`exact=11`, `invalid=60`); `git diff --check` clean |
 | 2.3 | pending | Reconcile shop/00 source-to-map ownership one reviewed address at a time. | Same as 2.2 |
 | 2.4 | pending | Reconcile battle/03 source-to-map ownership one reviewed address at a time. | Same as 2.2 |
 | 2.5 | pending | Repair the four reported SLUS source/map drifts and the `D_80143C30` binding/map disagreement at the owning declaration/map. | `bin/symbols check`; target build/match checks where applicable |
-| 2.6 | pending | Normalize the reported game/01 map only through `bin/symbols normalize <TARGET> --write`; inspect the resulting diff. | `bin/symbols check` |
+| 2.6 | complete | Normalize the reported game/01 map only through `bin/symbols normalize emi/etc/game/01 --write`; inspect the resulting diff (pure address-sort reorder: GAME_FRONT_POPUP_WORD moved before GAME_FRONT_FADE_PHASE). | `bin/symbols check emi/etc/game/01` → passed; canonical-symbols tests 5/5; SDK tests 7/7; ruff clean; `git diff --check` clean; diff is 1 insertion/1 deletion, semantic-free |
 | 2.7 | pending | Resolve invalid lift metadata in priority order from a fresh target-scoped decomp-status report. | `bin/decomp-status <TARGET>`; source validation |
 | 2.8 | pending | Correct a disputed Splat boundary only after original bytes and `t_addr` prove the reviewed layout is wrong. | Splat review plus target-local symbols and matching validation |
 

@@ -22,4 +22,8 @@ within the mission's target-qualified source, `internal.h`, target map, and
 Splat boundary. Never commit, push, reset, clean, check out, remove files, run
 setup, or spawn children; the parent workflow owns git and orchestration.
 
-Return only the structured JSON result required by the mission protocol.
+Return the mission JSON required by the protocol, then—when the harness supplies an
+`## Acceptance Contract`—finish with its required fenced `acceptance-report` JSON.
+Copy every supplied criterion ID exactly, record the actual commands and validation,
+and use empty arrays where nothing applies. The acceptance report is required even
+when the mission escalates or retains no changes.
