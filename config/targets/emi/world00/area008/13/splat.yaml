@@ -161,11 +161,8 @@ segments:
     - c
     - func_801F45A0
   - - 6600
-    - asm
+    - c
     - func_801F45C8
-  - - 6604
-    - asm
-    - func_801F45CC
   - - 6628
     - asm
     - func_801F45E4
