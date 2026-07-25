@@ -6,3 +6,20 @@ source_dir = "src/emi/world00/area030/04"
 binary = "out/binaries/emi/world00/area030/04.bin"
 splat = "config/targets/emi/world00/area030/04/splat.yaml"
 load_address = 0x801d0c00
+
+[[companion_overlays]]
+target = "emi/world00/area030/05"
+disc_id = "BIN/WORLD00/AREA030.EMI#5"
+payload_sha256 = "9e8a6a98911ad64ea8c22d59ee39ae551f82da004d4e1b73fca8d1ab67ea9145"
+load_address = 0x800f5000
+size = 0x2250
+evidence = "0x801E0C28 direct jal in reviewed func_801E0C20 assembly"
+
+[companion_overlays.abi]
+target_address = 0x800f500c
+prototype = "void func_800F500C(void)"
+evidence = "Scoped to 0x801E0C20: no a0-a3 setup or v0-v1 use; companion dispatch stub preserves the call-site ABI."
+
+[[companion_overlays.static_calls]]
+caller_address = 0x801e0c28
+target_address = 0x800f500c

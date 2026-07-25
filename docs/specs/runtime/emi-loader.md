@@ -66,6 +66,21 @@ separately in small type-`0` RAM payloads. See [EMI graphics](../formats/graphic
 Types `6` and `7` form VAB header/body pairs. Type `10` carries sequence data.
 Their load argument is a logical bank selector, not a raw destination pointer.
 
+## Companion static-call records
+
+A caller EMI manifest may record a catalog-verified static call into a separately
+owned companion EMI target. The record repeats the companion disc entry, SHA-256,
+base, size, original caller address, and direct `jal` target. Catalog validation
+checks those immutable fields and the original caller instruction; it never adds
+symbols, weak bindings, linker inputs, or reverse-index call edges across targets.
+
+`emi/world00/area030/04` records `0x801E0C28 -> 0x800F500C` into independently
+bootstrapped `BIN/WORLD00/AREA030.EMI#5` (`0x800F5000`, `0x2250` bytes). This
+proves a static call target within the extracted payload, not concurrent residency,
+load order, ABI, entrypoint ownership, relocation behavior, shared source, or a
+runtime service. The lift gate requires reviewed boundary/map, ABI, and caller
+prototype evidence; it deliberately does not require emulator co-load evidence.
+
 ## Matching invariant
 
 Before matching C, the selected entry, load address, function boundary, and

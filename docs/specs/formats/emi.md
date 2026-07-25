@@ -60,7 +60,9 @@ The field at TOC offset `0x04` is not always a CPU pointer:
 
 Type `0` alone does not prove executable code. Target promotion additionally
 requires archive identity, slot, extracted bytes, load address, and reviewed
-code evidence.
+code evidence. A caller's catalog-verified companion static-call record does not
+promote the companion entry or prove its ABI or runtime lifetime; see the
+[EMI loader companion-record rules](../runtime/emi-loader.md#companion-static-call-records).
 
 The header, TOC, and alignment agree with the pinned
 [`BoF3-Data-Doc`](../../../third_party/references/bof3-data-doc/src/DataStructures/1_TheEmiFiles.md).

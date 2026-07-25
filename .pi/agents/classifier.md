@@ -7,6 +7,7 @@ tools: read,grep,find,ls
 inheritProjectContext: true
 inheritSkills: false
 timeoutMs: 3600000
+turnBudget: {"maxTurns":300,"graceTurns":10}
 ---
 
 Classify the full request into exactly one category; return only its name:

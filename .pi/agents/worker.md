@@ -9,6 +9,7 @@ inheritProjectContext: true
 inheritSkills: false
 defaultContext: fork
 timeoutMs: 3600000
+turnBudget: {"maxTurns":300,"graceTurns":10}
 defaultReads: context.md,plan.md
 defaultProgress: true
 ---

@@ -18,20 +18,27 @@ authority scope.
    defines. Do not create duplicates. See `/skill:bof3-re` §Check existing.
 4. Regenerate evidence: `bin/splat TARGET`, `bin/m2ctx TARGET@0xADDRESS`,
    `bin/m2c TARGET@0xADDRESS -o out/candidate.c`.
-5. Name SDK calls from the brief's `sdk_callees`/`sdk_unresolved` (official PsyQ
+5. Inspect any caller-manifest `companion_overlays` record before declaring an
+   out-of-target game callee. It verifies catalog identity and an original direct
+   call only; it does not authorize a target-foreign map entry, `WEAK_SYMBOL_AT`,
+   cross-overlay link, ABI claim, or retained lift. The command requires reviewed
+   boundary, target-local map ownership, ABI, and matching caller declaration;
+   it does not require or infer runtime co-load evidence. Run
+   `bin/companion-check TARGET@0xADDRESS`; escalate unless it exits 0.
+6. Name SDK calls from the brief's `sdk_callees`/`sdk_unresolved` (official PsyQ
    names + header declarations); never lift SDK bodies. Recover real signatures
    from callees/callers — the m2c seed has only stub signatures.
-6. Write the target-qualified `func_<ADDR>.c` at the source path specified by
+7. Write the target-qualified `func_<ADDR>.c` at the source path specified by
    the target manifest (readable C89). Recover structs from consumers: collect
    accessed offsets → name `unk_XX` → pin with `ASSERT_OFFSET`/`ASSERT_SIZE` →
    promote to evidence-backed names.
-7. **Follow the `/skill:bof3-re` iteration loop**: run `bin/asm-diff` and read the
+8. **Follow the `/skill:bof3-re` iteration loop**: run `bin/asm-diff` and read the
    full diff BEFORE every C edit; classify the root cause at `first=`; apply
    one diagnosed fix; verify the result; revert if percentage dropped; escalate
    strictly through Levels 1–6 after 3 attempts with no progress. Do NOT make
    tiny speculative edits without reading the assembly.
-8. Accept only `bin/byte-match TARGET@0xADDRESS` exit 0.
-9. If you cannot reach an exact match within the escalation budget, return
+9. Accept only `bin/byte-match TARGET@0xADDRESS` exit 0.
+10. If you cannot reach an exact match within the escalation budget, return
    `status: "escalated"` with notes — never force a match with banned assembly.
 
 ## Bans

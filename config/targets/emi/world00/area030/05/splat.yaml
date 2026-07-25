@@ -1,0 +1,31 @@
+name: world00_area030_05
+sha1: c76601b7d2978bb39511537394b2e32a26f7b4fe
+options:
+  platform: psx
+  compiler: psyq
+  basename: world00_area030_05
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world00/area030/05.bin
+  asm_path: out/splat/emi/world00/area030/05/asm
+  src_path: src/emi/world00/area030/05
+  ld_script_path: out/splat/emi/world00/area030/05/linker.ld
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world00/area030/05/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 12
+  vram: 2148487180
+  subsegments:
+  - - 12
+    - asm
+    - func_800F500C
+  - - 72
+    - asm
+    - func_800F5048
+- - 8784

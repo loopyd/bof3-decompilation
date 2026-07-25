@@ -1,3 +1,9 @@
 {
-  "sessionDir": "sessions"
+  "sessionDir": "sessions",
+  "subagents": {
+    "turnBudget": {
+      "maxTurns": 300,
+      "graceTurns": 10
+    }
+  }
 }

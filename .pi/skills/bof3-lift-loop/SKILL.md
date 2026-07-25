@@ -61,6 +61,8 @@ Repeat until the budget is spent, no candidates remain, or a stop rule fires:
 4. **Verify** independently in the parent:
    `bin/byte-match TARGET@0xADDRESS` exits 0 AND
    `bin/decomp-status TARGET --json` reports `status == "exact"`.
+   A companion static-call record does not make an unresolved external ABI safe:
+   run `bin/companion-check TARGET@0xADDRESS` and require exit 0 before dispatch.
 5. **Supervisor decision**: when a child calls `contact_supervisor`, the parent
    detaches. Reply with `subagent_supervisor({ action: "reply", replyTo:
    REQUEST_ID, message: "..." })`, then wait for that run before resuming the

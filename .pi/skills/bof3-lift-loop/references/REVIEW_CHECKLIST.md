@@ -25,9 +25,15 @@ findings.
 7. **Semantic correctness**: the C reflects original behavior, not just bytes —
    no unjustified hardcoded magic, proper struct/type recovery, correct
    signedness (`lb` vs `lbu`), no dead code masking a mismatch.
-8. **Map/Splat consistency**: `symbols.txt` entry present + normalized
+8. **Companion static-call records**: if the caller manifest declares one,
+   confirm it only records catalog identity and original static-call evidence.
+   Block a lift that treats it as ABI or source/map ownership,
+   `WEAK_SYMBOL_AT`, cross-overlay linking, or a reverse-index call edge without
+   separately reviewed evidence. Re-run `bin/companion-check TARGET@0xADDRESS`;
+   nonzero is a `block` verdict.
+9. **Map/Splat consistency**: `symbols.txt` entry present + normalized
    (`bin/symbols check`); reviewed Splat boundary intact.
-9. **Hygiene**: no secrets or `inputs/` media staged; `git diff --check` clean.
+10. **Hygiene**: no secrets or `inputs/` media staged; `git diff --check` clean.
 
 ## Verdict
 

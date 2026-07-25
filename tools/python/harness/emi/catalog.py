@@ -18,7 +18,7 @@ from ..domain import load_target_manifests, normalize_target_id
 from ..io import read_json, write_json
 
 
-CATALOG_SCHEMA = "harness.catalog.emi/v2"
+CATALOG_SCHEMA = "harness.catalog.emi/v3"
 TARGET_RE = re.compile(r"^(?P<archive>.+?)(?:\.EMI)?#(?P<slot>\d+)$", re.I)
 AUDIO_TYPES = {6, 7, 8, 10}
 ARCHIVE_PART_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
@@ -173,7 +173,7 @@ def build_catalog(emi_root: Path) -> dict[str, Any]:
         by_target[(entry["sha256"], entry["load_address"])].append(entry["id"])
         entry["content_group"] = entry["sha256"]
         entry["build_target"] = f"{entry['sha256']}@0x{entry['load_address']:08x}:raw"
-    return {
+    catalog = {
         "schema": CATALOG_SCHEMA,
         "emi_root": str(emi_root),
         "entry_count": len(entries),
@@ -209,6 +209,11 @@ def build_catalog(emi_root: Path) -> dict[str, Any]:
         ],
         "entries": entries,
     }
+    if root is not None:
+        catalog["companion_relations"] = verify_companion_relations(root, catalog)
+    else:
+        catalog["companion_relations"] = []
+    return catalog
 
 
 def load_catalog(root: Path) -> dict[str, Any]:
@@ -245,6 +250,78 @@ def resolve_entry(catalog: dict[str, Any], identifier: str) -> dict[str, Any]:
             f"expected one extracted EMI entry for {identifier}; found {len(matches)}"
         )
     return matches[0]
+
+
+def _jal_target(word: int, caller_address: int) -> int | None:
+    if word >> 26 != 3:
+        return None
+    return ((caller_address + 4) & 0xF0000000) | ((word & 0x03FFFFFF) << 2)
+
+
+def verify_companion_relations(root: Path, catalog: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return declared companion calls whose immutable catalog evidence agrees.
+
+    This deliberately verifies only a static call and payload identity. It does
+    not establish ABI, load order, concurrent residency, or source ownership.
+    """
+
+    relations: list[dict[str, Any]] = []
+    for manifest in load_target_manifests(root).values():
+        for companion in manifest.companions:
+            caller = resolve_entry(catalog, manifest.disc_id)
+            target = resolve_entry(catalog, companion.disc_id)
+            if (
+                target["sha256"] != companion.payload_sha256
+                or int(target["load_address"]) != companion.load_address
+                or int(target["size"]) != companion.size
+            ):
+                raise ValueError(
+                    f"companion catalog identity mismatch: {manifest.id.value} -> "
+                    f"{companion.target.value}"
+                )
+            caller_start = int(caller["load_address"])
+            caller_size = int(caller["size"])
+            if manifest.load_address != caller_start:
+                raise ValueError(
+                    f"caller catalog load address mismatch: {manifest.id.value}"
+                )
+            if target["payload_kind"] != "ram":
+                raise ValueError(
+                    f"companion is not a RAM payload: {companion.target.value}"
+                )
+            payload = Path(caller["payload_path"]).read_bytes()
+            calls: list[dict[str, int]] = []
+            for call in companion.static_calls:
+                offset = call.caller_address - caller_start
+                if offset < 0 or offset + 4 > caller_size:
+                    raise ValueError(
+                        f"companion call outside caller payload: {manifest.id.value}"
+                    )
+                word = struct.unpack_from("<I", payload, offset)[0]
+                if _jal_target(word, call.caller_address) != call.target_address:
+                    raise ValueError(
+                        f"companion call bytes differ: {manifest.id.value} at "
+                        f"0x{call.caller_address:08X}"
+                    )
+                calls.append(
+                    {
+                        "caller_address": call.caller_address,
+                        "target_address": call.target_address,
+                    }
+                )
+            relations.append(
+                {
+                    "caller": manifest.id.value,
+                    "companion": companion.target.value,
+                    "disc_id": companion.disc_id,
+                    "payload_sha256": companion.payload_sha256,
+                    "load_address": companion.load_address,
+                    "size": companion.size,
+                    "static_calls": calls,
+                    "evidence": companion.evidence,
+                }
+            )
+    return sorted(relations, key=lambda item: (item["caller"], item["companion"]))
 
 
 def _eligibility(root: Path, entry: dict[str, Any]) -> list[str]:
@@ -406,6 +483,7 @@ def apply_bootstrap(
 def materialize_reviewed_targets(*, root: Path, catalog: dict[str, Any]) -> list[Path]:
     """Restore ignored binaries for already-reviewed EMI manifests."""
 
+    verify_companion_relations(root, catalog)
     images: list[Path] = []
     for manifest in sorted(
         load_target_manifests(root).values(), key=lambda item: item.id.value
@@ -452,4 +530,5 @@ __all__ = [
     "materialize_reviewed_targets",
     "resolve_entry",
     "target_slug",
+    "verify_companion_relations",
 ]

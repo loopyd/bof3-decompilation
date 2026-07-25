@@ -9,7 +9,7 @@ inheritProjectContext: true
 inheritSkills: false
 defaultContext: fork
 timeoutMs: 3600000
-turnBudget: {"maxTurns":50,"graceTurns":10}
+turnBudget: {"maxTurns":300,"graceTurns":10}
 output: oracle.md
 ---
 

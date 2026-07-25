@@ -100,19 +100,27 @@ need fresh disposable Splat/m2c evidence under `out/skill-evidence/`.
    and `unresolved_calls`/`metric_missing` flag risk.
 3. **Check existing declarations before creating new ones** (see §Check
    existing below). Reuse what already exists; do not duplicate.
-4. Run `bin/splat TARGET`, `bin/m2ctx TARGET@0xADDRESS`, and
+4. **Check companion static-call records before declaring an out-of-target game
+   callee.** A record proves only catalog identity and original `jal` bytes. It
+   does not prove ABI, residency, or ownership: do not add its map symbol,
+   `WEAK_SYMBOL_AT`, source body, or cross-linking. Stop and obtain reviewed
+   companion boundary, ABI, target-local map ownership, and matching caller
+   declaration before retaining a caller lift that depends on it. Run
+   `bin/companion-check TARGET@0xADDRESS`;
+   nonzero means escalate rather than declare the external locally.
+5. Run `bin/splat TARGET`, `bin/m2ctx TARGET@0xADDRESS`, and
    `bin/m2c TARGET@0xADDRESS -o out/candidate.c` as needed. The m2c seed emits
    only stub signatures (`extern void func_…()`); recover real types from
    callees/callers — never trust the seed's signatures.
-5. Name SDK calls correctly: before writing `func_8017XXXX`, check the SDK map
+6. Name SDK calls correctly: before writing `func_8017XXXX`, check the SDK map
    (`config/sdk/psyq-<space>.txt`) or `bin/symbols psyq-report TARGET`. If it is
    a known PsyQ/BIOS symbol, use the official name and header declaration; never
    lift its body. After any SDK-map edit, regenerate bindings with
    `bin/symbols psyq-bindings TARGET --write`.
-6. Edit the address-owned C file and only evidence-required local header, map,
+7. Edit the address-owned C file and only evidence-required local header, map,
    or Splat entries.
-7. Enter the **iteration loop** (below).
-8. Accept only `bin/byte-match TARGET@0xADDRESS` equality (exit 0).
+8. Enter the **iteration loop** (below).
+9. Accept only `bin/byte-match TARGET@0xADDRESS` equality (exit 0).
 
 ### Check existing
 

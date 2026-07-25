@@ -129,7 +129,10 @@ bin/byte-match TARGET@0xADDRESS
 
 `m2ctx` materializes target-owned declarations. `m2c` creates a complete seed,
 not reviewed C. `asm-diff` prints a bounded diagnostic and keeps the full patch
-under `out/asm-diff/`; `byte-match` is the acceptance check.
+under `out/asm-diff/`; `byte-match` is the acceptance check. For a function with
+an out-of-image companion call, run `bin/companion-check TARGET@0xADDRESS` first;
+it exits nonzero until static-call identity, companion boundary/map, reviewed ABI,
+and matching caller declaration evidence are all present.
 
 When readable semantics are credible but code shape differs:
 
@@ -182,6 +185,7 @@ tests, lint, maps, and a full compile/link/compare audit of retained lifts.
 | `bin/emi-ex` | list, extract, or explicitly repack EMI archives | chosen output |
 | `bin/str-media` | inspect, validate, or convert STR media | chosen output |
 | `bin/emi-target` | preview/create one EMI target | only with `--apply` |
+| `bin/companion-check` | gate a lift through a declared EMI companion call | JSON readiness report |
 | `bin/build` | compile all, one target, or one function | `build/` |
 | `bin/splat` | regenerate reviewed segment output | `out/splat/` |
 | `bin/spimdisasm` | disassemble MIPS images directly | terminal output or explicit destination |

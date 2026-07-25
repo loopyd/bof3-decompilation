@@ -8,6 +8,9 @@ from .ids import (
     parse_function_id,
 )
 from .manifests import (
+    CompanionAbi,
+    CompanionOverlay,
+    CompanionStaticCall,
     TargetManifest,
     load_target_manifests,
 )
@@ -18,6 +21,9 @@ from .registry import (
 )
 
 __all__ = [
+    "CompanionAbi",
+    "CompanionOverlay",
+    "CompanionStaticCall",
     "FunctionId",
     "ResolvedTarget",
     "TargetId",
