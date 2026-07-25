@@ -458,7 +458,7 @@ segments:
     - asm
     - func_801E01DC
   - - 63036
-    - asm
+    - c
     - func_801E023C
   - - 63084
     - asm

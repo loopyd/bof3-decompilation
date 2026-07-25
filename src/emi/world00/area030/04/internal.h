@@ -5,6 +5,7 @@
 #include "gpu/prim.h"
 
 extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_3FC9;
+extern u8           D_80145E93;
 extern u8           D_801E2384[];
 extern u8           D_801E2388[];
 extern u8           D_801E238C[];
