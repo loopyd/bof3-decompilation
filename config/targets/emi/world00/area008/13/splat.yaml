@@ -143,7 +143,7 @@ segments:
     - asm
     - func_801F4424
   - - 6412
-    - asm
+    - c
     - func_801F450C
   - - 6452
     - asm
