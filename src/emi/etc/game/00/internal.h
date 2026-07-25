@@ -57,6 +57,19 @@ struct GameWorkArea {
   u8  pad_76[0x22];   /* 0x76-0x97 (work area slot is 0x98 bytes) */
 };
 
+typedef struct GameResetRecord {
+  u8 unk_00;
+  u8 unk_01;
+  u8 unk_02;
+  u8 unk_03;
+  u8 unk_04;
+  u8 unk_05;
+  u8 unk_06;
+  u8 unk_07;
+  u8 unk_08[2];
+  s16 unk_0A;
+} GameResetRecord;
+
 typedef struct GamePaletteEntry {
   u8  flags;
   u8  field_01;
@@ -216,6 +229,7 @@ extern u8 D_80144F5A[];
  * @source 0x8019601C
  */
 u8 func_8019601C(u8 mode);
+void func_801BE710(GameResetRecord* record);
 
 /* @behavior clears bytes 0‑4 of the record slot at record_index.
  * @source 0x801960C0
