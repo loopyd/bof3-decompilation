@@ -111,7 +111,7 @@ extern const volatile AbilityObject ABILITY_OBJECTS[];
 /* Work area pointer in scratchpad slot 0x1F800044 (offset 0x44).
  * Declared as a weak extern so the linker emits %hi/%lo relocations,
  * matching the original binary's codegen. */
-extern struct GameWorkArea* volatile g_game_work;
+extern struct GameWorkArea* g_game_work;
 
 /* @behavior entry-0 main state machine index */
 extern volatile u16 D_80143B90;

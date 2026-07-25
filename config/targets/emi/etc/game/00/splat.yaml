@@ -844,7 +844,7 @@ segments:
     - asm
     - func_801AD90C
   - - 98756
-    - asm
+    - c
     - func_801AD9C4
   - - 98800
     - asm
