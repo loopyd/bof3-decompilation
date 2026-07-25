@@ -13,6 +13,8 @@ typedef struct World00Area008Scratch {
 typedef struct World00Area008State {
   u8 unk_00;
   u8 mode;
+  u8 unk_02[0x7];
+  u8 unk_09;
 } World00Area008State;
 
 typedef void (*World00Area008Handler)(void);
@@ -28,6 +30,7 @@ extern u8           WORLD00_AREA008_D_801F2C10[];
  * symbol (not a fixed-address macro) so codegen emits the symbol-relative
  * `lui + lw reg, %lo(reg)` load the original binary uses. */
 extern u8* D_8014598C;
+extern World00Area008State* D_1F800044;
 
 s32  func_8017E3F4(char* buffer, const char* format, ...);
 void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
