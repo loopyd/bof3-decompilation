@@ -625,7 +625,7 @@ segments:
     - asm
     - func_801A18C8
   - - 49700
-    - asm
+    - c
     - func_801A1A24
   - - 49752
     - asm
