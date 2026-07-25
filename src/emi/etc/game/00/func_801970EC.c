@@ -4,7 +4,6 @@ extern volatile u16 D_80143B90;
 extern volatile u16 D_80143F00;
 extern volatile u8  D_80143F1F;
 extern volatile u8  D_80143F49;
-extern volatile u8  D_80143F4A;
 extern volatile u8  D_80143F4B;
 extern volatile u16 D_801448FC;
 extern volatile u8  D_801448FF;

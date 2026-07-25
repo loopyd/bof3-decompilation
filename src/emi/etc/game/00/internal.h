@@ -116,6 +116,8 @@ extern struct GameWorkArea* g_game_work;
 /* @behavior entry-0 main state machine index */
 extern volatile u16 D_80143B90;
 extern u16          D_80143C40;
+extern volatile u8  D_80143F4A;
+extern u8           D_80143FBC;
 /* @behavior entry-0 sub-state within current state */
 extern u16 D_80143B92;
 /* @behavior world/phase index for entry-0 world dispatch */
