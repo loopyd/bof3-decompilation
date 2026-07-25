@@ -29,8 +29,10 @@ findings.
    confirm it only records catalog identity and original static-call evidence.
    Block a lift that treats it as ABI or source/map ownership,
    `WEAK_SYMBOL_AT`, cross-overlay linking, or a reverse-index call edge without
-   separately reviewed evidence. Re-run `bin/companion-check TARGET@0xADDRESS`;
-   nonzero is a `block` verdict.
+   separately reviewed evidence. Re-run `bin/companion-check TARGET@0xADDRESS`
+   only when the caller manifest declares a matching companion record; then a
+   nonzero result is a `block` verdict. No companion record means this check is
+   not applicable.
 9. **Map/Splat consistency**: `symbols.txt` entry present + normalized
    (`bin/symbols check`); reviewed Splat boundary intact.
 10. **Hygiene**: no secrets or `inputs/` media staged; `git diff --check` clean.
