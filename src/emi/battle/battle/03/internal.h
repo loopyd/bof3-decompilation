@@ -59,8 +59,21 @@ typedef struct Battle03QueuedSlot {
   u32 unk_74;
 } Battle03QueuedSlot;
 
+typedef struct Battle03SpritePrimitive {
+  u8  pad_00[4];
+  u8  r0;
+  u8  g0;
+  u8  b0;
+  u8  pad_07;
+  s16 x0;
+  s16 y0;
+  s16 unk_0c;
+  s16 unk_0e;
+} Battle03SpritePrimitive;
+
 extern volatile AbilityObject ABILITY_OBJECTS[];
 extern u8* volatile g_battle03_work;
+extern u8*          D_8014598C;
 extern volatile u8  BATTLE_LOCAL_BYTE_62EC;
 extern volatile u8  BATTLE_GLOBAL_BYTE_62E0;
 extern volatile u8  BATTLE_GLOBAL_BYTE_62E1;
