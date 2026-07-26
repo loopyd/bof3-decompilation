@@ -150,6 +150,7 @@ void func_800A31E0(u8 selection_kind, u16 input_mask);
 u8   func_800A3A10(u8 battler_index, u8 selection_kind);
 u16  func_800A36F0(u8 battler_index, u16 flags);
 void func_800A3F28(void);
+u8   func_800A41D8(s32 input_mask);
 u8   func_801DB524(u8 arg0);
 void func_800A4458(void);
 void func_800AAA74(void);
