@@ -4,6 +4,7 @@
 #include "bof3/bof3.h"
 #include "gpu/prim.h"
 
+extern u8           D_80144125;
 extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_3FC9;
 extern u8           D_80145E93;
 extern u8           D_801E2384[];
