@@ -1,8 +1,8 @@
 ---
 name: context-builder
 description: Build codebase context and handoff
-model: ninerouter/gpt-combo
-thinking: high
+model: ninerouter/qwen-combo
+thinking: off
 tools: read,grep,find,ls,bash,write,web_search,intercom,memory_search,memory_remember,session_search,qmd_search,append_ledger,fetch_content,get_search_content,mcp,mcp:sqlitecloud-mcp-server,mcp:github-mcp-server,mcp:context7
 systemPromptMode: replace
 inheritProjectContext: true
