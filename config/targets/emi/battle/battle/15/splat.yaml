@@ -362,7 +362,7 @@ segments:
     - c
     - func_8009E1E0
   - - 31232
-    - asm
+    - c
     - func_8009E200
   - - 31268
     - c
