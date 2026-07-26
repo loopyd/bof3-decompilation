@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @behavior UNKNOWN: exact behavior is not yet documented. */
+
 /* @stores 0x-5 to offset 2 of the pointer loaded from D_801463A0.
  * @source 0x8009FFE4
  */

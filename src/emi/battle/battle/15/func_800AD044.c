@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @behavior UNKNOWN: exact behavior is not yet documented. */
+
 /* @tests a specific bit in the bitmask array at D_80144F60.
  * Uses arg0 & 0xFFFF for index calculation.
  * @source 0x800AD044

@@ -1,5 +1,8 @@
 #include "internal.h"
 
+/* @source 0x801D38A8
+ * @behavior starts the selected entry's +4 action unless the local state is already two.
+ */
 void func_801D38A8(void) {
   u8* state = &D_80143BB0;
 

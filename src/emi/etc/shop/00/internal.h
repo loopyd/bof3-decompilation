@@ -14,7 +14,7 @@ extern volatile u8  D_80148650;
 extern volatile u8  D_80148651;
 extern volatile u8  D_80148652;
 extern volatile u8  D_80148654;
-extern volatile u32 D_801490A4[];
+extern volatile u16 D_801490A4;
 
 /* Shared primitive cursor (PsyQ SDK, owned by the main exe). */
 extern u8* D_8014598C;

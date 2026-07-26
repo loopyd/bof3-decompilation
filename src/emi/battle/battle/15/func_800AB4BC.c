@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @behavior UNKNOWN: exact behavior is not yet documented. */
+
 /* @returns 1 if the value at offset based on arg0 in D_80145FAA equals 0xE or 0x128.
  * @source 0x800AB4BC
  */

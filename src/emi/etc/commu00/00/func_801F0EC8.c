@@ -1,5 +1,8 @@
 #include "internal.h"
 
+/* @source 0x801F0EC8
+ * @behavior marks the task's scratchpad record active and writes its 0xC003 status word.
+ */
 extern u16 D_80146904[1];
 
 void func_801F0EC8(u8 task_index) {

@@ -1,5 +1,9 @@
 #include "internal.h"
 
+/* @source 0x8009DC6C
+ * @behavior UNKNOWN: exact behavior is not yet documented.
+ */
+
 void func_8009DC6C(void) {
   /*
      * MATCHING_AID (user-approved register pin):

@@ -1,8 +1,6 @@
 #include "bof3/context.h"
 #include "internal.h"
 
-extern void func_8017E028(s32 arg0);
-
 extern s32 D_80145E14;
 extern s32 D_80145E18;
 extern s32 D_80145E1C;
@@ -32,7 +30,7 @@ void func_8014B1A4(void) {
   EnableEvent(D_80145E24);
   EnableEvent(D_80145E28);
   EnableEvent(D_80145E2C);
-  func_8017E028(1);
+  InitCARD(1);
   func_8017E07C();
   _bu_init();
   ChangeClearPAD(0);

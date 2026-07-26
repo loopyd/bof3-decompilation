@@ -29,7 +29,7 @@ segments:
     - asm
     - func_801D67B0
   - - 23532
-    - asm
+    - c
     - func_801D67EC
   - - 23576
     - asm
@@ -251,7 +251,7 @@ segments:
     - asm
     - func_801DD14C
   - - 50796
-    - asm
+    - c
     - func_801DD26C
   - - 50844
     - asm
@@ -275,10 +275,10 @@ segments:
     - asm
     - func_801DD760
   - - 52140
-    - asm
+    - c
     - func_801DD7AC
   - - 52184
-    - asm
+    - c
     - func_801DD7D8
   - - 52224
     - asm
@@ -308,10 +308,10 @@ segments:
     - asm
     - func_801DDE7C
   - - 53976
-    - asm
+    - c
     - func_801DDED8
   - - 54016
-    - asm
+    - c
     - func_801DDF00
   - - 54056
     - asm
@@ -413,7 +413,7 @@ segments:
     - asm
     - func_801DEF0C
   - - 58332
-    - asm
+    - c
     - func_801DEFDC
   - - 58340
     - asm
@@ -542,7 +542,7 @@ segments:
     - asm
     - func_801E1A14
   - - 69340
-    - asm
+    - c
     - func_801E1ADC
   - - 69348
     - asm
@@ -554,7 +554,7 @@ segments:
     - asm
     - func_801E1B2C
   - - 69468
-    - asm
+    - c
     - func_801E1B5C
   - - 69476
     - asm
@@ -563,7 +563,7 @@ segments:
     - asm
     - func_801E1BA8
   - - 69720
-    - asm
+    - c
     - func_801E1C58
   - - 69752
     - asm
@@ -695,7 +695,7 @@ segments:
     - asm
     - func_801E3B68
   - - 77740
-    - asm
+    - c
     - func_801E3BAC
   - - 77776
     - asm
@@ -794,7 +794,7 @@ segments:
     - asm
     - func_801E5288
   - - 83688
-    - asm
+    - c
     - func_801E52E8
   - - 83696
     - asm
@@ -830,7 +830,7 @@ segments:
     - asm
     - func_801E5A38
   - - 85740
-    - asm
+    - c
     - func_801E5AEC
   - - 85748
     - asm
@@ -887,7 +887,7 @@ segments:
     - asm
     - func_801E6930
   - - 89488
-    - asm
+    - c
     - func_801E6990
   - - 89536
     - asm
@@ -917,7 +917,7 @@ segments:
     - asm
     - func_801E6E54
   - - 91040
-    - asm
+    - c
     - func_801E6FA0
   - - 91056
     - asm
@@ -935,7 +935,7 @@ segments:
     - asm
     - func_801E74B8
   - - 92456
-    - asm
+    - c
     - func_801E7528
   - - 92504
     - asm
@@ -1001,7 +1001,7 @@ segments:
     - asm
     - func_801E91FC
   - - 99932
-    - asm
+    - c
     - func_801E925C
   - - 99964
     - asm
@@ -1019,7 +1019,7 @@ segments:
     - asm
     - func_801E94D0
   - - 100656
-    - asm
+    - c
     - func_801E9530
   - - 100664
     - asm
@@ -1073,7 +1073,7 @@ segments:
     - asm
     - func_801EA728
   - - 105324
-    - asm
+    - c
     - func_801EA76C
   - - 105332
     - asm
@@ -1100,7 +1100,7 @@ segments:
     - asm
     - func_801EAB38
   - - 106340
-    - asm
+    - c
     - func_801EAB64
   - - 106348
     - asm

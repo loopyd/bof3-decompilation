@@ -1,5 +1,9 @@
 #include "internal.h"
 
+/* @source 0x800AE390
+ * @behavior UNKNOWN: exact behavior is not yet documented.
+ */
+
 void func_800AE390(void) {
   u8* work;
 

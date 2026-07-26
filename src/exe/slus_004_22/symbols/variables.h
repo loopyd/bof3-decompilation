@@ -14,7 +14,6 @@ extern u8  D_80143F44;
 
 /* Shared SLUS data referenced by reviewed core functions. */
 extern u16 D_80145AA4;
-extern u8  D_8014B17C;
 
 /* Static target data. */
 extern u8 D_8018B300;

@@ -12,6 +12,7 @@ clean:
     rm -rf build
 
 test: build
+    ctest --test-dir build --output-on-failure
     ./build/bof3-audio --help
     ./build/bof3-audio --examples
 

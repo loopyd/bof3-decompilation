@@ -47,6 +47,26 @@ fn extracts_raw_mode2_fixture_byte_exactly() {
 }
 
 #[test]
+fn rejects_extent_past_the_image_and_does_not_create_output() {
+    let root = support::temp_root("bad-extent");
+    fs::create_dir_all(&root).unwrap();
+    let image = root.join("fixture.iso");
+    let mut bytes = support::fixture(false, false);
+    let record = 20 * 2048 + 68;
+    let extent = 99_u32;
+    bytes[record + 2..record + 6].copy_from_slice(&extent.to_le_bytes());
+    bytes[record + 6..record + 10].copy_from_slice(&extent.to_be_bytes());
+    fs::write(&image, bytes).unwrap();
+
+    assert!(matches!(
+        Image::open(&image).unwrap().extract(root.join("out")),
+        Err(Error::InvalidImage(_))
+    ));
+    assert!(!root.join("out/HELLO.TXT").exists());
+    support::remove_temp_root(&root);
+}
+
+#[test]
 fn rejects_disagreeing_both_endian_fields() {
     let root = support::temp_root("bad-endian");
     fs::create_dir_all(&root).unwrap();

@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @behavior UNKNOWN: exact behavior is not yet documented. */
+
 /* @source 0x800980E4
  * NOTE: byte-match blocked by the `jr ra` epilogue scheduler reorg: the repo
  * build's default `-fschedule-insns` hoists the selection-slot store out of

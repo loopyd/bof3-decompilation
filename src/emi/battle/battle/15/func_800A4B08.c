@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @behavior UNKNOWN: exact behavior is not yet documented. */
+
 /* @sets D_80148627 to 2 and increments the global counter at D_801462E4.
  * @source 0x800A4B08
  */

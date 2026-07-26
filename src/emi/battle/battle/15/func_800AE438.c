@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @behavior UNKNOWN: exact behavior is not yet documented. */
+
 /* @increments byte at offset 1 of the scratchpad pointer if D_801462E8 has bit 2 set.
  * Uses volatile casts for scratchpad access (0x1F80xxxx).
  * @source 0x800AE438

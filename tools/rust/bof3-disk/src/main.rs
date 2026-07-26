@@ -34,7 +34,7 @@ fn run(args: Vec<OsString>) -> Result<(), String> {
         "extract" => extract(options),
         "lba-json" => lba_json(options),
         "checksum" => checksum(options),
-        "rebuild" => Err("rebuild parity is not implemented yet".into()),
+        "rebuild" => rebuild(options),
         "verify" => verify(options),
         value => Err(format!(
             "unknown command: {value}; use extract, rebuild, lba-json, checksum, or verify"
@@ -139,6 +139,26 @@ fn file_stem(path: &Path) -> &str {
     path.file_stem()
         .and_then(|value| value.to_str())
         .unwrap_or("disc")
+}
+
+fn rebuild(options: Options) -> Result<(), String> {
+    reject(
+        &options,
+        &[
+            ('x', options.extract.is_some()),
+            ('p', options.project.is_some()),
+            ('r', options.raw_root.is_some()),
+            ('c', options.cue.is_some()),
+            ('l', options.log.is_some()),
+        ],
+    )?;
+    let input = options.input.ok_or("rebuild requires -i <input-dir>")?;
+    let output = options.output.ok_or("rebuild requires -o <output.iso>")?;
+    bof3_disk_v2::rebuild::iso(&input, &output).map_err(display_error(&input))?;
+    if !options.quiet {
+        eprintln!("wrote synthetic ISO: {}", output.display());
+    }
+    Ok(())
 }
 
 fn lba_json(options: Options) -> Result<(), String> {

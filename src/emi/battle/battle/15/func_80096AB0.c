@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @behavior UNKNOWN: exact behavior is not yet documented. */
+
 /* @source 0x80096AB0
  * NOTE: byte-match blocked by the `jr ra` epilogue scheduler reorg: the repo
  * build uses default `-fschedule-insns`, which hoists the `sb` cell-store past

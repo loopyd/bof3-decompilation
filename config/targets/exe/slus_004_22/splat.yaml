@@ -107,14 +107,14 @@ segments:
     start: 0xdb92c
     vram: 0x8017212c
     subsegments:
-      - [0xdb92c, c, func_8017212C]
+      - [0xdb92c, asm, func_8017212C]
   - [0xdb9f8, bin, post_emi_gap_0xdb9f8]
   - name: cluster_4
     type: code
     start: 0xdc1d0
     vram: 0x801729d0
     subsegments:
-      - [0xdc1d0, c, func_801729D0]
+      - [0xdc1d0, asm, func_801729D0]
   - [0xdc710, bin, post_emi_gap_0xdc710]
   - name: cluster_5
     type: code

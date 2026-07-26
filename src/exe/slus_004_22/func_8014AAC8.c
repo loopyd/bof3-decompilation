@@ -11,7 +11,7 @@ void func_8014AAC8(void) {
   D_8018B300 = 0;
   func_8014ACA0();
   func_8014AEE0();
-  DrawSyncCallback(&D_8014B17C);
+  DrawSyncCallback(func_8014B17C);
   func_8014B854(0, func_8014EA80);
 
   for (;;) {

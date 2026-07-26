@@ -1,5 +1,8 @@
 #include "internal.h"
 
+/* @source 0x801E2B94
+ * @behavior passes the panel position and field six to the common UI helper.
+ */
 void func_801E2B94(void) {
   PanelTask* task = g_PanelTaskRoot;
 

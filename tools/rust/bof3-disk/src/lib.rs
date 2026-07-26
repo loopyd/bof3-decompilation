@@ -7,6 +7,7 @@ use std::path::{Component, Path, PathBuf};
 pub mod checksum;
 pub mod cue;
 pub mod metadata;
+pub mod rebuild;
 
 const ISO_SECTOR_SIZE: u64 = 2048;
 const RAW_SECTOR_SIZE: u64 = 2352;
@@ -20,6 +21,7 @@ pub enum Error {
     Io(std::io::Error),
     InvalidImage(&'static str),
     InvalidImageDetail(String),
+    InvalidInput(&'static str),
 }
 
 impl fmt::Display for Error {
@@ -28,6 +30,7 @@ impl fmt::Display for Error {
             Self::Io(error) => write!(f, "{error}"),
             Self::InvalidImage(message) => write!(f, "invalid disc image: {message}"),
             Self::InvalidImageDetail(message) => write!(f, "invalid disc image: {message}"),
+            Self::InvalidInput(message) => write!(f, "invalid rebuild input: {message}"),
         }
     }
 }

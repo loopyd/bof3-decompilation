@@ -1,5 +1,9 @@
 #include "internal.h"
 
+/* @source 0x8009B20C
+ * @behavior UNKNOWN: exact behavior is not yet documented.
+ */
+
 void func_8009B20C(void) {
   u8  i;
   u8* base;

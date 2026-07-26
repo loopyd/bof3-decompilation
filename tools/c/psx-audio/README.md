@@ -72,7 +72,9 @@ cmake --build build -j
 ctest --test-dir build --output-on-forward
 ```
 
-Tests: `psf_test`, `psx_machine_test`, `spu_device_test`.
+Tests: `psf_test` (PSF load/CRC/overlay), `psx_machine_test` (bounded CPU
+and SPU transfer/DMA writes), `spu_device_test` (voice loop/key-off and pitch
+cap), and `xa_test` (synthetic XA decode and WAV header).
 
 ### Audio device
 

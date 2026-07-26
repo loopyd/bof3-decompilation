@@ -1,5 +1,9 @@
 #include "internal.h"
 
+/* @source 0x800B254C
+ * @behavior UNKNOWN: exact behavior is not yet documented.
+ */
+
 void func_800B254C(void) {
   PanelTask* task = g_PanelTaskRoot;
   s16        val;

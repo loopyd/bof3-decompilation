@@ -1,5 +1,9 @@
 #include "internal.h"
 
+/* @source 0x800A0E68
+ * @behavior UNKNOWN: exact behavior is not yet documented.
+ */
+
 void func_800A0E68(void) {
   /*
      * MATCHING_AID (user-approved register pin):

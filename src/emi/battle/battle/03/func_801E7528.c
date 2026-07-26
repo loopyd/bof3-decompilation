@@ -2,6 +2,9 @@
 
 extern u8 D_801EB4E0;
 
+/* @source 0x801E7528
+ * @behavior writes mode two to the current global record and increments work byte one.
+ */
 void func_801E7528(void) {
   *(volatile u8*)(D_801EB4E0 + 0x48) = 2;
   *(volatile u8*)(*(volatile void**)SPAD_ADDRESS(0x44u) + 1) += 1;

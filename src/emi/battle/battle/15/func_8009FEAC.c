@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @behavior UNKNOWN: exact behavior is not yet documented. */
+
 /* @stores byte 2 at offset 8 and halfword -5 at offset 6 of the pointer from D_801463A0.
  * @source 0x8009FEAC
  */

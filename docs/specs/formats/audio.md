@@ -19,7 +19,7 @@ bin/psx-audio play BGM000                 # play by track name (auto-resolves)
 bin/psx-audio play BGMBAT02 --gain 0.7    # adjust playback/render volume
 bin/psx-audio render BGMBAT04 -o track.ogg # compressed Ogg Vorbis output
 bin/psx-audio render BGMBAT04 -o track.flac # lossless compressed output
-bin/psx-audio render BGMBAT04 --engine fast -o track.wav
+bin/psx-audio render BGMBAT04 -o track.wav
 bin/psx-audio play BGM000.EMI             # play directly from EMI (zero-copy)
 bin/psx-audio play BGM000 -o out.wav      # render to WAV instead of speakers
 bin/psx-audio play VOICE.STR -c 0         # play XA voice channel 0
@@ -265,10 +265,9 @@ where possible, original bytes or hardware traces.
 
 ### Renderer architecture
 
-`audio_render()` is the stable rendering seam. `AUDIO_ENGINE_FAST` delegates to
-the direct SEP/VAB renderer. `AUDIO_ENGINE_GAME` is reserved for execution of
-the linked BOF3 sound code and currently returns an explicit unsupported-engine
-status; it must not silently fall back to the approximate renderer.
+`render_bgm()` is the current rendering seam. It is a direct SEP/VAB renderer,
+not execution of BOF3's linked sound runtime; it must be described as an
+approximate offline renderer rather than a game-faithful engine.
 
 The exact path is split below that seam:
 
@@ -469,6 +468,21 @@ refresh: 60Hz
 
 ## Tooling
 
+### Evidence and limits
+
+| User-visible capability | Evidence | Limit |
+| --- | --- | --- |
+| PSF pack/inspect and bounded `psf-run` | native `psf_test`; native `psx_machine_test` | The machine faults on unsupported CPU/BIOS/hardware paths and does not bootstrap BOF3's audio scheduler. |
+| Direct BGM render | `spu_device_test` covers live voice looping, key-off, and pitch cap; source audit in `audio_audit.c` | It is an approximate offline SEP/VAB renderer; it does not execute the game runtime. |
+| XA decode to WAV | native `xa_test` decodes a synthetic audio sector and parses its WAV output | CD/XA is not mixed or captured through the SPU. |
+| VAB WAV/SF2 and SEP MIDI export | CLI paths are implemented in `vab.c`, `sf2.c`, `sep.c`, and `export.c` | No fixture or retail-media golden output is claimed. |
+| Ogg/FLAC output | feature-gated `ogg.c`/`flac.c` writers | Available only when their optional codec libraries are detected; no codec-output golden is claimed. |
+
+The SPU's reverb, noise, pitch modulation, volume sweeps, exact DMA/FIFO/IRQ
+timing, and CD/XA mixing remain unsupported as specified in the hardware table
+above; no command claims fidelity for them.
+
+
 ### C tool (`tools/c/psx-audio/`)
 
 Self-contained C11 library + CLI. Uses miniaudio for playback.
@@ -494,12 +508,10 @@ bin/psx-audio <command>           # auto-builds on first run
 | `psf-inspect <file.psf>` | Validate and compose a PSF1/MiniPSF image |
 | `psf-run <file.psf> [-n N]` | Run a bounded machine diagnostic |
 
-`--engine fast|game` selects the BGM engine. `fast` is the current default.
-`game` now executes the linked initialization, VAB upload, SEP open/play, and
-manual scheduler path, but refuses to emit a file while that scheduler produces
-no audible voice-register state. It never falls back to `fast`. The remaining
-bootstrap work is to reproduce the game-owned scheduler/table state that turns
-parsed SEP events into nonzero voice volume/key writes.
+The CLI exposes only the direct SEP/VAB renderer. BOF3 linked-runtime
+execution is not a supported render mode: the bounded PSF machine is a
+separate diagnostic, and its missing game-owned scheduler/table bootstrap
+prevents it from producing audio.
 
 ### Python wrapper (`tools/python/harness/`)
 

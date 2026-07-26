@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @behavior UNKNOWN: exact behavior is not yet documented. */
+
 /* @source 0x80096F78
  * NOTE: byte-match blocked by the same `jr ra` epilogue scheduler reorg as
  * func_80096AB0. The original battle/15 object used `-fno-schedule-insns`;

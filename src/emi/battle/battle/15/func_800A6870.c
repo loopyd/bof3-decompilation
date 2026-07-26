@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @behavior UNKNOWN: exact behavior is not yet documented. */
+
 /* @sets D_801485BB, D_801485DF, and initializes counters at D_801462E3/E4.
  * @source 0x800A6870
  */
