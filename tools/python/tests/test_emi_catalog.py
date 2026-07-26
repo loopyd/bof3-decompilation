@@ -177,6 +177,15 @@ def _layout(root: Path, target: str, base: int, offset: int, name: str) -> None:
     )
 
 
+def test_companion_check_allows_callers_without_companion_static_calls(tmp_path: Path) -> None:
+    root = _fixture_root(tmp_path)
+    _layout(root, "emi/world00/area030/04", CALLER_BASE, 0, "func_801E0C20")
+    report = build_report(root, "emi/world00/area030/04@0x801E0C20")
+
+    assert report["companions"] == []
+    assert report["ready_to_lift"]
+
+
 def test_companion_check_requires_boundary_map_abi_and_declaration(tmp_path: Path) -> None:
     root = _fixture_root(tmp_path)
     _layout(root, "emi/world00/area030/04", CALLER_BASE, CALLSITE - CALLER_BASE - 8, "func_801E0C20")

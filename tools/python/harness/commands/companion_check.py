@@ -115,7 +115,7 @@ def build_report(root: Path, selector: str) -> dict[str, Any]:
         "schema": "harness.companion-check/v1",
         "caller": f"{function.target.value}@0x{function.address:08X}",
         "companions": reports,
-        "ready_to_lift": bool(reports) and all(item["ready_to_lift"] for item in reports),
+        "ready_to_lift": all(item["ready_to_lift"] for item in reports),
     }
 
 
