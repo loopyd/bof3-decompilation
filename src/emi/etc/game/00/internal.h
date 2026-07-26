@@ -146,6 +146,7 @@ extern volatile u32 D_80144FC0;
 extern u8  D_80145029;
 extern u8  D_80145024;
 extern u32 D_8014502C;
+extern u8* D_801459F4;
 /* @behavior palette stage serial for GPU upload sequencing */
 extern volatile u8 D_80145988;
 /* @behavior world flags — bit0=pending scenario, bit6=force-reset.
