@@ -107,7 +107,7 @@ segments:
     - asm
     - func_801F16F8
   - - 11120
-    - asm
+    - c
     - func_801F1770
   - - 11172
     - asm
