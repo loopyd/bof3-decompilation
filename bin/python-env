@@ -1,0 +1,16 @@
+#!/bin/sh
+# Shared environment for Python-backed repository commands.
+# Resolves repo root, PSX_PYTHON/.venv selection, PYTHONPATH, and missing-Python exits.
+# Callers source this script to inherit PYTHON and PYTHONPATH:
+#   . "${ROOT}/bin/python-env"
+set -eu
+
+_ROOT="${ROOT:-$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)}"
+_PYTHON="${PSX_PYTHON:-${_ROOT}/.venv/bin/python}"
+if [ ! -x "$_PYTHON" ]; then
+    printf 'missing project Python environment: %s\n' "$_PYTHON" >&2
+    exit 2
+fi
+export PYTHON="$_PYTHON"
+PYTHONPATH="${_ROOT}/tools/python${PYTHONPATH:+:${PYTHONPATH}}"
+export PYTHONPATH

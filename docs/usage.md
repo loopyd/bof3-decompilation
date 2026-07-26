@@ -85,6 +85,19 @@ reviewed exact candidates into the space's SDK map; `psyq-bindings` regenerates
 the compiled `src/<t>/symbols/psyq.c` from it. Nothing edits maps without
 `--write`.
 
+### 3b. Analysis sequence (freshness → rebuild → query)
+
+```sh
+bin/analysis-sequence TARGET --ranking quick-wins
+bin/analysis-sequence TARGET --ranking metrics TARGET@0xADDRESS --detail normal
+```
+
+`analysis-sequence` checks `bin/rz-project status TARGET` first; fails with the
+target and `snapshot` stage when stale; rebuilds the index only after freshness
+succeeds; runs the requested `rev-query` ranking without touching other targets
+or reviewed maps. Use `--exclusions` to inspect rows rejected by canonical-code
+checks; use `--detail full` for complete rows.
+
 ### 4. Select one function
 
 ```sh
@@ -92,9 +105,12 @@ bin/rev-query quick-wins --unlifted --detail minimal --limit 5
 bin/rev-query leafs --unlifted --detail minimal --limit 5
 bin/rev-query duplicates --unlifted --detail normal --limit 5
 bin/rev-query metrics TARGET@0xADDRESS --detail normal
+bin/rev-query quick-wins --exclusions --detail full --limit 0
 ```
 
-Use `quick-wins` for low effort, `hotspots` for caller impact, `leafs` for
+Use `--exclusions` on any ranking command to inspect target-qualified rows
+rejected by canonical code checks; it reports `candidate_exclusion` instead of
+ranked candidates. Use `quick-wins` for low effort, `hotspots` for caller impact, `leafs` for
 bounded call dependencies, `pareto` for visible effort/value trade-offs, and
 `duplicates` for exact-byte leverage. Rankings are hints, not promotion proof.
 

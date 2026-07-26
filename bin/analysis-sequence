@@ -3,4 +3,4 @@ set -eu
 
 ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
 . "$ROOT/bin/python-env"
-exec "$PYTHON" -m harness.commands.index "$@"
+exec "$PYTHON" -m harness.commands.analysis_sequence "$@"

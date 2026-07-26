@@ -3,7 +3,7 @@ name: reviewer
 description: Evidence-backed review
 model: ninerouter/gpt-combo
 thinking: high
-tools: read,grep,find,ls,bash,write,contact_supervisor,memory_search,session_search,qmd_search,mcp,mcp:sqlitecloud-mcp-server,mcp:github-mcp-server,mcp:context7
+tools: read,grep,find,ls,bash,write,contact_supervisor,memory_search,session_search,qmd_search,mcp,mcp:sqlitecloud-mcp-server,mcp:context7
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false

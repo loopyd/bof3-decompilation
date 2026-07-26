@@ -3,11 +3,11 @@ name: planner
 description: Create concrete implementation plans
 model: ninerouter/gpt-combo
 thinking: high
-tools: read,grep,find,ls,write,intercom,memory_search,session_search,qmd_search,web_search,fetch_content,get_search_content,mcp,mcp:sqlitecloud-mcp-server,mcp:github-mcp-server,mcp:context7
+tools: read,grep,find,ls,write,intercom,memory_search,session_search,qmd_search,web_search,fetch_content,get_search_content,mcp,mcp:sqlitecloud-mcp-server,mcp:context7
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
-defaultContext: fork
+defaultContext: fresh
 timeoutMs: 3600000
 turnBudget: {"maxTurns":300,"graceTurns":10}
 output: plan.md

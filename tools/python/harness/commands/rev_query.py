@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 from collections import defaultdict
+from functools import lru_cache
 import json
 from pathlib import Path
 import sys
@@ -273,6 +274,24 @@ def _dominates(left: dict[str, Any], right: dict[str, Any]) -> bool:
     return better and strict
 
 
+@lru_cache(maxsize=None)
+def _candidate_context(root: Path, target: str):
+    manifest = load_target_manifests(root)[target]
+    binary = root / manifest.binary
+    if not binary.is_file():
+        return manifest, None, None, frozenset()
+    return (
+        manifest,
+        binary.read_bytes(),
+        parse_splat_layout(root / manifest.splat, manifest.load_address),
+        frozenset(
+            symbol.address
+            for symbol in load_map(sdk_map_path(root, manifest.psyq_space))
+            if not symbol.is_raw
+        ),
+    )
+
+
 def _candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
     """Reject analyzer-only roots that lack canonical code evidence.
 
@@ -280,13 +299,11 @@ def _candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
     must not offer a raw-data label or an SDK body as a lift candidate.
     """
 
-    manifests = load_target_manifests(root)
-    manifest = manifests[row["target"]]
     address = int(str(row["address"]), 0)
-    binary = root / manifest.binary
-    if not binary.is_file():
+    manifest, image, layout, sdk_addresses = _candidate_context(root, row["target"])
+    if image is None:
         return "missing_binary"
-    layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+    assert layout is not None
     boundary = layout.boundary_starting_at(address)
     if boundary is None or not boundary.is_function:
         return "not_reviewed_code_boundary"
@@ -294,7 +311,7 @@ def _candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
         return "noncanonical_boundary_name"
     offset = address - manifest.load_address
     size = row["size"]
-    payload = binary.read_bytes()[offset : offset + size]
+    payload = image[offset : offset + size]
     if len(payload) != size:
         return "boundary_outside_binary"
     printable = sum(byte == 0 or 0x20 <= byte < 0x7F for byte in payload)
@@ -304,12 +321,11 @@ def _candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
         int.from_bytes(payload[index : index + 4], "little")
         for index in range(0, len(payload) - 3, 4)
     ]
-    binary_end = manifest.load_address + binary.stat().st_size
+    binary_end = manifest.load_address + len(image)
     if len(words) >= 2 and all(manifest.load_address <= word < binary_end for word in words):
         return "in_image_pointer_table"
-    for symbol in load_map(sdk_map_path(root, manifest.psyq_space)):
-        if symbol.address == address and not symbol.is_raw:
-            return "shared_sdk_symbol"
+    if address in sdk_addresses:
+        return "shared_sdk_symbol"
     return None
 
 
@@ -322,12 +338,30 @@ def _priority_rows(
 
     payload = _function_metrics(connection, args.target)
     if root is not None:
-        for row in payload:
-            row["candidate_exclusion"] = _candidate_exclusion(root, row)
-        payload = [row for row in payload if row["candidate_exclusion"] is None]
+        exclusions = [
+            (row, _candidate_exclusion(root, row)) for row in payload
+        ]
+        if getattr(args, "exclusions", False):
+            payload = [
+                {**row, "candidate_exclusion": reason}
+                for row, reason in exclusions
+                if reason is not None
+            ]
+        else:
+            payload = [row for row, reason in exclusions if reason is None]
     _enrich_graph(connection, payload)
     if getattr(args, "function", None):
         payload = [row for row in payload if row["id"] == args.function]
+    if getattr(args, "exclusions", False):
+        payload = [
+            {
+                key: row[key]
+                for key in ("id", "target", "address", "candidate_exclusion")
+            }
+            for row in payload
+        ]
+        payload.sort(key=lambda row: (row["id"], row["candidate_exclusion"]))
+        return payload[: args.limit] if args.limit else payload
     if args.command != "metrics":
         payload = [row for row in payload if row["reviewed"] and row["size"] >= 8]
         if not args.include_trivial:
@@ -514,7 +548,9 @@ def run_query(args: argparse.Namespace) -> int:
             "duplicates",
         }
         if ranked:
-            detail = resolve_detail(requested=args.detail, json_output=args.json)
+            detail = "full" if getattr(args, "exclusions", False) else resolve_detail(
+                requested=args.detail, json_output=args.json
+            )
             payload = _project_rows(payload, command=args.command, detail=detail)
         _print(payload, args.json, labeled=ranked and detail != "full")
     finally:
@@ -725,6 +761,12 @@ def build_parser() -> argparse.ArgumentParser:
         command.add_argument("--limit", type=nonnegative, default=argparse.SUPPRESS)
         add_detail_argument(command)
         command.add_argument("--target")
+        if name != "duplicates":
+            command.add_argument(
+                "--exclusions",
+                action="store_true",
+                help="show candidate rows rejected by canonical-code checks",
+            )
         command.add_argument("--unlifted", action="store_true")
         if name != "duplicates":
             command.add_argument(
