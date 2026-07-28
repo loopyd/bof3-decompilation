@@ -8,7 +8,10 @@ ordered required context in one call. Stay within mission-owned source,
 1. Reuse supplied brief; otherwise run `function-brief.py` once. Do not repeat
    mission/status/byte-match queries. Verify load: runtime − load = payload offset.
 2. Before declarations, search target header/map, `include/`, PsyQ map/report,
-   and index. Reuse types/symbols; no duplicates.
+   and index. Reuse types/symbols; no duplicates. For each new target-local
+   fixed address, retain matching `internal.h` extern, `symbols.c`
+   `WEAK_SYMBOL_AT`, and target map entry. Check composed Splat maps first:
+   shared-map symbols need no invalid target-map duplicate.
 3. Generate Splat/m2c evidence only for a missing/uncertain boundary or seed.
 4. For relevant declared companion calls, run `companion-check`; it proves static
    identity/call only. Require reviewed boundary, ABI, local map, and caller
@@ -19,8 +22,10 @@ ordered required context in one call. Stay within mission-owned source,
    one structural fix, rerun. Revert regressions. Escalate types → flow → ordering
    → flags → one bounded permuter → documented residual after three stalled tries
    per level. Use full diff only when normal evidence is insufficient.
-8. Accept only final live `byte-match` exit 0. Never use cached status as proof.
-   Report Rizin/index staleness to parent; do not rebuild global analysis.
+8. Accept only final live `byte-match` exit 0 plus `bin/symbols check TARGET`
+   and `bin/splat TARGET`; a new authored lift also needs its Splat boundary
+   changed to `c` and `@source`/`@behavior` metadata. Never use cached status as
+   proof. Report Rizin/index staleness to parent; do not rebuild global analysis.
 
 Banned: handwritten asm (except sanctioned helpers), register pins, asm-renamed
 externs, `INCLUDE_ASM` without approval, git writes, reset/clean/rm/setup, children.
