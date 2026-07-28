@@ -158,7 +158,7 @@ segments:
     - asm
     - func_80099114
   - - 10616
-    - asm
+    - c
     - func_80099178
   - - 10676
     - asm
