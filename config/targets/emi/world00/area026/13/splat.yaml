@@ -50,16 +50,16 @@ segments:
     - asm
     - func_801F309C
   - - 1236
-    - asm
+    - c
     - func_801F30D4
   - - 1276
-    - asm
+    - c
     - func_801F30FC
   - - 1316
-    - asm
+    - c
     - func_801F3124
   - - 1356
-    - asm
+    - c
     - func_801F314C
   - - 1396
     - asm
