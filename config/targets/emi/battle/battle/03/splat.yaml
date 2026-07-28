@@ -26,7 +26,7 @@ segments:
     - c
     - func_801D6774
   - - 23472
-    - asm
+    - c
     - func_801D67B0
   - - 23532
     - c
