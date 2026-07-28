@@ -49,18 +49,6 @@ def map_names(path: Path, address: int) -> list[str]:
     return [match.group(1) for line in path.read_text().splitlines() if (match := SYMBOL.fullmatch(line)) and int(match.group(2), 16) == address]
 
 
-def lift_record(payload: Any, target: str, address: int) -> dict[str, Any] | None:
-    if not isinstance(payload, dict):
-        return None
-    for item in payload.get("targets", []):
-        if item.get("target") != target:
-            continue
-        for function in item.get("functions", []):
-            if function.get("address") == f"0x{address:08X}":
-                return function
-    return None
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("function", type=selector, metavar="TARGET@0xADDRESS")
@@ -101,10 +89,31 @@ def main() -> int:
         "mission": run(root, "bin/rev-query", "mission", f"{target}@0x{address:08X}", "--json"),
     }
     if source.is_file():
-        status = run(root, "bin/decomp-status", target, "--json")
-        report["lift_status"] = lift_record(status.get("json"), target, address)
-        report["asm_diff"] = run(root, "bin/asm-diff", f"{target}@0x{address:08X}", "--json")
-        report["byte_match"] = run(root, "bin/byte-match", f"{target}@0x{address:08X}", "--json")
+        comparison = run(root, "bin/asm-diff", f"{target}@0x{address:08X}", "--json")
+        report["asm_diff"] = comparison
+        payload = comparison.get("json")
+        if isinstance(payload, dict):
+            report["lift_status"] = {
+                "status": "exact" if payload.get("byte_match") else "partial",
+                "function": payload.get("function"),
+                "address": payload.get("address"),
+                "instruction_count": payload.get("instruction_count"),
+                "match_percent": payload.get("instruction_count", {}).get("match_percent")
+                if isinstance(payload.get("instruction_count"), dict)
+                else None,
+                "original_size": payload.get("original_size"),
+                "current_size": payload.get("current_size"),
+                "size_delta": payload.get("size_delta"),
+            }
+            report["byte_match"] = {
+                "command": comparison["command"],
+                "exit_code": comparison["exit_code"],
+                "json": {
+                    key: payload[key]
+                    for key in ("function", "address", "original_size", "current_size", "byte_match")
+                    if key in payload
+                },
+            }
     if args.prepare:
         evidence = root / "out" / "skill-evidence" / target / f"func_{address:08X}"
         evidence.mkdir(parents=True, exist_ok=True)

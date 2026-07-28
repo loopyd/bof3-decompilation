@@ -101,6 +101,7 @@ sessions/*
 *.map
 
 # Cache
+.cache/
 compile_commands.json
 tools/rust/bof3-disk/target/
 tools/rust/emi-ex/target/

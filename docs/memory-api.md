@@ -22,7 +22,8 @@ code. Forwarding alias: `include/bof3/defines.h`.
   problem is volatile-access **ordering** across a call (e.g. a global read must
   stay before an indirect call). See `LESSONS.md` for the `func_801F4578`
   example.
-- `CLOBBER_A0()` / `CLOBBER_V0()` / `CLOBBER_A1()` — empty-asm barriers that
+- `CLOBBER_A0()` / `CLOBBER_V0()` / `CLOBBER_V1()` / `CLOBBER_A1()` —
+  empty-asm barriers that
   mark the named MIPS register clobbered. Use when the problem is **which
   register** holds a value in a `jal`/branch **delay slot** (e.g. keep
   `move a0,zero` in the slot before `func_801C1400(0u)`).
@@ -80,6 +81,9 @@ Forwarding alias: `include/bof3/scratchpad.h`.
 - `SPAD_ADDRESS(byte_offset)` — absolute address of a scratchpad byte offset.
 - `SPAD_ADDR(type, byte_offset)` — typed pointer into scratchpad; no access.
 - `SPAD_REF(type, byte_offset)` — lvalue for an object stored in scratchpad.
+- `SPAD_PTR_TABLE(type)` — typed base of scratchpad pointer cells. Index by
+  four-byte cell number when the original uses `lui` + offset `lw`, e.g.
+  `SPAD_PTR_TABLE(u8)[0x11]` for `0x1F800044`.
 - `SPAD_PTR_SLOT(type, byte_offset)` — a **pointer cell** stored in scratchpad:
   `PSX_REF(type *, SPAD_ADDRESS(byte_offset))`. The cell is intentionally
   **not** `volatile`. The constant-address codegen (`lui` + offset `lw`/`lh`/

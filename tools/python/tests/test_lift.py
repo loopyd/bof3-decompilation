@@ -51,6 +51,16 @@ def test_target_qualified_lift_resolves_only_its_owner(
     assert source == tmp_path / "src/exe/logo/func_801CE758.c"
 
 
+def test_lift_commands_explain_missing_source(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _target(tmp_path)
+    monkeypatch.setattr(lift, "repo_layout", lambda: _layout(tmp_path))
+
+    assert lift.main("asm-diff", ["exe/logo@0x801CE758"]) == 2
+    assert "bin/m2c exe/logo@0x801CE758 -o" in capsys.readouterr().err
+
+
 def test_context_keeps_symbols_target_local(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

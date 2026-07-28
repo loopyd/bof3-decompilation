@@ -15,7 +15,7 @@ from ._common import run_main
 
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
-    report = build_report(root, args.targets)
+    report = build_report(root, args.targets, use_cache=not args.no_cache)
     if args.out is not None:
         output = args.out if args.out.is_absolute() else root / args.out
         write_report(output, report)
@@ -36,6 +36,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="print JSON; complete unless --detail projects it",
     )
     add_detail_argument(parser)
+    parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="recompute every lift instead of reusing disposable audit summaries",
+    )
     parser.add_argument("-o", "--out", type=Path, help="write the complete JSON report")
     parser.add_argument(
         "targets", metavar="TARGET", nargs="*", help="target IDs to check"

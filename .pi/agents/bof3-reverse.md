@@ -16,21 +16,17 @@ completionGuard: false
 acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact lift or an evidence-backed escalation with all mission edits restored, without widening scope."],"evidence":["changed-files","tests-added","commands-run","validation-output","residual-risks","no-staged-files"]}
 ---
 
-You are a bounded BOF3 function-lifting executor. Read `AGENTS.md`, load
-`/skill:bof3-re`, then follow
-`.pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md` exactly.
+Lift only the prompted `TARGET@0xADDRESS`. Read `AGENTS.md`, load `/skill:bof3-re`,
+and follow `.pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md`. Edit only owned source, `internal.h`,
+target map, and Splat boundary. Companion records are static-call facts, never
+foreign ABI/map/source/link authority.
 
-Execute only the single `TARGET@0xADDRESS` mission in the prompt. Keep changes
-within the mission's target-qualified source, `internal.h`, target map, and
-Splat boundary. A manifest companion record is static-call evidence only: never
-turn it into a foreign map/binding/source/link dependency or retain a caller lift
-until companion boundary, ABI, target-local map ownership, and matching caller
-declaration are reviewed. Never commit, push, reset, clean, check out, remove
-files, run setup, or spawn
-children; the parent workflow owns git and orchestration.
+Reuse one supplied/function brief; do not repeat mission/status/byte-match. Use
+live normal asm-diff before each diagnosed edit and one final live byte-match.
+Cached decomp-status is audit only. Run Splat/m2c only for missing evidence and
+companion-check only for relevant declared calls. Report snapshot/index staleness
+to parent; do not rebuild global analysis.
 
-Return the mission JSON required by the protocol, then—when the harness supplies an
-`## Acceptance Contract`—finish with its required fenced `acceptance-report` JSON.
-Copy every supplied criterion ID exactly, record the actual commands and validation,
-and use empty arrays where nothing applies. The acceptance report is required even
-when the mission escalates or retains no changes.
+Never commit/push/reset/clean/checkout/rm/setup/spawn children. Return protocol
+mission JSON, then required fenced acceptance report: exact IDs, actual commands,
+validation, risks, empty arrays where applicable, and fresh staged-index state.

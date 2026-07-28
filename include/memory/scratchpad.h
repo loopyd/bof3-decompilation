@@ -38,6 +38,16 @@
 #define SPAD_REF(type, byte_offset) PSX_REF(type, SPAD_ADDRESS(byte_offset))
 
 /*
+ * Typed base of scratchpad pointer cells. Index by four-byte cell number.
+ * Keeping the base at zero lets the compiler use an offset load rather than
+ * materialize a full cell address.
+ *
+ *     SPAD_PTR_TABLE(Entity)[0x11]
+ *         Entity *
+ */
+#define SPAD_PTR_TABLE(type) SPAD_ADDR(type*, 0u)
+
+/*
  * Pointer stored in a scratchpad slot.
  *
  * The cell is intentionally NOT marked volatile: the constant-address codegen

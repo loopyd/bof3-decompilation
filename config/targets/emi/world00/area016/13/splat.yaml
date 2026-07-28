@@ -50,7 +50,7 @@ segments:
     - asm
     - func_801F341C
   - - 2144
-    - asm
+    - c
     - func_801F3460
   - - 2208
     - asm

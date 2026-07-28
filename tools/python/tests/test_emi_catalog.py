@@ -9,7 +9,11 @@ import pytest
 
 from harness.commands.companion_check import build_report
 from harness.domain import load_target_manifests
-from harness.emi.catalog import build_catalog, materialize_reviewed_targets
+from harness.emi.catalog import (
+    build_catalog,
+    materialize_reviewed_targets,
+    verify_declared_companions,
+)
 
 CALLER_BASE = 0x801D0C00
 CALLSITE = 0x801E0C28
@@ -83,6 +87,16 @@ def test_companion_relation_requires_declaration(tmp_path: Path) -> None:
 
     assert len(catalog["build_targets"]) == 2
     assert catalog["companion_relations"] == []
+
+
+def test_target_scoped_companion_verification_matches_catalog_relation(tmp_path: Path) -> None:
+    root = _fixture_root(tmp_path)
+    manifests = load_target_manifests(root)
+    catalog = build_catalog(root / "out" / "extracted" / "BIN")
+
+    assert verify_declared_companions(
+        root, manifests["emi/world00/area030/04"]
+    ) == catalog["companion_relations"]
 
 
 def test_declared_companion_relation_verifies_identity_and_jal(tmp_path: Path) -> None:

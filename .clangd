@@ -1,0 +1,15 @@
+CompileFlags:
+  Remove:
+    - -G*
+    - -Wa,*
+    - -gcoff
+    - -mips1
+    - -EL
+    - -msoft-float
+  Add:
+    - --target=mipsel-none-elf
+    - -std=gnu89
+    - -ffreestanding
+    - -fno-builtin
+Diagnostics:
+  UnusedIncludes: None

@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "servers": [
+    {
+      "id": "pyright",
+      "enabled": true,
+      "include": ["**/*.py", "**/*.pyi"],
+      "exclude": [
+        "**/.venv/**",
+        "**/__pycache__/**",
+        "**/build/**",
+        "**/out/**",
+        "**/third_party/**"
+      ],
+      "rootMarkers": ["pyproject.toml"],
+      "bin": "pyright-langserver",
+      "args": ["--stdio"],
+      "cwd": "{root}",
+      "languageIdByExtension": {
+        ".py": "python",
+        ".pyi": "python"
+      },
+      "startupTimeoutMs": 15000,
+      "diagnosticsWaitMs": 2000,
+      "initializationOptions": {},
+      "settings": {
+        "python": {
+          "analysis": {
+            "typeCheckingMode": "basic",
+            "venvPath": ".",
+            "venv": ".venv"
+          }
+        }
+      }
+    },
+    {
+      "id": "rust-analyzer",
+      "enabled": true,
+      "include": ["tools/rust/**/*.rs"],
+      "exclude": ["**/target/**", "**/build/**", "**/out/**", "**/third_party/**"],
+      "rootMarkers": ["Cargo.toml"],
+      "bin": "rust-analyzer",
+      "args": [],
+      "cwd": "{root}",
+      "languageIdByExtension": {
+        ".rs": "rust"
+      },
+      "startupTimeoutMs": 15000,
+      "diagnosticsWaitMs": 3000,
+      "initializationOptions": {},
+      "settings": {
+        "rust-analyzer": {
+          "cargo": {
+            "allFeatures": true
+          },
+          "checkOnSave": true
+        }
+      }
+    },
+    {
+      "id": "clangd",
+      "enabled": true,
+      "include": ["**/*.c", "**/*.h", "**/*.cpp", "**/*.hpp", "**/*.cc", "**/*.cxx", "**/*.m", "**/*.mm"],
+      "exclude": ["**/build/**", "**/third_party/**", "**/_build/**"],
+      "rootMarkers": ["compile_commands.json", ".clangd", "CMakeLists.txt", "Makefile"],
+      "bin": "clangd",
+      "args": ["--background-index", "--header-insertion=iwyu", "--enable-config"],
+      "cwd": "{root}",
+      "languageIdByExtension": {
+        ".c": "c",
+        ".h": "c",
+        ".cpp": "cpp",
+        ".hpp": "cpp",
+        ".cc": "cpp",
+        ".cxx": "cpp",
+        ".m": "objective-c",
+        ".mm": "objective-cpp"
+      },
+      "startupTimeoutMs": 15000,
+      "diagnosticsWaitMs": 2000,
+      "initializationOptions": {},
+      "settings": {}
+    }
+  ]
+}

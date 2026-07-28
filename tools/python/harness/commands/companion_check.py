@@ -10,7 +10,7 @@ from typing import Any
 from ..canonical import load_map
 from ..domain import parse_function_id
 from ..domain.manifests import CompanionOverlay, load_target_manifests
-from ..emi.catalog import load_catalog, verify_companion_relations
+from ..emi.catalog import verify_declared_companions
 from ..io import repo_layout
 from ..layout import parse_splat_layout
 
@@ -21,8 +21,12 @@ def _status(ok: bool, detail: str) -> dict[str, object]:
     return {"status": "verified" if ok else "missing", "detail": detail}
 
 
-def _companion_report(root: Path, caller: str, companion: CompanionOverlay) -> dict[str, Any]:
-    manifests = load_target_manifests(root)
+def _companion_report(
+    root: Path,
+    manifests: dict[str, Any],
+    caller: str,
+    companion: CompanionOverlay,
+) -> dict[str, Any]:
     target = manifests[companion.target.value]
     layout = parse_splat_layout(root / target.splat, target.load_address)
     symbols = {symbol.address: symbol.canonical_name for symbol in load_map(root / "config" / "targets" / target.id.value / "symbols.txt")}
@@ -88,8 +92,7 @@ def build_report(root: Path, selector: str) -> dict[str, Any]:
     caller = manifests.get(function.target.value)
     if caller is None:
         raise ValueError(f"unknown target: {function.target.value}")
-    catalog = load_catalog(root)
-    relations = verify_companion_relations(root, catalog)
+    relations = verify_declared_companions(root, caller)
     caller_layout = parse_splat_layout(root / caller.splat, caller.load_address)
     companions = [
         companion
@@ -110,7 +113,10 @@ def build_report(root: Path, selector: str) -> dict[str, Any]:
             for relation in relations
         )
     ]
-    reports = [_companion_report(root, caller.id.value, companion) for companion in companions]
+    reports = [
+        _companion_report(root, manifests, caller.id.value, companion)
+        for companion in companions
+    ]
     return {
         "schema": "harness.companion-check/v1",
         "caller": f"{function.target.value}@0x{function.address:08X}",

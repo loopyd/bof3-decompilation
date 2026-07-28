@@ -6,7 +6,9 @@ import re
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
+
+from ..domain.manifests import SectionPlacement
 
 from ..build import build, cmake_target_for_source
 from ..io import write_json, RepoLayout, repo_layout
@@ -71,6 +73,9 @@ class AsmDiffRequest:
     load_address: int | None = None
     output_root: Path | None = None
     symbols_c_path: Path | None = None
+    canonical_bindings: Mapping[str, int] | None = None
+    section_placements: tuple[SectionPlacement, ...] | None = None
+    diagnostics: bool = True
 
 
 # -- diff -------------------------------------------------------------------------------
@@ -189,7 +194,7 @@ def build_result_payload(
 
 
 def run_build_object(
-    layout: RepoLayout, source_path: Path, build_log_path: Path
+    layout: RepoLayout, source_path: Path, build_log_path: Path | None
 ) -> None:
     target = cmake_target_for_source(layout.root, source_path)
     object_path = object_path_for_source(layout, source_path)
@@ -198,16 +203,18 @@ def run_build_object(
             f"cmake executable not found in PATH; cannot build {target}"
         )
 
-    build_log_path.parent.mkdir(parents=True, exist_ok=True)
     result = build(layout.root, target)
     log_text = result.stdout
     if result.stderr:
         if log_text:
             log_text += "\n"
         log_text += result.stderr
-    build_log_path.write_text(log_text, encoding="utf-8")
+    if build_log_path is not None:
+        build_log_path.parent.mkdir(parents=True, exist_ok=True)
+        build_log_path.write_text(log_text, encoding="utf-8")
     if result.returncode != 0:
-        raise RuntimeError(f"object build failed for {target}; see {build_log_path}")
+        suffix = "" if build_log_path is None else f"; see {build_log_path}"
+        raise RuntimeError(f"object build failed for {target}{suffix}")
     if (
         not object_path.is_file()
         or object_path.stat().st_mtime < source_path.stat().st_mtime
@@ -256,11 +263,14 @@ def run_asm_diff_one(
         owner = source_path.parent.name
     target_slug = re.sub(r"[^A-Za-z0-9_.-]+", "_", owner)
     output_dir = output_root / target_slug / function_name
-    if output_dir.is_dir():
-        shutil.rmtree(output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    if request.diagnostics:
+        if output_dir.is_dir():
+            shutil.rmtree(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
 
-    run_build_object(repo, source_path, output_dir / "build.log")
+    run_build_object(
+        repo, source_path, output_dir / "build.log" if request.diagnostics else None
+    )
     if not object_path.is_file():
         raise FileNotFoundError(f"expected object was not built: {object_path}")
     if not binary_path.is_file():
@@ -268,7 +278,7 @@ def run_asm_diff_one(
 
     objdump_path = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-objdump"
     nm_path = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-nm"
-    if not os.access(objdump_path, os.X_OK):
+    if request.diagnostics and not os.access(objdump_path, os.X_OK):
         raise FileNotFoundError(f"missing executable {objdump_path}; run `just setup`")
     if not os.access(nm_path, os.X_OK):
         raise FileNotFoundError(f"missing executable {nm_path}; run `just setup`")
@@ -280,28 +290,32 @@ def run_asm_diff_one(
         size=original_size,
         load_address=load_address,
     )
-    original_bytes_path.write_bytes(original_bytes)
+    if request.diagnostics:
+        original_bytes_path.write_bytes(original_bytes)
 
-    from ..domain.manifests import load_target_manifests
+    if request.section_placements is None:
+        from ..domain.manifests import load_target_manifests
 
-    source_directory = source_path.parent.relative_to(repo.root).as_posix()
-    manifest = next(
-        (
-            value
-            for value in load_target_manifests(repo.root).values()
-            if value.source_dir == source_directory
-        ),
-        None,
-    )
-    placements = (
-        () if manifest is None else manifest.section_placements.get(address, ())
-    )
+        source_directory = source_path.parent.relative_to(repo.root).as_posix()
+        manifest = next(
+            (
+                value
+                for value in load_target_manifests(repo.root).values()
+                if value.source_dir == source_directory
+            ),
+            None,
+        )
+        placements = (
+            () if manifest is None else manifest.section_placements.get(address, ())
+        )
+    else:
+        placements = request.section_placements
     section_addresses = {
         placement.section: placement.address for placement in placements
     }
 
     current_compiler_asm = compiler_asm_path_for_object(object_path)
-    if not current_compiler_asm.is_file():
+    if request.diagnostics and not current_compiler_asm.is_file():
         raise FileNotFoundError(
             f"expected compiler assembly was not written: {current_compiler_asm}"
         )
@@ -312,6 +326,7 @@ def run_asm_diff_one(
         size=original_size,
         original_bytes=original_bytes,
         symbols_c_path=request.symbols_c_path or source_path.parent / "symbols.c",
+        canonical_bindings=request.canonical_bindings,
         layout=repo,
         section_addresses=section_addresses,
     )
@@ -332,6 +347,22 @@ def run_asm_diff_one(
                 "match original bytes"
             )
     current_size = current_symbol_size(nm_path, object_path, function_name)
+    if not request.diagnostics:
+        return {
+            "schema": "harness.byte-match-one/v1",
+            "status": "exact_match" if byte_match else "different",
+            "exact_match": byte_match,
+            "byte_match": byte_match,
+            "source": str(source_path),
+            "function": function_name,
+            "address": format_hex(address),
+            "original_size": original_size,
+            "current_size": current_size,
+            "size_delta": None if current_size is None else current_size - original_size,
+            "original_binary": str(binary_path),
+            "current_object": str(object_path),
+            "outputs": {},
+        }
 
     shutil.copyfile(current_compiler_asm, output_dir / "compiler.s")
 

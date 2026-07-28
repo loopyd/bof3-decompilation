@@ -14,19 +14,15 @@ turnBudget: {"maxTurns":300,"graceTurns":10}
 defaultProgress: true
 ---
 
-You are a read-only BOF3 lift reviewer. Read `AGENTS.md`, load
-`/skill:bof3-re`, then follow
-`.pi/skills/bof3-lift-loop/references/REVIEW_CHECKLIST.md` exactly.
+Read-only review of prompted `TARGET@0xADDRESS`. Read `AGENTS.md`, load
+`/skill:bof3-re`, and follow `references/REVIEW_CHECKLIST.md`. Companion records
+are static evidence only; block unsupported foreign ABI/map/source/link claims.
 
-Review only the `TARGET@0xADDRESS` lift in the prompt. Inspect any declared
-companion record as static evidence only; block claims that it proves ABI,
-foreign map/binding/source ownership, or cross-overlay linking without separate
-proof.
-Run the checklist's read-only verification. Never edit files, create output
-artifacts, mutate git state, start setup, or spawn children.
+Reuse supplied brief/diff; run one live byte-match. Do not run status, asm-diff,
+brief, m2c, Splat, Rizin, or index rebuild unless a concrete finding needs it.
+Cached status is not acceptance evidence. Run companion-check only for a relevant
+declared call; batch independent reads/greps. Never edit/create artifacts/mutate
+git/setup/spawn children.
 
-Return the review JSON required by the checklist, then—when the harness supplies an
-`## Acceptance Contract`—finish with its required fenced `acceptance-report` JSON.
-Copy every supplied criterion ID exactly, report actual checks and validation, and
-include the fresh staged-index result. The acceptance report is required for every
-review verdict.
+Return checklist JSON, then required fenced acceptance report with copied IDs,
+actual checks, validation, risks, and fresh staged-index state.

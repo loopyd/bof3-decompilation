@@ -8,6 +8,7 @@ decomp-permuter.
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -17,9 +18,41 @@ from harness.commands import permute
 from harness.toolchain.permuter import DecompPermuterToolchain
 
 
+ROOT = Path(__file__).resolve().parents[3]
+
+
 def _stub_tools(root: Path) -> None:
     (root / "tools").mkdir(parents=True, exist_ok=True)
     (root / "tools" / "prep-permuter.py").touch()
+
+
+# ---------------------------------------------------------------------------
+# Preparer
+# ---------------------------------------------------------------------------
+
+
+def test_preparer_creates_runnable_workspace(tmp_path: Path) -> None:
+    source = tmp_path / "func_test.c"
+    source.write_text("typedef int s32;\ns32 func_test(void) { return 1; }\n")
+    (tmp_path / "target.s").write_text(".text\nglabel func_test\n    jr $ra\n     li $v0, 1\n")
+
+    subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools" / "prep-permuter.py"),
+            str(source),
+            "func_test",
+            str(tmp_path),
+        ],
+        check=True,
+    )
+    subprocess.run(
+        [str(tmp_path / "compile.sh"), str(tmp_path / "base.c"), "-o", str(tmp_path / "base.o")],
+        check=True,
+    )
+
+    for name in ("base.c", "compile.sh", "settings.toml", "target.o"):
+        assert (tmp_path / name).is_file()
 
 
 # ---------------------------------------------------------------------------

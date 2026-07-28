@@ -14,6 +14,11 @@ extern u32              D_8014646C;
 /* @behavior selects one pending EMI transfer slot and copies its staged transfer
  * state into the active loader registers.
  * @source 0x80162B08
+ *
+ * RESIDUAL: bin/byte-match exits non-zero. 66/67 instructions match (98.51%);
+ * byte size matches (268--268). The sole difference: the `j epilogue` delay slot
+ * contains `li v0,1` (current) vs `nop` (original). Canonical -O2 output differs.
+ * Flag-search (52 catalog variants): no exact match; best result 98.51%.
  */
 s32 func_80162B08(u8 slot) {
   volatile EmiTransferSlot* slot_table;

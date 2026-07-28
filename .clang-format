@@ -33,7 +33,3 @@ IndentCaseLabels: true
 IndentPPDirectives: None
 ReflowComments: false
 MaxEmptyLinesToKeep: 1
-KeepEmptyLines:
-  AtEndOfFile: false
-  AtStartOfBlock: false
-  AtStartOfFile: false

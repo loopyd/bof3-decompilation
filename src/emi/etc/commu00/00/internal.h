@@ -51,13 +51,18 @@ extern volatile u16 COMMU00_WORLD_STATE;
 extern volatile u8  COMMU00_TYPE10_TOTAL;
 extern volatile u8  COMMU00_TYPE11_TOTAL;
 extern u16          D_80146904[1];
+extern u8           D_801448EB;
 extern u8           D_801448EC[1];
+extern u8           D_801448ED;
 extern volatile u8  D_801F2928[1];
 
 u16  commu00_pack_slot_anchor(s32 x, s32 y);
 void commu00_apply_slot_palette(u16 palette_id);
 void commu00_prime_slot_resource(u8 resource_id);
 s32  commu00_check_selector_flag(const void* table_base, s32 selector_id);
+
+void func_8015C058(void);
+void func_8015C088(void);
 
 void func_801EEDF8(void);
 void func_801EEEF0(u32 row_index);
@@ -91,7 +96,7 @@ void func_801F0BF4(u8 task_index);
 #define COMMU00_BATTLE_COUNT         PSX_PTR(volatile u32, 0x8014502cu)
 #define COMMU00_STATE                PSX_PTR(volatile u8, 0x80143bb0u)
 #define COMMU00_ITEM_NAME            PSX_PTR(volatile u8, 0x801490d8u)
-#define COMMU00_ACTIVE_UI            PSX_REF(volatile u8*, 0x801f2948u)
+#define COMMU00_ACTIVE_UI            PSX_REF(u8*, 0x801f2948u)
 #define COMMU00_REMOVAL_QUEUE        PSX_PTR(volatile u8, 0x80145e30u)
 #define COMMU00_PENDING_QUEUE        PSX_PTR(volatile u8, 0x80145e48u)
 #define COMMU00_TYPE45_NOTIFICATION_TABLE                                      \

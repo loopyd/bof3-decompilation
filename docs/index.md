@@ -27,6 +27,7 @@
 - [EMI loader](specs/runtime/emi-loader.md) — SLUS EMI entry dispatch and loading rules
 - [Recovered layouts](specs/runtime/memory-layouts.md) — byte layouts required by current lifted code
 - [Psy-Q constants](specs/runtime/psyq-constants.md) — SDK-backed constants, ABI declarations, and layout rules
+- [Compiler provenance](specs/runtime/compiler-provenance.md) — historical compiler and delay-slot matching evidence
 
 ### Data
 

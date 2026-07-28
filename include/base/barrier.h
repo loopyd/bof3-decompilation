@@ -25,11 +25,13 @@
 #if defined(__GNUC__)
 #define CLOBBER_A0() __asm__ __volatile__("" : : : "a0")
 #define CLOBBER_V0() __asm__ __volatile__("" : : : "v0")
+#define CLOBBER_V1() __asm__ __volatile__("" : : : "v1")
 #define CLOBBER_A1() __asm__ __volatile__("" : : : "a1")
 #define CLOBBER_A2() __asm__ __volatile__("" : : : "a2")
 #else
 #define CLOBBER_A0()
 #define CLOBBER_V0()
+#define CLOBBER_V1()
 #define CLOBBER_A1()
 #define CLOBBER_A2()
 #endif

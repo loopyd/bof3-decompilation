@@ -12,6 +12,7 @@ from typing import Any, Callable, Iterable
 
 from .domain import TargetManifest, load_target_manifests, normalize_target_id
 from .match.asm_diff import AsmDiffRequest, run_asm_diff_one
+from .match.status_cache import StatusCache, source_fingerprint, target_fingerprint
 from .reverse_index import SCHEMA_VERSION, index_path
 from .snapshot import read_snapshot, snapshot_path, validate_snapshot_identity
 
@@ -72,12 +73,14 @@ def collect_lifts(
     manifests: Iterable[tuple[str, TargetManifest]],
     *,
     diff_runner: DiffRunner = run_asm_diff_one,
+    cache: StatusCache | None = None,
 ) -> list[dict[str, Any]]:
     """Compile and compare every lift in the supplied target manifests."""
 
     records: list[dict[str, Any]] = []
     for target, manifest in manifests:
         source_dir = root / manifest.source_dir
+        target_key = target_fingerprint(root, manifest) if cache is not None else ""
         for source in sorted(source_dir.glob("func_*.c")):
             if _FUNCTION.fullmatch(source.stem) is None:
                 records.append(
@@ -103,6 +106,12 @@ def collect_lifts(
                     )
                 )
                 continue
+            source_name = source.relative_to(root).as_posix()
+            key = source_fingerprint(source, target_key) if cache is not None else ""
+            record = cache.get(target, source_name, key) if cache is not None else None
+            if record is not None:
+                records.append(record)
+                continue
             try:
                 result = diff_runner(
                     AsmDiffRequest(
@@ -111,6 +120,7 @@ def collect_lifts(
                         binary_path=root / manifest.binary,
                         load_address=manifest.load_address,
                         output_root=root / "out" / "matching",
+                        section_placements=manifest.section_placements.get(address, ()),
                     )
                 )
             except (FileNotFoundError, RuntimeError, ValueError) as exc:
@@ -119,25 +129,26 @@ def collect_lifts(
                 )
                 continue
             instructions = result["instruction_count"]
-            records.append(
-                {
-                    "target": target,
-                    "function": source.stem,
-                    "address": f"0x{address:08X}",
-                    "source": source.relative_to(root).as_posix(),
-                    "status": "exact" if result["byte_match"] else "partial",
-                    "reason": "",
-                    "instruction_count": {
-                        "original": instructions["original"],
-                        "current": instructions["current"],
-                        "matching": instructions["matching"],
-                    },
-                    "match_percent": instructions["match_percent"],
-                    "original_size": result["original_size"],
-                    "current_size": result["current_size"],
-                    "size_delta": result["size_delta"],
-                }
-            )
+            record = {
+                "target": target,
+                "function": source.stem,
+                "address": f"0x{address:08X}",
+                "source": source_name,
+                "status": "exact" if result["byte_match"] else "partial",
+                "reason": "",
+                "instruction_count": {
+                    "original": instructions["original"],
+                    "current": instructions["current"],
+                    "matching": instructions["matching"],
+                },
+                "match_percent": instructions["match_percent"],
+                "original_size": result["original_size"],
+                "current_size": result["current_size"],
+                "size_delta": result["size_delta"],
+            }
+            if cache is not None:
+                cache.put(target, source_name, key, record)
+            records.append(record)
     return records
 
 
@@ -206,11 +217,20 @@ def build_report(
     target_ids: Iterable[str] = (),
     *,
     diff_runner: DiffRunner = run_asm_diff_one,
+    use_cache: bool = True,
 ) -> dict[str, Any]:
     """Build a complete live status report; index coverage is supplementary."""
 
     manifests = select_manifests(root, target_ids)
-    records = collect_lifts(root, manifests, diff_runner=diff_runner)
+    try:
+        cache = StatusCache(root) if use_cache else None
+    except sqlite3.DatabaseError:
+        cache = None
+    try:
+        records = collect_lifts(root, manifests, diff_runner=diff_runner, cache=cache)
+    finally:
+        if cache is not None:
+            cache.close()
     try:
         coverage = index_coverage(root, manifests)
         coverage_error: str | None = None

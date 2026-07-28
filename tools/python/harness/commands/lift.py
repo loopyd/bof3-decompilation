@@ -189,15 +189,20 @@ def run_m2c(args: argparse.Namespace) -> int:
     return 0
 
 
-def _run_match(function: FunctionId, source: Path) -> dict[str, object]:
+def _run_match(
+    function: FunctionId,
+    manifest: TargetManifest,
+    source: Path,
+    *,
+    diagnostics: bool,
+) -> dict[str, object]:
     root = repo_layout().root
-    manifest = load_target_manifests(root)[function.target.value]
     bindings = root / "out" / "bindings" / function.target.value / "symbols.c"
+    symbols = load_target_symbols(root, function.target.value)
+    binding_text = weak_bindings_c(symbols)
     bindings.parent.mkdir(parents=True, exist_ok=True)
-    bindings.write_text(
-        weak_bindings_c(load_target_symbols(root, function.target.value)),
-        encoding="utf-8",
-    )
+    if not bindings.is_file() or bindings.read_text(encoding="utf-8") != binding_text:
+        bindings.write_text(binding_text, encoding="utf-8")
     payload = run_asm_diff_one(
         AsmDiffRequest(
             source_path=source,
@@ -206,9 +211,15 @@ def _run_match(function: FunctionId, source: Path) -> dict[str, object]:
             load_address=manifest.load_address,
             output_root=root / "out" / "asm-diff",
             symbols_c_path=bindings,
+            canonical_bindings={
+                symbol.canonical_name: symbol.address for symbol in symbols
+            },
+            section_placements=manifest.section_placements.get(function.address, ()),
+            diagnostics=diagnostics,
         )
     )
-    write_bundle(root, payload, target=function.target.value)
+    if diagnostics:
+        write_bundle(root, payload, target=function.target.value)
     return payload
 
 
@@ -269,7 +280,10 @@ def _print_match(
                         "first_mismatch",
                     )
                 }
-                projected["diff"] = payload["outputs"]["diff"]
+                outputs = payload["outputs"]
+                if not isinstance(outputs, dict):
+                    raise ValueError("invalid asm-diff payload outputs")
+                projected["diff"] = outputs["diff"]
             print(json.dumps(projected, indent=2, sort_keys=True))
     elif bytes_only:
         status = "MATCH" if exact else "DIFFER"
@@ -281,19 +295,29 @@ def _print_match(
         elif resolved == "normal":
             print(format_asm_diff_llm(payload, root=root))
         else:
-            diff = Path(payload["outputs"]["diff"])
+            outputs = payload["outputs"]
+            if not isinstance(outputs, dict):
+                raise ValueError("invalid asm-diff payload outputs")
+            diff = Path(outputs["diff"])
             print(format_asm_diff_summary(payload, root=root))
             if diff.is_file() and diff.stat().st_size:
                 print(diff.read_text(encoding="utf-8"), end="")
     return 0 if exact else 1
 
 
-def run_asm_diff(args: argparse.Namespace) -> int:
-    function, _manifest, source = resolve_function(args.function)
+def _require_lifted_source(function: FunctionId, source: Path) -> None:
     if not source.is_file():
-        raise FileNotFoundError(f"lifted source does not exist: {source}")
+        raise FileNotFoundError(
+            f"lifted source does not exist: {source}; generate and review it with "
+            f"bin/m2c {function.target.value}@0x{function.address:08X} -o {source}"
+        )
+
+
+def run_asm_diff(args: argparse.Namespace) -> int:
+    function, manifest, source = resolve_function(args.function)
+    _require_lifted_source(function, source)
     return _print_match(
-        _run_match(function, source),
+        _run_match(function, manifest, source, diagnostics=True),
         json_output=args.json,
         bytes_only=False,
         detail=args.detail,
@@ -301,16 +325,17 @@ def run_asm_diff(args: argparse.Namespace) -> int:
 
 
 def run_byte_match(args: argparse.Namespace) -> int:
-    function, _manifest, source = resolve_function(args.function)
-    if not source.is_file():
-        raise FileNotFoundError(f"lifted source does not exist: {source}")
+    function, manifest, source = resolve_function(args.function)
+    _require_lifted_source(function, source)
     return _print_match(
-        _run_match(function, source), json_output=args.json, bytes_only=True
+        _run_match(function, manifest, source, diagnostics=False),
+        json_output=args.json,
+        bytes_only=True,
     )
 
 
 def run_promote(args: argparse.Namespace) -> int:
-    function, _manifest, source = resolve_function(args.function)
+    function, manifest, source = resolve_function(args.function)
     candidate = Path(args.candidate).resolve()
     if not candidate.is_file():
         raise FileNotFoundError(f"candidate source does not exist: {candidate}")
@@ -331,7 +356,7 @@ def run_promote(args: argparse.Namespace) -> int:
         raise RuntimeError(
             f"candidate is not clang-format clean: {format_check.stderr}"
         )
-    payload = _run_match(function, source)
+    payload = _run_match(function, manifest, source, diagnostics=True)
     result = _print_match(
         payload, json_output=args.json, bytes_only=False, detail=args.detail
     )

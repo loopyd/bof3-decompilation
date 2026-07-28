@@ -123,6 +123,33 @@ def test_report_keeps_live_results_when_index_is_unavailable(
     assert "index coverage: unavailable" in decomp_status.render_text(report)
 
 
+def test_report_reuses_a_content_addressed_cache(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _source(tmp_path, "src/exe/logo", "80100010")
+    binary = tmp_path / "out/binaries/exe/logo.bin"
+    binary.parent.mkdir(parents=True)
+    binary.write_bytes(b"test")
+    monkeypatch.setattr(
+        decomp_status,
+        "index_coverage",
+        lambda _root, _manifests: {"exe/logo": 1},
+    )
+    calls = 0
+
+    def cached_diff(request: object) -> dict[str, object]:
+        nonlocal calls
+        calls += 1
+        return _diff(request)
+
+    first = decomp_status.build_report(tmp_path, ("exe/logo",), diff_runner=cached_diff)
+    second = decomp_status.build_report(tmp_path, ("exe/logo",), diff_runner=cached_diff)
+
+    assert calls == 1
+    assert first == second
+
+
 def test_context_detail_keeps_full_report_available() -> None:
     report = {
         "schema": "bof3.decomp-status/v1",
