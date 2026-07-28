@@ -236,7 +236,7 @@ segments:
     - c
     - func_8009B20C
   - - 19060
-    - asm
+    - c
     - func_8009B274
   - - 19120
     - asm

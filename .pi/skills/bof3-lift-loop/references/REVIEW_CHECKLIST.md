@@ -15,7 +15,9 @@ Check:
 3. artificial aids have `MATCHING_AID`; no generic matching-hack macro;
 4. SDK calls are official; no lifted SDK body;
 5. new declarations/maps/types reuse existing target/include/SDK facts; no aliases
-   or parallel structs;
+   or parallel structs. Check the composed maps in Splat order: an existing
+   shared-map entry satisfies map ownership; never require an invalid duplicate
+   in the target-local map;
 6. raw filename, canonical names, `unk_XX`, and header barrel order remain correct;
 7. C is semantically credible: types, signedness, flow, data ownership, no masking;
 8. companion claims remain static-only; block foreign ownership/link/ABI claims;
