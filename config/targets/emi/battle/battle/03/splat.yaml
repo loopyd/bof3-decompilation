@@ -38,7 +38,7 @@ segments:
     - asm
     - func_801D6A14
   - - 24708
-    - asm
+    - c
     - func_801D6C84
   - - 24768
     - asm
