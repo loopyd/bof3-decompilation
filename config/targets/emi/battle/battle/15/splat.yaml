@@ -779,7 +779,7 @@ segments:
     - asm
     - func_800A47AC
   - - 57600
-    - asm
+    - c
     - func_800A4900
   - - 57660
     - asm
