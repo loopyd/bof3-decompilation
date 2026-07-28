@@ -185,7 +185,7 @@ segments:
     - asm
     - func_80099E80
   - - 14224
-    - asm
+    - c
     - func_80099F90
   - - 14284
     - asm
