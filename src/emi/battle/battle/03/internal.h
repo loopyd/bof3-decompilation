@@ -80,6 +80,7 @@ extern Battle03Handler D_801EACD4[];
 extern Battle03Handler D_801EACE8[];
 extern Battle03Handler D_801EACF4[];
 extern Battle03Handler D_801EAD00[];
+extern Battle03Handler D_801EAD0C[];
 extern volatile u8  BATTLE_LOCAL_BYTE_62EC;
 extern volatile u8  BATTLE_GLOBAL_BYTE_62E0;
 extern volatile u8  BATTLE_GLOBAL_BYTE_62E1;
