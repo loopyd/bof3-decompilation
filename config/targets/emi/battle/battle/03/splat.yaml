@@ -731,7 +731,7 @@ segments:
     - asm
     - func_801E4760
   - - 80804
-    - asm
+    - c
     - func_801E47A4
   - - 80864
     - asm
