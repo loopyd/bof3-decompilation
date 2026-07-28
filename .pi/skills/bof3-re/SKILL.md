@@ -5,11 +5,11 @@ description: Lift or review one target-qualified BOF3 function, normalize proven
 
 # BOF3 RE
 
-Work one `TARGET@0xADDRESS` at a time. Read `AGENTS.md`, then `docs/index.md`,
-`docs/usage.md`, `docs/matching.md`, `docs/matching-playbook.md`,
-`docs/memory-api.md`, and `LESSONS.md` before editing. Load the applicable
-`docs/specs/` domain file; for analyzer work also read needed `psx-rizin`
-references. Repo `bin/` commands win over generic tooling.
+Work one `TARGET@0xADDRESS` at a time. For `bof3-reverse`/`bof3-review`, first
+run `python3 .pi/skills/bof3-re/scripts/agent-context.py <reverse|review>` once:
+it emits the required ordered common+role context with filename headers in one
+read-only call. Load an applicable `docs/specs/` domain file or psx-rizin
+reference only for a concrete domain/analyzer question. Repo `bin/` commands win.
 
 ## Invariants
 

@@ -14,9 +14,12 @@ turnBudget: {"maxTurns":300,"graceTurns":10}
 defaultProgress: true
 ---
 
-Read-only review of prompted `TARGET@0xADDRESS`. Read `AGENTS.md`, load
-`/skill:bof3-re`, and follow `references/REVIEW_CHECKLIST.md`. Companion records
-are static evidence only; block unsupported foreign ABI/map/source/link claims.
+Read-only review of prompted `TARGET@0xADDRESS`. First run
+`python3 .pi/skills/bof3-re/scripts/agent-context.py review` once; it is the
+required ordered context bundle. Do not individually reread its common files
+unless a concrete finding needs a narrower follow-up. Follow its checklist.
+Companion records are static evidence only; block unsupported foreign
+ABI/map/source/link claims.
 
 Reuse supplied brief/diff; run one live byte-match. Do not run status, asm-diff,
 brief, m2c, Splat, Rizin, or index rebuild unless a concrete finding needs it.

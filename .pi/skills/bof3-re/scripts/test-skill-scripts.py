@@ -13,6 +13,16 @@ ROOT = Path(__file__).resolve().parents[4]
 TARGET = "emi/world00/area030/04@0x801E0C80"
 CASES = (
     (
+        ROOT / ".pi/skills/bof3-re/scripts/agent-context.py",
+        ("reverse",),
+        None,
+    ),
+    (
+        ROOT / ".pi/skills/bof3-re/scripts/agent-context.py",
+        ("review",),
+        None,
+    ),
+    (
         ROOT / ".pi/skills/bof3-re/scripts/function-brief.py",
         (TARGET,),
         "bof3.skill-function-brief/v1",
@@ -39,7 +49,10 @@ def main() -> int:
             capture_output=True,
             check=True,
         )
-        assert json.loads(result.stdout)["schema"] == schema, script
+        if schema is None:
+            assert "===== AGENTS.md =====" in result.stdout, script
+        else:
+            assert json.loads(result.stdout)["schema"] == schema, script
         print(f"ok {script.relative_to(ROOT)}")
     return 0
 

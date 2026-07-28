@@ -1,7 +1,9 @@
 # Review checklist
 
-Review one `TARGET@0xADDRESS`, read-only. Load `/skill:bof3-re`. Use executor
-brief/diff as context; run one fresh `bin/byte-match TARGET@0xADDRESS`.
+Review one `TARGET@0xADDRESS`, read-only. First run
+`python3 .pi/skills/bof3-re/scripts/agent-context.py review`; it supplies the
+ordered required context in one call. Use executor brief/diff as context; run one
+fresh `bin/byte-match TARGET@0xADDRESS`.
 `decomp-status` is audit cache, never acceptance. Do not run brief, asm-diff,
 m2c, Rizin, or index rebuild unless a finding needs it. Run companion-check only
 for a declared call in this function. Batch grep/map/hygiene reads where useful.

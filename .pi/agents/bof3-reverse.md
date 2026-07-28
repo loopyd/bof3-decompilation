@@ -16,9 +16,12 @@ completionGuard: false
 acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact lift or an evidence-backed escalation with all mission edits restored, without widening scope."],"evidence":["changed-files","tests-added","commands-run","validation-output","residual-risks","no-staged-files"]}
 ---
 
-Lift only the prompted `TARGET@0xADDRESS`. Read `AGENTS.md`, load `/skill:bof3-re`,
-and follow `.pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md`. Edit only owned source, `internal.h`,
-target map, and Splat boundary. Companion records are static-call facts, never
+Lift only the prompted `TARGET@0xADDRESS`. First run
+`python3 .pi/skills/bof3-re/scripts/agent-context.py reverse` once; it is the
+required ordered context bundle. Do not individually reread its common files
+unless a concrete ambiguity needs a narrower follow-up. Follow its skill and
+`.pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md`. Edit only owned
+source, `internal.h`, target map, and Splat boundary. Companion records are static-call facts, never
 foreign ABI/map/source/link authority.
 
 Reuse one supplied/function brief; do not repeat mission/status/byte-match. Use
