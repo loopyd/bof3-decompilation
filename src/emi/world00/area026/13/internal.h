@@ -7,6 +7,7 @@ extern volatile u32 D_8014686C;
 extern volatile u16 WORLD00_AREA026_13_D_8014932A;
 extern volatile u8  WORLD00_AREA026_13_D_80149333;
 
+void game_stop_selection_fx(u32 effect_group, s32 effect_id);
 void func_8015B580(void* arg0, u8 bit_index);
 void func_8015B5A8(void* arg0, u8 bit_index);
 void func_801AFE18(void* arg0);
