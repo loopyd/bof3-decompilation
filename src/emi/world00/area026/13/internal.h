@@ -16,6 +16,7 @@ void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 
 void func_801F2D5C(const s32* arg0, s32 arg1);
 void func_801F2E04(const s32* arg0, s32 arg1, s16 arg2, s32 arg3, s32 arg4);
+void func_801F309C(void);
 void func_801F30D4(void);
 void func_801F30FC(void);
 void func_801F3124(void);
