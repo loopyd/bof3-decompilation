@@ -71,62 +71,6 @@ extern volatile u8  BATTLE_PANEL_RULE_PASS_SLOT;
 extern volatile u16 BATTLE_PANEL_RULE_PASS_SELECTION;
 extern volatile u8 BATTLE_LOCAL_PANEL_ENTRY_COUNT;
 
-void battle_stage_attack_name_message(s32 slot_index, s32 queue_kind);
-u8   battle_resolve_selection_slot(u32 family_id);
-void battle_queue_frontend_cue(u32 cue_id);
-u32  battle_resolve_frontend_resource(u16 resource_id);
-void battle_stage_selection_ring_record(u32 slot_index, u32 record_kind,
-                                        u32 resource_handle);
-u32  battle_decode_repeatable_input(u16 input_mask);
-u8*  battle_resolve_selection_kind_table(u32 source_slot, u32 group_index,
-                                         u32 table_kind);
-u8   battle_selection_kind_is_blocked(void);
-void battle_reset_local_task_slot(void);
-void battle_stage_message_resource(void* message_slot);
-u8   battle_result_uses_empty_slot(void);
-u8   battle_local_panel_slot_has_entry(volatile u8* battler, u32 slot_index);
-void battle_copy_local_panel_rule_entry(volatile u8* battler,
-                                        volatile u8* panel_rule);
-void battle_set_local_panel_slot_active(volatile u8* battler, u32 slot_index,
-                                        u32 active_state);
-u16  battle_resolve_secondary_choice_resource(u32 group_index, u32 choice_id);
-u8   battle_try_commit_secondary_choice(u32 panel_kind, u32 zero_arg,
-                                        u32 group_index, u32 choice_id);
-
-void                           func_800975D4(void);
-void                           func_800989B4(void);
-void __attribute__((noinline)) func_8009B20C(void);
-u8                             func_8009C8AC(u16 required_mask);
-void                           func_8009CFEC(void);
-
-s16  func_800A2880(u8 battler_index, u16 base_value, u8 element_flag);
-s16  func_800A2AE0(u8 battler_index, u16 element_mask);
-void func_800A31E0(u8 selection_kind, u16 input_mask);
-u8   func_800A3A10(u8 battler_index, u8 selection_kind);
-u16  func_800A36F0(u8 battler_index, u16 flags);
-void func_800A3F28(void);
-u8   func_800A41D8(s32 input_mask);
-u8   func_801DB524(u8 arg0);
-void func_800A4458(void);
-void func_800AAA74(void);
-void func_800AAEBC(s16 target_index, u8 battler_index);
-void func_800B0498(void);
-void func_800B0B0C(s16 base_x, s16 base_y);
-void func_800B2218(void);
-void func_800B22AC(void);
-void func_800B23B8(void);
-void func_800B23F8(void);
-void func_800B250C(void);
-u8   func_800A4238(s32 input_mask);
-s16  func_801DC044(u8 arg0, u8 arg1, u32 arg2);
-void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
-void func_801DE94C(s32 arg0, s32 arg1);
-void func_80158E20(void);
-u32  func_801502D0(u32 arg0);
-void func_801DE8C0(u8 arg0, u8 arg1, u32 arg2);
-u8   func_801DB5CC(s32 arg0);
-void func_801E5988(void);
-
 /* Scratchpad work-area pointer (volatile cell at 0x1F800044).
  * Reloaded per access to match original codegen. */
 extern u8* volatile g_battle_work;
@@ -142,6 +86,7 @@ extern BattleSelectionHandler D_800B43D4[];
 extern BattleSelectionHandler D_800B4CAC[];
 extern BattleSelectionHandler D_800B4CC8[];
 extern BattleSelectionHandler D_800B4CD0[];
+extern BattleSelectionHandler D_800B4CE4[];
 extern BattleSelectionHandler D_800B4418[];
 extern BattleSelectionHandler D_800B44A0[];
 extern BattleSelectionHandler D_800B4428[];
@@ -177,6 +122,59 @@ extern u8* D_8014598C;
  * SetSprt8 / SetSemiTrans are declared by <libgpu.h> (via bof3/psyq.h);
  * func_8014E5A0 is a game primitive-append helper (lifted in exe/slus_004.22). */
 void func_8014E5A0(u32 ot_index, u32 primitive_size);
+void battle_stage_attack_name_message(s32 slot_index, s32 queue_kind);
+u8   battle_resolve_selection_slot(u32 family_id);
+void battle_queue_frontend_cue(u32 cue_id);
+u32  battle_resolve_frontend_resource(u16 resource_id);
+void battle_stage_selection_ring_record(u32 slot_index, u32 record_kind,
+                                        u32 resource_handle);
+u32  battle_decode_repeatable_input(u16 input_mask);
+u8*  battle_resolve_selection_kind_table(u32 source_slot, u32 group_index,
+                                         u32 table_kind);
+u8   battle_selection_kind_is_blocked(void);
+void battle_reset_local_task_slot(void);
+void battle_stage_message_resource(void* message_slot);
+u8   battle_result_uses_empty_slot(void);
+u8   battle_local_panel_slot_has_entry(volatile u8* battler, u32 slot_index);
+void battle_copy_local_panel_rule_entry(volatile u8* battler,
+                                        volatile u8* panel_rule);
+void battle_set_local_panel_slot_active(volatile u8* battler, u32 slot_index,
+                                        u32 active_state);
+u16  battle_resolve_secondary_choice_resource(u32 group_index, u32 choice_id);
+u8   battle_try_commit_secondary_choice(u32 panel_kind, u32 zero_arg,
+                                        u32 group_index, u32 choice_id);
+void                           func_800975D4(void);
+void                           func_800989B4(void);
+void __attribute__((noinline)) func_8009B20C(void);
+u8                             func_8009C8AC(u16 required_mask);
+void                           func_8009CFEC(void);
+s16  func_800A2880(u8 battler_index, u16 base_value, u8 element_flag);
+s16  func_800A2AE0(u8 battler_index, u16 element_mask);
+void func_800A31E0(u8 selection_kind, u16 input_mask);
+u8   func_800A3A10(u8 battler_index, u8 selection_kind);
+u16  func_800A36F0(u8 battler_index, u16 flags);
+void func_800A3F28(void);
+u8   func_800A41D8(s32 input_mask);
+u8   func_801DB524(u8 arg0);
+void func_800A4458(void);
+void func_800AAA74(void);
+void func_800AAEBC(s16 target_index, u8 battler_index);
+void func_800B0498(void);
+void func_800B0B0C(s16 base_x, s16 base_y);
+void func_800B2218(void);
+void func_800B22AC(void);
+void func_800B23B8(void);
+void func_800B23F8(void);
+void func_800B250C(void);
+u8   func_800A4238(s32 input_mask);
+s16  func_801DC044(u8 arg0, u8 arg1, u32 arg2);
+void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
+void func_801DE94C(s32 arg0, s32 arg1);
+void func_80158E20(void);
+u32  func_801502D0(u32 arg0);
+void func_801DE8C0(u8 arg0, u8 arg1, u32 arg2);
+u8   func_801DB5CC(s32 arg0);
+void func_801E5988(void);
 
 #define D_8014598C g_PrimCursor
 #define BATTLE_ACTIVE_SELECTION_SLOT_PTR PSX_REF(volatile u8*, 0x801eb4d8u)
