@@ -86,7 +86,7 @@ segments:
     - asm
     - func_801F32B8
   - - 1848
-    - asm
+    - c
     - func_801F3338
   - - 1888
     - asm
