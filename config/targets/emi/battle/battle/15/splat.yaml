@@ -203,7 +203,7 @@ segments:
     - asm
     - func_8009A518
   - - 15760
-    - asm
+    - c
     - func_8009A590
   - - 15820
     - asm
