@@ -75,6 +75,8 @@ typedef struct Battle03SpritePrimitive {
 extern volatile AbilityObject ABILITY_OBJECTS[];
 extern u8* volatile g_battle03_work;
 extern u8*          D_8014598C;
+extern u8           D_801462E1[];
+extern Battle03Handler D_801EACD4[];
 extern volatile u8  BATTLE_LOCAL_BYTE_62EC;
 extern volatile u8  BATTLE_GLOBAL_BYTE_62E0;
 extern volatile u8  BATTLE_GLOBAL_BYTE_62E1;

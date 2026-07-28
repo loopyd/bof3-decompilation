@@ -23,7 +23,7 @@ segments:
   vram: 2149410676
   subsegments:
   - - 23412
-    - asm
+    - c
     - func_801D6774
   - - 23472
     - asm
