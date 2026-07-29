@@ -455,7 +455,7 @@ segments:
     - asm
     - func_801DFC20
   - - 61552
-    - asm
+    - c
     - func_801DFC70
   - - 61620
     - asm
