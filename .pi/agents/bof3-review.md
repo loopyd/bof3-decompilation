@@ -29,10 +29,11 @@ pre-existing target header/public contract; report it as pre-existing debt only
 if relevant. Block new cross-target function bindings, foreign definitions, and
 signature disagreement; report owner path/symbol and conflicting signatures.
 Companion records are static-only. Treat direct pins as banned. A mission-added
-`REGISTER_PIN` is allowed only with function-specific parent approval, a local
-`MATCHING_AID` rationale, and the live exact match; a direct numeric `"$N"`
-spelling also needs evidence that the macro changes codegen. Otherwise return
-`block`.
+`REGISTER_PIN` is allowed only with parent approval, a local `MATCHING_AID`
+rationale, and the live exact match. Approval for a proven local duplicate family
+covers independently exact members using the same evidenced pin. A direct numeric
+`"$N"` spelling also needs evidence that the macro changes codegen. Otherwise
+return `block`.
 
 Reuse supplied brief/diff; run one live byte-match. Do not run `just check`,
 decomp-status, status, asm-diff, brief, m2c, Splat, Rizin, or index rebuild unless

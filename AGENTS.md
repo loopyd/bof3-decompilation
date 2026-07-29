@@ -59,9 +59,10 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
   handwritten assembly; only retain a direct numeric-register spelling when the
   macro form has been demonstrated to change codegen. Bind symbols with a plain
   `extern` in `internal.h` plus a `WEAK_SYMBOL_AT` entry in `symbols.c`. A pin
-  still needs function-specific user approval, an adjacent `MATCHING_AID`
-  comment, and a retained live byte-match; `INCLUDE_ASM` needs explicit user
-  approval.
+  needs user approval, an adjacent `MATCHING_AID` comment, and a retained live
+  byte-match. Approval for a proven local duplicate family authorizes the same
+  evidenced pin for its members after each independently reaches exact;
+  `INCLUDE_ASM` still needs explicit user approval.
 
 ## Exact duplicates
 

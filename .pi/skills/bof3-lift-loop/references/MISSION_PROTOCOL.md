@@ -36,8 +36,10 @@ Banned: handwritten asm (except sanctioned helpers), direct register pins,
 asm-renamed externs, `INCLUDE_ASM` without approval, git writes, reset/clean/setup,
 children. An approved function-specific allocator constraint must use
 `REGISTER_PIN(type, name, reg)`, carry a local `MATCHING_AID` rationale, and
-remain only on a live exact match. A direct numeric `"$N"` spelling needs
-separate evidence that the macro changes codegen. Allowed exceptions: read-only
+remain only on a live exact match. Approval extends to independently exact
+members of a proven local duplicate family. A direct numeric `"$N"` spelling
+needs separate evidence that the macro changes codegen. Allowed exceptions:
+read-only
 `git diff --cached --quiet` for fresh-index state;
 on escalation only, `rm` the one newly created mission source to restore the
 pre-mission tree. Never remove any other path.

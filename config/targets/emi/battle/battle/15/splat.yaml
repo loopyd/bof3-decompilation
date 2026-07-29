@@ -1154,8 +1154,10 @@ segments:
     - '@source: src/emi/battle/battle/15/func_800AD26C.c'
     - '@behavior: Dispatches a three-entry selection handler table using battle work state.'
   - - 92908
-    - asm
-    - func_800AD2EC
+    - c
+    - func_800AD69C
+    - '@source: src/emi/battle/battle/15/func_800AD69C.c'
+    - '@behavior: Dispatches a three-entry selection handler table using battle work state.'
   - - 93236
     - asm
     - func_800AD434

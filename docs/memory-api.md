@@ -31,9 +31,10 @@ code. Forwarding alias: `include/bof3/defines.h`.
 `barrier()`, `CLOBBER_*`, and `REGISTER_PIN(type, name, reg)` are
 `__GNUC__`-guarded; the pin macro becomes a normal `register` declaration on
 other compilers. `REGISTER_PIN` is a last-resort allocator constraint: use it
-only after the matching ladder is exhausted, with function-specific user
-approval and an adjacent `MATCHING_AID` comment naming the evidenced register.
-Use it for the compiler's supported allocator-register spelling; retain a
+only after the matching ladder is exhausted, with user approval and an adjacent
+`MATCHING_AID` comment naming the evidenced register. Approval extends to each
+independently exact member of a proven local duplicate family. Use it for the
+compiler's supported allocator-register spelling; retain a
 legacy numeric `"$N"` spelling only when the macro form has been separately
 verified not to preserve that function's codegen.
 

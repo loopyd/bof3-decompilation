@@ -24,7 +24,8 @@ Load a spec or psx-rizin reference only for a concrete question. Repo `bin` wins
   `REGISTER_PIN(type, name, reg)`, and target `symbols.c` `WEAK_SYMBOL_AT`
   apply. A legacy direct numeric pin remains only if the macro form changes
   codegen. An approved pin needs a local `MATCHING_AID` comment and a live exact
-  byte match. No fallback asm without user approval.
+  byte match; approval extends to independently exact members of its proven
+  local duplicate family. No fallback asm without user approval.
 - SDK is external: use official PsyQ names/maps/headers; never lift SDK bodies.
 - Unknown fields are `unk_XX`; map names are canonical; keep `internal.h` order:
   guard, includes, types, extern data, prototypes, macros/helpers.

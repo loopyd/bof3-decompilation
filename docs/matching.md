@@ -187,10 +187,11 @@ promote function-specific matching aids into generic macros.
 register constraint. A pin is still local to its function: use it only after
 declarations, symbol representation, branch direction, loop shape, temporaries,
 deref hoists, statement reordering, and the permuter are exhausted; retain it
-only with function-specific user approval, an adjacent `MATCHING_AID` rationale,
-and a live byte match. A legacy direct numeric `"$N"` spelling may remain only
-when the macro form demonstrably changes codegen. Remove speculative pins once
-a structural match is found.
+only with user approval, an adjacent `MATCHING_AID` rationale, and a live byte
+match. Approval extends to independently exact members of a proven local
+duplicate family. A legacy direct numeric `"$N"` spelling may remain only when
+the macro form demonstrably changes codegen. Remove speculative pins once a
+structural match is found.
 
 ## Data materialization
 

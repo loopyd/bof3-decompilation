@@ -14,9 +14,10 @@ Check:
 
 1. live byte-match exits 0;
 2. no banned asm/direct pins/asm-renamed externs/unauthorized `INCLUDE_ASM`;
-   any mission-added `REGISTER_PIN` has function-specific approval, a local
-   `MATCHING_AID` rationale, and the live exact match; a direct numeric `"$N"`
-   spelling also proves the macro form changes codegen;
+   any mission-added `REGISTER_PIN` has parent approval, a local `MATCHING_AID`
+   rationale, and the live exact match; approval covers independently exact
+   members of a proven local duplicate family; a direct numeric `"$N"` spelling
+   also proves the macro form changes codegen;
 3. artificial aids have `MATCHING_AID`; no generic matching-hack macro;
 4. SDK calls are official; no lifted SDK body;
 5. new declarations/maps/types reuse existing target/include/SDK facts; no aliases
