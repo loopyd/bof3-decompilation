@@ -33,6 +33,8 @@ typedef struct BattleWork {
   u8  unk_09[0x03];
   s32 unk_0C;
   s32 unk_10;
+  u8  unk_14[0x1C];
+  u16 unk_30;
 } BattleWork;
 
 typedef struct BattleLocalWork {
