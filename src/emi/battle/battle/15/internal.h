@@ -89,6 +89,7 @@ extern BattleSelectionHandler D_800B4CD0[];
 extern BattleSelectionHandler D_800B4CE4[];
 extern BattleSelectionHandler D_800B4D00[];
 extern BattleSelectionHandler D_800B4D14[];
+extern BattleSelectionHandler D_800B4D30[];
 extern BattleSelectionHandler D_800B4418[];
 extern BattleSelectionHandler D_800B44A0[];
 extern BattleSelectionHandler D_800B4428[];

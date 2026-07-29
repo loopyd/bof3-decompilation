@@ -869,7 +869,7 @@ segments:
     - asm
     - func_800A5F80
   - - 63472
-    - asm
+    - c
     - func_800A5FF0
   - - 63532
     - asm
