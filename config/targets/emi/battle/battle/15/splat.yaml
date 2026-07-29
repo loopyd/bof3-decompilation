@@ -1354,7 +1354,7 @@ segments:
     - asm
     - func_800B06F4
   - - 106956
-    - asm
+    - c
     - func_800B09CC
   - - 107052
     - c

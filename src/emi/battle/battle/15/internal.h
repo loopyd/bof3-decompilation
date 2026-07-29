@@ -8,6 +8,9 @@
 #include "battle/ram.h"
 
 typedef void (*BattleSelectionHandler)(void);
+typedef struct BattleSelectionDispatchTable {
+  BattleSelectionHandler handlers[3];
+} BattleSelectionDispatchTable;
 
 typedef struct BattleLocalPanelEntry {
   u8  owner_index;
@@ -82,6 +85,7 @@ extern u8* volatile g_battle_work;
 
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
  * equal the symbol-name addresses. */
+extern BattleSelectionDispatchTable D_80096A08;
 extern volatile u32  D_80144F60[];
 extern volatile u32  D_80144F80[];
 extern volatile u32  D_80145FAA;
