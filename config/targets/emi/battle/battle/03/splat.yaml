@@ -982,8 +982,10 @@ segments:
     - '@source: src/emi/battle/battle/03/func_801E7888.c'
     - '@behavior: Sets the selected local record flag and advances battle work state.'
   - - 93424
-    - asm
+    - c
     - func_801E78F0
+    - '@source: src/emi/battle/battle/03/func_801E78F0.c'
+    - '@behavior: Decrements the active work countdown or flags it and advances scratchpad work.'
   - - 93512
     - asm
     - func_801E7948
