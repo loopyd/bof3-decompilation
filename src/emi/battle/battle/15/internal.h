@@ -87,6 +87,7 @@ extern u8* volatile g_battle_work;
  * equal the symbol-name addresses. */
 extern BattleSelectionDispatchTable D_80096A08;
 extern BattleSelectionDispatchTable D_80096A34;
+extern BattleSelectionDispatchTable D_80096A40;
 extern volatile u32  D_80144F60[];
 extern volatile u32  D_80144F80[];
 extern volatile u32  D_80145FAA;
