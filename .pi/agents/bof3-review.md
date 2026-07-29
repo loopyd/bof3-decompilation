@@ -22,10 +22,13 @@ concise target manifest/map/Splat/header/binding excerpts and selected source/as
 After it succeeds, never call `read` on any emitted `=====` path: skill/checklist,
 manifest, map, Splat, header, bindings, source, or asm. This is a policy
 violation, not verification. Read only an unbundled path for a named finding; the
-brief is allowed. Audit every new game-function extern/binding: accept only a
-local reviewed map+ABI+binding or shared SDK-map ownership. Block cross-target
-function bindings, foreign definitions, and signature disagreement; report
-owner path/symbol and conflicting signatures. Companion records are static-only.
+brief is allowed. Audit only game-function declarations/bindings added or
+changed by this mission's diff: accept them only with local reviewed
+map+ABI+binding or shared SDK-map ownership. Never block on an unchanged
+pre-existing target header/public contract; report it as pre-existing debt only
+if relevant. Block new cross-target function bindings, foreign definitions, and
+signature disagreement; report owner path/symbol and conflicting signatures.
+Companion records are static-only.
 
 Reuse supplied brief/diff; run one live byte-match. Do not run `just check`,
 decomp-status, status, asm-diff, brief, m2c, Splat, Rizin, or index rebuild unless

@@ -22,10 +22,12 @@ Check:
    in the target-local map;
 6. raw filename, canonical names, `unk_XX`, and header barrel order remain correct;
 7. C is semantically credible: types, signedness, flow, data ownership, no masking;
-8. companion claims remain static-only. For every new game-function extern or
-   `WEAK_SYMBOL_AT`, require local reviewed map+ABI+binding or shared SDK-map
-   ownership. Block foreign target definitions/bindings and signature conflicts;
-   report owner path, symbol, and both signatures;
+8. companion claims remain static-only. For every mission-added/changed
+   game-function extern or `WEAK_SYMBOL_AT`, require local reviewed map+ABI+
+   binding or shared SDK-map ownership. Do not block on unchanged pre-existing
+   header/public contracts; flag relevant debt separately. Block new foreign
+   target definitions/bindings and signature conflicts; report owner path,
+   symbol, and both signatures;
 9. changed map/Splat facts pass `bin/symbols check TARGET` and `bin/splat TARGET`;
 10. `git diff --check` clean; no secrets, `inputs/`, or unintended staged files.
     Read-only `git diff --cached --quiet` is also allowed; no other git command.
