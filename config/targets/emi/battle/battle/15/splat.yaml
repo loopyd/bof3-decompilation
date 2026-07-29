@@ -1488,8 +1488,10 @@ segments:
     - c
     - func_800B2198
   - - 113112
-    - asm
+    - c
     - func_800B21D8
+    - '@source: src/emi/battle/battle/15/func_800B21D8.c'
+    - '@behavior: Decrements the panel x coordinate and clamps it to 0x52 below the signed threshold.'
   - - 113176
     - c
     - func_800B2218
