@@ -1516,7 +1516,7 @@ segments:
     - c
     - func_800B23F8
   - - 113720
-    - asm
+    - c
     - func_800B2438
   - - 113784
     - asm
