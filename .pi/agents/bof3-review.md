@@ -19,10 +19,13 @@ Read-only review of prompted `TARGET[#INDEX]@0xADDRESS` (`TARGET@...` also
 works). First run `python3 .pi/skills/bof3-re/scripts/agent-context.py review
 TARGET[#INDEX]@0xADDRESS` once. It emits ordered common/role context plus
 concise target manifest/map/Splat/header/binding excerpts and selected source/asm.
-Never reread a bundled file; never reread skill/checklist Markdown. For missing
-evidence, read only an unbundled path and name the concrete finding in the report.
-Follow its checklist. Companion records are static evidence only; block
-unsupported foreign ABI/map/source/link claims.
+After it succeeds, never call `read` on any emitted `=====` path: skill/checklist,
+manifest, map, Splat, header, bindings, source, or asm. This is a policy
+violation, not verification. Read only an unbundled path for a named finding; the
+brief is allowed. Audit every new game-function extern/binding: accept only a
+local reviewed map+ABI+binding or shared SDK-map ownership. Block cross-target
+function bindings, foreign definitions, and signature disagreement; report
+owner path/symbol and conflicting signatures. Companion records are static-only.
 
 Reuse supplied brief/diff; run one live byte-match. Do not run `just check`,
 decomp-status, status, asm-diff, brief, m2c, Splat, Rizin, or index rebuild unless

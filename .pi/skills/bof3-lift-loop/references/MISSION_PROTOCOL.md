@@ -17,7 +17,9 @@ unbundled path for a named concrete gap. Stay within mission-owned source,
 3. Generate Splat/m2c evidence only for a missing/uncertain boundary or seed.
 4. For relevant declared companion calls, run `companion-check`; it proves static
    identity/call only. Require reviewed boundary, ABI, local map, and caller
-   declaration; never create foreign binding/source/link ownership.
+   declaration. A game-function extern/`WEAK_SYMBOL_AT` needs local reviewed
+   map+ABI+binding or shared SDK-map ownership; never create foreign binding,
+   source, link ownership, or conflicting signatures.
 5. Use official SDK names; recover real signatures from callers/callees, not m2c.
 6. Write readable C89. Infer structs from offsets; unknown fields are `unk_XX`.
 7. Before every C edit: live `asm-diff --detail normal`, diagnose `first=`, make
