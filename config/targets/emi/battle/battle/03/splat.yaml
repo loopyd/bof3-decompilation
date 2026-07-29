@@ -998,7 +998,7 @@ segments:
     - asm
     - func_801E91CC
   - - 99836
-    - asm
+    - c
     - func_801E91FC
   - - 99932
     - c
