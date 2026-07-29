@@ -1090,8 +1090,10 @@ segments:
     - asm
     - func_801EA7DC
   - - 105544
-    - asm
+    - c
     - func_801EA848
+    - '@source: src/emi/battle/battle/03/func_801EA848.c'
+    - '@behavior: Advances panel state byte +3 and raises an update flag when two gate bytes differ.'
   - - 105620
     - asm
     - func_801EA894
