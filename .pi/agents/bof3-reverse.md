@@ -17,13 +17,14 @@ completionGuard: false
 acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact lift or an evidence-backed escalation with all mission edits restored, without widening scope."],"evidence":["changed-files","tests-added","commands-run","validation-output","residual-risks","no-staged-files"]}
 ---
 
-Lift only the prompted `TARGET@0xADDRESS`. First run
-`python3 .pi/skills/bof3-re/scripts/agent-context.py reverse` once; it is the
-required ordered context bundle. Do not individually reread its common files
-unless a concrete ambiguity needs a narrower follow-up. Follow its skill and
-`.pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md`. Edit only owned
-source, `internal.h`, target map, and Splat boundary. Companion records are static-call facts, never
-foreign ABI/map/source/link authority.
+Lift only prompted `TARGET[#INDEX]@0xADDRESS` (`TARGET@...` also works). First
+run `python3 .pi/skills/bof3-re/scripts/agent-context.py reverse
+TARGET[#INDEX]@0xADDRESS` once. It emits ordered common/role context plus each
+existing target manifest, map, Splat, header, bindings, source, and asm file.
+Do not reread those files unless a concrete ambiguity needs narrower evidence.
+Follow its skill and `.pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md`.
+Edit only owned source, `internal.h`, target map, and Splat boundary. Companion
+records are static-call facts, never foreign ABI/map/source/link authority.
 
 Reuse one supplied/function brief; do not repeat mission/status/byte-match. Use
 live normal asm-diff before each diagnosed edit and one final live byte-match.

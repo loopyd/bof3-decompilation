@@ -33,7 +33,8 @@ Initialize `out/lift-loop/results.tsv`: `function status commit notes`.
 
 For each candidate until budget/stop:
 
-1. Get one `function-brief.py TARGET@0xADDRESS`; pass it to `bof3-reverse`.
+1. Get one `function-brief.py TARGET@0xADDRESS`; pass it with the canonical
+   `TARGET[#INDEX]@0xADDRESS` selector to `bof3-reverse`.
 2. If a relevant declared companion call exists, require passing `companion-check`
    before dispatch; a static record alone proves no ABI/ownership.
 3. Executor returns mission JSON + its checked acceptance report. It may return an
@@ -55,10 +56,12 @@ risks, and next step.
 ## Child brief
 
 ```
-Task: lift/review TARGET@0xADDRESS.
-Context: function brief + mission/diff + owned-file diff.
+Task: lift/review TARGET[#INDEX]@0xADDRESS.
+Context: function brief + mission/diff + owned-file diff. First run
+`agent-context.py <reverse|review> TARGET[#INDEX]@0xADDRESS`.
 Authority: executor may edit only owned source/internal.h/map/Splat; reviewer read-only.
-No git writes, setup, rm, other targets, or children.
+No git writes, setup, other targets, or children; escalation may delete only its
+new mission source to restore the tree.
 Return protocol/checklist JSON and required acceptance-report.
 ```
 

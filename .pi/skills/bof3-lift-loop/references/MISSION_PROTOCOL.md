@@ -1,9 +1,10 @@
 # Executor protocol
 
-Lift one `TARGET@0xADDRESS`. First run
-`python3 .pi/skills/bof3-re/scripts/agent-context.py reverse`; it supplies the
-ordered required context in one call. Stay within mission-owned source,
-`internal.h`, target map, and Splat boundary.
+Lift one `TARGET[#INDEX]@0xADDRESS`. First run
+`python3 .pi/skills/bof3-re/scripts/agent-context.py reverse TARGET[#INDEX]@0xADDRESS`;
+it supplies ordered common/role and all existing target source/config/asm context
+in one call. Stay within mission-owned source, `internal.h`, target map, and
+Splat boundary.
 
 1. Reuse supplied brief; otherwise run `function-brief.py` once. Do not repeat
    mission/status/byte-match queries. Verify load: runtime − load = payload offset.

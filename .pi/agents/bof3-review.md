@@ -15,12 +15,13 @@ toolBudget: {"soft":240,"hard":300,"block":"*"}
 defaultProgress: true
 ---
 
-Read-only review of prompted `TARGET@0xADDRESS`. First run
-`python3 .pi/skills/bof3-re/scripts/agent-context.py review` once; it is the
-required ordered context bundle. Do not individually reread its common files
-unless a concrete finding needs a narrower follow-up. Follow its checklist.
-Companion records are static evidence only; block unsupported foreign
-ABI/map/source/link claims.
+Read-only review of prompted `TARGET[#INDEX]@0xADDRESS` (`TARGET@...` also
+works). First run `python3 .pi/skills/bof3-re/scripts/agent-context.py review
+TARGET[#INDEX]@0xADDRESS` once. It emits ordered common/role context plus each
+existing target manifest, map, Splat, header, bindings, source, and asm file.
+Do not reread those files unless a concrete finding needs narrower evidence.
+Follow its checklist. Companion records are static evidence only; block
+unsupported foreign ABI/map/source/link claims.
 
 Reuse supplied brief/diff; run one live byte-match. Do not run status, asm-diff,
 brief, m2c, Splat, Rizin, or index rebuild unless a concrete finding needs it.

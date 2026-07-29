@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import re
 import sys
+import tomllib
 
 
 ROOT = Path(__file__).resolve().parents[4]
@@ -46,6 +48,7 @@ ROLE = {
     "reverse": (".pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md",),
     "review": (".pi/skills/bof3-lift-loop/references/REVIEW_CHECKLIST.md",),
 }
+SELECTOR = re.compile(r"^(?P<target>[^@]+)@(?P<address>0x[0-9a-fA-F]+|[0-9]+)$")
 
 
 def section(path: Path, root: Path, text: str | None = None) -> str:
@@ -79,9 +82,74 @@ def selected_sections(path: Path, headings: tuple[str, ...]) -> str:
     return "".join(output)
 
 
+def selector(value: str) -> tuple[str, int]:
+    match = SELECTOR.fullmatch(value)
+    if not match:
+        raise argparse.ArgumentTypeError("expected TARGET[#INDEX]@0xADDRESS")
+    try:
+        address = int(match.group("address"), 0)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError("expected TARGET[#INDEX]@0xADDRESS") from error
+    if address < 0 or address > 0xFFFFFFFF:
+        raise argparse.ArgumentTypeError("expected TARGET[#INDEX]@0xADDRESS")
+    return match.group("target"), address
+
+
+def manifest_aliases(manifest_path: Path, manifest: dict[str, object]) -> set[str]:
+    target = str(manifest["id"])
+    aliases = {target, str(manifest["disc_id"])}
+    parts = target.rsplit("/", 1)
+    if len(parts) == 2 and parts[1].isdigit():
+        aliases.update((f"{parts[0]}#{parts[1]}", f"{Path(parts[0]).name}#{parts[1]}"))
+    disc_id = str(manifest["disc_id"])
+    aliases.add(Path(disc_id).name)
+    if disc_id.startswith("BIN/"):
+        aliases.add(disc_id[4:])
+    return {alias.casefold() for alias in aliases}
+
+
+def resolve_target(root: Path, requested: str) -> tuple[Path, dict[str, object]]:
+    direct = root / "config" / "targets" / requested / "target.toml"
+    if direct.is_file():
+        return direct, tomllib.loads(direct.read_text(encoding="utf-8"))
+    wanted = requested.casefold()
+    matches: list[tuple[Path, dict[str, object]]] = []
+    for manifest_path in (root / "config" / "targets").glob("**/target.toml"):
+        manifest = tomllib.loads(manifest_path.read_text(encoding="utf-8"))
+        if wanted in manifest_aliases(manifest_path, manifest):
+            matches.append((manifest_path, manifest))
+    if len(matches) != 1:
+        raise ValueError(f"unknown or ambiguous target selector: {requested}")
+    return matches[0]
+
+
+def asm_path(root: Path, target: str, splat: Path, address: int) -> Path:
+    match = re.search(r"^\s*asm_path:\s*(\S+)\s*$", splat.read_text(encoding="utf-8"), re.MULTILINE)
+    directory = root / match.group(1) if match else root / "out" / "splat" / target / "asm"
+    return directory / f"func_{address:08X}.s"
+
+
+def target_paths(root: Path, requested: str, address: int) -> tuple[Path, ...]:
+    manifest_path, manifest = resolve_target(root, requested)
+    target = str(manifest["id"])
+    source_dir = root / str(manifest["source_dir"])
+    splat = root / str(manifest["splat"])
+    paths = (
+        manifest_path,
+        root / "config" / "targets" / target / "symbols.txt",
+        splat,
+        source_dir / "internal.h",
+        source_dir / "symbols.c",
+        source_dir / f"func_{address:08X}.c",
+        asm_path(root, target, splat, address),
+    )
+    return tuple(path for path in paths if path.is_file())
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("role", choices=sorted(ROLE))
+    parser.add_argument("function", nargs="?", type=selector, metavar="TARGET[#INDEX]@0xADDRESS")
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     root = args.root.resolve()
@@ -97,6 +165,9 @@ def main() -> int:
             for path, headings in SECTIONS.items()
         )
         output.extend(section(root / path, root) for path in ROLE[args.role])
+        if args.function:
+            requested, address = args.function
+            output.extend(section(path, root) for path in target_paths(root, requested, address))
     except ValueError as error:
         print(error, file=sys.stderr)
         return 2

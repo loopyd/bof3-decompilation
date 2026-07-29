@@ -10,16 +10,16 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[4]
-TARGET = "emi/world00/area030/04@0x801E0C80"
+TARGET = "emi/battle/battle/15@0x80096E90"
 CASES = (
     (
         ROOT / ".pi/skills/bof3-re/scripts/agent-context.py",
-        ("reverse",),
+        ("reverse", TARGET),
         None,
     ),
     (
         ROOT / ".pi/skills/bof3-re/scripts/agent-context.py",
-        ("review",),
+        ("review", "BATTLE#15@0x80096E90"),
         None,
     ),
     (
@@ -51,6 +51,10 @@ def main() -> int:
         )
         if schema is None:
             assert "===== AGENTS.md =====" in result.stdout, script
+            assert "===== config/targets/emi/battle/battle/15/target.toml =====" in result.stdout, script
+            assert "===== config/targets/emi/battle/battle/15/symbols.txt =====" in result.stdout, script
+            assert "===== config/targets/emi/battle/battle/15/splat.yaml =====" in result.stdout, script
+            assert "===== src/emi/battle/battle/15/internal.h =====" in result.stdout, script
         else:
             assert json.loads(result.stdout)["schema"] == schema, script
         print(f"ok {script.relative_to(ROOT)}")
