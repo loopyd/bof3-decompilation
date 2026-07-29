@@ -15,6 +15,11 @@ typedef struct BattleLocalPanelEntry {
   u16 panel_id;
 } BattleLocalPanelEntry;
 
+typedef struct BattleSelectionKind {
+  u16 mask;
+  u8  unk_02[0x12];
+} BattleSelectionKind;
+
 extern volatile u8  BATTLE_SELECTION_PHASE;
 extern volatile u8  BATTLE_SELECTION_OWNER_STATE;
 extern volatile u8  BATTLE_SELECTION_ROOT_STATE;
@@ -111,6 +116,8 @@ extern volatile u32  D_801462E8;
 extern volatile u8   D_80146374;
 extern volatile u8   D_80146394;
 extern s16* volatile D_801463A0;
+extern volatile u16  D_801463C0;
+extern volatile BattleSelectionKind D_801CA71C[];
 extern volatile u32  D_801483C3;
 extern volatile u32  D_80148597;
 extern volatile u32  D_801485BB;
