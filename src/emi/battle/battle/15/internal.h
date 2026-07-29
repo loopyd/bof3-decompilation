@@ -108,6 +108,7 @@ extern u8* volatile g_battle_work;
 extern BattleSelectionDispatchTable D_80096994;
 extern BattleSelectionDispatchTable D_800969A0;
 extern BattleSelectionDispatchTable D_800969AC;
+extern BattleSelectionDispatchTable D_800969B8;
 extern volatile u32 D_801459F0;
 
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
