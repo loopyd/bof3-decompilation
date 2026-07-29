@@ -449,7 +449,7 @@ segments:
     - asm
     - func_801DFB64
   - - 61404
-    - asm
+    - c
     - func_801DFBDC
   - - 61472
     - asm
