@@ -86,6 +86,7 @@ extern u8           D_801462E1[];
 extern volatile Battle03QueuedSlot* D_801EC2E0;
 extern Battle03DispatchTable        D_801D0F20;
 extern Battle03DispatchTable        D_801D0F2C;
+extern Battle03DispatchTable        D_801D0FA0;
 extern Battle03Handler D_801EACD4[];
 extern Battle03Handler D_801EACE8[];
 extern Battle03Handler D_801EACF4[];
@@ -375,6 +376,8 @@ void func_801E5824(void);
 void func_801E6C84(void);
 void func_801E7818(void);
 void func_801E9074(void);
+void func_801E915C(void);
+void func_801E91CC(void);
 void func_801EA174(void);
 void func_801EA1A4(void);
 void func_801EA1E0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5,
