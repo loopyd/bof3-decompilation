@@ -843,8 +843,10 @@ segments:
     - asm
     - func_801E5B8C
   - - 86044
-    - asm
+    - c
     - func_801E5C1C
+    - '@source: src/emi/battle/battle/03/func_801E5C1C.c'
+    - '@behavior: Copies an eight-handler local table to the stack and dispatches by queued-slot byte +0x05.'
   - - 86180
     - asm
     - func_801E5CA4

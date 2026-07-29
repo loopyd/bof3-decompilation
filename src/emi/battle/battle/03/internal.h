@@ -16,6 +16,9 @@ typedef struct Battle03DispatchTable {
 typedef struct Battle03FiveDispatchTable {
   Battle03Handler handlers[5];
 } Battle03FiveDispatchTable;
+typedef struct Battle03EightDispatchTable {
+  Battle03Handler handlers[8];
+} Battle03EightDispatchTable;
 
 typedef struct Battle03LocalWork {
   u8  flags_00;
@@ -111,6 +114,7 @@ extern u8                            D_8014864C;
 extern u32                           D_80181B10;
 extern Battle03FlagRecord            D_80145FB4[];
 extern volatile Battle03LocalWork*   D_801EB4E0;
+extern Battle03EightDispatchTable   D_801D0ED4;
 extern Battle03FiveDispatchTable    D_801D0F58;
 extern Battle03DispatchTable        D_801D0F20;
 extern Battle03DispatchTable        D_801D0F2C;
