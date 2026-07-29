@@ -953,8 +953,10 @@ segments:
     - asm
     - func_801E7818
   - - 93320
-    - asm
+    - c
     - func_801E7888
+    - '@source: src/emi/battle/battle/03/func_801E7888.c'
+    - '@behavior: Sets the selected local record flag and advances battle work state.'
   - - 93424
     - asm
     - func_801E78F0

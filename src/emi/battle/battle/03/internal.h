@@ -23,7 +23,8 @@ typedef struct Battle03LocalWork {
   u8  unk_02;
   u8  unk_03;
   u8  unk_04;
-  u8  pad_05[3];
+  u8  unk_05;
+  u8  pad_06[2];
   u8  unk_08;
   u8  pad_09[3];
   u32 unk_0c;
@@ -49,6 +50,11 @@ typedef struct Battle03LocalWork {
   u8  pad_124[0x10];
   u16 unk_134;
 } Battle03LocalWork;
+
+typedef struct Battle03FlagRecord {
+  u32 flags_00;
+  u8  pad_04[0x13c];
+} Battle03FlagRecord;
 
 typedef struct Battle03EnemyWork {
   u8                       unk_00;
@@ -92,7 +98,8 @@ extern u8                            D_801462E5;
 extern u8                            D_8014630C;
 extern u8                            D_8014864C;
 extern u32                           D_80181B10;
-extern u8                            D_801EB4E0;
+extern Battle03FlagRecord            D_80145FB4[];
+extern volatile Battle03LocalWork*   D_801EB4E0;
 extern Battle03FiveDispatchTable    D_801D0F58;
 extern Battle03DispatchTable        D_801D0F20;
 extern Battle03DispatchTable        D_801D0F2C;
