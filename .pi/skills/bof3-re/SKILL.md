@@ -19,9 +19,12 @@ Load a spec or psx-rizin reference only for a concrete question. Repo `bin` wins
   `runtime address - load address = payload offset`.
 - Keep each target independent: raw `func_<ADDR>.c`, local `internal.h`, map,
   Splat boundary, and validation. Never copy game extern addresses across targets.
-- C89 only. No handwritten asm, register pins, asm-renamed externs, or
-  `INCLUDE_ASM`; only sanctioned `barrier()`/`CLOBBER_*` and target `symbols.c`
-  `WEAK_SYMBOL_AT` apply. No fallback asm without user approval.
+- C89 only. No handwritten asm, direct register pins, asm-renamed externs, or
+  `INCLUDE_ASM`; only sanctioned `barrier()`/`CLOBBER_*`, approved
+  `REGISTER_PIN(type, name, reg)`, and target `symbols.c` `WEAK_SYMBOL_AT`
+  apply. A legacy direct numeric pin remains only if the macro form changes
+  codegen. An approved pin needs a local `MATCHING_AID` comment and a live exact
+  byte match. No fallback asm without user approval.
 - SDK is external: use official PsyQ names/maps/headers; never lift SDK bodies.
 - Unknown fields are `unk_XX`; map names are canonical; keep `internal.h` order:
   guard, includes, types, extern data, prototypes, macros/helpers.

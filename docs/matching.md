@@ -181,12 +181,16 @@ counterparts for each target directory containing INCLUDE_ASM markers.
 Aids stay local to the function and carry a `MATCHING_AID` comment. Acceptable:
 temporaries, pointer hoists, early returns, if/else inversion, duplicated
 assignments, manual `goto` loops, reordered independent statements. Never
-promote these into generic macros (no `FORCE_REGISTER`, `KEEP_TEMP`, etc.).
+promote function-specific matching aids into generic macros.
 
-Register pinning and inline assembly are the last C-level resort, after
+`REGISTER_PIN(type, name, reg)` is the shared spelling for an approved
+register constraint. A pin is still local to its function: use it only after
 declarations, symbol representation, branch direction, loop shape, temporaries,
-deref hoists, statement reordering, and the permuter are exhausted. Remove
-speculative pins once a structural match is found.
+deref hoists, statement reordering, and the permuter are exhausted; retain it
+only with function-specific user approval, an adjacent `MATCHING_AID` rationale,
+and a live byte match. A legacy direct numeric `"$N"` spelling may remain only
+when the macro form demonstrably changes codegen. Remove speculative pins once
+a structural match is found.
 
 ## Data materialization
 

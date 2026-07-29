@@ -28,12 +28,19 @@ code. Forwarding alias: `include/bof3/defines.h`.
   register** holds a value in a `jal`/branch **delay slot** (e.g. keep
   `move a0,zero` in the slot before `func_801C1400(0u)`).
 
-Both `barrier()` and the `CLOBBER_*` macros are `__GNUC__`-guarded; they expand
-to nothing on other compilers.
+`barrier()`, `CLOBBER_*`, and `REGISTER_PIN(type, name, reg)` are
+`__GNUC__`-guarded; the pin macro becomes a normal `register` declaration on
+other compilers. `REGISTER_PIN` is a last-resort allocator constraint: use it
+only after the matching ladder is exhausted, with function-specific user
+approval and an adjacent `MATCHING_AID` comment naming the evidenced register.
+Use it for the compiler's supported allocator-register spelling; retain a
+legacy numeric `"$N"` spelling only when the macro form has been separately
+verified not to preserve that function's codegen.
 
-Inline `__asm__` is banned in lifted source except these macros. That ban
-includes `register X asm("$N")` register pinning and `extern X asm("NAME")`
-symbol renames — both need explicit user approval. Bind a fixed-address symbol
+Inline `__asm__` is banned in lifted source except these macros. Direct
+`register X asm("$N")` register pinning and `extern X asm("NAME")` symbol
+renames are forbidden except for that verified legacy spelling; use
+`REGISTER_PIN` for ordinary approved pins. Bind a fixed-address symbol
 with a plain `extern` declaration in `internal.h` plus a `WEAK_SYMBOL_AT(name,
 addr)` entry in the target `symbols.c` (`include/bof3/symbols.h`); never alias a
 symbol with `__asm__`. A register pin or `INCLUDE_ASM` is a last resort that
@@ -41,7 +48,8 @@ requires user approval — first try the per-object compiler-profile override in
 `config/compiler/object-flags.cmake`.
 
 Rule of thumb: `barrier()` for access ordering, `CLOBBER_A0/V0/A1()` for
-delay-slot placement, `WEAK_SYMBOL_AT` for address binding.
+delay-slot placement, `REGISTER_PIN` for an approved allocator constraint, and
+`WEAK_SYMBOL_AT` for address binding.
 
 ## `memory.h` — address conversion (`include/memory/access.h`)
 

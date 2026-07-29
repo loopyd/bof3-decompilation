@@ -455,10 +455,13 @@ or low-level SDK code — not as a normal C matching technique.
 
 ## 16. Register allocation ladder (no pinning)
 
-Bare MIPS register pinning (`register type name asm("$N")`) and `INCLUDE_ASM`
-are **banned unless the user explicitly approves them** for a specific function.
-They change the register web globally and mask the real cause. Escalate through
-this ladder instead, and only ask for a pin after exhausting it:
+Direct MIPS register pinning (`register type name asm("$N")`) and
+`INCLUDE_ASM` are **banned unless the user explicitly approves them** for a
+specific function. Use the shared `REGISTER_PIN(type, name, reg)` macro when
+approved; a bare numeric spelling may remain only if the macro form has been
+shown to alter codegen. Pins change the register web globally and can mask the
+real cause. Escalate through this ladder instead, and only ask for a pin after
+exhausting it:
 
 1. Correct types and declarations
 2. Correct control-flow structure
@@ -473,10 +476,12 @@ this ladder instead, and only ask for a pin after exhausting it:
 9. Bind fixed-address symbols with `WEAK_SYMBOL_AT` in `symbols.c`, not
    `extern X asm("NAME")` renames
 10. If nothing matches, report it as a documented residual and ask the user
-    before adding any pin or `INCLUDE_ASM`
+    before adding any `REGISTER_PIN` or `INCLUDE_ASM`
 
 A pinned local may remain live across the whole function and displace unrelated
 variables — pinning one register can create several new mismatches elsewhere.
+Each retained `REGISTER_PIN` needs an adjacent `MATCHING_AID` rationale and a
+live exact byte match.
 
 ---
 

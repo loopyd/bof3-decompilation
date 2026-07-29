@@ -32,9 +32,13 @@ unbundled path for a named concrete gap. Stay within mission-owned source,
    `@source`/`@behavior`. Never use cached status as proof; never run `just check`
    or `decomp-status`. Report Rizin/index staleness; do not rebuild it.
 
-Banned: handwritten asm (except sanctioned helpers), register pins, asm-renamed
-externs, `INCLUDE_ASM` without approval, git writes, reset/clean/setup, children.
-Allowed exceptions: read-only `git diff --cached --quiet` for fresh-index state;
+Banned: handwritten asm (except sanctioned helpers), direct register pins,
+asm-renamed externs, `INCLUDE_ASM` without approval, git writes, reset/clean/setup,
+children. An approved function-specific allocator constraint must use
+`REGISTER_PIN(type, name, reg)`, carry a local `MATCHING_AID` rationale, and
+remain only on a live exact match. A direct numeric `"$N"` spelling needs
+separate evidence that the macro changes codegen. Allowed exceptions: read-only
+`git diff --cached --quiet` for fresh-index state;
 on escalation only, `rm` the one newly created mission source to restore the
 pre-mission tree. Never remove any other path.
 

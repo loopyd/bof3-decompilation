@@ -52,12 +52,16 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 - Write readable C89. Inline assembly is banned in lifted source except the
   sanctioned helpers: `barrier()`/`CLOBBER_*` (`include/base/barrier.h`,
   forwarding alias `include/bof3/defines.h`) for access ordering and
-  delay-slot placement, and `WEAK_SYMBOL_AT` (target
-  `symbols.c` only) for address binding. Do not use `register X asm("$N")`
-  register pinning, `extern X asm("NAME")` symbol renames, or handwritten
-  assembly; bind symbols with a plain `extern` in `internal.h` plus a
-  `WEAK_SYMBOL_AT` entry in `symbols.c`. A register pin or `INCLUDE_ASM` needs
-  explicit user approval.
+  delay-slot placement, `REGISTER_PIN(type, name, reg)`
+  (`include/base/barrier.h`) for an approved allocator constraint, and
+  `WEAK_SYMBOL_AT` (target `symbols.c` only) for address binding. Do not use
+  direct `register X asm("$N")` pins, `extern X asm("NAME")` symbol renames, or
+  handwritten assembly; only retain a direct numeric-register spelling when the
+  macro form has been demonstrated to change codegen. Bind symbols with a plain
+  `extern` in `internal.h` plus a `WEAK_SYMBOL_AT` entry in `symbols.c`. A pin
+  still needs function-specific user approval, an adjacent `MATCHING_AID`
+  comment, and a retained live byte-match; `INCLUDE_ASM` needs explicit user
+  approval.
 
 ## Exact duplicates
 

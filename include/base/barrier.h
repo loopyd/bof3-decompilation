@@ -11,9 +11,21 @@
 #define NO_SIBLING_CALLS __attribute__((optimize("no-optimize-sibling-calls")))
 
 #define barrier() __asm__ __volatile__("" : : : "memory")
+
+/*
+ * Last-resort allocator constraint. Use only with function-specific user
+ * approval and a MATCHING_AID comment; reg is a GCC MIPS register name.
+ */
+#define REGISTER_PIN(type, name, reg) register type name asm(reg)
+/*
+ * The macro form is supported by the current PsyQ compiler for ordinary
+ * allocator pins. Legacy pins using numeric "$N" register spellings remain
+ * direct declarations until their compiler syntax is separately verified.
+ */
 #else
 #define NO_SIBLING_CALLS
 #define barrier()
+#define REGISTER_PIN(type, name, reg) register type name
 #endif
 
 /*

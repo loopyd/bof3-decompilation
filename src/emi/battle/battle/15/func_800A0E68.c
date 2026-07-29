@@ -12,7 +12,7 @@ void func_800A0E68(void) {
      * the original scheduling where lui+lw fills the addu→sra gap
      * and sh lands in the beqz delay slot.
      */
-  register s32 half asm("v1");
+  REGISTER_PIN(s32, half, "v1");
 
   half = func_801DC044(D_80146374, D_80146394, 0xFFFF) / 2;
   ((u16*)D_801463A0)[2] = half;

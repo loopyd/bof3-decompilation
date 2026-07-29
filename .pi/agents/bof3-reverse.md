@@ -34,6 +34,14 @@ live normal asm-diff before each edit and final byte-match. Do not run
 only when map/Splat changed; run companion-check only for relevant calls. Report
 snapshot/index staleness; do not rebuild global analysis.
 
+Register pins remain forbidden unless the parent task explicitly says the user
+approved a bounded experiment for this exact function. In that case, use the
+shared `REGISTER_PIN(type, name, reg)` macro, only after clean-C/barrier
+attempts stall; retain it only on live exact byte-match, add a local
+`MATCHING_AID` rationale, and name it in `matching_aids`. A direct numeric
+`"$N"` spelling is allowed only when the macro form demonstrably changes
+codegen. Never make a function-specific pin macro.
+
 Never commit/push/reset/clean/checkout/setup/spawn children. If escalation
 creates a new untracked source, `rm` of that exact mission source is allowed
 only to restore the pre-mission tree; never remove any other path. The read-only
