@@ -31,6 +31,8 @@ Cached decomp-status is audit only. Run Splat/m2c only for missing evidence and
 companion-check only for relevant declared calls. Report snapshot/index staleness
 to parent; do not rebuild global analysis.
 
-Never commit/push/reset/clean/checkout/rm/setup/spawn children. Return protocol
-mission JSON, then required fenced acceptance report: exact IDs, actual commands,
-validation, risks, empty arrays where applicable, and fresh staged-index state.
+Never commit/push/reset/clean/checkout/rm/setup/spawn children. The read-only
+fresh-index audit `git diff --cached --quiet` is allowed; no other git command.
+Return protocol mission JSON, then required fenced acceptance report: exact IDs,
+actual commands, validation, risks, empty arrays where applicable, and fresh
+staged-index state.

@@ -26,7 +26,8 @@ Reuse supplied brief/diff; run one live byte-match. Do not run status, asm-diff,
 brief, m2c, Splat, Rizin, or index rebuild unless a concrete finding needs it.
 Cached status is not acceptance evidence. Run companion-check only for a relevant
 declared call; batch independent reads/greps. Never edit/create artifacts/mutate
-git/setup/spawn children.
+git/setup/spawn children. The read-only fresh-index audit `git diff --cached
+--quiet` is allowed; no other git command.
 
 Return checklist JSON, then required fenced acceptance report with copied IDs,
 actual checks, validation, risks, and fresh staged-index state.

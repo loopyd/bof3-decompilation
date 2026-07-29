@@ -23,6 +23,8 @@ Check:
 8. companion claims remain static-only; block foreign ownership/link/ABI claims;
 9. changed map/Splat facts pass `bin/symbols check` and relevant `bin/splat`;
 10. `git diff --check` clean; no secrets, `inputs/`, or unintended staged files.
+    Read-only `git diff --cached --quiet` is allowed for this audit; no other
+    git command.
 
 Verdict: `pass`, `needs-fix`, or `block` (fundamental behavior/load/banned issue).
 Return:

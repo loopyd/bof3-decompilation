@@ -29,6 +29,7 @@ ordered required context in one call. Stay within mission-owned source,
 
 Banned: handwritten asm (except sanctioned helpers), register pins, asm-renamed
 externs, `INCLUDE_ASM` without approval, git writes, reset/clean/rm/setup, children.
+Allowed exception: read-only `git diff --cached --quiet` for fresh-index state.
 
 Return:
 
