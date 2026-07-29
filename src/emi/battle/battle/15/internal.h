@@ -100,6 +100,7 @@ extern BattleSelectionHandler D_800B448C[];
 extern BattleSelectionHandler D_800B44C8[];
 extern BattleSelectionHandler D_800B44D4[];
 extern BattleSelectionHandler D_800B44E4[];
+extern BattleSelectionHandler D_800B6E08[];
 extern volatile u8   D_801462E4;
 extern volatile u8   D_801462EF;
 extern volatile u16  D_80145AC8;
