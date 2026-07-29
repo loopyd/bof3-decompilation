@@ -69,10 +69,13 @@ typedef struct Battle03EnemyWork {
 
 typedef struct Battle03QueuedSlot {
   u8  unk_00;
-  u8  pad_01[4];
+  u8  unk_01;
+  u8  pad_02[3];
   u8  unk_05;
   u8  unk_06;
-  u8  pad_07[0x6d];
+  u8  pad_07[2];
+  u8  unk_09;
+  u8  pad_0a[0x6a];
   u32 unk_74;
 } Battle03QueuedSlot;
 
@@ -97,7 +100,7 @@ extern Battle03LocalWork* volatile D_80146250;
 extern volatile u8* g_battle03_work;
 extern u8*          D_8014598C;
 extern u8           D_801462E1[];
-extern volatile Battle03QueuedSlot* D_801EC2E0;
+extern Battle03QueuedSlot* volatile D_801EC2E0;
 extern u8                            D_801EBF04;
 extern u8                            D_801EC2E4;
 extern u8                            D_801EC328;

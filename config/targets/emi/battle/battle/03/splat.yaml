@@ -852,8 +852,10 @@ segments:
     - asm
     - func_801E5E2C
   - - 87176
-    - asm
+    - c
     - func_801E6088
+    - '@source: src/emi/battle/battle/03/func_801E6088.c'
+    - '@behavior: Decrements the queued-slot timer and advances its selector on wrap.'
   - - 87260
     - asm
     - func_801E60DC
