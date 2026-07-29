@@ -863,7 +863,7 @@ segments:
     - asm
     - func_801E62BC
   - - 88000
-    - asm
+    - c
     - func_801E63C0
   - - 88096
     - asm

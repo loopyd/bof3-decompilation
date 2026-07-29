@@ -10,6 +10,9 @@ typedef void (*Battle03EnemyModeHandler)(s32 arg0);
 typedef void (*Battle03ForwardingHandler)(s32 arg0, s32 arg1, s32 arg2,
                                           s32 arg3, s32 arg4, s32 arg5,
                                           s32 arg6, u8* selector);
+typedef struct Battle03DispatchTable {
+  Battle03Handler handlers[3];
+} Battle03DispatchTable;
 
 typedef struct Battle03LocalWork {
   u8  flags_00;
@@ -80,6 +83,8 @@ extern Battle03LocalWork* volatile D_80146250;
 extern volatile u8* g_battle03_work;
 extern u8*          D_8014598C;
 extern u8           D_801462E1[];
+extern volatile Battle03QueuedSlot* D_801EC2E0;
+extern Battle03DispatchTable        D_801D0F20;
 extern Battle03Handler D_801EACD4[];
 extern Battle03Handler D_801EACE8[];
 extern Battle03Handler D_801EACF4[];
