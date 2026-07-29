@@ -165,7 +165,7 @@ extern volatile u8   D_801485DF;
 extern volatile u16  D_801485E0;
 extern volatile u8   D_80148626;
 extern volatile u8   D_80148627;
-extern volatile u16  D_80148628;
+extern volatile s16  D_80148628;
 extern volatile u16  D_8014862A;
 extern volatile u8   D_8014862E;
 
