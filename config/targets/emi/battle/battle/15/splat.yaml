@@ -1485,7 +1485,7 @@ segments:
     - source: src/emi/battle/battle/15/func_800B2158.c
       behavior: leaf
   - - 113048
-    - asm
+    - c
     - func_800B2198
   - - 113112
     - asm
