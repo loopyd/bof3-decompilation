@@ -998,8 +998,10 @@ segments:
     - asm
     - func_801E8FA8
   - - 99444
-    - asm
+    - c
     - func_801E9074
+    - '@source: src/emi/battle/battle/03/func_801E9074.c'
+    - '@behavior: Dispatches an eight-entry local handler table by battle state byte +0x02.'
   - - 99580
     - c
     - func_801E90FC

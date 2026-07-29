@@ -115,6 +115,7 @@ extern u32                           D_80181B10;
 extern Battle03FlagRecord            D_80145FB4[];
 extern volatile Battle03LocalWork*   D_801EB4E0;
 extern Battle03EightDispatchTable   D_801D0ED4;
+extern Battle03EightDispatchTable   D_801D0F80;
 extern Battle03FiveDispatchTable    D_801D0F58;
 extern Battle03DispatchTable        D_801D0F20;
 extern Battle03DispatchTable        D_801D0F2C;
