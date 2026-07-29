@@ -139,8 +139,10 @@ segments:
     - asm
     - func_801D9804
   - - 36096
-    - asm
+    - c
     - func_801D9900
+    - '@source: src/emi/battle/battle/03/func_801D9900.c'
+    - '@behavior: Emits a semi-transparent full-screen tile primitive.'
   - - 36268
     - asm
     - func_801D99AC
