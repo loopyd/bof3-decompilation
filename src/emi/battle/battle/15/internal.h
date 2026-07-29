@@ -155,6 +155,9 @@ u16  battle_resolve_secondary_choice_resource(u32 group_index, u32 choice_id);
 u8   battle_try_commit_secondary_choice(u32 panel_kind, u32 zero_arg,
                                         u32 group_index, u32 choice_id);
 void                           func_800975D4(void);
+void                           func_800AE014(void);
+void                           func_800AE06C(void);
+void                           func_800AE09C(void);
 void                           func_800A83F8(void);
 void                           func_800A8450(void);
 void                           func_800A84FC(void);

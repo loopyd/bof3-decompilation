@@ -1196,7 +1196,7 @@ segments:
     - asm
     - func_800ADFBC
   - - 96276
-    - asm
+    - c
     - func_800AE014
   - - 96364
     - c
