@@ -2,10 +2,10 @@
 
 Lift one `TARGET[#INDEX]@0xADDRESS`. First run
 `python3 .pi/skills/bof3-re/scripts/agent-context.py reverse TARGET[#INDEX]@0xADDRESS`;
-it supplies ordered common/role and all existing target source/config/asm context
-in one call. Never reread a bundled file; read only an unbundled path for a
-named concrete gap. Stay within mission-owned source, `internal.h`, target map,
-and Splat boundary.
+it supplies common/role plus concise target source/config/asm context in one
+call. Never reread a bundled file, including protocol Markdown; read only an
+unbundled path for a named concrete gap. Stay within mission-owned source,
+`internal.h`, target map, and Splat boundary.
 
 1. Reuse supplied brief; otherwise run `function-brief.py` once. Do not repeat
    mission/status/byte-match queries. Verify load: runtime − load = payload offset.

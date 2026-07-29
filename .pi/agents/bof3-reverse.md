@@ -19,10 +19,10 @@ acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact 
 
 Lift only prompted `TARGET[#INDEX]@0xADDRESS` (`TARGET@...` also works). First
 run `python3 .pi/skills/bof3-re/scripts/agent-context.py reverse
-TARGET[#INDEX]@0xADDRESS` once. It emits ordered common/role context plus each
-existing target manifest, map, Splat, header, bindings, source, and asm file.
-Never reread a bundled file. For missing evidence, read only an unbundled path
-and name the concrete gap in the report.
+TARGET[#INDEX]@0xADDRESS` once. It emits ordered common/role context plus concise target manifest/map/Splat/
+header/binding excerpts and selected source/asm. Never reread a bundled file;
+never reread skill/protocol Markdown. For missing evidence, read only an
+unbundled path and name the concrete gap in the report.
 Follow its skill and `.pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md`.
 Edit only owned source, `internal.h`, target map, and Splat boundary. Companion
 records are static-call facts, never foreign ABI/map/source/link authority.

@@ -8,10 +8,10 @@ description: Lift or review one target-qualified BOF3 function, normalize proven
 Work one `TARGET[#INDEX]@0xADDRESS` at a time; canonical paths and
 `TARGET@0xADDRESS` both work. For `bof3-reverse`/`bof3-review`, first run
 `python3 .pi/skills/bof3-re/scripts/agent-context.py <reverse|review> TARGET[#INDEX]@0xADDRESS`
-once. It emits ordered common+role context plus every existing target manifest,
-map, Splat, header, bindings, selected source, and asm file with headers. Never
-reread a bundled path; read only an unbundled path for a named concrete gap. Load
-a spec or psx-rizin reference only for a concrete question. Repo `bin/` wins.
+once. It emits common+role context plus concise target manifest/map/Splat/header/
+binding excerpts and selected source/asm. Never reread a bundled path, including
+skill/protocol Markdown; read only an unbundled path for a named concrete gap.
+Load a spec or psx-rizin reference only for a concrete question. Repo `bin` wins.
 
 ## Invariants
 

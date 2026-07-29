@@ -17,10 +17,10 @@ defaultProgress: true
 
 Read-only review of prompted `TARGET[#INDEX]@0xADDRESS` (`TARGET@...` also
 works). First run `python3 .pi/skills/bof3-re/scripts/agent-context.py review
-TARGET[#INDEX]@0xADDRESS` once. It emits ordered common/role context plus each
-existing target manifest, map, Splat, header, bindings, source, and asm file.
-Never reread a bundled file. For missing evidence, read only an unbundled path
-and name the concrete finding in the report.
+TARGET[#INDEX]@0xADDRESS` once. It emits ordered common/role context plus
+concise target manifest/map/Splat/header/binding excerpts and selected source/asm.
+Never reread a bundled file; never reread skill/checklist Markdown. For missing
+evidence, read only an unbundled path and name the concrete finding in the report.
 Follow its checklist. Companion records are static evidence only; block
 unsupported foreign ABI/map/source/link claims.
 

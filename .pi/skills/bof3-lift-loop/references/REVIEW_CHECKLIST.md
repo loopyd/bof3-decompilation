@@ -2,9 +2,9 @@
 
 Review one `TARGET[#INDEX]@0xADDRESS`, read-only. First run
 `python3 .pi/skills/bof3-re/scripts/agent-context.py review TARGET[#INDEX]@0xADDRESS`;
-it supplies ordered common/role and all existing target source/config/asm context
-in one call. Never reread a bundled file; read only an unbundled path for a
-named concrete finding. Use executor brief/diff; run fresh
+it supplies common/role plus concise target source/config/asm context in one
+call. Never reread a bundled file, including checklist Markdown; read only an
+unbundled path for a named concrete finding. Use executor brief/diff; run fresh
 `bin/byte-match TARGET@0xADDRESS`.
 `decomp-status` is audit cache, never acceptance. Do not run `just check`, brief,
 asm-diff, m2c, Rizin, or index rebuild unless a finding needs it. Run companion-check only

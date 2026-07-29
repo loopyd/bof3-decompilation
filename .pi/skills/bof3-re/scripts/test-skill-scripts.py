@@ -55,6 +55,9 @@ def main() -> int:
             assert "===== config/targets/emi/battle/battle/15/symbols.txt =====" in result.stdout, script
             assert "===== config/targets/emi/battle/battle/15/splat.yaml =====" in result.stdout, script
             assert "===== src/emi/battle/battle/15/internal.h =====" in result.stdout, script
+            assert "===== src/emi/battle/battle/15/func_80096E90.c =====" in result.stdout, script
+            assert "===== out/splat/emi/battle/battle/15/asm/func_80096E90.s =====" in result.stdout, script
+            assert len(result.stdout.encode()) < 32_000, script
         else:
             assert json.loads(result.stdout)["schema"] == schema, script
         print(f"ok {script.relative_to(ROOT)}")
