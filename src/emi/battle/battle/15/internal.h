@@ -163,7 +163,7 @@ extern volatile u16  D_80145AC8;
 extern u8*           D_801EB4D8;
 extern u8*           D_801EBF08;
 extern u8            D_80148330[];
-extern volatile u8   D_801462E5;
+extern u8            D_801462E5;
 extern volatile u8   D_801462E6;
 extern volatile u16  D_801462E8[];
 extern volatile BattleLocalWork D_80145E90[];
@@ -338,5 +338,7 @@ void func_801DEA64(s32 arg0);
 #define BATTLE_UNK_80145F59        PSX_PTR(volatile u8, 0x80145f59u)
 #define BATTLE_UNK_80145F4A        PSX_PTR(volatile u16, 0x80145f4au)
 #define BATTLE_UNK_801461CA        PSX_PTR(volatile u16, 0x801461cau)
+
+extern volatile u8 D_801485B8;
 
 #endif
