@@ -1345,8 +1345,10 @@ segments:
     - [0x800B0118, 0x800B0180]
     - {source: src/emi/battle/battle/15/func_800B0118.c, behavior: "Select local offset pair by battle-work mode and active table."}
   - - 104832
-    - asm
+    - c
     - func_800B0180
+    - '@source: src/emi/battle/battle/15/func_800B0180.c'
+    - '@behavior: Dispatches five local handlers by panel-task byte +0x02.'
   - - 104944
     - c
     - func_800B01F0
