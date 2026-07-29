@@ -922,8 +922,10 @@ segments:
     - asm
     - func_801E6B28
   - - 90056
-    - asm
+    - c
     - func_801E6BC8
+    - '@source: src/emi/battle/battle/03/func_801E6BC8.c'
+    - '@behavior: Increments scratch work state after a successful battle predicate.'
   - - 90144
     - asm
     - func_801E6C20
