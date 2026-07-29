@@ -80,8 +80,10 @@ segments:
     - asm
     - func_801D7350
   - - 26836
-    - asm
+    - c
     - func_801D74D4
+    - '@source: src/emi/battle/battle/03/func_801D74D4.c'
+    - '@behavior: Clears the battle selection flag and decrements its counter when the gate is clear.'
   - - 26892
     - asm
     - func_801D750C
