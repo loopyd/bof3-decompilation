@@ -340,5 +340,6 @@ void func_801DEA64(s32 arg0);
 #define BATTLE_UNK_801461CA        PSX_PTR(volatile u16, 0x801461cau)
 
 extern volatile u8 D_801485B8;
+extern volatile u8 D_801485DC;
 
 #endif

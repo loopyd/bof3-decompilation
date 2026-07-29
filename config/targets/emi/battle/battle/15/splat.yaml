@@ -882,8 +882,10 @@ segments:
     - '@source: src/emi/battle/battle/15/func_800A5DE0.c'
     - '@behavior: Initializes battle menu state 0x15 and advances its update counter.'
   - - 63060
-    - asm
+    - c
     - func_800A5E54
+    - '@source: src/emi/battle/battle/15/func_800A5E54.c'
+    - '@behavior: Advances local selection state when the battle gate is clear.'
   - - 63128
     - asm
     - func_800A5E98
