@@ -1349,8 +1349,10 @@ segments:
     - asm
     - func_800AFB48
   - - 103508
-    - asm
+    - c
     - func_800AFC54
+    - '@source: src/emi/battle/battle/15/func_800AFC54.c'
+    - '@behavior: Copies 0x100 halfwords between fixed battle RAM buffers and sets the completion flag.'
   - - 103576
     - asm
     - func_800AFC98
