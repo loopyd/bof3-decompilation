@@ -289,8 +289,10 @@ segments:
     - asm
     - func_8009C868
   - - 24700
-    - asm
+    - c
     - func_8009C87C
+    - '@source: src/emi/battle/battle/15/func_8009C87C.c'
+    - '@behavior: Sets or clears the indexed bit in byte +0xE1.'
   - - 24748
     - asm
     - func_8009C8AC
