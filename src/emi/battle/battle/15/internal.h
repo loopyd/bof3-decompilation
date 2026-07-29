@@ -109,7 +109,7 @@ extern volatile u32  D_801462E6;
 extern volatile u32  D_801462E8;
 extern volatile u8   D_80146374;
 extern volatile u8   D_80146394;
-extern volatile u32  D_801463A0;
+extern s16*          D_801463A0;
 extern volatile u32  D_801483C3;
 extern volatile u32  D_80148597;
 extern volatile u32  D_801485BB;

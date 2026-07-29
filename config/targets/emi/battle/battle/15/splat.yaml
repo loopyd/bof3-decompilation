@@ -395,7 +395,7 @@ segments:
     - asm
     - func_8009EA30
   - - 33420
-    - asm
+    - c
     - func_8009EA8C
   - - 33484
     - asm
