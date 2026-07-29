@@ -650,7 +650,7 @@ segments:
     - c
     - func_801E32AC
   - - 75504
-    - asm
+    - c
     - func_801E32F0
   - - 75572
     - asm
