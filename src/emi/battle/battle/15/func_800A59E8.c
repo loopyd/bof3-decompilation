@@ -6,7 +6,11 @@
  * @source 0x800A59E8
  */
 void func_800A59E8(void) {
+  u8 *counter = (u8 *)&D_801462E4;
+  u8 value;
+
   D_80148627 = 2;
+  value = *counter;
   D_8014862E = 1;
-  (*D_801462E4)++;
+  *counter = value + 1;
 }

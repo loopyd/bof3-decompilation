@@ -6,7 +6,12 @@
  * @source 0x800A5300
  */
 void func_800A5300(void) {
+  u8* counter;
+  u8  value;
+
+  counter = &D_801462E4;
   D_80148597 = 2;
+  value = *counter;
   D_801483C3 = 1;
-  (*D_801462E4)++;
+  *counter = value + 1;
 }
