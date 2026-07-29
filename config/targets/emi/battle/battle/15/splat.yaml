@@ -842,7 +842,7 @@ segments:
     - asm
     - func_800A58F4
   - - 61868
-    - asm
+    - c
     - func_800A59AC
   - - 61928
     - c
