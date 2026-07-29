@@ -934,8 +934,10 @@ segments:
     - asm
     - func_800A6E14
   - - 69192
-    - asm
+    - c
     - func_800A7648
+    - '@source: src/emi/battle/battle/15/func_800A7648.c'
+    - '@behavior: Clamps the offset index to zero through four and returns the corresponding signed-byte table value.'
   - - 69268
     - asm
     - func_800A7694
