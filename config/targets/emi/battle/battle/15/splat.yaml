@@ -38,8 +38,10 @@ segments:
     - asm
     - func_80096CC8
   - - 1556
-    - asm
+    - c
     - func_80096E14
+    - '@source: src/emi/battle/battle/15/func_80096E14.c'
+    - '@behavior: Queues cue 0x104, stages selection state, and advances the battle counter.'
   - - 1680
     - c
     - func_80096E90

@@ -40,7 +40,9 @@ typedef struct BattleLocalOffsetPair {
 } BattleLocalOffsetPair;
 
 typedef struct Unk801EBF08 {
-  u8  unk_00[0x128];
+  u8  unk_00;
+  u8  unk_01;
+  u8  unk_02[0x126];
   volatile u32 unk_128;
 } Unk801EBF08;
 
@@ -145,8 +147,10 @@ extern BattleLocalOffsetPair D_800B6C90[];
 extern u8 D_800B6D00[];
 extern volatile u8   D_801462E4;
 extern volatile u8   D_801462EF;
+extern volatile u8   D_80146303;
 extern volatile u16  D_80145AC8;
 extern u8*           D_801EB4D8;
+extern u8*           D_801EBF08;
 extern u8            D_80148330[];
 extern volatile u8   D_801462E5;
 extern volatile u8   D_801462E6;
@@ -249,7 +253,7 @@ void func_801DEA64(s32 arg0);
 #define D_8014598C g_PrimCursor
 #define BATTLE_ACTIVE_SELECTION_SLOT_PTR D_801EB4D8
 #define BATTLE_ACTIVE_MESSAGE_SLOT_PTR   PSX_REF(volatile void*, 0x801ebf08u)
-#define D_801EBF08_PTR                   PSX_REF(Unk801EBF08*, 0x801ebf08u)
+#define D_801EBF08_PTR                   ((Unk801EBF08*)D_801EBF08)
 #define BATTLE_CURRENT_BATTLER_PTR       PSX_REF(volatile u8*, 0x801eb4e8u)
 #define BATTLE_SELECTION_SLOT_SUBSTATE_TABLE                                   \
   PSX_PTR(const volatile BattleSelectionHandler, 0x800b43c0u)
