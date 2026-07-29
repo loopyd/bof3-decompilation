@@ -168,6 +168,8 @@ extern volatile u8  BATTLE_UI_RING_TARGET;
 extern u8           func_8017E3D4(void);
 
 void func_8014D290(void);
+void func_801E72A8(void);
+void func_801E72F4(void);
 void func_8014D5F0(u8 arg0, u32 arg1, s32 arg2);
 void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 u16  func_8017A620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
