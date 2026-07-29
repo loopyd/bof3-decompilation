@@ -398,8 +398,10 @@ segments:
     - c
     - func_8009EA8C
   - - 33484
-    - asm
+    - c
     - func_8009EACC
+    - [source, src/emi/battle/battle/15/func_8009EACC.c]
+    - [behavior, "sets selection flag and stores half target result"]
   - - 33576
     - asm
     - func_8009EB28
