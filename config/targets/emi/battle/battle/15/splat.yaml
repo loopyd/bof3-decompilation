@@ -117,8 +117,10 @@ segments:
     - asm
     - func_80098144
   - - 6740
-    - asm
+    - c
     - func_80098254
+    - '@source: src/emi/battle/battle/15/func_80098254.c'
+    - '@behavior: Resets the active battle selection slot and advances selection state.'
   - - 6884
     - c
     - func_800982E4

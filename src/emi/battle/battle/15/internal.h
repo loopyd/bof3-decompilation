@@ -246,6 +246,7 @@ s16  func_801DC044(u8 arg0, u8 arg1, u32 arg2);
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
 void func_801DE94C(s32 arg0, s32 arg1);
 void func_80158E20(void);
+void func_8015DF18(u16 arg0);
 u32  func_801502D0(u32 arg0);
 void func_801DE8C0(u8 arg0, u8 arg1, u32 arg2);
 u8   func_801DB5CC(s32 arg0);
