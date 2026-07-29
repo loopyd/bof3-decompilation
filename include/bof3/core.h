@@ -23,6 +23,7 @@ s32  func_80162D00(void);
 
 /* ---- game front ---- */
 void func_8014ECAC(u16 local_mode);
+void func_80158DB8(u8 menu_id, u8 mode);
 void func_8015DF18(u16 cue_id);
 void func_80161808(u32 layout_bank);
 void func_80161C20(u8 selection_id, s32 cue_level, s32 cue_shape);
