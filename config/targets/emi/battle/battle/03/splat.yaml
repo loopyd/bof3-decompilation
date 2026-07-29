@@ -329,8 +329,10 @@ segments:
     - asm
     - func_801DDFEC
   - - 54444
-    - asm
+    - c
     - func_801DE0AC
+    - '@source: src/emi/battle/battle/03/func_801DE0AC.c'
+    - '@behavior: Multiplies signed inputs, scales by 100, clamps to 0 through 999, and returns s16.'
   - - 54520
     - asm
     - func_801DE0F8

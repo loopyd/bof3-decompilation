@@ -118,6 +118,8 @@ extern Battle03EightDispatchTable   D_801D0ED4;
 extern Battle03EightDispatchTable   D_801D0F80;
 extern Battle03FiveDispatchTable    D_801D0F58;
 extern Battle03DispatchTable        D_801D0F20;
+
+s16 func_801DE0AC(s32 arg0, s32 arg1);
 extern Battle03DispatchTable        D_801D0F2C;
 extern Battle03DispatchTable        D_801D0FA0;
 extern Battle03DispatchTable        D_801D0FAC;
