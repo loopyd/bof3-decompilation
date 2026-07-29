@@ -49,6 +49,7 @@ typedef struct Battle03LocalWork {
   u8  unk_123;
   u8  pad_124[0x10];
   u16 unk_134;
+  u8  pad_136[0xa];
 } Battle03LocalWork;
 
 typedef struct Battle03FlagRecord {
@@ -87,7 +88,9 @@ typedef struct Battle03SpritePrimitive {
   s16 unk_0e;
 } Battle03SpritePrimitive;
 
-extern volatile AbilityObject ABILITY_OBJECTS[];
+extern volatile AbilityObject       ABILITY_OBJECTS[];
+extern u8                           D_801EB2E8[];
+extern Battle03LocalWork            D_80145E90[];
 extern volatile u16           D_80143C40;
 extern volatile u8            D_8014832E;
 extern Battle03LocalWork* volatile D_80146250;

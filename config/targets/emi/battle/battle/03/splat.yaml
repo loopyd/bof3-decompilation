@@ -274,8 +274,10 @@ segments:
     - asm
     - func_801DD704
   - - 52064
-    - asm
+    - c
     - func_801DD760
+    - '@source: src/emi/battle/battle/03/func_801DD760.c'
+    - '@behavior: Selects the local 0x140-stride work array below three and the alternate 0x118-stride region otherwise.'
   - - 52140
     - c
     - func_801DD7AC
