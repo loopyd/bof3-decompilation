@@ -219,8 +219,10 @@ segments:
     - asm
     - func_801DB9E4
   - - 44832
-    - asm
+    - c
     - func_801DBB20
+    - '@source: src/emi/battle/battle/03/func_801DBB20.c'
+    - '@behavior: Returns the first of three local work records whose byte +0x79 matches the selector.'
   - - 44920
     - asm
     - func_801DBB78

@@ -48,7 +48,9 @@ typedef struct Battle03LocalWork {
   u32 unk_40;
   u32 unk_44;
   u8  unk_48;
-  u8  pad_49[0xda];
+  u8  pad_49[0x30];
+  u8  unk_79;
+  u8  pad_7a[0xa9];
   u8  unk_123;
   u8  pad_124[0x10];
   u16 unk_134;
@@ -118,6 +120,8 @@ extern Battle03EightDispatchTable   D_801D0ED4;
 extern Battle03EightDispatchTable   D_801D0F80;
 extern Battle03FiveDispatchTable    D_801D0F58;
 extern Battle03DispatchTable        D_801D0F20;
+
+Battle03LocalWork *func_801DBB20(u8 arg0);
 
 s16 func_801DE0AC(s32 arg0, s32 arg1);
 extern Battle03DispatchTable        D_801D0F2C;
