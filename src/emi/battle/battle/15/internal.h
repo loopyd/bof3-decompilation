@@ -35,6 +35,15 @@ typedef struct BattleWork {
   s32 unk_10;
 } BattleWork;
 
+typedef struct BattleLocalWork {
+  u8 unk_00;
+  u8 unk_01;
+  u8 unk_02;
+  u8 unk_03;
+  u8 unk_04;
+  u8 unk_05[0x13B];
+} BattleLocalWork;
+
 typedef struct BattleLocalOffsetPair {
   s16 values[4][2];
 } BattleLocalOffsetPair;
@@ -157,7 +166,8 @@ extern u8            D_80148330[];
 extern volatile u8   D_801462E5;
 extern volatile u8   D_801462E6;
 extern volatile u16  D_801462E8[];
-extern volatile u8   D_80146374;
+extern volatile BattleLocalWork D_80145E90[];
+extern volatile u8             D_80146374;
 extern volatile s8   D_80145558;
 extern volatile s16  D_801EC2EE;
 extern volatile u8   D_80146394;

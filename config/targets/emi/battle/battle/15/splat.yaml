@@ -958,8 +958,10 @@ segments:
     - c
     - func_800A83F8
   - - 72784
-    - asm
+    - c
     - func_800A8450
+    - '@source: src/emi/battle/battle/15/func_800A8450.c'
+    - '@behavior: Initializes the selected local battle-work record and advances work state.'
   - - 72956
     - asm
     - func_800A84FC
