@@ -85,9 +85,12 @@ def around(lines: list[str], needle: str, radius: int = 5) -> str:
     return ""
 
 
-def symbol_excerpt(path: Path, names: set[str]) -> str:
-    return "".join(line for line in path.read_text(encoding="utf-8").splitlines(keepends=True)
-                   if any(re.search(rf"\b{re.escape(name)}\b", line) for name in names))
+def map_excerpt(path: Path, address: int) -> str:
+    lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+    index = next((i for i, line in enumerate(lines)
+                  if (match := re.search(r"=\s*(0x[0-9A-Fa-f]+);", line))
+                  and int(match.group(1), 0) >= address), len(lines))
+    return "".join(lines[max(0, index - 3):index + 3])
 
 
 def header_excerpt(path: Path, names: set[str]) -> str:
@@ -110,7 +113,7 @@ def target_context(root: Path, requested: str, address: int) -> list[str]:
     names = set(IDENTIFIER.findall(asm_text)) | {f"func_{address:08X}"}
     paths: list[tuple[Path, str | None]] = [(manifest_path, None)]
     if map_path.is_file():
-        paths.append((map_path, symbol_excerpt(map_path, names)))
+        paths.append((map_path, map_excerpt(map_path, address)))
     if splat.is_file():
         lines = splat.read_text(encoding="utf-8").splitlines(keepends=True)
         paths.append((splat, "".join(lines[:16]) + around(lines, f"func_{address:08X}")))
@@ -119,7 +122,7 @@ def target_context(root: Path, requested: str, address: int) -> list[str]:
         paths.append((header, header_excerpt(header, names)))
     bindings = source_dir / "symbols.c"
     if bindings.is_file():
-        paths.append((bindings, symbol_excerpt(bindings, names)))
+        paths.append((bindings, None))
     if source.is_file():
         paths.append((source, None))
     if asm.is_file():
