@@ -85,6 +85,7 @@ extern u8*          D_8014598C;
 extern u8           D_801462E1[];
 extern volatile Battle03QueuedSlot* D_801EC2E0;
 extern Battle03DispatchTable        D_801D0F20;
+extern Battle03DispatchTable        D_801D0F2C;
 extern Battle03Handler D_801EACD4[];
 extern Battle03Handler D_801EACE8[];
 extern Battle03Handler D_801EACF4[];
