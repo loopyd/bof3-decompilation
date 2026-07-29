@@ -440,7 +440,7 @@ segments:
     - asm
     - func_801DF914
   - - 60956
-    - asm
+    - c
     - func_801DFA1C
   - - 61024
     - asm
