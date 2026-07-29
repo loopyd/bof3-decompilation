@@ -5,8 +5,8 @@ Review one `TARGET[#INDEX]@0xADDRESS`, read-only. First run
 it supplies ordered common/role and all existing target source/config/asm context
 in one call. Use executor brief/diff as context; run one fresh
 `bin/byte-match TARGET@0xADDRESS`.
-`decomp-status` is audit cache, never acceptance. Do not run brief, asm-diff,
-m2c, Rizin, or index rebuild unless a finding needs it. Run companion-check only
+`decomp-status` is audit cache, never acceptance. Do not run `just check`, brief,
+asm-diff, m2c, Rizin, or index rebuild unless a finding needs it. Run companion-check only
 for a declared call in this function. Batch grep/map/hygiene reads where useful.
 
 Check:
@@ -22,7 +22,7 @@ Check:
 6. raw filename, canonical names, `unk_XX`, and header barrel order remain correct;
 7. C is semantically credible: types, signedness, flow, data ownership, no masking;
 8. companion claims remain static-only; block foreign ownership/link/ABI claims;
-9. changed map/Splat facts pass `bin/symbols check` and relevant `bin/splat`;
+9. changed map/Splat facts pass `bin/symbols check TARGET` and `bin/splat TARGET`;
 10. `git diff --check` clean; no secrets, `inputs/`, or unintended staged files.
     Read-only `git diff --cached --quiet` is allowed for this audit; no other
     git command.

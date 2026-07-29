@@ -27,10 +27,10 @@ Edit only owned source, `internal.h`, target map, and Splat boundary. Companion
 records are static-call facts, never foreign ABI/map/source/link authority.
 
 Reuse one supplied/function brief; do not repeat mission/status/byte-match. Use
-live normal asm-diff before each diagnosed edit and one final live byte-match.
-Cached decomp-status is audit only. Run Splat/m2c only for missing evidence and
-companion-check only for relevant declared calls. Report snapshot/index staleness
-to parent; do not rebuild global analysis.
+live normal asm-diff before each edit and final byte-match. Do not run
+`just check` or `decomp-status`. Run `symbols check TARGET` and `splat TARGET`
+only when map/Splat changed; run companion-check only for relevant calls. Report
+snapshot/index staleness; do not rebuild global analysis.
 
 Never commit/push/reset/clean/checkout/setup/spawn children. If escalation
 creates a new untracked source, `rm` of that exact mission source is allowed

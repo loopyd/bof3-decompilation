@@ -23,10 +23,11 @@ Splat boundary.
    one structural fix, rerun. Revert regressions. Escalate types → flow → ordering
    → flags → one bounded permuter → documented residual after three stalled tries
    per level. Use full diff only when normal evidence is insufficient.
-8. Accept only final live `byte-match` exit 0 plus `bin/symbols check TARGET`
-   and `bin/splat TARGET`; a new authored lift also needs its Splat boundary
-   changed to `c` and `@source`/`@behavior` metadata. Never use cached status as
-   proof. Report Rizin/index staleness to parent; do not rebuild global analysis.
+8. Accept only final live `byte-match` exit 0. If map/Splat changed, also run
+   `bin/symbols check TARGET` and `bin/splat TARGET`; otherwise do not rerun
+   them. A new lift needs its Splat boundary changed to `c` with
+   `@source`/`@behavior`. Never use cached status as proof; never run `just check`
+   or `decomp-status`. Report Rizin/index staleness; do not rebuild it.
 
 Banned: handwritten asm (except sanctioned helpers), register pins, asm-renamed
 externs, `INCLUDE_ASM` without approval, git writes, reset/clean/setup, children.

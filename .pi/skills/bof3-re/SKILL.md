@@ -37,12 +37,12 @@ Use the narrowest sufficient command. Live acceptance is never cached.
 | Diagnose | `bin/asm-diff TARGET@0xADDRESS --detail normal` | broad status/m2c each edit |
 | Ambiguous/new hunk | `asm-diff --detail full` | reread unchanged full diffs |
 | Accept/review | `bin/byte-match TARGET@0xADDRESS` | accept cached status |
-| Progress | `bin/decomp-status TARGET --detail minimal` | `--no-cache` except diagnosis/request |
+| Parent progress report | `bin/decomp-status TARGET --detail minimal` on request | agent mission/status sweep |
 | Companion ABI | `bin/companion-check TARGET@0xADDRESS` only for a relevant declared call | global catalog scan |
 | Seed/boundary | `splat`, `m2ctx`, `m2c` only when missing/needed | regenerate after C-only edits |
 
-`decomp-status` is disposable audit data. `asm-diff` and `byte-match` are live.
-Report map/Splat-caused Rizin/index staleness for the parent batch checkpoint;
+`decomp-status` is parent-only disposable audit data. `asm-diff` and `byte-match`
+are live. Report map/Splat-caused Rizin/index staleness for the parent checkpoint;
 do not rebuild global analysis during a one-function mission.
 
 ## Scope and evidence
@@ -87,7 +87,9 @@ A duplicate hash is a candidate, not shared ownership. Confirm boundaries; match
 one representative and a second target independently before a worthwhile shared
 `src/shared/<domain>/*.inc` body. Keep address wrappers/local maps/boundaries.
 
-Before handoff run required live byte-match(es), `bin/symbols check`, relevant
-Splat/companion checks, `git diff --check`, and cached status audit. Run
-`just check` when practical. Report Done, evidence, checks, skipped checks, risks,
-and next step tersely.
+Before handoff run live `byte-match` for each edited function,
+`bin/symbols check TARGET`, `bin/splat TARGET` only if its map/Splat changed,
+relevant companion-check, and `git diff --check`. This is the default complete
+lift gate; do not run `just check` or `decomp-status` in an agent mission.
+Reserve `just check` for parent-only broad tooling/config changes or explicit
+request. Report checks, skipped broad checks, risks, and next step tersely.
