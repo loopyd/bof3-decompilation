@@ -109,6 +109,7 @@ extern BattleSelectionHandler D_800B6E08[];
 extern volatile u8   D_801462E4;
 extern volatile u8   D_801462EF;
 extern volatile u16  D_80145AC8;
+extern u8*           D_801EB4D8;
 extern u8            D_80148330[];
 extern volatile u8   D_801462E5;
 extern volatile u8   D_801462E6;
@@ -194,7 +195,7 @@ u8   func_801DB5CC(s32 arg0);
 void func_801E5988(void);
 
 #define D_8014598C g_PrimCursor
-#define BATTLE_ACTIVE_SELECTION_SLOT_PTR PSX_REF(volatile u8*, 0x801eb4d8u)
+#define BATTLE_ACTIVE_SELECTION_SLOT_PTR D_801EB4D8
 #define BATTLE_ACTIVE_MESSAGE_SLOT_PTR   PSX_REF(volatile void*, 0x801ebf08u)
 #define BATTLE_CURRENT_BATTLER_PTR       PSX_REF(volatile u8*, 0x801eb4e8u)
 #define BATTLE_SELECTION_SLOT_SUBSTATE_TABLE                                   \
