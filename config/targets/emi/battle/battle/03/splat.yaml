@@ -881,8 +881,10 @@ segments:
     - asm
     - func_801E65F8
   - - 88868
-    - asm
+    - c
     - func_801E6724
+    - '@source: src/emi/battle/battle/03/func_801E6724.c'
+    - '@behavior: Dispatches one of two local handlers by battle work state under a temporary global.'
   - - 88988
     - asm
     - func_801E679C

@@ -152,7 +152,10 @@ extern volatile u8  BATTLE_GLOBAL_BYTE_62F3;
 extern volatile u8  BATTLE_GLOBAL_BYTE_6301;
 extern volatile u8  BATTLE_GLOBAL_BYTE_6302;
 extern volatile u8  BATTLE_GLOBAL_BYTE_6303;
-extern volatile u32 BATTLE_GLOBAL_WORD_59F0;
+extern volatile u32 D_801459F0;
+
+void func_801E679C(void);
+void func_801E68EC(void);
 extern volatile u16 BATTLE_SCRATCH_HALF_000;
 extern volatile u8  BATTLE_SCRATCH_BYTE_000;
 extern volatile u8  BATTLE_SCRATCH_BYTE_001;
