@@ -90,6 +90,7 @@ extern u8* volatile g_battle_work;
 
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
  * equal the symbol-name addresses. */
+extern BattleSelectionDispatchTable D_800969F8;
 extern BattleSelectionDispatchTable D_80096A08;
 extern BattleSelectionDispatchTable D_80096A34;
 extern BattleSelectionDispatchTable D_80096A40;

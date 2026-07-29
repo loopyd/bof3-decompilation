@@ -1338,8 +1338,10 @@ segments:
     - asm
     - func_800B0180
   - - 104944
-    - asm
+    - c
     - func_800B01F0
+    - '@source: src/emi/battle/battle/15/func_800B01F0.c'
+    - '@behavior: Dispatches local handlers by panel-task state byte +0x03.'
   - - 105040
     - asm
     - func_800B0250
