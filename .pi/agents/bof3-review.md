@@ -11,6 +11,7 @@ inheritSkills: true
 defaultContext: fresh
 timeoutMs: 3600000
 turnBudget: {"maxTurns":300,"graceTurns":10}
+toolBudget: {"soft":240,"hard":300,"block":"*"}
 defaultProgress: true
 ---
 

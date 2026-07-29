@@ -11,6 +11,7 @@ inheritSkills: true
 defaultContext: fresh
 timeoutMs: 3600000
 turnBudget: {"maxTurns":300,"graceTurns":10}
+toolBudget: {"soft":300,"hard":400,"block":"*"}
 defaultProgress: true
 completionGuard: false
 acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact lift or an evidence-backed escalation with all mission edits restored, without widening scope."],"evidence":["changed-files","tests-added","commands-run","validation-output","residual-risks","no-staged-files"]}
