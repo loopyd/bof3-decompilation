@@ -13,6 +13,9 @@ typedef void (*Battle03ForwardingHandler)(s32 arg0, s32 arg1, s32 arg2,
 typedef struct Battle03DispatchTable {
   Battle03Handler handlers[3];
 } Battle03DispatchTable;
+typedef struct Battle03FiveDispatchTable {
+  Battle03Handler handlers[5];
+} Battle03FiveDispatchTable;
 
 typedef struct Battle03LocalWork {
   u8  flags_00;
@@ -90,6 +93,7 @@ extern u8                            D_8014630C;
 extern u8                            D_8014864C;
 extern u32                           D_80181B10;
 extern u8                            D_801EB4E0;
+extern Battle03FiveDispatchTable    D_801D0F58;
 extern Battle03DispatchTable        D_801D0F20;
 extern Battle03DispatchTable        D_801D0F2C;
 extern Battle03DispatchTable        D_801D0FA0;
@@ -192,6 +196,7 @@ extern u8           func_8017E3D4(void);
 
 void func_8014D290(void);
 void func_801E72A8(void);
+void func_801E74B8(void);
 void func_801E72F4(void);
 void func_8014D5F0(u8 arg0, u32 arg1, s32 arg2);
 void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
