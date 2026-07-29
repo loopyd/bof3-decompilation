@@ -86,6 +86,8 @@ extern volatile u32  D_80144F60[];
 extern volatile u32  D_80144F80[];
 extern volatile u32  D_80145FAA;
 extern volatile u32  D_80146250;
+extern volatile u8   D_801462E1;
+extern volatile u8   D_801462E2;
 extern volatile u8   D_801462E3;
 extern BattleSelectionHandler D_800B43D4[];
 extern BattleSelectionHandler D_800B4CAC[];
@@ -193,6 +195,8 @@ u32  func_801502D0(u32 arg0);
 void func_801DE8C0(u8 arg0, u8 arg1, u32 arg2);
 u8   func_801DB5CC(s32 arg0);
 void func_801E5988(void);
+void func_8015DF18(u16 arg0);
+void func_801DEA64(s32 arg0);
 
 #define D_8014598C g_PrimCursor
 #define BATTLE_ACTIVE_SELECTION_SLOT_PTR D_801EB4D8
