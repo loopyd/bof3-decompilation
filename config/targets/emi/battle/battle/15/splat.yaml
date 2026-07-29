@@ -886,8 +886,10 @@ segments:
     - c
     - func_800A5FF0
   - - 63532
-    - asm
+    - c
     - func_800A602C
+    - '@source: src/emi/battle/battle/15/func_800A602C.c'
+    - '@behavior: Initializes battle menu state 0x13 and advances its update counter.'
   - - 63656
     - c
     - func_800A60A8
