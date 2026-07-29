@@ -960,8 +960,10 @@ segments:
     - c
     - func_801E7528
   - - 92504
-    - asm
+    - c
     - func_801E7558
+    - '@source: src/emi/battle/battle/03/func_801E7558.c'
+    - '@behavior: Decrements the active timer or sets its flag and increments scratchpad state.'
   - - 92592
     - asm
     - func_801E75B0
