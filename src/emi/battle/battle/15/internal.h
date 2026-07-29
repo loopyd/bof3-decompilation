@@ -133,7 +133,7 @@ extern BattleSelectionDispatchTable D_80096A34;
 extern BattleSelectionDispatchTable D_80096A40;
 extern volatile u32  D_80144F60[];
 extern volatile u32  D_80144F80[];
-extern volatile u32  D_80145FAA;
+extern u16 D_80145FAA[];
 extern volatile u32  D_80146250;
 extern volatile u8   D_801462E1;
 extern volatile u8   D_801462E2;

@@ -1079,8 +1079,10 @@ segments:
     - asm
     - func_800AB0B8
   - - 85104
-    - asm
+    - c
     - func_800AB470
+    - '@source: src/emi/battle/battle/15/func_800AB470.c'
+    - '@behavior: Returns whether the selected entry kind is 0x4C, 0x4D, 0xB4, or 0xB5.'
   - - 85180
     - c
     - func_800AB4BC
