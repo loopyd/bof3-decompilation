@@ -3,7 +3,8 @@
 Review one `TARGET[#INDEX]@0xADDRESS`, read-only. First run
 `python3 .pi/skills/bof3-re/scripts/agent-context.py review TARGET[#INDEX]@0xADDRESS`;
 it supplies ordered common/role and all existing target source/config/asm context
-in one call. Use executor brief/diff as context; run one fresh
+in one call. Never reread a bundled file; read only an unbundled path for a
+named concrete finding. Use executor brief/diff; run fresh
 `bin/byte-match TARGET@0xADDRESS`.
 `decomp-status` is audit cache, never acceptance. Do not run `just check`, brief,
 asm-diff, m2c, Rizin, or index rebuild unless a finding needs it. Run companion-check only
@@ -24,8 +25,7 @@ Check:
 8. companion claims remain static-only; block foreign ownership/link/ABI claims;
 9. changed map/Splat facts pass `bin/symbols check TARGET` and `bin/splat TARGET`;
 10. `git diff --check` clean; no secrets, `inputs/`, or unintended staged files.
-    Read-only `git diff --cached --quiet` is allowed for this audit; no other
-    git command.
+    Read-only `git diff --cached --quiet` is also allowed; no other git command.
 
 Verdict: `pass`, `needs-fix`, or `block` (fundamental behavior/load/banned issue).
 Return:

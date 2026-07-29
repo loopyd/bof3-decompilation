@@ -19,7 +19,8 @@ Read-only review of prompted `TARGET[#INDEX]@0xADDRESS` (`TARGET@...` also
 works). First run `python3 .pi/skills/bof3-re/scripts/agent-context.py review
 TARGET[#INDEX]@0xADDRESS` once. It emits ordered common/role context plus each
 existing target manifest, map, Splat, header, bindings, source, and asm file.
-Do not reread those files unless a concrete finding needs narrower evidence.
+Never reread a bundled file. For missing evidence, read only an unbundled path
+and name the concrete finding in the report.
 Follow its checklist. Companion records are static evidence only; block
 unsupported foreign ABI/map/source/link claims.
 
@@ -27,9 +28,9 @@ Reuse supplied brief/diff; run one live byte-match. Do not run `just check`,
 decomp-status, status, asm-diff, brief, m2c, Splat, Rizin, or index rebuild unless
 a concrete finding needs it. Cached status is not acceptance evidence. Run
 companion-check only for a relevant declared call; batch independent reads/greps.
-Never edit/create artifacts/mutate git/setup/spawn children. The read-only
-fresh-index audit `git diff --cached
---quiet` is allowed; no other git command.
+Never edit/create artifacts/mutate git/setup/spawn children. Read-only audits
+`git diff --check` and `git diff --cached --quiet` are allowed; no other git
+command. Do not report either as skipped by policy.
 
 Return checklist JSON, then required fenced acceptance report with copied IDs,
 actual checks, validation, risks, and fresh staged-index state.
