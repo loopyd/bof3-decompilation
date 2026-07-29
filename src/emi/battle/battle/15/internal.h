@@ -103,6 +103,8 @@ extern volatile u8 BATTLE_LOCAL_PANEL_ENTRY_COUNT;
 /* Scratchpad work-area pointer (volatile cell at 0x1F800044).
  * Reloaded per access to match original codegen. */
 extern u8* volatile g_battle_work;
+extern BattleSelectionDispatchTable D_80096994;
+extern volatile u32 D_801459F0;
 
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
  * equal the symbol-name addresses. */
