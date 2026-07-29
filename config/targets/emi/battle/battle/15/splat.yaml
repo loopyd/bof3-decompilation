@@ -492,8 +492,10 @@ segments:
     - asm
     - func_8009F6B4
   - - 36588
-    - asm
+    - c
     - func_8009F6EC
+    - '@source: src/emi/battle/battle/15/func_8009F6EC.c'
+    - '@behavior: Sets battle flags, resolves the selected value, and advances state.'
   - - 36696
     - asm
     - func_8009F758
