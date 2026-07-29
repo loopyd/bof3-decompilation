@@ -23,6 +23,18 @@ typedef struct BattleSelectionKind {
   u8  unk_02[0x12];
 } BattleSelectionKind;
 
+typedef struct BattleWork {
+  u8  unk_00[0x08];
+  u8  unk_08;
+  u8  unk_09[0x03];
+  s32 unk_0C;
+  s32 unk_10;
+} BattleWork;
+
+typedef struct BattleLocalOffsetPair {
+  s16 values[4][2];
+} BattleLocalOffsetPair;
+
 typedef struct Unk801EBF08 {
   u8  unk_00[0x128];
   volatile u32 unk_128;
@@ -120,6 +132,8 @@ extern BattleSelectionHandler D_800B44C8[];
 extern BattleSelectionHandler D_800B44D4[];
 extern BattleSelectionHandler D_800B44E4[];
 extern BattleSelectionHandler D_800B6E08[];
+extern BattleLocalOffsetPair D_800B6C90[];
+extern u8 D_800B6D00[];
 extern volatile u8   D_801462E4;
 extern volatile u8   D_801462EF;
 extern volatile u16  D_80145AC8;
@@ -132,6 +146,7 @@ extern volatile u8   D_80146374;
 extern volatile u8   D_80146394;
 extern s16* volatile D_801463A0;
 extern volatile u16  D_801463C0;
+extern u8            D_801463C9;
 extern volatile BattleSelectionKind D_801CA71C[];
 extern volatile u8   D_8014837B;
 extern volatile u8   D_8014839F;

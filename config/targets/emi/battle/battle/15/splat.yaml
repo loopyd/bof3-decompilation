@@ -1336,8 +1336,10 @@ segments:
     - asm
     - func_800B0058
   - - 104728
-    - asm
+    - c
     - func_800B0118
+    - [0x800B0118, 0x800B0180]
+    - {source: src/emi/battle/battle/15/func_800B0118.c, behavior: "Select local offset pair by battle-work mode and active table."}
   - - 104832
     - asm
     - func_800B0180
