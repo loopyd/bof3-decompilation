@@ -1074,8 +1074,10 @@ segments:
     - asm
     - func_801EA650
   - - 105256
-    - asm
+    - c
     - func_801EA728
+    - '@source: src/emi/battle/battle/03/func_801EA728.c'
+    - '@behavior: Advances PanelTask state +6 by 8 unless it is 0x12, then increments byte +3.'
   - - 105324
     - c
     - func_801EA76C
