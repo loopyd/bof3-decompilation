@@ -25,8 +25,10 @@ header plus complete target bindings and selected source/asm. After it succeeds,
 bindings, source, or asm. This is a policy violation, not verification. Read only
 an unbundled path for a named evidence gap; the supplied brief is allowed.
 Follow its skill and `.pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md`.
-Edit only owned source, `internal.h`, target map, and Splat boundary. Companion
-records are static-call facts, never foreign ABI/map/source/link authority.
+Edit only owned source, `internal.h`, target map, and Splat boundary. Use `edit`
+for every existing file—never `write`, shell redirection, or a whole-file rewrite
+of a map/header/Splat/binding file. `write` is only for the newly created mission
+source. Companion records are static-call facts, never foreign ABI/map/source/link authority.
 
 Reuse one supplied/function brief; do not repeat mission/status/byte-match. Use
 live normal asm-diff before each edit and final byte-match. Do not run

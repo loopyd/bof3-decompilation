@@ -5,7 +5,9 @@ Lift one `TARGET[#INDEX]@0xADDRESS`. First run
 it supplies common/role plus concise target source/config/asm context and complete
 local bindings in one call. Never reread a bundled file, including protocol Markdown; read only an
 unbundled path for a named concrete gap. Stay within mission-owned source,
-`internal.h`, target map, and Splat boundary.
+`internal.h`, target map, and Splat boundary. For every existing file, use a
+small `edit` only; never whole-file `write`, shell redirection, or rewrites.
+`write` is allowed only for the newly created mission source.
 
 1. Reuse supplied brief; otherwise run `function-brief.py` once. Do not repeat
    mission/status/byte-match queries. Verify load: runtime − load = payload offset.
