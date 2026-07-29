@@ -38,7 +38,10 @@ typedef struct Battle03LocalWork {
   u32 unk_40;
   u32 unk_44;
   u8  unk_48;
-  u8  pad_49[0xf7];
+  u8  pad_49[0xda];
+  u8  unk_123;
+  u8  pad_124[0x10];
+  u16 unk_134;
 } Battle03LocalWork;
 
 typedef struct Battle03EnemyWork {
@@ -73,6 +76,7 @@ typedef struct Battle03SpritePrimitive {
 } Battle03SpritePrimitive;
 
 extern volatile AbilityObject ABILITY_OBJECTS[];
+extern Battle03LocalWork* volatile D_80146250;
 extern volatile u8* g_battle03_work;
 extern u8*          D_8014598C;
 extern u8           D_801462E1[];
@@ -231,6 +235,7 @@ void func_801DEFE4(void);
 void func_801DF34C(void);
 void func_801DF8AC(void);
 void func_801DF914(void);
+void func_801DFC20(void);
 void func_801E019C(void);
 void func_801E046C(void);
 void func_801E1298(void);
