@@ -28,8 +28,10 @@ ordered required context in one call. Stay within mission-owned source,
    proof. Report Rizin/index staleness to parent; do not rebuild global analysis.
 
 Banned: handwritten asm (except sanctioned helpers), register pins, asm-renamed
-externs, `INCLUDE_ASM` without approval, git writes, reset/clean/rm/setup, children.
-Allowed exception: read-only `git diff --cached --quiet` for fresh-index state.
+externs, `INCLUDE_ASM` without approval, git writes, reset/clean/setup, children.
+Allowed exceptions: read-only `git diff --cached --quiet` for fresh-index state;
+on escalation only, `rm` the one newly created mission source to restore the
+pre-mission tree. Never remove any other path.
 
 Return:
 
