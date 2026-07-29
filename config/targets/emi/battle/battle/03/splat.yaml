@@ -659,7 +659,7 @@ segments:
     - asm
     - func_801E3398
   - - 75832
-    - asm
+    - c
     - func_801E3438
   - - 75900
     - asm
