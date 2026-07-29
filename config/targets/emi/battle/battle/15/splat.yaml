@@ -1502,8 +1502,10 @@ segments:
     - c
     - func_800B22AC
   - - 113388
-    - asm
+    - c
     - func_800B22EC
+    - '@source: src/emi/battle/battle/15/func_800B22EC.c'
+    - '@behavior: Moves the panel left by 32 pixels, clamping it to x=83 and clearing its state.'
   - - 113452
     - asm
     - func_800B232C
