@@ -23,6 +23,11 @@ typedef struct BattleSelectionKind {
   u8  unk_02[0x12];
 } BattleSelectionKind;
 
+typedef struct Unk801EBF08 {
+  u8  unk_00[0x128];
+  volatile u32 unk_128;
+} Unk801EBF08;
+
 extern volatile u8  BATTLE_SELECTION_PHASE;
 extern volatile u8  BATTLE_SELECTION_OWNER_STATE;
 extern volatile u8  BATTLE_SELECTION_ROOT_STATE;
@@ -183,6 +188,7 @@ void func_800A3F28(void);
 u8   func_800A41D8(s32 input_mask);
 u8   func_801DB524(u8 arg0);
 void func_800A4458(void);
+void func_800A581C(void);
 void func_800AAA74(void);
 void func_800AAEBC(s16 target_index, u8 battler_index);
 void func_800B0498(void);
@@ -201,12 +207,12 @@ u32  func_801502D0(u32 arg0);
 void func_801DE8C0(u8 arg0, u8 arg1, u32 arg2);
 u8   func_801DB5CC(s32 arg0);
 void func_801E5988(void);
-void func_8015DF18(u16 arg0);
 void func_801DEA64(s32 arg0);
 
 #define D_8014598C g_PrimCursor
 #define BATTLE_ACTIVE_SELECTION_SLOT_PTR D_801EB4D8
 #define BATTLE_ACTIVE_MESSAGE_SLOT_PTR   PSX_REF(volatile void*, 0x801ebf08u)
+#define D_801EBF08_PTR                   PSX_REF(Unk801EBF08*, 0x801ebf08u)
 #define BATTLE_CURRENT_BATTLER_PTR       PSX_REF(volatile u8*, 0x801eb4e8u)
 #define BATTLE_SELECTION_SLOT_SUBSTATE_TABLE                                   \
   PSX_PTR(const volatile BattleSelectionHandler, 0x800b43c0u)

@@ -835,8 +835,10 @@ segments:
     - asm
     - func_800A5330
   - - 61468
-    - asm
+    - c
     - func_800A581C
+    - '@source: src/emi/battle/battle/15/func_800A581C.c'
+    - '@behavior: Calls func_8015DF18(0x104), sets bit 2 at +0x128, updates battle state bytes.'
   - - 61556
     - asm
     - func_800A5874

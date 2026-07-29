@@ -38,7 +38,7 @@ void func_8014E5A0(u32 ot_index, u32 primitive_size);
 void func_8014F514(void);
 void func_8014F704(void);
 void func_80150098(s16 x, s16 y, u32 clut, const u8* text);
-void func_8015DF18(void);
+void func_8015DF18(u16 cue_id);
 s32  func_801655F4(u8* counter, s32 delta);
 
 /* EMI loader and CD callback path. */
