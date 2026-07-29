@@ -698,7 +698,7 @@ segments:
     - c
     - func_801E3BAC
   - - 77776
-    - asm
+    - c
     - func_801E3BD0
   - - 77844
     - asm
