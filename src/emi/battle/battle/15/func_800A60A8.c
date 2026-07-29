@@ -6,7 +6,12 @@
  * @source 0x800A60A8
  */
 void func_800A60A8(void) {
-  if (D_801485E0 == 0xA3) {
-    (*D_801462E4)++;
+  s16* state;
+  u8*  counter;
+
+  state = (s16*)&D_801485E0;
+  if (*state == 0xA3) {
+    counter = &D_801462E4;
+    *counter = *counter + 1;
   }
 }
