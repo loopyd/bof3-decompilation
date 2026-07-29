@@ -339,8 +339,10 @@ segments:
     - '@source: src/emi/battle/battle/03/func_801DE0F8.c'
     - '@behavior: Multiplies signed inputs, scales by 100, clamps to 0 through 9999, and returns s16.'
   - - 54596
-    - asm
+    - c
     - func_801DE144
+    - '@source: src/emi/battle/battle/03/func_801DE144.c'
+    - '@behavior: Multiplies signed inputs, scales by 100, clamps to 0 through 100, and returns s16.'
   - - 54672
     - asm
     - func_801DE190
