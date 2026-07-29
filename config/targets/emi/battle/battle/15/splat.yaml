@@ -116,8 +116,10 @@ segments:
     - asm
     - func_80098254
   - - 6884
-    - asm
+    - c
     - func_800982E4
+    - '@source: src/emi/battle/battle/15/func_800982E4.c'
+    - '@behavior: Queues event 0x106, stages the active message slot, and resets battle selection state.'
   - - 6988
     - c
     - func_8009834C
