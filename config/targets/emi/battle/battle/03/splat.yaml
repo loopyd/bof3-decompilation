@@ -647,7 +647,7 @@ segments:
     - asm
     - func_801E320C
   - - 75436
-    - asm
+    - c
     - func_801E32AC
   - - 75504
     - asm
