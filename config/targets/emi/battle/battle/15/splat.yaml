@@ -1235,8 +1235,10 @@ segments:
     - c
     - func_800ADF9C
   - - 96188
-    - asm
+    - c
     - func_800ADFBC
+    - '@source: src/emi/battle/battle/15/func_800ADFBC.c'
+    - '@behavior: Dispatches an action-table handler when scratchpad state 5 is nonzero.'
   - - 96276
     - c
     - func_800AE014

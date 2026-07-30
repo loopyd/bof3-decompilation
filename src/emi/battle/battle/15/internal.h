@@ -12,6 +12,11 @@ typedef struct BattleSelectionDispatchTable {
   BattleSelectionHandler handlers[3];
 } BattleSelectionDispatchTable;
 
+typedef struct BattleSelectionAction {
+  BattleSelectionHandler handler;
+  u32 unk_04;
+} BattleSelectionAction;
+
 typedef struct BattlePanelTaskDispatchTable {
   BattleSelectionHandler handlers[5];
 } BattlePanelTaskDispatchTable;
@@ -170,6 +175,7 @@ extern u8*           D_801EBF08;
 extern u8            D_80148330[];
 extern u8            D_801462E5;
 extern volatile u8   D_801462E6;
+extern BattleSelectionAction D_800B65FC[];
 extern volatile u16  D_801462E8;
 extern volatile BattleLocalWork D_80145E90[];
 extern volatile u8             D_80146329;
