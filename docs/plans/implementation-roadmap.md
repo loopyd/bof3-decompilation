@@ -2,10 +2,9 @@
 
 **Status:** active
 
-> **Baseline refreshed 2026-07-26:** `bin/decomp-status --detail minimal`
-> reports `exact=395`, `partial=222`, and `invalid=26` across 643 lifts. The
-> invalid retained lifts must be repaired or removed before `just check` can
-> pass; partial lifts remain non-acceptance backlog.
+> **Baseline refreshed 2026-07-26:** Phase 0 is complete. `just check` passes;
+> its live audit reports `exact=419`, `partial=224`, and `invalid=0` across 643
+> lifts. Partial lifts remain non-acceptance backlog.
 
 ## Goal
 
@@ -15,11 +14,11 @@ ABI, and Splat evidence with the owning image.
 
 ## Current evidence
 
-- `bin/decomp-status --detail minimal` reports `exact=395`, `partial=222`, and
-  `invalid=26` across 643 indexed lifts.
-- The 26 invalid retained lifts are a prerequisite cleanup: restore/remove
-  unsupported source or repair its metadata and declarations, then run
-  `just check`. They are not candidates for duplicate reuse or promotion.
+- `just check` passes: its live audit reports `exact=419`, `partial=224`, and
+  `invalid=0` across 643 indexed lifts.
+- Phase 0 repaired the 26 retained invalid records; partial lifts remain
+  non-acceptance backlog and are not candidates for duplicate reuse or
+  promotion.
 - `bin/symbols check` passes.
 - `emi/world00/area016/13@0x801F3460` is an exact 64-byte clean-C lift.
   `SPAD_PTR_TABLE(u8)[0x11]` provides the reviewed scratchpad pointer-cell
@@ -37,14 +36,11 @@ ABI, and Splat evidence with the owning image.
 - The closed `exe/slus_004_22@0x80162B08` compiler residual remains documented
   in `docs/specs/runtime/compiler-provenance.md`; it is not active work.
 
-## Phase 0 — restore a valid retained-source baseline
+## Phase 0 — restore a valid retained-source baseline (complete)
 
-1. Use `bin/decomp-status --detail normal` to identify invalid records.
-2. For each invalid lift, either restore/remove unsupported source or repair
-   its owned metadata, declarations, and C body through the normal
-   target-qualified evidence loop. Do not mark invalid code as partial.
-3. Validate with `bin/decomp-status --detail normal` and `just check` before
-   returning to new-candidate selection.
+- Repaired all 26 invalid retained records through target-qualified review.
+- Validated with `bin/decomp-status --no-cache --detail minimal` and
+  `just check`: `invalid=0`.
 
 ## Phase 1 — select one evidenced candidate
 
