@@ -7,10 +7,10 @@
  * @source 0x800AE438
  */
 void func_800AE438(void) {
-  void* sp_ptr;
+  volatile u8* sp_byte;
 
   if (D_801462E8 & 4) {
-    sp_ptr = *(void**)SPAD_ADDRESS(0x44u);
-    (*(volatile u8*)((u32)sp_ptr + 1))++;
+    sp_byte = *(volatile u8**)SPAD_ADDRESS(0x44u);
+    sp_byte[1] = sp_byte[1] + 1;
   }
 }

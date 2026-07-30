@@ -168,7 +168,7 @@ extern u8*           D_801EBF08;
 extern u8            D_80148330[];
 extern u8            D_801462E5;
 extern volatile u8   D_801462E6;
-extern volatile u16  D_801462E8[];
+extern volatile u16  D_801462E8;
 extern volatile BattleLocalWork D_80145E90[];
 extern volatile u8             D_80146374;
 extern volatile s8   D_80145558;
