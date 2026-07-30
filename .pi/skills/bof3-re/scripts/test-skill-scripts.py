@@ -29,7 +29,7 @@ CASES = (
     ),
     (
         ROOT / ".pi/skills/bof3-lift-loop/scripts/loop-status.py",
-        ("--selection", "hotspots", "--limit", "1", "--no-recover"),
+        ("--selection", "hotspots", "--limit", "1"),
         "bof3.skill-lift-loop-status/v1",
     ),
     (

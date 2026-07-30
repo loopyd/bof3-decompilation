@@ -20,15 +20,22 @@ Subagents never commit/push/reset/clean/setup; never commit `inputs/` or secrets
 
 ```sh
 python3 .pi/skills/bof3-lift-loop/scripts/loop-status.py --selection hotspots
+# If it reports stale generated evidence:
+python3 .pi/skills/bof3-lift-loop/scripts/loop-status.py --selection hotspots --recover
 ```
 
-Do not dispatch on dirty tree/index failure. `loop-status` recovery is generated
-state only. It replaces slow `decomp-status` baselines: use per-function live
-byte-match for truth; run decomp-status only on explicit progress-report request.
-Queue candidates from one fresh snapshot/index; after map/Splat edits,
-continue the bounded queue, then refresh edited target snapshots and rebuild index
-once at a checkpoint before requesting another queue. Never query a stale index.
-Initialize `out/lift-loop/results.tsv`: `function status commit notes`.
+Do not dispatch on dirty tree/index failure. `loop-status` is inspection-only by
+default: it fails closed without ranking when snapshots or the index are stale.
+Use `--recover` to repair only generated stale evidence serially, then rebuild
+the index once after fresh snapshot rechecks. It replaces slow `decomp-status`
+baselines: use per-function live byte-match for truth; run decomp-status only on
+explicit progress-report request. Queue candidates from one fresh snapshot/index;
+after map/Splat edits, continue the bounded queue, then refresh edited target
+snapshots and rebuild index once at a checkpoint before requesting another queue.
+Never query a stale index. Initialize `out/lift-loop/results.tsv`: `function status commit notes`.
+Keep the four columns: parent records bounded relative brief/companion evidence
+paths and/or SHA-256 references in `notes`; they aid checkpoints and never
+replace live acceptance evidence.
 
 ## Serial loop
 

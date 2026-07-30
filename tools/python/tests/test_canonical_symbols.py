@@ -1,11 +1,18 @@
 from __future__ import annotations
 
 from pathlib import Path
+import subprocess
 from types import SimpleNamespace
+
+import pytest
 
 from harness.canonical import Symbol, format_map, parse_map, weak_bindings_c
 from harness.commands.symbols import main as symbols_main
-from harness.match._asm_link import _target_map_bindings, resolve_symbol_address
+from harness.match._asm_link import (
+    _target_map_bindings,
+    link_object_at_address,
+    resolve_symbol_address,
+)
 
 
 def test_maps_normalize_raw_data_and_function_spelling() -> None:
@@ -113,9 +120,7 @@ def test_symbols_check_target_scope(tmp_path: Path, capsys) -> None:
     code3 = symbols_main(["--root", str(tmp_path), "check"])
     captured3 = capsys.readouterr()
     assert code3 == 2, f"expected 2 for all-target check, got {code3}: {captured3.err}"
-    assert "exe/keep" not in captured3.err, (
-        "exe/keep should have no errors"
-    )
+    assert "exe/keep" not in captured3.err, "exe/keep should have no errors"
     assert "emi/battle/keep/15" in captured3.err, (
         "full check should name the failing target"
     )
@@ -131,3 +136,31 @@ def test_source_target_uses_its_canonical_map_for_link_bindings(tmp_path: Path) 
     assert _target_map_bindings(
         SimpleNamespace(root=tmp_path), source / "symbols.c"
     ) == {"PadRead": 0x801CE760}
+
+
+def test_link_uses_supplied_bindings_without_map_reload(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        "harness.match._asm_link._target_map_bindings",
+        lambda *_: (_ for _ in ()).throw(AssertionError("fallback map loaded")),
+    )
+    commands: list[list[str]] = []
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda command, **_: (
+            commands.append(command) or subprocess.CompletedProcess(command, 0, "", "")
+        ),
+    )
+    object_path = tmp_path / "test.o"
+    object_path.touch()
+    link_object_at_address(
+        object_path=object_path,
+        address=0x801CE000,
+        undefined_symbols=["PadRead"],
+        symbols_c_path=tmp_path / "symbols.c",
+        canonical_bindings={"PadRead": 0x801CE760},
+        layout=SimpleNamespace(psn00b_toolchain_root=tmp_path, root=tmp_path),
+    )
+    assert f"--defsym=PadRead={0x801CE760}" in commands[0]

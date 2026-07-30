@@ -10,7 +10,7 @@ from types import SimpleNamespace
 import pytest
 
 from harness.commands import lift
-from harness.commands.lift import run_m2c
+from harness.commands.lift import AsmDiffRequest, run_m2c
 from harness.toolchain.m2c import M2cToolchain
 
 
@@ -118,7 +118,14 @@ def test_run_m2c_delegates_to_owning_toolchain(
     assert run_m2c(_m2c_args()) == 0
     call_root, call_args, call_kwargs = executed[0]
     assert call_root == tmp_path
-    assert call_args[:6] == ["-t", "mipsel-gcc-c", "-f", "func_801CE758", "--globals", "used"]
+    assert call_args[:6] == [
+        "-t",
+        "mipsel-gcc-c",
+        "-f",
+        "func_801CE758",
+        "--globals",
+        "used",
+    ]
     assert call_kwargs == {"capture_output": True, "text": True}
 
 
@@ -142,3 +149,45 @@ def test_run_m2c_preserves_flags_exit_code_and_output(
     assert call_root == tmp_path
     assert "--void" in call_args
     assert out_file.read_text(encoding="utf-8") == "void func_801CE758(void) { }"
+
+
+def _map_infra(root: Path) -> None:
+    _target(root)
+    (root / "config/targets/shared").mkdir(parents=True)
+    (root / "config/targets/shared/symbols.txt").write_text("")
+    (root / "config/sdk").mkdir(parents=True)
+    (root / "config/sdk/psyq-slus.txt").write_text("")
+    symbols = root / "config/targets/exe/logo/symbols.txt"
+    symbols.parent.mkdir(parents=True, exist_ok=True)
+    symbols.write_text("func_801CE758 = 0x801CE758;\nD_801D0000 = 0x801D0000;\n")
+
+
+def test_run_match_passes_bindings_without_rewriting_identical_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _map_infra(tmp_path)
+    monkeypatch.setattr(lift, "repo_layout", lambda: _layout(tmp_path))
+    source = tmp_path / "src/exe/logo/func_801CE758.c"
+    source.parent.mkdir(parents=True)
+    source.write_text("// test\n")
+    bindings = tmp_path / "out/bindings/exe/logo/symbols.c"
+    bindings.parent.mkdir(parents=True)
+    bindings.write_text(
+        lift.weak_bindings_c(lift.load_target_symbols(tmp_path, "exe/logo"))
+    )
+    before = bindings.stat().st_mtime_ns
+    captured: list[AsmDiffRequest] = []
+    monkeypatch.setattr(
+        lift,
+        "run_asm_diff_one",
+        lambda request: captured.append(request) or {"byte_match": True},
+    )
+
+    function, manifest, _ = lift.resolve_function("exe/logo@0x801CE758")
+    lift._run_match(function, manifest, source, diagnostics=False)
+
+    assert bindings.stat().st_mtime_ns == before
+    assert captured[0].canonical_bindings == {
+        "func_801CE758": 0x801CE758,
+        "D_801D0000": 0x801D0000,
+    }

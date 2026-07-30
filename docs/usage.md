@@ -95,8 +95,11 @@ bin/analysis-sequence TARGET --ranking metrics TARGET@0xADDRESS --detail normal
 `analysis-sequence` checks `bin/rz-project status TARGET` first; fails with the
 target and `snapshot` stage when stale; rebuilds the index only after freshness
 succeeds; runs the requested `rev-query` ranking without touching other targets
-or reviewed maps. Use `--exclusions` to inspect rows rejected by canonical-code
-checks; use `--detail full` for complete rows.
+or reviewed maps. `loop-status.py` is inspection-only by default; use
+`--recover` to repair stale generated snapshots/indexes before it ranks
+candidates. `rev-query` refuses stale snapshot/index evidence. Use `--exclusions`
+to inspect rows rejected by canonical-code checks; use `--detail full` for
+complete rows.
 
 ### 4. Select one function
 
