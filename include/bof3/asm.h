@@ -2,10 +2,11 @@
 #define BOF3_ASM_H
 
 /*
- * Unmatched-function fallback.
+ * Explicit-user-approved unmatched-function fallback.
  *
- * Provides a first-class path for functions that cannot yet be represented in
- * clean matching C. The macros pull the original disassembly from an adjacent
+ * Use only after the user explicitly approves INCLUDE_ASM for the function.
+ * Otherwise retain the reviewed Splat `asm` segment and report the clean-C
+ * residual. The macros pull the original disassembly from an adjacent
  * `.s` file compiled into the same translation unit, preserving:
  *     - section selection and alignment
  *     - .set noreorder / .set noat directives
@@ -18,8 +19,8 @@
  *
  * ---- Usage ----
  *
- * When a function cannot be matched, replace its C body with INCLUDE_ASM and
- * keep the original disassembly in an adjacent .s file:
+ * After explicit user approval, replace the C body with INCLUDE_ASM and keep
+ * the original disassembly in an adjacent .s file:
  *
  *     // func_8014AEE0 is not yet matched — see adjacent .s file.
  *     INCLUDE_ASM("asm/nonmatchings/battle", func_8014AEE0);

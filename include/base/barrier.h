@@ -13,8 +13,10 @@
 #define barrier() __asm__ __volatile__("" : : : "memory")
 
 /*
- * Last-resort allocator constraint. Use only with function-specific user
- * approval and a MATCHING_AID comment; reg is a GCC MIPS register name.
+ * Last-resort local allocator constraint. After the clean-C ladder and permuter,
+ * use once only for an asm-diff-proven allocator or entry-register residual;
+ * retain only with MATCHING_AID, independent review, and a live exact match.
+ * Direct numeric pins still need explicit user approval. reg is a GCC MIPS name.
  */
 #define REGISTER_PIN(type, name, reg) register type name asm(reg)
 /*

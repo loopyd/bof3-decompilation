@@ -453,16 +453,16 @@ or low-level SDK code — not as a normal C matching technique.
 
 ---
 
-## 16. Register allocation ladder (no pinning)
+## 16. Register allocation ladder
 
-Direct MIPS register pinning (`register type name asm("$N")`) and
-`INCLUDE_ASM` are **banned unless the user explicitly approves them** for a
-specific function. Use the shared `REGISTER_PIN(type, name, reg)` macro when
-approved; the approval extends to independently exact members of a proven local
-duplicate family. A bare numeric spelling may remain only if the macro form has
-been shown to alter codegen. Pins change the register web globally and can mask
-the real cause. Escalate through this ladder instead, and only ask for a pin after
-exhausting it:
+Direct MIPS register pinning (`register type name asm("$N")`) and `INCLUDE_ASM`
+are **banned unless the user explicitly approves them** for a specific function.
+After this ladder is exhausted, the shared `REGISTER_PIN(type, name, reg)` macro
+may be tried once as a bounded local experiment for an asm-diff-proven allocator
+or entry-register residual. A bare numeric spelling still needs proof that the macro form alters
+codegen and explicit user approval. Retention also requires independent review.
+Pins change the register web globally and
+can mask the real cause. Escalate through this ladder first:
 
 1. Correct types and declarations
 2. Correct control-flow structure
@@ -476,20 +476,23 @@ exhausting it:
    (per-object override) rather than pinning
 9. Bind fixed-address symbols with `WEAK_SYMBOL_AT` in `symbols.c`, not
    `extern X asm("NAME")` renames
-10. If nothing matches, report it as a documented residual and ask the user
-    before adding any `REGISTER_PIN` or `INCLUDE_ASM`
+10. For an asm-diff-proven allocator or entry-register residual, make one
+    bounded local `REGISTER_PIN` experiment; otherwise report the residual.
+    `INCLUDE_ASM` still requires user approval.
 
 A pinned local may remain live across the whole function and displace unrelated
 variables — pinning one register can create several new mismatches elsewhere.
-Each retained `REGISTER_PIN` needs an adjacent `MATCHING_AID` rationale and a
-live exact byte match.
+Each retained `REGISTER_PIN` needs an adjacent `MATCHING_AID` rationale,
+independent review, and a live exact byte match.
 
 ---
 
 ## 17. `INCLUDE_ASM` fallback
 
-Retain unmatched functions through `INCLUDE_ASM` rather than writing
-unreadable C filled with arbitrary hacks. A clean unmatched function allows:
+Use `INCLUDE_ASM` only after explicit user approval for that function. Without
+approval, leave its reviewed Splat segment as `asm` and report the clean-C
+residual rather than adding an assembly-backed source stub. An approved clean
+unmatched function allows:
 
 - Incremental reconstruction
 - Fully linkable intermediate builds

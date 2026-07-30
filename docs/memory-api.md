@@ -35,13 +35,15 @@ code. Forwarding alias: `include/bof3/defines.h`.
 
 `barrier()`, `CLOBBER_*`, and `REGISTER_PIN(type, name, reg)` are
 `__GNUC__`-guarded; the pin macro becomes a normal `register` declaration on
-other compilers. `REGISTER_PIN` is a last-resort allocator constraint: use it
-only after the matching ladder is exhausted, with user approval and an adjacent
-`MATCHING_AID` comment naming the evidenced register. Approval extends to each
-independently exact member of a proven local duplicate family. Use it for the
-compiler's supported allocator-register spelling; retain a
-legacy numeric `"$N"` spelling only when the macro form has been separately
-verified not to preserve that function's codegen.
+other compilers. `REGISTER_PIN` is a last-resort allocator constraint: after
+the matching ladder is exhausted, make one bounded local experiment for an
+asm-diff-proven allocator or entry-register residual with an adjacent
+`MATCHING_AID` comment naming the
+evidenced register, an independent review, and a live byte match. It is not a
+generic scheduling tool. Use the compiler's supported allocator-register
+spelling; a legacy numeric `"$N"` spelling still requires explicit user approval
+and proof that the macro form does not preserve that function's codegen. The
+pin's independent review is required before retention.
 
 Inline `__asm__` is banned in lifted source except these macros. Direct
 `register X asm("$N")` register pinning and `extern X asm("NAME")` symbol
@@ -49,9 +51,10 @@ renames are forbidden except for that verified legacy spelling; use
 `REGISTER_PIN` for ordinary approved pins. Bind a fixed-address symbol
 with a plain `extern` declaration in `internal.h` plus a `WEAK_SYMBOL_AT(name,
 addr)` entry in the target `symbols.c` (`include/bof3/symbols.h`); never alias a
-symbol with `__asm__`. A register pin or `INCLUDE_ASM` is a last resort that
-requires user approval — first try the per-object compiler-profile override in
-`config/compiler/object-flags.cmake`.
+symbol with `__asm__`. A register pin is a last resort after the matching
+ladder and may be tried autonomously only for an asm-diff-proven allocator or
+entry-register residual; `INCLUDE_ASM` still requires user approval. First try
+the per-object compiler-profile override in `config/compiler/object-flags.cmake`.
 
 Rule of thumb: `barrier()` for access ordering, `CLOBBER_CALLER_REG(reg)`
 (or a named wrapper) for evidenced caller-register scheduling,

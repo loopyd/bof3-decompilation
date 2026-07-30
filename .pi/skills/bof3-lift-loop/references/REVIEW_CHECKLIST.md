@@ -14,10 +14,12 @@ Check:
 
 1. live byte-match exits 0;
 2. no banned asm/direct pins/asm-renamed externs/unauthorized `INCLUDE_ASM`;
-   any mission-added `REGISTER_PIN` has parent approval, a local `MATCHING_AID`
-   rationale, and the live exact match; approval covers independently exact
-   members of a proven local duplicate family; a direct numeric `"$N"` spelling
-   also proves the macro form changes codegen. A mission-added
+   any mission-added `REGISTER_PIN` follows the clean-C ladder and is backed by
+   an asm-diff-proven allocator or entry-register residual, a local
+   `MATCHING_AID` rationale, and the live exact match; this independent review
+   is required before retention. A direct numeric `"$N"`
+   spelling also has explicit user approval and proves the macro form changes
+   codegen. A mission-added
    `CLOBBER_CALLER_REG(reg)`/`CLOBBER_*` aid names its original
    instruction/register/placement in adjacent `MATCHING_AID`, clobbers only a
    caller register, and emits no opcode; reject `s*`, `gp`, `sp`, `ra`, and

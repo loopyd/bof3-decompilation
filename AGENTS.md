@@ -60,11 +60,12 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
   direct `register X asm("$N")` pins, `extern X asm("NAME")` symbol renames, or
   handwritten assembly; only retain a direct numeric-register spelling when the
   macro form has been demonstrated to change codegen. Bind symbols with a plain
-  `extern` in `internal.h` plus a `WEAK_SYMBOL_AT` entry in `symbols.c`. A pin
-  needs user approval, an adjacent `MATCHING_AID` comment, and a retained live
-  byte-match. Approval for a proven local duplicate family authorizes the same
-  evidenced pin for its members after each independently reaches exact;
-  `INCLUDE_ASM` still needs explicit user approval.
+  `extern` in `internal.h` plus a `WEAK_SYMBOL_AT` entry in `symbols.c`. After
+  the clean-C matching ladder is exhausted, an asm-diff-proven allocator or
+  entry-register residual may make one bounded local `REGISTER_PIN` experiment
+  without additional approval. Retain it only with an adjacent `MATCHING_AID` comment,
+  a live byte-match, and independent review. A direct numeric spelling still
+  needs explicit user approval. `INCLUDE_ASM` still needs explicit user approval.
 
 ## Exact duplicates
 

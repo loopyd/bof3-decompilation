@@ -106,15 +106,15 @@ lift audit.
 
 ## Unmatched functions (INCLUDE_ASM)
 
-When a function cannot yet be represented in clean matching C, use INCLUDE_ASM
-as a first-class fallback. This preserves section selection, alignment, symbol
-metadata, and separate read-only data inclusion — enabling incremental progress
-without producing low-quality fake matches.
+`INCLUDE_ASM` is an explicit-user-approved fallback only. Without that approval,
+leave the function as its reviewed Splat `asm` segment and report the clean-C
+residual; do not add an assembly-backed source stub.
 
-A clean unmatched function is better than unreadable C filled with arbitrary
-hacks.
+When explicitly approved, `INCLUDE_ASM` preserves section selection, alignment,
+symbol metadata, and separate read-only data inclusion without producing
+low-quality fake matches.
 
-### Usage
+### Usage after explicit approval
 
 Replace the function body in `func_XXXXXXXX.c`:
 
@@ -183,15 +183,15 @@ temporaries, pointer hoists, early returns, if/else inversion, duplicated
 assignments, manual `goto` loops, reordered independent statements. Never
 promote function-specific matching aids into generic macros.
 
-`REGISTER_PIN(type, name, reg)` is the shared spelling for an approved
-register constraint. A pin is still local to its function: use it only after
-declarations, symbol representation, branch direction, loop shape, temporaries,
-deref hoists, statement reordering, and the permuter are exhausted; retain it
-only with user approval, an adjacent `MATCHING_AID` rationale, and a live byte
-match. Approval extends to independently exact members of a proven local
-duplicate family. A legacy direct numeric `"$N"` spelling may remain only when
-the macro form demonstrably changes codegen. Remove speculative pins once a
-structural match is found.
+`REGISTER_PIN(type, name, reg)` is the shared spelling for a local allocator
+constraint. Use it only after declarations, symbol representation, branch
+direction, loop shape, temporaries, deref hoists, statement reordering, and the
+permuter are exhausted, and only for one bounded local experiment on an
+asm-diff-proven allocator or entry-register residual. Retain it only with an adjacent `MATCHING_AID`
+rationale, independent review, and a live byte match. It is never a generic
+matching macro. A legacy direct numeric `"$N"` spelling still requires explicit
+user approval and proof that the macro form changes codegen. Remove speculative
+pins once a structural match is found.
 
 ## Data materialization
 

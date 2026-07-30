@@ -43,12 +43,12 @@ in a `jal`/branch delay slot or fixed-address reload sequence—and must not enc
 an opcode. Add an adjacent `MATCHING_AID` naming the instruction, register, and
 placement; retain it only after a live byte match. Never clobber
 `s*`, `gp`, `sp`, or `ra`; that is an allocator/pin case, not a clobber aid.
-Register pins remain forbidden unless the parent task explicitly says the user
-approved a bounded experiment for this exact function. In that case, use the
-shared `REGISTER_PIN(type, name, reg)` macro, only after clean-C/barrier
-attempts stall; retain it only on live exact byte-match, add a local
-`MATCHING_AID` rationale, and name it in `matching_aids`. A direct numeric
-`"$N"` spelling is allowed only when the macro form demonstrably changes
+After clean-C/barrier attempts, flags, and the bounded permuter stall, an
+asm-diff-proven allocator or entry-register residual may use the shared
+`REGISTER_PIN(type, name, reg)` macro autonomously. Make one bounded local
+experiment; retain it only after a live exact byte-match and independent review,
+add a local `MATCHING_AID` rationale, and name it in `matching_aids`. A direct numeric `"$N"` spelling
+still needs explicit user approval and proof that the macro form changes
 codegen. Never make a function-specific pin macro.
 
 Never commit/push/reset/clean/checkout/setup/spawn children. If escalation

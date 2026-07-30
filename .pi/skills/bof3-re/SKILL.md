@@ -21,12 +21,14 @@ Load a spec or psx-rizin reference only for a concrete question. Repo `bin` wins
   Splat boundary, and validation. Never copy game extern addresses across targets.
 - C89 only. No handwritten asm, direct register pins, asm-renamed externs, or
   `INCLUDE_ASM`; only sanctioned `barrier()`/`CLOBBER_CALLER_REG(reg)`
-  (or named `CLOBBER_*` wrappers), approved `REGISTER_PIN(type, name, reg)`,
-  and target `symbols.c` `WEAK_SYMBOL_AT`
-  apply. A legacy direct numeric pin remains only if the macro form changes
-  codegen. An approved pin needs a local `MATCHING_AID` comment and a live exact
-  byte match; approval extends to independently exact members of its proven
-  local duplicate family. No fallback asm without user approval.
+  (or named `CLOBBER_*` wrappers), `REGISTER_PIN(type, name, reg)`, and target
+  `symbols.c` `WEAK_SYMBOL_AT` apply. After the clean-C ladder is exhausted,
+  use a pin autonomously only for an asm-diff-proven allocator or entry-register
+  residual; it needs a local `MATCHING_AID`, independent review, and a live
+  exact byte match. Never introduce a generic matching macro. A legacy direct
+  numeric pin remains only with explicit user approval and proof that the macro
+  form changes codegen. No fallback asm
+  without user approval.
 - SDK is external: use official PsyQ names/maps/headers; never lift SDK bodies.
 - Unknown fields are `unk_XX`; map names are canonical; keep `internal.h` order:
   guard, includes, types, extern data, prototypes, macros/helpers.
@@ -84,7 +86,9 @@ non-progressing diagnosed attempts per level:
    encode an opcode or clobber `s*`/`gp`/`sp`/`ra`;
 4. compiler profile: `bin/flag-search`; record only clean-C exact profiles;
 5. one bounded `bin/permute TARGET@0xADDRESS --time-limit 300 -j N` after shape is right;
-6. report residual; never force banned assembly.
+6. for an asm-diff-proven allocator or entry-register residual, one bounded
+   local `REGISTER_PIN` experiment; retain only if exact and independently reviewed;
+7. report residual; never force banned assembly.
 
 Read `first=` first. A percentage is not success. Document artificial aids with
 `MATCHING_AID`; do not add generic matching-hack macros. Accept only final live

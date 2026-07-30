@@ -97,8 +97,11 @@ byte match and clean target-local Splat, map, and decomp-status evidence.
 ## Boundaries
 
 - Never hand-edit `build/` or `toolchains/`; never commit `inputs/` or `out/`.
-- No inline assembly, register pinning, `INCLUDE_ASM`, speculative object flags,
-  or Splat-assembly fallback.
+- No inline assembly, direct numeric register pins, `INCLUDE_ASM`, speculative
+  object flags, or Splat-assembly fallback. A local `REGISTER_PIN` experiment is
+  allowed only for an asm-diff-proven allocator or entry-register residual after
+  the clean-C ladder; retain it only with `MATCHING_AID`, independent review,
+  and a live exact byte match.
 - Do not retain partial lifts, analyzer hypotheses, or cross-target game-address
   bindings.
 - Do not stage, commit, push, or mutate external systems without approval.

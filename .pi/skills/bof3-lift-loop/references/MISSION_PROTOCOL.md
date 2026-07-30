@@ -26,9 +26,11 @@ small `edit` only; never whole-file `write`, shell redirection, or rewrites.
 6. Write readable C89. Infer structs from offsets; unknown fields are `unk_XX`.
 7. Before every C edit: live `asm-diff --detail normal`, diagnose `first=`, make
    one structural fix, rerun. Revert regressions. Escalate types → flow → ordering
-   → flags → one bounded permuter → documented residual after three stalled tries
-   per level. Use full diff only when normal evidence is insufficient. For an
-   evidenced caller-register delay-slot or fixed-address reload residual, use
+   → flags → one bounded permuter → one local `REGISTER_PIN` experiment only
+   for an asm-diff-proven allocator or entry-register residual → documented
+   residual after three stalled tries per level. Use full diff only when normal
+   evidence is insufficient. For an evidenced caller-register delay-slot or
+   fixed-address reload residual, use
    `CLOBBER_CALLER_REG(reg)` only to schedule existing C-generated code; add a
    local `MATCHING_AID` naming the instruction/register/placement and retain it only if
    live exact. Never clobber `s*`, `gp`, `sp`, or `ra`, or encode an opcode.
@@ -40,11 +42,13 @@ small `edit` only; never whole-file `write`, shell redirection, or rewrites.
 
 Banned: handwritten asm (except sanctioned helpers), direct register pins,
 asm-renamed externs, `INCLUDE_ASM` without approval, git writes, reset/clean/setup,
-children. An approved function-specific allocator constraint must use
-`REGISTER_PIN(type, name, reg)`, carry a local `MATCHING_AID` rationale, and
-remain only on a live exact match. Approval extends to independently exact
-members of a proven local duplicate family. A direct numeric `"$N"` spelling
-needs separate evidence that the macro changes codegen. Allowed exceptions:
+children. After the clean-C ladder and bounded permuter stall, an
+asm-diff-proven allocator or entry-register residual may make one local
+`REGISTER_PIN(type, name, reg)` experiment. It must carry a local
+`MATCHING_AID` rationale and remain only after a live exact match and
+independent review. A direct numeric
+`"$N"` spelling still needs explicit user approval and separate evidence that
+the macro changes codegen. Allowed exceptions:
 read-only
 `git diff --cached --quiet` for fresh-index state;
 on escalation only, `rm` the one newly created mission source to restore the

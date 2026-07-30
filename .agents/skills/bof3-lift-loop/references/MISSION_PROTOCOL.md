@@ -26,8 +26,11 @@ and follow `AGENTS.md`. Stay strictly within the mission's authority scope.
 7. **Follow the `$bof3-re` iteration loop**: run `bin/asm-diff` and read the
    full diff BEFORE every C edit; classify the root cause at `first=`; apply
    one diagnosed fix; verify the result; revert if percentage dropped; escalate
-   strictly through Levels 1–6 after 3 attempts with no progress. Do NOT make
-   tiny speculative edits without reading the assembly.
+   strictly through Levels 1–6 after 3 attempts with no progress. After the
+   bounded permuter, an asm-diff-proven allocator or entry-register residual may
+   make one bounded local `REGISTER_PIN(type, name, reg)` experiment with a
+   `MATCHING_AID`; retain it only after a live exact byte match and independent
+   review. Do NOT make tiny speculative edits without reading the assembly.
 8. Accept only `bin/byte-match TARGET@0xADDRESS` exit 0.
 9. If you cannot reach an exact match within the escalation budget, return
    `status: "escalated"` with notes — never force a match with banned assembly.
@@ -35,7 +38,9 @@ and follow `AGENTS.md`. Stay strictly within the mission's authority scope.
 ## Bans
 
 - No handwritten `__asm__` except `barrier()`/`CLOBBER_*`/`WEAK_SYMBOL_AT`.
-- No `register X asm("$N")` pins or `extern X asm("NAME")` renames.
+- No direct `register X asm("$N")` pins or `extern X asm("NAME")` renames.
+  Numeric pins require explicit user approval; only the shared local
+  `REGISTER_PIN` experiment described above is allowed.
 - No `INCLUDE_ASM` unless the user explicitly approved it for this function.
 - Do not commit, push, reset, clean, rm, or run setup.
 

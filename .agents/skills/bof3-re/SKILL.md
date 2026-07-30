@@ -260,10 +260,12 @@ Level 5 — Permuter (1 bounded run):
   structural fix — it cannot repair wrong types or wrong control flow.
   → no match after 1 run → Level 6.
 
-Level 6 — Documented residual:
-  Report the residual to the user with the current diff, what was
-  tried, and what remains. Do NOT add register pins or INCLUDE_ASM
-  without explicit user approval.
+Level 6 — One local pin experiment or documented residual:
+  For an asm-diff-proven allocator or entry-register residual, make one bounded
+  local `REGISTER_PIN(type, name, reg)` experiment with a `MATCHING_AID`
+  rationale. Retain it only after a live exact byte match and independent review.
+  Otherwise report the residual. Direct numeric pins and INCLUDE_ASM still need
+  explicit user approval.
 ```
 
 **Escalation is additive, not destructive.** Each level builds on the
@@ -316,8 +318,10 @@ When the semantic C is correct but instruction bytes differ, consult
 6. Check compiler profile (`bin/flag-search`) and signedness; if a non-canonical
    profile byte-matches clean C, record it in `config/compiler/object-flags.cmake`.
 7. Run the permuter as a bounded search, not a structural fix.
-8. Register pinning (`register X asm("$N")`) and `INCLUDE_ASM` are banned unless
-   the user explicitly approves them; report a documented residual instead.
+8. For an asm-diff-proven allocator or entry-register residual, make one bounded
+   local `REGISTER_PIN(type, name, reg)` experiment with `MATCHING_AID`; retain
+   only after a live exact byte match and independent review. Direct numeric pins
+   and `INCLUDE_ASM` still require explicit user approval.
 
 Document every artificial matching aid with a `MATCHING_AID` comment (see
 `docs/matching-playbook.md` §4). Do not add generic macros to headers for
@@ -348,10 +352,14 @@ macro reference is in `docs/memory-api.md`.
 Rules:
 
 - No `vu8`/`vu16`/`vu32` aliases — write `volatile u8` etc. directly.
-- No inline `__asm__` of any kind in lifted source — that includes
+- No inline `__asm__` of any kind in lifted source — that includes direct
   `register X asm("$N")` register pins and `extern X asm("NAME")` symbol renames,
-  both of which need explicit user approval. The only sanctioned helpers are
-  `barrier()` (access ordering) and `CLOBBER_A0()/CLOBBER_V0()/CLOBBER_A1()`
+  both of which need explicit user approval. After the matching ladder, the only
+  allowed allocator constraint is one local `REGISTER_PIN(type, name, reg)`
+  experiment for an asm-diff-proven allocator or entry-register residual; retain
+  it only with `MATCHING_AID`, independent review, and a live exact byte match.
+  The other sanctioned helpers are `barrier()` (access ordering) and
+  `CLOBBER_A0()/CLOBBER_V0()/CLOBBER_A1()`
   (delay-slot register placement) from `include/bof3/defines.h`. Bind
   fixed-address symbols with a plain `extern` in `internal.h` plus
   `WEAK_SYMBOL_AT(name, addr)` in the target `symbols.c` (see

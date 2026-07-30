@@ -11,3 +11,9 @@ def test_generic_caller_clobber_keeps_legacy_wrappers_direct() -> None:
         assert f'#define CLOBBER_CALLER_REG_{reg}() __asm__ __volatile__("" : : : "{reg}")' in header
     for reg in ("a0", "a1", "a2", "v0", "v1"):
         assert f'#define CLOBBER_{reg.upper()}() __asm__ __volatile__("" : : : "{reg}")' in header
+
+
+def test_register_pin_is_the_local_allocator_constraint() -> None:
+    header = (ROOT / "include/base/barrier.h").read_text(encoding="utf-8")
+    assert '#define REGISTER_PIN(type, name, reg) register type name asm(reg)' in header
+    assert '#define REGISTER_PIN(type, name, reg) register type name' in header

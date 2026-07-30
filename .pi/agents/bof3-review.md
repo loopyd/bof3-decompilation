@@ -32,11 +32,12 @@ Companion records are static-only. Treat direct pins as banned. A mission-added
 `CLOBBER_CALLER_REG(reg)` or `CLOBBER_*` scheduling aid is valid only when its
 adjacent `MATCHING_AID` identifies the original instruction/register/placement and
 live byte matching proves it; reject opcode-emitting assembly and clobbers of
-`s*`, `gp`, `sp`, or `ra`. A mission-added `REGISTER_PIN` is allowed only with parent approval, a local `MATCHING_AID`
-rationale, and the live exact match. Approval for a proven local duplicate family
-covers independently exact members using the same evidenced pin. A direct numeric
-`"$N"` spelling also needs evidence that the macro changes codegen. Otherwise
-return `block`.
+`s*`, `gp`, `sp`, or `ra`. A mission-added `REGISTER_PIN` is allowed only for
+one bounded local experiment for an asm-diff-proven allocator or entry-register
+residual after the clean-C ladder, with a local `MATCHING_AID` rationale and a
+live exact match; passing this review is the required independent review. A direct
+numeric `"$N"` spelling still needs explicit user approval and evidence that the
+macro changes codegen. Otherwise return `block`.
 
 Reuse supplied brief/diff; run one live byte-match. Do not run `just check`,
 decomp-status, status, asm-diff, brief, m2c, Splat, Rizin, or index rebuild unless

@@ -7,8 +7,12 @@ for the rules. Return a verdict with concrete, file:line findings.
 
 1. **Byte-match integrity**: re-run `bin/byte-match TARGET@0xADDRESS`; confirm exit 0.
 2. **Banned constructs** (AGENTS.md): no `__asm__` except `barrier()`/`CLOBBER_*`/
-   `WEAK_SYMBOL_AT`; no `register X asm("$N")` pins; no `extern X asm("NAME")`
-   renames; no `INCLUDE_ASM` without explicit user approval.
+   `WEAK_SYMBOL_AT`; no direct `register X asm("$N")` pins; no `extern X asm("NAME")`
+   renames; no `INCLUDE_ASM` without explicit user approval. A mission-added
+   `REGISTER_PIN` must be one bounded local experiment after the clean-C ladder,
+   backed by an asm-diff-proven allocator or entry-register residual, documented
+   by `MATCHING_AID`, and retained only after a live exact match and this
+   independent review.
 3. **Matching aids documented**: every artificial aid has a `MATCHING_AID`
    comment; no generic header macros added for matching hacks.
 4. **PsyQ external**: no lifted SDK bodies; SDK calls use official names +
