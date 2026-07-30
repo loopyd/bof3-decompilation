@@ -103,6 +103,7 @@ extern volatile AbilityObject       ABILITY_OBJECTS[];
 extern u8                           D_801EB2E8[];
 extern Battle03LocalWork            D_80145E90[];
 extern volatile u16           D_80143C40;
+extern u8                     D_801462E0;
 extern volatile u8            D_8014832E;
 extern Battle03LocalWork* volatile D_80146250;
 extern volatile Battle03LocalWork* D_1F800044;
@@ -125,6 +126,7 @@ extern Battle03SeventyDispatchTable D_801D0D1C;
 
 void func_801E47E0(void);
 extern Battle03EightDispatchTable   D_801D0F80;
+extern Battle03FiveDispatchTable   D_801D0F44;
 extern Battle03FiveDispatchTable    D_801D0F58;
 extern Battle03DispatchTable        D_801D0F20;
 

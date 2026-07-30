@@ -934,8 +934,10 @@ segments:
     - asm
     - func_801E6C20
   - - 90244
-    - asm
+    - c
     - func_801E6C84
+    - '@source: src/emi/battle/battle/03/func_801E6C84.c'
+    - '@behavior: Copies five handlers locally and dispatches one selected by battle work byte 1.'
   - - 90408
     - asm
     - func_801E6D28
