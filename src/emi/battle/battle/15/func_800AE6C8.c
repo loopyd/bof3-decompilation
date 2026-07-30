@@ -1,5 +1,9 @@
 #include "internal.h"
 
+/* @source 0x800AE6C8
+ * @behavior increments BattleWork byte `0x09`, adds 2 to its `0x10` counter,
+ * then accumulates that counter into `0x30`; increments byte `0x01` when `0x09` reaches 0x10.
+ */
 void func_800AE6C8(void)
 {
     s32 value;

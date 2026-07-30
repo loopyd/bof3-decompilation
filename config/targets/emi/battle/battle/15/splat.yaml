@@ -1284,7 +1284,7 @@ segments:
     - c
     - func_800AE6C8
     - '@source: src/emi/battle/battle/15/func_800AE6C8.c'
-    - '@behavior: Advances battle work byte +0x09 and timer +0x10, accumulates +0x30, then advances state at 0x10.'
+    - '@behavior: Increments battle work byte +0x09, adds 2 to signed counter +0x10, accumulates its low halfword into +0x30, then increments byte +0x01 when +0x09 equals 0x10.'
   - - 98088
     - asm
     - func_800AE728
