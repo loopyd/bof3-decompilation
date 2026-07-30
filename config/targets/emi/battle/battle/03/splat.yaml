@@ -748,8 +748,10 @@ segments:
     - c
     - func_801E47A4
   - - 80864
-    - asm
-    - func_801E47E0
+    - c
+    - name: func_801E47E0
+      source: src/emi/battle/battle/03/func_801E47E0.c
+      behavior: leaf local-work counter advance or flag transition
   - - 80956
     - asm
     - func_801E483C
