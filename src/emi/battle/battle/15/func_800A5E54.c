@@ -1,5 +1,8 @@
 #include "internal.h"
 
+/* @source 0x800A5E54
+ * @behavior When D_801485DC bit 0 is clear, sets state byte 0xE3 to 2, clears 0xE4, and clears bit 7 of 0xE5.
+ */
 void func_800A5E54(void) {
     u8 *state;
 

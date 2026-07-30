@@ -1,5 +1,10 @@
 #include "internal.h"
 
+/* @source 0x8009F6EC
+ * @behavior Reads the current flag word, clears D_801EC2EE, sets flag 0x2000,
+ * calls func_801DC044 with state values and 0xFFFF, and stores the doubled
+ * signed halfword result to D_801463A0[2].
+ */
 void func_8009F6EC(void)
 {
     volatile u16* flags;
