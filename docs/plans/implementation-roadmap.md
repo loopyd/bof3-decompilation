@@ -2,6 +2,11 @@
 
 **Status:** active
 
+> **Baseline refreshed 2026-07-26:** `bin/decomp-status --detail minimal`
+> reports `exact=395`, `partial=222`, and `invalid=26` across 643 lifts. The
+> invalid retained lifts must be repaired or removed before `just check` can
+> pass; partial lifts remain non-acceptance backlog.
+
 ## Goal
 
 Increase reviewed exact lifts one independently loaded `TARGET@0xADDRESS` at a
@@ -10,8 +15,11 @@ ABI, and Splat evidence with the owning image.
 
 ## Current evidence
 
-- `bin/decomp-status --detail normal` reports `exact=298`, `partial=230`, and
-  `invalid=0` across 528 indexed lifts.
+- `bin/decomp-status --detail minimal` reports `exact=395`, `partial=222`, and
+  `invalid=26` across 643 indexed lifts.
+- The 26 invalid retained lifts are a prerequisite cleanup: restore/remove
+  unsupported source or repair its metadata and declarations, then run
+  `just check`. They are not candidates for duplicate reuse or promotion.
 - `bin/symbols check` passes.
 - `emi/world00/area016/13@0x801F3460` is an exact 64-byte clean-C lift.
   `SPAD_PTR_TABLE(u8)[0x11]` provides the reviewed scratchpad pointer-cell
@@ -28,6 +36,15 @@ ABI, and Splat evidence with the owning image.
   slot.
 - The closed `exe/slus_004_22@0x80162B08` compiler residual remains documented
   in `docs/specs/runtime/compiler-provenance.md`; it is not active work.
+
+## Phase 0 — restore a valid retained-source baseline
+
+1. Use `bin/decomp-status --detail normal` to identify invalid records.
+2. For each invalid lift, either restore/remove unsupported source or repair
+   its owned metadata, declarations, and C body through the normal
+   target-qualified evidence loop. Do not mark invalid code as partial.
+3. Validate with `bin/decomp-status --detail normal` and `just check` before
+   returning to new-candidate selection.
 
 ## Phase 1 — select one evidenced candidate
 
@@ -57,8 +74,11 @@ ABI, and Splat evidence with the owning image.
 - `emi/etc/game/00@0x801993F0`, `emi/etc/game/00@0x80199418`, and
   `emi/world00/area016/13@0x801F4740` need the ABI/ownership evidence required
   for their external calls.
-- The `emi/world00/area008/13@0x801F3D88` duplicate group needs two independent
-  exact members before any shared implementation is considered.
+- `emi/world00/area008/13@0x801F3D88` is a partial direct-register-pin lift;
+  restore/remove it while partial. Retain it only after explicit approval,
+  demonstrated macro-form codegen difference, adjacent rationale, and an exact
+  live byte match. Its duplicate group needs two independent exact members
+  before any shared implementation is considered.
 - Do not reopen the SLUS compiler residual without new compiler provenance.
 
 ## Validation and acceptance

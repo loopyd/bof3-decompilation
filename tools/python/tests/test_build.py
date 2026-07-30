@@ -20,6 +20,23 @@ def test_configure_reuses_complete_ninja_tree(tmp_path: Path) -> None:
     run.assert_not_called()
 
 
+def test_configure_recovers_corrupt_cache(tmp_path: Path) -> None:
+    """A cache missing its source root is discarded before CMake runs."""
+    (tmp_path / "CMakeLists.txt").write_text(
+        "cmake_minimum_required(VERSION 3.20)\nproject(test NONE)\n"
+    )
+    build_tree = tmp_path / "build/cmake"
+    build_tree.mkdir(parents=True)
+    (build_tree / "CMakeCache.txt").write_text("corrupt\n")
+    (build_tree / "build.ninja").touch()
+
+    assert configure(tmp_path) == build_tree
+    assert (
+        f"CMAKE_HOME_DIRECTORY:INTERNAL={tmp_path.resolve()}"
+        in (build_tree / "CMakeCache.txt").read_text()
+    )
+
+
 def test_configure_recovers_foreign_root_tree(tmp_path: Path) -> None:
     """CMake can configure after a complete foreign tree is discarded."""
     source_a = tmp_path / "source-a"
@@ -43,9 +60,9 @@ def test_configure_recovers_foreign_root_tree(tmp_path: Path) -> None:
     build_tree = configure(source_b)
 
     assert build_tree == source_b / "build/cmake"
-    assert (
-        build_tree / "CMakeCache.txt"
-    ).read_text().find(f"CMAKE_HOME_DIRECTORY:INTERNAL={source_b.resolve()}") >= 0
+    assert (build_tree / "CMakeCache.txt").read_text().find(
+        f"CMAKE_HOME_DIRECTORY:INTERNAL={source_b.resolve()}"
+    ) >= 0
 
 
 def test_configure_recovers_incomplete_makefile_tree(tmp_path: Path) -> None:

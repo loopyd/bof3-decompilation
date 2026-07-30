@@ -21,7 +21,7 @@ validators, and provenance that each flow must retain.
 | Type-3 texture upload and palettes | [EMI graphics](formats/graphics.md) | Upload geometry is verified; palette association is draw-state-owned. |
 | Sprites and GPU primitives | [Frontend flow](runtime/frontend.md), reviewed source | Construction examples are verified; there is no single universal sprite format. |
 | VAB, sequence, and STR/XA media | [EMI loader](runtime/emi-loader.md), [STR/XA](formats/str-xa.md) | Container roles are verified; runtime CDDA control is not recovered. |
-| Monsters and formations | [Area data](data/areas.md), [archive ownership](archives/ownership.md) | Storage extraction is verified; enemy runtime lifecycle is out of scope here. |
+| Monsters and formations | [Area data](data/areas.md), [archive ownership](archives.md) | Storage extraction is verified; enemy runtime lifecycle is out of scope here. |
 
 ## Runtime flows
 

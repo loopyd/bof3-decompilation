@@ -236,5 +236,5 @@ used for acceptance: immediately before accepting a lift, run live
 `maspsx` are build adapters. Workflow users should call `bin/build` and the
 matching commands instead of invoking these adapters directly.
 
-See [matching](matching.md) for C iteration rules, [Rizin evidence](reverse-engineering.md)
+See [matching](matching.md) for C iteration rules, [tool usage](usage.md)
 for analyzer contracts, and [context](../CONTEXT.md) for ownership.

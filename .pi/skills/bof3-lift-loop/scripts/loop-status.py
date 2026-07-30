@@ -33,11 +33,24 @@ def journal(path: Path) -> list[dict[str, str]]:
     lines = path.read_text().splitlines()
     if not lines or lines[0] != "function\tstatus\tcommit\tnotes":
         return [{"error": f"invalid journal header: {path}"}]
-    return [
-        dict(zip(("function", "status", "commit", "notes"), line.split("\t", 3)))
-        for line in lines[1:]
-        if line
-    ]
+    records = []
+    for number, line in enumerate(lines[1:], start=2):
+        if not line:
+            continue
+        fields = line.split("\t", 3)
+        if len(fields) != 4:
+            records.append({"error": f"invalid journal row {number}: {path}"})
+        else:
+            function, status, commit, notes = fields
+            records.append(
+                {
+                    "function": function,
+                    "status": status,
+                    "commit": commit,
+                    "notes": notes,
+                }
+            )
+    return records
 
 
 def targets(root: Path) -> list[str]:

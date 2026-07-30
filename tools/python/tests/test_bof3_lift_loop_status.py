@@ -94,6 +94,27 @@ def _run_report(
 # -- tests ----------------------------------------------------------------
 
 
+def test_journal_reports_malformed_row(tmp_path: Path) -> None:
+    path = tmp_path / "results.tsv"
+    path.write_text(
+        "function\tstatus\tcommit\tnotes\n"
+        "selection\\tblocked\\t\\tstale evidence\n"
+        "SLUS_004.22@0x80010000\texact\tabc123\tok\n"
+    )
+
+    records = _load_module().journal(path)
+
+    assert records == [
+        {"error": f"invalid journal row 2: {path}"},
+        {
+            "function": "SLUS_004.22@0x80010000",
+            "status": "exact",
+            "commit": "abc123",
+            "notes": "ok",
+        },
+    ]
+
+
 def test_default_stale_fail_closed() -> None:
     """Default (no --recover) with stale snapshots → fail-closed, no rev-query."""
     rev_query_called = False
@@ -118,10 +139,28 @@ def test_default_stale_fail_closed() -> None:
 
 def test_default_fresh_passes() -> None:
     """Default with all fresh snapshots → rev-query runs, candidates available."""
-    report = _run_report()
+    calls: list[tuple[str, ...]] = []
+
+    def _fn(args):
+        calls.append(args)
+        return _default_command(args)
+
+    report = _run_report(
+        command_fn=_fn, argv=["--selection", "hotspots", "--limit", "1"]
+    )
     assert report["suppressed_candidates"] is None
     assert report["candidates"]["command"] != ["(skipped)"]
     assert "select one candidate" in report["next_action"]
+    assert (
+        "bin/rev-query",
+        "hotspots",
+        "--unlifted",
+        "--detail",
+        "minimal",
+        "--limit",
+        "1",
+        "--json",
+    ) in calls
 
 
 def test_recovery_stale_succeeds() -> None:
