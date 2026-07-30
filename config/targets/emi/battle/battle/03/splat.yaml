@@ -749,9 +749,9 @@ segments:
     - func_801E47A4
   - - 80864
     - c
-    - name: func_801E47E0
-      source: src/emi/battle/battle/03/func_801E47E0.c
-      behavior: leaf local-work counter advance or flag transition
+    - func_801E47E0
+    - '@source: src/emi/battle/battle/03/func_801E47E0.c'
+    - '@behavior: Advances local-work fields +0x40/+0x44 by +0x0C and then +0x0C by +0x18 while signed +0x40 is at most 0x13FFF; otherwise sets byte +0x03 to 2.'
   - - 80956
     - asm
     - func_801E483C
