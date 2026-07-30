@@ -1099,8 +1099,10 @@ segments:
     - asm
     - func_801EA254
   - - 104752
-    - asm
+    - c
     - func_801EA530
+    - '@source: src/emi/battle/battle/03/func_801EA530.c'
+    - '@behavior: Subtracts the panel counter from its byte budget and clears companion state when exhausted.'
   - - 104860
     - asm
     - func_801EA59C
