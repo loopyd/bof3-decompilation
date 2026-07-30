@@ -876,8 +876,10 @@ segments:
     - asm
     - func_801E60DC
   - - 87380
-    - asm
+    - c
     - func_801E6154
+    - '@source: src/emi/battle/battle/03/func_801E6154.c'
+    - '@behavior: Advances the queued slot or marks it complete and increments its queue counter.'
   - - 87536
     - asm
     - func_801E61F0

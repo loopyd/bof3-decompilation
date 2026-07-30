@@ -83,7 +83,17 @@ typedef struct Battle03QueuedSlot {
   u8  unk_06;
   u8  pad_07[2];
   u8  unk_09;
-  u8  pad_0a[0x6a];
+  u8  pad_0a[2];
+  s32 unk_0c;
+  s32 unk_10;
+  u8  pad_14[4];
+  s32 unk_18;
+  s32 unk_1c;
+  u8  pad_20[0x14];
+  s32 unk_34;
+  s32 unk_38;
+  s16 unk_3a;
+  u8  pad_3c[0x38];
   u32 unk_74;
 } Battle03QueuedSlot;
 
