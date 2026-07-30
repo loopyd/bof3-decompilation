@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @source 0x8009C87C */
+/* @behavior Sets or clears bit `bit` in byte offset 0xE1 according to nonzero `set`. */
 void func_8009C87C(u8 *arg0, s32 bit, u8 set) {
     u8 mask;
 

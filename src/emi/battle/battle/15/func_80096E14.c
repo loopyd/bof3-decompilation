@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @source 0x80096E14 */
+/* @behavior Initializes battle selection/action state, calls setup mode 0x104, resets relevant state bytes, selects slot 1, and increments the counter. */
 void func_80096E14(void) {
   u8 counter;
 

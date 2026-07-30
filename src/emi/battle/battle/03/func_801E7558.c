@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @source 0x801E7558 */
+/* @behavior Decrements the active work timer by 0x2000 when nonzero; otherwise sets flag 0x40 and increments scratchpad state. */
 void func_801E7558(void) {
     Battle03LocalWork* work;
 
