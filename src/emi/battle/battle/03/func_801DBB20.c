@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @source 0x801DBB20 */
+/* @behavior Returns the first of three local work records whose byte +0x79 matches the selector, or NULL. */
 Battle03LocalWork *func_801DBB20(u8 arg0)
 {
     u8 i;

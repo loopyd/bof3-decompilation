@@ -1,5 +1,7 @@
 # AGENTS.md — BOF3
 
+Read [`SOUL.md`](SOUL.md) alongside this file before repository work.
+
 BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 
 ## Boundaries

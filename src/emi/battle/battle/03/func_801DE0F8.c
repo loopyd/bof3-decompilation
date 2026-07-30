@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @source 0x801DE0F8 */
+/* @behavior Multiplies signed inputs, divides by 100, clamps to 0 through 9999, and returns s16. */
 s16 func_801DE0F8(s32 arg0, s32 arg1) {
     s32 value;
 
