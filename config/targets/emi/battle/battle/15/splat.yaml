@@ -271,8 +271,10 @@ segments:
     - asm
     - func_8009B9A0
   - - 21116
-    - asm
+    - c
     - func_8009BA7C
+    - '@source: src/emi/battle/battle/15/func_8009BA7C.c'
+    - '@behavior: Clears local battle selection state when its gate flag is clear.'
   - - 21196
     - asm
     - func_8009BACC

@@ -57,6 +57,7 @@ typedef struct Unk801EBF08 {
   volatile u32 unk_128;
 } Unk801EBF08;
 
+
 extern volatile u8  BATTLE_SELECTION_PHASE;
 extern volatile u8  BATTLE_SELECTION_OWNER_STATE;
 extern volatile u8  BATTLE_SELECTION_ROOT_STATE;
@@ -135,6 +136,7 @@ extern volatile u32  D_80144F60[];
 extern volatile u32  D_80144F80[];
 extern u16 D_80145FAA[];
 extern volatile u32  D_80146250;
+extern volatile u8   D_801462E0;
 extern volatile u8   D_801462E1;
 extern volatile u8   D_801462E2;
 extern volatile u8   D_801462E3;
@@ -170,6 +172,7 @@ extern u8            D_801462E5;
 extern volatile u8   D_801462E6;
 extern volatile u16  D_801462E8;
 extern volatile BattleLocalWork D_80145E90[];
+extern volatile u8             D_80146329;
 extern volatile u8             D_80146374;
 extern volatile s8   D_80145558;
 extern volatile s16  D_801EC2EE;
@@ -186,6 +189,7 @@ extern volatile u8   D_801485BB;
 extern volatile u8   D_801485DE;
 extern volatile u8   D_801485DF;
 extern volatile u16  D_801485E0;
+extern volatile u16  D_8014932E;
 extern volatile u16  D_801485E2;
 extern volatile u16  D_801485EC;
 extern volatile u16  D_801485EE;
