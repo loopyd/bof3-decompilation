@@ -1,5 +1,8 @@
 #include "internal.h"
 
+/* @source 0x800A7648
+ * @behavior Adds 2 to signed index, clamps it to [0,4], then returns D_800B4E8C[index].
+ */
 s8 func_800A7648(s8 index) {
     index += 2;
     if (index < 0) {

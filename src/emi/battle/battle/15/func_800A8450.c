@@ -1,6 +1,7 @@
 #include "internal.h"
 
-/* @behavior initializes the selected local battle work record and advances work state. */
+/* @source 0x800A8450 */
+/* @behavior initializes selected D_80145E90 record state fields (01=6, 02/03=4, 04=0) then increments g_battle_work[1]. */
 void func_800A8450(void) {
   volatile u8* selection_index;
   u8           value;
