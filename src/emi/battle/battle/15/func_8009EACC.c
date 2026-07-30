@@ -1,5 +1,9 @@
 #include "internal.h"
 
+/* @source 0x8009EACC
+ * @behavior sets flag 0x2000, calls func_801DC044 with state values and 0xFFFF,
+ * then stores half the result plus one into D_801463A0[2].
+ */
 void func_8009EACC(void)
 {
     volatile u16* flags;
