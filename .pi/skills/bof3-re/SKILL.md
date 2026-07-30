@@ -20,8 +20,9 @@ Load a spec or psx-rizin reference only for a concrete question. Repo `bin` wins
 - Keep each target independent: raw `func_<ADDR>.c`, local `internal.h`, map,
   Splat boundary, and validation. Never copy game extern addresses across targets.
 - C89 only. No handwritten asm, direct register pins, asm-renamed externs, or
-  `INCLUDE_ASM`; only sanctioned `barrier()`/`CLOBBER_*`, approved
-  `REGISTER_PIN(type, name, reg)`, and target `symbols.c` `WEAK_SYMBOL_AT`
+  `INCLUDE_ASM`; only sanctioned `barrier()`/`CLOBBER_CALLER_REG(reg)`
+  (or named `CLOBBER_*` wrappers), approved `REGISTER_PIN(type, name, reg)`,
+  and target `symbols.c` `WEAK_SYMBOL_AT`
   apply. A legacy direct numeric pin remains only if the macro form changes
   codegen. An approved pin needs a local `MATCHING_AID` comment and a live exact
   byte match; approval extends to independently exact members of its proven
@@ -77,7 +78,10 @@ non-progressing diagnosed attempts per level:
 
 1. types/declarations: width, signedness, pointers, fields, prototypes;
 2. control flow: branch direction, loop/return/switch shape;
-3. expression/register order: temps, hoists, statement order, sanctioned barriers;
+3. expression/register order: temps, hoists, statement order, then an
+   asm-diff-proven caller-register `CLOBBER_CALLER_REG(reg)` for delay-slot or
+   fixed-address reload scheduling, with local `MATCHING_AID`; never use it to
+   encode an opcode or clobber `s*`/`gp`/`sp`/`ra`;
 4. compiler profile: `bin/flag-search`; record only clean-C exact profiles;
 5. one bounded `bin/permute TARGET@0xADDRESS --time-limit 300 -j N` after shape is right;
 6. report residual; never force banned assembly.

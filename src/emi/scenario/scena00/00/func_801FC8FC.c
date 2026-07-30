@@ -32,8 +32,8 @@ void func_801FC8FC(void) {
   SCENA00_EFFECT_BANK->byte_4f5f = 0xffu;
   SCENA00_EFFECT_BANK->byte_6254 = 0u;
   SCENA00_EFFECT_BANK->byte_4f59 = (u8)(flags | 7u);
-  /* MATCHING_AID: CLOBBER_A0 forces a0=10 into the jal delay slot
+  /* MATCHING_AID: CLOBBER_CALLER_REG(a0) forces a0=10 into the jal delay slot
    * instead of being hoisted after the first call. */
-  CLOBBER_A0();
+  CLOBBER_CALLER_REG(a0);
   func_801C187C(10);
 }

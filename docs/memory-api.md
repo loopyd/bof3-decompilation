@@ -22,11 +22,16 @@ code. Forwarding alias: `include/bof3/defines.h`.
   problem is volatile-access **ordering** across a call (e.g. a global read must
   stay before an indirect call). See `LESSONS.md` for the `func_801F4578`
   example.
-- `CLOBBER_A0()` / `CLOBBER_V0()` / `CLOBBER_V1()` / `CLOBBER_A1()` —
-  empty-asm barriers that
-  mark the named MIPS register clobbered. Use when the problem is **which
-  register** holds a value in a `jal`/branch **delay slot** (e.g. keep
-  `move a0,zero` in the slot before `func_801C1400(0u)`).
+- `CLOBBER_CALLER_REG(reg)` — an empty-asm barrier that marks any named
+  caller-clobbered MIPS register (`a0`–`a3`, `v0`/`v1`, or `t0`–`t9`)
+  clobbered. The `CLOBBER_A0()` / `CLOBBER_A1()` / `CLOBBER_A2()` /
+  `CLOBBER_V0()` / `CLOBBER_V1()` wrappers are preferred for those common
+  registers. Use only after `asm-diff` identifies the register and placement
+  needed to keep a C-generated instruction—`li`, `move`, arithmetic, load, or
+  store—in a `jal`/branch **delay slot** or to retain a fixed-address reload
+  ordering. It neither emits nor selects an opcode. Never clobber callee-saved
+  `s*`, `gp`, `sp`, or `ra`; an `s*`
+  allocator constraint remains an approved `REGISTER_PIN` case.
 
 `barrier()`, `CLOBBER_*`, and `REGISTER_PIN(type, name, reg)` are
 `__GNUC__`-guarded; the pin macro becomes a normal `register` declaration on
@@ -48,9 +53,10 @@ symbol with `__asm__`. A register pin or `INCLUDE_ASM` is a last resort that
 requires user approval — first try the per-object compiler-profile override in
 `config/compiler/object-flags.cmake`.
 
-Rule of thumb: `barrier()` for access ordering, `CLOBBER_A0/V0/A1()` for
-delay-slot placement, `REGISTER_PIN` for an approved allocator constraint, and
-`WEAK_SYMBOL_AT` for address binding.
+Rule of thumb: `barrier()` for access ordering, `CLOBBER_CALLER_REG(reg)`
+(or a named wrapper) for evidenced caller-register scheduling,
+`REGISTER_PIN` for an approved allocator constraint, and `WEAK_SYMBOL_AT` for
+address binding.
 
 ## `memory.h` — address conversion (`include/memory/access.h`)
 

@@ -29,7 +29,10 @@ pre-existing target header/public contract; report it as pre-existing debt only
 if relevant. Block new cross-target function bindings, foreign definitions, and
 signature disagreement; report owner path/symbol and conflicting signatures.
 Companion records are static-only. Treat direct pins as banned. A mission-added
-`REGISTER_PIN` is allowed only with parent approval, a local `MATCHING_AID`
+`CLOBBER_CALLER_REG(reg)` or `CLOBBER_*` scheduling aid is valid only when its
+adjacent `MATCHING_AID` identifies the original instruction/register/placement and
+live byte matching proves it; reject opcode-emitting assembly and clobbers of
+`s*`, `gp`, `sp`, or `ra`. A mission-added `REGISTER_PIN` is allowed only with parent approval, a local `MATCHING_AID`
 rationale, and the live exact match. Approval for a proven local duplicate family
 covers independently exact members using the same evidenced pin. A direct numeric
 `"$N"` spelling also needs evidence that the macro changes codegen. Otherwise

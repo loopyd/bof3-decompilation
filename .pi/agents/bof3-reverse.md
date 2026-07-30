@@ -36,6 +36,13 @@ live normal asm-diff before each edit and final byte-match. Do not run
 only when map/Splat changed; run companion-check only for relevant calls. Report
 snapshot/index staleness; do not rebuild global analysis.
 
+For an asm-diff-proven caller-register scheduling mismatch, use
+`CLOBBER_CALLER_REG(reg)` (or a named `CLOBBER_*` wrapper) only after clean C
+and `barrier()` fail. It schedules any existing C-generated instruction—such as
+in a `jal`/branch delay slot or fixed-address reload sequence—and must not encode
+an opcode. Add an adjacent `MATCHING_AID` naming the instruction, register, and
+placement; retain it only after a live byte match. Never clobber
+`s*`, `gp`, `sp`, or `ra`; that is an allocator/pin case, not a clobber aid.
 Register pins remain forbidden unless the parent task explicitly says the user
 approved a bounded experiment for this exact function. In that case, use the
 shared `REGISTER_PIN(type, name, reg)` macro, only after clean-C/barrier

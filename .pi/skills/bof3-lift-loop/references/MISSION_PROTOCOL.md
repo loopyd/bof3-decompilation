@@ -27,7 +27,11 @@ small `edit` only; never whole-file `write`, shell redirection, or rewrites.
 7. Before every C edit: live `asm-diff --detail normal`, diagnose `first=`, make
    one structural fix, rerun. Revert regressions. Escalate types → flow → ordering
    → flags → one bounded permuter → documented residual after three stalled tries
-   per level. Use full diff only when normal evidence is insufficient.
+   per level. Use full diff only when normal evidence is insufficient. For an
+   evidenced caller-register delay-slot or fixed-address reload residual, use
+   `CLOBBER_CALLER_REG(reg)` only to schedule existing C-generated code; add a
+   local `MATCHING_AID` naming the instruction/register/placement and retain it only if
+   live exact. Never clobber `s*`, `gp`, `sp`, or `ra`, or encode an opcode.
 8. Accept only final live `byte-match` exit 0. If map/Splat changed, also run
    `bin/symbols check TARGET` and `bin/splat TARGET`; otherwise do not rerun
    them. A new lift needs its Splat boundary changed to `c` with

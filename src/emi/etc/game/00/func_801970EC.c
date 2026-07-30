@@ -37,7 +37,9 @@ void func_801970EC(void) {
 
   D_8014832E = 0x1fu;
   D_8014933E = 6u;
-  CLOBBER_A0();
+  /* MATCHING_AID: CLOBBER_CALLER_REG(a0) retains move a0,zero in the
+   * func_801C1400 jal delay slot. */
+  CLOBBER_CALLER_REG(a0);
   func_801C1400(0u);
   selection_seed = D_801448FC;
   D_80143F00 = 0xffffu;

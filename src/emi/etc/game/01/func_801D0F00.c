@@ -17,7 +17,7 @@ void func_801D0F00(void) {
     u16 bank;
     D_80146874 = 1u;
     /* MATCHING_AID: keep a0=4 in the jal delay slot */
-    CLOBBER_A0();
+    CLOBBER_CALLER_REG(a0);
     func_8014ECAC(4);
     /* MATCHING_AID: stage the two arguments through ordered temporaries, then
      * barrier() before the call. This makes cc1 emit lbu a0 (GAME_FRONT_SELECTION)

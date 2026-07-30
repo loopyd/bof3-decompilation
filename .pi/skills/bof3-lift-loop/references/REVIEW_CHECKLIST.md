@@ -17,7 +17,11 @@ Check:
    any mission-added `REGISTER_PIN` has parent approval, a local `MATCHING_AID`
    rationale, and the live exact match; approval covers independently exact
    members of a proven local duplicate family; a direct numeric `"$N"` spelling
-   also proves the macro form changes codegen;
+   also proves the macro form changes codegen. A mission-added
+   `CLOBBER_CALLER_REG(reg)`/`CLOBBER_*` aid names its original
+   instruction/register/placement in adjacent `MATCHING_AID`, clobbers only a
+   caller register, and emits no opcode; reject `s*`, `gp`, `sp`, `ra`, and
+   opcode-emitting assembly;
 3. artificial aids have `MATCHING_AID`; no generic matching-hack macro;
 4. SDK calls are official; no lifted SDK body;
 5. new declarations/maps/types reuse existing target/include/SDK facts; no aliases
