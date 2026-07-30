@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-SNAPSHOT_SCHEMA = "bof3.analysis-snapshot/v2"
+SNAPSHOT_SCHEMA = "bof3.analysis-snapshot/v3"
 
 
 def snapshot_path(root: Path, target_id: str) -> Path:

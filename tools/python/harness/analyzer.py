@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import hashlib
 import subprocess
+import struct
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -259,6 +260,7 @@ def build_snapshot(
     functions.sort(key=lambda function: function.address)
     calls: list[SnapshotCall] = []
     unresolved: list[SnapshotUnresolvedCall] = []
+    recorded_callsites: set[tuple[str, int]] = set()
     for raw in raw_xrefs if isinstance(raw_xrefs, list) else []:
         if str(raw.get("type", "")).upper() not in {"CALL", "C"}:
             continue
@@ -274,6 +276,7 @@ def build_snapshot(
         )
         if caller is None:
             continue
+        recorded_callsites.add((caller, callsite))
         callee = function_ids.get(target)
         if callee is not None:
             calls.append(SnapshotCall(caller, callee, callsite))
@@ -287,6 +290,30 @@ def build_snapshot(
                 )
             )
 
+    # Rizin's `aa` omits direct JAL xrefs whose destination is outside this
+    # image. Preserve those calls as unresolved graph edges.
+    for start, end, caller in ranges:
+        for callsite in range(start, end - 3, 4):
+            if (caller, callsite) in recorded_callsites:
+                continue
+            offset = callsite - load_address
+            word = struct.unpack_from("<I", binary, offset)[0]
+            if word >> 26 != 3:
+                continue
+            target = ((callsite + 4) & 0xF0000000) | ((word & 0x03FFFFFF) << 2)
+            callee = function_ids.get(target)
+            if callee is not None:
+                calls.append(SnapshotCall(caller, callee, callsite))
+            else:
+                unresolved.append(
+                    SnapshotUnresolvedCall(
+                        caller=caller,
+                        target_address=target,
+                        callsite=callsite,
+                        kind="static_jal",
+                    )
+                )
+
     return TargetSnapshot(
         schema=SNAPSHOT_SCHEMA,
         target=target_id,
@@ -297,7 +324,12 @@ def build_snapshot(
         },
         functions=tuple(functions),
         calls=tuple(sorted(set(calls), key=lambda call: (call.caller, call.callsite))),
-        unresolved_calls=tuple(unresolved),
+        unresolved_calls=tuple(
+            sorted(
+                set(unresolved),
+                key=lambda call: (call.caller, call.callsite, call.target_address, call.kind),
+            )
+        ),
     )
 
 

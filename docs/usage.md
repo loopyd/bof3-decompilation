@@ -191,7 +191,17 @@ git diff --check
 `build` compiles authored objects; it does not reconstruct a complete image.
 `decomp-status --detail minimal` prints totals, `normal` adds target totals and
 invalid details, and `full` prints every function. `just check` runs repository
-tests, lint, maps, and a full compile/link/compare audit of retained lifts.
+tests, lint, maps, and a cached repository audit of retained lifts; it is not
+acceptance evidence for an individual lift.
+
+On a cold or partially invalidated cache, `decomp-status` batch-builds all
+valid cache-miss objects per owning target in a single CMake invocation, then
+compares each individually. An all-cache-hit target issues no build command.
+`--no-cache` bypasses disposable audit summaries but still batch-builds selected
+valid misses; it is for diagnosis, not lift acceptance. Cache rows are never
+used for acceptance: immediately before accepting a lift, run live
+`asm-diff`, `byte-match`, `companion-check` where relevant, `splat`, and
+`symbols check`.
 
 ## Command ownership
 

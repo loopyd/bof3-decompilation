@@ -43,6 +43,8 @@ from ._asm_resolve import (
 __all__ = [
     "AsmDiffRequest",
     "PsxExeInfo",
+    "_asm_diff_compare",
+    "_asm_diff_resolve",
     "build_result_payload",
     "build_target_for_source",
     "collect_source_addresses",
@@ -224,12 +226,18 @@ def run_build_object(
         )
 
 
-def run_asm_diff_one(
-    request: AsmDiffRequest,
-    *,
-    layout: RepoLayout | None = None,
+def _asm_diff_resolve(
+    repo: RepoLayout, request: AsmDiffRequest
 ) -> dict[str, Any]:
-    repo = layout or repo_layout()
+    """Resolve and prepare every input needed by the comparison step.
+
+    Returns a dict with keys:
+      source_path, address, function_name, binary_path, load_address,
+      original_size, object_path, output_dir
+
+    This is extracted so the status-audit batch path can know what to build
+    without duplicating resolution logic.
+    """
     source_path = request.source_path.expanduser().resolve()
     address = (
         request.address
@@ -267,10 +275,37 @@ def run_asm_diff_one(
         if output_dir.is_dir():
             shutil.rmtree(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
+    return {
+        "source_path": source_path,
+        "address": address,
+        "function_name": function_name,
+        "binary_path": binary_path,
+        "load_address": load_address,
+        "original_size": original_size,
+        "object_path": object_path,
+        "output_dir": output_dir,
+    }
 
-    run_build_object(
-        repo, source_path, output_dir / "build.log" if request.diagnostics else None
-    )
+
+def _asm_diff_compare(
+    repo: RepoLayout,
+    request: AsmDiffRequest,
+    resolved: dict[str, Any],
+) -> dict[str, Any]:
+    """Run the link, byte-match, placement, size, and diagnostic steps.
+
+    *Assumes* the object already exists (built by the caller).  Object
+    freshness is verified via ``st_mtime``.
+    """
+    source_path = resolved["source_path"]
+    address = resolved["address"]
+    function_name = resolved["function_name"]
+    binary_path = resolved["binary_path"]
+    load_address = resolved["load_address"]
+    original_size = resolved["original_size"]
+    object_path = resolved["object_path"]
+    output_dir = resolved["output_dir"]
+
     if not object_path.is_file():
         raise FileNotFoundError(f"expected object was not built: {object_path}")
     if not binary_path.is_file():
@@ -405,3 +440,18 @@ def run_asm_diff_one(
     )
     write_json(output_dir / "summary.json", payload)
     return payload
+
+
+def run_asm_diff_one(
+    request: AsmDiffRequest,
+    *,
+    layout: RepoLayout | None = None,
+) -> dict[str, Any]:
+    repo = layout or repo_layout()
+    resolved = _asm_diff_resolve(repo, request)
+    run_build_object(
+        repo,
+        resolved["source_path"],
+        resolved["output_dir"] / "build.log" if request.diagnostics else None,
+    )
+    return _asm_diff_compare(repo, request, resolved)

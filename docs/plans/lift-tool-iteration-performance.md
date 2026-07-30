@@ -1,6 +1,6 @@
 # Lift-tool iteration performance
 
-**Status:** in progress — phases 1.1, 1.2, 2.1, and 3 implemented; phase 5 measurement pending final full validation.
+**Status:** in progress — phases 1.1, 1.2, 2.1, 2.3, and 3 implemented; phase 5 measurement is pending final full validation.
 
 ## Goal
 
@@ -180,6 +180,145 @@ Document the distinction:
 **Acceptance:** the lift-loop review/commit gate remains explicitly live and
 unchanged in the skill instructions.
 
+### 2.3 Batch cache-miss object builds without weakening per-function matching
+
+**Evidence baseline (current worktree):**
+
+- The project has 643 `func_*.c` lifts. A warm full `validate-sources` audit
+  completed in **1.10 s** after safe CMake build-tree reuse; its component
+  report was `exact=395`, `partial=222`, `invalid=26`.
+- `pytest`, Ruff, and `symbols check` took approximately **1.33 s**, **0.03 s**,
+  and **0.29 s**, respectively. The audit remains the only material `just
+  check` cost after the warm cache is populated.
+- `collect_lifts()` still invokes `run_asm_diff_one()` independently for every
+  cache miss. Although the configure pass is now reused, each miss launches a
+  separate `cmake --build --target lift_<hash>` process.
+- `CMakeLists.txt` already creates both a stable per-source `lift_<hash>` target
+  and a directory-wide `target_<hash>` target. The per-source targets are the
+  safe batch unit: they exclude metadata-invalid or otherwise unrelated source
+  files, while allowing one native build invocation to request every valid
+  cache-miss object for an owning image.
+
+**Goal:** reduce a cold or partially invalidated audit to one CMake build
+invocation per owning target, then retain the existing target-qualified
+link/byte/placement comparison and per-function report format.
+
+**Boundaries and non-goals:**
+
+- This is an audit optimization only. `bin/asm-diff` and `bin/byte-match` stay
+  live, one-function acceptance authorities and must not consume status-cache
+  rows or a previously batched object without rebuilding it.
+- Do not batch the directory-wide `target_<hash>` target: one unrelated broken
+  or metadata-invalid source must not hide the status of valid selected lifts.
+- Do not add a daemon, a new dependency, a parallel Python worker pool, a
+  persistent build scheduler, or user-facing batch flags. One CMake invocation
+  lets the configured native generator select its own safe parallelism.
+- Do not commit `out/`, `build/`, or toolchain artifacts. Existing 26 invalid
+  lifts are report data outside this performance scope; they must remain
+  visible without being compiled merely to accelerate valid rows.
+
+#### Phase 2.3.1 — separate audit discovery from comparison
+
+**Files:**
+- `tools/python/harness/decomp_status.py`
+- `tools/python/tests/test_decomp_status.py`
+- only a small adjacent matcher test if required
+
+Make the current sequential `collect_lifts()` loop first construct its report
+worklist in sorted target/source order:
+
+1. retain the existing filename and metadata-invalid records immediately;
+2. compute the existing content fingerprint and reuse matching status-cache
+   records unchanged;
+3. group only valid cache misses by their owning manifest; and
+4. preserve the existing source path, address, binary, load address, and
+   reviewed section-placement evidence for each miss.
+
+The preflight must not alter record ordering, totals, cache schema, status
+labels, `--no-cache` semantics, or the rule that a missing/corrupt cache is a
+miss. It may use small local tuples/dicts; do not introduce an executor class
+or a second reporting model.
+
+**Acceptance:** a focused test with cached, uncached, and metadata-invalid
+sources proves that only valid misses enter the build worklist, report output is
+identical to the current sequential shape, and invalid rows cause no build
+request.
+
+#### Phase 2.3.2 — build selected source objects once per target
+
+**Files:**
+- `tools/python/harness/build.py`
+- `tools/python/harness/match/asm_diff.py`
+- `tools/python/harness/decomp_status.py`
+- `tools/python/tests/test_build.py`
+- `tools/python/tests/test_decomp_status.py`
+- `tools/python/tests/test_asm_diff.py` only if the existing test location
+  covers the extracted helper better
+
+Add the smallest build helper that accepts the selected source paths and runs
+one `cmake --build <tree> --target lift_<hash> ...` command for that target.
+Reuse `cmake_target_for_source()` and the already-safe configured-tree check;
+do not duplicate CMake target hashing in the validator. A zero-miss target must
+not invoke CMake.
+
+Refactor only enough of `run_asm_diff_one()` for the audit path to run its
+existing object freshness check, link, original-byte extraction, placement
+validation, size lookup, disassembly, and diagnostic bundle generation **after
+that batch succeeds**, without issuing another build. Normal one-function
+`asm-diff` and `byte-match` retain their current build path.
+
+If a multi-target CMake request fails, retry the selected misses through the
+current one-source build path solely to produce the current per-source invalid
+records. That slow fallback is an error path, not a success-path optimization;
+it prevents a shared build failure from obscuring which lift failed.
+
+**Acceptance:** tests verify one build invocation for multiple valid misses in
+the same target, no batch call for all-cache-hit targets, an object freshness
+check before comparison, and individual error attribution after an injected
+batch failure. Existing byte-match, reviewed placement, and diagnostic-artifact
+tests must continue to pass unchanged.
+
+#### Phase 2.3.3 — prove invalidation and measure both paths
+
+**Files:**
+- `tools/python/tests/test_decomp_status.py`
+- `docs/usage.md`
+- this plan
+
+Expand cache tests so a source change recomputes one row, a target compile/link
+input recomputes that target's valid rows, and a shared compile input invalidates
+the affected targets according to the existing fingerprint contract. Confirm
+that each invalidation produces one selected-target build rather than N source
+builds.
+
+Measure with Python/stdlib timing after one warm-up, recording the command,
+source revision, lift count, counts, and median of three runs for:
+
+| Path | Command shape | Required result |
+| --- | --- | --- |
+| warm audit | `bin/decomp-status --detail minimal` | report parity and no builds for hits |
+| target cache miss | remove/rotate only the disposable target cache rows, then `bin/decomp-status TARGET --detail minimal` | one CMake build invocation for that target's valid misses |
+| forced live target audit | `bin/decomp-status --no-cache TARGET --detail minimal` | identical status totals; one selected-target build |
+| live acceptance | `bin/asm-diff TARGET@ADDRESS`, `bin/byte-match TARGET@ADDRESS` | unchanged live build/link/placement behavior |
+
+Do not compare a cache-hit audit to an acceptance command. Restore the
+throwaway cache naturally by rerunning the audit; do not hand-edit reviewed
+inputs to create a benchmark case.
+
+**Acceptance:** cache-miss audit totals match the sequential baseline, the
+batch command count is one per affected target on success, and the measured
+uncached target audit improves materially over the pre-batch per-source build
+path without any accepted lift relying on a cache row.
+
+**Dependencies and blockers:** Phase 2.3.1 precedes 2.3.2 so the batch never
+compiles unreportable inputs. Phase 2.3.2 precedes measurements. Stop if CMake
+cannot accept multiple `lift_<hash>` targets in one configured generator, if an
+object lacks a trustworthy post-batch freshness signal, or if batch failure
+cannot retain per-source diagnostics. The direct-JAL snapshot schema upgrade
+and safe CMake-tree validation currently in the worktree must be validated and
+land before benchmarking this redesign, because stale graph evidence or a
+partial build tree invalidates the baseline.
+
 ## Phase 3 — make companion verification target-scoped
 
 **Files:**
@@ -280,6 +419,80 @@ bin/decomp-status TARGET --detail minimal
 
 Run `just check`, all focused cache/companion/script tests, `git diff --check`,
 and a clean decomp-status audit before handoff.
+
+**Completed evidence (2026-07-26, worktree at `1e11c90` plus pending diff):**
+
+`collect_lifts()` now uses a preflight+batch strategy:
+
+1. **`_build_preflight()`** (Phase 2.3.1) — separates invalid/cached records
+   from valid cache misses, ordered by target then source.  Invalid rows and
+   cache hits are returned immediately as ``ready``; misses are grouped into a
+   per-target worklist.
+
+2. **`_run_batch_misses()`** (Phase 2.3.2) — for each target with misses,
+   runs one ``cmake --build --target lift_<hash> <hash2> <hash3> ...``
+   invocation (via the new ``build.batch_build()`` helper), then compares each
+   miss individually with ``asm_diff._asm_diff_compare()`` without rebuilding.
+   On batch failure, falls back to per-source ``diff_runner()`` calls.
+
+3. **`build.batch_build(root, targets)`** — new public helper that passes all
+   requested per-source ``lift_<hash>`` targets through CMake's ``--target``
+   interface in one process. Zero-miss targets never invoke CMake. Reuse checks
+   both generator files and ``CMAKE_HOME_DIRECTORY``; a copied, foreign, or
+   incomplete tree is removed before configuring the requested root, because
+   CMake cannot replace a foreign or mismatched-generator cache in place.
+
+4. **`asm_diff._asm_diff_resolve()` and ``asm_diff._asm_diff_compare()``** —
+   extracted from the former monolithic ``run_asm_diff_one()``.  The resolve
+   step determines source path, address, size, object/output paths without
+   building.  The compare step runs link, byte match, placement validation,
+   size lookup, disassembly, and diagnostics.  ``run_asm_diff_one()`` calls
+   both; the batch audit calls resolve once per miss to know what to build,
+   builds in batch, then calls compare zero-build per miss.
+
+**Test additions (Phase 2.3.3):**
+
+- ``test_build_preflight_separates_cache_misses_from_ready`` — invalid metadata,
+  cache hits, and valid misses land in the correct buckets.
+- ``test_build_preflight_reuses_cache_hits`` — cache hits appear in ready,
+  never in the worklist.
+- ``test_batch_builds_fresh_misses_once_per_target`` — two misses in one
+  target produce one successful mocked ``batch_build`` invocation, create
+  fresh objects, compare under the supplied root, and avoid fallback.
+- ``test_batch_failure_falls_back_per_source_with_error_attribution`` — a
+  nonzero batch result runs the existing per-source comparator once per source
+  and preserves exact/partial attribution without duplicate records.
+- ``test_batch_stale_object_falls_back_once_without_duplicate_record`` and
+  ``test_batch_resolve_failure_falls_back_once`` — a successful batch that
+  leaves a stale object or cannot resolve one comparison takes the per-source
+  path once, never compares stale output, and emits one attributed record.
+- ``test_source_change_invalidates_cache_and_recomputes`` and
+  ``test_compile_inputs_invalidate_only_affected_target_then_all_targets`` —
+  source, target-map, and shared-header invalidation rebuild only the affected
+  target(s), once per target.
+- ``test_no_batch_when_all_sources_are_cached`` — an all-cache-hit target
+  issues zero build commands.
+- ``test_batch_build_passes_multiple_targets_as_native_args`` — verifies the
+  all targets appear after ``--target`` without a ``--`` separator.
+- ``test_batch_build_raises_on_empty_targets`` — validates the guard.
+
+Existing ``byte-match``, ``asm-diff``, placement validation, and cache tests
+pass unchanged.
+
+**Measured medians (three runs after warm-up, `emi/battle/battle/03`, 184 lifts,
+`exact=71 partial=103 invalid=10`):**
+
+| Path | Command | Median | Runs |
+| --- | --- | ---: | --- |
+| cache miss | delete only this target's disposable status-cache rows, then `bin/decomp-status emi/battle/battle/03 --detail minimal` | 41.530 s | 41.163, 41.859, 41.530 s |
+| warm audit | `bin/decomp-status emi/battle/battle/03 --detail minimal` | 0.797 s | 0.731, 0.805, 0.797 s |
+| no-cache diagnostic | `bin/decomp-status --no-cache emi/battle/battle/03 --detail minimal` | 39.582 s | 39.098, 40.484, 39.582 s |
+
+All three retained identical totals. The live acceptance check
+`bin/asm-diff emi/battle/battle/03@0x801D6EAC --detail minimal` and
+`bin/byte-match emi/battle/battle/03@0x801D6EAC` both passed after the audit.
+`--no-cache` intentionally bypasses summaries but still uses the selected
+per-target batch build; it is a diagnostic audit, never lift acceptance.
 
 ## Dependencies and blockers
 

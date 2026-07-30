@@ -11,7 +11,7 @@ from .analyzer import EngineIdentity, build_snapshot, find_engine
 from .canonical import Symbol, load_target_symbols
 from .domain import load_target_manifests, normalize_target_id
 from .layout import parse_splat_layout
-from .snapshot import snapshot_path, write_snapshot
+from .snapshot import SNAPSHOT_SCHEMA, snapshot_path, write_snapshot
 
 
 @dataclass(frozen=True)
@@ -126,7 +126,8 @@ def status(root: Path, target_id: str) -> dict[str, object]:
         try:
             payload = json.loads(target.snapshot.read_text(encoding="utf-8"))
             fresh = (
-                payload.get("target") == target.target
+                payload.get("schema") == SNAPSHOT_SCHEMA
+                and payload.get("target") == target.target
                 and payload.get("engine", {}).get("name") == "rizin"
                 and payload.get("inputs", {}).get("binary_sha256") == binary_sha256
                 and payload.get("inputs", {}).get("replay_sha256")

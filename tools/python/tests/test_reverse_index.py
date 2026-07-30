@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import sqlite3
 from pathlib import Path
 
@@ -76,6 +77,19 @@ def test_project_recipe_is_target_qualified_and_read_only(tmp_path: Path) -> Non
     assert project.replay_sha256 == hashlib.sha256(project.replay.encode()).hexdigest()
     assert status(tmp_path, TARGET)["fresh"] is False
     assert not (tmp_path / "out/rizin").exists()
+
+
+def test_status_rejects_pre_jal_snapshot_schema(tmp_path: Path) -> None:
+    binary, _ = _manifest(tmp_path)
+    _snapshot(tmp_path, binary)
+    snapshot = tmp_path / "out/reverse/emi/test/archive/00/snapshot.json"
+    assert status(tmp_path, TARGET)["fresh"] is True
+
+    payload = json.loads(snapshot.read_text(encoding="utf-8"))
+    payload["schema"] = "bof3.analysis-snapshot/v2"
+    snapshot.write_text(json.dumps(payload), encoding="utf-8")
+
+    assert status(tmp_path, TARGET)["fresh"] is False
 
 
 def test_rebuild_is_atomic_when_a_snapshot_is_stale(tmp_path: Path) -> None:

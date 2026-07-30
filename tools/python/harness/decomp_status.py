@@ -11,7 +11,14 @@ import tempfile
 from typing import Any, Callable, Iterable
 
 from .domain import TargetManifest, load_target_manifests, normalize_target_id
-from .match.asm_diff import AsmDiffRequest, run_asm_diff_one
+from .build import batch_build, cmake_target_for_source, configure
+from .io import repo_layout
+from .match.asm_diff import (
+    AsmDiffRequest,
+    run_asm_diff_one,
+    _asm_diff_resolve,
+    _asm_diff_compare,
+)
 from .match.status_cache import StatusCache, source_fingerprint, target_fingerprint
 from .reverse_index import SCHEMA_VERSION, index_path
 from .snapshot import read_snapshot, snapshot_path, validate_snapshot_identity
@@ -23,6 +30,10 @@ _UNDEFINED = re.compile(r"undefined reference to `([^']+)'")
 _FUNCTION = re.compile(r"func_[0-9A-F]{8}\Z")
 
 DiffRunner = Callable[[AsmDiffRequest], dict[str, Any]]
+
+_Record = dict[str, Any]
+_WorkItem = tuple[str, Path, int, str, str, TargetManifest]
+"""Worklist item: (target, source_path, address, source_name, fingerprint_key, manifest)."""
 
 
 def select_manifests(
@@ -68,39 +79,76 @@ def _invalid_record(
     }
 
 
-def collect_lifts(
+def _batch_result(
+    root: Path,
+    target: str,
+    source: Path,
+    address: int,
+    source_name: str,
+    result: dict[str, Any],
+) -> _Record:
+    """Build a status record from a live comparison result."""
+    instructions = result["instruction_count"]
+    return {
+        "target": target,
+        "function": source.stem,
+        "address": f"0x{address:08X}",
+        "source": source_name,
+        "status": "exact" if result["byte_match"] else "partial",
+        "reason": "",
+        "instruction_count": {
+            "original": instructions["original"],
+            "current": instructions["current"],
+            "matching": instructions["matching"],
+        },
+        "match_percent": instructions["match_percent"],
+        "original_size": result["original_size"],
+        "current_size": result["current_size"],
+        "size_delta": result["size_delta"],
+    }
+
+
+def _build_preflight(
     root: Path,
     manifests: Iterable[tuple[str, TargetManifest]],
-    *,
-    diff_runner: DiffRunner = run_asm_diff_one,
-    cache: StatusCache | None = None,
-) -> list[dict[str, Any]]:
-    """Compile and compare every lift in the supplied target manifests."""
+    cache: StatusCache | None,
+) -> tuple[list[_Record], dict[str, list[_WorkItem]]]:
+    """
+    Phase 2.3.1 — separate audit discovery from comparison.
 
-    records: list[dict[str, Any]] = []
+    Returns (ready_records, worklist_by_target) where:
+    - ready_records contains invalid and cache-hit records (report-ready).
+    - worklist_by_target groups valid cache misses by owning manifest target
+      so the caller can batch-build per target.
+
+    Ordering, cache semantics, and label rules are unchanged.
+    """
+    ready: list[_Record] = []
+    worklist: dict[str, list[_WorkItem]] = {}
+
     for target, manifest in manifests:
         source_dir = root / manifest.source_dir
         target_key = target_fingerprint(root, manifest) if cache is not None else ""
         for source in sorted(source_dir.glob("func_*.c")):
             if _FUNCTION.fullmatch(source.stem) is None:
-                records.append(
+                ready.append(
                     _invalid_record(root, target, source, "invalid lifted filename")
                 )
                 continue
             try:
                 address = int(source.stem.removeprefix("func_"), 16)
             except ValueError:
-                records.append(
+                ready.append(
                     _invalid_record(root, target, source, "invalid lifted filename")
                 )
                 continue
             try:
                 text = source.read_text(encoding="utf-8")
             except (OSError, UnicodeError) as exc:
-                records.append(_invalid_record(root, target, source, str(exc), address))
+                ready.append(_invalid_record(root, target, source, str(exc), address))
                 continue
             if _SOURCE.search(text) is None or _BEHAVIOR.search(text) is None:
-                records.append(
+                ready.append(
                     _invalid_record(
                         root, target, source, "missing required metadata", address
                     )
@@ -110,45 +158,160 @@ def collect_lifts(
             key = source_fingerprint(source, target_key) if cache is not None else ""
             record = cache.get(target, source_name, key) if cache is not None else None
             if record is not None:
-                records.append(record)
+                ready.append(record)
                 continue
-            try:
-                result = diff_runner(
-                    AsmDiffRequest(
-                        source_path=source,
-                        address=address,
-                        binary_path=root / manifest.binary,
-                        load_address=manifest.load_address,
-                        output_root=root / "out" / "matching",
-                        section_placements=manifest.section_placements.get(address, ()),
+            worklist.setdefault(target, []).append(
+                (target, source, address, source_name, key, manifest)
+            )
+
+    return ready, worklist
+
+
+def _request_for_source(
+    root: Path, source: Path, address: int, manifest: TargetManifest
+) -> AsmDiffRequest:
+    return AsmDiffRequest(
+        source_path=source,
+        address=address,
+        binary_path=root / manifest.binary,
+        load_address=manifest.load_address,
+        output_root=root / "out" / "matching",
+        section_placements=manifest.section_placements.get(address, ()),
+    )
+
+
+def _run_batch_misses(
+    root: Path,
+    worklist: dict[str, list[_WorkItem]],
+    diff_runner: DiffRunner,
+    cache: StatusCache | None,
+) -> list[_Record]:
+    """
+    Phase 2.3.2 — build selected source objects once per target.
+
+    For each owning target, batch-build all valid cache-miss lifts, then
+    compare individually without rebuilding.  Falls back to per-source builds
+    when a batch fails, preserving individual error attribution.
+    """
+    records: list[_Record] = []
+    repo = repo_layout(root)
+
+    for target, items in worklist.items():
+        sources = [item[1] for item in items]
+        cmake_targets = [cmake_target_for_source(root, s) for s in sources]
+        batch_ok = True
+
+        try:
+            configure(root)
+            result = batch_build(root, cmake_targets)
+            if result.returncode != 0:
+                batch_ok = False
+        except (RuntimeError, ValueError, FileNotFoundError):
+            batch_ok = False
+
+        if batch_ok:
+            # Check freshness before comparing so every work item produces one
+            # record and stale objects cannot enter the matcher.
+            resolved_items: list[tuple[_WorkItem, AsmDiffRequest, dict[str, Any]]] = []
+            stale_items: list[_WorkItem] = []
+            for item in items:
+                _, source, address, _, _, manifest = item
+                try:
+                    request = _request_for_source(root, source, address, manifest)
+                    resolved = _asm_diff_resolve(repo, request)
+                    obj = resolved["object_path"]
+                    if (
+                        not obj.is_file()
+                        or obj.stat().st_mtime < source.stat().st_mtime
+                    ):
+                        stale_items.append(item)
+                        continue
+                    resolved_items.append((item, request, resolved))
+                except (FileNotFoundError, RuntimeError, ValueError):
+                    stale_items.append(item)
+
+            # A successful CMake request that did not refresh an object needs
+            # the existing per-source path for a trustworthy diagnosis.
+            for item in stale_items:
+                _, source, address, source_name, key, manifest = item
+                request = _request_for_source(root, source, address, manifest)
+                try:
+                    result = diff_runner(request)
+                except (FileNotFoundError, RuntimeError, ValueError) as exc:
+                    records.append(
+                        _invalid_record(
+                            root, target, source, _failure_detail(exc), address
+                        )
                     )
+                    continue
+                record = _batch_result(
+                    root, target, source, address, source_name, result
                 )
-            except (FileNotFoundError, RuntimeError, ValueError) as exc:
-                records.append(
-                    _invalid_record(root, target, source, _failure_detail(exc), address)
+                if cache is not None:
+                    cache.put(target, source_name, key, record)
+                records.append(record)
+
+            for item, request, resolved in resolved_items:
+                _, source, address, source_name, key, _manifest = item
+                try:
+                    result = _asm_diff_compare(repo, request, resolved)
+                except (FileNotFoundError, RuntimeError, ValueError) as exc:
+                    records.append(
+                        _invalid_record(
+                            root, target, source, _failure_detail(exc), address
+                        )
+                    )
+                    continue
+                record = _batch_result(
+                    root, target, source, address, source_name, result
                 )
-                continue
-            instructions = result["instruction_count"]
-            record = {
-                "target": target,
-                "function": source.stem,
-                "address": f"0x{address:08X}",
-                "source": source_name,
-                "status": "exact" if result["byte_match"] else "partial",
-                "reason": "",
-                "instruction_count": {
-                    "original": instructions["original"],
-                    "current": instructions["current"],
-                    "matching": instructions["matching"],
-                },
-                "match_percent": instructions["match_percent"],
-                "original_size": result["original_size"],
-                "current_size": result["current_size"],
-                "size_delta": result["size_delta"],
-            }
-            if cache is not None:
-                cache.put(target, source_name, key, record)
-            records.append(record)
+                if cache is not None:
+                    cache.put(target, source_name, key, record)
+                records.append(record)
+        else:
+            # Batch failed — fall back to per-source build + compare
+            for item in items:
+                _, source, address, source_name, key, _manifest = item
+                request = _request_for_source(root, source, address, _manifest)
+                try:
+                    result = diff_runner(request)
+                except (FileNotFoundError, RuntimeError, ValueError) as exc:
+                    records.append(
+                        _invalid_record(
+                            root, target, source, _failure_detail(exc), address
+                        )
+                    )
+                    continue
+                record = _batch_result(
+                    root, target, source, address, source_name, result
+                )
+                if cache is not None:
+                    cache.put(target, source_name, key, record)
+                records.append(record)
+
+    return records
+
+
+def collect_lifts(
+    root: Path,
+    manifests: Iterable[tuple[str, TargetManifest]],
+    *,
+    diff_runner: DiffRunner = run_asm_diff_one,
+    cache: StatusCache | None = None,
+) -> list[dict[str, Any]]:
+    """Compile and compare every lift in the supplied target manifests.
+
+    Uses a preflight + batch build strategy (Phases 2.3.1 and 2.3.2):
+    1. Preflight separates invalid/cached from valid cache-miss sources.
+    2. Valid misses are batch-built per owning target, then compared
+       individually without issuing another build per source.
+    3. On batch failure, falls back to per-source build-and-compare.
+    """
+
+    ready, worklist = _build_preflight(root, manifests, cache)
+    batch_records = _run_batch_misses(root, worklist, diff_runner, cache)
+    records = ready + batch_records
+    records.sort(key=lambda r: (r["target"], r["source"]))
     return records
 
 
