@@ -1,5 +1,7 @@
 #include "internal.h"
 
+/* @source 0x800B0118 */
+/* @behavior Looks up a table index, then writes the selected pair values to BattleWork offsets 0x0C and 0x10. */
 void func_800B0118(void) {
   BattleWork *work;
   u8 table_index;

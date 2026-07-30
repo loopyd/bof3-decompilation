@@ -1,5 +1,9 @@
 #include "internal.h"
 
+/*
+ * @source 0x800B21D8
+ * @behavior Subtracts 0x20 from PanelTask x; if signed x falls below 0x53, sets x=0x52 and state=0.
+ */
 void func_800B21D8(void) {
     PanelTask* task;
 
