@@ -3,6 +3,12 @@
 Recover independently loaded *Breath of Fire III* binaries as readable C89
 with target-qualified evidence and byte comparison.
 
+## License
+
+The original project material in this repository is licensed under the
+[GNU General Public License, version 3](LICENSE). Third-party components retain
+their own licenses; original game assets are not distributed here.
+
 ## Quick path
 
 ```sh
