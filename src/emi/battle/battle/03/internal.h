@@ -124,7 +124,7 @@ extern Battle03QueuedSlot* volatile D_801EC2E0;
 extern u8                            D_801EBF04;
 extern u8                            D_801EC2E4;
 extern u8                            D_801EC328;
-extern u32                           D_80148648;
+extern u8*                           D_80148648;
 extern u8                            D_801462E5;
 extern u8                            D_8014630C;
 extern u8                            D_8014864C;

@@ -1037,8 +1037,10 @@ segments:
     - asm
     - func_801E915C
   - - 99788
-    - asm
+    - c
     - func_801E91CC
+    - '@source: src/emi/battle/battle/03/func_801E91CC.c'
+    - '@behavior: Reads two signed panel halfwords and calls func_801D750C.'
   - - 99836
     - c
     - func_801E91FC
