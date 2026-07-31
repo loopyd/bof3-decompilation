@@ -549,8 +549,10 @@ segments:
     - asm
     - func_801E1938
   - - 69008
-    - asm
+    - c
     - func_801E1990
+    - '@source: src/emi/battle/battle/03/func_801E1990.c'
+    - '@behavior: Dispatches the handler selected by scratchpad slot 0x44 byte 2, then calls func_801E1B2C.'
   - - 69084
     - c
     - func_801E19DC
