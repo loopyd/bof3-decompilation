@@ -654,8 +654,10 @@ segments:
     - asm
     - func_801E2E30
   - - 74936
-    - asm
+    - c
     - func_801E30B8
+    - '@source: src/emi/battle/battle/03/func_801E30B8.c'
+    - '@behavior: Returns 0xFF when D_801462F3 is 1; otherwise calls func_801E29B4 with arg0 + 3 as u8.'
   - - 75000
     - asm
     - func_801E30F8
