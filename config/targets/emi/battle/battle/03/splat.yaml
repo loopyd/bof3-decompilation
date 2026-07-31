@@ -1057,8 +1057,10 @@ segments:
     - c
     - func_801E943C
   - - 100508
-    - asm
+    - c
     - func_801E949C
+    - '@source: src/emi/battle/battle/03/func_801E949C.c'
+    - '@behavior: Calls func_801D8450 with D_801462F4 when D_80144955 is zero.'
   - - 100560
     - c
     - func_801E94D0
