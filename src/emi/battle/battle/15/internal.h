@@ -129,6 +129,8 @@ extern BattleSelectionDispatchTable D_800969B8;
 extern volatile u32 D_801459F0;
 extern s8 D_800B4E8C[];
 
+u32 func_800AF66C(u8 *arg0, u32 arg1);
+
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
  * equal the symbol-name addresses. */
 extern BattlePanelTaskDispatchTable D_800969E4;

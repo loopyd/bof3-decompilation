@@ -17,6 +17,45 @@
       "identity": "2.6.3",
       "assembler": "maspsx --aspsx-version=2.56",
       "executable_relpath": "gcc"
+    },
+    {
+      "id": "gcc-2.8.0-psx",
+      "label": "GCC 2.8.0 PSX (old-gcc 0.17)",
+      "url": "https://github.com/decompals/old-gcc/releases/download/0.17/gcc-2.8.0-psx.tar.gz",
+      "checksum": "sha256:1a3c956fe8aea5ebdb251749d95de2c84f023530584d7bd663744b5ec24050b7",
+      "archive_name": "gcc-2.8.0-psx.tar.gz",
+      "license": "GPL-2.0-or-later",
+      "source": "https://github.com/decompals/old-gcc/blob/b74211c9d959e9724802f3177c8229cd67202c87/gcc-2.8.0-psx.Dockerfile",
+      "host": "linux-x86_64",
+      "identity": "2.8.0",
+      "assembler": "maspsx --aspsx-version=2.56",
+      "executable_relpath": "gcc"
+    },
+    {
+      "id": "gcc-2.8.1-psx",
+      "label": "GCC 2.8.1 PSX (old-gcc 0.17)",
+      "url": "https://github.com/decompals/old-gcc/releases/download/0.17/gcc-2.8.1-psx.tar.gz",
+      "checksum": "sha256:f6f6e883942d4d3289d048236c672e71ed410e546aaae8ff655952f1567e1be0",
+      "archive_name": "gcc-2.8.1-psx.tar.gz",
+      "license": "GPL-2.0-or-later",
+      "source": "https://github.com/decompals/old-gcc/blob/b74211c9d959e9724802f3177c8229cd67202c87/gcc-2.8.1-psx.Dockerfile",
+      "host": "linux-x86_64",
+      "identity": "2.8.1",
+      "assembler": "maspsx --aspsx-version=2.56",
+      "executable_relpath": "gcc"
+    },
+    {
+      "id": "gcc-2.95.2-psx",
+      "label": "GCC 2.95.2 PSX (old-gcc 0.17)",
+      "url": "https://github.com/decompals/old-gcc/releases/download/0.17/gcc-2.95.2-psx.tar.gz",
+      "checksum": "sha256:932ed3669710a82b12570c29c46ff42989b6505b2af10db84d4551d55dfc0b1c",
+      "archive_name": "gcc-2.95.2-psx.tar.gz",
+      "license": "GPL-2.0-or-later",
+      "source": "https://github.com/decompals/old-gcc/blob/b74211c9d959e9724802f3177c8229cd67202c87/gcc-2.95.2-psx.Dockerfile",
+      "host": "linux-x86_64",
+      "identity": "2.95.2",
+      "assembler": "maspsx --aspsx-version=2.56",
+      "executable_relpath": "gcc"
     }
   ]
 }

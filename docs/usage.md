@@ -166,7 +166,7 @@ source shapes in a disposable workspace. `promote` validates the canonical
 source but never edits source, maps, or layouts.
 
 To try a catalog compiler instead of the canonical one, pass `--compiler` with
-a catalog ID, e.g. `bin/flag-search TARGET@0xADDRESS --compiler gcc-2.6.3-psx`.
+a catalog ID, e.g. `bin/flag-search TARGET@0xADDRESS --compiler gcc-2.8.0-psx`.
 Its output is diagnostic only: a non-exact result never retains an object
 override, and even a fresh exact result needs a reviewed
 `BOF3_OBJCOMPILER_`/`BOF3_OBJFLAGS_` entry in `config/compiler/object-flags.cmake`

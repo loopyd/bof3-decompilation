@@ -570,10 +570,11 @@ See `third_party/decomp-permuter/` for upstream documentation.
 ## 20. Historical GCC variant catalog
 
 The framework (`config/compiler/variants.json`, `bin/compiler-variants`)
-manages historical GCC compiler candidates. One provenance-pinned candidate
-exists — `gcc-2.6.3-psx` (SHA-256-verified) — but no object selects it: it
-failed its single bounded pilot and is never claimed to match. Research and the
-negative record are documented in `docs/specs/runtime/compiler-variants.md`.
+manages historical GCC compiler candidates. Four provenance-pinned candidates
+exist — `gcc-2.6.3-psx`, `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, and
+`gcc-2.95.2-psx` (SHA-256-verified) — but no object selects any: bounded
+probes were non-exact and none is claimed to match. Research and the negative
+records are documented in `docs/specs/runtime/compiler-variants.md`.
 
 When adding a candidate:
 

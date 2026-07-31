@@ -10,11 +10,12 @@ tags: [compiler, research, gcc, mips, negative-evidence, pipeline]
 
 Research into historical GCC compilers that may have produced BOF3 objects.
 
-## Status: one verified negative candidate
+## Status: four verified negative candidates
 
-`gcc-2.6.3-psx` is a provenance-pinned, opt-in candidate in
-`config/compiler/variants.json`; it is not selected by any object and did not
-produce an exact match in its single bounded pilot. The framework
+`gcc-2.6.3-psx`, `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, and `gcc-2.95.2-psx` are
+provenance-pinned, opt-in candidates in `config/compiler/variants.json`; none
+is selected by any object and none produced an exact match in a bounded probe.
+The framework
 (`bin/compiler-variants`, `tools/python/harness/toolchain/gcc_variants.py`)
 verifies archive digest, host, extraction containment, and executable identity
 before the compiler may run.
@@ -32,7 +33,9 @@ before the compiler may run.
 | GCC 2.7.0 | old-gcc submodule | Retains same residuals as 2.7.2 |
 | GCC 2.7.1 | old-gcc submodule | Retains same residuals as 2.7.2 |
 | GCC 2.7.2.1–3 | old-gcc submodule | Retains same residuals as 2.7.2 |
-| GCC 2.8+ | old-gcc submodule | Diverges from earlier BOF3 objects |
+| GCC 2.8.0 PSX (old-gcc 0.17) | SHA-256-pinned GitHub release probe | `exe/slus_004_22@0x80162B08`: all 52 flag profiles differ; best 86.96%, below canonical 98.51%; no override; later `battle/15@0x800AF66C`: 23.81%, no override |
+| GCC 2.8.1 PSX (old-gcc 0.17) | SHA-256-pinned GitHub release probe | `battle/15@0x800AF66C`: all 52 flag profiles differ; best 23.81%; no override |
+| GCC 2.95.2 PSX (old-gcc 0.17) | SHA-256-pinned GitHub release probe | `battle/15@0x800AF66C`: all 52 flag profiles differ; best 23.81%; no override |
 | maspsx (any version) | third_party/maspsx | Verified canonical match |
 | ASPSX 2.56 | bin/cc driver | Verified canonical match |
 | Stock PsyQ CC1PSX.EXE (4.0, 4.1, 4.3, 4.6) | Retail | Tested — no unique value |
@@ -40,7 +43,36 @@ before the compiler may run.
 **GCC 2.7.0–2.7.2.3**: see `docs/specs/runtime/compiler-provenance.md`
 (`exe/slus_004_22@0x80162B08`). No byte-match improvement.
 
-**GCC 2.8+**: Diverges from all tested BOF3 objects.
+**GCC 2.8.0 PSX (old-gcc 0.17)**: a fresh, provenance-pinned probe on
+`exe/slus_004_22@0x80162B08` confirmed divergence: all 52 flag profiles
+were non-exact, with best 86.96% (`-O2 -mno-split-addresses`) versus the
+canonical compiler's 98.51%. Its release archive was
+`gcc-2.8.0-psx.tar.gz` from old-gcc `0.17`, SHA-256
+`1a3c956fe8aea5ebdb251749d95de2c84f023530584d7bd663744b5ec24050b7`,
+identity `2.8.0`; its catalog record is retained only as negative provenance,
+and no `BOF3_OBJCOMPILER_` override was retained.
+
+### `battle/15@0x800AF66C` historical-version matrix
+
+The user-authorized clean-C revival has reviewed boundary `0x18E6C..0x18EB8`
+(76 original bytes) and source
+`src/emi/battle/battle/15/func_800AF66C.c`. Its canonical residual is
+5/20 instructions (25.00%), 76→80 bytes, first at `+0x0000` (`move t0,a1`
+absent). Each row ran all 52 flag-catalog profiles through
+`bin/flag-search`; no `BOF3_OBJCOMPILER_` or flag override was retained.
+
+| GCC | Compiled profiles | Compile errors | Best profile | Best match | Exact |
+| --- | ---: | ---: | --- | ---: | --- |
+| canonical 2.7.2 PSX | 47 | 5 | `-O2 -G0` | 25.00% | no |
+| 2.6.3 PSX (old-gcc 0.13) | 47 | 5 | `-O2 -G0` | 25.00% | no |
+| 2.8.0 PSX (old-gcc 0.17) | 50 | 2 | `-O2 -mno-split-addresses -fno-schedule-insns -fno-delayed-branch` | 23.81% | no |
+| 2.8.1 PSX (old-gcc 0.17) | 50 | 2 | `-O2 -mno-split-addresses -fno-schedule-insns -fno-delayed-branch` | 23.81% | no |
+| 2.95.2 PSX (old-gcc 0.17) | 52 | 0 | `-O2 -mno-split-addresses -fno-schedule-insns -fno-delayed-branch` | 23.81% | no |
+
+The first clean-C candidate is retained as a target-local partial lift for
+future source-shape work, not as proof of retail compiler identity. The matrix
+closes these versions for this target; do not repeat it without new source,
+ABI, or compiler-provenance evidence.
 
 **ASPSX**: Used with `bin/cc` driver, produces byte-identical output to
 canonical GCC 2.7.2-psx toolchain for all tested functions.
@@ -64,7 +96,8 @@ Bounded research has been performed and documented:
   documented non-exact residuals
 - Bounded permuter search (best score improved but did not yield credible C)
 - maspsx ASPSX emulation versions (2.56+)
-- Isolated old-GCC binaries: 2.5.7, 2.6.0, 2.6.3, 2.7.0, 2.7.1, 2.7.2, 2.7.2.1–3, 2.8+
+- Isolated old-GCC binaries: 2.5.7, 2.6.0, 2.6.3, 2.7.0, 2.7.1, 2.7.2,
+  2.7.2.1–3, 2.8.0, 2.8.1, and 2.95.2
 - Disposable stock PsyQ `CC1PSX.EXE` 4.0, 4.1, 4.3, 4.6
 - Declaration/volatile forms for loader globals
 - Branch inversion, early-return, `goto`, local-result, return-expression shapes
@@ -84,8 +117,10 @@ GPL-2.0-or-later licensing, `linux-x86_64`, flat `gcc` executable path, and
 observed `gcc --version` output `2.6.3`. `bin/compiler-variants install`,
 `verify`, and `path` passed locally.
 
-The disposable clean-C pilot was a 76-byte entry-register residual; its source
-was removed after this non-exact closeout. GCC 2.6.3 initially rejected the
+The initial disposable clean-C pilot was a 76-byte entry-register residual;
+its source was removed after that closeout. A later user-authorized revival is
+retained as a target-local partial lift and has its separate all-version matrix
+above. GCC 2.6.3 initially rejected the
 pre-existing declaration spelling
 `void __attribute__((noinline)) func_8009B20C(void);`. Its equivalent
 post-declarator spelling was used only for the experiment then restored. Under
@@ -97,8 +132,8 @@ retained header/source/flag change. The canonical live control remains 76→76
 bytes with first difference `+0x0000`: original `move t0,a1; move v0,zero`,
 current `move a2,a1; srl a3,a2,1` (2/19 instructions).
 
-This exhausts the one-candidate pilot. Do not generalize its score or repeat
-the flag matrix; a follow-up needs new source, ABI, or compiler provenance.
+This closes the first probe. Do not generalize its score or repeat the flag
+matrix; a follow-up needs new source, ABI, or compiler provenance.
 
 ## Framework
 
@@ -146,9 +181,9 @@ just check
 bin/symbols check
 ```
 
-Expected: `list` reports the candidate, `verify gcc-2.6.3-psx` validates its
-ignored local installation, and the default build remains canonical because no
-object selects a compiler variant.
+Expected: `list` reports both candidates, `verify <id>` validates an ignored
+local installation, and the default build remains canonical because no object
+selects a compiler variant.
 
 ## Live pipeline control results (Phase 6)
 

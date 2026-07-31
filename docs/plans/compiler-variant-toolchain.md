@@ -6,10 +6,12 @@ implemented but **cannot be marked complete**: no target has a clean-C, fresh
 exact `BOF3_OBJCOMPILER_` profile. The concrete trigger to close it is a new,
 independently evidenced candidate that fresh `bin/byte-match` exact-matches a
 live target with a retained object selection — not a fake selection/flag
-profile and not a reopened pass over the negative pilot. Phase 4 tested its one
-provenance-pinned candidate and is **closed
-negative**: `gcc-2.6.3-psx` did not exact-match its bounded pilot, so no
-object profile is retained.
+profile and not a reopened pass over a negative probe. Phase 4 exhausted four
+provenance-pinned candidates: `gcc-2.6.3-psx`, `gcc-2.8.0-psx`,
+`gcc-2.8.1-psx`, and `gcc-2.95.2-psx`. The latter three were tested on
+`emi/battle/battle/15@0x800AF66C` (with 2.8.0 also tested on
+`exe/slus_004_22@0x80162B08`); none exact-matched, so no object profile is
+retained.
 
 **Scope:** add an opt-in, provenance-pinned way to compare one lifted function
 against managed historical PS1 GCC variants. The canonical compiler remains
@@ -21,8 +23,11 @@ against managed historical PS1 GCC variants. The canonical compiler remains
 permuter, and bounded local-pin ladders. Its disposable clean-C pilot was
 same-size but had an entry-register allocation mismatch. The original overlay
 contains no debug/compiler provenance strings, so its compiler version and
-options remain unproven. The one `gcc-2.6.3-psx` comparison is recorded below
-as negative evidence; neither pilot source nor compiler profile is retained.
+options remain unproven. The `gcc-2.6.3-psx`, `gcc-2.8.0-psx`,
+`gcc-2.8.1-psx`, and `gcc-2.95.2-psx` comparisons are recorded below as
+negative evidence; no compiler profile is retained. The user-authorized
+`0x800AF66C` clean-C revival remains a partial lift for source-shape research,
+not a compiler-selection candidate.
 
 The current project chain is intentionally canonical, but
 [`docs/specs/runtime/compiler-provenance.md`](../specs/runtime/compiler-provenance.md)
@@ -76,8 +81,9 @@ Existing ownership seams:
    | 2 | `gcc-2.7.1-psx`, `gcc-2.7.0-psx` | adjacent release comparison | test only after priority 1 |
    | 3 | `gcc-2.6.3-psx`, `gcc-2.6.0-psx` | older bounded controls | stop if nearer variants are non-exact |
 
-   GCC 2.5.7, GCC 2.8+, stock PsyQ CC1PSX, and the closed SLUS residual are
-   explicitly out of scope.
+   GCC 2.5.7, GCC 2.95.3+, stock PsyQ CC1PSX, and the closed SLUS residual are
+   explicitly out of scope. GCC 2.8.0, 2.8.1, and 2.95.2 are completed negative
+   probes below.
 
 2. For each usable candidate, collect the source/release identifier and exact
    immutable archive URL, SHA-256, license/notice, host requirements,
@@ -96,10 +102,10 @@ canonical control validates; no candidate lacking provenance advances.
 **Stop:** if no safe, compatible, verifiable candidate exists, publish the
 negative evidence and stop without code changes.
 
-**Decision (2026-07-23):** Initial research found no candidate with enough
-provenance to catalog. The later `gcc-2.6.3-psx` record below met that bar and
-was tested once; it did not produce an exact pilot match. The default toolchain
-remains unchanged.
+**Decision (2026-07-23, updated 2026-08-01):** Initial research found no
+candidate with enough provenance to catalog. Later `gcc-2.6.3-psx` and
+`gcc-2.8.0-psx` records met that bar and were each tested once; neither
+produced an exact pilot match. The default toolchain remains unchanged.
 
 ## Phase 1 — catalog and managed variant lifecycle
 
@@ -237,8 +243,8 @@ after no retained entry references it.
 
 ## Phase 4 — one bounded pilot and durable evidence
 
-**Status: COMPLETE — NEGATIVE** (2026-07-31). The one-candidate matrix is
-exhausted; do not expand it from score/assembly resemblance.
+**Status: COMPLETE — NEGATIVE** (2026-08-01). The bounded four-candidate
+matrix is exhausted; do not expand it from score/assembly resemblance.
 
 | Field | Verified evidence |
 | --- | --- |
@@ -248,11 +254,14 @@ exhausted; do not expand it from score/assembly resemblance.
 | Pilot | Disposable `emi/battle/battle/15@0x800AF66C` clean-C candidate, 76 bytes, reviewed boundary/load/payload offset `0x18E6C`; removed after non-exact closeout |
 | Compatibility / result | A temporary C89-compatible spelling (`void func_8009B20C(void) __attribute__((noinline));`) let 2.6.3 compile the pilot through `bin/cc → maspsx --aspsx-version=2.56 → bin/as`; it was restored before closeout. Of 52 flag profiles, 47 compiled and all differed; best was 19.05% (`-O1 -fno-delayed-branch`), while 5 unsupported `-mno-split-addresses`/`-Os` profiles failed to compile. No object override was added. Canonical live control remains 76→76 bytes, first `+0x0000`: original `move t0,a1; move v0,zero`, current `move a2,a1; srl a3,a2,1` (2/19 instructions). |
 | Stop reason | No clean-C exact `bin/byte-match`; no compiler or flag profile may be retained. |
+| Follow-up probe | `gcc-2.8.0-psx`, old-gcc `0.17` commit `b74211c9d959e9724802f3177c8229cd67202c87`, archive SHA-256 `1a3c956fe8aea5ebdb251749d95de2c84f023530584d7bd663744b5ec24050b7`; `exe/slus_004_22@0x80162B08` (268 bytes) compiled under all 52 flag profiles with no exact result; best 86.96% (`-O2 -mno-split-addresses`) versus canonical 98.51%. |
+| Historical matrix | The user-authorized clean-C revival of `emi/battle/battle/15@0x800AF66C` is 76→80 bytes, first difference `+0x0000`, 5/20 instructions. Its all-52-profile matrix produced no exact result: canonical and `gcc-2.6.3-psx` each best 25.00%; `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, and `gcc-2.95.2-psx` each best 23.81%. The full table and compile-error counts are in `docs/specs/runtime/compiler-variants.md`. |
 
-The catalog record remains as provenance-pinned, opt-in negative evidence; its
-installation state is ignored. Remove it only if it becomes obsolete or its
-source/archive provenance is withdrawn. A future experiment needs new source,
-ABI, or compiler provenance evidence—not another pass over this pilot.
+All four catalog records remain as provenance-pinned, opt-in negative evidence;
+their installation state is ignored. Remove one only if it becomes obsolete or
+its source/archive provenance is withdrawn. A future experiment needs new
+source, ABI, or compiler provenance evidence—not another pass over these closed
+probes.
 
 ## Phase 5 — retained per-function compiler specification metadata
 

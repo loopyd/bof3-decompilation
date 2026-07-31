@@ -36,10 +36,10 @@ headers remain the build-facing declaration baseline.
 
 ## Historical GCC variants
 
-`gcc-2.6.3-psx` is the current verified, opt-in negative candidate in
-`config/compiler/variants.json`; no object selects it, so canonical GCC remains
-the default. Add another candidate only with the same reviewed provenance. The
-`bin/compiler-variants` CLI manages the lifecycle:
+`gcc-2.6.3-psx` and `gcc-2.8.0-psx` are verified, opt-in negative candidates
+in `config/compiler/variants.json`; no object selects either, so canonical GCC
+remains the default. Add another candidate only with the same reviewed
+provenance. The `bin/compiler-variants` CLI manages the lifecycle:
 
 ```sh
 bin/compiler-variants list                    # show catalog entries

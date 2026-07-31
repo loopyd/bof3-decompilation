@@ -1332,8 +1332,10 @@ segments:
     - asm
     - func_800AF5FC
   - - 101996
-    - asm
+    - c
     - func_800AF66C
+    - '@source: src/emi/battle/battle/15/func_800AF66C.c'
+    - '@behavior: Checks horizontal and vertical battle-work bounds for arg1.'
   - - 102072
     - asm
     - func_800AF6B8

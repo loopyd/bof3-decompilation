@@ -55,5 +55,16 @@ For `0x800AF66C`, a candidate that copies `a0` to preserve the range pointer is
 not evidence for the intended ABI: original instructions load `a0`'s two fields
 into `a1` then `a0` and reserve `t0` for `a1`. The unresolved mismatch is the
 compiler's allocation/scheduling of this proven `(range, value)` shape, not an
-unknown parameter order. Do not add a pin or a generic macro on this evidence
-alone; use a fresh `bin/asm-diff` for any bounded source-shape attempt.
+unknown parameter order.
+
+The retained clean-C partial lift first loads `g_battle_work`, then shifts
+`a1` directly and keeps range/work values in `v0`/`v1`; it is 76→80 bytes and
+first differs at entry, where the original is `move t0,a1; move v0,zero`.
+A 52-profile matrix found canonical GCC 2.7.2 and GCC 2.6.3 tie at 25.00%,
+while GCC 2.8.0, 2.8.1, and 2.95.2 are worse (23.81%), all non-exact. This
+rules out those tested compiler profiles for this C shape; it does not prove
+retail GCC version or justify an object override. Continue with clean-C
+lifetime/expression ordering that makes `value` live before work materialization
+and permits the original `a0`/`a1` reuse. Do not add a pin or a generic macro
+on this evidence alone; use a fresh `bin/asm-diff` for each bounded source-shape
+attempt.
