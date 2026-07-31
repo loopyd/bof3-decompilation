@@ -564,8 +564,10 @@ segments:
     - '@source: src/emi/battle/battle/03/func_801E1AE4.c'
     - '@behavior: Calls the preceding battle handler.'
   - - 69380
-    - asm
+    - c
     - func_801E1B04
+    - '@source: src/emi/battle/battle/03/func_801E1B04.c'
+    - '@behavior: Calls the preceding battle handler and stores its result.'
   - - 69420
     - asm
     - func_801E1B2C
