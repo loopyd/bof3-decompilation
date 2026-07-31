@@ -24,44 +24,27 @@ header plus complete target bindings and selected source/asm. After it succeeds,
 `read` on any emitted `=====` path: skill/protocol, manifest, map, Splat, header,
 bindings, source, or asm. This is a policy violation, not verification. Read only
 an unbundled path for a named evidence gap; the supplied brief is allowed.
-Follow its skill and `.pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md`.
+Follow the inherited skill (`.pi/skills/bof3-re/SKILL.md`) for the matching
+ladder, fast-evidence commands, and pipeline-test contract, and
+`.pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md` for mission flow.
 Edit only owned source, `internal.h`, target map, and Splat boundary. Use `edit`
 for every existing file—never `write`, shell redirection, or a whole-file rewrite
 of a map/header/Splat/binding file. `write` is only for the newly created mission
 source. Companion records are static-call facts, never foreign ABI/map/source/link authority.
+Reuse one supplied/function brief; do not repeat mission/status/byte-match.
 
-Reuse one supplied/function brief; do not repeat mission/status/byte-match. Use
-live normal asm-diff before each edit and final byte-match. Classify the first
-hunk using `docs/matching-playbook.md` §17: frame/size first means calls,
-address-taking, aggregate copies, and CFG; same-size address/load order means
-symbol form and pointer-cell qualifiers; lone branch/jump-delay or entry-copy
-residuals need exact register liveness. The catalog is only a parent priority
-snapshot; never replace this live classification with a catalog row. Do not run
-`just check` or `decomp-status`. Run `symbols check TARGET` and `splat TARGET`
-only when map/Splat changed; run companion-check only for relevant calls. Report
-snapshot/index staleness; do not rebuild global analysis.
-
-For an asm-diff-proven caller-register scheduling mismatch, use
-`CLOBBER_CALLER_REG(reg)` (or a named `CLOBBER_*` wrapper) only after clean C
-and `barrier()` fail. It schedules any existing C-generated instruction—such as
-in a `jal`/branch delay slot or fixed-address reload sequence—and must not encode
-an opcode. Add an adjacent `MATCHING_AID` naming the instruction, register, and
-placement; retain it only after a live byte match. Never clobber
-`s*`, `gp`, `sp`, or `ra`; that is an allocator/pin case, not a clobber aid.
-After clean-C/barrier attempts, flags, and the bounded permuter stall, an
-asm-diff-proven allocator or entry-register residual may use the shared
-`REGISTER_PIN(type, name, reg)` macro autonomously. Make one bounded local
-experiment; retain it only after a live exact byte-match and independent review,
-add a local `MATCHING_AID` rationale, and name it in `matching_aids`. A direct numeric `"$N"` spelling
-still needs explicit user approval and proof that the macro form changes
-codegen. Never make a function-specific pin macro.
-
-At each ladder rung, make at most three diagnosed non-progressing attempts;
-restore the best clean-C state before advancing. On exhaustion, restore mission
-edits and report the target, first original/current difference, rungs and aids
-tried, last live result, and the specific missing/blocked evidence. A retained
-`MATCHING_AID` must name the original/current placement, exhausted rung, and
-immediately following exact byte-match; never retain one for a score alone.
+Role-specific safeguards beyond the skill ladder: after clean-C/barrier
+attempts, flags, and the bounded permuter stall, an asm-diff-proven allocator
+or entry-register residual may use the shared `REGISTER_PIN(type, name, reg)`
+macro autonomously. Make one bounded local
+experiment; retain it only after a live exact byte-match and independent
+review, with a local `MATCHING_AID` rationale
+and a `matching_aids` entry. A direct numeric `"$N"` spelling still needs
+explicit user approval and proof that the macro form changes codegen. Never
+make a function-specific pin macro. Toolchain/catalog/flag/compiler changes
+fall under the SKILL.md pipeline-test contract; `just setup` primes catalog
+installs, so never manually manage cache/install unless the task is toolchain
+work.
 
 Never commit/push/reset/clean/checkout/setup/spawn children. If escalation
 creates a new untracked source, `rm` of that exact mission source is allowed

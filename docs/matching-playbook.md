@@ -569,10 +569,11 @@ See `third_party/decomp-permuter/` for upstream documentation.
 
 ## 20. Historical GCC variant catalog
 
-The empty-catalog framework (`config/compiler/variants.json`,
-`bin/compiler-variants`) manages historical GCC compiler candidates. Current
-state is empty — no validated candidate exists. Research is documented in
-`docs/specs/runtime/compiler-variants.md`.
+The framework (`config/compiler/variants.json`, `bin/compiler-variants`)
+manages historical GCC compiler candidates. One provenance-pinned candidate
+exists — `gcc-2.6.3-psx` (SHA-256-verified) — but no object selects it: it
+failed its single bounded pilot and is never claimed to match. Research and the
+negative record are documented in `docs/specs/runtime/compiler-variants.md`.
 
 When adding a candidate:
 

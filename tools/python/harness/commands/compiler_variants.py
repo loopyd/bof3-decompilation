@@ -1,4 +1,4 @@
-"""Compiler variant catalog inspection and resolution commands."""
+"""Compiler variant catalog inspection and lifecycle commands."""
 
 from __future__ import annotations
 
@@ -6,9 +6,8 @@ import argparse
 import json
 import sys
 
-from ..compiler_config import resolve_compiler_variant, set_environment_for_variant
 from ..io import repo_layout
-from ..toolchain.gcc_variants import load_variants, lookup_variant, sha256_file
+from ..toolchain.gcc_variants import ensure_variant, load_variants, lookup_variant
 from ._common import run_main
 
 
@@ -56,65 +55,15 @@ def _cmd_verify(args: argparse.Namespace) -> int:
 
 
 def _cmd_path(args: argparse.Namespace) -> int:
-    """Resolve and print the verified GCC path for a compiler ID."""
+    """Resolve (auto-installing when absent) and print the verified GCC path."""
     layout = repo_layout()
     try:
         variant = lookup_variant(layout, args.id)
-        variant.verify(layout)
-        exe = variant.install_path(layout) / variant.executable_relpath
-        if not exe.is_file():
-            print(f"path {args.id}: compiler not found at {exe}", file=sys.stderr)
-            return 2
-        print(exe.resolve())
-    except (ValueError, FileNotFoundError, RuntimeError) as exc:
+        print(ensure_variant(layout, variant))
+    except (ValueError, FileNotFoundError, RuntimeError, OSError) as exc:
         print(f"path {args.id}: {exc}", file=sys.stderr)
         return 2
     return 0
-
-
-def _cmd_resolve(args: argparse.Namespace) -> int:
-    layout = repo_layout()
-    variant = resolve_compiler_variant(layout)
-    print(variant.id)
-    return 0
-
-
-def _cmd_env(args: argparse.Namespace) -> int:
-    layout = repo_layout()
-    variant = resolve_compiler_variant(layout)
-    env = set_environment_for_variant(layout, variant)
-    for key, value in sorted(env.items()):
-        if value:
-            print(f"export {key}={value!r}")
-        else:
-            print(f"unset {key}")
-    return 0
-
-
-def _cmd_sha256(args: argparse.Namespace) -> int:
-    layout = repo_layout()
-    try:
-        candidates = load_variants(layout, validate=True)
-    except ValueError as exc:
-        print(f"sha256: schema validation error: {exc}", file=sys.stderr)
-        return 2
-
-    if not candidates:
-        print("sha256: empty catalog")
-        return 0
-
-    failed = 0
-    for v in candidates:
-        archive = layout.downloads_dir / v.archive_name
-        if archive.is_file():
-            computed = sha256_file(archive)
-            match = "OK" if computed == v.checksum else "MISMATCH"
-            if match == "MISMATCH":
-                failed += 1
-            print(f"{v.id}: {computed} ({match})")
-        else:
-            print(f"{v.id}: {v.checksum} (not downloaded)")
-    return 2 if failed else 0
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -139,28 +88,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("id", help="Catalog ID")
     p.set_defaults(handler=_cmd_path)
 
-    p = subparsers.add_parser("resolve", help="Print resolved variant ID")
-    p.set_defaults(handler=_cmd_resolve)
-
-    p = subparsers.add_parser("env", help="Print environment exports")
-    p.set_defaults(handler=_cmd_env)
-
-    p = subparsers.add_parser("sha256", help="Compute SHA-256 of downloaded archives")
-    p.set_defaults(handler=_cmd_sha256)
-
     return parser
-
-
-def run(args: argparse.Namespace) -> int:
-    cmd = getattr(args, "command", None)
-    if cmd is None:
-        # Default: resolve
-        return _cmd_resolve(args)
-    handler = getattr(args, "handler", None)
-    if handler is None:
-        print(f"compiler-variants: unknown command {cmd!r}", file=sys.stderr)
-        return 2
-    return handler(args)
 
 
 def main(argv: list[str] | None = None) -> int:

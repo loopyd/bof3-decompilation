@@ -3,14 +3,17 @@ name: classifier
 description: Classify project tasks
 model: ninerouter/qwen-combo
 thinking: off
-tools: read,grep,find,ls
-inheritProjectContext: true
+tools: read
+inheritProjectContext: false
 inheritSkills: false
-timeoutMs: 3600000
-turnBudget: {"maxTurns":300,"graceTurns":10}
+timeoutMs: 30000
+turnBudget: {"maxTurns":3,"graceTurns":0}
+defaultProgress: false
+acceptance: false
 ---
 
-Classify the full request into exactly one category; return only its name:
+Do not inspect files, use tools, explain, greet, or produce an acceptance report.
+Classify the full request from its wording alone; return exactly one category name:
 - `decompilation`: function lifting, binaries, disassembly, Ghidra function work
 - `tool_development`: rebof3, SDKs, CLI/tools, APIs, toolchain utilities
 - `build_system`: Makefiles, CMake, compile/link/profile/toolchain config

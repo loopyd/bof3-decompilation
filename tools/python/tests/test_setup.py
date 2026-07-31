@@ -67,3 +67,85 @@ def test_setup_managed_toolchains_factory_contains_all(tmp_path: Path) -> None:
         "splat",
         "spimdisasm",
     ]
+
+
+def test_setup_primes_all_host_compatible_catalog_variants(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """Setup primes every host-compatible catalog candidate, selected or not."""
+    installed: list[str] = []
+
+    class FakeVariant:
+        def __init__(self, cid: str) -> None:
+            self.id = cid
+            self.label = cid
+            self.host = "linux-x86_64"
+
+        def install(self, layout, *, force: bool = False) -> str:
+            installed.append(self.id)
+            return "installed"
+
+    def fake_managed(root, layout):
+        return tuple()
+
+    monkeypatch.setattr(setup, "managed_toolchains", fake_managed)
+    monkeypatch.setattr(
+        setup,
+        "load_variants",
+        lambda layout: [FakeVariant("gcc-2.6.3-psx"), FakeVariant("gcc-2.8.1-psx")],
+    )
+
+    layout = SimpleNamespace(root=tmp_path)
+    state = setup.SetupState(root=tmp_path, layout=layout, args=SimpleNamespace(force=False))
+    result = setup.TASKS[2].run(state)
+
+    assert installed == ["gcc-2.6.3-psx", "gcc-2.8.1-psx"]
+    assert "primed variants: gcc-2.6.3-psx, gcc-2.8.1-psx" in result
+
+
+def test_setup_skips_host_incompatible_catalog_variant(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """A host-incompatible catalog candidate is skipped and reported."""
+    installed: list[str] = []
+
+    class FakeVariant:
+        id = "gcc-2.6.3-psx"
+        label = "GCC 2.6.3 PSX"
+        host = "darwin-x86_64"
+
+        def install(self, layout, *, force: bool = False) -> str:
+            installed.append(self.id)
+            return "installed"
+
+    def fake_managed(root, layout):
+        return tuple()
+
+    monkeypatch.setattr(setup, "managed_toolchains", fake_managed)
+    monkeypatch.setattr(setup, "load_variants", lambda layout: [FakeVariant()])
+
+    layout = SimpleNamespace(root=tmp_path)
+    state = setup.SetupState(root=tmp_path, layout=layout, args=SimpleNamespace(force=False))
+    result = setup.TASKS[2].run(state)
+
+    assert installed == []
+    assert "primed variants" not in result
+    assert "skipped variants: gcc-2.6.3-psx (darwin-x86_64)" in result
+
+
+def test_setup_empty_catalog_installs_no_variant(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """An empty catalog primes no variant."""
+    def fake_managed(root, layout):
+        return tuple()
+
+    monkeypatch.setattr(setup, "managed_toolchains", fake_managed)
+    monkeypatch.setattr(setup, "load_variants", lambda layout: [])
+
+    layout = SimpleNamespace(root=tmp_path)
+    state = setup.SetupState(root=tmp_path, layout=layout, args=SimpleNamespace(force=False))
+    result = setup.TASKS[2].run(state)
+
+    assert "primed variants" not in result
+    assert "skipped variants" not in result

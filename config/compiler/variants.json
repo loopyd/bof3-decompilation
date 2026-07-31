@@ -1,10 +1,22 @@
 {
   "schema": "harness.compiler-variants/v1",
   "note": [
-    "Empty catalog: no historical GCC variant has been validated.",
-    "Negative evidence is documented in docs/specs/runtime/compiler-variants.md.",
-    "When a candidate appears, add an entry here with verified SHA-256 URL.",
-    "The build ignores this file until at least one entry passes validation."
+    "Candidates are explicit opt-in comparison tools; the canonical compiler remains default.",
+    "A compiler profile is retained only after a fresh target-qualified exact byte match."
   ],
-  "candidates": []
+  "candidates": [
+    {
+      "id": "gcc-2.6.3-psx",
+      "label": "GCC 2.6.3 PSX (old-gcc 0.13)",
+      "url": "https://github.com/decompals/old-gcc/releases/download/0.13/gcc-2.6.3-psx.tar.gz",
+      "checksum": "sha256:db98510a8cece2f9e37665cc16b4f1f7ad17f282f900d2791b62ed74f50e40b2",
+      "archive_name": "gcc-2.6.3-psx.tar.gz",
+      "license": "GPL-2.0-or-later",
+      "source": "https://github.com/decompals/old-gcc/blob/b9793e7e84f42d442e8d89a2c5c9e568e79e3bb7/gcc-2.6.3-psx.Dockerfile",
+      "host": "linux-x86_64",
+      "identity": "2.6.3",
+      "assembler": "maspsx --aspsx-version=2.56",
+      "executable_relpath": "gcc"
+    }
+  ]
 }

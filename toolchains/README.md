@@ -36,20 +36,42 @@ headers remain the build-facing declaration baseline.
 
 ## Historical GCC variants
 
-When a validated historical GCC variant appears, add it to
-`config/compiler/variants.json`. The `bin/compiler-variants` CLI manages the
-lifecycle:
+`gcc-2.6.3-psx` is the current verified, opt-in negative candidate in
+`config/compiler/variants.json`; no object selects it, so canonical GCC remains
+the default. Add another candidate only with the same reviewed provenance. The
+`bin/compiler-variants` CLI manages the lifecycle:
 
 ```sh
 bin/compiler-variants list                    # show catalog entries
-bin/compiler-variants resolve                 # print resolved ID (or 'none')
 bin/compiler-variants install <id>            # download and install a variant
 bin/compiler-variants verify <id>             # verify installed variant
 bin/compiler-variants path <id>               # print verified GCC path for CMake
-bin/compiler-variants env                     # export environment overrides
-bin/compiler-variants sha256                  # verify downloaded archives
 ```
 
-The empty catalog (current state) means the canonical `gcc-2.7.2-psx` toolchain
-is used without modification. A candidate entry remains untracked until its
-SHA-256 matches the downloaded archive.
+`config/compiler/variants.json` is reviewed, tracked metadata — the single
+source of truth for compiler IDs, archive digests, and executable paths.
+GCC archives are cached (digest-verified) under
+`inputs/external/private-assets/toolchains/gcc/`; installed variants live in
+ignored local state under `toolchains/gcc-variants/` and the canonical
+compiler under `toolchains/gcc-2.7.2-psx/`. Unrelated toolchain downloads
+(PSn00b, Rizin) stay in `toolchains/downloads/`.
+
+An archive is accepted only when its SHA-256 matches the reviewed catalog
+entry. The shared GCC archive lifecycle downloads into a cache-local
+temporary file, validates the digest before atomically publishing the cache
+entry, extracts to a fresh sibling staging directory, verifies the staged
+`gcc --version` identity, and only then atomically replaces the install; a
+failed network, digest, extraction, or identity check preserves a prior
+verified install. `bin/compiler-variants path <id>` and generated
+`compile_commands.json` resolve a selected compiler through the same
+ensure-installed operation, so a missing install self-heals from the
+verified cache. `just setup` primes the canonical compiler plus every host-compatible entry
+in the `config/compiler/variants.json` catalog; a host-incompatible
+candidate is skipped with its ID and host reported, an invalid catalog fails
+setup closed, and a catalog with no candidates installs nothing. Setup never
+sets `PSX_GCC`, adds an object override, or changes the default compilation
+selection. A corrupt or malformed existing install fails closed
+rather than falling back to canonical or host GCC.
+
+A catalog entry never changes the compiler until an exact, target-qualified
+object selection is added.

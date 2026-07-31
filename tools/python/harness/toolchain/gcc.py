@@ -1,15 +1,24 @@
-from __future__ import annotations
+"""Canonical GCC 2.7.2 PSX installer (decompals/old-gcc 0.13)."""
 
-import shutil
+from __future__ import annotations
 
 from ..io import RepoLayout
 from .base import Toolchain, ensure_gitkeep
-from .releases import download_file, extract_tar_gz, github_release_asset_url
+from .gcc_archive import install_archive, verify_installed
+from .releases import github_release_asset_url
 
 
 OLD_GCC_REPO = "decompals/old-gcc"
 OLD_GCC_TAG = "0.13"
 OLD_GCC_ASSET = "gcc-2.7.2-psx.tar.gz"
+# Observed SHA-256 of the 0.13 release archive; identity is the `gcc --version`
+# first line. Both canonical GCC and catalog variants share the same
+# digest-verified cache lifecycle.
+OLD_GCC_URL = github_release_asset_url(
+    repo=OLD_GCC_REPO, tag=OLD_GCC_TAG, asset_name=OLD_GCC_ASSET
+)
+OLD_GCC_SHA256 = "sha256:aca64479041aa2d645dc52ebcaace276c0aa06f258c0e3f190ccf6d76701ffbc"
+OLD_GCC_IDENTITY = "2.7.2"
 
 
 class GccToolchain(Toolchain):
@@ -19,22 +28,24 @@ class GccToolchain(Toolchain):
         self.layout = layout
 
     def install(self, *, force: bool = False) -> str:
-        archive = self.layout.downloads_dir / OLD_GCC_ASSET
-        download_file(
-            github_release_asset_url(
-                repo=OLD_GCC_REPO, tag=OLD_GCC_TAG, asset_name=OLD_GCC_ASSET
-            ),
-            archive,
+        status = install_archive(
+            self.layout,
+            archive_name=OLD_GCC_ASSET,
+            url=OLD_GCC_URL,
+            checksum=OLD_GCC_SHA256,
+            dest=self.layout.gcc272_psx_root,
+            executable_relpath="gcc",
+            expected_identity=OLD_GCC_IDENTITY,
+            label=self.label,
+            force=force,
         )
-        if force:
-            shutil.rmtree(self.layout.gcc272_psx_root, ignore_errors=True)
-        if not (self.layout.gcc272_psx_root / "gcc").is_file():
-            shutil.rmtree(self.layout.gcc272_psx_root, ignore_errors=True)
-            extract_tar_gz(archive, self.layout.gcc272_psx_root)
         ensure_gitkeep(self.layout.gcc272_psx_root)
-        return ""
+        return status
 
     def verify(self) -> str:
-        if not (self.layout.gcc272_psx_root / "gcc").is_file():
-            raise FileNotFoundError(f"missing GCC: {self.layout.gcc272_psx_root / 'gcc'}")
-        return self.label
+        return verify_installed(
+            dest=self.layout.gcc272_psx_root,
+            executable_relpath="gcc",
+            expected_identity=OLD_GCC_IDENTITY,
+            label=self.label,
+        )

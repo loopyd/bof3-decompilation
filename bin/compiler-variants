@@ -1,27 +1,21 @@
 #!/usr/bin/env python3
-"""Resolve and inspect compiler variants from the catalog.
+"""Inspect and manage compiler variants from the catalog.
 
-When the catalog is empty, reports "empty" and exits 0 — no candidate was
-found or validated. The build continues using the canonical toolchain.
-
-When a candidate is present, resolves its ID, verifies installation, and
-prints the environment overrides that should be applied to the build.
-
-Environment variables:
-  BOF3_OBJCOMPILER       — path to the variant's install directory (set by this script).
-  BOF3_OBJCOMPILER_LABEL — human-readable label for the active variant.
+`just setup` primes every host-compatible catalog candidate, and `path` or a
+selected compile command may self-heal a missing selected install from the
+digest-verified cache. A catalog entry never implicitly selects a compiler:
+without an explicit selection the build keeps the canonical toolchain, and an
+empty catalog reports "empty" with exit 0.
 
 Commands:
   list     — show catalog entries (empty when no candidates).
-  resolve  — print resolved variant ID.
-  verify   — verify the resolved variant is installed.
-  env      — print export statements for the active variant's environment.
-  sha256   — compute and display SHA-256 of downloaded archives.
+  install  — download, digest-verify, and install a variant.
+  verify   — verify an installed variant.
+  path     — print the verified compiler executable path for CMake.
 """
 
 from __future__ import annotations
 
-import os
 import os
 import sys
 from pathlib import Path

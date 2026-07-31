@@ -42,6 +42,8 @@ inputs/disc/*
 inputs/external/*
 !inputs/external/.gitkeep
 !inputs/README.md
+# Digest-verified GCC archive cache (canonical GCC + catalog variants)
+inputs/external/private-assets/toolchains/gcc/
 
 # Toolchains (staged downloads)
 toolchains/downloads/

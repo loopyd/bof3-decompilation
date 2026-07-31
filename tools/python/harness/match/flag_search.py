@@ -22,6 +22,7 @@ from .asm_diff import (
 )
 
 OPTIMIZATION_RE = re.compile(r"^-O(?:[0-3s]|fast)$")
+CMAKE_ENV_ASSIGNMENT_RE = re.compile(r"^[^=]+=.*$")
 
 
 def _compile_command(layout: RepoLayout, source: Path) -> tuple[list[str], Path]:
@@ -42,6 +43,19 @@ def _compile_command(layout: RepoLayout, source: Path) -> tuple[list[str], Path]
     if command is None:
         command = shlex.split(row["command"])
     return list(command), Path(row["directory"])
+
+
+def _strip_embedded_psx_gcc(command: list[str]) -> list[str]:
+    """Remove PSX_GCC only from the leading ``cmake -E env`` assignments."""
+    if command[:3] != ["cmake", "-E", "env"]:
+        return command
+    index = 3
+    env: list[str] = []
+    while index < len(command) and CMAKE_ENV_ASSIGNMENT_RE.match(command[index]):
+        if not command[index].startswith("PSX_GCC="):
+            env.append(command[index])
+        index += 1
+    return [*command[:3], *env, *command[index:]]
 
 
 def _with_candidate(command: list[str], flags: list[str], output: Path) -> list[str]:
@@ -98,6 +112,8 @@ def search_flags(
         variant_label = variant.label
 
     cmd, cmd_dir = _compile_command(layout, source)
+    if compiler_id is not None:
+        cmd = _strip_embedded_psx_gcc(cmd)
     results: list[dict[str, Any]] = []
     with tempfile.TemporaryDirectory(prefix="harness-flags-") as tmp:
         work = Path(tmp)

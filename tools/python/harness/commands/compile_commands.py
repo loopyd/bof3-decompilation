@@ -12,7 +12,7 @@ from ..compiler_config import (
     sanitize_identifier,
 )
 from ..io import repo_layout
-from ..toolchain.gcc_variants import lookup_variant
+from ..toolchain.gcc_variants import ensure_variant, lookup_variant
 from ._common import run_main
 
 OPTIMIZATION_RE = __import__("re").compile(r"^-O(?:[0-3s]|fast)$")
@@ -53,19 +53,14 @@ def run(args: argparse.Namespace) -> int:
         if compiler_id is None:
             variant_prefix: list[str] = []
         else:
-            # Resolve the specific requested compiler ID
+            # Resolve the specific requested compiler ID; a missing install is
+            # installed on demand (only this catalog ID is ever downloaded).
             layout = repo_layout(root)
             variant = lookup_variant(layout, compiler_id)
-            variant.verify(layout)
-            gcc_path = variant.install_path(layout) / variant.executable_relpath
-            if not gcc_path.is_file():
-                raise FileNotFoundError(
-                    f"compiler variant {compiler_id!r}: {gcc_path} not found; "
-                    f"run `bin/compiler-variants install {compiler_id}`"
-                )
+            gcc_path = ensure_variant(layout, variant)
             variant_prefix = [
                 "cmake", "-E", "env",
-                f"PSX_GCC={gcc_path.resolve()}",
+                f"PSX_GCC={gcc_path}",
             ]
         if override is None:
             base_args = [*common, "-c", str(source), "-o", str(object_path)]

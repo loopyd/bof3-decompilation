@@ -119,3 +119,20 @@ relevant companion-check, and `git diff --check`. This is the default complete
 lift gate; do not run `just check` or `decomp-status` in an agent mission.
 Reserve `just check` for parent-only broad tooling/config changes or explicit
 request. Report checks, skipped broad checks, risks, and next step tersely.
+
+### Pipeline-test contract
+
+When the task changes the compiler catalog
+(`config/compiler/variants.json`), object flags
+(`config/compiler/object-flags.cmake`), compiler selection
+(`BOF3_OBJCOMPILER_`), `bin/cc`, maspsx, `bin/as`, or linker toolchain code,
+run the focused pipeline tests:
+
+    python -m pytest tools/python/tests/test_bin_cc_pipeline.py -v
+    python -m pytest tools/python/tests/test_asm_link.py -v
+
+Then run live `bin/asm-diff TARGET@0xADDRESS --detail normal` and
+`bin/byte-match TARGET@0xADDRESS` on every affected lift.
+
+Ordinary source-only lifts (no toolchain/flag/compiler change) are not
+burdened by this check.

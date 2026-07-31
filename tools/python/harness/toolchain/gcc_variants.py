@@ -2,19 +2,21 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import platform as _platform
 import re
 import subprocess
 import sys
-import tarfile
-import urllib.request
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
-
 from ..io import RepoLayout
+from .gcc_archive import (
+    _safe_extract_tar_gz,  # noqa: F401 — re-exported for tests
+    install_archive,
+    sha256_file,  # noqa: F401 — re-exported for tests
+    verify_installed,
+)
 
 
 class CompilerVariant(ABC):
@@ -71,22 +73,12 @@ class CompilerVariant(ABC):
     def verify(self, layout: RepoLayout) -> str:
         """Verify the installed variant: file exists, within root, identity matches."""
         check_host_compatible(self.host)
-        exe = self.install_path(layout) / self.executable_relpath
-        if not exe.is_file():
-            raise FileNotFoundError(f"missing {self.id}: {exe} not found")
-        resolved = exe.resolve()
-        root = self.install_path(layout).resolve()
-        if not (resolved == root or root in resolved.parents):
-            raise ValueError(
-                f"{self.id}: executable path {resolved} escapes variant root {root}"
-            )
-        version = self.verify_identity(layout)
-        if self.identity and self.identity not in version:
-            raise ValueError(
-                f"{self.id}: --version output does not contain expected identity "
-                f"{self.identity!r}"
-            )
-        return self.label
+        return verify_installed(
+            dest=self.install_path(layout),
+            executable_relpath=self.executable_relpath,
+            expected_identity=self.identity,
+            label=self.label,
+        )
 
     def verify_identity(self, layout: RepoLayout) -> str:
         """Verify the installed binary's --version output contains expected text."""
@@ -160,7 +152,7 @@ _REQUIRED_FIELDS = {
 _SAFE_ID_RE = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]*$")
 _SAFE_RELPATH_RE = re.compile(r"^[a-zA-Z0-9_][-a-zA-Z0-9_./]*$")
 _HOST_RE = re.compile(
-    r"^(linux|darwin|freebsd|win32)-(x86_64|i686|aarch64|arm64|amd64)$"
+    r"^(linux|darwin|win32)-(x86_64|i686|aarch64|arm64|amd64)$"
 )
 
 
@@ -231,7 +223,11 @@ def _validate_entry(entry: dict[str, Any]) -> None:
 
 
 def check_host_compatible(host: str) -> None:
-    """Verify the declared host matches the running platform."""
+    """Verify the declared host matches the running platform (OS and arch).
+
+    Normalizes obvious aliases (amd64 == x86_64, arm64 == aarch64) before
+    comparing; rejects any OS or architecture mismatch.
+    """
     if not _HOST_RE.match(host):
         raise ValueError(
             f"invalid host format {host!r}; expected <os>-<arch>"
@@ -239,36 +235,40 @@ def check_host_compatible(host: str) -> None:
     sys_os = {"linux": "linux", "darwin": "darwin", "win32": "win32"}.get(sys.platform)
     if sys_os is None:
         raise RuntimeError(f"unsupported platform: {sys.platform}")
-    declared_os = host.split("-")[0]
-    if sys_os != declared_os:
+    arch_alias = {"amd64": "x86_64", "arm64": "aarch64"}
+    machine = _platform.machine().lower()
+    sys_arch = arch_alias.get(machine, machine)
+    declared_os, declared_arch = host.split("-", 1)
+    declared_arch = arch_alias.get(declared_arch, declared_arch)
+    if sys_os != declared_os or sys_arch != declared_arch:
         raise RuntimeError(
-            f"host mismatch: declared {host!r}, running {sys_os}-{_platform.machine()}"
+            f"host mismatch: declared {host!r}, running {sys_os}-{sys_arch}"
         )
 
 
-def _safe_extract_tar_gz(archive_path: Path, dest: Path) -> None:
-    """Extract tar.gz rejecting absolute, traversal, device/FIFO, and link entries."""
-    dest.mkdir(parents=True, exist_ok=True)
-    with tarfile.open(archive_path, "r:gz") as tf:
-        for member in tf.getmembers():
-            if member.issym() or member.islnk():
-                raise ValueError(
-                    f"archive contains link entry {member.name!r}; rejecting for safety"
-                )
-            if member.isdev() or member.isfifo():
-                raise ValueError(
-                    f"archive contains device entry {member.name!r}; rejecting"
-                )
-            name = Path(member.name)
-            if name.is_absolute():
-                raise ValueError(
-                    f"archive contains absolute path {member.name!r}; rejecting"
-                )
-            if ".." in name.parts:
-                raise ValueError(
-                    f"archive contains path with '..' {member.name!r}; rejecting"
-                )
-            tf.extract(member, dest, filter="data")
+def ensure_variant(layout: RepoLayout, variant: CompilerVariant) -> str:
+    """Resolve the verified GCC executable path, auto-installing when absent.
+
+    Fails closed: an unsupported host, unknown ID, corrupt existing install,
+    or failed install raises instead of falling back to the canonical or host
+    GCC. ``compiler-variants path <id>`` and ``compile_commands.py`` both use
+    this so a selected variant is installed on demand when only its install
+    is missing.
+    """
+    check_host_compatible(variant.host)
+    dest = variant.install_path(layout)
+    exe = dest / variant.executable_relpath
+    if exe.is_file():
+        variant.verify(layout)
+        return str(exe.resolve())
+    if dest.exists():
+        raise RuntimeError(
+            f"{variant.id}: existing installation at {dest} is corrupt or "
+            f"incomplete; run `bin/compiler-variants install --force {variant.id}`"
+        )
+    variant.install(layout)
+    variant.verify(layout)
+    return str(exe.resolve())
 
 
 def lookup_variant(layout: RepoLayout, compiler_id: str) -> CompilerVariant:
@@ -365,55 +365,16 @@ class CompilerVariantEntry(CompilerVariant):
         return layout.gcc_variants_root / self.id
 
     def install(self, layout: RepoLayout, *, force: bool = False) -> str:
-        """Download, verify digest, and extract this variant."""
+        """Download, verify digest, and install this variant."""
         check_host_compatible(self.host)
-        archive = layout.downloads_dir / self.archive_name
-        if archive.is_file() and not force:
-            existing = sha256_file(archive)
-            if existing == self.checksum:
-                dest = self.install_path(layout)
-                self.verify(layout)
-                return f"{self.id}: already installed"
-
-        # Download
-        archive.parent.mkdir(parents=True, exist_ok=True)
-        urllib.request.urlretrieve(self.url, archive)
-
-        # Verify digest
-        actual = sha256_file(archive)
-        if actual != self.checksum:
-            archive.unlink()
-            raise ValueError(
-                f"{self.id}: SHA-256 mismatch "
-                f"(expected {self.checksum}, got {actual})"
-            )
-
-        # Safe extract
-        dest = self.install_path(layout)
-        if dest.exists():
-            import shutil
-            shutil.rmtree(dest)
-        _safe_extract_tar_gz(archive, dest)
-
-        # Verify executable is a regular file under the variant root
-        exe = dest / self.executable_relpath
-        if not exe.is_file():
-            raise FileNotFoundError(
-                f"{self.id}: {self.executable_relpath} not found after extraction"
-            )
-        resolved = exe.resolve()
-        if not (resolved == dest.resolve() or dest.resolve() in resolved.parents):
-            raise ValueError(
-                f"{self.id}: executable path {resolved} escapes variant root {dest}"
-            )
-
-        # Run full verification: file exists, root containment, identity
-        self.verify(layout)
-        return f"{self.id}: installed and verified"
-
-
-def sha256_file(path: Path) -> str:
-    """Compute SHA-256 hex digest of a file."""
-    h = hashlib.sha256()
-    h.update(path.read_bytes())
-    return f"sha256:{h.hexdigest()}"
+        return install_archive(
+            layout,
+            archive_name=self.archive_name,
+            url=self.url,
+            checksum=self.checksum,
+            dest=self.install_path(layout),
+            executable_relpath=self.executable_relpath,
+            expected_identity=self.identity,
+            label=f"variant {self.id}",
+            force=force,
+        )

@@ -18,6 +18,7 @@ from ..emi.operations import emi_unpack
 from ..io import RepoLayout, repo_layout
 from ..toolchain import managed_toolchains
 from ..toolchain.disc import DiscToolchain, find_disc_set
+from ..toolchain.gcc_variants import check_host_compatible, load_variants
 from ..toolchain.psyq import PsyqToolchain
 from ._common import run_main
 from .compile_commands import run as write_compile_commands
@@ -201,7 +202,27 @@ def _disc(state: SetupState) -> str:
 def _toolchain(state: SetupState) -> str:
     for toolchain in managed_toolchains(state.root, state.layout):
         toolchain.run(force=state.args.force)
-    return "PSn00b, GCC 2.7.2, maspsx, Rizin, m2c, asm-differ, decomp-permuter, splat, spimdisasm"
+
+    # Prime every host-compatible catalog candidate so all project-confirmed
+    # GCC versions are staged; an invalid catalog fails setup closed. This
+    # never sets PSX_GCC, adds an object override, or changes the default
+    # compilation selection.
+    primed = []
+    skipped = []
+    for variant in sorted(load_variants(state.layout), key=lambda v: v.id):
+        try:
+            check_host_compatible(variant.host)
+        except (RuntimeError, ValueError):
+            skipped.append(f"{variant.id} ({variant.host})")
+            continue
+        variant.install(state.layout, force=state.args.force)
+        primed.append(variant.id)
+    detail = "PSn00b, GCC 2.7.2, maspsx, Rizin, m2c, asm-differ, decomp-permuter, splat, spimdisasm"
+    if primed:
+        detail += f"; primed variants: {', '.join(primed)}"
+    if skipped:
+        detail += f"; skipped variants: {', '.join(skipped)}"
+    return detail
 
 
 @setup_task("PsyQ 4.7")

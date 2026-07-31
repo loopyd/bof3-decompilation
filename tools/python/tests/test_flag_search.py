@@ -8,8 +8,6 @@ from types import SimpleNamespace
 
 import pytest
 
-from harness.toolchain.gcc_variants import EmptyCatalog
-
 
 def _make_layout(root: Path) -> SimpleNamespace:
     return SimpleNamespace(
@@ -18,45 +16,6 @@ def _make_layout(root: Path) -> SimpleNamespace:
         gcc_variants_root=root / "toolchains" / "gcc-variants",
         downloads_dir=root / "downloads",
     )
-
-
-class TestSearchFlagsEmptyVariant:
-    def test_resolve_returns_none_for_empty_catalog(self) -> None:
-        """When catalog is empty and no compiler_id given, returns EmptyCatalog."""
-        from harness.compiler_config import resolve_compiler_variant
-        from harness.io import RepoLayout
-        import tempfile
-        root = Path(tempfile.mkdtemp())
-        try:
-            layout = RepoLayout(
-                root=root, build_dir=root / "build", out_dir=root / "out",
-                toolchains_dir=root / "toolchains",
-                third_party_dir=root / "third_party",
-                inputs_dir=root / "inputs",
-                downloads_dir=root / "downloads",
-                private_assets_dir=root / "inputs" / "external" / "private-assets",
-                harness_disk_src=root / "tools" / "rust" / "bof3-disk",
-                emi_ex_src=root / "tools" / "rust" / "emi-ex",
-                harness_disk_bin=root / "bof3-disk",
-                emi_ex_bin=root / "emi-ex",
-                psn00b_toolchain_root=root / "toolchains" / "psn00b_toolchain",
-                psn00b_sdk_root=root / "toolchains" / "psn00bsdk",
-                gcc272_psx_root=root / "toolchains" / "gcc-2.7.2-psx",
-                gcc_variants_root=root / "toolchains" / "gcc-variants",
-                psyq_root=root / "toolchains" / "psyq" / "4.7",
-            )
-            variant = resolve_compiler_variant(layout)
-            assert isinstance(variant, EmptyCatalog)
-        finally:
-            import shutil
-            shutil.rmtree(root, ignore_errors=True)
-
-    def test_explicit_id_raises_in_empty_catalog(self, tmp_path: Path) -> None:
-        """Requesting a specific compiler ID in empty catalog raises."""
-        from harness.compiler_config import resolve_compiler_variant
-        layout = _make_layout(tmp_path)
-        with pytest.raises(ValueError, match="not found in catalog"):
-            resolve_compiler_variant(layout, compiler_id="nonexistent")  # type: ignore[arg-type]
 
 
 class TestVariantCatalogLookup:
@@ -175,6 +134,84 @@ class TestNonemptyListOfLists:
         for i, (flags, result) in enumerate(zip(catalog, results)):
             assert all(f in result for f in flags), f"flags {flags} not in result {i}"
             assert "-o" in result
+
+
+class TestExplicitCompilerOverride:
+    def test_removes_only_embedded_compiler_selection(self) -> None:
+        from harness.match.flag_search import _strip_embedded_psx_gcc
+
+        command = [
+            "cmake", "-E", "env", "KEEP=1", "PSX_GCC=/old/gcc",
+            "bin/cc", "-c", "source.c", "-o", "source.o",
+        ]
+        assert _strip_embedded_psx_gcc(command) == [
+            "cmake", "-E", "env", "KEEP=1", "bin/cc", "-c", "source.c",
+            "-o", "source.o",
+        ]
+
+    def test_unselected_command_is_unchanged(self) -> None:
+        from harness.match.flag_search import _strip_embedded_psx_gcc
+
+        command = ["bin/cc", "-c", "source.c", "-o", "source.o"]
+        assert _strip_embedded_psx_gcc(command) == command
+
+    def test_search_override_preserves_command_arguments(
+        self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+    ) -> None:
+        import harness.match.flag_search as flag_search
+
+        source = tmp_path / "source.c"
+        source.write_text("int f(void) { return 0; }\n")
+        original = tmp_path / "original.s"
+        original.write_text("nop\n")
+        original_bytes = tmp_path / "original.bin"
+        original_bytes.write_bytes(b"\0\0\0\0")
+        command = [
+            "cmake", "-E", "env", "KEEP=1", "PSX_GCC=/selected/gcc",
+            "bin/cc", "PSX_GCC=argument", "-O2", "-c", str(source),
+            "-o", "source.o",
+        ]
+        (tmp_path / "compile_commands.json").write_text(json.dumps([{
+            "directory": str(tmp_path), "file": str(source), "arguments": command,
+        }]))
+        catalog = tmp_path / "flags.json"
+        catalog.write_text(json.dumps({"candidates": [["-O1"]]}))
+        monkeypatch.setattr(flag_search, "run_asm_diff_one", lambda *_a, **_kw: {
+            "outputs": {"original": str(original), "original_bytes": str(original_bytes)},
+            "original_size": 4, "address": "0x80000000",
+        })
+
+        class Variant:
+            label = "requested"
+            executable_relpath = "gcc"
+
+            def verify(self, _layout: object) -> None:
+                pass
+
+            def install_path(self, _layout: object) -> Path:
+                return tmp_path / "requested"
+
+        monkeypatch.setattr(flag_search, "lookup_variant", lambda *_args: Variant())
+        calls: list[tuple[list[str], dict[str, str]]] = []
+
+        def run(args: list[str], **kwargs: object) -> SimpleNamespace:
+            calls.append((args, kwargs["env"]))  # type: ignore[index]
+            return SimpleNamespace(returncode=1)
+
+        monkeypatch.setattr(flag_search.subprocess, "run", run)
+        layout = SimpleNamespace(root=tmp_path, psn00b_toolchain_root=tmp_path)
+        flag_search.search_flags(layout=layout, source=source, catalog_path=catalog)
+        flag_search.search_flags(
+            layout=layout, source=source, catalog_path=catalog, compiler_id="requested"
+        )
+
+        default_args, default_env = calls[0]
+        override_args, override_env = calls[1]
+        assert "PSX_GCC=/selected/gcc" in default_args
+        assert "PSX_GCC" not in default_env
+        assert "PSX_GCC=/selected/gcc" not in override_args
+        assert "PSX_GCC=argument" in override_args
+        assert override_env["PSX_GCC"] == str(tmp_path / "requested" / "gcc")
 
 
 class TestDefaultObjdump:
