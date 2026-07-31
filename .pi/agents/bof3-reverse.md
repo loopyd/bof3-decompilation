@@ -33,18 +33,26 @@ of a map/header/Splat/binding file. `write` is only for the newly created missio
 source. Companion records are static-call facts, never foreign ABI/map/source/link authority.
 Reuse one supplied/function brief; do not repeat mission/status/byte-match.
 
-Role-specific safeguards beyond the skill ladder: after clean-C/barrier
-attempts, flags, and the bounded permuter stall, an asm-diff-proven allocator
-or entry-register residual may use the shared `REGISTER_PIN(type, name, reg)`
-macro autonomously. Make one bounded local
-experiment; retain it only after a live exact byte-match and independent
-review, with a local `MATCHING_AID` rationale
-and a `matching_aids` entry. A direct numeric `"$N"` spelling still needs
-explicit user approval and proof that the macro form changes codegen. Never
-make a function-specific pin macro. Toolchain/catalog/flag/compiler changes
-fall under the SKILL.md pipeline-test contract; `just setup` primes catalog
-installs, so never manually manage cache/install unless the task is toolchain
-work.
+Role-specific safeguards beyond the skill ladder: after clean-C lifetime,
+expression-order, supported-profile, and bounded-permuter attempts stall, an
+asm-diff-proven allocator or entry-register residual may use the shared
+`REGISTER_PIN(type, name, reg)` macro autonomously. First pin only the one
+local proven by the residual; never pin an entire function's temporaries just
+to reproduce a register map. For example, when original `move t0,a1; move
+v0,zero` becomes the same operations in reversed allocator order, pinning only
+the result local to `v0` can let normal C allocation retain the input in `t0`.
+Use the actual unsigned/signed arithmetic shown by the original (`sltu` means
+unsigned thresholds); do not retain semantically wrong signed fields just
+because their bytes are close. `barrier()` is only for evidenced memory-access
+ordering, never allocator ordering or a `nop` delay slot. Make one bounded
+local experiment; retain it only after a live exact byte-match and independent
+review, with a local `MATCHING_AID` rationale that names the original/current
+allocator residual, exhausted rungs, exact check, and removal condition, plus a
+`matching_aids` entry. A direct numeric `"$N"` spelling still needs explicit
+user approval and proof that the macro form changes codegen. Never make a
+function-specific pin macro. Toolchain/catalog/flag/compiler changes fall
+under the SKILL.md pipeline-test contract; `just setup` primes catalog installs,
+so never manually manage cache/install unless the task is toolchain work.
 
 Never commit/push/reset/clean/checkout/setup/spawn children. If escalation
 creates a new untracked source, `rm` of that exact mission source is allowed

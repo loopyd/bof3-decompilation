@@ -165,6 +165,23 @@ bin/promote TARGET@0xADDRESS src/<target>/func_XXXXXXXX.c --detail normal
 source shapes in a disposable workspace. `promote` validates the canonical
 source but never edits source, maps, or layouts.
 
+### Share a decomp.me scratch
+
+```sh
+bin/scratchpad preview TARGET@0xADDRESS
+bin/scratchpad share TARGET@0xADDRESS
+```
+
+`preview` is local-only and prints the exact payload. `share` creates a public,
+unclaimed decomp.me PS1 scratch with the target assembly, the authored C body,
+and minimal generated target declarations/context; it prints the resulting URL.
+Sharing is opt-in and must never include user media, private assets,
+credentials, or unreviewed `out/` candidates. It fails closed for a lift that
+uses ignored PsyQ declarations; add a reviewed public declaration boundary
+before sharing that class of function. It defaults to the canonical local
+`gcc-2.7.2-psx`, mapped to decomp.me's `gcc2.7.2-psx` compiler ID; it does not
+change a local compiler/object selection or constitute matching evidence.
+
 To try a catalog compiler instead of the canonical one, pass `--compiler` with
 a catalog ID, e.g. `bin/flag-search TARGET@0xADDRESS --compiler gcc-2.8.0-psx`.
 Its output is diagnostic only: a non-exact result never retains an object

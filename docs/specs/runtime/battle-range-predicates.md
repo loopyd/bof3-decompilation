@@ -63,8 +63,22 @@ first differs at entry, where the original is `move t0,a1; move v0,zero`.
 A 52-profile matrix found canonical GCC 2.7.2 and GCC 2.6.3 tie at 25.00%,
 while GCC 2.8.0, 2.8.1, and 2.95.2 are worse (23.81%), all non-exact. This
 rules out those tested compiler profiles for this C shape; it does not prove
-retail GCC version or justify an object override. Continue with clean-C
-lifetime/expression ordering that makes `value` live before work materialization
-and permits the original `a0`/`a1` reuse. Do not add a pin or a generic macro
-on this evidence alone; use a fresh `bin/asm-diff` for each bounded source-shape
-attempt.
+retail GCC version or justify an object override.
+
+The bounded clean-C lifetime pass did not improve that retained shape:
+assigning `value` before the work load emitted the same 5/20 result, a
+`volatile` value made a stack frame (6/27), and materializing both axis
+thresholds made a 76-byte but only 2/19 ordered-instruction result. A 300-second
+four-worker permuter run yielded 22 candidates; none byte-matched, and its best
+candidate was the latter 2/19 form. A local `t0` pin experiment recovered the
+first `move t0,a1` but produced 4/21 instructions and 84 bytes, so it was
+reverted.
+
+The final allocator experiment constrained only the result local to `v0` with
+`REGISTER_PIN(u32, result, "v0")`; all other values remain ordinary clean-C
+locals. This causes canonical GCC to preserve `value` in `t0`, initialize the
+result in `v0`, and allocate the derived values as in the original. The signed
+threshold experiment was not retained: both range fields and thresholds are
+`u32`, consistent with the original `sltu` comparisons. A fresh live
+`bin/asm-diff` and `bin/byte-match` then matched all 19 instructions / 76 bytes.
+No object compiler override or generic macro is used.

@@ -35,8 +35,13 @@ and pin rules; apply them from the review side: treat direct pins as banned, and
 reject opcode-emitting assembly and clobbers of `s*`, `gp`, `sp`, or `ra`. A
 mission-added `REGISTER_PIN` is allowed only for
 one bounded local experiment for an asm-diff-proven allocator or entry-register
-residual after the clean-C ladder, with a local `MATCHING_AID` rationale and a
-live exact match; passing this review is the required independent review. A direct
+residual after clean-C lifetime/expression order, supported-profile, and bounded
+permuter attempts, with a local `MATCHING_AID` rationale and a live exact match;
+passing this review is the required independent review. Require the smallest pin
+set: reject a pin set that recreates the full register map when one pinned result
+or input local suffices. Confirm the source types follow the original arithmetic
+(`sltu` requires unsigned threshold values), and reject `barrier()` when it is
+used for allocator ordering rather than evidenced memory-access ordering. A direct
 numeric `"$N"` spelling still needs explicit user approval and evidence that the
 macro changes codegen. Otherwise return `block`.
 

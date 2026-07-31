@@ -40,7 +40,16 @@ typedef struct BattleWork {
   s32 unk_10;
   u8  unk_14[0x1C];
   u16 unk_30;
+  u16 unk_32;
+  u32 range_axis_34;
+  u32 range_axis_38;
 } BattleWork;
+
+typedef struct BattleRange {
+  u8  unk_00[0x34];
+  u32 range_axis_34;
+  u32 range_axis_38;
+} BattleRange;
 
 typedef struct BattleLocalWork {
   u8 unk_00;
@@ -129,7 +138,7 @@ extern BattleSelectionDispatchTable D_800969B8;
 extern volatile u32 D_801459F0;
 extern s8 D_800B4E8C[];
 
-u32 func_800AF66C(u8 *arg0, u32 arg1);
+u32 func_800AF66C(BattleRange *range, u32 value);
 
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
  * equal the symbol-name addresses. */
