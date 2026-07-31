@@ -436,8 +436,10 @@ segments:
     - asm
     - func_801DF34C
   - - 59320
-    - asm
+    - c
     - func_801DF3B8
+    - '@source: src/emi/battle/battle/03/func_801DF3B8.c'
+    - '@behavior: Calls func_801DEFE4 then func_801DEDE4 and increments scratchpad work byte +1.'
   - - 59384
     - asm
     - func_801DF3F8
