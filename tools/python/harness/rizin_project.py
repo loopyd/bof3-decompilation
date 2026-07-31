@@ -9,7 +9,7 @@ from pathlib import Path
 
 from .analyzer import EngineIdentity, build_snapshot, find_engine
 from .canonical import Symbol, load_target_symbols
-from .domain import load_target_manifests, normalize_target_id
+from .domain import lookup_target_manifest
 from .layout import parse_splat_layout
 from .snapshot import SNAPSHOT_SCHEMA, snapshot_path, write_snapshot
 
@@ -64,8 +64,7 @@ def replay_commands(replay: str) -> list[str]:
 def prepare_target(root: Path, target_id: str) -> RizinTarget:
     """Compose a target recipe without writing generated project files."""
 
-    target = normalize_target_id(target_id).value
-    manifest = load_target_manifests(root).get(target)
+    manifest = lookup_target_manifest(root, target_id)
     if manifest is None:
         raise ValueError(f"unknown target: {target_id}")
     binary = root / manifest.binary
@@ -83,16 +82,16 @@ def prepare_target(root: Path, target_id: str) -> RizinTarget:
     if invalid_roots:
         rendered = ", ".join(f"0x{address:08X}" for address in invalid_roots)
         raise ValueError(f"reviewed function roots outside target image: {rendered}")
-    overlay = root / "config" / "targets" / target / "reviewed.rz"
-    replay = _baseline(load_target_symbols(root, target), roots) + _reviewed_overlay(
-        overlay
-    )
+    overlay = root / "config" / "targets" / manifest.id.value / "reviewed.rz"
+    replay = _baseline(
+        load_target_symbols(root, manifest.id.value), roots
+    ) + _reviewed_overlay(overlay)
     return RizinTarget(
-        target=target,
+        target=manifest.id.value,
         binary=binary,
         load_address=manifest.load_address,
         source_dir=root / manifest.source_dir,
-        snapshot=snapshot_path(root, target),
+        snapshot=snapshot_path(root, manifest.id.value),
         reviewed_addresses=roots,
         replay=replay,
         replay_sha256=hashlib.sha256(replay.encode()).hexdigest(),

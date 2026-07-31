@@ -19,7 +19,13 @@ from ..canonical import (
     weak_bindings_c,
     write_map,
 )
-from ..domain import load_target_manifests, normalize_target_id, parse_function_id
+from ..domain import (
+    FUNCTION_ID_FORMAT,
+    FUNCTION_ID_HELP,
+    load_target_manifests,
+    normalize_target_id,
+    parse_function_id,
+)
 from ..io import repo_layout
 from ._common import run_main
 
@@ -34,7 +40,9 @@ def _root(args: argparse.Namespace) -> Path:
     return args.root.resolve()
 
 
-def _targets(root: Path, target: str | None, *, manifests: dict | None = None) -> list[str]:
+def _targets(
+    root: Path, target: str | None, *, manifests: dict | None = None
+) -> list[str]:
     pool = manifests if manifests is not None else load_target_manifests(root)
     if target is None:
         return sorted(pool)
@@ -167,9 +175,13 @@ def _import_rows(args: argparse.Namespace) -> list[dict[str, object]]:
         for function in (parse_function_id(value) for value in args.selectors)
     }
     if args.all_qualified and selectors:
-        raise ValueError("--all-qualified cannot be combined with TARGET@ADDRESS")
+        raise ValueError(
+            f"--all-qualified cannot be combined with {FUNCTION_ID_FORMAT}"
+        )
     if not args.all_qualified and not selectors:
-        raise ValueError("select at least one TARGET@ADDRESS or pass --all-qualified")
+        raise ValueError(
+            f"select at least one {FUNCTION_ID_FORMAT} or pass --all-qualified"
+        )
     selected = (
         rows
         if args.all_qualified
@@ -388,7 +400,9 @@ def build_parser() -> argparse.ArgumentParser:
         "import-psyq", help="apply reviewed exact PsyQ provenance to target maps"
     )
     import_psyq.add_argument("proposal", type=Path)
-    import_psyq.add_argument("selectors", nargs="*", metavar="TARGET@ADDRESS")
+    import_psyq.add_argument(
+        "selectors", nargs="*", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP
+    )
     import_psyq.add_argument("--all-qualified", action="store_true")
     import_psyq.add_argument("--write", action="store_true")
     import_psyq.set_defaults(handler=run_import_psyq)

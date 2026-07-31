@@ -6,7 +6,7 @@ import argparse
 from pathlib import Path
 import sys
 
-from ..domain import load_target_manifests, normalize_target_id
+from ..domain import lookup_target_manifest
 from ..io import repo_layout
 from ..toolchain.splat import SplatToolchain
 from ._common import run_main
@@ -14,8 +14,7 @@ from ._common import run_main
 
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
-    target = normalize_target_id(args.target).value
-    manifest = load_target_manifests(root).get(target)
+    manifest = lookup_target_manifest(root, args.target)
     if manifest is None:
         raise ValueError(f"unknown target: {args.target}")
     toolchain = SplatToolchain(root)
@@ -33,7 +32,7 @@ def run(args: argparse.Namespace) -> int:
             if result.stderr:
                 print(result.stderr, end="", file=sys.stderr)
         else:
-            print(f"{target}: splat OK")
+            print(f"{manifest.id.value}: splat OK")
     return result.returncode
 
 

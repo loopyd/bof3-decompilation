@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Any
 from ..io import RepoLayout
 from .gcc_archive import (
-    _safe_extract_tar_gz,  # noqa: F401 — re-exported for tests
     install_archive,
     sha256_file,  # noqa: F401 — re-exported for tests
     verify_installed,
@@ -87,7 +86,9 @@ class CompilerVariant(ABC):
             raise FileNotFoundError(f"missing {self.id}: {exe} not found")
         result = subprocess.run(
             [str(exe), "--version"],
-            capture_output=True, text=True, timeout=30,
+            capture_output=True,
+            text=True,
+            timeout=30,
         )
         if result.returncode != 0:
             raise RuntimeError(f"{self.id}: gcc --version exited {result.returncode}")
@@ -145,15 +146,21 @@ class EmptyCatalog(CompilerVariant):
 _SCHEMA = "harness.compiler-variants/v1"
 _ALLOWED_ROOT_KEYS = {"schema", "note", "candidates"}
 _REQUIRED_FIELDS = {
-    "id", "label", "url", "checksum", "archive_name",
-    "license", "source", "host", "identity", "assembler",
+    "id",
+    "label",
+    "url",
+    "checksum",
+    "archive_name",
+    "license",
+    "source",
+    "host",
+    "identity",
+    "assembler",
     "executable_relpath",
 }
 _SAFE_ID_RE = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]*$")
 _SAFE_RELPATH_RE = re.compile(r"^[a-zA-Z0-9_][-a-zA-Z0-9_./]*$")
-_HOST_RE = re.compile(
-    r"^(linux|darwin|win32)-(x86_64|i686|aarch64|arm64|amd64)$"
-)
+_HOST_RE = re.compile(r"^(linux|darwin|win32)-(x86_64|i686|aarch64|arm64|amd64)$")
 
 
 def _reject_extra_keys(obj: dict[str, Any], allowed: set[str], label: str) -> None:
@@ -184,7 +191,7 @@ def _validate_entry(entry: dict[str, Any]) -> None:
         raise ValueError("variant 'checksum' must be a non-empty string")
     if not entry["checksum"].startswith("sha256:"):
         raise ValueError("variant 'checksum' must start with 'sha256:'")
-    hex_part = entry["checksum"][len("sha256:"):]
+    hex_part = entry["checksum"][len("sha256:") :]
     if not re.match(r"^[0-9a-f]{64}$", hex_part):
         raise ValueError(
             "variant 'checksum' must contain exactly 64 lowercase hex digits"
@@ -202,14 +209,15 @@ def _validate_entry(entry: dict[str, Any]) -> None:
     if not isinstance(entry.get("host", ""), str) or not entry["host"]:
         raise ValueError("variant 'host' must be a non-empty string")
     if not _HOST_RE.match(entry["host"]):
-        raise ValueError(
-            f"invalid host format {entry['host']!r}; expected <os>-<arch>"
-        )
+        raise ValueError(f"invalid host format {entry['host']!r}; expected <os>-<arch>")
     if not isinstance(entry.get("identity", ""), str) or not entry["identity"]:
         raise ValueError("variant 'identity' must be a non-empty string")
     if not isinstance(entry.get("assembler", ""), str) or not entry["assembler"]:
         raise ValueError("variant 'assembler' must be a non-empty string")
-    if not isinstance(entry.get("executable_relpath", ""), str) or not entry["executable_relpath"]:
+    if (
+        not isinstance(entry.get("executable_relpath", ""), str)
+        or not entry["executable_relpath"]
+    ):
         raise ValueError("variant 'executable_relpath' must be a non-empty string")
     if entry["executable_relpath"].startswith("/"):
         raise ValueError("variant 'executable_relpath' must be relative (no leading /)")
@@ -229,9 +237,7 @@ def check_host_compatible(host: str) -> None:
     comparing; rejects any OS or architecture mismatch.
     """
     if not _HOST_RE.match(host):
-        raise ValueError(
-            f"invalid host format {host!r}; expected <os>-<arch>"
-        )
+        raise ValueError(f"invalid host format {host!r}; expected <os>-<arch>")
     sys_os = {"linux": "linux", "darwin": "darwin", "win32": "win32"}.get(sys.platform)
     if sys_os is None:
         raise RuntimeError(f"unsupported platform: {sys.platform}")
@@ -280,9 +286,7 @@ def lookup_variant(layout: RepoLayout, compiler_id: str) -> CompilerVariant:
     for v in variants:
         if v.id == compiler_id:
             return v
-    raise ValueError(
-        f"compiler variant {compiler_id!r} not found in catalog"
-    )
+    raise ValueError(f"compiler variant {compiler_id!r} not found in catalog")
 
 
 def load_variants(

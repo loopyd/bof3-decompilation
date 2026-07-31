@@ -4,13 +4,19 @@ import contextlib
 import shutil
 import tempfile
 import urllib.parse
-import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
 from ..io import DEFAULT_PSYQ_VERSION, RepoLayout, normalize_psyq_version
-from .base import Toolchain
-from .archive import (
+from .base import Toolchain, ensure_gitkeep
+from .helpers import (
+    download_file,
+    find_matching_files,
+    paths_under,
+    require_path_under,
+    unique_paths,
+)
+from .releases import (
     archive_path_looks_valid as archive_file_looks_valid,
     archive_stem,
     extract_archive,
@@ -24,7 +30,9 @@ INCLUDE_FILE_NAMES = ("LIBGPU.H", "libgpu.h")
 LIB_FILE_NAMES = ("LIBGPU.LIB", "libgpu.lib", "libgpu.a")
 TEXT_FILE_SUFFIXES = {".c", ".cc", ".cpp", ".h", ".hpp", ".inc", ".inl", ".s", ".txt"}
 # Official source media: headers and PsyQ .LIB archives.
-DEFAULT_PSYQ_ARCHIVE_URL = "https://archive.org/download/ps1_sdks/Runtime%20Library%204.7.zip"
+DEFAULT_PSYQ_ARCHIVE_URL = (
+    "https://archive.org/download/ps1_sdks/Runtime%20Library%204.7.zip"
+)
 # Converted extraction: per-object .o files required by reviewed signature evidence.
 DEFAULT_PSYQ_CONVERTED_ARCHIVE_URL = (
     "https://psx.arthus.net/sdk/Psy-Q/psyq-4.7-converted-full.7z"
@@ -68,47 +76,10 @@ def psyq_private_cache_root(
     )
 
 
-def ensure_gitkeep(root: Path) -> None:
-    root.mkdir(parents=True, exist_ok=True)
-    gitkeep_path = root / ".gitkeep"
-    if not gitkeep_path.exists() or gitkeep_path.read_text(encoding="utf-8") != "\n":
-        gitkeep_path.write_text("\n", encoding="utf-8")
-
-
 @dataclass(frozen=True)
 class PsyqSource:
     kind: str
     path: Path
-
-
-def _dedupe_paths(candidates: list[Path]) -> list[Path]:
-    deduped: list[Path] = []
-    seen: set[Path] = set()
-    for candidate in candidates:
-        expanded = candidate.expanduser()
-        if expanded in seen:
-            continue
-        seen.add(expanded)
-        deduped.append(expanded)
-    return deduped
-
-
-def _is_allowed_input_path(path: Path) -> bool:
-    candidate = path.expanduser().resolve(strict=False)
-    inputs_root = (REPO_ROOT / "inputs").resolve()
-    return candidate == inputs_root or inputs_root in candidate.parents
-
-
-def _filter_repo_local_paths(candidates: list[Path]) -> list[Path]:
-    return _dedupe_paths(
-        [candidate for candidate in candidates if _is_allowed_input_path(candidate)]
-    )
-
-
-def _validate_repo_local_input(path: Path, *, label: str) -> Path:
-    if not _is_allowed_input_path(path):
-        raise ValueError(f"{label} must stay under the repo's inputs/ tree: {path}")
-    return path.expanduser()
 
 
 def contains_any_file(directory: Path, names: tuple[str, ...]) -> bool:
@@ -221,7 +192,7 @@ def auto_discovery_roots(version: str | None = None) -> list[Path]:
             cache_root / "source-tree",
         ]
     )
-    return _filter_repo_local_paths(candidates)
+    return paths_under(candidates, REPO_ROOT / "inputs")
 
 
 def auto_discovery_archives(version: str | None = None) -> list[Path]:
@@ -232,19 +203,7 @@ def auto_discovery_archives(version: str | None = None) -> list[Path]:
     for parent in (REPO_ROOT / "inputs" / "external", REPO_ROOT / "inputs"):
         for suffix in (".7z", ".zip", ".tar.gz", ".tgz"):
             candidates.append(parent / f"{stem}{suffix}")
-    return _filter_repo_local_paths(candidates)
-
-
-def _iter_archive_matches(candidate: Path) -> list[Path]:
-    if archive_path_looks_valid(candidate):
-        return [candidate]
-    if not candidate.exists() or not candidate.is_dir():
-        return []
-    matches: list[Path] = []
-    for path in sorted(candidate.rglob("*")):
-        if archive_path_looks_valid(path):
-            matches.append(path)
-    return matches
+    return paths_under(candidates, REPO_ROOT / "inputs")
 
 
 def discover_source_root(
@@ -255,10 +214,12 @@ def discover_source_root(
     candidates: list[Path] = []
     if explicit_source is not None:
         candidates.append(
-            _validate_repo_local_input(explicit_source, label="PsyQ source root")
+            require_path_under(
+                explicit_source, REPO_ROOT / "inputs", label="PsyQ source root"
+            )
         )
     candidates.extend(auto_discovery_roots(version))
-    for candidate in _dedupe_paths(candidates):
+    for candidate in unique_paths(candidates):
         if source_root_looks_valid(candidate):
             return candidate
     return None
@@ -272,11 +233,13 @@ def discover_source_archive(
     candidates: list[Path] = []
     if explicit_archive is not None:
         candidates.append(
-            _validate_repo_local_input(explicit_archive, label="PsyQ archive")
+            require_path_under(
+                explicit_archive, REPO_ROOT / "inputs", label="PsyQ archive"
+            )
         )
     candidates.extend(auto_discovery_archives(version))
-    for candidate in _dedupe_paths(candidates):
-        matches = _iter_archive_matches(candidate)
+    for candidate in unique_paths(candidates):
+        matches = find_matching_files(candidate, archive_path_looks_valid)
         if matches:
             return matches[0]
     return None
@@ -361,15 +324,6 @@ def stage_psyq_sdk(
     return dest_root
 
 
-def download_archive(url: str, dest: Path, *, force: bool) -> Path:
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    if dest.exists() and not force:
-        return dest
-    with urllib.request.urlopen(url) as response, dest.open("wb") as output:
-        shutil.copyfileobj(response, output)
-    return dest
-
-
 def import_psyq_sdk(
     *,
     dest: Path | None = None,
@@ -398,7 +352,7 @@ def import_psyq_sdk(
         archive_name = Path(urllib.parse.urlparse(archive_url).path).name
         if not archive_name:
             raise ValueError(f"could not derive archive name from URL: {archive_url}")
-        source_archive = download_archive(
+        source_archive = download_file(
             archive_url,
             archive_store / archive_name,
             force=force,
@@ -412,7 +366,7 @@ def import_psyq_sdk(
         archive_name = Path(urllib.parse.urlparse(archive_url).path).name
         if not archive_name:
             raise ValueError(f"could not derive archive name from URL: {archive_url}")
-        source_archive = download_archive(
+        source_archive = download_file(
             archive_url,
             archive_store / archive_name,
             force=force,
@@ -448,9 +402,13 @@ def stage_psyq_converted_sdk(
     cache_root = psyq_private_cache_root(private_root, psyq_version)
     archive_url = default_psyq_converted_archive_url(psyq_version)
     if archive_url is None:
-        raise FileNotFoundError(f"no converted PsyQ archive is configured for {psyq_version}")
+        raise FileNotFoundError(
+            f"no converted PsyQ archive is configured for {psyq_version}"
+        )
     archive_name = Path(urllib.parse.urlparse(archive_url).path).name
-    archive = download_archive(archive_url, cache_root / "source-media" / archive_name, force=force)
+    archive = download_file(
+        archive_url, cache_root / "source-media" / archive_name, force=force
+    )
     source_root = cache_root / "source-tree" / archive_stem(archive)
     if force and source_root.exists():
         shutil.rmtree(source_root)
@@ -467,11 +425,17 @@ def stage_psyq_converted_sdk(
         None,
     )
     if library_root is None:
-        raise RuntimeError(f"converted PsyQ {psyq_version} archive has no library directory")
+        raise RuntimeError(
+            f"converted PsyQ {psyq_version} archive has no library directory"
+        )
     dest_root = (dest or psyq_dest(psyq_version)).resolve()
     for source_library in library_root.iterdir():
         if source_library.is_dir():
-            shutil.copytree(source_library, dest_root / source_library.name.lower(), dirs_exist_ok=True)
+            shutil.copytree(
+                source_library,
+                dest_root / source_library.name.lower(),
+                dirs_exist_ok=True,
+            )
     return dest_root
 
 

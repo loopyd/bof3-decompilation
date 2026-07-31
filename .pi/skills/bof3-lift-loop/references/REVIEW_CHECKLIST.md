@@ -1,7 +1,8 @@
 # Review checklist
 
-Review one `TARGET[#INDEX]@0xADDRESS`, read-only. First run
-`python3 .pi/skills/bof3-re/scripts/agent-context.py review TARGET[#INDEX]@0xADDRESS`;
+Review one selector, read-only: `TARGET@0xADDRESS`, or shipped EMI
+`BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First run
+`python3 .pi/skills/bof3-re/scripts/agent-context.py review SELECTOR`;
 it supplies common/role plus concise target source/config/asm context in one
 call. Never reread a bundled file, including checklist Markdown; read only an
 unbundled path for a named concrete finding. Use executor brief/diff; run fresh

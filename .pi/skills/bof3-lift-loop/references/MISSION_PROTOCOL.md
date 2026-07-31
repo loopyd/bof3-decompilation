@@ -1,7 +1,8 @@
 # Executor protocol
 
-Lift one `TARGET[#INDEX]@0xADDRESS`. First run
-`python3 .pi/skills/bof3-re/scripts/agent-context.py reverse TARGET[#INDEX]@0xADDRESS`;
+Lift one selector: `TARGET@0xADDRESS`, or shipped EMI
+`BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First run
+`python3 .pi/skills/bof3-re/scripts/agent-context.py reverse SELECTOR`;
 it supplies common/role plus concise target source/config/asm context and complete
 local bindings in one call. Never reread a bundled file, including protocol Markdown; read only an
 unbundled path for a named concrete gap. Stay within mission-owned source,

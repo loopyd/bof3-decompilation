@@ -2,7 +2,9 @@
 
 Read [`SOUL.md`](SOUL.md) alongside this file before repository work.
 
-BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
+BOF3 binaries load independently. Qualify work by one function selector:
+`TARGET@0xADDRESS`. For a shipped EMI entry, use
+`BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`.
 
 ## Boundaries
 

@@ -7,8 +7,7 @@ import shutil
 import sys
 
 from ..build import build, cmake_target_for_directory, cmake_target_for_source
-from ..domain import normalize_target_id
-from ..domain.manifests import load_target_manifests
+from ..domain import lookup_target_manifest, normalize_target_id
 from ..io import repo_layout
 from ._common import run_main
 from .lift import resolve_function
@@ -34,15 +33,16 @@ def run(args: argparse.Namespace) -> int:
             )
         target = cmake_target_for_source(root, source)
     elif args.selector != "all":
-        target_id = normalize_target_id(args.selector)
-        manifest = load_target_manifests(root).get(target_id.value)
+        manifest = lookup_target_manifest(root, args.selector)
         if manifest is None:
-            raise ValueError(f"unknown target: {target_id.value}")
+            raise ValueError(
+                f"unknown target: {normalize_target_id(args.selector).value}"
+            )
         source_directory = root / manifest.source_dir
         if not any(
             path.suffix in {".c", ".s", ".S"} for path in source_directory.glob("*")
         ):
-            print(f"{target_id.value}: no authored sources")
+            print(f"{manifest.id.value}: no authored sources")
             return 0
         target = cmake_target_for_directory(manifest.source_dir)
 

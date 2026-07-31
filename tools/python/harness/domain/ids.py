@@ -16,6 +16,11 @@ _EXE_NAMES = {
     "logo/logo.exe": "exe/logo",
     "logo.exe": "exe/logo",
 }
+FUNCTION_ID_FORMAT = "TARGET@0xADDRESS"
+FUNCTION_ID_HELP = (
+    "TARGET@0xADDRESS; EMI targets may use BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS"
+)
+
 _FUNCTION_RE = re.compile(r"^(?P<target>.+)@(?P<address>(?:0x)?[0-9a-fA-F]{8})$")
 
 
@@ -90,9 +95,17 @@ def normalize_target_id(value: str) -> TargetId:
 
 
 def parse_function_id(value: str) -> FunctionId:
+    """Parse the shared function selector accepted by harness commands.
+
+    Executables use a target name such as ``SLUS_004.22@0x8014AE08``. An EMI
+    entry uses its archive path and slot, for example
+    ``BIN/BATTLE/BATL_END.EMI#0@0x800AF66C``.
+    """
     match = _FUNCTION_RE.match(value.strip())
     if match is None:
-        raise ValueError("function ID must be TARGET@8-digit-address")
+        raise ValueError(
+            f"function ID must be TARGET@8-digit-address ({FUNCTION_ID_HELP})"
+        )
     return FunctionId(
         target=normalize_target_id(match.group("target")),
         address=int(match.group("address"), 16),

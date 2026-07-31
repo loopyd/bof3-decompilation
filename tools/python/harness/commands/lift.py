@@ -15,7 +15,7 @@ import subprocess
 import sys
 
 from ..canonical import load_target_symbols, weak_bindings_c
-from ..domain import FunctionId, parse_function_id
+from ..domain import FUNCTION_ID_HELP, FunctionId, parse_function_id
 from ..domain.manifests import TargetManifest, load_target_manifests
 from ..io import repo_layout
 from ..toolchain.m2c import M2cToolchain
@@ -378,18 +378,18 @@ def _parser(command: str) -> argparse.ArgumentParser:
 def main(command: str, argv: list[str] | None = None) -> int:
     parser = _parser(command)
     if command == "m2ctx":
-        parser.add_argument("function", nargs="?")
+        parser.add_argument("function", nargs="?", help=FUNCTION_ID_HELP)
         parser.add_argument("-o", "--out")
         parser.add_argument("--json", action="store_true")
         parser.set_defaults(handler=run_m2ctx)
     elif command == "m2c":
-        parser.add_argument("function", nargs="?")
+        parser.add_argument("function", nargs="?", help=FUNCTION_ID_HELP)
         parser.add_argument("--void", action="store_true")
         parser.add_argument("-o", "--out")
         parser.add_argument("-c", "--context", action="append", default=[])
         parser.set_defaults(handler=run_m2c)
     elif command in {"asm-diff", "byte-match"}:
-        parser.add_argument("function", nargs="?")
+        parser.add_argument("function", nargs="?", help=FUNCTION_ID_HELP)
         parser.add_argument("--json", action="store_true")
         if command == "asm-diff":
             add_detail_argument(parser)
@@ -397,7 +397,7 @@ def main(command: str, argv: list[str] | None = None) -> int:
             handler=run_asm_diff if command == "asm-diff" else run_byte_match
         )
     elif command == "promote":
-        parser.add_argument("function", nargs="?")
+        parser.add_argument("function", nargs="?", help=FUNCTION_ID_HELP)
         parser.add_argument("candidate", nargs="?")
         parser.add_argument("--json", action="store_true")
         add_detail_argument(parser)
@@ -409,7 +409,7 @@ def main(command: str, argv: list[str] | None = None) -> int:
         print(_example(command))
         return 0
     if not getattr(args, "function", None):
-        parser.error("TARGET@0xADDRESS is required")
+        parser.error(f"{FUNCTION_ID_HELP} is required")
     if command == "promote" and not args.candidate:
         parser.error("candidate.c is required")
     try:

@@ -8,11 +8,14 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
-import tomllib
+import sys
 from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT / "tools" / "python"))
+
+from harness.domain import TargetManifest, load_target_manifests  # noqa: E402
 
 
 def command(root: Path, *args: str) -> dict[str, Any]:
@@ -29,22 +32,15 @@ def command(root: Path, *args: str) -> dict[str, Any]:
     return result
 
 
-def manifests(root: Path) -> dict[str, tuple[Path, dict[str, Any]]]:
-    result: dict[str, tuple[Path, dict[str, Any]]] = {}
-    for path in sorted((root / "config" / "targets").glob("**/target.toml")):
-        data = tomllib.loads(path.read_text())
-        result[data["id"]] = (path, data)
-    return result
-
-
-def target_record(root: Path, target: str, manifest_path: Path, manifest: dict[str, Any]) -> dict[str, Any]:
-    binary = root / manifest["binary"]
+def target_record(root: Path, target: str, manifest: TargetManifest) -> dict[str, Any]:
+    binary = root / manifest.binary
+    manifest_path = root / "config" / "targets" / manifest.id.value / "target.toml"
     return {
         "target": target,
         "manifest": manifest_path.relative_to(root).as_posix(),
-        "kind": manifest["kind"],
-        "disc_id": manifest["disc_id"],
-        "load_address": f"0x{int(manifest['load_address']):08X}",
+        "kind": manifest.kind,
+        "disc_id": manifest.disc_id,
+        "load_address": f"0x{manifest.load_address:08X}",
         "binary": {
             "path": binary.relative_to(root).as_posix(),
             "exists": binary.is_file(),
@@ -60,11 +56,11 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     root = args.root.resolve()
-    known = manifests(root)
+    known = load_target_manifests(root)
     if args.target and args.target not in known:
         parser.error(f"unknown target: {args.target}")
     selected = [args.target] if args.target else sorted(known)
-    records = [target_record(root, target, *known[target]) for target in selected]
+    records = [target_record(root, target, known[target]) for target in selected]
     fresh = sum(bool(record["snapshot"].get("json", {}).get("fresh")) for record in records)
     report = {
         "schema": "bof3.skill-rizin-snapshot-status/v1",

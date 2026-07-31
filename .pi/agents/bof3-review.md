@@ -15,9 +15,10 @@ toolBudget: {"soft":240,"hard":300,"block":"*"}
 defaultProgress: true
 ---
 
-Read-only review of prompted `TARGET[#INDEX]@0xADDRESS` (`TARGET@...` also
-works). First run `python3 .pi/skills/bof3-re/scripts/agent-context.py review
-TARGET[#INDEX]@0xADDRESS` once. It emits ordered common/role context plus
+Read-only review of the prompted function selector: `TARGET@0xADDRESS`, or a
+shipped EMI entry as `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First run
+`python3 .pi/skills/bof3-re/scripts/agent-context.py review SELECTOR` once. It
+emits ordered common/role context plus
 concise target manifest/map/Splat/header plus complete target bindings and selected source/asm.
 After it succeeds, never call `read` on any emitted `=====` path: skill/checklist,
 manifest, map, Splat, header, bindings, source, or asm. This is a policy

@@ -6,7 +6,7 @@ import argparse
 import json
 import sys
 
-from ..domain import parse_function_id
+from ..domain import FUNCTION_ID_HELP, parse_function_id
 from ..io import repo_layout
 from ..toolchain.decompme import DecompMeScratchpadToolchain
 from ._common import run_main
@@ -14,7 +14,9 @@ from ._common import run_main
 
 def run_share(args: argparse.Namespace) -> int:
     toolchain = DecompMeScratchpadToolchain(repo_layout())
-    payload = toolchain.payload(parse_function_id(args.function), compiler=args.compiler)
+    payload = toolchain.payload(
+        parse_function_id(args.function), compiler=args.compiler
+    )
     url = toolchain.publish(payload)
     print(url)
     return 0
@@ -22,7 +24,9 @@ def run_share(args: argparse.Namespace) -> int:
 
 def run_preview(args: argparse.Namespace) -> int:
     toolchain = DecompMeScratchpadToolchain(repo_layout())
-    payload = toolchain.payload(parse_function_id(args.function), compiler=args.compiler)
+    payload = toolchain.payload(
+        parse_function_id(args.function), compiler=args.compiler
+    )
     print(json.dumps(payload.as_api_data(), indent=2, sort_keys=True))
     return 0
 
@@ -35,7 +39,7 @@ def build_parser() -> argparse.ArgumentParser:
         ("preview", run_preview, "print the decomp.me payload without publishing"),
     ):
         command = subcommands.add_parser(name, help=help_text)
-        command.add_argument("function", help="TARGET@0xADDRESS")
+        command.add_argument("function", help=FUNCTION_ID_HELP)
         command.add_argument(
             "--compiler",
             default="gcc-2.7.2-psx",

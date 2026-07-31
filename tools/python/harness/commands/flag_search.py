@@ -7,7 +7,7 @@ import json
 import sys
 from pathlib import Path
 
-from ..domain import load_target_manifests, parse_function_id
+from ..domain import FUNCTION_ID_HELP, load_target_manifests, parse_function_id
 from ..io import repo_layout
 from ..match.flag_search import search_flags
 from ..toolchain.gcc_variants import EmptyCatalog, lookup_variant
@@ -52,10 +52,11 @@ def run(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="flag-search")
-    parser.add_argument("function", help="TARGET@0xADDRESS")
+    parser.add_argument("function", help=FUNCTION_ID_HELP)
     parser.add_argument("--catalog", type=Path)
-    parser.add_argument("--compiler", type=str,
-                        help="catalog ID for a historical GCC variant")
+    parser.add_argument(
+        "--compiler", type=str, help="catalog ID for a historical GCC variant"
+    )
     parser.add_argument("-o", "--out", type=Path)
     parser.add_argument("--example", action="store_true")
     parser.set_defaults(handler=run)

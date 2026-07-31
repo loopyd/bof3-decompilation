@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from ..canonical import load_map
-from ..domain import parse_function_id
+from ..domain import FUNCTION_ID_HELP, parse_function_id
 from ..domain.manifests import CompanionOverlay, load_target_manifests
 from ..emi.catalog import verify_declared_companions
 from ..io import repo_layout
@@ -29,14 +29,21 @@ def _companion_report(
 ) -> dict[str, Any]:
     target = manifests[companion.target.value]
     layout = parse_splat_layout(root / target.splat, target.load_address)
-    symbols = {symbol.address: symbol.canonical_name for symbol in load_map(root / "config" / "targets" / target.id.value / "symbols.txt")}
+    symbols = {
+        symbol.address: symbol.canonical_name
+        for symbol in load_map(
+            root / "config" / "targets" / target.id.value / "symbols.txt"
+        )
+    }
     boundaries = []
     binding_ok = True
     for call in companion.static_calls:
         boundary = layout.boundary_starting_at(call.target_address)
         mapped = symbols.get(call.target_address)
         if boundary is None or not boundary.is_function:
-            boundaries.append({"address": f"0x{call.target_address:08X}", "status": "missing"})
+            boundaries.append(
+                {"address": f"0x{call.target_address:08X}", "status": "missing"}
+            )
             binding_ok = False
             continue
         boundaries.append(
@@ -51,7 +58,9 @@ def _companion_report(
             binding_ok = False
     abi = _status(
         companion.abi is not None,
-        "no reviewed ABI declaration" if companion.abi is None else companion.abi.prototype,
+        "no reviewed ABI declaration"
+        if companion.abi is None
+        else companion.abi.prototype,
     )
     binding = _status(
         binding_ok,
@@ -75,7 +84,10 @@ def _companion_report(
     return {
         "target": companion.target.value,
         "static_calls": [
-            {"caller_address": f"0x{call.caller_address:08X}", "target_address": f"0x{call.target_address:08X}"}
+            {
+                "caller_address": f"0x{call.caller_address:08X}",
+                "target_address": f"0x{call.target_address:08X}",
+            }
             for call in companion.static_calls
         ],
         "boundary": boundaries,
@@ -101,11 +113,7 @@ def build_report(root: Path, selector: str) -> dict[str, Any]:
             relation["caller"] == caller.id.value
             and relation["companion"] == companion.target.value
             and any(
-                (
-                    boundary := caller_layout.boundary_containing(
-                        call["caller_address"]
-                    )
-                )
+                (boundary := caller_layout.boundary_containing(call["caller_address"]))
                 is not None
                 and boundary.virtual_start == function.address
                 for call in relation["static_calls"]
@@ -136,7 +144,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="bin/companion-check",
         description="report whether companion evidence makes one lift safe",
     )
-    parser.add_argument("function")
+    parser.add_argument("function", help=FUNCTION_ID_HELP)
     parser.add_argument("--root", type=Path, default=repo_layout().root)
     parser.set_defaults(handler=run)
     return parser

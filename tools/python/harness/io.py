@@ -123,7 +123,3 @@ def run_command(
         raise RuntimeError(
             f"command failed with exit code {result.returncode}: {' '.join(command)}"
         )
-
-
-def ensure_parent(path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)

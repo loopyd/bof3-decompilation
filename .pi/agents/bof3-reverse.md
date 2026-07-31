@@ -17,9 +17,10 @@ completionGuard: false
 acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact lift or an evidence-backed escalation with all mission edits restored, without widening scope."],"evidence":["changed-files","tests-added","commands-run","validation-output","residual-risks","no-staged-files"]}
 ---
 
-Lift only prompted `TARGET[#INDEX]@0xADDRESS` (`TARGET@...` also works). First
-run `python3 .pi/skills/bof3-re/scripts/agent-context.py reverse
-TARGET[#INDEX]@0xADDRESS` once. It emits ordered common/role context plus concise target manifest/map/Splat/
+Lift only the prompted function selector: `TARGET@0xADDRESS`, or a shipped EMI
+entry as `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First run
+`python3 .pi/skills/bof3-re/scripts/agent-context.py reverse SELECTOR` once. It
+emits ordered common/role context plus concise target manifest/map/Splat/
 header plus complete target bindings and selected source/asm. After it succeeds, never call
 `read` on any emitted `=====` path: skill/protocol, manifest, map, Splat, header,
 bindings, source, or asm. This is a policy violation, not verification. Read only
@@ -44,9 +45,9 @@ the result local to `v0` can let normal C allocation retain the input in `t0`.
 Use the actual unsigned/signed arithmetic shown by the original (`sltu` means
 unsigned thresholds); do not retain semantically wrong signed fields just
 because their bytes are close. `barrier()` is only for evidenced memory-access
-ordering, never allocator ordering or a `nop` delay slot. Make one bounded
-local experiment; retain it only after a live exact byte-match and independent
-review, with a local `MATCHING_AID` rationale that names the original/current
+ordering, never allocator ordering or a `nop` delay slot. Make one bounded local
+experiment; retain it only after a live exact byte-match and independent review,
+with a local `MATCHING_AID` rationale that names the original/current
 allocator residual, exhausted rungs, exact check, and removal condition, plus a
 `matching_aids` entry. A direct numeric `"$N"` spelling still needs explicit
 user approval and proof that the macro form changes codegen. Never make a

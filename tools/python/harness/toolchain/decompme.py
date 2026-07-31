@@ -91,7 +91,9 @@ def _source_command(layout: RepoLayout, source: Path) -> list[str]:
         row for row in rows if Path(row.get("file", "")).resolve() == source.resolve()
     ]
     if len(matches) != 1:
-        raise ValueError(f"expected 1 compile command for {source}, found {len(matches)}")
+        raise ValueError(
+            f"expected 1 compile command for {source}, found {len(matches)}"
+        )
     arguments = list(matches[0].get("arguments", []))
     if not arguments:
         raise ValueError(f"compile command has no arguments for {source}")
@@ -185,7 +187,9 @@ def _target_assembly(layout: RepoLayout, function: FunctionId) -> str:
         / f"func_{function.address:08X}.s"
     )
     if not path.is_file():
-        raise FileNotFoundError(f"missing {path}; run `bin/splat {function.target.value}` first")
+        raise FileNotFoundError(
+            f"missing {path}; run `bin/splat {function.target.value}` first"
+        )
     lines = path.read_text(encoding="utf-8").splitlines()
     kept = [
         line
@@ -209,7 +213,9 @@ class DecompMeScratchpadToolchain:
         manifest = load_target_manifests(self.layout.root).get(function.target.value)
         if manifest is None:
             raise ValueError(f"unknown target: {function.target.value}")
-        source = self.layout.root / manifest.source_dir / f"func_{function.address:08X}.c"
+        source = (
+            self.layout.root / manifest.source_dir / f"func_{function.address:08X}.c"
+        )
         if not source.is_file():
             raise FileNotFoundError(f"lifted source does not exist: {source}")
         # Macro-expanded source avoids target-local includes. Only retain
@@ -217,7 +223,9 @@ class DecompMeScratchpadToolchain:
         # preprocessor context.
         preprocessed_context, source_code = _preprocess_source(self.layout, source)
         private = _private_identifiers(preprocessed_context)
-        local_text = _STRING.sub("", _COMMENT.sub("", source.read_text(encoding="utf-8")))
+        local_text = _STRING.sub(
+            "", _COMMENT.sub("", source.read_text(encoding="utf-8"))
+        )
         local_identifiers = {
             *(_LOCAL_DECLARATION.findall(local_text)),
             *(_PIN_DECLARATION.findall(local_text)),

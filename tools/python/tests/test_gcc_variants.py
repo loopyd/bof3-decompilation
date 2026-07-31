@@ -375,7 +375,7 @@ class TestSha256File:
 class TestSafeExtract:
     def test_safe_extract_raises_on_absolute(self, tmp_path: Path) -> None:
         import tarfile
-        from harness.toolchain.gcc_variants import _safe_extract_tar_gz
+        from harness.toolchain.releases import extract_archive
         archive = tmp_path / "bad.tar.gz"
         with tarfile.open(archive, "w:gz") as tf:
             from io import BytesIO
@@ -383,11 +383,11 @@ class TestSafeExtract:
             info.size = 0
             tf.addfile(info, BytesIO())
         with pytest.raises(ValueError, match="absolute path"):
-            _safe_extract_tar_gz(archive, tmp_path / "dest")
+            extract_archive(archive, tmp_path / "dest")
 
     def test_safe_extract_raises_on_traversal(self, tmp_path: Path) -> None:
         import tarfile
-        from harness.toolchain.gcc_variants import _safe_extract_tar_gz
+        from harness.toolchain.releases import extract_archive
         archive = tmp_path / "bad.tar.gz"
         with tarfile.open(archive, "w:gz") as tf:
             from io import BytesIO
@@ -395,11 +395,11 @@ class TestSafeExtract:
             info.size = 0
             tf.addfile(info, BytesIO())
         with pytest.raises(ValueError, match="'..'"):
-            _safe_extract_tar_gz(archive, tmp_path / "dest")
+            extract_archive(archive, tmp_path / "dest")
 
     def test_safe_extract_raises_on_fifo(self, tmp_path: Path) -> None:
         import tarfile
-        from harness.toolchain.gcc_variants import _safe_extract_tar_gz
+        from harness.toolchain.releases import extract_archive
         archive = tmp_path / "fifo.tar.gz"
         with tarfile.open(archive, "w:gz") as tf:
             info = tarfile.TarInfo("named-pipe")
@@ -407,11 +407,11 @@ class TestSafeExtract:
             info.size = 0
             tf.addfile(info)
         with pytest.raises(ValueError, match="device"):
-            _safe_extract_tar_gz(archive, tmp_path / "dest")
+            extract_archive(archive, tmp_path / "dest")
 
     def test_safe_extract_raises_on_symlink(self, tmp_path: Path) -> None:
         import tarfile
-        from harness.toolchain.gcc_variants import _safe_extract_tar_gz
+        from harness.toolchain.releases import extract_archive
         archive = tmp_path / "bad.tar.gz"
         with tarfile.open(archive, "w:gz") as tf:
             info = tarfile.TarInfo("link")
@@ -420,7 +420,16 @@ class TestSafeExtract:
             info.size = 0
             tf.addfile(info)
         with pytest.raises(ValueError, match="link entry"):
-            _safe_extract_tar_gz(archive, tmp_path / "dest")
+            extract_archive(archive, tmp_path / "dest")
+
+    def test_safe_extract_rejects_zip_traversal(self, tmp_path: Path) -> None:
+        import zipfile
+        from harness.toolchain.releases import extract_archive
+        archive = tmp_path / "bad.zip"
+        with zipfile.ZipFile(archive, "w") as zip_file:
+            zip_file.writestr("../escape", b"")
+        with pytest.raises(ValueError, match="'..'"):
+            extract_archive(archive, tmp_path / "dest")
 
 
 class TestHostValidation:

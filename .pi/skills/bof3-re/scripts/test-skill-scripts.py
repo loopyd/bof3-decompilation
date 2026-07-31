@@ -19,7 +19,7 @@ CASES = (
     ),
     (
         ROOT / ".pi/skills/bof3-re/scripts/agent-context.py",
-        ("review", "BATTLE#15@0x80096E90"),
+        ("review", TARGET),
         None,
     ),
     (
@@ -51,14 +51,35 @@ def main() -> int:
         )
         if schema is None:
             assert "===== AGENTS.md =====" in result.stdout, script
-            assert "===== config/targets/emi/battle/battle/15/target.toml =====" in result.stdout, script
-            assert "===== config/targets/emi/battle/battle/15/symbols.txt =====" in result.stdout, script
-            assert "===== config/targets/emi/battle/battle/15/splat.yaml =====" in result.stdout, script
-            assert "===== src/emi/battle/battle/15/internal.h =====" in result.stdout, script
-            bindings = (ROOT / "src/emi/battle/battle/15/symbols.c").read_text(encoding="utf-8")
-            assert f"===== src/emi/battle/battle/15/symbols.c =====\n{bindings}" in result.stdout, script
-            assert "===== src/emi/battle/battle/15/func_80096E90.c =====" in result.stdout, script
-            assert "===== out/splat/emi/battle/battle/15/asm/func_80096E90.s =====" in result.stdout, script
+            assert (
+                "===== config/targets/emi/battle/battle/15/target.toml ====="
+                in result.stdout
+            ), script
+            assert (
+                "===== config/targets/emi/battle/battle/15/symbols.txt ====="
+                in result.stdout
+            ), script
+            assert (
+                "===== config/targets/emi/battle/battle/15/splat.yaml ====="
+                in result.stdout
+            ), script
+            assert "===== src/emi/battle/battle/15/internal.h =====" in result.stdout, (
+                script
+            )
+            bindings = (ROOT / "src/emi/battle/battle/15/symbols.c").read_text(
+                encoding="utf-8"
+            )
+            assert (
+                f"===== src/emi/battle/battle/15/symbols.c =====\n{bindings}"
+                in result.stdout
+            ), script
+            assert (
+                "===== src/emi/battle/battle/15/func_80096E90.c =====" in result.stdout
+            ), script
+            assert (
+                "===== out/splat/emi/battle/battle/15/asm/func_80096E90.s ====="
+                in result.stdout
+            ), script
             assert len(result.stdout.encode()) < 40_000, script
         else:
             assert json.loads(result.stdout)["schema"] == schema, script

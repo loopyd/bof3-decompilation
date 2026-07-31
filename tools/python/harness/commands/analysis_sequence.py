@@ -6,6 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from ..domain import FUNCTION_ID_FORMAT, FUNCTION_ID_HELP
 from ..io import repo_layout
 from ..reverse_index import rebuild
 from ..rizin_project import status
@@ -105,7 +106,8 @@ def build_parser() -> argparse.ArgumentParser:
         "function",
         nargs="?",
         default=None,
-        metavar="TARGET@ADDRESS",
+        metavar=FUNCTION_ID_FORMAT,
+        help=FUNCTION_ID_HELP,
     )
     parser.set_defaults(handler=run_sequence)
     return parser

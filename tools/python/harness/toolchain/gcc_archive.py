@@ -30,12 +30,12 @@ import hashlib
 import os
 import shutil
 import subprocess
-import tarfile
 import tempfile
 import urllib.request
 from pathlib import Path
 
 from ..io import RepoLayout
+from .releases import extract_archive
 
 
 def sha256_file(path: Path) -> str:
@@ -164,40 +164,6 @@ def verify_installed(
     return label
 
 
-def _safe_extract_tar_gz(archive_path: Path, dest: Path) -> None:
-    """Extract tar.gz rejecting absolute, traversal, device/FIFO, and link entries."""
-    dest.mkdir(parents=True, exist_ok=True)
-    try:
-        archive = tarfile.open(archive_path, "r:gz")
-    except (tarfile.TarError, OSError) as exc:
-        raise ValueError(f"cannot open GCC archive {archive_path.name}: {exc}") from exc
-    with archive:
-        try:
-            for member in archive.getmembers():
-                if member.issym() or member.islnk():
-                    raise ValueError(
-                        f"archive contains link entry {member.name!r}; rejecting for safety"
-                    )
-                if member.isdev() or member.isfifo():
-                    raise ValueError(
-                        f"archive contains device entry {member.name!r}; rejecting"
-                    )
-                name = Path(member.name)
-                if name.is_absolute():
-                    raise ValueError(
-                        f"archive contains absolute path {member.name!r}; rejecting"
-                    )
-                if ".." in name.parts:
-                    raise ValueError(
-                        f"archive contains path with '..' {member.name!r}; rejecting"
-                    )
-                archive.extract(member, dest, filter="data")
-        except tarfile.TarError as exc:
-            raise ValueError(
-                f"cannot extract GCC archive {archive_path.name}: {exc}"
-            ) from exc
-
-
 def _atomic_replace_dir(staging: Path, dest: Path) -> None:
     """Swap staging into dest, keeping a backup of any prior install."""
     backup = dest.parent / f".{dest.name}.backup-{os.getpid()}"
@@ -253,7 +219,7 @@ def install_archive(
     staging = dest.parent / f".{dest.name}.staging-{os.getpid()}"
     shutil.rmtree(staging, ignore_errors=True)
     try:
-        _safe_extract_tar_gz(archive, staging)
+        extract_archive(archive, staging)
         verify_installed(
             dest=staging,
             executable_relpath=executable_relpath,

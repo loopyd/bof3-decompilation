@@ -151,7 +151,9 @@ class PythonSubmoduleToolchain(SubmoduleToolchain, ExecutableToolchain):
     def install(self, *, force: bool = False) -> str:
         super().install(force=force)
         if not self.python.is_file():
-            raise FileNotFoundError(f"missing project Python environment: {self.python}")
+            raise FileNotFoundError(
+                f"missing project Python environment: {self.python}"
+            )
         command = ["uv", "pip", "install", "--python", str(self.python)]
         if force:
             command.append("--reinstall")
@@ -161,7 +163,9 @@ class PythonSubmoduleToolchain(SubmoduleToolchain, ExecutableToolchain):
 
     def verify(self) -> str:
         if not self.executable.is_file():
-            raise FileNotFoundError(f"missing {self.label} executable: {self.executable}")
+            raise FileNotFoundError(
+                f"missing {self.label} executable: {self.executable}"
+            )
         result = self.execute(["--version"], quiet=True)
         if result.returncode:
             raise RuntimeError(f"{self.label} exited {result.returncode}")

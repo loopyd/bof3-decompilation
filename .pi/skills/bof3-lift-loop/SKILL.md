@@ -41,8 +41,9 @@ replace live acceptance evidence.
 
 For each candidate until budget/stop:
 
-1. Get one `function-brief.py TARGET@0xADDRESS`; pass it with the canonical
-   `TARGET[#INDEX]@0xADDRESS` selector to `bof3-reverse`.
+1. Get one `function-brief.py SELECTOR`, using `TARGET@0xADDRESS` or a shipped
+   EMI selector `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`; pass the same selector
+   to `bof3-reverse`.
 2. If a relevant declared companion call exists, require passing `companion-check`
    before dispatch; a static record alone proves no ABI/ownership.
 3. Executor returns mission JSON + its checked acceptance report. It may return an
@@ -64,9 +65,10 @@ risks, and next step.
 ## Child brief
 
 ```
-Task: lift/review TARGET[#INDEX]@0xADDRESS.
+Task: lift/review SELECTOR (`TARGET@0xADDRESS`, or shipped EMI
+`BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`).
 Context: function brief + mission/diff + owned-file diff. First run
-`agent-context.py <reverse|review> TARGET[#INDEX]@0xADDRESS`.
+`agent-context.py <reverse|review> SELECTOR`.
 Authority: executor may edit only owned source/internal.h/map/Splat; reviewer read-only.
 No git writes, setup, other targets, or children; escalation may delete only its
 new mission source to restore the tree.

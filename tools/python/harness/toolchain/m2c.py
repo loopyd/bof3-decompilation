@@ -40,7 +40,9 @@ class M2cToolchain(SubmoduleToolchain, ExecutableToolchain):
         if not self.executable.is_file():
             raise FileNotFoundError(f"missing m2c source: {self.executable}")
         if not self.python.is_file():
-            raise FileNotFoundError(f"missing project Python environment: {self.python}")
+            raise FileNotFoundError(
+                f"missing project Python environment: {self.python}"
+            )
         result = self.execute(["--help"], quiet=True)
         if result.returncode:
             raise RuntimeError(f"m2c exited {result.returncode}")

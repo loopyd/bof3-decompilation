@@ -11,7 +11,13 @@ import sys
 from typing import Any
 
 from ..canonical import load_map, sdk_map_path
-from ..domain import load_target_manifests, normalize_target_id, parse_function_id
+from ..domain import (
+    FUNCTION_ID_FORMAT,
+    FUNCTION_ID_HELP,
+    load_target_manifests,
+    normalize_target_id,
+    parse_function_id,
+)
 from ..io import repo_layout
 from ..layout import parse_splat_layout
 from ..output import add_detail_argument, resolve_detail
@@ -322,7 +328,9 @@ def _candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
         for index in range(0, len(payload) - 3, 4)
     ]
     binary_end = manifest.load_address + len(image)
-    if len(words) >= 2 and all(manifest.load_address <= word < binary_end for word in words):
+    if len(words) >= 2 and all(
+        manifest.load_address <= word < binary_end for word in words
+    ):
         return "in_image_pointer_table"
     if address in sdk_addresses:
         return "shared_sdk_symbol"
@@ -338,9 +346,7 @@ def _priority_rows(
 
     payload = _function_metrics(connection, args.target)
     if root is not None:
-        exclusions = [
-            (row, _candidate_exclusion(root, row)) for row in payload
-        ]
+        exclusions = [(row, _candidate_exclusion(root, row)) for row in payload]
         if getattr(args, "exclusions", False):
             payload = [
                 {**row, "candidate_exclusion": reason}
@@ -548,8 +554,10 @@ def run_query(args: argparse.Namespace) -> int:
             "duplicates",
         }
         if ranked:
-            detail = "full" if getattr(args, "exclusions", False) else resolve_detail(
-                requested=args.detail, json_output=args.json
+            detail = (
+                "full"
+                if getattr(args, "exclusions", False)
+                else resolve_detail(requested=args.detail, json_output=args.json)
             )
             payload = _project_rows(payload, command=args.command, detail=detail)
         _print(payload, args.json, labeled=ranked and detail != "full")
@@ -742,9 +750,9 @@ def build_parser() -> argparse.ArgumentParser:
     xrefs = sub.add_parser(
         "xrefs", help="find target-local indexed references to an address"
     )
-    xrefs.add_argument("function", metavar="TARGET@ADDRESS")
-    calls = sub.add_parser("calls", help="show calls to or from TARGET@ADDRESS")
-    calls.add_argument("function")
+    xrefs.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
+    calls = sub.add_parser("calls", help="show calls to or from a function selector")
+    calls.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
     variables = sub.add_parser("variables", help="list mapped data symbols")
     variables.add_argument("pattern", nargs="?")
     ranked = (
@@ -780,7 +788,7 @@ def build_parser() -> argparse.ArgumentParser:
     for command in sub.choices.values():
         command.set_defaults(handler=run_query)
     mission = sub.add_parser("mission", help="compose a single-function lifting brief")
-    mission.add_argument("function", metavar="TARGET@ADDRESS")
+    mission.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
     mission.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
     mission.set_defaults(handler=run_mission)
     return parser

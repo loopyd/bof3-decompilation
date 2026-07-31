@@ -1,6 +1,8 @@
 """Stable domain identifiers used by the harness workflows."""
 
 from .ids import (
+    FUNCTION_ID_FORMAT,
+    FUNCTION_ID_HELP,
     FunctionId,
     TargetId,
     normalize_target_id,
@@ -16,12 +18,15 @@ from .manifests import (
 )
 from .registry import (
     ResolvedTarget,
+    lookup_target_manifest,
     resolve_all_targets,
     resolve_target,
 )
 
 __all__ = [
     "CompanionAbi",
+    "FUNCTION_ID_FORMAT",
+    "FUNCTION_ID_HELP",
     "CompanionOverlay",
     "CompanionStaticCall",
     "FunctionId",
@@ -29,6 +34,7 @@ __all__ = [
     "TargetId",
     "TargetManifest",
     "load_target_manifests",
+    "lookup_target_manifest",
     "normalize_target_id",
     "parse_address",
     "parse_function_id",

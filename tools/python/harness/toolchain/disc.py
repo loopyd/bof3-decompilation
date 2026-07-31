@@ -3,12 +3,17 @@ from __future__ import annotations
 import re
 import shutil
 import urllib.parse
-import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
 from .base import Toolchain
-from .archive import (
+from .helpers import (
+    download_file,
+    find_matching_files,
+    require_path_under,
+    unique_paths,
+)
+from .releases import (
     archive_path_looks_valid,
     archive_stem,
     extract_archive,
@@ -21,9 +26,7 @@ DEFAULT_DISC_DIR = REPO_ROOT / "inputs" / "external"
 DEFAULT_PRIVATE_ASSETS_ROOT = DEFAULT_DISC_DIR / "private-assets"
 DEFAULT_BOF3_ARCHIVE_URL = "https://archive.org/download/BreathOfFireIIIv1.1.7z"
 
-AUTO_DISCOVERY_ARCHIVES = (
-    DEFAULT_DISC_DIR / "BreathOfFireIIIv1.1.7z",
-)
+AUTO_DISCOVERY_ARCHIVES = (DEFAULT_DISC_DIR / "BreathOfFireIIIv1.1.7z",)
 
 FILE_PATTERN = re.compile(r'^\s*FILE\s+"([^"]+)"\s+\S+', re.IGNORECASE)
 
@@ -36,66 +39,21 @@ class DiscImportResult:
     staged_paths: tuple[Path, ...]
 
 
-def _dedupe_paths(candidates: list[Path]) -> list[Path]:
-    deduped: list[Path] = []
-    seen: set[Path] = set()
-    for candidate in candidates:
-        expanded = candidate.expanduser()
-        if expanded in seen:
-            continue
-        seen.add(expanded)
-        deduped.append(expanded)
-    return deduped
-
-
-def _is_allowed_input_path(path: Path) -> bool:
-    candidate = path.expanduser().resolve(strict=False)
-    inputs_root = (REPO_ROOT / "inputs").resolve()
-    return candidate == inputs_root or inputs_root in candidate.parents
-
-
-def _validate_repo_local_input(path: Path, *, label: str) -> Path:
-    if not _is_allowed_input_path(path):
-        raise ValueError(f"{label} must stay under the repo's inputs/ tree: {path}")
-    return path.expanduser()
-
-
-def _iter_archive_matches(candidate: Path) -> list[Path]:
-    if archive_path_looks_valid(candidate):
-        return [candidate]
-    if not candidate.exists() or not candidate.is_dir():
-        return []
-    matches: list[Path] = []
-    for path in sorted(candidate.rglob("*")):
-        if archive_path_looks_valid(path):
-            matches.append(path)
-    return matches
-
-
 def discover_disc_archive(explicit_archive: Path | None = None) -> Path | None:
     candidates: list[Path] = []
     if explicit_archive is not None:
         candidates.append(
-            _validate_repo_local_input(explicit_archive, label="BOF3 archive")
+            require_path_under(
+                explicit_archive, REPO_ROOT / "inputs", label="BOF3 archive"
+            )
         )
     candidates.extend(AUTO_DISCOVERY_ARCHIVES)
 
-    for candidate in _dedupe_paths(
-        [candidate for candidate in candidates if _is_allowed_input_path(candidate)]
-    ):
-        matches = _iter_archive_matches(candidate)
+    for candidate in unique_paths(candidates):
+        matches = find_matching_files(candidate, archive_path_looks_valid)
         if matches:
             return matches[0]
     return None
-
-
-def download_archive(url: str, dest: Path, *, force: bool) -> Path:
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    if dest.exists() and not force:
-        return dest
-    with urllib.request.urlopen(url) as response, dest.open("wb") as output:
-        shutil.copyfileobj(response, output)
-    return dest
 
 
 def resolve_bof3_archive(
@@ -120,7 +78,7 @@ def resolve_bof3_archive(
         archive_name = Path(urllib.parse.urlparse(archive_url).path).name
         if not archive_name:
             raise ValueError(f"could not derive archive name from URL: {archive_url}")
-        return download_archive(archive_url, archive_store / archive_name, force=force)
+        return download_file(archive_url, archive_store / archive_name, force=force)
 
     resolved_archive = discover_disc_archive()
     if resolved_archive is None:

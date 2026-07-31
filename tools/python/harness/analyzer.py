@@ -336,20 +336,19 @@ def build_snapshot(
 def write_target_snapshot(root: Path, target_id: str, *, timeout: int = 120) -> Path:
     """Analyze a manifest-backed target and atomically write its snapshot."""
 
-    from .domain import load_target_manifests, normalize_target_id
+    from .domain import lookup_target_manifest, normalize_target_id
 
-    normalized = normalize_target_id(target_id).value
-    manifest = load_target_manifests(root).get(normalized)
+    manifest = lookup_target_manifest(root, target_id)
     if manifest is None:
-        raise ValueError(f"unknown target: {normalized}")
+        raise ValueError(f"unknown target: {normalize_target_id(target_id).value}")
     binary_path = root / manifest.binary
     if not binary_path.is_file():
         raise FileNotFoundError(f"target binary not found: {manifest.binary}")
     from .rizin_project import analyze_project
 
     # Keep this legacy entry point on the same composed replay as rz-project.
-    analyze_project(root, normalized, timeout=timeout)
-    output = snapshot_path(root, normalized)
+    analyze_project(root, manifest.id.value, timeout=timeout)
+    output = snapshot_path(root, manifest.id.value)
     return output
 
 

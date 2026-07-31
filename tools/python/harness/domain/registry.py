@@ -90,6 +90,19 @@ def resolve_target(root: Path, value: str) -> ResolvedTarget:
     )
 
 
+def lookup_target_manifest(root: Path, value: str) -> TargetManifest | None:
+    """Return the ``TargetManifest`` for a shipped or canonical selector.
+
+    Unlike :func:`resolve_target`, this never constructs resolved paths and
+    never requires a target binary to exist.  Raises ``ValueError`` if the
+    selector itself is malformed; returns ``None`` for a valid but unknown
+    target.
+    """
+
+    target_id = normalize_target_id(value)
+    return load_target_manifests(root).get(target_id.value)
+
+
 def _validate_manifest_identity(
     root: Path, target_id: TargetId, manifest: TargetManifest, manifest_path: Path
 ) -> None:
@@ -127,6 +140,7 @@ def resolve_all_targets(root: Path) -> dict[str, ResolvedTarget]:
 
 __all__ = [
     "ResolvedTarget",
+    "lookup_target_manifest",
     "resolve_all_targets",
     "resolve_target",
 ]

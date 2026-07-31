@@ -7,10 +7,14 @@ import argparse
 import json
 from pathlib import Path
 import subprocess
+import sys
 from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT / "tools" / "python"))
+
+from harness.domain import load_target_manifests  # noqa: E402
 
 
 def command(root: Path, *args: str) -> dict[str, Any]:
@@ -54,13 +58,8 @@ def journal(path: Path) -> list[dict[str, str]]:
 
 
 def targets(root: Path) -> list[str]:
-    """Read target IDs without depending on generated index state."""
-    import tomllib
-
-    return sorted(
-        tomllib.loads(path.read_text())["id"]
-        for path in (root / "config" / "targets").glob("**/target.toml")
-    )
+    """Read target IDs from typed manifests without generated index state."""
+    return sorted(load_target_manifests(root))
 
 
 def snapshot_statuses(

@@ -17,7 +17,9 @@ OLD_GCC_ASSET = "gcc-2.7.2-psx.tar.gz"
 OLD_GCC_URL = github_release_asset_url(
     repo=OLD_GCC_REPO, tag=OLD_GCC_TAG, asset_name=OLD_GCC_ASSET
 )
-OLD_GCC_SHA256 = "sha256:aca64479041aa2d645dc52ebcaace276c0aa06f258c0e3f190ccf6d76701ffbc"
+OLD_GCC_SHA256 = (
+    "sha256:aca64479041aa2d645dc52ebcaace276c0aa06f258c0e3f190ccf6d76701ffbc"
+)
 OLD_GCC_IDENTITY = "2.7.2"
 
 

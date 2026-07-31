@@ -29,12 +29,19 @@ class DecompPermuterToolchain(SubmoduleToolchain, ExecutableToolchain):
         return ("-u",)
 
     def invocation(self, arguments: Sequence[str] = ()) -> list[str]:
-        return [str(self.python), *self.interpreter_flags, str(self.executable), *arguments]
+        return [
+            str(self.python),
+            *self.interpreter_flags,
+            str(self.executable),
+            *arguments,
+        ]
 
     def install(self, *, force: bool = False) -> str:
         super().install(force=force)
         if not self.python.is_file():
-            raise FileNotFoundError(f"missing project Python environment: {self.python}")
+            raise FileNotFoundError(
+                f"missing project Python environment: {self.python}"
+            )
         command = ["uv", "pip", "install", "--python", str(self.python), "toml"]
         if force:
             command.append("--reinstall")
@@ -43,7 +50,9 @@ class DecompPermuterToolchain(SubmoduleToolchain, ExecutableToolchain):
 
     def verify(self) -> str:
         if not self.executable.is_file():
-            raise FileNotFoundError(f"missing decomp-permuter executable: {self.executable}")
+            raise FileNotFoundError(
+                f"missing decomp-permuter executable: {self.executable}"
+            )
         result = self.execute(["--help"], quiet=True)
         if result.returncode:
             raise RuntimeError(f"decomp-permuter exited {result.returncode}")

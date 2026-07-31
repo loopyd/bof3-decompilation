@@ -15,6 +15,14 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT / "tools" / "python"))
+
+from harness.domain import (  # noqa: E402
+    FUNCTION_ID_FORMAT,
+    FUNCTION_ID_HELP,
+    parse_function_id,
+)
+
 SYMBOL = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*) = 0x([0-9A-F]{8});$")
 
 
@@ -34,26 +42,33 @@ def run(root: Path, *args: str) -> dict[str, Any]:
 
 def selector(value: str) -> tuple[str, int]:
     try:
-        target, raw_address = value.rsplit("@", 1)
-        address = int(raw_address, 0)
+        function = parse_function_id(value)
     except ValueError as error:
-        raise argparse.ArgumentTypeError("expected TARGET@0xADDRESS") from error
-    if not target or address < 0 or address > 0xFFFFFFFF:
-        raise argparse.ArgumentTypeError("expected TARGET@0xADDRESS")
-    return target, address
+        raise argparse.ArgumentTypeError(f"expected {FUNCTION_ID_HELP}") from error
+    return function.target.value, function.address
 
 
 def map_names(path: Path, address: int) -> list[str]:
     if not path.is_file():
         return []
-    return [match.group(1) for line in path.read_text().splitlines() if (match := SYMBOL.fullmatch(line)) and int(match.group(2), 16) == address]
+    return [
+        match.group(1)
+        for line in path.read_text().splitlines()
+        if (match := SYMBOL.fullmatch(line)) and int(match.group(2), 16) == address
+    ]
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("function", type=selector, metavar="TARGET@0xADDRESS")
+    parser.add_argument(
+        "function", type=selector, metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP
+    )
     parser.add_argument("--root", type=Path, default=ROOT)
-    parser.add_argument("--prepare", action="store_true", help="regenerate disposable splat/m2ctx/m2c evidence under out/skill-evidence")
+    parser.add_argument(
+        "--prepare",
+        action="store_true",
+        help="regenerate disposable splat/m2ctx/m2c evidence under out/skill-evidence",
+    )
     args = parser.parse_args()
     root = args.root.resolve()
     target, address = args.function
@@ -78,15 +93,29 @@ def main() -> int:
         "binary": {
             "path": binary.relative_to(root).as_posix(),
             "exists": binary.is_file(),
-            **({"size": binary.stat().st_size, "sha256": hashlib.sha256(binary.read_bytes()).hexdigest()} if binary.is_file() else {}),
+            **(
+                {
+                    "size": binary.stat().st_size,
+                    "sha256": hashlib.sha256(binary.read_bytes()).hexdigest(),
+                }
+                if binary.is_file()
+                else {}
+            ),
         },
-        "source": {"path": source.relative_to(root).as_posix(), "exists": source.is_file()},
+        "source": {
+            "path": source.relative_to(root).as_posix(),
+            "exists": source.is_file(),
+        },
         "local_declarations": {
             "map_names_at_address": map_names(map_path, address),
-            "header_mentions_address": bool(header.is_file() and f"{address:08X}" in header.read_text()),
+            "header_mentions_address": bool(
+                header.is_file() and f"{address:08X}" in header.read_text()
+            ),
         },
         "rizin": run(root, "bin/rz-project", "status", target, "--json"),
-        "mission": run(root, "bin/rev-query", "mission", f"{target}@0x{address:08X}", "--json"),
+        "mission": run(
+            root, "bin/rev-query", "mission", f"{target}@0x{address:08X}", "--json"
+        ),
     }
     if source.is_file():
         comparison = run(root, "bin/asm-diff", f"{target}@0x{address:08X}", "--json")
@@ -98,7 +127,9 @@ def main() -> int:
                 "function": payload.get("function"),
                 "address": payload.get("address"),
                 "instruction_count": payload.get("instruction_count"),
-                "match_percent": payload.get("instruction_count", {}).get("match_percent")
+                "match_percent": payload.get("instruction_count", {}).get(
+                    "match_percent"
+                )
                 if isinstance(payload.get("instruction_count"), dict)
                 else None,
                 "original_size": payload.get("original_size"),
@@ -110,7 +141,13 @@ def main() -> int:
                 "exit_code": comparison["exit_code"],
                 "json": {
                     key: payload[key]
-                    for key in ("function", "address", "original_size", "current_size", "byte_match")
+                    for key in (
+                        "function",
+                        "address",
+                        "original_size",
+                        "current_size",
+                        "byte_match",
+                    )
                     if key in payload
                 },
             }
@@ -119,8 +156,20 @@ def main() -> int:
         evidence.mkdir(parents=True, exist_ok=True)
         report["prepare"] = [
             run(root, "bin/splat", target),
-            run(root, "bin/m2ctx", f"{target}@0x{address:08X}", "-o", str(evidence / "context.c")),
-            run(root, "bin/m2c", f"{target}@0x{address:08X}", "-o", str(evidence / "candidate.c")),
+            run(
+                root,
+                "bin/m2ctx",
+                f"{target}@0x{address:08X}",
+                "-o",
+                str(evidence / "context.c"),
+            ),
+            run(
+                root,
+                "bin/m2c",
+                f"{target}@0x{address:08X}",
+                "-o",
+                str(evidence / "candidate.c"),
+            ),
         ]
         report["prepare_output"] = evidence.relative_to(root).as_posix()
     print(json.dumps(report, indent=2, sort_keys=True))

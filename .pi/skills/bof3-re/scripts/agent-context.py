@@ -7,10 +7,17 @@ import argparse
 from pathlib import Path
 import re
 import sys
-import tomllib
-
 
 ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT / "tools" / "python"))
+
+from harness.domain import (  # noqa: E402
+    FUNCTION_ID_FORMAT,
+    FUNCTION_ID_HELP,
+    lookup_target_manifest,
+    parse_function_id,
+)
+
 FULL = (
     "AGENTS.md",
     ".pi/skills/bof3-re/SKILL.md",
@@ -20,7 +27,6 @@ ROLE = {
     "reverse": (".pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md",),
     "review": (".pi/skills/bof3-lift-loop/references/REVIEW_CHECKLIST.md",),
 }
-SELECTOR = re.compile(r"^(?P<target>[^@]+)@(?P<address>0x[0-9a-fA-F]+|[0-9]+)$")
 IDENTIFIER = re.compile(r"\b(?:D|func)_[0-9A-Fa-f]{8}\b")
 
 
@@ -30,49 +36,20 @@ def section(path: Path, root: Path, text: str | None = None) -> str:
 
 
 def selector(value: str) -> tuple[str, int]:
-    match = SELECTOR.fullmatch(value)
-    if not match:
-        raise argparse.ArgumentTypeError("expected TARGET[#INDEX]@0xADDRESS")
     try:
-        address = int(match.group("address"), 0)
+        function = parse_function_id(value)
     except ValueError as error:
-        raise argparse.ArgumentTypeError("expected TARGET[#INDEX]@0xADDRESS") from error
-    if address < 0 or address > 0xFFFFFFFF:
-        raise argparse.ArgumentTypeError("expected TARGET[#INDEX]@0xADDRESS")
-    return match.group("target"), address
-
-
-def manifest_aliases(manifest: dict[str, object]) -> set[str]:
-    target = str(manifest["id"])
-    aliases = {target, str(manifest["disc_id"])}
-    parts = target.rsplit("/", 1)
-    if len(parts) == 2 and parts[1].isdigit():
-        aliases.update((f"{parts[0]}#{parts[1]}", f"{Path(parts[0]).name}#{parts[1]}"))
-    disc_id = str(manifest["disc_id"])
-    aliases.add(Path(disc_id).name)
-    if disc_id.startswith("BIN/"):
-        aliases.add(disc_id[4:])
-    return {alias.casefold() for alias in aliases}
-
-
-def resolve_target(root: Path, requested: str) -> tuple[Path, dict[str, object]]:
-    direct = root / "config" / "targets" / requested / "target.toml"
-    if direct.is_file():
-        return direct, tomllib.loads(direct.read_text(encoding="utf-8"))
-    wanted = requested.casefold()
-    matches: list[tuple[Path, dict[str, object]]] = []
-    for manifest_path in (root / "config" / "targets").glob("**/target.toml"):
-        manifest = tomllib.loads(manifest_path.read_text(encoding="utf-8"))
-        if wanted in manifest_aliases(manifest):
-            matches.append((manifest_path, manifest))
-    if len(matches) != 1:
-        raise ValueError(f"unknown or ambiguous target selector: {requested}")
-    return matches[0]
+        raise argparse.ArgumentTypeError(f"expected {FUNCTION_ID_HELP}") from error
+    return function.target.value, function.address
 
 
 def asm_path(root: Path, target: str, splat: Path, address: int) -> Path:
-    match = re.search(r"^\s*asm_path:\s*(\S+)\s*$", splat.read_text(encoding="utf-8"), re.MULTILINE)
-    directory = root / match.group(1) if match else root / "out" / "splat" / target / "asm"
+    match = re.search(
+        r"^\s*asm_path:\s*(\S+)\s*$", splat.read_text(encoding="utf-8"), re.MULTILINE
+    )
+    directory = (
+        root / match.group(1) if match else root / "out" / "splat" / target / "asm"
+    )
     return directory / f"func_{address:08X}.s"
 
 
@@ -87,26 +64,42 @@ def around(lines: list[str], needle: str, radius: int = 5) -> str:
 
 def map_excerpt(path: Path, address: int) -> str:
     lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
-    index = next((i for i, line in enumerate(lines)
-                  if (match := re.search(r"=\s*(0x[0-9A-Fa-f]+);", line))
-                  and int(match.group(1), 0) >= address), len(lines))
-    return "".join(lines[max(0, index - 3):index + 3])
+    index = next(
+        (
+            i
+            for i, line in enumerate(lines)
+            if (match := re.search(r"=\s*(0x[0-9A-Fa-f]+);", line))
+            and int(match.group(1), 0) >= address
+        ),
+        len(lines),
+    )
+    return "".join(lines[max(0, index - 3) : index + 3])
 
 
 def header_excerpt(path: Path, names: set[str]) -> str:
     lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
-    boundary = next((i for i, line in enumerate(lines) if "Absolute-address globals" in line), min(len(lines), 120))
+    boundary = next(
+        (i for i, line in enumerate(lines) if "Absolute-address globals" in line),
+        min(len(lines), 120),
+    )
     output = lines[:boundary]
-    output.extend(line for line in lines[boundary:] if any(re.search(rf"\b{re.escape(name)}\b", line) for name in names))
+    output.extend(
+        line
+        for line in lines[boundary:]
+        if any(re.search(rf"\b{re.escape(name)}\b", line) for name in names)
+    )
     return "".join(output)
 
 
-def target_context(root: Path, requested: str, address: int) -> list[str]:
-    manifest_path, manifest = resolve_target(root, requested)
-    target = str(manifest["id"])
-    source_dir = root / str(manifest["source_dir"])
+def target_context(root: Path, target: str, address: int) -> list[str]:
+    manifest = lookup_target_manifest(root, target)
+    if manifest is None:
+        raise ValueError(f"unknown target: {target}")
+    target = manifest.id.value
+    manifest_path = root / "config" / "targets" / target / "target.toml"
+    source_dir = root / manifest.source_dir
     map_path = root / "config" / "targets" / target / "symbols.txt"
-    splat = root / str(manifest["splat"])
+    splat = root / manifest.splat
     source = source_dir / f"func_{address:08X}.c"
     asm = asm_path(root, target, splat, address)
     asm_text = asm.read_text(encoding="utf-8") if asm.is_file() else ""
@@ -116,7 +109,9 @@ def target_context(root: Path, requested: str, address: int) -> list[str]:
         paths.append((map_path, map_excerpt(map_path, address)))
     if splat.is_file():
         lines = splat.read_text(encoding="utf-8").splitlines(keepends=True)
-        paths.append((splat, "".join(lines[:16]) + around(lines, f"func_{address:08X}")))
+        paths.append(
+            (splat, "".join(lines[:16]) + around(lines, f"func_{address:08X}"))
+        )
     header = source_dir / "internal.h"
     if header.is_file():
         paths.append((header, header_excerpt(header, names)))
@@ -133,7 +128,13 @@ def target_context(root: Path, requested: str, address: int) -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("role", choices=sorted(ROLE))
-    parser.add_argument("function", nargs="?", type=selector, metavar="TARGET[#INDEX]@0xADDRESS")
+    parser.add_argument(
+        "function",
+        nargs="?",
+        type=selector,
+        metavar=FUNCTION_ID_FORMAT,
+        help=FUNCTION_ID_HELP,
+    )
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     root = args.root.resolve()
