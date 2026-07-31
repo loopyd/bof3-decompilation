@@ -1,0 +1,28 @@
+name: Documentation correction
+description: Fix wording, navigation, or an evidence-backed documentation error.
+title: "docs: "
+labels: [documentation]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Document and section
+      placeholder: docs/matching.md — Loop
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is unclear or wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_text
+    attributes:
+      label: Suggested wording
+      description: A short replacement is ideal.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Required for factual corrections; omit for purely editorial suggestions.

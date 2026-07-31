@@ -1,11 +1,14 @@
 # Documentation index
 
-## Getting started
+## Start here
 
-- [README](../README.md) — project overview and quick path
-- [AGENTS.md](../AGENTS.md) — agent rules and boundaries
-- [CONTEXT.md](../CONTEXT.md) — identity model and repository map
-- [Tool usage](usage.md) — ordered workflow and command reference
+1. [README](../README.md) — project overview and first commands.
+2. [CONTRIBUTING.md](../CONTRIBUTING.md) — clean-room and pull-request rules.
+3. [Tool usage](usage.md) — the ordered workflow and command reference.
+4. [Matching](matching.md) — the loop for lifting one function.
+
+Use [AGENTS.md](../AGENTS.md) for project rules and [CONTEXT.md](../CONTEXT.md)
+for the repository map and target identity model.
 
 ## Matching
 

@@ -1,7 +1,7 @@
 # Tool usage
 
-Use one target-qualified function at a time. Commands default to bounded human
-output; generated evidence under `out/` retains full detail.
+Work on one `TARGET@0xADDRESS` at a time. Commands keep terminal output short;
+full generated evidence is written under `out/`.
 
 ## Output budget
 
@@ -13,10 +13,9 @@ Context-heavy commands accept `--detail minimal|normal|full`:
 | `normal` | daily iteration | labeled metrics or the first bounded diff hunk |
 | `full` | debugging/tool development | complete rows, function records, or diff |
 
-`normal` is the text default. Existing `--json` without `--detail` remains full
-for automation compatibility. `-o FILE` always writes the complete artifact.
-Do not truncate payload commands such as `m2c`; write them with `-o` and load
-only the relevant file when editing.
+`normal` is the text default. Plain `--json` remains full for automation.
+`-o FILE` always writes the complete artifact. For payload commands such as
+`m2c`, use `-o` and open only the file you need to edit.
 
 ## Ordered workflow
 

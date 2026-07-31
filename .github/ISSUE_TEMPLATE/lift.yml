@@ -1,0 +1,43 @@
+name: Function lift or byte-match
+description: Track one target-qualified lift, mismatch, or evidence review.
+title: "lift: "
+labels: [decompilation]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not attach original game assets, extracted binaries, or copyrighted source.
+        One issue should cover one `TARGET@0xADDRESS`.
+  - type: input
+    id: function
+    attributes:
+      label: Target and address
+      description: Use TARGET@0xADDRESS.
+      placeholder: emi/battle/battle/15@0x800AF66C
+    validations:
+      required: true
+  - type: dropdown
+    id: state
+    attributes:
+      label: Work needed
+      options:
+        - Investigate an unlifted function
+        - Diagnose a mismatch
+        - Review a proposed lift
+        - Document verified behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Include disassembly observations, byte-match/asm-diff summary, and relevant symbols. Do not paste copyrighted binary data.
+    validations:
+      required: true
+  - type: textarea
+    id: next_step
+    attributes:
+      label: Smallest next step
+      description: What specific check or source change should happen next?
+    validations:
+      required: true

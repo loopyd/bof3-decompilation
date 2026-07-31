@@ -1,0 +1,28 @@
+name: Feature request
+description: Propose a focused, evidence-backed improvement.
+title: "feature: "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include original game assets, extracted binaries, or copyrighted source.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What reverse-engineering or workflow problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Prefer the smallest change that addresses the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or alternatives considered
+      description: Include target/address evidence where applicable.
