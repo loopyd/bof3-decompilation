@@ -550,8 +550,10 @@ segments:
     - asm
     - func_801E1990
   - - 69084
-    - asm
+    - c
     - func_801E19DC
+    - '@source: src/emi/battle/battle/03/func_801E19DC.c'
+    - '@behavior: Calls func_801DEE4C and increments byte 2 of scratchpad pointer slot 0x44.'
   - - 69140
     - asm
     - func_801E1A14
