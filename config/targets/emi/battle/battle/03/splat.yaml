@@ -728,8 +728,10 @@ segments:
     - asm
     - func_801E3C14
   - - 79108
-    - asm
+    - c
     - func_801E4104
+    - '@source: src/emi/battle/battle/03/func_801E4104.c'
+    - '@behavior: Increments scratchpad byte +0x03 when func_801E3160 returns nonzero.'
   - - 79180
     - asm
     - func_801E414C
