@@ -38,6 +38,7 @@ class RepoLayout:
     psn00b_toolchain_root: Path
     psn00b_sdk_root: Path
     gcc272_psx_root: Path
+    gcc_variants_root: Path
     psyq_root: Path
 
 
@@ -70,6 +71,7 @@ def repo_layout(
         psn00b_toolchain_root=toolchains / "psn00b_toolchain",
         psn00b_sdk_root=toolchains / "psn00bsdk",
         gcc272_psx_root=toolchains / "gcc-2.7.2-psx",
+        gcc_variants_root=toolchains / "gcc-variants",
         psyq_root=toolchains / "psyq" / psyq,
     )
 

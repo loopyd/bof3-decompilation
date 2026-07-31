@@ -31,5 +31,25 @@ bin/harness psyq scan --all
 bin/harness psyq calls --all
 ```
 
-It supplies object-signature evidence for Psy-Q versions 3.6–4.7. PsyQ 4.7
+It supplies object-signature evidence for PsyQ versions 3.6–4.7. PsyQ 4.7
 headers remain the build-facing declaration baseline.
+
+## Historical GCC variants
+
+When a validated historical GCC variant appears, add it to
+`config/compiler/variants.json`. The `bin/compiler-variants` CLI manages the
+lifecycle:
+
+```sh
+bin/compiler-variants list                    # show catalog entries
+bin/compiler-variants resolve                 # print resolved ID (or 'none')
+bin/compiler-variants install <id>            # download and install a variant
+bin/compiler-variants verify <id>             # verify installed variant
+bin/compiler-variants path <id>               # print verified GCC path for CMake
+bin/compiler-variants env                     # export environment overrides
+bin/compiler-variants sha256                  # verify downloaded archives
+```
+
+The empty catalog (current state) means the canonical `gcc-2.7.2-psx` toolchain
+is used without modification. A candidate entry remains untracked until its
+SHA-256 matches the downloaded archive.

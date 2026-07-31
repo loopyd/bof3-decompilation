@@ -39,13 +39,17 @@ live exact match; passing this review is the required independent review. A dire
 numeric `"$N"` spelling still needs explicit user approval and evidence that the
 macro changes codegen. Otherwise return `block`.
 
-Reuse supplied brief/diff; run one live byte-match. Do not run `just check`,
-decomp-status, status, asm-diff, brief, m2c, Splat, Rizin, or index rebuild unless
-a concrete finding needs it. Cached status is not acceptance evidence. Run
-companion-check only for a relevant declared call; batch independent reads/greps.
-Never edit/create artifacts/mutate git/setup/spawn children. Read-only audits
-`git diff --check` and `git diff --cached --quiet` are allowed; no other git
-command. Do not report either as skipped by policy.
+For a non-exact escalation, verify that its residual report records the live
+first original/current difference, rung-specific attempts, last result, and
+missing/blocked evidence. Reject a pin used to paper over a size/frame or CFG
+mismatch, or a clobber without a caller-register placement proof. Reuse supplied
+brief/diff; run one live byte-match only when reviewing a claimed exact lift. Do
+not run `just check`, decomp-status, status, asm-diff, brief, m2c, Splat, Rizin,
+or index rebuild unless a concrete finding needs it. Cached status is not
+acceptance evidence. Run companion-check only for a relevant declared call;
+batch independent reads/greps. Never edit/create artifacts/mutate git/setup/spawn
+children. Read-only audits `git diff --check` and `git diff --cached --quiet` are
+allowed; no other git command. Do not report either as skipped by policy.
 
 Return checklist JSON, then required fenced acceptance report with copied IDs,
 actual checks, validation, risks, and fresh staged-index state.

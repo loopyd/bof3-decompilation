@@ -73,10 +73,11 @@ and wait for user selection.
 
 ## Match loop
 
-**Never edit C before a live asm diff.** Diagnose the first mismatch, make one
-structural fix, then rerun normal-detail diff. If percentage drops, revert at once.
-Use full diff only for first/ambiguous diagnosis. Fix in order, with three
-non-progressing diagnosed attempts per level:
+**Never edit C before a live asm diff.** Diagnose the first mismatch, classify
+it with [`docs/matching-playbook.md` §17](../../../docs/matching-playbook.md#17-delay-slots-and-entry-register-copies), then make one structural fix and rerun normal-detail diff. If percentage drops, revert at once.
+Use full diff only for first/ambiguous diagnosis. The partial-lift catalog is
+parent audit data, not a substitute for this live diagnosis. Fix in order, with
+three non-progressing diagnosed attempts per level:
 
 1. types/declarations: width, signedness, pointers, fields, prototypes;
 2. control flow: branch direction, loop/return/switch shape;
@@ -90,9 +91,21 @@ non-progressing diagnosed attempts per level:
    local `REGISTER_PIN` experiment; retain only if exact and independently reviewed;
 7. report residual; never force banned assembly.
 
-Read `first=` first. A percentage is not success. Document artificial aids with
-`MATCHING_AID`; do not add generic matching-hack macros. Accept only final live
-`bin/byte-match ...` exit 0.
+Frame/size residuals start at types/calls, address-taken locals, aggregate copies,
+and control-flow—not at a pin. Same-size relocation/load-order residuals start at
+symbol representation and pointer-cell volatility. A `move tN,aN`/`move vN,aN`
+entry copy is an allocator residual only after its local source lifetime, clean-C
+ordering, profile, and permuter variants are exhausted. A lone delay-slot
+residual needs the exact branch/jump operands and liveness diagnosed before a
+caller-register clobber is considered.
+
+Read `first=` first. A percentage is not success. Every retained `MATCHING_AID`
+names the original/current instruction or register placement, exhausted rung,
+and that the immediately following live byte-match was exact; remove it if
+clean C later matches. Do not add generic matching-hack macros. At the third
+non-progressing attempt at a rung, restore the best clean-C state and advance;
+on exhaustion, report target, first difference, attempts, and next untried or
+blocked evidence. Accept only final live `bin/byte-match ...` exit 0.
 
 ## Duplicates and handoff
 

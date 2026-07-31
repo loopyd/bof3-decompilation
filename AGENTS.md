@@ -103,8 +103,13 @@ BOF3 binaries load independently. Qualify work by one `TARGET@0xADDRESS`.
 
 Load `/skill:bof3-re` for ANY lifting, matching, duplicate-normalization, or
 promotion task — it enforces the [memory API](docs/memory-api.md)
-inline-assembly ban and the [matching](docs/matching.md) loop. Use
-`/skill:psx-rizin` only for explicitly requested generic analyzer work. See the [docs index](docs/index.md) for the
+inline-assembly ban and the [matching](docs/matching.md) loop. Classify each
+live first mismatch with the [matching playbook](docs/matching-playbook.md): do
+not use an allocator pin for a frame/size or CFG mismatch, and do not use a
+clobber until a caller-register scheduling placement is proven. The
+[non-exact lift catalog](docs/specs/non-exact-lifts.md) is a parent-generated
+priority snapshot, not evidence that replaces a function's live `asm-diff`.
+Use `/skill:psx-rizin` only for explicitly requested generic analyzer work. See the [docs index](docs/index.md) for the
 full documentation map, [tool usage](docs/usage.md) for procedures, and
 [docs/memory-api.md](docs/memory-api.md) for the memory-macro reference. Store
 reviewed findings in `docs/specs/` and

@@ -50,6 +50,7 @@ def test_setup_managed_toolchains_factory_contains_all(tmp_path: Path) -> None:
         psn00b_toolchain_root=resolved / "toolchains" / "psn00b_toolchain",
         psn00b_sdk_root=resolved / "toolchains" / "psn00bsdk",
         gcc272_psx_root=resolved / "toolchains" / "gcc-2.7.2-psx",
+        gcc_variants_root=resolved / "toolchains" / "gcc-variants",
         psyq_root=resolved / "toolchains" / "psyq",
     )
     toolchains = managed_toolchains(resolved, layout)

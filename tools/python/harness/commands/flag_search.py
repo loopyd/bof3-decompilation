@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 
 from ..domain import load_target_manifests, parse_function_id
 from ..io import repo_layout
 from ..match.flag_search import search_flags
+from ..toolchain.gcc_variants import EmptyCatalog, lookup_variant
 from ._common import run_main
 
 
@@ -22,11 +23,23 @@ def run(args: argparse.Namespace) -> int:
     source = layout.root / manifest.source_dir / f"func_{function.address:08X}.c"
     if not source.is_file():
         raise FileNotFoundError(f"lifted source does not exist: {source}")
+
+    # Resolve optional compiler variant before search.
+    compiler_id = args.compiler
+    if compiler_id is not None:
+        variant = lookup_variant(layout, compiler_id)
+        if isinstance(variant, EmptyCatalog):
+            raise ValueError(
+                f"compiler variant {compiler_id!r} not available (empty catalog)"
+            )
+        variant.verify(layout)
+
     payload = search_flags(
         layout=layout,
         source=source,
         catalog_path=args.catalog
         or layout.root / "config" / "compiler" / "flag-catalog.json",
+        compiler_id=compiler_id,
     )
     text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
     if args.out:
@@ -41,6 +54,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="flag-search")
     parser.add_argument("function", help="TARGET@0xADDRESS")
     parser.add_argument("--catalog", type=Path)
+    parser.add_argument("--compiler", type=str,
+                        help="catalog ID for a historical GCC variant")
     parser.add_argument("-o", "--out", type=Path)
     parser.add_argument("--example", action="store_true")
     parser.set_defaults(handler=run)

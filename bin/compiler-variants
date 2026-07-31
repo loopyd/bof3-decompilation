@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+"""Resolve and inspect compiler variants from the catalog.
+
+When the catalog is empty, reports "empty" and exits 0 — no candidate was
+found or validated. The build continues using the canonical toolchain.
+
+When a candidate is present, resolves its ID, verifies installation, and
+prints the environment overrides that should be applied to the build.
+
+Environment variables:
+  BOF3_OBJCOMPILER       — path to the variant's install directory (set by this script).
+  BOF3_OBJCOMPILER_LABEL — human-readable label for the active variant.
+
+Commands:
+  list     — show catalog entries (empty when no candidates).
+  resolve  — print resolved variant ID.
+  verify   — verify the resolved variant is installed.
+  env      — print export statements for the active variant's environment.
+  sha256   — compute and display SHA-256 of downloaded archives.
+"""
+
+from __future__ import annotations
+
+import os
+import os
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+PYTHON = ROOT / ".venv" / "bin" / "python"
+
+
+def _main() -> int:
+    sys.path.insert(0, str(ROOT / "tools" / "python"))
+    from harness.commands.compiler_variants import main  # noqa: E402
+    return main()
+
+
+if not PYTHON.is_file():
+    print(f"missing project Python environment: {PYTHON}", file=sys.stderr)
+    print("run `just setup` first", file=sys.stderr)
+    raise SystemExit(2)
+
+if Path(sys.executable).resolve() != PYTHON.resolve():
+    environment = os.environ.copy()
+    environment["PYTHONPATH"] = str(ROOT / "tools" / "python")
+    os.execve(str(PYTHON), [str(PYTHON), __file__, *sys.argv[1:]], environment)
+
+sys.exit(_main())

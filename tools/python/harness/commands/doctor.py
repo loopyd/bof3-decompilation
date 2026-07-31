@@ -9,6 +9,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
+from ..compiler_config import load_object_compilers
 from ..domain import load_target_manifests
 from ..io import repo_layout
 from ..toolchain import managed_toolchains
@@ -47,8 +48,24 @@ def _require(root: Path, paths: tuple[Path, ...]) -> str:
 
 @doctor_task("toolchain")
 def _toolchain(root: Path) -> str:
+    from ..toolchain.gcc_variants import lookup_variant
+
     layout = repo_layout(root)
-    return ", ".join(toolchain.verify() for toolchain in managed_toolchains(root, layout))
+    labels = [toolchain.verify() for toolchain in managed_toolchains(root, layout)]
+
+    # Inspect compiler variants only when BOF3_OBJCOMPILER_ selections exist.
+    selections = load_object_compilers(root)
+    if selections:
+        verified_ids = set()
+        for key, cid in selections.items():
+            if cid in verified_ids:
+                continue
+            verified_ids.add(cid)
+            variant = lookup_variant(layout, cid)
+            variant.verify(layout)
+            labels.append(f"compiler={variant.label} ({variant.id})")
+
+    return ", ".join(labels)
 
 
 @doctor_task("PsyQ 4.7")

@@ -1,0 +1,10 @@
+{
+  "schema": "harness.compiler-variants/v1",
+  "note": [
+    "Empty catalog: no historical GCC variant has been validated.",
+    "Negative evidence is documented in docs/specs/runtime/compiler-variants.md.",
+    "When a candidate appears, add an entry here with verified SHA-256 URL.",
+    "The build ignores this file until at least one entry passes validation."
+  ],
+  "candidates": []
+}

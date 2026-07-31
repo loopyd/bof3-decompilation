@@ -21,7 +21,10 @@ confirmed (types, signatures, calls).
 | `lb` vs `lbu` | Field type and default `char` signedness | [§7](#7-signedness) |
 | Wrong global/BSS offsets | COMMON, section, alignment, ordering, padding | [§11](#11-commonbss-and-symbol-ordering) |
 | GNU assembler rejects GTE op | Exact `.word` in generated assembly | [§15](#15-gnu-as-instruction-spelling) |
-| No clean C solution after levers | Register pin, inline asm, or `INCLUDE_ASM` | [§16](#16-register-pinning-ladder) |
+| Proven incoming `a*` copied to `t*`/`v*` at entry | Preserve a local value's lifetime; after the ladder, one local `REGISTER_PIN` experiment | [§16](#16-register-pinning-ladder) |
+| Same-sized near match with a lone delay-slot difference | Inspect the exact branch/jump and live operands; use clean-C ordering, then an evidenced caller-register clobber | [§17](#17-delay-slots-and-entry-register-copies) |
+| Code size or stack frame differs | Check calls, address-taken locals, aggregate copies, temporary lifetime, and branch topology before allocator aids | [§5](#5-temporaries-and-register-allocation) |
+| No clean C solution after levers | Record the exhausted evidence; do not add inline asm or `INCLUDE_ASM` without explicit approval | [§16](#16-register-pinning-ladder) |
 
 ---
 
@@ -154,8 +157,12 @@ of modern taste.
 
 ## 4. `MATCHING_AID` comment convention
 
-Every artificial matching aid must say exactly what it controls, why it is
-needed, and what future evidence would remove it.
+Every artificial matching aid must be adjacent to the aid and say exactly what
+it controls, the `asm-diff`-observed original/current instruction or register
+placement, the ladder rung already exhausted, and what future evidence would
+remove it. Retained `CLOBBER_*` and `REGISTER_PIN` aids must additionally say
+that the immediately following live `bin/byte-match` was exact. Do not retain
+an aid on a percentage improvement.
 
 ```c
 /*
@@ -487,7 +494,29 @@ independent review, and a live exact byte match.
 
 ---
 
-## 17. `INCLUDE_ASM` fallback
+## 17. Delay slots and entry-register copies
+
+Classify the **first** live diff before changing source. A raw percentage does
+not identify a cause. The categories in
+[`specs/non-exact-lifts.md`](specs/non-exact-lifts.md) are a disposable priority
+snapshot; re-run the target's `asm-diff` and use the table below as the durable
+choice of first lever.
+
+| Observed first-diff shape | Diagnose first | First clean-C levers | Escalation boundary |
+| --- | --- | --- | --- |
+| Same byte size; one/few differences around `jal`, branch, or `j` delay slots | The exact original/current instruction, its live input/output register, and whether its value is needed after the transfer | Invert the branch, use early return vs result variable, reorder independent statements, introduce/remove one local, or adjust a pointer hoist | `CLOBBER_CALLER_REG` only if the evidence names a caller-clobbered register and placement; it must retain C-generated work, never select an opcode |
+| Original begins `move tN,aN` or `move vN,aN`; current uses the argument directly | Whether the copied argument remains live across a call/branch or overlaps another temporary | Name one local copy at the original source lifetime; vary its declaration/first use and surrounding independent statement order | After all clean-C, profile, and one permuter attempt, one local `REGISTER_PIN(type, name, "tN"/"vN")` experiment is allowed only for this asm-diff-proven entry allocator residual |
+| Frame/size differs at or before the first call | Exact prologue/epilogue, calls made, address-taken locals, aggregate assignment, and values live across calls | Correct prototypes and widths; remove accidental address-taking; split/collapse aggregate copies; choose early return/loop shape; shorten/extend a temporary lifetime | A pin never substitutes for an unmatched frame or changed control-flow shape |
+| Same size; relocated address, `lui`/`addiu`, or load order differs | Symbol owner/declaration form, field offset, pointer-cell volatility, and whether a pointer is cached or reloaded | Pointer versus array; standalone symbol versus field; `PSX_REF`/`SPAD_PTR_SLOT` qualifiers; hoist or unhoist one dereference | `CLOBBER_*` only after the precise caller-clobbered reload ordering is proven |
+
+For a partial lift, keep a short residual note in the function only when it is
+specific and durable: command/target, first differing instruction(s), attempts
+that changed no result, and the next untried rung. Do not fill sources with
+speculative TODOs. At a rung's third non-progressing diagnosed attempt, restore
+the best clean-C state and move to the next rung; once the ladder is exhausted,
+report that evidence rather than looping.
+
+## 18. `INCLUDE_ASM` fallback
 
 Use `INCLUDE_ASM` only after explicit user approval for that function. Without
 approval, leave its reviewed Splat segment as `asm` and report the clean-C
@@ -504,7 +533,7 @@ See [matching workflow](matching.md) for iteration procedure.
 
 ---
 
-## 18. Permuter gotchas
+## 19. Permuter gotchas
 
 Use `bin/permute TARGET@0xADDRESS --time-limit 300 -j N` for source-shape
 search. Key lessons from practice:
@@ -535,3 +564,19 @@ Recommended workflow:
 ```
 
 See `third_party/decomp-permuter/` for upstream documentation.
+
+---
+
+## 20. Historical GCC variant catalog
+
+The empty-catalog framework (`config/compiler/variants.json`,
+`bin/compiler-variants`) manages historical GCC compiler candidates. Current
+state is empty — no validated candidate exists. Research is documented in
+`docs/specs/runtime/compiler-variants.md`.
+
+When adding a candidate:
+
+1. Verify SHA-256 of downloaded archive matches entry.
+2. Test against one BOF3 function via `bin/flag-search` + `bin/byte-match`.
+3. Confirm byte-match before adding to production catalog.
+4. Update `toolchains/README.md §20` with provenance evidence.

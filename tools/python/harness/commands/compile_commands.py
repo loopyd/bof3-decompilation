@@ -4,45 +4,26 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 from pathlib import Path
 
+from ..compiler_config import (
+    load_object_compilers,
+    load_object_flags,
+    sanitize_identifier,
+)
 from ..io import repo_layout
+from ..toolchain.gcc_variants import lookup_variant
 from ._common import run_main
 
-
-OPTIMIZATION_RE = re.compile(r"^-O(?:[0-3s]|fast)$")
-OBJECT_FLAGS_RE = re.compile(r"^\s*set\(\s*BOF3_OBJFLAGS_(\S+)\s+(.*?)\)\s*$")
-
-
-def _sanitize_identifier(relative: str) -> str:
-    return re.sub(r"[^A-Za-z0-9]", "_", relative)
-
-
-def _load_object_flags(root: Path) -> dict[str, list[str]]:
-    """Parse config/compiler/object-flags.cmake into {sanitized_key: flags}.
-
-    Mirrors the include() in CMakeLists.txt so the compile database matches the
-    actual per-object build flags.
-    """
-    path = root / "config" / "compiler" / "object-flags.cmake"
-    overrides: dict[str, list[str]] = {}
-    if not path.is_file():
-        return overrides
-    for line in path.read_text(encoding="utf-8").splitlines():
-        match = OBJECT_FLAGS_RE.match(line)
-        if match is None:
-            continue
-        overrides[match.group(1)] = match.group(2).split()
-    return overrides
+OPTIMIZATION_RE = __import__("re").compile(r"^-O(?:[0-3s]|fast)$")
 
 
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     output = root / "compile_commands.json"
-    compiler = root / "bin" / "cc"
+    cc_driver = root / "bin" / "cc"
     common = [
-        str(compiler),
+        str(cc_driver),
         "-DHARNESS_TARGET_PSX=1",
         f"-I{root / 'src'}",
         f"-I{root / 'include'}",
@@ -58,17 +39,38 @@ def run(args: argparse.Namespace) -> int:
     c_flags = [flag for flag in common if not flag.startswith("-Wa")]
     wa_flags = [flag for flag in common if flag.startswith("-Wa")]
     c_flags_base = [flag for flag in c_flags if not OPTIMIZATION_RE.match(flag)]
-    object_flags = _load_object_flags(root)
+    object_flags = load_object_flags(root)
+    object_compilers = load_object_compilers(root)
     src_root = root / "src"
     entries = []
     for source in sorted(src_root.rglob("*.c")):
         object_path = root / "build" / source.relative_to(root).with_suffix(".o")
         relative = source.relative_to(src_root).as_posix()
-        override = object_flags.get(_sanitize_identifier(relative))
-        if override is None:
-            arguments = [*common, "-c", str(source), "-o", str(object_path)]
+        key = sanitize_identifier(relative)
+        override = object_flags.get(key)
+        compiler_id = object_compilers.get(key)
+        # Build argument vector
+        if compiler_id is None:
+            variant_prefix: list[str] = []
         else:
-            arguments = [
+            # Resolve the specific requested compiler ID
+            layout = repo_layout(root)
+            variant = lookup_variant(layout, compiler_id)
+            variant.verify(layout)
+            gcc_path = variant.install_path(layout) / variant.executable_relpath
+            if not gcc_path.is_file():
+                raise FileNotFoundError(
+                    f"compiler variant {compiler_id!r}: {gcc_path} not found; "
+                    f"run `bin/compiler-variants install {compiler_id}`"
+                )
+            variant_prefix = [
+                "cmake", "-E", "env",
+                f"PSX_GCC={gcc_path.resolve()}",
+            ]
+        if override is None:
+            base_args = [*common, "-c", str(source), "-o", str(object_path)]
+        else:
+            base_args = [
                 *c_flags_base,
                 *override,
                 *wa_flags,
@@ -77,6 +79,7 @@ def run(args: argparse.Namespace) -> int:
                 "-o",
                 str(object_path),
             ]
+        arguments = [*variant_prefix, *base_args]
         entries.append(
             {
                 "directory": str(root),
