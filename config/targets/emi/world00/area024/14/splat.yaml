@@ -80,8 +80,10 @@ segments:
     - asm
     - func_801F3D0C
   - - 4444
-    - asm
+    - c
     - func_801F3D5C
+    - '@source: src/emi/world00/area024/14/func_801F3D5C.c'
+    - '@behavior: Draws the 16-entry spin table and advances each entry size/fade halfwords.'
   - - 4680
     - asm
     - func_801F3E48

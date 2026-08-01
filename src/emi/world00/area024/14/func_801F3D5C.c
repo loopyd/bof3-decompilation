@@ -21,7 +21,7 @@ void func_801F3D5C(void) {
     func_801F3944(work);
     work->field_24 = (s16)(work->field_24 + 0x10);
 
-    if (WORLD00_AREA024_SCRATCH_BYTE_09 < 4u) {
+    if (((volatile u8*)WORLD00_AREA024_SCRATCH_PTR)[9] < 4u) {
       work->field_2a = (s16)(work->field_2a + 0x20);
     } else {
       work->field_2a = (s16)(work->field_2a - 2);
