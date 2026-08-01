@@ -194,7 +194,7 @@ extern volatile u8             D_80146374;
 extern volatile s8   D_80145558;
 extern volatile s16  D_801EC2EE;
 extern volatile u8   D_80146394;
-extern volatile s16* volatile D_801463A0;
+extern s16* volatile D_801463A0;
 extern volatile u16  D_801463C0;
 extern u8            D_801463C9;
 extern volatile BattleSelectionKind D_801CA71C[];
