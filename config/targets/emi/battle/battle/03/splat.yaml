@@ -44,8 +44,10 @@ segments:
     - asm
     - func_801D6CC0
   - - 24976
-    - asm
+    - c
     - func_801D6D90
+    - '@source: src/emi/battle/battle/03/func_801D6D90.c'
+    - '@behavior: Advances the global battle state when the EXE loader gate is ready and enabled.'
   - - 25060
     - c
     - func_801D6DE4
