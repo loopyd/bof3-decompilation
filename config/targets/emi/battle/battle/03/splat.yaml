@@ -794,8 +794,10 @@ segments:
     - asm
     - func_801E4D34
   - - 82316
-    - asm
+    - c
     - func_801E4D8C
+    - '@source: src/emi/battle/battle/03/func_801E4D8C.c'
+    - '@behavior: Dispatches a handler selected by scratchpad work byte +0x02, then calls func_801E4F34.'
   - - 82392
     - c
     - func_801E4DD8
