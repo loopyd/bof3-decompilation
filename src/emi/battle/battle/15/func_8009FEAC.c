@@ -6,9 +6,6 @@
  * @source 0x8009FEAC
  */
 void func_8009FEAC(void) {
-  volatile u8* ptr;
-
-  ptr = (volatile u8*)D_801463A0;
-  *(ptr + 8) = 2;
-  (*(volatile u16*)((u32)ptr + 6)) = -5;
+  ((u8*)D_801463A0)[8] = 2;
+  *(s16*)((u8*)D_801463A0 + 6) = -5;
 }
