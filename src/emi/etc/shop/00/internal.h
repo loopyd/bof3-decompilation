@@ -27,6 +27,9 @@ void func_8014E5A0(u32 ot_index, u32 primitive_size);
 
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
 
+/* Shop command jump table (this EMI, text blob T_801E5144). */
+extern void (*D_801E5D2C[])(u32);
+
 void func_801E2CDC(void);
 void func_801E3EF4(void);
 void func_801E31C4(void);
