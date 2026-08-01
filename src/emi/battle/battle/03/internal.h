@@ -118,6 +118,7 @@ extern u8                           D_80146328;
 extern u8                           D_80144955;
 extern u8                           D_801462F3;
 extern u8                           D_801462F4;
+extern Battle03LocalWork           *D_1F800044;
 extern Battle03Handler              D_801EB258[];
 extern Battle03Handler              D_801EB46C[];
 extern u8                           D_801EB2E8[];

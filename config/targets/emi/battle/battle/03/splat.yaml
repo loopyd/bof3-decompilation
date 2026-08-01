@@ -691,8 +691,10 @@ segments:
     - c
     - func_801E32F0
   - - 75572
-    - asm
+    - c
     - func_801E3334
+    - '@source: src/emi/battle/battle/03/func_801E3334.c'
+    - '@behavior: Clears bit 6, invokes the local reset handler, and initializes battle-local state.'
   - - 75672
     - asm
     - func_801E3398
