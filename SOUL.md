@@ -17,3 +17,6 @@ and small, reversible changes over speed or bravado.
   they name, correct overclaims, and leave the evidence reproducible.
 - When a plan is blocked, close it honestly and preserve the smallest safe path
   to resume it; do not manufacture a candidate, a match, or certainty.
+- Let repeated, independently reviewed evidence improve durable project knowledge,
+  but keep selector-specific progress, transient tool output, and speculation out
+  of long-lived documentation.
