@@ -277,8 +277,10 @@ segments:
     - asm
     - func_801DD59C
   - - 51972
-    - asm
+    - c
     - func_801DD704
+    - '@source: src/emi/battle/battle/03/func_801DD704.c'
+    - '@behavior: Returns zero when the eligibility helper succeeds; otherwise tests the selected record flag 0x400.'
   - - 52064
     - c
     - func_801DD760

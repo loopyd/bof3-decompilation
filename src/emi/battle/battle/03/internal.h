@@ -112,6 +112,7 @@ typedef struct Battle03SpritePrimitive {
 } Battle03SpritePrimitive;
 
 extern volatile AbilityObject       ABILITY_OBJECTS[];
+extern volatile Battle03FlagRecord D_80145FB8[];
 extern u8                           D_80144955;
 extern u8                           D_801462F3;
 extern u8                           D_801462F4;
@@ -276,6 +277,7 @@ u8   func_8014DAEC(void);
 void func_8014E5A0(u8 arg0, u8 arg1);
 u32  func_8014D8D4(u8 arg0);
 u8   func_801DB524(u8 arg0);
+s32  func_801DD704(u8 arg0);
 u8   func_800A9304(u8 arg0);
 u8   func_800A94A8(void);
 u8   func_800A955C(void);
