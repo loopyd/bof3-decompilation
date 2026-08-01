@@ -6,8 +6,8 @@
  * @source 0x8009DE64
  */
 void func_8009DE64(void) {
-  volatile u16* ptr;
+  s16* ptr;
 
-  ptr = (volatile u16*)D_801463A0;
-  *(ptr + 2) = -40u;
+  ptr = (s16*)D_801463A0;
+  ptr[2] = -40;
 }
