@@ -26,7 +26,8 @@ Check:
    cross-function project fact. Edit only the relevant `docs/specs/**/*.md` or
    `LESSONS.md`; omit selector/address, match percentage, transient residual,
    tool-output details, and date-stamped status. Do not record speculation or
-   one-function examples.
+   one-function examples. The preloaded documentation text is sufficient for
+   this narrow edit; do not reread it merely to prepare the update.
 
 Verdict: `pass`, `needs-fix`, or `block`.
 

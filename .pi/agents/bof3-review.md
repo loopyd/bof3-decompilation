@@ -69,7 +69,9 @@ never mutate git/setup/spawn children. You may use `edit` only to record a
 true without this mission's selector, address, byte percentage, current residual,
 transient tool output, or date-stamped status. Do not add speculative conclusions,
 per-function progress reports, or duplicate an existing rule; report instead when
-no stable knowledge belongs there. Read-only audits `git diff --check` and `git diff
+no stable knowledge belongs there. The preloaded documentation text is sufficient
+for such a narrow `edit`; do not reread it merely to prepare the edit. Read-only
+audits `git diff --check` and `git diff
 --cached --quiet` are allowed; no other git command. Do not report either as
 skipped by policy.
 
