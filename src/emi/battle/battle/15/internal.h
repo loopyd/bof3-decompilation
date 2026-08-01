@@ -137,6 +137,7 @@ extern BattleSelectionDispatchTable D_800969AC;
 extern BattleSelectionDispatchTable D_800969B8;
 extern volatile u32 D_801459F0;
 extern s8 D_800B4E8C[];
+extern BattleSelectionHandler D_800B6BF4[];
 
 u32 func_800AF66C(BattleRange *range, u32 value);
 
