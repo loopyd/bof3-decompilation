@@ -6,8 +6,8 @@
  * @source 0x8009FE70
  */
 void func_8009FE70(void) {
-  volatile u16* ptr;
+  s16* ptr;
 
-  ptr = (volatile u16*)D_801463A0;
-  *(ptr + 2) = -1u;
+  ptr = D_801463A0;
+  *(ptr + 2) = -1;
 }
