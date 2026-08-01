@@ -803,8 +803,10 @@ segments:
     - asm
     - func_801E4C7C
   - - 82228
-    - asm
+    - c
     - func_801E4D34
+    - '@source: src/emi/battle/battle/03/func_801E4D34.c'
+    - '@behavior: Resets local work byte +0x02 after func_801E3160 succeeds, incrementing byte +0x01.'
   - - 82316
     - c
     - func_801E4D8C
