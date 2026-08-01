@@ -34,6 +34,10 @@ extern u8           WORLD00_AREA008_D_801F2C10[];
  * `lui + lw reg, %lo(reg)` load the original binary uses. */
 extern u8* D_8014598C;
 extern World00Area008State* D_1F800044;
+extern World00Area008State  D_80145FD0;
+extern World00Area008State* D_80146250;
+extern volatile u8          D_801460E8;
+extern volatile u8          D_80146866;
 
 s32  func_8017E3F4(char* buffer, const char* format, ...);
 void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);

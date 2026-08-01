@@ -10,16 +10,16 @@ void func_801F2C88(void) {
   volatile World00Area008State* previous;
 
   if ((WORLD00_AREA008_D_80146867 & 0x80u) != 0u) {
-    WORLD00_AREA008_SCRATCH_PTR->mode = 9;
+    D_1F800044->mode = 9;
     return;
   }
 
-  previous = WORLD00_AREA008_SCRATCH_PTR;
-  WORLD00_AREA008_STATE_PTR = WORLD00_AREA008_STATE_BASE;
-  WORLD00_AREA008_SCRATCH_PTR = WORLD00_AREA008_STATE_BASE;
-  REG8(0x801460e8) |= 0x40;
+  previous = D_1F800044;
+  D_80146250 = &D_80145FD0;
+  D_1F800044 = &D_80145FD0;
+  D_801460E8 |= 0x40;
   func_8014D6B8(0x10);
-  REG8(0x80146866) = 1;
-  WORLD00_AREA008_SCRATCH_PTR = previous;
+  D_80146866 = 1;
+  D_1F800044 = previous;
   previous->mode = 2;
 }
