@@ -774,8 +774,10 @@ segments:
     - asm
     - func_801E483C
   - - 81108
-    - asm
+    - c
     - func_801E48D4
+    - '@source: src/emi/battle/battle/03/func_801E48D4.c'
+    - '@behavior: Advances local work timers and invokes the update handler after a negative timer.'
   - - 81192
     - asm
     - func_801E4928
