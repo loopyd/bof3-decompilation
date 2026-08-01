@@ -1,6 +1,6 @@
 # Scratchpad fallback and partial re-lift handoff
 
-**Status:** active
+**Status:** complete (2026-08-01)
 
 ## Goal
 
@@ -13,15 +13,17 @@ loop.
 ## Evidence baseline
 
 - `emi/battle/battle/03@0x801D0C00` is a partial map entry whose range begins
-  with `0x410` bytes of data; it has no Splat `func_801D0C00.s`, so current
-  `bin/scratchpad preview` fails before it can publish the mandated escalation.
-- `DecompMeScratchpadToolchain._minimal_context` only retains directly named
-  structs and `extern` declarations from preprocessor output. It does not close
-  type dependencies or explicitly expose a reusable declaration-lookup seam.
-- `canonical.load_target_symbols` is the single authority for composed map
-  ownership, but maps cannot supply C prototypes/types.
+  with `0x410` bytes of data and has no Splat `func_801D0C00.s`. The fallback
+  now publishes its canonical range as explicit little-endian `.word` values:
+  https://decomp.me/scratch/Hs4uB
+- `harness.c_context.public_declaration_context` now selects source-referenced
+  declarations from all public preprocessor headers, closes typedef dependencies
+  in stable order, and the scratchpad rejects ignored PsyQ declarations in both
+  source and context.
+- `canonical.load_target_symbols` remains the single authority for composed map
+  ownership; the C declaration resolver intentionally does not assign symbols.
 
-## Phase 1 — public declaration context
+## Phase 1 — public declaration context (complete)
 
 1. Add one small parser/resolver module for public preprocessed declarations.
    It must select source-referenced declarations from every project header,
@@ -33,7 +35,7 @@ loop.
 3. Add focused unit tests for direct and transitive header declarations and
    ignored-header rejection.
 
-## Phase 2 — non-mutating original-byte fallback
+## Phase 2 — non-mutating original-byte fallback (complete)
 
 1. Keep the reviewed Splat assembly path as the preferred scratchpad target.
 2. If it is absent, infer the established function/range size using the existing
@@ -43,7 +45,7 @@ loop.
 3. Add a focused partial-lift payload test using `battle/03@801D0C00` and retain
    the existing Splat-backed payload test.
 
-## Phase 3 — partial-loop stop handoff
+## Phase 3 — partial-loop stop handoff (complete)
 
 1. Extend `.pi/skills/bof3-lift-loop/SKILL.md`: after normal bounded candidates,
    process a fresh partial catalog serially; exact results retain through the
@@ -55,10 +57,10 @@ loop.
 ## Validation
 
 ```sh
-python -m pytest -q tools/python/tests/test_scratchpad.py
-bin/scratchpad preview emi/battle/battle/03@0x801D0C00
-bin/scratchpad share emi/battle/battle/03@0x801D0C00
-just check
+python -m pytest -q tools/python/tests/test_scratchpad.py  # 8 passed
+bin/scratchpad preview emi/battle/battle/03@0x801D0C00    # fallback payload
+bin/scratchpad share emi/battle/battle/03@0x801D0C00      # Hs4uB
+just check                                                  # 277 passed
 ```
 
 ## Boundaries
