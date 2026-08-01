@@ -7,13 +7,12 @@
  */
 void func_801E2B54(void) {
   PanelTask* task_root;
-  u16        next_val;
 
   task_root = D_80148648;
-  next_val = (u16)((*(volatile u16*)((u8*)task_root + 6)) + 0x10);
-  *(volatile u16*)((u8*)task_root + 6) = next_val;
-  if ((s16)next_val >= 0x27) {
-    *(volatile u16*)((u8*)task_root + 6) = 0x26;
+  if ((s16)(*(u16*)((u8*)task_root + 6) =
+                  (u16)(*(u16*)((u8*)task_root + 6) + 0x10)) >=
+      0x27) {
+    *(u16*)((u8*)task_root + 6) = 0x26;
     task_root->state = 0;
   }
 }
