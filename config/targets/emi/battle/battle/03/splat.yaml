@@ -708,8 +708,10 @@ segments:
     - asm
     - func_801E352C
   - - 76248
-    - asm
+    - c
     - func_801E35D8
+    - '@source: src/emi/battle/battle/03/func_801E35D8.c'
+    - '@behavior: Conditionally initializes battle state, then advances scratchpad work byte +1.'
   - - 76344
     - asm
     - func_801E3638
