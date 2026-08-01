@@ -2,8 +2,8 @@
 
 **Status:** active
 
-> **Baseline refreshed 2026-07-26:** Phase 0 is complete. `just check` passes;
-> its live audit reports `exact=419`, `partial=224`, and `invalid=0` across 643
+> **Baseline refreshed 2026-08-01:** Phase 0 is complete. `just check` passes;
+> its live audit reports `exact=451`, `partial=224`, and `invalid=0` across 675
 > lifts. Partial lifts remain non-acceptance backlog.
 
 ## Goal
@@ -14,8 +14,8 @@ ABI, and Splat evidence with the owning image.
 
 ## Current evidence
 
-- `just check` passes: its live audit reports `exact=419`, `partial=224`, and
-  `invalid=0` across 643 indexed lifts.
+- `just check` passes: its live audit reports `exact=451`, `partial=224`, and
+  `invalid=0` across 675 indexed lifts.
 - Phase 0 repaired the 26 retained invalid records; partial lifts remain
   non-acceptance backlog and are not candidates for duplicate reuse or
   promotion.
@@ -33,6 +33,9 @@ ABI, and Splat evidence with the owning image.
   `SPAD_PTR_TABLE(Battle03LocalWork)[0x11]` to initialize the scratch work
   record while preserving the original pointer-cell reloads and return delay
   slot.
+- `emi/etc/shop/00@0x801E1B80` is an exact 56-byte clean-C indirect dispatcher.
+  It preserves the byte mask, scaled callback-table index, call frame, and
+  callback argument register placement through a target-local table binding.
 - The closed `exe/slus_004_22@0x80162B08` compiler residual remains documented
   in `docs/specs/runtime/compiler-provenance.md`; it is not active work.
 
