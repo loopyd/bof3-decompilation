@@ -22,6 +22,7 @@ FULL = (
     "AGENTS.md",
     ".pi/skills/bof3-re/SKILL.md",
     "docs/memory-api.md",
+    "LESSONS.md",
 )
 ROLE = {
     "reverse": (".pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md",),
@@ -31,6 +32,15 @@ ROLE = {
     ),
 }
 IDENTIFIER = re.compile(r"\b(?:D|func)_[0-9A-Fa-f]{8}\b")
+
+
+def knowledge_paths(root: Path) -> tuple[str, ...]:
+    """Return the complete, stable project knowledge prefill in tree order."""
+    specs = tuple(
+        path.relative_to(root).as_posix()
+        for path in sorted((root / "docs" / "specs").rglob("*.md"))
+    )
+    return (*FULL, *specs)
 
 
 def section(path: Path, root: Path, text: str | None = None) -> str:
@@ -141,13 +151,14 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     root = args.root.resolve()
-    paths = (*FULL, *ROLE[args.role])
+    common = knowledge_paths(root)
+    paths = (*common, *ROLE[args.role])
     missing = [path for path in paths if not (root / path).is_file()]
     if missing:
         print(f"missing required context: {', '.join(missing)}", file=sys.stderr)
         return 2
     try:
-        output = [section(root / path, root) for path in FULL]
+        output = [section(root / path, root) for path in common]
         output.extend(section(root / path, root) for path in ROLE[args.role])
         if args.function:
             output.extend(target_context(root, *args.function))

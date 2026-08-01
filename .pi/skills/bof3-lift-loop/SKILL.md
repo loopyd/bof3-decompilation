@@ -6,8 +6,9 @@ description: Autonomously lift a serial BOF3 batch to reviewed exact byte matche
 # BOF3 lift loop
 
 Read `AGENTS.md` and load `/skill:bof3-re`. Parent owns selection, checkpoints,
-git, and commits; `bof3-reverse` writes one function and `bof3-review` is
-read-only. Agents own their model/tool policy. Never run two functions in one
+git, and commits; `bof3-reverse` writes one function and `bof3-review`
+independently reviews it and may record durable cross-function findings in
+`docs/specs/` or `LESSONS.md`. Agents own their model/tool policy. Never run two functions in one
 target concurrently: they share `internal.h`.
 
 ## Confirm
@@ -99,7 +100,7 @@ Task: lift/review SELECTOR (`TARGET@0xADDRESS`, or shipped EMI
 `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`).
 Context: function brief + mission/diff + owned-file diff. First run
 `agent-context.py <reverse|review> SELECTOR`.
-Authority: executor may edit only owned source/internal.h/map/Splat; reviewer read-only.
+Authority: executor may edit only owned source/internal.h/map/Splat; reviewer may additionally edit only `docs/specs/**/*.md` or `LESSONS.md` for durable cross-function findings, never transient selector-specific evidence.
 No git writes, setup, other targets, or children; escalation may delete only its
 new mission source to restore the tree.
 Return protocol/checklist JSON and required acceptance-report.

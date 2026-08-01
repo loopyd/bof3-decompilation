@@ -89,6 +89,27 @@ def test_register_pin_autonomy_stays_local_and_evidence_gated() -> None:
         assert "user approval" in text
 
 
+def test_agents_receive_project_knowledge_and_reviewer_records_only_durable_facts() -> None:
+    reverse = AGENT.read_text(encoding="utf-8")
+    review = REVIEW_AGENT.read_text(encoding="utf-8")
+    context = (ROOT / ".pi/skills/bof3-re/scripts/agent-context.py").read_text(
+        encoding="utf-8"
+    )
+    checklist = REVIEW_CHECKLIST.read_text(encoding="utf-8")
+
+    for text in (reverse, review, checklist):
+        assert "LESSONS.md" in text
+        assert "docs/specs/**/*.md" in text
+    assert "LESSONS.md" in context
+    assert 'rglob("*.md")' in context
+    assert "tools: read,grep,find,ls,bash,edit,contact_supervisor" in review
+    assert "Do not edit lift source, headers, maps, Splat, bindings" in review
+    assert "durable, evidence-backed, cross-function" in review
+    assert "selector, address, byte percentage" in review
+    assert "do not\nedit project knowledge docs" in reverse
+    assert "knowledge_paths" in context
+
+
 def test_partial_share_uses_layout_eligibility_not_lift_evidence() -> None:
     text = (ROOT / ".pi" / "skills" / "bof3-lift-loop" / "SKILL.md").read_text(
         encoding="utf-8"

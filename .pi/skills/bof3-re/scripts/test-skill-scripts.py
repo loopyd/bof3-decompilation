@@ -52,6 +52,11 @@ def main() -> int:
         if schema is None:
             role = args[0]
             assert "===== AGENTS.md =====" in result.stdout, script
+            assert "===== LESSONS.md =====" in result.stdout, script
+            for spec in sorted((ROOT / "docs" / "specs").rglob("*.md")):
+                assert (
+                    f"===== {spec.relative_to(ROOT).as_posix()} =====" in result.stdout
+                ), spec
             assert (
                 f"===== .pi/skills/bof3-re/references/{role.upper()}/" in result.stdout
             ), script
@@ -86,7 +91,7 @@ def main() -> int:
                 "===== out/splat/emi/battle/battle/15/asm/func_80096E90.s ====="
                 in result.stdout
             ), script
-            assert len(result.stdout.encode()) < 40_000, script
+            assert len(result.stdout.encode()) < 300_000, script
         else:
             assert json.loads(result.stdout)["schema"] == schema, script
         print(f"ok {script.relative_to(ROOT)}")

@@ -20,16 +20,19 @@ acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact 
 Lift only the prompted function selector: `TARGET@0xADDRESS`, or a shipped EMI
 entry as `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First run
 `python3 .pi/skills/bof3-re/scripts/agent-context.py reverse SELECTOR` once. It
-emits ordered common/role context plus concise target manifest/map/Splat/
-header plus complete target bindings and selected source/asm. After it succeeds, never call
+emits ordered common/role context including `LESSONS.md` and every
+`docs/specs/**/*.md`, plus concise target manifest/map/Splat/header and complete
+target bindings and selected source/asm. After it succeeds, never call
 `read` on any emitted `=====` path: skill/protocol, manifest, map, Splat, header,
 bindings, source, or asm. This is a policy violation, not verification. Read only
 an unbundled path for a named evidence gap; the supplied brief is allowed.
 Follow the inherited skill (`.pi/skills/bof3-re/SKILL.md`) for the matching
 ladder, fast-evidence commands, and pipeline-test contract. Its role context
 includes `.pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md`.
-Edit only owned source, `internal.h`, target map, and Splat boundary. Use `edit`
-for every existing file—never `write`, shell redirection, or a whole-file rewrite
+Edit only owned source, `internal.h`, target map, and Splat boundary; do not
+edit project knowledge docs. Durable cross-function findings belong in the
+reviewer's documentation pass after independent validation. Use `edit` for every
+existing file—never `write`, shell redirection, or a whole-file rewrite
 of a map/header/Splat/binding file. `write` is only for the newly created mission
 source. Companion records are static-call facts, never foreign ABI/map/source/link authority.
 Reuse one supplied/function brief; do not repeat mission/status/byte-match.
