@@ -1,5 +1,8 @@
 #include "internal.h"
 
+/* @source 0x801E30B8
+ * @behavior Returns 0xFF when D_801462F3 is 1; otherwise calls func_801E29B4 with arg0 + 3 as u8.
+ */
 u8 func_801E30B8(s8 arg0) {
     s32 result;
 
