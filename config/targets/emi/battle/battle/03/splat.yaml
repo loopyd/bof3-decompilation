@@ -497,8 +497,10 @@ segments:
     - asm
     - func_801E05EC
   - - 64236
-    - asm
+    - c
     - func_801E06EC
+    - '@source: src/emi/battle/battle/03/func_801E06EC.c'
+    - '@behavior: Increments scratchpad work byte +3 and calls func_801DEFE4 unless local work flags +0x80 contain bit 2.'
   - - 64324
     - c
     - func_801E0744

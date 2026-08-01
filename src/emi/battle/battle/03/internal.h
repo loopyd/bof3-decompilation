@@ -53,7 +53,9 @@ typedef struct Battle03LocalWork {
   u8  unk_48;
   u8  pad_49[0x30];
   u8  unk_79;
-  u8  pad_7a[0xa9];
+  u8  pad_7a[6];
+  u16 unk_80;
+  u8  pad_82[0xa1];
   u8  unk_123;
   u8  pad_124[0x10];
   u16 unk_134;
