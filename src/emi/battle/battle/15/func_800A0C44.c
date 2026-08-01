@@ -6,9 +6,6 @@
  * @source 0x800A0C44
  */
 void func_800A0C44(void) {
-  volatile u8* ptr;
-
-  ptr = (volatile u8*)D_801463A0;
-  *(ptr + 8) = 2;
-  (*(volatile u16*)((u32)ptr + 6)) = -0xA;
+  *((u8*)D_801463A0 + 8) = 2;
+  D_801463A0[3] = -0xA;
 }
