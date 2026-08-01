@@ -616,8 +616,10 @@ segments:
     - asm
     - func_801E2024
   - - 70944
-    - asm
+    - c
     - func_801E2120
+    - '@source: src/emi/battle/battle/03/func_801E2120.c'
+    - '@behavior: Sets battle global flag 0x4 and dispatches the update when the scratchpad gate is clear.'
   - - 71024
     - asm
     - func_801E2170
