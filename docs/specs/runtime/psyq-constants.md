@@ -66,9 +66,10 @@ The SLUS loader's `D_80146518` table is an exact address-backed view at
 - When original code reloads a volatile pointer cell between mixed-width
   accesses, keep the accesses as distinct pointer-cell expressions instead of
   caching the pointer in one local; the reload order can be match-significant.
-- For a signed-halfword store through an address-held pointer cell, bind the
-  cell as a volatile pointer, reload it into a local pointer, and use a plain
-  signed-halfword assignment when matching return-delay-slot scheduling.
+- For a signed-halfword store through an address-held pointer cell, retain a
+  volatile pointer-cell binding and use a plain signed-halfword assignment.
+  Preserve the original reload shape: use a local pointer when it reloads once,
+  or a direct pointer-cell expression when that is the matching form.
 - Raw event descriptors, EMI state values, and overlay offsets stay numeric
   when the SDK does not provide an authoritative name.
 
