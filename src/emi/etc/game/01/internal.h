@@ -35,7 +35,6 @@ extern volatile u8  D_80144FC1;
 extern volatile u8  D_80144FC2;
 extern volatile u8  D_80144FC3;
 extern volatile u8  D_80145024;
-#define D_80145024 g_StreamHint
 extern volatile u8 D_80146874;
 extern volatile u8 D_8014832E;
 extern volatile u16 D_80143B90;

@@ -40,3 +40,7 @@ Minimum size: `0x10`.
 
 Recheck offsets against original assembly before moving declarations into a
 shared header.
+
+When an access requires symbol-relative relocation, declare and use the owning
+mapped target-local data symbol rather than a same-address local alias; identical
+addresses do not guarantee identical linked relocation or code generation.
