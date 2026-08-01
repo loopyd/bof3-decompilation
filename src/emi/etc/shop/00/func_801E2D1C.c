@@ -2,12 +2,15 @@
 #include "bof3/ui/panel_task.h"
 
 /* @source 0x801E2D1C
- * @behavior subtracts 0x10 from the panel task field at offset 6, clamps to max 0x3E, and
+ * @behavior subtracts 0x10 from the panel task field at offset 6, raises values below 0x3E, and
  *         clears state when reached.
  */
 void func_801E2D1C(void) {
   PanelTask* task_root;
-  u16        next_val;
+  /* MATCHING_AID: original retains the decremented value in v0 through its store and signed
+   * threshold; clean-C lifetime/order forms were exhausted. Remove if compiler allocation matches unaided.
+   */
+  REGISTER_PIN(u16, next_val, "v0");
 
   task_root = D_80148648;
   next_val = (u16)((*(volatile u16*)((u8*)task_root + 6)) - 0x10);
