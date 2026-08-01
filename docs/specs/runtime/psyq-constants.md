@@ -63,6 +63,9 @@ The SLUS loader's `D_80146518` table is an exact address-backed view at
 - `VPPTR` and the scratchpad pointer cells are intentionally unchanged. The
   existing spelling preserves current matches; changing volatile pointer-cell
   qualification is a code-generation experiment, not a formatting cleanup.
+- When original code reloads a volatile pointer cell between mixed-width
+  accesses, keep the accesses as distinct pointer-cell expressions instead of
+  caching the pointer in one local; the reload order can be match-significant.
 - For a signed-halfword store through an address-held pointer cell, bind the
   cell as a volatile pointer, reload it into a local pointer, and use a plain
   signed-halfword assignment when matching return-delay-slot scheduling.
