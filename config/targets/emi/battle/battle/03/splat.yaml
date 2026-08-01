@@ -937,8 +937,10 @@ segments:
     - asm
     - func_801E69C0
   - - 89684
-    - asm
+    - c
     - func_801E6A54
+    - '@source: src/emi/battle/battle/03/func_801E6A54.c'
+    - '@behavior: Copies byte +0x09 from the scratchpad-selected object to scratchpad bytes 0x00 through 0x02, then calls func_801D99AC(0, 0, 0xB).'
   - - 89760
     - asm
     - func_801E6AA0
