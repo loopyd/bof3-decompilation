@@ -550,8 +550,10 @@ segments:
     - asm
     - func_801E1888
   - - 68920
-    - asm
+    - c
     - func_801E1938
+    - '@source: src/emi/battle/battle/03/func_801E1938.c'
+    - '@behavior: Increments scratchpad battle-work byte 1 and clears byte 2 when func_801DEE4C returns nonzero.'
   - - 69008
     - c
     - func_801E1990
