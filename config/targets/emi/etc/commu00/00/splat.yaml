@@ -101,7 +101,7 @@ segments:
     - c
     - func_801F1684
   - - 10940
-    - asm
+    - c
     - func_801F16BC
   - - 11000
     - asm

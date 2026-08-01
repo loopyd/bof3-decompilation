@@ -56,6 +56,9 @@ extern u8           D_801448EC[1];
 extern u8           D_801448ED;
 extern volatile u8  D_801F2928[1];
 
+/* Local commu00 dispatch table (data blob T_801F24FC). */
+extern void (*D_801F25EC[6])(void);
+
 u16  commu00_pack_slot_anchor(s32 x, s32 y);
 void commu00_apply_slot_palette(u16 palette_id);
 void commu00_prime_slot_resource(u8 resource_id);
