@@ -38,7 +38,6 @@ extern volatile u8  D_80145024;
 #define D_80145024 g_StreamHint
 extern volatile u8 D_80146874;
 extern volatile u8 D_8014832E;
-#define D_8014832E g_GlobalFlag832E
 extern volatile u16 D_80143B90;
 extern volatile u8  D_80143BB0;
 #define D_80143BB0 g_GameState
