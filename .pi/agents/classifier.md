@@ -3,7 +3,7 @@ name: classifier
 description: Classify project tasks
 model: ninerouter/qwen-combo
 thinking: off
-tools: read
+tools:
 inheritProjectContext: false
 inheritSkills: false
 timeoutMs: 30000
