@@ -1,5 +1,9 @@
 #include "internal.h"
 
+/* This access needs the target-local symbol relocation, rather than the shared
+ * PSX_PTR alias used by other frontend code. */
+#undef D_8014832E
+
 /* @behavior waits for the selection effect to close, resets frontend-local
  * phases and EXE flags, installs the next callback, then advances the state.
  * @source 0x801D0E54
