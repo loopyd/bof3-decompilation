@@ -10,9 +10,9 @@ original game assets.
 
 ## Project origin
 
-Loopyd's first decompilation commit in
-[`loopyd/bof3-decompilation`](https://github.com/loopyd/bof3-decompilation)
-was made on **2026-07-23 at 00:48:56 -07:00**.
+Loopyd's original private decompilation repository,
+[`loopyd/bof3-decomp`](https://github.com/loopyd/bof3-decomp), was created on
+**2025-10-26 at 20:24:04 UTC**.
 
 This repository preserves the history of
 [`raulcorreia7/rebof3-simple`](https://github.com/raulcorreia7/rebof3-simple),
