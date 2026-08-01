@@ -10,10 +10,10 @@ void func_801E2A70(void) {
   u16        next_val;
 
   task_root = D_80148648;
-  next_val = (u16)((*(volatile u16*)((u8*)task_root + 6)) + 0x10);
-  *(volatile u16*)((u8*)task_root + 6) = next_val;
+  next_val = (u16)(task_root->field_06 + 0x10);
+  task_root->field_06 = next_val;
   if ((s16)next_val >= 0x27) {
-    *(volatile u16*)((u8*)task_root + 6) = 0x26;
+    task_root->field_06 = 0x26;
     task_root->state = 0;
   }
 }
