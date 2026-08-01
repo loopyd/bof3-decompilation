@@ -17,6 +17,8 @@ Its initial commit was made on 2026-04-17.
 
 ## Contributors
 
+- [@cuckydev](https://github.com/cuckydev) — clean-match code contributions.
+
 Every contributor is credited in the Git history. See
 [`git shortlog -sne`](https://git-scm.com/docs/git-shortlog) for the current
 contributor list.
