@@ -5,7 +5,7 @@ commit's author date.
 
 ## 2026-07-31
 
-- `3b90125` docs: add GPL-3.0-only license (superseded by CC0 1.0)
+- `3b90125` docs: add license file
 - `e8b6469` feat(decomp): match battle range predicate
 
 ## 2026-07-30
