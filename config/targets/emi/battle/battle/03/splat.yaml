@@ -865,8 +865,10 @@ segments:
     - asm
     - func_801E5768
   - - 84936
-    - asm
+    - c
     - func_801E57C8
+    - '@source: src/emi/battle/battle/03/func_801E57C8.c'
+    - '@behavior: Sets frontend mode 4 and increments the volatile global battle byte when state bit 0 is set and gate 0xBD matches.'
   - - 85028
     - asm
     - func_801E5824
