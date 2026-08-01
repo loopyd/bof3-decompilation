@@ -24,8 +24,11 @@ FULL = (
     "docs/memory-api.md",
 )
 ROLE = {
-    "reverse": (".pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md",),
-    "review": (".pi/skills/bof3-lift-loop/references/REVIEW_CHECKLIST.md",),
+    "reverse": (".pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md",),
+    "review": (
+        ".pi/skills/bof3-re/references/REVIEW/REVIEW_CHECKLIST.md",
+        ".pi/skills/bof3-re/references/REVIEW/SHARING_NONMATCHES.md",
+    ),
 }
 IDENTIFIER = re.compile(r"\b(?:D|func)_[0-9A-Fa-f]{8}\b")
 

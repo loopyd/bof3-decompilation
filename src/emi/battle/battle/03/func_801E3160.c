@@ -5,10 +5,15 @@
  * @source 0x801E3160
  */
 u8 func_801E3160(void) {
-  if (((BATTLE_ENEMY_FLAGS_82(BATTLE_CURRENT_ENEMY_PTR) & 0x44u) == 0u) &&
-      ((BATTLE_GLOBAL_BYTE_63CE == 0u) ||
-       ((BATTLE_ENEMY_WORD_104(BATTLE_CURRENT_ENEMY_PTR) & 0x10u) != 0u))) {
-    return func_8014DAEC();
+  volatile Battle03EnemyWork* enemy =
+    PSX_REF(volatile Battle03EnemyWork*, 0x801EB4E8u);
+
+  if ((BATTLE_ENEMY_FLAGS_82(enemy) & 0x44u) != 0u) {
+    return 1u;
   }
-  return 1u;
+  if ((BATTLE_GLOBAL_BYTE_63CE != 0u) &&
+      ((BATTLE_ENEMY_WORD_104(enemy) & 0x10u) == 0u)) {
+    return 1u;
+  }
+  return func_8014DAEC();
 }

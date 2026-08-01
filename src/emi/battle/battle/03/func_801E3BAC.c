@@ -1,9 +1,15 @@
 #include "bof3/bof3.h"
 
 /* @source 0x801E3BAC
- * @behavior clears the scratchpad work pointer then sets byte two in its target.
+ * @behavior clears byte four then sets byte two in the scratchpad work target.
  */
 void func_801E3BAC(void) {
-  *(volatile u32*)SPAD_ADDRESS(0x44u) = 0;
-  *(volatile u8*)(*(volatile void**)SPAD_ADDRESS(0x44u) + 2) = 1;
+  u8** scratch_slots;
+  u8            value;
+
+  scratch_slots = SPAD_PTR_TABLE(u8);
+  scratch_slots[0x11][4] = 0;
+  scratch_slots = SPAD_PTR_TABLE(u8);
+  value = 1;
+  scratch_slots[0x11][2] = value;
 }

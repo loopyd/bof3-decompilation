@@ -5,7 +5,14 @@
  * @source 0x801DEA18
  */
 void func_801DEA18(u32 arg0) {
+  s32 shift;
+  void* data;
+
   arg0 &= 0xff;
-  arg0 = ((((arg0 << 3) + arg0) << 2) - arg0) << 3;
-  func_801501E4((void*)0x801490d8u, arg0 - 0x7fe14ca4, 8u);
+  shift = 2;
+  data = D_801490D8;
+  func_801501E4(data,
+                 (u32)(D_801EB35C + (((((arg0 << 3) + arg0) << shift) - arg0)
+                                      << 3)),
+                 8u);
 }

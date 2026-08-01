@@ -50,7 +50,13 @@ def main() -> int:
             check=True,
         )
         if schema is None:
+            role = args[0]
             assert "===== AGENTS.md =====" in result.stdout, script
+            assert (
+                f"===== .pi/skills/bof3-re/references/{role.upper()}/" in result.stdout
+            ), script
+            if role == "review":
+                assert "===== .pi/skills/bof3-re/references/REVIEW/SHARING_NONMATCHES.md =====" in result.stdout, script
             assert (
                 "===== config/targets/emi/battle/battle/15/target.toml ====="
                 in result.stdout

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve this clean-room reverse-engineering project.
+Thanks for helping improve this reverse-engineering project.
 
 ## Ground rules
 

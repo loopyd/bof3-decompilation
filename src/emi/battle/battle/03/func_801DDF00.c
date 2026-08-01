@@ -1,10 +1,10 @@
-#include "bof3/bof3.h"
+#include "internal.h"
 
 /* @source 0x801DDF00
- * @behavior initializes the current scratchpad work record to substate 5,2,0.
+ * @behavior initializes the battle state to substate 5,2,0.
  */
 void func_801DDF00(void) {
-  *(volatile u8*)(*(volatile void**)SPAD_ADDRESS(0x44u) + 0x90) = 5;
-  *(volatile u8*)(*(volatile void**)SPAD_ADDRESS(0x44u) + 0x91) = 2;
-  *(volatile u8*)(*(volatile void**)SPAD_ADDRESS(0x44u) + 0x92) = 0;
+  D_801462E0 = 5;
+  D_801462E1[0] = 2;
+  BATTLE_GLOBAL_BYTE_62E2 = 0;
 }

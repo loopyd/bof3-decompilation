@@ -4,13 +4,14 @@
  * fixed handlers.
  * @source 0x801E862C
  */
-void NO_SIBLING_CALLS func_801E862C(void) {
-  Battle03Handler handler;
+void func_801E862C(void) {
   Battle03Handler table[2];
+  volatile Battle03LocalWork* work;
 
-  handler = BATTLE_RESULT_UI_AUX_HANDLER_0;
-  table[0] = handler;
-  handler = BATTLE_RESULT_UI_AUX_HANDLER_1;
-  table[1] = handler;
-  table[BATTLE_LOCAL_SCRATCH_PTR->unk_01]();
+  do {
+    work = BATTLE_LOCAL_SCRATCH_PTR;
+  } while (0);
+  table[0] = func_801E8684;
+  table[1] = func_801E8D04;
+  table[work->unk_01]();
 }

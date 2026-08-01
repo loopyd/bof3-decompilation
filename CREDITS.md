@@ -4,8 +4,8 @@
 
 *Breath of Fire III* is an original game developed and published by **Capcom**.
 Capcom and *Breath of Fire* are trademarks or registered trademarks of their
-respective owners. This independent clean-room reverse-engineering project is
-not affiliated with, endorsed by, or sponsored by Capcom. It does not distribute
+respective owners. This independent reverse-engineering project is not
+affiliated with, endorsed by, or sponsored by Capcom. It does not distribute
 original game assets.
 
 ## Project origin

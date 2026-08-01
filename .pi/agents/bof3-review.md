@@ -32,7 +32,9 @@ signature disagreement; report owner path/symbol and conflicting signatures.
 Companion records are static-only.
 
 The inherited skill (`.pi/skills/bof3-re/SKILL.md`) owns the matching ladder
-and pin rules; apply them from the review side: treat direct pins as banned, and
+and pin rules; the role context also includes
+`.pi/skills/bof3-re/references/REVIEW/SHARING_NONMATCHES.md` for non-match
+sharing decisions. Apply them from the review side: treat direct pins as banned, and
 reject opcode-emitting assembly and clobbers of `s*`, `gp`, `sp`, or `ra`. A
 mission-added `REGISTER_PIN` is allowed only for
 one bounded local experiment for an asm-diff-proven allocator or entry-register

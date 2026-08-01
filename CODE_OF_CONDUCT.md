@@ -11,7 +11,7 @@ race, religion, or sexual identity and orientation.
 
 - Be respectful, constructive, and receptive to technical feedback.
 - Focus criticism on evidence, code, and process—not people.
-- Respect privacy, copyright, and the project's clean-room boundaries.
+- Respect privacy, copyright, and the project's asset and provenance boundaries.
 
 ## Unacceptable behavior
 

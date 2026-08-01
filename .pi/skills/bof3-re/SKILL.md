@@ -9,8 +9,9 @@ Work one function selector at a time: `TARGET@0xADDRESS`, or a shipped EMI
 entry as `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. For
 `bof3-reverse`/`bof3-review`, first run
 `python3 .pi/skills/bof3-re/scripts/agent-context.py <reverse|review> SELECTOR`
-once. It emits common+role context plus concise target manifest/map/Splat/header,
-complete target bindings, and selected source/asm. Never reread a bundled path, including
+once. It emits common+role context from the role's `references/<ROLE>/` folder,
+then concise target manifest/map/Splat/header, complete target bindings, and
+selected source/asm. Never reread a bundled path, including
 skill/protocol Markdown; read only an unbundled path for a named concrete gap.
 Load a spec or psx-rizin reference only for a concrete question. Repo `bin` wins.
 

@@ -50,7 +50,7 @@ Version note: Rizin and rz-ghidra evolve together. Use an rz-ghidra tag matching
 - MDEC: https://psx-spx.consoledev.net/macroblockdecodermdec/
 - Original nocash document: https://problemkaputt.de/psx-spx.htm
 
-Important provenance: the maintained PSX-SPX site itself states that republication rights were not formally acquired and that substantial content derives from confidential Sony code/documentation; it is not a clean-room specification. Use it as a highly useful technical reference while keeping legal/provenance claims accurate.
+Important provenance: the maintained PSX-SPX site itself states that republication rights were not formally acquired and that substantial content derives from confidential Sony code/documentation; it is not an independently authored specification. Use it as a highly useful technical reference while keeping legal/provenance claims accurate.
 
 ## MIPS CPU and ABI manuals — Tier A/C
 

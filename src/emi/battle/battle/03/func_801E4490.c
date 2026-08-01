@@ -8,5 +8,5 @@ void NO_SIBLING_CALLS func_801E4490(void) {
   volatile u8* scratch;
 
   scratch = BATTLE_SCRATCH_CELL_U8PTR;
-  (*BATTLE_DISPATCH_PRESENTATION_BYTE3(scratch[3]))();
+  D_801EB430[scratch[3]]();
 }

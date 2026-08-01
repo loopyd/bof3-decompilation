@@ -42,6 +42,11 @@ def _name(statement: str) -> str | None:
     if not identifiers:
         return None
     if statement.startswith("typedef "):
+        function_pointer = re.search(
+            r"\(\s*\*\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)", statement
+        )
+        if function_pointer is not None:
+            return function_pointer.group(1)
         return identifiers[-1]
     function = re.search(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(", statement)
     if function is not None and not re.search(

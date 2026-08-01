@@ -4,8 +4,8 @@
  * byte after control codes `0x12`, `0x13`, and `0x15`.
  * @source 0x801EAB6C
  */
-s8 func_801EAB6C(u8* arg0) {
-  s8  count;
+u8 func_801EAB6C(u8* arg0) {
+  u8  count;
   u32 value;
 
   count = 0;

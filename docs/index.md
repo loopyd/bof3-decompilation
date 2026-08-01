@@ -3,7 +3,7 @@
 ## Start here
 
 1. [README](../README.md) — project overview and first commands.
-2. [CONTRIBUTING.md](../CONTRIBUTING.md) — clean-room and pull-request rules.
+2. [CONTRIBUTING.md](../CONTRIBUTING.md) — contribution and pull-request rules.
 3. [Tool usage](usage.md) — the ordered workflow and command reference.
 4. [Matching](matching.md) — the loop for lifting one function.
 

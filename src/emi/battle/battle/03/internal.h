@@ -111,12 +111,20 @@ typedef struct Battle03SpritePrimitive {
   s16 unk_0e;
 } Battle03SpritePrimitive;
 
+typedef struct Battle03UiRingEntry {
+  u8  unk_00;
+  u8  unk_01;
+  u8  pad_02[2];
+  u32 unk_04;
+} Battle03UiRingEntry;
+
 extern volatile AbilityObject       ABILITY_OBJECTS[];
 extern volatile Battle03FlagRecord D_80145FB8[];
 extern u16                          D_80143F04;
 extern u8                           D_80146328;
 extern u8                           D_80144955;
 extern u8                           D_801462F3;
+extern u8                           D_80146384;
 extern u8                           D_801462F4;
 extern Battle03LocalWork           *D_1F800044;
 extern Battle03Handler              D_801EB258[];
@@ -135,12 +143,13 @@ extern u8           D_801462E1[];
 extern Battle03QueuedSlot* volatile D_801EC2E0;
 extern u8                            D_801EBF04;
 extern u8                            D_801EC2E4;
-extern u8                            D_801EC328;
+extern volatile Battle03UiRingEntry D_801EB5B0[];
+extern volatile u8                   D_801EC328;
 extern u8*                           D_80148648;
 extern u8                            D_801462E5;
 extern u8                            D_8014630C;
 extern u8                            D_8014864C;
-extern u32                           D_80181B10;
+extern u8                            D_80181B10[];
 extern Battle03FlagRecord            D_80145FB4[];
 extern volatile Battle03LocalWork*   D_801EB4E0;
 extern Battle03EightDispatchTable    D_801D0ED4;
@@ -176,6 +185,7 @@ extern Battle03Handler D_801EB3F4[];
 extern Battle03Handler D_801EB404[];
 extern Battle03Handler D_801EB40C[];
 extern Battle03Handler D_801EB424[];
+extern Battle03Handler D_801EB430[];
 extern Battle03Handler D_801EB444[];
 extern Battle03Handler D_801EB460[];
 extern Battle03Handler D_801EB478[];
@@ -301,10 +311,15 @@ void func_801D7EB0(s32 arg0, s32 arg1);
 u8   func_801D64C4(u32 arg0);
 u8   func_801DDCB4(u32 arg0);
 void func_801644D8(u32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u32 arg5);
+extern Battle03Handler D_801EB120[];
+
 void func_801DEEB4(void);
 void func_801DE190(u32 arg0);
 void func_801DE560(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u32 arg4);
 void func_801DE9A8(u32 arg0);
+extern u8 D_801490D8[];
+extern u8 D_801EB35C[];
+
 void func_801DEA18(u32 arg0);
 void func_801DCEF8(u32 arg0);
 u32  func_801502D0(u32 arg0);
@@ -328,10 +343,17 @@ void func_801DF8AC(void);
 void func_801DF914(void);
 void func_801DFC20(void);
 void func_801E019C(void);
+extern Battle03Handler D_801EB1E0[];
+
 void func_801E046C(void);
 void func_801E1298(void);
 void func_801E1450(void);
+extern Battle03Handler D_801EB224[];
+
 void func_801E1670(void);
+extern Battle03Handler D_801EB26C[];
+extern Battle03Handler D_801EB274[];
+
 void func_801E1B64(void);
 void func_801E1CD8(void);
 void func_801E1E7C(void);
@@ -452,6 +474,8 @@ u8   func_801E30F8(void);
 u8   func_801E30B8(s8 arg0);
 void func_801E31C8(void);
 void func_801E4490(void);
+extern Battle03Handler D_801EB454[];
+
 void func_801E4928(void);
 void func_801E5AF4(void);
 void func_801E5824(void);
@@ -466,18 +490,20 @@ void func_801EA1A4(void);
 void func_801EA1E0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5,
                    s32 arg6, u8* selector);
 void func_801E862C(void);
+void func_801E8684(void);
+void func_801E8D04(void);
 void func_801EA650(void);
 void func_801EA7DC(void);
 void func_801EAAB8(void);
 u8   func_801EAB38(void);
-s8   func_801EAB6C(u8* arg0);
+u8   func_801EAB6C(u8* arg0);
 
 #define BATTLE_LOCAL_WORK_ARRAY PSX_PTR(volatile Battle03LocalWork, 0x80145e90u)
 #define BATTLE_ENEMY_WORK_ARRAY PSX_PTR(volatile Battle03EnemyWork, 0x801eb630u)
 #define BATTLE_QUEUED_SLOT_ARRAY                                               \
   PSX_PTR(volatile Battle03QueuedSlot, 0x801ec330u)
 #define BATTLE_LOCAL_WORK_PTR                                                  \
-  SPAD_PTR_SLOT(volatile Battle03LocalWork, 0x80146250u)
+  PSX_REF(volatile Battle03LocalWork*, 0x80146250u)
 #define BATTLE_GLOBAL_BYTE_62FC(index)                                         \
   PSX_REF(volatile u8, 0x801462fcu + (u32)(index))
 #define BATTLE_GLOBAL_BYTE_62F6(index)                                         \
@@ -489,17 +515,17 @@ s8   func_801EAB6C(u8* arg0);
   PSX_REF(volatile u16, 0x80146334u + ((u32)(index) * 2u))
 #define BATTLE_GLOBAL_BYTE_6354(index)                                         \
   PSX_REF(volatile u8, 0x80146354u + (u32)(index))
-#define BATTLE_GLOBAL_PTR_6380 SPAD_PTR_SLOT(volatile u8, 0x80146380u)
+#define BATTLE_GLOBAL_PTR_6380 PSX_REF(volatile u8 *, 0x80146380u)
 #define BATTLE_UI_BYTE_8333_INDEX(index)                                       \
   PSX_REF(volatile u8, 0x80148333u + ((u32)(index) * 0x24u))
 #define BATTLE_UI_BYTE_833A(index)                                             \
   PSX_REF(volatile u8, 0x8014833au + ((u32)(index) * 0x24u))
 #define BATTLE_LOCAL_SCRATCH_PTR                                               \
-  SPAD_PTR_SLOT(volatile Battle03LocalWork, 0x1f800044u)
+  PSX_REF(volatile Battle03LocalWork*, 0x1f800044u)
 #define BATTLE_ENEMY_SCRATCH_PTR                                               \
   SPAD_PTR_SLOT(volatile Battle03EnemyWork, 0x1f800044u)
 #define BATTLE_CURRENT_ENEMY_PTR                                               \
-  SPAD_PTR_SLOT(volatile Battle03EnemyWork, 0x801eb4e8u)
+  PSX_REF(volatile Battle03EnemyWork*, 0x801eb4e8u)
 #define BATTLE_CURRENT_QUEUED_SLOT_PTR                                         \
   SPAD_PTR_SLOT(volatile Battle03QueuedSlot, 0x801ec2e0u)
 #define BATTLE_CURRENT_QUEUED_PTR_4B20 SPAD_PTR_SLOT(volatile u8, 0x801eb4e0u)

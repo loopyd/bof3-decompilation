@@ -9,9 +9,9 @@ void func_801DED54(void) {
 
   index = 0;
   do {
-    volatile Battle03LocalWork* battle_work;
+    Battle03LocalWork* battle_work;
 
-    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
+    battle_work = &D_80145E90[index];
     BATTLE_LOCAL_WORK_PTR = battle_work;
     BATTLE_LOCAL_SCRATCH_PTR = battle_work;
 

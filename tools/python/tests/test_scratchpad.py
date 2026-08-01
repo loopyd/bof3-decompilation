@@ -114,18 +114,14 @@ def test_payload_for_battle_range_lift_uses_ps1_and_preprocessed_source() -> Non
     assert payload.context.count("extern ") == 1
 
 
-def test_payload_falls_back_to_original_words_when_splat_asm_is_absent() -> None:
+def test_payload_rejects_data_leading_non_function_range() -> None:
     from harness.io import repo_layout
 
-    payload = DecompMeScratchpadToolchain(repo_layout()).payload(
-        parse_function_id("emi/battle/battle/03@0x801D0C00"),
-        compiler="gcc-2.7.2-psx",
-    )
-
-    assert payload.target_asm.startswith(
-        ".text\nglabel func_801D0C00\n    .word 0x00000010\n"
-    )
-    assert ".include" not in payload.target_asm
+    with pytest.raises(ValueError, match="not a reviewed function boundary"):
+        DecompMeScratchpadToolchain(repo_layout()).payload(
+            parse_function_id("emi/battle/battle/03@0x801D0C00"),
+            compiler="gcc-2.7.2-psx",
+        )
 
 
 def test_public_context_closes_type_dependencies_from_any_header() -> None:
@@ -144,6 +140,16 @@ def test_public_context_closes_type_dependencies_from_any_header() -> None:
     assert "typedef struct Local" in context
     assert "extern Local *g_local;" in context
     assert "ignored" not in context
+
+
+def test_public_context_keeps_function_pointer_typedefs() -> None:
+    context = public_declaration_context(
+        "typedef void (*BattleSelectionHandler)(void);\n",
+        "void func(void) { BattleSelectionHandler handler; handler(); }",
+        base="",
+    )
+
+    assert "typedef void (*BattleSelectionHandler)(void);" in context
 
 
 def test_payload_allows_local_names_that_collide_with_ignored_headers() -> None:

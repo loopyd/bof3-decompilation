@@ -1,13 +1,17 @@
 # BOF3 reverse-engineering workspace
 
-A clean-room project that recovers independently loaded *Breath of Fire III*
-binaries as readable C89, backed by target-qualified evidence and byte checks.
+A reverse-engineering project that recovers independently loaded *Breath of
+Fire III* binaries as readable C89, backed by target-qualified evidence and byte
+checks.
 
 ## License
 
-The original project material in this repository is licensed under the
-[GNU General Public License, version 3](LICENSE). Third-party components retain
-their own licenses; original game assets are not distributed here.
+Project-authored material is dedicated to the public domain under
+[CC0 1.0 Universal](LICENSE), to the extent permitted by law. It is provided
+as-is, without warranty; use it at your own risk. This dedication does not grant
+rights to *Breath of Fire III*, Capcom trademarks, original game assets, or
+bundled third-party components, which retain their respective rights and
+licenses. Original game assets are not distributed here.
 
 ## Start here
 

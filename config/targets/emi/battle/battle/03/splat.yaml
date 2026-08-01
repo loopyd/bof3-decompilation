@@ -326,7 +326,7 @@ segments:
     - c
     - func_801DDF00
   - - 54056
-    - asm
+    - c
     - func_801DDF28
   - - 54096
     - asm
@@ -380,14 +380,18 @@ segments:
     - c
     - func_801DE7FC
   - - 56324
-    - asm
+    - c
     - func_801DE804
+    - [0x801DE804, 0x801DE858]
+    - {source: src/emi/battle/battle/03/func_801DE804.c, behavior: clears the first three bytes of all eight event-queue slots}
   - - 56408
     - asm
     - func_801DE858
   - - 56512
-    - asm
-    - func_801DE8C0
+    - c
+    - name: func_801DE8C0
+      source: src/emi/battle/battle/03/func_801DE8C0.c
+      behavior: appends one triple `(byte, byte, word)` into the 16-entry UI ring and advances the ring tail.
   - - 56620
     - asm
     - func_801DE92C
@@ -398,7 +402,7 @@ segments:
     - asm
     - func_801DE9A8
   - - 56856
-    - asm
+    - c
     - func_801DEA18
   - - 56932
     - asm
@@ -419,14 +423,20 @@ segments:
     - asm
     - func_801DED54
   - - 57828
-    - asm
+    - c
     - func_801DEDE4
+    - '@source: src/emi/battle/battle/03/func_801DEDE4.c'
+    - '@behavior: Returns ready from reviewed battle-work flags or delegates to func_8014D978.'
   - - 57932
-    - asm
+    - c
     - func_801DEE4C
+    - '@source: src/emi/battle/battle/03/func_801DEE4C.c'
+    - '@behavior: Returns ready from reviewed battle-work flags or delegates to func_8014DAEC.'
   - - 58036
-    - asm
+    - c
     - func_801DEEB4
+    - '@source: src/emi/battle/battle/03/func_801DEEB4.c'
+    - '@behavior: Dispatches the current local work record through the state table when the active flag bit is set.'
   - - 58124
     - asm
     - func_801DEF0C
@@ -481,14 +491,18 @@ segments:
     - asm
     - func_801DFCB4
   - - 62876
-    - asm
+    - c
     - func_801E019C
+    - '@source: src/emi/battle/battle/03/func_801E019C.c'
+    - '@behavior: Waits on func_8014DAEC, advances local substate, and runs the ready followup.'
   - - 62988
     - asm
     - func_801E020C
   - - 63596
-    - asm
+    - c
     - func_801E046C
+    - '@source: src/emi/battle/battle/03/func_801E046C.c'
+    - '@behavior: Dispatches the current local substate-3 byte through its table.'
   - - 63664
     - asm
     - func_801E04B0
@@ -543,8 +557,10 @@ segments:
     - asm
     - func_801E15CC
   - - 68208
-    - asm
+    - c
     - func_801E1670
+    - '@source: src/emi/battle/battle/03/func_801E1670.c'
+    - '@behavior: Dispatches the current local state-2 class byte through its table.'
   - - 68276
     - asm
     - func_801E16B4
@@ -589,7 +605,7 @@ segments:
     - c
     - func_801E1B5C
   - - 69476
-    - asm
+    - c
     - func_801E1B64
   - - 69544
     - asm
@@ -601,7 +617,7 @@ segments:
     - asm
     - func_801E1C78
   - - 69848
-    - asm
+    - c
     - func_801E1CD8
   - - 69916
     - asm
@@ -647,8 +663,9 @@ segments:
     - asm
     - func_801E25E0
   - - 73032
-    - asm
-    - func_801E2948
+    - c
+    - name: func_801E2948
+      source: func_801E2948.c
   - - 73140
     - asm
     - func_801E29B4
@@ -757,7 +774,7 @@ segments:
     - asm
     - func_801E4368
   - - 80016
-    - asm
+    - c
     - func_801E4490
   - - 80084
     - asm
@@ -791,8 +808,10 @@ segments:
     - '@source: src/emi/battle/battle/03/func_801E48D4.c'
     - '@behavior: Advances local work timers and invokes the update handler after a negative timer.'
   - - 81192
-    - asm
+    - c
     - func_801E4928
+    - '@source: src/emi/battle/battle/03/func_801E4928.c'
+    - '@behavior: Dispatches the current queued-result substate byte through its table.'
   - - 81260
     - asm
     - func_801E496C
@@ -1049,8 +1068,10 @@ segments:
     - asm
     - func_801E8558
   - - 96812
-    - asm
-    - func_801E862C
+    - c
+    - name: func_801E862C
+      source: src/emi/battle/battle/03/func_801E862C.c
+      behavior: dispatches the current result-ui aux state byte through one of two fixed handlers.
   - - 96900
     - asm
     - func_801E8684
@@ -1193,7 +1214,7 @@ segments:
     - c
     - func_801EAB64
   - - 106348
-    - asm
+    - c
     - func_801EAB6C
   - - 106424
     - asm

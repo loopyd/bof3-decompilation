@@ -175,7 +175,9 @@ bin/scratchpad share TARGET@0xADDRESS
 unclaimed decomp.me PS1 scratch with the target assembly, the authored C body,
 and minimal generated target declarations/context; it prints the resulting URL.
 Sharing is opt-in and must never include user media, private assets,
-credentials, or unreviewed `out/` candidates. It fails closed for a lift that
+credentials, or unreviewed `out/` candidates. It accepts only a reviewed Splat
+function boundary with an authored source file; missing lifting ABI/call evidence
+does not itself make that function unshareable. It fails closed for a lift that
 uses ignored PsyQ declarations; add a reviewed public declaration boundary
 before sharing that class of function. It defaults to the canonical local
 `gcc-2.7.2-psx`, mapped to decomp.me's `gcc2.7.2-psx` compiler ID; it does not

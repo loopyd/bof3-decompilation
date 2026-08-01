@@ -5,9 +5,11 @@
  * @source 0x801E567C
  */
 void func_801E567C(void) {
-  BATTLE_ENEMY_SCRATCH_PTR->unk_01 = 2u;
-  BATTLE_ENEMY_BYTE_02(BATTLE_ENEMY_SCRATCH_PTR) = 0u;
-  func_801DE1B0(BATTLE_ENEMY_BYTE_05(BATTLE_ENEMY_SCRATCH_PTR));
+  volatile Battle03EnemyWork **scratch = SPAD_PTR_TABLE(volatile Battle03EnemyWork);
+
+  scratch[0x11]->unk_01 = 2u;
+  BATTLE_ENEMY_BYTE_02(scratch[0x11]) = 0u;
+  func_801DE1B0(BATTLE_ENEMY_BYTE_05(scratch[0x11]));
   BATTLE_ENEMY_WORD_100(BATTLE_CURRENT_ENEMY_PTR) &= 0xfffffdffu;
   if ((BATTLE_GLOBAL_HALF_62E8 & 0x40u) == 0u) {
     BATTLE_ENEMY_BYTE_F5(BATTLE_CURRENT_ENEMY_PTR) = 0u;

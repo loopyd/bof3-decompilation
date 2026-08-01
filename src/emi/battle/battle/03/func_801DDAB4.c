@@ -6,6 +6,6 @@
  */
 void func_801DDAB4(u32 arg0) {
   if ((arg0 & 0x80u) != 0u) {
-    func_8019651C((void*)BATTLE_LOCAL_SCRATCH_PTR, -6, -10, 0, 0);
+    func_8019651C(SPAD_PTR_SLOT(void, 0x44u), -6, -10, 0, 0);
   }
 }

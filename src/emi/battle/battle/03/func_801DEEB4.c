@@ -6,6 +6,6 @@
  */
 void func_801DEEB4(void) {
   if ((BATTLE_LOCAL_SCRATCH_PTR->flags_00 & 1u) != 0u) {
-    BATTLE_LOCAL_STATE_TABLE[BATTLE_LOCAL_SCRATCH_PTR->unk_01]();
+    D_801EB120[BATTLE_LOCAL_SCRATCH_PTR->unk_01]();
   }
 }

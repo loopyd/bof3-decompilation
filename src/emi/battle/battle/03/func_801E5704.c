@@ -6,9 +6,12 @@ extern int rand(void);
  * @source 0x801E5704
  */
 void func_801E5704(void) {
+  u16* flags;
+
   if (((BATTLE_ENEMY_FLAGS_80(BATTLE_CURRENT_ENEMY_PTR) & 8u) != 0u) &&
       ((rand() & 1u) != 0u)) {
-    BATTLE_GLOBAL_HALF_62E8 |= 0x80u;
+    flags = (u16*)&BATTLE_GLOBAL_HALF_62E8;
+    *flags |= 0x80u;
     func_801E590C(0u, 2u);
   }
 }

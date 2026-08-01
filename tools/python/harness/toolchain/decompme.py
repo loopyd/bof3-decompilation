@@ -12,8 +12,9 @@ from pathlib import Path
 from typing import Any
 
 from ..c_context import public_declaration_context
-from ..domain import FunctionId, load_target_manifests
+from ..domain import FunctionId, TargetManifest, load_target_manifests
 from ..io import RepoLayout
+from ..layout import parse_splat_layout
 from ..match._asm_resolve import (
     extract_original_bytes,
     infer_original_size,
@@ -151,10 +152,28 @@ def _private_identifiers(preprocessed: str) -> set[str]:
     return identifiers - _C_KEYWORDS
 
 
+def _require_reviewed_function_boundary(
+    layout: RepoLayout, function: FunctionId, manifest: TargetManifest
+) -> None:
+    boundary = parse_splat_layout(
+        layout.root / manifest.splat, manifest.load_address
+    ).boundary_starting_at(function.address)
+    if (
+        boundary is None
+        or not boundary.is_function
+        or boundary.function_name != f"func_{function.address:08X}"
+    ):
+        raise ValueError(
+            f"not a reviewed function boundary: "
+            f"{function.target.value}@0x{function.address:08X}"
+        )
+
+
 def _target_assembly(layout: RepoLayout, function: FunctionId, source: Path) -> str:
     manifest = load_target_manifests(layout.root).get(function.target.value)
     if manifest is None:
         raise ValueError(f"unknown target: {function.target.value}")
+    _require_reviewed_function_boundary(layout, function, manifest)
     path = (
         layout.out_dir
         / "splat"
@@ -207,6 +226,7 @@ class DecompMeScratchpadToolchain:
         manifest = load_target_manifests(self.layout.root).get(function.target.value)
         if manifest is None:
             raise ValueError(f"unknown target: {function.target.value}")
+        _require_reviewed_function_boundary(self.layout, function, manifest)
         source = (
             self.layout.root / manifest.source_dir / f"func_{function.address:08X}.c"
         )

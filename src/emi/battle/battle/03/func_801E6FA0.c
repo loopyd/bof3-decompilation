@@ -4,5 +4,5 @@
  * @behavior clears byte one in the current scratchpad work record.
  */
 void func_801E6FA0(void) {
-  *(volatile u8*)(*(volatile void**)SPAD_ADDRESS(0x44u) + 1) = 0;
+  SPAD_PTR_SLOT(u8, 0x44u)[1] = 0;
 }

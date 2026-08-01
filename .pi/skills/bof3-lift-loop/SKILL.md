@@ -13,7 +13,8 @@ target concurrently: they share `internal.h`.
 ## Confirm
 
 Before starting, get targets (default reviewed), selection (`quick-wins` default),
-budget (start 3–5), scope exclusions, branch, and explicit commit authorization.
+budget (start 3–5), scope exclusions, branch, explicit commit authorization, and
+explicit decomp.me publication authorization when partials are in scope.
 Subagents never commit/push/reset/clean/setup; never commit `inputs/` or secrets.
 
 ## Baseline and queue
@@ -39,7 +40,7 @@ replace live acceptance evidence.
 
 ## Serial loop
 
-For each candidate until budget/stop:
+For each candidate until the requested queue is exhausted or a fatal loop failure:
 
 1. Get one `function-brief.py SELECTOR`, using `TARGET@0xADDRESS` or a shipped
    EMI selector `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`; pass the same selector
@@ -48,30 +49,48 @@ For each candidate until budget/stop:
    before dispatch; a static record alone proves no ABI/ownership.
 3. Executor returns mission JSON + its checked acceptance report. It may return an
    exact lift or fully restored escalation; do not override that policy.
-4. Parent runs one live `byte-match`. Do not use status cache as acceptance.
-5. Dispatch `bof3-review` with brief, diff, and changed-file diff. On `needs-fix`,
-   retry executor ≤2 times, then re-match/review; on `block`, stop/escalate.
+4. Parent runs one live `byte-match` only for an exact claim. Do not use status
+   cache as acceptance.
+5. For an exact claim, dispatch `bof3-review` with brief, diff, and changed-file
+   diff. On `needs-fix`, retry executor ≤2 times, then re-match/review; on `block`,
+   journal and continue with the next candidate.
 6. Only exact + review pass: stage owned source/header/map/Splat facts, verify the
    staged file list, commit `feat(decomp): byte-match <function>`, journal it.
+7. A non-exact result never stops the queue: restore the candidate state, use the
+   decomp.me final rung below, journal its outcome, then start the next selector
+   with a fresh mission context.
 
 Use `subagent_supervisor` replies for child requests, not generic intercom.
 
-## Partial re-lift handoff
+## Partial re-lift and decomp.me final rung
 
 After the normal bounded queue and its checkpoint, a user may authorize a
-fresh `out/non-exact-lifts.json` pass. Process its current `partial` rows
-serially, preserving each target-qualified source's pre-mission state. Exact
-results use the normal live-byte/review/commit gate. On the first non-exact or
-boundary/data blocker, restore that prior state, run
-`bin/scratchpad share TARGET@0xADDRESS`, record its URL (or publish failure) in
-the loop journal, and stop. Never alter reviewed map/Splat facts just to make a
-scratch payload; a scratch share is public escalation evidence, not acceptance.
+fresh `out/non-exact-lifts.json` pass. Process every current `partial` row
+serially, preserving each target-qualified source's pre-mission state. Each
+row gets a fresh executor mission, parent evidence check, and independent
+review only if it exact-matches.
+
+For every non-exact result, the executor restores its prior state. The parent
+then performs the final execution rung: `bin/scratchpad share SELECTOR`.
+Publish only if the selector begins at a reviewed Splat `c` or `asm`
+`func_XXXXXXXX` boundary and its restored partial source exists. Missing ABI,
+call ownership, analyzer confidence, or other lifting evidence does **not** make
+an otherwise valid function unshareable. A data-leading, non-function,
+unreviewed, or source-less selector is `not shareable: <reason>`. Record the
+URL, `not shareable` reason, or publication failure in the journal, then
+continue with the next partial. Never alter reviewed map/Splat facts just to
+make a scratch payload; a scratch is public escalation evidence, never
+acceptance. A prior scratch URL never replaces a current mission or exact gate.
 
 ## Stop/report
 
-Stop on budget, no candidates, build/index failure, scratch publish failure,
-unresolved review retries, conflicting child output, or required approval.
-Print journal, counts, commits, scratch URL/result, risks, and next step.
+Do not stop merely because a candidate is non-exact, unshareable, a decomp.me
+publish fails, review rejects an exact claim, or a bounded executor mission
+escalates. Journal that outcome and continue. Stop only when the requested
+queue is exhausted, the user budget is reached, generated-evidence recovery is
+fatal, child output conflicts with the owned worktree, or user approval is
+required. Print journal, counts, commits, every scratch URL/result, risks, and
+next step.
 
 ## Child brief
 
@@ -86,4 +105,5 @@ new mission source to restore the tree.
 Return protocol/checklist JSON and required acceptance-report.
 ```
 
-See `references/MISSION_PROTOCOL.md` and `references/REVIEW_CHECKLIST.md`.
+Role protocols are preloaded from `.pi/skills/bof3-re/references/REVERSE/` and
+`.pi/skills/bof3-re/references/REVIEW/` by `agent-context.py`.

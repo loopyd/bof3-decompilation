@@ -2,7 +2,7 @@ blank_issues_enabled: false
 contact_links:
   - name: Contribution guide
     url: https://github.com/loopyd/bof3-decompilation/blob/main/CONTRIBUTING.md
-    about: Read the clean-room and review requirements before contributing.
+    about: Read the contribution and review requirements before contributing.
   - name: Code of Conduct
     url: https://github.com/loopyd/bof3-decompilation/blob/main/CODE_OF_CONDUCT.md
     about: Report conduct concerns privately using the contact in this policy.

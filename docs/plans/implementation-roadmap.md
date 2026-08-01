@@ -2,9 +2,9 @@
 
 **Status:** active
 
-> **Baseline refreshed 2026-08-01:** Phase 0 is complete. `just check` passes;
-> its live audit reports `exact=451`, `partial=224`, and `invalid=0` across 675
-> lifts. Partial lifts remain non-acceptance backlog.
+> **Baseline refreshed 2026-08-01:** Phase 0 is complete. The live audit is
+> `exact=454`, `partial=223`, and `invalid=0` across 677 lifts. Partial lifts
+> remain non-acceptance backlog.
 
 ## Goal
 
@@ -14,8 +14,8 @@ ABI, and Splat evidence with the owning image.
 
 ## Current evidence
 
-- `just check` passes: its live audit reports `exact=451`, `partial=224`, and
-  `invalid=0` across 675 indexed lifts.
+- Live acceptance evidence reports `exact=454`, `partial=223`, and `invalid=0`
+  across 677 indexed lifts; final `just check` is required before handoff.
 - Phase 0 repaired the 26 retained invalid records; partial lifts remain
   non-acceptance backlog and are not candidates for duplicate reuse or
   promotion.
@@ -28,7 +28,10 @@ ABI, and Splat evidence with the owning image.
   respectively, then call the reviewed no-argument frontend helper
   `func_8015C088`. `@0x801F1684` is an exact 56-byte lift that calls the
   reviewed frontend reset helper `func_8015C058` and clears UI state bytes
-  `D_801448EB..D_801448ED`.
+  `D_801448EB..D_801448ED`. `@0x801F18BC` is an exact 60-byte clean-C
+  dispatcher through the signed-indexed local jump table `D_801F25EC`.
+  `@0x801F1B8C` is an exact 60-byte clean-C dispatcher through the adjacent
+  signed-indexed local jump table `D_801F2610`.
 - `emi/battle/battle/03@0x801E47A4` is an exact 60-byte clean-C lift. It uses
   `SPAD_PTR_TABLE(Battle03LocalWork)[0x11]` to initialize the scratch work
   record while preserving the original pointer-cell reloads and return delay

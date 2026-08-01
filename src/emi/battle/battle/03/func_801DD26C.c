@@ -5,6 +5,11 @@
  * @behavior decrements the queued battle index and writes one signed byte.
  */
 void func_801DD26C(s8 arg0) {
-  BATTLE_GLOBAL_BYTE_6322 -= 1;
-  *(volatile u8*)(D_8014630C + (BATTLE_GLOBAL_BYTE_6322 & 0xFF)) = arg0;
+  volatile u8* index_ptr;
+  u8 index;
+
+  index_ptr = &BATTLE_GLOBAL_BYTE_6322;
+  index = *index_ptr - 1;
+  *index_ptr = index;
+  (&D_8014630C)[index] = arg0;
 }

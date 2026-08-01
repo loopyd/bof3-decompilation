@@ -7,9 +7,9 @@
 void func_801DE8C0(s8 arg0, s8 arg1, u32 arg2) {
   u8 index;
 
-  BATTLE_UI_RING_BYTE0(BATTLE_UI_RING_HEAD) = (u8)arg0;
-  BATTLE_UI_RING_BYTE1(BATTLE_UI_RING_HEAD) = (u8)arg1;
-  index = BATTLE_UI_RING_HEAD;
-  BATTLE_UI_RING_WORD2(index) = arg2;
-  BATTLE_UI_RING_HEAD = (index + 1u) & 0x0fu;
+  D_801EB5B0[D_801EC328].unk_00 = (u8)arg0;
+  D_801EB5B0[D_801EC328].unk_01 = (u8)arg1;
+  index = D_801EC328;
+  D_801EB5B0[index].unk_04 = arg2;
+  D_801EC328 = (index + 1u) & 0x0fu;
 }

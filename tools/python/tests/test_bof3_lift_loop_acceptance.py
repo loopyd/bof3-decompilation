@@ -8,8 +8,9 @@ ROOT = Path(__file__).resolve().parents[3]
 AGENT = ROOT / ".pi" / "agents" / "bof3-reverse.md"
 REVIEW_AGENT = ROOT / ".pi" / "agents" / "bof3-review.md"
 SKILL = ROOT / ".pi" / "skills" / "bof3-re" / "SKILL.md"
-PROTOCOL = ROOT / ".pi" / "skills" / "bof3-lift-loop" / "references" / "MISSION_PROTOCOL.md"
-REVIEW_CHECKLIST = ROOT / ".pi" / "skills" / "bof3-lift-loop" / "references" / "REVIEW_CHECKLIST.md"
+PROTOCOL = ROOT / ".pi" / "skills" / "bof3-re" / "references" / "REVERSE" / "MISSION_PROTOCOL.md"
+REVIEW_CHECKLIST = ROOT / ".pi" / "skills" / "bof3-re" / "references" / "REVIEW" / "REVIEW_CHECKLIST.md"
+SHARING_NONMATCHES = ROOT / ".pi" / "skills" / "bof3-re" / "references" / "REVIEW" / "SHARING_NONMATCHES.md"
 MATCHING = ROOT / "docs" / "matching.md"
 POLICY_SOURCES = [
     ROOT / "AGENTS.md",
@@ -18,8 +19,6 @@ POLICY_SOURCES = [
     ROOT / "docs" / "matching-playbook.md",
     ROOT / "docs" / "plans" / "implementation-roadmap.md",
     ROOT / ".agents" / "skills" / "bof3-re" / "SKILL.md",
-    ROOT / ".agents" / "skills" / "bof3-lift-loop" / "references" / "MISSION_PROTOCOL.md",
-    ROOT / ".agents" / "skills" / "bof3-lift-loop" / "references" / "REVIEW_CHECKLIST.md",
 ]
 
 
@@ -47,10 +46,10 @@ def test_reverse_agent_accepts_exact_or_restored_escalation() -> None:
         "residual-risks",
         "no-staged-files",
     ]
-    assert ".pi/skills/bof3-lift-loop/references/MISSION_PROTOCOL.md" in AGENT.read_text(
+    assert ".pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md" in AGENT.read_text(
         encoding="utf-8"
     )
-    assert ".agents/skills/bof3-lift-loop" not in AGENT.read_text(encoding="utf-8")
+    assert ".agents/skills/" not in AGENT.read_text(encoding="utf-8")
 
 
 def test_register_pin_autonomy_stays_local_and_evidence_gated() -> None:
@@ -90,13 +89,23 @@ def test_register_pin_autonomy_stays_local_and_evidence_gated() -> None:
         assert "user approval" in text
 
 
+def test_partial_share_uses_layout_eligibility_not_lift_evidence() -> None:
+    text = (ROOT / ".pi" / "skills" / "bof3-lift-loop" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "bin/scratchpad share SELECTOR" in text
+    assert "Missing ABI,\ncall ownership, analyzer confidence" in text
+    assert "does **not** make\nan otherwise valid function unshareable" in text
+    sharing = SHARING_NONMATCHES.read_text(encoding="utf-8")
+    assert "Missing ABI, call ownership" in sharing
+    assert "does not make an\notherwise qualifying function unshareable" in sharing
+
+
 def test_reverse_protocol_requires_truthful_escalation_evidence() -> None:
     text = PROTOCOL.read_text(encoding="utf-8")
 
-    assert "```acceptance-report" in text
-    assert "**Exact:** byte match passed" in text
-    assert "**Escalated:** the mission JSON says `status: \"escalated\"`" in text
-    assert 'both `files_changed` and `changedFiles` are `[]`' in text
-    assert "restoration commands" in text
-    assert "no-retained-changes `diffSummary`" in text
-    assert "missing fence, missing evidence, or an\nescalation falsely claimed as exact remains a failed acceptance report" in text
+    assert "Append the required fenced `acceptance-report`" in text
+    assert "Exact requires live byte" in text
+    assert "Escalated requires empty changed-file lists" in text
+    assert "no retained-change summary" in text

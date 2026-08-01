@@ -119,8 +119,10 @@ segments:
     - asm
     - func_801F1874
   - - 11452
-    - asm
+    - c
     - func_801F18BC
+    - '@source: src/emi/etc/commu00/00/func_801F18BC.c'
+    - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 11512
     - asm
     - func_801F18F8
@@ -131,8 +133,10 @@ segments:
     - asm
     - func_801F1B30
   - - 12172
-    - asm
+    - c
     - func_801F1B8C
+    - '@source: src/emi/etc/commu00/00/func_801F1B8C.c'
+    - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 12232
     - asm
     - func_801F1BC8
