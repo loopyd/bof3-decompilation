@@ -11,9 +11,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from ..c_context import public_declaration_context
 from ..domain import FunctionId, load_target_manifests
 from ..io import RepoLayout
-from ..match._asm_resolve import source_function_name
+from ..match._asm_resolve import (
+    extract_original_bytes,
+    infer_original_size,
+    source_function_name,
+)
 
 DEFAULT_API_URL = "https://decomp.me/api"
 DEFAULT_SITE_URL = "https://decomp.me"
@@ -27,15 +32,6 @@ _LOCAL_DECLARATION = re.compile(
 )
 _PIN_DECLARATION = re.compile(
     r"\bREGISTER_PIN\s*\(\s*[^,]+,\s*([A-Za-z_][A-Za-z0-9_]*)"
-)
-_EXTERN = re.compile(r"^\s*extern\s+[^;]+;\s*$", re.MULTILINE)
-_EXTERN_NAME = re.compile(
-    r"^\s*extern\s+.*?\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)"
-    r"\s*(?:\[[^]]*\])?\s*(?:\([^;]*\))?\s*;$"
-)
-_TYPEDEF_STRUCT = re.compile(
-    r"typedef\s+struct\b.*?}\s*(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*;",
-    re.DOTALL,
 )
 _C_KEYWORDS = frozenset(
     "auto break case char const continue default do double else enum extern float for "
@@ -155,27 +151,7 @@ def _private_identifiers(preprocessed: str) -> set[str]:
     return identifiers - _C_KEYWORDS
 
 
-def _minimal_context(preprocessed_context: str, source_code: str) -> str:
-    """Keep source-referenced local structs and externs plus primitive aliases.
-
-    Full preprocessor context may contain ignored PsyQ headers. Those are not
-    public scratch data, and macro-expanded source needs only declarations it
-    actually references.
-    """
-    identifiers = set(_IDENTIFIER.findall(source_code))
-    declarations = [
-        match.group(0).strip()
-        for match in _TYPEDEF_STRUCT.finditer(preprocessed_context)
-        if match.group("name") in identifiers
-    ]
-    for declaration in _EXTERN.findall(preprocessed_context):
-        name = _EXTERN_NAME.match(declaration)
-        if name is not None and name.group("name") in identifiers:
-            declarations.append(declaration.strip())
-    return _BASE_CONTEXT + ("\n".join(dict.fromkeys(declarations)) + "\n")
-
-
-def _target_assembly(layout: RepoLayout, function: FunctionId) -> str:
+def _target_assembly(layout: RepoLayout, function: FunctionId, source: Path) -> str:
     manifest = load_target_manifests(layout.root).get(function.target.value)
     if manifest is None:
         raise ValueError(f"unknown target: {function.target.value}")
@@ -186,19 +162,37 @@ def _target_assembly(layout: RepoLayout, function: FunctionId) -> str:
         / "asm"
         / f"func_{function.address:08X}.s"
     )
-    if not path.is_file():
-        raise FileNotFoundError(
-            f"missing {path}; run `bin/splat {function.target.value}` first"
-        )
-    lines = path.read_text(encoding="utf-8").splitlines()
-    kept = [
-        line
-        for line in lines
-        if not line.startswith((".include", ".set ", "/*", "nonmatching "))
-    ]
-    while kept and not kept[0].strip():
-        kept.pop(0)
-    return ".text\n" + "\n".join(kept) + "\n"
+    if path.is_file():
+        lines = path.read_text(encoding="utf-8").splitlines()
+        kept = [
+            line
+            for line in lines
+            if not line.startswith((".include", ".set ", "/*", "nonmatching "))
+        ]
+        while kept and not kept[0].strip():
+            kept.pop(0)
+        return ".text\n" + "\n".join(kept) + "\n"
+
+    binary = layout.root / manifest.binary
+    size = infer_original_size(
+        source,
+        address=function.address,
+        binary_path=binary,
+        load_address=manifest.load_address,
+    )
+    raw = extract_original_bytes(
+        binary,
+        address=function.address,
+        size=size,
+        load_address=manifest.load_address,
+    )
+    if len(raw) % 4:
+        raise ValueError(f"unaligned original range for {function.target.value}@0x{function.address:08X}")
+    words = "\n".join(
+        f"    .word 0x{int.from_bytes(raw[offset:offset + 4], 'little'):08X}"
+        for offset in range(0, len(raw), 4)
+    )
+    return f".text\nglabel func_{function.address:08X}\n{words}\n"
 
 
 class DecompMeScratchpadToolchain:
@@ -242,7 +236,15 @@ class DecompMeScratchpadToolchain:
                 "cannot publish source that references ignored PsyQ declarations: "
                 + ", ".join(referenced_private[:5])
             )
-        context = _minimal_context(preprocessed_context, source_code)
+        context = public_declaration_context(
+            preprocessed_context, source_code, base=_BASE_CONTEXT
+        )
+        context_private = set(_IDENTIFIER.findall(context)) & private
+        if context_private:
+            raise ValueError(
+                "cannot publish context that references ignored PsyQ declarations: "
+                + ", ".join(sorted(context_private)[:5])
+            )
         name = source_function_name(source, function.address)
         return ScratchpadPayload(
             name=name,
@@ -250,7 +252,7 @@ class DecompMeScratchpadToolchain:
             compiler=_remote_compiler_id(compiler),
             compiler_flags="-O2 -G0 -funsigned-char -msoft-float -gcoff",
             diff_label=name,
-            target_asm=_target_assembly(self.layout, function),
+            target_asm=_target_assembly(self.layout, function, source),
             context=context,
             source_code=source_code,
         )

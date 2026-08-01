@@ -56,11 +56,22 @@ For each candidate until budget/stop:
 
 Use `subagent_supervisor` replies for child requests, not generic intercom.
 
+## Partial re-lift handoff
+
+After the normal bounded queue and its checkpoint, a user may authorize a
+fresh `out/non-exact-lifts.json` pass. Process its current `partial` rows
+serially, preserving each target-qualified source's pre-mission state. Exact
+results use the normal live-byte/review/commit gate. On the first non-exact or
+boundary/data blocker, restore that prior state, run
+`bin/scratchpad share TARGET@0xADDRESS`, record its URL (or publish failure) in
+the loop journal, and stop. Never alter reviewed map/Splat facts just to make a
+scratch payload; a scratch share is public escalation evidence, not acceptance.
+
 ## Stop/report
 
-Stop on budget, no candidates, build/index failure, unresolved review retries,
-conflicting child output, or required approval. Print journal, counts, commits,
-risks, and next step.
+Stop on budget, no candidates, build/index failure, scratch publish failure,
+unresolved review retries, conflicting child output, or required approval.
+Print journal, counts, commits, scratch URL/result, risks, and next step.
 
 ## Child brief
 

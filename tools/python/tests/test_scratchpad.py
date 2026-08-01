@@ -10,6 +10,7 @@ from types import SimpleNamespace
 import pytest
 
 from harness.domain import parse_function_id
+from harness.c_context import public_declaration_context
 from harness.toolchain.decompme import (
     DecompMeScratchpadToolchain,
     ScratchpadPayload,
@@ -111,6 +112,38 @@ def test_payload_for_battle_range_lift_uses_ps1_and_preprocessed_source() -> Non
     assert "inputs/" not in exported and "/toolchains/" not in exported
     assert "OpenEvent" not in payload.context and "SVECTOR" not in payload.context
     assert payload.context.count("extern ") == 1
+
+
+def test_payload_falls_back_to_original_words_when_splat_asm_is_absent() -> None:
+    from harness.io import repo_layout
+
+    payload = DecompMeScratchpadToolchain(repo_layout()).payload(
+        parse_function_id("emi/battle/battle/03@0x801D0C00"),
+        compiler="gcc-2.7.2-psx",
+    )
+
+    assert payload.target_asm.startswith(
+        ".text\nglabel func_801D0C00\n    .word 0x00000010\n"
+    )
+    assert ".include" not in payload.target_asm
+
+
+def test_public_context_closes_type_dependencies_from_any_header() -> None:
+    context = public_declaration_context(
+        """
+        typedef struct Shared { u32 value; } Shared;
+        typedef struct Local { Shared member; } Local;
+        extern Local *g_local;
+        extern u32 ignored;
+        """,
+        "void func(void) { g_local->member.value = 0; }",
+        base="typedef unsigned int u32;\n",
+    )
+
+    assert "typedef struct Shared" in context
+    assert "typedef struct Local" in context
+    assert "extern Local *g_local;" in context
+    assert "ignored" not in context
 
 
 def test_payload_allows_local_names_that_collide_with_ignored_headers() -> None:
