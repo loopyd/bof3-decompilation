@@ -310,6 +310,7 @@ void func_801DECE0(void);
 void func_801DED54(void);
 u8   func_801DEDE4(void);
 u8   func_801DEE4C(void);
+void func_801E1D88(void);
 void func_801E1B04(void);
 void func_801DEF0C(void);
 void func_801DEFE4(void);

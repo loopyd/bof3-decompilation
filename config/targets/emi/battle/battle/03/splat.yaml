@@ -599,8 +599,10 @@ segments:
     - asm
     - func_801E1D1C
   - - 70024
-    - asm
+    - c
     - func_801E1D88
+    - '@source: src/emi/battle/battle/03/func_801E1D88.c'
+    - '@behavior: Calls func_801DEE4C and, when nonzero, sets local-work bytes +0x01 to 8 and +0x02 to 0.'
   - - 70100
     - asm
     - func_801E1DD4
