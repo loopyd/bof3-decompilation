@@ -18,7 +18,7 @@ defaultProgress: true
 Review the prompted function selector: `TARGET@0xADDRESS`, or a shipped EMI
 entry as `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First run
 `python3 .pi/skills/bof3-re/scripts/agent-context.py review SELECTOR` once. It
-emits ordered common/role context including `LESSONS.md` and every
+emits ordered common/role context including `docs/agents/lessons.md` and every
 `docs/specs/**/*.md`, plus concise target manifest/map/Splat/header and complete
 target bindings and selected source/asm. After it succeeds, never call `read` on
 any emitted `=====` path: skill/checklist,
@@ -65,7 +65,7 @@ toolchain code, verify the contributor ran the SKILL.md pipeline-test contract
 Do not edit lift source, headers, maps, Splat, bindings, or generated artifacts;
 never mutate git/setup/spawn children. You may use `edit` only to record a
 **durable, evidence-backed, cross-function** discovery in the applicable
-`docs/specs/**/*.md` or `LESSONS.md`. Add the smallest statement that remains
+`docs/specs/**/*.md` or `docs/agents/lessons.md`. Add the smallest statement that remains
 true without this mission's selector, address, byte percentage, current residual,
 transient tool output, or date-stamped status. Do not add speculative conclusions,
 per-function progress reports, or duplicate an existing rule; report instead when

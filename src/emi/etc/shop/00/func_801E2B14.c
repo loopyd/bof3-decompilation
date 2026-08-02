@@ -1,5 +1,4 @@
 #include "internal.h"
-#include "bof3/ui/panel_task.h"
 
 /* @source 0x801E2B14
  * @behavior subtracts 0x10 from the panel task field at offset 6, clamps to min -0x14, and

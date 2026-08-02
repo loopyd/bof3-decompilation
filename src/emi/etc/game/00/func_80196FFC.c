@@ -10,9 +10,9 @@ void func_80196FFC(void) {
   u16  ev;
   u8   pv;
 
-  emi_stream_init_slot(0x268u);
+  func_80161FDC(0x268u);
 
-  while (!emi_loader_is_ready()) {
+  while (!func_80162D00()) {
     func_8014B87C(1u);
   }
 

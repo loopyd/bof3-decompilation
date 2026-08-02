@@ -5,7 +5,7 @@
 Domain contracts belong in `docs/specs/`; repeatable procedures belong in the
 owning operating reference. This file retains concrete findings that are easy
 to repeat or misdiagnose across targets. Use the
-[`matching workflow`](docs/matching.md) for matching and permuter procedures.
+[`matching workflow`](../matching.md) for matching and permuter procedures.
 
 ## Evidence and boundaries
 
@@ -135,23 +135,23 @@ to repeat or misdiagnose across targets. Use the
 
 Register pinning ladder, `MATCHING_AID` convention, `barrier()`/`CLOBBER_*`
 usage, pointer hoisting, and table indexing are fully documented in
-`docs/matching-playbook.md` §§2,4,5,16 and `docs/memory-api.md`.
+`../matching-playbook.md` §§2,4,5,16 and `../memory-api.md`.
 
 ### Reach fixed RAM through `PSX_PTR`/`PSX_REF`, never raw casts or `vu8`
 
 - All fixed-address access goes through the `include/memory/` and `include/base/`
-  subsystem headers (legacy aliases remain under `include/bof3/`). The
+  subsystem headers. The
   `vu8`/`vu16`/`vu32` typedefs are gone; write `volatile u8`/`u16`/`u32`
   directly on the `type` argument (`PSX_REF(volatile u16, 0x80143B90u)`).
-- Hardware registers use `REG8/16/32` only. Scratchpad RAM (`0x1F800000`) uses
-  `SPAD_ADDR`/`SPAD_REF`/`SPAD_PTR_SLOT` — never `REG*`. Full reference in
-  `docs/memory-api.md`.
+- Scratchpad RAM (`0x1F800000`) uses `SPAD_ADDR`/`SPAD_REF`/`SPAD_PTR_SLOT`.
+  Use `PSX_REF(volatile type, address)` only when a fixed-address access must
+  remain volatile. Full reference in `docs/memory-api.md`.
 
 ### Keep `SPAD_PTR_SLOT` cell non-volatile to match constant-address codegen
 
 - Marking the slot `volatile` forces `lui + ori + lw`, breaking the match.
-  To force a per-evaluation reload, qualify the pointee, not the cell:
-  `SPAD_PTR_SLOT(volatile Entity, off)`.
+  To force a per-evaluation reload, use an explicit volatile pointer-cell
+  `PSX_REF(Entity * volatile, SPAD_ADDRESS(off))`.
 
 ## Target ownership and symbols
 

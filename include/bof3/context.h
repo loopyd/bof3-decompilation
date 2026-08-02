@@ -1,7 +1,7 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
-#include "bof3/defines.h"
+#include "base/types.h"
 #include "bof3/psyq.h"
 #include "bof3/symbols.h"
 

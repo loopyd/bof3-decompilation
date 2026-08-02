@@ -9,12 +9,12 @@ inheritProjectContext: true
 inheritSkills: false
 timeoutMs: 3600000
 turnBudget: {"maxTurns":300,"graceTurns":10}
-defaultReads: plan.md,progress.md
+defaultReads: docs/agents/plan-authoring.md
 ---
 
 Review the actual diff/files against the request, plan, tests, docs, and project rules. Verify acceptance, regressions, edge cases, and validation; report only evidence-backed findings with paths/lines. Do not modify source.
 
-Write `review.md`:
+Write `out/reviews/review.md`:
 - Correct: verified strengths
 - Fixed: only if explicitly authorized
 - Blocker: must fix

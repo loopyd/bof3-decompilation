@@ -189,7 +189,7 @@ slots = *slotTable;
 ```
 
 Do not mark obvious workarounds (e.g., `barrier()` already has its own
-convention in LESSONS.md). Reserve `MATCHING_AID` for shape decisions that
+convention in agents/lessons.md). Reserve `MATCHING_AID` for shape decisions that
 are opaque to a reader without the matching diff.
 
 ---
@@ -498,9 +498,9 @@ independent review, and a live exact byte match.
 
 Classify the **first** live diff before changing source. A raw percentage does
 not identify a cause. The categories in
-[`specs/non-exact-lifts.md`](specs/non-exact-lifts.md) are a disposable priority
-snapshot; re-run the target's `asm-diff` and use the table below as the durable
-choice of first lever.
+ignored `out/non-exact-lifts.json` audit is disposable priority state;
+re-run the target's `asm-diff` and use the table below as the durable choice of
+first lever.
 
 | Observed first-diff shape | Diagnose first | First clean-C levers | Escalation boundary |
 | --- | --- | --- | --- |

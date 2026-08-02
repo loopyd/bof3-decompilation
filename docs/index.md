@@ -7,8 +7,9 @@
 3. [Tool usage](usage.md) — the ordered workflow and command reference.
 4. [Matching](matching.md) — the loop for lifting one function.
 
-Use [AGENTS.md](../AGENTS.md) for project rules and [CONTEXT.md](../CONTEXT.md)
-for the repository map and target identity model.
+Use [AGENTS.md](../AGENTS.md) for project rules. Agent-facing references:
+[project context](agents/project-context.md), [plan authoring](agents/plan-authoring.md),
+and [lessons](agents/lessons.md).
 
 ## Matching
 
@@ -53,13 +54,13 @@ for the repository map and target identity model.
 
 ## Lessons
 
-- [LESSONS.md](../LESSONS.md) — cross-cutting gotchas for the lift-and-match loop
+- [agents/lessons.md](agents/lessons.md) — cross-cutting gotchas for the lift-and-match loop
 
 ## Header layout
 
-Subsystem headers under `include/` are the single source of truth for fixed RAM
-addresses, hardware registers, and scratchpad. Legacy aliases live in
-`include/bof3/`.
+`include/base/` and `include/memory/` are the canonical source of truth for
+fixed RAM addresses, hardware registers, and scratchpad. The aggregate and SDK
+contracts under `include/bof3/` remain active public headers.
 
 | Directory | Domain |
 | --- | --- |

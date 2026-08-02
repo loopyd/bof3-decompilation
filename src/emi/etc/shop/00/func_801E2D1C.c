@@ -1,5 +1,5 @@
 #include "internal.h"
-#include "bof3/ui/panel_task.h"
+#include "base/barrier.h"
 
 /* @source 0x801E2D1C
  * @behavior subtracts 0x10 from the panel task field at offset 6, raises values below 0x3E, and

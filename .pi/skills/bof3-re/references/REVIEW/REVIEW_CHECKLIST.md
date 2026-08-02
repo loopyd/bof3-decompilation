@@ -1,7 +1,7 @@
 # Review checklist
 
 Review one selector. `agent-context.py review SELECTOR` preloads this file,
-`SHARING_NONMATCHES.md`, `LESSONS.md`, all `docs/specs/**/*.md`, and target
+`SHARING_NONMATCHES.md`, `docs/agents/lessons.md`, all `docs/specs/**/*.md`, and target
 evidence. Do not reread bundled paths.
 Use executor brief/diff; run fresh `bin/byte-match TARGET@0xADDRESS` for an
 exact claim. `decomp-status` is cache, never acceptance. Do not run `just
@@ -24,7 +24,7 @@ Check:
    `SHARING_NONMATCHES.md` when reviewing a parent sharing decision.
 8. record a documentation update only when the evidence establishes a durable,
    cross-function project fact. Edit only the relevant `docs/specs/**/*.md` or
-   `LESSONS.md`; omit selector/address, match percentage, transient residual,
+   `docs/agents/lessons.md`; omit selector/address, match percentage, transient residual,
    tool-output details, and date-stamped status. Do not record speculation or
    one-function examples. The preloaded documentation text is sufficient for
    this narrow edit; do not reread it merely to prepare the update.

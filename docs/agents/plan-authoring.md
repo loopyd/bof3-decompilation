@@ -1,20 +1,20 @@
 # Plan Authoring
 
-Create repository implementation plans in [`docs/plans/`](docs/plans/), one
-Markdown file per scoped effort. Existing historical plans live there too.
+Create a repository implementation plan in `docs/plans/` only for a current,
+scoped effort. The directory is intentionally empty when no such plan exists.
 
 ## Before writing
 
-1. Read this file, [`AGENTS.md`](AGENTS.md), and any relevant active plan under
-   `docs/plans/`.
+1. Read this file, [`AGENTS.md`](../../AGENTS.md), and the relevant plan under
+   `docs/plans/` when one exists.
 2. Establish current evidence with the owning commands (for example
    `bin/decomp-status`, `bin/symbols check`, `just doctor`, or focused tests).
-3. Keep durable runtime or file-format findings in `docs/specs/`, not plans.
+3. Keep durable runtime or file-format findings in `../specs/`, not plans.
 
 ## Plan format
 
 Use a descriptive kebab-case filename, such as
-`docs/plans/toolchain-unification.md`. Include:
+`../plans/toolchain-unification.md`. Include:
 
 - a concise goal and evidence baseline;
 - numbered, dependency-ordered phases;
@@ -28,13 +28,12 @@ existing plan instead of maintaining conflicting plans.
 
 ## Executing plans
 
-When the user asks to execute a plan, scan `docs/plans/` first. Select the
-specified plan by filename or unambiguous scope, then execute its incomplete
-phases in dependency order. Revalidate and refresh the plan's evidence baseline
+When the user asks to execute a plan, select the specified existing plan by
+filename or unambiguous scope. If none exists, create the smallest plan first.
+Execute incomplete phases in dependency order, refresh the evidence baseline
 before each phase, mark completed work in that plan, and stop for an explicit
-blocker or ambiguity. A plan is historical only when it explicitly says so;
-otherwise treat its incomplete phases as active. Do not execute unrelated plans
-merely because they are present in the directory.
+blocker or ambiguity. Do not execute unrelated plans merely because they are
+present in the directory.
 
 ## Toolchain plans
 

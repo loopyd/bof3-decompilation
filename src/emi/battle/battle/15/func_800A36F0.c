@@ -17,9 +17,9 @@ u16 func_800A36F0(u8 battler_index, u16 flags) {
   player_base = BATTLE_GAME_RAM_BASE;
 
   if (battler_index < 3u) {
-    status = REG16(0x80145f10u + ((u32)battler_index * 0x140u));
+    status = PSX_REF(volatile u16, 0x80145f10u + ((u32)battler_index * 0x140u));
   } else {
-    status = REG16(0x801eb6b2u + ((u32)(battler_index - 3u) * 0x118u));
+    status = PSX_REF(volatile u16, 0x801eb6b2u + ((u32)(battler_index - 3u) * 0x118u));
   }
 
   if (flags & 0x4000u) {
@@ -54,20 +54,20 @@ u16 func_800A36F0(u8 battler_index, u16 flags) {
     status &= 0xffdfu;
 
     if (battler_index < 3u) {
-      REG32(0x80145ec4u + ((u32)battler_index * 0x140u)) =
-          REG32(0x801ec364u + ((u32)battler_index * 0x78u));
-      REG32(0x80145ec8u + ((u32)battler_index * 0x140u)) =
-          REG32(0x801ec368u + ((u32)battler_index * 0x78u));
-      REG32(0x80145eccu + ((u32)battler_index * 0x140u)) =
-          REG32(0x801ec36cu + ((u32)battler_index * 0x78u));
+      PSX_REF(volatile u32, 0x80145ec4u + ((u32)battler_index * 0x140u)) =
+          PSX_REF(volatile u32, 0x801ec364u + ((u32)battler_index * 0x78u));
+      PSX_REF(volatile u32, 0x80145ec8u + ((u32)battler_index * 0x140u)) =
+          PSX_REF(volatile u32, 0x801ec368u + ((u32)battler_index * 0x78u));
+      PSX_REF(volatile u32, 0x80145eccu + ((u32)battler_index * 0x140u)) =
+          PSX_REF(volatile u32, 0x801ec36cu + ((u32)battler_index * 0x78u));
     } else {
       enemy = battler_index - 3u;
-      REG32(0x801eb664u + ((u32)enemy * 0x118u)) =
-          REG32(0x801ec364u + ((u32)battler_index * 0x78u));
-      REG32(0x801eb668u + ((u32)enemy * 0x118u)) =
-          REG32(0x801ec368u + ((u32)battler_index * 0x78u));
-      REG32(0x801eb66cu + ((u32)enemy * 0x118u)) =
-          REG32(0x801ec36cu + ((u32)battler_index * 0x78u));
+      PSX_REF(volatile u32, 0x801eb664u + ((u32)enemy * 0x118u)) =
+          PSX_REF(volatile u32, 0x801ec364u + ((u32)battler_index * 0x78u));
+      PSX_REF(volatile u32, 0x801eb668u + ((u32)enemy * 0x118u)) =
+          PSX_REF(volatile u32, 0x801ec368u + ((u32)battler_index * 0x78u));
+      PSX_REF(volatile u32, 0x801eb66cu + ((u32)enemy * 0x118u)) =
+          PSX_REF(volatile u32, 0x801ec36cu + ((u32)battler_index * 0x78u));
     }
   }
 
@@ -76,7 +76,7 @@ u16 func_800A36F0(u8 battler_index, u16 flags) {
     FUNCTION_AT(void (*)(volatile u8*),
                 0x80196718u)(player_base + ((u32)player * 0x140u) + 0x5e90u);
     scratchpad_saved = (u32)*BATTLE_SCRATCHPAD_PTR;
-    REG16(0x80145f10u + ((u32)player * 0x140u)) = status;
+    PSX_REF(volatile u16, 0x80145f10u + ((u32)player * 0x140u)) = status;
     *BATTLE_SCRATCHPAD_PTR =
         (volatile u8*)(u32)(player_base + ((u32)player * 0x140u) + 0x5e90u);
   } else {
@@ -84,7 +84,7 @@ u16 func_800A36F0(u8 battler_index, u16 flags) {
     FUNCTION_AT(void (*)(volatile u8*), 0x80196718u)(
         (volatile u8*)((u32)BATTLE_ENEMY_BATTLER_BASE + ((u32)enemy * 0x118u)));
     scratchpad_saved = (u32)*BATTLE_SCRATCHPAD_PTR;
-    REG16(0x801eb6b2u + ((u32)enemy * 0x118u)) = status;
+    PSX_REF(volatile u16, 0x801eb6b2u + ((u32)enemy * 0x118u)) = status;
     *BATTLE_SCRATCHPAD_PTR =
         (volatile u8*)(u32)((u32)BATTLE_ENEMY_BATTLER_BASE +
                             ((u32)enemy * 0x118u));

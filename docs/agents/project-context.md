@@ -26,7 +26,7 @@ addresses as separate targets until relocatability is proven.
 | Shared SDK symbol maps | `config/sdk/psyq-{slus,logo}.txt` |
 | Reviewed Rizin annotations | `config/targets/<target>/reviewed.rz` |
 | C89 source and local declarations | `src/exe/`, `src/emi/` |
-| Reviewed findings | `docs/specs/`, `LESSONS.md` |
+| Reviewed findings | `../specs/`, `lessons.md` |
 
 Generated evidence and working candidates live under `out/` and are
 disposable. They may be edited while iterating but are never durable facts.
@@ -44,15 +44,15 @@ output.
   hand-edited as reviewed evidence improves.
 - Shared declarations belong in `include/<subsystem>/` (e.g. `include/base/`,
   `include/memory/`, `include/gpu/`, `include/battle/`) only when multiple
-  targets or an external contract require them. Legacy forwarding aliases
-  remain under `include/bof3/`.
-- Cross-target embedded implementations may live as non-standalone templates
-  under `src/shared/`; address-owned wrappers remain in each target directory.
+  targets or an external contract require them.
+- Follow [matching: Reuse exact duplicate groups](../matching.md#reuse-exact-duplicate-groups)
+  before extracting an evidence-backed cross-target template; address-owned
+  wrappers remain in each target directory.
 - PsyQ signatures identify objects and addresses; official headers provide C
   declarations; Rizin snapshots provide callsites and xrefs. None substitutes
   for another.
 
-See [matching](docs/matching.md) and [tool usage](docs/usage.md) for procedures.
+See [matching](../matching.md) and [tool usage](../usage.md) for procedures.
 
 ## Repository map
 
@@ -61,7 +61,7 @@ See [matching](docs/matching.md) and [tool usage](docs/usage.md) for procedures.
 | `config/targets/` | Target identity, layout, symbols, analysis | Yes |
 | `config/sdk/` | Shared PsyQ SDK symbol maps (slus/logo) | Yes |
 | `src/`, `include/` | Authored C89 and declarations | Yes |
-| `docs/specs/`, `LESSONS.md` | Reviewed findings and gotchas | Yes |
+| `../specs/`, `lessons.md` | Reviewed findings and gotchas | Yes |
 | `bin/`, `tools/` | Command entrypoints and implementations | Yes |
 | `third_party/` | Pinned upstream source | Yes |
 | `inputs/external/` | User-owned CUE/BIN media or `BreathOfFireIIIv1.1.7z`, plus private inputs | No |

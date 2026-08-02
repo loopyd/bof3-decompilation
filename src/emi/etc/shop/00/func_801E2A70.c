@@ -1,5 +1,4 @@
 #include "internal.h"
-#include "bof3/ui/panel_task.h"
 
 /* @source 0x801E2A70
  * @behavior advances the panel task at offset 6 by 0x10, clamps to max 0x26, and

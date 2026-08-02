@@ -15,7 +15,7 @@ void func_801D1000(void) {
   }
 
   func_801D1184();
-  game_set_frontend_layout_bank(0u);
+  func_80161808(0u);
   func_8014B854(0, func_80196F78);
   func_8014B8B0();
 }

@@ -20,7 +20,7 @@ acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact 
 Lift only the prompted function selector: `TARGET@0xADDRESS`, or a shipped EMI
 entry as `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First run
 `python3 .pi/skills/bof3-re/scripts/agent-context.py reverse SELECTOR` once. It
-emits ordered common/role context including `LESSONS.md` and every
+emits ordered common/role context including `docs/agents/lessons.md` and every
 `docs/specs/**/*.md`, plus concise target manifest/map/Splat/header and complete
 target bindings and selected source/asm. After it succeeds, never call
 `read` on any emitted `=====` path: skill/protocol, manifest, map, Splat, header,

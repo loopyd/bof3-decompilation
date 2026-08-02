@@ -1,5 +1,5 @@
 /* Counter-step template: writes a fixed mode byte then steps a u16 counter.
- * Byte-identical across area008/area026 (see LESSONS.md).
+ * Byte-identical across area008/area026 (see docs/agents/lessons.md).
  *
  * Usage:
  *   #include "internal.h"

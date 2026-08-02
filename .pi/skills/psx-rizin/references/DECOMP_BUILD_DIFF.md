@@ -52,7 +52,7 @@ A practical matching project separates:
 ```text
 config/targets/      per-target identity, layout, symbols
 config/targets/      target identity, image path, load address
-include/bof3/        generic PS1 memory/accessor headers
+include/memory/      generic PS1 memory/accessor headers
 src/exe/<name>/      executable lifts (func_XXXXXXXX.c + internal.h)
 src/emi/<fam>/<arc>/<slot>/   one EMI entry
 src/shared/<domain>/ cross-target embedded templates
@@ -61,7 +61,7 @@ out/                 disposable snapshots, index, matching workspaces
 ```
 
 In the BOF3 repository these replace the generic `config/ src/ a sm/ tools/`
-layout; see `CONTEXT.md` and `docs/usage.md` for the canonical map.
+layout; see `docs/agents/project-context.md` and `docs/usage.md` for the canonical map.
 
 ## Function iteration
 

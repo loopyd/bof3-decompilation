@@ -2,7 +2,6 @@
 #define EMI_GAME_00_INTERNAL_H
 
 #include "bof3/bof3.h"
-#include "bof3/ui/panel_task.h"
 #include "panel/task.h"
 #include "battle/ability.h"
 #include "frontend/state.h"

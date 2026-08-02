@@ -2,7 +2,6 @@
 #define EMI_BATTLE_15_INTERNAL_H
 
 #include "bof3/bof3.h"
-#include "bof3/ui/panel_task.h"
 #include "panel/task.h"
 #include "gpu/prim.h"
 #include "battle/ram.h"

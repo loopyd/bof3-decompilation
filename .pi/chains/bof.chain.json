@@ -142,7 +142,7 @@
       "phase": "Review",
       "label": "Inspect all worker implementations",
       "task": "Review all worker implementations against the oracle's validated plan.\n\nWorker results: {outputs.workerResults}\nOracle guidance: {outputs.plan}\n\n1. Inspect every changed file directly \u2014 do not rely on worker reasoning\n2. Verify each task's acceptance criteria against the actual code\n3. For a non-exact lift escalation, require its first-diff evidence, rung-specific attempts, restored state, and clear blocked/next evidence; reject a pin for a frame/CFG residual or a clobber without caller-register placement proof\n4. Check for regressions, missed edge cases, and pattern violations\n5. Do NOT modify files \u2014 findings only\n\nFor each finding, report:\n- taskId: which plan task this relates to\n- severity: blocker | fixNow | optional | defer\n- file: path with line references\n- description: what is wrong\n- suggestion: minimal fix (one line if possible)\n- confidence: high | medium | low\n\nFinal verdict: PASS (all tasks verified clean) or FAIL (blocker or fixNow issues remain)\nIf no issues found, state PASS explicitly.",
-      "output": "review.md",
+      "output": "out/reviews/review.md",
       "outputMode": "file-only",
       "progress": true,
       "as": "reviewResult",

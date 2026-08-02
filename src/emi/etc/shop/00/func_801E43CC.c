@@ -1,5 +1,4 @@
 #include "internal.h"
-#include "bof3/ui/panel_task.h"
 
 /* @source 0x801E43CC
  * @behavior subtracts 0x20 from the panel task x position, clamps to max 0x8C, and

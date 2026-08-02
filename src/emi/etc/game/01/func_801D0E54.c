@@ -14,7 +14,7 @@ void func_801D0E54(void) {
     GAME_FRONT_WINDOW_PHASE = 0u;
     GAME_FRONT_INPUT_GATE = 0u;
     func_801D1184();
-    game_set_frontend_layout_bank(0u);
+    func_80161808(0u);
     func_8019611C();
     D_80144FC3 = 0u;
     D_80144FC2 = 0u;

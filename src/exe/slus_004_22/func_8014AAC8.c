@@ -33,7 +33,7 @@ void func_8014AAC8(void) {
 
     if ((D_80145AA4 & 0x900) == 0x900) {
       if (D_80143F44 == 60) {
-        if (emi_loader_is_ready() != 0) {
+        if (func_80162D00() != 0) {
           D_80143F44 = 0;
           func_8015CEBC();
           func_8014B33C();

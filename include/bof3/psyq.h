@@ -1,7 +1,7 @@
 #ifndef PSYQ_H
 #define PSYQ_H
 
-#include "bof3/defines.h"
+#include "base/types.h"
 
 /* PsyQ-compatible type aliases */
 #ifndef _UCHAR_T

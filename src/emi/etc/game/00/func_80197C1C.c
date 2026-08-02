@@ -11,7 +11,7 @@ void func_80197C1C(void) {
   local_ready = func_801BF11C();
   func_801A06D8();
   func_801992B8();
-  if (emi_loader_is_ready() && local_ready && D_80149332 == 0) {
+  if (func_80162D00() && local_ready && D_80149332 == 0) {
     state = &D_80143B92;
     (*state)++;
   }

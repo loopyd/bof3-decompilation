@@ -2,10 +2,11 @@
 #define BOF3_H
 
 #include "bof3/context.h"
-#include "bof3/defines.h"
+#include "base/types.h"
+#include "base/barrier.h"
 #include "bof3/core.h"
 #include "bof3/psyq.h"
-#include "bof3/scratchpad.h"
+#include "memory/scratchpad.h"
 #include "bof3/asm.h"
 #include "bof3/symbols.h"
 

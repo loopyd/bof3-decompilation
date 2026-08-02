@@ -52,7 +52,7 @@ def main() -> int:
         if schema is None:
             role = args[0]
             assert "===== AGENTS.md =====" in result.stdout, script
-            assert "===== LESSONS.md =====" in result.stdout, script
+            assert "===== docs/agents/lessons.md =====" in result.stdout, script
             for spec in sorted((ROOT / "docs" / "specs").rglob("*.md")):
                 assert (
                     f"===== {spec.relative_to(ROOT).as_posix()} =====" in result.stdout

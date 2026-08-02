@@ -1,6 +1,0 @@
-# Local append-only JSONL ledger records and runtime metadata. Only the
-# placeholders are tracked.
-*
-!.gitignore
-!.gitkeep
-!README.md

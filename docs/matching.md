@@ -116,23 +116,20 @@ low-quality fake matches.
 
 ### Usage after explicit approval
 
-Replace the function body in `func_XXXXXXXX.c`:
+Keep the raw assembly under the repository's `asm/nonmatchings/` tree and
+include it from the address-owned C translation unit:
 
 ```c
 #include "internal.h"
 #include "bof3/asm.h"
 
-// func_8014AEE0 is not yet matched — see adjacent .s file.
-INCLUDE_ASM(func_8014AEE0);
+/* Explicitly approved fallback for func_8014AEE0. */
+INCLUDE_ASM("asm/nonmatchings/<target>", func_8014AEE0);
 ```
 
-The macro marks the call site with a global symbol declaration. The actual
-implementation lives in an adjacent assembly file compiled into the same target:
-
-```text
-src/exe/<target>/func_XXXXXXXX.c    (declarations + INCLUDE_ASM marker)
-src/exe/<target>/func_XXXXXXXX.s    (raw disassembly)
-```
+The macro textual-includes `asm/nonmatchings/<target>/func_8014AEE0.s`; do not
+also compile that file as a standalone source. The C file remains the target's
+tracked source/boundary owner.
 
 ### Assembly file format
 
@@ -156,25 +153,21 @@ for BSS, and `"a" @progbits` for read-only data.
 
 ### Adjacent .rodata
 
-For functions with adjacent `.rodata` (jump tables, string literals):
-
-- Include the `.rodata` section before `.text` in the same `.s` file, or
-- Place it in a companion `func_XXXXXXXX.rodata.s` file and include both from
-  the build system.
+For functions with adjacent `.rodata` (jump tables, string literals), place its
+section before `.text` in the same included `.s` file. `INCLUDE_RODATA(FOLDER,
+NAME)` is available only when an explicitly approved layout requires a separate
+included data fragment.
 
 ### Promotion path
 
 When reconstruction succeeds:
 
-1. Replace `INCLUDE_ASM(func_XXXXXXXX);` with matching C body.
-2. Remove `func_XXXXXXXX.s`.
+1. Replace `INCLUDE_ASM("FOLDER", func_XXXXXXXX);` with matching C body.
+2. Remove its included `FOLDER/func_XXXXXXXX.s` file.
 3. Update the Splat boundary from `"a"` (asm) to `"c"` (C).
 4. Run `bin/byte-match TARGET@0xADDRESS` to validate.
 
-### Build integration
-
-The build system must compile adjacent `.s` files alongside their `.c`
-counterparts for each target directory containing INCLUDE_ASM markers.
+The macro owns its assembly inclusion; no CMake source-list change is needed.
 
 ## Local matching aids
 

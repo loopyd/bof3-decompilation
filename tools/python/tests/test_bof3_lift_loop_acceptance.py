@@ -17,8 +17,7 @@ POLICY_SOURCES = [
     ROOT / "include" / "base" / "barrier.h",
     ROOT / "docs" / "memory-api.md",
     ROOT / "docs" / "matching-playbook.md",
-    ROOT / "docs" / "plans" / "implementation-roadmap.md",
-    ROOT / ".agents" / "skills" / "bof3-re" / "SKILL.md",
+    ROOT / ".pi" / "skills" / "bof3-re" / "SKILL.md",
 ]
 
 
@@ -98,9 +97,9 @@ def test_agents_receive_project_knowledge_and_reviewer_records_only_durable_fact
     checklist = REVIEW_CHECKLIST.read_text(encoding="utf-8")
 
     for text in (reverse, review, checklist):
-        assert "LESSONS.md" in text
+        assert "docs/agents/lessons.md" in text
         assert "docs/specs/**/*.md" in text
-    assert "LESSONS.md" in context
+    assert "docs/agents/lessons.md" in context
     assert 'rglob("*.md")' in context
     assert "tools: read,grep,find,ls,bash,edit,contact_supervisor" in review
     assert "Do not edit lift source, headers, maps, Splat, bindings" in review

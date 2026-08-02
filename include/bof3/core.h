@@ -18,8 +18,6 @@ const SlotTableEntry* slot_table_logo_str(void);
 void func_80161FDC(u32 slot_id);
 s32  func_80162D00(void);
 
-#define emi_stream_init_slot func_80161FDC
-#define emi_loader_is_ready  func_80162D00
 
 /* ---- game front ---- */
 void func_8014ECAC(u16 local_mode);
@@ -28,9 +26,5 @@ void func_8015DF18(u16 cue_id);
 void func_80161808(u32 layout_bank);
 void func_80161C20(u8 selection_id, s32 cue_level, s32 cue_shape);
 void func_80161CD0(u8 selection_id, s32 cue_level, s32 cue_shape);
-
-#define game_queue_cue              func_8015DF18
-#define game_set_frontend_layout_bank func_80161808
-#define game_set_active_selection_cue func_80161C20
 
 #endif

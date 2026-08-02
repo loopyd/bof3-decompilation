@@ -1,6 +1,0 @@
-interface:
-  display_name: "BOF3 Lift Loop"
-  short_description: "Autonomous review-gated BOF3 function lifting."
-  default_prompt: "$bof3-lift-loop"
-policy:
-  allow_implicit_invocation: false

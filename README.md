@@ -31,8 +31,8 @@ proposal through the repository's issue forms.
 | Lift and match one function | [Matching](docs/matching.md) |
 | Resolve asm-diff symptoms | [Matching playbook](docs/matching-playbook.md) |
 | Memory macros and qualifiers | [Memory API](docs/memory-api.md) |
-| Understand target identity and ownership | [Context](CONTEXT.md) |
+| Understand target identity and ownership | [Context](docs/agents/project-context.md) |
 | Read reviewed format/runtime/data findings | [Specs](docs/specs/) |
-| Avoid known reverse-engineering mistakes | [Lessons](LESSONS.md) |
+| Avoid known reverse-engineering mistakes | [Lessons](docs/agents/lessons.md) |
 
 Run `--help` or `--example` on commands. Run `just check` before handoff.

@@ -22,7 +22,9 @@ FULL = (
     "AGENTS.md",
     ".pi/skills/bof3-re/SKILL.md",
     "docs/memory-api.md",
-    "LESSONS.md",
+    "docs/agents/project-context.md",
+    "docs/agents/plan-authoring.md",
+    "docs/agents/lessons.md",
 )
 ROLE = {
     "reverse": (".pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md",),

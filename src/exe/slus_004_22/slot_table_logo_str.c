@@ -1,5 +1,5 @@
 #include "bof3/context.h"
-#include "bof3/defines.h"
+#include "base/types.h"
 #include "internal.h"
 
 extern u_long D_801D8BB0;

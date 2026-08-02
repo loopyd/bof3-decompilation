@@ -54,8 +54,7 @@ BOF3 binaries load independently. Qualify work by one function selector:
   bindings under `out/bindings/` (regenerated on every match) stay disposable
   and untracked.
 - Write readable C89. Inline assembly is banned in lifted source except the
-  sanctioned helpers: `barrier()`/`CLOBBER_*` (`include/base/barrier.h`,
-  forwarding alias `include/bof3/defines.h`) for access ordering and
+  sanctioned helpers: `barrier()`/`CLOBBER_*` (`include/base/barrier.h`) for access ordering and
   delay-slot placement, `REGISTER_PIN(type, name, reg)`
   (`include/base/barrier.h`) for an approved allocator constraint, and
   `WEAK_SYMBOL_AT` (target `symbols.c` only) for address binding. Do not use
@@ -86,7 +85,7 @@ BOF3 binaries load independently. Qualify work by one function selector:
   address-based `func_XXXXXXXX.c` wrapper per member to provide its raw symbol
   and any compile-time parameters.
 - Put stable shared types in `include/<subsystem>/` (e.g. `include/battle/`,
-  `include/gpu/`; legacy forwarding aliases remain under `include/bof3/`).
+  `include/gpu/`).
   A shared template is compiled into every owning image; it is not a runtime
   engine service.
 - Never reuse a game-specific extern address across targets. Each wrapper
@@ -109,19 +108,19 @@ inline-assembly ban and the [matching](docs/matching.md) loop. Classify each
 live first mismatch with the [matching playbook](docs/matching-playbook.md): do
 not use an allocator pin for a frame/size or CFG mismatch, and do not use a
 clobber until a caller-register scheduling placement is proven. The
-[non-exact lift catalog](docs/specs/non-exact-lifts.md) is a parent-generated
-priority snapshot, not evidence that replaces a function's live `asm-diff`.
+ignored `out/non-exact-lifts.json` audit is parent-generated priority state,
+not evidence that replaces a function's live `asm-diff`.
 Use `/skill:psx-rizin` only for explicitly requested generic analyzer work. See the [docs index](docs/index.md) for the
 full documentation map, [tool usage](docs/usage.md) for procedures, and
 [docs/memory-api.md](docs/memory-api.md) for the memory-macro reference. Store
 reviewed findings in `docs/specs/` and
-reusable evidence-backed gotchas in `LESSONS.md`. Use the
-[repository map](CONTEXT.md#repository-map) to locate tracked and ignored state.
+reusable evidence-backed gotchas in `docs/agents/lessons.md`. Use the
+[repository map](docs/agents/project-context.md#repository-map) to locate tracked and ignored state.
 
 ## Planning
 
 For repository implementation plans or plan-management requests, read
-[`PLAN.md`](PLAN.md), then create or update a scoped plan under
-[`docs/plans/`](docs/plans/). Keep plans phased, evidence-backed, and aligned
-with live `bin/decomp-status`, `bin/symbols check`, and validation results;
-durable runtime or format findings still belong in `docs/specs/`.
+[`docs/agents/plan-authoring.md`](docs/agents/plan-authoring.md), then create or update a scoped plan under
+`docs/plans/`. Keep plans phased, evidence-backed, and aligned with live
+`bin/decomp-status`, `bin/symbols check`, and validation results; durable
+runtime or format findings still belong in `docs/specs/`.

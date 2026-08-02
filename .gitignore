@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 .pytest_cache/
+.ruff_cache/
 .venv/
 .uv-cache/
 dist/
@@ -22,8 +23,7 @@ build/
 .idea/
 
 # Generated outputs (regenerable)
-out/*
-!out/README.md
+out/
 
 # Splat-generated
 undefined_funcs_auto.txt
@@ -65,8 +65,8 @@ toolchains/psyq-stock/
 
 # Session / agent artifacts
 session-*.md
-sessions/*
-!sessions/.gitkeep
+sessions/
+ledger/
 .codex
 
 # Project Pi runtime state (tracked configuration lives in .pi/)

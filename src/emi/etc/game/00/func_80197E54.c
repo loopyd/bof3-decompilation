@@ -11,7 +11,7 @@ void func_80197E54(void) {
   local_ready = func_801BF78C();
   func_801A06D8();
   func_801992B8();
-  if (emi_loader_is_ready() && local_ready) {
+  if (func_80162D00() && local_ready) {
     D_8014932E = 0;
     D_80146329 = 0;
     D_801462E0 = 0;

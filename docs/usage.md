@@ -129,7 +129,7 @@ bin/rev-query status
 `bin/rev-query mission TARGET@0xADDRESS` composes a single-function lifting
 brief (metrics, callers/callees, duplicate group, SDK callees, and risk flags) —
 the input to the autonomous lift loop. To lift a batch unattended, run
-`/skill:bof3-lift-loop` (see `.agents/skills/bof3-lift-loop/README.md`); it
+`/skill:bof3-lift-loop` (see `.pi/skills/bof3-lift-loop/README.md`); it
 gates each exact match through a reviewer and commits only reviewed lifts.
 
 Addresses are target-qualified where identity matters; overlapping addresses
@@ -192,19 +192,10 @@ before the build selects it.
 
 ### 6. Promote duplicate knowledge
 
-1. Verify group bytes and reviewed boundaries.
-2. Make one representative byte-match.
-3. Independently make a second member byte-match.
-4. Normalize evidence-backed roles, types, fields, and constants.
-5. Share a cross-target embedded body under `src/shared/<domain>/` only when
-   repeated maintenance justifies an `.inc`;
-   retain every address-owned wrapper and target-local check.
-
-An implementation embedded in several EMIs is compile-time source reuse, not
-an engine service. A real engine service exists once in `SLUS_004.22`; keep its
-implementation in `src/exe/slus_004_22/` and put only its proven public contract
-in `include/bof3/core.h`. `src/shared/` templates compile into each owning
-image; do not create an orphan `src/engine/` or link one EMI against another.
+Follow the evidence gate and ownership model in
+[matching: Reuse exact duplicate groups](matching.md#reuse-exact-duplicate-groups).
+It is the normative duplicate-promotion procedure; every wrapper remains
+address-owned and independently validated.
 
 ### 7. Audit and hand off
 
@@ -262,4 +253,4 @@ used for acceptance: immediately before accepting a lift, run live
 matching commands instead of invoking these adapters directly.
 
 See [matching](matching.md) for C iteration rules, [tool usage](usage.md)
-for analyzer contracts, and [context](../CONTEXT.md) for ownership.
+for analyzer contracts, and [context](agents/project-context.md) for ownership.

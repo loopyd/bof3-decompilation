@@ -33,7 +33,7 @@ void func_801A7704(u8 scenario_index) {
   ready_phase = 5u;
   func_801A7804();
 
-  while (!emi_loader_is_ready()) {
+  while (!func_80162D00()) {
     if ((D_80143F00 != none_sel) && (D_80143BB0 != ready_phase)) {
       func_801992B8();
     }
