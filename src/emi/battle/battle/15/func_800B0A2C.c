@@ -7,10 +7,12 @@
  * @source 0x800B0A2C
  */
 void func_800B0A2C(void) {
-  volatile u8* ptr;
+  BattlePanelTask* task;
+  u8 state;
 
-  ptr = (volatile u8*)D_80148648;
-  (*(volatile u16*)((u32)ptr + 4)) = 0x5A;
-  (*(volatile u16*)((u32)ptr + 6)) = -0x17;
-  ptr[3]++;
+  task = (BattlePanelTask*)D_80148648;
+  task->x = 0x5A;
+  state = task->state;
+  task->field_06 = -0x17;
+  task->state = state + 1;
 }

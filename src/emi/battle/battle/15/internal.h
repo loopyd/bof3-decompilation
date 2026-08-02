@@ -27,6 +27,13 @@ typedef struct BattleLocalPanelEntry {
   u16 panel_id;
 } BattleLocalPanelEntry;
 
+typedef struct BattlePanelTask {
+  u8  unk_00[3];
+  u8  state;
+  u16 x;
+  s16 field_06;
+} BattlePanelTask;
+
 typedef struct BattleSelectionKind {
   u16 mask;
   u8  unk_02[0x12];
