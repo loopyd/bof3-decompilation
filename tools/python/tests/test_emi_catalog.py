@@ -1,14 +1,9 @@
-from __future__ import annotations
-
-import hashlib
-import json
 import struct
 from pathlib import Path
 
 import pytest
 
 from harness.commands.companion_check import build_report
-from harness.domain import load_target_manifests
 from harness.emi.catalog import (
     build_catalog,
     materialize_reviewed_targets,

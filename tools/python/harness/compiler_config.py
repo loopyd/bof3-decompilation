@@ -25,12 +25,6 @@ def load_object_flags(root: Path) -> dict[str, list[str]]:
 
     Mirrors the include() in CMakeLists.txt so the compile database
     matches the actual per-object build flags.
-    """
-    path = root / "config" / "compiler" / "object-flags.cmake"
-    overrides: dict[str, list[str]] = {}
-    if not path.is_file():
-        return overrides
-    for line in path.read_text(encoding="utf-8").splitlines():
         m = OBJECT_FLAGS_RE.match(line)
         if m is not None:
             overrides[m.group(1)] = m.group(2).split()
@@ -48,7 +42,6 @@ def load_object_compilers(root: Path) -> dict[str, str]:
     compilers: dict[str, str] = {}
     if not path.is_file():
         return compilers
-    for line in path.read_text(encoding="utf-8").splitlines():
         m = OBJCOMPILER_RE.match(line)
         if m is None:
             # Raise on any active BOF3_OBJCOMPILER_ assignment that is malformed,

@@ -30,14 +30,5 @@ def _main() -> int:
     return main()
 
 
-if not PYTHON.is_file():
-    print(f"missing project Python environment: {PYTHON}", file=sys.stderr)
-    print("run `just setup` first", file=sys.stderr)
-    raise SystemExit(2)
-
-if Path(sys.executable).resolve() != PYTHON.resolve():
-    environment = os.environ.copy()
-    environment["PYTHONPATH"] = str(ROOT / "tools" / "python")
-    os.execve(str(PYTHON), [str(PYTHON), __file__, *sys.argv[1:]], environment)
 
 sys.exit(_main())

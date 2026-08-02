@@ -22,19 +22,10 @@ Install contract (``toolchains/...``):
 - The swap keeps a backup of any prior install and restores it if the atomic
   rename fails, so a failed network, digest, extraction, or identity check
   preserves a prior verified install.
-"""
-
-from __future__ import annotations
-
-import hashlib
-import os
 import shutil
 import subprocess
 import tempfile
 import urllib.request
-from pathlib import Path
-
-from ..io import RepoLayout
 from .releases import extract_archive
 
 

@@ -17,8 +17,6 @@ struct SlotTableEntry {
   RuntimePathKind kind;
 };
 
-extern const struct SlotTableEntry g_slot_table[];
-extern const size_t                g_slot_table_count;
 extern const char                  s__LOGO_LOGO_EXE_1_80149800[];
 
 #endif

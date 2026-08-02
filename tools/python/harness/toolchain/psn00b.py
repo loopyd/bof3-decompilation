@@ -1,27 +1,13 @@
 from __future__ import annotations
 
 import shutil
-from pathlib import Path
-
-from ..io import RepoLayout
 from .base import Toolchain, ensure_gitkeep
 from .helpers import download_file
 from .releases import extract_archive, github_release_asset_url
 
 
-PSN00B_REPO = "Lameguy64/PSn00bSDK"
-PSN00B_TAG = "v0.24"
-PSN00B_TOOLCHAIN_ASSET = "gcc-mipsel-none-elf-12.3.0-linux.zip"
-PSN00B_SDK_ASSET = "PSn00bSDK-0.24-Linux.zip"
-
-
 def _make_executable(bin_dir: Path) -> None:
     if bin_dir.is_dir():
-        for path in bin_dir.iterdir():
-            if path.is_file():
-                path.chmod(path.stat().st_mode | 0o111)
-
-
 class Psn00bToolchain(Toolchain):
     label = "PSn00b"
 

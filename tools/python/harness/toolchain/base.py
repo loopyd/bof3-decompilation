@@ -9,12 +9,7 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-
-def ensure_gitkeep(root: Path) -> None:
-    root.mkdir(parents=True, exist_ok=True)
     (root / ".gitkeep").write_text("\n", encoding="utf-8")
-
-
 class Toolchain(ABC):
     """An installable local dependency with an optional build step."""
 

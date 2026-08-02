@@ -1,8 +1,0 @@
-schema = "harness.target/v2"
-id = "emi/etc/shop/00"
-disc_id = "BIN/ETC/SHOP.EMI#0"
-kind = "emi"
-source_dir = "src/emi/etc/shop/00"
-binary = "out/binaries/emi/etc/shop/00.bin"
-splat = "config/targets/emi/etc/shop/00/splat.yaml"
-load_address = 0x801d0c00

@@ -1,8 +1,17 @@
 #include "internal.h"
-#include "ui/panel_task.h"
 
 /* @source 0x800B2218
  * @behavior UNKNOWN: exact behavior is not yet documented.
  */
 
-PANEL_ADVANCE_X(func_800B2218, 320)
+void func_800B2218(void) {
+  PanelTask* task_root;
+  u16        next_x;
+  task_root = D_80148648;
+  next_x = (u16)(task_root->x + 32u);
+  task_root->x = next_x;
+  if ((s16)next_x >= (320) + 1) {
+    task_root->x = (320);
+    task_root->state = 0u;
+  }
+}

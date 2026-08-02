@@ -1,8 +1,0 @@
-schema = "harness.target/v2"
-id = "emi/battle/battle/03"
-disc_id = "BIN/BATTLE/BATTLE.EMI#3"
-kind = "emi"
-source_dir = "src/emi/battle/battle/03"
-binary = "out/binaries/emi/battle/battle/03.bin"
-splat = "config/targets/emi/battle/battle/03/splat.yaml"
-load_address = 0x801d0c00

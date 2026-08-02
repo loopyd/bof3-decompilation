@@ -1,74 +1,14 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-.pytest_cache/
 .ruff_cache/
-.venv/
-.uv-cache/
-dist/
-*.egg-info/
-
 # Installed compiler variant binaries (archive downloads already ignored)
 toolchains/gcc-variants/
 
-# Build artifacts
-build/
-
-# Editor / IDE
-*.swp
-*.swo
-*~
-.vscode/
-.idea/
-
-# Generated outputs (regenerable)
 out/
-
-# Splat-generated
-undefined_funcs_auto.txt
-undefined_syms_auto.txt
-
-# Debug artifacts
-debug_*.o
-debug_*.c
-
-# Extracted assets
-assets/
-
 # Local inputs (user-owned CUE/BIN media or BreathOfFireIIIv1.1.7z)
-inputs/disc/*
-!inputs/disc/README.md
-inputs/external/*
-!inputs/external/.gitkeep
-!inputs/README.md
 # Digest-verified GCC archive cache (canonical GCC + catalog variants)
 inputs/external/private-assets/toolchains/gcc/
-
-# Toolchains (staged downloads)
-toolchains/downloads/
-toolchains/gcc-2.7.2-psx/*
-!toolchains/gcc-2.7.2-psx/.gitkeep
-toolchains/psn00b_toolchain/*
-!toolchains/psn00b_toolchain/.gitkeep
-toolchains/psn00bsdk/*
-!toolchains/psn00bsdk/.gitkeep
 toolchains/rizin/*
-toolchains/aspsx-psyq-binaries/*
-toolchains/psyq/*
-!toolchains/psyq/4.7/
-toolchains/psyq/4.7/*
-!toolchains/psyq/4.7/.gitkeep
-toolchains/psyq-original/
-toolchains/psyq-stock/
-!toolchains/README.md
-
-# Session / agent artifacts
-session-*.md
 sessions/
 ledger/
-.codex
-
 # Project Pi runtime state (tracked configuration lives in .pi/)
 .pi/sessions/
 .pi/memory/*.db
@@ -96,17 +36,4 @@ ledger/
 .pi/runtime/
 .pi-subagents/
 
-# Audio outputs
-*.wav
-*.ogg
-
-# Compiled binaries
-*.o
-*.elf
-*.map
-
-# Cache
 .cache/
-compile_commands.json
-tools/rust/bof3-disk/target/
-tools/rust/emi-ex/target/

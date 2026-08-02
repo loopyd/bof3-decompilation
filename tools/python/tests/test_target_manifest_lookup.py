@@ -1,17 +1,8 @@
-from __future__ import annotations
-
-from pathlib import Path
-
-import pytest
-
 from harness.domain import TargetManifest, load_target_manifests, lookup_target_manifest
 
 
 def _write_manifest(root: Path, target_id: str, kind: str = "emi") -> None:
     config = root / "config" / "targets" / target_id / "target.toml"
-    config.parent.mkdir(parents=True)
-    config.write_text(
-        "schema = 'harness.target/v2'\n"
         f"id = '{target_id}'\n"
         f"kind = '{kind}'\n"
         "source_dir = 'src/'\n"

@@ -1,8 +1,5 @@
 """Tests for the target-scoped analysis sequence command."""
 
-from __future__ import annotations
-
-from pathlib import Path
 from unittest.mock import patch
 
 from harness.commands.analysis_sequence import build_parser, main

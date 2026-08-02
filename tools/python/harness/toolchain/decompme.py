@@ -6,9 +6,6 @@ import json
 import re
 import subprocess
 import urllib.error
-import urllib.request
-from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
 
 from ..c_context import public_declaration_context
@@ -40,11 +37,6 @@ _C_KEYWORDS = frozenset(
     "typedef union unsigned void volatile while".split()
 )
 _BASE_CONTEXT = """typedef signed char s8;
-typedef signed short s16;
-typedef signed int s32;
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
 """
 
 
@@ -80,10 +72,6 @@ def _remote_compiler_id(local_id: str) -> str:
 
 
 def _source_command(layout: RepoLayout, source: Path) -> list[str]:
-    database = layout.root / "compile_commands.json"
-    if not database.is_file():
-        raise FileNotFoundError(f"missing {database}; run `just build` first")
-    rows = json.loads(database.read_text(encoding="utf-8"))
     matches = [
         row for row in rows if Path(row.get("file", "")).resolve() == source.resolve()
     ]
@@ -170,9 +158,6 @@ def _require_reviewed_function_boundary(
 
 
 def _target_assembly(layout: RepoLayout, function: FunctionId, source: Path) -> str:
-    manifest = load_target_manifests(layout.root).get(function.target.value)
-    if manifest is None:
-        raise ValueError(f"unknown target: {function.target.value}")
     _require_reviewed_function_boundary(layout, function, manifest)
     path = (
         layout.out_dir
@@ -224,14 +209,10 @@ class DecompMeScratchpadToolchain:
 
     def payload(self, function: FunctionId, *, compiler: str) -> ScratchpadPayload:
         manifest = load_target_manifests(self.layout.root).get(function.target.value)
-        if manifest is None:
-            raise ValueError(f"unknown target: {function.target.value}")
         _require_reviewed_function_boundary(self.layout, function, manifest)
         source = (
             self.layout.root / manifest.source_dir / f"func_{function.address:08X}.c"
         )
-        if not source.is_file():
-            raise FileNotFoundError(f"lifted source does not exist: {source}")
         # Macro-expanded source avoids target-local includes. Only retain
         # declarations it references, never the full (possibly ignored PsyQ)
         # preprocessor context.

@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-import shutil
-import subprocess
 from unittest.mock import patch
 
 from harness.build import configure

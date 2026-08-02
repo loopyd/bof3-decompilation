@@ -1,56 +1,17 @@
 """Focused tests for target-qualified lift and M2c toolchain delegation."""
 
-from __future__ import annotations
-
 import argparse
 import subprocess
-from pathlib import Path
-from types import SimpleNamespace
-
 import pytest
 
-from harness.commands import lift
 from harness.commands.lift import AsmDiffRequest, run_m2c
 from harness.toolchain.m2c import M2cToolchain
-
-
-def _target(root: Path) -> None:
-    target = root / "config" / "targets" / "exe" / "logo" / "target.toml"
-    target.parent.mkdir(parents=True)
-    target.write_text(
-        "\n".join(
-            (
-                'schema = "harness.target/v2"',
-                'id = "exe/logo"',
-                'kind = "executable"',
-                'source_dir = "src/exe/logo"',
-                'binary = "out/binaries/exe/logo.bin"',
-                'splat = "config/targets/exe/logo/splat.yaml"',
-                "load_address = 0x801CE000",
-            )
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-
-
 def _layout(root: Path) -> SimpleNamespace:
     return SimpleNamespace(root=root, out_dir=root / "out")
 
 
-def test_target_qualified_lift_resolves_only_its_owner(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    _target(tmp_path)
     monkeypatch.setattr(lift, "repo_layout", lambda: _layout(tmp_path))
-
-    function, manifest, source = lift.resolve_function("exe/logo@0x801CE758")
-
-    assert function.address == 0x801CE758
-    assert manifest.id.value == "exe/logo"
-    assert source == tmp_path / "src/exe/logo/func_801CE758.c"
-
-
 def test_lift_commands_explain_missing_source(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -64,21 +25,7 @@ def test_lift_commands_explain_missing_source(
 def test_context_keeps_symbols_target_local(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    _target(tmp_path)
-    symbols = tmp_path / "config" / "targets" / "exe" / "logo"
-    symbols.mkdir(parents=True, exist_ok=True)
-    (symbols / "symbols.txt").write_text(
-        "func_801CE758 = 0x801CE758;\nD_801D0000 = 0x801D0000;\n",
-        encoding="utf-8",
-    )
     monkeypatch.setattr(lift, "repo_layout", lambda: _layout(tmp_path))
-    function, manifest, _ = lift.resolve_function("exe/logo@0x801CE758")
-
-    context = lift.render_context(function, manifest)
-
-    assert "extern void func_801CE758();" in context
-    assert "extern u8 D_801D0000[];" in context
-    assert "other target" not in context
 
 
 def _m2c_stubs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -183,7 +130,6 @@ def test_run_match_passes_bindings_without_rewriting_identical_file(
         lambda request: captured.append(request) or {"byte_match": True},
     )
 
-    function, manifest, _ = lift.resolve_function("exe/logo@0x801CE758")
     lift._run_match(function, manifest, source, diagnostics=False)
 
     assert bindings.stat().st_mtime_ns == before

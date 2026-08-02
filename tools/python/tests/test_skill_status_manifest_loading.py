@@ -6,15 +6,6 @@ their local ``tools/python`` import bootstrap and ``harness.domain`` manifest
 loading preserve public ordering and selected report fields.
 """
 
-from __future__ import annotations
-
-import hashlib
-import json
-import os
-import subprocess
-import sys
-from pathlib import Path
-
 SNAPSHOT_STATUS = (
     Path(__file__).resolve().parents[3]
     / ".pi"

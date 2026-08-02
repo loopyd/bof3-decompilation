@@ -37,7 +37,6 @@ def require_path_under(path: Path, root: Path, *, label: str) -> Path:
     resolved = expanded.resolve(strict=False)
     root_resolved = root.resolve()
     if resolved != root_resolved and root_resolved not in resolved.parents:
-        raise ValueError(f"{label} must stay under the repo's inputs/ tree: {path}")
     return expanded
 
 
@@ -52,9 +51,3 @@ def find_matching_files(path: Path, matches: Callable[[Path], bool]) -> list[Pat
 
 def download_file(url: str, dest: Path, *, force: bool = False) -> Path:
     """Download a URL unless *dest* already exists or *force* is set."""
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    if dest.exists() and not force:
-        return dest
-    with urllib.request.urlopen(url) as response, dest.open("wb") as output:
-        shutil.copyfileobj(response, output)
-    return dest

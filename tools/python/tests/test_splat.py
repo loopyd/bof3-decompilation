@@ -17,12 +17,6 @@ def _setup_target(tmp_path: Path) -> Path:
     target_dir = root / "config" / "targets" / "exe" / "logo"
     target_dir.mkdir(parents=True)
     (target_dir / "manifest.toml").write_text(
-        'schema = "harness.target/v2"\n'
-        'id = "exe/logo"\n'
-        'kind = "executable"\n'
-        'source_dir = "src/exe/logo"\n'
-        'binary = "out/binaries/exe/logo.bin"\n'
-        'splat = "config/targets/exe/logo/splat.yaml"\n'
         "load_address = 0x80100000\n",
         encoding="utf-8",
     )

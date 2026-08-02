@@ -1,11 +1,5 @@
 """Compiler variant catalog inspection and lifecycle commands."""
 
-from __future__ import annotations
-
-import argparse
-import json
-import sys
-
 from ..io import repo_layout
 from ..toolchain.gcc_variants import ensure_variant, load_variants, lookup_variant
 from ._common import run_main
@@ -89,11 +83,3 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(handler=_cmd_path)
 
     return parser
-
-
-def main(argv: list[str] | None = None) -> int:
-    return run_main(build_parser, argv)
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

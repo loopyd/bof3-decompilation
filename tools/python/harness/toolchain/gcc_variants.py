@@ -8,8 +8,6 @@ import re
 import subprocess
 import sys
 from abc import ABC, abstractmethod
-from pathlib import Path
-from typing import Any
 from ..io import RepoLayout
 from .gcc_archive import (
     install_archive,
@@ -300,8 +298,6 @@ def load_variants(
     path = layout.root / "config" / "compiler" / "variants.json"
     if not path.is_file():
         return []
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
         raise ValueError("catalog root must be a JSON object")
     _reject_extra_keys(payload, _ALLOWED_ROOT_KEYS, "catalog root")
     if payload.get("schema") != _SCHEMA:

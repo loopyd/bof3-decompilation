@@ -1,10 +1,5 @@
 """Focused tests: setup toolchain task uses shared managed_toolchains factory."""
 
-from __future__ import annotations
-
-from pathlib import Path
-from types import SimpleNamespace
-
 from harness.io import RepoLayout
 from harness.commands import setup
 
@@ -43,8 +38,6 @@ def test_setup_managed_toolchains_factory_contains_all(tmp_path: Path) -> None:
         inputs_dir=resolved / "inputs",
         downloads_dir=resolved / "toolchains" / "downloads",
         private_assets_dir=resolved / "inputs" / "external" / "private-assets",
-        harness_disk_src=resolved / "tools" / "rust" / "bof3-disk",
-        emi_ex_src=resolved / "tools" / "rust" / "emi-ex",
         harness_disk_bin=resolved / "toolchains" / "bof3-disk" / "bof3-disk",
         emi_ex_bin=resolved / "toolchains" / "emi-ex" / "emi-ex",
         psn00b_toolchain_root=resolved / "toolchains" / "psn00b_toolchain",

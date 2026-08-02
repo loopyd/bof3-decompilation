@@ -8,9 +8,6 @@ from .gcc_archive import install_archive, verify_installed
 from .releases import github_release_asset_url
 
 
-OLD_GCC_REPO = "decompals/old-gcc"
-OLD_GCC_TAG = "0.13"
-OLD_GCC_ASSET = "gcc-2.7.2-psx.tar.gz"
 # Observed SHA-256 of the 0.13 release archive; identity is the `gcc --version`
 # first line. Both canonical GCC and catalog variants share the same
 # digest-verified cache lifecycle.

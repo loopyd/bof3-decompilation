@@ -1,11 +1,5 @@
 """Create a public decomp.me scratch from one target-qualified lift."""
 
-from __future__ import annotations
-
-import argparse
-import json
-import sys
-
 from ..domain import FUNCTION_ID_HELP, parse_function_id
 from ..io import repo_layout
 from ..toolchain.decompme import DecompMeScratchpadToolchain
@@ -28,10 +22,6 @@ def run_preview(args: argparse.Namespace) -> int:
         parse_function_id(args.function), compiler=args.compiler
     )
     print(json.dumps(payload.as_api_data(), indent=2, sort_keys=True))
-    return 0
-
-
-def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="scratchpad")
     subcommands = parser.add_subparsers(dest="command", required=True)
     for name, handler, help_text in (
@@ -45,11 +35,6 @@ def build_parser() -> argparse.ArgumentParser:
             default="gcc-2.7.2-psx",
             help="local canonical/catalog GCC ID mapped to decomp.me",
         )
-        command.set_defaults(handler=handler)
-    return parser
-
-
-def main(argv: list[str] | None = None) -> int:
     return run_main(build_parser, sys.argv[1:] if argv is None else argv)
 
 

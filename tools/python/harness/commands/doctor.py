@@ -1,14 +1,7 @@
 """Validate that the local reverse-engineering setup is ready to use."""
-
-from __future__ import annotations
-
-import argparse
 import subprocess
 import tomllib
 from collections.abc import Callable
-from dataclasses import dataclass
-from pathlib import Path
-
 from ..compiler_config import load_object_compilers
 from ..domain import load_target_manifests
 from ..io import repo_layout
@@ -123,10 +116,6 @@ def _tools(root: Path) -> str:
 
 def _render(status: str, label: str, detail: str) -> None:
     print(f"[{status}] {label:<{max(len(task.label) for task in TASKS)}}  {detail}")
-
-
-def run(args: argparse.Namespace) -> int:
-    root = args.root.resolve()
     failed = 0
     for task in TASKS:
         try:
@@ -140,14 +129,3 @@ def run(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="doctor")
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
-    parser.set_defaults(handler=run)
-    return parser
-
-
-def main(argv: list[str] | None = None) -> int:
-    return run_main(build_parser, argv)
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

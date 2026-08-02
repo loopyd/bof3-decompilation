@@ -1,10 +1,4 @@
 """Disposable content-addressed summaries for target decompilation audits."""
-
-from __future__ import annotations
-
-import hashlib
-import json
-from pathlib import Path
 import sqlite3
 from typing import Any, Iterable
 
@@ -14,9 +8,6 @@ _SCHEMA = "harness.decomp-status-cache/v1"
 
 
 def _hash_file(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
 def _paths(root: Path, manifest: TargetManifest) -> Iterable[Path]:
     yield root / "CMakeLists.txt"
     yield root / "config" / "targets" / manifest.id.value / "target.toml"
@@ -73,8 +64,6 @@ class StatusCache:
             "CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)"
         )
         row = self.connection.execute(
-            "SELECT value FROM metadata WHERE key = 'schema'"
-        ).fetchone()
         if row is not None and row[0] != _SCHEMA:
             self.connection.execute("DROP TABLE IF EXISTS results")
             self.connection.execute("DELETE FROM metadata")

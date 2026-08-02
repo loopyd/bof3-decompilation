@@ -1,7 +1,17 @@
 #include "internal.h"
-#include "ui/panel_task.h"
 
 /* @source 0x801995F8
  * @behavior retreats panel x with the template clamp behavior.
  */
-PANEL_RETREAT_X(func_801995F8)
+void func_801995F8(void) {
+  PanelTask* task_root;
+  s16        next_x;
+  task_root = D_80148648;
+  next_x = (s16)((s32)task_root->x - 0x20);
+  task_root->x = (u16)next_x;
+  if (next_x < -0xAA) {
+    next_x = -0xAA;
+    task_root->x = (u16)next_x;
+    task_root->state = 0u;
+  }
+}

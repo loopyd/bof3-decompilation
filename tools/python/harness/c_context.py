@@ -20,9 +20,6 @@ def _statements(text: str) -> list[str]:
     depth = 0
     for line in text.splitlines():
         if not pending and line.lstrip().startswith("#"):
-            continue
-        if not pending and not line.strip():
-            continue
         pending += line + "\n"
         for character in line:
             if character == "{":

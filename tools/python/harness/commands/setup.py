@@ -1,8 +1,4 @@
 """Stage authorized BOF3 media and local reverse-engineering dependencies."""
-
-from __future__ import annotations
-
-import argparse
 import contextlib
 import io
 import shutil
@@ -21,7 +17,6 @@ from ..toolchain.disc import DiscToolchain, find_disc_set
 from ..toolchain.gcc_variants import check_host_compatible, load_variants
 from ..toolchain.psyq import PsyqToolchain
 from ._common import run_main
-from .compile_commands import run as write_compile_commands
 
 
 REQUIRED_TOOLS = (
@@ -83,22 +78,7 @@ def _run(command: list[str], *, cwd: Path, quiet: bool = False) -> None:
 
 def _build_local_tools(root: Path) -> None:
     layout = repo_layout(root)
-    for source, target in (
-        (layout.harness_disk_src, layout.harness_disk_bin.parent.parent),
-        (layout.emi_ex_src, layout.emi_ex_bin.parent.parent),
-    ):
         _run(
-            [
-                "cargo",
-                "build",
-                "--locked",
-                "--release",
-                "--manifest-path",
-                str(source / "Cargo.toml"),
-                "--target-dir",
-                str(target),
-            ],
-            cwd=root,
             quiet=True,
         )
 
@@ -114,7 +94,6 @@ def _materialize_executables(root: Path, *, force: bool) -> None:
         destination = root / manifest.binary
         if destination.exists() and not force:
             continue
-        destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, destination)
 
 
@@ -263,8 +242,6 @@ def _render(status: str, label: str, detail: str) -> None:
     print(f"[{status}] {label:<{max(len(task.label) for task in TASKS)}}  {detail}")
 
 
-def run(args: argparse.Namespace) -> int:
-    root = args.root.resolve()
     state = SetupState(root=root, layout=repo_layout(root), args=args)
     for task in TASKS:
         try:
@@ -273,25 +250,9 @@ def run(args: argparse.Namespace) -> int:
             _render("FAIL", task.label, str(exc).replace("\n", "; "))
             raise
     print(f"setup: {len(TASKS)}/{len(TASKS)} tasks passed")
-    return 0
-
-
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
         prog="setup",
         description="Stage authorized BOF3 media and required toolchains.",
     )
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
     parser.add_argument("--psyq-archive", type=Path, help="PsyQ 4.7 archive under inputs/")
     parser.add_argument("--psyq-url", help="explicit PsyQ 4.7 archive URL")
     parser.add_argument("--force", action="store_true")
-    parser.set_defaults(handler=run)
-    return parser
-
-
-def main(argv: list[str] | None = None) -> int:
-    return run_main(build_parser, argv)
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

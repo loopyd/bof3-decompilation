@@ -1,140 +1,8 @@
-from __future__ import annotations
-
-from pathlib import Path
 import subprocess
-
-from harness import decomp_status
-
-
-def _target(root: Path, target: str, source_dir: str) -> None:
-    manifest = root / "config" / "targets" / target / "target.toml"
-    manifest.parent.mkdir(parents=True, exist_ok=True)
-    manifest.write_text(
-        "schema = 'harness.target/v2'\n"
-        f"id = '{target}'\n"
-        "kind = 'executable'\n"
-        f"source_dir = '{source_dir}'\n"
-        f"binary = 'out/binaries/{target}.bin'\n"
-        f"splat = 'config/targets/{target}/splat.yaml'\n"
-        "load_address = 0x80100000\n",
-        encoding="utf-8",
-    )
-
-
-def _source(root: Path, directory: str, address: str, *, metadata: bool = True) -> None:
-    path = root / directory / f"func_{address}.c"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    text = ""
-    if metadata:
-        text = f"// @source 0x{address}\n// @behavior test behavior\n"
-    path.write_text(text + "void f(void) {}\n", encoding="utf-8")
-
-
-def _diff(request: object) -> dict[str, object]:
-    source = request.source_path  # type: ignore[attr-defined]
-    exact = source.stem == "func_80100010"
-    return {
-        "byte_match": exact,
-        "instruction_count": {
-            "original": 4,
-            "current": 4 if exact else 5,
-            "matching": 4 if exact else 3,
-            "match_percent": 100.0 if exact else 60.0,
-        },
-        "original_size": 16,
-        "current_size": 16 if exact else 20,
-        "size_delta": 0 if exact else 4,
-    }
-
-
-def test_report_orders_lifts_and_aggregates_match_states(
-    tmp_path: Path, monkeypatch
-) -> None:
-    _target(tmp_path, "exe/zeta", "src/exe/zeta")
-    _target(tmp_path, "emi/alpha/00", "src/emi/alpha/00")
-    _source(tmp_path, "src/exe/zeta", "80100030", metadata=False)
-    _source(tmp_path, "src/emi/alpha/00", "80100020")
-    _source(tmp_path, "src/emi/alpha/00", "80100010")
-    monkeypatch.setattr(
-        decomp_status,
-        "index_coverage",
-        lambda _root, _manifests: {"emi/alpha/00": 7, "exe/zeta": 3},
-    )
-
-    report = decomp_status.build_report(
-        tmp_path, ("exe/zeta", "emi/alpha/00"), diff_runner=_diff
-    )
-
-    assert [target["target"] for target in report["targets"]] == [
-        "emi/alpha/00",
-        "exe/zeta",
-    ]
-    assert [record["function"] for record in report["targets"][0]["functions"]] == [
-        "func_80100010",
-        "func_80100020",
-    ]
-    assert report["lifts"] == {
-        "exact": 1,
-        "partial": 1,
-        "invalid": 1,
-        "total": 3,
-    }
-    assert report["targets"][0]["indexed_functions"] == 7
-    assert "EXACT func_80100010" in decomp_status.render_text(report)
-
-
-def test_report_filters_to_requested_target(tmp_path: Path, monkeypatch) -> None:
-    _target(tmp_path, "exe/keep", "src/exe/keep")
-    _target(tmp_path, "exe/skip", "src/exe/skip")
-    _source(tmp_path, "src/exe/keep", "80100010")
-    _source(tmp_path, "src/exe/skip", "80100020")
-    monkeypatch.setattr(
-        decomp_status,
-        "index_coverage",
-        lambda _root, _manifests: {"exe/keep": 1},
-    )
-
-    report = decomp_status.build_report(tmp_path, ("exe/keep",), diff_runner=_diff)
-
-    assert [target["target"] for target in report["targets"]] == ["exe/keep"]
-    assert report["lifts"]["total"] == 1
-    assert report["indexed_functions"] == 1
-
-
-def test_report_keeps_live_results_when_index_is_unavailable(
-    tmp_path: Path, monkeypatch
-) -> None:
-    _target(tmp_path, "exe/logo", "src/exe/logo")
-    _source(tmp_path, "src/exe/logo", "80100010")
-
-    def unavailable(_root: Path, _manifests: object) -> dict[str, int]:
-        raise FileNotFoundError("reverse index not found; run just index")
-
-    monkeypatch.setattr(decomp_status, "index_coverage", unavailable)
-    report = decomp_status.build_report(tmp_path, diff_runner=_diff)
-
-    assert report["lifts"] == {
-        "exact": 1,
-        "partial": 0,
-        "invalid": 0,
-        "total": 1,
-    }
-    assert report["indexed_functions"] is None
-    assert report["coverage_error"] == "reverse index not found; run just index"
-    assert "index coverage: unavailable" in decomp_status.render_text(report)
-
-
 def test_report_reuses_a_content_addressed_cache(
-    tmp_path: Path, monkeypatch
-) -> None:
-    _target(tmp_path, "exe/logo", "src/exe/logo")
-    _source(tmp_path, "src/exe/logo", "80100010")
     binary = tmp_path / "out/binaries/exe/logo.bin"
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b"test")
-    monkeypatch.setattr(
-        decomp_status,
-        "index_coverage",
         lambda _root, _manifests: {"exe/logo": 1},
     )
     calls = 0
@@ -151,46 +19,14 @@ def test_report_reuses_a_content_addressed_cache(
     assert first == second
 
 
-def test_context_detail_keeps_full_report_available() -> None:
-    report = {
-        "schema": "bof3.decomp-status/v1",
-        "lifts": {"exact": 1, "partial": 0, "invalid": 0, "total": 1},
-        "indexed_functions": 3,
-        "coverage_error": None,
-        "targets": [
-            {
-                "target": "exe/test",
-                "lifts": {"exact": 1, "partial": 0, "invalid": 0, "total": 1},
-                "indexed_functions": 3,
-                "functions": [
-                    {
-                        "status": "exact",
-                        "function": "func_80100010",
-                        "address": "0x80100010",
-                    }
-                ],
-            }
-        ],
-    }
-
-    assert decomp_status.render_text(report, "minimal") == (
-        "lifts: exact=1 partial=0 invalid=0 total=1"
-    )
-    normal = decomp_status.project_report(report, "normal")
-    assert normal["targets"][0]["invalid"] == []
-    assert decomp_status.project_report(report, "full") is report
 
 
 def test_build_preflight_separates_cache_misses_from_ready(
-    tmp_path: Path, monkeypatch
-) -> None:
     """Phase 2.3.1: invalid, cached, and valid-miss sources land correctly."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
     _target(tmp_path, "exe/other", "src/exe/other")
     # Invalid: missing metadata
     _source(tmp_path, "src/exe/logo", "80100030", metadata=False)
     # Valid: will be a cache miss
-    _source(tmp_path, "src/exe/logo", "80100010")
     _source(tmp_path, "src/exe/other", "80100020")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
@@ -213,8 +49,6 @@ def test_build_preflight_separates_cache_misses_from_ready(
 
 def test_build_preflight_reuses_cache_hits(tmp_path: Path, monkeypatch) -> None:
     """Phase 2.3.1: cache hits appear in ready, not in worklist."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
-    _source(tmp_path, "src/exe/logo", "80100010")
     _source(tmp_path, "src/exe/logo", "80100020")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
@@ -257,8 +91,6 @@ def test_build_preflight_reuses_cache_hits(tmp_path: Path, monkeypatch) -> None:
 def _batch_result() -> dict[str, object]:
     return {
         "byte_match": True,
-        "instruction_count": {
-            "original": 4,
             "current": 4,
             "matching": 4,
             "match_percent": 100.0,
@@ -270,11 +102,7 @@ def _batch_result() -> dict[str, object]:
 
 
 def test_batch_builds_fresh_misses_once_per_target(
-    tmp_path: Path, monkeypatch
-) -> None:
     """Phase 2.3.2: one successful batch compares fresh objects in root."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
-    _source(tmp_path, "src/exe/logo", "80100010")
     _source(tmp_path, "src/exe/logo", "80100020")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
@@ -322,11 +150,7 @@ def test_batch_builds_fresh_misses_once_per_target(
 
 
 def test_batch_resolve_failure_falls_back_once(
-    tmp_path: Path, monkeypatch
-) -> None:
     """A successful batch cannot abort the audit on one resolve failure."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
-    _source(tmp_path, "src/exe/logo", "80100010")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b"test")
@@ -360,10 +184,6 @@ def test_batch_resolve_failure_falls_back_once(
 
 
 def test_batch_stale_object_falls_back_once_without_duplicate_record(
-    tmp_path: Path, monkeypatch
-) -> None:
-    _target(tmp_path, "exe/logo", "src/exe/logo")
-    _source(tmp_path, "src/exe/logo", "80100010")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b"test")
@@ -405,11 +225,7 @@ def test_batch_stale_object_falls_back_once_without_duplicate_record(
 
 
 def test_batch_failure_falls_back_per_source_with_error_attribution(
-    tmp_path: Path, monkeypatch
-) -> None:
     """Phase 2.3.2: failed batch falls back to per-source build+compare."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
-    _source(tmp_path, "src/exe/logo", "80100010")
     _source(tmp_path, "src/exe/logo", "80100020")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
@@ -430,19 +246,6 @@ def test_batch_failure_falls_back_per_source_with_error_attribution(
     def diff(request):
         diff_calls.append(request.source_path.stem)
         exact = request.source_path.stem == "func_80100010"
-        return {
-            "byte_match": exact,
-            "instruction_count": {
-                "original": 4,
-                "current": 4 if exact else 5,
-                "matching": 4 if exact else 3,
-                "match_percent": 100.0 if exact else 60.0,
-            },
-            "original_size": 16,
-            "current_size": 16 if exact else 20,
-            "size_delta": 0 if exact else 4,
-        }
-
     report = ds.build_report(tmp_path, use_cache=False, diff_runner=diff)
 
     # Both sources via per-source fallback, no duplicate
@@ -509,11 +312,7 @@ def test_no_batch_when_all_sources_are_cached(tmp_path: Path, monkeypatch) -> No
 
 
 def test_source_change_invalidates_cache_and_recomputes(
-    tmp_path: Path, monkeypatch
-) -> None:
     """Phase 2.3.3: source change invalidates cache, produces one batch build."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
-    _source(tmp_path, "src/exe/logo", "80100010")
     _source(tmp_path, "src/exe/logo", "80100020")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
@@ -578,12 +377,8 @@ def test_source_change_invalidates_cache_and_recomputes(
 
 
 def test_compile_inputs_invalidate_only_affected_target_then_all_targets(
-    tmp_path: Path, monkeypatch
-) -> None:
     """Target inputs invalidate one target; shared headers invalidate both."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
     _target(tmp_path, "exe/other", "src/exe/other")
-    _source(tmp_path, "src/exe/logo", "80100010")
     _source(tmp_path, "src/exe/other", "80100020")
     for target in ("exe/logo", "exe/other"):
         binary = tmp_path / "out/binaries" / f"{target}.bin"

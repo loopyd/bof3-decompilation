@@ -1,17 +1,7 @@
 """Evidence gate for a caller's declared EMI companion static calls."""
-
-from __future__ import annotations
-
-import argparse
-import json
-from pathlib import Path
-from typing import Any
-
-from ..canonical import load_map
 from ..domain import FUNCTION_ID_HELP, parse_function_id
 from ..domain.manifests import CompanionOverlay, load_target_manifests
 from ..emi.catalog import verify_declared_companions
-from ..io import repo_layout
 from ..layout import parse_splat_layout
 
 from ._common import run_main
@@ -103,7 +93,6 @@ def build_report(root: Path, selector: str) -> dict[str, Any]:
     manifests = load_target_manifests(root)
     caller = manifests.get(function.target.value)
     if caller is None:
-        raise ValueError(f"unknown target: {function.target.value}")
     relations = verify_declared_companions(root, caller)
     caller_layout = parse_splat_layout(root / caller.splat, caller.load_address)
     companions = [
@@ -137,22 +126,7 @@ def run(args: argparse.Namespace) -> int:
     report = build_report(args.root.resolve(), args.function)
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0 if report["ready_to_lift"] else 1
-
-
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
         prog="bin/companion-check",
         description="report whether companion evidence makes one lift safe",
     )
     parser.add_argument("function", help=FUNCTION_ID_HELP)
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
-    parser.set_defaults(handler=run)
-    return parser
-
-
-def main(argv: list[str] | None = None) -> int:
-    return run_main(build_parser, argv)
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

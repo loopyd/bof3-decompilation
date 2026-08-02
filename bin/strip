@@ -1,5 +1,0 @@
-#!/bin/sh
-set -eu
-
-ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-exec "${PSX_STRIP:-${ROOT}/toolchains/psn00b_toolchain/bin/mipsel-none-elf-strip}" "$@"

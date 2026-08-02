@@ -4,9 +4,6 @@ from __future__ import annotations
 
 import io
 import json
-from pathlib import Path
-from types import SimpleNamespace
-
 import pytest
 
 from harness.domain import parse_function_id

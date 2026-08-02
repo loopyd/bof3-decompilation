@@ -1,22 +1,9 @@
 """Target-scoped analysis sequence: freshness check -> index rebuild -> rev-query."""
 
-from __future__ import annotations
-
-import argparse
-import sys
 from pathlib import Path
 
 from ..domain import FUNCTION_ID_FORMAT, FUNCTION_ID_HELP
-from ..io import repo_layout
-from ..reverse_index import rebuild
 from ..rizin_project import status
-from ._common import run_main
-
-
-def _root(args: argparse.Namespace) -> Path:
-    return args.root.resolve()
-
-
 def run_sequence(args: argparse.Namespace) -> int:
     """Check snapshot freshness, rebuild the index, then run a ranking."""
     root = _root(args)
@@ -64,17 +51,12 @@ def run_sequence(args: argparse.Namespace) -> int:
     parsed = parser.parse_args(argv)
     parsed.root = root  # Ensure root is set on parsed args
     return run_query(parsed)
-
-
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
         prog="analysis-sequence",
         description=(
             "Target-scoped analysis sequence: check rz-project snapshot freshness, "
             "rebuild index when stale, then run a rev-query ranking."
         ),
     )
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
     parser.add_argument("target", help="target ID for the sequence")
     parser.add_argument(
         "--ranking",
@@ -100,8 +82,6 @@ def build_parser() -> argparse.ArgumentParser:
         "--include-trivial",
         action="store_true",
         default=False,
-        help="include classified return-only stubs in rankings",
-    )
     parser.add_argument(
         "function",
         nargs="?",
@@ -110,16 +90,4 @@ def build_parser() -> argparse.ArgumentParser:
         help=FUNCTION_ID_HELP,
     )
     parser.set_defaults(handler=run_sequence)
-    return parser
-
-
-def main(argv: list[str] | None = None) -> int:
-    arguments = sys.argv[1:] if argv is None else argv
-    if arguments == ["--example"]:
         print("bin/analysis-sequence exe/slus_004_22 --ranking quick-wins")
-        return 0
-    return run_main(build_parser, arguments)
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

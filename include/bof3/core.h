@@ -10,8 +10,6 @@ void func_8014B854(s32 slot_index, void (*callback)(void));
 void func_8014B87C(u16 countdown);
 void func_8014B8B0(void);
 
-/* ---- disc / slot table ---- */
-const SlotTableEntry* slot_table_find(EmiLoaderSlotId slot_id);
 const SlotTableEntry* slot_table_logo_str(void);
 
 /* ---- EMI archive ---- */

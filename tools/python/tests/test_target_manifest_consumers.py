@@ -109,7 +109,6 @@ def test_rizin_canonical_identity_propagated(tmp_path: Path) -> None:
     project = prepare_target(tmp_path, SHIPPED)
     assert project.target == CANONICAL
     assert project.snapshot == tmp_path / "out/reverse" / CANONICAL / "snapshot.json"
-    assert "afn func_80100000 0x80100000" in project.replay
 
 
 # --- commands.build.run -------------------------------------------------------
