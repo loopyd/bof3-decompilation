@@ -1,0 +1,98 @@
+name: Moderate blocked users
+
+on:
+  pull_request_target:
+    types: [opened, reopened, edited, synchronize]
+  issues:
+    types: [opened, reopened, edited]
+  issue_comment:
+    types: [created, edited]
+  pull_request_review:
+    types: [submitted, edited]
+  pull_request_review_comment:
+    types: [created, edited]
+  commit_comment:
+    types: [created]
+  discussion:
+    types: [created, edited]
+  discussion_comment:
+    types: [created, edited]
+
+permissions:
+  discussions: write
+  issues: write
+  pull-requests: write
+
+# This is a reactive repository-level moderation guard, not an authorization
+# boundary: GitHub receives the contribution before the workflow can remove it.
+jobs:
+  moderate:
+    if: >-
+      github.event.pull_request.user.id == 19838093 ||
+      github.event.issue.user.id == 19838093 ||
+      github.event.comment.user.id == 19838093 ||
+      github.event.review.user.id == 19838093 ||
+      github.event.discussion.user.id == 19838093
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove blocked contribution
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          api() {
+            curl --fail-with-body --silent --show-error \
+              --request "$1" \
+              --header 'Accept: application/vnd.github+json' \
+              --header "Authorization: Bearer $GH_TOKEN" \
+              --header 'X-GitHub-Api-Version: 2022-11-28' \
+              --header 'Content-Type: application/json' \
+              "${GITHUB_API_URL}$2" "${@:3}"
+          }
+
+          graphql_delete() {
+            local mutation="$1" node_id="$2" payload response
+            payload="$(jq --null-input --compact-output \
+              --arg query "$mutation" --arg id "$node_id" \
+              '{query: $query, variables: {id: $id}}')"
+            response="$(api POST /graphql --data "$payload")"
+            jq --exit-status '(.errors | not) and (.data != null)' <<<"$response" >/dev/null
+          }
+
+          case "$GITHUB_EVENT_NAME" in
+            pull_request_target|issues)
+              number="$(jq --raw-output '.number' "$GITHUB_EVENT_PATH")"
+              api PATCH "/repos/$GITHUB_REPOSITORY/issues/$number" \
+                --data '{"state":"closed"}' >/dev/null
+              api PUT "/repos/$GITHUB_REPOSITORY/issues/$number/lock" \
+                --data '{"lock_reason":"off-topic"}' >/dev/null
+              ;;
+            issue_comment)
+              comment_id="$(jq --raw-output '.comment.id' "$GITHUB_EVENT_PATH")"
+              api DELETE "/repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" >/dev/null
+              ;;
+            pull_request_review)
+              number="$(jq --raw-output '.pull_request.number' "$GITHUB_EVENT_PATH")"
+              review_id="$(jq --raw-output '.review.id' "$GITHUB_EVENT_PATH")"
+              api PUT "/repos/$GITHUB_REPOSITORY/pulls/$number/reviews/$review_id/dismissals" \
+                --data '{"message":"Removed under the repository moderation policy."}' >/dev/null
+              ;;
+            pull_request_review_comment)
+              comment_id="$(jq --raw-output '.comment.id' "$GITHUB_EVENT_PATH")"
+              api DELETE "/repos/$GITHUB_REPOSITORY/pulls/comments/$comment_id" >/dev/null
+              ;;
+            commit_comment)
+              comment_id="$(jq --raw-output '.comment.id' "$GITHUB_EVENT_PATH")"
+              api DELETE "/repos/$GITHUB_REPOSITORY/comments/$comment_id" >/dev/null
+              ;;
+            discussion)
+              graphql_delete 'mutation($id: ID!) { deleteDiscussion(input: {id: $id}) { clientMutationId } }' \
+                "$(jq --raw-output '.discussion.node_id' "$GITHUB_EVENT_PATH")"
+              ;;
+            discussion_comment)
+              graphql_delete 'mutation($id: ID!) { deleteDiscussionComment(input: {id: $id}) { clientMutationId } }' \
+                "$(jq --raw-output '.comment.node_id' "$GITHUB_EVENT_PATH")"
+              ;;
+          esac
