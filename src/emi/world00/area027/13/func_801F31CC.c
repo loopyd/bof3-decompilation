@@ -7,7 +7,7 @@
 void func_801F31CC(void) {
   s16 point[3];
 
-  if (func_8015B5D4(0x80144e98u, 0x17) != 0) {
+  if (func_8015B5D4((u32)D_80144E98, 0x17) != 0) {
     WORLD00_AREA027_SCRATCH_PTR[2] += 1u;
     *(u32*)(WORLD00_AREA027_SCRATCH_PTR + 0x0c) = 0u;
   }
