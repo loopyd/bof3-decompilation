@@ -24,8 +24,8 @@ extern volatile u32 D_8014685C;
  */
 void func_80161FDC(u32 slot_id) {
   u32 cd_base;
-  u32 active_lba;
   u32 current_lba;
+  u32 active_lba;
   u32 max_lba;
   u32 slot_index;
   u8  slot;
@@ -60,12 +60,22 @@ void func_80161FDC(u32 slot_id) {
     D_8014685C = current_lba;
   }
 
-  active_lba = D_80146468;
+  /*
+   * MATCHING_AID:
+   * Splitting the D_80146468 load through current_lba keeps the call
+   * argument load in $a0 and the func_80162160 result in $v0 (original:
+   * `lw $a0, %lo(D_80146468)`; after `jal`, `sw $v0` twice with no move).
+   * A single local made GCC either copy the result `move $a0,$v0` or load
+   * the argument into $v0 with a delay-slot `move $a0,$v0`. Permuter-found;
+   * remove when the allocator choice is understood.
+   */
+  current_lba = D_80146468;
+  active_lba = current_lba;
   D_80146858 = 0;
-  current_lba = func_80162160(active_lba);
+  active_lba = func_80162160(active_lba);
   slot = D_80146481;
-  D_80146678 = current_lba;
-  D_80146808 = current_lba;
+  D_80146678 = active_lba;
+  D_80146808 = active_lba;
   D_80146481 = slot + 1;
   func_80162B08(slot);
 
