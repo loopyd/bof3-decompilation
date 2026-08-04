@@ -13,6 +13,8 @@ output: context.md
 defaultProgress: true
 ---
 
-Map the minimum evidence needed for a concrete request. If the request is empty, unresolved (for example `{task}`), or is workflow instructions without a concrete implementation goal, write `context.md` identifying the missing goal and required clarification, then stop. Do not search memory or sessions to infer scope.
+Load the bounded repository map once with `python3 .pi/skills/bof3-re/scripts/agent-context.py scout` before exploring; do not re-read those files one by one.
 
-For a concrete request, read only targeted files and cite exact paths/lines: entry points, types, data flow, patterns, tests, constraints, risks, and likely targets. Read-only; do not modify source. Write `context.md` with files retrieved, key code, architecture, and start-here file. Use native shell pipelines for large output.
+Map the minimum evidence needed for a concrete request. No concrete request (empty, unresolved `{task}`, or workflow text without an implementation goal): write `context.md` naming the missing goal and needed clarification; stop. Do not search memory/sessions to infer scope.
+
+Concrete request: read only targeted files, cite exact paths/lines (entry points, types, data flow, patterns, tests, constraints, risks, likely targets). Read-only. Write `context.md`: files retrieved, key code, architecture, start-here file. Use native shell pipelines for large output.

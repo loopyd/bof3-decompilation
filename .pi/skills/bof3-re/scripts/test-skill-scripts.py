@@ -23,6 +23,21 @@ CASES = (
         None,
     ),
     (
+        ROOT / ".pi/skills/bof3-re/scripts/agent-context.py",
+        ("agents",),
+        None,
+    ),
+    (
+        ROOT / ".pi/skills/bof3-re/scripts/agent-context.py",
+        ("scout",),
+        None,
+    ),
+    (
+        ROOT / ".pi/skills/bof3-re/scripts/agent-context.py",
+        ("worker",),
+        None,
+    ),
+    (
         ROOT / ".pi/skills/bof3-re/scripts/function-brief.py",
         (TARGET,),
         "bof3.skill-function-brief/v1",
@@ -51,17 +66,40 @@ def main() -> int:
         )
         if schema is None:
             role = args[0]
-            assert "===== AGENTS.md =====" in result.stdout, script
-            assert "===== docs/agents/lessons.md =====" in result.stdout, script
-            for spec in sorted((ROOT / "docs" / "specs").rglob("*.md")):
+            if role in ("scout", "worker"):
                 assert (
-                    f"===== {spec.relative_to(ROOT).as_posix()} =====" in result.stdout
-                ), spec
+                    "===== docs/agents/project-context.md =====" in result.stdout
+                ), script
+                assert "===== SOUL.md =====" not in result.stdout, script
+                assert len(result.stdout.encode()) < 20_000, script
+                print(f"ok {script.relative_to(ROOT)}")
+                continue
+            assert "===== SOUL.md =====" in result.stdout, script
+            assert "===== AGENTS.md =====" in result.stdout, script
+            assert (
+                "===== docs/agents/CODING_STANDARDS.md =====" in result.stdout
+            ), script
+            assert "===== docs/agents/lessons.md =====" in result.stdout, script
+            assert not any(
+                f"===== {spec.relative_to(ROOT).as_posix()} =====" in result.stdout
+                for spec in (ROOT / "docs" / "specs").rglob("*.md")
+            ), script
+            if role == "agents":
+                assert "===== subagent roster (.pi/agents) =====" in result.stdout, (
+                    script
+                )
+                assert "bof3-reverse:" in result.stdout, script
+                assert len(result.stdout.encode()) < 100_000, script
+                print(f"ok {script.relative_to(ROOT)}")
+                continue
             assert (
                 f"===== .pi/skills/bof3-re/references/{role.upper()}/" in result.stdout
             ), script
             if role == "review":
-                assert "===== .pi/skills/bof3-re/references/REVIEW/SHARING_NONMATCHES.md =====" in result.stdout, script
+                assert (
+                    "===== .pi/skills/bof3-re/references/REVIEW/SHARING_NONMATCHES.md ====="
+                    in result.stdout
+                ), script
             assert (
                 "===== config/targets/emi/battle/battle/15/target.toml ====="
                 in result.stdout
@@ -91,7 +129,7 @@ def main() -> int:
                 "===== out/splat/emi/battle/battle/15/asm/func_80096E90.s ====="
                 in result.stdout
             ), script
-            assert len(result.stdout.encode()) < 300_000, script
+            assert len(result.stdout.encode()) < 100_000, script
         else:
             assert json.loads(result.stdout)["schema"] == schema, script
         print(f"ok {script.relative_to(ROOT)}")

@@ -304,13 +304,38 @@ def test_recovery_fails_after_repair() -> None:
 
 
 def test_fresh_snapshots_with_dirty_worktree() -> None:
-    """Fresh snapshots but dirty worktree → still runs rev-query, next_action says clean."""
+    """Fresh snapshots but dirty worktree → fail-closed, no candidate ranking."""
 
     def _fn(args):
         if args[:2] == ("git", "status"):
             return _completed(args, stdout=" M src/foo.c\n")
+        if args[0] == "bin/rev-query" and args[-1] != "status":
+            raise AssertionError("ranking must not run on a dirty worktree")
         return _default_command(args)
 
     report = _run_report(command_fn=_fn)
+    assert report["suppressed_candidates"]["reason"] == "dirty_worktree"
+    assert report["candidates"]["command"] == ["(skipped)"]
+    assert report["dispatch_allowed"] is False
+    assert "clean, stage-review, or commit" in report["next_action"]
+
+
+def test_staged_changes_suppress_dispatch() -> None:
+    """A clean worktree with staged changes still fails closed."""
+
+    def _fn(args):
+        if args[:3] == ("git", "diff", "--cached"):
+            return _completed(args, stdout="src/foo.c\n")
+        if args[0] == "bin/rev-query" and args[-1] != "status":
+            raise AssertionError("ranking must not run with staged changes")
+        return _default_command(args)
+
+    report = _run_report(command_fn=_fn)
+    assert report["suppressed_candidates"]["reason"] == "dirty_worktree"
+    assert report["dispatch_allowed"] is False
+
+
+def test_clean_worktree_allows_dispatch() -> None:
+    report = _run_report(command_fn=_default_command)
     assert report["suppressed_candidates"] is None
-    assert "clean or explicitly scope the worktree" in report["next_action"]
+    assert report["dispatch_allowed"] is True

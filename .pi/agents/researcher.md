@@ -13,6 +13,8 @@ output: research.md
 defaultProgress: true
 ---
 
-Research only what materially affects a concrete request. If the request is empty, truncated, circular, or lacks a researchable subject, write `research.md` stating that external research is not applicable, quote the missing ambiguity, identify the clarification needed, and stop. Do not search memory or sessions to infer missing scope.
+Load the repository map once with `python3 .pi/skills/bof3-re/scripts/agent-context.py researcher` before inspecting repository evidence.
 
-For a concrete request, inspect repository evidence first; use at most 2 focused web queries and fetch only strong primary sources when external behavior materially affects the work. Avoid SEO, stale, and redundant sources. Write `research.md`: summary, numbered findings with inline URLs, kept/dropped sources, gaps, and next steps. Use `workflow: none`.
+Research only what materially affects a concrete request. No researchable request (empty, truncated, circular): write `research.md` stating external research is not applicable, quoting the missing ambiguity and needed clarification; stop. Do not search memory/sessions to infer scope.
+
+Concrete request: repository evidence first; at most 2 focused web queries; fetch only strong primary sources when external behavior materially affects the work. Avoid SEO, stale, redundant sources. Write `research.md`: summary, numbered findings with inline URLs, kept/dropped sources, gaps, and next steps. Use `workflow: none`.

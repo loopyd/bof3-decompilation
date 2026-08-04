@@ -19,30 +19,66 @@ from harness.domain import (  # noqa: E402
 )
 
 FULL = (
+    "SOUL.md",
     "AGENTS.md",
+    "docs/agents/CODING_STANDARDS.md",
     ".pi/skills/bof3-re/SKILL.md",
-    "docs/memory-api.md",
+    "docs/agents/memory-api.md",
+    "docs/agents/matching.md",
+    "docs/agents/matching-playbook.md",
     "docs/agents/project-context.md",
     "docs/agents/plan-authoring.md",
     "docs/agents/lessons.md",
 )
 ROLE = {
+    "agents": (),
     "reverse": (".pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md",),
     "review": (
         ".pi/skills/bof3-re/references/REVIEW/REVIEW_CHECKLIST.md",
         ".pi/skills/bof3-re/references/REVIEW/SHARING_NONMATCHES.md",
     ),
 }
+# Workflow agents get bounded, role-targeted context instead of FULL: Qwen
+# models have a very limited context window, so their roles stay tiny.
+WORKFLOW = {
+    "classifier": (),  # wording-only classification; must not inspect files
+    "context-builder": ("AGENTS.md", "docs/agents/project-context.md"),
+    "oracle": ("AGENTS.md", "docs/agents/plan-authoring.md"),
+    "planner": (
+        "AGENTS.md",
+        "docs/agents/project-context.md",
+        "docs/agents/plan-authoring.md",
+    ),
+    "researcher": ("docs/agents/project-context.md",),
+    "reviewer": ("AGENTS.md", "docs/agents/plan-authoring.md"),
+    "scout": ("docs/agents/project-context.md",),
+    "worker": (
+        "AGENTS.md",
+        "docs/agents/CODING_STANDARDS.md",
+        "docs/agents/project-context.md",
+    ),
+}
 IDENTIFIER = re.compile(r"\b(?:D|func)_[0-9A-Fa-f]{8}\b")
 
 
 def knowledge_paths(root: Path) -> tuple[str, ...]:
-    """Return the complete, stable project knowledge prefill in tree order."""
-    specs = tuple(
-        path.relative_to(root).as_posix()
-        for path in sorted((root / "docs" / "specs").rglob("*.md"))
-    )
-    return (*FULL, *specs)
+    """Return the stable common context; specs stay targeted reads."""
+    del root
+    return FULL
+
+
+def roster(root: Path) -> str:
+    """Summarize subagent definitions and skills for the core agents mode."""
+    lines = ["\n===== subagent roster (.pi/agents) =====\n"]
+    for path in sorted((root / ".pi" / "agents").glob("*.md")):
+        front = path.read_text(encoding="utf-8").split("---")[1]
+        fields = dict(
+            line.split(": ", 1) for line in front.splitlines() if ": " in line
+        )
+        lines.append(f"{fields.get('name', path.stem)}: {fields.get('description', '')}\n")
+    skills = sorted(p.parent.name for p in (root / ".pi" / "skills").glob("*/SKILL.md"))
+    lines.append("\n===== skills (.pi/skills) =====\n" + "\n".join(skills) + "\n")
+    return "".join(lines)
 
 
 def section(path: Path, root: Path, text: str | None = None) -> str:
@@ -142,7 +178,9 @@ def target_context(root: Path, target: str, address: int) -> list[str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("role", choices=sorted(ROLE))
+    parser.add_argument(
+        "role", nargs="?", default="agents", choices=sorted((*ROLE, *WORKFLOW))
+    )
     parser.add_argument(
         "function",
         nargs="?",
@@ -153,6 +191,21 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args()
     root = args.root.resolve()
+    if args.role in WORKFLOW:
+        paths = WORKFLOW[args.role]
+        missing = [path for path in paths if not (root / path).is_file()]
+        if missing:
+            print(
+                f"missing required context: {', '.join(missing)}", file=sys.stderr
+            )
+            return 2
+        if not paths:
+            sys.stdout.write(f"role {args.role}: no repository context required\n")
+            return 0
+        sys.stdout.write(
+            "".join(section(root / path, root) for path in paths).lstrip()
+        )
+        return 0
     common = knowledge_paths(root)
     paths = (*common, *ROLE[args.role])
     missing = [path for path in paths if not (root / path).is_file()]
@@ -162,6 +215,8 @@ def main() -> int:
     try:
         output = [section(root / path, root) for path in common]
         output.extend(section(root / path, root) for path in ROLE[args.role])
+        if args.role == "agents":
+            output.append(roster(root))
         if args.function:
             output.extend(target_context(root, *args.function))
     except ValueError as error:

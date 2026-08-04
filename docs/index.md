@@ -5,17 +5,19 @@
 1. [README](../README.md) — project overview and first commands.
 2. [CONTRIBUTING.md](../CONTRIBUTING.md) — contribution and pull-request rules.
 3. [Tool usage](usage.md) — the ordered workflow and command reference.
-4. [Matching](matching.md) — the loop for lifting one function.
+4. [Function matching](agents/matching.md) — the loop for lifting one function.
 
-Use [AGENTS.md](../AGENTS.md) for project rules. Agent-facing references:
-[project context](agents/project-context.md), [plan authoring](agents/plan-authoring.md),
-and [lessons](agents/lessons.md).
+Use [AGENTS.md](../AGENTS.md) for project rules.
 
-## Matching
+## Agent operating references
 
-- [Matching loop](matching.md) — C iteration rules and acceptance gates
-- [Matching playbook](matching-playbook.md) — symptom-to-lever table for asm-diff
-- [Memory API](memory-api.md) — PSX_PTR/PSX_REF/SPAD macro reference
+- [Coding standards](agents/CODING_STANDARDS.md) — Python naming, module, CLI, and test rules
+- [Function matching](agents/matching.md) — C iteration rules, acceptance gates, duplicate promotion
+- [Matching playbook](agents/matching-playbook.md) — first-diff symptom-to-lever guide
+- [Memory API](agents/memory-api.md) — fixed-RAM, scratchpad, and sanctioned matching helpers
+- [Project context](agents/project-context.md) — target identity, ownership, and repository map
+- [Plan authoring](agents/plan-authoring.md) — scoped, evidence-backed implementation plans
+- [Lessons](agents/lessons.md) — durable cross-target reverse-engineering gotchas
 
 ## Specs
 

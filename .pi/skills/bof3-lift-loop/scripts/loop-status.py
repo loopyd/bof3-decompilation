@@ -162,6 +162,11 @@ def main(
                 "reason": "stale_or_invalid_index",
                 "hint": "repair reverse-index evidence before selecting a candidate",
             }
+        elif status.get("stdout") or staged.get("stdout"):
+            suppressed = {
+                "reason": "dirty_worktree",
+                "hint": "clean, stage-review, or commit tracked changes before dispatching a candidate",
+            }
         else:
             candidates = command(
                 root,
@@ -198,14 +203,19 @@ def main(
         "index": index,
         "candidates": candidates,
         "suppressed_candidates": suppressed,
+        "dispatch_allowed": suppressed is None and candidates["exit_code"] == 0,
         "recovery": recovery,
         "next_action": (
-            "inspect stale snapshot evidence; run with --recover to repair"
-            if suppressed and recovery is None
-            else "inspect recovery failure; do not select a candidate"
+            "clean, stage-review, or commit tracked changes before dispatch"
+            if suppressed and suppressed.get("reason") == "dirty_worktree"
+            else "inspect stale snapshot evidence; run with --recover to repair"
             if suppressed
-            else "clean or explicitly scope the worktree before dispatch"
-            if status.get("stdout")
+            and recovery is None
+            and suppressed.get("reason") == "stale_snapshot"
+            else "inspect recovery failure; do not select a candidate"
+            if suppressed and suppressed.get("reason") == "recovery_incomplete"
+            else "repair reverse-index evidence before selecting a candidate"
+            if suppressed
             else "select one candidate and run function-brief.py"
             if candidates["exit_code"] == 0
             else "inspect candidate query failure"

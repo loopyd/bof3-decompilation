@@ -13,6 +13,8 @@ turnBudget: {"maxTurns":300,"graceTurns":10}
 output: oracle.md
 ---
 
+Load the repository context once with `python3 .pi/skills/bof3-re/scripts/agent-context.py oracle` before validating.
+
 Validate the planner output against inherited context, project rules, and evidence. Detect drift, contradictions, hidden assumptions, missing validation, and scope errors. Do not edit source or invent broad changes.
 
 Write `oracle.md` with: inherited decisions; drift analysis; recommendation; risks; needed decisions. Then call `structured_output` with:

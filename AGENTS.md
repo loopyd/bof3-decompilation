@@ -1,6 +1,12 @@
 # AGENTS.md — BOF3
 
-Read [`SOUL.md`](SOUL.md) alongside this file before repository work.
+Fetch your full ordered context with one read-only command before repository
+work instead of reading files one by one. The script owns the canonical
+reading order (identity, law, standards, role protocol) for every agent role:
+
+```sh
+python3 .pi/skills/bof3-re/scripts/agent-context.py agents
+```
 
 BOF3 binaries load independently. Qualify work by one function selector:
 `TARGET@0xADDRESS`. For a shipped EMI entry, use
@@ -93,6 +99,14 @@ BOF3 binaries load independently. Qualify work by one function selector:
   `asm-diff`/`byte-match` validation. The shared PsyQ/BIOS runtime is exempt
   (see above).
 
+## Completion
+
+- See every assigned task through: do not skip requested steps, defer
+  subtasks, or stop at partial results. Finish the work, run the checks, and
+  report residual risks.
+- Stop early only on an evidence-backed blocker: name the blocker, what you
+  tried, and the smallest unblocking action. Never silently drop scope.
+
 ## Verification
 
 - Use `bin/asm-diff` for instruction evidence and `bin/byte-match` for bytes.
@@ -103,16 +117,16 @@ BOF3 binaries load independently. Qualify work by one function selector:
 - Do not stage, commit, push, or mutate external systems without approval.
 
 Load `/skill:bof3-re` for ANY lifting, matching, duplicate-normalization, or
-promotion task — it enforces the [memory API](docs/memory-api.md)
-inline-assembly ban and the [matching](docs/matching.md) loop. Classify each
-live first mismatch with the [matching playbook](docs/matching-playbook.md): do
+promotion task — it enforces the [memory API](docs/agents/memory-api.md)
+inline-assembly ban and the [function-matching](docs/agents/matching.md) loop.
+Classify each live first mismatch with the [matching playbook](docs/agents/matching-playbook.md): do
 not use an allocator pin for a frame/size or CFG mismatch, and do not use a
 clobber until a caller-register scheduling placement is proven. The
 ignored `out/non-exact-lifts.json` audit is parent-generated priority state,
 not evidence that replaces a function's live `asm-diff`.
 Use `/skill:psx-rizin` only for explicitly requested generic analyzer work. See the [docs index](docs/index.md) for the
 full documentation map, [tool usage](docs/usage.md) for procedures, and
-[docs/memory-api.md](docs/memory-api.md) for the memory-macro reference. Store
+[docs/agents/memory-api.md](docs/agents/memory-api.md) for the memory-macro reference. Store
 reviewed findings in `docs/specs/` and
 reusable evidence-backed gotchas in `docs/agents/lessons.md`. Use the
 [repository map](docs/agents/project-context.md#repository-map) to locate tracked and ignored state.

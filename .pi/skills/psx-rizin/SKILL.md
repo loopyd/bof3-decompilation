@@ -13,8 +13,8 @@ metadata:
 # PSX Rizin
 
 Use only after explicit invocation. Build reproducible findings from authorized
-machine code and runtime evidence; treat analyzer, decompiler, and signature
-output as hypotheses until corroborated.
+machine code and runtime evidence; analyzer, decompiler, and signature output
+are hypotheses until corroborated.
 
 ## Rules
 
@@ -23,32 +23,31 @@ output as hypotheses until corroborated.
 3. Qualify every address by file offset, runtime address, and overlay/module.
 4. Validate PS-X EXE load addresses and cached/uncached RAM aliases.
 5. Inspect MIPS branch, call, and load delay slots before inferring behavior.
-6. Analyze mixed code/data in bounded stages; do not start with unrestricted
+6. Analyze mixed code/data in bounded stages; never start with unrestricted
    global analysis.
 7. Validate functions, arguments, types, and names across callers,
    instructions, and runtime evidence where practical.
 8. Keep independently loaded overlays in separate namespaces.
 9. Record symbol/signature provenance and confidence; preserve source names.
-10. In this repository, use the repo's workspace and commands: Rizin snapshots
-     land under `out/reverse/<target>/` (via `bin/rz-project`), the cross-target
-     query cache under `out/index/`, and matching evidence under
-     `out/matching/`, `out/permuter/`, and `out/asm-diff/`. The generic scripts
-     below are skill-local helpers; prefer the wired `bin/` entrypoints when they
-     cover the task.
+10. Here, use repo workspace/commands: Rizin snapshots under
+     `out/reverse/<target>/` (via `bin/rz-project`), query cache under
+     `out/index/`, matching evidence under `out/matching/`, `out/permuter/`,
+     `out/asm-diff/`. The generic scripts below are skill-local helpers;
+     prefer wired `bin/` entrypoints when they cover the task.
 
 ## Snapshot readiness
 
-For one target—or all configured targets—run the bundled read-only summary
-before analysis or index work:
+Run the bundled read-only summary before analysis or index work (one target
+or all configured):
 
 ```sh
 python3 .pi/skills/psx-rizin/scripts/snapshot-status.py [TARGET]
 ```
 
-It emits manifest identity, binary hash, Rizin snapshot freshness, and reverse
-index readiness in one JSON document. It never runs analysis or changes files.
-For each stale target, run the reported `bin/rz-project analyze TARGET`, then
-rebuild the index explicitly with `bin/index`.
+Emits manifest identity, binary hash, Rizin snapshot freshness, reverse index
+readiness as one JSON document; never runs analysis or changes files. Per stale
+target: run the reported `bin/rz-project analyze TARGET`, then rebuild the index
+with `bin/index`.
 
 ## Route the task
 
@@ -67,7 +66,7 @@ $psx-rizin build-diff [function-or-target]
 $psx-rizin audit <case-directory>
 ```
 
-A free-form request is valid. State assumptions instead of blocking on minor
+Free-form requests are valid; state assumptions instead of blocking on minor
 syntax ambiguity.
 
 ## Read progressively

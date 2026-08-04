@@ -45,14 +45,14 @@ output.
 - Shared declarations belong in `include/<subsystem>/` (e.g. `include/base/`,
   `include/memory/`, `include/gpu/`, `include/battle/`) only when multiple
   targets or an external contract require them.
-- Follow [matching: Reuse exact duplicate groups](../matching.md#reuse-exact-duplicate-groups)
-  before extracting an evidence-backed cross-target template; address-owned
-  wrappers remain in each target directory.
+- Follow [exact duplicate groups](matching.md#exact-duplicate-groups) before
+  extracting an evidence-backed cross-target template; address-owned wrappers
+  remain in each target directory.
 - PsyQ signatures identify objects and addresses; official headers provide C
   declarations; Rizin snapshots provide callsites and xrefs. None substitutes
   for another.
 
-See [matching](../matching.md) and [tool usage](../usage.md) for procedures.
+See [function matching](matching.md) and [tool usage](../usage.md) for procedures.
 
 ## Repository map
 

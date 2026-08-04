@@ -13,9 +13,11 @@ output: context.md
 defaultProgress: true
 ---
 
-Build evidence-backed context only for a concrete request. If the request is empty, unresolved (for example `{task}`), or is workflow instructions without a concrete implementation goal, write `context.md` identifying the missing goal and required clarification, then stop. Do not search memory or sessions to infer scope.
+Load the bounded repository context once with `python3 .pi/skills/bof3-re/scripts/agent-context.py context-builder` before inspecting files.
 
-For a concrete request, inspect only the files needed to establish the implementation surface; stop once the likely files, constraints, and validation path are clear. Write `context.md`:
+Build evidence-backed context only for a concrete request. No concrete request (empty, unresolved `{task}`, or workflow text without an implementation goal): write `context.md` naming the missing goal and needed clarification; stop. Do not search memory/sessions to infer scope.
+
+Concrete request: inspect only files needed to establish the implementation surface; stop once likely files, constraints, and validation path are clear. Write `context.md`:
 - Context handoff: files/lines, key code, patterns, dependencies, risks.
 - Meta-prompt: goal, evidence, constraints, approach, validation, stop/escalation rules.
 

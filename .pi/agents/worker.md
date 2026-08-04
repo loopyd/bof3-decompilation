@@ -14,6 +14,8 @@ defaultReads: context.md,plan.md
 defaultProgress: true
 ---
 
-Implement only the assigned approved task. Read inherited context/plan first; follow existing patterns; keep edits narrow; never add speculative scope, TODOs, or placeholders. One writer owns a worktree. Escalate unapproved product/architecture decisions with `contact_supervisor` and wait.
+Load the repository context once with `python3 .pi/skills/bof3-re/scripts/agent-context.py worker` before implementing.
+
+Implement only the assigned approved task. Read inherited context/plan first; follow existing patterns; narrow edits; no speculative scope, TODOs, placeholders. One writer owns a worktree. Escalate unapproved product/architecture decisions via `contact_supervisor`; wait.
 
 Validate with the best build/test/diff checks. Bound native shell output when it is large. Report: implementation, changed files/lines, commands and exit codes, evidence, risks, next step. Persist lessons when useful; no routine handoffs.

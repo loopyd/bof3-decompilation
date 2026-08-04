@@ -5,37 +5,35 @@ description: Lift or review one target-qualified BOF3 function, normalize proven
 
 # BOF3 RE
 
-Work one function selector at a time: `TARGET@0xADDRESS`, or a shipped EMI
-entry as `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. For
-`bof3-reverse`/`bof3-review`, first run
-`python3 .pi/skills/bof3-re/scripts/agent-context.py <reverse|review> SELECTOR`
-once. It emits common+role context from the role's `references/<ROLE>/` folder,
-`docs/agents/lessons.md`, every `docs/specs/**/*.md`, then concise target manifest/map/Splat/
-header, complete target bindings, and selected source/asm. Never reread a bundled path, including
-skill/protocol Markdown; read only an unbundled path for a named concrete gap.
-Load a spec or psx-rizin reference only for a concrete question. Repo `bin` wins.
+One function selector at a time: `TARGET@0xADDRESS`, or shipped EMI
+`BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. For `bof3-reverse`/`bof3-review`,
+run `python3 .pi/skills/bof3-re/scripts/agent-context.py <agents|reverse|review> [SELECTOR]`
+once: it emits common+role context, the role's `references/<ROLE>/` folder,
+`docs/agents/lessons.md`, target manifest/map/Splat/header, complete bindings,
+and selected source/asm. Never reread a bundled path; read an unbundled path
+only for a named gap. Load a spec or psx-rizin reference only for a concrete
+question. Repo `bin` wins.
 
 ## Invariants
 
-- Original bytes, PS-X headers, and `t_addr` outrank tools. Verify target load:
+- Original bytes, PS-X headers, `t_addr` outrank tools. Verify load:
   `runtime address - load address = payload offset`.
-- Keep each target independent: raw `func_<ADDR>.c`, local `internal.h`, map,
-  Splat boundary, and validation. Never copy game extern addresses across targets.
-- C89 only. No handwritten asm, direct register pins, asm-renamed externs, or
-  `INCLUDE_ASM`; only sanctioned `barrier()`/`CLOBBER_CALLER_REG(reg)`
-  (or named `CLOBBER_*` wrappers), `REGISTER_PIN(type, name, reg)`, and target
-  `symbols.c` `WEAK_SYMBOL_AT` apply. After the clean-C ladder is exhausted,
-  use a pin autonomously only for an asm-diff-proven allocator or entry-register
-  residual; it needs a local `MATCHING_AID`, independent review, and a live
-  exact byte match. Never introduce a generic matching macro. A legacy direct
-  numeric pin remains only with explicit user approval and proof that the macro
-  form changes codegen. No fallback asm
+- Targets stay independent: raw `func_<ADDR>.c`, local `internal.h`, map,
+  Splat boundary, validation. Never copy game extern addresses across targets.
+- C89 only. Banned: handwritten asm, direct register pins, asm-renamed
+  externs, `INCLUDE_ASM`. Sanctioned: `barrier()`/`CLOBBER_CALLER_REG(reg)`
+  (or named `CLOBBER_*`), `REGISTER_PIN(type, name, reg)`, `symbols.c`
+  `WEAK_SYMBOL_AT`. After the clean-C ladder, a pin is autonomous only for an
+  asm-diff-proven allocator or entry-register residual; it needs a local
+  `MATCHING_AID`, independent review, and a live exact byte match. Never add a
+  generic matching macro. A legacy direct numeric pin stays only with explicit
+  user approval and proof the macro form changes codegen. No fallback asm
   without user approval.
-- SDK is external: use official PsyQ names/maps/headers; never lift SDK bodies.
-- Unknown fields are `unk_XX`; map names are canonical; keep `internal.h` order:
-  guard, includes, types, extern data, prototypes, macros/helpers.
-- Do not commit without explicit user approval. Do not add behavior tests for lifts;
-  add only minimal tooling-contract tests when tooling changes.
+- SDK is external: official PsyQ names/maps/headers; never lift SDK bodies.
+- Unknown fields: `unk_XX`; map names canonical; `internal.h` order: guard,
+  includes, types, extern data, prototypes, macros/helpers.
+- No commit without explicit user approval. No behavior tests for lifts; only
+  minimal tooling-contract tests when tooling changes.
 
 ## Fast evidence
 
@@ -51,90 +49,88 @@ Use the narrowest sufficient command. Live acceptance is never cached.
 | Companion ABI | `bin/companion-check TARGET@0xADDRESS` only for a relevant declared call | global catalog scan |
 | Seed/boundary | `splat`, `m2ctx`, `m2c` only when missing/needed | regenerate after C-only edits |
 
-`decomp-status` is parent-only disposable audit data. `asm-diff` and `byte-match`
-are live. Report map/Splat-caused Rizin/index staleness for the parent checkpoint;
-do not rebuild global analysis during a one-function mission.
+`decomp-status` is parent-only disposable audit data; `asm-diff`/`byte-match`
+are live. Report map/Splat-caused Rizin/index staleness for the parent
+checkpoint; never rebuild global analysis in a one-function mission.
 
 ## Scope and evidence
 
-Honor the selected function/group. If none is selected, rank with
+Honor the selected function/group. With none selected, rank via
 `bin/rev-query <quick-wins|leafs|duplicates|hotspots|pareto> --unlifted --detail minimal --limit 5`
 and wait for user selection.
 
-1. Run the brief once; validate identity, boundary, load/payload offset.
-2. Query `rev-query calls`/`duplicates` only for missing ABI/duplicate evidence.
-3. Before declarations, search target `internal.h` and `symbols.txt`, `include/`,
-   PsyQ map/report, then index/siblings. Reuse existing types/names; extend
-   evidenced structs, never make parallel declarations.
+1. Brief once; validate identity, boundary, load/payload offset.
+2. `rev-query calls`/`duplicates` only for missing ABI/duplicate evidence.
+3. Before declarations: search target `internal.h`/`symbols.txt`, `include/`,
+   PsyQ map/report, then index/siblings. Reuse types/names; extend evidenced
+   structs; never parallel declarations.
 4. A companion record proves catalog identity plus original `jal`, not ABI,
-   ownership, residency, or cross-linking. Before retaining such a caller,
-   require reviewed callee boundary, ABI, target map ownership, caller prototype,
-   and passing relevant `companion-check`; otherwise escalate.
-5. Generate Splat/m2c evidence only if required. Recover signatures from callers/
-   callees, not m2c stubs. Edit only owned C and evidence-required header/map/Splat.
+   ownership, residency, or cross-linking. Retain such a caller only with
+   reviewed callee boundary, ABI, target map ownership, caller prototype, and
+   passing `companion-check`; otherwise escalate.
+5. Splat/m2c evidence only if required. Signatures from callers/callees, not
+   m2c stubs. Edit only owned C and evidence-required header/map/Splat.
 
 ## Match loop
 
 **Never edit C before a live asm diff.** Diagnose the first mismatch, classify
-it with [`docs/matching-playbook.md` §17](../../../docs/matching-playbook.md#17-delay-slots-and-entry-register-copies), then make one structural fix and rerun normal-detail diff. If percentage drops, revert at once.
-Use full diff only for first/ambiguous diagnosis. The partial-lift catalog is
-parent audit data, not a substitute for this live diagnosis. Fix in order, with
-three non-progressing diagnosed attempts per level:
+with the [matching playbook](../../../docs/agents/matching-playbook.md#delay-slots-and-entry-copies),
+make one structural fix, rerun normal diff; revert at once if percentage drops.
+Full diff only for first/ambiguous diagnosis. The partial-lift catalog is
+parent audit data, not a substitute for live diagnosis. Fix order, three
+non-progressing diagnosed attempts per level:
 
 1. types/declarations: width, signedness, pointers, fields, prototypes;
 2. control flow: branch direction, loop/return/switch shape;
 3. expression/register order: temps, hoists, statement order, then an
    asm-diff-proven caller-register `CLOBBER_CALLER_REG(reg)` for delay-slot or
-   fixed-address reload scheduling, with local `MATCHING_AID`; never use it to
-   encode an opcode or clobber `s*`/`gp`/`sp`/`ra`;
+   fixed-address reload scheduling, with local `MATCHING_AID`; never to encode
+   an opcode or clobber `s*`/`gp`/`sp`/`ra`;
 4. compiler profile: `bin/flag-search`; record only clean-C exact profiles;
 5. one bounded `bin/permute TARGET@0xADDRESS --time-limit 300 -j N` after shape is right;
-6. for an asm-diff-proven allocator or entry-register residual, one bounded
-   local `REGISTER_PIN` experiment; retain only if exact and independently reviewed;
+6. asm-diff-proven allocator or entry-register residual: one bounded local
+   `REGISTER_PIN` experiment; retain only if exact and independently reviewed;
 7. report residual; never force banned assembly.
 
-Frame/size residuals start at types/calls, address-taken locals, aggregate copies,
-and control-flow—not at a pin. Same-size relocation/load-order residuals start at
-symbol representation and pointer-cell volatility. A `move tN,aN`/`move vN,aN`
-entry copy is an allocator residual only after its local source lifetime, clean-C
-ordering, profile, and permuter variants are exhausted. A lone delay-slot
-residual needs the exact branch/jump operands and liveness diagnosed before a
-caller-register clobber is considered.
+Frame/size residuals: start at types/calls, address-taken locals, aggregate
+copies, control flow — never a pin. Same-size relocation/load-order: symbol
+representation, pointer-cell volatility. A `move tN,aN`/`move vN,aN` entry
+copy is an allocator residual only after source lifetime, clean-C ordering,
+profile, and permuter variants are exhausted. A lone delay-slot residual needs
+exact branch/jump operands and liveness before a caller-register clobber.
 
-Read `first=` first. A percentage is not success. Every retained `MATCHING_AID`
+Read `first=` first; a percentage is not success. A retained `MATCHING_AID`
 names the original/current instruction or register placement, exhausted rung,
-and that the immediately following live byte-match was exact; remove it if
-clean C later matches. Do not add generic matching-hack macros. At the third
-non-progressing attempt at a rung, restore the best clean-C state and advance;
-on exhaustion, report target, first difference, attempts, and next untried or
-blocked evidence. Accept only final live `bin/byte-match ...` exit 0.
+and the immediately following exact live byte-match; remove it if clean C
+later matches. No generic matching-hack macros. Third non-progressing attempt:
+restore best clean-C state and advance. On exhaustion report target, first
+difference, attempts, next untried/blocked evidence. Accept only final live
+`bin/byte-match ...` exit 0.
 
 ## Duplicates and handoff
 
-A duplicate hash is a candidate, not shared ownership. Confirm boundaries; match
-one representative and a second target independently before a worthwhile shared
-`src/shared/<domain>/*.inc` body. Keep address wrappers/local maps/boundaries.
+A duplicate hash is a candidate, not shared ownership. Confirm boundaries;
+match one representative and a second target independently before a worthwhile
+shared `src/shared/<domain>/*.inc` body. Keep address wrappers/local
+maps/boundaries.
 
-Before handoff run live `byte-match` for each edited function,
-`bin/symbols check TARGET`, `bin/splat TARGET` only if its map/Splat changed,
-relevant companion-check, and `git diff --check`. This is the default complete
-lift gate; do not run `just check` or `decomp-status` in an agent mission.
-Reserve `just check` for parent-only broad tooling/config changes or explicit
-request. Report checks, skipped broad checks, risks, and next step tersely.
+Before handoff: live `byte-match` per edited function, `bin/symbols check
+TARGET`, `bin/splat TARGET` only if map/Splat changed, relevant
+companion-check, `git diff --check`. This is the default complete lift gate;
+never run `just check` or `decomp-status` in an agent mission. Reserve
+`just check` for parent-only broad tooling/config changes or explicit request.
+Report checks, skipped broad checks, risks, next step tersely.
 
 ### Pipeline-test contract
 
-When the task changes the compiler catalog
-(`config/compiler/variants.json`), object flags
-(`config/compiler/object-flags.cmake`), compiler selection
+On changes to the compiler catalog (`config/compiler/variants.json`), object
+flags (`config/compiler/object-flags.cmake`), compiler selection
 (`BOF3_OBJCOMPILER_`), `bin/cc`, maspsx, `bin/as`, or linker toolchain code,
-run the focused pipeline tests:
+run:
 
     python -m pytest tools/python/tests/test_bin_cc_pipeline.py -v
     python -m pytest tools/python/tests/test_asm_link.py -v
 
-Then run live `bin/asm-diff TARGET@0xADDRESS --detail normal` and
-`bin/byte-match TARGET@0xADDRESS` on every affected lift.
-
-Ordinary source-only lifts (no toolchain/flag/compiler change) are not
-burdened by this check.
+Then live `bin/asm-diff TARGET@0xADDRESS --detail normal` and
+`bin/byte-match TARGET@0xADDRESS` on every affected lift. Source-only lifts
+are exempt.
