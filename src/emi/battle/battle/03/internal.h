@@ -55,9 +55,12 @@ typedef struct Battle03LocalWork {
   u8  unk_79;
   u8  pad_7a[6];
   u16 unk_80;
-  u8  pad_82[0xa1];
+  u8  pad_82[0x97];
+  u8  unk_119;
+  u8  pad_11a[9];
   u8  unk_123;
-  u8  pad_124[0x10];
+  u32 unk_124;
+  u8  pad_128[0xc];
   u16 unk_134;
   u8  pad_136[0xa];
 } Battle03LocalWork;
@@ -74,7 +77,11 @@ typedef struct Battle03EnemyWork {
   Battle03EnemyModeHandler unk_e4;
   u8                       pad_e8[8];
   u8                       unk_f0;
-  u8                       pad_f1[0x27];
+  u8                       pad_f1[4];
+  u8                       unk_f5;
+  u8                       pad_f6[0xa];
+  u32                      unk_100;
+  u8                       pad_104[0x14];
 } Battle03EnemyWork;
 
 typedef struct Battle03QueuedSlot {
@@ -173,6 +180,9 @@ extern Battle03DispatchTable        D_801D0FC4;
 extern u8*            D_801C893C[];
 extern u8*            D_801C8950[];
 extern Battle03Handler D_801EB15C[];
+extern Battle03Handler D_801EB218[];
+extern Battle03Handler D_801EB3B0[];
+extern volatile Battle03EnemyWork D_801EB630[];
 extern Battle03Handler D_801EB188;
 extern Battle03Handler D_801EACD4[];
 extern Battle03Handler D_801EACE8[];
@@ -704,8 +714,6 @@ u8   func_801EAB6C(u8* arg0);
   PSX_REF(volatile u8, 0x801eb6acu + ((u32)(index) * 0x118u))
 #define BATTLE_KIND_BYTE_00(kind)                                              \
   PSX_REF(volatile u8, 0x801ca718u + ((u32)(kind) * 0x14u))
-#define BATTLE_LOCAL_PRESENTATION_STATE1_TABLE                                 \
-  PSX_PTR(const volatile Battle03Handler, 0x801eb3b0u)
 #define BATTLE_LOCAL_PRESENTATION_BYTE3_TABLE                                  \
   PSX_PTR(const volatile Battle03Handler, 0x801eb430u)
 #define BATTLE_QUEUED_RESULT_SUBSTATE_TABLE                                    \

@@ -5,10 +5,8 @@
  * @source 0x801E31C8
  */
 void NO_SIBLING_CALLS func_801E31C8(void) {
-  volatile u8*     scratch;
-  Battle03Handler* table;
+  volatile u8* scratch;
 
   scratch = BATTLE_SCRATCH_CELL_U8PTR;
-  table = (Battle03Handler*)BATTLE_LOCAL_PRESENTATION_STATE1_TABLE;
-  table[scratch[1]]();
+  D_801EB3B0[scratch[1]]();
 }
