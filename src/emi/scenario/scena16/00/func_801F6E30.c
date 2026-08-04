@@ -45,6 +45,15 @@ void func_801F6E30(void) {
                ->word_686c;
     ((volatile Scena16Bank80140000*)SCENA16_BANK_80140000(Scena16Bank80140000))
         ->byte_832e = 0u;
+    /*
+     * MATCHING_AID: memory-access ordering. asm-diff showed the original
+     * keeps `sb zero,-31954(at)` immediately before `jal func_8015B580`
+     * with `li a1,1` in the delay slot; without the barrier GCC schedules
+     * `li a1,1` before the store and emits a nop delay slot (+4 bytes).
+     * Live bin/byte-match after this aid is exact. Remove if GCC's
+     * scheduler placement for this call is otherwise reproduced.
+     */
+    barrier();
     func_8015B580(arg0, 1);
     ((volatile Scena16Bank80140000*)SCENA16_BANK_80140000(Scena16Bank80140000))
         ->byte_6874 = 3;
