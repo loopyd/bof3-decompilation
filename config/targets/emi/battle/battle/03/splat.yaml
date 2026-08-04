@@ -411,7 +411,7 @@ segments:
     - asm
     - func_801DEAE0
   - - 57284
-    - asm
+    - c
     - func_801DEBC4
   - - 57384
     - asm
