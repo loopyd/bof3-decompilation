@@ -1,19 +1,12 @@
 #include "internal.h"
 
-typedef struct World00Area016Overlay801f0000 {
-  u8                    unk_0000[0x512c];
-  World00Area016Handler state_table_03[1];
-} World00Area016Overlay801f0000;
-
 /* @behavior dispatches through the second local handler table selected by
  * scratchpad state byte `0x03`.
  * @source 0x801F368C
  */
 void func_801F368C(void) {
-  World00Area016Scratch*         scratch;
-  World00Area016Overlay801f0000* overlay;
+  World00Area016Scratch* scratch;
 
   scratch = WORLD00_AREA016_SCRATCH_PTR;
-  overlay = (World00Area016Overlay801f0000*)0x801f0000;
-  overlay->state_table_03[scratch->state_03]();
+  WORLD00_AREA016_D_801F512C[scratch->state_03]();
 }

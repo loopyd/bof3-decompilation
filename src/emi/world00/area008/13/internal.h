@@ -28,6 +28,7 @@ extern volatile u8  WORLD00_AREA008_D_80149333;
 extern u8           WORLD00_AREA008_D_80145AD4[];
 extern u8           WORLD00_AREA008_D_801F2C04[];
 extern u8           WORLD00_AREA008_D_801F2C10[];
+extern World00Area008Handler WORLD00_AREA008_D_801F4688[];
 
 /* Shared primitive cursor (PsyQ SDK global, owned by the main exe). A named
  * symbol (not a fixed-address macro) so codegen emits the symbol-relative
@@ -54,7 +55,5 @@ void func_801F3D88(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
 #define WORLD00_AREA008_STATE_PTR                                              \
   PSX_REF(volatile World00Area008State*, 0x80146250u)
 #define WORLD00_AREA008_STATE_BASE PSX_PTR(World00Area008State, 0x80145fd0u)
-#define WORLD00_AREA008_HANDLER_TABLE                                          \
-  PSX_PTR(World00Area008Handler, 0x801f4688u)
 
 #endif
