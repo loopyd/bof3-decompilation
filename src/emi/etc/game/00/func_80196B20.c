@@ -5,16 +5,14 @@
  * @source 0x80196B20
  */
 u8 func_80196B20(u8 value) {
-  volatile u8* scratch;
-  u8           row;
-  u8           column;
+  u8 row;
+  u8 column;
 
-  scratch = SPAD_ADDR(volatile u8, 0x00u);
   for (row = 0u; row < 4u; row++) {
     for (column = 0u; column < 0x10u; column++) {
       if (D_80145D54[row][column] == value) {
-        scratch[0] = row;
-        scratch[1] = column;
+        D_1F800000[0] = row;
+        D_1F800000[1] = column;
         return value;
       }
     }

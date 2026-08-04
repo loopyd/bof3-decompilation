@@ -2,6 +2,7 @@
 
 /* ---- Shared scratchpad pointer cell ---- */
 WEAK_SYMBOL_AT(g_game_work, 0x1F800044);
+WEAK_SYMBOL_AT(D_1F800000, 0x1f800000);
 
 /* ---- Entry table (main exe data segment, ref'd by overlay) ---- */
 WEAK_SYMBOL_AT(D_80143FC8, 0x80143fc8);

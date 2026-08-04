@@ -203,6 +203,8 @@ extern volatile u16        D_801490A4;
 extern volatile u16     D_80037800[];
 extern GamePaletteEntry D_80145BD4[];
 extern u8               D_80145D54[][16];
+/* Scratchpad base byte array (0x1F800000); extern forces lui/addiu pair. */
+extern u8               D_1F800000[];
 extern GamePaletteSlot  D_80145D94[];
 extern const u8         D_801C7AC0[];
 extern const u8         D_801C7AC8[];
