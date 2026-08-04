@@ -5,21 +5,21 @@
  * @source 0x801D3938
  */
 void func_801D3938(void) {
-  volatile u8* scratch;
-  s16          y;
+  u8*  scratch;
+  u16  y;
 
-  scratch = WORLD00_AREA030_SCRATCH_PTR;
+  scratch = (u8*)WORLD00_AREA030_SCRATCH_PTR;
 
-  *(volatile s16*)(scratch + 0x30u) =
-      (s16)(*(volatile s16*)(scratch + 0x30u) - 8);
-  if (*(volatile s16*)(scratch + 0x30u) < -0x19) {
-    if (scratch[7] == 0u) {
-      scratch[1] = 0u;
-    } else {
+  y = *(u16*)(scratch + 0x30u) - 8u;
+  *(u16*)(scratch + 0x30u) = y;
+  if ((s16)y < -0x19) {
+    if (scratch[7] != 0u) {
       scratch[1] = 1u;
+    } else {
+      scratch[1] = 0u;
     }
   }
 
-  y = *(volatile s16*)(scratch + 0x30u);
-  func_801D9534(0x14, y, 0x118, 0x13, 0);
+  func_801D9534(0x14, *(volatile u16*)(WORLD00_AREA030_SCRATCH_PTR + 0x30u),
+                0x118, 0x13, 0);
 }
