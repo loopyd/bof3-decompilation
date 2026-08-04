@@ -1,6 +1,7 @@
 name: battle_battle_03
 sha1: 690cac201bc0366a2a18937168edcf0feadb9bd1
 options:
+  create_c_files: false
   platform: psx
   compiler: psyq
   basename: battle_battle_03
@@ -447,8 +448,10 @@ segments:
     - asm
     - func_801DEFE4
   - - 59212
-    - asm
+    - c
     - func_801DF34C
+    - '@source: src/emi/battle/battle/03/func_801DF34C.c'
+    - '@behavior: Selects one of two local-work-driven effect ids by flag 0x800 and forwards it to func_8014D8D4.'
   - - 59320
     - c
     - func_801DF3B8
