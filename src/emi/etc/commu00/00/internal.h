@@ -60,6 +60,7 @@ extern volatile u8  D_801F2928[1];
 extern void (*D_801F25EC[6])(void);
 extern void (*D_801F2610[])(void);
 extern void (*D_801F2678[])(void);
+extern void (*D_801F268C[])(void);
 
 u16  commu00_pack_slot_anchor(s32 x, s32 y);
 void commu00_apply_slot_palette(u16 palette_id);
