@@ -122,6 +122,13 @@ misdiagnose across targets. Matching/permuter procedures:
   address-based wrappers so each target compiles/validates its own symbol; no
   runtime wrapper call merely to remove repeated source text.
 
+### Duplicate identical calls in if/else arms instead of a ternary argument
+
+- When the original computes a value directly in `$a0` in each branch and
+  tail-merges into one `jal`, write `if (cond) f(x + A); else f(x + B);`.
+  A ternary argument `f(cond ? x + A : x + B)` forces the compiler to compute
+  the argument before the call, changing allocation and breaking the merge.
+
 ### Matching technique reference
 
 Register-pinning ladder, `MATCHING_AID`, `barrier()`/`CLOBBER_*`, pointer
