@@ -45,6 +45,8 @@ typedef struct World00Area024SpinWork {
 extern volatile u8  D_80147A58;
 extern volatile u16 WORLD00_AREA024_GLOBAL_HALF_3E6C;
 extern u16          D_801490A8;
+extern u8*                              D_801F5B00;
+extern const World00Area024Handler      D_801F4214[];
 
 void func_8015B410(void* arg0);
 void func_8015B4B0(void* arg0);

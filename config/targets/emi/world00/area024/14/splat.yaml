@@ -48,7 +48,7 @@ segments:
     - asm
     - func_801F3080
   - - 1260
-    - asm
+    - c
     - func_801F30EC
   - - 1460
     - asm

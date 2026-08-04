@@ -13,17 +13,17 @@ s32 func_801F30EC(void) {
   func_801AFE18(scratch);
 
   result = 0;
+  D_801F5B00 = WORLD00_AREA024_WORK_BASE;
   i = 0u;
-  WORLD00_AREA024_WORK_PTR = WORLD00_AREA024_WORK_BASE;
 
   do {
-    if (WORLD00_AREA024_WORK_PTR[0] != 0u) {
-      WORLD00_AREA024_STATE_TABLE[WORLD00_AREA024_WORK_PTR[1]]();
-      func_801F2DF8(WORLD00_AREA024_WORK_PTR);
+    if (D_801F5B00[0] != 0u) {
+      D_801F4214[D_801F5B00[1]]();
+      func_801F2DF8(D_801F5B00);
       result = 1;
     }
 
-    WORLD00_AREA024_WORK_PTR += 0x28u;
+    D_801F5B00 += 0x28u;
     i += 1u;
   } while (i < 8u);
 
