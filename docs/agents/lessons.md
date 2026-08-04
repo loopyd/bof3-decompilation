@@ -129,6 +129,20 @@ misdiagnose across targets. Matching/permuter procedures:
   A ternary argument `f(cond ? x + A : x + B)` forces the compiler to compute
   the argument before the call, changing allocation and breaking the merge.
 
+### Let the assembler fold an extern-array base+index to recover `addu` operand order
+
+- When C computes `table + index` itself (absolute-address pointer macro),
+  GCC emits its own `addu` with a fixed operand order that may not match the
+  original. Rebind the table as `extern Type D_XXXXXXXX[];` plus
+  `WEAK_SYMBOL_AT` and index it directly: GCC then emits the macro load
+  `lw table($idx)`, and `as` expands the `%hi`/`%lo` relocation with its own
+  canonical `lui $at; addu $at,$at,$idx` order. Same semantics; only the
+  assembler's expansion order differs.
+- A `volatile` pointee on a narrow signed global can force `lbu` plus manual
+  sign-extension (`sll`/`sra`) where the original has one `lb`. A local
+  non-volatile representation view `*(s8*)&x` restores the single `lb`; also
+  check the extern's declared type width/signedness is right first.
+
 ### Matching technique reference
 
 Register-pinning ladder, `MATCHING_AID`, `barrier()`/`CLOBBER_*`, pointer
