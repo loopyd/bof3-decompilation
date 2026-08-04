@@ -7,7 +7,7 @@ body:
     id: location
     attributes:
       label: Document and section
-      placeholder: docs/matching.md — Loop
+      placeholder: docs/agents/matching.md — Required loop
     validations:
       required: true
   - type: textarea

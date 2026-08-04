@@ -2,8 +2,8 @@
   "schema": "harness.compiler-flag-catalog/v1",
   "provenance": [
     "decomp.me PS1 compiler presets",
-    "docs/matching.md",
-    "docs/matching-playbook.md §1 profile levers"
+    "docs/agents/matching.md",
+    "docs/agents/matching-playbook.md#compiler-profile"
   ],
   "note": [
     "Candidates are deltas applied on top of the canonical build flags",

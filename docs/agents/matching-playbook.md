@@ -1,39 +1,39 @@
 # Matching playbook
 
-A symptom-to-lever reference for resolving `bin/asm-diff` mismatches in BOF3
-function lifts. Use after [matching workflow](matching.md) fundamentals are
-confirmed (types, signatures, calls).
+Use this symptom-to-lever reference only after the [function-matching
+loop](matching.md) has established the target, boundary, types, signatures, and
+calls. Classify the first live `bin/asm-diff` difference, make one structural
+change, and re-run the diff; a percentage alone is not a diagnosis.
 
 ## Symptom-to-lever table
 
 | Diff symptom | First things to test | Section |
 |---|---|---|
-| `lw` instead of address calculation | Pointer vs array declaration | [§2](#2-pointer-vs-array-declaration) |
-| Wrong relocation symbol | Standalone symbol vs struct field | [§2](#2-pointer-vs-array-declaration) |
-| Folded base register | Array/table access, semantic symbol | [§2](#2-pointer-vs-array-declaration) |
-| `beq` vs `bne` | Invert `if/else` | [§3](#3-control-flow) |
-| Wrong loop topology | `while`, `do`, `for`, guarded infinite loop, `goto` | [§3](#3-control-flow) |
-| Wrong `$v0` return web | Early returns vs result variable | [§3](#3-control-flow) |
-| Register swap or unexpected spill | Temp lifetime, statement order, pointer hoist | [§5](#5-temporaries-and-register-allocation) |
-| Extra `andi` before shift | Verify reconstructed mask is necessary | [§7](#7-signedness) |
-| Unexpected block-copy loop | Structure assignment | [§2](#2-pointer-vs-array-declaration) |
-| Phantom `.rodata` | Local `static const` vs shared `extern` | [§12](#12-shared-read-only-data) |
-| `lb` vs `lbu` | Field type and default `char` signedness | [§7](#7-signedness) |
-| Wrong global/BSS offsets | COMMON, section, alignment, ordering, padding | [§11](#11-commonbss-and-symbol-ordering) |
-| GNU assembler rejects GTE op | Exact `.word` in generated assembly | [§15](#15-gnu-as-instruction-spelling) |
-| Proven incoming `a*` copied to `t*`/`v*` at entry | Preserve a local value's lifetime; after the ladder, one local `REGISTER_PIN` experiment | [§16](#16-register-pinning-ladder) |
-| Same-sized near match with a lone delay-slot difference | Inspect the exact branch/jump and live operands; use clean-C ordering, then an evidenced caller-register clobber | [§17](#17-delay-slots-and-entry-register-copies) |
-| Code size or stack frame differs | Check calls, address-taken locals, aggregate copies, temporary lifetime, and branch topology before allocator aids | [§5](#5-temporaries-and-register-allocation) |
-| No clean C solution after levers | Record the exhausted evidence; do not add inline asm or `INCLUDE_ASM` without explicit approval | [§16](#16-register-pinning-ladder) |
+| `lw` instead of address calculation | Pointer vs array declaration | [Symbol representation](#symbol-representation) |
+| Wrong relocation symbol | Standalone symbol vs struct field | [Symbol representation](#symbol-representation) |
+| Folded base register | Array/table access, semantic symbol | [Symbol representation](#symbol-representation) |
+| `beq` vs `bne` | Invert `if/else` | [Control flow](#control-flow) |
+| Wrong loop topology | `while`, `do`, `for`, guarded infinite loop, `goto` | [Control flow](#control-flow) |
+| Wrong `$v0` return web | Early returns vs result variable | [Control flow](#control-flow) |
+| Register swap or unexpected spill | Temp lifetime, statement order, pointer hoist | [Temporaries and allocation](#temporaries-and-allocation) |
+| Extra `andi` before shift | Verify reconstructed mask is necessary | [Signedness](#signedness) |
+| Unexpected block-copy loop | Structure assignment | [Symbol representation](#symbol-representation) |
+| Phantom `.rodata` | Local `static const` vs shared `extern` | [Shared read-only data](#shared-read-only-data) |
+| `lb` vs `lbu` | Field type and default `char` signedness | [Signedness](#signedness) |
+| Wrong global/BSS offsets | COMMON, section, alignment, ordering, padding | [COMMON, BSS, and symbol order](#common-bss-and-symbol-order) |
+| GNU assembler rejects GTE op | Exact `.word` in generated assembly | [Generated-assembly spelling](#generated-assembly-spelling) |
+| Proven incoming `a*` copied to `t*`/`v*` at entry | Preserve a local value's lifetime; after the ladder, one local `REGISTER_PIN` experiment | [Allocation ladder](#allocation-ladder) |
+| Same-sized near match with a lone delay-slot difference | Inspect the exact branch/jump and live operands; use clean-C ordering, then an evidenced caller-register clobber | [Delay slots and entry copies](#delay-slots-and-entry-copies) |
+| Code size or stack frame differs | Check calls, address-taken locals, aggregate copies, temporary lifetime, and branch topology before allocator aids | [Temporaries and allocation](#temporaries-and-allocation) |
+| No clean C solution after levers | Record the exhausted evidence; do not add inline asm or `INCLUDE_ASM` without explicit approval | [Allocation ladder](#allocation-ladder) |
 
 ---
 
-## 1. Compiler profile verification
+## Compiler profile
 
-Before restructuring C for a stubborn function, verify the compiler profile.
-Different targets — and sometimes different objects within one target — can use
-different compiler versions, optimization levels, `-G` values, and signed-char
-settings.
+Before restructuring C for a stubborn function, verify the compiler profile:
+different targets — sometimes different objects in one target — can differ in
+compiler version, optimization level, `-G` value, signed-char setting.
 
 To test a profile:
 
@@ -53,25 +53,24 @@ Profile levers that affect matching:
 - `--expand-div` (division hardening)
 - COMMON-section behavior (`-fcommon`, `--use-comm-section`)
 
-When `flag-search` proves an original was compiled at a non-canonical profile,
-record it in `config/compiler/object-flags.cmake` so the object actually builds
-with that profile instead of bridging to canonical `-O2` with C aids:
+When `flag-search` proves a non-canonical profile, record it in
+`config/compiler/object-flags.cmake` so the object builds with it instead of
+bridging to canonical `-O2` with C aids:
 
 ```cmake
 set(BOF3_OBJFLAGS_emi_etc_game_01_func_801D0D5C_c -O1)
 ```
 
-The key is the source path relative to `src/` with non-alphanumerics replaced by
-underscores; the value is a `flag-search` candidate that replaces the canonical
-`-O` level (the `-G0 -funsigned-char ...` base is kept). CMake and the
-`compile_commands` generator both read this file, so the build and `flag-search`
-stay in sync. Sources without an entry keep the canonical flags. Only add an
-entry after `flag-search` reports an exact byte-match, then re-confirm with
-`bin/byte-match`.
+Key: source path relative to `src/`, non-alphanumerics as underscores; value:
+a `flag-search` candidate replacing the canonical `-O` level (the
+`-G0 -funsigned-char ...` base is kept). CMake and the `compile_commands`
+generator both read it, so build and `flag-search` stay in sync. Sources without
+an entry keep canonical flags. Add an entry only after `flag-search` reports an
+exact byte-match; re-confirm with `bin/byte-match`.
 
 ---
 
-## 2. Pointer vs array declaration
+## Symbol representation
 
 A declaration change can flip an address calculation into a load.
 
@@ -97,7 +96,7 @@ should be an address calculation, try the alternative declaration form.
 
 ---
 
-## 3. Control flow
+## Control flow
 
 ### Branch direction
 
@@ -155,14 +154,14 @@ of modern taste.
 
 ---
 
-## 4. `MATCHING_AID` comment convention
+## `MATCHING_AID` comments
 
-Every artificial matching aid must be adjacent to the aid and say exactly what
-it controls, the `asm-diff`-observed original/current instruction or register
-placement, the ladder rung already exhausted, and what future evidence would
-remove it. Retained `CLOBBER_*` and `REGISTER_PIN` aids must additionally say
-that the immediately following live `bin/byte-match` was exact. Do not retain
-an aid on a percentage improvement.
+Every artificial matching aid is adjacent to the aid and says: what it
+controls, the `asm-diff`-observed original/current instruction or register
+placement, the exhausted ladder rung, and what future evidence removes it.
+Retained `CLOBBER_*`/`REGISTER_PIN` aids must also say the immediately following
+live `bin/byte-match` was exact. Never retain an aid on a percentage
+improvement.
 
 ```c
 /*
@@ -188,13 +187,13 @@ if (count == 2) {
 slots = *slotTable;
 ```
 
-Do not mark obvious workarounds (e.g., `barrier()` already has its own
-convention in agents/lessons.md). Reserve `MATCHING_AID` for shape decisions that
-are opaque to a reader without the matching diff.
+Do not mark obvious workarounds (`barrier()` has its own
+[lesson](lessons.md)). Reserve `MATCHING_AID` for shape decisions opaque to a
+reader without the matching diff.
 
 ---
 
-## 5. Temporaries and register allocation
+## Temporaries and allocation
 
 ### Pointer hoist
 
@@ -256,11 +255,11 @@ Compare the induction-variable structure in the original assembly.
 
 ---
 
-## 6. Preserve unused or partially optimized code
+## Surviving dead code
 
-Original source sometimes contains calculations whose results are unused in the
-final behavior but survive partial optimization. Removing them changes
-register lifetimes and instruction streams.
+Original source sometimes keeps calculations whose results are unused but
+survive partial optimization; removing them changes register lifetimes and the
+instruction stream.
 
 ```c
 /*
@@ -283,7 +282,7 @@ Do not remove such code because a static analyzer calls it useless.
 
 ---
 
-## 7. Signedness
+## Signedness
 
 The default `char` signedness is set by the compiler profile. Mismatches
 produce `lb` vs `lbu`, wrong sign-extension, and different constant folding.
@@ -303,7 +302,7 @@ reconstructed field has a wider unsigned type than the original.
 
 ---
 
-## 8. Boolean spelling
+## Boolean spelling
 
 These may compile differently, especially with narrow types:
 
@@ -319,7 +318,7 @@ Treat boolean spelling as a matching lever, not just a style choice.
 
 ---
 
-## 9. Type punning
+## Representation views
 
 An explicit representation view can be more accurate than bitwise operators:
 
@@ -335,10 +334,10 @@ Use these locally. Do not create a generic punning framework.
 
 ---
 
-## 10. Padding and alignment
+## Padding and alignment
 
-Padding can affect field offsets, BSS order, `$gp` reachability, section size,
-and following symbol placement.
+Padding affects field offsets, BSS order, `$gp` reachability, section size,
+following symbol placement.
 
 ```c
 typedef struct Context {
@@ -356,11 +355,10 @@ translation unit rather than a universal padding macro.
 
 ---
 
-## 11. COMMON/BSS and symbol ordering
+## COMMON, BSS, and symbol order
 
-The compiler's COMMON section and MASPSX handling of uninitialized globals can
-produce different variable ordering. The linker may reorder COMMON symbols by
-name.
+COMMON-section and MASPSX handling of uninitialized globals can reorder
+variables; the linker may reorder COMMON symbols by name.
 
 Typical symptoms:
 
@@ -383,7 +381,7 @@ needed via the linker script or Splat layout.
 
 ---
 
-## 12. Shared read-only data
+## Shared read-only data
 
 ```c
 /* Creates local .rodata — wrong if the original references a shared string */
@@ -394,16 +392,15 @@ extern const char D_80051234[];
 ```
 
 Making shared read-only data local creates phantom `.rodata` and changes the
-object. This is especially important for format strings, lookup tables, jump
-tables, animation tables, shared vectors, and SDK constants.
+object — critical for format strings, lookup/jump/animation tables, shared
+vectors, SDK constants.
 
 ---
 
-## 13. Jump tables
+## Jump tables
 
 When Splat separates code and `.rodata`, jump-table entries may reference
-labels inside a function object. Symptoms include functions that look
-structurally wrong in m2c.
+labels inside a function object; functions can look structurally wrong in m2c.
 
 Solutions:
 
@@ -421,12 +418,12 @@ Solutions:
 /* function */
 ```
 
-A function may look structurally wrong in m2c simply because its jump table
-was omitted from the analysis context.
+A function can look wrong in m2c simply because its jump table was omitted
+from the analysis context.
 
 ---
 
-## 14. Analysis context
+## Analysis context
 
 m2c context should contain:
 
@@ -444,32 +441,30 @@ See `bin/m2ctx` for the context generation command.
 
 ---
 
-## 15. GNU `as` instruction spelling
+## Generated-assembly spelling
 
-GNU `as` does not accept some GTE compute mnemonics emitted by disassembly
-pipelines. Use exact `.word` encodings in generated assembly rather than
-relying on the assembler to accept a non-standard mnemonic:
+GNU `as` rejects some GTE compute mnemonics from disassembly pipelines. Use
+exact `.word` encodings in generated assembly:
 
 ```asm
 .word 0xXXXXXX
 ```
 
-This is safer than depending on the assembler to encode the correct function
-field, reorder, or interpret aliases. Use `.word` only in generated assembly
-or low-level SDK code — not as a normal C matching technique.
+Use `.word` only in generated assembly or low-level SDK code, never as a C
+matching technique.
 
 ---
 
-## 16. Register allocation ladder
+## Allocation ladder
 
-Direct MIPS register pinning (`register type name asm("$N")`) and `INCLUDE_ASM`
-are **banned unless the user explicitly approves them** for a specific function.
-After this ladder is exhausted, the shared `REGISTER_PIN(type, name, reg)` macro
-may be tried once as a bounded local experiment for an asm-diff-proven allocator
-or entry-register residual. A bare numeric spelling still needs proof that the macro form alters
-codegen and explicit user approval. Retention also requires independent review.
-Pins change the register web globally and
-can mask the real cause. Escalate through this ladder first:
+Direct MIPS register pinning (`register type name asm("$N")`) and
+`INCLUDE_ASM` are **banned unless the user explicitly approves them** for a
+specific function. After this ladder, the shared `REGISTER_PIN(type, name,
+reg)` macro may be tried once as a bounded local experiment for an
+asm-diff-proven allocator or entry-register residual. A bare numeric spelling
+still needs proof the macro form alters codegen plus explicit user approval;
+retention also requires independent review. Pins change the register web
+globally and mask real causes. Ladder:
 
 1. Correct types and declarations
 2. Correct control-flow structure
@@ -487,20 +482,19 @@ can mask the real cause. Escalate through this ladder first:
     bounded local `REGISTER_PIN` experiment; otherwise report the residual.
     `INCLUDE_ASM` still requires user approval.
 
-A pinned local may remain live across the whole function and displace unrelated
-variables — pinning one register can create several new mismatches elsewhere.
-Each retained `REGISTER_PIN` needs an adjacent `MATCHING_AID` rationale,
-independent review, and a live exact byte match.
+A pinned local can stay live across the whole function and displace unrelated
+variables — one pin can create new mismatches elsewhere. Each retained
+`REGISTER_PIN` needs an adjacent `MATCHING_AID` rationale, independent review,
+and a live exact byte match.
 
 ---
 
-## 17. Delay slots and entry-register copies
+## Delay slots and entry copies
 
-Classify the **first** live diff before changing source. A raw percentage does
-not identify a cause. The categories in
-ignored `out/non-exact-lifts.json` audit is disposable priority state;
-re-run the target's `asm-diff` and use the table below as the durable choice of
-first lever.
+Classify the **first** live diff before changing source; a raw percentage
+identifies no cause. The ignored `out/non-exact-lifts.json` audit is disposable
+priority state — re-run the target's `asm-diff` and use the table below as the
+durable choice of first lever.
 
 | Observed first-diff shape | Diagnose first | First clean-C levers | Escalation boundary |
 | --- | --- | --- | --- |
@@ -509,18 +503,17 @@ first lever.
 | Frame/size differs at or before the first call | Exact prologue/epilogue, calls made, address-taken locals, aggregate assignment, and values live across calls | Correct prototypes and widths; remove accidental address-taking; split/collapse aggregate copies; choose early return/loop shape; shorten/extend a temporary lifetime | A pin never substitutes for an unmatched frame or changed control-flow shape |
 | Same size; relocated address, `lui`/`addiu`, or load order differs | Symbol owner/declaration form, field offset, pointer-cell volatility, and whether a pointer is cached or reloaded | Pointer versus array; standalone symbol versus field; `PSX_REF`/`SPAD_PTR_SLOT` qualifiers; hoist or unhoist one dereference | `CLOBBER_*` only after the precise caller-clobbered reload ordering is proven |
 
-For a partial lift, keep a short residual note in the function only when it is
-specific and durable: command/target, first differing instruction(s), attempts
-that changed no result, and the next untried rung. Do not fill sources with
-speculative TODOs. At a rung's third non-progressing diagnosed attempt, restore
-the best clean-C state and move to the next rung; once the ladder is exhausted,
-report that evidence rather than looping.
+Partial lift: keep a residual note only when specific and durable —
+command/target, first differing instruction(s), no-progress attempts, next
+untried rung. No speculative TODOs. Third non-progressing diagnosed attempt at
+a rung: restore best clean-C state, move on. Ladder exhausted: report that
+evidence rather than looping.
 
-## 18. `INCLUDE_ASM` fallback
+## Approved `INCLUDE_ASM` fallback
 
-Use `INCLUDE_ASM` only after explicit user approval for that function. Without
-approval, leave its reviewed Splat segment as `asm` and report the clean-C
-residual rather than adding an assembly-backed source stub. An approved clean
+Use `INCLUDE_ASM` only after explicit user approval for that function.
+Without approval, leave its reviewed Splat segment as `asm` and report the
+clean-C residual; never add an assembly-backed source stub. An approved clean
 unmatched function allows:
 
 - Incremental reconstruction
@@ -529,24 +522,23 @@ unmatched function allows:
 - Avoiding low-quality fake matches
 - Keeping hard hand-written assembly intact
 
-See [matching workflow](matching.md) for iteration procedure.
+See the [function-matching loop](matching.md) for the required iteration procedure.
 
 ---
 
-## 19. Permuter gotchas
+## Permuter
 
 Use `bin/permute TARGET@0xADDRESS --time-limit 300 -j N` for source-shape
-search. Key lessons from practice:
+search. Lessons:
 
-- Fix structure and declarations before running the permuter.
-- A lower-percentage but structurally clean source is often a better seed than
-  a heavily pinned near-match.
+- Fix structure and declarations before running it.
+- A lower-percentage structurally clean source is often a better seed than a
+  heavily pinned near-match.
 - Register pins constrain the search space.
-- The permuter is good at scheduling and some allocation changes, but cannot
-  reliably repair the wrong fundamental control-flow shape.
-- Pointer-hoist mutations can unlock otherwise inaccessible register
-  allocations.
-- Matching aids found by the permuter should be marked with `MATCHING_AID`.
+- It handles scheduling and some allocation changes, but cannot repair a wrong
+  fundamental control-flow shape.
+- Pointer-hoist mutations can unlock otherwise inaccessible allocations.
+- Mark permuter-found aids with `MATCHING_AID`.
 
 Recommended workflow:
 
@@ -567,14 +559,13 @@ See `third_party/decomp-permuter/` for upstream documentation.
 
 ---
 
-## 20. Historical GCC variant catalog
+## Historical GCC catalog
 
 The framework (`config/compiler/variants.json`, `bin/compiler-variants`)
-manages historical GCC compiler candidates. Four provenance-pinned candidates
-exist — `gcc-2.6.3-psx`, `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, and
-`gcc-2.95.2-psx` (SHA-256-verified) — but no object selects any: bounded
-probes were non-exact and none is claimed to match. Research and the negative
-records are documented in `docs/specs/runtime/compiler-variants.md`.
+manages historical GCC candidates. Four provenance-pinned candidates exist —
+`gcc-2.6.3-psx`, `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, `gcc-2.95.2-psx`
+(SHA-256-verified) — but no object selects any: bounded probes were non-exact.
+Research and negative records: `docs/specs/runtime/compiler-variants.md`.
 
 When adding a candidate:
 

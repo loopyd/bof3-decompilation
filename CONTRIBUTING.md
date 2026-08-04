@@ -12,7 +12,7 @@ Thanks for helping improve this reverse-engineering project.
 - Do not add inline assembly or register pinning without maintainer approval.
 
 Read [AGENTS.md](AGENTS.md), [Tool usage](docs/usage.md), and
-[Matching](docs/matching.md) before proposing a lift.
+[Function matching](docs/agents/matching.md) before proposing a lift.
 
 ## Pull requests
 

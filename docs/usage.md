@@ -130,7 +130,8 @@ bin/rev-query status
 brief (metrics, callers/callees, duplicate group, SDK callees, and risk flags) —
 the input to the autonomous lift loop. To lift a batch unattended, run
 `/skill:bof3-lift-loop` (see `.pi/skills/bof3-lift-loop/README.md`); it
-gates each exact match through a reviewer and commits only reviewed lifts.
+gates each exact match through a reviewer and commits only reviewed exact
+lifts after explicit user commit authorization.
 
 Addresses are target-qualified where identity matters; overlapping addresses
 in different images never share query results.
@@ -193,7 +194,7 @@ before the build selects it.
 ### 6. Promote duplicate knowledge
 
 Follow the evidence gate and ownership model in
-[matching: Reuse exact duplicate groups](matching.md#reuse-exact-duplicate-groups).
+[function matching: Exact duplicate groups](agents/matching.md#exact-duplicate-groups).
 It is the normative duplicate-promotion procedure; every wrapper remains
 address-owned and independently validated.
 
@@ -252,5 +253,6 @@ used for acceptance: immediately before accepting a lift, run live
 `maspsx` are build adapters. Workflow users should call `bin/build` and the
 matching commands instead of invoking these adapters directly.
 
-See [matching](matching.md) for C iteration rules, [tool usage](usage.md)
-for analyzer contracts, and [context](agents/project-context.md) for ownership.
+See [function matching](agents/matching.md) for C iteration rules,
+[tool usage](usage.md) for analyzer contracts, and
+[project context](agents/project-context.md) for ownership.

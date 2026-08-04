@@ -28,9 +28,9 @@ proposal through the repository's issue forms.
 | Task | Reference |
 | --- | --- |
 | Follow the complete ordered tool workflow | [Tool usage](docs/usage.md) |
-| Lift and match one function | [Matching](docs/matching.md) |
-| Resolve asm-diff symptoms | [Matching playbook](docs/matching-playbook.md) |
-| Memory macros and qualifiers | [Memory API](docs/memory-api.md) |
+| Lift and match one function | [Function matching](docs/agents/matching.md) |
+| Resolve asm-diff symptoms | [Matching playbook](docs/agents/matching-playbook.md) |
+| Memory macros and qualifiers | [Memory API](docs/agents/memory-api.md) |
 | Understand target identity and ownership | [Context](docs/agents/project-context.md) |
 | Read reviewed format/runtime/data findings | [Specs](docs/specs/) |
 | Avoid known reverse-engineering mistakes | [Lessons](docs/agents/lessons.md) |
