@@ -32,6 +32,7 @@ extern s16          WORLD00_AREA016_GLOBAL_HALF_930A;
 extern s16          WORLD00_AREA016_GLOBAL_HALF_930E;
 extern volatile u8  WORLD00_AREA016_STREAM_HINT;
 extern volatile u16 WORLD00_AREA016_BOOT_HALF_0008;
+extern World00Area016Handler WORLD00_AREA016_D_801F511C[];
 extern World00Area016Handler WORLD00_AREA016_D_801F512C[];
 
 void func_8014E5A0(u8 arg0, u8 arg1);
@@ -51,8 +52,6 @@ void func_801F40C4(s16 arg0, s16 arg1);
 #define WORLD00_AREA016_SCRATCH_PTR                                            \
   PSX_REF(volatile World00Area016Scratch*, 0x1f800044u)
 #define WORLD00_AREA016_PRIMITIVE_PTR PSX_REF(volatile u8*, 0x8014598cu)
-#define WORLD00_AREA016_STATE_TABLE                                            \
-  PSX_PTR(const volatile World00Area016Handler, 0x801f511cu)
 #define WORLD00_AREA016_SPRT_TABLE PSX_PTR(const volatile u8, 0x801f513cu)
 #define WORLD00_AREA016_MARKER_TABLE                                           \
   PSX_PTR(const volatile World00Area016MarkerEntry, 0x801f5194u)
