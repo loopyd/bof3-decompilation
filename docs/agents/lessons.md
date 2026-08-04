@@ -106,6 +106,16 @@ misdiagnose across targets. Matching/permuter procedures:
   Addresses, masks, encoded values stay hexadecimal; human quantities (32-pixel
   step, 320-pixel clamp) decimal.
 
+### Bind a reused fixed-RAM word as an extern symbol when the macro CSEs into a callee-saved register
+
+- A `PSX_REF`-style fixed-address macro materializes the address as a
+  constant; when the value is used twice (call argument, then cached
+  pointer), GCC can CSE the constant into a callee-saved register and steal
+  an argument's prologue entry-copy register. Binding the word as a plain
+  `extern` symbol resolved through the composed maps emits `lui`/`lw`
+  relocations instead and frees the allocator. Prefer the extern form when
+  the macro form shows this exact entry-copy theft in `asm-diff`.
+
 ### Share duplicate behavior, not target ownership
 
 - Exact bytes make a strong source-shape reuse candidate; they do not make
