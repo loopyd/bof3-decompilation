@@ -19,7 +19,7 @@ typedef struct World00Area008State {
 
 typedef void (*World00Area008Handler)(void);
 
-extern volatile u8  WORLD00_AREA008_D_80146867;
+extern u8           WORLD00_AREA008_D_80146867;
 extern s32          D_80146C4C;
 extern volatile u16 D_80149328;
 extern volatile u8  D_80149333;
