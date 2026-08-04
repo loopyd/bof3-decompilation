@@ -146,6 +146,10 @@ hoisting, table indexing: [matching playbook](matching-playbook.md) and
 
 ## Target ownership and symbols
 
+- Check the shared SDK maps (`config/sdk/psyq-*.txt`) before adding a symbol
+  to a target-local map: Splat composes both files, and a name defined in
+  both aborts `bin/splat` with "Duplicate symbol detected". Keep the entry in
+  exactly one map.
 - PsyQ code can be linked more than once at different addresses across
   executables and EMI payloads; an address verified in `SLUS_004.22` is not a
   contract for another binary.

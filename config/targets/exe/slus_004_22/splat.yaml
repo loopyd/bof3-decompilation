@@ -254,7 +254,7 @@ segments:
     start: 0xe8a7c
     vram: 0x8017f27c
     subsegments:
-      - [0xe8a7c, asm, func_8017F27C]
+      - [0xe8a7c, c, func_8017F27C]
   - [0xe8ab4, bin, post_emi_gap_0xe8ab4]
   - name: cluster_24
     type: code
