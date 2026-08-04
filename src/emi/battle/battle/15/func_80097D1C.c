@@ -5,12 +5,5 @@
  * @source 0x80097D1C
  */
 void func_80097D1C(void) {
-  volatile u8*                           substate_base;
-  u32                                    substate;
-  BattleSelectionHandler const volatile* table;
-
-  substate_base = BATTLE_GAME_RAM_BASE;
-  substate = substate_base[0x62e4];
-  table = BATTLE_SELECTION_TABLE_BASE;
-  table[substate + 0x1102]();
+  D_800B4408[D_801462E4]();
 }
