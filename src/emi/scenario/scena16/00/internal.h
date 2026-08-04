@@ -56,6 +56,7 @@ extern volatile u32 SCENA16_D_80145EC8;
 extern volatile u32 SCENA16_D_80149308;
 extern Scena16Callback SCENA16_D_801F854C[];
 extern Scena16Callback SCENA16_D_801F8558[];
+extern Scena16RecordCallback SCENA16_D_801F856C[];
 
 void game_stop_selection_fx(u32 effect_group, s32 effect_id);
 void game_queue_frontend_cue(u32 cue_id);
@@ -103,7 +104,6 @@ void func_801F8530(void);
 #define SCENA16_SELECTION_FX_TABLE PSX_PTR(const volatile u8, 0x80181ebau)
 #define SCENA16_PALETTE_SRC        PSX_PTR(const volatile u16, 0x80033800u)
 #define SCENA16_PALETTE_DST        PSX_PTR(volatile u16, 0x80037800u)
-#define SCENA16_PTR_801F856C       ((Scena16RecordCallback*)0x801f856cu)
 #define SCENA16_VRAM_BASE          (0x80010000u)
 
 #endif

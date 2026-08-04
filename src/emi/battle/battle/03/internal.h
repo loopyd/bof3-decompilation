@@ -134,6 +134,8 @@ extern u8                           D_801462F3;
 extern u8                           D_80146384;
 extern u8                           D_801462F4;
 extern Battle03LocalWork           *D_1F800044;
+extern Battle03Handler              D_801EB210[];
+extern Battle03Handler              D_801EB27C[];
 extern Battle03Handler              D_801EB258[];
 extern u16                          D_801EB09C[];
 extern Battle03Handler              D_801EB46C[];
@@ -779,8 +781,6 @@ u8   func_801EAB6C(u8* arg0);
 
 /* Scratchpad pointer cell at 0x1F800044, read as several cell types. */
 #define BATTLE_SCRATCH_CELL_U8PTR PSX_REF(volatile u8*, 0x1f800044u)
-#define BATTLE_SCRATCH_CELL_WORKPTR                                            \
-  PSX_REF(volatile Battle03LocalWork*, 0x1f800044u)
 #define BATTLE_SCRATCH_CELL_WORD PSX_REF(volatile u32, 0x1f800044u)
 
 /* Local-work-array (0x80145e90, stride 0x140) absolute-field accessors. */
@@ -839,16 +839,12 @@ u8   func_801EAB6C(u8* arg0);
 #define BATTLE_UI_RING_HEAD PSX_REF(volatile u8, 0x801ec328u)
 
 /* Local-state dispatch tables reached as (0x801f0000 - offset) + index*4. */
-#define BATTLE_DISPATCH_STATE4(index)                                          \
-  PSX_PTR(const volatile Battle03Handler, 0x801eb110u + ((u32)(index) * 4u))
 #define BATTLE_DISPATCH_STATE2_CLASS(index)                                    \
   PSX_PTR(const volatile Battle03Handler, 0x801eb124u + ((u32)(index) * 4u))
 #define BATTLE_DISPATCH_STATE2_EVENT(index)                                    \
   PSX_PTR(const volatile Battle03Handler, 0x801eb16cu + ((u32)(index) * 4u))
 #define BATTLE_DISPATCH_STATE2_FOLLOWUP(index)                                 \
   PSX_PTR(const volatile Battle03Handler, 0x801eb174u + ((u32)(index) * 4u))
-#define BATTLE_DISPATCH_DEFAULT_CLASS(index)                                   \
-  PSX_PTR(const volatile Battle03Handler, 0x801eb17cu + ((u32)(index) * 4u))
 #define BATTLE_DISPATCH_PRESENTATION_BYTE3(index)                              \
   PSX_PTR(const volatile Battle03Handler, 0x801eb24cu + ((u32)(index) * 4u))
 #define BATTLE_DISPATCH_QUEUED_RESULT(index)                                   \

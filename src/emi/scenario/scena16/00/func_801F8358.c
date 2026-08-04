@@ -4,12 +4,16 @@
  * @source 0x801F8358
  */
 void func_801F8358(void* record) {
-  Scena16RecordCallback* table;
-  u8                     callback_index;
-  u32                    arg1;
+  Scena16RecordCallback callback;
 
-  table = SCENA16_PTR_801F856C;
-  callback_index = ((const u8*)record)[0x7a];
-  arg1 = PSX_PTR(volatile u32, 0x80140000u)[0x686c / 4];
-  table[callback_index](record, arg1);
+  /*
+   * MATCHING_AID:
+   * Original emits the prologue (addiu $sp / sw $ra) before the record and
+   * D_8014686C loads; current schedules both loads above the prologue. This
+   * barrier keeps the loads after the frame setup. Remove when the original
+   * scheduling constraint is understood.
+   */
+  barrier();
+  callback = SCENA16_D_801F856C[((const u8*)record)[0x7a]];
+  callback(record, SCENA16_D_8014686C);
 }
