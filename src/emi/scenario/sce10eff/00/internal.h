@@ -2,6 +2,7 @@
 #define EMI_SCE10EFF_00_INTERNAL_H
 
 #include "bof3/context.h"
+#include "memory/scratchpad.h"
 
 typedef struct ScenarioSce10effScratch {
   u8  pad_00[0x08];

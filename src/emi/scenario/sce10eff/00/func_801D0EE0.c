@@ -10,13 +10,12 @@ void func_801D0EE0(void) {
   ScenarioSce10effScratch* scratch;
   s16                      rotation[3];
   s16                      translation[3];
-  u32                      object_work[5];
-  u32                      matrix[3];
-  u32                      vector[2];
+  MATRIX                     object_work;
+  long                       flag;
 
   PushMatrix();
 
-  scratch = *(ScenarioSce10effScratch* volatile*)0x1f800044;
+  scratch = SPAD_PTR_SLOT(ScenarioSce10effScratch, 0x44u);
 
   translation[0] = 0;
   translation[1] = 0;
@@ -28,13 +27,11 @@ void func_801D0EE0(void) {
   rotation[0] = (s16)(scratch->unk_34 >> 9) - 0x4000;
   rotation[1] = (s16)(scratch->unk_38 >> 9) - 0x4000;
 
-  rotation[2] =
-      (s16)((-(s32)scratch->unk_3e + ((u32)(-(s32)scratch->unk_3e) >> 31)) >>
-            1);
+  rotation[2] = (s16)(-(s32)scratch->unk_3e / 2);
 
-  RotTrans((SVECTOR*)rotation, (VECTOR*)matrix, (long*)vector);
-  RotMatrix((SVECTOR*)translation, (MATRIX*)object_work);
-  MulMatrix2((MATRIX*)D_801492E8, (MATRIX*)object_work);
-  SetRotMatrix((MATRIX*)object_work);
-  SetTransMatrix((MATRIX*)object_work);
+  RotTrans((SVECTOR*)rotation, (VECTOR*)object_work.t, &flag);
+  RotMatrix((SVECTOR*)translation, (MATRIX*)&object_work);
+  MulMatrix2((MATRIX*)D_801492E8, (MATRIX*)&object_work);
+  SetRotMatrix((MATRIX*)&object_work);
+  SetTransMatrix((MATRIX*)&object_work);
 }
