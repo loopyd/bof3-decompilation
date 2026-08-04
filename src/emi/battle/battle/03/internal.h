@@ -57,7 +57,9 @@ typedef struct Battle03LocalWork {
   u16 unk_80;
   u8  pad_82[0x97];
   u8  unk_119;
-  u8  pad_11a[9];
+  u8  pad_11a[7];
+  u8  unk_121;
+  u8  pad_122;
   u8  unk_123;
   u32 unk_124;
   u8  pad_128[0xc];
@@ -628,7 +630,6 @@ u8   func_801EAB6C(u8* arg0);
 #define BATTLE_LOCAL_BYTE_9E(work)  PSX_REF(volatile u8, (u32)(work) + 0x9eu)
 #define BATTLE_LOCAL_BYTE_A6(work)  PSX_REF(volatile u8, (u32)(work) + 0xa6u)
 #define BATTLE_LOCAL_BYTE_A9(work)  PSX_REF(volatile u8, (u32)(work) + 0xa9u)
-#define BATTLE_LOCAL_BYTE_21(work)  PSX_REF(volatile u8, (u32)(work) + 0x21u)
 #define BATTLE_LOCAL_HALF_1C(work)  PSX_REF(volatile u16, (u32)(work) + 0x1cu)
 #define BATTLE_LOCAL_HALF_1E(work)  PSX_REF(volatile u16, (u32)(work) + 0x1eu)
 #define BATTLE_LOCAL_BYTE_136(work) PSX_REF(volatile u8, (u32)(work) + 0x136u)

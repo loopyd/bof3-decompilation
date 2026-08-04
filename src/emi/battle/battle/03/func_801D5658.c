@@ -13,18 +13,16 @@ u8 func_801D5658(void) {
   last_index = 0u;
   index = 0u;
   do {
-    volatile Battle03LocalWork* battle_work;
-
-    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
-    if ((func_801D64C4(index) == 0u) &&
-        ((BATTLE_LOCAL_FLAGS_80(battle_work) & 0x40u) != 0u)) {
-      if (func_801DDCB4(index) == 0u) {
-        BATTLE_LOCAL_BYTE_21(battle_work) += 1u;
-      } else {
-        BATTLE_LOCAL_BYTE_21(battle_work) = 0u;
-        BATTLE_LOCAL_FLAGS_80(battle_work) &= 0xffbfu;
-        count += 1u;
-        last_index = index;
+    if (func_801D64C4(index) == 0u) {
+      if ((D_80145E90[index].unk_80 & 0x40u) != 0u) {
+        if (func_801DDCB4(index) != 0u) {
+          last_index = index;
+          D_80145E90[index].unk_121 = 0u;
+          D_80145E90[index].unk_80 &= 0xffbfu;
+          count += 1u;
+        } else {
+          D_80145E90[index].unk_121 += 1u;
+        }
       }
     }
     index += 1u;
