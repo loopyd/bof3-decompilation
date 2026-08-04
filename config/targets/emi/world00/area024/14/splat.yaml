@@ -1,6 +1,7 @@
 name: world00_area024_14
 sha1: 499bf9c285ef340ddfa63c8699997020d92cd829
 options:
+  create_c_files: false
   platform: psx
   compiler: psyq
   basename: world00_area024_14

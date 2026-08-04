@@ -1,6 +1,7 @@
 name: etc_commu00_00
 sha1: 9194f952f747f67935b44048690ee954d50f4daa
 options:
+  create_c_files: false
   platform: psx
   compiler: psyq
   basename: etc_commu00_00

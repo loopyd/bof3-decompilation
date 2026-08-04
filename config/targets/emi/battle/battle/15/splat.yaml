@@ -1,6 +1,7 @@
 name: battle_battle_15
 sha1: 57a0526249697fe71692cf73d7abcf17f2396f14
 options:
+  create_c_files: false
   platform: psx
   compiler: psyq
   basename: battle_battle_15
