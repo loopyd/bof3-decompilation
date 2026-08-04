@@ -16,6 +16,7 @@ void func_80162500(void) {
   u8*           tag;
   s32           tag_count;
   s32           tag_index;
+  s32           prev_count;
   u32*          entry;
   u32*          offsets;
   u32*          sector_offsets;
@@ -41,8 +42,19 @@ void func_80162500(void) {
       loader_state[-0x14] = 1;
       return;
     }
+    /*
+     * MATCHING_AID:
+     * The explicit prev_count copy reproduces the original's `move $v0,$a0`
+     * in the tag-compare beq delay slot and the `addiu $a0,-1; bnez $v0;
+     * addiu $a1,-1` tail order (asm-diff first=+0x005c before this aid).
+     * Writing `tag_index--; } while (tag_count-- != 0);` lets GCC swap the
+     * two independent decrements around the bnez. Remove if the scheduler
+     * behavior is reproduced without the temp.
+     */
+    prev_count = tag_count;
+    tag_count--;
     tag_index--;
-  } while (tag_count-- != 0);
+  } while (prev_count != 0);
 
   sector_offsets = &D_80146678;
   next_offset = sector_offsets[0] + 1;
