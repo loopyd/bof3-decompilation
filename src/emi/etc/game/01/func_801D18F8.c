@@ -11,33 +11,43 @@ typedef struct GameFrontBannerState {
  * visible panel with its current alpha.
  * @source 0x801D18F8
  *
- * RESIDUAL (pin-free, 109/131 insn = 83.21% at canonical -O2): control flow,
- * calls, loads/stores, and relocations all match; the remaining diff is purely
- * IRA register allocation that the sanctioned levers cannot reverse:
- *   1. cc1 assigns the two loop induction variables in the opposite order to the
- *      original (marker -> s1, i -> s2; original i -> s1, marker -> s2). marker
- *      carries the higher allocation priority (its `& 0x3ff` uses sit in the
- *      inner delay slots), so init-order, live-range shaping, and deriving marker
- *      as a strength-reduced GIV of i all leave the swap in place.
- *   2. cc1 hoists the loop-invariant clamp constant 128 into a 7th saved register
- *      (s5) and displaces the `1` compare constant to s6, instead of rematerial-
- *      izing 128 in the branch delay slots and saving only s0-s5 as the original
- *      does. Block-scoping the constant and the CSE-limiting catalog profiles do
- *      not stop the hoist.
- * `bin/flag-search` over all 52 catalog profiles peaks at 83.21% (-O2); -O1 keeps
- * both allocation choices and adds further structural drift (58.87%). barrier()/
- * CLOBBER_* govern delay-slot scheduling, not register allocation, so they do not
- * apply. Reaching 100% requires a register pin (banned) for i/marker/1/128.
+ * Exact byte match (130/130 insn, bin/byte-match MATCH) at canonical -O2.
+ * The pin-free lift stalls at 109/131 insn (83.21%): control flow, calls,
+ * loads/stores, and relocations all match; the diff is purely IRA register
+ * allocation that the sanctioned clean-C levers cannot reverse (see the
+ * MATCHING_AID notes below). `bin/flag-search` over all 52 catalog profiles
+ * peaks at 83.21% (-O2); -O1 keeps both allocation choices and adds further
+ * structural drift (58.87%). barrier()/CLOBBER_* govern delay-slot
+ * scheduling, not register allocation, so they do not apply.
  */
 void func_801D18F8(void) {
   volatile GameFrontBannerState* state;
   volatile u16*                  alpha;
   volatile u8*                   phase_addr;
-  s32                            i;
+  /* MATCHING_AID: REGISTER_PIN on the two loop induction variables.
+   * Original allocator residual: cc1 swaps i and marker (i -> s2, marker ->
+   * s1; original i -> s1, marker -> s2) because marker's `& 0x3ff` uses sit
+   * in inner delay slots, giving it the higher allocation priority. Current
+   * allocator residual: identical swap at 83.21%. Exhausted rungs: clean-C
+   * lifetime/init-order shaping, strength-reduced GIV derivation of marker,
+   * expression order, and all 52 supported catalog profiles (peak 83.21%
+   * at -O2; -O1 drifts structurally to 58.87%). Exact check: live
+   * bin/asm-diff + bin/byte-match on emi/etc/game/01@0x801D18F8.
+   * Removal condition: reattempt clean C whenever the compiler or flags
+   * change. */
+  REGISTER_PIN(s32, i, "s1");
+  REGISTER_PIN(s32, marker, "s2");
+  /* MATCHING_AID: same residual family as above: the original
+   * rematerializes the 128 clamp / 2 phase constants in v0 at each store
+   * site (li v0,128 / li v0,2 in branch delay slots); cc1 instead hoists
+   * them into extra saved registers (s5/s6/s7), growing the frame. Pinning
+   * the transient store temp to v0 restores the original shape. Removal
+   * condition: same as above. */
+  REGISTER_PIN(s32, v, "v0");
   s32                            x;
-  s32                            marker;
   s32                            flags;
   s32                            a;
+  s32                            one;
   s32                            sc;
   u8                             phase;
   u8*                            primitive;
@@ -54,6 +64,7 @@ void func_801D18F8(void) {
     return;
   }
   state = (volatile GameFrontBannerState*)(phase_addr - 15);
+  one = 1;
   alpha = (volatile u16*)(phase_addr - 13);
   marker = 320;
 
@@ -69,12 +80,14 @@ void func_801D18F8(void) {
     /* Read the dispatch phase through a non-volatile view so cc1 does not emit
      * an andi 0xff zero-extension before the == 1 / == 3 compares. */
     phase = *(u8*)&state->phase;
-    if (phase == 1) {
+    if (phase == one) {
       a = state->alpha + 1;
       state->alpha = a;
       if ((s16)a >= 128) {
-        state->alpha = 128;
-        *(u8*)&state->phase = 2;
+        v = 128;
+        state->alpha = v;
+        v = 2;
+        *(u8*)&state->phase = v;
       }
     } else if (phase == 3) {
       a = state->alpha - 1;
@@ -84,14 +97,15 @@ void func_801D18F8(void) {
         *(u8*)&state->phase = 0;
       }
     } else {
-      state->alpha = 128;
+      v = 128;
+      state->alpha = v;
     }
 
     if (GAME_FRONT_FADE_PHASE == 0) {
       continue;
     }
 
-    flags = GetGraphType() == 1   ? ((marker & 0x3ff) >> 6) | 0x200
+    flags = GetGraphType() == one   ? ((marker & 0x3ff) >> 6) | 0x200
             : GetGraphType() == 2 ? ((marker & 0x3ff) >> 6) | 0x200
                                   : ((marker & 0x3ff) >> 6) | 0x80;
     SetDrawMode((DR_MODE*)D_8014598C, 0, 0, flags, 0);
