@@ -5,27 +5,23 @@
  * @source 0x801DD14C
  */
 void func_801DD14C(u8 arg0) {
+  u8 arg_copy;
   u8 index;
 
-  if (arg0 < 3u) {
-    volatile Battle03LocalWork* battle_work;
-
-    battle_work = &BATTLE_LOCAL_WORK_ARRAY[arg0];
-    BATTLE_LOCAL_BYTE_119(battle_work) = 0u;
-    BATTLE_LOCAL_WORD_124(battle_work) &= 0xfffffffdu;
-    BATTLE_LOCAL_WORD_128(battle_work) &= 0xfffffffbu;
+  arg_copy = arg0;
+  if (arg_copy < 3u) {
+    D_80145E90[arg_copy].unk_119 = 0u;
+    D_80145E90[arg_copy].unk_124 &= 0xfffffffdu;
+    D_80145E90[arg_copy].unk_128 &= 0xfffffffbu;
   } else {
-    volatile Battle03EnemyWork* battle_work;
-
-    battle_work = &BATTLE_ENEMY_WORK_ARRAY[(arg0 - 3u) & 0xffu];
-    BATTLE_ENEMY_BYTE_F5(battle_work) = 0u;
-    BATTLE_ENEMY_WORD_100(battle_work) &= 0xfffffffdu;
+    D_801EB630[arg_copy - 3u].unk_f5 = 0u;
+    D_801EB630[arg_copy - 3u].unk_100 &= 0xfffffffdu;
   }
 
   index = 0u;
-  while (index < BATTLE_GLOBAL_BYTE_6323) {
-    if (arg0 == BATTLE_GLOBAL_BYTE_630C(index)) {
-      BATTLE_GLOBAL_BYTE_630C(index) = 0xffu;
+  while (index < *(&BATTLE_GLOBAL_BYTE_6323)) {
+    if (arg0 == (&D_8014630C)[index]) {
+      (&D_8014630C)[index] = 0xffu;
     }
     index += 1u;
   }

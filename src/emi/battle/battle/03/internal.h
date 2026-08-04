@@ -62,7 +62,8 @@ typedef struct Battle03LocalWork {
   u8  pad_122;
   u8  unk_123;
   u32 unk_124;
-  u8  pad_128[0xc];
+  u32 unk_128;
+  u8  pad_12c[8];
   u16 unk_134;
   u8  pad_136[0xa];
 } Battle03LocalWork;
@@ -190,7 +191,7 @@ extern u8*            D_801C8950[];
 extern Battle03Handler D_801EB15C[];
 extern Battle03Handler D_801EB218[];
 extern Battle03Handler D_801EB3B0[];
-extern volatile Battle03EnemyWork D_801EB630[];
+extern Battle03EnemyWork          D_801EB630[];
 extern Battle03Handler D_801EB188;
 extern Battle03Handler D_801EACD4[];
 extern Battle03Handler D_801EACE8[];
