@@ -110,3 +110,6 @@ ledger/
 compile_commands.json
 tools/rust/bof3-disk/target/
 tools/rust/emi-ex/target/
+
+# splat regenerates this on every run (file_presets); deliberately untracked since f067a9a
+include/include_asm.h

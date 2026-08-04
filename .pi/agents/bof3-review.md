@@ -6,6 +6,7 @@ thinking: low
 tools: read,grep,find,ls,bash,edit,contact_supervisor
 extensions:
 systemPromptMode: replace
+acceptanceRole: read-only
 inheritProjectContext: true
 inheritSkills: true
 defaultContext: fresh
