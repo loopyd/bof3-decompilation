@@ -11,7 +11,7 @@ void func_801F6EB0(void) {
     SCENA16_D_80146874 = 2;
   }
 
-  if (SCENA16_D_80143F03 == 2u) {
+  if (SCENA16_D_80143F03 == 2) {
     SCENA16_D_8014832E = 0x1fu;
     func_8015C100();
   }

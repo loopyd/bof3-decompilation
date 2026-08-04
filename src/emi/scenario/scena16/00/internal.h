@@ -14,7 +14,7 @@ extern volatile u16 SCENA16_D_80143C40;
 extern volatile u8  SCENA16_D_80143BB0;
 #define SCENA16_D_80143BB0 g_GameState
 extern volatile u16 SCENA16_D_80143F00;
-extern volatile u8  SCENA16_D_80143F03;
+extern u8  SCENA16_D_80143F03;
 extern s32          SCENA16_D_80143F80;
 extern volatile u8  SCENA16_D_80144F59;
 extern volatile u8  SCENA16_D_80144F5A;
@@ -35,8 +35,7 @@ extern volatile s8  SCENA16_D_80146874;
 extern volatile u8  SCENA16_D_80146875;
 extern volatile u16 SCENA16_D_80146876;
 extern volatile u32 SCENA16_D_8014686C;
-extern volatile u8  SCENA16_D_8014832E;
-#define SCENA16_D_8014832E g_GlobalFlag832E
+extern u8  SCENA16_D_8014832E;
 extern volatile u16 SCENA16_D_801492D8;
 extern volatile u16 SCENA16_D_801492DA;
 extern volatile u16 SCENA16_D_801492DC;
