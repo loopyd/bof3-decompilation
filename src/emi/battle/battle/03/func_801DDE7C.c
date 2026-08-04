@@ -12,14 +12,14 @@ u8 func_801DDE7C(u32 arg0, u32 arg1) {
   char  counter;
 
   table_index = (arg1 >> 6) & 0x3fcu;
-  counter_table = (char*)BATTLE_COUNTER_BYTE_TABLE_8950[table_index >> 2];
+  counter_table = D_801C8950[table_index >> 2];
   ptr = counter_table + (arg0 & 0xffu);
   counter = *ptr;
   if (counter == 'c') {
     return 1u;
   }
   *ptr = counter + 1;
-  value_table = (char*)BATTLE_COUNTER_PTR_TABLE_893C[table_index >> 2];
+  value_table = D_801C893C[table_index >> 2];
   value_table[arg0 & 0xffu] = arg1;
   return 0u;
 }

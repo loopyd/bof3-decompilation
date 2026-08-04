@@ -170,6 +170,10 @@ extern Battle03DispatchTable        D_801D0FA0;
 extern Battle03DispatchTable        D_801D0FAC;
 extern Battle03DispatchTable        D_801D0FB8;
 extern Battle03DispatchTable        D_801D0FC4;
+extern u8*            D_801C893C[];
+extern u8*            D_801C8950[];
+extern Battle03Handler D_801EB15C[];
+extern Battle03Handler D_801EB188;
 extern Battle03Handler D_801EACD4[];
 extern Battle03Handler D_801EACE8[];
 extern Battle03Handler D_801EACF4[];
@@ -692,8 +696,6 @@ u8   func_801EAB6C(u8* arg0);
 #define BATTLE_EFFECT_TABLE_AFD0       PSX_PTR(const volatile u16, 0x801eafd0u)
 #define BATTLE_EVENT_PICK_TABLE_0C98   PSX_PTR(const volatile u8, 0x801d0c98u)
 #define BATTLE_EVENT_PICK_TABLE_0CB8   PSX_PTR(const volatile u8, 0x801d0cb8u)
-#define BATTLE_COUNTER_PTR_TABLE_893C  ((volatile u32**)0x801c893cu)
-#define BATTLE_COUNTER_BYTE_TABLE_8950 ((volatile u8**)0x801c8950u)
 #define BATTLE_TRIGGER_TABLE_6178      ((volatile u32**)0x800b6178u)
 #define BATTLE_VARIANCE_TABLE_AF94     PSX_PTR(const volatile u8, 0x801eaf94u)
 #define BATTLE_TARGET_MODE_PACK(index)                                         \

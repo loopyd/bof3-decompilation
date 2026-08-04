@@ -5,18 +5,12 @@
  * @source 0x801DF8AC
  */
 void NO_SIBLING_CALLS func_801DF8AC(void) {
-  const volatile u8* state_table_base;
-  Battle03Handler    handler;
-  u32                state_index;
-
-  state_table_base = BATTLE_HIGH_RAM_U8;
+  Battle03Handler handler;
 
   if ((BATTLE_LOCAL_WORD_128(BATTLE_LOCAL_WORK_PTR) & 1u) != 0u) {
-    handler = *(Battle03Handler const volatile*)(state_table_base - 0x4e78u);
+    handler = D_801EB188;
   } else {
-    state_index = BATTLE_LOCAL_BYTE_79(BATTLE_LOCAL_WORK_PTR);
-    handler = *(Battle03Handler const volatile*)((u32)state_table_base +
-                                                 (state_index << 2) - 0x4ea4u);
+    handler = D_801EB15C[BATTLE_LOCAL_BYTE_79(BATTLE_LOCAL_WORK_PTR)];
   }
 
   handler();
