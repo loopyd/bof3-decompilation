@@ -1,7 +1,7 @@
 #include "internal.h"
 
-extern volatile GameCallbackSlot* D_80143D40;
-extern GameCallbackSlot           D_80143B40;
+extern GameCallbackSlot* volatile D_80143D40;
+extern GameCallbackSlot           D_80143B40[4];
 
 /* possible name: game_slot_scheduler_tick
  * @behavior walks the EXE callback slot table, opens ready threads, decrements
@@ -9,41 +9,41 @@ extern GameCallbackSlot           D_80143B40;
  * @source 0x8014B73C
  */
 void func_8014B73C(void) {
-  u16                        new_var;
-  GameCallbackSlot*          current_slot;
-  volatile GameCallbackSlot* next_slot;
-  u16                        state;
-  unsigned short             countdown;
+  GameCallbackSlot* top_slot;
+  GameCallbackSlot* open_slot;
+  GameCallbackSlot* dispatch_slot;
+  GameCallbackSlot* next_slot;
+  s32               state;
+  u16               idle;
 
-  state = 0x80143d40u;
-  current_slot = (D_80143D40 = &D_80143B40);
+  D_80143D40 = D_80143B40;
+  idle = GAME_CALLBACK_SLOT_STATE_IDLE;
 
   do {
-    state = D_80143D40->state;
+    top_slot = D_80143D40;
+    state = top_slot->state;
 
     switch (state) {
       case GAME_CALLBACK_SLOT_STATE_OPEN:
         EnterCriticalSection();
-        (current_slot = D_80143D40)->thread_id =
-            OpenTh((long (*)())D_80143D40->callback, D_80143D40->open_arg,
-                   D_80143D40->open_arg_2);
+        open_slot = D_80143D40;
+        D_80143D40->thread_id =
+            OpenTh((long (*)())open_slot->callback, open_slot->open_arg,
+                   open_slot->open_arg_2);
         ExitCriticalSection();
         goto dispatch;
 
       case GAME_CALLBACK_SLOT_STATE_YIELD:
-        new_var = D_80143D40->countdown;
-        countdown = (u16)(new_var - 1u);
-        D_80143D40->countdown = countdown;
-        if (countdown != 0u) {
+        if ((u16)--top_slot->countdown != 0u) {
           break;
         }
         goto dispatch;
 
       case GAME_CALLBACK_SLOT_STATE_SWITCH:
       dispatch:
-        D_80143D40->state = (state = GAME_CALLBACK_SLOT_STATE_IDLE);
-        countdown = D_80143D40->thread_id;
-        ChangeTh(countdown);
+        dispatch_slot = D_80143D40;
+        dispatch_slot->state = idle;
+        ChangeTh(dispatch_slot->thread_id);
         break;
 
       default:
@@ -52,5 +52,5 @@ void func_8014B73C(void) {
 
     next_slot = D_80143D40 + 1;
     D_80143D40 = next_slot;
-  } while (next_slot < ((u32)((volatile GameCallbackSlot*)state)));
+  } while (next_slot < D_80143B40 + 4);
 }
