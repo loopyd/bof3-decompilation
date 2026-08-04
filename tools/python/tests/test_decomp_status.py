@@ -4,6 +4,7 @@ from pathlib import Path
 import subprocess
 
 from harness import decomp_status
+from harness import decomp_status_preflight as dsp
 
 
 def _target(root: Path, target: str, source_dir: str) -> None:
@@ -124,9 +125,7 @@ def test_report_keeps_live_results_when_index_is_unavailable(
     assert "index coverage: unavailable" in decomp_status.render_text(report)
 
 
-def test_report_reuses_a_content_addressed_cache(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_report_reuses_a_content_addressed_cache(tmp_path: Path, monkeypatch) -> None:
     _target(tmp_path, "exe/logo", "src/exe/logo")
     _source(tmp_path, "src/exe/logo", "80100010")
     binary = tmp_path / "out/binaries/exe/logo.bin"
@@ -145,7 +144,9 @@ def test_report_reuses_a_content_addressed_cache(
         return _diff(request)
 
     first = decomp_status.build_report(tmp_path, ("exe/logo",), diff_runner=cached_diff)
-    second = decomp_status.build_report(tmp_path, ("exe/logo",), diff_runner=cached_diff)
+    second = decomp_status.build_report(
+        tmp_path, ("exe/logo",), diff_runner=cached_diff
+    )
 
     assert calls == 1
     assert first == second
@@ -197,9 +198,8 @@ def test_build_preflight_separates_cache_misses_from_ready(
     binary.write_bytes(b"test")
 
     manifests = decomp_status.select_manifests(tmp_path)
-    from harness import decomp_status as ds
 
-    ready, worklist = ds._build_preflight(tmp_path, manifests, cache=None)
+    ready, worklist = dsp._build_preflight(tmp_path, manifests, cache=None)
 
     assert len(ready) == 1  # one invalid (missing metadata)
     assert ready[0]["status"] == "invalid"
@@ -243,9 +243,11 @@ def test_build_preflight_reuses_cache_hits(tmp_path: Path, monkeypatch) -> None:
     )
     from harness import decomp_status as ds
 
-    monkeypatch.setattr(ds, "source_fingerprint", lambda _s, _t: "fake-fingerprint")
-    monkeypatch.setattr(ds, "target_fingerprint", lambda _r, _m: "fake-fingerprint")
-    ready, worklist = ds._build_preflight(tmp_path, ds.select_manifests(tmp_path), cache)
+    monkeypatch.setattr(dsp, "source_fingerprint", lambda _s, _t: "fake-fingerprint")
+    monkeypatch.setattr(dsp, "target_fingerprint", lambda _r, _m: "fake-fingerprint")
+    ready, worklist = dsp._build_preflight(
+        tmp_path, ds.select_manifests(tmp_path), cache
+    )
     cache.close()
 
     assert any(r["function"] == "func_80100010" for r in ready)
@@ -269,9 +271,7 @@ def _batch_result() -> dict[str, object]:
     }
 
 
-def test_batch_builds_fresh_misses_once_per_target(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_batch_builds_fresh_misses_once_per_target(tmp_path: Path, monkeypatch) -> None:
     """Phase 2.3.2: one successful batch compares fresh objects in root."""
     _target(tmp_path, "exe/logo", "src/exe/logo")
     _source(tmp_path, "src/exe/logo", "80100010")
@@ -307,10 +307,10 @@ def test_batch_builds_fresh_misses_once_per_target(
         compared_roots.append(repo.root)
         return _batch_result()
 
-    monkeypatch.setattr(ds, "configure", lambda root: tmp_path / "build/cmake")
-    monkeypatch.setattr(ds, "batch_build", batch)
-    monkeypatch.setattr(ds, "_asm_diff_resolve", resolve)
-    monkeypatch.setattr(ds, "_asm_diff_compare", compare)
+    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
+    monkeypatch.setattr(dsp, "batch_build", batch)
+    monkeypatch.setattr(dsp, "_asm_diff_resolve", resolve)
+    monkeypatch.setattr(dsp, "_asm_diff_compare", compare)
     monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: {})
 
     report = ds.build_report(tmp_path, use_cache=False, diff_runner=lambda _: {})
@@ -321,9 +321,7 @@ def test_batch_builds_fresh_misses_once_per_target(
     assert report["lifts"] == {"exact": 2, "partial": 0, "invalid": 0, "total": 2}
 
 
-def test_batch_resolve_failure_falls_back_once(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_batch_resolve_failure_falls_back_once(tmp_path: Path, monkeypatch) -> None:
     """A successful batch cannot abort the audit on one resolve failure."""
     _target(tmp_path, "exe/logo", "src/exe/logo")
     _source(tmp_path, "src/exe/logo", "80100010")
@@ -334,17 +332,19 @@ def test_batch_resolve_failure_falls_back_once(
     from harness import decomp_status as ds
 
     fallback = 0
-    monkeypatch.setattr(ds, "configure", lambda root: tmp_path / "build/cmake")
+    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
     monkeypatch.setattr(
-        ds,
+        dsp,
         "batch_build",
         lambda root, targets: subprocess.CompletedProcess([], 0, "", ""),
     )
     monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: {})
     monkeypatch.setattr(
-        ds,
+        dsp,
         "_asm_diff_resolve",
-        lambda repo, request: (_ for _ in ()).throw(ValueError("cannot infer test size")),
+        lambda repo, request: (_ for _ in ()).throw(
+            ValueError("cannot infer test size")
+        ),
     )
 
     def diff(_request):
@@ -371,14 +371,14 @@ def test_batch_stale_object_falls_back_once_without_duplicate_record(
     from harness import decomp_status as ds
 
     fallback = 0
-    monkeypatch.setattr(ds, "configure", lambda root: tmp_path / "build/cmake")
+    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
     monkeypatch.setattr(
-        ds,
+        dsp,
         "batch_build",
         lambda root, targets: subprocess.CompletedProcess([], 0, "", ""),
     )
     monkeypatch.setattr(
-        ds,
+        dsp,
         "_asm_diff_resolve",
         lambda repo, request: {
             "source_path": request.source_path,
@@ -419,9 +419,9 @@ def test_batch_failure_falls_back_per_source_with_error_attribution(
 
     diff_calls: list[str] = []
 
-    monkeypatch.setattr(ds, "configure", lambda root: tmp_path / "build/cmake")
+    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
     monkeypatch.setattr(
-        ds,
+        dsp,
         "batch_build",
         lambda root, targets: subprocess.CompletedProcess([], 1, "", "build error"),
     )
@@ -482,8 +482,8 @@ def test_no_batch_when_all_sources_are_cached(tmp_path: Path, monkeypatch) -> No
 
     from harness import decomp_status as ds
 
-    monkeypatch.setattr(ds, "source_fingerprint", lambda _s, _t: "fake-fp")
-    monkeypatch.setattr(ds, "target_fingerprint", lambda _r, _m: "fake-fp")
+    monkeypatch.setattr(dsp, "source_fingerprint", lambda _s, _t: "fake-fp")
+    monkeypatch.setattr(dsp, "target_fingerprint", lambda _r, _m: "fake-fp")
     monkeypatch.setattr(
         ds,
         "index_coverage",
@@ -496,7 +496,7 @@ def test_no_batch_when_all_sources_are_cached(tmp_path: Path, monkeypatch) -> No
         batch_calls.append(targets)
         raise RuntimeError("should not be called")
 
-    monkeypatch.setattr(ds, "batch_build", track_batch)
+    monkeypatch.setattr(dsp, "batch_build", track_batch)
 
     report = ds.build_report(
         tmp_path, ("exe/logo",), use_cache=True, diff_runner=lambda r: {}
@@ -524,8 +524,13 @@ def test_source_change_invalidates_cache_and_recomputes(
 
     cache = StatusCache(tmp_path)
     import hashlib
-    monkeypatch.setattr(ds, "source_fingerprint", lambda s, t: hashlib.sha256(s.read_bytes()).hexdigest()[:32])
-    monkeypatch.setattr(ds, "target_fingerprint", lambda r, m: "fp-target")
+
+    monkeypatch.setattr(
+        dsp,
+        "source_fingerprint",
+        lambda s, t: hashlib.sha256(s.read_bytes()).hexdigest()[:32],
+    )
+    monkeypatch.setattr(dsp, "target_fingerprint", lambda r, m: "fp-target")
     monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: {})
 
     batch_calls: list[list[str]] = []
@@ -548,19 +553,23 @@ def test_source_change_invalidates_cache_and_recomputes(
             "output_dir": tmp_path / "out/matching/dummy",
         }
 
-    monkeypatch.setattr(ds, "configure", lambda root: tmp_path / "build/cmake")
-    monkeypatch.setattr(ds, "batch_build", batch)
-    monkeypatch.setattr(ds, "_asm_diff_resolve", resolve)
-    monkeypatch.setattr(ds, "_asm_diff_compare", lambda repo, rq, rs: _batch_result())
+    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
+    monkeypatch.setattr(dsp, "batch_build", batch)
+    monkeypatch.setattr(dsp, "_asm_diff_resolve", resolve)
+    monkeypatch.setattr(dsp, "_asm_diff_compare", lambda repo, rq, rs: _batch_result())
 
     # First run — cache miss for both sources
-    first = ds.build_report(tmp_path, use_cache=True, diff_runner=lambda r: _batch_result())
+    first = ds.build_report(
+        tmp_path, use_cache=True, diff_runner=lambda r: _batch_result()
+    )
     assert first["lifts"] == {"exact": 2, "partial": 0, "invalid": 0, "total": 2}
     assert len(batch_calls) == 1, "first run: one batch build"
 
     # Second run — both cached, no build
     batch_calls.clear()
-    second = ds.build_report(tmp_path, use_cache=True, diff_runner=lambda r: _batch_result())
+    second = ds.build_report(
+        tmp_path, use_cache=True, diff_runner=lambda r: _batch_result()
+    )
     assert second["lifts"] == first["lifts"]
     assert len(batch_calls) == 0, "second run: no batch build (all cached)"
 
@@ -570,7 +579,9 @@ def test_source_change_invalidates_cache_and_recomputes(
 
     # Third run — only changed source recomputed; one build for that target
     batch_calls.clear()
-    third = ds.build_report(tmp_path, use_cache=True, diff_runner=lambda r: _batch_result())
+    third = ds.build_report(
+        tmp_path, use_cache=True, diff_runner=lambda r: _batch_result()
+    )
     assert third["lifts"] == {"exact": 2, "partial": 0, "invalid": 0, "total": 2}
     assert len(batch_calls) == 1, "source change: one batch"
 
@@ -617,10 +628,12 @@ def test_compile_inputs_invalidate_only_affected_target_then_all_targets(
             "output_dir": tmp_path / "out/matching/dummy",
         }
 
-    monkeypatch.setattr(ds, "configure", lambda root: tmp_path / "build/cmake")
-    monkeypatch.setattr(ds, "batch_build", batch)
-    monkeypatch.setattr(ds, "_asm_diff_resolve", resolve)
-    monkeypatch.setattr(ds, "_asm_diff_compare", lambda repo, req, resolved: _batch_result())
+    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
+    monkeypatch.setattr(dsp, "batch_build", batch)
+    monkeypatch.setattr(dsp, "_asm_diff_resolve", resolve)
+    monkeypatch.setattr(
+        dsp, "_asm_diff_compare", lambda repo, req, resolved: _batch_result()
+    )
     monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: {})
 
     ds.build_report(tmp_path, use_cache=True, diff_runner=lambda _: _batch_result())

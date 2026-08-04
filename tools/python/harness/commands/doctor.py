@@ -15,7 +15,7 @@ from ..io import repo_layout
 from ..toolchain import managed_toolchains
 from ..toolchain.disc import DiscToolchain
 from ..toolchain.psyq import PsyqToolchain
-from ._common import run_main
+from ._common import add_root_argument, run_main
 from .setup import REQUIRED_TOOLS, _psyq_47_members
 
 
@@ -117,7 +117,9 @@ def _tools(root: Path) -> str:
             check=False,
         )
         if result.returncode:
-            raise RuntimeError(f"{' '.join(map(str, command))} exited {result.returncode}")
+            raise RuntimeError(
+                f"{' '.join(map(str, command))} exited {result.returncode}"
+            )
     return f"{len(commands)} commands"
 
 
@@ -131,7 +133,12 @@ def run(args: argparse.Namespace) -> int:
     for task in TASKS:
         try:
             _render("PASS", task.label, task.run(root))
-        except (FileNotFoundError, RuntimeError, ValueError, tomllib.TOMLDecodeError) as exc:
+        except (
+            FileNotFoundError,
+            RuntimeError,
+            ValueError,
+            tomllib.TOMLDecodeError,
+        ) as exc:
             failed += 1
             _render("FAIL", task.label, str(exc).replace("\n", "; "))
     print(f"doctor: {len(TASKS) - failed}/{len(TASKS)} checks passed")
@@ -140,7 +147,7 @@ def run(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="doctor")
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
     parser.set_defaults(handler=run)
     return parser
 

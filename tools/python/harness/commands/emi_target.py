@@ -4,12 +4,10 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
-from pathlib import Path
 
-from ..emi.catalog import apply_bootstrap, bootstrap_plan, load_catalog
-from ..io import repo_layout
-from ._common import run_main
+from ..emi.catalog import load_catalog
+from ..emi.catalog_bootstrap import apply_bootstrap, bootstrap_plan
+from ._common import add_example_argument, add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:
@@ -41,20 +39,18 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--apply", action="store_true", help="create the previewed files"
     )
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
+    add_example_argument(
+        parser,
+        "bin/emi-target BIN/BATTLE/BATL_END.EMI#0\n"
+        "bin/emi-target BIN/BATTLE/BATL_END.EMI#0 --apply",
+    )
     parser.set_defaults(handler=run)
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
-    arguments = sys.argv[1:] if argv is None else argv
-    if arguments == ["--example"]:
-        print(
-            "bin/emi-target BIN/BATTLE/BATL_END.EMI#0\n"
-            "bin/emi-target BIN/BATTLE/BATL_END.EMI#0 --apply"
-        )
-        return 0
-    return run_main(build_parser, arguments)
+    return run_main(build_parser, argv)
 
 
 if __name__ == "__main__":

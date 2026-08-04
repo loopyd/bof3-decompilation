@@ -6,12 +6,10 @@ import argparse
 import json
 import os
 from pathlib import Path
-import sys
 
 from ..analyzer import find_engine
-from ..io import repo_layout
 from ..rizin_project import analyze_project, prepare_target, rizin_argv, status
-from ._common import run_main
+from ._common import add_example_argument, add_root_argument, run_main
 
 
 def _root(args: argparse.Namespace) -> Path:
@@ -43,7 +41,8 @@ def run_analyze(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="rz-project")
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
+    add_example_argument(parser, "bin/rz-project analyze exe/logo")
     sub = parser.add_subparsers(dest="command", required=True)
     for name, handler, help_text in (
         ("open", run_open, "open a target-isolated interactive Rizin session"),
@@ -62,11 +61,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    arguments = sys.argv[1:] if argv is None else argv
-    if arguments == ["--example"]:
-        print("bin/rz-project analyze exe/logo")
-        return 0
-    return run_main(build_parser, arguments)
+    return run_main(build_parser, argv)
 
 
 if __name__ == "__main__":

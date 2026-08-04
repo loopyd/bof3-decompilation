@@ -9,12 +9,12 @@ from types import SimpleNamespace
 
 import pytest
 
+from harness.toolchain.gcc_archive import sha256_file
 from harness.toolchain.gcc_variants import (
-    CompilerVariantEntry,
+    CompilerVariant,
     EmptyCatalog,
     _validate_entry,
     load_variants,
-    sha256_file,
 )
 
 
@@ -193,7 +193,9 @@ class TestValidateEntry:
             _validate_entry(entry)
 
     def test_missing_executable_relpath_raises(self) -> None:
-        entry = {k: v for k, v in _minimal_valid_entry().items() if k != "executable_relpath"}
+        entry = {
+            k: v for k, v in _minimal_valid_entry().items() if k != "executable_relpath"
+        }
         with pytest.raises(ValueError, match="missing required fields"):
             _validate_entry(entry)
 
@@ -211,11 +213,15 @@ class TestValidateEntry:
         layout = _make_layout(tmp_path)
         f = tmp_path / "config" / "compiler" / "variants.json"
         f.parent.mkdir(parents=True)
-        f.write_text(json.dumps({
-            "schema": "harness.compiler-variants/v1",
-            "candidates": [],
-            "unknown_key": "bad",
-        }))
+        f.write_text(
+            json.dumps(
+                {
+                    "schema": "harness.compiler-variants/v1",
+                    "candidates": [],
+                    "unknown_key": "bad",
+                }
+            )
+        )
         with pytest.raises(ValueError, match="unexpected keys"):
             load_variants(layout)
 
@@ -223,26 +229,34 @@ class TestValidateEntry:
         layout = _make_layout(tmp_path)
         f = tmp_path / "config" / "compiler" / "variants.json"
         f.parent.mkdir(parents=True)
-        f.write_text(json.dumps({
-            "schema": "harness.compiler-variants/v1",
-            "candidates": [
-                _minimal_valid_entry({"id": "dup-id"}),
-                _minimal_valid_entry({"id": "dup-id"}),
-            ],
-        }))
+        f.write_text(
+            json.dumps(
+                {
+                    "schema": "harness.compiler-variants/v1",
+                    "candidates": [
+                        _minimal_valid_entry({"id": "dup-id"}),
+                        _minimal_valid_entry({"id": "dup-id"}),
+                    ],
+                }
+            )
+        )
         with pytest.raises(ValueError, match="duplicate"):
             load_variants(layout)
 
 
 class TestCompilerVariantEntry:
     def test_properties(self) -> None:
-        entry = CompilerVariantEntry(_minimal_valid_entry({
-            "id": "test-variant",
-            "label": "Test Variant",
-            "url": "https://example.com/test.tar.gz",
-            "checksum": "sha256:" + "b" * 64,
-            "archive_name": "test.tar.gz",
-        }))
+        entry = CompilerVariant(
+            _minimal_valid_entry(
+                {
+                    "id": "test-variant",
+                    "label": "Test Variant",
+                    "url": "https://example.com/test.tar.gz",
+                    "checksum": "sha256:" + "b" * 64,
+                    "archive_name": "test.tar.gz",
+                }
+            )
+        )
         assert entry.id == "test-variant"
         assert entry.label == "Test Variant"
         assert entry.url == "https://example.com/test.tar.gz"
@@ -252,7 +266,7 @@ class TestCompilerVariantEntry:
         assert entry.executable_relpath == "gcc"
 
     def test_install_path_uses_gcc_variants_root(self) -> None:
-        entry = CompilerVariantEntry(_minimal_valid_entry({"id": "my-gcc"}))
+        entry = CompilerVariant(_minimal_valid_entry({"id": "my-gcc"}))
         layout = _make_layout(Path("/tmp"))
         path = entry.install_path(layout)
         assert str(path) == str(Path("/tmp/toolchains/gcc-variants/my-gcc"))
@@ -273,19 +287,24 @@ class TestLoadVariants:
         layout = _make_layout(tmp_path)
         variants_file = tmp_path / "config" / "compiler" / "variants.json"
         variants_file.parent.mkdir(parents=True)
-        variants_file.write_text(json.dumps({
-            "schema": "invalid/schema",
-            "candidates": [],
-        }))
+        variants_file.write_text(
+            json.dumps(
+                {
+                    "schema": "invalid/schema",
+                    "candidates": [],
+                }
+            )
+        )
         with pytest.raises(ValueError, match="expected schema"):
             load_variants(layout)
 
     def test_verify_checks_escaped_executable(self, tmp_path: Path) -> None:
-        entry = CompilerVariantEntry(_minimal_valid_entry())
+        entry = CompilerVariant(_minimal_valid_entry())
         layout = _make_layout(tmp_path)
         root = layout.gcc_variants_root / entry.id
         root.mkdir(parents=True)
         import os
+
         outside = tmp_path / "outside_gcc"
         outside.write_text("gcc\n")
         outside.chmod(0o755)
@@ -297,10 +316,14 @@ class TestLoadVariants:
         layout = _make_layout(tmp_path)
         variants_file = tmp_path / "config" / "compiler" / "variants.json"
         variants_file.parent.mkdir(parents=True)
-        variants_file.write_text(json.dumps({
-            "schema": "harness.compiler-variants/v1",
-            "candidates": "not a list",
-        }))
+        variants_file.write_text(
+            json.dumps(
+                {
+                    "schema": "harness.compiler-variants/v1",
+                    "candidates": "not a list",
+                }
+            )
+        )
         with pytest.raises(ValueError, match="candidates' must be a list"):
             load_variants(layout)
 
@@ -316,11 +339,15 @@ class TestLoadVariants:
         layout = _make_layout(tmp_path)
         variants_file = tmp_path / "config" / "compiler" / "variants.json"
         variants_file.parent.mkdir(parents=True)
-        variants_file.write_text(json.dumps({
-            "schema": "harness.compiler-variants/v1",
-            "note": "not a list",
-            "candidates": [],
-        }))
+        variants_file.write_text(
+            json.dumps(
+                {
+                    "schema": "harness.compiler-variants/v1",
+                    "note": "not a list",
+                    "candidates": [],
+                }
+            )
+        )
         with pytest.raises(ValueError, match="'note' must be a list"):
             load_variants(layout)
 
@@ -328,11 +355,15 @@ class TestLoadVariants:
         layout = _make_layout(tmp_path)
         variants_file = tmp_path / "config" / "compiler" / "variants.json"
         variants_file.parent.mkdir(parents=True)
-        variants_file.write_text(json.dumps({
-            "schema": "harness.compiler-variants/v1",
-            "note": ["valid note", 42],
-            "candidates": [],
-        }))
+        variants_file.write_text(
+            json.dumps(
+                {
+                    "schema": "harness.compiler-variants/v1",
+                    "note": ["valid note", 42],
+                    "candidates": [],
+                }
+            )
+        )
         with pytest.raises(ValueError, match="must be a string"):
             load_variants(layout)
 
@@ -340,10 +371,14 @@ class TestLoadVariants:
         layout = _make_layout(tmp_path)
         variants_file = tmp_path / "config" / "compiler" / "variants.json"
         variants_file.parent.mkdir(parents=True)
-        variants_file.write_text(json.dumps({
-            "schema": "harness.compiler-variants/v1",
-            "candidates": [],
-        }))
+        variants_file.write_text(
+            json.dumps(
+                {
+                    "schema": "harness.compiler-variants/v1",
+                    "candidates": [],
+                }
+            )
+        )
         result = load_variants(layout)
         assert result == []
 
@@ -353,10 +388,14 @@ class TestLoadVariantsStrictSchema:
         layout = _make_layout(tmp_path)
         variants_file = tmp_path / "config" / "compiler" / "variants.json"
         variants_file.parent.mkdir(parents=True)
-        variants_file.write_text(json.dumps({
-            "schema": "harness.compiler-variants/v1",
-            "candidates": [{"id": "x", "url": "https://x.com/x.tar.gz"}],
-        }))
+        variants_file.write_text(
+            json.dumps(
+                {
+                    "schema": "harness.compiler-variants/v1",
+                    "candidates": [{"id": "x", "url": "https://x.com/x.tar.gz"}],
+                }
+            )
+        )
         with pytest.raises(ValueError, match="missing required fields"):
             load_variants(layout)
 
@@ -367,18 +406,23 @@ class TestSha256File:
         test_file.write_bytes(b"hello world")
         result = sha256_file(test_file)
         assert result.startswith("sha256:")
-        hex_part = result[len("sha256:"):]
+        hex_part = result[len("sha256:") :]
         assert len(hex_part) == 64
-        assert result == "sha256:b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+        assert (
+            result
+            == "sha256:b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+        )
 
 
 class TestSafeExtract:
     def test_safe_extract_raises_on_absolute(self, tmp_path: Path) -> None:
         import tarfile
         from harness.toolchain.releases import extract_archive
+
         archive = tmp_path / "bad.tar.gz"
         with tarfile.open(archive, "w:gz") as tf:
             from io import BytesIO
+
             info = tarfile.TarInfo("/etc/passwd")
             info.size = 0
             tf.addfile(info, BytesIO())
@@ -388,9 +432,11 @@ class TestSafeExtract:
     def test_safe_extract_raises_on_traversal(self, tmp_path: Path) -> None:
         import tarfile
         from harness.toolchain.releases import extract_archive
+
         archive = tmp_path / "bad.tar.gz"
         with tarfile.open(archive, "w:gz") as tf:
             from io import BytesIO
+
             info = tarfile.TarInfo("../escape")
             info.size = 0
             tf.addfile(info, BytesIO())
@@ -400,6 +446,7 @@ class TestSafeExtract:
     def test_safe_extract_raises_on_fifo(self, tmp_path: Path) -> None:
         import tarfile
         from harness.toolchain.releases import extract_archive
+
         archive = tmp_path / "fifo.tar.gz"
         with tarfile.open(archive, "w:gz") as tf:
             info = tarfile.TarInfo("named-pipe")
@@ -412,6 +459,7 @@ class TestSafeExtract:
     def test_safe_extract_raises_on_symlink(self, tmp_path: Path) -> None:
         import tarfile
         from harness.toolchain.releases import extract_archive
+
         archive = tmp_path / "bad.tar.gz"
         with tarfile.open(archive, "w:gz") as tf:
             info = tarfile.TarInfo("link")
@@ -425,6 +473,7 @@ class TestSafeExtract:
     def test_safe_extract_rejects_zip_traversal(self, tmp_path: Path) -> None:
         import zipfile
         from harness.toolchain.releases import extract_archive
+
         archive = tmp_path / "bad.zip"
         with zipfile.ZipFile(archive, "w") as zip_file:
             zip_file.writestr("../escape", b"")
@@ -435,27 +484,39 @@ class TestSafeExtract:
 class TestHostValidation:
     def test_valid_host_format(self) -> None:
         from harness.toolchain.gcc_variants import _validate_entry
+
         for host in ("linux-x86_64", "darwin-arm64", "win32-x86_64"):
             _validate_entry(_minimal_valid_entry({"host": host}))
 
     def test_empty_host_raises(self) -> None:
         from harness.toolchain.gcc_variants import _validate_entry
+
         with pytest.raises(ValueError, match="host.*non-empty"):
             _validate_entry(_minimal_valid_entry({"host": ""}))
 
     def test_invalid_host_format_raises(self) -> None:
         from harness.toolchain.gcc_variants import _validate_entry
-        for host in ("linux", "linux-", "-x86_64", "OSX-ARM", "windows-64", "freebsd-amd64"):
+
+        for host in (
+            "linux",
+            "linux-",
+            "-x86_64",
+            "OSX-ARM",
+            "windows-64",
+            "freebsd-amd64",
+        ):
             with pytest.raises(ValueError, match="invalid host format"):
                 _validate_entry(_minimal_valid_entry({"host": host}))
 
     def test_check_host_compatible_valid_format(self) -> None:
         """check_host_compatible validates format of host string."""
         from harness.toolchain.gcc_variants import check_host_compatible
+
         check_host_compatible("linux-x86_64")
 
     def test_check_host_compatible_bad_format_raises(self) -> None:
         from harness.toolchain.gcc_variants import check_host_compatible
+
         with pytest.raises(ValueError, match="invalid host format"):
             check_host_compatible("windows-64")
 
@@ -465,6 +526,7 @@ class TestHostValidation:
         """Hermetic: linux-x86_64 (and amd64 alias) passes under mocked linux+x86_64."""
         import sys
         from harness.toolchain import gcc_variants
+
         monkeypatch.setattr(sys, "platform", "linux")
         monkeypatch.setattr(gcc_variants._platform, "machine", lambda: "x86_64")
         gcc_variants.check_host_compatible("linux-x86_64")
@@ -476,6 +538,7 @@ class TestHostValidation:
         """Hermetic: arm64/aarch64 aliases pass; x86_64 mismatches ARM."""
         import sys
         from harness.toolchain import gcc_variants
+
         monkeypatch.setattr(sys, "platform", "linux")
         monkeypatch.setattr(gcc_variants._platform, "machine", lambda: "aarch64")
         gcc_variants.check_host_compatible("linux-arm64")
@@ -489,6 +552,7 @@ class TestHostValidation:
         """Hermetic: declared darwin-x86_64 fails under mocked linux+x86_64."""
         import sys
         from harness.toolchain import gcc_variants
+
         monkeypatch.setattr(sys, "platform", "linux")
         monkeypatch.setattr(gcc_variants._platform, "machine", lambda: "x86_64")
         with pytest.raises(RuntimeError, match="host mismatch"):
@@ -500,15 +564,16 @@ class TestInstallCachedVerification:
         self, tmp_path: Path, linux_x86_64: None
     ) -> None:
         """Digest-valid cached archive + missing install -> install extracts it."""
-        from harness.toolchain.gcc_variants import CompilerVariantEntry, sha256_file
+        from harness.toolchain.gcc_archive import sha256_file
+        from harness.toolchain.gcc_variants import CompilerVariant
 
-        entry = CompilerVariantEntry(_minimal_valid_entry({"id": "test-gcc"}))
+        entry = CompilerVariant(_minimal_valid_entry({"id": "test-gcc"}))
         layout = _make_layout(tmp_path)
         cache_dir = layout.gcc_archive_cache_dir
         cache_dir.mkdir(parents=True)
         cached = cache_dir / entry.archive_name
         _make_fake_gcc_archive(cached)
-        entry._entry["checksum"] = sha256_file(cached)
+        entry.checksum = sha256_file(cached)
 
         status = entry.install(layout)
         assert "installed and verified" in status
@@ -520,13 +585,14 @@ class TestInstallCachedVerification:
     ) -> None:
         """A digest-mismatched cache entry is replaced by a fresh verified download."""
         from harness.toolchain import gcc_archive
-        from harness.toolchain.gcc_variants import CompilerVariantEntry, sha256_file
+        from harness.toolchain.gcc_archive import sha256_file
+        from harness.toolchain.gcc_variants import CompilerVariant
 
-        entry = CompilerVariantEntry(_minimal_valid_entry({"id": "test-gcc"}))
+        entry = CompilerVariant(_minimal_valid_entry({"id": "test-gcc"}))
         layout = _make_layout(tmp_path)
         valid = tmp_path / "valid.tar.gz"
         _make_fake_gcc_archive(valid)
-        entry._entry["checksum"] = sha256_file(valid)
+        entry.checksum = sha256_file(valid)
         cache_dir = layout.gcc_archive_cache_dir
         cache_dir.mkdir(parents=True)
         cached = cache_dir / entry.archive_name
@@ -546,9 +612,9 @@ class TestInstallCachedVerification:
     ) -> None:
         """A failed download removes the temp file and leaves the cache clean."""
         from harness.toolchain import gcc_archive
-        from harness.toolchain.gcc_variants import CompilerVariantEntry
+        from harness.toolchain.gcc_variants import CompilerVariant
 
-        entry = CompilerVariantEntry(_minimal_valid_entry({"id": "test-gcc"}))
+        entry = CompilerVariant(_minimal_valid_entry({"id": "test-gcc"}))
         layout = _make_layout(tmp_path)
         cache_dir = layout.gcc_archive_cache_dir
         cache_dir.mkdir(parents=True)
@@ -568,15 +634,16 @@ class TestInstallCachedVerification:
         from pathlib import Path as _Path
 
         from harness.toolchain import gcc_archive
-        from harness.toolchain.gcc_variants import CompilerVariantEntry, sha256_file
+        from harness.toolchain.gcc_archive import sha256_file
+        from harness.toolchain.gcc_variants import CompilerVariant
 
-        entry = CompilerVariantEntry(
+        entry = CompilerVariant(
             _minimal_valid_entry({"id": "test-gcc", "identity": "2.6.3"})
         )
         layout = _make_layout(tmp_path)
         valid = tmp_path / "valid.tar.gz"
         _make_fake_gcc_archive(valid, version="2.6.3")
-        entry._entry["checksum"] = sha256_file(valid)
+        entry.checksum = sha256_file(valid)
         cache_dir = layout.gcc_archive_cache_dir
         cache_dir.mkdir(parents=True)
         (cache_dir / entry.archive_name).write_bytes(valid.read_bytes())
@@ -601,9 +668,9 @@ class TestInstallCachedVerification:
         self, tmp_path: Path, linux_x86_64: None
     ) -> None:
         """A symlinked GCC cache root is rejected, never followed."""
-        from harness.toolchain.gcc_variants import CompilerVariantEntry
+        from harness.toolchain.gcc_variants import CompilerVariant
 
-        entry = CompilerVariantEntry(_minimal_valid_entry({"id": "test-gcc"}))
+        entry = CompilerVariant(_minimal_valid_entry({"id": "test-gcc"}))
         layout = _make_layout(tmp_path)
         real = tmp_path / "real-cache"
         real.mkdir()
@@ -616,9 +683,9 @@ class TestInstallCachedVerification:
         self, tmp_path: Path, linux_x86_64: None
     ) -> None:
         """A symlinked cache entry is rejected, never downloaded over or followed."""
-        from harness.toolchain.gcc_variants import CompilerVariantEntry
+        from harness.toolchain.gcc_variants import CompilerVariant
 
-        entry = CompilerVariantEntry(_minimal_valid_entry({"id": "test-gcc"}))
+        entry = CompilerVariant(_minimal_valid_entry({"id": "test-gcc"}))
         layout = _make_layout(tmp_path)
         cache_dir = layout.gcc_archive_cache_dir
         cache_dir.mkdir(parents=True)
@@ -632,9 +699,9 @@ class TestInstallCachedVerification:
         self, tmp_path: Path, linux_x86_64: None
     ) -> None:
         """A non-regular cache entry (directory) is rejected."""
-        from harness.toolchain.gcc_variants import CompilerVariantEntry
+        from harness.toolchain.gcc_variants import CompilerVariant
 
-        entry = CompilerVariantEntry(_minimal_valid_entry({"id": "test-gcc"}))
+        entry = CompilerVariant(_minimal_valid_entry({"id": "test-gcc"}))
         layout = _make_layout(tmp_path)
         cache_dir = layout.gcc_archive_cache_dir
         cache_dir.mkdir(parents=True)
@@ -686,17 +753,14 @@ class TestEnsureVariant:
         self, tmp_path: Path, linux_x86_64: None
     ) -> None:
         """ensure_variant installs a missing selected install from the cache."""
-        from harness.toolchain.gcc_variants import (
-            CompilerVariantEntry,
-            ensure_variant,
-            sha256_file,
-        )
+        from harness.toolchain.gcc_archive import sha256_file
+        from harness.toolchain.gcc_variants import CompilerVariant, ensure_variant
 
-        entry = CompilerVariantEntry(_minimal_valid_entry({"id": "test-gcc"}))
+        entry = CompilerVariant(_minimal_valid_entry({"id": "test-gcc"}))
         layout = _make_layout(tmp_path)
         valid = tmp_path / "valid.tar.gz"
         _make_fake_gcc_archive(valid)
-        entry._entry["checksum"] = sha256_file(valid)
+        entry.checksum = sha256_file(valid)
         cache_dir = layout.gcc_archive_cache_dir
         cache_dir.mkdir(parents=True)
         (cache_dir / entry.archive_name).write_bytes(valid.read_bytes())
@@ -710,11 +774,11 @@ class TestEnsureVariant:
     ) -> None:
         """An existing-but-unverifiable install raises; no host/canonical fallback."""
         from harness.toolchain.gcc_variants import (
-            CompilerVariantEntry,
+            CompilerVariant,
             ensure_variant,
         )
 
-        entry = CompilerVariantEntry(_minimal_valid_entry({"id": "test-gcc"}))
+        entry = CompilerVariant(_minimal_valid_entry({"id": "test-gcc"}))
         layout = _make_layout(tmp_path)
         dest = entry.install_path(layout)
         dest.mkdir(parents=True)
@@ -732,7 +796,7 @@ class TestEnsureVariant:
 
         monkeypatch.setattr(sys, "platform", "linux")
         monkeypatch.setattr(gcc_variants._platform, "machine", lambda: "aarch64")
-        entry = gcc_variants.CompilerVariantEntry(
+        entry = gcc_variants.CompilerVariant(
             _minimal_valid_entry({"host": "linux-x86_64"})
         )
         layout = _make_layout(tmp_path)

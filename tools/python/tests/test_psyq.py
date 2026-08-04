@@ -4,14 +4,15 @@ from pathlib import Path
 import zipfile
 
 from harness.commands.symbols import main as symbols_main
-from harness.psyq.signatures import find_calls, scan
+from harness.psyq.signature_calls import find_calls
+from harness.psyq.signatures import scan
 from harness.snapshot import (
     SNAPSHOT_SCHEMA,
     SnapshotUnresolvedCall,
     TargetSnapshot,
     write_snapshot,
 )
-from harness.toolchain import psyq as psyq_lib
+from harness.toolchain import psyq_discovery
 from harness.toolchain.psyq import import_psyq_sdk, stage_psyq_sdk
 
 
@@ -25,7 +26,7 @@ def make_fake_psyq_tree(root: Path) -> None:
 
 
 def test_stage_psyq_sdk_from_tree(monkeypatch, tmp_path: Path) -> None:
-    monkeypatch.setattr(psyq_lib, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(psyq_discovery, "REPO_ROOT", tmp_path)
     source_root = tmp_path / "inputs" / "psyq-source"
     dest_root = tmp_path / "psyq-staged"
     make_fake_psyq_tree(source_root)
@@ -41,7 +42,7 @@ def test_stage_psyq_sdk_from_tree(monkeypatch, tmp_path: Path) -> None:
 
 
 def test_import_psyq_sdk_stages_original_archive(monkeypatch, tmp_path: Path) -> None:
-    monkeypatch.setattr(psyq_lib, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(psyq_discovery, "REPO_ROOT", tmp_path)
     archive_path = tmp_path / "inputs" / "psyq47.zip"
     private_root = tmp_path / "inputs" / "external" / "private-assets"
     dest_root = tmp_path / "psyq-staged"
@@ -67,7 +68,7 @@ def test_find_psyq_source_rejects_explicit_paths_outside_inputs(tmp_path: Path) 
     make_fake_psyq_tree(source_root)
 
     try:
-        psyq_lib.find_psyq_source(source_root=source_root)
+        psyq_discovery.find_psyq_source(source_root=source_root)
     except ValueError as exc:
         assert "must stay under the repo's inputs/ tree" in str(exc)
     else:

@@ -3,11 +3,9 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 
-from ..io import repo_layout
 from ..reverse_index import rebuild
-from ._common import run_main
+from ._common import add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:
@@ -18,7 +16,7 @@ def run(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="index")
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
     parser.set_defaults(handler=run)
     return parser
 

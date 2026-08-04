@@ -116,7 +116,7 @@ class TestNonemptyListOfLists:
         from harness.match.flag_search import search_flags
         source = inspect.getsource(search_flags)
         # The linked_path must be derived from object_path with .linked.o suffix
-        assert "with_suffix('.linked.o')" in source, (
+        assert 'with_suffix(".linked.o")' in source, (
             "search_flags must use object_path.with_suffix('.linked.o') for linked output"
         )
 

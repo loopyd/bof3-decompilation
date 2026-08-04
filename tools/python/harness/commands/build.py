@@ -9,15 +9,12 @@ import sys
 from ..build import build, cmake_target_for_directory, cmake_target_for_source
 from ..domain import lookup_target_manifest, normalize_target_id
 from ..io import repo_layout
-from ._common import run_main
-from .lift import resolve_function
+from ._common import add_example_argument, run_main
+from ._lift_m2c import resolve_function
 
 
 def run(args: argparse.Namespace) -> int:
     root = repo_layout().root
-    if args.example:
-        print("bin/build exe/logo@0x801CE758")
-        return 0
     if args.selector == "clean":
         shutil.rmtree(root / "build" / "src", ignore_errors=True)
         return 0
@@ -58,7 +55,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="build all lifts, one TARGET, or one TARGET@0xADDRESS",
     )
     parser.add_argument("selector", nargs="?", default="all")
-    parser.add_argument("--example", action="store_true")
+    add_example_argument(parser, "bin/build exe/logo@0x801CE758")
     parser.set_defaults(handler=run)
     return parser
 

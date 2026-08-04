@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
 
 from ..compiler_config import (
     load_object_compilers,
@@ -13,7 +12,7 @@ from ..compiler_config import (
 )
 from ..io import repo_layout
 from ..toolchain.gcc_variants import ensure_variant, lookup_variant
-from ._common import run_main
+from ._common import add_root_argument, run_main
 
 OPTIMIZATION_RE = __import__("re").compile(r"^-O(?:[0-3s]|fast)$")
 
@@ -59,7 +58,9 @@ def run(args: argparse.Namespace) -> int:
             variant = lookup_variant(layout, compiler_id)
             gcc_path = ensure_variant(layout, variant)
             variant_prefix = [
-                "cmake", "-E", "env",
+                "cmake",
+                "-E",
+                "env",
                 f"PSX_GCC={gcc_path}",
             ]
         if override is None:
@@ -89,7 +90,7 @@ def run(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="compile-commands")
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
     parser.set_defaults(handler=run)
     return parser
 

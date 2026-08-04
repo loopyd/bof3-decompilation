@@ -5,12 +5,10 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-import sys
 
 from ..decomp_status import build_report, project_report, render_text, write_report
-from ..io import repo_layout
 from ..output import add_detail_argument, resolve_detail
-from ._common import run_main
+from ._common import add_example_argument, add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:
@@ -29,7 +27,8 @@ def run(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="decomp-status")
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
+    add_example_argument(parser, "bin/decomp-status exe/logo")
     parser.add_argument(
         "--json",
         action="store_true",
@@ -50,11 +49,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    arguments = sys.argv[1:] if argv is None else argv
-    if arguments == ["--example"]:
-        print("bin/decomp-status exe/logo")
-        return 0
-    return run_main(build_parser, arguments)
+    return run_main(build_parser, argv)
 
 
 if __name__ == "__main__":

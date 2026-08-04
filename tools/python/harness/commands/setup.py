@@ -13,14 +13,15 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from ..domain import load_target_manifests
-from ..emi.catalog import load_catalog, materialize_reviewed_targets
+from ..emi.catalog import load_catalog
+from ..emi.catalog_bootstrap import materialize_reviewed_targets
 from ..emi.operations import emi_unpack
 from ..io import RepoLayout, repo_layout
 from ..toolchain import managed_toolchains
 from ..toolchain.disc import DiscToolchain, find_disc_set
 from ..toolchain.gcc_variants import check_host_compatible, load_variants
 from ..toolchain.psyq import PsyqToolchain
-from ._common import run_main
+from ._common import add_root_argument, run_main
 from .compile_commands import run as write_compile_commands
 
 
@@ -110,7 +111,9 @@ def _materialize_executables(root: Path, *, force: bool) -> None:
             continue
         source = (extracted / manifest.disc_id).resolve()
         if not source.is_relative_to(extracted) or not source.is_file():
-            raise FileNotFoundError(f"missing extracted executable for {manifest.id}: {source}")
+            raise FileNotFoundError(
+                f"missing extracted executable for {manifest.id}: {source}"
+            )
         destination = root / manifest.binary
         if destination.exists() and not force:
             continue
@@ -120,7 +123,14 @@ def _materialize_executables(root: Path, *, force: bool) -> None:
 
 def _extract_and_materialize(root: Path, cue: Path, *, force: bool) -> None:
     _run(
-        [str(root / "bin" / "bof3-disk"), "extract", "-i", str(cue), "-o", "out/extracted"],
+        [
+            str(root / "bin" / "bof3-disk"),
+            "extract",
+            "-i",
+            str(cue),
+            "-o",
+            "out/extracted",
+        ],
         cwd=root,
         quiet=True,
     )
@@ -176,17 +186,25 @@ def verify_setup(root: Path) -> None:
     if missing_images:
         raise FileNotFoundError("missing target images: " + ", ".join(missing_images))
     missing_members = [
-        str(path.relative_to(root)) for path in _psyq_47_members(root) if not path.is_file()
+        str(path.relative_to(root))
+        for path in _psyq_47_members(root)
+        if not path.is_file()
     ]
     if missing_members:
-        raise FileNotFoundError("missing PsyQ 4.7 members: " + ", ".join(missing_members))
+        raise FileNotFoundError(
+            "missing PsyQ 4.7 members: " + ", ".join(missing_members)
+        )
     _run([str(root / "bin" / "bof3-disk"), "--example"], cwd=root, quiet=True)
     _run([str(root / "bin" / "emi-ex"), "--example"], cwd=root, quiet=True)
 
 
 @setup_task("submodules")
 def _submodules(state: SetupState) -> str:
-    _run(["git", "submodule", "update", "--init", "--recursive"], cwd=state.root, quiet=True)
+    _run(
+        ["git", "submodule", "update", "--init", "--recursive"],
+        cwd=state.root,
+        quiet=True,
+    )
     return "ready"
 
 
@@ -269,7 +287,12 @@ def run(args: argparse.Namespace) -> int:
     for task in TASKS:
         try:
             _render("PASS", task.label, task.run(state))
-        except (FileNotFoundError, RuntimeError, ValueError, tomllib.TOMLDecodeError) as exc:
+        except (
+            FileNotFoundError,
+            RuntimeError,
+            ValueError,
+            tomllib.TOMLDecodeError,
+        ) as exc:
             _render("FAIL", task.label, str(exc).replace("\n", "; "))
             raise
     print(f"setup: {len(TASKS)}/{len(TASKS)} tasks passed")
@@ -281,8 +304,10 @@ def build_parser() -> argparse.ArgumentParser:
         prog="setup",
         description="Stage authorized BOF3 media and required toolchains.",
     )
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
-    parser.add_argument("--psyq-archive", type=Path, help="PsyQ 4.7 archive under inputs/")
+    add_root_argument(parser)
+    parser.add_argument(
+        "--psyq-archive", type=Path, help="PsyQ 4.7 archive under inputs/"
+    )
     parser.add_argument("--psyq-url", help="explicit PsyQ 4.7 archive URL")
     parser.add_argument("--force", action="store_true")
     parser.set_defaults(handler=run)

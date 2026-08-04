@@ -10,11 +10,10 @@ from typing import Any
 from ..canonical import load_map
 from ..domain import FUNCTION_ID_HELP, parse_function_id
 from ..domain.manifests import CompanionOverlay, load_target_manifests
-from ..emi.catalog import verify_declared_companions
-from ..io import repo_layout
+from ..emi.catalog_verify import verify_declared_companions
 from ..layout import parse_splat_layout
 
-from ._common import run_main
+from ._common import add_root_argument, run_main
 
 
 def _status(ok: bool, detail: str) -> dict[str, object]:
@@ -145,7 +144,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="report whether companion evidence makes one lift safe",
     )
     parser.add_argument("function", help=FUNCTION_ID_HELP)
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
     parser.set_defaults(handler=run)
     return parser
 

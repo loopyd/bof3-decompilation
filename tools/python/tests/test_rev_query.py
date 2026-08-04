@@ -3,18 +3,16 @@ from __future__ import annotations
 import json
 import sqlite3
 
-from harness.commands.rev_query import (
-    _candidate_exclusion,
+from harness.commands._rev_query_graph import (
     _dominates,
     _enrich_graph,
     _function_metrics,
-    _priority_rows,
-    _project_rows,
     _sccs,
-    build_parser,
-    main,
 )
+from harness.commands._rev_query_priority import _candidate_exclusion, _priority_rows
+from harness.commands.rev_query import _project_rows, build_parser, main
 from harness.reverse_index import _schema
+
 
 def test_sccs_are_deterministic_and_collapse_recursion() -> None:
     edges = {"a": {"b"}, "b": {"a", "c"}, "c": set()}
@@ -99,7 +97,7 @@ def test_candidate_exclusions_are_reported_without_ranking(tmp_path) -> None:
         'source_dir = "src/exe/t"\n'
         'binary = "out/binaries/exe/t.bin"\n'
         'splat = "config/targets/exe/t/splat.yaml"\n'
-        'load_address = 0x80100000\n',
+        "load_address = 0x80100000\n",
         encoding="utf-8",
     )
     (config / "splat.yaml").write_text(
@@ -165,7 +163,10 @@ def test_candidate_exclusions_are_reported_without_ranking(tmp_path) -> None:
     args.function = None
     from unittest.mock import patch
 
-    with patch("harness.commands.rev_query._function_metrics", return_value=candidates):
+    with patch(
+        "harness.commands._rev_query_priority._function_metrics",
+        return_value=candidates,
+    ):
         exclusions = _priority_rows(connection, args, root=tmp_path)
     assert [entry["candidate_exclusion"] for entry in exclusions] == [
         "shared_sdk_symbol",
@@ -174,7 +175,10 @@ def test_candidate_exclusions_are_reported_without_ranking(tmp_path) -> None:
     ]
 
     args.exclusions = False
-    with patch("harness.commands.rev_query._function_metrics", return_value=candidates):
+    with patch(
+        "harness.commands._rev_query_priority._function_metrics",
+        return_value=candidates,
+    ):
         ranked = _priority_rows(connection, args, root=tmp_path)
     assert [entry["id"] for entry in ranked] == [f"{target}@80100018"]
 
@@ -361,7 +365,9 @@ def test_mission_composes_sdk_callees_callers_and_risk(
     connection.execute(
         "INSERT INTO unresolved_calls VALUES ('exe/t@80100000', 0x80174668, 0x80100008, 'unknown')"
     )
-    monkeypatch.setattr("harness.commands.rev_query.connect", lambda _root: connection)
+    monkeypatch.setattr(
+        "harness.commands._rev_query_mission.connect", lambda _root: connection
+    )
 
     assert main(["--root", str(tmp_path), "mission", "exe/t@0x80100000", "--json"]) == 0
 

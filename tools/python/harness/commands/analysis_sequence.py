@@ -7,10 +7,9 @@ import sys
 from pathlib import Path
 
 from ..domain import FUNCTION_ID_FORMAT, FUNCTION_ID_HELP
-from ..io import repo_layout
 from ..reverse_index import rebuild
 from ..rizin_project import status
-from ._common import run_main
+from ._common import add_example_argument, add_root_argument, run_main
 
 
 def _root(args: argparse.Namespace) -> Path:
@@ -74,7 +73,7 @@ def build_parser() -> argparse.ArgumentParser:
             "rebuild index when stale, then run a rev-query ranking."
         ),
     )
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
     parser.add_argument("target", help="target ID for the sequence")
     parser.add_argument(
         "--ranking",
@@ -109,16 +108,15 @@ def build_parser() -> argparse.ArgumentParser:
         metavar=FUNCTION_ID_FORMAT,
         help=FUNCTION_ID_HELP,
     )
+    add_example_argument(
+        parser, "bin/analysis-sequence exe/slus_004_22 --ranking quick-wins"
+    )
     parser.set_defaults(handler=run_sequence)
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
-    arguments = sys.argv[1:] if argv is None else argv
-    if arguments == ["--example"]:
-        print("bin/analysis-sequence exe/slus_004_22 --ranking quick-wins")
-        return 0
-    return run_main(build_parser, arguments)
+    return run_main(build_parser, argv)
 
 
 if __name__ == "__main__":

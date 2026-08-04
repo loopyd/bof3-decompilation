@@ -10,8 +10,9 @@ import sys
 from pathlib import Path
 import re
 
-from ..io import repo_layout
 from ..toolchain.permuter import DecompPermuterToolchain
+from ._common import add_example_argument, add_root_argument, run_main
+
 
 def require_inside_root(path: Path, description: str, root: Path) -> None:
     try:
@@ -20,7 +21,7 @@ def require_inside_root(path: Path, description: str, root: Path) -> None:
         raise ValueError(f"{description} must be inside {root}: {path}") from exc
 
 
-def function_name(source: Path, explicit: str | None) -> str:
+def resolve_function_name(source: Path, explicit: str | None) -> str:
     function = explicit or source.stem
     if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", function):
         raise ValueError(f"invalid function name: {function!r}")
@@ -48,7 +49,9 @@ def assembly_path(source: Path, function: str, root: Path) -> Path:
     return exact
 
 
-def ensure_target_assembly(source: Path, function: str, directory: Path, root: Path) -> None:
+def ensure_target_assembly(
+    source: Path, function: str, directory: Path, root: Path
+) -> None:
     target = directory / "target.s"
     if target.is_file():
         require_inside_root(target.resolve(), "target.s", root)
@@ -83,7 +86,7 @@ def validate(args: argparse.Namespace, root: Path) -> tuple[Path, str, Path, Pat
     except ValueError as exc:
         raise ValueError(f"source must be inside {root / 'src'}: {source}") from exc
 
-    function = function_name(source, args.function)
+    function = resolve_function_name(source, args.function)
     directory = (
         default_directory(source, root)
         if args.directory is None
@@ -165,7 +168,13 @@ def run(args: argparse.Namespace) -> int:
             ensure_target_assembly(source, function, directory, root)
             toolchain = DecompPermuterToolchain(root)
             prepare = subprocess.run(
-                [str(toolchain.python), str(preparer), str(source), function, str(directory)],
+                [
+                    str(toolchain.python),
+                    str(preparer),
+                    str(source),
+                    function,
+                    str(directory),
+                ],
                 cwd=root,
                 check=False,
             )
@@ -206,16 +215,14 @@ def build_parser() -> argparse.ArgumentParser:
         description="Prepare and optionally run decomp-permuter for one function.",
         prog="permute",
     )
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
     parser.add_argument(
         "source",
         type=Path,
         nargs="?",
         help="TARGET@0xADDRESS (preferred) or an existing src/.../func_ADDRESS.c path",
     )
-    parser.add_argument(
-        "--example", action="store_true", help="print a minimal invocation"
-    )
+    add_example_argument(parser, "bin/permute exe/logo@0x801CE758 --time-limit 300")
     parser.add_argument(
         "function",
         nargs="?",
@@ -282,30 +289,27 @@ def build_parser() -> argparse.ArgumentParser:
         help="stop this coordinator after SECONDS (the upstream permuter has no native timer)",
     )
     parser.add_argument("--debug", action="store_true")
-    parser.set_defaults(quiet=False, best_only=True, stop_on_zero=True)
+    parser.set_defaults(
+        quiet=False, best_only=True, stop_on_zero=True, handler=_resolve_and_run
+    )
     return parser
 
 
-def main(argv: list[str] | None = None) -> int:
-    arguments = sys.argv[1:] if argv is None else argv
-    if "--example" in arguments:
-        print("bin/permute exe/logo@0x801CE758 --time-limit 300")
-        return 0
-    args = build_parser().parse_args(arguments)
-    try:
-        if args.source is None:
-            raise ValueError("TARGET@0xADDRESS is required")
-        raw_source = str(args.source)
-        if "@" in raw_source:
-            from harness.commands.lift import resolve_function
+def _resolve_and_run(args: argparse.Namespace) -> int:
+    if args.source is None:
+        raise ValueError("TARGET@0xADDRESS is required")
+    raw_source = str(args.source)
+    if "@" in raw_source:
+        from harness.commands._lift_m2c import resolve_function
 
-            function_id, _, args.source = resolve_function(raw_source)
-            if args.function is None:
-                args.function = f"func_{function_id.address:08X}"
-        return run(args)
-    except (FileNotFoundError, RuntimeError, ValueError) as exc:
-        print(f"error: {exc}", file=sys.stderr)
-        return 2
+        function_id, _, args.source = resolve_function(raw_source)
+        if args.function is None:
+            args.function = f"func_{function_id.address:08X}"
+    return run(args)
+
+
+def main(argv: list[str] | None = None) -> int:
+    return run_main(build_parser, argv)
 
 
 if __name__ == "__main__":

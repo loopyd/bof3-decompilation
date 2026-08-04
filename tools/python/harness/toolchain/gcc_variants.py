@@ -3,71 +3,55 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping
 import platform as _platform
 import re
 import subprocess
 import sys
-from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
 from ..io import RepoLayout
 from .gcc_archive import (
     install_archive,
-    sha256_file,  # noqa: F401 — re-exported for tests
     verify_installed,
 )
 
 
-class CompilerVariant(ABC):
-    """A single historical GCC compiler variant entry."""
+class CompilerVariant:
+    """A single historical GCC compiler variant entry.
 
-    @property
-    @abstractmethod
-    def id(self) -> str:
-        """Unique identifier for this variant."""
+    Plain attributes mirror the validated catalog fields; install and verify
+    behavior is shared by every concrete variant.
+    """
 
-    @property
-    @abstractmethod
-    def label(self) -> str:
-        """Human-readable name for display."""
+    def __init__(self, entry: Mapping[str, str]) -> None:
+        self.id = entry["id"]
+        self.label = entry["label"]
+        self.url = entry["url"]
+        self.checksum = entry["checksum"]
+        self.archive_name = entry["archive_name"]
+        self.host = entry["host"]
+        self.identity = entry["identity"]
+        self.executable_relpath = entry["executable_relpath"]
 
-    @property
-    @abstractmethod
-    def url(self) -> str:
-        """Download URL for the archive containing this variant's binaries."""
-
-    @property
-    @abstractmethod
-    def checksum(self) -> str:
-        """SHA-256 of the downloaded archive."""
-
-    @property
-    @abstractmethod
-    def archive_name(self) -> str:
-        """Archive filename (e.g., 'gcc-2.7.2-psx.tar.gz')."""
-
-    @abstractmethod
     def install(self, layout: RepoLayout, *, force: bool = False) -> str:
         """Download, verify digest, and install this variant."""
+        check_host_compatible(self.host)
+        return install_archive(
+            layout,
+            archive_name=self.archive_name,
+            url=self.url,
+            checksum=self.checksum,
+            dest=self.install_path(layout),
+            executable_relpath=self.executable_relpath,
+            expected_identity=self.identity,
+            label=f"variant {self.id}",
+            force=force,
+        )
 
-    @abstractmethod
     def install_path(self, layout: RepoLayout) -> Path:
         """Where this variant installs relative to the toolchains directory."""
-
-    @property
-    @abstractmethod
-    def identity(self) -> str:
-        """Expected identity substring in --version output (e.g. 'mips-sony-psx-gcc')."""
-
-    @property
-    @abstractmethod
-    def executable_relpath(self) -> str:
-        """Relative path from variant root to the compiler binary (e.g. 'gcc')."""
-
-    @property
-    @abstractmethod
-    def host(self) -> str:
-        """Expected host platform string."""
+        return layout.gcc_variants_root / self.id
 
     def verify(self, layout: RepoLayout) -> str:
         """Verify the installed variant: file exists, within root, identity matches."""
@@ -98,37 +82,17 @@ class CompilerVariant(ABC):
 class EmptyCatalog(CompilerVariant):
     """Sentinel indicating no valid candidates exist in the catalog."""
 
-    @property
-    def id(self) -> str:
-        return "none"
+    id = "none"
+    label = "No variant"
+    url = ""
+    checksum = ""
+    archive_name = ""
+    host = ""
+    identity = ""
+    executable_relpath = ""
 
-    @property
-    def label(self) -> str:
-        return "No variant"
-
-    @property
-    def url(self) -> str:
-        return ""
-
-    @property
-    def checksum(self) -> str:
-        return ""
-
-    @property
-    def archive_name(self) -> str:
-        return ""
-
-    @property
-    def host(self) -> str:
-        return ""
-
-    @property
-    def identity(self) -> str:
-        return ""
-
-    @property
-    def executable_relpath(self) -> str:
-        return ""
+    def __init__(self) -> None:
+        """The sentinel has no catalog entry."""
 
     def install(self, layout: RepoLayout, *, force: bool = False) -> str:
         raise RuntimeError("empty catalog has no package to install")
@@ -324,61 +288,4 @@ def load_variants(
             if cid in seen_ids:
                 raise ValueError(f"duplicate variant ID: {cid!r}")
             seen_ids.add(cid)
-    return [CompilerVariantEntry(e) for e in entries]
-
-
-class CompilerVariantEntry(CompilerVariant):
-    """Concrete implementation backed by a catalog entry dict."""
-
-    def __init__(self, entry: dict[str, Any]) -> None:
-        self._entry = entry
-
-    @property
-    def id(self) -> str:
-        return self._entry["id"]
-
-    @property
-    def label(self) -> str:
-        return self._entry["label"]
-
-    @property
-    def url(self) -> str:
-        return self._entry["url"]
-
-    @property
-    def checksum(self) -> str:
-        return self._entry["checksum"]
-
-    @property
-    def archive_name(self) -> str:
-        return self._entry["archive_name"]
-
-    @property
-    def host(self) -> str:
-        return self._entry["host"]
-
-    @property
-    def identity(self) -> str:
-        return self._entry["identity"]
-
-    @property
-    def executable_relpath(self) -> str:
-        return self._entry["executable_relpath"]
-
-    def install_path(self, layout: RepoLayout) -> Path:
-        return layout.gcc_variants_root / self.id
-
-    def install(self, layout: RepoLayout, *, force: bool = False) -> str:
-        """Download, verify digest, and install this variant."""
-        check_host_compatible(self.host)
-        return install_archive(
-            layout,
-            archive_name=self.archive_name,
-            url=self.url,
-            checksum=self.checksum,
-            dest=self.install_path(layout),
-            executable_relpath=self.executable_relpath,
-            expected_identity=self.identity,
-            label=f"variant {self.id}",
-            force=force,
-        )
+    return [CompilerVariant(e) for e in entries]

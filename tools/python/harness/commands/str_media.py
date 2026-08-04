@@ -6,11 +6,9 @@ import argparse
 import json
 from pathlib import Path
 import shutil
-import sys
 
 from ..assets.str_media import convert_str, inspect_str, validate_str
-from ..io import repo_layout
-from ._common import run_main
+from ._common import add_example_argument, add_root_argument, run_main
 
 
 def _source(args: argparse.Namespace) -> Path:
@@ -58,8 +56,8 @@ def run_convert(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="str-media")
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
-    parser.add_argument("--example", action="store_true")
+    add_root_argument(parser)
+    add_example_argument(parser, "bin/str-media inspect out/extracted/INTRO.STR")
     sub = parser.add_subparsers(dest="command")
     for name, handler in (
         ("inspect", run_inspect),
@@ -80,10 +78,6 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    argv = sys.argv[1:] if argv is None else argv
-    if argv == ["--example"]:
-        print("bin/str-media inspect out/extracted/INTRO.STR")
-        return 0
     return run_main(build_parser, argv)
 
 

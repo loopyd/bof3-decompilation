@@ -4,14 +4,13 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
 from pathlib import Path
 
 from ..domain import FUNCTION_ID_HELP, load_target_manifests, parse_function_id
 from ..io import repo_layout
 from ..match.flag_search import search_flags
 from ..toolchain.gcc_variants import EmptyCatalog, lookup_variant
-from ._common import run_main
+from ._common import add_example_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:
@@ -58,16 +57,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--compiler", type=str, help="catalog ID for a historical GCC variant"
     )
     parser.add_argument("-o", "--out", type=Path)
-    parser.add_argument("--example", action="store_true")
+    add_example_argument(parser, "bin/flag-search exe/logo@0x801CE758")
     parser.set_defaults(handler=run)
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
-    argv = sys.argv[1:] if argv is None else argv
-    if argv == ["--example"]:
-        print("bin/flag-search exe/logo@0x801CE758")
-        return 0
     return run_main(build_parser, argv)
 
 

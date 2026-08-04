@@ -9,11 +9,9 @@ import pytest
 
 from harness.commands.companion_check import build_report
 from harness.domain import load_target_manifests
-from harness.emi.catalog import (
-    build_catalog,
-    materialize_reviewed_targets,
-    verify_declared_companions,
-)
+from harness.emi.catalog import build_catalog
+from harness.emi.catalog_bootstrap import materialize_reviewed_targets
+from harness.emi.catalog_verify import verify_declared_companions
 
 CALLER_BASE = 0x801D0C00
 CALLSITE = 0x801E0C28
@@ -32,12 +30,20 @@ def _entry(root: Path, archive: str, slot: int, base: int, payload: bytes) -> No
     manifest = directory / "emi.json"
     entries = json.loads(manifest.read_text()) if manifest.exists() else {"entries": []}
     entries["entries"].append(
-        {"index": slot, "name": f"{slot}.bin", "ram_ptr": base, "size": len(payload), "type": 0}
+        {
+            "index": slot,
+            "name": f"{slot}.bin",
+            "ram_ptr": base,
+            "size": len(payload),
+            "type": 0,
+        }
     )
     manifest.write_text(json.dumps(entries), encoding="utf-8")
 
 
-def _target(root: Path, target: str, disc_id: str, base: int, *, companion: bool = False) -> None:
+def _target(
+    root: Path, target: str, disc_id: str, base: int, *, companion: bool = False
+) -> None:
     path = root / "config" / "targets" / target / "target.toml"
     path.parent.mkdir(parents=True, exist_ok=True)
     text = (
@@ -48,10 +54,12 @@ def _target(root: Path, target: str, disc_id: str, base: int, *, companion: bool
         f'source_dir = "src/{target}"\n'
         f'binary = "out/binaries/{target}.bin"\n'
         f'splat = "config/targets/{target}/splat.yaml"\n'
-        f'load_address = 0x{base:08X}\n'
+        f"load_address = 0x{base:08X}\n"
     )
     if companion:
-        payload = (root / "out" / "extracted" / "BIN" / "WORLD00" / "AREA030" / "5.bin").read_bytes()
+        payload = (
+            root / "out" / "extracted" / "BIN" / "WORLD00" / "AREA030" / "5.bin"
+        ).read_bytes()
         text += (
             "\n[[companion_overlays]]\n"
             'target = "emi/world00/area030/05"\n'
@@ -76,8 +84,16 @@ def _fixture_root(tmp_path: Path, *, companion: bool = True) -> Path:
     _entry(tmp_path, "WORLD00/AREA030", 5, COMPANION_BASE, payload)
     _entry(tmp_path, "WORLD02/AREA089", 5, COMPANION_BASE, payload)
     _entry(tmp_path, "WORLD03/AREA129", 5, COMPANION_BASE, payload)
-    _target(tmp_path, "emi/world00/area030/05", "BIN/WORLD00/AREA030.EMI#5", COMPANION_BASE)
-    _target(tmp_path, "emi/world00/area030/04", "BIN/WORLD00/AREA030.EMI#4", CALLER_BASE, companion=companion)
+    _target(
+        tmp_path, "emi/world00/area030/05", "BIN/WORLD00/AREA030.EMI#5", COMPANION_BASE
+    )
+    _target(
+        tmp_path,
+        "emi/world00/area030/04",
+        "BIN/WORLD00/AREA030.EMI#4",
+        CALLER_BASE,
+        companion=companion,
+    )
     return tmp_path
 
 
@@ -89,14 +105,17 @@ def test_companion_relation_requires_declaration(tmp_path: Path) -> None:
     assert catalog["companion_relations"] == []
 
 
-def test_target_scoped_companion_verification_matches_catalog_relation(tmp_path: Path) -> None:
+def test_target_scoped_companion_verification_matches_catalog_relation(
+    tmp_path: Path,
+) -> None:
     root = _fixture_root(tmp_path)
     manifests = load_target_manifests(root)
     catalog = build_catalog(root / "out" / "extracted" / "BIN")
 
-    assert verify_declared_companions(
-        root, manifests["emi/world00/area030/04"]
-    ) == catalog["companion_relations"]
+    assert (
+        verify_declared_companions(root, manifests["emi/world00/area030/04"])
+        == catalog["companion_relations"]
+    )
 
 
 def test_declared_companion_relation_verifies_identity_and_jal(tmp_path: Path) -> None:
@@ -110,13 +129,7 @@ def test_declared_companion_relation_verifies_identity_and_jal(tmp_path: Path) -
             "disc_id": "BIN/WORLD00/AREA030.EMI#5",
             "payload_sha256": hashlib.sha256(
                 (
-                    root
-                    / "out"
-                    / "extracted"
-                    / "BIN"
-                    / "WORLD00"
-                    / "AREA030"
-                    / "5.bin"
+                    root / "out" / "extracted" / "BIN" / "WORLD00" / "AREA030" / "5.bin"
                 ).read_bytes()
             ).hexdigest(),
             "load_address": COMPANION_BASE,
@@ -129,7 +142,16 @@ def test_declared_companion_relation_verifies_identity_and_jal(tmp_path: Path) -
 
 def test_catalog_rejects_caller_base_mismatch(tmp_path: Path) -> None:
     root = _fixture_root(tmp_path)
-    path = root / "config" / "targets" / "emi" / "world00" / "area030" / "04" / "target.toml"
+    path = (
+        root
+        / "config"
+        / "targets"
+        / "emi"
+        / "world00"
+        / "area030"
+        / "04"
+        / "target.toml"
+    )
     path.write_text(path.read_text().replace("0x801D0C00", "0x801D1000"))
 
     with pytest.raises(ValueError, match="caller catalog load address mismatch"):
@@ -158,7 +180,16 @@ def test_catalog_rejects_changed_companion_payload_identity(tmp_path: Path) -> N
 
 def test_manifest_rejects_companion_target_base_mismatch(tmp_path: Path) -> None:
     root = _fixture_root(tmp_path)
-    path = root / "config" / "targets" / "emi" / "world00" / "area030" / "05" / "target.toml"
+    path = (
+        root
+        / "config"
+        / "targets"
+        / "emi"
+        / "world00"
+        / "area030"
+        / "05"
+        / "target.toml"
+    )
     path.write_text(path.read_text().replace("0x800F5000", "0x800F6000"))
 
     with pytest.raises(ValueError, match="companion overlay identity mismatch"):
@@ -167,8 +198,21 @@ def test_manifest_rejects_companion_target_base_mismatch(tmp_path: Path) -> None
 
 def test_manifest_rejects_companion_outside_declared_payload(tmp_path: Path) -> None:
     root = _fixture_root(tmp_path)
-    path = root / "config" / "targets" / "emi" / "world00" / "area030" / "04" / "target.toml"
-    path.write_text(path.read_text().replace("target_address = 0x800F500C", "target_address = 0x800F8000"))
+    path = (
+        root
+        / "config"
+        / "targets"
+        / "emi"
+        / "world00"
+        / "area030"
+        / "04"
+        / "target.toml"
+    )
+    path.write_text(
+        path.read_text().replace(
+            "target_address = 0x800F500C", "target_address = 0x800F8000"
+        )
+    )
 
     with pytest.raises(ValueError, match="companion call outside payload"):
         load_target_manifests(root)
@@ -191,7 +235,9 @@ def _layout(root: Path, target: str, base: int, offset: int, name: str) -> None:
     )
 
 
-def test_companion_check_allows_callers_without_companion_static_calls(tmp_path: Path) -> None:
+def test_companion_check_allows_callers_without_companion_static_calls(
+    tmp_path: Path,
+) -> None:
     root = _fixture_root(tmp_path)
     _layout(root, "emi/world00/area030/04", CALLER_BASE, 0, "func_801E0C20")
     report = build_report(root, "emi/world00/area030/04@0x801E0C20")
@@ -200,9 +246,17 @@ def test_companion_check_allows_callers_without_companion_static_calls(tmp_path:
     assert report["ready_to_lift"]
 
 
-def test_companion_check_requires_boundary_map_abi_and_declaration(tmp_path: Path) -> None:
+def test_companion_check_requires_boundary_map_abi_and_declaration(
+    tmp_path: Path,
+) -> None:
     root = _fixture_root(tmp_path)
-    _layout(root, "emi/world00/area030/04", CALLER_BASE, CALLSITE - CALLER_BASE - 8, "func_801E0C20")
+    _layout(
+        root,
+        "emi/world00/area030/04",
+        CALLER_BASE,
+        CALLSITE - CALLER_BASE - 8,
+        "func_801E0C20",
+    )
     _layout(root, "emi/world00/area030/05", COMPANION_BASE, 12, "func_800F500C")
     missing = build_report(root, "emi/world00/area030/04@0x801E0C20")
     assert not missing["ready_to_lift"]
@@ -210,14 +264,30 @@ def test_companion_check_requires_boundary_map_abi_and_declaration(tmp_path: Pat
     assert missing["companions"][0]["companion_binding"]["status"] == "missing"
     assert missing["companions"][0]["consumer_declaration"]["status"] == "missing"
 
-    (root / "config" / "targets" / "emi" / "world00" / "area030" / "05" / "symbols.txt").write_text(
-        "func_800F500C = 0x800F500C;\n", encoding="utf-8"
-    )
+    (
+        root
+        / "config"
+        / "targets"
+        / "emi"
+        / "world00"
+        / "area030"
+        / "05"
+        / "symbols.txt"
+    ).write_text("func_800F500C = 0x800F500C;\n", encoding="utf-8")
     (root / "src" / "emi" / "world00" / "area030" / "04").mkdir(parents=True)
     (root / "src" / "emi" / "world00" / "area030" / "04" / "internal.h").write_text(
         "void func_800F500C(void);\n", encoding="utf-8"
     )
-    path = root / "config" / "targets" / "emi" / "world00" / "area030" / "04" / "target.toml"
+    path = (
+        root
+        / "config"
+        / "targets"
+        / "emi"
+        / "world00"
+        / "area030"
+        / "04"
+        / "target.toml"
+    )
     path.write_text(
         path.read_text()
         + "\n[companion_overlays.abi]\n"
@@ -239,4 +309,6 @@ def test_materialization_validates_relation_before_writing(tmp_path: Path) -> No
     caller.write_bytes(data)
     with pytest.raises(ValueError, match="companion call bytes differ"):
         materialize_reviewed_targets(root=root, catalog=catalog)
-    assert not (root / "out" / "binaries" / "emi" / "world00" / "area030" / "04.bin").exists()
+    assert not (
+        root / "out" / "binaries" / "emi" / "world00" / "area030" / "04.bin"
+    ).exists()

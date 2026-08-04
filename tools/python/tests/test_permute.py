@@ -34,7 +34,9 @@ def _stub_tools(root: Path) -> None:
 def test_preparer_creates_runnable_workspace(tmp_path: Path) -> None:
     source = tmp_path / "func_test.c"
     source.write_text("typedef int s32;\ns32 func_test(void) { return 1; }\n")
-    (tmp_path / "target.s").write_text(".text\nglabel func_test\n    jr $ra\n     li $v0, 1\n")
+    (tmp_path / "target.s").write_text(
+        ".text\nglabel func_test\n    jr $ra\n     li $v0, 1\n"
+    )
 
     subprocess.run(
         [
@@ -47,7 +49,12 @@ def test_preparer_creates_runnable_workspace(tmp_path: Path) -> None:
         check=True,
     )
     subprocess.run(
-        [str(tmp_path / "compile.sh"), str(tmp_path / "base.c"), "-o", str(tmp_path / "base.o")],
+        [
+            str(tmp_path / "compile.sh"),
+            str(tmp_path / "base.c"),
+            "-o",
+            str(tmp_path / "base.o"),
+        ],
         check=True,
     )
 
@@ -83,16 +90,19 @@ def test_nonexistent_source_returns_2(
 
 
 def test_function_name_from_stem() -> None:
-    assert permute.function_name(Path("/src/x/func_801CE758.c"), None) == "func_801CE758"
+    assert (
+        permute.resolve_function_name(Path("/src/x/func_801CE758.c"), None)
+        == "func_801CE758"
+    )
 
 
 def test_function_name_explicit() -> None:
-    assert permute.function_name(Path("src/x.c"), "custom") == "custom"
+    assert permute.resolve_function_name(Path("src/x.c"), "custom") == "custom"
 
 
 def test_function_name_invalid_raises() -> None:
     with pytest.raises(ValueError, match="invalid function name"):
-        permute.function_name(Path("x.c"), "bad-name!")
+        permute.resolve_function_name(Path("x.c"), "bad-name!")
 
 
 # ---------------------------------------------------------------------------
@@ -118,7 +128,9 @@ def test_default_directory_includes_src(tmp_path: Path) -> None:
     source.parent.mkdir(parents=True)
     source.touch()
     result = permute.default_directory(source, tmp_path)
-    expected = (tmp_path / "out" / "permuter" / "src" / "exe" / "logo" / "func_801CE758").resolve()
+    expected = (
+        tmp_path / "out" / "permuter" / "src" / "exe" / "logo" / "func_801CE758"
+    ).resolve()
     assert result == expected
 
 
@@ -202,7 +214,9 @@ def test_run_rejects_prepare_only_with_prepared(tmp_path: Path) -> None:
     ns = permute.build_parser().parse_args(
         ["--root", str(tmp_path), str(src), "--prepare-only", "--prepared"]
     )
-    with pytest.raises(ValueError, match="--prepare-only cannot be combined with --prepared"):
+    with pytest.raises(
+        ValueError, match="--prepare-only cannot be combined with --prepared"
+    ):
         permute.run(ns)
 
 
@@ -237,7 +251,9 @@ def test_run_prepared_accepts_complete_workspace(
     for name in ("base.c", "target.o", "compile.sh", "settings.toml"):
         (workspace / name).touch()
 
-    monkeypatch.setattr(subprocess, "run", lambda command, **kw: subprocess.CompletedProcess(command, 0))
+    monkeypatch.setattr(
+        subprocess, "run", lambda command, **kw: subprocess.CompletedProcess(command, 0)
+    )
     monkeypatch.setattr(permute.fcntl, "flock", lambda fd, op: None)
 
     ns = permute.build_parser().parse_args(
@@ -263,7 +279,9 @@ def test_run_prepare_only_propagates_preparer_nonzero(
     asm.parent.mkdir(parents=True)
     asm.write_text("glabel f\n")
 
-    monkeypatch.setattr(subprocess, "run", lambda command, **kw: subprocess.CompletedProcess(command, 7))
+    monkeypatch.setattr(
+        subprocess, "run", lambda command, **kw: subprocess.CompletedProcess(command, 7)
+    )
     monkeypatch.setattr(permute.fcntl, "flock", lambda fd, op: None)
 
     ns = permute.build_parser().parse_args(
@@ -284,7 +302,9 @@ def test_run_prepare_only_returns_zero(
     asm.parent.mkdir(parents=True)
     asm.write_text("glabel f\n")
 
-    monkeypatch.setattr(subprocess, "run", lambda command, **kw: subprocess.CompletedProcess(command, 0))
+    monkeypatch.setattr(
+        subprocess, "run", lambda command, **kw: subprocess.CompletedProcess(command, 0)
+    )
     monkeypatch.setattr(permute.fcntl, "flock", lambda fd, op: None)
 
     ns = permute.build_parser().parse_args(
@@ -352,7 +372,9 @@ def test_run_propagates_permuter_exit_code(
     monkeypatch.setattr(
         DecompPermuterToolchain,
         "execute",
-        lambda self, args, **kw: subprocess.CompletedProcess(args, 5, stdout="", stderr=""),
+        lambda self, args, **kw: subprocess.CompletedProcess(
+            args, 5, stdout="", stderr=""
+        ),
     )
 
     ns = permute.build_parser().parse_args(
@@ -389,7 +411,16 @@ def test_run_timeout_returns_zero(
     )
 
     ns = permute.build_parser().parse_args(
-        ["--root", str(tmp_path), str(src), "f", "--prepared", str(workspace), "--time-limit", "5"]
+        [
+            "--root",
+            str(tmp_path),
+            str(src),
+            "f",
+            "--prepared",
+            str(workspace),
+            "--time-limit",
+            "5",
+        ]
     )
     rc = permute.run(ns)
     assert rc == 0
@@ -423,7 +454,9 @@ def test_run_acquires_and_releases_lock(
     monkeypatch.setattr(
         DecompPermuterToolchain,
         "execute",
-        lambda self, args, **kw: subprocess.CompletedProcess(args, 0, stdout="", stderr=""),
+        lambda self, args, **kw: subprocess.CompletedProcess(
+            args, 0, stdout="", stderr=""
+        ),
     )
 
     ns = permute.build_parser().parse_args(
@@ -478,19 +511,22 @@ def test_main_resolves_target_address(
         (workspace / name).touch()
 
     from types import SimpleNamespace
+
     mock_id = SimpleNamespace(
         address=0x801CE758, target=SimpleNamespace(value="exe/logo")
     )
 
     monkeypatch.setattr(
-        "harness.commands.lift.resolve_function",
+        "harness.commands._lift_m2c.resolve_function",
         lambda raw: (mock_id, mock_id.target, src),
     )
     monkeypatch.setattr(permute.fcntl, "flock", lambda fd, op: None)
     monkeypatch.setattr(
         DecompPermuterToolchain,
         "execute",
-        lambda self, args, **kw: subprocess.CompletedProcess(args, 0, stdout="", stderr=""),
+        lambda self, args, **kw: subprocess.CompletedProcess(
+            args, 0, stdout="", stderr=""
+        ),
     )
 
     rc = permute.main(

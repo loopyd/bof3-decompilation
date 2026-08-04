@@ -10,7 +10,9 @@ from types import SimpleNamespace
 import pytest
 
 from harness.commands import lift
-from harness.commands.lift import AsmDiffRequest, run_m2c
+from harness.commands import _lift_m2c
+from harness.commands._lift_m2c import run_m2c
+from harness.match._asm_diff_payload import AsmDiffRequest
 from harness.toolchain.m2c import M2cToolchain
 
 
@@ -43,6 +45,7 @@ def test_target_qualified_lift_resolves_only_its_owner(
 ) -> None:
     _target(tmp_path)
     monkeypatch.setattr(lift, "repo_layout", lambda: _layout(tmp_path))
+    monkeypatch.setattr(_lift_m2c, "repo_layout", lambda: _layout(tmp_path))
 
     function, manifest, source = lift.resolve_function("exe/logo@0x801CE758")
 
@@ -56,6 +59,7 @@ def test_lift_commands_explain_missing_source(
 ) -> None:
     _target(tmp_path)
     monkeypatch.setattr(lift, "repo_layout", lambda: _layout(tmp_path))
+    monkeypatch.setattr(_lift_m2c, "repo_layout", lambda: _layout(tmp_path))
 
     assert lift.main("asm-diff", ["exe/logo@0x801CE758"]) == 2
     assert "bin/m2c exe/logo@0x801CE758 -o" in capsys.readouterr().err
@@ -72,9 +76,10 @@ def test_context_keeps_symbols_target_local(
         encoding="utf-8",
     )
     monkeypatch.setattr(lift, "repo_layout", lambda: _layout(tmp_path))
+    monkeypatch.setattr(_lift_m2c, "repo_layout", lambda: _layout(tmp_path))
     function, manifest, _ = lift.resolve_function("exe/logo@0x801CE758")
 
-    context = lift.render_context(function, manifest)
+    context = _lift_m2c.render_context(function, manifest)
 
     assert "extern void func_801CE758();" in context
     assert "extern u8 D_801D0000[];" in context
@@ -85,6 +90,7 @@ def _m2c_stubs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Set up one isolated target, assembly artifact, and project layout."""
     _target(tmp_path)
     monkeypatch.setattr(lift, "repo_layout", lambda: _layout(tmp_path))
+    monkeypatch.setattr(_lift_m2c, "repo_layout", lambda: _layout(tmp_path))
     assembly = tmp_path / "out" / "splat" / "exe" / "logo" / "asm" / "func_801CE758.s"
     assembly.parent.mkdir(parents=True)
     assembly.write_text("glabel func_801CE758\n", encoding="utf-8")
@@ -167,6 +173,7 @@ def test_run_match_passes_bindings_without_rewriting_identical_file(
 ) -> None:
     _map_infra(tmp_path)
     monkeypatch.setattr(lift, "repo_layout", lambda: _layout(tmp_path))
+    monkeypatch.setattr(_lift_m2c, "repo_layout", lambda: _layout(tmp_path))
     source = tmp_path / "src/exe/logo/func_801CE758.c"
     source.parent.mkdir(parents=True)
     source.write_text("// test\n")

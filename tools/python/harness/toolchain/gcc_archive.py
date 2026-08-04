@@ -1,6 +1,6 @@
 """Shared GCC archive cache and atomic install lifecycle.
 
-Both the canonical ``GccToolchain`` and every catalog ``CompilerVariantEntry``
+Both the canonical ``GccToolchain`` and every catalog ``CompilerVariant``
 resolve their archives through this module.
 
 Cache contract (``inputs/external/private-assets/toolchains/gcc/``):

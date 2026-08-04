@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
-import sys
 
-from ..io import repo_layout
-from ..psyq.signatures import write_calls, write_index, write_promotion_proposal
-from ._common import run_main
+from ..psyq.signature_calls import write_calls, write_promotion_proposal
+from ..psyq.signatures import write_index
+from ._common import add_example_argument, add_root_argument, run_main
 
 
 def _require_all(args: argparse.Namespace) -> None:
@@ -46,7 +44,10 @@ def run_proposal(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="bin/harness psyq")
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
+    add_example_argument(
+        parser, "bin/harness psyq scan --all\nbin/harness psyq calls --all"
+    )
     sub = parser.add_subparsers(dest="command", required=True)
     for name, handler, help_text in (
         (
@@ -66,11 +67,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    arguments = sys.argv[1:] if argv is None else argv
-    if arguments == ["--example"]:
-        print("bin/harness psyq scan --all\nbin/harness psyq calls --all")
-        return 0
-    return run_main(build_parser, arguments)
+    return run_main(build_parser, argv)
 
 
 if __name__ == "__main__":

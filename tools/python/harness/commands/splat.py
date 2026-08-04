@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 import sys
 
 from ..domain import lookup_target_manifest
-from ..io import repo_layout
 from ..toolchain.splat import SplatToolchain
-from ._common import run_main
+from ._common import add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:
@@ -19,7 +17,9 @@ def run(args: argparse.Namespace) -> int:
         raise ValueError(f"unknown target: {args.target}")
     toolchain = SplatToolchain(root)
     if not toolchain.executable.is_file():
-        raise FileNotFoundError(f"missing Splat executable: {toolchain.executable}; run just setup")
+        raise FileNotFoundError(
+            f"missing Splat executable: {toolchain.executable}; run just setup"
+        )
     result = toolchain.execute(
         ["split", "--make-full-disasm-for-code", str(root / manifest.splat)],
         capture_output=not args.verbose,
@@ -38,7 +38,7 @@ def run(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="splat")
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
     parser.add_argument("target", help="target id, for example exe/logo")
     parser.add_argument("--example", action="store_true")
     parser.add_argument("--verbose", action="store_true", help="show full Splat output")

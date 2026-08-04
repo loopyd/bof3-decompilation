@@ -6,8 +6,7 @@ import argparse
 from pathlib import Path
 
 from ..decomp_status import build_report, write_report
-from ..io import repo_layout
-from ._common import run_main
+from ._common import add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:
@@ -30,7 +29,7 @@ def run(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="validate-sources")
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+    add_root_argument(parser)
     parser.add_argument("-o", "--out", type=Path, help="write a JSON audit report")
     parser.set_defaults(handler=run)
     return parser

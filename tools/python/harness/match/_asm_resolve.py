@@ -220,7 +220,7 @@ def _catalog_load_address(layout: RepoLayout, disc_id: str) -> int | None:
     catalog_path = layout.root / "out" / "catalog" / "emi.json"
     if not catalog_path.is_file():
         return None
-    from ..emi.catalog import resolve_entry
+    from ..emi.catalog_verify import resolve_entry
 
     try:
         return int(resolve_entry(read_json(catalog_path), disc_id)["load_address"])
