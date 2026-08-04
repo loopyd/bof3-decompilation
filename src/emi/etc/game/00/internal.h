@@ -115,6 +115,7 @@ extern struct GameWorkArea* g_game_work;
 /* @behavior entry-0 main state machine index */
 extern volatile u16 D_80143B90;
 extern u16          D_80143C40;
+extern volatile u8  D_80143F49;
 extern volatile u8  D_80143F4A;
 extern u8           D_80143FBC;
 /* @behavior entry-0 sub-state within current state */
@@ -210,6 +211,7 @@ extern const u8         D_801C7AD8[];
 extern const u8         D_801C7AE0[];
 extern const u8         D_801C7AE8[];
 
+extern const GameEntry0StateHandler D_801CD568[];
 extern const GameEntry0StateHandler D_801C7B08[];
 extern const GameEntry0StateHandler D_801C7B14[];
 extern const GameEntry0StateHandler D_801C7B44[];
