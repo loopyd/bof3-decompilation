@@ -176,6 +176,13 @@ exit:
 form that produces identical instruction bytes is the correct form, regardless
 of modern taste.
 
+A `do { ... } while` wrapper also anchors loop-body scheduling when the
+`for`/`while` rotation drifts. When the original preheader materializes
+invariants late (`la` chains plus a `move` copying an entry pointer), assign
+the invariants *inside* the loop body: `loop.c` hoists them as late-created
+pseudos, reproducing the preheader order and the entry copy; hoisting them in
+source before the loop flips `addu` operand order and drops the copy.
+
 ---
 
 ## Volatility
