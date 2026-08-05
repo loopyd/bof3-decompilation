@@ -45,6 +45,15 @@ extern volatile u32          GAME_FRONT_POPUP_WORD;
 extern volatile u32          D_8014598C;
 extern volatile u16          D_80143C2A;
 extern GameFrontStateHandler D_801D1C4C[];
+/* One 10-byte glyph geometry record; indexed per glyph id. */
+typedef struct GameFrontGlyphGeometry {
+  u16 unk_0;
+  u16 unk_2;
+  u16 unk_4;
+  u16 unk_6;
+  u16 unk_8;
+} GameFrontGlyphGeometry;
+extern GameFrontGlyphGeometry D_801D1C6C[];
 
 void func_8014BA04(void);
 void func_801D18F8(void);
