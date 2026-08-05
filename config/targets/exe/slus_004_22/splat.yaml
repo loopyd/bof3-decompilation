@@ -56,6 +56,13 @@ segments:
     subsegments:
       - [0xb497c, c, func_8014B17C]
   - [0xb49a4, bin, pre_emi_loader]
+  - name: cue_dispatch
+    type: code
+    start: 0xc7718
+    vram: 0x8015df18
+    subsegments:
+      - [0xc7718, c, func_8015DF18]
+  - [0xc8194, bin, post_cue_dispatch]
   - name: emi_loader
     type: code
     start: 0xcb758
