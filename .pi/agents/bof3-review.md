@@ -7,6 +7,7 @@ tools: read,grep,find,ls,bash,edit,contact_supervisor
 extensions:
 systemPromptMode: replace
 acceptanceRole: read-only
+completionGuard: false
 inheritProjectContext: true
 inheritSkills: true
 defaultContext: fresh
@@ -39,8 +40,7 @@ opcode-emitting assembly and clobbers of `s*`/`gp`/`sp`/`ra`. A mission-added
 asm-diff-proven allocator or entry-register residual after the
 clean-C/profile/permuter rungs, with a local `MATCHING_AID` and a live exact
 match; passing this review is the required independent review. Require the
-smallest pin set — reject recreating the full register map when one pinned
-local suffices.
+smallest pin set.
 Confirm types follow the original arithmetic (`sltu` = unsigned thresholds);
 reject `barrier()` used for allocator ordering. A direct numeric `"$N"`
 spelling needs explicit user approval and evidence the macro changes codegen.
