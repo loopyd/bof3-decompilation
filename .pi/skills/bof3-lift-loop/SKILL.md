@@ -53,14 +53,11 @@ Per candidate, until the queue is exhausted or a fatal loop failure:
    never acceptance.
 5. On an exact claim, dispatch `bof3-review` with brief, diff, changed-file
    diff. `needs-fix`: retry executor ≤2 times, then re-match/review; `block`:
-   journal, continue.
-6. Optional cleanup: after review passes, one `bof3-cleanup` pass for
-   cosmetic, evidence-preserving changes only (naming, comment metadata,
-   organization within owned files), gated per Post-loop organization.
-7. Only exact + review pass (plus the cleanup gate): stage owned
-   source/header/map/Splat facts, verify the staged list, commit
-   `feat(decomp): byte-match <function>`, journal it.
-8. A non-exact result never stops the queue: restore candidate state, run the
+   journal, continue. No mid-queue cleanup — cleanup runs once at batch end.
+6. Only exact + review pass: stage owned source/header/map/Splat facts,
+   verify the staged list, commit `feat(decomp): byte-match <function>`,
+   journal it.
+7. A non-exact result never stops the queue: restore candidate state, run the
    decomp.me final rung below, journal, start the next selector with a fresh
    mission context.
 
@@ -68,9 +65,10 @@ Use `subagent_supervisor` replies for child requests, not generic intercom.
 
 ## Post-loop organization
 
-Cleanup may run mid-queue (step 6). After the queue completes
+Cleanup runs once at batch end: after the queue completes
 (or budget is reached) with reviewed exact lifts, run one organization
-cleanup before the next queue per bof3-re's `Order of operations` — cosmetic,
+cleanup pass via `bof3-cleanup` over the batch's exact functions before the
+next queue per bof3-re's `Order of operations` — cosmetic,
 evidence-preserving changes only (naming, comment metadata, organization
 within owned files).
 

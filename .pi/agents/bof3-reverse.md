@@ -9,7 +9,7 @@ systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: true
 defaultContext: fresh
-timeoutMs: 3600000
+timeoutMs: 7200000
 turnBudget: {"maxTurns":300,"graceTurns":10}
 toolBudget: {"soft":300,"hard":400,"block":"*"}
 defaultProgress: true
