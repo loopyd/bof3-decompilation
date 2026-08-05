@@ -201,6 +201,14 @@ extern volatile u8   D_801462E6;
 extern BattleSelectionAction D_800B65FC[];
 extern volatile u16  D_801462E8;
 extern volatile BattleLocalWork D_80145E90[];
+extern u8  D_80145FB0[];
+extern u8  D_801EB2E8[];
+extern u8  D_801EB72C[];
+extern u8  D_801EC337[];
+extern u8  D_801EC33B[];
+extern u8  D_801EC357[];
+extern u8  D_801EC390[];
+extern u8  D_801EC3A4[];
 extern volatile u8             D_80146329;
 extern volatile u8             D_80146374;
 extern volatile s8   D_80145558;
@@ -297,6 +305,7 @@ u32  func_801502D0(u32 arg0);
 void func_801DE8C0(u8 arg0, u8 arg1, u32 arg2);
 u8   func_801DB5CC(s32 arg0);
 void func_801E5988(void);
+u32  func_801E590C(u32 arg0, u32 arg1);
 void func_801DEA64(s32 arg0);
 
 #define D_8014598C g_PrimCursor

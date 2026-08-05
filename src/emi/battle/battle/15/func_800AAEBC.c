@@ -6,45 +6,59 @@
  * @source 0x800AAEBC
  */
 void func_800AAEBC(s16 target_index, u8 battler_index) {
-  volatile u8* battler_data;
-  u8           action_slot;
-  u8           target_flags;
-  u8           enemy;
+  u8  action_slot;
+  u8  *slot_entry;
+  u32 target_flags;
+  u32 enemy;
+  s32 magnitude;
 
-  action_slot = (u8)FUNCTION_AT(s32 (*)(s32, s32), 0x801e590cu)(0, 1);
+  action_slot = (u8)func_801E590C(0u, 1u);
 
-  PSX_REF(volatile u8, 0x801ec33bu + ((u32)action_slot * 0x78u)) = 1u;
+  D_801EC33B[action_slot * 0x78] = 1u;
 
   if (battler_index < 3u) {
-    battler_data = (volatile u8*)((u32)BATTLE_PLAYER_BATTLER_BASE +
-                                  ((u32)battler_index * 0x140u));
-    target_flags = PSX_REF(volatile u8, 0x80145fb0u + ((u32)battler_index * 0x140u));
+    *(u32*)&D_801EC3A4[action_slot * 0x78] =
+        (u32)&D_80145E90[battler_index];
+    barrier();
+    target_flags = D_80145FB0[battler_index * 0x140];
   } else {
     enemy = battler_index - 3u;
-    battler_data =
-        (volatile u8*)((u32)BATTLE_ENEMY_BATTLER_BASE + ((u32)enemy * 0x118u));
-    target_flags = PSX_REF(volatile u8, 0x801eb72cu + ((u32)enemy * 0x118u));
+    *(u32*)&D_801EC3A4[action_slot * 0x78] =
+        (u32)&D_801EB2E8[battler_index * 0x118];
+    barrier();
+    target_flags = D_801EB72C[enemy * 0x118];
   }
 
   if (target_index < 0) {
-    target_index = -target_index;
-    PSX_REF(volatile u32, 0x801ec390u + ((u32)action_slot * 0x78u)) = (s32)target_index;
-    PSX_REF(volatile u8, 0x801ec357u + ((u32)action_slot * 0x78u)) = 1u;
+    *(s32*)&D_801EC390[action_slot * 0x78] =
+        (magnitude = abs((s32)target_index));
+    D_801EC357[action_slot * 0x78] = 1u;
   } else {
-    PSX_REF(volatile u32, 0x801ec390u + ((u32)action_slot * 0x78u)) = (s32)target_index;
-    PSX_REF(volatile u8, 0x801ec357u + ((u32)action_slot * 0x78u)) = 2u;
+    /* MATCHING_AID: the do-while(0) wrapper plus the slot_entry pointer
+     * temporary (permuter-found) reproduce the original register allocation
+     * (action_slot in $a1, target_flags in $a2) and the positive-arm store
+     * schedule. Without the wrapper the allocator swaps $a1/$a2 and the
+     * match drops to 90.55%. Live bin/byte-match was exact. Remove when the
+     * allocator choice for this arm is understood. */
+    do {
+      slot_entry = &D_801EC390[action_slot * 0x78];
+      *(s32*)slot_entry = (s32)target_index;
+      D_801EC357[action_slot * 0x78] = 2u;
+    } while (0);
   }
 
   if (!(target_flags & 0x2u)) {
-    PSX_REF(volatile u8, 0x801ec337u + ((u32)action_slot * 0x78u)) = 4u;
+    D_801EC337[action_slot * 0x78] = 4u;
     return;
   }
 
-  if (!(target_flags & 0x20u) && (target_flags & 0x8u)) {
-    PSX_REF(volatile u8, 0x801ec357u + ((u32)action_slot * 0x78u)) = 1u;
-    PSX_REF(volatile u8, 0x801ec337u + ((u32)action_slot * 0x78u)) = 2u;
-    return;
+  if (!(target_flags & 0x20u)) {
+    if (target_flags & 0x8u) {
+      D_801EC357[action_slot * 0x78] = 1u;
+      D_801EC337[action_slot * 0x78] = 2u;
+      return;
+    }
   }
 
-  PSX_REF(volatile u8, 0x801ec337u + ((u32)action_slot * 0x78u)) = 0u;
+  D_801EC337[action_slot * 0x78] = 0u;
 }
