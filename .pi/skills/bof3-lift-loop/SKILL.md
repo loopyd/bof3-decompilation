@@ -15,8 +15,7 @@ functions in one target concurrently: they share `internal.h`.
 
 Get targets (default reviewed), selection (`quick-wins` default), budget
 (start 3–5), scope exclusions, branch, explicit commit authorization, explicit
-decomp.me publication authorization when partials are in scope. Subagents
-never commit/push/reset/clean/setup; never commit `inputs/` or secrets.
+decomp.me publication authorization when partials are in scope.
 
 ## Baseline and queue
 
@@ -31,14 +30,13 @@ it fails closed (`dispatch_allowed: false`) when snapshots or the index are
 stale or changes exist; never dispatch while false. `--recover` repairs only
 generated stale evidence serially, then rebuilds the index once after fresh
 snapshot rechecks. It replaces slow `decomp-status` baselines: truth is
-per-function live byte-match; run decomp-status only on explicit
-progress-report request. Queue from one fresh snapshot/index; after map/Splat
+per-function live byte-match; decomp-status only on explicit progress-report
+request. Queue from one fresh snapshot/index; after map/Splat
 edits, continue the bounded queue, then refresh edited target snapshots and
 rebuild the index once at a checkpoint before requesting another queue. Never
 query a stale index. Initialize `out/lift-loop/results.tsv`: `function status
-commit notes` (four columns; parent records bounded relative brief/companion
-evidence paths and/or SHA-256 references in `notes` — they aid checkpoints,
-never replace live acceptance evidence).
+commit notes` (four columns; `notes` may carry evidence
+paths/SHA-256 refs — aids checkpoints, never replaces live acceptance).
 
 ## Serial loop
 
@@ -58,18 +56,29 @@ Per candidate, until the queue is exhausted or a fatal loop failure:
    journal, continue.
 6. Optional cleanup: after review passes, one `bof3-cleanup` pass for
    cosmetic, evidence-preserving changes only (naming, comment metadata,
-   organization within owned files). After any cleanup edit, re-run a
-   fresh live `byte-match` and dispatch a fresh `bof3-review`; both must pass
-   before the function stays eligible. A cleanup that breaks byte-match is reverted,
-   never fixed forward.
-7. Only exact + review pass (plus the cleanup gate when used): stage owned
-   source/header/map/Splat facts, verify the staged file list, commit
+   organization within owned files), gated per Post-loop organization.
+7. Only exact + review pass (plus the cleanup gate): stage owned
+   source/header/map/Splat facts, verify the staged list, commit
    `feat(decomp): byte-match <function>`, journal it.
 8. A non-exact result never stops the queue: restore candidate state, run the
    decomp.me final rung below, journal, start the next selector with a fresh
    mission context.
 
 Use `subagent_supervisor` replies for child requests, not generic intercom.
+
+## Post-loop organization
+
+Cleanup may run mid-queue (step 6). After the queue completes
+(or budget is reached) with reviewed exact lifts, run one organization
+cleanup before the next queue per bof3-re's `Order of operations` — cosmetic,
+evidence-preserving changes only (naming, comment metadata, organization
+within owned files).
+
+After any cleanup edit, re-run a fresh live `byte-match` and dispatch a fresh `bof3-review`;
+both must pass before the function stays eligible. Lift-body edits also
+first need live `bin/asm-diff TARGET@0xADDRESS --detail normal` with no
+first-difference. A cleanup that breaks byte-match is reverted, never
+fixed forward.
 
 ## Partial re-lift and decomp.me final rung
 
@@ -107,7 +116,9 @@ Task: lift/review SELECTOR (`TARGET@0xADDRESS`, or shipped EMI
 `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`).
 Context: function brief + mission/diff + owned-file diff. First run
 `agent-context.py <reverse|review> SELECTOR`.
-Authority: executor may edit only owned source/internal.h/map/Splat; reviewer may additionally edit only `docs/specs/**/*.md` or `docs/agents/lessons.md` for durable cross-function findings, never transient selector-specific evidence.
+Authority: executor edits only owned source/internal.h/map/Splat; reviewer
+may also edit only `docs/specs/**/*.md` or `docs/agents/lessons.md` for
+durable cross-function findings.
 No git writes, setup, other targets, or children; escalation may delete only its
 new mission source to restore the tree.
 Return protocol/checklist JSON and required acceptance-report.

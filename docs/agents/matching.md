@@ -19,7 +19,7 @@ bin/byte-match TARGET@0xADDRESS
 3. Recover control flow, signedness, access widths, calls, delay slots in
    readable C89.
 4. Update function C, adjacent `internal.h`, target-local map, or Splat
-   boundary when evidence requires; rerun `bin/symbols check` and
+   boundary when evidence requires; rerun `bin/symbols check TARGET` and
    `bin/splat TARGET` after configuration changes.
 5. `bin/asm-diff` for instructions; `bin/byte-match` for raw equality.
 6. Credible semantics but wrong source shape: one bounded

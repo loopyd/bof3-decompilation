@@ -3,69 +3,52 @@
 > Durable cross-cutting gotchas that make the BOF3 lift-and-match loop faster and safer.
 
 Domain contracts belong in `docs/specs/`; repeatable procedures in the owning
-operating reference. This file keeps concrete findings easy to repeat or
-misdiagnose across targets. Matching/permuter procedures:
-[function matching](matching.md).
+operating reference. Matching levers (volatile scheduling, extern rebinding,
+control-flow shapes, temporaries): [matching playbook](matching-playbook.md);
+iteration procedure: [function matching](matching.md).
 
 ## Evidence and boundaries
 
 ### Establish payload boundaries before lifting
 
 - Splat labels are reviewed inputs, not stronger evidence than payload bytes.
-- A plausible decoded instruction can still be embedded data: in
-  `emi/world00/area008/13`, bytes at payload offset `0x14` begin with the
-  `"%d"` entry header; code starts at `0x18`.
-- Check calls, saved return addresses, return paths are coherent: a false
-  start at `0x801f2c14` appeared to call before its prologue and would have
-  returned into itself.
-- Split confirmed leading data in Splat before promoting the real boundary.
+  A plausible decoded instruction can still be embedded data
+  (`emi/world00/area008/13`: `"%d"` header at payload `0x14`, code at
+  `0x18`). Check calls, saved return addresses, and return paths are
+  coherent; split confirmed leading data in Splat before promoting the real
+  boundary.
 
 ### Normalize analyzer addresses against payloads
 
 - Raw EMI payloads may contain a header before the configured code VRAM.
   Reconcile analyzer addresses with payload offsets and the Splat segment
-  start before promoting a boundary. Canonical payload bytes and tracked
+  start before promoting a boundary; canonical payload bytes and tracked
   layouts outrank analyzer-created function names.
 - Never load an extracted `GAME.EMI` entry as one linear raw image at its
-  first function address. Entry 0 begins with a count/pointer header. Entry 1
-  loads at `0x801d0c00`, begins with a control word, reaches the title setup
-  handler only at payload offset `0x90` (`0x801d0c90`); using that handler as
-  load address shifts every payload offset. Normalize and split through the
-  target's tracked Splat layout, then verify against canonical lift assembly.
-- `GAME.EMI#0` loads at `0x80195800`; its first reviewed function is at
-  payload offset `0x91c` (`0x8019611c`). Configuring the target at the first
-  function silently shifts byte reads and analyzer addresses by `0x91c`.
-  Sequence-based asm resolution can still report plausible or exact matches
-  under that bad base — a green function diff does not validate the load
-  address. Cross-check the catalog/header destination; require
-  `runtime address - load address == payload offset` before adding boundaries.
-
+  first function address. Entry 0 begins with a count/pointer header; entry 1
+  reaches its title setup handler only at payload offset `0x90`. `GAME.EMI#0`
+  loads at `0x80195800`, first reviewed function at payload `0x91c` — a
+  target configured at the first function silently shifts every byte read,
+  and sequence-based asm resolution can still report exact matches under that
+  bad base. Require `runtime address - load address == payload offset`
+  before adding boundaries.
 ### Account for runtime state and cross-target pointers
 
 - Frontend callback tables at `0x801c7b08`/`0x801c7b14` are zero in the
   shipped SLUS load image, populated at runtime. Recover consumers/producers
   from code/xrefs; zero-filled EXE bytes are not evidence of absence.
-- A callback table owned by one EMI payload may intentionally target the
-  concurrently loaded companion overlay: `GAME.EMI#0` tables mix local
-  `0x8019...` with `0x801d...`/`0x801e...` targets. Preserve the pointer as a
-  reviewed table entry; do not create a local boundary or reject the table
-  because the target lies outside the payload map.
-
+- A callback table may intentionally target the concurrently loaded companion
+  overlay (`GAME.EMI#0` tables mix `0x8019...` with `0x801d...`/`0x801e...`).
+  Preserve the pointer as a reviewed table entry; do not create a local
+  boundary because the target lies outside the payload map.
 ## Executable metadata
 
 - Read PS-X EXE `t_addr` from header offset `0x18`; never assume the common
-  `0x80010000` base. `SLUS_004.22` loads at `0x80096800`.
-- A wrong manifest base maps valid runtime addresses into unrelated zero
-  padding: the EMI loader at `0x80161f58` sits at normalized-image offset
-  `0xcb758`; subtracting the former `0x80010000` base gave the false offset
-  `0x151f58` and an apparent all-zero library.
-- Cross-check the tracked manifest against the normalized binary's generated
-  metadata and the original PS-X EXE header before concluding code is
-  runtime-generated or missing.
-- Apply the check independently per PS-X executable: `LOGO.EXE` loads at
-  `0x801ce000`; a common-base `0x80010000` reading puts its entry point and
-  reviewed functions outside the normalized payload.
-
+  `0x80010000` base. `SLUS_004.22` loads at `0x80096800`; `LOGO.EXE` at
+  `0x801ce000`. A wrong base maps valid runtime addresses into unrelated zero
+  padding and can make a library look all-zero or runtime-generated.
+  Cross-check the manifest against the normalized binary's metadata and the
+  original header, independently per executable.
 ## Build and matching
 
 ### Diagnose toolchain failures before changing candidate C
@@ -76,20 +59,9 @@ misdiagnose across targets. Matching/permuter procedures:
 - A compiler exit without diagnostics is not a comparison result. Preserve the
   last verified diff; fix the compile path before tuning source shape.
 - The historical compiler is a statically linked 32-bit i386 executable; under
-  a managed sandbox it can exit `225`/`159` before processing arguments, even
-  `--version`. Re-run `bin/cc` with its approved out-of-sandbox permission;
-  never add flags or rewrite C to address the exit.
-
-### Force global read/store order with a local when m2c reorders
-
-- m2c commonly reorders independent global accesses: `flag = 2;
-  counter += 0x14;` may emit the constant-load and `sb` before the `lhu` read
-  of `counter`, breaking byte-match despite matching semantics.
-- Pin the original load-then-store order with a local: `count = counter;
-  flag = 2; counter = (u16)(count + 0x14);`. Keep the narrow-width cast so the
-  store width matches. Byte-matched `func_801F4578`/`func_801F3258`
-  (0x8014932A/0x80149333 pair) across `emi/world00/area008/13` and
-  `emi/world00/area026/13`.
+  a managed sandbox it can exit `225`/`159` before processing arguments.
+  Re-run `bin/cc` with its approved out-of-sandbox permission; never add
+  flags or rewrite C to address the exit.
 
 ### Preserve fixed-RAM pointer ownership before permuting source shape
 
@@ -97,67 +69,27 @@ misdiagnose across targets. Matching/permuter procedures:
   global, add the raw symbol to the target-local map and declare its narrowest
   evidence-backed type in `internal.h`; never hide a known RAM global behind
   an anonymous address macro.
-- Match qualifiers to the observed contract: an unjustified `volatile` pointee
-  changes register allocation and moves stores across comparisons;
-  `func_800B2218` matched only after `D_80148648` became a named
-  `PanelTask*`. Add `volatile` only with asynchronous/hardware-mutation
-  evidence.
+- Add `volatile` only with asynchronous/hardware-mutation evidence
+  (`func_800B2218` matched only after `D_80148648` became a named
+  `PanelTask*`). Scheduling symptoms and levers:
+  [playbook §Volatility](matching-playbook.md#volatility).
 - Recover stable field offsets into a target-local struct before permuting.
-  Addresses, masks, encoded values stay hexadecimal; human quantities (32-pixel
-  step, 320-pixel clamp) decimal.
-
-### Bind a reused fixed-RAM word as an extern symbol when the macro CSEs into a callee-saved register
-
-- A `PSX_REF`-style fixed-address macro materializes the address as a
-  constant; when the value is used twice (call argument, then cached
-  pointer), GCC can CSE the constant into a callee-saved register and steal
-  an argument's prologue entry-copy register. Binding the word as a plain
-  `extern` symbol resolved through the composed maps emits `lui`/`lw`
-  relocations instead and frees the allocator. Prefer the extern form when
-  the macro form shows this exact entry-copy theft in `asm-diff`.
-
+  Addresses, masks, encoded values stay hexadecimal; human quantities
+  (32-pixel step, 320-pixel clamp) decimal.
+- Model stack locals with official PsyQ SDK types (e.g. `MATRIX`) when the
+  evidence fits; ad-hoc `u32` arrays round to 8-byte slots and inflate the
+  frame.
 ### Share duplicate behavior, not target ownership
 
 - Exact bytes make a strong source-shape reuse candidate; they do not make
   one function address, extern declaration, or semantic provenance global.
-- "Has authored C" ≠ "has a matching lift": a 7.95% representative was
-  rejected despite exact group bytes; percentage ranks effort, never
+  "Has authored C" ≠ "has a matching lift": percentage ranks effort, never
   authorizes propagation.
-- Validate a second member independently before sharing code, so target-local
-  compiler context cannot become hidden plumbing.
-- Normalize equivalent variables and struct fields before extracting a shared
-  body; divergent local vocabulary only hides unresolved understanding.
-- Use a semantic `src/shared/<domain>/*.inc` body after two independently
-  matching cross-target members when reuse offsets the indirection. Keep
-  address-based wrappers so each target compiles/validates its own symbol; no
-  runtime wrapper call merely to remove repeated source text.
-
-### Duplicate identical calls in if/else arms instead of a ternary argument
-
-- When the original computes a value directly in `$a0` in each branch and
-  tail-merges into one `jal`, write `if (cond) f(x + A); else f(x + B);`.
-  A ternary argument `f(cond ? x + A : x + B)` forces the compiler to compute
-  the argument before the call, changing allocation and breaking the merge.
-
-### Let the assembler fold an extern-array base+index to recover `addu` operand order
-
-- When C computes `table + index` itself (absolute-address pointer macro),
-  GCC emits its own `addu` with a fixed operand order that may not match the
-  original. Rebind the table as `extern Type D_XXXXXXXX[];` plus
-  `WEAK_SYMBOL_AT` and index it directly: GCC then emits the macro load
-  `lw table($idx)`, and `as` expands the `%hi`/`%lo` relocation with its own
-  canonical `lui $at; addu $at,$at,$idx` order. Same semantics; only the
-  assembler's expansion order differs.
-- A `volatile` pointee on a narrow signed global can force `lbu` plus manual
-  sign-extension (`sll`/`sra`) where the original has one `lb`. A local
-  non-volatile representation view `*(s8*)&x` restores the single `lb`; also
-  check the extern's declared type width/signedness is right first.
-
-### Matching technique reference
-
-Register-pinning ladder, `MATCHING_AID`, `barrier()`/`CLOBBER_*`, pointer
-hoisting, table indexing: [matching playbook](matching-playbook.md) and
-[memory API](memory-api.md).
+- Validate a second member independently before sharing code; normalize
+  equivalent variables and struct fields before extracting a shared body.
+- Use a semantic `src/shared/<domain>/*.inc` body only after two
+  independently matching cross-target members; keep address-based wrappers so
+  each target compiles/validates its own symbol.
 
 ### Reach fixed RAM through `PSX_PTR`/`PSX_REF`, never raw casts or `vu8`
 
@@ -165,15 +97,10 @@ hoisting, table indexing: [matching playbook](matching-playbook.md) and
   `include/base/`. The `vu8`/`vu16`/`vu32` typedefs are gone; write
   `volatile u8`/`u16`/`u32` directly on the `type` argument
   (`PSX_REF(volatile u16, 0x80143B90u)`).
-- Scratchpad RAM (`0x1F800000`): `SPAD_ADDR`/`SPAD_REF`/`SPAD_PTR_SLOT`. Use
-  `PSX_REF(volatile type, address)` only when an access must stay volatile.
-  See the [memory API](memory-api.md).
-
-### Keep `SPAD_PTR_SLOT` cell non-volatile to match constant-address codegen
-
-- A `volatile` slot forces `lui + ori + lw`, breaking the match. To force a
-  per-evaluation reload, use explicit volatile pointer-cell
-  `PSX_REF(Entity * volatile, SPAD_ADDRESS(off))`.
+- Scratchpad RAM (`0x1F800000`): `SPAD_ADDR`/`SPAD_REF`/`SPAD_PTR_SLOT`. Keep
+  the slot cell non-volatile — a `volatile` slot forces `lui + ori + lw`;
+  for a per-evaluation reload use `PSX_REF(Entity * volatile,
+  SPAD_ADDRESS(off))`. See the [memory API](memory-api.md).
 
 ## Target ownership and symbols
 

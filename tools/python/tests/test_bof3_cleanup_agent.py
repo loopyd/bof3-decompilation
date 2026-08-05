@@ -10,13 +10,20 @@ AGENTS_DIR = ROOT / ".pi" / "agents"
 
 def test_cleanup_agent_preserves_lift_identity_and_requires_evidence() -> None:
     text = AGENT.read_text(encoding="utf-8")
+    rules = (
+        ROOT / ".pi/skills/bof3-re/references/CLEANUP/RULES.md"
+    ).read_text(encoding="utf-8")
 
-    assert "two independent corroborators" in text
-    assert "never rename/move `func_XXXXXXXX.c`" in text
-    assert "rename a Splat function boundary" in text
+    # Identity/evidence contracts live in the CLEANUP reference node; the
+    # agent spec must point at it.
+    assert "two independent corroborators" in rules
+    assert "never rename/move `func_XXXXXXXX.c`" in rules
+    assert "rename a Splat function boundary" in rules
+    assert "references/CLEANUP/RULES.md" in text
+    assert "REFACTOR_PLAYBOOK.md" in text
     assert "`audit PATHS...`" in text
     assert "`docs PATHS...`" in text
-    assert "docs/plans/" in text
+    assert "docs/plans/" in rules
     assert "Do not stage, commit, push, reset, clean, checkout" in text
 
 

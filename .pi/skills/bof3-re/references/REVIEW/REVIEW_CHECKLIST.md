@@ -23,11 +23,9 @@ Check:
    rung-specific attempts, restored state, next evidence needed; apply
    `SHARING_NONMATCHES.md` to a parent sharing decision;
 8. record a documentation update only for a durable, cross-function project
-   fact: edit only the relevant `docs/specs/**/*.md` or
-   `docs/agents/lessons.md`; omit selector/address, match percentage,
-   transient residual, tool output, date-stamped status. No speculation or
-   one-function examples. Preloaded documentation text suffices; do not
-   reread it to prepare the edit.
+   fact in the relevant `docs/specs/**/*.md` or `docs/agents/lessons.md`;
+   omit selector/address, percentages, transient state, dates. No
+   speculation or one-function examples; preloaded text suffices.
 
 Verdict: `pass`, `needs-fix`, or `block`.
 

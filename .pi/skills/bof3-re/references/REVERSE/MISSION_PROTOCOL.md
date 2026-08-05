@@ -4,8 +4,8 @@ Lift one selector: `TARGET@0xADDRESS`, or shipped EMI
 `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. `agent-context.py reverse SELECTOR`
 preloads this file and target evidence. Do not reread bundled paths.
 
-1. Reuse supplied brief; otherwise run `function-brief.py` once. Verify load:
-   runtime − load = payload offset.
+1. Reuse supplied brief; otherwise run `function-brief.py` once.
+   Verify load per SKILL.md.
 2. Before declarations: search target header/map, `include/`, PsyQ map/report,
    index. Reuse types/symbols; no duplicates. A new target-local fixed address
    requires matching `internal.h` extern, `symbols.c` `WEAK_SYMBOL_AT`, and
@@ -14,10 +14,10 @@ preloads this file and target evidence. Do not reread bundled paths.
    static identity/call. Require reviewed boundary, ABI, local map, caller
    declaration. Never create foreign game bindings or source ownership.
 4. Before every C edit: live `asm-diff --detail normal`, diagnose `first=`,
-   one structural fix, rerun, revert regressions. Escalate types → flow →
-   ordering → flags → one bounded permuter → one local `REGISTER_PIN` only for
-   an asm-diff-proven allocator or entry-register residual. Retain a pin only
-   after live exact match with local `MATCHING_AID` and independent review.
+   one structural fix, rerun, revert regressions. Ladder and clobber rules
+   per SKILL.md; retain a pin only for an asm-diff-proven allocator or
+   entry-register residual after live exact match with local `MATCHING_AID`
+   and independent review.
 5. Evidence insufficient to lift: investigate the concrete gap with the repo
    Rizin workflow — `bin/rz-project` status/open, `bin/rev-query` first;
    focused calls/xrefs, code/data boundaries, jump-table targets, ABI setup.

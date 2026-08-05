@@ -33,18 +33,20 @@ documentation pass. Use `edit` for every existing file, never `write`, shell
 redirection, or whole-file rewrite of map/header/Splat/binding files; `write`
 is only for the newly created mission source. Companion records are
 static-call facts, never foreign ABI/map/source/link authority. Reuse one
-supplied/function brief; do not repeat mission/status/byte-match. When a
-concrete evidence gap blocks the lift, do the focused target-qualified Rizin
-research required by the reverse protocol; report findings rather than
-claiming missing evidence without investigating.
+supplied/function brief; do not repeat mission/status/byte-match.
+
+Classify the live first mismatch against the playbook symptom table before
+any source edit — most partials resolve in one documented lever. Audit
+`volatile` qualifiers first; grep-remove macros your rebinding strands. Bound
+permuter runs (~300s). Escalation restores every mission edit: verify
+`git status --porcelain` is clean of your target's files before returning.
 
 Role safeguards beyond the skill ladder: after clean-C lifetime,
 expression-order, supported-profile, and bounded-permuter attempts stall, an
 asm-diff-proven allocator or entry-register residual may use
 `REGISTER_PIN(type, name, reg)` autonomously. Pin only the one local
-proven by the residual, never all temporaries (e.g. reversed `move t0,a1;
-move v0,zero`: pin only the result local to `v0`, let C allocation keep the
-input in `t0`). Use the original's actual signed/unsigned arithmetic (`sltu` =
+proven by the residual (e.g. reversed `move t0,a1; move v0,zero`: pin the
+result local to `v0` only), never the full register map. Use the original's actual signed/unsigned arithmetic (`sltu` =
 unsigned thresholds); never retain wrong signed fields because bytes are
 close. `barrier()` is only for evidenced memory-access ordering, never
 allocator ordering or a `nop` delay slot. Make one bounded local experiment;
@@ -53,9 +55,8 @@ local `MATCHING_AID` naming the original/current allocator residual, exhausted
 rungs, exact check, removal condition, plus a `matching_aids` entry. A direct
 numeric `"$N"` spelling still needs explicit user approval and proof the macro
 form changes codegen. Never make a function-specific pin macro.
-Toolchain/catalog/flag/compiler changes fall under the SKILL.md pipeline-test
-contract; `just setup` primes catalog installs, so never manage cache/install
-manually unless the task is toolchain work.
+Toolchain/catalog changes fall under the SKILL.md pipeline-test contract;
+`just setup` primes catalog installs — never manage cache/install manually.
 
 Never commit/push/reset/clean/checkout/setup/spawn children. On escalation,
 `rm` of the exact new mission source is allowed only to restore the

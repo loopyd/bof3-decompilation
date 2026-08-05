@@ -37,6 +37,10 @@ ROLE = {
         ".pi/skills/bof3-re/references/REVIEW/REVIEW_CHECKLIST.md",
         ".pi/skills/bof3-re/references/REVIEW/SHARING_NONMATCHES.md",
     ),
+    "cleanup": (
+        ".pi/skills/bof3-re/references/CLEANUP/RULES.md",
+        ".pi/skills/bof3-re/references/CLEANUP/REFACTOR_PLAYBOOK.md",
+    ),
 }
 # Workflow agents get bounded, role-targeted context instead of FULL: Qwen
 # models have a very limited context window, so their roles stay tiny.

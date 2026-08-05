@@ -65,11 +65,11 @@ and wait for user selection.
    PsyQ map/report, then index/siblings. Reuse types/names; extend evidenced
    structs; never parallel declarations.
 4. A companion record proves catalog identity plus original `jal`, not ABI,
-   ownership, residency, or cross-linking. Retain such a caller only with
-   reviewed callee boundary, ABI, target map ownership, caller prototype, and
-   passing `companion-check`; otherwise escalate.
-5. Splat/m2c evidence only if required. Signatures from callers/callees, not
-   m2c stubs. Edit only owned C and evidence-required header/map/Splat.
+   ownership, or residency. Retain such a caller only with reviewed callee
+   boundary, ABI, target map ownership, caller prototype, and passing
+   `companion-check`; otherwise escalate.
+5. Splat/m2c only if required. Signatures from callers/callees, not m2c
+   stubs. Edit only owned C and evidence-required header/map/Splat.
 
 ## Match loop
 
@@ -86,7 +86,7 @@ non-progressing diagnosed attempts per level:
    asm-diff-proven caller-register `CLOBBER_CALLER_REG(reg)` for delay-slot or
    fixed-address reload scheduling, with local `MATCHING_AID`; never to encode
    an opcode or clobber `s*`/`gp`/`sp`/`ra`;
-4. compiler profile: `bin/flag-search`; record only clean-C exact profiles;
+4. compiler profile: `bin/flag-search TARGET@0xADDRESS`; record only clean-C exact profiles;
 5. one bounded `bin/permute TARGET@0xADDRESS --time-limit 300 -j N` after shape is right;
 6. asm-diff-proven allocator or entry-register residual: one bounded local
    `REGISTER_PIN` experiment; retain only if exact and independently reviewed;
@@ -105,7 +105,7 @@ and the immediately following exact live byte-match; remove it if clean C
 later matches. No generic matching-hack macros. Third non-progressing attempt:
 restore best clean-C state and advance. On exhaustion report target, first
 difference, attempts, next untried/blocked evidence. Accept only final live
-`bin/byte-match ...` exit 0.
+`bin/byte-match TARGET@0xADDRESS` exit 0.
 
 ## Duplicates and handoff
 
@@ -120,6 +120,24 @@ companion-check, `git diff --check`. This is the default complete lift gate;
 never run `just check` or `decomp-status` in an agent mission. Reserve
 `just check` for parent-only broad tooling/config changes or explicit request.
 Report checks, skipped broad checks, risks, next step tersely.
+
+## Order of operations: loop completion → cleanup
+
+After a lift loop completes (all selected exact), cleanup organizes before
+the next loop:
+
+1. Symbols: `bin/symbols normalize TARGET --write`, then `bin/symbols check
+   TARGET`; proven names enter the target map as sorted `name = 0xADDRESS;`.
+2. Naming: `bof3-cleanup` ladder (references/CLEANUP/), one evidence-gated
+   rename at a time; `func_XXXXXXXX`/`D_XXXXXXXX`/`unk_XX` stays until the
+   two-corroborator gate passes.
+3. Organization: relocate only when the flexible file framework + metadata
+   track the file; plan moves, never move mid-loop; wrappers stay
+   address-based.
+4. Gates: fresh live `bin/asm-diff TARGET@0xADDRESS --detail normal` (no
+   first-difference) and `bin/byte-match TARGET@0xADDRESS` per touched
+   selector, `bin/splat TARGET` if map/Splat changed, fresh `bof3-review`.
+   Failure → revert, never fix forward.
 
 ### Pipeline-test contract
 

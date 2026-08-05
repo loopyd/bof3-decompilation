@@ -12,6 +12,10 @@ change, and re-run the diff; a percentage alone is not a diagnosis.
 | `lw` instead of address calculation | Pointer vs array declaration | [Symbol representation](#symbol-representation) |
 | Wrong relocation symbol | Standalone symbol vs struct field | [Symbol representation](#symbol-representation) |
 | Folded base register | Array/table access, semantic symbol | [Symbol representation](#symbol-representation) |
+| `lui $at` then `addu $at,$reg,$at`; original `addu $at,$at,$reg` | Extern-array rebinding so `as` folds base+index | [Symbol representation](#symbol-representation) |
+| Address constant CSEd into a callee-saved register, stealing an entry copy | Extern symbol instead of fixed-address macro | [Symbol representation](#symbol-representation) |
+| Original `lb`; current `lbu` plus `sll`/`sra` | Volatile pointee on a narrow signed global | [Volatility](#volatility) |
+| Store missing from a jump delay slot; extra `nop` | Volatile store on plain RAM | [Volatility](#volatility) |
 | `beq` vs `bne` | Invert `if/else` | [Control flow](#control-flow) |
 | Wrong loop topology | `while`, `do`, `for`, guarded infinite loop, `goto` | [Control flow](#control-flow) |
 | Wrong `$v0` return web | Early returns vs result variable | [Control flow](#control-flow) |
@@ -94,6 +98,19 @@ D_80123458 = 4;
 **Matching lever**: when m2c or your struct produces an unexpected `lw` for what
 should be an address calculation, try the alternative declaration form.
 
+### Extern rebinding: `addu` operand order and entry-copy theft
+
+Replace a fixed-address macro with `extern Type D_XXXXXXXX[];` plus
+`WEAK_SYMBOL_AT`, indexed directly, when:
+
+- **`addu` operand order.** C computing `table + index` makes GCC emit its
+  own fixed-order `addu`; through the extern-array form GCC emits
+  `lw table($idx)` and `as` expands `%hi`/`%lo` with its canonical
+  `lui $at; addu $at,$at,$idx` order. Remove any macro the rebinding strands.
+- **Entry-copy theft.** A macro's constant address used twice can be CSEd
+  into a callee-saved register, stealing an argument's prologue entry copy;
+  the extern form emits `lui`/`lw` relocations and frees the allocator.
+
 ---
 
 ## Control flow
@@ -112,6 +129,13 @@ if (!condition) { HandleFalse(); } else { HandleTrue(); }
 
 This swaps `beq` ↔ `bne` and changes delay-slot scheduling and fall-through
 reachability.
+
+### Duplicate identical calls in `if/else` arms
+
+When the original computes a value directly in `$a0` in each branch and
+tail-merges into one `jal`, write `if (cond) f(x + A); else f(x + B);` — a
+ternary argument computes before the call, changing allocation and breaking
+the merge.
 
 ### Early return vs result variable
 
@@ -154,6 +178,25 @@ of modern taste.
 
 ---
 
+## Volatility
+
+`volatile` is a scheduling constraint, not free documentation. Add it only
+with asynchronous/hardware-mutation evidence (lessons.md); on plain RAM
+globals it is the most common partial-lift root cause. Levers:
+
+- A volatile store never moves into a jump delay slot; if the original sinks
+  a store there and yours sits after a `nop`, drop the unjustified qualifier.
+- A volatile pointee on a narrow signed global can force `lbu` + manual
+  sign-extension where the original has one `lb`; a local non-volatile view
+  `*(s8*)&x` restores it. Check declared type width/signedness first.
+- A volatile pointer *cell* (`Type * volatile`) forces a per-evaluation
+  reload without constraining the pointee — the sanctioned form when the
+  original reloads a shared cursor.
+- Evidenced exception: a view `*((volatile T*)SYM + n)` can pin an
+  original-proven store-before-volatile-store order.
+
+---
+
 ## `MATCHING_AID` comments
 
 Every artificial matching aid is adjacent to the aid and says: what it
@@ -177,19 +220,9 @@ if (count == 2) {
 }
 ```
 
-```c
-/*
- * MATCHING_AID:
- * Hoisting the slot pointer keeps the index temporary in $a1.
- * Without this local, GCC allocates $v1 for the index and the store
- * at +0x34 uses a different base.
- */
-slots = *slotTable;
-```
-
-Do not mark obvious workarounds (`barrier()` has its own
-[lesson](lessons.md)). Reserve `MATCHING_AID` for shape decisions opaque to a
-reader without the matching diff.
+Do not mark obvious workarounds (evidenced `barrier()` ordering is
+covered by [Volatility](#volatility)). Reserve `MATCHING_AID` for shape
+decisions opaque to a reader without the matching diff.
 
 ---
 
@@ -239,6 +272,19 @@ if (value == one) {
 
 GCC may reuse the register already holding `one`.
 
+### Per-evaluation reload via fresh locals
+
+Re-read a global cursor per case (`case A: f(*table);`) instead of caching it
+when the original reloads per region — fresh reads reproduce the original's
+per-region reload registers (`a0` in one case, `v0` in another).
+
+### Force global read/store order with a local
+
+m2c reorders independent global accesses (`flag = 2; counter += 0x14;` may
+emit the `sb` before the `lhu`). Pin the original order with a local:
+`count = counter; flag = 2; counter = (u16)(count + 0x14);`. Keep the
+narrow-width cast so the store width matches.
+
 ### Induction variable
 
 ```c
@@ -273,9 +319,6 @@ if ((distance * 2) == 0) {
 } else {
     distance *= 2;
 }
-/* scaledX and scaledY are dead in the final behavior */
-scaledX = (x * scale) / distance;
-scaledY = (y * scale) / distance;
 ```
 
 Do not remove such code because a static analyzer calls it useless.

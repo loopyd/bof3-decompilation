@@ -36,11 +36,11 @@ and pin rules; role context includes
 sharing decisions. From the review side: direct pins are banned; reject
 opcode-emitting assembly and clobbers of `s*`/`gp`/`sp`/`ra`. A mission-added
 `REGISTER_PIN` is allowed only as one bounded local experiment for an
-asm-diff-proven allocator or entry-register residual after clean-C
-lifetime/expression-order, supported-profile, and bounded permuter attempts,
-with a local `MATCHING_AID` and a live exact match; passing this review is the
-required independent review. Require the smallest pin set —
-reject recreating the full register map when one pinned local suffices.
+asm-diff-proven allocator or entry-register residual after the
+clean-C/profile/permuter rungs, with a local `MATCHING_AID` and a live exact
+match; passing this review is the required independent review. Require the
+smallest pin set — reject recreating the full register map when one pinned
+local suffices.
 Confirm types follow the original arithmetic (`sltu` = unsigned thresholds);
 reject `barrier()` used for allocator ordering. A direct numeric `"$N"`
 spelling needs explicit user approval and evidence the macro changes codegen.
@@ -49,16 +49,12 @@ Otherwise `block`.
 For a non-exact escalation, verify the residual report records the live first
 original/current difference, rung-specific attempts, last result, and
 missing/blocked evidence. Reject a pin papering over a size/frame or CFG
-mismatch, or a clobber without caller-register placement proof. Reuse supplied
-brief/diff; run one live byte-match only for a claimed exact lift. Do not run
-`just check`, decomp-status, status, asm-diff, brief, m2c, Splat, Rizin, or
-index rebuild unless a concrete finding needs it. Cached status is not
-acceptance. Run companion-check only for a relevant declared call; batch
-independent reads/greps. When the diff touches compiler catalog, object flags,
-compiler selection, `bin/cc`, maspsx, `bin/as`, or linker toolchain code,
-verify the contributor ran the SKILL.md pipeline-test contract
-(`test_bin_cc_pipeline.py`, `test_asm_link.py`, live `asm-diff`/`byte-match`)
-on affected lifts; source-only lifts are exempt. Do not edit lift source,
+mismatch, or a clobber without caller-register placement proof. Run one live
+byte-match only for a claimed exact lift; cached status is not acceptance.
+Run companion-check only for a relevant declared call; batch
+independent reads/greps. When the diff touches toolchain code (compiler catalog, object flags,
+`bin/cc`, maspsx, `bin/as`, linker), verify the contributor ran the SKILL.md
+pipeline-test contract on affected lifts; source-only lifts are exempt. Do not edit lift source,
 headers, maps, Splat, bindings, or generated artifacts; never mutate
 git/setup/spawn children. Use `edit` only to record a durable,
 evidence-backed, cross-function discovery in the applicable

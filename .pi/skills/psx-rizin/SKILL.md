@@ -103,18 +103,11 @@ proprietary inputs from distributable artifacts.
 
 ## Utilities
 
-Repository-wired entrypoints (prefer these):
-
-```text
-bin/rz-project      target-qualified Rizin analyze/status/open (writes out/reverse/<target>/)
-bin/rev-query       query the generated cross-target index (out/index/)
-bin/asm-diff        instruction-level diff of one authored lift
-bin/byte-match      raw byte-equality acceptance check
-bin/permute         bounded source-shape search (out/permuter/)
-bin/decomp-status   exact/partial/invalid lift audit
-bin/symbols         check/normalize target-local maps
-bin/splat           regenerate reviewed segment output
-```
+Repository-wired entrypoints (prefer these): `bin/rz-project` for
+target-qualified Rizin analyze/status/open (writes `out/reverse/<target>/`)
+and `bin/rev-query` for the generated cross-target index (`out/index/`).
+Lift-side commands (`asm-diff`/`byte-match`/`permute`/`decomp-status`/
+`symbols`/`splat`) follow the bof3-re Fast evidence table.
 
 > Note: this skill's earlier `bin/psx-rizin`, `bin/lift`, `bin/build-diff`, and
 > `scripts/*.py` helpers are not wired in this repository. Use the repo `bin/`
