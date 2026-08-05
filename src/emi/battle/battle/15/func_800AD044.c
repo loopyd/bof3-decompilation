@@ -1,14 +1,17 @@
 #include "internal.h"
 
-/* @behavior UNKNOWN: exact behavior is not yet documented. */
-
-/* @tests a specific bit in the bitmask array at D_80144F60.
- * Uses arg0 & 0xFFFF for index calculation.
+/* @behavior Tests bit (arg0 & 0x1F) of the bitmask word
+ * D_80144F60[(arg0 & 0xFFFF) >> 5]; returns nonzero as a boolean.
  * @source 0x800AD044
  */
 u32 func_800AD044(u32 arg0) {
-  u32 idx;
+    u32 idx;
+    u32 mask;
+    u32 word;
 
-  idx = arg0 & 0xFFFF;
-  return ((D_80144F60[idx >> 5] >> (idx & 0x1F)) & 1);
+    arg0 &= 0xFFFF;
+    idx = (arg0 >> 5) * 4;
+    mask = 1 << (arg0 & 0x1F);
+    word = *(u32 *)((u8 *)D_80144F60 + idx);
+    return (word & mask) != 0;
 }
