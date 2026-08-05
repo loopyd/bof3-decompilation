@@ -379,3 +379,15 @@ extern volatile u8 D_801485B8;
 extern volatile u8 D_801485DC;
 
 #endif
+
+extern u8 D_80145F2F[];
+extern u8 D_80145F30[];
+extern u8 D_80145F31[];
+extern u8 D_80145F32[];
+extern u8 D_80145F33[];
+extern u8 D_801EB6DF[];
+extern u8 D_801EB6E0[];
+extern u8 D_801EB6E1[];
+extern u8 D_801EB6E2[];
+extern u8 D_801EB6E3[];
+extern s16 D_800B493C[];

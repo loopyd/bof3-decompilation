@@ -6,54 +6,48 @@
  * @source 0x800A2AE0
  */
 s16 func_800A2AE0(u8 battler_index, u16 element_mask) {
-  volatile s16* modifier_table;
-  s16           result;
-  u8            element_slot;
+  s32 result;
+  u32 offset;
+  u32 offset1;
 
-  modifier_table = BATTLE_MODIFIER_TABLE;
   result = 0;
 
   if (battler_index < 3u) {
     if (element_mask & 1u) {
-      element_slot = PSX_REF(volatile u8, 0x80145f2fu + ((u32)battler_index * 0x140u));
-      result += modifier_table[element_slot];
+      result += D_800B493C[D_80145F2F[battler_index * 0x140u]];
     }
     if (element_mask & 2u) {
-      element_slot = PSX_REF(volatile u8, 0x80145f30u + ((u32)battler_index * 0x140u));
-      result += modifier_table[element_slot];
+      result += D_800B493C[D_80145F30[battler_index * 0x140u]];
     }
     if (element_mask & 4u) {
-      element_slot = PSX_REF(volatile u8, 0x80145f31u + ((u32)battler_index * 0x140u));
-      result += modifier_table[element_slot];
+      result += D_800B493C[D_80145F31[battler_index * 0x140u]];
     }
     if (element_mask & 8u) {
-      element_slot = PSX_REF(volatile u8, 0x80145f32u + ((u32)battler_index * 0x140u));
-      result += modifier_table[element_slot];
+      result += D_800B493C[D_80145F32[battler_index * 0x140u]];
     }
     if (element_mask & 0x10u) {
-      element_slot = PSX_REF(volatile u8, 0x80145f33u + ((u32)battler_index * 0x140u));
-      result += modifier_table[element_slot];
+      result += D_800B493C[D_80145F33[battler_index * 0x140u]];
     }
   } else {
     if (element_mask & 1u) {
-      element_slot = PSX_REF(volatile u8, 0x801eb6dfu + ((u32)(battler_index - 3u) * 0x118u));
-      result += modifier_table[element_slot];
+      offset1 = (battler_index - 3) * 0x118;
+      result += D_800B493C[D_801EB6DF[offset1]];
     }
     if (element_mask & 2u) {
-      element_slot = PSX_REF(volatile u8, 0x801eb6e0u + ((u32)(battler_index - 3u) * 0x118u));
-      result += modifier_table[element_slot];
+      offset = (battler_index - 3) * 0x118;
+      result += D_800B493C[D_801EB6E0[offset]];
     }
     if (element_mask & 4u) {
-      element_slot = PSX_REF(volatile u8, 0x801eb6e1u + ((u32)(battler_index - 3u) * 0x118u));
-      result += modifier_table[element_slot];
+      offset = (battler_index - 3) * 0x118;
+      result += D_800B493C[D_801EB6E1[offset]];
     }
     if (element_mask & 8u) {
-      element_slot = PSX_REF(volatile u8, 0x801eb6e2u + ((u32)(battler_index - 3u) * 0x118u));
-      result += modifier_table[element_slot];
+      offset = (battler_index - 3) * 0x118;
+      result += D_800B493C[D_801EB6E2[offset]];
     }
     if (element_mask & 0x10u) {
-      element_slot = PSX_REF(volatile u8, 0x801eb6e3u + ((u32)(battler_index - 3u) * 0x118u));
-      result += modifier_table[element_slot];
+      offset = (battler_index - 3) * 0x118;
+      result += D_800B493C[D_801EB6E3[offset]];
     }
   }
 
