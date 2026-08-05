@@ -15,6 +15,13 @@ options:
   - config/targets/exe/slus_004_22/symbols.txt
 segments:
   - [0x0, bin, pre_boot]
+  - name: item_dispatch_jumptable
+    type: rodata
+    start: 0xB3728
+    vram: 0x80149f28
+    subsegments:
+      - [0xB3728, rodata, func_80165D48]
+  - [0xB373C, bin, pre_boot_mid]
   - name: boot
     type: code
     start: 0xb42c8
@@ -88,6 +95,13 @@ segments:
       - [0xcc500, c, func_80162D00]
       - [0xcc518, c, func_80162D18]
   - [0xcc59c, bin, post_emi_loader]
+  - name: item_record_dispatch
+    type: code
+    start: 0xCF548
+    vram: 0x80165d48
+    subsegments:
+      - [0xCF548, c, func_80165D48]
+  - [0xCF604, bin, post_emi_gap_0xCF604]
   - name: cluster_0
     type: code
     start: 0xd438c

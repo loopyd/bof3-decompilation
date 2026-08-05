@@ -30,10 +30,9 @@ Here, `1.1` is the pinned vast-violence corpus label for the input's exact Track
 
 ### Runtime item-reference dispatch
 
-`SLUS_004.22` function `0x800df548` masks the category and dispatches record
+`SLUS_004.22` function `0x80165d48` masks the category and dispatches record
 address calculation. The five handled categories use the fixed runtime bases
-and strides below; the function then enters a shared continuation at
-`0x80165dfc`.
+and strides below.
 
 | Item type | Record family | Runtime base | Stride | Index calculation |
 | ---: | --- | ---: | ---: | --- |
@@ -236,7 +235,7 @@ Item type codes: `0`=ItemObject, `1`=WeaponObject, `2`=ArmorObject,
 ## Evidence
 
 - Source file: `out/extracted/BIN/ETC/GAME.EMI`
-- Runtime dispatch: `SLUS_004.22` @ `0x800df548`
+- Runtime dispatch: `SLUS_004.22` @ `0x80165d48`
 - Validation: `out/index/vast-violence-1.1.json`
 - Struct definitions: `third_party/references/vast-violence/tables/struct_*.txt`
 - Ability names: `third_party/references/vast-violence/ability_names.txt` (228 abilities)

@@ -5,8 +5,8 @@
 
 typedef void (*GameCallbackEntry)(void);
 
-/* Shared executable entry points. */
-void* func_800DF548(s32 item_type, s32 item_index);
+/* Runtime equipment-record dispatch. */
+void* func_80165D48(s32 item_type, s32 item_index);
 
 /* LOGO.EXE is loaded independently; this call targets its reviewed entry
  * address rather than linking LOGO.EXE implementation into SLUS_004.22. */
