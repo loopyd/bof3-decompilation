@@ -1,6 +1,6 @@
 #include "internal.h"
 
-/* @tests a specific bit in the bitmask array at D_80144F80.
+/* @behavior Tests a specific bit in the bitmask array at D_80144F80.
  * Extracts bit index from arg0 and tests it.
  * @source 0x800AA874
  */

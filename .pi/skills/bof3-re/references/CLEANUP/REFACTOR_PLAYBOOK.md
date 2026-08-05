@@ -8,7 +8,9 @@ Apply the ladder top down; stop at the first rung that resolves the drift.
 ## Safe ladder (no re-validation beyond diff hygiene)
 
 1. **Comment/doc text** — wording, stale claims, dead links. Never delete a
-   `MATCHING_AID`, `INFERRED:`, or evidence comment.
+   `MATCHING_AID`, `INFERRED:`, or evidence comment; never drop
+   `@behavior`/`@source` metadata — correct a stale tag in place (preflight
+   fails the lift without both).
 2. **Whitespace/format** that `git diff --check` accepts — no line
    joins/splits inside declarations or macros.
 3. **Dead code removal at file scope only when grep proves zero users** —
@@ -38,13 +40,13 @@ Apply the ladder top down; stop at the first rung that resolves the drift.
 
 ## Naming standards (proven renames only)
 
-Adapted from PSX decomp practice (sotn-decomp STYLE, silent-hill
+From PSX decomp practice (sotn-decomp STYLE, silent-hill
 Organization): types are `s8/u8/s16/u16/s32/u32/f32` from
-`include/base/types.h`, never raw C types. Locals/struct fields camelCase;
+`include/base/types.h`. Locals/struct fields camelCase;
 struct/enum types PascalCase; enum values/macros SCREAMING_SNAKE_CASE.
 Address-canonical `func_XXXXXXXX`/`D_XXXXXXXX`/`unk_XX` stays until the
 evidence gate passes. Addresses, bitmasks, offsets in hex; timers/sizes
-decimal. Always `{}` on conditional/loop blocks; blank line between
+decimal. Always `{}` on conditional/loops; blank line between
 declarations and code; functions in assembly order (Splat-owned). Unsure →
 leave unnamed: a wrong name is worse than an address name.
 
