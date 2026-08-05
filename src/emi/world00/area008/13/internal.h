@@ -24,7 +24,6 @@ extern s32          D_80146C4C;
 extern volatile u16 D_80149328;
 extern volatile u8  D_80149333;
 extern volatile u16 WORLD00_AREA008_D_8014932A;
-extern volatile u8  WORLD00_AREA008_D_80149333;
 extern u8           WORLD00_AREA008_D_80145AD4[];
 extern u8           WORLD00_AREA008_D_801F2C04[];
 extern u8           WORLD00_AREA008_D_801F2C10[];
