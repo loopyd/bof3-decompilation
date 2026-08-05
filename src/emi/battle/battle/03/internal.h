@@ -73,6 +73,10 @@ typedef struct Battle03FlagRecord {
   u8  pad_04[0x13c];
 } Battle03FlagRecord;
 
+typedef struct Battle03TemplateRecord {
+  u32 words_00[41];
+} Battle03TemplateRecord;
+
 typedef struct Battle03EnemyWork {
   u8                       unk_00;
   u8                       unk_01;
@@ -129,6 +133,8 @@ typedef struct Battle03UiRingEntry {
 } Battle03UiRingEntry;
 
 extern volatile AbilityObject       ABILITY_OBJECTS[];
+extern volatile u8                  D_801462F0;
+extern const Battle03TemplateRecord D_80144968[];
 extern volatile Battle03FlagRecord D_80145FB8[];
 extern u16                          D_80143F04;
 extern u8                           D_80146328;
