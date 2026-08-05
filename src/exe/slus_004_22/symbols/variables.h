@@ -5,6 +5,8 @@
 
 /* Core runtime state near the SLUS callback scheduler. */
 extern u8  D_80143D44;
+extern u8  D_80143D75[];
+extern u8  D_80143E05[];
 extern u8  D_80143D48[];
 extern u8* D_80143E68;
 extern s32 D_80143E6C;
