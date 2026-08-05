@@ -222,7 +222,7 @@ def build_parser() -> argparse.ArgumentParser:
         nargs="?",
         help="TARGET@0xADDRESS (preferred) or an existing src/.../func_ADDRESS.c path",
     )
-    add_example_argument(parser, "bin/permute exe/logo@0x801CE758 --time-limit 300")
+    add_example_argument(parser, "bin/permute exe/logo@0x801CE758 --time-limit 30")
     parser.add_argument(
         "function",
         nargs="?",
@@ -285,8 +285,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--time-limit",
         type=float,
+        default=30.0,
         metavar="SECONDS",
-        help="stop this coordinator after SECONDS (the upstream permuter has no native timer)",
+        help="stop this coordinator after SECONDS (default 30; the upstream permuter has no native timer)",
     )
     parser.add_argument("--debug", action="store_true")
     parser.set_defaults(

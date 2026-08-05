@@ -353,7 +353,7 @@ def test_run_delegates_permuter_through_toolchain(
     assert call_root == tmp_path
     assert "-u" not in call_args  # interpreter flag, now owned by toolchain
     assert str(workspace) == call_args[-1]
-    assert call_kwargs.get("timeout") is None
+    assert call_kwargs.get("timeout") == 30.0
 
 
 def test_run_propagates_permuter_exit_code(

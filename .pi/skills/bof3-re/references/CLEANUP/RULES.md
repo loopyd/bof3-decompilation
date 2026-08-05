@@ -36,8 +36,8 @@ compiler flags, or binding addresses.
 
 - Never rename/move `func_XXXXXXXX.c`, rename a raw lifted entry function, or
   rename a Splat function boundary.
-- Never drop `@behavior`/`@source` tags or evidence comments; correct a
-  stale tag in place.
+- Never drop `@behavior`/`@source` tags or evidence comments; correct stale
+  tags in place.
 - Never move target directories or alter `source_dir`, manifests, load
   addresses, Splat boundaries, compiler/toolchain files, SDK
   maps/declarations, shared/public headers, `src/shared/`, `out/`, `build/`,

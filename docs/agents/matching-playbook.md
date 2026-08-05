@@ -599,7 +599,7 @@ Recommended workflow:
 4. Match loads, stores and relocations.
 5. Match stack frame.
 6. Match register allocation approximately.
-7. Run permuter.
+7. Run permuter (`bin/permute` caps runs at 30s by default).
 8. Inspect winning mutations.
 9. Simplify the winning source.
 10. Re-run to remove unnecessary hacks.

@@ -38,7 +38,7 @@ supplied/function brief; do not repeat mission/status/byte-match.
 Classify the live first mismatch against the playbook symptom table before
 any source edit — most partials resolve in one documented lever. Audit
 `volatile` qualifiers first; grep-remove macros your rebinding strands. Bound
-permuter runs (~300s). Escalation restores every mission edit: verify
+permuter runs (`bin/permute`, 30s cap). Escalation restores every mission edit: verify
 `git status --porcelain` is clean of your target's files before returning.
 
 Role safeguards beyond the skill ladder: after clean-C lifetime,
