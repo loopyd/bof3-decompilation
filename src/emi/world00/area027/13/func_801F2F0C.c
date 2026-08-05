@@ -5,13 +5,14 @@
  * @source 0x801F2F0C
  */
 void func_801F2F0C(const void* arg0) {
-  const u8* work;
-  u8        i;
-  u32       primitive;
-  u16       red0;
-  u16       red1;
+  u8*      points;
+  LINE_G2* line;
+  u8       i;
+  u32      j;
+  u32      off;
+  u16      red;
 
-  work = (const u8*)arg0;
+  points = (u8*)arg0;
 
   SetDrawMode((DR_MODE*)WORLD00_AREA027_PRIMITIVE_PTR, 0, 0,
               GetTPage(0, 1, 0x380, 0x100), 0);
@@ -19,34 +20,29 @@ void func_801F2F0C(const void* arg0) {
 
   i = 0u;
   do {
-    primitive = (u32)WORLD00_AREA027_PRIMITIVE_PTR;
-    func_8017AA94((void*)primitive);
-    SetSemiTrans((void*)primitive, 1);
+    line = (LINE_G2*)WORLD00_AREA027_PRIMITIVE_PTR;
+    func_8017AA94(line);
+    SetSemiTrans(line, 1);
 
-    *(volatile s16*)(primitive + 8) =
-        *(const s16*)(work + ((u32)i * 4u) + 0x18u);
-    *(volatile s16*)(primitive + 10) =
-        *(const s16*)(work + ((u32)i * 4u) + 0x1au);
-    *(volatile s16*)(primitive + 0x10) =
-        *(const s16*)(work + (((u32)i + 1u) * 4u) + 0x18u);
-    *(volatile s16*)(primitive + 0x12) =
-        *(const s16*)(work + (((u32)i + 1u) * 4u) + 0x1au);
+    j = i + 1u;
 
-    red0 = (0x20u - (u16)i) * 8u;
-    if (red0 > 0xffu) {
-      red0 = 0xffu;
+    off = (u32)i * 4u;
+    line->x0 = *(s16*)(points + off + 0x18u);
+    line->y0 = *(s16*)(points + off + 0x1au);
+    off = j * 4u;
+    line->x1 = *(s16*)(points + off + 0x18u);
+    line->y1 = *(s16*)(points + off + 0x1au);
+
+    red = (0x20u - (u16)i) * 8u;
+    if (red > 0xffu) {
+      red = 0xffu;
     }
-    red1 = (0x1fu - (u16)i) * 8u;
-    if (red1 > 0xffu) {
-      red1 = 0xffu;
+    setRGB0(line, red, 0u, 0u);
+    red = (0x1fu - (u16)i) * 8u;
+    if (red > 0xffu) {
+      red = 0xffu;
     }
-
-    *(volatile u8*)(primitive + 4) = (u8)red0;
-    *(volatile u8*)(primitive + 5) = 0u;
-    *(volatile u8*)(primitive + 6) = 0u;
-    *(volatile u8*)(primitive + 0xc) = (u8)red1;
-    *(volatile u8*)(primitive + 0xd) = 0u;
-    *(volatile u8*)(primitive + 0xe) = 0u;
+    setRGB1(line, red, 0u, 0u);
     func_8014E5A0(1u, 0x14u);
 
     i += 1u;
