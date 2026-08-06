@@ -32,7 +32,10 @@ FULL = (
 )
 ROLE = {
     "agents": (),
-    "reverse": (".pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md",),
+    "reverse": (
+        ".pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md",
+        "docs/reference/bof3-eu/README.md",
+    ),
     "review": (
         ".pi/skills/bof3-re/references/REVIEW/REVIEW_CHECKLIST.md",
         ".pi/skills/bof3-re/references/REVIEW/SHARING_NONMATCHES.md",

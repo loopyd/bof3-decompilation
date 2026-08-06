@@ -9,6 +9,16 @@ SLUS_004.22 targets; addresses do not. A US fact still needs our own
 evidence — treat these files as leads and format contracts, not reviewed
 facts. Reviewed US facts live in [`../specs/`](../specs/).
 
+**US 1.1 annotations.** These files are read-only for EU content. When our
+loop verifies a US 1.1 (SLUS_004.22) difference against an EU claim, append
+a greppable quote block directly after that claim:
+
+```
+> **US 1.1 verified:** <the US-specific fact> (<selector or commit>)
+```
+
+Never edit or delete EU text; corrections accumulate as annotation blocks.
+
 Supporting machine-readable data (animation/CLUT phase tables, runtime
 geometry dumps, community game data) stays upstream in the bof3js repo
 (`bod3js/references/re/`, `bod3js/data/`) — it is large and regenerable.

@@ -4,6 +4,13 @@ Lift one selector: `TARGET@0xADDRESS`, or shipped EMI
 `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. `agent-context.py reverse SELECTOR`
 preloads this file and target evidence. Do not reread bundled paths.
 
+EU knowledgebase: `docs/reference/bof3-eu/` (README maps chapters) is the
+baseline for format/table/rule guesses — consult the matching chapter before
+deriving a structure blind. Its addresses are EU-only; never copy an address.
+A verified US 1.1 (SLUS_004.22) difference updates the chapter
+nondestructively: append `> **US 1.1 verified:** <claim> (<selector/commit>)`
+after the EU claim; never edit or delete EU text.
+
 1. Reuse supplied brief; otherwise run `function-brief.py` once.
    Verify load per SKILL.md.
 2. Before declarations: search target header/map, `include/`, PsyQ map/report,
