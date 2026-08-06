@@ -152,6 +152,17 @@ def _private_identifiers(preprocessed: str) -> set[str]:
     return identifiers - _C_KEYWORDS
 
 
+def _is_reviewed_name_at(root: Path, manifest, function: FunctionId) -> bool:
+    """True when the target map binds a semantic name at the function address."""
+
+    from ..canonical import load_target_symbols
+
+    return any(
+        symbol.address == function.address
+        for symbol in load_target_symbols(root, manifest.id.value)
+    )
+
+
 def _require_reviewed_function_boundary(
     layout: RepoLayout, function: FunctionId, manifest: TargetManifest
 ) -> None:
@@ -161,7 +172,10 @@ def _require_reviewed_function_boundary(
     if (
         boundary is None
         or not boundary.is_function
-        or boundary.function_name != f"func_{function.address:08X}"
+        or not (
+            boundary.function_name == f"func_{function.address:08X}"
+            or _is_reviewed_name_at(layout.root, manifest, function)
+        )
     ):
         raise ValueError(
             f"not a reviewed function boundary: "
