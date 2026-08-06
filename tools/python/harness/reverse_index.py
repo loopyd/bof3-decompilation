@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import os
 import sqlite3
+import struct
 import tempfile
 from collections import defaultdict
 from pathlib import Path
@@ -19,7 +20,7 @@ from .domain import load_target_manifests
 from .snapshot import read_snapshot, snapshot_path, validate_snapshot_identity
 
 
-SCHEMA_VERSION = "bof3.reverse-index/v3"
+SCHEMA_VERSION = "bof3.reverse-index/v4"
 
 
 def index_path(root: Path) -> Path:
@@ -34,6 +35,49 @@ def _trivial_kind(data: bytes) -> str | None:
     if data == b"\x08\x00\xe0\x03\x00\x00\x00\x00":
         return "return_void"
     return None
+
+
+_LUI = 0x0F
+# opcode -> immediate signedness for %lo uses of a lui-materialized register
+_LO_OPS = {
+    0x09: "s",  # addiu
+    0x0D: "z",  # ori
+    0x20: "s", 0x21: "s", 0x23: "s", 0x24: "s", 0x25: "s",  # lb/lh/lw/lbu/lhu
+    0x28: "s", 0x29: "s", 0x2B: "s",  # sb/sh/sw
+}
+# SPECIAL functs that write rd
+_SPECIAL_WRITES_RD = {
+    0x00, 0x02, 0x03, 0x04, 0x08, 0x09, 0x0F,
+    0x10, 0x11, 0x12, 0x13, 0x18, 0x19, 0x1A, 0x1B,
+    0x20, 0x21, 0x23, 0x24, 0x25, 0x26, 0x27, 0x2A, 0x2B,
+}
+_LUI_WINDOW = 12
+
+
+def _data_references(data: bytes) -> list[int]:
+    """Addresses materialized by lui/%lo pairs inside one function's bytes."""
+
+    references: set[int] = set()
+    lui: dict[int, tuple[int, int]] = {}
+    for index in range(len(data) // 4):
+        (word,) = struct.unpack_from("<I", data, index * 4)
+        op = word >> 26
+        rs = (word >> 21) & 31
+        rt = (word >> 16) & 31
+        rd = (word >> 11) & 31
+        imm = word & 0xFFFF
+        if op == _LUI:
+            lui[rt] = (imm << 16, index)
+            continue
+        if op in _LO_OPS and rs in lui and index - lui[rs][1] <= _LUI_WINDOW:
+            hi, _ = lui[rs]
+            simm = imm if _LO_OPS[op] == "z" else (imm - 0x10000 if imm & 0x8000 else imm)
+            references.add((hi + simm) & 0xFFFFFFFF)
+        if op == 0 and (word & 0x3F) in _SPECIAL_WRITES_RD and rd in lui:
+            del lui[rd]
+        if op in _LO_OPS and rt in lui and op not in (0x28, 0x29, 0x2B):
+            del lui[rt]
+    return sorted(references)
 
 
 def _schema(connection: sqlite3.Connection) -> None:
@@ -259,6 +303,24 @@ def rebuild(root: Path) -> Path:
                             ),
                         ),
                     )
+                for function in snapshot.functions:
+                    function_bytes = binary_bytes[
+                        function.address
+                        - manifest.load_address : function.address
+                        - manifest.load_address
+                        + function.analyzer_size
+                    ]
+                    symbol_by_address = {s.address: s.canonical_name for s in target_symbols}
+                    for address in _data_references(function_bytes):
+                        connection.execute(
+                            "INSERT OR IGNORE INTO data_references VALUES (?, ?, ?, ?)",
+                            (
+                                target,
+                                function.id,
+                                address,
+                                symbol_by_address.get(address),
+                            ),
+                        )
                 for call in snapshot.calls:
                     connection.execute(
                         "INSERT INTO calls VALUES (?, ?, ?)",

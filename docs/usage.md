@@ -158,8 +158,12 @@ When readable semantics are credible but code shape differs:
 ```sh
 bin/flag-search TARGET@0xADDRESS
 bin/permute TARGET@0xADDRESS --time-limit 300 --quiet -j N
-bin/promote TARGET@0xADDRESS src/<target>/func_XXXXXXXX.c --detail normal
 ```
+
+`bin/data-scan [TARGET...]` lists unlabeled in-image data regions referenced
+by lifted functions (BSS globals vs file-backed tables/strings, with reference
+counts) — the data-labeling and table-extraction backlog. `--all` widens to
+unlifted functions, `--json` for tooling.
 
 `flag-search` suggests compiler flags from known profiles. `permute` searches
 source shapes in a disposable workspace. `promote` validates the canonical

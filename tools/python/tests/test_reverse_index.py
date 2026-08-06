@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from harness import reverse_index
 from harness.reverse_index import index_path, rebuild
 from harness.rizin_project import prepare_target, status
 from harness.snapshot import (
@@ -105,3 +106,16 @@ def test_rebuild_is_atomic_when_a_snapshot_is_stale(tmp_path: Path) -> None:
         rebuild(tmp_path)
     with sqlite3.connect(output) as connection:
         assert connection.execute("SELECT COUNT(*) FROM functions").fetchone()[0] == 1
+
+
+def test_data_references_decodes_lui_lo_pairs() -> None:
+    # lui t0, 0x8014 ; lw v0, -4(t0) ; addiu t0, t0, 8 ; ori v1, t0, 0x1234
+    words = [
+        (0x0F << 26) | (8 << 16) | 0x8014,
+        (0x23 << 26) | (8 << 21) | (2 << 16) | 0xFFFC,
+        (0x09 << 26) | (8 << 21) | (8 << 16) | 0x0008,
+        (0x0D << 26) | (8 << 21) | (3 << 16) | 0x1234,
+    ]
+    data = b"".join(w.to_bytes(4, "little") for w in words)
+    refs = reverse_index._data_references(data)
+    assert refs == [0x8013FFFC, 0x80140008]
