@@ -5,4 +5,4 @@
  * @behavior mode-2 handler of the entry mode dispatch table (D_801F33EC):
  * calls the shared work-area reset helper.
  */
-WORKAREA_RESET(world00_area026_reset_workarea_select_mode2)
+WORKAREA_RESET(resetWorkareaSelectMode2)

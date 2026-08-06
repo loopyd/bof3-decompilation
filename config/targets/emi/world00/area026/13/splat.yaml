@@ -30,10 +30,10 @@ segments:
     - func_801F2C94
   - - 284
     - c
-    - world00_area026_reset_workarea_select_mode2
+    - resetWorkareaSelectMode2
   - - 316
     - c
-    - world00_area026_reset_workarea_select_mode3
+    - resetWorkareaSelectMode3
   - - 348
     - asm
     - func_801F2D5C
@@ -48,46 +48,46 @@ segments:
     - func_801F305C
   - - 1180
     - c
-    - world00_area026_scenario_flags_set29_clear28
+    - setScenarioFlagBit29ClearBit28
   - - 1236
     - c
-    - world00_area026_scenario_flags_clear29
+    - clearScenarioFlagBit29
   - - 1276
     - c
-    - world00_area026_scenario_flags_set28
+    - setScenarioFlagBit28
   - - 1316
     - c
-    - world00_area026_scenario_flags_clear28
+    - clearScenarioFlagBit28
   - - 1356
     - c
-    - world00_area026_scenario_flags_set2B
+    - setScenarioFlagBit2B
   - - 1396
     - c
-    - world00_area026_scenario_flags_clear2B
+    - clearScenarioFlagBit2B
   - - 1436
     - c
-    - world00_area026_scenario_flags_set2C
+    - setScenarioFlagBit2C
   - - 1476
     - c
-    - world00_area026_scenario_flags_clear2C
+    - clearScenarioFlagBit2C
   - - 1516
     - asm
     - func_801F31EC
   - - 1584
     - c
-    - world00_area026_counter_retreat
+    - retreatCounter
   - - 1624
     - c
-    - world00_area026_counter_advance
+    - advanceCounter
   - - 1664
     - c
-    - world00_area026_counter_reset
+    - resetCounter
   - - 1720
     - asm
     - func_801F32B8
   - - 1848
     - c
-    - world00_area026_scenario_flags_set2E
+    - setScenarioFlagBit2E
   - - 1888
     - asm
     - func_801F3360
