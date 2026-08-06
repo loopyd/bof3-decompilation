@@ -132,177 +132,120 @@ typedef struct Battle03UiRingEntry {
   u32 unk_04;
 } Battle03UiRingEntry;
 
-extern volatile AbilityObject       ABILITY_OBJECTS[];
-extern volatile u8                  D_801462F0;
-extern const Battle03TemplateRecord D_80144968[];
-extern volatile Battle03FlagRecord D_80145FB8[];
-extern u16                          D_80143F04;
-extern u8                           D_80146328;
-extern u8                           D_80144955;
-extern u8                           D_801462F3;
-extern u8                           D_80146384;
-extern u8                           D_801462F4;
-extern Battle03LocalWork           *D_1F800044;
-extern Battle03Handler              D_801EB210[];
-extern Battle03Handler              D_801EB27C[];
-extern Battle03Handler              D_801EB258[];
-extern u16                          D_801EB09C[];
-extern Battle03Handler              D_801EB46C[];
-extern u8                           D_801EB2E8[];
-extern Battle03LocalWork            D_80145E90[];
-extern volatile u16           D_80143C40;
-extern volatile u16           D_80145AA8;
-extern u8                     D_801462E0;
-extern volatile u8            D_8014832E;
-extern Battle03LocalWork* volatile D_80146250;
-extern Battle03LocalWork*          D_1F800044;
-extern volatile u8* g_battle03_work;
-extern u8*          D_8014598C;
-extern u8           D_80145AD4[];
-extern const char   D_801D0C70[];
-extern const char   D_801D0C74[];
-extern u8           D_801462E1[];
-extern Battle03QueuedSlot* volatile D_801EC2E0;
-/* @kind: bss (map symbol: battle03UiRingHead) — UI ring consumer index. */
-extern u8                            battle03UiRingHead;
-extern u8                            D_801EC2E4;
-/* @kind: bss (map symbol: battle03UiRingEntries) — 16-entry UI ring of (byte, byte, word) triples. */
-extern volatile Battle03UiRingEntry battle03UiRingEntries[];
-/* @kind: bss (map symbol: battle03UiRingTail) — UI ring producer index. */
-extern volatile u8                   battle03UiRingTail;
-extern u8*                           D_80148648;
-extern u8                            D_801462E5;
-extern u8                            D_8014630C;
-extern u8                            D_8014864C;
-extern u8                            D_80181B10[];
-extern Battle03FlagRecord            D_80145FB4[];
-extern volatile Battle03LocalWork*   D_801EB4E0;
-extern Battle03EightDispatchTable    D_801D0ED4;
-extern Battle03SeventyDispatchTable D_801D0D1C;
+extern volatile AbilityObject       ABILITY_OBJECTS[]; // @source 0x801CA70C // @kind unknown
+extern volatile u8                  D_801462F0; // @source 0x801462F0 // @kind unknown
+extern const Battle03TemplateRecord D_80144968[]; // @source 0x80144968 // @kind unknown
+extern volatile Battle03FlagRecord D_80145FB8[]; // @source 0x80145FB8 // @kind unknown
+extern u16                          D_80143F04; // @source 0x80143F04 // @kind unknown
+extern u8                           D_80146328; // @source 0x80146328 // @kind unknown
+extern u8                           D_80144955; // @source 0x80144955 // @kind unknown
+extern u8                           D_801462F3; // @source 0x801462F3 // @kind unknown
+extern u8                           D_80146384; // @source 0x80146384 // @kind unknown
+extern u8                           D_801462F4; // @source 0x801462F4 // @kind unknown
+extern Battle03LocalWork           *D_1F800044; // @source 0x1F800044 // @kind unknown
+extern Battle03Handler              D_801EB210[]; // @source 0x801EB210 // @kind unknown
+extern Battle03Handler              D_801EB27C[]; // @source 0x801EB27C // @kind unknown
+extern Battle03Handler              D_801EB258[]; // @source 0x801EB258 // @kind unknown
+extern u16                          D_801EB09C[]; // @source 0x801EB09C // @kind unknown
+extern Battle03Handler              D_801EB46C[]; // @source 0x801EB46C // @kind unknown
+extern u8                           D_801EB2E8[]; // @source 0x801EB2E8 // @kind unknown
+extern Battle03LocalWork            D_80145E90[]; // @source 0x80145E90 // @kind unknown
+extern volatile u16           D_80143C40; // @source 0x80143C40 // @kind unknown
+extern volatile u16           D_80145AA8; // @source 0x80145AA8 // @kind unknown
+extern u8                     D_801462E0; // @source 0x801462E0 // @kind unknown
+extern volatile u8            D_8014832E; // @source 0x8014832E // @kind unknown
+extern Battle03LocalWork* volatile D_80146250; // @source 0x80146250 // @kind unknown
+extern Battle03LocalWork*          D_1F800044; // @source 0x1F800044 // @kind unknown
+extern volatile u8* battleWork; // @source 0x1F800044 // @kind unknown
+extern u8*          D_8014598C; // @source 0x8014598C // @kind unknown
+extern u8           D_80145AD4[]; // @source 0x80145AD4 // @kind unknown
+extern const char   D_801D0C70[]; // @source 0x801D0C70 // @kind unknown
+extern const char   D_801D0C74[]; // @source 0x801D0C74 // @kind unknown
+extern u8           D_801462E1[]; // @source 0x801462E1 // @kind unknown
+extern Battle03QueuedSlot* volatile D_801EC2E0; // @source 0x801EC2E0 // @kind unknown
+/* @kind: bss (map symbol: uiRingHead) — UI ring consumer index. */
+extern u8                            uiRingHead; // @source 0x801EBF04
+extern u8                            D_801EC2E4; // @source 0x801EC2E4
+/* @kind: bss (map symbol: uiRingEntries) — 16-entry UI ring of (byte, byte, word) triples. */
+extern volatile Battle03UiRingEntry uiRingEntries[]; // @source 0x801EB5B0
+/* @kind: bss (map symbol: uiRingTail) — UI ring producer index. */
+extern volatile u8                   uiRingTail; // @source 0x801EC328
+extern u8*                           D_80148648; // @source 0x80148648
+extern u8                            D_801462E5; // @source 0x801462E5
+extern u8                            D_8014630C; // @source 0x8014630C // @kind unknown
+extern u8                            D_8014864C; // @source 0x8014864C // @kind unknown
+extern u8                            D_80181B10[]; // @source 0x80181B10 // @kind unknown
+extern Battle03FlagRecord            D_80145FB4[]; // @source 0x80145FB4 // @kind unknown
+extern volatile Battle03LocalWork*   D_801EB4E0; // @source 0x801EB4E0 // @kind unknown
+extern Battle03EightDispatchTable    D_801D0ED4; // @source 0x801D0ED4 // @kind unknown
+extern Battle03SeventyDispatchTable D_801D0D1C; // @source 0x801D0D1C // @kind unknown
 
-void battle03_integrate_motion_or_set2(void);
-extern Battle03EightDispatchTable   D_801D0F80;
-extern Battle03FiveDispatchTable   D_801D0F44;
-extern Battle03FiveDispatchTable    D_801D0F58;
-extern Battle03DispatchTable        D_801D0F20;
+void integrateMotionOrSet2(void);
+extern Battle03EightDispatchTable   D_801D0F80; // @source 0x801D0F80 // @kind unknown
+extern Battle03FiveDispatchTable   D_801D0F44; // @source 0x801D0F44 // @kind unknown
+extern Battle03FiveDispatchTable    D_801D0F58; // @source 0x801D0F58 // @kind unknown
+extern Battle03DispatchTable        D_801D0F20; // @source 0x801D0F20 // @kind unknown
 
-Battle03LocalWork *battle03_find_local_work_by_kind(u8 arg0);
+Battle03LocalWork *findLocalWorkByKind(u8 arg0);
 
-s16 battle03_scale_percent_clamp999(s32 arg0, s32 arg1);
-extern Battle03DispatchTable        D_801D0F2C;
-extern Battle03DispatchTable        D_801D0FA0;
-extern Battle03DispatchTable        D_801D0FAC;
-extern Battle03DispatchTable        D_801D0FB8;
-extern Battle03DispatchTable        D_801D0FC4;
-extern u8*            D_801C893C[];
-extern u32*           D_800B6178[];
-extern u8*            D_801C8950[];
-extern Battle03Handler D_801EB15C[];
-extern Battle03Handler D_801EB218[];
-extern Battle03Handler D_801EB3B0[];
-extern Battle03EnemyWork          D_801EB630[];
-extern Battle03Handler D_801EB188;
-extern Battle03Handler D_801EACD4[];
-extern Battle03Handler D_801EACE8[];
-extern Battle03Handler D_801EACF4[];
-extern Battle03Handler D_801EAD00[];
-extern Battle03Handler D_801EAD0C[];
-extern Battle03Handler D_801EAD20[];
-extern Battle03Handler D_801EB1B4[];
-extern Battle03Handler D_801EB1BC[];
-extern Battle03Handler D_801EB1D4[];
-extern Battle03Handler D_801EB1F4[];
-extern Battle03Handler D_801EB3E4[];
-extern Battle03Handler D_801EB3EC[];
-extern Battle03Handler D_801EB3F4[];
-extern Battle03Handler D_801EB404[];
-extern Battle03Handler D_801EB40C[];
-extern Battle03Handler D_801EB424[];
-extern Battle03Handler D_801EB430[];
-extern Battle03Handler D_801EB444[];
-extern Battle03Handler D_801EB460[];
-extern Battle03Handler D_801EB478[];
-extern void             D_801492B8;
-extern u8               D_801EB000[];
-extern s8               D_801EB4F2;
-extern volatile u8  BATTLE_LOCAL_BYTE_62EC;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62E0;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62E1;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62E2;
-extern volatile u16 BATTLE_GLOBAL_HALF_62E8;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62EA;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62EE;
-extern volatile u8  BATTLE_GLOBAL_BYTE_62F4;
+s16 scalePercentClamp999(s32 arg0, s32 arg1);
+extern Battle03DispatchTable        D_801D0F2C; // @source 0x801D0F2C // @kind unknown
+extern Battle03DispatchTable        D_801D0FA0; // @source 0x801D0FA0 // @kind unknown
+extern Battle03DispatchTable        D_801D0FAC; // @source 0x801D0FAC // @kind unknown
+extern Battle03DispatchTable        D_801D0FB8; // @source 0x801D0FB8 // @kind unknown
+extern Battle03DispatchTable        D_801D0FC4; // @source 0x801D0FC4 // @kind unknown
+extern u8*            D_801C893C[]; // @source 0x801C893C // @kind unknown
+extern u32*           D_800B6178[]; // @source 0x800B6178 // @kind unknown
+extern u8*            D_801C8950[]; // @source 0x801C8950 // @kind unknown
+extern Battle03Handler D_801EB15C[]; // @source 0x801EB15C // @kind unknown
+extern Battle03Handler D_801EB218[]; // @source 0x801EB218 // @kind unknown
+extern Battle03Handler D_801EB3B0[]; // @source 0x801EB3B0 // @kind unknown
+extern Battle03EnemyWork          D_801EB630[]; // @source 0x801EB630 // @kind unknown
+extern Battle03Handler D_801EB188; // @source 0x801EB188 // @kind unknown
+extern Battle03Handler D_801EACD4[]; // @source 0x801EACD4 // @kind unknown
+extern Battle03Handler D_801EACE8[]; // @source 0x801EACE8 // @kind unknown
+extern Battle03Handler D_801EACF4[]; // @source 0x801EACF4 // @kind unknown
+extern Battle03Handler D_801EAD00[]; // @source 0x801EAD00 // @kind unknown
+extern Battle03Handler D_801EAD0C[]; // @source 0x801EAD0C // @kind unknown
+extern Battle03Handler D_801EAD20[]; // @source 0x801EAD20 // @kind unknown
+extern Battle03Handler D_801EB1B4[]; // @source 0x801EB1B4 // @kind unknown
+extern Battle03Handler D_801EB1BC[]; // @source 0x801EB1BC // @kind unknown
+extern Battle03Handler D_801EB1D4[]; // @source 0x801EB1D4 // @kind unknown
+extern Battle03Handler D_801EB1F4[]; // @source 0x801EB1F4 // @kind unknown
+extern Battle03Handler D_801EB3E4[]; // @source 0x801EB3E4 // @kind unknown
+extern Battle03Handler D_801EB3EC[]; // @source 0x801EB3EC // @kind unknown
+extern Battle03Handler D_801EB3F4[]; // @source 0x801EB3F4 // @kind unknown
+extern Battle03Handler D_801EB404[]; // @source 0x801EB404 // @kind unknown
+extern Battle03Handler D_801EB40C[]; // @source 0x801EB40C // @kind unknown
+extern Battle03Handler D_801EB424[]; // @source 0x801EB424 // @kind unknown
+extern Battle03Handler D_801EB430[]; // @source 0x801EB430 // @kind unknown
+extern Battle03Handler D_801EB444[]; // @source 0x801EB444 // @kind unknown
+extern Battle03Handler D_801EB460[]; // @source 0x801EB460 // @kind unknown
+extern Battle03Handler D_801EB478[]; // @source 0x801EB478 // @kind unknown
+extern void             D_801492B8; // @source 0x801492B8 // @kind unknown
+extern u8               D_801EB000[]; // @source 0x801EB000 // @kind unknown
+extern s8               D_801EB4F2; // @source 0x801EB4F2 // @kind unknown
+extern volatile u8  BATTLE_GLOBAL_BYTE_62E2; // @source 0x801462E2 // @kind unknown
+extern volatile u16 BATTLE_GLOBAL_HALF_62E8; // @source 0x801462E8 // @kind unknown
 extern volatile u8  BATTLE_GLOBAL_BYTE_62F3;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6301;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6302;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6303;
-extern volatile u32 D_801459F0;
+extern volatile u32 D_801459F0; // @source 0x801459F0 // @kind unknown
 
 void func_801E679C(void);
 void func_801E68EC(void);
-extern volatile u16 BATTLE_SCRATCH_HALF_000;
-extern volatile u8  BATTLE_SCRATCH_BYTE_000;
-extern volatile u8  BATTLE_SCRATCH_BYTE_001;
-extern volatile u8  BATTLE_SCRATCH_BYTE_002;
-extern volatile u8  BATTLE_LOCAL_FLAG_63CE;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6325;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6327;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6328;
-extern volatile u32 BATTLE_GLOBAL_WORD_632C;
-extern volatile u32 BATTLE_GLOBAL_WORD_6330;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6374;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6375;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6384;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6324;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6304;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6308;
-extern volatile u16 BATTLE_GLOBAL_HALF_63B8;
-extern volatile u8  BATTLE_GLOBAL_BYTE_63BA;
-extern volatile u16 BATTLE_GLOBAL_HALF_63C0;
-extern volatile u16 BATTLE_GLOBAL_HALF_63C2;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6322;
-extern volatile u8  BATTLE_GLOBAL_BYTE_6323;
-extern volatile u8  BATTLE_GLOBAL_BYTE_63CE;
-extern volatile u16 BATTLE_GLOBAL_HALF_63DA;
-extern volatile u8  BATTLE_GLOBAL_BYTE_63CA;
-extern volatile u16 BATTLE_GLOBAL_HALF_63D0;
-extern volatile u8  BATTLE_GLOBAL_BYTE_EC324;
-extern volatile u16 BATTLE_GLOBAL_HALF_EC30C;
-extern volatile u8  BATTLE_UI_BYTE_8356;
-extern volatile u8  BATTLE_UI_BYTE_8357;
-extern volatile u16 BATTLE_UI_HALF_8358;
-extern volatile u16 BATTLE_UI_HALF_835A;
-extern volatile u8  BATTLE_UI_BYTE_835C;
-extern volatile u8  BATTLE_UI_BYTE_835D;
-extern volatile u8  BATTLE_UI_BYTE_835E;
-extern volatile u8  BATTLE_UI_BYTE_837A;
-extern volatile u8  BATTLE_UI_BYTE_837B;
-extern volatile u16 BATTLE_UI_HALF_837C;
-extern volatile u16 BATTLE_UI_HALF_837E;
-extern volatile u8  BATTLE_UI_BYTE_839E;
-extern volatile u8  BATTLE_UI_BYTE_839F;
-extern volatile u8  BATTLE_UI_BYTE_83C2;
-extern volatile u8  BATTLE_UI_BYTE_83C3;
-extern volatile u16 BATTLE_UI_HALF_83C4;
-extern volatile u16 BATTLE_UI_HALF_83C6;
-extern volatile u8  BATTLE_UI_BYTE_8332;
-extern volatile u8  BATTLE_UI_BYTE_8333;
-extern volatile u16 BATTLE_UI_HALF_8334;
-extern volatile u16 BATTLE_UI_HALF_8336;
-extern volatile u32 BATTLE_CURRENT_QUEUED_WORD_4B20;
-extern volatile u8  BATTLE_GLOBAL_BYTE_63C9;
-extern volatile u8  BATTLE_GLOBAL_BYTE_44F58;
-extern volatile s8  BATTLE_GLOBAL_BYTE_4952;
-extern volatile u8  BATTLE_RANDOM_TABLE_AC58_DATA[];
-extern volatile u8  BATTLE_RANDOM_TABLE_AC78_DATA[];
-extern volatile u8  BATTLE_UI_RING_INDEX;
-extern volatile u8  BATTLE_UI_RING_TARGET;
+extern volatile u8  BATTLE_GLOBAL_BYTE_6374; // @source 0x80146374 // @kind unknown
+extern volatile u8  BATTLE_GLOBAL_BYTE_6375; // @source 0x80146375 // @kind unknown
+extern volatile u8  BATTLE_GLOBAL_BYTE_63BA; // @source 0x801463BA // @kind unknown
+extern volatile u16 BATTLE_GLOBAL_HALF_63C0; // @source 0x801463C0 // @kind unknown
+extern volatile u8  BATTLE_GLOBAL_BYTE_6322; // @source 0x80146322 // @kind unknown
+extern volatile u8  BATTLE_GLOBAL_BYTE_6323; // @source 0x80146323 // @kind unknown
+extern volatile u8  BATTLE_GLOBAL_BYTE_63CE; // @source 0x801463CE // @kind unknown
+extern volatile u8  BATTLE_RANDOM_TABLE_AC58_DATA[]; // @source 0x801EAC58 // @kind unknown
+extern volatile u8  BATTLE_RANDOM_TABLE_AC78_DATA[]; // @source 0x801EAC78 // @kind unknown
 extern u8           func_8017E3D4(void);
 
 void func_8014D290(void);
-void battle03_dispatch_byte1_pair_table(void);
-void battle03_dispatch_mode_five_table(void);
+void dispatchByte1PairTable(void);
+void dispatchModeFiveTable(void);
 void func_801E72F4(void);
 void func_8014D5F0(u8 arg0, u32 arg1, s32 arg2);
 void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
@@ -323,7 +266,7 @@ u8   func_8014DAEC(void);
 void func_8014E5A0(u8 arg0, u8 arg1);
 u32  func_8014D8D4(u8 arg0);
 u8   func_801DB524(u8 arg0);
-s32  battle03_test_flag400_when_eligible(u8 arg0);
+s32  testFlag400WhenEligible(u8 arg0);
 u8   func_800A9304(u8 arg0);
 u8   func_800A94A8(void);
 u8   func_800A955C(void);
@@ -344,16 +287,16 @@ void func_801D7EB0(s32 arg0, s32 arg1);
 u8   func_801D64C4(u32 arg0);
 u8   func_801DDCB4(u32 arg0);
 void func_801644D8(u32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u32 arg5);
-extern Battle03Handler D_801EB120[];
+extern Battle03Handler D_801EB120[]; // @source 0x801EB120 // @kind unknown
 
-void battle03_dispatch_local_state_table(void);
-void battle03_mark_pending_bit(u32 arg0);
+void dispatchLocalStateTable(void);
+void markPendingBit(u32 arg0);
 void func_801DE560(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u32 arg4);
 void func_801DE9A8(u32 arg0);
-extern u8 D_801490D8[];
-extern u8 D_801EB35C[];
+extern u8 D_801490D8[]; // @source 0x801490D8 // @kind unknown
+extern u8 D_801EB35C[]; // @source 0x801EB35C // @kind unknown
 
-void battle03_submit_enemy_script_block(u32 arg0);
+void submitEnemyScriptBlock(u32 arg0);
 void func_801DCEF8(u32 arg0);
 u32  func_801502D0(u32 arg0);
 void func_801501E4(void* arg0, u32 arg1, u32 arg2);
@@ -362,48 +305,48 @@ u32  func_801E590C(u32 arg0, u32 arg1);
 u8   func_801E2E30(void);
 s16  func_8015477C(s32 arg0, s32 arg1);
 
-void battle03_setup_all_local_work(void);
-void battle03_run_active_local_handlers(void);
-u8   battle03_local_ready_or_helper1(void);
-u8   battle03_local_ready_or_helper2(void);
-void battle03_set_state8_when_ready(void);
-void battle03_store_local_ready2_result(void);
+void setupAllLocalWork(void);
+void runActiveLocalHandlers(void);
+u8   localReadyOrHelper1(void);
+u8   localReadyOrHelper2(void);
+void setState8WhenReady(void);
+void storeLocalReady2Result(void);
 void func_801DEF0C(void);
 void func_801DEFE4(void);
-void battle03_forward_selected_effect_id(void);
-void battle03_reset_ready_advance_byte1(void);
-void battle03_call_next_local_handler(void);
+void forwardSelectedEffectId(void);
+void resetReadyAdvanceByte1(void);
+void callNextLocalHandler(void);
 void func_801DF914(void);
-void battle03_copy_scratch_to_local_work(void);
-void battle03_wait_ready_advance_substate3(void);
-extern Battle03Handler D_801EB1E0[];
+void copyScratchToLocalWork(void);
+void waitReadyAdvanceSubstate3(void);
+extern Battle03Handler D_801EB1E0[]; // @source 0x801EB1E0 // @kind unknown
 
-void battle03_dispatch_local_substate3_table(void);
-void battle03_dispatch_local_state4_table(void);
-void battle03_dispatch_alt_state3_table(void);
-extern Battle03Handler D_801EB224[];
+void dispatchLocalSubstate3Table(void);
+void dispatchLocalState4Table(void);
+void dispatchAltState3Table(void);
+extern Battle03Handler D_801EB224[]; // @source 0x801EB224 // @kind unknown
 
-void battle03_dispatch_state2_class_table(void);
-extern Battle03Handler D_801EB26C[];
-extern Battle03Handler D_801EB274[];
+void dispatchState2ClassTable(void);
+extern Battle03Handler D_801EB26C[]; // @source 0x801EB26C // @kind unknown
+extern Battle03Handler D_801EB274[]; // @source 0x801EB274 // @kind unknown
 
-void battle03_dispatch_state2_event_table(void);
-void battle03_dispatch_state2_followup_table(void);
-void battle03_dispatch_default_class_table(void);
+void dispatchState2EventTable(void);
+void dispatchState2FollowupTable(void);
+void dispatchDefaultClassTable(void);
 void func_801E2170(void);
 void func_801E25E0(u8 arg0);
-void battle03_pick_target_store_global(s8 arg0);
+void pickTargetStoreGlobal(s8 arg0);
 void func_801D9304(u8 arg0);
-u8   battle03_resolve_kind_result_mode(void);
+u8   resolveKindResultMode(void);
 void func_801D4850(void);
-void battle03_init_ui_bundle_slot2(u8 arg0);
-void battle03_init_ui_bundle_slot3(u8 arg0);
-void battle03_init_ui_bundle_slot4(u8 arg0);
-void battle03_init_ui_bundle_slot0(void);
+void initUiBundleSlot2(u8 arg0);
+void initUiBundleSlot3(u8 arg0);
+void initUiBundleSlot4(u8 arg0);
+void initUiBundleSlot0(void);
 u8   func_801D54F8(void);
-u8   battle03_advance_local_flag40_countdown(void);
+u8   advanceLocalFlag40Countdown(void);
 u8   func_801D57AC(void);
-u8   battle03_advance_local_flag20_countdown(void);
+u8   advanceLocalFlag20Countdown(void);
 u8   func_801D5A60(void);
 u8   func_801D5BC0(void);
 u8   func_801D5DCC(void);
@@ -417,14 +360,14 @@ void func_801D8690(s32 arg0, s32 arg1, s32 arg2);
 void func_801D8AE4(s32 arg0, s32 arg1, s32 arg2);
 void func_801D8DF8(s32 arg0, s32 arg1, u32 arg2);
 u8   func_801DB058(void);
-void battle03_draw_decimal_glyph_run(s16 arg0, u16 arg1, u8 arg2, s16 arg3);
+void drawDecimalGlyphRun(s16 arg0, u16 arg1, u8 arg2, s16 arg3);
 void func_801D9684(s16 arg0, u16 arg1, s32 arg2, u16 arg3);
 void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void func_801D9C80(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void func_801D9DBC(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
 void func_801D9E9C(s16 arg0, s16 arg1, u16 arg2, u16 arg3, s8 arg4);
 void func_801DA078(s16 arg0, s16 arg1, s32 arg2);
-void battle03_draw_flat_line_prim(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
+void drawFlatLinePrim(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
 u8   func_801DA69C(u32 arg0);
 u32  func_801DB434(u8 arg0, u32 arg1);
@@ -433,7 +376,7 @@ u8   func_801DB9E4(u32 arg0);
 u8   func_801DB2F8(u32 arg0);
 u8   func_801DB3A0(u32 arg0, u32 arg1, u32 arg2);
 u8   func_801DB3E4(u32 arg0, u32 arg1, u32 arg2);
-void battle03_clear_ranking_scratch(void);
+void clearRankingScratch(void);
 void func_801DA7D4(void);
 void func_801DAAE4(void);
 u32  func_801DC73C(s16 arg0, u32 arg1, u32 arg2);
@@ -443,93 +386,93 @@ u32  func_801DC044(u8 arg0, u8 arg1, u16 arg2);
 u32  func_801DCAD8(u8 arg0, u8 arg1, s8 arg2);
 u32  func_801DC894(s16 arg0, u8 arg1, u32 arg2);
 u32  func_801DBB78(u8 arg0, u8 arg1);
-void battle03_copy_local_templates(void);
-void battle03_clear_battler_action_flags(u8 arg0);
+void copyLocalTemplates(void);
+void clearBattlerActionFlags(u8 arg0);
 void func_801DD29C(void);
 void func_801DD350(s32 arg0);
 void func_801DD3CC(s32 arg0);
-u8   battle03_check_local_queued_branch(void);
+u8   checkLocalQueuedBranch(void);
 void func_801DD858(u32 arg0);
 void func_801DD8AC(u32 arg0);
-void battle03_submit_positional_effect_bit80(u32 arg0);
+void submitPositionalEffectBit80(u32 arg0);
 void func_801DDAF0(void);
 void func_801DD800(void);
-u8   battle03_advance_counter_store_packed(u32 arg0, u32 arg1);
-void battle03_init_mode_tuple_530(void);
-u8   battle03_scan_trigger_table_submit(u16 arg0, u32 arg1);
+u8   advanceCounterStorePacked(u32 arg0, u32 arg1);
+void initModeTuple530(void);
+u8   scanTriggerTableSubmit(u16 arg0, u32 arg1);
 void func_801DDFEC(u32 arg0);
-void battle03_clear_pending_bit(u32 arg0);
+void clearPendingBit(u32 arg0);
 void func_801DE1D4(void);
 void func_801DE60C(u32 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4, u32 arg5);
-void battle03_stub_handler_e690(void);
-void battle03_stub_handler_e7fc(void);
+void stubHandlerE690(void);
+void stubHandlerE7fc(void);
 void func_801DE804(void);
 u8   func_801DE858(s8 arg0);
-void battle03_ui_ring_push_triple(s8 arg0, s8 arg1, u32 arg2);
-u8   battle03_ui_ring_has_work(void);
+void pushUiRingTriple(s8 arg0, s8 arg1, u32 arg2);
+u8   hasUiRingWork(void);
 void func_801DEA64(s32 arg0);
 void func_801DDB7C(void);
 u8   func_801E0E0C(void);
 void func_801E0B64(void);
-void battle03_reset_scratch_when_global_bit4(void);
+void resetScratchWhenGlobalBit4(void);
 void func_801E1DD4(void);
-u8   battle03_enemy_ready_or_helper2(void);
-u8   battle03_check_enemy_queued_predicate(void);
+u8   enemyReadyOrHelper2(void);
+u8   checkEnemyQueuedPredicate(void);
 void func_801E2314(u32 arg0);
-void battle03_reset_enemy_scratch_when_bit4(void);
+void resetEnemyScratchWhenBit4(void);
 void func_801E531C(void);
-void battle03_submit_effect_unless_neg1(s16 arg0);
-void battle03_apply_gravity_or_reset(void);
+void submitEffectUnlessNeg1(s16 arg0);
+void applyGravityOrReset(void);
 void func_801E54EC(void);
-void battle03_reset_enemy_scratch_state(void);
-void battle03_raise_bit80_alloc_slot(void);
-void battle03_clear_queued_slot_bytes(void);
+void resetEnemyScratchState(void);
+void raiseBit80AllocSlot(void);
+void clearQueuedSlotBytes(void);
 void func_801E5A38(void);
 void func_801E62BC(u8 arg0);
 u8   func_801E7B34(void);
 void func_801E8DD8(void);
 u8   func_801E8FA8(void);
 void func_801DEAE0(void);
-void battle03_queue_script_event(u32 arg0, u32 arg1);
-void battle03_draw_icon_strip_24x8(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
-void battle03_draw_fullscreen_fade_tile(void);
+void queueScriptEvent(u32 arg0, u32 arg1);
+void drawIconStrip24x8(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+void drawFullscreenFadeTile(void);
 void func_801D99AC(s16 arg0, s16 arg1, s32 arg2);
-void battle03_draw_sprite_prim_tpage0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
+void drawSpritePrimTpage0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
-void battle03_draw_sprite_prim_tpage1(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
+void drawSpritePrimTpage1(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
-u8   battle03_pick_random_unblocked_id(u8 arg0);
+u8   pickRandomUnblockedId(u8 arg0);
 s8   func_801E2A88(u8 arg0);
 u8   func_801E2CA4(void);
-u8   battle03_pick_target_by_mode(s8 arg0);
+u8   pickTargetByMode(s8 arg0);
 u8   func_801E2D90(void);
-u8   battle03_enemy_ready_or_helper1(void);
-u8   battle03_pick_target_or_ff(s8 arg0);
-void battle03_dispatch_presentation_state1(void);
-void battle03_dispatch_presentation_byte3(void);
-extern Battle03Handler D_801EB454[];
+u8   enemyReadyOrHelper1(void);
+u8   pickTargetOrFf(s8 arg0);
+void dispatchPresentationState1(void);
+void dispatchPresentationByte3(void);
+extern Battle03Handler D_801EB454[]; // @source 0x801EB454 // @kind unknown
 
-void battle03_dispatch_result_substate_table(void);
+void dispatchResultSubstateTable(void);
 void func_801E5AF4(void);
 void func_801E5824(void);
-void battle03_dispatch_byte1_five_table(void);
+void dispatchByte1FiveTable(void);
 void func_801E7818(void);
-void battle03_dispatch_state_byte2_table_f80(void);
+void dispatchStateByte2TableF80(void);
 void func_801E915C(void);
-void battle03_panel_forward_halfwords(void);
-void battle03_call_d8450_when_idle(void);
-void battle03_panel_task_activate(void);
-void battle03_panel_task_commit_queued(void);
+void forwardPanelHalfwords(void);
+void callD8450WhenIdle(void);
+void activatePanelTask(void);
+void commitQueuedPanelTask(void);
 void func_801EA1E0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5,
                    s32 arg6, u8* selector);
-void battle03_dispatch_result_aux_state(void);
+void dispatchResultAuxState(void);
 void func_801E8684(void);
 void func_801E8D04(void);
 void func_801EA650(void);
 void func_801EA7DC(void);
 void func_801EAAB8(void);
-u8   battle03_ui_ring_advance_check(void);
-u8   battle03_count_message_tokens(u8* arg0);
+u8   advanceUiRingCheck(void);
+u8   countMessageTokens(u8* arg0);
 
 #define BATTLE_LOCAL_WORK_ARRAY PSX_PTR(volatile Battle03LocalWork, 0x80145e90u)
 #define BATTLE_ENEMY_WORK_ARRAY PSX_PTR(volatile Battle03EnemyWork, 0x801eb630u)

@@ -37,13 +37,13 @@ set(BOF3_OBJFLAGS_emi_etc_game_01_armFadeDelay_c -O1)
 # byte with no register pinning. Verified by bin/flag-search (100% exact).
 set(BOF3_OBJFLAGS_emi_etc_game_01_preDispatchGate_c -O2 -fno-rerun-cse-after-loop)
 
-# battle03_pick_random_unblocked_id uses a signed modulo (rand() % count) whose original expansion
+# pickRandomUnblockedId uses a signed modulo (rand() % count) whose original expansion
 # includes the full MIPS division-trap sequence (break 7 / break 6). The
 # canonical maspsx pass omits these traps; --expand-div restores them.
 # Verified by bin/flag-search (no -O variant matches) + manual maspsx test.
-set(BOF3_OBJFLAGS_emi_battle_battle_03_battle03_pick_random_unblocked_id_c -O2 -Wa,--expand-div)
+set(BOF3_OBJFLAGS_emi_battle_battle_03_pickRandomUnblockedId_c -O2 -Wa,--expand-div)
 
-# battle15_pick_random_unblocked_id is a byte-identical duplicate of battle03_pick_random_unblocked_id (battle/03).
+# battle15_pick_random_unblocked_id is a byte-identical duplicate of pickRandomUnblockedId (battle/03).
 # Same signed modulo (rand() % count) requiring --expand-div for the MIPS
 # division-trap sequence.
 set(BOF3_OBJFLAGS_emi_battle_battle_15_battle15_pick_random_unblocked_id_c -O2 -Wa,--expand-div)
