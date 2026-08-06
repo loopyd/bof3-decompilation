@@ -44,7 +44,9 @@ extern volatile u8           D_80143C30;
 extern volatile u32          GAME_FRONT_POPUP_WORD;
 extern volatile u32          D_8014598C;
 extern volatile u16          D_80143C2A;
-extern GameFrontStateHandler D_801D1C4C[];
+/* @kind: table — GAME_FRONT_STATE-dispatched handler pointers, one per
+ * frontend state (payload 0x104c holds eight 0x801D**** entries). */
+extern GameFrontStateHandler game_front_state_handlerTable[];
 /* One 10-byte glyph geometry record; indexed per glyph id. */
 typedef struct GameFrontGlyphGeometry {
   u16 unk_0;
@@ -53,11 +55,12 @@ typedef struct GameFrontGlyphGeometry {
   u16 unk_6;
   u16 unk_8;
 } GameFrontGlyphGeometry;
-extern GameFrontGlyphGeometry D_801D1C6C[];
+/* @kind: table — glyph geometry records indexed by glyph id. */
+extern GameFrontGlyphGeometry game_front_glyph_geometryTable[];
 
 void func_8014BA04(void);
-void func_801D18F8(void);
-void func_801D1B00(void);
+void game_front_update_banner(void);
+void game_front_update_windows(void);
 void func_8019611C(void);
 void func_801A7704(u8 scenario_index);
 void func_80197068(void);
@@ -67,7 +70,7 @@ void func_8017AA1C(u8* primitive);
 void func_8017A904(u8* primitive, u8 flags);
 void func_8014E5A0(s32 group, s32 id);
 u8*  game_front_draw_glyph(s32 x, s32 y, s32 width, s32 height, u8 flags);
-void func_801D18E8(u8* primitive, u8 alpha);
+void game_front_set_glyph_alpha(u8* primitive, u8 alpha);
 
 /* @behavior slot-2 frontend-local callback body selected by the local mode byte.
  * @source 0x8014ED6C
@@ -100,27 +103,27 @@ void game_stage_shared_palette_bank(void);
  */
 void game_queue_frontend_cue(u32 cue_id);
 
-void func_801D0C90(void);
-void func_801D0C04(void);
-void func_801D0D5C(void);
-void func_801D0D94(void);
-void func_801D0E54(void);
-void func_801D0F00(void);
-void func_801D0FB8(void);
-void func_801D11E4(void);
-void func_801D12CC(u8 selected, u8 alpha);
-void func_801D150C(s16 x, s16 y, u8 selected, u8 alpha);
-void func_801D16DC(s16 x, s16 y, u8 selected, u8 alpha);
-void func_801D0DF0(void);
-void func_801D1134(void);
-void func_801D1184(void);
-void func_801D1000(void);
-void func_801D104C(void);
+void game_front_title_setup(void);
+void game_front_main_loop(void);
+void game_front_arm_fade_delay(void);
+void game_front_tick_fade_timer(void);
+void game_front_finish_selection(void);
+void game_front_handle_menu_input(void);
+void game_front_update_prompt(void);
+void game_front_draw_prompt(void);
+void game_front_draw_prompt_panels(u8 selected, u8 alpha);
+void game_front_draw_label_groups(s16 x, s16 y, u8 selected, u8 alpha);
+void game_front_draw_label_group(s16 x, s16 y, u8 selected, u8 alpha);
+void game_front_open_selection(void);
+void game_front_start_selection_fx(void);
+void game_front_stop_selection_fx(void);
+void game_front_finalize_exit(void);
+void game_front_pre_dispatch_gate(void);
 
 #define GAME_FRONT_START_MASK         0x0800u
 #define GAME_FRONT_POPUP_PENDING_MASK 0x00ffff00u
 #define GAME_FRONT_POPUP_PENDING_OPEN 0x00020000u
 #define GAME_FRONT_SELECTION_FX_TABLE PSX_PTR(const volatile u8, 0x80181ebau)
-#define GAME_FRONT_STATE_HANDLERS     D_801D1C4C
+#define GAME_FRONT_STATE_HANDLERS     game_front_state_handlerTable
 
 #endif

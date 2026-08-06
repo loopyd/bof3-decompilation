@@ -4,7 +4,7 @@
  * opens the selection FX, and advances the title state.
  * @source 0x801D0DF0
  */
-void func_801D0DF0(void) {
+void game_front_open_selection(void) {
   volatile u16* timer_ptr;
   u16           timer;
 
@@ -14,7 +14,7 @@ void func_801D0DF0(void) {
 
   if ((s32)(timer << 0x10) == 0) {
     func_8014ECAC(0);
-    func_801D1134();
+    game_front_start_selection_fx();
     GAME_FRONT_STATE = GAME_FRONT_STATE + 1u;
   }
 }

@@ -4,7 +4,7 @@
  * state, then draws the active frontend prompt and its selection marker.
  * @source 0x801D11E4
  */
-void func_801D11E4(void) {
+void game_front_draw_prompt(void) {
   /* MATCHING_AID: read the gate/mode bytes through a non-volatile view.
    * cc1 (gcc-2.7.2-psx) emits an explicit zero-extension (andi 0xff after
    * lbu, andi 0xffff after lhu) whenever a *volatile* narrow load feeds a

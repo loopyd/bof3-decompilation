@@ -4,7 +4,7 @@
  * marker; when the popup is open, pulses the active marker primitive.
  * @source 0x801D12CC
  */
-void func_801D12CC(u8 selected, u8 alpha) {
+void game_front_draw_prompt_panels(u8 selected, u8 alpha) {
   u8* primitive;
   s32 marker_x;
   s32 pulse;
@@ -14,21 +14,21 @@ void func_801D12CC(u8 selected, u8 alpha) {
   SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(1, 12);
   primitive = game_front_draw_glyph(262, 130, 1, 1, selected);
-  func_801D18E8(primitive, alpha);
+  game_front_set_glyph_alpha(primitive, alpha);
 
   marker_x = GetGraphType() == 1 ? 685 : (GetGraphType() == 2 ? 685 : 189);
   SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(2, 12);
   primitive = game_front_draw_glyph(12, 200, 8, 2, selected);
-  func_801D18E8(primitive, alpha);
+  game_front_set_glyph_alpha(primitive, alpha);
 
   marker_x = GetGraphType() == 1 ? 685 : (GetGraphType() == 2 ? 685 : 189);
   SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(2, 12);
   primitive = game_front_draw_glyph(12, 212, 19, 2, selected);
-  func_801D18E8(primitive, alpha);
+  game_front_set_glyph_alpha(primitive, alpha);
   primitive = game_front_draw_glyph(172, 212, 9, 2, selected);
-  func_801D18E8(primitive, alpha);
+  game_front_set_glyph_alpha(primitive, alpha);
 
   if ((GAME_FRONT_POPUP_WORD & GAME_FRONT_POPUP_PENDING_MASK) ==
       GAME_FRONT_POPUP_PENDING_OPEN) {

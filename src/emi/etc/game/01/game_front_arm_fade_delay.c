@@ -4,7 +4,7 @@
  * the frontend state.
  * @source 0x801D0D5C
  */
-void func_801D0D5C(void) {
+void game_front_arm_fade_delay(void) {
   /* MATCHING_AID: read the fade-phase byte through a non-volatile view.
    * cc1 (gcc-2.7.2-psx) emits an explicit zero-extension (andi 0xff after the
    * lbu) whenever a *volatile* narrow load feeds a non-zero comparison, and that

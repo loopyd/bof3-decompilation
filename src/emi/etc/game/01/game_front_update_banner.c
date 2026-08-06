@@ -20,7 +20,7 @@ typedef struct GameFrontBannerState {
  * structural drift (58.87%). barrier()/CLOBBER_* govern delay-slot
  * scheduling, not register allocation, so they do not apply.
  */
-void func_801D18F8(void) {
+void game_front_update_banner(void) {
   volatile GameFrontBannerState* state;
   volatile u16*                  alpha;
   volatile u8*                   phase_addr;

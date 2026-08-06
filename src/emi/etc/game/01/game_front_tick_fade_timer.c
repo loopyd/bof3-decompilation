@@ -4,7 +4,7 @@
  * opens the window phase, rearms 900 ticks, and advances the state.
  * @source 0x801D0D94
  */
-void func_801D0D94(void) {
+void game_front_tick_fade_timer(void) {
   u16* timer_ptr;
   u16  timer;
 

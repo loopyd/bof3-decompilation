@@ -5,7 +5,7 @@ extern u8 D_80181EBA[];
 /* @behavior opens the selection-specific EXE effect using the current selection.
  * @source 0x801D1134
  */
-void func_801D1134(void) {
+void game_front_start_selection_fx(void) {
   u8 selection;
 
   selection = GAME_FRONT_SELECTION;

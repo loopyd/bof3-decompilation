@@ -4,7 +4,7 @@
  * primitive.
  * @source 0x801D18E8
  */
-void func_801D18E8(u8* primitive, u8 alpha) {
+void game_front_set_glyph_alpha(u8* primitive, u8 alpha) {
   primitive[4] = alpha;
   primitive[5] = alpha;
   primitive[6] = alpha;

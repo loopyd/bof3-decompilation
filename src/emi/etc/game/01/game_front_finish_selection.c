@@ -8,12 +8,12 @@
  * phases and EXE flags, installs the next callback, then advances the state.
  * @source 0x801D0E54
  */
-void func_801D0E54(void) {
+void game_front_finish_selection(void) {
   if (GAME_FRONT_EFFECT_BUSY == 0u) {
     GAME_FRONT_FADE_PHASE = 0u;
     GAME_FRONT_WINDOW_PHASE = 0u;
     GAME_FRONT_INPUT_GATE = 0u;
-    func_801D1184();
+    game_front_stop_selection_fx();
     func_80161808(0u);
     func_8019611C();
     D_80144FC3 = 0u;

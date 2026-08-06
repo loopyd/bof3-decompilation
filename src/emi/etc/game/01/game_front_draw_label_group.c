@@ -4,7 +4,7 @@
  * applying the supplied selection and alpha controls to both primitives.
  * @source 0x801D16DC
  */
-void func_801D16DC(s16 x, s16 y, u8 selected, u8 alpha) {
+void game_front_draw_label_group(s16 x, s16 y, u8 selected, u8 alpha) {
   u8* primitive;
   s32 marker_x;
 
@@ -12,7 +12,7 @@ void func_801D16DC(s16 x, s16 y, u8 selected, u8 alpha) {
   SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(2, 12);
   primitive = game_front_draw_glyph(x, y, 2, 2, selected);
-  func_801D18E8(primitive, alpha);
+  game_front_set_glyph_alpha(primitive, alpha);
   primitive = game_front_draw_glyph((s16)(x + 240), (s16)(y + 112), 3, 2, selected);
-  func_801D18E8(primitive, alpha);
+  game_front_set_glyph_alpha(primitive, alpha);
 }
