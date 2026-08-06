@@ -395,7 +395,7 @@ segments:
     - c
     - appendFullscreenDimTileB
   - - 60792
-    - asm
+    - c
     - func_801DF978
   - - 60852
     - asm
