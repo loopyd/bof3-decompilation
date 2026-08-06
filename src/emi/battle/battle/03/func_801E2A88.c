@@ -14,7 +14,7 @@ s8 func_801E2A88(u8 arg0) {
   if (BATTLE_GLOBAL_BYTE_6375 == 1u) {
     flags = BATTLE_ENEMY_FLAGS_80(battle_work);
     if ((flags & 1u) != 0u) {
-      value = (s8)func_801E30B8((s8)arg0);
+      value = (s8)battle03_pick_target_or_ff((s8)arg0);
       if (value != -1) {
         return value;
       }
@@ -63,7 +63,7 @@ s8 func_801E2A88(u8 arg0) {
       return (s8)(arg0 + 3u);
     }
     if ((kind_flags & 0x20u) != 0u) {
-      return (s8)func_801E2D4C((s8)arg0);
+      return (s8)battle03_pick_target_by_mode((s8)arg0);
     }
   }
 

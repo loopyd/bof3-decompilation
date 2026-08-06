@@ -33,10 +33,10 @@ u8 func_801D5A60(void) {
   if (count != 0u) {
     u32 event_id;
 
-    func_801D9484();
+    battle03_init_ui_bundle_slot0();
     event_id = 0x2au;
     if (count == 1u) {
-      func_801DEA18(last_index);
+      battle03_submit_enemy_script_block(last_index);
       event_id = 0x28u;
     }
     event_id = func_801502D0(event_id);

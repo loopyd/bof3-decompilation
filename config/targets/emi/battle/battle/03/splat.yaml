@@ -25,13 +25,13 @@ segments:
   subsegments:
   - - 23412
     - c
-    - func_801D6774
+    - battle03_dispatch_substate_table_acd4
   - - 23472
     - c
-    - func_801D67B0
+    - battle03_dispatch_state_table_ace8
   - - 23532
     - c
-    - func_801D67EC
+    - battle03_clear_state_bytes_advance
   - - 23576
     - asm
     - func_801D6818
@@ -40,27 +40,27 @@ segments:
     - func_801D6A14
   - - 24708
     - c
-    - func_801D6C84
+    - battle03_dispatch_state_table_acf4
   - - 24768
     - asm
     - func_801D6CC0
   - - 24976
     - c
-    - func_801D6D90
-    - '@source: src/emi/battle/battle/03/func_801D6D90.c'
+    - battle03_advance_state_when_loader_gated
+    - '@source: src/emi/battle/battle/03/battle03_advance_state_when_loader_gated.c'
     - '@behavior: Advances the global battle state when the EXE loader gate is ready and enabled.'
   - - 25060
     - c
-    - func_801D6DE4
+    - battle03_dispatch_state_table_ad00
   - - 25120
     - asm
     - func_801D6E20
   - - 25260
     - c
-    - func_801D6EAC
+    - battle03_advance_state_when_loader_ready
   - - 25324
     - c
-    - func_801D6EEC
+    - battle03_dispatch_state_table_ad0c
   - - 25384
     - asm
     - func_801D6F28
@@ -69,10 +69,10 @@ segments:
     - func_801D7108
   - - 25964
     - c
-    - func_801D716C
+    - battle03_enter_phase4_when_loader_ready
   - - 26020
     - c
-    - func_801D71A4
+    - battle03_dispatch_state_table_ad20
   - - 26080
     - asm
     - func_801D71E0
@@ -84,8 +84,8 @@ segments:
     - func_801D7350
   - - 26836
     - c
-    - func_801D74D4
-    - '@source: src/emi/battle/battle/03/func_801D74D4.c'
+    - battle03_retreat_state_when_gate_clear
+    - '@source: src/emi/battle/battle/03/battle03_retreat_state_when_gate_clear.c'
     - '@behavior: Clears the battle selection flag and decrements its counter when the gate is clear.'
   - - 26892
     - asm
@@ -122,29 +122,29 @@ segments:
     - func_801D9304
   - - 34696
     - asm
-    - func_801D9388
+    - battle03_init_ui_bundle_slot2
   - - 34788
     - asm
-    - func_801D93E4
+    - battle03_init_ui_bundle_slot3
   - - 34856
     - asm
-    - func_801D9428
+    - battle03_init_ui_bundle_slot4
   - - 34948
     - asm
-    - func_801D9484
+    - battle03_init_ui_bundle_slot0
   - - 35028
     - asm
-    - func_801D94D4
+    - battle03_draw_decimal_glyph_run
   - - 35460
     - asm
     - func_801D9684
   - - 35844
     - asm
-    - func_801D9804
+    - battle03_draw_icon_strip_24x8
   - - 36096
     - c
-    - func_801D9900
-    - '@source: src/emi/battle/battle/03/func_801D9900.c'
+    - battle03_draw_fullscreen_fade_tile
+    - '@source: src/emi/battle/battle/03/battle03_draw_fullscreen_fade_tile.c'
     - '@behavior: Emits a semi-transparent full-screen tile primitive.'
   - - 36268
     - asm
@@ -172,13 +172,13 @@ segments:
     - func_801DA328
   - - 38920
     - asm
-    - func_801DA408
+    - battle03_draw_flat_line_prim
   - - 39092
     - c
-    - func_801DA4B4
+    - battle03_draw_sprite_prim_tpage0
   - - 39336
     - c
-    - func_801DA5A8
+    - battle03_draw_sprite_prim_tpage1
   - - 39580
     - asm
     - func_801DA69C
@@ -205,7 +205,7 @@ segments:
     - func_801DB434
   - - 43156
     - asm
-    - func_801DB494
+    - battle03_clear_ranking_scratch
   - - 43300
     - asm
     - func_801DB524
@@ -223,8 +223,8 @@ segments:
     - func_801DB9E4
   - - 44832
     - c
-    - func_801DBB20
-    - '@source: src/emi/battle/battle/03/func_801DBB20.c'
+    - battle03_find_local_work_by_kind
+    - '@source: src/emi/battle/battle/03/battle03_find_local_work_by_kind.c'
     - '@behavior: Returns the first of three local work records whose byte +0x79 matches the selector.'
   - - 44920
     - asm
@@ -255,13 +255,13 @@ segments:
     - func_801DCFD0
   - - 50316
     - c
-    - func_801DD08C
+    - battle03_copy_local_templates
   - - 50508
     - c
-    - func_801DD14C
+    - battle03_clear_battler_action_flags
   - - 50796
     - c
-    - func_801DD26C
+    - battle03_store_queued_index_byte
   - - 50844
     - asm
     - func_801DD29C
@@ -273,26 +273,26 @@ segments:
     - func_801DD3CC
   - - 51272
     - asm
-    - func_801DD448
+    - battle03_check_local_queued_branch
   - - 51612
     - asm
     - func_801DD59C
   - - 51972
     - c
-    - func_801DD704
-    - '@source: src/emi/battle/battle/03/func_801DD704.c'
+    - battle03_test_flag400_when_eligible
+    - '@source: src/emi/battle/battle/03/battle03_test_flag400_when_eligible.c'
     - '@behavior: Returns zero when the eligibility helper succeeds; otherwise tests the selected record flag 0x400.'
   - - 52064
     - c
-    - func_801DD760
-    - '@source: src/emi/battle/battle/03/func_801DD760.c'
+    - battle03_select_work_record_base
+    - '@source: src/emi/battle/battle/03/battle03_select_work_record_base.c'
     - '@behavior: Selects the local 0x140-stride work array below three and the alternate 0x118-stride region otherwise.'
   - - 52140
     - c
-    - func_801DD7AC
+    - battle03_lookup_state_byte_mapped
   - - 52184
     - c
-    - func_801DD7D8
+    - battle03_clamp_s32
   - - 52224
     - asm
     - func_801DD800
@@ -307,7 +307,7 @@ segments:
     - func_801DD978
   - - 52916
     - asm
-    - func_801DDAB4
+    - battle03_submit_positional_effect_bit80
   - - 52976
     - asm
     - func_801DDAF0
@@ -319,43 +319,43 @@ segments:
     - func_801DDCB4
   - - 53884
     - asm
-    - func_801DDE7C
+    - battle03_advance_counter_store_packed
   - - 53976
     - c
-    - func_801DDED8
+    - battle03_init_mode_tuple_510
   - - 54016
     - c
-    - func_801DDF00
+    - battle03_init_mode_tuple_520
   - - 54056
     - c
-    - func_801DDF28
+    - battle03_init_mode_tuple_530
   - - 54096
     - asm
-    - func_801DDF50
+    - battle03_scan_trigger_table_submit
   - - 54252
     - asm
     - func_801DDFEC
   - - 54444
     - c
-    - func_801DE0AC
-    - '@source: src/emi/battle/battle/03/func_801DE0AC.c'
+    - battle03_scale_percent_clamp999
+    - '@source: src/emi/battle/battle/03/battle03_scale_percent_clamp999.c'
     - '@behavior: Multiplies signed inputs, scales by 100, clamps to 0 through 999, and returns s16.'
   - - 54520
     - c
-    - func_801DE0F8
-    - '@source: src/emi/battle/battle/03/func_801DE0F8.c'
+    - battle03_scale_percent_clamp9999
+    - '@source: src/emi/battle/battle/03/battle03_scale_percent_clamp9999.c'
     - '@behavior: Multiplies signed inputs, scales by 100, clamps to 0 through 9999, and returns s16.'
   - - 54596
     - c
-    - func_801DE144
-    - '@source: src/emi/battle/battle/03/func_801DE144.c'
+    - battle03_scale_percent_clamp100
+    - '@source: src/emi/battle/battle/03/battle03_scale_percent_clamp100.c'
     - '@behavior: Multiplies signed inputs, scales by 100, clamps to 0 through 100, and returns s16.'
   - - 54672
     - asm
-    - func_801DE190
+    - battle03_mark_pending_bit
   - - 54704
     - asm
-    - func_801DE1B0
+    - battle03_clear_pending_bit
   - - 54740
     - asm
     - func_801DE1D4
@@ -370,7 +370,7 @@ segments:
     - func_801DE60C
   - - 55952
     - c
-    - func_801DE690
+    - battle03_stub_handler_e690
   - - 55960
     - asm
     - func_801DE698
@@ -379,7 +379,7 @@ segments:
     - func_801DE754
   - - 56316
     - c
-    - func_801DE7FC
+    - battle03_stub_handler_e7fc
   - - 56324
     - c
     - func_801DE804
@@ -390,21 +390,21 @@ segments:
     - func_801DE858
   - - 56512
     - c
-    - name: func_801DE8C0
-      source: src/emi/battle/battle/03/func_801DE8C0.c
+    - name: battle03_ui_ring_push_triple
+      source: src/emi/battle/battle/03/battle03_ui_ring_push_triple.c
       behavior: appends one triple `(byte, byte, word)` into the 16-entry UI ring and advances the ring tail.
   - - 56620
     - asm
-    - func_801DE92C
+    - battle03_ui_ring_has_work
   - - 56652
     - c
-    - func_801DE94C
+    - battle03_queue_script_record
   - - 56744
     - asm
     - func_801DE9A8
   - - 56856
     - c
-    - func_801DEA18
+    - battle03_submit_enemy_script_block
   - - 56932
     - asm
     - func_801DEA64
@@ -413,50 +413,50 @@ segments:
     - func_801DEAE0
   - - 57284
     - c
-    - func_801DEBC4
+    - battle03_queue_script_event
   - - 57384
     - asm
     - func_801DEC28
   - - 57568
     - asm
-    - func_801DECE0
+    - battle03_setup_all_local_work
   - - 57684
     - asm
-    - func_801DED54
+    - battle03_run_active_local_handlers
   - - 57828
     - c
-    - func_801DEDE4
-    - '@source: src/emi/battle/battle/03/func_801DEDE4.c'
+    - battle03_local_ready_or_helper1
+    - '@source: src/emi/battle/battle/03/battle03_local_ready_or_helper1.c'
     - '@behavior: Returns ready from reviewed battle-work flags or delegates to func_8014D978.'
   - - 57932
     - c
-    - func_801DEE4C
-    - '@source: src/emi/battle/battle/03/func_801DEE4C.c'
+    - battle03_local_ready_or_helper2
+    - '@source: src/emi/battle/battle/03/battle03_local_ready_or_helper2.c'
     - '@behavior: Returns ready from reviewed battle-work flags or delegates to func_8014DAEC.'
   - - 58036
     - c
-    - func_801DEEB4
-    - '@source: src/emi/battle/battle/03/func_801DEEB4.c'
+    - battle03_dispatch_local_state_table
+    - '@source: src/emi/battle/battle/03/battle03_dispatch_local_state_table.c'
     - '@behavior: Dispatches the current local work record through the state table when the active flag bit is set.'
   - - 58124
     - asm
     - func_801DEF0C
   - - 58332
     - c
-    - func_801DEFDC
+    - battle03_stub_handler_efdc
   - - 58340
     - asm
     - func_801DEFE4
   - - 59212
     - c
-    - func_801DF34C
-    - '@source: src/emi/battle/battle/03/func_801DF34C.c'
+    - battle03_forward_selected_effect_id
+    - '@source: src/emi/battle/battle/03/battle03_forward_selected_effect_id.c'
     - '@behavior: Selects one of two local-work-driven effect ids by flag 0x800 and forwards it to func_8014D8D4.'
   - - 59320
     - c
-    - func_801DF3B8
-    - '@source: src/emi/battle/battle/03/func_801DF3B8.c'
-    - '@behavior: Calls func_801DEFE4 then func_801DEDE4 and increments scratchpad work byte +1.'
+    - battle03_reset_ready_advance_byte1
+    - '@source: src/emi/battle/battle/03/battle03_reset_ready_advance_byte1.c'
+    - '@behavior: Calls func_801DEFE4 then battle03_local_ready_or_helper1 and increments scratchpad work byte +1.'
   - - 59384
     - asm
     - func_801DF3F8
@@ -468,13 +468,13 @@ segments:
     - func_801DF7EC
   - - 60588
     - asm
-    - func_801DF8AC
+    - battle03_call_next_local_handler
   - - 60692
     - asm
     - func_801DF914
   - - 60956
     - c
-    - func_801DFA1C
+    - battle03_dispatch_local_byte2_table
   - - 61024
     - asm
     - func_801DFA60
@@ -483,28 +483,28 @@ segments:
     - func_801DFB64
   - - 61404
     - c
-    - func_801DFBDC
+    - battle03_dispatch_scratch_byte2_table
   - - 61472
     - c
-    - func_801DFC20
+    - battle03_copy_scratch_to_local_work
   - - 61552
     - c
-    - func_801DFC70
+    - battle03_dispatch_work_byte3_table
   - - 61620
     - asm
     - func_801DFCB4
   - - 62876
     - c
-    - func_801E019C
-    - '@source: src/emi/battle/battle/03/func_801E019C.c'
+    - battle03_wait_ready_advance_substate3
+    - '@source: src/emi/battle/battle/03/battle03_wait_ready_advance_substate3.c'
     - '@behavior: Waits on func_8014DAEC, advances local substate, and runs the ready followup.'
   - - 62988
     - asm
     - func_801E020C
   - - 63596
     - c
-    - func_801E046C
-    - '@source: src/emi/battle/battle/03/func_801E046C.c'
+    - battle03_dispatch_local_substate3_table
+    - '@source: src/emi/battle/battle/03/battle03_dispatch_local_substate3_table.c'
     - '@behavior: Dispatches the current local substate-3 byte through its table.'
   - - 63664
     - asm
@@ -517,12 +517,12 @@ segments:
     - func_801E05EC
   - - 64236
     - c
-    - func_801E06EC
-    - '@source: src/emi/battle/battle/03/func_801E06EC.c'
+    - battle03_advance_byte3_unless_flag2
+    - '@source: src/emi/battle/battle/03/battle03_advance_byte3_unless_flag2.c'
     - '@behavior: Increments scratchpad work byte +3 and calls func_801DEFE4 unless local work flags +0x80 contain bit 2.'
   - - 64324
     - c
-    - func_801E0744
+    - battle03_dispatch_substate3_table_b1f4
   - - 64392
     - asm
     - func_801E0788
@@ -543,7 +543,7 @@ segments:
     - func_801E10C8
   - - 67224
     - asm
-    - func_801E1298
+    - battle03_dispatch_local_state4_table
   - - 67292
     - asm
     - func_801E12DC
@@ -552,7 +552,7 @@ segments:
     - func_801E13B8
   - - 67664
     - asm
-    - func_801E1450
+    - battle03_dispatch_alt_state3_table
   - - 67732
     - asm
     - func_801E1494
@@ -561,8 +561,8 @@ segments:
     - func_801E15CC
   - - 68208
     - c
-    - func_801E1670
-    - '@source: src/emi/battle/battle/03/func_801E1670.c'
+    - battle03_dispatch_state2_class_table
+    - '@source: src/emi/battle/battle/03/battle03_dispatch_state2_class_table.c'
     - '@behavior: Dispatches the current local state-2 class byte through its table.'
   - - 68276
     - asm
@@ -572,70 +572,70 @@ segments:
     - func_801E1888
   - - 68920
     - c
-    - func_801E1938
-    - '@source: src/emi/battle/battle/03/func_801E1938.c'
-    - '@behavior: Increments scratchpad battle-work byte 1 and clears byte 2 when func_801DEE4C returns nonzero.'
+    - battle03_advance_bytes12_when_ready
+    - '@source: src/emi/battle/battle/03/battle03_advance_bytes12_when_ready.c'
+    - '@behavior: Increments scratchpad battle-work byte 1 and clears byte 2 when battle03_local_ready_or_helper2 returns nonzero.'
   - - 69008
     - c
-    - func_801E1990
-    - '@source: src/emi/battle/battle/03/func_801E1990.c'
-    - '@behavior: Dispatches the handler selected by scratchpad slot 0x44 byte 2, then calls func_801E1B2C.'
+    - battle03_dispatch_byte2_then_reset
+    - '@source: src/emi/battle/battle/03/battle03_dispatch_byte2_then_reset.c'
+    - '@behavior: Dispatches the handler selected by scratchpad slot 0x44 byte 2, then calls battle03_reset_scratch_when_global_bit4.'
   - - 69084
     - c
-    - func_801E19DC
-    - '@source: src/emi/battle/battle/03/func_801E19DC.c'
-    - '@behavior: Calls func_801DEE4C and increments byte 2 of scratchpad pointer slot 0x44.'
+    - battle03_check_ready_advance_byte2
+    - '@source: src/emi/battle/battle/03/battle03_check_ready_advance_byte2.c'
+    - '@behavior: Calls battle03_local_ready_or_helper2 and increments byte 2 of scratchpad pointer slot 0x44.'
   - - 69140
     - asm
     - func_801E1A14
   - - 69340
     - c
-    - func_801E1ADC
+    - battle03_stub_handler_1adc
   - - 69348
     - c
-    - func_801E1AE4
-    - '@source: src/emi/battle/battle/03/func_801E1AE4.c'
+    - battle03_call_local_ready1
+    - '@source: src/emi/battle/battle/03/battle03_call_local_ready1.c'
     - '@behavior: Calls the preceding battle handler.'
   - - 69380
     - c
-    - func_801E1B04
-    - '@source: src/emi/battle/battle/03/func_801E1B04.c'
+    - battle03_store_local_ready2_result
+    - '@source: src/emi/battle/battle/03/battle03_store_local_ready2_result.c'
     - '@behavior: Calls the preceding battle handler and stores its result.'
   - - 69420
     - asm
-    - func_801E1B2C
+    - battle03_reset_scratch_when_global_bit4
   - - 69468
     - c
-    - func_801E1B5C
+    - battle03_stub_handler_1b5c
   - - 69476
     - c
-    - func_801E1B64
+    - battle03_dispatch_state2_event_table
   - - 69544
     - asm
     - func_801E1BA8
   - - 69720
     - c
-    - func_801E1C58
+    - battle03_set_work_bytes_2_0
   - - 69752
     - asm
     - func_801E1C78
   - - 69848
     - c
-    - func_801E1CD8
+    - battle03_dispatch_state2_followup_table
   - - 69916
     - asm
     - func_801E1D1C
   - - 70024
     - c
-    - func_801E1D88
-    - '@source: src/emi/battle/battle/03/func_801E1D88.c'
-    - '@behavior: Calls func_801DEE4C and, when nonzero, sets local-work bytes +0x01 to 8 and +0x02 to 0.'
+    - battle03_set_state8_when_ready
+    - '@source: src/emi/battle/battle/03/battle03_set_state8_when_ready.c'
+    - '@behavior: Calls battle03_local_ready_or_helper2 and, when nonzero, sets local-work bytes +0x01 to 8 and +0x02 to 0.'
   - - 70100
     - asm
     - func_801E1DD4
   - - 70268
     - asm
-    - func_801E1E7C
+    - battle03_dispatch_default_class_table
   - - 70336
     - asm
     - func_801E1EC0
@@ -644,8 +644,8 @@ segments:
     - func_801E2024
   - - 70944
     - c
-    - func_801E2120
-    - '@source: src/emi/battle/battle/03/func_801E2120.c'
+    - battle03_raise_flag4_and_update
+    - '@source: src/emi/battle/battle/03/battle03_raise_flag4_and_update.c'
     - '@behavior: Sets battle global flag 0x4 and dispatches the update when the scratchpad gate is clear.'
   - - 71024
     - asm
@@ -667,11 +667,11 @@ segments:
     - func_801E25E0
   - - 73032
     - c
-    - name: func_801E2948
-      source: func_801E2948.c
+    - name: battle03_pick_target_store_global
+      source: battle03_pick_target_store_global.c
   - - 73140
     - asm
-    - func_801E29B4
+    - battle03_pick_random_unblocked_id
   - - 73352
     - asm
     - func_801E2A88
@@ -680,7 +680,7 @@ segments:
     - func_801E2CA4
   - - 74060
     - asm
-    - func_801E2D4C
+    - battle03_pick_target_by_mode
   - - 74128
     - asm
     - func_801E2D90
@@ -689,38 +689,38 @@ segments:
     - func_801E2E30
   - - 74936
     - c
-    - func_801E30B8
-    - '@source: src/emi/battle/battle/03/func_801E30B8.c'
-    - '@behavior: Returns 0xFF when D_801462F3 is 1; otherwise calls func_801E29B4 with arg0 + 3 as u8.'
+    - battle03_pick_target_or_ff
+    - '@source: src/emi/battle/battle/03/battle03_pick_target_or_ff.c'
+    - '@behavior: Returns 0xFF when D_801462F3 is 1; otherwise calls battle03_pick_random_unblocked_id with arg0 + 3 as u8.'
   - - 75000
     - asm
-    - func_801E30F8
+    - battle03_enemy_ready_or_helper1
   - - 75104
     - asm
-    - func_801E3160
+    - battle03_enemy_ready_or_helper2
   - - 75208
     - asm
-    - func_801E31C8
+    - battle03_dispatch_presentation_state1
   - - 75276
     - asm
     - func_801E320C
   - - 75436
     - c
-    - func_801E32AC
+    - battle03_dispatch_byte2_table_b3e4
   - - 75504
     - c
-    - func_801E32F0
+    - battle03_dispatch_byte3_table_b3ec
   - - 75572
     - c
-    - func_801E3334
-    - '@source: src/emi/battle/battle/03/func_801E3334.c'
+    - battle03_init_scratch_work_state
+    - '@source: src/emi/battle/battle/03/battle03_init_scratch_work_state.c'
     - '@behavior: Clears bit 6, invokes the local reset handler, and initializes battle-local state.'
   - - 75672
     - asm
     - func_801E3398
   - - 75832
     - c
-    - func_801E3438
+    - battle03_dispatch_byte3_table_b3f4
   - - 75900
     - asm
     - func_801E347C
@@ -729,8 +729,8 @@ segments:
     - func_801E352C
   - - 76248
     - c
-    - func_801E35D8
-    - '@source: src/emi/battle/battle/03/func_801E35D8.c'
+    - battle03_init_state_by_enemy_flag2
+    - '@source: src/emi/battle/battle/03/battle03_init_state_by_enemy_flag2.c'
     - '@behavior: Conditionally initializes battle state, then advances scratchpad work byte +1.'
   - - 76344
     - asm
@@ -746,7 +746,7 @@ segments:
     - func_801E3980
   - - 77312
     - c
-    - func_801E3A00
+    - battle03_dispatch_byte2_table_b404
   - - 77380
     - asm
     - func_801E3A44
@@ -755,30 +755,30 @@ segments:
     - func_801E3B04
   - - 77672
     - c
-    - func_801E3B68
+    - battle03_dispatch_byte2_table_b40c
   - - 77740
     - c
-    - func_801E3BAC
+    - battle03_reset_scratch_byte4_set2
   - - 77776
     - c
-    - func_801E3BD0
+    - battle03_dispatch_byte3_table_b424
   - - 77844
     - asm
     - func_801E3C14
   - - 79108
     - c
-    - func_801E4104
-    - '@source: src/emi/battle/battle/03/func_801E4104.c'
-    - '@behavior: Increments scratchpad byte +0x03 when func_801E3160 returns nonzero.'
+    - battle03_advance_byte3_when_ready2
+    - '@source: src/emi/battle/battle/03/battle03_advance_byte3_when_ready2.c'
+    - '@behavior: Increments scratchpad byte +0x03 when battle03_enemy_ready_or_helper2 returns nonzero.'
   - - 79180
     - asm
     - func_801E414C
   - - 79720
     - asm
-    - func_801E4368
+    - battle03_check_enemy_queued_predicate
   - - 80016
     - c
-    - func_801E4490
+    - battle03_dispatch_presentation_byte3
   - - 80084
     - asm
     - func_801E44D4
@@ -793,27 +793,27 @@ segments:
     - func_801E46EC
   - - 80736
     - c
-    - func_801E4760
+    - battle03_dispatch_byte3_table_b444
   - - 80804
     - c
-    - func_801E47A4
+    - battle03_init_scratch_motion_fields
   - - 80864
     - c
-    - func_801E47E0
-    - '@source: src/emi/battle/battle/03/func_801E47E0.c'
+    - battle03_integrate_motion_or_set2
+    - '@source: src/emi/battle/battle/03/battle03_integrate_motion_or_set2.c'
     - '@behavior: Advances local-work fields +0x40/+0x44 by +0x0C and then +0x0C by +0x18 while signed +0x40 is at most 0x13FFF; otherwise sets byte +0x03 to 2.'
   - - 80956
     - asm
     - func_801E483C
   - - 81108
     - c
-    - func_801E48D4
-    - '@source: src/emi/battle/battle/03/func_801E48D4.c'
+    - battle03_apply_gravity_or_reset
+    - '@source: src/emi/battle/battle/03/battle03_apply_gravity_or_reset.c'
     - '@behavior: Advances local work timers and invokes the update handler after a negative timer.'
   - - 81192
     - c
-    - func_801E4928
-    - '@source: src/emi/battle/battle/03/func_801E4928.c'
+    - battle03_dispatch_result_substate_table
+    - '@source: src/emi/battle/battle/03/battle03_dispatch_result_substate_table.c'
     - '@behavior: Dispatches the current queued-result substate byte through its table.'
   - - 81260
     - asm
@@ -823,7 +823,7 @@ segments:
     - func_801E4A50
   - - 81640
     - c
-    - func_801E4AE8
+    - battle03_dispatch_byte2_table_b460
   - - 81708
     - asm
     - func_801E4B2C
@@ -832,19 +832,19 @@ segments:
     - func_801E4C7C
   - - 82228
     - c
-    - func_801E4D34
-    - '@source: src/emi/battle/battle/03/func_801E4D34.c'
-    - '@behavior: Resets local work byte +0x02 after func_801E3160 succeeds, incrementing byte +0x01.'
+    - battle03_advance_bytes12_when_ready3
+    - '@source: src/emi/battle/battle/03/battle03_advance_bytes12_when_ready3.c'
+    - '@behavior: Resets local work byte +0x02 after battle03_enemy_ready_or_helper2 succeeds, incrementing byte +0x01.'
   - - 82316
     - c
-    - func_801E4D8C
-    - '@source: src/emi/battle/battle/03/func_801E4D8C.c'
-    - '@behavior: Dispatches a handler selected by scratchpad work byte +0x02, then calls func_801E4F34.'
+    - battle03_dispatch_byte2_then_reset2
+    - '@source: src/emi/battle/battle/03/battle03_dispatch_byte2_then_reset2.c'
+    - '@behavior: Dispatches a handler selected by scratchpad work byte +0x02, then calls battle03_reset_enemy_scratch_when_bit4.'
   - - 82392
     - c
-    - func_801E4DD8
-    - '@source: src/emi/battle/battle/03/func_801E4DD8.c'
-    - '@behavior: Calls func_801E3160 and increments scratchpad work byte +0x02.'
+    - battle03_check_ready2_advance_byte2
+    - '@source: src/emi/battle/battle/03/battle03_check_ready2_advance_byte2.c'
+    - '@behavior: Calls battle03_enemy_ready_or_helper2 and increments scratchpad work byte +0x02.'
   - - 82448
     - asm
     - func_801E4E10
@@ -853,10 +853,10 @@ segments:
     - func_801E4ECC
   - - 82740
     - asm
-    - func_801E4F34
+    - battle03_reset_enemy_scratch_when_bit4
   - - 82788
     - c
-    - func_801E4F64
+    - battle03_dispatch_byte2_table_b478
   - - 82856
     - asm
     - func_801E4FA8
@@ -871,10 +871,10 @@ segments:
     - func_801E5288
   - - 83688
     - c
-    - func_801E52E8
+    - battle03_stub_handler_52e8
   - - 83696
     - asm
-    - func_801E52F0
+    - battle03_submit_effect_unless_neg1
   - - 83740
     - asm
     - func_801E531C
@@ -883,17 +883,17 @@ segments:
     - func_801E54EC
   - - 84604
     - asm
-    - func_801E567C
+    - battle03_reset_enemy_scratch_state
   - - 84740
     - asm
-    - func_801E5704
+    - battle03_raise_bit80_alloc_slot
   - - 84840
     - asm
     - func_801E5768
   - - 84936
     - c
-    - func_801E57C8
-    - '@source: src/emi/battle/battle/03/func_801E57C8.c'
+    - battle03_enter_frontend_mode4
+    - '@source: src/emi/battle/battle/03/battle03_enter_frontend_mode4.c'
     - '@behavior: Sets frontend mode 4 and increments the volatile global battle byte when state bit 0 is set and gate 0xBD matches.'
   - - 85028
     - asm
@@ -903,25 +903,25 @@ segments:
     - func_801E590C
   - - 85384
     - asm
-    - func_801E5988
+    - battle03_clear_queued_slot_bytes
   - - 85560
     - asm
     - func_801E5A38
   - - 85740
     - c
-    - func_801E5AEC
+    - battle03_stub_handler_5aec
   - - 85748
     - asm
     - func_801E5AF4
   - - 85900
     - c
-    - func_801E5B8C
-    - '@source: src/emi/battle/battle/03/func_801E5B8C.c'
+    - battle03_dispatch_slot_byte5_table_d1c
+    - '@source: src/emi/battle/battle/03/battle03_dispatch_slot_byte5_table_d1c.c'
     - '@behavior: Copies a 110-handler local table to the stack and dispatches by queued-slot byte +0x05.'
   - - 86044
     - c
-    - func_801E5C1C
-    - '@source: src/emi/battle/battle/03/func_801E5C1C.c'
+    - battle03_dispatch_slot_byte5_table_ed4
+    - '@source: src/emi/battle/battle/03/battle03_dispatch_slot_byte5_table_ed4.c'
     - '@behavior: Copies an eight-handler local table to the stack and dispatches by queued-slot byte +0x05.'
   - - 86180
     - asm
@@ -931,16 +931,16 @@ segments:
     - func_801E5E2C
   - - 87176
     - c
-    - func_801E6088
-    - '@source: src/emi/battle/battle/03/func_801E6088.c'
+    - battle03_roll_slot_timer_advance
+    - '@source: src/emi/battle/battle/03/battle03_roll_slot_timer_advance.c'
     - '@behavior: Decrements the queued-slot timer and advances its selector on wrap.'
   - - 87260
     - asm
     - func_801E60DC
   - - 87380
     - c
-    - func_801E6154
-    - '@source: src/emi/battle/battle/03/func_801E6154.c'
+    - battle03_advance_slot_position
+    - '@source: src/emi/battle/battle/03/battle03_advance_slot_position.c'
     - '@behavior: Advances the queued slot or marks it complete and increments its queue counter.'
   - - 87536
     - asm
@@ -950,7 +950,7 @@ segments:
     - func_801E62BC
   - - 88000
     - c
-    - func_801E63C0
+    - battle03_dispatch_slot_byte1_table_f20
   - - 88096
     - asm
     - func_801E6420
@@ -962,8 +962,8 @@ segments:
     - func_801E65F8
   - - 88868
     - c
-    - func_801E6724
-    - '@source: src/emi/battle/battle/03/func_801E6724.c'
+    - battle03_dispatch_byte1_pair_flagged
+    - '@source: src/emi/battle/battle/03/battle03_dispatch_byte1_pair_flagged.c'
     - '@behavior: Dispatches one of two local handlers by battle work state under a temporary global.'
   - - 88988
     - asm
@@ -973,17 +973,17 @@ segments:
     - func_801E68EC
   - - 89392
     - c
-    - func_801E6930
+    - battle03_dispatch_slot_byte1_table_f2c
   - - 89488
     - c
-    - func_801E6990
+    - battle03_clear_byte9_advance_byte1
   - - 89536
     - asm
     - func_801E69C0
   - - 89684
     - c
-    - func_801E6A54
-    - '@source: src/emi/battle/battle/03/func_801E6A54.c'
+    - battle03_broadcast_byte9_draw_digits
+    - '@source: src/emi/battle/battle/03/battle03_broadcast_byte9_draw_digits.c'
     - '@behavior: Copies byte +0x09 from the scratchpad-selected object to scratchpad bytes 0x00 through 0x02, then calls func_801D99AC(0, 0, 0xB).'
   - - 89760
     - asm
@@ -993,16 +993,16 @@ segments:
     - func_801E6B28
   - - 90056
     - c
-    - func_801E6BC8
-    - '@source: src/emi/battle/battle/03/func_801E6BC8.c'
+    - battle03_advance_byte1_when_ready
+    - '@source: src/emi/battle/battle/03/battle03_advance_byte1_when_ready.c'
     - '@behavior: Increments scratch work state after a successful battle predicate.'
   - - 90144
     - asm
     - func_801E6C20
   - - 90244
     - c
-    - func_801E6C84
-    - '@source: src/emi/battle/battle/03/func_801E6C84.c'
+    - battle03_dispatch_byte1_five_table
+    - '@source: src/emi/battle/battle/03/battle03_dispatch_byte1_five_table.c'
     - '@behavior: Copies five handlers locally and dispatches one selected by battle work byte 1.'
   - - 90408
     - asm
@@ -1012,7 +1012,7 @@ segments:
     - func_801E6E54
   - - 91040
     - c
-    - func_801E6FA0
+    - battle03_clear_scratch_byte1
   - - 91056
     - asm
     - func_801E6FB0
@@ -1021,20 +1021,20 @@ segments:
     - func_801E71EC
   - - 91816
     - c
-    - func_801E72A8
+    - battle03_dispatch_byte1_pair_table
   - - 91892
     - asm
     - func_801E72F4
   - - 92344
     - c
-    - func_801E74B8
+    - battle03_dispatch_mode_five_table
   - - 92456
     - c
-    - func_801E7528
+    - battle03_set_mode2_advance_byte1
   - - 92504
     - c
-    - func_801E7558
-    - '@source: src/emi/battle/battle/03/func_801E7558.c'
+    - battle03_countdown_or_flag40_advance
+    - '@source: src/emi/battle/battle/03/battle03_countdown_or_flag40_advance.c'
     - '@behavior: Decrements the active timer or sets its flag and increments scratchpad state.'
   - - 92592
     - asm
@@ -1050,13 +1050,13 @@ segments:
     - func_801E7818
   - - 93320
     - c
-    - func_801E7888
-    - '@source: src/emi/battle/battle/03/func_801E7888.c'
+    - battle03_flag_record_advance_counter
+    - '@source: src/emi/battle/battle/03/battle03_flag_record_advance_counter.c'
     - '@behavior: Sets the selected local record flag and advances battle work state.'
   - - 93424
     - c
-    - func_801E78F0
-    - '@source: src/emi/battle/battle/03/func_801E78F0.c'
+    - battle03_countdown_or_flag40_advance2
+    - '@source: src/emi/battle/battle/03/battle03_countdown_or_flag40_advance2.c'
     - '@behavior: Decrements the active work countdown or flags it and advances scratchpad work.'
   - - 93512
     - asm
@@ -1072,8 +1072,8 @@ segments:
     - func_801E8558
   - - 96812
     - c
-    - name: func_801E862C
-      source: src/emi/battle/battle/03/func_801E862C.c
+    - name: battle03_dispatch_result_aux_state
+      source: src/emi/battle/battle/03/battle03_dispatch_result_aux_state.c
       behavior: dispatches the current result-ui aux state byte through one of two fixed handlers.
   - - 96900
     - asm
@@ -1089,26 +1089,26 @@ segments:
     - func_801E8FA8
   - - 99444
     - c
-    - func_801E9074
-    - '@source: src/emi/battle/battle/03/func_801E9074.c'
+    - battle03_dispatch_state_byte2_table_f80
+    - '@source: src/emi/battle/battle/03/battle03_dispatch_state_byte2_table_f80.c'
     - '@behavior: Dispatches an eight-entry local handler table by battle state byte +0x02.'
   - - 99580
     - c
-    - func_801E90FC
+    - battle03_dispatch_state_byte3_table_fa0
   - - 99676
     - asm
     - func_801E915C
   - - 99788
     - c
-    - func_801E91CC
-    - '@source: src/emi/battle/battle/03/func_801E91CC.c'
+    - battle03_panel_forward_halfwords
+    - '@source: src/emi/battle/battle/03/battle03_panel_forward_halfwords.c'
     - '@behavior: Reads two signed panel halfwords and calls func_801D750C.'
   - - 99836
     - c
-    - func_801E91FC
+    - battle03_dispatch_state_byte3_table_fac
   - - 99932
     - c
-    - func_801E925C
+    - battle03_increment_state_byte3
   - - 99964
     - asm
     - func_801E927C
@@ -1117,18 +1117,18 @@ segments:
     - func_801E9390
   - - 100412
     - c
-    - func_801E943C
+    - battle03_dispatch_state_byte3_table_fb8
   - - 100508
     - c
-    - func_801E949C
-    - '@source: src/emi/battle/battle/03/func_801E949C.c'
+    - battle03_call_d8450_when_idle
+    - '@source: src/emi/battle/battle/03/battle03_call_d8450_when_idle.c'
     - '@behavior: Calls func_801D8450 with D_801462F4 when D_80144955 is zero.'
   - - 100560
     - c
-    - func_801E94D0
+    - battle03_dispatch_state_byte3_table_fc4
   - - 100656
     - c
-    - func_801E9530
+    - battle03_stub_handler_9530
   - - 100664
     - asm
     - func_801E9538
@@ -1158,10 +1158,10 @@ segments:
     - func_801E9FDC
   - - 103796
     - asm
-    - func_801EA174
+    - battle03_panel_task_activate
   - - 103844
     - asm
-    - func_801EA1A4
+    - battle03_panel_task_commit_queued
   - - 103904
     - asm
     - func_801EA1E0
@@ -1170,8 +1170,8 @@ segments:
     - func_801EA254
   - - 104752
     - c
-    - func_801EA530
-    - '@source: src/emi/battle/battle/03/func_801EA530.c'
+    - battle03_panel_consume_budget
+    - '@source: src/emi/battle/battle/03/battle03_panel_consume_budget.c'
     - '@behavior: Subtracts the panel counter from its byte budget and clears companion state when exhausted.'
   - - 104860
     - asm
@@ -1181,12 +1181,12 @@ segments:
     - func_801EA650
   - - 105256
     - c
-    - func_801EA728
-    - '@source: src/emi/battle/battle/03/func_801EA728.c'
+    - battle03_panel_advance_state
+    - '@source: src/emi/battle/battle/03/battle03_panel_advance_state.c'
     - '@behavior: Advances PanelTask state +6 by 8 unless it is 0x12, then increments byte +3.'
   - - 105324
     - c
-    - func_801EA76C
+    - battle03_stub_handler_a76c
   - - 105332
     - asm
     - func_801EA774
@@ -1195,8 +1195,8 @@ segments:
     - func_801EA7DC
   - - 105544
     - c
-    - func_801EA848
-    - '@source: src/emi/battle/battle/03/func_801EA848.c'
+    - battle03_panel_advance_when_ring_differs
+    - '@source: src/emi/battle/battle/03/battle03_panel_advance_when_ring_differs.c'
     - '@behavior: Advances panel state byte +3 and raises an update flag when two gate bytes differ.'
   - - 105620
     - asm
@@ -1212,13 +1212,13 @@ segments:
     - func_801EAAB8
   - - 106296
     - asm
-    - func_801EAB38
+    - battle03_ui_ring_advance_check
   - - 106340
     - c
-    - func_801EAB64
+    - battle03_stub_handler_ab64
   - - 106348
     - c
-    - func_801EAB6C
+    - battle03_count_message_tokens
   - - 106424
     - asm
     - T_801EABB8

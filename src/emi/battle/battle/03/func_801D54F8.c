@@ -34,7 +34,7 @@ u8 func_801D54F8(void) {
   if (count != 0u) {
     u32 event_id;
 
-    func_801D9484();
+    battle03_init_ui_bundle_slot0();
     event_id = 0x2cu;
     if (count == 1u) {
       func_801DE9A8(last_index);

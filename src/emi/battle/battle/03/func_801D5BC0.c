@@ -25,7 +25,7 @@ u8 func_801D5BC0(void) {
       battle_work->unk_04 = 0u;
       battle_work->unk_03 = 0u;
       battle_work->unk_20 = 0x11u;
-      func_801DE190(index);
+      battle03_mark_pending_bit(index);
     }
     index += 1u;
   } while (index < 3u);
@@ -46,7 +46,7 @@ u8 func_801D5BC0(void) {
       BATTLE_ENEMY_BYTE_04(battle_work) = 0u;
       BATTLE_ENEMY_BYTE_03(battle_work) = 0u;
       BATTLE_ENEMY_BYTE_FC(battle_work) = 0x11u;
-      func_801DE190(index);
+      battle03_mark_pending_bit(index);
     }
     index += 1u;
   } while (index < 0x0bu);
@@ -54,7 +54,7 @@ u8 func_801D5BC0(void) {
   if (count != 0u) {
     u32 event_id;
 
-    func_801D9484();
+    battle03_init_ui_bundle_slot0();
     event_id = func_801502D0(0x18u);
     func_801DE560(2u, 0u, 0u, 0x2du, event_id);
     return 1u;

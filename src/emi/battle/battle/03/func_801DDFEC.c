@@ -20,7 +20,7 @@ void func_801DDFEC(u32 arg0) {
         if ((index >> 8) != 0u) {
           return;
         }
-        func_801DDE7C(BATTLE_LOCAL_BYTE_122(&BATTLE_LOCAL_WORK_ARRAY[battler]),
+        battle03_advance_counter_store_packed(BATTLE_LOCAL_BYTE_122(&BATTLE_LOCAL_WORK_ARRAY[battler]),
                       index);
         return;
       }
