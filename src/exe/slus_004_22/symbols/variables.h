@@ -20,7 +20,7 @@ extern u16 D_80145AA4;
 /* Static target data. */
 extern u8 D_8018B300;
 
-/* Function-local data for func_8017F27C. */
+/* Function-local data for irq_dequeue_int_rp. */
 extern u32 D_8018DB40[];
 
 /* Function-local data for func_801729D0. */

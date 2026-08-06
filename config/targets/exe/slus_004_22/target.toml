@@ -7,7 +7,7 @@ binary = "out/binaries/exe/slus_004_22.bin"
 splat = "config/targets/exe/slus_004_22/splat.yaml"
 load_address = 0x80096800
 
-# func_80165D48 switch jump table: GCC emits it into .rodata; the original
+# equip_record_base switch jump table: GCC emits it into .rodata; the original
 # table lives at 0x80149F28 (five absolute case-label addresses).
 [[matching.section_placements]]
 function = 0x80165D48

@@ -273,7 +273,7 @@ WEAK_SYMBOL_AT(D_801EC328, 0x801ec328);
 WEAK_SYMBOL_AT(D_801F2C04, 0x801f2c04);
 WEAK_SYMBOL_AT(D_801F2C10, 0x801f2c10);
 
-/* Function-local data for func_8017F27C. */
+/* Function-local data for irq_dequeue_int_rp. */
 WEAK_SYMBOL_AT(D_8018DB40, 0x8018db40);
 
 /* Function-local data for func_801729D0. */

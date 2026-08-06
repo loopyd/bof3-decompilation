@@ -2,7 +2,7 @@
 
 /* @behavior resolves one selected native loader slot to authored shipped-file
  * metadata.
- * @source D_80182444 is the native u32 LBA table; this helper is authored.
+ * @source emiSlotLbaTable is the native u32 LBA table; this helper is authored.
  */
 const SlotTableEntry* slot_table_find(EmiLoaderSlotId slot_id) {
   size_t index;

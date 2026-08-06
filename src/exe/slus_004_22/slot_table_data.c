@@ -3,7 +3,7 @@
 /*
  * @behavior records reviewed shipped-file metadata for selected native EMI-loader
  * slot IDs.
- * @source D_80182444 is the native u32 LBA table; this path metadata is authored.
+ * @source emiSlotLbaTable is the native u32 LBA table; this path metadata is authored.
  */
 const SlotTableEntry g_slot_table[] = {
     {EMI_LOADER_SLOT_DEMO_EMI, 60853u, "BIN/ETC/DEMO.EMI", RUNTIME_PATH_EMI},

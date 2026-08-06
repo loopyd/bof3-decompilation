@@ -47,4 +47,4 @@ set(BOF3_OBJFLAGS_emi_battle_battle_03_func_801E29B4_c -O2 -Wa,--expand-div)
 # Same signed modulo (rand() % count) requiring --expand-div for the MIPS
 # division-trap sequence.
 set(BOF3_OBJFLAGS_emi_battle_battle_15_func_800AB760_c -O2 -Wa,--expand-div)
-set(BOF3_OBJCOMPILER_exe_slus_004_22_func_8015DF18_c gcc-2.6.3-psx)
+set(BOF3_OBJCOMPILER_exe_slus_004_22_sound_dispatch_cue_c gcc-2.6.3-psx)
