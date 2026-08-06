@@ -3,7 +3,7 @@
 /* @source 0x801F3460
  * @behavior clears scratch-state offsets 0x09 and 0x0b, then increments 0x01.
  */
-void func_801F3460(void)
+void world00_area016_scratch_state_reset_advance(void)
 {
   u8** slots;
   u8*  ptr;

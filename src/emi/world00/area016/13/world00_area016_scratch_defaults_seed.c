@@ -4,7 +4,7 @@
  * fixed area defaults.
  * @source 0x801F3400
  */
-void func_801F3400(void) {
+void world00_area016_scratch_defaults_seed(void) {
   World00Area016Scratch* scratch;
 
   scratch = WORLD00_AREA016_SCRATCH_PTR;
