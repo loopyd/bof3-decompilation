@@ -6,7 +6,7 @@ extern void func_801F3B00(s32 arg0, s32 arg1);
  * then calls the `0x801f3b00` local step with the scratch halfword at `0x2e`.
  * @source 0x801F35B8
  */
-void world00_area016_state02_step_advance(void) {
+void advanceState02Step(void) {
   const u8* global;
   u32       state;
 

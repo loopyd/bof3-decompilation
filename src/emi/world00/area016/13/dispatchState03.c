@@ -4,7 +4,7 @@
  * scratchpad state byte `0x03`.
  * @source 0x801F368C
  */
-void world00_area016_dispatch_state03(void) {
+void dispatchState03(void) {
   World00Area016Scratch* scratch;
 
   scratch = WORLD00_AREA016_SCRATCH_PTR;

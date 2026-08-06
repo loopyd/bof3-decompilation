@@ -45,19 +45,19 @@ segments:
     - func_801F3360
   - - 2048
     - asm
-    - world00_area016_scratch_defaults_seed
+    - seedScratchDefaults
   - - 2076
     - asm
     - func_801F341C
   - - 2144
     - c
-    - world00_area016_scratch_state_reset_advance
+    - resetAdvanceScratchState
   - - 2208
     - asm
     - func_801F34A0
   - - 2248
     - asm
-    - world00_area016_dispatch_state02
+    - dispatchState02
   - - 2316
     - asm
     - func_801F350C
@@ -66,13 +66,13 @@ segments:
     - func_801F355C
   - - 2488
     - asm
-    - world00_area016_state02_step_advance
+    - advanceState02Step
   - - 2568
     - asm
     - func_801F3608
   - - 2700
     - asm
-    - world00_area016_dispatch_state03
+    - dispatchState03
   - - 2768
     - asm
     - func_801F36D0

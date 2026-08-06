@@ -22,17 +22,11 @@ typedef struct World00Area016Scratch {
   s16 field_30;
 } World00Area016Scratch;
 
-extern volatile u8  WORLD00_AREA016_GLOBAL_BYTE_54F2;
-extern volatile u16 WORLD00_AREA016_GLOBAL_HALF_5AB4;
-extern volatile u16 WORLD00_AREA016_GLOBAL_HALF_5AC0;
-extern volatile u16 WORLD00_AREA016_GLOBAL_HALF_6258;
-extern volatile u16 WORLD00_AREA016_GLOBAL_HALF_625A;
-extern volatile u8  WORLD00_AREA016_GLOBAL_BYTE_832E;
-extern s16          WORLD00_AREA016_GLOBAL_HALF_930A;
-extern s16          WORLD00_AREA016_GLOBAL_HALF_930E;
-extern volatile u8  WORLD00_AREA016_STREAM_HINT;
-extern volatile u16 WORLD00_AREA016_BOOT_HALF_0008;
+// @source 0x801F511C
+// @kind unknown
 extern World00Area016Handler WORLD00_AREA016_D_801F511C[];
+// @source 0x801F512C
+// @kind unknown
 extern World00Area016Handler WORLD00_AREA016_D_801F512C[];
 
 void func_8014E5A0(u8 arg0, u8 arg1);
@@ -40,10 +34,10 @@ void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 s8   func_80166CB0(s16 arg0, s16 arg1);
 u8   func_801B6610(s16 arg0, s16 arg1);
 
-void world00_area016_scratch_defaults_seed(void);
-void world00_area016_dispatch_state02(void);
-void world00_area016_state02_step_advance(void);
-void world00_area016_dispatch_state03(void);
+void seedScratchDefaults(void);
+void dispatchState02(void);
+void advanceState02Step(void);
+void dispatchState03(void);
 void func_801F39D8(s16 arg0, s16 arg1, u32 arg2);
 void func_801F3B00(s32 arg0, s32 arg1);
 void func_801F3ECC(s16 arg0, s16 arg1);
