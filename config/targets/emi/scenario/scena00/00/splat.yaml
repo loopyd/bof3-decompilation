@@ -62,7 +62,7 @@ segments:
     - asm
     - func_801FC3A0
   - - 23504
-    - asm
+    - c
     - func_801FC7D0
   - - 23568
     - asm

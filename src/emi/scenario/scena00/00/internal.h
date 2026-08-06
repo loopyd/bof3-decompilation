@@ -3,6 +3,12 @@
 
 #include "bof3/bof3.h"
 
+typedef void (*Scena00RecordCallback)(void* record, u32 arg1);
+
+/* @source 0x8014686C @kind unknown */
+extern volatile u32        D_8014686C;
+extern Scena00RecordCallback D_801FCA84[];
+
 void func_80166E88(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_801C187C(s32 arg0);
 
