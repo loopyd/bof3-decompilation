@@ -72,10 +72,10 @@ segments:
     - func_801FC818
   - - 23796
     - c
-    - func_801FC8F4
+    - scena00_return_zero
   - - 23804
     - c
-    - func_801FC8FC
+    - scena00_reset_effect_bank
   - - 23936
     - asm
     - T_801FC980

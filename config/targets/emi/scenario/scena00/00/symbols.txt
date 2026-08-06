@@ -7,5 +7,5 @@ func_801C187C = 0x801C187C;
 func_801F7134 = 0x801F7134;
 func_801F78EC = 0x801F78EC;
 func_801FC810 = 0x801FC810;
-func_801FC8F4 = 0x801FC8F4;
-func_801FC8FC = 0x801FC8FC;
+scena00_return_zero = 0x801FC8F4;
+scena00_reset_effect_bank = 0x801FC8FC;
