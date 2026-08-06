@@ -165,10 +165,10 @@ segments:
     - func_801D6668
   - - 23212
     - c
-    - func_801D66AC
+    - shop_set_ui_flags
   - - 23240
     - c
-    - func_801D66C8
+    - shop_set_ui_flags_gated
   - - 23288
     - asm
     - func_801D66F8
@@ -189,7 +189,7 @@ segments:
     - func_801D6D6C
   - - 25236
     - c
-    - func_801D6E94
+    - shop_append_fullscreen_dim_tile
   - - 25344
     - asm
     - func_801D6F00
@@ -276,7 +276,7 @@ segments:
     - func_801DA00C
   - - 38176
     - c
-    - func_801DA120
+    - shop_emit_panel_icon_prim
   - - 38360
     - asm
     - func_801DA1D8
@@ -393,7 +393,7 @@ segments:
     - func_801DF6A8
   - - 60684
     - c
-    - func_801DF90C
+    - shop_append_fullscreen_dim_tile_2
   - - 60792
     - asm
     - func_801DF978
@@ -411,7 +411,7 @@ segments:
     - func_801DFDF4
   - - 62504
     - c
-    - func_801E0028
+    - shop_phase_timer_tick
   - - 62572
     - asm
     - func_801E006C
@@ -447,10 +447,10 @@ segments:
     - func_801E1710
   - - 69504
     - c
-    - func_801E1B80
+    - shop_dispatch_command
   - - 69560
     - c
-    - func_801E1BB8
+    - shop_swap_bytes
   - - 69580
     - asm
     - func_801E1BCC
@@ -492,13 +492,13 @@ segments:
     - func_801E2590
   - - 72140
     - c
-    - func_801E25CC
+    - shop_phase_timer_tick_2
   - - 72208
     - c
     - func_801E2610
   - - 72236
     - c
-    - func_801E262C
+    - shop_reset_ui_state
   - - 72272
     - asm
     - func_801E2650
@@ -510,37 +510,37 @@ segments:
     - func_801E27BC
   - - 72704
     - c
-    - func_801E2800
+    - shop_panel_noop
   - - 72712
     - asm
     - func_801E2808
   - - 73032
     - c
-    - func_801E2948
+    - shop_panel_field6_retreat_to_neg20
   - - 73096
     - c
-    - func_801E2988
+    - shop_panel_field6_advance_to_16
   - - 73160
     - asm
     - func_801E29C8
   - - 73264
     - c
-    - func_801E2A30
+    - shop_panel_field6_retreat_to_neg20_2
   - - 73328
     - c
-    - func_801E2A70
+    - shop_panel_field6_advance_to_38
   - - 73392
     - asm
     - func_801E2AB0
   - - 73492
     - c
-    - func_801E2B14
+    - shop_panel_field6_retreat_to_neg20_3
   - - 73556
     - c
-    - func_801E2B54
+    - shop_panel_field6_advance_to_38_2
   - - 73620
     - c
-    - func_801E2B94
+    - shop_panel_apply_position
   - - 73668
     - asm
     - func_801E2BC4
@@ -549,13 +549,13 @@ segments:
     - func_801E2C18
   - - 73884
     - c
-    - func_801E2C9C
+    - shop_panel_x_retreat_to_neg150
   - - 73948
     - c
-    - func_801E2CDC
+    - shop_panel_x_advance_to_17
   - - 74012
     - c
-    - func_801E2D1C
+    - shop_panel_field6_retreat_to_62
   - - 74076
     - asm
     - func_801E2D5C
@@ -564,10 +564,10 @@ segments:
     - func_801E2DB4
   - - 74288
     - c
-    - func_801E2E30
+    - shop_panel_x_retreat_to_neg150_2
   - - 74352
     - c
-    - func_801E2E70
+    - shop_panel_x_advance_to_15
   - - 74416
     - asm
     - func_801E2EB0
@@ -576,13 +576,13 @@ segments:
     - func_801E2F04
   - - 75204
     - c
-    - func_801E31C4
+    - shop_panel_x_advance_to_320
   - - 75268
     - c
-    - func_801E3204
+    - shop_panel_x_retreat_to_132
   - - 75332
     - c
-    - func_801E3244
+    - shop_panel_x_retreat_to_70
   - - 75396
     - asm
     - func_801E3284
@@ -594,10 +594,10 @@ segments:
     - func_801E3720
   - - 76660
     - c
-    - func_801E3774
+    - shop_panel_x_advance_to_320_2
   - - 76724
     - c
-    - func_801E37B4
+    - shop_panel_x_retreat_to_75
   - - 76788
     - asm
     - func_801E37F4
@@ -609,40 +609,40 @@ segments:
     - func_801E3BA4
   - - 77816
     - c
-    - func_801E3BF8
+    - shop_panel_x_advance_to_320_3
   - - 77880
     - c
-    - func_801E3C38
+    - shop_panel_x_retreat_to_150
   - - 77944
     - c
-    - func_801E3C78
+    - shop_panel_x_advance_to_40
   - - 78008
     - c
-    - func_801E3CB8
+    - shop_panel_x_retreat_to_neg170
   - - 78072
     - asm
     - func_801E3CF8
   - - 78156
     - c
-    - func_801E3D4C
+    - shop_panel_x_advance_to_320_4
   - - 78220
     - c
-    - func_801E3D8C
+    - shop_panel_x_retreat_to_150_2
   - - 78284
     - c
-    - func_801E3DCC
+    - shop_panel_x_retreat_to_17
   - - 78348
     - c
-    - func_801E3E0C
+    - shop_panel_x_advance_to_150
   - - 78412
     - asm
     - func_801E3E4C
   - - 78516
     - c
-    - func_801E3EB4
+    - shop_panel_x_retreat_to_neg150_3
   - - 78580
     - c
-    - func_801E3EF4
+    - shop_panel_x_advance_to_17_2
   - - 78644
     - asm
     - func_801E3F34
@@ -654,40 +654,40 @@ segments:
     - func_801E4224
   - - 79480
     - c
-    - func_801E4278
+    - shop_panel_x_retreat_to_neg120
   - - 79544
     - c
-    - func_801E42B8
+    - shop_panel_x_advance_to_100
   - - 79608
     - c
-    - func_801E42F8
+    - shop_panel_x_retreat_to_17_2
   - - 79672
     - asm
     - func_801E4338
   - - 79756
     - c
-    - func_801E438C
+    - shop_panel_x_advance_to_320_5
   - - 79820
     - c
-    - func_801E43CC
+    - shop_panel_x_retreat_to_140
   - - 79884
     - asm
     - func_801E440C
   - - 79968
     - c
-    - func_801E4460
+    - shop_panel_field6_advance_to_240
   - - 80032
     - c
-    - func_801E44A0
+    - shop_panel_field6_retreat_to_128
   - - 80096
     - asm
     - func_801E44E0
   - - 80192
     - c
-    - func_801E4540
+    - shop_panel_x_advance_to_320_6
   - - 80256
     - c
-    - func_801E4580
+    - shop_panel_x_retreat_to_210
   - - 80320
     - asm
     - func_801E45C0
