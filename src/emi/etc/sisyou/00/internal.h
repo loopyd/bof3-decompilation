@@ -22,6 +22,9 @@ extern u8 masterIndex;
 /* Per-master u16 action-id base; adding 4 or 0x11 yields the action id
  * dispatched for the selected master. */
 extern u16 masterActionBaseTable[];
+/* @source 0x801D41E0 @kind table */
+/* Per-mode handler table; indexed by modeIndex and tail-called. */
+extern void (*D_801D41E0[])(void);
 /* @source 0x801D4285 @kind bss */
 /* Current mode index; selects the handler from the D_801D41E0 table and is
  * set to 6 after an entry action starts. */
@@ -37,5 +40,6 @@ void func_80150224(s32 arg0);
 
 /* EMI-local functions. */
 void func_801D10AC(u32 arg0);
+void func_801D25D8(void);
 
 #endif

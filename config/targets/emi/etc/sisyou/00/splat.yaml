@@ -62,7 +62,7 @@ segments:
     - c
     - emitPanelIconPrim
   - - 6616
-    - asm
+    - c
     - func_801D25D8
   - - 6676
     - asm
