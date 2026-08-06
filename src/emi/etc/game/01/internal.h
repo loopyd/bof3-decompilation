@@ -66,7 +66,7 @@ void func_8017C2D8(u32 object, s32 x, s32 y, s32 flags, s32 arg4);
 void func_8017AA1C(u8* primitive);
 void func_8017A904(u8* primitive, u8 flags);
 void func_8014E5A0(s32 group, s32 id);
-u8*  func_801D17D8(s32 x, s32 y, s32 width, s32 height, u8 flags);
+u8*  game_front_draw_glyph(s32 x, s32 y, s32 width, s32 height, u8 flags);
 void func_801D18E8(u8* primitive, u8 alpha);
 
 /* @behavior slot-2 frontend-local callback body selected by the local mode byte.

@@ -13,26 +13,26 @@ void func_801D12CC(u8 selected, u8 alpha) {
   marker_x = GetGraphType() == 1 ? 143 : (GetGraphType() == 2 ? 143 : 47);
   SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(1, 12);
-  primitive = func_801D17D8(262, 130, 1, 1, selected);
+  primitive = game_front_draw_glyph(262, 130, 1, 1, selected);
   func_801D18E8(primitive, alpha);
 
   marker_x = GetGraphType() == 1 ? 685 : (GetGraphType() == 2 ? 685 : 189);
   SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(2, 12);
-  primitive = func_801D17D8(12, 200, 8, 2, selected);
+  primitive = game_front_draw_glyph(12, 200, 8, 2, selected);
   func_801D18E8(primitive, alpha);
 
   marker_x = GetGraphType() == 1 ? 685 : (GetGraphType() == 2 ? 685 : 189);
   SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(2, 12);
-  primitive = func_801D17D8(12, 212, 19, 2, selected);
+  primitive = game_front_draw_glyph(12, 212, 19, 2, selected);
   func_801D18E8(primitive, alpha);
-  primitive = func_801D17D8(172, 212, 9, 2, selected);
+  primitive = game_front_draw_glyph(172, 212, 9, 2, selected);
   func_801D18E8(primitive, alpha);
 
   if ((GAME_FRONT_POPUP_WORD & GAME_FRONT_POPUP_PENDING_MASK) ==
       GAME_FRONT_POPUP_PENDING_OPEN) {
-    primitive = func_801D17D8(48, 184, 7, 2, 0);
+    primitive = game_front_draw_glyph(48, 184, 7, 2, 0);
     pulse_counter = D_80143C2A + 1u;
     D_80143C2A = pulse_counter;
     pulse = (pulse_counter & 0x20u) == 0u

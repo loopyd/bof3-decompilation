@@ -4,7 +4,7 @@
  * glyph geometry record before returning the primitive to the caller.
  * @source 0x801D17D8
  */
-u8* func_801D17D8(s32 x, s32 y, s32 glyph, s32 palette, u8 flags) {
+u8* game_front_draw_glyph(s32 x, s32 y, s32 glyph, s32 palette, u8 flags) {
   u8* primitive;
   s32 glyph_index;
 

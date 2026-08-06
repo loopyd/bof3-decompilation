@@ -13,17 +13,17 @@ void func_801D150C(s16 x, s16 y, u8 selected, u8 alpha) {
     marker_x = GetGraphType() == 1 ? 809 : (GetGraphType() == 2 ? 809 : 217);
     SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
     func_8014E5A0(2, 12);
-    primitive = func_801D17D8(x, y, 15, 2, 1);
+    primitive = game_front_draw_glyph(x, y, 15, 2, 1);
     func_801D18E8(primitive, alpha);
-    primitive = func_801D17D8((s16)(x + 224), y, 16, 2, 1);
+    primitive = game_front_draw_glyph((s16)(x + 224), y, 16, 2, 1);
     func_801D18E8(primitive, alpha);
   }
 
   marker_x = GetGraphType() == 1 ? 681 : (GetGraphType() == 2 ? 681 : 185);
   SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(2, 12);
-  primitive = func_801D17D8(x, y, 4, 2, selected);
+  primitive = game_front_draw_glyph(x, y, 4, 2, selected);
   func_801D18E8(primitive, alpha);
-  primitive = func_801D17D8((s16)(x + 224), y, 5, 2, selected);
+  primitive = game_front_draw_glyph((s16)(x + 224), y, 5, 2, selected);
   func_801D18E8(primitive, alpha);
 }

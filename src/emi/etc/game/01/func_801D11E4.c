@@ -24,6 +24,6 @@ void func_801D11E4(void) {
                 GetGraphType() == 1 ? 557 : (GetGraphType() == 2 ? 557 : 157),
                 0);
     func_8014E5A0(2, 12);
-    func_801D17D8(192, 4, 10, 2, 0);
+    game_front_draw_glyph(192, 4, 10, 2, 0);
   }
 }

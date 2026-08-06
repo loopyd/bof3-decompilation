@@ -36,7 +36,7 @@ segments:
       - [0x6cc, c, func_801D12CC]
       - [0x90c, c, func_801D150C]
       - [0xadc, c, func_801D16DC]
-      - [0xbd8, c, func_801D17D8]
+      - [0xbd8, c, game_front_draw_glyph]
       - [0xce8, c, func_801D18E8]
       - [0xcf8, c, func_801D18F8]
       - [0xf00, c, func_801D1B00]

@@ -111,7 +111,7 @@ void func_801D18F8(void) {
     SetDrawMode((DR_MODE*)D_8014598C, 0, 0, flags, 0);
 
     func_8014E5A0(2, 12);
-    primitive = func_801D17D8((s16)x, 24, (u8)(i + 11), 2, 0);
+    primitive = game_front_draw_glyph((s16)x, 24, (u8)(i + 11), 2, 0);
     primitive[4] = *alpha;
     primitive[5] = *alpha;
     primitive[6] = *alpha;

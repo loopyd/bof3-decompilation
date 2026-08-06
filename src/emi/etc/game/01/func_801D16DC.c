@@ -11,8 +11,8 @@ void func_801D16DC(s16 x, s16 y, u8 selected, u8 alpha) {
   marker_x = GetGraphType() == 1 ? 683 : (GetGraphType() == 2 ? 683 : 187);
   SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
   func_8014E5A0(2, 12);
-  primitive = func_801D17D8(x, y, 2, 2, selected);
+  primitive = game_front_draw_glyph(x, y, 2, 2, selected);
   func_801D18E8(primitive, alpha);
-  primitive = func_801D17D8((s16)(x + 240), (s16)(y + 112), 3, 2, selected);
+  primitive = game_front_draw_glyph((s16)(x + 240), (s16)(y + 112), 3, 2, selected);
   func_801D18E8(primitive, alpha);
 }
