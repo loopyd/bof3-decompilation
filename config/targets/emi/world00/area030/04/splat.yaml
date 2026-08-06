@@ -45,7 +45,7 @@ segments:
     - func_801D1B88
   - - 5172
     - asm
-    - world00_area030_icon_strip_queue
+    - queueIconStrip
   - - 6124
     - asm
     - func_801D23EC
@@ -60,7 +60,7 @@ segments:
     - func_801D3244
   - - 11576
     - asm
-    - world00_area030_panel_scroll_advance
+    - advancePanelScroll
   - - 20296
     - asm
     - func_801D5B48
@@ -105,7 +105,7 @@ segments:
     - func_801D69E8
   - - 24108
     - c
-    - world00_area030_menu_scratch_seed
+    - seedMenuScratch
   - - 24360
     - asm
     - func_801D6B28
@@ -192,7 +192,7 @@ segments:
     - func_801D9D38
   - - 37384
     - c
-    - world00_area030_step_advance_mode6
+    - advanceStepMode6
   - - 37440
     - asm
     - func_801D9E40
@@ -459,7 +459,7 @@ segments:
     - func_801E01DC
   - - 63036
     - c
-    - world00_area030_flag_clear_state10
+    - clearFlagState10
   - - 63084
     - asm
     - func_801E026C
@@ -498,22 +498,22 @@ segments:
     - func_801E0BD0
   - - 65568
     - c
-    - world00_area030_companion_dispatch
+    - dispatchCompanion
   - - 65600
     - asm
     - func_801E0C40
   - - 65664
     - c
-    - world00_area030_tpage_draw_mode_submit
+    - submitTpageDrawMode
   - - 65996
     - asm
     - func_801E0DCC
   - - 66256
     - c
-    - world00_area030_panel_pair_submit
+    - submitPanelPair
   - - 66380
     - c
-    - world00_area030_sprite_clut_configure
+    - configureSpriteClut
   - - 66564
     - asm
     - func_801E1004
@@ -525,7 +525,7 @@ segments:
     - func_801E162C
   - - 68316
     - c
-    - world00_area030_dim_tile_append
+    - appendDimTile
   - - 68440
     - asm
     - func_801E1758

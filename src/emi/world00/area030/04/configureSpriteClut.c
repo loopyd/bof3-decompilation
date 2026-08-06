@@ -4,12 +4,12 @@
  * selecting graphics mode 1.
  * @source 0x801E0F4C
  */
-void world00_area030_sprite_clut_configure(s16 arg0, s16 arg1, u8 arg2) {
+void configureSpriteClut(s16 arg0, s16 arg1, u8 arg2) {
   u16 clut;
   u32 sprite_index;
   u8* sprite;
 
-  world00_area030_tpage_draw_mode_submit(1, 1);
+  submitTpageDrawMode(1, 1);
   sprite = func_801E0DCC(2, 1, arg0, arg1);
   sprite_index = arg2 & 0xff;
   if (sprite_index != 0xff) {

@@ -11,7 +11,7 @@ void func_801D6B28(s8 arg0) {
   s32          mode;
 
   func_8014D4E0();
-  world00_area030_tpage_draw_mode_submit(0, 1);
+  submitTpageDrawMode(0, 1);
   func_801E0DCC(0x15, 1, 0x32, 0x96);
   func_801E0DCC(0x16, 1, 0xbc, 0x96);
   func_801E0DCC(0x11, 1, 0x36, 0x9c);

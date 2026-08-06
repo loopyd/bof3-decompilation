@@ -4,7 +4,7 @@
  * appends its draw-mode primitive to the current ordering-table stream.
  * @source 0x801E0C80
  */
-void world00_area030_tpage_draw_mode_submit(s32 arg0, s32 arg1) {
+void submitTpageDrawMode(s32 arg0, s32 arg1) {
   s32 tpage;
 
   if (GetGraphType() == 1) {

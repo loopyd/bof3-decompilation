@@ -4,39 +4,15 @@
 #include "bof3/bof3.h"
 #include "gpu/prim.h"
 
-/* @kind: bss — shared mode byte; stored small mode values (4/6/7/...) and
- * compared against them by the area030 mode handlers. */
-extern u8           world00_area030_modeByte;
-extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_3FC9;
-extern u8           D_80145E93;
-extern u8           D_801E2384[];
-extern u8           D_801E2388[];
-extern u8           D_801E238C[];
-extern u8           D_801E2390[];
-extern u8*          D_8014598C;
-extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_4002;
-extern volatile u8  WORLD00_AREA030_GLOBAL_HALF_3FF2;
-extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_3FFC;
-extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_4000;
-extern s16          WORLD00_AREA030_GLOBAL_HALF_4006;
-extern volatile u32 WORLD00_AREA030_GLOBAL_WORD_3E6C;
-extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_5E92;
-extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_5EBA;
-extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_5ED9;
-extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_5EDA;
-extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_5EDB;
-extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_4011;
-extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_4012;
-extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_4013;
-extern volatile u32 WORLD00_AREA030_GLOBAL_WORD_5EE0;
-extern volatile u32 WORLD00_AREA030_GLOBAL_WORD_5EE4;
-extern volatile u32 WORLD00_AREA030_GLOBAL_WORD_4018;
-extern volatile u32 WORLD00_AREA030_GLOBAL_WORD_401C;
-extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_5EE8;
-extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_5EEA;
-extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_4020;
-extern volatile u16 WORLD00_AREA030_GLOBAL_HALF_4022;
-extern s16          WORLD00_AREA030_GLOBAL_HALF_930E;
+/* Shared mode byte; stored small mode values (4/6/7/...) and compared
+ * against them by the area030 mode handlers. */
+extern u8  modeByte;      /* @source 0x80144125 @kind bss */
+extern u8  D_80145E93;    /* @source 0x80145E93 @kind unknown */
+extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
+extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
+extern u8  D_801E238C[];  /* @source 0x801E238C @kind unknown */
+extern u8  D_801E2390[];  /* @source 0x801E2390 @kind unknown */
+extern u8* D_8014598C;    /* @source 0x8014598C @kind unknown */
 
 /* Scoped companion-call ABI for func_801E0C20; not a callback contract. */
 void func_800F500C(void);
@@ -47,7 +23,7 @@ void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 int  func_8017E3F4(char* buffer, char* fmt, ...);
 void func_801D195C(s16 arg0, s16 arg1);
 void func_801D18CC(s16 arg0, s16 arg1, u8 arg2);
-void world00_area030_tpage_draw_mode_submit(s32 arg0, s32 arg1);
+void submitTpageDrawMode(s32 arg0, s32 arg1);
 u8*  func_801E0DCC(s32 arg0, s32 arg1, s16 arg2, s16 arg3);
 s32  func_801D9534(s16 arg0, u16 arg1, s16 arg2, s16 arg3, s32 arg4);
 s32  func_80196070(void);
@@ -58,23 +34,20 @@ void func_801D159C(s16 arg0, s16 arg1);
 void func_801D1744(s16 arg0, s16 arg1, u8 arg2);
 void func_801D1818(s16 arg0, s16 arg1, u8 arg2);
 void func_801D1B88(s16 arg0, s16 arg1, s16 arg2, u8 arg3);
-void world00_area030_icon_strip_queue(s16 arg0, s16 arg1, u8 arg2, s8 arg3);
+void queueIconStrip(s16 arg0, s16 arg1, u8 arg2, s8 arg3);
 void func_801D2AE0(void);
 void func_801D2C34(s16 arg0, s16 arg1, s8 arg2, u8 arg3);
 void func_801D3244(s16 arg0, s16 arg1, u8 arg2, s8 arg3, u8 arg4, s8 arg5);
-void world00_area030_panel_scroll_advance(void);
-void world00_area030_menu_scratch_seed(void);
+void advancePanelScroll(void);
+void seedMenuScratch(void);
 void func_801D6B28(s8 arg0);
-void world00_area030_step_advance_mode6(void);
-void world00_area030_flag_clear_state10(void);
-void world00_area030_companion_dispatch(void);
-void world00_area030_panel_pair_submit(s16 arg0, s16 arg1);
-void world00_area030_sprite_clut_configure(s16 arg0, s16 arg1, u8 arg2);
-void world00_area030_dim_tile_append(void);
+void advanceStepMode6(void);
+void clearFlagState10(void);
+void dispatchCompanion(void);
+void submitPanelPair(s16 arg0, s16 arg1);
+void configureSpriteClut(s16 arg0, s16 arg1, u8 arg2);
+void appendDimTile(void);
 
-#define WORLD00_AREA030_PRIMITIVE_PTR  D_8014598C
-#define WORLD00_AREA030_SCRATCH_PTR    PSX_REF(volatile u8*, 0x1f800044u)
-#define WORLD00_AREA030_UI_CHAR_BUFFER PSX_PTR(volatile u8, 0x80145ad4u)
-#define WORLD00_AREA030_SPRT_TABLE     PSX_PTR(const volatile u8, 0x801e1d0cu)
+#define WORLD00_AREA030_SCRATCH_PTR PSX_REF(volatile u8*, 0x1f800044u)
 
 #endif
