@@ -1,0 +1,4 @@
+# Overlay header id word + zero pad, not code (reviewed).
+Cd 0x14 @ 0x801F2C00
+# Handler pointer table + trailing data, not code (reviewed).
+Cd 0x1904 @ 0x801F4200

@@ -1,0 +1,3 @@
+# Segment-base pointer/string tables, not code (reviewed).
+Cd 0x2B0 @ 0x80096800
+Cd 0x2D0C @ 0x800B43B8

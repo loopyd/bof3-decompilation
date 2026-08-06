@@ -19,7 +19,7 @@ from .domain import load_target_manifests
 from .snapshot import read_snapshot, snapshot_path, validate_snapshot_identity
 
 
-SCHEMA_VERSION = "bof3.reverse-index/v2"
+SCHEMA_VERSION = "bof3.reverse-index/v3"
 
 
 def index_path(root: Path) -> Path:
@@ -77,7 +77,8 @@ def _schema(connection: sqlite3.Connection) -> None:
             stack_frame INTEGER,
             local_count INTEGER,
             argument_count INTEGER,
-            trivial_kind TEXT
+            trivial_kind TEXT,
+            contains_data INTEGER NOT NULL DEFAULT 0
         );
         CREATE INDEX functions_target_address ON functions(target_id, address);
         CREATE INDEX functions_hash ON functions(exact_sha256);
@@ -197,11 +198,17 @@ def rebuild(root: Path) -> Path:
                         _hash(path),
                     ),
                 )
-                for symbol in load_target_symbols(root, target):
+                target_symbols = load_target_symbols(root, target)
+                data_addresses = [
+                    s.address
+                    for s in target_symbols
+                    if s.canonical_name.startswith("D_")
+                ]
+                for symbol in target_symbols:
                     kind = (
-                        "function"
-                        if symbol.canonical_name.startswith("func_")
-                        else "data"
+                        "data"
+                        if symbol.canonical_name.startswith("D_")
+                        else "function"
                     )
                     connection.execute(
                         "INSERT INTO symbols VALUES (?, ?, ?, ?)",
@@ -214,8 +221,8 @@ def rebuild(root: Path) -> Path:
                             reviewed, lifted, source, instruction_count,
                             basic_blocks, cfg_edges, cyclomatic_complexity,
                             loops, stack_frame, local_count, argument_count,
-                            trivial_kind
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                            trivial_kind, contains_data
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                         (
                             function.id,
                             target,
@@ -241,6 +248,14 @@ def rebuild(root: Path) -> Path:
                                     - manifest.load_address
                                     + function.analyzer_size
                                 ]
+                            ),
+                            int(
+                                any(
+                                    function.address
+                                    <= address
+                                    < function.address + function.analyzer_size
+                                    for address in data_addresses
+                                )
                             ),
                         ),
                     )

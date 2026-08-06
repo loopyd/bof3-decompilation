@@ -21,7 +21,7 @@ segments:
   vram: 2148100096
   subsegments:
   - - 0
-    - asm
+    - rodata
     - T_80096800
   - - 688
     - c
@@ -1567,6 +1567,6 @@ segments:
     - asm
     - func_800B4220
   - - 121784
-    - asm
+    - rodata
     - T_800B43B8
 - - 133316

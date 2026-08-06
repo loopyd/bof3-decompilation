@@ -82,7 +82,10 @@ fixed forward.
 
 After the bounded queue and checkpoint, a user may authorize a fresh
 `out/non-exact-lifts.json` pass. Process every current `partial` row
-serially, preserving each source's pre-mission state. Each row gets a fresh
+serially, preserving each source's pre-mission state. Skip rows in the
+report's `contains_data` list (range embeds reviewed `D_*` data; unliftable
+until the Splat segment splits — route to the user, never dispatch). Each
+remaining row gets a fresh
 executor mission, parent evidence check, and independent review only if it
 exact-matches.
 

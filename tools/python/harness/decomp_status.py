@@ -65,8 +65,8 @@ def _binary_hash(path: Path) -> str:
 
 def index_coverage(
     root: Path, manifests: Iterable[tuple[str, TargetManifest]]
-) -> dict[str, int]:
-    """Return index counts only when the index and source snapshots are fresh."""
+) -> tuple[dict[str, int], dict[str, list[dict[str, str]]]]:
+    """Return index counts and contains-data functions; only when fresh."""
 
     path = index_path(root)
     if not path.is_file():
@@ -83,6 +83,7 @@ def index_coverage(
             if schema is None or schema[0] != SCHEMA_VERSION:
                 raise ValueError("reverse index schema is stale; run just index")
             counts: dict[str, int] = {}
+            contains_data: dict[str, list[dict[str, str]]] = {}
             for target, manifest in manifests:
                 binary = root / manifest.binary
                 snapshot_file = snapshot_path(root, target)
@@ -112,7 +113,15 @@ def index_coverage(
                 counts[target] = connection.execute(
                     "SELECT COUNT(*) FROM functions WHERE target_id = ?", (target,)
                 ).fetchone()[0]
-            return counts
+                contains_data[target] = [
+                    {"address": f"0x{row[0]:08X}", "name": row[1]}
+                    for row in connection.execute(
+                        "SELECT address, name FROM functions "
+                        "WHERE target_id = ? AND contains_data",
+                        (target,),
+                    )
+                ]
+            return counts, contains_data
         finally:
             connection.close()
     except sqlite3.DatabaseError as exc:
@@ -138,10 +147,11 @@ def build_report(
         if cache is not None:
             cache.close()
     try:
-        coverage = index_coverage(root, manifests)
+        coverage, contains_data = index_coverage(root, manifests)
         coverage_error: str | None = None
     except (FileNotFoundError, ValueError) as exc:
         coverage = {}
+        contains_data = {}
         coverage_error = str(exc)
 
     targets: list[dict[str, Any]] = []
@@ -159,6 +169,7 @@ def build_report(
                 "target": target,
                 "lifts": {**counts, "total": len(functions)},
                 "indexed_functions": coverage.get(target),
+                "contains_data": contains_data.get(target, []),
                 "coverage_error": coverage_error,
                 "functions": functions,
             }
@@ -168,6 +179,7 @@ def build_report(
         "targets": targets,
         "lifts": {**totals, "total": len(records)},
         "indexed_functions": sum(coverage.values()) if coverage_error is None else None,
+        "contains_data": [row for rows in contains_data.values() for row in rows],
         "coverage_error": coverage_error,
     }
 
@@ -196,6 +208,10 @@ def render_text(report: dict[str, Any], detail: str = "full") -> str:
         lines.append(
             f"{target['target']}: exact={counts['exact']} partial={counts['partial']} invalid={counts['invalid']} lifts={counts['total']} indexed={target_coverage}"
         )
+        for entry in target.get("contains_data", []):
+            lines.append(
+                f"  CONTAINS-DATA {entry['name']}@{entry['address']} not liftable until the Splat segment is split"
+            )
         for function in target["functions"]:
             if function["status"] == "invalid":
                 lines.append(
@@ -222,6 +238,7 @@ def project_report(report: dict[str, Any], detail: str) -> dict[str, Any]:
         "schema": report["schema"],
         "lifts": report["lifts"],
         "indexed_functions": report["indexed_functions"],
+        "contains_data": report.get("contains_data", []),
         "coverage_error": report["coverage_error"],
     }
     if detail == "minimal":

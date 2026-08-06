@@ -1,0 +1,2 @@
+# Overlay header id word + handler pointer table, not code (reviewed).
+Cd 0x30 @ 0x801F2C00

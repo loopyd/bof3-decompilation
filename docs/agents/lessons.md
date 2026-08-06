@@ -104,6 +104,13 @@ iteration procedure: [function matching](matching.md).
 
 ## Target ownership and symbols
 
+- A shared-map (`config/targets/shared/symbols.txt`) `D_*` entry claims data
+  at that vram in EVERY target; keep it in the owning target's local map
+  unless it is data everywhere, else bogus contains-data functions appear.
+- Exclude a data blob from Rizin's function list with `Cd <size> @ <addr>`
+  in the target's `reviewed.rz`; `af-` does not survive the replay (`aa`
+  re-creates it).
+
 - Check the shared SDK maps (`config/sdk/psyq-*.txt`) before adding a symbol
   to a target-local map: Splat composes both files, and a name defined in
   both aborts `bin/splat` with "Duplicate symbol detected". Keep the entry in

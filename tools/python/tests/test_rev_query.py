@@ -244,12 +244,12 @@ def test_metrics_distinguish_recursive_leaf_with_unresolved_evidence() -> None:
         None,
     )
     connection.execute(
-        "INSERT INTO functions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO functions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
         function,
     )
     second = ("t@00000002", "t", 2, 8, "b", "b" * 64, *function[6:])
     connection.execute(
-        "INSERT INTO functions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO functions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
         second,
     )
     connection.execute("INSERT INTO calls VALUES ('t@00000001', 't@00000002', 1)")
@@ -286,7 +286,7 @@ def test_mission_composes_sdk_callees_callers_and_risk(
     connection.execute(
         "INSERT INTO targets VALUES ('exe/t', 'b', 'h', 0x80100000, 'rizin', 'v', 's', 'sh')"
     )
-    columns = "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?"
+    columns = "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0"
     connection.execute(
         f"INSERT INTO functions VALUES ({columns})",
         (

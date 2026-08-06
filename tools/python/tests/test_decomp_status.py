@@ -59,7 +59,7 @@ def test_report_orders_lifts_and_aggregates_match_states(
     monkeypatch.setattr(
         decomp_status,
         "index_coverage",
-        lambda _root, _manifests: {"emi/alpha/00": 7, "exe/zeta": 3},
+        lambda _root, _manifests: ({"emi/alpha/00": 7, "exe/zeta": 3}, {}),
     )
 
     report = decomp_status.build_report(
@@ -92,7 +92,7 @@ def test_report_filters_to_requested_target(tmp_path: Path, monkeypatch) -> None
     monkeypatch.setattr(
         decomp_status,
         "index_coverage",
-        lambda _root, _manifests: {"exe/keep": 1},
+        lambda _root, _manifests: ({"exe/keep": 1}, {}),
     )
 
     report = decomp_status.build_report(tmp_path, ("exe/keep",), diff_runner=_diff)
@@ -134,7 +134,7 @@ def test_report_reuses_a_content_addressed_cache(tmp_path: Path, monkeypatch) ->
     monkeypatch.setattr(
         decomp_status,
         "index_coverage",
-        lambda _root, _manifests: {"exe/logo": 1},
+        lambda _root, _manifests: ({"exe/logo": 1}, {}),
     )
     calls = 0
 
@@ -311,7 +311,7 @@ def test_batch_builds_fresh_misses_once_per_target(tmp_path: Path, monkeypatch) 
     monkeypatch.setattr(dsp, "batch_build", batch)
     monkeypatch.setattr(dsp, "_asm_diff_resolve", resolve)
     monkeypatch.setattr(dsp, "_asm_diff_compare", compare)
-    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: {})
+    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: ({}, {}))
 
     report = ds.build_report(tmp_path, use_cache=False, diff_runner=lambda _: {})
 
@@ -338,7 +338,7 @@ def test_batch_resolve_failure_falls_back_once(tmp_path: Path, monkeypatch) -> N
         "batch_build",
         lambda root, targets: subprocess.CompletedProcess([], 0, "", ""),
     )
-    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: {})
+    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: ({}, {}))
     monkeypatch.setattr(
         dsp,
         "_asm_diff_resolve",
@@ -391,7 +391,7 @@ def test_batch_stale_object_falls_back_once_without_duplicate_record(
             "output_dir": tmp_path / "out/matching/dummy",
         },
     )
-    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: {})
+    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: ({}, {}))
 
     def diff(_request):
         nonlocal fallback
@@ -425,7 +425,7 @@ def test_batch_failure_falls_back_per_source_with_error_attribution(
         "batch_build",
         lambda root, targets: subprocess.CompletedProcess([], 1, "", "build error"),
     )
-    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: {})
+    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: ({}, {}))
 
     def diff(request):
         diff_calls.append(request.source_path.stem)
@@ -487,7 +487,7 @@ def test_no_batch_when_all_sources_are_cached(tmp_path: Path, monkeypatch) -> No
     monkeypatch.setattr(
         ds,
         "index_coverage",
-        lambda _root, _manifests: {},
+        lambda _root, _manifests: ({}, {}),
     )
 
     batch_calls: list[list[str]] = []
@@ -531,7 +531,7 @@ def test_source_change_invalidates_cache_and_recomputes(
         lambda s, t: hashlib.sha256(s.read_bytes()).hexdigest()[:32],
     )
     monkeypatch.setattr(dsp, "target_fingerprint", lambda r, m: "fp-target")
-    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: {})
+    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: ({}, {}))
 
     batch_calls: list[list[str]] = []
 
@@ -634,7 +634,7 @@ def test_compile_inputs_invalidate_only_affected_target_then_all_targets(
     monkeypatch.setattr(
         dsp, "_asm_diff_compare", lambda repo, req, resolved: _batch_result()
     )
-    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: {})
+    monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: ({}, {}))
 
     ds.build_report(tmp_path, use_cache=True, diff_runner=lambda _: _batch_result())
     assert len(batches) == 2
