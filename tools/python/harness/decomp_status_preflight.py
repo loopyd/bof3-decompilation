@@ -110,25 +110,26 @@ def _build_preflight(
     for target, manifest in manifests:
         source_dir = root / manifest.source_dir
         target_key = target_fingerprint(root, manifest) if cache is not None else ""
-        for source in sorted(source_dir.glob("func_*.c")):
-            if _FUNCTION.fullmatch(source.stem) is None:
-                ready.append(
-                    _invalid_record(root, target, source, "invalid lifted filename")
-                )
-                continue
-            try:
-                address = int(source.stem.removeprefix("func_"), 16)
-            except ValueError:
-                ready.append(
-                    _invalid_record(root, target, source, "invalid lifted filename")
-                )
-                continue
+        for source in sorted(source_dir.glob("*.c")):
             try:
                 text = source.read_text(encoding="utf-8")
             except (OSError, UnicodeError) as exc:
-                ready.append(_invalid_record(root, target, source, str(exc), address))
+                ready.append(_invalid_record(root, target, source, str(exc)))
                 continue
-            if _SOURCE.search(text) is None or _BEHAVIOR.search(text) is None:
+            metadata = _SOURCE.search(text)
+            if _FUNCTION.fullmatch(source.stem) is not None:
+                address = int(source.stem.removeprefix("func_"), 16)
+            elif metadata is not None:
+                # Renamed lift: the @source tag is the address authority.
+                address = int(metadata.group(0).removeprefix("@source "), 16)
+            elif source.stem.startswith("func_"):
+                ready.append(
+                    _invalid_record(root, target, source, "invalid lifted filename")
+                )
+                continue
+            else:
+                continue  # not a lift file (bindings, helpers)
+            if metadata is None or _BEHAVIOR.search(text) is None:
                 ready.append(
                     _invalid_record(
                         root, target, source, "missing required metadata", address

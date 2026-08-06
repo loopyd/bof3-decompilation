@@ -235,6 +235,16 @@ def build_snapshot(
             candidate = source_dir / f"func_{address:08X}.c"
             if candidate.is_file():
                 source = str(candidate)
+            else:
+                from .match._asm_resolve import parse_source_address
+
+                for other in sorted(source_dir.glob("*.c")):
+                    try:
+                        if parse_source_address(other) == address:
+                            source = str(other)
+                            break
+                    except (OSError, ValueError):
+                        continue
         functions.append(
             SnapshotFunction(
                 id=function_id,

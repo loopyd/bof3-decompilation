@@ -37,8 +37,10 @@ compiler flags, or binding addresses.
 
 ## Identity contracts — never touch
 
-- Never rename/move `func_XXXXXXXX.c`, rename a raw lifted entry function, or
-  rename a Splat function boundary.
+- Rename a `func_XXXXXXXX.c` file or raw lifted entry function only through
+  a naming transaction (evidence gate) on a file that carries
+  `@behavior`/`@source` metadata; the `@source` tag is the address
+  authority once the filename no longer encodes it. Never rename a Splat function boundary address.
 - Never drop `@behavior`/`@source`/`@kind` tags or evidence comments;
   correct stale tags in place.
 - Never move target directories or alter `source_dir`, manifests, load

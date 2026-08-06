@@ -19,7 +19,11 @@ _FUNC = re.compile(r"^func_[0-9a-fA-F]{8}$")
 
 
 def resolve_function(value: str) -> tuple[FunctionId, TargetManifest, Path]:
-    """Return one known target and its address-based authored source path."""
+    """Return one known target and its authored source path.
+
+    Raw lifts live at func_<ADDR>.c; a renamed lift is found through its
+    @source metadata tag (the address authority inside renamed files).
+    """
 
     function = parse_function_id(value)
     root = repo_layout().root
@@ -28,6 +32,13 @@ def resolve_function(value: str) -> tuple[FunctionId, TargetManifest, Path]:
     if manifest is None:
         raise ValueError(f"unknown target: {function.target.value}")
     source = root / manifest.source_dir / f"func_{function.address:08X}.c"
+    if source.is_file():
+        return function, manifest, source
+    from ..match._asm_resolve import collect_source_addresses
+
+    for candidate, address in collect_source_addresses(root / manifest.source_dir):
+        if address == function.address:
+            return function, manifest, candidate
     return function, manifest, source
 
 
@@ -37,6 +48,14 @@ def splat_assembly(manifest: TargetManifest, address: int) -> Path:
     expected = directory / f"func_{address:08X}.s"
     if expected.is_file():
         return expected
+    from ..canonical import load_target_symbols
+
+    for symbol in load_target_symbols(root, manifest.id.value):
+        if symbol.address == address:
+            named = directory / f"{symbol.name}.s"
+            if named.is_file():
+                return named
+            break
     raise FileNotFoundError(
         f"Splat assembly not found: {expected}; run the target's Splat split first"
     )

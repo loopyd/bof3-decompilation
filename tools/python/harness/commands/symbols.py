@@ -77,16 +77,24 @@ def run_check(args: argparse.Namespace) -> int:
             symbol.address: symbol for symbol in load_target_symbols(root, target)
         }
         source_dir = root / manifest.source_dir
-        for source in source_dir.glob("func_*.c"):
+        for source in source_dir.glob("*.c"):
             encoded = source.stem.removeprefix("func_")
-            if len(encoded) != 8 or encoded != encoded.upper():
-                errors.append(f"invalid lifted filename: {source.relative_to(root)}")
-                continue
-            try:
-                address = int(encoded, 16)
-            except ValueError:
-                errors.append(f"invalid lifted filename: {source.relative_to(root)}")
-                continue
+            if len(encoded) == 8 and encoded == encoded.upper():
+                try:
+                    address = int(encoded, 16)
+                except ValueError:
+                    errors.append(f"invalid lifted filename: {source.relative_to(root)}")
+                    continue
+            else:
+                if source.stem.startswith("func_"):
+                    errors.append(
+                        f"invalid lifted filename: {source.relative_to(root)}"
+                    )
+                    continue
+                match = re.search(r"@source (0x[0-9A-F]{8})\b", source.read_text(encoding="utf-8"))
+                if match is None:
+                    continue  # not a lift file (bindings, helpers)
+                address = int(match.group(1), 16)
             if address not in addresses:
                 errors.append(
                     f"source/map drift: {source.relative_to(root)} has no map address"

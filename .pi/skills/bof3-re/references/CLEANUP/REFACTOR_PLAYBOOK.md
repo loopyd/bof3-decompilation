@@ -22,7 +22,9 @@ Apply the ladder top down; stop at the first rung that resolves the drift.
 4. **Spelling transactions** — rename a target-local symbol/field with
    unchanged address, width, signedness, volatility, and layout; update map,
    declaration, binding, and same-target references together (RULES.md
-   evidence gate).
+   evidence gate). A `func_` file/function rename additionally requires the
+   file's `@behavior`/`@source` metadata and the Splat label in the same
+   transaction.
 5. **Declaration consolidation** — merge a duplicate declaration into the
    owning `internal.h` only when the forms are token-identical. A qualifier
    difference is behavior, not drift.
@@ -33,7 +35,8 @@ Apply the ladder top down; stop at the first rung that resolves the drift.
 - Loop/branch/statement rewrites, type "modernization", extracting shared
   bodies, reordering declarations or initializers, changing `volatile` or
   signedness "for consistency".
-- Renaming `func_XXXXXXXX` files or functions, moving files/targets, touching
+- Renaming `func_XXXXXXXX` files or functions outside a rung-4 spelling
+  transaction, moving files/targets, touching
   Splat boundaries, SDK maps, shared headers, compiler flags.
 - Any edit justified by style alone. Style drift in a byte-matched lift is
   matching evidence, not a defect.

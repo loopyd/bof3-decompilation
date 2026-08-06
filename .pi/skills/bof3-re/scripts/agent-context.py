@@ -204,6 +204,17 @@ def target_context(root: Path, target: str, address: int) -> list[str]:
     map_path = root / "config" / "targets" / target / "symbols.txt"
     splat = root / manifest.splat
     source = source_dir / f"func_{address:08X}.c"
+    if not source.is_file():
+        for candidate in sorted(source_dir.glob("*.c")):
+            try:
+                if (
+                    f"@source 0x{address:08X}" in candidate.read_text(encoding="utf-8")
+                    or f"@source 0x{address:08x}" in candidate.read_text(encoding="utf-8")
+                ):
+                    source = candidate
+                    break
+            except (OSError, UnicodeError):
+                continue
     asm = asm_path(root, target, splat, address)
     asm_text = asm.read_text(encoding="utf-8") if asm.is_file() else ""
     names = set(IDENTIFIER.findall(asm_text)) | {f"func_{address:08X}"}

@@ -207,7 +207,7 @@ Every target `internal.h` is a structured barrel, ordered:
 | Constants / macros | SCREAMING_SNAKE_CASE | `EMI_SECTOR_SIZE`, `EQUIP_RYU` |
 | Single-bit flags | `(1 << N)` shift form | `#define ELEM_FIRE (1 << 0)` |
 | Globals (fixed-address) | `g_` + PascalCase | `g_PrimCursor`, `g_GameState` |
-| Filenames | `func_XXXXXXXX.c` (address-based) | `func_8014E5A0.c` |
+| Filenames | `func_XXXXXXXX.c` until the evidence gate passes; renamed files carry `@source` | `func_8014E5A0.c` |
 
 Values:
 

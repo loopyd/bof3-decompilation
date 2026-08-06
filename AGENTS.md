@@ -38,7 +38,8 @@ BOF3 binaries load independently. Qualify work by one function selector:
 - Keep one `func_XXXXXXXX.c` per function and an adjacent `internal.h`.
 - Use `func_80143B40` and `D_80143B40`; maps use sorted
   `name = 0xADDRESS;` entries with eight uppercase hex digits.
-- Replace raw names only after review. Keep lifted filenames address-based.
+- Replace raw names only after review; a renamed lift file keeps
+  `@behavior`/`@source` metadata (the `@source` tag is the address authority).
 - Edit `func_XXXXXXXX.c`, its target `internal.h`, the target-local map, and
   reviewed Splat boundaries as evidence improves. Keep declarations local
   unless a demonstrated cross-target contract requires sharing.

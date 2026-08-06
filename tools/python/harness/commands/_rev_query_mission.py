@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from ..canonical import load_map, sdk_map_path
+from ..canonical import load_map, load_target_symbols, sdk_map_path
 from ..domain import (
     load_target_manifests,
     parse_function_id,
@@ -135,7 +135,23 @@ def run_mission(args: argparse.Namespace) -> int:
             )
 
     source = Path(manifest.source_dir) / f"func_{address:08X}.c"
+    if not (root / source).is_file():
+        from ..match._asm_resolve import collect_source_addresses
+
+        for candidate, candidate_address in collect_source_addresses(
+            root / manifest.source_dir
+        ):
+            if candidate_address == address:
+                source = candidate.relative_to(root)
+                break
     splat_asm = Path("out") / "splat" / target / "asm" / f"func_{address:08X}.s"
+    if not (root / splat_asm).is_file():
+        for symbol in load_target_symbols(root, target):
+            if symbol.address == address:
+                named = splat_asm.with_name(f"{symbol.name}.s")
+                if (root / named).is_file():
+                    splat_asm = named
+                break
     brief = {
         "schema": "bof3.mission/v1",
         "function": function_id,

@@ -17,7 +17,7 @@ def test_cleanup_agent_preserves_lift_identity_and_requires_evidence() -> None:
     # Identity/evidence contracts live in the CLEANUP reference node; the
     # agent spec must point at it.
     assert "two independent corroborators" in rules
-    assert "never rename/move `func_XXXXXXXX.c`" in rules
+    assert "the `@source` tag is the address" in rules
     assert "rename a Splat function boundary" in rules
     assert "references/CLEANUP/RULES.md" in text
     assert "REFACTOR_PLAYBOOK.md" in text
