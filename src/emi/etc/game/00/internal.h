@@ -102,153 +102,239 @@ typedef struct RecordSlot {
   u8 pad[0x6F]; /* 0x74 - 5 */
 } RecordSlot;
 
+/* @source 0x80148648 @kind unknown */
 extern PanelTask* D_80148648;
 #define D_80148648 g_PanelTaskRoot
-extern GameScenarioState            GAME_SCENARIO_STATE;
-extern const volatile AbilityObject ABILITY_OBJECTS[];
+/* @source 0x80146870 @kind bss */
+extern GameScenarioState            scenarioState;
+/* @source 0x801CA70C @kind table */
+extern const volatile AbilityObject abilityObjects[];
 
 /* Work area pointer in scratchpad slot 0x1F800044 (offset 0x44).
  * Declared as a weak extern so the linker emits %hi/%lo relocations,
  * matching the original binary's codegen. */
+/* @source 0x1F800044 @kind data */
 extern struct GameWorkArea* g_game_work;
 
 /* @behavior entry-0 main state machine index */
+/* @source 0x80143B90 @kind unknown */
 extern volatile u16 D_80143B90;
-/* @kind: bss */
-extern u16          GAME_FRONT_EFFECT_BUSY;
+/* @source 0x80143C40 @kind bss */
+extern u16          effectBusy;
+/* @source 0x80143F49 @kind unknown */
 extern volatile u8  D_80143F49;
+/* @source 0x80143F4A @kind unknown */
 extern volatile u8  D_80143F4A;
+/* @source 0x80143FBC @kind unknown */
 extern u8           D_80143FBC;
 /* @behavior entry-0 sub-state within current state */
+/* @source 0x80143B92 @kind unknown */
 extern u16 D_80143B92;
 /* @behavior world/phase index for entry-0 world dispatch */
+/* @source 0x80143BB0 @kind unknown */
 extern u8 D_80143BB0;
 /* @behavior current world state ID for world/front routing */
+/* @source 0x80143F00 @kind unknown */
 extern volatile u16 D_80143F00;
 /* @behavior world/front flags: bit0=scenario pending, bit3=alt front mode */
+/* @source 0x80143F02 @kind unknown */
 extern volatile u8 D_80143F02;
 /* @behavior context selection seed passed to entry-0 ctx init */
+/* @source 0x80143F10 @kind unknown */
 extern volatile u16 D_80143F10;
 /* @behavior context bundle word A — world/route identifier */
+/* @source 0x80143F14 @kind unknown */
 extern volatile u32 D_80143F14;
 /* @behavior context bundle word B — secondary selector data */
+/* @source 0x80143F18 @kind unknown */
 extern volatile u32 D_80143F18;
 /* @behavior context kind byte — dispatch type discriminator */
+/* @source 0x80143F1C @kind unknown */
 extern volatile u8 D_80143F1C;
 /* @behavior pending request kind — selects next front operation */
+/* @source 0x80143F1D @kind unknown */
 extern volatile u8 D_80143F1D;
 /* @behavior pending mode after request resolution */
+/* @source 0x80143F1E @kind unknown */
 extern u8 D_80143F1E;
 /* @behavior selection seed for the entry-0 front callback bank */
+/* @source 0x80143F1F @kind unknown */
 extern u8 D_80143F1F;
 /* @behavior active selection id from front-end picker */
+/* @source 0x80144FC0 @kind unknown */
 extern volatile u32 D_80144FC0;
 /* @behavior front-end selection index for menu routing */
-/* @kind: bss */
-extern u8  GAME_FRONT_SELECTION;
+/* @source 0x80145029 @kind bss */
+extern u8  frontSelection;
+/* @source 0x80145024 @kind unknown */
 extern u8  D_80145024;
+/* @source 0x8014502C @kind unknown */
 extern u32 D_8014502C;
+/* @source 0x801459F4 @kind unknown */
 extern u8* D_801459F4;
 /* @behavior palette stage serial for GPU upload sequencing */
-/* @kind: bss */
-extern volatile u8 GAME_FRONT_PALETTE_STAGE_SERIAL;
+/* @source 0x80145988 @kind bss */
+extern volatile u8 paletteStageSerial;
 /* @behavior world flags — bit0=pending scenario, bit6=force-reset.
  * UNKNOWN: roles of observed bits 5 and 11. */
+/* @source 0x8014625A @kind unknown */
 extern u16         D_8014625A;
+/* @source 0x80146256 @kind unknown */
 extern volatile u8 D_80146256;
 /* @behavior flag byte cleared on request 0xFE.
  * UNKNOWN: the flag's owning subsystem. */
+/* @source 0x8014832E @kind unknown */
 extern volatile u8 D_8014832E;
+/* @source 0x801462E0 @kind unknown */
 extern u8          D_801462E0;
+/* @source 0x801462E1 @kind unknown */
 extern u8          D_801462E1;
+/* @source 0x801462E2 @kind unknown */
 extern u8          D_801462E2;
+/* @source 0x80145E9B @kind unknown */
 extern u8          D_80145E9B;
+/* @source 0x80145FDB @kind unknown */
 extern u8          D_80145FDB;
+/* @source 0x8014611B @kind unknown */
 extern u8          D_8014611B;
+/* @source 0x8014626C @kind unknown */
 extern u8          D_8014626C;
+/* @source 0x8014626D @kind unknown */
 extern u8          D_8014626D;
+/* @source 0x8014626E @kind unknown */
 extern u8          D_8014626E;
+/* @source 0x8014626F @kind unknown */
 extern u8          D_8014626F;
+/* @source 0x80146270 @kind unknown */
 extern u8          D_80146270;
+/* @source 0x80148650 @kind unknown */
 extern u8          D_80148650;
+/* @source 0x80148651 @kind unknown */
 extern u8          D_80148651;
+/* @source 0x80148652 @kind unknown */
 extern u8          D_80148652;
+/* @source 0x8014865C @kind unknown */
 extern s8          D_8014865C;
+/* @source 0x80149332 @kind unknown */
 extern u8          D_80149332;
+/* @source 0x80181EBA @kind unknown */
 extern const u8    D_80181EBA[];
+/* @source 0x80181EBB @kind unknown */
 extern const u8    D_80181EBB[];
 /* @behavior signed world-coord X argument for scenario entry */
+/* @source 0x8014930A @kind unknown */
 extern s16 D_8014930A;
 /* @behavior signed world-coord Y argument for scenario entry */
+/* @source 0x8014930E @kind unknown */
 extern s16                 D_8014930E;
+/* @source 0x801492D8 @kind unknown */
 extern s16                 D_801492D8;
+/* @source 0x801492DC @kind unknown */
 extern s16                 D_801492DC;
+/* @source 0x8014932E @kind unknown */
 extern s16                 D_8014932E;
+/* @source 0x80146329 @kind unknown */
 extern u8                  D_80146329;
+/* @source 0x801462E3 @kind unknown */
 extern u8                  D_801462E3;
+/* @source 0x801462E4 @kind unknown */
 extern u8                  D_801462E4;
+/* @source 0x801462F0 @kind unknown */
 extern u8                  D_801462F0;
+/* @source 0x801462EC @kind unknown */
 extern u8                  D_801462EC;
+/* @source 0x80146325 @kind unknown */
 extern u8                  D_80146325;
+/* @source 0x80149318 @kind unknown */
 extern u32                 D_80149318;
+/* @source 0x80149330 @kind unknown */
 extern s16                 D_80149330;
+/* @source 0x80149333 @kind unknown */
 extern u8                  D_80149333;
+/* @source 0x8014933E @kind unknown */
 extern u8                  D_8014933E;
+/* @source 0x80146888 @kind unknown */
 extern struct GameWorkArea D_80146888[30];
+/* @source 0x8014933F @kind unknown */
 extern u8                  D_8014933F;
+/* @source 0x801CD954 @kind unknown */
 extern u32                 D_801CD954;
+/* @source 0x801C7B74 @kind unknown */
 extern const s8            D_801C7B74[];
+/* @source 0x80146864 @kind unknown */
 extern volatile u8         D_80146864;
+/* @source 0x801490A4 @kind unknown */
 extern volatile u16        D_801490A4;
 
 /* INFERRED: palette work records use the observed 12-byte and 16-byte strides;
  * confirm field meanings against their setup paths. */
+/* @source 0x80037800 @kind unknown */
 extern volatile u16     D_80037800[];
+/* @source 0x80145BD4 @kind unknown */
 extern GamePaletteEntry D_80145BD4[];
+/* @source 0x80145D54 @kind unknown */
 extern u8               D_80145D54[][16];
 /* Scratchpad base byte array (0x1F800000); extern forces lui/addiu pair. */
+/* @source 0x1F800000 @kind unknown */
 extern u8               D_1F800000[];
+/* @source 0x80145D94 @kind unknown */
 extern GamePaletteSlot  D_80145D94[];
+/* @source 0x801C7AC0 @kind unknown */
 extern const u8         D_801C7AC0[];
+/* @source 0x801C7AC8 @kind unknown */
 extern const u8         D_801C7AC8[];
+/* @source 0x801C7AD0 @kind unknown */
 extern const u8         D_801C7AD0[];
+/* @source 0x801C7AD8 @kind unknown */
 extern const u8         D_801C7AD8[];
+/* @source 0x801C7AE0 @kind unknown */
 extern const u8         D_801C7AE0[];
+/* @source 0x801C7AE8 @kind unknown */
 extern const u8         D_801C7AE8[];
 
-/* @kind: table */
-extern const GameEntry0StateHandler game_scenario_substate_handlerTable[];
+/* @source 0x801CD568 @kind table */
+extern const GameEntry0StateHandler scenarioSubstateHandlerTable[];
+/* @source 0x801C7B08 @kind unknown */
 extern const GameEntry0StateHandler D_801C7B08[];
+/* @source 0x801C7B14 @kind unknown */
 extern const GameEntry0StateHandler D_801C7B14[];
+/* @source 0x801C7B44 @kind unknown */
 extern const GameEntry0StateHandler D_801C7B44[];
+/* @source 0x801C7B54 @kind unknown */
 extern const GameEntry0StateHandler D_801C7B54[];
+/* @source 0x801C7B7C @kind unknown */
 extern const GameEntry0StateHandler D_801C7B7C[];
+/* @source 0x801C7B88 @kind unknown */
 extern const GameEntry0StateHandler D_801C7B88[];
+/* @source 0x801C7B98 @kind unknown */
 extern const GameEntry0StateHandler D_801C7B98[];
+/* @source 0x801C7BA4 @kind unknown */
 extern const GameEntry0StateHandler D_801C7BA4[];
+/* @source 0x801C7BB0 @kind unknown */
 extern const GameEntry0StateHandler D_801C7BB0[];
 
-/* @kind: bss */
-extern RecordSlot game_front_recordTable[20];
+/* @source 0x80143FC8 @kind bss */
+extern RecordSlot recordTable[20];
 
 /* @behavior per-mode 3-byte record table. Expected stride: mode * 3 bytes. */
+/* @source 0x80144F5A @kind unknown */
 extern u8 D_80144F5A[];
 
 /* @behavior finds the first unused record slot by scanning the
- * entry table at game_front_recordTable; returns its index (0‑19) or 0xFF
+ * entry table at recordTable; returns its index (0‑19) or 0xFF
  * when all slots are occupied.
  * @source 0x8019601C
  */
-u8 game_front_find_free_record(u8 mode);
-void game_reset_record_clear(GameResetRecord* record);
+u8 findFreeRecord(u8 mode);
+void clearResetRecord(GameResetRecord* record);
 
 /* @behavior clears bytes 0‑4 of the record slot at record_index.
  * @source 0x801960C0
  */
-void game_front_clear_record(u8 record_index);
+void clearRecord(u8 record_index);
 
-void game_work_clear_flags(void);
-void game_work_reset_2(void);
+void clearWorkFlags(void);
+void resetWork2(void);
 void func_801D0D9C(void);
 
 /* @behavior seeds the shared callback/frame dispatch prologue before the entry-0
@@ -288,13 +374,13 @@ void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
  * upload path.
  * @source 0x8014E284
  */
-void game_stage_shared_palette_bank(void);
+void stageSharedPaletteBank(void);
 
 /* @behavior begins streaming the currently selected SCENA pack for the seeded
  * scenario state.
  * @source 0x801A7804
  */
-void game_scenario_request_overlay(void);
+void requestScenarioOverlay(void);
 
 /* @behavior enters the loaded scenario-local dispatch path after the SCENA loader
  * completes.
@@ -312,16 +398,16 @@ void func_801992B8(void);
  * sprite_id * 4, with the table chosen by flags & 1.
  * @source 0x801AF270
  */
-u8* game_sprite_rect_entry(u8 sprite_id, u8 flags);
+u8* getSpriteRectEntry(u8 sprite_id, u8 flags);
 
 /* @behavior draws one sprite by filling a GT quad primitive from a rect-table
  * entry, selecting CLUT by flags & 2, then appending to the OT.
  * @source 0x801AF2A0
  */
-void game_sprite_draw(s16 x, s16 y, u8 sprite_id, u8 flags);
+void drawSprite(s16 x, s16 y, u8 sprite_id, u8 flags);
 
 /* @behavior iterates a packed sprite-record table and draws each sprite via
- * game_sprite_draw with signed offsets shifted by 3 applied to base coords.
+ * drawSprite with signed offsets shifted by 3 applied to base coords.
  * @source 0x801AF390
  */
 void func_801AF390(s16 base_x, s16 base_y, const u8* record_table, u8 flags);
@@ -338,33 +424,33 @@ s16 func_80154F28(s32 x, s32 y);
  */
 u8 func_8014D978(void);
 
-void game_front_clear_all_records(void);
+void clearAllRecords(void);
 void func_8019625C(void);
 u8   func_801968BC(u8 mode);
-u8   game_palette_locate_color(u8 value);
+u8   locatePaletteColor(u8 value);
 void func_80196B9C(void);
-u8   game_palette_alloc_slot(u8* owner, u8* source_table);
-void game_front_advance_entry_serial(void);
-void game_front_selection_main_loop(void);
-void game_front_reset_selection_state(void);
-void game_front_apply_selection_context(void);
-void game_front_update_state_machine(void);
-void game_front_dispatch_substate_1(void);
-void game_front_enter_state_2_on_input(void);
-void game_front_dispatch_substate_2(void);
-void game_front_bank2_init(void);
+u8   allocPaletteSlot(u8* owner, u8* source_table);
+void advanceEntrySerial(void);
+void selectionMainLoop(void);
+void resetSelectionState(void);
+void applySelectionContext(void);
+void updateStateMachine(void);
+void dispatchSubstate1(void);
+void enterState2OnInput(void);
+void dispatchSubstate2(void);
+void bank2Init(void);
 void func_80197AA4(void);
-void game_front_bank2_advance_when_ready(void);
-void game_front_bank2_complete_operation(void);
-void game_front_bank2_final_updates(void);
-void game_front_dispatch_world_update(void);
-void game_front_update_world(void);
-void game_front_update_world_position(void);
-void game_front_dispatch_substate_3(void);
-void game_front_dispatch_substate_4(void);
-void game_front_dispatch_substate_5(void);
-void game_front_dispatch_substate_6(void);
-void game_front_dispatch_substate_7(void);
+void bank2AdvanceWhenReady(void);
+void bank2CompleteOperation(void);
+void bank2FinalUpdates(void);
+void dispatchWorldUpdate(void);
+void updateWorld(void);
+void updateWorldPosition(void);
+void dispatchSubstate3(void);
+void dispatchSubstate4(void);
+void dispatchSubstate5(void);
+void dispatchSubstate6(void);
+void dispatchSubstate7(void);
 void func_80199230(void);
 void func_80198F1C(void);
 void func_801990D0(void);
@@ -372,35 +458,35 @@ void func_801991B8(void);
 void func_801BEDD0(void);
 s32  func_801BEE5C(void);
 void func_801A06D8(void);
-void game_request_apply_remap(u8 arg0);
+void applyRemapRequest(u8 arg0);
 u8   func_801BF11C(void);
 void func_801BF8E0(void);
 void func_801BFAC4(void);
 u8   func_801BF78C(void);
-u8   game_find_mode_free_slot(u8 mode);
-void game_work_update_route_index(u8 arg_a, u8 arg_b, u8 arg_c);
+u8   findModeFreeSlot(u8 mode);
+void updateWorkRouteIndex(u8 arg_a, u8 arg_b, u8 arg_c);
 void func_8016728C(u32 slot_id, u32 mode);
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
-void game_start_selection_fx(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
-void game_stop_selection_fx(u8 arg0, u8 arg1);
-void game_scenario_load(u8 scenario_index);
+void startSelectionFx(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
+void stopSelectionFx(u8 arg0, u8 arg1);
+void loadScenario(u8 scenario_index);
 void func_801651DC(s32 ability_id, s32 character_id, s32 arg2, s32 arg3);
 void func_80164A44(volatile void* character_state);
 
 void func_8019FAA0(u16 selection_seed, u32 context_a, u32 context_b,
                    u8 context_kind);
-void game_front_wait_transition(u32 arg0);
+void waitTransition(u32 arg0);
 void func_801A0048(s16 a, s16 b);
 /* @behavior Iterates active entity slots and dispatches per-type handlers.
  * @source 0x801A0514
  */
 void func_801A0514(void);
 void func_801B3CCC(u32 arg0);
-void game_panel_x_advance_to_320(void);
-void game_panel_x_retreat_to_neg170(void);
-void game_panel_x_retreat_to_neg170_2(void);
-void game_panel_x_advance_to_17(void);
-void game_panel_field6_retreat_to_neg20(void);
+void advancePanelXTo320(void);
+void retreatPanelXToNeg170(void);
+void retreatPanelXToNeg170_2(void);
+void advancePanelXTo17(void);
+void retreatPanelField6ToNeg20(void);
 
 /* Legacy alias for already‑matched functions that dereference 0x1F800044
  * via a literal‑address macro (lui+ori+lw 0(base) codegen). */

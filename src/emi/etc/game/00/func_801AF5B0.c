@@ -26,7 +26,7 @@ s32 func_801AF5B0(s32 item_category, s32 character_index, s32 ability_kind) {
     return 0;
   }
 
-  ability = &ABILITY_OBJECTS[(u8)saved_kind];
+  ability = &abilityObjects[(u8)saved_kind];
 
   if ((u8)item_category == 1u) {
     mapped_character =

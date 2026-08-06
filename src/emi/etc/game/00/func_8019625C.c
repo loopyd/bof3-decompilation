@@ -83,7 +83,7 @@ void func_8019625C(void) {
         source_index++;
       }
 
-      GAME_FRONT_PALETTE_STAGE_SERIAL = 1u;
+      paletteStageSerial = 1u;
       if ((entry->flags & 0x40u) != 0u) {
         entry->flags &= 0xbfu;
         entry->target[0x27] = entry->step;

@@ -22,9 +22,9 @@ segments:
   start: 2076
   vram: 0x8019601C
   subsegments:
-  - [2076, c, game_front_find_free_record]
-  - [2160, c, game_work_clear_flags]
-  - [2240, c, game_front_clear_record]
+  - [2076, c, findFreeRecord]
+  - [2160, c, clearWorkFlags]
+  - [2240, c, clearRecord]
 - name: main
   type: code
   start: 2332
@@ -32,7 +32,7 @@ segments:
   subsegments:
   - - 2332
     - c
-    - game_front_clear_all_records
+    - clearAllRecords
   - - 2396
     - asm
     - func_8019615C
@@ -56,7 +56,7 @@ segments:
     - func_801968BC
   - - 4896
     - c
-    - game_palette_locate_color
+    - locatePaletteColor
   - - 5020
     - c
     - func_80196B9C
@@ -65,7 +65,7 @@ segments:
     - func_80196C8C
   - - 5360
     - c
-    - game_palette_alloc_slot
+    - allocPaletteSlot
   - - 5508
     - asm
     - func_80196D84
@@ -74,79 +74,79 @@ segments:
     - func_80196E74
   - - 6008
     - c
-    - game_front_alt_main_loop
+    - altMainLoop
   - - 6140
     - c
-    - game_front_advance_entry_serial
+    - advanceEntrySerial
   - - 6248
     - c
-    - game_front_selection_main_loop
+    - selectionMainLoop
   - - 6380
     - c
-    - game_front_reset_selection_state
+    - resetSelectionState
   - - 6632
     - c
-    - game_front_apply_selection_context
+    - applySelectionContext
   - - 7032
     - c
-    - game_front_update_state_machine
+    - updateStateMachine
   - - 7652
     - c
-    - game_front_dispatch_substate_1
+    - dispatchSubstate1
   - - 8660
     - c
-    - game_front_enter_state_2_on_input
+    - enterState2OnInput
   - - 8740
     - c
-    - game_front_dispatch_substate_2
+    - dispatchSubstate2
   - - 8800
     - c
-    - game_front_bank2_init
+    - bank2Init
   - - 8868
     - c
     - func_80197AA4
   - - 9244
     - c
-    - game_front_bank2_advance_when_ready
+    - bank2AdvanceWhenReady
   - - 9364
     - asm
     - func_80197C94
   - - 9812
     - c
-    - game_front_bank2_complete_operation
+    - bank2CompleteOperation
   - - 9980
     - c
-    - game_front_bank2_final_updates
+    - bank2FinalUpdates
   - - 10056
     - asm
     - func_80197F48
   - - 10608
     - c
-    - game_front_dispatch_world_update
+    - dispatchWorldUpdate
   - - 10676
     - c
-    - game_front_update_world
+    - updateWorld
   - - 10708
     - c
-    - game_front_update_world_position
+    - updateWorldPosition
   - - 10804
     - c
-    - game_front_dispatch_substate_3
+    - dispatchSubstate3
   - - 11436
     - c
-    - game_front_dispatch_substate_4
+    - dispatchSubstate4
   - - 12100
     - c
-    - game_front_dispatch_substate_5
+    - dispatchSubstate5
   - - 12548
     - c
-    - game_front_dispatch_substate_6
+    - dispatchSubstate6
   - - 12996
     - c
-    - game_front_dispatch_substate_7
+    - dispatchSubstate7
   - - 13252
     - c
-    - game_front_wait_transition
+    - waitTransition
   - - 13368
     - asm
     - func_80198C38
@@ -179,7 +179,7 @@ segments:
     - func_80199398
   - - 15344
     - c
-    - game_front_finalize_frame
+    - finalizeFrame
   - - 15384
     - asm
     - func_80199418
@@ -197,40 +197,40 @@ segments:
     - func_801995A4
   - - 15864
     - c
-    - game_panel_x_retreat_to_neg170
+    - retreatPanelXToNeg170
   - - 15928
     - asm
     - func_80199638
   - - 15992
     - asm
-    - game_panel_submit_position
+    - submitPanelPosition
   - - 16040
     - asm
     - func_801996A8
   - - 16124
     - c
-    - game_panel_x_advance_to_320
+    - advancePanelXTo320
   - - 16188
     - asm
-    - game_panel_x_retreat_to_152
+    - retreatPanelXTo152
   - - 16252
     - asm
     - func_8019977C
   - - 16364
     - c
-    - game_panel_x_retreat_to_neg170_2
+    - retreatPanelXToNeg170_2
   - - 16428
     - c
-    - game_panel_x_advance_to_17
+    - advancePanelXTo17
   - - 16492
     - asm
     - func_8019986C
   - - 16696
     - c
-    - game_panel_field6_retreat_to_neg20
+    - retreatPanelField6ToNeg20
   - - 16760
     - c
-    - game_panel_field6_advance_to_16
+    - advancePanelField6To16
   - - 16824
     - asm
     - func_801999B8
@@ -335,7 +335,7 @@ segments:
     - func_8019B024
   - - 22764
     - c
-    - game_work_reset
+    - resetWork
   - - 22796
     - asm
     - func_8019B10C
@@ -518,7 +518,7 @@ segments:
     - func_8019EA60
   - - 37588
     - c
-    - game_work_reset_2
+    - resetWork2
   - - 37620
     - asm
     - func_8019EAF4
@@ -626,7 +626,7 @@ segments:
     - func_801A18C8
   - - 49700
     - c
-    - game_work_set_anim_bit4
+    - setWorkAnimBit4
   - - 49752
     - asm
     - func_801A1A58
@@ -641,10 +641,10 @@ segments:
     - func_801A7330
   - - 73476
     - c
-    - game_scenario_load
+    - loadScenario
   - - 73732
     - c
-    - game_scenario_request_overlay
+    - requestScenarioOverlay
   - - 73772
     - asm
     - func_801A782C
@@ -653,7 +653,7 @@ segments:
     - func_801A7878
   - - 73976
     - c
-    - game_scenario_set_field01_bit7
+    - setScenarioField01Bit7
   - - 74004
     - asm
     - func_801A7914
@@ -668,7 +668,7 @@ segments:
     - func_801A7AD8
   - - 74736
     - c
-    - game_dispatch_state_handler
+    - dispatchStateHandler
   - - 74796
     - asm
     - func_801A7C2C
@@ -824,7 +824,7 @@ segments:
     - func_801AD3B4
   - - 97356
     - c
-    - game_work_clear_anim_bit0
+    - clearWorkAnimBit0
   - - 97388
     - asm
     - func_801AD46C
@@ -833,7 +833,7 @@ segments:
     - func_801AD4DC
   - - 97948
     - c
-    - game_work_clear_anim_bit0_2
+    - clearWorkAnimBit0_2
   - - 97980
     - asm
     - func_801AD6BC
@@ -845,7 +845,7 @@ segments:
     - func_801AD90C
   - - 98756
     - c
-    - game_work_set_mode_5
+    - setWorkMode5
   - - 98800
     - asm
     - func_801AD9F0
@@ -863,10 +863,10 @@ segments:
     - func_801ADDD4
   - - 105072
     - c
-    - game_sprite_rect_entry
+    - getSpriteRectEntry
   - - 105120
     - c
-    - game_sprite_draw
+    - drawSprite
   - - 105360
     - c
     - func_801AF390
@@ -1007,7 +1007,7 @@ segments:
     - func_801B5AE4
   - - 132060
     - asm
-    - game_request_apply_remap
+    - applyRemapRequest
   - - 132180
     - asm
     - func_801B5C54
@@ -1253,13 +1253,13 @@ segments:
     - func_801BB86C
   - - 155880
     - c
-    - game_work_update_route_index
+    - updateWorkRouteIndex
   - - 164536
     - asm
     - func_801BDAB8
   - - 164732
     - c
-    - game_find_mode_free_slot
+    - findModeFreeSlot
   - - 164804
     - asm
     - func_801BDBC4
@@ -1286,7 +1286,7 @@ segments:
     - func_801BE574
   - - 167696
     - c
-    - game_reset_record_clear
+    - clearResetRecord
   - - 167736
     - asm
     - func_801BE738
@@ -1535,10 +1535,10 @@ segments:
     - func_801C5558
   - - 196504
     - c
-    - game_work_clear_words_c_to_14
+    - clearWorkWordsCTo14
   - - 196596
     - c
-    - game_scenario_dispatch_substate
+    - dispatchScenarioSubstate
   - - 196656
     - asm
     - func_801C5830
@@ -1553,7 +1553,7 @@ segments:
     - func_801C5BB8
   - - 197756
     - c
-    - game_scenario_clear_substate_flags
+    - clearScenarioSubstateFlags
   - - 197812
     - asm
     - func_801C5CB4
@@ -1604,10 +1604,10 @@ segments:
     - func_801C7064
   - - 203144
     - c
-    - game_abs_s16
+    - absS16
   - - 203180
     - c
-    - game_sign_s16
+    - signS16
 - - 203204
   - bin
   - data
