@@ -245,6 +245,15 @@ class DecompMeScratchpadToolchain:
             self.layout.root / manifest.source_dir / f"func_{function.address:08X}.c"
         )
         if not source.is_file():
+            from ..match._asm_resolve import collect_source_addresses
+
+            for candidate, address in collect_source_addresses(
+                self.layout.root / manifest.source_dir
+            ):
+                if address == function.address:
+                    source = candidate
+                    break
+        if not source.is_file():
             raise FileNotFoundError(f"lifted source does not exist: {source}")
         # Macro-expanded source avoids target-local includes. Only retain
         # declarations it references, never the full (possibly ignored PsyQ)
