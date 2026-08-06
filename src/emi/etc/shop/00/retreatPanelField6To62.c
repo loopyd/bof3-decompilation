@@ -1,0 +1,22 @@
+#include "internal.h"
+#include "base/barrier.h"
+
+/* @source 0x801E2D1C
+ * @behavior subtracts 0x10 from the panel task field at offset 6, raises values below 0x3E, and
+ *         clears state when reached.
+ */
+void retreatPanelField6To62(void) {
+  PanelTask* task_root;
+  /* MATCHING_AID: original retains the decremented value in v0 through its store and signed
+   * threshold; clean-C lifetime/order forms were exhausted. Remove if compiler allocation matches unaided.
+   */
+  REGISTER_PIN(u16, next_val, "v0");
+
+  task_root = D_80148648;
+  next_val = (u16)((*(volatile u16*)((u8*)task_root + 6)) - 0x10);
+  *(volatile u16*)((u8*)task_root + 6) = next_val;
+  if ((s16)next_val < 0x3E) {
+    *(volatile u16*)((u8*)task_root + 6) = 0x3E;
+    task_root->state = 0;
+  }
+}

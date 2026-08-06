@@ -165,10 +165,10 @@ segments:
     - func_801D6668
   - - 23212
     - c
-    - shop_set_ui_flags
+    - setUiFlags
   - - 23240
     - c
-    - shop_set_ui_flags_gated
+    - setUiFlagsGated
   - - 23288
     - asm
     - func_801D66F8
@@ -189,7 +189,7 @@ segments:
     - func_801D6D6C
   - - 25236
     - c
-    - shop_append_fullscreen_dim_tile
+    - appendFullscreenDimTile
   - - 25344
     - asm
     - func_801D6F00
@@ -276,7 +276,7 @@ segments:
     - func_801DA00C
   - - 38176
     - c
-    - shop_emit_panel_icon_prim
+    - emitPanelIconPrim
   - - 38360
     - asm
     - func_801DA1D8
@@ -393,7 +393,7 @@ segments:
     - func_801DF6A8
   - - 60684
     - c
-    - shop_append_fullscreen_dim_tile_2
+    - appendFullscreenDimTileB
   - - 60792
     - asm
     - func_801DF978
@@ -411,7 +411,7 @@ segments:
     - func_801DFDF4
   - - 62504
     - c
-    - shop_phase_timer_tick
+    - tickPhaseTimer
   - - 62572
     - asm
     - func_801E006C
@@ -447,10 +447,10 @@ segments:
     - func_801E1710
   - - 69504
     - c
-    - shop_dispatch_command
+    - dispatchCommand
   - - 69560
     - c
-    - shop_swap_bytes
+    - swapBytes
   - - 69580
     - asm
     - func_801E1BCC
@@ -492,13 +492,13 @@ segments:
     - func_801E2590
   - - 72140
     - c
-    - shop_phase_timer_tick_2
+    - tickPhaseTimerB
   - - 72208
     - c
     - func_801E2610
   - - 72236
     - c
-    - shop_reset_ui_state
+    - resetUiState
   - - 72272
     - asm
     - func_801E2650
@@ -510,37 +510,37 @@ segments:
     - func_801E27BC
   - - 72704
     - c
-    - shop_panel_noop
+    - panelNoop
   - - 72712
     - asm
     - func_801E2808
   - - 73032
     - c
-    - shop_panel_field6_retreat_to_neg20
+    - retreatPanelField6ToNeg20
   - - 73096
     - c
-    - shop_panel_field6_advance_to_16
+    - advancePanelField6To16
   - - 73160
     - asm
     - func_801E29C8
   - - 73264
     - c
-    - shop_panel_field6_retreat_to_neg20_2
+    - retreatPanelField6ToNeg20B
   - - 73328
     - c
-    - shop_panel_field6_advance_to_38
+    - advancePanelField6To38
   - - 73392
     - asm
     - func_801E2AB0
   - - 73492
     - c
-    - shop_panel_field6_retreat_to_neg20_3
+    - retreatPanelField6ToNeg20C
   - - 73556
     - c
-    - shop_panel_field6_advance_to_38_2
+    - advancePanelField6To38B
   - - 73620
     - c
-    - shop_panel_apply_position
+    - applyPanelPosition
   - - 73668
     - asm
     - func_801E2BC4
@@ -549,13 +549,13 @@ segments:
     - func_801E2C18
   - - 73884
     - c
-    - shop_panel_x_retreat_to_neg150
+    - retreatPanelXToNeg150
   - - 73948
     - c
-    - shop_panel_x_advance_to_17
+    - advancePanelXTo17
   - - 74012
     - c
-    - shop_panel_field6_retreat_to_62
+    - retreatPanelField6To62
   - - 74076
     - asm
     - func_801E2D5C
@@ -564,10 +564,10 @@ segments:
     - func_801E2DB4
   - - 74288
     - c
-    - shop_panel_x_retreat_to_neg150_2
+    - retreatPanelXToNeg150B
   - - 74352
     - c
-    - shop_panel_x_advance_to_15
+    - advancePanelXTo15
   - - 74416
     - asm
     - func_801E2EB0
@@ -576,13 +576,13 @@ segments:
     - func_801E2F04
   - - 75204
     - c
-    - shop_panel_x_advance_to_320
+    - advancePanelXTo320
   - - 75268
     - c
-    - shop_panel_x_retreat_to_132
+    - retreatPanelXTo132
   - - 75332
     - c
-    - shop_panel_x_retreat_to_70
+    - retreatPanelXTo70
   - - 75396
     - asm
     - func_801E3284
@@ -594,10 +594,10 @@ segments:
     - func_801E3720
   - - 76660
     - c
-    - shop_panel_x_advance_to_320_2
+    - advancePanelXTo320B
   - - 76724
     - c
-    - shop_panel_x_retreat_to_75
+    - retreatPanelXTo75
   - - 76788
     - asm
     - func_801E37F4
@@ -609,40 +609,40 @@ segments:
     - func_801E3BA4
   - - 77816
     - c
-    - shop_panel_x_advance_to_320_3
+    - advancePanelXTo320C
   - - 77880
     - c
-    - shop_panel_x_retreat_to_150
+    - retreatPanelXTo150
   - - 77944
     - c
-    - shop_panel_x_advance_to_40
+    - advancePanelXTo40
   - - 78008
     - c
-    - shop_panel_x_retreat_to_neg170
+    - retreatPanelXToNeg170
   - - 78072
     - asm
     - func_801E3CF8
   - - 78156
     - c
-    - shop_panel_x_advance_to_320_4
+    - advancePanelXTo320D
   - - 78220
     - c
-    - shop_panel_x_retreat_to_150_2
+    - retreatPanelXTo150B
   - - 78284
     - c
-    - shop_panel_x_retreat_to_17
+    - retreatPanelXTo17
   - - 78348
     - c
-    - shop_panel_x_advance_to_150
+    - advancePanelXTo150
   - - 78412
     - asm
     - func_801E3E4C
   - - 78516
     - c
-    - shop_panel_x_retreat_to_neg150_3
+    - retreatPanelXToNeg150C
   - - 78580
     - c
-    - shop_panel_x_advance_to_17_2
+    - advancePanelXTo17B
   - - 78644
     - asm
     - func_801E3F34
@@ -654,40 +654,40 @@ segments:
     - func_801E4224
   - - 79480
     - c
-    - shop_panel_x_retreat_to_neg120
+    - retreatPanelXToNeg120
   - - 79544
     - c
-    - shop_panel_x_advance_to_100
+    - advancePanelXTo100
   - - 79608
     - c
-    - shop_panel_x_retreat_to_17_2
+    - retreatPanelXTo17B
   - - 79672
     - asm
     - func_801E4338
   - - 79756
     - c
-    - shop_panel_x_advance_to_320_5
+    - advancePanelXTo320E
   - - 79820
     - c
-    - shop_panel_x_retreat_to_140
+    - retreatPanelXTo140
   - - 79884
     - asm
     - func_801E440C
   - - 79968
     - c
-    - shop_panel_field6_advance_to_240
+    - advancePanelField6To240
   - - 80032
     - c
-    - shop_panel_field6_retreat_to_128
+    - retreatPanelField6To128
   - - 80096
     - asm
     - func_801E44E0
   - - 80192
     - c
-    - shop_panel_x_advance_to_320_6
+    - advancePanelXTo320F
   - - 80256
     - c
-    - shop_panel_x_retreat_to_210
+    - retreatPanelXTo210
   - - 80320
     - asm
     - func_801E45C0
