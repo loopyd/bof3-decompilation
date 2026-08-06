@@ -3,10 +3,10 @@
 /* @behavior sets state byte 2 and advances the 16-bit count by 0x14.
  * @source 0x801F450C
  */
-void world00_area008_counter1_advance(void) {
+void advanceCounter1(void) {
   u16 count;
 
-  count = world00_area008_counter1;
+  count = counter1;
   D_80149333 = 2;
-  world00_area008_counter1 = (u16)(count + 0x14);
+  counter1 = (u16)(count + 0x14);
 }

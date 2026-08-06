@@ -4,9 +4,9 @@
  * table.
  * @source 0x801F2C18
  */
-void world00_area008_dispatch_mode(void) {
+void dispatchMode(void) {
   u8 mode;
 
   mode = ((volatile u8*)WORLD00_AREA008_SCRATCH_PTR)[1];
-  world00_area008_mode_handlerTable[mode]();
+  modeHandlerTable[mode]();
 }

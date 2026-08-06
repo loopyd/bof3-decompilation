@@ -4,10 +4,10 @@
  * constant 2.
  * @source 0x801F455C
  */
-s32 world00_area008_counter1_reset(void) {
+s32 resetCounter1(void) {
   s32 state = 2;
 
-  world00_area008_counter1 = 0;
+  counter1 = 0;
   D_80149333 = (u8)state;
   return state;
 }

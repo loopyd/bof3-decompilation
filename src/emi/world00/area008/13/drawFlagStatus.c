@@ -4,7 +4,7 @@
  * shared UI text buffer, then queues the matching local label.
  * @source 0x801F3D18
  */
-void world00_area008_draw_flag_status(void) {
+void drawFlagStatus(void) {
   char* text_buffer;
   u8    value;
 

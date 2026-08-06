@@ -4,8 +4,8 @@
  * Usage:
  *   #include "internal.h"
  *   #include "game/counter_step.h"
- *   COUNTER_ADVANCE(world00_area008_counter2_advance, counter_extern, flag_extern)
- *   COUNTER_RETREAT(world00_area008_counter2_retreat, counter_extern, flag_extern)
+ *   COUNTER_ADVANCE(advanceCounter2, counter_extern, flag_extern)
+ *   COUNTER_RETREAT(retreatCounter2, counter_extern, flag_extern)
  */
 
 #ifndef GAME_COUNTER_STEP_H

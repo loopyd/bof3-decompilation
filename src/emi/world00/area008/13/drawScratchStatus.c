@@ -4,7 +4,7 @@
  * text buffer, then queues the three local UI labels.
  * @source 0x801F3C2C
  */
-void world00_area008_draw_scratch_status(void) {
+void drawScratchStatus(void) {
   World00Area008Scratch* scratch;
   char*                  buf;
   s32                    field_5d;

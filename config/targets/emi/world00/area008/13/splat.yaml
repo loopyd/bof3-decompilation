@@ -27,13 +27,13 @@ segments:
   subsegments:
   - - 24
     - c
-    - world00_area008_dispatch_mode
+    - dispatchMode
   - - 92
     - c
-    - world00_area008_reset_state_select_mode1
+    - resetStateSelectMode1
   - - 136
     - c
-    - world00_area008_load_resource_select_mode2
+    - loadResourceSelectMode2
   - - 292
     - asm
     - func_801F2D24
@@ -63,7 +63,7 @@ segments:
     - func_801F3244
   - - 1672
     - c
-    - world00_area008_reset_scratch_select_mode1
+    - resetScratchSelectMode1
   - - 1708
     - asm
     - func_801F32AC
@@ -120,10 +120,10 @@ segments:
     - func_801F3BB4
   - - 4140
     - c
-    - world00_area008_draw_scratch_status
+    - drawScratchStatus
   - - 4376
     - c
-    - world00_area008_draw_flag_status
+    - drawFlagStatus
   - - 4488
     - c
     - func_801F3D88
@@ -144,28 +144,28 @@ segments:
     - func_801F4424
   - - 6412
     - c
-    - world00_area008_counter1_advance
+    - advanceCounter1
   - - 6452
     - c
-    - world00_area008_counter1_retreat
+    - retreatCounter1
   - - 6492
     - c
-    - world00_area008_counter1_reset
+    - resetCounter1
   - - 6520
     - c
-    - world00_area008_counter2_advance
+    - advanceCounter2
   - - 6560
     - c
-    - world00_area008_counter2_retreat
+    - retreatCounter2
   - - 6600
     - c
-    - world00_area008_counter2_reset
+    - resetCounter2
   - - 6628
     - c
-    - world00_area008_counter3_advance
+    - advanceCounter3
   - - 6656
     - c
-    - world00_area008_counter3_retreat
+    - retreatCounter3
   - - 6684
     - asm
     - func_801F461C

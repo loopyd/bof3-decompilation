@@ -3,11 +3,11 @@
 /* @source 0x801F4600
  * @behavior decrements the area counter by 0x800
  */
-void world00_area008_counter3_retreat(void) {
+void retreatCounter3(void) {
   s32 *counter;
   s32 value;
 
-  counter = &world00_area008_counter3;
+  counter = &counter3;
   value = *counter;
   value -= 0x800;
   *counter = value;
