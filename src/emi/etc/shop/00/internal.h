@@ -127,4 +127,9 @@ extern void (*D_801E5D48[])(void);
  * func_801E2114 with the sub-step byte D_80148652 as index. */
 extern void (*D_801E5D50[])(void);
 
+/* @source 0x801E5D5C
+ * @kind table — UI phase handler pointers (this EMI); dispatched by
+ * func_801E2590 with the sub-step byte D_80148652 as index. */
+extern void (*D_801E5D5C[])(void);
+
 #endif
