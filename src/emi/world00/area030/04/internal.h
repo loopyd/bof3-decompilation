@@ -4,7 +4,9 @@
 #include "bof3/bof3.h"
 #include "gpu/prim.h"
 
-extern u8           D_80144125;
+/* @kind: bss — shared mode byte; stored small mode values (4/6/7/...) and
+ * compared against them by the area030 mode handlers. */
+extern u8           world00_area030_modeByte;
 extern volatile u8  WORLD00_AREA030_GLOBAL_BYTE_3FC9;
 extern u8           D_80145E93;
 extern u8           D_801E2384[];
@@ -45,7 +47,7 @@ void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 int  func_8017E3F4(char* buffer, char* fmt, ...);
 void func_801D195C(s16 arg0, s16 arg1);
 void func_801D18CC(s16 arg0, s16 arg1, u8 arg2);
-void func_801E0C80(s32 arg0, s32 arg1);
+void world00_area030_tpage_draw_mode_submit(s32 arg0, s32 arg1);
 u8*  func_801E0DCC(s32 arg0, s32 arg1, s16 arg2, s16 arg3);
 s32  func_801D9534(s16 arg0, u16 arg1, s16 arg2, s16 arg3, s32 arg4);
 s32  func_80196070(void);
@@ -56,13 +58,19 @@ void func_801D159C(s16 arg0, s16 arg1);
 void func_801D1744(s16 arg0, s16 arg1, u8 arg2);
 void func_801D1818(s16 arg0, s16 arg1, u8 arg2);
 void func_801D1B88(s16 arg0, s16 arg1, s16 arg2, u8 arg3);
-void func_801D2034(s16 arg0, s16 arg1, u8 arg2, s8 arg3);
+void world00_area030_icon_strip_queue(s16 arg0, s16 arg1, u8 arg2, s8 arg3);
 void func_801D2AE0(void);
 void func_801D2C34(s16 arg0, s16 arg1, s8 arg2, u8 arg3);
 void func_801D3244(s16 arg0, s16 arg1, u8 arg2, s8 arg3, u8 arg4, s8 arg5);
-void func_801D3938(void);
-void func_801D6A2C(void);
+void world00_area030_panel_scroll_advance(void);
+void world00_area030_menu_scratch_seed(void);
 void func_801D6B28(s8 arg0);
+void world00_area030_step_advance_mode6(void);
+void world00_area030_flag_clear_state10(void);
+void world00_area030_companion_dispatch(void);
+void world00_area030_panel_pair_submit(s16 arg0, s16 arg1);
+void world00_area030_sprite_clut_configure(s16 arg0, s16 arg1, u8 arg2);
+void world00_area030_dim_tile_append(void);
 
 #define WORLD00_AREA030_PRIMITIVE_PTR  D_8014598C
 #define WORLD00_AREA030_SCRATCH_PTR    PSX_REF(volatile u8*, 0x1f800044u)

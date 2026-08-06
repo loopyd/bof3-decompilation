@@ -9,7 +9,7 @@ struct scratchpad_state {
  * scratch state byte `0x03`.
  * @source 0x801D6A2C
  */
-void func_801D6A2C(void) {
+void world00_area030_menu_scratch_seed(void) {
   volatile u8* temp_a0;
   volatile u8* temp_v0;
   volatile u8* temp_v1;

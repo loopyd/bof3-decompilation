@@ -4,7 +4,7 @@
  * panel draw through the later helper at `0x801d9534`.
  * @source 0x801D3938
  */
-void func_801D3938(void) {
+void world00_area030_panel_scroll_advance(void) {
   u8*  scratch;
   u16  y;
 

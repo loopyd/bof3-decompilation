@@ -4,10 +4,10 @@
  * after selecting graphics mode 4.
  * @source 0x801E16DC
  */
-void func_801E16DC(void) {
+void world00_area030_dim_tile_append(void) {
   TILE* primitive;
 
-  func_801E0C80(4, 2);
+  world00_area030_tpage_draw_mode_submit(4, 2);
   primitive = (TILE*)D_8014598C;
   SetTile(primitive);
   primitive->b0 = 0x20;

@@ -45,7 +45,7 @@ segments:
     - func_801D1B88
   - - 5172
     - asm
-    - func_801D2034
+    - world00_area030_icon_strip_queue
   - - 6124
     - asm
     - func_801D23EC
@@ -60,7 +60,7 @@ segments:
     - func_801D3244
   - - 11576
     - asm
-    - func_801D3938
+    - world00_area030_panel_scroll_advance
   - - 20296
     - asm
     - func_801D5B48
@@ -105,7 +105,7 @@ segments:
     - func_801D69E8
   - - 24108
     - c
-    - func_801D6A2C
+    - world00_area030_menu_scratch_seed
   - - 24360
     - asm
     - func_801D6B28
@@ -192,7 +192,7 @@ segments:
     - func_801D9D38
   - - 37384
     - c
-    - func_801D9E08
+    - world00_area030_step_advance_mode6
   - - 37440
     - asm
     - func_801D9E40
@@ -459,7 +459,7 @@ segments:
     - func_801E01DC
   - - 63036
     - c
-    - func_801E023C
+    - world00_area030_flag_clear_state10
   - - 63084
     - asm
     - func_801E026C
@@ -498,22 +498,22 @@ segments:
     - func_801E0BD0
   - - 65568
     - c
-    - func_801E0C20
+    - world00_area030_companion_dispatch
   - - 65600
     - asm
     - func_801E0C40
   - - 65664
     - c
-    - func_801E0C80
+    - world00_area030_tpage_draw_mode_submit
   - - 65996
     - asm
     - func_801E0DCC
   - - 66256
     - c
-    - func_801E0ED0
+    - world00_area030_panel_pair_submit
   - - 66380
     - c
-    - func_801E0F4C
+    - world00_area030_sprite_clut_configure
   - - 66564
     - asm
     - func_801E1004
@@ -525,7 +525,7 @@ segments:
     - func_801E162C
   - - 68316
     - c
-    - func_801E16DC
+    - world00_area030_dim_tile_append
   - - 68440
     - asm
     - func_801E1758

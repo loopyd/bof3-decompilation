@@ -225,7 +225,7 @@ def render_text(report: dict[str, Any], detail: str = "full") -> str:
                 f"  {function['status'].upper()} {function['function']}@{function['address']} "
                 f"insn={instructions['matching']}/{max(instructions['original'], instructions['current'], 1)}"
                 f"({function['match_percent']:.2f}%) "
-                f"bytes={function['original_size']}->{function['current_size']}({function['size_delta']:+d})"
+                f"bytes={function['original_size']}->{function['current_size']}({function['size_delta'] if function['size_delta'] is not None else 0:+d})"
             )
     return "\n".join(lines)
 
