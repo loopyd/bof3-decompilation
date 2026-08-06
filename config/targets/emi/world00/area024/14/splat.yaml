@@ -37,10 +37,10 @@ segments:
     - func_801F2D5C
   - - 436
     - c
-    - func_801F2DB4
+    - world00_area024_reset_scratch_select_entry3
   - - 472
     - c
-    - func_801F2DD8
+    - world00_area024_reset_workarea_select_entry4
   - - 504
     - asm
     - func_801F2DF8
@@ -52,7 +52,7 @@ segments:
     - func_801F3080
   - - 1260
     - c
-    - func_801F30EC
+    - world00_area024_dispatch_work_states
   - - 1460
     - asm
     - func_801F31B4
@@ -61,10 +61,10 @@ segments:
     - func_801F3250
   - - 1748
     - c
-    - func_801F32D4
+    - world00_area024_advance_state_select_mode2
   - - 1780
     - c
-    - func_801F32F4
+    - world00_area024_advance_state_select_mode3
   - - 1812
     - asm
     - func_801F3314
@@ -82,11 +82,11 @@ segments:
     - func_801F3BE4
   - - 4364
     - asm
-    - func_801F3D0C
+    - world00_area024_spin_work_init
   - - 4444
     - c
-    - func_801F3D5C
-    - '@source: src/emi/world00/area024/14/func_801F3D5C.c'
+    - world00_area024_spin_draw
+    - '@source: src/emi/world00/area024/14/world00_area024_spin_draw.c'
     - '@behavior: Draws the 16-entry spin table and advances each entry size/fade halfwords.'
   - - 4680
     - asm
@@ -96,10 +96,10 @@ segments:
     - func_801F4158
   - - 5592
     - c
-    - func_801F41D8
+    - world00_area024_state_flag_reset_a
   - - 5612
     - c
-    - func_801F41EC
+    - world00_area024_state_flag_reset_b
   - - 5632
     - rodata
     - T_801F4200

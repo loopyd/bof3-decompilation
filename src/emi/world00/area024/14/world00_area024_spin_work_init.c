@@ -1,10 +1,11 @@
 #include "internal.h"
 
-/* @behavior seeds the local 16-entry spin-work table at `0x800e5000` by calling
+/* @behavior called from the overlay init entry func_801F2C58: seeds the local
+ * 16-entry spin-work table at `0x800e5000` by calling
  * the per-entry initializer on each `0x2c`-byte slot.
  * @source 0x801F3D0C
  */
-void func_801F3D0C(void) {
+void world00_area024_spin_work_init(void) {
   u8* work;
   u8  i;
 

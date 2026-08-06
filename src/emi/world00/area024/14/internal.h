@@ -45,8 +45,12 @@ typedef struct World00Area024SpinWork {
 extern volatile u8  D_80147A58;
 extern volatile u16 WORLD00_AREA024_GLOBAL_HALF_3E6C;
 extern u16          D_801490A8;
-extern u8*                              D_801F5B00;
-extern const World00Area024Handler      D_801F4214[];
+/* @kind: bss — current 0x28-byte work entry cursor; seeded from the work base
+ * and walked by the dispatcher. */
+extern u8*                              world00_area024_work_cursor;
+/* @kind: rodata — four-entry per-mode handler table dispatched by the work
+ * dispatcher on each active entry's byte +0x01. */
+extern const World00Area024Handler      world00_area024_state_table[];
 
 void func_8015B410(void* arg0);
 void func_8015B4B0(void* arg0);
@@ -66,13 +70,13 @@ void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_801F2DF8(const void* arg0);
 void func_801F2FD4(void* arg0);
 void func_801F3080(void);
-s32  func_801F30EC(void);
+s32  world00_area024_dispatch_work_states(void);
 void func_801F362C(void);
 void func_801F3708(void* arg0, const void* arg1, s16* arg2);
 void func_801F3944(const void* arg0);
 void func_801F3BE4(void* arg0);
-void func_801F3D0C(void);
-void func_801F3D5C(void);
+void world00_area024_spin_work_init(void);
+void world00_area024_spin_draw(void);
 s32  func_801F3E48(u8 arg0);
 s16  func_801F4158(const s16* arg0, const s16* arg1, const s16* arg2);
 

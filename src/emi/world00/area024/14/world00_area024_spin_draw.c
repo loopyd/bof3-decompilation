@@ -1,10 +1,11 @@
 #include "internal.h"
 
-/* @behavior draws the 16-entry spin table and advances each entry's size/fade
+/* @behavior called from the overlay frame entry func_801F2D5C: draws the 16-entry
+ * spin table and advances each entry's size/fade
  * halfwords using the scratch byte at `0x1f80004d`.
  * @source 0x801F3D5C
  */
-void func_801F3D5C(void) {
+void world00_area024_spin_draw(void) {
   u8                      scratch[0x20];
   World00Area024SpinWork* work;
   u8                      i;
