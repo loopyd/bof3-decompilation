@@ -132,117 +132,117 @@ typedef struct Battle03UiRingEntry {
   u32 unk_04;
 } Battle03UiRingEntry;
 
-extern volatile AbilityObject       ABILITY_OBJECTS[]; // @source 0x801CA70C // @kind unknown
-extern volatile u8                  D_801462F0; // @source 0x801462F0 // @kind unknown
-extern const Battle03TemplateRecord D_80144968[]; // @source 0x80144968 // @kind unknown
-extern volatile Battle03FlagRecord D_80145FB8[]; // @source 0x80145FB8 // @kind unknown
-extern u16                          D_80143F04; // @source 0x80143F04 // @kind unknown
-extern u8                           D_80146328; // @source 0x80146328 // @kind unknown
-extern u8                           D_80144955; // @source 0x80144955 // @kind unknown
-extern const u8                     D_801D0C98[]; // @source 0x801D0C98 // @kind unknown
-extern volatile u32                 D_801463D0; // @source 0x801463D0 // @kind unknown
-extern u8                           D_801462F3; // @source 0x801462F3 // @kind unknown
-extern u8                           D_80146384; // @source 0x80146384 // @kind unknown
-extern u8                           D_801462F4; // @source 0x801462F4 // @kind unknown
-extern Battle03LocalWork           *D_1F800044; // @source 0x1F800044 // @kind unknown
-extern Battle03Handler              D_801EB210[]; // @source 0x801EB210 // @kind unknown
-extern Battle03Handler              D_801EB27C[]; // @source 0x801EB27C // @kind unknown
-extern Battle03Handler              D_801EB258[]; // @source 0x801EB258 // @kind unknown
-extern u16                          D_801EB09C[]; // @source 0x801EB09C // @kind unknown
-extern Battle03Handler              D_801EB46C[]; // @source 0x801EB46C // @kind unknown
-extern u8                           D_801EB2E8[]; // @source 0x801EB2E8 // @kind unknown
-extern Battle03LocalWork            D_80145E90[]; // @source 0x80145E90 // @kind unknown
-extern volatile u16           D_80143C40; // @source 0x80143C40 // @kind unknown
-extern volatile u16           D_80145AA8; // @source 0x80145AA8 // @kind unknown
-extern u8                     D_801462E0; // @source 0x801462E0 // @kind unknown
-extern volatile u8            D_8014832E; // @source 0x8014832E // @kind unknown
-extern Battle03LocalWork* volatile D_80146250; // @source 0x80146250 // @kind unknown
-extern Battle03LocalWork*          D_1F800044; // @source 0x1F800044 // @kind unknown
-extern volatile u8* battleWork; // @source 0x1F800044 // @kind unknown
-extern u8*          D_8014598C; // @source 0x8014598C // @kind unknown
-extern u8           D_80145AD4[]; // @source 0x80145AD4 // @kind unknown
-extern const char   D_801D0C70[]; // @source 0x801D0C70 // @kind unknown
-extern const char   D_801D0C74[]; // @source 0x801D0C74 // @kind unknown
-extern u8           D_801462E1[]; // @source 0x801462E1 // @kind unknown
-extern Battle03QueuedSlot* volatile D_801EC2E0; // @source 0x801EC2E0 // @kind unknown
+extern volatile AbilityObject       ABILITY_OBJECTS[]; /* @source 0x801CA70C @kind unknown */
+extern volatile u8                  D_801462F0; /* @source 0x801462F0 @kind unknown */
+extern const Battle03TemplateRecord D_80144968[]; /* @source 0x80144968 @kind unknown */
+extern volatile Battle03FlagRecord D_80145FB8[]; /* @source 0x80145FB8 @kind unknown */
+extern u16                          D_80143F04; /* @source 0x80143F04 @kind unknown */
+extern u8                           D_80146328; /* @source 0x80146328 @kind unknown */
+extern u8                           D_80144955; /* @source 0x80144955 @kind unknown */
+extern const u8                     D_801D0C98[]; /* @source 0x801D0C98 @kind unknown */
+extern volatile u32                 D_801463D0; /* @source 0x801463D0 @kind unknown */
+extern u8                           D_801462F3; /* @source 0x801462F3 @kind unknown */
+extern u8                           D_80146384; /* @source 0x80146384 @kind unknown */
+extern u8                           D_801462F4; /* @source 0x801462F4 @kind unknown */
+extern Battle03LocalWork           *D_1F800044; /* @source 0x1F800044 @kind unknown */
+extern Battle03Handler              D_801EB210[]; /* @source 0x801EB210 @kind unknown */
+extern Battle03Handler              D_801EB27C[]; /* @source 0x801EB27C @kind unknown */
+extern Battle03Handler              D_801EB258[]; /* @source 0x801EB258 @kind unknown */
+extern u16                          D_801EB09C[]; /* @source 0x801EB09C @kind unknown */
+extern Battle03Handler              D_801EB46C[]; /* @source 0x801EB46C @kind unknown */
+extern u8                           D_801EB2E8[]; /* @source 0x801EB2E8 @kind unknown */
+extern Battle03LocalWork            D_80145E90[]; /* @source 0x80145E90 @kind unknown */
+extern volatile u16           D_80143C40; /* @source 0x80143C40 @kind unknown */
+extern volatile u16           D_80145AA8; /* @source 0x80145AA8 @kind unknown */
+extern u8                     D_801462E0; /* @source 0x801462E0 @kind unknown */
+extern volatile u8            D_8014832E; /* @source 0x8014832E @kind unknown */
+extern Battle03LocalWork* volatile D_80146250; /* @source 0x80146250 @kind unknown */
+extern Battle03LocalWork*          D_1F800044; /* @source 0x1F800044 @kind unknown */
+extern volatile u8* battleWork; /* @source 0x1F800044 @kind unknown */
+extern u8*          D_8014598C; /* @source 0x8014598C @kind unknown */
+extern u8           D_80145AD4[]; /* @source 0x80145AD4 @kind unknown */
+extern const char   D_801D0C70[]; /* @source 0x801D0C70 @kind unknown */
+extern const char   D_801D0C74[]; /* @source 0x801D0C74 @kind unknown */
+extern u8           D_801462E1[]; /* @source 0x801462E1 @kind unknown */
+extern Battle03QueuedSlot* volatile D_801EC2E0; /* @source 0x801EC2E0 @kind unknown */
 /* @kind: bss (map symbol: uiRingHead) — UI ring consumer index. */
-extern u8                            uiRingHead; // @source 0x801EBF04
-extern u8                            D_801EC2E4; // @source 0x801EC2E4
+extern u8                            uiRingHead; /* @source 0x801EBF04 */
+extern u8                            D_801EC2E4; /* @source 0x801EC2E4 */
 /* @kind: bss (map symbol: uiRingEntries) — 16-entry UI ring of (byte, byte, word) triples. */
-extern volatile Battle03UiRingEntry uiRingEntries[]; // @source 0x801EB5B0
+extern volatile Battle03UiRingEntry uiRingEntries[]; /* @source 0x801EB5B0 */
 /* @kind: bss (map symbol: uiRingTail) — UI ring producer index. */
-extern volatile u8                   uiRingTail; // @source 0x801EC328
-extern u8*                           D_80148648; // @source 0x80148648
-extern u8                            D_801462E5; // @source 0x801462E5
-extern u8                            D_8014630C; // @source 0x8014630C // @kind unknown
-extern u8                            D_8014864C; // @source 0x8014864C // @kind unknown
-extern u8                            D_80181B10[]; // @source 0x80181B10 // @kind unknown
-extern Battle03FlagRecord            D_80145FB4[]; // @source 0x80145FB4 // @kind unknown
-extern volatile Battle03LocalWork*   D_801EB4E0; // @source 0x801EB4E0 // @kind unknown
-extern Battle03EightDispatchTable    D_801D0ED4; // @source 0x801D0ED4 // @kind unknown
-extern Battle03SeventyDispatchTable D_801D0D1C; // @source 0x801D0D1C // @kind unknown
+extern volatile u8                   uiRingTail; /* @source 0x801EC328 */
+extern u8*                           D_80148648; /* @source 0x80148648 */
+extern u8                            D_801462E5; /* @source 0x801462E5 */
+extern u8                            D_8014630C; /* @source 0x8014630C @kind unknown */
+extern u8                            D_8014864C; /* @source 0x8014864C @kind unknown */
+extern u8                            D_80181B10[]; /* @source 0x80181B10 @kind unknown */
+extern Battle03FlagRecord            D_80145FB4[]; /* @source 0x80145FB4 @kind unknown */
+extern volatile Battle03LocalWork*   D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
+extern Battle03EightDispatchTable    D_801D0ED4; /* @source 0x801D0ED4 @kind unknown */
+extern Battle03SeventyDispatchTable D_801D0D1C; /* @source 0x801D0D1C @kind unknown */
 
 void integrateMotionOrSet2(void);
-extern Battle03EightDispatchTable   D_801D0F80; // @source 0x801D0F80 // @kind unknown
-extern Battle03FiveDispatchTable   D_801D0F44; // @source 0x801D0F44 // @kind unknown
-extern Battle03FiveDispatchTable    D_801D0F58; // @source 0x801D0F58 // @kind unknown
-extern Battle03DispatchTable        D_801D0F20; // @source 0x801D0F20 // @kind unknown
+extern Battle03EightDispatchTable   D_801D0F80; /* @source 0x801D0F80 @kind unknown */
+extern Battle03FiveDispatchTable   D_801D0F44; /* @source 0x801D0F44 @kind unknown */
+extern Battle03FiveDispatchTable    D_801D0F58; /* @source 0x801D0F58 @kind unknown */
+extern Battle03DispatchTable        D_801D0F20; /* @source 0x801D0F20 @kind unknown */
 
 Battle03LocalWork *findLocalWorkByKind(u8 arg0);
 
 s16 scalePercentClamp999(s32 arg0, s32 arg1);
-extern Battle03DispatchTable        D_801D0F2C; // @source 0x801D0F2C // @kind unknown
-extern Battle03DispatchTable        D_801D0FA0; // @source 0x801D0FA0 // @kind unknown
-extern Battle03DispatchTable        D_801D0FAC; // @source 0x801D0FAC // @kind unknown
-extern Battle03DispatchTable        D_801D0FB8; // @source 0x801D0FB8 // @kind unknown
-extern Battle03DispatchTable        D_801D0FC4; // @source 0x801D0FC4 // @kind unknown
-extern u8*            D_801C893C[]; // @source 0x801C893C // @kind unknown
-extern u32*           D_800B6178[]; // @source 0x800B6178 // @kind unknown
-extern u8*            D_801C8950[]; // @source 0x801C8950 // @kind unknown
-extern Battle03Handler D_801EB15C[]; // @source 0x801EB15C // @kind unknown
-extern Battle03Handler D_801EB218[]; // @source 0x801EB218 // @kind unknown
-extern Battle03Handler D_801EB3B0[]; // @source 0x801EB3B0 // @kind unknown
-extern Battle03EnemyWork          D_801EB630[]; // @source 0x801EB630 // @kind unknown
-extern Battle03Handler D_801EB188; // @source 0x801EB188 // @kind unknown
-extern Battle03Handler D_801EACD4[]; // @source 0x801EACD4 // @kind unknown
-extern Battle03Handler D_801EACE8[]; // @source 0x801EACE8 // @kind unknown
-extern Battle03Handler D_801EACF4[]; // @source 0x801EACF4 // @kind unknown
-extern Battle03Handler D_801EAD00[]; // @source 0x801EAD00 // @kind unknown
-extern Battle03Handler D_801EAD0C[]; // @source 0x801EAD0C // @kind unknown
-extern Battle03Handler D_801EAD20[]; // @source 0x801EAD20 // @kind unknown
-extern Battle03Handler D_801EB1B4[]; // @source 0x801EB1B4 // @kind unknown
-extern Battle03Handler D_801EB1BC[]; // @source 0x801EB1BC // @kind unknown
-extern Battle03Handler D_801EB1D4[]; // @source 0x801EB1D4 // @kind unknown
-extern Battle03Handler D_801EB1F4[]; // @source 0x801EB1F4 // @kind unknown
-extern Battle03Handler D_801EB3E4[]; // @source 0x801EB3E4 // @kind unknown
-extern Battle03Handler D_801EB3EC[]; // @source 0x801EB3EC // @kind unknown
-extern Battle03Handler D_801EB3F4[]; // @source 0x801EB3F4 // @kind unknown
-extern Battle03Handler D_801EB404[]; // @source 0x801EB404 // @kind unknown
-extern Battle03Handler D_801EB40C[]; // @source 0x801EB40C // @kind unknown
-extern Battle03Handler D_801EB424[]; // @source 0x801EB424 // @kind unknown
-extern Battle03Handler D_801EB430[]; // @source 0x801EB430 // @kind unknown
-extern Battle03Handler D_801EB444[]; // @source 0x801EB444 // @kind unknown
-extern Battle03Handler D_801EB460[]; // @source 0x801EB460 // @kind unknown
-extern Battle03Handler D_801EB478[]; // @source 0x801EB478 // @kind unknown
-extern void             D_801492B8; // @source 0x801492B8 // @kind unknown
-extern u8               D_801EB000[]; // @source 0x801EB000 // @kind unknown
-extern s8               D_801EB4F2; // @source 0x801EB4F2 // @kind unknown
-extern volatile u8  BATTLE_GLOBAL_BYTE_62E2; // @source 0x801462E2 // @kind unknown
-extern volatile u16 BATTLE_GLOBAL_HALF_62E8; // @source 0x801462E8 // @kind unknown
+extern Battle03DispatchTable        D_801D0F2C; /* @source 0x801D0F2C @kind unknown */
+extern Battle03DispatchTable        D_801D0FA0; /* @source 0x801D0FA0 @kind unknown */
+extern Battle03DispatchTable        D_801D0FAC; /* @source 0x801D0FAC @kind unknown */
+extern Battle03DispatchTable        D_801D0FB8; /* @source 0x801D0FB8 @kind unknown */
+extern Battle03DispatchTable        D_801D0FC4; /* @source 0x801D0FC4 @kind unknown */
+extern u8*            D_801C893C[]; /* @source 0x801C893C @kind unknown */
+extern u32*           D_800B6178[]; /* @source 0x800B6178 @kind unknown */
+extern u8*            D_801C8950[]; /* @source 0x801C8950 @kind unknown */
+extern Battle03Handler D_801EB15C[]; /* @source 0x801EB15C @kind unknown */
+extern Battle03Handler D_801EB218[]; /* @source 0x801EB218 @kind unknown */
+extern Battle03Handler D_801EB3B0[]; /* @source 0x801EB3B0 @kind unknown */
+extern Battle03EnemyWork          D_801EB630[]; /* @source 0x801EB630 @kind unknown */
+extern Battle03Handler D_801EB188; /* @source 0x801EB188 @kind unknown */
+extern Battle03Handler D_801EACD4[]; /* @source 0x801EACD4 @kind unknown */
+extern Battle03Handler D_801EACE8[]; /* @source 0x801EACE8 @kind unknown */
+extern Battle03Handler D_801EACF4[]; /* @source 0x801EACF4 @kind unknown */
+extern Battle03Handler D_801EAD00[]; /* @source 0x801EAD00 @kind unknown */
+extern Battle03Handler D_801EAD0C[]; /* @source 0x801EAD0C @kind unknown */
+extern Battle03Handler D_801EAD20[]; /* @source 0x801EAD20 @kind unknown */
+extern Battle03Handler D_801EB1B4[]; /* @source 0x801EB1B4 @kind unknown */
+extern Battle03Handler D_801EB1BC[]; /* @source 0x801EB1BC @kind unknown */
+extern Battle03Handler D_801EB1D4[]; /* @source 0x801EB1D4 @kind unknown */
+extern Battle03Handler D_801EB1F4[]; /* @source 0x801EB1F4 @kind unknown */
+extern Battle03Handler D_801EB3E4[]; /* @source 0x801EB3E4 @kind unknown */
+extern Battle03Handler D_801EB3EC[]; /* @source 0x801EB3EC @kind unknown */
+extern Battle03Handler D_801EB3F4[]; /* @source 0x801EB3F4 @kind unknown */
+extern Battle03Handler D_801EB404[]; /* @source 0x801EB404 @kind unknown */
+extern Battle03Handler D_801EB40C[]; /* @source 0x801EB40C @kind unknown */
+extern Battle03Handler D_801EB424[]; /* @source 0x801EB424 @kind unknown */
+extern Battle03Handler D_801EB430[]; /* @source 0x801EB430 @kind unknown */
+extern Battle03Handler D_801EB444[]; /* @source 0x801EB444 @kind unknown */
+extern Battle03Handler D_801EB460[]; /* @source 0x801EB460 @kind unknown */
+extern Battle03Handler D_801EB478[]; /* @source 0x801EB478 @kind unknown */
+extern void             D_801492B8; /* @source 0x801492B8 @kind unknown */
+extern u8               D_801EB000[]; /* @source 0x801EB000 @kind unknown */
+extern s8               D_801EB4F2; /* @source 0x801EB4F2 @kind unknown */
+extern volatile u8  BATTLE_GLOBAL_BYTE_62E2; /* @source 0x801462E2 @kind unknown */
+extern volatile u16 BATTLE_GLOBAL_HALF_62E8; /* @source 0x801462E8 @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_62F3;
-extern volatile u32 D_801459F0; // @source 0x801459F0 // @kind unknown
+extern volatile u32 D_801459F0; /* @source 0x801459F0 @kind unknown */
 
 void func_801E679C(void);
 void func_801E68EC(void);
-extern volatile u8  BATTLE_GLOBAL_BYTE_6374; // @source 0x80146374 // @kind unknown
-extern volatile u8  BATTLE_GLOBAL_BYTE_6375; // @source 0x80146375 // @kind unknown
-extern volatile u8  BATTLE_GLOBAL_BYTE_63BA; // @source 0x801463BA // @kind unknown
-extern volatile u16 BATTLE_GLOBAL_HALF_63C0; // @source 0x801463C0 // @kind unknown
-extern volatile u8  BATTLE_GLOBAL_BYTE_6322; // @source 0x80146322 // @kind unknown
-extern volatile u8  BATTLE_GLOBAL_BYTE_6323; // @source 0x80146323 // @kind unknown
-extern volatile u8  BATTLE_GLOBAL_BYTE_63CE; // @source 0x801463CE // @kind unknown
-extern volatile u8  BATTLE_RANDOM_TABLE_AC58_DATA[]; // @source 0x801EAC58 // @kind unknown
-extern volatile u8  BATTLE_RANDOM_TABLE_AC78_DATA[]; // @source 0x801EAC78 // @kind unknown
+extern volatile u8  BATTLE_GLOBAL_BYTE_6374; /* @source 0x80146374 @kind unknown */
+extern volatile u8  BATTLE_GLOBAL_BYTE_6375; /* @source 0x80146375 @kind unknown */
+extern volatile u8  BATTLE_GLOBAL_BYTE_63BA; /* @source 0x801463BA @kind unknown */
+extern volatile u16 BATTLE_GLOBAL_HALF_63C0; /* @source 0x801463C0 @kind unknown */
+extern volatile u8  BATTLE_GLOBAL_BYTE_6322; /* @source 0x80146322 @kind unknown */
+extern volatile u8  BATTLE_GLOBAL_BYTE_6323; /* @source 0x80146323 @kind unknown */
+extern volatile u8  BATTLE_GLOBAL_BYTE_63CE; /* @source 0x801463CE @kind unknown */
+extern volatile u8  BATTLE_RANDOM_TABLE_AC58_DATA[]; /* @source 0x801EAC58 @kind unknown */
+extern volatile u8  BATTLE_RANDOM_TABLE_AC78_DATA[]; /* @source 0x801EAC78 @kind unknown */
 extern u8           func_8017E3D4(void);
 
 void func_8014D290(void);
@@ -289,14 +289,14 @@ void func_801D7EB0(s32 arg0, s32 arg1);
 u8   func_801D64C4(u32 arg0);
 u8   func_801DDCB4(u32 arg0);
 void func_801644D8(u32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u32 arg5);
-extern Battle03Handler D_801EB120[]; // @source 0x801EB120 // @kind unknown
+extern Battle03Handler D_801EB120[]; /* @source 0x801EB120 @kind unknown */
 
 void dispatchLocalStateTable(void);
 void markPendingBit(u32 arg0);
 void func_801DE560(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u32 arg4);
 void func_801DE9A8(u32 arg0);
-extern u8 D_801490D8[]; // @source 0x801490D8 // @kind unknown
-extern u8 D_801EB35C[]; // @source 0x801EB35C // @kind unknown
+extern u8 D_801490D8[]; /* @source 0x801490D8 @kind unknown */
+extern u8 D_801EB35C[]; /* @source 0x801EB35C @kind unknown */
 
 void submitEnemyScriptBlock(u32 arg0);
 void func_801DCEF8(u32 arg0);
@@ -321,16 +321,16 @@ void callNextLocalHandler(void);
 void func_801DF914(void);
 void copyScratchToLocalWork(void);
 void waitReadyAdvanceSubstate3(void);
-extern Battle03Handler D_801EB1E0[]; // @source 0x801EB1E0 // @kind unknown
+extern Battle03Handler D_801EB1E0[]; /* @source 0x801EB1E0 @kind unknown */
 
 void dispatchLocalSubstate3Table(void);
 void dispatchLocalState4Table(void);
 void dispatchAltState3Table(void);
-extern Battle03Handler D_801EB224[]; // @source 0x801EB224 // @kind unknown
+extern Battle03Handler D_801EB224[]; /* @source 0x801EB224 @kind unknown */
 
 void dispatchState2ClassTable(void);
-extern Battle03Handler D_801EB26C[]; // @source 0x801EB26C // @kind unknown
-extern Battle03Handler D_801EB274[]; // @source 0x801EB274 // @kind unknown
+extern Battle03Handler D_801EB26C[]; /* @source 0x801EB26C @kind unknown */
+extern Battle03Handler D_801EB274[]; /* @source 0x801EB274 @kind unknown */
 
 void dispatchState2EventTable(void);
 void dispatchState2FollowupTable(void);
@@ -452,7 +452,7 @@ u8   enemyReadyOrHelper1(void);
 u8   pickTargetOrFf(s8 arg0);
 void dispatchPresentationState1(void);
 void dispatchPresentationByte3(void);
-extern Battle03Handler D_801EB454[]; // @source 0x801EB454 // @kind unknown
+extern Battle03Handler D_801EB454[]; /* @source 0x801EB454 @kind unknown */
 
 void dispatchResultSubstateTable(void);
 void func_801E5AF4(void);

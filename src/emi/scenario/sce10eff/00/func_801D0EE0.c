@@ -1,7 +1,6 @@
 #include "internal.h"
 
-// @source 0x801492E8
-// @kind unknown
+/* @source 0x801492E8 @kind unknown */
 extern u8 D_801492E8[];
 
 /* @behavior builds a temporary transform from scratchpad camera state and submits

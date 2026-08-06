@@ -78,112 +78,112 @@ typedef struct Unk801EBF08 {
 } Unk801EBF08;
 
 
-extern PanelTask*   D_80148648; // @source 0x80148648 // @kind unknown
+extern PanelTask*   D_80148648; /* @source 0x80148648 @kind unknown */
 
 /* Scratchpad work-area pointer (volatile cell at 0x1F800044).
  * Reloaded per access to match original codegen. */
-extern u8* volatile g_battle_work; // @source 0x1F800044 // @kind data
-extern BattleSelectionDispatchTable D_80096994; // @source 0x80096994 // @kind unknown
-extern BattleSelectionDispatchTable D_800969A0; // @source 0x800969A0 // @kind unknown
-extern BattleSelectionDispatchTable D_800969AC; // @source 0x800969AC // @kind unknown
-extern BattleSelectionDispatchTable D_800969B8; // @source 0x800969B8 // @kind unknown
-extern volatile u32 D_801459F0; // @source 0x801459F0 // @kind unknown
-extern s8 D_800B4E8C[]; // @source 0x800B4E8C // @kind unknown
-extern BattleSelectionHandler D_800B6BF4[]; // @source 0x800B6BF4 // @kind unknown
+extern u8* volatile g_battle_work; /* @source 0x1F800044 @kind data */
+extern BattleSelectionDispatchTable D_80096994; /* @source 0x80096994 @kind unknown */
+extern BattleSelectionDispatchTable D_800969A0; /* @source 0x800969A0 @kind unknown */
+extern BattleSelectionDispatchTable D_800969AC; /* @source 0x800969AC @kind unknown */
+extern BattleSelectionDispatchTable D_800969B8; /* @source 0x800969B8 @kind unknown */
+extern volatile u32 D_801459F0; /* @source 0x801459F0 @kind unknown */
+extern s8 D_800B4E8C[]; /* @source 0x800B4E8C @kind unknown */
+extern BattleSelectionHandler D_800B6BF4[]; /* @source 0x800B6BF4 @kind unknown */
 
 u32 func_800AF66C(BattleRange *range, u32 value);
 
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
  * equal the symbol-name addresses. */
-extern BattlePanelTaskDispatchTable D_800969E4; // @source 0x800969E4 // @kind unknown
-extern BattlePanelTaskDispatchTable D_80096A14; // @source 0x80096A14 // @kind unknown
-extern BattleSelectionDispatchTable D_800969F8; // @source 0x800969F8 // @kind unknown
-extern BattleSelectionDispatchTable D_80096A08; // @source 0x80096A08 // @kind unknown
-extern BattleSelectionDispatchTable D_80096A34; // @source 0x80096A34 // @kind unknown
-extern BattleSelectionDispatchTable D_80096A40; // @source 0x80096A40 // @kind unknown
-extern s32 D_80144F60[]; // @source 0x80144F60 // @kind unknown
-extern volatile u32  D_80144F80[]; // @source 0x80144F80 // @kind unknown
-extern u16 D_80145FAA[]; // @source 0x80145FAA // @kind unknown
-extern volatile u32  D_80146250; // @source 0x80146250 // @kind unknown
-extern volatile u8   D_801462E0; // @source 0x801462E0 // @kind unknown
-extern volatile u8   D_801462E1; // @source 0x801462E1 // @kind unknown
-extern volatile u8   D_801462E2; // @source 0x801462E2 // @kind unknown
-extern volatile u8   D_801462E3; // @source 0x801462E3 // @kind unknown
-extern BattleSelectionHandler D_800B43C0[]; // @source 0x800B43C0 // @kind unknown
-extern BattleSelectionHandler D_800B4450[]; // @source 0x800B4450 // @kind unknown
-extern BattleSelectionHandler D_800B43D4[]; // @source 0x800B43D4 // @kind unknown
-extern BattleSelectionHandler D_800B4CAC[]; // @source 0x800B4CAC // @kind unknown
-extern BattleSelectionHandler D_800B4CC8[]; // @source 0x800B4CC8 // @kind unknown
-extern BattleSelectionHandler D_800B4CD0[]; // @source 0x800B4CD0 // @kind unknown
-extern BattleSelectionHandler D_800B4CE4[]; // @source 0x800B4CE4 // @kind unknown
-extern BattleSelectionHandler D_800B4D00[]; // @source 0x800B4D00 // @kind unknown
-extern BattleSelectionHandler D_800B4D14[]; // @source 0x800B4D14 // @kind unknown
-extern BattleSelectionHandler D_800B4D30[]; // @source 0x800B4D30 // @kind unknown
-extern BattleSelectionHandler D_800B43EC[]; // @source 0x800B43EC // @kind unknown
-extern BattleSelectionHandler D_800B43F4[]; // @source 0x800B43F4 // @kind unknown
-extern BattleSelectionHandler D_800B4408[]; // @source 0x800B4408 // @kind unknown
-extern BattleSelectionHandler D_800B4418[]; // @source 0x800B4418 // @kind unknown
-extern BattleSelectionHandler D_800B44A0[]; // @source 0x800B44A0 // @kind unknown
-extern BattleSelectionHandler D_800B4428[]; // @source 0x800B4428 // @kind unknown
-extern BattleSelectionHandler D_800B4458[]; // @source 0x800B4458 // @kind unknown
-extern BattleSelectionHandler D_800B446C[]; // @source 0x800B446C // @kind unknown
-extern BattleSelectionHandler D_800B447C[]; // @source 0x800B447C // @kind unknown
-extern BattleSelectionHandler D_800B448C[]; // @source 0x800B448C // @kind unknown
-extern BattleSelectionHandler D_800B44C8[]; // @source 0x800B44C8 // @kind unknown
-extern BattleSelectionHandler D_800B44D4[]; // @source 0x800B44D4 // @kind unknown
-extern BattleSelectionHandler D_800B44E4[]; // @source 0x800B44E4 // @kind unknown
-extern BattleSelectionHandler D_800B6E08[]; // @source 0x800B6E08 // @kind unknown
-extern BattleLocalOffsetPair D_800B6C90[]; // @source 0x800B6C90 // @kind unknown
-extern u8 D_800B6D00[]; // @source 0x800B6D00 // @kind unknown
-extern volatile u8   D_801462E4; // @source 0x801462E4 // @kind unknown
-extern volatile u8   D_801462EF; // @source 0x801462EF // @kind unknown
-extern volatile u8   D_80146303; // @source 0x80146303 // @kind unknown
-extern volatile u16  D_80145AC8; // @source 0x80145AC8 // @kind unknown
-extern u8*           D_801EB4D8; // @source 0x801EB4D8 // @kind unknown
-extern u8*           D_801EBF08; // @source 0x801EBF08 // @kind unknown
-extern u8            D_80148330[]; // @source 0x80148330 // @kind unknown
-extern u8            D_801462E5; // @source 0x801462E5 // @kind unknown
-extern volatile u8   D_801462E6; // @source 0x801462E6 // @kind unknown
-extern BattleSelectionAction D_800B65FC[]; // @source 0x800B65FC // @kind unknown
-extern volatile u16  D_801462E8; // @source 0x801462E8 // @kind unknown
-extern volatile BattleLocalWork D_80145E90[]; // @source 0x80145E90 // @kind unknown
-extern u8  D_80145FB0[]; // @source 0x80145FB0 // @kind unknown
-extern u8  D_801EB2E8[]; // @source 0x801EB2E8 // @kind unknown
-extern u8  D_801EB72C[]; // @source 0x801EB72C // @kind unknown
-extern u8  D_801EC337[]; // @source 0x801EC337 // @kind unknown
-extern u8  D_801EC33B[]; // @source 0x801EC33B // @kind unknown
-extern u8  D_801EC357[]; // @source 0x801EC357 // @kind unknown
-extern u8  D_801EC390[]; // @source 0x801EC390 // @kind unknown
-extern u8  D_801EC3A4[]; // @source 0x801EC3A4 // @kind unknown
-extern volatile u8             D_80146329; // @source 0x80146329 // @kind unknown
-extern volatile u8             D_80146374; // @source 0x80146374 // @kind unknown
-extern volatile s8   D_80145558; // @source 0x80145558 // @kind unknown
-extern volatile s16  D_801EC2EE; // @source 0x801EC2EE // @kind unknown
-extern volatile u8   D_80146394; // @source 0x80146394 // @kind unknown
-extern s16* volatile D_801463A0; // @source 0x801463A0 // @kind unknown
-extern volatile u16  D_801463C0; // @source 0x801463C0 // @kind unknown
-extern u8            D_801463C9; // @source 0x801463C9 // @kind unknown
-extern volatile BattleSelectionKind D_801CA71C[]; // @source 0x801CA71C // @kind unknown
-extern volatile u8   D_8014837B; // @source 0x8014837B // @kind unknown
-extern volatile u8   D_8014839F; // @source 0x8014839F // @kind unknown
-extern volatile u8   D_801483C3; // @source 0x801483C3 // @kind unknown
-extern volatile u8   D_80148597; // @source 0x80148597 // @kind unknown
-extern volatile u8   D_801485BB; // @source 0x801485BB // @kind unknown
-extern volatile u8   D_801485DE; // @source 0x801485DE // @kind unknown
-extern volatile u8   D_801485DF; // @source 0x801485DF // @kind unknown
-extern volatile u16  D_801485E0; // @source 0x801485E0 // @kind unknown
-extern volatile u16  D_8014932E; // @source 0x8014932E // @kind unknown
-extern volatile u16  D_801485E2; // @source 0x801485E2 // @kind unknown
-extern volatile u16  D_801485EC; // @source 0x801485EC // @kind unknown
-extern volatile u16  D_801485EE; // @source 0x801485EE // @kind unknown
-extern volatile u8   D_80148626; // @source 0x80148626 // @kind unknown
-extern volatile u8   D_80148627; // @source 0x80148627 // @kind unknown
-extern volatile s16  D_80148628; // @source 0x80148628 // @kind unknown
-extern volatile u16  D_8014862A; // @source 0x8014862A // @kind unknown
-extern volatile u8   D_8014862E; // @source 0x8014862E // @kind unknown
+extern BattlePanelTaskDispatchTable D_800969E4; /* @source 0x800969E4 @kind unknown */
+extern BattlePanelTaskDispatchTable D_80096A14; /* @source 0x80096A14 @kind unknown */
+extern BattleSelectionDispatchTable D_800969F8; /* @source 0x800969F8 @kind unknown */
+extern BattleSelectionDispatchTable D_80096A08; /* @source 0x80096A08 @kind unknown */
+extern BattleSelectionDispatchTable D_80096A34; /* @source 0x80096A34 @kind unknown */
+extern BattleSelectionDispatchTable D_80096A40; /* @source 0x80096A40 @kind unknown */
+extern s32 D_80144F60[]; /* @source 0x80144F60 @kind unknown */
+extern volatile u32  D_80144F80[]; /* @source 0x80144F80 @kind unknown */
+extern u16 D_80145FAA[]; /* @source 0x80145FAA @kind unknown */
+extern volatile u32  D_80146250; /* @source 0x80146250 @kind unknown */
+extern volatile u8   D_801462E0; /* @source 0x801462E0 @kind unknown */
+extern volatile u8   D_801462E1; /* @source 0x801462E1 @kind unknown */
+extern volatile u8   D_801462E2; /* @source 0x801462E2 @kind unknown */
+extern volatile u8   D_801462E3; /* @source 0x801462E3 @kind unknown */
+extern BattleSelectionHandler D_800B43C0[]; /* @source 0x800B43C0 @kind unknown */
+extern BattleSelectionHandler D_800B4450[]; /* @source 0x800B4450 @kind unknown */
+extern BattleSelectionHandler D_800B43D4[]; /* @source 0x800B43D4 @kind unknown */
+extern BattleSelectionHandler D_800B4CAC[]; /* @source 0x800B4CAC @kind unknown */
+extern BattleSelectionHandler D_800B4CC8[]; /* @source 0x800B4CC8 @kind unknown */
+extern BattleSelectionHandler D_800B4CD0[]; /* @source 0x800B4CD0 @kind unknown */
+extern BattleSelectionHandler D_800B4CE4[]; /* @source 0x800B4CE4 @kind unknown */
+extern BattleSelectionHandler D_800B4D00[]; /* @source 0x800B4D00 @kind unknown */
+extern BattleSelectionHandler D_800B4D14[]; /* @source 0x800B4D14 @kind unknown */
+extern BattleSelectionHandler D_800B4D30[]; /* @source 0x800B4D30 @kind unknown */
+extern BattleSelectionHandler D_800B43EC[]; /* @source 0x800B43EC @kind unknown */
+extern BattleSelectionHandler D_800B43F4[]; /* @source 0x800B43F4 @kind unknown */
+extern BattleSelectionHandler D_800B4408[]; /* @source 0x800B4408 @kind unknown */
+extern BattleSelectionHandler D_800B4418[]; /* @source 0x800B4418 @kind unknown */
+extern BattleSelectionHandler D_800B44A0[]; /* @source 0x800B44A0 @kind unknown */
+extern BattleSelectionHandler D_800B4428[]; /* @source 0x800B4428 @kind unknown */
+extern BattleSelectionHandler D_800B4458[]; /* @source 0x800B4458 @kind unknown */
+extern BattleSelectionHandler D_800B446C[]; /* @source 0x800B446C @kind unknown */
+extern BattleSelectionHandler D_800B447C[]; /* @source 0x800B447C @kind unknown */
+extern BattleSelectionHandler D_800B448C[]; /* @source 0x800B448C @kind unknown */
+extern BattleSelectionHandler D_800B44C8[]; /* @source 0x800B44C8 @kind unknown */
+extern BattleSelectionHandler D_800B44D4[]; /* @source 0x800B44D4 @kind unknown */
+extern BattleSelectionHandler D_800B44E4[]; /* @source 0x800B44E4 @kind unknown */
+extern BattleSelectionHandler D_800B6E08[]; /* @source 0x800B6E08 @kind unknown */
+extern BattleLocalOffsetPair D_800B6C90[]; /* @source 0x800B6C90 @kind unknown */
+extern u8 D_800B6D00[]; /* @source 0x800B6D00 @kind unknown */
+extern volatile u8   D_801462E4; /* @source 0x801462E4 @kind unknown */
+extern volatile u8   D_801462EF; /* @source 0x801462EF @kind unknown */
+extern volatile u8   D_80146303; /* @source 0x80146303 @kind unknown */
+extern volatile u16  D_80145AC8; /* @source 0x80145AC8 @kind unknown */
+extern u8*           D_801EB4D8; /* @source 0x801EB4D8 @kind unknown */
+extern u8*           D_801EBF08; /* @source 0x801EBF08 @kind unknown */
+extern u8            D_80148330[]; /* @source 0x80148330 @kind unknown */
+extern u8            D_801462E5; /* @source 0x801462E5 @kind unknown */
+extern volatile u8   D_801462E6; /* @source 0x801462E6 @kind unknown */
+extern BattleSelectionAction D_800B65FC[]; /* @source 0x800B65FC @kind unknown */
+extern volatile u16  D_801462E8; /* @source 0x801462E8 @kind unknown */
+extern volatile BattleLocalWork D_80145E90[]; /* @source 0x80145E90 @kind unknown */
+extern u8  D_80145FB0[]; /* @source 0x80145FB0 @kind unknown */
+extern u8  D_801EB2E8[]; /* @source 0x801EB2E8 @kind unknown */
+extern u8  D_801EB72C[]; /* @source 0x801EB72C @kind unknown */
+extern u8  D_801EC337[]; /* @source 0x801EC337 @kind unknown */
+extern u8  D_801EC33B[]; /* @source 0x801EC33B @kind unknown */
+extern u8  D_801EC357[]; /* @source 0x801EC357 @kind unknown */
+extern u8  D_801EC390[]; /* @source 0x801EC390 @kind unknown */
+extern u8  D_801EC3A4[]; /* @source 0x801EC3A4 @kind unknown */
+extern volatile u8             D_80146329; /* @source 0x80146329 @kind unknown */
+extern volatile u8             D_80146374; /* @source 0x80146374 @kind unknown */
+extern volatile s8   D_80145558; /* @source 0x80145558 @kind unknown */
+extern volatile s16  D_801EC2EE; /* @source 0x801EC2EE @kind unknown */
+extern volatile u8   D_80146394; /* @source 0x80146394 @kind unknown */
+extern s16* volatile D_801463A0; /* @source 0x801463A0 @kind unknown */
+extern volatile u16  D_801463C0; /* @source 0x801463C0 @kind unknown */
+extern u8            D_801463C9; /* @source 0x801463C9 @kind unknown */
+extern volatile BattleSelectionKind D_801CA71C[]; /* @source 0x801CA71C @kind unknown */
+extern volatile u8   D_8014837B; /* @source 0x8014837B @kind unknown */
+extern volatile u8   D_8014839F; /* @source 0x8014839F @kind unknown */
+extern volatile u8   D_801483C3; /* @source 0x801483C3 @kind unknown */
+extern volatile u8   D_80148597; /* @source 0x80148597 @kind unknown */
+extern volatile u8   D_801485BB; /* @source 0x801485BB @kind unknown */
+extern volatile u8   D_801485DE; /* @source 0x801485DE @kind unknown */
+extern volatile u8   D_801485DF; /* @source 0x801485DF @kind unknown */
+extern volatile u16  D_801485E0; /* @source 0x801485E0 @kind unknown */
+extern volatile u16  D_8014932E; /* @source 0x8014932E @kind unknown */
+extern volatile u16  D_801485E2; /* @source 0x801485E2 @kind unknown */
+extern volatile u16  D_801485EC; /* @source 0x801485EC @kind unknown */
+extern volatile u16  D_801485EE; /* @source 0x801485EE @kind unknown */
+extern volatile u8   D_80148626; /* @source 0x80148626 @kind unknown */
+extern volatile u8   D_80148627; /* @source 0x80148627 @kind unknown */
+extern volatile s16  D_80148628; /* @source 0x80148628 @kind unknown */
+extern volatile u16  D_8014862A; /* @source 0x8014862A @kind unknown */
+extern volatile u8   D_8014862E; /* @source 0x8014862E @kind unknown */
 
 /* Shared primitive cursor (PsyQ SDK, owned by the main exe). */
-extern u8* D_8014598C; // @source 0x8014598C // @kind unknown
+extern u8* D_8014598C; /* @source 0x8014598C @kind unknown */
 
 /* PsyQ SDK primitive setup helpers called by this target.
  * SetSprt8 / SetSemiTrans are declared by <libgpu.h> (via bof3/psyq.h);
@@ -338,19 +338,19 @@ void func_801DEA64(s32 arg0);
 #define BATTLE_UNK_80145F4A        PSX_PTR(volatile u16, 0x80145f4au)
 #define BATTLE_UNK_801461CA        PSX_PTR(volatile u16, 0x801461cau)
 
-extern volatile u8 D_801485B8; // @source 0x801485B8 // @kind unknown
-extern volatile u8 D_801485DC; // @source 0x801485DC // @kind unknown
+extern volatile u8 D_801485B8; /* @source 0x801485B8 @kind unknown */
+extern volatile u8 D_801485DC; /* @source 0x801485DC @kind unknown */
 
 #endif
 
-extern u8 D_80145F2F[]; // @source 0x80145F2F // @kind unknown
-extern u8 D_80145F30[]; // @source 0x80145F30 // @kind unknown
-extern u8 D_80145F31[]; // @source 0x80145F31 // @kind unknown
-extern u8 D_80145F32[]; // @source 0x80145F32 // @kind unknown
-extern u8 D_80145F33[]; // @source 0x80145F33 // @kind unknown
-extern u8 D_801EB6DF[]; // @source 0x801EB6DF // @kind unknown
-extern u8 D_801EB6E0[]; // @source 0x801EB6E0 // @kind unknown
-extern u8 D_801EB6E1[]; // @source 0x801EB6E1 // @kind unknown
-extern u8 D_801EB6E2[]; // @source 0x801EB6E2 // @kind unknown
-extern u8 D_801EB6E3[]; // @source 0x801EB6E3 // @kind unknown
-extern s16 D_800B493C[]; // @source 0x800B493C // @kind unknown
+extern u8 D_80145F2F[]; /* @source 0x80145F2F @kind unknown */
+extern u8 D_80145F30[]; /* @source 0x80145F30 @kind unknown */
+extern u8 D_80145F31[]; /* @source 0x80145F31 @kind unknown */
+extern u8 D_80145F32[]; /* @source 0x80145F32 @kind unknown */
+extern u8 D_80145F33[]; /* @source 0x80145F33 @kind unknown */
+extern u8 D_801EB6DF[]; /* @source 0x801EB6DF @kind unknown */
+extern u8 D_801EB6E0[]; /* @source 0x801EB6E0 @kind unknown */
+extern u8 D_801EB6E1[]; /* @source 0x801EB6E1 @kind unknown */
+extern u8 D_801EB6E2[]; /* @source 0x801EB6E2 @kind unknown */
+extern u8 D_801EB6E3[]; /* @source 0x801EB6E3 @kind unknown */
+extern s16 D_800B493C[]; /* @source 0x800B493C @kind unknown */

@@ -11,17 +11,13 @@ typedef struct World00Area027Point {
   s16 z;
 } World00Area027Point;
 
-// @source 0x80144E98
-// @kind unknown
+/* @source 0x80144E98 @kind unknown */
 extern u8 D_80144E98[];
-// @source 0x1F800044
-// @kind unknown
+/* @source 0x1F800044 @kind unknown */
 extern u8* D_1F800044;
-// @source 0x801492E8
-// @kind unknown
+/* @source 0x801492E8 @kind unknown */
 extern MATRIX D_801492E8;
-// @source 0x1F800014
-// @kind unknown
+/* @source 0x1F800014 @kind unknown */
 extern SVECTOR D_1F800014[];
 
 void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);

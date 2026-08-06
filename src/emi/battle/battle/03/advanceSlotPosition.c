@@ -1,6 +1,6 @@
 #include "internal.h"
 
-// @source 0x801E6154
+/* @source 0x801E6154 */
 // @behavior Advances the queued-slot position or marks its state when the target is reached.
 void advanceSlotPosition(void) {
     Battle03QueuedSlot *work;

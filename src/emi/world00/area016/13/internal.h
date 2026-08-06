@@ -22,11 +22,9 @@ typedef struct World00Area016Scratch {
   s16 field_30;
 } World00Area016Scratch;
 
-// @source 0x801F511C
-// @kind unknown
+/* @source 0x801F511C @kind unknown */
 extern World00Area016Handler WORLD00_AREA016_D_801F511C[];
-// @source 0x801F512C
-// @kind unknown
+/* @source 0x801F512C @kind unknown */
 extern World00Area016Handler WORLD00_AREA016_D_801F512C[];
 
 void func_8014E5A0(u8 arg0, u8 arg1);

@@ -1,6 +1,6 @@
 #include "internal.h"
 
-// @source 0x8009BA7C
+/* @source 0x8009BA7C */
 // @behavior Clears local battle selection state when its gate flag is clear.
 void clearStateWhenGateClear(void)
 {

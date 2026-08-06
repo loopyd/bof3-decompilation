@@ -39,42 +39,36 @@ typedef struct Commu00ActiveRecord {
   u32 progress_anchor;
 } Commu00ActiveRecord;
 
-// @source 0x80145E5C
-// @kind unknown
+/* @source 0x80145E5C @kind unknown */
 extern volatile u8  COMMU00_PENDING_QUEUE_COUNT;
-// @source 0x80146904
-// @kind bss — per-task label/status words: label_id field view of the
-// Commu00TaskSlot array (base 0x80146888 + 0x7c), written with 0xC003,
-// 0xC00A, and variant-derived label words.
+/* @source 0x80146904 @kind bss: per-task label/status words: label_id field view of the
+ * Commu00TaskSlot array (base 0x80146888 + 0x7c), written with 0xC003,
+ * 0xC00A, and variant-derived label words.
+ */
 extern u16          taskLabelWords[1];
-// @source 0x801448EB
-// @kind bss — commu00 UI mode byte; requested values 0, 14, and 23.
+/* @source 0x801448EB @kind bss: commu00 UI mode byte; requested values 0, 14, and 23. */
 extern u8           uiMode;
-// @source 0x801448EC
-// @kind bss — fairy progress byte; cleared on selection reset, advanced by
-// message selection, and indexes the progress handler tables.
+/* @source 0x801448EC @kind bss: fairy progress byte; cleared on selection reset, advanced by
+ * message selection, and indexes the progress handler tables.
+ */
 extern u8           fairyProgress[1];
-// @source 0x801448ED
-// @kind bss — fairy slot index byte; indexes the slot handler table.
+/* @source 0x801448ED @kind bss: fairy slot index byte; indexes the slot handler table. */
 extern u8           fairySlotIndex;
-// @source 0x801F2928
-// @kind rodata — variant rotation bytes backing COMMU00_VARIANT_ROTATION;
-// variant-derived labels are entries minus 0x3FFB.
+/* @source 0x801F2928 @kind rodata: variant rotation bytes backing COMMU00_VARIANT_ROTATION;
+ * variant-derived labels are entries minus 0x3FFB.
+ */
 extern volatile u8  variantRotation[1];
 
 /* Local commu00 dispatch tables (data blob T_801F24FC). */
-// @source 0x801F25EC
-// @kind table — six function pointers indexed by the fairy progress byte
-// (plus a second group dispatched at offset +6).
+/* @source 0x801F25EC @kind table: six function pointers indexed by the fairy progress byte
+ * (plus a second group dispatched at offset +6).
+ */
 extern void (*progressHandlerTable[6])(void);
-// @source 0x801F2610
-// @kind table — function pointers indexed by the fairy progress byte.
+/* @source 0x801F2610 @kind table: function pointers indexed by the fairy progress byte. */
 extern void (*progressHandlerTable2[])(void);
-// @source 0x801F2678
-// @kind table — function pointers indexed by the fairy progress byte.
+/* @source 0x801F2678 @kind table: function pointers indexed by the fairy progress byte. */
 extern void (*progressHandlerTable3[])(void);
-// @source 0x801F268C
-// @kind table — function pointers indexed by the fairy slot index byte.
+/* @source 0x801F268C @kind table: function pointers indexed by the fairy slot index byte. */
 extern void (*slotHandlerTable[])(void);
 
 void func_8015C058(void);
