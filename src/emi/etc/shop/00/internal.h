@@ -53,4 +53,9 @@ void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
  * scaled by 4 as the handler argument. */
 extern void (*commandHandlerTable[])(u32);
 
+/* @source 0x801E52C4
+ * @kind table — UI phase handler pointers (this EMI); dispatched by
+ * func_801D39BC with the phase byte D_80148651 as index. */
+extern void (*D_801E52C4[])(void);
+
 #endif
