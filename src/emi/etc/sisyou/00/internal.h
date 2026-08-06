@@ -31,6 +31,9 @@ extern void (*D_801D41FC[])(void);
 /* @source 0x801D4204 @kind table */
 /* Handler table indexed by D_801D4286 and tail-called. */
 extern void (*D_801D4204[])(void);
+/* @source 0x801D421C @kind table */
+/* Handler table indexed by D_801D4286 and tail-called. */
+extern void (*D_801D421C[])(void);
 /* @source 0x801D4285 @kind bss */
 /* Current mode index; selects the handler from the D_801D41E0 table and is
  * set to 6 after an entry action starts. */
@@ -50,5 +53,6 @@ void func_80150224(s32 arg0);
 /* EMI-local functions. */
 void func_801D10AC(u32 arg0);
 void func_801D25D8(void);
+void func_801D2BE8(void);
 
 #endif
