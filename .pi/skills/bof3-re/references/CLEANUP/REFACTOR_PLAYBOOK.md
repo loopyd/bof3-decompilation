@@ -50,27 +50,21 @@ struct/enum types PascalCase; enum values/macros SCREAMING_SNAKE_CASE.
 Address-canonical `func_XXXXXXXX`/`D_XXXXXXXX`/`unk_XX` stays until the
 evidence gate passes.
 
-Function names: verb-led camelCase, role-first — `dispatchScenarioState`,
-`resetEffectBank`, `emitPanelIconPrim`. NO target/module prefix: the file
-path already encodes module and target, so `world00_area008_dispatch_mode`
-wrongly duplicates it; use a prefix only when the same name would collide
-inside one target's link scope (then the shortest discriminating word, e.g.
-`emiSelectNextEntry` where `emi_` marks the loader subsystem of the exe).
-Duplicate bodies across targets keep the same role name; the target stays
-visible in the selector. State bytes/counters stay `UPPER_SNAKE` macros
-only when they are constants; mutable globals are data symbols (below).
+Function names: verb-led camelCase, role-first (`dispatchScenarioState`);
+NO module/target prefix (the file path encodes it) — a prefix only breaks
+an in-target collision, shortest discriminating word. Duplicates across
+targets keep the role name; the target stays in the selector. Mutable
+globals are data symbols, not `UPPER_SNAKE`.
 
-Data symbols: camelCase with a role suffix (`...Table`, `...Strings`,
-`...State`, `...Cursor`) plus TWO mandatory comment tags on the
-declaration in `internal.h`: `// @source 0xXXXXXXXX` (origin address —
-the metadata authority, survives renames) and `// @kind table|rodata|bss|data`.
-Raw `D_XXXXXXXX` symbols that fail the evidence gate STILL get the
-`// @source` tag (address is already the name; the tag marks it reviewed)
-with `// @kind unknown`; no speculative names.
+Data symbols: camelCase + role suffix (`...Table/...Strings/...State/
+...Cursor`) and two mandatory `internal.h` declaration tags: `// @source
+0xXXXXXXXX` (origin address = metadata authority, survives renames) and
+`// @kind table|rodata|bss|data`. Gate-failing raw `D_XXXXXXXX` still gets
+`@source` + `@kind unknown`; no speculative names. Unsure → keep the
+address name, never skip the `@source` tag.
 Addresses, bitmasks, offsets in hex; timers/sizes decimal. Always `{}` on
 conditional/loops; blank line between declarations and code; functions in
-assembly order (Splat-owned). Unsure → leave the role name off: a wrong
-name is worse than an address name — but never skip the `@source` tag.
+assembly order (Splat-owned).
 
 ## Validation
 
