@@ -1,5 +1,9 @@
 #include "internal.h"
 
+/* Per-evaluation reload of the scratch cursor cell: the original emits
+ * lui $v1,0x1f80 / lw $v1,0x44($v1) before each store group. */
+#define AREA030_SCRATCH_CURSOR ((volatile u8*)D_1F800044)
+
 /* @behavior either advances the local AREA030 scratch record from the shared world
  * state or falls back to the game-side helper when the countdown gate is not
  * active.
@@ -11,26 +15,26 @@ void func_801D2AE0(void) {
 
   world = (volatile u8*)0x80140000u;
 
-  if ((*(volatile s16*)(world + 0x4006u) < 1) || (world[0x3fc9u] == 0u)) {
+  if ((*(s16*)(world + 0x4006u) < 1) || (world[0x3fc9u] == 0u)) {
     func_80196070();
     return;
   }
 
-  scratch = WORLD00_AREA030_SCRATCH_PTR;
+  scratch = AREA030_SCRATCH_CURSOR;
   *(volatile u32*)(scratch + 0x34u) = *(volatile u32*)(world + 0x3ffcu);
   *(volatile u32*)(scratch + 0x38u) = *(volatile u32*)(world + 0x4000u);
   scratch[0x2au] = world[0x3ff2u];
 
-  scratch = WORLD00_AREA030_SCRATCH_PTR;
+  scratch = AREA030_SCRATCH_CURSOR;
   scratch[0x49u] = world[0x4011u];
-  scratch = WORLD00_AREA030_SCRATCH_PTR;
+  scratch = AREA030_SCRATCH_CURSOR;
   scratch[0x4au] = world[0x4012u];
-  scratch = WORLD00_AREA030_SCRATCH_PTR;
+  scratch = AREA030_SCRATCH_CURSOR;
   scratch[0x4bu] = world[0x4013u];
-  scratch = WORLD00_AREA030_SCRATCH_PTR;
+  scratch = AREA030_SCRATCH_CURSOR;
   *(volatile u32*)(scratch + 0x50u) = *(volatile u32*)(world + 0x4018u);
   *(volatile u32*)(scratch + 0x54u) = *(volatile u32*)(world + 0x401cu);
   *(volatile u16*)(scratch + 0x58u) = *(volatile u16*)(world + 0x4020u);
-  *(volatile u16*)(scratch + 0x5au) = *(volatile u16*)(world + 0x4022u);
+  *(u16*)(scratch + 0x5au) = *(volatile u16*)(world + 0x4022u);
   func_8014D290();
 }
