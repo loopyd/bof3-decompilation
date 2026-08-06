@@ -128,6 +128,9 @@ if (!condition) { HandleFalse(); } else { HandleTrue(); }
 ```
 
 This swaps `beq` ↔ `bne` and changes delay-slot scheduling and fall-through
+order. A chain inversion surviving every C spelling is gcc 2.7
+`reorder_insns` normalization: no flag disables it (`-fno-thread-jumps` is a
+proven no-op, func_801DEAE0); escalate, do not churn spellings.
 reachability.
 
 ### Duplicate identical calls in `if/else` arms
@@ -555,22 +558,15 @@ durable choice of first lever.
 
 Partial lift: keep a residual note only when specific and durable —
 command/target, first differing instruction(s), no-progress attempts, next
-untried rung. No speculative TODOs. Third non-progressing diagnosed attempt at
-a rung: restore best clean-C state, move on. Ladder exhausted: report that
-evidence rather than looping.
+untried rung. No speculative TODOs. Third non-progressing diagnosed attempt:
+restore best clean-C state, move on. Ladder exhausted: report that evidence
+rather than looping.
 
 ## Approved `INCLUDE_ASM` fallback
 
 Use `INCLUDE_ASM` only after explicit user approval for that function.
 Without approval, leave its reviewed Splat segment as `asm` and report the
-clean-C residual; never add an assembly-backed source stub. An approved clean
-unmatched function allows:
-
-- Incremental reconstruction
-- Fully linkable intermediate builds
-- Per-function progress tracking
-- Avoiding low-quality fake matches
-- Keeping hard hand-written assembly intact
+clean-C residual; never add an assembly-backed source stub.
 
 See the [function-matching loop](matching.md) for the required iteration procedure.
 
