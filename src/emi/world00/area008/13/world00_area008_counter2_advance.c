@@ -4,5 +4,5 @@
 /* @source 0x801F4578
  * @behavior marks the local counter active and advances it by 20.
  */
-COUNTER_ADVANCE(func_801F4578, WORLD00_AREA008_D_8014932A,
+COUNTER_ADVANCE(world00_area008_counter2_advance, world00_area008_counter2,
                 D_80149333)
