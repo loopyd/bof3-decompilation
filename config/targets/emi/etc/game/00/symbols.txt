@@ -69,6 +69,7 @@ advancePanelXTo17 = 0x8019982C;
 retreatPanelField6ToNeg20 = 0x80199938;
 advancePanelField6To16 = 0x80199978;
 resetWork = 0x8019B0EC;
+func_8019DF8C = 0x8019DF8C;
 resetWork2 = 0x8019EAD4;
 func_801A0514 = 0x801A0514;
 func_801A06D8 = 0x801A06D8;

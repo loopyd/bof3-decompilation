@@ -119,6 +119,8 @@ extern struct GameWorkArea* g_game_work;
 /* @behavior entry-0 main state machine index */
 /* @source 0x80143B90 @kind unknown */
 extern volatile u16 D_80143B90;
+/* @source 0x8014932C @kind unknown */
+extern volatile u16 D_8014932C;
 /* @source 0x80143C40 @kind bss */
 extern u16          effectBusy;
 /* @source 0x80143F49 @kind unknown */
