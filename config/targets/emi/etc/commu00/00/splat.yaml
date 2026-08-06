@@ -162,7 +162,7 @@ segments:
     - asm
     - func_801F1FD8
   - - 13344
-    - asm
+    - c
     - func_801F2020
   - - 13404
     - asm
