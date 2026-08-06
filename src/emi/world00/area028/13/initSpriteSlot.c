@@ -5,7 +5,7 @@
  * sets a fixed 0x280 halfword bound at offset 8.
  * @source 0x801F2FB0
  */
-void world00_area028_sprite_slot_init(void* arg0) {
+void initSpriteSlot(void* arg0) {
   World00Area028Work* work;
 
   work = (World00Area028Work*)arg0;

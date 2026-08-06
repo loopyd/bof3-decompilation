@@ -5,7 +5,7 @@
  * entries.
  * @source 0x801F3060
  */
-void world00_area028_sprite_slots_refresh(void) {
+void refreshSpriteSlots(void) {
   u8 scratch[0x20];
   u8 i;
 
@@ -31,13 +31,13 @@ void world00_area028_sprite_slots_refresh(void) {
     i += 1u;
   } while (i < 0x20u);
 
-  WORLD00_AREA028_WORK_PTR = (World00Area028Work*)world00_area028_free_slot_scan();
+  WORLD00_AREA028_WORK_PTR = (World00Area028Work*)scanFreeSlot();
   if (WORLD00_AREA028_WORK_PTR != 0) {
-    world00_area028_sprite_slot_init((void*)WORLD00_AREA028_WORK_PTR);
+    initSpriteSlot((void*)WORLD00_AREA028_WORK_PTR);
   }
 
-  WORLD00_AREA028_WORK_PTR = (World00Area028Work*)world00_area028_free_slot_scan();
+  WORLD00_AREA028_WORK_PTR = (World00Area028Work*)scanFreeSlot();
   if (WORLD00_AREA028_WORK_PTR != 0) {
-    world00_area028_sprite_slot_init((void*)WORLD00_AREA028_WORK_PTR);
+    initSpriteSlot((void*)WORLD00_AREA028_WORK_PTR);
   }
 }
