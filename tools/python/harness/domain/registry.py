@@ -8,11 +8,32 @@ paths from a ``TargetManifest``.
 from __future__ import annotations
 
 import hashlib
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
 from .ids import TargetId, normalize_target_id
 from .manifests import TargetManifest, load_target_manifests
+
+# Lift metadata tags: the single parsing authority for @source/@behavior.
+# Comment-syntax agnostic (`/* */` or `//`); hex is case-insensitive and the
+# `0x` prefix optional (legacy forms accepted, tree writes `0x` uppercase).
+SOURCE_TAG_RE = re.compile(r"@source\s+(?:0x)?([0-9A-Fa-f]{8})\b")
+BEHAVIOR_TAG_RE = re.compile(r"@behavior (?:UNKNOWN: .+|[^\n]+)")
+
+
+def parse_source_tag(text: str) -> int | None:
+    """Return the address from a lift file's @source tag, or None."""
+
+    match = SOURCE_TAG_RE.search(text)
+    return int(match.group(1), 16) if match is not None else None
+
+
+def parse_behavior_tag(text: str) -> str | None:
+    """Return the @behavior tag text, or None when absent."""
+
+    match = BEHAVIOR_TAG_RE.search(text)
+    return match.group(0) if match is not None else None
 
 
 @dataclass(frozen=True)
@@ -139,8 +160,12 @@ def resolve_all_targets(root: Path) -> dict[str, ResolvedTarget]:
 
 
 __all__ = [
+    "BEHAVIOR_TAG_RE",
+    "SOURCE_TAG_RE",
     "ResolvedTarget",
     "lookup_target_manifest",
+    "parse_behavior_tag",
+    "parse_source_tag",
     "resolve_all_targets",
     "resolve_target",
 ]

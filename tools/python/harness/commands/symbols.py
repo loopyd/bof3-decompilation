@@ -6,6 +6,7 @@ import argparse
 from pathlib import Path
 import re
 
+from ..domain.registry import SOURCE_TAG_RE
 from ..canonical import (
     format_map,
     load_map,
@@ -91,7 +92,7 @@ def run_check(args: argparse.Namespace) -> int:
                         f"invalid lifted filename: {source.relative_to(root)}"
                     )
                     continue
-                match = re.search(r"@source (0x[0-9A-F]{8})\b", source.read_text(encoding="utf-8"))
+                match = SOURCE_TAG_RE.search(source.read_text(encoding="utf-8"))
                 if match is None:
                     continue  # not a lift file (bindings, helpers)
                 address = int(match.group(1), 16)

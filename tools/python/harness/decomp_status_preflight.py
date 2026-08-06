@@ -7,6 +7,7 @@ import re
 from typing import Any, Callable, Iterable
 
 from .domain import TargetManifest
+from .domain.registry import BEHAVIOR_TAG_RE, SOURCE_TAG_RE
 from .build import batch_build, cmake_target_for_source, configure
 from .io import repo_layout
 from .match._asm_diff_payload import AsmDiffRequest
@@ -14,10 +15,10 @@ from .match._asm_diff_run import _asm_diff_compare, _asm_diff_resolve
 from .match.status_cache import StatusCache, source_fingerprint, target_fingerprint
 
 
-_SOURCE = re.compile(r"@source 0x[0-9A-F]{8}\b")
+_SOURCE = SOURCE_TAG_RE
 
 
-_BEHAVIOR = re.compile(r"@behavior (?:UNKNOWN: .+|[^\n]+)")
+_BEHAVIOR = BEHAVIOR_TAG_RE
 
 
 _UNDEFINED = re.compile(r"undefined reference to `([^']+)'")
@@ -121,7 +122,7 @@ def _build_preflight(
                 address = int(source.stem.removeprefix("func_"), 16)
             elif metadata is not None:
                 # Renamed lift: the @source tag is the address authority.
-                address = int(metadata.group(0).removeprefix("@source "), 16)
+                address = int(metadata.group(1), 16)
             elif source.stem.startswith("func_"):
                 ready.append(
                     _invalid_record(root, target, source, "invalid lifted filename")

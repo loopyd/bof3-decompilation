@@ -4,13 +4,15 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from ..domain.registry import SOURCE_TAG_RE
 from ..io import read_json, RepoLayout
 
 IMPLAUSIBLE_SIBLING_FUNCTION_SIZE = 0x1000
 MIPS_JR_RA = 0x03E00008
 PSX_EXE_MAGIC = b"PS-X EXE"
 PSX_EXE_HEADER_SIZE = 0x800
-SOURCE_ADDRESS_RE = re.compile(r"@source\s+(0x[0-9a-fA-F]+|[0-9a-fA-F]{8})")
+# Centralized in domain.registry; alias retained for existing importers.
+SOURCE_ADDRESS_RE = SOURCE_TAG_RE
 FUNC_NAME_RE = re.compile(r"func_([0-9a-fA-F]{8})")
 
 
@@ -53,7 +55,7 @@ def parse_source_address(source_path: Path) -> int:
     text = source_path.read_text(encoding="utf-8")
     match = SOURCE_ADDRESS_RE.search(text)
     if match is not None:
-        return parse_int(match.group(1))
+        return int(match.group(1), 16)
     match = FUNC_NAME_RE.search(source_path.stem)
     if match is not None:
         return int(match.group(1), 16)
