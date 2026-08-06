@@ -19,6 +19,7 @@ func_801D7344 = 0x801D7344;
 func_801D7E08 = 0x801D7E08;
 emitPanelIconPrim = 0x801DA120;
 func_801DE188 = 0x801DE188;
+func_801DE1C4 = 0x801DE1C4;
 func_801DF464 = 0x801DF464;
 appendFullscreenDimTileB = 0x801DF90C;
 tickPhaseTimer = 0x801E0028;

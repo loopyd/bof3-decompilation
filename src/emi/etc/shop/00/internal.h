@@ -88,4 +88,9 @@ extern void (*D_801E52F0[])(void);
  * func_801D46A4 with the phase byte D_80148652 as index. */
 extern void (*D_801E530C[])(void);
 
+/* @source 0x801E5BFC
+ * @kind table — UI phase handler pointers (this EMI); dispatched by
+ * func_801DE1C4 with the phase byte D_80148652 as index. */
+extern void (*D_801E5BFC[])(void);
+
 #endif
