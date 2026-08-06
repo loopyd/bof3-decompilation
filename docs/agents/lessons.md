@@ -70,6 +70,11 @@ iteration procedure: [function matching](matching.md).
   (`func_800B2218` matched only after `D_80148648` became a named
   `PanelTask*`). Scheduling symptoms and levers:
   [playbook §Volatility](matching-playbook.md#volatility).
+- For a tail dispatch through a function-pointer table, if asm-diff shows the
+  original placing the stack prologue between the index load and the `sll`,
+  `const` on the table extern can block that schedule: dropping `const` is a
+  legitimate lever alongside the local-copy + `barrier()` shape. Try both
+  before reaching for pins.
 - Recover stable field offsets into a target-local struct before permuting.
   Addresses, masks, encoded values stay hexadecimal; human quantities
   (32-pixel step, 320-pixel clamp) decimal.
