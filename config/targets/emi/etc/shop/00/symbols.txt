@@ -30,6 +30,7 @@ func_801E092C = 0x801E092C;
 dispatchCommand = 0x801E1B80;
 swapBytes = 0x801E1BB8;
 func_801E200C = 0x801E200C;
+func_801E2048 = 0x801E2048;
 tickPhaseTimerB = 0x801E25CC;
 func_801E2610 = 0x801E2610;
 resetUiState = 0x801E262C;

@@ -467,7 +467,7 @@ segments:
     - c
     - func_801E200C
   - - 70728
-    - asm
+    - c
     - func_801E2048
   - - 70788
     - asm
