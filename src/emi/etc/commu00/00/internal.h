@@ -68,6 +68,8 @@ extern void (*progressHandlerTable[6])(void);
 extern void (*progressHandlerTable2[])(void);
 /* @source 0x801F2678 @kind table: function pointers indexed by the fairy progress byte. */
 extern void (*progressHandlerTable3[])(void);
+/* @source 0x801F269C @kind table: function pointers indexed by the fairy progress byte. */
+extern void (*progressHandlerTable4[])(void);
 /* @source 0x801F268C @kind table: function pointers indexed by the fairy slot index byte. */
 extern void (*slotHandlerTable[])(void);
 
@@ -90,6 +92,7 @@ void func_801F1064(u8 task_index, u8 record_kind_index);
 void func_801F1110(u8 task_index, u8 record_kind_index);
 void setVariantTaskStatus(u8 task_index, u8 record_kind_index);
 void activateTaskStatusC00A(u8 task_index);
+void func_801F1F9C(void);
 
 void func_801F0534(void);
 void func_801F0718(u8 source_index, u8 task_index);
