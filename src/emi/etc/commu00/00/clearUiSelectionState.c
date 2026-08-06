@@ -3,10 +3,10 @@
 /* @source 0x801F1684
  * @behavior clears the three frontend UI selection-state bytes.
  */
-void commu00_clear_ui_selection_state(void)
+void clearUiSelectionState(void)
 {
   func_8015C058();
-  commu00_ui_mode = 0;
-  commu00_fairy_progress[0] = 0;
-  commu00_fairy_slot_index = 0;
+  uiMode = 0;
+  fairyProgress[0] = 0;
+  fairySlotIndex = 0;
 }

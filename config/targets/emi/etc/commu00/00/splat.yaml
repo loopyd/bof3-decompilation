@@ -40,7 +40,7 @@ segments:
     - func_801F0E1C
   - - 8904
     - asm
-    - commu00_activate_task_status_c003
+    - activateTaskStatusC003
   - - 8968
     - asm
     - func_801F0F08
@@ -55,13 +55,13 @@ segments:
     - func_801F1110
   - - 9732
     - asm
-    - commu00_set_variant_task_status
+    - setVariantTaskStatus
   - - 9812
     - asm
-    - commu00_activate_task_status_c00a
+    - activateTaskStatusC00A
   - - 9876
     - c
-    - commu00_select_ui_mode_14
+    - selectUiMode14
   - - 9928
     - asm
     - func_801F12C8
@@ -79,7 +79,7 @@ segments:
     - func_801F1484
   - - 10436
     - c
-    - commu00_select_ui_mode_23
+    - selectUiMode23
   - - 10488
     - asm
     - func_801F14F8
@@ -100,16 +100,16 @@ segments:
     - func_801F1638
   - - 10884
     - c
-    - commu00_clear_ui_selection_state
+    - clearUiSelectionState
   - - 10940
     - c
-    - commu00_dispatch_progress_table
+    - dispatchProgressTable
   - - 11000
     - asm
     - func_801F16F8
   - - 11120
     - c
-    - commu00_select_message_259
+    - selectMessage259
   - - 11172
     - asm
     - func_801F17A4
@@ -121,8 +121,8 @@ segments:
     - func_801F1874
   - - 11452
     - c
-    - commu00_dispatch_progress_table_alt
-    - '@source: src/emi/etc/commu00/00/commu00_dispatch_progress_table_alt.c'
+    - dispatchProgressTableAlt
+    - '@source: src/emi/etc/commu00/00/dispatchProgressTableAlt.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 11512
     - asm
@@ -135,23 +135,23 @@ segments:
     - func_801F1B30
   - - 12172
     - c
-    - commu00_dispatch_progress_table2
-    - '@source: src/emi/etc/commu00/00/commu00_dispatch_progress_table2.c'
+    - dispatchProgressTable2
+    - '@source: src/emi/etc/commu00/00/dispatchProgressTable2.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 12232
     - asm
     - func_801F1BC8
   - - 12916
     - c
-    - commu00_dispatch_progress_table3
-    - '@source: src/emi/etc/commu00/00/commu00_dispatch_progress_table3.c'
+    - dispatchProgressTable3
+    - '@source: src/emi/etc/commu00/00/dispatchProgressTable3.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 12976
     - asm
     - func_801F1EB0
   - - 13072
     - c
-    - commu00_dispatch_slot_table
+    - dispatchSlotTable
   - - 13132
     - asm
     - func_801F1F4C
