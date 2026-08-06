@@ -101,20 +101,33 @@ def run_check(args: argparse.Namespace) -> int:
                     f"source/map drift: {source.relative_to(root)} has no map address"
                 )
         bindings_dir = source_dir / "symbols"
-        if bindings_dir.is_dir():
-            for binding in sorted(bindings_dir.rglob("*.c")):
-                for match in _WEAK_BINDING.finditer(
-                    binding.read_text(encoding="utf-8")
+        binding_files = sorted(bindings_dir.rglob("*.c")) if bindings_dir.is_dir() else []
+        for binding in binding_files:
+            for match in _WEAK_BINDING.finditer(
+                binding.read_text(encoding="utf-8")
+            ):
+                address = int(match.group("address"), 0)
+                expected = by_address.get(address)
+                if expected is None or expected.canonical_name != match.group(
+                    "name"
                 ):
-                    address = int(match.group("address"), 0)
-                    expected = by_address.get(address)
-                    if expected is None or expected.canonical_name != match.group(
-                        "name"
-                    ):
-                        errors.append(
-                            f"binding/map drift: {binding.relative_to(root)} "
-                            f"has {match.group('name')} at 0x{address:08X}"
-                        )
+                    errors.append(
+                        f"binding/map drift: {binding.relative_to(root)} "
+                        f"has {match.group('name')} at 0x{address:08X}"
+                    )
+        # Hand-maintained top-level bindings: flag only addresses no map owns
+        # (a different name at a mapped address is a deliberate typed alias).
+        top_level = source_dir / "symbols.c"
+        if top_level.is_file():
+            for match in _WEAK_BINDING.finditer(
+                top_level.read_text(encoding="utf-8")
+            ):
+                address = int(match.group("address"), 0)
+                if address not in by_address:
+                    errors.append(
+                        f"binding/map drift: {top_level.relative_to(root)} "
+                        f"has {match.group('name')} at 0x{address:08X}"
+                    )
     if errors:
         raise ValueError("; ".join(errors))
     print("symbol maps: OK")
