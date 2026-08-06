@@ -127,12 +127,16 @@ iteration procedure: [function matching](matching.md).
 - Semantic function names are verb-led camelCase, role-first
   (`dispatchScenarioState`), with NO target/module prefix — the file path
   already encodes it; a prefix only breaks an in-target collision (shortest
-  discriminating word). Long snake `module_target_role` names are retired
-  (see REFACTOR_PLAYBOOK naming standards).
-- Every data-symbol declaration in `internal.h` carries `// @source
-  0xXXXXXXXX` (origin address, the metadata authority) and `// @kind
-  table|rodata|bss|data`; gate-failing raw `D_XXXXXXXX` still gets the
-  `@source` tag with `@kind unknown`.
+  discriminating word). Cross-target duplicates keep the same role name;
+  the target stays in the selector. Mutable globals are data symbols, not
+  `UPPER_SNAKE`. Long snake `module_target_role` names are retired
+  (binding standard; REFACTOR_PLAYBOOK points here).
+- Data symbols take camelCase + role suffix (`...Table`/`...Strings`/
+  `...State`/`...Cursor`). Every data-symbol declaration in `internal.h`
+  carries `// @source 0xXXXXXXXX` (origin address = metadata authority,
+  survives renames) and `// @kind table|rodata|bss|data`; gate-failing raw
+  `D_XXXXXXXX` still gets `@source` with `@kind unknown`. No speculative
+  names, but never skip the `@source` tag.
 - Preserve pre-promotion evidence with an `INFERRED:` comment beside the
   owning address-based declaration: what was observed, what would verify
   promotion. Never create a semantic alias from a hint alone.

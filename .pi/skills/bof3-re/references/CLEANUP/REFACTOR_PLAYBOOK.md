@@ -43,24 +43,11 @@ Apply the ladder top down; stop at the first rung that resolves the drift.
 
 ## Naming standards (proven renames only)
 
-From PSX decomp practice (sotn-decomp STYLE): types `s8/u8/s16/u16/s32/u32/f32`
-(`include/base/types.h`); locals/struct fields camelCase; struct/enum types
-PascalCase; enum values/macros SCREAMING_SNAKE_CASE. Address-canonical
-`func_XXXXXXXX`/`D_XXXXXXXX`/`unk_XX` stays until the evidence gate passes.
-
-Functions: verb-led camelCase, role-first (`dispatchScenarioState`); NO
-module/target prefix (the file path encodes it) — a prefix only breaks an
-in-target collision, shortest discriminating word. Cross-target duplicates
-keep the role name. Mutable globals are data symbols, not `UPPER_SNAKE`.
-
-Data: camelCase + role suffix (`...Table/...Strings/...State/...Cursor`)
-plus two mandatory `internal.h` declaration tags: `// @source 0xXXXXXXXX`
-(origin address = metadata authority, survives renames) and `// @kind
-table|rodata|bss|data`. Gate-failing raw `D_XXXXXXXX` still gets
-`@source` + `@kind unknown`; no speculative names. Unsure → keep the
-address name, never skip the `@source` tag.
-Addresses, bitmasks, offsets in hex; timers/sizes decimal. Always `{}` on
-conditional/loops; blank line between declarations and code; functions in
+Types `s8/u8/s16/u16/s32/u32/f32` (`include/base/types.h`); locals/struct
+fields camelCase; types PascalCase; macros SCREAMING_SNAKE_CASE.
+Address-canonical names stay until the evidence gate passes. Naming style +
+data `@source`/`@kind` tag rules: docs/agents/lessons.md (binding standard).
+Addresses/offsets in hex; timers/sizes decimal. Always `{}`; functions in
 assembly order (Splat-owned).
 
 ## Validation
