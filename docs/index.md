@@ -54,6 +54,13 @@ Use [AGENTS.md](../AGENTS.md) for project rules.
 - [Graphics](specs/formats/graphics.md) — type-3 VRAM upload and indexed-palette layout
 - [Format conversion](specs/formats/conversion.md) — lossless interchange, derivatives, and provenance
 
+## External reference
+
+- [BoF3 EU (bof3js) RE reference](reference/bof3-eu/README.md) — imported
+  EU-release knowledge split by subject: engine, disc/EMI, graphics, world,
+  battle, game rules, audio, method, and EU address register. Addresses are
+  EU address space — leads and format contracts, not reviewed US facts.
+
 ## Lessons
 
 - [agents/lessons.md](agents/lessons.md) — cross-cutting gotchas for the lift-and-match loop

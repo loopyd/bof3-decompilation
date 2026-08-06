@@ -1,0 +1,359 @@
+> Imported from the bof3js project (EU release, SLES_013.04). Addresses are
+> EU address space — do NOT treat them as SLUS_004.22 facts; formats, record
+> layouts, and rules carry over, addresses do not. Source of truth for a
+> US-target fact remains our own evidence.
+
+## 22. Further address findings
+
+Individual findings that do not carry a chapter of their own: routines, tables and state
+bytes named once, grouped by subsystem. The address register in chapter 20 links here too.
+
+### Field engine and map rendering
+
+- `0x801534ec`–`0x80153f18` — terrain strip renderer (`RTPT` routine `0x80153e04`: `lwc2` dr0-5 = 3 vertices, strip stride 0x30); screen-cache table `0x80142cc4`+idx·8, scratchpad `0x1f800034`.
+- Object `ctx[0x3e]` = angle/timer (advances `+0x10` per tick, hits threshold `0x280` → sets `ctx[1]`=3). `0x801f6870` — per-area state-renderer vtable (subfile `+0x3c70`) selected by `ctx[1]` mode; holds the 40-byte mesh-loop handlers.
+- `0x80146254` — index resolving area-067 "gate reads": actually party-membership checks, not navigation gates. `0x80149de8` — one of 7 candidate ×55-entry pointer-array tables checked and ruled out as the per-area object-type handler table.
+- `0x8017fdac` — feature texture-word table (`[texIdx:u16][b2][b3]`), indexed by `idx=(TYPE−0x3F)>>1` (`idx&1` = X/Y orientation; height = 128 units above the max corner). `0x8014D9xx`–`0x8014DExx` — mesh-group interpreter for these feature objects, context kept in scratchpad.
+- `0x8014c86c`/`0x8014c880`/`0x8014c894` — feature mirroring/orientation resolvers, combining `flag&0x80` with context flip bits (`ctx[0x2a]`→bit1, `ctx[0x48]`→bit2) into 6 cases (`0x8014c970`–`0x8014cc34`, each ± width/height per corner). Screen position: `Xs·ctx[0x40]+ctx[0x2e]` (`0x8014ca30`/`0x8014ca58`), `Ys·ctx[0x44]+ctx[0x30]`.
+- `0x8014d558` — projects a feature/entity anchor once via `RTPS`: world pos `ctx[0x34/0x38/0x3e]>>9 − 0x4000` → screen anchor `ctx[0x2e]`/`ctx[0x30]` (frame data at `ctx[0x5c..0x5f]`, `0x8014cd40`–`0x8014ce8c`). `0x8014db38`/`0x8014dcac` test `a≥0x80` to drive the animation-sequencer cursor `ctx[0x50]`.
+- `0x8017fc68` — half-wall fan plane-count table; `0x8017fc74`/`0x8017fce0` endpoint offsets (±256 units); `0x8017fd4c` height (type 0x05 = 640); `0x8017fd60`/`0x8017fd74` V texture bands; `0x8017fd88`/`0x8017fd94` U edges; `0x8017fda0` CLUT nibble — together bend 2-3 planes into 4-6 half-walls in a 60° fan around an anchor.
+- `0x80158428`/`0x80158630`/`0x80158674`/`0x801587c4`/`0x801588c0`/`0x80158aa4`/`0x80158bb4` — per-feature-type sub-handlers for `TYPE 0x43`-`0x49` (indices ≥4 of the feature dispatch table).
+- `0x80166ac0` — party-list insert routine (writes both party lists with a duplicate check), using `0x80146254` as insert cursor. `0x80148661` — rebuild flag: field-init `0x80197914` rebuilds the march (follow) chain via `0x8016713c` (`buildParty`) only if the flag is nonzero, then zeroes it.
+- `0x80145eb8` — world entity record array: each record holds Q16 world position at `+0xc`/`+0x10` and a sprite-program pointer into the sprite band `0x800d3800` at `+0x28`/`+0x2c` (= model identity). walk-type `0x90` = chest family, `0xe0` = ambient family.
+- `0x80146888` — field entity table, 34 slots × `0x98` (152 B); populated via INIT spawn-op dispatcher `0x80195b54` (hi=0 `0x801a4f98`→`0x801a4fd4`, hi=1 `0x801a4f88`→`0x801a5340`). Object registers = slots 30-33, base `0x80147a58` (`0x80147aa0` = slot0+0x48, not a separate table).
+- `0x80148661` — party march-chain rebuild flag; field init `0x80197914` rebuilds the follow chain (and thus the battle party) via `buildParty` `0x8016713c` only when nonzero, then zeroes it — otherwise the old chain persists across area changes.
+- `0x8012c000` — world window grid base, cell = `0x8012c000 + row·0x70 + col·4` (code `0x80153558`-`78`); 4 B cell = `[worldCol:u8][worldRow:u8][slotIdx:u12|flags:u4]`; 28×55 grid, ends at `0x8012d810`.
+- `0x80153e04` — terrain strip renderer (RTPT-based; 3 vertices via lwc2 dr0-5, strip stride `0x30`); screen-cache table `0x80142cc4 + idx·8`; scratchpad `0x1f800034`.
+- `0x8015af74` — resident object-mesh renderer (loop `0x8015b160`ff): copies each 40-byte record's 4 vertices into scratchpad `0x1f800014`-`30`, then RTPS per vertex.
+- `0x80155970`-`0x80155a00` — terrain UV-corner mode branches, supplying corners `OL=(b3,b2)`, `OR=(b1,b0)` etc. per texture mode.
+- `0x801534ec` — terrain strip renderer; breakpoint target for tracing the data source of quad geometry, alongside per-area subfile candidate `0x801f2c00`.
+- `0x80144348` — global slot holding a pointer to the current mesh placement record (object-list head), independent of player position.
+- `0x801791c4` — `ApplyMatrix` (resident GTE library, matrices at `0x801492d8`/`0x801492e8`; mtc2/MVMVA/mfc2).
+- `0x801f61cc` — return address of an `ApplyMatrix` call, proving that code region belongs to the per-area subfile at `0x801f2c00`.
+- `0x80159bf0` — POLY_FT4 packet template for object meshes; no per-vertex lighting math, renderer always writes constant neutral color `0x80`.
+- `0x8015b474`-`0x8015b48c` — writes an object-mesh quad's CLUT via `GetClut(typ·16, 483)`: the record's `typ` field (0-15) is the CLUT column in row 483 (`clA` band `0x80033e00`).
+- `0x80146678`/`0x801833e0` — RAM load tables consulted at area load; point exclusively at AREA EMI sectors, making `vram-*.bin` dumps obsolete except as validation ground truth.
+- `0x80146888` — field object array, 30 slots × 152 bytes.
+- `0x80157f58` — world coordinate formula: `world-XY = tile·128 − 0x4040` (128 units/tile), `world-Z = −corner-height·16`; tile top = max of the corner heights.
+- `0x80104030` — per-tile height table: `height = *(0x80104030 + tile·4)`.
+- `0x80154508` — tile renderer, sole call site `ra=0x801537d0`; reads `tileTexIdx`+`textureData`, returns early when `tileTexIdx==0`. Texel/CLUT entry decode via `0x801557d4` (dominant caller `0x801545d4` per RA histogram).
+- `0x801534ec`–`0x80153f18` — terrain strip renderer; RTPT routine `0x80153e04` (`lwc2 dr0-5` = 3 vertices).
+- `0x801f60fc` — entity world-position translation: `(pos16.16 sra 9) − 0x4000`.
+- `0x80143fc8` — field entity table: stride `0x74` (116 B) × 20 slots (`+0`=active, `+5`=type; type-search example `0x801b5dc0` for type `0x17`). `0x80144f5a`–`0x80144f5d` — party-slot bytes written by `ENT_ACTIVATE` (`0x801c1b00`).
+- `0x80155db4` — feature/roof dispatch loop: runtime window table `0x80141880` (28 u16/row) → group-index·4 + featPtr; handler args a0=feature word, a1=col, a2=row.
+- `0x80157970` — condition consumer, evaluates a group header via the roof condition interpreter `0x801560f0`. `0x801578b4`/`0x80157914` — trigger setter, stamps an object TYPE byte to `0x25`/`0x23` (t23 trigger family, e.g. AREA011 door open/closed).
+- `0x8014626c` — player walk-context pointer; walk-code `0x11` (flag-conditional block) checks byte `0x80146277 & 1` for the player, or `ctx2[+0x12c] & 1` for other entities.
+
+### Sprites and animation
+
+- `0x80182000`/`0x801820a8`/`0x80182148` — EXE-static objList table (handle triples + `[descKey, progIdx, flip]` records); identical across all battle-RAM captures, ruled out as the source of per-instance sprite variance.
+- Enemy/furniture sprite chain: `0x800abce0` setup (ctx = `0x801eb630`+actorId·280; record = `0x800e4000`+spriteId·136) → `0x800a7e40` param decoder (table `0x800b4ee0`+idx) → sequencer `0x8014d740`/`0x8014da60` (cursor `ctx[0x54]`+recIdx·2) → `0x8014dce8` resolves the record (`ctx[0x54]+ctx[0x5a]`) → renderer `0x8014c62c`.
+- `0x801463b9` — element-variant CLUT row selector on sprite ct0 (0=neutral, 1-5=Flame/Frost/Thunder/Shadow/Radiance, 6=multi, 7=golden). Window model: texel index ≤31 selects this row, >31 is an absolute palette index.
+- `0x801ec330` — particle/effect instance struct (stride 0x78, `+0x74`=parent link). `0x800b65f8` — effect-descriptor table (+eff·8, per-effect mainFn); `0x801d0d1c` child-type table. Prim heap `0x80028fcc`/cursor `0x8014598c`, `0x8017abbc`=GetClut, frame counter `0x80143e6c` gates emission.
+- `0x8014c62c` — sprite renderer entry; geometry loop `0x8014c860`-`0x8014cecc` expands each 5-byte "vertex" record into one textured `POLY_FT4` quad in screen space.
+- `0x8014c86c`/`80`/`94` — quad mirroring/orientation selector (6 cases at `0x8014c970`-`cc34`, ±w/±h per corner); screen X `Xs·ctx[0x40]+ctx[0x2e]` (`0x8014ca30`/`58`), screen Y `Ys·ctx[0x44]+ctx[0x30]` (`0x8014cc64`/`8c`); UV box `[U+ctx[0x28],V+ctx[0x26]]..+(w,h)` (`0x8014c9ac`/`cd00`).
+- `0x8014d558` — per-entity world-position RTPS transform, run once per frame: `ctx[0x34/0x38/0x3e] >>9 − 0x4000`.
+- `0x8014db38`/`dcac` — animation-sequencer record-pair test (`a≥0x80` via sltiu); cursor `ctx[0x50]` selects the drawn record via `ctx[0x54]+ctx[0x5a]`.
+- `0x8014d740` — `setAnimState`: sets `ctx[0x4b]`, skips restart if unchanged, else restarts the sequencer at `0x8014da60`; explicit-param variant `0x8014d7b4`; state-switch dispatch `0x8014d808`→`0x8014d82c` (`a0&0x80` → EXE object-list `0x80182000`, global cursor `0x80145024`).
+- `0x800a7e40` (table `0x800b4ee0`+idx) — enemy sprite param decoder feeding the shared animation sequencer → resolve `0x8014dce8` (record = `ctx[0x54]+ctx[0x5a]`); all enemies share geometry base `0x800d3800` (AREA ct0-sub4).
+- `0x80145bd4` — CLUT-tint slot table (32×12 B) for ghost/fade effects, applied by `0x8019645c` onto VRAM shadow `0x80037800`.
+- `0x80182148` — `ANIM_PLAY` table → `ctx[0x4b]`, one-shot animation protocol (ops `0x0e`/`0xfd`/`0xe4`; WAIT polls entity+0x50/58).
+- `0x8017fb34` — dispatch handler table for renderable POLY_FT4 quad records; terrain uses an 80-byte-slot double buffer `@~0x8012d8d4`, sprites/NPCs a separate buffer `@~0x80020000`.
+- `0x8014c848` — quad record vertex count `vc`; each vertex is `[flag][Xs:i8][Ys:i8][U:u8][V:u8]` (stride 5) — one record renders as one screen-space textured quad, no shared vertex connectivity.
+- `0x8014ca30`/`0x8014cc64` — screen position formula: `Xs·ctx[0x40]+ctx[0x2e]`, `Ys·ctx[0x44]+ctx[0x30]`; `ctx[0x2e]/0x30` is the entity anchor projected to screen.
+- `0x8014c9ac`/`0x8014cd40` — per-quad UV box `[U+ctx[0x28],V+ctx[0x26]]..+(w,h)` and CLUT/TPage taken from `ctx[0x5c..0x5f]`.
+- `0x8004b1d8` — ct1 pose-block storage: one animation frame is one block (~5-7 quads, 16×32 sprite from 8px bands), grouped by 8 (directions/walk cycles). Block format `[01 01][cmd1:u16][link:u16][vc:u8][vc×5B vertex]`; `[06 06]` pairs are `(tick,frameIdx)` sequencer entries.
+- `0x8014d9c8` — animation program resolution: `pkgBase = table[*(0x801459f0)][ctx[0x2c]]`, `progOff = u16[pkgBase+ctx[0x4b]·2]`, `ctx[0x50] = pkgBase+progOff`.
+- `0x800e5000` — RAM location holding an EMI ctype7 payload byte-exact (e.g. ENEMY019, size 38592 matching pBAV `+0x12`); read there as an LZSS-packed battle-sprite codec.
+- `0x800c1804`/`0x800c1810`/`0x800c181c` — BOSS055 three-part composite: descLookup 781 = snake body, descLookup 780 used twice for head (`[1,3,5,…]`) and wings (`[0,2,4,…]`); all parts idle 8 steps at tick 5 sharing a `(0,0)` anchor.
+- `0x8014da60`/`0x8014dac8`/`0x8014db74` — sprite anim sequencer; program header format corrected to `[nRecs:u8][nSteps:u8]` (previously read swapped).
+- `0x801ec8d0`/`0x801ec948` — secondary anim contexts for effect/auxiliary battle actors (p1/p4 cycles); enemy programs: p0=idle, p2/p4=action (per type), p6=hurt.
+- Sprite vertex format `[flag][Xs:i8][Ys:i8][U:u8][V:u8]` (stride 5); quad size table `0x8017fa08[flag&0xf]` (used at `0x8014c948`/`58`/`5C`): `w=((flag&3)+1)·8`, `h=(((flag>>2)&3)+1)·8` ∈ {8,16,24,32}.
+- `0x8014c9ac`/`0x8014cd00` — sprite UV box `[U+ctx[0x28], V+ctx[0x26]]..+(w,h)`; CLUT/TPage from `ctx[0x5c..0x5f]` (`0x8014cd40–84`/`0x8014ce14–8C`). `0x8014d558` — entity anchor, projected once via RTPS from world pos `ctx[0x34/0x38/0x3e]>>9−0x4000` into `ctx[0x2e]/0x30`.
+- `0x8014dc1c`–`0x8014dc30` — sprite frame/record addressing: `ctx[0x5a]=*(u16)(ctx[0x54]+index·2)`=recOffs[index]; `record=ctx[0x54]+ctx[0x5a]`; frame step `ctx[0x54]=(cursor+2)+b·2`.
+- `0x8014ab50` — per-frame battle-sprite dispatch call (game loop); drains queue tables `0x80145a04`/`0x80145a54`/`0x80145a7c` (count `0x80145a00`); enqueue routine `0x8014dd68`.
+- `0x800c1804` — Myria giant-form snake-body descriptor (`0x30c`=780, used twice); `0x800c1810`=head frames `[1,3,5,…]`, `0x800c181c`=wing frames `[0,2,4,…]`; shared (0,0) anchor, composited into `area198_giant.png` (8×248×232 frames).
+
+### Battle
+
+- `0x80149333` — alternative sprite-band base used when the address-correction path is taken; the default base is `0x200` lower.
+- `0x801ddfec` — per-slot turn routine called once per combatant; the turn filter `0x801db898` admits only combatants carrying flag bit `0x10`.
+- `0x801e3c14` — battle phase handler (type 0; phase byte `0x80146375`), copies combatant contexts at start. `0x801dbb78` — HP-apply routine, the only caller of `calcDamage` (call site `0x801dbbfc`).
+- `0x801d935d` — skill element-word table: `element = table[actionId(+0x82)·24 + 18]`; fetched when `calcDamage`'s 3rd parameter is the sentinel `0xffff`. Result lands in scratchpad `0x1f800000` and drives resist percentages in damage finalize.
+- Party record `+0xa8` — 5-byte percentage row `[?, roll%, crit%, dodge%, hit%]` (e.g. Ryu/Teepo = `[50,12,5,6,95]`). `+1` is read by `0x801dd508` (proc-roll chance); `+2` crit%; `+3` dodge% (actual dodge = `(value+1)/100`); `+4` hit%.
+- `0x800a2ae0` — elemental resist: `damage *= resistPct/100` for element bits 0-4 (resist fields 0-7). `0x801eafc0` — i16 table `[300,200,200,150,125,100,50,0]`/100, multiplier by target-type index when element bit 5 is set. Damage variance rolls 0.85-1.20 in 5% steps, then rounds commercially: `(x&0xff)≥0x80 → +0x100, >>8`.
+- `0x801462e8` — global battle flag word; bit `0x80` = crit (also selects choreo cue a0=3). `0x801dc5c8` — `calcDamage` crit formula: `dmg = 2·dmg + core(atk without def)/4` with its own random factor; minimum 1, a crit never fully misses.
+- `0x801eb550` — turn-order list: pairs `[i16 accumulator][u16 slot]`, party slots then enemies; built by `0x801dab9c`. `0x801dad04` — per-tick update `acc = acc·pct/100 + agl`, pct from table `0x801eaf3c`.
+- `0x800ab504` — target-slot roll: `rand&7` picks uniformly among 8 slots for normal-attack targeting (confirms flat roulette-style targeting); confusion targeting offsets it, `target = 3+(rand&7)`, and procs on `rand%20` against party byte `+0x136`.
+- Battle `SET_ATK` ops on the power stat (party `+0x94`/enemy `+0xa4`): `0x8009fa80` (×0.8), `0x8009eba0` (×1.25), `0x8009f224` (×2, element word 0x20), `0x8009db14`/`0x800a048c` (×random {0.5,1,1,1.5}). `0x8009f030` — `SET_ATK_INT`: atk cell = INT stat (party `+0x9a`/enemy `+0xaa`), used by MAGIC ops.
+- `0x8009f6ec` — heal op: zeroes the def cell, sets flag `0x801462e8` bit `0x2000` (heal mode), runs the `calcDamage` core then doubles it → `heal = rollScale(int)·2`.
+- `0x800b470c` — class→program-array table (class 3→`0x800b45e0`, 4→`0x800b4640`, 5→`0x800b469c`, 6→`0x800b46e4`; `0x800b44f8` = phase-4 array). `0x800b471c` — opcode→handler CODE table (op 0 = `0x8009da94`; >120 ops total).
+- Op 80 = atk×0.8; op 89 = Dragon Breath (skillId fixed to 102, power read from `0x801cb197`); op ~118 = spell formula with mode=1 (heal variant, resist via `0x800a2ef0`). `0x800a2880` — `SPELL_FORMULA(atkSlot, targetSlot, power, mode)`.
+- `0x801daed8` — stable pair-swap turn-order sort, output slot order into `0x8014630c` (count at `0x80146323`). Party accumulator = agl (+ priority-action bonus ×table `0x801eaf3c` `[100,125,150,200,250]` by level class); enemy accumulator = `agl + JITTER[lvlClass][rand&15]`.
+- `0x801d38d0` — action-record setter: writes the skill ID into the record at `+0x2` (record pointer from `0x80146380`, mirrored to `0x801463c0`), sourced from table `0x801eac78[x&0x1f]`. Skill byte `+0x0e` = flag bits (0x10/0x40/0x80 select special branches).
+- `0x800a0c68` — Super Combo (id 3) handler, entry op 103 via `0x800b44f8[3]`: multi-hit loop over N = hit counter `+0x62`, each hit = `calcDamage(actor, target, elem 0xffff)` (own rand variance) × `FACTOR[hit]/10`.
+- Battle actor record `+0x5c` — skill list feeding the battle ability window (example slot 2: actor base `0x80146184` → `+0x5c` = `0x801461e0`). `+0x70` — magic/spell list (e.g. Nina=`[0x64,0x5e,0x61]`, Rei=`[0x41]`); child Rei's list is empty.
+- Battle actor context layout: `+0` active, `+1` choreo phase, `+5` idx+3, `+8` = global `0x801462ec`^2 (side bit), `+0x2c` sprite-package index, `+0x4b` anim state, `+0x50` active program pointer, `+0x58` remaining time.
+- `0x800b50b0` — physical-action choreography opcode table (11 ops, EXE-resident); dispatcher `0x800a8548` = `fnTab[ctx[+1]]`. Ops write anim-state `ctx[+8]+K`: K=0x38 (op0, +movement target = APPROACH), 0x3c (op1), 0x40 (op2), 0x44 (op3), 0x04 (op6).
+- `0x801eb000` — battle action name table (`BATTLE.EMI` sub[3], stride ~26 bytes): Attack, Examine, Defend, Charge, Reprisal, Critical, Lucky Strike, Instant Kill, Escape, Counter.
+- `0x801cda10` — battle-encounter table (56×4-byte records: flags/layout/formationIdx/bossSel). `0x80197f88` — boss selection via u16 list `0x801cdaf0` (= `BOSS001`-`BOSS055` index); figure lookup `0x800ac754(objId)` uses descriptor handler table `0x800b5108`.
+- `0x800a3a10` — status-chance formula: `chance% = s2·s0·s1/10000`, with `s2 = X/5+50` (cap 100), `s0 = 125−Y/5` (min 50), `s1` = tier percentage.
+- Party struct `+0x35`/`+0x36`/`+0x37` (psionic/status/death resist tiers, matching `enemies.json` resist fields) index tier table `0x800b494c` = `[−1,150,100,75,50,25,0,0]`%, stored directly after the element-resist table.
+- Skill 130 (Venom) = three independent applyStatus rolls (Confusion+Poison+Blind). `0x800a0378` — Death (skill 106) handler: sets no status bit, instead writes the target's current HP as the damage amount. Blind: `rand&2` → 50% pre-miss check before the normal hit roll.
+- `0x801dcf1c` — poison tick: `damage = (currentHP + 5) / 10` (not maxHP/16); party HP field `+0x9c`, enemy HP field `+0xb6c4`.
+- `0x801eaffc` — `[25,50,75]`-family status-proc probability bytes; from counter ≥3 a fixed ~76% roll applies instead. Enemy path: struct `+0x34` indexes tier table `0x801eaff4` = `[200,150,100,75,50,25,0,0]`, giving `P ≈ (10000−w·50)/10000`.
+- `0x801d5658`/`0x801d57ac` — sleep loop. `0x801dc404` — on-hit status-clear zone: clears sleep and confusion (`0x801dc49c`/`0x801dc4dc`); paralysis is checked there as a helpless marker but never cleared (holds until cure or battle end).
+- `0x800a3480` — status marshaller: applying Paralysis first clears mask `0x38` (Blind|Silence|Confusion); applying Egg clears mask `0x7e`.
+- Stat-stage storage: party `0x80145fbc`+slot·0x140, enemy `0x801eb738`+i·0x118 — 8 signed bytes `[pwr,def,agl,int,%-row(5)]`. Target-context pointer `0x801463a0` exposes them at `+0x14+statIdx`.
+- Flag `0x4000` → pwr×3 (Berserk class); flag `0x1000` → `pwr += chargeCell(+0x96)` then clears it. `0x801e81e4`/`0x801e89fc` (battle init), `0x800a68a4` (self-cleanse), `0x800a17a4` (purify) all zero the 8 stat stages.
+- `0x801ca98e`+skillId·20+`0x11` (read by `0x801ca99f`) — per-skill stage power/statIdx feeding stage-apply→recompute. `0x800aee88` — context-copy caller with dynamic statIdx (the Slow family's agl-debuff path).
+- Party row `+0xa9` (value 12 for Ryu/Teepo) = extra sleep-proc chance per enemy hit, rolled by `0x801dd508` (from `0x801dd448`); requires actor=enemy and target not locked by status mask `0x4864`; an already-sleeping target is woken instead (clears bit `0x40`).
+- Op 96 = status chance roll (`0x800a3a10`). Op 97 marks the target (slot `0x80146394`) with bit `0x10` and starts timer `0x801463ce` = 4 rounds (decremented each round by `0x801d4f04`, triggers a clear cascade at 0).
+- `0x801e3c14` — battle phase-0 handler: reads action-phase byte `0x80146375`, copies combatant contexts; only `calcDamage` caller is HP-apply `0x801dbb78` (call site `0x801dbbfc`) → `calcDamage(atkSlot,targetSlot,elemWord)` `0x801dc044` → core `0x801dcad8`.
+- `0x801ec2e8` / `0x801ec308` — per-battle target/attacker context copy (mirrors struct+0xa0..0xbf: effective stats, resists, percentages); target def cell at `0x801ec2ee`.
+- `0x801dccb0` — enemy-attacker base-damage loop: averages party def (`Σ def@+0x96 / count@0x801462f0`); level-term divisor table `0x801eaf94 = [10,11,12,13,14,15,16,18,20]` in `lvl·(2+rand%2)·256/div`.
+- `0x801eafc0` — i16 race/type multiplier table `[300,200,200,150,125,100,50,0]` for element bit 5; hit/miss guards `0x801dc73c` (party target) / `0x801dc894` (enemy target).
+- `0x800a2ae0` — elemental resist application: per set element bit, target resist level (party +0x9f / enemy +0xaf) indexes `% table @0x800b493c = [300,200,100,75,50,25,0,−100]` (2=neutral, 7=absorb).
+- `0x801d0c7c` — DEFEND-command damage-reduction table `[50,50,50,50,60,60,60,70]` (indexed `rand%8`), applied when target status s5 bit `0x2` is set; formation byte `0x80144f58==2` on a party target adds a further −25%.
+- `0x801dab9c` — turn-order combatant list build (party slots then enemies); per-tick accumulator `0x801dad04`: `acc = acc·pct/100 + agl`, speed-class table `0x801eaf3c = [100,125,150,200,250]` selected via `0x801db434` from combatant byte +0x7a.
+- `0x801d0c00`-`0x801ed700` — battle overlay code/data range; absent from `battleload.ram.bin` (differs completely from mid-battle RAM).
+- `0x8009f224` (op `0x20`) and `0x8009db14`/`0x800a048c` — battle op handlers: power·{0.5|1|1|1.5} random multiplier.
+- `0x8009f030` — `SET_ATK_INT` op: atk cell := INT stat (party+0x9a / enemy+0xaa), marks a MAGIC-type action; `0x8009ee5c` — status op: atk:=0, hit% = x/2+30 capped at 100.
+- `0x800b4640`, `0x800b469c`, `0x800b46e4` — magic/healing percentage table series (entries 4-6), parallel to the element-resist table `0x800b493c`.
+- `0x800b471c` — battle op-code dispatch table (op byte → handler, op0=`0x8009da94`, >120 ops total); op8 = power-random multiplier, op11 = SPELL DAMAGE.
+- `0x800b492c` — spell-damage variance table `[85,90,95,100,105,110,115,120]%` (÷10000 via `0x68DB8BAD`), used in `power·(int_caster+100)/100 · max(100−int_target/5,50)/100 · resist%/100 · f/100`.
+- `0x801eaf48` — 4 level-scaled 16-B enemy jitter arrays (`±4/±6/±8/±10`, each 4 positive/6 zero/6 negative) added to agl for the enemy turn accumulator; level-class thresholds `0x801eaf88 = [16,36,64,99]`.
+- `0x800b44f8` — phase-4 start-op array, indexed by skill ID (`0x801463c0`); dispatcher `0x8009d3b4` reads it, gated by `0x8009d3a0` checking action-phase byte `0x80146375==4`.
+- `0x800b4924` — multi-hit damage-factor table `[5,5,5,4,4,4,3]/10` (hit≥8 constant 3/10); per-hit `calcDamage` calls (elem `0xffff`) are summed, clamped ±9999, applied as one instance.
+- `0x800e4000` — resident battle-load buffer: encounter-formation header (8 formations × 9 B: 8 slots + 1 extra byte; spawner `0x800abf5c`) followed by the enemy sprite param table (`+spriteId·136`).
+- `0x801cdaf0` — BOSS001-055 list; figure resolved via `0x800ac754(objId)` → descriptor-lookup handler table `0x800b5108`.
+- `0x801eb6c4` — enemy block array (+k·`0x118` stride); enemy HP at block+0x94 (`0xFFFF`=empty); HP-apply branch `0x801dbda8`.
+- `0x800ad8d8` — death animation helper: sets state `0x12`, then (if global `0x801462e6==0xff`) transitions to state `0x13` (two-stage dying → lying).
+- `0x800a9d00` — active-percentage (dodge/crit-type) calculator: `base·(100+2·buffMod@+0x10c)/100`; confirms enemies have no base dodge/crit stat.
+- `0x801ec312`/`0x801ec2f2` — actor/target context fields feeding the status-resist chance formula (`s2=X/5+50 cap100`, `s0=125−Y/5 min50`; resisted if `rand%100 ≥ chance`).
+- `0x800a31e0` — status setter `(slot, bitmask)`: writes the 16-bit status word — party `0x80145f10 + slot·0x140`, enemy `0x801eb6b2 + (slot−3)·280`.
+- `0x801dc7a8` — BLIND pre-miss check (`rand&2`, 50%) before the normal hit roll; ACTION-LOCK status mask `0x4964` (party) / `0x4144` (enemy, excludes Confusion/Egg) gates the turn filter.
+- `0x801d5658` (party) / `0x801d57ac` (enemy) — per-tick SLEEP counter (+0xa1); wake decided probabilistically by `0x801ddcb4` (weights `[200,150,100,75,50,25,0,0]`), reset on hit-wake by `0x801dc404`.
+- `0x801d4d44` — EGG status round counter (+0x137, cap 6); hatch check in tick loop `0x801d54f8`.
+- `0x800a39b4` — stat-stage apply `(delta,statIdx)`: `stage += delta`, clamped `[−25..+50]`; recompute `0x800a9bd8` (party core `0x800a9fc4`): `base·(100+2·stage)/100` (scaler `0x801de0ac`, clamp 0..999).
+- `0x801e81e4`/`89fc` (battle init), `0x800a68a4` (self-cleanse), `0x800a17a4` (purify) — zero all 8 stat stages.
+- `0x800a403c`/`0x800a40d0(statIdx)` — stat-stage change roll wrapper → chance roll `0x800a3a10`.
+- `0x801e02d4` — phase-4 attack-path SLEEP infliction: success sets `0x801463d8 |= 0x40`; `0x801e0340` — same path for elem-`0x800` (EGG) skills.
+- `0x80146394` — INTIMIDATE target slot (extra bit `0x10`); sets 4-round timer `0x801463ce` (decremented by round loop `0x801d4f04`) and clears the queued actions of other combatants via sorted turn list `0x8014630c`.
+- `0x801dbb78` — HP-apply routine, sole caller of `calcDamage` (call site `0x801dbbfc`); deducts HP after the formula chain returns, gated by a near-death window on combatant byte `+0x8c` (heals capped at maxHP).
+- `0x801dc044` — `calcDamage(atkSlot, targetSlot, elemWord)`, the central damage-formula entry point; flows through core `0x801dcad8` and finalize `0x801dcd50`.
+- `0x801ec2e8`/`0x801ec308` — per-battle working copies of target/attacker combat stats (struct `+0xa0..0xbf` / `+0x90..0xaf`; def at `+0xa6`, pwr at `+0x94`).
+- `0x801dccb0` — sums target-side `def@+0x96` over combatant `Count@0x801462f0` for the level term `lvl·(2+rand%2)·256/div`; divisor table `0x801eaf94` = `[10,11,12,13,14,15,16,18,20]` by level (level 0 → /10, floor 0, `+rand&1`).
+- `0x801eafc0` — i16 type-multiplier table `[300,200,200,150,125,100,50,0]/100`, indexed by target type.
+- `0x801dc73c`/`0x801dc894` — hit/miss guards for party-target / enemy-target: attacker blind (status `0x8`) or enemy dodge (specialProps `0x04`) each force a 50% miss.
+- `0x801d0c7c` — DEFEND-command −25% modifier table (target status `0x80`, or party target while `0x80144f58==2`, formation-related, unconfirmed); skill-vs-race ×2 for actionId `{0x13,0x17,0x33}` vs race 4 and `{0x16,0x35,0x40}` vs race 1.
+- `0x801dad04` — per-tick turn accumulator `acc = acc·pct/100 + agl`; pct table `0x801eaf3c` = `[100,125,150,200,250]` selected by haste-like state class `0x801db434` from combatant byte `+0x7a`.
+- `0x8009d800`-`0x800a0600` — CHOREO op-family range in BATTLE.EMI: per-opcode action scripts compose the damage-formula context before calling `calcDamage`.
+- `0x8009f030`/`0x8009ee5c` — `SET_ATK_INT` op (atk cell := INT stat, `party+0x9a`/`enemy+0xaa` — magic damage reuses the physical `calcDamage` formula) and the status-effect hit% op (`x/2+30`, capped 100).
+- `0x8009d3d0` — CHOREO interpreter dispatch: action `record[+0x2]` = u16 `[class:hi|step:lo]`; class indexes a u8 program array via table `0x800b470c` (e.g. class 3 → `0x800b45e0`).
+- CHOREO ops (via `0x8009d3d0`): `8`=pwr×`{0.5,1,1,1.5}`; `11`=spell damage, power from skill table `0x801ca98e+id·20+0x11` via `0x800a2880`; `43`=fixed power 20; `46`=element fetch (`+0x12`, 9-bit mask); `47`=`SET_ATK_INT`; `69`=heal (`core·2`).
+- `0x801dadbc`/`0x801daed8` — turn-order build + stable pair-swap sort, globally descending by initiative accumulator (not per-side phases); sorted slot order written to `0x8014630c`.
+- `0x801eaf48`/`0x801eaf88` — four level-scaled 16-byte initiative-jitter arrays (`±4/±6/±8/±10`, weighted toward 0) and class thresholds `[16,36,64,99]` enemy / `[8,16,32,48]` party for classifier `0x801db434(level, tabIdx)`.
+- `0x80146374` — running-action queue-head struct: `+0x00` actor, `+0x20` target, `+0x4c` skillId, `+0x62` hit counter (counts animation hits); queue shift `0x801d44b8` advances cursor `0x80146384` on record flag `0x40`.
+- `0x8009ff7c` — handler that force-rewrites the running action to phase 4 / skillId `0x63` (Myollnir), proving choreo scripts can rewrite in-flight actions; `0x8009ffb4` calls `0x800a36f0(actor, 0x0bfc)`.
+- `0x801e5824` — VFX scheduler for battle ct0 effects; 48 entity slots at `0x801ec330` (stride 0x78, `+0x74`=parent), effect descriptors at `0x800b65f8+eff·8`.
+- `0x801c7cd8` — `startBattle`, leads to battle table `0x801cda10` (56×4B: flags/layout/formationIdx/bossSel) → BOSS-EMI selection `0x80197f88`.
+- `0x800b5108`/`0x800e4000`/`0x800abf5c` — descLookup handler table, formation header (8 formations × 9 bytes = 8 slots + 1 extra byte, not 12×6), and the formation spawner.
+- `0x801ec312`/`0x801ec2f2`/`0x800a2d70` — actor/target status-resist context fields used by `rand%100 >= chance ⇒ RESISTED`, and the resist-channel selector lookup (9-bit "D1" mask).
+- `0x800a31e0` — status setter `(slot, bitmask)`: 16-bit status word, party fighter at `0x80145f10+slot·0x140`, enemy at `0x801eb6b2+(slot−3)·280` (stride 280).
+- `0x801db884`/`0x801dc3a4` — turn filter status mask (party `0x4964` / enemy `0x4144`, excludes Confusion/Egg), and the helpless check inside calcDamage: target status `0x64` (Sleep|Confusion|Paralysis) ⇒ auto-hit and wakes the target.
+- `0x801d5658`/`0x801d57ac` — party/enemy Sleep tick loops (`+0xa1` counter counts up each tick).
+- `0x801ddcb4`/`0x801eaffc` — Sleep wake decision (counter 0 never wakes) rolling `rand%100` against thresholds `[25,50,75]`, fixed ~76% once counter ≥3.
+- `0x800a39b4` — stat-stage apply for Slow (Molasses/Tarbaby): signed stage delta `−25/−5`, agl ×0.5/×0.9.
+- `0x801d4d44`/`0x801d54f8` — Egg status round loop (counter `+0x137`, cap 6) and hatch tick: at counter `==5`, restores HP/AP to max and resets the counter.
+- `0x8009f278` — REDIRECT-op family (17 stubs on a 0x38 grid): `phase:=4; skillId:=K; re-dispatch` — the skill-chaining/composition mechanism.
+- `0x801de0ac`/`0x80145f04`/`0x801eb6f4` — stat-stage scaler `base·(100+2·stage)/100` (clamp 0..999) applied to party/enemy base-stat rows.
+- `0x800a68a4`/`0x800a17a4` — self-cleanse / purify ops: zero all 8 stat stages.
+- `0x800a3a10` — stat-change chance-roll formula `s2·s0·s1/10000` (channel from element), invoked via roll wrapper `0x800a403c`/`0x800a40d0(statIdx)`.
+- Boss ct0 chunks compile to MIPS battle choreography in BMAGIC style (`u32[0]` = global skill id `0x11e-0x140`, shared id space with spells); register into battle hooks `0x801463a4..` and actor callbacks `ctx+0xe4..`.
+- `0x8014d82c`/`0x8014d740` — `setAnimState` breakpoint (fires 216 times per battle; the latter does not fire in battle); party attack cycle: program `p10` (approach) → `p14` (strike) → `p6` (battle idle).
+- `0x801eb23c`/`0x800b6c4c`/`0x800b6d00` — formCode-indexed voice/cry/anchor-metric tables pairing gold and base monster forms (e.g. Mammoth↔Behemoth, Trygon↔Dragon).
+- `0x801dc044(atkSlot,targetSlot,elemWord)` — calcDamage entry → core `0x801dcad8` → finalize `0x801dcd50` → HP deduction (near-death window via combatant byte `+0x8c`, capped at max HP). Finalize applies `×205/256` then `×F[rand&7]/256`, `F@0x801eafa0=[218,230,243,256,269,282,294,307]` (±15–20% in 5% steps), rounded commercially.
+- `0x801ec2ee` — effective-defense cell (from `def@+0xa6`). `0x801ec308` — attacker stat block (struct `+0x90..+0xaf`), `pwr@+0x94`→cell `0x801ec30c`. Every combatant carries a 5-byte percentage row (party at base-row `+0xa8`).
+- Miss = 7% chance: dmg=0 + clears target state bit `0x10`. CRIT roll `0x801dfab8` (action start): `rand%100 < CRIT%(5)` → flag `0x801462e8 |= 0x80` + crit choreo cue (a0=3 instead of 2).
+- `0x801eb550` — turn-order initiative accumulator list (pairs `[i16 acc][u16 slot]`), built at `~0x801dab9c` (party slots then enemies).
+- `0x801e278c` — AI skill selector: enemies with the specialProps bit choose `skillId = E-block+0x8c[rand&7]` (disc skill-roulette copy, 8B@+0x18), written to `+0xf6`.
+- Action-script arithmetic ops chained onto `SET_ATK=pwr` (`party+0x94`/`enemy+0xa4`): `0x8009fa80`(×0.8), `0x8009eba0`(×1.25), `0x8009f224`(×2, elem word `0x20`), `0x8009db14`(pwr×{0.5,1,1,1.5} random; variant `0x800a048c`).
+- `0x8009ee5c` — status-effect op: `atk:=0` + `hit% := x/2+30` (cap 100). `0x8009f704`/`0x8009f7b0` — def-cell-zeroing ops. No separate magic formula: spells reuse calcDamage with `atk=int`.
+- `0x8009d3d0` — choreo interpreter dispatch: action record `+0x2` = `u16[PROGRAM CLASS:hi|STEP:lo]`; class → program array via table `0x800b470c` (class 3→`0x800b45e0`, 4→`0x800b4640`, 5→`0x800b469c`, 6→`0x800b46e4`; phase-4 array `0x800b44f8`).
+- Choreo op values: `47`=SET_ATK_INT (calcDamage path), `69`=calcDamage heal (core×2), `80`=atk×0.8, `89`=DRAGON BREATH (`skillId:=102` fixed, power from `0x801cb197`), `~118`=formula mode=1 (heal-spell variant, resist routine `0x800a2ef0`).
+- `0x801dadbc`(build)/`0x801daed8`(stable sort) — global turn-order sort descending by initiative accumulator; sorted slot order → `0x8014630c` (count `0x80146323`); party accumulator = agl (+ priority-action accumulator ×pct `[100,125,150,200,250]`).
+- `0x801d38d0` — action-record skill-id setter: `a1=lbu 0x801eac78[x&0x1f]`, stored to `record+0x2` (`v1=lw[0x80146380]`), mirrored to `0x801463c0` (skillId copy, `+0x4c`) and `0x801463d6` (hit counter, `+0x62`); queue cursor `0x80146384`, shifted by `0x801d44b8` on record flag `0x40`.
+- `0x800b44f8[3] = 103` — Super Combo (skill id 3) start op; handler `0x8009ff7c` forces phase 4 + `skillId=0x63`(99, Myollnir); `0x8009ffb4` calls `0x800a36f0(actor, 0x0bfc)`.
+- `0x800b50b0` — battle physical-action choreography opcode table (11 ops, EXE-resident); phase dispatcher `0x800a8548 = fnTab[ctx[+1]]`, ops write anim state `ctx[+8]+K`.
+- `0x801e5824` — battle VFX scheduler (reads `BATTLE ct0 @0x801d0c00`); `0x801ec330` — 48 VFX entity slots (stride `0x78`, `+0x74`=parent); effect descriptors `0x800b65f8+eff·8`; child-type table `0x801d0d1c`; prim heap `0x80028fcc` (cursor `0x8014598c`); CLUT lookup `0x8017abbc`.
+- `0x801c7cd8` — startBattle; battle table `0x801cda10` (56×4B: flags/layout/formationIdx/bossSel); BOSS-EMI selection `0x80197f88` (u16 list `0x801cdaf0`=BOSS001-055); figure resolved via BOSS-ct0 pattern `jal 0x800ac754(objId)`.
+- `0x800e4000` — per-area `AREA###.EMI` encounter sub-container (ctype0): 72-byte header, 8 formations×9 bytes (spawner `0x800abf5c`, 1872 slots disc-wide), 136-byte enemy records. `0x800ad044` — enemyId "defeated" bitset.
+- `0x800a2d70` — status resist-channel selector: element word `&0x1ff`, bit `0x40` = psionic channel (e.g. Molasses/Tarbaby, elem 64).
+- `0x800a4238`/`0x800a41d8` — applyStatus wrapper + variant; status bit `0x80` applies only if newly-set and global flag `0x801463d8` has `0x80` set. Example: Blind = `calcDamage(elem 0xffff)/2` as damage + status mask `8`.
+- `0x801d3438` — magic-menu SILENCE gate: blocks spell casting if status bit `0x10` is set.
+- `0x801ddcb4` — status-chance decision: counter==0 → never triggers; party path rolls `rand%100` against threshold bytes `0x801eaffc` (`[25,50,75]` family, fixed ~76 once counter≥3); enemy path scales via struct `+0x34` into tier table `0x801eaff4`.
+- `0x801d590c` — Confusion tick loop (party; enemy counterpart adjacent); shares the Sleep counter (`+0x121`/`0xb72d`).
+- `clearStatus(slot, 0x8ff)` (enemy counterpart `0x801d6ae0`) — clears all basic ailments (Poison/Blind/Silence/…) for full recovery. PARALYSIS (`0x04`) has no auto-expiry — no tick loop or round counter exists for it.
+- `0x801e281c` — AI start: sets phase:=1 for enemies with flag `0x4000`; skill-chain stub 0 hardcodes `skillId=102` (dragon breath).
+- `0x80145f04` (`+0x40`-row) — party status-power cell block, effective cells `+0x94/0x96/0x98/0x9a`; `0x801eb6f4`/`0x801eb6d4` — enemy counterparts. Status-bit branches: `0x4000` ⇒ pwr×3 (Berserk), `0x1000` ⇒ pwr += charge cell (`+0x96`), then cleared.
+- `0x801ca98e` — per-skill signed power byte (`skillId·20 + 0x11`, reader `0x801ca99f`); feeds stage-apply(power, statIdx) → recompute(target) on a successful `s2·s0·s1/10000` roll. `0x800aee88` — additional redirect stub (statIdx fixed).
+- `0x800a0898`/`0x800a0920` — INTIMIDATE op chain (skill 173, Dolphin/Hobgoblin): op 96 = chance roll (`0x800a3a10`, status channel), op 97 = apply; gated by target flag bit `0x10` at `+0x128`.
+
+### Audio
+
+- `0x801827f8` — SFX bank handler table (banks 0-6). `0x801486a0` — per-bank cue table (`+bank·0x7c`), up to 31×4-byte records `[flags|bank(11-8)|sample(7-0)]`. Each VAB trio carries these as subfiles: `ct6`=VH, `ct7`=VB, `ct8`=cue records `[0][0x80|prog][note][vol]`.
+- `0x800b6178` — cast-cry pointer array, indexed by skill (index at `0x801463cd`, written by setter `0x801d3694`).
+- `0x801a8330`/`0x801a84c8`/`0x801a8718` — hardcoded `XA_PLAY` call sites inside the title/system FSM (state progression + XA sync wait via status poll), not script-op handlers.
+- `0x801eb1b4`/`0x801eb1e0` — SFX event dispatch, indexed by sub-state `ctx[3]`: event 0 = Hit (`0x801e1494` tests damage `+0x11c` < threshold `+0x88`), event 1 = Hit Heavy (damage ≥ threshold → knockback anim 0x4000, combatant `+0x80`).
+- Event 5 = Spell/skill cast, state chain `0x801e16b4`/`0x801e1888`: tries an XA cry via `0x800b6178` (lookup `0x801ddf50`, matched on combatant `+0x79`), else SPU event 5; extra event 3 fires unless `[0x801463c9]` ∈ {4,7,8}.
+- Enemy `ct8` cue table (bank 6, identical across all enemy files, 16 records): cue `2n` = program n tone 0 = Action Scream (FSM state 3, `0x801e3a44`); cue `2n+1` = tone 2 = Death Scream (state 27, `0x801e4c7c`).
+- `0x801462ea` — boss flag; bosses use their own cue pair from FSM struct `+0xe8` (`u16[0]`=action cry, `u16[1]`=death cry), companion struct at `0x801e52f0`.
+- `0x801a0580(x, y, area)` — resolves the BGM zone for a position and stores the target bgmId at `0x80143f1f` (write site `0x801a0668`); called from `0x8019fc74`.
+- `0x80145029` — currently-playing bgmId. Area loader `0x8019fca0` compares the target against it and reloads via `0x80162290` if different (busy-waits on load-state `0x80146494`==3, checked by `0x80162fb4`), then plays via `0x80161ed4` → `SsSeqPlay` wrapper `0x8015d750`.
+- `0x80181630` — per-section BGM rect table (8-byte records `[x0,y0,x1,y1,?,section,val,flag]`), looked up on warp. `0x8018230c` — conditional BGM list when flag=1 (tested via `0x8015b848`; 0xff = keep current music) → bgmId → `0x80182384` = `{fileIdx, channel, BLOCK}` table (209 entries).
+- `0x8014677c` — SFX bank table (7×20-byte records). `0x80182814` — 3 SPU-mode bank layouts: mode 0 (field) bank1=`PL###` voice/bank2=area SE; mode 1 (battle) bank1=`COMN`, bank2=battle SE, bank3-5=`BPLD`/`BPLU`, bank6=`ENEMY###`.
+- `0x80146788` — SFX bank load-descriptor table: records `[id,spuAddr,ramBase,cueTabPtr,endPtr]` for banks 1-6 (bank→VAB file mapping itself still open).
+- `0x800b6178` — cast-cry pointer array, indexed by skill ID (index byte `0x801463cd`, copied from action skill id `0x801463c0` by setter `0x801d3694`); 37 entries occupied, replaces the earlier "dragon form cries" hypothesis.
+- `0x80096c64`ff — action-handler sites emitting SFX cue `0x101` (swing on windup) and `0x103` (hit impact, also per super-combo hit).
+- `0x801dfa60` — crit-roll state; SFX event 3 (attack-call STRONG) fires on crit or for power-skill IDs listed at `0x800a8f58` (e.g. actionId `0x1b`/`0x3f`), else event 2 (normal).
+- `0x801ddf50` — cast-cry lookup: matches combatant+0x79 against `0x800b6178`, else SPU event 5; extra event 3 when dragon form id `0x801463c9` (set by `0x800a6c00`) is not in {4,7,8}.
+- `0x801e3a44` — battle FSM state 3, triggers ACTION SCREAM cue; `0x801e4c7c` — state 27, triggers DEATH SCREAM → state 28 decrements living counter `0x801462f3`, sets victory flag `0x80146328|=2` at 0.
+- `0x801b1310` — door proximity/interaction handler: stamps the door patch (`0x801551ec`) and plays SFX cue `u16[0x801cd378 + type·2]`.
+- `0x8019fc74` — resolves the BGM zone, stores target bgmId at `0x80143f1f` (write site `0x801a0668`); area loader `0x8019fca0` reads it (`0x8019fd34`) and, if ≠`0xff`, calls BGM change `0x80161dd8(bgmId,100,8)`.
+- `0x80146494` — load-state byte, busy-waited (checker `0x80162fb4`) before BGM starts via `0x80161ed4` → `SsSeqPlay` wrapper `0x8015d750`.
+- `0x801827f8` — SFX bank dispatch (sample descriptors `0x801486a0 + k·0x7c`); text control code `0x0A` (reveal-pass) handler `0x80150c58` → `PlaySfx(operand|0x200)` (bank 2, UI blip).
+- `0x8014e6f0` — bump allocator, ruled out as the SFX cue-bank candidate.
+- `0x800afc98` — actor-voice SFX helper (party voice table `0x801eafd0`; enemy voice = `0x600|voiceByte<<1`).
+- `0x80163954` — `XA_PLAY(cue)`; start routine `0x801639f8` decodes `cue = slot<<12 | track` (slot 0 = `S_XA00.STR`, 8x interleave).
+- `0x801ddfcc` — end of the handler resolving a battle hit to `XA_PLAY(0x1000|track)` (per-character MAGIC00 cry excerpt, one track per party slot); falls back to SPU event 5 when no XA entry exists.
+- `0x801dd858`/`0x801eafd0` — `playCharCue(event)`: cue = table `0x801eafd0[event·3+partySlot]`, equal to `(bank 3+slot)<<8 | event`.
+- `0x801dfa60`/`0x800a8f58` — crit-roll state selecting battle voice event 2 (normal attack call) vs 3 (strong, on crit or for power-skill actionIds); event 4 = extra layer, always double-called right after 2/3.
+- `0x801463c9` — current dragon formId in the battle voice context, set by `0x800a6c00`.
+- `0x800a6bf8` — writes the save-form byte `[0x80145503] = elemRow<<5|formId`.
+- `0x801e4c7c`/`0x801462f3`/`0x80146328` — voice state 27 (death scream, cue tone 2) → state 28 death conclusion: decrements living counter, sets victory flag at zero.
+- `0x8015d9d0`/`0x8015e1cc` — SFX cue dispatch, wrapper / direct call (`a0`=cue); MAGIC151 (Accession VFX) sequence: cue `0x100`=s00 at tick 4, `0x102`=s02 at tick 19 (column start), `0x103`=s03.
+- `0x80182386` — `BGM_PLAY` table (op `b4`); op `bd` triggers distance-gated positional SFX.
+- `0x801b1310`/`0x801551ec`/`0x801cd378` — door handler: stamps the door patch and plays `PlaySfx` from the door-sound table `[type]` = `{0x103,0x109,0x10a}` (bank 1, ~0.37/0.73/0.46s).
+- `0x80143f1f`/`0x801a0668`/`0x8019fca0` — pending area bgmId, written by the warp path, read by the area loader, which calls the BGM-change routine when `≠0xff`.
+- `0x80161dd8`/`0x80145029`/`0x80162290` — BGM-change routine `(bgmId,100,8)`: compares against running bgmId, reloads if different.
+- `0x8011c620` — BGM sample buffer; the battle theme BGMBAT00 is fully resident (19893 B match) only in battle savestates — field savestates match just the first KB, a stale load-buffer remainder.
+- `0x80163954`/`0x801639f8` — XA_PLAY(cue): `cue = slot<<12 | track`, slot 0=S_XA00.STR (8x interleave), 1=MAGIC00.STR, 2=VOICE.STR (16x); file slot table `0x80183704`.
+- NPC-VM op `0x89` CD_STREAM_START `[cue:BE16]`, handler `0x801aba10` (unused across all 2223 extracted scripts).
+- `0x801eb1b4`/`0x801eb1e0` — actor-FSM event-cue tables (party sub-state `ctx[2]`→`0x801eb1b4`, sub-sub `ctx[3]`→`0x801eb1e0`); event 0 = Hit (hit-state `0x801e1494`: `damage+0x11c < threshold+0x88`).
+- Event 4 = "extra layer" (always fires immediately after event 2/3, double call); event 5 = Spell/skill CAST (states 17/18, `0x801e16b4`/`0x801e1888`): first XA cast-cry attempt via cry table `0x800b6178` (lookup `0x801ddf50`, matched on `combatant+0x79`).
+- `0x801462ea` — boss flag: bosses get a dedicated cue pair via FSM struct `+0xe8` (`u16[0]`=action, `u16[1]`=death; player counterpart `0x801e52f0`). Non-boss variant selector: FSM struct `+0xe0 = floor(gfxKey/200)`.
+- `0x801ef530` — MAGIC064 burst-sound callsite (does not fire in the capture context); the audible burst is the 5.59s call sample s02, not the 27ms s01 sample at tick 57.
+- `0x80161dd8(bgmId,100,8)` — BGM change call; fires when the target-zone bgmId byte `[0x80143f1f]` (read at `0x8019fd34`) is ≠0xff. Compares against running bgmId `[0x80145029]`; reloads via `0x80162290` if different (busy-wait on load-state 3 at `[0x80146494]`, checked by `0x80162fb4`).
+- `0x801a0690(x,y,area)` — resolves the BGM zone of the target area from the zone-transition parameters (x,y = target tile, area = upper 16 bits); per-area rect lists at `0x80181630 + area·4` (8-byte rects).
+
+### Scripts, flags and events
+
+- `0x8019ff40`/`0x8019ff58` (chapter-increment writers), `0x801a79d8` (clear writer), `0x801fc5c0`+`0x801fa520` (dialog-flow OR-bit-0 writer: sets talk state 8, FSM request 2 = textbox) — the 8 known write sites into the story-phase byte range `0x14686e`-`0x146872`.
+- `0x80195ec0` — NPC-VM opcode dispatch table. Opcodes c0/c1/c2/cd/ea → CLUT-tint system: 32×12-byte slots at `0x80145bd4`, applied by `0x8019645c` onto VRAM shadow `0x80037800` (ghost/fade effects).
+- `0x80150784` — textbox control-code dispatcher (jump table `0x80149a00`, codes 0-0x17). Code `0x08` = `<GLYPH x>`, one operand byte indexing the extended character table.
+- `0x8015b7f4` — generic bit-flag setter; `0x801fa1ec` sets bit 7 on `*(0x8014686c)`, which points at `0x80144e90` (story-flag block 1) — the dialog-state block holds a pointer (+0x6c) into the story flags.
+- `0x801fc5b8` — SCENA01 chapter-script event handler: sets a control bit, writes dialog state `0x80146875`, and `story[0]:=8`; cleared at SCENA init `0x801a79d8`.
+- `0x801490c7` — SISYOU dialog choice/check dispatch (string index base `0x801d41bc`, continues at `0x801490a8`).
+- `0x801a7fa4`/`0x801448ec` — NPC init-stream f-marker handler and its group counter; stream = `[f6 NN]` phase blocks with `[fd]`/`[fe]` sub-gates and `[f0]` event sections (marker lengths f0=1, f1=3, f4=2, f5/f8/fd/fe=1, f6=2, ff=end).
+- `0x8019621c`/`0x80143fc8` — `ENT_ALLOC`, invoked by NPC-VM script ops `8c`/`90-9d`/`9f`, allocating from 20 slots.
+- `0x801a8258`/`0x80146867` — cleanup for Screen-FX op `0x03`, run when state byte `==0x31`; the op's `(x,y)` argument pair is not the warp source tile of the current area.
+- `0x801a4240`/`0x801a43d8` — NPC-VM op `f0`/`f1` sub-executors: `f0` = conditional expression section (variable length, extractor treats as "gated"), `f1` = 2-operand op; part of the `f4`(switch)/`f5`(end)/`f7`(else)/`f8`(case end) phase-selector family.
+- `0x801a0580(x,y,area)` — resolves the target area descriptor via story-flag pairs `0x80144e88` (table `0x801d8608`; mode classification `0x801a04e8` distinguishes class `0xb` vs `1`); called from the zone-transition handler `0x8019fc28` at `0x8019fc74`.
+
+### Game systems and menus
+
+- `0x80097508` — menu command-ID check: every confirmed list command dispatches into Accession (`lbu v0,0(v0)` → `ori v0,zero,0x97`), under gene-menu mode 62e2=7. `0x80145548` — gene bitmask (`0x3ffff`). `0x801463b8`/`0x801463c8` — AP-sum fields (0 baseline).
+- Fairy job→axis routines: job 9→axis 0 (`0x801ef110`, ÷10, plus `0x801ef784`); job 4→axis 3 (`0x801ef214`/`0x801ef398`, two-stage, gated on scratch bytes `0x55c4<7` and `0x55c3<10`); job 13→axis 3 (`0x801efa50`); job 5→axis 2 (`0x801ef52c`).
+- `0x801eeef0` — fairy routine tied to counter `0x55c2` (suspected population/food). `0x801f0534` — unclassified fairy routine. `0x801daf0c` — `COMMU02` anchor carrying a fairy-related triple table.
+- `0x801f2c00` — per-area init overlay hosting master-recruitment gate checks (not SCENA/SISYOU scripts); dispatch via `0x801490c7`/`0x801490a8` (string index base `0x801d41bc`). Fahl's gate: battle counter `0x801454f3` < 30 (incremented at `0x801c2338`, gated by Fahl's flag).
+- Master gate thresholds: `0x801450cc` < 15; Emitai needs zenny `0x80144f50` ≥ 10000 (deducted on recruit); Giotto needs fishing rank `0x801454ec` ≥ 6 (thresholds `0x801d0c70`; score = fish-inventory point sum `0x80144fe4`, also read by `SHOP.EMI`); Mygas sets zenny to 0 with no check.
+- `0x801f18f8` — reads a 20×`[minBattles:u16][id][cat]` master-gate table via `lwl`/`lwr`. `0x8014502c` — global battle counter (u32; corrects an earlier "zenny pointer" misreading). `0x801dad00` — Casino Numbers config (2 blocks × 8 attempts × 3), block-select save byte `0x801448f2` (block B prize = GooKingSword).
+- `0x800a805c` — dragon-gene splice resolver, pair-symmetric with partner-swap retry. `0x800a82a0` — upgrade-gene check against the splice queue. "Super" variant = CLUT row 1 (a palette choice), not an elemental flag.
+- Party record `+0x1b` = current masterId (0xff = none); set on join by `0x801d2dd0`, cleared on leave by `0x801d34ac`. `0x80183ef0` — pointer table of EXE bytecode implementing master "Will effects" (student bonuses).
+- `0x801d51d0` — High-Low draw: `rand&7` selects one of 8 fixed 9-card decks at `0x801dad90` (values 0-3, 9=joker; decks 3 and 5 carry 3 trailing jokers). `0x801d5418` — joker resolution via `rand&7` against deck column 0.
+- `0x801d2870` — Casino Numbers secret draw: 9-digit permutation of digits 1-9 via rejection sampling `0x801d2750` (`do v=rand&0xf while v==0||v>max`).
+- `0x801db083`+v·5 — Casino Numbers attempt records (5 bytes: `[3 digits][hits][blows]`); hits==3 triggers the win/column-roll path. `0x801d8994` — fairy name generator (`rand&0x3f`), an unrelated reuse of the same scratch text-window buffers `0x800103e0`/`0x80010460`.
+- `0x801f294d` — Casino state-machine byte, dispatch table `0x801dacc4`. `0x801d2134` — High-Low payout: `new = cash·factor/100` (+50 rounding), factor from the 2×8 u16 table `0x801dac34`.
+- `0x801e2f9c` — Manillo fishing-mode trade table (55×8 B: item/category/fish price); spot lists at `0x801e315e`.
+- `0x80145548` — gene bitmask (full = `0x3ffff`); read by the gene-splicing UI hijack check (`0x80097508`, menu mode `62e2`==7) and by master discGate `0x801f3988` (area143 texts 80/83/85); apSum context cells `0x801463b8`/`-c8` track accumulated AP (baseline 0).
+- `0x801eb23c` (overlay `0x800b6c74`), `0x800b6c4c` (Cry2), `0x800b6d00`→`0x800b6c90` (anchor metrics) — three formCode-indexed tables pairing gold↔base dragon forms.
+- `0x800aa21c` — per-tick Pwr/Def stat loader (+0x1e) for the Tiger+Force fusion dragon form (fc22).
+- `0x801d2dd0` / `0x801d34ac` — master join/leave handlers (assignment persisted in save data).
+- `0x80183ef0` — Will-effects (student stat bonus) bytecode table, `[op][val]` pairs ending `0x0e`; interpreter `0x80164b54`.
+- `0x801454f3` — Fahl battle-encounter counter (u8, <30 gate; incremented at `0x801c2338` under the Fahl flag).
+- `0x801666ec` — D'Lonzo distinct-weapons-seen array (128 slots).
+- `0x801454ec` — fishing-rank counter (≥6 gate; thresholds `0x801d0c70` = …1500/2000/3000; score = fish-inventory sum `0x80144fe4`, also read by SHOP.EMI).
+- `0x80166540` — Yggdrasil reward inventory write (1× Wisdom Fruit); EU code has no "Peco-only" restriction.
+- `0x801448f2` — block-selection save byte: picks the Explorer loot pool block (`0x801f2618`, 3×16 `u16`, tier thresholds `0x801eec98`) and the High-Low payout factor row (`0x801dac34`, 2×8 `u16`; payout `new=cash·factor/100` at `0x801d2134`).
+- `0x801dad90` — 8 fixed 9-card High-Low decks (values 0-3, 9=joker; decks 3 and 5 carry 3 jokers); joker resolution `0x801d5418` (`rand&7` vs table `0x801dade0=[7,6,5]`).
+- `0x801d2750` — rejection-sampled digit RNG for the Numbers game (`do v=rand&0xf while(v==0||v>max)`); secret code (3 distinct digits) built at `0x801db080`; compare state `0x801d3e44` (HITS/BLOWS).
+- `0x801d8994` — fairy NAME GENERATOR (`rand&0x3f`, text windows `0x800103e0`/`460`); shares a scratch buffer with the casino Numbers game but is unrelated to it.
+- `0x801ef214`/`398` (job4→axis3), `0x801efa50` (job13→axis3), `0x801ef52c` (job5→axis2), `0x801f0320` (jobs10+11→axis1) — fairy training-job → axis mappings; second 60×8 fairy stat array "B" at `0x801457a8`.
+- `0x801daf0c` (2nd copy `0x801dafb0`) — COMMU02 triple table `[facility 0-13, slot/level 0-6, job/label id 9-31]`, candidate facility→job bridge for fairy training.
+- `0x80146254`/`0x80146255` — party_add insert-cursor counts for list B / list A, written by `0x80166ac0` with a duplicate check.
+- `0x801485c4`/`0x80181fdc`/`0x80144968` — active party index (`curIdx`), resolved via charId→recIdx table to the party record (`+idx·164`).
+- `0x801d0ff4`/`0x8018ec9c`/`0x801ca510` — SHOP.EMI overlay sets the inventory list pointer to `0x801ca510+shopId·23` (resident shop table in GAME.EMI sub[0], 40 shops).
+- `0x801eed8c`/`0x801457a8`/`0x801455c8` — fairy-village facility-ticks dispatcher (5 job→axis pairs) and fairy roster B (behind roster A): `+0`=job/task id filter, `+1`/`+3`=progress statuses.
+- `0x801efa50`/`0x801ef52c`/`0x801f0320` — fairy job→axis routines (axis 3, axis 2, axis 1).
+- `0x801454f3` — Fahl recruit gate: battle counter must be <30.
+- `0x801666ec`/`0x801450cc`/`0x80144f50` — D'Lonzo recruit gate (distinct-weapons-owned count, 128-slot array, <15) and Emitai gate (zenny ≥10000, deducted on recruit).
+- `0x801eec48`/`0x801f18f8` — fairy-village gift schedule (COMMU00, 20×`[minBattles:u16][id][cat]`; item code = `(cat<<8)|id`) and its reader.
+- `0x801d4d48` — fairy-village rawDataBlock: UI submenus plus a `(dx,dy)` room grid 4×2 (max 8 rooms); population limit 20.
+- `0x800a7124` — Mutant RNG for gene-splicing: `acc==0` → 10% mutation chance, otherwise 50%; mutation direction 50/50.
+- `0x801e315e`/`0x801ca697` — Manillo slot table (indexed by `spotId−1`) and the fairy market's resident shop records (17-22, 66 items with prices).
+- `0x8017e8a0`/`0x801d2750` — BIOS `rand` stub (`A0:2F`, 16 casino call sites) and general-purpose `randRange(1..a0)` via rejection sampling.
+- `0x801d5418`/`0x801dade0` — casino Joker resolution: `rand&7` against table column 0 (`[7,6,5]`) → probability `1/8·1/8·1/8·5/8` for the highest tier.
+- `0x801db080`/`0x801d3e44`/`0x801db083` — casino Numbers secret (3 different digits, 1-9), compare state (hits/blows), and attempt records (5 bytes: `[3 digits][hits][blows]`).
+- `0x801db07c`/`0x80166920` — casino cash account, paid out via `addZenny` on leaving.
+- `0x801f294d`/`0x801dacc4` — casino state-machine byte, indexing the state table.
+- `0x801db0bc` — casino High-Low hit counter, indexes the payout column (up to 144×/560× stake after 8 hits, no doubling).
+- `0x801463c9` — current dragon form id (setter `0x800a6c00` during transformation); `0x80145503` — saved form byte `elemRow<<5 | formId` (setter `0x800a6bf8`). Extra transformation cry only fires if the form is not Kaiser family.
+- `0x80146254`(list B, insert cursor)/`0x80146255`(list A) — party_add API (`0x80166ac0`) writes both lists with duplicate check. `0x80148661` — march-chain rebuild flag; field init `0x80197914` rebuilds only if nonzero.
+- `0x801485c4` — active battle-party cursor (`party[curIdx]`); charId→recIdx table `0x80181fdc`; character record = `0x80144968 + idx·164`.
+- `0x801d163c` — shop purchase cursor, reads item pairs; price lookup `0x80165ffc`. 40 valid shops (terminator `b0==0`); shop 38 = "Bread ×11".
+- `0x801ef110`(job9→axis0, divisor/10)/`0x801ef784`; `0x801ef214`/`0x801ef398`(job4→axis3, two-stage, gates `0x55c4<7`/`0x55c3<10`); `0x801f0320`(job13→axis1) — fairy facility axis assignment, baked in per routine rather than data-driven.
+- `0x801457a8` — second fairy task array B (60×8, directly behind roster A `0x801455c8`): `+0`=job/task id filter, `+1`/`+3`=progress status (e.g. `0x801efea8`: `B.s0==11 → B[+3]:=5`); acts together with roster A (`+0`=active, `+1`=job).
+- `0x8001a000`/`0x8001b69c` — FIRST.EMI sub[11] text block (file/RAM offset `+0x169c`): 455 descriptions covering items, weapons ("PwrX WgtY"), armor ("DefX … Resists flame"), skill/magic.
+- `0x801caa07` — skill/magic name table (~196 entries).
+- `0x801f0534` — fairy-village placement loop (population limit 20, 8-room layout cap); `0x801455c2` — food-stock init value (10). `0x801f291c` — curveTable: dead code, no reference.
+- `0x801eec48` — gift schedule (COMMU00, 20×`[minBattles:u16][id][cat]`); reader `0x801f18f8`; battle counter `0x8014502c` (u32, drives gift eligibility).
+- `0x801666ec`(+128-slot array `0x801450cc`) — D'Lonzo gift gate: needs <15 distinct weapons owned. `0x80144f50` — Emitai gate: zenny ≥10000 (deducted on trigger). `0x801454ec`(thresholds `0x801d0c70`: …1500/2000/3000) — Giotto gate: fishing rank ≥6.
+- `0x801eb230` — charId counterparts for Kaiser hybrid forms (Mammoth↔Behemoth, Trygon↔Dragon, Wildfire↔Whelp, Myrmidon↔Warrior; Kaiser `fc4/7/8`=charId−7, humanoid anchor row 0); hybrid resolver `0x800a805c` (partner-swap retry, pair-symmetric, upgrade-gene check).
+- `0x801eb514` (= `START.EMI[8]` load addr `0x801d0c00` + `0x1a914`) — 7 character base-stat templates, stride 164, in charId order (the EXE mirror `0x80144968` is zeroed BSS in the ROM file).
+- `0x801d51d0` — HIGH-LOW card draw: not random — picks one of 8 fixed 9-card decks at `0x801dad90` via `rand&7` (values 0-3, 9=joker; decks 3 and 5 carry 3 jokers).
+- `0x801d3fd0` — NUMBERS prize-column pick: `c=rand&3`; if `c==3` then `c=clamp(3−(rand&3),0,2)` ⇒ P=[5/16,5/16,6/16]. Prize table `0x801dad00` (2 blocks×8 attempts×3 prizes).
+- `0x801d3e44` — NUMBERS scoring: HITS (position match) + BLOWS (`i≠j` double loop — duplicate guesses can score multiple times); attempt log 5 bytes at `0x801db083+v·5` (`[3 digits][hits][blows]`); 3 hits = win.
+- `0x801d8994` — name generator: two `rand&0x3f` rolls index two 64-entry text windows (`0x800103e0`/`0x80010460` in the area text block) = first-name/last-name pools (fairy naming).
+- `0x801db07c` — casino cash account; payout on leaving via `addZenny` `0x80166920` (site `0x801d22d0`, cue `0x75`); state machine byte `0x801f294d`→table `0x801dacc4`. `0x801d2134` — HIGH-LOW payout: `new = cash·factor/100`.
+
+### Camera, warps and world state
+
+- `0x801f43e8` — entity-spawn routine (13 calls to BIOS rand `0x8017e8a0`); not the AREA189 "getting lost" logic it was first taken for. (`0x8017e8a0` is the correct rand address — `fishing.json`'s `0x8017e8c0` is wrong.)
+- `0x801f5d74` — desert navigation "lost" (edge-exit) handler, parameter table at `0x801f6388`.
+- `0x801f5600` — desert navigation success-exit handler (inline constants, no lookup table).
+- `0x801492d8`/`0x801492dc` — camera pitch/yaw; set by FX-mode table `0x801499ac` modes 11/18/19 (`-0x155`/`0x355`); AREA189 reads yaw for entity-relative angle `((yaw+0x200)&0xfff)·5/16` → entity+0x8.
+- `0x801499ac` — screen-FX mode table: modes 0-7 → fade core `0x8014f780` (steps ±`0x800`/16 frames, ±`0x2000`/4 frames flash, ±`0x400`/32 frames = 0.64 s warp fade); modes 8-9 → second core `0x8014f85c` (alt-buffer variant).
+- `0x801448eb`/`ec`/`ed` — screen-FX op-`0x03` transition state machine; countdown `u16` at `0x801448ee` (ticker `0x801a81a4`); at 0, a 6-entry dispatch table `0x80195bc0` selects the stub.
+- `0x801f6388`/`89`/`8a` (+idx) — desert exit warp tables (code `0x801f5da4`/`db8`/`dd8`) written to `0x80143f10` (area), `0x80143f14` (X, Q16), `0x80143f18` (Y, Q16).
+- `0x801f3df8` — sole caller of the AREA189 "getting lost" logic, gated by scratchpad `[0x1f80001c] != 0`; constants `0x2a5`/`0xb5` at the routine's start are not sprite keys.
+- `0x801f6389`/`0x801f638a` — desert exit X/Y lookup tables, read as `lbu[table+idx]<<16`.
+- `0x80143f14`/`0x80143f18`/`0x80143f1c` — warp target X/Y (Q16) written from the desert exit tables; dir then set to `4`.
+- `0x801499ac`/`0x8014f85c` — FX-mode table (fully classified); modes 8-9 call a second core routine (a2=2 variant).
+- `0x801492d8`/`0x801492dc` — camera setters written by FX-modes 11/18/19: `0x801492dc` = camera yaw (default `0x200`).
+- `0x801f5c1c`/`0x801f6388` — AREA189 (Desert of Death) "got lost" navigation: success exit warps to AREA125 (25,25) via `0x801f5c1c`; edge table `0x801f6388` drives 13× `rand()` got-lost checks.
+- `0x80143f1c`/`0x8014504a` — desert exit bookkeeping: exit direction byte (`sb 4` at `0x801f5e0c`) and lost-attempt counter (increments at `0x801f5de0`/`0x801f5e14`).
+- `0x8019fc28` — zone-transition "request-5" handler (mimicked by `warp.ts` via struct write + `bb0=5`); its (x,y,area>>16) parameters are the plain target tile/area.
+- `0x801492d8`/`0x801492da`/`0x801492dc` — camera-angle triple (rx/ry/rz-yaw); condition class `0xfb` reads `rz` directly; FX modes 11/18/19 reset it (standard camera).
+
+### Miscellaneous
+
+- `0x80007570` — libpad raw input buffer (`[ok][0x41 digital marker][buttons u16 active-low]`). `0x80183f84` — pointer to the live input context, resolving into scratchpad `0x1f801c00` (held/pressed bits) — not reachable by simple RAM pokes.
+- `0x8018444c` bit 0 — gate selecting the input target: replay channel `0x8018e700`/`0x8018e702` (attract-demo recorder) vs. the normal scratchpad context. `0x80146d24` — visible RAM copy of pad state (struct stride 0x98); consumer `0x80168638` clears pressed bits (`lhu`/`nor`/`and`/`sh`).
+- `0x80033000`–`0x80037000` — EMI staging buffer range; `0x80200000` — RAM upper bound. Both are range-check bounds used in address validation, never literal addresses to resolve into RAM.
+- `0x80007570` — pad status struct `[ok][0x41=digital][buttons u16 active-low]`.
+- `0x80183f84` — pointer to the live input context in scratchpad `0x1f801c00` (held/pressed bitmasks at +0x188/+0x18a); `setInput(pad,bits)` at `0x80168594`; RAM mirror `0x80146d24` (stride `0x98`), pressed-bits cleared at `0x80168638`.
+- `0x80170eac`/`0x80170eb4` — savestate-specific PadHold `ori` patch that blocks keyboard-arrow input until the original `lhu` instructions are restored via cheat.
+- `0x80183f84` — pointer to the field input context in scratchpad `0x1f801c00` (held/pressed masks `+0x188`/`+0x18a`).
+- `0x80168594`/`0x8018444c`/`0x8018e700` — `setInput(pad,bits)`: gated by `*(0x8018444c)&1`, writes into replay channel `0x8018e700`/`0x8018e702`.
+- `0x80168594` — setInput(pad,bits); writes to REPLAY channel `0x8018e700`/`0x8018e702` (attract-mode demo) when gate `*(0x8018444c)&1` is set, else to the normal input scratchpad context; visible RAM copies at `0x80146d24`.
