@@ -15,6 +15,13 @@ typedef struct World00Area028Work {
   s16 field_0e;
 } World00Area028Work;
 
+typedef struct Area028SpriteSlot {
+  u8  unk_00;
+  u8  unk_01;
+  u8  pad_02[0x2c];
+  s16 unk_2e;
+} Area028SpriteSlot;
+
 /* @source 0x801F3E00
  * @kind bss — current AREA028 work table cursor; seeded from the work table
  * base and walked by the seed/scan/refresh helpers. */

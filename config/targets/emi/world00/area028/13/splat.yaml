@@ -23,8 +23,7 @@ segments:
     - asm
     - T_801F2C00
   - - 72
-    - asm
-    - func_801F2C48
+    - c
   - - 128
     - asm
     - func_801F2C80
