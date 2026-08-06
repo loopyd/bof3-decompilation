@@ -5,4 +5,4 @@
  * @behavior entry-4 handler of the overlay entry table (D_801F4200):
  * calls the shared work-area reset helper.
  */
-WORKAREA_RESET(world00_area024_reset_workarea_select_entry4)
+WORKAREA_RESET(resetWorkareaSelectEntry4)

@@ -37,10 +37,10 @@ segments:
     - func_801F2D5C
   - - 436
     - c
-    - world00_area024_reset_scratch_select_entry3
+    - resetScratchSelectEntry3
   - - 472
     - c
-    - world00_area024_reset_workarea_select_entry4
+    - resetWorkareaSelectEntry4
   - - 504
     - asm
     - func_801F2DF8
@@ -52,7 +52,7 @@ segments:
     - func_801F3080
   - - 1260
     - c
-    - world00_area024_dispatch_work_states
+    - dispatchWorkStates
   - - 1460
     - asm
     - func_801F31B4
@@ -61,10 +61,10 @@ segments:
     - func_801F3250
   - - 1748
     - c
-    - world00_area024_advance_state_select_mode2
+    - advanceStateSelectMode2
   - - 1780
     - c
-    - world00_area024_advance_state_select_mode3
+    - advanceStateSelectMode3
   - - 1812
     - asm
     - func_801F3314
@@ -82,11 +82,11 @@ segments:
     - func_801F3BE4
   - - 4364
     - asm
-    - world00_area024_spin_work_init
+    - initSpinWork
   - - 4444
     - c
-    - world00_area024_spin_draw
-    - '@source: src/emi/world00/area024/14/world00_area024_spin_draw.c'
+    - drawSpin
+    - '@source: src/emi/world00/area024/14/drawSpin.c'
     - '@behavior: Draws the 16-entry spin table and advances each entry size/fade halfwords.'
   - - 4680
     - asm
@@ -96,10 +96,10 @@ segments:
     - func_801F4158
   - - 5592
     - c
-    - world00_area024_state_flag_reset_a
+    - resetStateFlagA
   - - 5612
     - c
-    - world00_area024_state_flag_reset_b
+    - resetStateFlagB
   - - 5632
     - rodata
     - T_801F4200

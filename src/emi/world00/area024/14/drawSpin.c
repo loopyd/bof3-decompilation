@@ -5,7 +5,7 @@
  * halfwords using the scratch byte at `0x1f80004d`.
  * @source 0x801F3D5C
  */
-void world00_area024_spin_draw(void) {
+void drawSpin(void) {
   u8                      scratch[0x20];
   World00Area024SpinWork* work;
   u8                      i;

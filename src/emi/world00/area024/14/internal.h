@@ -42,15 +42,21 @@ typedef struct World00Area024SpinWork {
   s16     field_2a;
 } World00Area024SpinWork;
 
+/* @source 0x80147A58
+ * @kind unknown — raw fixed-RAM byte; cleared by the entry-3 handler. */
 extern volatile u8  D_80147A58;
-extern volatile u16 WORLD00_AREA024_GLOBAL_HALF_3E6C;
+/* @source 0x801490A8
+ * @kind unknown — raw fixed-RAM halfword; set to -1 by both state-flag
+ * reset callbacks. */
 extern u16          D_801490A8;
-/* @kind: bss — current 0x28-byte work entry cursor; seeded from the work base
+/* @source 0x801F5B00
+ * @kind bss — current 0x28-byte work entry cursor; seeded from the work base
  * and walked by the dispatcher. */
-extern u8*                              world00_area024_work_cursor;
-/* @kind: rodata — four-entry per-mode handler table dispatched by the work
+extern u8*                              workCursor;
+/* @source 0x801F4214
+ * @kind rodata — four-entry per-mode handler table dispatched by the work
  * dispatcher on each active entry's byte +0x01. */
-extern const World00Area024Handler      world00_area024_state_table[];
+extern const World00Area024Handler      stateTable[];
 
 void func_8015B410(void* arg0);
 void func_8015B4B0(void* arg0);
@@ -70,13 +76,13 @@ void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_801F2DF8(const void* arg0);
 void func_801F2FD4(void* arg0);
 void func_801F3080(void);
-s32  world00_area024_dispatch_work_states(void);
+s32  dispatchWorkStates(void);
 void func_801F362C(void);
 void func_801F3708(void* arg0, const void* arg1, s16* arg2);
 void func_801F3944(const void* arg0);
 void func_801F3BE4(void* arg0);
-void world00_area024_spin_work_init(void);
-void world00_area024_spin_draw(void);
+void initSpinWork(void);
+void drawSpin(void);
 s32  func_801F3E48(u8 arg0);
 s16  func_801F4158(const s16* arg0, const s16* arg1, const s16* arg2);
 
@@ -84,17 +90,7 @@ s16  func_801F4158(const s16* arg0, const s16* arg1, const s16* arg2);
 #define WORLD00_AREA024_WORK_PTR       PSX_REF(volatile u8*, 0x801f5b00u)
 #define WORLD00_AREA024_WORK_BASE      PSX_PTR(u8, 0x800e4800u)
 #define WORLD00_AREA024_SPIN_WORK_BASE PSX_PTR(u8, 0x800e5000u)
-#define WORLD00_AREA024_STATE_BASE     PSX_PTR(volatile s16, 0x800e4940u)
-#define WORLD00_AREA024_STATE_OFFSET   PSX_PTR(volatile s16, 0x800e4944u)
-#define WORLD00_AREA024_VERTEX_DST     PSX_PTR(volatile u8, 0x800e4bc8u)
-#define WORLD00_AREA024_VERTEX_SRC     PSX_PTR(const volatile u8, 0x80147aa8u)
-#define WORLD00_AREA024_SCRATCH_REMAP  PSX_PTR(volatile u8, 0x80147a58u)
-#define WORLD00_AREA024_PTR_7AA8       PSX_REF(volatile u8*, 0x80147aa8u)
-#define WORLD00_AREA024_PTR_7AAC       PSX_REF(volatile u8*, 0x80147aacu)
-#define WORLD00_AREA024_STATE_TABLE                                            \
-  PSX_PTR(const volatile World00Area024Handler, 0x801f4214u)
 #define WORLD00_AREA024_SCRATCH_PTR                                            \
   PSX_REF(volatile World00Area024Scratch*, 0x1f800044u)
-#define WORLD00_AREA024_SCRATCH_BYTE_09 PSX_REF(volatile u8, 0x1f80004du)
 
 #endif

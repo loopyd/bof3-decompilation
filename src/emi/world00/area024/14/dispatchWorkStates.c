@@ -6,7 +6,7 @@
  * whether any active work was processed.
  * @source 0x801F30EC
  */
-s32 world00_area024_dispatch_work_states(void) {
+s32 dispatchWorkStates(void) {
   u8  scratch[0x20];
   u8  i;
   s32 result;
@@ -14,17 +14,17 @@ s32 world00_area024_dispatch_work_states(void) {
   func_801AFE18(scratch);
 
   result = 0;
-  world00_area024_work_cursor = WORLD00_AREA024_WORK_BASE;
+  workCursor = WORLD00_AREA024_WORK_BASE;
   i = 0u;
 
   do {
-    if (world00_area024_work_cursor[0] != 0u) {
-      world00_area024_state_table[world00_area024_work_cursor[1]]();
-      func_801F2DF8(world00_area024_work_cursor);
+    if (workCursor[0] != 0u) {
+      stateTable[workCursor[1]]();
+      func_801F2DF8(workCursor);
       result = 1;
     }
 
-    world00_area024_work_cursor += 0x28u;
+    workCursor += 0x28u;
     i += 1u;
   } while (i < 8u);
 

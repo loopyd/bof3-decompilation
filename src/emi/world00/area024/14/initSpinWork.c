@@ -5,7 +5,7 @@
  * the per-entry initializer on each `0x2c`-byte slot.
  * @source 0x801F3D0C
  */
-void world00_area024_spin_work_init(void) {
+void initSpinWork(void) {
   u8* work;
   u8  i;
 
