@@ -5,7 +5,7 @@
  * @behavior initializes LOGO.EXE work-area globals, then starts dependent
  * subsystems and the supplied disc-LBA setup.
  */
-void func_801CE760(s32 work_base, u_long disc_lba) {
+void initWorkAreaAndStartSubsystems(s32 work_base, u_long disc_lba) {
   volatile u8 scratch[0x30];
 
   (void)scratch;

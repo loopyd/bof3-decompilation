@@ -1,6 +1,7 @@
 #include "internal.h"
 
-/* possible name: logo_c_runtime_init
+/* INFERRED: current analysis marks this as a possible NONE3.OBJ/__main stub;
+ * a reviewed entry-call trace or SDK archive member would verify promotion.
  * @behavior current analysis marks this as a possible NONE3.OBJ/__main stub.
  * @source 0x801CE758
  */

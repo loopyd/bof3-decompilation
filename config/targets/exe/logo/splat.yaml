@@ -26,7 +26,7 @@ segments:
     start: 0x760
     vram: 0x801ce760
     subsegments:
-      - [0x760, c, func_801CE760]
+      - [0x760, c, initWorkAreaAndStartSubsystems]
       - [0x7f4, asm, func_801CE7F4]
       - [0x930, asm, func_801CE930]
       - [0xa98, asm, func_801CEA98]
@@ -38,6 +38,6 @@ segments:
     start: 0xdfc
     vram: 0x801cedfc
     subsegments:
-      - [0xdfc, c, func_801CEDFC]
+      - [0xdfc, c, playCapcomStream]
   - [0xe7c, bin, post_main]
   - [0x1d800]
