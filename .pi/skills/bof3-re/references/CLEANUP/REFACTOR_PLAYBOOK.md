@@ -48,11 +48,29 @@ Organization): types are `s8/u8/s16/u16/s32/u32/f32` from
 `include/base/types.h`. Locals/struct fields camelCase;
 struct/enum types PascalCase; enum values/macros SCREAMING_SNAKE_CASE.
 Address-canonical `func_XXXXXXXX`/`D_XXXXXXXX`/`unk_XX` stays until the
-evidence gate passes; then data symbols take camelCase with a role suffix
-(`...Table`, `...Strings`, `...State`) and a `@kind` annotation. Addresses, bitmasks, offsets in hex; timers/sizes
-decimal. Always `{}` on conditional/loops; blank line between
-declarations and code; functions in assembly order (Splat-owned). Unsure →
-leave unnamed: a wrong name is worse than an address name.
+evidence gate passes.
+
+Function names: verb-led camelCase, role-first — `dispatchScenarioState`,
+`resetEffectBank`, `emitPanelIconPrim`. NO target/module prefix: the file
+path already encodes module and target, so `world00_area008_dispatch_mode`
+wrongly duplicates it; use a prefix only when the same name would collide
+inside one target's link scope (then the shortest discriminating word, e.g.
+`emiSelectNextEntry` where `emi_` marks the loader subsystem of the exe).
+Duplicate bodies across targets keep the same role name; the target stays
+visible in the selector. State bytes/counters stay `UPPER_SNAKE` macros
+only when they are constants; mutable globals are data symbols (below).
+
+Data symbols: camelCase with a role suffix (`...Table`, `...Strings`,
+`...State`, `...Cursor`) plus TWO mandatory comment tags on the
+declaration in `internal.h`: `// @source 0xXXXXXXXX` (origin address —
+the metadata authority, survives renames) and `// @kind table|rodata|bss|data`.
+Raw `D_XXXXXXXX` symbols that fail the evidence gate STILL get the
+`// @source` tag (address is already the name; the tag marks it reviewed)
+with `// @kind unknown`; no speculative names.
+Addresses, bitmasks, offsets in hex; timers/sizes decimal. Always `{}` on
+conditional/loops; blank line between declarations and code; functions in
+assembly order (Splat-owned). Unsure → leave the role name off: a wrong
+name is worse than an address name — but never skip the `@source` tag.
 
 ## Validation
 

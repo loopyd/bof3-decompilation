@@ -124,6 +124,15 @@ iteration procedure: [function matching](matching.md).
 - Replace analyzer aliases only after behavior and signature are proven. Raw
   `func_XXXXXXXX`/`D_XXXXXXXX` names are replaced directly by a reviewed
   semantic name; no compatibility aliases.
+- Semantic function names are verb-led camelCase, role-first
+  (`dispatchScenarioState`), with NO target/module prefix — the file path
+  already encodes it; a prefix only breaks an in-target collision (shortest
+  discriminating word). Long snake `module_target_role` names are retired
+  (see REFACTOR_PLAYBOOK naming standards).
+- Every data-symbol declaration in `internal.h` carries `// @source
+  0xXXXXXXXX` (origin address, the metadata authority) and `// @kind
+  table|rodata|bss|data`; gate-failing raw `D_XXXXXXXX` still gets the
+  `@source` tag with `@kind unknown`.
 - Preserve pre-promotion evidence with an `INFERRED:` comment beside the
   owning address-based declaration: what was observed, what would verify
   promotion. Never create a semantic alias from a hint alone.
