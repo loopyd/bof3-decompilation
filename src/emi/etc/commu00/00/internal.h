@@ -50,17 +50,31 @@ extern volatile u32 COMMU00_PROGRESS_COUNTER;
 extern volatile u16 COMMU00_WORLD_STATE;
 extern volatile u8  COMMU00_TYPE10_TOTAL;
 extern volatile u8  COMMU00_TYPE11_TOTAL;
-extern u16          D_80146904[1];
-extern u8           D_801448EB;
-extern u8           D_801448EC[1];
-extern u8           D_801448ED;
-extern volatile u8  D_801F2928[1];
+/* @kind: bss — per-task label/status words: label_id field view of the
+ * Commu00TaskSlot array (base 0x80146888 + 0x7c), written with 0xC003,
+ * 0xC00A, and variant-derived label words. */
+extern u16          commu00_task_label_words[1];
+/* @kind: bss — commu00 UI mode byte; requested values 0, 14, and 23. */
+extern u8           commu00_ui_mode;
+/* @kind: bss — fairy progress byte; cleared on selection reset, advanced by
+ * message selection, and indexes the progress handler tables. */
+extern u8           commu00_fairy_progress[1];
+/* @kind: bss — fairy slot index byte; indexes the slot handler table. */
+extern u8           commu00_fairy_slot_index;
+/* @kind: rodata — variant rotation bytes backing COMMU00_VARIANT_ROTATION;
+ * variant-derived labels are entries minus 0x3FFB. */
+extern volatile u8  commu00_variant_rotation[1];
 
-/* Local commu00 dispatch table (data blob T_801F24FC). */
-extern void (*D_801F25EC[6])(void);
-extern void (*D_801F2610[])(void);
-extern void (*D_801F2678[])(void);
-extern void (*D_801F268C[])(void);
+/* Local commu00 dispatch tables (data blob T_801F24FC). */
+/* @kind: table — six function pointers indexed by the fairy progress byte
+ * (plus a second group dispatched at offset +6). */
+extern void (*commu00_progress_handlerTable[6])(void);
+/* @kind: table — function pointers indexed by the fairy progress byte. */
+extern void (*commu00_progress_handlerTable2[])(void);
+/* @kind: table — function pointers indexed by the fairy progress byte. */
+extern void (*commu00_progress_handlerTable3[])(void);
+/* @kind: table — function pointers indexed by the fairy slot index byte. */
+extern void (*commu00_slot_handlerTable[])(void);
 
 u16  commu00_pack_slot_anchor(s32 x, s32 y);
 void commu00_apply_slot_palette(u16 palette_id);
@@ -74,18 +88,18 @@ void func_801EEDF8(void);
 void func_801EEEF0(u32 row_index);
 void func_801F00D4(void);
 void func_801F01F4(void);
-u8   func_801F02E4(void);
+u8   commu00_count_active_records(void);
 void func_801F0320(void);
 void func_801F0C6C(u8 task_index, u8 record_kind_index);
 void func_801F0D3C(u8 task_index, u8 record_kind_index);
 void func_801F0E1C(u8 task_index, u8 record_kind_index);
-void func_801F0EC8(u8 task_index);
+void commu00_activate_task_status_c003(u8 task_index);
 void func_801F0F08(u8 source_index, u8 task_index, u8 record_kind_index);
 void func_801F0FBC(u8 source_index, u8 task_index, u8 record_kind_index);
 void func_801F1064(u8 task_index, u8 record_kind_index);
 void func_801F1110(u8 task_index, u8 record_kind_index);
-void func_801F1204(u8 task_index, u8 record_kind_index);
-void func_801F1254(u8 task_index);
+void commu00_set_variant_task_status(u8 task_index, u8 record_kind_index);
+void commu00_activate_task_status_c00a(u8 task_index);
 
 void func_801F0534(void);
 void func_801F0718(u8 source_index, u8 task_index);
