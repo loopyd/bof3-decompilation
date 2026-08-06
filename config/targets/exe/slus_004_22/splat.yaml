@@ -268,7 +268,7 @@ segments:
     start: 0xe89cc
     vram: 0x8017f1cc
     subsegments:
-      - [0xe89cc, asm, func_8017F1CC]
+      - [0xe89cc, c, func_8017F1CC]
   - [0xe89fc, bin, post_emi_gap_0xe89fc]
   - name: cluster_23
     type: code

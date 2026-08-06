@@ -59,6 +59,7 @@ s32     stageEmiTransferSlot(u8 slot);
 void    copyEmiTransferChunk(void);
 void    selectEmiLoaderMode6(void);
 void    dispatchEmiModeCallback(void);
+int     dequeueIntRpIrq(void);
 void    func_80163010(void);
 
 /* Remaining reviewed SLUS services, kept address-traceable pending promotion. */
