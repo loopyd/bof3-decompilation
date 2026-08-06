@@ -53,7 +53,7 @@ segments:
     - c
     - resetAdvanceScratchState
   - - 2208
-    - asm
+    - c
     - func_801F34A0
   - - 2248
     - asm
