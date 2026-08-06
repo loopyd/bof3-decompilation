@@ -37,5 +37,5 @@ void func_8016728C(u8 index, u8 family) {
       return;
   }
 
-  emi_stream_init_slot(slot_id);
+  initStreamSlot(slot_id);
 }

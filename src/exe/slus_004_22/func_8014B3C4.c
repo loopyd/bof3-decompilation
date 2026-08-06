@@ -83,7 +83,7 @@ void func_8014B3C4(void) {
     func_80150098(0x8e, 0x24, 4, (void*)D_80145AD4);
 
     DrawSync(0);
-    render_link_ot_packets();
+    linkRenderOtPackets();
     D_80143E6C += 1;
   }
 }

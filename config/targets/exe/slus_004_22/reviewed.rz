@@ -1,12 +1,12 @@
 # Semantic aliases are additional flags, never replacements for address-based
 # function names. These aliases are reviewed in the owning symbol layer.
 fs semantic
-f semantic.emi_loader_initialize 1 @ 0x80161f58
-f semantic.emi_stream_init_slot 1 @ 0x80161fdc
-f semantic.emi_loader_slot_lba 1 @ 0x80162160
-f semantic.emi_cd_sync_callback 1 @ 0x801621e8
-f semantic.emi_cd_ready_callback 1 @ 0x80162230
-f semantic.emi_loader_is_ready 1 @ 0x80162d00
+f semantic.initEmiLoader 1 @ 0x80161f58
+f semantic.initStreamSlot 1 @ 0x80161fdc
+f semantic.emiLoaderSlotLba 1 @ 0x80162160
+f semantic.emiCdSyncCallback 1 @ 0x801621e8
+f semantic.emiCdReadyCallback 1 @ 0x80162230
+f semantic.isEmiLoaderReady 1 @ 0x80162d00
 
 # PsyQ 4.7 SDK call documentation — flags auto-generated from symbols/psyq.c;
 # these CC comments describe each function for interactive browsing.
@@ -46,7 +46,7 @@ CC "absolute frame counter" @ 0x80143e6c
 f data.D_8018B300 4 @ 0x8018b300
 CC "boot-level init flag" @ 0x8018b300
 
-# Event handles from boot_open_event_set event setup.
+# Event handles from openBootEventSet event setup.
 f data.D_80145E14 4 @ 0x80145e14
 f data.D_80145E18 4 @ 0x80145e18
 f data.D_80145E1C 4 @ 0x80145e1c
@@ -54,6 +54,6 @@ f data.D_80145E20 4 @ 0x80145e20
 f data.D_80145E24 4 @ 0x80145e24
 f data.D_80145E28 4 @ 0x80145e28
 f data.D_80145E2C 4 @ 0x80145e2c
-CC "SwCARD/HwCARD event handles (boot_open_event_set)" @ 0x80145e14
+CC "SwCARD/HwCARD event handles (openBootEventSet)" @ 0x80145e14
 
 fs functions

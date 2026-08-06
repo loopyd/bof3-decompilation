@@ -29,92 +29,128 @@ enum {
   GAME_CALLBACK_SLOT_STATE_IDLE = 0x7f,
 };
 
+/* @source 0x8018B308 @kind unknown */
 extern s16 D_8018B308;
+/* @source 0x8018B310 @kind unknown */
 extern s16 D_8018B310;
+/* @source 0x8018B314 @kind unknown */
 extern s16 D_8018B314;
+/* @source 0x8018B318 @kind unknown */
 extern s16 D_8018B318;
+/* @source 0x8018B31C @kind unknown */
 extern s16 D_8018B31C;
+/* @source 0x8018B320 @kind unknown */
 extern s16 D_8018B320;
+/* @source 0x8018B324 @kind unknown */
 extern s16 D_8018B324;
+/* @source 0x8018B328 @kind unknown */
 extern s16 D_8018B328;
+/* @source 0x8018B32C @kind unknown */
 extern s16 D_8018B32C;
+/* @source 0x8018B330 @kind unknown */
 extern s16 D_8018B330;
+/* @source 0x8018B338 @kind unknown */
 extern s16 D_8018B338;
+/* @source 0x8018B33C @kind unknown */
 extern s16 D_8018B33C;
+/* @source 0x8018B340 @kind unknown */
 extern s16 D_8018B340;
+/* @source 0x8018B344 @kind unknown */
 extern s16 D_8018B344;
+/* @source 0x8018B348 @kind unknown */
 extern s16 D_8018B348;
+/* @source 0x8018B34C @kind unknown */
 extern s16 D_8018B34C;
+/* @source 0x8018B350 @kind unknown */
 extern s16 D_8018B350;
+/* @source 0x8018B354 @kind unknown */
 extern s16 D_8018B354;
+/* @source 0x8018B358 @kind unknown */
 extern s16 D_8018B358;
+/* @source 0x8018B360 @kind unknown */
 extern s16 D_8018B360;
+/* @source 0x8018B364 @kind unknown */
 extern s16 D_8018B364;
+/* @source 0x8018B368 @kind unknown */
 extern s16 D_8018B368;
+/* @source 0x8018B36C @kind unknown */
 extern s16 D_8018B36C;
+/* @source 0x8018B370 @kind unknown */
 extern s16 D_8018B370;
+/* @source 0x8018B374 @kind unknown */
 extern s16 D_8018B374;
+/* @source 0x8018B378 @kind unknown */
 extern s16 D_8018B378;
+/* @source 0x8018B37C @kind unknown */
 extern s16 D_8018B37C;
+/* @source 0x8018B380 @kind unknown */
 extern s16 D_8018B380;
+/* @source 0x8018B388 @kind unknown */
 extern s16 D_8018B388;
+/* @source 0x8018B38C @kind unknown */
 extern s16 D_8018B38C;
+/* @source 0x8018B390 @kind unknown */
 extern s16 D_8018B390;
+/* @source 0x8018B394 @kind unknown */
 extern s16 D_8018B394;
+/* @source 0x8018B398 @kind unknown */
 extern s16 D_8018B398;
+/* @source 0x8018B39C @kind unknown */
 extern s16 D_8018B39C;
+/* @source 0x8018B3A0 @kind unknown */
 extern s16 D_8018B3A0;
+/* @source 0x8018B3A4 @kind unknown */
 extern s16 D_8018B3A4;
+/* @source 0x8018B30C @kind unknown */
 extern s16 D_8018B30C;
+/* @source 0x8018B3D8 @kind unknown */
 extern s16 D_8018B3D8;
+/* @source 0x8018B3DC @kind unknown */
 extern s16 D_8018B3DC;
+/* @source 0x8018B3E4 @kind unknown */
 extern s16 D_8018B3E4;
+/* @source 0x8018B3E8 @kind unknown */
 extern u16 D_8018B3E8;
+/* @source 0x8018B3EC @kind unknown */
 extern u16 D_8018B3EC;
+/* @source 0x8018B3F0 @kind unknown */
 extern u16 D_8018B3F0;
+/* @source 0x8018B3F4 @kind unknown */
 extern s16 D_8018B3F4;
+/* @source 0x8018B404 @kind unknown */
 extern s16 D_8018B404;
+/* @source 0x8018B408 @kind unknown */
 extern s16 D_8018B408;
+/* @source 0x8018232A @kind unknown */
 extern s8  D_8018232A;
+/* @source 0x8018232C @kind unknown */
 extern void (*D_8018232C[])(u32);
+/* @source 0x8018E140 @kind unknown */
 extern s32 D_8018E140[];
 
+/* @source 0x801C8964 @kind table */
 extern const ItemObject      ITEM_OBJECTS[];
+/* @source 0x801C90DC @kind table */
 extern const WeaponObject    WEAPON_OBJECTS[];
+/* @source 0x801C98A4 @kind table */
 extern const ArmorObject     ARMOR_OBJECTS[];
+/* @source 0x801C9E7C @kind table */
 extern const AccessoryObject ACCESSORY_OBJECTS[];
+/* @source 0x801C8FDC @kind table */
 extern const KeyItemObject   KEY_ITEM_OBJECTS[];
 
-bool emi_header_is_valid(const void* header, size_t size);
-u32  emi_next_payload_offset(u32 current_offset, u32 current_size);
-void emi_build_entry_lbas(u32 base_lba, const EmiTocEntry* entries,
+bool isEmiHeaderValid(const void* header, size_t size);
+u32  nextEmiPayloadOffset(u32 current_offset, u32 current_size);
+void buildEmiEntryLbas(u32 base_lba, const EmiTocEntry* entries,
                           size_t entry_count, u32* entry_lbas);
-u32  emi_slot_to_lba(const u32* slot_lba_table, size_t slot_count, u32 slot_id);
+u32  emiSlotToLba(const u32* slot_lba_table, size_t slot_count, u32 slot_id);
 
-void game_front_local_mode_callback_loop(void);
+void frontLocalModeCallbackLoop(void);
 
 #define GAME_CALLBACK_FORCE_SWITCH ((s32)0xff000000u)
-#define GAME_CALLBACK_SLOTS   PSX_PTR(volatile GameCallbackSlot, 0x80143b40u)
-#define GAME_CALLBACK_CURSOR  PSX_PTR(volatile GameCallbackSlot*, 0x80143d40u)
-#define GAME_CALLBACK_END     PSX_PTR(volatile GameCallbackSlot, 0x80143d40u)
-#define GAME_FRONT_LOCAL_MODE PSX_PTR(volatile u16, 0x80143c90u)
 
 /* Fixed-address EMI stream data. The raw literals live only here; function
  * bodies reference these named accessors. */
 #define EMI_STREAM_INDEX_HINT PSX_REF(volatile u8, 0x80145024u)
-#define EMI_UNK_80190308      PSX_PTR(volatile s16, 0x80190308u)
-#define EMI_UNK_8018E7EE      PSX_REF(s16, 0x8018e7eeu)
-#define EMI_UNK_8018E264      PSX_REF(u8, 0x8018e264u)
-#define EMI_UNK_8018DBFE      PSX_PTR(volatile u16, 0x8018dbfeu)
-#define EMI_UNK_8018DBF8      PSX_PTR(volatile s16, 0x8018dbf8u)
-#define EMI_UNK_8018E258      PSX_REF(s32, 0x8018e258u)
-#define EMI_UNK_8018E250      PSX_REF(s32, 0x8018e250u)
-#define EMI_UNK_8018DC02      PSX_PTR(volatile s16, 0x8018dc02u)
-#define EMI_UNK_8018DC00      PSX_PTR(volatile s16, 0x8018dc00u)
-#define EMI_UNK_8018DC04      PSX_PTR(volatile s16, 0x8018dc04u)
-#define EMI_UNK_8018E25C      PSX_REF(s32, 0x8018e25cu)
-#define EMI_UNK_8018E8C8      PSX_PTR(volatile s16, 0x8018e8c8u)
-#define EMI_UNK_8018E8CA      PSX_PTR(volatile s16, 0x8018e8cau)
-#define EMI_UNK_8018E0E8      PSX_PTR(volatile u8, 0x8018e0e8u)
 
 #endif

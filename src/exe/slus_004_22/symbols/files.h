@@ -17,8 +17,12 @@ struct SlotTableEntry {
   RuntimePathKind kind;
 };
 
+/* Authored shipped-file metadata table; no native fixed address.
+ * @source authored @kind table */
 extern const struct SlotTableEntry g_slot_table[];
+/* @source authored @kind data */
 extern const size_t                g_slot_table_count;
+/* @source 0x80149800 @kind rodata */
 extern const char                  s__LOGO_LOGO_EXE_1_80149800[];
 
 #endif

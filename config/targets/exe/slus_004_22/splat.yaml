@@ -20,34 +20,34 @@ segments:
     start: 0xB3728
     vram: 0x80149f28
     subsegments:
-      - [0xB3728, rodata, equip_record_base]
+      - [0xB3728, rodata, getEquipRecordBase]
   - [0xB373C, bin, pre_boot_mid]
   - name: boot
     type: code
     start: 0xb42c8
     vram: 0x8014aac8
     subsegments:
-      - [0xb42c8, c, boot_main_loop]
-      - [0xb44a0, c, boot_init_runtime]
+      - [0xb42c8, c, bootMainLoop]
+      - [0xb44a0, c, initBootRuntime]
   - name: post_logo_init
     type: code
     start: 0xb4528
     vram: 0x8014ad28
     subsegments:
-      - [0xb4528, c, boot_init_disc_events]
+      - [0xb4528, c, initBootDiscEvents]
   - name: display_work_init
     type: code
     start: 0xb4608
     vram: 0x8014ae08
     subsegments:
-      - [0xb4608, c, boot_init_display_envs]
-      - [0xb469c, c, boot_clear_ot_entry]
+      - [0xb4608, c, initBootDisplayEnvs]
+      - [0xb469c, c, clearBootOtEntry]
   - name: logo_handoff
     type: code
     start: 0xb46e0
     vram: 0x8014aee0
     subsegments:
-      - [0xb46e0, c, boot_run_logo_exe]
+      - [0xb46e0, c, runLogoExe]
   - [0xb47c0, bin, pre_boot_frame_tables]
   - name: boot_frame_tables
     type: code
@@ -55,52 +55,52 @@ segments:
     vram: 0x8014b020
     subsegments:
       - [0xb4820, c, func_8014B020]
-      - [0xb48f0, c, render_link_ot_packets]
+      - [0xb48f0, c, linkRenderOtPackets]
   - name: vblank_capture
     type: code
     start: 0xb497c
     vram: 0x8014b17c
     subsegments:
-      - [0xb497c, c, boot_capture_vsync]
+      - [0xb497c, c, captureBootVsync]
   - [0xb49a4, bin, pre_emi_loader]
   - name: cue_dispatch
     type: code
     start: 0xc7718
     vram: 0x8015df18
     subsegments:
-      - [0xc7718, c, sound_dispatch_cue]
+      - [0xc7718, c, dispatchSoundCue]
   - [0xc8194, bin, post_cue_dispatch]
   - name: emi_loader
     type: code
     start: 0xcb758
     vram: 0x80161f58
     subsegments:
-      - [0xcb758, c, emi_loader_initialize]
-      - [0xcb7dc, c, emi_stream_init_slot]
-      - [0xcb960, c, emi_loader_slot_lba]
-      - [0xcb978, c, emi_loader_begin_transfer]
-      - [0xcb9e8, c, emi_cd_sync_callback]
-      - [0xcba30, c, emi_cd_ready_callback]
-      - [0xcbd00, c, emi_loader_validate_header]
-      - [0xcbde4, c, emi_copy_type0_payload]
-      - [0xcbe18, c, emi_record_dispatch_handler]
-      - [0xcbe98, c, emi_record_packed_dispatch]
-      - [0xcbf90, c, emi_select_next_entry]
-      - [0xcc098, c, emi_start_entry_transfer]
-      - [0xcc1f0, c, emi_select_primary_destination]
-      - [0xcc26c, c, emi_select_alternate_destination]
-      - [0xcc308, c, emi_stage_transfer_slot]
-      - [0xcc414, c, emi_copy_transfer_chunk]
-      - [0xcc4d8, c, emi_loader_select_mode6]
-      - [0xcc500, c, emi_loader_is_ready]
-      - [0xcc518, c, emi_dispatch_mode_callback]
+      - [0xcb758, c, initEmiLoader]
+      - [0xcb7dc, c, initStreamSlot]
+      - [0xcb960, c, emiLoaderSlotLba]
+      - [0xcb978, c, beginEmiLoaderTransfer]
+      - [0xcb9e8, c, emiCdSyncCallback]
+      - [0xcba30, c, emiCdReadyCallback]
+      - [0xcbd00, c, validateEmiLoaderHeader]
+      - [0xcbde4, c, copyEmiType0Payload]
+      - [0xcbe18, c, recordEmiDispatchHandler]
+      - [0xcbe98, c, recordEmiPackedDispatch]
+      - [0xcbf90, c, selectNextEmiEntry]
+      - [0xcc098, c, startEmiEntryTransfer]
+      - [0xcc1f0, c, selectPrimaryEmiDestination]
+      - [0xcc26c, c, selectAlternateEmiDestination]
+      - [0xcc308, c, stageEmiTransferSlot]
+      - [0xcc414, c, copyEmiTransferChunk]
+      - [0xcc4d8, c, selectEmiLoaderMode6]
+      - [0xcc500, c, isEmiLoaderReady]
+      - [0xcc518, c, dispatchEmiModeCallback]
   - [0xcc59c, bin, post_emi_loader]
   - name: item_record_dispatch
     type: code
     start: 0xCF548
     vram: 0x80165d48
     subsegments:
-      - [0xCF548, c, equip_record_base]
+      - [0xCF548, c, getEquipRecordBase]
   - [0xCF604, bin, post_emi_gap_0xCF604]
   - name: cluster_0
     type: code
@@ -275,7 +275,7 @@ segments:
     start: 0xe8a7c
     vram: 0x8017f27c
     subsegments:
-      - [0xe8a7c, c, irq_dequeue_int_rp]
+      - [0xe8a7c, c, dequeueIntRpIrq]
   - [0xe8ab4, bin, post_emi_gap_0xe8ab4]
   - name: cluster_24
     type: code

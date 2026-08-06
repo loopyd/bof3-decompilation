@@ -1,7 +1,7 @@
 #include "bof3/context.h"
 #include "internal.h"
 
-extern void render_append_prim(u32 arg0, u32 arg1);
+extern void appendRenderPrim(u32 arg0, u32 arg1);
 
 extern SPRT_8* D_8014598C;
 
@@ -47,7 +47,7 @@ void func_80150098(s16 x, s16 y, u32 clut, const u8* text) {
 
       SetSprt8(primitive);
       SetSemiTrans(primitive, 1);
-      render_append_prim(1, 0x10);
+      appendRenderPrim(1, 0x10);
       primitive = D_8014598C;
     }
 

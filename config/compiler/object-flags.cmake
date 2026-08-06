@@ -47,4 +47,4 @@ set(BOF3_OBJFLAGS_emi_battle_battle_03_battle03_pick_random_unblocked_id_c -O2 -
 # Same signed modulo (rand() % count) requiring --expand-div for the MIPS
 # division-trap sequence.
 set(BOF3_OBJFLAGS_emi_battle_battle_15_battle15_pick_random_unblocked_id_c -O2 -Wa,--expand-div)
-set(BOF3_OBJCOMPILER_exe_slus_004_22_sound_dispatch_cue_c gcc-2.6.3-psx)
+set(BOF3_OBJCOMPILER_exe_slus_004_22_dispatchSoundCue_c gcc-2.6.3-psx)

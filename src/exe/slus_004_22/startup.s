@@ -37,7 +37,7 @@ bof3_boot_main:
 	addiu	$sp, $sp, -16
 	sw	$ra, 12($sp)
 
-	jal	boot_run_logo_exe
+	jal	runLogoExe
 	nop
 	move	$t0, $v0
 
