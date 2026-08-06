@@ -10,11 +10,17 @@ extern u8* D_8014598C;
 
 /* Main-RAM globals owned by the loaded image. */
 extern u8 D_80143BB0;
-extern u8 D_801448ED;
+/* @kind: bss — index of the active master; selects the entry whose action
+ * base is read from sisyou_master_action_base_table. */
+extern u8 sisyou_master_index;
 
 /* EMI-local data. */
-extern u16 D_801D41BC[];
-extern u8  D_801D4285;
+/* @kind: data — per-master u16 action-id base; adding 4 or 0x11 yields the
+ * action id dispatched for the selected master. */
+extern u16 sisyou_master_action_base_table[];
+/* @kind: bss — current mode index; selects the handler from the D_801D41E0
+ * table and is set to 6 after an entry action starts. */
+extern u8  sisyou_mode_index;
 
 /* PsyQ SDK primitive setup helpers called by this target.
  * SetSprt8 / SetSemiTrans are declared by <libgpu.h> (via bof3/psyq.h);

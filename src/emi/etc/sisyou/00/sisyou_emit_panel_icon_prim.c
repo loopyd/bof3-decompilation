@@ -4,4 +4,4 @@
 /* @source 0x801D2520
  * @behavior emits the panel icon primitive.
  */
-PANEL_ICON_PRIM(func_801D2520)
+PANEL_ICON_PRIM(sisyou_emit_panel_icon_prim)

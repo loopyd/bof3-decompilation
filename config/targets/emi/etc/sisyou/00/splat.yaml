@@ -60,7 +60,7 @@ segments:
     - func_801D23A0
   - - 6432
     - c
-    - func_801D2520
+    - sisyou_emit_panel_icon_prim
   - - 6616
     - asm
     - func_801D25D8
@@ -105,7 +105,7 @@ segments:
     - func_801D2C24
   - - 8292
     - c
-    - func_801D2C64
+    - sisyou_dispatch_entry_action_mode0
   - - 8356
     - asm
     - func_801D2CA4
@@ -117,7 +117,7 @@ segments:
     - func_801D3148
   - - 9816
     - c
-    - func_801D3258
+    - sisyou_start_entry_action_mode0
   - - 9940
     - asm
     - func_801D32D4
@@ -126,7 +126,7 @@ segments:
     - func_801D3310
   - - 10064
     - c
-    - func_801D3350
+    - sisyou_dispatch_entry_action_mode1
   - - 10128
     - asm
     - func_801D3390
@@ -138,7 +138,7 @@ segments:
     - func_801D3798
   - - 11432
     - c
-    - func_801D38A8
+    - sisyou_start_entry_action_mode1
   - - 11556
     - asm
     - func_801D3924
