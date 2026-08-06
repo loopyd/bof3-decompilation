@@ -124,19 +124,16 @@ iteration procedure: [function matching](matching.md).
 - Replace analyzer aliases only after behavior and signature are proven. Raw
   `func_XXXXXXXX`/`D_XXXXXXXX` names are replaced directly by a reviewed
   semantic name; no compatibility aliases.
-- Semantic function names are verb-led camelCase, role-first
-  (`dispatchScenarioState`), with NO target/module prefix — the file path
-  already encodes it; a prefix only breaks an in-target collision (shortest
-  discriminating word). Cross-target duplicates keep the same role name;
-  the target stays in the selector. Mutable globals are data symbols, not
-  `UPPER_SNAKE`. Long snake `module_target_role` names are retired
-  (binding standard; REFACTOR_PLAYBOOK points here).
-- Data symbols take camelCase + role suffix (`...Table`/`...Strings`/
-  `...State`/`...Cursor`). Every data-symbol declaration in `internal.h`
-  carries `// @source 0xXXXXXXXX` (origin address = metadata authority,
-  survives renames) and `// @kind table|rodata|bss|data`; gate-failing raw
-  `D_XXXXXXXX` still gets `@source` with `@kind unknown`. No speculative
-  names, but never skip the `@source` tag.
+- Semantic function names: verb-led camelCase, role-first
+  (`dispatchScenarioState`); NO module/target prefix (file path encodes
+  it), prefix only for in-target collisions. Cross-target duplicates keep
+  the role name; mutable globals are data symbols, not `UPPER_SNAKE`.
+  Long snake `module_target_role` names are retired.
+- Data symbols: camelCase + role suffix (`...Table`/`...Strings`/`...State`/
+  `...Cursor`); every `internal.h` data declaration carries `// @source
+  0xXXXXXXXX` (metadata authority, survives renames) + `// @kind
+  table|rodata|bss|data`; gate-failing raw `D_XXXXXXXX` still gets
+  `@source` + `@kind unknown`. Never skip the `@source` tag.
 - Preserve pre-promotion evidence with an `INFERRED:` comment beside the
   owning address-based declaration: what was observed, what would verify
   promotion. Never create a semantic alias from a hint alone.
