@@ -23,7 +23,7 @@ segments:
   vram: 2148487180
   subsegments:
   - - 12
-    - asm
+    - c
     - func_800F500C
   - - 72
     - asm
