@@ -114,7 +114,8 @@ extern struct GameWorkArea* g_game_work;
 
 /* @behavior entry-0 main state machine index */
 extern volatile u16 D_80143B90;
-extern u16          D_80143C40;
+/* @kind: bss */
+extern u16          GAME_FRONT_EFFECT_BUSY;
 extern volatile u8  D_80143F49;
 extern volatile u8  D_80143F4A;
 extern u8           D_80143FBC;
@@ -143,12 +144,14 @@ extern u8 D_80143F1F;
 /* @behavior active selection id from front-end picker */
 extern volatile u32 D_80144FC0;
 /* @behavior front-end selection index for menu routing */
-extern u8  D_80145029;
+/* @kind: bss */
+extern u8  GAME_FRONT_SELECTION;
 extern u8  D_80145024;
 extern u32 D_8014502C;
 extern u8* D_801459F4;
 /* @behavior palette stage serial for GPU upload sequencing */
-extern volatile u8 D_80145988;
+/* @kind: bss */
+extern volatile u8 GAME_FRONT_PALETTE_STAGE_SERIAL;
 /* @behavior world flags — bit0=pending scenario, bit6=force-reset.
  * UNKNOWN: roles of observed bits 5 and 11. */
 extern u16         D_8014625A;
@@ -213,7 +216,8 @@ extern const u8         D_801C7AD8[];
 extern const u8         D_801C7AE0[];
 extern const u8         D_801C7AE8[];
 
-extern const GameEntry0StateHandler D_801CD568[];
+/* @kind: table */
+extern const GameEntry0StateHandler game_scenario_substate_handlerTable[];
 extern const GameEntry0StateHandler D_801C7B08[];
 extern const GameEntry0StateHandler D_801C7B14[];
 extern const GameEntry0StateHandler D_801C7B44[];
@@ -224,26 +228,27 @@ extern const GameEntry0StateHandler D_801C7B98[];
 extern const GameEntry0StateHandler D_801C7BA4[];
 extern const GameEntry0StateHandler D_801C7BB0[];
 
-extern RecordSlot D_80143FC8[20];
+/* @kind: bss */
+extern RecordSlot game_front_recordTable[20];
 
 /* @behavior per-mode 3-byte record table. Expected stride: mode * 3 bytes. */
 extern u8 D_80144F5A[];
 
 /* @behavior finds the first unused record slot by scanning the
- * entry table at D_80143FC8; returns its index (0‑19) or 0xFF
+ * entry table at game_front_recordTable; returns its index (0‑19) or 0xFF
  * when all slots are occupied.
  * @source 0x8019601C
  */
-u8 func_8019601C(u8 mode);
-void func_801BE710(GameResetRecord* record);
+u8 game_front_find_free_record(u8 mode);
+void game_reset_record_clear(GameResetRecord* record);
 
 /* @behavior clears bytes 0‑4 of the record slot at record_index.
  * @source 0x801960C0
  */
-void func_801960C0(u8 record_index);
+void game_front_clear_record(u8 record_index);
 
-void func_80196070(void);
-void func_8019EAD4(void);
+void game_work_clear_flags(void);
+void game_work_reset_2(void);
 void func_801D0D9C(void);
 
 /* @behavior seeds the shared callback/frame dispatch prologue before the entry-0
@@ -283,13 +288,13 @@ void func_8019FA28(u16 selection_seed, u32 context_a, u32 context_b,
  * upload path.
  * @source 0x8014E284
  */
-void func_8014E284(void);
+void game_stage_shared_palette_bank(void);
 
 /* @behavior begins streaming the currently selected SCENA pack for the seeded
  * scenario state.
  * @source 0x801A7804
  */
-void func_801A7804(void);
+void game_scenario_request_overlay(void);
 
 /* @behavior enters the loaded scenario-local dispatch path after the SCENA loader
  * completes.
@@ -307,16 +312,16 @@ void func_801992B8(void);
  * sprite_id * 4, with the table chosen by flags & 1.
  * @source 0x801AF270
  */
-u8* func_801AF270(u8 sprite_id, u8 flags);
+u8* game_sprite_rect_entry(u8 sprite_id, u8 flags);
 
 /* @behavior draws one sprite by filling a GT quad primitive from a rect-table
  * entry, selecting CLUT by flags & 2, then appending to the OT.
  * @source 0x801AF2A0
  */
-void func_801AF2A0(s16 x, s16 y, u8 sprite_id, u8 flags);
+void game_sprite_draw(s16 x, s16 y, u8 sprite_id, u8 flags);
 
 /* @behavior iterates a packed sprite-record table and draws each sprite via
- * func_801AF2A0 with signed offsets shifted by 3 applied to base coords.
+ * game_sprite_draw with signed offsets shifted by 3 applied to base coords.
  * @source 0x801AF390
  */
 void func_801AF390(s16 base_x, s16 base_y, const u8* record_table, u8 flags);
@@ -333,33 +338,33 @@ s16 func_80154F28(s32 x, s32 y);
  */
 u8 func_8014D978(void);
 
-void func_8019611C(void);
+void game_front_clear_all_records(void);
 void func_8019625C(void);
 u8   func_801968BC(u8 mode);
-u8   func_80196B20(u8 value);
+u8   game_palette_locate_color(u8 value);
 void func_80196B9C(void);
-u8   func_80196CF0(u8* owner, u8* source_table);
-void func_80196FFC(void);
-void func_80197068(void);
-void func_801970EC(void);
-void func_801971E8(void);
-void func_80197378(void);
-void func_801975E4(void);
-void func_801979D4(void);
-void func_80197A24(void);
-void func_80197A60(void);
+u8   game_palette_alloc_slot(u8* owner, u8* source_table);
+void game_front_advance_entry_serial(void);
+void game_front_selection_main_loop(void);
+void game_front_reset_selection_state(void);
+void game_front_apply_selection_context(void);
+void game_front_update_state_machine(void);
+void game_front_dispatch_substate_1(void);
+void game_front_enter_state_2_on_input(void);
+void game_front_dispatch_substate_2(void);
+void game_front_bank2_init(void);
 void func_80197AA4(void);
-void func_80197C1C(void);
-void func_80197E54(void);
-void func_80197EFC(void);
-void func_80198170(void);
-void func_801981B4(void);
-void func_801981D4(void);
-void func_80198234(void);
-void func_801984AC(void);
-void func_80198744(void);
-void func_80198904(void);
-void func_80198AC4(void);
+void game_front_bank2_advance_when_ready(void);
+void game_front_bank2_complete_operation(void);
+void game_front_bank2_final_updates(void);
+void game_front_dispatch_world_update(void);
+void game_front_update_world(void);
+void game_front_update_world_position(void);
+void game_front_dispatch_substate_3(void);
+void game_front_dispatch_substate_4(void);
+void game_front_dispatch_substate_5(void);
+void game_front_dispatch_substate_6(void);
+void game_front_dispatch_substate_7(void);
 void func_80199230(void);
 void func_80198F1C(void);
 void func_801990D0(void);
@@ -367,35 +372,35 @@ void func_801991B8(void);
 void func_801BEDD0(void);
 s32  func_801BEE5C(void);
 void func_801A06D8(void);
-void func_801B5BDC(u8 arg0);
+void game_request_apply_remap(u8 arg0);
 u8   func_801BF11C(void);
 void func_801BF8E0(void);
 void func_801BFAC4(void);
 u8   func_801BF78C(void);
-u8   func_801BDB7C(u8 mode);
-void func_801BB8E8(u8 arg_a, u8 arg_b, u8 arg_c);
+u8   game_find_mode_free_slot(u8 mode);
+void game_work_update_route_index(u8 arg_a, u8 arg_b, u8 arg_c);
 void func_8016728C(u32 slot_id, u32 mode);
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
-void func_8015D4F8(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
-void func_8015D404(u8 arg0, u8 arg1);
-void func_801A7704(u8 scenario_index);
+void game_start_selection_fx(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
+void game_stop_selection_fx(u8 arg0, u8 arg1);
+void game_scenario_load(u8 scenario_index);
 void func_801651DC(s32 ability_id, s32 character_id, s32 arg2, s32 arg3);
 void func_80164A44(volatile void* character_state);
 
 void func_8019FAA0(u16 selection_seed, u32 context_a, u32 context_b,
                    u8 context_kind);
-void func_80198BC4(u32 arg0);
+void game_front_wait_transition(u32 arg0);
 void func_801A0048(s16 a, s16 b);
 /* @behavior Iterates active entity slots and dispatches per-type handlers.
  * @source 0x801A0514
  */
 void func_801A0514(void);
 void func_801B3CCC(u32 arg0);
-void func_801996FC(void);
-void func_801995F8(void);
-void func_801997EC(void);
-void func_8019982C(void);
-void func_80199938(void);
+void game_panel_x_advance_to_320(void);
+void game_panel_x_retreat_to_neg170(void);
+void game_panel_x_retreat_to_neg170_2(void);
+void game_panel_x_advance_to_17(void);
+void game_panel_field6_retreat_to_neg20(void);
 
 /* Legacy alias for already‑matched functions that dereference 0x1F800044
  * via a literal‑address macro (lui+ori+lw 0(base) codegen). */

@@ -33,5 +33,5 @@ void func_80196B9C(void) {
       color_index++;
     } while (color_index < (D_801C7AD8[work[0x28]] << 4));
   }
-  D_80145988 = 1u;
+  GAME_FRONT_PALETTE_STAGE_SERIAL = 1u;
 }
