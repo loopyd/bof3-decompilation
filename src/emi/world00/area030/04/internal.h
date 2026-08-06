@@ -42,6 +42,7 @@ void func_801D2AE0(void);
 void func_801D2C34(s16 arg0, s16 arg1, s8 arg2, u8 arg3);
 void func_801D3244(s16 arg0, s16 arg1, u8 arg2, s8 arg3, u8 arg4, s8 arg5);
 void advancePanelScroll(void);
+void func_801D6F08(void);
 void seedMenuScratch(void);
 void func_801D6B28(s8 arg0);
 void advanceStepMode6(void);

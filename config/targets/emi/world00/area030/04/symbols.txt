@@ -20,6 +20,7 @@ func_801D3244 = 0x801D3244;
 advancePanelScroll = 0x801D3938;
 seedMenuScratch = 0x801D6A2C;
 func_801D6B28 = 0x801D6B28;
+func_801D6F08 = 0x801D6F08;
 advanceStepMode6 = 0x801D9E08;
 clearFlagState10 = 0x801E023C;
 dispatchCompanion = 0x801E0C20;
