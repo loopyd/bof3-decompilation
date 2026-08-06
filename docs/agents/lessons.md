@@ -142,3 +142,9 @@ iteration procedure: [function matching](matching.md).
   `out/reverse/<target>/snapshot.json`; equal addresses across targets are
   insufficient. Overlays and PsyQ copies can share a role with different
   addresses or bytes.
+- `bin/symbols check` validates `WEAK_SYMBOL_AT` entries only under
+  `src/<target>/symbols/` (the generated PsyQ bindings); the hand-maintained
+  top-level `src/<target>/symbols.c` is skipped by its lift-file scan (no
+  `func_` stem, no `@source` tag), so a bound label with no target-map entry
+  passes silently. After editing that file, verify the map contains every
+  bound name by hand (or grep map vs bindings) until the harness covers it.
