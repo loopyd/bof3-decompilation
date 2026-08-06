@@ -5,23 +5,22 @@
  * texture state through the local helper at `0x80155560`.
  * @source 0x801F3480
  */
-void func_801F3480(const void* arg0, s32 arg1, u32 arg2) {
+POLY_FT4* emitMarkerQuad(const void* arg0, s32 arg1, u32 arg2) {
   const World00Area027Point* point;
-  MATRIX                     matrix;
-  VECTOR                     translation;
-  long                       depth;
-  long                       flag;
   SVECTOR                    rotation;
+  MATRIX                     matrix;
+  long                       flag;
+  long                       depth;
   POLY_FT4*                  primitive;
-  volatile s16*              scratch;
+  SVECTOR*                   vertices;
 
   point = (const World00Area027Point*)arg0;
-  rotation.vx = 0;
   rotation.vy = 0;
+  rotation.vx = 0;
   rotation.vz = (s16)arg1;
 
   PushMatrix();
-  RotTrans((SVECTOR*)point, &translation, &flag);
+  RotTrans((SVECTOR*)point, (VECTOR*)matrix.t, &flag);
   RotMatrix(&rotation, &matrix);
   MulMatrix2(WORLD00_AREA027_MATRIX_92E8, &matrix);
   SetRotMatrix(&matrix);
@@ -31,30 +30,23 @@ void func_801F3480(const void* arg0, s32 arg1, u32 arg2) {
   SetPolyFT4(primitive);
   SetShadeTex(primitive, 0);
 
-  scratch = SPAD_ADDR(volatile s16, 0x14u);
-  scratch[0] = 0;
-  scratch[1] = 0;
-  scratch[2] = -0x17e;
-  scratch[3] = 0;
-  scratch[4] = 0;
-  scratch[5] = 0;
-  scratch[6] = 0x80;
-  scratch[7] = 0;
-  scratch[8] = 0;
-  scratch[9] = 0;
-  scratch[10] = -0x17e;
-  scratch[11] = 0;
-  scratch[12] = 0x80;
-  scratch[13] = 0;
-  scratch[14] = 0;
-  scratch[15] = 0;
+  vertices = D_1F800014;
+  vertices[0].vx = vertices[1].vx = vertices[2].vx = vertices[3].vx = 0;
+  vertices[2].vy = 0x80;
+  vertices[0].vy = 0x80;
+  vertices[1].vz = -0x17e;
+  vertices[0].vz = -0x17e;
+  vertices[3].vy = 0;
+  vertices[1].vy = 0;
+  vertices[3].vz = 0;
+  vertices[2].vz = 0;
 
-  RotTransPers4(SPAD_ADDR(SVECTOR, 0x14u), SPAD_ADDR(SVECTOR, 0x1cu),
-                SPAD_ADDR(SVECTOR, 0x24u), SPAD_ADDR(SVECTOR, 0x2cu),
+  RotTransPers4(vertices, vertices + 1, vertices + 2, vertices + 3,
                 (long*)((u8*)primitive + 8), (long*)((u8*)primitive + 0x10),
                 (long*)((u8*)primitive + 0x18), (long*)((u8*)primitive + 0x20),
                 &depth, &flag);
   PopMatrix();
 
   func_80155560(arg2, primitive, 1);
+  return primitive;
 }

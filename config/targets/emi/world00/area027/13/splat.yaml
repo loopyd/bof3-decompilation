@@ -57,7 +57,7 @@ segments:
     - func_801F33A8
   - - 2176
     - asm
-    - func_801F3480
+    - emitMarkerQuad
   - - 2528
     - asm
     - func_801F35E0

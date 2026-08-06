@@ -1,7 +1,7 @@
 #include "internal.h"
 
 /* @behavior advances the local scratch state when the loader poll succeeds, then
- * emits the two fixed world markers through `func_801F3480`.
+ * emits the two fixed world markers through `emitMarkerQuad`.
  * @source 0x801F31CC
  */
 void emitMarkerPair(void) {
@@ -15,12 +15,12 @@ void emitMarkerPair(void) {
   point[0] = (s16)0xe340u;
   point[1] = (s16)0xe3c0u;
   point[2] = 0;
-  func_801F3480(point, 0, 0x13500126u);
+  emitMarkerQuad(point, 0, 0x13500126u);
   func_80155A08(0x468000, 0x478000, 0, 0x28);
 
   point[0] = (s16)0xe340u;
   point[1] = (s16)0xe4c0u;
   point[2] = 0;
-  func_801F3480(point, 0x800, 0x13510125u);
+  emitMarkerQuad(point, 0x800, 0x13510125u);
   func_80155A08(0x468000, 0x498000, -1, 0x28);
 }
