@@ -347,7 +347,7 @@ segments:
     - asm
     - func_801DC93C
   - - 49268
-    - asm
+    - c
     - func_801DCC74
   - - 49328
     - asm

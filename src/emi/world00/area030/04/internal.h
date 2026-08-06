@@ -7,7 +7,9 @@
 /* Shared mode byte; stored small mode values (4/6/7/...) and compared
  * against them by the area030 mode handlers. */
 extern u8  modeByte;      /* @source 0x80144125 @kind bss */
+extern u8  D_80144286;    /* @source 0x80144286 @kind unknown */
 extern u8  D_80145E93;    /* @source 0x80145E93 @kind unknown */
+extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
 extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
 extern u8  D_801E238C[];  /* @source 0x801E238C @kind unknown */
@@ -48,6 +50,7 @@ void func_801D6B28(s8 arg0);
 void advanceStepMode6(void);
 void clearFlagState10(void);
 void dispatchCompanion(void);
+void func_801DCC74(void);
 void submitPanelPair(s16 arg0, s16 arg1);
 void configureSpriteClut(s16 arg0, s16 arg1, u8 arg2);
 void appendDimTile(void);
