@@ -103,6 +103,16 @@ typedef struct RecordSlot {
   u8 pad[0x6F]; /* 0x74 - 5 */
 } RecordSlot;
 
+/* Work record passed to func_801A86D4; only the handler selector byte at
+ * 0x7A is proven. */
+typedef struct GameIndexedWork {
+  u8 pad_00[0x7A];
+  u8 handler_index_7A; /* 0x7A */
+} GameIndexedWork;
+
+/* Indexed handler table dispatch record. */
+typedef s32 (*GameIndexedHandler)(GameIndexedWork* work, u8* arg);
+
 /* @source 0x80148648 @kind unknown */
 extern PanelTask* D_80148648;
 #define D_80148648 g_PanelTaskRoot
@@ -268,6 +278,10 @@ extern const s8            D_801C7B74[];
 extern volatile u8         D_80146864;
 /* @source 0x801490A4 @kind unknown */
 extern volatile u16        D_801490A4;
+/* @source 0x80144F28 @kind unknown */
+extern u8                  D_80144F28[];
+/* @source 0x801C85F0 @kind table */
+extern GameIndexedHandler  D_801C85F0[];
 
 /* INFERRED: palette work records use the observed 12-byte and 16-byte strides;
  * confirm field meanings against their setup paths. */
