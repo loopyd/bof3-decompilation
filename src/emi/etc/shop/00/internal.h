@@ -93,4 +93,8 @@ extern void (*D_801E530C[])(void);
  * func_801DE1C4 with the phase byte D_80148652 as index. */
 extern void (*D_801E5BFC[])(void);
 
+/* @source 0x801E5C08
+ * @kind table */
+extern void (*D_801E5C08[])(void);
+
 #endif
