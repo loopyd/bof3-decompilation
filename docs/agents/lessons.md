@@ -121,7 +121,7 @@ iteration procedure: [function matching](matching.md).
 - Replace analyzer aliases only after behavior and signature are proven. Raw
   `func_XXXXXXXX`/`D_XXXXXXXX` names are replaced directly by a reviewed
   semantic name; no compatibility aliases. Function names: verb-led
-  camelCase, role-first (`dispatchScenarioState`), no module/target prefix
+  camelCase, role-first, no module/target prefix
   except to break a collision. Data: camelCase + role suffix
   (`...Table`/`...Strings`/`...State`) + `// @source 0xXXXXXXXX` and
   `// @kind table|rodata|bss|data` tags (raw `D_*`: `@kind unknown`).
