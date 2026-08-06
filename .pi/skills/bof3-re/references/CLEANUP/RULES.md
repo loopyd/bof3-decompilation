@@ -42,7 +42,8 @@ compiler flags, or binding addresses.
   `@behavior`/`@source` metadata; the `@source` tag is the address
   authority once the filename no longer encodes it. Never rename a Splat function boundary address.
 - Never drop `@behavior`/`@source`/`@kind` tags or evidence comments;
-  correct stale tags in place.
+  correct stale tags in place. Tags are written `/* @source 0x... @kind
+  ... */` — `//` comments break gcc-2.6.3 variant objects.
 - Never move target directories or alter `source_dir`, manifests, load
   addresses, Splat boundaries, compiler/toolchain files, SDK
   maps/declarations, shared/public headers, `src/shared/`, `out/`, `build/`,
