@@ -4,7 +4,7 @@ extern u32*             D_80146848;
 extern u8               D_80146854;
 extern EmiTransferSlot* D_80146844;
 extern u32              D_80146678[];
-extern volatile u32     D_80146450;
+extern volatile u32     emiExpectedSectorState; /* @kind: bss */
 extern volatile u32     D_80146454;
 extern volatile u32     D_80146458;
 extern volatile u32     D_8014645C;
@@ -26,9 +26,9 @@ s32 func_80162B08(u8 slot) {
     D_80146454 = 0x800;
     D_80146460 = 5;
     D_8014646C = 1;
-    D_80146450 = D_80146678[0];
+    emiExpectedSectorState = D_80146678[0];
   } else {
-    D_80146450 = D_80146678[slot];
+    emiExpectedSectorState = D_80146678[slot];
     /* Preserve the original compiler's slot-address register allocation. */
     slot_table = D_80146844 - -slot;
     D_80146454 = slot_table->size;

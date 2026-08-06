@@ -372,7 +372,9 @@ void func_801DEA64(s32 arg0);
 #define BATTLE_PALETTE_TABLE       PSX_PTR(volatile u16, 0x800b6d30u)
 #define BATTLE_PALETTE_ROW_28      PSX_PTR(volatile void, 0x800b6d28u)
 #define BATTLE_PALETTE_ROW_20      PSX_PTR(volatile void, 0x800b6d20u)
+/* @kind: string (map symbol: battleApParamStrings) — "AP" label + params string run. */
 #define BATTLE_UNK_800B6D1C        PSX_PTR(volatile u32, 0x800b6d1cu)
+/* @kind: string (map symbol: battlePanelIndexFormat) — "%2d" battler-index format. */
 #define BATTLE_UNK_80096A04        PSX_PTR(volatile void, 0x80096a04u)
 #define BATTLE_UNK_80145AD4        PSX_PTR(volatile u16, 0x80145ad4u)
 #define BATTLE_SCRATCHPAD_PTR      SPAD_PTR_SLOT(u8, 0x44u)

@@ -1,6 +1,6 @@
 #include "internal.h"
 
-extern GameCallbackSlot* volatile D_80143D40;
+extern GameCallbackSlot* volatile gameCallbackSlotCursor; /* @kind: bss */
 extern GameCallbackSlot           D_80143B40[4];
 
 /* possible name: game_slot_scheduler_tick
@@ -16,18 +16,18 @@ void func_8014B73C(void) {
   s32               state;
   u16               idle;
 
-  D_80143D40 = D_80143B40;
+  gameCallbackSlotCursor = D_80143B40;
   idle = GAME_CALLBACK_SLOT_STATE_IDLE;
 
   do {
-    top_slot = D_80143D40;
+    top_slot = gameCallbackSlotCursor;
     state = top_slot->state;
 
     switch (state) {
       case GAME_CALLBACK_SLOT_STATE_OPEN:
         EnterCriticalSection();
-        open_slot = D_80143D40;
-        D_80143D40->thread_id =
+        open_slot = gameCallbackSlotCursor;
+        gameCallbackSlotCursor->thread_id =
             OpenTh((long (*)())open_slot->callback, open_slot->open_arg,
                    open_slot->open_arg_2);
         ExitCriticalSection();
@@ -41,7 +41,7 @@ void func_8014B73C(void) {
 
       case GAME_CALLBACK_SLOT_STATE_SWITCH:
       dispatch:
-        dispatch_slot = D_80143D40;
+        dispatch_slot = gameCallbackSlotCursor;
         dispatch_slot->state = idle;
         ChangeTh(dispatch_slot->thread_id);
         break;
@@ -50,7 +50,7 @@ void func_8014B73C(void) {
         break;
     }
 
-    next_slot = D_80143D40 + 1;
-    D_80143D40 = next_slot;
+    next_slot = gameCallbackSlotCursor + 1;
+    gameCallbackSlotCursor = next_slot;
   } while (next_slot < D_80143B40 + 4);
 }

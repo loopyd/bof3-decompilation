@@ -1,8 +1,8 @@
 #include "internal.h"
 
 extern void (*D_80183248[])(void);
-extern CdlLOC       D_8018B490;
-extern volatile u32 D_80146450;
+extern CdlLOC       cdCurrentPositionState; /* @kind: bss */
+extern volatile u32 emiExpectedSectorState;   /* @kind: bss */
 extern volatile u32 D_80146454;
 extern volatile u32 D_8014645C;
 extern volatile u16 D_80146460;
@@ -34,7 +34,7 @@ void func_80162230(u8 status, u8* result) {
   }
 
   if (CdReady(1, NULL) == callback_ready) {
-    current_pos = &D_8018B490;
+    current_pos = &cdCurrentPositionState;
     CdGetSector(current_pos, 3);
     if (D_80146808 != CdPosToInt(current_pos)) {
       goto fail;
@@ -86,7 +86,7 @@ void func_80162230(u8 status, u8* result) {
     CdGetSector((void*)(D_80146464 + (transfer_size << 11)), 0x200);
     if (D_8014646C == 0) {
       u32* sector_head = (u32*)(((u32)D_80146489 << 11) + D_80146464);
-      if ((D_8014645C != *sector_head) || (D_80146450 != D_80146808)) {
+      if ((D_8014645C != *sector_head) || (emiExpectedSectorState != D_80146808)) {
         D_80146480 = 1;
         D_80146494 = 0;
         return;

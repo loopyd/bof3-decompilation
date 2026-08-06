@@ -554,6 +554,7 @@ u8   func_801EAB6C(u8* arg0);
   PSX_REF(volatile Battle03LocalWork*, 0x1f800044u)
 #define BATTLE_ENEMY_SCRATCH_PTR                                               \
   SPAD_PTR_SLOT(volatile Battle03EnemyWork, 0x1f800044u)
+/* @kind: bss (map symbol: battleCurrentEnemyWorkState) — current Battle03EnemyWork pointer cell. */
 #define BATTLE_CURRENT_ENEMY_PTR                                               \
   PSX_REF(volatile Battle03EnemyWork*, 0x801eb4e8u)
 #define BATTLE_CURRENT_QUEUED_SLOT_PTR                                         \
@@ -709,6 +710,7 @@ u8   func_801EAB6C(u8* arg0);
 #define BATTLE_WEIGHT_TABLE_039C       PSX_PTR(const volatile u8, 0x801eb39cu)
 #define BATTLE_RANDOM_TABLE_AC58       PSX_PTR(const volatile u8, 0x801eac58u)
 #define BATTLE_RANDOM_TABLE_AC78       PSX_PTR(const volatile u8, 0x801eac78u)
+/* @kind: rodata (map symbol: battleCommandEntryTable) — command entries: 12-byte params + 16-byte name. */
 #define BATTLE_RETRY_TABLE_AFF4        PSX_PTR(const volatile u8, 0x801eaff4u)
 #define BATTLE_COUNTER_TABLE_AFFC      PSX_PTR(const volatile u8, 0x801eaffcu)
 #define BATTLE_PERCENT_TABLE_AF3C      PSX_PTR(const volatile u16, 0x801eaf3cu)
