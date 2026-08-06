@@ -4,7 +4,7 @@
  * emits the two fixed world markers through `func_801F3480`.
  * @source 0x801F31CC
  */
-void world00_area027_marker_pair_emit(void) {
+void emitMarkerPair(void) {
   s16 point[3];
 
   if (func_8015B5D4((u32)D_80144E98, 0x17) != 0) {

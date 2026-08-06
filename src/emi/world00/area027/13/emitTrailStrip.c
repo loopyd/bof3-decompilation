@@ -4,7 +4,7 @@
  * fading the leading endpoint from bright red toward black.
  * @source 0x801F2F0C
  */
-void world00_area027_trail_strip_emit(const void* arg0) {
+void emitTrailStrip(const void* arg0) {
   u8*      points;
   LINE_G2* line;
   u8       i;

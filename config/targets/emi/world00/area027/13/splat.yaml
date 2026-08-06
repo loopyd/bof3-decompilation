@@ -36,7 +36,7 @@ segments:
     - func_801F2E3C
   - - 780
     - c
-    - world00_area027_trail_strip_emit
+    - emitTrailStrip
   - - 1100
     - asm
     - func_801F304C
@@ -48,7 +48,7 @@ segments:
     - func_801F3164
   - - 1484
     - c
-    - world00_area027_marker_pair_emit
+    - emitMarkerPair
   - - 1712
     - asm
     - func_801F32B0
