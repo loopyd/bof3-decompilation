@@ -131,7 +131,6 @@ This swaps `beq` ↔ `bne` and changes delay-slot scheduling and fall-through
 order. A chain inversion surviving every C spelling is gcc 2.7
 `reorder_insns` normalization: no flag disables it (`-fno-thread-jumps` is a
 proven no-op); escalate, do not churn spellings.
-reachability.
 
 ### Duplicate identical calls in `if/else` arms
 
@@ -182,9 +181,9 @@ of modern taste.
 A `do { ... } while` wrapper also anchors loop-body scheduling when the
 `for`/`while` rotation drifts. When the original preheader materializes
 invariants late (`la` chains plus a `move` copying an entry pointer), assign
-the invariants *inside* the loop body: `loop.c` hoists them as late-created
-pseudos, reproducing the preheader order and the entry copy; hoisting them in
-source before the loop flips `addu` operand order and drops the copy.
+them *inside* the loop body: `loop.c` hoists them as late-created pseudos,
+reproducing the preheader order and the entry copy; hoisting in source before
+the loop flips `addu` operand order and drops the copy.
 
 ---
 

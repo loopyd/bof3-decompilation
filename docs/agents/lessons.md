@@ -6,44 +6,36 @@ iteration procedure: [function matching](matching.md).
 
 ## Evidence and boundaries
 
-### Establish payload boundaries before lifting
+### Validate payload boundaries against bytes
 
-- Splat labels are reviewed inputs, not stronger evidence than payload bytes.
-  A plausible decoded instruction can still be embedded data
+- Splat labels are reviewed inputs, not stronger evidence than payload bytes;
+  a plausible decoded instruction can still be embedded data
   (`emi/world00/area008/13`: `"%d"` header at payload `0x14`, code at
-  `0x18`). Check calls, saved return addresses, and return paths are
-  coherent; split confirmed leading data in Splat before promoting the real
-  boundary.
-
-### Normalize analyzer addresses against payloads
-
-- Raw EMI payloads may contain a header before the configured code VRAM.
-  Reconcile analyzer addresses with payload offsets and the Splat segment
-  start before promoting a boundary; canonical payload bytes and tracked
-  layouts outrank analyzer-created function names.
-- Never load an extracted `GAME.EMI` entry as one linear raw image at its
-  first function address. Entry 0 begins with a count/pointer header; entry 1
-  reaches its title setup handler only at payload offset `0x90`. `GAME.EMI#0`
-  loads at `0x80195800`, first reviewed function at payload `0x91c` — a
-  target configured at the first function silently shifts every byte read,
-  and sequence-based asm resolution can still report exact matches under that
-  bad base. Require `runtime address - load address == payload offset`
-  before adding boundaries.
+  `0x18`). Check calls, saved return addresses, and return paths; split
+  confirmed leading data in Splat before promoting the real boundary.
+- Raw EMI payloads may carry a header before the code VRAM; reconcile
+  analyzer addresses with payload offsets before adding boundaries
+  (`runtime address - load address == payload offset`). Never load an
+  extracted `GAME.EMI` entry linearly at its first function address: entry 0
+  opens with a count/pointer header, entry 1's title setup handler sits at
+  payload `0x90`; `GAME.EMI#0` (load `0x80195800`) starts code at payload
+  `0x91c`. A bad base silently shifts every byte read, and sequence-based asm
+  resolution can still report exact matches under it.
 ### Account for runtime state and cross-target pointers
 
 - Frontend callback tables at `0x801c7b08`/`0x801c7b14` are zero in the
-  shipped SLUS load image, populated at runtime. Recover consumers/producers
-  from code/xrefs; zero-filled EXE bytes are not evidence of absence.
-- A callback table may intentionally target the concurrently loaded companion
-  overlay (`GAME.EMI#0` tables mix `0x8019...` with `0x801d...`/`0x801e...`).
-  Preserve the pointer as a reviewed table entry; do not create a local
-  boundary because the target lies outside the payload map.
+  shipped SLUS image, populated at runtime; recover consumers/producers from
+  code/xrefs — zero-filled bytes are not evidence of absence. A table may
+  intentionally target the concurrently loaded companion overlay (`GAME.EMI#0`
+  tables mix `0x8019...` with `0x801d...`/`0x801e...`): preserve the pointer
+  as a reviewed entry; never create a local boundary for an address outside
+  the payload map.
 ## Executable metadata
 
 - Read PS-X EXE `t_addr` from header offset `0x18`; never assume the common
-  `0x80010000` base. `SLUS_004.22` loads at `0x80096800`; `LOGO.EXE` at
-  `0x801ce000`. A wrong base maps valid runtime addresses into unrelated zero
-  padding and can make a library look all-zero or runtime-generated.
+  `0x80010000` base (`SLUS_004.22` loads at `0x80096800`; `LOGO.EXE` at
+  `0x801ce000`). A wrong base maps valid runtime addresses into unrelated
+  zero padding and can make a library look all-zero or runtime-generated.
   Cross-check the manifest against the normalized binary's metadata and the
   original header, independently per executable.
 ## Build and matching
@@ -63,34 +55,30 @@ iteration procedure: [function matching](matching.md).
 ### Preserve fixed-RAM pointer ownership before permuting source shape
 
 - When m2c exposes a fixed-RAM address as a pointer-valued `D_XXXXXXXX`
-  global, add the raw symbol to the target-local map and declare its narrowest
+  global, map the raw symbol target-locally and declare its narrowest
   evidence-backed type in `internal.h`; never hide a known RAM global behind
   an anonymous address macro.
 - Add `volatile` only with asynchronous/hardware-mutation evidence
   (`func_800B2218` matched only after `D_80148648` became a named
-  `PanelTask*`). Scheduling symptoms and levers:
-  [playbook §Volatility](matching-playbook.md#volatility).
-- For a tail dispatch through a function-pointer table, if asm-diff shows the
-  original placing the stack prologue between the index load and the `sll`,
-  `const` on the table extern can block that schedule: dropping `const` is a
-  legitimate lever alongside the local-copy + `barrier()` shape. Try both
-  before reaching for pins.
+  `PanelTask*`); levers: [playbook §Volatility](matching-playbook.md#volatility).
+- Tail-dispatch prologue between index load and `sll`: a `const` table
+  extern can block that schedule; dropping `const` is a lever alongside the
+  local-copy + `barrier()` shape. Try both before pins.
 - Recover stable field offsets into a target-local struct before permuting.
   Addresses, masks, encoded values stay hexadecimal; human quantities
   (32-pixel step, 320-pixel clamp) decimal.
-- C alignment silently relocates a misdeclared field: a `u32` named for an
-  unaligned offset (e.g. `unk_49`) lands on the next aligned boundary and
-  shifts every later field. Model unaligned words as `u8[N]` and audit named
-  offsets against the struct's real C layout, not just the comments.
+- C alignment silently relocates a misdeclared field: a `u32` at an
+  unaligned offset (e.g. `unk_49`) lands on the next boundary and shifts
+  later fields. Model unaligned words as `u8[N]`; audit offsets against the
+  struct's real C layout, not the comments.
 - Model stack locals with official PsyQ SDK types (e.g. `MATRIX`) when the
   evidence fits; ad-hoc `u32` arrays round to 8-byte slots and inflate the
   frame.
 ### Share duplicate behavior, not target ownership
 
-- Exact bytes make a strong source-shape reuse candidate; they do not make
-  one function address, extern declaration, or semantic provenance global.
-  "Has authored C" ≠ "has a matching lift": percentage ranks effort, never
-  authorizes propagation.
+- Exact bytes make a strong source-shape reuse candidate; they globalize no
+  address, extern, or provenance. "Has authored C" ≠ "has a matching lift":
+  percentage ranks effort, never authorizes propagation.
 - Validate a second member independently before sharing code; normalize
   equivalent variables and struct fields before extracting a shared body.
 - Use a semantic `src/shared/<domain>/*.inc` body only after two
@@ -100,51 +88,43 @@ iteration procedure: [function matching](matching.md).
 ### Reach fixed RAM through `PSX_PTR`/`PSX_REF`, never raw casts or `vu8`
 
 - All fixed-address access goes through `include/memory/` and
-  `include/base/`. The `vu8`/`vu16`/`vu32` typedefs are gone; write
-  `volatile u8`/`u16`/`u32` directly on the `type` argument
-  (`PSX_REF(volatile u16, 0x80143B90u)`).
+  `include/base/`; write `volatile u8`/`u16`/`u32` directly on the `type`
+  argument (`PSX_REF(volatile u16, 0x80143B90u)`).
 - Scratchpad RAM (`0x1F800000`): `SPAD_ADDR`/`SPAD_REF`/`SPAD_PTR_SLOT`. Keep
-  the slot cell non-volatile — a `volatile` slot forces `lui + ori + lw`;
-  for a per-evaluation reload use `PSX_REF(Entity * volatile,
+  the slot cell non-volatile (a `volatile` slot forces `lui + ori + lw`); for
+  a per-evaluation reload use `PSX_REF(Entity * volatile,
   SPAD_ADDRESS(off))`. See the [memory API](memory-api.md).
 
 ## Target ownership and symbols
 
 - A shared-map (`config/targets/shared/symbols.txt`) `D_*` entry claims data
   at that vram in EVERY target; keep it in the owning target's local map
-  unless it is data everywhere, else bogus contains-data functions appear.
+  unless it is data everywhere — else bogus contains-data functions appear.
 - Exclude a data blob from Rizin's function list with `Cd <size> @ <addr>`
   in the target's `reviewed.rz`; `af-` does not survive the replay (`aa`
   re-creates it).
-
-- Check the shared SDK maps (`config/sdk/psyq-*.txt`) before adding a symbol
-  to a target-local map: Splat composes both files, and a name defined in
-  both aborts `bin/splat` with "Duplicate symbol detected". Keep the entry in
-  exactly one map.
-- PsyQ code can be linked more than once at different addresses across
-  executables and EMI payloads; an address verified in `SLUS_004.22` is not a
-  contract for another binary.
+- Check the shared SDK maps (`config/sdk/psyq-*.txt`) before adding to a
+  target-local map: Splat composes both and a duplicate name aborts
+  `bin/splat`. Keep each symbol in exactly one map.
+- PsyQ code can be linked at different addresses across executables and
+  EMI payloads; an address verified in `SLUS_004.22` is not a contract for
+  another binary.
 - Use official PsyQ names; record the verified archive member in the owning
-  target's symbol map. Generated weak bindings take the runtime address from
-  that map.
-- Replace analyzer aliases only after behavior and signature are proven. Raw
-  `func_XXXXXXXX`/`D_XXXXXXXX` names are replaced directly by a reviewed
-  semantic name; no compatibility aliases. Function names: verb-led
-  camelCase, role-first, no module/target prefix
-  except to break a collision. Data: camelCase + role suffix
-  (`...Table`/`...Strings`/`...State`) + `/* @source 0xXXXXXXXX` and
-  `@kind table|rodata|bss|data */` tags (raw `D_*`: `@kind unknown`;
+  target's map. Generated weak bindings take the runtime address from it.
+- Replace analyzer aliases only after behavior and signature are proven;
+  raw `func_XXXXXXXX`/`D_XXXXXXXX` names go straight to the reviewed
+  semantic name, no compatibility aliases. Functions: verb-led camelCase,
+  role-first, no target prefix except to break a collision. Data: camelCase +
+  role suffix (`...Table`/`...Strings`/`...State`) + `/* @source 0xXXXXXXXX`
+  and `@kind table|rodata|bss|data */` tags (raw `D_*`: `@kind unknown`;
   `/* */` only — `//` breaks gcc-2.6.3).
 - Preserve pre-promotion evidence with an `INFERRED:` comment beside the
   owning address-based declaration: what was observed, what would verify
   promotion. Never create a semantic alias from a hint alone.
-- Compare target-qualified analyzer snapshots under
-  `out/reverse/<target>/snapshot.json`; equal addresses across targets are
-  insufficient. Overlays and PsyQ copies can share a role with different
-  addresses or bytes.
-- `bin/symbols check` validates `WEAK_SYMBOL_AT` entries only under
-  `src/<target>/symbols/` (the generated PsyQ bindings); the hand-maintained
-  top-level `src/<target>/symbols.c` is skipped by its lift-file scan (no
-  `func_` stem, no `@source` tag), so a bound label with no target-map entry
-  passes silently. After editing that file, verify the map contains every
-  bound name by hand (or grep map vs bindings) until the harness covers it.
+- Compare target-qualified snapshots (`out/reverse/<target>/snapshot.json`);
+  equal addresses across targets are insufficient — overlays and PsyQ copies
+  can share a role with different addresses or bytes.
+- Every `WEAK_SYMBOL_AT` in the hand-maintained top-level
+  `src/<target>/symbols.c` needs a target-map entry; a different name at a
+  mapped address is a deliberate typed alias (e.g. u8 view of a u16 global).
+  `bin/symbols check` flags bindings whose address no map owns.
