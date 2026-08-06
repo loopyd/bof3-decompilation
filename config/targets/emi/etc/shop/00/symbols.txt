@@ -9,6 +9,7 @@ func_801647C4 = 0x801647C4;
 scaleByPercentFloor1 = 0x801D3654;
 func_801D39BC = 0x801D39BC;
 func_801D3AA8 = 0x801D3AA8;
+func_801D41B0 = 0x801D41B0;
 setUiFlags = 0x801D66AC;
 setUiFlagsGated = 0x801D66C8;
 appendFullscreenDimTile = 0x801D6E94;
