@@ -157,6 +157,7 @@ extern u8  D_801EC390[]; /* @source 0x801EC390 @kind unknown */
 extern u8  D_801EC3A4[]; /* @source 0x801EC3A4 @kind unknown */
 extern volatile u8             D_80146329; /* @source 0x80146329 @kind unknown */
 extern volatile u8             D_80146374; /* @source 0x80146374 @kind unknown */
+extern u8                      D_80146375; /* @source 0x80146375 @kind unknown */
 extern volatile s8   D_80145558; /* @source 0x80145558 @kind unknown */
 extern volatile s16  D_801EC2EE; /* @source 0x801EC2EE @kind unknown */
 extern volatile u8   D_80146394; /* @source 0x80146394 @kind unknown */

@@ -488,7 +488,7 @@ segments:
     - asm
     - func_8009F59C
   - - 36308
-    - asm
+    - c
     - func_8009F5D4
   - - 36364
     - asm
