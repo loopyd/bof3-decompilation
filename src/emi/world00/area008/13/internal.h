@@ -78,6 +78,7 @@ extern volatile u8          D_80146866;
  * by the mode handlers. */
 extern volatile u8          countdown;
 
+s32  GetGraphType(void);
 s32  func_8017E3F4(char* buffer, const char* format, ...);
 void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
@@ -85,7 +86,7 @@ void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 
 void drawScratchStatus(void);
 void drawFlagStatus(void);
-void func_801F3D88(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
+void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
 
 #define WORLD00_AREA008_SCRATCH_PTR                                            \
   PSX_REF(volatile World00Area008State*, 0x1f800044u)
