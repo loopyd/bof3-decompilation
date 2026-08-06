@@ -43,8 +43,8 @@ set(BOF3_OBJFLAGS_emi_etc_game_01_preDispatchGate_c -O2 -fno-rerun-cse-after-loo
 # Verified by bin/flag-search (no -O variant matches) + manual maspsx test.
 set(BOF3_OBJFLAGS_emi_battle_battle_03_pickRandomUnblockedId_c -O2 -Wa,--expand-div)
 
-# battle15_pick_random_unblocked_id is a byte-identical duplicate of pickRandomUnblockedId (battle/03).
+# pickRandomUnblockedId is a byte-identical duplicate of pickRandomUnblockedId (battle/03).
 # Same signed modulo (rand() % count) requiring --expand-div for the MIPS
 # division-trap sequence.
-set(BOF3_OBJFLAGS_emi_battle_battle_15_battle15_pick_random_unblocked_id_c -O2 -Wa,--expand-div)
+set(BOF3_OBJFLAGS_emi_battle_battle_15_pickRandomUnblockedId_c -O2 -Wa,--expand-div)
 set(BOF3_OBJCOMPILER_exe_slus_004_22_dispatchSoundCue_c gcc-2.6.3-psx)

@@ -78,166 +78,112 @@ typedef struct Unk801EBF08 {
 } Unk801EBF08;
 
 
-extern volatile u8  BATTLE_SELECTION_PHASE;
-extern volatile u8  BATTLE_SELECTION_OWNER_STATE;
-extern volatile u8  BATTLE_SELECTION_ROOT_STATE;
-extern volatile u8  BATTLE_SELECTION_SUBSTATE;
-extern volatile u8  BATTLE_SELECTION_PENDING_KIND;
-extern volatile u8  BATTLE_SELECTION_ADVANCE_COUNTER;
-extern volatile u16 BATTLE_SELECTION_RING_RESET;
-extern volatile u16 BATTLE_INPUT_HELD_MASK;
-extern volatile u16 BATTLE_INPUT_CONFIRM_MASK;
-extern volatile u16 BATTLE_INPUT_CANCEL_MASK;
-extern volatile u8  BATTLE_PANEL_TASK_FLAG_A;
-extern volatile u8  BATTLE_PANEL_TASK_FLAG_B;
-extern volatile u8  BATTLE_PANEL_STATE_KIND;
-extern volatile u8  BATTLE_SELECTION_LOCKED;
-extern volatile u16 BATTLE_SELECTION_CURSOR_BASE_X;
-extern volatile u16 BATTLE_SELECTION_CURSOR_BASE_Y;
-extern volatile u8  BATTLE_SELECTION_MOVE_SFX;
-extern volatile u8  BATTLE_SELECTION_RING_INDEX;
-extern volatile u8  BATTLE_SELECTION_GROUP_INDEX;
-extern volatile u8  BATTLE_SELECTION_CURSOR_INDEX;
-extern s16          BATTLE_SELECTION_SCROLL_BASE;
-extern s16          BATTLE_SELECTION_SCROLL_DELTA;
-extern volatile u8  BATTLE_SELECTION_CURSOR_DIRTY;
-extern volatile u16 BATTLE_SELECTION_CURSOR_X;
-extern volatile u16 BATTLE_SELECTION_CURSOR_Y;
-extern volatile u8  BATTLE_SELECTION_SOURCE_SLOT;
-extern volatile u8  BATTLE_PANEL_ICON_RING_HEAD;
-extern volatile u8  BATTLE_SECONDARY_PANEL_ACTIVE;
-extern volatile u8  BATTLE_SECONDARY_PANEL_ROWS;
-extern volatile u8  BATTLE_SECONDARY_PANEL_KIND;
-extern volatile u8  BATTLE_SECONDARY_STATE_KIND;
-extern volatile u8  BATTLE_SECONDARY_SOURCE_GROUP;
-extern volatile u8  BATTLE_SECONDARY_PAGE_BASE;
-extern volatile u8  BATTLE_SECONDARY_CURSOR_INDEX;
-extern volatile u8  BATTLE_SECONDARY_CURSOR_LIMIT;
-extern volatile u16 BATTLE_SECONDARY_FLAG_MASK;
-extern volatile u8  BATTLE_SELECTION_CURSOR_ROWS;
-extern volatile u8  BATTLE_SELECTION_CURSOR_MODE;
-extern PanelTask*   D_80148648;
-extern volatile u8  BATTLE_SECONDARY_SAVED_GROUP;
-extern volatile u8  BATTLE_SECONDARY_SAVED_PAGE_BASE;
-extern volatile u8  BATTLE_SECONDARY_SAVED_CURSOR;
-extern volatile u16 BATTLE_SECONDARY_MOVE_SFX;
-extern volatile u8  BATTLE_SECONDARY_PROMPT_ACTIVE;
-extern volatile u8  BATTLE_SECONDARY_PROMPT_ROWS;
-extern volatile u8  BATTLE_SECONDARY_PROMPT_KIND;
-extern volatile u16 BATTLE_SECONDARY_PROMPT_X;
-extern volatile u16 BATTLE_SECONDARY_PROMPT_Y;
-extern volatile u8  BATTLE_SECONDARY_PROMPT_MODE;
-extern volatile u8  BATTLE_SECONDARY_PROMPT_CURSOR_LIMIT;
-extern volatile u8  BATTLE_PANEL_PROMPT_STATE;
-extern volatile u8  BATTLE_PANEL_RULE_PASS_KIND;
-extern volatile u8  BATTLE_PANEL_RULE_PASS_SLOT;
-extern volatile u16 BATTLE_PANEL_RULE_PASS_SELECTION;
-extern volatile u8 BATTLE_LOCAL_PANEL_ENTRY_COUNT;
+extern PanelTask*   D_80148648; // @source 0x80148648 // @kind unknown
 
 /* Scratchpad work-area pointer (volatile cell at 0x1F800044).
  * Reloaded per access to match original codegen. */
-extern u8* volatile g_battle_work;
-extern BattleSelectionDispatchTable D_80096994;
-extern BattleSelectionDispatchTable D_800969A0;
-extern BattleSelectionDispatchTable D_800969AC;
-extern BattleSelectionDispatchTable D_800969B8;
-extern volatile u32 D_801459F0;
-extern s8 D_800B4E8C[];
-extern BattleSelectionHandler D_800B6BF4[];
+extern u8* volatile g_battle_work; // @source 0x1F800044 // @kind data
+extern BattleSelectionDispatchTable D_80096994; // @source 0x80096994 // @kind unknown
+extern BattleSelectionDispatchTable D_800969A0; // @source 0x800969A0 // @kind unknown
+extern BattleSelectionDispatchTable D_800969AC; // @source 0x800969AC // @kind unknown
+extern BattleSelectionDispatchTable D_800969B8; // @source 0x800969B8 // @kind unknown
+extern volatile u32 D_801459F0; // @source 0x801459F0 // @kind unknown
+extern s8 D_800B4E8C[]; // @source 0x800B4E8C // @kind unknown
+extern BattleSelectionHandler D_800B6BF4[]; // @source 0x800B6BF4 // @kind unknown
 
 u32 func_800AF66C(BattleRange *range, u32 value);
 
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
  * equal the symbol-name addresses. */
-extern BattlePanelTaskDispatchTable D_800969E4;
-extern BattlePanelTaskDispatchTable D_80096A14;
-extern BattleSelectionDispatchTable D_800969F8;
-extern BattleSelectionDispatchTable D_80096A08;
-extern BattleSelectionDispatchTable D_80096A34;
-extern BattleSelectionDispatchTable D_80096A40;
-extern s32 D_80144F60[];
-extern volatile u32  D_80144F80[];
-extern u16 D_80145FAA[];
-extern volatile u32  D_80146250;
-extern volatile u8   D_801462E0;
-extern volatile u8   D_801462E1;
-extern volatile u8   D_801462E2;
-extern volatile u8   D_801462E3;
-extern BattleSelectionHandler D_800B43C0[];
-extern BattleSelectionHandler D_800B4450[];
-extern BattleSelectionHandler D_800B43D4[];
-extern BattleSelectionHandler D_800B4CAC[];
-extern BattleSelectionHandler D_800B4CC8[];
-extern BattleSelectionHandler D_800B4CD0[];
-extern BattleSelectionHandler D_800B4CE4[];
-extern BattleSelectionHandler D_800B4D00[];
-extern BattleSelectionHandler D_800B4D14[];
-extern BattleSelectionHandler D_800B4D30[];
-extern BattleSelectionHandler D_800B43EC[];
-extern BattleSelectionHandler D_800B43F4[];
-extern BattleSelectionHandler D_800B4408[];
-extern BattleSelectionHandler D_800B4418[];
-extern BattleSelectionHandler D_800B44A0[];
-extern BattleSelectionHandler D_800B4428[];
-extern BattleSelectionHandler D_800B4458[];
-extern BattleSelectionHandler D_800B446C[];
-extern BattleSelectionHandler D_800B447C[];
-extern BattleSelectionHandler D_800B448C[];
-extern BattleSelectionHandler D_800B44C8[];
-extern BattleSelectionHandler D_800B44D4[];
-extern BattleSelectionHandler D_800B44E4[];
-extern BattleSelectionHandler D_800B6E08[];
-extern BattleLocalOffsetPair D_800B6C90[];
-extern u8 D_800B6D00[];
-extern volatile u8   D_801462E4;
-extern volatile u8   D_801462EF;
-extern volatile u8   D_80146303;
-extern volatile u16  D_80145AC8;
-extern u8*           D_801EB4D8;
-extern u8*           D_801EBF08;
-extern u8            D_80148330[];
-extern u8            D_801462E5;
-extern volatile u8   D_801462E6;
-extern BattleSelectionAction D_800B65FC[];
-extern volatile u16  D_801462E8;
-extern volatile BattleLocalWork D_80145E90[];
-extern u8  D_80145FB0[];
-extern u8  D_801EB2E8[];
-extern u8  D_801EB72C[];
-extern u8  D_801EC337[];
-extern u8  D_801EC33B[];
-extern u8  D_801EC357[];
-extern u8  D_801EC390[];
-extern u8  D_801EC3A4[];
-extern volatile u8             D_80146329;
-extern volatile u8             D_80146374;
-extern volatile s8   D_80145558;
-extern volatile s16  D_801EC2EE;
-extern volatile u8   D_80146394;
-extern s16* volatile D_801463A0;
-extern volatile u16  D_801463C0;
-extern u8            D_801463C9;
-extern volatile BattleSelectionKind D_801CA71C[];
-extern volatile u8   D_8014837B;
-extern volatile u8   D_8014839F;
-extern volatile u8   D_801483C3;
-extern volatile u8   D_80148597;
-extern volatile u8   D_801485BB;
-extern volatile u8   D_801485DE;
-extern volatile u8   D_801485DF;
-extern volatile u16  D_801485E0;
-extern volatile u16  D_8014932E;
-extern volatile u16  D_801485E2;
-extern volatile u16  D_801485EC;
-extern volatile u16  D_801485EE;
-extern volatile u8   D_80148626;
-extern volatile u8   D_80148627;
-extern volatile s16  D_80148628;
-extern volatile u16  D_8014862A;
-extern volatile u8   D_8014862E;
+extern BattlePanelTaskDispatchTable D_800969E4; // @source 0x800969E4 // @kind unknown
+extern BattlePanelTaskDispatchTable D_80096A14; // @source 0x80096A14 // @kind unknown
+extern BattleSelectionDispatchTable D_800969F8; // @source 0x800969F8 // @kind unknown
+extern BattleSelectionDispatchTable D_80096A08; // @source 0x80096A08 // @kind unknown
+extern BattleSelectionDispatchTable D_80096A34; // @source 0x80096A34 // @kind unknown
+extern BattleSelectionDispatchTable D_80096A40; // @source 0x80096A40 // @kind unknown
+extern s32 D_80144F60[]; // @source 0x80144F60 // @kind unknown
+extern volatile u32  D_80144F80[]; // @source 0x80144F80 // @kind unknown
+extern u16 D_80145FAA[]; // @source 0x80145FAA // @kind unknown
+extern volatile u32  D_80146250; // @source 0x80146250 // @kind unknown
+extern volatile u8   D_801462E0; // @source 0x801462E0 // @kind unknown
+extern volatile u8   D_801462E1; // @source 0x801462E1 // @kind unknown
+extern volatile u8   D_801462E2; // @source 0x801462E2 // @kind unknown
+extern volatile u8   D_801462E3; // @source 0x801462E3 // @kind unknown
+extern BattleSelectionHandler D_800B43C0[]; // @source 0x800B43C0 // @kind unknown
+extern BattleSelectionHandler D_800B4450[]; // @source 0x800B4450 // @kind unknown
+extern BattleSelectionHandler D_800B43D4[]; // @source 0x800B43D4 // @kind unknown
+extern BattleSelectionHandler D_800B4CAC[]; // @source 0x800B4CAC // @kind unknown
+extern BattleSelectionHandler D_800B4CC8[]; // @source 0x800B4CC8 // @kind unknown
+extern BattleSelectionHandler D_800B4CD0[]; // @source 0x800B4CD0 // @kind unknown
+extern BattleSelectionHandler D_800B4CE4[]; // @source 0x800B4CE4 // @kind unknown
+extern BattleSelectionHandler D_800B4D00[]; // @source 0x800B4D00 // @kind unknown
+extern BattleSelectionHandler D_800B4D14[]; // @source 0x800B4D14 // @kind unknown
+extern BattleSelectionHandler D_800B4D30[]; // @source 0x800B4D30 // @kind unknown
+extern BattleSelectionHandler D_800B43EC[]; // @source 0x800B43EC // @kind unknown
+extern BattleSelectionHandler D_800B43F4[]; // @source 0x800B43F4 // @kind unknown
+extern BattleSelectionHandler D_800B4408[]; // @source 0x800B4408 // @kind unknown
+extern BattleSelectionHandler D_800B4418[]; // @source 0x800B4418 // @kind unknown
+extern BattleSelectionHandler D_800B44A0[]; // @source 0x800B44A0 // @kind unknown
+extern BattleSelectionHandler D_800B4428[]; // @source 0x800B4428 // @kind unknown
+extern BattleSelectionHandler D_800B4458[]; // @source 0x800B4458 // @kind unknown
+extern BattleSelectionHandler D_800B446C[]; // @source 0x800B446C // @kind unknown
+extern BattleSelectionHandler D_800B447C[]; // @source 0x800B447C // @kind unknown
+extern BattleSelectionHandler D_800B448C[]; // @source 0x800B448C // @kind unknown
+extern BattleSelectionHandler D_800B44C8[]; // @source 0x800B44C8 // @kind unknown
+extern BattleSelectionHandler D_800B44D4[]; // @source 0x800B44D4 // @kind unknown
+extern BattleSelectionHandler D_800B44E4[]; // @source 0x800B44E4 // @kind unknown
+extern BattleSelectionHandler D_800B6E08[]; // @source 0x800B6E08 // @kind unknown
+extern BattleLocalOffsetPair D_800B6C90[]; // @source 0x800B6C90 // @kind unknown
+extern u8 D_800B6D00[]; // @source 0x800B6D00 // @kind unknown
+extern volatile u8   D_801462E4; // @source 0x801462E4 // @kind unknown
+extern volatile u8   D_801462EF; // @source 0x801462EF // @kind unknown
+extern volatile u8   D_80146303; // @source 0x80146303 // @kind unknown
+extern volatile u16  D_80145AC8; // @source 0x80145AC8 // @kind unknown
+extern u8*           D_801EB4D8; // @source 0x801EB4D8 // @kind unknown
+extern u8*           D_801EBF08; // @source 0x801EBF08 // @kind unknown
+extern u8            D_80148330[]; // @source 0x80148330 // @kind unknown
+extern u8            D_801462E5; // @source 0x801462E5 // @kind unknown
+extern volatile u8   D_801462E6; // @source 0x801462E6 // @kind unknown
+extern BattleSelectionAction D_800B65FC[]; // @source 0x800B65FC // @kind unknown
+extern volatile u16  D_801462E8; // @source 0x801462E8 // @kind unknown
+extern volatile BattleLocalWork D_80145E90[]; // @source 0x80145E90 // @kind unknown
+extern u8  D_80145FB0[]; // @source 0x80145FB0 // @kind unknown
+extern u8  D_801EB2E8[]; // @source 0x801EB2E8 // @kind unknown
+extern u8  D_801EB72C[]; // @source 0x801EB72C // @kind unknown
+extern u8  D_801EC337[]; // @source 0x801EC337 // @kind unknown
+extern u8  D_801EC33B[]; // @source 0x801EC33B // @kind unknown
+extern u8  D_801EC357[]; // @source 0x801EC357 // @kind unknown
+extern u8  D_801EC390[]; // @source 0x801EC390 // @kind unknown
+extern u8  D_801EC3A4[]; // @source 0x801EC3A4 // @kind unknown
+extern volatile u8             D_80146329; // @source 0x80146329 // @kind unknown
+extern volatile u8             D_80146374; // @source 0x80146374 // @kind unknown
+extern volatile s8   D_80145558; // @source 0x80145558 // @kind unknown
+extern volatile s16  D_801EC2EE; // @source 0x801EC2EE // @kind unknown
+extern volatile u8   D_80146394; // @source 0x80146394 // @kind unknown
+extern s16* volatile D_801463A0; // @source 0x801463A0 // @kind unknown
+extern volatile u16  D_801463C0; // @source 0x801463C0 // @kind unknown
+extern u8            D_801463C9; // @source 0x801463C9 // @kind unknown
+extern volatile BattleSelectionKind D_801CA71C[]; // @source 0x801CA71C // @kind unknown
+extern volatile u8   D_8014837B; // @source 0x8014837B // @kind unknown
+extern volatile u8   D_8014839F; // @source 0x8014839F // @kind unknown
+extern volatile u8   D_801483C3; // @source 0x801483C3 // @kind unknown
+extern volatile u8   D_80148597; // @source 0x80148597 // @kind unknown
+extern volatile u8   D_801485BB; // @source 0x801485BB // @kind unknown
+extern volatile u8   D_801485DE; // @source 0x801485DE // @kind unknown
+extern volatile u8   D_801485DF; // @source 0x801485DF // @kind unknown
+extern volatile u16  D_801485E0; // @source 0x801485E0 // @kind unknown
+extern volatile u16  D_8014932E; // @source 0x8014932E // @kind unknown
+extern volatile u16  D_801485E2; // @source 0x801485E2 // @kind unknown
+extern volatile u16  D_801485EC; // @source 0x801485EC // @kind unknown
+extern volatile u16  D_801485EE; // @source 0x801485EE // @kind unknown
+extern volatile u8   D_80148626; // @source 0x80148626 // @kind unknown
+extern volatile u8   D_80148627; // @source 0x80148627 // @kind unknown
+extern volatile s16  D_80148628; // @source 0x80148628 // @kind unknown
+extern volatile u16  D_8014862A; // @source 0x8014862A // @kind unknown
+extern volatile u8   D_8014862E; // @source 0x8014862E // @kind unknown
 
 /* Shared primitive cursor (PsyQ SDK, owned by the main exe). */
-extern u8* D_8014598C;
+extern u8* D_8014598C; // @source 0x8014598C // @kind unknown
 
 /* PsyQ SDK primitive setup helpers called by this target.
  * SetSprt8 / SetSemiTrans are declared by <libgpu.h> (via bof3/psyq.h);
@@ -264,14 +210,14 @@ void battle_set_local_panel_slot_active(volatile u8* battler, u32 slot_index,
 u16  battle_resolve_secondary_choice_resource(u32 group_index, u32 choice_id);
 u8   battle_try_commit_secondary_choice(u32 panel_kind, u32 zero_arg,
                                         u32 group_index, u32 choice_id);
-void                           battle15_reset_state_when_unlocked(void);
-void                           battle15_dispatch_local_handler_pair(void);
-void                           battle15_set_work_byte9_advance(void);
+void                           resetStateWhenUnlocked(void);
+void                           dispatchLocalHandlerPair(void);
+void                           setWorkByte9Advance(void);
 void                           func_800AE09C(void);
-void                           battle15_dispatch_work_byte1_pair(void);
-void                           battle15_init_record_state_advance_work(void);
+void                           dispatchWorkByte1Pair(void);
+void                           initRecordStateAdvanceWork(void);
 void                           func_800A84FC(void);
-void                           battle15_reset_state_when_unlocked2(void);
+void                           resetStateWhenUnlockedB(void);
 void __attribute__((noinline)) func_8009B20C(void);
 u8                             func_8009C8AC(u16 required_mask);
 void                           func_8009CFEC(void);
@@ -281,10 +227,10 @@ void func_800A31E0(u8 selection_kind, u16 input_mask);
 u8   func_800A3A10(u8 battler_index, u8 selection_kind);
 u16  func_800A36F0(u8 battler_index, u16 flags);
 void func_800A3F28(void);
-u8   battle15_reset_selection_apply_input(s32 input_mask);
+u8   resetSelectionApplyInput(s32 input_mask);
 u8   func_801DB524(u8 arg0);
 void func_800A4458(void);
-void battle15_setup_mode104_arm_work_bit2(void);
+void setupMode104ArmWorkBit2(void);
 void func_800AAA74(void);
 void func_800AAEBC(s16 target_index, u8 battler_index);
 void func_800B0498(void);
@@ -294,8 +240,8 @@ void func_800B22AC(void);
 void func_800B23B8(void);
 void func_800B23F8(void);
 void func_800B250C(void);
-void battle15_set_flag2000_store_doubled_result(void);
-u8   battle15_query_selection_apply_input(s32 input_mask);
+void setFlag2000StoreDoubledResult(void);
+u8   querySelectionApplyInput(s32 input_mask);
 s16  func_801DC044(u8 arg0, u8 arg1, u32 arg2);
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
 void func_801DE94C(s32 arg0, s32 arg1);
@@ -392,19 +338,19 @@ void func_801DEA64(s32 arg0);
 #define BATTLE_UNK_80145F4A        PSX_PTR(volatile u16, 0x80145f4au)
 #define BATTLE_UNK_801461CA        PSX_PTR(volatile u16, 0x801461cau)
 
-extern volatile u8 D_801485B8;
-extern volatile u8 D_801485DC;
+extern volatile u8 D_801485B8; // @source 0x801485B8 // @kind unknown
+extern volatile u8 D_801485DC; // @source 0x801485DC // @kind unknown
 
 #endif
 
-extern u8 D_80145F2F[];
-extern u8 D_80145F30[];
-extern u8 D_80145F31[];
-extern u8 D_80145F32[];
-extern u8 D_80145F33[];
-extern u8 D_801EB6DF[];
-extern u8 D_801EB6E0[];
-extern u8 D_801EB6E1[];
-extern u8 D_801EB6E2[];
-extern u8 D_801EB6E3[];
-extern s16 D_800B493C[];
+extern u8 D_80145F2F[]; // @source 0x80145F2F // @kind unknown
+extern u8 D_80145F30[]; // @source 0x80145F30 // @kind unknown
+extern u8 D_80145F31[]; // @source 0x80145F31 // @kind unknown
+extern u8 D_80145F32[]; // @source 0x80145F32 // @kind unknown
+extern u8 D_80145F33[]; // @source 0x80145F33 // @kind unknown
+extern u8 D_801EB6DF[]; // @source 0x801EB6DF // @kind unknown
+extern u8 D_801EB6E0[]; // @source 0x801EB6E0 // @kind unknown
+extern u8 D_801EB6E1[]; // @source 0x801EB6E1 // @kind unknown
+extern u8 D_801EB6E2[]; // @source 0x801EB6E2 // @kind unknown
+extern u8 D_801EB6E3[]; // @source 0x801EB6E3 // @kind unknown
+extern s16 D_800B493C[]; // @source 0x800B493C // @kind unknown

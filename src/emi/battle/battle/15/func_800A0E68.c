@@ -17,6 +17,6 @@ void func_800A0E68(void) {
   half = func_801DC044(D_80146374, D_80146394, 0xFFFF) / 2;
   ((u16*)D_801463A0)[2] = half;
   if (half != 0) {
-    battle15_query_selection_apply_input(0x20);
+    querySelectionApplyInput(0x20);
   }
 }
