@@ -4,7 +4,7 @@
  * state, then draws the active frontend prompt and its selection marker.
  * @source 0x801D11E4
  */
-void game_front_draw_prompt(void) {
+void drawPrompt(void) {
   /* MATCHING_AID: read the gate/mode bytes through a non-volatile view.
    * cc1 (gcc-2.7.2-psx) emits an explicit zero-extension (andi 0xff after
    * lbu, andi 0xffff after lhu) whenever a *volatile* narrow load feeds a
@@ -24,6 +24,6 @@ void game_front_draw_prompt(void) {
                 GetGraphType() == 1 ? 557 : (GetGraphType() == 2 ? 557 : 157),
                 0);
     func_8014E5A0(2, 12);
-    game_front_draw_glyph(192, 4, 10, 2, 0);
+    drawGlyph(192, 4, 10, 2, 0);
   }
 }

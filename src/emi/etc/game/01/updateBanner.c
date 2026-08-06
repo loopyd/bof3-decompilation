@@ -20,7 +20,7 @@ typedef struct GameFrontBannerState {
  * structural drift (58.87%). barrier()/CLOBBER_* govern delay-slot
  * scheduling, not register allocation, so they do not apply.
  */
-void game_front_update_banner(void) {
+void updateBanner(void) {
   volatile GameFrontBannerState* state;
   volatile u16*                  alpha;
   volatile u8*                   phase_addr;
@@ -111,7 +111,7 @@ void game_front_update_banner(void) {
     SetDrawMode((DR_MODE*)D_8014598C, 0, 0, flags, 0);
 
     func_8014E5A0(2, 12);
-    primitive = game_front_draw_glyph((s16)x, 24, (u8)(i + 11), 2, 0);
+    primitive = drawGlyph((s16)x, 24, (u8)(i + 11), 2, 0);
     primitive[4] = *alpha;
     primitive[5] = *alpha;
     primitive[6] = *alpha;

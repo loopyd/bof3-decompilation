@@ -4,7 +4,7 @@
  * redirects early start-button transitions into either state `2` or state `7`.
  * @source 0x801D104C
  */
-void game_front_pre_dispatch_gate(void) {
+void preDispatchGate(void) {
   /* The original keeps &GAME_FRONT_INPUT_GATE in s0 and reaches the nearby
    * front-state fields as negative byte offsets off that single base, not as
    * standalone globals:
@@ -30,7 +30,7 @@ void game_front_pre_dispatch_gate(void) {
                         GAME_FRONT_POPUP_PENDING_MASK) ==
                        GAME_FRONT_POPUP_PENDING_OPEN) {
               func_8014ECAC(0);
-              game_front_start_selection_fx();
+              startSelectionFx();
               game_queue_frontend_cue(0x105u);
               *front_gate = 0u;
               *state = 7u;

@@ -5,7 +5,7 @@
  * the selected cue, advances state, and updates the frontend prompt.
  * @source 0x801D0F00
  */
-void game_front_handle_menu_input(void) {
+void handleMenuInput(void) {
   if (D_80143B40 == 0u) {
     GAME_FRONT_STATE = 0u;
     return;
@@ -32,5 +32,5 @@ void game_front_handle_menu_input(void) {
     func_80161CD0(sel, bank, 8);
     GAME_FRONT_STATE = GAME_FRONT_STATE + 1u;
   }
-  game_front_draw_prompt();
+  drawPrompt();
 }

@@ -6,7 +6,7 @@ extern u8 D_80181EBA[];
  * selection byte.
  * @source 0x801D1184
  */
-void game_front_stop_selection_fx(void) {
+void stopSelectionFx(void) {
   u8* selection_ptr = &GAME_FRONT_SELECTION;
   u8  selection = *selection_ptr;
 

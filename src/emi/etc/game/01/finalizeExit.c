@@ -5,7 +5,7 @@
  * thread.
  * @source 0x801D1000
  */
-void game_front_finalize_exit(void) {
+void finalizeExit(void) {
   volatile u16* effect_busy;
 
   effect_busy = (volatile u16*)0x80140000u;
@@ -13,7 +13,7 @@ void game_front_finalize_exit(void) {
     return;
   }
 
-  game_front_stop_selection_fx();
+  stopSelectionFx();
   func_80161808(0u);
   func_8014B854(0, func_80196F78);
   func_8014B8B0();

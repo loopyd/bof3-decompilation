@@ -4,7 +4,7 @@
  * once both channels saturate, and draws the visible menu/window layers.
  * @source 0x801D1B00
  */
-void game_front_update_windows(void) {
+void updateWindows(void) {
   /* MATCHING_AID: the draw calls pass the low byte of each u16 alpha global
    * with a single symbol-relative `lui/lbu` (e.g. `lui a1 ; lbu a1,%lo(a1)`),
    * reloading it per call. Reading `(u8)GLOBAL` of the volatile u16 emits
@@ -68,16 +68,16 @@ void game_front_update_windows(void) {
   }
 
   if (GAME_FRONT_WINDOW_PHASE != 0u) {
-    game_front_draw_prompt_panels(secondary_active, D_80143C28);
-    game_front_draw_label_group(26, 24, secondary_active, D_80143C28);
-    /* MATCHING_AID: the original passes primary_active to game_front_draw_label_groups's
+    drawPromptPanels(secondary_active, D_80143C28);
+    drawLabelGroup(26, 24, secondary_active, D_80143C28);
+    /* MATCHING_AID: the original passes primary_active to drawLabelGroups's
      * selected parameter as a full word (`move a2,s1` in the jal delay slot),
      * with no andi 0xff truncation, even though the declared parameter is u8.
      * Calling through a widened s32 prototype reproduces that word-wide
      * argument pass: cc1 would otherwise narrow the u8 value with
      * `andi a2,...,0xff`. The callee (byte-matched) reads only the low byte,
      * so the wider pass is behavior-identical. */
-    ((void (*)(s16, s16, s32, u8))game_front_draw_label_groups)(-6, 28, primary_active,
+    ((void (*)(s16, s16, s32, u8))drawLabelGroups)(-6, 28, primary_active,
                                                  D_80143C26);
   }
 }

@@ -4,7 +4,7 @@
  * seeds cue `0x8d`, then arms the local fade/window state.
  * @source 0x801D0C90
  */
-void game_front_title_setup(void) {
+void titleSetup(void) {
   u16 state;
 
   func_80161808(2u);
