@@ -33,28 +33,28 @@ segments:
     - func_801F7CC4
   - - 5976
     - asm
-    - func_801F8358
+    - scena16_dispatch_record_callback
   - - 6040
     - asm
-    - func_801F8398
+    - scena16_return_zero
   - - 6048
     - asm
-    - func_801F83A0
+    - scena16_return_zero2
   - - 6056
     - asm
-    - func_801F83A8
+    - scena16_return_zero3
   - - 6064
     - asm
     - func_801F83B0
   - - 6236
     - asm
-    - func_801F845C
+    - scena16_copy_palette_block
   - - 6316
     - asm
-    - func_801F84AC
+    - scena16_reset_effect_bank
   - - 6448
     - asm
-    - func_801F8530
+    - scena16_noop_record_handler
   - - 6456
     - asm
     - func_801F8538

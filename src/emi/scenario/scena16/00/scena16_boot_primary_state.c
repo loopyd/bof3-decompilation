@@ -12,7 +12,7 @@ extern u8  D_8014832E;
 /* @behavior boots the primary SCENA16 state and waits for slot 6 to finish.
  * @source 0x801F6CCC
  */
-void func_801F6CCC(void) {
+void scena16_boot_primary_state(void) {
   func_801C1DF0(0u);
   D_8014832E = 0x1fu;
   func_8019FA28(4u, 0x1a0000u, 0x88000u, 5u);

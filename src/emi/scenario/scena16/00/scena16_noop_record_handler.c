@@ -1,8 +1,8 @@
 #include "internal.h"
 
 /* @behavior returns immediately.
- * @source 0x801F7180
+ * @source 0x801F8530
  */
-void func_801F7180(void) {
+void scena16_noop_record_handler(void) {
   return;
 }

@@ -1,8 +1,8 @@
 #include "internal.h"
 
 /* @behavior returns immediately.
- * @source 0x801F8530
+ * @source 0x801F7180
  */
-void func_801F8530(void) {
+void scena16_noop_secondary_state(void) {
   return;
 }

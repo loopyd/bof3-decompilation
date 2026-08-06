@@ -3,7 +3,7 @@
 /* @behavior dispatches one record callback selected by byte 0x7a.
  * @source 0x801F8358
  */
-void func_801F8358(void* record) {
+void scena16_dispatch_record_callback(void* record) {
   Scena16RecordCallback callback;
 
   /*
@@ -14,6 +14,6 @@ void func_801F8358(void* record) {
    * scheduling constraint is understood.
    */
   barrier();
-  callback = SCENA16_D_801F856C[((const u8*)record)[0x7a]];
+  callback = scena16_record_callbackTable[((const u8*)record)[0x7a]];
   callback(record, SCENA16_D_8014686C);
 }

@@ -53,9 +53,13 @@ extern volatile u16 SCENA16_D_80010022;
 extern volatile u32 SCENA16_D_80145EC4;
 extern volatile u32 SCENA16_D_80145EC8;
 extern volatile u32 SCENA16_D_80149308;
-extern Scena16Callback SCENA16_D_801F854C[];
-extern Scena16Callback SCENA16_D_801F8558[];
-extern Scena16RecordCallback SCENA16_D_801F856C[];
+/* @kind: table — primary state handlers indexed by bank byte 0x6872:
+ * boot, area route, secondary dispatch. */
+extern Scena16Callback scena16_primary_stateTable[];
+/* @kind: table — secondary state handlers indexed by SCENA16_D_80146874. */
+extern Scena16Callback scena16_secondary_stateTable[];
+/* @kind: table — record callbacks indexed by record byte 0x7a. */
+extern Scena16RecordCallback scena16_record_callbackTable[];
 extern const u8 SCENA16_D_80181EBA[];
 
 void game_stop_selection_fx(u32 effect_group, s32 effect_id);
@@ -79,26 +83,26 @@ void func_801C1DF0(u32 arg0);
 void func_801C601C(u32 arg0);
 void func_801C187C(s32 arg0);
 
-void func_801F6C90(void);
-void func_801F6CCC(void);
+void scena16_dispatch_primary_state(void);
+void scena16_boot_primary_state(void);
 void func_801F6D90(void);
-void func_801F6E30(void);
-void func_801F6EB0(void);
+void scena16_seed_route_enter_state3(void);
+void scena16_seed_route_enter_state2(void);
 void func_801F6F30(void);
 void func_801F7230(void);
 void func_801F7790(void);
 void func_801F7CC4(void);
-void func_801F7144(void);
-void func_801F7180(void);
-void func_801F7188(void);
-void func_801F8358(void* record);
-s32  func_801F8398(void);
+void scena16_dispatch_secondary_state(void);
+void scena16_noop_secondary_state(void);
+void scena16_finalize_secondary_path(void);
+void scena16_dispatch_record_callback(void* record);
+s32  scena16_return_zero(void);
 void func_801F83B0(u32 intensity);
-s32  func_801F83A0(void);
-s32  func_801F83A8(void);
-void func_801F845C(void);
-void func_801F84AC(void);
-void func_801F8530(void);
+s32  scena16_return_zero2(void);
+s32  scena16_return_zero3(void);
+void scena16_copy_palette_block(void);
+void scena16_reset_effect_bank(void);
+void scena16_noop_record_handler(void);
 
 #define SCENA16_D_80146864_BYTE    (*(volatile u8*)&SCENA16_D_80146864)
 #define SCENA16_PALETTE_SRC        PSX_PTR(const volatile u16, 0x80033800u)

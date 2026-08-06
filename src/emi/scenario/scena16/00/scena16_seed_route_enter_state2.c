@@ -3,7 +3,7 @@
 /* @behavior seeds one routed setup path and enters secondary state 2 on success.
  * @source 0x801F6EB0
  */
-void func_801F6EB0(void) {
+void scena16_seed_route_enter_state2(void) {
   if (func_8015B5D4(SCENA16_D_8014686C, 0) == 0) {
     SCENA16_D_8014832E = 0u;
     func_8015B580(SCENA16_D_8014686C, 0);

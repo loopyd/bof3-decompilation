@@ -52,12 +52,12 @@ void func_801F7CC4(void) {
         if (progress < 0x20u) {
           func_801F83B0((u32)(progress & 0xffu));
         } else if (progress == 0x20u) {
-          func_801F845C();
+          scena16_copy_palette_block();
         } else if (progress > 0x9fu) {
           func_801F83B0((u32)((0xbfu - progress) & 0xffu));
         }
       } else if (progress == 0xbfu) {
-        func_801F845C();
+        scena16_copy_palette_block();
       }
 
       next_counter = (u16)(SCENA16_D_80146876 - 1u);

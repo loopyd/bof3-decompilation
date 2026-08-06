@@ -23,7 +23,7 @@ typedef struct Scena16Bank80150000 {
 /* @behavior seeds one routed setup path and enters secondary state 3 on success.
  * @source 0x801F6E30
  */
-void func_801F6E30(void) {
+void scena16_seed_route_enter_state3(void) {
   u32 arg0;
 
   ((volatile Scena16Bank80150000*)SCENA16_BANK_80140000(Scena16Bank80150000))

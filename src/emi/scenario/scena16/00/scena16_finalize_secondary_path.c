@@ -3,14 +3,14 @@
 /* @behavior finalizes the secondary SCENA16 path and exits the local callback.
  * @source 0x801F7188
  */
-void func_801F7188(void) {
+void scena16_finalize_secondary_path(void) {
   u8 selection;
   u8* slot;
 
   if (SCENA16_D_80143C40 == 0u) {
     SCENA16_D_80143C30 = 0u;
     SCENA16_D_8014832E = 0u;
-    func_801F845C();
+    scena16_copy_palette_block();
     game_queue_frontend_cue(0x213u);
     game_queue_frontend_cue(0x214u);
     slot = (u8*)&SCENA16_D_80145029;

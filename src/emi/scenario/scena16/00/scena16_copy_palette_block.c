@@ -3,7 +3,7 @@
 /* @behavior copies one 16-word palette block and bumps the stage serial.
  * @source 0x801F845C
  */
-void func_801F845C(void) {
+void scena16_copy_palette_block(void) {
   u16*         dst;
   const u16*   src;
   s32          i;
