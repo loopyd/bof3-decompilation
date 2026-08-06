@@ -119,7 +119,7 @@ segments:
     - c
     - startEntryActionMode0
   - - 9940
-    - asm
+    - c
     - func_801D32D4
   - - 10000
     - asm

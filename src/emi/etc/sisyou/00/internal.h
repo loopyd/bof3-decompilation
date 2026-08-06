@@ -31,6 +31,9 @@ extern void (*D_801D41FC[])(void);
 /* @source 0x801D4204 @kind table */
 /* Handler table indexed by D_801D4286 and tail-called. */
 extern void (*D_801D4204[])(void);
+/* @source 0x801D4240 @kind table */
+/* Handler table indexed by D_801D4286 and called (not tail-called). */
+extern void (*D_801D4240[])(void);
 /* @source 0x801D421C @kind table */
 /* Handler table indexed by D_801D4286 and tail-called. */
 extern void (*D_801D421C[])(void);
