@@ -3,9 +3,9 @@
 /* @source 0x801F3280
  * @behavior resets the local selection counter, marks it active, and stops effect 0.
  */
-void func_801F3280(void)
+void world00_area026_counter_reset(void)
 {
-    WORLD00_AREA026_13_D_8014932A = 0;
-    WORLD00_AREA026_13_D_80149333 = 2;
+    world00_area026_counter = 0;
+    D_80149333 = 2;
     game_stop_selection_fx(0u, 0);
 }
