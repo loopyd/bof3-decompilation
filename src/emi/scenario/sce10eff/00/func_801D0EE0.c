@@ -1,10 +1,15 @@
 #include "internal.h"
 
+// @source 0x801492E8
+// @kind unknown
 extern u8 D_801492E8[];
 
 /* @behavior builds a temporary transform from scratchpad camera state and submits
  * it through the local scene object pipeline.
  * @source 0x801D0EE0
+ * INFERRED: scene-transform setup role; no reviewed caller or annotation
+ * corroborates a semantic name yet. Promotion to a verb-led role name
+ * requires a reviewed caller/dispatch site plus the existing @behavior.
  */
 void func_801D0EE0(void) {
   ScenarioSce10effScratch* scratch;
