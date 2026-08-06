@@ -24,6 +24,7 @@ func_801DE850 = 0x801DE850;
 func_801DF464 = 0x801DF464;
 appendFullscreenDimTileB = 0x801DF90C;
 func_801DF978 = 0x801DF978;
+func_801DFDB8 = 0x801DFDB8;
 tickPhaseTimer = 0x801E0028;
 dispatchCommand = 0x801E1B80;
 swapBytes = 0x801E1BB8;
