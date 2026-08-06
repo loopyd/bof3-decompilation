@@ -20,14 +20,16 @@ Lift only the prompted selector: `TARGET@0xADDRESS`, or shipped EMI
 `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First run
 `python3 .pi/skills/bof3-re/scripts/agent-context.py reverse SELECTOR` once; it
 emits ordered common/role context including `docs/agents/lessons.md`, plus
-target manifest/map/Splat/header, complete bindings, and selected source/asm.
+target manifest/map/Splat/header, complete bindings, selected source/asm,
+and data-scan gaps.
 After it succeeds, never `read` an emitted `=====` path — policy violation,
 not verification. Read an unbundled path only for a named evidence gap; the
 supplied brief is allowed. Follow the inherited skill
 (`.pi/skills/bof3-re/SKILL.md`) for the matching ladder, fast-evidence
 commands, pipeline-test contract; role context includes
 `.pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md`. Edit only owned
-source, `internal.h`, target map, Splat boundary; do not edit project
+source, `internal.h`, target map (including proven data-scan `D_*` labels),
+Splat boundary; do not edit project
 knowledge docs — durable cross-function findings belong to the reviewer's
 documentation pass. Use `edit` for every existing file, never `write`, shell
 redirection, or whole-file rewrite of map/header/Splat/binding files; `write`

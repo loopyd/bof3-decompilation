@@ -146,6 +146,54 @@ def header_excerpt(path: Path, names: set[str]) -> str:
     return "".join(output)
 
 
+def unlabeled_refs(root: Path, target: str, address: int, manifest) -> str:
+    """This function's unlabeled data references plus the target's hot gaps."""
+
+    index = root / "out" / "index" / "reverse.sqlite"
+    binary = root / manifest.binary
+    if not index.is_file() or not binary.is_file():
+        return ""
+    import sqlite3
+
+    load = manifest.load_address
+    end = load + binary.stat().st_size
+    try:
+        connection = sqlite3.connect(index)
+        try:
+            own = [
+                f"0x{row[0]:08X}"
+                for row in connection.execute(
+                    "SELECT address FROM data_references "
+                    "WHERE function_id = ? AND symbol IS NULL ORDER BY address",
+                    (f"{target}@{address:08x}",),
+                )
+                if load <= row[0] < end
+            ]
+            hot = [
+                (row[0], row[1])
+                for row in connection.execute(
+                    "SELECT address, COUNT(*) FROM data_references "
+                    "WHERE target_id = ? AND symbol IS NULL "
+                    "GROUP BY address ORDER BY 2 DESC LIMIT 8",
+                    (target,),
+                )
+                if load <= row[0] < end
+            ]
+        finally:
+            connection.close()
+    except sqlite3.DatabaseError:
+        return ""
+    lines = ["unlabeled data references (label in the target map when proven):"]
+    if own:
+        lines.append("this function: " + " ".join(own))
+    if hot:
+        lines.append(
+            "target hot gaps: "
+            + " ".join(f"0x{address:08X}({refs})" for address, refs in hot)
+        )
+    return "\n".join(lines)
+
+
 def target_context(root: Path, target: str, address: int) -> list[str]:
     manifest = lookup_target_manifest(root, target)
     if manifest is None:
@@ -177,7 +225,11 @@ def target_context(root: Path, target: str, address: int) -> list[str]:
         paths.append((source, None))
     if asm.is_file():
         paths.append((asm, asm_text))
-    return [section(path, root, text) for path, text in paths]
+    sections = [section(path, root, text) for path, text in paths]
+    refs = unlabeled_refs(root, target, address, manifest)
+    if refs:
+        sections.append(f"===== data-scan: {target} =====\n{refs}\n")
+    return sections
 
 
 def main() -> int:
