@@ -1,8 +1,8 @@
 #include "internal.h"
 
 /* @behavior returns zero.
- * @source 0x801F83A8
+ * @source 0x801F8398
  */
-s32 scena16_return_zero3(void) {
+s32 returnZero(void) {
   return 0;
 }

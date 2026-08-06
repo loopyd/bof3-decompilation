@@ -33,28 +33,28 @@ segments:
     - func_801F7CC4
   - - 5976
     - asm
-    - scena16_dispatch_record_callback
+    - dispatchRecordCallback
   - - 6040
     - asm
-    - scena16_return_zero
+    - returnZero
   - - 6048
     - asm
-    - scena16_return_zero2
+    - returnZero2
   - - 6056
     - asm
-    - scena16_return_zero3
+    - returnZero3
   - - 6064
     - asm
     - func_801F83B0
   - - 6236
     - asm
-    - scena16_copy_palette_block
+    - copyPaletteBlock
   - - 6316
     - asm
-    - scena16_reset_effect_bank
+    - resetEffectBank
   - - 6448
     - asm
-    - scena16_noop_record_handler
+    - noopRecordHandler
   - - 6456
     - asm
     - func_801F8538

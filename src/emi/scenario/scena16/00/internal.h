@@ -9,57 +9,82 @@
 typedef void (*Scena16Callback)(void);
 typedef void (*Scena16RecordCallback)(void* record, u32 arg1);
 
+/* @source 0x80143C30 @kind unknown */
 extern volatile u8  SCENA16_D_80143C30;
+/* @source 0x80143C40 @kind unknown */
 extern volatile u16 SCENA16_D_80143C40;
+/* @source 0x80143BB0 @kind unknown */
 extern volatile u8  SCENA16_D_80143BB0;
 #define SCENA16_D_80143BB0 g_GameState
-extern volatile u16 SCENA16_D_80143F00;
+/* @source 0x80143F03 @kind unknown */
 extern u8  SCENA16_D_80143F03;
+/* @source 0x80143F80 @kind unknown */
 extern s32          SCENA16_D_80143F80;
-extern volatile u8  SCENA16_D_80144F59;
-extern volatile u8  SCENA16_D_80144F5A;
-extern volatile u8  SCENA16_D_80144F5B;
-extern volatile u8  SCENA16_D_80144F5C;
-extern volatile u8  SCENA16_D_80144F5D;
-extern volatile u8  SCENA16_D_80144F5E;
-extern volatile u8  SCENA16_D_80144F5F;
+/* @source 0x80145029 @kind unknown */
 extern volatile u8  SCENA16_D_80145029;
+/* @source 0x80145988 @kind unknown */
 extern volatile u8  SCENA16_D_80145988;
-extern volatile u8  SCENA16_D_80146254;
+/* @source 0x80146258 @kind unknown */
 extern volatile u16 SCENA16_D_80146258;
+/* @source 0x80146866 @kind unknown */
 extern volatile u8  SCENA16_D_80146866;
+/* @source 0x80146867 @kind unknown */
 extern volatile u8  SCENA16_D_80146867;
+/* @source 0x80146864 @kind unknown */
 extern volatile u32 SCENA16_D_80146864;
-extern volatile u8  SCENA16_D_80146872;
+/* @source 0x80146874 @kind unknown */
 extern volatile s8  SCENA16_D_80146874;
+/* @source 0x80146875 @kind unknown */
 extern volatile u8  SCENA16_D_80146875;
+/* @source 0x80146876 @kind unknown */
 extern volatile u16 SCENA16_D_80146876;
+/* @source 0x8014686C @kind unknown */
 extern volatile u32 SCENA16_D_8014686C;
+/* @source 0x8014832E @kind unknown */
 extern u8  SCENA16_D_8014832E;
+/* @source 0x801492D8 @kind unknown */
 extern volatile u16 SCENA16_D_801492D8;
+/* @source 0x801492DA @kind unknown */
 extern volatile u16 SCENA16_D_801492DA;
+/* @source 0x801492DC @kind unknown */
 extern volatile u16 SCENA16_D_801492DC;
+/* @source 0x8014932C @kind unknown */
 extern volatile u16 SCENA16_D_8014932C;
+/* @source 0x8014930C @kind unknown */
 extern s32          SCENA16_D_8014930C;
+/* @source 0x80149314 @kind unknown */
 extern volatile u32 SCENA16_D_80149314;
+/* @source 0x80149322 @kind unknown */
 extern volatile u16 SCENA16_D_80149322;
+/* @source 0x80147A90 @kind unknown */
 extern s32          SCENA16_D_80147A90;
+/* @source 0x80143F1D @kind unknown */
 extern volatile u8  SCENA16_D_80143F1D;
+/* @source 0x80010004 @kind unknown */
 extern volatile u16 SCENA16_D_80010004;
+/* @source 0x80010006 @kind unknown */
 extern volatile u16 SCENA16_D_80010006;
+/* @source 0x80010008 @kind unknown */
 extern volatile u16 SCENA16_D_80010008;
+/* @source 0x80010020 @kind unknown */
 extern volatile u16 SCENA16_D_80010020;
+/* @source 0x80010022 @kind unknown */
 extern volatile u16 SCENA16_D_80010022;
+/* @source 0x80145EC4 @kind unknown */
 extern volatile u32 SCENA16_D_80145EC4;
+/* @source 0x80145EC8 @kind unknown */
 extern volatile u32 SCENA16_D_80145EC8;
+/* @source 0x80149308 @kind unknown */
 extern volatile u32 SCENA16_D_80149308;
-/* @kind: table — primary state handlers indexed by bank byte 0x6872:
+/* @source 0x801F854C @kind table — primary state handlers indexed by bank byte 0x6872:
  * boot, area route, secondary dispatch. */
-extern Scena16Callback scena16_primary_stateTable[];
-/* @kind: table — secondary state handlers indexed by SCENA16_D_80146874. */
-extern Scena16Callback scena16_secondary_stateTable[];
-/* @kind: table — record callbacks indexed by record byte 0x7a. */
-extern Scena16RecordCallback scena16_record_callbackTable[];
+extern Scena16Callback primaryStateTable[];
+/* @source 0x801F8558 @kind table — secondary state handlers indexed by SCENA16_D_80146874. */
+extern Scena16Callback secondaryStateTable[];
+/* @source 0x801F856C @kind table — record callbacks indexed by record byte 0x7a. */
+extern Scena16RecordCallback recordCallbackTable[];
+/* @source 0x80181EBA @kind unknown */
+/* @source 0x80181EBA @kind unknown */
 extern const u8 SCENA16_D_80181EBA[];
 
 void game_stop_selection_fx(u32 effect_group, s32 effect_id);
@@ -83,26 +108,26 @@ void func_801C1DF0(u32 arg0);
 void func_801C601C(u32 arg0);
 void func_801C187C(s32 arg0);
 
-void scena16_dispatch_primary_state(void);
-void scena16_boot_primary_state(void);
+void dispatchPrimaryState(void);
+void bootPrimaryState(void);
 void func_801F6D90(void);
-void scena16_seed_route_enter_state3(void);
-void scena16_seed_route_enter_state2(void);
+void seedRouteEnterState3(void);
+void seedRouteEnterState2(void);
 void func_801F6F30(void);
 void func_801F7230(void);
 void func_801F7790(void);
 void func_801F7CC4(void);
-void scena16_dispatch_secondary_state(void);
-void scena16_noop_secondary_state(void);
-void scena16_finalize_secondary_path(void);
-void scena16_dispatch_record_callback(void* record);
-s32  scena16_return_zero(void);
+void dispatchSecondaryState(void);
+void noopSecondaryState(void);
+void finalizeSecondaryPath(void);
+void dispatchRecordCallback(void* record);
+s32  returnZero(void);
 void func_801F83B0(u32 intensity);
-s32  scena16_return_zero2(void);
-s32  scena16_return_zero3(void);
-void scena16_copy_palette_block(void);
-void scena16_reset_effect_bank(void);
-void scena16_noop_record_handler(void);
+s32  returnZero2(void);
+s32  returnZero3(void);
+void copyPaletteBlock(void);
+void resetEffectBank(void);
+void noopRecordHandler(void);
 
 #define SCENA16_D_80146864_BYTE    (*(volatile u8*)&SCENA16_D_80146864)
 #define SCENA16_PALETTE_SRC        PSX_PTR(const volatile u16, 0x80033800u)

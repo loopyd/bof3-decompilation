@@ -78,7 +78,7 @@ void func_801F7790(void) {
         func_801F83B0((u32)((u8)*timer));
         break;
       }
-      scena16_copy_palette_block();
+      copyPaletteBlock();
       *timer = 0x7fu;
       goto increment_state;
 
@@ -101,7 +101,7 @@ void func_801F7790(void) {
         func_801F83B0((u32)(*(volatile u8*)timer));
         break;
       }
-      scena16_copy_palette_block();
+      copyPaletteBlock();
       *timer = 0x1eu;
       goto increment_state;
 
