@@ -1,10 +1,7 @@
 # Reverse-engineering lessons
 
-> Durable cross-cutting gotchas that make the BOF3 lift-and-match loop faster and safer.
-
 Domain contracts belong in `docs/specs/`; repeatable procedures in the owning
-operating reference. Matching levers (volatile scheduling, extern rebinding,
-control-flow shapes, temporaries): [matching playbook](matching-playbook.md);
+operating reference. Matching levers: [matching playbook](matching-playbook.md);
 iteration procedure: [function matching](matching.md).
 
 ## Evidence and boundaries
