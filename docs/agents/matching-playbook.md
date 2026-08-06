@@ -130,7 +130,7 @@ if (!condition) { HandleFalse(); } else { HandleTrue(); }
 This swaps `beq` ↔ `bne` and changes delay-slot scheduling and fall-through
 order. A chain inversion surviving every C spelling is gcc 2.7
 `reorder_insns` normalization: no flag disables it (`-fno-thread-jumps` is a
-proven no-op, func_801DEAE0); escalate, do not churn spellings.
+proven no-op); escalate, do not churn spellings.
 reachability.
 
 ### Duplicate identical calls in `if/else` arms
