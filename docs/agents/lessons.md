@@ -124,8 +124,8 @@ iteration procedure: [function matching](matching.md).
   camelCase, role-first, no module/target prefix
   except to break a collision. Data: camelCase + role suffix
   (`...Table`/`...Strings`/`...State`) + `/* @source 0xXXXXXXXX` and
-  `@kind table|rodata|bss|data */` tags (raw `D_*`: `@kind unknown`);
-  `/* */` only (`//` breaks gcc-2.6.3).
+  `@kind table|rodata|bss|data */` tags (raw `D_*`: `@kind unknown`;
+  `/* */` only — `//` breaks gcc-2.6.3).
 - Preserve pre-promotion evidence with an `INFERRED:` comment beside the
   owning address-based declaration: what was observed, what would verify
   promotion. Never create a semantic alias from a hint alone.
