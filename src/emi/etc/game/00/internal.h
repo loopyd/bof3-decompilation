@@ -41,9 +41,10 @@ struct GameWorkArea {
   u8  pad_2B[0x09];   /* 0x2B-0x33 */
   s32 coord_x_34;     /* 0x34 */
   s32 coord_y_38;     /* 0x38 */
+  u8  pad_3C[0x02];   /* 0x3C-0x3D */
   u16 counter_3E;     /* 0x3E */
   u8  pad_40[0x09];   /* 0x40-0x48 */
-  u32 unk_49;         /* 0x49 */
+  u8  unk_49[0x04];   /* 0x49-0x4C (unaligned word) */
   u8  pad_4D[0x0F];   /* 0x4D-0x5B */
   u8  flags_5C;       /* 0x5C */
   u8  unk_5D;         /* 0x5D */
