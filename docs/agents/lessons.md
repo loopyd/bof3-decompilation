@@ -73,6 +73,10 @@ iteration procedure: [function matching](matching.md).
 - Recover stable field offsets into a target-local struct before permuting.
   Addresses, masks, encoded values stay hexadecimal; human quantities
   (32-pixel step, 320-pixel clamp) decimal.
+- C alignment silently relocates a misdeclared field: a `u32` named for an
+  unaligned offset (e.g. `unk_49`) lands on the next aligned boundary and
+  shifts every later field. Model unaligned words as `u8[N]` and audit named
+  offsets against the struct's real C layout, not just the comments.
 - Model stack locals with official PsyQ SDK types (e.g. `MATRIX`) when the
   evidence fits; ad-hoc `u32` arrays round to 8-byte slots and inflate the
   frame.
