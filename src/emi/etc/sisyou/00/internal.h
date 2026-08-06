@@ -25,10 +25,16 @@ extern u16 masterActionBaseTable[];
 /* @source 0x801D41E0 @kind table */
 /* Per-mode handler table; indexed by modeIndex and tail-called. */
 extern void (*D_801D41E0[])(void);
+/* @source 0x801D41FC @kind table */
+/* Handler table indexed by D_801D4286 and tail-called. */
+extern void (*D_801D41FC[])(void);
 /* @source 0x801D4285 @kind bss */
 /* Current mode index; selects the handler from the D_801D41E0 table and is
  * set to 6 after an entry action starts. */
 extern u8 modeIndex;
+/* @source 0x801D4286 @kind unknown */
+/* Index selecting the handler from the D_801D41FC table. */
+extern u8 D_801D4286;
 
 /* PsyQ SDK primitive setup helpers called by this target.
  * SetSprt8 / SetSemiTrans are declared by <libgpu.h> (via bof3/psyq.h);

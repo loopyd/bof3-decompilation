@@ -7,7 +7,9 @@ WEAK_SYMBOL_AT(masterIndex, 0x801448ed);
 /* EMI-local data. */
 WEAK_SYMBOL_AT(masterActionBaseTable, 0x801d41bc);
 WEAK_SYMBOL_AT(D_801D41E0, 0x801d41e0);
+WEAK_SYMBOL_AT(D_801D41FC, 0x801d41fc);
 WEAK_SYMBOL_AT(modeIndex, 0x801d4285);
+WEAK_SYMBOL_AT(D_801D4286, 0x801d4286);
 
 /* Main-exe functions called by this overlay. */
 WEAK_SYMBOL_AT(func_80150224, 0x80150224);
