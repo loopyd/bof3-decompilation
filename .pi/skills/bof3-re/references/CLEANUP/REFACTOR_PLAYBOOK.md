@@ -45,7 +45,8 @@ Organization): types are `s8/u8/s16/u16/s32/u32/f32` from
 `include/base/types.h`. Locals/struct fields camelCase;
 struct/enum types PascalCase; enum values/macros SCREAMING_SNAKE_CASE.
 Address-canonical `func_XXXXXXXX`/`D_XXXXXXXX`/`unk_XX` stays until the
-evidence gate passes. Addresses, bitmasks, offsets in hex; timers/sizes
+evidence gate passes; then data symbols take camelCase with a role suffix
+(`...Table`, `...Strings`, `...State`) and a `@kind` annotation. Addresses, bitmasks, offsets in hex; timers/sizes
 decimal. Always `{}` on conditional/loops; blank line between
 declarations and code; functions in assembly order (Splat-owned). Unsure →
 leave unnamed: a wrong name is worse than an address name.
