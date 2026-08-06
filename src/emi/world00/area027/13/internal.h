@@ -26,9 +26,9 @@ void func_8017C2D8(void* arg0, s32 arg1, s32 arg2, s32 arg3, void* arg4);
 void func_8014E5A0(u8 arg0, u8 arg1);
 
 void func_801F2E3C(void* arg0);
-void func_801F2F0C(const void* arg0);
+void world00_area027_trail_strip_emit(const void* arg0);
 void func_801F304C(void* arg0);
-void func_801F31CC(void);
+void world00_area027_marker_pair_emit(void);
 void func_801F33A8(void);
 void func_801F3480(const void* arg0, s32 arg1, u32 arg2);
 
