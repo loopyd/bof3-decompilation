@@ -7,28 +7,20 @@ extern int rand(void);
  * @source 0x801DEAE0
  */
 void func_801DEAE0(void) {
-  const void* src;
-  u32*        mode_ptr;
   u8          local_18[6];
   u32         mode;
-  u32         temp;
-  u8*         table;
+  u32         id;
+  u8*         table = local_18;
 
-  src = BATTLE_ROM_BASE_D0000;
-  mode_ptr = BATTLE_GLOBAL_RAM_U32;
-  __builtin_memcpy(local_18, (const u8*)src + 0xc98, sizeof(local_18));
-  mode = *(volatile u32*)((u8*)mode_ptr + 0x63d0u);
+  __builtin_memcpy(local_18, D_801D0C98, sizeof(local_18));
+  mode = D_801463D0;
 
   if (mode == 1u) {
-    temp = ((u32 (*)(void))rand)();
-    table = local_18;
+    id = func_801502D0(table[rand() & 1]);
+  } else if ((mode != 0u) && (mode < 5u)) {
+    id = func_801502D0(local_18[2 + (rand() & 1)]);
   } else {
-    if ((mode == 0u) || (mode >= 5u)) {
-      table = &local_18[4];
-    } else {
-      table = &local_18[2];
-    }
-    temp = ((u32 (*)(void))rand)();
+    id = func_801502D0(local_18[4 + (rand() & 1)]);
   }
-  func_801DE60C(0u, 2u, 0u, 0u, 0xffu, func_801502D0(table[temp & 1u]));
+  func_801DE60C(0u, 2u, 0u, 0u, 0xffu, id);
 }

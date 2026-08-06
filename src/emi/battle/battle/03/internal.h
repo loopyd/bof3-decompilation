@@ -139,6 +139,8 @@ extern volatile Battle03FlagRecord D_80145FB8[]; // @source 0x80145FB8 // @kind 
 extern u16                          D_80143F04; // @source 0x80143F04 // @kind unknown
 extern u8                           D_80146328; // @source 0x80146328 // @kind unknown
 extern u8                           D_80144955; // @source 0x80144955 // @kind unknown
+extern const u8                     D_801D0C98[]; // @source 0x801D0C98 // @kind unknown
+extern volatile u32                 D_801463D0; // @source 0x801463D0 // @kind unknown
 extern u8                           D_801462F3; // @source 0x801462F3 // @kind unknown
 extern u8                           D_80146384; // @source 0x80146384 // @kind unknown
 extern u8                           D_801462F4; // @source 0x801462F4 // @kind unknown
