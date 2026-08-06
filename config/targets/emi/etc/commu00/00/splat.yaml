@@ -171,7 +171,7 @@ segments:
     - asm
     - func_801F222C
   - - 13964
-    - asm
+    - c
     - func_801F228C
   - - 14024
     - asm
