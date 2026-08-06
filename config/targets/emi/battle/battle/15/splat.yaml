@@ -28,10 +28,10 @@ segments:
     - func_80096AB0
   - - 744
     - asm
-    - func_80096AE8
+    - battle15_dispatch_substate_table_43c0
   - - 804
     - c
-    - func_80096B24
+    - battle15_store_slot3_advance_substate
   - - 892
     - asm
     - func_80096B7C
@@ -40,20 +40,20 @@ segments:
     - func_80096CC8
   - - 1556
     - c
-    - func_80096E14
-    - '@source: src/emi/battle/battle/15/func_80096E14.c'
+    - battle15_init_selection_state_slot1
+    - '@source: src/emi/battle/battle/15/battle15_init_selection_state_slot1.c'
     - '@behavior: Queues cue 0x104, stages selection state, and advances the battle counter.'
   - - 1680
     - c
-    - func_80096E90
-    - '@source: src/emi/battle/battle/15/func_80096E90.c'
+    - battle15_queue_event106_reset_state
+    - '@source: src/emi/battle/battle/15/battle15_queue_event106_reset_state.c'
     - '@behavior: Queues event 0x106, stages the active message slot, and resets battle selection state.'
   - - 1792
     - c
-    - func_80096F00
+    - battle15_dispatch_substate_table_43d4
   - - 1852
     - asm
-    - func_80096F3C
+    - battle15_dispatch_substate_table_43ec
   - - 1912
     - c
     - func_80096F78
@@ -68,13 +68,13 @@ segments:
     - func_80097574
   - - 3540
     - c
-    - func_800975D4
+    - battle15_reset_state_when_unlocked
   - - 3612
     - asm
     - func_8009761C
   - - 3900
     - asm
-    - func_8009773C
+    - battle15_dispatch_substate_table_43f4
   - - 3960
     - asm
     - func_80097778
@@ -89,10 +89,10 @@ segments:
     - func_80097C0C
   - - 5308
     - c
-    - func_80097CBC
+    - battle15_queue_event106_reset_state3
   - - 5404
     - asm
-    - func_80097D1C
+    - battle15_dispatch_substate_table_4408
   - - 5464
     - asm
     - func_80097D58
@@ -101,7 +101,7 @@ segments:
     - func_80097DC0
   - - 5816
     - asm
-    - func_80097EB8
+    - battle15_selection_setup_enabled
   - - 5824
     - asm
     - func_80097EC0
@@ -110,7 +110,7 @@ segments:
     - func_80097FE8
   - - 6312
     - c
-    - func_800980A8
+    - battle15_dispatch_substate_table_4418
   - - 6372
     - c
     - func_800980E4
@@ -119,38 +119,38 @@ segments:
     - func_80098144
   - - 6740
     - c
-    - func_80098254
-    - '@source: src/emi/battle/battle/15/func_80098254.c'
+    - battle15_init_selection_state_slot0
+    - '@source: src/emi/battle/battle/15/battle15_init_selection_state_slot0.c'
     - '@behavior: Resets the active battle selection slot and advances selection state.'
   - - 6884
     - c
-    - func_800982E4
-    - '@source: src/emi/battle/battle/15/func_800982E4.c'
+    - battle15_queue_event106_reset_state2
+    - '@source: src/emi/battle/battle/15/battle15_queue_event106_reset_state2.c'
     - '@behavior: Queues event 0x106, stages the active message slot, and resets battle selection state.'
   - - 6988
     - c
-    - func_8009834C
+    - battle15_dispatch_substate_table_4428
   - - 7048
     - c
-    - func_80098388
+    - battle15_dispatch_substate_table_4450
   - - 7108
     - c
     - func_800983C4
   - - 7176
     - asm
-    - func_80098408
+    - battle15_arm_secondary_grid_advance_root
   - - 7248
     - asm
     - func_80098450
   - - 8628
     - c
-    - func_800989B4
+    - battle15_reset_state_when_unlocked2
   - - 8700
     - asm
     - func_800989FC
   - - 8968
     - asm
-    - func_80098B08
+    - battle15_dispatch_substate_table_4458
   - - 9028
     - asm
     - func_80098B44
@@ -165,10 +165,10 @@ segments:
     - func_80098FD4
   - - 10516
     - c
-    - func_80099114
+    - battle15_queue_event106_reset_state4
   - - 10616
     - c
-    - func_80099178
+    - battle15_dispatch_substate_table_446c
   - - 10676
     - asm
     - func_800991B4
@@ -177,7 +177,7 @@ segments:
     - func_80099248
   - - 11048
     - c
-    - func_80099328
+    - battle15_dispatch_substate_table_447c
   - - 11108
     - asm
     - func_80099364
@@ -195,7 +195,7 @@ segments:
     - func_80099E80
   - - 14224
     - c
-    - func_80099F90
+    - battle15_dispatch_substate_table_448c
   - - 14284
     - asm
     - func_80099FCC
@@ -213,7 +213,7 @@ segments:
     - func_8009A518
   - - 15760
     - c
-    - func_8009A590
+    - battle15_dispatch_substate_table_44a0
   - - 15820
     - asm
     - func_8009A5CC
@@ -246,13 +246,13 @@ segments:
     - func_8009B20C
   - - 19060
     - c
-    - func_8009B274
+    - battle15_dispatch_substate_table_44c8
   - - 19120
     - asm
     - func_8009B2B0
   - - 19532
     - c
-    - func_8009B44C
+    - battle15_dispatch_substate_table_44d4
   - - 19592
     - asm
     - func_8009B488
@@ -267,14 +267,14 @@ segments:
     - func_8009B828
   - - 20836
     - c
-    - func_8009B964
+    - battle15_dispatch_substate_table_44e4
   - - 20896
     - asm
     - func_8009B9A0
   - - 21116
     - c
-    - func_8009BA7C
-    - '@source: src/emi/battle/battle/15/func_8009BA7C.c'
+    - battle15_clear_state_when_gate_clear
+    - '@source: src/emi/battle/battle/15/battle15_clear_state_when_gate_clear.c'
     - '@behavior: Clears local battle selection state when its gate flag is clear.'
   - - 21196
     - asm
@@ -290,11 +290,11 @@ segments:
     - func_8009C794
   - - 24680
     - asm
-    - func_8009C868
+    - battle15_test_entry_bit_e1
   - - 24700
     - c
-    - func_8009C87C
-    - '@source: src/emi/battle/battle/15/func_8009C87C.c'
+    - battle15_set_entry_bit_e1
+    - '@source: src/emi/battle/battle/15/battle15_set_entry_bit_e1.c'
     - '@behavior: Sets or clears the indexed bit in byte +0xE1.'
   - - 24748
     - asm
@@ -340,7 +340,7 @@ segments:
     - func_8009DE18
   - - 30288
     - c
-    - func_8009DE50
+    - battle15_set_record_field4_neg20
   - - 30308
     - c
     - func_8009DE64
@@ -373,13 +373,13 @@ segments:
     - func_8009E184
   - - 31200
     - c
-    - func_8009E1E0
+    - battle15_forward_selector_0
   - - 31232
     - c
-    - func_8009E200
+    - battle15_set_record_flag8_field6_neg20
   - - 31268
     - c
-    - func_8009E224
+    - battle15_set_record_flag8_field6_neg100
   - - 31304
     - asm
     - func_8009E248
@@ -388,7 +388,7 @@ segments:
     - func_8009E500
   - - 32708
     - c
-    - func_8009E7C4
+    - battle15_forward_selector_1
   - - 32740
     - c
     - func_8009E7E4
@@ -409,11 +409,11 @@ segments:
     - func_8009EA30
   - - 33420
     - c
-    - func_8009EA8C
+    - battle15_store_halved_selection_result
   - - 33484
     - c
-    - func_8009EACC
-    - [source, src/emi/battle/battle/15/func_8009EACC.c]
+    - battle15_store_halved_result_plus1
+    - [source, src/emi/battle/battle/15/battle15_store_halved_result_plus1.c]
     - [behavior, "sets selection flag and stores half target result"]
   - - 33576
     - asm
@@ -435,7 +435,7 @@ segments:
     - func_8009EF28
   - - 34744
     - c
-    - func_8009EFB8
+    - battle15_apply_kind_mask_selection
   - - 34832
     - asm
     - func_8009F010
@@ -504,8 +504,8 @@ segments:
     - func_8009F6B4
   - - 36588
     - c
-    - func_8009F6EC
-    - '@source: src/emi/battle/battle/15/func_8009F6EC.c'
+    - battle15_set_flag2000_store_doubled_result
+    - '@source: src/emi/battle/battle/15/battle15_set_flag2000_store_doubled_result.c'
     - '@behavior: Sets battle flags, resolves the selected value, and advances state.'
   - - 36696
     - asm
@@ -536,7 +536,7 @@ segments:
     - func_8009F9B8
   - - 37344
     - c
-    - func_8009F9E0
+    - battle15_arm_record_flag8_reset_fields
   - - 37408
     - asm
     - func_8009FA20
@@ -770,10 +770,10 @@ segments:
     - func_800A4160
   - - 55768
     - c
-    - func_800A41D8
+    - battle15_reset_selection_apply_input
   - - 55864
     - c
-    - func_800A4238
+    - battle15_query_selection_apply_input
   - - 55956
     - asm
     - func_800A4294
@@ -782,10 +782,10 @@ segments:
     - func_800A4458
   - - 56968
     - c
-    - func_800A4688
+    - battle15_dispatch_substate_table_4cac
   - - 57028
     - c
-    - func_800A46C4
+    - battle15_dispatch_substate_table_4cc8
   - - 57088
     - asm
     - func_800A4700
@@ -797,7 +797,7 @@ segments:
     - func_800A47AC
   - - 57600
     - c
-    - func_800A4900
+    - battle15_dispatch_substate_table_4cd0
   - - 57660
     - asm
     - func_800A493C
@@ -815,7 +815,7 @@ segments:
     - func_800A4BB4
   - - 58376
     - c
-    - func_800A4C08
+    - battle15_dispatch_substate_table_4ce4
   - - 58436
     - c
     - func_800A4C44
@@ -830,13 +830,13 @@ segments:
     - func_800A4FD8
   - - 59576
     - c
-    - func_800A50B8
-    - '@source: src/emi/battle/battle/15/func_800A50B8.c'
+    - battle15_init_menu_state_15
+    - '@source: src/emi/battle/battle/15/battle15_init_menu_state_15.c'
     - '@behavior: Initializes battle menu state 0x15 and advances its update counter.'
   - - 59680
     - c
-    - func_800A5120
-    - '@source: src/emi/battle/battle/15/func_800A5120.c'
+    - battle15_enter_state2_when_b8_clear
+    - '@source: src/emi/battle/battle/15/battle15_enter_state2_when_b8_clear.c'
     - '@behavior: Clears local battle selection state when its gate flag is clear.'
   - - 59748
     - asm
@@ -846,7 +846,7 @@ segments:
     - func_800A5244
   - - 60100
     - c
-    - func_800A52C4
+    - battle15_dispatch_substate_table_4d00
   - - 60160
     - c
     - func_800A5300
@@ -855,8 +855,8 @@ segments:
     - func_800A5330
   - - 61468
     - c
-    - func_800A581C
-    - '@source: src/emi/battle/battle/15/func_800A581C.c'
+    - battle15_setup_mode104_arm_work_bit2
+    - '@source: src/emi/battle/battle/15/battle15_setup_mode104_arm_work_bit2.c'
     - '@behavior: Calls func_8015DF18(0x104), sets bit 2 at +0x128, updates battle state bytes.'
   - - 61556
     - asm
@@ -866,7 +866,7 @@ segments:
     - func_800A58F4
   - - 61868
     - c
-    - func_800A59AC
+    - battle15_dispatch_substate_table_4d14
   - - 61928
     - c
     - func_800A59E8
@@ -881,13 +881,13 @@ segments:
     - func_800A5D00
   - - 62944
     - c
-    - func_800A5DE0
-    - '@source: src/emi/battle/battle/15/func_800A5DE0.c'
+    - battle15_init_menu_state_15_2
+    - '@source: src/emi/battle/battle/15/battle15_init_menu_state_15_2.c'
     - '@behavior: Initializes battle menu state 0x15 and advances its update counter.'
   - - 63060
     - c
-    - func_800A5E54
-    - '@source: src/emi/battle/battle/15/func_800A5E54.c'
+    - battle15_enter_state2_when_dc_clear
+    - '@source: src/emi/battle/battle/15/battle15_enter_state2_when_dc_clear.c'
     - '@behavior: Advances local selection state when the battle gate is clear.'
   - - 63128
     - asm
@@ -897,11 +897,11 @@ segments:
     - func_800A5F80
   - - 63472
     - c
-    - func_800A5FF0
+    - battle15_dispatch_substate_table_4d30
   - - 63532
     - c
-    - func_800A602C
-    - '@source: src/emi/battle/battle/15/func_800A602C.c'
+    - battle15_init_menu_state_13
+    - '@source: src/emi/battle/battle/15/battle15_init_menu_state_13.c'
     - '@behavior: Initializes battle menu state 0x13 and advances its update counter.'
   - - 63656
     - c
@@ -938,8 +938,8 @@ segments:
     - func_800A6E14
   - - 69192
     - c
-    - func_800A7648
-    - '@source: src/emi/battle/battle/15/func_800A7648.c'
+    - battle15_lookup_clamped_s8_table
+    - '@source: src/emi/battle/battle/15/battle15_lookup_clamped_s8_table.c'
     - '@behavior: Clamps the offset index to zero through four and returns the corresponding signed-byte table value.'
   - - 69268
     - asm
@@ -967,11 +967,11 @@ segments:
     - func_800A8360
   - - 72696
     - c
-    - func_800A83F8
+    - battle15_dispatch_work_byte1_pair
   - - 72784
     - c
-    - func_800A8450
-    - '@source: src/emi/battle/battle/15/func_800A8450.c'
+    - battle15_init_record_state_advance_work
+    - '@source: src/emi/battle/battle/15/battle15_init_record_state_advance_work.c'
     - '@behavior: Initializes the selected local battle-work record and advances work state.'
   - - 72956
     - asm
@@ -1083,8 +1083,8 @@ segments:
     - func_800AB0B8
   - - 85104
     - c
-    - func_800AB470
-    - '@source: src/emi/battle/battle/15/func_800AB470.c'
+    - battle15_entry_kind_is_listed
+    - '@source: src/emi/battle/battle/15/battle15_entry_kind_is_listed.c'
     - '@behavior: Returns whether the selected entry kind is 0x4C, 0x4D, 0xB4, or 0xB5.'
   - - 85180
     - c
@@ -1100,7 +1100,7 @@ segments:
     - func_800AB68C
   - - 85856
     - c
-    - func_800AB760
+    - battle15_pick_random_unblocked_id
   - - 86068
     - asm
     - func_800AB834
@@ -1169,13 +1169,13 @@ segments:
     - func_800AD0A8
   - - 92780
     - c
-    - func_800AD26C
-    - '@source: src/emi/battle/battle/15/func_800AD26C.c'
+    - battle15_dispatch_work_table_6994
+    - '@source: src/emi/battle/battle/15/battle15_dispatch_work_table_6994.c'
     - '@behavior: Dispatches a three-entry selection handler table using battle work state.'
   - - 92908
     - c
-    - func_800AD69C
-    - '@source: src/emi/battle/battle/15/func_800AD69C.c'
+    - battle15_dispatch_work_table_69a0
+    - '@source: src/emi/battle/battle/15/battle15_dispatch_work_table_69a0.c'
     - '@behavior: Dispatches a three-entry selection handler table using battle work state.'
   - - 93236
     - asm
@@ -1191,7 +1191,7 @@ segments:
     - func_800AD67C
   - - 93852
     - asm
-    - func_800AD69C
+    - battle15_dispatch_work_table_69a0
   - - 93980
     - asm
     - func_800AD71C
@@ -1209,8 +1209,8 @@ segments:
     - func_800AD9AC
   - - 94668
     - c
-    - func_800AD9CC
-    - '@source: src/emi/battle/battle/15/func_800AD9CC.c'
+    - battle15_dispatch_work_table_69ac
+    - '@source: src/emi/battle/battle/15/battle15_dispatch_work_table_69ac.c'
     - '@behavior: Dispatches a three-entry selection handler table using battle work state.'
   - - 94796
     - asm
@@ -1223,9 +1223,9 @@ segments:
     - func_800ADCA4
   - - 95428
     - c
-    - func_800ADCC4
+    - battle15_dispatch_work_table_69b8
     - [0x800ADCC4, 0x800ADD44]
-    - {source: src/emi/battle/battle/15/func_800ADCC4.c, behavior: "copies the three handlers at 0x800969B8 and dispatches the entry selected by battle work byte 0x01"}
+    - {source: src/emi/battle/battle/15/battle15_dispatch_work_table_69b8.c, behavior: "copies the three handlers at 0x800969B8 and dispatches the entry selected by battle work byte 0x01"}
   - - 95556
     - asm
     - func_800ADD44
@@ -1242,10 +1242,10 @@ segments:
     - '@behavior: Dispatches an action-table handler when scratchpad state 5 is nonzero.'
   - - 96276
     - c
-    - func_800AE014
+    - battle15_dispatch_local_handler_pair
   - - 96364
     - c
-    - func_800AE06C
+    - battle15_set_work_byte9_advance
   - - 96412
     - asm
     - func_800AE09C
@@ -1263,7 +1263,7 @@ segments:
     - func_800AE2D4
   - - 97100
     - c
-    - func_800AE34C
+    - battle15_dispatch_work_table_6bf4
   - - 97168
     - c
     - func_800AE390
@@ -1287,8 +1287,8 @@ segments:
     - func_800AE640
   - - 97992
     - c
-    - func_800AE6C8
-    - '@source: src/emi/battle/battle/15/func_800AE6C8.c'
+    - battle15_accumulate_work_counter
+    - '@source: src/emi/battle/battle/15/battle15_accumulate_work_counter.c'
     - '@behavior: Increments battle work byte +0x09, adds 2 to signed counter +0x10, accumulates its low halfword into +0x30, then increments byte +0x01 when +0x09 equals 0x10.'
   - - 98088
     - asm
@@ -1380,18 +1380,18 @@ segments:
     - func_800B0058
   - - 104728
     - c
-    - func_800B0118
+    - battle15_select_offset_pair_by_mode
     - [0x800B0118, 0x800B0180]
-    - {source: src/emi/battle/battle/15/func_800B0118.c, behavior: "Select local offset pair by battle-work mode and active table."}
+    - {source: src/emi/battle/battle/15/battle15_select_offset_pair_by_mode.c, behavior: "Select local offset pair by battle-work mode and active table."}
   - - 104832
     - c
-    - func_800B0180
-    - '@source: src/emi/battle/battle/15/func_800B0180.c'
+    - battle15_dispatch_panel_task_table_69e4
+    - '@source: src/emi/battle/battle/15/battle15_dispatch_panel_task_table_69e4.c'
     - '@behavior: Dispatches five local handlers by panel-task byte +0x02.'
   - - 104944
     - c
-    - func_800B01F0
-    - '@source: src/emi/battle/battle/15/func_800B01F0.c'
+    - battle15_dispatch_panel_state_table_69f8
+    - '@source: src/emi/battle/battle/15/battle15_dispatch_panel_state_table_69f8.c'
     - '@behavior: Dispatches local handlers by panel-task state byte +0x03.'
   - - 105040
     - asm
@@ -1410,7 +1410,7 @@ segments:
     - func_800B06F4
   - - 106956
     - c
-    - func_800B09CC
+    - battle15_dispatch_panel_state_table_6a08
   - - 107052
     - c
     - func_800B0A2C
@@ -1425,8 +1425,8 @@ segments:
     - func_800B0B0C
   - - 107748
     - c
-    - func_800B0CE4
-    - '@source: src/emi/battle/battle/15/func_800B0CE4.c'
+    - battle15_dispatch_panel_task_table_6a14
+    - '@source: src/emi/battle/battle/15/battle15_dispatch_panel_task_table_6a14.c'
     - '@behavior: Dispatches five local handlers by panel-task state byte +0x03.'
   - - 107860
     - asm
@@ -1448,7 +1448,7 @@ segments:
     - func_800B0F9C
   - - 109452
     - c
-    - func_800B138C
+    - battle15_dispatch_panel_state_table_6a34
   - - 109548
     - asm
     - func_800B13EC
@@ -1460,7 +1460,7 @@ segments:
     - func_800B1504
   - - 109916
     - c
-    - func_800B155C
+    - battle15_dispatch_panel_state_table_6a40
   - - 110012
     - asm
     - func_800B15BC
@@ -1484,7 +1484,7 @@ segments:
     - func_800B1F04
   - - 112776
     - c
-    - func_800B2088
+    - battle15_dispatch_panel_task_table_6e08
   - - 112844
     - c
     - func_800B20CC
@@ -1496,16 +1496,16 @@ segments:
     - func_800B2104
   - - 112984
     - c
-    - func_800B2158
-    - source: src/emi/battle/battle/15/func_800B2158.c
+    - battle15_panel_step_left_end_neg_c8
+    - source: src/emi/battle/battle/15/battle15_panel_step_left_end_neg_c8.c
       behavior: leaf
   - - 113048
     - c
-    - func_800B2198
+    - battle15_panel_step_right_end_54
   - - 113112
     - c
-    - func_800B21D8
-    - '@source: src/emi/battle/battle/15/func_800B21D8.c'
+    - battle15_panel_step_left_end_53
+    - '@source: src/emi/battle/battle/15/battle15_panel_step_left_end_53.c'
     - '@behavior: Decrements the panel x coordinate and clamps it to 0x52 below the signed threshold.'
   - - 113176
     - c
@@ -1518,8 +1518,8 @@ segments:
     - func_800B22AC
   - - 113388
     - c
-    - func_800B22EC
-    - '@source: src/emi/battle/battle/15/func_800B22EC.c'
+    - battle15_panel_move_left_clamp_53
+    - '@source: src/emi/battle/battle/15/battle15_panel_move_left_clamp_53.c'
     - '@behavior: Moves the panel left by 32 pixels, clamping it to x=83 and clearing its state.'
   - - 113452
     - asm
@@ -1532,13 +1532,13 @@ segments:
     - func_800B23F8
   - - 113720
     - c
-    - func_800B2438
+    - battle15_panel_step_right_clamp_62
   - - 113784
     - asm
     - func_800B2478
   - - 113868
     - c
-    - func_800B24CC
+    - battle15_panel_step_right_clamp_98
   - - 113932
     - c
     - func_800B250C

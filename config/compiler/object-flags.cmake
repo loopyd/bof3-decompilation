@@ -43,8 +43,8 @@ set(BOF3_OBJFLAGS_emi_etc_game_01_game_front_pre_dispatch_gate_c -O2 -fno-rerun-
 # Verified by bin/flag-search (no -O variant matches) + manual maspsx test.
 set(BOF3_OBJFLAGS_emi_battle_battle_03_battle03_pick_random_unblocked_id_c -O2 -Wa,--expand-div)
 
-# func_800AB760 is a byte-identical duplicate of battle03_pick_random_unblocked_id (battle/03).
+# battle15_pick_random_unblocked_id is a byte-identical duplicate of battle03_pick_random_unblocked_id (battle/03).
 # Same signed modulo (rand() % count) requiring --expand-div for the MIPS
 # division-trap sequence.
-set(BOF3_OBJFLAGS_emi_battle_battle_15_func_800AB760_c -O2 -Wa,--expand-div)
+set(BOF3_OBJFLAGS_emi_battle_battle_15_battle15_pick_random_unblocked_id_c -O2 -Wa,--expand-div)
 set(BOF3_OBJCOMPILER_exe_slus_004_22_sound_dispatch_cue_c gcc-2.6.3-psx)

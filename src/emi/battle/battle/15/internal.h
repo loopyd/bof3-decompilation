@@ -264,14 +264,14 @@ void battle_set_local_panel_slot_active(volatile u8* battler, u32 slot_index,
 u16  battle_resolve_secondary_choice_resource(u32 group_index, u32 choice_id);
 u8   battle_try_commit_secondary_choice(u32 panel_kind, u32 zero_arg,
                                         u32 group_index, u32 choice_id);
-void                           func_800975D4(void);
-void                           func_800AE014(void);
-void                           func_800AE06C(void);
+void                           battle15_reset_state_when_unlocked(void);
+void                           battle15_dispatch_local_handler_pair(void);
+void                           battle15_set_work_byte9_advance(void);
 void                           func_800AE09C(void);
-void                           func_800A83F8(void);
-void                           func_800A8450(void);
+void                           battle15_dispatch_work_byte1_pair(void);
+void                           battle15_init_record_state_advance_work(void);
 void                           func_800A84FC(void);
-void                           func_800989B4(void);
+void                           battle15_reset_state_when_unlocked2(void);
 void __attribute__((noinline)) func_8009B20C(void);
 u8                             func_8009C8AC(u16 required_mask);
 void                           func_8009CFEC(void);
@@ -281,10 +281,10 @@ void func_800A31E0(u8 selection_kind, u16 input_mask);
 u8   func_800A3A10(u8 battler_index, u8 selection_kind);
 u16  func_800A36F0(u8 battler_index, u16 flags);
 void func_800A3F28(void);
-u8   func_800A41D8(s32 input_mask);
+u8   battle15_reset_selection_apply_input(s32 input_mask);
 u8   func_801DB524(u8 arg0);
 void func_800A4458(void);
-void func_800A581C(void);
+void battle15_setup_mode104_arm_work_bit2(void);
 void func_800AAA74(void);
 void func_800AAEBC(s16 target_index, u8 battler_index);
 void func_800B0498(void);
@@ -294,8 +294,8 @@ void func_800B22AC(void);
 void func_800B23B8(void);
 void func_800B23F8(void);
 void func_800B250C(void);
-void func_8009F6EC(void);
-u8   func_800A4238(s32 input_mask);
+void battle15_set_flag2000_store_doubled_result(void);
+u8   battle15_query_selection_apply_input(s32 input_mask);
 s16  func_801DC044(u8 arg0, u8 arg1, u32 arg2);
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
 void func_801DE94C(s32 arg0, s32 arg1);
@@ -369,6 +369,12 @@ void func_801DEA64(s32 arg0);
 #define BATTLE_UNK_801485DD        PSX_REF(volatile u8, 0x801485ddu)
 #define BATTLE_UNK_801485DE        PSX_REF(volatile u8, 0x801485deu)
 #define BATTLE_UNK_80148656        PSX_REF(volatile u8, 0x80148656u)
+/* UNREVIEWED: the "palette" names below come from the partial lift
+ * func_800B0B0C and are not proven. Original bytes at 0x800b6d20/0x800b6d28/
+ * 0x800b6d30 are the ASCII string run "1"/"0"/"Data"/"Pick"/"Best"
+ * continuing battleApParamStrings (0x800b6d1c, "AP"), inside the reviewed
+ * pointer/string-table region (reviewed.rz: Cd 0x2D0C @ 0x800B43B8).
+ * Rename only with evidence from a matched func_800B0B0C. */
 #define BATTLE_PALETTE_TABLE       PSX_PTR(volatile u16, 0x800b6d30u)
 #define BATTLE_PALETTE_ROW_28      PSX_PTR(volatile void, 0x800b6d28u)
 #define BATTLE_PALETTE_ROW_20      PSX_PTR(volatile void, 0x800b6d20u)

@@ -2,9 +2,9 @@
 
 /* @behavior UNKNOWN: exact behavior is not yet documented. */
 
-/* @calls func_800A41D8 with argument 0x10
+/* @calls battle15_reset_selection_apply_input with argument 0x10
  * @source 0x8009F258
  */
 void func_8009F258(void) {
-  func_800A41D8(0x10);
+  battle15_reset_selection_apply_input(0x10);
 }
