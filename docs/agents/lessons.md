@@ -123,17 +123,11 @@ iteration procedure: [function matching](matching.md).
   that map.
 - Replace analyzer aliases only after behavior and signature are proven. Raw
   `func_XXXXXXXX`/`D_XXXXXXXX` names are replaced directly by a reviewed
-  semantic name; no compatibility aliases.
-- Semantic function names: verb-led camelCase, role-first
-  (`dispatchScenarioState`); NO module/target prefix (file path encodes
-  it), prefix only for in-target collisions. Cross-target duplicates keep
-  the role name; mutable globals are data symbols, not `UPPER_SNAKE`.
-  Long snake `module_target_role` names are retired.
-- Data symbols: camelCase + role suffix (`...Table`/`...Strings`/`...State`/
-  `...Cursor`); every `internal.h` data declaration carries `// @source
-  0xXXXXXXXX` (metadata authority, survives renames) + `// @kind
-  table|rodata|bss|data`; gate-failing raw `D_XXXXXXXX` still gets
-  `@source` + `@kind unknown`. Never skip the `@source` tag.
+  semantic name; no compatibility aliases. Function names: verb-led
+  camelCase, role-first (`dispatchScenarioState`), no module/target prefix
+  except to break a collision. Data: camelCase + role suffix
+  (`...Table`/`...Strings`/`...State`) + `// @source 0xXXXXXXXX` and
+  `// @kind table|rodata|bss|data` tags (raw `D_*`: `@kind unknown`).
 - Preserve pre-promotion evidence with an `INFERRED:` comment beside the
   owning address-based declaration: what was observed, what would verify
   promotion. Never create a semantic alias from a hint alone.
