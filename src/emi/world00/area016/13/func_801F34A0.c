@@ -1,5 +1,5 @@
 /*
- * @behavior: dispatch both advance states in order.
+ * @behavior dispatch both advance states in order.
  * @source 0x801F34A0
  */
 #include "internal.h"
