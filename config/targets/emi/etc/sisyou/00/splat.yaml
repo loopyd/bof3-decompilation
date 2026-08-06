@@ -140,7 +140,7 @@ segments:
     - c
     - startEntryActionMode1
   - - 11556
-    - asm
+    - c
     - func_801D3924
   - - 11616
     - asm
