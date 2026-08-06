@@ -92,6 +92,6 @@ segments:
     - asm
     - func_801D2658
   - - 6920
-    - asm
-    - func_801D2708
+    - rodata
+    - T_801D2708
 - - 6984
