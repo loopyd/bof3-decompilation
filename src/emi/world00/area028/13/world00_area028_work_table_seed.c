@@ -4,7 +4,7 @@
  * at offset `0` for each `0x10`-byte slot.
  * @source 0x801F2F5C
  */
-void func_801F2F5C(void) {
+void world00_area028_work_table_seed(void) {
   u8 i;
 
   WORLD00_AREA028_WORK_PTR = (World00Area028Work*)WORLD00_AREA028_WORK_BASE;

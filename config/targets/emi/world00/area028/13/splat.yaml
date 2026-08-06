@@ -30,22 +30,22 @@ segments:
     - func_801F2C80
   - - 284
     - c
-    - func_801F2D1C
+    - world00_area028_reset_workarea_select_mode2
   - - 316
     - asm
     - func_801F2D3C
   - - 860
-    - asm
-    - func_801F2F5C
+    - c
+    - world00_area028_work_table_seed
   - - 944
-    - asm
-    - func_801F2FB0
+    - c
+    - world00_area028_sprite_slot_init
   - - 1028
-    - asm
-    - func_801F3004
+    - c
+    - world00_area028_free_slot_scan
   - - 1120
     - c
-    - func_801F3060
+    - world00_area028_sprite_slots_refresh
   - - 1420
     - asm
     - func_801F318C

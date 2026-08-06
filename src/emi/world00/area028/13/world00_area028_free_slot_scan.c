@@ -4,7 +4,7 @@
  * active byte at offset `0` is clear, or `NULL` if none are free.
  * @source 0x801F3004
  */
-void* func_801F3004(void) {
+void* world00_area028_free_slot_scan(void) {
   u8 i;
 
   WORLD00_AREA028_WORK_PTR = (World00Area028Work*)WORLD00_AREA028_WORK_BASE;
