@@ -1,1 +1,4 @@
 #include "internal.h"
+
+WEAK_SYMBOL_AT(D_1F800044, 0x1f800044);
+WEAK_SYMBOL_AT(D_801F3F80, 0x801f3f80);
