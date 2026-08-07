@@ -15,5 +15,5 @@ void dispatchRecordCallback(void* record) {
    */
   barrier();
   callback = recordCallbackTable[((const u8*)record)[0x7a]];
-  callback(record, SCENA16_D_8014686C);
+  callback(record, D_8014686C);
 }

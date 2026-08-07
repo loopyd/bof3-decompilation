@@ -20,7 +20,7 @@ typedef struct World00Area008State {
 typedef void (*World00Area008Handler)(void);
 
 /* @source 0x80146867 @kind unknown */
-extern u8           WORLD00_AREA008_D_80146867;
+extern u8           D_80146867;
 /* @source 0x80146C4C */
 /* @kind: bss — area counter 3; stepped by +/-0x800 via the counter3 table
  * triple. */
@@ -36,11 +36,11 @@ extern volatile u8  D_80149333;
  * triple. */
 extern volatile u16 counter2;
 /* @source 0x80145AD4 @kind unknown */
-extern u8           WORLD00_AREA008_D_80145AD4[];
+extern u8           D_80145AD4[];
 /* @source 0x801F2C04 @kind unknown */
-extern u8           WORLD00_AREA008_D_801F2C04[];
+extern u8           D_801F2C04[];
 /* @source 0x801F2C10 @kind unknown */
-extern u8           WORLD00_AREA008_D_801F2C10[];
+extern u8           D_801F2C10[];
 /* @source 0x801F4688 */
 /* @kind: table — per-mode handler pointers dispatched by
  * dispatchMode via the scratch state mode byte. */

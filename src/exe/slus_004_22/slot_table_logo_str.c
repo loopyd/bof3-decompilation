@@ -2,6 +2,7 @@
 #include "base/types.h"
 #include "internal.h"
 
+/* @source 0x801D8BB0 @kind unknown */
 extern u_long capcomStrLba;
 
 /* @behavior probes the independently loaded LOGO.EXE stream path for the authored

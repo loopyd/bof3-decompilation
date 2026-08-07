@@ -8,5 +8,5 @@ void dispatchState03(void) {
   World00Area016Scratch* scratch;
 
   scratch = WORLD00_AREA016_SCRATCH_PTR;
-  WORLD00_AREA016_D_801F512C[scratch->state_03]();
+  D_801F512C[scratch->state_03]();
 }

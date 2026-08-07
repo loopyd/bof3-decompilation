@@ -7,13 +7,13 @@ void finalizeSecondaryPath(void) {
   u8 selection;
   u8* slot;
 
-  if (SCENA16_D_80143C40 == 0u) {
-    SCENA16_D_80143C30 = 0u;
-    SCENA16_D_8014832E = 0u;
+  if (D_80143C40 == 0u) {
+    D_80143C30 = 0u;
+    D_8014832E = 0u;
     copyPaletteBlock();
     game_queue_frontend_cue(0x213u);
     game_queue_frontend_cue(0x214u);
-    slot = (u8*)&SCENA16_D_80145029;
+    slot = (u8*)&D_80145029;
     selection = *slot;
 
     if (selection != 0xffu) {
@@ -21,8 +21,8 @@ void finalizeSecondaryPath(void) {
 
       selection_offset = selection << 2;
       game_stop_selection_fx(
-          (u32)SCENA16_D_80181EBA[selection_offset + 0u],
-          (s32)SCENA16_D_80181EBA[selection_offset + 1u]);
+          (u32)D_80181EBA[selection_offset + 0u],
+          (s32)D_80181EBA[selection_offset + 1u]);
       *slot = 0xffu;
     }
 

@@ -164,3 +164,39 @@ def test_link_uses_supplied_bindings_without_map_reload(
         layout=SimpleNamespace(psn00b_toolchain_root=tmp_path, root=tmp_path),
     )
     assert f"--defsym=PadRead={0x801CE760}" in commands[0]
+
+
+def test_parse_source_tag_skips_data_declaration_tags() -> None:
+    from harness.domain.registry import parse_source_tag
+
+    text = (
+        "/* region */\n/* @source 0x801455C8 @kind unknown */\n"
+        "extern volatile u8 activeRecordBytes[];\n\n"
+        "/* @source 0x801F02E4\n * @behavior counts bytes\n */\n"
+        "u8 countActiveRecords(void) { return 0; }\n"
+    )
+    assert parse_source_tag(text) == 0x801F02E4
+    assert parse_source_tag("extern u8 x; /* @source 0x80100000 */\n") is None
+
+
+def test_parse_declaration_source_tag_forms() -> None:
+    from harness.domain.registry import parse_declaration_source_tag
+
+    trailing = "extern u8 foo; /* @source 0x80100000 @kind bss */\n"
+    leading = "/* @source 0x80100001 @kind table */\nextern const u8 bar[];\n"
+    split = "/* @source 0x80149328 */\n/* @kind: bss — counter 1; stepped */\nextern volatile u16 counter1;\n"
+    funcdecl = "/* @source 0x8014ED6C @kind unknown */\nvoid loopBody(void);\n"
+    assert parse_declaration_source_tag(trailing, "foo") == 0x80100000
+    assert parse_declaration_source_tag(leading, "bar") == 0x80100001
+    assert parse_declaration_source_tag(split, "counter1") == 0x80149328
+    assert parse_declaration_source_tag(funcdecl, "loopBody") == 0x8014ED6C
+    assert parse_declaration_source_tag("/* counter1 table */\nextern u16 counter1;\n", "counter1") is None
+
+
+def test_prefixed_raw_names_rejected_by_check() -> None:
+    from harness.domain.registry import PREFIXED_RAW_NAME_RE, RAW_SYMBOL_NAME_RE
+
+    assert PREFIXED_RAW_NAME_RE.search("SCENA16_D_80145EC4")
+    assert not RAW_SYMBOL_NAME_RE.fullmatch("SCENA16_D_80145EC4")
+    assert RAW_SYMBOL_NAME_RE.fullmatch("D_80145EC4")
+    assert not PREFIXED_RAW_NAME_RE.search("D_80146864_BYTE")

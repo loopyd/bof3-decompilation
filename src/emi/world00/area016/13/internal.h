@@ -24,15 +24,15 @@ typedef struct World00Area016Scratch {
 } World00Area016Scratch;
 
 /* @source 0x801F5114 @kind unknown */
-extern World00Area016Handler WORLD00_AREA016_D_801F5114[];
+extern World00Area016Handler D_801F5114[];
 /* @source 0x801F511C @kind unknown */
-extern World00Area016Handler WORLD00_AREA016_D_801F511C[];
+extern World00Area016Handler D_801F511C[];
 /* @source 0x801F512C @kind unknown */
-extern World00Area016Handler WORLD00_AREA016_D_801F512C[];
+extern World00Area016Handler D_801F512C[];
 /* @source 0x801F51D0 @kind unknown */
-extern World00Area016Handler WORLD00_AREA016_D_801F51D0[];
+extern World00Area016Handler D_801F51D0[];
 /* @source 0x801F51AC @kind unknown */
-extern World00Area016Handler WORLD00_AREA016_D_801F51AC[];
+extern World00Area016Handler D_801F51AC[];
 
 void func_8014E5A0(u8 arg0, u8 arg1);
 void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);

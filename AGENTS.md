@@ -40,6 +40,11 @@ BOF3 binaries load independently. Qualify work by one function selector:
   `name = 0xADDRESS;` entries with eight uppercase hex digits.
 - Replace raw names only after review; a renamed lift file keeps
   `@behavior`/`@source` metadata (the `@source` tag is the address authority).
+  Resolve name collisions with a different name or a suffix
+  (`D_80146864_BYTE`), never an overlay-name prefix (`SCENA16_D_*`). Every
+  non-address-named map symbol (SDK exempt) carries its origin address in a
+  `/* @source 0xXXXXXXXX */`-tagged definition (lift file, declaration, or
+  `WEAK_SYMBOL_AT` binding); `bin/symbols check` enforces both rules.
 - Edit `func_XXXXXXXX.c`, its target `internal.h`, the target-local map, and
   reviewed Splat boundaries as evidence improves. Keep declarations local
   unless a demonstrated cross-target contract requires sharing.

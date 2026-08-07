@@ -855,4 +855,10 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_GLOBAL_BYTE_C303  PSX_REF(volatile u8, 0x801ec303u)
 #define BATTLE_GLOBAL_HALF_EC2EE PSX_REF(volatile u16, 0x801ec2eeu)
 
+/* @source 0x801EAFF4 @kind unknown */
+extern u8 battleCommandEntryTable;
+
+/* @source 0x801EB4E8 @kind unknown */
+extern u8 battleCurrentEnemyWorkState;
+
 #endif

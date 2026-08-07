@@ -114,10 +114,15 @@ iteration procedure: [function matching](matching.md).
 - Replace analyzer aliases only after behavior and signature are proven;
   raw `func_XXXXXXXX`/`D_XXXXXXXX` names go straight to the reviewed
   semantic name, no compatibility aliases. Functions: verb-led camelCase,
-  role-first, no target prefix except to break a collision. Data: camelCase +
-  role suffix (`...Table`/`...Strings`/`...State`) + `/* @source 0xXXXXXXXX`
-  and `@kind table|rodata|bss|data */` tags (raw `D_*`: `@kind unknown`;
-  `/* */` only — `//` breaks gcc-2.6.3).
+  role-first, no target prefix except to break a collision. Never prefix a
+  raw `D_*`/`func_*` name with an overlay name (`SCENA16_D_*`); a collision
+  resolves by a different name or a suffix (`D_80146864_BYTE`). Data:
+  camelCase + role suffix (`...Table`/`...Strings`/`...State`) +
+  `/* @source 0xXXXXXXXX` and `@kind table|rodata|bss|data */` tags (raw
+  `D_*`: `@kind unknown`; `/* */` only — `//` breaks gcc-2.6.3). Every
+  non-address-named map symbol (SDK exempt) needs one @source-tagged
+  definition: its lift file, a header/source declaration, or a
+  `WEAK_SYMBOL_AT` binding; `bin/symbols check` enforces both rules.
 - Preserve pre-promotion evidence with an `INFERRED:` comment beside the
   owning address-based declaration: what was observed, what would verify
   promotion. Never create a semantic alias from a hint alone.

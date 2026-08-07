@@ -6,6 +6,6 @@
 void dispatchSecondaryState(void) {
   s8 state;
 
-  state = *(s8*)&SCENA16_D_80146874;
+  state = *(s8*)&D_80146874;
   secondaryStateTable[state]();
 }

@@ -9,7 +9,7 @@ extern void func_8014D6B8(u32 flag);
 void loadResourceSelectMode2(void) {
   volatile World00Area008State* previous;
 
-  if ((WORLD00_AREA008_D_80146867 & 0x80u) != 0u) {
+  if ((D_80146867 & 0x80u) != 0u) {
     g_areaWork->mode = 9;
     return;
   }

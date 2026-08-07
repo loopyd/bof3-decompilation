@@ -52,5 +52,5 @@ void func_801F83B0(u32 intensity) {
     dst_offset += 2u;
   } while (src < src_end);
 
-  SCENA16_D_80145988 = (u8)(SCENA16_D_80145988 + 1u);
+  D_80145988 = (u8)(D_80145988 + 1u);
 }

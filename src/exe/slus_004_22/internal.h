@@ -145,6 +145,7 @@ void buildEmiEntryLbas(u32 base_lba, const EmiTocEntry* entries,
                           size_t entry_count, u32* entry_lbas);
 u32  emiSlotToLba(const u32* slot_lba_table, size_t slot_count, u32 slot_id);
 
+/* @source 0x8014ED6C @kind unknown */
 void frontLocalModeCallbackLoop(void);
 
 #define GAME_CALLBACK_FORCE_SWITCH ((s32)0xff000000u)
@@ -152,5 +153,8 @@ void frontLocalModeCallbackLoop(void);
 /* Fixed-address EMI stream data. The raw literals live only here; function
  * bodies reference these named accessors. */
 #define EMI_STREAM_INDEX_HINT PSX_REF(volatile u8, 0x80145024u)
+
+/* @source 0x1F800044 @kind unknown */
+extern u8 g_game_work;
 
 #endif

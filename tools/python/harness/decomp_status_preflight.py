@@ -7,7 +7,7 @@ import re
 from typing import Any, Callable, Iterable
 
 from .domain import TargetManifest
-from .domain.registry import BEHAVIOR_TAG_RE, SOURCE_TAG_RE
+from .domain.registry import BEHAVIOR_TAG_RE, SOURCE_TAG_RE, parse_source_tag
 from .build import batch_build, cmake_target_for_source, configure
 from .io import repo_layout
 from .match._asm_diff_payload import AsmDiffRequest
@@ -120,9 +120,10 @@ def _build_preflight(
             metadata = _SOURCE.search(text)
             if _FUNCTION.fullmatch(source.stem) is not None:
                 address = int(source.stem.removeprefix("func_"), 16)
-            elif metadata is not None:
-                # Renamed lift: the @source tag is the address authority.
-                address = int(metadata.group(1), 16)
+            elif metadata is not None and parse_source_tag(text) is not None:
+                # Renamed lift: the @source tag is the address authority
+                # (data-declaration tags skipped by the registry parser).
+                address = parse_source_tag(text)
             elif source.stem.startswith("func_"):
                 ready.append(
                     _invalid_record(root, target, source, "invalid lifted filename")

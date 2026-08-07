@@ -6,12 +6,18 @@ import argparse
 from pathlib import Path
 import re
 
-from ..domain.registry import SOURCE_TAG_RE
+from ..domain.registry import (
+    PREFIXED_RAW_NAME_RE,
+    RAW_SYMBOL_NAME_RE,
+    SOURCE_TAG_RE,
+    parse_declaration_source_tag,
+)
 from ..canonical import (
     format_map,
     load_map,
     load_target_symbols,
     map_path,
+    sdk_map_path,
     weak_bindings_c,
     write_map,
 )
@@ -118,16 +124,74 @@ def run_check(args: argparse.Namespace) -> int:
         # Hand-maintained top-level bindings: flag only addresses no map owns
         # (a different name at a mapped address is a deliberate typed alias).
         top_level = source_dir / "symbols.c"
+        top_text = ""
         if top_level.is_file():
-            for match in _WEAK_BINDING.finditer(
-                top_level.read_text(encoding="utf-8")
-            ):
+            top_text = top_level.read_text(encoding="utf-8")
+            for match in _WEAK_BINDING.finditer(top_text):
                 address = int(match.group("address"), 0)
                 if address not in by_address:
                     errors.append(
                         f"binding/map drift: {top_level.relative_to(root)} "
                         f"has {match.group('name')} at 0x{address:08X}"
                     )
+        # Naming rule: raw hex names must be the whole name; conflicts resolve
+        # by a different name or a suffix, never an overlay-name prefix.
+        for symbol in symbols:
+            name = symbol.canonical_name
+            if not RAW_SYMBOL_NAME_RE.fullmatch(name) and (
+                PREFIXED_RAW_NAME_RE.search(name)
+            ):
+                errors.append(
+                    f"prefixed raw name: {path.relative_to(root)} has {name}"
+                )
+        # Tracking rule: every non-address-named game symbol (SDK exempt)
+        # needs a definition carrying its origin address: a lift file with a
+        # matching @source tag, a tagged header declaration, or a matching
+        # WEAK_SYMBOL_AT binding.
+        sdk_names = {
+            s.canonical_name
+            for s in load_map(sdk_map_path(root, manifest.psyq_space))
+        }
+        header = source_dir / "internal.h"
+        header_text = (
+            header.read_text(encoding="utf-8") if header.is_file() else ""
+        )
+        owned = symbols
+        for symbol in owned:
+            name = symbol.canonical_name
+            if RAW_SYMBOL_NAME_RE.fullmatch(name) or name in sdk_names:
+                continue
+            lift = source_dir / f"{name}.c"
+            if lift.is_file():
+                tags = SOURCE_TAG_RE.findall(lift.read_text(encoding="utf-8"))
+                if any(int(tag, 16) == symbol.address for tag in tags):
+                    continue
+            declared = parse_declaration_source_tag(header_text, name)
+            if declared != symbol.address:
+                sources = sorted(source_dir.rglob("*.h")) + sorted(
+                    source_dir.glob("*.c")
+                )
+                for source in sources:
+                    if source == header:
+                        continue
+                    declared = parse_declaration_source_tag(
+                        source.read_text(encoding="utf-8"), name
+                    )
+                    if declared == symbol.address:
+                        break
+            if declared == symbol.address:
+                continue
+            binding = re.search(
+                rf"WEAK_SYMBOL_AT\(\s*{re.escape(name)}\s*,\s*"
+                rf"0x0*{symbol.address:x}\s*\)",
+                top_text,
+            )
+            if binding is not None:
+                continue
+            errors.append(
+                f"untracked symbol: {path.relative_to(root)} has {name} = "
+                f"0x{symbol.address:08X} with no @source-tagged definition"
+            )
     if errors:
         raise ValueError("; ".join(errors))
     print("symbol maps: OK")

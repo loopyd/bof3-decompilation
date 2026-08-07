@@ -1,6 +1,7 @@
 #include "internal.h"
 
 /* activeRecordBytes: 480-byte region, accessed with stride-8 byte offsets */
+/* @source 0x801455C8 @kind unknown */
 extern volatile u8 activeRecordBytes[];
 
 /* @source 0x801F02E4

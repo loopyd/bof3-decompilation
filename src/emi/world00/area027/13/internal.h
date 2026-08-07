@@ -34,7 +34,7 @@ void func_801F33A8(void);
 POLY_FT4* emitMarkerQuad(const void* arg0, s32 arg1, u32 arg2);
 
 /* @source 0x801F3AB4 @kind table */
-extern void (*WORLD00_AREA027_HANDLER_TABLE[])(void);
+extern void (*handlerTable[])(void);
 /* @source 0x801F3ABC @kind table */
 extern void (*D_801F3ABC[])(void);
 

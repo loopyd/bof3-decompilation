@@ -342,6 +342,15 @@ void func_801DEA64(s32 arg0);
 extern volatile u8 D_801485B8; /* @source 0x801485B8 @kind unknown */
 extern volatile u8 D_801485DC; /* @source 0x801485DC @kind unknown */
 
+/* @source 0x800B6D1C @kind unknown */
+extern u8 battleApParamStrings;
+
+/* @source 0x80096A04 @kind unknown */
+extern u8 battlePanelIndexFormat;
+
+/* @source 0x800969C4 @kind unknown */
+extern u8 battleWorkStateHandlerTable;
+
 #endif
 
 extern u8 D_80145F2F[]; /* @source 0x80145F2F @kind unknown */

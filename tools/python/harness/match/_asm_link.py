@@ -9,7 +9,10 @@ from ..canonical import load_target_symbols
 from ..io import RepoLayout, repo_layout
 from ..symbols import load_weak_symbol_bindings
 
-_HEX_SUFFIX_RE = re.compile(r"(?:func|D)_([0-9a-fA-F]{8})$")
+# Raw address-encoding names are exactly `func_XXXXXXXX`/`D_XXXXXXXX`;
+# overlay-prefixed variants (`SCENA16_D_*`) are banned — conflicts resolve by
+# a different name or a suffix, never an overlay-name prefix.
+_HEX_SUFFIX_RE = re.compile(r"^(?:func|D)_([0-9a-fA-F]{8})$")
 
 
 def _target_map_bindings(repo: RepoLayout, symbols_c_path: Path) -> dict[str, int]:

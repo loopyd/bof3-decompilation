@@ -60,7 +60,7 @@ extern u8*                              workCursor;
  * dispatcher on each active entry's byte +0x01. */
 extern const World00Area024Handler      stateTable[];
 /* @source 0x801F4200 @kind unknown */
-extern World00Area024Handler            WORLD00_AREA024_D_801F4200[];
+extern World00Area024Handler            D_801F4200[];
 
 void func_8015B410(void* arg0);
 void func_8015B4B0(void* arg0);
