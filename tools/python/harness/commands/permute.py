@@ -145,6 +145,15 @@ def run(args: argparse.Namespace) -> int:
         raise ValueError("--jobs must not be negative")
     if args.time_limit is not None and args.time_limit <= 0:
         raise ValueError("--time-limit must be positive")
+    if (
+        args.time_limit is not None
+        and args.time_limit > 60
+        and not args.allow_long_run
+    ):
+        raise ValueError(
+            "--time-limit is capped at 60s per run (matching rule); "
+            "pass --allow-long-run for interactive search only"
+        )
     if args.prepare_only and args.prepared:
         raise ValueError("--prepare-only cannot be combined with --prepared")
 
@@ -287,7 +296,12 @@ def build_parser() -> argparse.ArgumentParser:
         type=float,
         default=30.0,
         metavar="SECONDS",
-        help="stop this coordinator after SECONDS (default 30; the upstream permuter has no native timer)",
+        help="stop this coordinator after SECONDS (default 30, capped at 60; the upstream permuter has no native timer)",
+    )
+    parser.add_argument(
+        "--allow-long-run",
+        action="store_true",
+        help="override the 60s --time-limit cap (interactive search only)",
     )
     parser.add_argument("--debug", action="store_true")
     parser.set_defaults(

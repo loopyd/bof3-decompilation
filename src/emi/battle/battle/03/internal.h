@@ -434,7 +434,7 @@ u8   func_801DB844(u32 arg0);
 u8   func_801DB9E4(u32 arg0);
 u8   func_801DB2F8(u32 arg0);
 u8   func_801DB3A0(u32 arg0, u32 arg1, u32 arg2);
-u8   func_801DB3E4(u32 arg0, u32 arg1, u32 arg2);
+u8   func_801DB3E4(u32 arg0, s32 arg1, u32 arg2);
 void clearRankingScratch(void);
 void func_801DA7D4(void);
 void func_801DAAE4(void);

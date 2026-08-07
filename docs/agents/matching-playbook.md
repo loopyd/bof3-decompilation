@@ -573,7 +573,7 @@ See the [function-matching loop](matching.md) for the required iteration procedu
 
 ## Permuter
 
-Use `bin/permute TARGET@0xADDRESS --time-limit 300 -j N` for source-shape
+Use `bin/permute TARGET@0xADDRESS --time-limit 60 -j N` for source-shape (60s hard cap per run;
 search. Lessons:
 
 - Fix structure and declarations before running it.

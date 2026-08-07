@@ -23,7 +23,7 @@ bin/byte-match TARGET@0xADDRESS
    `bin/splat TARGET` after configuration changes.
 5. `bin/asm-diff` for instructions; `bin/byte-match` for raw equality.
 6. Credible semantics but wrong source shape: one bounded
-   `bin/permute TARGET@0xADDRESS --time-limit 300 -j N` coordinator.
+   `bin/permute TARGET@0xADDRESS --time-limit 60 -j N` coordinator (60s hard cap per run).
 
 Permuter scores rank candidates; they never accept a match. Never run two
 coordinators for one function.

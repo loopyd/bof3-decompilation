@@ -157,7 +157,7 @@ When readable semantics are credible but code shape differs:
 
 ```sh
 bin/flag-search TARGET@0xADDRESS
-bin/permute TARGET@0xADDRESS --time-limit 300 --quiet -j N
+bin/permute TARGET@0xADDRESS --time-limit 60 --quiet -j N
 ```
 
 `bin/data-scan [TARGET...]` lists unlabeled in-image data regions referenced
