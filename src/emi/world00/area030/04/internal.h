@@ -26,6 +26,7 @@ extern void (*D_801E22BC[])(void); /* @source 0x801E22BC @kind table */
 extern void (*D_801E22C8[])(void); /* @source 0x801E22C8 @kind table */
 extern void (*D_801E22F0[])(void); /* @source 0x801E22F0 @kind table */
 extern void (*D_801E22FC[])(void); /* @source 0x801E22FC @kind table */
+extern void (*D_801E2304[])(void); /* @source 0x801E2304 @kind table */
 extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
 extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
