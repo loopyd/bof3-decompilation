@@ -221,6 +221,7 @@ extern volatile u16           D_80145AA8; /* @source 0x80145AA8 @kind unknown */
 extern u8                     D_801462E0; /* @source 0x801462E0 @kind unknown */
 extern volatile u8            D_8014832E; /* @source 0x8014832E @kind unknown */
 extern Battle03LocalWork* volatile D_80146250; /* @source 0x80146250 @kind unknown */
+extern const volatile u16 D_801EAFD0[];
 extern Battle03LocalWork*          D_1F800044; /* @source 0x1F800044 @kind unknown */
 extern volatile u8* battleWork; /* @source 0x1F800044 @kind unknown */
 extern u8*          D_8014598C; /* @source 0x8014598C @kind unknown */
@@ -734,7 +735,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_VARIANCE_TABLE_AFA0     PSX_PTR(const volatile s32, 0x801eafa0u)
 #define BATTLE_SCALE_TABLE_AFC0        PSX_PTR(const volatile s16, 0x801eafc0u)
 #define BATTLE_DAMAGE_SCALE_TABLE_0C7C PSX_PTR(const volatile u8, 0x801d0c7cu)
-#define BATTLE_EFFECT_TABLE_AFD0       PSX_PTR(const volatile u16, 0x801eafd0u)
 #define BATTLE_EVENT_PICK_TABLE_0C98   PSX_PTR(const volatile u8, 0x801d0c98u)
 #define BATTLE_EVENT_PICK_TABLE_0CB8   PSX_PTR(const volatile u8, 0x801d0cb8u)
 #define BATTLE_VARIANCE_TABLE_AF94     PSX_PTR(const volatile u8, 0x801eaf94u)
