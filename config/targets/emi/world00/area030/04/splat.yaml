@@ -233,7 +233,7 @@ segments:
     - asm
     - func_801DA78C
   - - 40168
-    - asm
+    - c
     - func_801DA8E8
   - - 40236
     - asm
