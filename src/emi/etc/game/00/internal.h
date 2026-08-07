@@ -472,7 +472,12 @@ void dispatchStateHandler(void);
  * still pending.
  * @source 0x801992B8
  */
+void func_801527E4(void);
+void func_8015A758(void);
+void func_801BDAB8(void);
 void func_801992B8(void);
+void func_8019A0E4(void);
+void func_8014BA54(void);
 
 /* @behavior returns a pointer into one of two sprite-rect tables indexed by
  * sprite_id * 4, with the table chosen by flags & 1.
