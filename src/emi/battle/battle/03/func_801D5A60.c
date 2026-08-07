@@ -13,18 +13,22 @@ u8 func_801D5A60(void) {
   last_index = 0u;
   index = 3u;
   do {
-    volatile Battle03EnemyWork* battle_work;
+    u32 slot;
 
-    battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
-    if ((func_801D64C4(index) == 0u) &&
-        ((BATTLE_ENEMY_FLAGS_82(battle_work) & 0x20u) != 0u)) {
-      if (func_801DDCB4(index) == 0u) {
-        BATTLE_ENEMY_BYTE_FD(battle_work) += 1u;
-      } else {
-        BATTLE_ENEMY_BYTE_FD(battle_work) = 0u;
-        BATTLE_ENEMY_FLAGS_82(battle_work) &= 0xffdfu;
-        count += 1u;
-        last_index = index;
+    if (func_801D64C4(index) == 0u) {
+      slot = index - 3u;
+      if ((D_801EB630[slot].unk_82 & 0x20u) != 0u) {
+        if (func_801DDCB4(index) != 0u) {
+          u16 flags;
+
+          last_index = index;
+          flags = D_801EB630[slot].unk_82;
+          D_801EB630[slot].unk_fd = 0u;
+          D_801EB630[slot].unk_82 = flags & 0xffdfu;
+          count += 1u;
+        } else {
+          D_801EB630[slot].unk_fd += 1u;
+        }
       }
     }
     index += 1u;
