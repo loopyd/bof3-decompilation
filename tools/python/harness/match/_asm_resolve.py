@@ -4,7 +4,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..domain.registry import parse_source_tag
+from ..domain.tags import parse_source_tag
 from ..io import read_json, RepoLayout
 
 IMPLAUSIBLE_SIBLING_FUNCTION_SIZE = 0x1000

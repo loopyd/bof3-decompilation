@@ -167,7 +167,7 @@ def test_link_uses_supplied_bindings_without_map_reload(
 
 
 def test_parse_source_tag_skips_data_declaration_tags() -> None:
-    from harness.domain.registry import parse_source_tag
+    from harness.domain.tags import parse_source_tag
 
     text = (
         "/* region */\n/* @source 0x801455C8 @kind unknown */\n"
@@ -180,7 +180,7 @@ def test_parse_source_tag_skips_data_declaration_tags() -> None:
 
 
 def test_parse_declaration_source_tag_forms() -> None:
-    from harness.domain.registry import parse_declaration_source_tag
+    from harness.domain.tags import parse_declaration_source_tag
 
     trailing = "extern u8 foo; /* @source 0x80100000 @kind bss */\n"
     leading = "/* @source 0x80100001 @kind table */\nextern const u8 bar[];\n"
@@ -194,7 +194,7 @@ def test_parse_declaration_source_tag_forms() -> None:
 
 
 def test_prefixed_raw_names_rejected_by_check() -> None:
-    from harness.domain.registry import PREFIXED_RAW_NAME_RE, RAW_SYMBOL_NAME_RE
+    from harness.domain.tags import PREFIXED_RAW_NAME_RE, RAW_SYMBOL_NAME_RE
 
     assert PREFIXED_RAW_NAME_RE.search("SCENA16_D_80145EC4")
     assert not RAW_SYMBOL_NAME_RE.fullmatch("SCENA16_D_80145EC4")

@@ -7,7 +7,7 @@ import re
 from typing import Any, Callable, Iterable
 
 from .domain import TargetManifest
-from .domain.registry import BEHAVIOR_TAG_RE, SOURCE_TAG_RE, parse_source_tag
+from .domain.tags import BEHAVIOR_TAG_RE, SOURCE_TAG_RE, parse_source_tag
 from .build import batch_build, cmake_target_for_source, configure
 from .io import repo_layout
 from .match._asm_diff_payload import AsmDiffRequest

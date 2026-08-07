@@ -6,7 +6,7 @@ import argparse
 from pathlib import Path
 import re
 
-from ..domain.registry import (
+from ..domain.tags import (
     PREFIXED_RAW_NAME_RE,
     RAW_SYMBOL_NAME_RE,
     SOURCE_TAG_RE,
