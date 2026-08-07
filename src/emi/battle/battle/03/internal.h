@@ -171,6 +171,17 @@ typedef struct Battle03QueuedSlot {
   u32 unk_74;
 } Battle03QueuedSlot;
 
+typedef struct Battle03SlotStore {
+  u8  pad_00[9];
+  u8  flag_09;
+  u8  pad_0a[0x2a];
+  u32 unk_34;
+  u32 unk_38;
+  u32 unk_3c;
+  u8  pad_40[0x34];
+  u32 ptr_74;
+} Battle03SlotStore;
+
 typedef struct Battle03SpritePrimitive {
   u8  pad_00[4];
   u8  r0;
@@ -240,6 +251,7 @@ extern const char   D_801D0C74[]; /* @source 0x801D0C74 @kind unknown */
 extern u8           D_801462E1[]; /* @source 0x801462E1 @kind unknown */
 extern const u8     D_801EAF88[][6]; /* @source 0x801EAF88 */
 extern Battle03QueuedSlot* volatile D_801EC2E0; /* @source 0x801EC2E0 @kind unknown */
+extern Battle03SlotStore            D_801EC330[]; /* @source 0x801EC330 @kind unknown */
 /* @kind: bss (map symbol: uiRingHead) — UI ring consumer index. */
 extern u8                            uiRingHead; /* @source 0x801EBF04 */
 extern u8                            D_801EC2E4; /* @source 0x801EC2E4 */

@@ -52,4 +52,10 @@ set(BOF3_OBJFLAGS_emi_battle_battle_15_pickRandomUnblockedId_c -O2 -Wa,--expand-
 # break 6) at both `total / count` sites; the canonical maspsx pass omits them.
 # Same lever as pickRandomUnblockedId: --expand-div restores the traps.
 set(BOF3_OBJFLAGS_emi_battle_battle_03_func_801DB058_c -O2 -Wa,--expand-div)
+# func_801DDAF0 reloads the scratchpad work-pointer cell per access as a fresh
+# lui+lw pair; the canonical -G0 build CSEs the cell address into one
+# lui+addiu register. With -G4 the small-data threshold keeps the access
+# split per load, matching the original byte-for-byte.
+# Verified by bin/flag-search (100% exact; -G8 also exact).
+set(BOF3_OBJFLAGS_emi_battle_battle_03_func_801DDAF0_c -O2 -G4)
 set(BOF3_OBJCOMPILER_exe_slus_004_22_dispatchSoundCue_c gcc-2.6.3-psx)
