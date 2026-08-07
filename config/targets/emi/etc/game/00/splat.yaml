@@ -337,7 +337,7 @@ segments:
     - c
     - resetWork
   - - 22796
-    - asm
+    - c
     - func_8019B10C
   - - 22864
     - asm
