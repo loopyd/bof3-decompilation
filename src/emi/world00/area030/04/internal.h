@@ -9,6 +9,7 @@
 extern u8  modeByte;      /* @source 0x80144125 @kind bss */
 extern u8  D_80144286;    /* @source 0x80144286 @kind unknown */
 extern u8  D_80145E93;    /* @source 0x80145E93 @kind unknown */
+extern void (*D_801E2000[])(void); /* @source 0x801E2000 @kind table */
 extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
 extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
@@ -35,6 +36,7 @@ s32  func_80196070(void);
 s16  func_8015477C(u16 arg0, u16 arg1);
 
 void func_801D11C0(void);
+void func_801D5C48(void);
 void func_801D159C(s16 arg0, s16 arg1);
 void func_801D1744(s16 arg0, s16 arg1, u8 arg2);
 void func_801D1818(s16 arg0, s16 arg1, u8 arg2);
