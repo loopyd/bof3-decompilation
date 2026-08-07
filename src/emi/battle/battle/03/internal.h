@@ -592,8 +592,7 @@ u8   countMessageTokens(u8* arg0);
   PSX_REF(volatile u8, 0x8014833au + ((u32)(index) * 0x24u))
 #define BATTLE_LOCAL_SCRATCH_PTR                                               \
   PSX_REF(volatile Battle03LocalWork*, 0x1f800044u)
-#define BATTLE_ENEMY_SCRATCH_PTR                                               \
-  SPAD_PTR_SLOT(volatile Battle03EnemyWork, 0x1f800044u)
+#define BATTLE_ENEMY_SCRATCH_PTR SPAD_PTR_SLOT(volatile Battle03EnemyWork, 0x44u)
 /* @kind: bss (map symbol: battleCurrentEnemyWorkState) — current Battle03EnemyWork pointer cell. */
 #define BATTLE_CURRENT_ENEMY_PTR                                               \
   PSX_REF(volatile Battle03EnemyWork*, 0x801eb4e8u)
