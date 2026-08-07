@@ -19,6 +19,7 @@ extern void (*D_801E2210[])(void); /* @source 0x801E2210 @kind table */
 extern void (*D_801E221C[])(void); /* @source 0x801E221C @kind table */
 extern void (*D_801E2248[])(void); /* @source 0x801E2248 @kind table */
 extern void (*D_801E2258[])(void); /* @source 0x801E2258 @kind table */
+extern void (*D_801E2268[])(void); /* @source 0x801E2268 @kind table */
 extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
 extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
@@ -69,6 +70,7 @@ void clearFlagState10(void);
 void dispatchCompanion(void);
 void func_801DCC74(void);
 void func_801DA8E8(void);
+void func_801DAED4(void);
 void submitPanelPair(s16 arg0, s16 arg1);
 void configureSpriteClut(s16 arg0, s16 arg1, u8 arg2);
 void appendDimTile(void);
