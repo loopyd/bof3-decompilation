@@ -5,42 +5,34 @@
  * @source 0x801D4850
  */
 void func_801D4850(void) {
-  if ((BATTLE_GLOBAL_BYTE_6375 != 4u) || (BATTLE_GLOBAL_HALF_63C0 != 0x27u)) {
-    if (BATTLE_GLOBAL_BYTE_6374 < 3u) {
-      volatile Battle03LocalWork* battle_work;
-
-      battle_work = &BATTLE_LOCAL_WORK_ARRAY[BATTLE_GLOBAL_BYTE_6374];
-      if ((BATTLE_LOCAL_WORD_128(battle_work) & 0x40u) != 0u) {
-        BATTLE_LOCAL_BYTE_138(battle_work) = 0u;
-        BATTLE_LOCAL_WORD_128(battle_work) &= 0xffffffbfu;
+  if ((D_80146375 != 4u) ||
+      (D_801463C0 != 0x27u)) {
+    if (D_80146374 < 3u) {
+      if ((D_80145E90[D_80146374].unk_128 & 0x40u) != 0u) {
+        D_80145E90[D_80146374].unk_138 = 0u;
+        D_80145E90[D_80146374].unk_128 &= 0xffffffbfu;
       }
     } else {
-      volatile Battle03EnemyWork* battle_work;
-
-      battle_work = &BATTLE_ENEMY_WORK_ARRAY[BATTLE_GLOBAL_BYTE_6374 - 3u];
-      if ((BATTLE_ENEMY_WORD_104(battle_work) & 0x40u) != 0u) {
-        BATTLE_ENEMY_BYTE_114(battle_work) = 0u;
-        BATTLE_ENEMY_WORD_104(battle_work) &= 0xffffffbfu;
+      if ((D_801EB630[D_80146374 - 3u].unk_104 & 0x40u) !=
+          0u) {
+        D_801EB630[D_80146374 - 3u].unk_114 = 0u;
+        D_801EB630[D_80146374 - 3u].unk_104 &= 0xffffffbfu;
       }
     }
   }
 
-  if ((BATTLE_GLOBAL_BYTE_6375 != 4u) || (BATTLE_GLOBAL_HALF_63C0 != 0xa3u)) {
-    if (BATTLE_GLOBAL_BYTE_6374 < 3u) {
-      volatile Battle03LocalWork* battle_work;
-
-      battle_work = &BATTLE_LOCAL_WORK_ARRAY[BATTLE_GLOBAL_BYTE_6374];
-      if ((BATTLE_LOCAL_WORD_128(battle_work) & 0x80u) != 0u) {
-        BATTLE_LOCAL_BYTE_139(battle_work) = 0u;
-        BATTLE_LOCAL_WORD_128(battle_work) &= 0xffffff7fu;
+  if ((D_80146375 != 4u) ||
+      (D_801463C0 != 0xa3u)) {
+    if (D_80146374 < 3u) {
+      if ((D_80145E90[D_80146374].unk_128 & 0x80u) != 0u) {
+        D_80145E90[D_80146374].unk_139 = 0u;
+        D_80145E90[D_80146374].unk_128 &= 0xffffff7fu;
       }
     } else {
-      volatile Battle03EnemyWork* battle_work;
-
-      battle_work = &BATTLE_ENEMY_WORK_ARRAY[BATTLE_GLOBAL_BYTE_6374 - 3u];
-      if ((BATTLE_ENEMY_WORD_104(battle_work) & 0x80u) != 0u) {
-        BATTLE_ENEMY_BYTE_115(battle_work) = 0u;
-        BATTLE_ENEMY_WORD_104(battle_work) &= 0xffffff7fu;
+      if ((D_801EB630[D_80146374 - 3u].unk_104 & 0x80u) !=
+          0u) {
+        D_801EB630[D_80146374 - 3u].unk_115 = 0u;
+        D_801EB630[D_80146374 - 3u].unk_104 &= 0xffffff7fu;
       }
     }
   }

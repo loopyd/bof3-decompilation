@@ -65,7 +65,10 @@ typedef struct Battle03LocalWork {
   u32 unk_128;
   u8  pad_12c[8];
   u16 unk_134;
-  u8  pad_136[0xa];
+  u8  pad_136[2];
+  u8  unk_138;
+  u8  unk_139;
+  u8  pad_13a[6];
 } Battle03LocalWork;
 
 typedef struct Battle03FlagRecord {
@@ -88,7 +91,11 @@ typedef struct Battle03EnemyWork {
   u8                       unk_f5;
   u8                       pad_f6[0xa];
   u32                      unk_100;
-  u8                       pad_104[0x14];
+  u32                      unk_104;
+  u8                       pad_108[0xc];
+  u8                       unk_114;
+  u8                       unk_115;
+  u8                       pad_116[2];
 } Battle03EnemyWork;
 
 typedef struct Battle03QueuedSlot {
@@ -235,6 +242,9 @@ extern volatile u32 D_801459F0; /* @source 0x801459F0 @kind unknown */
 void func_801E679C(void);
 void func_801E68EC(void);
 extern volatile u8  BATTLE_GLOBAL_BYTE_6374; /* @source 0x80146374 @kind unknown */
+extern u8           D_80146374; /* @source 0x80146374 @kind unknown */
+extern u8           D_80146375; /* @source 0x80146375 @kind unknown */
+extern u16          D_801463C0; /* @source 0x801463C0 @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_6375; /* @source 0x80146375 @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_63BA; /* @source 0x801463BA @kind unknown */
 extern volatile u16 BATTLE_GLOBAL_HALF_63C0; /* @source 0x801463C0 @kind unknown */
