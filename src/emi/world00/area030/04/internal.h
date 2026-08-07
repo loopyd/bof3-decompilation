@@ -12,6 +12,7 @@ extern u8  D_80145E93;    /* @source 0x80145E93 @kind unknown */
 extern void (*D_801E2000[])(void); /* @source 0x801E2000 @kind table */
 extern void (*D_801E2014[])(void); /* @source 0x801E2014 @kind table */
 extern void (*D_801E2048[])(void); /* @source 0x801E2048 @kind table */
+extern void (*D_801E2074[])(void); /* @source 0x801E2074 @kind table */
 extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
 extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
