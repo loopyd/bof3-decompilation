@@ -460,7 +460,7 @@ segments:
     - c
     - func_8019DDCC
   - - 34320
-    - asm
+    - c
     - func_8019DE10
   - - 34388
     - asm
