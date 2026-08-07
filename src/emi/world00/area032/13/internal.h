@@ -9,6 +9,8 @@ extern u8* D_1F800044;
 extern void (*D_801F3F80[])(void);
 /* @source 0x801F4900 @kind table */
 extern void (*D_801F4900[])(void);
+/* @source 0x801F4908 @kind table */
+extern void (*D_801F4908[])(void);
 
 void func_80196070(void);
 
