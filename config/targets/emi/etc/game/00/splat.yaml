@@ -646,7 +646,7 @@ segments:
     - c
     - requestScenarioOverlay
   - - 73772
-    - asm
+    - c
     - func_801A782C
   - - 73848
     - asm

@@ -462,7 +462,11 @@ void requestScenarioOverlay(void);
  * completes.
  * @source 0x801A782C
  */
+/* @source 0x801C8454 @kind table */
+extern GameEntry0StateHandler* D_801C8454[];
+
 void func_801A782C(void);
+void dispatchStateHandler(void);
 
 /* @behavior ticks the shared world/front waiting path while the scenario loader is
  * still pending.
