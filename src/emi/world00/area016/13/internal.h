@@ -29,6 +29,8 @@ extern World00Area016Handler WORLD00_AREA016_D_801F5114[];
 extern World00Area016Handler WORLD00_AREA016_D_801F511C[];
 /* @source 0x801F512C @kind unknown */
 extern World00Area016Handler WORLD00_AREA016_D_801F512C[];
+/* @source 0x801F51AC @kind unknown */
+extern World00Area016Handler WORLD00_AREA016_D_801F51AC[];
 
 void func_8014E5A0(u8 arg0, u8 arg1);
 void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
@@ -43,6 +45,7 @@ void func_801F39D8(s16 arg0, s16 arg1, u32 arg2);
 void func_801F3B00(s32 arg0, s32 arg1);
 void func_801F3ECC(s16 arg0, s16 arg1);
 void func_801F40C4(s16 arg0, s16 arg1);
+void func_801F4178(void);
 
 #define WORLD00_AREA016_SCRATCH_PTR                                            \
   PSX_REF(volatile World00Area016Scratch*, 0x1f800044u)
