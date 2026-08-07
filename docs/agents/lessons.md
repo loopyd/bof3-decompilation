@@ -47,6 +47,9 @@ iteration procedure: [function matching](matching.md).
   a workspace/toolchain problem, not wrong candidate C.
 - A compiler exit without diagnostics is not a comparison result. Preserve the
   last verified diff; fix the compile path before tuning source shape.
+- After creating a lift source, regenerate the compile database before running
+  `bin/flag-search`; a failed compiler or permuter invocation is not ladder
+  exhaustion until it produces a real comparison result.
 - The historical compiler is a statically linked 32-bit i386 executable; under
   a managed sandbox it can exit `225`/`159` before processing arguments.
   Re-run `bin/cc` with its approved out-of-sandbox permission; never add
