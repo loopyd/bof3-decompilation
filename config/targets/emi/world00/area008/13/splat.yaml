@@ -107,7 +107,7 @@ segments:
     - asm
     - func_801F39BC
   - - 3684
-    - asm
+    - c
     - func_801F3A64
   - - 3752
     - c

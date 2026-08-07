@@ -47,6 +47,8 @@ extern u8           WORLD00_AREA008_D_801F2C10[];
 extern World00Area008Handler modeHandlerTable[];
 /* @source 0x801F46B0 @kind unknown */
 extern World00Area008Handler D_801F46B0[];
+/* @source 0x801F46EC @kind unknown */
+extern World00Area008Handler D_801F46EC[];
 
 /* Shared primitive cursor (PsyQ SDK global, owned by the main exe). A named
  * symbol (not a fixed-address macro) so codegen emits the symbol-relative
