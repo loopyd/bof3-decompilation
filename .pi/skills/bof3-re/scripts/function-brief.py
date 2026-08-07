@@ -48,6 +48,39 @@ def selector(value: str) -> tuple[str, int]:
     return function.target.value, function.address
 
 
+def data_table_probe(binary: Path, load_address: int, address: int) -> dict[str, Any] | None:
+    """Heuristic: an alleged function whose window is mostly aligned code
+    pointers (and lacks a stack prolog) is probably a mis-analyzed data table
+    (sce10eff/00@0x801D2708, scena16/00@0x801F8538 precedents)."""
+    if not binary.is_file() or address < load_address:
+        return None
+    payload = binary.read_bytes()
+    offset = address - load_address
+    window = payload[offset : offset + 64]
+    if len(window) < 16:
+        return None
+    words = [
+        int.from_bytes(window[i : i + 4], "little") for i in range(0, len(window), 4)
+    ]
+    nonzero = [w for w in words if w]
+    pointers = [w for w in nonzero if w % 4 == 0 and load_address <= w < load_address + len(payload)]
+    prolog = bool(words) and (words[0] >> 16) == 0x27BD  # addiu $sp,$sp,-N
+    likely = len(nonzero) >= 3 and len(pointers) * 4 >= len(nonzero) * 3 and not prolog
+    return {
+        "window_bytes": len(window),
+        "nonzero_words": len(nonzero),
+        "code_pointer_words": len(pointers),
+        "stack_prolog": prolog,
+        "likely_data_table": likely,
+        "warning": (
+            "bytes look like a function-pointer table, not code: verify with raw "
+            "disassembly before lifting; promote splat asm->rodata (T_<ADDR>) if data"
+            if likely
+            else None
+        ),
+    }
+
+
 def map_names(path: Path, address: int) -> list[str]:
     if not path.is_file():
         return []
@@ -112,6 +145,9 @@ def main() -> int:
                 header.is_file() and f"{address:08X}" in header.read_text()
             ),
         },
+        "data_table_probe": data_table_probe(
+            binary, int(manifest["load_address"]), address
+        ),
         "rizin": run(root, "bin/rz-project", "status", target, "--json"),
         "mission": run(
             root, "bin/rev-query", "mission", f"{target}@0x{address:08X}", "--json"

@@ -12,7 +12,9 @@ nondestructively: append `> **US 1.1 verified:** <claim> (<selector/commit>)`
 after the EU claim; never edit or delete EU text.
 
 1. Reuse supplied brief; otherwise run `function-brief.py` once.
-   Verify load per SKILL.md.
+   Verify load per SKILL.md. Honor `data_table_probe.warning`: bytes mostly
+   aligned code pointers, no prolog = data table; verify raw, promote Splat
+   asm→rodata (`T_<ADDR>`), escalate restored (sce10eff/00@0x801D2708, scena16/00@0x801F8538).
 2. Before declarations: search target header/map, `include/`, PsyQ map/report,
    index. Reuse types/symbols; no duplicates. A new target-local fixed address
    requires matching `internal.h` extern, `symbols.c` `WEAK_SYMBOL_AT`, and

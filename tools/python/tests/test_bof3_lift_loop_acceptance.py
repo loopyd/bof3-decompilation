@@ -260,3 +260,25 @@ def test_pi_context_files_stay_compact() -> None:
     docs = sorted((ROOT / "docs" / "agents").glob("*.md"))
     docs_total = sum(len(path.read_bytes()) for path in docs)
     assert docs_total <= 54_000, f"docs/agents re-inflated: {docs_total} bytes"
+
+
+def test_function_brief_data_table_probe() -> None:
+    script = ROOT / ".pi/skills/bof3-re/scripts/function-brief.py"
+
+    def probe(selector: str) -> dict:
+        result = subprocess.run(
+            (sys.executable, str(script), selector),
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return json.loads(result.stdout)["data_table_probe"]
+
+    table = probe("emi/scenario/scena16/00@0x801F8538")
+    assert table["likely_data_table"] is True
+    assert table["warning"]
+
+    code = probe("emi/scenario/scena00/00@0x801FC7D0")
+    assert code["likely_data_table"] is False
+    assert code["warning"] is None
