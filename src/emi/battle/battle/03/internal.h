@@ -284,6 +284,7 @@ extern u8               D_801EB000[]; /* @source 0x801EB000 @kind unknown */
 extern s8               D_801EB4F2; /* @source 0x801EB4F2 @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_62E2; /* @source 0x801462E2 @kind unknown */
 extern volatile u16 BATTLE_GLOBAL_HALF_62E8; /* @source 0x801462E8 @kind unknown */
+extern u8  D_801EC303; /* @source 0x801EC303 @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_62F3;
 extern volatile u32 D_801459F0; /* @source 0x801459F0 @kind unknown */
 
@@ -911,7 +912,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_GLOBAL_WORD_598C  PSX_REF(u32, 0x8014598cu)
 #define BATTLE_GLOBAL_BYTE_62F0  PSX_REF(volatile u8, 0x801462f0u)
 #define BATTLE_GLOBAL_BYTE_62F3  PSX_REF(u8, 0x801462f3u)
-#define BATTLE_GLOBAL_BYTE_C303  PSX_REF(volatile u8, 0x801ec303u)
 #define BATTLE_GLOBAL_HALF_EC2EE PSX_REF(volatile u16, 0x801ec2eeu)
 
 /* @source 0x801EAFF4 @kind unknown */
