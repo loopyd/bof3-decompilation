@@ -24,7 +24,7 @@ segments:
     - rodata
     - T_801F2C00
   - - 20
-    - asm
+    - c
     - func_801F2C14
   - - 88
     - asm
