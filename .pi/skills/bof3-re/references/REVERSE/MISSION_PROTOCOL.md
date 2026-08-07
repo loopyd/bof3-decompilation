@@ -27,9 +27,14 @@ after the EU claim; never edit or delete EU text.
    candidate shape, first mismatch class, result, and whether retained. Before
    repeating a failed lever, search `docs/agents/lessons.md` and the target's
    reviewed exact siblings for the same mismatch family. Ladder and clobber
-   rules per SKILL.md; retain a pin only for an asm-diff-proven allocator or
-   entry-register residual after live exact match with local `MATCHING_AID`
-   and independent review.
+   rules    per SKILL.md. If clean-C/source-shape levers stall, the terminal ladder is
+   mandatory before allocator aids or escalation: run `bin/flag-search
+   SELECTOR` for the supported flag matrix, then repeat it with each installed
+   historical compiler catalog ID via `--compiler ID`. Record every best score
+   and whether it changes the first mismatch; skip only with evidence that the
+   mismatch class cannot be compiler/profile-sensitive. Retain a pin only for
+   an asm-diff-proven allocator or entry-register residual after live exact
+   match with local `MATCHING_AID` and independent review.
 5. Evidence insufficient to lift: investigate the concrete gap with the repo
    Rizin workflow — `bin/rz-project` status/open, `bin/rev-query` first;
    focused calls/xrefs, code/data boundaries, jump-table targets, ABI setup.

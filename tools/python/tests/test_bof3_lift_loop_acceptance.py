@@ -172,6 +172,9 @@ def test_non_exact_review_precedes_parent_restore_and_integrates_lessons() -> No
     assert "parent restoration happens only after this review" in _flat(checklist)
     assert "lesson: none" in checklist
     assert "compact rung ledger" in _flat(reverse)
+    assert "bin/flag-search" in protocol and "SELECTOR" in protocol
+    assert "--compiler ID" in protocol
+    assert "every installed historical compiler" in _flat(checklist)
     assert "before a non-exact candidate is restored" in _flat(review)
 
 
@@ -266,7 +269,7 @@ def test_pi_context_files_stay_compact() -> None:
     files += sorted((ROOT / ".pi/skills").glob("*/SKILL.md"))
     files += sorted((ROOT / ".pi/skills/bof3-re/references").glob("*/*.md"))
     total = sum(len(path.read_bytes()) for path in files)
-    assert total <= 55_500, f".pi context files re-inflated: {total} bytes"
+    assert total <= 56_500, f".pi context files re-inflated: {total} bytes"
     docs = sorted((ROOT / "docs" / "agents").glob("*.md"))
     docs_total = sum(len(path.read_bytes()) for path in docs)
     assert docs_total <= 54_000, f"docs/agents re-inflated: {docs_total} bytes"

@@ -45,9 +45,13 @@ never chain runs). Keep a compact rung ledger. Escalation restores regressing
 experiments but preserves the best coherent candidate for independent review;
 report its truthful changed files and `parent_restore_required: true`.
 
-Role safeguards beyond the skill ladder: after clean-C lifetime,
-expression-order, supported-profile, and bounded-permuter attempts stall, an
-asm-diff-proven allocator or entry-register residual may use
+Role safeguards beyond the skill ladder: after clean-C lifetime and
+expression-order attempts stall, run the terminal searches before aids or
+escalation: `bin/flag-search SELECTOR`, then `bin/flag-search SELECTOR
+--compiler ID` for every installed historical compiler catalog ID. Record best
+scores and first-mismatch changes; skip only with mismatch-class evidence that
+compiler/profile changes cannot apply. After those searches and a bounded
+source permuter stall, an asm-diff-proven allocator or entry-register residual may use
 `REGISTER_PIN(type, name, reg)` autonomously. Pin only the one local
 proven by the residual (e.g. reversed `move t0,a1; move v0,zero`: pin the
 result local to `v0` only), never the full register map. Use the original's actual signed/unsigned arithmetic (`sltu` =

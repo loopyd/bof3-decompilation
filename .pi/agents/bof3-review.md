@@ -48,8 +48,11 @@ Otherwise `block`.
 
 For a non-exact escalation, inspect the still-present best candidate and verify
 the live first original/current difference, mismatch class, rung-specific
-attempts, last result, and missing/blocked evidence. Return `needs-fix` when a
-preloaded lesson or reviewed exact sibling proves a skipped or misapplied
+attempts, last result, and missing/blocked evidence. Before accepting escalation, require the supported
+flag-matrix result and one `bin/flag-search SELECTOR --compiler ID` result for
+every installed historical compiler, unless mismatch-class evidence proves
+profiles cannot affect it. Return `needs-fix` when this terminal rung, a
+preloaded lesson, or a reviewed exact sibling proves a skipped/misapplied
 lever. Parent restoration happens only after review. Reject a pin papering over a size/frame or CFG
 mismatch, or a clobber without caller-register placement proof. Run one live
 byte-match only for a claimed exact lift; cached status is not acceptance.
