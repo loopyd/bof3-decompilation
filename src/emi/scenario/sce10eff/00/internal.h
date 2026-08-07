@@ -14,5 +14,7 @@ typedef struct ScenarioSce10effScratch {
   s16 unk_3e;
 } ScenarioSce10effScratch;
 
+/* @source 0x801D2708 @kind table */
+extern void (*D_801D2708[])(void);
 
 #endif
