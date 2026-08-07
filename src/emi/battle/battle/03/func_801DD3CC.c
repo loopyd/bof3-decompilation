@@ -6,40 +6,41 @@
  */
 void func_801DD3CC(s32 arg0) {
   s32 mode;
-  s32 value_1c;
   s32 value_18;
+  s32 value_1c;
 
   mode = *(u8*)(arg0 + 8);
   if (mode == 1) {
-    goto mode_1;
+    goto block_1;
   }
   if (mode < 2) {
     return;
   }
   if (mode == 2) {
-    goto mode_2;
+    goto block_2;
   }
-  if (mode == 3) {
-    goto mode_3;
+  if (mode != 3) {
+    return;
   }
-  return;
+  goto block_3;
 
-mode_1:
-  value_1c = *(s32*)(arg0 + 0x1c);
+block_1:
+  value_1c = -*(s32*)(arg0 + 0x1c);
   value_18 = *(s32*)(arg0 + 0x18);
-  goto done;
+  goto store;
 
-mode_2:
-  value_1c = *(s32*)(arg0 + 0x18);
+block_2:
+  value_1c = -*(s32*)(arg0 + 0x18);
   value_18 = -*(s32*)(arg0 + 0x1c);
 
-done:
-  *(s32*)(arg0 + 0x18) = -value_1c;
+store:
+  *(s32*)(arg0 + 0x18) = value_1c;
   *(s32*)(arg0 + 0x1c) = value_18;
   return;
 
-mode_3:
+block_3:
+  value_1c = *(s32*)(arg0 + 0x1c);
   value_18 = *(s32*)(arg0 + 0x18);
-  *(s32*)(arg0 + 0x18) = *(s32*)(arg0 + 0x1c);
+  *(s32*)(arg0 + 0x18) = value_1c;
   *(s32*)(arg0 + 0x1c) = -value_18;
 }
