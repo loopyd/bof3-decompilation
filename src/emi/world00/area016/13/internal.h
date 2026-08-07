@@ -14,7 +14,8 @@ typedef struct World00Area016MarkerEntry {
 } World00Area016MarkerEntry;
 
 typedef struct World00Area016Scratch {
-  u8  unk_00[2];
+  u8  unk_00;
+  u8  mode;
   u8  state_02;
   u8  state_03;
   u8  unk_04[0x2a];
@@ -22,6 +23,8 @@ typedef struct World00Area016Scratch {
   s16 field_30;
 } World00Area016Scratch;
 
+/* @source 0x801F5114 @kind unknown */
+extern World00Area016Handler WORLD00_AREA016_D_801F5114[];
 /* @source 0x801F511C @kind unknown */
 extern World00Area016Handler WORLD00_AREA016_D_801F511C[];
 /* @source 0x801F512C @kind unknown */
