@@ -14,19 +14,16 @@ u8 func_801D54F8(void) {
   last_index = 0u;
   index = 0u;
   do {
-    volatile Battle03LocalWork* battle_work;
-
-    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
     if ((func_801D64C4(index) == 0u) &&
-        ((BATTLE_LOCAL_FLAGS_80(battle_work) & 0x0800u) != 0u) &&
-        (BATTLE_LOCAL_BYTE_137(battle_work) == 5u)) {
-      count += 1u;
-      BATTLE_LOCAL_BYTE_137(battle_work) = 0u;
-      BATTLE_LOCAL_HALF_88(battle_work) = BATTLE_LOCAL_HALF_90(battle_work);
-      BATTLE_LOCAL_HALF_8A(battle_work) = BATTLE_LOCAL_HALF_92(battle_work);
-      BATTLE_LOCAL_BYTE_8C(battle_work) = BATTLE_LOCAL_BYTE_9E(battle_work);
-      func_800A36F0(index, 0x8ffu);
+        ((D_80145E90[index].unk_80 & 0x0800u) != 0u) &&
+        (D_80145E90[index].unk_137 == 5u)) {
       last_index = index;
+      count += 1u;
+      D_80145E90[index].unk_137 = 0u;
+      D_80145E90[index].unk_88 = D_80145E90[index].unk_90;
+      D_80145E90[index].unk_8a = D_80145E90[index].unk_92;
+      D_80145E90[index].unk_8c = D_80145E90[index].unk_9e;
+      func_800A36F0(index, 0x8ffu);
     }
     index += 1u;
   } while (index < 3u);
