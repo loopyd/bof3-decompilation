@@ -33,6 +33,9 @@ void emitMarkerPair(void);
 void func_801F33A8(void);
 POLY_FT4* emitMarkerQuad(const void* arg0, s32 arg1, u32 arg2);
 
+/* @source 0x801F3AB4 @kind table */
+extern void (*WORLD00_AREA027_HANDLER_TABLE[])(void);
+
 #define WORLD00_AREA027_PRIMITIVE_PTR PSX_REF(volatile u8*, 0x8014598cu)
 #define WORLD00_AREA027_SCRATCH_PTR   D_1F800044
 #define WORLD00_AREA027_MATRIX_92E8   (&D_801492E8)
