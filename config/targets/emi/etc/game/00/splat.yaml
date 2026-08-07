@@ -457,7 +457,7 @@ segments:
     - asm
     - func_8019DC6C
   - - 34252
-    - asm
+    - c
     - func_8019DDCC
   - - 34320
     - asm
