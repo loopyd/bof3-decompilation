@@ -11,42 +11,41 @@ u8 func_801D5BC0(void) {
   count = 0u;
   index = 0u;
   do {
-    volatile Battle03LocalWork* battle_work;
-
-    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
-    if ((func_801D64C4(index) == 0u) &&
-        ((BATTLE_LOCAL_FLAGS_80(battle_work) & 0x80u) != 0u)) {
-      BATTLE_LOCAL_HALF_1E(battle_work) = 0u;
-      BATTLE_LOCAL_HALF_1C(battle_work) = 0u;
-      func_801DCEF8(index);
-      count += 1u;
-      battle_work->unk_01 = 6u;
-      battle_work->unk_02 = 5u;
-      battle_work->unk_04 = 0u;
-      battle_work->unk_03 = 0u;
-      battle_work->unk_20 = 0x11u;
-      markPendingBit(index);
+    if (func_801D64C4(index) == 0u) {
+      if ((D_80145E90[index].unk_80 & 0x80u) != 0u) {
+        D_80145E90[index].unk_11e = 0u;
+        D_80145E90[index].unk_11c = 0u;
+        func_801DCEF8(index);
+        count += 1u;
+        D_80145E90[index].unk_01 = 6u;
+        D_80145E90[index].unk_02 = 5u;
+        D_80145E90[index].unk_04 = 0u;
+        D_80145E90[index].unk_03 = 0u;
+        D_80145E90[index].unk_120 = 0x11u;
+        markPendingBit(index);
+      }
     }
     index += 1u;
   } while (index < 3u);
 
   index = 3u;
   do {
-    volatile Battle03EnemyWork* battle_work;
+    u32 slot;
 
-    battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
-    if ((func_801D64C4(index) == 0u) &&
-        ((BATTLE_ENEMY_FLAGS_82(battle_work) & 0x80u) != 0u)) {
-      BATTLE_ENEMY_HALF_FA(battle_work) = 0u;
-      BATTLE_ENEMY_HALF_F8(battle_work) = 0u;
-      func_801DCEF8(index);
-      count += 1u;
-      battle_work->unk_01 = 6u;
-      BATTLE_ENEMY_BYTE_02(battle_work) = 5u;
-      BATTLE_ENEMY_BYTE_04(battle_work) = 0u;
-      BATTLE_ENEMY_BYTE_03(battle_work) = 0u;
-      BATTLE_ENEMY_BYTE_FC(battle_work) = 0x11u;
-      markPendingBit(index);
+    if (func_801D64C4(index) == 0u) {
+      slot = index - 3u;
+      if ((D_801EB630[slot].unk_82 & 0x80u) != 0u) {
+        D_801EB630[slot].unk_fa = 0u;
+        D_801EB630[slot].unk_f8 = 0u;
+        func_801DCEF8(index);
+        count += 1u;
+        D_801EB630[slot].unk_01 = 6u;
+        D_801EB630[slot].unk_02 = 5u;
+        D_801EB630[slot].unk_04 = 0u;
+        D_801EB630[slot].unk_03 = 0u;
+        D_801EB630[slot].unk_fc = 0x11u;
+        markPendingBit(index);
+      }
     }
     index += 1u;
   } while (index < 0x0bu);

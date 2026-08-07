@@ -66,7 +66,11 @@ typedef struct Battle03LocalWork {
   u8  unk_9e;
   u8  pad_9f[0x7a];
   u8  unk_119;
-  u8  pad_11a[7];
+  u8  pad_11a[2];
+  /* unk_11c/unk_11e/unk_120 proven by the func_801D5BC0 reset path */
+  u16 unk_11c;
+  u16 unk_11e;
+  u8  unk_120;
   u8  unk_121;
   u8  pad_122;
   u8  unk_123;
@@ -93,7 +97,11 @@ typedef struct Battle03TemplateRecord {
 typedef struct Battle03EnemyWork {
   u8                       unk_00;
   u8                       unk_01;
-  u8                       pad_02[0x80];
+  /* unk_02/unk_03/unk_04 proven by the func_801D5BC0 reset path */
+  u8                       unk_02;
+  u8                       unk_03;
+  u8                       unk_04;
+  u8                       pad_05[0x7d];
   /* unk_82/unk_fd proven by the func_801D57AC countdown path */
   u16                      unk_82;
   u8                       pad_84[0x60];
@@ -102,7 +110,11 @@ typedef struct Battle03EnemyWork {
   u8                       unk_f0;
   u8                       pad_f1[4];
   u8                       unk_f5;
-  u8                       pad_f6[7];
+  u8                       pad_f6[2];
+  /* unk_f8/unk_fa/unk_fc proven by the func_801D5BC0 reset path */
+  u16                      unk_f8;
+  u16                      unk_fa;
+  u8                       unk_fc;
   u8                       unk_fd;
   u8                       pad_fe[2];
   u32                      unk_100;
