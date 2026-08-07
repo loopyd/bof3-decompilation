@@ -85,6 +85,16 @@ iteration procedure: [function matching](matching.md).
   independently matching cross-target members; keep address-based wrappers so
   each target compiles/validates its own symbol.
 
+### Argument-register pins can be a legitimate allocator residual
+
+- A retained `REGISTER_PIN` targeting an `a*` register is not automatically an
+  entry-copy problem: when the original frees the argument early (entry copy
+  into a callee-saved register in the prologue) and reuses the freed `a*`
+  register as a scratch load destination (`lhu a1` / `andi v0,a1,...`), that
+  is an allocator residual. The same ladder, `MATCHING_AID`, live byte-match,
+  and independent-review requirements apply; the split load/mask register
+  pair may need one pin per register.
+
 ### Reach fixed RAM through `PSX_PTR`/`PSX_REF`, never raw casts or `vu8`
 
 - All fixed-address access goes through `include/memory/` and

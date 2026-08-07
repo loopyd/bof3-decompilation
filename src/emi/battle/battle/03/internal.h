@@ -121,7 +121,10 @@ typedef struct Battle03EnemyWork {
   u8                       pad_05[0x7d];
   /* unk_82/unk_fd proven by the func_801D57AC countdown path */
   u16                      unk_82;
-  u8                       pad_84[0x30];
+  u8                       pad_84[0x10];
+  /* unk_94 proven by the func_801DCEF8 countdown-init path */
+  u16                      unk_94;
+  u8                       pad_96[0x1e];
   u8                       unk_b4;
   u8                       pad_b5[0x2f];
   Battle03EnemyModeHandler unk_e4;
@@ -654,7 +657,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_LOCAL_BYTE_9E(work)  PSX_REF(volatile u8, (u32)(work) + 0x9eu)
 #define BATTLE_LOCAL_BYTE_A6(work)  PSX_REF(volatile u8, (u32)(work) + 0xa6u)
 #define BATTLE_LOCAL_BYTE_A9(work)  PSX_REF(volatile u8, (u32)(work) + 0xa9u)
-#define BATTLE_LOCAL_HALF_1C(work)  PSX_REF(volatile u16, (u32)(work) + 0x1cu)
 #define BATTLE_LOCAL_HALF_1E(work)  PSX_REF(volatile u16, (u32)(work) + 0x1eu)
 #define BATTLE_LOCAL_BYTE_136(work) PSX_REF(volatile u8, (u32)(work) + 0x136u)
 #define BATTLE_LOCAL_BYTE_137(work) PSX_REF(volatile u8, (u32)(work) + 0x137u)
@@ -705,8 +707,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_ENEMY_HALF_94(work)  PSX_REF(volatile u16, (u32)(work) + 0x94u)
 #define BATTLE_ENEMY_BYTE_88(work)  PSX_REF(volatile u8, (u32)(work) + 0x88u)
 #define BATTLE_ENEMY_HALF_A8(work)  PSX_REF(volatile u16, (u32)(work) + 0xa8u)
-#define BATTLE_ENEMY_HALF_A0(work)  PSX_REF(volatile u16, (u32)(work) + 0xa0u)
-#define BATTLE_ENEMY_HALF_F8(work)  PSX_REF(volatile u16, (u32)(work) + 0xf8u)
 #define BATTLE_ENEMY_HALF_FA(work)  PSX_REF(volatile u16, (u32)(work) + 0xfau)
 #define BATTLE_ENEMY_BYTE_F5(work)  PSX_REF(volatile u8, (u32)(work) + 0xf5u)
 #define BATTLE_ENEMY_BYTE_FC(work)  PSX_REF(volatile u8, (u32)(work) + 0xfcu)
