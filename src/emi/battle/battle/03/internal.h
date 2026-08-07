@@ -216,6 +216,15 @@ extern u16                          D_801EB09C[]; /* @source 0x801EB09C @kind un
 extern Battle03Handler              D_801EB46C[]; /* @source 0x801EB46C @kind unknown */
 extern u8                           D_801EB2E8[]; /* @source 0x801EB2E8 @kind unknown */
 extern Battle03LocalWork            D_80145E90[]; /* @source 0x80145E90 @kind unknown */
+extern volatile u8 D_80144974[];
+extern volatile u8 D_8014497C[];
+extern volatile u8 D_8014497E[];
+extern volatile u8 D_80144980[];
+extern volatile u8 D_80145F10[];
+extern volatile u8 D_80145F18[];
+extern volatile u8 D_80145F1A[];
+extern volatile u8 D_80145F1C[];
+extern u8 D_80145FCC[];
 extern volatile u16           D_80143C40; /* @source 0x80143C40 @kind unknown */
 extern volatile u16           D_80145AA8; /* @source 0x80145AA8 @kind unknown */
 extern u8                     D_801462E0; /* @source 0x801462E0 @kind unknown */

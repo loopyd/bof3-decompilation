@@ -304,7 +304,7 @@ segments:
     - asm
     - func_801DD858
   - - 52396
-    - asm
+    - c
     - func_801DD8AC
   - - 52600
     - asm
