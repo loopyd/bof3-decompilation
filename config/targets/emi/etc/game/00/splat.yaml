@@ -412,7 +412,7 @@ segments:
     - asm
     - func_8019CAB4
   - - 29588
-    - asm
+    - c
     - func_8019CB94
   - - 29656
     - asm
