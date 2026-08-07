@@ -144,6 +144,8 @@ extern GameEntry0StateHandler D_801C817C[];
 extern GameEntry0StateHandler D_801C8198[];
 /* @source 0x801C81A0 @kind table */
 extern GameEntry0StateHandler D_801C81A0[];
+/* @source 0x801C81B8 @kind table */
+extern GameEntry0StateHandler D_801C81B8[];
 /* @source 0x801C81B0 @kind table */
 extern GameEntry0StateHandler D_801C81B0[];
 
