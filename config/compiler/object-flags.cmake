@@ -47,4 +47,9 @@ set(BOF3_OBJFLAGS_emi_battle_battle_03_pickRandomUnblockedId_c -O2 -Wa,--expand-
 # Same signed modulo (rand() % count) requiring --expand-div for the MIPS
 # division-trap sequence.
 set(BOF3_OBJFLAGS_emi_battle_battle_15_pickRandomUnblockedId_c -O2 -Wa,--expand-div)
+
+# func_801DB058 keeps the original's signed division-trap sequences (break 7 /
+# break 6) at both `total / count` sites; the canonical maspsx pass omits them.
+# Same lever as pickRandomUnblockedId: --expand-div restores the traps.
+set(BOF3_OBJFLAGS_emi_battle_battle_03_func_801DB058_c -O2 -Wa,--expand-div)
 set(BOF3_OBJCOMPILER_exe_slus_004_22_dispatchSoundCue_c gcc-2.6.3-psx)

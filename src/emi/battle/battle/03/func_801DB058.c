@@ -6,24 +6,25 @@
  * @source 0x801DB058
  */
 u8 func_801DB058(void) {
+  u8  result;
   u16 total;
   u16 maximum;
   u8  count;
   u8  index;
-  u8  local_hits;
 
+  result = 0u;
   total = 0u;
   maximum = 0u;
   count = 0u;
   index = 3u;
   while (index < 0x0bu) {
-    volatile Battle03EnemyWork* battle_work;
-
-    battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
     if (func_801DB2F8(index) != 0u) {
-      total += BATTLE_ENEMY_HALF_A8(battle_work);
-      if (maximum < BATTLE_ENEMY_HALF_A8(battle_work)) {
-        maximum = BATTLE_ENEMY_HALF_A8(battle_work);
+      u16 value;
+
+      value = D_801EB6D8[index - 3u].half_00;
+      total += value;
+      if (maximum < value) {
+        maximum = value;
       }
       count += 1u;
     }
@@ -34,15 +35,19 @@ u8 func_801DB058(void) {
     total = total / count;
   }
 
-  local_hits = 0u;
+  count = 0u;
   index = 0u;
   while (index < 3u) {
     if ((func_801DB9E4(index) != 0u) &&
         (func_801DB3A0(index, total, maximum) != 0u)) {
-      BATTLE_LOCAL_WORD_128(&BATTLE_LOCAL_WORK_ARRAY[index]) |= 0x8000u;
-      local_hits += 1u;
+      D_80145FB8[index].flags_00 |= 0x8000u;
+      count += 1u;
     }
     index += 1u;
+  }
+
+  if (count != 0u) {
+    result += 1u;
   }
 
   total = 0u;
@@ -50,13 +55,13 @@ u8 func_801DB058(void) {
   count = 0u;
   index = 0u;
   while (index < 3u) {
-    volatile Battle03LocalWork* battle_work;
-
-    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
     if (func_801DB2F8(index) != 0u) {
-      total += BATTLE_LOCAL_HALF_98(battle_work);
-      if (maximum < BATTLE_LOCAL_HALF_98(battle_work)) {
-        maximum = BATTLE_LOCAL_HALF_98(battle_work);
+      u16 value;
+
+      value = D_80145F28[index].half_00;
+      total += value;
+      if (maximum < value) {
+        maximum = value;
       }
       count += 1u;
     }
@@ -71,10 +76,10 @@ u8 func_801DB058(void) {
   while (index < 0x0bu) {
     if ((func_801DB9E4(index) != 0u) &&
         (func_801DB3E4(index, total, maximum) != 0u)) {
-      BATTLE_ENEMY_WORD_104(&BATTLE_ENEMY_WORK_ARRAY[index - 3u]) |= 0x8000u;
+      D_801EB734[index - 3u].word_00 |= 0x8000u;
     }
     index += 1u;
   }
 
-  return local_hits != 0u;
+  return result;
 }

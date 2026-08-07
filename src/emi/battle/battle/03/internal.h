@@ -90,6 +90,21 @@ typedef struct Battle03FlagRecord {
   u8  pad_04[0x13c];
 } Battle03FlagRecord;
 
+typedef struct Battle03LocalHalfRecord {
+  u16 half_00;
+  u8  pad_02[0x13e];
+} Battle03LocalHalfRecord;
+
+typedef struct Battle03EnemyHalfRecord {
+  u16 half_00;
+  u8  pad_02[0x116];
+} Battle03EnemyHalfRecord;
+
+typedef struct Battle03EnemyWordRecord {
+  u32 word_00;
+  u8  pad_04[0x114];
+} Battle03EnemyWordRecord;
+
 typedef struct Battle03TemplateRecord {
   u32 words_00[41];
 } Battle03TemplateRecord;
@@ -172,6 +187,9 @@ extern volatile AbilityObject       ABILITY_OBJECTS[]; /* @source 0x801CA70C @ki
 extern volatile u8                  D_801462F0; /* @source 0x801462F0 @kind unknown */
 extern const Battle03TemplateRecord D_80144968[]; /* @source 0x80144968 @kind unknown */
 extern volatile Battle03FlagRecord D_80145FB8[]; /* @source 0x80145FB8 @kind unknown */
+extern volatile Battle03LocalHalfRecord D_80145F28[]; /* @source 0x80145F28 @kind unknown */
+extern volatile Battle03EnemyHalfRecord D_801EB6D8[]; /* @source 0x801EB6D8 @kind unknown */
+extern volatile Battle03EnemyWordRecord D_801EB734[]; /* @source 0x801EB734 @kind unknown */
 extern u16                          D_80143F04; /* @source 0x80143F04 @kind unknown */
 extern u8                           D_80146328; /* @source 0x80146328 @kind unknown */
 extern u8                           D_80144955; /* @source 0x80144955 @kind unknown */
