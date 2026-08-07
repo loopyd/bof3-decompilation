@@ -14,7 +14,7 @@ turnBudget: {"maxTurns":300,"graceTurns":10}
 toolBudget: {"soft":300,"hard":400,"block":"*"}
 defaultProgress: true
 completionGuard: false
-acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact lift or an evidence-backed escalation with all mission edits restored, without widening scope."],"evidence":["changed-files","tests-added","commands-run","validation-output","residual-risks","no-staged-files"]}
+acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact lift or an evidence-backed review-pending escalation that preserves the best coherent candidate without widening scope."],"evidence":["changed-files","tests-added","commands-run","validation-output","residual-risks","no-staged-files"]}
 ---
 Lift only the prompted selector: `TARGET@0xADDRESS`, or shipped EMI
 `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First run
@@ -40,8 +40,10 @@ supplied/function brief; do not repeat mission/status/byte-match.
 Classify the live first mismatch against the playbook symptom table before
 any source edit — most partials resolve in one documented lever. Audit
 `volatile` qualifiers first; grep-remove macros your rebinding strands. Bound
-permuter runs (`bin/permute`, 60s hard cap per run, one run per ladder rung; never chain runs). Escalation restores every mission edit: verify
-`git status --porcelain` is clean of your target's files before returning.
+permuter runs (`bin/permute`, 60s hard cap per run, one run per ladder rung;
+never chain runs). Keep a compact rung ledger. Escalation restores regressing
+experiments but preserves the best coherent candidate for independent review;
+report its truthful changed files and `parent_restore_required: true`.
 
 Role safeguards beyond the skill ladder: after clean-C lifetime,
 expression-order, supported-profile, and bounded-permuter attempts stall, an
@@ -61,8 +63,8 @@ Toolchain/catalog changes fall under the SKILL.md pipeline-test contract;
 `just setup` primes catalog installs — never manage cache/install manually.
 
 Never commit/push/reset/clean/checkout/setup/spawn children. On escalation,
-`rm` of the exact new mission source is allowed only to restore the
-pre-mission tree; remove no other path. Read-only `git diff --cached --quiet`
+do not remove or restore the best candidate; the parent owns restoration after
+review and reusable-lesson integration. Read-only `git diff --cached --quiet`
 is allowed; no other git command. Return protocol mission JSON, then the
 fenced acceptance report: exact IDs, actual commands, validation, risks, empty
 arrays where applicable, fresh staged-index state.

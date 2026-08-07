@@ -1,10 +1,10 @@
 # Review checklist
 
-Review one selector. `agent-context.py review SELECTOR` preloads this file,
-`SHARING_NONMATCHES.md`, `docs/agents/lessons.md`, and target evidence. Do not
-reread bundled paths; load an unbundled spec only for a concrete finding. Use
-executor brief/diff; run fresh `bin/byte-match TARGET@0xADDRESS` for an exact
-claim. `decomp-status` is cache, never acceptance. No `just check`, brief,
+Review one selector, exact or non-exact. `agent-context.py review SELECTOR`
+preloads this file, `SHARING_NONMATCHES.md`, `docs/agents/lessons.md`, and
+ target evidence. Do not reread bundled paths; load an unbundled spec only for
+ a concrete finding. Use executor brief/diff/rung ledger; run fresh
+`bin/byte-match TARGET@0xADDRESS` only for an exact claim. `decomp-status` is cache, never acceptance. No `just check`, brief,
 m2c, Rizin, or index rebuild unless a concrete finding needs it.
 
 Check:
@@ -19,18 +19,22 @@ Check:
 5. changed map/Splat facts pass `bin/symbols check TARGET`, `bin/splat TARGET`;
 6. `git diff --check` clean; no secrets, `inputs/`, or unintended staged
    files; `git diff --cached --quiet` allowed;
-7. non-exact escalation: verify first original/current difference,
-   rung-specific attempts, restored state, next evidence needed; apply
-   `SHARING_NONMATCHES.md` to a parent sharing decision;
-8. record a documentation update only for a durable, cross-function project
-   fact in the relevant `docs/specs/**/*.md` or `docs/agents/lessons.md`;
-   omit selector/address, percentages, transient state, dates. No
-   speculation or one-function examples; preloaded text suffices.
+7. non-exact escalation: inspect the still-present best candidate and live
+   diff; verify the first original/current difference, mismatch class,
+   rung-specific attempts, and next evidence needed. Return `needs-fix` when
+   a documented or sibling-proven lever was skipped or misapplied. Do not
+   require restored state: parent restoration happens only after this review;
+8. compare the residual and successful/failed lever against preloaded lessons.
+   When evidence establishes a reusable cross-function rule, edit the smallest
+   applicable `docs/agents/lessons.md` or `docs/specs/**/*.md` statement before
+   verdict. Omit selector/address, percentages, transient state, and dates.
+   If it is genuinely one-function-only, explicitly return `lesson: none` with
+   the reason. Apply `SHARING_NONMATCHES.md` to the parent's sharing decision;
 
 Verdict: `pass`, `needs-fix`, or `block`.
 
 ```json
-{"function":"TARGET@0xADDRESS","verdict":"pass|needs-fix|block","findings":[{"file":"","line":0,"rule":"","issue":""}]}
+{"function":"TARGET@0xADDRESS","verdict":"pass|needs-fix|block","findings":[{"file":"","line":0,"rule":"","issue":""}],"residual_class":"exact|types|symbols|cfg|frame|allocation|scheduling|compiler|boundary|data","next_lever":"","lesson":"path updated|none: reason","parent_restore_required":false}
 ```
 
 Append the required fenced `acceptance-report` with copied IDs, actual checks,

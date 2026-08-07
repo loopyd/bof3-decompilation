@@ -23,8 +23,11 @@ after the EU claim; never edit or delete EU text.
    static identity/call. Require reviewed boundary, ABI, local map, caller
    declaration. Never create foreign game bindings or source ownership.
 4. Before every C edit: live `asm-diff --detail normal`, diagnose `first=`,
-   one structural fix, rerun, revert regressions. Ladder and clobber rules
-   per SKILL.md; retain a pin only for an asm-diff-proven allocator or
+   one structural fix, rerun, revert regressions. Track a compact rung ledger:
+   candidate shape, first mismatch class, result, and whether retained. Before
+   repeating a failed lever, search `docs/agents/lessons.md` and the target's
+   reviewed exact siblings for the same mismatch family. Ladder and clobber
+   rules per SKILL.md; retain a pin only for an asm-diff-proven allocator or
    entry-register residual after live exact match with local `MATCHING_AID`
    and independent review.
 5. Evidence insufficient to lift: investigate the concrete gap with the repo
@@ -36,14 +39,17 @@ after the EU claim; never edit or delete EU text.
    `bin/symbols check TARGET` and `bin/splat TARGET`. A new lift needs a `c`
    Splat boundary with `@source`/`@behavior`. No `just check`/`decomp-status`
    in the mission.
-7. Non-exact re-lift: restore prior source state, report best residual. Do not
-   decide decomp.me eligibility or publish; the parent checks the reviewed
-   layout boundary and owns sharing.
+7. Non-exact result: restore regressions, but leave the best coherent clean-C
+   candidate and its owned declaration/map/Splat edits **review-pending**.
+   Report the pre-mission file list, best live diff, first original/current
+   mismatch, mismatch class, rung ledger, and next evidence-backed lever. The
+   parent dispatches independent review and owns final restoration/sharing.
+   Do not decide decomp.me eligibility or publish.
 
 Banned: handwritten asm except sanctioned helpers, direct register pins,
 asm-renamed externs, `INCLUDE_ASM` without user approval; also git writes,
-reset/clean/setup, children. On escalation, remove only a newly created
-mission source to restore its prior state.
+reset/clean/setup, children. Do not delete or restore a non-exact best candidate
+before independent review; the parent owns post-review restoration.
 
 Return:
 
@@ -52,6 +58,7 @@ Return:
 ```
 
 Append the required fenced `acceptance-report`: actual commands/validation,
-risks, restoration, fresh staged-index state. Exact requires live byte match
-and retained owned facts. Escalated requires empty changed-file lists and no
-retained-change summary.
+risks, pre-mission state, rung ledger, and fresh staged-index state. Exact
+requires live byte match and retained owned facts. Escalated requires a best
+coherent review-pending candidate, truthful changed-file list, live best diff,
+and an explicit `parent_restore_required: true`; it must not claim restoration.

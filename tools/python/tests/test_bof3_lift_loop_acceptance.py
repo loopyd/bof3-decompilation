@@ -58,14 +58,14 @@ def _flat(text: str) -> str:
     return " ".join(text.split())
 
 
-def test_reverse_agent_accepts_exact_or_restored_escalation() -> None:
+def test_reverse_agent_accepts_exact_or_review_pending_escalation() -> None:
     frontmatter = _frontmatter(AGENT)
     acceptance = json.loads(frontmatter["acceptance"])
 
     assert frontmatter["completionGuard"] == "false"
     assert acceptance["level"] == "checked"
     assert acceptance["criteria"] == [
-        "Produce either a byte-matched exact lift or an evidence-backed escalation with all mission edits restored, without widening scope."
+        "Produce either a byte-matched exact lift or an evidence-backed review-pending escalation that preserves the best coherent candidate without widening scope."
     ]
     assert acceptance["evidence"] == [
         "changed-files",
@@ -156,13 +156,23 @@ def test_partial_share_uses_layout_eligibility_not_lift_evidence() -> None:
     assert "does not make an otherwise qualifying function unshareable" in _flat(sharing)
 
 
-def test_reverse_protocol_requires_truthful_escalation_evidence() -> None:
-    text = PROTOCOL.read_text(encoding="utf-8")
+def test_non_exact_review_precedes_parent_restore_and_integrates_lessons() -> None:
+    protocol = PROTOCOL.read_text(encoding="utf-8")
+    loop = (ROOT / ".pi/skills/bof3-lift-loop/SKILL.md").read_text(encoding="utf-8")
+    checklist = REVIEW_CHECKLIST.read_text(encoding="utf-8")
+    reverse = AGENT.read_text(encoding="utf-8")
+    review = REVIEW_AGENT.read_text(encoding="utf-8")
 
-    assert "Append the required fenced `acceptance-report`" in _flat(text)
-    assert "Exact requires live byte" in _flat(text)
-    assert "Escalated requires empty changed-file lists" in _flat(text)
-    assert "no retained-change summary" in _flat(text)
+    assert "Append the required fenced `acceptance-report`" in _flat(protocol)
+    assert "Exact requires live byte" in _flat(protocol)
+    assert "best coherent review-pending candidate" in _flat(protocol)
+    assert "parent_restore_required: true" in protocol
+    assert "Dispatch `bof3-review` for **both exact and non-exact**" in _flat(loop)
+    assert "Never restore before review" in _flat(loop)
+    assert "parent restoration happens only after this review" in _flat(checklist)
+    assert "lesson: none" in checklist
+    assert "compact rung ledger" in _flat(reverse)
+    assert "before a non-exact candidate is restored" in _flat(review)
 
 
 def test_lift_loop_gates_cleanup_with_fresh_match_and_review() -> None:
@@ -256,7 +266,7 @@ def test_pi_context_files_stay_compact() -> None:
     files += sorted((ROOT / ".pi/skills").glob("*/SKILL.md"))
     files += sorted((ROOT / ".pi/skills/bof3-re/references").glob("*/*.md"))
     total = sum(len(path.read_bytes()) for path in files)
-    assert total <= 53_500, f".pi context files re-inflated: {total} bytes"
+    assert total <= 55_500, f".pi context files re-inflated: {total} bytes"
     docs = sorted((ROOT / "docs" / "agents").glob("*.md"))
     docs_total = sum(len(path.read_bytes()) for path in docs)
     assert docs_total <= 54_000, f"docs/agents re-inflated: {docs_total} bytes"

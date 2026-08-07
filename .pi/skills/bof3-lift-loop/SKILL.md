@@ -47,19 +47,28 @@ Per candidate, until the queue is exhausted or a fatal loop failure:
    `bof3-reverse`.
 2. A relevant declared companion call requires passing `companion-check`
    before dispatch; a static record proves no ABI/ownership.
-3. Executor returns mission JSON + checked acceptance report: an exact lift or
-   fully restored escalation; do not override that policy.
+3. Executor returns mission JSON + checked acceptance report: an exact lift, or
+   a **review-pending escalation** that leaves its best coherent clean-C
+   candidate in the owned files. It must identify the pre-mission baseline,
+   best live diff, first mismatch class, attempted rungs, and changed files.
 4. Parent runs one live `byte-match` only for an exact claim. Status cache is
    never acceptance.
-5. On an exact claim, dispatch `bof3-review` with brief, diff, changed-file
-   diff. `needs-fix`: retry executor ≤2 times, then re-match/review; `block`:
+5. Dispatch `bof3-review` for **both exact and non-exact** results with the
+   brief, best live asm diff, changed-file diff, and executor rung report.
+   For non-exact work the reviewer must classify the residual, identify any
+   skipped/misapplied lever, and record a genuinely reusable cross-function
+   lesson before the candidate is discarded. `needs-fix`: retry executor ≤2
+   times from the reviewed best candidate, then re-match/review; `block`:
    journal, continue. No mid-queue cleanup — cleanup runs once at batch end.
 6. Only exact + review pass: stage owned source/header/map/Splat facts,
    verify the staged list, commit `feat(decomp): byte-match <function>`,
    journal it.
-7. A non-exact result never stops the queue: restore candidate state, run the
-   decomp.me final rung below, journal, start the next selector with a fresh
-   mission context.
+7. A reviewed non-exact result never stops the queue. Parent captures the
+   reviewer verdict and reusable lesson path in the journal, restores every
+   owned candidate file to the recorded pre-mission state, verifies a clean
+   worktree/index, then runs the decomp.me final rung below and starts the next
+   selector with a fresh mission context. Never restore before review: the
+   candidate diff is primary diagnostic evidence.
 
 Use `subagent_supervisor` replies for child requests, not generic intercom.
 
@@ -89,8 +98,10 @@ remaining row gets a fresh
 executor mission, parent evidence check, and independent review only if it
 exact-matches.
 
-For every non-exact result, the executor restores prior state. The parent then
-runs the final execution rung: `bin/scratchpad share SELECTOR`. Publish only
+For every non-exact result, the executor leaves the best coherent candidate
+review-pending. The parent dispatches `bof3-review`, integrates any durable
+cross-function lesson, then restores the recorded prior state and runs the
+final execution rung: `bin/scratchpad share SELECTOR`. Publish only
 if the selector begins at a reviewed Splat `c` or `asm` `func_XXXXXXXX`
 boundary and its restored partial source exists. Missing ABI, call ownership,
 analyzer confidence, or other lifting evidence does **not** make an otherwise
@@ -120,8 +131,9 @@ Context: function brief + mission/diff + owned-file diff. First run
 Authority: executor edits only owned source/internal.h/map/Splat; reviewer
 may also edit only `docs/specs/**/*.md` or `docs/agents/lessons.md` for
 durable cross-function findings.
-No git writes, setup, other targets, or children; escalation may delete only its
-new mission source to restore the tree.
+No git writes, setup, other targets, or children. A non-exact executor leaves
+its best coherent candidate review-pending; only the parent restores it after
+review and durable-lesson integration.
 Return protocol/checklist JSON and required acceptance-report.
 ```
 

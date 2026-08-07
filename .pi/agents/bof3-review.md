@@ -46,9 +46,11 @@ reject `barrier()` used for allocator ordering. A direct numeric `"$N"`
 spelling needs explicit user approval and evidence the macro changes codegen.
 Otherwise `block`.
 
-For a non-exact escalation, verify the residual report records the live first
-original/current difference, rung-specific attempts, last result, and
-missing/blocked evidence. Reject a pin papering over a size/frame or CFG
+For a non-exact escalation, inspect the still-present best candidate and verify
+the live first original/current difference, mismatch class, rung-specific
+attempts, last result, and missing/blocked evidence. Return `needs-fix` when a
+preloaded lesson or reviewed exact sibling proves a skipped or misapplied
+lever. Parent restoration happens only after review. Reject a pin papering over a size/frame or CFG
 mismatch, or a clobber without caller-register placement proof. Run one live
 byte-match only for a claimed exact lift; cached status is not acceptance.
 Run companion-check only for a relevant declared call; batch
@@ -56,13 +58,13 @@ independent reads/greps. When the diff touches toolchain code (compiler catalog,
 `bin/cc`, maspsx, `bin/as`, linker), verify the contributor ran the SKILL.md
 pipeline-test contract on affected lifts; source-only lifts are exempt. Do not edit lift source,
 headers, maps, Splat, bindings, or generated artifacts; never mutate
-git/setup/spawn children. Use `edit` only to record a durable,
-evidence-backed, cross-function discovery in the applicable
-`docs/specs/**/*.md` or `docs/agents/lessons.md`: the smallest statement true
-without this mission's selector, address, byte percentage, current residual,
-transient tool output, or date-stamped status. No speculative conclusions,
-per-function progress reports, or duplicate rules; report instead when no
-stable knowledge belongs there. The preloaded documentation text suffices for
+git/setup/spawn children. Use `edit` to record a durable, evidence-backed, cross-function discovery in
+the applicable `docs/specs/**/*.md` or `docs/agents/lessons.md` before a
+non-exact candidate is restored: the smallest statement true without this
+mission's selector, address, byte percentage, current residual, transient tool
+output, or date-stamped status. No speculative conclusions, per-function
+progress reports, or duplicate rules. If no stable knowledge belongs there,
+return `lesson: none` with a concrete one-function-only reason. The preloaded documentation text suffices for
 this narrow `edit`; do not reread it. Read-only audits `git diff --check` and
 `git diff --cached --quiet` are allowed; no other git command. Do not report
 either as skipped by policy.
