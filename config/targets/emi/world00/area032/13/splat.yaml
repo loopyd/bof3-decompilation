@@ -59,7 +59,7 @@ segments:
     - asm
     - func_801F36A0
   - - 2788
-    - asm
+    - c
     - func_801F36E4
   - - 2856
     - asm
@@ -91,4 +91,7 @@ segments:
   - - 4972
     - asm
     - T_801F3F6C
+  - - 7424
+    - rodata
+    - D_801F4900
 - - 7440
