@@ -93,13 +93,18 @@ typedef struct Battle03TemplateRecord {
 typedef struct Battle03EnemyWork {
   u8                       unk_00;
   u8                       unk_01;
-  u8                       pad_02[0xe2];
+  u8                       pad_02[0x80];
+  /* unk_82/unk_fd proven by the func_801D57AC countdown path */
+  u16                      unk_82;
+  u8                       pad_84[0x60];
   Battle03EnemyModeHandler unk_e4;
   u8                       pad_e8[8];
   u8                       unk_f0;
   u8                       pad_f1[4];
   u8                       unk_f5;
-  u8                       pad_f6[0xa];
+  u8                       pad_f6[7];
+  u8                       unk_fd;
+  u8                       pad_fe[2];
   u32                      unk_100;
   u32                      unk_104;
   u8                       pad_108[0xa];
