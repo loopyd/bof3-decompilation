@@ -2,6 +2,7 @@
 #define EMI_SHOP_00_INTERNAL_H
 
 #include "bof3/context.h"
+#include "base/barrier.h"
 #include "panel/task.h"
 #include "gpu/prim.h"
 
@@ -131,5 +132,10 @@ extern void (*D_801E5D50[])(void);
  * @kind table — UI phase handler pointers (this EMI); dispatched by
  * func_801E2590 with the sub-step byte D_80148652 as index. */
 extern void (*D_801E5D5C[])(void);
+
+/* @source 0x801E5D68
+ * @kind table — handler pointers (this EMI); dispatched by func_801E27BC
+ * with panel task byte 2 (g_PanelTaskRoot->unk_00[2]) as index. */
+extern void (*D_801E5D68[])(void);
 
 #endif
