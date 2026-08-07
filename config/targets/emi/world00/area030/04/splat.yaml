@@ -320,7 +320,7 @@ segments:
     - asm
     - func_801DC5D4
   - - 47692
-    - asm
+    - c
     - func_801DC64C
   - - 47760
     - asm
