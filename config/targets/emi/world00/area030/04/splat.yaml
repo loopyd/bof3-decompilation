@@ -113,7 +113,7 @@ segments:
     - asm
     - func_801D6CB0
   - - 25284
-    - asm
+    - c
     - func_801D6EC4
   - - 25352
     - c

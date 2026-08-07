@@ -13,6 +13,7 @@ extern void (*D_801E2000[])(void); /* @source 0x801E2000 @kind table */
 extern void (*D_801E2014[])(void); /* @source 0x801E2014 @kind table */
 extern void (*D_801E2048[])(void); /* @source 0x801E2048 @kind table */
 extern void (*D_801E2074[])(void); /* @source 0x801E2074 @kind table */
+extern void (*D_801E20C4[])(void); /* @source 0x801E20C4 @kind table */
 extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
 extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
@@ -54,6 +55,7 @@ void advancePanelScroll(void);
 void func_801D6F08(void);
 void seedMenuScratch(void);
 void func_801D6B28(s8 arg0);
+void func_801D6EC4(void);
 void advanceStepMode6(void);
 void clearFlagState10(void);
 void dispatchCompanion(void);
