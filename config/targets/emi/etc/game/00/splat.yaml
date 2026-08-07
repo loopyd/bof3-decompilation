@@ -895,7 +895,7 @@ segments:
     - asm
     - func_801B31F0
   - - 121440
-    - asm
+    - c
     - func_801B3260
   - - 121508
     - asm
