@@ -922,7 +922,7 @@ segments:
     - asm
     - func_801B3488
   - - 122176
-    - asm
+    - c
     - func_801B3540
   - - 122244
     - asm
