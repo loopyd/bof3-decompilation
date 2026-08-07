@@ -784,7 +784,7 @@ segments:
     - asm
     - func_801ACAC0
   - - 95172
-    - asm
+    - c
     - func_801ACBC4
   - - 95240
     - asm

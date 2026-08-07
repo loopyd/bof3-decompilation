@@ -116,6 +116,8 @@ typedef s32 (*GameIndexedHandler)(GameIndexedWork* work, u8* arg);
 /* @source 0x80148648 @kind unknown */
 /* @source 0x801C88FC @kind table */
 extern GameEntry0StateHandler D_801C88FC[];
+/* @source 0x801C8904 @kind table */
+extern GameEntry0StateHandler D_801C8904[];
 
 extern PanelTask* D_80148648;
 #define D_80148648 g_PanelTaskRoot
