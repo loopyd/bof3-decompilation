@@ -65,7 +65,8 @@ typedef struct Battle03LocalWork {
   u32 unk_128;
   u8  pad_12c[8];
   u16 unk_134;
-  u8  pad_136[2];
+  u8  unk_136;
+  u8  unk_137;
   u8  unk_138;
   u8  unk_139;
   u8  pad_13a[6];
@@ -92,7 +93,9 @@ typedef struct Battle03EnemyWork {
   u8                       pad_f6[0xa];
   u32                      unk_100;
   u32                      unk_104;
-  u8                       pad_108[0xc];
+  u8                       pad_108[0xa];
+  u8                       unk_112;
+  u8                       pad_113;
   u8                       unk_114;
   u8                       unk_115;
   u8                       pad_116[2];
