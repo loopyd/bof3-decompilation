@@ -218,6 +218,7 @@ extern u8           D_80145AD4[]; /* @source 0x80145AD4 @kind unknown */
 extern const char   D_801D0C70[]; /* @source 0x801D0C70 @kind unknown */
 extern const char   D_801D0C74[]; /* @source 0x801D0C74 @kind unknown */
 extern u8           D_801462E1[]; /* @source 0x801462E1 @kind unknown */
+extern const u8     D_801EAF88[][6]; /* @source 0x801EAF88 */
 extern Battle03QueuedSlot* volatile D_801EC2E0; /* @source 0x801EC2E0 @kind unknown */
 /* @kind: bss (map symbol: uiRingHead) — UI ring consumer index. */
 extern u8                            uiRingHead; /* @source 0x801EBF04 */
@@ -429,6 +430,7 @@ void func_801DA078(s16 arg0, s16 arg1, s32 arg2);
 void drawFlatLinePrim(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
 u8   func_801DA69C(u32 arg0);
+
 u32  func_801DB434(u8 arg0, u32 arg1);
 u8   func_801DB844(u32 arg0);
 u8   func_801DB9E4(u32 arg0);

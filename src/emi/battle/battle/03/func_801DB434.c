@@ -5,14 +5,11 @@
  * @source 0x801DB434
  */
 u32 func_801DB434(u8 arg0, u32 arg1) {
-  const volatile u8* row;
-  u8                 index;
+  u8 index;
 
-  row = (const volatile u8*)(BATTLE_HIGH_RAM_U8 + (s16)0xaf88u);
-  row += (arg1 & 0xffu) * 6u;
   index = 0u;
   while (index < 6u) {
-    if (arg0 < row[index]) {
+    if (arg0 < D_801EAF88[arg1 & 0xffu][index]) {
       return index;
     }
     index += 1u;
