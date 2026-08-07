@@ -16,6 +16,7 @@ extern void (*D_801E2074[])(void); /* @source 0x801E2074 @kind table */
 extern void (*D_801E20C4[])(void); /* @source 0x801E20C4 @kind table */
 extern void (*D_801E21E0[])(void); /* @source 0x801E21E0 @kind table */
 extern void (*D_801E2210[])(void); /* @source 0x801E2210 @kind table */
+extern void (*D_801E221C[])(void); /* @source 0x801E221C @kind table */
 extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
 extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
@@ -44,6 +45,7 @@ s16  func_8015477C(u16 arg0, u16 arg1);
 void func_801D11C0(void);
 void func_801D9B14(void);
 void func_801D9B58(void);
+void func_801D9CF4(void);
 void func_801D5C48(void);
 void func_801D6000(void);
 void func_801D6554(void);
