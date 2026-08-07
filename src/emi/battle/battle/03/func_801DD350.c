@@ -22,23 +22,25 @@ void func_801DD350(s32 arg0) {
   if (mode != 3) {
     return;
   }
-
-  value_10 = *(s32*)(arg0 + 0x10);
-  value_0c = *(s32*)(arg0 + 0x0c);
-  *(s32*)(arg0 + 0x0c) = value_10;
-  *(s32*)(arg0 + 0x10) = -value_0c;
-  return;
+  goto block_3;
 
 block_1:
-  value_10 = *(s32*)(arg0 + 0x10);
+  value_10 = -*(s32*)(arg0 + 0x10);
   value_0c = *(s32*)(arg0 + 0x0c);
-  *(s32*)(arg0 + 0x0c) = -value_10;
+  goto store;
+
+block_2:
+  value_10 = -*(s32*)(arg0 + 0x0c);
+  value_0c = -*(s32*)(arg0 + 0x10);
+
+store:
+  *(s32*)(arg0 + 0x0c) = value_10;
   *(s32*)(arg0 + 0x10) = value_0c;
   return;
 
-block_2:
-  value_10 = *(s32*)(arg0 + 0x0c);
-  value_0c = *(s32*)(arg0 + 0x10);
-  *(s32*)(arg0 + 0x0c) = -value_10;
+block_3:
+  value_10 = *(s32*)(arg0 + 0x10);
+  value_0c = *(s32*)(arg0 + 0x0c);
+  *(s32*)(arg0 + 0x0c) = value_10;
   *(s32*)(arg0 + 0x10) = -value_0c;
 }
