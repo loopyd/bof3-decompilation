@@ -170,7 +170,7 @@ segments:
     - asm
     - func_801D9740
   - - 36628
-    - asm
+    - c
     - func_801D9B14
   - - 36696
     - asm
