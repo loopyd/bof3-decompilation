@@ -21,6 +21,7 @@ extern void (*D_801E2248[])(void); /* @source 0x801E2248 @kind table */
 extern void (*D_801E2258[])(void); /* @source 0x801E2258 @kind table */
 extern void (*D_801E2268[])(void); /* @source 0x801E2268 @kind table */
 extern void (*D_801E22A4[])(void); /* @source 0x801E22A4 @kind table */
+extern void (*D_801E22B0[])(void); /* @source 0x801E22B0 @kind table */
 extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
 extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
@@ -71,6 +72,7 @@ void clearFlagState10(void);
 void dispatchCompanion(void);
 void func_801DCC74(void);
 void func_801DC474(void);
+void func_801DC590(void);
 void func_801DA8E8(void);
 void func_801DAED4(void);
 void submitPanelPair(s16 arg0, s16 arg1);
