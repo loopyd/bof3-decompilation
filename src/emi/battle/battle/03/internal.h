@@ -64,7 +64,9 @@ typedef struct Battle03LocalWork {
   u16 unk_92;
   u8  pad_94[0xa];
   u8  unk_9e;
-  u8  pad_9f[0x7a];
+  u8  pad_9f[5];
+  u8  unk_a4;
+  u8  pad_a5[0x74];
   u8  unk_119;
   u8  pad_11a[2];
   /* unk_11c/unk_11e/unk_120 proven by the func_801D5BC0 reset path */
@@ -119,7 +121,9 @@ typedef struct Battle03EnemyWork {
   u8                       pad_05[0x7d];
   /* unk_82/unk_fd proven by the func_801D57AC countdown path */
   u16                      unk_82;
-  u8                       pad_84[0x60];
+  u8                       pad_84[0x30];
+  u8                       unk_b4;
+  u8                       pad_b5[0x2f];
   Battle03EnemyModeHandler unk_e4;
   u8                       pad_e8[8];
   u8                       unk_f0;
@@ -190,6 +194,9 @@ extern volatile Battle03FlagRecord D_80145FB8[]; /* @source 0x80145FB8 @kind unk
 extern volatile Battle03LocalHalfRecord D_80145F28[]; /* @source 0x80145F28 @kind unknown */
 extern volatile Battle03EnemyHalfRecord D_801EB6D8[]; /* @source 0x801EB6D8 @kind unknown */
 extern volatile Battle03EnemyWordRecord D_801EB734[]; /* @source 0x801EB734 @kind unknown */
+extern s32                          D_801EAFA0[]; /* @source 0x801EAFA0 @kind unknown */
+extern s16                          D_801EAFC0[]; /* @source 0x801EAFC0 @kind unknown */
+extern volatile u16                 D_1F800000; /* @source 0x1F800000 @kind unknown */
 extern u16                          D_80143F04; /* @source 0x80143F04 @kind unknown */
 extern u8                           D_80146328; /* @source 0x80146328 @kind unknown */
 extern u8                           D_80144955; /* @source 0x80144955 @kind unknown */
