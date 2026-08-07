@@ -148,6 +148,8 @@ extern GameEntry0StateHandler D_801C81A0[];
 extern GameEntry0StateHandler D_801C81B8[];
 /* @source 0x801C81B0 @kind table */
 extern GameEntry0StateHandler D_801C81B0[];
+/* @source 0x801C81C0 @kind table */
+extern GameEntry0StateHandler D_801C81C0[];
 
 extern PanelTask* D_80148648;
 #define D_80148648 g_PanelTaskRoot

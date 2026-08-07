@@ -520,7 +520,7 @@ segments:
     - c
     - resetWork2
   - - 37620
-    - asm
+    - c
     - func_8019EAF4
   - - 37688
     - asm
