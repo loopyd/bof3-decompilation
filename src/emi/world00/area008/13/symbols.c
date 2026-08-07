@@ -11,3 +11,4 @@ WEAK_SYMBOL_AT(countdown, 0x801f53f4);
 /* Local handler table: extern-array binding so `as` expands the indexed
  * relocation with the original `addu $at,$at,$idx` operand order. */
 WEAK_SYMBOL_AT(modeHandlerTable, 0x801f4688);
+WEAK_SYMBOL_AT(D_801F46B0, 0x801f46b0);

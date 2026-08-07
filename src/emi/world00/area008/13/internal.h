@@ -45,6 +45,8 @@ extern u8           WORLD00_AREA008_D_801F2C10[];
 /* @kind: table — per-mode handler pointers dispatched by
  * dispatchMode via the scratch state mode byte. */
 extern World00Area008Handler modeHandlerTable[];
+/* @source 0x801F46B0 @kind unknown */
+extern World00Area008Handler D_801F46B0[];
 
 /* Shared primitive cursor (PsyQ SDK global, owned by the main exe). A named
  * symbol (not a fixed-address macro) so codegen emits the symbol-relative
@@ -79,6 +81,7 @@ void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 void drawScratchStatus(void);
 void drawFlagStatus(void);
 void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
+void func_801F3244(void);
 
 #define WORLD00_AREA008_SCRATCH_PTR                                            \
   PSX_REF(volatile World00Area008State*, 0x1f800044u)
