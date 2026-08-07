@@ -350,7 +350,7 @@ segments:
     - c
     - func_801DCC74
   - - 49328
-    - asm
+    - c
     - func_801DCCB0
   - - 49396
     - asm
