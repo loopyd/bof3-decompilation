@@ -82,6 +82,14 @@ typedef struct Unk801EBF08 {
   volatile u32 unk_128;
 } Unk801EBF08;
 
+typedef struct BattleRecord {
+  u8 unk_00;
+  u8 unk_01;
+  u8 unk_02;
+  u8 unk_03;
+  u8 unk_04;
+  u8 unk_05[0x113];
+} BattleRecord;
 
 extern PanelTask*   D_80148648; /* @source 0x80148648 @kind unknown */
 
@@ -95,6 +103,7 @@ extern BattleSelectionDispatchTable D_800969B8; /* @source 0x800969B8 @kind unkn
 extern volatile u32 D_801459F0; /* @source 0x801459F0 @kind unknown */
 extern s8 D_800B4E8C[]; /* @source 0x800B4E8C @kind unknown */
 extern BattleSelectionHandler D_800B6BF4[]; /* @source 0x800B6BF4 @kind unknown */
+extern BattleRecord D_801EB630[]; /* @source 0x801EB630 @kind unknown */
 
 u32 func_800AF66C(BattleRange *range, u32 value);
 
