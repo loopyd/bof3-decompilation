@@ -10,6 +10,13 @@
 
 typedef void (*GameEntry0StateHandler)(void);
 
+/* @source 0x80146260 @kind unknown */
+extern u8 D_80146260;
+/* @source 0x80146261 @kind unknown */
+extern u8 D_80146261;
+/* @source 0x801CD49C @kind table */
+extern GameEntry0StateHandler D_801CD49C[];
+
 /* @source 0x801C80C8 @kind table */
 extern GameEntry0StateHandler D_801C80C8[];
 /* @source 0x801CD308 @kind table */

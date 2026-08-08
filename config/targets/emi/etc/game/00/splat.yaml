@@ -1345,7 +1345,7 @@ segments:
     - asm
     - func_801C090C
   - - 176744
-    - asm
+    - c
     - func_801C0A68
   - - 176820
     - asm
