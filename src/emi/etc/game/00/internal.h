@@ -10,6 +10,8 @@
 
 typedef void (*GameEntry0StateHandler)(void);
 
+/* @source 0x801C80C8 @kind table */
+extern GameEntry0StateHandler D_801C80C8[];
 /* @source 0x801CD308 @kind table */
 extern GameEntry0StateHandler D_801CD308[];
 
