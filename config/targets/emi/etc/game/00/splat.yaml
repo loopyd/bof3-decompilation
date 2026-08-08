@@ -1387,7 +1387,7 @@ segments:
     - asm
     - func_801C1ABC
   - - 181744
-    - asm
+    - c
     - func_801C1DF0
   - - 181820
     - asm
