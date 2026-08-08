@@ -94,8 +94,10 @@ segments:
     - asm
     - dispatchSubstateTable4408
   - - 5464
-    - asm
+    - c
     - func_80097D58
+    # @source 0x80097D58
+    # @behavior Configure the active selection slot from selection-kind flags.
   - - 5568
     - asm
     - func_80097DC0

@@ -38,6 +38,11 @@ typedef struct BattleSelectionKind {
   u8  unk_02[0x12];
 } BattleSelectionKind;
 
+typedef struct BattleSelectionFlags {
+  u8 flags;
+  u8 unk_01[0x13];
+} BattleSelectionFlags;
+
 typedef struct BattleWork {
   u8  unk_00[0x08];
   u8  unk_08;
@@ -164,6 +169,7 @@ extern volatile u8   D_80146394; /* @source 0x80146394 @kind unknown */
 extern s16* volatile D_801463A0; /* @source 0x801463A0 @kind unknown */
 extern volatile u16  D_801463C0; /* @source 0x801463C0 @kind unknown */
 extern u8            D_801463C9; /* @source 0x801463C9 @kind unknown */
+extern volatile BattleSelectionFlags D_801CA718[]; /* @source 0x801CA718 @kind unknown */
 extern volatile BattleSelectionKind D_801CA71C[]; /* @source 0x801CA71C @kind unknown */
 extern volatile u8   D_8014837B; /* @source 0x8014837B @kind unknown */
 extern volatile u8   D_8014839F; /* @source 0x8014839F @kind unknown */
