@@ -826,7 +826,7 @@ segments:
     - c
     - clearWorkAnimBit0
   - - 97388
-    - asm
+    - c
     - func_801AD46C
   - - 97500
     - asm

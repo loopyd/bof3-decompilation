@@ -14,6 +14,12 @@ typedef void (*GameEntry0StateHandler)(void);
 extern GameEntry0StateHandler D_801C80C8[];
 /* @source 0x801CD308 @kind table */
 extern GameEntry0StateHandler D_801CD308[];
+typedef struct GameEntry0HandlerSet {
+  GameEntry0StateHandler handlers[5];
+} GameEntry0HandlerSet;
+
+/* @source 0x80195F10 @kind table */
+extern GameEntry0HandlerSet D_80195F10;
 
 void func_801ACF2C(void);
 void func_801AD0EC(void);
