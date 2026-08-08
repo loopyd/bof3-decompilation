@@ -2,6 +2,8 @@
 
 /* Main-RAM globals owned by the loaded image. */
 WEAK_SYMBOL_AT(D_80143BB0, 0x80143bb0);
+WEAK_SYMBOL_AT(D_80144968, 0x80144968);
+WEAK_SYMBOL_AT(D_801490D8, 0x801490d8);
 WEAK_SYMBOL_AT(masterIndex, 0x801448ed);
 
 /* EMI-local data. */

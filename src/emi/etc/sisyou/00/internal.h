@@ -10,6 +10,10 @@ extern u8* D_8014598C;
 #define D_8014598C g_PrimCursor
 
 /* Main-RAM globals owned by the loaded image. */
+/* @source 0x80144968 @kind unknown */
+extern u8 D_80144968[];
+/* @source 0x801490D8 @kind unknown */
+extern u8 D_801490D8[];
 /* @source 0x80143BB0 @kind unknown */
 extern u8 D_80143BB0;
 /* @source 0x801448ED @kind bss */

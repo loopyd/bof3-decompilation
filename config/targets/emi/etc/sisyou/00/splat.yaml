@@ -146,7 +146,7 @@ segments:
     - asm
     - func_801D3960
   - - 11724
-    - asm
+    - c
     - func_801D39CC
   - - 11812
     - asm
