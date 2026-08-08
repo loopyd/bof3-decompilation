@@ -817,7 +817,7 @@ segments:
     - asm
     - func_801AD2CC
   - - 97116
-    - asm
+    - c
     - func_801AD35C
   - - 97204
     - asm

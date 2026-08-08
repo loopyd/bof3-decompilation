@@ -10,6 +10,9 @@
 
 typedef void (*GameEntry0StateHandler)(void);
 
+void func_801AD218(void);
+void func_801AD3B4(void);
+
 typedef struct GameScenarioState {
   s8  scenario_id;
   u8  field_01;
