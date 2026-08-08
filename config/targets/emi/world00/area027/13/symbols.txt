@@ -15,5 +15,6 @@ emitMarkerPair = 0x801F31CC;
 func_801F33A8 = 0x801F33A8;
 emitMarkerQuad = 0x801F3480;
 func_801F35E0 = 0x801F35E0;
+func_801F3618 = 0x801F3618;
 handlerTable = 0x801F3AB4;
 D_801F3ABC = 0x801F3ABC;

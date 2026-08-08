@@ -32,6 +32,7 @@ void func_801F304C(void* arg0);
 void emitMarkerPair(void);
 void func_801F33A8(void);
 POLY_FT4* emitMarkerQuad(const void* arg0, s32 arg1, u32 arg2);
+void func_801F3618(void);
 
 /* @source 0x801F3AB4 @kind table */
 extern void (*handlerTable[])(void);
