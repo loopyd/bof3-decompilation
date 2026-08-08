@@ -341,7 +341,7 @@ segments:
     - asm
     - func_801DC888
   - - 48388
-    - asm
+    - c
     - func_801DC904
   - - 48444
     - asm
