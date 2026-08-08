@@ -21,13 +21,18 @@ Check:
    files; `git diff --cached --quiet` allowed;
 7. non-exact escalation: inspect the still-present best candidate and live
    diff; verify the first original/current difference, mismatch class,
-   rung-specific attempts, and next evidence needed. Before accepting an
-   escalation, require results from the supported flag matrix and every
-   installed historical compiler (`bin/flag-search`, then `--compiler ID`),
-   unless the report proves the mismatch class is profile-insensitive. Return
-   `needs-fix` when this terminal rung or another documented/sibling-proven
-   lever was skipped or misapplied. Do not require restored state: parent
-   restoration happens only after this review;
+   rung-specific attempts, and next evidence needed. If any type, symbol role,
+   field layout, caller ABI, branch target, or value lifetime remains missing
+   or guessed, require a focused target-qualified Rizin context rung
+   (`bin/rz-project status`, `bin/rev-query` calls/xrefs/symbols, and only the
+   relevant target-isolated function/caller/data inspection) before accepting
+   escalation. Rizin is contextual evidence, not register-allocation or byte
+   acceptance evidence. Also require results from the supported flag matrix and
+   every installed historical compiler (`bin/flag-search`, then `--compiler
+   ID`), unless the report proves the mismatch class is profile-insensitive.
+   Return `needs-fix` when either context/terminal rung or another
+   documented/sibling-proven lever was skipped or misapplied. Do not require
+   restored state: parent restoration happens only after this review;
 8. compare the residual and successful/failed lever against preloaded lessons.
    When evidence establishes a reusable cross-function rule, edit the smallest
    applicable `docs/agents/lessons.md` or `docs/specs/**/*.md` statement before

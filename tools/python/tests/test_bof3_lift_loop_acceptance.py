@@ -174,7 +174,11 @@ def test_non_exact_review_precedes_parent_restore_and_integrates_lessons() -> No
     assert "compact rung ledger" in _flat(reverse)
     assert "bin/flag-search" in protocol and "SELECTOR" in protocol
     assert "--compiler ID" in protocol
+    assert "focused Rizin context rung" in _flat(protocol)
+    assert "bin/rz-project status TARGET" in _flat(protocol)
+    assert "bin/rev-query" in protocol
     assert "every installed historical compiler" in _flat(checklist)
+    assert "focused target-qualified Rizin context rung" in _flat(checklist)
     assert "before a non-exact candidate is restored" in _flat(review)
 
 
@@ -269,7 +273,7 @@ def test_pi_context_files_stay_compact() -> None:
     files += sorted((ROOT / ".pi/skills").glob("*/SKILL.md"))
     files += sorted((ROOT / ".pi/skills/bof3-re/references").glob("*/*.md"))
     total = sum(len(path.read_bytes()) for path in files)
-    assert total <= 56_500, f".pi context files re-inflated: {total} bytes"
+    assert total <= 59_000, f".pi context files re-inflated: {total} bytes"
     docs = sorted((ROOT / "docs" / "agents").glob("*.md"))
     docs_total = sum(len(path.read_bytes()) for path in docs)
     assert docs_total <= 54_000, f"docs/agents re-inflated: {docs_total} bytes"

@@ -48,10 +48,13 @@ Otherwise `block`.
 
 For a non-exact escalation, inspect the still-present best candidate and verify
 the live first original/current difference, mismatch class, rung-specific
-attempts, last result, and missing/blocked evidence. Before accepting escalation, require the supported
-flag-matrix result and one `bin/flag-search SELECTOR --compiler ID` result for
-every installed historical compiler, unless mismatch-class evidence proves
-profiles cannot affect it. Return `needs-fix` when this terminal rung, a
+attempts, last result, and missing/blocked evidence. When any type, symbol role,
+field layout, caller ABI, branch target, or value lifetime remains missing or
+guessed, require evidence from the focused target-qualified Rizin context rung
+before accepting escalation; Rizin cannot prove allocation or byte equality.
+Also require the supported flag-matrix result and one `bin/flag-search SELECTOR
+--compiler ID` result for every installed historical compiler, unless
+mismatch-class evidence proves profiles cannot affect it. Return `needs-fix` when this terminal rung, a
 preloaded lesson, or a reviewed exact sibling proves a skipped/misapplied
 lever. Parent restoration happens only after review. Reject a pin papering over a size/frame or CFG
 mismatch, or a clobber without caller-register placement proof. Run one live

@@ -27,7 +27,15 @@ after the EU claim; never edit or delete EU text.
    candidate shape, first mismatch class, result, and whether retained. Before
    repeating a failed lever, search `docs/agents/lessons.md` and the target's
    reviewed exact siblings for the same mismatch family. Ladder and clobber
-   rules    per SKILL.md. If clean-C/source-shape levers stall, the terminal ladder is
+   rules per SKILL.md. When a type, symbol role, field layout, caller contract,
+   branch target, or value lifetime is missing or merely guessed, run the
+   focused Rizin context rung before further source permutation: verify snapshot
+   freshness with `bin/rz-project status TARGET`, query `bin/rev-query`
+   calls/xrefs/symbols first, then use target-isolated `bin/rz-project open
+   TARGET` for only the relevant function, callers, xrefs, and data accesses.
+   Record the commands and what source hypothesis each finding supports or
+   rejects. Do not use Rizin to force register allocation or replace byte
+   evidence. If clean-C/source-shape levers then stall, the terminal ladder is
    mandatory before allocator aids or escalation: run `bin/flag-search
    SELECTOR` for the supported flag matrix, then repeat it with each installed
    historical compiler catalog ID via `--compiler ID`. Record every best score
@@ -35,11 +43,11 @@ after the EU claim; never edit or delete EU text.
    mismatch class cannot be compiler/profile-sensitive. Retain a pin only for
    an asm-diff-proven allocator or entry-register residual after live exact
    match with local `MATCHING_AID` and independent review.
-5. Evidence insufficient to lift: investigate the concrete gap with the repo
-   Rizin workflow — `bin/rz-project` status/open, `bin/rev-query` first;
-   focused calls/xrefs, code/data boundaries, jump-table targets, ABI setup.
-   No global analysis, analyzer mutation, or invented ownership. Report
-   target-qualified findings and next evidence needed.
+5. Evidence insufficient to lift: do not escalate before the focused Rizin
+   context rung above. No global analysis, analyzer mutation, or invented
+   ownership. If the snapshot is stale, report that parent-owned analysis is
+   required; otherwise report target-qualified findings and the next evidence
+   needed.
 6. Accept only final live `byte-match` exit 0. If map/Splat changed, also
    `bin/symbols check TARGET` and `bin/splat TARGET`. A new lift needs a `c`
    Splat boundary with `@source`/`@behavior`. No `just check`/`decomp-status`

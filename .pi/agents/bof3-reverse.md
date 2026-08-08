@@ -45,9 +45,15 @@ never chain runs). Keep a compact rung ledger. Escalation restores regressing
 experiments but preserves the best coherent candidate for independent review;
 report its truthful changed files and `parent_restore_required: true`.
 
-Role safeguards beyond the skill ladder: after clean-C lifetime and
-expression-order attempts stall, run the terminal searches before aids or
-escalation: `bin/flag-search SELECTOR`, then `bin/flag-search SELECTOR
+Role safeguards beyond the skill ladder: when a type, symbol role, field
+layout, caller ABI, branch target, or value lifetime is missing or guessed, use
+focused static analysis before churning C: `bin/rz-project status TARGET`,
+`bin/rev-query` calls/xrefs/symbols, then target-isolated `bin/rz-project open
+TARGET` for the relevant function/callers/data only. Record which hypothesis
+was supported or rejected; never use global analysis, analyzer mutation, or
+Rizin as register-allocation evidence. After this context rung and clean-C
+lifetime/expression-order attempts stall, run the terminal searches before aids
+or escalation: `bin/flag-search SELECTOR`, then `bin/flag-search SELECTOR
 --compiler ID` for every installed historical compiler catalog ID. Record best
 scores and first-mismatch changes; skip only with mismatch-class evidence that
 compiler/profile changes cannot apply. After those searches and a bounded

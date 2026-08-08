@@ -56,8 +56,10 @@ Per candidate, until the queue is exhausted or a fatal loop failure:
 5. Dispatch `bof3-review` for **both exact and non-exact** results with the
    brief, best live asm diff, changed-file diff, and executor rung report.
    For non-exact work the reviewer must classify the residual, identify any
-   skipped/misapplied lever, and record a genuinely reusable cross-function
-   lesson before the candidate is discarded. `needs-fix`: retry executor ≤2
+   skipped/misapplied lever, require focused target-qualified Rizin context when
+   types, symbol roles, layouts, caller contracts, branch targets, or lifetimes
+   remain unknown, and record a genuinely reusable cross-function lesson before
+   the candidate is discarded. `needs-fix`: retry executor ≤2
    times from the reviewed best candidate, then re-match/review; `block`:
    journal, continue. No mid-queue cleanup — cleanup runs once at batch end.
 6. Only exact + review pass: stage owned source/header/map/Splat facts,
