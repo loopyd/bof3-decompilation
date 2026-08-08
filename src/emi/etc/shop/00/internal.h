@@ -11,6 +11,8 @@
 extern PanelTask* D_80148648;
 #define D_80148648 g_PanelTaskRoot
 
+/* @source 0x80143C40 @kind unknown */
+extern volatile u16 D_80143C40;
 extern u8 D_80148330[];
 extern u8 D_80148331;
 extern u8 D_80148332;
@@ -47,6 +49,8 @@ extern volatile u8  D_80148651;
  * @source 0x80148652
  * @kind unknown */
 extern volatile u8  D_80148652;
+/* @source 0x8014865F @kind unknown */
+extern volatile u8  D_8014865F;
 /* @source 0x80148654
  * @kind bss — per-frame phase timer; decremented each tick, zeroed on phase
  * changes, advances D_80148652 on wrap. */
