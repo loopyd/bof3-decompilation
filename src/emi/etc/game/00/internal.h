@@ -118,6 +118,8 @@ typedef s32 (*GameIndexedHandler)(GameIndexedWork* work, u8* arg);
 extern GameEntry0StateHandler D_801C8090[];
 /* @source 0x801C80E0 @kind table */
 extern GameEntry0StateHandler D_801C80E0[];
+/* @source 0x801C80EC @kind table */
+extern GameEntry0StateHandler D_801C80EC[];
 /* @source 0x801CD510 @kind table */
 extern GameEntry0StateHandler* D_801CD510[];
 /* @source 0x801CD4C0 @kind table */
