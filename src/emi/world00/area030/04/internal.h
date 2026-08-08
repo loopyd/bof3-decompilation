@@ -35,6 +35,18 @@ extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
 extern u8  D_801E238C[];  /* @source 0x801E238C @kind unknown */
 extern u8  D_801E2390[];  /* @source 0x801E2390 @kind unknown */
 extern u8* D_8014598C;    /* @source 0x8014598C @kind unknown */
+
+typedef struct SpriteGeometry {
+  s32 clut_x;
+  s32 clut_y;
+  u16 width;
+  u16 height;
+  u8 u;
+  u8 v;
+  u8 pad_0E[2];
+} SpriteGeometry;
+
+extern SpriteGeometry D_801E2424[]; /* @source 0x801E2424 @kind table */
 /* Scratchpad work-record cursor cell; reloaded per store group by the
  * AREA030 handlers (volatile cell, plain RAM pointee). */
 extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind bss */

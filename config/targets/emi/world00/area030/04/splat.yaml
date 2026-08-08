@@ -506,7 +506,7 @@ segments:
     - c
     - submitTpageDrawMode
   - - 65996
-    - asm
+    - c
     - func_801E0DCC
   - - 66256
     - c
