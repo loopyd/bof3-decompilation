@@ -853,7 +853,7 @@ segments:
     - asm
     - func_801E4E10
   - - 82636
-    - asm
+    - c
     - func_801E4ECC
   - - 82740
     - asm

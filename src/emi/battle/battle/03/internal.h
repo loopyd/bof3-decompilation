@@ -92,6 +92,11 @@ typedef struct Battle03FlagRecord {
   u8  pad_04[0x13c];
 } Battle03FlagRecord;
 
+typedef struct Battle03SelectionKind {
+  u16 mask_00;
+  u8  pad_02[0x12];
+} Battle03SelectionKind;
+
 typedef struct Battle03LocalHalfRecord {
   u16 half_00;
   u8  pad_02[0x13e];
@@ -329,6 +334,7 @@ extern u16          D_801463C0; /* @source 0x801463C0 @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_6375; /* @source 0x80146375 @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_63BA; /* @source 0x801463BA @kind unknown */
 extern volatile u16 BATTLE_GLOBAL_HALF_63C0; /* @source 0x801463C0 @kind unknown */
+extern Battle03SelectionKind D_801CA71C[]; /* @source 0x801CA71C @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_6322; /* @source 0x80146322 @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_6323; /* @source 0x80146323 @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_63CE; /* @source 0x801463CE @kind unknown */
