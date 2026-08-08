@@ -6,7 +6,10 @@
 
 /* Shared mode byte; stored small mode values (4/6/7/...) and compared
  * against them by the area030 mode handlers. */
+extern u16 D_80143C40;    /* @source 0x80143C40 @kind unknown */
 extern u8  modeByte;      /* @source 0x80144125 @kind bss */
+extern u8  D_80144199[];  /* @source 0x80144199 @kind unknown */
+extern u8  D_8014419E;    /* @source 0x8014419E @kind unknown */
 extern u8  D_80144286;    /* @source 0x80144286 @kind unknown */
 extern u8  D_80145E93;    /* @source 0x80145E93 @kind unknown */
 extern void (*D_801E2000[])(void); /* @source 0x801E2000 @kind table */
