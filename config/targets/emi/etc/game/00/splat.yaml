@@ -541,7 +541,7 @@ segments:
     - c
     - func_8019F2CC
   - - 39696
-    - asm
+    - c
     - func_8019F310
   - - 39812
     - asm
