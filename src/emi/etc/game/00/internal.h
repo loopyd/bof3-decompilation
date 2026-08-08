@@ -295,6 +295,13 @@ extern u8          D_80148652;
 extern s8          D_8014865C;
 /* @source 0x80149332 @kind unknown */
 extern u8          D_80149332;
+/* @source 0x80145EC4 @kind unknown */
+extern u32         D_80145EC4;
+/* @source 0x80145EC8 @kind unknown */
+extern u32         D_80145EC8;
+/* @source 0x80149308 @kind unknown */
+extern u32         D_80149308;
+extern u32         D_8014930C;
 /* @source 0x80181EBA @kind unknown */
 extern const u8    D_80181EBA[];
 /* @source 0x80181EBB @kind unknown */
