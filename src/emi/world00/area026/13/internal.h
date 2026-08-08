@@ -15,6 +15,8 @@ void game_stop_selection_fx(u32 effect_group, s32 effect_id);
 void func_8015B580(void* arg0, u8 bit_index);
 void func_8015B5A8(void* arg0, u8 bit_index);
 
+void func_801F2C48(void);
+
 void setScenarioFlagBit29ClearBit28(void);
 void clearScenarioFlagBit29(void);
 void setScenarioFlagBit28(void);
