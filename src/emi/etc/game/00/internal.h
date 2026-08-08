@@ -88,7 +88,10 @@ struct GameWorkArea {
   u8  unk_5D;         /* 0x5D */
   u8  unk_5E;         /* 0x5E */
   u8  unk_5F;         /* 0x5F */
-  u8  pad_60[0x10];   /* 0x60-0x6F */
+  u8  pad_60[0x04];   /* 0x60-0x63 */
+  s32 coord_64;       /* 0x64 */
+  s32 coord_68;       /* 0x68 */
+  s32 coord_6C;       /* 0x6C */
   u8  speed_70;       /* 0x70 */
   u8  pad_71[0x03];   /* 0x71-0x73 */
   u16 anim_state_74;  /* 0x74 */
@@ -360,6 +363,8 @@ extern s16 D_8014930A;
 extern s16                 D_8014930E;
 /* @source 0x801492D8 @kind unknown */
 extern s16                 D_801492D8;
+/* @source 0x801492DA @kind unknown */
+extern s16                 D_801492DA;
 /* @source 0x801492DC @kind unknown */
 extern s16                 D_801492DC;
 /* @source 0x8014932E @kind unknown */
