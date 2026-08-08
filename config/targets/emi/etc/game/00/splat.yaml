@@ -568,7 +568,7 @@ segments:
     - c
     - func_8019F98C
   - - 41424
-    - asm
+    - c
     - func_8019F9D0
   - - 41512
     - asm
