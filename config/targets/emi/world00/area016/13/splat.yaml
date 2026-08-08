@@ -62,7 +62,7 @@ segments:
     - asm
     - func_801F350C
   - - 2396
-    - asm
+    - c
     - func_801F355C
   - - 2488
     - asm

@@ -41,6 +41,7 @@ u8   func_801B6610(s16 arg0, s16 arg1);
 
 void seedScratchDefaults(void);
 void dispatchState02(void);
+void func_801F355C(void);
 void advanceState02Step(void);
 void dispatchState03(void);
 void func_801F39D8(s16 arg0, s16 arg1, u32 arg2);
