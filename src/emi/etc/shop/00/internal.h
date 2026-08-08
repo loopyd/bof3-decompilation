@@ -162,4 +162,7 @@ extern void (*D_801E5D5C[])(void);
  * with panel task byte 2 (g_PanelTaskRoot->unk_00[2]) as index. */
 extern void (*D_801E5D68[])(void);
 
+void appendFullscreenDimTileB(void);
+void func_801DE8E8(void);
+
 #endif
