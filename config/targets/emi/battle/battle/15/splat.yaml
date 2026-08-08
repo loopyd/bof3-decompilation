@@ -913,7 +913,7 @@ segments:
     - asm
     - func_800A632C
   - - 64648
-    - asm
+    - c
     - func_800A6488
   - - 64956
     - asm

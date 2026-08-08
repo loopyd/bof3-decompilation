@@ -135,7 +135,7 @@ extern BattleSelectionHandler D_800B44E4[]; /* @source 0x800B44E4 @kind unknown 
 extern BattleSelectionHandler D_800B6E08[]; /* @source 0x800B6E08 @kind unknown */
 extern BattleLocalOffsetPair D_800B6C90[]; /* @source 0x800B6C90 @kind unknown */
 extern u8 D_800B6D00[]; /* @source 0x800B6D00 @kind unknown */
-extern volatile u8   D_801462E4; /* @source 0x801462E4 @kind unknown */
+extern u8 D_801462E4; /* @source 0x801462E4 @kind unknown */
 extern volatile u8   D_801462EF; /* @source 0x801462EF @kind unknown */
 extern volatile u8   D_80146303; /* @source 0x80146303 @kind unknown */
 extern volatile u16  D_80145AC8; /* @source 0x80145AC8 @kind unknown */
@@ -175,8 +175,12 @@ extern volatile u8   D_801485DF; /* @source 0x801485DF @kind unknown */
 extern volatile u16  D_801485E0; /* @source 0x801485E0 @kind unknown */
 extern volatile u16  D_8014932E; /* @source 0x8014932E @kind unknown */
 extern volatile u16  D_801485E2; /* @source 0x801485E2 @kind unknown */
-extern volatile u16  D_801485EC; /* @source 0x801485EC @kind unknown */
-extern volatile u16  D_801485EE; /* @source 0x801485EE @kind unknown */
+extern s16 D_801485C8; /* @source 0x801485C8 @kind unknown */
+extern s16 D_801485CA; /* @source 0x801485CA @kind unknown */
+extern s16 D_801485EC; /* @source 0x801485EC @kind unknown */
+extern s16 D_801485EE; /* @source 0x801485EE @kind unknown */
+extern u8 D_80145500[][4]; /* @source 0x80145500 @kind unknown */
+extern u8 D_80145518[][4]; /* @source 0x80145518 @kind unknown */
 extern volatile u8   D_80148626; /* @source 0x80148626 @kind unknown */
 extern volatile u8   D_80148627; /* @source 0x80148627 @kind unknown */
 extern volatile s16  D_80148628; /* @source 0x80148628 @kind unknown */
