@@ -5,6 +5,16 @@
 
 /* @source 0x1F800044 @kind unknown */
 extern u8* D_1F800044;
+/* @source 0x801448EB @kind unknown */
+extern u8 D_801448EB;
+/* @source 0x801448EC @kind unknown */
+extern u8 D_801448EC;
+/* @source 0x801448ED @kind unknown */
+extern u8 D_801448ED;
+/* @source 0x801490A8 @kind unknown */
+extern u16 D_801490A8;
+/* @source 0x801490C7 @kind unknown */
+extern s8 D_801490C7;
 /* @source 0x801F3F80 @kind table */
 extern void (*D_801F3F80[])(void);
 /* @source 0x801F4900 @kind table */
