@@ -76,6 +76,7 @@ s16  func_8015477C(u16 arg0, u16 arg1);
 void func_801D11C0(void);
 void func_801D9B14(void);
 void func_801D9B58(void);
+void func_801D9C9C(void);
 void func_801D9CF4(void);
 void func_801D5C48(void);
 void func_801D6000(void);
