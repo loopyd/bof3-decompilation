@@ -72,6 +72,7 @@ applyPanelPosition = 0x801E2B94;
 retreatPanelXToNeg150 = 0x801E2C9C;
 advancePanelXTo17 = 0x801E2CDC;
 retreatPanelField6To62 = 0x801E2D1C;
+func_801E2D5C = 0x801E2D5C;
 retreatPanelXToNeg150B = 0x801E2E30;
 advancePanelXTo15 = 0x801E2E70;
 advancePanelXTo320 = 0x801E31C4;

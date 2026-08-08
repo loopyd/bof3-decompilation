@@ -557,7 +557,7 @@ segments:
     - c
     - retreatPanelField6To62
   - - 74076
-    - asm
+    - c
     - func_801E2D5C
   - - 74164
     - asm
