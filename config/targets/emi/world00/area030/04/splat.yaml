@@ -257,7 +257,7 @@ segments:
     - asm
     - func_801DAFBC
   - - 42060
-    - asm
+    - c
     - func_801DB04C
   - - 42156
     - asm

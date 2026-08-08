@@ -42,6 +42,9 @@ extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
 extern u8  D_801E238C[];  /* @source 0x801E238C @kind unknown */
 extern u8  D_801E2390[];  /* @source 0x801E2390 @kind unknown */
 extern u8* D_8014598C;    /* @source 0x8014598C @kind unknown */
+extern s32 D_8014421C;     /* @source 0x8014421C @kind unknown */
+extern u8  D_801E31F8;     /* @source 0x801E31F8 @kind unknown */
+extern s8* D_801E320C;     /* @source 0x801E320C @kind unknown */
 
 typedef struct SpriteGeometry {
   s32 clut_x;
