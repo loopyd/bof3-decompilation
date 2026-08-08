@@ -203,6 +203,8 @@ extern struct GameWorkArea* g_game_work;
 extern u8* D_80146250;
 /* @source 0x801CD358 @kind table */
 extern GameEntry0StateHandler D_801CD358[];
+/* @source 0x801CD374 @kind table */
+extern GameEntry0StateHandler D_801CD374[];
 
 /* @behavior entry-0 main state machine index */
 /* @source 0x80143B90 @kind unknown */
