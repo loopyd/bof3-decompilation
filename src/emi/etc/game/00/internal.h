@@ -201,6 +201,8 @@ extern const volatile AbilityObject abilityObjects[];
 extern struct GameWorkArea* g_game_work;
 /* @source 0x80146250 @kind unknown */
 extern u8* D_80146250;
+/* @source 0x801CD358 @kind table */
+extern GameEntry0StateHandler D_801CD358[];
 
 /* @behavior entry-0 main state machine index */
 /* @source 0x80143B90 @kind unknown */
