@@ -197,6 +197,7 @@ advanceByte3UnlessFlag2 = 0x801E06EC;
 dispatchSubstate3TableB1f4 = 0x801E0744;
 func_801E0B64 = 0x801E0B64;
 func_801E0E0C = 0x801E0E0C;
+func_801E1050 = 0x801E1050;
 dispatchLocalState4Table = 0x801E1298;
 dispatchAltState3Table = 0x801E1450;
 dispatchState2ClassTable = 0x801E1670;
