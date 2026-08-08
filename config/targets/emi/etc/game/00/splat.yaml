@@ -292,7 +292,7 @@ segments:
     - asm
     - func_8019A848
   - - 20660
-    - asm
+    - c
     - func_8019A8B4
   - - 20740
     - asm
