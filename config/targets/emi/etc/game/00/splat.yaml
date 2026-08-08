@@ -232,7 +232,7 @@ segments:
     - c
     - advancePanelField6To16
   - - 16824
-    - asm
+    - c
     - func_801999B8
   - - 16888
     - asm
