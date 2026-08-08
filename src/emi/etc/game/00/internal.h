@@ -185,6 +185,8 @@ extern const volatile AbilityObject abilityObjects[];
  * matching the original binary's codegen. */
 /* @source 0x1F800044 @kind data */
 extern struct GameWorkArea* g_game_work;
+/* @source 0x80146250 @kind unknown */
+extern u8* D_80146250;
 
 /* @behavior entry-0 main state machine index */
 /* @source 0x80143B90 @kind unknown */
