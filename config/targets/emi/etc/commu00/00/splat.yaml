@@ -63,7 +63,7 @@ segments:
     - c
     - selectUiMode14
   - - 9928
-    - asm
+    - c
     - func_801F12C8
   - - 10008
     - asm

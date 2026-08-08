@@ -58,6 +58,9 @@ extern u8           fairySlotIndex;
  * variant-derived labels are entries minus 0x3FFB.
  */
 extern volatile u8  variantRotation[1];
+extern u8           D_801455C9[];
+extern u8           D_801457AB[];
+extern u8           D_801CA28C[];
 
 /* Local commu00 dispatch tables (data blob T_801F24FC). */
 /* @source 0x801F25EC @kind table: six function pointers indexed by the fairy progress byte
