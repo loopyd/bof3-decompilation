@@ -500,7 +500,7 @@ segments:
     - c
     - resetUiState
   - - 72272
-    - asm
+    - c
     - func_801E2650
   - - 72484
     - asm

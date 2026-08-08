@@ -11,6 +11,26 @@
 extern PanelTask* D_80148648;
 #define D_80148648 g_PanelTaskRoot
 
+extern u8 D_80148330[];
+extern u8 D_80148331;
+extern u8 D_80148332;
+extern u8 D_80148333;
+extern s16 D_80148334;
+extern s16 D_80148336;
+extern s16 D_80148340;
+extern u8 D_80148355;
+extern u8 D_80148356;
+extern u8 D_80148357;
+extern s16 D_80148358;
+extern s16 D_8014835A;
+extern u8 D_8014835C;
+extern u8 D_8014835E;
+extern u8 D_8014835F;
+extern u8 D_80148360;
+extern u8 D_80148361;
+extern u8 D_80148625;
+extern u8 D_80148626;
+
 /* Absolute-address globals (byte-width counters/flags). */
 /* Write-only in this target (7 stores, no loads); role unproven.
  * @source 0x80148650
