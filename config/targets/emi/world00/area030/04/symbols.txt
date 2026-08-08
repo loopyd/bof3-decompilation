@@ -59,6 +59,7 @@ func_801DFFA8 = 0x801DFFA8;
 func_801DFFEC = 0x801DFFEC;
 func_801E00E0 = 0x801E00E0;
 clearFlagState10 = 0x801E023C;
+func_801E0394 = 0x801E0394;
 dispatchCompanion = 0x801E0C20;
 submitTpageDrawMode = 0x801E0C80;
 func_801E0DCC = 0x801E0DCC;
