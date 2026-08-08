@@ -199,7 +199,7 @@ segments:
     - c
     - retreatPanelXToNeg170
   - - 15928
-    - asm
+    - c
     - func_80199638
   - - 15992
     - asm

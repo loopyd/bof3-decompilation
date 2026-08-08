@@ -79,6 +79,7 @@ finalizeFrame = 0x801993F0;
 func_80199558 = 0x80199558;
 func_8019959C = 0x8019959C;
 retreatPanelXToNeg170 = 0x801995F8;
+func_80199638 = 0x80199638;
 submitPanelPosition = 0x80199678;
 advancePanelXTo320 = 0x801996FC;
 retreatPanelXTo152 = 0x8019973C;
