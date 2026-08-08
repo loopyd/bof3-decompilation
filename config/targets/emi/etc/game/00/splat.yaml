@@ -670,7 +670,7 @@ segments:
     - c
     - dispatchStateHandler
   - - 74796
-    - asm
+    - c
     - func_801A7C2C
   - - 74924
     - c
