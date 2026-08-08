@@ -15,7 +15,11 @@ extern GameEntry0StateHandler D_801C80C8[];
 /* @source 0x801CD308 @kind table */
 extern GameEntry0StateHandler D_801CD308[];
 
+void func_801ACF2C(void);
+void func_801AD0EC(void);
+void func_801AD184(void);
 void func_801AD218(void);
+void func_801AD2CC(void);
 void func_801AD3B4(void);
 
 typedef struct GameScenarioState {

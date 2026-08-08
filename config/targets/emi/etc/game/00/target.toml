@@ -12,3 +12,9 @@ function = 0x80197378
 section = ".rodata"
 address = 0x80195830
 size = 0x28
+
+[[matching.section_placements]]
+function = 0x801ACEBC
+section = ".rodata"
+address = 0x80195ED4
+size = 0x14
