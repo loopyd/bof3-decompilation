@@ -17,9 +17,14 @@ extern GameEntry0StateHandler D_801CD308[];
 typedef struct GameEntry0HandlerSet {
   GameEntry0StateHandler handlers[5];
 } GameEntry0HandlerSet;
+typedef struct GameEntry0DispatchSet {
+  GameEntry0StateHandler handlers[6];
+} GameEntry0DispatchSet;
 
 /* @source 0x80195F10 @kind table */
 extern GameEntry0HandlerSet D_80195F10;
+/* @source 0x80195F44 @kind table */
+extern GameEntry0DispatchSet D_80195F44;
 
 void func_801ACF2C(void);
 void func_801AD0EC(void);
@@ -44,7 +49,8 @@ struct GameWorkArea {
   u8  flags_00;       /* 0x00 - entity flags */
   u8  unk_01;         /* 0x01 */
   u8  flags_02;       /* 0x02 */
-  u8  pad_03[0x02];   /* 0x03-0x04 */
+  u8  pad_03;         /* 0x03 */
+  u8  field_04;       /* 0x04 - handler index */
   u8  field_05;       /* 0x05 - region/scene index */
   u8  unk_06;         /* 0x06 */
   u8  unk_07;         /* 0x07 */
