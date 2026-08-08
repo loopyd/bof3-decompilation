@@ -10,6 +10,9 @@
 
 typedef void (*GameEntry0StateHandler)(void);
 
+/* @source 0x801CD308 @kind table */
+extern GameEntry0StateHandler D_801CD308[];
+
 void func_801AD218(void);
 void func_801AD3B4(void);
 
