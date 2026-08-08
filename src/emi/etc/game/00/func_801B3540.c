@@ -7,5 +7,5 @@
  */
 void NO_SIBLING_CALLS func_801B3540(void)
 {
-    D_801CD154[g_game_work->pad_03[0]]();
+    D_801CD154[g_game_work->pad_03]();
 }

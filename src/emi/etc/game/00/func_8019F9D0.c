@@ -6,7 +6,7 @@ void func_8019F9D0(void)
 {
     g_game_work->unk_01 = g_game_work->field_0B;
     g_game_work->flags_02 = 0;
-    g_game_work->pad_03[0] = 0;
-    g_game_work->pad_03[1] = 0;
+    g_game_work->pad_03 = 0;
+    g_game_work->field_04 = 0;
     g_game_work->pad_09[0] = 0;
 }

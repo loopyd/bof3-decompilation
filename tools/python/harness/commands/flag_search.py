@@ -22,8 +22,10 @@ def run(args: argparse.Namespace) -> int:
     from ._lift_m2c import resolve_function
 
     _, _, source = resolve_function(args.function)
-    if not source.is_file():
-        raise FileNotFoundError(f"lifted source does not exist: {source}")
+    if source is None or not source.is_file():
+        raise FileNotFoundError(
+            f"lifted source does not exist for {args.function}"
+        )
 
     # Resolve optional compiler variant before search.
     compiler_id = args.compiler

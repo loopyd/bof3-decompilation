@@ -24,6 +24,7 @@ class RizinTarget:
     reviewed_addresses: frozenset[int]
     replay: str
     replay_sha256: str
+    expected_lifts: dict[str, int]
 
 
 def _baseline(symbols: list[Symbol], roots: frozenset[int]) -> str:
@@ -86,6 +87,9 @@ def prepare_target(root: Path, target_id: str) -> RizinTarget:
     replay = _baseline(
         load_target_symbols(root, manifest.id.value), roots
     ) + _reviewed_overlay(overlay)
+    from .domain.sources import expected_lift_sources
+
+    expected_lifts = expected_lift_sources(layout, root / manifest.source_dir)
     return RizinTarget(
         target=manifest.id.value,
         binary=binary,
@@ -95,6 +99,7 @@ def prepare_target(root: Path, target_id: str) -> RizinTarget:
         reviewed_addresses=roots,
         replay=replay,
         replay_sha256=hashlib.sha256(replay.encode()).hexdigest(),
+        expected_lifts=expected_lifts,
     )
 
 
@@ -110,6 +115,7 @@ def analyze_project(root: Path, target_id: str, *, timeout: int = 120) -> RizinT
         replay_commands=replay_commands(target.replay),
         replay_sha256=target.replay_sha256,
         source_dir=target.source_dir,
+        expected_lifts=target.expected_lifts,
         timeout=timeout,
     )
     write_snapshot(snapshot, target.snapshot)

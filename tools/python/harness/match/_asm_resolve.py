@@ -1,18 +1,20 @@
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..domain.tags import parse_source_tag
+from ..domain.sources import (  # single authority: metadata-backed registry
+    CompiledSymbolError,
+    collect_source_addresses as _domain_collect_source_addresses,
+    compiled_symbol_name,
+    source_address as _domain_source_address,
+)
 from ..io import read_json, RepoLayout
 
 IMPLAUSIBLE_SIBLING_FUNCTION_SIZE = 0x1000
 MIPS_JR_RA = 0x03E00008
 PSX_EXE_MAGIC = b"PS-X EXE"
 PSX_EXE_HEADER_SIZE = 0x800
-# Centralized in domain.registry; alias retained for existing importers.
-FUNC_NAME_RE = re.compile(r"func_([0-9a-fA-F]{8})")
 
 
 @dataclass(frozen=True)
@@ -51,26 +53,15 @@ def read_psx_exe_info(path: Path) -> PsxExeInfo | None:
 
 
 def parse_source_address(source_path: Path) -> int:
-    text = source_path.read_text(encoding="utf-8")
-    address = parse_source_tag(text)
-    if address is not None:
-        return address
-    match = FUNC_NAME_RE.search(source_path.stem)
-    if match is not None:
-        return int(match.group(1), 16)
-    raise ValueError(
-        f"cannot infer original address from {source_path}; add @source or pass --address"
-    )
+    """Legacy alias; the @source-tag authority lives in domain.sources."""
+
+    return _domain_source_address(source_path)
 
 
 def collect_source_addresses(source_dir: Path) -> list[tuple[Path, int]]:
-    rows: list[tuple[Path, int]] = []
-    for source_path in sorted(source_dir.glob("*.c")):
-        try:
-            rows.append((source_path, parse_source_address(source_path)))
-        except ValueError:
-            continue
-    return sorted(rows, key=lambda row: (row[1], row[0].name))
+    """Legacy alias; duplicate detection lives in domain.sources."""
+
+    return _domain_collect_source_addresses(source_dir)
 
 
 def infer_size_from_sibling_sources(source_path: Path, address: int) -> int | None:
@@ -142,11 +133,25 @@ def infer_original_size(
         raise
 
 
-def source_function_name(source_path: Path, address: int) -> str:
-    match = FUNC_NAME_RE.search(source_path.stem)
-    if match is not None:
-        return f"func_{match.group(1).upper()}"
-    return f"func_{address:08X}"
+def source_function_name(
+    source_path: Path, address: int, root: Path | None = None
+) -> str:
+    """Return the compiled symbol name for a lift source.
+
+    With ``root`` the owning target map names the compiled symbol (raw
+    ``func_<ADDR>`` or a reviewed semantic name) with map/Splat agreement.
+    Without a target context, the compiled symbol cannot be proven and
+    :class:`CompiledSymbolError` is raised — ``func_<ADDR>`` is never
+    synthesized from the filename.
+    """
+
+    if root is None:
+        raise CompiledSymbolError(
+            source_path,
+            address,
+            "no repository context for compiled symbol resolution",
+        )
+    return compiled_symbol_name(root, source_path, address)
 
 
 def _source_relative_path(layout: RepoLayout, source_path: Path) -> Path:

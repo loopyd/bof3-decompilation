@@ -8,5 +8,5 @@ void NO_SIBLING_CALLS func_801AD35C(void)
         func_801AD3B4,
         func_801AD218
     };
-    handlers[g_game_work->pad_03[1]]();
+    handlers[g_game_work->field_04]();
 }

@@ -188,13 +188,16 @@ def _target_assembly(layout: RepoLayout, function: FunctionId, source: Path) -> 
     if manifest is None:
         raise ValueError(f"unknown target: {function.target.value}")
     _require_reviewed_function_boundary(layout, function, manifest)
-    path = (
-        layout.out_dir
-        / "splat"
-        / manifest.id.value
-        / "asm"
-        / f"func_{function.address:08X}.s"
+
+    boundary = parse_splat_layout(
+        layout.root / manifest.splat, manifest.load_address
+    ).boundary_starting_at(function.address)
+    asm_name = (
+        boundary.name
+        if boundary is not None and boundary.name is not None
+        else f"func_{function.address:08X}"
     )
+    path = layout.out_dir / "splat" / manifest.id.value / "asm" / f"{asm_name}.s"
     if path.is_file():
         lines = path.read_text(encoding="utf-8").splitlines()
         kept = [
@@ -241,20 +244,16 @@ class DecompMeScratchpadToolchain:
         if manifest is None:
             raise ValueError(f"unknown target: {function.target.value}")
         _require_reviewed_function_boundary(self.layout, function, manifest)
-        source = (
-            self.layout.root / manifest.source_dir / f"func_{function.address:08X}.c"
-        )
-        if not source.is_file():
-            from ..match._asm_resolve import collect_source_addresses
+        from ..domain.sources import resolve_source_for_address
 
-            for candidate, address in collect_source_addresses(
-                self.layout.root / manifest.source_dir
-            ):
-                if address == function.address:
-                    source = candidate
-                    break
-        if not source.is_file():
-            raise FileNotFoundError(f"lifted source does not exist: {source}")
+        source = resolve_source_for_address(
+            self.layout.root / manifest.source_dir, function.address
+        )
+        if source is None:
+            raise FileNotFoundError(
+                f"lifted source does not exist for {function.target.value}@0x{function.address:08X}; "
+                "a lift source must carry '@source' and '@behavior' metadata"
+            )
         # Macro-expanded source avoids target-local includes. Only retain
         # declarations it references, never the full (possibly ignored PsyQ)
         # preprocessor context.
@@ -288,7 +287,7 @@ class DecompMeScratchpadToolchain:
                 "cannot publish context that references ignored PsyQ declarations: "
                 + ", ".join(sorted(context_private)[:5])
             )
-        name = source_function_name(source, function.address)
+        name = source_function_name(source, function.address, self.layout.root)
         return ScratchpadPayload(
             name=name,
             platform="ps1",

@@ -74,7 +74,9 @@ def test_symbols_check_target_scope(tmp_path: Path, capsys) -> None:
     map1.write_text("func_80100000 = 0x80100000;\n", encoding="utf-8")
     src1 = tmp_path / "src" / "exe" / "keep"
     src1.mkdir(parents=True)
-    (src1 / "func_80100000.c").write_text("// stub\n", encoding="utf-8")
+    (src1 / "func_80100000.c").write_text(
+        "// @source 0x80100000\n// @behavior stub\n", encoding="utf-8"
+    )
 
     # --- Target 2: emi/battle/keep/15 (source/map drift) ---
     _write_check_target(tmp_path, "emi/battle/keep/15", kind="emi")
@@ -92,7 +94,9 @@ def test_symbols_check_target_scope(tmp_path: Path, capsys) -> None:
     src2 = tmp_path / "src" / "emi" / "battle" / "keep" / "15"
     src2.mkdir(parents=True)
     # func_80200000.c exists but map only has func_80200004 → drift
-    (src2 / "func_80200000.c").write_text("// stub\n", encoding="utf-8")
+    (src2 / "func_80200000.c").write_text(
+        "// @source 0x80200000\n// @behavior stub\n", encoding="utf-8"
+    )
 
     # --- 1: selected clean target ---
     code1 = symbols_main(["--root", str(tmp_path), "check", "exe/keep"])

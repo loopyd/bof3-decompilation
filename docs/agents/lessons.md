@@ -84,9 +84,7 @@ iteration procedure: [function matching](matching.md).
   percentage ranks effort, never authorizes propagation.
 - Validate a second member independently before sharing code; normalize
   equivalent variables and struct fields before extracting a shared body.
-- Use a semantic `src/shared/<domain>/*.inc` body only after two
-  independently matching cross-target members; keep address-based wrappers so
-  each target compiles/validates its own symbol.
+- Use a semantic `src/shared/<domain>/*.inc` body only after two independently matching cross-target members; keep metadata-tagged target-local wrappers so each target compiles and validates its own symbol. Wrapper filenames need not encode addresses.
 
 ### Argument-register pins can be a legitimate allocator residual
 
@@ -136,9 +134,7 @@ iteration procedure: [function matching](matching.md).
   non-address-named map symbol (SDK exempt) needs one @source-tagged
   definition: its lift file, a header/source declaration, or a
   `WEAK_SYMBOL_AT` binding; `bin/symbols check` enforces both rules.
-- Preserve pre-promotion evidence with an `INFERRED:` comment beside the
-  owning address-based declaration: what was observed, what would verify
-  promotion. Never create a semantic alias from a hint alone.
+- Preserve pre-promotion evidence with an `INFERRED:` comment beside the owning metadata-tagged declaration: what was observed and what would verify promotion. Never create a semantic alias from a hint alone.
 - Compare target-qualified snapshots (`out/reverse/<target>/snapshot.json`);
   equal addresses across targets are insufficient — overlays and PsyQ copies
   can share a role with different addresses or bytes.

@@ -21,8 +21,21 @@ def require_inside_root(path: Path, description: str, root: Path) -> None:
         raise ValueError(f"{description} must be inside {root}: {path}") from exc
 
 
-def resolve_function_name(source: Path, explicit: str | None) -> str:
-    function = explicit or source.stem
+def resolve_function_name(source: Path, explicit: str | None, root: Path) -> str:
+    """Return the compiled symbol name for the permuter workspace.
+
+    An explicit name wins; otherwise the owning target map names the
+    compiled symbol (map/Splat agreement, never the filename stem and never
+    a synthesized ``func_<ADDR>``).
+    """
+
+    if explicit is not None:
+        function = explicit
+    else:
+        from ..domain.sources import compiled_symbol_name, source_address
+
+        address = source_address(source)
+        function = compiled_symbol_name(root, source, address)
     if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", function):
         raise ValueError(f"invalid function name: {function!r}")
     return function
@@ -86,7 +99,7 @@ def validate(args: argparse.Namespace, root: Path) -> tuple[Path, str, Path, Pat
     except ValueError as exc:
         raise ValueError(f"source must be inside {root / 'src'}: {source}") from exc
 
-    function = resolve_function_name(source, args.function)
+    function = resolve_function_name(source, args.function, root)
     directory = (
         default_directory(source, root)
         if args.directory is None
@@ -229,13 +242,13 @@ def build_parser() -> argparse.ArgumentParser:
         "source",
         type=Path,
         nargs="?",
-        help="TARGET@0xADDRESS (preferred) or an existing src/.../func_ADDRESS.c path",
+        help="TARGET@0xADDRESS (preferred) or an existing lift source path",
     )
     add_example_argument(parser, "bin/permute exe/logo@0x801CE758 --time-limit 30")
     parser.add_argument(
         "function",
         nargs="?",
-        help="function name; defaults to the source filename stem",
+        help="function name; defaults to the compiled map symbol",
     )
     parser.add_argument(
         "directory",
@@ -318,8 +331,12 @@ def _resolve_and_run(args: argparse.Namespace) -> int:
         from harness.commands._lift_m2c import resolve_function
 
         function_id, _, args.source = resolve_function(raw_source)
-        if args.function is None:
-            args.function = f"func_{function_id.address:08X}"
+        if args.source is None:
+            raise FileNotFoundError(
+                f"lifted source does not exist for {function_id.target.value}@0x{function_id.address:08X}"
+            )
+        # The permuter function name is resolved from the owning map in
+        # validate(); never synthesize func_<ADDR> here.
     return run(args)
 
 

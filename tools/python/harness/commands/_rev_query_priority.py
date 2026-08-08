@@ -10,8 +10,10 @@ from typing import Any
 
 from ..canonical import load_map, sdk_map_path
 from ..domain import (
+    CompiledSymbolError,
     load_target_manifests,
 )
+from ..domain.sources import reviewed_function_name
 from ..layout import parse_splat_layout
 
 
@@ -98,8 +100,6 @@ def _candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
     boundary = layout.boundary_starting_at(address)
     if boundary is None or not boundary.is_function:
         return "not_reviewed_code_boundary"
-    if boundary.function_name != f"func_{address:08X}":
-        return "noncanonical_boundary_name"
     offset = address - manifest.load_address
     size = row["size"]
     payload = image[offset : offset + size]
@@ -119,6 +119,14 @@ def _candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
         return "in_image_pointer_table"
     if address in sdk_addresses:
         return "shared_sdk_symbol"
+    # Canonical raw boundaries need no map entry; semantic boundaries must be
+    # agreed by the target-local map (reviewed_function_name).
+    if boundary.name == f"func_{address:08X}":
+        return None
+    try:
+        reviewed_function_name(root, row["target"], address, layout=layout)
+    except CompiledSymbolError:
+        return "noncanonical_boundary_name"
     return None
 
 

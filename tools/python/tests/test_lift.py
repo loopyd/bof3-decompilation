@@ -44,14 +44,19 @@ def test_target_qualified_lift_resolves_only_its_owner(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _target(tmp_path)
+    source = tmp_path / "src/exe/logo/initSelectionState.c"
+    source.parent.mkdir(parents=True)
+    source.write_text(
+        "/* @source 0x801CE758 @behavior stages selection */\n", encoding="utf-8"
+    )
     monkeypatch.setattr(lift, "repo_layout", lambda: _layout(tmp_path))
     monkeypatch.setattr(_lift_m2c, "repo_layout", lambda: _layout(tmp_path))
 
-    function, manifest, source = lift.resolve_function("exe/logo@0x801CE758")
+    function, manifest, resolved = lift.resolve_function("exe/logo@0x801CE758")
 
     assert function.address == 0x801CE758
     assert manifest.id.value == "exe/logo"
-    assert source == tmp_path / "src/exe/logo/func_801CE758.c"
+    assert resolved == source
 
 
 def test_lift_commands_explain_missing_source(
@@ -62,7 +67,9 @@ def test_lift_commands_explain_missing_source(
     monkeypatch.setattr(_lift_m2c, "repo_layout", lambda: _layout(tmp_path))
 
     assert lift.main("asm-diff", ["exe/logo@0x801CE758"]) == 2
-    assert "bin/m2c exe/logo@0x801CE758 -o" in capsys.readouterr().err
+    assert "lifted source does not exist for exe/logo@0x801CE758" in (
+        capsys.readouterr().err
+    )
 
 
 def test_context_keeps_symbols_target_local(
@@ -176,7 +183,9 @@ def test_run_match_passes_bindings_without_rewriting_identical_file(
     monkeypatch.setattr(_lift_m2c, "repo_layout", lambda: _layout(tmp_path))
     source = tmp_path / "src/exe/logo/func_801CE758.c"
     source.parent.mkdir(parents=True)
-    source.write_text("// test\n")
+    source.write_text(
+        "// @source 0x801CE758\n// @behavior stages selection\n", encoding="utf-8"
+    )
     bindings = tmp_path / "out/bindings/exe/logo/symbols.c"
     bindings.parent.mkdir(parents=True)
     bindings.write_text(

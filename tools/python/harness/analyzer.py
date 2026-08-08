@@ -203,6 +203,7 @@ def build_snapshot(
     replay_commands: list[str] | None = None,
     replay_sha256: str | None = None,
     source_dir: Path | None = None,
+    expected_lifts: dict[str, int] | None = None,
     timeout: int = 120,
 ) -> TargetSnapshot:
     """Build a portable snapshot from one stateless analyzer invocation set."""
@@ -232,19 +233,13 @@ def build_snapshot(
         function_id = f"{target_id}@{address:08x}"
         source = None
         if source_dir is not None:
-            candidate = source_dir / f"func_{address:08X}.c"
-            if candidate.is_file():
-                source = str(candidate)
-            else:
-                from .match._asm_resolve import parse_source_address
+            from .domain.sources import resolve_source_for_address
 
-                for other in sorted(source_dir.glob("*.c")):
-                    try:
-                        if parse_source_address(other) == address:
-                            source = str(other)
-                            break
-                    except (OSError, ValueError):
-                        continue
+            resolved = resolve_source_for_address(
+                source_dir, address, expected_lifts=expected_lifts
+            )
+            if resolved is not None:
+                source = str(resolved)
         functions.append(
             SnapshotFunction(
                 id=function_id,

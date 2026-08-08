@@ -1,5 +1,10 @@
 #include "internal.h"
 
+/* @behavior computes signed step values from the scratch work-record
+ * x/y coordinates at offsets 0x34/0x38, stores them at offsets 0x0C/0x10,
+ * sets work byte +0x09 to 8, and increments work byte +0x02.
+ * @source 0x801DFFEC
+ */
 void func_801DFFEC(void)
 {
     u8 *work;

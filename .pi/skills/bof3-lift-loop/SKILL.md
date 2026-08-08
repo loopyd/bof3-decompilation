@@ -65,11 +65,7 @@ Per candidate, until the queue is exhausted or a fatal loop failure:
 6. Only exact + review pass: stage owned source/header/map/Splat facts,
    verify the staged list, commit `feat(decomp): byte-match <function>`,
    journal it.
-7. A reviewed non-exact result never stops the queue. Parent captures the
-   reviewer verdict and reusable lesson path in the journal, restores every
-   owned candidate file to the recorded pre-mission state, verifies a clean
-   worktree/index, then runs the decomp.me final rung below and starts the next
-   selector with a fresh mission context. Never restore before review: the
+7. Non-exact never stops the queue. Retain a reviewed coherent net improvement with atomic `@status partial`, `@match NN.NN`, `@residual ...` and commit when authorized; restore only no-progress or semantic/type rejection. Journal, run the final rung, continue. Never restore before review: the
    candidate diff is primary diagnostic evidence.
 
 Use `subagent_supervisor` replies for child requests, not generic intercom.

@@ -7,5 +7,5 @@
  */
 void func_801AC9D0(void)
 {
-    D_801C88FC[g_game_work->pad_03[1]]();
+    D_801C88FC[g_game_work->field_04]();
 }

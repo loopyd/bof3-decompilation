@@ -8,5 +8,5 @@ void setWorkMode5(void) {
         return;
     }
 
-    g_game_work->pad_03[1] = 5;
+    g_game_work->field_04 = 5;
 }

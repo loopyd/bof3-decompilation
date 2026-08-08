@@ -7,24 +7,17 @@ import re
 from typing import Any, Callable, Iterable
 
 from .domain import TargetManifest
-from .domain.tags import BEHAVIOR_TAG_RE, SOURCE_TAG_RE, parse_source_tag
+from .domain.sources import expected_lift_sources
+from .domain.tags import parse_behavior_tag, parse_source_tag
 from .build import batch_build, cmake_target_for_source, configure
 from .io import repo_layout
+from .layout import ReviewedLayout, parse_splat_layout
 from .match._asm_diff_payload import AsmDiffRequest
 from .match._asm_diff_run import _asm_diff_compare, _asm_diff_resolve
 from .match.status_cache import StatusCache, source_fingerprint, target_fingerprint
 
 
-_SOURCE = SOURCE_TAG_RE
-
-
-_BEHAVIOR = BEHAVIOR_TAG_RE
-
-
 _UNDEFINED = re.compile(r"undefined reference to `([^']+)'")
-
-
-_FUNCTION = re.compile(r"func_[0-9A-F]{8}\Z")
 
 
 DiffRunner = Callable[[AsmDiffRequest], dict[str, Any]]
@@ -111,33 +104,71 @@ def _build_preflight(
     for target, manifest in manifests:
         source_dir = root / manifest.source_dir
         target_key = target_fingerprint(root, manifest) if cache is not None else ""
+        try:
+            layout: ReviewedLayout | None = parse_splat_layout(
+                root / manifest.splat, manifest.load_address
+            )
+            expected = expected_lift_sources(layout, source_dir)
+        except (OSError, ValueError):
+            expected = {}
+        claimed: dict[int, Path] = {}
         for source in sorted(source_dir.glob("*.c")):
             try:
                 text = source.read_text(encoding="utf-8")
             except (OSError, UnicodeError) as exc:
                 ready.append(_invalid_record(root, target, source, str(exc)))
                 continue
-            metadata = _SOURCE.search(text)
-            if _FUNCTION.fullmatch(source.stem) is not None:
-                address = int(source.stem.removeprefix("func_"), 16)
-            elif metadata is not None and parse_source_tag(text) is not None:
-                # Renamed lift: the @source tag is the address authority
-                # (data-declaration tags skipped by the registry parser).
-                address = parse_source_tag(text)
-            elif source.stem.startswith("func_"):
-                ready.append(
-                    _invalid_record(root, target, source, "invalid lifted filename")
-                )
-                continue
-            else:
-                continue  # not a lift file (bindings, helpers)
-            if metadata is None or _BEHAVIOR.search(text) is None:
+            address = parse_source_tag(text)
+            expected_address = expected.get(source.stem)
+            if address is None and expected_address is None and not re.match(
+                r"^func_[0-9A-Fa-f]{8}$", source.stem
+            ):
+                continue  # support/helper translation unit, not a lift
+            if address is None:
                 ready.append(
                     _invalid_record(
-                        root, target, source, "missing required metadata", address
+                        root,
+                        target,
+                        source,
+                        "missing required metadata (@source)",
                     )
                 )
                 continue
+            if expected_address is not None and address != expected_address:
+                ready.append(
+                    _invalid_record(
+                        root,
+                        target,
+                        source,
+                        f"source address disagrees with Splat boundary 0x{expected_address:08X}",
+                        address,
+                    )
+                )
+                continue
+            if parse_behavior_tag(text) is None:
+                ready.append(
+                    _invalid_record(
+                        root,
+                        target,
+                        source,
+                        "missing required metadata (@behavior)",
+                        address,
+                    )
+                )
+                continue
+            previous = claimed.get(address)
+            if previous is not None:
+                ready.append(
+                    _invalid_record(
+                        root,
+                        target,
+                        source,
+                        f"duplicate address claim 0x{address:08X} (also {previous.name})",
+                        address,
+                    )
+                )
+                continue
+            claimed[address] = source
             source_name = source.relative_to(root).as_posix()
             key = source_fingerprint(source, target_key) if cache is not None else ""
             record = cache.get(target, source_name, key) if cache is not None else None

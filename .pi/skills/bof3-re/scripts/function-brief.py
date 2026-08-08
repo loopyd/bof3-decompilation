@@ -109,8 +109,10 @@ def main() -> int:
     if not manifest_path.is_file():
         parser.error(f"unknown target: {target}")
     manifest = tomllib.loads(manifest_path.read_text())
-    source = root / manifest["source_dir"] / f"func_{address:08X}.c"
-    header = source.parent / "internal.h"
+    from harness.domain.sources import resolve_source_for_address
+
+    source = resolve_source_for_address(root / manifest["source_dir"], address)
+    header = (root / manifest["source_dir"] / "internal.h") if source is None else source.parent / "internal.h"
     map_path = root / "config" / "targets" / target / "symbols.txt"
     binary = root / manifest["binary"]
     payload_offset = address - int(manifest["load_address"])
@@ -136,8 +138,8 @@ def main() -> int:
             ),
         },
         "source": {
-            "path": source.relative_to(root).as_posix(),
-            "exists": source.is_file(),
+            "path": None if source is None else source.relative_to(root).as_posix(),
+            "exists": source is not None and source.is_file(),
         },
         "local_declarations": {
             "map_names_at_address": map_names(map_path, address),
@@ -153,7 +155,7 @@ def main() -> int:
             root, "bin/rev-query", "mission", f"{target}@0x{address:08X}", "--json"
         ),
     }
-    if source.is_file():
+    if source is not None and source.is_file():
         comparison = run(root, "bin/asm-diff", f"{target}@0x{address:08X}", "--json")
         report["asm_diff"] = comparison
         payload = comparison.get("json")

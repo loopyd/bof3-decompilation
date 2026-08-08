@@ -102,12 +102,24 @@ def selector(value: str) -> tuple[str, int]:
 
 
 def asm_path(root: Path, target: str, splat: Path, address: int) -> Path:
+    """Splat assembly for ``address`` by reviewed boundary name."""
+
     match = re.search(
         r"^\s*asm_path:\s*(\S+)\s*$", splat.read_text(encoding="utf-8"), re.MULTILINE
     )
     directory = (
         root / match.group(1) if match else root / "out" / "splat" / target / "asm"
     )
+    from harness.domain.sources import reviewed_function_name
+
+    try:
+        name = reviewed_function_name(root, target, address)
+    except ValueError:
+        name = None
+    if name is not None:
+        candidate = directory / f"{name}.s"
+        if candidate.is_file():
+            return candidate
     return directory / f"func_{address:08X}.s"
 
 
@@ -206,18 +218,9 @@ def target_context(root: Path, target: str, address: int) -> list[str]:
     source_dir = root / manifest.source_dir
     map_path = root / "config" / "targets" / target / "symbols.txt"
     splat = root / manifest.splat
-    source = source_dir / f"func_{address:08X}.c"
-    if not source.is_file():
-        for candidate in sorted(source_dir.glob("*.c")):
-            try:
-                if (
-                    f"@source 0x{address:08X}" in candidate.read_text(encoding="utf-8")
-                    or f"@source 0x{address:08x}" in candidate.read_text(encoding="utf-8")
-                ):
-                    source = candidate
-                    break
-            except (OSError, UnicodeError):
-                continue
+    from harness.domain.sources import resolve_source_for_address
+
+    source = resolve_source_for_address(source_dir, address)
     asm = asm_path(root, target, splat, address)
     asm_text = asm.read_text(encoding="utf-8") if asm.is_file() else ""
     names = set(IDENTIFIER.findall(asm_text)) | {f"func_{address:08X}"}
@@ -235,7 +238,7 @@ def target_context(root: Path, target: str, address: int) -> list[str]:
     bindings = source_dir / "symbols.c"
     if bindings.is_file():
         paths.append((bindings, None))
-    if source.is_file():
+    if source is not None and source.is_file():
         paths.append((source, None))
     if asm.is_file():
         paths.append((asm, asm_text))

@@ -18,8 +18,7 @@ question. Repo `bin` wins.
 
 - Original bytes, PS-X headers, `t_addr` outrank tools. Verify load:
   `runtime address - load address = payload offset`.
-- Targets stay independent: raw `func_<ADDR>.c`, local `internal.h`, map,
-  Splat boundary, validation. Never copy game extern addresses across targets.
+- Targets stay independent: one metadata-tagged lift source, local `internal.h`, map, Splat boundary, validation. Parsable function-level `@source` and `@behavior` are mandatory and authoritative; filenames never supply identity or an address fallback. Never copy game extern addresses across targets.
 - C89 only. Banned: handwritten asm, direct register pins, asm-renamed
   externs, `INCLUDE_ASM`. Sanctioned: `barrier()`/`CLOBBER_CALLER_REG(reg)`
   (or named `CLOBBER_*`), `REGISTER_PIN(type, name, reg)`, `symbols.c`
@@ -99,6 +98,8 @@ copy is an allocator residual only after source lifetime, clean-C ordering,
 profile, and permuter variants are exhausted. A lone delay-slot residual needs
 exact branch/jump operands and liveness before a caller-register clobber.
 
+After the bounded loop, retain a reviewed coherent net improvement with atomic `@status partial`, `@match NN.NN`, `@residual ...`; revert only no-progress or semantic/type defects.
+
 Read `first=` first; a percentage is not success. A retained `MATCHING_AID`
 names the original/current instruction or register placement, exhausted rung,
 and the immediately following exact live byte-match; remove it if clean C
@@ -131,9 +132,7 @@ the next loop:
 2. Naming: `bof3-cleanup` ladder (references/CLEANUP/), one evidence-gated
    rename at a time; `func_XXXXXXXX`/`D_XXXXXXXX`/`unk_XX` stays until the
    two-corroborator gate passes.
-3. Organization: relocate only when the flexible file framework + metadata
-   track the file; plan moves, never move mid-loop; wrappers stay
-   address-based.
+3. Organization: source filenames are flexible because the domain registry resolves function-level `@source`/`@behavior`; source filename, compiled symbol, and Splat label remain separate. Plan moves and never move mid-loop.
 4. Gates: fresh live `bin/asm-diff TARGET@0xADDRESS --detail normal` (no
    first-difference) and `bin/byte-match TARGET@0xADDRESS` per touched
    selector, `bin/splat TARGET` if map/Splat changed, fresh `bof3-review`.

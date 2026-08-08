@@ -22,6 +22,8 @@ class LayoutBoundary:
     virtual_end: int | None
     kind: str
     name: str | None
+    source: str | None = None
+    behavior: str | None = None
 
     @property
     def is_function(self) -> bool:
@@ -102,10 +104,32 @@ def _integer(value: object, *, field: str) -> int:
     raise ValueError(f"invalid Splat {field}: {value!r}")
 
 
-def _row(value: object) -> tuple[int, str, str | None] | None:
+def _row(
+    value: object,
+) -> tuple[int, str, str | None, str | None, str | None] | None:
     if not isinstance(value, list) or len(value) < 2 or not isinstance(value[1], str):
         return None
-    name = str(value[2]) if len(value) >= 3 else None
+    name: str | None = None
+    source: str | None = None
+    behavior: str | None = None
+    metadata = value[2] if len(value) >= 3 else None
+    if isinstance(metadata, str):
+        name = metadata
+        for extra in value[3:]:
+            if isinstance(extra, str) and extra.startswith("@source:"):
+                source = extra.split(":", 1)[1].strip()
+            elif isinstance(extra, str) and extra.startswith("@behavior:"):
+                behavior = extra.split(":", 1)[1].strip()
+    elif isinstance(metadata, dict):
+        name = metadata.get("name")
+        source = metadata.get("source")
+        behavior = metadata.get("behavior")
+        if name is not None:
+            name = str(name)
+        if source is not None:
+            source = str(source)
+        if behavior is not None:
+            behavior = str(behavior)
     if (
         name
         and _MIXED_CASE_RAW_FUNCTION.fullmatch(name)
@@ -116,6 +140,8 @@ def _row(value: object) -> tuple[int, str, str | None] | None:
         _integer(value[0], field="offset"),
         value[1],
         name,
+        source,
+        behavior,
     )
 
 
@@ -125,7 +151,7 @@ def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedLayout:
     if not isinstance(document, dict) or not isinstance(document.get("segments"), list):
         raise ValueError(f"invalid Splat segments in {splat_path}")
 
-    starts: list[tuple[int, int, str, str | None]] = []
+    starts: list[tuple[int, int, str, str | None, str | None, str | None]] = []
     eof: int | None = None
     for segment in document["segments"]:
         if isinstance(segment, list):
@@ -134,8 +160,10 @@ def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedLayout:
                 continue
             parsed = _row(segment)
             if parsed is not None:
-                offset, kind, name = parsed
-                starts.append((offset, load_address + offset, kind, name))
+                offset, kind, name, source, behavior = parsed
+                starts.append(
+                    (offset, load_address + offset, kind, name, source, behavior)
+                )
             continue
         if not isinstance(segment, dict):
             raise ValueError(f"unsupported Splat segment in {splat_path}: {segment!r}")
@@ -152,18 +180,36 @@ def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedLayout:
                 raise ValueError(
                     f"unsupported Splat subsegment in {splat_path}: {subsegment!r}"
                 )
-            offset, kind, name = parsed
-            starts.append((offset, segment_vram + offset - segment_start, kind, name))
+            offset, kind, name, source, behavior = parsed
+            starts.append(
+                (offset, segment_vram + offset - segment_start, kind, name, source, behavior)
+            )
 
     starts.sort(key=lambda item: item[0])
     boundaries: list[LayoutBoundary] = []
-    for index, (file_start, virtual_start, kind, name) in enumerate(starts):
+    for index, (
+        file_start,
+        virtual_start,
+        kind,
+        name,
+        source,
+        behavior,
+    ) in enumerate(starts):
         file_end = starts[index + 1][0] if index + 1 < len(starts) else eof
         virtual_end = (
             virtual_start + file_end - file_start if file_end is not None else None
         )
         boundaries.append(
-            LayoutBoundary(file_start, file_end, virtual_start, virtual_end, kind, name)
+            LayoutBoundary(
+                file_start,
+                file_end,
+                virtual_start,
+                virtual_end,
+                kind,
+                name,
+                source,
+                behavior,
+            )
         )
     return ReviewedLayout(
         tuple(boundaries), load_address, hashlib.sha256(text.encode()).hexdigest()

@@ -18,11 +18,12 @@ from ..toolchain.m2c import M2cToolchain
 _FUNC = re.compile(r"^func_[0-9a-fA-F]{8}$")
 
 
-def resolve_function(value: str) -> tuple[FunctionId, TargetManifest, Path]:
-    """Return one known target and its authored source path.
+def resolve_function(value: str) -> tuple[FunctionId, TargetManifest, Path | None]:
+    """Return one known target and its authored source path, or None.
 
-    Raw lifts live at func_<ADDR>.c; a renamed lift is found through its
-    @source metadata tag (the address authority inside renamed files).
+    A lift source is found through its @source metadata tag (the address
+    authority inside renamed files).  No path is fabricated for a missing
+    source; callers report the explicit absence.
     """
 
     function = parse_function_id(value)
@@ -31,14 +32,9 @@ def resolve_function(value: str) -> tuple[FunctionId, TargetManifest, Path]:
     manifest = manifests.get(function.target.value)
     if manifest is None:
         raise ValueError(f"unknown target: {function.target.value}")
-    source = root / manifest.source_dir / f"func_{function.address:08X}.c"
-    if source.is_file():
-        return function, manifest, source
-    from ..match._asm_resolve import collect_source_addresses
+    from ..domain.sources import resolve_source_for_address
 
-    for candidate, address in collect_source_addresses(root / manifest.source_dir):
-        if address == function.address:
-            return function, manifest, candidate
+    source = resolve_source_for_address(root / manifest.source_dir, function.address)
     return function, manifest, source
 
 

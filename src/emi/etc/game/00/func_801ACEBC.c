@@ -11,5 +11,5 @@ void func_801ACEBC(void)
         func_801AD2CC
     };
 
-    handlers[g_game_work->pad_03[1]]();
+    handlers[g_game_work->field_04]();
 }

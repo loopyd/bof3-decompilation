@@ -276,6 +276,12 @@ def test_mission_composes_sdk_callees_callers_and_risk(
         'splat = "config/targets/exe/t/splat.yaml"\nload_address = 0x80100000\n',
         encoding="utf-8",
     )
+    (manifest.parent / "splat.yaml").write_text(
+        "segments:\n"
+        "  - [0, c, func_80100000]\n"
+        "  - [16]\n",
+        encoding="utf-8",
+    )
     sdk = tmp_path / "config" / "sdk"
     sdk.mkdir(parents=True)
     (sdk / "psyq-slus.txt").write_text("PadInit = 0x80174668;\n", encoding="utf-8")

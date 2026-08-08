@@ -141,7 +141,7 @@ in different images never share query results.
 ```sh
 bin/m2ctx TARGET@0xADDRESS
 bin/m2c TARGET@0xADDRESS -o out/candidate.c
-# edit src/<target>/func_XXXXXXXX.c and adjacent target evidence
+# edit the metadata-resolved lift source and adjacent target evidence
 bin/asm-diff TARGET@0xADDRESS --detail normal
 bin/byte-match TARGET@0xADDRESS
 ```

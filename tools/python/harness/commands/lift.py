@@ -145,16 +145,18 @@ def _print_match(
                 print(diff.read_text(encoding="utf-8"), end="")
     return 0 if exact else 1
 
-def _require_lifted_source(function: FunctionId, source: Path) -> None:
-    if not source.is_file():
+def _require_lifted_source(function: FunctionId, source: Path | None) -> Path:
+    if source is None or not source.is_file():
         raise FileNotFoundError(
-            f"lifted source does not exist: {source}; generate and review it with "
-            f"bin/m2c {function.target.value}@0x{function.address:08X} -o {source}"
+            f"lifted source does not exist for {function.target.value}@0x{function.address:08X}; "
+            "generate and review it (a lift source must carry '@source' and "
+            "'@behavior' metadata)"
         )
+    return source
 
 def run_asm_diff(args: argparse.Namespace) -> int:
     function, manifest, source = resolve_function(args.function)
-    _require_lifted_source(function, source)
+    source = _require_lifted_source(function, source)
     return _print_match(
         _run_match(function, manifest, source, diagnostics=True),
         json_output=args.json,
@@ -164,7 +166,7 @@ def run_asm_diff(args: argparse.Namespace) -> int:
 
 def run_byte_match(args: argparse.Namespace) -> int:
     function, manifest, source = resolve_function(args.function)
-    _require_lifted_source(function, source)
+    source = _require_lifted_source(function, source)
     return _print_match(
         _run_match(function, manifest, source, diagnostics=False),
         json_output=args.json,
@@ -173,6 +175,7 @@ def run_byte_match(args: argparse.Namespace) -> int:
 
 def run_promote(args: argparse.Namespace) -> int:
     function, manifest, source = resolve_function(args.function)
+    source = _require_lifted_source(function, source)
     candidate = Path(args.candidate).resolve()
     if not candidate.is_file():
         raise FileNotFoundError(f"candidate source does not exist: {candidate}")

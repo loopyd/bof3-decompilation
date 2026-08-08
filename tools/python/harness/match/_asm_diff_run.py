@@ -78,7 +78,7 @@ def _asm_diff_resolve(repo: RepoLayout, request: AsmDiffRequest) -> dict[str, An
         if request.address is not None
         else parse_source_address(source_path)
     )
-    function_name = source_function_name(source_path, address)
+    function_name = source_function_name(source_path, address, repo.root)
     binary_path = (
         request.binary_path.expanduser().resolve()
         if request.binary_path is not None

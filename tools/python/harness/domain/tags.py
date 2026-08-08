@@ -10,6 +10,9 @@ import re
 
 SOURCE_TAG_RE = re.compile(r"@source\s+(?:0x)?([0-9A-Fa-f]{8})\b")
 BEHAVIOR_TAG_RE = re.compile(r"@behavior (?:UNKNOWN: .+|[^\n]+)")
+STATUS_TAG_RE = re.compile(r"@status\s+(exact|partial)\b")
+MATCH_TAG_RE = re.compile(r"@match\s+([0-9]+(?:\.[0-9]+)?)\b")
+RESIDUAL_TAG_RE = re.compile(r"@residual\s+([^\n]+)")
 
 # Raw address-encoding symbol names; conflicts resolve by a different name or
 # a suffix, never an overlay-name prefix (`SCENA16_D_*` ban).
@@ -55,6 +58,19 @@ def parse_behavior_tag(text: str) -> str | None:
 
     match = BEHAVIOR_TAG_RE.search(text)
     return match.group(0) if match is not None else None
+
+
+def parse_progress_tags(text: str) -> tuple[str, float, str] | None:
+    """Return partial-lift status, live match percentage, and residual."""
+
+    status = STATUS_TAG_RE.search(text)
+    match = MATCH_TAG_RE.search(text)
+    residual = RESIDUAL_TAG_RE.search(text)
+    if status is None and match is None and residual is None:
+        return None
+    if status is None or match is None or residual is None:
+        raise ValueError("partial progress metadata requires @status, @match, and @residual")
+    return status.group(1), float(match.group(1)), residual.group(1).strip()
 
 
 def parse_declaration_source_tag(text: str, name: str) -> int | None:
@@ -105,10 +121,14 @@ def parse_declaration_source_tag(text: str, name: str) -> int | None:
 
 __all__ = [
     "BEHAVIOR_TAG_RE",
+    "MATCH_TAG_RE",
     "PREFIXED_RAW_NAME_RE",
     "RAW_SYMBOL_NAME_RE",
+    "RESIDUAL_TAG_RE",
     "SOURCE_TAG_RE",
+    "STATUS_TAG_RE",
     "parse_behavior_tag",
     "parse_declaration_source_tag",
+    "parse_progress_tags",
     "parse_source_tag",
 ]

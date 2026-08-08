@@ -1,9 +1,6 @@
 # Cleanup rules — where cleanup applies and where it never does
 
-Never turn an audit into edits, a docs repair into a source refactor, or a
-naming transaction into a lift/matching experiment. Cosmetic and
-evidence-preserving only: never rename/move `func_XXXXXXXX.c` files, never
-change behavior or a byte-match.
+Never turn an audit into edits, a docs repair into a source refactor, or a naming transaction into a lift/matching experiment. Cosmetic and evidence-preserving only: source filename changes require a complete metadata-backed naming transaction; never change behavior or a byte-match.
 
 ## Evidence gate
 
@@ -31,16 +28,11 @@ compiler flags, or binding addresses.
   snapshots, dead links, duplicated instructions — never relocate them.
   Changelog/history entries stay. Durable facts → `docs/specs/`; agent
   policy → `docs/agents/`; scoped work → `docs/plans/`.
-- `audit`: report each finding as `path`, current contract, evidence,
-  smallest safe repair, validation, human-approval needed. Large
-  `internal.h`, raw address spellings, address-based filenames are not drift.
+- `audit`: report each finding as `path`, current contract, evidence, smallest safe repair, validation, human-approval needed. Large `internal.h` and raw compiled-symbol spellings are not drift; source filenames may be semantic because metadata owns identity.
 
 ## Identity contracts — never touch
 
-- Rename a `func_XXXXXXXX.c` file or raw lifted entry function only through
-  a naming transaction (evidence gate) on a file that carries
-  `@behavior`/`@source` metadata; the `@source` tag is the address
-  authority once the filename no longer encodes it. Never rename a Splat function boundary address.
+- Every lift carries parsable function-level `@behavior` and `@source`; the `@source` tag is the address authority and no filename fallback exists. Rename a source file or compiled entry function only through a complete naming transaction (evidence gate). Never rename a Splat function boundary address.
 - Never drop `@behavior`/`@source`/`@kind` tags or evidence comments;
   correct stale tags in place. Tags are written `/* @source 0x... @kind
   ... */` — `//` comments break gcc-2.6.3 variant objects.

@@ -9,7 +9,7 @@ unrelated until proven otherwise.
 bin/splat TARGET
 bin/m2ctx TARGET@0xADDRESS
 bin/m2c TARGET@0xADDRESS -o out/candidate.c
-# edit src/<target>/func_XXXXXXXX.c
+# edit the metadata-resolved lift source under src/<target>/
 bin/asm-diff TARGET@0xADDRESS
 bin/byte-match TARGET@0xADDRESS
 ```
@@ -58,9 +58,7 @@ Normalize names from evidence before sharing code:
   members normally share the same readable constants.
 
 After two cross-target members independently match, a worthwhile common body
-may live in `src/shared/<domain>/<role>.inc`. Each `func_XXXXXXXX.c` stays a
-small address-owned wrapper defining the raw function macro and explicit
-parameters before including the template. No wrapper call or linked extern
+may live in `src/shared/<domain>/<role>.inc`. Each member keeps a small metadata-tagged target-local wrapper defining the compiled function macro and explicit parameters before including the template; the wrapper filename may be semantic. No wrapper call or linked extern
 function: either can change instructions or cross independently loaded binary
 ownership.
 
@@ -81,7 +79,7 @@ Splat `c` boundary, `bin/asm-diff`, and `bin/byte-match` result.
 ## Candidate validation
 
 ```sh
-bin/promote TARGET@0xADDRESS src/<target>/func_XXXXXXXX.c
+bin/promote TARGET@0xADDRESS src/<target>/<metadata-resolved-source>.c
 ```
 
 With the candidate installed in its canonical source file, `bin/promote`
@@ -95,7 +93,7 @@ bin/decomp-status [TARGET...]
 bin/decomp-status exe/logo --json -o out/status.json
 ```
 
-Results: `exact`, `partial`, `invalid`. Valid partial lifts exit `0`;
+Results: `exact`, `partial`, `invalid`. An improved, reviewed coherent partial stays tracked with function-level `@status partial`, `@match NN.NN`, and `@residual ...`; these are progress evidence, never acceptance. Revert only when a completed bounded pass has no net improvement or review rejects semantics/types. Valid partial lifts exit `0`;
 invalid metadata/compilation/linking/comparison exits `2`. Rizin-index
 coverage is supplementary; unavailability does not invalidate the live audit.
 
@@ -207,7 +205,7 @@ Every target `internal.h` is a structured barrel, ordered:
 | Constants / macros | SCREAMING_SNAKE_CASE | `EMI_SECTOR_SIZE`, `EQUIP_RYU` |
 | Single-bit flags | `(1 << N)` shift form | `#define ELEM_FIRE (1 << 0)` |
 | Globals (fixed-address) | `g_` + PascalCase | `g_PrimCursor`, `g_GameState` |
-| Filenames | `func_XXXXXXXX.c` until the evidence gate passes; renamed files carry `@source` | `func_8014E5A0.c` |
+| Source filenames | Flexible semantic name; mandatory function-level `@source`/`@behavior` own identity | `dispatchStateHandler.c` |
 
 Values:
 

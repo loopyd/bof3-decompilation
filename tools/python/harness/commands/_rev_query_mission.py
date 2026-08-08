@@ -134,21 +134,22 @@ def run_mission(args: argparse.Namespace) -> int:
                 {"address": f"0x{unresolved_address:08X}", "name": name}
             )
 
-    source = Path(manifest.source_dir) / f"func_{address:08X}.c"
-    if not (root / source).is_file():
-        from ..match._asm_resolve import collect_source_addresses
+    from ..domain.sources import resolve_source_for_address
+    from ..layout import parse_splat_layout
 
-        for candidate, candidate_address in collect_source_addresses(
-            root / manifest.source_dir
-        ):
-            if candidate_address == address:
-                source = candidate.relative_to(root)
-                break
-    splat_asm = Path("out") / "splat" / target / "asm" / f"func_{address:08X}.s"
-    if not (root / splat_asm).is_file():
+    resolved = resolve_source_for_address(root / manifest.source_dir, address)
+    source = resolved.relative_to(root) if resolved is not None else None
+    layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+    boundary = layout.boundary_starting_at(address)
+    splat_asm = None
+    if boundary is not None and boundary.name:
+        candidate = Path("out") / "splat" / target / "asm" / f"{boundary.name}.s"
+        if (root / candidate).is_file():
+            splat_asm = candidate
+    if splat_asm is None:
         for symbol in load_target_symbols(root, target):
             if symbol.address == address:
-                named = splat_asm.with_name(f"{symbol.name}.s")
+                named = Path("out") / "splat" / target / "asm" / f"{symbol.name}.s"
                 if (root / named).is_file():
                     splat_asm = named
                 break
@@ -158,11 +159,11 @@ def run_mission(args: argparse.Namespace) -> int:
         "target": target,
         "address": f"0x{address:08X}",
         "psyq_space": space,
-        "source": str(source),
-        "source_exists": (root / source).is_file(),
+        "source": None if source is None else str(source),
+        "source_exists": source is not None and (root / source).is_file(),
         "lifted": row["lifted"],
-        "splat_asm": str(splat_asm),
-        "splat_asm_exists": (root / splat_asm).is_file(),
+        "splat_asm": None if splat_asm is None else str(splat_asm),
+        "splat_asm_exists": splat_asm is not None and (root / splat_asm).is_file(),
         "metrics": {
             key: row[key]
             for key in (

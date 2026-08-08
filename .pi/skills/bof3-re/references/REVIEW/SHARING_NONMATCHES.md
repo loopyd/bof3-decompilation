@@ -5,8 +5,8 @@ authorize publication; the parent owns `bin/scratchpad share`.
 
 A restored partial is shareable when all hold:
 
-1. it begins at a reviewed Splat `c` or `asm` `func_XXXXXXXX` boundary;
-2. its restored authored `src/<target>/func_XXXXXXXX.c` exists;
+1. it begins at a reviewed Splat `c` or `asm` function boundary;
+2. its restored authored metadata-resolved lift source exists;
 3. the payload passes local `bin/scratchpad preview SELECTOR` checks.
 
 **Not shareable** only when a boundary is data-leading/non-function,

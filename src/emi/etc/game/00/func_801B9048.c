@@ -8,5 +8,5 @@
 void func_801B9048(void)
 {
   D_80146250[0x12B] = 6;
-  D_801CD374[g_game_work->pad_03[0]]();
+  D_801CD374[g_game_work->pad_03]();
 }

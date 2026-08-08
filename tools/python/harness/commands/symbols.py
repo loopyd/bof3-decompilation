@@ -21,6 +21,13 @@ from ..canonical import (
     weak_bindings_c,
     write_map,
 )
+from ..domain.sources import (
+    LiftMetadataError,
+    SourceAddressCollision,
+    collect_source_addresses,
+    expected_lift_sources,
+)
+from ..layout import parse_splat_layout
 from ..domain import (
     FUNCTION_ID_FORMAT,
     FUNCTION_ID_HELP,
@@ -84,27 +91,26 @@ def run_check(args: argparse.Namespace) -> int:
             symbol.address: symbol for symbol in load_target_symbols(root, target)
         }
         source_dir = root / manifest.source_dir
-        for source in source_dir.glob("*.c"):
-            encoded = source.stem.removeprefix("func_")
-            if len(encoded) == 8 and encoded == encoded.upper():
-                try:
-                    address = int(encoded, 16)
-                except ValueError:
-                    errors.append(f"invalid lifted filename: {source.relative_to(root)}")
-                    continue
-            else:
-                if source.stem.startswith("func_"):
-                    errors.append(
-                        f"invalid lifted filename: {source.relative_to(root)}"
-                    )
-                    continue
-                match = SOURCE_TAG_RE.search(source.read_text(encoding="utf-8"))
-                if match is None:
-                    continue  # not a lift file (bindings, helpers)
-                address = int(match.group(1), 16)
+        try:
+            layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+            expected = expected_lift_sources(layout, source_dir)
+        except (OSError, ValueError):
+            expected = {}
+        try:
+            lift_rows = collect_source_addresses(
+                source_dir, expected_lifts=expected
+            )
+        except LiftMetadataError as exc:
+            errors.append(str(exc))
+            lift_rows = []
+        except SourceAddressCollision as exc:
+            errors.append(str(exc))
+            lift_rows = []
+        for source, address in lift_rows:
             if address not in addresses:
                 errors.append(
-                    f"source/map drift: {source.relative_to(root)} has no map address"
+                    f"source/map drift: {source.relative_to(root)} "
+                    f"(0x{address:08X}) has no map address"
                 )
         bindings_dir = source_dir / "symbols"
         binding_files = sorted(bindings_dir.rglob("*.c")) if bindings_dir.is_dir() else []

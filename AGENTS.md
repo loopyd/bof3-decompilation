@@ -35,7 +35,7 @@ BOF3 binaries load independently. Qualify work by one function selector:
 
 ## Source and symbols
 
-- Keep one `func_XXXXXXXX.c` per function and an adjacent `internal.h`.
+- Keep one C source per lifted function and an adjacent `internal.h`. Lift identity comes only from parsable function-level `@source` and `@behavior` metadata; filenames are flexible and never supply an address fallback.
 - Use `func_80143B40` and `D_80143B40`; maps use sorted
   `name = 0xADDRESS;` entries with eight uppercase hex digits.
 - Replace raw names only after review; a renamed lift file keeps
@@ -45,8 +45,7 @@ BOF3 binaries load independently. Qualify work by one function selector:
   non-address-named map symbol (SDK exempt) carries its origin address in a
   `/* @source 0xXXXXXXXX */`-tagged definition (lift file, declaration, or
   `WEAK_SYMBOL_AT` binding); `bin/symbols check` enforces both rules.
-- Edit `func_XXXXXXXX.c`, its target `internal.h`, the target-local map, and
-  reviewed Splat boundaries as evidence improves. Keep declarations local
+- Edit the metadata-resolved lift source, its target `internal.h`, the target-local map, and reviewed Splat boundaries as evidence improves. Source filename, compiled symbol name, and Splat label are separate identities tied by metadata and target-local address. Keep declarations local
   unless a demonstrated cross-target contract requires sharing.
 - Keep PsyQ external: use official declarations and the shared SDK symbol maps;
   never lift its bodies. The PsyQ/BIOS runtime is a shared SDK linked into the
@@ -91,11 +90,7 @@ BOF3 binaries load independently. Qualify work by one function selector:
   byte-matches. Keep both sources independent until both byte-match.
 - Normalize proven roles, parameters, local names, struct names, and field
   names across group members. Keep unknown fields offset-based (`unk_XX`).
-- After two cross-target members independently byte-match with the same C
-  shape, move only a worthwhile common body to
-  `src/shared/<domain>/<role>.inc`. Keep one
-  address-based `func_XXXXXXXX.c` wrapper per member to provide its raw symbol
-  and any compile-time parameters.
+- After two cross-target members independently byte-match with the same C shape, move only a worthwhile common body to `src/shared/<domain>/<role>.inc`. Keep one metadata-tagged target-local wrapper per member to provide its compiled symbol and any compile-time parameters; its filename may be semantic.
 - Put stable shared types in `include/<subsystem>/` (e.g. `include/battle/`,
   `include/gpu/`).
   A shared template is compiled into every owning image; it is not a runtime

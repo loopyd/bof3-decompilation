@@ -48,6 +48,54 @@ def _diff(request: object) -> dict[str, object]:
     }
 
 
+def test_preflight_reports_duplicate_claims_as_invalid(tmp_path: Path) -> None:
+    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _source(tmp_path, "src/exe/logo", "80100010")
+    dup = tmp_path / "src/exe/logo/dup.c"
+    dup.write_text(
+        "// @source 0x80100010\n// @behavior duplicate claim\n", encoding="utf-8"
+    )
+    manifests = decomp_status.select_manifests(tmp_path)
+    ready, worklist = dsp._build_preflight(tmp_path, manifests, cache=None)
+    assert any(
+        r["reason"].startswith("duplicate address claim 0x80100010")
+        for r in ready
+    )
+    # exactly one claimant reaches the worklist; the duplicate is rejected
+    assert [
+        item[2] for item in worklist["exe/logo"]
+    ].count(0x80100010) == 1
+
+
+def test_preflight_skips_helper_files_and_flags_expected_lifts(
+    tmp_path: Path,
+) -> None:
+    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _source(tmp_path, "src/exe/logo", "80100010")
+    source_dir = tmp_path / "src/exe/logo"
+    (source_dir / "symbols.c").write_text("WEAK_SYMBOL_AT(x, 0x80100000);\n")
+    expected = source_dir / "initSelectionState.c"
+    expected.write_text("void f(void) {}\n", encoding="utf-8")
+    splat = tmp_path / "config/targets/exe/logo/splat.yaml"
+    splat.parent.mkdir(parents=True, exist_ok=True)
+    splat.write_text(
+        "segments:\n"
+        "  - [0, c, func_80100010]\n"
+        "  - [16, c, initSelectionState]\n"
+        "  - [32]\n",
+        encoding="utf-8",
+    )
+    manifests = decomp_status.select_manifests(tmp_path)
+    ready, worklist = dsp._build_preflight(tmp_path, manifests, cache=None)
+    # helper file contributes nothing; expected lift without metadata is invalid
+    assert not any(r["function"] == "symbols.c" for r in ready)
+    assert any(
+        r["function"] == "initSelectionState"
+        and "missing required metadata" in r["reason"]
+        for r in ready
+    )
+
+
 def test_report_orders_lifts_and_aggregates_match_states(
     tmp_path: Path, monkeypatch
 ) -> None:

@@ -7,5 +7,5 @@
  */
 void NO_SIBLING_CALLS func_801B790C(void)
 {
-    D_801CD310[g_game_work->pad_03[1]]();
+    D_801CD310[g_game_work->field_04]();
 }

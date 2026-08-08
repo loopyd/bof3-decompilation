@@ -39,7 +39,7 @@ output.
 
 - `src/exe/<name>/` owns executable lifts.
 - `src/emi/<family>/<archive>/<slot>/` owns one EMI entry.
-- Each lift is `func_XXXXXXXX.c` with adjacent target-local `internal.h`.
+- Each lift is one C source with adjacent target-local `internal.h`. Parsable function-level `@source` and `@behavior` metadata identify it; filenames are flexible and never provide address fallback.
 - Function C, local headers, maps, and Splat layouts are intentionally
   hand-edited as reviewed evidence improves.
 - Shared declarations belong in `include/<subsystem>/` (e.g. `include/base/`,

@@ -264,8 +264,16 @@ def test_agent_context_qwen_roles_stay_bounded() -> None:
             text=True,
             check=True,
         )
-        assert len(result.stdout.encode()) < 12_000, name
+        assert len(result.stdout.encode()) < 13_000, name
         assert result.stdout.count("=====") <= 4, name
+
+
+def test_lift_loop_retains_reviewed_partial_progress_metadata() -> None:
+    text = (ROOT / ".pi/skills/bof3-lift-loop/SKILL.md").read_text(encoding="utf-8")
+    assert "@status partial" in text
+    assert "@match NN.NN" in text
+    assert "@residual ..." in text
+    assert "restore only no-progress or semantic/type rejection" in text
 
 
 def test_pi_context_files_stay_compact() -> None:

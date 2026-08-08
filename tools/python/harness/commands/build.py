@@ -24,9 +24,9 @@ def run(args: argparse.Namespace) -> int:
     target = "lifts"
     if args.selector != "all" and "@" in args.selector:
         _function, _manifest, source = resolve_function(args.selector)
-        if not source.is_file():
+        if source is None or not source.is_file():
             raise FileNotFoundError(
-                f"lift source not found: {source.relative_to(root)}"
+                f"lift source not found for {args.selector}"
             )
         target = cmake_target_for_source(root, source)
     elif args.selector != "all":

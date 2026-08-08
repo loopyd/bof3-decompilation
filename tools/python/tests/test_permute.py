@@ -26,6 +26,39 @@ def _stub_tools(root: Path) -> None:
     (root / "tools" / "prep-permuter.py").touch()
 
 
+def _lift_env(tmp_path: Path, *, address: int = 0x801CE758) -> Path:
+    """One metadata-complete lift source with owning target map and Splat."""
+
+    name = f"func_{address:08X}"
+    config = tmp_path / "config" / "targets" / "exe" / "x"
+    config.mkdir(parents=True, exist_ok=True)
+    (config / "target.toml").write_text(
+        'schema = "harness.target/v2"\n'
+        'id = "exe/x"\n'
+        'kind = "executable"\n'
+        'source_dir = "src/exe/x"\n'
+        'binary = "out/binaries/exe/x.bin"\n'
+        'splat = "config/targets/exe/x/splat.yaml"\n'
+        "load_address = 0x801CE000\n",
+        encoding="utf-8",
+    )
+    (config / "symbols.txt").write_text(
+        f"{name} = 0x{address:08X};\n", encoding="utf-8"
+    )
+    (config / "splat.yaml").write_text(
+        "segments:\n"
+        f"  - [{address - 0x801CE000}, c, {name}]\n"
+        "  - [32]\n",
+        encoding="utf-8",
+    )
+    source = tmp_path / "src" / "exe" / "x" / f"{name}.c"
+    source.parent.mkdir(parents=True)
+    source.write_text(
+        f"/* @source 0x{address:08X} @behavior test */\n", encoding="utf-8"
+    )
+    return source
+
+
 # ---------------------------------------------------------------------------
 # Preparer
 # ---------------------------------------------------------------------------
@@ -89,20 +122,25 @@ def test_nonexistent_source_returns_2(
 # ---------------------------------------------------------------------------
 
 
-def test_function_name_from_stem() -> None:
+def test_function_name_default_map_backed(tmp_path: Path) -> None:
+    source = _lift_env(tmp_path)
     assert (
-        permute.resolve_function_name(Path("/src/x/func_801CE758.c"), None)
-        == "func_801CE758"
+        permute.resolve_function_name(source, None, tmp_path) == "func_801CE758"
     )
 
 
 def test_function_name_explicit() -> None:
-    assert permute.resolve_function_name(Path("src/x.c"), "custom") == "custom"
+    assert (
+        permute.resolve_function_name(Path("src/x.c"), "custom", Path("/root"))
+        == "custom"
+    )
 
 
 def test_function_name_invalid_raises() -> None:
     with pytest.raises(ValueError, match="invalid function name"):
-        permute.resolve_function_name(Path("x.c"), "bad-name!")
+        permute.resolve_function_name(
+            Path("x.c"), "bad-name!", Path("/root")
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -174,9 +212,7 @@ def test_permuter_arguments_jobs() -> None:
 
 
 def test_run_requires_preparer(tmp_path: Path) -> None:
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
+    src = _lift_env(tmp_path)
     ns = permute.build_parser().parse_args(["--root", str(tmp_path), str(src)])
     with pytest.raises(FileNotFoundError, match="decomp-permuter workflow"):
         permute.run(ns)
@@ -184,9 +220,7 @@ def test_run_requires_preparer(tmp_path: Path) -> None:
 
 def test_run_rejects_negative_jobs(tmp_path: Path) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
+    src = _lift_env(tmp_path)
     ns = permute.build_parser().parse_args(
         ["--root", str(tmp_path), str(src), "-j", "-1"]
     )
@@ -196,9 +230,7 @@ def test_run_rejects_negative_jobs(tmp_path: Path) -> None:
 
 def test_run_rejects_zero_time_limit(tmp_path: Path) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
+    src = _lift_env(tmp_path)
     ns = permute.build_parser().parse_args(
         ["--root", str(tmp_path), str(src), "--time-limit", "0"]
     )
@@ -208,9 +240,7 @@ def test_run_rejects_zero_time_limit(tmp_path: Path) -> None:
 
 def test_run_rejects_prepare_only_with_prepared(tmp_path: Path) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
+    src = _lift_env(tmp_path)
     ns = permute.build_parser().parse_args(
         ["--root", str(tmp_path), str(src), "--prepare-only", "--prepared"]
     )
@@ -227,9 +257,7 @@ def test_run_rejects_prepare_only_with_prepared(tmp_path: Path) -> None:
 
 def test_run_prepared_missing_files_raises(tmp_path: Path) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
+    src = _lift_env(tmp_path)
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     ns = permute.build_parser().parse_args(
@@ -243,9 +271,7 @@ def test_run_prepared_accepts_complete_workspace(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
+    src = _lift_env(tmp_path)
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     for name in ("base.c", "target.o", "compile.sh", "settings.toml"):
@@ -272,12 +298,10 @@ def test_run_prepare_only_propagates_preparer_nonzero(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
-    asm = tmp_path / "out" / "splat" / "exe" / "x" / "asm" / "f.s"
+    src = _lift_env(tmp_path)
+    asm = tmp_path / "out" / "splat" / "exe" / "x" / "asm" / "func_801CE758.s"
     asm.parent.mkdir(parents=True)
-    asm.write_text("glabel f\n")
+    asm.write_text("glabel func_801CE758\n")
 
     monkeypatch.setattr(
         subprocess, "run", lambda command, **kw: subprocess.CompletedProcess(command, 7)
@@ -295,12 +319,10 @@ def test_run_prepare_only_returns_zero(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
-    asm = tmp_path / "out" / "splat" / "exe" / "x" / "asm" / "f.s"
+    src = _lift_env(tmp_path)
+    asm = tmp_path / "out" / "splat" / "exe" / "x" / "asm" / "func_801CE758.s"
     asm.parent.mkdir(parents=True)
-    asm.write_text("glabel f\n")
+    asm.write_text("glabel func_801CE758\n")
 
     monkeypatch.setattr(
         subprocess, "run", lambda command, **kw: subprocess.CompletedProcess(command, 0)
@@ -323,9 +345,7 @@ def test_run_delegates_permuter_through_toolchain(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
+    src = _lift_env(tmp_path)
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     for name in ("base.c", "target.o", "compile.sh", "settings.toml"):
@@ -360,9 +380,7 @@ def test_run_propagates_permuter_exit_code(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
+    src = _lift_env(tmp_path)
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     for name in ("base.c", "target.o", "compile.sh", "settings.toml"):
@@ -393,9 +411,7 @@ def test_run_timeout_returns_zero(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
+    src = _lift_env(tmp_path)
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     for name in ("base.c", "target.o", "compile.sh", "settings.toml"):
@@ -435,9 +451,7 @@ def test_run_acquires_and_releases_lock(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
+    src = _lift_env(tmp_path)
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     for name in ("base.c", "target.o", "compile.sh", "settings.toml"):
@@ -472,9 +486,7 @@ def test_run_concurrent_lock_raises(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _stub_tools(tmp_path)
-    src = tmp_path / "src" / "exe" / "x" / "f.c"
-    src.parent.mkdir(parents=True)
-    src.touch()
+    src = _lift_env(tmp_path)
     workspace = tmp_path / "workspace"
     workspace.mkdir()
     for name in ("base.c", "target.o", "compile.sh", "settings.toml"):
