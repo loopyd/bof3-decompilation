@@ -386,7 +386,7 @@ segments:
     - asm
     - func_801DDC0C
   - - 53332
-    - asm
+    - c
     - func_801DDC54
   - - 53432
     - asm
