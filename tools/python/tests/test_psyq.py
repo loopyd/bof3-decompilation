@@ -25,6 +25,48 @@ def make_fake_psyq_tree(root: Path) -> None:
     (lib_dir / "LIBGPU.LIB").write_bytes(b"fake")
 
 
+def _write_check_target(root: Path, target: str) -> None:
+    manifest = root / "config" / "targets" / target / "target.toml"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(
+        "\n".join(
+            (
+                'schema = "harness.target/v2"',
+                f'id = "{target}"',
+                'kind = "executable"',
+                f'source_dir = "src/{target}"',
+                f'binary = "out/binaries/{target}.bin"',
+                f'splat = "config/targets/{target}/splat.yaml"',
+                "load_address = 0x801CE000",
+            )
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+
+def test_psyq_report_scans_nested_lift(tmp_path: Path, capsys) -> None:
+    """psyq-report sees SDK calls from relocated (nested) lift sources."""
+    (tmp_path / "config" / "sdk").mkdir(parents=True)
+    (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text(
+        "SomeSdkCall = 0x80010000;\n", encoding="utf-8"
+    )
+    _write_check_target(tmp_path, "exe/keep")
+    nested = tmp_path / "src" / "exe" / "keep" / "runtime" / "nested.c"
+    nested.parent.mkdir(parents=True)
+    nested.write_text(
+        "/* @source 0x80100000 @behavior x */\n"
+        "void f(void) { SomeSdkCall(); }\n",
+        encoding="utf-8",
+    )
+
+    code = symbols_main(["--root", str(tmp_path), "psyq-report", "exe/keep"])
+    captured = capsys.readouterr()
+
+    assert code == 0
+    assert "SomeSdkCall = 0x80010000" in captured.out
+
+
 def test_stage_psyq_sdk_from_tree(monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr(psyq_discovery, "REPO_ROOT", tmp_path)
     source_root = tmp_path / "inputs" / "psyq-source"

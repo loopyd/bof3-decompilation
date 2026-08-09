@@ -25,6 +25,8 @@ segments:
   - - 12
     - c
     - func_800F500C
+    - '@source: src/bof3/world/func_800F500C.c'
+    - '@behavior: Dispatches through the handler table indexed by the selector byte.'
   - - 72
     - asm
     - func_800F5048

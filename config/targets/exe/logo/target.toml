@@ -6,6 +6,25 @@ source_dir = "src/exe/logo"
 binary = "out/binaries/exe/logo.bin"
 splat = "config/targets/exe/logo/splat.yaml"
 load_address = 0x801ce000
+psyq_source = "src/bof3/support/logo_psyq.c"
+
+sources = [
+    "src/bof3/boot/func_801CE758.c",
+    "src/bof3/boot/initWorkAreaAndStartSubsystems.c",
+    "src/bof3/boot/playCapcomStream.c",
+]
+support_sources = [
+    "src/bof3/support/logo_symbols.c",
+    "src/bof3/support/logo_functions.c",
+    "src/bof3/support/logo_psyq.c",
+    "src/bof3/support/logo_variables.c",
+]
+headers = [
+    "include/bof3/boot/logo_internal.h",
+    "include/bof3/boot/logo_functions.h",
+    "include/bof3/boot/logo_symbols.h",
+    "include/bof3/boot/logo_variables.h",
+]
 
 [psyq]
 space = "logo"

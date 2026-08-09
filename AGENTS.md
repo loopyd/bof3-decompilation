@@ -31,11 +31,11 @@ BOF3 binaries load independently. Qualify work by one function selector:
 | Target-local symbols             | `config/targets/<target>/symbols.txt`  |
 | Shared SDK symbol maps           | `config/sdk/psyq-{slus,logo}.txt` |
 | Reviewed Rizin annotations       | `config/targets/<target>/reviewed.rz`    |
-| Authored lifts                   | `src/exe/`, `src/emi/`         |
+| Authored lifts                   | `src/bof3/<subsystem>/`         |
 
 ## Source and symbols
 
-- Keep one C source per lifted function and an adjacent `internal.h`. Lift identity comes only from parsable function-level `@source` and `@behavior` metadata; filenames are flexible and never supply an address fallback.
+- Keep one C source per lifted function. Authored lifts converge into human-readable `src/bof3/<subsystem>/` folders; `src/exe/` and `src/emi/` are migration debt, not destinations. Lift identity and target ownership come from explicit manifest claims, maps, Splat, and parsable function-level `@source`/`@behavior` metadata—never directory ancestry or filenames.
 - Use `func_80143B40` and `D_80143B40`; maps use sorted
   `name = 0xADDRESS;` entries with eight uppercase hex digits.
 - Replace raw names only after review; a renamed lift file keeps
@@ -131,6 +131,8 @@ full documentation map, [tool usage](docs/usage.md) for procedures, and
 reviewed findings in `docs/specs/` and
 reusable evidence-backed gotchas in `docs/agents/lessons.md`. Use the
 [repository map](docs/agents/project-context.md#repository-map) to locate tracked and ignored state.
+
+Cleanup relocation should use atomic same-target/same-subsystem batches when classification is proven. Every moved selector still needs independent live asm/byte evidence; one failure reverts the whole batch. Never deepen the legacy `src/exe/` or `src/emi/` hierarchy.
 
 ## Planning
 

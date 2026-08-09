@@ -70,6 +70,8 @@ segments:
   - - 20552
     - c
     - func_801D5C48
+    - '@source: src/bof3/world/func_801D5C48.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2000.'
   - - 20620
     - asm
     - func_801D5C8C
@@ -79,6 +81,8 @@ segments:
   - - 21504
     - c
     - func_801D6000
+    - '@source: src/bof3/world/func_801D6000.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2014.'
   - - 21572
     - asm
     - func_801D6044
@@ -94,6 +98,8 @@ segments:
   - - 22868
     - c
     - func_801D6554
+    - '@source: src/bof3/world/func_801D6554.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2048.'
   - - 22936
     - asm
     - func_801D6598
@@ -103,9 +109,13 @@ segments:
   - - 24040
     - c
     - func_801D69E8
+    - '@source: src/bof3/world/func_801D69E8.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2074.'
   - - 24108
     - c
     - seedMenuScratch
+    - '@source: src/bof3/world/seedMenuScratch.c'
+    - '@behavior: seeds the AREA030 scratch record for the later menu phase and bumps scratch state byte `0x03`.'
   - - 24360
     - asm
     - func_801D6B28
@@ -115,9 +125,13 @@ segments:
   - - 25284
     - c
     - func_801D6EC4
+    - '@source: src/bof3/world/func_801D6EC4.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E20C4.'
   - - 25352
     - c
     - func_801D6F08
+    - '@source: src/bof3/world/func_801D6F08.c'
+    - '@behavior: Seeds the menu scratch record, then stores 0x37 at cursor+0xB.'
   - - 25396
     - asm
     - func_801D6F34
@@ -172,27 +186,39 @@ segments:
   - - 36628
     - c
     - func_801D9B14
+    - '@source: src/bof3/world/func_801D9B14.c'
+    - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E21E0.'
   - - 36696
     - c
     - func_801D9B58
+    - '@source: src/bof3/world/func_801D9B58.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2210.'
   - - 36764
     - asm
     - func_801D9B9C
   - - 36940
     - c
     - func_801D9C4C
+    - '@source: src/bof3/world/func_801D9C4C.c'
+    - '@behavior: Advances two counters when the area timer is inactive.'
   - - 37020
     - c
     - func_801D9C9C
+    - '@source: src/bof3/world/func_801D9C9C.c'
+    - '@behavior: Advances the shared counters and clears work byte 3 in mode 4.'
   - - 37108
     - c
     - func_801D9CF4
+    - '@source: src/bof3/world/func_801D9CF4.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E221C.'
   - - 37176
     - asm
     - func_801D9D38
   - - 37384
     - c
     - advanceStepMode6
+    - '@source: src/bof3/world/advanceStepMode6.c'
+    - '@behavior: increments scratch byte 0x03 when the shared state byte is 6.'
   - - 37440
     - asm
     - func_801D9E40
@@ -220,6 +246,8 @@ segments:
   - - 39348
     - c
     - func_801DA5B4
+    - '@source: src/bof3/world/func_801DA5B4.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2248.'
   - - 39416
     - asm
     - func_801DA5F8
@@ -235,6 +263,8 @@ segments:
   - - 40168
     - c
     - func_801DA8E8
+    - '@source: src/bof3/world/func_801DA8E8.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2258.'
   - - 40236
     - asm
     - func_801DA92C
@@ -250,6 +280,8 @@ segments:
   - - 41684
     - c
     - func_801DAED4
+    - '@source: src/bof3/world/func_801DAED4.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2268.'
   - - 41752
     - asm
     - func_801DAF18
@@ -259,6 +291,8 @@ segments:
   - - 42060
     - c
     - func_801DB04C
+    - '@source: src/bof3/world/func_801DB04C.c'
+    - '@behavior: Selects a signed record value and records which slot was used.'
   - - 42156
     - asm
     - func_801DB0AC
@@ -304,6 +338,8 @@ segments:
   - - 47220
     - c
     - func_801DC474
+    - '@source: src/bof3/world/func_801DC474.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22A4.'
   - - 47288
     - asm
     - func_801DC4B8
@@ -316,18 +352,24 @@ segments:
   - - 47504
     - c
     - func_801DC590
+    - '@source: src/bof3/world/func_801DC590.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22B0.'
   - - 47572
     - asm
     - func_801DC5D4
   - - 47692
     - c
     - func_801DC64C
+    - '@source: src/bof3/world/func_801DC64C.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22BC.'
   - - 47760
     - asm
     - func_801DC690
   - - 47880
     - c
     - func_801DC708
+    - '@source: src/bof3/world/func_801DC708.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22C8.'
   - - 47948
     - asm
     - func_801DC74C
@@ -337,21 +379,29 @@ segments:
   - - 48184
     - c
     - func_801DC838
+    - '@source: src/bof3/world/func_801DC838.c'
+    - '@behavior: Appends the dim tile, then dispatches the scratch work-record mode.'
   - - 48264
     - asm
     - func_801DC888
   - - 48388
     - c
     - func_801DC904
+    - '@source: src/bof3/world/func_801DC904.c'
+    - '@behavior: Increments scratch-record byte 3 while state byte 0x80144281 is 3.'
   - - 48444
     - asm
     - func_801DC93C
   - - 49268
     - c
     - func_801DCC74
+    - '@source: src/bof3/world/func_801DCC74.c'
+    - '@behavior: dispatches through the handler table indexed by the selector byte `D_80144286` (tail call via jalr, no arguments).'
   - - 49328
     - c
     - func_801DCCB0
+    - '@source: src/bof3/world/func_801DCCB0.c'
+    - '@behavior: dispatches the byte at offset 4 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22F0.'
   - - 49396
     - asm
     - func_801DCCF4
@@ -370,30 +420,42 @@ segments:
   - - 52492
     - c
     - func_801DD90C
+    - '@source: src/bof3/world/func_801DD90C.c'
+    - '@behavior: when the area gate is clear, advances its counter and initializes bytes 2 and 3 of the current scratch work record.'
   - - 52572
     - c
     - func_801DD95C
+    - '@source: src/bof3/world/func_801DD95C.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22FC.'
   - - 52640
     - asm
     - func_801DD9A0
   - - 53108
     - c
     - func_801DDB74
+    - '@source: src/bof3/world/func_801DDB74.c'
+    - '@behavior: When the guard byte is clear, advances the area state and initializes scratch-record bytes 2 and 3.'
   - - 53192
     - c
     - func_801DDBC8
+    - '@source: src/bof3/world/func_801DDBC8.c'
+    - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2304.'
   - - 53260
     - asm
     - func_801DDC0C
   - - 53332
     - c
     - func_801DDC54
+    - '@source: src/bof3/world/func_801DDC54.c'
+    - '@behavior: when the shared transition is idle, clears companion state, advances the scratch work-record phase, and selects state 3.'
   - - 53432
     - asm
     - func_801DDCB8
   - - 53496
     - c
     - func_801DDCF8
+    - '@source: src/bof3/world/func_801DDCF8.c'
+    - '@behavior: Advances the area counter and seeds two scratch-record bytes while the shared state is clear.'
   - - 53580
     - asm
     - func_801DDD4C
@@ -442,15 +504,21 @@ segments:
   - - 62376
     - c
     - func_801DFFA8
+    - '@source: src/bof3/world/func_801DFFA8.c'
+    - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2340.'
   - - 62444
     - c
     - func_801DFFEC
+    - '@source: src/bof3/world/func_801DFFEC.c'
+    - '@behavior: computes signed step values from the scratch work-record x/y coordinates at offsets 0x34/0x38, stores them at offsets 0x0C/0x10, sets work byte +0x09 to 8, and increments work byte +0x02.'
   - - 62532
     - asm
     - func_801E0044
   - - 62688
     - c
     - func_801E00E0
+    - '@source: src/bof3/world/func_801E00E0.c'
+    - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2348.'
   - - 62756
     - asm
     - func_801E0124
@@ -460,6 +528,8 @@ segments:
   - - 63036
     - c
     - clearFlagState10
+    - '@source: src/bof3/world/clearFlagState10.c'
+    - '@behavior: clears the scratch-record flag when the AREA030 state byte is >= 10.'
   - - 63084
     - asm
     - func_801E026C
@@ -469,6 +539,8 @@ segments:
   - - 63380
     - c
     - func_801E0394
+    - '@source: src/bof3/world/func_801E0394.c'
+    - '@behavior: Advances the active scratch work record while its timer is nonzero.'
   - - 63480
     - asm
     - func_801E03F8
@@ -499,21 +571,31 @@ segments:
   - - 65568
     - c
     - dispatchCompanion
+    - '@source: src/bof3/world/dispatchCompanion.c'
+    - '@behavior: invokes the AREA030 companion dispatch entry.'
   - - 65600
     - asm
     - func_801E0C40
   - - 65664
     - c
     - submitTpageDrawMode
+    - '@source: src/bof3/world/submitTpageDrawMode.c'
+    - '@behavior: builds the texture-page word for the selected AREA030 graphic and appends its draw-mode primitive to the current ordering-table stream.'
   - - 65996
     - c
     - func_801E0DCC
+    - '@source: src/bof3/world/func_801E0DCC.c'
+    - '@behavior: appends a sprite primitive using indexed texture geometry. */ /* @source 0x801E0DCC'
   - - 66256
     - c
     - submitPanelPair
+    - '@source: src/bof3/world/submitPanelPair.c'
+    - '@behavior: submits the two AREA030 panel updates at the requested vertical positions after selecting graphics mode 0.'
   - - 66380
     - c
     - configureSpriteClut
+    - '@source: src/bof3/world/configureSpriteClut.c'
+    - '@behavior: configures the requested AREA030 sprite and its CLUT entry after selecting graphics mode 1.'
   - - 66564
     - asm
     - func_801E1004
@@ -526,6 +608,8 @@ segments:
   - - 68316
     - c
     - appendDimTile
+    - '@source: src/bof3/world/appendDimTile.c'
+    - '@behavior: configures the dim semi-transparent AREA030 tile and appends it after selecting graphics mode 4.'
   - - 68440
     - asm
     - func_801E1758

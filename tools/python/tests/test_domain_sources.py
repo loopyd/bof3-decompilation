@@ -27,6 +27,7 @@ from harness.domain.sources import (
     compiled_symbol_name,
     expected_lift_sources,
     lift_metadata,
+    owning_manifest,
     resolve_source_for_address,
     reviewed_function_name,
     source_address,
@@ -34,7 +35,10 @@ from harness.domain.sources import (
 from harness.layout import parse_splat_layout
 from harness.match._asm_diff_payload import AsmDiffRequest
 from harness.match._asm_diff_run import _asm_diff_resolve
-from harness.match._asm_resolve import source_function_name
+from harness.match._asm_resolve import (
+    infer_size_from_sibling_sources,
+    source_function_name,
+)
 
 TARGET_TOML = (
     'schema = "harness.target/v2"\n'
@@ -157,6 +161,20 @@ def test_collect_source_addresses_semantic_and_raw(tmp_path: Path) -> None:
     ]
 
 
+def test_collect_nested_source_uses_target_relative_path(tmp_path: Path) -> None:
+    nested = tmp_path / "battle" / "dispatchState.c"
+    nested.parent.mkdir()
+    nested.write_text(
+        "/* @source 0x80100008 @behavior dispatches battle state */\n",
+        encoding="utf-8",
+    )
+    rows = collect_source_addresses(
+        tmp_path, expected_lifts={"battle/dispatchState": 0x80100008}
+    )
+    assert rows == [(nested, 0x80100008)]
+    assert resolve_source_for_address(tmp_path, 0x80100008) == nested
+
+
 def test_collect_skips_helper_files_without_identity(tmp_path: Path) -> None:
     (tmp_path / "symbols.c").write_text("WEAK_SYMBOL_AT(x, 0x80100000);\n")
     (tmp_path / "helper.c").write_text(
@@ -228,6 +246,23 @@ def test_resolve_source_for_address(tmp_path: Path) -> None:
 # -- expected lift sources from Splat ------------------------------------------
 
 
+def test_expected_lift_sources_nested_source_path(tmp_path: Path) -> None:
+    _target(tmp_path)
+    splat = tmp_path / "config" / "targets" / "exe" / "logo" / "splat.yaml"
+    splat.parent.mkdir(parents=True, exist_ok=True)
+    splat.write_text(
+        "name: logo\nsegments:\n- name: main\n  type: code\n  start: 0\n"
+        "  vram: 0x801CE000\n  subsegments:\n"
+        "  - - 0x758\n    - c\n    - dispatchState\n"
+        "    - '@source: src/exe/logo/battle/dispatchState.c'\n",
+        encoding="utf-8",
+    )
+    layout = parse_splat_layout(splat, 0x801CE000)
+    assert expected_lift_sources(
+        layout, tmp_path / "src" / "exe" / "logo"
+    ) == {"battle/dispatchState": 0x801CE758}
+
+
 def test_expected_lift_sources_list_and_dict_forms(tmp_path: Path) -> None:
     _target(tmp_path)
     splat = tmp_path / "config" / "targets" / "exe" / "logo" / "splat.yaml"
@@ -276,6 +311,23 @@ def test_reviewed_function_name_semantic(tmp_path: Path) -> None:
     layout = parse_splat_layout(
         tmp_path / "config/targets/exe/logo/splat.yaml", 0x801CE000
     )
+    assert (
+        reviewed_function_name(tmp_path, "exe/logo", 0x801CE758, layout=layout)
+        == "initSelectionState"
+    )
+
+
+def test_reviewed_function_name_accepts_map_owned_lift_inside_bin(
+    tmp_path: Path,
+) -> None:
+    _target(tmp_path)
+    _map(tmp_path, "initSelectionState = 0x801CE758;\n")
+    splat = tmp_path / "config/targets/exe/logo/splat.yaml"
+    splat.write_text(
+        "name: logo\nsegments:\n- [0, bin, image]\n- [4096]\n",
+        encoding="utf-8",
+    )
+    layout = parse_splat_layout(splat, 0x801CE000)
     assert (
         reviewed_function_name(tmp_path, "exe/logo", 0x801CE758, layout=layout)
         == "initSelectionState"
@@ -355,6 +407,106 @@ def test_compiled_symbol_name_source_path(tmp_path: Path) -> None:
         compiled_symbol_name(tmp_path, source, 0x801CE758)
         == "initSelectionState"
     )
+
+
+def test_compiled_symbol_name_nested_source_path(tmp_path: Path) -> None:
+    _target(tmp_path)
+    _map(tmp_path, "initSelectionState = 0x801CE758;\n")
+    _splat(tmp_path)
+    source = tmp_path / "src" / "exe" / "logo" / "runtime" / "initSelectionState.c"
+    source.parent.mkdir(parents=True)
+    source.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
+    assert compiled_symbol_name(tmp_path, source, 0x801CE758) == "initSelectionState"
+
+
+def test_owning_manifest_nested_and_root_sources(tmp_path: Path) -> None:
+    _target(tmp_path)
+    root_source = tmp_path / "src" / "exe" / "logo" / "initState.c"
+    root_source.parent.mkdir(parents=True)
+    root_source.write_text("/* @source 0x80100000 @behavior x */\n")
+    nested = tmp_path / "src" / "exe" / "logo" / "runtime" / "nested.c"
+    nested.parent.mkdir(parents=True)
+    nested.write_text("/* @source 0x80100004 @behavior x */\n")
+    unrelated = tmp_path / "src" / "other" / "helper.c"
+    unrelated.parent.mkdir(parents=True)
+    unrelated.write_text("/* @behavior helper */\n")
+
+    assert owning_manifest(tmp_path, root_source) is not None
+    assert owning_manifest(tmp_path, root_source).id.value == "exe/logo"  # type: ignore[union-attr]
+    assert owning_manifest(tmp_path, nested) is not None
+    assert owning_manifest(tmp_path, nested).id.value == "exe/logo"  # type: ignore[union-attr]
+    assert owning_manifest(tmp_path, unrelated) is None
+
+
+def test_owning_manifest_prefers_deepest_ancestor(tmp_path: Path) -> None:
+    _target(tmp_path)
+    inner_dir = tmp_path / "config" / "targets" / "emi" / "nested" / "01"
+    inner_dir.mkdir(parents=True)
+    (inner_dir / "target.toml").write_text(
+        "schema = 'harness.target/v2'\n"
+        "id = 'emi/nested/01'\n"
+        "kind = 'emi'\n"
+        "source_dir = 'src/exe/logo/runtime'\n"
+        "binary = 'out/binaries/emi/nested/01.bin'\n"
+        "splat = 'config/targets/emi/nested/01/splat.yaml'\n"
+        "load_address = 0x80100000\n",
+        encoding="utf-8",
+    )
+    nested = tmp_path / "src" / "exe" / "logo" / "runtime" / "deep.c"
+    nested.parent.mkdir(parents=True)
+    nested.write_text("/* @source 0x80100008 @behavior x */\n")
+
+    assert owning_manifest(tmp_path, nested) is not None
+    assert owning_manifest(tmp_path, nested).id.value == "emi/nested/01"  # type: ignore[union-attr]
+
+
+def test_infer_size_from_sibling_sources_uses_manifest_root(
+    tmp_path: Path,
+) -> None:
+    _target(tmp_path)
+    source_dir = tmp_path / "src" / "exe" / "logo"
+    first = source_dir / "runtime" / "first.c"
+    second = source_dir / "ui" / "second.c"
+    first.parent.mkdir(parents=True)
+    second.parent.mkdir(parents=True)
+    first.write_text("/* @source 0x80100000 @behavior x */\n")
+    second.write_text("/* @source 0x80100010 @behavior x */\n")
+
+    size = infer_size_from_sibling_sources(first, 0x80100000, root=tmp_path)
+    assert size == 0x10  # next-higher lift in another subsystem folder
+    assert (
+        infer_size_from_sibling_sources(first, 0x80100000) is None
+    )  # folder-local fallback sees no sibling
+
+
+def test_asm_diff_resolve_nested_source_output_owner(tmp_path: Path) -> None:
+    _target(tmp_path)
+    _map(tmp_path, "initSelectionState = 0x801CE758;\n")
+    _splat(tmp_path)
+    binary = tmp_path / "out" / "binaries" / "exe" / "logo.bin"
+    binary.parent.mkdir(parents=True)
+    payload = bytearray(0x800)
+    struct.pack_into("<I", payload, 0x758, 0x03E00008)  # jr $ra at 0x801CE758
+    binary.write_bytes(payload)
+
+    source = tmp_path / "src" / "exe" / "logo" / "runtime" / "initSelectionState.c"
+    source.parent.mkdir(parents=True)
+    source.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
+
+    request = AsmDiffRequest(
+        source_path=source,
+        address=0x801CE758,
+        binary_path=binary,
+        load_address=0x801CE000,
+        diagnostics=False,
+    )
+    resolved = _asm_diff_resolve(_layout(tmp_path), request)  # type: ignore[arg-type]
+
+    assert resolved["address"] == 0x801CE758
+    assert resolved["function_name"] == "initSelectionState"
+    assert resolved["original_size"] == 8
+    assert resolved["output_dir"].name == "initSelectionState"
+    assert resolved["output_dir"].parent.name == "exe_logo"  # manifest-owned slug
 
 
 def test_source_function_name_requires_root(tmp_path: Path) -> None:

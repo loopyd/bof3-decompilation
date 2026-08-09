@@ -28,12 +28,14 @@ segments:
   - - 11708
     - c
     - func_801D39BC
+    - '@source: src/bof3/ui/func_801D39BC.c'
   - - 11768
     - asm
     - func_801D39F8
   - - 11944
     - c
     - func_801D3AA8
+    - '@source: src/bof3/ui/func_801D3AA8.c'
   - - 12004
     - asm
     - func_801D3AE4
@@ -55,6 +57,7 @@ segments:
   - - 13744
     - c
     - func_801D41B0
+    - '@source: src/bof3/ui/func_801D41B0.c'
   - - 13804
     - asm
     - func_801D41EC
@@ -79,6 +82,7 @@ segments:
   - - 15012
     - c
     - func_801D46A4
+    - '@source: src/bof3/ui/func_801D46A4.c'
   - - 15072
     - asm
     - func_801D46E0
@@ -148,6 +152,7 @@ segments:
   - - 21892
     - c
     - func_801D6184
+    - '@source: src/bof3/ui/func_801D6184.c'
   - - 21952
     - asm
     - func_801D61C0
@@ -166,9 +171,11 @@ segments:
   - - 23212
     - c
     - setUiFlags
+    - '@source: src/bof3/ui/setUiFlags.c'
   - - 23240
     - c
     - setUiFlagsGated
+    - '@source: src/bof3/ui/setUiFlagsGated.c'
   - - 23288
     - asm
     - func_801D66F8
@@ -190,6 +197,7 @@ segments:
   - - 25236
     - c
     - appendFullscreenDimTile
+    - '@source: src/bof3/ui/appendFullscreenDimTile.c'
   - - 25344
     - asm
     - func_801D6F00
@@ -202,6 +210,7 @@ segments:
   - - 26436
     - c
     - func_801D7344
+    - '@source: src/bof3/ui/func_801D7344.c'
   - - 26496
     - asm
     - func_801D7380
@@ -229,6 +238,7 @@ segments:
   - - 29192
     - c
     - func_801D7E08
+    - '@source: src/bof3/ui/func_801D7E08.c'
   - - 29212
     - asm
     - func_801D7E1C
@@ -277,6 +287,7 @@ segments:
   - - 38176
     - c
     - emitPanelIconPrim
+    - '@source: src/bof3/ui/emitPanelIconPrim_shop00.c'
   - - 38360
     - asm
     - func_801DA1D8
@@ -343,9 +354,11 @@ segments:
   - - 54664
     - c
     - func_801DE188
+    - '@source: src/bof3/ui/func_801DE188.c'
   - - 54724
     - c
     - func_801DE1C4
+    - '@source: src/bof3/ui/func_801DE1C4.c'
   - - 54784
     - asm
     - func_801DE200
@@ -364,18 +377,21 @@ segments:
   - - 56400
     - c
     - func_801DE850
+    - '@source: src/bof3/ui/func_801DE850.c'
   - - 56460
     - asm
     - func_801DE88C
   - - 56552
     - c
     - func_801DE8E8
+    - '@source: src/bof3/ui/func_801DE8E8.c'
   - - 56644
     - asm
     - func_801DE944
   - - 57888
     - c
     - func_801DEE20
+    - '@source: src/bof3/ui/func_801DEE20.c'
   - - 57956
     - asm
     - func_801DEE64
@@ -385,6 +401,7 @@ segments:
   - - 59492
     - c
     - func_801DF464
+    - '@source: src/bof3/ui/func_801DF464.c'
   - - 59512
     - asm
     - func_801DF478
@@ -394,9 +411,11 @@ segments:
   - - 60684
     - c
     - appendFullscreenDimTileB
+    - '@source: src/bof3/ui/appendFullscreenDimTileB.c'
   - - 60792
     - c
     - func_801DF978
+    - '@source: src/bof3/ui/func_801DF978.c'
   - - 60852
     - asm
     - func_801DF9B4
@@ -406,12 +425,14 @@ segments:
   - - 61880
     - c
     - func_801DFDB8
+    - '@source: src/bof3/ui/func_801DFDB8.c'
   - - 61940
     - asm
     - func_801DFDF4
   - - 62504
     - c
     - tickPhaseTimer
+    - '@source: src/bof3/ui/tickPhaseTimer.c'
   - - 62572
     - asm
     - func_801E006C
@@ -424,6 +445,7 @@ segments:
   - - 64812
     - c
     - func_801E092C
+    - '@source: src/bof3/ui/func_801E092C.c'
   - - 64872
     - asm
     - func_801E0968
@@ -448,9 +470,11 @@ segments:
   - - 69504
     - c
     - dispatchCommand
+    - '@source: src/bof3/ui/dispatchCommand.c'
   - - 69560
     - c
     - swapBytes
+    - '@source: src/bof3/ui/swapBytes.c'
   - - 69580
     - asm
     - func_801E1BCC
@@ -466,18 +490,22 @@ segments:
   - - 70668
     - c
     - func_801E200C
+    - '@source: src/bof3/ui/func_801E200C.c'
   - - 70728
     - c
     - func_801E2048
+    - '@source: src/bof3/ui/func_801E2048.c'
   - - 70788
     - asm
     - func_801E2084
   - - 70860
     - c
     - func_801E20CC
+    - '@source: src/bof3/ui/func_801E20CC.c'
   - - 70932
     - c
     - func_801E2114
+    - '@source: src/bof3/ui/func_801E2114.c'
   - - 70992
     - asm
     - func_801E2150
@@ -487,60 +515,75 @@ segments:
   - - 72012
     - c
     - func_801E254C
+    - '@source: src/bof3/ui/func_801E254C.c'
   - - 72080
     - c
     - func_801E2590
+    - '@source: src/bof3/ui/func_801E2590.c'
   - - 72140
     - c
     - tickPhaseTimerB
+    - '@source: src/bof3/ui/tickPhaseTimerB.c'
   - - 72208
     - c
     - func_801E2610
+    - '@source: src/bof3/ui/func_801E2610.c'
   - - 72236
     - c
     - resetUiState
+    - '@source: src/bof3/ui/resetUiState.c'
   - - 72272
     - c
     - func_801E2650
+    - '@source: src/bof3/ui/func_801E2650.c'
   - - 72484
     - asm
     - func_801E2724
   - - 72636
     - c
     - func_801E27BC
+    - '@source: src/bof3/ui/func_801E27BC.c'
   - - 72704
     - c
     - panelNoop
+    - '@source: src/bof3/ui/panelNoop.c'
   - - 72712
     - asm
     - func_801E2808
   - - 73032
     - c
     - retreatPanelField6ToNeg20
+    - '@source: src/bof3/ui/retreatPanelField6ToNeg20.c'
   - - 73096
     - c
     - advancePanelField6To16
+    - '@source: src/bof3/ui/advancePanelField6To16.c'
   - - 73160
     - asm
     - func_801E29C8
   - - 73264
     - c
     - retreatPanelField6ToNeg20B
+    - '@source: src/bof3/ui/retreatPanelField6ToNeg20B.c'
   - - 73328
     - c
     - advancePanelField6To38
+    - '@source: src/bof3/ui/advancePanelField6To38.c'
   - - 73392
     - asm
     - func_801E2AB0
   - - 73492
     - c
     - retreatPanelField6ToNeg20C
+    - '@source: src/bof3/ui/retreatPanelField6ToNeg20C.c'
   - - 73556
     - c
     - advancePanelField6To38B
+    - '@source: src/bof3/ui/advancePanelField6To38B.c'
   - - 73620
     - c
     - applyPanelPosition
+    - '@source: src/bof3/ui/applyPanelPosition.c'
   - - 73668
     - asm
     - func_801E2BC4
@@ -550,24 +593,30 @@ segments:
   - - 73884
     - c
     - retreatPanelXToNeg150
+    - '@source: src/bof3/ui/retreatPanelXToNeg150.c'
   - - 73948
     - c
     - advancePanelXTo17
+    - '@source: src/bof3/ui/advancePanelXTo17.c'
   - - 74012
     - c
     - retreatPanelField6To62
+    - '@source: src/bof3/ui/retreatPanelField6To62.c'
   - - 74076
     - c
     - func_801E2D5C
+    - '@source: src/bof3/ui/func_801E2D5C.c'
   - - 74164
     - asm
     - func_801E2DB4
   - - 74288
     - c
     - retreatPanelXToNeg150B
+    - '@source: src/bof3/ui/retreatPanelXToNeg150B.c'
   - - 74352
     - c
     - advancePanelXTo15
+    - '@source: src/bof3/ui/advancePanelXTo15.c'
   - - 74416
     - asm
     - func_801E2EB0
@@ -577,12 +626,15 @@ segments:
   - - 75204
     - c
     - advancePanelXTo320
+    - '@source: src/bof3/ui/advancePanelXTo320.c'
   - - 75268
     - c
     - retreatPanelXTo132
+    - '@source: src/bof3/ui/retreatPanelXTo132.c'
   - - 75332
     - c
     - retreatPanelXTo70
+    - '@source: src/bof3/ui/retreatPanelXTo70.c'
   - - 75396
     - asm
     - func_801E3284
@@ -595,9 +647,11 @@ segments:
   - - 76660
     - c
     - advancePanelXTo320B
+    - '@source: src/bof3/ui/advancePanelXTo320B.c'
   - - 76724
     - c
     - retreatPanelXTo75
+    - '@source: src/bof3/ui/retreatPanelXTo75.c'
   - - 76788
     - asm
     - func_801E37F4
@@ -610,39 +664,49 @@ segments:
   - - 77816
     - c
     - advancePanelXTo320C
+    - '@source: src/bof3/ui/advancePanelXTo320C.c'
   - - 77880
     - c
     - retreatPanelXTo150
+    - '@source: src/bof3/ui/retreatPanelXTo150.c'
   - - 77944
     - c
     - advancePanelXTo40
+    - '@source: src/bof3/ui/advancePanelXTo40.c'
   - - 78008
     - c
     - retreatPanelXToNeg170
+    - '@source: src/bof3/ui/retreatPanelXToNeg170.c'
   - - 78072
     - asm
     - func_801E3CF8
   - - 78156
     - c
     - advancePanelXTo320D
+    - '@source: src/bof3/ui/advancePanelXTo320D.c'
   - - 78220
     - c
     - retreatPanelXTo150B
+    - '@source: src/bof3/ui/retreatPanelXTo150B.c'
   - - 78284
     - c
     - retreatPanelXTo17
+    - '@source: src/bof3/ui/retreatPanelXTo17.c'
   - - 78348
     - c
     - advancePanelXTo150
+    - '@source: src/bof3/ui/advancePanelXTo150.c'
   - - 78412
     - asm
     - func_801E3E4C
   - - 78516
     - c
     - retreatPanelXToNeg150C
+    - '@source: src/bof3/ui/retreatPanelXToNeg150C.c'
   - - 78580
     - c
     - advancePanelXTo17B
+    - '@source: src/bof3/ui/advancePanelXTo17B.c'
   - - 78644
     - asm
     - func_801E3F34
@@ -655,39 +719,48 @@ segments:
   - - 79480
     - c
     - retreatPanelXToNeg120
+    - '@source: src/bof3/ui/retreatPanelXToNeg120.c'
   - - 79544
     - c
     - advancePanelXTo100
+    - '@source: src/bof3/ui/advancePanelXTo100.c'
   - - 79608
     - c
     - retreatPanelXTo17B
+    - '@source: src/bof3/ui/retreatPanelXTo17B.c'
   - - 79672
     - asm
     - func_801E4338
   - - 79756
     - c
     - advancePanelXTo320E
+    - '@source: src/bof3/ui/advancePanelXTo320E.c'
   - - 79820
     - c
     - retreatPanelXTo140
+    - '@source: src/bof3/ui/retreatPanelXTo140.c'
   - - 79884
     - asm
     - func_801E440C
   - - 79968
     - c
     - advancePanelField6To240
+    - '@source: src/bof3/ui/advancePanelField6To240.c'
   - - 80032
     - c
     - retreatPanelField6To128
+    - '@source: src/bof3/ui/retreatPanelField6To128.c'
   - - 80096
     - asm
     - func_801E44E0
   - - 80192
     - c
     - advancePanelXTo320F
+    - '@source: src/bof3/ui/advancePanelXTo320F.c'
   - - 80256
     - c
     - retreatPanelXTo210
+    - '@source: src/bof3/ui/retreatPanelXTo210.c'
   - - 80320
     - asm
     - func_801E45C0

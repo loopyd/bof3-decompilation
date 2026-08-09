@@ -112,22 +112,25 @@ def main() -> int:
                 "===== config/targets/emi/battle/battle/15/splat.yaml ====="
                 in result.stdout
             ), script
-            assert "===== src/emi/battle/battle/15/internal.h =====" in result.stdout, (
-                script
-            )
-            bindings = (ROOT / "src/emi/battle/battle/15/symbols.c").read_text(
+            assert (
+                "===== include/bof3/battle/battle15_internal.h ====="
+                in result.stdout
+            ), script
+            bindings = (ROOT / "src/bof3/support/battle15_symbols.c").read_text(
                 encoding="utf-8"
             )
             assert (
-                f"===== src/emi/battle/battle/15/symbols.c =====\n{bindings}"
+                f"===== src/bof3/support/battle15_symbols.c =====\n{bindings}"
                 in result.stdout
             ), script
             assert (
-                "===== src/emi/battle/battle/15/func_80096E90.c =====" in result.stdout
-            ), script
-            assert (
-                "===== out/splat/emi/battle/battle/15/asm/func_80096E90.s ====="
+                "===== src/bof3/battle/queueEvent106ResetState.c ====="
                 in result.stdout
+            ), script
+            assert any(
+                line.startswith("===== out/splat/emi/battle/battle/15/asm/")
+                and line.endswith(".s =====")
+                for line in result.stdout.splitlines()
             ), script
             assert len(result.stdout.encode()) < 100_000, script
         else:

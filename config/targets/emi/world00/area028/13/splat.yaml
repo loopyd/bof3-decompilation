@@ -1,6 +1,7 @@
 name: world00_area028_13
 sha1: 86f4d6a7a62372374e6a6c297d6a242ec02274e6
 options:
+  create_c_files: false
   platform: psx
   compiler: psyq
   basename: world00_area028_13
@@ -24,36 +25,53 @@ segments:
     - T_801F2C00
   - - 72
     - c
+    - func_801F2C48
+    - '@source: src/bof3/world/func_801F2C48.c'
+    - '@behavior: seeds the work table, advances work byte one, and clears the current record halfword.'
   - - 128
     - asm
     - func_801F2C80
   - - 284
     - c
     - resetWorkareaSelectMode2
+    - '@source: src/bof3/world/resetWorkareaSelectMode2.c'
+    - '@behavior: mode-2 handler of the entry mode dispatch table; calls the shared work-area reset helper.'
   - - 316
     - asm
     - func_801F2D3C
   - - 860
     - c
     - seedWorkTable
+    - '@source: src/bof3/world/seedWorkTable.c'
+    - '@behavior: seeds the local 32-entry work table and clears each slot active byte.'
   - - 944
     - c
     - initSpriteSlot
+    - '@source: src/bof3/world/initSpriteSlot.c'
+    - '@behavior: initializes one AREA028 sprite slot with random offsets and a fixed bound.'
   - - 1028
     - c
     - scanFreeSlot
+    - '@source: src/bof3/world/scanFreeSlot.c'
+    - '@behavior: returns the first inactive slot in the 32-entry AREA028 work table.'
   - - 1120
     - c
     - refreshSpriteSlots
+    - '@source: src/bof3/world/refreshSpriteSlots.c'
+    - '@behavior: refreshes active sprite slots and spawns replacements in free entries.'
   - - 1420
     - asm
     - func_801F318C
   - - 2068
-    - asm
+    - c
     - func_801F3414
+    - '@source: src/bof3/world/func_801F3414.c'
+    - '@behavior: UNKNOWN: empty function body.'
   - - 2076
-    - asm
+    - c
     - func_801F341C
+    - '@source: src/bof3/world/func_801F341C.c'
+    - '@behavior: UNKNOWN: empty function body.'
   - - 2084
     - asm
     - func_801F3424

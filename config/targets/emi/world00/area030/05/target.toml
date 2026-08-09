@@ -6,3 +6,16 @@ source_dir = "src/emi/world00/area030/05"
 binary = "out/binaries/emi/world00/area030/05.bin"
 splat = "config/targets/emi/world00/area030/05/splat.yaml"
 load_address = 0x800F5000
+
+
+sources = [
+    "src/bof3/world/func_800F500C.c",
+]
+support_sources = [
+    "src/bof3/support/area03005_symbols.c",
+    "src/bof3/support/area03005_psyq.c",
+]
+psyq_source = "src/bof3/support/area03005_psyq.c"
+headers = [
+    "include/bof3/world/area03005_internal.h",
+]

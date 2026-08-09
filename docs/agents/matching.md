@@ -69,9 +69,11 @@ Splat `c` boundary, `bin/asm-diff`, and `bin/byte-match` result.
 
 - Identical code embedded in multiple EMIs stays target-owned; reuse its C
   body at compile time only when that reduces maintenance.
-- A runtime engine service has one implementation in `SLUS_004.22` plus EMI
-  callsite evidence to that address. Keep its C under `src/exe/slus_004_22/`;
-  promote only its stable contract to `include/bof3/core.h`.
+- A runtime engine service has one implementation owned by `SLUS_004.22` plus
+  EMI callsite evidence to that address. Keep its C under the narrowest
+  semantic `src/bof3/<class>/` path, with `SLUS_004.22` ownership carried by
+  explicit manifest claims and target metadata; promote only its stable
+  contract to `include/bof3/core.h`.
 - `src/shared/` owns embedded implementation templates, never standalone
   runtime objects. No generic `src/engine/` ownership until a real link target
   exists.
@@ -93,7 +95,7 @@ bin/decomp-status [TARGET...]
 bin/decomp-status exe/logo --json -o out/status.json
 ```
 
-Results: `exact`, `partial`, `invalid`. An improved, reviewed coherent partial stays tracked with function-level `@status partial`, `@match NN.NN`, and `@residual ...`; these are progress evidence, never acceptance. Revert only when a completed bounded pass has no net improvement or review rejects semantics/types. Valid partial lifts exit `0`;
+Results: `exact`, `partial`, `invalid`. An improved, reviewed coherent partial stays tracked with function-level `@status partial`, `@match NN.NN`, and `@residual ...`; an improving per-object flag/profile may stay with the same evidence. These are progress evidence, never exact acceptance. Revert only when a completed bounded pass has no net improvement or review rejects semantics/types. Valid partial lifts exit `0`;
 invalid metadata/compilation/linking/comparison exits `2`. Rizin-index
 coverage is supplementary; unavailability does not invalidate the live audit.
 

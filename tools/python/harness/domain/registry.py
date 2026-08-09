@@ -13,6 +13,7 @@ from pathlib import Path
 
 from .ids import TargetId, normalize_target_id
 from .manifests import TargetManifest, load_target_manifests
+from .claims import manifest_header_paths, manifest_source_paths
 
 @dataclass(frozen=True)
 class ResolvedTarget:
@@ -27,6 +28,10 @@ class ResolvedTarget:
     splat_path: Path
     reviewed_replay_path: Path
     load_address: int
+    # Explicit build inputs and private headers (claim-aware; empty when the
+    # target is unmigrated and uses the legacy source_dir inventory).
+    source_paths: tuple[Path, ...] = ()
+    header_paths: tuple[Path, ...] = ()
 
     @property
     def binary_end(self) -> int:
@@ -86,6 +91,8 @@ def resolve_target(root: Path, value: str) -> ResolvedTarget:
         / manifest.id.value
         / "reviewed.rz",
         load_address=manifest.load_address,
+        source_paths=tuple(manifest_source_paths(root, manifest)),
+        header_paths=tuple(manifest_header_paths(root, manifest)),
     )
 
 

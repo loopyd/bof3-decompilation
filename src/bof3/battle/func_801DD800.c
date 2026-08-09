@@ -1,0 +1,28 @@
+#include "bof3/battle/battle03_internal.h"
+
+/* @behavior oscillates the UI byte at `0x80146308` between rising and falling modes
+ * using the latch byte at `0x80146304`.
+ * @source 0x801DD800
+ * @status partial
+ * @match 54.17
+ * @residual non-exact live audit: 13/22 instructions; 88 original bytes versus 96 current.
+ */
+void func_801DD800(void) {
+  volatile u8* value_ptr;
+  u8           value;
+  u8           next;
+
+  value_ptr = BATTLE_GLOBAL_RAM_U8 + 0x6308u;
+  value = *value_ptr;
+  if (value > 0x1eu) {
+    *(value_ptr - 4) = 1u;
+  }
+  if (value == 0u) {
+    *(value_ptr - 4) = 0u;
+  }
+  next = value + 2u;
+  if (*(value_ptr - 4) == 1u) {
+    next = value - 2u;
+  }
+  *value_ptr = next;
+}

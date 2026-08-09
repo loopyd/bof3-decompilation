@@ -9,7 +9,7 @@ import pytest
 
 from harness import reverse_index
 from harness.reverse_index import index_path, rebuild
-from harness.rizin_project import prepare_target, status
+from harness.rizin_project import prepare_target, replay_commands, status
 from harness.snapshot import (
     SNAPSHOT_SCHEMA,
     SnapshotFunction,
@@ -68,6 +68,44 @@ def _snapshot(root: Path, binary: Path) -> None:
         unresolved_calls=(),
     )
     write_snapshot(snapshot, root / "out/reverse/emi/test/archive/00/snapshot.json")
+
+
+def test_rizin_replay_fingerprint_includes_claim_identity(
+    tmp_path: Path,
+) -> None:
+    """Explicit claims participate in the replay fingerprint without altering
+    the commands Rizin actually executes."""
+
+    _binary, config = _manifest(tmp_path)
+    config.write_text(
+        config.read_text()
+        + 'sources = ["src/bof3/io/load.c"]\n'
+        + 'support_sources = ["src/bof3/io/symbols.c"]\n'
+        + 'headers = ["src/bof3/io/private.h"]\n',
+        encoding="utf-8",
+    )
+    for relative in (
+        "src/bof3/io/load.c",
+        "src/bof3/io/symbols.c",
+        "src/bof3/io/private.h",
+    ):
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("/* placeholder */\n", encoding="utf-8")
+
+    before = prepare_target(tmp_path, TARGET)
+    assert "# claim src/bof3/io/load.c" in before.replay
+    assert "# claim src/bof3/io/symbols.c" in before.replay
+    assert "# claim src/bof3/io/private.h" in before.replay
+    commands = replay_commands(before.replay)
+    assert not any("claim" in line for line in commands)
+
+    config.write_text(
+        config.read_text().replace('sources = ["src/bof3/io/load.c"]\n', ""),
+        encoding="utf-8",
+    )
+    after = prepare_target(tmp_path, TARGET)
+    assert after.replay_sha256 != before.replay_sha256
 
 
 def test_project_recipe_is_target_qualified_and_read_only(tmp_path: Path) -> None:

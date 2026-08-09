@@ -36,6 +36,19 @@ def _paths(root: Path, manifest: TargetManifest) -> Iterable[Path]:
                 for path in directory.rglob("*")
                 if path.is_file() and path.suffix in {".cmake", ".h", ".inc"}
             )
+    if manifest.headers:
+        # Explicitly claimed private headers (may live outside source_dir).
+        from ..domain.claims import manifest_header_paths
+
+        for path in manifest_header_paths(root, manifest):
+            if path.is_file() and path.suffix in {".cmake", ".h", ".inc"}:
+                yield path
+    # Explicit claim identity is part of the target fingerprint: adding or
+    # removing a claimed source/support path invalidates the whole target
+    # cache even when the files live outside source_dir.  Content of claimed
+    # sources is covered per-source by source_fingerprint.
+    for claimed in manifest.sources + manifest.support_sources:
+        yield root / claimed
 
 
 def target_fingerprint(root: Path, manifest: TargetManifest) -> str:

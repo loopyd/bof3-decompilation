@@ -1,6 +1,7 @@
 name: world00_area032_13
 sha1: 2c3f913fb3acdb10627e7a98770d038f122430d7
 options:
+  create_c_files: false
   platform: psx
   compiler: psyq
   basename: world00_area032_13
@@ -37,12 +38,16 @@ segments:
   - - 740
     - c
     - resetWorkarea
+    - '@source: src/bof3/world/resetWorkarea_801F2EE4.c'
+    - '@behavior: Calls the shared work-area reset helper as slot 4 of the local handler table.'
   - - 772
     - asm
     - func_801F2F04
   - - 1192
     - c
     - func_801F30A8
+    - '@source: src/bof3/world/func_801F30A8.c'
+    - '@behavior: Dispatches scratch work byte 1 through the local handler table.'
   - - 1260
     - asm
     - func_801F30EC
@@ -58,9 +63,13 @@ segments:
   - - 2720
     - c
     - func_801F36A0
+    - '@source: src/bof3/world/func_801F36A0.c'
+    - '@behavior: Sets the shared flag and conditionally writes three gate-controlled bytes.'
   - - 2788
     - c
     - func_801F36E4
+    - '@source: src/bof3/world/func_801F36E4.c'
+    - '@behavior: Dispatches scratch work byte 4 through the local handler table at 0x801F4900.'
   - - 2856
     - asm
     - func_801F3728
@@ -70,6 +79,8 @@ segments:
   - - 3072
     - c
     - func_801F3800
+    - '@source: src/bof3/world/func_801F3800.c'
+    - '@behavior: Dispatches scratch work byte 4 through the local handler table at 0x801F4908.'
   - - 3140
     - asm
     - func_801F3844

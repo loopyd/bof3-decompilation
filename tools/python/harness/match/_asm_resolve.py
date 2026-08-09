@@ -7,6 +7,7 @@ from ..domain.sources import (  # single authority: metadata-backed registry
     CompiledSymbolError,
     collect_source_addresses as _domain_collect_source_addresses,
     compiled_symbol_name,
+    owning_manifest,
     source_address as _domain_source_address,
 )
 from ..io import read_json, RepoLayout
@@ -64,10 +65,27 @@ def collect_source_addresses(source_dir: Path) -> list[tuple[Path, int]]:
     return _domain_collect_source_addresses(source_dir)
 
 
-def infer_size_from_sibling_sources(source_path: Path, address: int) -> int | None:
-    for candidate_path, candidate_address in collect_source_addresses(
-        source_path.parent
-    ):
+def infer_size_from_sibling_sources(
+    source_path: Path, address: int, root: Path | None = None
+) -> int | None:
+    """Infer a size from the next-higher authored lift address.
+
+    With ``root``, siblings are enumerated from the owning manifest source
+    root (recursive), so relocation across subsystem folders never changes the
+    inference.  Without ``root`` the immediate parent folder is used.
+    """
+
+    if root is not None:
+        manifest = owning_manifest(root, source_path)
+        if manifest is not None:
+            from ..domain.claims import collect_manifest_source_addresses
+
+            siblings = collect_manifest_source_addresses(root, manifest)
+        else:
+            siblings = collect_source_addresses(source_path.parent)
+    else:
+        siblings = collect_source_addresses(source_path.parent)
+    for candidate_path, candidate_address in siblings:
         if candidate_path == source_path:
             continue
         if candidate_address > address:
@@ -121,13 +139,16 @@ def infer_original_size(
     address: int,
     binary_path: Path,
     load_address: int | None,
+    root: Path | None = None,
 ) -> int:
     try:
         return infer_size_from_binary_return(
             binary_path, address=address, load_address=load_address
         )
     except ValueError:
-        sibling_size = infer_size_from_sibling_sources(source_path, address)
+        sibling_size = infer_size_from_sibling_sources(
+            source_path, address, root=root
+        )
         if sibling_size is not None:
             return sibling_size
         raise
@@ -185,39 +206,23 @@ def build_target_for_source(layout: RepoLayout, source_path: Path) -> str:
 
 
 def default_binary_for_source(layout: RepoLayout, source_path: Path) -> Path:
+    manifest = owning_manifest(layout.root, source_path)
+    if manifest is not None:
+        return layout.root / manifest.binary
     resolved_source = source_path.expanduser().resolve()
     try:
         source_rel = resolved_source.relative_to(layout.root).as_posix()
     except ValueError:
         source_rel = ""
-    from ..domain.manifests import load_target_manifests
-
-    source_dir = str(Path(source_rel).parent)
-    for manifest in load_target_manifests(layout.root).values():
-        if manifest.source_dir == source_dir:
-            return layout.root / manifest.binary
-
     raise ValueError(f"cannot resolve original binary for overlay source: {source_rel}")
 
 
 def overlay_load_address_for_source(
     layout: RepoLayout, source_path: Path
 ) -> int | None:
-    resolved_source = source_path.expanduser().resolve()
-    try:
-        source_rel = resolved_source.relative_to(layout.root).as_posix()
-    except ValueError:
-        return None
-
-    from ..domain.manifests import load_target_manifests
-
-    source_dir = str(Path(source_rel).parent)
-    for manifest in load_target_manifests(layout.root).values():
-        if manifest.source_dir == source_dir:
-            return (
-                _catalog_load_address(layout, manifest.disc_id) or manifest.load_address
-            )
-
+    manifest = owning_manifest(layout.root, source_path)
+    if manifest is not None:
+        return _catalog_load_address(layout, manifest.disc_id) or manifest.load_address
     return None
 
 

@@ -20,25 +20,105 @@ segments:
     start: 0x4
     vram: 0x801d0c04
     subsegments:
-      - [0x4, c, mainLoop]
-      - [0x90, c, titleSetup]
-      - [0x15c, c, armFadeDelay]
-      - [0x194, c, tickFadeTimer]
-      - [0x1f0, c, openSelection]
-      - [0x254, c, finishSelection]
-      - [0x300, c, handleMenuInput]
-      - [0x3b8, c, updatePrompt]
-      - [0x400, c, finalizeExit]
-      - [0x44c, c, preDispatchGate]
-      - [0x534, c, startSelectionFx]
-      - [0x584, c, stopSelectionFx]
-      - [0x5e4, c, drawPrompt]
-      - [0x6cc, c, drawPromptPanels]
-      - [0x90c, c, drawLabelGroups]
-      - [0xadc, c, drawLabelGroup]
-      - [0xbd8, c, drawGlyph]
-      - [0xce8, c, setGlyphAlpha]
-      - [0xcf8, c, updateBanner]
-      - [0xf00, c, updateWindows]
+      - - 0x4
+        - c
+        - mainLoop
+        - '@source: src/bof3/ui/mainLoop_game01_801D0C04.c'
+        - '@behavior: initializes the frontend overlay state, then runs its perpetual input, state-dispatch, and render/update loop.'
+      - - 0x90
+        - c
+        - titleSetup
+        - '@source: src/bof3/ui/titleSetup_game01_801D0C90.c'
+        - '@behavior: selects layout bank `2`, requests `DEMO.EMI`, waits for the loader, seeds cue `0x8d`, then arms the local fade/window state.'
+      - - 0x15c
+        - c
+        - armFadeDelay
+        - '@source: src/bof3/ui/armFadeDelay_game01_801D0D5C.c'
+        - '@behavior: when fade phase `2` is reached, arms a 360-tick delay and advances the frontend state.'
+      - - 0x194
+        - c
+        - tickFadeTimer
+        - '@source: src/bof3/ui/tickFadeTimer_game01_801D0D94.c'
+        - '@behavior: counts down the frontend timer; at zero it selects fade phase `3`, opens the window phase, rearms 900 ticks, and advances the state.'
+      - - 0x1f0
+        - c
+        - openSelection
+        - '@source: src/bof3/ui/openSelection_game01_801D0DF0.c'
+        - '@behavior: decrements the local timer; once it expires, enters local mode `0`, opens the selection FX, and advances the title state.'
+      - - 0x254
+        - c
+        - finishSelection
+        - '@source: src/bof3/ui/finishSelection_game01_801D0E54.c'
+        - '@behavior: waits for the selection effect to close, resets frontend-local phases and EXE flags, installs the next callback, then advances the state.'
+      - - 0x300
+        - c
+        - handleMenuInput
+        - '@source: src/bof3/ui/handleMenuInput_game01_801D0F00.c'
+        - '@behavior: returns the overlay to state zero when the EXE gate closes; otherwise accepts enabled pad input once loading/effects are idle, starts the selected cue, advances state, and updates the frontend prompt.'
+      - - 0x3b8
+        - c
+        - updatePrompt
+        - '@source: src/bof3/ui/updatePrompt_game01_801D0FB8.c'
+        - '@behavior: while the EXE gate is active, updates the frontend prompt; otherwise clears the prompt selection and returns the overlay to state zero.'
+      - - 0x400
+        - c
+        - finalizeExit
+        - '@source: src/bof3/ui/finalizeExit_game01_801D1000.c'
+        - '@behavior: closes the current selection FX, restores layout bank `0`, installs the alternate frontend callback loop, then exits the active EXE callback thread.'
+      - - 0x44c
+        - c
+        - preDispatchGate
+        - '@source: src/bof3/ui/preDispatchGate_game01_801D104C.c'
+        - '@behavior: runs before the main GAME.EMI entry-1 state handler each frame and redirects early start-button transitions into either state `2` or state `7`.'
+      - - 0x534
+        - c
+        - startSelectionFx
+        - '@source: src/bof3/ui/startSelectionFx_game01_801D1134.c'
+        - '@behavior: opens the selection-specific EXE effect using the current selection.'
+      - - 0x584
+        - c
+        - stopSelectionFx
+        - '@source: src/bof3/ui/stopSelectionFx_game01_801D1184.c'
+        - '@behavior: closes the current selection-specific EXE effect and clears the active selection byte.'
+      - - 0x5e4
+        - c
+        - drawPrompt
+        - '@source: src/bof3/ui/drawPrompt_game01_801D11E4.c'
+        - '@behavior: clears the prompt gate once the EXE reaches its idle selection state, then draws the active frontend prompt and its selection marker.'
+      - - 0x6cc
+        - c
+        - drawPromptPanels
+        - '@source: src/bof3/ui/drawPromptPanels_game01_801D12CC.c'
+        - '@behavior: draws both New Game/Load prompt panels, their labels and selection marker; when the popup is open, pulses the active marker primitive.'
+      - - 0x90c
+        - c
+        - drawLabelGroups
+        - '@source: src/bof3/ui/drawLabelGroups_game01_801D150C.c'
+        - '@behavior: draws two paired frontend label groups at the requested position; the first expanded pair is optional, while both groups share selection and alpha controls.'
+      - - 0xadc
+        - c
+        - drawLabelGroup
+        - '@source: src/bof3/ui/drawLabelGroup_game01_801D16DC.c'
+        - '@behavior: draws a paired frontend label group at the requested position, applying the supplied selection and alpha controls to both primitives.'
+      - - 0xbd8
+        - c
+        - drawGlyph
+        - '@source: src/bof3/ui/drawGlyph_game01_801D17D8.c'
+        - '@behavior: initializes the shared frontend primitive and applies one indexed glyph geometry record before returning the primitive to the caller.'
+      - - 0xce8
+        - c
+        - setGlyphAlpha
+        - '@source: src/bof3/ui/setGlyphAlpha_game01_801D18E8.c'
+        - '@behavior: writes one alpha value to the three color channels of a frontend primitive.'
+      - - 0xcf8
+        - c
+        - updateBanner
+        - '@source: src/bof3/ui/updateBanner_game01_801D18F8.c'
+        - '@behavior: advances the four-panel frontend banner fade and draws each visible panel with its current alpha.'
+      - - 0xf00
+        - c
+        - updateWindows
+        - '@source: src/bof3/ui/updateWindows_game01_801D1B00.c'
+        - '@behavior: advances the two frontend window fades, promotes the fade phase once both channels saturate, and draws the visible menu/window layers.'
   - [0x104c, bin, data]
   - [0x1134]

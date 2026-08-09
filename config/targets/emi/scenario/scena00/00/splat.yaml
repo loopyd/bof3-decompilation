@@ -2,6 +2,7 @@ name: scenario_scena00_00
 sha1: 0d16dda28b89d58ea04e1552174c21a453cc0077
 options:
   platform: psx
+  create_c_files: false
   compiler: psyq
   basename: scenario_scena00_00
   base_path: ../../../../../..
@@ -64,18 +65,26 @@ segments:
   - - 23504
     - c
     - func_801FC7D0
+    - '@source: src/bof3/scenario/func_801FC7D0.c'
+    - '@behavior: Dispatches one record callback selected by byte 0x7a.'
   - - 23568
     - asm
     - func_801FC810
+    - '@source: src/bof3/scenario/func_801FC810.c'
+    - '@behavior: UNKNOWN: recover the empty body from target-qualified assembly.'
   - - 23576
     - asm
     - func_801FC818
   - - 23796
     - c
     - returnZero
+    - '@source: src/bof3/scenario/returnZero_801FC8F4.c'
+    - '@behavior: Returns zero.'
   - - 23804
     - c
     - resetEffectBank
+    - '@source: src/bof3/scenario/resetEffectBank_801FC8FC.c'
+    - '@behavior: Resets one local effect bank and marks the frontend flag byte.'
   - - 23936
     - asm
     - T_801FC980

@@ -6,3 +6,17 @@ source_dir = "src/emi/scenario/sce10eff/00"
 binary = "out/binaries/emi/scenario/sce10eff/00.bin"
 splat = "config/targets/emi/scenario/sce10eff/00/splat.yaml"
 load_address = 0x801d0c00
+
+sources = [
+    "src/bof3/scenario/func_801D0E9C.c",
+    "src/bof3/scenario/func_801D0EE0.c",
+    "src/bof3/scenario/func_801D1138.c",
+]
+support_sources = [
+    "src/bof3/support/sce10eff_symbols.c",
+    "src/bof3/support/sce10eff_psyq.c",
+]
+psyq_source = "src/bof3/support/sce10eff_psyq.c"
+headers = [
+    "include/bof3/scenario/sce10eff_internal.h",
+]

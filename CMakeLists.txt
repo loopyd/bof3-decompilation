@@ -41,6 +41,73 @@ file(GLOB_RECURSE BOF3_SHARED_SOURCES CONFIGURE_DEPENDS
 
 set(BOF3_OBJECTS)
 set(BOF3_SOURCE_DIRECTORIES)
+
+# Canonical target roots: every manifest's source_dir (e.g. src/emi/...).
+# Nested subsystem folders below a root share that root's build target so
+# `bin/build TARGET` compiles every descendant lift.
+set(BOF3_MANIFEST_SOURCE_DIRS)
+file(GLOB_RECURSE BOF3_MANIFEST_TOMLS CONFIGURE_DEPENDS
+     "${CMAKE_SOURCE_DIR}/config/targets/*/target.toml")
+foreach(manifest_file IN LISTS BOF3_MANIFEST_TOMLS)
+  file(READ "${manifest_file}" _manifest_text)
+  if(_manifest_text MATCHES "source_dir[ \t]*=[ \t]*\"([^\"]+)\"")
+    list(APPEND BOF3_MANIFEST_SOURCE_DIRS "${CMAKE_MATCH_1}")
+  endif()
+endforeach()
+list(REMOVE_DUPLICATES BOF3_MANIFEST_SOURCE_DIRS)
+
+# Explicit target source claims (manifest sources/support_sources/headers):
+# an authored lift may live in a semantic src/bof3/<class>/ folder far outside
+# the manifest source_dir, so grouping uses the claim, never path ancestry.
+# Unmigrated targets emit no claims and keep the legacy inventory grouping.
+if(EXISTS "${CMAKE_SOURCE_DIR}/.venv/bin/python")
+  set(BOF3_CLAIMS_PYTHON "${CMAKE_SOURCE_DIR}/.venv/bin/python")
+else()
+  find_program(BOF3_CLAIMS_PYTHON python3)
+endif()
+execute_process(
+  COMMAND "${CMAKE_COMMAND}" -E env "PYTHONPATH=${CMAKE_SOURCE_DIR}/tools/python"
+          "${BOF3_CLAIMS_PYTHON}" -m harness.commands.manifest_claims --root "${CMAKE_SOURCE_DIR}"
+  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+  OUTPUT_VARIABLE _manifest_claims
+  RESULT_VARIABLE _claims_result
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+if(NOT _claims_result EQUAL 0)
+  message(FATAL_ERROR "manifest claims generation failed (${_claims_result})")
+endif()
+set(BOF3_CLAIMED_PATHS)
+set(BOF3_CLAIMED_OWNERS)
+set(BOF3_CLAIMED_HEADER_PATHS)
+set(BOF3_CLAIMED_HEADER_OWNERS)
+set(BOF3_MIGRATED_SOURCE_DIRS)
+# execute_process stores output as one list element with embedded newlines;
+# split it into lines explicitly so every claim parses independently.
+string(REPLACE "\n" ";" _manifest_lines "${_manifest_claims}")
+foreach(_line IN LISTS _manifest_lines)
+  if(_line STREQUAL "")
+    continue()
+  endif()
+  string(REPLACE "|" ";" _fields "${_line}")
+  list(LENGTH _fields _nfields)
+  if(_nfields LESS 3)
+    continue()
+  endif()
+  list(GET _fields 0 _kind)
+  list(GET _fields 1 _owner)
+  list(GET _fields 2 _path)
+  if(_kind STREQUAL "source")
+    list(APPEND BOF3_CLAIMED_PATHS "${_path}")
+    list(APPEND BOF3_CLAIMED_OWNERS "${_owner}")
+  elseif(_kind STREQUAL "header")
+    list(APPEND BOF3_CLAIMED_HEADER_PATHS "${_path}")
+    list(APPEND BOF3_CLAIMED_HEADER_OWNERS "${_owner}")
+  elseif(_kind STREQUAL "migrated")
+    # Explicit-claim target: unclaimed files under its legacy source_dir are
+    # not owned by it and must never join its build target.
+    list(APPEND BOF3_MIGRATED_SOURCE_DIRS "${_owner}")
+  endif()
+endforeach()
+
 foreach(source IN LISTS BOF3_C_SOURCES BOF3_ASM_SOURCES)
   file(RELATIVE_PATH relative "${CMAKE_SOURCE_DIR}/src" "${source}")
   string(REGEX REPLACE "\.[^.]+$" ".o" relative_object "${relative}")
@@ -102,11 +169,67 @@ foreach(source IN LISTS BOF3_C_SOURCES BOF3_ASM_SOURCES)
   add_custom_target("lift_${target_hash}" DEPENDS "${object}")
   list(APPEND BOF3_OBJECTS "${object}")
 
+  # Group every source under the deepest owning manifest source_dir so a
+  # relocated (nested) lift still builds with `bin/build TARGET`.  An explicit
+  # manifest claim wins over path containment and may point far outside every
+  # manifest root (semantic src/bof3/<class>/ folders); directories outside
+  # any manifest root without a claim keep their own grouping.  For a target
+  # with explicit claims (migrated), its build target owns exactly its claimed
+  # translation units: unclaimed files under its legacy source_dir get no
+  # target group (the global `lifts` target still compiles them).
   get_filename_component(source_directory "src/${relative}" DIRECTORY)
-  string(SHA1 directory_hash "${source_directory}")
-  string(SUBSTRING "${directory_hash}" 0 16 directory_hash)
-  list(APPEND "BOF3_TARGET_OBJECTS_${directory_hash}" "${object}")
-  list(APPEND BOF3_SOURCE_DIRECTORIES "${source_directory}")
+  set(group_directory "${source_directory}")
+  set(_claim_owner "")
+  list(FIND BOF3_CLAIMED_PATHS "src/${relative}" _claim_index)
+  if(_claim_index GREATER -1)
+    list(GET BOF3_CLAIMED_OWNERS ${_claim_index} _claim_owner)
+    set(group_directory "${_claim_owner}")
+  else()
+    set(_best_prefix_len -1)
+    set(_best_manifest_dir "")
+    foreach(manifest_dir IN LISTS BOF3_MANIFEST_SOURCE_DIRS)
+      string(LENGTH "${manifest_dir}" _manifest_len)
+      string(FIND "${source_directory}/" "${manifest_dir}/" _prefix_at)
+      if(_prefix_at EQUAL 0 AND _manifest_len GREATER _best_prefix_len)
+        set(_best_prefix_len "${_manifest_len}")
+        set(_best_manifest_dir "${manifest_dir}")
+      endif()
+    endforeach()
+    if(_best_manifest_dir)
+      list(FIND BOF3_MIGRATED_SOURCE_DIRS "${_best_manifest_dir}" _migrated_index)
+      if(_migrated_index EQUAL -1)
+        set(group_directory "${_best_manifest_dir}")
+      else()
+        # Explicit-claim target: unclaimed files under its legacy source_dir
+        # are not owned by it. Keep them compiling via the global `lifts`
+        # target but give them no target group (no bin/build TARGET claim).
+        set(group_directory "")
+      endif()
+    endif()
+  endif()
+  if(_claim_owner)
+    # Claimed header deps: every explicit private header of the owning target.
+    set(_i 0)
+    foreach(_h IN LISTS BOF3_CLAIMED_HEADER_PATHS)
+      list(GET BOF3_CLAIMED_HEADER_OWNERS ${_i} _h_owner)
+      if(_h_owner STREQUAL _claim_owner)
+        list(APPEND source_headers "${CMAKE_SOURCE_DIR}/${_h}")
+      endif()
+      math(EXPR _i "${_i} + 1")
+    endforeach()
+  elseif(NOT group_directory STREQUAL ""
+         AND NOT group_directory STREQUAL source_directory)
+    # Nested lift: rebuild when any target-root header changes.
+    file(GLOB_RECURSE _target_headers CONFIGURE_DEPENDS
+         "${CMAKE_SOURCE_DIR}/${group_directory}/*.h")
+    list(APPEND source_headers ${_target_headers})
+  endif()
+  if(NOT group_directory STREQUAL "")
+    string(SHA1 directory_hash "${group_directory}")
+    string(SUBSTRING "${directory_hash}" 0 16 directory_hash)
+    list(APPEND "BOF3_TARGET_OBJECTS_${directory_hash}" "${object}")
+    list(APPEND BOF3_SOURCE_DIRECTORIES "${group_directory}")
+  endif()
 endforeach()
 
 list(REMOVE_DUPLICATES BOF3_SOURCE_DIRECTORIES)

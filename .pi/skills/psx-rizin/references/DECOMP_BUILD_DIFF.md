@@ -50,11 +50,11 @@ Evidence comes from library signatures, startup code, generated idioms, object m
 A practical matching project separates:
 
 ```text
-config/targets/      per-target identity, layout, symbols
-config/targets/      target identity, image path, load address
+config/targets/      per-target identity, layout, symbols, image path, load address
 include/memory/      generic PS1 memory/accessor headers
-src/exe/<name>/      executable lifts (func_XXXXXXXX.c + internal.h)
-src/emi/<fam>/<arc>/<slot>/   one EMI entry
+include/bof3/        shared and target-private declarations
+src/bof3/<domain>/   metadata-owned executable and EMI lifts
+src/bof3/support/    target-qualified support and generated bindings
 src/shared/<domain>/ cross-target embedded templates
 build/               generated objects/binaries
 out/                 disposable snapshots, index, matching workspaces

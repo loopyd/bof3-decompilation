@@ -58,6 +58,79 @@ def _write_check_target(root: Path, target: str, *, kind: str = "executable") ->
     manifest.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def test_symbols_check_accepts_nested_lift_provenance(
+    tmp_path: Path, capsys
+) -> None:
+    """A semantic map symbol owned by a nested @source-tagged lift passes."""
+    (tmp_path / "config" / "targets" / "shared").mkdir(parents=True)
+    (tmp_path / "config" / "targets" / "shared" / "symbols.txt").write_text(
+        "", encoding="utf-8"
+    )
+    (tmp_path / "config" / "sdk").mkdir(parents=True)
+    (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text(
+        "", encoding="utf-8"
+    )
+    _write_check_target(tmp_path, "exe/keep")
+    (tmp_path / "config" / "targets" / "exe" / "keep" / "symbols.txt").write_text(
+        "initSelectionState = 0x80100000;\n", encoding="utf-8"
+    )
+    nested = (
+        tmp_path
+        / "src"
+        / "exe"
+        / "keep"
+        / "runtime"
+        / "initSelectionState.c"
+    )
+    nested.parent.mkdir(parents=True)
+    nested.write_text(
+        "// @source 0x80100000\n// @behavior stub\n", encoding="utf-8"
+    )
+
+    code = symbols_main(["--root", str(tmp_path), "check", "exe/keep"])
+    captured = capsys.readouterr()
+
+    assert code == 0, captured.err
+    assert "untracked symbol" not in captured.err
+
+
+def test_symbols_check_rejects_nested_lift_without_matching_address(
+    tmp_path: Path, capsys
+) -> None:
+    """A nested lift with the wrong @source still fails provenance."""
+    (tmp_path / "config" / "targets" / "shared").mkdir(parents=True)
+    (tmp_path / "config" / "targets" / "shared" / "symbols.txt").write_text(
+        "", encoding="utf-8"
+    )
+    (tmp_path / "config" / "sdk").mkdir(parents=True)
+    (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text(
+        "", encoding="utf-8"
+    )
+    _write_check_target(tmp_path, "exe/keep")
+    (tmp_path / "config" / "targets" / "exe" / "keep" / "symbols.txt").write_text(
+        "initSelectionState = 0x80100000;\n", encoding="utf-8"
+    )
+    nested = (
+        tmp_path
+        / "src"
+        / "exe"
+        / "keep"
+        / "runtime"
+        / "initSelectionState.c"
+    )
+    nested.parent.mkdir(parents=True)
+    nested.write_text(
+        "// @source 0x80100004\n// @behavior stub\n", encoding="utf-8"
+    )
+
+    code = symbols_main(["--root", str(tmp_path), "check", "exe/keep"])
+    captured = capsys.readouterr()
+
+    assert code == 2
+    assert "untracked symbol" in captured.err
+    assert "initSelectionState" in captured.err
+
+
 def test_symbols_check_target_scope(tmp_path: Path, capsys) -> None:
     """`symbols check [TARGET]` selects one target; no-operand checks all."""
     # --- shared and SDK maps (empty but exist) ---

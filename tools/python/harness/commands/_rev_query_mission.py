@@ -134,10 +134,10 @@ def run_mission(args: argparse.Namespace) -> int:
                 {"address": f"0x{unresolved_address:08X}", "name": name}
             )
 
-    from ..domain.sources import resolve_source_for_address
+    from ..domain.claims import resolve_manifest_source_for_address
     from ..layout import parse_splat_layout
 
-    resolved = resolve_source_for_address(root / manifest.source_dir, address)
+    resolved = resolve_manifest_source_for_address(root, manifest, address)
     source = resolved.relative_to(root) if resolved is not None else None
     layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
     boundary = layout.boundary_starting_at(address)

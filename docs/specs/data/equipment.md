@@ -167,7 +167,7 @@ continuation and are not assigned a shared field name here.
 `+0x0c` bit `0` for one selection mode and bit `1` for another, then loads
 `+0x10` as a halfword and tests bit `0x400` in the second mode. These are
 runtime flag uses; their public names remain candidates. A readable target-local
-candidate now exists at `src/emi/etc/game/00/func_801AF5B0.c`; it measures
+candidate now exists at `src/bof3/ui/func_801AF5B0.c`; it measures
 51.35% under canonical `-O2`, so the ability-gate names and exact function
 replacement remain unpromoted.
 

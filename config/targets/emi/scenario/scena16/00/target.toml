@@ -6,3 +6,34 @@ source_dir = "src/emi/scenario/scena16/00"
 binary = "out/binaries/emi/scenario/scena16/00.bin"
 splat = "config/targets/emi/scenario/scena16/00/splat.yaml"
 load_address = 0x801f6c00
+
+sources = [
+    "src/bof3/scenario/bootPrimaryState_scena16.c",
+    "src/bof3/scenario/copyPaletteBlock_scena16.c",
+    "src/bof3/scenario/dispatchPrimaryState_scena16.c",
+    "src/bof3/scenario/dispatchRecordCallback_scena16.c",
+    "src/bof3/scenario/dispatchSecondaryState_scena16.c",
+    "src/bof3/scenario/finalizeSecondaryPath_scena16.c",
+    "src/bof3/scenario/func_801F6D90_scena16.c",
+    "src/bof3/scenario/func_801F6F30_scena16.c",
+    "src/bof3/scenario/func_801F7230_scena16.c",
+    "src/bof3/scenario/func_801F7790_scena16.c",
+    "src/bof3/scenario/func_801F7CC4_scena16.c",
+    "src/bof3/scenario/func_801F83B0_scena16.c",
+    "src/bof3/scenario/noopRecordHandler_scena16.c",
+    "src/bof3/scenario/noopSecondaryState_scena16.c",
+    "src/bof3/scenario/resetEffectBank_scena16.c",
+    "src/bof3/scenario/returnZero2_scena16.c",
+    "src/bof3/scenario/returnZero3_scena16.c",
+    "src/bof3/scenario/returnZero_scena16.c",
+    "src/bof3/scenario/seedRouteEnterState2_scena16.c",
+    "src/bof3/scenario/seedRouteEnterState3_scena16.c",
+]
+support_sources = [
+    "src/bof3/support/scena16_symbols.c",
+    "src/bof3/support/scena16_psyq.c",
+]
+psyq_source = "src/bof3/support/scena16_psyq.c"
+headers = [
+    "include/bof3/scenario/scena16_internal.h",
+]

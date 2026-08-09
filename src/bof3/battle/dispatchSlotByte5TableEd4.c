@@ -1,0 +1,16 @@
+#include "bof3/battle/battle03_internal.h"
+
+/* @source 0x801E5C1C
+ * @behavior copies the eight-handler local dispatch table to the stack and
+ * invokes the entry selected by queued-slot byte +0x05.
+ * @status exact
+ * @match 100.00
+ * @residual none; live audit is instruction- and byte-exact.
+ */
+void dispatchSlotByte5TableEd4(void)
+{
+    Battle03EightDispatchTable handlers;
+
+    handlers = D_801D0ED4;
+    handlers.handlers[D_801EC2E0->unk_05]();
+}

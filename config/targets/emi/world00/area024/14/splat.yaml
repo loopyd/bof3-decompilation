@@ -26,6 +26,8 @@ segments:
   - - 20
     - c
     - func_801F2C14
+    - '@source: src/bof3/world/func_801F2C14.c'
+    - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table at 0x801F4200.'
   - - 88
     - asm
     - func_801F2C58
@@ -38,9 +40,13 @@ segments:
   - - 436
     - c
     - resetScratchSelectEntry3
+    - '@source: src/bof3/world/resetScratchSelectEntry3.c'
+    - '@behavior: entry-3 handler of the overlay entry table (D_801F4200): clears D_80147A58 and increments scratch-work byte 0x01.'
   - - 472
     - c
     - resetWorkareaSelectEntry4
+    - '@source: src/bof3/world/resetWorkareaSelectEntry4.c'
+    - '@behavior: entry-4 handler of the overlay entry table (D_801F4200): calls the shared work-area reset helper.'
   - - 504
     - asm
     - func_801F2DF8
@@ -53,6 +59,8 @@ segments:
   - - 1260
     - c
     - dispatchWorkStates
+    - '@source: src/bof3/world/dispatchWorkStates.c'
+    - '@behavior: called from the overlay frame entry func_801F2D5C: walks the local eight-entry work array, runs the state handler selected by byte `+0x01` for each active entry, then draws the entry and returns whether any active work was processed.'
   - - 1460
     - asm
     - func_801F31B4
@@ -62,9 +70,13 @@ segments:
   - - 1748
     - c
     - advanceStateSelectMode2
+    - '@source: src/bof3/world/advanceStateSelectMode2.c'
+    - '@behavior: mode-2 handler of the work state dispatch table (stateTable): increments the byte at offset 1 of the current work pointer.'
   - - 1780
     - c
     - advanceStateSelectMode3
+    - '@source: src/bof3/world/advanceStateSelectMode3.c'
+    - '@behavior: mode-3 handler of the work state dispatch table (stateTable): increments the byte at offset 1 of the current work pointer.'
   - - 1812
     - asm
     - func_801F3314
@@ -86,7 +98,7 @@ segments:
   - - 4444
     - c
     - drawSpin
-    - '@source: src/emi/world00/area024/14/drawSpin.c'
+    - '@source: src/bof3/world/drawSpin.c'
     - '@behavior: Draws the 16-entry spin table and advances each entry size/fade halfwords.'
   - - 4680
     - asm
@@ -97,9 +109,13 @@ segments:
   - - 5592
     - c
     - resetStateFlagA
+    - '@source: src/bof3/world/resetStateFlagA.c'
+    - '@behavior: slot-0 callback of the local pointer table D_801F5AB4: sets D_801490A8 to -1.'
   - - 5612
     - c
     - resetStateFlagB
+    - '@source: src/bof3/world/resetStateFlagB.c'
+    - '@behavior: slot-1 callback of the local pointer table D_801F5AB4: sets D_801490A8 to -1.'
   - - 5632
     - rodata
     - T_801F4200

@@ -18,7 +18,7 @@ This module centralizes lift-source identity:
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Mapping
+from typing import Iterable, Mapping
 
 from ..canonical import load_map, map_path
 from ..layout import ReviewedLayout, parse_splat_layout
@@ -95,12 +95,45 @@ def lift_metadata(source_path: Path) -> tuple[int, str]:
     return address, behavior
 
 
-def collect_source_addresses(
+def _repo_root(source_dir: Path) -> Path | None:
+    """Return the repository root when ``source_dir`` lies under a ``src`` tree."""
+
+    try:
+        index = source_dir.parts.index("src")
+    except ValueError:
+        return None
+    return Path(*source_dir.parts[:index])
+
+
+def source_expected_key(source_dir: Path, source_path: Path) -> str | None:
+    """Return the ``expected_lifts`` key for ``source_path``.
+
+    In-root sources use their ``source_dir``-relative stem (legacy and
+    in-root ``@source`` convention).  Out-of-root claimed sources use the
+    repository-relative stem, which is exactly what
+    :func:`expected_lift_sources` emits for out-of-root ``@source`` paths.
+    Returns None when neither convention applies.
+    """
+
+    try:
+        return source_path.relative_to(source_dir).with_suffix("").as_posix()
+    except ValueError:
+        root = _repo_root(source_dir)
+        if root is None:
+            return None
+        try:
+            return source_path.relative_to(root).with_suffix("").as_posix()
+        except ValueError:
+            return None
+
+
+def _scan_lift_sources(
+    source_paths: Iterable[Path],
     source_dir: Path,
-    *,
-    expected_lifts: Mapping[str, int] | None = None,
+    expected_lifts: Mapping[str, int] | None,
+    owner: str | None = None,
 ) -> list[tuple[Path, int]]:
-    """Scan one target source directory deterministically.
+    """Shared strict lift scan over an explicit candidate set.
 
     ``expected_lifts`` maps file stems to reviewed Splat ``c``-boundary
     addresses (see :func:`expected_lift_sources`).  A file is a lift
@@ -109,16 +142,19 @@ def collect_source_addresses(
     sources claiming the same address raise :class:`SourceAddressCollision`;
     a Splat-expected candidate missing metadata raises
     :class:`LiftMetadataError`.  Rows sort by ``(address, filename)``.
+    ``owner`` names the target for out-of-root collision messages.
     """
 
     rows: list[tuple[Path, int]] = []
     claimed: dict[int, Path] = {}
-    for source_path in sorted(source_dir.glob("*.c")):
+    for source_path in sorted(source_paths):
         text = source_path.read_text(encoding="utf-8")
         address = parse_source_tag(text)
-        expected = (
-            None if expected_lifts is None else expected_lifts.get(source_path.stem)
-        )
+        expected = None
+        if expected_lifts is not None:
+            key = source_expected_key(source_dir, source_path)
+            if key is not None:
+                expected = expected_lifts.get(key)
         if address is None:
             if expected is None:
                 continue  # support/helper translation unit, not a lift
@@ -142,32 +178,63 @@ def collect_source_addresses(
             )
         previous = claimed.get(address)
         if previous is not None:
+            location = owner or str(source_dir)
             raise SourceAddressCollision(
                 f"source address collision 0x{address:08X}: "
-                f"{previous.name} and {source_path.name} in {source_dir}"
+                f"{previous.name} and {source_path.name} in {location}"
             )
         claimed[address] = source_path
         rows.append((source_path, address))
     return sorted(rows, key=lambda row: (row[1], row[0].name))
 
 
+def collect_source_addresses(
+    source_dir: Path,
+    *,
+    expected_lifts: Mapping[str, int] | None = None,
+) -> list[tuple[Path, int]]:
+    """Scan one target source directory deterministically.
+
+    Legacy entry point used by unmigrated targets and folder-local callers;
+    target-qualified consumers should prefer
+    :func:`collect_manifest_source_addresses`.
+    """
+
+    return _scan_lift_sources(
+        sorted(source_dir.rglob("*.c")), source_dir, expected_lifts
+    )
+
+
 def expected_lift_sources(
     layout: ReviewedLayout, source_dir: Path
 ) -> dict[str, int]:
-    """Map every reviewed Splat ``c`` boundary to its expected source stem.
+    """Map every reviewed Splat ``c`` boundary to a target-relative source stem.
 
-    The boundary's ``@source`` metadata names the exact file; otherwise the
-    boundary name is the source stem (``func_<ADDR>`` or a reviewed semantic
-    name).
+    Relocated sources use their reviewed ``@source`` path.  In-root paths stay
+    ``source_dir``-relative; out-of-root claimed paths become repository-
+    relative.  Legacy boundaries without a source path remain top-level names.
     """
 
     result: dict[str, int] = {}
+    source_parts = source_dir.parts
     for boundary in layout.boundaries:
         if boundary.kind != "c":
             continue
         stem: str | None = None
         if boundary.source:
-            stem = Path(boundary.source).stem
+            path = Path(boundary.source).with_suffix("")
+            parts = path.parts
+            try:
+                source_index = source_parts.index("src")
+            except ValueError:
+                source_suffix = source_parts
+            else:
+                source_suffix = source_parts[source_index:]
+            for index in range(len(parts)):
+                if parts[index : index + len(source_suffix)] == source_suffix:
+                    path = Path(*parts[index + len(source_suffix) :])
+                    break
+            stem = path.as_posix()
         elif boundary.name:
             stem = boundary.name
         if stem is None:
@@ -184,6 +251,8 @@ def resolve_source_for_address(
 ) -> Path | None:
     """Return the source claiming ``address``, or None when absent.
 
+    Legacy folder-scoped resolver; target-qualified consumers should prefer
+    ``domain.claims.resolve_manifest_source_for_address``.
     Strict: a Splat-expected candidate missing metadata raises
     :class:`LiftMetadataError` instead of being silently skipped.
     """
@@ -196,13 +265,48 @@ def resolve_source_for_address(
     return None
 
 
-def _owning_manifest(root: Path, source_path: Path):
-    source_rel = source_path.expanduser().resolve().relative_to(root)
-    source_dir = str(Path(source_rel).parent)
-    for manifest in load_target_manifests(root).values():
-        if manifest.source_dir == source_dir:
-            return manifest
-    return None
+def owning_manifest(root: Path, source_path: Path):
+    """Return the manifest owning ``source_path``: explicit claim match first,
+    then legacy ``source_dir`` ancestry.
+
+    Explicit claims make ownership target-qualified and path-independent, so
+    a lift moved into a semantic ``src/bof3/<class>/`` folder keeps its owner.
+    Returns None when no manifest claims the path and no manifest root
+    contains it (out-of-root or unrelated source).
+    """
+
+    try:
+        source_rel = source_path.expanduser().resolve().relative_to(
+            root.expanduser().resolve()
+        )
+    except ValueError:
+        return None
+    claimed_owners = [
+        manifest
+        for manifest in load_target_manifests(root).values()
+        if any(Path(claimed) == source_rel for claimed in manifest.sources)
+        or any(
+            Path(claimed) == source_rel for claimed in manifest.support_sources
+        )
+        or any(Path(claimed) == source_rel for claimed in manifest.headers)
+    ]
+    if claimed_owners:
+        return max(
+            claimed_owners,
+            key=lambda manifest: len(
+                manifest.sources + manifest.support_sources + manifest.headers
+            ),
+        )
+    owners = [
+        manifest
+        for manifest in load_target_manifests(root).values()
+        if source_rel.is_relative_to(Path(manifest.source_dir))
+    ]
+    return max(
+        owners,
+        key=lambda manifest: len(Path(manifest.source_dir).parts),
+        default=None,
+    )
 
 
 def reviewed_function_name(
@@ -216,7 +320,8 @@ def reviewed_function_name(
 
     Requires, deterministically:
 
-    - a reviewed Splat function boundary starting exactly at ``address``;
+    - a reviewed Splat function boundary at ``address``, or a containing reviewed
+      ``bin`` segment for a metadata/map-owned lift not yet split in Splat;
     - a target-local map entry (never shared/SDK) at that address;
     - a function entry, not a ``D_*`` data symbol;
     - boundary/map agreement (equal names, or Splat ``@source`` metadata).
@@ -232,10 +337,6 @@ def reviewed_function_name(
     if layout is None:
         layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
     boundary = layout.boundary_starting_at(address)
-    if boundary is None or not boundary.is_function:
-        raise CompiledSymbolError(
-            None, address, "no reviewed Splat function boundary at this address"
-        )
     entry = next(
         (symbol for symbol in load_map(map_path(root, target)) if symbol.address == address),
         None,
@@ -248,6 +349,13 @@ def reviewed_function_name(
         raise CompiledSymbolError(
             None, address, "target-local map entry is a data symbol, not a function"
         )
+    if boundary is None or not boundary.is_function:
+        containing = layout.boundary_containing(address)
+        if containing is None or containing.kind != "bin":
+            raise CompiledSymbolError(
+                None, address, "no reviewed Splat function boundary or containing bin segment"
+            )
+        return entry.name
     boundary_name = boundary.name
     if boundary_name == entry.name:
         return entry.name
@@ -277,12 +385,12 @@ def compiled_symbol_name(
     never fabricates ``func_<ADDR>``.
     """
 
-    manifest = _owning_manifest(root, source_path)
+    manifest = owning_manifest(root, source_path)
     if manifest is None:
         raise CompiledSymbolError(
             source_path,
             address,
-            "source is not inside a known target source directory",
+            "source is not claimed by or inside a known target source directory",
         )
     return reviewed_function_name(
         root, manifest.id.value, address, layout=layout
@@ -297,7 +405,9 @@ __all__ = [
     "compiled_symbol_name",
     "expected_lift_sources",
     "lift_metadata",
+    "owning_manifest",
     "resolve_source_for_address",
     "reviewed_function_name",
     "source_address",
+    "source_expected_key",
 ]

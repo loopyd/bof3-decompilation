@@ -109,10 +109,34 @@ def main() -> int:
     if not manifest_path.is_file():
         parser.error(f"unknown target: {target}")
     manifest = tomllib.loads(manifest_path.read_text())
-    from harness.domain.sources import resolve_source_for_address
+    from harness.domain.claims import (
+        manifest_header_paths,
+        resolve_manifest_source_for_address,
+    )
+    from harness.domain.manifests import load_target_manifests
 
-    source = resolve_source_for_address(root / manifest["source_dir"], address)
-    header = (root / manifest["source_dir"] / "internal.h") if source is None else source.parent / "internal.h"
+    manifest_obj = load_target_manifests(root).get(target)
+    source = (
+        resolve_manifest_source_for_address(root, manifest_obj, address)
+        if manifest_obj is not None
+        else None
+    )
+    # Target-qualified claims name the private headers; fall back to the
+    # legacy adjacent/root internal.h only when no claim resolves.
+    header = next(
+        (
+            candidate
+            for candidate in manifest_header_paths(root, manifest_obj)
+            if candidate.is_file()
+        ),
+        None,
+    )
+    if header is None:
+        header = (
+            source.parent / "internal.h"
+            if source is not None and (source.parent / "internal.h").is_file()
+            else root / manifest["source_dir"] / "internal.h"
+        )
     map_path = root / "config" / "targets" / target / "symbols.txt"
     binary = root / manifest["binary"]
     payload_offset = address - int(manifest["load_address"])

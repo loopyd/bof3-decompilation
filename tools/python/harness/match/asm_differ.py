@@ -23,11 +23,17 @@ def write_bundle(
     address = str(payload["address"]).removeprefix("0x")
     if target is None:
         source_path = Path(str(payload["source"]))
-        try:
-            source_parent = source_path.parent.relative_to(root).as_posix()
-        except ValueError:
-            source_parent = source_path.parent.name
-        owner = source_parent.removeprefix("src/")
+        from ..domain.sources import owning_manifest
+
+        manifest = owning_manifest(root, source_path)
+        if manifest is not None:
+            owner = manifest.id.value
+        else:
+            try:
+                source_parent = source_path.parent.relative_to(root).as_posix()
+            except ValueError:
+                source_parent = source_path.parent.name
+            owner = source_parent.removeprefix("src/")
     else:
         owner = target
     bundle = root / "out" / "matching" / owner / function / "asm-differ"

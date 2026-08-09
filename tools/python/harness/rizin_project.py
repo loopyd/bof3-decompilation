@@ -25,6 +25,7 @@ class RizinTarget:
     replay: str
     replay_sha256: str
     expected_lifts: dict[str, int]
+    source_paths: tuple[Path, ...] = ()
 
 
 def _baseline(symbols: list[Symbol], roots: frozenset[int]) -> str:
@@ -87,9 +88,26 @@ def prepare_target(root: Path, target_id: str) -> RizinTarget:
     replay = _baseline(
         load_target_symbols(root, manifest.id.value), roots
     ) + _reviewed_overlay(overlay)
+    # Explicit claim identity participates in the Rizin fingerprint: comment
+    # lines are filtered out by replay_commands but change replay_sha256, so
+    # adding/removing/renaming a claimed source, support unit, or header
+    # marks the snapshot stale and forces re-analysis.
+    claim_lines = "\n".join(
+        f"# claim {claimed}"
+        for claimed in (
+            manifest.sources + manifest.support_sources + manifest.headers
+        )
+    )
+    if claim_lines:
+        replay += claim_lines + "\n"
+    from .domain.registry import resolve_target
     from .domain.sources import expected_lift_sources
 
     expected_lifts = expected_lift_sources(layout, root / manifest.source_dir)
+    try:
+        resolved = resolve_target(root, manifest.id.value)
+    except (FileNotFoundError, ValueError, RuntimeError):
+        resolved = None
     return RizinTarget(
         target=manifest.id.value,
         binary=binary,
@@ -100,6 +118,7 @@ def prepare_target(root: Path, target_id: str) -> RizinTarget:
         replay=replay,
         replay_sha256=hashlib.sha256(replay.encode()).hexdigest(),
         expected_lifts=expected_lifts,
+        source_paths=() if resolved is None else resolved.source_paths,
     )
 
 
@@ -115,6 +134,7 @@ def analyze_project(root: Path, target_id: str, *, timeout: int = 120) -> RizinT
         replay_commands=replay_commands(target.replay),
         replay_sha256=target.replay_sha256,
         source_dir=target.source_dir,
+        source_paths=target.source_paths or None,
         expected_lifts=target.expected_lifts,
         timeout=timeout,
     )

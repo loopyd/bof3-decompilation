@@ -7,6 +7,65 @@ binary = "out/binaries/emi/world00/area030/04.bin"
 splat = "config/targets/emi/world00/area030/04/splat.yaml"
 load_address = 0x801d0c00
 
+
+sources = [
+    "src/bof3/world/advancePanelScroll.c",
+    "src/bof3/world/advanceStepMode6.c",
+    "src/bof3/world/appendDimTile.c",
+    "src/bof3/world/clearFlagState10.c",
+    "src/bof3/world/configureSpriteClut.c",
+    "src/bof3/world/dispatchCompanion.c",
+    "src/bof3/world/func_801D23EC.c",
+    "src/bof3/world/func_801D2AE0.c",
+    "src/bof3/world/func_801D5C48.c",
+    "src/bof3/world/func_801D6000.c",
+    "src/bof3/world/func_801D6554.c",
+    "src/bof3/world/func_801D69E8.c",
+    "src/bof3/world/func_801D6B28.c",
+    "src/bof3/world/func_801D6EC4.c",
+    "src/bof3/world/func_801D6F08.c",
+    "src/bof3/world/func_801D9B14.c",
+    "src/bof3/world/func_801D9B58.c",
+    "src/bof3/world/func_801D9C4C.c",
+    "src/bof3/world/func_801D9C9C.c",
+    "src/bof3/world/func_801D9CF4.c",
+    "src/bof3/world/func_801DA5B4.c",
+    "src/bof3/world/func_801DA8E8.c",
+    "src/bof3/world/func_801DAED4.c",
+    "src/bof3/world/func_801DB04C.c",
+    "src/bof3/world/func_801DC474.c",
+    "src/bof3/world/func_801DC590.c",
+    "src/bof3/world/func_801DC64C.c",
+    "src/bof3/world/func_801DC708.c",
+    "src/bof3/world/func_801DC838.c",
+    "src/bof3/world/func_801DC904.c",
+    "src/bof3/world/func_801DCC74.c",
+    "src/bof3/world/func_801DCCB0.c",
+    "src/bof3/world/func_801DD90C.c",
+    "src/bof3/world/func_801DD95C.c",
+    "src/bof3/world/func_801DDB74.c",
+    "src/bof3/world/func_801DDBC8.c",
+    "src/bof3/world/func_801DDC54.c",
+    "src/bof3/world/func_801DDCF8.c",
+    "src/bof3/world/func_801DFFA8.c",
+    "src/bof3/world/func_801DFFEC.c",
+    "src/bof3/world/func_801E00E0.c",
+    "src/bof3/world/func_801E0394.c",
+    "src/bof3/world/func_801E0DCC.c",
+    "src/bof3/world/queueIconStrip.c",
+    "src/bof3/world/seedMenuScratch.c",
+    "src/bof3/world/submitPanelPair.c",
+    "src/bof3/world/submitTpageDrawMode.c",
+]
+support_sources = [
+    "src/bof3/support/area03004_symbols.c",
+    "src/bof3/support/area03004_psyq.c",
+]
+psyq_source = "src/bof3/support/area03004_psyq.c"
+headers = [
+    "include/bof3/world/area03004_internal.h",
+]
+
 [[companion_overlays]]
 target = "emi/world00/area030/05"
 disc_id = "BIN/WORLD00/AREA030.EMI#5"

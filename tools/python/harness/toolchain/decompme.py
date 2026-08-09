@@ -215,6 +215,7 @@ def _target_assembly(layout: RepoLayout, function: FunctionId, source: Path) -> 
         address=function.address,
         binary_path=binary,
         load_address=manifest.load_address,
+        root=layout.root,
     )
     raw = extract_original_bytes(
         binary,
@@ -244,10 +245,10 @@ class DecompMeScratchpadToolchain:
         if manifest is None:
             raise ValueError(f"unknown target: {function.target.value}")
         _require_reviewed_function_boundary(self.layout, function, manifest)
-        from ..domain.sources import resolve_source_for_address
+        from ..domain.claims import resolve_manifest_source_for_address
 
-        source = resolve_source_for_address(
-            self.layout.root / manifest.source_dir, function.address
+        source = resolve_manifest_source_for_address(
+            self.layout.root, manifest, function.address
         )
         if source is None:
             raise FileNotFoundError(

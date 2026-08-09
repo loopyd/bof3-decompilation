@@ -6,3 +6,22 @@ source_dir = "src/emi/world00/area028/13"
 binary = "out/binaries/emi/world00/area028/13.bin"
 splat = "config/targets/emi/world00/area028/13/splat.yaml"
 load_address = 0x801f2c00
+
+sources = [
+    "src/bof3/world/func_801F2C48.c",
+    "src/bof3/world/resetWorkareaSelectMode2.c",
+    "src/bof3/world/seedWorkTable.c",
+    "src/bof3/world/initSpriteSlot.c",
+    "src/bof3/world/scanFreeSlot.c",
+    "src/bof3/world/refreshSpriteSlots.c",
+    "src/bof3/world/func_801F3414.c",
+    "src/bof3/world/func_801F341C.c",
+]
+support_sources = [
+    "src/bof3/support/area02813_symbols.c",
+    "src/bof3/support/area02813_psyq.c",
+]
+psyq_source = "src/bof3/support/area02813_psyq.c"
+headers = [
+    "include/bof3/world/area02813_internal.h",
+]

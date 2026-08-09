@@ -47,7 +47,7 @@ segments:
   - - 24976
     - c
     - advanceStateWhenLoaderGated
-    - '@source: src/emi/battle/battle/03/advanceStateWhenLoaderGated.c'
+    - '@source: src/bof3/battle/advanceStateWhenLoaderGated.c'
     - '@behavior: Advances the global battle state when the EXE loader gate is ready and enabled.'
   - - 25060
     - c
@@ -85,7 +85,7 @@ segments:
   - - 26836
     - c
     - retreatStateWhenGateClear
-    - '@source: src/emi/battle/battle/03/retreatStateWhenGateClear.c'
+    - '@source: src/bof3/battle/retreatStateWhenGateClear.c'
     - '@behavior: Clears the battle selection flag and decrements its counter when the gate is clear.'
   - - 26892
     - asm
@@ -144,7 +144,7 @@ segments:
   - - 36096
     - c
     - drawFullscreenFadeTile
-    - '@source: src/emi/battle/battle/03/drawFullscreenFadeTile.c'
+    - '@source: src/bof3/battle/drawFullscreenFadeTile.c'
     - '@behavior: Emits a semi-transparent full-screen tile primitive.'
   - - 36268
     - asm
@@ -200,12 +200,12 @@ segments:
   - - 42980
     - c
     - func_801DB3E4
-    - '@source: src/emi/battle/battle/03/func_801DB3E4.c'
+    - '@source: src/bof3/battle/func_801DB3E4.c'
     - '@behavior: reports whether one enemy battler''s `0xa8` value is large enough for the current average/max threshold pair.'
   - - 43060
     - c
     - func_801DB434
-    - '@source: src/emi/battle/battle/03/func_801DB434.c'
+    - '@source: src/bof3/battle/func_801DB434.c'
     - '@behavior: scans one six-entry threshold row and returns the first index whose value exceeds the input byte, or `6` if none match.'
   - - 43156
     - asm
@@ -228,7 +228,7 @@ segments:
   - - 44832
     - c
     - findLocalWorkByKind
-    - '@source: src/emi/battle/battle/03/findLocalWorkByKind.c'
+    - '@source: src/bof3/battle/findLocalWorkByKind.c'
     - '@behavior: Returns the first of three local work records whose byte +0x79 matches the selector.'
   - - 44920
     - asm
@@ -284,12 +284,12 @@ segments:
   - - 51972
     - c
     - testFlag400WhenEligible
-    - '@source: src/emi/battle/battle/03/testFlag400WhenEligible.c'
+    - '@source: src/bof3/battle/testFlag400WhenEligible.c'
     - '@behavior: Returns zero when the eligibility helper succeeds; otherwise tests the selected record flag 0x400.'
   - - 52064
     - c
     - selectWorkRecordBase
-    - '@source: src/emi/battle/battle/03/selectWorkRecordBase.c'
+    - '@source: src/bof3/battle/selectWorkRecordBase.c'
     - '@behavior: Selects the local 0x140-stride work array below three and the alternate 0x118-stride region otherwise.'
   - - 52140
     - c
@@ -342,17 +342,17 @@ segments:
   - - 54444
     - c
     - scalePercentClamp999
-    - '@source: src/emi/battle/battle/03/scalePercentClamp999.c'
+    - '@source: src/bof3/battle/scalePercentClamp999.c'
     - '@behavior: Multiplies signed inputs, scales by 100, clamps to 0 through 999, and returns s16.'
   - - 54520
     - c
     - scalePercentClamp9999
-    - '@source: src/emi/battle/battle/03/scalePercentClamp9999.c'
+    - '@source: src/bof3/battle/scalePercentClamp9999.c'
     - '@behavior: Multiplies signed inputs, scales by 100, clamps to 0 through 9999, and returns s16.'
   - - 54596
     - c
     - scalePercentClamp100
-    - '@source: src/emi/battle/battle/03/scalePercentClamp100.c'
+    - '@source: src/bof3/battle/scalePercentClamp100.c'
     - '@behavior: Multiplies signed inputs, scales by 100, clamps to 0 through 100, and returns s16.'
   - - 54672
     - asm
@@ -388,14 +388,14 @@ segments:
     - c
     - func_801DE804
     - [0x801DE804, 0x801DE858]
-    - {source: src/emi/battle/battle/03/func_801DE804.c, behavior: clears the first three bytes of all eight event-queue slots}
+    - {source: src/bof3/battle/func_801DE804.c, behavior: clears the first three bytes of all eight event-queue slots}
   - - 56408
     - asm
     - func_801DE858
   - - 56512
     - c
     - name: pushUiRingTriple
-      source: src/emi/battle/battle/03/pushUiRingTriple.c
+      source: src/bof3/battle/pushUiRingTriple.c
       behavior: appends one triple `(byte, byte, word)` into the 16-entry UI ring and advances the ring tail.
   - - 56620
     - asm
@@ -430,17 +430,17 @@ segments:
   - - 57828
     - c
     - localReadyOrHelper1
-    - '@source: src/emi/battle/battle/03/localReadyOrHelper1.c'
+    - '@source: src/bof3/battle/localReadyOrHelper1.c'
     - '@behavior: Returns ready from reviewed battle-work flags or delegates to func_8014D978.'
   - - 57932
     - c
     - localReadyOrHelper2
-    - '@source: src/emi/battle/battle/03/localReadyOrHelper2.c'
+    - '@source: src/bof3/battle/localReadyOrHelper2.c'
     - '@behavior: Returns ready from reviewed battle-work flags or delegates to func_8014DAEC.'
   - - 58036
     - c
     - dispatchLocalStateTable
-    - '@source: src/emi/battle/battle/03/dispatchLocalStateTable.c'
+    - '@source: src/bof3/battle/dispatchLocalStateTable.c'
     - '@behavior: Dispatches the current local work record through the state table when the active flag bit is set.'
   - - 58124
     - asm
@@ -454,12 +454,12 @@ segments:
   - - 59212
     - c
     - forwardSelectedEffectId
-    - '@source: src/emi/battle/battle/03/forwardSelectedEffectId.c'
+    - '@source: src/bof3/battle/forwardSelectedEffectId.c'
     - '@behavior: Selects one of two local-work-driven effect ids by flag 0x800 and forwards it to func_8014D8D4.'
   - - 59320
     - c
     - resetReadyAdvanceByte1
-    - '@source: src/emi/battle/battle/03/resetReadyAdvanceByte1.c'
+    - '@source: src/bof3/battle/resetReadyAdvanceByte1.c'
     - '@behavior: Calls func_801DEFE4 then localReadyOrHelper1 and increments scratchpad work byte +1.'
   - - 59384
     - asm
@@ -500,7 +500,7 @@ segments:
   - - 62876
     - c
     - waitReadyAdvanceSubstate3
-    - '@source: src/emi/battle/battle/03/waitReadyAdvanceSubstate3.c'
+    - '@source: src/bof3/battle/waitReadyAdvanceSubstate3.c'
     - '@behavior: Waits on func_8014DAEC, advances local substate, and runs the ready followup.'
   - - 62988
     - asm
@@ -508,7 +508,7 @@ segments:
   - - 63596
     - c
     - dispatchLocalSubstate3Table
-    - '@source: src/emi/battle/battle/03/dispatchLocalSubstate3Table.c'
+    - '@source: src/bof3/battle/dispatchLocalSubstate3Table.c'
     - '@behavior: Dispatches the current local substate-3 byte through its table.'
   - - 63664
     - asm
@@ -522,7 +522,7 @@ segments:
   - - 64236
     - c
     - advanceByte3UnlessFlag2
-    - '@source: src/emi/battle/battle/03/advanceByte3UnlessFlag2.c'
+    - '@source: src/bof3/battle/advanceByte3UnlessFlag2.c'
     - '@behavior: Increments scratchpad work byte +3 and calls func_801DEFE4 unless local work flags +0x80 contain bit 2.'
   - - 64324
     - c
@@ -566,7 +566,7 @@ segments:
   - - 68208
     - c
     - dispatchState2ClassTable
-    - '@source: src/emi/battle/battle/03/dispatchState2ClassTable.c'
+    - '@source: src/bof3/battle/dispatchState2ClassTable.c'
     - '@behavior: Dispatches the current local state-2 class byte through its table.'
   - - 68276
     - asm
@@ -577,17 +577,17 @@ segments:
   - - 68920
     - c
     - advanceBytes12WhenReady
-    - '@source: src/emi/battle/battle/03/advanceBytes12WhenReady.c'
+    - '@source: src/bof3/battle/advanceBytes12WhenReady.c'
     - '@behavior: Increments scratchpad battle-work byte 1 and clears byte 2 when localReadyOrHelper2 returns nonzero.'
   - - 69008
     - c
     - dispatchByte2ThenReset
-    - '@source: src/emi/battle/battle/03/dispatchByte2ThenReset.c'
+    - '@source: src/bof3/battle/dispatchByte2ThenReset.c'
     - '@behavior: Dispatches the handler selected by scratchpad slot 0x44 byte 2, then calls resetScratchWhenGlobalBit4.'
   - - 69084
     - c
     - checkReadyAdvanceByte2
-    - '@source: src/emi/battle/battle/03/checkReadyAdvanceByte2.c'
+    - '@source: src/bof3/battle/checkReadyAdvanceByte2.c'
     - '@behavior: Calls localReadyOrHelper2 and increments byte 2 of scratchpad pointer slot 0x44.'
   - - 69140
     - asm
@@ -598,12 +598,12 @@ segments:
   - - 69348
     - c
     - callLocalReady1
-    - '@source: src/emi/battle/battle/03/callLocalReady1.c'
+    - '@source: src/bof3/battle/callLocalReady1.c'
     - '@behavior: Calls the preceding battle handler.'
   - - 69380
     - c
     - storeLocalReady2Result
-    - '@source: src/emi/battle/battle/03/storeLocalReady2Result.c'
+    - '@source: src/bof3/battle/storeLocalReady2Result.c'
     - '@behavior: Calls the preceding battle handler and stores its result.'
   - - 69420
     - asm
@@ -632,7 +632,7 @@ segments:
   - - 70024
     - c
     - setState8WhenReady
-    - '@source: src/emi/battle/battle/03/setState8WhenReady.c'
+    - '@source: src/bof3/battle/setState8WhenReady.c'
     - '@behavior: Calls localReadyOrHelper2 and, when nonzero, sets local-work bytes +0x01 to 8 and +0x02 to 0.'
   - - 70100
     - asm
@@ -649,7 +649,7 @@ segments:
   - - 70944
     - c
     - raiseFlag4AndUpdate
-    - '@source: src/emi/battle/battle/03/raiseFlag4AndUpdate.c'
+    - '@source: src/bof3/battle/raiseFlag4AndUpdate.c'
     - '@behavior: Sets battle global flag 0x4 and dispatches the update when the scratchpad gate is clear.'
   - - 71024
     - asm
@@ -694,7 +694,7 @@ segments:
   - - 74936
     - c
     - pickTargetOrFf
-    - '@source: src/emi/battle/battle/03/pickTargetOrFf.c'
+    - '@source: src/bof3/battle/pickTargetOrFf.c'
     - '@behavior: Returns 0xFF when D_801462F3 is 1; otherwise calls pickRandomUnblockedId with arg0 + 3 as u8.'
   - - 75000
     - asm
@@ -717,7 +717,7 @@ segments:
   - - 75572
     - c
     - initScratchWorkState
-    - '@source: src/emi/battle/battle/03/initScratchWorkState.c'
+    - '@source: src/bof3/battle/initScratchWorkState.c'
     - '@behavior: Clears bit 6, invokes the local reset handler, and initializes battle-local state.'
   - - 75672
     - asm
@@ -734,7 +734,7 @@ segments:
   - - 76248
     - c
     - initStateByEnemyFlag2
-    - '@source: src/emi/battle/battle/03/initStateByEnemyFlag2.c'
+    - '@source: src/bof3/battle/initStateByEnemyFlag2.c'
     - '@behavior: Conditionally initializes battle state, then advances scratchpad work byte +1.'
   - - 76344
     - asm
@@ -772,7 +772,7 @@ segments:
   - - 79108
     - c
     - advanceByte3WhenReady2
-    - '@source: src/emi/battle/battle/03/advanceByte3WhenReady2.c'
+    - '@source: src/bof3/battle/advanceByte3WhenReady2.c'
     - '@behavior: Increments scratchpad byte +0x03 when enemyReadyOrHelper2 returns nonzero.'
   - - 79180
     - asm
@@ -804,7 +804,7 @@ segments:
   - - 80864
     - c
     - integrateMotionOrSet2
-    - '@source: src/emi/battle/battle/03/integrateMotionOrSet2.c'
+    - '@source: src/bof3/battle/integrateMotionOrSet2.c'
     - '@behavior: Advances local-work fields +0x40/+0x44 by +0x0C and then +0x0C by +0x18 while signed +0x40 is at most 0x13FFF; otherwise sets byte +0x03 to 2.'
   - - 80956
     - asm
@@ -812,12 +812,12 @@ segments:
   - - 81108
     - c
     - applyGravityOrReset
-    - '@source: src/emi/battle/battle/03/applyGravityOrReset.c'
+    - '@source: src/bof3/battle/applyGravityOrReset.c'
     - '@behavior: Advances local work timers and invokes the update handler after a negative timer.'
   - - 81192
     - c
     - dispatchResultSubstateTable
-    - '@source: src/emi/battle/battle/03/dispatchResultSubstateTable.c'
+    - '@source: src/bof3/battle/dispatchResultSubstateTable.c'
     - '@behavior: Dispatches the current queued-result substate byte through its table.'
   - - 81260
     - asm
@@ -837,17 +837,17 @@ segments:
   - - 82228
     - c
     - advanceBytes12WhenReady3
-    - '@source: src/emi/battle/battle/03/advanceBytes12WhenReady3.c'
+    - '@source: src/bof3/battle/advanceBytes12WhenReady3.c'
     - '@behavior: Resets local work byte +0x02 after enemyReadyOrHelper2 succeeds, incrementing byte +0x01.'
   - - 82316
     - c
     - dispatchByte2ThenReset2
-    - '@source: src/emi/battle/battle/03/dispatchByte2ThenReset2.c'
+    - '@source: src/bof3/battle/dispatchByte2ThenReset2.c'
     - '@behavior: Dispatches a handler selected by scratchpad work byte +0x02, then calls resetEnemyScratchWhenBit4.'
   - - 82392
     - c
     - checkReady2AdvanceByte2
-    - '@source: src/emi/battle/battle/03/checkReady2AdvanceByte2.c'
+    - '@source: src/bof3/battle/checkReady2AdvanceByte2.c'
     - '@behavior: Calls enemyReadyOrHelper2 and increments scratchpad work byte +0x02.'
   - - 82448
     - asm
@@ -897,7 +897,7 @@ segments:
   - - 84936
     - c
     - enterFrontendMode4
-    - '@source: src/emi/battle/battle/03/enterFrontendMode4.c'
+    - '@source: src/bof3/battle/enterFrontendMode4.c'
     - '@behavior: Sets frontend mode 4 and increments the volatile global battle byte when state bit 0 is set and gate 0xBD matches.'
   - - 85028
     - asm
@@ -920,12 +920,12 @@ segments:
   - - 85900
     - c
     - dispatchSlotByte5TableD1c
-    - '@source: src/emi/battle/battle/03/dispatchSlotByte5TableD1c.c'
+    - '@source: src/bof3/battle/dispatchSlotByte5TableD1c.c'
     - '@behavior: Copies a 110-handler local table to the stack and dispatches by queued-slot byte +0x05.'
   - - 86044
     - c
     - dispatchSlotByte5TableEd4
-    - '@source: src/emi/battle/battle/03/dispatchSlotByte5TableEd4.c'
+    - '@source: src/bof3/battle/dispatchSlotByte5TableEd4.c'
     - '@behavior: Copies an eight-handler local table to the stack and dispatches by queued-slot byte +0x05.'
   - - 86180
     - asm
@@ -936,7 +936,7 @@ segments:
   - - 87176
     - c
     - rollSlotTimerAdvance
-    - '@source: src/emi/battle/battle/03/rollSlotTimerAdvance.c'
+    - '@source: src/bof3/battle/rollSlotTimerAdvance.c'
     - '@behavior: Decrements the queued-slot timer and advances its selector on wrap.'
   - - 87260
     - asm
@@ -944,7 +944,7 @@ segments:
   - - 87380
     - c
     - advanceSlotPosition
-    - '@source: src/emi/battle/battle/03/advanceSlotPosition.c'
+    - '@source: src/bof3/battle/advanceSlotPosition.c'
     - '@behavior: Advances the queued slot or marks it complete and increments its queue counter.'
   - - 87536
     - asm
@@ -967,7 +967,7 @@ segments:
   - - 88868
     - c
     - dispatchByte1PairFlagged
-    - '@source: src/emi/battle/battle/03/dispatchByte1PairFlagged.c'
+    - '@source: src/bof3/battle/dispatchByte1PairFlagged.c'
     - '@behavior: Dispatches one of two local handlers by battle work state under a temporary global.'
   - - 88988
     - asm
@@ -987,7 +987,7 @@ segments:
   - - 89684
     - c
     - broadcastByte9DrawDigits
-    - '@source: src/emi/battle/battle/03/broadcastByte9DrawDigits.c'
+    - '@source: src/bof3/battle/broadcastByte9DrawDigits.c'
     - '@behavior: Copies byte +0x09 from the scratchpad-selected object to scratchpad bytes 0x00 through 0x02, then calls func_801D99AC(0, 0, 0xB).'
   - - 89760
     - asm
@@ -998,7 +998,7 @@ segments:
   - - 90056
     - c
     - advanceByte1WhenReady
-    - '@source: src/emi/battle/battle/03/advanceByte1WhenReady.c'
+    - '@source: src/bof3/battle/advanceByte1WhenReady.c'
     - '@behavior: Increments scratch work state after a successful battle predicate.'
   - - 90144
     - asm
@@ -1006,7 +1006,7 @@ segments:
   - - 90244
     - c
     - dispatchByte1FiveTable
-    - '@source: src/emi/battle/battle/03/dispatchByte1FiveTable.c'
+    - '@source: src/bof3/battle/dispatchByte1FiveTable.c'
     - '@behavior: Copies five handlers locally and dispatches one selected by battle work byte 1.'
   - - 90408
     - asm
@@ -1038,7 +1038,7 @@ segments:
   - - 92504
     - c
     - countdownOrFlag40Advance
-    - '@source: src/emi/battle/battle/03/countdownOrFlag40Advance.c'
+    - '@source: src/bof3/battle/countdownOrFlag40Advance.c'
     - '@behavior: Decrements the active timer or sets its flag and increments scratchpad state.'
   - - 92592
     - asm
@@ -1055,12 +1055,12 @@ segments:
   - - 93320
     - c
     - advanceFlagRecordCounter
-    - '@source: src/emi/battle/battle/03/advanceFlagRecordCounter.c'
+    - '@source: src/bof3/battle/advanceFlagRecordCounter.c'
     - '@behavior: Sets the selected local record flag and advances battle work state.'
   - - 93424
     - c
     - countdownOrFlag40Advance2
-    - '@source: src/emi/battle/battle/03/countdownOrFlag40Advance2.c'
+    - '@source: src/bof3/battle/countdownOrFlag40Advance2.c'
     - '@behavior: Decrements the active work countdown or flags it and advances scratchpad work.'
   - - 93512
     - asm
@@ -1077,7 +1077,7 @@ segments:
   - - 96812
     - c
     - name: dispatchResultAuxState
-      source: src/emi/battle/battle/03/dispatchResultAuxState.c
+      source: src/bof3/battle/dispatchResultAuxState.c
       behavior: dispatches the current result-ui aux state byte through one of two fixed handlers.
   - - 96900
     - asm
@@ -1094,7 +1094,7 @@ segments:
   - - 99444
     - c
     - dispatchStateByte2TableF80
-    - '@source: src/emi/battle/battle/03/dispatchStateByte2TableF80.c'
+    - '@source: src/bof3/battle/dispatchStateByte2TableF80.c'
     - '@behavior: Dispatches an eight-entry local handler table by battle state byte +0x02.'
   - - 99580
     - c
@@ -1105,7 +1105,7 @@ segments:
   - - 99788
     - c
     - forwardPanelHalfwords
-    - '@source: src/emi/battle/battle/03/forwardPanelHalfwords.c'
+    - '@source: src/bof3/battle/forwardPanelHalfwords.c'
     - '@behavior: Reads two signed panel halfwords and calls func_801D750C.'
   - - 99836
     - c
@@ -1125,7 +1125,7 @@ segments:
   - - 100508
     - c
     - callD8450WhenIdle
-    - '@source: src/emi/battle/battle/03/callD8450WhenIdle.c'
+    - '@source: src/bof3/battle/callD8450WhenIdle.c'
     - '@behavior: Calls func_801D8450 with D_801462F4 when D_80144955 is zero.'
   - - 100560
     - c
@@ -1175,7 +1175,7 @@ segments:
   - - 104752
     - c
     - consumePanelBudget
-    - '@source: src/emi/battle/battle/03/consumePanelBudget.c'
+    - '@source: src/bof3/battle/consumePanelBudget.c'
     - '@behavior: Subtracts the panel counter from its byte budget and clears companion state when exhausted.'
   - - 104860
     - asm
@@ -1186,7 +1186,7 @@ segments:
   - - 105256
     - c
     - advancePanelState
-    - '@source: src/emi/battle/battle/03/advancePanelState.c'
+    - '@source: src/bof3/battle/advancePanelState.c'
     - '@behavior: Advances PanelTask state +6 by 8 unless it is 0x12, then increments byte +3.'
   - - 105324
     - c
@@ -1200,7 +1200,7 @@ segments:
   - - 105544
     - c
     - advancePanelWhenRingDiffers
-    - '@source: src/emi/battle/battle/03/advancePanelWhenRingDiffers.c'
+    - '@source: src/bof3/battle/advancePanelWhenRingDiffers.c'
     - '@behavior: Advances panel state byte +3 and raises an update flag when two gate bytes differ.'
   - - 105620
     - asm

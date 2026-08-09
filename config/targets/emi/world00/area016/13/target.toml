@@ -7,6 +7,29 @@ binary = "out/binaries/emi/world00/area016/13.bin"
 splat = "config/targets/emi/world00/area016/13/splat.yaml"
 load_address = 0x801f2c00
 
+sources = [
+    "src/bof3/world/advanceState02Step.c",
+    "src/bof3/world/dispatchState02.c",
+    "src/bof3/world/dispatchState03.c",
+    "src/bof3/world/func_801F341C_area01613.c",
+    "src/bof3/world/func_801F34A0.c",
+    "src/bof3/world/func_801F355C.c",
+    "src/bof3/world/func_801F3ECC.c",
+    "src/bof3/world/func_801F4178.c",
+    "src/bof3/world/func_801F45CC.c",
+    "src/bof3/world/resetAdvanceScratchState.c",
+    "src/bof3/world/seedScratchDefaults.c",
+]
+support_sources = [
+    "src/bof3/support/area01613_symbols.c",
+    "src/bof3/support/area01613_psyq.c",
+]
+psyq_source = "src/bof3/support/area01613_psyq.c"
+headers = [
+    "include/bof3/world/area01613_internal.h",
+]
+
+
 [psyq]
 [psyq.libraries.LIBGTE]
 members = [

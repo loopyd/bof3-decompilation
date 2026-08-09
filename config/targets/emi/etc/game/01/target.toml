@@ -6,3 +6,34 @@ source_dir = "src/emi/etc/game/01"
 binary = "out/binaries/emi/etc/game/01.bin"
 splat = "config/targets/emi/etc/game/01/splat.yaml"
 load_address = 0x801d0c00
+
+sources = [
+    "src/bof3/ui/armFadeDelay_game01_801D0D5C.c",
+    "src/bof3/ui/drawGlyph_game01_801D17D8.c",
+    "src/bof3/ui/drawLabelGroup_game01_801D16DC.c",
+    "src/bof3/ui/drawLabelGroups_game01_801D150C.c",
+    "src/bof3/ui/drawPrompt_game01_801D11E4.c",
+    "src/bof3/ui/drawPromptPanels_game01_801D12CC.c",
+    "src/bof3/ui/finalizeExit_game01_801D1000.c",
+    "src/bof3/ui/finishSelection_game01_801D0E54.c",
+    "src/bof3/ui/handleMenuInput_game01_801D0F00.c",
+    "src/bof3/ui/mainLoop_game01_801D0C04.c",
+    "src/bof3/ui/openSelection_game01_801D0DF0.c",
+    "src/bof3/ui/preDispatchGate_game01_801D104C.c",
+    "src/bof3/ui/setGlyphAlpha_game01_801D18E8.c",
+    "src/bof3/ui/startSelectionFx_game01_801D1134.c",
+    "src/bof3/ui/stopSelectionFx_game01_801D1184.c",
+    "src/bof3/ui/tickFadeTimer_game01_801D0D94.c",
+    "src/bof3/ui/titleSetup_game01_801D0C90.c",
+    "src/bof3/ui/updateBanner_game01_801D18F8.c",
+    "src/bof3/ui/updatePrompt_game01_801D0FB8.c",
+    "src/bof3/ui/updateWindows_game01_801D1B00.c",
+]
+support_sources = [
+    "src/bof3/support/game01_symbols.c",
+    "src/bof3/support/game01_psyq.c",
+]
+psyq_source = "src/bof3/support/game01_psyq.c"
+headers = [
+    "include/bof3/ui/game01_internal.h",
+]

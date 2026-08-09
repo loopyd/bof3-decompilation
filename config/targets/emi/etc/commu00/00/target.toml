@@ -6,3 +6,31 @@ source_dir = "src/emi/etc/commu00/00"
 binary = "out/binaries/emi/etc/commu00/00.bin"
 splat = "config/targets/emi/etc/commu00/00/splat.yaml"
 load_address = 0x801eec00
+
+sources = [
+    "src/bof3/ui/activateTaskStatusC003.c",
+    "src/bof3/ui/activateTaskStatusC00A.c",
+    "src/bof3/ui/clearUiSelectionState.c",
+    "src/bof3/ui/countActiveRecords.c",
+    "src/bof3/ui/dispatchProgressTable.c",
+    "src/bof3/ui/dispatchProgressTable2.c",
+    "src/bof3/ui/dispatchProgressTable3.c",
+    "src/bof3/ui/dispatchProgressTableAlt.c",
+    "src/bof3/ui/dispatchSlotTable.c",
+    "src/bof3/ui/func_801F12C8.c",
+    "src/bof3/ui/func_801F1F9C.c",
+    "src/bof3/ui/func_801F2020.c",
+    "src/bof3/ui/func_801F228C.c",
+    "src/bof3/ui/selectMessage259.c",
+    "src/bof3/ui/selectUiMode14.c",
+    "src/bof3/ui/selectUiMode23.c",
+    "src/bof3/ui/setVariantTaskStatus.c",
+]
+support_sources = [
+    "src/bof3/support/commu00_symbols.c",
+    "src/bof3/support/commu00_psyq.c",
+]
+psyq_source = "src/bof3/support/commu00_psyq.c"
+headers = [
+    "include/bof3/ui/commu00_internal.h",
+]

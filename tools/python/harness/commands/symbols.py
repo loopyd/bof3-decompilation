@@ -9,7 +9,6 @@ import re
 from ..domain.tags import (
     PREFIXED_RAW_NAME_RE,
     RAW_SYMBOL_NAME_RE,
-    SOURCE_TAG_RE,
     parse_declaration_source_tag,
 )
 from ..canonical import (
@@ -21,10 +20,15 @@ from ..canonical import (
     weak_bindings_c,
     write_map,
 )
+from ..domain.claims import (
+    collect_manifest_source_addresses,
+    manifest_header_paths,
+    manifest_source_paths,
+    resolve_manifest_source_for_address,
+)
 from ..domain.sources import (
     LiftMetadataError,
     SourceAddressCollision,
-    collect_source_addresses,
     expected_lift_sources,
 )
 from ..layout import parse_splat_layout
@@ -97,8 +101,8 @@ def run_check(args: argparse.Namespace) -> int:
         except (OSError, ValueError):
             expected = {}
         try:
-            lift_rows = collect_source_addresses(
-                source_dir, expected_lifts=expected
+            lift_rows = collect_manifest_source_addresses(
+                root, manifest, expected_lifts=expected
             )
         except LiftMetadataError as exc:
             errors.append(str(exc))
@@ -112,9 +116,37 @@ def run_check(args: argparse.Namespace) -> int:
                     f"source/map drift: {source.relative_to(root)} "
                     f"(0x{address:08X}) has no map address"
                 )
-        bindings_dir = source_dir / "symbols"
-        binding_files = sorted(bindings_dir.rglob("*.c")) if bindings_dir.is_dir() else []
-        for binding in binding_files:
+        # Generated bindings (strict: name must equal the composed map) and
+        # hand-maintained top-level bindings (lenient: only addresses no map
+        # owns; a different name at a mapped address is a deliberate typed
+        # alias).  Migrated targets name their support files explicitly: the
+        # generated PsyQ source is the strict set and every other claimed
+        # support ``.c`` is hand-maintained.  Legacy targets (and migrated
+        # targets keeping the legacy support layout unclaimed) fall back to
+        # ``source_dir/symbols/*.c`` plus ``source_dir/symbols.c``.
+        if manifest.has_explicit_sources and any(
+            Path(claimed).suffix == ".c" for claimed in manifest.support_sources
+        ):
+            psyq = Path(manifest.psyq_source) if manifest.psyq_source else None
+            claimed_c = [
+                root / claimed
+                for claimed in manifest.support_sources
+                if Path(claimed).suffix == ".c"
+            ]
+            strict_files = (
+                [root / psyq] if psyq is not None and (root / psyq) in claimed_c else []
+            )
+            lenient_files = [path for path in claimed_c if path not in strict_files]
+        else:
+            bindings_dir = source_dir / "symbols"
+            strict_files = (
+                sorted(bindings_dir.rglob("*.c")) if bindings_dir.is_dir() else []
+            )
+            lenient_files = []
+            top_level = source_dir / "symbols.c"
+            if top_level.is_file():
+                lenient_files.append(top_level)
+        for binding in strict_files:
             for match in _WEAK_BINDING.finditer(
                 binding.read_text(encoding="utf-8")
             ):
@@ -127,13 +159,11 @@ def run_check(args: argparse.Namespace) -> int:
                         f"binding/map drift: {binding.relative_to(root)} "
                         f"has {match.group('name')} at 0x{address:08X}"
                     )
-        # Hand-maintained top-level bindings: flag only addresses no map owns
-        # (a different name at a mapped address is a deliberate typed alias).
-        top_level = source_dir / "symbols.c"
         top_text = ""
-        if top_level.is_file():
-            top_text = top_level.read_text(encoding="utf-8")
-            for match in _WEAK_BINDING.finditer(top_text):
+        for top_level in lenient_files:
+            text = top_level.read_text(encoding="utf-8")
+            top_text += text + "\n"
+            for match in _WEAK_BINDING.finditer(text):
                 address = int(match.group("address"), 0)
                 if address not in by_address:
                     errors.append(
@@ -167,15 +197,15 @@ def run_check(args: argparse.Namespace) -> int:
             name = symbol.canonical_name
             if RAW_SYMBOL_NAME_RE.fullmatch(name) or name in sdk_names:
                 continue
-            lift = source_dir / f"{name}.c"
-            if lift.is_file():
-                tags = SOURCE_TAG_RE.findall(lift.read_text(encoding="utf-8"))
-                if any(int(tag, 16) == symbol.address for tag in tags):
-                    continue
+            lift = resolve_manifest_source_for_address(root, manifest, symbol.address)
+            if lift is not None:
+                continue
             declared = parse_declaration_source_tag(header_text, name)
             if declared != symbol.address:
-                sources = sorted(source_dir.rglob("*.h")) + sorted(
-                    source_dir.glob("*.c")
+                sources = manifest_header_paths(root, manifest) + sorted(
+                    path
+                    for path in manifest_source_paths(root, manifest)
+                    if path.suffix == ".c"
                 )
                 for source in sources:
                     if source == header:

@@ -17,8 +17,8 @@ completionGuard: false
 acceptance: {"level":"checked","criteria":["Repair one scoped, evidence-backed naming or documentation inconsistency without breaking repository contracts, or report a concrete organization plan/blocker without edits."],"evidence":["changed-files","commands-run","validation-output","residual-risks","no-staged-files"]}
 ---
 Accept one explicit scope in exactly one mode: `symbol TARGET OLD -> NEW`,
-`type TARGET OLD -> NEW`, `docs PATHS...`, or `audit PATHS...`. Never widen
-the mode mid-task.
+`type TARGET OLD -> NEW`, `relocate-batch TARGET CLASS SELECTOR...`,
+`docs PATHS...`, or `audit PATHS...`. Never widen the mode mid-task.
 
 Load context once via
 `python3 .pi/skills/bof3-re/scripts/agent-context.py cleanup SELECTOR`
@@ -33,6 +33,6 @@ revert, never fix forward. Ladder rungs 1–3 need only diff hygiene; rungs 4–
 live byte-match per affected selector; the "never safe" list is a hard stop.
 
 Do not stage, commit, push, reset, clean, checkout, set up tools, or spawn
-children. Return JSON: mode/scope, `renamed|documented|audited|no-change|blocked`,
+children. Return JSON: mode/scope, `renamed|relocated|documented|audited|no-change|blocked`,
 evidence, changed files, commands, validation, organization findings, residual
 risks; then the acceptance report. Failed evidence gate: retain no edits.

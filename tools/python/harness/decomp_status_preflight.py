@@ -7,7 +7,11 @@ import re
 from typing import Any, Callable, Iterable
 
 from .domain import TargetManifest
-from .domain.sources import expected_lift_sources
+from .domain.claims import manifest_source_paths
+from .domain.sources import (
+    expected_lift_sources,
+    source_expected_key,
+)
 from .domain.tags import parse_behavior_tag, parse_source_tag
 from .build import batch_build, cmake_target_for_source, configure
 from .io import repo_layout
@@ -112,14 +116,23 @@ def _build_preflight(
         except (OSError, ValueError):
             expected = {}
         claimed: dict[int, Path] = {}
-        for source in sorted(source_dir.glob("*.c")):
+        for source in sorted(
+            path
+            for path in manifest_source_paths(root, manifest)
+            if path.suffix == ".c"
+        ):
             try:
                 text = source.read_text(encoding="utf-8")
             except (OSError, UnicodeError) as exc:
                 ready.append(_invalid_record(root, target, source, str(exc)))
                 continue
             address = parse_source_tag(text)
-            expected_address = expected.get(source.stem)
+            expected_key = source_expected_key(source_dir, source)
+            expected_address = (
+                None
+                if expected_key is None
+                else expected.get(expected_key)
+            )
             if address is None and expected_address is None and not re.match(
                 r"^func_[0-9A-Fa-f]{8}$", source.stem
             ):

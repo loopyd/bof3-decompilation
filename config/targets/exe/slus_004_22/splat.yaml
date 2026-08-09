@@ -22,85 +22,124 @@ segments:
     subsegments:
       - [0xB3728, rodata, getEquipRecordBase]
   - [0xB373C, bin, pre_boot_mid]
+  - name: boot_noop
+    type: code
+    start: 0xb4204
+    vram: 0x8014aa04
+    subsegments:
+      - [0xb4204, c, bootNoop, '@source: src/bof3/boot/bootNoop.c']
+  - [0xb420c, bin, pre_boot_loop]
   - name: boot
     type: code
     start: 0xb42c8
     vram: 0x8014aac8
     subsegments:
-      - [0xb42c8, c, bootMainLoop]
-      - [0xb44a0, c, initBootRuntime]
+      - [0xb42c8, c, bootMainLoop, '@source: src/bof3/boot/bootMainLoop.c']
+      - [0xb44a0, c, initBootRuntime, '@source: src/bof3/boot/initBootRuntime.c']
   - name: post_logo_init
     type: code
     start: 0xb4528
     vram: 0x8014ad28
     subsegments:
-      - [0xb4528, c, initBootDiscEvents]
+      - [0xb4528, c, initBootDiscEvents, '@source: src/bof3/boot/initBootDiscEvents.c']
   - name: display_work_init
     type: code
     start: 0xb4608
     vram: 0x8014ae08
     subsegments:
-      - [0xb4608, c, initBootDisplayEnvs]
-      - [0xb469c, c, clearBootOtEntry]
+      - [0xb4608, c, initBootDisplayEnvs, '@source: src/bof3/boot/initBootDisplayEnvs.c']
+      - [0xb469c, c, clearBootOtEntry, '@source: src/bof3/boot/clearBootOtEntry.c']
   - name: logo_handoff
     type: code
     start: 0xb46e0
     vram: 0x8014aee0
     subsegments:
-      - [0xb46e0, c, runLogoExe]
+      - [0xb46e0, c, runLogoExe, '@source: src/bof3/boot/runLogoExe.c']
   - [0xb47c0, bin, pre_boot_frame_tables]
   - name: boot_frame_tables
     type: code
     start: 0xb4820
     vram: 0x8014b020
     subsegments:
-      - [0xb4820, c, func_8014B020]
-      - [0xb48f0, c, linkRenderOtPackets]
+      - [0xb4820, c, rebuildBootRenderTables, '@source: src/bof3/boot/rebuildBootRenderTables.c']
+      - [0xb48f0, c, linkRenderOtPackets, '@source: src/bof3/boot/linkRenderOtPackets.c']
   - name: vblank_capture
     type: code
     start: 0xb497c
     vram: 0x8014b17c
     subsegments:
-      - [0xb497c, c, captureBootVsync]
-  - [0xb49a4, bin, pre_emi_loader]
+      - [0xb497c, c, captureBootVsync, '@source: src/bof3/boot/captureBootVsync.c']
+  - name: boot_events
+    type: code
+    start: 0xb49a4
+    vram: 0x8014b1a4
+    subsegments:
+      - [0xb49a4, c, openBootEventSet, '@source: src/bof3/boot/openBootEventSet.c']
+  - name: callback_scheduler
+    type: code
+    start: 0xb4b3c
+    vram: 0x8014b33c
+    subsegments:
+      - [0xb4b3c, c, dispatchCallbackSlots, '@source: src/bof3/callback/dispatchCallbackSlots.c']
+      - [0xb4bc4, c, displayBootExceptionDump, '@source: src/bof3/boot/displayBootExceptionDump.c']
+      - [0xb4f3c, c, tickCallbackSlotScheduler, '@source: src/bof3/callback/tickCallbackSlotScheduler.c']
+      - [0xb5054, c, installCallbackSlot, '@source: src/bof3/callback/installCallbackSlot.c']
+      - [0xb507c, c, yieldCallbackSlotScheduler, '@source: src/bof3/callback/yieldCallbackSlotScheduler.c']
+      - [0xb50b0, c, exitCurrentCallbackThread, '@source: src/bof3/callback/exitCurrentCallbackThread.c']
+      - [0xb5100, c, closeCallbackSlot, '@source: src/bof3/callback/closeCallbackSlot.c']
+  - [0xb5154, bin, pre_frontend_local_mode]
+  - name: frontend_local_mode
+    type: code
+    start: 0xb84ac
+    vram: 0x8014ecac
+    subsegments:
+      - [0xb84ac, c, setFrontLocalMode, '@source: src/bof3/ui/setFrontLocalMode.c']
+  - [0xb856c, bin, pre_emi_loader]
   - name: cue_dispatch
     type: code
     start: 0xc7718
     vram: 0x8015df18
     subsegments:
-      - [0xc7718, c, dispatchSoundCue]
+      - [0xc7718, c, dispatchSoundCue, '@source: src/bof3/audio/dispatchSoundCue.c']
   - [0xc8194, bin, post_cue_dispatch]
   - name: emi_loader
     type: code
     start: 0xcb758
     vram: 0x80161f58
     subsegments:
-      - [0xcb758, c, initEmiLoader]
-      - [0xcb7dc, c, initStreamSlot]
-      - [0xcb960, c, emiLoaderSlotLba]
-      - [0xcb978, c, beginEmiLoaderTransfer]
-      - [0xcb9e8, c, emiCdSyncCallback]
-      - [0xcba30, c, emiCdReadyCallback]
-      - [0xcbd00, c, validateEmiLoaderHeader]
-      - [0xcbde4, c, copyEmiType0Payload]
-      - [0xcbe18, c, recordEmiDispatchHandler]
-      - [0xcbe98, c, recordEmiPackedDispatch]
-      - [0xcbf90, c, selectNextEmiEntry]
-      - [0xcc098, c, startEmiEntryTransfer]
-      - [0xcc1f0, c, selectPrimaryEmiDestination]
-      - [0xcc26c, c, selectAlternateEmiDestination]
-      - [0xcc308, c, stageEmiTransferSlot]
-      - [0xcc414, c, copyEmiTransferChunk]
-      - [0xcc4d8, c, selectEmiLoaderMode6]
-      - [0xcc500, c, isEmiLoaderReady]
-      - [0xcc518, c, dispatchEmiModeCallback]
+      - [0xcb758, c, initEmiLoader, '@source: src/bof3/io/initEmiLoader.c']
+      - [0xcb7dc, c, initStreamSlot, '@source: src/bof3/io/initStreamSlot.c']
+      - [0xcb960, c, emiLoaderSlotLba, '@source: src/bof3/io/emiLoaderSlotLba.c']
+      - [0xcb978, c, beginEmiLoaderTransfer, '@source: src/bof3/io/beginEmiLoaderTransfer.c']
+      - [0xcb9e8, c, emiCdSyncCallback, '@source: src/bof3/io/emiCdSyncCallback.c']
+      - [0xcba30, c, emiCdReadyCallback, '@source: src/bof3/io/emiCdReadyCallback.c']
+      - [0xcbd00, c, validateEmiLoaderHeader, '@source: src/bof3/io/validateEmiLoaderHeader.c']
+      - [0xcbde4, c, copyEmiType0Payload, '@source: src/bof3/io/copyEmiType0Payload.c']
+      - [0xcbe18, c, recordEmiDispatchHandler, '@source: src/bof3/io/recordEmiDispatchHandler.c']
+      - [0xcbe98, c, recordEmiPackedDispatch, '@source: src/bof3/io/recordEmiPackedDispatch.c']
+      - [0xcbf90, c, selectNextEmiEntry, '@source: src/bof3/io/selectNextEmiEntry.c']
+      - [0xcc098, c, startEmiEntryTransfer, '@source: src/bof3/io/startEmiEntryTransfer.c']
+      - [0xcc1f0, c, selectPrimaryEmiDestination, '@source: src/bof3/io/selectPrimaryEmiDestination.c']
+      - [0xcc26c, c, selectAlternateEmiDestination, '@source: src/bof3/io/selectAlternateEmiDestination.c']
+      - [0xcc308, c, stageEmiTransferSlot, '@source: src/bof3/io/stageEmiTransferSlot.c']
+      - [0xcc414, c, copyEmiTransferChunk, '@source: src/bof3/io/copyEmiTransferChunk.c']
+      - [0xcc4d8, c, selectEmiLoaderMode6, '@source: src/bof3/io/selectEmiLoaderMode6.c']
+      - [0xcc500, c, isEmiLoaderReady, '@source: src/bof3/io/isEmiLoaderReady.c']
+      - [0xcc518, c, dispatchEmiModeCallback, '@source: src/bof3/io/dispatchEmiModeCallback.c']
   - [0xcc59c, bin, post_emi_loader]
+  - name: equipment_counter
+    type: code
+    start: 0xcedf4
+    vram: 0x801655f4
+    subsegments:
+      - [0xcedf4, c, func_801655F4, '@source: src/bof3/equipment/func_801655F4.c']
+  - [0xcee94, bin, pre_item_record_dispatch]
   - name: item_record_dispatch
     type: code
     start: 0xCF548
     vram: 0x80165d48
     subsegments:
-      - [0xCF548, c, getEquipRecordBase]
+      - [0xCF548, c, getEquipRecordBase, '@source: src/bof3/equipment/getEquipRecordBase.c']
   - [0xCF604, bin, post_emi_gap_0xCF604]
   - name: cluster_0
     type: code
@@ -268,14 +307,14 @@ segments:
     start: 0xe89cc
     vram: 0x8017f1cc
     subsegments:
-      - [0xe89cc, c, func_8017F1CC]
+      - [0xe89cc, asm, func_8017F1CC]
   - [0xe89fc, bin, post_emi_gap_0xe89fc]
   - name: cluster_23
     type: code
     start: 0xe8a7c
     vram: 0x8017f27c
     subsegments:
-      - [0xe8a7c, c, dequeueIntRpIrq]
+      - [0xe8a7c, c, dequeueIntRpIrq, '@source: src/bof3/callback/dequeueIntRpIrq.c']
   - [0xe8ab4, bin, post_emi_gap_0xe8ab4]
   - name: cluster_24
     type: code

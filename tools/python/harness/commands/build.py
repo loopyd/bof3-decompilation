@@ -8,6 +8,7 @@ import sys
 
 from ..build import build, cmake_target_for_directory, cmake_target_for_source
 from ..domain import lookup_target_manifest, normalize_target_id
+from ..domain.claims import manifest_source_paths
 from ..io import repo_layout
 from ._common import add_example_argument, run_main
 from ._lift_m2c import resolve_function
@@ -35,10 +36,7 @@ def run(args: argparse.Namespace) -> int:
             raise ValueError(
                 f"unknown target: {normalize_target_id(args.selector).value}"
             )
-        source_directory = root / manifest.source_dir
-        if not any(
-            path.suffix in {".c", ".s", ".S"} for path in source_directory.glob("*")
-        ):
+        if not manifest_source_paths(root, manifest):
             print(f"{manifest.id.value}: no authored sources")
             return 0
         target = cmake_target_for_directory(manifest.source_dir)

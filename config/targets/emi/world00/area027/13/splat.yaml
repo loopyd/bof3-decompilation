@@ -25,6 +25,8 @@ segments:
   - - 48
     - c
     - func_801F2C30
+    - '@source: src/bof3/world/func_801F2C30.c'
+    - '@behavior: Dispatches scratch mode byte 1 through the local handler table.'
   - - 116
     - asm
     - func_801F2C74
@@ -37,18 +39,24 @@ segments:
   - - 780
     - c
     - emitTrailStrip
+    - '@source: src/bof3/world/emitTrailStrip.c'
+    - '@behavior: Emits a 31-segment Gouraud line strip across the projected trail.'
   - - 1100
     - asm
     - func_801F304C
   - - 1312
     - c
     - func_801F3120
+    - '@source: src/bof3/world/func_801F3120.c'
+    - '@behavior: Dispatches scratch mode byte 2 through the local handler table.'
   - - 1380
     - asm
     - func_801F3164
   - - 1484
     - c
     - emitMarkerPair
+    - '@source: src/bof3/world/emitMarkerPair.c'
+    - '@behavior: Advances local scratch state and emits two fixed world markers.'
   - - 1712
     - asm
     - func_801F32B0
@@ -58,12 +66,18 @@ segments:
   - - 2176
     - asm
     - emitMarkerQuad
+    - '@source: src/bof3/world/emitMarkerQuad.c'
+    - '@behavior: Projects a fixed textured quad and fills its texture state.'
   - - 2528
     - c
     - func_801F35E0
+    - '@source: src/bof3/world/func_801F35E0.c'
+    - '@behavior: Resets a state value and conditionally enables a pair of flags.'
   - - 2584
     - c
     - func_801F3618
+    - '@source: src/bof3/world/func_801F3618.c'
+    - '@behavior: Resets area state and conditionally arms two flags.'
   - - 2640
     - asm
     - func_801F3650

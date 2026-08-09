@@ -6,3 +6,12 @@ source_dir = "src/emi/battle/batl_re2/01"
 binary = "out/binaries/emi/battle/batl_re2/01.bin"
 splat = "config/targets/emi/battle/batl_re2/01/splat.yaml"
 load_address = 0x80036e00
+
+sources = []
+support_sources = [
+    "src/bof3/support/batl_re2_01_psyq.c",
+]
+psyq_source = "src/bof3/support/batl_re2_01_psyq.c"
+headers = [
+    "include/bof3/battle/batl_re2_01_internal.h",
+]

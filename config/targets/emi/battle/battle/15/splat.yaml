@@ -41,12 +41,12 @@ segments:
   - - 1556
     - c
     - initSelectionStateSlot1
-    - '@source: src/emi/battle/battle/15/initSelectionStateSlot1.c'
+    - '@source: src/bof3/battle/initSelectionStateSlot1.c'
     - '@behavior: Queues cue 0x104, stages selection state, and advances the battle counter.'
   - - 1680
     - c
     - queueEvent106ResetState
-    - '@source: src/emi/battle/battle/15/queueEvent106ResetState.c'
+    - '@source: src/bof3/battle/queueEvent106ResetState.c'
     - '@behavior: Queues event 0x106, stages the active message slot, and resets battle selection state.'
   - - 1792
     - c
@@ -122,12 +122,12 @@ segments:
   - - 6740
     - c
     - initSelectionStateSlot0
-    - '@source: src/emi/battle/battle/15/initSelectionStateSlot0.c'
+    - '@source: src/bof3/battle/initSelectionStateSlot0.c'
     - '@behavior: Resets the active battle selection slot and advances selection state.'
   - - 6884
     - c
     - queueEvent106ResetStateB
-    - '@source: src/emi/battle/battle/15/queueEvent106ResetStateB.c'
+    - '@source: src/bof3/battle/queueEvent106ResetStateB.c'
     - '@behavior: Queues event 0x106, stages the active message slot, and resets battle selection state.'
   - - 6988
     - c
@@ -276,7 +276,7 @@ segments:
   - - 21116
     - c
     - clearStateWhenGateClear
-    - '@source: src/emi/battle/battle/15/clearStateWhenGateClear.c'
+    - '@source: src/bof3/battle/clearStateWhenGateClear.c'
     - '@behavior: Clears local battle selection state when its gate flag is clear.'
   - - 21196
     - asm
@@ -296,7 +296,7 @@ segments:
   - - 24700
     - c
     - setEntryBitE1
-    - '@source: src/emi/battle/battle/15/setEntryBitE1.c'
+    - '@source: src/bof3/battle/setEntryBitE1.c'
     - '@behavior: Sets or clears the indexed bit in byte +0xE1.'
   - - 24748
     - asm
@@ -396,10 +396,10 @@ segments:
     - func_8009E7E4
   - - 32772
     - c
-    - func_8009E804
+    - resetSelectionApplyInput40
   - - 32804
     - c
-    - func_8009E824
+    - resetSelectionApplyInput20
   - - 32836
     - asm
     - func_8009E844
@@ -415,7 +415,7 @@ segments:
   - - 33484
     - c
     - storeHalvedResultPlus1
-    - [source, src/emi/battle/battle/15/storeHalvedResultPlus1.c]
+    - [source, src/bof3/battle/storeHalvedResultPlus1.c]
     - [behavior, "sets selection flag and stores half target result"]
   - - 33576
     - asm
@@ -507,7 +507,7 @@ segments:
   - - 36588
     - c
     - setFlag2000StoreDoubledResult
-    - '@source: src/emi/battle/battle/15/setFlag2000StoreDoubledResult.c'
+    - '@source: src/bof3/battle/setFlag2000StoreDoubledResult.c'
     - '@behavior: Sets battle flags, resolves the selected value, and advances state.'
   - - 36696
     - asm
@@ -833,12 +833,12 @@ segments:
   - - 59576
     - c
     - initMenuState15
-    - '@source: src/emi/battle/battle/15/initMenuState15.c'
+    - '@source: src/bof3/battle/initMenuState15.c'
     - '@behavior: Initializes battle menu state 0x15 and advances its update counter.'
   - - 59680
     - c
     - enterState2WhenB8Clear
-    - '@source: src/emi/battle/battle/15/enterState2WhenB8Clear.c'
+    - '@source: src/bof3/battle/enterState2WhenB8Clear.c'
     - '@behavior: Clears local battle selection state when its gate flag is clear.'
   - - 59748
     - asm
@@ -858,7 +858,7 @@ segments:
   - - 61468
     - c
     - setupMode104ArmWorkBit2
-    - '@source: src/emi/battle/battle/15/setupMode104ArmWorkBit2.c'
+    - '@source: src/bof3/battle/setupMode104ArmWorkBit2.c'
     - '@behavior: Calls func_8015DF18(0x104), sets bit 2 at +0x128, updates battle state bytes.'
   - - 61556
     - asm
@@ -884,12 +884,12 @@ segments:
   - - 62944
     - c
     - initMenuState15B
-    - '@source: src/emi/battle/battle/15/initMenuState15B.c'
+    - '@source: src/bof3/battle/initMenuState15B.c'
     - '@behavior: Initializes battle menu state 0x15 and advances its update counter.'
   - - 63060
     - c
     - enterState2WhenDcClear
-    - '@source: src/emi/battle/battle/15/enterState2WhenDcClear.c'
+    - '@source: src/bof3/battle/enterState2WhenDcClear.c'
     - '@behavior: Advances local selection state when the battle gate is clear.'
   - - 63128
     - asm
@@ -903,7 +903,7 @@ segments:
   - - 63532
     - c
     - initMenuState13
-    - '@source: src/emi/battle/battle/15/initMenuState13.c'
+    - '@source: src/bof3/battle/initMenuState13.c'
     - '@behavior: Initializes battle menu state 0x13 and advances its update counter.'
   - - 63656
     - c
@@ -941,7 +941,7 @@ segments:
   - - 69192
     - c
     - lookupClampedS8Table
-    - '@source: src/emi/battle/battle/15/lookupClampedS8Table.c'
+    - '@source: src/bof3/battle/lookupClampedS8Table.c'
     - '@behavior: Clamps the offset index to zero through four and returns the corresponding signed-byte table value.'
   - - 69268
     - asm
@@ -973,7 +973,7 @@ segments:
   - - 72784
     - c
     - initRecordStateAdvanceWork
-    - '@source: src/emi/battle/battle/15/initRecordStateAdvanceWork.c'
+    - '@source: src/bof3/battle/initRecordStateAdvanceWork.c'
     - '@behavior: Initializes the selected local battle-work record and advances work state.'
   - - 72956
     - asm
@@ -1086,7 +1086,7 @@ segments:
   - - 85104
     - c
     - entryKindIsListed
-    - '@source: src/emi/battle/battle/15/entryKindIsListed.c'
+    - '@source: src/bof3/battle/entryKindIsListed.c'
     - '@behavior: Returns whether the selected entry kind is 0x4C, 0x4D, 0xB4, or 0xB5.'
   - - 85180
     - c
@@ -1172,7 +1172,7 @@ segments:
   - - 92780
     - c
     - dispatchWorkTable6994
-    - '@source: src/emi/battle/battle/15/dispatchWorkTable6994.c'
+    - '@source: src/bof3/battle/dispatchWorkTable6994.c'
     - '@behavior: Dispatches a three-entry selection handler table using battle work state.'
   - - 92908
     - asm
@@ -1192,7 +1192,7 @@ segments:
   - - 93852
     - c
     - dispatchWorkTable69a0
-    - '@source: src/emi/battle/battle/15/dispatchWorkTable69a0.c'
+    - '@source: src/bof3/battle/dispatchWorkTable69a0.c'
     - '@behavior: Dispatches a three-entry selection handler table using battle work state.'
   - - 93980
     - asm
@@ -1212,7 +1212,7 @@ segments:
   - - 94668
     - c
     - dispatchWorkTable69ac
-    - '@source: src/emi/battle/battle/15/dispatchWorkTable69ac.c'
+    - '@source: src/bof3/battle/dispatchWorkTable69ac.c'
     - '@behavior: Dispatches a three-entry selection handler table using battle work state.'
   - - 94796
     - asm
@@ -1227,7 +1227,7 @@ segments:
     - c
     - dispatchWorkTable69b8
     - [0x800ADCC4, 0x800ADD44]
-    - {source: src/emi/battle/battle/15/dispatchWorkTable69b8.c, behavior: "copies the three handlers at 0x800969B8 and dispatches the entry selected by battle work byte 0x01"}
+    - {source: src/bof3/battle/dispatchWorkTable69b8.c, behavior: "copies the three handlers at 0x800969B8 and dispatches the entry selected by battle work byte 0x01"}
   - - 95556
     - asm
     - func_800ADD44
@@ -1240,7 +1240,7 @@ segments:
   - - 96188
     - c
     - func_800ADFBC
-    - '@source: src/emi/battle/battle/15/func_800ADFBC.c'
+    - '@source: src/bof3/battle/func_800ADFBC.c'
     - '@behavior: Dispatches an action-table handler when scratchpad state 5 is nonzero.'
   - - 96276
     - c
@@ -1290,7 +1290,7 @@ segments:
   - - 97992
     - c
     - accumulateWorkCounter
-    - '@source: src/emi/battle/battle/15/accumulateWorkCounter.c'
+    - '@source: src/bof3/battle/accumulateWorkCounter.c'
     - '@behavior: Increments battle work byte +0x09, adds 2 to signed counter +0x10, accumulates its low halfword into +0x30, then increments byte +0x01 when +0x09 equals 0x10.'
   - - 98088
     - asm
@@ -1337,7 +1337,7 @@ segments:
   - - 101996
     - c
     - func_800AF66C
-    - '@source: src/emi/battle/battle/15/func_800AF66C.c'
+    - '@source: src/bof3/battle/func_800AF66C.c'
     - '@behavior: Checks horizontal and vertical battle-work bounds for arg1.'
   - - 102072
     - asm
@@ -1366,7 +1366,7 @@ segments:
   - - 103508
     - c
     - func_800AFC54
-    - '@source: src/emi/battle/battle/15/func_800AFC54.c'
+    - '@source: src/bof3/battle/func_800AFC54.c'
     - '@behavior: Copies 0x100 halfwords between fixed battle RAM buffers and sets the completion flag.'
   - - 103576
     - asm
@@ -1384,16 +1384,16 @@ segments:
     - c
     - selectOffsetPairByMode
     - [0x800B0118, 0x800B0180]
-    - {source: src/emi/battle/battle/15/selectOffsetPairByMode.c, behavior: "Select local offset pair by battle-work mode and active table."}
+    - {source: src/bof3/battle/selectOffsetPairByMode.c, behavior: "Select local offset pair by battle-work mode and active table."}
   - - 104832
     - c
     - dispatchPanelTaskTable69e4
-    - '@source: src/emi/battle/battle/15/dispatchPanelTaskTable69e4.c'
+    - '@source: src/bof3/battle/dispatchPanelTaskTable69e4.c'
     - '@behavior: Dispatches five local handlers by panel-task byte +0x02.'
   - - 104944
     - c
     - dispatchPanelStateTable69f8
-    - '@source: src/emi/battle/battle/15/dispatchPanelStateTable69f8.c'
+    - '@source: src/bof3/battle/dispatchPanelStateTable69f8.c'
     - '@behavior: Dispatches local handlers by panel-task state byte +0x03.'
   - - 105040
     - asm
@@ -1428,7 +1428,7 @@ segments:
   - - 107748
     - c
     - dispatchPanelTaskTable6a14
-    - '@source: src/emi/battle/battle/15/dispatchPanelTaskTable6a14.c'
+    - '@source: src/bof3/battle/dispatchPanelTaskTable6a14.c'
     - '@behavior: Dispatches five local handlers by panel-task state byte +0x03.'
   - - 107860
     - asm
@@ -1499,7 +1499,7 @@ segments:
   - - 112984
     - c
     - panelStepLeftEndNegC8
-    - source: src/emi/battle/battle/15/panelStepLeftEndNegC8.c
+    - source: src/bof3/battle/panelStepLeftEndNegC8.c
       behavior: leaf
   - - 113048
     - c
@@ -1507,7 +1507,7 @@ segments:
   - - 113112
     - c
     - panelStepLeftEnd53
-    - '@source: src/emi/battle/battle/15/panelStepLeftEnd53.c'
+    - '@source: src/bof3/battle/panelStepLeftEnd53.c'
     - '@behavior: Decrements the panel x coordinate and clamps it to 0x52 below the signed threshold.'
   - - 113176
     - c
@@ -1521,7 +1521,7 @@ segments:
   - - 113388
     - c
     - panelMoveLeftClamp53
-    - '@source: src/emi/battle/battle/15/panelMoveLeftClamp53.c'
+    - '@source: src/bof3/battle/panelMoveLeftClamp53.c'
     - '@behavior: Moves the panel left by 32 pixels, clamping it to x=83 and clearing its state.'
   - - 113452
     - asm

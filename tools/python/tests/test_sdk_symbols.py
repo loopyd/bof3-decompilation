@@ -75,6 +75,138 @@ def test_psyq_bindings_generator_writes_sdk_bindings(tmp_path: Path) -> None:
     assert "WEAK_SYMBOL_AT(PadInit, 0x801CEE7C);" in text
 
 
+def test_psyq_bindings_migrated_without_psyq_source_errors(tmp_path: Path) -> None:
+    """A migrated target must declare psyq_source; the output path is never guessed."""
+    _write_target(tmp_path, "emi/test/00")
+    support = tmp_path / "src/bof3/support/test_psyq.c"
+    support.parent.mkdir(parents=True)
+    support.write_text("", encoding="utf-8")
+    manifest = tmp_path / "config/targets/emi/test/00/target.toml"
+    manifest.write_text(
+        manifest.read_text(encoding="utf-8")
+        + 'support_sources = ["src/bof3/support/test_psyq.c"]\n',
+        encoding="utf-8",
+    )
+    _write_sdk(tmp_path, "slus", "PadInit = 0x80174668;\n")
+
+    assert (
+        symbols_main(
+            ["--root", str(tmp_path), "psyq-bindings", "emi/test/00", "--write"]
+        )
+        == 2
+    )
+
+
+def test_psyq_bindings_generator_writes_claimed_support_path(tmp_path: Path) -> None:
+    """psyq_source names the exact generated output; no stem guessing."""
+    _write_target(tmp_path, "emi/test/00")
+    support = tmp_path / "src/bof3/support/test_psyq.c"
+    support.parent.mkdir(parents=True)
+    support.write_text("", encoding="utf-8")
+    manifest = tmp_path / "config/targets/emi/test/00/target.toml"
+    manifest.write_text(
+        manifest.read_text(encoding="utf-8")
+        + 'support_sources = ["src/bof3/support/test_psyq.c"]\n'
+        + 'psyq_source = "src/bof3/support/test_psyq.c"\n',
+        encoding="utf-8",
+    )
+    _write_sdk(tmp_path, "slus", "PadInit = 0x80174668;\n")
+
+    assert symbols_main(
+        ["--root", str(tmp_path), "psyq-bindings", "emi/test/00", "--write"]
+    ) == 0
+    assert "WEAK_SYMBOL_AT(PadInit, 0x80174668);" in support.read_text(
+        encoding="utf-8"
+    )
+
+
+def _migrated_binding_target(root: Path, binding_text: str) -> None:
+    """One migrated target claiming a relocated hand-maintained binding file."""
+    manifest = root / "config/targets/emi/test/00/target.toml"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(
+        'schema = "harness.target/v2"\n'
+        'id = "emi/test/00"\n'
+        'kind = "emi"\n'
+        'source_dir = "src/emi/test/00"\n'
+        'binary = "out/binaries/emi/test/00.bin"\n'
+        'splat = "config/targets/emi/test/00/splat.yaml"\n'
+        "load_address = 0x801EEC00\n"
+        'sources = ["src/bof3/ui/selectUiMode14.c"]\n'
+        'support_sources = ["src/bof3/support/test_symbols.c"]\n',
+        encoding="utf-8",
+    )
+    source = root / "src/bof3/ui/selectUiMode14.c"
+    source.parent.mkdir(parents=True)
+    source.write_text(
+        "/* @source 0x801F0EC8 @behavior x */\n", encoding="utf-8"
+    )
+    binding = root / "src/bof3/support/test_symbols.c"
+    binding.parent.mkdir(parents=True)
+    binding.write_text(binding_text, encoding="utf-8")
+    (root / "config/targets/emi/test/00/symbols.txt").write_text(
+        "foo = 0x801448EB;\n"
+        "func_801F0EC8 = 0x801F0EC8;\n",
+        encoding="utf-8",
+    )
+    sdk = root / "config/sdk"
+    sdk.mkdir(parents=True)
+    (sdk / "psyq-slus.txt").write_text("PadInit = 0x80174668;\n", encoding="utf-8")
+
+
+def test_symbols_check_validates_relocated_binding_file(tmp_path: Path) -> None:
+    """symbols check scans claimed support binding .c files outside
+    ``source_dir`` and accepts bindings the composed map owns."""
+    _migrated_binding_target(
+        tmp_path, "WEAK_SYMBOL_AT(foo, 0x801448eb);\n"
+    )
+    assert symbols_main(["--root", str(tmp_path), "check", "emi/test/00"]) == 0
+
+
+def test_symbols_check_flags_bad_relocated_binding(tmp_path: Path) -> None:
+    """A WEAK_SYMBOL_AT address no composed map owns is drift, even from a
+    relocated claimed support file."""
+    _migrated_binding_target(
+        tmp_path,
+        "WEAK_SYMBOL_AT(foo, 0x801448eb);\n"
+        "WEAK_SYMBOL_AT(ghost, 0xDEADBEEF);\n",
+    )
+    assert symbols_main(["--root", str(tmp_path), "check", "emi/test/00"]) == 2
+
+
+def test_psyq_source_must_be_explicitly_claimed(tmp_path: Path) -> None:
+    _write_target(tmp_path, "emi/test/00")
+    source = tmp_path / "src/bof3/ui/lift.c"
+    helper = tmp_path / "src/bof3/support/helper.c"
+    source.parent.mkdir(parents=True)
+    helper.parent.mkdir(parents=True)
+    source.write_text("/* @source 0x801EEC00 @behavior test */\n", encoding="utf-8")
+    helper.write_text("/* test */\n", encoding="utf-8")
+    manifest = tmp_path / "config/targets/emi/test/00/target.toml"
+    manifest.write_text(
+        manifest.read_text(encoding="utf-8")
+        + 'sources = ["src/bof3/ui/lift.c"]\n'
+        + 'support_sources = ["src/bof3/support/helper.c"]\n'
+        + 'psyq_source = "src/emi/test/00/symbols/psyq.c"\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="psyq_source must be explicitly claimed"):
+        load_target_manifests(tmp_path)
+
+
+def test_psyq_source_must_be_canonical_path(tmp_path: Path) -> None:
+    _write_target(tmp_path, "emi/test/00")
+    manifest = tmp_path / "config/targets/emi/test/00/target.toml"
+    manifest.write_text(
+        manifest.read_text(encoding="utf-8")
+        + 'psyq_source = "/abs/psyq.c"\n',
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="invalid psyq_source path"):
+        load_target_manifests(tmp_path)
+
+
 def test_real_sdk_maps_are_space_consistent() -> None:
     root = repo_layout().root
     slus = load_map(sdk_map_path(root, "slus"))

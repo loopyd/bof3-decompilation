@@ -8,7 +8,7 @@ import subprocess
 import struct
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 from .io import repo_layout
 
@@ -203,6 +203,7 @@ def build_snapshot(
     replay_commands: list[str] | None = None,
     replay_sha256: str | None = None,
     source_dir: Path | None = None,
+    source_paths: Iterable[Path] | None = None,
     expected_lifts: dict[str, int] | None = None,
     timeout: int = 120,
 ) -> TargetSnapshot:
@@ -232,7 +233,13 @@ def build_snapshot(
             continue
         function_id = f"{target_id}@{address:08x}"
         source = None
-        if source_dir is not None:
+        if source_paths is not None:
+            from .domain.claims import resolve_source_for_paths
+
+            resolved = resolve_source_for_paths(source_paths, address)
+            if resolved is not None:
+                source = str(resolved)
+        elif source_dir is not None:
             from .domain.sources import resolve_source_for_address
 
             resolved = resolve_source_for_address(

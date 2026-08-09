@@ -1,6 +1,7 @@
 name: world00_area016_13
 sha1: 8038c035e9553a2b330fcde0e39911b32b8c7828
 options:
+  create_c_files: false
   platform: psx
   compiler: psyq
   basename: world00_area016_13
@@ -49,12 +50,18 @@ segments:
   - - 2076
     - c
     - func_801F341C
+    - '@source: src/bof3/world/func_801F341C_area01613.c'
+    - '@behavior: dispatches the scratch mode byte at offset 1 through the local four-entry handler table.'
   - - 2144
     - c
     - resetAdvanceScratchState
+    - '@source: src/bof3/world/resetAdvanceScratchState.c'
+    - '@behavior: clears scratch-state offsets 0x09 and 0x0b, then increments offset 0x01.'
   - - 2208
     - c
     - func_801F34A0
+    - '@source: src/bof3/world/func_801F34A0.c'
+    - '@behavior: dispatches both advance states in order.'
   - - 2248
     - asm
     - dispatchState02
@@ -64,6 +71,8 @@ segments:
   - - 2396
     - c
     - func_801F355C
+    - '@source: src/bof3/world/func_801F355C.c'
+    - '@behavior: advances the scratch height and updates state after reaching the threshold.'
   - - 2488
     - asm
     - advanceState02Step
@@ -100,6 +109,8 @@ segments:
   - - 5496
     - c
     - func_801F4178
+    - '@source: src/bof3/world/func_801F4178.c'
+    - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table.'
   - - 5564
     - asm
     - func_801F41BC
@@ -112,6 +123,8 @@ segments:
   - - 6604
     - c
     - func_801F45CC
+    - '@source: src/bof3/world/func_801F45CC.c'
+    - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table.'
   - - 6672
     - asm
     - func_801F4610

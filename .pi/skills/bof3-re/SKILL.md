@@ -132,7 +132,7 @@ the next loop:
 2. Naming: `bof3-cleanup` ladder (references/CLEANUP/), one evidence-gated
    rename at a time; `func_XXXXXXXX`/`D_XXXXXXXX`/`unk_XX` stays until the
    two-corroborator gate passes.
-3. Organization: source filenames are flexible because the domain registry resolves function-level `@source`/`@behavior`; source filename, compiled symbol, and Splat label remain separate. Plan moves and never move mid-loop.
+3. Organization: authored lifts converge into `src/bof3/<class>/`; `src/exe/`/`src/emi/` are migration debt. Ownership: explicit manifest claims + `@source`/map/Splat, never path ancestry; prefer `relocate-batch TARGET CLASS SELECTOR...`, never mid-match.
 4. Gates: fresh live `bin/asm-diff TARGET@0xADDRESS --detail normal` (no
    first-difference) and `bin/byte-match TARGET@0xADDRESS` per touched
    selector, `bin/splat TARGET` if map/Splat changed, fresh `bof3-review`.

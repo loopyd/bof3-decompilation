@@ -6,3 +6,13 @@ source_dir = "src/emi/etc/bate/03"
 binary = "out/binaries/emi/etc/bate/03.bin"
 splat = "config/targets/emi/etc/bate/03/splat.yaml"
 load_address = 0x80033a00
+
+
+sources = []
+support_sources = [
+    "src/bof3/support/bate_03_psyq.c",
+]
+psyq_source = "src/bof3/support/bate_03_psyq.c"
+headers = [
+    "include/bof3/battle/bate_03_internal.h",
+]

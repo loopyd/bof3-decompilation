@@ -6,3 +6,27 @@ source_dir = "src/emi/world00/area024/14"
 binary = "out/binaries/emi/world00/area024/14.bin"
 splat = "config/targets/emi/world00/area024/14/splat.yaml"
 load_address = 0x801f2c00
+
+sources = [
+    "src/bof3/world/advanceStateSelectMode2.c",
+    "src/bof3/world/advanceStateSelectMode3.c",
+    "src/bof3/world/dispatchWorkStates.c",
+    "src/bof3/world/drawSpin.c",
+    "src/bof3/world/func_801F2C14.c",
+    "src/bof3/world/func_801F2DF8.c",
+    "src/bof3/world/func_801F3080.c",
+    "src/bof3/world/func_801F4158.c",
+    "src/bof3/world/initSpinWork.c",
+    "src/bof3/world/resetScratchSelectEntry3.c",
+    "src/bof3/world/resetStateFlagA.c",
+    "src/bof3/world/resetStateFlagB.c",
+    "src/bof3/world/resetWorkareaSelectEntry4.c",
+]
+support_sources = [
+    "src/bof3/support/area02414_symbols.c",
+    "src/bof3/support/area02414_psyq.c",
+]
+psyq_source = "src/bof3/support/area02414_psyq.c"
+headers = [
+    "include/bof3/world/area02414_internal.h",
+]

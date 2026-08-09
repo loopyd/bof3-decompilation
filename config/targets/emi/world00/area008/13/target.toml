@@ -6,3 +6,35 @@ source_dir = "src/emi/world00/area008/13"
 binary = "out/binaries/emi/world00/area008/13.bin"
 splat = "config/targets/emi/world00/area008/13/splat.yaml"
 load_address = 0x801f2c00
+
+sources = [
+    "src/bof3/world/advanceCounter1.c",
+    "src/bof3/world/advanceCounter2.c",
+    "src/bof3/world/advanceCounter3.c",
+    "src/bof3/world/dispatchMode.c",
+    "src/bof3/world/drawFlagStatus.c",
+    "src/bof3/world/drawScratchStatus.c",
+    "src/bof3/world/func_801F3244.c",
+    "src/bof3/world/func_801F3654.c",
+    "src/bof3/world/func_801F37B4.c",
+    "src/bof3/world/func_801F39B4.c",
+    "src/bof3/world/func_801F3A64.c",
+    "src/bof3/world/func_801F3AA8.c",
+    "src/bof3/world/func_801F3D88.c",
+    "src/bof3/world/loadResourceSelectMode2.c",
+    "src/bof3/world/resetCounter1.c",
+    "src/bof3/world/resetCounter2.c",
+    "src/bof3/world/resetScratchSelectMode1.c",
+    "src/bof3/world/resetStateSelectMode1.c",
+    "src/bof3/world/retreatCounter1.c",
+    "src/bof3/world/retreatCounter2.c",
+    "src/bof3/world/retreatCounter3.c",
+]
+support_sources = [
+    "src/bof3/support/area00813_symbols.c",
+    "src/bof3/support/area00813_psyq.c",
+]
+psyq_source = "src/bof3/support/area00813_psyq.c"
+headers = [
+    "include/bof3/world/area00813_internal.h",
+]

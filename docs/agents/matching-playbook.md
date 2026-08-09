@@ -69,8 +69,7 @@ Key: source path relative to `src/`, non-alphanumerics as underscores; value:
 a `flag-search` candidate replacing the canonical `-O` level (the
 `-G0 -funsigned-char ...` base is kept). CMake and the `compile_commands`
 generator both read it, so build and `flag-search` stay in sync. Sources without
-an entry keep canonical flags. Add an entry only after `flag-search` reports an
-exact byte-match; re-confirm with `bin/byte-match`.
+an entry keep canonical flags. Add an entry after `flag-search` reports an exact byte-match or a reviewed, semantically coherent net partial improvement. For a partial, record the selected flag/profile and live residual in `@status`/`@match`/`@residual`; remove it for no net improvement or semantic/type regression. Re-confirm exact results with `bin/byte-match` and partial results with live `bin/asm-diff`.
 
 ---
 

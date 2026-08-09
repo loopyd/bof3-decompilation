@@ -30,6 +30,8 @@ from ._asm_resolve import (
     source_function_name,
 )
 
+from ..domain.sources import owning_manifest
+
 from ._asm_diff_payload import AsmDiffRequest, build_result_payload, render_diff
 
 def run_build_object(
@@ -95,15 +97,20 @@ def _asm_diff_resolve(repo: RepoLayout, request: AsmDiffRequest) -> dict[str, An
             address=address,
             binary_path=binary_path,
             load_address=load_address,
+            root=repo.root,
         )
     )
     object_path = object_path_for_source(repo, source_path)
     output_root = request.output_root or repo.out_dir / "matching"
-    try:
-        owner = source_path.parent.relative_to(repo.root).as_posix()
-    except ValueError:
-        owner = source_path.parent.name
-    target_slug = re.sub(r"[^A-Za-z0-9_.-]+", "_", owner)
+    manifest = owning_manifest(repo.root, source_path)
+    if manifest is not None:
+        target_slug = manifest.id.value.replace("/", "_")
+    else:
+        try:
+            owner = source_path.parent.relative_to(repo.root).as_posix()
+        except ValueError:
+            owner = source_path.parent.name
+        target_slug = re.sub(r"[^A-Za-z0-9_.-]+", "_", owner)
     output_dir = output_root / target_slug / function_name
     if request.diagnostics:
         if output_dir.is_dir():
@@ -162,19 +169,11 @@ def _asm_diff_compare(
         original_bytes_path.write_bytes(original_bytes)
 
     if request.section_placements is None:
-        from ..domain.manifests import load_target_manifests
-
-        source_directory = source_path.parent.relative_to(repo.root).as_posix()
-        manifest = next(
-            (
-                value
-                for value in load_target_manifests(repo.root).values()
-                if value.source_dir == source_directory
-            ),
-            None,
-        )
+        manifest = owning_manifest(repo.root, source_path)
         placements = (
-            () if manifest is None else manifest.section_placements.get(address, ())
+            ()
+            if manifest is None
+            else manifest.section_placements.get(address, ())
         )
     else:
         placements = request.section_placements
@@ -188,12 +187,19 @@ def _asm_diff_compare(
             f"expected compiler assembly was not written: {current_compiler_asm}"
         )
 
+    manifest = owning_manifest(repo.root, source_path)
+    if request.symbols_c_path is not None:
+        symbols_c_path = request.symbols_c_path
+    elif manifest is not None:
+        symbols_c_path = repo.root / manifest.source_dir / "symbols.c"
+    else:
+        symbols_c_path = source_path.parent / "symbols.c"
     byte_match, compiled_bytes = function_bytes_match(
         object_path,
         address=address,
         size=original_size,
         original_bytes=original_bytes,
-        symbols_c_path=request.symbols_c_path or source_path.parent / "symbols.c",
+        symbols_c_path=symbols_c_path,
         canonical_bindings=request.canonical_bindings,
         layout=repo,
         section_addresses=section_addresses,

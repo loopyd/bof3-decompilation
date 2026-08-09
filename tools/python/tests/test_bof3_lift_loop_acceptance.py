@@ -277,6 +277,8 @@ def test_lift_loop_retains_reviewed_partial_progress_metadata() -> None:
 
 
 def test_pi_context_files_stay_compact() -> None:
+    # 58.7K at the 2026-08 baseline with only 283 bytes of slack; the constant
+    # reflects that minimum; any further growth must compress existing text.
     files = sorted((ROOT / ".pi/agents").glob("*.md"))
     files += sorted((ROOT / ".pi/skills").glob("*/SKILL.md"))
     files += sorted((ROOT / ".pi/skills/bof3-re/references").glob("*/*.md"))

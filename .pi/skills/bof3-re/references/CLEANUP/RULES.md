@@ -29,6 +29,8 @@ compiler flags, or binding addresses.
   Changelog/history entries stay. Durable facts → `docs/specs/`; agent
   policy → `docs/agents/`; scoped work → `docs/plans/`.
 - `audit`: report each finding as `path`, current contract, evidence, smallest safe repair, validation, human-approval needed. Large `internal.h` and raw compiled-symbol spellings are not drift; source filenames may be semantic because metadata owns identity.
+- `relocate`/`relocate-batch`: move lifts to `src/bof3/<class>/`,
+  manifest claims + Splat `@source`; failure reverts all.
 
 ## Identity contracts — never touch
 
@@ -36,13 +38,12 @@ compiler flags, or binding addresses.
 - Never drop `@behavior`/`@source`/`@kind` tags or evidence comments;
   correct stale tags in place. Tags are written `/* @source 0x... @kind
   ... */` — `//` comments break gcc-2.6.3 variant objects.
-- Never move target directories or alter `source_dir`, manifests, load
-  addresses, Splat boundaries, compiler/toolchain files, SDK
-  maps/declarations, shared/public headers, `src/shared/`, `out/`, `build/`,
-  `toolchains/`.
-- Reorganization = audit finding + `docs/plans/` plan + explicit user
-  approval, then a separate task. Crossing these boundaries: report
-  plan/blocker, no edits.
+- Never move target config directories or alter `source_dir`, load addresses,
+  reviewed boundaries, SDK maps, public headers, `src/shared/`, `out/`,
+  `build/`, or `toolchains/`. Authorized relocation atomically updates source,
+  support, header, `psyq_source`, C-boundary `@source`, and required flag keys.
+- Other reorganization needs a plan and explicit approval; otherwise report a
+  blocker without edits.
 
 ## Transaction
 

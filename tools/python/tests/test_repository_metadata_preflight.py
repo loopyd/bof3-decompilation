@@ -50,11 +50,18 @@ def test_repository_metadata_preflight() -> None:
             pytest.fail(f"{target}: missing splat layout {splat}")
         layout = parse_splat_layout(splat, manifest.load_address)
         source_dir = root / manifest.source_dir
-        if not source_dir.is_dir():
+        if not source_dir.is_dir() and not manifest.has_explicit_sources:
             pytest.fail(f"{target}: missing source dir {source_dir}")
         expected = expected_lift_sources(layout, source_dir)
         try:
-            rows = collect_source_addresses(source_dir, expected_lifts=expected)
+            if manifest.has_explicit_sources:
+                from harness.domain.claims import collect_manifest_source_addresses
+
+                rows = collect_manifest_source_addresses(
+                    root, manifest, expected_lifts=expected
+                )
+            else:
+                rows = collect_source_addresses(source_dir, expected_lifts=expected)
         except SourceAddressCollision as exc:
             pytest.fail(f"{target}: duplicate address claim: {exc}")
         except LiftMetadataError as exc:
@@ -110,11 +117,11 @@ def test_repository_metadata_preflight() -> None:
     # Semantic filenames resolve as lifts; raw func_<ADDR> filenames resolve
     # only through their @source tag (both repaired above).
     assert (
-        source_address(root / "src/emi/world00/area030/04/func_801DFFEC.c")
+        source_address(root / "src/bof3/world/func_801DFFEC.c")
         == 0x801DFFEC
     )
     assert (
-        source_address(root / "src/emi/world00/area032/13/func_801F36A0.c")
+        source_address(root / "src/bof3/world/func_801F36A0.c")
         == 0x801F36A0
     )
     assert any(path.name == "seedMenuScratch.c" for path in accepted), (

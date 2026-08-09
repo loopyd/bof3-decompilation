@@ -36,7 +36,8 @@ Apply the ladder top down; stop at the first rung that resolves the drift.
   bodies, reordering declarations or initializers, changing `volatile` or
   signedness "for consistency".
 - Renaming `func_XXXXXXXX` files or functions outside a rung-4 spelling
-  transaction, moving files/targets, touching
+  transaction, moving files/targets outside `relocate-batch`,
+  touching
   Splat boundaries, SDK maps, shared headers, compiler flags.
 - Any edit justified by style alone. Style drift in a byte-matched lift is
   matching evidence, not a defect.

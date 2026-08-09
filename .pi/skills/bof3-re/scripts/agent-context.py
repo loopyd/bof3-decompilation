@@ -218,9 +218,9 @@ def target_context(root: Path, target: str, address: int) -> list[str]:
     source_dir = root / manifest.source_dir
     map_path = root / "config" / "targets" / target / "symbols.txt"
     splat = root / manifest.splat
-    from harness.domain.sources import resolve_source_for_address
+    from harness.domain.claims import resolve_manifest_source_for_address
 
-    source = resolve_source_for_address(source_dir, address)
+    source = resolve_manifest_source_for_address(root, manifest, address)
     asm = asm_path(root, target, splat, address)
     asm_text = asm.read_text(encoding="utf-8") if asm.is_file() else ""
     names = set(IDENTIFIER.findall(asm_text)) | {f"func_{address:08X}"}
@@ -232,12 +232,30 @@ def target_context(root: Path, target: str, address: int) -> list[str]:
         paths.append(
             (splat, "".join(lines[:16]) + around(lines, f"func_{address:08X}"))
         )
-    header = source_dir / "internal.h"
-    if header.is_file():
-        paths.append((header, header_excerpt(header, names)))
-    bindings = source_dir / "symbols.c"
-    if bindings.is_file():
-        paths.append((bindings, None))
+    headers: list[Path] = []
+    for claimed in manifest.headers:
+        header = root / claimed
+        if header.is_file():
+            headers.append(header)
+    if source is not None and source.parent != source_dir:
+        local = source.parent / "internal.h"
+        if local.is_file() and local not in headers:
+            headers.append(local)
+    legacy = source_dir / "internal.h"
+    if legacy.is_file() and legacy not in headers:
+        headers.append(legacy)
+    public_dir = source_dir / "public"
+    if public_dir.is_dir():
+        headers.extend(sorted(public_dir.glob("*.h")))
+    for header in dict.fromkeys(headers):
+        if header.is_file():
+            paths.append((header, header_excerpt(header, names)))
+    from harness.domain.claims import manifest_binding_sources
+
+    bindings = manifest_binding_sources(root, manifest)
+    for binding in bindings:
+        if binding.is_file():
+            paths.append((binding, None))
     if source is not None and source.is_file():
         paths.append((source, None))
     if asm.is_file():

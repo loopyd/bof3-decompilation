@@ -221,3 +221,73 @@ class TestDefaultObjdump:
         _root = _pl.Path(__file__).resolve().parents[1]
         _src = (_root / "harness" / "match" / "flag_search.py").read_text()
         assert "psn00b_toolchain_root / \"bin\" / \"mipsel-none-elf-objdump\"" in _src
+
+
+class TestResolveBindings:
+    def _migrated_target(self, root: Path) -> Path:
+        """One migrated target claiming an out-of-root support binding file."""
+        manifest = root / "config/targets/emi/test/00/target.toml"
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text(
+            'schema = "harness.target/v2"\n'
+            'id = "emi/test/00"\n'
+            'kind = "emi"\n'
+            'source_dir = "src/emi/test/00"\n'
+            'binary = "out/binaries/emi/test/00.bin"\n'
+            'splat = "config/targets/emi/test/00/splat.yaml"\n'
+            "load_address = 0x801EEC00\n"
+            'sources = ["src/bof3/ui/selectUiMode14.c"]\n'
+            'support_sources = ["src/bof3/support/test_symbols.c", "src/bof3/support/test_psyq.c"]\n'
+            'psyq_source = "src/bof3/support/test_psyq.c"\n',
+            encoding="utf-8",
+        )
+        source = root / "src/bof3/ui/selectUiMode14.c"
+        source.parent.mkdir(parents=True)
+        source.write_text(
+            "/* @source 0x801F0EC8 @behavior x */\n", encoding="utf-8"
+        )
+        support = root / "src/bof3/support/test_symbols.c"
+        support.parent.mkdir(parents=True)
+        support.write_text(
+            "WEAK_SYMBOL_AT(foo, 0x801448eb);\n", encoding="utf-8"
+        )
+        (root / "src/bof3/support/test_psyq.c").write_text(
+            "", encoding="utf-8"
+        )
+        (root / "config/targets/emi/test/00/symbols.txt").write_text(
+            "foo = 0x801448EB;\n", encoding="utf-8"
+        )
+        sdk = root / "config/sdk"
+        sdk.mkdir(parents=True)
+        (sdk / "psyq-slus.txt").write_text(
+            "PadInit = 0x80174668;\n", encoding="utf-8"
+        )
+        return source
+
+    def test_uses_claimed_support_binding_source(self, tmp_path: Path) -> None:
+        """flag-search resolves the claimed support binding file, not
+        ``source.parent/symbols.c``."""
+        import harness.match.flag_search as flag_search
+
+        source = self._migrated_target(tmp_path)
+        layout = SimpleNamespace(root=tmp_path)
+        symbols_c_path, canonical = flag_search._resolve_bindings(  # type: ignore[arg-type]
+            layout, source
+        )
+        assert symbols_c_path == tmp_path / "src/bof3/support/test_symbols.c"
+        assert canonical is not None
+        assert canonical["foo"] == 0x801448EB
+        assert canonical["PadInit"] == 0x80174668
+
+    def test_legacy_falls_back_to_source_parent_symbols(self, tmp_path: Path) -> None:
+        import harness.match.flag_search as flag_search
+
+        layout = SimpleNamespace(root=tmp_path)
+        source = tmp_path / "src/exe/logo/func.c"
+        source.parent.mkdir(parents=True)
+        (source.parent / "symbols.c").write_text("", encoding="utf-8")
+        symbols_c_path, canonical = flag_search._resolve_bindings(  # type: ignore[arg-type]
+            layout, source
+        )
+        assert symbols_c_path == source.parent / "symbols.c"
+        assert canonical is None

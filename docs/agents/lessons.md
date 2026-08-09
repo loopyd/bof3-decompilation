@@ -142,3 +142,10 @@ iteration procedure: [function matching](matching.md).
   `src/<target>/symbols.c` needs a target-map entry; a different name at a
   mapped address is a deliberate typed alias (e.g. u8 view of a u16 global).
   `bin/symbols check` flags bindings whose address no map owns.
+- Splat regenerates root stubs keyed by the Splat **boundary name**, never by
+  the authored `@source` basename. After a collision-renamed relocation
+  (`advancePanelXTo320_game00_801996FC.c` under boundary
+  `advancePanelXTo320`), stub projection must look for
+  `source_dir/<boundary-name>.c`; deriving the stub from the `@source`
+  basename silently leaves regenerated stubs behind in the deep tree
+  (`tools/python/harness/commands/splat.py` `_legacy_stub_candidates`).

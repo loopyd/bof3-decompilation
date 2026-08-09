@@ -10,8 +10,8 @@ import re
 
 SOURCE_TAG_RE = re.compile(r"@source\s+(?:0x)?([0-9A-Fa-f]{8})\b")
 BEHAVIOR_TAG_RE = re.compile(r"@behavior (?:UNKNOWN: .+|[^\n]+)")
-STATUS_TAG_RE = re.compile(r"@status\s+(exact|partial)\b")
-MATCH_TAG_RE = re.compile(r"@match\s+([0-9]+(?:\.[0-9]+)?)\b")
+STATUS_TAG_RE = re.compile(r"@status\s+(exact|partial|invalid)\b")
+MATCH_TAG_RE = re.compile(r"@match\s+([0-9]+(?:\.[0-9]+)?|unavailable)\b")
 RESIDUAL_TAG_RE = re.compile(r"@residual\s+([^\n]+)")
 
 # Raw address-encoding symbol names; conflicts resolve by a different name or
@@ -60,7 +60,7 @@ def parse_behavior_tag(text: str) -> str | None:
     return match.group(0) if match is not None else None
 
 
-def parse_progress_tags(text: str) -> tuple[str, float, str] | None:
+def parse_progress_tags(text: str) -> tuple[str, float | None, str] | None:
     """Return partial-lift status, live match percentage, and residual."""
 
     status = STATUS_TAG_RE.search(text)
@@ -70,7 +70,8 @@ def parse_progress_tags(text: str) -> tuple[str, float, str] | None:
         return None
     if status is None or match is None or residual is None:
         raise ValueError("partial progress metadata requires @status, @match, and @residual")
-    return status.group(1), float(match.group(1)), residual.group(1).strip()
+    value = match.group(1)
+    return status.group(1), None if value == "unavailable" else float(value), residual.group(1).strip()
 
 
 def parse_declaration_source_tag(text: str, name: str) -> int | None:

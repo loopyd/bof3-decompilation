@@ -157,18 +157,27 @@ def run_import_psyq(args: argparse.Namespace) -> int:
 
 
 def run_psyq_bindings(args: argparse.Namespace) -> int:
-    """Generate src/<target>/symbols/psyq.c weak bindings from the SDK map.
+    """Generate each target's claimed PsyQ weak-binding source from the SDK map.
 
-    The build compiles these (CMake globs src/*.c); they provide link-time
-    addresses for the PSX SDK functions each target calls. Only psyq.c is
-    written, so authored semantic binding files are never touched.
+    Migrated targets (explicit ``sources``/``support_sources``) must declare
+    ``psyq_source``; the output path is never guessed.  Unmigrated targets
+    keep the legacy ``source_dir/symbols/psyq.c`` location.
     """
     root = _root(args)
     manifests = load_target_manifests(root)
     for target in _targets(root, args.target):
-        space = manifests[target].psyq_space
+        manifest = manifests[target]
+        space = manifest.psyq_space
         content = weak_bindings_c(load_map(sdk_map_path(root, space)))
-        output = root / manifests[target].source_dir / "symbols" / "psyq.c"
+        if manifest.has_explicit_sources:
+            if not manifest.psyq_source:
+                raise ValueError(
+                    f"migrated target {target} must declare psyq_source "
+                    "in its manifest"
+                )
+            output = root / manifest.psyq_source
+        else:
+            output = root / manifest.source_dir / "symbols" / "psyq.c"
         if args.write:
             output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(content, encoding="utf-8")
@@ -183,7 +192,8 @@ def run_psyq_report(args: argparse.Namespace) -> int:
 
     Regenerated on demand; this preserves the per-target "what it calls"
     evidence that generating the full SDK binding set otherwise discards.
-    Scans lifted func_*.c and internal.h, not the generated bindings.
+    Scans metadata-owned lift sources (recursive) plus target headers, not
+    the generated bindings.
     """
     root = _root(args)
     manifests = load_target_manifests(root)
@@ -191,10 +201,26 @@ def run_psyq_report(args: argparse.Namespace) -> int:
         space = manifests[target].psyq_space
         sdk = load_map(sdk_map_path(root, space))
         source_dir = root / manifests[target].source_dir
-        haystacks = sorted(source_dir.glob("func_*.c"))
-        internal = source_dir / "internal.h"
-        if internal.is_file():
-            haystacks.append(internal)
+        from ..domain.claims import (
+            collect_manifest_source_addresses,
+            manifest_header_paths,
+        )
+
+        haystack_paths = {
+            source
+            for source, _ in collect_manifest_source_addresses(
+                root, manifests[target]
+            )
+        }
+        haystack_paths.update(
+            path
+            for path in manifest_header_paths(root, manifests[target])
+            if path.name == "internal.h"
+        )
+        public_dir = source_dir / "public"
+        if public_dir.is_dir():
+            haystack_paths.update(sorted(public_dir.glob("*.h")))
+        haystacks = sorted(haystack_paths)
         text = "".join(path.read_text(encoding="utf-8") for path in haystacks)
         referenced = sorted(
             (

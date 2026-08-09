@@ -62,9 +62,13 @@ segments:
   - - 9876
     - c
     - selectUiMode14
+    - '@source: src/bof3/ui/selectUiMode14.c'
+    - '@behavior: Selects active UI data, requests mode 14, and refreshes it.'
   - - 9928
     - c
     - func_801F12C8
+    - '@source: src/bof3/ui/func_801F12C8.c'
+    - '@behavior: Copies the selected record-kind byte into the task-indexed UI record.'
   - - 10008
     - asm
     - func_801F1318
@@ -80,6 +84,8 @@ segments:
   - - 10436
     - c
     - selectUiMode23
+    - '@source: src/bof3/ui/selectUiMode23.c'
+    - '@behavior: Selects active UI data, requests mode 23, and refreshes it.'
   - - 10488
     - asm
     - func_801F14F8
@@ -101,15 +107,21 @@ segments:
   - - 10884
     - c
     - clearUiSelectionState
+    - '@source: src/bof3/ui/clearUiSelectionState.c'
+    - '@behavior: Clears the three frontend UI selection-state bytes.'
   - - 10940
     - c
     - dispatchProgressTable
+    - '@source: src/bof3/ui/dispatchProgressTable.c'
+    - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 11000
     - asm
     - func_801F16F8
   - - 11120
     - c
     - selectMessage259
+    - '@source: src/bof3/ui/selectMessage259.c'
+    - '@behavior: Selects message 0x259 and advances its local state byte.'
   - - 11172
     - asm
     - func_801F17A4
@@ -122,7 +134,7 @@ segments:
   - - 11452
     - c
     - dispatchProgressTableAlt
-    - '@source: src/emi/etc/commu00/00/dispatchProgressTableAlt.c'
+    - '@source: src/bof3/ui/dispatchProgressTableAlt.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 11512
     - asm
@@ -136,7 +148,7 @@ segments:
   - - 12172
     - c
     - dispatchProgressTable2
-    - '@source: src/emi/etc/commu00/00/dispatchProgressTable2.c'
+    - '@source: src/bof3/ui/dispatchProgressTable2.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 12232
     - asm
@@ -144,7 +156,7 @@ segments:
   - - 12916
     - c
     - dispatchProgressTable3
-    - '@source: src/emi/etc/commu00/00/dispatchProgressTable3.c'
+    - '@source: src/bof3/ui/dispatchProgressTable3.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 12976
     - asm
@@ -152,18 +164,24 @@ segments:
   - - 13072
     - c
     - dispatchSlotTable
+    - '@source: src/bof3/ui/dispatchSlotTable.c'
+    - '@behavior: Dispatches the unsigned slot index through the local commu00 table.'
   - - 13132
     - asm
     - func_801F1F4C
   - - 13212
     - c
     - func_801F1F9C
+    - '@source: src/bof3/ui/func_801F1F9C.c'
+    - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 13272
     - asm
     - func_801F1FD8
   - - 13344
     - c
     - func_801F2020
+    - '@source: src/bof3/ui/func_801F2020.c'
+    - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 13404
     - asm
     - func_801F205C
@@ -173,6 +191,8 @@ segments:
   - - 13964
     - c
     - func_801F228C
+    - '@source: src/bof3/ui/func_801F228C.c'
+    - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 14024
     - asm
     - func_801F22C8

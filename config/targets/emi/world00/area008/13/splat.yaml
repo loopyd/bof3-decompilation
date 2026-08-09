@@ -28,12 +28,18 @@ segments:
   - - 24
     - c
     - dispatchMode
+    - '@source: src/bof3/world/dispatchMode.c'
+    - '@behavior: dispatches the current scratchpad mode through the local handler table.'
   - - 92
     - c
     - resetStateSelectMode1
+    - '@source: src/bof3/world/resetStateSelectMode1.c'
+    - '@behavior: Clears scratch byte 9 and local state, then enables scratch byte 1.'
   - - 136
     - c
     - loadResourceSelectMode2
+    - '@source: src/bof3/world/loadResourceSelectMode2.c'
+    - '@behavior: Selects disabled mode when the shared high-bit flag is set; otherwise installs and enables the area resource, then selects mode 2.'
   - - 292
     - asm
     - func_801F2D24
@@ -61,9 +67,13 @@ segments:
   - - 1604
     - c
     - func_801F3244
+    - '@source: src/bof3/world/func_801F3244.c'
+    - '@behavior: dispatches the current area-state mode byte through the local handler table at 0x801F46B0.'
   - - 1672
     - c
     - resetScratchSelectMode1
+    - '@source: src/bof3/world/resetScratchSelectMode1.c'
+    - '@behavior: resets scratch-state offsets 0x09 and 0x01.'
   - - 1708
     - asm
     - func_801F32AC
@@ -109,9 +119,13 @@ segments:
   - - 3684
     - c
     - func_801F3A64
+    - '@source: src/bof3/world/func_801F3A64.c'
+    - '@behavior: dispatches the current area-state mode byte through the local handler table at 0x801F46EC.'
   - - 3752
     - c
     - func_801F3AA8
+    - '@source: src/bof3/world/func_801F3AA8.c'
+    - '@behavior: resets scratch-state fields 0x5d/0x5e and advances the mode byte.'
   - - 3816
     - asm
     - func_801F3AE8
@@ -121,12 +135,18 @@ segments:
   - - 4140
     - c
     - drawScratchStatus
+    - '@source: src/bof3/world/drawScratchStatus.c'
+    - '@behavior: draws one local frame, formats the scratchpad pair into the shared UI text buffer, then queues the three local UI labels.'
   - - 4376
     - c
     - drawFlagStatus
+    - '@source: src/bof3/world/drawFlagStatus.c'
+    - '@behavior: draws one local frame, formats the single-byte world value into the shared UI text buffer, then queues the matching local label.'
   - - 4488
     - c
     - func_801F3D88
+    - '@source: src/bof3/world/func_801F3D88.c'
+    - '@behavior: draws the local textured frame as four translucent FT4 border strips (left edge, top/bottom span, right-inner span, right edge) around a shared texture window, then queues the matching inner fill rectangle.'
   - - 5844
     - asm
     - func_801F42D4
@@ -145,27 +165,43 @@ segments:
   - - 6412
     - c
     - advanceCounter1
+    - '@source: src/bof3/world/advanceCounter1.c'
+    - '@behavior: sets state byte 2 and advances the 16-bit count by 0x14.'
   - - 6452
     - c
     - retreatCounter1
+    - '@source: src/bof3/world/retreatCounter1.c'
+    - '@behavior: sets state byte 2 and decrements the 16-bit count by 0x14.'
   - - 6492
     - c
     - resetCounter1
+    - '@source: src/bof3/world/resetCounter1.c'
+    - '@behavior: clears the 16-bit count, sets state byte 2, returns the constant 2.'
   - - 6520
     - c
     - advanceCounter2
+    - '@source: src/bof3/world/advanceCounter2.c'
+    - '@behavior: marks the local counter active and advances it by 20.'
   - - 6560
     - c
     - retreatCounter2
+    - '@source: src/bof3/world/retreatCounter2.c'
+    - '@behavior: marks the local counter active and retreats it by 20.'
   - - 6600
     - c
     - resetCounter2
+    - '@source: src/bof3/world/resetCounter2.c'
+    - '@behavior: clears the state halfword and sets the adjacent state byte to 2'
   - - 6628
     - c
     - advanceCounter3
+    - '@source: src/bof3/world/advanceCounter3.c'
+    - '@behavior: increments the area counter by 0x800'
   - - 6656
     - c
     - retreatCounter3
+    - '@source: src/bof3/world/retreatCounter3.c'
+    - '@behavior: decrements the area counter by 0x800'
   - - 6684
     - asm
     - func_801F461C

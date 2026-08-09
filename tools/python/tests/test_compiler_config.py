@@ -56,6 +56,14 @@ class TestLoadObjectFlags:
         assert result["emi_etc_game_01_func_801D0D5C_c"] == ["-O1"]
         assert result["emi_battle_battle_15_func_800AB760_c"] == ["-O2", "-Wa,--expand-div"]
 
+    def test_semantic_destination_key_preserves_relocated_profile(self) -> None:
+        root = Path(__file__).resolve().parents[3]
+        result = load_object_flags(root)
+        assert result["bof3_ui_preDispatchGate_game01_801D104C_c"] == [
+            "-O2",
+            "-fno-rerun-cse-after-loop",
+        ]
+
 
 class TestLoadObjectCompilers:
     def test_missing_file_returns_empty(self, tmp_path: Path) -> None:

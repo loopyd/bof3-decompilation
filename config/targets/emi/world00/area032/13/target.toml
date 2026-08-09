@@ -6,3 +6,20 @@ source_dir = "src/emi/world00/area032/13"
 binary = "out/binaries/emi/world00/area032/13.bin"
 splat = "config/targets/emi/world00/area032/13/splat.yaml"
 load_address = 0x801f2c00
+
+
+sources = [
+    "src/bof3/world/resetWorkarea_801F2EE4.c",
+    "src/bof3/world/func_801F30A8.c",
+    "src/bof3/world/func_801F36A0.c",
+    "src/bof3/world/func_801F36E4.c",
+    "src/bof3/world/func_801F3800.c",
+]
+support_sources = [
+    "src/bof3/support/area03213_symbols.c",
+    "src/bof3/support/area03213_psyq.c",
+]
+psyq_source = "src/bof3/support/area03213_psyq.c"
+headers = [
+    "include/bof3/world/area03213_internal.h",
+]

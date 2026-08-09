@@ -56,7 +56,7 @@ and no `BOF3_OBJCOMPILER_` override was retained.
 
 The user-authorized clean-C revival has reviewed boundary `0x18E6C..0x18EB8`
 (76 original bytes) and source
-`src/emi/battle/battle/15/func_800AF66C.c`. Its canonical residual is
+`src/bof3/battle/func_800AF66C.c`. Its canonical residual is
 5/20 instructions (25.00%), 76→80 bytes, first at `+0x0000` (`move t0,a1`
 absent). Each row ran all 52 flag-catalog profiles through
 `bin/flag-search`; no `BOF3_OBJCOMPILER_` or flag override was retained.

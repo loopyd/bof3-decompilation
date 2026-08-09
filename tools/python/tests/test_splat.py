@@ -67,6 +67,172 @@ def test_non_verbose_captures_output(
     assert kwargs.get("text") is True
 
 
+@pytest.mark.parametrize(
+    "owner_text",
+    [
+        "/* @source 0x80100000 @behavior loads entry */\n",
+        "void loadEntry(void) {}\n",
+        "/* @source 0x80100004 @behavior wrong address */\n",
+    ],
+)
+def test_generated_root_stub_projected_or_kept(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, owner_text: str
+) -> None:
+    """Fresh Splat never deletes src files: a Splat-regenerated legacy stub is
+    preserved in the ignored projection when its explicit @source owner
+    matches, and authored/foreign files stay untouched in src/."""
+
+    root = _setup_target(tmp_path)
+    source_dir = root / "src/exe/logo"
+    owner = source_dir / "io/loadEntry.c"
+    owner.parent.mkdir(parents=True)
+    owner.write_text(owner_text)
+    stub = source_dir / "loadEntry.c"
+    splat_path = root / "config/targets/exe/logo/splat.yaml"
+    splat_path.write_text(
+        "name: logo\nsegments:\n- name: main\n  type: code\n  start: 0\n"
+        "  vram: 0x80100000\n  subsegments:\n"
+        "  - - 0\n    - c\n    - loadEntry\n"
+        "    - '@source: src/exe/logo/io/loadEntry.c'\n"
+    )
+
+    def fake_execute(self, args, **kwargs):
+        stub.write_text('#include "common.h"\nINCLUDE_ASM("x", loadEntry);\n')
+        return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(SplatToolchain, "execute", fake_execute)
+    assert splat.run(
+        splat.build_parser().parse_args(["--root", str(root), "exe/logo"])
+    ) == 0
+    projected = root / "out/splat/exe/logo/source-view/loadEntry.c"
+    if owner_text.startswith("/* @source 0x80100000"):
+        # Matching owner: the generated stub is preserved in the projection.
+        assert owner.is_file()
+        assert not stub.exists()
+        assert "INCLUDE_ASM" in projected.read_text()
+    else:
+        # No matching metadata: nothing under src/ may change.
+        assert owner.is_file()
+        assert stub.is_file()
+        assert not projected.exists()
+
+
+def test_repeat_run_refreshes_projection_and_removes_stub(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Repeated Splat with an existing projection is idempotent: every freshly
+    regenerated metadata-free root stub is projected (atomic refresh, never a
+    skip) and removed from src/ so Splat then build passes every time."""
+
+    root = _setup_target(tmp_path)
+    source_dir = root / "src/exe/logo"
+    owner = source_dir / "io/loadEntry.c"
+    owner.parent.mkdir(parents=True)
+    owner.write_text("/* @source 0x80100000 @behavior loads entry */\n")
+    stub = source_dir / "loadEntry.c"
+    splat_path = root / "config/targets/exe/logo/splat.yaml"
+    splat_path.write_text(
+        "name: logo\nsegments:\n- name: main\n  type: code\n  start: 0\n"
+        "  vram: 0x80100000\n  subsegments:\n"
+        "  - - 0\n    - c\n    - loadEntry\n"
+        "    - '@source: src/exe/logo/io/loadEntry.c'\n"
+    )
+    projected = root / "out/splat/exe/logo/source-view/loadEntry.c"
+    projected.parent.mkdir(parents=True)
+    projected.write_text("stale projection bytes")
+
+    def fake_execute(self, args, **kwargs):
+        stub.write_text('#include "common.h"\nINCLUDE_ASM("x", loadEntry);\n')
+        return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(SplatToolchain, "execute", fake_execute)
+    parser = splat.build_parser()
+    for _ in range(2):
+        assert splat.run(parser.parse_args(["--root", str(root), "exe/logo"])) == 0
+        assert owner.is_file()
+        assert not stub.exists()
+        assert "INCLUDE_ASM" in projected.read_text()
+
+
+def test_out_of_root_owner_renamed_basename_stub_projected(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Splat stubs are keyed by the Splat boundary name, never the authored
+    destination basename: a collision-renamed out-of-root owner
+    (``advancePanelXTo320_game00_801996FC.c`` under boundary
+    ``advancePanelXTo320``) still gets its regenerated root stub projected and
+    removed from src/."""
+
+    root = _setup_target(tmp_path)
+    source_dir = root / "src/exe/logo"
+    source_dir.mkdir(parents=True, exist_ok=True)
+    owner = root / "src/bof3/ui/advancePanelXTo320_game00_801996FC.c"
+    owner.parent.mkdir(parents=True)
+    owner.write_text(
+        "/* @source 0x801996FC @behavior advances panel x */\n", encoding="utf-8"
+    )
+    stub = source_dir / "advancePanelXTo320.c"
+    splat_path = root / "config/targets/exe/logo/splat.yaml"
+    splat_path.write_text(
+        "name: logo\nsegments:\n- name: main\n  type: code\n  start: 0\n"
+        "  vram: 0x801996FC\n  subsegments:\n"
+        "  - - 0\n    - c\n    - advancePanelXTo320\n"
+        "    - '@source: src/bof3/ui/advancePanelXTo320_game00_801996FC.c'\n"
+        "    - '@behavior: advances panel x'\n"
+    )
+    projected = root / "out/splat/exe/logo/source-view/advancePanelXTo320_game00_801996FC.c"
+    projected.parent.mkdir(parents=True)
+    projected.write_text("stale projection bytes")
+
+    def fake_execute(self, args, **kwargs):
+        stub.write_text('#include "common.h"\nINCLUDE_ASM("x", advancePanelXTo320);\n')
+        return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(SplatToolchain, "execute", fake_execute)
+    parser = splat.build_parser()
+    for _ in range(2):
+        assert splat.run(parser.parse_args(["--root", str(root), "exe/logo"])) == 0
+        assert owner.is_file()
+        assert not stub.exists()
+        assert "INCLUDE_ASM" in projected.read_text()
+
+
+def test_pre_run_refuses_authored_source_at_legacy_stub_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A metadata-tagged (authored) file at a legacy path Splat could write
+    must refuse the run before Splat ever executes."""
+
+    root = _setup_target(tmp_path)
+    source_dir = root / "src/exe/logo"
+    owner = source_dir / "io/loadEntry.c"
+    owner.parent.mkdir(parents=True)
+    owner.write_text("/* @source 0x80100000 @behavior loads entry */\n")
+    stub = source_dir / "loadEntry.c"
+    stub.write_text("/* @source 0x80100000 @behavior authored duplicate */\n")
+    splat_path = root / "config/targets/exe/logo/splat.yaml"
+    splat_path.write_text(
+        "name: logo\nsegments:\n- name: main\n  type: code\n  start: 0\n"
+        "  vram: 0x80100000\n  subsegments:\n"
+        "  - - 0\n    - c\n    - loadEntry\n"
+        "    - '@source: src/exe/logo/io/loadEntry.c'\n"
+    )
+    calls: list = []
+
+    def fake_execute(self, args, **kwargs):
+        calls.append(args)
+        return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(SplatToolchain, "execute", fake_execute)
+    with pytest.raises(ValueError, match="refusing Splat"):
+        splat.run(
+            splat.build_parser().parse_args(["--root", str(root), "exe/logo"])
+        )
+    assert calls == []
+    assert stub.is_file()
+    assert owner.is_file()
+
+
 def test_verbose_streams_output(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

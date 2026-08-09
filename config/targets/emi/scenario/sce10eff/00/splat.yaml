@@ -2,6 +2,7 @@ name: scenario_sce10eff_00
 sha1: dd7b26475dc7e5968b9f4e4b4011167a3e664b3e
 options:
   platform: psx
+  create_c_files: false
   compiler: psyq
   basename: scenario_sce10eff_00
   base_path: ../../../../../..
@@ -31,9 +32,13 @@ segments:
   - - 668
     - c
     - func_801D0E9C
+    - '@source: src/bof3/scenario/func_801D0E9C.c'
+    - '@behavior: Dispatches byte 2 of the scratchpad-resident state object through its handler table.'
   - - 736
     - asm
     - func_801D0EE0
+    - '@source: src/bof3/scenario/func_801D0EE0.c'
+    - '@behavior: Builds a temporary transform from scratchpad camera state and submits it through the local scene object pipeline.'
   - - 940
     - asm
     - func_801D0FAC
@@ -46,6 +51,8 @@ segments:
   - - 1336
     - c
     - func_801D1138
+    - '@source: src/bof3/scenario/func_801D1138.c'
+    - '@behavior: Advances byte 11 and counts down byte 9 of scratchpad work, advancing byte 3 when the countdown reaches zero.'
   - - 1440
     - asm
     - func_801D11A0

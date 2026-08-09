@@ -25,34 +25,38 @@ addresses as separate targets until relocatability is proven.
 | Target-local symbols | `config/targets/<target>/symbols.txt` |
 | Shared SDK symbol maps | `config/sdk/psyq-{slus,logo}.txt` |
 | Reviewed Rizin annotations | `config/targets/<target>/reviewed.rz` |
-| C89 source and local declarations | `src/exe/`, `src/emi/` |
+| Authored C89/declarations | `src/bof3/`, `include/bof3/` |
 | Reviewed findings | `../specs/`, `lessons.md` |
 
-Generated evidence and working candidates live under `out/` and are
-disposable. They may be edited while iterating but are never durable facts.
-The one exception is `src/<target>/symbols/psyq.c`: generated from the SDK map
-but tracked because the build compiles it as a source input.
+Generated evidence and candidates live under `out/`; disposable, never
+durable facts. The exception is the generated PsyQ binding source
+(`psyq_source`): tracked because the build compiles it.
 Original bytes, PS-X headers, and reviewed configuration outrank analyzer
 output.
 
 ## Source model
 
-- `src/exe/<name>/` owns executable lifts.
-- `src/emi/<family>/<archive>/<slot>/` owns one EMI entry.
-- Each lift is one C source with adjacent target-local `internal.h`. Parsable function-level `@source` and `@behavior` metadata identify it; filenames are flexible and never provide address fallback.
+- Fresh and existing lifts live under `src/bof3/<subsystem>/`; legacy
+  `src/exe/` and `src/emi/` trees are removed. Ownership is explicit: lifts,
+  bindings, headers, and PsyQ source are claimed in
+  `config/targets/<target>/target.toml`
+  (`sources`/`support_sources`/`headers`/`psyq_source`) with `@source`/
+  `@behavior`; identity (binary, layout, symbols) stays centralized;
+  `source_dir` is only the historical Splat root.
+- Each lift is one C source plus its claimed target-private header
+  (`include/bof3/<subsystem>/`); filenames never supply address fallback.
 - Function C, local headers, maps, and Splat layouts are intentionally
   hand-edited as reviewed evidence improves.
 - Shared declarations belong in `include/<subsystem>/` (e.g. `include/base/`,
   `include/memory/`, `include/gpu/`, `include/battle/`) only when multiple
   targets or an external contract require them.
 - Follow [exact duplicate groups](matching.md#exact-duplicate-groups) before
-  extracting an evidence-backed cross-target template; address-owned wrappers
-  remain in each target directory.
-- PsyQ signatures identify objects and addresses; official headers provide C
-  declarations; Rizin snapshots provide callsites and xrefs. None substitutes
-  for another.
+  extracting a template; colocated wrappers stay independently manifest-owned.
+- PsyQ signatures identify objects/addresses; official headers give C
+  declarations; Rizin snapshots give callsites/xrefs. None substitutes
+  another.
 
-See [function matching](matching.md) and [tool usage](../usage.md) for procedures.
+See [function matching](matching.md) and [tool usage](../usage.md).
 
 ## Repository map
 
@@ -60,7 +64,7 @@ See [function matching](matching.md) and [tool usage](../usage.md) for procedure
 | --- | --- | --- |
 | `config/targets/` | Target identity, layout, symbols, analysis | Yes |
 | `config/sdk/` | Shared PsyQ SDK symbol maps (slus/logo) | Yes |
-| `src/`, `include/` | Authored C89 and declarations | Yes |
+| `src/`, `include/` | Authored C89 (`src/bof3/` semantic root; metadata and manifest claims own target identity) | Yes |
 | `../specs/`, `lessons.md` | Reviewed findings and gotchas | Yes |
 | `bin/`, `tools/` | Command entrypoints and implementations | Yes |
 | `third_party/` | Pinned upstream source | Yes |

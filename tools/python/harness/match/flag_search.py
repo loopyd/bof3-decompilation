@@ -11,6 +11,9 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from ..canonical import load_target_symbols
+from ..domain.claims import manifest_binding_sources
+from ..domain.sources import owning_manifest
 from ..io import RepoLayout
 from ..toolchain.gcc_variants import EmptyCatalog, lookup_variant
 from ._asm_disasm import extract_instructions, disassemble_linked
@@ -51,6 +54,32 @@ def _strip_embedded_psx_gcc(command: list[str]) -> list[str]:
             env.append(command[index])
         index += 1
     return [*command[:3], *env, *command[index:]]
+
+
+def _resolve_bindings(
+    layout: RepoLayout, source: Path
+) -> tuple[Path, dict[str, int] | None]:
+    """Resolve the WEAK_SYMBOL_AT binding file and canonical map for linking.
+
+    Migrated targets: the claimed hand-maintained support binding source plus
+    the composed target map (target-qualified, never path ancestry).  Legacy
+    targets: ``source.parent/symbols.c`` with no canonical map.
+    """
+
+    manifest = owning_manifest(layout.root, source)
+    if manifest is not None:
+        binding_files = manifest_binding_sources(layout.root, manifest)
+        symbols_c_path = (
+            binding_files[0]
+            if binding_files
+            else layout.root / manifest.source_dir / "symbols.c"
+        )
+        canonical_bindings = {
+            symbol.canonical_name: symbol.address
+            for symbol in load_target_symbols(layout.root, manifest.id.value)
+        }
+        return symbols_c_path, canonical_bindings
+    return source.parent / "symbols.c", None
 
 
 def _with_candidate(command: list[str], flags: list[str], output: Path) -> list[str]:
@@ -111,6 +140,7 @@ def search_flags(
     cmd, cmd_dir = _compile_command(layout, source)
     if compiler_id is not None:
         cmd = _strip_embedded_psx_gcc(cmd)
+    symbols_c_path, canonical_bindings = _resolve_bindings(layout, source)
     results: list[dict[str, Any]] = []
     with tempfile.TemporaryDirectory(prefix="harness-flags-") as tmp:
         work = Path(tmp)
@@ -142,7 +172,8 @@ def search_flags(
                     address=address,
                     size=original_size,
                     original_bytes=original_bytes,
-                    symbols_c_path=source.parent / "symbols.c",
+                    symbols_c_path=symbols_c_path,
+                    canonical_bindings=canonical_bindings,
                     layout=layout,
                 )
                 linked_path = object_path.with_suffix(".linked.o")
