@@ -13,6 +13,7 @@ dispatchMode = 0x801F2C18;
 resetStateSelectMode1 = 0x801F2C5C;
 loadResourceSelectMode2 = 0x801F2C88;
 func_801F2F24 = 0x801F2F24;
+func_801F317C = 0x801F317C;
 func_801F3244 = 0x801F3244;
 resetScratchSelectMode1 = 0x801F3288;
 func_801F3654 = 0x801F3654;

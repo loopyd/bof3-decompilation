@@ -59,7 +59,7 @@ segments:
     - asm
     - func_801F30B8
   - - 1404
-    - asm
+    - c
     - func_801F317C
   - - 1488
     - asm
