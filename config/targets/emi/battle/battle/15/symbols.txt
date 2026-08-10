@@ -155,6 +155,7 @@ func_800AE390 = 0x800AE390;
 func_800AE438 = 0x800AE438;
 accumulateWorkCounter = 0x800AE6C8;
 func_800AF66C = 0x800AF66C;
+func_800AF720 = 0x800AF720;
 func_800AFC54 = 0x800AFC54;
 selectOffsetPairByMode = 0x800B0118;
 dispatchPanelTaskTable69e4 = 0x800B0180;

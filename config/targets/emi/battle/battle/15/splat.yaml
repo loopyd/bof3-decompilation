@@ -1343,7 +1343,7 @@ segments:
     - asm
     - func_800AF6B8
   - - 102176
-    - asm
+    - c
     - func_800AF720
   - - 102244
     - asm
