@@ -28,6 +28,8 @@ change, and re-run the diff; a percentage alone is not a diagnosis.
 | GNU assembler rejects GTE op | Exact `.word` in generated assembly | [Generated-assembly spelling](#generated-assembly-spelling) |
 | Proven incoming `a*` copied to `t*`/`v*` at entry | Preserve a local value's lifetime; after the ladder, one local `REGISTER_PIN` experiment | [Allocation ladder](#allocation-ladder) |
 | Same-sized near match with a lone delay-slot difference | Inspect the exact branch/jump and live operands; use clean-C ordering, then an evidenced caller-register clobber | [Delay slots and entry copies](#delay-slots-and-entry-copies) |
+| Sole difference is commutative `addu` operand order using `$at` | Exhaust source representation forms, then record a compiler-order ceiling; never pin assembler scratch `$at` | [Allocation ladder](#allocation-ladder) |
+| Preinitialization fills the desired delay slot but changes downstream registers | Reject it unless the longer value lifetime preserves the complete register web; placement alone is not progress | [Delay slots and entry copies](#delay-slots-and-entry-copies) |
 | Code size or stack frame differs | Check calls, address-taken locals, aggregate copies, temporary lifetime, and branch topology before allocator aids | [Temporaries and allocation](#temporaries-and-allocation) |
 | No clean C solution after levers | Record the exhausted evidence; do not add inline asm or `INCLUDE_ASM` without explicit approval | [Allocation ladder](#allocation-ladder) |
 
@@ -568,6 +570,10 @@ durable choice of first lever.
 | Original begins `move tN,aN` or `move vN,aN`; current uses the argument directly | Whether the copied argument remains live across a call/branch or overlaps another temporary | Name one local copy at the original source lifetime; vary its declaration/first use and surrounding independent statement order | After all clean-C, profile, and one permuter attempt, one local `REGISTER_PIN(type, name, "tN"/"vN")` experiment is allowed only for this asm-diff-proven entry allocator residual |
 | Frame/size differs at or before the first call | Exact prologue/epilogue, calls made, address-taken locals, aggregate assignment, and values live across calls | Correct prototypes and widths; remove accidental address-taking; split/collapse aggregate copies; choose early return/loop shape; shorten/extend a temporary lifetime | A pin never substitutes for an unmatched frame or changed control-flow shape |
 | Same size; relocated address, `lui`/`addiu`, or load order differs | Symbol owner/declaration form, field offset, pointer-cell volatility, and whether a pointer is cached or reloaded | Pointer versus array; standalone symbol versus field; `PSX_REF`/`SPAD_PTR_SLOT` qualifiers; hoist or unhoist one dereference | `CLOBBER_*` only after the precise caller-clobbered reload ordering is proven |
+
+Preinitializing a result can make GCC fill a desired branch delay slot, but it also lengthens that value's lifetime. Reject the variant when downstream allocation changes even if the slot now matches: placement alone is not a net improvement.
+
+A sole commutative operand-order difference involving assembler scratch `$at` can survive typed-record arrays, byte views, pointer arithmetic, and extern-array indexing. GNU `as` preserves the compiler-emitted operand order; it does not canonicalize this encoding. After representation, profile, and permuter rungs are exhausted, record a compiler-order ceiling. Never pin or clobber `$at` to control it.
 
 Partial lift: keep a residual note only when specific and durable —
 command/target, first differing instruction(s), no-progress attempts, next
