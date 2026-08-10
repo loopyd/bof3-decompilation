@@ -13,6 +13,8 @@ extern u8  D_80149332;    /* @source 0x80149332 @kind unknown */
 extern u8  D_8014403D;    /* @source 0x8014403D @kind unknown */
 extern u8  D_80144281;    /* @source 0x80144281 @kind unknown */
 extern u8  modeByte;      /* @source 0x80144125 @kind bss */
+extern u8  D_8014412A;    /* @source 0x8014412A @kind unknown */
+extern u8  D_8014412B;    /* @source 0x8014412B @kind unknown */
 extern u8  D_80144199[];  /* @source 0x80144199 @kind unknown */
 extern u8  D_8014419E;    /* @source 0x8014419E @kind unknown */
 extern u8  D_80144286;    /* @source 0x80144286 @kind unknown */
@@ -109,6 +111,7 @@ void func_801DFFA8(void);
 void func_801DCC74(void);
 void func_801DCCB0(void);
 void func_801DDFD4(void);
+void func_801DDE94(s32 state);
 void func_801DC474(void);
 void func_801DC590(void);
 void func_801DC64C(void);
