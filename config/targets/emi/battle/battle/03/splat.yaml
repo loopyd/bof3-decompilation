@@ -408,7 +408,7 @@ segments:
     - c
     - queueScriptRecord
   - - 56744
-    - asm
+    - c
     - func_801DE9A8
   - - 56856
     - c
