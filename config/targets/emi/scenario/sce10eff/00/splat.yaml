@@ -46,8 +46,10 @@ segments:
     - asm
     - func_801D1034
   - - 1224
-    - asm
+    - c
     - func_801D10C8
+    - '@source: src/bof3/scenario/func_801D10C8.c'
+    - '@behavior: Advances scratch byte 11, then advances byte 10 by two while it is below 18; otherwise resets byte 9 to 60 and advances byte 3.'
   - - 1336
     - c
     - tickScratchCountdownAndAdvanceState
