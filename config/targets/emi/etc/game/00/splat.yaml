@@ -1600,7 +1600,7 @@ segments:
     - asm
     - func_801C0CDC
   - - 177460
-    - asm
+    - c
     - func_801C0D34
   - - 177492
     - asm
