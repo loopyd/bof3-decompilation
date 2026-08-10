@@ -95,7 +95,9 @@ struct GameWorkArea {
   u8  pad_1C[0x0D];   /* 0x1C-0x28 */
   u8  unk_29;         /* 0x29 */
   u8  unk_2A;         /* 0x2A */
-  u8  pad_2B[0x09];   /* 0x2B-0x33 */
+  u8  pad_2B[0x05];   /* 0x2B-0x2F */
+  u8  unk_30;         /* 0x30 */
+  u8  pad_31[0x03];   /* 0x31-0x33 */
   s32 coord_x_34;     /* 0x34 */
   s32 coord_y_38;     /* 0x38 */
   u8  pad_3C[0x02];   /* 0x3C-0x3D */
@@ -367,6 +369,8 @@ extern u8          D_80148652;
 extern s8          D_8014865C;
 /* @source 0x80149332 @kind unknown */
 extern u8          D_80149332;
+/* @source 0x80145EC0 @kind unknown */
+extern u8          D_80145EC0;
 /* @source 0x80145EC4 @kind unknown */
 extern u32         D_80145EC4;
 /* @source 0x80145EC8 @kind unknown */

@@ -1053,7 +1053,7 @@ segments:
     - asm
     - func_801ADAC0
   - - 99480
-    - asm
+    - c
     - func_801ADC98
   - - 99572
     - asm
