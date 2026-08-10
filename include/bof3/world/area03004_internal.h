@@ -45,6 +45,9 @@ extern u8  D_801E238C[];  /* @source 0x801E238C @kind unknown */
 extern u8  D_801E2390[];  /* @source 0x801E2390 @kind unknown */
 extern u8* g_PrimCursor;    /* @source 0x8014598C @kind unknown */
 extern s32 D_8014421C;     /* @source 0x8014421C @kind unknown */
+extern u16 D_80145AA8;     /* @source 0x80145AA8 @kind unknown */
+extern u8  D_801E31F0;     /* @source 0x801E31F0 @kind unknown */
+extern u8  D_801E31F4;     /* @source 0x801E31F4 @kind unknown */
 extern u8  D_801E31F8;     /* @source 0x801E31F8 @kind unknown */
 extern s8* D_801E320C;     /* @source 0x801E320C @kind unknown */
 
@@ -105,6 +108,7 @@ void dispatchCompanion(void);
 void func_801DFFA8(void);
 void func_801DCC74(void);
 void func_801DCCB0(void);
+void func_801DDFD4(void);
 void func_801DC474(void);
 void func_801DC590(void);
 void func_801DC64C(void);
