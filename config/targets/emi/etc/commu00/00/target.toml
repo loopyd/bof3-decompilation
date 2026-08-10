@@ -17,7 +17,7 @@ sources = [
     "src/bof3/ui/dispatchProgressTable3.c",
     "src/bof3/ui/dispatchProgressTableAlt.c",
     "src/bof3/ui/dispatchSlotTable.c",
-    "src/bof3/ui/func_801F12C8.c",
+    "src/bof3/ui/copySelectedRecordKindToTaskRecord.c",
     "src/bof3/ui/func_801F1F9C.c",
     "src/bof3/ui/func_801F2020.c",
     "src/bof3/ui/func_801F228C.c",

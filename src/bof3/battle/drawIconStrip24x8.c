@@ -11,10 +11,10 @@ void drawIconStrip24x8(s16 arg0, s16 arg1, s32 arg2, s32 arg3) {
   s32 x;
   u8* packet;
 
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, GetTPage(0, 0, 0x3c0, 0), 0);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, GetTPage(0, 0, 0x3c0, 0), 0);
   func_8014E5A0(1, 0xc);
 
-  packet = D_8014598C;
+  packet = g_PrimCursor;
   *(u16*)(packet + 0xe) = GetClut((arg2 & 0xff) << 4, 0x1e0);
   packet[4] = 0x80;
   packet[5] = 0x80;

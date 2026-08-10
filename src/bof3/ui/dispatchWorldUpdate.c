@@ -13,5 +13,5 @@ void dispatchWorldUpdate(void) {
   } else {
     updateWorldPosition();
   }
-  func_801992B8();
+  runFrameFinalizationServices();
 }

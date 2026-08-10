@@ -79,7 +79,7 @@ def _remote_compiler_id(local_id: str) -> str:
     return local_id.replace("gcc-", "gcc", 1)
 
 
-def _source_command(layout: RepoLayout, source: Path) -> list[str]:
+def _source_arguments(layout: RepoLayout, source: Path) -> list[str]:
     database = layout.root / "compile_commands.json"
     if not database.is_file():
         raise FileNotFoundError(f"missing {database}; run `just build` first")
@@ -94,8 +94,19 @@ def _source_command(layout: RepoLayout, source: Path) -> list[str]:
     arguments = list(matches[0].get("arguments", []))
     if not arguments:
         raise ValueError(f"compile command has no arguments for {source}")
+    return arguments
 
+
+def _decompme_compiler_flags(arguments: list[str]) -> str:
+    assembler_flags = [flag for flag in arguments if flag == "-Wa,--expand-div"]
+    return " ".join(
+        ["-O2", "-G0", "-funsigned-char", "-msoft-float", "-gcoff", *assembler_flags]
+    )
+
+
+def _source_command(layout: RepoLayout, source: Path) -> list[str]:
     command: list[str] = []
+    arguments = _source_arguments(layout, source)
     skip = False
     for argument in arguments:
         if skip:
@@ -289,11 +300,14 @@ class DecompMeScratchpadToolchain:
                 + ", ".join(sorted(context_private)[:5])
             )
         name = source_function_name(source, function.address, self.layout.root)
+        compiler_flags = _decompme_compiler_flags(
+            _source_arguments(self.layout, source)
+        )
         return ScratchpadPayload(
             name=name,
             platform="ps1",
             compiler=_remote_compiler_id(compiler),
-            compiler_flags="-O2 -G0 -funsigned-char -msoft-float -gcoff",
+            compiler_flags=compiler_flags,
             diff_label=name,
             target_asm=_target_assembly(self.layout, function, source),
             context=context,

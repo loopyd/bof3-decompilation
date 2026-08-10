@@ -12,7 +12,7 @@ sources = [
     "src/bof3/world/advanceStateSelectMode3.c",
     "src/bof3/world/dispatchWorkStates.c",
     "src/bof3/world/drawSpin.c",
-    "src/bof3/world/func_801F2C14.c",
+    "src/bof3/world/dispatchScratchMode.c",
     "src/bof3/world/func_801F2DF8.c",
     "src/bof3/world/func_801F3080.c",
     "src/bof3/world/func_801F4158.c",

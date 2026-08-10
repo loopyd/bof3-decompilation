@@ -1,11 +1,11 @@
 #include "bof3/battle/battle03_internal.h"
 
 /* @source 0x801E5B8C
+ * @behavior Copies the local handler table then dispatches by battle work byte 5.
  * @status exact
  * @match 100.00
  * @residual none; live audit is instruction- and byte-exact.
  */
-// @behavior Copies the local handler table then dispatches by battle work byte 5.
 void dispatchSlotByte5TableD1c(void)
 {
     Battle03SeventyDispatchTable table;

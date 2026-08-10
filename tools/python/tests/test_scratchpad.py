@@ -14,6 +14,7 @@ from harness.c_context import public_declaration_context
 from harness.toolchain.decompme import (
     DecompMeScratchpadToolchain,
     ScratchpadPayload,
+    _decompme_compiler_flags,
     _remote_compiler_id,
 )
 
@@ -114,6 +115,15 @@ def test_payload_for_battle_range_lift_uses_ps1_and_preprocessed_source() -> Non
     assert payload.context.count("extern ") == 1
 
 
+def test_payload_preserves_required_assembler_flags() -> None:
+    assert _decompme_compiler_flags(
+        ["bin/cc", "-O2", "-Wa,--expand-div", "-c", "source.c"]
+    ) == "-O2 -G0 -funsigned-char -msoft-float -gcoff -Wa,--expand-div"
+    assert _decompme_compiler_flags(
+        ["bin/cc", "-O2", "-c", "source.c"]
+    ) == "-O2 -G0 -funsigned-char -msoft-float -gcoff"
+
+
 def test_payload_rejects_data_leading_non_function_range() -> None:
     from harness.io import repo_layout
 
@@ -140,6 +150,17 @@ def test_public_context_closes_type_dependencies_from_any_header() -> None:
     assert "typedef struct Local" in context
     assert "extern Local *g_local;" in context
     assert "ignored" not in context
+
+
+def test_public_context_deduplicates_base_typedefs() -> None:
+    context = public_declaration_context(
+        "typedef unsigned int u32;\nextern u32 g_value;\n",
+        "u32 func(void) { return g_value; }",
+        base="typedef unsigned int u32;\n",
+    )
+
+    assert context.count("typedef unsigned int u32;") == 1
+    assert "extern u32 g_value;" in context
 
 
 def test_public_context_keeps_function_pointer_typedefs() -> None:

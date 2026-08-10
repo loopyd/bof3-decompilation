@@ -36,8 +36,8 @@ segments:
     - '@behavior: Dispatches byte 2 of the scratchpad-resident state object through its handler table.'
   - - 736
     - asm
-    - func_801D0EE0
-    - '@source: src/bof3/scenario/func_801D0EE0.c'
+    - setupSceneObjectTransform
+    - '@source: src/bof3/scenario/setupSceneObjectTransform.c'
     - '@behavior: Builds a temporary transform from scratchpad camera state and submits it through the local scene object pipeline.'
   - - 940
     - asm
@@ -50,8 +50,8 @@ segments:
     - func_801D10C8
   - - 1336
     - c
-    - func_801D1138
-    - '@source: src/bof3/scenario/func_801D1138.c'
+    - tickScratchCountdownAndAdvanceState
+    - '@source: src/bof3/scenario/tickScratchCountdownAndAdvanceState.c'
     - '@behavior: Advances byte 11 and counts down byte 9 of scratchpad work, advancing byte 3 when the countdown reaches zero.'
   - - 1440
     - asm

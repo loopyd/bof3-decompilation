@@ -2,8 +2,8 @@
 #include "bof3/core/slus_internal.h"
 
 extern volatile u32 D_80146464;
-extern volatile u8  D_8014648A;
-extern volatile u32 D_8014648C;
+extern volatile u8  emiLoaderMode; /* @source 0x8014648A @kind bss */
+extern volatile u32 emiCdSyncResult; /* @source 0x8014648C @kind bss */
 extern volatile u8  D_801464A0[];
 extern volatile u8  D_80146840;
 extern u16          D_8014681A;
@@ -35,8 +35,8 @@ void initEmiLoader(void) {
 
   *loader_state = bootstrap_address;
   D_80146840 = 0;
-  D_8014648A = 0;
-  D_8014648C = 0;
+  emiLoaderMode = 0;
+  emiCdSyncResult = 0;
   D_8014681A = 0xffff;
 
   do {

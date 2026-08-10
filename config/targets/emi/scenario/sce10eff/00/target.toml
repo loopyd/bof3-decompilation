@@ -9,8 +9,8 @@ load_address = 0x801d0c00
 
 sources = [
     "src/bof3/scenario/func_801D0E9C.c",
-    "src/bof3/scenario/func_801D0EE0.c",
-    "src/bof3/scenario/func_801D1138.c",
+    "src/bof3/scenario/setupSceneObjectTransform.c",
+    "src/bof3/scenario/tickScratchCountdownAndAdvanceState.c",
 ]
 support_sources = [
     "src/bof3/support/sce10eff_symbols.c",

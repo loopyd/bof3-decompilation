@@ -18,5 +18,5 @@ void appendFullscreenDimTile(void) {
   prim->r0 = 0;
   prim->g0 = 0;
   prim->b0 = 0;
-  func_8014E5A0(1, 0x10);
+  appendRenderPrim(1, 0x10);
 }

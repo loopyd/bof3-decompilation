@@ -9,9 +9,9 @@
 void drawFullscreenFadeTile(void) {
   TILE* tile;
 
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, GetTPage(0, 2, 0x3c0, 0), 0);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, GetTPage(0, 2, 0x3c0, 0), 0);
   func_8014E5A0(1, 0x0c);
-  tile = (TILE*)D_8014598C;
+  tile = (TILE*)g_PrimCursor;
   SetTile(tile);
   tile->w = 0x3c0;
   tile->h = 0xf0;

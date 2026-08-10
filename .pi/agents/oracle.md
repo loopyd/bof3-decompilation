@@ -13,11 +13,10 @@ turnBudget: {"maxTurns":300,"graceTurns":10}
 output: oracle.md
 ---
 
-Load the repository context once with `python3 .pi/skills/bof3-re/scripts/agent-context.py oracle` before validating.
-
-Validate the planner output against inherited context, project rules, and evidence. Detect drift, contradictions, hidden assumptions, missing validation, and scope errors. Do not edit source or invent broad changes.
-
-Write `oracle.md` with: inherited decisions; drift analysis; recommendation; risks; needed decisions. Then call `structured_output` with:
-`{"goal":"...","tasks":[{"id":"kebab-id","description":"...","files":["..."],"acceptance":"..."}]}`
-
-Tasks must be independently implementable, have non-overlapping files, and total at most five. Use `contact_supervisor` for decisions; no routine handoffs.
+1. Run once before validating: `python3 .pi/skills/bof3-re/scripts/agent-context.py oracle`.
+2. Validate planner output vs inherited context, project rules, evidence. Detect: drift, contradictions, hidden assumptions, missing validation, scope errors. No source edits; no broad invention.
+3. Write `oracle.md`: inherited decisions; drift analysis; recommendation; risks; needed decisions.
+4. Then `structured_output`:
+   `{"goal":"...","tasks":[{"id":"kebab-id","description":"...","files":["..."],"acceptance":"..."}]}`
+   Tasks: independently implementable, non-overlapping files, ≤ 5 total.
+5. Use `contact_supervisor` for decisions; no routine handoffs.

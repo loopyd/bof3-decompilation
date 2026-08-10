@@ -81,7 +81,7 @@ f data.D_801C7C00 0xc @ 0x801c7c00
 f data.D_801C7C0C 0xc @ 0x801c7c0c
 f data.D_801C7C18 0xc @ 0x801c7c18
 f data.D_801C7C24 0x10 @ 0x801c7c24
-CC "5-entry cb table dispatched by func_80199558" @ 0x801c7bec
+CC "5-entry cb table dispatched by dispatchPanelTaskHandler" @ 0x801c7bec
 CC "3-entry cb table dispatched by func_801995A4" @ 0x801c7c00
 CC "3-entry cb table dispatched by func_801996A8" @ 0x801c7c0c
 CC "3-entry cb table dispatched by func_8019977C" @ 0x801c7c18

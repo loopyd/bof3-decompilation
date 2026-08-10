@@ -11,7 +11,7 @@ void func_801F6F30(void) {
     volatile u8* object;
     u8           object_index;
 
-    D_80146864 = 0u;
+    g_ScenarioProgress = 0u;
     func_80154FD8(0x300u);
     func_801C601C(0u);
     D_801492D8 = (u16)(D_801492D8 + 0xaau);

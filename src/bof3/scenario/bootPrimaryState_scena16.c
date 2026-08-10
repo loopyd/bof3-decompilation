@@ -5,7 +5,7 @@ extern u8  D_801448FF;
 extern u32 D_80144900;
 extern u32 D_80144904;
 extern u16 D_80146258;
-extern u32 D_80146864;
+extern volatile u8 g_ScenarioProgress;
 extern s8  D_80146872;
 extern u8  D_8014832E;
 
@@ -30,6 +30,6 @@ void bootPrimaryState(void) {
     func_8014B87C(1u);
   }
 
-  D_80146864 = 0u;
+  g_ScenarioProgress = 0u;
   D_80146872 = 1;
 }

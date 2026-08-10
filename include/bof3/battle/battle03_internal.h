@@ -127,7 +127,7 @@ typedef struct Battle03EnemyWork {
   /* unk_82/unk_fd proven by the func_801D57AC countdown path */
   u16                      unk_82;
   u8                       pad_84[0x10];
-  /* unk_94 proven by the func_801DCEF8 countdown-init path */
+  /* unk_94 proven by the initDeferredBattlerCountdown path */
   u16                      unk_94;
   u8                       pad_96[0x1e];
   u8                       unk_b4;
@@ -249,7 +249,7 @@ extern Battle03LocalWork* volatile D_80146250; /* @source 0x80146250 @kind unkno
 extern const volatile u16 D_801EAFD0[];
 extern Battle03LocalWork*          D_1F800044; /* @source 0x1F800044 @kind unknown */
 extern volatile u8* battleWork; /* @source 0x1F800044 @kind unknown */
-extern u8*          D_8014598C; /* @source 0x8014598C @kind unknown */
+extern u8*          g_PrimCursor; /* @source 0x8014598C @kind unknown */
 extern u8           D_80145AD4[]; /* @source 0x80145AD4 @kind unknown */
 extern const char   D_801D0C70[]; /* @source 0x801D0C70 @kind unknown */
 extern const char   D_801D0C74[]; /* @source 0x801D0C74 @kind unknown */
@@ -347,7 +347,6 @@ void dispatchByte1PairTable(void);
 void dispatchModeFiveTable(void);
 void func_801E72F4(void);
 void func_8014D5F0(u8 arg0, u32 arg1, s32 arg2);
-void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 u16  func_8017A620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8017A904(u32 arg0, s32 arg1);
 void func_8017A9A4(u32 arg0);
@@ -383,8 +382,8 @@ void func_80164A44(u32 arg0);
 void func_8019651C(void* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_80196718(void* arg0);
 void func_801D7EB0(s32 arg0, s32 arg1);
-u8   func_801D64C4(u32 arg0);
-u8   func_801DDCB4(u32 arg0);
+u8   isBattlerBlockedOrUnavailable(u32 arg0);
+u8   shouldTriggerBattlerCountdownRetry(u32 arg0);
 void func_801644D8(u32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u32 arg5);
 extern Battle03Handler D_801EB120[]; /* @source 0x801EB120 @kind unknown */
 
@@ -396,7 +395,7 @@ extern u8 D_801490D8[]; /* @source 0x801490D8 @kind unknown */
 extern u8 D_801EB35C[]; /* @source 0x801EB35C @kind unknown */
 
 void submitEnemyScriptBlock(u32 arg0);
-void func_801DCEF8(u32 arg0);
+void initDeferredBattlerCountdown(u32 arg0);
 u32  func_801502D0(u32 arg0);
 void func_801501E4(void* arg0, u32 arg1, u32 arg2);
 void func_80150098(s16 arg0, s16 arg1, u32 arg2, void* arg3);
@@ -458,7 +457,7 @@ void func_801D8450(u32 arg0);
 void func_801D8690(s32 arg0, s32 arg1, s32 arg2);
 void func_801D8AE4(s32 arg0, s32 arg1, s32 arg2);
 void func_801D8DF8(s32 arg0, s32 arg1, u32 arg2);
-u8   func_801DB058(void);
+u8   markBattlersMeetingOpposingThresholds(void);
 void drawDecimalGlyphRun(s16 arg0, u16 arg1, u8 arg2, s16 arg3);
 void func_801D9684(s16 arg0, u16 arg1, s32 arg2, u16 arg3);
 void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
@@ -470,12 +469,12 @@ void drawFlatLinePrim(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
 u8   func_801DA69C(u32 arg0);
 
-u32  func_801DB434(u8 arg0, u32 arg1);
+u32  findThresholdRank(u8 arg0, u32 arg1);
 u8   func_801DB844(u32 arg0);
 u8   func_801DB9E4(u32 arg0);
 u8   func_801DB2F8(u32 arg0);
 u8   func_801DB3A0(u32 arg0, u32 arg1, u32 arg2);
-u8   func_801DB3E4(u32 arg0, s32 arg1, u32 arg2);
+u8   enemyBattlerMeetsThresholds(u32 arg0, s32 arg1, u32 arg2);
 void clearRankingScratch(void);
 void func_801DA7D4(void);
 void func_801DAAE4(void);
@@ -489,13 +488,13 @@ u32  func_801DBB78(u8 arg0, u8 arg1);
 void copyLocalTemplates(void);
 void clearBattlerActionFlags(u8 arg0);
 void func_801DD29C(void);
-void func_801DD350(s32 arg0);
+void transformFirstPointPairByMode(s32 arg0);
 void func_801DD3CC(s32 arg0);
 u8   checkLocalQueuedBranch(void);
-void func_801DD858(u32 arg0);
-void func_801DD8AC(u32 arg0);
+void submitCurrentWorkEffectVariant(u32 arg0);
+void copyCurrentBattlerVisibleStateToTemplate(u32 arg0);
 void submitPositionalEffectBit80(u32 arg0);
-void func_801DDAF0(void);
+void copyCurrentBattlerToQueuedSlot(void);
 void func_801DD800(void);
 u8   advanceCounterStorePacked(u32 arg0, u32 arg1);
 void initModeTuple530(void);
@@ -511,7 +510,7 @@ u8   func_801DE858(s8 arg0);
 void pushUiRingTriple(s8 arg0, s8 arg1, u32 arg2);
 u8   hasUiRingWork(void);
 void func_801DEA64(s32 arg0);
-void func_801DDB7C(void);
+void queueActiveBattlerSnapshots(void);
 u8   func_801E0E0C(void);
 void func_801E0B64(void);
 void resetScratchWhenGlobalBit4(void);

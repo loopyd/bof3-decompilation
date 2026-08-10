@@ -16,23 +16,26 @@ defaultProgress: true
 completionGuard: false
 acceptance: {"level":"checked","criteria":["Repair one scoped, evidence-backed naming or documentation inconsistency without breaking repository contracts, or report a concrete organization plan/blocker without edits."],"evidence":["changed-files","commands-run","validation-output","residual-risks","no-staged-files"]}
 ---
-Accept one explicit scope in exactly one mode: `symbol TARGET OLD -> NEW`,
-`type TARGET OLD -> NEW`, `relocate-batch TARGET CLASS SELECTOR...`,
-`docs PATHS...`, or `audit PATHS...`. Never widen the mode mid-task.
+One scope, exactly one mode: `symbol TARGET OLD -> NEW` | `type TARGET OLD -> NEW` | `relocate-batch TARGET CLASS SELECTOR...` | `docs PATHS...` | `audit PATHS...`. Never widen mid-task.
 
-Load context once via
-`python3 .pi/skills/bof3-re/scripts/agent-context.py cleanup SELECTOR`
-(selector optional). Its role output — `references/CLEANUP/RULES.md` and
-`references/CLEANUP/REFACTOR_PLAYBOOK.md` — is binding. Follow both exactly.
+Context once: `python3 .pi/skills/bof3-re/scripts/agent-context.py cleanup SELECTOR` (optional). Binding role output: `references/CLEANUP/RULES.md` + `references/CLEANUP/REFACTOR_PLAYBOOK.md`. Follow both exactly.
 
-Key invariants: every edit is cosmetic and evidence-preserving only; when a
-cleanup touched a lift body, a live `bin/asm-diff TARGET@0xADDRESS --detail
-normal` (no first-difference) and a post-cleanup
-live `bin/byte-match TARGET@0xADDRESS` must pass before handoff — on failure
-revert, never fix forward. Ladder rungs 1–3 need only diff hygiene; rungs 4–6 need
-live byte-match per affected selector; the "never safe" list is a hard stop.
+## Invariants
+- Edits: cosmetic and evidence-preserving only.
+- Lift body touched → live `bin/asm-diff TARGET@0xADDRESS --detail normal` (no first-difference) + post-cleanup live `bin/byte-match TARGET@0xADDRESS` before handoff. Fail → revert, never fix forward.
+- Source path added/moved/removed → run `bin/build TARGET` after manifest/Splat edits; a generated Ninja/Make path to the old source is stale disposable state — the frontend reconfigure from current recursive manifests; never hand-edit `build/`. Verify the old path is absent from the regenerated graph.
+- Ladder rungs 1–3: diff hygiene only. Rungs 4–6: live byte-match per affected exact selector. Spelling-only retained partial lift: require unchanged live `asm-diff`/`byte-match` baseline + preserved partial metadata, not an impossible exact match. "Never safe" list: hard stop.
 
-Do not stage, commit, push, reset, clean, checkout, set up tools, or spawn
-children. Return JSON: mode/scope, `renamed|relocated|documented|audited|no-change|blocked`,
-evidence, changed files, commands, validation, organization findings, residual
-risks; then the acceptance report. Failed evidence gate: retain no edits.
+## Naming audits
+For `audit config/targets/` or any target-subtree audit, enumerate targets from recursively discovered `config/targets/**/target.toml`; never assume a fixed directory depth or derive from immediate children. Audit each manifest-owned `symbols.txt`, Splat file, sources, support sources, headers, reviewed annotations. Header scopes recursive too: every descendant `*.h` under named/manifest-owned roots (including deeply nested `include/**`), then follow local `#include` edges for declaration/reference completeness, preserving ownership. Treat `config/targets/shared/` separately (no manifest). A fixed-RAM data symbol used by many targets is not automatically a blocker: if already shared-map-owned, or every consuming target proves the same address/content class/runtime role, apply the shared fixed-RAM exception in RULES.md atomically; else retain target-local ownership.
+
+Failed repo reference search ≠ evidence ceiling. Follow RULES.md focused PSX Rizin rung: `bin/rz-project status TARGET --json` + `bin/rev-query --json status`; stale → auto `bin/rz-project analyze TARGET` then `bin/index` (disposable `out/reverse/`, `out/index/`), recheck both; fresh → bounded calls/xrefs/symbols, inspect candidate + callers + data/dispatch tables only; empty indexed xrefs → RULES.md bounded direct fallback (delay slots, exact `jal`/aligned pointer-table scans, neighboring handlers/state accesses, original bytes) before declaring a function/field exhausted; analyzer output = lead, proven original-byte dispatch layout or direct MIPS caller/state-machine evidence may elevate as an independent corroborator.
+
+Before `no-change`, trace one semantic level beyond the mechanical lead: table consumer/owning selector + neighboring slots; caller guards/result use/state transitions + argument provenance; immediate callee + caller context for presentation helpers; initializer/use pair for raw data. Repeated identical call patterns = one mechanical lead. Report the exact unresolved static role after escalation. Runtime traces/visible observations are optional corroborators; never block or force `no-change` when static original-byte/layout/caller/consumer evidence passes.
+
+Semantic gate passed on a partial lift → automatically apply a spelling-only rung-4 transaction. Preserve body/ABI/address/boundary/compiler settings and `@status partial`/`@match`/`@residual`; validate the unchanged live partial baseline. Never bundle matching edits.
+
+Block only if regeneration or bounded semantic escalation fails. Never mutate tracked reviewed truth.
+
+## Output
+Do not stage, commit, push, reset, clean, checkout, set up tools, or spawn children. Return JSON: mode/scope, `renamed|relocated|documented|audited|no-change|blocked`, evidence, changed files, commands, validation, org findings, residual risks; then acceptance report. Failed evidence gate → retain no edits.

@@ -13,11 +13,6 @@ md5 `9dd9a7c934b8b59d0ce76b0f25d18176`) with zero failures.
 `BOF3_1.1` is the vast-violence corpus label associated with that exact hash,
 not a claim about a separately catalogued US retail revision.
 
-The analysis catalog in `config/targets/shared/bof3_objects.h` records
-packed storage layouts and canonical names. Compiled declarations remain
-target-owned until their ABI is confirmed by consumers; one target-local
-battle overlay records the proven alternate ability-table interpretation.
-
 ## Verification
 
 - 16 fixed tables located and byte-matched

@@ -1,7 +1,7 @@
 #include "bof3/core/slus_internal.h"
 
-extern u8   D_80145990[];
-extern u32* D_801459D0[];
+extern u8   bootPacketHeadTable[];
+extern u32* bootOrderingTableHeads[];
 
 /* @behavior links the active frame's eight ordering-table heads to their
  * packet chains with the PsyQ AddPrims helper.
@@ -17,8 +17,8 @@ void linkRenderOtPackets(void) {
   s32   work_offset;
 
   index = 0;
-  ordering_table = D_801459D0;
-  packet = D_80145990;
+  ordering_table = bootOrderingTableHeads;
+  packet = bootPacketHeadTable;
   work_offset = 0x70;
   do {
     AddPrims(D_80143E68 + work_offset,

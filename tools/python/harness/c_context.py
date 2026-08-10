@@ -64,10 +64,15 @@ def public_declaration_context(preprocessed: str, source: str, *, base: str) -> 
     identifiers before this lexical, dependency-closed selection is exported.
     """
 
+    base_names = {
+        name
+        for statement in _statements(base)
+        if (name := _name(statement)) is not None
+    }
     declarations: dict[str, str] = {}
     for statement in _statements(preprocessed):
         name = _name(statement)
-        if name is not None and name not in declarations:
+        if name is not None and name not in base_names and name not in declarations:
             declarations[name] = statement
 
     wanted = set(_IDENTIFIER.findall(source)) - _C_KEYWORDS

@@ -45,8 +45,8 @@ segments:
     - func_801F2F04
   - - 1192
     - c
-    - func_801F30A8
-    - '@source: src/bof3/world/func_801F30A8.c'
+    - dispatchScratchWorkByte1
+    - '@source: src/bof3/world/dispatchScratchWorkByte1.c'
     - '@behavior: Dispatches scratch work byte 1 through the local handler table.'
   - - 1260
     - asm

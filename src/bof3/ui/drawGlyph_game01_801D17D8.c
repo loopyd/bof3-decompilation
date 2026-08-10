@@ -11,7 +11,7 @@ u8* drawGlyph(s32 x, s32 y, s32 glyph, s32 palette, u8 flags) {
   u8* primitive;
   s32 glyph_index;
 
-  primitive = (u8*)D_8014598C;
+  primitive = (u8*)g_PrimCursor;
   SetSprt((SPRT*)primitive);
   SetSemiTrans((void*)primitive, flags);
 
@@ -26,6 +26,6 @@ u8* drawGlyph(s32 x, s32 y, s32 glyph, s32 palette, u8 flags) {
   *(u16*)(primitive + 16) = glyphGeometryTable[glyph_index].unk_4;
   *(u16*)(primitive + 18) = glyphGeometryTable[glyph_index].unk_6;
   *(u16*)(primitive + 14) = glyphGeometryTable[glyph_index].unk_8 << 6;
-  func_8014E5A0((u8)palette, 20);
+  appendRenderPrim((u8)palette, 20);
   return primitive;
 }

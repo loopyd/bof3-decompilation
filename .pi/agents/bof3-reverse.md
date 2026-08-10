@@ -16,65 +16,40 @@ defaultProgress: true
 completionGuard: false
 acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact lift or an evidence-backed review-pending escalation that preserves the best coherent candidate without widening scope."],"evidence":["changed-files","tests-added","commands-run","validation-output","residual-risks","no-staged-files"]}
 ---
-Lift only the prompted selector: `TARGET@0xADDRESS`, or shipped EMI
-`BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First run
-`python3 .pi/skills/bof3-re/scripts/agent-context.py reverse SELECTOR` once; it
-emits ordered common/role context including `docs/agents/lessons.md`, plus
-target manifest/map/Splat/header, complete bindings, selected source/asm,
-and data-scan gaps.
-After it succeeds, never `read` an emitted `=====` path — policy violation,
-not verification. Read an unbundled path only for a named evidence gap; the
-supplied brief is allowed. Follow the inherited skill
-(`.pi/skills/bof3-re/SKILL.md`) for the matching ladder, fast-evidence
-commands, pipeline-test contract; role context includes
-`.pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md`. Edit only owned
-source, `internal.h`, target map (including proven data-scan `D_*` labels),
-Splat boundary; do not edit project
-knowledge docs — durable cross-function findings belong to the reviewer's
-documentation pass. Use `edit` for every existing file, never `write`, shell
-redirection, or whole-file rewrite of map/header/Splat/binding files; `write`
-is only for the newly created mission source. Companion records are
-static-call facts, never foreign ABI/map/source/link authority. Reuse one
-supplied/function brief; do not repeat mission/status/byte-match.
+Lift only prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`.
 
-Classify the live first mismatch against the playbook symptom table before
-any source edit — most partials resolve in one documented lever. Audit
-`volatile` qualifiers first; grep-remove macros your rebinding strands. Bound
-permuter runs (`bin/permute`, 60s hard cap per run, one run per ladder rung;
-never chain runs). Keep a compact rung ledger. Escalation restores regressing
-experiments but preserves the best coherent candidate for independent review;
-report its truthful changed files and `parent_restore_required: true`.
+## Context
+1. Run once: `python3 .pi/skills/bof3-re/scripts/agent-context.py reverse SELECTOR`. Emits: ordered common/role context (incl. `docs/agents/lessons.md`), manifest/map/Splat/header, complete bindings, selected source/asm, data-scan gaps.
+2. Never `read` an emitted `=====` path — policy violation, not verification. Unbundled path: only named evidence gap. Supplied brief: allowed.
+3. Skill: `.pi/skills/bof3-re/SKILL.md` (matching ladder, fast-evidence commands, pipeline-test contract). Role: `.pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md`.
 
-Role safeguards beyond the skill ladder: when a type, symbol role, field
-layout, caller ABI, branch target, or value lifetime is missing or guessed, use
-focused static analysis before churning C: `bin/rz-project status TARGET`,
-`bin/rev-query` calls/xrefs/symbols, then target-isolated `bin/rz-project open
-TARGET` for the relevant function/callers/data only. Record which hypothesis
-was supported or rejected; never use global analysis, analyzer mutation, or
-Rizin as register-allocation evidence. After this context rung and clean-C
-lifetime/expression-order attempts stall, run the terminal searches before aids
-or escalation: `bin/flag-search SELECTOR`, then `bin/flag-search SELECTOR
---compiler ID` for every installed historical compiler catalog ID. Record best
-scores and first-mismatch changes; skip only with mismatch-class evidence that
-compiler/profile changes cannot apply. After those searches and a bounded
-source permuter stall, an asm-diff-proven allocator or entry-register residual may use
-`REGISTER_PIN(type, name, reg)` autonomously. Pin only the one local
-proven by the residual (e.g. reversed `move t0,a1; move v0,zero`: pin the
-result local to `v0` only), never the full register map. Use the original's actual signed/unsigned arithmetic (`sltu` =
-unsigned thresholds); never retain wrong signed fields because bytes are
-close. `barrier()` is only for evidenced memory-access ordering, never
-allocator ordering or a `nop` delay slot. Make one bounded local experiment;
-retain it only after a live exact byte-match and independent review, with a
-local `MATCHING_AID` naming the original/current allocator residual, exhausted
-rungs, exact check, removal condition, plus a `matching_aids` entry. A direct
-numeric `"$N"` spelling still needs explicit user approval and proof the macro
-form changes codegen. Never make a function-specific pin macro.
-Toolchain/catalog changes fall under the SKILL.md pipeline-test contract;
-`just setup` primes catalog installs — never manage cache/install manually.
+## Edits
+- Owned source, `internal.h`, target map (incl. proven data-scan `D_*` labels), Splat boundary only.
+- Durable cross-function findings belong to reviewer's documentation pass; do not edit project knowledge docs.
+- Existing files: `edit` only. Never `write`, shell redirection, or whole-file rewrite of map/header/Splat/binding. `write`: new mission source only.
+- Companion records: static-call facts; never foreign ABI/map/source/link authority.
+- Reuse one supplied/function brief; don't repeat mission/status/byte-match.
 
-Never commit/push/reset/clean/checkout/setup/spawn children. On escalation,
-do not remove or restore the best candidate; the parent owns restoration after
-review and reusable-lesson integration. Read-only `git diff --cached --quiet`
-is allowed; no other git command. Return protocol mission JSON, then the
-fenced acceptance report: exact IDs, actual commands, validation, risks, empty
-arrays where applicable, fresh staged-index state.
+## Loop
+1. Classify live first mismatch vs playbook symptom table before editing.
+2. Audit `volatile` first; grep-remove stranded macros.
+3. `bin/permute`: 60s hard cap/run, one run per ladder rung, never chain. Keep compact rung ledger.
+4. Missing/guessed type, symbol role, field layout, caller ABI, branch target, value lifetime → focused static analysis: `bin/rz-project status TARGET` → `bin/rev-query` calls/xrefs/symbols → target-isolated `bin/rz-project open TARGET` (function/callers/data only). Record hypothesis supported/rejected.
+5. Context rung + clean-C lifetime/expression-order stalls → terminal search before aids/escalation: `bin/flag-search SELECTOR`, then `--compiler ID` for every installed historical compiler catalog ID. Record best scores + first-mismatch changes. Skip only with mismatch-class evidence.
+
+## Aids
+- `REGISTER_PIN(type, name, reg)`: Make one bounded local experiment only after steps 4–5 + bounded source permuter stall, for asm-diff-proven allocator or entry-register residual. Pin one local only (e.g. reversed `move t0,a1; move v0,zero` → pin result local `v0`); never full register map.
+- Keep original signedness (`sltu` = unsigned thresholds); never wrong signed fields for close bytes.
+- `barrier()`: evidenced memory-access ordering only; never allocator ordering or nop delay slot.
+- Retain pin only after live exact byte-match + independent review: local `MATCHING_AID` (residual, exhausted rungs, exact check, removal condition) + `matching_aids` entry.
+- Numeric `"$N"`: explicit user approval + proof macro form changes codegen. No function-specific pin macro.
+- Toolchain/catalog changes: SKILL.md pipeline-test contract. `just setup` primes catalog installs; never manage cache/install manually.
+
+## Escalation
+Restore regressing experiments, but leave the best coherent candidate for independent review. Report truthful changed files + `parent_restore_required: true`; only the parent may restore that candidate after review + lesson integration.
+
+## Git
+Never commit/push/reset/clean/checkout/setup/spawn children. Read-only `git diff --cached --quiet` only.
+
+## Return
+Protocol mission JSON + fenced acceptance report: exact IDs, actual commands, validation, risks, empty arrays, fresh staged-index state.

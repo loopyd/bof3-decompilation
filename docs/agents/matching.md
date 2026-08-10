@@ -9,7 +9,7 @@ unrelated until proven otherwise.
 bin/splat TARGET
 bin/m2ctx TARGET@0xADDRESS
 bin/m2c TARGET@0xADDRESS -o out/candidate.c
-# edit the metadata-resolved lift source under src/<target>/
+# edit the metadata-resolved lift under src/bof3/<subsystem>/
 bin/asm-diff TARGET@0xADDRESS
 bin/byte-match TARGET@0xADDRESS
 ```
@@ -81,7 +81,7 @@ Splat `c` boundary, `bin/asm-diff`, and `bin/byte-match` result.
 ## Candidate validation
 
 ```sh
-bin/promote TARGET@0xADDRESS src/<target>/<metadata-resolved-source>.c
+bin/promote TARGET@0xADDRESS src/bof3/<subsystem>/<metadata-resolved-source>.c
 ```
 
 With the candidate installed in its canonical source file, `bin/promote`

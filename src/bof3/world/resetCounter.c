@@ -8,7 +8,7 @@
  */
 void resetCounter(void)
 {
-    counter = 0;
+    selectionCounter = 0;
     D_80149333 = 2;
     game_stop_selection_fx(0u, 0);
 }

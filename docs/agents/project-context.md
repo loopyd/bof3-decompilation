@@ -36,9 +36,8 @@ output.
 
 ## Source model
 
-- Fresh and existing lifts live under `src/bof3/<subsystem>/`; legacy
-  `src/exe/` and `src/emi/` trees are removed. Ownership is explicit: lifts,
-  bindings, headers, and PsyQ source are claimed in
+- Fresh and existing lifts live under `src/bof3/<subsystem>/`. Ownership is
+  explicit: lifts, bindings, headers, and PsyQ source are claimed in
   `config/targets/<target>/target.toml`
   (`sources`/`support_sources`/`headers`/`psyq_source`) with `@source`/
   `@behavior`; identity (binary, layout, symbols) stays centralized;

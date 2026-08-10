@@ -72,7 +72,7 @@ extern volatile u8           D_80143C30;
 /* @source 0x80143C30 @kind unknown */
 extern volatile u32          GAME_FRONT_POPUP_WORD;
 /* @source 0x8014598C @kind unknown */
-extern volatile u32          D_8014598C;
+extern volatile u32          g_PrimCursor;
 /* @source 0x80143C2A @kind unknown */
 extern volatile u16          D_80143C2A;
 /* @source 0x801D1C4C @kind table — GAME_FRONT_STATE-dispatched handler
@@ -101,7 +101,7 @@ int  func_8017B2B4(void);
 void func_8017C2D8(u32 object, s32 x, s32 y, s32 flags, s32 arg4);
 void func_8017AA1C(u8* primitive);
 void func_8017A904(u8* primitive, u8 flags);
-void func_8014E5A0(s32 group, s32 id);
+void appendRenderPrim(u32 ot_index, u32 primitive_size);
 u8*  drawGlyph(s32 x, s32 y, s32 width, s32 height, u8 flags);
 void setGlyphAlpha(u8* primitive, u8 alpha);
 

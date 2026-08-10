@@ -33,20 +33,19 @@ extern World00Area016Handler D_801F51D0[];
 extern World00Area016Handler D_801F51AC[];
 
 void func_8014E5A0(u8 arg0, u8 arg1);
-void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 s8   func_80166CB0(s16 arg0, s16 arg1);
 u8   func_801B6610(s16 arg0, s16 arg1);
 
 void seedScratchDefaults(void);
 void dispatchState02(void);
-void func_801F355C(void);
+void advanceScratchHeightState02(void);
 void advanceState02Step(void);
 void dispatchState03(void);
 void func_801F39D8(s16 arg0, s16 arg1, u32 arg2);
 void func_801F3B00(s32 arg0, s32 arg1);
-void func_801F3ECC(s16 arg0, s16 arg1);
+void appendTransformedG4Panel(s16 arg0, s16 arg1);
 void func_801F40C4(s16 arg0, s16 arg1);
-void func_801F4178(void);
+void dispatchArea016ScratchMode(void);
 void func_801F45CC(void);
 
 #define WORLD00_AREA016_SCRATCH_PTR                                            \

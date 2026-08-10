@@ -13,7 +13,7 @@ void func_80197AA4(void) {
 
   local_ready = func_801BEE5C();
   func_801A06D8();
-  func_801992B8();
+  runFrameFinalizationServices();
   if (local_ready) {
     func_80161808(1);
     if ((D_80146325 & 1) == 0) {

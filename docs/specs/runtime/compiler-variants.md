@@ -52,13 +52,13 @@ canonical compiler's 98.51%. Its release archive was
 identity `2.8.0`; its catalog record is retained only as negative provenance,
 and no `BOF3_OBJCOMPILER_` override was retained.
 
-### `battle/15@0x800AF66C` historical-version matrix
+### `battle/15@0x800AF66C` historical-version matrix (pre-exact lift)
 
-The user-authorized clean-C revival has reviewed boundary `0x18E6C..0x18EB8`
-(76 original bytes) and source
-`src/bof3/battle/func_800AF66C.c`. Its canonical residual is
-5/20 instructions (25.00%), 76→80 bytes, first at `+0x0000` (`move t0,a1`
-absent). Each row ran all 52 flag-catalog profiles through
+The user-authorized clean-C revival tested the source shape now retained at
+`src/bof3/battle/func_800AF66C.c` against reviewed boundary
+`0x18E6C..0x18EB8` (76 original bytes). At the time, its canonical residual
+was 5/20 instructions (25.00%), 76→80 bytes, first at `+0x0000`
+(`move t0,a1` absent). Each row ran all 52 flag-catalog profiles through
 `bin/flag-search`; no `BOF3_OBJCOMPILER_` or flag override was retained.
 
 | GCC | Compiled profiles | Compile errors | Best profile | Best match | Exact |
@@ -69,10 +69,10 @@ absent). Each row ran all 52 flag-catalog profiles through
 | 2.8.1 PSX (old-gcc 0.17) | 50 | 2 | `-O2 -mno-split-addresses -fno-schedule-insns -fno-delayed-branch` | 23.81% | no |
 | 2.95.2 PSX (old-gcc 0.17) | 52 | 0 | `-O2 -mno-split-addresses -fno-schedule-insns -fno-delayed-branch` | 23.81% | no |
 
-The first clean-C candidate is retained as a target-local partial lift for
-future source-shape work, not as proof of retail compiler identity. The matrix
-closes these versions for this target; do not repeat it without new source,
-ABI, or compiler-provenance evidence.
+That tested source shape was later superseded by the current exact target-local
+lift; it was never proof of retail compiler identity. The matrix closes these
+versions for this target; do not repeat it without new source, ABI, or
+compiler-provenance evidence.
 
 **ASPSX**: Used with `bin/cc` driver, produces byte-identical output to
 canonical GCC 2.7.2-psx toolchain for all tested functions.

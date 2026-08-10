@@ -14,7 +14,7 @@ typedef struct EmiCallbackGroup {
   u32 values[4];
 } EmiCallbackGroup;
 
-extern s8        D_8014648A;
+extern s8        emiLoaderMode; /* @source 0x8014648A @kind bss */
 /* @source 0x80149C3C @kind table */
 extern const u32 emiLoaderCallbackTable[];
 
@@ -34,5 +34,5 @@ void dispatchEmiModeCallback(void) {
   } while (src != end);
   *(volatile u32*)dst = src->values[0];
 
-  ((EmiLoaderCallback)callbacks[D_8014648A])();
+  ((EmiLoaderCallback)callbacks[emiLoaderMode])();
 }

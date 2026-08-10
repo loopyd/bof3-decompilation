@@ -64,8 +64,8 @@ segments:
     - func_801FC3A0
   - - 23504
     - c
-    - func_801FC7D0
-    - '@source: src/bof3/scenario/func_801FC7D0.c'
+    - dispatchRecordCallbackByByte7A
+    - '@source: src/bof3/scenario/dispatchRecordCallbackByByte7A.c'
     - '@behavior: Dispatches one record callback selected by byte 0x7a.'
   - - 23568
     - asm

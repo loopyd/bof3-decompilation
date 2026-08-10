@@ -190,7 +190,7 @@ segments:
     - func_801DAAE4
   - - 42072
     - asm
-    - func_801DB058
+    - markBattlersMeetingOpposingThresholds
   - - 42744
     - asm
     - func_801DB2F8
@@ -199,13 +199,13 @@ segments:
     - func_801DB3A0
   - - 42980
     - c
-    - func_801DB3E4
-    - '@source: src/bof3/battle/func_801DB3E4.c'
+    - enemyBattlerMeetsThresholds
+    - '@source: src/bof3/battle/enemyBattlerMeetsThresholds.c'
     - '@behavior: reports whether one enemy battler''s `0xa8` value is large enough for the current average/max threshold pair.'
   - - 43060
     - c
-    - func_801DB434
-    - '@source: src/bof3/battle/func_801DB434.c'
+    - findThresholdRank
+    - '@source: src/bof3/battle/findThresholdRank.c'
     - '@behavior: scans one six-entry threshold row and returns the first index whose value exceeds the input byte, or `6` if none match.'
   - - 43156
     - asm
@@ -253,7 +253,7 @@ segments:
     - func_801DCD50
   - - 49912
     - asm
-    - func_801DCEF8
+    - initDeferredBattlerCountdown
   - - 50128
     - asm
     - func_801DCFD0
@@ -271,7 +271,8 @@ segments:
     - func_801DD29C
   - - 51024
     - asm
-    - func_801DD350
+    - transformFirstPointPairByMode
+    - '@source: src/bof3/battle/transformFirstPointPairByMode.c'
   - - 51148
     - c
     - func_801DD3CC
@@ -302,10 +303,12 @@ segments:
     - func_801DD800
   - - 52312
     - asm
-    - func_801DD858
+    - submitCurrentWorkEffectVariant
+    - '@source: src/bof3/battle/submitCurrentWorkEffectVariant.c'
   - - 52396
     - c
-    - func_801DD8AC
+    - copyCurrentBattlerVisibleStateToTemplate
+    - '@source: src/bof3/battle/copyCurrentBattlerVisibleStateToTemplate.c'
   - - 52600
     - asm
     - func_801DD978
@@ -314,13 +317,14 @@ segments:
     - submitPositionalEffectBit80
   - - 52976
     - asm
-    - func_801DDAF0
+    - copyCurrentBattlerToQueuedSlot
   - - 53116
     - asm
-    - func_801DDB7C
+    - queueActiveBattlerSnapshots
   - - 53428
     - asm
-    - func_801DDCB4
+    - shouldTriggerBattlerCountdownRetry
+    - '@source: src/bof3/battle/shouldTriggerBattlerCountdownRetry.c'
   - - 53884
     - asm
     - advanceCounterStorePacked
@@ -1056,7 +1060,7 @@ segments:
     - c
     - advanceFlagRecordCounter
     - '@source: src/bof3/battle/advanceFlagRecordCounter.c'
-    - '@behavior: Sets the selected local record flag and advances battle work state.'
+    - '@behavior: Sets selected-record flag 0x2000, sets its local-work state byte +0x48 to 2, and increments battle-work byte 1.'
   - - 93424
     - c
     - countdownOrFlag40Advance2

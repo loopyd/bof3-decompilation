@@ -9,7 +9,7 @@ typedef struct World00Area028Work {
   u8  unk_00[4];
   s16 field_04;
   s16 field_06;
-  s16 field_08;
+  s16 scale;
   s16 unk_0a;
   s16 field_0c;
   s16 field_0e;

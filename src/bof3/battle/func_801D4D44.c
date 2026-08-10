@@ -20,7 +20,7 @@ void func_801D4D44(void) {
   index = 0u;
   local_work = (u8*)D_80145E90;
   do {
-    if (func_801D64C4(index) == 0u) {
+    if (isBattlerBlockedOrUnavailable(index) == 0u) {
       if (((D_80145E90[index].unk_128 & 1u) != 0u) &&
           (D_80145E90[index].unk_136 < 6u)) {
         u8 next;
@@ -49,7 +49,7 @@ void func_801D4D44(void) {
   index = 3u;
   enemy_work = (u8*)D_801EB630;
   do {
-    if (func_801D64C4(index) == 0u) {
+    if (isBattlerBlockedOrUnavailable(index) == 0u) {
       u32 enemy_index;
 
       enemy_index = index - 3u;

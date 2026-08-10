@@ -4,7 +4,7 @@
 #include "base/types.h"
 #include "memory/access.h"
 
-#define g_PrimCursor PSX_REF(u8*, 0x8014598Cu)
+extern u8* g_PrimCursor; /* @source 0x8014598C @kind bss */
 
 #define g_UiCharBuffer PSX_PTR(volatile u8, 0x80145AD4u)
 

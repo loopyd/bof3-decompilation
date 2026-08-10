@@ -14,20 +14,20 @@ void drawPromptPanels(u8 selected, u8 alpha) {
   s32 pulse_counter;
 
   marker_x = GetGraphType() == 1 ? 143 : (GetGraphType() == 2 ? 143 : 47);
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
-  func_8014E5A0(1, 12);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, marker_x, 0);
+  appendRenderPrim(1, 12);
   primitive = drawGlyph(262, 130, 1, 1, selected);
   setGlyphAlpha(primitive, alpha);
 
   marker_x = GetGraphType() == 1 ? 685 : (GetGraphType() == 2 ? 685 : 189);
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
-  func_8014E5A0(2, 12);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, marker_x, 0);
+  appendRenderPrim(2, 12);
   primitive = drawGlyph(12, 200, 8, 2, selected);
   setGlyphAlpha(primitive, alpha);
 
   marker_x = GetGraphType() == 1 ? 685 : (GetGraphType() == 2 ? 685 : 189);
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
-  func_8014E5A0(2, 12);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, marker_x, 0);
+  appendRenderPrim(2, 12);
   primitive = drawGlyph(12, 212, 19, 2, selected);
   setGlyphAlpha(primitive, alpha);
   primitive = drawGlyph(172, 212, 9, 2, selected);

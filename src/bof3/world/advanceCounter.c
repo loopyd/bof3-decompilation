@@ -7,5 +7,5 @@
  * @match 100.00
  * @residual none; live audit is instruction- and byte-exact.
  */
-COUNTER_ADVANCE(advanceCounter, counter,
+COUNTER_ADVANCE(advanceCounter, selectionCounter,
                 D_80149333)

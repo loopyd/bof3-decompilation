@@ -1,3 +1,3 @@
-func_800F500C = 0x800F500C;
+dispatchArea030CompanionHandler = 0x800F500C;
 D_800F71F0 = 0x800F71F0;
 D_800F724C = 0x800F724C;

@@ -8,5 +8,5 @@
  */
 
 void dispatchPanelTaskTable6e08(void) {
-  D_800B6E08[D_80148648->unk_00[2]]();
+  battlePanelOuterStateHandlerTable[D_80148648->unk_00[2]]();
 }

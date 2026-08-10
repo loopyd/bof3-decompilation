@@ -14,8 +14,8 @@ output: plan.md
 defaultReads: context.md
 ---
 
-Load the repository context once with `python3 .pi/skills/bof3-re/scripts/agent-context.py planner` before planning.
-
-Create a small, ordered, evidence-backed plan from request + context handoff. Name exact files, acceptance checks, dependencies, risks, ambiguities. Do not edit source.
-
-Write `plan.md` with goal, numbered tasks, files, validation, dependencies, and risks. Recover memory/session/qmd context first. Bound native shell output when it is large. Escalate unresolved decisions; no routine handoffs.
+1. Run once before planning: `python3 .pi/skills/bof3-re/scripts/agent-context.py planner`.
+2. Small, ordered, evidence-backed plan from request + context handoff. Exact files, acceptance checks, dependencies, risks, ambiguities. No source edits.
+3. Recover memory/session/qmd context first.
+4. Write `plan.md`: goal, numbered tasks, files, validation, dependencies, risks.
+5. Bound large native shell output. Escalate unresolved decisions; no routine handoffs.

@@ -1,7 +1,7 @@
 #include "bof3/context.h"
 #include "bof3/core/slus_internal.h"
 
-extern TILE* D_8014598C;
+extern TILE* g_PrimCursor;
 
 /* @behavior draws a full-screen 320x240 tile primitive whose gray shade is
  * the incoming fade value shifted down, then advances the fade value by the
@@ -16,9 +16,9 @@ u8 drawFadeTile(s16* value, s32 arg, u8 arg2, u8 arg3, u8 arg4) {
   u16   next;
   u16   shade;
 
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, GetTPage(1, arg4, 320, 0), NULL);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, GetTPage(1, arg4, 320, 0), NULL);
   appendRenderPrim(arg3, 0xC);
-  tile = D_8014598C;
+  tile = g_PrimCursor;
   SetTile(tile);
   shade = ((u16)*value) >> 7;
   tile->r0 = tile->g0 = tile->b0 = shade;

@@ -46,8 +46,8 @@ segments:
     - func_801F304C
   - - 1312
     - c
-    - func_801F3120
-    - '@source: src/bof3/world/func_801F3120.c'
+    - dispatchScratchMode2
+    - '@source: src/bof3/world/dispatchScratchMode2.c'
     - '@behavior: Dispatches scratch mode byte 2 through the local handler table.'
   - - 1380
     - asm

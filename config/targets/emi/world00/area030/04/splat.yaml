@@ -290,8 +290,8 @@ segments:
     - func_801DAFBC
   - - 42060
     - c
-    - func_801DB04C
-    - '@source: src/bof3/world/func_801DB04C.c'
+    - selectRecordValueAndSlot
+    - '@source: src/bof3/world/selectRecordValueAndSlot.c'
     - '@behavior: Selects a signed record value and records which slot was used.'
   - - 42156
     - asm

@@ -1,14 +1,10 @@
 # Rizin playbook for PS1 binaries
 
-> In the BOF3 repository, prefer the wired `bin/rz-project` wrapper:
-> `bin/rz-project analyze TARGET`, `bin/rz-project status TARGET`,
-> `bin/rz-project open TARGET`. The generic `rizin` invocations below are the
-> skill-local fallback for work outside the repo's `out/reverse/<target>/`
-> workspace.
+> In this repo prefer the wired `bin/rz-project` wrapper: `bin/rz-project analyze TARGET`, `bin/rz-project status TARGET`, `bin/rz-project open TARGET` (writes `out/reverse/<target>/`). The generic `rizin` invocations below are the skill-local fallback outside that workspace.
 
 ## Canonical raw mapping
 
-Extract a PS-X EXE payload or identify a raw overlay base, then open:
+Extract a PS-X EXE payload or identify a raw overlay base, then:
 
 ```bash
 rizin -a mips -b 32 \
@@ -18,23 +14,11 @@ rizin -a mips -b 32 \
   payload.bin
 ```
 
-Use `-m` to map a raw file at the proven runtime address. Confirm the installed Rizin CLI with `rizin -h`; option behavior can evolve.
+`-m` maps a raw file at the proven runtime address. Confirm installed CLI (`rizin -h`); option behavior evolves.
 
 ## Staged analysis
 
-Recommended progression:
-
-```text
-aa      entrypoints/symbol roots
-aar     data references
-aaf     call targets
-aac     calls from focused functions
-aad     pointers-to-pointers references
-```
-
-Use `aaa` only after checking ranges and code/data boundaries. The Rizin handbook explicitly warns fully automated analysis can produce nonsensical results and exposes individual phases for control.
-
-Useful configuration:
+Order: `aa` (roots) → `aar` (data refs) → `aaf` (call targets) → `aac` (calls from focus) → `aad` (ptr-to-ptr). Use `aaa` only after checking ranges/boundaries — fully automated analysis can be nonsensical.
 
 ```text
 e analysis.hasnext=false
@@ -45,168 +29,93 @@ e analysis.refstr=true
 e analysis.strings=true
 ```
 
-For raw mixed files, set analysis ranges where possible. Inspect `e analysis.in=??` on the installed version.
+Raw mixed files: set analysis ranges where possible; inspect `e analysis.in=??`.
 
-## Navigation and display
+## Navigation
 
-```text
-s <addr>               seek
-pdf @ <func>            disassemble function
-pd 20 @ <addr>          20 instructions
-pD 80 @ <addr>          80 bytes interpreted as disassembly
-px 64 @ <addr>          64-byte hex dump
-iz / izz / izj / izzj   strings; use `izzj` JSON for raw images
-```
-
-`pd` counts instructions; `pD` counts bytes.
+| Cmd | Meaning |
+|---|---|
+| `s <addr>` | seek |
+| `pdf @ <func>` | function disassembly |
+| `pd 20 @ <addr>` | 20 instructions |
+| `pD 80 @ <addr>` | 80 bytes as disassembly |
+| `px 64 @ <addr>` | 64-byte hex dump |
+| `iz / izz / izj / izzj` | strings; `izzj` JSON for raw images |
 
 ## Functions
 
-```text
-af @ <addr>             analyze function
-afu <end> @ <start>     resize/reanalyze through end
-af+ <name> ...          handcraft when needed
-afb @ <addr>            list basic blocks
-afi / afij              function information
-afn <name> @ <addr>     rename function
-afs                     show/edit signature (check `afs?`)
-```
+| Cmd | Meaning |
+|---|---|
+| `af @ <addr>` | analyze function |
+| `afu <end> @ <start>` | resize/reanalyze through end |
+| `af+ <name> ...` | handcraft when needed |
+| `afb @ <addr>` | list basic blocks |
+| `afi / afij` | function information |
+| `afn <name> @ <addr>` | rename function |
+| `afs` | show/edit signature (`afs?`) |
 
-Do not use a plausible prologue alone as proof. Direct/runtime edges are stronger.
+Plausible prologue alone ≠ proof; direct/runtime edges are stronger.
 
-## Calls and xrefs
+## Calls / xrefs
 
-```text
-axt @ <addr>            xrefs to address
-axtj @ <addr>           JSON xrefs to
-axf @ <addr>            xrefs from address
-axfj @ <addr>           JSON xrefs from
-axg @ <addr>            graph paths reaching target
-axl / axlj              all xrefs
-axC <target> @ <from>   add call xref
-axc <target> @ <from>   add generic code xref
-axd <target> @ <from>   add data xref
-axs <target> @ <from>   add string xref
-```
+| Cmd | Meaning |
+|---|---|
+| `axt / axtj @ <addr>` | xrefs to |
+| `axf / axfj @ <addr>` | xrefs from |
+| `axg @ <addr>` | graph paths reaching target |
+| `axl / axlj` | all xrefs |
+| `axC <target> @ <from>` | add call xref |
+| `axc / axd / axs <target> @ <from>` | add code/data/string xref |
 
 Add manual xrefs only after recording how the target was derived.
 
-## Variables and arguments
+## Variables / arguments
 
-```text
-afvl @ <func>           list function variables/arguments
-afva @ <func>           analyze arguments/locals
-afv= @ <func>           show variable accesses
-```
+`afvl` list · `afva` analyze · `afv=` accesses. Check `afv?`, `afc?`, `afs?` before scripted mutations. Argument recovery is a caller/callee/runtime exercise; command output is one source.
 
-Use installed help (`afv?`, `afc?`, `afs?`) before scripted mutations. Argument recovery is a caller/callee/runtime exercise; the command output is only one source.
+## Hints (control flow wrong)
 
-## Analysis hints
+| Cmd | Meaning |
+|---|---|
+| `ahc <target> @ <addr>` | override jump/call target |
+| `ahd <opcode> @ <addr>` | override displayed opcode |
+| `ahs <size> @ <addr>` | override opcode size |
+| `ahl` | list hints |
 
-When control flow is wrong:
+Prefer hints over global analysis when one instruction/table is the issue.
 
-```text
-ahc <target> @ <addr>    override jump/call target
-ahd <opcode> @ <addr>    override displayed opcode
-ahs <size> @ <addr>      override opcode size
-ahl                      list hints
-```
-
-Hints are preferable to globally increasing analysis when one instruction/table is the actual issue.
-
-## GP and jump tables
+## GP / jump tables
 
 ```text
 e analysis.gp=<value>
 e analysis.gpfixed=true|false
 ```
 
-Use cautiously. The Rizin handbook notes MIPS GP can change by function and these controls are experimental.
+Experimental per the official handbook; GP may differ per function. Manual reconstruction remains necessary for overlay-relative, relocated, compressed, or script dispatch tables.
 
-Jump-table support is influenced by:
+## Flags / comments / namespaces
 
-```text
-e analysis.jmp.tbl=true
-e analysis.jmp.indir=true
-e analysis.datarefs=true
-```
-
-Manual reconstruction remains necessary for overlay-relative, relocated, compressed, or script dispatch tables.
-
-## Flags, comments, and namespaces
-
-```text
-f name @ <addr>         create flag
-fr old new              rename flag
-fs symbols              select/create flagspace
-fC name comment         flag comment
-```
-
-Use namespaces such as:
-
-```text
-main.*
-ovl.<id>.*
-psyq.*
-bios.*
-data.*
-trace.*
-```
-
-Do not erase original symbol spelling. Add normalized aliases.
+`f name @ <addr>` · `fr old new` · `fs <space>` · `fC name comment`. Namespaces: `main.*`, `ovl.<id>.*`, `psyq.*`, `bios.*`, `data.*`, `trace.*`. Never erase original symbol spelling; add normalized aliases.
 
 ## Types
 
-Core type-oriented commands include:
+`td <declaration>` define · `to <header>` load · `ts` structs · `tp <type> @ <addr>` print as type. Consult `t?`, `afc?`. Apply types after the offset ledger is coherent; verify propagation didn't hide contradictory machine-code behavior.
 
-```text
-td <declaration>        define C type
-to <header>             load C header
-ts                      list/show structs
-tp <type> @ <addr>      print memory as type
-```
+## Decompiler (rz-ghidra)
 
-Consult `t?`, `afc?`, and variable/type help for the installed release. Apply types after the offset ledger is coherent, then verify that type propagation did not hide contradictory machine-code behavior.
-
-## Decompiler
-
-With compatible rz-ghidra:
-
-```text
-pdg                     decompile current function
-pdgo                    decompile side-by-side with offsets
-pdgj                    JSON decompiler output
-pdgx                    XML output
-pdg*                    return decompilation as Rizin comments
-pdgs                    list loaded Sleigh languages
-```
-
-Pin rz-ghidra to a tag compatible with the installed Rizin release. Compare `pdg` against `pdf` and runtime observations.
+`pdg` decompile · `pdgo` side-by-side with offsets · `pdgj` JSON · `pdgx` XML · `pdg*` comments · `pdgs` languages. Pin rz-ghidra to a tag compatible with the installed Rizin release. Compare `pdg` vs `pdf` + runtime.
 
 ## Signatures
 
-Rizin's FLIRT workflows use the `F` command family and `rz-sign`. Typical tasks are creating patterns/signatures from symbolized libraries, loading a signature database, and applying matches. Check `F?`/`rz-sign -h` because paths and exact subcommands can change.
+FLIRT workflows: `F` command family + `rz-sign` (check `F?`/`rz-sign -h`; paths/subcommands evolve). Create patterns from symbolized libraries, load, apply; record false positives and functions too short to identify safely.
 
-## JSON and automation
+## JSON / automation
 
-Prefer JSON outputs for durable tooling:
-
-```text
-ij       core/binary information
-aflj     functions
-axlj     xrefs
-izzj     raw strings
-afij     current/function info
-axtj     xrefs to
-axfj     xrefs from
-pdgj     decompiler JSON
-```
-
-The bundled scripts use independent Rizin invocations to reduce interactive-state ambiguity. For high-volume work, use `rzpipe` and retain command logs plus raw JSON.
+Prefer JSON for durable tooling: `ij`, `aflj`, `axlj`, `izzj`, `afij`, `axtj`, `axfj`, `pdgj`. Bundled scripts use independent Rizin invocations to reduce interactive-state ambiguity. High-volume work: `rzpipe` + command logs + raw JSON.
 
 ## Function artifact minimum
 
-A function directory should contain:
+Per function directory:
 
 ```text
 metadata.json
@@ -220,4 +129,4 @@ variables.txt
 notes.md
 ```
 
-Regenerate artifacts after boundary, symbol, type, or xref changes and diff the directories.
+Regenerate artifacts after boundary, symbol, type, or xref changes; diff the directories.

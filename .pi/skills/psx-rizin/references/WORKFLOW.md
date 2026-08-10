@@ -2,250 +2,73 @@
 
 ## Phase 0 — Define the question
 
-Start with a testable target, for example:
+Testable target, e.g.: identify PsyQ calls everywhere; recover a function + all callers; explain a system + data structures; map overlay manager + load destinations; produce matching C; compare revisions/regional builds. Record scope, deliverables, proof. "Understand engine" → decompose into bounded hypotheses + replay scenarios.
 
-- identify every PsyQ call in all executables and overlays
-- recover a function at a runtime address and all callers
-- explain a gameplay system and its data structures
-- map an overlay manager and every load destination
-- produce matching C for a function or module
-- compare revisions or regional builds
+## Phase 1 — Provenance / immutable inputs
 
-Record scope, expected deliverables, and what constitutes proof. A task such as “understand the engine” must be decomposed into bounded hypotheses and replay scenarios.
+1. Case ID.
+2. Hash disc tracks, executables, overlays, BIOS, symbols, replays, sibling revisions.
+3. Record extraction tools/commands.
+4. Keep originals read-only.
+5. In this repo, generated files live in `out/`: snapshots `out/reverse/<target>/` (`bin/rz-project`), index `out/index/`, matching `out/matching/`, `out/permuter/`, `out/asm-diff/`. Outside: `.agent-work/psx-rizin/<case-id>/`.
 
-## Phase 1 — Provenance and immutable inputs
+Manifest fields: `templates/case-manifest.yaml`.
 
-1. Create a case ID.
-2. Hash disc tracks, executable files, overlays, BIOS, symbols, replay files, and any sibling revision.
-3. Record extraction tools and commands.
-4. Keep original inputs read-only.
-5. In the BOF3 repository, store generated files under the repo's disposable
-   `out/` tree: Rizin snapshots in `out/reverse/<target>/` (via `bin/rz-project`),
-   the query cache in `out/index/`, and matching workspaces in `out/matching/`,
-   `out/permuter/`, and `out/asm-diff/`. Outside this repo, use
-   `.agent-work/psx-rizin/<case-id>/` if present.
+## Phase 2 — Disc / filesystem inventory
 
-Recommended manifest fields are in `templates/case-manifest.yaml`.
+Parse `SYSTEM.CNF` → boot path. Inventory all ISO entries + raw track ranges; don't skip `.BIN`/`.DAT`/extensionless. Per candidate: magic/entropy, PS-X EXE magic, MIPS call/jump encodings, RAM-looking words, strings/source paths/assertions, alignment/padding, loader read sizes + CD sector requests, raw/compressed/encrypted/relocated/interpreted. Raw MIPS scanning = triage only, not proof of code.
 
-## Phase 2 — Disc and filesystem inventory
+## Phase 3 — Address model
 
-Locate and parse `SYSTEM.CNF` to identify the boot path. Inventory all ISO entries and raw track ranges. Do not ignore files with generic extensions such as `.BIN`, `.DAT`, or extensionless names.
-
-For every candidate executable/module:
-
-- inspect magic and entropy
-- search for PS-X EXE magic
-- search for MIPS call/jump encodings and RAM-looking words
-- search for strings/source paths/assertions
-- identify alignment/padding patterns
-- compare against loader read sizes and CD sector requests
-- record whether data is raw, compressed, encrypted, relocated, or interpreted
-
-Use raw MIPS scanning only as triage. Its candidates are not proof of executable code.
-
-## Phase 3 — Establish the address model
-
-Create an address-space table before naming functions:
+Address-space table before naming:
 
 | identity | source offset | runtime range | alias range | lifetime | evidence |
-|---|---:|---:|---:|---|---|
+|---|---:|---:|---:|---:|---|
 | main payload | file + `0x800` | header text address | KSEG aliases | process | PS-X EXE header |
 | overlay A | raw + `0` | loader destination | KSEG aliases | level 1 | write breakpoint |
 
-For each address seen in notes, state one of:
-
-- file offset
-- disc sector/LBA and intra-sector offset
-- executable payload offset
-- runtime virtual address
-- physical RAM offset
-- overlay-relative offset
-
-Use a PS-X EXE parser for header conversions. Never apply the 0x800-header formula to an arbitrary overlay.
+State each noted address as one of: file offset · sector/LBA + intra-sector · executable payload offset · runtime VA · physical RAM · overlay-relative. Use a PS-X EXE parser for header conversions. Never apply the 0x800 formula to an arbitrary overlay.
 
 ## Phase 4 — Static baseline
 
-Extract the PS-X EXE payload and map it at the text load address. Run conservative analysis. Then review:
+Extract EXE payload, map at text load address, conservative analysis. Review: entry/startup, GP init, stack init, BIOS calls/vectors, `.ctors`, library startup/heap, main loop, callback registration, CD/file loader, overlay manager, controller input, VBlank, GPU ordering tables, sound/CD-XA paths. Export baseline JSON before manual edits.
 
-- entry point and startup sequence
-- GP initialization
-- stack initialization
-- BIOS calls and vectors
-- `.ctors`-like initialization patterns
-- library startup and heap setup
-- main loop candidates
-- callback registration
-- CD/file loader
-- overlay manager
-- controller/input read path
-- frame/VBlank synchronization
-- GPU ordering-table construction
-- sound/CD-XA paths
+## Phase 5 — Function boundaries
 
-Export baseline JSON before extensive manual edits. This gives a diffable starting point.
+Root priority: entry point → direct `jal` targets → callback pointers → jump-table targets → runtime-executed addresses → symbol/signature matches → plausible prologues (lowest). Validate: incoming edges, outgoing direct/indirect edges, delay slots, tail calls, shared epilogues, literal/data pools, merged adjacent functions, non-returning functions. Use function-local artifacts, not screenshots. Store commands, disassembly, xrefs, decompiler text, trace observations.
 
-## Phase 5 — Function-boundary recovery
+## Phase 6 — Calls / args / returns / globals
 
-Prioritize roots with strong evidence:
+Per call: define a0–a3 → stack arg stores → jal/jalr delay slot → target's first arg reads → return-value consumers (v0/v1) → all call sites → runtime values across representative replays. Separate facts: "a0 read at offset 0x18" vs "[INFERRED] a0 is a Player pointer". Globals: GP can vary per module/function; don't force one value over all overlays.
 
-1. executable entry point
-2. direct `jal` targets
-3. callback pointers written to known APIs/data
-4. jump-table targets
-5. runtime-executed addresses
-6. symbol/signature matches
-7. plausible prologues only as lower-confidence candidates
+## Phase 7 — Structures / offset ledger
 
-For each function, validate:
+Accumulate accesses before defining a type. Grouping key: `(base-role, allocation/lifetime, offset, width, signedness)`. Correlate static offsets with runtime watchpoints + replay transitions. A field name must explain reads/writes across ALL known users. Arrays ≠ structures; MIPS mul/shift patterns expose element stride; check `index * stride + field`.
 
-- all incoming control-flow edges
-- all outgoing direct/indirect edges
-- delay slots
-- tail calls
-- shared epilogues
-- literal/data pools mistakenly included
-- adjacent functions merged by analysis
-- non-returning functions
+## Phase 8 — Indirect control flow / xrefs
 
-Use function-local artifacts rather than screenshots. Store commands, disassembly, xrefs, decompiler text, and trace observations.
+Per `jalr`/register jump: backward-slice target reg → table base/index → element width → absolute/relative/relocated → bounds/default → enumerate targets → validate via breakpoints/replay → add reviewed manual xrefs. Patterns: state dispatch, vtables, callback arrays, BIOS/lib callbacks, overlay entry tables, switch tables, script opcode dispatch. Require contextual evidence; never xref just because a word falls in RAM.
 
-## Phase 6 — Calls, arguments, returns, and globals
+## Phase 9 — Symbols / library ID
 
-At each call:
-
-1. locate definitions of `a0`–`a3`
-2. inspect stack argument stores
-3. inspect the `jal`/`jalr` delay slot
-4. inspect the target’s first reads of arguments
-5. inspect return-value consumers (`v0`/`v1`)
-6. compare all call sites
-7. capture runtime values across representative replays
-
-Separate facts:
-
-- “a0 is read at offset 0x18”
-- “a0 points to a mutable object”
-- “[INFERRED] a0 is a Player pointer”
-
-Do the same for globals and GP-relative data. GP can vary by module or function; do not force one value over all overlays.
-
-## Phase 7 — Structures and offset ledger
-
-Accumulate accesses before defining a type. A useful grouping key is:
-
-```text
-(base-role, allocation/lifetime, offset, width, signedness)
-```
-
-Correlate static offsets with runtime watchpoints and replay state transitions. A field name should explain reads and writes across all known users, not just one function.
-
-Record arrays separately from structures. MIPS multiplication/shift patterns often expose element stride. Check whether an apparent field offset is actually `index * stride + field`.
-
-## Phase 8 — Indirect control flow and xrefs
-
-For every `jalr` or register jump:
-
-- backward-slice the target register
-- identify table base and index
-- determine element width and whether values are absolute, relative, or relocated
-- determine bounds/default path
-- enumerate targets
-- validate targets with execution breakpoints or replay coverage
-- add reviewed manual xrefs
-
-Common patterns include:
-
-- state-machine dispatch
-- virtual/object method tables
-- callback arrays
-- BIOS/lib callbacks
-- overlay entrypoint tables
-- switch jump tables
-- script opcode dispatch
-
-Do not add xrefs merely because a word falls in RAM. Require contextual evidence.
-
-## Phase 9 — Symbols and library identification
-
-Search all symbol-bearing sources before semantic renaming. Import exact symbols first, then signatures, then cross-version matches, then heuristics. Keep a provenance field for every name.
-
-For PsyQ identification, combine:
-
-- exact library/OBJ signatures
-- call graph shape
-- constants and MMIO/BIOS usage
-- strings/assertions
-- parameter behavior
-- sibling-build matches
-
-Signature collisions are possible, especially for short wrapper functions. Mark ambiguous hits.
+Search all symbol-bearing sources before semantic renaming. Import order: exact symbols → signatures → cross-version matches → heuristics. Provenance per name. PsyQ ID: exact signatures + call graph shape + constants + MMIO/BIOS usage + strings/assertions + parameter behavior + sibling-build matches. Short wrappers collide — mark ambiguous hits.
 
 ## Phase 10 — Overlay lifecycle
 
-Find the loader and prove:
-
-- source on disc
-- read/decompression size
-- destination
-- cache flush behavior if present
-- relocation/fixups
-- entrypoint registration
-- unload/replacement event
-
-Create an overlay timeline per replay. Static analysis of the raw file and runtime dump should be compared byte-for-byte; differences often reveal decompression, relocation, or mutable data appended to code.
+Find the loader and prove: source on disc, read/decompression size, destination, cache flush, relocation/fixups, entrypoint registration, unload/replace event. Overlay timeline per replay. Compare raw file vs runtime dump byte-for-byte; differences reveal decompression, relocation, or mutable data appended to code.
 
 ## Phase 11 — Replay-driven dynamic analysis
 
-Create minimal deterministic scenarios that isolate behavior. Use all discovered built-in replays plus recorded scenarios.
-
-Instrumentation targets:
-
-- function entry/return
-- indirect call target
-- overlay destination writes
-- object allocation/initialization
-- field read/write
-- file/CD reads
-- input state
-- frame counter/VBlank
-- DMA/GPU/SPU registers where relevant
-
-Log frame number, PC, caller/RA, `a0`–`a3`, stack words, `v0`/`v1` on return, and selected memory snapshots. Avoid unlimited full CPU traces until a narrow frame/function window is known.
+Minimal deterministic scenarios from built-in replays + recorded scenarios. Instrument: function entry/return, indirect call targets, overlay destination writes, alloc/init, field r/w, file/CD reads, input state, frame/VBlank, DMA/GPU/SPU. Log frame, PC, caller/RA, a0–a3, stack words, v0/v1 on return, memory snapshots. No unlimited full CPU traces until a narrow window is known.
 
 ## Phase 12 — Decompiler reconciliation
 
-Compare `pdf`, `pdgo`, and runtime facts. Rewrite misleading constructs manually when necessary. Typical MIPS decompiler hazards:
-
-- delay-slot assignment moved across calls/branches
-- signed versus unsigned comparisons
-- pointer aliasing
-- GP-relative globals
-- switch reconstruction
-- shared tail/epilogue blocks
-- 64-bit arithmetic formed from register pairs
-- GTE macro semantics
-
-The decompiler is allowed to be wrong. The report must not hide disagreement.
+Compare `pdf`/`pdgo` + runtime facts; rewrite misleading constructs. Hazards: delay-slot assignment moved across calls/branches, signed vs unsigned comparisons, pointer aliasing, GP-relative globals, switch reconstruction, shared tail/epilogue blocks, 64-bit register pairs, GTE macro semantics. Decompiler may be wrong; report must not hide disagreement.
 
 ## Phase 13 — Matching decompilation
 
-Only begin byte matching after semantic recovery is stable enough. Establish compiler/assembler/linker versions, section ordering, symbol map, and binary split. Match one function at a time and record compiler flags and score.
+Begin only after semantic recovery is stable. Pin compiler/assembler/linker versions, section ordering, symbol map, binary split. Match one function at a time; record flags + score. Asm diffs are evidence of compiler behavior, not a substitute for understanding. Re-run runtime scenarios after replacing a function where feasible. See DECOMP_BUILD_DIFF.md.
 
-Use assembly diffs as evidence of compiler behavior, not as a substitute for understanding. Re-run runtime scenarios after replacing a function in a mod/test build where feasible.
+## Phase 14 — Audit / handoff
 
-## Phase 14 — Audit and handoff
-
-Produce:
-
-- `inventory.md`
-- `address-map.md`
-- `functions.csv`
-- `offset-ledger.csv`
-- `symbols.csv`
-- `overlays.md`
-- `replay-coverage.csv`
-- `open-questions.md`
-- per-function artifact directories
-- reproducible commands/scripts
-
-A new analyst should be able to regenerate each conclusion from hashes, commands, and evidence without relying on private memory.
+Deliver: `inventory.md`, `address-map.md`, `functions.csv`, `offset-ledger.csv`, `symbols.csv`, `overlays.md`, `replay-coverage.csv`, `open-questions.md`, per-function artifact directories, reproducible commands/scripts. A new analyst must regenerate every conclusion from hashes/commands/evidence — no private memory.

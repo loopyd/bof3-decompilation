@@ -168,7 +168,7 @@ continuation and are not assigned a shared field name here.
 `+0x10` as a halfword and tests bit `0x400` in the second mode. These are
 runtime flag uses; their public names remain candidates. A readable target-local
 candidate now exists at `src/bof3/ui/func_801AF5B0.c`; it measures
-51.35% under canonical `-O2`, so the ability-gate names and exact function
+45.33% under canonical `-O2`, so the ability-gate names and exact function
 replacement remain unpromoted.
 
 These are consumer facts, not a claim that every byte has one global semantic

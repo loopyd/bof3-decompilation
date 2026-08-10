@@ -274,9 +274,14 @@ def test_companion_check_requires_boundary_map_abi_and_declaration(
         / "05"
         / "symbols.txt"
     ).write_text("func_800F500C = 0x800F500C;\n", encoding="utf-8")
-    (root / "src" / "emi" / "world00" / "area030" / "04").mkdir(parents=True)
-    (root / "src" / "emi" / "world00" / "area030" / "04" / "internal.h").write_text(
-        "void func_800F500C(void);\n", encoding="utf-8"
+    header = root / "include" / "bof3" / "world" / "area03004_internal.h"
+    header.parent.mkdir(parents=True)
+    header.write_text(
+        '#define FALSE_ABI "ignore; void func_800F500C(void); ignore" \\\n'
+        "  continued tokens\n"
+        "char marker = ';'; // void func_800F500C(void);\n"
+        "/* void func_800F500C(void); */\n",
+        encoding="utf-8",
     )
     path = (
         root
@@ -288,12 +293,28 @@ def test_companion_check_requires_boundary_map_abi_and_declaration(
         / "04"
         / "target.toml"
     )
+    manifest = path.read_text().replace(
+        "\n[[companion_overlays]]\n",
+        '\nheaders = ["include/bof3/world/area03004_internal.h"]\n'
+        "\n[[companion_overlays]]\n",
+    )
     path.write_text(
-        path.read_text()
+        manifest
         + "\n[companion_overlays.abi]\n"
         + "target_address = 0x800F500C\n"
         + 'prototype = "void func_800F500C(void)"\n'
         + 'evidence = "reviewed callers and callee assembly"\n',
+        encoding="utf-8",
+    )
+    commented = build_report(root, "emi/world00/area030/04@0x801E0C20")
+    assert commented["companions"][0]["consumer_declaration"]["status"] == "missing"
+
+    header.write_text(
+        "#ifndef AREA03004_INTERNAL_H\n"
+        "#define AREA03004_INTERNAL_H \\\n"
+        "  continued tokens\n"
+        "void\nfunc_800F500C( void );\n"
+        "#endif\n",
         encoding="utf-8",
     )
     ready = build_report(root, "emi/world00/area030/04@0x801E0C20")

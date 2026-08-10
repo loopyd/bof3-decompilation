@@ -1,7 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* @behavior when the byte at 0x80148573 is clear, writes 1, 0, 0 to
- * 0x801462E1..0x801462E3 and calls func_8009B20C.
+ * 0x801462E1..0x801462E3 and calls runPanelTasks16To19.
  * @source 0x800975D4
  * @status exact
  * @match 100.00
@@ -20,5 +20,5 @@ void NO_SIBLING_CALLS resetStateWhenUnlocked(void) {
   battle_selection_state[0x62e1u] = 1u;
   battle_selection_state[0x62e2u] = 0u;
   battle_selection_state[0x62e3u] = 0u;
-  func_8009B20C();
+  runPanelTasks16To19();
 }

@@ -25,11 +25,9 @@ segments:
     - T_801F2C00
   - - 72
     - c
-    - func_801F2C48
-    - '@source: src/bof3/world/func_801F2C48_area02613.c'
-    - '@behavior: save workarea coordinates and advance mode'
-    - '@source: src/bof3/world/func_801F2C48.c'
-    - '@behavior: seeds the work table, then increments work byte one and clears'
+    - copyWorkareaFieldsAndAdvanceMode
+    - '@source: src/bof3/world/copyWorkareaFieldsAndAdvanceMode.c'
+    - '@behavior: copies three workarea fields and advances mode'
   - - 148
     - asm
     - func_801F2C94
@@ -38,8 +36,6 @@ segments:
     - resetWorkareaSelectMode2
     - '@source: src/bof3/world/resetWorkareaSelectMode2_801F2D1C.c'
     - '@behavior: mode-2 handler of the entry mode dispatch table (D_801F33EC):'
-    - '@source: src/bof3/world/resetWorkareaSelectMode2.c'
-    - '@behavior: mode-2 handler of the entry mode dispatch table (D_801F34A8):'
   - - 316
     - c
     - resetWorkareaSelectMode3

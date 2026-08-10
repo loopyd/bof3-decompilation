@@ -1,7 +1,7 @@
 #include "bof3/core/slus_internal.h"
 
 extern u8           D_80146480;
-extern u8           D_8014648A;
+extern u8           emiLoaderMode; /* @source 0x8014648A @kind bss */
 extern s8           D_8014648B;
 extern u16          D_80146490;
 extern u16          D_80146492;
@@ -29,5 +29,5 @@ void beginEmiLoaderTransfer(void) {
   D_80146492 = 3;
   D_80146480 = 0;
   state = D_8014648B;
-  D_8014648A = state == 1 ? 6 : 1;
+  emiLoaderMode = state == 1 ? 6 : 1;
 }

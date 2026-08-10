@@ -17,7 +17,7 @@ u8 func_801D54F8(void) {
   last_index = 0u;
   index = 0u;
   do {
-    if ((func_801D64C4(index) == 0u) &&
+    if ((isBattlerBlockedOrUnavailable(index) == 0u) &&
         ((D_80145E90[index].unk_80 & 0x0800u) != 0u) &&
         (D_80145E90[index].unk_137 == 5u)) {
       last_index = index;

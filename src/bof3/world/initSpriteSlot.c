@@ -15,5 +15,5 @@ void initSpriteSlot(void* arg0) {
   work->unk_00[0] = 1u;
   work->field_04 = (s16)((rand() & 0xFF) - 0x80);
   work->field_06 = (s16)((rand() & 0xFF) - 0x80);
-  work->field_08 = 0x280;
+  work->scale = 0x280;
 }

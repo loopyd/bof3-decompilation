@@ -3,7 +3,7 @@
 
 #include "base/types.h"
 
-/* Type-3 load_arg bitfield (graphics.md) */
+/* Type-3 load_arg bitfield (docs/specs/formats/graphics.md) */
 #define GFX_LOAD_ARG_BASE_X(arg)     (((u32)(arg) >> 24) & 0xFFu)
 #define GFX_LOAD_ARG_BASE_Y(arg)     (((u32)(arg) >> 16) & 0xFFu)
 #define GFX_LOAD_ARG_CHUNKS_ROW(arg) (((u32)(arg) >> 8) & 0x3Fu)

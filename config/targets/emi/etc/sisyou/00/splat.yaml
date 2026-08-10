@@ -169,8 +169,8 @@ segments:
     - func_801D3960
   - - 11724
     - c
-    - func_801D39CC
-    - '@source: src/bof3/ui/func_801D39CC.c'
+    - copySelectedRecordPrefixToWorkBuffer
+    - '@source: src/bof3/ui/copySelectedRecordPrefixToWorkBuffer.c'
     - '@behavior: Copies five bytes from the selected 164-byte main-RAM record into a shared work buffer, then clears its terminator.'
   - - 11812
     - asm

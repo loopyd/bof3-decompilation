@@ -7,5 +7,5 @@
  * @residual none; live audit is instruction- and byte-exact.
  */
 void dispatchSubstateTable44c8(void) {
-  D_800B44C8[D_801462E3]();
+  battleSelectionHandlerTable44C8[D_801462E3]();
 }

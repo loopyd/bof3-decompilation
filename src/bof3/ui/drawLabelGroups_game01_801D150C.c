@@ -14,8 +14,8 @@ void drawLabelGroups(s16 x, s16 y, u8 selected, u8 alpha) {
 
   if (selected != 0u) {
     marker_x = GetGraphType() == 1 ? 809 : (GetGraphType() == 2 ? 809 : 217);
-    SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
-    func_8014E5A0(2, 12);
+    SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, marker_x, 0);
+    appendRenderPrim(2, 12);
     primitive = drawGlyph(x, y, 15, 2, 1);
     setGlyphAlpha(primitive, alpha);
     primitive = drawGlyph((s16)(x + 224), y, 16, 2, 1);
@@ -23,8 +23,8 @@ void drawLabelGroups(s16 x, s16 y, u8 selected, u8 alpha) {
   }
 
   marker_x = GetGraphType() == 1 ? 681 : (GetGraphType() == 2 ? 681 : 185);
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
-  func_8014E5A0(2, 12);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, marker_x, 0);
+  appendRenderPrim(2, 12);
   primitive = drawGlyph(x, y, 4, 2, selected);
   setGlyphAlpha(primitive, alpha);
   primitive = drawGlyph((s16)(x + 224), y, 5, 2, selected);

@@ -111,9 +111,9 @@ void updateBanner(void) {
     flags = GetGraphType() == one   ? ((marker & 0x3ff) >> 6) | 0x200
             : GetGraphType() == 2 ? ((marker & 0x3ff) >> 6) | 0x200
                                   : ((marker & 0x3ff) >> 6) | 0x80;
-    SetDrawMode((DR_MODE*)D_8014598C, 0, 0, flags, 0);
+    SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, flags, 0);
 
-    func_8014E5A0(2, 12);
+    appendRenderPrim(2, 12);
     primitive = drawGlyph((s16)x, 24, (u8)(i + 11), 2, 0);
     primitive[4] = *alpha;
     primitive[5] = *alpha;

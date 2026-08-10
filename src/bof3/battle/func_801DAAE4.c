@@ -61,7 +61,7 @@ void func_801DAAE4(void) {
         if (BATTLE_LOCAL_BYTE_119(battle_work) == 5u) {
           score = 1;
         }
-        score = (s16)((score * BATTLE_PERCENT_TABLE_AF3C[func_801DB434(
+        score = (s16)((score * BATTLE_PERCENT_TABLE_AF3C[findThresholdRank(
                                    BATTLE_LOCAL_BYTE_7A(battle_work), 1u)]) /
                       100);
         entries[count].value = (s16)(score + BATTLE_LOCAL_HALF_98(battle_work));
@@ -83,7 +83,7 @@ void func_801DAAE4(void) {
         u32 rank;
         s8  random_bonus;
 
-        rank = func_801DB434(BATTLE_ENEMY_BYTE_88(battle_work), 0u);
+        rank = findThresholdRank(BATTLE_ENEMY_BYTE_88(battle_work), 0u);
         random_bonus =
             BATTLE_RANDOM_BONUS_TABLE_AF48[(rank * 0x10u) + (rand() & 0xfu)];
         entries[count].value =

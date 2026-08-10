@@ -526,16 +526,16 @@ segments:
     - '@source: src/bof3/ui/tickPhaseTimerB.c'
   - - 72208
     - c
-    - func_801E2610
-    - '@source: src/bof3/ui/func_801E2610.c'
+    - advanceUiSubstep
+    - '@source: src/bof3/ui/advanceUiSubstep.c'
   - - 72236
     - c
     - resetUiState
     - '@source: src/bof3/ui/resetUiState.c'
   - - 72272
     - c
-    - func_801E2650
-    - '@source: src/bof3/ui/func_801E2650.c'
+    - initializeShopUiState
+    - '@source: src/bof3/ui/initializeShopUiState.c'
   - - 72484
     - asm
     - func_801E2724

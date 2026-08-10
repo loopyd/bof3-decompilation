@@ -43,7 +43,7 @@ extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
 extern u8  D_801E238C[];  /* @source 0x801E238C @kind unknown */
 extern u8  D_801E2390[];  /* @source 0x801E2390 @kind unknown */
-extern u8* D_8014598C;    /* @source 0x8014598C @kind unknown */
+extern u8* g_PrimCursor;    /* @source 0x8014598C @kind unknown */
 extern s32 D_8014421C;     /* @source 0x8014421C @kind unknown */
 extern u8  D_801E31F8;     /* @source 0x801E31F8 @kind unknown */
 extern s8* D_801E320C;     /* @source 0x801E320C @kind unknown */
@@ -64,7 +64,7 @@ extern SpriteGeometry D_801E2424[]; /* @source 0x801E2424 @kind table */
 extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind bss */
 
 /* Scoped companion-call ABI for func_801E0C20; not a callback contract. */
-void func_800F500C(void);
+void dispatchArea030CompanionHandler(void); /* @source 0x800F500C */
 void func_8014D290(void);
 void func_8014D4E0(void);
 void func_8014DD3C(s32 arg0);
@@ -75,7 +75,7 @@ void func_801D18CC(s16 arg0, s16 arg1, u8 arg2);
 void submitTpageDrawMode(s32 arg0, s32 arg1);
 u8*  func_801E0DCC(s32 arg0, s32 arg1, s16 arg2, s16 arg3);
 s32  func_801D9534(s16 arg0, u16 arg1, s16 arg2, s16 arg3, s32 arg4);
-s32  func_80196070(void);
+void func_80196070(void);
 s16  func_8015477C(u16 arg0, u16 arg1);
 
 void func_801D11C0(void);

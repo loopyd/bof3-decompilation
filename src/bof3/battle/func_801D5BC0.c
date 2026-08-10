@@ -14,11 +14,11 @@ u8 func_801D5BC0(void) {
   count = 0u;
   index = 0u;
   do {
-    if (func_801D64C4(index) == 0u) {
+    if (isBattlerBlockedOrUnavailable(index) == 0u) {
       if ((D_80145E90[index].unk_80 & 0x80u) != 0u) {
         D_80145E90[index].unk_11e = 0u;
         D_80145E90[index].unk_11c = 0u;
-        func_801DCEF8(index);
+        initDeferredBattlerCountdown(index);
         count += 1u;
         D_80145E90[index].unk_01 = 6u;
         D_80145E90[index].unk_02 = 5u;
@@ -35,12 +35,12 @@ u8 func_801D5BC0(void) {
   do {
     u32 slot;
 
-    if (func_801D64C4(index) == 0u) {
+    if (isBattlerBlockedOrUnavailable(index) == 0u) {
       slot = index - 3u;
       if ((D_801EB630[slot].unk_82 & 0x80u) != 0u) {
         D_801EB630[slot].unk_fa = 0u;
         D_801EB630[slot].unk_f8 = 0u;
-        func_801DCEF8(index);
+        initDeferredBattlerCountdown(index);
         count += 1u;
         D_801EB630[slot].unk_01 = 6u;
         D_801EB630[slot].unk_02 = 5u;

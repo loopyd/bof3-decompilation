@@ -33,8 +33,8 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   s32       zero_v;
   s16       x0_h;
 
-  texture_window = (RECT*)D_8014598C;
-  D_8014598C = (u8*)(texture_window + 1);
+  texture_window = (RECT*)g_PrimCursor;
+  g_PrimCursor = (u8*)(texture_window + 1);
   texture_window->y = 0xf0;
   texture_window->x = 0;
   texture_window->w = 0x10;
@@ -48,10 +48,10 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
     GetGraphType();
   }
 
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 1, 0xf, texture_window);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 1, 0xf, texture_window);
   func_8014E5A0(1u, 0x0cu);
 
-  primitive = (POLY_FT4*)D_8014598C;
+  primitive = (POLY_FT4*)g_PrimCursor;
   SetPolyFT4(primitive);
   SetSemiTrans(primitive, 1);
   clut_x = ((s32)arg4 << 5) + 0x10;
@@ -96,7 +96,7 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   func_8014E5A0(1u, 0x28u);
   x = ((s32)(u16)x - 4) >> 1;
 
-  primitive = (POLY_FT4*)D_8014598C;
+  primitive = (POLY_FT4*)g_PrimCursor;
   odd_width = (arg2 - 3) & 1;
   SetPolyFT4(primitive);
   SetSemiTrans(primitive, 1);
@@ -130,7 +130,7 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->tpage = 0x0fu;
   func_8014E5A0(1u, 0x28u);
 
-  primitive = (POLY_FT4*)D_8014598C;
+  primitive = (POLY_FT4*)g_PrimCursor;
   SetPolyFT4(primitive);
   SetSemiTrans(primitive, 1);
   right_base = arg0 + x;
@@ -163,7 +163,7 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->tpage = tpage_val;
   func_8014E5A0(1u, 0x28u);
 
-  primitive = (POLY_FT4*)D_8014598C;
+  primitive = (POLY_FT4*)g_PrimCursor;
   SetPolyFT4(primitive);
   SetSemiTrans(primitive, 1);
   primitive->y2 = (s16)bottom_y;
@@ -200,8 +200,8 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->tpage = tpage_val;
   func_8014E5A0(1u, 0x28u);
 
-  texture_window = (RECT*)D_8014598C;
-  D_8014598C = (u8*)(texture_window + 1);
+  texture_window = (RECT*)g_PrimCursor;
+  g_PrimCursor = (u8*)(texture_window + 1);
   zero_v = 0;
   texture_window->x = 0;
   texture_window->y = zero_v;
@@ -212,7 +212,7 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
     GetGraphType();
   }
 
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 1, 0xf, texture_window);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 1, 0xf, texture_window);
   func_8014E5A0(1u, 0x0cu);
   func_801AEBA0((s16)left_x, (s16)(arg1 + two), (s16)(arg2 - 4),
                 (s16)(arg3 - 4), 0);

@@ -12,14 +12,11 @@ turnBudget: {"maxTurns":300,"graceTurns":10}
 defaultReads: docs/agents/plan-authoring.md
 ---
 
-Load the repository context once with `python3 .pi/skills/bof3-re/scripts/agent-context.py reviewer` before reviewing.
-
-Review the actual diff/files against the request, plan, tests, docs, and project rules. Verify acceptance, regressions, edge cases, and validation; report only evidence-backed findings with paths/lines. Do not modify source.
-
-Write `out/reviews/review.md`:
-- Correct: verified strengths
-- Fixed: only if explicitly authorized
-- Blocker: must fix
-- Note: risk/follow-up
-
-Bound native shell output when it is large. Review-only beats progress writing. Escalate blocked decisions with `contact_supervisor`; no routine handoffs.
+1. Run once before reviewing: `python3 .pi/skills/bof3-re/scripts/agent-context.py reviewer`.
+2. Review actual diff/files vs request, plan, tests, docs, project rules. Verify acceptance, regressions, edge cases, validation. Evidence-backed findings with paths/lines. No source edits.
+3. Write `out/reviews/review.md`:
+   - Correct: verified strengths
+   - Fixed: only if explicitly authorized
+   - Blocker: must fix
+   - Note: risk/follow-up
+4. Bound large native shell output. Review-only beats progress writing. Escalate blocked decisions via `contact_supervisor`; no routine handoffs.

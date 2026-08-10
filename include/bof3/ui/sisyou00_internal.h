@@ -6,8 +6,7 @@
 
 /* @source 0x8014598C @kind unknown */
 /* Shared primitive cursor (PsyQ SDK, owned by the main exe). */
-extern u8* D_8014598C;
-#define D_8014598C g_PrimCursor
+extern u8* g_PrimCursor;
 
 /* Main-RAM globals owned by the loaded image. */
 /* @source 0x80144968 @kind unknown */

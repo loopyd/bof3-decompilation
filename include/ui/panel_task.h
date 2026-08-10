@@ -94,7 +94,7 @@ typedef struct {
 #define PANEL_ICON_PRIM(func)                                                  \
   void func(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u16 arg4, u8 arg5) {       \
     IconPrim* icon;                                                            \
-    icon = (IconPrim*)D_8014598C;                                              \
+    icon = (IconPrim*)g_PrimCursor;                                              \
     SetSprt8((SPRT_8*)icon);                                                   \
     icon->unk_08 = arg0;                                                       \
     icon->unk_0A = arg1;                                                       \

@@ -12,8 +12,8 @@ void drawLabelGroup(s16 x, s16 y, u8 selected, u8 alpha) {
   s32 marker_x;
 
   marker_x = GetGraphType() == 1 ? 683 : (GetGraphType() == 2 ? 683 : 187);
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, marker_x, 0);
-  func_8014E5A0(2, 12);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, marker_x, 0);
+  appendRenderPrim(2, 12);
   primitive = drawGlyph(x, y, 2, 2, selected);
   setGlyphAlpha(primitive, alpha);
   primitive = drawGlyph((s16)(x + 240), (s16)(y + 112), 3, 2, selected);

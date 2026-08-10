@@ -245,7 +245,7 @@ segments:
     - func_8009B160
   - - 18956
     - c
-    - func_8009B20C
+    - runPanelTasks16To19
   - - 19060
     - c
     - dispatchSubstateTable44c8

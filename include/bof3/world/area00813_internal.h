@@ -45,8 +45,9 @@ extern u8           D_801F2C10[];
 /* @kind: table — per-mode handler pointers dispatched by
  * dispatchMode via the scratch state mode byte. */
 extern World00Area008Handler modeHandlerTable[];
-/* @source 0x801F46B0 @kind unknown */
-extern World00Area008Handler D_801F46B0[];
+/* @source 0x801F46B0
+ * @kind: table — 15 area-state mode handler pointers. */
+extern World00Area008Handler areaStateModeHandlerTable[];
 /* @source 0x801F46EC @kind unknown */
 extern World00Area008Handler D_801F46EC[];
 
@@ -54,7 +55,7 @@ extern World00Area008Handler D_801F46EC[];
  * symbol (not a fixed-address macro) so codegen emits the symbol-relative
  * `lui + lw reg, %lo(reg)` load the original binary uses. */
 /* @source 0x8014598C @kind unknown */
-extern u8* D_8014598C;
+extern u8* g_PrimCursor;
 /* @source 0x1F800044 */
 /* @kind: bss — scratchpad cell holding the current area state pointer. */
 extern World00Area008State* g_areaWork;
@@ -77,7 +78,6 @@ extern volatile u8          countdown;
 s32  GetGraphType(void);
 s32  func_8017E3F4(char* buffer, const char* format, ...);
 void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
-void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 
 void drawScratchStatus(void);

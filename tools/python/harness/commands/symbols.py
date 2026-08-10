@@ -26,6 +26,11 @@ from ..domain.claims import (
     manifest_source_paths,
     resolve_manifest_source_for_address,
 )
+from ..domain.naming_debt import (
+    collect_naming_debt,
+    load_naming_baseline,
+    naming_debt_regressions,
+)
 from ..domain.sources import (
     LiftMetadataError,
     SourceAddressCollision,
@@ -228,6 +233,11 @@ def run_check(args: argparse.Namespace) -> int:
                 f"untracked symbol: {path.relative_to(root)} has {name} = "
                 f"0x{symbol.address:08X} with no @source-tagged definition"
             )
+    if args.target is None:
+        debt = collect_naming_debt(root, manifests)
+        errors.extend(
+            naming_debt_regressions(debt, load_naming_baseline(root))
+        )
     if errors:
         raise ValueError("; ".join(errors))
     print("symbol maps: OK")

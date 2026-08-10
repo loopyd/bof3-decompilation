@@ -2,46 +2,18 @@
 
 ## Tool roles
 
-### PCSX-Redux
+| Tool | Role |
+|---|---|
+| PCSX-Redux | primary runtime evidence: exec/read/write breakpoints, GDB server, Lua scripting + memory/register access, GPU logger, deterministic narrow experiments |
+| BizHawk | input-movie corpus: deterministic replays, TAStudio editing, savestate scenarios, Lua/debug interfaces |
+| DuckStation | cross-check: broad CPU trace logging, gameplay/replay testing (logs can reach GBs — constrained windows only) |
+| Ghidra + PCSX-Redux | live memory/register inspection via GDB when it materially helps; Rizin artifacts stay the reproducible static DB |
 
-Primary runtime evidence tool:
-
-- execution/read/write breakpoints
-- GDB server
-- Lua scripting and memory/register access
-- GPU logger and debugging facilities
-- deterministic narrow experiments when settings are fixed
-
-For CPU debugging, enable the debugger and disable the dynarec/interpreter optimizations as required by PCSX-Redux documentation. GDB typically connects through the emulator's configured server (documented examples use port 3333).
-
-### BizHawk
-
-Primary input-movie/re-recording corpus tool:
-
-- record and replay deterministic input sequences
-- TAStudio editing
-- savestate-based scenario construction
-- Lua/debugging interfaces where supported
-
-Record core, firmware/BIOS, sync settings, disc hash, region, and movie format/version. Do not assume a movie recorded in one emulator is portable to another.
-
-### DuckStation
-
-Useful cross-check:
-
-- broad CPU trace logging
-- convenient gameplay/replay testing
-- debugger/logging features
-
-CPU logs can grow to many gigabytes. Use narrow frame windows, known breakpoints, or filtered scenarios.
-
-### Ghidra + PCSX-Redux
-
-PCSX-Redux documents a GDB connection path for Ghidra's MIPS debugger. Use it when live memory/register inspection in Ghidra materially helps, while keeping Rizin artifacts as the case's reproducible static database.
+CPU debugging: enable the debugger, disable dynarec/interpreter optimizations as PCSX-Redux docs require; GDB connects through the emulator's server (examples use port 3333). Record core, firmware/BIOS, sync settings, disc hash, region, movie format/version. A movie recorded in one emulator is not portable to another.
 
 ## Replay corpus definition
 
-A replay corpus includes more than emulator movies:
+More than emulator movies:
 
 1. built-in attract-mode demos
 2. native replay/ghost files
@@ -49,109 +21,52 @@ A replay corpus includes more than emulator movies:
 4. scripted cutscenes/tutorials
 5. debug menu/level-select paths
 6. external TAS/input movies
-7. newly recorded minimal reproduction scenarios
+7. newly recorded minimal reproductions
 
-Search executables and assets for “demo”, “replay”, “ghost”, “record”, controller buffers, frame counters, and save-file identifiers. Validate discoveries dynamically.
+Search executables/assets for "demo", "replay", "ghost", "record", controller buffers, frame counters, save identifiers; validate discoveries dynamically.
 
 ## Replay matrix
 
-Use `templates/replay-matrix.csv`. Required dimensions:
-
-- stable replay/scenario ID
-- source and hashes
-- emulator/core/version
-- BIOS hash and region
-- initial save/state
-- controller ports/devices
-- sync/determinism settings
-- frame start/end
-- expected event
-- overlays loaded
-- functions expected/hit
-- watched ranges
-- trace files
-- outcome and blockers
+Use `templates/replay-matrix.csv`. Dimensions: stable ID · source + hashes · emulator/core/version · BIOS hash + region · initial save/state · controller ports/devices · sync/determinism settings · frame start/end · expected event · overlays loaded · functions expected/hit · watched ranges · trace files · outcome + blockers.
 
 ## Function-entry capture
 
-At function entry capture:
-
 ```text
 frame/cycle
-effective PC and overlay identity
-RA and caller call-site
+effective PC + overlay identity
+RA + caller call-site
 GP, SP, FP
 a0-a3
-stack words covering argument area and selected locals
+stack words (argument area + selected locals)
 relevant object/global snapshots
 ```
 
-At return capture `v0`, `v1`, mutated memory, and return path. For nested/recursive calls, maintain a call-depth or invocation ID.
+At return capture `v0`, `v1`, mutated memory, return path. Nested/recursive calls: maintain a call-depth or invocation ID.
 
 ## PCSX-Redux breakpoint pattern
 
-Use execution breakpoints for entry/return, and read/write watchpoints for fields or overlay load destinations. PCSX-Redux's Lua API exposes breakpoint types and memory/register access; script callbacks should write structured JSONL or CSV with frame and address context.
-
-Avoid unbounded logging in a callback. Filter by:
-
-- frame range
-- caller/RA
-- argument value
-- overlay active ID
-- object pointer range
-- invocation count
+Exec breakpoints for entry/return; read/write watchpoints for fields or overlay load destinations. Lua callbacks → structured JSONL/CSV with frame + address context. No unbounded logging; filter by frame range, caller/RA, argument value, overlay ID, object pointer range, invocation count.
 
 ## Narrowing an unknown behavior
 
-1. Record a movie that reaches the behavior.
+1. Record a movie reaching the behavior.
 2. Create a nearby savestate/checkpoint.
 3. Compare memory before/after the event.
 4. Find writes to changed fields.
-5. Break on the writer and inspect the call chain.
-6. Add execution breakpoints to candidate functions.
+5. Break on the writer; inspect the call chain.
+6. Add exec breakpoints to candidate functions.
 7. Replay the exact input.
-8. merge confirmed addresses/arguments into Rizin.
-9. create a negative/control replay where the event does not occur.
+8. Merge confirmed addresses/arguments into Rizin.
+9. Negative/control replay where the event does not occur.
 
 ## Overlay tracing
 
-Set write watchpoints on candidate destination pages/ranges. Log:
-
-- first and last write
-- source loader/caller
-- bytes/count
-- decompression state
-- cache maintenance calls
-- first execution in the range
-- callbacks registered from the range
-
-Dump bytes after loading and before replacement.
+Write watchpoints on candidate destination pages/ranges. Log: first/last write · source loader/caller · bytes/count · decompression state · cache maintenance calls · first execution · callbacks registered from the range. Dump bytes after loading and before replacement.
 
 ## Coverage model
 
-Track at least:
-
-- function hit coverage
-- overlay load/entry coverage
-- branch/state coverage for the target subsystem
-- replay/scenario status
-- argument value diversity
-- field read/write coverage
-
-Coverage is evidence-specific; do not claim whole-program coverage from a function hit list.
+Track at least: function hit coverage · overlay load/entry coverage · branch/state coverage for the target subsystem · replay/scenario status · argument value diversity · field read/write coverage. Coverage is evidence-specific — never claim whole-program coverage from a function hit list.
 
 ## Determinism failures
 
-Common causes:
-
-- different BIOS or region
-- emulator/core version
-- dynarec/interpreter differences
-- CD timing
-- uninitialized memory
-- RTC/random seed
-- controller device/config
-- savestate incompatibility
-- frame pacing/input polling boundaries
-
-When a replay diverges, record the first divergent frame/state and preserve both runs. Do not silently “fix” the movie and overwrite provenance.
+Causes: BIOS/region · emulator/core version · dynarec/interpreter differences · CD timing · uninitialized memory · RTC/random seed · controller device/config · savestate incompatibility · frame pacing/input polling boundaries. On divergence: record the first divergent frame/state and preserve both runs. Never silently "fix" a movie and overwrite provenance.

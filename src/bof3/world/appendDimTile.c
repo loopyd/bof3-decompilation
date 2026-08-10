@@ -11,7 +11,7 @@ void appendDimTile(void) {
   TILE* primitive;
 
   submitTpageDrawMode(4, 2);
-  primitive = (TILE*)D_8014598C;
+  primitive = (TILE*)g_PrimCursor;
   SetTile(primitive);
   primitive->b0 = 0x20;
   primitive->g0 = 0x20;

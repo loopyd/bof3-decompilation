@@ -29,7 +29,7 @@ void func_801F7CC4(void) {
       break;
 
     case 2:
-      if (D_80146864_BYTE != 3u) {
+      if (g_ScenarioProgress != 3u) {
         return;
       }
       func_80150224(2u);
@@ -38,7 +38,7 @@ void func_801F7CC4(void) {
       break;
 
     case 3:
-      if (g_GameState != 2u && D_80146864_BYTE == 4u) {
+      if (g_GameState != 2u && g_ScenarioProgress == 4u) {
         D_80146876 = 0x130u;
         advance_state = 1u;
       }
@@ -76,7 +76,7 @@ void func_801F7CC4(void) {
     }
 
     case 5:
-      if (D_80146864_BYTE != 5u) {
+      if (g_ScenarioProgress != 5u) {
         return;
       }
       SPAD_REF(volatile u8, 0x0u) = func_8019601C();
@@ -97,7 +97,7 @@ void func_801F7CC4(void) {
       break;
 
     case 6:
-      if (D_80146864_BYTE != 8u) {
+      if (g_ScenarioProgress != 8u) {
         break;
       }
       SPAD_REF(volatile u8, 0x0u) = func_8019601C();
@@ -133,7 +133,7 @@ void func_801F7CC4(void) {
     }
 
     case 8:
-      if (D_80146864_BYTE == 0x0bu) {
+      if (g_ScenarioProgress == 0x0bu) {
         func_8014ECAC(0u);
         D_80146876 = 0u;
         advance_state = 1u;

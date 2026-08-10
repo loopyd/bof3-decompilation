@@ -24,8 +24,8 @@ segments:
   subsegments:
   - - 12
     - c
-    - func_800F500C
-    - '@source: src/bof3/world/func_800F500C.c'
+    - dispatchArea030CompanionHandler
+    - '@source: src/bof3/world/dispatchArea030CompanionHandler.c'
     - '@behavior: Dispatches through the handler table indexed by the selector byte.'
   - - 72
     - asm

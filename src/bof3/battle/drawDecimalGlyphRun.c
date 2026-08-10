@@ -22,14 +22,14 @@ void drawDecimalGlyphRun(s16 arg0, u16 arg1, u8 arg2, s16 arg3) {
   } else {
     sprintf((char*)D_80145AD4, D_801D0C74, (u16)arg3);
   }
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, GetTPage(0, 0, 0x3c0, 0), 0);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, GetTPage(0, 0, 0x3c0, 0), 0);
   func_8014E5A0(1, 0xc);
 
   do {
     temp = D_80145AD4[index];
     if (temp != ' ') {
       D_80145AD4[index] = temp - 0x30;
-      packet = D_8014598C;
+      packet = g_PrimCursor;
       value = GetClut((arg2 & 0xff) << 4, 0x1e0);
       *(u16*)(packet + 0xe) = value;
       packet[4] = 0x80;

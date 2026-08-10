@@ -6,6 +6,7 @@ WEAK_SYMBOL_AT(D_1F800000, 0x1f800000);
 
 /* ---- Entry table (main exe data segment, ref'd by overlay) ---- */
 WEAK_SYMBOL_AT(recordTable, 0x80143fc8);
+WEAK_SYMBOL_AT(workStateHandlerTable, 0x80195ed4);
 
 /* ---- Palette work data ---- */
 
@@ -92,7 +93,7 @@ WEAK_SYMBOL_AT(D_801C7B98, 0x801c7b98);
 WEAK_SYMBOL_AT(D_801C7BA4, 0x801c7ba4);
 WEAK_SYMBOL_AT(D_801C7BB0, 0x801c7bb0);
 WEAK_SYMBOL_AT(D_80144E88, 0x80144e88);
-WEAK_SYMBOL_AT(D_80146864, 0x80146864);
+WEAK_SYMBOL_AT(g_ScenarioProgress, 0x80146864);
 WEAK_SYMBOL_AT(D_8014686C, 0x8014686c);
 WEAK_SYMBOL_AT(requestRemapTable, 0x801cd06c);
 WEAK_SYMBOL_AT(scenarioState, 0x80146870);

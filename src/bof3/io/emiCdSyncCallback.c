@@ -1,6 +1,6 @@
 #include "bof3/core/slus_internal.h"
 
-extern volatile u32 D_8014648C;
+extern volatile u32 emiCdSyncResult; /* @source 0x8014648C @kind bss */
 extern u8           D_80146498[];
 
 /* @behavior latches the last CdSync callback result bytes and marks the async sync
@@ -23,8 +23,8 @@ void emiCdSyncCallback(s32 status, u8* result) {
   } while (i-- != 0);
 
   if (status == CdlComplete) {
-    D_8014648C = 1;
+    emiCdSyncResult = 1;
   } else {
-    D_8014648C = -1;
+    emiCdSyncResult = -1;
   }
 }

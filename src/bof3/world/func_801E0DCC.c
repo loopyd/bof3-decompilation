@@ -9,7 +9,7 @@
 u8* func_801E0DCC(s32 arg0, s32 arg1, s16 arg2, s16 arg3) {
   SPRT* primitive;
 
-  primitive = (SPRT*)D_8014598C;
+  primitive = (SPRT*)g_PrimCursor;
   SetSprt(primitive);
   primitive->r0 = 0x80;
   primitive->g0 = 0x80;

@@ -20,6 +20,46 @@ def test_configure_reuses_complete_ninja_tree(tmp_path: Path) -> None:
     run.assert_not_called()
 
 
+def test_configure_refreshes_ninja_after_manifest_source_move(tmp_path: Path) -> None:
+    (tmp_path / "CMakeLists.txt").write_text(
+        "cmake_minimum_required(VERSION 3.20)\nproject(test NONE)\n"
+    )
+    manifest = tmp_path / "config/targets/emi/test/00/target.toml"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text("sources = ['src/new.c']\n")
+    build_tree = tmp_path / "build/cmake"
+    build_tree.mkdir(parents=True)
+    (build_tree / "CMakeCache.txt").write_text(
+        f"CMAKE_HOME_DIRECTORY:INTERNAL={tmp_path.resolve()}\n"
+    )
+    generated = build_tree / "build.ninja"
+    generated.touch()
+    generated.touch()
+    import os
+    os.utime(generated, ns=(1, 1))
+
+    assert configure(tmp_path) == build_tree
+    assert generated.stat().st_mtime_ns > 1
+
+
+def test_configure_refreshes_ninja_with_missing_source_path(tmp_path: Path) -> None:
+    (tmp_path / "CMakeLists.txt").write_text(
+        "cmake_minimum_required(VERSION 3.20)\nproject(test NONE)\n"
+    )
+    build_tree = tmp_path / "build/cmake"
+    build_tree.mkdir(parents=True)
+    (build_tree / "CMakeCache.txt").write_text(
+        f"CMAKE_HOME_DIRECTORY:INTERNAL={tmp_path.resolve()}\n"
+    )
+    generated = build_tree / "build.ninja"
+    generated.write_text(
+        f"build old.o: cc {tmp_path.resolve()}/src/deleted.c\n"
+    )
+
+    assert configure(tmp_path) == build_tree
+    assert "src/deleted.c" not in generated.read_text()
+
+
 def test_configure_recovers_corrupt_cache(tmp_path: Path) -> None:
     """A cache missing its source root is discarded before CMake runs."""
     (tmp_path / "CMakeLists.txt").write_text(

@@ -7,5 +7,5 @@
  * @residual none; live audit is instruction- and byte-exact.
  */
 void dispatchCompanion(void) {
-  func_800F500C();
+  dispatchArea030CompanionHandler();
 }

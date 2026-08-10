@@ -39,7 +39,7 @@ sources = [
     "src/bof3/render/fadeLoop.c",
     "src/bof3/io/func_8014E0FC.c",
     "src/bof3/render/func_80150098.c",
-    "src/bof3/equipment/func_801655F4.c",
+    "src/bof3/equipment/adjustBoundedCounter.c",
     "src/bof3/io/func_8016728C.c",
     "src/bof3/equipment/getEquipRecordBase.c",
     "src/bof3/boot/initBootDiscEvents.c",

@@ -138,8 +138,8 @@ iteration procedure: [function matching](matching.md).
 - Compare target-qualified snapshots (`out/reverse/<target>/snapshot.json`);
   equal addresses across targets are insufficient — overlays and PsyQ copies
   can share a role with different addresses or bytes.
-- Every `WEAK_SYMBOL_AT` in the hand-maintained top-level
-  `src/<target>/symbols.c` needs a target-map entry; a different name at a
+- Every `WEAK_SYMBOL_AT` in a hand-maintained, explicitly claimed
+  `src/bof3/support/*_symbols.c` needs a target-map entry; a different name at a
   mapped address is a deliberate typed alias (e.g. u8 view of a u16 global).
   `bin/symbols check` flags bindings whose address no map owns.
 - Splat regenerates root stubs keyed by the Splat **boundary name**, never by

@@ -16,9 +16,9 @@ u8 advanceLocalFlag20Countdown(void) {
   last_index = 0u;
   index = 0u;
   do {
-    if (func_801D64C4(index) == 0u) {
+    if (isBattlerBlockedOrUnavailable(index) == 0u) {
       if ((D_80145E90[index].unk_80 & 0x20u) != 0u) {
-        if (func_801DDCB4(index) != 0u) {
+        if (shouldTriggerBattlerCountdownRetry(index) != 0u) {
           last_index = index;
           D_80145E90[index].unk_121 = 0u;
           D_80145E90[index].unk_80 &= 0xffdfu;

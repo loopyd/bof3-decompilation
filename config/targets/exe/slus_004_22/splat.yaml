@@ -132,7 +132,7 @@ segments:
     start: 0xcedf4
     vram: 0x801655f4
     subsegments:
-      - [0xcedf4, c, func_801655F4, '@source: src/bof3/equipment/func_801655F4.c']
+      - [0xcedf4, c, adjustBoundedCounter, '@source: src/bof3/equipment/adjustBoundedCounter.c']
   - [0xcee94, bin, pre_item_record_dispatch]
   - name: item_record_dispatch
     type: code

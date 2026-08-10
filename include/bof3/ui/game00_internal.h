@@ -10,6 +10,9 @@
 
 typedef void (*GameEntry0StateHandler)(void);
 
+/* @source 0x80195ED4 @kind table */
+extern GameEntry0StateHandler workStateHandlerTable[5];
+
 /* @source 0x801C84A4 @kind table */
 extern GameEntry0StateHandler stateHandlerTable[];
 
@@ -149,7 +152,7 @@ typedef struct RecordSlot {
   u8 pad[0x6F]; /* 0x74 - 5 */
 } RecordSlot;
 
-/* Work record passed to func_801A86D4; only the handler selector byte at
+/* Work record passed to dispatchRecordCallbackByByte7A; only the handler selector byte at
  * 0x7A is proven. */
 typedef struct GameIndexedWork {
   u8 pad_00[0x7A];
@@ -403,7 +406,7 @@ extern u32                 D_801CD954;
 /* @source 0x801C7B74 @kind unknown */
 extern const s8            D_801C7B74[];
 /* @source 0x80146864 @kind unknown */
-extern volatile u8         D_80146864;
+extern volatile u8         g_ScenarioProgress;
 /* @source 0x801490A4 @kind unknown */
 extern volatile u16        D_801490A4;
 /* @source 0x80144F28 @kind unknown */
@@ -534,7 +537,7 @@ void requestScenarioOverlay(void);
 /* @source 0x801C8454 @kind table */
 extern GameEntry0StateHandler* D_801C8454[];
 
-void func_801A782C(void);
+void dispatchScenarioHandlerAndState(void);
 void dispatchStateHandler(void);
 
 /* @behavior ticks the shared world/front waiting path while the scenario loader is
@@ -544,7 +547,7 @@ void dispatchStateHandler(void);
 void func_801527E4(void);
 void func_8015A758(void);
 void func_801BDAB8(void);
-void func_801992B8(void);
+void runFrameFinalizationServices(void);
 void func_8019A0E4(void);
 void func_8014BA54(void);
 
@@ -564,7 +567,7 @@ void drawSprite(s16 x, s16 y, u8 sprite_id, u8 flags);
  * drawSprite with signed offsets shifted by 3 applied to base coords.
  * @source 0x801AF390
  */
-void func_801AF390(s16 base_x, s16 base_y, const u8* record_table, u8 flags);
+void drawSpriteRecordTable(s16 base_x, s16 base_y, const u8* record_table, u8 flags);
 
 /* @behavior computes a screen-space position from an entity's offset-adjusted
  * coordinates; returns the result as a signed 16-bit value.

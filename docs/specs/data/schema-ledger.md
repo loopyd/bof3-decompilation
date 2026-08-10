@@ -190,9 +190,9 @@ separate from the exact-match contracts above until their C lifts match.
 | Target/function | Observation | Evidence boundary |
 | --- | --- | --- |
 | `GAME.EMI#0 @ 0x801addd4` | runtime character records use base `0x80144968`, stride `0xa4`; level is `+0x06`, exp `+0x08`; six base-stat halfwords at `+0x3c`–`+0x46` are updated from level rows, with signed modifiers at `+0x85`–`+0x8a` | reviewed raw instructions; target-local C candidate at 39.71%, exact promotion pending |
-| `GAME.EMI#0 @ 0x801af5b0` | ability records use `kind × 0x14`; offset `0x0c` is a flag byte and offset `0x10` is loaded as a halfword for selection checks | reviewed raw instructions; target-local C candidate at 51.35%, exact promotion pending |
-| `COMMU00.EMI#0 @ 0x801f18f8` | gift table is copied as 20 × `0x04` from runtime `0x801eec48` | reviewed raw instructions; target-local C candidate at 23.26%, exact promotion pending |
-| `COMMU00.EMI#0 @ 0x801f1bc8` | exploration table at runtime `0x801f2618` is indexed as `row × 2`; item index/type bytes are passed to reward and name consumers | reviewed raw instructions; target-local C candidate at 22.22%, exact promotion pending |
+| `GAME.EMI#0 @ 0x801af5b0` | ability records use `kind × 0x14`; offset `0x0c` is a flag byte and offset `0x10` is loaded as a halfword for selection checks | reviewed raw instructions; target-local C candidate at 45.33%, exact promotion pending |
+| `COMMU00.EMI#0 @ 0x801f18f8` | gift table is copied as 20 × `0x04` from runtime `0x801eec48` | reviewed raw instructions; historical m2c draft measured 23.26%, exact promotion pending |
+| `COMMU00.EMI#0 @ 0x801f1bc8` | exploration table at runtime `0x801f2618` is indexed as `row × 2`; item index/type bytes are passed to reward and name consumers | reviewed raw instructions; historical m2c draft measured 22.22%, exact promotion pending |
 
 The exact-match source uses external array symbols and consumer-local pointer
 casts where those declarations are necessary to reproduce the original ABI.

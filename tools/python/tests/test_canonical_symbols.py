@@ -140,6 +140,12 @@ def test_symbols_check_target_scope(tmp_path: Path, capsys) -> None:
     )
     (tmp_path / "config" / "sdk").mkdir(parents=True)
     (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text("", encoding="utf-8")
+    (tmp_path / "config" / "symbol-naming-baseline.json").write_text(
+        '{"raw_function_files": [], "invalid_semantic_files": [], '
+        '"raw_functions": ["emi/battle/keep/15:func_80200004", '
+        '"exe/keep:func_80100000"], "raw_data": []}\n',
+        encoding="utf-8",
+    )
 
     # --- Target 1: exe/keep (clean) ---
     _write_check_target(tmp_path, "exe/keep")

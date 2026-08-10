@@ -5,10 +5,12 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import re
 from typing import Any
 
 from ..canonical import load_map
 from ..domain import FUNCTION_ID_HELP, parse_function_id
+from ..domain.claims import manifest_header_paths
 from ..domain.manifests import CompanionOverlay, load_target_manifests
 from ..emi.catalog_verify import verify_declared_companions
 from ..layout import parse_splat_layout
@@ -18,6 +20,27 @@ from ._common import add_root_argument, run_main
 
 def _status(ok: bool, detail: str) -> dict[str, object]:
     return {"status": "verified" if ok else "missing", "detail": detail}
+
+
+def _declarations(source: str) -> set[tuple[str, ...]]:
+    source = re.sub(r"\\\r?\n", "", source)
+    source = re.sub(
+        r'/\*.*?\*/|//[^\n]*|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'',
+        " ",
+        source,
+        flags=re.DOTALL,
+    )
+    source = re.sub(r"(?m)^[ \t]*#[^\n]*", " ", source)
+    return {
+        tuple(re.findall(r"[A-Za-z_]\w*|\d+|[^\s]", statement))
+        for statement in source.split(";")
+        if statement.strip()
+    }
+
+
+def _declares(source: str, prototype: str) -> bool:
+    tokens = tuple(re.findall(r"[A-Za-z_]\w*|\d+|[^\s]", prototype))
+    return tokens in _declarations(source)
 
 
 def _companion_report(
@@ -67,15 +90,14 @@ def _companion_report(
         if binding_ok
         else "target-local map/boundary mismatch",
     )
-    header = root / manifests[caller].source_dir / "internal.h"
-    declaration = (
-        companion.abi is not None
-        and header.is_file()
-        and companion.abi.prototype + ";" in header.read_text(encoding="utf-8")
+    declaration = companion.abi is not None and any(
+        _declares(header.read_text(encoding="utf-8"), companion.abi.prototype)
+        for header in manifest_header_paths(root, manifests[caller])
+        if header.is_file()
     )
     consumer = _status(
         declaration,
-        "caller internal.h has the reviewed ABI declaration"
+        "caller manifest header has the reviewed ABI declaration"
         if companion.abi is not None
         else "no reviewed ABI declaration",
     )

@@ -8,5 +8,5 @@
  * @residual none; live audit is instruction- and byte-exact.
  */
 void NO_SIBLING_CALLS func_801F3244(void) {
-  D_801F46B0[g_areaWork->mode]();
+  areaStateModeHandlerTable[g_areaWork->mode]();
 }

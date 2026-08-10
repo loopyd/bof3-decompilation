@@ -38,10 +38,10 @@ void loadScenario(u8 scenario_index) {
 
   while (!func_80162D00()) {
     if ((D_80143F00 != none_sel) && (D_80143BB0 != ready_phase)) {
-      func_801992B8();
+      runFrameFinalizationServices();
     }
     func_8014B87C(1u);
   }
 
-  func_801A782C();
+  dispatchScenarioHandlerAndState();
 }

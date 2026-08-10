@@ -8,6 +8,8 @@ reading order (identity, law, standards, role protocol) for every agent role:
 python3 .pi/skills/bof3-re/scripts/agent-context.py agents
 ```
 
+After `.pi` agent/skill Markdown edits, run `/skill:agent-skill-compaction`.
+
 BOF3 binaries load independently. Qualify work by one function selector:
 `TARGET@0xADDRESS`. For a shipped EMI entry, use
 `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`.
@@ -35,7 +37,7 @@ BOF3 binaries load independently. Qualify work by one function selector:
 
 ## Source and symbols
 
-- Keep one C source per lifted function. Authored lifts converge into human-readable `src/bof3/<subsystem>/` folders; `src/exe/` and `src/emi/` are migration debt, not destinations. Lift identity and target ownership come from explicit manifest claims, maps, Splat, and parsable function-level `@source`/`@behavior` metadata—never directory ancestry or filenames.
+- Keep one C source per lifted function under `src/bof3/<subsystem>/`. Lift identity and target ownership come from explicit manifest claims, maps, Splat, and parsable function-level `@source`/`@behavior` metadata—never directory ancestry or filenames.
 - Use `func_80143B40` and `D_80143B40`; maps use sorted
   `name = 0xADDRESS;` entries with eight uppercase hex digits.
 - Replace raw names only after review; a renamed lift file keeps
@@ -111,8 +113,9 @@ BOF3 binaries load independently. Qualify work by one function selector:
 ## Verification
 
 - Use `bin/asm-diff` for instruction evidence and `bin/byte-match` for bytes.
-- Run `bin/symbols check` after map edits; normalize only with
-  `bin/symbols normalize [TARGET] --write`.
+- Run `bin/symbols check` after map edits; normalize with
+  `bin/symbols normalize [TARGET] --write`. Global checks gate naming debt
+  against `config/symbol-naming-baseline.json`.
 - Run `bin/decomp-status [TARGET...]` for the live lift audit.
 - Run `just check` before handoff when practical; state skipped checks.
 - Do not stage, commit, push, or mutate external systems without approval.
@@ -132,7 +135,6 @@ reviewed findings in `docs/specs/` and
 reusable evidence-backed gotchas in `docs/agents/lessons.md`. Use the
 [repository map](docs/agents/project-context.md#repository-map) to locate tracked and ignored state.
 
-Cleanup relocation should use atomic same-target/same-subsystem batches when classification is proven. Every moved selector still needs independent live asm/byte evidence; one failure reverts the whole batch. Never deepen the legacy `src/exe/` or `src/emi/` hierarchy.
 
 ## Planning
 

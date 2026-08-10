@@ -10,9 +10,9 @@ void drawSpritePrimTpage1(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 ar
                    u8 arg6) {
   Battle03SpritePrimitive* primitive;
 
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, GetTPage(0, 1, 0x3c0, 0), 0);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, GetTPage(0, 1, 0x3c0, 0), 0);
   func_8014E5A0(1, 0x0c);
-  primitive = (Battle03SpritePrimitive*)D_8014598C;
+  primitive = (Battle03SpritePrimitive*)g_PrimCursor;
   func_8017AA80(primitive);
   primitive->r0 = arg4;
   primitive->g0 = arg5;

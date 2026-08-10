@@ -59,8 +59,8 @@ segments:
     - '@behavior: clears scratch-state offsets 0x09 and 0x0b, then increments offset 0x01.'
   - - 2208
     - c
-    - func_801F34A0
-    - '@source: src/bof3/world/func_801F34A0.c'
+    - dispatchAdvanceStates
+    - '@source: src/bof3/world/dispatchAdvanceStates.c'
     - '@behavior: dispatches both advance states in order.'
   - - 2248
     - asm
@@ -70,8 +70,8 @@ segments:
     - func_801F350C
   - - 2396
     - c
-    - func_801F355C
-    - '@source: src/bof3/world/func_801F355C.c'
+    - advanceScratchHeightState02
+    - '@source: src/bof3/world/advanceScratchHeightState02.c'
     - '@behavior: advances the scratch height and updates state after reaching the threshold.'
   - - 2488
     - asm
@@ -102,14 +102,15 @@ segments:
     - func_801F3B00
   - - 4812
     - asm
-    - func_801F3ECC
+    - appendTransformedG4Panel
+    - '@source: src/bof3/world/appendTransformedG4Panel.c'
   - - 5316
     - asm
     - func_801F40C4
   - - 5496
     - c
-    - func_801F4178
-    - '@source: src/bof3/world/func_801F4178.c'
+    - dispatchArea016ScratchMode
+    - '@source: src/bof3/world/dispatchArea016ScratchMode.c'
     - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table.'
   - - 5564
     - asm

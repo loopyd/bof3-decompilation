@@ -31,6 +31,6 @@ resetCounter2 = 0x801F45C8;
 advanceCounter3 = 0x801F45E4;
 retreatCounter3 = 0x801F4600;
 modeHandlerTable = 0x801F4688;
-D_801F46B0 = 0x801F46B0;
+areaStateModeHandlerTable = 0x801F46B0;
 D_801F46EC = 0x801F46EC;
 countdown = 0x801F53F4;

@@ -126,13 +126,13 @@ extern volatile u8   D_801462E3; /* @source 0x801462E3 @kind unknown */
 extern BattleSelectionHandler D_800B43C0[]; /* @source 0x800B43C0 @kind unknown */
 extern BattleSelectionHandler D_800B4450[]; /* @source 0x800B4450 @kind unknown */
 extern BattleSelectionHandler D_800B43D4[]; /* @source 0x800B43D4 @kind unknown */
-extern BattleSelectionHandler D_800B4CAC[]; /* @source 0x800B4CAC @kind unknown */
-extern BattleSelectionHandler D_800B4CC8[]; /* @source 0x800B4CC8 @kind unknown */
-extern BattleSelectionHandler D_800B4CD0[]; /* @source 0x800B4CD0 @kind unknown */
-extern BattleSelectionHandler D_800B4CE4[]; /* @source 0x800B4CE4 @kind unknown */
-extern BattleSelectionHandler D_800B4D00[]; /* @source 0x800B4D00 @kind unknown */
-extern BattleSelectionHandler D_800B4D14[]; /* @source 0x800B4D14 @kind unknown */
-extern BattleSelectionHandler D_800B4D30[]; /* @source 0x800B4D30 @kind unknown */
+extern BattleSelectionHandler battleSelectionHandlerTable4CAC[]; /* @source 0x800B4CAC @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable4CC8[]; /* @source 0x800B4CC8 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable4CD0[]; /* @source 0x800B4CD0 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable4CE4[]; /* @source 0x800B4CE4 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable4D00[]; /* @source 0x800B4D00 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable4D14[]; /* @source 0x800B4D14 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable4D30[]; /* @source 0x800B4D30 @kind table */
 extern BattleSelectionHandler D_800B43EC[]; /* @source 0x800B43EC @kind unknown */
 extern BattleSelectionHandler D_800B43F4[]; /* @source 0x800B43F4 @kind unknown */
 extern BattleSelectionHandler D_800B4408[]; /* @source 0x800B4408 @kind unknown */
@@ -143,10 +143,10 @@ extern BattleSelectionHandler D_800B4458[]; /* @source 0x800B4458 @kind unknown 
 extern BattleSelectionHandler D_800B446C[]; /* @source 0x800B446C @kind unknown */
 extern BattleSelectionHandler D_800B447C[]; /* @source 0x800B447C @kind unknown */
 extern BattleSelectionHandler D_800B448C[]; /* @source 0x800B448C @kind unknown */
-extern BattleSelectionHandler D_800B44C8[]; /* @source 0x800B44C8 @kind unknown */
+extern BattleSelectionHandler battleSelectionHandlerTable44C8[]; /* @source 0x800B44C8 @kind table */
 extern BattleSelectionHandler D_800B44D4[]; /* @source 0x800B44D4 @kind unknown */
-extern BattleSelectionHandler D_800B44E4[]; /* @source 0x800B44E4 @kind unknown */
-extern BattleSelectionHandler D_800B6E08[]; /* @source 0x800B6E08 @kind unknown */
+extern BattleSelectionHandler battleSelectionHandlerTable44E4[]; /* @source 0x800B44E4 @kind table */
+extern BattleSelectionHandler battlePanelOuterStateHandlerTable[]; /* @source 0x800B6E08 @kind table */
 extern BattleLocalOffsetPair D_800B6C90[]; /* @source 0x800B6C90 @kind unknown */
 extern u8 D_800B6D00[]; /* @source 0x800B6D00 @kind unknown */
 extern u8 D_801462E4; /* @source 0x801462E4 @kind unknown */
@@ -158,7 +158,7 @@ extern u8*           D_801EBF08; /* @source 0x801EBF08 @kind unknown */
 extern u8            D_80148330[]; /* @source 0x80148330 @kind unknown */
 extern u8            D_801462E5; /* @source 0x801462E5 @kind unknown */
 extern volatile u8   D_801462E6; /* @source 0x801462E6 @kind unknown */
-extern BattleSelectionAction D_800B65FC[]; /* @source 0x800B65FC @kind unknown */
+extern BattleSelectionAction battleSelectionActionTable[]; /* @source 0x800B65FC @kind table */
 extern volatile u16  D_801462E8; /* @source 0x801462E8 @kind unknown */
 extern volatile BattleLocalWork D_80145E90[]; /* @source 0x80145E90 @kind unknown */
 extern u8  D_80145FB0[]; /* @source 0x80145FB0 @kind unknown */
@@ -203,7 +203,7 @@ extern volatile u16  D_8014862A; /* @source 0x8014862A @kind unknown */
 extern volatile u8   D_8014862E; /* @source 0x8014862E @kind unknown */
 
 /* Shared primitive cursor (PsyQ SDK, owned by the main exe). */
-extern u8* D_8014598C; /* @source 0x8014598C @kind unknown */
+extern u8* g_PrimCursor; /* @source 0x8014598C @kind unknown */
 
 /* PsyQ SDK primitive setup helpers called by this target.
  * SetSprt8 / SetSemiTrans are declared by <libgpu.h> (via bof3/psyq.h);
@@ -238,7 +238,7 @@ void                           dispatchWorkByte1Pair(void);
 void                           initRecordStateAdvanceWork(void);
 void                           func_800A84FC(void);
 void                           resetStateWhenUnlockedB(void);
-void __attribute__((noinline)) func_8009B20C(void);
+void __attribute__((noinline)) runPanelTasks16To19(void);
 u8                             func_8009C8AC(u16 required_mask);
 void                           func_8009CFEC(void);
 s16  func_800A2880(u8 battler_index, u16 base_value, u8 element_flag);
@@ -274,7 +274,6 @@ void func_801E5988(void);
 u32  func_801E590C(u32 arg0, u32 arg1);
 void func_801DEA64(s32 arg0);
 
-#define D_8014598C g_PrimCursor
 #define BATTLE_ACTIVE_SELECTION_SLOT_PTR D_801EB4D8
 #define BATTLE_ACTIVE_MESSAGE_SLOT_PTR   PSX_REF(volatile void*, 0x801ebf08u)
 #define D_801EBF08_PTR                   ((Unk801EBF08*)D_801EBF08)
@@ -382,4 +381,4 @@ extern u8 D_801EB6E0[]; /* @source 0x801EB6E0 @kind unknown */
 extern u8 D_801EB6E1[]; /* @source 0x801EB6E1 @kind unknown */
 extern u8 D_801EB6E2[]; /* @source 0x801EB6E2 @kind unknown */
 extern u8 D_801EB6E3[]; /* @source 0x801EB6E3 @kind unknown */
-extern s16 D_800B493C[]; /* @source 0x800B493C @kind unknown */
+extern s16 battleElementResistanceModifierTable[]; /* @source 0x800B493C @kind table */

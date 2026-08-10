@@ -21,9 +21,9 @@ void refreshSpriteSlots(void) {
   i = 0u;
   do {
     if (WORLD00_AREA028_WORK_PTR->unk_00[0] != 0u) {
-      WORLD00_AREA028_WORK_PTR->field_08 =
-          (s16)(WORLD00_AREA028_WORK_PTR->field_08 - 0x20);
-      if (WORLD00_AREA028_WORK_PTR->field_08 < 0x80) {
+      WORLD00_AREA028_WORK_PTR->scale =
+          (s16)(WORLD00_AREA028_WORK_PTR->scale - 0x20);
+      if (WORLD00_AREA028_WORK_PTR->scale < 0x80) {
         WORLD00_AREA028_WORK_PTR->unk_00[0] = 0u;
       }
       func_801F2D3C();

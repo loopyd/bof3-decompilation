@@ -23,10 +23,10 @@ void drawPrompt(void) {
   }
 
   if (D_8014832E != 0u && D_80143C30 != 0u) {
-    SetDrawMode((DR_MODE*)D_8014598C, 0, 0,
+    SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0,
                 GetGraphType() == 1 ? 557 : (GetGraphType() == 2 ? 557 : 157),
                 0);
-    func_8014E5A0(2, 12);
+    appendRenderPrim(2, 12);
     drawGlyph(192, 4, 10, 2, 0);
   }
 }

@@ -28,7 +28,7 @@ extern volatile u8  D_80146866;
 /* @source 0x80146867 @kind unknown */
 extern volatile u8  D_80146867;
 /* @source 0x80146864 @kind unknown */
-extern volatile u32 D_80146864;
+extern volatile u8 g_ScenarioProgress;
 /* @source 0x80146874 @kind unknown */
 extern volatile s8  D_80146874;
 /* @source 0x80146875 @kind unknown */
@@ -126,7 +126,6 @@ void copyPaletteBlock(void);
 void resetEffectBank(void);
 void noopRecordHandler(void);
 
-#define D_80146864_BYTE    (*(volatile u8*)&D_80146864)
 #define SCENA16_PALETTE_SRC        PSX_PTR(const volatile u16, 0x80033800u)
 #define SCENA16_PALETTE_DST        PSX_PTR(volatile u16, 0x80037800u)
 #define SCENA16_VRAM_BASE          (0x80010000u)

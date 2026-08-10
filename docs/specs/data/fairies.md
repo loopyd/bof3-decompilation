@@ -61,10 +61,9 @@ The separate `COMMU00.EMI#0 @ 0x801f1bc8` consumer indexes runtime
 the `FairyExploreObject` item-index and item-type widths. The commu00 layout
 still holds `func_801F18F8` and `func_801F1BC8` as reviewed `asm` boundaries
 (`config/targets/emi/etc/commu00/00/splat.yaml`); historical m2c drafts for
-them measured 23.26% and 22.22% under canonical `-O2` before the source tree
-migration removed the `src/emi` candidate paths. The
-gift-row widths and exploration progression behavior are recorded, but
-exact function promotion remains pending.
+them measured 23.26% and 22.22% under canonical `-O2`; those drafts were not
+retained as authored lifts. The gift-row widths and exploration progression
+behavior are recorded, but exact function promotion remains pending.
 
 ## Evidence boundary
 

@@ -1,11 +1,11 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* @source 0x800A5120
+ * @behavior When D_801485B8 bit 0 is clear, sets state byte 0xE3 to 2, clears 0xE4, and clears bit 7 of 0xE5.
  * @status exact
  * @match 100.00
  * @residual none; live audit is instruction- and byte-exact.
  */
-// @behavior When D_801485B8 bit 0 is clear, sets state byte 0xE3 to 2, clears 0xE4, and clears bit 7 of 0xE5.
 void enterState2WhenB8Clear(void) {
     u8 *state;
 

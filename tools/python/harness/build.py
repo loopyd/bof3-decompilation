@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
+import re
 import shutil
 import subprocess
 
@@ -19,18 +20,42 @@ def cmake_target_for_directory(source_directory: str) -> str:
     return f"target_{digest}"
 
 
+def _has_missing_source(root: Path, generated: Path) -> bool:
+    text = generated.read_text(encoding="utf-8", errors="ignore")
+    sources = set(re.findall(r"(?:[A-Za-z]:)?[^\s:|]+/src/[^\s:|]+\.(?:c|s|S)", text))
+    return any(not Path(source).is_file() for source in sources)
+
+
 def configure(root: Path) -> Path:
     build_tree = root / "build" / "cmake"
     cache = build_tree / "CMakeCache.txt"
     if cache.is_file():
-        complete = (build_tree / "build.ninja").is_file() or (
-            build_tree / "Makefile"
-        ).is_file()
+        generated = next(
+            (
+                path
+                for path in (build_tree / "build.ninja", build_tree / "Makefile")
+                if path.is_file()
+            ),
+            None,
+        )
         for line in cache.read_text().splitlines():
             if line.startswith("CMAKE_HOME_DIRECTORY:"):
                 cached_home = line.split("=", 1)[1].strip()
-                if complete and cached_home == str(root.resolve()):
+                inputs = [root / "CMakeLists.txt"] + list(
+                    (root / "config" / "targets").rglob("target.toml")
+                )
+                stale = generated is not None and (
+                    _has_missing_source(root, generated)
+                    or any(
+                        path.is_file()
+                        and path.stat().st_mtime_ns > generated.stat().st_mtime_ns
+                        for path in inputs
+                    )
+                )
+                if generated is not None and not stale and cached_home == str(root.resolve()):
                     return build_tree
+                if stale and cached_home == str(root.resolve()):
+                    break
                 break
         # CMake cannot overwrite either a foreign cache or an incomplete cache
         # from another generator, so start this disposable tree afresh.

@@ -4,7 +4,7 @@
 
 Replace address-canonical `func_XXXXXXXX` and `D_XXXXXXXX` names only where target-local evidence satisfies the cleanup two-corroborator gate. Preserve every unresolved address name rather than guessing.
 
-Baseline (2026-08-08): clean worktree; 24 target maps contain 504 raw function names and 832 raw data names. The largest scopes are `exe/slus_004_22`, `emi/battle/battle/{15,03}`, `emi/etc/game/00`, and `emi/world00/area030/04`. This is an evidence campaign, not a mechanical rename.
+Baseline (refreshed 2026-08-09): `config/symbol-naming-baseline.json` records 317 address-named lift files, 499 target-qualified raw function-map entries, 709 target-qualified raw data-map entries, and 25 pre-existing filename-style exceptions. `bin/symbols check` fails when any category gains an entry while allowing reviewed reductions. This is an evidence campaign, not a mechanical rename; update the baseline only in the same reviewed transaction that removes debt or deliberately approves a new exception.
 
 ## Phase 0 — Metadata-authoritative flexible naming framework ✅ implemented 2026-08-08
 
@@ -17,6 +17,13 @@ Before renaming symbols, finish and validate the harness framework so source ide
 5. Update `AGENTS.md`, `.pi/agents/`, `.pi/skills/bof3-re/`, and `docs/agents/` so metadata is the identity contract and address-based filenames are neither required nor preferred. Raw compiled symbols may remain `func_XXXXXXXX` until an evidence-gated symbol rename; source filename and compiled symbol identity are separate.
 
 Validation: focused source-registry and consumer tests and repository metadata audit pass. The pre-existing duplicate/misplaced `dispatchWorkTable69a0` Splat ownership was reconciled to its map, source metadata, and exact bytes at `0x800AD69C`. Run `just check` before handoff. No target bytes, addresses, ABI, map ownership, or Splat boundaries may change during framework migration.
+
+## Phase 0.5 — Naming-debt regression gate ✅ implemented 2026-08-09
+
+1. Keep the reviewed inventory in `config/symbol-naming-baseline.json` as exact target/path-qualified entries, not counts.
+2. Run the gate from the repository-wide `bin/symbols check` used by `just check`; target-scoped checks continue to validate only target correctness and do not compare the global baseline.
+3. Fail on newly introduced `func_XXXXXXXX.c`, raw target-map `func_XXXXXXXX`/`D_XXXXXXXX`, or invalid semantic lift filename. Deletions are always allowed.
+4. Never use the gate to force unsupported semantic guesses; raw names remain valid debt until the two-corroborator cleanup gate passes.
 
 ## Phase 1 — Target-qualified audit
 

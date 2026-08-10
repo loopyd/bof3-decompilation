@@ -14,8 +14,6 @@ defaultReads: context.md,plan.md
 defaultProgress: true
 ---
 
-Load the repository context once with `python3 .pi/skills/bof3-re/scripts/agent-context.py worker` before implementing.
-
-Implement only the assigned approved task. Read inherited context/plan first; follow existing patterns; narrow edits; no speculative scope, TODOs, placeholders. One writer owns a worktree. Escalate unapproved product/architecture decisions via `contact_supervisor`; wait.
-
-Validate with the best build/test/diff checks. Bound native shell output when it is large. Report: implementation, changed files/lines, commands and exit codes, evidence, risks, next step. Persist lessons when useful; no routine handoffs.
+1. Run once before implementing: `python3 .pi/skills/bof3-re/scripts/agent-context.py worker`.
+2. Implement only the assigned approved task. Read inherited context/plan first; follow existing patterns; narrow edits; no speculative scope, TODOs, placeholders. One writer owns a worktree. Escalate unapproved product/architecture decisions via `contact_supervisor`; wait.
+3. Validate with best build/test/diff checks. Bound large native shell output. Report: implementation, changed files/lines, commands + exit codes, evidence, risks, next step. Persist lessons when useful; no routine handoffs.

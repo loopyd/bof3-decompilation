@@ -3,9 +3,9 @@
 extern u8   D_80142CC0[];
 extern u8   D_80142CC4[];
 extern u8   D_80142CE0[];
-extern u32  D_8014598C;
-extern u8   D_80145990[];
-extern u32* D_801459D0[];
+extern u32  g_PrimCursor;
+extern u8   bootPacketHeadTable[];
+extern u32* bootOrderingTableHeads[];
 extern u32  D_801459F8;
 extern u32  D_801459FC;
 
@@ -25,10 +25,10 @@ void rebuildBootRenderTables(void) {
   u32   table_offset;
 
   index = 0;
-  ordering_table = D_801459D0;
+  ordering_table = bootOrderingTableHeads;
   buffer_index = D_80143D44;
-  packet_table = D_80145990;
-  D_8014598C = 0x80020000u + ((buffer_index * 9) << 12);
+  packet_table = bootPacketHeadTable;
+  g_PrimCursor = 0x80020000u + ((buffer_index * 9) << 12);
   while (index < 8) {
     *ordering_table = (u32*)(packet_table + (buffer_index << 5));
     ordering_table++;

@@ -66,8 +66,8 @@ segments:
     - '@behavior: Selects active UI data, requests mode 14, and refreshes it.'
   - - 9928
     - c
-    - func_801F12C8
-    - '@source: src/bof3/ui/func_801F12C8.c'
+    - copySelectedRecordKindToTaskRecord
+    - '@source: src/bof3/ui/copySelectedRecordKindToTaskRecord.c'
     - '@behavior: Copies the selected record-kind byte into the task-indexed UI record.'
   - - 10008
     - asm

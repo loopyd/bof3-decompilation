@@ -42,7 +42,7 @@ file(GLOB_RECURSE BOF3_SHARED_SOURCES CONFIGURE_DEPENDS
 set(BOF3_OBJECTS)
 set(BOF3_SOURCE_DIRECTORIES)
 
-# Canonical target roots: every manifest's source_dir (e.g. src/emi/...).
+# Target metadata roots: every manifest's source_dir.
 # Nested subsystem folders below a root share that root's build target so
 # `bin/build TARGET` compiles every descendant lift.
 set(BOF3_MANIFEST_SOURCE_DIRS)

@@ -28,6 +28,6 @@ void submitTpageDrawMode(s32 arg0, s32 arg1) {
             ((*(s32*)(D_801E2390 + ((arg0 & 0xff) << 4)) & 0x200) << 2);
   }
 
-  SetDrawMode((DR_MODE*)D_8014598C, 0, 0, tpage, 0);
+  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, tpage, 0);
   GpuAppendPrim((u32)(u8)arg1, 0x0c);
 }

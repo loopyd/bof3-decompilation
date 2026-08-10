@@ -33,6 +33,6 @@ WEAK_SYMBOL_AT(fadeLoop, 0x8014f514);
 WEAK_SYMBOL_AT(drawFadeTile, 0x8014f704);
 WEAK_SYMBOL_AT(func_80150098, 0x80150098);
 WEAK_SYMBOL_AT(dispatchSoundCue, 0x8015df18);
-WEAK_SYMBOL_AT(func_801655F4, 0x801655f4);
+WEAK_SYMBOL_AT(adjustBoundedCounter, 0x801655f4);
 
 /* Remaining reviewed SLUS services, kept address-traceable pending promotion. */

@@ -18,10 +18,10 @@ u8 func_801D5A60(void) {
   do {
     u32 slot;
 
-    if (func_801D64C4(index) == 0u) {
+    if (isBattlerBlockedOrUnavailable(index) == 0u) {
       slot = index - 3u;
       if ((D_801EB630[slot].unk_82 & 0x20u) != 0u) {
-        if (func_801DDCB4(index) != 0u) {
+        if (shouldTriggerBattlerCountdownRetry(index) != 0u) {
           u16 flags;
 
           last_index = index;

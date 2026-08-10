@@ -1,11 +1,11 @@
 #include "bof3/battle/battle03_internal.h"
 
 /* @source 0x801E6154
+ * @behavior Advances the queued-slot position or marks its state when the target is reached.
  * @status exact
  * @match 100.00
  * @residual none; live audit is instruction- and byte-exact.
  */
-// @behavior Advances the queued-slot position or marks its state when the target is reached.
 void advanceSlotPosition(void) {
     Battle03QueuedSlot *work;
     Battle03QueuedSlot *new_var;

@@ -12,7 +12,7 @@ void bank2Init(void) {
 
   func_801BEDD0();
   func_801A06D8();
-  func_801992B8();
+  runFrameFinalizationServices();
   state = &D_80143B92;
   (*state)++;
 }

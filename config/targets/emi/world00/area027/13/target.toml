@@ -10,7 +10,7 @@ load_address = 0x801f2c00
 sources = [
     "src/bof3/world/func_801F2C30.c",
     "src/bof3/world/emitTrailStrip.c",
-    "src/bof3/world/func_801F3120.c",
+    "src/bof3/world/dispatchScratchMode2.c",
     "src/bof3/world/emitMarkerPair.c",
     "src/bof3/world/emitMarkerQuad.c",
     "src/bof3/world/func_801F35E0.c",

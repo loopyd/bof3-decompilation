@@ -1,6 +1,6 @@
 #include "bof3/core/slus_internal.h"
 
-extern volatile u8 D_8014648A;
+extern volatile u8 emiLoaderMode; /* @source 0x8014648A @kind bss */
 extern volatile u8 D_8014648B;
 extern volatile u8 D_80146494;
 
@@ -11,7 +11,7 @@ extern volatile u8 D_80146494;
  * @residual none; live audit is instruction- and byte-exact.
  */
 void selectEmiLoaderMode6(void) {
-  D_8014648A = 6;
+  emiLoaderMode = 6;
   D_80146494 = 0;
   D_8014648B = 2;
 }
