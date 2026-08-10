@@ -133,14 +133,18 @@ proven no-op); escalate, do not churn spellings.
 
 ### Equal-valued branch arms
 
-GCC may range-fold grouped cases or reverse/tail-merge an `if` chain. Try, one
-live diff each: ordered then nested/inverted equality tests; separate ungrouped
-`case` bodies with varied case/default order; duplicated arm stores/returns;
-then shared locals or explicit labels. Keep the best semantic shape; stop after
-three non-progressing variants. Locals can alter the register web. Proven on
-`emi/world00/area027/13@0x801F3650`: separate equal-valued cases prevented
-`slti` range folding and
-improved 12/16 to 14/16 at equal size; tail merging remained.
+GCC may range-fold grouped cases or reverse/tail-merge an `if` chain. Before
+changing shape, interpret every MIPS branch delay slot on both taken and
+fall-through paths; a delay-slot constant may be the branch comparison value or
+the selected result, making apparently equal arms semantically distinct. Try,
+one live diff each: ordered then nested/inverted equality tests; separate
+ungrouped `case` bodies with varied case/default order; duplicated arm
+stores/returns; then shared locals or explicit labels. Keep the best semantic
+shape; stop after three non-progressing variants. Locals can alter the register
+web. Proven on `emi/world00/area027/13@0x801F3650`: correct delay-slot semantics
+made case 0 store 5, case 1 store 6, and default perform no store; separate
+cases with an explicit empty default reproduced the compiler's shared-store
+tail and byte-matched exactly.
 
 ### Duplicate identical calls in `if/else` arms
 
