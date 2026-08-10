@@ -19,8 +19,8 @@ acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact 
 Lift only prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`.
 
 ## Context
-1. Run once: `python3 .pi/skills/bof3-re/scripts/agent-context.py reverse SELECTOR`. Emits: ordered common/role context (incl. `docs/agents/lessons.md`), manifest/map/Splat/header, complete bindings, selected source/asm, data-scan gaps.
-2. Never `read` an emitted `=====` path — policy violation, not verification. Unbundled path: only named evidence gap. Supplied brief: allowed.
+1. Run once: `python3 .pi/skills/bof3-re/scripts/agent-context.py reverse SELECTOR` (ordered common/role context incl. `docs/agents/lessons.md`, manifest/map/Splat/header, bindings, selected source/asm, data-scan gaps).
+2. Never `read` an emitted `=====` path; unbundled path only for a named evidence gap. Supplied brief allowed.
 3. Skill: `.pi/skills/bof3-re/SKILL.md` (matching ladder, fast-evidence commands, pipeline-test contract). Role: `.pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md`.
 
 ## Edits
@@ -35,18 +35,18 @@ Lift only prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@
 2. Audit `volatile` first; grep-remove stranded macros.
 3. `bin/permute`: 60s hard cap/run, one run per ladder rung, never chain. Keep compact rung ledger.
 4. Missing/guessed type, symbol role, field layout, caller ABI, branch target, value lifetime → focused static analysis: `bin/rz-project status TARGET` → `bin/rev-query` calls/xrefs/symbols → target-isolated `bin/rz-project open TARGET` (function/callers/data only). Record hypothesis supported/rejected.
-5. Context rung + clean-C lifetime/expression-order stalls → terminal search before aids/escalation: `bin/flag-search SELECTOR`, then `--compiler ID` for every installed historical compiler catalog ID. Record best scores + first-mismatch changes. Skip only with mismatch-class evidence.
+5. Context rung + clean-C lifetime/expression-order stalls → terminal search before aids/escalation: `bin/flag-search SELECTOR`, then `--compiler ID` for every installed historical compiler. Record best scores + first-mismatch changes. Skip only with mismatch-class evidence.
 
 ## Aids
-- `REGISTER_PIN(type, name, reg)`: Make one bounded local experiment only after steps 4–5 + bounded source permuter stall, for asm-diff-proven allocator or entry-register residual. Pin one local only (e.g. reversed `move t0,a1; move v0,zero` → pin result local `v0`); never full register map.
+- `REGISTER_PIN(type, name, reg)`: one bounded local experiment only after steps 4–5 + bounded permuter stall, for asm-diff-proven allocator/entry-register residual. Pin one local only (e.g. reversed `move t0,a1; move v0,zero` → pin result local `v0`); never a full register map.
 - Keep original signedness (`sltu` = unsigned thresholds); never wrong signed fields for close bytes.
 - `barrier()`: evidenced memory-access ordering only; never allocator ordering or nop delay slot.
 - Retain pin only after live exact byte-match + independent review: local `MATCHING_AID` (residual, exhausted rungs, exact check, removal condition) + `matching_aids` entry.
-- Numeric `"$N"`: explicit user approval + proof macro form changes codegen. No function-specific pin macro.
-- Toolchain/catalog changes: SKILL.md pipeline-test contract. `just setup` primes catalog installs; never manage cache/install manually.
+- Numeric `"$N"`: explicit user approval + proof the macro form changes codegen. No function-specific pin macro.
+- Toolchain/catalog changes: pipeline-test contract (references/CLEANUP/RULES.md). `just setup` primes catalog installs; never manage cache/install manually.
 
 ## Escalation
-Restore regressing experiments, but leave the best coherent candidate for independent review. Report truthful changed files + `parent_restore_required: true`; only the parent may restore that candidate after review + lesson integration.
+Restore regressing experiments; leave the best coherent candidate for independent review. Report truthful changed files + `parent_restore_required: true`; only the parent restores after review + lesson integration.
 
 ## Git
 Never commit/push/reset/clean/checkout/setup/spawn children. Read-only `git diff --cached --quiet` only.

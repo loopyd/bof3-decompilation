@@ -27,11 +27,7 @@ long prose -> short rules -> arrow map -> command table
 - Group/deduplicate concepts; use terse fragments.
 - Tables: commands/ownership/states. Mermaid: branches.
 - Keep needed examples.
-
-Preserve: front matter; prohibitions; exceptions; approvals; safety; ownership;
-evidence; freshness; acceptance; revert/escalation; tools; budgets; selectors;
-paths; commands; flags; schemas; outputs; test literals; links/anchors/URLs;
-formulas; addresses; `SKILL.md`/reference boundaries.
+- Preserve: front matter; prohibitions; exceptions; approvals; safety; ownership; evidence; freshness; acceptance; revert/escalation; tools; budgets; selectors; paths; commands; flags; schemas; outputs; test literals; links/anchors/URLs; formulas; addresses; `SKILL.md`/reference boundaries.
 
 ## Run
 
@@ -51,5 +47,4 @@ Markdown policy only. No semantic changes; code, target metadata, lifts,
 generated state, stage, commit, or push. Preserve unrelated dirt. Failed
 contract -> repair/revert scoped rewrite; never waive.
 
-Report files, size delta, checks, review, skips, risks. See
-[checklist](references/CONTRACTS.md).
+Report files, size delta, checks, review, skips, risks. See [checklist](references/CONTRACTS.md).

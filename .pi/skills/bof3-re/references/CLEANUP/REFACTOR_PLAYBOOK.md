@@ -1,6 +1,6 @@
 # Refactor playbook — byte-match-safe cleanup ladder
 
-Cleanup edits are cosmetic and evidence-preserving only. Any edit that touches a lift body requires a post-cleanup live `bin/byte-match TARGET@0xADDRESS` before handoff; on failure revert, never fix forward. Apply the ladder top down; stop at the first rung that resolves the drift.
+Cleanup edits are cosmetic and evidence-preserving only. Any lift-body edit requires post-cleanup live `bin/byte-match TARGET@0xADDRESS`; on failure revert, never fix forward. Apply the ladder top down; stop at the first rung that resolves the drift.
 
 ## Safe ladder (no re-validation beyond diff hygiene)
 
@@ -10,14 +10,14 @@ Cleanup edits are cosmetic and evidence-preserving only. Any edit that touches a
 
 ## Guarded ladder (per affected selector: live `bin/asm-diff TARGET@0xADDRESS --detail normal` no first-difference, then `bin/byte-match TARGET@0xADDRESS` exit 0)
 
-4. **Spelling transactions** — rename a target-local symbol/field with unchanged address, width, signedness, volatility, and layout; update map, declaration, binding, and same-target references together (RULES.md evidence gate). A `func_` file/function rename additionally requires the file's `@behavior`/`@source` metadata and the Splat label in the same transaction. A retained partial lift may be renamed automatically when the semantic gate passes, but only as a spelling transaction: preserve body, ABI, boundary, compiler settings, and `@status partial`/`@match`/`@residual` metadata exactly.
+4. **Spelling transactions** — rename a target-local symbol/field with unchanged address, width, signedness, volatility, and layout; update map, declaration, binding, and same-target references together (RULES.md evidence gate). A `func_` file/function rename additionally requires the file's `@behavior`/`@source` metadata and the Splat label in the same transaction. A retained partial lift may be renamed automatically when the semantic gate passes, but only as a spelling transaction preserving body, ABI, boundary, compiler settings, and `@status partial`/`@match`/`@residual` metadata exactly.
 5. **Declaration consolidation** — merge a duplicate declaration into the owning `internal.h` only when the forms are token-identical. A qualifier difference is behavior, not drift.
 6. **Macro hygiene** — remove a macro only after grep proves zero users; never "simplify" a surviving macro body.
 
 ## Never safe as cleanup
 
-- Loop/branch/statement rewrites, type "modernization", extracting shared bodies, reordering declarations or initializers, changing `volatile` or signedness "for consistency".
-- Renaming `func_XXXXXXXX` files or functions outside a rung-4 spelling transaction, moving files/targets outside `relocate-batch`, touching Splat boundaries, SDK maps, shared headers, compiler flags.
+- Loop/branch/statement rewrites, type "modernization", extracting shared bodies, reordering declarations/initializers, changing `volatile` or signedness "for consistency".
+- Renaming `func_XXXXXXXX` files/functions outside a rung-4 spelling transaction, moving files/targets outside `relocate-batch`, touching Splat boundaries, SDK maps, shared headers, compiler flags.
 - Any edit justified by style alone. Style drift in a byte-matched lift is matching evidence, not a defect.
 
 ## Naming standards (proven renames only)
@@ -26,4 +26,4 @@ Types `s8/u8/s16/u16/s32/u32/f32` (`include/base/types.h`); locals/struct fields
 
 ## Validation
 
-Naming: `bin/symbols normalize TARGET --write`, `bin/symbols check TARGET`, `bin/splat TARGET`, `bin/build TARGET`, `git diff --check`, `git diff --cached --quiet`. A source-path rename must regenerate stale Ninja/Make metadata through `bin/build TARGET`; never hand-edit `build/`. Confirm the old source path is absent from the regenerated build graph and current manifest source exists. Exact lifts: live `bin/asm-diff TARGET@0xADDRESS --detail normal` (no first-difference) plus `bin/byte-match TARGET@0xADDRESS`. Spelling-only partial lifts: capture live pre/post `asm-diff` and `byte-match`, require the same match percentage/byte sizes/first mismatch and preserved partial metadata; exactness is not required and body changes are forbidden. Docs: resolve changed links, grep the stale claim, focused docs tests. Audit: no mutation.
+Naming: `bin/symbols normalize TARGET --write`, `bin/symbols check TARGET`, `bin/splat TARGET`, `bin/build TARGET`, `git diff --check`, `git diff --cached --quiet`. A source-path rename must regenerate stale Ninja/Make metadata through `bin/build TARGET`; never hand-edit `build/`; confirm the old source path is absent from the regenerated graph and the current manifest source exists. Exact lifts: live normal `asm-diff` (no first-difference) + `byte-match`. Spelling-only partial lifts: live pre/post `asm-diff`/`byte-match`, same percentage/byte sizes/first mismatch + preserved metadata; exactness not required, body changes forbidden. Docs: resolve changed links, grep the stale claim, focused docs tests. Audit: no mutation.

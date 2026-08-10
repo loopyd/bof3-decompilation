@@ -35,7 +35,7 @@ Read-only summary before analysis/index work (one target or all):
 python3 .pi/skills/psx-rizin/scripts/snapshot-status.py [TARGET]
 ```
 
-Emits manifest identity, binary hash, snapshot freshness, index readiness as one JSON; never runs analysis or changes files. Stale target: `bin/rz-project analyze TARGET`, then `bin/index`.
+Emits manifest identity, binary hash, snapshot freshness, index readiness as one JSON; never runs analysis or changes files. Stale: `bin/rz-project analyze TARGET`, then `bin/index`.
 
 ## Route the task
 
@@ -72,12 +72,12 @@ Broad case: read WORKFLOW.md. Focused task: matching reference only, then bundle
 
 ## Deliver
 
-Report only needed evidence: input identity + proven address model; target/overlay-qualified findings + confidence; relevant static + runtime evidence; matching status when requested; contradictions, unknowns, next useful experiment. Mark unsupported conclusions `[INFERRED]` with the evidence chain.
+Report needed evidence only: input identity + proven address model; target/overlay-qualified findings + confidence; relevant static + runtime evidence; matching status when requested; contradictions/unknowns/next experiment. Mark unsupported conclusions `[INFERRED]` with the evidence chain.
 
-Broad-case completion requires verifying: inventory, address mapping, overlay identity, function boundaries, indirect control flow, symbol provenance, runtime coverage, decompiler reconciliation, exclusion of proprietary inputs from distributable artifacts.
+Broad-case completion verifies: inventory, address mapping, overlay identity, function boundaries, indirect control flow, symbol provenance, runtime coverage, decompiler reconciliation, exclusion of proprietary inputs from distributable artifacts.
 
 ## Utilities
 
-Repo-wired (prefer): `bin/rz-project` — target-qualified analyze/status/open (writes `out/reverse/snapshots/<encoded-target>.json`); `bin/rev-query` — cross-target index (`out/index/`). Lift-side (`asm-diff`/`byte-match`/`permute`/`decomp-status`/`symbols`/`splat`) follow the bof3-re evidence table.
+Repo-wired: `bin/rz-project` — target-qualified analyze/status/open (writes `out/reverse/snapshots/<encoded-target>.json`); `bin/rev-query` — cross-target index (`out/index/`). Lift-side (`asm-diff`/`byte-match`/`permute`/`decomp-status`/`symbols`/`splat`) follow the bof3-re evidence table.
 
-> Note: earlier `bin/psx-rizin`, `bin/lift`, `bin/build-diff`, and generic legacy `scripts/*.py` helpers are NOT wired here. `scripts/snapshot-status.py` is the supported read-only readiness check above; use repo `bin/` entrypoints for analysis, symbol import, replay coverage.
+> Note: legacy `bin/psx-rizin`, `bin/lift`, `bin/build-diff`, and generic `scripts/*.py` helpers are NOT wired here. `scripts/snapshot-status.py` is the supported read-only readiness check above; use `bin/` entrypoints for analysis, symbol import, replay coverage.

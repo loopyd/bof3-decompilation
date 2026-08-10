@@ -1,6 +1,6 @@
 # Review checklist
 
-Review one selector, exact or non-exact. `agent-context.py review SELECTOR` preloads this file, `SHARING_NONMATCHES.md`, `docs/agents/lessons.md`, and target evidence. Do not reread bundled paths; load an unbundled spec only for a concrete finding. Use executor brief/diff/rung ledger; run fresh `bin/byte-match TARGET@0xADDRESS` only for an exact claim. `decomp-status` is cache, never acceptance. No `just check`, brief, m2c, Rizin, or index rebuild unless a concrete finding needs it.
+Review one selector, exact or non-exact. `agent-context.py review SELECTOR` preloads this file, `SHARING_NONMATCHES.md`, `docs/agents/lessons.md`, target evidence. Use executor brief/diff/rung ledger; fresh `bin/byte-match TARGET@0xADDRESS` only for an exact claim. `decomp-status` is cache, never acceptance. No `just check`, brief, m2c, Rizin, or index rebuild without a concrete finding.
 
 1. live byte match exits 0 for an exact claim;
 2. no banned asm/direct pins/asm-renamed externs/unauthorized `INCLUDE_ASM`; a retained `REGISTER_PIN` has allocator/entry-register evidence, local `MATCHING_AID`, live exact match, independent review;
@@ -8,13 +8,13 @@ Review one selector, exact or non-exact. `agent-context.py review SELECTOR` prel
 4. new game function bindings have local reviewed map+ABI+binding or shared SDK ownership; do not block unchanged pre-existing debt;
 5. changed map/Splat facts pass `bin/symbols check TARGET`, `bin/splat TARGET`;
 6. `git diff --check` clean; no secrets, `inputs/`, or unintended staged files; `git diff --cached --quiet` allowed;
-7. non-exact escalation: inspect the present best candidate and live diff; verify the first original/current difference, mismatch class, rung-specific attempts, next evidence needed. Any type, symbol role, field layout, caller ABI, branch target, or value lifetime still missing or guessed → require a focused target-qualified Rizin context rung (`bin/rz-project status`, `bin/rev-query` calls/xrefs/symbols, only relevant target-isolated function/caller/data inspection) before accepting escalation. Rizin is contextual evidence, not register-allocation or byte-acceptance evidence. Also require the supported flag matrix + every installed historical compiler (`bin/flag-search`, then `--compiler ID`), unless the report proves the mismatch class profile-insensitive. Return `needs-fix` when a required rung or sibling-proven lever was skipped or misapplied. Do not require restored state: parent restoration happens only after this review;
-8. compare residual + successful/failed levers against preloaded lessons. Reusable cross-function rule → edit the smallest applicable `docs/agents/lessons.md` or `docs/specs/**/*.md` statement before verdict. Omit selector/address, percentages, transient state, dates. Genuinely one-function-only → explicitly return `lesson: none` with the reason. Apply `SHARING_NONMATCHES.md` to the parent's sharing decision.
+7. non-exact: inspect best candidate/live first diff, mismatch, attempts, prior handoffs. `needs-fix` returns 1–3 new ranked experiments (lever, expected effect, evidence, accept/revert). No evidence-free repeat; unknown type/symbol/layout/ABI/CFG/lifetime → focused target-qualified Rizin first. Require supported + installed historical profiles unless proven insensitive. Exhausted coherent partial → `pass` + empty experiments + explicit ladder attestation. `block` only for rejected semantics/types, invalid ownership/boundary, approval/safety, or external tool blocker — never ordinary non-exactness. Do not require restoration;
+8. partial→exact: identify decisive experiment, compare pre/post diffs. Reviewer records reusable rules only in `docs/agents/lessons.md`/`docs/specs/**/*.md`; matching-playbook-narrower rule → return proposed wording for parent. Function-only → `lesson: none` + evidence. Omit selector/address, percentages, transient state, dates. Apply `SHARING_NONMATCHES.md` to the sharing decision.
 
 Verdict: `pass`, `needs-fix`, or `block`.
 
 ```json
-{"function":"TARGET@0xADDRESS","verdict":"pass|needs-fix|block","findings":[{"file":"","line":0,"rule":"","issue":""}],"residual_class":"exact|types|symbols|cfg|frame|allocation|scheduling|compiler|boundary|data","next_lever":"","lesson":"path updated|none: reason","parent_restore_required":false}
+{"function":"TARGET@0xADDRESS","verdict":"pass|needs-fix|block","findings":[],"residual_class":"exact|types|symbols|cfg|frame|allocation|scheduling|compiler|boundary|data","experiments":[{"lever":"","expected_effect":"","accept_if":"","revert_if":"","evidence":""}],"ladder_exhausted":false,"lesson":"path updated|parent playbook proposal|none: reason","parent_restore_required":false}
 ```
 
 Append the required fenced `acceptance-report` with copied IDs, actual checks, validation, risks, fresh staged-index result.
