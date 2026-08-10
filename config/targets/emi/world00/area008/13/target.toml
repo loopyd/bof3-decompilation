@@ -14,6 +14,7 @@ sources = [
     "src/bof3/world/dispatchMode.c",
     "src/bof3/world/drawFlagStatus.c",
     "src/bof3/world/drawScratchStatus.c",
+    "src/bof3/world/func_801F2F24.c",
     "src/bof3/world/func_801F3244.c",
     "src/bof3/world/func_801F3654.c",
     "src/bof3/world/func_801F37B4.c",

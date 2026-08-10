@@ -69,7 +69,7 @@ extern World00Area008State* currentState;
 /* @source 0x801460E8 @kind unknown */
 extern volatile u8          D_801460E8;
 /* @source 0x80146866 @kind unknown */
-extern volatile u8          D_80146866;
+extern u8                   D_80146866;
 /* @source 0x801F53F4 */
 /* @kind: bss — per-area countdown byte; loaded from small tables, decremented
  * by the mode handlers. */
@@ -82,6 +82,7 @@ void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 
 void drawScratchStatus(void);
 void drawFlagStatus(void);
+void func_801F2F24(void);
 void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
 void func_801F3244(void);
 

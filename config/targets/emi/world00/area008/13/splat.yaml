@@ -47,7 +47,7 @@ segments:
     - asm
     - func_801F2E1C
   - - 804
-    - asm
+    - c
     - func_801F2F24
   - - 888
     - asm
