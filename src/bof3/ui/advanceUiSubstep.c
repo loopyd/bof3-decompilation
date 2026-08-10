@@ -2,10 +2,10 @@
 
 /* @source 0x801E2610
  * @behavior increments D_80148652.
- * @status partial
- * @match 37.50
- * @residual non-exact live audit: 3/8 instructions; 28 original bytes versus 32 current.
+ * @status exact
+ * @match 100.00
  */
 void advanceUiSubstep(void) {
-  D_80148652 += 1;
+  u8 *cell = &D_80148652;
+  *cell += 1;
 }

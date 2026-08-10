@@ -48,7 +48,7 @@ extern volatile u8  D_80148651;
  * handler, cleared by the UI-state reset. Kept raw (shared-map address).
  * @source 0x80148652
  * @kind unknown */
-extern volatile u8  D_80148652;
+extern u8 D_80148652;
 /* @source 0x8014865F @kind unknown */
 extern volatile u8  D_8014865F;
 /* @source 0x80148654
