@@ -665,8 +665,10 @@ segments:
     - '@source: src/bof3/ui/func_8019EAF4.c'
     - '@behavior: Dispatches the handler table (0x801C81C0) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 37688
-    - asm
+    - c
     - func_8019EB38
+    - '@source: src/bof3/ui/func_8019EB38.c'
+    - '@behavior: Initializes work-area route and coordinates from global tables, then advances the work substate.'
   - - 37920
     - asm
     - func_8019EC20

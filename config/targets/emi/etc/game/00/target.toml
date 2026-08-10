@@ -78,6 +78,7 @@ sources = [
     "src/bof3/ui/func_8019E780.c",
     "src/bof3/ui/func_8019E918.c",
     "src/bof3/ui/func_8019EAF4.c",
+    "src/bof3/ui/func_8019EB38.c",
     "src/bof3/ui/func_8019EE10.c",
     "src/bof3/ui/func_8019F2CC.c",
     "src/bof3/ui/func_8019F310.c",

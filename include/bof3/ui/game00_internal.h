@@ -90,7 +90,9 @@ struct GameWorkArea {
   u8  route_index_08; /* 0x08 */
   u8  pad_09[0x02];   /* 0x09-0x0A */
   u8  field_0B;       /* 0x0B */
-  u8  pad_0C[0x0C];   /* 0x0C-0x17 */
+  s32 field_0C;       /* 0x0C */
+  s32 field_10;       /* 0x10 */
+  u8  pad_14[0x04];   /* 0x14-0x17 */
   s32 unk_18;         /* 0x18 */
   u8  pad_1C[0x0D];   /* 0x1C-0x28 */
   u8  unk_29;         /* 0x29 */
@@ -371,10 +373,22 @@ extern s8          D_8014865C;
 extern u8          D_80149332;
 /* @source 0x80145EC0 @kind unknown */
 extern u8          D_80145EC0;
+/* @source 0x80145E98 @kind unknown */
+extern u8          D_80145E98;
 /* @source 0x80145EC4 @kind unknown */
 extern u32         D_80145EC4;
 /* @source 0x80145EC8 @kind unknown */
 extern u32         D_80145EC8;
+/* @source 0x80145ECE @kind unknown */
+extern u16         D_80145ECE;
+/* @source 0x80181AC0 @kind table */
+extern s32         D_80181AC0[];
+/* @source 0x80181AC4 @kind table */
+extern s32         D_80181AC4[];
+/* @source 0x80181B94 @kind table */
+extern s32         D_80181B94[];
+/* @source 0x80181B98 @kind table */
+extern s32         D_80181B98[];
 /* @source 0x80149308 @kind unknown */
 extern u32         D_80149308;
 extern u32         D_8014930C;
