@@ -1741,7 +1741,7 @@ segments:
     - asm
     - func_801C41D0
   - - 192300
-    - asm
+    - c
     - func_801C472C
   - - 192364
     - asm
