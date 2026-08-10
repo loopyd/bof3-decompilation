@@ -19,6 +19,9 @@ typedef struct Battle03FiveDispatchTable {
 typedef struct Battle03EightDispatchTable {
   Battle03Handler handlers[8];
 } Battle03EightDispatchTable;
+typedef struct Battle03NineteenDispatchTable {
+  Battle03Handler handlers[19];
+} Battle03NineteenDispatchTable;
 typedef struct Battle03SeventyDispatchTable {
   Battle03Handler handlers[110];
 } Battle03SeventyDispatchTable;
@@ -255,6 +258,7 @@ extern const char   D_801D0C70[]; /* @source 0x801D0C70 @kind unknown */
 extern const char   D_801D0C74[]; /* @source 0x801D0C74 @kind unknown */
 extern u8           D_801462E1[]; /* @source 0x801462E1 @kind unknown */
 extern const u8     D_801EAF88[][6]; /* @source 0x801EAF88 */
+extern Battle03NineteenDispatchTable D_801D0CD0; /* @source 0x801D0CD0 @kind unknown */
 extern Battle03QueuedSlot* volatile D_801EC2E0; /* @source 0x801EC2E0 @kind unknown */
 extern Battle03SlotStore            D_801EC330[]; /* @source 0x801EC330 @kind unknown */
 /* @kind: bss (map symbol: uiRingHead) — UI ring consumer index. */

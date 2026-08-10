@@ -919,8 +919,9 @@ segments:
     - c
     - stubHandler5Aec
   - - 85748
-    - asm
+    - c
     - func_801E5AF4
+    - '@source: src/bof3/battle/func_801E5AF4.c'
   - - 85900
     - c
     - dispatchSlotByte5TableD1c
