@@ -10,6 +10,9 @@
 
 typedef void (*GameEntry0StateHandler)(void);
 
+/* @source 0x801454F4 @kind unknown */
+extern u8 D_801454F4[3][3];
+
 /* @source 0x80195ED4 @kind table */
 extern GameEntry0StateHandler workStateHandlerTable[5];
 

@@ -1624,8 +1624,10 @@ segments:
     - asm
     - func_801C16B8
   - - 180288
-    - asm
+    - c
     - func_801C1840
+    - '@source: src/bof3/ui/func_801C1840.c'
+    - '@behavior: clears all nine bytes in the three-by-three state table'
   - - 180348
     - asm
     - func_801C187C
