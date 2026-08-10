@@ -273,7 +273,11 @@ extern u16 D_80143B92;
 extern u8 D_80143BB0;
 /* @behavior current world state ID for world/front routing */
 /* @source 0x80143F00 @kind unknown */
-extern volatile u16 D_80143F00;
+extern u16 D_80143F00;
+/* @source 0x801C7F74 @kind table */
+extern u8 D_801C7F74[11][0x1C];
+
+u8 func_8019A194(void);
 /* @behavior world/front flags: bit0=scenario pending, bit3=alt front mode */
 /* @source 0x80143F02 @kind unknown */
 extern volatile u8 D_80143F02;

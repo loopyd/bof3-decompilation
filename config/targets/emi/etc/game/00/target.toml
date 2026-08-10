@@ -54,6 +54,7 @@ sources = [
     "src/bof3/ui/func_8019959C.c",
     "src/bof3/ui/advancePanelXTo80.c",
     "src/bof3/ui/advancePanelField6To40_game00_801999B8.c",
+    "src/bof3/ui/func_8019A194.c",
     "src/bof3/ui/func_8019A3B8.c",
     "src/bof3/ui/func_8019A53C.c",
     "src/bof3/ui/clearWorkStatusAndFlags.c",
