@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/emitMarkerQuad.c",
     "src/bof3/world/func_801F35E0.c",
     "src/bof3/world/func_801F3618.c",
+    "src/bof3/world/func_801F36D0.c",
 ]
 support_sources = [
     "src/bof3/support/area02713_symbols.c",
