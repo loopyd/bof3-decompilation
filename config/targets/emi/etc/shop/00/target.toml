@@ -36,6 +36,7 @@ sources = [
     "src/bof3/ui/func_801D6184.c",
     "src/bof3/ui/func_801D7344.c",
     "src/bof3/ui/func_801D7E08.c",
+    "src/bof3/ui/func_801DAA78.c",
     "src/bof3/ui/func_801DE188.c",
     "src/bof3/ui/func_801DE1C4.c",
     "src/bof3/ui/func_801DE850.c",

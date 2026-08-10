@@ -165,4 +165,11 @@ extern void (*D_801E5D68[])(void);
 void appendFullscreenDimTileB(void);
 void func_801DE8E8(void);
 
+typedef struct ShopValueRecord {
+  u16 value;
+  u8 unk_02[6];
+} ShopValueRecord;
+
+extern ShopValueRecord D_801CB8DC[][99];
+
 #endif
