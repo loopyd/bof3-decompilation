@@ -275,8 +275,10 @@ segments:
     - asm
     - func_801DAE3C
   - - 41604
-    - asm
+    - c
     - func_801DAE84
+    - '@source: src/bof3/world/func_801DAE84.c'
+    - '@behavior: clears the scratch work-record action byte after setting its state byte when both area flags are zero.'
   - - 41684
     - c
     - func_801DAED4

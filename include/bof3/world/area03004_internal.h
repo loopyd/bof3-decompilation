@@ -114,6 +114,7 @@ void func_801DC590(void);
 void func_801DC64C(void);
 void func_801DC708(void);
 void func_801DA8E8(void);
+void func_801DAE84(void);
 void func_801DAED4(void);
 void submitPanelPair(s16 arg0, s16 arg1);
 void configureSpriteClut(s16 arg0, s16 arg1, u8 arg2);
