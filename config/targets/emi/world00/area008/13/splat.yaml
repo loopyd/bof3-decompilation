@@ -148,8 +148,10 @@ segments:
     - '@source: src/bof3/world/func_801F3D88.c'
     - '@behavior: draws the local textured frame as four translucent FT4 border strips (left edge, top/bottom span, right-inner span, right edge) around a shared texture window, then queues the matching inner fill rectangle.'
   - - 5844
-    - asm
+    - c
     - func_801F42D4
+    - '@source: src/bof3/world/func_801F42D4.c'
+    - '@behavior: selects a halfword from the local mode table, stores it to the shared area value, and maps modes zero and one to scenario flags one and zero respectively.'
   - - 5940
     - asm
     - func_801F4334

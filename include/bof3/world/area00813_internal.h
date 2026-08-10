@@ -74,6 +74,14 @@ extern u8                   D_80146866;
 /* @kind: bss — per-area countdown byte; loaded from small tables, decremented
  * by the mode handlers. */
 extern volatile u8          countdown;
+/* @source 0x80146864 @kind unknown */
+extern volatile u8          g_ScenarioProgress;
+/* @source 0x801490A8 @kind unknown */
+extern u16                  D_801490A8;
+/* @source 0x801490C7 @kind unknown */
+extern s8                   D_801490C7;
+/* @source 0x801F53F0 @kind table */
+extern u16                  D_801F53F0[];
 
 s32  GetGraphType(void);
 s32  func_8017E3F4(char* buffer, const char* format, ...);
