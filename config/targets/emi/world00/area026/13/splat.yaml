@@ -51,8 +51,10 @@ segments:
     - asm
     - func_801F300C
   - - 1116
-    - asm
+    - c
     - func_801F305C
+    - '@source: src/bof3/world/func_801F305C.c'
+    - '@behavior: resets the area state and selects scenario progress from the area flags.'
   - - 1180
     - c
     - setScenarioFlagBit29ClearBit28
