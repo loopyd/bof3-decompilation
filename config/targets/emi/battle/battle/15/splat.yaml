@@ -1066,7 +1066,7 @@ segments:
     - c
     - func_800AA874
   - - 82084
-    - asm
+    - c
     - func_800AA8A4
   - - 82172
     - asm

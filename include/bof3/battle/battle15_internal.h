@@ -71,6 +71,11 @@ typedef struct BattleLocalWork {
   u8 unk_05[0x13B];
 } BattleLocalWork;
 
+typedef struct BattleStatusSlots {
+  u8 slots[10];
+  u8 unk_0A[0x136];
+} BattleStatusSlots;
+
 typedef struct BattleLocalOffsetPair {
   s16 values[4][2];
 } BattleLocalOffsetPair;
@@ -169,6 +174,7 @@ extern volatile u8   D_801462E6; /* @source 0x801462E6 @kind unknown */
 extern BattleSelectionAction battleSelectionActionTable[]; /* @source 0x800B65FC @kind table */
 extern volatile u16  D_801462E8; /* @source 0x801462E8 @kind unknown */
 extern volatile BattleLocalWork D_80145E90[]; /* @source 0x80145E90 @kind unknown */
+extern BattleStatusSlots D_80145F7E[]; /* @source 0x80145F7E @kind unknown */
 extern u8  D_80145FB0[]; /* @source 0x80145FB0 @kind unknown */
 extern u8  D_801EB2E8[]; /* @source 0x801EB2E8 @kind unknown */
 extern u8  D_801EB72C[]; /* @source 0x801EB72C @kind unknown */

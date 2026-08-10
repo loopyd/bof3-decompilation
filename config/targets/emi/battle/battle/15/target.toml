@@ -102,6 +102,7 @@ sources = [
     "src/bof3/battle/func_800A6870.c",
     "src/bof3/battle/func_800A82A0.c",
     "src/bof3/battle/func_800AA874.c",
+    "src/bof3/battle/func_800AA8A4.c",
     "src/bof3/battle/func_800AAA74.c",
     "src/bof3/battle/func_800AAEBC.c",
     "src/bof3/battle/func_800AB4BC.c",
