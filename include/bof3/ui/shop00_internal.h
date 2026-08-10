@@ -30,6 +30,18 @@ extern u8 D_8014835E;
 extern u8 D_8014835F;
 extern u8 D_80148360;
 extern u8 D_80148361;
+extern u8 D_80148378[];
+extern u8 D_80148379;
+extern u8 D_8014837A;
+extern u8 D_8014837B;
+extern s16 D_8014837C;
+extern s16 D_8014837E;
+extern u8 D_80148382;
+extern u8 D_8014839D;
+extern u8 D_8014839E;
+extern u8 D_8014839F;
+extern s16 D_801483A0;
+extern s16 D_801483A2;
 extern u8 D_80148625;
 extern u8 D_80148626;
 

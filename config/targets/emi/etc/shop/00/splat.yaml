@@ -537,8 +537,9 @@ segments:
     - initializeShopUiState
     - '@source: src/bof3/ui/initializeShopUiState.c'
   - - 72484
-    - asm
+    - c
     - func_801E2724
+    - '@source: src/bof3/ui/func_801E2724.c'
   - - 72636
     - c
     - func_801E27BC

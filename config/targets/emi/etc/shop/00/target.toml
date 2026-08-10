@@ -54,6 +54,7 @@ sources = [
     "src/bof3/ui/func_801E2590.c",
     "src/bof3/ui/advanceUiSubstep.c",
     "src/bof3/ui/initializeShopUiState.c",
+    "src/bof3/ui/func_801E2724.c",
     "src/bof3/ui/func_801E27BC.c",
     "src/bof3/ui/func_801E2D5C.c",
     "src/bof3/ui/panelNoop.c",
