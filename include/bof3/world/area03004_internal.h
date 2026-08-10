@@ -116,6 +116,7 @@ void func_801DC474(void);
 void func_801DC590(void);
 void func_801DC64C(void);
 void func_801DC708(void);
+void func_801DC7EC(void);
 void func_801DA8E8(void);
 void func_801DAE84(void);
 void func_801DAED4(void);

@@ -376,8 +376,10 @@ segments:
     - asm
     - func_801DC74C
   - - 48108
-    - asm
+    - c
     - func_801DC7EC
+    - '@source: src/bof3/world/func_801DC7EC.c'
+    - '@behavior: Initializes three scratch work-record bytes when the shared mode is zero.'
   - - 48184
     - c
     - func_801DC838

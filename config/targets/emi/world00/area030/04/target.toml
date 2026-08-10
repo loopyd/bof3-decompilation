@@ -38,6 +38,7 @@ sources = [
     "src/bof3/world/func_801DC590.c",
     "src/bof3/world/func_801DC64C.c",
     "src/bof3/world/func_801DC708.c",
+    "src/bof3/world/func_801DC7EC.c",
     "src/bof3/world/func_801DC838.c",
     "src/bof3/world/func_801DC904.c",
     "src/bof3/world/func_801DCC74.c",
