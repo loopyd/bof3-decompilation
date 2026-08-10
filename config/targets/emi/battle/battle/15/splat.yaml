@@ -317,7 +317,7 @@ segments:
     - asm
     - func_8009D198
   - - 29332
-    - asm
+    - c
     - func_8009DA94
   - - 29364
     - asm
