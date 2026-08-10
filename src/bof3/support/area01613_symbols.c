@@ -2,6 +2,9 @@
 
 /* Absolute bindings are grouped in the adjacent symbols/*.c translation units. */
 
+WEAK_SYMBOL_AT(D_801454F2, 0x801454f2);
+WEAK_SYMBOL_AT(D_80146258, 0x80146258);
+
 /* Local handler tables: extern-array bindings so `as` expands the
  * indexed relocation with the original `addu $at,$at,$idx` operand order. */
 WEAK_SYMBOL_AT(D_801F5114, 0x801f5114);

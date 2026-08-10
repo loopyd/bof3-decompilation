@@ -1,5 +1,6 @@
 D_80143C40 = 0x80143C40;
 D_80145029 = 0x80145029;
+D_801454F2 = 0x801454F2;
 D_80145988 = 0x80145988;
 D_801462E2 = 0x801462E2;
 seedScratchDefaults = 0x801F3400;
@@ -7,6 +8,7 @@ func_801F341C = 0x801F341C;
 resetAdvanceScratchState = 0x801F3460;
 dispatchAdvanceStates = 0x801F34A0;
 dispatchState02 = 0x801F34C8;
+func_801F350C = 0x801F350C;
 advanceScratchHeightState02 = 0x801F355C;
 advanceState02Step = 0x801F35B8;
 dispatchState03 = 0x801F368C;

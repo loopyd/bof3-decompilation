@@ -66,8 +66,10 @@ segments:
     - asm
     - dispatchState02
   - - 2316
-    - asm
+    - c
     - func_801F350C
+    - '@source: src/bof3/world/func_801F350C_area01613.c'
+    - '@behavior: advances the scratch state when the global mode and input flag permit it.'
   - - 2396
     - c
     - advanceScratchHeightState02
