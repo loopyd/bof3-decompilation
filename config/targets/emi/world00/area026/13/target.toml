@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/copyWorkareaFieldsAndAdvanceMode.c",
     "src/bof3/world/resetWorkareaSelectMode2_801F2D1C.c",
     "src/bof3/world/resetWorkareaSelectMode3.c",
+    "src/bof3/world/func_801F300C.c",
     "src/bof3/world/func_801F305C.c",
     "src/bof3/world/setScenarioFlagBit29ClearBit28.c",
     "src/bof3/world/clearScenarioFlagBit29.c",

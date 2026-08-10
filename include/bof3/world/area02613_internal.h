@@ -16,12 +16,15 @@ extern volatile u8 g_ScenarioProgress;
 extern u16 D_801490A8;
 /* @source 0x801490C7 @kind unknown */
 extern s8 D_801490C7;
+/* @source 0x801F4CDC @kind table */
+extern u16 D_801F4CDC[];
 
 void game_stop_selection_fx(u32 effect_group, s32 effect_id);
 void func_8015B580(void* arg0, u8 bit_index);
 void func_8015B5A8(void* arg0, u8 bit_index);
 
 void copyWorkareaFieldsAndAdvanceMode(void); /* @source 0x801F2C48 */
+void func_801F300C(void);
 void func_801F305C(void);
 
 void setScenarioFlagBit29ClearBit28(void);

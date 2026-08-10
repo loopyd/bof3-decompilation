@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801F2E04
   - - 1036
-    - asm
+    - c
     - func_801F300C
+    - '@source: src/bof3/world/func_801F300C.c'
+    - '@behavior: selects a table value and scenario progress from the signed area mode.'
   - - 1116
     - c
     - func_801F305C
