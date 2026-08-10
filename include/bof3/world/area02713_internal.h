@@ -19,6 +19,8 @@ extern MATRIX D_801492E8;
 extern SVECTOR D_1F800014[];
 /* @source 0x80146864 @kind unknown */
 extern volatile u8 g_ScenarioProgress;
+/* @source 0x801490A8 @kind unknown */
+extern u16 D_801490A8;
 /* @source 0x801490C7 @kind unknown */
 extern s8 D_801490C7;
 /* @source 0x801F3AB4 @kind table */
@@ -40,6 +42,7 @@ void func_801F33A8(void);
 POLY_FT4* emitMarkerQuad(const void* arg0, s32 arg1, u32 arg2);
 void func_801F3618(void);
 void func_801F3650(void);
+void func_801F3690(void);
 void func_801F36D0(void);
 
 #define WORLD00_AREA027_PRIMITIVE_PTR PSX_REF(volatile u8*, 0x8014598cu)

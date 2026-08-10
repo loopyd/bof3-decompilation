@@ -84,8 +84,10 @@ segments:
     - '@source: src/bof3/world/func_801F3650.c'
     - '@behavior: Resets area state; flags 0 and 1 set scenario progress to 5 and 6 respectively.'
   - - 2704
-    - asm
+    - c
     - func_801F3690
+    - '@source: src/bof3/world/func_801F3690.c'
+    - '@behavior: Clears area state and maps area flag 0 or 1 to scenario progress 91 or 90.'
   - - 2768
     - c
     - func_801F36D0
