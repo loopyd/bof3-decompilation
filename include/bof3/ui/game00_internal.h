@@ -51,6 +51,8 @@ extern GameEntry0HandlerSet D_80195F10;
 /* @source 0x80195F44 @kind table */
 extern GameEntry0DispatchSet D_80195F44;
 
+void func_801C5474(void);
+
 void func_801ACF2C(void);
 void func_801AD0EC(void);
 void func_801AD184(void);

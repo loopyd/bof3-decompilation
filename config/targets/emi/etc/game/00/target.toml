@@ -106,6 +106,7 @@ sources = [
     "src/bof3/ui/func_801B3260.c",
     "src/bof3/ui/func_801B32D0.c",
     "src/bof3/ui/func_801B3540.c",
+    "src/bof3/ui/func_801B3670.c",
     "src/bof3/ui/func_801B69C0.c",
     "src/bof3/ui/func_801B6FDC.c",
     "src/bof3/ui/func_801B726C.c",
