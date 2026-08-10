@@ -58,6 +58,8 @@ void func_801AD218(void);
 void func_801AD2CC(void);
 void func_801AD3B4(void);
 
+u8 func_801C3A18(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
+u8 func_801C3B78(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
 u8 func_801C476C(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
 u8 func_801C48FC(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
 
