@@ -49,7 +49,18 @@ def default_directory(source: Path, root: Path) -> Path:
 
 
 def assembly_path(source: Path, function: str, root: Path) -> Path:
-    target_relative = source.parent.relative_to(root / "src")
+    from ..domain.sources import owning_manifest
+
+    manifest = owning_manifest(root, source)
+    if manifest is not None:
+        # Manifest ownership is target-qualified and path-independent: an
+        # explicitly claimed lift may live outside the target source_dir, but
+        # its Splat assembly always lands under out/splat/<target>/asm.
+        target_relative = Path(manifest.id.value)
+    else:
+        # Legacy source-qualified projection for sources without a manifest
+        # owner.
+        target_relative = source.parent.relative_to(root / "src")
     directory = root / "out" / "splat" / target_relative / "asm"
     exact = directory / f"{function}.s"
     if exact.is_file():

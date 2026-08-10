@@ -59,6 +59,46 @@ def _lift_env(tmp_path: Path, *, address: int = 0x801CE758) -> Path:
     return source
 
 
+def _claimed_out_of_tree_env(
+    tmp_path: Path, *, address: int = 0x801E2724
+) -> Path:
+    """A manifest-owned lift living outside its target source_dir.
+
+    Mirrors the real ``emi/etc/shop/00`` claim on ``src/bof3/ui/*``: Splat
+    output is target-qualified, never projected from source ancestry.
+    """
+
+    name = f"func_{address:08X}"
+    config = tmp_path / "config" / "targets" / "emi" / "etc" / "shop" / "00"
+    config.mkdir(parents=True, exist_ok=True)
+    (config / "target.toml").write_text(
+        'schema = "harness.target/v2"\n'
+        'id = "emi/etc/shop/00"\n'
+        'kind = "emi"\n'
+        'source_dir = "src/emi/etc/shop/00"\n'
+        'binary = "out/binaries/emi/etc/shop/00.bin"\n'
+        'splat = "config/targets/emi/etc/shop/00/splat.yaml"\n'
+        "load_address = 0x801D0C00\n"
+        f'sources = ["src/bof3/ui/{name}.c"]\n',
+        encoding="utf-8",
+    )
+    (config / "symbols.txt").write_text(
+        f"{name} = 0x{address:08X};\n", encoding="utf-8"
+    )
+    (config / "splat.yaml").write_text(
+        "segments:\n"
+        f"  - [{address - 0x801D0C00}, c, {name}]\n"
+        "  - [32]\n",
+        encoding="utf-8",
+    )
+    source = tmp_path / "src" / "bof3" / "ui" / f"{name}.c"
+    source.parent.mkdir(parents=True)
+    source.write_text(
+        f"/* @source 0x{address:08X} @behavior test */\n", encoding="utf-8"
+    )
+    return source
+
+
 # ---------------------------------------------------------------------------
 # Preparer
 # ---------------------------------------------------------------------------
@@ -141,6 +181,48 @@ def test_function_name_invalid_raises() -> None:
         permute.resolve_function_name(
             Path("x.c"), "bad-name!", Path("/root")
         )
+
+
+# ---------------------------------------------------------------------------
+# assembly_path — target-qualified ownership
+# ---------------------------------------------------------------------------
+
+
+def test_assembly_path_target_owned_source_resolves_target_splat(
+    tmp_path: Path,
+) -> None:
+    """A manifest-owned lift outside the source_dir resolves target Splat asm."""
+    source = _claimed_out_of_tree_env(tmp_path)
+    expected = (
+        tmp_path
+        / "out"
+        / "splat"
+        / "emi"
+        / "etc"
+        / "shop"
+        / "00"
+        / "asm"
+        / "func_801E2724.s"
+    )
+    # Not yet split: the canonical target-qualified path is still returned so
+    # ensure_target_assembly can report it as the looked-for location.
+    assert permute.assembly_path(source, "func_801E2724", tmp_path) == expected
+    expected.parent.mkdir(parents=True)
+    expected.write_text("glabel func_801E2724\n", encoding="utf-8")
+    assert permute.assembly_path(source, "func_801E2724", tmp_path) == expected
+
+
+def test_assembly_path_legacy_source_qualified_fallback(tmp_path: Path) -> None:
+    """An unclaimed source keeps the legacy source-ancestry projection."""
+    source = tmp_path / "src" / "bof3" / "ui" / "func_801CE758.c"
+    source.parent.mkdir(parents=True)
+    source.write_text(
+        "/* @source 0x801CE758 @behavior test */\n", encoding="utf-8"
+    )
+    expected = (
+        tmp_path / "out" / "splat" / "bof3" / "ui" / "asm" / "func_801CE758.s"
+    )
+    assert permute.assembly_path(source, "func_801CE758", tmp_path) == expected
 
 
 # ---------------------------------------------------------------------------
