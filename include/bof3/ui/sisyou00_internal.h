@@ -15,6 +15,8 @@ extern u8 D_80144968[];
 extern u8 D_801490D8[];
 /* @source 0x80143BB0 @kind unknown */
 extern u8 D_80143BB0;
+/* @source 0x80146254 @kind unknown */
+extern u8 D_80146254;
 /* @source 0x801448ED @kind bss */
 /* Index of the active master; selects the entry whose action base is read
  * from masterActionBaseTable. */
@@ -50,6 +52,8 @@ extern u8 modeIndex;
 /* @source 0x801D4286 @kind unknown */
 /* Index selecting the handler from the D_801D41FC table. */
 extern u8 D_801D4286;
+/* @source 0x801D428A @kind unknown */
+extern u8 D_801D428A;
 
 /* PsyQ SDK primitive setup helpers called by this target.
  * SetSprt8 / SetSemiTrans are declared by <libgpu.h> (via bof3/psyq.h);
