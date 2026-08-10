@@ -79,8 +79,10 @@ segments:
     - '@source: src/bof3/world/func_801F3618.c'
     - '@behavior: Resets area state and conditionally arms two flags.'
   - - 2640
-    - asm
+    - c
     - func_801F3650
+    - '@source: src/bof3/world/func_801F3650.c'
+    - '@behavior: Resets area state; flags 0 and 1 set scenario progress to 5 and 6 respectively.'
   - - 2704
     - asm
     - func_801F3690

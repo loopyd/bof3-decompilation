@@ -39,6 +39,7 @@ void emitMarkerPair(void);
 void func_801F33A8(void);
 POLY_FT4* emitMarkerQuad(const void* arg0, s32 arg1, u32 arg2);
 void func_801F3618(void);
+void func_801F3650(void);
 void func_801F36D0(void);
 
 #define WORLD00_AREA027_PRIMITIVE_PTR PSX_REF(volatile u8*, 0x8014598cu)
