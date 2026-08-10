@@ -3,9 +3,9 @@
 ## Goal and baseline
 
 Store one target-qualified JSON file per target under `out/reverse/snapshots/`
-instead of `out/reverse/<target>/snapshot.json`. There are currently 23
-manifest targets and 23 hierarchical snapshots. `out/` and the SQLite reverse
-index are disposable.
+instead of `out/reverse/<target>/snapshot.json`. The implementation now stores
+all 23 manifest snapshots flat with no nested `snapshot.json` files. `out/` and
+the SQLite reverse index are disposable.
 
 Use collision-safe readable filenames: percent-encode the canonical target ID
 path components and join them with `--`, e.g.
@@ -13,7 +13,7 @@ path components and join them with `--`, e.g.
 as `exe/slus_004_22` make that encoding non-reversible and future collisions
 possible.
 
-## Phase 1 — canonical path and tests
+## Phase 1 — canonical path and tests (complete)
 
 1. Change only `snapshot_path()` in `tools/python/harness/snapshot.py`; keep all
    analyzer/index/status consumers routed through it.
@@ -27,7 +27,7 @@ possible.
    decomp-status, PsyQ, analysis-sequence, lift-loop-status, and skill-status
    tests pass.
 
-## Phase 2 — documentation and disposable regeneration
+## Phase 2 — documentation and disposable regeneration (complete)
 
 1. Update exact path references in `docs/usage.md`,
    `docs/agents/lessons.md`, `.pi/skills/psx-rizin/SKILL.md`, and its workflow /
@@ -39,6 +39,16 @@ possible.
    `out/reverse/snapshots/`; no nested `snapshot.json` remains; every
    `bin/rz-project status TARGET --json` is fresh; `bin/rev-query --json status`
    passes.
+
+## Validation evidence
+
+- Focused harness/skill suite: 43 tests passed.
+- Compaction audit and `git diff --check`: passed.
+- Generated state: 23 direct JSON files, zero nested `snapshot.json` files.
+- Every target reports `fresh=true`; `bin/rev-query --json status` lists all 23.
+- `test-skill-scripts.py` remains blocked by an unrelated generated context
+  exceeding its 100 KB ceiling; the modified psx-rizin Markdown passed the
+  compaction audit.
 
 ## Boundaries and non-goals
 

@@ -135,7 +135,7 @@ iteration procedure: [function matching](matching.md).
   definition: its lift file, a header/source declaration, or a
   `WEAK_SYMBOL_AT` binding; `bin/symbols check` enforces both rules.
 - Preserve pre-promotion evidence with an `INFERRED:` comment beside the owning metadata-tagged declaration: what was observed and what would verify promotion. Never create a semantic alias from a hint alone.
-- Compare target-qualified snapshots (`out/reverse/<target>/snapshot.json`);
+- Compare target-qualified snapshots (`out/reverse/snapshots/<encoded-target>.json`);
   equal addresses across targets are insufficient — overlays and PsyQ copies
   can share a role with different addresses or bytes.
 - Every `WEAK_SYMBOL_AT` in a hand-maintained, explicitly claimed

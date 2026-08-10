@@ -10,7 +10,7 @@ Testable target, e.g.: identify PsyQ calls everywhere; recover a function + all 
 2. Hash disc tracks, executables, overlays, BIOS, symbols, replays, sibling revisions.
 3. Record extraction tools/commands.
 4. Keep originals read-only.
-5. In this repo, generated files live in `out/`: snapshots `out/reverse/<target>/` (`bin/rz-project`), index `out/index/`, matching `out/matching/`, `out/permuter/`, `out/asm-diff/`. Outside: `.agent-work/psx-rizin/<case-id>/`.
+5. In this repo, generated files live in `out/`: snapshots `out/reverse/snapshots/<encoded-target>.json` (`bin/rz-project`), index `out/index/`, matching `out/matching/`, `out/permuter/`, `out/asm-diff/`. Outside: `.agent-work/psx-rizin/<case-id>/`.
 
 Manifest fields: `templates/case-manifest.yaml`.
 

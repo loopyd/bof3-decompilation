@@ -25,7 +25,7 @@ Explicit invocation only. Findings reproducible from authorized machine code + r
 7. Validate functions/args/types/names across callers, instructions, runtime evidence where practical.
 8. Keep independently loaded overlays in separate namespaces.
 9. Record symbol/signature provenance + confidence; preserve source names.
-10. Repo workspace: snapshots `out/reverse/<target>/` (`bin/rz-project`), index `out/index/` (`bin/rev-query`), matching `out/matching/`, `out/permuter/`, `out/asm-diff/`. Prefer wired `bin/` entrypoints when they cover the task.
+10. Repo workspace: snapshots `out/reverse/snapshots/<encoded-target>.json` (`bin/rz-project`), index `out/index/` (`bin/rev-query`), matching `out/matching/`, `out/permuter/`, `out/asm-diff/`. Prefer wired `bin/` entrypoints when they cover the task.
 
 ## Snapshot readiness
 
@@ -78,6 +78,6 @@ Broad-case completion requires verifying: inventory, address mapping, overlay id
 
 ## Utilities
 
-Repo-wired (prefer): `bin/rz-project` — target-qualified analyze/status/open (writes `out/reverse/<target>/`); `bin/rev-query` — cross-target index (`out/index/`). Lift-side (`asm-diff`/`byte-match`/`permute`/`decomp-status`/`symbols`/`splat`) follow the bof3-re evidence table.
+Repo-wired (prefer): `bin/rz-project` — target-qualified analyze/status/open (writes `out/reverse/snapshots/<encoded-target>.json`); `bin/rev-query` — cross-target index (`out/index/`). Lift-side (`asm-diff`/`byte-match`/`permute`/`decomp-status`/`symbols`/`splat`) follow the bof3-re evidence table.
 
 > Note: earlier `bin/psx-rizin`, `bin/lift`, `bin/build-diff`, and generic legacy `scripts/*.py` helpers are NOT wired here. `scripts/snapshot-status.py` is the supported read-only readiness check above; use repo `bin/` entrypoints for analysis, symbol import, replay coverage.

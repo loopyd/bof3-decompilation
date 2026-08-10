@@ -13,6 +13,7 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 SNAPSHOT_SCHEMA = "bof3.analysis-snapshot/v3"
 
@@ -20,7 +21,11 @@ SNAPSHOT_SCHEMA = "bof3.analysis-snapshot/v3"
 def snapshot_path(root: Path, target_id: str) -> Path:
     """Return the canonical generated snapshot path for a target."""
 
-    return root / "out" / "reverse" / target_id / "snapshot.json"
+    parts = target_id.split("/")
+    if not parts or any(part in ("", ".", "..") for part in parts):
+        raise ValueError(f"invalid target ID: {target_id}")
+    encoded = "--".join(quote(part, safe="_").replace("-", "%2D") for part in parts)
+    return root / "out" / "reverse" / "snapshots" / f"{encoded}.json"
 
 
 @dataclass(frozen=True)

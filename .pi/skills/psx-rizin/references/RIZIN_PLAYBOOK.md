@@ -1,6 +1,6 @@
 # Rizin playbook for PS1 binaries
 
-> In this repo prefer the wired `bin/rz-project` wrapper: `bin/rz-project analyze TARGET`, `bin/rz-project status TARGET`, `bin/rz-project open TARGET` (writes `out/reverse/<target>/`). The generic `rizin` invocations below are the skill-local fallback outside that workspace.
+> In this repo prefer the wired `bin/rz-project` wrapper: `bin/rz-project analyze TARGET`, `bin/rz-project status TARGET`, `bin/rz-project open TARGET` (writes `out/reverse/snapshots/<encoded-target>.json`). The generic `rizin` invocations below are the skill-local fallback outside that workspace.
 
 ## Canonical raw mapping
 

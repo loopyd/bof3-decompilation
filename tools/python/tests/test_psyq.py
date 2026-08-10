@@ -10,6 +10,7 @@ from harness.snapshot import (
     SNAPSHOT_SCHEMA,
     SnapshotUnresolvedCall,
     TargetSnapshot,
+    snapshot_path,
     write_snapshot,
 )
 from harness.toolchain import psyq_discovery
@@ -274,7 +275,7 @@ def test_signature_scan_merges_versions_and_calls_rizin_xrefs(tmp_path: Path) ->
             ),
         ),
     )
-    write_snapshot(snapshot, tmp_path / "out/reverse/exe/logo/snapshot.json")
+    write_snapshot(snapshot, snapshot_path(tmp_path, "exe/logo"))
 
     calls = find_calls(tmp_path)
 

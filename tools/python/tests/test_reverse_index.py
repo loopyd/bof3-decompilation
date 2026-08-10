@@ -14,6 +14,7 @@ from harness.snapshot import (
     SNAPSHOT_SCHEMA,
     SnapshotFunction,
     TargetSnapshot,
+    snapshot_path,
     write_snapshot,
 )
 
@@ -67,7 +68,7 @@ def _snapshot(root: Path, binary: Path) -> None:
         calls=(),
         unresolved_calls=(),
     )
-    write_snapshot(snapshot, root / "out/reverse/emi/test/archive/00/snapshot.json")
+    write_snapshot(snapshot, snapshot_path(root, TARGET))
 
 
 def test_rizin_replay_fingerprint_includes_claim_identity(
@@ -121,7 +122,7 @@ def test_project_recipe_is_target_qualified_and_read_only(tmp_path: Path) -> Non
 def test_status_rejects_pre_jal_snapshot_schema(tmp_path: Path) -> None:
     binary, _ = _manifest(tmp_path)
     _snapshot(tmp_path, binary)
-    snapshot = tmp_path / "out/reverse/emi/test/archive/00/snapshot.json"
+    snapshot = snapshot_path(tmp_path, TARGET)
     assert status(tmp_path, TARGET)["fresh"] is True
 
     payload = json.loads(snapshot.read_text(encoding="utf-8"))

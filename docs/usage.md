@@ -241,7 +241,7 @@ used for acceptance: immediately before accepting a lift, run live
 | `bin/spimdisasm` | disassemble MIPS images directly | terminal output or explicit destination |
 | `bin/symbols` | map check/normalize, bindings, PsyQ import/bindings/report | explicit subcommand |
 | `bin/rizin` | pinned local Rizin analyzer | terminal output only |
-| `bin/rz-project` | isolated Rizin analyze/status/open | `out/reverse/` on analyze |
+| `bin/rz-project` | isolated Rizin analyze/status/open | `out/reverse/snapshots/` on analyze |
 | `bin/index` | rebuild the fresh cross-target query cache | `out/index/` |
 | `bin/rev-query` | query fresh indexed evidence | none |
 | `bin/m2ctx`, `bin/m2c` | generate target context and C seed | `out/` or `-o` |

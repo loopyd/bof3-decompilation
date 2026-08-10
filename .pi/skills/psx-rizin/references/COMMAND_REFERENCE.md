@@ -1,6 +1,6 @@
 # Command reference
 
-> In this repo prefer wired `bin/rz-project`, `bin/asm-diff`, `bin/byte-match`, `bin/permute`. The Rizin summaries below are a generic reference for work outside `out/reverse/<target>/`.
+> In this repo prefer wired `bin/rz-project`, `bin/asm-diff`, `bin/byte-match`, `bin/permute`. The Rizin summaries below are a generic reference for work outside `out/reverse/snapshots/<encoded-target>.json`.
 
 ## Essentials
 

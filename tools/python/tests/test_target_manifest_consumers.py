@@ -17,10 +17,26 @@ from harness.commands import build as build_cmd
 from harness.commands import splat as splat_cmd
 from harness.io import repo_layout
 from harness.rizin_project import prepare_target
+from harness.snapshot import snapshot_path
 from harness.toolchain.splat import SplatToolchain
 
 CANONICAL = "emi/battle/batl_end/00"
 SHIPPED = "BIN/BATTLE/BATL_END.EMI#0"
+
+
+def test_snapshot_path_is_flat_injective_and_rejects_traversal(
+    tmp_path: Path,
+) -> None:
+    assert snapshot_path(tmp_path, "exe/slus_004_22") == (
+        tmp_path / "out/reverse/snapshots/exe--slus_004_22.json"
+    )
+    assert snapshot_path(tmp_path, "emi/a--b/00").name == "emi--a%2D%2Db--00.json"
+    assert snapshot_path(tmp_path, "emi/a/b--00").name != snapshot_path(
+        tmp_path, "emi/a--b/00"
+    ).name
+    for target_id in ("", "../exe/logo", "exe//logo", "exe/./logo"):
+        with pytest.raises(ValueError, match="invalid target ID"):
+            snapshot_path(tmp_path, target_id)
 
 
 def _write_target(
@@ -108,7 +124,7 @@ def test_rizin_canonical_identity_propagated(tmp_path: Path) -> None:
     _write_target(tmp_path, CANONICAL)
     project = prepare_target(tmp_path, SHIPPED)
     assert project.target == CANONICAL
-    assert project.snapshot == tmp_path / "out/reverse" / CANONICAL / "snapshot.json"
+    assert project.snapshot == snapshot_path(tmp_path, CANONICAL)
     assert "afn func_80100000 0x80100000" in project.replay
 
 
