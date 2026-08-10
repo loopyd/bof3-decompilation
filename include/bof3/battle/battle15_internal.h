@@ -104,6 +104,8 @@ extern volatile u32 D_801459F0; /* @source 0x801459F0 @kind unknown */
 extern s8 D_800B4E8C[]; /* @source 0x800B4E8C @kind unknown */
 extern BattleSelectionHandler D_800B6BF4[]; /* @source 0x800B6BF4 @kind unknown */
 extern BattleRecord D_801EB630[]; /* @source 0x801EB630 @kind unknown */
+extern u8 D_801463C4[]; /* @source 0x801463C4 @kind unknown */
+extern u8 D_801463C7; /* @source 0x801463C7 @kind unknown */
 
 u32 func_800AF66C(BattleRange *range, u32 value);
 
