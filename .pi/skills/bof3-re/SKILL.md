@@ -47,7 +47,7 @@ Honor the selected function/group. None selected: rank via `bin/rev-query <quick
 **Never edit C before a live asm diff.** Diagnose first mismatch, classify per [matching playbook](../../../docs/agents/matching-playbook.md#delay-slots-and-entry-copies), one structural fix, rerun normal diff; revert at once if percentage drops. Full diff only for first/ambiguous diagnosis. Partial-lift catalog = parent audit data, not live diagnosis. Fix order, three non-progressing diagnosed attempts per level:
 
 1. types/declarations: width, signedness, pointers, fields, prototypes;
-2. control flow: branch direction, loop/return/switch shape;
+2. control flow: branch direction, loop/return/switch shape; equal-valued arms use the playbook's bounded branch-shape matrix before escalation;
 3. expression/register order: temps, hoists, statement order; then an asm-diff-proven caller-register `CLOBBER_CALLER_REG(reg)` for delay-slot or fixed-address reload scheduling, local `MATCHING_AID`; never to encode an opcode or clobber `s*`/`gp`/`sp`/`ra`;
 4. compiler profile: `bin/flag-search TARGET@0xADDRESS`; record only clean-C exact profiles;
 5. one bounded `bin/permute TARGET@0xADDRESS --time-limit 300 -j N` after shape is right;

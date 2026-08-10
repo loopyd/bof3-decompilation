@@ -131,6 +131,17 @@ order. A chain inversion surviving every C spelling is gcc 2.7
 `reorder_insns` normalization: no flag disables it (`-fno-thread-jumps` is a
 proven no-op); escalate, do not churn spellings.
 
+### Equal-valued branch arms
+
+GCC may range-fold grouped cases or reverse/tail-merge an `if` chain. Try, one
+live diff each: ordered then nested/inverted equality tests; separate ungrouped
+`case` bodies with varied case/default order; duplicated arm stores/returns;
+then shared locals or explicit labels. Keep the best semantic shape; stop after
+three non-progressing variants. Locals can alter the register web. Proven on
+`emi/world00/area027/13@0x801F3650`: separate equal-valued cases prevented
+`slti` range folding and
+improved 12/16 to 14/16 at equal size; tail merging remained.
+
 ### Duplicate identical calls in `if/else` arms
 
 When the original computes a value directly in `$a0` in each branch and
