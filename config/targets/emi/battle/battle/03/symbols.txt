@@ -272,6 +272,7 @@ func_801E5AF4 = 0x801E5AF4;
 dispatchSlotByte5TableD1c = 0x801E5B8C;
 dispatchSlotByte5TableEd4 = 0x801E5C1C;
 rollSlotTimerAdvance = 0x801E6088;
+func_801E60DC = 0x801E60DC;
 advanceSlotPosition = 0x801E6154;
 func_801E62BC = 0x801E62BC;
 dispatchSlotByte1TableF20 = 0x801E63C0;

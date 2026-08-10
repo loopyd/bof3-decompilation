@@ -944,8 +944,10 @@ segments:
     - '@source: src/bof3/battle/rollSlotTimerAdvance.c'
     - '@behavior: Decrements the queued-slot timer and advances its selector on wrap.'
   - - 87260
-    - asm
+    - c
     - func_801E60DC
+    - '@source: src/bof3/battle/func_801E60DC.c'
+    - '@behavior: Advances the current queued slot motion and resets it when its timer expires.'
   - - 87380
     - c
     - advanceSlotPosition

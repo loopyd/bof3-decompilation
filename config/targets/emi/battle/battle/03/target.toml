@@ -153,6 +153,7 @@ sources = [
     "src/bof3/battle/func_801E590C.c",
     "src/bof3/battle/func_801E5A38.c",
     "src/bof3/battle/func_801E5AF4.c",
+    "src/bof3/battle/func_801E60DC.c",
     "src/bof3/battle/func_801E62BC.c",
     "src/bof3/battle/func_801E7818.c",
     "src/bof3/battle/func_801E7B34.c",
