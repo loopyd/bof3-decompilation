@@ -77,6 +77,9 @@ iteration procedure: [function matching](matching.md).
 - Model stack locals with official PsyQ SDK types (e.g. `MATRIX`) when the
   evidence fits; ad-hoc `u32` arrays round to 8-byte slots and inflate the
   frame.
+- When adjacent source blobs are copied into adjacent stack ranges, model them
+  as separate locals. Combining both into one aggregate while also declaring
+  the second blob duplicates storage and inflates the frame.
 ### Share duplicate behavior, not target ownership
 
 - Exact bytes make a strong source-shape reuse candidate; they globalize no

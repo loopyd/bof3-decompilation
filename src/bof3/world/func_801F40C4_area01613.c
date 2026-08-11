@@ -11,8 +11,8 @@ void func_801F40C4(s16 arg0, s16 arg1) {
 
   if ((D_8014832E & 0x1bu) != 0u) {
     y = arg1;
-    func_801F39D8(arg0, y, 4u);
-    func_801F39D8((s16)(arg0 + 0x80), y, 5u);
+    emitSemiTransparentSprite(arg0, y, 4u);
+    emitSemiTransparentSprite((s16)(arg0 + 0x80), y, 5u);
     func_8014F800((s16)(arg0 + 4), (s16)(arg1 + 4), 0, 0xffu,
                   0x80010000u + (u32)D_80010008);
   }

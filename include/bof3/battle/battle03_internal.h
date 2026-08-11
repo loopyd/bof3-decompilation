@@ -468,6 +468,9 @@ void func_801D8DF8(s32 arg0, s32 arg1, u32 arg2);
 u8   markBattlersMeetingOpposingThresholds(void);
 void drawDecimalGlyphRun(s16 arg0, u16 arg1, u8 arg2, s16 arg3);
 void func_801D9684(s16 arg0, u16 arg1, s32 arg2, u16 arg3);
+extern s8  D_80144952; /* @source 0x80144952 @kind unknown */
+extern u16 D_80033A08[]; /* @source 0x80033A08 @kind table */
+extern u16 D_801EAD30[]; /* @source 0x801EAD30 @kind table */
 void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void func_801D9C80(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void func_801D9DBC(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);

@@ -612,8 +612,10 @@ segments:
     - '@source: src/bof3/world/func_801E1004.c'
     - '@behavior: draws three panel decorations, a label, and optional numeric values.'
   - - 67360
-    - asm
+    - c
     - func_801E1320
+    - '@source: src/bof3/world/func_801E1320.c'
+    - '@behavior: draws a value-dependent icon row and formatted numeric label.'
   - - 68140
     - asm
     - func_801E162C

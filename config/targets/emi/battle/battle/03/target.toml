@@ -107,6 +107,7 @@ sources = [
     "src/bof3/battle/findLocalWorkByKind.c",
     "src/bof3/battle/forwardPanelHalfwords.c",
     "src/bof3/battle/forwardSelectedEffectId.c",
+    "src/bof3/battle/func_801D9AB4.c",
     "src/bof3/battle/func_801D4850.c",
     "src/bof3/battle/func_801D4D44.c",
     "src/bof3/battle/func_801D54F8.c",

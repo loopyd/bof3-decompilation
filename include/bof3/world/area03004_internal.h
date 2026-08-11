@@ -46,6 +46,18 @@ extern void (*D_801E2348[])(void); /* @source 0x801E2348 @kind table */
 extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
 extern u8  D_801D0C30[];  /* @source 0x801D0C30 @kind rodata */
 extern u8  D_801D0C38[];  /* @source 0x801D0C38 @kind rodata */
+typedef struct IconRecord {
+  u8 icon, offset, first, second;
+} IconRecord;
+typedef struct IconData {
+  IconRecord records[13];
+} IconData;
+typedef struct ThresholdData {
+  u16 thresholds[13];
+} ThresholdData;
+extern IconData D_801D0C3C; /* @source 0x801D0C3C @kind rodata */
+extern ThresholdData D_801D0C70; /* @source 0x801D0C70 @kind rodata */
+extern u8 D_801D0C8C[]; /* @source 0x801D0C8C @kind rodata */
 extern u8  D_801C8964[];  /* @source 0x801C8964 @kind unknown */
 extern u8  D_801E28C4[];  /* @source 0x801E28C4 @kind rodata */
 extern u8  D_801E28D0[];  /* @source 0x801E28D0 @kind rodata */
@@ -108,6 +120,8 @@ int  func_8017E3F4(char* buffer, char* fmt, ...);
 void func_801D195C(s16 arg0, s16 arg1);
 void func_801D18CC(s16 arg0, s16 arg1, u8 arg2);
 void submitTpageDrawMode(s32 arg0, s32 arg1);
+u32 func_801E0B6C(void);
+extern u8 D_801454EC; /* @source 0x801454EC @kind unknown */
 u8*  func_801E0DCC(s32 arg0, s32 arg1, s16 arg2, s16 arg3);
 s32  func_801D9534(s16 arg0, u16 arg1, s16 arg2, s16 arg3, s32 arg4);
 void func_80196070(void);

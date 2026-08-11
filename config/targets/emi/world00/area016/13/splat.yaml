@@ -97,8 +97,8 @@ segments:
     - asm
     - func_801F3928
   - - 3544
-    - asm
-    - func_801F39D8
+    - c
+    - emitSemiTransparentSprite
   - - 3840
     - asm
     - func_801F3B00
