@@ -11,10 +11,10 @@ Review one selector, exact or non-exact. `agent-context.py review SELECTOR` prel
 7. non-exact: inspect best candidate/live first diff, mismatch, attempts, prior handoffs. `needs-fix` returns 1–3 new ranked experiments (lever, expected effect, evidence, accept/revert). No evidence-free repeat; unknown type/symbol/layout/ABI/CFG/lifetime → focused target-qualified Rizin first. Require supported + installed historical profiles unless proven insensitive. Exhausted coherent partial → `pass` + empty experiments + explicit ladder attestation. `block` only for rejected semantics/types, invalid ownership/boundary, approval/safety, or external tool blocker — never ordinary non-exactness. Do not require restoration;
 8. partial→exact: identify decisive experiment, compare pre/post diffs. Reviewer records reusable rules only in `docs/agents/lessons.md`/`docs/specs/**/*.md`; matching-playbook-narrower rule → return proposed wording for parent. Function-only → `lesson: none` + evidence. Omit selector/address, percentages, transient state, dates. Apply `SHARING_NONMATCHES.md` to the sharing decision.
 
-Verdict: `pass`, `needs-fix`, or `block`.
+Verdict: `pass`, `needs-fix`, or `block`. Every `block` sets `repairable:true` only for concrete executor-fixable source/metadata/binding findings; false for rejected semantics/types, invalid boundary, approval/safety, or external-tool failure. A repeated experiment requires non-empty `new_evidence` explaining its changed expected effect.
 
 ```json
-{"function":"TARGET@0xADDRESS","verdict":"pass|needs-fix|block","findings":[],"residual_class":"exact|types|symbols|cfg|frame|allocation|scheduling|compiler|boundary|data","experiments":[{"lever":"","expected_effect":"","accept_if":"","revert_if":"","evidence":""}],"ladder_exhausted":false,"lesson":"path updated|parent playbook proposal|none: reason","parent_restore_required":false}
+{"function":"TARGET@0xADDRESS","verdict":"pass|needs-fix|block","repairable":false,"findings":[],"residual_class":"exact|types|symbols|cfg|frame|allocation|scheduling|compiler|boundary|data","experiments":[{"lever":"","expected_effect":"","accept_if":"","revert_if":"","evidence":"","new_evidence":""}],"ladder_exhausted":false,"lesson":"path updated|parent playbook proposal|none: reason","parent_restore_required":false}
 ```
 
 Append the required fenced `acceptance-report` with copied IDs, actual checks, validation, risks, fresh staged-index result.

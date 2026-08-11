@@ -313,7 +313,7 @@ segments:
     - asm
     - func_801DAAF4
   - - 40848
-    - asm
+    - c
     - func_801DAB90
   - - 42204
     - asm

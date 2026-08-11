@@ -194,6 +194,7 @@ func_801BB81C = 0x801BB81C;
 updateWorkRouteIndex = 0x801BB8E8;
 func_801BDAB8 = 0x801BDAB8;
 findModeFreeSlot = 0x801BDB7C;
+func_801BDE14 = 0x801BDE14;
 clearResetRecord = 0x801BE710;
 func_801BE920 = 0x801BE920;
 func_801BEDD0 = 0x801BEDD0;

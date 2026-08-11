@@ -11,6 +11,7 @@ load_address = 0x801f2c00
 sources = [
     "src/bof3/world/resetWorkarea_801F2EE4.c",
     "src/bof3/world/dispatchScratchWorkByte1.c",
+    "src/bof3/world/func_801F2F04.c",
     "src/bof3/world/func_801F3480.c",
     "src/bof3/world/func_801F36A0.c",
     "src/bof3/world/func_801F36E4.c",

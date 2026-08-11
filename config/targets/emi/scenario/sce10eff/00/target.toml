@@ -14,6 +14,7 @@ sources = [
     "src/bof3/scenario/func_801D1EFC.c",
     "src/bof3/scenario/setupSceneObjectTransform.c",
     "src/bof3/scenario/tickScratchCountdownAndAdvanceState.c",
+    "src/bof3/scenario/func_801D2658.c",
 ]
 support_sources = [
     "src/bof3/support/sce10eff_symbols.c",

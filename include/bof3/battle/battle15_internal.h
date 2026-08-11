@@ -205,6 +205,7 @@ extern volatile s16  D_801EC2EE; /* @source 0x801EC2EE @kind unknown */
 extern volatile u8   D_80146394; /* @source 0x80146394 @kind unknown */
 extern s16* volatile D_801463A0; /* @source 0x801463A0 @kind unknown */
 extern volatile u16  D_801463C0; /* @source 0x801463C0 @kind unknown */
+extern u16 D_801EC2F2; /* @source 0x801EC2F2 @kind unknown */
 extern u16 D_801EC312; /* @source 0x801EC312 @kind unknown */
 extern u8 D_801CA71B[]; /* @source 0x801CA71B @kind unknown */
 extern u8 D_80145F34[]; /* @source 0x80145F34 @kind unknown */
@@ -320,8 +321,9 @@ u8                             func_8009C8AC(u16 required_mask);
 void                           func_8009CFEC(void);
 s16  func_800A2880(u8 battler_index, u16 base_value, u8 element_flag);
 s16  func_800A2AE0(u8 battler_index, u16 element_mask);
+s16  func_800A2D70(s32 battler_index, s32 selection_mask);
 void func_800A31E0(u8 selection_kind, u16 input_mask);
-u8   func_800A3A10(u8 battler_index, u8 selection_kind);
+s32  func_800A3A10(s32 battler_index, s32 selection_kind);
 u16  func_800A36F0(u8 battler_index, u16 flags);
 void func_800A3F28(void);
 u8   resetSelectionApplyInput(s32 input_mask);

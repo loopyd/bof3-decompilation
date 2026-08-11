@@ -44,6 +44,12 @@ extern void (*D_801E2304[])(void); /* @source 0x801E2304 @kind table */
 extern void (*D_801E2340[])(void); /* @source 0x801E2340 @kind table */
 extern void (*D_801E2348[])(void); /* @source 0x801E2348 @kind table */
 extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
+extern u8  D_801D0C30[];  /* @source 0x801D0C30 @kind rodata */
+extern u8  D_801D0C38[];  /* @source 0x801D0C38 @kind rodata */
+extern u8  D_801C8964[];  /* @source 0x801C8964 @kind unknown */
+extern u8  D_801E28C4[];  /* @source 0x801E28C4 @kind rodata */
+extern u8  D_801E28D0[];  /* @source 0x801E28D0 @kind rodata */
+extern u8  D_80145AD4[];  /* @source 0x80145AD4 @kind unknown */
 extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
 extern u8  D_801E238C[];  /* @source 0x801E238C @kind unknown */
@@ -106,6 +112,7 @@ u8*  func_801E0DCC(s32 arg0, s32 arg1, s16 arg2, s16 arg3);
 s32  func_801D9534(s16 arg0, u16 arg1, s16 arg2, s16 arg3, s32 arg4);
 void func_80196070(void);
 s16  func_8015477C(u16 arg0, u16 arg1);
+s32  func_801E0ABC(s32 arg0, s32 arg1);
 
 void func_801D11C0(void);
 void func_801D9B14(void);

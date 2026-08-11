@@ -7,14 +7,23 @@
 typedef struct ScenarioSce10effScratch {
   u8  pad_00[0x08];
   u8  flags_08;
-  u8  pad_09[0x2b];
+  u8  pad_09[0x25];
+  u16 screen_x_2e;
+  u16 screen_y_30;
+  u8  pad_32[0x02];
   s32 unk_34;
   s32 unk_38;
   u8  pad_3c[0x02];
-  s16 unk_3e;
+  u16 unk_3e;
 } ScenarioSce10effScratch;
+
+/* @source 0x1F800044 @kind unknown */
+extern ScenarioSce10effScratch* D_1F800044;
 
 /* @source 0x801D2708 @kind table */
 extern void (*D_801D2708[])(void);
+
+void func_8017AA30(void* arg0);
+void func_801D2658(void);
 
 #endif

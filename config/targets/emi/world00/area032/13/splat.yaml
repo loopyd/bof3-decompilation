@@ -41,8 +41,10 @@ segments:
     - '@source: src/bof3/world/resetWorkarea_801F2EE4.c'
     - '@behavior: Calls the shared work-area reset helper as slot 4 of the local handler table.'
   - - 772
-    - asm
+    - c
     - func_801F2F04
+    - '@source: src/bof3/world/func_801F2F04.c'
+    - '@behavior: Emits a ring of semi-transparent quadrilateral primitives.'
   - - 1192
     - c
     - dispatchScratchWorkByte1

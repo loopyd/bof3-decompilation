@@ -88,6 +88,7 @@ extern u8* g_PrimCursor;
  * appendRenderPrim is a game primitive-append helper (lifted in exe/slus_004_22).
  * @source 0x8014E5A0 */
 void appendRenderPrim(u32 ot_index, u32 primitive_size);
+void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
 

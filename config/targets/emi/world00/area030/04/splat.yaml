@@ -607,8 +607,10 @@ segments:
     - '@source: src/bof3/world/configureSpriteClut.c'
     - '@behavior: configures the requested AREA030 sprite and its CLUT entry after selecting graphics mode 1.'
   - - 66564
-    - asm
+    - c
     - func_801E1004
+    - '@source: src/bof3/world/func_801E1004.c'
+    - '@behavior: draws three panel decorations, a label, and optional numeric values.'
   - - 67360
     - asm
     - func_801E1320

@@ -100,7 +100,7 @@ segments:
     - asm
     - func_801D240C
   - - 6744
-    - asm
+    - c
     - func_801D2658
   - - 6920
     - rodata

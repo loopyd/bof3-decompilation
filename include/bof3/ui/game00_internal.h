@@ -51,8 +51,13 @@ extern GameEntry0HandlerSet D_80195F10;
 /* @source 0x80195F44 @kind table */
 extern GameEntry0DispatchSet D_80195F44;
 
+struct GameWorkArea;
+
 void func_801C0F9C(s32 arg0);
 void func_801C5474(void);
+s16 func_801BDCF8(void);
+u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range,
+                 struct GameWorkArea* work);
 
 void func_801ACF2C(void);
 void func_801AD0EC(void);
@@ -468,7 +473,7 @@ extern u8                  D_80149333;
 /* @source 0x8014933E @kind unknown */
 extern u8                  D_8014933E;
 /* @source 0x80146888 @kind unknown */
-extern struct GameWorkArea D_80146888[30];
+extern struct GameWorkArea D_80146888[];
 /* @source 0x8014933F @kind unknown */
 extern u8                  D_8014933F;
 /* @source 0x801CD954 @kind unknown */

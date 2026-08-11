@@ -60,6 +60,7 @@ sources = [
     "src/bof3/world/func_801E026C.c",
     "src/bof3/world/func_801E0394.c",
     "src/bof3/world/func_801E0DCC.c",
+    "src/bof3/world/func_801E1004.c",
     "src/bof3/world/queueIconStrip.c",
     "src/bof3/world/seedMenuScratch.c",
     "src/bof3/world/submitPanelPair.c",
