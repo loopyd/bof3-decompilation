@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801F31B4
   - - 1616
-    - asm
+    - c
     - func_801F3250
+    - '@source: src/bof3/world/func_801F3250.c'
+    - '@behavior: advances the current work entry by its three velocity fields, decrements two byte timers, and clears the active flag when timer +2 expires.'
   - - 1748
     - c
     - advanceStateSelectMode2

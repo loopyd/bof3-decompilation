@@ -81,6 +81,7 @@ void func_801F2DF8(const void* arg0);
 void func_801F2FD4(void* arg0);
 void func_801F3080(void);
 s32  dispatchWorkStates(void);
+void func_801F3250(void);
 void func_801F362C(void);
 void func_801F3708(void* arg0, const void* arg1, s16* arg2);
 void func_801F3944(const void* arg0);
