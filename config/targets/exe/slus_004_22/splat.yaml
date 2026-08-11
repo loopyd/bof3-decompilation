@@ -167,7 +167,7 @@ segments:
     start: 0xdb92c
     vram: 0x8017212c
     subsegments:
-      - [0xdb92c, asm, func_8017212C]
+      - [0xdb92c, asm, _SsVmKeyOffNow]
   - [0xdb9f8, bin, post_emi_gap_0xdb9f8]
   - name: cluster_4
     type: code
@@ -278,7 +278,7 @@ segments:
     start: 0xe7ab4
     vram: 0x8017e2b4
     subsegments:
-      - [0xe7ab4, asm, func_8017E2B4]
+      - [0xe7ab4, asm, _ExitCard]
   - [0xe7b1c, bin, post_emi_gap_0xe7b1c]
   - name: cluster_19
     type: code

@@ -92,6 +92,10 @@ address = 0x80149F28
 size = 0x14
 
 [psyq]
+[psyq.libraries.LIBSND]
+members = ["psyq/4.7/libsnd/VM_NOWOF.OBJ"]
+confidence = "high"
+evidence = ["out/psyq/index.json exact object match: 0x8017212C = _SsVmKeyOffNow"]
 [psyq.libraries.LIBGPU]
 members = ["psyq/4.0/libgpu/ext.obj"]
 confidence = "high"
@@ -121,6 +125,10 @@ members = [
     "psyq/4.7/libcard/a74.o",
     "psyq/4.7/libcard/c112.o",
     "psyq/4.7/libcard/patch.o",
+    "psyq/4.7/libcard/END.OBJ",
 ]
 confidence = "high"
-evidence = ["SLUS_004.22 card-init call targets match PsyQ 4.7 libcard.a symbols"]
+evidence = [
+    "SLUS_004.22 card-init call targets match PsyQ 4.7 libcard.a symbols",
+    "out/psyq/index.json exact object match: 0x8017E2B4 = _ExitCard",
+]
