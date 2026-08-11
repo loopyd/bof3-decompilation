@@ -380,8 +380,32 @@ extern s8          D_8014865C;
 extern u8          D_80149332;
 /* @source 0x80145EC0 @kind unknown */
 extern u8          D_80145EC0;
+typedef struct GameModeRecord {
+  u8 field_00;
+  u8 pad_01[3];
+  u32 field_04;
+  u32 field_08;
+  u32 field_0C;
+  u8 pad_10[0x11];
+  u8 field_21;
+  u8 pad_22[0x0A];
+  u32 field_2C;
+  u32 field_30;
+  u32 field_34;
+  u8 pad_38[0x0B];
+  u8 field_43;
+  u8 pad_44[0x2D];
+  u8 field_71;
+  u8 pad_72[0x9E];
+  u8 field_110;
+  u8 field_111;
+  u8 pad_112[0x12];
+  u8 field_124;
+  u8 pad_125[0x1B];
+} GameModeRecord;
+
 /* @source 0x80145E98 @kind unknown */
-extern u8          D_80145E98;
+extern GameModeRecord D_80145E98[];
 /* @source 0x80145EC4 @kind unknown */
 extern u32         D_80145EC4;
 /* @source 0x80145EC8 @kind unknown */
