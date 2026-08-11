@@ -98,7 +98,7 @@ segments:
     - func_801D218C
   - - 6156
     - c
-    - func_801D240C
+    - emitRadialTranslucentQuads
   - - 6744
     - c
     - func_801D2658

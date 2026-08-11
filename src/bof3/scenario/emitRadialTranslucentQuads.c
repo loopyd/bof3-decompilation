@@ -8,16 +8,17 @@
  * each iteration's second sample as the next iteration's first sample.
  * @source 0x801D240C
  * @status partial
- * @match 97.96
- * @residual scratchpad base materialization is one instruction short, moving
- * the loop head by four bytes; clean-C/profile search is review-pending
+ * @match 99.32
+ * @residual the SetDrawMode zero argument is materialized after, rather than
+ * before, the loop counter and scratchpad-radius initialization
  */
-void func_801D240C(void) {
+void emitRadialTranslucentQuads(void) {
   u8* primitive;
   s32* radius;
   s32 phase;
   s32 graph_value;
   u8 color;
+  s32 zero;
   s32 i;
 
   SPAD_REF(s32, 0) = (rand() & 7) + D_1F800044->color_0a * 3;
@@ -30,11 +31,12 @@ void func_801D240C(void) {
     graph_value = 0x35;
   }
 
-  radius = SPAD_ADDR(s32, 0);
-  SetDrawMode((DR_MODE*)g_PrimCursor, 0, 1, graph_value, 0);
+  zero = 0;
+  i = 0;
+  radius = &D_1F800000;
+  SetDrawMode((DR_MODE*)g_PrimCursor, zero, 1, graph_value, 0);
   func_8014E5A0(2, 12);
 
-  i = 0;
   do {
     primitive = g_PrimCursor;
     func_8017A97C(primitive);

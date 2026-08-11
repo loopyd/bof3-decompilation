@@ -19,6 +19,9 @@ typedef struct ScenarioSce10effScratch {
   u16 unk_3e;
 } ScenarioSce10effScratch;
 
+/* @source 0x1F800000 @kind unknown */
+extern s32 D_1F800000;
+
 /* @source 0x1F800044 @kind unknown */
 extern ScenarioSce10effScratch* D_1F800044;
 
