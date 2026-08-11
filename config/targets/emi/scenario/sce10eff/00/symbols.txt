@@ -6,5 +6,6 @@ func_801D0E9C = 0x801D0E9C;
 setupSceneObjectTransform = 0x801D0EE0;
 func_801D10C8 = 0x801D10C8;
 tickScratchCountdownAndAdvanceState = 0x801D1138;
+func_801D13C0 = 0x801D13C0;
 func_801D1EFC = 0x801D1EFC;
 D_801D2708 = 0x801D2708;
