@@ -39,7 +39,7 @@ bof3-reverse -> bof3-review -> [exact 100%] bof3-cleanup -> live gates -> bof3-r
 
 Per candidate until queue exhausted or fatal failure:
 
-1. `function-brief.py SELECTOR` (`TARGET@0xADDRESS` or shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`); pass same selector to `bof3-reverse`.
+1. `.pi/skills/bof3-re/scripts/function-brief.py SELECTOR` (`TARGET@0xADDRESS` or shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`); pass same selector to `bof3-reverse`.
 2. Relevant declared companion call: pass `companion-check` before dispatch; a static record proves no ABI/ownership.
 3. Executor returns mission JSON + checked acceptance report: exact lift, or **review-pending escalation** keeping its best coherent clean-C candidate in owned files; identifies baseline, best live diff, first mismatch class, rungs, changed files.
 4. Parent runs one live `byte-match` only for an exact claim. Status cache is never acceptance.

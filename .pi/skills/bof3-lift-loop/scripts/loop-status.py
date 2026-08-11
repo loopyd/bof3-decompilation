@@ -216,7 +216,7 @@ def main(
             if suppressed and suppressed.get("reason") == "recovery_incomplete"
             else "repair reverse-index evidence before selecting a candidate"
             if suppressed
-            else "select one candidate and run function-brief.py"
+            else "select one candidate and run .pi/skills/bof3-re/scripts/function-brief.py"
             if candidates["exit_code"] == 0
             else "inspect candidate query failure"
         ),
