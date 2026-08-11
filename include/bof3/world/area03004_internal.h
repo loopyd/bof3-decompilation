@@ -7,6 +7,7 @@
 /* Shared mode byte; stored small mode values (4/6/7/...) and compared
  * against them by the area030 mode handlers. */
 extern u16 D_80143C40;    /* @source 0x80143C40 @kind unknown */
+extern s32 D_80143E6C;    /* shared frame counter */
 extern u16 D_80143B92;    /* @source 0x80143B92 @kind unknown */
 extern u8  D_8014832E;    /* @source 0x8014832E @kind unknown */
 extern u8  D_80149332;    /* @source 0x80149332 @kind unknown */
@@ -57,8 +58,16 @@ extern u8 D_80145026;      /* @source 0x80145026 @kind unknown */
 extern u8 D_80145028;      /* @source 0x80145028 @kind unknown */
 extern u8 D_801E2720[];    /* @source 0x801E2720 @kind unknown */
 extern u8 D_801E2748[];    /* @source 0x801E2748 @kind unknown */
+extern u8 D_801E3208;      /* @source 0x801E3208 @kind unknown */
 extern s8* D_801E320C;     /* @source 0x801E320C @kind unknown */
 extern u8* D_801E3210;     /* @source 0x801E3210 @kind unknown */
+
+typedef struct Area030SlotState {
+  s32 value;
+  u8 pad_04[0x94];
+} Area030SlotState;
+
+extern Area030SlotState D_801468A4[]; /* @source 0x801468A4 @kind unknown */
 
 typedef struct Area030Range {
   u8 pad_00[0x8C];
