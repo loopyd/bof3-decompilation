@@ -6,6 +6,7 @@ WEAK_SYMBOL_AT(g_areaWork, 0x1f800044);
 /* Shared PsyQ primitive cursor (owned by the main exe; weak-bound here so the
  * overlay resolves to the exe's definition at link time). */
 WEAK_SYMBOL_AT(g_PrimCursor, 0x8014598c);
+WEAK_SYMBOL_AT(D_80146888, 0x80146888);
 WEAK_SYMBOL_AT(countdown, 0x801f53f4);
 WEAK_SYMBOL_AT(D_801490A8, 0x801490a8);
 WEAK_SYMBOL_AT(D_801490C7, 0x801490c7);

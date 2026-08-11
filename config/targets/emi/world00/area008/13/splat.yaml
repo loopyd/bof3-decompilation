@@ -75,8 +75,10 @@ segments:
     - '@source: src/bof3/world/resetScratchSelectMode1.c'
     - '@behavior: resets scratch-state offsets 0x09 and 0x01.'
   - - 1708
-    - asm
+    - c
     - func_801F32AC
+    - '@source: src/bof3/world/func_801F32AC.c'
+    - '@behavior: advances the area mode or clears the active entity flag.'
   - - 1860
     - asm
     - func_801F3344

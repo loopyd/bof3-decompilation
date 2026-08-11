@@ -15,12 +15,23 @@ typedef struct World00Area008State {
   u8 mode;
   u8 unk_02[0x7];
   u8 unk_09;
+  u8 unk_0a;
+  u8 entityIndex;
 } World00Area008State;
+
+typedef struct World00Area008Entity {
+  u8 flags;
+  u8 unk_01[0x97];
+} World00Area008Entity;
 
 typedef void (*World00Area008Handler)(void);
 
+/* @source 0x80146866 @kind unknown */
+extern u8           D_80146866;
 /* @source 0x80146867 @kind unknown */
 extern u8           D_80146867;
+/* @source 0x80146888 @kind unknown */
+extern World00Area008Entity D_80146888[];
 /* @source 0x80146C4C */
 /* @kind: bss — area counter 3; stepped by +/-0x800 via the counter3 table
  * triple. */
@@ -68,8 +79,6 @@ extern World00Area008State  areaState;
 extern World00Area008State* currentState;
 /* @source 0x801460E8 @kind unknown */
 extern volatile u8          D_801460E8;
-/* @source 0x80146866 @kind unknown */
-extern u8                   D_80146866;
 /* @source 0x801F53F4 */
 /* @kind: bss — per-area countdown byte; loaded from small tables, decremented
  * by the mode handlers. */
