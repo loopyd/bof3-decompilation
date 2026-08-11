@@ -391,6 +391,17 @@ void func_801DEA64(s32 arg0);
 #define BATTLE_UNK_801461CA        PSX_PTR(volatile u16, 0x801461cau)
 
 extern volatile u8 D_801485B8; /* @source 0x801485B8 @kind unknown */
+extern u8 D_801485B9; /* @source 0x801485B9 @kind unknown */
+extern u8 D_801485BA; /* @source 0x801485BA @kind unknown */
+extern s16 D_801485BC; /* @source 0x801485BC @kind unknown */
+extern u16 D_801485BE; /* @source 0x801485BE @kind unknown */
+extern u8 D_801485C2; /* @source 0x801485C2 @kind unknown */
+extern u8 D_801485C3; /* @source 0x801485C3 @kind unknown */
+extern u8 D_801485C4; /* @source 0x801485C4 @kind unknown */
+extern u8 D_801485C5; /* @source 0x801485C5 @kind unknown */
+extern u32 D_801485D8; /* @source 0x801485D8 @kind unknown */
+extern u8 D_80148656; /* @source 0x80148656 @kind unknown */
+extern u8 D_800B6F50[]; /* @source 0x800B6F50 @kind unknown */
 extern volatile u8 D_801485DC; /* @source 0x801485DC @kind unknown */
 
 /* @source 0x800B6D1C @kind unknown */
