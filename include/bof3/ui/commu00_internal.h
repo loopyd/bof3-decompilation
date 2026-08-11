@@ -98,7 +98,7 @@ void func_801F0C6C(u8 task_index, u8 record_kind_index);
 void func_801F0D3C(u8 task_index, u8 record_kind_index);
 void func_801F0E1C(u8 task_index, u8 record_kind_index);
 void activateTaskStatusC003(u8 task_index);
-void func_801F0F08(u8 source_index, u8 task_index, u8 record_kind_index);
+void activateScratchTaskWithBandLabel(u8 source_index, u8 task_index, u8 record_kind_index);
 void func_801F0FBC(u8 source_index, u8 task_index, u8 record_kind_index);
 void func_801F1064(u8 task_index, u8 record_kind_index);
 void func_801F1110(u8 task_index, u8 record_kind_index);

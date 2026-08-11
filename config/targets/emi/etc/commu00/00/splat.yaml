@@ -43,7 +43,7 @@ segments:
     - activateTaskStatusC003
   - - 8968
     - c
-    - func_801F0F08
+    - activateScratchTaskWithBandLabel
   - - 9148
     - asm
     - func_801F0FBC

@@ -66,7 +66,9 @@ segments:
     - func_801D12A8
   - - 1984
     - c
-    - func_801D13C0
+    - advanceScratchProgressUntil16
+    - '@source: src/bof3/scenario/advanceScratchProgressUntil16.c'
+    - '@behavior: Advances scratch byte 11, then advances byte 10 by two while it is below 16; otherwise resets byte 9 to 60 and advances byte 3.'
   - - 2096
     - asm
     - func_801D1430

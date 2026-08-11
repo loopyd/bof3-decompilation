@@ -5,7 +5,7 @@
  * @behavior Clears or invalidates the active slot state according to a frame-mask bit.
  * @status matching
  */
-void func_801DB0AC(void) {
+void setActiveSlotValueFromFrameMask(void) {
   if ((D_80143E6C & (3 >> ((u8*)D_801E320C)[3])) == 0) {
     D_801468A4[D_801E3208].value = -1;
   } else {

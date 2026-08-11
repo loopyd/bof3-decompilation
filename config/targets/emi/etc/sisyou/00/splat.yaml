@@ -180,7 +180,7 @@ segments:
     - func_801D3E70
   - - 13008
     - c
-    - func_801D3ED0
+    - commitMasterSelectionAndResetMode
   - - 13148
     - asm
     - T_801D3F5C

@@ -299,8 +299,8 @@ segments:
     - '@behavior: Selects a signed record value and records which slot was used.'
   - - 42156
     - c
-    - func_801DB0AC
-    - '@source: src/bof3/world/func_801DB0AC.c'
+    - setActiveSlotValueFromFrameMask
+    - '@source: src/bof3/world/setActiveSlotValueFromFrameMask.c'
     - '@behavior: Clears or invalidates the active slot state according to a frame-mask bit.'
   - - 42304
     - asm

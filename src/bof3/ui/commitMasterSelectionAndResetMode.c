@@ -9,7 +9,7 @@
  * into the active 152-byte record unless it is 0xFF, reset modeIndex, and
  * increment the shared selection counter.
  */
-void func_801D3ED0(void)
+void commitMasterSelectionAndResetMode(void)
 {
     u8 value;
     u8 recordIndex;

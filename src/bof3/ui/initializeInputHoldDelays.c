@@ -2,9 +2,9 @@
 
 /**
  * @source 0x801C3204
- * @behavior Updates two input hold-delay bytes from the current indexed record flags.
+ * @behavior Initializes two input hold-delay bytes from the current indexed record flags.
  */
-void updateInputHoldDelays(void)
+void initializeInputHoldDelays(void)
 {
   u8* work;
   u8 index;

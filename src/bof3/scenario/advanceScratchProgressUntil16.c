@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none; live audit is instruction- and byte-exact.
  */
-void func_801D13C0(void) {
+void advanceScratchProgressUntil16(void) {
   u8* scratch;
   u32 slot_offset;
 

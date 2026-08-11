@@ -35,7 +35,7 @@ sources = [
     "src/bof3/world/func_801DAE84.c",
     "src/bof3/world/func_801DAED4.c",
     "src/bof3/world/selectRecordValueAndSlot.c",
-    "src/bof3/world/func_801DB0AC.c",
+    "src/bof3/world/setActiveSlotValueFromFrameMask.c",
     "src/bof3/world/func_801DC474.c",
     "src/bof3/world/func_801DC590.c",
     "src/bof3/world/func_801DC64C.c",
