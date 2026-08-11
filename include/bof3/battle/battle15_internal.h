@@ -191,6 +191,11 @@ extern volatile s16  D_801EC2EE; /* @source 0x801EC2EE @kind unknown */
 extern volatile u8   D_80146394; /* @source 0x80146394 @kind unknown */
 extern s16* volatile D_801463A0; /* @source 0x801463A0 @kind unknown */
 extern volatile u16  D_801463C0; /* @source 0x801463C0 @kind unknown */
+extern u16 D_801EC312; /* @source 0x801EC312 @kind unknown */
+extern u8 D_801CA71B[]; /* @source 0x801CA71B @kind unknown */
+extern u8 D_80145F34[]; /* @source 0x80145F34 @kind unknown */
+extern u8 D_801EB6E4[]; /* @source 0x801EB6E4 @kind unknown */
+extern s16 D_800B497C[]; /* @source 0x800B497C @kind unknown */
 extern u8            D_801463C9; /* @source 0x801463C9 @kind unknown */
 extern volatile BattleSelectionFlags D_801CA718[]; /* @source 0x801CA718 @kind unknown */
 extern volatile BattleSelectionKind D_801CA71C[]; /* @source 0x801CA71C @kind unknown */
