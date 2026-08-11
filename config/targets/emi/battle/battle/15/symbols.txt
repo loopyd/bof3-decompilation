@@ -56,6 +56,7 @@ runPanelTasks16To19 = 0x8009B20C;
 dispatchSubstateTable44c8 = 0x8009B274;
 dispatchSubstateTable44d4 = 0x8009B44C;
 func_8009B700 = 0x8009B700;
+func_8009B794 = 0x8009B794;
 dispatchSubstateTable44e4 = 0x8009B964;
 clearStateWhenGateClear = 0x8009BA7C;
 func_8009BBE8 = 0x8009BBE8;
