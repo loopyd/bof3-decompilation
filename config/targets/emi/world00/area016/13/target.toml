@@ -16,6 +16,7 @@ sources = [
     "src/bof3/world/dispatchAdvanceStates.c",
     "src/bof3/world/advanceScratchHeightState02.c",
     "src/bof3/world/appendTransformedG4Panel.c",
+    "src/bof3/world/func_801F40C4_area01613.c",
     "src/bof3/world/dispatchArea016ScratchMode.c",
     "src/bof3/world/func_801F45CC.c",
     "src/bof3/world/resetAdvanceScratchState.c",

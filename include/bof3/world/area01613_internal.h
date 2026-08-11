@@ -35,8 +35,13 @@ extern World00Area016Handler D_801F51AC[];
 extern u8 D_801454F2;
 /* @source 0x80146258 @kind unknown */
 extern u16 D_80146258;
+/* @source 0x8014832E @kind unknown */
+extern u8 D_8014832E;
+/* @source 0x80010008 @kind unknown */
+extern u16 D_80010008;
 
 void func_8014E5A0(u8 arg0, u8 arg1);
+void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 s8   func_80166CB0(s16 arg0, s16 arg1);
 u8   func_801B6610(s16 arg0, s16 arg1);
 

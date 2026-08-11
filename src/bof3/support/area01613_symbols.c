@@ -4,6 +4,7 @@
 
 WEAK_SYMBOL_AT(D_801454F2, 0x801454f2);
 WEAK_SYMBOL_AT(D_80146258, 0x80146258);
+WEAK_SYMBOL_AT(func_8014F800, 0x8014f800);
 
 /* Local handler tables: extern-array bindings so `as` expands the
  * indexed relocation with the original `addu $at,$at,$idx` operand order. */

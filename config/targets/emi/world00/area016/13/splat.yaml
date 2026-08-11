@@ -107,8 +107,10 @@ segments:
     - appendTransformedG4Panel
     - '@source: src/bof3/world/appendTransformedG4Panel.c'
   - - 5316
-    - asm
+    - c
     - func_801F40C4
+    - '@source: src/bof3/world/func_801F40C4_area01613.c'
+    - '@behavior: emits two marker primitives and one display primitive when the shared display-enable mask is active.'
   - - 5496
     - c
     - dispatchArea016ScratchMode
