@@ -349,8 +349,9 @@ segments:
     - asm
     - func_801DDCB0
   - - 54192
-    - asm
+    - c
     - func_801DDFB0
+    - '@source: src/bof3/ui/func_801DDFB0.c'
   - - 54664
     - c
     - func_801DE188

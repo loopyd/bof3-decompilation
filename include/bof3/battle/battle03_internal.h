@@ -471,6 +471,7 @@ void func_801D9684(s16 arg0, u16 arg1, s32 arg2, u16 arg3);
 extern s8  D_80144952; /* @source 0x80144952 @kind unknown */
 extern u16 D_80033A08[]; /* @source 0x80033A08 @kind table */
 extern u16 D_801EAD30[]; /* @source 0x801EAD30 @kind table */
+extern u16 D_801EAE50[][2]; /* @source 0x801EAE50 @kind table */
 void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void func_801D9C80(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void func_801D9DBC(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);

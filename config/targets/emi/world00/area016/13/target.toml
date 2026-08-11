@@ -12,6 +12,7 @@ sources = [
     "src/bof3/world/dispatchState02.c",
     "src/bof3/world/dispatchState03.c",
     "src/bof3/world/emitSemiTransparentSprite.c",
+    "src/bof3/world/func_801F3B00_area01613.c",
     "src/bof3/world/func_801F350C_area01613.c",
     "src/bof3/world/func_801F341C_area01613.c",
     "src/bof3/world/dispatchAdvanceStates.c",

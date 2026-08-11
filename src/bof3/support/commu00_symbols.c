@@ -4,6 +4,8 @@ WEAK_SYMBOL_AT(uiMode, 0x801448eb);
 WEAK_SYMBOL_AT(fairyProgress, 0x801448ec);
 WEAK_SYMBOL_AT(fairySlotIndex, 0x801448ed);
 WEAK_SYMBOL_AT(progressHandlerTable, 0x801f25ec);
+WEAK_SYMBOL_AT(D_8014688E, 0x8014688e);
+WEAK_SYMBOL_AT(taskLabelWords, 0x80146904);
 WEAK_SYMBOL_AT(taskLabelBandTable, 0x801f2930);
 WEAK_SYMBOL_AT(commu00ScratchTask, 0x1f800044);
 WEAK_SYMBOL_AT(currentCommu00Task, 0x801f2948);

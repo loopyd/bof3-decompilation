@@ -27,8 +27,8 @@ segments:
     - asm
     - func_801F08D8
   - - 8180
-    - asm
-    - func_801F0BF4
+    - c
+    - activateTaskWithRandomLabel
   - - 8300
     - asm
     - func_801F0C6C

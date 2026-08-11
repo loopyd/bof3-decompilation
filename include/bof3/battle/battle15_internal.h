@@ -319,7 +319,7 @@ void                           resetStateWhenUnlockedB(void);
 void __attribute__((noinline)) runPanelTasks16To19(void);
 u8                             func_8009C8AC(u16 required_mask);
 void                           func_8009CFEC(void);
-s16  func_800A2880(u8 battler_index, u16 base_value, u8 element_flag);
+s16  func_800A2880(u8 battler_index, u16 base_value, u8 element_flag, u32 mode);
 s16  func_800A2AE0(u8 battler_index, u16 element_mask);
 s16  func_800A2D70(s32 battler_index, s32 selection_mask);
 void func_800A31E0(u8 selection_kind, u16 input_mask);

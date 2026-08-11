@@ -97,7 +97,7 @@ segments:
     - asm
     - func_801D218C
   - - 6156
-    - asm
+    - c
     - func_801D240C
   - - 6744
     - c

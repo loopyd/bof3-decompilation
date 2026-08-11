@@ -18,6 +18,7 @@ sources = [
     "src/bof3/ui/dispatchProgressTableAlt.c",
     "src/bof3/ui/dispatchSlotTable.c",
     "src/bof3/ui/copySelectedRecordKindToTaskRecord.c",
+    "src/bof3/ui/activateTaskWithRandomLabel.c",
     "src/bof3/ui/func_801F0E1C.c",
     "src/bof3/ui/activateScratchTaskWithBandLabel.c",
     "src/bof3/ui/func_801F1064.c",

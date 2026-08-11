@@ -54,6 +54,8 @@ extern GameEntry0DispatchSet D_80195F44;
 struct GameWorkArea;
 
 void func_801C0F9C(s32 arg0);
+void func_801C2538(void);
+void func_801C2710(void);
 void func_801C5474(void);
 s16 func_801BDCF8(void);
 u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range,
@@ -349,6 +351,8 @@ extern u16 D_80039600[];
 extern u16 D_8003963E[];
 /* @behavior world flags — bit0=pending scenario, bit6=force-reset.
  * UNKNOWN: roles of observed bits 5 and 11. */
+/* @source 0x80146258 @kind unknown */
+extern u16         D_80146258;
 /* @source 0x8014625A @kind unknown */
 extern u16         D_8014625A;
 /* @source 0x80146256 @kind unknown */

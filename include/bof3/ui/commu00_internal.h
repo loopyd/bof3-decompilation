@@ -41,10 +41,9 @@ typedef struct Commu00ActiveRecord {
 
 /* @source 0x80145E5C @kind unknown */
 extern volatile u8  COMMU00_PENDING_QUEUE_COUNT;
-/* @source 0x80146904 @kind bss: per-task label/status words: label_id field view of the
- * Commu00TaskSlot array (base 0x80146888 + 0x7c), written with 0xC003,
- * 0xC00A, and variant-derived label words.
- */
+/* @source 0x8014688E @kind bss */
+extern u8           D_8014688E[];
+/* @source 0x80146904 @kind bss */
 extern u16          taskLabelWords[1];
 /* @source 0x801448EB @kind bss: commu00 UI mode byte; requested values 0, 14, and 23. */
 extern u8           uiMode;
@@ -116,7 +115,7 @@ void func_801F228C(void);
 void func_801F0534(void);
 void func_801F0718(u8 source_index, u8 task_index);
 void func_801F08D8(u8 source_index, u8 task_index);
-void func_801F0BF4(u8 task_index);
+void activateTaskWithRandomLabel(u8 task_index);
 
 #define COMMU00_TASK_SLOTS PSX_PTR(volatile Commu00TaskSlot, 0x80146888u)
 

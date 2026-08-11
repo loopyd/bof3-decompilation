@@ -1,7 +1,5 @@
 #include "bof3/world/area01613_internal.h"
 
-extern void func_801F3B00(s32 arg0, s32 arg1);
-
 /* @behavior advances local scratch state `0x02` when the shared byte reaches `2`,
  * then calls the `0x801f3b00` local step with the scratch halfword at `0x2e`.
  * @source 0x801F35B8

@@ -100,8 +100,9 @@ segments:
     - c
     - emitSemiTransparentSprite
   - - 3840
-    - asm
+    - c
     - func_801F3B00
+    - '@source: src/bof3/world/func_801F3B00_area01613.c'
   - - 4812
     - asm
     - appendTransformedG4Panel

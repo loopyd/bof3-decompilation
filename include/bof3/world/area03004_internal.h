@@ -62,6 +62,11 @@ extern u8  D_801C8964[];  /* @source 0x801C8964 @kind unknown */
 extern u8  D_801E28C4[];  /* @source 0x801E28C4 @kind rodata */
 extern u8  D_801E28D0[];  /* @source 0x801E28D0 @kind rodata */
 extern u8  D_80145AD4[];  /* @source 0x80145AD4 @kind unknown */
+extern u16 D_801E218C[]; /* @source 0x801E218C @kind table */
+extern u16 D_801E218E[]; /* @source 0x801E218E @kind table */
+extern u16 D_801E2190[]; /* @source 0x801E2190 @kind table */
+extern u8 D_801E2192[]; /* @source 0x801E2192 @kind table */
+extern u16 D_801E2194[]; /* @source 0x801E2194 @kind table */
 extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
 extern u8  D_801E238C[];  /* @source 0x801E238C @kind unknown */

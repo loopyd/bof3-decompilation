@@ -13,6 +13,7 @@ sources = [
     "src/bof3/scenario/advanceScratchProgressUntil16.c",
     "src/bof3/scenario/func_801D1EFC.c",
     "src/bof3/scenario/setupSceneObjectTransform.c",
+    "src/bof3/scenario/func_801D240C.c",
     "src/bof3/scenario/tickScratchCountdownAndAdvanceState.c",
     "src/bof3/scenario/func_801D2658.c",
 ]

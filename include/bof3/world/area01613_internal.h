@@ -33,6 +33,10 @@ extern World00Area016Handler D_801F51D0[];
 extern World00Area016Handler D_801F51AC[];
 /* @source 0x801454F2 @kind unknown */
 extern u8 D_801454F2;
+/* @source 0x80145AB4 @kind unknown */
+extern u16 D_80145AB4;
+/* @source 0x80145AC0 @kind unknown */
+extern u16 D_80145AC0;
 /* @source 0x80146258 @kind unknown */
 extern u16 D_80146258;
 /* @source 0x8014832E @kind unknown */
@@ -55,7 +59,7 @@ void advanceScratchHeightState02(void);
 void advanceState02Step(void);
 void dispatchState03(void);
 void emitSemiTransparentSprite(s16 arg0, s16 arg1, u8 arg2);
-void func_801F3B00(s32 arg0, s32 arg1);
+void func_801F3B00(s16 arg0, s16 arg1);
 void appendTransformedG4Panel(s16 arg0, s16 arg1);
 void func_801F40C4(s16 arg0, s16 arg1);
 void dispatchArea016ScratchMode(void);

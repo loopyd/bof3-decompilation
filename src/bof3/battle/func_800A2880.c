@@ -8,7 +8,7 @@
  * @match 19.51
  * @residual non-exact live audit: 32/150 instructions; 608 original bytes versus 672 current.
  */
-s16 func_800A2880(u8 battler_index, u16 base_value, u8 element_flag) {
+s16 func_800A2880(u8 battler_index, u16 base_value, u8 element_flag, u32 mode) {
   volatile s16* modifier_table;
   volatile u8*  player_state;
   u16           rule_selection;

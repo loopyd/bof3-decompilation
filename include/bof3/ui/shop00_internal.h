@@ -90,6 +90,13 @@ extern u8* g_PrimCursor;
 void appendRenderPrim(u32 ot_index, u32 primitive_size);
 void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 
+extern const char D_801D0E58[];
+extern const char D_801D0E5C[];
+
+void func_801DBF18(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+void func_801644D8(u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 arg5);
+u32 func_801502D0(u32 arg0);
+void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
 
 /* @source 0x801E5D2C
