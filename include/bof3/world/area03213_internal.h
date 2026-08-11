@@ -11,6 +11,8 @@ extern u8 D_801448EB;
 extern u8 D_801448EC;
 /* @source 0x801448ED @kind unknown */
 extern u8 D_801448ED;
+/* @source 0x80146888 @kind unknown */
+extern u8 D_80146888[];
 /* @source 0x801490A8 @kind unknown */
 extern u16 D_801490A8;
 /* @source 0x801490C7 @kind unknown */
