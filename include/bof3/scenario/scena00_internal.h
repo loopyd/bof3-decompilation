@@ -8,6 +8,12 @@ typedef void (*Scena00RecordCallback)(void* record, u32 arg1);
 /* @source 0x8014686C @kind unknown */
 extern volatile u32        D_8014686C;
 extern Scena00RecordCallback D_801FCA84[];
+extern u8* D_80147AA8;
+extern u8* D_80147BD8;
+extern s8* volatile D_80147BDC;
+extern s32 D_801FCA90[][12];
+extern s32 D_801FD030[][12];
+extern s32 D_801FD5D0[][12];
 
 void func_80166E88(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_801C187C(s32 arg0);

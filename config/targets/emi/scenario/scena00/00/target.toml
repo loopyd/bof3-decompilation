@@ -9,6 +9,7 @@ load_address = 0x801f6c00
 
 sources = [
     "src/bof3/scenario/dispatchRecordCallbackByByte7A.c",
+    "src/bof3/scenario/func_801FC3A0.c",
     "src/bof3/scenario/func_801FC810.c",
     "src/bof3/scenario/returnZero_801FC8F4.c",
     "src/bof3/scenario/resetEffectBank_801FC8FC.c",

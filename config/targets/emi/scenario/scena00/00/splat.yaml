@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801FC01C
   - - 22432
-    - asm
+    - c
     - func_801FC3A0
+    - '@source: src/bof3/scenario/func_801FC3A0.c'
+    - '@behavior: Advances twelve fixed-point channels for each active scenario record and subtracts their per-channel offsets from a companion record.'
   - - 23504
     - c
     - dispatchRecordCallbackByByte7A
