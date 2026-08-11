@@ -1,17 +1,14 @@
 # Lift-loop workflowScript
 
-Use one `subagent` call per wave. The script owns executor/reviewer retries,
-retained exact/partial cleanup, host gates, and final review; the parent still owns queue
-selection, generic playbook edits, integration, commits, pushes, and snapshot/index
-refresh.
+This is the **inner lane** workflow. A top-level `bof3-lane` child already owns one native managed worktree; it runs this script there to own executor/reviewer retries, retained exact/partial cleanup, host gates, rollback, and final review. The parent owns queue selection, generic playbook edits, native handoff consolidation, commits, pushes, and snapshot/index refresh.
 
-Replace only `SELECTORS` and set `RUN_KEY` to a unique wave ID. Keep selectors target-distinct. Launch with repository
-`cwd`, `async: true`, and no mutation-worker turn/tool budget.
+Set `SELECTORS` to exactly one selector and `RUN_KEY` to its unique lane ID. Nested children must use the lane cwd and `worktree:false`; never create a new managed worktree per phase. Launch the outer parallel wave as `bof3-lane` children with `worktree:true`.
 
 ```js
 const SELECTORS = [
   "emi/example/00@0x80123456"
 ];
+if (SELECTORS.length !== 1) throw new Error("inner lane workflow requires exactly one selector");
 const RUN_KEY = "replace-with-unique-wave-id";
 const MAX_ATTEMPTS = 6;
 
@@ -349,17 +346,22 @@ return lanes.map(x => ({
 }));
 ```
 
-Invocation shell:
+Outer wave invocation shape:
 
-```text
+```js
 subagent({
-  workflowScript: <script above>,
+  workflowScript: `return runs.all([
+    { key: "lane-a", agent: "bof3-lane", task: "Run TARGET_A@ADDRESS with RUN_KEY lane-a", worktree: true },
+    { key: "lane-b", agent: "bof3-lane", task: "Run TARGET_B@ADDRESS with RUN_KEY lane-b", worktree: true }
+  ])`,
   cwd: "/absolute/repository/path",
   async: true,
-  timeoutMs: 2400000,
+  timeoutMs: 14400000,
   artifacts: true
 })
 ```
+
+The outer result's native `artifactPaths`/`handoffPath` identifies the captured patches and cleanup state. Do not reconstruct patches from child text.
 
 Each lane keeps a complete ordered JSON attempt ledger (executor result, review,
 experiment effects, retained/reverted outcome) and passes it to every fresh executor

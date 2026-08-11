@@ -1,3 +1,3 @@
 # BOF3 lift loop
 
-`/skill:bof3-lift-loop`: reviewed serial batch. `/skill:bof3-re`: one hand-guided function. Requires fresh snapshot/index; only reviewed exact results may enter its authorized commit path. See `SKILL.md`.
+`/skill:bof3-lift-loop`: reviewed batch with one native managed worktree per function lane. `/skill:bof3-re`: one hand-guided function. Requires fresh snapshot/index; only reviewed retained outcomes may enter its authorized serial consolidation path. See `SKILL.md`.

@@ -23,7 +23,7 @@ Never dispatch on dirty tree/index. `loop-status` fails closed (`dispatch_allowe
 
 ## Function pipeline
 
-For execution, load [`references/workflow-script.md`](references/workflow-script.md), replace only its selector array, set its unique wave `RUN_KEY`, and submit the full template as one async `subagent({ workflowScript })` call per wave. Do not expand its compact role contracts into repeated parent-authored prose or separate tool calls. The reference script is the executable retry authority, including explicitly repairable reviewer blocks; this file supplies invariants, not a duplicate branch specification. The script handles executor/reviewer retries, retained exact/partial cleanup, gates, and final review; the parent retains queue, generic-lever, integration, git, and freshness authority.
+For execution, load [`references/workflow-script.md`](references/workflow-script.md). The parent launches one `bof3-lane` child per selector with native `worktree:true`; that child runs the complete single-selector reference workflow inside its assigned managed worktree. Do not expand compact role contracts into repeated parent prose or phase calls. The reference script remains the retry/cleanup authority; the parent retains queue, generic-lever, native handoff consolidation, git, and freshness authority.
 
 Each function is single-threaded regardless of batch parallelism:
 
@@ -37,22 +37,21 @@ bof3-reverse -> bof3-review -> [retained exact|partial] bof3-cleanup -> live gat
 
 ## Serial loop (`parallelism=1`)
 
-Use the reference script unchanged except selectors/`RUN_KEY`; it is the executable retry/cleanup authority. Before dispatch run `.pi/skills/bof3-re/scripts/function-brief.py SELECTOR` and relevant `companion-check`. Parent accepts only retained state + cleanup gate + final review: exact commits as `feat(decomp): byte-match <function>`; authorized partial commits keep atomic metadata. Restore no-progress, rejected semantics/types, or cleanup regression. Use `subagent_supervisor` for child requests.
+Launch one `bof3-lane` child with `worktree:true`; it runs the single-selector reference script. Before dispatch run `.pi/skills/bof3-re/scripts/function-brief.py SELECTOR` and relevant `companion-check`. Parent accepts only native handoff + retained state + cleanup gate + final review: exact commits as `feat(decomp): byte-match <function>`; authorized partial commits keep atomic metadata. Restore no-progress, rejected semantics/types, or cleanup regression. Use `subagent_supervisor` for child requests.
 
 ## Parallel loop (optional `parallelism>1`)
 
-Freeze one fresh queue, then execute the reference workflow script with up to `parallelism` target-distinct selectors. It uses `runs.all` for each phase and ordinary JavaScript for bounded per-lane branching/retries. Requirements:
+Freeze one fresh queue, then launch up to `parallelism` target-distinct `bof3-lane` children in one `runs.all`, each with `worktree:true`. Each managed worktree exists from the lane's first reverse attempt through its terminal cleanup/final review; its lane orchestrator serializes nested writers/reviewers in that cwd. Requirements:
 
-- Never place two live lanes from the same target together: target-local map, Splat, manifest, support source, `internal.h` are shared. Partition each wave by distinct `TARGET`; defer collisions.
-- Every lane owns exactly one selector and the script runs its bounded executor ↔ reviewer retry loop -> retained exact/partial cleanup -> gates -> re-review serially. Cleanup/audit may overlap another target's lane.
-- Managed-worktree launches require one absolute project-owned `sessionDir` **per top-level lane** (for example `$PWD/.pi-subagents/sessions/<batch>/<lane>`); one shared directory makes parallel `run-0/session.jsonl` writers collide. Launch lanes separately when the workflow API cannot set child session directories. RE lanes also require the ignored `.venv`, binaries, and generated evidence; absent a project setup hook that provisions them, use distinct-target direct lanes instead of worktrees. Never inherit a relative session directory: cleanup removes it with the worktree.
-- No lane commits, pushes, edits another target, or shares publicly. A lane may regenerate target-local disposable analysis/index evidence required by its pipeline; generated `out/`, `build/`, compile DB, Rizin analysis/index, and source stubs are never merge artifacts or shared acceptance state.
-- Parent receives each worktree handoff, rejects overlapping/unexpected paths, and integrates lanes **one at a time**. Before each integration, refresh against the current parent tree/index plus already integrated lanes, not only `HEAD`; resolve target ownership facts deliberately, never by blind patch application.
-- Integration order is deterministic queue order, not completion order. Exact lane: re-run live gates in the parent worktree, confirm cleanup naming + relocation audit, fresh review, then commit/push if authorized. Non-exact lanes follow the normal review/journal/restore-or-retain policy.
-- Refresh edited target snapshots serially after integration, then rebuild the global index once per wave/checkpoint; never select the next wave from stale evidence.
-- A lane failure consumes only that selector; journal and continue other lanes. Conflicting handoffs, dirty parent state, or failed freshness recovery stop new dispatch.
+- Never place two live lanes from the same target together. Partition by distinct `TARGET`; defer collisions.
+- Use native pi-subagents isolation and handoff only. Each lane first runs `.pi/scripts/bootstrap-bof3-lane.py` to provision ignored `.venv`, `inputs`, compiler files, and a lane-local reflink/copy of disposable `out/`; Git ignores these, so native patch capture excludes them. No custom worktree manager, extension config mutation, or patch exporter.
+- Top-level call: `runs.all([{key, agent:"bof3-lane", task:"Run SELECTOR with RUN_KEY ...", worktree:true}, ...])`. The lane agent is an explicit bounded fanout orchestrator; nested reverse/review/cleanup children use `worktree:false` and one writer at a time.
+- No lane commits, pushes, stages, edits another target, or shares publicly. Generated `out/`, `build/`, compile DB, analyzer/index state, source stubs, and `.pi-subagents/` are never merge artifacts.
+- Consume native `artifactPaths`/`handoffPath`; manifests are the path/patch authority. Reject failed/partial capture, unexpected target paths, `src/emi/`, absolute-path stubs, unapproved `INCLUDE_ASM`, cleanup rollback failure, or final-review rejection. Discard rejected preserved worktrees only through `worktree.discard` with its handoff path.
+- Consolidate accepted lane patches **serially in deterministic queue order** onto a clean parent. Before each patch, verify its manifest base and overlap against current parent plus earlier accepted lanes; apply/check the native binary patch, rerun parent live gates and fresh final review, then commit if authorized. If parent `HEAD` advanced, use three-way applicability only after explicit conflict review; otherwise re-run the stale lane. Never retain half an atomic source/map/Splat/manifest/header/binding rename transaction.
+- Refresh edited target snapshots serially after consolidation, then rebuild the global index once. A lane failure consumes only its selector; dirty parent, overlap, stale/conflicting handoff, failed rollback, or failed freshness recovery stops consolidation/new dispatch.
 
-`parallelism=1` remains the default; no worktree fan-out.
+`parallelism=1` remains the default and still uses one managed worktree; higher values fan out isolated lane worktrees.
 
 ## Post-loop audit
 
