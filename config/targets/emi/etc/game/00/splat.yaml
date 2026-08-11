@@ -1700,8 +1700,8 @@ segments:
     - asm
     - func_801C3154
   - - 186884
-    - asm
-    - func_801C3204
+    - c
+    - updateInputHoldDelays
   - - 187036
     - asm
     - func_801C329C

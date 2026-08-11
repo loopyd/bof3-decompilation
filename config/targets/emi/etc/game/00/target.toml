@@ -151,6 +151,7 @@ sources = [
     "src/bof3/ui/setWorkMode5.c",
     "src/bof3/ui/signS16.c",
     "src/bof3/ui/submitPanelPosition.c",
+    "src/bof3/ui/updateInputHoldDelays.c",
     "src/bof3/ui/updateStateMachine.c",
     "src/bof3/ui/updateWorkRouteIndex.c",
     "src/bof3/ui/updateWorld.c",

@@ -259,6 +259,12 @@ extern const volatile AbilityObject abilityObjects[];
 extern struct GameWorkArea* g_game_work;
 /* @source 0x80146250 @kind unknown */
 extern u8* D_80146250;
+typedef struct GameInputRecord {
+  volatile u16 flags;
+  u8 pad_02[0xA2];
+} GameInputRecord;
+/* @source 0x80144974 @kind unknown */
+extern GameInputRecord D_80144974[];
 /* @source 0x801CD358 @kind table */
 extern GameEntry0StateHandler D_801CD358[];
 /* @source 0x801CD374 @kind table */
