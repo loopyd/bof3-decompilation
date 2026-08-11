@@ -36,7 +36,7 @@ segments:
     - asm
     - func_801F0D3C
   - - 8732
-    - asm
+    - c
     - func_801F0E1C
   - - 8904
     - asm
