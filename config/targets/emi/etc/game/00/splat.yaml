@@ -1661,7 +1661,7 @@ segments:
     - asm
     - func_801C22D8
   - - 183352
-    - asm
+    - c
     - func_801C2438
   - - 183504
     - asm

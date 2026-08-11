@@ -332,6 +332,10 @@ extern u8* D_801459F4;
 /* @behavior palette stage serial for GPU upload sequencing */
 /* @source 0x80145988 @kind bss */
 extern volatile u8 paletteStageSerial;
+/* @source 0x80039600 @kind unknown */
+extern u16 D_80039600[];
+/* @source 0x8003963E @kind unknown */
+extern u16 D_8003963E[];
 /* @behavior world flags — bit0=pending scenario, bit6=force-reset.
  * UNKNOWN: roles of observed bits 5 and 11. */
 /* @source 0x8014625A @kind unknown */
