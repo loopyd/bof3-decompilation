@@ -62,8 +62,10 @@ segments:
     - '@source: src/bof3/world/dispatchWorkStates.c'
     - '@behavior: called from the overlay frame entry func_801F2D5C: walks the local eight-entry work array, runs the state handler selected by byte `+0x01` for each active entry, then draws the entry and returns whether any active work was processed.'
   - - 1460
-    - asm
+    - c
     - func_801F31B4
+    - '@source: src/bof3/world/func_801F31B4.c'
+    - '@behavior: advances the current work entry by twice its three velocity components, decrements its byte timer, advances its halfword phase, and moves to the next state with a reset timer when the timer expires.'
   - - 1616
     - c
     - func_801F3250

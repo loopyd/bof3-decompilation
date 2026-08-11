@@ -11,6 +11,7 @@ func_801F2DF8 = 0x801F2DF8;
 func_801F2FD4 = 0x801F2FD4;
 func_801F3080 = 0x801F3080;
 dispatchWorkStates = 0x801F30EC;
+func_801F31B4 = 0x801F31B4;
 func_801F3250 = 0x801F3250;
 advanceStateSelectMode2 = 0x801F32D4;
 advanceStateSelectMode3 = 0x801F32F4;

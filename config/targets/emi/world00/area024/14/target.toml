@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/dispatchScratchMode.c",
     "src/bof3/world/func_801F2DF8.c",
     "src/bof3/world/func_801F3080.c",
+    "src/bof3/world/func_801F31B4.c",
     "src/bof3/world/func_801F3250.c",
     "src/bof3/world/func_801F4158.c",
     "src/bof3/world/initSpinWork.c",
