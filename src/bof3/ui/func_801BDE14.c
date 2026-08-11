@@ -6,7 +6,8 @@
  * coordinate/range test, returning its signed slot index or -1.
  * @status partial
  * @match 86.89
- * @residual same-size callee-saved register allocation rotation
+ * @residual same-size callee-saved register allocation rotation; clean-C
+ * local copies regressed, permuter and compiler/flag searches found no exact
  */
 s8 func_801BDE14(s32 x, s32 y, s32 range)
 {

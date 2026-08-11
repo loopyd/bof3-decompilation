@@ -18,6 +18,7 @@ void func_801DAB90(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   s32       clut_x;
   s32       left_x;
   s32       bottom_v;
+  u8        right_u;
   s16       odd16;
   s32       width_plus_1;
   s32       odd_width;
@@ -146,11 +147,12 @@ void func_801DAB90(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->y3 = (s16)bottom_y;
   primitive->u0 = 0u;
   primitive->v0 = 0u;
+  right_u = (u8)(half_copy + odd16);
   primitive->u1 = (u8)(half_copy + odd16);
   primitive->v1 = 0u;
   primitive->u2 = 0u;
   primitive->v2 = (u8)bottom_v;
-  primitive->u3 = (u8)(half_copy + odd16);
+  primitive->u3 = right_u;
   primitive->v3 = (u8)bottom_v;
   primitive->r0 = 0xacu;
   primitive->g0 = 0xacu;

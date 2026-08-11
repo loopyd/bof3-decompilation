@@ -3,8 +3,8 @@
 /* @source 0x801E1004
  * @behavior draws three panel decorations, a label, and optional numeric values.
  * @status partial
- * @match 80.10
- * @residual dynamic-label loop CFG and duplicate source-load scheduling differ
+ * @match 84.73
+ * @residual dynamic-label entry scheduling and duplicate source-load scheduling differ
  */
 typedef struct PackedCoords {
   u8 value[6];
@@ -44,13 +44,16 @@ void func_801E1004(s32 arg0, s32 arg1, s32 arg2) {
   } else {
     src = D_801C8964 + (((arg0 & 0xff) + 0x38) * 18);
     i = 0;
-    do {
+    while (i < 12) {
       *dst = *src;
+      if (*src == 0) {
+        i++;
+        break;
+      }
       i++;
-      if (*src == 0) break;
       dst++;
       src++;
-    } while (i < 12);
+    }
   }
   *dst = 0;
   func_8014F800(0x70, 0x45 - ((arg2 & 0xff) * 20), 0, 0xf, (u32)D_80145AD4);
