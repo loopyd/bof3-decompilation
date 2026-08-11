@@ -14,7 +14,9 @@ ROOT = Path(__file__).resolve().parents[4]
 
 
 def run_json(*args: str) -> dict:
-    result = subprocess.run(args, cwd=ROOT, text=True, capture_output=True, check=True)
+    result = subprocess.run(args, cwd=ROOT, text=True, capture_output=True)
+    if result.returncode not in (0, 1):
+        raise subprocess.CalledProcessError(result.returncode, args, result.stdout, result.stderr)
     return json.loads(result.stdout)
 
 
@@ -31,6 +33,7 @@ def metric(selector: str, reported: float) -> dict:
         "current_size": diff.get("current_size"),
         "original_size": diff.get("original_size"),
         "size_delta": diff.get("size_delta"),
+        "source": diff.get("source"),
         "first_mismatch": {
             "original_offset": first.get("original_offset"),
             "current_offset": first.get("current_offset"),
@@ -53,7 +56,11 @@ def capture(args: argparse.Namespace) -> int:
         shutil.rmtree(attempt_dir)
     files_dir = attempt_dir / "files"
     files_dir.mkdir(parents=True)
+    evidence = None if args.paths_only else metric(args.selector, args.match)
     paths = set(args.files)
+    if evidence is not None:
+        source = Path(evidence["source"])
+        paths.add(source.relative_to(ROOT).as_posix())
     for record_path in lane_dir.glob("attempt-*/record.json"):
         record = json.loads(record_path.read_text())
         paths.update(state["path"] for state in record["files"])
@@ -68,7 +75,6 @@ def capture(args: argparse.Namespace) -> int:
             destination = files_dir / name
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, destination)
-    evidence = None if args.paths_only else metric(args.selector, args.match)
     record = {"selector": args.selector, "attempt": args.attempt, "files": states, "metric": evidence}
     (attempt_dir / "record.json").write_text(json.dumps(record, indent=2) + "\n")
     if args.paths_only:
@@ -129,7 +135,7 @@ def main() -> int:
     save.add_argument("--match", type=float)
     save.add_argument("--paths-only", action="store_true")
     save.add_argument("--require-improvement", action="store_true")
-    save.add_argument("files", nargs="+")
+    save.add_argument("files", nargs="*")
     load = sub.add_parser("restore")
     load.add_argument("--lane", required=True)
     args = parser.parse_args()
