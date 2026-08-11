@@ -19,6 +19,7 @@ sources = [
     "src/bof3/ui/func_801D32D4.c",
     "src/bof3/ui/func_801D3924.c",
     "src/bof3/ui/func_801D3E70.c",
+    "src/bof3/ui/func_801D3ED0.c",
     "src/bof3/ui/copySelectedRecordPrefixToWorkBuffer.c",
     "src/bof3/ui/startEntryActionMode0.c",
     "src/bof3/ui/startEntryActionMode1.c",

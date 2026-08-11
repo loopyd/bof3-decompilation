@@ -15,6 +15,12 @@ extern u8 D_80144968[];
 extern u8 D_801490D8[];
 /* @source 0x80143BB0 @kind unknown */
 extern u8 D_80143BB0;
+/* @source 0x801448EC @kind unknown */
+extern u8 D_801448EC;
+/* @source 0x80146867 @kind unknown */
+extern u8 D_80146867;
+/* @source 0x80146889 @kind unknown */
+extern u8 D_80146889[];
 /* @source 0x80146254 @kind unknown */
 extern u8 D_80146254;
 /* @source 0x801448ED @kind bss */
@@ -27,6 +33,8 @@ extern u8 masterIndex;
 /* Per-master u16 action-id base; adding 4 or 0x11 yields the action id
  * dispatched for the selected master. */
 extern u16 masterActionBaseTable[];
+/* @source 0x801D4270 @kind table */
+extern u8 D_801D4270[];
 /* @source 0x801D41E0 @kind table */
 /* Per-mode handler table; indexed by modeIndex and tail-called. */
 extern void (*D_801D41E0[])(void);
