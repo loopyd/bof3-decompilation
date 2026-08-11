@@ -447,8 +447,9 @@ segments:
     - func_801E092C
     - '@source: src/bof3/ui/func_801E092C.c'
   - - 64872
-    - asm
+    - c
     - func_801E0968
+    - '@source: src/bof3/ui/func_801E0968.c'
   - - 65012
     - asm
     - func_801E09F4
