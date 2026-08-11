@@ -96,6 +96,7 @@ sources = [
     "src/bof3/ui/setScenarioProgressToF0.c",
     "src/bof3/ui/dispatchWorkModeHandler.c",
     "src/bof3/ui/dispatchSecondaryWorkModeHandler.c",
+    "src/bof3/ui/func_801ACE10.c",
     "src/bof3/ui/func_801ACE9C.c",
     "src/bof3/ui/dispatchWorkStateHandler.c",
     "src/bof3/ui/dispatchWorkModePair.c",

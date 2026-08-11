@@ -286,6 +286,9 @@ extern u8 D_80143BB0;
 /* @behavior current world state ID for world/front routing */
 /* @source 0x80143F00 @kind unknown */
 extern u16 D_80143F00;
+extern u8 *D_80146884;
+extern void *D_8017F974[];
+extern void (*D_801C890C[])(s32, s32);
 /* @source 0x801C7F74 @kind table */
 extern u8 D_801C7F74[11][0x1C];
 

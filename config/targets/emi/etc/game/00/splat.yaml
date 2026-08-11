@@ -979,8 +979,10 @@ segments:
     - asm
     - func_801ACCD8
   - - 95760
-    - asm
+    - c
     - func_801ACE10
+    - '@source: src/bof3/ui/func_801ACE10.c'
+    - '@behavior: dispatches a work callback selected by the active record or argument'
   - - 95900
     - c
     - func_801ACE9C
