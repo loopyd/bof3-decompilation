@@ -537,8 +537,10 @@ segments:
     - '@source: src/bof3/world/clearFlagState10.c'
     - '@behavior: clears the scratch-record flag when the AREA030 state byte is >= 10.'
   - - 63084
-    - asm
+    - c
     - func_801E026C
+    - '@source: src/bof3/world/func_801E026C.c'
+    - '@behavior: advances the signed position by arg0 and clamps it to [0, limit].'
   - - 63188
     - asm
     - func_801E02D4

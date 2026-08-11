@@ -60,6 +60,14 @@ extern u8 D_801E2748[];    /* @source 0x801E2748 @kind unknown */
 extern s8* D_801E320C;     /* @source 0x801E320C @kind unknown */
 extern u8* D_801E3210;     /* @source 0x801E3210 @kind unknown */
 
+typedef struct Area030Range {
+  u8 pad_00[0x8C];
+  s16 limit_8C;
+  s16 value_8E;
+} Area030Range;
+
+extern Area030Range* D_80146884; /* @source 0x80146884 @kind unknown */
+
 typedef struct SpriteGeometry {
   s32 clut_x;
   s32 clut_y;
@@ -113,6 +121,7 @@ void func_801D6B28(s8 arg0);
 void func_801D6EC4(void);
 void advanceStepMode6(void);
 void clearFlagState10(void);
+void func_801E026C(s8 arg0);
 void func_801DAE3C(void);
 void dispatchCompanion(void);
 void func_801DFFA8(void);
