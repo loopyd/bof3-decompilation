@@ -2,7 +2,7 @@
 
 This is the **inner lane** workflow. A top-level `bof3-lane` child already owns one native managed worktree; it runs this script there to own executor/reviewer retries, retained exact/partial cleanup, host gates, rollback, and final review. The parent owns queue selection, generic playbook edits, native handoff consolidation, commits, pushes, and snapshot/index refresh.
 
-Set `SELECTORS` to exactly one selector and `RUN_KEY` to its unique lane ID. Nested children must use the lane cwd and `worktree:false`; never create a new managed worktree per phase. Launch the outer parallel wave as `bof3-lane` children with `worktree:true`.
+Set `SELECTORS` to exactly one selector and `RUN_KEY` to its unique lane ID. Nested children must use the lane cwd and `worktree:false`; never create a new managed worktree per phase. Launch each outer `bof3-lane` as an independent top-level async workflow with `worktree:true` and a unique absolute `sessionDir`; launch those calls back-to-back for parallelism. Do not combine lane orchestrators in one `runs.all`, which currently aliases their session path.
 
 ```js
 const SELECTORS = [
@@ -346,15 +346,17 @@ return lanes.map(x => ({
 }));
 ```
 
-Outer wave invocation shape:
+Outer lane invocation shape (repeat immediately with unique `LANE`/selector/session path):
 
 ```js
 subagent({
-  workflowScript: `return runs.all([
-    { key: "lane-a", agent: "bof3-lane", task: "Run TARGET_A@ADDRESS with RUN_KEY lane-a", worktree: true },
-    { key: "lane-b", agent: "bof3-lane", task: "Run TARGET_B@ADDRESS with RUN_KEY lane-b", worktree: true }
-  ])`,
+  workflowScript: `return runs.run("lane", {
+    agent: "bof3-lane",
+    task: "Run TARGET@ADDRESS with RUN_KEY WAVE-LANE",
+    worktree: true
+  })`,
   cwd: "/absolute/repository/path",
+  sessionDir: "/absolute/repository/path/.pi-subagents/sessions/WAVE/LANE",
   async: true,
   timeoutMs: 14400000,
   artifacts: true
