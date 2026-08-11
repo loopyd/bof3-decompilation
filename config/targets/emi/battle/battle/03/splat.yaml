@@ -904,8 +904,10 @@ segments:
     - '@source: src/bof3/battle/enterFrontendMode4.c'
     - '@behavior: Sets frontend mode 4 and increments the volatile global battle byte when state bit 0 is set and gate 0xBD matches.'
   - - 85028
-    - asm
-    - func_801E5824
+    - c
+    - runQueuedSlotHandlers
+    - '@source: src/bof3/battle/runQueuedSlotHandlers.c'
+    - '@behavior: Dispatches each active queued battle slot through its selected handler while publishing current slot and work pointers.'
   - - 85260
     - asm
     - func_801E590C

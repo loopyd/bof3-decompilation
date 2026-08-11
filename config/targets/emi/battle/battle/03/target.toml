@@ -196,6 +196,7 @@ sources = [
     "src/bof3/battle/retreatStateWhenGateClear.c",
     "src/bof3/battle/rollSlotTimerAdvance.c",
     "src/bof3/battle/runActiveLocalHandlers.c",
+    "src/bof3/battle/runQueuedSlotHandlers.c",
     "src/bof3/battle/scalePercentClamp100.c",
     "src/bof3/battle/scalePercentClamp999.c",
     "src/bof3/battle/scalePercentClamp9999.c",

@@ -13,6 +13,9 @@ typedef void (*Battle03ForwardingHandler)(s32 arg0, s32 arg1, s32 arg2,
 typedef struct Battle03DispatchTable {
   Battle03Handler handlers[3];
 } Battle03DispatchTable;
+typedef struct Battle03FourDispatchTable {
+  Battle03Handler handlers[4];
+} Battle03FourDispatchTable;
 typedef struct Battle03FiveDispatchTable {
   Battle03Handler handlers[5];
 } Battle03FiveDispatchTable;
@@ -260,6 +263,7 @@ extern u8           D_801462E1[]; /* @source 0x801462E1 @kind unknown */
 extern const u8     D_801EAF88[][6]; /* @source 0x801EAF88 */
 extern Battle03NineteenDispatchTable D_801D0CD0; /* @source 0x801D0CD0 @kind unknown */
 extern Battle03QueuedSlot* volatile D_801EC2E0; /* @source 0x801EC2E0 @kind unknown */
+extern Battle03FourDispatchTable    D_801D0CC0; /* @source 0x801D0CC0 @kind table */
 extern Battle03SlotStore            D_801EC330[]; /* @source 0x801EC330 @kind unknown */
 /* @kind: bss (map symbol: uiRingHead) — UI ring consumer index. */
 extern u8                            uiRingHead; /* @source 0x801EBF04 */
@@ -557,7 +561,7 @@ extern Battle03Handler D_801EB454[]; /* @source 0x801EB454 @kind unknown */
 
 void dispatchResultSubstateTable(void);
 void func_801E5AF4(void);
-void func_801E5824(void);
+void runQueuedSlotHandlers(void);
 void dispatchByte1FiveTable(void);
 void func_801E7818(void);
 void dispatchStateByte2TableF80(void);
