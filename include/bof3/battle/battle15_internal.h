@@ -224,6 +224,16 @@ extern u8 D_80148572; /* @source 0x80148572 @kind unknown */
 extern u8 D_80148573; /* @source 0x80148573 @kind unknown */
 extern s16 D_80148574; /* @source 0x80148574 @kind unknown */
 extern s16 D_80148576; /* @source 0x80148576 @kind unknown */
+extern u8 D_80148595; /* @source 0x80148595 @kind unknown */
+extern u8 D_80148596; /* @source 0x80148596 @kind unknown */
+extern u16 D_80148598; /* @source 0x80148598 @kind unknown */
+extern u16 D_8014859A; /* @source 0x8014859A @kind unknown */
+extern u8 D_8014859C; /* @source 0x8014859C @kind unknown */
+extern u8 D_8014859D; /* @source 0x8014859D @kind unknown */
+extern u8 D_8014859E; /* @source 0x8014859E @kind unknown */
+extern u8 D_8014859F; /* @source 0x8014859F @kind unknown */
+extern u8 D_801485A0; /* @source 0x801485A0 @kind unknown */
+extern u8 D_801485A1; /* @source 0x801485A1 @kind unknown */
 extern u8 D_80148578; /* @source 0x80148578 @kind unknown */
 extern u8 D_80148579; /* @source 0x80148579 @kind unknown */
 extern u8 D_8014857A; /* @source 0x8014857A @kind unknown */
