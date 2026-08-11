@@ -50,6 +50,11 @@ def checkpoint_dir(lane: str) -> Path:
 def capture(args: argparse.Namespace) -> int:
     lane_dir = checkpoint_dir(args.lane)
     attempt_dir = lane_dir / f"attempt-{args.attempt}"
+    outcome_path = attempt_dir / "outcome.json"
+    if outcome_path.is_file():
+        outcome = json.loads(outcome_path.read_text())
+        print(json.dumps(outcome))
+        return int(outcome["exit_code"])
     if args.attempt == 1 and lane_dir.exists():
         shutil.rmtree(lane_dir)
     if attempt_dir.exists():
@@ -78,7 +83,9 @@ def capture(args: argparse.Namespace) -> int:
     record = {"selector": args.selector, "attempt": args.attempt, "files": states, "metric": evidence}
     (attempt_dir / "record.json").write_text(json.dumps(record, indent=2) + "\n")
     if args.paths_only:
-        print(json.dumps({"paths_recorded": paths}))
+        outcome = {"paths_recorded": paths, "exit_code": 0}
+        outcome_path.write_text(json.dumps(outcome, indent=2) + "\n")
+        print(json.dumps(outcome))
         return 0
 
     assert evidence is not None
@@ -95,12 +102,14 @@ def capture(args: argparse.Namespace) -> int:
     if improved:
         best = record | {"checkpoint": attempt_dir.relative_to(lane_dir).as_posix()}
         best_path.write_text(json.dumps(best, indent=2) + "\n")
-    print(json.dumps({"improved": improved, "observable_change": observable, "current": record, "best": best}))
-    if not evidence["report_matches_live"]:
-        return 2
-    if args.require_improvement and not improved:
-        return 1
-    return 0
+    exit_code = 2 if not evidence["report_matches_live"] else 1 if args.require_improvement and not improved else 0
+    outcome = {
+        "improved": improved, "observable_change": observable,
+        "current": record, "best": best, "exit_code": exit_code,
+    }
+    outcome_path.write_text(json.dumps(outcome, indent=2) + "\n")
+    print(json.dumps(outcome))
+    return exit_code
 
 
 def restore(args: argparse.Namespace) -> int:

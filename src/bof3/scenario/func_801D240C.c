@@ -8,14 +8,16 @@
  * each iteration's second sample as the next iteration's first sample.
  * @source 0x801D240C
  * @status partial
- * @match 82.31
- * @residual size and loop-local lifetime scheduling differ
+ * @match 97.96
+ * @residual scratchpad base materialization is one instruction short, moving
+ * the loop head by four bytes; clean-C/profile search is review-pending
  */
 void func_801D240C(void) {
   u8* primitive;
+  s32* radius;
   s32 phase;
-  s32 next_phase;
   s32 graph_value;
+  u8 color;
   s32 i;
 
   SPAD_REF(s32, 0) = (rand() & 7) + D_1F800044->color_0a * 3;
@@ -28,6 +30,7 @@ void func_801D240C(void) {
     graph_value = 0x35;
   }
 
+  radius = SPAD_ADDR(s32, 0);
   SetDrawMode((DR_MODE*)g_PrimCursor, 0, 1, graph_value, 0);
   func_8014E5A0(2, 12);
 
@@ -42,26 +45,27 @@ void func_801D240C(void) {
 
     phase = i << 9;
     *(u16*)(primitive + 16) = D_1F800044->screen_x_2e +
-        ((func_801782FC(phase) * SPAD_REF(s32, 0)) >> 12);
+        ((func_801782FC(phase) * *radius) >> 12);
     *(u16*)(primitive + 18) = D_1F800044->screen_y_30 +
-        ((func_801783C8(phase) * SPAD_REF(s32, 0)) >> 12);
+        ((func_801783C8(phase) * *radius) >> 12);
 
     i++;
-    next_phase = i << 9;
+    phase = i << 9;
     *(u16*)(primitive + 24) = D_1F800044->screen_x_2e +
-        ((func_801782FC(next_phase) * SPAD_REF(s32, 0)) >> 12);
+        ((func_801782FC(phase) * *radius) >> 12);
     *(u16*)(primitive + 26) = D_1F800044->screen_y_30 +
-        ((func_801783C8(next_phase) * SPAD_REF(s32, 0)) >> 12);
+        ((func_801783C8(phase) * *radius) >> 12);
 
     primitive[4] = D_1F800044->color_0a << 3;
     primitive[5] = D_1F800044->color_0a << 3;
+    color = D_1F800044->color_0a;
     primitive[12] = 1;
     primitive[13] = 1;
     primitive[14] = 1;
     primitive[20] = 1;
     primitive[21] = 1;
     primitive[22] = 1;
-    primitive[6] = D_1F800044->color_0a * 6;
+    primitive[6] = color * 6;
     func_8014E5A0(2, 28);
   } while (i < 8);
 }

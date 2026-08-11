@@ -24,17 +24,17 @@ extern volatile u8  D_80145988;
 /* @source 0x80146258 @kind unknown */
 extern volatile u16 D_80146258;
 /* @source 0x80146866 @kind unknown */
-extern volatile u8  D_80146866;
+extern u8 D_80146866;
 /* @source 0x80146867 @kind unknown */
-extern volatile u8  D_80146867;
+extern u8 D_80146867;
 /* @source 0x80146864 @kind unknown */
 extern volatile u8 g_ScenarioProgress;
 /* @source 0x80146874 @kind unknown */
 extern volatile s8  D_80146874;
 /* @source 0x80146875 @kind unknown */
-extern volatile u8  D_80146875;
+extern u8  D_80146875;
 /* @source 0x80146876 @kind unknown */
-extern volatile u16 D_80146876;
+extern u16 D_80146876;
 /* @source 0x8014686C @kind unknown */
 extern volatile u32 D_8014686C;
 /* @source 0x8014832E @kind unknown */

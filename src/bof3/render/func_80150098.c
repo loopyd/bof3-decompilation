@@ -9,14 +9,12 @@ extern SPRT_8* g_PrimCursor;
  * advancing eight pixels per byte and wrapping on newline.
  * @source 0x80150098
  * @status partial
- * @match 51.81
- * @residual non-exact live audit: 43/83 instructions; 332 original bytes versus 308 current.
+ * @match 54.22
+ * @residual non-exact live audit: 45/83 instructions; 332 original bytes versus 312 current.
  */
 void func_80150098(s16 x, s16 y, u32 clut, const u8* text) {
   SPRT_8* primitive;
   s16     start_x;
-  s32     char_index;
-  s32     text_char;
   u16     primitive_clut;
 
   func_8014FC00(0);
@@ -36,15 +34,25 @@ void func_80150098(s16 x, s16 y, u32 clut, const u8* text) {
       primitive->g0 = 0x80;
       primitive->b0 = 0x80;
 
-      text_char = (s32)(*text);
-      char_index = text_char - 0x20;
-      if (char_index < 0) {
-        char_index = text_char - 1;
-      }
+      {
+        s32 glyph_byte_u = (s32)(*text);
+        s32 glyph_index_u = glyph_byte_u - 0x20;
 
-      primitive->u0 =
-          (u8)(((text_char - 0x20) - (((text_char - 1) >> 5) << 5)) << 3);
-      primitive->v0 = (u8)((char_index >> 5) << 3);
+        if (glyph_index_u < 0) {
+          glyph_index_u = glyph_byte_u - 1;
+        }
+        primitive->u0 =
+            (u8)(((glyph_byte_u - 0x20) - ((glyph_index_u >> 5) << 5)) << 3);
+      }
+      {
+        s32 glyph_byte_v = (s32)(*text);
+        s32 glyph_index_v = glyph_byte_v - 0x20;
+
+        if (glyph_index_v < 0) {
+          glyph_index_v = glyph_byte_v - 1;
+        }
+        primitive->v0 = (u8)((glyph_index_v >> 5) << 3);
+      }
       primitive->x0 = x;
       primitive->y0 = y;
 
