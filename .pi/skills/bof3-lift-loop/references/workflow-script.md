@@ -5,13 +5,14 @@ exact-only cleanup, host gates, and final review; the parent still owns queue
 selection, generic playbook edits, integration, commits, pushes, and snapshot/index
 refresh.
 
-Replace only `SELECTORS`. Keep selectors target-distinct. Launch with repository
+Replace only `SELECTORS` and set `RUN_KEY` to a unique wave ID. Keep selectors target-distinct. Launch with repository
 `cwd`, `async: true`, and no mutation-worker turn/tool budget.
 
 ```js
 const SELECTORS = [
   "emi/example/00@0x80123456"
 ];
+const RUN_KEY = "replace-with-unique-wave-id";
 const MAX_ATTEMPTS = 6;
 
 const targetOf = s => s.split("@")[0];
@@ -46,17 +47,46 @@ const exactOf = r => {
 const verdictOf = r => String(jsonOf(r).verdict || "");
 const experimentsOf = r => Array.isArray(jsonOf(r).experiments) ? jsonOf(r).experiments : [];
 const findingsOf = r => Array.isArray(jsonOf(r).findings) ? jsonOf(r).findings : [];
+const filesOf = r => {
+  const j = jsonOf(r);
+  return Array.isArray(j.files_changed) ? j.files_changed :
+    Array.isArray(j.changedFiles) ? j.changedFiles : [];
+};
+const scoreOf = r => {
+  const value = Number(jsonOf(r).match_percent);
+  return Number.isFinite(value) ? value : NaN;
+};
+const filesSeenOf = x => [...new Set(x.history.flatMap(h => filesOf(h.executor)))];
 const repairableOf = r => jsonOf(r).repairable === true;
 const experimentKey = e => JSON.stringify([e.lever || "", e.expected_effect || ""]);
+const observableExperiment = e => {
+  const effect = String(e.expected_effect || "");
+  return String(e.lever || "").trim() &&
+    /(size|frame|cfg|branch|loop|first mismatch|offset|instruction|register|load|store|delay slot|score)/i.test(effect);
+};
 const unseenExperiments = x => {
   const seen = new Set(x.history.slice(0, -1).flatMap(h =>
     (h.review && Array.isArray(h.review.result.experiments) ? h.review.result.experiments : [])
       .map(experimentKey)
   ));
   return experimentsOf(x.review).filter(e =>
-    !seen.has(experimentKey(e)) || String(e.new_evidence || "").trim()
+    observableExperiment(e) &&
+    (!seen.has(experimentKey(e)) || String(e.new_evidence || "").trim())
   );
 };
+const shellQuote = s => "'" + String(s).replace(/'/g, "'\\''") + "'";
+const checkpointGate = (x, attempt, requireImprovement, extraFiles = []) => {
+  const files = filesOf(x.executor);
+  if (!files.length || !Number.isFinite(scoreOf(x.executor))) return "false";
+  return [
+    "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py capture",
+    "--lane", shellQuote(RUN_KEY + "-" + keyOf(x.selector)), "--selector", shellQuote(x.selector),
+    "--attempt", String(attempt), "--match", String(scoreOf(x.executor)),
+    requireImprovement ? "--require-improvement" : "",
+    [...new Set([...filesSeenOf(x), ...extraFiles])].map(shellQuote).join(" ")
+  ].filter(Boolean).join(" ");
+};
+const restoreGate = x => "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py restore --lane " + shellQuote(RUN_KEY + "-" + keyOf(x.selector));
 const handoffOf = r => ({ result: jsonOf(r), report: textOf(r) });
 const recordOf = (attempt, executor, review) => ({
   attempt,
@@ -75,6 +105,8 @@ const reviewTask = x => [
   "Run agent-context review; inspect live diff, owned changes, semantics/types/ABI/ownership.",
   "Use the complete ordered attempt ledger below. Do not repeat a tested lever unless new evidence explains why its expected effect differs.",
   "Exact: pass or evidence-backed block. Non-exact: pass+exhausted or needs-fix with 1-3 ranked untried experiments.",
+  "Every experiment must name one lever and predict an observable change to size/frame, CFG/branch/loop, first mismatch/offset, or named instruction/register/load/store range. Speculative effects are invalid.",
+  "After one experiment with no score improvement, propose another only when new evidence predicts a different observable effect; otherwise pass with ladder_exhausted.",
   "Every block must return repairable:true only for concrete source/metadata/binding fixes this executor may make; return repairable:false for rejected semantics/types, invalid boundary, approval/safety, or external-tool blockers.",
   "No source edits. Identify any decisive reproducible improvement as generic-lever candidate.",
   "Attempt ledger:\n" + historyOf(x),
@@ -85,7 +117,8 @@ const retryTask = (x, actionable) => [
   verdictOf(x.review) === "block"
     ? "Repair only the concrete review blockers below, with live evidence."
     : "Use only the ranked untried review experiments below, one variant at a time.",
-  "Read the complete ordered attempt ledger. Do not repeat a lever; record expected versus actual instruction effect and accept/revert outcome.",
+  "Read the complete ordered attempt ledger. Do not repeat a lever; record expected versus actual size/CFG/first-mismatch/instruction effect and accept/revert outcome.",
+  "The host checkpoints every attempt and restores the best score after unchanged or regressing experiments; do not defeat that state.",
   "Preserve the best legal coherent candidate; obey six-attempt ceiling.",
   "No git, publication, other targets, or children.",
   "Actionable filtered experiments (the only experiments you may run):\n" + JSON.stringify(actionable),
@@ -108,8 +141,19 @@ let lanes = (await runs.all(SELECTORS.map(s => ({
   key: "reverse-0-" + keyOf(s), agent: "bof3-reverse", task: reverseTask(s)
 })))).map((run, i) => ({
   selector: SELECTORS[i], attempt: 1, executor: run, review: null,
-  history: [recordOf(1, run, null)], terminal: false
+  history: [recordOf(1, run, null)], terminal: false,
+  bestScore: scoreOf(run), bestExecutor: run
 }));
+
+const initialCheckpoints = await runs.all(lanes.map(x => ({
+  key: "checkpoint-1-" + keyOf(x.selector), agent: "bof3-review",
+  task: "Record the host checkpoint for " + x.selector + ". No edits.",
+    gate: checkpointGate(x, 1, false)
+})));
+lanes.forEach((x, i) => {
+  x.checkpoint = initialCheckpoints[i];
+  if (!x.checkpoint || !x.checkpoint.ok) x.terminal = true;
+});
 
 for (let round = 0; round < MAX_ATTEMPTS; round++) {
   const active = lanes.filter(x => !x.terminal);
@@ -146,6 +190,50 @@ for (let round = 0; round < MAX_ATTEMPTS; round++) {
     x.attempt++;
     x.history.push(recordOf(x.attempt, reruns[i], null));
   });
+
+  const checks = await runs.all(retry.map(x => ({
+    key: "checkpoint-" + x.attempt + "-" + keyOf(x.selector), agent: "bof3-review",
+    task: "Record this attempt only if it improves the prior best score for " + x.selector + ". No edits.",
+    gate: checkpointGate(x, x.attempt, true)
+  })));
+  retry.forEach((x, i) => { x.checkpoint = checks[i]; });
+  const rejected = retry.filter(x => !x.checkpoint || !x.checkpoint.ok);
+  if (rejected.length) {
+    const restores = await runs.all(rejected.map(x => ({
+      key: "restore-best-" + x.attempt + "-" + keyOf(x.selector), agent: "bof3-review",
+      task: "Restore the mechanically checkpointed best state for " + x.selector + ". No authored edits.",
+      gate: restoreGate(x)
+    })));
+    rejected.forEach((x, i) => {
+      x.restore = restores[i];
+      x.history[x.history.length - 1].checkpoint = {
+        accepted: false, restored: Boolean(restores[i] && restores[i].ok)
+      };
+      x.executor = x.bestExecutor;
+      x.terminal = true;
+    });
+  }
+  retry.filter(x => x.checkpoint && x.checkpoint.ok).forEach(x => {
+    x.bestScore = scoreOf(x.executor);
+    x.bestExecutor = x.executor;
+    x.history[x.history.length - 1].checkpoint = { accepted: true, restored: false };
+  });
+}
+
+const restored = lanes.filter(x => x.restore && x.restore.ok);
+if (restored.length) {
+  const restoredReviews = await runs.all(restored.map(x => ({
+    key: "review-restored-best-" + keyOf(x.selector), agent: "bof3-review",
+    task: [
+      "Review the mechanically restored best state for " + x.selector + ".",
+      "The latest experiment failed to improve its predecessor and is exhausted. Inspect live evidence; pass+ladder_exhausted if the restored candidate is coherent, otherwise block.",
+      "No new experiments and no edits. Attempt ledger:\n" + historyOf(x)
+    ].join("\n")
+  })));
+  restored.forEach((x, i) => {
+    x.review = restoredReviews[i];
+    x.history[x.history.length - 1].review = handoffOf(restoredReviews[i]);
+  });
 }
 
 const exact = lanes.filter(x => x.terminal && exactOf(x.executor) && verdictOf(x.review) === "pass");
@@ -159,15 +247,43 @@ if (exact.length) {
   exact.forEach((x, i) => { x.precleanup = precleanup[i]; });
   const gated = exact.filter(x => x.precleanup && x.precleanup.ok);
 
-  const cleanups = await runs.all(gated.map(x => ({
+  const cleanupCheckpoints = await runs.all(gated.map(x => ({
+    key: "checkpoint-precleanup-" + keyOf(x.selector), agent: "bof3-review",
+    task: "Checkpoint the reviewed exact state before cleanup for " + x.selector + ". No edits.",
+    gate: checkpointGate(x, x.attempt + 1, false)
+  })));
+  gated.forEach((x, i) => { x.cleanupCheckpoint = cleanupCheckpoints[i]; });
+  const cleanupReady = gated.filter(x => x.cleanupCheckpoint && x.cleanupCheckpoint.ok);
+  const cleanups = await runs.all(cleanupReady.map(x => ({
     key: "cleanup-" + keyOf(x.selector),
     agent: "bof3-cleanup",
     task: cleanupTask(x.selector),
     gate: gateOf(x.selector)
   })));
-  gated.forEach((x, i) => { x.cleanup = cleanups[i]; });
+  cleanupReady.forEach((x, i) => { x.cleanup = cleanups[i]; });
+  const failedCleanup = cleanupReady.filter(x => !x.cleanup || !x.cleanup.ok);
+  if (failedCleanup.length) {
+    const cleanupPathRecords = await runs.all(failedCleanup.map(x => ({
+      key: "record-cleanup-paths-" + keyOf(x.selector), agent: "bof3-review",
+      task: "Record cleanup-touched paths before rollback for " + x.selector + ". No authored edits.",
+      gate: [
+        "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py capture",
+        "--lane", shellQuote(RUN_KEY + "-" + keyOf(x.selector)),
+        "--selector", shellQuote(x.selector), "--attempt", String(x.attempt + 2),
+        "--paths-only", filesOf(x.cleanup).map(shellQuote).join(" ")
+      ].join(" ")
+    })));
+    failedCleanup.forEach((x, i) => { x.cleanupPathRecord = cleanupPathRecords[i]; });
+    const restorableCleanup = failedCleanup.filter(x => x.cleanupPathRecord && x.cleanupPathRecord.ok);
+    const cleanupRestores = await runs.all(restorableCleanup.map(x => ({
+      key: "restore-precleanup-" + keyOf(x.selector), agent: "bof3-review",
+      task: "Restore the reviewed exact pre-cleanup checkpoint for " + x.selector + ". No authored edits.",
+      gate: restoreGate(x)
+    })));
+    restorableCleanup.forEach((x, i) => { x.cleanupRestore = cleanupRestores[i]; });
+  }
 
-  const cleaned = gated.filter(x => x.cleanup && x.cleanup.ok);
+  const cleaned = cleanupReady.filter(x => x.cleanup && x.cleanup.ok);
   const finals = await runs.all(cleaned.map(x => ({
     key: "final-review-" + keyOf(x.selector),
     agent: "bof3-review",
@@ -184,11 +300,16 @@ return lanes.map(x => ({
   selector: x.selector,
   attempts: x.attempt,
   attemptLedger: x.history,
+  bestScore: x.bestScore,
+  checkpointPassed: Boolean(x.checkpoint && x.checkpoint.ok),
+  bestStateRestored: Boolean(x.restore && x.restore.ok),
   executorRunId: x.executor && x.executor.runId,
   executor: jsonOf(x.executor),
   review: jsonOf(x.review),
   precleanupGatePassed: Boolean(x.precleanup && x.precleanup.ok),
   cleanup: jsonOf(x.cleanup),
+  cleanupRollbackPassed: Boolean(x.cleanupRestore && x.cleanupRestore.ok),
+  cleanupRollbackFailed: Boolean(x.cleanup && !x.cleanup.ok && (!x.cleanupRestore || !x.cleanupRestore.ok)),
   finalReview: jsonOf(x.finalReview),
   integrateExact: exactOf(x.executor) && verdictOf(x.review) === "pass" && verdictOf(x.finalReview) === "pass",
   retainPartial: !exactOf(x.executor) && verdictOf(x.review) === "pass" && jsonOf(x.review).ladder_exhausted === true,
