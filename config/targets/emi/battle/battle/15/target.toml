@@ -13,6 +13,7 @@ sources = [
     "src/bof3/battle/armRecordFlag8ResetFields.c",
     "src/bof3/battle/armSecondaryGridAdvanceRoot.c",
     "src/bof3/battle/clearStateWhenGateClear.c",
+    "src/bof3/battle/clampIndexedBattleByte14.c",
     "src/bof3/battle/dispatchLocalHandlerPair.c",
     "src/bof3/battle/dispatchPanelStateTable69f8.c",
     "src/bof3/battle/dispatchPanelStateTable6a08.c",

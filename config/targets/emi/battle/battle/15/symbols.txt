@@ -104,6 +104,7 @@ func_800A30E8 = 0x800A30E8;
 func_800A3688 = 0x800A3688;
 func_800A36BC = 0x800A36BC;
 func_800A36F0 = 0x800A36F0;
+clampIndexedBattleByte14 = 0x800A39B4;
 func_800A3F28 = 0x800A3F28;
 resetSelectionApplyInput = 0x800A41D8;
 querySelectionApplyInput = 0x800A4238;

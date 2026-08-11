@@ -744,8 +744,8 @@ segments:
     - asm
     - func_800A36F0
   - - 53684
-    - asm
-    - func_800A39B4
+    - c
+    - clampIndexedBattleByte14
   - - 53776
     - asm
     - func_800A3A10
