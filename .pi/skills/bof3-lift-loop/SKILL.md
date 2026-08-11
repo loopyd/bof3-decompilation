@@ -23,39 +23,28 @@ Never dispatch on dirty tree/index. `loop-status` fails closed (`dispatch_allowe
 
 ## Function pipeline
 
-For execution, load [`references/workflow-script.md`](references/workflow-script.md), replace only its selector array, set its unique wave `RUN_KEY`, and submit the full template as one async `subagent({ workflowScript })` call per wave. Do not expand its compact role contracts into repeated parent-authored prose or separate tool calls. The reference script is the executable retry authority, including explicitly repairable reviewer blocks; this file supplies invariants, not a duplicate branch specification. The script handles executor/reviewer retries, exact-only cleanup, gates, and final review; the parent retains queue, generic-lever, integration, git, and freshness authority.
+For execution, load [`references/workflow-script.md`](references/workflow-script.md), replace only its selector array, set its unique wave `RUN_KEY`, and submit the full template as one async `subagent({ workflowScript })` call per wave. Do not expand its compact role contracts into repeated parent-authored prose or separate tool calls. The reference script is the executable retry authority, including explicitly repairable reviewer blocks; this file supplies invariants, not a duplicate branch specification. The script handles executor/reviewer retries, retained exact/partial cleanup, gates, and final review; the parent retains queue, generic-lever, integration, git, and freshness authority.
 
 Each function is single-threaded regardless of batch parallelism:
 
 ```text
-bof3-reverse -> bof3-review -> [exact 100%] bof3-cleanup -> live gates -> bof3-review -> integration
+bof3-reverse -> bof3-review -> [retained exact|partial] bof3-cleanup -> live gates -> bof3-review -> integration
 ```
 
 - One function lane; ≤6 executor attempts incl. first. Keep an ordered per-lane attempt ledger containing every executor result, review, tested lever, expected/actual instruction effect, accept/revert outcome, and host checkpoint. Pass it to every fresh executor/reviewer. Non-exact review returns 1–3 ranked untried experiments, each predicting an observable size/frame, CFG/branch/loop, first-mismatch/offset, or named instruction/register/load/store effect. Launch one variant at a time. After every attempt, `attempt-checkpoint.py` records score, sizes, first mismatch, and all owned files; a non-improving attempt fails its host gate, restores the best checkpoint, exhausts that lever, and terminates the lane for review. Never rely on prompt-only best preservation. A repeated lever requires new evidence predicting a different observable effect. Never use retained-child `resume` for mutation retries: it may detach and return before edits finish, racing review against an unstable worktree; the explicit ledger preserves context instead. Stop early: exact; first unchanged/regressing experiment; rejected semantics/types; approval/safety or external blocker; reviewer `pass` with attested ladder exhaustion. Experiment-free `needs-fix` invalid.
 - Every experiment that produces a reviewed, reproducible net match improvement identifies its decisive lever and before integration records only the generic reusable rule in the narrowest playbook/lesson. Do not add function selectors, percentages, or case narratives to the playbook. State whether evidence is exact or partial in the review/journal; partial evidence is a candidate lever, never a universal rule. Function-only effects → `lesson: none` + evidence. Partial→exact levers must be recorded before integration.
-- Cleanup only after live 100% instruction/byte match + review pass: evidence-backed semantic rename, relocation/binding normalization, metadata, owned-file audit; never broaden ownership. Cleanup passes only with fresh `asm-diff`, `byte-match`, `symbols check`, Splat validation when touched, naming/relocation audit, fresh review; failure reverts cleanup only, retaining the reviewed exact pre-cleanup lift.
+- Cleanup runs after every reviewed retained exact or partial. It performs evidence-backed semantic function/source/Splat naming and integrates target-local symbol imports, declarations, weak bindings, metadata, and owned-file consistency; never broaden ownership or invent semantics. Exact cleanup requires fresh `asm-diff`, `byte-match`, `symbols check`, Splat/naming/relocation audit, and fresh review. Partial cleanup is spelling/integration-only: preserve body/ABI/address/boundary/compiler settings and atomic `@status partial`/`@match`/`@residual`, require fresh live score ≥ reviewed best plus symbols/Splat/naming audits and fresh review. Failure restores the reviewed pre-cleanup exact/partial checkpoint.
 
-## Serial loop (default `parallelism=1`)
+## Serial loop (`parallelism=1`)
 
-Per candidate until queue exhausted or fatal failure:
-
-1. `.pi/skills/bof3-re/scripts/function-brief.py SELECTOR` (`TARGET@0xADDRESS` or shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`); pass same selector to `bof3-reverse`.
-2. Relevant declared companion call: pass `companion-check` before dispatch; a static record proves no ABI/ownership.
-3. Executor returns mission JSON + checked acceptance report: exact lift, or **review-pending escalation** keeping its best coherent clean-C candidate in owned files; identifies baseline, best live diff, first mismatch class, rungs, changed files.
-4. Parent runs one live `byte-match` only for an exact claim. Status cache is never acceptance.
-5. Review exact and non-exact with brief, best live diff, owned diff, rung ledger, prior handoffs. Non-exact: ≤6-attempt contract; unknown types/symbols/layout/ABI/CFG/lifetimes → focused target-qualified Rizin first. Every experiment predicts an observable metric/instruction effect. The host rejects and restores the first unchanged/regressing attempt; no further speculative retry. `block` only for rejected semantics/types, invalid ownership/boundary, approval/safety, or external tool failure — not ordinary non-exactness. Exhausted coherent partial → reviewer `pass`, empty experiments, attestation.
-6. Review identifies the decisive lever behind every reproducible net improvement; parent records only its generic reusable rule in the narrowest playbook/lesson before integration, keeping case-specific evidence in the review/journal. Then exact-only cleanup/audit per the pipeline bullet.
-7. Only exact + cleanup/audit pass + final review pass: stage owned source/header/map/Splat facts, verify staged list, commit `feat(decomp): byte-match <function>`, journal.
-8. Non-exact never stops the queue. Retain a reviewed coherent net improvement with atomic `@status partial`/`@match NN.NN`/`@residual ...`; commit when authorized. Restore only no-progress or semantic/type rejection; never restore before review — candidate diff is primary diagnostic evidence.
-
-Use `subagent_supervisor` replies for child requests, not generic intercom.
+Use the reference script unchanged except selectors/`RUN_KEY`; it is the executable retry/cleanup authority. Before dispatch run `.pi/skills/bof3-re/scripts/function-brief.py SELECTOR` and relevant `companion-check`. Parent accepts only retained state + cleanup gate + final review: exact commits as `feat(decomp): byte-match <function>`; authorized partial commits keep atomic metadata. Restore no-progress, rejected semantics/types, or cleanup regression. Use `subagent_supervisor` for child requests.
 
 ## Parallel loop (optional `parallelism>1`)
 
 Freeze one fresh queue, then execute the reference workflow script with up to `parallelism` target-distinct selectors. It uses `runs.all` for each phase and ordinary JavaScript for bounded per-lane branching/retries. Requirements:
 
 - Never place two live lanes from the same target together: target-local map, Splat, manifest, support source, `internal.h` are shared. Partition each wave by distinct `TARGET`; defer collisions.
-- Every lane owns exactly one selector and the script runs its bounded executor ↔ reviewer retry loop -> exact-only cleanup -> gates -> re-review serially. Cleanup/audit may overlap another target's lane.
+- Every lane owns exactly one selector and the script runs its bounded executor ↔ reviewer retry loop -> retained exact/partial cleanup -> gates -> re-review serially. Cleanup/audit may overlap another target's lane.
 - Managed-worktree launches require one absolute project-owned `sessionDir` **per top-level lane** (for example `$PWD/.pi-subagents/sessions/<batch>/<lane>`); one shared directory makes parallel `run-0/session.jsonl` writers collide. Launch lanes separately when the workflow API cannot set child session directories. RE lanes also require the ignored `.venv`, binaries, and generated evidence; absent a project setup hook that provisions them, use distinct-target direct lanes instead of worktrees. Never inherit a relative session directory: cleanup removes it with the worktree.
 - No lane commits, pushes, edits another target, or shares publicly. A lane may regenerate target-local disposable analysis/index evidence required by its pipeline; generated `out/`, `build/`, compile DB, Rizin analysis/index, and source stubs are never merge artifacts or shared acceptance state.
 - Parent receives each worktree handoff, rejects overlapping/unexpected paths, and integrates lanes **one at a time**. Before each integration, refresh against the current parent tree/index plus already integrated lanes, not only `HEAD`; resolve target ownership facts deliberately, never by blind patch application.
@@ -67,7 +56,7 @@ Freeze one fresh queue, then execute the reference workflow script with up to `p
 
 ## Post-loop audit
 
-At batch end, audit all integrated exact functions for missed evidence-backed rename/relocation cleanup. Do not repeat cleanup already passed in the function pipeline. Any new edit requires fresh live `asm-diff`, `byte-match`, naming/relocation checks, and fresh `bof3-review`; revert a cleanup regression, never fix forward.
+Audit retained lanes for missed integration only; do not repeat passed cleanup. New exact edits require live `asm-diff`/`byte-match` and review; partial edits require unchanged-or-better live score and metadata. Revert regression.
 
 ## Partial re-lift + decomp.me final rung
 
@@ -75,27 +64,8 @@ User-authorized fresh `out/non-exact-lifts.json` pass after queue + checkpoint. 
 
 Exhausted non-exact: integrate durable lesson, restore recorded prior state, run final rung `bin/scratchpad share SELECTOR`. Publish only if selector starts at a reviewed Splat `c`/`asm` `func_XXXXXXXX` boundary and restored partial source exists. Missing ABI/call ownership/analyzer confidence/lifting evidence does **not** block a valid function. Data-leading/non-function/unreviewed/source-less → `not shareable: <reason>`. Journal URL/reason/failure; continue. Never alter reviewed map/Splat facts for a payload; a scratch is public escalation evidence, never acceptance; a prior URL never replaces a current mission or exact gate.
 
-## Cleanup child brief
-
-```
-Task: audit/clean one reviewed exact SELECTOR only.
-Scope: evidence-backed semantic rename, relocation/binding normalization, metadata, and owned-file consistency. No behavior invention or ownership broadening.
-Required: pre/post live asm-diff + byte-match; symbols/Splat and naming/relocation audits when applicable. Exactness must remain 100%.
-No git writes, setup, sharing, other targets, or children. Return changed paths, audit evidence, rollback instruction.
-```
-
 ## Stop/report
 
 Never stop for: non-exact candidate, unshareable, publish failure, review rejection of an exact claim, bounded escalation. Journal + continue. Stop only: queue exhausted, budget reached, evidence-recovery fatal, child output conflicts with owned worktree, user approval required. Print journal, counts, commits, scratch URLs/results, risks, next step.
 
-## Child brief
-
-```
-Task: lift/review SELECTOR (`TARGET@0xADDRESS`, or shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`).
-Context: function brief + mission/diff + owned-file diff. First run `agent-context.py <reverse|review> SELECTOR`.
-Authority: executor edits owned source/internal.h/map/Splat. Reviewer may edit only `docs/specs/**/*.md` or `docs/agents/lessons.md`; parent owns matching-playbook edits.
-No git writes, setup, other targets, or children. Non-exact executor leaves best coherent candidate review-pending; only parent restores after review + durable-lesson integration.
-Return protocol/checklist JSON + required acceptance-report.
-```
-
-Role protocols preloaded from `.pi/skills/bof3-re/references/REVERSE/` and `.pi/skills/bof3-re/references/REVIEW/` by `agent-context.py`.
+Role protocols are preloaded by `agent-context.py`; the reference workflow supplies compact child tasks and ownership limits.

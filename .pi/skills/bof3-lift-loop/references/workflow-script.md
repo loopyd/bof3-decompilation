@@ -1,7 +1,7 @@
 # Lift-loop workflowScript
 
 Use one `subagent` call per wave. The script owns executor/reviewer retries,
-exact-only cleanup, host gates, and final review; the parent still owns queue
+retained exact/partial cleanup, host gates, and final review; the parent still owns queue
 selection, generic playbook edits, integration, commits, pushes, and snapshot/index
 refresh.
 
@@ -75,7 +75,7 @@ const unseenExperiments = x => {
   );
 };
 const shellQuote = s => "'" + String(s).replace(/'/g, "'\\''") + "'";
-const checkpointGate = (x, attempt, requireImprovement, extraFiles = []) => {
+const checkpointGate = (x, attempt, requireImprovement, extraFiles = [], requireAtLeast = null) => {
   const files = filesOf(x.executor);
   if (!files.length || !Number.isFinite(scoreOf(x.executor))) return "false";
   return [
@@ -83,6 +83,7 @@ const checkpointGate = (x, attempt, requireImprovement, extraFiles = []) => {
     "--lane", shellQuote(RUN_KEY + "-" + keyOf(x.selector)), "--selector", shellQuote(x.selector),
     "--attempt", String(attempt), "--match", String(scoreOf(x.executor)),
     requireImprovement ? "--require-improvement" : "",
+    requireAtLeast == null ? "" : "--require-at-least " + String(requireAtLeast),
     [...new Set([...filesSeenOf(x), ...extraFiles])].map(shellQuote).join(" ")
   ].filter(Boolean).join(" ");
 };
@@ -126,16 +127,32 @@ const retryTask = (x, actionable) => [
   "Current executor handoff:\n" + textOf(x.executor),
   "Current reviewer handoff:\n" + textOf(x.review)
 ].join("\n");
-const cleanupTask = s => [
-  "Cleanup reviewed exact " + s + ".",
-  "Perform evidence-backed semantic function/symbol/source filename naming, relocation/binding normalization, metadata and owned-file audit.",
-  "Preserve exact bytes. No git, publication, other targets, or children."
+const cleanupTask = x => [
+  "Cleanup and integrate reviewed " + (exactOf(x.executor) ? "exact" : "retained partial") + " " + x.selector + ".",
+  "Perform evidence-backed semantic function naming, source filename/Splat label transaction, target-local symbol imports, declarations, weak bindings, metadata, and owned-file consistency with the rest of the project.",
+  exactOf(x.executor)
+    ? "Preserve exact bytes and require live asm-diff plus byte-match."
+    : "Spelling-only cleanup: preserve body/ABI/address/boundary/compiler settings and @status partial/@match/@residual; require the live score not to regress below " + String(x.bestScore) + ".",
+  "Do not invent semantics or broaden target ownership. No git, publication, other targets, or children."
 ].join("\n");
 const gateOf = s => {
   const t = targetOf(s);
   return "bin/asm-diff '" + s + "' >/dev/null && bin/byte-match '" + s +
     "' && bin/symbols check '" + t + "' && bin/splat '" + t + "' && git diff --check";
 };
+const partialCleanupGate = x => [
+  "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py capture",
+  "--lane", shellQuote(RUN_KEY + "-" + keyOf(x.selector)),
+  "--selector", shellQuote(x.selector), "--attempt", String(x.attempt + 3),
+  "--require-at-least", String(x.bestScore), "--no-promote", filesSeenOf(x).map(shellQuote).join(" ")
+].join(" ") + " && bin/symbols check " + shellQuote(targetOf(x.selector)) +
+  " && bin/splat " + shellQuote(targetOf(x.selector)) + " && git diff --check";
+const cleanupPathsGate = (x, attempt) => [
+  "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py capture",
+  "--lane", shellQuote(RUN_KEY + "-" + keyOf(x.selector)),
+  "--selector", shellQuote(x.selector), "--attempt", String(attempt),
+  "--paths-only --scan-worktree", filesOf(x.cleanup).map(shellQuote).join(" ")
+].join(" ");
 
 let lanes = (await runs.all(SELECTORS.map(s => ({
   key: "reverse-0-" + keyOf(s), agent: "bof3-reverse", task: reverseTask(s)
@@ -236,29 +253,30 @@ if (restored.length) {
   });
 }
 
-const exact = lanes.filter(x => x.terminal && exactOf(x.executor) && verdictOf(x.review) === "pass");
-if (exact.length) {
-  const precleanup = await runs.all(exact.map(x => ({
+const retained = lanes.filter(x => x.terminal && verdictOf(x.review) === "pass" &&
+  (exactOf(x.executor) || jsonOf(x.review).ladder_exhausted === true));
+if (retained.length) {
+  const precleanup = await runs.all(retained.map(x => ({
     key: "precleanup-gate-" + keyOf(x.selector),
     agent: "bof3-review",
-    task: "Attest only the host exactness gate for " + x.selector + ". No edits.",
-    gate: gateOf(x.selector)
+    task: "Attest the reviewed retained-state gate for " + x.selector + ". No edits.",
+    gate: exactOf(x.executor) ? gateOf(x.selector) : checkpointGate(x, x.attempt + 1, false, [], x.bestScore)
   })));
-  exact.forEach((x, i) => { x.precleanup = precleanup[i]; });
-  const gated = exact.filter(x => x.precleanup && x.precleanup.ok);
+  retained.forEach((x, i) => { x.precleanup = precleanup[i]; });
+  const gated = retained.filter(x => x.precleanup && x.precleanup.ok);
 
   const cleanupCheckpoints = await runs.all(gated.map(x => ({
     key: "checkpoint-precleanup-" + keyOf(x.selector), agent: "bof3-review",
-    task: "Checkpoint the reviewed exact state before cleanup for " + x.selector + ". No edits.",
-    gate: checkpointGate(x, x.attempt + 1, false)
+    task: "Checkpoint the reviewed retained state before cleanup for " + x.selector + ". No edits.",
+    gate: checkpointGate(x, x.attempt + 2, false)
   })));
   gated.forEach((x, i) => { x.cleanupCheckpoint = cleanupCheckpoints[i]; });
   const cleanupReady = gated.filter(x => x.cleanupCheckpoint && x.cleanupCheckpoint.ok);
   const cleanups = await runs.all(cleanupReady.map(x => ({
     key: "cleanup-" + keyOf(x.selector),
     agent: "bof3-cleanup",
-    task: cleanupTask(x.selector),
-    gate: gateOf(x.selector)
+    task: cleanupTask(x),
+    gate: exactOf(x.executor) ? gateOf(x.selector) : partialCleanupGate(x)
   })));
   cleanupReady.forEach((x, i) => { x.cleanup = cleanups[i]; });
   const failedCleanup = cleanupReady.filter(x => !x.cleanup || !x.cleanup.ok);
@@ -266,18 +284,13 @@ if (exact.length) {
     const cleanupPathRecords = await runs.all(failedCleanup.map(x => ({
       key: "record-cleanup-paths-" + keyOf(x.selector), agent: "bof3-review",
       task: "Record cleanup-touched paths before rollback for " + x.selector + ". No authored edits.",
-      gate: [
-        "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py capture",
-        "--lane", shellQuote(RUN_KEY + "-" + keyOf(x.selector)),
-        "--selector", shellQuote(x.selector), "--attempt", String(x.attempt + 2),
-        "--paths-only", filesOf(x.cleanup).map(shellQuote).join(" ")
-      ].join(" ")
+      gate: cleanupPathsGate(x, x.attempt + 4)
     })));
     failedCleanup.forEach((x, i) => { x.cleanupPathRecord = cleanupPathRecords[i]; });
     const restorableCleanup = failedCleanup.filter(x => x.cleanupPathRecord && x.cleanupPathRecord.ok);
     const cleanupRestores = await runs.all(restorableCleanup.map(x => ({
       key: "restore-precleanup-" + keyOf(x.selector), agent: "bof3-review",
-      task: "Restore the reviewed exact pre-cleanup checkpoint for " + x.selector + ". No authored edits.",
+      task: "Restore the reviewed retained pre-cleanup checkpoint for " + x.selector + ". No authored edits.",
       gate: restoreGate(x)
     })));
     restorableCleanup.forEach((x, i) => { x.cleanupRestore = cleanupRestores[i]; });
@@ -288,12 +301,28 @@ if (exact.length) {
     key: "final-review-" + keyOf(x.selector),
     agent: "bof3-review",
     task: [
-      "Final post-cleanup review " + x.selector + ".",
-      "Verify semantic naming, ownership, metadata, old-spelling absence, exact bytes, and cleanup gate evidence.",
+      "Final retained-state post-cleanup review " + x.selector + ".",
+      "Verify semantic naming, source/Splat/map/declaration/binding integration, ownership, metadata, old-spelling absence, and cleanup gate evidence. Exact must remain byte-exact; partial must retain or improve its reviewed live score and partial metadata.",
       "No edits. Cleanup handoff:\n" + textOf(x.cleanup)
     ].join("\n")
   })));
   cleaned.forEach((x, i) => { x.finalReview = finals[i]; });
+  const rejectedFinal = cleaned.filter(x => verdictOf(x.finalReview) !== "pass");
+  if (rejectedFinal.length) {
+    const finalPathRecords = await runs.all(rejectedFinal.map(x => ({
+      key: "record-final-rejected-paths-" + keyOf(x.selector), agent: "bof3-review",
+      task: "Record final-review-rejected cleanup paths before rollback for " + x.selector + ". No authored edits.",
+      gate: cleanupPathsGate(x, x.attempt + 5)
+    })));
+    rejectedFinal.forEach((x, i) => { x.finalPathRecord = finalPathRecords[i]; });
+    const finalRestorable = rejectedFinal.filter(x => x.finalPathRecord && x.finalPathRecord.ok);
+    const finalRestores = await runs.all(finalRestorable.map(x => ({
+      key: "restore-final-rejected-" + keyOf(x.selector), agent: "bof3-review",
+      task: "Restore the reviewed retained pre-cleanup checkpoint after final-review rejection for " + x.selector + ". No authored edits.",
+      gate: restoreGate(x)
+    })));
+    finalRestorable.forEach((x, i) => { x.finalCleanupRestore = finalRestores[i]; });
+  }
 }
 
 return lanes.map(x => ({
@@ -308,11 +337,14 @@ return lanes.map(x => ({
   review: jsonOf(x.review),
   precleanupGatePassed: Boolean(x.precleanup && x.precleanup.ok),
   cleanup: jsonOf(x.cleanup),
-  cleanupRollbackPassed: Boolean(x.cleanupRestore && x.cleanupRestore.ok),
-  cleanupRollbackFailed: Boolean(x.cleanup && !x.cleanup.ok && (!x.cleanupRestore || !x.cleanupRestore.ok)),
+  cleanupRollbackPassed: Boolean((x.cleanupRestore && x.cleanupRestore.ok) || (x.finalCleanupRestore && x.finalCleanupRestore.ok)),
+  cleanupRollbackFailed: Boolean(
+    (x.cleanup && !x.cleanup.ok && (!x.cleanupRestore || !x.cleanupRestore.ok)) ||
+    (x.finalReview && verdictOf(x.finalReview) !== "pass" && (!x.finalCleanupRestore || !x.finalCleanupRestore.ok))
+  ),
   finalReview: jsonOf(x.finalReview),
-  integrateExact: exactOf(x.executor) && verdictOf(x.review) === "pass" && verdictOf(x.finalReview) === "pass",
-  retainPartial: !exactOf(x.executor) && verdictOf(x.review) === "pass" && jsonOf(x.review).ladder_exhausted === true,
+  integrateExact: exactOf(x.executor) && verdictOf(x.review) === "pass" && verdictOf(x.finalReview) === "pass" && Boolean(x.cleanup && x.cleanup.ok),
+  retainPartial: !exactOf(x.executor) && verdictOf(x.review) === "pass" && jsonOf(x.review).ladder_exhausted === true && verdictOf(x.finalReview) === "pass" && Boolean(x.cleanup && x.cleanup.ok),
   genericLeverCandidates: [jsonOf(x.review).lesson, jsonOf(x.finalReview).lesson].filter(Boolean)
 }));
 ```

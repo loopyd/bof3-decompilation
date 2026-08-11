@@ -20,7 +20,7 @@ def run_json(*args: str) -> dict:
     return json.loads(result.stdout)
 
 
-def metric(selector: str, reported: float) -> dict:
+def metric(selector: str, reported: float | None) -> dict:
     diff = run_json("bin/asm-diff", "--json", selector)
     first = diff.get("first_mismatch") or {}
     instruction_count = diff.get("instruction_count") or {}
@@ -28,7 +28,7 @@ def metric(selector: str, reported: float) -> dict:
     return {
         "match_percent": live_score,
         "reported_match_percent": reported,
-        "report_matches_live": abs(live_score - reported) < 0.005,
+        "report_matches_live": reported is None or abs(live_score - reported) < 0.005,
         "exact": bool(diff.get("exact_match")),
         "current_size": diff.get("current_size"),
         "original_size": diff.get("original_size"),
@@ -47,10 +47,27 @@ def checkpoint_dir(lane: str) -> Path:
     return ROOT / "out" / "lift-loop" / "checkpoints" / lane
 
 
+def dirty_paths() -> set[str]:
+    status = subprocess.run(
+        ("git", "status", "--porcelain", "-z"), cwd=ROOT, capture_output=True, check=True
+    ).stdout.decode(errors="surrogateescape").split("\0")
+    return {
+        entry[3:].split(" -> ")[-1]
+        for entry in status
+        if entry and entry[3:].split(" -> ")[-1].startswith(
+            ("src/", "include/", "config/targets/", "docs/specs/", "docs/agents/")
+        )
+    }
+
+
 def capture(args: argparse.Namespace) -> int:
     lane_dir = checkpoint_dir(args.lane)
     attempt_dir = lane_dir / f"attempt-{args.attempt}"
     outcome_path = attempt_dir / "outcome.json"
+    if args.scan_worktree:
+        best_path = lane_dir / "best.json"
+        baseline = set(json.loads(best_path.read_text()).get("worktree_paths", []))
+        args.files.extend(sorted(dirty_paths() - baseline))
     if outcome_path.is_file():
         outcome = json.loads(outcome_path.read_text())
         print(json.dumps(outcome))
@@ -99,10 +116,14 @@ def capture(args: argparse.Namespace) -> int:
     } != {
         key: value for key, value in best["metric"].items() if key != "reported_match_percent"
     }
-    if improved:
-        best = record | {"checkpoint": attempt_dir.relative_to(lane_dir).as_posix()}
+    if improved and not args.no_promote:
+        best = record | {
+            "checkpoint": attempt_dir.relative_to(lane_dir).as_posix(),
+            "worktree_paths": sorted(dirty_paths()),
+        }
         best_path.write_text(json.dumps(best, indent=2) + "\n")
-    exit_code = 2 if not evidence["report_matches_live"] else 1 if args.require_improvement and not improved else 0
+    below_floor = args.require_at_least is not None and live_score < args.require_at_least
+    exit_code = 2 if not evidence["report_matches_live"] else 1 if (args.require_improvement and not improved) or below_floor else 0
     outcome = {
         "improved": improved, "observable_change": observable,
         "current": record, "best": best, "exit_code": exit_code,
@@ -143,13 +164,16 @@ def main() -> int:
     save.add_argument("--attempt", required=True, type=int)
     save.add_argument("--match", type=float)
     save.add_argument("--paths-only", action="store_true")
+    save.add_argument("--scan-worktree", action="store_true")
+    save.add_argument("--no-promote", action="store_true")
     save.add_argument("--require-improvement", action="store_true")
+    save.add_argument("--require-at-least", type=float)
     save.add_argument("files", nargs="*")
     load = sub.add_parser("restore")
     load.add_argument("--lane", required=True)
     args = parser.parse_args()
-    if args.command == "capture" and not args.paths_only and args.match is None:
-        parser.error("capture requires --match unless --paths-only is set")
+    if args.command == "capture" and not args.paths_only and args.match is None and args.require_at_least is None:
+        parser.error("capture requires --match or --require-at-least unless --paths-only is set")
     return capture(args) if args.command == "capture" else restore(args)
 
 
