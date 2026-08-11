@@ -56,3 +56,4 @@ progressHandlerTable4 = 0x801F269C;
 progressHandlerTable5 = 0x801F26B0;
 progressHandlerTable6 = 0x801F26EC;
 variantRotation = 0x801F2928;
+taskLabelBandTable = 0x801F2930;

@@ -1,9 +1,5 @@
 #include "bof3/ui/commu00_internal.h"
 
-/* activeRecordBytes: 480-byte region, accessed with stride-8 byte offsets */
-/* @source 0x801455C8 @kind unknown */
-extern volatile u8 activeRecordBytes[];
-
 /* @source 0x801F02E4
  * @behavior counts non-zero bytes in activeRecordBytes region with stride-8, returns masked count
  * @status exact
@@ -15,7 +11,7 @@ u8 countActiveRecords(void) {
   s32 v1 = 0;
 
   do {
-    if (activeRecordBytes[v1] != 0) {
+    if (((volatile u8 *)activeRecordBytes)[v1] != 0) {
       count++;
     }
     v1 += 8;

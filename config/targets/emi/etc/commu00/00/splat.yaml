@@ -42,7 +42,7 @@ segments:
     - asm
     - activateTaskStatusC003
   - - 8968
-    - asm
+    - c
     - func_801F0F08
   - - 9148
     - asm

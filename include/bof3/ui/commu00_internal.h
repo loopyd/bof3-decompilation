@@ -58,6 +58,11 @@ extern u8           fairySlotIndex;
  * variant-derived labels are entries minus 0x3FFB.
  */
 extern volatile u8  variantRotation[1];
+/* @source 0x801F2930 @kind bss: three rows of three u16 task labels selected by battle-age band. */
+extern u16          taskLabelBandTable[3][3];
+extern u32          D_8014502C;
+/* @source 0x801455C8 @kind unknown: typed view of the active-record region. */
+extern volatile Commu00ActiveRecord activeRecordBytes[];
 extern u8           D_801455C9[];
 extern u8           D_801457AB[];
 extern u8           D_801CA28C[];
@@ -111,6 +116,7 @@ void func_801F0BF4(u8 task_index);
 #define COMMU00_TASK_SLOTS PSX_PTR(volatile Commu00TaskSlot, 0x80146888u)
 
 #define COMMU00_ACTIVE_RECORD_BASE   ((u32)0x801455c8u)
+#define COMMU00_ACTIVE_RECORDS       activeRecordBytes
 #define COMMU00_RECORD_KIND_TABLE    PSX_PTR(const volatile u8, 0x801457a8u)
 #define COMMU00_ACTIVE_TEMPLATE_BASE ((u32)0x801457e8u)
 #define COMMU00_FAIRY_PROGRESS       PSX_PTR(volatile u8, 0x801448ecu)
