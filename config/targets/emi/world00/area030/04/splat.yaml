@@ -272,8 +272,10 @@ segments:
     - asm
     - func_801DA9DC
   - - 41532
-    - asm
+    - c
     - func_801DAE3C
+    - '@source: src/bof3/world/func_801DAE3C.c'
+    - '@behavior: initializes shared motion state and advances the scratch work-record action byte when the area gate flag is clear.'
   - - 41604
     - c
     - func_801DAE84

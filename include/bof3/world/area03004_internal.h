@@ -10,6 +10,8 @@ extern u16 D_80143C40;    /* @source 0x80143C40 @kind unknown */
 extern u16 D_80143B92;    /* @source 0x80143B92 @kind unknown */
 extern u8  D_8014832E;    /* @source 0x8014832E @kind unknown */
 extern u8  D_80149332;    /* @source 0x80149332 @kind unknown */
+extern u16 D_8014932E;    /* @source 0x8014932E @kind unknown */
+extern u32 D_8014930C;    /* @source 0x8014930C @kind unknown */
 extern u8  D_8014403D;    /* @source 0x8014403D @kind unknown */
 extern u8  D_80144281;    /* @source 0x80144281 @kind unknown */
 extern u8  modeByte;      /* @source 0x80144125 @kind bss */
@@ -111,6 +113,7 @@ void func_801D6B28(s8 arg0);
 void func_801D6EC4(void);
 void advanceStepMode6(void);
 void clearFlagState10(void);
+void func_801DAE3C(void);
 void dispatchCompanion(void);
 void func_801DFFA8(void);
 void func_801DCC74(void);

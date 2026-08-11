@@ -31,6 +31,7 @@ sources = [
     "src/bof3/world/func_801D9CF4.c",
     "src/bof3/world/func_801DA5B4.c",
     "src/bof3/world/func_801DA8E8.c",
+    "src/bof3/world/func_801DAE3C.c",
     "src/bof3/world/func_801DAE84.c",
     "src/bof3/world/func_801DAED4.c",
     "src/bof3/world/selectRecordValueAndSlot.c",
