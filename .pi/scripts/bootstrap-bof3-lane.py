@@ -25,17 +25,27 @@ for name in (".venv", "inputs"):
     source = root / name
     target = worktree / name
     if source.exists() and not target.exists():
-        os.symlink(source, target, target_is_directory=True)
+        if name == ".venv":
+            target.mkdir()
+            subprocess.run(("cp", "-as", str(source) + "/.", str(target)), check=True)
+        else:
+            os.symlink(source, target, target_is_directory=True)
 
-# Managed worktrees do not initialize submodules. Link populated submodule
-# worktrees required by matching tools; their tracked gitlinks remain unchanged.
+# Managed worktrees do not initialize submodules. Populate their existing
+# gitlink directories with reflinked files; replacing gitlinks with symlinks
+# creates tracked type changes that can leak into native handoff patches.
 for name in ("maspsx", "asm-differ", "decomp-permuter", "m2c"):
     source = root / "third_party" / name
     target = worktree / "third_party" / name
     if source.is_dir() and any(source.iterdir()) and (not target.exists() or not any(target.iterdir())):
-        if target.exists():
-            target.rmdir()
-        os.symlink(source, target, target_is_directory=True)
+        target.mkdir(parents=True, exist_ok=True)
+        subprocess.run(
+            ("cp", "-a", "--reflink=auto", str(source) + "/.", str(target)),
+            check=True,
+        )
+        git_admin = target / ".git"
+        if git_admin.is_file() or git_admin.is_symlink():
+            git_admin.unlink()
 
 source_out = root / "out"
 target_out = worktree / "out"

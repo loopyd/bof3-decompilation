@@ -74,7 +74,7 @@ const unseenExperiments = x => {
 const shellQuote = s => "'" + String(s).replace(/'/g, "'\\''") + "'";
 const checkpointGate = (x, attempt, requireImprovement, extraFiles = [], requireAtLeast = null) => {
   const files = filesOf(x.executor);
-  if (!files.length || !Number.isFinite(scoreOf(x.executor))) return "false";
+  if (!Number.isFinite(scoreOf(x.executor))) return "false";
   return [
     "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py capture",
     "--lane", shellQuote(RUN_KEY + "-" + keyOf(x.selector)), "--selector", shellQuote(x.selector),

@@ -143,14 +143,23 @@ def restore(args: argparse.Namespace) -> int:
         record = json.loads(record_path.read_text())
         known_paths.update(state["path"] for state in record["files"])
     for name in sorted(known_paths):
-        state = best_states.get(name, {"path": name, "exists": False})
+        state = best_states.get(name)
         path = (ROOT / name).resolve()
         path.relative_to(ROOT)
-        if state["exists"]:
+        if state and state["exists"]:
             path.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source / name, path)
-        elif path.exists():
-            path.unlink()
+        elif state:
+            if path.exists():
+                path.unlink()
+        else:
+            tracked = subprocess.run(
+                ("git", "cat-file", "-e", f"HEAD:{name}"), cwd=ROOT
+            ).returncode == 0
+            if tracked:
+                subprocess.run(("git", "restore", "--source=HEAD", "--", name), cwd=ROOT, check=True)
+            elif path.exists():
+                path.unlink()
     print(json.dumps(best))
     return 0
 
