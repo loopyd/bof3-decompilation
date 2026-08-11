@@ -438,6 +438,12 @@ extern u8 battlePanelIndexFormat;
 /* @source 0x800969C4 @kind unknown */
 extern u8 battleWorkStateHandlerTable;
 
+extern u8 D_801462EC; /* @source 0x801462EC @kind unknown */
+extern s16 D_8014930A; /* @source 0x8014930A @kind unknown */
+extern s16 D_8014930E; /* @source 0x8014930E @kind unknown */
+extern u8 D_80149332; /* @source 0x80149332 @kind unknown */
+extern s8 D_800B44C0[]; /* @source 0x800B44C0 @kind table */
+
 #endif
 
 extern u8 D_80145F2F[]; /* @source 0x80145F2F @kind unknown */

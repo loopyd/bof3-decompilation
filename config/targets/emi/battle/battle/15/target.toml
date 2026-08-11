@@ -66,6 +66,7 @@ sources = [
     "src/bof3/battle/func_8009AF84.c",
     "src/bof3/battle/func_8009B03C.c",
     "src/bof3/battle/func_8009B160.c",
+    "src/bof3/battle/func_8009B700.c",
     "src/bof3/battle/func_8009DA94.c",
     "src/bof3/battle/runPanelTasks16To19.c",
     "src/bof3/battle/func_8009DC6C.c",
