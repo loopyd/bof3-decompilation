@@ -200,9 +200,22 @@ extern volatile u8   D_801483C3; /* @source 0x801483C3 @kind unknown */
 extern volatile u8   D_80148597; /* @source 0x80148597 @kind unknown */
 extern volatile u8   D_801485BB; /* @source 0x801485BB @kind unknown */
 typedef struct BattleSelectionState {
-  u8 first;
-  u8 unk_01[0x6B];
-  u8 field_6C;
+  u8  first;
+  u8  unk_01;
+  u8  unk_02;
+  u8  unk_03;
+  s16 unk_04;
+  s16 unk_06;
+  u8  unk_08;
+  u8  unk_09;
+  u8  unk_0A;
+  u8  unk_0B;
+  u8  unk_0C;
+  u8  unk_0D;
+  u8  unk_0E[6];
+  s16 unk_14;
+  u8  unk_16[0x56];
+  u8  field_6C;
 } BattleSelectionState;
 
 extern BattleSelectionState D_80148570; /* @source 0x80148570 @kind unknown */
@@ -211,12 +224,14 @@ extern u8 D_80148572; /* @source 0x80148572 @kind unknown */
 extern u8 D_80148573; /* @source 0x80148573 @kind unknown */
 extern s16 D_80148574; /* @source 0x80148574 @kind unknown */
 extern s16 D_80148576; /* @source 0x80148576 @kind unknown */
+extern u8 D_80148578; /* @source 0x80148578 @kind unknown */
 extern u8 D_80148579; /* @source 0x80148579 @kind unknown */
 extern u8 D_8014857A; /* @source 0x8014857A @kind unknown */
 extern u8 D_8014857B; /* @source 0x8014857B @kind unknown */
 extern u8 D_8014857C; /* @source 0x8014857C @kind unknown */
 extern u8 D_8014857D; /* @source 0x8014857D @kind unknown */
 extern s16 D_80148580; /* @source 0x80148580 @kind unknown */
+extern s16 D_80148584; /* @source 0x80148584 @kind unknown */
 extern u8 D_801485DD; /* @source 0x801485DD @kind unknown */
 extern volatile u8 D_801485DE; /* @source 0x801485DE @kind unknown */
 extern volatile u8   D_801485DF; /* @source 0x801485DF @kind unknown */

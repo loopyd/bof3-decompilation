@@ -59,6 +59,7 @@ sources = [
     "src/bof3/battle/func_80096F78.c",
     "src/bof3/battle/func_80097D58.c",
     "src/bof3/battle/func_80097EC0.c",
+    "src/bof3/battle/func_80097FE8.c",
     "src/bof3/battle/func_800980E4.c",
     "src/bof3/battle/func_800983C4.c",
     "src/bof3/battle/func_8009AF7C.c",
