@@ -78,7 +78,7 @@ const checkpointGate = (x, attempt, requireImprovement, extraFiles = [], require
   return [
     "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py capture",
     "--lane", shellQuote(RUN_KEY + "-" + keyOf(x.selector)), "--selector", shellQuote(x.selector),
-    "--attempt", String(attempt), "--match", String(scoreOf(x.executor)),
+    "--attempt", String(attempt), "--match=" + String(scoreOf(x.executor)),
     requireImprovement ? "--require-improvement" : "",
     requireAtLeast == null ? "" : "--require-at-least " + String(requireAtLeast),
     [...new Set([...filesSeenOf(x), ...extraFiles])].map(shellQuote).join(" ")

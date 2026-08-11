@@ -181,8 +181,6 @@ def main() -> int:
     load = sub.add_parser("restore")
     load.add_argument("--lane", required=True)
     args = parser.parse_args()
-    if args.command == "capture" and not args.paths_only and args.match is None and args.require_at_least is None:
-        parser.error("capture requires --match or --require-at-least unless --paths-only is set")
     return capture(args) if args.command == "capture" else restore(args)
 
 
