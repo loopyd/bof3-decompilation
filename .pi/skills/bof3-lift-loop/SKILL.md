@@ -30,7 +30,7 @@ bof3-reverse -> bof3-review -> [exact 100%] bof3-cleanup -> live gates -> bof3-r
 ```
 
 - One executor/reviewer pair per function; ≤6 executor attempts incl. first. Non-exact review returns 1–3 ranked untried experiments (lever, expected effect, evidence, accept/revert); resume same executor, one variant at a time, preserve best coherent result, re-review. Stop early: exact; rejected semantics/types; approval/safety or external blocker; reviewer `pass` with attested ladder exhaustion. Experiment-free `needs-fix` invalid.
-- Partial→exact final review identifies the decisive experiment; parent records a reusable rule in the narrowest playbook/lesson before integration; function-only → `lesson: none` + evidence.
+- Every experiment that produces a reviewed, reproducible net match improvement identifies its decisive lever and before integration records only the generic reusable rule in the narrowest playbook/lesson. Do not add function selectors, percentages, or case narratives to the playbook. State whether evidence is exact or partial in the review/journal; partial evidence is a candidate lever, never a universal rule. Function-only effects → `lesson: none` + evidence. Partial→exact levers must be recorded before integration.
 - Cleanup only after live 100% instruction/byte match + review pass: evidence-backed semantic rename, relocation/binding normalization, metadata, owned-file audit; never broaden ownership. Cleanup passes only with fresh `asm-diff`, `byte-match`, `symbols check`, Splat validation when touched, naming/relocation audit, fresh review; failure reverts cleanup only, retaining the reviewed exact pre-cleanup lift.
 
 ## Serial loop (default `parallelism=1`)
@@ -42,7 +42,7 @@ Per candidate until queue exhausted or fatal failure:
 3. Executor returns mission JSON + checked acceptance report: exact lift, or **review-pending escalation** keeping its best coherent clean-C candidate in owned files; identifies baseline, best live diff, first mismatch class, rungs, changed files.
 4. Parent runs one live `byte-match` only for an exact claim. Status cache is never acceptance.
 5. Review exact and non-exact with brief, best live diff, owned diff, rung ledger, prior handoffs. Non-exact: ≤6-attempt contract; unknown types/symbols/layout/ABI/CFG/lifetimes → focused target-qualified Rizin first; no unchanged retry. `block` only for rejected semantics/types, invalid ownership/boundary, approval/safety, or external tool failure — not ordinary non-exactness. Exhausted coherent partial → reviewer `pass`, empty experiments, attestation.
-6. Partial→exact final review identifies the decisive experiment; parent records any reusable rule. Then exact-only cleanup/audit per the pipeline bullet.
+6. Review identifies the decisive lever behind every reproducible net improvement; parent records only its generic reusable rule in the narrowest playbook/lesson before integration, keeping case-specific evidence in the review/journal. Then exact-only cleanup/audit per the pipeline bullet.
 7. Only exact + cleanup/audit pass + final review pass: stage owned source/header/map/Splat facts, verify staged list, commit `feat(decomp): byte-match <function>`, journal.
 8. Non-exact never stops the queue. Retain a reviewed coherent net improvement with atomic `@status partial`/`@match NN.NN`/`@residual ...`; commit when authorized. Restore only no-progress or semantic/type rejection; never restore before review — candidate diff is primary diagnostic evidence.
 
