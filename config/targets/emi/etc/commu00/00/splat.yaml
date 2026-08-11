@@ -102,8 +102,10 @@ segments:
     - asm
     - func_801F15F8
   - - 10808
-    - asm
-    - func_801F1638
+    - c
+    - dispatchCurrentTaskVariantResource
+    - '@source: src/bof3/ui/dispatchCurrentTaskVariantResource.c'
+    - '@behavior: Copies the current task into scratch, copies its variant state to resource ID, and dispatches it.'
   - - 10884
     - c
     - clearUiSelectionState

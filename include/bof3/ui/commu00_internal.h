@@ -24,9 +24,9 @@ typedef struct Commu00TaskSlot {
   s16 field_3e;
   u8  unk_40[8];
   u8  reset_flag;
-  u8  unk_49[0x2f];
+  u8  unk_49[0x30];
   u8  variant_state;
-  u8  unk_79[3];
+  u8  unk_7a[2];
   u16 label_id;
   u8  unk_7e[0x1a];
 } Commu00TaskSlot;
@@ -60,6 +60,10 @@ extern u8           fairySlotIndex;
 extern volatile u8  variantRotation[1];
 /* @source 0x801F2930 @kind bss: three rows of three u16 task labels selected by battle-age band. */
 extern u16          taskLabelBandTable[3][3];
+/* @source 0x1F800044 @kind bss: scratchpad current task pointer cell. */
+extern Commu00TaskSlot *commu00ScratchTask;
+/* @source 0x801F2948 @kind bss: current commu00 task pointer. */
+extern Commu00TaskSlot *currentCommu00Task;
 extern u32          D_8014502C;
 /* @source 0x801455C8 @kind unknown: typed view of the active-record region. */
 extern volatile Commu00ActiveRecord activeRecordBytes[];
@@ -85,6 +89,7 @@ extern void (*progressHandlerTable6[])(void);
 /* @source 0x801F268C @kind table: function pointers indexed by the fairy slot index byte. */
 extern void (*slotHandlerTable[])(void);
 
+void func_8015BAC4(u8 resource_id);
 void func_8015C058(void);
 void func_8015C088(void);
 
