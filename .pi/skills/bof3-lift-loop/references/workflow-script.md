@@ -58,10 +58,13 @@ const reviewTask = (s, prior) => [
   "No source edits. Identify any decisive reproducible improvement as generic-lever candidate.",
   "Executor handoff:\n" + textOf(prior)
 ].join("\n");
-const retryTask = (s, review) => [
-  "Retry " + s + " using only the ranked review experiments below, one variant at a time.",
+const retryTask = (s, executor, review) => [
+  "Continue " + s + " from the stable repository state left by the prior executor.",
+  "Use only the ranked review experiments below, one variant at a time.",
   "Preserve the best legal coherent candidate; obey six-attempt ceiling.",
-  "No git, publication, other targets, or children.\n" + textOf(review)
+  "No git, publication, other targets, or children.",
+  "Prior executor handoff:\n" + textOf(executor),
+  "Reviewer handoff:\n" + textOf(review)
 ].join("\n");
 const cleanupTask = s => [
   "Cleanup reviewed exact " + s + ".",
@@ -98,8 +101,8 @@ for (let round = 0; round < MAX_ATTEMPTS; round++) {
 
   const reruns = await runs.all(retry.map(x => ({
     key: "reverse-" + x.attempt + "-" + keyOf(x.selector),
-    resume: x.executor.runId,
-    task: retryTask(x.selector, x.review)
+    agent: "bof3-reverse",
+    task: retryTask(x.selector, x.executor, x.review)
   })));
   retry.forEach((x, i) => { x.executor = reruns[i]; x.attempt++; });
 }
@@ -162,6 +165,11 @@ subagent({
   artifacts: true
 })
 ```
+
+Retry attempts launch a fresh executor and pass both prior handoffs. Do not use
+retained-child `resume` here: a resumed mutation child may detach and return its
+receipt before editing finishes, allowing the next reviewer to race an unstable
+worktree. A normal `runs.run` resolves only after that attempt finishes.
 
 The script deliberately returns decisions instead of committing. Parent checks
 unexpected/overlapping paths, records only generic reusable levers, integrates in
