@@ -23,6 +23,8 @@ Never dispatch on dirty tree/index. `loop-status` fails closed (`dispatch_allowe
 
 ## Function pipeline
 
+For execution, load [`references/workflow-script.md`](references/workflow-script.md), replace only its selector array, and submit the full template as one async `subagent({ workflowScript })` call per wave. Do not expand its compact role contracts into repeated parent-authored prose or separate tool calls. The script handles executor/reviewer retries, exact-only cleanup, gates, and final review; the parent retains queue, generic-lever, integration, git, and freshness authority.
+
 Each function is single-threaded regardless of batch parallelism:
 
 ```text
@@ -50,10 +52,10 @@ Use `subagent_supervisor` replies for child requests, not generic intercom.
 
 ## Parallel loop (optional `parallelism>1`)
 
-Freeze one fresh queue, then run up to `parallelism` independent function pipelines concurrently with `runs.all`, one managed worktree per lane. Requirements:
+Freeze one fresh queue, then execute the reference workflow script with up to `parallelism` target-distinct selectors. It uses `runs.all` for each phase and ordinary JavaScript for bounded per-lane branching/retries. Requirements:
 
 - Never place two live lanes from the same target together: target-local map, Splat, manifest, support source, `internal.h` are shared. Partition each wave by distinct `TARGET`; defer collisions.
-- Every lane owns exactly one selector and runs its bounded executor ↔ reviewer retry loop -> exact-only cleanup -> gates -> re-review serially. Cleanup/audit may overlap another target's lane.
+- Every lane owns exactly one selector and the script runs its bounded executor ↔ reviewer retry loop -> exact-only cleanup -> gates -> re-review serially. Cleanup/audit may overlap another target's lane.
 - Managed-worktree launches require one absolute project-owned `sessionDir` **per top-level lane** (for example `$PWD/.pi-subagents/sessions/<batch>/<lane>`); one shared directory makes parallel `run-0/session.jsonl` writers collide. Launch lanes separately when the workflow API cannot set child session directories. RE lanes also require the ignored `.venv`, binaries, and generated evidence; absent a project setup hook that provisions them, use distinct-target direct lanes instead of worktrees. Never inherit a relative session directory: cleanup removes it with the worktree.
 - No lane commits, pushes, edits another target, or shares publicly. A lane may regenerate target-local disposable analysis/index evidence required by its pipeline; generated `out/`, `build/`, compile DB, Rizin analysis/index, and source stubs are never merge artifacts or shared acceptance state.
 - Parent receives each worktree handoff, rejects overlapping/unexpected paths, and integrates lanes **one at a time**. Before each integration, refresh against the current parent tree/index plus already integrated lanes, not only `HEAD`; resolve target ownership facts deliberately, never by blind patch application.
