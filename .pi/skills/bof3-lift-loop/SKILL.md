@@ -31,7 +31,7 @@ Each function is single-threaded regardless of batch parallelism:
 bof3-reverse -> bof3-review -> [retained exact|partial] bof3-cleanup -> live gates -> bof3-review -> integration
 ```
 
-- One function lane; ≤20 executor attempts incl. first. Ordered ledger: executor/review, lever, basis (`evidence-backed|speculative`), predicted/actual codegen, accept/revert, host checkpoint; pass it to fresh roles. Review returns 1–3 safe concrete variants: evidence-backed first, then reversible semantics-preserving speculative C shapes. Run singly. `attempt-checkpoint.py` restores best after no-progress, which exhausts only that variant. Repeat a lever only with a distinct hypothesis/effect. Never use retained-child `resume` for mutation retries; it may return before edits finish. Stop only for exact, rejection/safety/semantic/external blocker, or 20 attempts—not evidence exhaustion. Experiment-free `needs-fix` is invalid.
+- One function per lane. The rendered workflow owns the reverse↔review loop, 20-attempt ceiling, ledger, checkpoints, restore, and stop conditions; do not duplicate them in prompts or wrappers.
 - Reviewed improvements record the decisive generic lever in the narrowest playbook/lesson before integration—never selector/percentage/case narrative. Mark exact vs partial; function-only → `lesson: none`.
 - Cleanup every retained exact/partial: evidence-backed naming and target-local integration only. Exact requires fresh diff/bytes/symbols/Splat/relocation + review. Partial is spelling-only; preserve body/ABI/boundary/compiler and atomic status/match/residual, score ≥ best + audits/review. Failure restores pre-cleanup.
 
@@ -59,7 +59,7 @@ Audit retained lanes for missed integration only; do not repeat passed cleanup. 
 
 ## Partial re-lift + decomp.me final rung
 
-User-authorized fresh `out/non-exact-lifts.json` pass after queue + checkpoint. Process `partial` rows serially, preserving each source's pre-mission state. Skip `contains_data` rows (range embeds reviewed `D_*` data; unliftable until Splat segment splits — route to user, never dispatch). Remaining rows: same ≤20-attempt executor↔review loop, then parent evidence check.
+User-authorized fresh `out/non-exact-lifts.json` pass after queue + checkpoint. Process `partial` rows serially, preserving each source's pre-mission state. Skip `contains_data` rows (range embeds reviewed `D_*` data; unliftable until Splat segment splits — route to user, never dispatch). Remaining rows: same rendered executor↔review loop, then parent evidence check.
 
 Exhausted non-exact: lesson, restore prior state, then `bin/scratchpad share SELECTOR`. Publish only reviewed Splat `c`/`asm` function start with restored source. Data/non-function/unreviewed/source-less → journal not-shareable reason. Scratch is escalation evidence, never acceptance or map/Splat authority.
 

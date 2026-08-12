@@ -30,17 +30,11 @@ def main() -> int:
         syntax = Path(directory) / "syntax.js"
         rendered = output.read_text()
         assert "const MAX_ATTEMPTS = 20" in rendered
-        assert "What other experiments could we try" in rendered
-        assert "speculative but semantics-preserving C-shape experiments" in rendered
-        assert "Evidence exhaustion is not pass" in rendered
-        assert "x.terminal = !restores[i] || !restores[i].ok" in rendered
-        assert "x.restore = null" in rendered
+        assert "while (!exact(best) && attempt < MAX_ATTEMPTS)" in rendered
+        assert "Use evidence first, then think outside the box" in rendered
         assert "--require-improvement --soft-no-improvement" in rendered
-        assert "checkpointImprovedOf(x.checkpoint)" in rendered
-        assert '["evidence-backed", "speculative"].includes' in rendered
-        assert "x.attempt >= MAX_ATTEMPTS && jsonOf(x.review).ladder_exhausted" in rendered
-        assert "const restored = lanes.filter" not in rendered
-        assert "No new experiments and no edits" not in rendered
+        assert "checkpoint restore failed" in rendered
+        assert "attemptLedger: ledger" in rendered
         syntax.write_text("async function lane(){\n" + rendered + "\n}\n")
         run("node", "--check", str(syntax))
         state = json.loads(run("python3", str(SCRIPTS / "lane-worktree.py"), "create", "--key", key, "--selector", SELECTOR, "--allow-dirty").stdout)
