@@ -41,8 +41,8 @@ Review prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xA
 - Missing/guessed type, role, field layout, caller ABI, branch target, value lifetime → focused target-qualified Rizin context evidence first. Rizin can't prove allocation or byte equality.
 - Require supported flag-matrix + one `bin/flag-search SELECTOR --compiler ID` per installed historical compiler, unless mismatch-class evidence proves profiles can't affect.
 - After auditing the prescribed ladder, explicitly ask: **What other experiments could we try that are not already in the ladder or attempt ledger?** Search the live mismatch, source shape, compiler output, nearby functions, and target evidence. A novel candidate need not already appear in the playbook.
-- If any safe plausible candidate remains, return `needs-fix`, `ladder_exhausted: false`, and 1–3 ranked concrete experiments. Each predicts an observable size/frame, CFG/branch/loop, first-mismatch/offset, or named instruction/register/load/store effect; reject vague “may improve allocation” effects.
-- Return `pass` with `ladder_exhausted: true` only after documenting the open-ended question, evidence searched, and why no additional safe plausible experiment remains. After a failed experiment, ask again using its actual diff/compiler effect as new evidence.
+- Before the ceiling, return `needs-fix`, `ladder_exhausted:false`, and 1–3 safe semantic-preserving variants: evidence-backed first, then labeled speculative C shapes. Each predicts a concrete size/frame/CFG/first-mismatch/instruction/register/memory effect; reject vague effects.
+- Evidence exhaustion is not `pass`. Safe coherent partial at ceiling → `pass`, `ladder_exhausted:true`; safety/semantic/external blocker → `block`, normally `repairable:false`. After failure, use its diff as evidence or a boundary for distinct speculation.
 - `needs-fix` also applies when terminal rung / preloaded lesson / reviewed exact sibling proves skipped/misapplied lever.
 - Reject: pin papering over size/frame or CFG mismatch; clobber without caller-register placement proof.
 

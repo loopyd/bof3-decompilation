@@ -10,7 +10,7 @@ const SELECTORS = [
 ];
 if (SELECTORS.length !== 1) throw new Error("inner lane workflow requires exactly one selector");
 const RUN_KEY = "replace-with-unique-wave-id";
-const MAX_ATTEMPTS = 10;
+const MAX_ATTEMPTS = 20;
 
 const targetOf = s => s.split("@")[0];
 const keyOf = s => s.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "").toLowerCase();
@@ -68,6 +68,7 @@ const unseenExperiments = x => {
       .map(experimentKey)
   ));
   return experimentsOf(x.review).filter(e =>
+    ["evidence-backed", "speculative"].includes(String(e.basis || "")) &&
     observableExperiment(e) &&
     (!seen.has(experimentKey(e)) || String(e.new_evidence || "").trim())
   );
@@ -102,11 +103,11 @@ const reverseTask = s => [
 const reviewTask = x => [
   "Review " + x.selector + " from fresh repository evidence.",
   "Run agent-context review; inspect live diff, owned changes, semantics/types/ABI/ownership.",
-  "Use the complete ordered attempt ledger below. Do not repeat a tested lever unless new evidence explains why its expected effect differs.",
+  "Use the ordered ledger. Repeat a lever only with a distinct hypothesis and expected effect.",
   "Exact: pass or evidence-backed block. For every non-exact candidate, after auditing the prescribed ladder, explicitly ask: What other experiments could we try that are not already in the ladder or ledger?",
-  "Use live mismatch/source/compiler/nearby-function/target evidence. Return needs-fix with 1-3 safe concrete untried experiments; pass+ladder_exhausted only after documenting why open discovery found none.",
-  "Each experiment predicts an observable size/frame/CFG/first-mismatch or named instruction/register/memory effect. Novel playbook-external experiments are allowed; unsupported speculation is not.",
-  "After no progress, ask again using the new evidence; propose only untried candidates with a different predicted effect.",
+  "Prefer live/compiler/nearby/target evidence; then continue labeled speculative but semantics-preserving C-shape experiments to the ceiling.",
+  "Each predicts concrete size/frame/CFG/first-mismatch/instruction/register/memory codegen and sets basis evidence-backed or speculative; reject vague/unsafe ideas.",
+  "After failure use its diff as evidence or a boundary for distinct speculation. Evidence exhaustion is not pass.",
   "Every block must return repairable:true only for concrete source/metadata/binding fixes this executor may make; return repairable:false for rejected semantics/types, invalid boundary, approval/safety, or external-tool blockers.",
   "No source edits. Identify any decisive reproducible improvement as generic-lever candidate.",
   "Attempt ledger:\n" + historyOf(x),
@@ -117,9 +118,9 @@ const retryTask = (x, actionable) => [
   verdictOf(x.review) === "block"
     ? "Repair only the concrete review blockers below, with live evidence."
     : "Use only the ranked untried review experiments below, one variant at a time.",
-  "Read the complete ordered attempt ledger. Do not repeat a lever; record expected versus actual size/CFG/first-mismatch/instruction effect and accept/revert outcome.",
+  "Read the ledger. Repeat only with a distinct hypothesis; record basis, predicted/actual codegen, and accept/revert.",
   "The host checkpoints every attempt and restores the best score after unchanged or regressing experiments; do not defeat that state.",
-  "Preserve the best legal coherent candidate; obey ten-attempt ceiling.",
+  "Preserve the best legal coherent candidate; obey twenty-attempt ceiling.",
   "No git, publication, other targets, or children.",
   "Actionable filtered experiments (the only experiments you may run):\n" + JSON.stringify(actionable),
   "Attempt ledger (history only; repeated experiments here are not actionable):\n" + historyOf(x),
@@ -240,7 +241,7 @@ for (let round = 0; round < MAX_ATTEMPTS; round++) {
 }
 
 const retained = lanes.filter(x => x.terminal && verdictOf(x.review) === "pass" &&
-  (exactOf(x.executor) || jsonOf(x.review).ladder_exhausted === true));
+  (exactOf(x.executor) || (x.attempt >= MAX_ATTEMPTS && jsonOf(x.review).ladder_exhausted === true)));
 if (retained.length) {
   const precleanup = await runs.all(retained.map(x => ({
     key: "precleanup-gate-" + keyOf(x.selector),
@@ -330,7 +331,7 @@ return lanes.map(x => ({
   ),
   finalReview: jsonOf(x.finalReview),
   integrateExact: exactOf(x.executor) && verdictOf(x.review) === "pass" && verdictOf(x.finalReview) === "pass" && Boolean(x.cleanup && x.cleanup.ok),
-  retainPartial: !exactOf(x.executor) && verdictOf(x.review) === "pass" && jsonOf(x.review).ladder_exhausted === true && verdictOf(x.finalReview) === "pass" && Boolean(x.cleanup && x.cleanup.ok),
+  retainPartial: !exactOf(x.executor) && x.attempt >= MAX_ATTEMPTS && verdictOf(x.review) === "pass" && jsonOf(x.review).ladder_exhausted === true && verdictOf(x.finalReview) === "pass" && Boolean(x.cleanup && x.cleanup.ok),
   genericLeverCandidates: [jsonOf(x.review).lesson, jsonOf(x.finalReview).lesson].filter(Boolean)
 }));
 ```
@@ -340,12 +341,12 @@ Launch the verified fenced script directly with `cwd` equal to the sibling workt
 Each lane keeps a complete ordered JSON attempt ledger (executor result, review,
 experiment effects, retained/reverted outcome) and passes it to every fresh executor
 and reviewer. After the ladder and each failure, review asks what other untried
-experiment live evidence suggests; continue until exact, none remains, or ten attempts. This preserves accumulated reasoning without reusing a mutation session.
+experiment could be tried; prefer live evidence, then continue explicitly labeled safe semantics-preserving speculative C-shape variants until exact, blocker, or twenty attempts. This preserves accumulated reasoning without reusing a mutation session.
 `needs-fix` retries ranked untried experiments; `block` retries only when review explicitly returns
 `repairable: true` with concrete findings. Missing/false repairability is
 terminal, including rejected semantics/types, invalid boundary, approval/safety,
-or external-tool blockers. Repairable lanes loop through reverse → review for at
-most five retries after the first attempt.
+or external-tool blockers. Repairable lanes loop through reverse → review up to
+the twenty-attempt ceiling.
 Do not use retained-child `resume` here: a resumed mutation child may detach and
 return its receipt before editing finishes, allowing the next reviewer to race
 an unstable worktree. A normal `runs.run` resolves only after that attempt
