@@ -31,7 +31,8 @@ Each function is single-threaded regardless of batch parallelism:
 bof3-reverse -> bof3-review -> [retained exact|partial] bof3-cleanup -> live gates -> bof3-review -> integration
 ```
 
-- One function per lane. The rendered workflow owns the reverse↔review loop, 20-attempt ceiling, ledger, checkpoints, restore, and stop conditions; do not duplicate them in prompts or wrappers.
+- One function per lane. The rendered workflow owns the reverse↔review loop, 20-attempt ceiling, ledger, one baseline checkpoint, final restore, and stop conditions; do not duplicate them in prompts or wrappers.
+- An attempt is a substantive investigation pass: executor inspects live evidence and may try up to three related safe variants before returning; reviewer independently reloads live evidence. Never checkpoint/restore between attempts—the shared worktree carries discoveries forward. At the end, restore the baseline only when the final live score did not improve.
 - Reviewed improvements record the decisive generic lever in the narrowest playbook/lesson before integration—never selector/percentage/case narrative. Mark exact vs partial; function-only → `lesson: none`.
 - Cleanup every retained exact/partial: evidence-backed naming and target-local integration only. Exact requires fresh diff/bytes/symbols/Splat/relocation + review. Partial is spelling-only; preserve body/ABI/boundary/compiler and atomic status/match/residual, score ≥ best + audits/review. Failure restores pre-cleanup.
 

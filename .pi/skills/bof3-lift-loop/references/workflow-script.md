@@ -44,13 +44,13 @@ const files = r => {
 const experimentKey = value => JSON.stringify([value.lever || "", value.expected_effect || ""]);
 const choices = (review, seen) => (Array.isArray(json(review).experiments) ? json(review).experiments : [])
   .filter(value => value.lever && value.expected_effect && !seen.includes(experimentKey(value)));
-const checkpoint = (attempt, run, improve) => [
+const checkpoint = (attempt, run) => [
   "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py capture",
   "--lane", quote(laneKey), "--selector", quote(selector),
   "--attempt", String(attempt), "--match=" + String(score(run)),
-  improve ? "--require-improvement --soft-no-improvement" : "",
   files(run).map(quote).join(" ")
 ].filter(Boolean).join(" ");
+const measureTask = "Measure " + selector + " with live asm-diff. Do not edit. Return JSON with status, match_percent, and files_changed containing every file this lift may edit.";
 const restore = "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py restore --lane " + quote(laneKey);
 const gateEvidence = run => {
   const rows = run && Array.isArray(run.results) ? run.results : [];
@@ -70,16 +70,24 @@ let lane = await state.get("lane") || {
   selector, attempt: 0, bestScore: null, status: "baseline", phase: "ready", next: null, seen: [], ledger: []
 };
 if (lane.selector !== selector) throw new Error("mission state selector mismatch");
-if (lane.phase !== "ready") throw new Error("interrupted lane requires worktree inspection: " + lane.phase);
+if (lane.phase !== "ready") {
+  const recovered = await runs.run("restore-interrupted", {
+    agent: "bof3-review", task: "Report the host restore only. No edits.", gate: restore
+  });
+  if (!recovered.ok) throw new Error("interrupted lane restore failure: " + lane.phase);
+  lane.phase = "ready";
+  lane.status = "running";
+  lane.bestScore = lane.ledger.length ? lane.ledger[0].score : lane.bestScore;
+  lane.next = null;
+  lane.ledger.push({ attempt: lane.attempt, score: lane.bestScore, improved: false, lever: "interruption recovery", predicted: "", actual: "restored baseline checkpoint" });
+  await save(lane);
+}
 
 if (lane.status === "baseline") {
-  const baseline = await runs.run("baseline", {
-    agent: "bof3-reverse",
-    task: "Measure " + selector + " with live asm-diff. Do not edit. Return JSON with status, match_percent, and files_changed containing every file this lift may edit."
-  });
+  const baseline = await runs.run("baseline", { agent: "bof3-reverse", task: measureTask });
   if (!Number.isFinite(score(baseline))) throw new Error("baseline omitted match_percent");
   const captured = await runs.run("checkpoint-baseline", {
-    agent: "bof3-review", task: "Report the host gate only. No edits.", gate: checkpoint(1, baseline, false)
+    agent: "bof3-review", task: "Report the host gate only. No edits.", gate: checkpoint(1, baseline)
   });
   if (!captured.ok) throw new Error("baseline checkpoint failed");
   const baselineEvidence = gateEvidence(captured);
@@ -99,44 +107,32 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
     agent: "bof3-reverse",
     task: [
       "Move " + selector + " toward a verified 100% byte match; attempt " + attempt + "/" + MAX_ATTEMPTS + ".",
-      lane.next ? "Try this experiment: " + JSON.stringify(lane.next) : "Diagnose and try the best clean-C experiment.",
-      "Run live asm-diff. Preserve semantics. No git, publication, other targets, or children.",
-      "Return JSON with status, match_percent, files_changed, lever, predicted effect, actual effect, and residual."
+      lane.next ? "Start with this experiment: " + JSON.stringify(lane.next) : "Diagnose the best clean-C experiment.",
+      "This is a substantive investigation pass, not one edit: inspect live diff and source/compiler evidence, then try up to three related safe variants before returning. Re-run live asm-diff after each variant; retain the best coherent state even when it is not yet better than the mission baseline.",
+      "Use the matching ladder and targeted static evidence when relevant. Do not stop merely because the first variant fails or revert to the mission baseline; later attempts build on this worktree state.",
+      "Preserve semantics. No git, publication, other targets, or children.",
+      "Return JSON with status, match_percent, files_changed, lever, predicted_effect, actual_effect, residual, and a compact variants_tried ledger."
     ].join("\n")
   });
   if (!Number.isFinite(score(reverse))) throw new Error("reverse omitted match_percent");
 
-  lane.phase = "checkpoint-" + attempt;
-  await save(lane);
-  const gate = await runs.run("checkpoint-" + attempt, {
-    agent: "bof3-review",
-    task: "Report the host gate only. No edits.",
-    gate: checkpoint(attempt + 1, reverse, true)
-  });
-  if (!gate.ok) throw new Error("checkpoint integrity failure");
-  const evidence = gateEvidence(gate);
-  const accepted = evidence.accepted === true && evidence.improved === true;
-  const liveScore = evidence.current.metric.match_percent;
-  if (accepted) lane.bestScore = liveScore;
-  else {
-    const restored = await runs.run("restore-" + attempt, {
-      agent: "bof3-review", task: "Report the host restore only. No edits.", gate: restore
-    });
-    if (!restored.ok) throw new Error("checkpoint restore failure");
-  }
+  const liveScore = score(reverse);
+  const improved = liveScore > lane.bestScore;
+  if (improved) lane.bestScore = liveScore;
   lane.attempt = attempt;
   lane.phase = "ready";
   lane.ledger.push({
     attempt,
     score: liveScore,
-    accepted,
+    improved,
     lever: json(reverse).lever || (lane.next && lane.next.lever) || "initial",
     predicted: json(reverse).predicted_effect || (lane.next && lane.next.expected_effect) || "",
-    actual: json(reverse).actual_effect || json(reverse).residual || ""
+    actual: json(reverse).actual_effect || json(reverse).residual || "",
+    variants: json(reverse).variants_tried || []
   });
   lane.next = null;
 
-  if (accepted && evidence.current.metric.exact === true) {
+  if (exact(reverse)) {
     lane.bestScore = 100;
     lane.status = "exact";
     await save(lane);
@@ -152,8 +148,9 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
     agent: "bof3-review",
     task: [
       "Review " + selector + " after attempt " + attempt + "/" + MAX_ATTEMPTS + ". No edits.",
+      "Perform a substantive evidence pass: load role context, inspect the live asm-diff and relevant source/compiler output, and check whether the executor's variants actually tested their predicted effects.",
       "If safe to continue, return needs-fix with 1-3 untried semantics-preserving experiments; use evidence first, then think outside the box.",
-      "Each experiment requires lever and concrete expected_effect. Safety/semantic/external blocker returns block.",
+      "Each experiment requires a lever and concrete expected_effect. Do not recycle a superficial spelling variant. Safety/semantic/external blocker returns block.",
       "Latest result: " + JSON.stringify(lane.ledger[lane.ledger.length - 1]),
       "Tried experiment keys: " + JSON.stringify(lane.seen)
     ].join("\n")
@@ -190,11 +187,34 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
   await save(lane);
 }
 
+lane.phase = "final-measure";
+await save(lane);
+const finalMeasure = await runs.run("final-measure", { agent: "bof3-reverse", task: measureTask });
+if (!Number.isFinite(score(finalMeasure))) throw new Error("final measurement omitted match_percent");
+lane.finalScore = score(finalMeasure);
 const finalReview = await runs.run("final-review", {
   agent: "bof3-review",
   task: "Final review " + selector + ". Verify live score and semantics. No edits. Mission lane state: " + JSON.stringify(lane)
 });
 lane.finalReview = json(finalReview);
+const rejected = String(lane.finalReview.verdict || "") === "block";
+if (rejected || (lane.finalScore <= lane.ledger[0].score && lane.finalScore < 100)) {
+  lane.phase = "final-restore";
+  await save(lane);
+  const restored = await runs.run("restore-final", {
+    agent: "bof3-review", task: "Report the host restore only. No edits.", gate: restore
+  });
+  if (!restored.ok) throw new Error("final checkpoint restore failure");
+  lane.status = rejected ? "restored-review-block" : "restored-no-improvement";
+  lane.bestScore = lane.ledger[0].score;
+} else if (lane.finalScore === 100) {
+  lane.status = "exact";
+  lane.bestScore = 100;
+} else {
+  lane.status = "improved-partial";
+  lane.bestScore = lane.finalScore;
+}
+lane.phase = "ready";
 await save(lane);
 return lane;
 ```

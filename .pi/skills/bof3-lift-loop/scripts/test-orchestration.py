@@ -33,21 +33,23 @@ def main() -> int:
         run("node", "--check", str(syntax))
         behavior = Path(directory) / "behavior.js"
         behavior.write_text(
-            "const saved = {};\n"
+            "const saved = {}, calls = [];\n"
             "const state = {get: async k => saved[k], set: async (k,v) => {saved[k]=v;}};\n"
             "const gate = metric => ({ok:true,results:[{acceptance:{verifyRuns:[{stdout:JSON.stringify({accepted:true,improved:true,current:{metric}})}]}}]});\n"
-            "const runs = {run: async (k,o) => k === 'baseline' ? "
-            "{ok:true,output:JSON.stringify({status:'exact',match_percent:100,files_changed:[]})} : "
+            "const measured = {ok:true,output:JSON.stringify({status:'exact',match_percent:100,files_changed:[]})};\n"
+            "const runs = {run: async (k,o) => {calls.push(k); return k === 'baseline' || k === 'final-measure' ? measured : "
             "k === 'checkpoint-baseline' ? gate({match_percent:100,exact:true}) : "
-            "{ok:true,output:JSON.stringify({verdict:'pass'})}};\n"
+            "{ok:true,output:JSON.stringify({verdict:'pass'})};}};\n"
             "async function lane(){\n" + rendered + "\n}\n"
-            "lane().then(v => console.log(JSON.stringify({result:v,state:saved})));\n"
+            "lane().then(v => console.log(JSON.stringify({result:v,state:saved,calls})));\n"
         )
         result = json.loads(run("node", str(behavior)).stdout)
         assert result["result"]["status"] == "exact"
         assert result["result"]["attempt"] == 0
         assert result["result"]["bestScore"] == 100
         assert result["state"]["lane"]["status"] == "exact"
+        assert result["calls"].count("checkpoint-baseline") == 1
+        assert not any(call.startswith("restore-") for call in result["calls"])
         state = json.loads(run("python3", str(SCRIPTS / "lane-worktree.py"), "create", "--key", key, "--selector", SELECTOR, "--allow-dirty").stdout)
         worktree = Path(state["worktree"])
         marker = worktree / "orchestration-self-check.txt"
