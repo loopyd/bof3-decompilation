@@ -71,7 +71,8 @@ def capture(args: argparse.Namespace) -> int:
     if outcome_path.is_file():
         outcome = json.loads(outcome_path.read_text())
         print(json.dumps(outcome))
-        return int(outcome["exit_code"])
+        code = int(outcome["exit_code"])
+        return 0 if args.soft_no_improvement and code == 1 else code
     if args.attempt == 1 and lane_dir.exists():
         shutil.rmtree(lane_dir)
     if attempt_dir.exists():
@@ -125,12 +126,16 @@ def capture(args: argparse.Namespace) -> int:
     below_floor = args.require_at_least is not None and live_score < args.require_at_least
     exit_code = 2 if not evidence["report_matches_live"] else 1 if (args.require_improvement and not improved) or below_floor else 0
     outcome = {
-        "improved": improved, "observable_change": observable,
-        "current": record, "best": best, "exit_code": exit_code,
+        "accepted": exit_code == 0,
+        "improved": improved,
+        "observable_change": observable,
+        "current": record,
+        "best": best,
+        "exit_code": exit_code,
     }
     outcome_path.write_text(json.dumps(outcome, indent=2) + "\n")
     print(json.dumps(outcome))
-    return exit_code
+    return 0 if args.soft_no_improvement and exit_code == 1 else exit_code
 
 
 def restore(args: argparse.Namespace) -> int:
@@ -177,6 +182,7 @@ def main() -> int:
     save.add_argument("--no-promote", action="store_true")
     save.add_argument("--require-improvement", action="store_true")
     save.add_argument("--require-at-least", type=float)
+    save.add_argument("--soft-no-improvement", action="store_true", help="report ordinary no-progress in JSON without failing the host run")
     save.add_argument("files", nargs="*")
     load = sub.add_parser("restore")
     load.add_argument("--lane", required=True)

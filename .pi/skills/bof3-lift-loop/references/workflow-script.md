@@ -10,7 +10,7 @@ const SELECTORS = [
 ];
 if (SELECTORS.length !== 1) throw new Error("inner lane workflow requires exactly one selector");
 const RUN_KEY = "replace-with-unique-wave-id";
-const MAX_ATTEMPTS = 6;
+const MAX_ATTEMPTS = 10;
 
 const targetOf = s => s.split("@")[0];
 const keyOf = s => s.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "").toLowerCase();
@@ -55,6 +55,7 @@ const scoreOf = r => {
 };
 const filesSeenOf = x => [...new Set(x.history.flatMap(h => filesOf(h.executor)))];
 const repairableOf = r => jsonOf(r).repairable === true;
+const checkpointImprovedOf = r => r && r.ok && jsonOf(r).improved === true;
 const experimentKey = e => JSON.stringify([e.lever || "", e.expected_effect || ""]);
 const observableExperiment = e => {
   const effect = String(e.expected_effect || "");
@@ -79,7 +80,7 @@ const checkpointGate = (x, attempt, requireImprovement, extraFiles = [], require
     "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py capture",
     "--lane", shellQuote(RUN_KEY + "-" + keyOf(x.selector)), "--selector", shellQuote(x.selector),
     "--attempt", String(attempt), "--match=" + String(scoreOf(x.executor)),
-    requireImprovement ? "--require-improvement" : "",
+    requireImprovement ? "--require-improvement --soft-no-improvement" : "",
     requireAtLeast == null ? "" : "--require-at-least " + String(requireAtLeast),
     [...new Set([...filesSeenOf(x), ...extraFiles])].map(shellQuote).join(" ")
   ].filter(Boolean).join(" ");
@@ -118,7 +119,7 @@ const retryTask = (x, actionable) => [
     : "Use only the ranked untried review experiments below, one variant at a time.",
   "Read the complete ordered attempt ledger. Do not repeat a lever; record expected versus actual size/CFG/first-mismatch/instruction effect and accept/revert outcome.",
   "The host checkpoints every attempt and restores the best score after unchanged or regressing experiments; do not defeat that state.",
-  "Preserve the best legal coherent candidate; obey six-attempt ceiling.",
+  "Preserve the best legal coherent candidate; obey ten-attempt ceiling.",
   "No git, publication, other targets, or children.",
   "Actionable filtered experiments (the only experiments you may run):\n" + JSON.stringify(actionable),
   "Attempt ledger (history only; repeated experiments here are not actionable):\n" + historyOf(x),
@@ -208,11 +209,11 @@ for (let round = 0; round < MAX_ATTEMPTS; round++) {
 
   const checks = await runs.all(retry.map(x => ({
     key: "checkpoint-" + x.attempt + "-" + keyOf(x.selector), agent: "bof3-review",
-    task: "Record this attempt only if it improves the prior best score for " + x.selector + ". No edits.",
+    task: "Report the configured host gate result only. improved:false is an expected checkpoint decision, not an agent failure. No edits or extra commands.",
     gate: checkpointGate(x, x.attempt, true)
   })));
   retry.forEach((x, i) => { x.checkpoint = checks[i]; });
-  const rejected = retry.filter(x => !x.checkpoint || !x.checkpoint.ok);
+  const rejected = retry.filter(x => !checkpointImprovedOf(x.checkpoint));
   if (rejected.length) {
     const restores = await runs.all(rejected.map(x => ({
       key: "restore-best-" + x.attempt + "-" + keyOf(x.selector), agent: "bof3-review",
@@ -230,7 +231,7 @@ for (let round = 0; round < MAX_ATTEMPTS; round++) {
       x.terminal = !restores[i] || !restores[i].ok;
     });
   }
-  retry.filter(x => x.checkpoint && x.checkpoint.ok).forEach(x => {
+  retry.filter(x => checkpointImprovedOf(x.checkpoint)).forEach(x => {
     x.restore = null;
     x.bestScore = scoreOf(x.executor);
     x.bestExecutor = x.executor;
@@ -339,7 +340,7 @@ Launch the verified fenced script directly with `cwd` equal to the sibling workt
 Each lane keeps a complete ordered JSON attempt ledger (executor result, review,
 experiment effects, retained/reverted outcome) and passes it to every fresh executor
 and reviewer. After the ladder and each failure, review asks what other untried
-experiment live evidence suggests; continue until exact, none remains, or six attempts. This preserves accumulated reasoning without reusing a mutation session.
+experiment live evidence suggests; continue until exact, none remains, or ten attempts. This preserves accumulated reasoning without reusing a mutation session.
 `needs-fix` retries ranked untried experiments; `block` retries only when review explicitly returns
 `repairable: true` with concrete findings. Missing/false repairability is
 terminal, including rejected semantics/types, invalid boundary, approval/safety,
