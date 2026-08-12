@@ -23,7 +23,7 @@ Never dispatch dirty/stale. `loop-status` fails closed; `--recover` serially rep
 
 ## Function pipeline
 
-For execution, render [`references/workflow-script.md`](references/workflow-script.md) with `scripts/render-workflow.py`, verify it, and submit its exact contents directly as `subagent.workflowScript`. No model copies or rewrites orchestration. `scripts/lane-worktree.py` creates one parent-managed lane worktree; launch the rendered workflow with `cwd` set there and `worktree:false`, so every nested phase shares it. The parent owns queue, worktree lifecycle, handoff consolidation, git, and freshness.
+Render and verify [`references/workflow-script.md`](references/workflow-script.md), then submit it unchanged as `subagent.workflowScript` with `mission:{title, objective}`, lane `cwd`, and `worktree:false`. The script owns durable mission state and all function iterations; the parent owns queue, worktree lifecycle, handoff consolidation, git, mission closure, and freshness.
 
 Each function is single-threaded regardless of batch parallelism:
 
@@ -45,9 +45,9 @@ Freeze one queue; launch target-distinct rendered workflows as independent async
 
 - Never place two live lanes from the same target together. Partition by distinct `TARGET`; defer collisions.
 - Create with `python3 .pi/skills/bof3-lift-loop/scripts/lane-worktree.py create --key WAVE-LANE --selector SELECTOR`; it bootstraps executable modes, tools, `.venv`/`inputs`, compilers, and disposable `out/`.
-- Render/verify with `render-workflow.py`, then call `subagent({workflowScript: SCRIPT, cwd:"../.bof3-lift-worktrees/WAVE-LANE", worktree:false, sessionDir:"/absolute/project/.pi-subagents/sessions/WAVE/LANE", async:true, ...})`. Launch calls back-to-back. Nested phases serialize in that cwd.
+- Render/verify, then call `subagent({workflowScript:SCRIPT, mission:{title:"Byte-match SELECTOR", objective:"Reach verified 100% within 20 attempts"}, cwd:LANE, worktree:false, sessionDir:SESSION, async:true})`. Launch calls back-to-back; nested phases serialize.
 - No lane commits, pushes, stages, edits another target, or shares publicly. Generated `out/`, `build/`, compile DB, analyzer/index state, source stubs, and `.pi-subagents/` are never merge artifacts.
-- After success run `lane-worktree.py export --key WAVE-LANE --selector SELECTOR`; its JSON manifest and binary patch are authoritative. After consolidation or rejection run `lane-worktree.py remove --key WAVE-LANE`. Reject failed/partial capture, unexpected target paths, `src/emi/`, absolute-path stubs, unapproved `INCLUDE_ASM`, cleanup rollback failure, or final-review rejection. Discard rejected preserved worktrees only through `worktree.discard` with its handoff path.
+- After success export with `lane-worktree.py`; its manifest/patch are authoritative. Close the mission `completed` only for reviewed exact output, otherwise `failed` with lane status/ledger summary. After consolidation/rejection remove the lane. Reject failed capture, unexpected paths, `src/emi/`, absolute-path stubs, unapproved `INCLUDE_ASM`, or final-review rejection.
 - Consolidate serially in queue order onto clean parent: verify base/overlap, apply/check patch, rerun gates + fresh review, commit only if authorized. Advanced `HEAD`: three-way only after explicit conflict review, else rerun. Atomic ownership transactions only.
 - Refresh edited target snapshots serially after consolidation, then rebuild the global index once. A lane failure consumes only its selector; dirty parent, overlap, stale/conflicting handoff, failed rollback, or failed freshness recovery stops consolidation/new dispatch.
 

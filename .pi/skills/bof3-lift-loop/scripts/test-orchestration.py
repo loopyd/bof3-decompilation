@@ -29,14 +29,25 @@ def main() -> int:
         assert json.loads(run("python3", str(SCRIPTS / "render-workflow.py"), "verify", *common).stdout)["verified"]
         syntax = Path(directory) / "syntax.js"
         rendered = output.read_text()
-        assert "const MAX_ATTEMPTS = 20" in rendered
-        assert "while (!exact(best) && attempt < MAX_ATTEMPTS)" in rendered
-        assert "Use evidence first, then think outside the box" in rendered
-        assert "--require-improvement --soft-no-improvement" in rendered
-        assert "checkpoint restore failed" in rendered
-        assert "attemptLedger: ledger" in rendered
         syntax.write_text("async function lane(){\n" + rendered + "\n}\n")
         run("node", "--check", str(syntax))
+        behavior = Path(directory) / "behavior.js"
+        behavior.write_text(
+            "const saved = {};\n"
+            "const state = {get: async k => saved[k], set: async (k,v) => {saved[k]=v;}};\n"
+            "const gate = metric => ({ok:true,results:[{acceptance:{verifyRuns:[{stdout:JSON.stringify({accepted:true,improved:true,current:{metric}})}]}}]});\n"
+            "const runs = {run: async (k,o) => k === 'baseline' ? "
+            "{ok:true,output:JSON.stringify({status:'exact',match_percent:100,files_changed:[]})} : "
+            "k === 'checkpoint-baseline' ? gate({match_percent:100,exact:true}) : "
+            "{ok:true,output:JSON.stringify({verdict:'pass'})}};\n"
+            "async function lane(){\n" + rendered + "\n}\n"
+            "lane().then(v => console.log(JSON.stringify({result:v,state:saved})));\n"
+        )
+        result = json.loads(run("node", str(behavior)).stdout)
+        assert result["result"]["status"] == "exact"
+        assert result["result"]["attempt"] == 0
+        assert result["result"]["bestScore"] == 100
+        assert result["state"]["lane"]["status"] == "exact"
         state = json.loads(run("python3", str(SCRIPTS / "lane-worktree.py"), "create", "--key", key, "--selector", SELECTOR, "--allow-dirty").stdout)
         worktree = Path(state["worktree"])
         marker = worktree / "orchestration-self-check.txt"

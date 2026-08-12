@@ -112,6 +112,7 @@ BOF3 binaries load independently. Qualify work by one function selector:
 
 ## Verification
 
+- Tests must verify behavior or parsed structure, never assert literal wording or source substrings from agent, skill, prompt, or workflow-reference Markdown. Do not add brittle content-lock tests for policy text.
 - Use `bin/asm-diff` for instruction evidence and `bin/byte-match` for bytes.
 - Run `bin/symbols check` after map edits; normalize with
   `bin/symbols normalize [TARGET] --write`. Global checks gate naming debt
