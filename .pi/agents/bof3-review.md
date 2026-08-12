@@ -40,7 +40,10 @@ Review prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xA
 - Best candidate present; verify live first original/current difference, mismatch class, rung attempts, last result, missing/blocked evidence.
 - Missing/guessed type, role, field layout, caller ABI, branch target, value lifetime → focused target-qualified Rizin context evidence first. Rizin can't prove allocation or byte equality.
 - Require supported flag-matrix + one `bin/flag-search SELECTOR --compiler ID` per installed historical compiler, unless mismatch-class evidence proves profiles can't affect.
-- `needs-fix` when terminal rung / preloaded lesson / reviewed exact sibling proves skipped/misapplied lever.
+- After auditing the prescribed ladder, explicitly ask: **What other experiments could we try that are not already in the ladder or attempt ledger?** Search the live mismatch, source shape, compiler output, nearby functions, and target evidence. A novel candidate need not already appear in the playbook.
+- If any safe plausible candidate remains, return `needs-fix`, `ladder_exhausted: false`, and 1–3 ranked concrete experiments. Each predicts an observable size/frame, CFG/branch/loop, first-mismatch/offset, or named instruction/register/load/store effect; reject vague “may improve allocation” effects.
+- Return `pass` with `ladder_exhausted: true` only after documenting the open-ended question, evidence searched, and why no additional safe plausible experiment remains. After a failed experiment, ask again using its actual diff/compiler effect as new evidence.
+- `needs-fix` also applies when terminal rung / preloaded lesson / reviewed exact sibling proves skipped/misapplied lever.
 - Reject: pin papering over size/frame or CFG mismatch; clobber without caller-register placement proof.
 
 ## Checks

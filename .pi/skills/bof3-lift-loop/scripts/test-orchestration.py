@@ -28,7 +28,13 @@ def main() -> int:
         run("python3", str(SCRIPTS / "render-workflow.py"), "render", *common)
         assert json.loads(run("python3", str(SCRIPTS / "render-workflow.py"), "verify", *common).stdout)["verified"]
         syntax = Path(directory) / "syntax.js"
-        syntax.write_text("async function lane(){\n" + output.read_text() + "\n}\n")
+        rendered = output.read_text()
+        assert "What other experiments could we try" in rendered
+        assert "x.terminal = !restores[i] || !restores[i].ok" in rendered
+        assert "x.restore = null" in rendered
+        assert "const restored = lanes.filter" not in rendered
+        assert "No new experiments and no edits" not in rendered
+        syntax.write_text("async function lane(){\n" + rendered + "\n}\n")
         run("node", "--check", str(syntax))
         state = json.loads(run("python3", str(SCRIPTS / "lane-worktree.py"), "create", "--key", key, "--selector", SELECTOR, "--allow-dirty").stdout)
         worktree = Path(state["worktree"])

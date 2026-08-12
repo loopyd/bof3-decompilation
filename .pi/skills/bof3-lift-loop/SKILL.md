@@ -5,7 +5,7 @@ description: Autonomously lift a serial BOF3 batch to reviewed exact byte matche
 
 # BOF3 lift loop
 
-Read `AGENTS.md`, load `/skill:bof3-re`. Parent owns selection, checkpoints, git, commits. `bof3-reverse` writes one function; `bof3-review` independently reviews it, may record durable cross-function findings in `docs/specs/`/`docs/agents/lessons.md`. Agents own model/tool policy. Never run two functions in one target concurrently (shared `internal.h`).
+Read `AGENTS.md`, load `/skill:bof3-re`. Parent owns selection/checkpoints/git. Reverse writes one function; review is independent and may record durable findings. Never run same-target functions concurrently (`internal.h`).
 
 ## Confirm
 
@@ -19,7 +19,7 @@ python3 .pi/skills/bof3-lift-loop/scripts/loop-status.py --selection hotspots
 python3 .pi/skills/bof3-lift-loop/scripts/loop-status.py --selection hotspots --recover
 ```
 
-Never dispatch on dirty tree/index. `loop-status` fails closed (`dispatch_allowed: false`) on stale snapshots/index or changes; `--recover` repairs only stale generated evidence serially, then rebuilds index once; queue from one fresh snapshot/index. After map/Splat edits: continue bounded queue, refresh edited target snapshots, rebuild index once at checkpoint. Never query a stale index. Init `out/lift-loop/results.tsv`: `function status commit notes` (evidence paths/SHA-256 allowed; checkpoint aids, never live acceptance).
+Never dispatch dirty/stale. `loop-status` fails closed; `--recover` serially repairs generated evidence and rebuilds index. After map/Splat edits refresh affected snapshots, then index once. Init `out/lift-loop/results.tsv`: `function status commit notes` (evidence paths/SHA-256 allowed; checkpoint aids, never live acceptance).
 
 ## Function pipeline
 
@@ -31,9 +31,9 @@ Each function is single-threaded regardless of batch parallelism:
 bof3-reverse -> bof3-review -> [retained exact|partial] bof3-cleanup -> live gates -> bof3-review -> integration
 ```
 
-- One function lane; ≤6 executor attempts incl. first. Keep an ordered per-lane attempt ledger containing every executor result, review, tested lever, expected/actual instruction effect, accept/revert outcome, and host checkpoint. Pass it to every fresh executor/reviewer. Non-exact review returns 1–3 ranked untried experiments, each predicting an observable size/frame, CFG/branch/loop, first-mismatch/offset, or named instruction/register/load/store effect. Launch one variant at a time. After every attempt, `attempt-checkpoint.py` records score, sizes, first mismatch, and all owned files; a non-improving attempt fails its host gate, restores the best checkpoint, exhausts that lever, and terminates the lane for review. Never rely on prompt-only best preservation. A repeated lever requires new evidence predicting a different observable effect. Never use retained-child `resume` for mutation retries: it may detach and return before edits finish, racing review against an unstable worktree; the explicit ledger preserves context instead. Stop early: exact; first unchanged/regressing experiment; rejected semantics/types; approval/safety or external blocker; reviewer `pass` with attested ladder exhaustion. Experiment-free `needs-fix` invalid.
-- Every experiment that produces a reviewed, reproducible net match improvement identifies its decisive lever and before integration records only the generic reusable rule in the narrowest playbook/lesson. Do not add function selectors, percentages, or case narratives to the playbook. State whether evidence is exact or partial in the review/journal; partial evidence is a candidate lever, never a universal rule. Function-only effects → `lesson: none` + evidence. Partial→exact levers must be recorded before integration.
-- Cleanup runs after every reviewed retained exact or partial. It performs evidence-backed semantic function/source/Splat naming and integrates target-local symbol imports, declarations, weak bindings, metadata, and owned-file consistency; never broaden ownership or invent semantics. Exact cleanup requires fresh `asm-diff`, `byte-match`, `symbols check`, Splat/naming/relocation audit, and fresh review. Partial cleanup is spelling/integration-only: preserve body/ABI/address/boundary/compiler settings and atomic `@status partial`/`@match`/`@residual`, require fresh live score ≥ reviewed best plus symbols/Splat/naming audits and fresh review. Failure restores the reviewed pre-cleanup exact/partial checkpoint.
+- One function lane; ≤6 executor attempts incl. first. Keep an ordered per-lane attempt ledger containing every executor result, review, tested lever, expected/actual instruction effect, accept/revert outcome, and host checkpoint. Pass it to every fresh executor/reviewer. Non-exact review audits the ladder, then asks what other untried experiments live evidence suggests. It returns 1–3 safe concrete candidates with predicted observable effects. Run one at a time. `attempt-checkpoint.py` records each result; no-progress restores best, exhausts only that experiment, then repeats open discovery. Never rely on prompt-only best preservation. A repeated lever requires new evidence predicting a different observable effect. Never use retained-child `resume` for mutation retries: it may detach and return before edits finish, racing review against an unstable worktree; the explicit ledger preserves context instead. Stop only for exact, rejection/blocker, six attempts, or reviewed ladder + open-discovery exhaustion. Experiment-free `needs-fix` is invalid.
+- Reviewed improvements record the decisive generic lever in the narrowest playbook/lesson before integration—never selector/percentage/case narrative. Mark exact vs partial; function-only → `lesson: none`.
+- Cleanup every retained exact/partial: evidence-backed naming and target-local integration only. Exact requires fresh diff/bytes/symbols/Splat/relocation + review. Partial is spelling-only; preserve body/ABI/boundary/compiler and atomic status/match/residual, score ≥ best + audits/review. Failure restores pre-cleanup.
 
 ## Serial loop (`parallelism=1`)
 
@@ -41,14 +41,14 @@ Create one lane with `lane-worktree.py create`, render/verify its script, then l
 
 ## Parallel loop (optional `parallelism>1`)
 
-Freeze one fresh queue, then launch up to `parallelism` target-distinct rendered workflows as independent top-level async calls, each in its own parent-managed lane worktree with `worktree:false` and a unique absolute project-owned `sessionDir`. Do not combine lanes in one `runs.all`; it aliases `run-0/session.jsonl`. Each lane worktree exists through terminal cleanup/final review. Requirements:
+Freeze one queue; launch target-distinct rendered workflows as independent async calls, each parent-managed with `worktree:false` and unique absolute `sessionDir`. Never outer `runs.all` (aliases `run-0/session.jsonl`). Requirements:
 
 - Never place two live lanes from the same target together. Partition by distinct `TARGET`; defer collisions.
 - Create with `python3 .pi/skills/bof3-lift-loop/scripts/lane-worktree.py create --key WAVE-LANE --selector SELECTOR`; it bootstraps executable modes, tools, `.venv`/`inputs`, compilers, and disposable `out/`.
 - Render/verify with `render-workflow.py`, then call `subagent({workflowScript: SCRIPT, cwd:"../.bof3-lift-worktrees/WAVE-LANE", worktree:false, sessionDir:"/absolute/project/.pi-subagents/sessions/WAVE/LANE", async:true, ...})`. Launch calls back-to-back. Nested phases serialize in that cwd.
 - No lane commits, pushes, stages, edits another target, or shares publicly. Generated `out/`, `build/`, compile DB, analyzer/index state, source stubs, and `.pi-subagents/` are never merge artifacts.
 - After success run `lane-worktree.py export --key WAVE-LANE --selector SELECTOR`; its JSON manifest and binary patch are authoritative. After consolidation or rejection run `lane-worktree.py remove --key WAVE-LANE`. Reject failed/partial capture, unexpected target paths, `src/emi/`, absolute-path stubs, unapproved `INCLUDE_ASM`, cleanup rollback failure, or final-review rejection. Discard rejected preserved worktrees only through `worktree.discard` with its handoff path.
-- Consolidate accepted lane patches **serially in deterministic queue order** onto a clean parent. Before each patch, verify its manifest base and overlap against current parent plus earlier accepted lanes; apply/check the exported binary patch, rerun parent live gates and fresh final review, then commit if authorized. If parent `HEAD` advanced, use three-way applicability only after explicit conflict review; otherwise re-run the stale lane. Never retain half an atomic source/map/Splat/manifest/header/binding rename transaction.
+- Consolidate serially in queue order onto clean parent: verify base/overlap, apply/check patch, rerun gates + fresh review, commit only if authorized. Advanced `HEAD`: three-way only after explicit conflict review, else rerun. Atomic ownership transactions only.
 - Refresh edited target snapshots serially after consolidation, then rebuild the global index once. A lane failure consumes only its selector; dirty parent, overlap, stale/conflicting handoff, failed rollback, or failed freshness recovery stops consolidation/new dispatch.
 
 `parallelism=1` remains the default and still uses one managed worktree; higher values fan out isolated lane worktrees.
@@ -61,7 +61,7 @@ Audit retained lanes for missed integration only; do not repeat passed cleanup. 
 
 User-authorized fresh `out/non-exact-lifts.json` pass after queue + checkpoint. Process `partial` rows serially, preserving each source's pre-mission state. Skip `contains_data` rows (range embeds reviewed `D_*` data; unliftable until Splat segment splits — route to user, never dispatch). Remaining rows: same ≤6-attempt executor↔review loop, then parent evidence check.
 
-Exhausted non-exact: integrate durable lesson, restore recorded prior state, run final rung `bin/scratchpad share SELECTOR`. Publish only if selector starts at a reviewed Splat `c`/`asm` `func_XXXXXXXX` boundary and restored partial source exists. Missing ABI/call ownership/analyzer confidence/lifting evidence does **not** block a valid function. Data-leading/non-function/unreviewed/source-less → `not shareable: <reason>`. Journal URL/reason/failure; continue. Never alter reviewed map/Splat facts for a payload; a scratch is public escalation evidence, never acceptance; a prior URL never replaces a current mission or exact gate.
+Exhausted non-exact: lesson, restore prior state, then `bin/scratchpad share SELECTOR`. Publish only reviewed Splat `c`/`asm` function start with restored source. Data/non-function/unreviewed/source-less → journal not-shareable reason. Scratch is escalation evidence, never acceptance or map/Splat authority.
 
 ## Stop/report
 

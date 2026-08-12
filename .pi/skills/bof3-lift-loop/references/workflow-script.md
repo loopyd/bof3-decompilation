@@ -102,9 +102,10 @@ const reviewTask = x => [
   "Review " + x.selector + " from fresh repository evidence.",
   "Run agent-context review; inspect live diff, owned changes, semantics/types/ABI/ownership.",
   "Use the complete ordered attempt ledger below. Do not repeat a tested lever unless new evidence explains why its expected effect differs.",
-  "Exact: pass or evidence-backed block. Non-exact: pass+exhausted or needs-fix with 1-3 ranked untried experiments.",
-  "Every experiment must name one lever and predict an observable change to size/frame, CFG/branch/loop, first mismatch/offset, or named instruction/register/load/store range. Speculative effects are invalid.",
-  "After one experiment with no score improvement, propose another only when new evidence predicts a different observable effect; otherwise pass with ladder_exhausted.",
+  "Exact: pass or evidence-backed block. For every non-exact candidate, after auditing the prescribed ladder, explicitly ask: What other experiments could we try that are not already in the ladder or ledger?",
+  "Use live mismatch/source/compiler/nearby-function/target evidence. Return needs-fix with 1-3 safe concrete untried experiments; pass+ladder_exhausted only after documenting why open discovery found none.",
+  "Each experiment predicts an observable size/frame/CFG/first-mismatch or named instruction/register/memory effect. Novel playbook-external experiments are allowed; unsupported speculation is not.",
+  "After no progress, ask again using the new evidence; propose only untried candidates with a different predicted effect.",
   "Every block must return repairable:true only for concrete source/metadata/binding fixes this executor may make; return repairable:false for rejected semantics/types, invalid boundary, approval/safety, or external-tool blockers.",
   "No source edits. Identify any decisive reproducible improvement as generic-lever candidate.",
   "Attempt ledger:\n" + historyOf(x),
@@ -224,29 +225,16 @@ for (let round = 0; round < MAX_ATTEMPTS; round++) {
         accepted: false, restored: Boolean(restores[i] && restores[i].ok)
       };
       x.executor = x.bestExecutor;
-      x.terminal = true;
+      // A successful restore re-enters the normal review loop, where open-ended
+      // discovery uses the failed experiment as new evidence.
+      x.terminal = !restores[i] || !restores[i].ok;
     });
   }
   retry.filter(x => x.checkpoint && x.checkpoint.ok).forEach(x => {
+    x.restore = null;
     x.bestScore = scoreOf(x.executor);
     x.bestExecutor = x.executor;
     x.history[x.history.length - 1].checkpoint = { accepted: true, restored: false };
-  });
-}
-
-const restored = lanes.filter(x => x.restore && x.restore.ok);
-if (restored.length) {
-  const restoredReviews = await runs.all(restored.map(x => ({
-    key: "review-restored-best-" + keyOf(x.selector), agent: "bof3-review",
-    task: [
-      "Review the mechanically restored best state for " + x.selector + ".",
-      "The latest experiment failed to improve its predecessor and is exhausted. Inspect live evidence; pass+ladder_exhausted if the restored candidate is coherent, otherwise block.",
-      "No new experiments and no edits. Attempt ledger:\n" + historyOf(x)
-    ].join("\n")
-  })));
-  restored.forEach((x, i) => {
-    x.review = restoredReviews[i];
-    x.history[x.history.length - 1].review = handoffOf(restoredReviews[i]);
   });
 }
 
@@ -350,7 +338,8 @@ Launch the verified fenced script directly with `cwd` equal to the sibling workt
 
 Each lane keeps a complete ordered JSON attempt ledger (executor result, review,
 experiment effects, retained/reverted outcome) and passes it to every fresh executor
-and reviewer. This preserves accumulated reasoning without reusing a mutation session.
+and reviewer. After the ladder and each failure, review asks what other untried
+experiment live evidence suggests; continue until exact, none remains, or six attempts. This preserves accumulated reasoning without reusing a mutation session.
 `needs-fix` retries ranked untried experiments; `block` retries only when review explicitly returns
 `repairable: true` with concrete findings. Missing/false repairability is
 terminal, including rejected semantics/types, invalid boundary, approval/safety,
