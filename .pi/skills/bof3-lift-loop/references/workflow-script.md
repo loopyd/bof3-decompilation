@@ -1,8 +1,8 @@
 # Lift-loop workflowScript
 
-This is the **inner lane** workflow. A top-level `bof3-lane` child already owns one native managed worktree; it runs this script there to own executor/reviewer retries, retained exact/partial cleanup, host gates, rollback, and final review. The parent owns queue selection, generic playbook edits, native handoff consolidation, commits, pushes, and snapshot/index refresh.
+This is the deterministic lane workflow. The parent renders and verifies it, then submits its exact contents directly in a parent-managed lane worktree. It owns retries, cleanup, host gates, rollback, and final review; no model copies orchestration.
 
-Set `SELECTORS` to exactly one selector and `RUN_KEY` to its unique lane ID. Nested children must use the lane cwd and `worktree:false`; never create a new managed worktree per phase. Launch each outer `bof3-lane` as an independent top-level async workflow with `worktree:true` and a unique absolute `sessionDir`; launch those calls back-to-back for parallelism. Do not combine lane orchestrators in one `runs.all`, which currently aliases their session path.
+Set `SELECTORS` to exactly one selector and `RUN_KEY` to its unique lane ID via `render-workflow.py`. Launch each script independently with `cwd` set to its `lane-worktree.py` worktree, workflow `worktree:false`, and a unique absolute `sessionDir`. Nested children share that cwd. Never combine lanes in one outer `runs.all`, which aliases their session path.
 
 ```js
 const SELECTORS = [
@@ -346,24 +346,7 @@ return lanes.map(x => ({
 }));
 ```
 
-Outer lane invocation shape (repeat immediately with unique `LANE`/selector/session path):
-
-```js
-subagent({
-  workflowScript: `return runs.run("lane", {
-    agent: "bof3-lane",
-    task: "Run TARGET@ADDRESS with RUN_KEY WAVE-LANE",
-    worktree: true
-  })`,
-  cwd: "/absolute/repository/path",
-  sessionDir: "/absolute/repository/path/.pi-subagents/sessions/WAVE/LANE",
-  async: true,
-  timeoutMs: 14400000,
-  artifacts: true
-})
-```
-
-The outer result's native `artifactPaths`/`handoffPath` identifies the captured patches and cleanup state. Do not reconstruct patches from child text.
+Launch the verified fenced script directly with `cwd` equal to the sibling worktree `../.bof3-lift-worktrees/WAVE-LANE`, workflow `worktree:false`, and a unique absolute `sessionDir`. Do not wrap it in `bof3-lane` or another `runs.run`. Export afterward with `lane-worktree.py export --key WAVE-LANE --selector SELECTOR`; its manifest and binary patch are authoritative. Do not reconstruct patches from child text.
 
 Each lane keeps a complete ordered JSON attempt ledger (executor result, review,
 experiment effects, retained/reverted outcome) and passes it to every fresh executor
