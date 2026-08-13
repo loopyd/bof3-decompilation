@@ -16,15 +16,16 @@ def template() -> str:
     return text[start:text.index("\n```", start)]
 
 
-def rendered(selector: str, run_key: str) -> str:
+def rendered(selector: str, run_key: str, max_attempts: int = 20) -> str:
     text = template()
     old_selector = 'const SELECTORS = [\n  "emi/example/00@0x80123456"\n];'
     old_key = 'const RUN_KEY = "replace-with-unique-wave-id";'
-    if text.count(old_selector) != 1 or text.count(old_key) != 1:
+    old_attempts = "const MAX_ATTEMPTS = 20;"
+    if text.count(old_selector) != 1 or text.count(old_key) != 1 or text.count(old_attempts) != 1:
         raise SystemExit("canonical workflow constants changed")
     selector_json = json.dumps(selector)
     key_json = json.dumps(run_key)
-    return text.replace(old_selector, f"const SELECTORS = [\n  {selector_json}\n];").replace(old_key, f"const RUN_KEY = {key_json};")
+    return text.replace(old_selector, f"const SELECTORS = [\n  {selector_json}\n];").replace(old_key, f"const RUN_KEY = {key_json};").replace(old_attempts, f"const MAX_ATTEMPTS = {max_attempts};")
 
 
 def main() -> int:
@@ -33,8 +34,11 @@ def main() -> int:
     parser.add_argument("--selector", required=True)
     parser.add_argument("--run-key", required=True)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--max-attempts", type=int, default=20)
     args = parser.parse_args()
-    expected = rendered(args.selector, args.run_key).encode()
+    if args.max_attempts < 1:
+        parser.error("--max-attempts must be positive")
+    expected = rendered(args.selector, args.run_key, args.max_attempts).encode()
     if args.command == "render":
         args.output.write_bytes(expected)
         return 0
