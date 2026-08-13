@@ -5,13 +5,16 @@
  * shared texture window, then queues the matching inner fill rectangle.
  * @source 0x801F3D88
  * @status partial
- * @match 93.51
- * @residual non-exact live audit: 317/339 instructions; 1356 original bytes versus 1356 current.
+ * @match 95.28
+ * @residual non-exact live audit: 323/339 instructions; 1356 original bytes versus 1356 current; first mismatch +0x00E4.
  */
 void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   RECT*     texture_window;
   POLY_FT4* primitive;
   s32       x;
+  /* MATCHING_AID: bounded removal tests regressed bottom_y to 302/339 and
+   * half_copy to 212/339; retain these allocator constraints only while this
+   * lift is partial. Removal condition: an exact match without the pin. */
   REGISTER_PIN(s32, bottom_y, "s3");
   REGISTER_PIN(s32, half_copy, "s4");
   s32       y;
@@ -65,17 +68,16 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   arg3_l = arg3;
   arg1_l = arg1;
   primitive->x3 = (s16)left_x;
+  bottom_v = arg3_l + 1;
+  bottom_y = arg1_l + bottom_v;
+  primitive->y2 = (s16)bottom_y;
+  primitive->y3 = (s16)bottom_y;
   primitive->u0 = 0u;
   primitive->v0 = 0u;
   primitive->v1 = 0u;
   primitive->u2 = 0u;
   primitive->r0 = 0xacu;
   primitive->g0 = 0xacu;
-  primitive->b0 = 0xacu;
-  bottom_v = arg3_l + 1;
-  bottom_y = arg1_l + bottom_v;
-  primitive->y2 = (s16)bottom_y;
-  primitive->y3 = (s16)bottom_y;
   primitive->u1 = 2u;
   primitive->v3 = (primitive->v2 = (u8)bottom_v);
   primitive->u3 = 2u;
@@ -83,6 +85,7 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->y2 -= 3;
   primitive->v0 += two;
   primitive->v2 -= 3;
+  primitive->b0 = 0xacu;
   primitive->clut = GetClut(clut_x, 0x1e1);
   barrier();
   width_plus_1 = arg2 + 1;
@@ -188,8 +191,8 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->y1 += two;
   primitive->y3 -= 3;
   primitive->y2 -= 1;
-  primitive->v1 += two;
   primitive->v2 -= 1;
+  primitive->v1 += two;
   primitive->v3 -= 3;
   primitive->clut = GetClut(clut_x, 0x1e1);
 
