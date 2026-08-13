@@ -5,8 +5,8 @@
  * shared texture window, then queues the matching inner fill rectangle.
  * @source 0x801F3D88
  * @status partial
- * @match 95.28
- * @residual non-exact live audit: 323/339 instructions; 1356 original bytes versus 1356 current; first mismatch +0x00E4.
+ * @match 96.17
+ * @residual non-exact live audit: 326/339 instructions; 1356 original bytes versus 1356 current; first mismatch +0x0154.
  */
 void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   RECT*     texture_window;
@@ -22,7 +22,7 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   s32       left_x;
   s32       bottom_v;
   s16       odd16;
-  s32       width_plus_1;
+  s32       widthPlus1;
   s32       odd_width;
   s32       right_base;
   /* MATCHING_AID: `two`/`tpage_val` named constants came from a bounded
@@ -62,15 +62,15 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->x0 = x0_h;
   primitive->y0 = (s16)y;
   left_x = arg0 + two;
-  primitive->y1 = (s16)y;
-  primitive->x2 = (s16)x;
   primitive->x1 = (s16)left_x;
   arg3_l = arg3;
   arg1_l = arg1;
-  primitive->x3 = (s16)left_x;
+  primitive->y1 = (s16)y;
+  primitive->x2 = (s16)x;
   bottom_v = arg3_l + 1;
   bottom_y = arg1_l + bottom_v;
   primitive->y2 = (s16)bottom_y;
+  primitive->x3 = (s16)left_x;
   primitive->y3 = (s16)bottom_y;
   primitive->u0 = 0u;
   primitive->v0 = 0u;
@@ -88,8 +88,8 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->b0 = 0xacu;
   primitive->clut = GetClut(clut_x, 0x1e1);
   barrier();
-  width_plus_1 = arg2 + 1;
-  x = (s32)(u16)width_plus_1;
+  widthPlus1 = arg2 + 1;
+  x = (s32)(u16)widthPlus1;
 
   if (GetGraphType() != 1) {
     GetGraphType();
@@ -171,11 +171,11 @@ void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   SetSemiTrans(primitive, 1);
   primitive->y2 = (s16)bottom_y;
   primitive->v2 = (u8)bottom_v;
-  primitive->x0 = (s16)(arg0 + width_plus_1 - two);
-  primitive->x2 = (s16)(arg0 + width_plus_1 - two);
-  primitive->x1 = (s16)(arg0 + width_plus_1);
+  primitive->x0 = (s16)(arg0 + widthPlus1 - two);
+  primitive->x2 = (s16)(arg0 + widthPlus1 - two);
+  primitive->x1 = (s16)(arg0 + widthPlus1);
   primitive->y1 = (s16)y;
-  primitive->x3 = (s16)(arg0 + width_plus_1);
+  primitive->x3 = (s16)(arg0 + widthPlus1);
   primitive->y3 = (s16)bottom_y;
   primitive->y0 = (s16)y;
   primitive->u0 = 0u;
