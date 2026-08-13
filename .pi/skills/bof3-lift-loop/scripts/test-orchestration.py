@@ -42,6 +42,8 @@ def main() -> int:
             "const measured = {ok:true,output:JSON.stringify({status:'exact',match_percent:100,files_changed:[]})};\n"
             "const runs = {run: async (k,o) => {calls.push(k); return k === 'baseline' || k === 'final-measure' ? measured : "
             "k === 'checkpoint-baseline' ? gate({match_percent:100,exact:true}) : "
+            "k === 'load-durable-ledger' ? {ok:true,results:[{acceptance:{verifyRuns:[{stdout:JSON.stringify({entries:[]})}]}}]} : "
+            "k.startsWith('record-ledger-') ? {ok:true} : "
             "k === 'integrate' ? {ok:true,results:[{acceptance:{verifyRuns:[{stdout:JSON.stringify({integrated:true,commit:'test'})}]}}]} : "
             "{ok:true,output:JSON.stringify({verdict:'pass'})};}};\n"
             "async function lane(){\n" + rendered + "\n}\n"
@@ -64,7 +66,7 @@ def main() -> int:
             "const gate = metric => ({ok:true,results:[{acceptance:{verifyRuns:[{stdout:JSON.stringify({accepted:true,current:{metric}})}]}}]});\n"
             "const result = (rung, extra={}) => ({ok:true,output:JSON.stringify({status:'partial',match_percent:50,files_changed:[],rung,variants_tried:[1,2,3],...extra})});\n"
             "let reviews = 0; const review = () => {reviews++; return {ok:true,output:JSON.stringify({verdict:'needs-fix',experiments:[1,2,3].map(n=>({lever:'e'+reviews+'-'+n,expected_effect:String(n)}))})};};\n"
-            "const runs = {run: async (k,o) => {calls.push(k); if(k==='baseline'||k==='final-measure') return {ok:true,output:JSON.stringify({status:'partial',match_percent:50,files_changed:[]})}; if(k==='checkpoint-baseline') return gate({match_percent:50,exact:false}); if(k.startsWith('reverse-')) {const m=o.task.match(/ladder rung ([a-z-]+)/), rung=m[1]; return result(rung,rung==='compiler-profile'?{coverage_complete:true}:rung==='permuter'?{coordinator_runs:1}:{});} if(k.startsWith('review-')) return o.task.includes('compiler-ceiling')?{ok:true,output:JSON.stringify({verdict:'pass',ladder_exhausted:true})}:review(); if(k==='restore-final') return {ok:true}; return review();}};\n"
+            "const runs = {run: async (k,o) => {calls.push(k); if(k==='baseline'||k==='final-measure') return {ok:true,output:JSON.stringify({status:'partial',match_percent:50,files_changed:[]})}; if(k==='checkpoint-baseline') return gate({match_percent:50,exact:false}); if(k==='load-durable-ledger') return {ok:true,results:[{acceptance:{verifyRuns:[{stdout:JSON.stringify({entries:[]})}]}}]}; if(k.startsWith('record-ledger-')) return {ok:true}; if(k.startsWith('reverse-')) {const m=o.task.match(/ladder rung ([a-z-]+)/), rung=m[1]; return result(rung,rung==='compiler-profile'?{coverage_complete:true}:rung==='permuter'?{coordinator_runs:1}:{});} if(k.startsWith('review-')) return o.task.includes('compiler-ceiling')?{ok:true,output:JSON.stringify({verdict:'pass',ladder_exhausted:true})}:review(); if(k==='restore-final') return {ok:true}; return review();}};\n"
             "async function lane(){\n" + rendered + "\n}\n"
             "lane().then(v => console.log(JSON.stringify({result:v,state:saved,calls})));\n"
         )

@@ -54,6 +54,15 @@ const checkpoint = (attempt, run) => [
 ].filter(Boolean).join(" ");
 const measureTask = "Measure " + selector + " with live asm-diff. Do not edit. Return JSON with status, match_percent, and files_changed containing every file this lift may edit.";
 const restore = "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py restore --lane " + quote(laneKey);
+const manager = "$(git worktree list --porcelain | awk '/^worktree / {print substr($0,10); exit}')/.pi/skills/bof3-lift-loop/scripts/lane-worktree.py";
+const durableEntry = row => JSON.stringify({ selector, lane_key: laneKey, row });
+const recordLedger = async row => {
+  const recorded = await runs.run("record-ledger-" + lane.attempt + "-" + lane.ledger.length, {
+    agent: "bof3-review", task: "Report the host ledger gate only. No edits.",
+    gate: "python3 " + manager + " record --key " + quote(laneKey) + " --selector " + quote(selector) + " --entry-json " + quote(durableEntry(row))
+  });
+  if (!recorded.ok) throw new Error("durable experiment ledger write failed");
+};
 const gateEvidence = run => {
   const rows = run && Array.isArray(run.results) ? run.results : [];
   const verify = rows.flatMap(row => row.acceptance && Array.isArray(row.acceptance.verifyRuns) ? row.acceptance.verifyRuns : []);
@@ -74,6 +83,25 @@ let lane = await state.get("lane") || {
 if (!Number.isInteger(lane.rung) || lane.rung < 0 || lane.rung >= LADDER.length) lane.rung = 0;
 if (!Number.isInteger(lane.stalledQueues) || lane.stalledQueues < 0) lane.stalledQueues = 0;
 if (lane.selector !== selector) throw new Error("mission state selector mismatch");
+if (!lane.historyLoaded) {
+  const loaded = await runs.run("load-durable-ledger", {
+    agent: "bof3-review", task: "Report the host ledger gate only. No edits.",
+    gate: "python3 " + manager + " ledger --selector " + quote(selector)
+  });
+  if (!loaded.ok) throw new Error("durable experiment ledger read failed");
+  const history = gateEvidence(loaded).entries || [];
+  lane.history = history;
+  for (const entry of history) {
+    const row = entry.row || {};
+    const variants = Array.isArray(row.variants) ? row.variants : [];
+    for (const variant of variants) {
+      const key = experimentKey(variant);
+      if (key !== '["",""]' && !lane.seen.includes(key)) lane.seen.push(key);
+    }
+  }
+  lane.historyLoaded = true;
+  await save(lane);
+}
 if (lane.phase !== "ready") {
   const recovered = await runs.run("restore-interrupted", {
     agent: "bof3-review", task: "Report the host restore only. No edits.", gate: restore
@@ -103,7 +131,9 @@ if (lane.status === "baseline") {
   if (!baselineEvidence.accepted) throw new Error("baseline checkpoint rejected");
   lane.bestScore = baselineEvidence.current.metric.match_percent;
   lane.status = baselineEvidence.current.metric.exact === true ? "exact" : "running";
-  lane.ledger.push({ attempt: 0, score: lane.bestScore, accepted: true, lever: "baseline", predicted: "", actual: "" });
+  const baselineRow = { attempt: 0, score: lane.bestScore, accepted: true, lever: "baseline", predicted: "", actual: "", variants: [], rung: LADDER[lane.rung] };
+  lane.ledger.push(baselineRow);
+  await recordLedger(baselineRow);
   await save(lane);
 }
 
@@ -150,7 +180,7 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
   }
   lane.attempt = attempt;
   lane.phase = "ready";
-  lane.ledger.push({
+  const attemptRow = {
     attempt,
     score: liveScore,
     improved,
@@ -159,7 +189,9 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
     actual: json(reverse).actual_effect || json(reverse).residual || "",
     variants,
     rung
-  });
+  };
+  lane.ledger.push(attemptRow);
+  await recordLedger(attemptRow);
   lane.queue = [];
   const oneShotRung = rung === "compiler-profile" || rung === "permuter";
   const rungLimit = oneShotRung || rung === "compiler-ceiling" ? 1 : STALL_LIMIT;
@@ -205,7 +237,9 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
   if (advanceRung && lane.rung < LADDER.length - 1) {
     lane.rung++;
     lane.stalledQueues = 0;
-    lane.ledger.push({ attempt, score: liveScore, improved: false, lever: "ladder advance", predicted: "", actual: rung + " exhausted after review; advancing to " + LADDER[lane.rung], variants: [], rung: LADDER[lane.rung] });
+    const advanceRow = { attempt, score: liveScore, improved: false, lever: "ladder advance", predicted: "", actual: rung + " exhausted after review; advancing to " + LADDER[lane.rung], variants: [], rung: LADDER[lane.rung] };
+    lane.ledger.push(advanceRow);
+    await recordLedger(advanceRow);
     lane.queue = [];
     await save(lane);
     continue;
@@ -295,7 +329,6 @@ if (lane.status === "exact" || lane.status === "improved-partial") {
 if (lane.status === "ready-to-integrate-exact" || lane.status === "ready-to-integrate-partial") {
   lane.phase = "integrate";
   await save(lane);
-  const manager = "$(git worktree list --porcelain | awk '/^worktree / {print substr($0,10); exit}')/.pi/skills/bof3-lift-loop/scripts/lane-worktree.py";
   const message = lane.status === "ready-to-integrate-exact"
     ? "feat(decomp): byte-match " + selector.split("@")[1]
     : "feat(decomp): improve partial " + selector.split("@")[1];

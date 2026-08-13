@@ -17,7 +17,42 @@ ROOT = Path(__file__).resolve().parents[4]
 STATE = ROOT / "out/lift-loop/lanes"
 WORKTREES = ROOT.parent / ".bof3-lift-worktrees"
 HANDOFFS = ROOT / "out/lift-loop/handoffs"
+LEDGERS = ROOT / "out/lift-loop/experiment-ledgers"
 SESSIONS = ROOT / ".pi-subagents/sessions/lift-loop"
+
+
+def ledger_path(selector: str) -> Path:
+    return LEDGERS / f"{hashlib.sha256(selector.encode()).hexdigest()}.jsonl"
+
+
+def read_ledger(selector: str) -> list[dict]:
+    path = ledger_path(selector)
+    if not path.exists():
+        return []
+    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+
+
+def record(args: argparse.Namespace) -> int:
+    _, _, state = lane_state(args.key, check_head=False)
+    entry = json.loads(args.entry_json)
+    if state["selector"] != args.selector or entry.get("selector") != args.selector:
+        raise SystemExit("ledger selector mismatch")
+    if entry.get("lane_key") != args.key or not isinstance(entry.get("row"), dict):
+        raise SystemExit("invalid ledger entry")
+    LEDGERS.mkdir(parents=True, exist_ok=True)
+    path = ledger_path(args.selector)
+    with path.open("a") as output:
+        fcntl.flock(output, fcntl.LOCK_EX)
+        output.write(json.dumps(entry, sort_keys=True) + "\n")
+    print(json.dumps({"recorded": True, "entries": len(read_ledger(args.selector))}))
+    return 0
+
+
+def ledger(args: argparse.Namespace) -> int:
+    print(json.dumps({"selector": args.selector, "entries": read_ledger(args.selector)}))
+    return 0
+
+
 INTEGRATION_LOCK = ROOT / ".git/bof3-lift-integrate.lock"
 FORBIDDEN_PREFIXES = ("build/", "src/emi/", ".pi-subagents/", "out/")
 
@@ -229,8 +264,15 @@ def main() -> int:
     integrate_parser.add_argument("--message", required=True)
     remove_parser = sub.add_parser("remove")
     remove_parser.add_argument("--key", required=True)
+    record_parser = sub.add_parser("record")
+    record_parser.add_argument("--key", required=True)
+    record_parser.add_argument("--selector", required=True)
+    record_parser.add_argument("--entry-json", required=True)
+    ledger_parser = sub.add_parser("ledger")
+    ledger_parser.add_argument("--selector", required=True)
     args = parser.parse_args()
-    return create(args) if args.command == "create" else export(args) if args.command == "export" else integrate(args) if args.command == "integrate" else remove(args)
+    commands = {"create": create, "export": export, "integrate": integrate, "remove": remove, "record": record, "ledger": ledger}
+    return commands[args.command](args)
 
 
 if __name__ == "__main__":
