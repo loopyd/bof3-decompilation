@@ -324,6 +324,61 @@ for (i = 0; i < count; i++) {
 
 Compare the induction-variable structure in the original assembly.
 
+### Allocator-sensitive complex functions
+
+Classify a same-CFG near match as allocator-sensitive when separate probes such
+as adding one narrow temporary, splitting one chained assignment, or removing
+one existing constraint cause spills, frame/size changes, saved-register role
+changes, a prologue-first mismatch, or a broad score collapse. Record each
+probe; it diagnoses the search neighborhood but does not authorize retaining a
+non-exact allocator aid.
+
+For a classified function:
+
+1. Search the first mismatch hunk before later residuals: move existing
+   statements across adjacent dependency-safe lifetime boundaries before
+   changing expressions or value lifetimes. Run live `asm-diff` after every
+   variant; continue outward while the first-mismatch frontier advances.
+2. Classify results as `retained-improvement`, `retained-frontier` (same score,
+   later first mismatch), `reverted-neutral`, `reverted-local-regression`, or
+   `reverted-structural-regression`. Rank candidates lexicographically: exact
+   bytes, matching instructions, later first mismatch, fewer residual hunks,
+   unchanged size/instruction count/frame, then smaller source disturbance.
+   Keep a frontier candidate separately and test it once with the best strict
+   improvement; frontier movement alone is not completion evidence.
+3. Abort and restore a nominally local variant when it unexpectedly changes
+   frame size, function size/instruction count, spills, multi-block
+   saved-register roles, or the prologue. Do not tune that structural shape
+   unless the original diff predicted the change.
+4. Track `source_parent`, moved statement, crossed statements/lifetime
+   boundary, score, first mismatch, residual-hunk count, size, instruction
+   count, frame size, retained changes, and interaction result. Requeue a
+   reverted structural experiment only when a retained change affects its
+   definition/last use, overlapping call, interfering saved value, frame,
+   compiler profile, or owning residual block; an unrelated reorder is not
+   invalidation.
+5. Group source forms proven to emit identical instructions into an optimizer
+   equivalence class (constant identities, commutative reversal, equivalent
+   casts, normalized store order). Do not retry spellings in that class unless
+   profile, type, lifetime, volatility, or expression equivalence changes.
+   When splitting a chained assignment broadly changes allocation, treat the
+   intact chain as an allocator anchor and move it only as a unit. Reusing a
+   dead-looking local for an unrelated later role is also a lifetime-changing
+   experiment, not free storage.
+6. After an existing `REGISTER_PIN` removal probe, record score/size/frame and
+   allocator effects. A severe regression prevents redundant removal retries;
+   it does not waive the exact-match retention rule in
+   [Allocation ladder](#allocation-ladder).
+
+Queue at least two independent experiments plus one combination with the best
+strict/frontier candidate when evidence supports a safe combination. Restore
+the best coherent state after each rejected variant. After an improvement,
+allow three reviewed non-improving queues at the new frontier, then advance to
+static allocation evidence, profile search, the permuter, or a recorded
+compiler ceiling instead of broad spelling churn. A non-compiling C89 variant
+is not comparison evidence; repair declaration placement within the same
+attempt and record only the compiled result.
+
 ---
 
 ## Surviving dead code

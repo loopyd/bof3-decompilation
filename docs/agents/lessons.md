@@ -99,6 +99,25 @@ iteration procedure: [function matching](matching.md).
   and independent-review requirements apply; the split load/mask register
   pair may need one pin per register.
 
+### Detect allocator-sensitive functions before expanding lifetimes
+
+- Two 20-attempt passes on `emi/world00/area008/13@0x801F3D88` improved
+  317/339 (93.51%) to 326/339 (96.17%) at the same 1,356-byte size solely by
+  dependency-safe ordering: first-strip geometry stores crossed argument-capture
+  and bottom-geometry lifetime boundaries, while fourth-strip UV updates moved
+  as intact statements. The first mismatch advanced from `+0xDC` to `+0x154`.
+  In contrast, repeating a shared UV temporary fell as low as 256/345 and
+  changed size/frame; field-capture locals remained structural regressions;
+  splitting the chained `v3 = (v2 = bottom_v)` fell to 309/339; moving
+  `odd16` changed the frame to `0x70`; removing one established pin previously
+  fell as low as 212/339. The second pass confirms that an unrelated retained
+  reorder does not invalidate prior allocator-failure evidence. For same-CFG
+  near matches, prioritize the first mismatch, rank score/frontier/hunk count
+  before source novelty, preserve proven allocator-anchor chains, group
+  optimizer-equivalent spellings, and retry a structural failure only after a
+  retained change touches its actual lifetime/interference neighborhood.
+  Procedure: [allocator-sensitive complex functions](matching-playbook.md#allocator-sensitive-complex-functions).
+
 ### Reach fixed RAM through `PSX_PTR`/`PSX_REF`, never raw casts or `vu8`
 
 - All fixed-address access goes through `include/memory/` and
