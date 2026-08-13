@@ -136,8 +136,8 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
   const liveScore = score(reverse);
   const result = json(reverse);
   const variants = Array.isArray(result.variants_tried) ? result.variants_tried : [];
-  const substantive = rung === "compiler-profile" ? result.coverage_complete === true
-    : rung === "permuter" ? result.coordinator_runs === 1
+  const substantive = rung === "compiler-profile" ? (result.coverage_complete === true || result.profile && result.profile.coverage_complete === true)
+    : rung === "permuter" ? (result.coordinator_runs === 1 || result.permuter && result.permuter.coordinator_runs === 1)
     : rung === "compiler-ceiling" ? true
     : variants.length >= 3;
   if (String(result.rung || rung) !== rung || !substantive) throw new Error("executor did not complete active ladder rung: " + rung);
