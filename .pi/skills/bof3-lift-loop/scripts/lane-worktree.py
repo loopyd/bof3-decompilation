@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import fcntl
 import hashlib
 import json
 from pathlib import Path
@@ -15,6 +16,8 @@ ROOT = Path(__file__).resolve().parents[4]
 STATE = ROOT / "out/lift-loop/lanes"
 WORKTREES = ROOT.parent / ".bof3-lift-worktrees"
 HANDOFFS = ROOT / "out/lift-loop/handoffs"
+INTEGRATION_LOCK = ROOT / ".git/bof3-lift-integrate.lock"
+FORBIDDEN_PREFIXES = ("build/", "src/emi/", ".pi-subagents/", "out/")
 
 
 def git(*args: str, cwd: Path = ROOT, capture: bool = False) -> str:
@@ -123,6 +126,53 @@ def export(args: argparse.Namespace) -> int:
     return 0
 
 
+def integrate(args: argparse.Namespace) -> int:
+    INTEGRATION_LOCK.parent.mkdir(parents=True, exist_ok=True)
+    with INTEGRATION_LOCK.open("w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        if git("status", "--porcelain", capture=True):
+            raise SystemExit("parent worktree must be clean")
+        state_path, worktree, state = lane_state(args.key)
+        if state["selector"] != args.selector:
+            raise SystemExit("lane selector mismatch")
+        if state["base"] != git("rev-parse", "HEAD", capture=True):
+            raise SystemExit("parent HEAD advanced; rerun lane")
+        export(argparse.Namespace(key=args.key, selector=args.selector))
+        manifest = json.loads((HANDOFFS / f"{args.key}.json").read_text())
+        patch = Path(manifest["patch"])
+        if hashlib.sha256(patch.read_bytes()).hexdigest() != manifest["patch_sha256"]:
+            raise SystemExit("handoff patch digest mismatch")
+        changed_paths = [entry[3:] for entry in manifest["changed"]]
+        if not changed_paths:
+            raise SystemExit("lane has no changes to integrate")
+        forbidden = [path for path in changed_paths if path.startswith(FORBIDDEN_PREFIXES) or Path(path).is_absolute()]
+        if forbidden:
+            raise SystemExit("forbidden lane paths: " + ", ".join(forbidden))
+        try:
+            subprocess.run(("git", "apply", "--check", str(patch)), cwd=ROOT, check=True)
+            subprocess.run(("git", "apply", str(patch)), cwd=ROOT, check=True)
+            subprocess.run(("git", "diff", "--check"), cwd=ROOT, check=True)
+            git("add", "--", *changed_paths)
+            staged = git("diff", "--cached", "--name-only", capture=True).splitlines()
+            if sorted(staged) != sorted(changed_paths):
+                raise RuntimeError("staged paths differ from reviewed handoff")
+            git("commit", "-m", args.message)
+        except BaseException:
+            git("reset", "--hard", "HEAD")
+            subprocess.run(("git", "clean", "-fd", "--", *changed_paths), cwd=ROOT, check=False, stdout=subprocess.DEVNULL)
+            raise
+        commit = git("rev-parse", "HEAD", capture=True)
+        removed = True
+        try:
+            git("worktree", "remove", "--force", str(worktree))
+            state_path.unlink(missing_ok=True)
+            git("worktree", "prune")
+        except BaseException:
+            removed = False
+        print(json.dumps({"key": args.key, "selector": args.selector, "integrated": True, "commit": commit, "lane_removed": removed}))
+        return 0
+
+
 def remove(args: argparse.Namespace) -> int:
     state_path, worktree = paths(args.key)
     registered_paths = {
@@ -154,10 +204,14 @@ def main() -> int:
     export_parser = sub.add_parser("export")
     export_parser.add_argument("--key", required=True)
     export_parser.add_argument("--selector", required=True)
+    integrate_parser = sub.add_parser("integrate")
+    integrate_parser.add_argument("--key", required=True)
+    integrate_parser.add_argument("--selector", required=True)
+    integrate_parser.add_argument("--message", required=True)
     remove_parser = sub.add_parser("remove")
     remove_parser.add_argument("--key", required=True)
     args = parser.parse_args()
-    return create(args) if args.command == "create" else export(args) if args.command == "export" else remove(args)
+    return create(args) if args.command == "create" else export(args) if args.command == "export" else integrate(args) if args.command == "integrate" else remove(args)
 
 
 if __name__ == "__main__":
