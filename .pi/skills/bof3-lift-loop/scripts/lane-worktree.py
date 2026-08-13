@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import shutil
 import subprocess
 
 
@@ -16,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[4]
 STATE = ROOT / "out/lift-loop/lanes"
 WORKTREES = ROOT.parent / ".bof3-lift-worktrees"
 HANDOFFS = ROOT / "out/lift-loop/handoffs"
+SESSIONS = ROOT / ".pi-subagents/sessions/lift-loop"
 INTEGRATION_LOCK = ROOT / ".git/bof3-lift-integrate.lock"
 FORBIDDEN_PREFIXES = ("build/", "src/emi/", ".pi-subagents/", "out/")
 
@@ -35,18 +37,30 @@ def paths(key: str) -> tuple[Path, Path]:
     return state, worktree
 
 
-def identity(key: str, selector: str, base: str, worktree: str) -> str:
-    return hashlib.sha256(json.dumps([key, selector, base, worktree]).encode()).hexdigest()
+def session_path(key: str) -> Path:
+    path = SESSIONS / key
+    if path.parent.resolve() != SESSIONS.resolve() or path.is_symlink():
+        raise SystemExit("invalid lane session path")
+    return path
+
+
+def identity(key: str, selector: str, base: str, worktree: str, session_dir: str) -> str:
+    return hashlib.sha256(json.dumps([key, selector, base, worktree, session_dir]).encode()).hexdigest()
 
 
 def lane_state(key: str, *, check_head: bool = True) -> tuple[Path, Path, dict]:
     state_path, expected = paths(key)
+    expected_session = session_path(key)
     state = json.loads(state_path.read_text())
     if (
         state.get("key") != key
         or Path(state.get("worktree", "")).resolve() != expected
+        or Path(state.get("session_dir", "")) != expected_session
+        or state.get("launch") != {"cwd": str(expected), "worktree": False, "sessionDir": str(expected_session), "async": True}
+        or not expected_session.is_dir()
+        or expected_session.is_symlink()
         or (check_head and state.get("base") != git("rev-parse", "HEAD", cwd=expected, capture=True))
-        or state.get("identity") != identity(key, state.get("selector", ""), state.get("base", ""), str(expected))
+        or state.get("identity") != identity(key, state.get("selector", ""), state.get("base", ""), str(expected), str(expected_session))
     ):
         raise SystemExit("lane state identity mismatch")
     if expected not in [Path(line.removeprefix("worktree ")).resolve() for line in git("worktree", "list", "--porcelain", capture=True).splitlines() if line.startswith("worktree ")]:
@@ -72,7 +86,8 @@ def status_entries(worktree: Path) -> list[tuple[str, str]]:
 
 def create(args: argparse.Namespace) -> int:
     state_path, worktree = paths(args.key)
-    if state_path.exists() or worktree.exists():
+    session_dir = session_path(args.key)
+    if state_path.exists() or worktree.exists() or session_dir.exists() or session_dir.is_symlink():
         raise SystemExit(f"lane already exists: {args.key}")
     if not args.allow_dirty and git("status", "--porcelain", capture=True):
         raise SystemExit("parent worktree must be clean")
@@ -82,11 +97,16 @@ def create(args: argparse.Namespace) -> int:
     subprocess.run(("git", "worktree", "add", "--detach", str(worktree), base), cwd=ROOT, check=True, stdout=subprocess.DEVNULL)
     try:
         subprocess.run(("python3", ".pi/scripts/bootstrap-bof3-lane.py"), cwd=worktree, check=True)
-        state = {"key": args.key, "selector": args.selector, "base": base, "worktree": str(worktree)}
-        state["identity"] = identity(args.key, args.selector, base, str(worktree))
+        session_dir.mkdir(parents=True)
+        launch = {"cwd": str(worktree), "worktree": False, "sessionDir": str(session_dir), "async": True}
+        state = {"key": args.key, "selector": args.selector, "base": base, "worktree": str(worktree), "session_dir": str(session_dir), "launch": launch}
+        state["identity"] = identity(args.key, args.selector, base, str(worktree), str(session_dir))
         state_path.write_text(json.dumps(state, indent=2) + "\n")
     except BaseException:
         git("worktree", "remove", "--force", str(worktree))
+        state_path.unlink(missing_ok=True)
+        if session_dir.is_dir() and not session_dir.is_symlink():
+            shutil.rmtree(session_dir)
         raise
     print(json.dumps(state))
     return 0
@@ -166,6 +186,9 @@ def integrate(args: argparse.Namespace) -> int:
         try:
             git("worktree", "remove", "--force", str(worktree))
             state_path.unlink(missing_ok=True)
+            session_dir = session_path(args.key)
+            if session_dir.is_dir():
+                shutil.rmtree(session_dir)
             git("worktree", "prune")
         except BaseException:
             removed = False
@@ -189,6 +212,9 @@ def remove(args: argparse.Namespace) -> int:
     if registered:
         git("worktree", "remove", "--force", str(worktree))
     state_path.unlink(missing_ok=True)
+    session_dir = session_path(args.key)
+    if session_dir.is_dir():
+        shutil.rmtree(session_dir)
     git("worktree", "prune")
     print(json.dumps({"key": args.key, "removed": True}))
     return 0

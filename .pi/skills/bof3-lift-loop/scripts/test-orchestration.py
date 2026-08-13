@@ -22,6 +22,9 @@ def rejected(*args: str) -> None:
 def main() -> int:
     key = "orchestration-self-check"
     subprocess.run(("python3", str(SCRIPTS / "lane-worktree.py"), "remove", "--key", key), cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    stale_self = ROOT / ".pi-subagents/sessions/lift-loop" / key
+    if stale_self.is_dir() and not stale_self.is_symlink():
+        stale_self.rmdir()
     with tempfile.TemporaryDirectory() as directory:
         output = Path(directory) / "lane.js"
         common = ("--selector", SELECTOR, "--run-key", key, "--output", str(output))
@@ -56,6 +59,16 @@ def main() -> int:
         assert not any(call.startswith("restore-") for call in result["calls"])
         state = json.loads(run("python3", str(SCRIPTS / "lane-worktree.py"), "create", "--key", key, "--selector", SELECTOR, "--allow-dirty").stdout)
         worktree = Path(state["worktree"])
+        session_dir = Path(state["session_dir"])
+        assert session_dir.is_absolute()
+        assert session_dir.is_dir()
+        assert session_dir.is_relative_to(ROOT / ".pi-subagents/sessions/lift-loop")
+        assert state["launch"] == {"cwd": str(worktree), "worktree": False, "sessionDir": str(session_dir), "async": True}
+        stale_key = "orchestration-stale-session"
+        stale_session = ROOT / ".pi-subagents/sessions/lift-loop" / stale_key
+        stale_session.mkdir(parents=True, exist_ok=True)
+        rejected("python3", str(SCRIPTS / "lane-worktree.py"), "create", "--key", stale_key, "--selector", SELECTOR, "--allow-dirty")
+        stale_session.rmdir()
         marker = worktree / "orchestration-self-check.txt"
         marker.write_text("shared cwd\n")
         manager = str(SCRIPTS / "lane-worktree.py")
@@ -77,6 +90,14 @@ def main() -> int:
         (sentinel / "keep").unlink()
         sentinel.rmdir()
     run("python3", str(SCRIPTS / "lane-worktree.py"), "remove", "--key", key)
+    assert not session_dir.exists()
+    symlink_key = "orchestration-session-symlink"
+    symlink = ROOT / ".pi-subagents/sessions/lift-loop" / symlink_key
+    outside = Path(tempfile.mkdtemp())
+    symlink.symlink_to(outside, target_is_directory=True)
+    rejected("python3", str(SCRIPTS / "lane-worktree.py"), "create", "--key", symlink_key, "--selector", SELECTOR, "--allow-dirty")
+    symlink.unlink()
+    outside.rmdir()
     print("orchestration self-check: OK")
     return 0
 
