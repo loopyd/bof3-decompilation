@@ -23,13 +23,13 @@ void func_800AAEBC(s16 target_index, u8 battler_index) {
     *(u32*)&D_801EC3A4[action_slot * 0x78] =
         (u32)&D_80145E90[battler_index];
     barrier();
-    target_flags = D_80145FB0[battler_index * 0x140];
+    target_flags = ((u8*)D_80145FB0)[battler_index * 0x140];
   } else {
     enemy = battler_index - 3u;
     *(u32*)&D_801EC3A4[action_slot * 0x78] =
         (u32)&D_801EB2E8[battler_index * 0x118];
     barrier();
-    target_flags = D_801EB72C[enemy * 0x118];
+    target_flags = ((u8*)D_801EB72C)[enemy * 0x118];
   }
 
   if (target_index < 0) {
