@@ -9,7 +9,7 @@ Read `AGENTS.md`, load `/skill:bof3-re`. Parent owns selection/checkpoints/git. 
 
 ## Confirm
 
-Targets (default reviewed), selection (`quick-wins`), budget (3–5), exclusions, branch, parallelism (`1`), explicit commit authorization, explicit decomp.me publication authorization (partials in scope). Parallelism = max lanes, not agents per function. For this run, the user explicitly set parallelism to `10`; preserve distinct-target ownership and single-thread each function pipeline.
+Confirm targets (default reviewed), selection (`quick-wins`), budget (3–5), exclusions, branch, parallelism (`1`), commit authorization, and decomp.me publication authorization. Parallelism counts lanes; preserve distinct-target ownership and single-thread each function.
 
 ## Baseline + queue
 
@@ -23,7 +23,7 @@ Never dispatch dirty/stale. `loop-status` fails closed; `--recover` serially rep
 
 ## Function pipeline
 
-Render and verify [`references/workflow-script.md`](references/workflow-script.md), then submit it unchanged as `subagent.workflowScript` with `mission:{title, objective}`, lane `cwd`, and `worktree:false`. The script owns durable mission state, iterations, cleanup, final review, and host-gated parent integration. Parent owns queue, launch, mission closure, and post-wave freshness.
+Render/verify [`references/workflow-script.md`](references/workflow-script.md); submit unchanged as `subagent.workflowScript` with mission and lane launch. Script owns state, iterations, cleanup, review, integration; parent owns queue, launch, closure, freshness.
 
 Each function is single-threaded regardless of batch parallelism:
 
@@ -31,14 +31,14 @@ Each function is single-threaded regardless of batch parallelism:
 bof3-reverse -> bof3-review -> [retained exact|partial] bof3-cleanup -> live gates -> bof3-review -> integration
 ```
 
-- One function per lane. The rendered workflow owns the reverse↔review loop, 20-attempt ceiling, ledger, one baseline checkpoint, final restore, and stop conditions; do not duplicate them in prompts or wrappers.
-- An attempt is a substantive investigation pass: reviewer queues at least three distinct evidence-backed experiments; executor runs the complete queue plus related safe variants before returning; reviewer independently reloads live evidence. Fewer than three distinct experiments blocks the next retry instead of burning an iteration. Never checkpoint/restore between attempts—the shared worktree carries discoveries forward. At the end, restore the baseline only when the final live score did not improve.
-- Reviewed improvements record the decisive generic lever in the narrowest playbook/lesson before integration—never selector/percentage/case narrative. Mark exact vs partial; function-only → `lesson: none`.
+- One function/lane. Rendered workflow owns loop, 20-attempt ceiling, ledger, baseline checkpoint, restore, stops; do not duplicate.
+- An attempt is a substantive investigation pass: reviewer queues at least three distinct evidence-backed experiments; executor runs the complete queue plus related safe variants before returning; reviewer independently reloads live evidence. Fewer than three distinct experiments blocks the next retry instead of burning an iteration. Never checkpoint/restore between attempts—the shared worktree carries discoveries forward. Three consecutive non-improving queues automatically advance one rung: `clean-c` → `static-allocation` → `compiler-profile` (`bin/flag-search`) → one bounded `permuter` coordinator → `compiler-ceiling`. An improvement resets the stall count but does not move backward to an exhausted rung. Rung changes are ledger entries; reviewers must queue experiments for the active rung, not resume broad spelling churn. At the end, restore the baseline only when the final live score did not improve.
+- Record a reusable decisive lever in the narrowest playbook/lesson before integration; function-only → `lesson: none`.
 - Cleanup every retained exact/partial: evidence-backed naming and target-local integration only. Exact requires fresh diff/bytes/symbols/Splat/relocation + review. Partial is spelling-only; preserve body/ABI/boundary/compiler and atomic status/match/residual, score ≥ best + audits/review. Failure restores pre-cleanup.
 
 ## Serial loop (`parallelism=1`)
 
-Create one lane with `lane-worktree.py create`, render/verify its script, then launch the exact script with lane `cwd` and `worktree:false`. Before dispatch run `.pi/skills/bof3-re/scripts/function-brief.py SELECTOR` and relevant `companion-check`. Parent accepts only the exported manifest/patch + retained state + cleanup gate + final review: exact commits as `feat(decomp): byte-match <function>`; authorized partial commits keep atomic metadata. Restore no-progress, rejected semantics/types, or cleanup regression. Use `subagent_supervisor` for child requests.
+Create lane, render/verify, launch exact script with returned launch. Before dispatch run `function-brief.py SELECTOR` and relevant companion check. Accept only exported manifest/patch + retained state + cleanup/review. Restore no-progress, rejected semantics/types, cleanup regression.
 
 ## Parallel loop (optional `parallelism>1`)
 
@@ -49,7 +49,7 @@ Freeze one queue; launch target-distinct rendered workflows as independent async
 - Render/verify, then call `subagent({workflowScript:SCRIPT, mission:{title:"Byte-match SELECTOR", objective:"Reach verified 100% within 20 attempts"}, ...CREATE_RESULT.launch})`. Use the returned launch object unchanged; it pins absolute `cwd`/`sessionDir`, `worktree:false`, and `async:true`. Never omit or reconstruct launch fields. Launch calls back-to-back; nested phases serialize.
 - Do not pass workflow-level `acceptance.level:"reviewed"`: reviewed is achieved, not requestable. Writer agents use their configured acceptance; independent review is an explicit subsequent `bof3-review` run. If host-level writer review is needed, use `acceptance:{review:{required:true,...}}`, never `level:"reviewed"`; omit acceptance for read-only reviewer calls.
 - No lane commits, pushes, stages, edits another target, or shares publicly. Generated `out/`, `build/`, compile DB, analyzer/index state, source stubs, and `.pi-subagents/` are never merge artifacts.
-- After retained exact/improvement, the workflow runs `bof3-cleanup` and consolidation review. Accept explicit `pass` for exact and `pass|retain-improved-partial` for a partial; warnings do not block a reviewed partial unless verdict is `block|needs-fix`. Then a host gate calls `lane-worktree.py integrate`: require clean parent at unchanged lane base, export/digest/check/apply only non-ignored Git changes, `git diff --check`, commit the reviewed transaction, and remove the lane. Generated ignored `build/`/`.pi-subagents/` state is expected in lanes and excluded rather than treated as a handoff failure. Any failure rolls parent changes back and preserves the lane for inspection. The workflow returns `integrated` only after commit + cleanup; otherwise close the mission `failed` with lane status/ledger summary. Reject failed capture, unexpected paths, `src/emi/`, absolute-path stubs, unapproved `INCLUDE_ASM`, cleanup/review rejection, or score regression.
+- After retained exact/improvement, the workflow runs `bof3-cleanup` and consolidation review. Accept explicit `pass` for exact and `pass|retain-improved-partial|retain-as-improved-partial` for a partial; warnings do not block a reviewed partial unless verdict is `block|needs-fix`. Then a host gate calls `lane-worktree.py integrate`: require clean parent at unchanged lane base, export/digest/check/apply only non-ignored Git changes, `git diff --check`, commit the reviewed transaction, and remove the lane. Generated ignored `build/`/`.pi-subagents/` state is expected in lanes and excluded rather than treated as a handoff failure. Any failure rolls parent changes back and preserves the lane for inspection. The workflow returns `integrated` only after commit + cleanup; otherwise close the mission `failed` with lane status/ledger summary. Reject failed capture, unexpected paths, `src/emi/`, absolute-path stubs, unapproved `INCLUDE_ASM`, cleanup/review rejection, or score regression.
 - Parallel completions serialize through the clean-parent/unchanged-HEAD gate: after one integration advances `main`, siblings fail closed and must rerun from the new base. No automatic three-way merge.
 - Refresh edited target snapshots serially after consolidation, then rebuild the global index once. A lane failure consumes only its selector; dirty parent, overlap, stale/conflicting handoff, failed rollback, or failed freshness recovery stops consolidation/new dispatch.
 

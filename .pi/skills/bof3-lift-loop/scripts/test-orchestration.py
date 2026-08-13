@@ -57,6 +57,31 @@ def main() -> int:
         assert "integrate" in result["calls"]
         assert result["calls"].count("checkpoint-baseline") == 1
         assert not any(call.startswith("restore-") for call in result["calls"])
+        ladder = Path(directory) / "ladder.js"
+        ladder.write_text(
+            "const saved = {}, calls = [];\n"
+            "const state = {get: async k => saved[k], set: async (k,v) => {saved[k]=v;}};\n"
+            "const gate = metric => ({ok:true,results:[{acceptance:{verifyRuns:[{stdout:JSON.stringify({accepted:true,current:{metric}})}]}}]});\n"
+            "const result = (rung, extra={}) => ({ok:true,output:JSON.stringify({status:'partial',match_percent:50,files_changed:[],rung,variants_tried:[1,2,3],...extra})});\n"
+            "let reviews = 0; const review = () => {reviews++; return {ok:true,output:JSON.stringify({verdict:'needs-fix',experiments:[1,2,3].map(n=>({lever:'e'+reviews+'-'+n,expected_effect:String(n)}))})};};\n"
+            "const runs = {run: async (k,o) => {calls.push(k); if(k==='baseline'||k==='final-measure') return {ok:true,output:JSON.stringify({status:'partial',match_percent:50,files_changed:[]})}; if(k==='checkpoint-baseline') return gate({match_percent:50,exact:false}); if(k.startsWith('reverse-')) {const m=o.task.match(/ladder rung ([a-z-]+)/), rung=m[1]; return result(rung,rung==='compiler-profile'?{coverage_complete:true}:rung==='permuter'?{coordinator_runs:1}:{});} if(k.startsWith('review-')) return o.task.includes('compiler-ceiling')?{ok:true,output:JSON.stringify({verdict:'pass',ladder_exhausted:true})}:review(); if(k==='restore-final') return {ok:true}; return review();}};\n"
+            "async function lane(){\n" + rendered + "\n}\n"
+            "lane().then(v => console.log(JSON.stringify({result:v,state:saved,calls})));\n"
+        )
+        ladder_result = json.loads(run("node", str(ladder)).stdout)
+        advances = [row["rung"] for row in ladder_result["result"]["ledger"] if row["lever"] == "ladder advance"]
+        assert advances == ["static-allocation", "compiler-profile", "permuter", "compiler-ceiling"], advances
+        assert ladder_result["calls"].count("reverse-7") == 1
+        assert len([call for call in ladder_result["calls"] if call.startswith("reverse-")]) == 9
+        assert ladder_result["result"]["status"] == "restored-ladder-exhausted"
+        improving = Path(directory) / "ladder-improving.js"
+        improving.write_text(ladder.read_text().replace("match_percent:50,files_changed:[],rung", "match_percent:rung==='compiler-profile'?60:rung==='permuter'?70:50,files_changed:[],rung"))
+        improving_result = json.loads(run("node", str(improving)).stdout)
+        improving_calls = improving_result["calls"]
+        assert sum(call.startswith("reverse-7") for call in improving_calls) == 1
+        assert sum(call.startswith("reverse-8") for call in improving_calls) == 1
+        improving_rungs = [row["rung"] for row in improving_result["result"]["ledger"] if row.get("rung") in ("compiler-profile", "permuter") and row["lever"] != "ladder advance"]
+        assert improving_rungs.count("compiler-profile") == 1 and improving_rungs.count("permuter") == 1
         state = json.loads(run("python3", str(SCRIPTS / "lane-worktree.py"), "create", "--key", key, "--selector", SELECTOR, "--allow-dirty").stdout)
         worktree = Path(state["worktree"])
         session_dir = Path(state["session_dir"])

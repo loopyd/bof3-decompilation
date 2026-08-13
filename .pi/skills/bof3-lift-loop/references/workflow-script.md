@@ -9,6 +9,8 @@ const SELECTORS = [
 if (SELECTORS.length !== 1) throw new Error("one selector required");
 const RUN_KEY = "replace-with-unique-wave-id";
 const MAX_ATTEMPTS = 20;
+const STALL_LIMIT = 3;
+const LADDER = ["clean-c", "static-allocation", "compiler-profile", "permuter", "compiler-ceiling"];
 
 const selector = SELECTORS[0];
 const laneKey = RUN_KEY + "-" + selector.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "").toLowerCase();
@@ -67,8 +69,10 @@ const save = async lane => {
 };
 
 let lane = await state.get("lane") || {
-  selector, attempt: 0, bestScore: null, status: "baseline", phase: "ready", queue: [], seen: [], ledger: []
+  selector, attempt: 0, bestScore: null, status: "baseline", phase: "ready", queue: [], seen: [], ledger: [], rung: 0, stalledQueues: 0
 };
+if (!Number.isInteger(lane.rung) || lane.rung < 0 || lane.rung >= LADDER.length) lane.rung = 0;
+if (!Number.isInteger(lane.stalledQueues) || lane.stalledQueues < 0) lane.stalledQueues = 0;
 if (lane.selector !== selector) throw new Error("mission state selector mismatch");
 if (lane.phase !== "ready") {
   const recovered = await runs.run("restore-interrupted", {
@@ -78,8 +82,13 @@ if (lane.phase !== "ready") {
   lane.phase = "ready";
   lane.status = "running";
   lane.bestScore = lane.ledger.length ? lane.ledger[0].score : lane.bestScore;
+  lane.attempt = 0;
+  lane.rung = 0;
+  lane.stalledQueues = 0;
   lane.queue = [];
-  lane.ledger.push({ attempt: lane.attempt, score: lane.bestScore, improved: false, lever: "interruption recovery", predicted: "", actual: "restored baseline checkpoint" });
+  lane.seen = [];
+  lane.ledger = lane.ledger.length ? [lane.ledger[0]] : [];
+  lane.ledger.push({ attempt: 0, score: lane.bestScore, improved: false, lever: "interruption recovery", predicted: "", actual: "restored baseline checkpoint and reset ladder state", variants: [], rung: LADDER[0] });
   await save(lane);
 }
 
@@ -103,22 +112,42 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
   lane.phase = "reverse-" + attempt;
   await save(lane);
 
+  const rung = LADDER[lane.rung];
+  const rungTask = {
+    "clean-c": "Search the current first mismatch with dependency-safe source shape, types, control flow, declarations, and lifetime changes.",
+    "static-allocation": "Stop broad spelling churn. Inspect live register lifetimes, saved-register interference, frame, calls, and residual hunks; test only hypotheses tied to that static allocation evidence.",
+    "compiler-profile": "Run bounded bin/flag-search for this selector. Test reported compiler/profile candidates and retain a profile only for a verified exact or coherent net improvement.",
+    "permuter": "Run one bounded bin/permute coordinator for this selector (60 second hard cap). Inspect and simplify its best semantic candidates; verify each retained candidate with live asm-diff.",
+    "compiler-ceiling": "Confirm prior rung evidence is exhausted. Test only one final evidence-backed residual hypothesis; otherwise return a durable compiler-ceiling diagnosis without speculative edits."
+  }[rung];
   const reverse = await runs.run("reverse-" + attempt, {
     agent: "bof3-reverse",
     task: [
-      "Move " + selector + " toward a verified 100% byte match; attempt " + attempt + "/" + MAX_ATTEMPTS + ".",
-      lane.queue.length ? "Run this complete experiment queue: " + JSON.stringify(lane.queue) : "Diagnose at least three distinct safe clean-C experiments.",
-      "This is a substantive investigation pass, not one edit: inspect live diff and source/compiler evidence, then run every queued experiment plus related safe variants before returning. Re-run live asm-diff after each variant; retain the best coherent state even when it is not yet better than the mission baseline.",
-      "Use the matching ladder and targeted static evidence when relevant. Do not stop merely because the first variant fails or revert to the mission baseline; later attempts build on this worktree state.",
-      "Preserve semantics. No git, publication, other targets, or children.",
-      "Return JSON with status, match_percent, files_changed, lever, predicted_effect, actual_effect, residual, and a compact variants_tried ledger."
+      "Move " + selector + " toward a verified 100% byte match; attempt " + attempt + "/" + MAX_ATTEMPTS + ", ladder rung " + rung + ".",
+      lane.queue.length ? "Run this complete experiment queue: " + JSON.stringify(lane.queue) : "Diagnose at least three distinct evidence-backed experiments for this rung.",
+      rungTask,
+      "This is a substantive investigation pass: inspect live diff and source/compiler evidence, run every queued experiment plus related safe variants, and re-run live asm-diff after each compiled C89 variant. Retain the best coherent state.",
+      "Preserve semantics. No git, publication, other targets, children, inline assembly, or INCLUDE_ASM.",
+      "Return JSON with status, match_percent, files_changed, lever, predicted_effect, actual_effect, residual, variants_tried, and rung. For compiler-profile also return coverage_complete; for permuter return coordinator_runs."
     ].join("\n")
   });
   if (!Number.isFinite(score(reverse))) throw new Error("reverse omitted match_percent");
 
   const liveScore = score(reverse);
+  const result = json(reverse);
+  const variants = Array.isArray(result.variants_tried) ? result.variants_tried : [];
+  const substantive = rung === "compiler-profile" ? result.coverage_complete === true
+    : rung === "permuter" ? result.coordinator_runs === 1
+    : rung === "compiler-ceiling" ? true
+    : variants.length >= 3;
+  if (String(result.rung || rung) !== rung || !substantive) throw new Error("executor did not complete active ladder rung: " + rung);
   const improved = liveScore > lane.bestScore;
-  if (improved) lane.bestScore = liveScore;
+  if (improved) {
+    lane.bestScore = liveScore;
+    lane.stalledQueues = 0;
+  } else {
+    lane.stalledQueues++;
+  }
   lane.attempt = attempt;
   lane.phase = "ready";
   lane.ledger.push({
@@ -128,9 +157,13 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
     lever: json(reverse).lever || (lane.queue[0] && lane.queue[0].lever) || "initial",
     predicted: json(reverse).predicted_effect || (lane.queue[0] && lane.queue[0].expected_effect) || "",
     actual: json(reverse).actual_effect || json(reverse).residual || "",
-    variants: json(reverse).variants_tried || []
+    variants,
+    rung
   });
   lane.queue = [];
+  const oneShotRung = rung === "compiler-profile" || rung === "permuter";
+  const rungLimit = oneShotRung || rung === "compiler-ceiling" ? 1 : STALL_LIMIT;
+  const advanceRung = oneShotRung || (!improved && lane.stalledQueues >= rungLimit);
 
   if (exact(reverse)) {
     lane.bestScore = 100;
@@ -144,22 +177,38 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
     break;
   }
 
+  const attemptResult = lane.ledger[lane.ledger.length - 1];
   let review = await runs.run("review-" + attempt, {
     agent: "bof3-review",
     task: [
-      "Review " + selector + " after attempt " + attempt + "/" + MAX_ATTEMPTS + ". No edits.",
-      "Perform a substantive evidence pass: load role context, inspect the live asm-diff and relevant source/compiler output, and check whether the executor's variants actually tested their predicted effects.",
-      "If safe to continue, return needs-fix with at least 3 distinct untried semantics-preserving experiments; use evidence first, then think outside the box.",
+      "Review " + selector + " after attempt " + attempt + "/" + MAX_ATTEMPTS + " at ladder rung " + LADDER[lane.rung] + ". No edits.",
+      "Perform a substantive evidence pass: load role context, inspect live diff and relevant source/compiler output, and verify the tested effects. Respect the active rung; do not send an exhausted rung back to broad source spelling.",
+      "If safe to continue, return needs-fix with at least 3 distinct untried semantics-preserving experiments for the active rung; use evidence first.",
       "Every experiment requires a lever and concrete expected_effect. The three must target materially different source/compiler effects, not superficial spelling variants. Safety/semantic/external blocker returns block.",
-      "Latest result: " + JSON.stringify(lane.ledger[lane.ledger.length - 1]),
+      "Latest executor result: " + JSON.stringify(attemptResult),
       "Tried experiment keys: " + JSON.stringify(lane.seen)
     ].join("\n")
   });
-  if (String(json(review).verdict || "") === "block") {
+  const reviewResult = json(review);
+  if (String(reviewResult.verdict || "") === "block") {
     lane.status = "blocked";
-    lane.blocker = json(review).findings || [];
+    lane.blocker = reviewResult.findings || [];
     await save(lane);
     break;
+  }
+  if (rung === "compiler-ceiling" && (reviewResult.ladder_exhausted === true || String(reviewResult.verdict || "") === "pass")) {
+    lane.status = "ladder-exhausted";
+    lane.ceiling = reviewResult.findings || reviewResult.residual || [];
+    await save(lane);
+    break;
+  }
+  if (advanceRung && lane.rung < LADDER.length - 1) {
+    lane.rung++;
+    lane.stalledQueues = 0;
+    lane.ledger.push({ attempt, score: liveScore, improved: false, lever: "ladder advance", predicted: "", actual: rung + " exhausted after review; advancing to " + LADDER[lane.rung], variants: [], rung: LADDER[lane.rung] });
+    lane.queue = [];
+    await save(lane);
+    continue;
   }
 
   let available = choices(review, lane.seen);
@@ -167,8 +216,8 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
     review = await runs.run("review-fallback-" + attempt, {
       agent: "bof3-review",
       task: [
-        "Build a queue of at least 3 distinct new semantics-preserving experiments for " + selector + ". No edits.",
-        "Inspect live evidence. Return needs-fix with experiments containing lever and concrete expected_effect.",
+        "Build a queue of at least 3 distinct new semantics-preserving experiments for " + selector + " at ladder rung " + LADDER[lane.rung] + ". No edits.",
+        "Inspect live evidence and respect the active rung. Return needs-fix with experiments containing lever and concrete expected_effect.",
         "Do not repeat or submit superficial variants: " + JSON.stringify(lane.seen)
       ].join("\n")
     });
@@ -202,14 +251,15 @@ const finalReview = await runs.run("final-review", {
 });
 lane.finalReview = json(finalReview);
 const rejected = String(lane.finalReview.verdict || "") === "block";
-if (rejected || (lane.finalScore <= lane.ledger[0].score && lane.finalScore < 100)) {
+const exhausted = lane.status === "ladder-exhausted";
+if (rejected || (lane.finalScore < lane.bestScore && lane.finalScore < 100) || (lane.finalScore <= lane.ledger[0].score && lane.finalScore < 100)) {
   lane.phase = "final-restore";
   await save(lane);
   const restored = await runs.run("restore-final", {
     agent: "bof3-review", task: "Report the host restore only. No edits.", gate: restore
   });
   if (!restored.ok) throw new Error("final checkpoint restore failure");
-  lane.status = rejected ? "restored-review-block" : "restored-no-improvement";
+  lane.status = rejected ? "restored-review-block" : lane.finalScore < lane.bestScore ? "restored-below-best" : exhausted ? "restored-ladder-exhausted" : "restored-no-improvement";
   lane.bestScore = lane.ledger[0].score;
 } else if (lane.finalScore === 100) {
   lane.status = "exact";
@@ -238,7 +288,7 @@ if (lane.status === "exact" || lane.status === "improved-partial") {
   });
   lane.consolidationReview = json(consolidationReview);
   const consolidationVerdict = String(lane.consolidationReview.verdict || "");
-  const approved = consolidationVerdict === "pass" || (lane.status === "improved-partial" && consolidationVerdict === "retain-improved-partial");
+  const approved = consolidationVerdict === "pass" || (lane.status === "improved-partial" && ["retain-improved-partial", "retain-as-improved-partial"].includes(consolidationVerdict));
   if (!consolidationReview.ok || !approved) lane.status = "consolidation-blocked";
   else lane.status = lane.status === "exact" ? "ready-to-integrate-exact" : "ready-to-integrate-partial";
 }
