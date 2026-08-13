@@ -152,6 +152,7 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
   }[rung];
   const reverse = await runs.run("reverse-" + attempt, {
     agent: "bof3-reverse",
+    acceptance: false,
     task: [
       "Move " + selector + " toward a verified 100% byte match; attempt " + attempt + "/" + MAX_ATTEMPTS + ", ladder rung " + rung + ".",
       lane.queue.length ? "Run this complete experiment queue: " + JSON.stringify(lane.queue) : "Diagnose at least three distinct evidence-backed experiments for this rung.",

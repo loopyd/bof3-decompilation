@@ -59,6 +59,7 @@ def main() -> int:
         assert "integrate" in result["calls"]
         assert result["calls"].count("checkpoint-baseline") == 1
         assert not any(call.startswith("restore-") for call in result["calls"])
+        assert "acceptance: false" in rendered
         ladder = Path(directory) / "ladder.js"
         ladder.write_text(
             "const saved = {}, calls = [];\n"
