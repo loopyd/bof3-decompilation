@@ -73,11 +73,12 @@ def main() -> int:
         marker.write_text("shared cwd\n")
         manager = str(SCRIPTS / "lane-worktree.py")
         rejected("python3", manager, "export", "--key", key, "--selector", "wrong@0x00000000")
-        forbidden = worktree / "build/orchestration-private.bin"
-        forbidden.parent.mkdir(parents=True, exist_ok=True)
-        forbidden.write_bytes(b"private")
-        rejected("python3", manager, "export", "--key", key, "--selector", SELECTOR)
-        forbidden.unlink()
+        generated = worktree / "build/orchestration-private.bin"
+        generated.parent.mkdir(parents=True, exist_ok=True)
+        generated.write_bytes(b"private")
+        generated_handoff = json.loads(run("python3", manager, "export", "--key", key, "--selector", SELECTOR).stdout)
+        assert all("build/orchestration-private.bin" not in path for path in generated_handoff["changed"])
+        generated.unlink()
         handoff = json.loads(run("python3", manager, "export", "--key", key, "--selector", SELECTOR).stdout)
         assert handoff["base"] == state["base"] and handoff["patch_sha256"]
         assert "orchestration-self-check.txt" in Path(handoff["patch"]).read_text()

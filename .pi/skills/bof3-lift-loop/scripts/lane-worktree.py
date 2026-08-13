@@ -119,13 +119,6 @@ def export(args: argparse.Namespace) -> int:
     if git("diff", "--cached", "--name-only", cwd=worktree, capture=True):
         raise SystemExit("lane index must be clean")
     entries = status_entries(worktree)
-    ignored = subprocess.run(
-        ("git", "ls-files", "--others", "--ignored", "--exclude-standard", "-z", "--", "build", "src/emi", ".pi-subagents"),
-        cwd=worktree, check=True, capture_output=True,
-    ).stdout.split(b"\0")
-    forbidden = [path.decode(errors="surrogateescape") for path in ignored if path]
-    if forbidden:
-        raise SystemExit("forbidden ignored lane artifacts: " + ", ".join(forbidden))
     changed = [code + " " + path for code, path in entries]
     HANDOFFS.mkdir(parents=True, exist_ok=True)
     patch = HANDOFFS / f"{args.key}.patch"

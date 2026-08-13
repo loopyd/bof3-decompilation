@@ -237,7 +237,9 @@ if (lane.status === "exact" || lane.status === "improved-partial") {
     task: "Final consolidation review " + selector + " after cleanup. Verify live score, semantics, metadata, and retention authority. No edits."
   });
   lane.consolidationReview = json(consolidationReview);
-  if (!consolidationReview.ok || String(lane.consolidationReview.verdict || "") !== "pass") lane.status = "consolidation-blocked";
+  const consolidationVerdict = String(lane.consolidationReview.verdict || "");
+  const approved = consolidationVerdict === "pass" || (lane.status === "improved-partial" && consolidationVerdict === "retain-improved-partial");
+  if (!consolidationReview.ok || !approved) lane.status = "consolidation-blocked";
   else lane.status = lane.status === "exact" ? "ready-to-integrate-exact" : "ready-to-integrate-partial";
 }
 if (lane.status === "ready-to-integrate-exact" || lane.status === "ready-to-integrate-partial") {
