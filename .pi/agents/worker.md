@@ -3,7 +3,7 @@ name: worker
 description: Execute approved implementation tasks
 model: ninerouter/ds-combo
 thinking: medium
-tools: read,grep,find,ls,bash,edit,write,contact_supervisor,memory_search,memory_remember,session_search,qmd_search,append_ledger,web_search,fetch_content,get_search_content,mcp,mcp:sqlitecloud-mcp-server,mcp:context7
+tools: read,grep,find,ls,bash,edit,write,contact_supervisor,memory_search,memory_remember,session_search,vcc_recall,append_ledger,web_search,fetch_content,get_search_content,mcp,mcp:sqlitecloud-mcp-server,mcp:context7
 systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
