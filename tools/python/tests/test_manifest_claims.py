@@ -22,7 +22,7 @@ from unittest.mock import patch
 import pytest
 
 
-from harness.analyzer import EngineIdentity, build_snapshot
+from harness.analysis.engine import EngineIdentity, build_snapshot
 from harness.commands import build as build_cmd
 from harness.domain.claims import (
     collect_manifest_source_addresses,
@@ -60,14 +60,18 @@ def _target(
 ) -> None:
     target = root / "config" / "targets" / target_id / "target.toml"
     target.parent.mkdir(parents=True, exist_ok=True)
-    text = _SLUS_TOML if target_id == "exe/slus_004_22" else (
-        'schema = "harness.target/v2"\n'
-        f'id = "{target_id}"\n'
-        'kind = "emi"\n'
-        f'source_dir = "{source_dir or f"src/{target_id}"}"\n'
-        f'binary = "out/binaries/{target_id}.bin"\n'
-        f'splat = "config/targets/{target_id}/splat.yaml"\n'
-        "load_address = 0x80100000\n"
+    text = (
+        _SLUS_TOML
+        if target_id == "exe/slus_004_22"
+        else (
+            'schema = "harness.target/v2"\n'
+            f'id = "{target_id}"\n'
+            'kind = "emi"\n'
+            f'source_dir = "{source_dir or f"src/{target_id}"}"\n'
+            f'binary = "out/binaries/{target_id}.bin"\n'
+            f'splat = "config/targets/{target_id}/splat.yaml"\n'
+            "load_address = 0x80100000\n"
+        )
     )
     target.write_text(text + claims, encoding="utf-8")
     binary = root / f"out/binaries/{target_id}.bin"
@@ -84,12 +88,10 @@ def _write_lift(root: Path, relative: str, address: int, behavior: str = "x") ->
     return source
 
 
-# -- claim enumeration: legacy fallback vs explicit claims ---------------------
+# -- claim enumeration: explicit claims required ---------------------------------
 
 
-def test_manifest_source_paths_legacy_inventory_when_unclaimed(
-    tmp_path: Path,
-) -> None:
+def test_manifest_source_paths_rejects_unclaimed_target(tmp_path: Path) -> None:
     _target(tmp_path, "exe/slus_004_22")
     legacy = tmp_path / "src/exe/slus_004_22"
     (legacy / "initState.c").parent.mkdir(parents=True)
@@ -98,11 +100,9 @@ def test_manifest_source_paths_legacy_inventory_when_unclaimed(
     (legacy / "symbols" / "psyq.c").write_text("// generated\n")
 
     manifest = load_target_manifests(tmp_path)["exe/slus_004_22"]
-    paths = manifest_source_paths(tmp_path, manifest)
-    assert paths == sorted(
-        [legacy / "initState.c", legacy / "symbols" / "psyq.c"]
-    )
     assert not manifest.has_explicit_sources
+    with pytest.raises(ValueError, match="no explicit source claims"):
+        manifest_source_paths(tmp_path, manifest)
 
 
 def test_manifest_source_paths_spans_semantic_dirs_with_claims(
@@ -163,15 +163,14 @@ def test_resolve_manifest_source_for_address_out_of_root(tmp_path: Path) -> None
     rows = collect_manifest_source_addresses(tmp_path, manifest)
     assert rows == [(claimed, 0x80161F58)]
     assert (
-        resolve_manifest_source_for_address(tmp_path, manifest, 0x80161F58)
-        == claimed
+        resolve_manifest_source_for_address(tmp_path, manifest, 0x80161F58) == claimed
     )
     assert resolve_manifest_source_for_address(tmp_path, manifest, 0x80100000) is None
 
 
-def test_owning_manifest_claim_wins_over_ancestry(tmp_path: Path) -> None:
-    # The claimed lift lives inside another manifest's source_dir: the claim,
-    # not path containment, must decide ownership.
+def test_owning_manifest_claim_owns_out_of_tree_lift(tmp_path: Path) -> None:
+    # The claimed lift lives outside its owning manifest's source_dir: the
+    # explicit claim, not path containment, must decide ownership.
     _target(tmp_path, "exe/slus_004_22")
     _target(
         tmp_path,
@@ -237,12 +236,15 @@ def test_non_canonical_or_corrupting_claim_path_rejected(
         "exe/slus_004_22",
         claims=f"sources = [{bad}]\n",
     )
-    with pytest.raises(ValueError, match="invalid sources path|non-canonical sources path"):
+    with pytest.raises(
+        ValueError, match="invalid sources path|non-canonical sources path"
+    ):
         load_target_manifests(tmp_path)
 
 
-def test_header_only_claims_keep_legacy_source_inventory(tmp_path: Path) -> None:
-    """Headers alone must not activate explicit source mode or drop sources."""
+def test_header_only_claims_rejected_without_sources(tmp_path: Path) -> None:
+    """Headers alone no longer activate explicit source mode; unclaimed
+    targets fail closed instead of falling back to the source_dir inventory."""
 
     _target(
         tmp_path,
@@ -256,9 +258,8 @@ def test_header_only_claims_keep_legacy_source_inventory(tmp_path: Path) -> None
 
     manifest = load_target_manifests(tmp_path)["exe/slus_004_22"]
     assert not manifest.has_explicit_sources
-    assert manifest_source_paths(tmp_path, manifest) == [
-        legacy / "initState.c"
-    ]
+    with pytest.raises(ValueError, match="no explicit source claims"):
+        manifest_source_paths(tmp_path, manifest)
     assert manifest_header_paths(tmp_path, manifest) == [legacy / "internal.h"]
 
 
@@ -268,7 +269,9 @@ def test_claimed_source_missing_file_rejected(tmp_path: Path) -> None:
         "exe/slus_004_22",
         claims='sources = ["src/bof3/io/missing.c"]\n',
     )
-    with pytest.raises(ValueError, match="claimed sources file missing for exe/slus_004_22"):
+    with pytest.raises(
+        ValueError, match="claimed sources file missing for exe/slus_004_22"
+    ):
         load_target_manifests(tmp_path)
 
 
@@ -288,9 +291,7 @@ def test_duplicate_address_within_target_rejected(tmp_path: Path) -> None:
     _target(
         tmp_path,
         "exe/slus_004_22",
-        claims=(
-            'sources = ["src/bof3/io/first.c", "src/bof3/io/second.c"]\n'
-        ),
+        claims=('sources = ["src/bof3/io/first.c", "src/bof3/io/second.c"]\n'),
     )
     _write_lift(tmp_path, "src/bof3/io/first.c", 0x80161F58)
     _write_lift(tmp_path, "src/bof3/io/second.c", 0x80161F58)
@@ -341,7 +342,7 @@ def test_analyzer_snapshot_resolves_claimed_out_of_root_source(
     functions = [{"offset": 0x80100000, "size": 16, "name": "func_80100000"}]
     claimed = _write_lift(tmp_path, "src/bof3/io/initState.c", 0x80100000)
 
-    with patch("harness.analyzer._run_analysis", return_value=(functions, [])):
+    with patch("harness.analysis.engine._run_analysis", return_value=(functions, [])):
         snapshot = build_snapshot(
             engine,
             binary,
@@ -363,7 +364,7 @@ def test_analyzer_snapshot_ignores_unclaimed_support_path(tmp_path: Path) -> Non
     support.parent.mkdir(parents=True, exist_ok=True)
     support.write_text("WEAK_SYMBOL_AT(x, 0x80100000);\n")
 
-    with patch("harness.analyzer._run_analysis", return_value=(functions, [])):
+    with patch("harness.analysis.engine._run_analysis", return_value=(functions, [])):
         snapshot = build_snapshot(
             engine,
             binary,
@@ -411,13 +412,17 @@ def test_target_fingerprint_includes_claim_identity(tmp_path: Path) -> None:
 
 
 def test_target_fingerprint_includes_header_only_claims(tmp_path: Path) -> None:
-    """Header-only claims change the fingerprint without enabling source mode."""
+    """A header claim changes the fingerprint without enabling source mode."""
 
     from harness.match.status_cache import target_fingerprint
 
-    _target(tmp_path, "exe/slus_004_22")
+    _target(
+        tmp_path,
+        "exe/slus_004_22",
+        claims='sources = ["src/exe/slus_004_22/boot.c"]\n',
+    )
     legacy = tmp_path / "src/exe/slus_004_22"
-    legacy.mkdir(parents=True)
+    legacy.mkdir(parents=True, exist_ok=True)
     (legacy / "boot.c").write_text("void boot(void) {}\n")
     baseline = target_fingerprint(
         tmp_path, load_target_manifests(tmp_path)["exe/slus_004_22"]
@@ -426,13 +431,16 @@ def test_target_fingerprint_includes_header_only_claims(tmp_path: Path) -> None:
     _target(
         tmp_path,
         "exe/slus_004_22",
-        claims='headers = ["src/bof3/io/extra.h"]\n',
+        claims=(
+            'sources = ["src/exe/slus_004_22/boot.c"]\n'
+            'headers = ["src/bof3/io/extra.h"]\n'
+        ),
     )
     header = tmp_path / "src/bof3/io/extra.h"
     header.parent.mkdir(parents=True)
     header.write_text("#ifndef EXTRA\n#define EXTRA\n#endif\n")
     manifest = load_target_manifests(tmp_path)["exe/slus_004_22"]
-    assert not manifest.has_explicit_sources
+    assert manifest.has_explicit_sources
     assert target_fingerprint(tmp_path, manifest) != baseline
 
 
@@ -464,13 +472,18 @@ def test_cmake_groups_multiple_claimed_sources_under_target_owner(
     legacy = tmp_path / "src/exe/slus_004_22"
     legacy.mkdir(parents=True)
     (legacy / "symbols.c").write_text("WEAK_SYMBOL_AT(x, 0x80100000);\n")
-    (legacy / "internal.h").write_text(
-        "#ifndef GUARD\n#define GUARD\n#endif\n"
-    )
+    (legacy / "internal.h").write_text("#ifndef GUARD\n#define GUARD\n#endif\n")
 
     result = subprocess.run(
-        ["cmake", "-S", str(tmp_path), "-B", str(tmp_path / "build/cmake"),
-         "-G", "Ninja"],
+        [
+            "cmake",
+            "-S",
+            str(tmp_path),
+            "-B",
+            str(tmp_path / "build/cmake"),
+            "-G",
+            "Ninja",
+        ],
         cwd=tmp_path,
         text=True,
         capture_output=True,
@@ -525,8 +538,15 @@ def test_cmake_migrated_target_excludes_unclaimed_legacy_files(
     (legacy / "unclaimedLegacy.c").write_text("void unclaimedLegacy(void) {}\n")
 
     result = subprocess.run(
-        ["cmake", "-S", str(tmp_path), "-B", str(tmp_path / "build/cmake"),
-         "-G", "Ninja"],
+        [
+            "cmake",
+            "-S",
+            str(tmp_path),
+            "-B",
+            str(tmp_path / "build/cmake"),
+            "-G",
+            "Ninja",
+        ],
         cwd=tmp_path,
         text=True,
         capture_output=True,
@@ -542,9 +562,7 @@ def test_cmake_migrated_target_excludes_unclaimed_legacy_files(
     owner_hash = hashlib.sha1(b"src/exe/slus_004_22").hexdigest()[:16]
     deps = grouped[f"target_{owner_hash}"]
     assert any(dep.endswith("build/src/bof3/io/a.o") for dep in deps)
-    assert any(
-        dep.endswith("build/src/exe/slus_004_22/symbols.o") for dep in deps
-    )
+    assert any(dep.endswith("build/src/exe/slus_004_22/symbols.o") for dep in deps)
     assert not any(dep.endswith("unclaimedLegacy.o") for dep in deps), deps
 
 

@@ -7,7 +7,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from harness.compiler_config import (
+from harness.build.compiler import (
     load_object_flags,
     load_object_compilers,
     sanitize_identifier,
@@ -54,7 +54,10 @@ class TestLoadObjectFlags:
         )
         result = load_object_flags(tmp_path)
         assert result["emi_etc_game_01_func_801D0D5C_c"] == ["-O1"]
-        assert result["emi_battle_battle_15_func_800AB760_c"] == ["-O2", "-Wa,--expand-div"]
+        assert result["emi_battle_battle_15_func_800AB760_c"] == [
+            "-O2",
+            "-Wa,--expand-div",
+        ]
 
     def test_semantic_destination_key_preserves_relocated_profile(self) -> None:
         root = Path(__file__).resolve().parents[3]
@@ -88,8 +91,7 @@ class TestLoadObjectCompilers:
         cmake = tmp_path / "config" / "compiler" / "object-flags.cmake"
         cmake.parent.mkdir(parents=True)
         cmake.write_text(
-            "set(BOF3_OBJCOMPILER_my_key gcc-a)\n"
-            "set(BOF3_OBJCOMPILER_my_key gcc-b)\n"
+            "set(BOF3_OBJCOMPILER_my_key gcc-a)\nset(BOF3_OBJCOMPILER_my_key gcc-b)\n"
         )
         with pytest.raises(ValueError, match="duplicate"):
             load_object_compilers(tmp_path)
@@ -97,34 +99,27 @@ class TestLoadObjectCompilers:
     def test_empty_value_raises(self, tmp_path: Path) -> None:
         cmake = tmp_path / "config" / "compiler" / "object-flags.cmake"
         cmake.parent.mkdir(parents=True)
-        cmake.write_text(
-            "set(BOF3_OBJCOMPILER_my_key )\n"
-        )
+        cmake.write_text("set(BOF3_OBJCOMPILER_my_key )\n")
         with pytest.raises(ValueError, match="malformed"):
             load_object_compilers(tmp_path)
 
     def test_multi_token_value_raises(self, tmp_path: Path) -> None:
         cmake = tmp_path / "config" / "compiler" / "object-flags.cmake"
         cmake.parent.mkdir(parents=True)
-        cmake.write_text(
-            "set(BOF3_OBJCOMPILER_my_key bad id!)\n"
-        )
+        cmake.write_text("set(BOF3_OBJCOMPILER_my_key bad id!)\n")
         with pytest.raises(ValueError, match="malformed"):
             load_object_compilers(tmp_path)
 
     def test_commented_line_ignored(self, tmp_path: Path) -> None:
         cmake = tmp_path / "config" / "compiler" / "object-flags.cmake"
         cmake.parent.mkdir(parents=True)
-        cmake.write_text(
-            "# set(BOF3_OBJCOMPILER_my_key gcc-a)\n"
-        )
+        cmake.write_text("# set(BOF3_OBJCOMPILER_my_key gcc-a)\n")
         assert load_object_compilers(tmp_path) == {}
 
     def test_no_compiler_entries_returns_empty(self, tmp_path: Path) -> None:
         cmake = tmp_path / "config" / "compiler" / "object-flags.cmake"
         cmake.parent.mkdir(parents=True)
         cmake.write_text(
-            "set(BOF3_OBJFLAGS_my_key -O2)\n"
-            "# BOF3_OBJCOMPILER only in a comment\n"
+            "set(BOF3_OBJFLAGS_my_key -O2)\n# BOF3_OBJCOMPILER only in a comment\n"
         )
         assert load_object_compilers(tmp_path) == {}

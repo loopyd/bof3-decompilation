@@ -19,13 +19,11 @@ def run(args: argparse.Namespace) -> int:
     manifest = load_target_manifests(layout.root).get(function.target.value)
     if manifest is None:
         raise ValueError(f"unknown target: {function.target.value}")
-    from ._lift_m2c import resolve_function
+    from ._common import resolve_function_selector
 
-    _, _, source = resolve_function(args.function)
+    _, _, source = resolve_function_selector(args.function)
     if source is None or not source.is_file():
-        raise FileNotFoundError(
-            f"lifted source does not exist for {args.function}"
-        )
+        raise FileNotFoundError(f"lifted source does not exist for {args.function}")
 
     # Resolve optional compiler variant before search.
     compiler_id = args.compiler

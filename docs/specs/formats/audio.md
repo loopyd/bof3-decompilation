@@ -17,28 +17,43 @@ banks + SEP sequences) driven by the PsyQ `libsnd`/`libspu` runtime.
 bin/psx-audio list                        # browse all 81 BGM tracks
 bin/psx-audio play BGM000                 # play by track name (auto-resolves)
 bin/psx-audio play BGMBAT02 --gain 0.7    # adjust playback/render volume
-bin/psx-audio render BGMBAT04 -o track.ogg # compressed Ogg Vorbis output
-bin/psx-audio render BGMBAT04 -o track.flac # lossless compressed output
+bin/psx-audio render BGMBAT04 -o track.ogg # Ogg output (requires vorbis/ogg/FLAC libs; see runtime requirements below)
+bin/psx-audio render BGMBAT04 -o track.flac # FLAC output (requires libFLAC.so.14; see runtime requirements below)
 bin/psx-audio render BGMBAT04 -o track.wav
-bin/psx-audio play BGM000.EMI             # play directly from EMI (zero-copy)
-bin/psx-audio play BGM000 -o out.wav      # render to WAV instead of speakers
-bin/psx-audio play VOICE.STR -c 0         # play XA voice channel 0
-bin/psx-audio render BGM000.EMI -o out.wav
-bin/psx-audio vab2sf2 BGM000.EMI -o bank.sf2
-bin/psx-audio emi-inspect BGM000.EMI
+bin/psx-audio play out/extracted/BIN/BGM/BGM000.EMI        # play directly from EMI without prior extraction
+bin/psx-audio play BGM000 -o out.wav                       # render to WAV instead of speakers
+bin/psx-audio play out/extracted/BIN/SCE_XA/VOICE.STR -c 0 # play XA voice channel 0
+bin/psx-audio render out/extracted/BIN/BGM/BGM000.EMI -o out.wav
+bin/psx-audio vab2sf2 out/extracted/BIN/BGM/BGM000.EMI -o bank.sf2
+bin/psx-audio emi-inspect out/extracted/BIN/BGM/BGM000.EMI
 bin/psx-audio psf-pack out/extracted/SLUS_004.22 -o out/audio/bof3.psflib
 bin/psx-audio psf-inspect out/audio/bof3.psflib
 bin/psx-audio psf-run out/audio/bof3.psflib -n 100000
 bin/psx-audio --examples
 ```
 
-Python wrapper (includes track browser with 81 BGM names):
+> **Runtime requirements:** the tracked audio ELF
+> (`tools/c/psx-audio/psx-audio`, dispatched by the thin `bin/psx-audio`
+> wrapper via `exec`) is an x86-64 PIE built for GNU **x86-64-v4** (ELF notes
+> require x86-64-baseline through x86-64-v4) and carries an unconditional
+> `DT_NEEDED` for `libFLAC.so.14` (plus the standard asound/vorbis/ogg/z/m/c
+> runtime). Both are load-time requirements for every subcommand — `list`,
+> WAV render, and `--help` included — so a host missing either one fails
+> with exit 127 before `main` runs. Installing `libFLAC.so.14` alone does
+> **not** unblock a host that lacks x86-64-v4 ISA support (the loader aborts with
+> “CPU ISA level is lower than required”). A
+> compatible host must provide an x86-64-v4-capable CPU **and** the
+> `libFLAC.so.14` SONAME together with the other shared libraries above.
 
-```sh
-bin/bof3-audio list                              # browse all audio
-bin/bof3-audio play BGMBAT06 -g 0.5              # render + play boss battle
-bin/bof3-audio export BGMOPN -f midi             # export to MIDI
-```
+Bare track names (`BGM000`) auto-resolve through the extracted track
+catalog; bare `.EMI`/`.STR` paths such as `BGM000.EMI` or `VOICE.STR` do
+**not** resolve — `play`, `render`, `vab2sf2`, and `emi-inspect` treat the
+argument as an existing file path, so the examples above use the generated
+extraction locations (`out/extracted/BIN/BGM/`, `out/extracted/BIN/SCE_XA/`;
+see “Generated extraction outputs” below).
+
+`bin/psx-audio` is the only supported audio surface; a previous Python wrapper
+(`bin/bof3-audio`) was removed and no longer exists.
 
 ## Audio content on disc
 
@@ -275,8 +290,8 @@ The exact path is split below that seam:
 | --- | --- | --- |
 | `psf.c` | PSF1/MiniPSF load, overlay, CRC, PC/SP, and package | Implemented and tested |
 | `psx_machine.c` | Bounded R3000 execution and PSF hardware boundary | Partial vertical slice |
-| `spu_device.c` | SPU registers, 24 voices, live ADPCM, pitch, Gaussian interpolation, ADSR, sound RAM, FIFO/DMA | Implemented except reverb, noise, modulation, and volume sweeps |
-| `render.c` | Direct SEP/VAB scheduling into `spu_device.c` | Implemented `fast` engine with 24-voice stealing and register-driven output |
+| `spu_device.c` | SPU registers, 24 voices, live ADPCM, pitch, Gaussian interpolation, ADSR, sound RAM, FIFO/DMA | Implemented (noise, pitch modulation, volume sweeps, and reverb included); register-timing exactness incomplete |
+| `render.c` | Direct SEP/VAB scheduling into `spu_device.c` | Implemented `fast` engine with 24-voice stealing; renders through the live SPU device |
 
 The machine intentionally faults on unsupported instructions, BIOS calls, and
 hardware addresses. The complete game PSF currently reaches its first CD-ROM
@@ -304,11 +319,11 @@ execution but not to an offline `fast` event scheduled on output frames.
 | 4-point, 512-entry Gaussian interpolation | Implemented | Uses the same implementation |
 | ADSR attack/decay/sustain/release | Implemented | Uses the same implementation |
 | Signed fixed voice/main volume | Implemented | Writes fixed SPU voice/main volume registers |
-| Volume sweep mode | Not implemented; sweep values currently mute | Not implemented |
+| Volume sweep mode | Implemented; sweep levels step per the sweep envelope | Implemented via the shared live device path |
 | KON, KOFF, ENDX | Implemented | Modeled as note events, not registers |
-| Pitch modulation (PMON) | Not implemented | Not implemented |
-| Noise source (NON) | Not implemented | Not implemented |
-| Per-voice and master reverb | Not implemented | Not implemented |
+| Pitch modulation (PMON) | Implemented; voice N modulates from voice N−1 | Implemented via the shared live device path |
+| Noise source (NON) | Implemented; shared noise source replaces ADPCM | Implemented via the shared live device path |
+| Per-voice and master reverb | Implemented; half-rate SPU-RAM feedback pipeline | Implemented; enabled when a tone requests reverb |
 | SPUCNT enable/mute and delayed status | Registers stored; behavior/timing incomplete | Not applicable |
 | Manual/DMA transfer FIFO timing and IRQ | Data transfer implemented; FIFO timing and IRQ incomplete | Not applicable |
 | CD/XA and external-input mixing/capture | Not implemented | Separate XA decoder; not mixed through SPU |
@@ -316,7 +331,7 @@ execution but not to an offline `fast` event scheduled on output frames.
 DuckStation explicitly zeroes the previous-block interpolation samples at key-on
 to avoid clicks in *Breath of Fire III*. Keep this as a BOF3 regression invariant.
 The fast path now decodes loop starts again with predictor and Gaussian history
-retained from the loop end instead of replaying a predecoded PCM loop.
+retained from the loop end instead of replaying a cached PCM loop.
 
 ### ADPCM decode
 
@@ -341,8 +356,10 @@ Filter coefficients:
 
 Reserved shifts 13–15 decode as shift 9; reserved filters 5–15 use zero
 coefficients. On hardware, ADPCM predictor and Gaussian sample history continue
-across loop jumps rather than resetting at the loop-start block. This is true in
-the register-driven device but not yet exact in the predecoded `fast` cache.
+across loop jumps rather than resetting at the loop-start block. Both the
+register-driven device and the `fast` renderer preserve this history because
+the renderer routes through the same live decoder; no predecoded loop cache is
+used.
 
 ### Gaussian interpolation
 
@@ -411,8 +428,10 @@ bits7-6=sustain_step, bit5=release_mode, bits4-0=release_shift.
 PMON modulates voice `n` from voice `n-1`; voice 0 cannot be modulated. NON
 replaces ADPCM with a shared hardware noise source, so `VxPitch` does not set
 noise frequency. Reverb is a half-rate SPU-RAM feedback pipeline with per-voice
-send bits and master enable/output controls. These features should be ported as
-coherent units from the hardware contract, not approximated by post-render DSP.
+send bits and master enable/output controls. These features are implemented in
+`spu_device.c` as coherent units (noise via the shared noise source, PMON from
+the previous voice output, per-voice send bits, and the half-rate reverb
+pipeline); they are not approximated by post-render DSP.
 
 ## Runtime loading
 
@@ -476,11 +495,12 @@ refresh: 60Hz
 | Direct BGM render | `spu_device_test` covers live voice looping, key-off, and pitch cap; source audit in `audio_audit.c` | It is an approximate offline SEP/VAB renderer; it does not execute the game runtime. |
 | XA decode to WAV | native `xa_test` decodes a synthetic audio sector and parses its WAV output | CD/XA is not mixed or captured through the SPU. |
 | VAB WAV/SF2 and SEP MIDI export | CLI paths are implemented in `vab.c`, `sf2.c`, `sep.c`, and `export.c` | No fixture or retail-media golden output is claimed. |
-| Ogg/FLAC output | feature-gated `ogg.c`/`flac.c` writers | Available only when their optional codec libraries are detected; no codec-output golden is claimed. |
+| Ogg/FLAC output | writers in `ogg.c`/`flac.c` (build-time feature detection) | The shipped ELF links vorbis/ogg/FLAC unconditionally (`DT_NEEDED`), so those codec libraries are mandatory load-time dependencies of every subcommand; no codec-output golden is claimed. |
 
-The SPU's reverb, noise, pitch modulation, volume sweeps, exact DMA/FIFO/IRQ
-timing, and CD/XA mixing remain unsupported as specified in the hardware table
-above; no command claims fidelity for them.
+The SPU's reverb, noise, pitch modulation, and volume sweeps are implemented
+in `spu_device.c` and used by the `fast` renderer; exact DMA/FIFO/IRQ timing and
+CD/XA mixing/capture remain unsupported, and no command claims hardware-fidelity
+timing.
 
 
 ### C tool (`tools/c/psx-audio/`)
@@ -489,7 +509,7 @@ Self-contained C11 library + CLI. Uses miniaudio for playback.
 Gaussian table and ADSR from DuckStation (hardware-verified).
 
 ```sh
-bin/psx-audio <command>           # auto-builds on first run
+bin/psx-audio <command>           # dispatches the tracked ELF in tools/c/psx-audio/
 ```
 
 | Command | Description |
@@ -513,18 +533,6 @@ execution is not a supported render mode: the bounded PSF machine is a
 separate diagnostic, and its missing game-owned scheduler/table bootstrap
 prevents it from producing audio.
 
-### Python wrapper (`tools/python/harness/`)
-
-Track browser with 81 BGM names, batch export, SF2 SoundFont generation.
-
-```sh
-bin/bof3-audio list [bgm|xa|banks]
-bin/bof3-audio info <track>
-bin/bof3-audio play <track> [-g GAIN] [-s SEQ]
-bin/bof3-audio export <track> [-f midi|sf2|wav|all]
-bin/bof3-audio export-all
-```
-
 ### ffmpeg validation
 
 ffmpeg has `adpcm_xa`, `adpcm_psx` decoders and `psxstr` demuxer for
@@ -542,18 +550,15 @@ ffmpeg -f psxstr -i wrapped_2352.str -vn output.wav
 | `tools/c/psx-audio/util.h` | Shared helpers and Gaussian table |
 | `tools/c/psx-audio/adpcm.c` | ADPCM decode core |
 | `tools/c/psx-audio/spu.c` | ADSR envelope |
-| `tools/c/psx-audio/spu_device.c` | Register-driven SPU device under construction |
+| `tools/c/psx-audio/spu_device.c` | Register-driven SPU device (live decoder, sweeps, noise, PMON, reverb) |
 | `tools/c/psx-audio/psx_machine.c` | Bounded PSF1 R3000 runtime under construction |
 | `tools/c/psx-audio/psf.c` | PSF1/MiniPSF image loader and writer |
 | `tools/c/psx-audio/render.c` | Approximate `fast` BGM renderer |
 | `tools/c/psx-audio/third_party/miniaudio.h` | Audio playback (v0.11.25) |
-| `tools/python/harness/assets/audio/` | Python decoders |
-| `tools/python/harness/commands/audio.py` | Python CLI |
 | `bin/psx-audio` | C tool wrapper |
-| `bin/bof3-audio` | Python tool wrapper |
 | `out/extracted/BIN/BGM/` | Extracted BGM archives |
 | `out/extracted/BIN/SCE_XA/` | Extracted XA streams |
-| `out/catalog/emi.json` | Full EMI entry catalog |
+| `out/extracted/BIN/**/emi.json` | Per-archive EMI entry manifests |
 
 ## Open questions
 

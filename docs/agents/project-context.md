@@ -1,7 +1,6 @@
 # BOF3 context
 
-This repository models BOF3 as independently loaded binaries, not one link
-target.
+BOF3 is modeled as independently loaded binaries, not one link target.
 
 ## Identity
 
@@ -16,46 +15,28 @@ target.
 Analyze executable images or extracted entries. Keep identical payloads or
 addresses as separate targets until relocatability is proven.
 
-## Durable facts
-
-| Fact | Owner |
-| --- | --- |
-| Binary identity and load address | `config/targets/<target>/target.toml` |
-| Segment boundaries | `config/targets/<target>/splat.yaml` |
-| Target-local symbols | `config/targets/<target>/symbols.txt` |
-| Shared SDK symbol maps | `config/sdk/psyq-{slus,logo}.txt` |
-| Reviewed Rizin annotations | `config/targets/<target>/reviewed.rz` |
-| Authored C89/declarations | `src/bof3/`, `include/bof3/` |
-| Reviewed findings | `../specs/`, `lessons.md` |
-
-Generated evidence and candidates live under `out/`; disposable, never
-durable facts. The exception is the generated PsyQ binding source
-(`psyq_source`): tracked because the build compiles it.
-Original bytes, PS-X headers, and reviewed configuration outrank analyzer
-output.
+Fact ownership (binary identity, layout, symbols, SDK maps, reviewed Rizin,
+authored lifts) is `AGENTS.md` §Ownership; generated `out/` evidence is
+disposable, never durable facts. The exception is the generated PsyQ binding
+source (`psyq_source`): tracked because the build compiles it. Original bytes,
+PS-X headers, and reviewed configuration outrank analyzer output.
 
 ## Source model
 
-- Fresh and existing lifts live under `src/bof3/<subsystem>/`. Ownership is
-  explicit: lifts, bindings, headers, and PsyQ source are claimed in
-  `config/targets/<target>/target.toml`
-  (`sources`/`support_sources`/`headers`/`psyq_source`) with `@source`/
-  `@behavior`; identity (binary, layout, symbols) stays centralized;
-  `source_dir` is only the historical Splat root.
-- Each lift is one C source plus its claimed target-private header
-  (`include/bof3/<subsystem>/`); filenames never supply address fallback.
-- Function C, local headers, maps, and Splat layouts are intentionally
-  hand-edited as reviewed evidence improves.
-- Shared declarations belong in `include/<subsystem>/` (e.g. `include/base/`,
-  `include/memory/`, `include/gpu/`, `include/battle/`) only when multiple
-  targets or an external contract require them.
-- Follow [exact duplicate groups](matching.md#exact-duplicate-groups) before
-  extracting a template; colocated wrappers stay independently manifest-owned.
-- PsyQ signatures identify objects/addresses; official headers give C
-  declarations; Rizin snapshots give callsites/xrefs. None substitutes
-  another.
-
-See [function matching](matching.md) and [tool usage](../usage.md).
+Ownership is explicit: lifts, bindings, headers, and PsyQ source are claimed
+in `config/targets/<target>/target.toml`
+(`sources`/`support_sources`/`headers`/`psyq_source`) with `@source`/
+`@behavior`; identity (binary, layout, symbols) stays centralized; `source_dir`
+is only the historical Splat root. Each lift is one C source plus its claimed
+target-private header (`include/bof3/<subsystem>/`); filenames never supply
+address fallback. Function C, local headers, maps, and Splat layouts are
+hand-edited as evidence improves. Shared declarations belong in
+`include/<subsystem>/` only when multiple targets or an external contract
+require them. Follow [exact duplicate groups](matching.md#exact-duplicate-groups)
+before extracting a template; colocated wrappers stay independently
+manifest-owned. PsyQ signatures identify objects/addresses; official headers
+give C declarations; Rizin snapshots give callsites/xrefs; none substitutes
+another.
 
 ## Repository map
 
@@ -74,5 +55,5 @@ See [function matching](matching.md) and [tool usage](../usage.md).
 | `build/` | Build products | No |
 | `toolchains/` | Tracked metadata plus mostly ignored staged tools | Mixed |
 
-Ignored paths remain available to local tools and agents. Inspect them when
-needed; do not cite them as durable facts or commit their generated contents.
+Ignored paths stay available to local tools/agents; inspect when needed;
+never cite them as durable facts or commit their generated contents.

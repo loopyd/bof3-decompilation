@@ -5,7 +5,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from ..analyzer import find_engine
+from ..analysis.engine import find_engine
 from ..io import RepoLayout
 from .base import ExecutableToolchain
 

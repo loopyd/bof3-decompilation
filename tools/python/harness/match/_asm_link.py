@@ -5,9 +5,8 @@ import subprocess
 from collections.abc import Mapping
 from pathlib import Path
 
-from ..canonical import load_target_symbols
+from ..domain.symbols import load_target_symbols, load_weak_symbol_bindings
 from ..io import RepoLayout, repo_layout
-from ..symbols import load_weak_symbol_bindings
 
 # Raw address-encoding names are exactly `func_XXXXXXXX`/`D_XXXXXXXX`;
 # overlay-prefixed variants (`SCENA16_D_*`) are banned — conflicts resolve by

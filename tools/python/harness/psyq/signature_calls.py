@@ -10,8 +10,8 @@ import tempfile
 from typing import Any, Iterable
 
 from ..domain import load_target_manifests
-from ..canonical import load_target_symbols
-from ..snapshot import read_snapshot, snapshot_path
+from ..analysis.snapshot import read_snapshot, snapshot_path
+from ..domain.symbols import load_target_symbols
 
 
 CALLS_SCHEMA = "bof3.psyq-calls/v1"

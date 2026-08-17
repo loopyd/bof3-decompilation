@@ -15,7 +15,7 @@ _MIXED_CASE_RAW_FUNCTION = re.compile(r"func_[0-9A-Fa-f]{8}\Z")
 
 
 @dataclass(frozen=True)
-class LayoutBoundary:
+class SplatBoundary:
     file_start: int
     file_end: int | None
     virtual_start: int
@@ -54,8 +54,8 @@ class LayoutBoundary:
 
 
 @dataclass(frozen=True)
-class ReviewedLayout:
-    boundaries: tuple[LayoutBoundary, ...]
+class ReviewedSplatLayout:
+    boundaries: tuple[SplatBoundary, ...]
     load_address: int
     sha256: str
 
@@ -71,7 +71,7 @@ class ReviewedLayout:
             if boundary.is_function
         )
 
-    def boundary_containing(self, address: int) -> LayoutBoundary | None:
+    def find_containing_boundary(self, address: int) -> SplatBoundary | None:
         return next(
             (
                 boundary
@@ -82,7 +82,7 @@ class ReviewedLayout:
             None,
         )
 
-    def boundary_starting_at(self, address: int) -> LayoutBoundary | None:
+    def find_boundary_at(self, address: int) -> SplatBoundary | None:
         return next(
             (
                 boundary
@@ -145,7 +145,7 @@ def _row(
     )
 
 
-def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedLayout:
+def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedSplatLayout:
     text = splat_path.read_text(encoding="utf-8")
     document = yaml.safe_load(text)
     if not isinstance(document, dict) or not isinstance(document.get("segments"), list):
@@ -182,11 +182,18 @@ def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedLayout:
                 )
             offset, kind, name, source, behavior = parsed
             starts.append(
-                (offset, segment_vram + offset - segment_start, kind, name, source, behavior)
+                (
+                    offset,
+                    segment_vram + offset - segment_start,
+                    kind,
+                    name,
+                    source,
+                    behavior,
+                )
             )
 
     starts.sort(key=lambda item: item[0])
-    boundaries: list[LayoutBoundary] = []
+    boundaries: list[SplatBoundary] = []
     for index, (
         file_start,
         virtual_start,
@@ -200,7 +207,7 @@ def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedLayout:
             virtual_start + file_end - file_start if file_end is not None else None
         )
         boundaries.append(
-            LayoutBoundary(
+            SplatBoundary(
                 file_start,
                 file_end,
                 virtual_start,
@@ -211,9 +218,9 @@ def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedLayout:
                 behavior,
             )
         )
-    return ReviewedLayout(
+    return ReviewedSplatLayout(
         tuple(boundaries), load_address, hashlib.sha256(text.encode()).hexdigest()
     )
 
 
-__all__ = ["LayoutBoundary", "ReviewedLayout", "parse_splat_layout"]
+__all__ = ["SplatBoundary", "ReviewedSplatLayout", "parse_splat_layout"]

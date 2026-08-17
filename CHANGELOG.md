@@ -1,7 +1,11 @@
 # Changelog
 
-All project changes are listed below from the Git history. Dates use each
-commit's author date.
+This file is a history snapshot ending at commit `3b90125` (2026-07-31
+11:25:31 -0700): every entry below is preserved verbatim as it was recorded.
+It is a partial snapshot of that day and is intentionally not kept current.
+For complete current history, including all commits since this snapshot, use
+`git log` (for example `git log --oneline --reverse 3b90125..`). Dates use
+each commit's author date.
 
 ## 2026-07-31
 

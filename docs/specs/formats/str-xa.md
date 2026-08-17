@@ -65,33 +65,45 @@ rescaling with an output-rate option because that can duplicate a boundary
 frame. Pad the selected XA stream by the formula above, then trim it to exactly
 `round(video_seconds * sample_rate)` samples.
 
-The extracted file is exactly `1155 * 2336` bytes. A reversible 2352-byte
-sector wrapper preserves all 1155 inner sectors and yields these measured
-streams when decoded:
+The extracted file is an exact multiple of `2336` bytes. For the pinned
+input `out/extracted/LOGO/CAPCOM30.STR` (SHA-256
+`0f9145e980e401ded21f4c315375bcb989f49b8b83582f46f4a2946dd33ff06d`),
+`bin/str-media inspect out/extracted/LOGO/CAPCOM30.STR` reports 1013
+sectors, 203 frame records (frames 1-203, no gaps, frame 203 incomplete), and
+one stereo XA stream (file 1,
+channel 1, 37800 Hz, 126 sectors, 254016 samples, 6.72 s). A reversible
+2352-byte sector wrapper preserves all inner sectors.
+`bin/str-media validate out/extracted/LOGO/CAPCOM30.STR --expected-fps 30` writes
+`out/str-media/CAPCOM30/validation.json` (schema `harness.str-validation/v1`)
+with status `pass`: 203/30 = 6.7667 s video against 6.72 s audio, delta
+0.0467 s within the 0.1067 s tolerance (two video frames or two primary XA
+audio sectors). These numbers are reproducible by running the tracked
+commands on the pinned input; the input itself is ignored disposable
+extraction state, so the numbers are generated evidence for that extraction,
+not durable corpus facts.
 
-| Measurement | Result |
-| --- | ---: |
-| Video frames | 231 |
-| Main stereo XA packets | 143 |
-| XA sample rate | 37800 Hz |
-| Decoded stereo XA duration | 7.626667 s |
-| Video duration at 30 fps (`231 / 30`) | 7.700 s |
-| Padded desktop audio duration | 7.700 s |
-| Desktop mux padding delta | 0.073333 s |
-| Desktop silence per stereo channel at 37800 Hz | 2772 samples |
-| 1155 sectors at 2x CD rate | 7.700 s |
+Earlier desktop-mux figures (231 frames, 1155 sectors, 2772 pad samples)
+have no preserved source hash, date, or artifact identity, so they are not
+reproducible and are not asserted. An unproven
+30 fps at 2x CD sector-delivery inference drawn from that older external
+sample is not attributed to any current asset and is not a game-runtime
+contract until the LOGO scheduler path at `0x801cea98` is reviewed;
+`0x801ce760` is already an exact lift
+(`initWorkAreaAndStartSubsystems`, 37/37, 148 bytes, `@status exact`), and
+its work-area-init/subsystem-start metadata does not by itself prove
+conversion timing.
 
 The naïve ffmpeg conversion reproduces the reported video-at-half-audio-speed
 symptom because its default time base is wrong for this stream. That default is
 not a canonical asset duration. The file is an exact number of extracted
 sectors, and lossless wrapping recovers both streams, so missing end padding is
-not supported as the cause.
-
-`INFERRED:` 30 fps video at 2x CD sector delivery is the strongly supported
-desktop-conversion intent: both give 7.700 seconds and differ from decoded XA
-by only 0.073333 seconds. Applying the formula above to this measured example
-yields 2772 zero samples per 37800 Hz stereo channel. This is derived output
-padding, not evidence of missing PSX source sectors. Keep the trailing mono
-stream separate rather than folding it into the main stereo track. Runtime
-intent remains unproven until the LOGO scheduler paths at `0x801ce760` and
-`0x801cea98` are reviewed.
+not supported as the cause. Padding is derived output only; the pinned
+extraction contains exactly one stereo XA stream, so there is no separate
+mono track to fold. Note
+that `bin/str-media convert` exits 0 regardless of result status: read
+`out/str-media/<stem>/conversion.json` and require `status: pass` before
+treating a conversion as valid. `out/str-media/<stem>/conversion.json`
+receipts are disposable per-run artifacts, so the reproducible contract is to
+run `bin/str-media convert` and require `status: pass` in the generated
+manifest (computing the output SHA-256 at conversion time); the passing
+source validation is not conversion acceptance.

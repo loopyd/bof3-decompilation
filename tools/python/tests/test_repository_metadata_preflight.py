@@ -25,12 +25,11 @@ from harness.domain.manifests import load_target_manifests
 from harness.domain.sources import (
     LiftMetadataError,
     SourceAddressCollision,
-    collect_source_addresses,
     expected_lift_sources,
     source_address,
 )
 from harness.domain.tags import parse_source_tag
-from harness.layout import parse_splat_layout
+from harness.domain.layout import parse_splat_layout
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -54,14 +53,17 @@ def test_repository_metadata_preflight() -> None:
             pytest.fail(f"{target}: missing source dir {source_dir}")
         expected = expected_lift_sources(layout, source_dir)
         try:
-            if manifest.has_explicit_sources:
-                from harness.domain.claims import collect_manifest_source_addresses
-
-                rows = collect_manifest_source_addresses(
-                    root, manifest, expected_lifts=expected
+            if not manifest.has_explicit_sources:
+                pytest.fail(
+                    f"{target}: target has no explicit source claims; migrate to "
+                    "manifest sources/support_sources claims (legacy source_dir "
+                    "inventory is no longer accepted)"
                 )
-            else:
-                rows = collect_source_addresses(source_dir, expected_lifts=expected)
+            from harness.domain.claims import collect_manifest_source_addresses
+
+            rows = collect_manifest_source_addresses(
+                root, manifest, expected_lifts=expected
+            )
         except SourceAddressCollision as exc:
             pytest.fail(f"{target}: duplicate address claim: {exc}")
         except LiftMetadataError as exc:
@@ -116,14 +118,8 @@ def test_repository_metadata_preflight() -> None:
 
     # Semantic filenames resolve as lifts; raw func_<ADDR> filenames resolve
     # only through their @source tag (both repaired above).
-    assert (
-        source_address(root / "src/bof3/world/func_801DFFEC.c")
-        == 0x801DFFEC
-    )
-    assert (
-        source_address(root / "src/bof3/world/func_801F36A0.c")
-        == 0x801F36A0
-    )
+    assert source_address(root / "src/bof3/world/func_801DFFEC.c") == 0x801DFFEC
+    assert source_address(root / "src/bof3/world/func_801F36A0.c") == 0x801F36A0
     assert any(path.name == "seedMenuScratch.c" for path in accepted), (
         "a reviewed semantic-named lift did not resolve"
     )

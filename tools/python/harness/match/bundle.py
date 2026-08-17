@@ -1,4 +1,8 @@
-"""Adapter artifact for the untouched asm-differ dependency."""
+"""Materialize the normalized asm-differ bundle and adapter settings.
+
+Renamed from ``asm_differ`` because the external differ tool owns
+``toolchain/asm_differ.py``; this module only writes the adapter artifact.
+"""
 
 from __future__ import annotations
 

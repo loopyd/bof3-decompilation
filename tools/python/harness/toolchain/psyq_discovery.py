@@ -1,10 +1,11 @@
-"""PsyQ SDK discovery, staging helpers, and path conventions."""
+"""PsyQ SDK discovery, staging helpers, and path conventions.
+
+Mutating a discovered input into the staged SDK layout lives in
+:mod:`.psyq_materialize`; this module only locates and classifies inputs.
+"""
 
 from __future__ import annotations
 
-import contextlib
-import shutil
-import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -17,7 +18,6 @@ from .helpers import (
 )
 from .releases import (
     archive_path_looks_valid as archive_file_looks_valid,
-    extract_archive,
 )
 
 
@@ -28,9 +28,6 @@ INCLUDE_FILE_NAMES = ("LIBGPU.H", "libgpu.h")
 
 
 LIB_FILE_NAMES = ("LIBGPU.LIB", "libgpu.lib", "libgpu.a")
-
-
-TEXT_FILE_SUFFIXES = {".c", ".cc", ".cpp", ".h", ".hpp", ".inc", ".inl", ".s", ".txt"}
 
 
 DEFAULT_PSYQ_ARCHIVE_URL = (
@@ -101,71 +98,6 @@ def find_sdk_subdir(
             return candidate
     raise FileNotFoundError(
         f"could not find {dir_name} under {source_root} with one of: {', '.join(required_files)}"
-    )
-
-
-def create_lowercase_aliases(root: Path) -> None:
-    for candidate in sorted(root.rglob("*")):
-        alias_name = candidate.name.lower()
-        if candidate.name == alias_name:
-            continue
-        alias_path = candidate.with_name(alias_name)
-        if alias_path.exists():
-            continue
-        if candidate.is_dir():
-            shutil.copytree(candidate, alias_path)
-        else:
-            shutil.copy2(candidate, alias_path)
-
-
-def should_normalize_text_file(path: Path) -> bool:
-    if path.suffix.lower() in TEXT_FILE_SUFFIXES:
-        return True
-    return path.suffix == "" and path.parent.name.lower() == "include"
-
-
-def file_uses_crlf(path: Path) -> bool:
-    return b"\r\n" in path.read_bytes()
-
-
-def normalize_text_file_newlines(path: Path) -> bool:
-    data = path.read_bytes()
-    if b"\0" in data or b"\r" not in data:
-        return False
-    normalized = data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
-    if normalized == data:
-        return False
-    path.write_bytes(normalized)
-    return True
-
-
-def list_text_files_with_crlf(root: Path) -> list[Path]:
-    offending: list[Path] = []
-    for candidate in sorted(root.rglob("*")):
-        if not candidate.is_file() or candidate.is_symlink():
-            continue
-        if not should_normalize_text_file(candidate):
-            continue
-        if file_uses_crlf(candidate):
-            offending.append(candidate)
-    return offending
-
-
-def normalize_text_tree_newlines(root: Path) -> int:
-    candidates = list_text_files_with_crlf(root)
-    return sum(1 for candidate in candidates if normalize_text_file_newlines(candidate))
-
-
-def staged_sdk_layout_exists(root: Path) -> bool:
-    return (root / "include").exists() and (root / "lib").exists()
-
-
-def original_sdk_is_ready(root: Path) -> bool:
-    libgpu_header = root / "include" / "libgpu.h"
-    return (
-        staged_sdk_layout_exists(root)
-        and libgpu_header.exists()
-        and not list_text_files_with_crlf(root)
     )
 
 
@@ -260,18 +192,6 @@ def discover_source_input(
     return None
 
 
-@contextlib.contextmanager
-def materialized_source_root(source_input: PsyqSource):
-    if source_input.kind == "tree":
-        yield source_input.path
-        return
-    with tempfile.TemporaryDirectory(prefix="harness-psyq-") as tmp_dir:
-        extraction_root = Path(tmp_dir) / "source"
-        extraction_root.mkdir(parents=True, exist_ok=True)
-        extract_archive(source_input.path, extraction_root)
-        yield extraction_root
-
-
 def find_psyq_source(
     *,
     source_root: Path | None = None,
@@ -280,3 +200,28 @@ def find_psyq_source(
 ) -> PsyqSource | None:
     psyq_version = normalize_psyq_version(version)
     return discover_source_input(source_root, archive, version=psyq_version)
+
+
+__all__ = [
+    "DEFAULT_PSYQ_ARCHIVE_URL",
+    "DEFAULT_PSYQ_CONVERTED_ARCHIVE_URL",
+    "INCLUDE_FILE_NAMES",
+    "LIB_FILE_NAMES",
+    "PsyqSource",
+    "REPO_ROOT",
+    "auto_discovery_archives",
+    "auto_discovery_roots",
+    "contains_any_file",
+    "default_private_assets_root",
+    "default_psyq_archive_url",
+    "default_psyq_converted_archive_url",
+    "discover_source_archive",
+    "discover_source_input",
+    "discover_source_root",
+    "find_psyq_source",
+    "find_sdk_subdir",
+    "psyq_archive_stem",
+    "psyq_dest",
+    "psyq_private_cache_root",
+    "source_root_looks_valid",
+]

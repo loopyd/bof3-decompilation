@@ -53,7 +53,7 @@ Review prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xA
 - Read-only git: `git diff --check`, `git diff --cached --quiet` only. Never edit lift source, headers, maps, Splat, bindings, or generated state; never mutate git/setup/spawn children. Only the lesson edit below is allowed.
 
 ## Lesson edit
-Before restoring a non-exact candidate, record durable evidence-backed cross-function findings only in `docs/specs/**/*.md` | `docs/agents/lessons.md` — smallest statement true without this selector/address/percentage/residual/dates; no speculation, per-function progress, duplicates. None → `lesson: none` + one-function-only reason. Preloaded doc text suffices.
+Before restoring a non-exact candidate, record durable evidence-backed cross-function findings only in `docs/specs/**/*.md` | `docs/agents/lessons.md` — smallest statement true without this selector/address/percentage/residual/dates; no speculation, per-function progress, duplicates. None → `lesson: none` + one-function-only reason.
 
 ## Return
 Checklist JSON + fenced acceptance report: copied IDs, actual checks, validation, risks, fresh staged-index state.

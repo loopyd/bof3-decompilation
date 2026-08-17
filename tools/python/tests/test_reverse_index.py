@@ -7,13 +7,13 @@ from pathlib import Path
 
 import pytest
 
-from harness import reverse_index
-from harness.reverse_index import index_path, rebuild
-from harness.rizin_project import prepare_target, replay_commands, status
-from harness.snapshot import (
+from harness.analysis import index as reverse_index
+from harness.analysis.index import index_path, rebuild
+from harness.analysis.project import prepare_target, replay_commands, status
+from harness.analysis.snapshot import (
     SNAPSHOT_SCHEMA,
     SnapshotFunction,
-    TargetSnapshot,
+    AnalysisSnapshot,
     snapshot_path,
     write_snapshot,
 )
@@ -48,7 +48,7 @@ def _manifest(root: Path) -> tuple[Path, Path]:
 
 
 def _snapshot(root: Path, binary: Path) -> None:
-    snapshot = TargetSnapshot(
+    snapshot = AnalysisSnapshot(
         schema=SNAPSHOT_SCHEMA,
         target=TARGET,
         engine={"name": "rizin", "version": "test"},

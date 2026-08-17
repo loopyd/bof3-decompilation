@@ -2,7 +2,7 @@
 name: scout
 description: Fast codebase reconnaissance
 model: ninerouter/qwen-combo
-thinking: off
+thinking: xhigh
 tools: read,grep,find,ls,bash,write
 systemPromptMode: replace
 inheritProjectContext: true

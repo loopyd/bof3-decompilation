@@ -52,7 +52,11 @@ def configure(root: Path) -> Path:
                         for path in inputs
                     )
                 )
-                if generated is not None and not stale and cached_home == str(root.resolve()):
+                if (
+                    generated is not None
+                    and not stale
+                    and cached_home == str(root.resolve())
+                ):
                     return build_tree
                 if stale and cached_home == str(root.resolve()):
                     break

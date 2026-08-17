@@ -18,23 +18,26 @@ from .releases import (
 from .psyq_discovery import (
     INCLUDE_FILE_NAMES,
     LIB_FILE_NAMES,
-    create_lowercase_aliases,
     default_private_assets_root,
     default_psyq_archive_url,
     default_psyq_converted_archive_url,
     discover_source_archive,
     discover_source_input,
     find_sdk_subdir,
-    materialized_source_root,
-    normalize_text_tree_newlines,
-    original_sdk_is_ready,
     psyq_dest,
     psyq_private_cache_root,
     source_root_looks_valid,
 )
+from .psyq_materialize import (
+    create_lowercase_aliases,
+    materialized_source_root,
+    normalize_text_tree_newlines,
+    original_sdk_is_ready,
+)
 
 # Official source media: headers and PsyQ .LIB archives.
 # Converted extraction: per-object .o files required by reviewed signature evidence.
+
 
 def stage_psyq_sdk(
     *,
@@ -76,6 +79,7 @@ def stage_psyq_sdk(
         )
 
     return dest_root
+
 
 def import_psyq_sdk(
     *,
@@ -141,6 +145,7 @@ def import_psyq_sdk(
         force=force,
     )
 
+
 def stage_psyq_converted_sdk(
     *,
     dest: Path | None = None,
@@ -189,6 +194,7 @@ def stage_psyq_converted_sdk(
                 dirs_exist_ok=True,
             )
     return dest_root
+
 
 class PsyqToolchain(Toolchain):
     label = "PsyQ 4.7"

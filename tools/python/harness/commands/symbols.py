@@ -11,7 +11,7 @@ from ..domain.tags import (
     RAW_SYMBOL_NAME_RE,
     parse_declaration_source_tag,
 )
-from ..canonical import (
+from ..domain.symbols import (
     format_map,
     load_map,
     load_target_symbols,
@@ -36,15 +36,15 @@ from ..domain.sources import (
     SourceAddressCollision,
     expected_lift_sources,
 )
-from ..layout import parse_splat_layout
 from ..domain import (
     FUNCTION_ID_FORMAT,
     FUNCTION_ID_HELP,
     load_target_manifests,
 )
+from ..domain.layout import parse_splat_layout
 from ._common import add_example_argument, add_root_argument, run_main
 
-from ._symbols_psyq import (
+from .symbols_psyq import (
     _root,
     _targets,
     run_dedupe,
@@ -57,6 +57,7 @@ _WEAK_BINDING = re.compile(
     r"WEAK_SYMBOL_AT\(\s*(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*,\s*"
     r"(?P<address>0x[0-9A-Fa-f]+)\s*\)"
 )
+
 
 def run_normalize(args: argparse.Namespace) -> int:
     root = _root(args)
@@ -75,6 +76,7 @@ def run_normalize(args: argparse.Namespace) -> int:
         else:
             print(f"would write {path.relative_to(root)}")
     return 1 if changed and not args.write else 0
+
 
 def run_check(args: argparse.Namespace) -> int:
     root = _root(args)
@@ -152,14 +154,10 @@ def run_check(args: argparse.Namespace) -> int:
             if top_level.is_file():
                 lenient_files.append(top_level)
         for binding in strict_files:
-            for match in _WEAK_BINDING.finditer(
-                binding.read_text(encoding="utf-8")
-            ):
+            for match in _WEAK_BINDING.finditer(binding.read_text(encoding="utf-8")):
                 address = int(match.group("address"), 0)
                 expected = by_address.get(address)
-                if expected is None or expected.canonical_name != match.group(
-                    "name"
-                ):
+                if expected is None or expected.canonical_name != match.group("name"):
                     errors.append(
                         f"binding/map drift: {binding.relative_to(root)} "
                         f"has {match.group('name')} at 0x{address:08X}"
@@ -182,21 +180,16 @@ def run_check(args: argparse.Namespace) -> int:
             if not RAW_SYMBOL_NAME_RE.fullmatch(name) and (
                 PREFIXED_RAW_NAME_RE.search(name)
             ):
-                errors.append(
-                    f"prefixed raw name: {path.relative_to(root)} has {name}"
-                )
+                errors.append(f"prefixed raw name: {path.relative_to(root)} has {name}")
         # Tracking rule: every non-address-named game symbol (SDK exempt)
         # needs a definition carrying its origin address: a lift file with a
         # matching @source tag, a tagged header declaration, or a matching
         # WEAK_SYMBOL_AT binding.
         sdk_names = {
-            s.canonical_name
-            for s in load_map(sdk_map_path(root, manifest.psyq_space))
+            s.canonical_name for s in load_map(sdk_map_path(root, manifest.psyq_space))
         }
         header = source_dir / "internal.h"
-        header_text = (
-            header.read_text(encoding="utf-8") if header.is_file() else ""
-        )
+        header_text = header.read_text(encoding="utf-8") if header.is_file() else ""
         owned = symbols
         for symbol in owned:
             name = symbol.canonical_name
@@ -235,13 +228,12 @@ def run_check(args: argparse.Namespace) -> int:
             )
     if args.target is None:
         debt = collect_naming_debt(root, manifests)
-        errors.extend(
-            naming_debt_regressions(debt, load_naming_baseline(root))
-        )
+        errors.extend(naming_debt_regressions(debt, load_naming_baseline(root)))
     if errors:
         raise ValueError("; ".join(errors))
     print("symbol maps: OK")
     return 0
+
 
 def run_bindings(args: argparse.Namespace) -> int:
     root = _root(args)
@@ -255,6 +247,7 @@ def run_bindings(args: argparse.Namespace) -> int:
         else:
             print(content, end="")
     return 0
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="symbols")
@@ -274,7 +267,7 @@ def build_parser() -> argparse.ArgumentParser:
     bindings.set_defaults(handler=run_bindings)
     psyq_bindings = sub.add_parser(
         "psyq-bindings",
-        help="generate src/<target>/symbols/psyq.c from the SDK map",
+        help="generate each target's manifest-owned psyq_source bindings from the SDK map",
     )
     psyq_bindings.add_argument("target", nargs="?")
     psyq_bindings.add_argument("--write", action="store_true")
@@ -303,8 +296,10 @@ def build_parser() -> argparse.ArgumentParser:
     dedupe.set_defaults(handler=run_dedupe)
     return parser
 
+
 def main(argv: list[str] | None = None) -> int:
     return run_main(build_parser, argv)
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

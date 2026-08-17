@@ -7,15 +7,15 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from .analyzer import EngineIdentity, build_snapshot, find_engine
-from .canonical import Symbol, load_target_symbols
-from .domain import lookup_target_manifest
-from .layout import parse_splat_layout
+from .engine import EngineIdentity, build_snapshot, find_engine
+from ..domain import lookup_target_manifest
+from ..domain.layout import parse_splat_layout
+from ..domain.symbols import MapSymbol, load_target_symbols
 from .snapshot import SNAPSHOT_SCHEMA, snapshot_path, write_snapshot
 
 
 @dataclass(frozen=True)
-class RizinTarget:
+class RizinProjectSpec:
     target: str
     binary: Path
     load_address: int
@@ -28,7 +28,7 @@ class RizinTarget:
     source_paths: tuple[Path, ...] = ()
 
 
-def _baseline(symbols: list[Symbol], roots: frozenset[int]) -> str:
+def _baseline(symbols: list[MapSymbol], roots: frozenset[int]) -> str:
     lines = [
         "e asm.arch=mips",
         "e asm.bits=32",
@@ -63,7 +63,7 @@ def replay_commands(replay: str) -> list[str]:
     ]
 
 
-def prepare_target(root: Path, target_id: str) -> RizinTarget:
+def prepare_target(root: Path, target_id: str) -> RizinProjectSpec:
     """Compose a target recipe without writing generated project files."""
 
     manifest = lookup_target_manifest(root, target_id)
@@ -94,21 +94,19 @@ def prepare_target(root: Path, target_id: str) -> RizinTarget:
     # marks the snapshot stale and forces re-analysis.
     claim_lines = "\n".join(
         f"# claim {claimed}"
-        for claimed in (
-            manifest.sources + manifest.support_sources + manifest.headers
-        )
+        for claimed in (manifest.sources + manifest.support_sources + manifest.headers)
     )
     if claim_lines:
         replay += claim_lines + "\n"
-    from .domain.registry import resolve_target
-    from .domain.sources import expected_lift_sources
+    from ..domain.registry import resolve_target
+    from ..domain.sources import expected_lift_sources
 
     expected_lifts = expected_lift_sources(layout, root / manifest.source_dir)
     try:
         resolved = resolve_target(root, manifest.id.value)
     except (FileNotFoundError, ValueError, RuntimeError):
         resolved = None
-    return RizinTarget(
+    return RizinProjectSpec(
         target=manifest.id.value,
         binary=binary,
         load_address=manifest.load_address,
@@ -122,7 +120,9 @@ def prepare_target(root: Path, target_id: str) -> RizinTarget:
     )
 
 
-def analyze_project(root: Path, target_id: str, *, timeout: int = 120) -> RizinTarget:
+def analyze_project(
+    root: Path, target_id: str, *, timeout: int = 120
+) -> RizinProjectSpec:
     target = prepare_target(root, target_id)
     engine = find_engine("rizin", root=root)
     snapshot = build_snapshot(
@@ -170,7 +170,7 @@ def status(root: Path, target_id: str) -> dict[str, object]:
     }
 
 
-def rizin_argv(target: RizinTarget, engine: EngineIdentity) -> list[str]:
+def rizin_argv(target: RizinProjectSpec, engine: EngineIdentity) -> list[str]:
     argv = [
         str(engine.executable),
         "-N",
@@ -191,7 +191,7 @@ def rizin_argv(target: RizinTarget, engine: EngineIdentity) -> list[str]:
 
 
 __all__ = [
-    "RizinTarget",
+    "RizinProjectSpec",
     "analyze_project",
     "prepare_target",
     "replay_commands",

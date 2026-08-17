@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from harness.canonical import Symbol, format_map, parse_map, weak_bindings_c
+from harness.domain.symbols import MapSymbol, format_map, parse_map, weak_bindings_c
 from harness.commands.symbols import main as symbols_main
 from harness.match._asm_link import (
     _target_map_bindings,
@@ -25,7 +25,7 @@ def test_maps_normalize_raw_data_and_function_spelling() -> None:
 
 def test_maps_normalize_and_render_weak_bindings() -> None:
     rendered = weak_bindings_c(
-        [Symbol(0x80100004, "D_80100004"), Symbol(0x80100000, "func_80100000")]
+        [MapSymbol(0x80100004, "D_80100004"), MapSymbol(0x80100000, "func_80100000")]
     )
 
     assert "WEAK_SYMBOL_AT(func_80100000, 0x80100000);" in rendered
@@ -54,38 +54,30 @@ def _write_check_target(root: Path, target: str, *, kind: str = "executable") ->
         f'binary = "out/binaries/{target}.bin"',
         f'splat = "config/targets/{target}/splat.yaml"',
         "load_address = 0x801CE000",
+        f'sources = ["src/{target}/runtime/initSelectionState.c"]',
     ]
     manifest.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    claimed = root / "src" / target / "runtime" / "initSelectionState.c"
+    claimed.parent.mkdir(parents=True, exist_ok=True)
+    if not claimed.exists():
+        claimed.write_text("void placeholder(void) {}\n", encoding="utf-8")
 
 
-def test_symbols_check_accepts_nested_lift_provenance(
-    tmp_path: Path, capsys
-) -> None:
+def test_symbols_check_accepts_nested_lift_provenance(tmp_path: Path, capsys) -> None:
     """A semantic map symbol owned by a nested @source-tagged lift passes."""
     (tmp_path / "config" / "targets" / "shared").mkdir(parents=True)
     (tmp_path / "config" / "targets" / "shared" / "symbols.txt").write_text(
         "", encoding="utf-8"
     )
     (tmp_path / "config" / "sdk").mkdir(parents=True)
-    (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text(
-        "", encoding="utf-8"
-    )
+    (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text("", encoding="utf-8")
     _write_check_target(tmp_path, "exe/keep")
     (tmp_path / "config" / "targets" / "exe" / "keep" / "symbols.txt").write_text(
         "initSelectionState = 0x80100000;\n", encoding="utf-8"
     )
-    nested = (
-        tmp_path
-        / "src"
-        / "exe"
-        / "keep"
-        / "runtime"
-        / "initSelectionState.c"
-    )
-    nested.parent.mkdir(parents=True)
-    nested.write_text(
-        "// @source 0x80100000\n// @behavior stub\n", encoding="utf-8"
-    )
+    nested = tmp_path / "src" / "exe" / "keep" / "runtime" / "initSelectionState.c"
+    nested.parent.mkdir(parents=True, exist_ok=True)
+    nested.write_text("// @source 0x80100000\n// @behavior stub\n", encoding="utf-8")
 
     code = symbols_main(["--root", str(tmp_path), "check", "exe/keep"])
     captured = capsys.readouterr()
@@ -103,25 +95,14 @@ def test_symbols_check_rejects_nested_lift_without_matching_address(
         "", encoding="utf-8"
     )
     (tmp_path / "config" / "sdk").mkdir(parents=True)
-    (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text(
-        "", encoding="utf-8"
-    )
+    (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text("", encoding="utf-8")
     _write_check_target(tmp_path, "exe/keep")
     (tmp_path / "config" / "targets" / "exe" / "keep" / "symbols.txt").write_text(
         "initSelectionState = 0x80100000;\n", encoding="utf-8"
     )
-    nested = (
-        tmp_path
-        / "src"
-        / "exe"
-        / "keep"
-        / "runtime"
-        / "initSelectionState.c"
-    )
-    nested.parent.mkdir(parents=True)
-    nested.write_text(
-        "// @source 0x80100004\n// @behavior stub\n", encoding="utf-8"
-    )
+    nested = tmp_path / "src" / "exe" / "keep" / "runtime" / "initSelectionState.c"
+    nested.parent.mkdir(parents=True, exist_ok=True)
+    nested.write_text("// @source 0x80100004\n// @behavior stub\n", encoding="utf-8")
 
     code = symbols_main(["--root", str(tmp_path), "check", "exe/keep"])
     captured = capsys.readouterr()
@@ -152,13 +133,40 @@ def test_symbols_check_target_scope(tmp_path: Path, capsys) -> None:
     map1 = tmp_path / "config" / "targets" / "exe" / "keep" / "symbols.txt"
     map1.write_text("func_80100000 = 0x80100000;\n", encoding="utf-8")
     src1 = tmp_path / "src" / "exe" / "keep"
-    src1.mkdir(parents=True)
+    src1.mkdir(parents=True, exist_ok=True)
     (src1 / "func_80100000.c").write_text(
         "// @source 0x80100000\n// @behavior stub\n", encoding="utf-8"
     )
 
     # --- Target 2: emi/battle/keep/15 (source/map drift) ---
     _write_check_target(tmp_path, "emi/battle/keep/15", kind="emi")
+    (
+        tmp_path
+        / "config"
+        / "targets"
+        / "emi"
+        / "battle"
+        / "keep"
+        / "15"
+        / "target.toml"
+    ).write_text(
+        (
+            tmp_path
+            / "config"
+            / "targets"
+            / "emi"
+            / "battle"
+            / "keep"
+            / "15"
+            / "target.toml"
+        )
+        .read_text(encoding="utf-8")
+        .replace(
+            'sources = ["src/emi/battle/keep/15/runtime/initSelectionState.c"]',
+            'sources = ["src/emi/battle/keep/15/func_80200000.c"]',
+        ),
+        encoding="utf-8",
+    )
     map2 = (
         tmp_path
         / "config"
@@ -171,7 +179,7 @@ def test_symbols_check_target_scope(tmp_path: Path, capsys) -> None:
     )
     map2.write_text("func_80200004 = 0x80200004;\n", encoding="utf-8")
     src2 = tmp_path / "src" / "emi" / "battle" / "keep" / "15"
-    src2.mkdir(parents=True)
+    src2.mkdir(parents=True, exist_ok=True)
     # func_80200000.c exists but map only has func_80200004 → drift
     (src2 / "func_80200000.c").write_text(
         "// @source 0x80200000\n// @behavior stub\n", encoding="utf-8"
@@ -273,7 +281,12 @@ def test_parse_declaration_source_tag_forms() -> None:
     assert parse_declaration_source_tag(leading, "bar") == 0x80100001
     assert parse_declaration_source_tag(split, "counter1") == 0x80149328
     assert parse_declaration_source_tag(funcdecl, "loopBody") == 0x8014ED6C
-    assert parse_declaration_source_tag("/* counter1 table */\nextern u16 counter1;\n", "counter1") is None
+    assert (
+        parse_declaration_source_tag(
+            "/* counter1 table */\nextern u16 counter1;\n", "counter1"
+        )
+        is None
+    )
 
 
 def test_prefixed_raw_names_rejected_by_check() -> None:

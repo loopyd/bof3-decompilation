@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from harness.commands.companion_check import build_report
+from harness.emi.companions import build_companion_report
 from harness.domain import load_target_manifests
 from harness.emi.catalog import build_catalog
 from harness.emi.catalog_bootstrap import materialize_reviewed_targets
@@ -240,7 +240,7 @@ def test_companion_check_allows_callers_without_companion_static_calls(
 ) -> None:
     root = _fixture_root(tmp_path)
     _layout(root, "emi/world00/area030/04", CALLER_BASE, 0, "func_801E0C20")
-    report = build_report(root, "emi/world00/area030/04@0x801E0C20")
+    report = build_companion_report(root, "emi/world00/area030/04@0x801E0C20")
 
     assert report["companions"] == []
     assert report["ready_to_lift"]
@@ -258,7 +258,7 @@ def test_companion_check_requires_boundary_map_abi_and_declaration(
         "func_801E0C20",
     )
     _layout(root, "emi/world00/area030/05", COMPANION_BASE, 12, "func_800F500C")
-    missing = build_report(root, "emi/world00/area030/04@0x801E0C20")
+    missing = build_companion_report(root, "emi/world00/area030/04@0x801E0C20")
     assert not missing["ready_to_lift"]
     assert missing["companions"][0]["abi"]["status"] == "missing"
     assert missing["companions"][0]["companion_binding"]["status"] == "missing"
@@ -306,7 +306,7 @@ def test_companion_check_requires_boundary_map_abi_and_declaration(
         + 'evidence = "reviewed callers and callee assembly"\n',
         encoding="utf-8",
     )
-    commented = build_report(root, "emi/world00/area030/04@0x801E0C20")
+    commented = build_companion_report(root, "emi/world00/area030/04@0x801E0C20")
     assert commented["companions"][0]["consumer_declaration"]["status"] == "missing"
 
     header.write_text(
@@ -317,7 +317,7 @@ def test_companion_check_requires_boundary_map_abi_and_declaration(
         "#endif\n",
         encoding="utf-8",
     )
-    ready = build_report(root, "emi/world00/area030/04@0x801E0C20")
+    ready = build_companion_report(root, "emi/world00/area030/04@0x801E0C20")
     assert ready["ready_to_lift"]
 
 

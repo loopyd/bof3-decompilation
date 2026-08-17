@@ -5,7 +5,7 @@ import shutil
 import subprocess
 from unittest.mock import patch
 
-from harness.build import configure
+from harness.build.operations import configure
 
 
 def test_configure_reuses_complete_ninja_tree(tmp_path: Path) -> None:
@@ -14,7 +14,7 @@ def test_configure_reuses_complete_ninja_tree(tmp_path: Path) -> None:
     cache.write_text(f"CMAKE_HOME_DIRECTORY:INTERNAL={tmp_path.resolve()}\n")
     (cache.parent / "build.ninja").touch()
 
-    with patch("harness.build.subprocess.run") as run:
+    with patch("harness.build.operations.subprocess.run") as run:
         assert configure(tmp_path) == cache.parent
 
     run.assert_not_called()
@@ -36,6 +36,7 @@ def test_configure_refreshes_ninja_after_manifest_source_move(tmp_path: Path) ->
     generated.touch()
     generated.touch()
     import os
+
     os.utime(generated, ns=(1, 1))
 
     assert configure(tmp_path) == build_tree
@@ -52,9 +53,7 @@ def test_configure_refreshes_ninja_with_missing_source_path(tmp_path: Path) -> N
         f"CMAKE_HOME_DIRECTORY:INTERNAL={tmp_path.resolve()}\n"
     )
     generated = build_tree / "build.ninja"
-    generated.write_text(
-        f"build old.o: cc {tmp_path.resolve()}/src/deleted.c\n"
-    )
+    generated.write_text(f"build old.o: cc {tmp_path.resolve()}/src/deleted.c\n")
 
     assert configure(tmp_path) == build_tree
     assert "src/deleted.c" not in generated.read_text()
@@ -130,7 +129,7 @@ def test_batch_build_passes_multiple_cmake_targets(
     import subprocess
     from unittest.mock import patch
 
-    from harness.build import batch_build
+    from harness.build.operations import batch_build
 
     # Prepare a cached build tree so configure() is a no-op
     cache = tmp_path / "build/cmake/CMakeCache.txt"
@@ -139,7 +138,7 @@ def test_batch_build_passes_multiple_cmake_targets(
     (cache.parent / "build.ninja").touch()
 
     with patch(
-        "harness.build.subprocess.run",
+        "harness.build.operations.subprocess.run",
         return_value=subprocess.CompletedProcess([], 0, "", ""),
     ) as run:
         batch_build(tmp_path, ["lift_aaa", "lift_bbb", "lift_ccc"])
@@ -159,7 +158,7 @@ def test_batch_build_passes_multiple_cmake_targets(
 def test_batch_build_raises_on_empty_targets(
     tmp_path: Path,
 ) -> None:
-    from harness.build import batch_build
+    from harness.build.operations import batch_build
     import pytest
 
     with pytest.raises(ValueError, match="at least one target"):

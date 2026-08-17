@@ -2,19 +2,13 @@
 
 from __future__ import annotations
 
-import argparse
 from collections import defaultdict
-from pathlib import Path
 from typing import Any
 
-from ..reverse_index import rows
+from .index import rows
 
 
-def _root(args: argparse.Namespace) -> Path:
-    return args.root.resolve()
-
-
-def _function_metrics(connection, target: str | None) -> list[dict[str, Any]]:
+def function_metrics(connection, target: str | None) -> list[dict[str, Any]]:
     where = "WHERE f.target_id = ?" if target else ""
     params = (target,) if target else ()
     payload = rows(
@@ -73,7 +67,7 @@ def _function_metrics(connection, target: str | None) -> list[dict[str, Any]]:
     return payload
 
 
-def _sccs(nodes: list[str], edges: dict[str, set[str]]) -> list[list[str]]:
+def sccs(nodes: list[str], edges: dict[str, set[str]]) -> list[list[str]]:
     """Return deterministic SCCs without depending on Python recursion depth."""
     reverse: dict[str, set[str]] = defaultdict(set)
     for caller, callees in edges.items():
@@ -115,7 +109,7 @@ def _sccs(nodes: list[str], edges: dict[str, set[str]]) -> list[list[str]]:
     return sorted(result, key=lambda component: component[0])
 
 
-def _enrich_graph(connection, metrics: list[dict[str, Any]]) -> None:
+def enrich_graph(connection, metrics: list[dict[str, Any]]) -> None:
     ids = {row["id"] for row in metrics}
     edges: dict[str, set[str]] = defaultdict(set)
     for caller, callee in connection.execute(
@@ -123,7 +117,7 @@ def _enrich_graph(connection, metrics: list[dict[str, Any]]) -> None:
     ):
         if caller in ids and callee in ids:
             edges[caller].add(callee)
-    components = _sccs(sorted(ids), edges)
+    components = sccs(sorted(ids), edges)
     component_for = {
         member: component_index
         for component_index, component in enumerate(components)
@@ -171,7 +165,7 @@ def _enrich_graph(connection, metrics: list[dict[str, Any]]) -> None:
             )
 
 
-def _dominates(left: dict[str, Any], right: dict[str, Any]) -> bool:
+def dominates(left: dict[str, Any], right: dict[str, Any]) -> bool:
     # Every Pareto dimension is emitted in the result; there is no hidden score.
     if left["metric_missing"] or right["metric_missing"]:
         return False

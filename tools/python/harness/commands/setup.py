@@ -8,7 +8,6 @@ import io
 import shutil
 import subprocess
 import tomllib
-from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -21,7 +20,13 @@ from ..toolchain import managed_toolchains
 from ..toolchain.disc import DiscToolchain, find_disc_set
 from ..toolchain.gcc_variants import check_host_compatible, load_variants
 from ..toolchain.psyq import PsyqToolchain
-from ._common import add_root_argument, run_main
+from ._common import (
+    Check,
+    add_root_argument,
+    register_check,
+    render_task,
+    run_main,
+)
 from .compile_commands import run as write_compile_commands
 
 
@@ -45,24 +50,7 @@ class SetupState:
     cue: Path | None = None
 
 
-SetupTaskRunner = Callable[[SetupState], str]
-
-
-@dataclass(frozen=True)
-class SetupTask:
-    label: str
-    run: SetupTaskRunner
-
-
-TASKS: list[SetupTask] = []
-
-
-def setup_task(label: str) -> Callable[[SetupTaskRunner], SetupTaskRunner]:
-    def register(run: SetupTaskRunner) -> SetupTaskRunner:
-        TASKS.append(SetupTask(label, run))
-        return run
-
-    return register
+TASKS: list[Check[SetupState]] = []
 
 
 def _run(command: list[str], *, cwd: Path, quiet: bool = False) -> None:
@@ -198,7 +186,7 @@ def verify_setup(root: Path) -> None:
     _run([str(root / "bin" / "emi-ex"), "--example"], cwd=root, quiet=True)
 
 
-@setup_task("submodules")
+@register_check("submodules", TASKS)
 def _submodules(state: SetupState) -> str:
     _run(
         ["git", "submodule", "update", "--init", "--recursive"],
@@ -208,7 +196,7 @@ def _submodules(state: SetupState) -> str:
     return "ready"
 
 
-@setup_task("disc media")
+@register_check("disc media", TASKS)
 def _disc(state: SetupState) -> str:
     disc = DiscToolchain(state.root)
     detail = disc.run(force=state.args.force)
@@ -216,7 +204,7 @@ def _disc(state: SetupState) -> str:
     return detail
 
 
-@setup_task("toolchain")
+@register_check("toolchain", TASKS)
 def _toolchain(state: SetupState) -> str:
     for toolchain in managed_toolchains(state.root, state.layout):
         toolchain.run(force=state.args.force)
@@ -243,27 +231,27 @@ def _toolchain(state: SetupState) -> str:
     return detail
 
 
-@setup_task("PsyQ 4.7")
+@register_check("PsyQ 4.7", TASKS)
 def _psyq(state: SetupState) -> str:
     return PsyqToolchain(
         state.layout, archive=state.args.psyq_archive, archive_url=state.args.psyq_url
     ).run(force=state.args.force)
 
 
-@setup_task("local tools")
+@register_check("local tools", TASKS)
 def _tools(state: SetupState) -> str:
     _build_local_tools(state.root)
     return "bof3-disk, emi-ex"
 
 
-@setup_task("compile commands")
+@register_check("compile commands", TASKS)
 def _compile_commands(state: SetupState) -> str:
     with contextlib.redirect_stdout(io.StringIO()):
         write_compile_commands(argparse.Namespace(root=state.root))
     return "compile_commands.json"
 
 
-@setup_task("target images")
+@register_check("target images", TASKS)
 def _images(state: SetupState) -> str:
     if state.cue is None:
         raise RuntimeError("disc media task did not provide a CUE file")
@@ -271,14 +259,10 @@ def _images(state: SetupState) -> str:
     return f"{len(load_target_manifests(state.root))} images"
 
 
-@setup_task("verification")
+@register_check("verification", TASKS)
 def _verification(state: SetupState) -> str:
     verify_setup(state.root)
     return "ready"
-
-
-def _render(status: str, label: str, detail: str) -> None:
-    print(f"[{status}] {label:<{max(len(task.label) for task in TASKS)}}  {detail}")
 
 
 def run(args: argparse.Namespace) -> int:
@@ -286,14 +270,14 @@ def run(args: argparse.Namespace) -> int:
     state = SetupState(root=root, layout=repo_layout(root), args=args)
     for task in TASKS:
         try:
-            _render("PASS", task.label, task.run(state))
+            render_task("PASS", task.label, task.run(state), TASKS)
         except (
             FileNotFoundError,
             RuntimeError,
             ValueError,
             tomllib.TOMLDecodeError,
         ) as exc:
-            _render("FAIL", task.label, str(exc).replace("\n", "; "))
+            render_task("FAIL", task.label, str(exc).replace("\n", "; "), TASKS)
             raise
     print(f"setup: {len(TASKS)}/{len(TASKS)} tasks passed")
     return 0

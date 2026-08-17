@@ -14,18 +14,23 @@ numeric form remains part of the match evidence.
 
 ## Exact promotions
 
-| Lifted use | Official declaration | Owner |
-| --- | --- | --- |
-| `SwCARD`, `HwCARD`, `HwCPU` | `kernel.h` descriptors | `src/bof3/boot/openBootEventSet.c`, `initBootDiscEvents.c` |
-| `EvSpIOE`, `EvSpTIMOUT`, `EvSpNEW`, `EvSpERROR` | `kernel.h` event specifications | `src/bof3/boot/openBootEventSet.c` |
-| `EvMdNOINTR`, `EvMdINTR`, `EvSpTRAP` | `kernel.h` event modes/specification | `src/bof3/boot/openBootEventSet.c`, `initBootDiscEvents.c` |
-| `PADstart` | `libetc.h` controller bit `1 << 11` | `src/bof3/boot/playCapcomStream.c`, `src/bof3/support/slus_slot_table_logo_str.c` |
-| `CdlSetloc` | `libcd.h` command `0x02` | `src/bof3/io/func_8014E0FC.c` |
-| `MODE_NTSC` | `libetc.h` video mode `0` | `src/bof3/boot/initBootDiscEvents.c` |
-| `CdlComplete` | `libcd.h` callback status `0x02` | `src/bof3/io/emiCdSyncCallback.c` |
+| Lifted use | Official declaration | Owner | Owner status |
+| --- | --- | --- | --- |
+| `SwCARD`, `HwCARD`, `HwCPU` | `kernel.h` descriptors | `src/bof3/boot/openBootEventSet.c`, `initBootDiscEvents.c` | exact |
+| `EvSpIOE`, `EvSpTIMOUT`, `EvSpNEW`, `EvSpERROR` | `kernel.h` event specifications | `src/bof3/boot/openBootEventSet.c` | exact |
+| `EvMdNOINTR`, `EvMdINTR`, `EvSpTRAP` | `kernel.h` event modes/specification | `src/bof3/boot/openBootEventSet.c`, `initBootDiscEvents.c` | exact |
+| `PADstart` | `libetc.h` controller bit `1 << 11` | `src/bof3/boot/playCapcomStream.c`, `src/bof3/support/slus_slot_table_logo_str.c` | exact (playCapcomStream); support source, not a lift (slot_table_logo_str) |
+| `CdlSetloc` | `libcd.h` command `0x02` | `src/bof3/io/func_8014E0FC.c` | partial (not exact) |
+| `MODE_NTSC` | `libetc.h` video mode `0` | `src/bof3/boot/initBootDiscEvents.c` | exact |
+| `CdlComplete` | `libcd.h` callback status `0x02` | `src/bof3/io/emiCdSyncCallback.c` | exact |
 
-Each of these changes is required to preserve the original instruction and
-byte match. The project wrapper [include/bof3/psyq.h](../../../include/bof3/psyq.h)
+For the **exact** owners above, adopting the official declaration was required to
+preserve the original instruction and byte match. `CdlSetloc` (`func_8014E0FC`)
+is listed because the same official constant substitution applies at the call
+site, but the owning lift is not exact; the row is not an exact promotion
+until the owner byte-matches.
+
+The project wrapper [include/bof3/psyq.h](../../../include/bof3/psyq.h)
 imports the headers; it does not redeclare their constants.
 
 `bin/harness psyq scan --all` refreshes the ignored catalog at
@@ -51,8 +56,11 @@ accesses. Their field offsets must be checked against the owning function's
 assembly before changing widths or signedness.
 
 The SLUS loader's `D_80146518` table is an exact address-backed view at
-`D_80146494 + 0x84`; it is now recorded in the target map and used by
-`func_80162230` instead of repeating the casted arithmetic.
+`D_80146494 + 0x84` and is recorded in the target map. The owned source
+(`emiCdReadyCallback`, `@source 0x80162230`, exact) binds
+`read_progress = &D_80146494` and derives the slot-size table as
+`(u32 *)(read_progress + 0x84)` without naming `D_80146518`; keep that
+arithmetic until a caller is lifted to use the mapped name.
 
 ## Deliberate discrepancies
 

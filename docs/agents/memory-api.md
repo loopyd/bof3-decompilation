@@ -1,14 +1,13 @@
 # Memory API (`include/base/` and `include/memory/`)
 
-The subsystem headers under `include/base/` and `include/memory/` are the
-only API for fixed RAM addresses, PS1 hardware registers, and scratchpad RAM
-from lifted C. Fixed-address macros are casts; they access memory only when
-their result is read or written. Put `const`/`volatile` directly on the `type`
-argument.
+`include/base/` and `include/memory/` are the only API for fixed RAM
+addresses, PS1 hardware registers, and scratchpad RAM from lifted C.
+Fixed-address macros are casts; they access memory only when their result is
+read or written. Put `const`/`volatile` directly on the `type` argument.
 
 ## Base types and matching helpers (`include/base/`)
 
-`include/base/types.h` defines `u8`..`u64`, `s8`..`s64`, `f32`, and `f64`.
+`include/base/types.h` defines `u8`..`u64`, `s8`..`s64`, `f32`, `f64`.
 `include/base/barrier.h` defines the only inline-assembly helpers allowed in
 lifted code:
 
@@ -49,12 +48,12 @@ target `symbols.c`.
   pointer; pass a function-pointer typedef as `function_type`.
 
 Use `PSX_REF(volatile u8|u16|u32, address)` for a volatile hardware register
-or unrecovered volatile fixed-RAM object. Prefer a target-local symbol and
+or unrecovered volatile fixed-RAM object; prefer a target-local symbol and
 reviewed typed field once ownership and layout are known.
 
 ## Scratchpad (`include/memory/scratchpad.h`)
 
-Scratchpad spans `0x1F800000` through `0x1F8003FF`.
+Scratchpad spans `0x1F800000`–`0x1F8003FF`.
 
 - `SPAD_BASE` and `SPAD_SIZE` describe that range.
 - `SPAD_ADDRESS(byte_offset)` gives an absolute byte address.
@@ -78,8 +77,7 @@ PSX_REF(Entity * volatile, addr)           /* volatile cell */
 PSX_REF(volatile Entity * volatile, addr)  /* both */
 ```
 
-`SPAD_PTR_SLOT(type, off)` deliberately keeps the cell non-volatile;
-qualifying `type` cannot force a cell reload. Use explicit
-`PSX_REF(type * volatile, SPAD_ADDRESS(off))` only when the original requires
-a reload per evaluation. Validate address materialization and load order with
-the owning function's live `asm-diff`/`byte-match`.
+`SPAD_PTR_SLOT(type, off)` keeps the cell non-volatile; qualifying `type`
+cannot force a cell reload. Use explicit `PSX_REF(type * volatile,
+SPAD_ADDRESS(off))` only when the original requires a reload per evaluation.
+Validate with the owning function's live `asm-diff`/`byte-match`.

@@ -2,7 +2,7 @@
 name: context-builder
 description: Build codebase context and handoff
 model: ninerouter/qwen-combo
-thinking: off
+thinking: xhigh
 tools: read,grep,find,ls,bash,write,web_search,fetch_content,get_search_content,mcp,mcp:context7
 systemPromptMode: replace
 inheritProjectContext: true

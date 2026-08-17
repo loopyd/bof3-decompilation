@@ -37,10 +37,16 @@ Retain enough information to reconstruct and audit every conversion:
 - for indexed graphics: texture mode, VRAM placement/TPage, CLUT word or source
   RAM range, UV rectangle, and the table/callsite that relates them;
 - for STR/XA: original sector order, wrapper policy, file/channel selectors,
-  decoder/version, codec options, pixel format/range, frame count, sample rate,
-  and measured packet endpoints;
-- converter command/version and output hash. Generated manifests and previews
-  belong under `out/`.
+  decoder/options, pixel format/range, frame count, sample rate, and measured
+  packet endpoints;
+- the generated `conversion.json` records the source path, the full
+  converter command line (`command`), fps, audio-padding arithmetic, ffprobe
+  inspection of source and output, output timing, and `status`; the source
+  hash is recorded as the nested `validation.source_sha256` field. It does
+  not record the converter executable version or an output hash; compute those
+  reproducibly with `ffmpeg -version | head -n 1` and
+  `sha256sum <output>.mkv` at conversion time when an audit needs them.
+  Generated manifests and previews belong under `out/`.
 
 ## Repository commands
 
@@ -64,8 +70,36 @@ without scaling or pixel-range changes.
 For every desktop mux, compute `video_seconds = frames / fps`,
 `audio_seconds = samples / rate`, and
 `pad_samples = max(0, round((video_seconds - audio_seconds) * rate))`; then
-require final durations to agree within one sample period. For the measured
-`CAPCOM30` example, `231 / 30 = 7.700` seconds, decoded stereo XA is `7.626667`
-seconds, and the formula yields 2772 zero samples per 37800 Hz channel. Record
-that as derived desktop mux padding, never as missing source sectors, and keep
-the trailing mono stream separate.
+require final durations to agree within one sample period. Two distinct
+timing attestations exist: `bin/str-media validate` checks source timing
+against a coarse tolerance (two video frames or two XA sectors) and never
+attests mux endpoint equality, while `bin/str-media convert` pads the primary
+stream to the video endpoint and then requires the muxed output to agree
+within one audio sample (`tools/python/harness/media/str_media.py`,
+`validate_str` vs `convert_str`). A passing `validate` therefore does not
+mean a desktop mux needs no padding. For the pinned `CAPCOM30.STR`
+extraction (SHA-256
+`0f9145e980e401ded21f4c315375bcb989f49b8b83582f46f4a2946dd33ff06d`),
+`bin/str-media validate out/extracted/LOGO/CAPCOM30.STR --expected-fps 30`
+passes because 203/30 = 6.7667 s
+video against 254016/37800 = 6.72 s stereo XA audio (delta 0.0467 s) is
+within its 0.1067 s tolerance, but the conversion formula requires
+`round((203/30 - 254016/37800) * 37800) = 1764` padding samples per channel
+for the primary stream; the converter computes exactly that
+(`padding_samples_per_channel` in `conversion.json`). Treat any padding as
+derived desktop output, never as missing source sectors; the pinned
+extraction contains exactly one stereo XA stream, so there is no trailing
+mono stream to keep separate. `bin/str-media convert
+out/extracted/LOGO/CAPCOM30.STR --fps 30 -o out/str-media/CAPCOM30/CAPCOM30.mkv`
+exits 0 even when its result
+status is `fail`; require `status: pass` in `out/str-media/<stem>/conversion.json`
+before treating a conversion as valid.
+
+The `out/str-media/<stem>/conversion.json` receipts are disposable per-run
+artifacts rather than durable facts. The reproducible contract is: run
+`bin/str-media convert out/extracted/LOGO/CAPCOM30.STR --fps 30 -o <out>.mkv`,
+then require `status: pass` in the generated `conversion.json` and record the
+output SHA-256 with `sha256sum` at conversion time. `bin/str-media convert`
+exits 0 even when its result status is `fail`, so CLI exit code alone is never
+conversion acceptance; a passing source validation is likewise not conversion
+acceptance.

@@ -2,7 +2,7 @@
 name: classifier
 description: Classify project tasks
 model: ninerouter/qwen-combo
-thinking: off
+thinking: xhigh
 tools:
 inheritProjectContext: false
 inheritSkills: false

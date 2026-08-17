@@ -75,14 +75,23 @@ tested explicit-source fallback before relying on broad automated flag search.
 
 The parameter roles are documented in
 [`battle-range-predicates.md`](battle-range-predicates.md): `a0` is the range
-pointer and `a1` is the extent copied into `t0`. The unresolved entry move is
-therefore an allocator/scheduling residual after the source model is correct;
-it does **not** justify reversing the parameters or adding a global macro.
+pointer and `a1` is the extent copied into `t0`. The entry move is an
+allocator/scheduling residual that is now resolved exactly: a local
+`REGISTER_PIN(u32, result, "v0")` constrains only the result local, which
+makes canonical GCC preserve the extent in `t0` and allocate the derived
+values as in the original. Live `bin/asm-diff` and `bin/byte-match` report
+19/19 instructions, 76 bytes, `func_800AF66C` (`@status exact`); see
+[`battle-range-predicates.md`](battle-range-predicates.md) for the complete
+solution record.
 
-A bounded profile experiment was run on 2026-07-30 against the strongest
-same-size clean-C permuter candidate, using its disposable compile command.
-None matched the entry register web: baseline and all accepted flag spellings
-still began `move a3,a1`, rather than original `move t0,a1; move v0,zero`.
+### Historical flag-search matrix
+
+The bounded profile experiment below was run on 2026-07-30 against the
+strongest same-size clean-C permuter candidate, using its disposable compile
+command, before the allocator pin resolved the residual. None matched the
+entry register web: baseline and all accepted flag spellings began
+`move a3,a1`, rather than original `move t0,a1; move v0,zero`. This matrix is
+dated historical evidence of the negative search, not current state.
 
 | Candidate | Size | Result |
 | --- | ---: | --- |
@@ -95,10 +104,12 @@ still began `move a3,a1`, rather than original `move t0,a1; move v0,zero`.
 | `-fno-force-mem` | 76 | Changed other registers but still began `move a3,a1` |
 | `-fno-regmove` | — | Unsupported by bundled `cc1`; reject the flag rather than infer behavior |
 
-The next clean-C step is not a wider flag search. Recover a source shape whose
-baseline assigns the extent to `t0`; only then may a single compatible profile
-flag be retested. Reject every result that changes function size, control flow,
-or fails live byte matching.
+The residual was resolved by the bounded allocator experiment described in
+[`battle-range-predicates.md`](battle-range-predicates.md): a local
+`REGISTER_PIN(u32, result, "v0")` recovered the entry register web without a
+wider flag search, a profile override, or a source-shape reversal. Reject
+any result that changes function size, control flow, or fails live byte
+matching.
 
 ## Sources
 

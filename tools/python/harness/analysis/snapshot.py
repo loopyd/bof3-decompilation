@@ -1,9 +1,4 @@
-"""Engine-independent snapshot models and validation.
-
-Migrated from ``harness.analysis.snapshot`` for subprocess-based stateless
-analysis.  Contains only portable snapshot data structures, I/O, and
-validation helpers.
-"""
+"""Engine-independent snapshot models, validation, and I/O."""
 
 from __future__ import annotations
 
@@ -119,7 +114,7 @@ class SnapshotUnresolvedCall:
 
 
 @dataclass(frozen=True)
-class TargetSnapshot:
+class AnalysisSnapshot:
     """A complete normalized snapshot for one target."""
 
     schema: str
@@ -142,7 +137,7 @@ class TargetSnapshot:
         }
 
 
-def write_snapshot(snapshot: TargetSnapshot, path: Path) -> None:
+def write_snapshot(snapshot: AnalysisSnapshot, path: Path) -> None:
     """Atomically write a snapshot to disk."""
 
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -162,7 +157,7 @@ def write_snapshot(snapshot: TargetSnapshot, path: Path) -> None:
         raise
 
 
-def read_snapshot(path: Path) -> TargetSnapshot:
+def read_snapshot(path: Path) -> AnalysisSnapshot:
     """Read and validate a snapshot from disk."""
 
     raw = json.loads(path.read_text(encoding="utf-8"))
@@ -176,7 +171,7 @@ def read_snapshot(path: Path) -> TargetSnapshot:
     unresolved = tuple(
         SnapshotUnresolvedCall(**row) for row in raw.get("unresolved_calls", [])
     )
-    return TargetSnapshot(
+    return AnalysisSnapshot(
         schema=raw["schema"],
         target=raw["target"],
         engine=raw["engine"],
@@ -192,7 +187,7 @@ def read_snapshot(path: Path) -> TargetSnapshot:
 # ---------------------------------------------------------------------------
 
 
-def validate_snapshot_identity(snapshot: TargetSnapshot) -> list[str]:
+def validate_snapshot_identity(snapshot: AnalysisSnapshot) -> list[str]:
     """Validate snapshot identity and structural integrity.
 
     Returns a list of error strings; an empty list means the snapshot is
@@ -244,7 +239,7 @@ def validate_snapshot_identity(snapshot: TargetSnapshot) -> list[str]:
 
 
 def validate_snapshot_freshness(
-    snapshot: TargetSnapshot,
+    snapshot: AnalysisSnapshot,
     *,
     expected_target: str | None = None,
     expected_engine: str | None = None,
@@ -272,7 +267,7 @@ def validate_snapshot_freshness(
 
 
 def validate_snapshot_hashes(
-    snapshot: TargetSnapshot, hashes: dict[str, str | None]
+    snapshot: AnalysisSnapshot, hashes: dict[str, str | None]
 ) -> list[str]:
     """Validate snapshot input hashes against provided hashes.
 
@@ -295,7 +290,7 @@ __all__ = [
     "SnapshotCall",
     "SnapshotFunction",
     "SnapshotUnresolvedCall",
-    "TargetSnapshot",
+    "AnalysisSnapshot",
     "read_snapshot",
     "snapshot_path",
     "write_snapshot",

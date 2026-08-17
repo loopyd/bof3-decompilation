@@ -8,7 +8,7 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from ..build import build, cmake_target_for_source
+from ..build.operations import build, cmake_target_for_source
 from ..io import write_json, RepoLayout
 from ._asm_disasm import (
     current_symbol_size,
@@ -26,13 +26,12 @@ from ._asm_resolve import (
     infer_original_size,
     object_path_for_source,
     overlay_load_address_for_source,
-    parse_source_address,
-    source_function_name,
 )
 
-from ..domain.sources import owning_manifest
+from ..domain.sources import compiled_symbol_name, owning_manifest, source_address
 
 from ._asm_diff_payload import AsmDiffRequest, build_result_payload, render_diff
+
 
 def run_build_object(
     layout: RepoLayout, source_path: Path, build_log_path: Path | None
@@ -64,6 +63,7 @@ def run_build_object(
             f"object build did not refresh {object_path}; see {build_log_path}"
         )
 
+
 def _asm_diff_resolve(repo: RepoLayout, request: AsmDiffRequest) -> dict[str, Any]:
     """Resolve and prepare every input needed by the comparison step.
 
@@ -76,11 +76,9 @@ def _asm_diff_resolve(repo: RepoLayout, request: AsmDiffRequest) -> dict[str, An
     """
     source_path = request.source_path.expanduser().resolve()
     address = (
-        request.address
-        if request.address is not None
-        else parse_source_address(source_path)
+        request.address if request.address is not None else source_address(source_path)
     )
-    function_name = source_function_name(source_path, address, repo.root)
+    function_name = compiled_symbol_name(repo.root, source_path, address)
     binary_path = (
         request.binary_path.expanduser().resolve()
         if request.binary_path is not None
@@ -127,6 +125,7 @@ def _asm_diff_resolve(repo: RepoLayout, request: AsmDiffRequest) -> dict[str, An
         "output_dir": output_dir,
     }
 
+
 def _asm_diff_compare(
     repo: RepoLayout,
     request: AsmDiffRequest,
@@ -171,9 +170,7 @@ def _asm_diff_compare(
     if request.section_placements is None:
         manifest = owning_manifest(repo.root, source_path)
         placements = (
-            ()
-            if manifest is None
-            else manifest.section_placements.get(address, ())
+            () if manifest is None else manifest.section_placements.get(address, ())
         )
     else:
         placements = request.section_placements

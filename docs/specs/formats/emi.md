@@ -72,5 +72,5 @@ Local archives and `SLUS_004.22` remain authoritative.
 
 - Tracked layouts: `config/targets/<target>/splat.yaml`
 - Tracked symbols: `config/targets/<target>/symbols.txt`
-- Generated entry catalog: `out/catalog/`
+- Generated per-archive manifests: `out/extracted/BIN/**/emi.json` (consumed in memory by `load_catalog`; `bin/emi-target` reads that in-memory catalog for its CLI and does not emit a reusable catalog)
 - Extracted entries: `out/extracted/`

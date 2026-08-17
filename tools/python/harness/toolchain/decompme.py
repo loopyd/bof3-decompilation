@@ -11,34 +11,17 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from ..c_context import public_declaration_context
-from ..domain import FunctionId, TargetManifest, load_target_manifests
+from ..domain.c_context import public_declaration_context
+from ..domain import FunctionId, TargetManifest, resolve_function
+from ..domain.sources import CompiledSymbolError
 from ..io import RepoLayout
-from ..layout import parse_splat_layout
-from ..match._asm_resolve import (
-    extract_original_bytes,
-    infer_original_size,
-    source_function_name,
-)
+from ..domain.layout import parse_splat_layout
+from ..match._asm_resolve import extract_original_bytes, infer_original_size
 
 DEFAULT_API_URL = "https://decomp.me/api"
 DEFAULT_SITE_URL = "https://decomp.me"
 _USER_AGENT = "Mozilla/5.0 (compatible; rebof3-scratchpad/1.0)"
 _IDENTIFIER = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
-_LINE_MARKER = re.compile(r'^#\s+\d+\s+"(?P<path>[^"]+)"')
-_COMMENT = re.compile(r"/\*.*?\*/|//[^\n]*", re.DOTALL)
-_STRING = re.compile(r'"(?:\\.|[^"\\])*"')
-_LOCAL_DECLARATION = re.compile(
-    r"\b[A-Za-z_][A-Za-z0-9_]*\s*\*?\s+([A-Za-z_][A-Za-z0-9_]*)"
-)
-_PIN_DECLARATION = re.compile(
-    r"\bREGISTER_PIN\s*\(\s*[^,]+,\s*([A-Za-z_][A-Za-z0-9_]*)"
-)
-_C_KEYWORDS = frozenset(
-    "auto break case char const continue default do double else enum extern float for "
-    "goto if int long register return short signed sizeof static struct switch "
-    "typedef union unsigned void volatile while".split()
-)
 _BASE_CONTEXT = """typedef signed char s8;
 typedef signed short s16;
 typedef signed int s32;
@@ -150,59 +133,16 @@ def _preprocess_source(layout: RepoLayout, source: Path) -> tuple[str, str]:
     return "\n".join(lines[:marker]) + "\n", without_directives(lines[marker + 1 :])
 
 
-def _private_identifiers(preprocessed: str) -> set[str]:
-    """Return declarations supplied by ignored PsyQ headers only."""
-    private = False
-    identifiers: set[str] = set()
-    for line in preprocessed.splitlines():
-        marker = _LINE_MARKER.match(line)
-        if marker is not None:
-            private = "/toolchains/psyq/" in marker.group("path")
-        elif private:
-            identifiers.update(_IDENTIFIER.findall(line))
-    return identifiers - _C_KEYWORDS
-
-
-def _is_reviewed_name_at(root: Path, manifest, function: FunctionId) -> bool:
-    """True when the target map binds a semantic name at the function address."""
-
-    from ..canonical import load_target_symbols
-
-    return any(
-        symbol.address == function.address
-        for symbol in load_target_symbols(root, manifest.id.value)
-    )
-
-
-def _require_reviewed_function_boundary(
-    layout: RepoLayout, function: FunctionId, manifest: TargetManifest
-) -> None:
+def _target_assembly(
+    layout: RepoLayout,
+    function: FunctionId,
+    manifest: TargetManifest,
+    source: Path,
+    name: str,
+) -> str:
     boundary = parse_splat_layout(
         layout.root / manifest.splat, manifest.load_address
-    ).boundary_starting_at(function.address)
-    if (
-        boundary is None
-        or not boundary.is_function
-        or not (
-            boundary.function_name == f"func_{function.address:08X}"
-            or _is_reviewed_name_at(layout.root, manifest, function)
-        )
-    ):
-        raise ValueError(
-            f"not a reviewed function boundary: "
-            f"{function.target.value}@0x{function.address:08X}"
-        )
-
-
-def _target_assembly(layout: RepoLayout, function: FunctionId, source: Path) -> str:
-    manifest = load_target_manifests(layout.root).get(function.target.value)
-    if manifest is None:
-        raise ValueError(f"unknown target: {function.target.value}")
-    _require_reviewed_function_boundary(layout, function, manifest)
-
-    boundary = parse_splat_layout(
-        layout.root / manifest.splat, manifest.load_address
-    ).boundary_starting_at(function.address)
+    ).find_boundary_at(function.address)
     asm_name = (
         boundary.name
         if boundary is not None and boundary.name is not None
@@ -235,12 +175,14 @@ def _target_assembly(layout: RepoLayout, function: FunctionId, source: Path) -> 
         load_address=manifest.load_address,
     )
     if len(raw) % 4:
-        raise ValueError(f"unaligned original range for {function.target.value}@0x{function.address:08X}")
+        raise ValueError(
+            f"unaligned original range for {function.target.value}@0x{function.address:08X}"
+        )
     words = "\n".join(
-        f"    .word 0x{int.from_bytes(raw[offset:offset + 4], 'little'):08X}"
+        f"    .word 0x{int.from_bytes(raw[offset : offset + 4], 'little'):08X}"
         for offset in range(0, len(raw), 4)
     )
-    return f".text\nglabel func_{function.address:08X}\n{words}\n"
+    return f".text\nglabel {name}\n{words}\n"
 
 
 class DecompMeScratchpadToolchain:
@@ -252,54 +194,26 @@ class DecompMeScratchpadToolchain:
         self.layout = layout
 
     def payload(self, function: FunctionId, *, compiler: str) -> ScratchpadPayload:
-        manifest = load_target_manifests(self.layout.root).get(function.target.value)
-        if manifest is None:
-            raise ValueError(f"unknown target: {function.target.value}")
-        _require_reviewed_function_boundary(self.layout, function, manifest)
-        from ..domain.claims import resolve_manifest_source_for_address
-
-        source = resolve_manifest_source_for_address(
-            self.layout.root, manifest, function.address
-        )
+        resolved = resolve_function(self.layout.root, function)
+        manifest = resolved.manifest
+        source = resolved.source
+        if resolved.compiled_symbol is None:
+            raise CompiledSymbolError(
+                None, function.address, "no target-local reviewed function symbol"
+            )
+        name = resolved.compiled_symbol
         if source is None:
             raise FileNotFoundError(
                 f"lifted source does not exist for {function.target.value}@0x{function.address:08X}; "
                 "a lift source must carry '@source' and '@behavior' metadata"
             )
-        # Macro-expanded source avoids target-local includes. Only retain
-        # declarations it references, never the full (possibly ignored PsyQ)
-        # preprocessor context.
+        # Macro-expanded source avoids includes. Resolve every referenced
+        # declaration and its type dependencies from the complete preprocessor
+        # stream, including SDK headers required to compile the scratch.
         preprocessed_context, source_code = _preprocess_source(self.layout, source)
-        private = _private_identifiers(preprocessed_context)
-        local_text = _STRING.sub(
-            "", _COMMENT.sub("", source.read_text(encoding="utf-8"))
-        )
-        local_identifiers = {
-            *(_LOCAL_DECLARATION.findall(local_text)),
-            *(_PIN_DECLARATION.findall(local_text)),
-        }
-        referenced_private = sorted(
-            (
-                (set(_IDENTIFIER.findall(_STRING.sub("", source_code))) & private)
-                - local_identifiers
-            )
-            - _C_KEYWORDS
-        )
-        if referenced_private:
-            raise ValueError(
-                "cannot publish source that references ignored PsyQ declarations: "
-                + ", ".join(referenced_private[:5])
-            )
         context = public_declaration_context(
             preprocessed_context, source_code, base=_BASE_CONTEXT
         )
-        context_private = set(_IDENTIFIER.findall(context)) & private
-        if context_private:
-            raise ValueError(
-                "cannot publish context that references ignored PsyQ declarations: "
-                + ", ".join(sorted(context_private)[:5])
-            )
-        name = source_function_name(source, function.address, self.layout.root)
         compiler_flags = _decompme_compiler_flags(
             _source_arguments(self.layout, source)
         )
@@ -309,7 +223,7 @@ class DecompMeScratchpadToolchain:
             compiler=_remote_compiler_id(compiler),
             compiler_flags=compiler_flags,
             diff_label=name,
-            target_asm=_target_assembly(self.layout, function, source),
+            target_asm=_target_assembly(self.layout, function, manifest, source, name),
             context=context,
             source_code=source_code,
         )

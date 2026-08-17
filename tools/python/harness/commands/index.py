@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import argparse
 
-from ..reverse_index import rebuild
+from ..analysis.index import rebuild
 from ._common import add_root_argument, run_main
 
 

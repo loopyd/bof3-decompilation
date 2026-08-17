@@ -13,7 +13,7 @@ tags: [ids, enums, flags, encoding]
 
 | Namespace | Width | Proven range/values | Owner | Status |
 | --- | ---: | --- | --- | --- |
-| item category | `u8` | `0` item, `1` weapon, `2` armor, `3` accessory, `4` key item | `GAME.EMI` dispatch | verified by `SLUS_004.22 @ 0x800df548` |
+| item category | `u8` | `0` item, `1` weapon, `2` armor, `3` accessory, `4` key item | `GAME.EMI` dispatch | verified by `SLUS_004.22 @ 0x80165d48` (`getEquipRecordBase`, exact) |
 | empty item category | `u8` | `0xff` | shop/chest/drop contexts | context-dependent |
 | item index | `u8` | `0x00`–`0x5b` | `ItemObject` | storage-verified |
 | fish item index | `u8` | `0x38`–`0x4c` | item table / Manillo records | storage-verified |
@@ -34,36 +34,20 @@ tags: [ids, enums, flags, encoding]
 | fairy prize index | array index | `0`–`0x2f` (48 records) | `FairyPrizeObject` | storage-verified |
 | Manillo trade index | pointer-map index | archive-local | Manillo records | storage-verified |
 
+Status vocabulary: `verified` means a live runtime selector (named in the
+row) reproduces the range; `storage-verified` means the range is recorded
+structural provenance from the tracked vast-violence table extraction with no
+tracked byte-verifier re-check (see [Evidence boundary](#evidence-boundary)).
+
 ## Character equipability mask
 
-The same `u8` mask layout is used by weapon, armor, and accessory records:
-
-| Bit | Mask | Character |
-| ---: | ---: | --- |
-| 0 | `0x01` | Ryu |
-| 1 | `0x02` | Nina |
-| 2 | `0x04` | Garr |
-| 3 | `0x08` | Teepo |
-| 4 | `0x10` | Rei |
-| 5 | `0x20` | Momo |
-| 6 | `0x40` | Peco |
-| 7 | `0x80` | Whelp |
+The `u8` equipability mask layout is defined in
+[encoding.md](encoding.md#equipability-1-byte); it is not duplicated here.
 
 ## Element masks and resistance slots
 
-Equipment and ability element masks use these bit positions:
-
-| Bit | Mask | Mask name |
-| ---: | ---: | --- |
-| 0 | `0x01` | Fire |
-| 1 | `0x02` | Ice |
-| 2 | `0x04` | Lightning |
-| 3 | `0x08` | Earth |
-| 4 | `0x10` | Wind |
-| 5 | `0x20` | Holy |
-| 6 | `0x40` | Psionic |
-| 7 | `0x80` | Status |
-
+Equipment and ability element mask bit positions are defined in
+[encoding.md](encoding.md#element-1-byte); they are not duplicated here.
 Monster and character resistance arrays have nine byte slots. Their labels
 use `Frost` and `Thunder` for the second and third slots; whether those are
 the display names or distinct runtime elements remains a conversion question.

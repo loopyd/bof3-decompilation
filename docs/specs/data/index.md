@@ -1,27 +1,33 @@
 ---
 type: Spec index
 title: Data tables
-description: Verified archive offsets, record layouts, and pointer maps for BOF3 game data.
+description: Recorded archive offsets, record layouts, and pointer maps for BOF3 game data (historical vast-violence catalog provenance; no tracked byte-verifier, not a current re-check).
 tags: [index]
 ---
 
 # Data tables
 
-Game data tables embedded in EMI archives. All offsets, record sizes, and
-field layouts were verified against the US `BOF3_1.1` corpus (`SLUS-00422`,
-md5 `9dd9a7c934b8b59d0ce76b0f25d18176`) with zero failures.
+Game data tables embedded in EMI archives. Offsets, record sizes, and field
+layouts below were recorded against the pinned US `BOF3_1.1` corpus
+(`SLUS-00422`, md5 `9dd9a7c934b8b59d0ce76b0f25d18176`) during the original
+vast-violence table extraction. No byte-verifier command is tracked in this
+repository, so these counts are historical provenance, not a current re-check.
 `BOF3_1.1` is the vast-violence corpus label associated with that exact hash,
 not a claim about a separately catalogued US retail revision.
 
 ## Verification
 
-- 16 fixed tables located and byte-matched
-- 7 pointer sets resolved across 200+ archives
-- 23 populated record layouts validated (the catalog's two zero-byte
+- 16 fixed tables located (tracked `tables_list_1.1.txt` coordinates)
+- 7 pointer maps resolved across the tracked `pointers_*.txt` files
+- 23 populated record layouts cataloged (the catalog's two zero-byte
   placeholders are tracked separately)
-- 0 mismatches
 
-Evidence: generated cross-target index (`bin/index` → `out/index/`)
+These totals are the tracked `third_party/references/vast-violence/tables/`
+catalog counts (25 named records minus 2 zero-byte placeholders); the corpus
+itself is a user-owned disc input. No standalone byte-verifier command is
+tracked in this repository, so no mismatch count is asserted. `bin/index` →
+`out/index/` is a query cache over Rizin snapshots and maps and is never an
+authority for binary layout.
 
 ## Location catalog
 
@@ -44,7 +50,7 @@ coordinates, not shared C declarations.
 | accessories | `ETC/GAME#0` | `0x3467c` | `0x801c9e7c` |
 | shops | `ETC/GAME#0` | `0x34a8c` | `0x801ca28c` |
 | abilities | `ETC/GAME#0` | `0x34f0c` | `0x801ca70c` |
-| level growth | `ETC/GAME#0` | `0x368dc` | `0x801cb8dc` |
+| level growth | `ETC/GAME#0` | `0x360dc` | `0x801cb8dc` |
 
 Additional fixed reward tables use archive coordinates because their runtime
 entry mapping is not shared with the GAME tables:

@@ -1,10 +1,9 @@
 # Matching playbook
 
-Use this symptom-to-lever reference only after the [function-matching
-loop](matching.md) has established the target, boundary, types, signatures, and
-calls. Classify the first live `bin/asm-diff` difference, make one structural
-change, and re-run the diff; a percentage alone is not a diagnosis.
-
+Symptom-to-lever reference after the [function-matching
+loop](matching.md) set target, boundary, types, signatures, calls. Classify the
+first live `bin/asm-diff` difference, one structural change, re-run; a
+percentage alone is not a diagnosis.
 ## Symptom-to-lever table
 
 | Diff symptom | First things to test | Section |
@@ -37,31 +36,21 @@ change, and re-run the diff; a percentage alone is not a diagnosis.
 
 ## Compiler profile
 
-Before restructuring C for a stubborn function, verify the compiler profile:
-different targets — sometimes different objects in one target — can differ in
-compiler version, optimization level, `-G` value, signed-char setting.
-
-To test a profile:
+Verify the profile before restructuring stubborn C: targets — sometimes
+objects in one target — can differ in compiler version, optimization level,
+`-G` value, signed-char setting.
 
 ```sh
 bin/flag-search TARGET@0xADDRESS
 ```
 
-Profile levers that affect matching:
-
-- Compiler version and patch level
-- Optimization level (`-O0` through `-O3`)
-- `-G` value (small-data limit)
-- `-fsigned-char` / `-funsigned-char`
-- `-mno-split-addresses`
-- `-fno-function-cse`, `-fno-schedule-insns`, `-fno-delayed-branch`
-- ASPSX version
-- `--expand-div` (division hardening)
-- COMMON-section behavior (`-fcommon`, `--use-comm-section`)
+Levers: compiler version/patch, optimization (`-O0`–`-O3`), `-G` value,
+`-fsigned-char`/`-funsigned-char`, `-mno-split-addresses`,
+`-fno-function-cse`, `-fno-schedule-insns`, `-fno-delayed-branch`, ASPSX
+version, `--expand-div`, COMMON behavior (`-fcommon`, `--use-comm-section`).
 
 When `flag-search` proves a non-canonical profile, record it in
-`config/compiler/object-flags.cmake` so the object builds with it instead of
-bridging to canonical `-O2` with C aids:
+`config/compiler/object-flags.cmake` so the object builds with it:
 
 ```cmake
 set(BOF3_OBJFLAGS_emi_etc_game_01_func_801D0D5C_c -O1)
@@ -69,48 +58,45 @@ set(BOF3_OBJFLAGS_emi_etc_game_01_func_801D0D5C_c -O1)
 
 Key: source path relative to `src/`, non-alphanumerics as underscores; value:
 a `flag-search` candidate replacing the canonical `-O` level (the
-`-G0 -funsigned-char ...` base is kept). CMake and the `compile_commands`
-generator both read it, so build and `flag-search` stay in sync. Sources without
-an entry keep canonical flags. Add an entry after `flag-search` reports an exact byte-match or a reviewed, semantically coherent net partial improvement. For a partial, record the selected flag/profile and live residual in `@status`/`@match`/`@residual`; remove it for no net improvement or semantic/type regression. Re-confirm exact results with `bin/byte-match` and partial results with live `bin/asm-diff`.
+`-G0 -funsigned-char ...` base is kept). CMake and `compile_commands` read it,
+keeping build and `flag-search` in sync; untouched sources keep canonical flags.
+Add an entry only after an exact byte-match or a reviewed net partial
+improvement (partial: record flag + live residual in
+`@status`/`@match`/`@residual`; remove for no improvement or semantic/type
+regression).
 
 ---
 
 ## Symbol representation
 
-A declaration change can flip an address calculation into a load.
+A declaration change can flip an address calculation into a load:
 
 ```c
-/* Generates lw of a pointer then offset. */
-extern Entity **g_entities;
-
-/* Generates the address of the array directly. */
-extern Entity *g_entities[];
+extern Entity **g_entities;   /* lw of a pointer then offset */
+extern Entity *g_entities[];  /* address of the array directly */
 ```
 
 ```c
-/* Generates relocation to g_state plus an offset. */
-g_state.currentMode = 4;
-
-/* Generates standalone relocation. */
+g_state.currentMode = 4;        /* relocation to g_state plus offset */
 extern s32 D_80123458;
-D_80123458 = 4;
+D_80123458 = 4;                 /* standalone relocation */
 ```
 
-**Matching lever**: when m2c or your struct produces an unexpected `lw` for what
-should be an address calculation, try the alternative declaration form.
+Unexpected `lw` where the original calculates an address → try the
+alternative declaration form.
 
 ### Extern rebinding: `addu` operand order and entry-copy theft
 
-Replace a fixed-address macro with `extern Type D_XXXXXXXX[];` plus
+Replace a fixed-address macro with `extern Type D_XXXXXXXX[];` +
 `WEAK_SYMBOL_AT`, indexed directly, when:
 
-- **`addu` operand order.** C computing `table + index` makes GCC emit its
-  own fixed-order `addu`; through the extern-array form GCC emits
-  `lw table($idx)` and `as` expands `%hi`/`%lo` with its canonical
-  `lui $at; addu $at,$at,$idx` order. Remove any macro the rebinding strands.
+- **`addu` operand order.** C computing `table + index` makes GCC emit its own
+  fixed-order `addu`; the extern-array form emits `lw table($idx)` and `as`
+  expands `%hi`/`%lo` with canonical `lui $at; addu $at,$at,$idx`; remove any
+  macro the rebinding strands.
 - **Entry-copy theft.** A macro's constant address used twice can be CSEd
   into a callee-saved register, stealing an argument's prologue entry copy;
-  the extern form emits `lui`/`lw` relocations and frees the allocator.
+  the extern form emits `lui`/`lw` relocations, freeing the allocator.
 
 ---
 
@@ -121,105 +107,81 @@ Replace a fixed-address macro with `extern Type D_XXXXXXXX[];` plus
 Inverting an `if/else` is the most common control-flow fix:
 
 ```c
-// Instead of:
 if (condition) { HandleTrue(); } else { HandleFalse(); }
-
-// Try:
 if (!condition) { HandleFalse(); } else { HandleTrue(); }
 ```
 
-This swaps `beq` ↔ `bne` and changes delay-slot scheduling and fall-through
-order. A chain inversion surviving every C spelling is gcc 2.7
-`reorder_insns` normalization: no flag disables it (`-fno-thread-jumps` is a
-proven no-op); escalate, do not churn spellings.
+Swaps `beq` ↔ `bne`, changing delay-slot scheduling and fall-through order.
+A chain inversion surviving every C spelling is gcc 2.7 `reorder_insns`
+normalization; no flag disables it (`-fno-thread-jumps` is a proven no-op).
+Escalate; do not churn spellings.
 
 ### Equal-valued branch arms
 
 GCC may range-fold grouped cases or reverse/tail-merge an `if` chain. Before
-changing shape, interpret every MIPS branch delay slot on both taken and
-fall-through paths; a delay-slot constant may be the branch comparison value or
-the selected result, making apparently equal arms semantically distinct. Try,
-one live diff each: ordered then nested/inverted equality tests; separate
-ungrouped `case` bodies with varied case/default order; duplicated arm
+changing shape, interpret every branch delay slot on both paths: a slot
+constant may be the comparison value or selected result, making equal arms
+semantically distinct. Try, one live diff each: ordered then nested/inverted
+equality tests; separate ungrouped `case` bodies; duplicated arm
 stores/returns; then shared locals or explicit labels. Keep the best semantic
-shape; stop after three non-progressing variants. Locals can alter the register
-web. Proven on `emi/world00/area027/13@0x801F3650`: correct delay-slot semantics
-made case 0 store 5, case 1 store 6, and default perform no store; separate
-cases with an explicit empty default reproduced the compiler's shared-store
-tail and byte-matched exactly.
+shape; stop after three non-progressing variants (locals can alter the
+register web). Proven on `emi/world00/area027/13@0x801F3650`: delay-slot
+semantics made case 0 store 5, case 1 store 6, default nothing; separate cases
+with an explicit empty default reproduced the shared-store tail exactly.
 
 ### Duplicate identical calls in `if/else` arms
 
 When the original computes a value directly in `$a0` in each branch and
 tail-merges into one `jal`, write `if (cond) f(x + A); else f(x + B);` — a
-ternary argument computes before the call, changing allocation and breaking
-the merge.
+ternary argument computes before the call, breaking the merge.
 
 ### Early return vs result variable
 
 ```c
-// Instead of:
-s32 result = 0;
-if (condition) { result = value; }
-return result;
-
-// Try:
-if (condition) { return value; }
-return 0;
+s32 result = 0; if (condition) { result = value; } return result;
+if (condition) { return value; } return 0;  /* may coalesce into $v0 */
 ```
-
-The second form may allow values to coalesce directly into `$v0`.
 
 ### Loop shape
 
-GCC 2.7–2.8 rotates structured loops into bottom-tested forms. These may all
+GCC 2.7–2.8 rotates structured loops into bottom-tested forms; these may all
 compile differently:
 
 ```c
 while (condition) { ... }
-
 do { ... } while (condition);
-
 for (;;) { if (!condition) break; ... }
-
-/* goto wrapper preserves a genuine top-tested CFG. */
-loop:
-    if (!condition) goto exit;
-    ...
-    goto loop;
-exit:
+loop: if (!condition) goto exit; ... goto loop; exit:  /* top-tested CFG */
 ```
 
-**Do not automatically clean up a matched `goto` into a loop.** The loop
-form that produces identical instruction bytes is the correct form, regardless
-of modern taste.
+**Do not clean up a matched `goto` into a loop**; the form that produces
+identical instruction bytes is correct.
 
-A `do { ... } while` wrapper also anchors loop-body scheduling when the
+A `do { ... } while` wrapper anchors loop-body scheduling when the
 `for`/`while` rotation drifts. When the original preheader materializes
 invariants late (`la` chains plus a `move` copying an entry pointer), assign
-them *inside* the loop body: `loop.c` hoists them as late-created pseudos,
-reproducing the preheader order and the entry copy; hoisting in source before
-the loop flips `addu` operand order and drops the copy.
+them *inside* the loop body; `loop.c` hoists them as late-created pseudos,
+reproducing the preheader order and entry copy — hoisting before the loop
+flips `addu` order and drops the copy.
 
 ---
 
 ## Volatility
 
-`volatile` is a scheduling constraint, not free documentation. Add it only
-with asynchronous/hardware-mutation evidence (lessons.md); on plain RAM
-globals it is the most common partial-lift root cause. Levers:
+`volatile` is a scheduling constraint, not documentation; add it only with
+asynchronous/hardware-mutation evidence (lessons.md). On plain RAM globals it
+is the most common partial-lift root cause. Levers:
 
 - A volatile store never moves into a jump delay slot; if the original sinks
   a store there and yours sits after a `nop`, drop the unjustified qualifier.
 - A volatile pointee on a narrow signed global can force `lbu` + manual
   sign-extension where the original has one `lb`; a local non-volatile view
-  `*(s8*)&x` restores it. Check declared type width/signedness first.
+  `*(s8*)&x` restores it.
 - A volatile pointer *cell* (`Type * volatile`) forces a per-evaluation
   reload without constraining the pointee — the sanctioned form when the
   original reloads a shared cursor.
-- Evidenced exception: a view `*((volatile T*)SYM + n)` can pin an
-  original-proven store-before-volatile-store order.
-
+- Evidenced exception: `*((volatile T*)SYM + n)` can pin an original-proven
+  store-before-volatile-store order.
 ---
 
 ## `MATCHING_AID` comments
@@ -232,22 +194,15 @@ live `bin/byte-match` was exact. Never retain an aid on a percentage
 improvement.
 
 ```c
-/*
- * MATCHING_AID:
- * This guard produces the li $t2,2 that feeds the next comparison.
- * Both branches are identical; the condition must remain to keep $t2 live
- * and $a3 holding count. Remove when $t2 allocation is understood.
- */
-if (count == 2) {
-    flags |= 0x20;
-} else {
-    flags |= 0x20;
-}
+/* MATCHING_AID: produces the li $t2,2 feeding the next comparison; both
+ * branches are identical; the condition keeps $t2 live and $a3 holding count.
+ * Remove when $t2 allocation is understood. */
+if (count == 2) { flags |= 0x20; } else { flags |= 0x20; }
 ```
 
-Do not mark obvious workarounds (evidenced `barrier()` ordering is
-covered by [Volatility](#volatility)). Reserve `MATCHING_AID` for shape
-decisions opaque to a reader without the matching diff.
+Do not mark obvious workarounds (evidenced `barrier()` ordering is in
+[Volatility](#volatility)); reserve `MATCHING_AID` for shape decisions opaque
+to readers without the matching diff.
 
 ---
 
@@ -256,14 +211,8 @@ decisions opaque to a reader without the matching diff.
 ### Pointer hoist
 
 ```c
-/* Instead of: */
-value = (*table)[index];
-other = (*table)[otherIndex];
-
-/* Try: */
-Entry *entries = *table;
-value = entries[index];
-other = entries[otherIndex];
+value = (*table)[index];          other = (*table)[otherIndex];
+Entry *entries = *table;          value = entries[index]; other = entries[otherIndex];
 ```
 
 Hoisting can free the allocator to place unrelated values in the required
@@ -272,133 +221,106 @@ register.
 ### Expression splitting
 
 ```c
-/* Instead of: */
 result = base[index].value + offset;
-
-/* Try: */
-Entry *entry = &base[index];
-s32 value = entry->value;
-result = value + offset;
+Entry *entry = &base[index]; s32 value = entry->value; result = value + offset;
 ```
 
-Or collapse if the original keeps everything in one register.
+Collapse instead if the original keeps everything in one register.
 
 ### Named constant reuse
 
 ```c
-/* Instead of: */
-one = 1;
-if (value == 1) {
-
-/* Try: */
-one = 1;
-if (value == one) {
+one = 1; if (value == 1) {
+one = 1; if (value == one) {
 ```
 
 GCC may reuse the register already holding `one`.
 
 ### Per-evaluation reload via fresh locals
 
-Re-read a global cursor per case (`case A: f(*table);`) instead of caching it
-when the original reloads per region — fresh reads reproduce the original's
-per-region reload registers (`a0` in one case, `v0` in another).
+Re-read a global cursor per case (`case A: f(*table);`) when the original
+reloads per region — fresh reads reproduce its per-region reload registers.
 
 ### Force global read/store order with a local
 
 m2c reorders independent global accesses (`flag = 2; counter += 0x14;` may
-emit the `sb` before the `lhu`). Pin the original order with a local:
-`count = counter; flag = 2; counter = (u16)(count + 0x14);`. Keep the
-narrow-width cast so the store width matches.
+emit `sb` before `lhu`). Pin the original order with a local:
+`count = counter; flag = 2; counter = (u16)(count + 0x14);`.
 
 ### Induction variable
 
 ```c
-/* These may allocate differently: */
 for (entry = entries; entry < end; entry++) { ... }
-
-for (i = 0; i < count; i++) {
-    entry = &entries[i];
-    ...
-}
+for (i = 0; i < count; i++) { entry = &entries[i]; ... }
 ```
 
-Compare the induction-variable structure in the original assembly.
+These may allocate differently; compare the induction-variable structure in
+the original assembly.
 
 ### Allocator-sensitive complex functions
 
-Classify a same-CFG near match as allocator-sensitive when separate probes such
-as adding one narrow temporary, splitting one chained assignment, or removing
-one existing constraint cause spills, frame/size changes, saved-register role
-changes, a prologue-first mismatch, or a broad score collapse. Record each
-probe; it diagnoses the search neighborhood but does not authorize retaining a
-non-exact allocator aid.
+Classify a same-CFG near match as allocator-sensitive when separate probes
+(one narrow temporary, one split chained assignment, one removed constraint)
+cause spills, frame/size changes, saved-register role changes, a
+prologue-first mismatch, or a broad score collapse. Probes diagnose the search
+neighborhood but do not authorize retaining a non-exact allocator aid.
 
 For a classified function:
 
-1. Search the first mismatch hunk before later residuals: move existing
-   statements across adjacent dependency-safe lifetime boundaries before
-   changing expressions or value lifetimes. Run live `asm-diff` after every
-   variant; continue outward while the first-mismatch frontier advances.
-2. Classify results as `retained-improvement`, `retained-frontier` (same score,
+1. Work the first mismatch hunk first: move existing statements across
+   adjacent dependency-safe lifetime boundaries before changing expressions.
+   Run live `asm-diff` after every variant; continue while the first-mismatch
+   frontier advances.
+2. Classify as `retained-improvement`, `retained-frontier` (same score,
    later first mismatch), `reverted-neutral`, `reverted-local-regression`, or
-   `reverted-structural-regression`. Rank candidates lexicographically: exact
-   bytes, matching instructions, later first mismatch, fewer residual hunks,
-   unchanged size/instruction count/frame, then smaller source disturbance.
-   Keep a frontier candidate separately and test it once with the best strict
-   improvement; frontier movement alone is not completion evidence.
+   `reverted-structural-regression`. Rank: exact bytes, matching
+   instructions, later first mismatch, fewer residual hunks, unchanged
+   size/instruction count/frame, then smaller source disturbance. Keep a
+   frontier candidate separately; test once with the best strict improvement;
+   frontier movement alone is not completion evidence.
 3. Abort and restore a nominally local variant when it unexpectedly changes
    frame size, function size/instruction count, spills, multi-block
-   saved-register roles, or the prologue. Do not tune that structural shape
+   saved-register roles, or the prologue; do not tune that structural shape
    unless the original diff predicted the change.
-4. Track `source_parent`, moved statement, crossed statements/lifetime
-   boundary, score, first mismatch, residual-hunk count, size, instruction
-   count, frame size, retained changes, and interaction result. Requeue a
-   reverted structural experiment only when a retained change affects its
-   definition/last use, overlapping call, interfering saved value, frame,
-   compiler profile, or owning residual block; an unrelated reorder is not
-   invalidation.
+4. Track `source_parent`, moved statement, crossed lifetime boundary, score,
+   first mismatch, residual-hunk count, size, instruction count, frame size,
+   retained changes, and interaction result. Requeue a reverted structural
+   experiment only when a retained change affects its definition/last use,
+   overlapping call, interfering saved value, frame, compiler profile, or
+   owning residual block; an unrelated reorder is not invalidation.
 5. Group source forms proven to emit identical instructions into an optimizer
    equivalence class (constant identities, commutative reversal, equivalent
-   casts, normalized store order). Do not retry spellings in that class unless
-   profile, type, lifetime, volatility, or expression equivalence changes.
-   When splitting a chained assignment broadly changes allocation, treat the
-   intact chain as an allocator anchor and move it only as a unit. Reusing a
-   dead-looking local for an unrelated later role is also a lifetime-changing
-   experiment, not free storage.
+   casts, normalized store order); retry within it only when profile, type,
+   lifetime, volatility, or expression equivalence changes. When splitting a
+   chained assignment broadly changes allocation, move the intact chain only as
+   a unit; reusing a dead-looking local for an unrelated role is also a
+   lifetime-changing experiment, not free storage.
 6. After an existing `REGISTER_PIN` removal probe, record score/size/frame and
-   allocator effects. A severe regression prevents redundant removal retries;
-   it does not waive the exact-match retention rule in
+   allocator effects; a severe regression prevents redundant removal retries
+   but does not waive the exact-match retention rule in
    [Allocation ladder](#allocation-ladder).
 
 Queue at least two independent experiments plus one combination with the best
-strict/frontier candidate when evidence supports a safe combination. Restore
+strict/frontier candidate when evidence supports a safe combination; restore
 the best coherent state after each rejected variant. After an improvement,
 allow three reviewed non-improving queues at the new frontier, then advance to
 static allocation evidence, profile search, the permuter, or a recorded
-compiler ceiling instead of broad spelling churn. A non-compiling C89 variant
-is not comparison evidence; repair declaration placement within the same
-attempt and record only the compiled result.
+compiler ceiling instead of broad spelling churn. A non-compiling C89 variant is not comparison evidence; repair declaration
+placement within the same attempt, record only the compiled result.
 
 ---
 
 ## Surviving dead code
 
-Original source sometimes keeps calculations whose results are unused but
-survive partial optimization; removing them changes register lifetimes and the
-instruction stream.
+Original source sometimes keeps unused calculations that survive partial
+optimization; removing them changes register lifetimes and the instruction
+stream.
 
 ```c
-/*
- * MATCHING_AID:
- * The distance calculation and following dead branch survive partial
- * optimization in the original. Removing them shifts register allocation.
- */
+/* MATCHING_AID: the distance calculation and following dead branch survive
+ * partial optimization in the original; removing them shifts allocation. */
 distance = SquareRoot0((x * x) + (y * y) + (z * z));
-if ((distance * 2) == 0) {
-    distance = 2;
-} else {
-    distance *= 2;
-}
+if ((distance * 2) == 0) { distance = 2; } else { distance *= 2; }
 ```
 
 Do not remove such code because a static analyzer calls it useless.
@@ -407,21 +329,13 @@ Do not remove such code because a static analyzer calls it useless.
 
 ## Signedness
 
-The default `char` signedness is set by the compiler profile. Mismatches
+The default `char` signedness is set by the compiler profile; mismatches
 produce `lb` vs `lbu`, wrong sign-extension, and different constant folding.
 
-Prefer explicit types in reconstructed structures:
-
-```c
-s8 signedValue;
-u8 flags;
-```
-
-But also reproduce the translation unit's default `char` signedness, because
-original code may use plain `char` in declarations.
-
-When a function produces extra `andi` before a shift, check whether your
-reconstructed field has a wider unsigned type than the original.
+Prefer explicit types (`s8 signedValue; u8 flags;`) and reproduce the
+translation unit's default `char` signedness when the original uses plain
+`char`. Extra `andi` before a shift → check whether your reconstructed field
+has a wider unsigned type than the original.
 
 ---
 
@@ -437,23 +351,20 @@ if (!flag)
 if (flag == false)
 ```
 
-Treat boolean spelling as a matching lever, not just a style choice.
+Boolean spelling is a matching lever, not a style choice.
 
 ---
 
 ## Representation views
 
-An explicit representation view can be more accurate than bitwise operators:
+An explicit representation view can beat bitwise operators:
 
 ```c
-/* Emits lhu from memory. */
-low = *(u16 *)&word;
-
-/* Keeps value in register, emits andi. */
-low = word & 0xFFFF;
+low = *(u16 *)&word;   /* emits lhu from memory */
+low = word & 0xFFFF;   /* keeps value in register, emits andi */
 ```
 
-Use these locally. Do not create a generic punning framework.
+Use locally; do not create a generic punning framework.
 
 ---
 
@@ -474,7 +385,7 @@ ASSERT_SIZE(Context, 0x08);
 ```
 
 For global-section padding, prefer an explicit symbol owned by the relevant
-translation unit rather than a universal padding macro.
+translation unit over a universal padding macro.
 
 ---
 
@@ -507,14 +418,11 @@ needed via the linker script or Splat layout.
 ## Shared read-only data
 
 ```c
-/* Creates local .rodata — wrong if the original references a shared string */
-static const char format[] = "%d";
-
-/* Correct for a shared string: */
-extern const char D_80051234[];
+static const char format[] = "%d";  /* local .rodata — wrong for a shared string */
+extern const char D_80051234[];     /* correct for a shared string */
 ```
 
-Making shared read-only data local creates phantom `.rodata` and changes the
+Localizing shared read-only data creates phantom `.rodata` and changes the
 object — critical for format strings, lookup/jump/animation tables, shared
 vectors, SDK constants.
 
@@ -523,12 +431,9 @@ vectors, SDK constants.
 ## Jump tables
 
 When Splat separates code and `.rodata`, jump-table entries may reference
-labels inside a function object; functions can look structurally wrong in m2c.
-
-Solutions:
-
-- Make jump-table labels global so cross-object references resolve.
-- Prepend jump-table data manually to the function assembly:
+labels inside a function object, so the function can look structurally wrong
+in m2c. Fixes: make jump-table labels global so cross-object references
+resolve; or prepend jump-table data manually to the function assembly:
 
 ```asm
 .set noat
@@ -541,39 +446,27 @@ Solutions:
 /* function */
 ```
 
-A function can look wrong in m2c simply because its jump table was omitted
-from the analysis context.
-
 ---
 
 ## Analysis context
 
-m2c context should contain:
-
-- Typedefs, structs, enums
-- Prototypes and `extern` declarations
-- Required macros and `static inline` functions
-
-m2c context should usually **not** contain:
-
-- Unrelated function definitions
-- Unrelated local static data
-- Unrelated `.rodata` (their inclusion can shift target rodata offsets)
-
-See `bin/m2ctx` for the context generation command.
+m2c context: typedefs, structs, enums, prototypes and `extern` declarations,
+required macros and `static inline` functions; usually **not** unrelated
+function definitions, local static data, or unrelated `.rodata` (inclusion can
+shift target rodata offsets). See `bin/m2ctx`.
 
 ---
 
 ## Generated-assembly spelling
 
-GNU `as` rejects some GTE compute mnemonics from disassembly pipelines. Use
+GNU `as` rejects some GTE compute mnemonics from disassembly pipelines; use
 exact `.word` encodings in generated assembly:
 
 ```asm
 .word 0xXXXXXX
 ```
 
-Use `.word` only in generated assembly or low-level SDK code, never as a C
+`.word` only in generated assembly or low-level SDK code, never as a C
 matching technique.
 
 ---
@@ -585,7 +478,7 @@ Direct MIPS register pinning (`register type name asm("$N")`) and
 specific function. After this ladder, the shared `REGISTER_PIN(type, name,
 reg)` macro may be tried once as a bounded local experiment for an
 asm-diff-proven allocator or entry-register residual. A bare numeric spelling
-still needs proof the macro form alters codegen plus explicit user approval;
+needs proof the macro form alters codegen plus explicit user approval;
 retention also requires independent review. Pins change the register web
 globally and mask real causes. Ladder:
 
@@ -606,18 +499,15 @@ globally and mask real causes. Ladder:
     `INCLUDE_ASM` still requires user approval.
 
 A pinned local can stay live across the whole function and displace unrelated
-variables — one pin can create new mismatches elsewhere. Each retained
-`REGISTER_PIN` needs an adjacent `MATCHING_AID` rationale, independent review,
-and a live exact byte match.
+variables — one pin can create new mismatches elsewhere.
 
 ---
 
 ## Delay slots and entry copies
 
-Classify the **first** live diff before changing source; a raw percentage
-identifies no cause. The ignored `out/non-exact-lifts.json` audit is disposable
-priority state — re-run the target's `asm-diff` and use the table below as the
-durable choice of first lever.
+Classify the **first** live diff before changing source; the table below is
+the durable first lever. The ignored `out/non-exact-lifts.json` audit is
+disposable priority state.
 
 | Observed first-diff shape | Diagnose first | First clean-C levers | Escalation boundary |
 | --- | --- | --- | --- |
@@ -626,70 +516,57 @@ durable choice of first lever.
 | Frame/size differs at or before the first call | Exact prologue/epilogue, calls made, address-taken locals, aggregate assignment, and values live across calls | Correct prototypes and widths; remove accidental address-taking; split/collapse aggregate copies; choose early return/loop shape; shorten/extend a temporary lifetime | A pin never substitutes for an unmatched frame or changed control-flow shape |
 | Same size; relocated address, `lui`/`addiu`, or load order differs | Symbol owner/declaration form, field offset, pointer-cell volatility, and whether a pointer is cached or reloaded | Pointer versus array; standalone symbol versus field; `PSX_REF`/`SPAD_PTR_SLOT` qualifiers; hoist or unhoist one dereference | `CLOBBER_*` only after the precise caller-clobbered reload ordering is proven |
 
-Preinitializing a result can make GCC fill a desired branch delay slot, but it also lengthens that value's lifetime. Reject the variant when downstream allocation changes even if the slot now matches: placement alone is not a net improvement.
+Preinitializing a result can fill a desired branch delay slot but lengthens
+that value's lifetime; reject it when downstream allocation changes (even if
+the slot now matches).
 
-A sole commutative operand-order difference involving assembler scratch `$at` can survive typed-record arrays, byte views, pointer arithmetic, and extern-array indexing. GNU `as` preserves the compiler-emitted operand order; it does not canonicalize this encoding. After representation, profile, and permuter rungs are exhausted, record a compiler-order ceiling. Never pin or clobber `$at` to control it.
+A sole commutative operand-order difference involving assembler scratch
+`$at` can survive typed-record arrays, byte views, pointer arithmetic, and
+extern-array indexing; GNU `as` preserves compiler-emitted operand order and
+does not canonicalize this encoding. After representation, profile, and
+permuter rungs are exhausted, record a compiler-order ceiling. Never pin or
+clobber `$at` to control it.
 
 Partial lift: keep a residual note only when specific and durable —
 command/target, first differing instruction(s), no-progress attempts, next
-untried rung. No speculative TODOs. Third non-progressing diagnosed attempt:
-restore best clean-C state, move on. Ladder exhausted: report that evidence
-rather than looping.
-
+untried rung. No speculative TODOs.
 ## Approved `INCLUDE_ASM` fallback
 
 Use `INCLUDE_ASM` only after explicit user approval for that function.
 Without approval, leave its reviewed Splat segment as `asm` and report the
 clean-C residual; never add an assembly-backed source stub.
 
-See the [function-matching loop](matching.md) for the required iteration procedure.
-
 ---
 
 ## Permuter
 
-Use `bin/permute TARGET@0xADDRESS --time-limit 60 -j N` for source-shape (60s hard cap per run;
-search. Lessons:
+Use `bin/permute TARGET@0xADDRESS --time-limit 60 -j N` for source-shape
+search (60s hard cap; `--allow-long-run` is interactive-only). Lessons: fix
+structure/declarations first (a lower-percentage clean source often beats a
+heavily pinned near-match); register pins constrain the search space; it
+handles scheduling/allocation changes, not wrong control-flow shape;
+pointer-hoist mutations can unlock inaccessible allocations; mark
+permuter-found aids with `MATCHING_AID`.
 
-- Fix structure and declarations before running it.
-- A lower-percentage structurally clean source is often a better seed than a
-  heavily pinned near-match.
-- Register pins constrain the search space.
-- It handles scheduling and some allocation changes, but cannot repair a wrong
-  fundamental control-flow shape.
-- Pointer-hoist mutations can unlock otherwise inaccessible allocations.
-- Mark permuter-found aids with `MATCHING_AID`.
 
-Recommended workflow:
-
-```text
-1. Reach semantic equivalence.
-2. Match function boundaries and calls.
-3. Match branches and loop structure.
-4. Match loads, stores and relocations.
-5. Match stack frame.
-6. Match register allocation approximately.
-7. Run permuter (`bin/permute` caps runs at 30s by default).
-8. Inspect winning mutations.
-9. Simplify the winning source.
-10. Re-run to remove unnecessary hacks.
-```
-
-See `third_party/decomp-permuter/` for upstream documentation.
 
 ---
 
 ## Historical GCC catalog
 
-The framework (`config/compiler/variants.json`, `bin/compiler-variants`)
-manages historical GCC candidates. Four provenance-pinned candidates exist —
-`gcc-2.6.3-psx`, `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, `gcc-2.95.2-psx`
-(SHA-256-verified) — but no object selects any: bounded probes were non-exact.
-Research and negative records: `docs/specs/runtime/compiler-variants.md`.
+`config/compiler/variants.json` + `bin/compiler-variants` manage four
+SHA-256-verified candidates (`gcc-2.6.3-psx`, `gcc-2.8.0-psx`,
+`gcc-2.8.1-psx`, `gcc-2.95.2-psx`). One object selects `gcc-2.6.3-psx`:
+`src/bof3/audio/dispatchSoundCue.c`, byte-exact at
+`exe/slus_004_22@0x8015DF18` (671/671, 2684 bytes).
 
-When adding a candidate:
-
-1. Verify SHA-256 of downloaded archive matches entry.
-2. Test against one BOF3 function via `bin/flag-search` + `bin/byte-match`.
-3. Confirm byte-match before adding to production catalog.
-4. Update `toolchains/README.md §20` with provenance evidence.
+Add a candidate catalog-first, probe second: add full provenance to
+`config/compiler/variants.json` (`bin/compiler-variants list` validates);
+`install <id>` (SHA-256 gate) then `verify <id>` (binary + `--version`);
+probe with `bin/flag-search TARGET@0xADDRESS --compiler <id>` (exit 0 +
+non-empty `exact_matches` = exact; exit 1 + empty = negative; exit 2/invalid
+payload = probe failure); retain only with verified provenance plus a
+recorded exact-or-negative probe. Selection is separate: a fresh exact match
+plus a reviewed `BOF3_OBJCOMPILER_`/`BOF3_OBJFLAGS_` entry in
+`config/compiler/object-flags.cmake`; procedure in
+`docs/specs/runtime/compiler-variants.md`.

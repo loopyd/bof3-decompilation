@@ -8,13 +8,10 @@ from pathlib import Path
 import sqlite3
 from typing import Any, Iterable
 
+from ..discovery import file_sha256
 from ..domain.manifests import TargetManifest
 
 _SCHEMA = "harness.decomp-status-cache/v1"
-
-
-def _hash_file(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _paths(root: Path, manifest: TargetManifest) -> Iterable[Path]:
@@ -59,23 +56,23 @@ def target_fingerprint(root: Path, manifest: TargetManifest) -> str:
         relative = path.relative_to(root).as_posix()
         digest.update(relative.encode())
         digest.update(b"\0")
-        digest.update(_hash_file(path).encode() if path.is_file() else b"missing")
+        digest.update(file_sha256(path).encode() if path.is_file() else b"missing")
         digest.update(b"\0")
     binary = root / manifest.binary
     digest.update(manifest.binary.encode())
     digest.update(b"\0")
-    digest.update(_hash_file(binary).encode() if binary.is_file() else b"missing")
+    digest.update(file_sha256(binary).encode() if binary.is_file() else b"missing")
     return digest.hexdigest()
 
 
 def source_fingerprint(source: Path, target_fingerprint: str) -> str:
     digest = hashlib.sha256(target_fingerprint.encode())
     digest.update(b"\0")
-    digest.update(_hash_file(source).encode())
+    digest.update(file_sha256(source).encode())
     return digest.hexdigest()
 
 
-class StatusCache:
+class MatchStatusCache:
     """SQLite-backed, throwaway cache whose misses are always safe to recompute."""
 
     def __init__(self, root: Path) -> None:
@@ -102,9 +99,7 @@ class StatusCache:
         )
         self.connection.commit()
 
-    def get(
-        self, target: str, source: str, fingerprint: str
-    ) -> dict[str, Any] | None:
+    def get(self, target: str, source: str, fingerprint: str) -> dict[str, Any] | None:
         row = self.connection.execute(
             "SELECT record FROM results WHERE target = ? AND source = ? AND fingerprint = ?",
             (target, source, fingerprint),

@@ -26,8 +26,10 @@ just setup
 just doctor
 ```
 
-`setup` validates one complete CUE/BIN set under `inputs/external/`. If it is
-not present, it accepts `inputs/external/BreathOfFireIIIv1.1.7z` and extracts it
+First-time setup requires the host tools listed in the
+[README prerequisites](../README.md#prerequisites); see that list for which
+`cmake`/`7z` roles are required and why. `setup` validates one complete CUE/BIN
+set under `inputs/external/`. If it is not present, it accepts `inputs/external/BreathOfFireIIIv1.1.7z` and extracts it
 to the private-assets cache. It then downloads/stages the required toolchains,
 extracts reviewed target images, and validates the result. `doctor` repeats
 setup validation. Run `bin/symbols check` separately to validate symbol maps.
@@ -74,15 +76,15 @@ bin/harness psyq proposal --all
 
 # Apply reviewed provenance, then regenerate and audit bindings
 bin/symbols import-psyq out/psyq/proposal.json --all-qualified --write
-bin/symbols psyq-bindings --write          # regenerate src/<t>/symbols/psyq.c
+bin/symbols psyq-bindings --write          # regenerate manifest-owned psyq_source bindings
 bin/symbols psyq-report TARGET             # which SDK symbols the code references
 ```
 
 The SDK maps live in `config/sdk/psyq-{slus,logo}.txt`; a target selects its
 space via the manifest `[psyq] space` key (default `slus`). `import-psyq` writes
 reviewed exact candidates into the space's SDK map; `psyq-bindings` regenerates
-the compiled `src/<t>/symbols/psyq.c` from it. Nothing edits maps without
-`--write`.
+the compiled manifest-owned `psyq_source` (e.g. `src/bof3/support/slus_psyq.c`)
+from it. Nothing edits maps without `--write`.
 
 ### 3b. Analysis sequence (freshness → rebuild → query)
 
@@ -94,9 +96,10 @@ bin/analysis-sequence TARGET --ranking metrics TARGET@0xADDRESS --detail normal
 `analysis-sequence` checks `bin/rz-project status TARGET` first; fails with the
 target and `snapshot` stage when stale; rebuilds the index only after freshness
 succeeds; runs the requested `rev-query` ranking without touching other targets
-or reviewed maps. `loop-status.py` is inspection-only by default; use
-`--recover` to repair stale generated snapshots/indexes before it ranks
-candidates. `rev-query` refuses stale snapshot/index evidence. Use `--exclusions`
+or reviewed maps. The lift-loop status script
+(`python3 .pi/skills/bof3-lift-loop/scripts/loop-status.py`) is inspection-only
+by default; use `--recover` to repair stale generated snapshots/indexes before
+it ranks candidates. `rev-query` refuses stale snapshot/index evidence. Use `--exclusions`
 to inspect rows rejected by canonical-code checks; use `--detail full` for
 complete rows.
 
@@ -258,5 +261,5 @@ used for acceptance: immediately before accepting a lift, run live
 matching commands instead of invoking these adapters directly.
 
 See [function matching](agents/matching.md) for C iteration rules,
-[tool usage](usage.md) for analyzer contracts, and
+[build analysis evidence](#3-build-analysis-evidence) for analyzer contracts, and
 [project context](agents/project-context.md) for ownership.

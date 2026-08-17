@@ -2,25 +2,22 @@
 
 from __future__ import annotations
 
-import argparse
 from functools import lru_cache
 from pathlib import Path
 import sys
 from typing import Any
 
-from ..canonical import load_map, sdk_map_path
 from ..domain import (
     CompiledSymbolError,
     load_target_manifests,
 )
+from ..domain.layout import parse_splat_layout
 from ..domain.sources import reviewed_function_name
-from ..layout import parse_splat_layout
+from ..domain.symbols import load_map, sdk_map_path
+from .graph import dominates, enrich_graph, function_metrics
 
 
-from ._rev_query_graph import _dominates, _enrich_graph, _function_metrics
-
-
-_RANK_FIELDS = {
+RANK_FIELDS = {
     "minimal": {
         "duplicates": (
             "representative",
@@ -68,7 +65,7 @@ _RANK_FIELDS = {
 
 
 @lru_cache(maxsize=None)
-def _candidate_context(root: Path, target: str):
+def candidate_context(root: Path, target: str):
     manifest = load_target_manifests(root)[target]
     binary = root / manifest.binary
     if not binary.is_file():
@@ -85,7 +82,7 @@ def _candidate_context(root: Path, target: str):
     )
 
 
-def _candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
+def candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
     """Reject analyzer-only roots that lack canonical code evidence.
 
     Reviewed Splat labels and Rizin's function finder are hypotheses. Ranking
@@ -93,11 +90,11 @@ def _candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
     """
 
     address = int(str(row["address"]), 0)
-    manifest, image, layout, sdk_addresses = _candidate_context(root, row["target"])
+    manifest, image, layout, sdk_addresses = candidate_context(root, row["target"])
     if image is None:
         return "missing_binary"
     assert layout is not None
-    boundary = layout.boundary_starting_at(address)
+    boundary = layout.find_boundary_at(address)
     if boundary is None or not boundary.is_function:
         return "not_reviewed_code_boundary"
     offset = address - manifest.load_address
@@ -130,28 +127,37 @@ def _candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
     return None
 
 
-def _priority_rows(
-    connection, args: argparse.Namespace, *, root: Path | None = None
+def priority_rows(
+    connection,
+    *,
+    target: str | None,
+    command: str,
+    limit: int,
+    exclusions: bool = False,
+    include_trivial: bool = False,
+    unlifted: bool = False,
+    function: str | None = None,
+    root: Path | None = None,
 ) -> list[dict[str, Any]]:
     def cost(row: dict[str, Any], name: str) -> int:
         value = row[name]
         return value if value is not None else sys.maxsize
 
-    payload = _function_metrics(connection, args.target)
+    payload = function_metrics(connection, target)
     if root is not None:
-        exclusions = [(row, _candidate_exclusion(root, row)) for row in payload]
-        if getattr(args, "exclusions", False):
+        exclusion_rows = [(row, candidate_exclusion(root, row)) for row in payload]
+        if exclusions:
             payload = [
                 {**row, "candidate_exclusion": reason}
-                for row, reason in exclusions
+                for row, reason in exclusion_rows
                 if reason is not None
             ]
         else:
-            payload = [row for row, reason in exclusions if reason is None]
-    _enrich_graph(connection, payload)
-    if getattr(args, "function", None):
-        payload = [row for row in payload if row["id"] == args.function]
-    if getattr(args, "exclusions", False):
+            payload = [row for row, reason in exclusion_rows if reason is None]
+    enrich_graph(connection, payload)
+    if function:
+        payload = [row for row in payload if row["id"] == function]
+    if exclusions:
         payload = [
             {
                 key: row[key]
@@ -160,14 +166,14 @@ def _priority_rows(
             for row in payload
         ]
         payload.sort(key=lambda row: (row["id"], row["candidate_exclusion"]))
-        return payload[: args.limit] if args.limit else payload
-    if args.command != "metrics":
+        return payload[:limit] if limit else payload
+    if command != "metrics":
         payload = [row for row in payload if row["reviewed"] and row["size"] >= 8]
-        if not args.include_trivial:
+        if not include_trivial:
             payload = [row for row in payload if row["trivial_kind"] is None]
-    if args.unlifted:
+    if unlifted:
         payload = [row for row in payload if not row["lifted"]]
-    if args.command == "leafs":
+    if command == "leafs":
         payload = [row for row in payload if row["leaf_status"] != "non_leaf"]
         payload.sort(
             key=lambda row: (
@@ -176,7 +182,7 @@ def _priority_rows(
                 row["id"],
             )
         )
-    elif args.command == "quick-wins":
+    elif command == "quick-wins":
         payload.sort(
             key=lambda row: (
                 row["leaf_status"] != "analyzer_no_edge",
@@ -190,7 +196,7 @@ def _priority_rows(
                 row["id"],
             )
         )
-    elif args.command == "hotspots":
+    elif command == "hotspots":
         payload.sort(
             key=lambda row: (
                 -row["unique_callers"],
@@ -203,12 +209,12 @@ def _priority_rows(
                 row["id"],
             )
         )
-    elif args.command == "pareto":
+    elif command == "pareto":
         payload = [row for row in payload if not row["metric_missing"]]
         payload = [
             row
             for row in payload
-            if not any(_dominates(other, row) for other in payload if other is not row)
+            if not any(dominates(other, row) for other in payload if other is not row)
         ]
         payload.sort(
             key=lambda row: (
@@ -218,7 +224,7 @@ def _priority_rows(
                 row["id"],
             )
         )
-    if args.command != "metrics":
+    if command != "metrics":
         unique: list[dict[str, Any]] = []
         seen: set[tuple[str, int]] = set()
         for row in payload:
@@ -228,4 +234,4 @@ def _priority_rows(
             seen.add(identity)
             unique.append(row)
         payload = unique
-    return payload[: args.limit] if args.limit else payload
+    return payload[:limit] if limit else payload

@@ -5,16 +5,14 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
 
 ## Naming
 
-- One concept, one name repo-wide. No same-name/different-semantics
-  collisions; rename the loser, keep the owner (precedent:
-  `signature_index_path`, `resolve_function_name`).
-- Functions and methods are verb-led `snake_case` that says what they do
-  (`resolve_function`, not `function_name`).
-- Private helpers take one leading underscore. Decomposed implementation lives
-  in `_private.py` sibling modules; the public module keeps no compat facade.
+- One concept, one name repo-wide; rename the loser, keep the owner
+  (precedent: `signature_index_path`, `resolve_function_name`).
+- Functions/methods are verb-led `snake_case` (`resolve_function`, not
+  `function_name`).
+- Private helpers take one leading underscore; decomposed implementation
+  lives in `_private.py` siblings, no compat facade.
 - Classes are `PascalCase`. Toolchain wrappers are declarative subclasses of
-  the `toolchain/base.py` contract (class attributes, minimal overrides), not
-  logic bundles.
+  the `toolchain/base.py` contract (class attributes, minimal overrides).
 - Constants are `UPPER_SNAKE` at module top.
 
 ## Module organization

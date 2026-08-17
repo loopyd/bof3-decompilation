@@ -8,14 +8,12 @@ from pathlib import Path
 
 from ..domain import lookup_target_manifest
 from ..domain.sources import LiftMetadataError, lift_metadata
-from ..layout import parse_splat_layout
+from ..domain.layout import parse_splat_layout
 from ..toolchain.splat import SplatToolchain
 from ._common import add_root_argument, run_main
 
 
-def _legacy_stub_candidates(
-    root: Path, manifest
-) -> list[tuple[Path, Path, int]]:
+def _legacy_stub_candidates(root: Path, manifest) -> list[tuple[Path, Path, int]]:
     """Yield ``(legacy_stub_path, authored_owner_path, expected_address)`` for
     every Splat ``c`` boundary whose reviewed ``@source`` names a nested or
     out-of-root owner.

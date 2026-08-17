@@ -5,7 +5,7 @@ description: Lift or review one target-qualified BOF3 function, normalize proven
 
 # BOF3 RE
 
-Selector: `TARGET@0xADDRESS` | shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. For `bof3-reverse`/`bof3-review` run `python3 .pi/skills/bof3-re/scripts/agent-context.py <agents|reverse|review> [SELECTOR]` once (common+role context, `references/<ROLE>/`, `docs/agents/lessons.md`, manifest/map/Splat/header, bindings, source/asm). Never reread bundled paths; unbundled path only for a named gap; spec/psx-rizin only for a concrete question. Repo `bin` wins.
+Selector: `TARGET@0xADDRESS` | shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. For `bof3-reverse`/`bof3-review` run `python3 .pi/skills/bof3-re/scripts/agent-context.py <agents|reverse|review> [SELECTOR]` once (common+role context, `references/<ROLE>/`, `docs/agents/lessons.md`, manifest/map/Splat/header, bindings, source/asm). Never reread bundled paths; unbundled only for a named gap; psx-rizin only for a concrete question. Repo `bin` wins.
 
 ## Invariants
 
@@ -28,8 +28,7 @@ Narrowest sufficient command; live acceptance never cached.
 | Accept/review | `bin/byte-match TARGET@0xADDRESS` | cached status |
 | Companion ABI | `bin/companion-check TARGET@0xADDRESS` for a relevant declared call | global catalog scan |
 
-`splat`/`m2ctx`/`m2c` only when missing/needed (matching.md). `decomp-status` = parent-only disposable audit data; `asm-diff`/`byte-match` live. Report map/Splat-caused Rizin/index staleness for the parent checkpoint; never rebuild global analysis in a one-function mission.
-
+`splat`/`m2ctx`/`m2c` only when missing/needed (matching.md). `decomp-status` = parent-only disposable audit data; `asm-diff`/`byte-match` live. Report map/Splat-caused Rizin/index staleness for the parent checkpoint; never rebuild global analysis in a mission.
 ## Scope + evidence
 
 Honor the selected function/group. None: rank via `bin/rev-query <quick-wins|leafs|duplicates|hotspots|pareto> --unlifted --detail minimal --limit 5`, wait.
@@ -48,7 +47,7 @@ Honor the selected function/group. None: rank via `bin/rev-query <quick-wins|lea
 2. control flow: branch direction, loop/return/switch shape; equal-valued arms use the playbook's bounded branch-shape matrix before escalation;
 3. expression/register order: temps, hoists, statement order; then asm-diff-proven caller-register `CLOBBER_CALLER_REG(reg)` for delay-slot/fixed-address reloads, local `MATCHING_AID`; never encode an opcode or clobber `s*`/`gp`/`sp`/`ra`;
 4. compiler profile: `bin/flag-search TARGET@0xADDRESS`; record only clean-C exact profiles;
-5. one bounded `bin/permute TARGET@0xADDRESS --time-limit 300 -j N` after shape is right;
+5. one bounded `bin/permute TARGET@0xADDRESS --time-limit 60 -j N` after shape is right;
 6. asm-diff-proven allocator/entry-register residual: one bounded local `REGISTER_PIN` experiment; retain only if exact + independently reviewed;
 7. report residual; never force banned assembly.
 

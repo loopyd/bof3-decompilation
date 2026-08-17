@@ -169,11 +169,7 @@ def run(args: argparse.Namespace) -> int:
         raise ValueError("--jobs must not be negative")
     if args.time_limit is not None and args.time_limit <= 0:
         raise ValueError("--time-limit must be positive")
-    if (
-        args.time_limit is not None
-        and args.time_limit > 60
-        and not args.allow_long_run
-    ):
+    if args.time_limit is not None and args.time_limit > 60 and not args.allow_long_run:
         raise ValueError(
             "--time-limit is capped at 60s per run (matching rule); "
             "pass --allow-long-run for interactive search only"
@@ -339,9 +335,9 @@ def _resolve_and_run(args: argparse.Namespace) -> int:
         raise ValueError("TARGET@0xADDRESS is required")
     raw_source = str(args.source)
     if "@" in raw_source:
-        from harness.commands._lift_m2c import resolve_function
+        from harness.commands._common import resolve_function_selector
 
-        function_id, _, args.source = resolve_function(raw_source)
+        function_id, _, args.source = resolve_function_selector(raw_source)
         if args.source is None:
             raise FileNotFoundError(
                 f"lifted source does not exist for {function_id.target.value}@0x{function_id.address:08X}"

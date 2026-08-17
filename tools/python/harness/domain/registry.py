@@ -11,9 +11,16 @@ import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 
-from .ids import TargetId, normalize_target_id
+from .layout import parse_splat_layout
+from .claims import (
+    manifest_header_paths,
+    manifest_source_paths,
+    resolve_manifest_source_for_address,
+)
+from .ids import FunctionId, TargetId, normalize_target_id, parse_function_id
 from .manifests import TargetManifest, load_target_manifests
-from .claims import manifest_header_paths, manifest_source_paths
+from .sources import CompiledSymbolError, reviewed_function_name
+
 
 @dataclass(frozen=True)
 class ResolvedTarget:
@@ -57,6 +64,67 @@ class ResolvedTarget:
         ).hexdigest()[:16]
 
 
+@dataclass(frozen=True)
+class ResolvedFunction:
+    """One target-qualified function and every owned fact about it.
+
+    Composes the existing authorities: manifest identity (target), metadata
+    claim (source path), and map/Splat-agreed compiled symbol.  ``source`` is
+    None when no authored lift claims the address; ``compiled_symbol`` is None
+    when the target-local map/Splat has not yet agreed on a function symbol
+    (e.g. a raw Splat boundary not yet owned by the map).
+    """
+
+    id: FunctionId
+    target: ResolvedTarget
+    manifest: TargetManifest
+    source: Path | None
+    compiled_symbol: str | None
+
+
+def resolve_function(root: Path, value: str | FunctionId) -> ResolvedFunction:
+    """Resolve one ``TARGET@0xADDRESS`` selector (or parsed ID) to a function.
+
+    Shares :func:`resolve_target`'s canonical manifest path/identity
+    validation: a missing canonical manifest raises ``FileNotFoundError`` and
+    a misplaced manifest whose ``id`` disagrees with its canonical path
+    raises ``RuntimeError``.  Unlike :func:`resolve_target`, the target
+    binary is intentionally not required.  The compiled symbol is computed
+    only when the target-local map/Splat agree on one; the source claim is
+    optional.
+    """
+
+    function = parse_function_id(value) if isinstance(value, str) else value
+    manifest = lookup_target_manifest(root, function.target.value)
+    if manifest is None:
+        raise ValueError(f"unknown target: {function.target.value!r}")
+    target_id = normalize_target_id(function.target.value)
+    manifest_path = root / "config" / "targets" / target_id.value / "target.toml"
+    if not manifest_path.is_file():
+        raise FileNotFoundError(f"target manifest missing: {manifest_path}")
+    _validate_manifest_identity(root, target_id, manifest, manifest_path)
+    target = _resolved_target(root, target_id, manifest)
+    source = resolve_manifest_source_for_address(root, manifest, function.address)
+    try:
+        compiled_symbol = reviewed_function_name(
+            root,
+            target.id.value,
+            function.address,
+            layout=parse_splat_layout(root / manifest.splat, manifest.load_address),
+        )
+    except (CompiledSymbolError, OSError):
+        # Missing layout or a not-yet-owned map entry means no agreed
+        # compiled symbol; callers that require one report the absence.
+        compiled_symbol = None
+    return ResolvedFunction(
+        id=function,
+        target=target,
+        manifest=manifest,
+        source=source,
+        compiled_symbol=compiled_symbol,
+    )
+
+
 def resolve_target(root: Path, value: str) -> ResolvedTarget:
     """Resolve a shipped or canonical ID to a ``ResolvedTarget``.
 
@@ -77,13 +145,21 @@ def resolve_target(root: Path, value: str) -> ResolvedTarget:
     binary = root / manifest.binary
     if not binary.is_file():
         raise FileNotFoundError(f"target binary missing: {manifest.binary}")
+    return _resolved_target(root, target_id, manifest)
+
+
+def _resolved_target(
+    root: Path, target_id: TargetId, manifest: TargetManifest
+) -> ResolvedTarget:
+    """Build the resolved target record without requiring the binary to exist."""
+
     return ResolvedTarget(
         id=target_id,
-        manifest_path=manifest_path,
+        manifest_path=root / "config" / "targets" / target_id.value / "target.toml",
         disc_id=manifest.disc_id,
         kind=manifest.kind,
         source_dir=root / manifest.source_dir,
-        binary_path=binary,
+        binary_path=root / manifest.binary,
         splat_path=root / manifest.splat,
         reviewed_replay_path=root
         / "config"
@@ -145,8 +221,10 @@ def resolve_all_targets(root: Path) -> dict[str, ResolvedTarget]:
 
 
 __all__ = [
+    "ResolvedFunction",
     "ResolvedTarget",
     "lookup_target_manifest",
     "resolve_all_targets",
+    "resolve_function",
     "resolve_target",
 ]

@@ -7,12 +7,8 @@ from pathlib import Path
 
 # ── shared source-key and object-parsing helpers ──────────────────────
 
-OBJECT_FLAGS_RE = re.compile(
-    r"^\s*set\(\s*BOF3_OBJFLAGS_(\S+)\s+(.*?)\)\s*$"
-)
-OBJCOMPILER_RE = re.compile(
-    r"^\s*set\(\s*BOF3_OBJCOMPILER_(\S+)\s+(\S+)\s*\)\s*$"
-)
+OBJECT_FLAGS_RE = re.compile(r"^\s*set\(\s*BOF3_OBJFLAGS_(\S+)\s+(.*?)\)\s*$")
+OBJCOMPILER_RE = re.compile(r"^\s*set\(\s*BOF3_OBJCOMPILER_(\S+)\s+(\S+)\s*\)\s*$")
 
 
 def sanitize_identifier(relative: str) -> str:
@@ -53,7 +49,10 @@ def load_object_compilers(root: Path) -> dict[str, str]:
         if m is None:
             # Raise on any active BOF3_OBJCOMPILER_ assignment that is malformed,
             # so compile_commands.py parity with CMake is explicit.
-            if "BOF3_OBJCOMPILER_" in line and "#" not in line.split("BOF3_OBJCOMPILER_")[0]:
+            if (
+                "BOF3_OBJCOMPILER_" in line
+                and "#" not in line.split("BOF3_OBJCOMPILER_")[0]
+            ):
                 stripped = line.strip()
                 if stripped.startswith("set(BOF3_OBJCOMPILER_"):
                     raise ValueError(

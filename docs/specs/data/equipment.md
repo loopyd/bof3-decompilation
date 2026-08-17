@@ -9,7 +9,9 @@ tags: [tables, equipment, emi]
 
 All tables below live in entry `0` of `BIN/ETC/GAME.EMI`. Locations are raw
 archive offsets; subtract the entry payload start (`0x800`) for payload-relative
-offsets. Verified against the US `BOF3_1.1` corpus with zero boundary failures.
+offsets. Recorded against the US `BOF3_1.1` corpus during the original
+vast-violence extraction (historical provenance; no byte-verifier command is
+tracked in this repository).
 Here, `1.1` is the pinned vast-violence corpus label for the input's exact Track
 1 MD5; it is not a claim about a separately catalogued US retail revision.
 
@@ -155,21 +157,22 @@ the byte offsets and support both consumers.
 | `BATTLE.EMI#3 @ 0x801d3844` | `ability[kind] + 0x0c` | selection flags drive the returned target/mode code |
 | `BATTLE.EMI#3 @ 0x801daae4` | `ability[kind] + 0x0d` | skill type separates attack, assist, and healing rank bonuses |
 | `BATTLE.EMI#15 @ 0x8009761c` | `+0x0c`, `+0x10`, `+0x12` | selection flags, mask, and 16-bit selector resource value |
-| `SLUS_004.22 @ 0x800df5ec` | `item_index & 0xff`, then `× 0x10` | key-item record accessor at `0x801c8fdc` |
+| `SLUS_004.22 @ 0x80165d48` | `(item_type, item_index)`, both masked to `u8`, then dispatches on the category to five record bases | category/index record-base dispatcher `getEquipRecordBase` (47/47 instructions, 188 bytes — byte-exact); categories 0–4 select item, weapon, armor, accessory, and key-item record bases with strides `0x12`, `0x18`, `0x16`, `0x14`, and `0x10` |
 
-`SLUS_004.22 @ 0x800df604` is a second category-indexed accessor. For the
-handled equipment categories it reads item `+0x0d`, weapon `+0x0e`, armor
-`+0x0e`, and accessory `+0x0e`; the accessory result is masked to its low
-nibble. Categories outside those branches fall through to a shared runtime
-continuation and are not assigned a shared field name here.
+The sole reviewed category/index dispatch is the exact `getEquipRecordBase`
+at `0x80165d48` above (47/47 instructions, 188 bytes — byte-exact): a
+five-way table switch over categories 0–4 selecting item, weapon, armor,
+accessory, and key-item record bases with strides `0x12`, `0x18`, `0x16`,
+`0x14`, and `0x10`. No reviewed config or source claim establishes a
+category-indexed accessor at `0x800df5ec`/`0x800df604`; those addresses
+remain unverified and are not asserted.
 
 `GAME.EMI#0 @ 0x801af5b0` indexes the ability table as `kind × 0x14`. It tests
 `+0x0c` bit `0` for one selection mode and bit `1` for another, then loads
 `+0x10` as a halfword and tests bit `0x400` in the second mode. These are
 runtime flag uses; their public names remain candidates. A readable target-local
-candidate now exists at `src/bof3/ui/func_801AF5B0.c`; it measures
-45.33% under canonical `-O2`, so the ability-gate names and exact function
-replacement remain unpromoted.
+candidate exists at `src/bof3/ui/func_801AF5B0.c`, but the ability-gate names
+and exact function replacement remain unpromoted.
 
 These are consumer facts, not a claim that every byte has one global semantic
 name. The target-local `Battle03AbilityRecordView` keeps the proven offsets
@@ -224,19 +227,13 @@ fairy village shops (not sorted during cleanup).
 
 ### Shop item reference (2 bytes per slot)
 
-| Bits | Field |
-| ---: | --- |
-| 7–0 | item_type |
-| 15–8 | item_index |
-
-Item type codes: `0`=ItemObject, `1`=WeaponObject, `2`=ArmorObject,
-`3`=AccessoryObject, `4`=KeyItemObject, `0xFF`=empty/zenny.
+The record layout is defined in [encoding.md](encoding.md#shop-item-reference-2-bytes-per-slot);
+it is not duplicated here.
 
 ## Evidence
 
 - Source file: `out/extracted/BIN/ETC/GAME.EMI`
-- Runtime dispatch: `SLUS_004.22` @ `0x80165d48`
-- Validation: `out/index/vast-violence-1.1.json`
+- Runtime dispatch: `SLUS_004.22` @ `0x80165d48` (`getEquipRecordBase`, 47/47 instructions, 188 bytes — byte-exact)
 - Struct definitions: `third_party/references/vast-violence/tables/struct_*.txt`
 - Ability names: `third_party/references/vast-violence/ability_names.txt` (228 abilities)
 - Shop names: `third_party/references/vast-violence/tables/names_shops.txt` (40 shops)

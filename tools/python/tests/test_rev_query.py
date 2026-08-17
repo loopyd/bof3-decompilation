@@ -3,21 +3,16 @@ from __future__ import annotations
 import json
 import sqlite3
 
-from harness.commands._rev_query_graph import (
-    _dominates,
-    _enrich_graph,
-    _function_metrics,
-    _sccs,
-)
-from harness.commands._rev_query_priority import _candidate_exclusion, _priority_rows
+from harness.analysis.graph import dominates, enrich_graph, function_metrics, sccs
+from harness.analysis.priority import candidate_exclusion, priority_rows
 from harness.commands.rev_query import _project_rows, build_parser, main
-from harness.reverse_index import _schema
+from harness.analysis.schema import create_schema
 
 
 def test_sccs_are_deterministic_and_collapse_recursion() -> None:
     edges = {"a": {"b"}, "b": {"a", "c"}, "c": set()}
 
-    assert _sccs(["c", "b", "a"], edges) == [["a", "b"], ["c"]]
+    assert sccs(["c", "b", "a"], edges) == [["a", "b"], ["c"]]
 
 
 def test_pareto_dominance_uses_only_visible_complete_metrics() -> None:
@@ -38,8 +33,8 @@ def test_pareto_dominance_uses_only_visible_complete_metrics() -> None:
         "metric_missing": 0,
     }
 
-    assert _dominates(better, worse)
-    assert not _dominates({**better, "metric_missing": 1}, worse)
+    assert dominates(better, worse)
+    assert not dominates({**better, "metric_missing": 1}, worse)
 
 
 def test_rank_options_work_after_the_subcommand() -> None:
@@ -97,9 +92,13 @@ def test_candidate_exclusions_are_reported_without_ranking(tmp_path) -> None:
         'source_dir = "src/exe/t"\n'
         'binary = "out/binaries/exe/t.bin"\n'
         'splat = "config/targets/exe/t/splat.yaml"\n'
-        "load_address = 0x80100000\n",
+        "load_address = 0x80100000\n"
+        'sources = ["src/exe/t/func_80100000.c"]\n',
         encoding="utf-8",
     )
+    claimed = tmp_path / "src/exe/t/func_80100000.c"
+    claimed.parent.mkdir(parents=True, exist_ok=True)
+    claimed.write_text("void placeholder(void) {}\n", encoding="utf-8")
     (config / "splat.yaml").write_text(
         "segments:\n"
         "  - [0, c, func_80100000]\n"
@@ -150,24 +149,34 @@ def test_candidate_exclusions_are_reported_without_ranking(tmp_path) -> None:
         }
 
     candidates = [row(0x80100000 + offset) for offset in (0, 8, 16, 24)]
-    assert _candidate_exclusion(tmp_path, candidates[0]) == "shared_sdk_symbol"
-    assert _candidate_exclusion(tmp_path, candidates[1]) == "in_image_pointer_table"
-    assert _candidate_exclusion(tmp_path, candidates[2]) == "ascii_or_nul_data"
-    assert _candidate_exclusion(tmp_path, candidates[3]) is None
+    assert candidate_exclusion(tmp_path, candidates[0]) == "shared_sdk_symbol"
+    assert candidate_exclusion(tmp_path, candidates[1]) == "in_image_pointer_table"
+    assert candidate_exclusion(tmp_path, candidates[2]) == "ascii_or_nul_data"
+    assert candidate_exclusion(tmp_path, candidates[3]) is None
 
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row
-    _schema(connection)
+    create_schema(connection)
     args = build_parser().parse_args(["quick-wins", "--exclusions", "--limit", "0"])
     args.target = target
     args.function = None
     from unittest.mock import patch
 
     with patch(
-        "harness.commands._rev_query_priority._function_metrics",
+        "harness.analysis.priority.function_metrics",
         return_value=candidates,
     ):
-        exclusions = _priority_rows(connection, args, root=tmp_path)
+        exclusions = priority_rows(
+            connection,
+            target=args.target,
+            command=args.command,
+            limit=args.limit,
+            exclusions=getattr(args, "exclusions", False),
+            include_trivial=getattr(args, "include_trivial", False),
+            unlifted=getattr(args, "unlifted", False),
+            function=getattr(args, "function", None),
+            root=tmp_path,
+        )
     assert [entry["candidate_exclusion"] for entry in exclusions] == [
         "shared_sdk_symbol",
         "in_image_pointer_table",
@@ -176,17 +185,27 @@ def test_candidate_exclusions_are_reported_without_ranking(tmp_path) -> None:
 
     args.exclusions = False
     with patch(
-        "harness.commands._rev_query_priority._function_metrics",
+        "harness.analysis.priority.function_metrics",
         return_value=candidates,
     ):
-        ranked = _priority_rows(connection, args, root=tmp_path)
+        ranked = priority_rows(
+            connection,
+            target=args.target,
+            command=args.command,
+            limit=args.limit,
+            exclusions=getattr(args, "exclusions", False),
+            include_trivial=getattr(args, "include_trivial", False),
+            unlifted=getattr(args, "unlifted", False),
+            function=getattr(args, "function", None),
+            root=tmp_path,
+        )
     assert [entry["id"] for entry in ranked] == [f"{target}@80100018"]
 
 
 def test_xrefs_are_filtered_by_target(capsys, monkeypatch) -> None:
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row
-    _schema(connection)
+    create_schema(connection)
     for target in ("exe/one", "exe/two"):
         connection.execute(
             "INSERT INTO targets VALUES (?, 'b', 'h', 0, 'rizin', 'v', 's', 'sh')",
@@ -208,7 +227,7 @@ def test_xrefs_are_filtered_by_target(capsys, monkeypatch) -> None:
 def test_xrefs_require_target_qualified_address(capsys, monkeypatch) -> None:
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row
-    _schema(connection)
+    create_schema(connection)
     monkeypatch.setattr("harness.commands.rev_query.connect", lambda _root: connection)
 
     assert main(["xrefs", "0x80100020"]) == 2
@@ -219,7 +238,7 @@ def test_xrefs_require_target_qualified_address(capsys, monkeypatch) -> None:
 def test_metrics_distinguish_recursive_leaf_with_unresolved_evidence() -> None:
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row
-    _schema(connection)
+    create_schema(connection)
     connection.execute(
         "INSERT INTO targets VALUES ('t', 'b', 'h', 0, 'rizin', 'v', 's', 'sh')"
     )
@@ -258,8 +277,8 @@ def test_metrics_distinguish_recursive_leaf_with_unresolved_evidence() -> None:
         "INSERT INTO unresolved_calls VALUES ('t@00000001', 99, 3, 'unknown')"
     )
 
-    metrics = _function_metrics(connection, "t")
-    _enrich_graph(connection, metrics)
+    metrics = function_metrics(connection, "t")
+    enrich_graph(connection, metrics)
 
     assert {row["scc_id"] for row in metrics} == {"t@00000001"}
     assert {row["leaf_status"] for row in metrics} == {"unresolved_edge"}
@@ -273,13 +292,15 @@ def test_mission_composes_sdk_callees_callers_and_risk(
     manifest.write_text(
         'schema = "harness.target/v2"\nid = "exe/t"\nkind = "executable"\n'
         'source_dir = "src/exe/t"\nbinary = "out/binaries/exe/t.bin"\n'
-        'splat = "config/targets/exe/t/splat.yaml"\nload_address = 0x80100000\n',
+        'splat = "config/targets/exe/t/splat.yaml"\nload_address = 0x80100000\n'
+        'sources = ["src/exe/t/func_80100000.c"]\n',
         encoding="utf-8",
     )
+    claimed = tmp_path / "src/exe/t/func_80100000.c"
+    claimed.parent.mkdir(parents=True, exist_ok=True)
+    claimed.write_text("void placeholder(void) {}\n", encoding="utf-8")
     (manifest.parent / "splat.yaml").write_text(
-        "segments:\n"
-        "  - [0, c, func_80100000]\n"
-        "  - [16]\n",
+        "segments:\n  - [0, c, func_80100000]\n  - [16]\n",
         encoding="utf-8",
     )
     sdk = tmp_path / "config" / "sdk"
@@ -288,7 +309,7 @@ def test_mission_composes_sdk_callees_callers_and_risk(
 
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row
-    _schema(connection)
+    create_schema(connection)
     connection.execute(
         "INSERT INTO targets VALUES ('exe/t', 'b', 'h', 0x80100000, 'rizin', 'v', 's', 'sh')"
     )
@@ -371,9 +392,7 @@ def test_mission_composes_sdk_callees_callers_and_risk(
     connection.execute(
         "INSERT INTO unresolved_calls VALUES ('exe/t@80100000', 0x80174668, 0x80100008, 'unknown')"
     )
-    monkeypatch.setattr(
-        "harness.commands._rev_query_mission.connect", lambda _root: connection
-    )
+    monkeypatch.setattr("harness.analysis.mission.connect", lambda _root: connection)
 
     assert main(["--root", str(tmp_path), "mission", "exe/t@0x80100000", "--json"]) == 0
 

@@ -12,17 +12,22 @@ tags: [tables, schemas, evidence]
 ## Scope and evidence
 
 This ledger covers the fixed and pointer-backed record families listed in the
-data specs. Record sizes, counts, locations, and byte boundaries are storage
-verified against the US `BOF3_1.1` corpus. The label is pinned to the input's
-exact Track 1 MD5 by vast-violence, not to a separately catalogued US retail
-revision. Field semantics are tracked separately:
+data specs. Record sizes, counts, locations, and byte boundaries were recorded
+against the US `BOF3_1.1` corpus during the original vast-violence extraction
+(historical provenance; no byte-verifier command is tracked in this
+repository). The label is pinned to the input's exact Track 1 MD5 by
+vast-violence, not to a separately catalogued US retail revision. Field
+semantics are tracked separately:
 the pinned `vast-violence` layouts and existing specs identify candidates, but
 runtime loads, stores, indexing, and behavior are required before a semantic
 name becomes a C contract.
 
 Status meanings:
 
-- `storage` — size, count, coordinate, and byte range are verified.
+- `storage` — size, count, coordinate, and byte range are recorded
+  structural provenance from the tracked vast-violence table extraction with
+  no tracked byte-verifier re-check (`storage-verified`, as defined in
+  [ids.md](ids.md#evidence-boundary)).
 - `access` — at least one runtime consumer proves field width or signedness.
 - `semantic` — callers or behavior prove the field meaning.
 - `unresolved` — bytes or semantics still require investigation.
@@ -69,9 +74,11 @@ so there is no layout, ID namespace, or runtime C contract to recover yet.
 
 ## GAME.EMI storage type maps
 
-These are byte-exact storage maps, not ABI promises. Arrays are serialized
-without compiler padding; multi-byte integers are little-endian. `unknown` and
-`reserved` preserve bytes whose semantics are not yet established.
+These are storage-verified layout records, not ABI promises: arrays are
+serialized without compiler padding, multi-byte integers are little-endian,
+and the layouts were recorded from the tracked vast-violence extraction
+with no tracked byte-verifier re-check. `unknown` and `reserved` preserve
+bytes whose semantics are not yet established.
 
 ```text
 ItemObject[92]      = u8 name[12]; u8 flags; u8 unknown[3]; u16 price;
@@ -178,9 +185,8 @@ the consuming instruction stream agree. They are not shared engine headers.
 | --- | --- | --- |
 | `BATTLE.EMI#3 @ 0x801d3844` | ability records are `0x14` bytes; `+0x0c` is the selector flag byte; state at `0x801463c0` is a `u16` | 376/376 byte exact match |
 | `BATTLE.EMI#3 @ 0x801e4368` | `0x80146374` and `0x80146375` are byte globals; `0x801463c0` is a halfword; random helper result is signed 32-bit for `% 100` | 296/296 byte exact match |
-| `GAME.EMI#0 @ 0x80196ffc` | payload base is `0x80195800` (the target's first function is `0x8019611c`); entry state at `+0x3b90` is `u16`, palette serial at `+0x5988` is `u8` | 85.71% candidate; width contract confirmed, scheduler residue remains |
-| `SLUS_004.22 @ 0x800df548` | category/index dispatch selects item, weapon, armor, accessory, or key-item bases with strides `0x12`, `0x18`, `0x16`, `0x14`, and `0x10`; category values `>=5` fall back to items | reviewed disassembly; target-local C candidate is 70.21% with equal size |
-| `SLUS_004.22 @ 0x800df5ec` | key-item index is masked to `u8`, scaled by `0x10`, and added to `0x801c8fdc` | disassembly contract confirmed; C candidate is 16.67% without inline assembly |
+| `GAME.EMI#0 @ 0x80196ffc` | payload base is `0x80195800` (the target's first function is `0x8019611c`); entry state at `+0x3b90` is `u16`, palette serial at `+0x5988` is `u8` | 27/27 instructions, 108 bytes — byte-exact (`advanceEntrySerial`) |
+| `SLUS_004.22 @ 0x80165d48` | category/index dispatch selects item, weapon, armor, accessory, or key-item bases with strides `0x12`, `0x18`, `0x16`, `0x14`, and `0x10`; category values `>=5` fall back to items | 47/47 instructions, 188 bytes — byte-exact (`getEquipRecordBase`) |
 
 ## Validated consumers outside exact-match promotions
 
@@ -189,10 +195,10 @@ separate from the exact-match contracts above until their C lifts match.
 
 | Target/function | Observation | Evidence boundary |
 | --- | --- | --- |
-| `GAME.EMI#0 @ 0x801addd4` | runtime character records use base `0x80144968`, stride `0xa4`; level is `+0x06`, exp `+0x08`; six base-stat halfwords at `+0x3c`–`+0x46` are updated from level rows, with signed modifiers at `+0x85`–`+0x8a` | reviewed raw instructions; target-local C candidate at 39.71%, exact promotion pending |
-| `GAME.EMI#0 @ 0x801af5b0` | ability records use `kind × 0x14`; offset `0x0c` is a flag byte and offset `0x10` is loaded as a halfword for selection checks | reviewed raw instructions; target-local C candidate at 45.33%, exact promotion pending |
-| `COMMU00.EMI#0 @ 0x801f18f8` | gift table is copied as 20 × `0x04` from runtime `0x801eec48` | reviewed raw instructions; historical m2c draft measured 23.26%, exact promotion pending |
-| `COMMU00.EMI#0 @ 0x801f1bc8` | exploration table at runtime `0x801f2618` is indexed as `row × 2`; item index/type bytes are passed to reward and name consumers | reviewed raw instructions; historical m2c draft measured 22.22%, exact promotion pending |
+| `GAME.EMI#0 @ 0x801addd4` | runtime character records use base `0x80144968`, stride `0xa4`; level is `+0x06`, exp `+0x08`; six base-stat halfwords at `+0x3c`–`+0x46` are updated from level rows, with signed modifiers at `+0x85`–`+0x8a` | reviewed raw instructions; target-local C candidate exists but is not promoted, exact promotion pending |
+| `GAME.EMI#0 @ 0x801af5b0` | ability records use `kind × 0x14`; offset `0x0c` is a flag byte and offset `0x10` is loaded as a halfword for selection checks | reviewed raw instructions; target-local C candidate exists but is not promoted, exact promotion pending |
+| `COMMU00.EMI#0 @ 0x801f18f8` | gift table is copied as 20 × `0x04` from runtime `0x801eec48` | reviewed raw instructions; historical m2c draft not retained as an authored lift, exact promotion pending |
+| `COMMU00.EMI#0 @ 0x801f1bc8` | exploration table at runtime `0x801f2618` is indexed as `row × 2`; item index/type bytes are passed to reward and name consumers | reviewed raw instructions; historical m2c draft not retained as an authored lift, exact promotion pending |
 
 The exact-match source uses external array symbols and consumer-local pointer
 casts where those declarations are necessary to reproduce the original ABI.
@@ -290,5 +296,5 @@ signedness. Remaining behavior-only questions stay explicitly `unresolved`.
 - [Characters](characters.md)
 - [Area data](areas.md)
 - [Encoding](encoding.md)
-- generated lift-report artifacts (`out/reports/`, `out/matching/`)
-- `third_party/references/vast-violence/tables/struct_*.txt`
+- `third_party/references/vast-violence/tables/struct_*.txt` and
+  `tables_list_1.1.txt` (tracked storage coordinates)

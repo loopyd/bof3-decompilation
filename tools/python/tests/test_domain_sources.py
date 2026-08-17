@@ -16,9 +16,9 @@ from unittest.mock import patch
 
 import pytest
 
-from harness.analyzer import EngineIdentity, build_snapshot
-from harness.commands import _lift_m2c, permute
-from harness.domain import parse_progress_tags
+from harness.analysis.engine import EngineIdentity, build_snapshot
+from harness.commands import _common, permute
+from harness.domain import parse_function_id, parse_progress_tags, resolve_function
 from harness.domain.sources import (
     CompiledSymbolError,
     LiftMetadataError,
@@ -32,13 +32,10 @@ from harness.domain.sources import (
     reviewed_function_name,
     source_address,
 )
-from harness.layout import parse_splat_layout
+from harness.domain.layout import parse_splat_layout
 from harness.match._asm_diff_payload import AsmDiffRequest
 from harness.match._asm_diff_run import _asm_diff_resolve
-from harness.match._asm_resolve import (
-    infer_size_from_sibling_sources,
-    source_function_name,
-)
+from harness.match._asm_resolve import infer_size_from_sibling_sources
 
 TARGET_TOML = (
     'schema = "harness.target/v2"\n'
@@ -51,10 +48,27 @@ TARGET_TOML = (
 )
 
 
-def _target(root: Path) -> None:
+def _target(
+    root: Path, *, sources: tuple[str, ...] = ("src/exe/logo/initSelectionState.c",)
+) -> None:
     target = root / "config" / "targets" / "exe" / "logo" / "target.toml"
     target.parent.mkdir(parents=True)
-    target.write_text(TARGET_TOML, encoding="utf-8")
+    lines = [
+        'schema = "harness.target/v2"',
+        'id = "exe/logo"',
+        'kind = "executable"',
+        'source_dir = "src/exe/logo"',
+        'binary = "out/binaries/exe/logo.bin"',
+        'splat = "config/targets/exe/logo/splat.yaml"',
+        "load_address = 0x801CE000",
+        "sources = [" + ", ".join(f'"{s}"' for s in sources) + "]",
+    ]
+    target.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    for claimed in sources:
+        claimed_path = root / claimed
+        claimed_path.parent.mkdir(parents=True, exist_ok=True)
+        if not claimed_path.exists():
+            claimed_path.write_text("void placeholder(void) {}\n", encoding="utf-8")
 
 
 def _map(root: Path, text: str) -> None:
@@ -63,7 +77,9 @@ def _map(root: Path, text: str) -> None:
     symbols.write_text(text, encoding="utf-8")
 
 
-def _splat(root: Path, name: str = "initSelectionState", address: int = 0x801CE758) -> None:
+def _splat(
+    root: Path, name: str = "initSelectionState", address: int = 0x801CE758
+) -> None:
     splat = root / "config" / "targets" / "exe" / "logo" / "splat.yaml"
     splat.parent.mkdir(parents=True, exist_ok=True)
     splat.write_text(
@@ -85,9 +101,7 @@ def _splat(root: Path, name: str = "initSelectionState", address: int = 0x801CE7
 
 
 def _layout(root: Path) -> SimpleNamespace:
-    return SimpleNamespace(
-        root=root, build_dir=root / "build", out_dir=root / "out"
-    )
+    return SimpleNamespace(root=root, build_dir=root / "build", out_dir=root / "out")
 
 
 # -- strict metadata identity --------------------------------------------------
@@ -199,9 +213,7 @@ def test_collect_expected_func_stem_requires_tag_not_filename(
     """Splat-expected candidacy is satisfied by @source, never the stem."""
     (tmp_path / "func_80100000.c").write_text("void f(void) {}\n", encoding="utf-8")
     with pytest.raises(LiftMetadataError, match="missing_source"):
-        collect_source_addresses(
-            tmp_path, expected_lifts={"func_80100000": 0x80100000}
-        )
+        collect_source_addresses(tmp_path, expected_lifts={"func_80100000": 0x80100000})
 
 
 def test_collect_flags_expected_lift_without_tags(tmp_path: Path) -> None:
@@ -258,9 +270,9 @@ def test_expected_lift_sources_nested_source_path(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     layout = parse_splat_layout(splat, 0x801CE000)
-    assert expected_lift_sources(
-        layout, tmp_path / "src" / "exe" / "logo"
-    ) == {"battle/dispatchState": 0x801CE758}
+    assert expected_lift_sources(layout, tmp_path / "src" / "exe" / "logo") == {
+        "battle/dispatchState": 0x801CE758
+    }
 
 
 def test_expected_lift_sources_list_and_dict_forms(tmp_path: Path) -> None:
@@ -400,75 +412,70 @@ def test_compiled_symbol_name_source_path(tmp_path: Path) -> None:
     _map(tmp_path, "initSelectionState = 0x801CE758;\n")
     _splat(tmp_path)
     source_dir = tmp_path / "src" / "exe" / "logo"
-    source_dir.mkdir(parents=True)
+    source_dir.mkdir(parents=True, exist_ok=True)
     source = source_dir / "initSelectionState.c"
-    source.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
-    assert (
-        compiled_symbol_name(tmp_path, source, 0x801CE758)
-        == "initSelectionState"
-    )
-
-
-def test_compiled_symbol_name_nested_source_path(tmp_path: Path) -> None:
-    _target(tmp_path)
-    _map(tmp_path, "initSelectionState = 0x801CE758;\n")
-    _splat(tmp_path)
-    source = tmp_path / "src" / "exe" / "logo" / "runtime" / "initSelectionState.c"
-    source.parent.mkdir(parents=True)
     source.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
     assert compiled_symbol_name(tmp_path, source, 0x801CE758) == "initSelectionState"
 
 
-def test_owning_manifest_nested_and_root_sources(tmp_path: Path) -> None:
-    _target(tmp_path)
+def test_compiled_symbol_name_nested_source_path(tmp_path: Path) -> None:
+    _target(tmp_path, sources=("src/exe/logo/runtime/initSelectionState.c",))
+    _map(tmp_path, "initSelectionState = 0x801CE758;\n")
+    _splat(tmp_path)
+    source = tmp_path / "src" / "exe" / "logo" / "runtime" / "initSelectionState.c"
+    source.parent.mkdir(parents=True, exist_ok=True)
+    source.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
+    assert compiled_symbol_name(tmp_path, source, 0x801CE758) == "initSelectionState"
+
+
+def test_owning_manifest_claimed_root_and_nested_sources(tmp_path: Path) -> None:
+    _target(
+        tmp_path,
+        sources=(
+            "src/exe/logo/initState.c",
+            "src/exe/logo/runtime/nested.c",
+        ),
+    )
     root_source = tmp_path / "src" / "exe" / "logo" / "initState.c"
-    root_source.parent.mkdir(parents=True)
+    root_source.parent.mkdir(parents=True, exist_ok=True)
     root_source.write_text("/* @source 0x80100000 @behavior x */\n")
     nested = tmp_path / "src" / "exe" / "logo" / "runtime" / "nested.c"
-    nested.parent.mkdir(parents=True)
+    nested.parent.mkdir(parents=True, exist_ok=True)
     nested.write_text("/* @source 0x80100004 @behavior x */\n")
     unrelated = tmp_path / "src" / "other" / "helper.c"
     unrelated.parent.mkdir(parents=True)
     unrelated.write_text("/* @behavior helper */\n")
 
-    assert owning_manifest(tmp_path, root_source) is not None
     assert owning_manifest(tmp_path, root_source).id.value == "exe/logo"  # type: ignore[union-attr]
-    assert owning_manifest(tmp_path, nested) is not None
     assert owning_manifest(tmp_path, nested).id.value == "exe/logo"  # type: ignore[union-attr]
     assert owning_manifest(tmp_path, unrelated) is None
 
 
-def test_owning_manifest_prefers_deepest_ancestor(tmp_path: Path) -> None:
+def test_owning_manifest_unclaimed_nested_source_is_none(tmp_path: Path) -> None:
+    """Ownership comes only from explicit claims, never source_dir ancestry."""
     _target(tmp_path)
-    inner_dir = tmp_path / "config" / "targets" / "emi" / "nested" / "01"
-    inner_dir.mkdir(parents=True)
-    (inner_dir / "target.toml").write_text(
-        "schema = 'harness.target/v2'\n"
-        "id = 'emi/nested/01'\n"
-        "kind = 'emi'\n"
-        "source_dir = 'src/exe/logo/runtime'\n"
-        "binary = 'out/binaries/emi/nested/01.bin'\n"
-        "splat = 'config/targets/emi/nested/01/splat.yaml'\n"
-        "load_address = 0x80100000\n",
-        encoding="utf-8",
-    )
-    nested = tmp_path / "src" / "exe" / "logo" / "runtime" / "deep.c"
-    nested.parent.mkdir(parents=True)
-    nested.write_text("/* @source 0x80100008 @behavior x */\n")
+    unclaimed = tmp_path / "src" / "exe" / "logo" / "runtime" / "deep.c"
+    unclaimed.parent.mkdir(parents=True)
+    unclaimed.write_text("/* @source 0x80100008 @behavior x */\n")
 
-    assert owning_manifest(tmp_path, nested) is not None
-    assert owning_manifest(tmp_path, nested).id.value == "emi/nested/01"  # type: ignore[union-attr]
+    assert owning_manifest(tmp_path, unclaimed) is None
 
 
 def test_infer_size_from_sibling_sources_uses_manifest_root(
     tmp_path: Path,
 ) -> None:
-    _target(tmp_path)
+    _target(
+        tmp_path,
+        sources=(
+            "src/exe/logo/runtime/first.c",
+            "src/exe/logo/ui/second.c",
+        ),
+    )
     source_dir = tmp_path / "src" / "exe" / "logo"
     first = source_dir / "runtime" / "first.c"
     second = source_dir / "ui" / "second.c"
-    first.parent.mkdir(parents=True)
-    second.parent.mkdir(parents=True)
+    first.parent.mkdir(parents=True, exist_ok=True)
+    second.parent.mkdir(parents=True, exist_ok=True)
     first.write_text("/* @source 0x80100000 @behavior x */\n")
     second.write_text("/* @source 0x80100010 @behavior x */\n")
 
@@ -480,7 +487,7 @@ def test_infer_size_from_sibling_sources_uses_manifest_root(
 
 
 def test_asm_diff_resolve_nested_source_output_owner(tmp_path: Path) -> None:
-    _target(tmp_path)
+    _target(tmp_path, sources=("src/exe/logo/runtime/initSelectionState.c",))
     _map(tmp_path, "initSelectionState = 0x801CE758;\n")
     _splat(tmp_path)
     binary = tmp_path / "out" / "binaries" / "exe" / "logo.bin"
@@ -490,7 +497,7 @@ def test_asm_diff_resolve_nested_source_output_owner(tmp_path: Path) -> None:
     binary.write_bytes(payload)
 
     source = tmp_path / "src" / "exe" / "logo" / "runtime" / "initSelectionState.c"
-    source.parent.mkdir(parents=True)
+    source.parent.mkdir(parents=True, exist_ok=True)
     source.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
 
     request = AsmDiffRequest(
@@ -509,11 +516,93 @@ def test_asm_diff_resolve_nested_source_output_owner(tmp_path: Path) -> None:
     assert resolved["output_dir"].parent.name == "exe_logo"  # manifest-owned slug
 
 
-def test_source_function_name_requires_root(tmp_path: Path) -> None:
-    source = tmp_path / "initState.c"
-    source.write_text("/* @source 0x80100000 @behavior x */\n", encoding="utf-8")
-    with pytest.raises(CompiledSymbolError, match="no repository context"):
-        source_function_name(source, 0x80100000)
+# -- registry resolved-function record ---------------------------------------
+
+
+def test_registry_resolve_function_semantic_name(tmp_path: Path) -> None:
+    _target(tmp_path, sources=("src/exe/logo/renamed.c",))
+    _map(tmp_path, "initSelectionState = 0x801CE758;\n")
+    _splat(tmp_path)
+    source_dir = tmp_path / "src" / "exe" / "logo"
+    source_dir.mkdir(parents=True, exist_ok=True)
+    renamed = source_dir / "renamed.c"
+    renamed.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
+
+    resolved = resolve_function(tmp_path, "exe/logo@0x801CE758")
+
+    assert resolved.id.address == 0x801CE758
+    assert resolved.manifest.id.value == "exe/logo"
+    assert resolved.source == renamed
+    assert resolved.compiled_symbol == "initSelectionState"
+
+
+def test_registry_resolve_function_accepts_parsed_id(tmp_path: Path) -> None:
+    _target(tmp_path)
+    _map(tmp_path, "initSelectionState = 0x801CE758;\n")
+    _splat(tmp_path)
+
+    resolved = resolve_function(tmp_path, parse_function_id("exe/logo@0x801CE758"))
+
+    assert resolved.id.address == 0x801CE758
+    assert resolved.compiled_symbol == "initSelectionState"
+
+
+def test_registry_resolve_function_raw_name_and_missing_source(tmp_path: Path) -> None:
+    _target(tmp_path)
+    _map(tmp_path, "func_801CE758 = 0x801CE758;\n")
+    _splat(tmp_path, name="func_801CE758")
+
+    resolved = resolve_function(tmp_path, "exe/logo@0x801CE758")
+
+    assert resolved.compiled_symbol == "func_801CE758"
+    assert resolved.source is None  # never fabricated from the address
+
+
+def test_registry_resolve_function_unmapped_symbol_is_none(tmp_path: Path) -> None:
+    _target(tmp_path)
+    _splat(tmp_path)
+
+    resolved = resolve_function(tmp_path, "exe/logo@0x801CE758")
+
+    assert resolved.compiled_symbol is None
+    assert resolved.source is None
+
+
+def test_registry_resolve_function_unknown_target_raises(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="unknown target"):
+        resolve_function(tmp_path, "exe/unknown@0x801CE758")
+
+
+def test_registry_resolve_function_rejects_misplaced_manifest(
+    tmp_path: Path,
+) -> None:
+    """A manifest outside its canonical path must not fabricate identity.
+
+    ``config/targets/exe/wrong/target.toml`` declaring ``id = exe/logo`` is
+    discovered by the manifest loader but must fail the same canonical
+    path/identity validation as :func:`resolve_target`, never return a
+    fabricated nonexistent ``manifest_path``.
+    """
+
+    claimed = tmp_path / "src" / "exe" / "logo" / "initSelectionState.c"
+    claimed.parent.mkdir(parents=True, exist_ok=True)
+    claimed.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
+    wrong = tmp_path / "config" / "targets" / "exe" / "wrong" / "target.toml"
+    wrong.parent.mkdir(parents=True)
+    wrong.write_text(
+        'schema = "harness.target/v2"\n'
+        'id = "exe/logo"\n'
+        'kind = "executable"\n'
+        'source_dir = "src/exe/logo"\n'
+        'binary = "out/binaries/exe/logo.bin"\n'
+        'splat = "config/targets/exe/logo/splat.yaml"\n'
+        "load_address = 0x801CE000\n"
+        'sources = ["src/exe/logo/initSelectionState.c"]\n',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(FileNotFoundError, match="target manifest missing"):
+        resolve_function(tmp_path, "exe/logo@0x801CE758")
 
 
 # -- migrated consumers --------------------------------------------------------
@@ -524,12 +613,14 @@ def test_lift_m2c_resolve_function_renamed_source(
 ) -> None:
     _target(tmp_path)
     source_dir = tmp_path / "src" / "exe" / "logo"
-    source_dir.mkdir(parents=True)
+    source_dir.mkdir(parents=True, exist_ok=True)
     renamed = source_dir / "initSelectionState.c"
     renamed.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
-    monkeypatch.setattr(_lift_m2c, "repo_layout", lambda: _layout(tmp_path))
+    monkeypatch.setattr(_common, "repo_layout", lambda: _layout(tmp_path))
 
-    function, manifest, source = _lift_m2c.resolve_function("exe/logo@0x801CE758")
+    function, manifest, source = _common.resolve_function_selector(
+        "exe/logo@0x801CE758"
+    )
 
     assert function.address == 0x801CE758
     assert manifest.id.value == "exe/logo"
@@ -540,10 +631,12 @@ def test_lift_m2c_resolve_function_missing_source_is_none(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     _target(tmp_path)
-    (tmp_path / "src" / "exe" / "logo").mkdir(parents=True)
-    monkeypatch.setattr(_lift_m2c, "repo_layout", lambda: _layout(tmp_path))
+    (tmp_path / "src" / "exe" / "logo").mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(_common, "repo_layout", lambda: _layout(tmp_path))
 
-    _function, _manifest, source = _lift_m2c.resolve_function("exe/logo@0x801CE758")
+    _function, _manifest, source = _common.resolve_function_selector(
+        "exe/logo@0x801CE758"
+    )
 
     assert source is None  # never a fabricated func_<ADDR> path
 
@@ -558,7 +651,7 @@ def test_analyzer_snapshot_is_lifted_for_renamed_source(tmp_path: Path) -> None:
     renamed = source_dir / "initState.c"
     renamed.write_text("/* @source 0x80100000 @behavior x */\n", encoding="utf-8")
 
-    with patch("harness.analyzer._run_analysis", return_value=(functions, [])):
+    with patch("harness.analysis.engine._run_analysis", return_value=(functions, [])):
         snapshot = build_snapshot(
             engine, binary, 0x80100000, "test", source_dir=source_dir
         )
@@ -577,7 +670,7 @@ def test_analyzer_snapshot_ignores_helper_files(tmp_path: Path) -> None:
     source_dir.mkdir()
     (source_dir / "symbols.c").write_text("WEAK_SYMBOL_AT(x, 0x80100000);\n")
 
-    with patch("harness.analyzer._run_analysis", return_value=(functions, [])):
+    with patch("harness.analysis.engine._run_analysis", return_value=(functions, [])):
         snapshot = build_snapshot(
             engine, binary, 0x80100000, "test", source_dir=source_dir
         )
@@ -600,7 +693,7 @@ def test_analyzer_detects_source_address_collision(tmp_path: Path) -> None:
         "/* @source 0x80100000 @behavior x */\n", encoding="utf-8"
     )
 
-    with patch("harness.analyzer._run_analysis", return_value=(functions, [])):
+    with patch("harness.analysis.engine._run_analysis", return_value=(functions, [])):
         with pytest.raises(SourceAddressCollision, match="collision 0x80100000"):
             build_snapshot(engine, binary, 0x80100000, "test", source_dir=source_dir)
 
@@ -616,7 +709,7 @@ def test_asm_diff_resolve_symbol_identity_map_backed(tmp_path: Path) -> None:
     binary.write_bytes(payload)
 
     source_dir = tmp_path / "src" / "exe" / "logo"
-    source_dir.mkdir(parents=True)
+    source_dir.mkdir(parents=True, exist_ok=True)
     source = source_dir / "initSelectionState.c"
     source.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
 
@@ -639,7 +732,7 @@ def test_permute_function_name_map_backed(tmp_path: Path) -> None:
     _map(tmp_path, "initSelectionState = 0x801CE758;\n")
     _splat(tmp_path)
     source = tmp_path / "src" / "exe" / "logo" / "initSelectionState.c"
-    source.parent.mkdir(parents=True)
+    source.parent.mkdir(parents=True, exist_ok=True)
     source.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
 
     assert permute.resolve_function_name(source, None, tmp_path) == "initSelectionState"
@@ -650,7 +743,7 @@ def test_permute_function_name_no_map_entry_raises(tmp_path: Path) -> None:
     _target(tmp_path)
     _splat(tmp_path)
     source = tmp_path / "src" / "exe" / "logo" / "initSelectionState.c"
-    source.parent.mkdir(parents=True)
+    source.parent.mkdir(parents=True, exist_ok=True)
     source.write_text("/* @source 0x801CE758 @behavior x */\n", encoding="utf-8")
 
     with pytest.raises(CompiledSymbolError, match="no target-local map entry"):

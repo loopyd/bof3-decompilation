@@ -11,7 +11,9 @@ Shared reference for data encoding used across multiple table types.
 
 ## Bitmask values
 
-Verified from binary bytes in `GAME.EMI`.
+Recorded from the tracked vast-violence structural layout of the `GAME.EMI`
+tables (historical catalog provenance; no tracked byte-verifier command —
+see [Evidence](#evidence)).
 
 ### Equipability (1 byte)
 
@@ -158,11 +160,21 @@ When `item_type = 0xFF`: zenny = `item_index × 40`.
 
 ### Steal/drop rate
 
+Randomizer implementation (`third_party/references/vast-violence/randomizer.py`):
+
 ```
-rate = 2^value / 128    (as fraction, e.g. value=3 → 8/128 = 6.25%)
+value = 0 → no steal/drop (sentinel)
+value = 1..7 → rate = 2^value / 128  (as fraction, e.g. value=3 → 8/128 = 6.25%)
 ```
 
-Value range 0–7. Value 0 = 0.8% (2^0/128).
+The tracked randomizer guards `2**rate / 128` behind `if self.steal_rate
+else 0` (value 0 = 0%, not 0.8%) and applies the same rule to drop rate.
+
+The imported EU reference (`docs/reference/bof3-eu/14-battle-mechanics.md`)
+lists codes 1–7 with a different intermediate mapping (e.g. 1 = 1/256); it
+belongs to the EU release. The native SLUS runtime mapping is not yet proven:
+no lifted function or tracked consumer cites either formula, so do not treat
+the randomizer behavior as the SLUS owner formula.
 
 ### Monster resistance scale
 
@@ -200,5 +212,4 @@ When `item_type = 0xFF`: zenny = `item_index × 40`.
 
 ## Evidence
 
-- Binary verification: `out/index/vast-violence-1.1.json`
-- Struct definitions: `third_party/references/vast-violence/tables/struct_*.txt`
+- Tracked structural provenance: `third_party/references/vast-violence/tables/struct_*.txt` layout tables (recorded against the pinned corpus at extraction time; no byte-verifier command is currently tracked in this repository)

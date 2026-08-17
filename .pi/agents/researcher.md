@@ -2,7 +2,7 @@
 name: researcher
 description: Focused sourced research
 model: ninerouter/qwen-combo
-thinking: off
+thinking: xhigh
 tools: read,write,web_search,fetch_content,get_search_content,mcp,mcp:context7,mcp:markitdown
 systemPromptMode: replace
 inheritProjectContext: true

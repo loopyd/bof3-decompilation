@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 
-from ..compiler_config import (
+from ..build.compiler import (
     load_object_compilers,
     load_object_flags,
     sanitize_identifier,

@@ -6,12 +6,15 @@ import argparse
 import shutil
 import sys
 
-from ..build import build, cmake_target_for_directory, cmake_target_for_source
+from ..build.operations import (
+    build,
+    cmake_target_for_directory,
+    cmake_target_for_source,
+)
 from ..domain import lookup_target_manifest, normalize_target_id
 from ..domain.claims import manifest_source_paths
 from ..io import repo_layout
-from ._common import add_example_argument, run_main
-from ._lift_m2c import resolve_function
+from ._common import add_example_argument, resolve_function_selector, run_main
 
 
 def run(args: argparse.Namespace) -> int:
@@ -24,11 +27,9 @@ def run(args: argparse.Namespace) -> int:
 
     target = "lifts"
     if args.selector != "all" and "@" in args.selector:
-        _function, _manifest, source = resolve_function(args.selector)
+        _function, _manifest, source = resolve_function_selector(args.selector)
         if source is None or not source.is_file():
-            raise FileNotFoundError(
-                f"lift source not found for {args.selector}"
-            )
+            raise FileNotFoundError(f"lift source not found for {args.selector}")
         target = cmake_target_for_source(root, source)
     elif args.selector != "all":
         manifest = lookup_target_manifest(root, args.selector)

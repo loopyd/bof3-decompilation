@@ -4,16 +4,14 @@ from __future__ import annotations
 
 import argparse
 import sys
-from pathlib import Path
 
 from ..domain import FUNCTION_ID_FORMAT, FUNCTION_ID_HELP
-from ..reverse_index import rebuild
-from ..rizin_project import status
-from ._common import add_example_argument, add_root_argument, run_main
+from ..analysis.index import rebuild
+from ..analysis.project import status
+from ._common import add_example_argument, add_root_argument, resolved_root, run_main
 
 
-def _root(args: argparse.Namespace) -> Path:
-    return args.root.resolve()
+_root = resolved_root
 
 
 def run_sequence(args: argparse.Namespace) -> int:

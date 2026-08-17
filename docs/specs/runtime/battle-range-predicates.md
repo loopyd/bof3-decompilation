@@ -53,16 +53,16 @@ supports the local convention but does not establish a shared public type.
 
 For `0x800AF66C`, a candidate that copies `a0` to preserve the range pointer is
 not evidence for the intended ABI: original instructions load `a0`'s two fields
-into `a1` then `a0` and reserve `t0` for `a1`. The unresolved mismatch is the
+into `a1` then `a0` and reserve `t0` for `a1`. The historical mismatch was the
 compiler's allocation/scheduling of this proven `(range, value)` shape, not an
-unknown parameter order.
+unknown parameter order; the allocator experiment below resolved it.
 
-The retained clean-C partial lift first loads `g_battle_work`, then shifts
-`a1` directly and keeps range/work values in `v0`/`v1`; it is 76→80 bytes and
-first differs at entry, where the original is `move t0,a1; move v0,zero`.
+The retained clean-C partial lift first loaded `g_battle_work`, then shifted
+`a1` directly and kept range/work values in `v0`/`v1`; it measured 76→80 bytes
+and first differed at entry, where the original is `move t0,a1; move v0,zero`.
 A 52-profile matrix found canonical GCC 2.7.2 and GCC 2.6.3 tie at 25.00%,
 while GCC 2.8.0, 2.8.1, and 2.95.2 are worse (23.81%), all non-exact. This
-rules out those tested compiler profiles for this C shape; it does not prove
+ruled out those tested compiler profiles for that C shape; it does not prove
 retail GCC version or justify an object override.
 
 The bounded clean-C lifetime pass did not improve that retained shape:
@@ -80,5 +80,6 @@ locals. This causes canonical GCC to preserve `value` in `t0`, initialize the
 result in `v0`, and allocate the derived values as in the original. The signed
 threshold experiment was not retained: both range fields and thresholds are
 `u32`, consistent with the original `sltu` comparisons. A fresh live
-`bin/asm-diff` and `bin/byte-match` then matched all 19 instructions / 76 bytes.
-No object compiler override or generic macro is used.
+`bin/asm-diff` and `bin/byte-match` then matched all 19 instructions / 76 bytes
+(`func_800AF66C`, `@status exact`). No object compiler override or generic
+macro is used.

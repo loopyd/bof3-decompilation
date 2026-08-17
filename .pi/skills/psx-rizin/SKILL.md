@@ -25,7 +25,8 @@ Explicit invocation only. Findings reproducible from authorized machine code + r
 7. Validate functions/args/types/names across callers, instructions, runtime evidence where practical.
 8. Keep independently loaded overlays in separate namespaces.
 9. Record symbol/signature provenance + confidence; preserve source names.
-10. Repo workspace: snapshots `out/reverse/snapshots/<encoded-target>.json` (`bin/rz-project`), index `out/index/` (`bin/rev-query`), matching `out/matching/`, `out/permuter/`, `out/asm-diff/`. Prefer wired `bin/` entrypoints when they cover the task.
+10. Repo workspace: snapshots `out/reverse/snapshots/<encoded-target>.json` (`bin/rz-project`), index `out/index/` (`bin/rev-query`), matching
+`out/matching/`, `out/permuter/`, `out/asm-diff/`. Prefer wired `bin/` entrypoints that cover the task.
 
 ## Snapshot readiness
 
@@ -52,7 +53,7 @@ Emits manifest identity, binary hash, snapshot freshness, index readiness as one
 | `$psx-rizin build-diff [function-or-target]` | matching diff |
 | `$psx-rizin audit <case-directory>` | case audit |
 
-Free-form requests valid; state assumptions instead of blocking on minor syntax ambiguity.
+Free-form requests valid; state assumptions; don't block on minor syntax ambiguity.
 
 ## Read progressively
 
@@ -75,7 +76,6 @@ Broad case: read WORKFLOW.md. Focused task: matching reference only, then bundle
 Report needed evidence only: input identity + proven address model; target/overlay-qualified findings + confidence; relevant static + runtime evidence; matching status when requested; contradictions/unknowns/next experiment. Mark unsupported conclusions `[INFERRED]` with the evidence chain.
 
 Broad-case completion verifies: inventory, address mapping, overlay identity, function boundaries, indirect control flow, symbol provenance, runtime coverage, decompiler reconciliation, exclusion of proprietary inputs from distributable artifacts.
-
 ## Utilities
 
 Repo-wired: `bin/rz-project` — target-qualified analyze/status/open (writes `out/reverse/snapshots/<encoded-target>.json`); `bin/rev-query` — cross-target index (`out/index/`). Lift-side (`asm-diff`/`byte-match`/`permute`/`decomp-status`/`symbols`/`splat`) follow the bof3-re evidence table.

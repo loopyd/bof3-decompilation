@@ -1,71 +1,21 @@
-"""Single-function mission brief composition and printing."""
+"""Single-function mission brief composition from indexed reverse evidence."""
 
 from __future__ import annotations
 
-import argparse
-import json
 from pathlib import Path
 from typing import Any
 
-from ..canonical import load_map, load_target_symbols, sdk_map_path
-from ..domain import (
-    load_target_manifests,
-    parse_function_id,
-)
-from ..reverse_index import connect, rows
+from ..domain import load_target_manifests, parse_function_id
+from ..domain.claims import resolve_manifest_source_for_address
+from ..domain.layout import parse_splat_layout
+from ..domain.symbols import load_map, load_target_symbols, sdk_map_path
+from .graph import enrich_graph, function_metrics
+from .index import connect, rows
 
 
-from ._rev_query_graph import _enrich_graph, _function_metrics, _root
-
-
-def _print_mission(brief: dict[str, Any]) -> None:
-    metrics = brief["metrics"]
-    risk = brief["risk"]
-    print(f"mission {brief['function']} (space={brief['psyq_space']})")
-    print(
-        f"  source: {brief['source']} "
-        f"(exists={brief['source_exists']}, lifted={brief['lifted']})"
-    )
-    print(f"  splat asm: {brief['splat_asm']} (exists={brief['splat_asm_exists']})")
-    print(
-        f"  insn={metrics['instruction_count']} cc={metrics['cyclomatic_complexity']} "
-        f"loops={metrics['loops']} bb={metrics['basic_blocks']} "
-        f"callers={metrics['unique_callers']} callees={metrics['unique_callees']} "
-        f"leaf={metrics['leaf_status']} dup_leverage={metrics['duplicate_leverage']}"
-    )
-    print(
-        f"  risk: unresolved_calls={risk['unresolved_calls']} "
-        f"metric_missing={risk['metric_missing']} confidence={risk['confidence_band']}"
-    )
-    if brief["sdk_callees"]:
-        names = ", ".join(f"{c['name']}@{c['address']}" for c in brief["sdk_callees"])
-        print(f"  SDK callees: {names}")
-    if brief["sdk_unresolved"]:
-        names = ", ".join(
-            f"{c['name']}@{c['address']}" for c in brief["sdk_unresolved"]
-        )
-        print(f"  SDK unresolved: {names}")
-    if brief["callers"]:
-        print(
-            f"  callers ({len(brief['callers'])}): "
-            + ", ".join(str(c["caller"]) for c in brief["callers"][:12])
-        )
-    if brief["callees"]:
-        print(
-            f"  callees ({len(brief['callees'])}): "
-            + ", ".join(str(c["callee"]) for c in brief["callees"][:12])
-        )
-    if brief["duplicate_group"]:
-        print(
-            f"  duplicate group ({len(brief['duplicate_group'])}): "
-            + ", ".join(brief["duplicate_group"])
-        )
-
-
-def run_mission(args: argparse.Namespace) -> int:
+def mission_brief(root: Path, function_selector: str) -> dict[str, Any]:
     """Compose a single-function lifting brief from indexed evidence."""
-    root = _root(args)
-    function = parse_function_id(args.function)
+    function = parse_function_id(function_selector)
     target = function.target.value
     address = function.address
     function_id = str(function)
@@ -78,8 +28,8 @@ def run_mission(args: argparse.Namespace) -> int:
 
     connection = connect(root)
     try:
-        metrics = _function_metrics(connection, target)
-        _enrich_graph(connection, metrics)
+        metrics = function_metrics(connection, target)
+        enrich_graph(connection, metrics)
         row = next((item for item in metrics if item["id"] == function_id), None)
         if row is None:
             raise ValueError(f"function not in reverse index: {function_id}")
@@ -134,13 +84,10 @@ def run_mission(args: argparse.Namespace) -> int:
                 {"address": f"0x{unresolved_address:08X}", "name": name}
             )
 
-    from ..domain.claims import resolve_manifest_source_for_address
-    from ..layout import parse_splat_layout
-
     resolved = resolve_manifest_source_for_address(root, manifest, address)
     source = resolved.relative_to(root) if resolved is not None else None
     layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
-    boundary = layout.boundary_starting_at(address)
+    boundary = layout.find_boundary_at(address)
     splat_asm = None
     if boundary is not None and boundary.name:
         candidate = Path("out") / "splat" / target / "asm" / f"{boundary.name}.s"
@@ -153,7 +100,7 @@ def run_mission(args: argparse.Namespace) -> int:
                 if (root / named).is_file():
                     splat_asm = named
                 break
-    brief = {
+    return {
         "schema": "bof3.mission/v1",
         "function": function_id,
         "target": target,
@@ -192,8 +139,3 @@ def run_mission(args: argparse.Namespace) -> int:
         "sdk_unresolved": sdk_unresolved,
         "duplicate_group": duplicate_group,
     }
-    if args.json:
-        print(json.dumps(brief, indent=2, sort_keys=True))
-    else:
-        _print_mission(brief)
-    return 0

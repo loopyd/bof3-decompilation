@@ -4,11 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from ..domain.sources import (  # single authority: metadata-backed registry
-    CompiledSymbolError,
-    collect_source_addresses as _domain_collect_source_addresses,
-    compiled_symbol_name,
+    collect_source_addresses,
     owning_manifest,
-    source_address as _domain_source_address,
 )
 from ..io import read_json, RepoLayout
 
@@ -51,18 +48,6 @@ def read_psx_exe_info(path: Path) -> PsxExeInfo | None:
         load_address=read_u32le(header, 0x18),
         payload_size=read_u32le(header, 0x1C),
     )
-
-
-def parse_source_address(source_path: Path) -> int:
-    """Legacy alias; the @source-tag authority lives in domain.sources."""
-
-    return _domain_source_address(source_path)
-
-
-def collect_source_addresses(source_dir: Path) -> list[tuple[Path, int]]:
-    """Legacy alias; duplicate detection lives in domain.sources."""
-
-    return _domain_collect_source_addresses(source_dir)
 
 
 def infer_size_from_sibling_sources(
@@ -146,33 +131,10 @@ def infer_original_size(
             binary_path, address=address, load_address=load_address
         )
     except ValueError:
-        sibling_size = infer_size_from_sibling_sources(
-            source_path, address, root=root
-        )
+        sibling_size = infer_size_from_sibling_sources(source_path, address, root=root)
         if sibling_size is not None:
             return sibling_size
         raise
-
-
-def source_function_name(
-    source_path: Path, address: int, root: Path | None = None
-) -> str:
-    """Return the compiled symbol name for a lift source.
-
-    With ``root`` the owning target map names the compiled symbol (raw
-    ``func_<ADDR>`` or a reviewed semantic name) with map/Splat agreement.
-    Without a target context, the compiled symbol cannot be proven and
-    :class:`CompiledSymbolError` is raised — ``func_<ADDR>`` is never
-    synthesized from the filename.
-    """
-
-    if root is None:
-        raise CompiledSymbolError(
-            source_path,
-            address,
-            "no repository context for compiled symbol resolution",
-        )
-    return compiled_symbol_name(root, source_path, address)
 
 
 def _source_relative_path(layout: RepoLayout, source_path: Path) -> Path:

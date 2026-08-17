@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import shutil
 
-from ..assets.str_media import convert_str, inspect_str, validate_str
+from ..media.str_media import convert_str, inspect_str, validate_str
 from ._common import add_example_argument, add_root_argument, run_main
 
 

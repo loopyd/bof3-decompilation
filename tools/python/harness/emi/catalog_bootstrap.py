@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from ..canonical import load_map
+from ..domain.symbols import load_map
 from ..discovery import file_sha256
 from ..domain import load_target_manifests
 from ..io import write_json

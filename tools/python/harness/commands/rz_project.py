@@ -5,15 +5,13 @@ from __future__ import annotations
 import argparse
 import json
 import os
-from pathlib import Path
 
-from ..analyzer import find_engine
-from ..rizin_project import analyze_project, prepare_target, rizin_argv, status
-from ._common import add_example_argument, add_root_argument, run_main
+from ..analysis.engine import find_engine
+from ..analysis.project import analyze_project, prepare_target, rizin_argv, status
+from ._common import add_example_argument, add_root_argument, resolved_root, run_main
 
 
-def _root(args: argparse.Namespace) -> Path:
-    return args.root.resolve()
+_root = resolved_root
 
 
 def run_open(args: argparse.Namespace) -> int:

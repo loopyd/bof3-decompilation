@@ -2,24 +2,25 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
 import sqlite3
 import tempfile
 from typing import Any, Iterable
 
-from .domain import TargetManifest, load_target_manifests, normalize_target_id
-from .match.asm_diff import (
+from ..analysis.index import SCHEMA_VERSION, index_path
+from ..analysis.snapshot import read_snapshot, snapshot_path, validate_snapshot_identity
+from ..discovery import file_sha256
+from ..domain import TargetManifest, load_target_manifests, normalize_target_id
+from ..match.asm_diff import (
     run_asm_diff_one,
 )
-from .match.status_cache import StatusCache
-from .reverse_index import SCHEMA_VERSION, index_path
-from .snapshot import read_snapshot, snapshot_path, validate_snapshot_identity
+from ..match.status_cache import MatchStatusCache
 
-from .decomp_status_preflight import DiffRunner, _build_preflight, _run_batch_misses
+from .preflight import DiffRunner, _build_preflight, _run_batch_misses
 
 """Worklist item: (target, source_path, address, source_name, fingerprint_key, manifest)."""
+
 
 def select_manifests(
     root: Path, target_ids: Iterable[str] = ()
@@ -38,12 +39,13 @@ def select_manifests(
         selected[normalized] = manifests[normalized]
     return sorted(selected.items())
 
+
 def collect_lifts(
     root: Path,
     manifests: Iterable[tuple[str, TargetManifest]],
     *,
     diff_runner: DiffRunner = run_asm_diff_one,
-    cache: StatusCache | None = None,
+    cache: MatchStatusCache | None = None,
 ) -> list[dict[str, Any]]:
     """Compile and compare every lift in the supplied target manifests.
 
@@ -60,8 +62,6 @@ def collect_lifts(
     records.sort(key=lambda r: (r["target"], r["source"]))
     return records
 
-def _binary_hash(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 def index_coverage(
     root: Path, manifests: Iterable[tuple[str, TargetManifest]]
@@ -99,14 +99,14 @@ def index_coverage(
                     raise ValueError(
                         "reverse index has invalid Rizin snapshot; run just index"
                     )
-                if snapshot.inputs.get("binary_sha256") != _binary_hash(binary):
+                if snapshot.inputs.get("binary_sha256") != file_sha256(binary):
                     raise ValueError(
                         "reverse index has stale Rizin snapshot; run just index"
                     )
                 row = connection.execute(
                     "SELECT binary_sha256 FROM targets WHERE id = ?", (target,)
                 ).fetchone()
-                if row is None or row[0] != _binary_hash(binary):
+                if row is None or row[0] != file_sha256(binary):
                     raise ValueError(
                         "reverse index is incomplete or stale; run just index"
                     )
@@ -127,6 +127,7 @@ def index_coverage(
     except sqlite3.DatabaseError as exc:
         raise ValueError(f"invalid reverse index: {exc}") from exc
 
+
 def build_report(
     root: Path,
     target_ids: Iterable[str] = (),
@@ -138,7 +139,7 @@ def build_report(
 
     manifests = select_manifests(root, target_ids)
     try:
-        cache = StatusCache(root) if use_cache else None
+        cache = MatchStatusCache(root) if use_cache else None
     except sqlite3.DatabaseError:
         cache = None
     try:
@@ -182,6 +183,7 @@ def build_report(
         "contains_data": [row for rows in contains_data.values() for row in rows],
         "coverage_error": coverage_error,
     }
+
 
 def render_text(report: dict[str, Any], detail: str = "full") -> str:
     """Render deterministic status at the requested context budget."""
@@ -229,6 +231,7 @@ def render_text(report: dict[str, Any], detail: str = "full") -> str:
             )
     return "\n".join(lines)
 
+
 def project_report(report: dict[str, Any], detail: str) -> dict[str, Any]:
     """Project display JSON without changing the complete persisted report."""
 
@@ -257,6 +260,7 @@ def project_report(report: dict[str, Any], detail: str) -> dict[str, Any]:
         for target in report["targets"]
     ]
     return projected
+
 
 def write_report(path: Path, report: dict[str, Any]) -> None:
     """Atomically persist the JSON representation requested by the caller."""

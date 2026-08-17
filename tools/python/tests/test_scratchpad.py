@@ -10,7 +10,7 @@ from types import SimpleNamespace
 import pytest
 
 from harness.domain import parse_function_id
-from harness.c_context import public_declaration_context
+from harness.domain.c_context import public_declaration_context
 from harness.toolchain.decompme import (
     DecompMeScratchpadToolchain,
     ScratchpadPayload,
@@ -82,9 +82,14 @@ def test_publish_rejects_malformed_response(
         lambda request, timeout: _Response(b"not json"),
     )
     payload = ScratchpadPayload(
-        name="func_80100000", platform="ps1", compiler="gcc2.7.2-psx",
-        compiler_flags="-O2", diff_label="func_80100000", target_asm=".text\n",
-        context="", source_code="void func_80100000(void) {}\n",
+        name="func_80100000",
+        platform="ps1",
+        compiler="gcc2.7.2-psx",
+        compiler_flags="-O2",
+        diff_label="func_80100000",
+        target_asm=".text\n",
+        context="",
+        source_code="void func_80100000(void) {}\n",
     )
     with pytest.raises(RuntimeError, match="no scratch slug"):
         DecompMeScratchpadToolchain(SimpleNamespace(root=tmp_path)).publish(payload)
@@ -115,19 +120,47 @@ def test_payload_for_battle_range_lift_uses_ps1_and_preprocessed_source() -> Non
     assert payload.context.count("extern ") == 1
 
 
+def test_payload_uses_registry_function_name(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from harness.io import repo_layout
+    from harness.toolchain import decompme
+
+    import dataclasses
+
+    real = decompme.resolve_function
+
+    def named(root, function):
+        resolved = real(root, function)
+        return dataclasses.replace(resolved, compiled_symbol="drawFrameBorder")
+
+    monkeypatch.setattr(decompme, "resolve_function", named)
+    payload = DecompMeScratchpadToolchain(repo_layout()).payload(
+        parse_function_id("emi/world00/area008/13@0x801F3D88"),
+        compiler="gcc-2.7.2-psx",
+    )
+
+    assert payload.name == "drawFrameBorder"
+    assert payload.diff_label == "drawFrameBorder"
+
+
 def test_payload_preserves_required_assembler_flags() -> None:
-    assert _decompme_compiler_flags(
-        ["bin/cc", "-O2", "-Wa,--expand-div", "-c", "source.c"]
-    ) == "-O2 -G0 -funsigned-char -msoft-float -gcoff -Wa,--expand-div"
-    assert _decompme_compiler_flags(
-        ["bin/cc", "-O2", "-c", "source.c"]
-    ) == "-O2 -G0 -funsigned-char -msoft-float -gcoff"
+    assert (
+        _decompme_compiler_flags(
+            ["bin/cc", "-O2", "-Wa,--expand-div", "-c", "source.c"]
+        )
+        == "-O2 -G0 -funsigned-char -msoft-float -gcoff -Wa,--expand-div"
+    )
+    assert (
+        _decompme_compiler_flags(["bin/cc", "-O2", "-c", "source.c"])
+        == "-O2 -G0 -funsigned-char -msoft-float -gcoff"
+    )
 
 
 def test_payload_rejects_data_leading_non_function_range() -> None:
     from harness.io import repo_layout
 
-    with pytest.raises(ValueError, match="not a reviewed function boundary"):
+    with pytest.raises(ValueError, match="cannot resolve compiled symbol"):
         DecompMeScratchpadToolchain(repo_layout()).payload(
             parse_function_id("emi/battle/battle/03@0x801D0C00"),
             compiler="gcc-2.7.2-psx",
@@ -173,6 +206,46 @@ def test_public_context_keeps_function_pointer_typedefs() -> None:
     assert "typedef void (*BattleSelectionHandler)(void);" in context
 
 
+def test_public_context_resolves_all_names_from_multi_name_typedef() -> None:
+    declaration = "typedef struct Node { u32 value; } Node, *NodePtr;"
+
+    for source in ("Node value;", "NodePtr value;"):
+        context = public_declaration_context(
+            declaration, source, base="typedef unsigned int u32;\n"
+        )
+        assert context.count(declaration) == 1
+
+
+def test_public_context_deduplicates_identical_same_name_declarations() -> None:
+    declaration = "extern u32 g_value;"
+    context = public_declaration_context(
+        declaration + "\n" + declaration,
+        "u32 func(void) { return g_value; }",
+        base="typedef unsigned int u32;\n",
+    )
+
+    assert context.count(declaration) == 1
+
+
+def test_public_context_keeps_plain_function_prototypes() -> None:
+    context = public_declaration_context(
+        "s32 GetGraphType(void);\n",
+        "s32 func(void) { return GetGraphType(); }",
+        base="typedef signed int s32;\n",
+    )
+
+    assert "s32 GetGraphType(void);" in context
+
+
+def test_public_context_rejects_conflicting_same_name_declarations() -> None:
+    with pytest.raises(ValueError, match="conflicting declarations for g_value"):
+        public_declaration_context(
+            "extern u16 g_value;\nextern u32 g_value;\n",
+            "u32 func(void) { return g_value; }",
+            base="typedef unsigned short u16;\ntypedef unsigned int u32;\n",
+        )
+
+
 def test_payload_allows_local_names_that_collide_with_ignored_headers() -> None:
     from harness.io import repo_layout
 
@@ -185,11 +258,20 @@ def test_payload_allows_local_names_that_collide_with_ignored_headers() -> None:
     assert "result" in payload.source_code
 
 
-def test_payload_rejects_ignored_psyq_declarations() -> None:
+def test_payload_resolves_referenced_psyq_declarations() -> None:
     from harness.io import repo_layout
 
-    with pytest.raises(ValueError, match="ignored PsyQ declarations: DR_MODE"):
-        DecompMeScratchpadToolchain(repo_layout()).payload(
-            parse_function_id("emi/battle/battle/03@0x801D9900"),
-            compiler="gcc-2.7.2-psx",
-        )
+    payload = DecompMeScratchpadToolchain(repo_layout()).payload(
+        parse_function_id("emi/world00/area008/13@0x801F3D88"),
+        compiler="gcc-2.7.2-psx",
+    )
+
+    assert payload.source_code.lstrip().startswith("void func_801F3D88(")
+    assert "typedef struct { short x, y; short w, h; } RECT;" in payload.context
+    assert "} POLY_FT4;" in payload.context
+    assert "} DR_MODE;" in payload.context
+    assert "extern u_short GetClut(int x, int y) ;" in payload.context
+    assert "extern void SetDrawMode(DR_MODE *p" in payload.context
+    assert "s32 GetGraphType(void);" in payload.context
+    assert "void func_8014E5A0 (u32 ot_index, u32 primitive_size);" in payload.context
+    assert "void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2" in payload.context

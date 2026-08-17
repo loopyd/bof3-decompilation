@@ -20,8 +20,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Iterable, Mapping
 
-from ..canonical import load_map, map_path
-from ..layout import ReviewedLayout, parse_splat_layout
+from .layout import ReviewedSplatLayout, parse_splat_layout
+from .symbols import load_map, map_path
 from .manifests import load_target_manifests
 from .tags import parse_behavior_tag, parse_source_tag
 
@@ -206,7 +206,7 @@ def collect_source_addresses(
 
 
 def expected_lift_sources(
-    layout: ReviewedLayout, source_dir: Path
+    layout: ReviewedSplatLayout, source_dir: Path
 ) -> dict[str, int]:
     """Map every reviewed Splat ``c`` boundary to a target-relative source stem.
 
@@ -266,18 +266,17 @@ def resolve_source_for_address(
 
 
 def owning_manifest(root: Path, source_path: Path):
-    """Return the manifest owning ``source_path``: explicit claim match first,
-    then legacy ``source_dir`` ancestry.
+    """Return the manifest that explicitly claims ``source_path``, or None.
 
-    Explicit claims make ownership target-qualified and path-independent, so
-    a lift moved into a semantic ``src/bof3/<class>/`` folder keeps its owner.
-    Returns None when no manifest claims the path and no manifest root
-    contains it (out-of-root or unrelated source).
+    Ownership is target-qualified and path-independent: only explicit
+    ``sources``/``support_sources``/``headers`` claims confer it, so a lift
+    moved into a semantic ``src/bof3/<class>/`` folder keeps its owner.
+    ``source_dir`` directory ancestry never confers ownership.
     """
 
     try:
-        source_rel = source_path.expanduser().resolve().relative_to(
-            root.expanduser().resolve()
+        source_rel = (
+            source_path.expanduser().resolve().relative_to(root.expanduser().resolve())
         )
     except ValueError:
         return None
@@ -285,27 +284,16 @@ def owning_manifest(root: Path, source_path: Path):
         manifest
         for manifest in load_target_manifests(root).values()
         if any(Path(claimed) == source_rel for claimed in manifest.sources)
-        or any(
-            Path(claimed) == source_rel for claimed in manifest.support_sources
-        )
+        or any(Path(claimed) == source_rel for claimed in manifest.support_sources)
         or any(Path(claimed) == source_rel for claimed in manifest.headers)
     ]
-    if claimed_owners:
-        return max(
-            claimed_owners,
-            key=lambda manifest: len(
-                manifest.sources + manifest.support_sources + manifest.headers
-            ),
-        )
-    owners = [
-        manifest
-        for manifest in load_target_manifests(root).values()
-        if source_rel.is_relative_to(Path(manifest.source_dir))
-    ]
+    if not claimed_owners:
+        return None
     return max(
-        owners,
-        key=lambda manifest: len(Path(manifest.source_dir).parts),
-        default=None,
+        claimed_owners,
+        key=lambda manifest: len(
+            manifest.sources + manifest.support_sources + manifest.headers
+        ),
     )
 
 
@@ -314,7 +302,7 @@ def reviewed_function_name(
     target: str,
     address: int,
     *,
-    layout: ReviewedLayout | None = None,
+    layout: ReviewedSplatLayout | None = None,
 ) -> str:
     """Return the target-owned compiled symbol name at ``address``.
 
@@ -336,9 +324,13 @@ def reviewed_function_name(
         raise CompiledSymbolError(None, address, f"unknown target: {target}")
     if layout is None:
         layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
-    boundary = layout.boundary_starting_at(address)
+    boundary = layout.find_boundary_at(address)
     entry = next(
-        (symbol for symbol in load_map(map_path(root, target)) if symbol.address == address),
+        (
+            symbol
+            for symbol in load_map(map_path(root, target))
+            if symbol.address == address
+        ),
         None,
     )
     if entry is None:
@@ -350,10 +342,12 @@ def reviewed_function_name(
             None, address, "target-local map entry is a data symbol, not a function"
         )
     if boundary is None or not boundary.is_function:
-        containing = layout.boundary_containing(address)
+        containing = layout.find_containing_boundary(address)
         if containing is None or containing.kind != "bin":
             raise CompiledSymbolError(
-                None, address, "no reviewed Splat function boundary or containing bin segment"
+                None,
+                address,
+                "no reviewed Splat function boundary or containing bin segment",
             )
         return entry.name
     boundary_name = boundary.name
@@ -375,7 +369,7 @@ def compiled_symbol_name(
     source_path: Path,
     address: int,
     *,
-    layout: ReviewedLayout | None = None,
+    layout: ReviewedSplatLayout | None = None,
 ) -> str:
     """Return the object symbol compiled from ``source_path`` at ``address``.
 
@@ -392,9 +386,7 @@ def compiled_symbol_name(
             address,
             "source is not claimed by or inside a known target source directory",
         )
-    return reviewed_function_name(
-        root, manifest.id.value, address, layout=layout
-    )
+    return reviewed_function_name(root, manifest.id.value, address, layout=layout)
 
 
 __all__ = [

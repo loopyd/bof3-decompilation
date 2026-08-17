@@ -131,8 +131,10 @@ function tint_primitive(primitive, alpha):
 
 The first flow is evidenced by exact-matching `GAME.EMI#0 @ 0x801af2a0`;
 the tint helper is exact at `GAME.EMI#1 @ 0x801d18e8`. Frontend glyph geometry
-is table-driven, but its constructor at `0x801d17d8` is not yet an exact C
-match. Do not generalize these layouts to every PSX primitive.
+is table-driven and its constructor at `0x801d17d8` is an exact match
+(`drawGlyph`, `bin/asm-diff emi/etc/game/01@0x801D17D8 --detail minimal`:
+MATCH 68/68, 272 bytes, `@status exact`). Do not generalize these layouts to
+every PSX primitive.
 
 Executable checks:
 
@@ -141,10 +143,13 @@ bin/asm-diff emi/etc/game/00@0x801AF2A0
 bin/byte-match emi/etc/game/00@0x801AF2A0
 bin/asm-diff emi/etc/game/01@0x801D18E8
 bin/byte-match emi/etc/game/01@0x801D18E8
+bin/asm-diff emi/etc/game/01@0x801D17D8
+bin/byte-match emi/etc/game/01@0x801D17D8
 ```
 
-Both checks must report exact instruction and byte matches. A visual render is
-supporting evidence only; it does not replace the canonical binary diff.
+All three primitives must report exact instruction and byte matches. A visual
+render is supporting evidence only; it does not replace the canonical binary
+diff.
 
 ### Audio and sector media
 
@@ -176,28 +181,35 @@ Testable invariants:
 - Preserve the original extracted bytes and hash as the archival source. The
   desktop derivative is Matroska with lossless H.264 (`libx264 -qp 0`) plus
   FLAC, without scaling or pixel-format/range changes.
-- A decoder-generated A/V file belongs under `out/analysis/media/`. Compare
-  decoded timing with a bounded probe:
-
-  ```sh
-  ffprobe -v error -count_frames \
-    -show_entries stream=index,codec_type,nb_read_frames,duration,r_frame_rate,sample_rate \
-    -of json out/analysis/media/CAPCOM30.mkv
-  ```
-
-- The measured `CAPCOM30.STR` has exactly 1155 2336-byte sectors. Lossless
-  wrapping yields 231 video frames and 143 main stereo XA packets at 37800 Hz.
-  ffmpeg's default time base reproduces the naïve desktop half-speed symptom,
-  but it is not a canonical duration for the asset.
+- Decoder-generated A/V files are disposable derivatives. `bin/str-media`
+  (`inspect`/`validate`/`convert`; `tools/python/harness/commands/str_media.py`,
+  `tools/python/harness/media/str_media.py`) is the tracked producer and
+  validator: it computes sector/frame/audio facts and writes
+  `out/str-media/<stem>/` manifests (`harness.str-validation/v1`,
+  `harness.str-conversion/v1`); `out/analysis/media/CAPCOM30.mkv` has no
+  producing command and is not a tracked output location.
+- The extracted `CAPCOM30.STR` is an exact multiple of `2336` bytes. For the
+  pinned input `out/extracted/LOGO/CAPCOM30.STR` (SHA-256
+  `0f9145e980e401ded21f4c315375bcb989f49b8b83582f46f4a2946dd33ff06d`),
+  `bin/str-media inspect out/extracted/LOGO/CAPCOM30.STR` reports 1013
+  sectors, 203 frame records (frames
+  1-203, no gaps), frame 203 incomplete, and one stereo XA stream (file 1,
+  channel 1, 37800 Hz, 126 sectors, 254016 samples, 6.72 s).
+  `bin/str-media validate out/extracted/LOGO/CAPCOM30.STR --expected-fps 30`
+  reports status `pass` (203/30 =
+  6.7667 s video against 6.72 s audio, delta 0.0467 s within the 0.1067 s
+  tolerance). These numbers are reproducible by running the tracked commands
+  on the pinned input; the input itself is ignored disposable extraction
+  state, so the numbers are generated evidence for that extraction, not
+  durable corpus facts.
 - Missing end padding is not supported: the extracted size is exact and the
-  wrapper preserves all sectors. As a worked example, 231 frames at 30 fps and
-  1155 sectors at 2x CD rate each give 7.700 seconds. Applying the generic
-  formula to the 7.626667-second main stereo decode derives 0.073333 seconds of
-  padding, or 2772 samples per channel at 37800 Hz; both mux tracks then measure
-  7.700 seconds within the stated tolerance.
-- `INFERRED:` 30 fps/2x delivery is the strongly supported conversion setting,
-  not yet a proven game-runtime contract. Verify scheduler behavior in the
-  unresolved LOGO functions `0x801ce760` and `0x801cea98` before promoting it.
+  wrapper preserves all sectors. A 30 fps at 2x CD sector-delivery inference
+  was drawn from an earlier external desktop mux whose provenance (source
+  hash, date, artifact identity) is not preserved, so it is not attributed to
+  any current asset and is not a proven game-runtime contract. Verify
+  scheduler behavior in the unresolved LOGO function `0x801cea98` before
+  promoting it (`0x801ce760` is already an exact lift:
+  `initWorkAreaAndStartSubsystems`, 37/37, 148 bytes, `@status exact`).
   `ffprobe` cannot read the extracted 2336-byte STR directly, so probing raw
   `CAPCOM30.STR` is not a valid timing test.
 
@@ -329,7 +341,11 @@ and checking that the same monster name always has the same ID
 
 ## 4. Stat decoding (signed bytes)
 
-Master and base stats use signed bytes where 0x80-0xFF = negative:
+Only the `MasterStatsObject` bonuses and the `BaseStatsObject` level-up
+modifier bytes at `0x85`–`0x8a` are established signed-byte fields
+(see [encoding.md](data/encoding.md#signed-byte-bonuses-and-modifiers) and
+[characters.md](data/characters.md)); values `0x80`–`0xff` decode as
+`value - 256`:
 
 ```
 function decode_stat(byte_value):
@@ -342,7 +358,8 @@ function decode_stat(byte_value):
 **How it was built**: Cross-referenced master stats against known game
 behavior (e.g., Ladon is "glass cannon" with -6 HP, +2 PWR). Verified
 that the randomizer's `MasterStatsObject.cleanup()` uses the same
-conversion.
+conversion. Base stat halfwords are not signed bytes; do not generalize
+this conversion to every stat field.
 
 ## 5. Level growth decoding (nibble packing)
 
@@ -422,19 +439,25 @@ Chests contain 3-byte records:
 function decode_chest(record):
     memory_byte = record[0]     # 0xFF = empty chest
     item_index = record[1]      # index into item table
-    item_type = record[2]       # 0=Item, 1=Weapon, 2=Armor, 3=Accessory
-    
+    item_type = record[2]       # 0=Item, 1=Weapon, 2=Armor, 3=Accessory, 0xFF=zenny
+
     if memory_byte == 0xFF:
         return null  # empty
-    
-    zenny_value = item_index * 40  # zenny chests use this formula
-    
-    return { item_index, item_type, zenny_value }
+
+    if item_type == 0xFF:
+        zenny_value = item_index * 40  # zenny chests use this formula
+        return { item_index, item_type, zenny_value }
+
+    return { item_index, item_type }
 ```
 
 **How it was built**: The randomizer's chest randomization logic showed
-the 3-byte format. The `item_index * 40` zenny formula was derived
-from the randomizer's `rewrite_chests()` function.
+that a chest is empty when the memory byte is `0xFF` and that zenny is
+conditional on `item_type == 0xFF` (`ChestObject.value`: `assert
+self.item_type == 0xFF; return self.item_index * 40` in
+`third_party/references/vast-violence/randomizer.py:1326-1341`, consistent
+with `docs/specs/data/encoding.md`). A non-empty, non-zenny chest carries
+only `item_index`/`item_type`; it has no zenny value.
 
 ## 9. Formation record decoding
 
@@ -784,18 +807,12 @@ function find_bosses(pointer_table):
 
 ## Traps to avoid
 
-- **Two encoding systems**: Don't assume plain ASCII for game-data names.
-  The custom encoding uses special bytes for punctuation and colors.
-- **Name field padding**: Names shorter than 12 bytes are padded with
-  `0x00`. Trailing non-zero bytes after visible text are struct fields,
-  not name characters.
-- **Signed vs unsigned**: Stat values (master stats, base stats) use
-  signed bytes. Raw hex `0xFE` = -2, not 254.
-- **Pointer validity**: Not all pointer slots are filled. `0x00000` and
-  `0xFFFFF` indicate empty/unused entries.
-- **Cross-version differences**: v1.0 and v1.1 have different offsets
-  for some tables (e.g., Manillo stock at 0x3E53A vs 0x3E53E).
-- **Monster ID ≠ pointer index**: The pointer list index is not the
-  monster ID. Multiple pointers can reference the same monster.
-- **Master assignment**: Characters have `master=0xFF` in base stats.
-  Master assignment is determined at runtime, not stored in the record.
+The canonical trap list is maintained in
+[encoding.md](data/encoding.md#traps-to-avoid) and is not duplicated here.
+Two pseudocode-specific notes supplement it:
+
+- **Signed vs unsigned**: Only the proven signed-byte fields
+  (`MasterStatsObject` bonuses, `BaseStatsObject` `0x85`–`0x8a` modifiers)
+  decode `0xFE` as -2; base stat halfwords are unsigned 16-bit values.
+- **Monster ID ≠ pointer index**: The pointer list index is not the monster
+  ID. Multiple pointers can reference the same monster.

@@ -18,9 +18,13 @@ Discovery procedure:
 
 ## Cross-archive duplication
 
-Identical bytes in multiple archives do not imply shared ownership. Confirm:
+Identical bytes in multiple archives do not imply shared ownership. Archive
+path and entry slot remain part of target identity, so:
 
-- Same payload hash and load address → same target, same source.
+- Same payload hash and load address → identical bytes; treat as a reuse
+  candidate, not shared ownership. Confirm reviewed boundaries, then iterate
+  on one representative; each member keeps independent ownership until its
+  implementation is proven.
 - Same bytes, different load address → independent copies; lift separately.
 - Subset bytes → one may be a truncated or padded variant; compare field-by-field.
 

@@ -4,16 +4,14 @@ import re
 import subprocess
 from pathlib import Path
 
+from ._asm_resolve import format_hex
+
 INSTRUCTION_RE = re.compile(
     r"^\s*(?P<address>[0-9a-fA-F]+):\s+[0-9a-fA-F]{8}\s+(?P<instruction>.+?)\s*$"
 )
 SYMBOL_SIZE_RE = re.compile(
     r"^(?P<address>[0-9a-fA-F]+)\s+(?P<size>[0-9a-fA-F]+)\s+[A-Za-z]\s+(?P<name>\S+)$"
 )
-
-
-def format_hex(value: int) -> str:
-    return f"0x{value:08x}"
 
 
 def run_command(

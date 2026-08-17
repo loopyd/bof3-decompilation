@@ -36,7 +36,7 @@ Procedure:
    - presentation helper: resolve immediate callee + caller context enough to distinguish drawing, positioning, animation; a runtime-visible observation may corroborate but is optional;
    - raw data/global: another consumer or initializer/use pair establishing content class and runtime role.
    Repeated call sites with the same unexplained pattern are one mechanical lead, not multiple corroborators. Perform this bounded escalation with focused PSX Rizin/original-byte analysis; return `no-change` only after reporting the exact unresolved static evidence (callee role, table owner, state field, argument meaning). Runtime traces/observations are optional corroborators; their absence must never block a naming transaction or force `no-change` when original-byte/layout/caller/consumer evidence passes.
-7. Semantic gate passes for a retained partial lift → automatically perform a spelling-only rung-4 transaction preserving body, ABI, address, reviewed boundary, compiler settings, and all `@status partial`/`@match`/`@residual` metadata. Partial codegen exactness is not a naming blocker; it only prohibits bundling body/matching changes into the transaction.
+7. Semantic gate passes for a retained partial lift → automatically perform a spelling-only rung-4 transaction preserving body, ABI, address, reviewed boundary, compiler settings, and all `@status partial`/`@match`/`@residual` metadata. Partial codegen exactness is not a naming blocker; it only bars bundling body/matching changes into the transaction.
 
 A rename must not change width, signedness, pointer depth, volatility, ABI, storage, array extent, packing, code shape, control flow, matching aids, compiler flags, or binding addresses.
 

@@ -2,13 +2,12 @@
 
 Non-exact escalation sharing policy for one selector. This policy does not authorize publication; the parent owns `bin/scratchpad share`.
 
-A restored partial is shareable when all hold:
+A restored partial is shareable when all hold: it begins at a reviewed Splat
+`c` or `asm` function boundary; its restored authored metadata-resolved lift
+source exists; the payload passes local `bin/scratchpad preview SELECTOR`
+checks.
 
-1. it begins at a reviewed Splat `c` or `asm` function boundary;
-2. its restored authored metadata-resolved lift source exists;
-3. the payload passes local `bin/scratchpad preview SELECTOR` checks.
-
-**Not shareable** only when a boundary is data-leading/non-function, unreviewed, mismatched, or its source is absent. Missing ABI, call ownership, analyzer confidence, Rizin evidence, or a clean-C solution does not make an otherwise qualifying function unshareable — those gaps are exactly what a public scratch can explore.
+**Not shareable** only when a boundary is data-leading/non-function, unreviewed, mismatched, or its source is absent. Missing ABI, call ownership, analyzer confidence, Rizin evidence, or a clean-C solution does not make an otherwise qualifying function unshareable; a public scratch explores those gaps.
 
 For a claimed share failure, verify the exact reason; distinguish payload context defects from eligibility. A generated source referencing a typedef, extern, or type absent from its preview context is a tooling finding: identify the missing declaration, require a focused regression test before accepting the fix. Never change target map/Splat facts to make a payload shareable.
 

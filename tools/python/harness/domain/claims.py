@@ -1,12 +1,12 @@
 """Target-qualified source claims (manifest-claim-aware registry).
 
-``domain.sources`` owns the strict metadata scan core and legacy
-``source_dir`` inventory entry points.  This module adds the manifest-claim
-layer: an explicit target ``sources``/``support_sources``/``headers`` claim
-may point outside ``source_dir`` (semantic ``src/bof3/<class>/`` folders),
-and every resolver here is target-qualified — ``(target, @source address)``
-plus the exact manifest-claimed path — never path ancestry.  Unmigrated
-targets (no claims) fall back to the legacy ``source_dir`` inventory.
+``domain.sources`` owns the strict metadata scan core.  This module adds the
+manifest-claim layer: an explicit target
+``sources``/``support_sources``/``headers`` claim may point outside
+``source_dir`` (semantic ``src/bof3/<class>/`` folders), and every resolver
+here is target-qualified — ``(target, @source address)`` plus the exact
+manifest-claimed path — never path ancestry.  Every target must declare
+claims; the legacy ``source_dir`` inventory is no longer consulted.
 """
 
 from __future__ import annotations
@@ -23,30 +23,32 @@ from .sources import (
 )
 
 
-def manifest_source_paths(root: Path, manifest: TargetManifest) -> list[Path]:
-    """Build inputs for one target: explicit claims when migrated, else the
-    legacy ``source_dir`` inventory (all ``.c``/``.s``/``.S`` files)."""
+def _require_claims(manifest: TargetManifest, kind: str) -> None:
+    if not manifest.has_explicit_sources:
+        raise ValueError(
+            f"{manifest.id.value}: target has no explicit source claims; "
+            "declare manifest sources/support_sources (legacy source_dir "
+            f"inventory is no longer consulted for {kind})"
+        )
 
-    if manifest.has_explicit_sources:
-        paths = {root / claimed for claimed in manifest.sources}
-        paths.update(root / claimed for claimed in manifest.support_sources)
-        return sorted(paths)
-    source_dir = root / manifest.source_dir
-    return sorted(
-        path
-        for path in source_dir.rglob("*")
-        if path.is_file() and path.suffix in {".c", ".s", ".S"}
-    )
+
+def manifest_source_paths(root: Path, manifest: TargetManifest) -> list[Path]:
+    """Build inputs for one target from its explicit source claims."""
+
+    _require_claims(manifest, "sources")
+    paths = {root / claimed for claimed in manifest.sources}
+    paths.update(root / claimed for claimed in manifest.support_sources)
+    return sorted(paths)
 
 
 def manifest_header_paths(root: Path, manifest: TargetManifest) -> list[Path]:
-    """Target-private headers: explicit claims when migrated, else the legacy
-    recursive ``source_dir`` ``*.h`` inventory."""
+    """Target-private headers from explicit claims; empty when none claimed.
 
-    if manifest.headers:
-        return sorted(root / claimed for claimed in manifest.headers)
-    source_dir = root / manifest.source_dir
-    return sorted(path for path in source_dir.rglob("*.h") if path.is_file())
+    Legacy implicit scanning of ``source_dir`` for ``*.h`` is removed: a
+    target without header claims has no private headers.
+    """
+
+    return sorted(root / claimed for claimed in manifest.headers)
 
 
 def collect_manifest_source_addresses(
@@ -55,10 +57,9 @@ def collect_manifest_source_addresses(
     *,
     expected_lifts: Mapping[str, int] | None = None,
 ) -> list[tuple[Path, int]]:
-    """Target-qualified lift scan: explicit claims when migrated, else the
-    legacy ``source_dir`` inventory.  Same metadata rules as
-    ``domain.sources.collect_source_addresses``; collisions name the owning
-    target."""
+    """Target-qualified lift scan from explicit claims.  Same metadata rules
+    as ``domain.sources.collect_source_addresses``; collisions name the
+    owning target."""
 
     source_paths = [
         path for path in manifest_source_paths(root, manifest) if path.suffix == ".c"
@@ -88,14 +89,11 @@ def resolve_manifest_source_for_address(
 def manifest_binding_sources(root: Path, manifest: TargetManifest) -> list[Path]:
     """Hand-maintained WEAK_SYMBOL_AT binding .c files for one target.
 
-    Migrated targets: every claimed support ``.c`` except the generated PsyQ
-    binding source, preferring the top-level ``symbols`` stem when present.
-    Legacy targets: ``source_dir/symbols.c`` when it exists.
+    Every claimed support ``.c`` except the generated PsyQ binding source,
+    preferring the top-level ``symbols`` stem when present.
     """
 
-    if not manifest.has_explicit_sources:
-        top = root / manifest.source_dir / "symbols.c"
-        return [top] if top.is_file() else []
+    _require_claims(manifest, "binding sources")
     psyq = Path(manifest.psyq_source) if manifest.psyq_source else None
     candidates = [
         root / claimed
@@ -106,9 +104,7 @@ def manifest_binding_sources(root: Path, manifest: TargetManifest) -> list[Path]
     return top or sorted(candidates)
 
 
-def resolve_source_for_paths(
-    source_paths: Iterable[Path], address: int
-) -> Path | None:
+def resolve_source_for_paths(source_paths: Iterable[Path], address: int) -> Path | None:
     """Return the claimed source carrying ``address`` in its ``@source`` tag."""
 
     for source_path in sorted(path for path in source_paths if path.suffix == ".c"):

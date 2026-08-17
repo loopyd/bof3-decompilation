@@ -231,4 +231,3 @@ Kombinat (0xF).
 
 - Pointer tables: `third_party/references/vast-violence/tables/pointers_*.txt`
 - Struct definitions: `third_party/references/vast-violence/tables/struct_*.txt`
-- Validation: `out/index/vast-violence-1.1.json`

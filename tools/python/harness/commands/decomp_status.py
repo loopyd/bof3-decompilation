@@ -6,7 +6,7 @@ import argparse
 import json
 from pathlib import Path
 
-from ..decomp_status import build_report, project_report, render_text, write_report
+from ..decomp.status import build_report, project_report, render_text, write_report
 from ..output import add_detail_argument, resolve_detail
 from ._common import add_example_argument, add_root_argument, run_main
 

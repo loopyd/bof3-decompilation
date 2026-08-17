@@ -65,11 +65,9 @@ class TargetManifest:
     sources: tuple[str, ...] = ()
     support_sources: tuple[str, ...] = ()
     headers: tuple[str, ...] = ()
-    # Generated PsyQ weak-binding source (relative to the repo root).  A
-    # migrated target (explicit ``sources``/``support_sources``) must declare
-    # this so ``bin/symbols psyq-bindings`` never guesses an output path;
-    # unmigrated targets keep the legacy ``source_dir/symbols/psyq.c``
-    # location.
+    # Generated PsyQ weak-binding source (relative to the repo root).  Every
+    # target must declare this so ``bin/symbols psyq-bindings`` never guesses
+    # an output path.
     psyq_source: str = ""
     libraries: dict[str, tuple[str, ...]] = field(default_factory=dict)
     library_confidence: dict[str, str] = field(default_factory=dict)
@@ -104,7 +102,9 @@ def _load_toml(path: Path) -> dict[str, Any]:
         return tomllib.load(stream)
 
 
-def _parse_companions(raw: dict[str, Any], caller: TargetId) -> tuple[CompanionOverlay, ...]:
+def _parse_companions(
+    raw: dict[str, Any], caller: TargetId
+) -> tuple[CompanionOverlay, ...]:
     values = raw.get("companion_overlays", [])
     if not isinstance(values, list):
         raise ValueError("companion_overlays must be an array of tables")
@@ -118,7 +118,9 @@ def _parse_companions(raw: dict[str, Any], caller: TargetId) -> tuple[CompanionO
         if target.kind != "emi" or normalize_target_id(disc_id).value != target.value:
             raise ValueError(f"invalid companion overlay identity: {disc_id}")
         if target.value == caller.value:
-            raise ValueError(f"companion overlay cannot reference itself: {target.value}")
+            raise ValueError(
+                f"companion overlay cannot reference itself: {target.value}"
+            )
         if target.value in seen:
             raise ValueError(f"duplicate companion overlay: {target.value}")
         seen.add(target.value)
@@ -209,9 +211,7 @@ def _parse_path_claims(raw: dict[str, Any], key: str) -> tuple[str, ...]:
             raise ValueError(f"invalid {key} path: {value!r}")
         canonical = str(Path(*path.parts))
         if canonical != value:
-            raise ValueError(
-                f"non-canonical {key} path: {value!r} (use {canonical!r})"
-            )
+            raise ValueError(f"non-canonical {key} path: {value!r} (use {canonical!r})")
         if value in seen:
             raise ValueError(f"duplicate {key} path: {value}")
         seen.add(value)
@@ -265,7 +265,6 @@ def _validate_claim_overlap(manifests: dict[str, TargetManifest]) -> None:
             )
 
 
-
 def _validate_claim_files(root: Path, manifests: dict[str, TargetManifest]) -> None:
     """Require every claimed path to exist with its expected file kind and stay
     inside the repository (no symlink escape)."""
@@ -302,9 +301,7 @@ def _validate_claimed_paths(manifests: dict[str, TargetManifest]) -> None:
 
     claims: dict[str, str] = {}
     for manifest in manifests.values():
-        for claimed in (
-            manifest.sources + manifest.support_sources + manifest.headers
-        ):
+        for claimed in manifest.sources + manifest.support_sources + manifest.headers:
             owner = claims.get(claimed)
             if owner is not None and owner != manifest.id.value:
                 raise ValueError(
@@ -412,8 +409,7 @@ def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
         if (
             manifest.has_explicit_sources
             and manifest.psyq_source
-            and manifest.psyq_source
-            not in manifest.sources + manifest.support_sources
+            and manifest.psyq_source not in manifest.sources + manifest.support_sources
         ):
             raise ValueError(
                 f"{manifest.id.value}: psyq_source must be explicitly claimed "

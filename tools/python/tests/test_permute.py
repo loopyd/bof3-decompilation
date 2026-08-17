@@ -39,16 +39,15 @@ def _lift_env(tmp_path: Path, *, address: int = 0x801CE758) -> Path:
         'source_dir = "src/exe/x"\n'
         'binary = "out/binaries/exe/x.bin"\n'
         'splat = "config/targets/exe/x/splat.yaml"\n'
-        "load_address = 0x801CE000\n",
+        "load_address = 0x801CE000\n"
+        f'sources = ["src/exe/x/{name}.c"]\n',
         encoding="utf-8",
     )
     (config / "symbols.txt").write_text(
         f"{name} = 0x{address:08X};\n", encoding="utf-8"
     )
     (config / "splat.yaml").write_text(
-        "segments:\n"
-        f"  - [{address - 0x801CE000}, c, {name}]\n"
-        "  - [32]\n",
+        f"segments:\n  - [{address - 0x801CE000}, c, {name}]\n  - [32]\n",
         encoding="utf-8",
     )
     source = tmp_path / "src" / "exe" / "x" / f"{name}.c"
@@ -59,9 +58,7 @@ def _lift_env(tmp_path: Path, *, address: int = 0x801CE758) -> Path:
     return source
 
 
-def _claimed_out_of_tree_env(
-    tmp_path: Path, *, address: int = 0x801E2724
-) -> Path:
+def _claimed_out_of_tree_env(tmp_path: Path, *, address: int = 0x801E2724) -> Path:
     """A manifest-owned lift living outside its target source_dir.
 
     Mirrors the real ``emi/etc/shop/00`` claim on ``src/bof3/ui/*``: Splat
@@ -86,9 +83,7 @@ def _claimed_out_of_tree_env(
         f"{name} = 0x{address:08X};\n", encoding="utf-8"
     )
     (config / "splat.yaml").write_text(
-        "segments:\n"
-        f"  - [{address - 0x801D0C00}, c, {name}]\n"
-        "  - [32]\n",
+        f"segments:\n  - [{address - 0x801D0C00}, c, {name}]\n  - [32]\n",
         encoding="utf-8",
     )
     source = tmp_path / "src" / "bof3" / "ui" / f"{name}.c"
@@ -164,9 +159,7 @@ def test_nonexistent_source_returns_2(
 
 def test_function_name_default_map_backed(tmp_path: Path) -> None:
     source = _lift_env(tmp_path)
-    assert (
-        permute.resolve_function_name(source, None, tmp_path) == "func_801CE758"
-    )
+    assert permute.resolve_function_name(source, None, tmp_path) == "func_801CE758"
 
 
 def test_function_name_explicit() -> None:
@@ -178,9 +171,7 @@ def test_function_name_explicit() -> None:
 
 def test_function_name_invalid_raises() -> None:
     with pytest.raises(ValueError, match="invalid function name"):
-        permute.resolve_function_name(
-            Path("x.c"), "bad-name!", Path("/root")
-        )
+        permute.resolve_function_name(Path("x.c"), "bad-name!", Path("/root"))
 
 
 # ---------------------------------------------------------------------------
@@ -216,12 +207,8 @@ def test_assembly_path_legacy_source_qualified_fallback(tmp_path: Path) -> None:
     """An unclaimed source keeps the legacy source-ancestry projection."""
     source = tmp_path / "src" / "bof3" / "ui" / "func_801CE758.c"
     source.parent.mkdir(parents=True)
-    source.write_text(
-        "/* @source 0x801CE758 @behavior test */\n", encoding="utf-8"
-    )
-    expected = (
-        tmp_path / "out" / "splat" / "bof3" / "ui" / "asm" / "func_801CE758.s"
-    )
+    source.write_text("/* @source 0x801CE758 @behavior test */\n", encoding="utf-8")
+    expected = tmp_path / "out" / "splat" / "bof3" / "ui" / "asm" / "func_801CE758.s"
     assert permute.assembly_path(source, "func_801CE758", tmp_path) == expected
 
 
@@ -594,7 +581,7 @@ def test_run_concurrent_lock_raises(
 def test_main_resolves_target_address(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """TARGET@0xADDRESS is resolved through lift.resolve_function and passed to run."""
+    """TARGET@0xADDRESS is resolved through lift.resolve_function_selector and passed to run."""
     _stub_tools(tmp_path)
     src = tmp_path / "src" / "exe" / "logo" / "func_801CE758.c"
     src.parent.mkdir(parents=True)
@@ -611,7 +598,7 @@ def test_main_resolves_target_address(
     )
 
     monkeypatch.setattr(
-        "harness.commands._lift_m2c.resolve_function",
+        "harness.commands._common.resolve_function_selector",
         lambda raw: (mock_id, mock_id.target, src),
     )
     monkeypatch.setattr(permute.fcntl, "flock", lambda fd, op: None)

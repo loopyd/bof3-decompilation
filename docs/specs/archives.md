@@ -1,6 +1,8 @@
 # Archive families
 
-Generated archive counts and entry lists belong in `out/catalog/`.
+Per-archive entry manifests are generated during EMI extraction under
+`out/extracted/BIN/**/emi.json`; they are consumed in memory by
+`load_catalog` and are disposable generated evidence, not reviewed truth.
 
 | Family | Stable role |
 | --- | --- |
@@ -80,5 +82,8 @@ into code.
 | `BIN/SCE_XA/S_XA00.STR` | scenario XA bank |
 | `BIN/SCE_XA/VOICE.STR` | voice XA bank |
 
-Generated corpus counts, duplicate groups, and per-entry manifests belong in
-`out/catalog/` rather than this page.
+Per-archive entry records are generated into the disposable per-archive
+manifests (`out/extracted/BIN/**/emi.json`) during extraction. Corpus counts
+and duplicate groups are derived at runtime in the in-memory aggregate catalog
+(`load_catalog`) and are not written back into those manifests; this page does
+not duplicate either form of generated evidence.

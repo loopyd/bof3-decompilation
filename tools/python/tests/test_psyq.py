@@ -6,10 +6,10 @@ import zipfile
 from harness.commands.symbols import main as symbols_main
 from harness.psyq.signature_calls import find_calls
 from harness.psyq.signatures import scan
-from harness.snapshot import (
+from harness.analysis.snapshot import (
     SNAPSHOT_SCHEMA,
     SnapshotUnresolvedCall,
-    TargetSnapshot,
+    AnalysisSnapshot,
     snapshot_path,
     write_snapshot,
 )
@@ -39,11 +39,16 @@ def _write_check_target(root: Path, target: str) -> None:
                 f'binary = "out/binaries/{target}.bin"',
                 f'splat = "config/targets/{target}/splat.yaml"',
                 "load_address = 0x801CE000",
+                f'sources = ["src/{target}/runtime/nested.c"]',
             )
         )
         + "\n",
         encoding="utf-8",
     )
+    claimed = root / "src" / target / "runtime" / "nested.c"
+    claimed.parent.mkdir(parents=True, exist_ok=True)
+    if not claimed.exists():
+        claimed.write_text("void placeholder(void) {}\n", encoding="utf-8")
 
 
 def test_psyq_report_scans_nested_lift(tmp_path: Path, capsys) -> None:
@@ -54,10 +59,9 @@ def test_psyq_report_scans_nested_lift(tmp_path: Path, capsys) -> None:
     )
     _write_check_target(tmp_path, "exe/keep")
     nested = tmp_path / "src" / "exe" / "keep" / "runtime" / "nested.c"
-    nested.parent.mkdir(parents=True)
+    nested.parent.mkdir(parents=True, exist_ok=True)
     nested.write_text(
-        "/* @source 0x80100000 @behavior x */\n"
-        "void f(void) { SomeSdkCall(); }\n",
+        "/* @source 0x80100000 @behavior x */\nvoid f(void) { SomeSdkCall(); }\n",
         encoding="utf-8",
     )
 
@@ -262,7 +266,7 @@ def test_signature_scan_merges_versions_and_calls_rizin_xrefs(tmp_path: Path) ->
     import json
 
     index_path.write_text(json.dumps(index), encoding="utf-8")
-    snapshot = TargetSnapshot(
+    snapshot = AnalysisSnapshot(
         schema=SNAPSHOT_SCHEMA,
         target="exe/logo",
         engine={"name": "rizin", "version": "test"},

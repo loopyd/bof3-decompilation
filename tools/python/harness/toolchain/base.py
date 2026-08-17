@@ -138,7 +138,9 @@ class ExecutableToolchain(Toolchain):
 class PythonSubmoduleToolchain(SubmoduleToolchain, ExecutableToolchain):
     """A pinned Python source submodule installed into the project virtual environment."""
 
-    install_target: str
+    install_target: str | None = None
+    pip_packages: tuple[str, ...] = ()
+    verify_arguments: tuple[str, ...] = ("--version",)
 
     @property
     def python(self) -> Path:
@@ -150,6 +152,12 @@ class PythonSubmoduleToolchain(SubmoduleToolchain, ExecutableToolchain):
 
     def install(self, *, force: bool = False) -> str:
         super().install(force=force)
+        targets: list[str] = []
+        if self.install_target is not None:
+            targets.append(str(self.root / self.install_target))
+        targets.extend(self.pip_packages)
+        if not targets:
+            return self.label
         if not self.python.is_file():
             raise FileNotFoundError(
                 f"missing project Python environment: {self.python}"
@@ -157,7 +165,7 @@ class PythonSubmoduleToolchain(SubmoduleToolchain, ExecutableToolchain):
         command = ["uv", "pip", "install", "--python", str(self.python)]
         if force:
             command.append("--reinstall")
-        command.append(str(self.root / self.install_target))
+        command.extend(targets)
         subprocess.run(command, cwd=self.root, check=True)
         return self.label
 
@@ -166,7 +174,39 @@ class PythonSubmoduleToolchain(SubmoduleToolchain, ExecutableToolchain):
             raise FileNotFoundError(
                 f"missing {self.label} executable: {self.executable}"
             )
-        result = self.execute(["--version"], quiet=True)
+        result = self.execute(self.verify_arguments, quiet=True)
+        if result.returncode:
+            raise RuntimeError(f"{self.label} exited {result.returncode}")
+        return self.label
+
+
+class PythonScriptSubmoduleToolchain(PythonSubmoduleToolchain):
+    """A pinned Python script submodule run through the project interpreter."""
+
+    script: str
+    interpreter_flags: tuple[str, ...] = ()
+    verify_arguments: tuple[str, ...] = ("--help",)
+
+    @property
+    def executable(self) -> Path:
+        return self.source / self.script
+
+    def invocation(self, arguments: Sequence[str] = ()) -> list[str]:
+        return [
+            str(self.python),
+            *self.interpreter_flags,
+            str(self.executable),
+            *arguments,
+        ]
+
+    def verify(self) -> str:
+        if not self.executable.is_file():
+            raise FileNotFoundError(f"missing {self.label} source: {self.executable}")
+        if not self.python.is_file():
+            raise FileNotFoundError(
+                f"missing project Python environment: {self.python}"
+            )
+        result = self.execute(self.verify_arguments, quiet=True)
         if result.returncode:
             raise RuntimeError(f"{self.label} exited {result.returncode}")
         return self.label

@@ -5,38 +5,25 @@ from __future__ import annotations
 import argparse
 import subprocess
 import tomllib
-from collections.abc import Callable
-from dataclasses import dataclass
 from pathlib import Path
 
-from ..compiler_config import load_object_compilers
+from ..build.compiler import load_object_compilers
 from ..domain import load_target_manifests
 from ..io import repo_layout
 from ..toolchain import managed_toolchains
 from ..toolchain.disc import DiscToolchain
 from ..toolchain.psyq import PsyqToolchain
-from ._common import add_root_argument, run_main
+from ._common import (
+    Check,
+    add_root_argument,
+    register_check,
+    render_task,
+    run_main,
+)
 from .setup import REQUIRED_TOOLS, _psyq_47_members
 
 
-Task = Callable[[Path], str]
-
-
-@dataclass(frozen=True)
-class DoctorTask:
-    label: str
-    run: Task
-
-
-TASKS: list[DoctorTask] = []
-
-
-def doctor_task(label: str) -> Callable[[Task], Task]:
-    def register(run: Task) -> Task:
-        TASKS.append(DoctorTask(label, run))
-        return run
-
-    return register
+TASKS: list[Check[Path]] = []
 
 
 def _require(root: Path, paths: tuple[Path, ...]) -> str:
@@ -46,7 +33,7 @@ def _require(root: Path, paths: tuple[Path, ...]) -> str:
     return f"{len(paths)} present"
 
 
-@doctor_task("toolchain")
+@register_check("toolchain", TASKS)
 def _toolchain(root: Path) -> str:
     from ..toolchain.gcc_variants import lookup_variant
 
@@ -68,7 +55,7 @@ def _toolchain(root: Path) -> str:
     return ", ".join(labels)
 
 
-@doctor_task("PsyQ 4.7")
+@register_check("PsyQ 4.7", TASKS)
 def _psyq(root: Path) -> str:
     layout = repo_layout(root)
     PsyqToolchain(layout).verify()
@@ -77,12 +64,12 @@ def _psyq(root: Path) -> str:
     return f"headers, libraries, {len(members)} reviewed members"
 
 
-@doctor_task("disc media")
+@register_check("disc media", TASKS)
 def _disc(root: Path) -> str:
     return DiscToolchain(root).verify()
 
 
-@doctor_task("target images")
+@register_check("target images", TASKS)
 def _target_images(root: Path) -> str:
     manifests = load_target_manifests(root)
     missing = [
@@ -95,7 +82,7 @@ def _target_images(root: Path) -> str:
     return f"{len(manifests)} images"
 
 
-@doctor_task("tool wrappers")
+@register_check("tool wrappers", TASKS)
 def _tools(root: Path) -> str:
     layout = repo_layout(root)
     commands = (
@@ -123,16 +110,12 @@ def _tools(root: Path) -> str:
     return f"{len(commands)} commands"
 
 
-def _render(status: str, label: str, detail: str) -> None:
-    print(f"[{status}] {label:<{max(len(task.label) for task in TASKS)}}  {detail}")
-
-
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     failed = 0
     for task in TASKS:
         try:
-            _render("PASS", task.label, task.run(root))
+            render_task("PASS", task.label, task.run(root), TASKS)
         except (
             FileNotFoundError,
             RuntimeError,
@@ -140,7 +123,7 @@ def run(args: argparse.Namespace) -> int:
             tomllib.TOMLDecodeError,
         ) as exc:
             failed += 1
-            _render("FAIL", task.label, str(exc).replace("\n", "; "))
+            render_task("FAIL", task.label, str(exc).replace("\n", "; "), TASKS)
     print(f"doctor: {len(TASKS) - failed}/{len(TASKS)} checks passed")
     return 2 if failed else 0
 

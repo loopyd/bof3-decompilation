@@ -108,9 +108,8 @@ shared character recalculation routine, and passes both level-record bytes at
 
 This contract is disassembly-backed; an exact C lift remains pending, so the
 remaining trailing bytes and recalculation semantics stay target-local. A
-readable target-local candidate now exists at
-`src/bof3/ui/func_801ADDD4.c`; it currently measures 39.71% under the
-canonical `-O2` profile and is not promoted as an exact replacement.
+readable target-local candidate exists at
+`src/bof3/ui/func_801ADDD4.c`, but it is not promoted as an exact replacement.
 
 ## Master IDs
 
@@ -212,4 +211,4 @@ v1.1 and `0x3c56b`/`0x3c592` in v1.0.
 ## Evidence
 
 - Source files: `out/extracted/BIN/ETC/START.EMI`, `STATUS.EMI`, `SISYOU.EMI`, `AFLDKWA.EMI`, `FIRST.EMI`
-- Validation: `out/index/vast-violence-1.1.json`
+- Struct definitions: `third_party/references/vast-violence/tables/struct_*.txt`

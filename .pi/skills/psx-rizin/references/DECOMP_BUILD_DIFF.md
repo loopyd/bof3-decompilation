@@ -69,7 +69,7 @@ Signature/signedness · source expression order · temporary lifetime · switch 
 ```bash
 bin/asm-diff TARGET@0xADDRESS        # instruction-level diff of one authored lift
 bin/byte-match TARGET@0xADDRESS      # raw byte-equality acceptance check
-bin/permute TARGET@0xADDRESS --time-limit 300   # bounded source-shape search
+bin/permute TARGET@0xADDRESS --time-limit 60   # bounded source-shape search
 bin/decomp-status TARGET             # exact/partial/invalid lift audit
 ```
 

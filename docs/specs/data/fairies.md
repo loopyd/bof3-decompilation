@@ -15,14 +15,17 @@ coordinates; they are not offsets into the extracted fairy roster pointer map.
 
 ## Fixed tables
 
-| Table | Archive | Archive offset | Records × size | Payload range | Runtime status |
+| Table | Archive | Archive offset | Records × size | Archive range | Runtime status |
 | --- | --- | ---: | ---: | --- | --- |
 | `FairyGiftObject` | `BIN/ETC/COMMU00.EMI` | `0x848` | 20 × `0x04` | `0x848`–`0x897` | loaded with COMMU00 entry 0 |
 | `FairyExploreObject` | `BIN/ETC/COMMU00.EMI` | `0x4218` | 48 × `0x02` | `0x4218`–`0x4277` | loaded with COMMU00 entry 0 |
 | `FairyPrizeObject` | `BIN/ETC/COMMU02.EMI` | `0x2d900` | 48 × `0x02` | `0x2d900`–`0x2d95f` | archive-owned prize data; runtime load mapping unresolved |
 
-The ranges and row hashes are verified by the generated lift-report artifacts
-(`bin/decomp-status` → `out/matching/`, `out/reports/`). The COMMU00 entry-0
+The archive offsets and record counts come from the tracked
+`third_party/references/vast-violence/tables/tables_list_1.1.txt`;
+`bin/decomp-status` is a lift match-status report and its `out/matching/`
+cache is a match cache — neither verifies record bytes or hashes, and no
+tracked command in this repository reproduces row hashes. The COMMU00 entry-0
 payload is loaded at
 `0x801eec00`, so its payload-relative coordinates are `0x48` and `0x3a18`,
 with runtime layout addresses `0x801eec48` and `0x801f2618`. COMMU02 is a
@@ -61,16 +64,17 @@ The separate `COMMU00.EMI#0 @ 0x801f1bc8` consumer indexes runtime
 the `FairyExploreObject` item-index and item-type widths. The commu00 layout
 still holds `func_801F18F8` and `func_801F1BC8` as reviewed `asm` boundaries
 (`config/targets/emi/etc/commu00/00/splat.yaml`); historical m2c drafts for
-them measured 23.26% and 22.22% under canonical `-O2`; those drafts were not
-retained as authored lifts. The gift-row widths and exploration progression
-behavior are recorded, but exact function promotion remains pending.
+them were not retained as authored lifts. The gift-row widths and exploration
+progression behavior are recorded, but exact function promotion remains pending.
 
 ## Evidence boundary
 
 - Storage: `third_party/references/vast-violence/tables/tables_list_1.1.txt`
   and `struct_fairy_{gift,item}.txt`.
-- Byte ranges and hashes: generated lift-report artifacts (`out/reports/`,
-  `out/matching/`).
-- Runtime COMMU00 payload base: `out/catalog/emi.json` entry
-  `ETC/COMMU00#0`.
+- Record counts/offsets: tracked `tables_list_1.1.txt` coordinates; no row-hash
+  verifier is tracked in this repository.
+- Runtime COMMU00 payload base: per-archive manifest
+  `out/extracted/BIN/ETC/COMMU00/emi.json` (generated during extraction,
+  consumed in memory by `load_catalog`; `bin/emi-target` does not emit a
+  reusable catalog).
 - Runtime consumer semantics and COMMU02 entry mapping remain unresolved.

@@ -10,12 +10,17 @@ tags: [compiler, research, gcc, mips, negative-evidence, pipeline]
 
 Research into historical GCC compilers that may have produced BOF3 objects.
 
-## Status: four verified negative candidates
+## Status: four verified candidates
 
 `gcc-2.6.3-psx`, `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, and `gcc-2.95.2-psx` are
-provenance-pinned, opt-in candidates in `config/compiler/variants.json`; none
-is selected by any object and none produced an exact match in a bounded probe.
-The framework
+provenance-pinned, opt-in candidates in `config/compiler/variants.json`.
+One candidate is selected by one reviewed exact object:
+`src/bof3/audio/dispatchSoundCue.c` selects `gcc-2.6.3-psx`
+(`BOF3_OBJCOMPILER_bof3_audio_dispatchSoundCue_c`,
+`config/compiler/object-flags.cmake:61`) with a byte-exact live match at
+`exe/slus_004_22@0x8015DF18` (671/671 instructions, 2684 bytes). The other
+three candidates have no object selection; each produced only negative
+target-qualified probe results (historical matrices below). The framework
 (`bin/compiler-variants`, `tools/python/harness/toolchain/gcc_variants.py`)
 verifies archive digest, host, extraction containment, and executable identity
 before the compiler may run.
@@ -29,7 +34,7 @@ before the compiler may run.
 | `gcc-2.7.2-psx` (decompals/old-gcc 0.13) | GitHub release | Canonical toolchain — verified |
 | GCC 2.5.7 | old-gcc submodule | Diverges from earlier BOF3 objects |
 | GCC 2.6.0 | old-gcc submodule | Diverges from earlier BOF3 objects |
-| GCC 2.6.3 PSX (old-gcc 0.13) | GitHub release, SHA-256-pinned | Bounded pilot tested; no exact result |
+| GCC 2.6.3 PSX (old-gcc 0.13) | GitHub release, SHA-256-pinned | Historical pilot negative (`battle/15@0x800AF66C`, matrix below); later exact selected override at `exe/slus_004_22@0x8015DF18` (`dispatchSoundCue`, 671/671, `config/compiler/object-flags.cmake:61`) |
 | GCC 2.7.0 | old-gcc submodule | Retains same residuals as 2.7.2 |
 | GCC 2.7.1 | old-gcc submodule | Retains same residuals as 2.7.2 |
 | GCC 2.7.2.1–3 | old-gcc submodule | Retains same residuals as 2.7.2 |
@@ -118,19 +123,30 @@ observed `gcc --version` output `2.6.3`. `bin/compiler-variants install`,
 `verify`, and `path` passed locally.
 
 The initial disposable clean-C pilot was a 76-byte entry-register residual;
-its source was removed after that closeout. A later user-authorized revival is
-retained as a target-local partial lift and has its separate all-version matrix
-above. GCC 2.6.3 initially rejected the
-pre-existing declaration spelling
+its source was removed after that closeout. A later user-authorized revival
+(dated pre-resolution history) was retained at that time as a target-local
+partial lift with its separate all-version matrix above; it has since been
+resolved exactly (see below), so the partial-lift description no longer
+reflects current state. GCC 2.6.3 initially rejected the pre-existing
+declaration spelling
 `void __attribute__((noinline)) func_8009B20C(void);`. Its equivalent
 post-declarator spelling was used only for the experiment then restored. Under
 that temporary compatibility spelling, 47 of 52 flag profiles compiled and all
 were different; the best was 19.05% for `-O1 -fno-delayed-branch`. Five
 `-mno-split-addresses`/`-Os` profiles are unsupported by GCC 2.6.3 and failed
 to compile. There were no exact matches, no `BOF3_OBJCOMPILER_` entry, and no
-retained header/source/flag change. The canonical live control remains 76→76
-bytes with first difference `+0x0000`: original `move t0,a1; move v0,zero`,
-current `move a2,a1; srl a3,a2,1` (2/19 instructions).
+retained header/source/flag change at that time: the canonical live control
+was 76→76 bytes with first difference `+0x0000`: original
+`move t0,a1; move v0,zero`, current `move a2,a1; srl a3,a2,1` (2/19
+instructions).
+
+The residual was later resolved exactly without a flag override: a local
+`REGISTER_PIN(u32, result, "v0")` recovered the entry register web, and live
+`bin/asm-diff`/`bin/byte-match` now report 19/19 instructions, 76 bytes
+(`func_800AF66C`, `@status exact`). See
+[`battle-range-predicates.md`](battle-range-predicates.md) for the solution
+record. The probe narrative and matrix below remain dated historical evidence
+of the negative flag search, not current state.
 
 This closes the first probe. Do not generalize its score or repeat the flag
 matrix; a follow-up needs new source, ABI, or compiler provenance.
@@ -142,7 +158,7 @@ The candidate framework is now in place:
 - `config/compiler/variants.json` — schema: `harness.compiler-variants/v1`
 - `bin/compiler-variants` — CLI list/install/verify/path
 - `tools/python/harness/toolchain/gcc_variants.py` — `CompilerVariant` / `EmptyCatalog`
-- `tools/python/harness/compiler_config.py` — per-object flag/compiler parsing for CMake parity
+- `tools/python/harness/build/compiler.py` — per-object flag/compiler parsing for CMake parity
 - `tools/python/harness/commands/compiler_variants.py` — CLI commands
 
 The `variants.json` catalog is reviewed, tracked metadata — the single source
@@ -181,9 +197,14 @@ just check
 bin/symbols check
 ```
 
-Expected: `list` reports both candidates, `verify <id>` validates an ignored
-local installation, and the default build remains canonical because no object
-selects a compiler variant.
+Expected: `list` reports all four catalog candidates, `verify <id>` validates an ignored
+local installation, and the default build remains canonical for every
+unoverridden object. One reviewed override exists: `src/bof3/audio/dispatchSoundCue.c`
+selects `gcc-2.6.3-psx` (`BOF3_OBJCOMPILER_bof3_audio_dispatchSoundCue_c`,
+`config/compiler/object-flags.cmake:61`) with a byte-exact live match at
+`exe/slus_004_22@0x8015DF18` (671/671 instructions, 2684 bytes). The dated
+negative probe matrices below are historical records of past attempts, not
+current selection state.
 
 ## Live pipeline control results (Phase 6)
 

@@ -11,7 +11,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from ..canonical import load_target_symbols
+from ..domain.symbols import load_target_symbols
 from ..domain.claims import manifest_binding_sources
 from ..domain.sources import owning_manifest
 from ..io import RepoLayout

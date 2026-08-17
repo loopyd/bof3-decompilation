@@ -3,13 +3,26 @@ from __future__ import annotations
 from pathlib import Path
 import subprocess
 
-from harness import decomp_status
-from harness import decomp_status_preflight as dsp
+from harness.decomp import preflight as dsp
+from harness.decomp import status as decomp_status
 
 
-def _target(root: Path, target: str, source_dir: str) -> None:
+def _target(
+    root: Path,
+    target: str,
+    source_dir: str,
+    *,
+    sources: tuple[str, ...] = (),
+    support_sources: tuple[str, ...] = (),
+) -> None:
     manifest = root / "config" / "targets" / target / "target.toml"
     manifest.parent.mkdir(parents=True, exist_ok=True)
+    claims = ""
+    if sources or support_sources:
+        claims += "sources = [" + ", ".join(f'"{s}"' for s in sources) + "]\n"
+        claims += (
+            "support_sources = [" + ", ".join(f'"{s}"' for s in support_sources) + "]\n"
+        )
     manifest.write_text(
         "schema = 'harness.target/v2'\n"
         f"id = '{target}'\n"
@@ -17,7 +30,7 @@ def _target(root: Path, target: str, source_dir: str) -> None:
         f"source_dir = '{source_dir}'\n"
         f"binary = 'out/binaries/{target}.bin'\n"
         f"splat = 'config/targets/{target}/splat.yaml'\n"
-        "load_address = 0x80100000\n",
+        "load_address = 0x80100000\n" + claims,
         encoding="utf-8",
     )
 
@@ -49,7 +62,12 @@ def _diff(request: object) -> dict[str, object]:
 
 
 def test_preflight_reports_duplicate_claims_as_invalid(tmp_path: Path) -> None:
-    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _target(
+        tmp_path,
+        "exe/logo",
+        "src/exe/logo",
+        sources=("src/exe/logo/func_80100010.c", "src/exe/logo/dup.c"),
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
     dup = tmp_path / "src/exe/logo/dup.c"
     dup.write_text(
@@ -58,19 +76,25 @@ def test_preflight_reports_duplicate_claims_as_invalid(tmp_path: Path) -> None:
     manifests = decomp_status.select_manifests(tmp_path)
     ready, worklist = dsp._build_preflight(tmp_path, manifests, cache=None)
     assert any(
-        r["reason"].startswith("duplicate address claim 0x80100010")
-        for r in ready
+        r["reason"].startswith("duplicate address claim 0x80100010") for r in ready
     )
     # exactly one claimant reaches the worklist; the duplicate is rejected
-    assert [
-        item[2] for item in worklist["exe/logo"]
-    ].count(0x80100010) == 1
+    assert [item[2] for item in worklist["exe/logo"]].count(0x80100010) == 1
 
 
 def test_preflight_skips_helper_files_and_flags_expected_lifts(
     tmp_path: Path,
 ) -> None:
-    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _target(
+        tmp_path,
+        "exe/logo",
+        "src/exe/logo",
+        sources=(
+            "src/exe/logo/func_80100010.c",
+            "src/exe/logo/initSelectionState.c",
+        ),
+        support_sources=("src/exe/logo/symbols.c",),
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
     source_dir = tmp_path / "src/exe/logo"
     (source_dir / "symbols.c").write_text("WEAK_SYMBOL_AT(x, 0x80100000);\n")
@@ -99,8 +123,18 @@ def test_preflight_skips_helper_files_and_flags_expected_lifts(
 def test_report_orders_lifts_and_aggregates_match_states(
     tmp_path: Path, monkeypatch
 ) -> None:
-    _target(tmp_path, "exe/zeta", "src/exe/zeta")
-    _target(tmp_path, "emi/alpha/00", "src/emi/alpha/00")
+    _target(
+        tmp_path, "exe/zeta", "src/exe/zeta", sources=("src/exe/zeta/func_80100030.c",)
+    )
+    _target(
+        tmp_path,
+        "emi/alpha/00",
+        "src/emi/alpha/00",
+        sources=(
+            "src/emi/alpha/00/func_80100020.c",
+            "src/emi/alpha/00/func_80100010.c",
+        ),
+    )
     _source(tmp_path, "src/exe/zeta", "80100030", metadata=False)
     _source(tmp_path, "src/emi/alpha/00", "80100020")
     _source(tmp_path, "src/emi/alpha/00", "80100010")
@@ -133,8 +167,12 @@ def test_report_orders_lifts_and_aggregates_match_states(
 
 
 def test_report_filters_to_requested_target(tmp_path: Path, monkeypatch) -> None:
-    _target(tmp_path, "exe/keep", "src/exe/keep")
-    _target(tmp_path, "exe/skip", "src/exe/skip")
+    _target(
+        tmp_path, "exe/keep", "src/exe/keep", sources=("src/exe/keep/func_80100010.c",)
+    )
+    _target(
+        tmp_path, "exe/skip", "src/exe/skip", sources=("src/exe/skip/func_80100020.c",)
+    )
     _source(tmp_path, "src/exe/keep", "80100010")
     _source(tmp_path, "src/exe/skip", "80100020")
     monkeypatch.setattr(
@@ -153,7 +191,9 @@ def test_report_filters_to_requested_target(tmp_path: Path, monkeypatch) -> None
 def test_report_keeps_live_results_when_index_is_unavailable(
     tmp_path: Path, monkeypatch
 ) -> None:
-    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _target(
+        tmp_path, "exe/logo", "src/exe/logo", sources=("src/exe/logo/func_80100010.c",)
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
 
     def unavailable(_root: Path, _manifests: object) -> dict[str, int]:
@@ -174,7 +214,9 @@ def test_report_keeps_live_results_when_index_is_unavailable(
 
 
 def test_report_reuses_a_content_addressed_cache(tmp_path: Path, monkeypatch) -> None:
-    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _target(
+        tmp_path, "exe/logo", "src/exe/logo", sources=("src/exe/logo/func_80100010.c",)
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
     binary = tmp_path / "out/binaries/exe/logo.bin"
     binary.parent.mkdir(parents=True)
@@ -234,8 +276,21 @@ def test_build_preflight_separates_cache_misses_from_ready(
     tmp_path: Path, monkeypatch
 ) -> None:
     """Phase 2.3.1: invalid, cached, and valid-miss sources land correctly."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
-    _target(tmp_path, "exe/other", "src/exe/other")
+    _target(
+        tmp_path,
+        "exe/logo",
+        "src/exe/logo",
+        sources=(
+            "src/exe/logo/func_80100030.c",
+            "src/exe/logo/func_80100010.c",
+        ),
+    )
+    _target(
+        tmp_path,
+        "exe/other",
+        "src/exe/other",
+        sources=("src/exe/other/func_80100020.c",),
+    )
     # Invalid: missing metadata
     _source(tmp_path, "src/exe/logo", "80100030", metadata=False)
     # Valid: will be a cache miss
@@ -261,16 +316,24 @@ def test_build_preflight_separates_cache_misses_from_ready(
 
 def test_build_preflight_reuses_cache_hits(tmp_path: Path, monkeypatch) -> None:
     """Phase 2.3.1: cache hits appear in ready, not in worklist."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _target(
+        tmp_path,
+        "exe/logo",
+        "src/exe/logo",
+        sources=(
+            "src/exe/logo/func_80100010.c",
+            "src/exe/logo/func_80100020.c",
+        ),
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
     _source(tmp_path, "src/exe/logo", "80100020")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b"test")
 
-    from harness.match.status_cache import StatusCache
+    from harness.match.status_cache import MatchStatusCache
 
-    cache = StatusCache(tmp_path)
+    cache = MatchStatusCache(tmp_path)
     cache.put(
         "exe/logo",
         "src/exe/logo/func_80100010.c",
@@ -289,7 +352,7 @@ def test_build_preflight_reuses_cache_hits(tmp_path: Path, monkeypatch) -> None:
             "size_delta": 0,
         },
     )
-    from harness import decomp_status as ds
+    from harness.decomp import status as ds
 
     monkeypatch.setattr(dsp, "source_fingerprint", lambda _s, _t: "fake-fingerprint")
     monkeypatch.setattr(dsp, "target_fingerprint", lambda _r, _m: "fake-fingerprint")
@@ -321,14 +384,22 @@ def _batch_result() -> dict[str, object]:
 
 def test_batch_builds_fresh_misses_once_per_target(tmp_path: Path, monkeypatch) -> None:
     """Phase 2.3.2: one successful batch compares fresh objects in root."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _target(
+        tmp_path,
+        "exe/logo",
+        "src/exe/logo",
+        sources=(
+            "src/exe/logo/func_80100010.c",
+            "src/exe/logo/func_80100020.c",
+        ),
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
     _source(tmp_path, "src/exe/logo", "80100020")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b"test")
 
-    from harness import decomp_status as ds
+    from harness.decomp import status as ds
 
     batch_calls: list[list[str]] = []
     compared_roots: list[Path] = []
@@ -371,13 +442,15 @@ def test_batch_builds_fresh_misses_once_per_target(tmp_path: Path, monkeypatch) 
 
 def test_batch_resolve_failure_falls_back_once(tmp_path: Path, monkeypatch) -> None:
     """A successful batch cannot abort the audit on one resolve failure."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _target(
+        tmp_path, "exe/logo", "src/exe/logo", sources=("src/exe/logo/func_80100010.c",)
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b"test")
 
-    from harness import decomp_status as ds
+    from harness.decomp import status as ds
 
     fallback = 0
     monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
@@ -410,13 +483,15 @@ def test_batch_resolve_failure_falls_back_once(tmp_path: Path, monkeypatch) -> N
 def test_batch_stale_object_falls_back_once_without_duplicate_record(
     tmp_path: Path, monkeypatch
 ) -> None:
-    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _target(
+        tmp_path, "exe/logo", "src/exe/logo", sources=("src/exe/logo/func_80100010.c",)
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b"test")
 
-    from harness import decomp_status as ds
+    from harness.decomp import status as ds
 
     fallback = 0
     monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
@@ -456,14 +531,22 @@ def test_batch_failure_falls_back_per_source_with_error_attribution(
     tmp_path: Path, monkeypatch
 ) -> None:
     """Phase 2.3.2: failed batch falls back to per-source build+compare."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _target(
+        tmp_path,
+        "exe/logo",
+        "src/exe/logo",
+        sources=(
+            "src/exe/logo/func_80100010.c",
+            "src/exe/logo/func_80100020.c",
+        ),
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
     _source(tmp_path, "src/exe/logo", "80100020")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b"test")
 
-    from harness import decomp_status as ds
+    from harness.decomp import status as ds
 
     diff_calls: list[str] = []
 
@@ -499,16 +582,20 @@ def test_batch_failure_falls_back_per_source_with_error_attribution(
 
 
 def test_no_batch_when_all_sources_are_cached(tmp_path: Path, monkeypatch) -> None:
-    """Phase 2.3.2: all-cache-hit target must not invoke batch build."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _target(
+        tmp_path,
+        "exe/logo",
+        "src/exe/logo",
+        sources=("src/exe/logo/func_80100010.c",),
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b"test")
 
-    from harness.match.status_cache import StatusCache
+    from harness.match.status_cache import MatchStatusCache
 
-    cache = StatusCache(tmp_path)
+    cache = MatchStatusCache(tmp_path)
     cache.put(
         "exe/logo",
         "src/exe/logo/func_80100010.c",
@@ -528,7 +615,7 @@ def test_no_batch_when_all_sources_are_cached(tmp_path: Path, monkeypatch) -> No
         },
     )
 
-    from harness import decomp_status as ds
+    from harness.decomp import status as ds
 
     monkeypatch.setattr(dsp, "source_fingerprint", lambda _s, _t: "fake-fp")
     monkeypatch.setattr(dsp, "target_fingerprint", lambda _r, _m: "fake-fp")
@@ -560,17 +647,25 @@ def test_source_change_invalidates_cache_and_recomputes(
     tmp_path: Path, monkeypatch
 ) -> None:
     """Phase 2.3.3: source change invalidates cache, produces one batch build."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
+    _target(
+        tmp_path,
+        "exe/logo",
+        "src/exe/logo",
+        sources=(
+            "src/exe/logo/func_80100010.c",
+            "src/exe/logo/func_80100020.c",
+        ),
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
     _source(tmp_path, "src/exe/logo", "80100020")
     binary = tmp_path / "out/binaries" / "exe/logo.bin"
     binary.parent.mkdir(parents=True)
     binary.write_bytes(b"test")
 
-    from harness import decomp_status as ds
-    from harness.match.status_cache import StatusCache
+    from harness.decomp import status as ds
+    from harness.match.status_cache import MatchStatusCache
 
-    cache = StatusCache(tmp_path)
+    cache = MatchStatusCache(tmp_path)
     import hashlib
 
     monkeypatch.setattr(
@@ -640,8 +735,18 @@ def test_compile_inputs_invalidate_only_affected_target_then_all_targets(
     tmp_path: Path, monkeypatch
 ) -> None:
     """Target inputs invalidate one target; shared headers invalidate both."""
-    _target(tmp_path, "exe/logo", "src/exe/logo")
-    _target(tmp_path, "exe/other", "src/exe/other")
+    _target(
+        tmp_path,
+        "exe/logo",
+        "src/exe/logo",
+        sources=("src/exe/logo/func_80100010.c",),
+    )
+    _target(
+        tmp_path,
+        "exe/other",
+        "src/exe/other",
+        sources=("src/exe/other/func_80100020.c",),
+    )
     _source(tmp_path, "src/exe/logo", "80100010")
     _source(tmp_path, "src/exe/other", "80100020")
     for target in ("exe/logo", "exe/other"):
@@ -654,7 +759,7 @@ def test_compile_inputs_invalidate_only_affected_target_then_all_targets(
     header.parent.mkdir()
     header.write_text("#define TEST 1\n")
 
-    from harness import decomp_status as ds
+    from harness.decomp import status as ds
 
     batches: list[list[str]] = []
 

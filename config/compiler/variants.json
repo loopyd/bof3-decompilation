@@ -2,7 +2,11 @@
   "schema": "harness.compiler-variants/v1",
   "note": [
     "Candidates are explicit opt-in comparison tools; the canonical compiler remains default.",
-    "A compiler profile is retained only after a fresh target-qualified exact byte match."
+    "Cataloguing retains a candidate on verified provenance plus a recorded",
+    "target-qualified probe result (exact or negative).",
+    "Selecting a candidate for an object requires a fresh target-qualified exact byte",
+    "match plus a reviewed BOF3_OBJCOMPILER_/BOF3_OBJFLAGS_ entry in",
+    "config/compiler/object-flags.cmake."
   ],
   "candidates": [
     {

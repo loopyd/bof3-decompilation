@@ -13,23 +13,25 @@ from pathlib import Path
 import subprocess
 import sys
 
-from ..canonical import load_target_symbols, weak_bindings_c
+from ..domain.symbols import load_target_symbols, weak_bindings_c
 from ..domain import FUNCTION_ID_HELP, FunctionId
 from ..domain.manifests import TargetManifest
 from ..io import repo_layout
 from ..match._asm_diff_payload import AsmDiffRequest
 from ..match.asm_diff import run_asm_diff_one
-from ..match.asm_differ import write_bundle
+from ..match.bundle import write_bundle
 from ..output import add_detail_argument, resolve_detail
-from ._common import add_example_argument
+from ._common import add_example_argument, resolve_function_selector
 from ._asm_diff_output import format_asm_diff_llm, format_asm_diff_summary
 
-from ._lift_m2c import resolve_function, run_m2c, run_m2ctx
+from ._lift_m2c import run_m2c, run_m2ctx
+
 
 def _example(command: str) -> str:
     if command == "m2c":
         return "bin/m2c exe/logo@0x801CE758 -o candidate.c"
     return f"bin/{command} exe/logo@0x801CE758"
+
 
 def _run_match(
     function: FunctionId,
@@ -63,6 +65,7 @@ def _run_match(
     if diagnostics:
         write_bundle(root, payload, target=function.target.value)
     return payload
+
 
 def _print_match(
     payload: dict[str, object],
@@ -145,6 +148,7 @@ def _print_match(
                 print(diff.read_text(encoding="utf-8"), end="")
     return 0 if exact else 1
 
+
 def _require_lifted_source(function: FunctionId, source: Path | None) -> Path:
     if source is None or not source.is_file():
         raise FileNotFoundError(
@@ -154,8 +158,9 @@ def _require_lifted_source(function: FunctionId, source: Path | None) -> Path:
         )
     return source
 
+
 def run_asm_diff(args: argparse.Namespace) -> int:
-    function, manifest, source = resolve_function(args.function)
+    function, manifest, source = resolve_function_selector(args.function)
     source = _require_lifted_source(function, source)
     return _print_match(
         _run_match(function, manifest, source, diagnostics=True),
@@ -164,8 +169,9 @@ def run_asm_diff(args: argparse.Namespace) -> int:
         detail=args.detail,
     )
 
+
 def run_byte_match(args: argparse.Namespace) -> int:
-    function, manifest, source = resolve_function(args.function)
+    function, manifest, source = resolve_function_selector(args.function)
     source = _require_lifted_source(function, source)
     return _print_match(
         _run_match(function, manifest, source, diagnostics=False),
@@ -173,8 +179,9 @@ def run_byte_match(args: argparse.Namespace) -> int:
         bytes_only=True,
     )
 
+
 def run_promote(args: argparse.Namespace) -> int:
-    function, manifest, source = resolve_function(args.function)
+    function, manifest, source = resolve_function_selector(args.function)
     source = _require_lifted_source(function, source)
     candidate = Path(args.candidate).resolve()
     if not candidate.is_file():
@@ -206,10 +213,12 @@ def run_promote(args: argparse.Namespace) -> int:
         )
     return result
 
+
 def _parser(command: str) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog=f"bin/{command}")
     add_example_argument(parser, _example(command))
     return parser
+
 
 def main(command: str, argv: list[str] | None = None) -> int:
     parser = _parser(command)

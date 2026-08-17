@@ -4,7 +4,7 @@ import struct
 from pathlib import Path
 from unittest.mock import patch
 
-from harness.analyzer import EngineIdentity, build_snapshot
+from harness.analysis.engine import EngineIdentity, build_snapshot
 
 
 def _jal(callsite: int, target: int) -> bytes:
@@ -30,10 +30,10 @@ def test_snapshot_records_missing_battle15_static_jals_once(tmp_path: Path) -> N
         {"from": callsite, "to": 0x8014D6B8, "type": "CALL"},
     ]
 
-    with patch("harness.analyzer._run_analysis", return_value=(functions, xrefs)):
-        snapshot = build_snapshot(
-            engine, binary, function, "emi/battle/battle/15"
-        )
+    with patch(
+        "harness.analysis.engine._run_analysis", return_value=(functions, xrefs)
+    ):
+        snapshot = build_snapshot(engine, binary, function, "emi/battle/battle/15")
 
     assert [call.to_row() for call in snapshot.unresolved_calls] == [
         {
@@ -57,7 +57,7 @@ def test_snapshot_ignores_incomplete_final_instruction(tmp_path: Path) -> None:
     engine = EngineIdentity("rizin", tmp_path / "rizin", "test", {})
     functions = [{"offset": 0x80000000, "size": 6, "name": "func_80000000"}]
 
-    with patch("harness.analyzer._run_analysis", return_value=(functions, [])):
+    with patch("harness.analysis.engine._run_analysis", return_value=(functions, [])):
         snapshot = build_snapshot(engine, binary, 0x80000000, "test")
 
     assert len(snapshot.unresolved_calls) == 1

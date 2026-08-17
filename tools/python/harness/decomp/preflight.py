@@ -6,19 +6,23 @@ from pathlib import Path
 import re
 from typing import Any, Callable, Iterable
 
-from .domain import TargetManifest
-from .domain.claims import manifest_source_paths
-from .domain.sources import (
+from ..build.operations import batch_build, cmake_target_for_source, configure
+from ..domain import TargetManifest
+from ..domain.claims import manifest_source_paths
+from ..domain.layout import ReviewedSplatLayout, parse_splat_layout
+from ..domain.sources import (
     expected_lift_sources,
     source_expected_key,
 )
-from .domain.tags import parse_behavior_tag, parse_source_tag
-from .build import batch_build, cmake_target_for_source, configure
-from .io import repo_layout
-from .layout import ReviewedLayout, parse_splat_layout
-from .match._asm_diff_payload import AsmDiffRequest
-from .match._asm_diff_run import _asm_diff_compare, _asm_diff_resolve
-from .match.status_cache import StatusCache, source_fingerprint, target_fingerprint
+from ..domain.tags import parse_behavior_tag, parse_source_tag
+from ..io import repo_layout
+from ..match._asm_diff_payload import AsmDiffRequest
+from ..match._asm_diff_run import _asm_diff_compare, _asm_diff_resolve
+from ..match.status_cache import (
+    MatchStatusCache,
+    source_fingerprint,
+    target_fingerprint,
+)
 
 
 _UNDEFINED = re.compile(r"undefined reference to `([^']+)'")
@@ -90,7 +94,7 @@ def _batch_result(
 def _build_preflight(
     root: Path,
     manifests: Iterable[tuple[str, TargetManifest]],
-    cache: StatusCache | None,
+    cache: MatchStatusCache | None,
 ) -> tuple[list[_Record], dict[str, list[_WorkItem]]]:
     """
     Phase 2.3.1 — separate audit discovery from comparison.
@@ -109,7 +113,7 @@ def _build_preflight(
         source_dir = root / manifest.source_dir
         target_key = target_fingerprint(root, manifest) if cache is not None else ""
         try:
-            layout: ReviewedLayout | None = parse_splat_layout(
+            layout: ReviewedSplatLayout | None = parse_splat_layout(
                 root / manifest.splat, manifest.load_address
             )
             expected = expected_lift_sources(layout, source_dir)
@@ -129,12 +133,12 @@ def _build_preflight(
             address = parse_source_tag(text)
             expected_key = source_expected_key(source_dir, source)
             expected_address = (
-                None
-                if expected_key is None
-                else expected.get(expected_key)
+                None if expected_key is None else expected.get(expected_key)
             )
-            if address is None and expected_address is None and not re.match(
-                r"^func_[0-9A-Fa-f]{8}$", source.stem
+            if (
+                address is None
+                and expected_address is None
+                and not re.match(r"^func_[0-9A-Fa-f]{8}$", source.stem)
             ):
                 continue  # support/helper translation unit, not a lift
             if address is None:
@@ -212,7 +216,7 @@ def _run_batch_misses(
     root: Path,
     worklist: dict[str, list[_WorkItem]],
     diff_runner: DiffRunner,
-    cache: StatusCache | None,
+    cache: MatchStatusCache | None,
 ) -> list[_Record]:
     """
     Phase 2.3.2 — build selected source objects once per target.

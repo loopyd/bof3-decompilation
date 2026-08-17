@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import re
 
-from ..canonical import map_path
+from .symbols import map_path
 from .manifests import TargetManifest
 
 _RAW_FUNCTION = re.compile(r"func_[0-9A-F]{8}")
@@ -26,7 +26,7 @@ class NamingDebt:
     raw_functions: frozenset[str]
     raw_data: frozenset[str]
 
-    def rows(self) -> dict[str, list[str]]:
+    def to_rows(self) -> dict[str, list[str]]:
         return {
             "raw_function_files": sorted(self.raw_function_files),
             "invalid_semantic_files": sorted(self.invalid_semantic_files),
@@ -35,9 +35,7 @@ class NamingDebt:
         }
 
 
-def collect_naming_debt(
-    root: Path, manifests: dict[str, TargetManifest]
-) -> NamingDebt:
+def collect_naming_debt(root: Path, manifests: dict[str, TargetManifest]) -> NamingDebt:
     raw_function_files: set[str] = set()
     invalid_semantic_files: set[str] = set()
     raw_functions: set[str] = set()
@@ -84,7 +82,7 @@ def load_naming_baseline(root: Path) -> dict[str, set[str]]:
 def naming_debt_regressions(
     debt: NamingDebt, baseline: dict[str, set[str]]
 ) -> list[str]:
-    current = debt.rows()
+    current = debt.to_rows()
     errors: list[str] = []
     for category, rows in current.items():
         for row in sorted(set(rows) - baseline.get(category, set())):

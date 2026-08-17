@@ -6,7 +6,7 @@ description: Compacts and organizes project agent and skill Markdown under .pi/a
 # Compaction
 
 Compact policy; preserve meaning. Default: `.pi/{agents,skills}/**/*.md`;
-arguments may narrow.
+args may narrow.
 
 ```mermaid
 flowchart LR

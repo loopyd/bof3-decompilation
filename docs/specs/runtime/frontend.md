@@ -54,8 +54,9 @@ yet identify the transition that selects area 31.
 
 The callback-table and direct-call recovery pass established these boundaries:
 
-- `0x80197378` is lifted and structurally near-exact; instruction scheduling
-  remains to be resolved.
+- `0x80197378` is an exact lift (`updateStateMachine`,
+  `bin/asm-diff emi/etc/game/00@0x80197378 --detail minimal`: MATCH 155/155,
+  620 bytes, `@status exact`).
 - `0x80198170`, `0x801981b4`, and `0x801981d4` split the former
   `0x80198170..0x80198234` span and match exactly.
 - `0x80198bc4` is an exact function ending at `0x80198c38`; the following
@@ -68,17 +69,23 @@ The callback-table and direct-call recovery pass established these boundaries:
   finalizing the shared frontend frame. `0x801c7b7c[1]`,
   `0x801c7b98[1]`, and `0x801c7ba4[1]` likewise point to `0x80199398`,
   `0x801993f0`, and `0x80199418` respectively.
-- `0x8019615c..0x80196f78` is split into 13 reviewed function boundaries.
+- `0x8019615c..0x80196f78` is split into reviewed function boundaries. Six
+  are already tracked: exact `locatePaletteColor` (`0x80196B20`),
+  `allocPaletteSlot` (`0x80196CF0`), and `altMainLoop` (`0x80196F78`), and
+  partial `func_8019625C` (`0x8019625C`), `func_801968BC` (`0x801968BC`),
+  and `func_80196B9C` (`0x80196B9C`). The remaining asm spans
+  (`func_8019615C`, `func_8019651C`, `func_80196670`, `func_80196718`,
+  `func_80196784`, `func_80196C8C`, `func_80196D84`, `func_80196E74`) stay
+  unlifted.
 
 The remaining `asm` entries are unresolved spans, not proven single functions.
 Recover internal code/data boundaries from the original payload before changing
 any span to C.
 
 | Priority | Tracked span | Size | Reason |
-| --- | --- | ---: | --- |
+| --- | --- | --- | --- |
 | 1 | `0x80199440..0x801A1AE4` | `0x86A4` | Large unresolved code/data span after the recovered callback/update entries; split code, tables, strings, and padding before lifting. |
-| 2 | `0x8019615C..0x80196F78` | `0xE1C` | Lift the 13 reviewed early entry-state functions individually. |
-| 3 | `0x80197378` | — | Lifted callback is structurally near-exact; resolve the remaining instruction scheduling difference. |
+| 2 | `0x8019615C..0x80196F78` | `0xE1C` | Eight of the reviewed early entry-state spans remain unlifted asm (`0x8019615C`, `0x8019651C`, `0x80196670`, `0x80196718`, `0x80196784`, `0x80196C8C`, `0x80196D84`, `0x80196E74`); lift them individually. The other six are already tracked (exact `0x80196B20`/`0x80196CF0`/`0x80196F78`, partial `0x8019625C`/`0x801968BC`/`0x80196B9C`). |
 
 For the name-entry path, prioritize xrefs from the callback tables above and
 writes to `0x80144968..0x8014496C`. For the inactivity path, begin at the title

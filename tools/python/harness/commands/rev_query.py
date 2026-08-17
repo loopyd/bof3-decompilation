@@ -14,21 +14,22 @@ from ..domain import (
     parse_function_id,
 )
 from ..output import add_detail_argument, resolve_detail
-from ..reverse_index import connect, rows
+from ..analysis.graph import function_metrics
+from ..analysis.index import connect, rows
+from ..analysis.mission import mission_brief
+from ..analysis.priority import RANK_FIELDS, priority_rows
 
-from ._common import add_example_argument, add_root_argument, run_main
+from ._common import add_example_argument, add_root_argument, resolved_root, run_main
 
-from ._rev_query_graph import _function_metrics, _root
-from ._rev_query_mission import run_mission
-from ._rev_query_priority import _RANK_FIELDS, _priority_rows
 
 def _project_rows(
     payload: list[dict[str, Any]], *, command: str, detail: str
 ) -> list[dict[str, Any]]:
     if detail == "full":
         return payload
-    fields = _RANK_FIELDS[detail].get(command, _RANK_FIELDS[detail]["default"])
+    fields = RANK_FIELDS[detail].get(command, RANK_FIELDS[detail]["default"])
     return [{key: row[key] for key in fields if key in row} for row in payload]
+
 
 def _print(
     payload: list[dict[str, object]], as_json: bool, *, labeled: bool = False
@@ -42,8 +43,9 @@ def _print(
         else:
             print("\t".join(str(value) for value in row.values()))
 
+
 def run_query(args: argparse.Namespace) -> int:
-    connection = connect(_root(args))
+    connection = connect(resolved_root(args))
     try:
         if getattr(args, "target", None):
             args.target = normalize_target_id(args.target).value
@@ -73,7 +75,7 @@ def run_query(args: argparse.Namespace) -> int:
                 (function.target.value, function.address, sql_limit),
             )
         elif args.command == "duplicates":
-            metrics = _function_metrics(connection, None)
+            metrics = function_metrics(connection, None)
             grouped: dict[tuple[str, int], list[dict[str, Any]]] = defaultdict(list)
             for row in metrics:
                 if row["duplicate_members"] > 1:
@@ -129,7 +131,17 @@ def run_query(args: argparse.Namespace) -> int:
             )
             payload = payload[:limit] if limit else payload
         elif args.command in {"metrics", "hotspots", "leafs", "quick-wins", "pareto"}:
-            payload = _priority_rows(connection, args, root=_root(args))
+            payload = priority_rows(
+                connection,
+                target=getattr(args, "target", None),
+                command=args.command,
+                limit=args.limit,
+                exclusions=getattr(args, "exclusions", False),
+                include_trivial=getattr(args, "include_trivial", False),
+                unlifted=getattr(args, "unlifted", False),
+                function=getattr(args, "function", None),
+                root=resolved_root(args),
+            )
         elif args.command == "calls":
             payload = rows(
                 connection,
@@ -168,6 +180,61 @@ def run_query(args: argparse.Namespace) -> int:
     finally:
         connection.close()
     return 0
+
+
+def _print_mission(brief: dict[str, Any]) -> None:
+    metrics = brief["metrics"]
+    risk = brief["risk"]
+    print(f"mission {brief['function']} (space={brief['psyq_space']})")
+    print(
+        f"  source: {brief['source']} "
+        f"(exists={brief['source_exists']}, lifted={brief['lifted']})"
+    )
+    print(f"  splat asm: {brief['splat_asm']} (exists={brief['splat_asm_exists']})")
+    print(
+        f"  insn={metrics['instruction_count']} cc={metrics['cyclomatic_complexity']} "
+        f"loops={metrics['loops']} bb={metrics['basic_blocks']} "
+        f"callers={metrics['unique_callers']} callees={metrics['unique_callees']} "
+        f"leaf={metrics['leaf_status']} dup_leverage={metrics['duplicate_leverage']}"
+    )
+    print(
+        f"  risk: unresolved_calls={risk['unresolved_calls']} "
+        f"metric_missing={risk['metric_missing']} confidence={risk['confidence_band']}"
+    )
+    if brief["sdk_callees"]:
+        names = ", ".join(f"{c['name']}@{c['address']}" for c in brief["sdk_callees"])
+        print(f"  SDK callees: {names}")
+    if brief["sdk_unresolved"]:
+        names = ", ".join(
+            f"{c['name']}@{c['address']}" for c in brief["sdk_unresolved"]
+        )
+        print(f"  SDK unresolved: {names}")
+    if brief["callers"]:
+        print(
+            f"  callers ({len(brief['callers'])}): "
+            + ", ".join(str(c["caller"]) for c in brief["callers"][:12])
+        )
+    if brief["callees"]:
+        print(
+            f"  callees ({len(brief['callees'])}): "
+            + ", ".join(str(c["callee"]) for c in brief["callees"][:12])
+        )
+    if brief["duplicate_group"]:
+        print(
+            f"  duplicate group ({len(brief['duplicate_group'])}): "
+            + ", ".join(brief["duplicate_group"])
+        )
+
+
+def run_mission(args: argparse.Namespace) -> int:
+    """Compose and print one function's mission brief."""
+    brief = mission_brief(resolved_root(args), args.function)
+    if args.json:
+        print(json.dumps(brief, indent=2, sort_keys=True))
+    else:
+        _print_mission(brief)
+    return 0
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="rev-query")
@@ -233,8 +300,10 @@ def build_parser() -> argparse.ArgumentParser:
     mission.set_defaults(handler=run_mission)
     return parser
 
+
 def main(argv: list[str] | None = None) -> int:
     return run_main(build_parser, argv)
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

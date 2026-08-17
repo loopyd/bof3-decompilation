@@ -10,14 +10,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
 
-from .io import repo_layout
+from ..io import repo_layout
 
 from .snapshot import (
     SNAPSHOT_SCHEMA,
     SnapshotCall,
     SnapshotFunction,
     SnapshotUnresolvedCall,
-    TargetSnapshot,
+    AnalysisSnapshot,
     snapshot_path,
 )
 
@@ -125,7 +125,9 @@ def find_engine(name: str = "rizin", *, root: Path | None = None) -> EngineIdent
         raise ValueError("only rizin is supported")
     executable = repo_layout(root).toolchains_dir / "rizin" / "bin" / "rizin"
     if not executable.is_file():
-        raise FileNotFoundError(f"missing project Rizin: {executable}; run `just setup`")
+        raise FileNotFoundError(
+            f"missing project Rizin: {executable}; run `just setup`"
+        )
     version = _get_version(executable)
     capabilities = _probe_capabilities(executable)
     missing = [
@@ -206,7 +208,7 @@ def build_snapshot(
     source_paths: Iterable[Path] | None = None,
     expected_lifts: dict[str, int] | None = None,
     timeout: int = 120,
-) -> TargetSnapshot:
+) -> AnalysisSnapshot:
     """Build a portable snapshot from one stateless analyzer invocation set."""
 
     binary = binary_path.read_bytes()
@@ -234,13 +236,13 @@ def build_snapshot(
         function_id = f"{target_id}@{address:08x}"
         source = None
         if source_paths is not None:
-            from .domain.claims import resolve_source_for_paths
+            from ..domain.claims import resolve_source_for_paths
 
             resolved = resolve_source_for_paths(source_paths, address)
             if resolved is not None:
                 source = str(resolved)
         elif source_dir is not None:
-            from .domain.sources import resolve_source_for_address
+            from ..domain.sources import resolve_source_for_address
 
             resolved = resolve_source_for_address(
                 source_dir, address, expected_lifts=expected_lifts
@@ -326,7 +328,7 @@ def build_snapshot(
                     )
                 )
 
-    return TargetSnapshot(
+    return AnalysisSnapshot(
         schema=SNAPSHOT_SCHEMA,
         target=target_id,
         engine={"name": engine.name, "version": engine.version},
@@ -339,7 +341,12 @@ def build_snapshot(
         unresolved_calls=tuple(
             sorted(
                 set(unresolved),
-                key=lambda call: (call.caller, call.callsite, call.target_address, call.kind),
+                key=lambda call: (
+                    call.caller,
+                    call.callsite,
+                    call.target_address,
+                    call.kind,
+                ),
             )
         ),
     )
@@ -348,7 +355,7 @@ def build_snapshot(
 def write_target_snapshot(root: Path, target_id: str, *, timeout: int = 120) -> Path:
     """Analyze a manifest-backed target and atomically write its snapshot."""
 
-    from .domain import lookup_target_manifest, normalize_target_id
+    from ..domain import lookup_target_manifest, normalize_target_id
 
     manifest = lookup_target_manifest(root, target_id)
     if manifest is None:
@@ -356,7 +363,7 @@ def write_target_snapshot(root: Path, target_id: str, *, timeout: int = 120) -> 
     binary_path = root / manifest.binary
     if not binary_path.is_file():
         raise FileNotFoundError(f"target binary not found: {manifest.binary}")
-    from .rizin_project import analyze_project
+    from .project import analyze_project
 
     # Keep this legacy entry point on the same composed replay as rz-project.
     analyze_project(root, manifest.id.value, timeout=timeout)

@@ -7,8 +7,8 @@ scoped effort. The directory is intentionally empty when no such plan exists.
 
 1. Read this file, [`AGENTS.md`](../../AGENTS.md), and the relevant plan under
    `docs/plans/` when one exists.
-2. Establish current evidence with the owning commands (for example
-   `bin/decomp-status`, `bin/symbols check`, `just doctor`, or focused tests).
+2. Establish current evidence with the owning commands (`bin/decomp-status`,
+   `bin/symbols check`, `just doctor`, focused tests).
 3. Keep durable runtime or file-format findings in `../specs/`, not plans.
 
 ## Plan format
@@ -22,9 +22,9 @@ Use a descriptive kebab-case filename, such as
 - validation commands and acceptance criteria;
 - explicit blockers, ownership boundaries, and non-goals.
 
-Prefer the smallest evidence-backed plan. Do not prescribe speculative
-abstractions, commits, or generated/private artifacts. Update or supersede an
-existing plan instead of maintaining conflicting plans.
+Prefer the smallest evidence-backed plan; no speculative abstractions,
+commits, or generated/private artifacts. Update or supersede an existing plan
+instead of maintaining conflicting plans.
 
 ## Executing plans
 
