@@ -103,6 +103,22 @@ it ranks candidates. `rev-query` refuses stale snapshot/index evidence. Use `--e
 to inspect rows rejected by canonical-code checks; use `--detail full` for
 complete rows.
 
+### Agent context prefill
+
+Every project agent starts repository work with exactly one bounded, read-only
+prefill:
+
+```sh
+bin/agent-context ROLE [TARGET@0xADDRESS]
+bin/agent-context cleanup --target TARGET
+```
+
+The default `stable` mode emits tracked role rules and, when selected, tracked
+target-owned facts; it never includes generated `out/` evidence. Do not rerun it
+or reread emitted paths without a named evidence gap. `--mode compatibility`
+exists only for full legacy-output diagnostics and may include optional generated
+evidence; agents must not use it as their prefill.
+
 ### 4. Select one function
 
 ```sh
@@ -124,10 +140,66 @@ Supporting queries:
 ```sh
 bin/rev-query calls TARGET@0xADDRESS
 bin/rev-query xrefs TARGET@0xADDRESS
+bin/rev-query owners TARGET@0xADDRESS
+bin/rev-query describe TARGET@0xADDRESS
+bin/rev-query transaction-scope TARGET SYMBOL
+bin/rev-query inventory TARGET
 bin/rev-query symbols NAME
 bin/rev-query variables NAME
+bin/rev-query types [NAME] [--target TARGET] [--untyped] [--detail full]
+bin/rev-query type-uses [NAME] [--target TARGET]
+bin/rev-query type-candidates [--target TARGET] [--status blocked] [--kind KIND]
+bin/rev-query macros [NAME] [--target TARGET] [--classification KIND]
+bin/rev-query macro-uses [NAME] [--target TARGET]
+bin/rev-query macro-opportunities [--target TARGET] [--kind KIND]
+bin/rev-query near-duplicates [--target TARGET]
 bin/rev-query status
 ```
+
+`owners` combines reviewed Splat ranges, analyzer ranges, and exact mapped-entry leads; provenance and confidence are hypotheses, never ownership authority. `xrefs` includes call references and decoded data accesses with source address, access kind, and opcode. `describe` reports canonical payload/file offsets, reviewed Splat boundary, exact symbol, and references. `types` inventories target-owned declarations plus the explicitly shared base scalar aliases; full detail includes fields, layout constraints, conflicts, diagnostics, and provenance. `type-uses` reports declaration/use relationships. `type-candidates` reports conservative representation and semantic leads only: every inferred aggregate, field, array, prototype, or class-like receiver/dispatch row remains blocked until its independent evidence gaps are closed. `macros` inventories definitions from manifest-claimed headers/sources plus sanctioned shared helpers and `src/shared/**/*.inc`; `macro-uses` reports target-qualified lexical expansions and restrictions. Generated PsyQ binding uses are `noncandidate`/`generator_owned`.
+
+`macro-opportunities` ranks read-only, target-qualified leads for repeated constants, expression/accessors, token-exact three-statement windows, and reviewed exact groups. `near-duplicates` reports reviewed non-trivial functions only when instruction count, CFG metrics, call/data-reference shape, and normalized instruction shape agree and all deltas are immediate/address operands (branch displacements remain exact). Every row stays `blocked`, includes evidence, counterexamples, source-level semantic guards, and fingerprints or reviewed hashes; cross-target clusters are report-only. Generated inputs, stale source/binary evidence, embedded data, trivial stubs, and analyzer/reviewed boundary disagreement fail closed or are excluded. These queries never edit source or promote a candidate.
+
+`bin/analysis-readiness [TARGET]` is the aggregate checkpoint. It reports snapshot/index freshness and stale facts, then composes naming inventory/debt plus target-qualified required-work rows, type inventory/conflicts/diagnostics plus candidate accounting, and macro inventory plus opportunity accounting. Type and macro rows carry the same blockers and fingerprints as their audit reports; naming rows carry generated caller/callee/access/owner work. It is read-only and prints `bin/index --recover` when authoritative inputs have made the disposable index stale. Recovery is explicit so reviewed transactions pass before index refresh.
+
+Naming audits start with readiness preflight, then use `bof3.naming-audit/v3` typed rungs, generated required work, typed corroborators, canonical transaction scope/storage, and digest-verified receipts. A mechanically safe exact-progress repair requires live proof:
+
+```sh
+bin/naming-audit prepare TARGET
+bin/naming-audit prepare TARGET --repair
+bin/naming-audit init TARGET out/reviews/audit.json
+bin/naming-audit validate TARGET out/reviews/audit.json --transaction function:func_80100000
+# Apply the isolated spelling transaction, then verify current truth:
+bin/naming-audit verify TARGET out/reviews/audit.json --transaction function:func_80100000
+bin/naming-audit validate TARGET out/reviews/audit.json
+```
+
+`init` writes every current raw inventory row once as an explicit blocked evidence gap, including tool-generated required work and the next bounded command for each open typed rung; auditors replace those rows only with receipt-backed exhausted or proposed conclusions. The isolated pre-transaction check ignores unrelated blocked rows but rejects incomplete locations, open mandatory work, malformed metadata, noncanonical storage, or overlapping proposals. `bin/naming-audit verify` derives scope by the recorded address and new spelling, proves every reported location migrated, the old spelling is absent, and data storage is unchanged.
+
+Reviewed type applications are concern-isolated and atomic. The disposable reverse index only supplies leads; `prepare` requires a separately reviewed, live-fingerprinted candidate artifact with resolved representation and semantics plus two independent observations. On a dirty worktree, the request must include the exact adopted baseline digest printed by the preflight error/workflow. `run` restricts writes to manifest-owned paths, executes the recorded checks, writes immutable structured receipts, and rolls all changes back on failure:
+
+```sh
+bin/type-audit account out/reviews/type-account.json
+bin/type-audit validate-account out/reviews/type-account.json
+bin/type-audit baseline  # copy digest into adopted_baseline when adopted=true
+bin/type-audit prepare out/reviews/type-request.json out/reviews/type-manifest.json
+bin/type-audit run out/reviews/type-manifest.json out/reviews/type-changes.json out/reviews/type-application.json
+bin/type-audit verify out/reviews/type-application.json --expected-application-digest DIGEST
+```
+
+The changes file is a JSON object mapping each allowed repo-relative file to its complete replacement text. Retain the application digest from the `run` output in a trusted external record; do not derive the expected value from the application file being verified. Shared promotion additionally requires two independently verified private application proofs with identical representation and semantic contracts; target-address-bearing contracts are rejected.
+
+Macro application uses the same pinned, atomic workflow:
+
+```sh
+bin/macro-audit account out/reviews/macro-account.json
+bin/macro-audit validate-account out/reviews/macro-account.json
+bin/macro-audit prepare out/reviews/macro-request.json out/reviews/macro-manifest.json
+bin/macro-audit run out/reviews/macro-manifest.json out/reviews/macro-changes.json out/reviews/macro-application.json
+bin/macro-audit verify out/reviews/macro-application.json --expected-application-digest DIGEST
+```
+
+The report records every current macro opportunity ID exactly once as `blocked` or `accepted`, with explicit blocked reasons, per-candidate and source/input fingerprints, and live freshness. `safe_application_count` must remain zero: generated account rows never authorize source changes. `prepare` requires an independently reviewed artifact, manifest-owned private paths or sanctioned shared paths, and exact proofs for shared templates; `run` restricts writes, executes pinned checks, writes receipts, and rolls back on failure. Retain its application digest in a trusted external record before `verify`. The local append-only attestation only detects replacement within this workspace and is not a remote signature or trust anchor.
 
 `bin/rev-query mission TARGET@0xADDRESS` composes a single-function lifting
 brief (metrics, callers/callees, duplicate group, SDK callees, and risk flags) —
@@ -165,7 +237,9 @@ bin/permute TARGET@0xADDRESS --time-limit 60 --quiet -j N
 
 `bin/data-scan [TARGET...]` lists unlabeled in-image data regions referenced
 by lifted functions (BSS globals vs file-backed tables/strings, with reference
-counts) — the data-labeling and table-extraction backlog. `--all` widens to
+counts) — the data-labeling and table-extraction backlog. Each region links any
+indexed type candidates with their evidence class, status, width, and blocker;
+this linkage is triage evidence, never a promoted layout. `--all` widens to
 unlifted functions, `--json` for tooling.
 
 `flag-search` suggests compiler flags from known profiles. `permute` searches

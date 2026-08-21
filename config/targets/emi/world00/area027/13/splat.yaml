@@ -24,8 +24,8 @@ segments:
     - T_801F2C00
   - - 48
     - c
-    - func_801F2C30
-    - '@source: src/bof3/world/func_801F2C30.c'
+    - dispatchScratchMode1
+    - '@source: src/bof3/world/dispatchScratchMode1.c'
     - '@behavior: Dispatches scratch mode byte 1 through the local handler table.'
   - - 116
     - asm

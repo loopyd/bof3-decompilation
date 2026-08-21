@@ -45,7 +45,7 @@ segments:
     - returnZero3
   - - 6064
     - asm
-    - func_801F83B0
+    - clampPaletteChannels
   - - 6236
     - asm
     - copyPaletteBlock

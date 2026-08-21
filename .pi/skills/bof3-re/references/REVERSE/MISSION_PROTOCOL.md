@@ -1,6 +1,6 @@
 # Reverse mission protocol
 
-One selector: `TARGET@0xADDRESS` or shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. `agent-context.py reverse SELECTOR` preloads this file + target evidence; never reread bundled paths.
+One selector: `TARGET@0xADDRESS` or shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. `bin/agent-context reverse SELECTOR` preloads this file + tracked target evidence once; never reread bundled paths.
 
 EU knowledgebase: `docs/reference/bof3-eu/` (README maps chapters) = baseline for format/table/rule guesses; consult it first. Addresses EU-only; never copy. Verified US 1.1 difference: append `> **US 1.1 verified:** <claim> (<selector/commit>)` after the EU claim; never edit/delete EU text.
 

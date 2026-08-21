@@ -88,3 +88,11 @@ def naming_debt_regressions(
         for row in sorted(set(rows) - baseline.get(category, set())):
             errors.append(f"new naming debt ({category}): {row}")
     return errors
+
+
+def address_of(name: str) -> int:
+    """Extract the embedded address from one raw inventory symbol name."""
+    match = re.search(r"([0-9A-Fa-f]{8})$", name)
+    if match is None:
+        raise ValueError(f"raw inventory name lacks address: {name}")
+    return int(match.group(1), 16)

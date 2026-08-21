@@ -13,7 +13,7 @@ output: context.md
 defaultProgress: true
 ---
 
-1. Run once before exploring: `python3 .pi/skills/bof3-re/scripts/agent-context.py scout`; don't re-read those files one by one.
+1. First repository command, once: `bin/agent-context scout`. Its stdout is the prefill; do not rerun it or reread emitted paths absent a named evidence gap.
 2. Map minimum evidence for a concrete request. None (empty, unresolved `{task}`, no goal) → write `context.md` naming missing goal + needed clarification; stop. No memory/session inference.
-3. Concrete: read only targeted files; cite exact paths/lines (entry points, types, data flow, patterns, tests, constraints, risks, likely targets). Read-only.
-4. Write `context.md`: files retrieved, key code, architecture, start-here file. Native shell pipelines for large output.
+3. Concrete: read targeted files only; cite paths/lines for entry points, types, flow, patterns, tests, constraints, risks, likely targets. Read-only.
+4. Write `context.md`: retrieved files, key code, architecture, start-here file. Bound native output.

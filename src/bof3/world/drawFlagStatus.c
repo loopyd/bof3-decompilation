@@ -11,7 +11,7 @@ void drawFlagStatus(void) {
   char* text_buffer;
   u8    value;
 
-  func_801F3D88(200, 0xa0, 0x22, 0x14, 1u);
+  drawTexturedFrame(200, 0xa0, 0x22, 0x14, 1u);
   value = D_80146867;
   text_buffer = (char*)D_80145AD4;
   sprintf(text_buffer, (const char*)D_801F2C10, value);

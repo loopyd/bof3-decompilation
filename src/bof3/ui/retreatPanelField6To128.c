@@ -1,5 +1,6 @@
 #include "bof3/ui/shop00_internal.h"
 #include "ui/panel_task.h"
+#include "shared/ui/panel_task.inc"
 
 /* @source 0x801E44A0
  * @behavior subtracts 0x10 from panel-task field 6; on underflow, clamps it to 0x80 and clears state.

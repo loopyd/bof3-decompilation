@@ -202,6 +202,99 @@ def test_candidate_exclusions_are_reported_without_ranking(tmp_path) -> None:
     assert [entry["id"] for entry in ranked] == [f"{target}@80100018"]
 
 
+def test_type_query_cli_details_filters_and_json(capsys, monkeypatch) -> None:
+    def typed_connection():
+        connection = sqlite3.connect(":memory:")
+        connection.row_factory = sqlite3.Row
+        create_schema(connection)
+        connection.execute(
+            "INSERT INTO targets VALUES ('exe/test', 'b', 'h', 0, 'rizin', 'v', 's', 'sh')"
+        )
+        connection.execute(
+            "INSERT INTO type_declarations VALUES ('d', 'exe/test', 'Thing', 'struct', 'Thing', "
+            "'h', 'header_claim', 'struct Thing;', 'reviewed', 4, 4, NULL)"
+        )
+        connection.execute(
+            "INSERT INTO type_usages VALUES ('exe/test', 'h', 'g_thing', NULL, 'Thing', "
+            "'global', 'data', 'header_claim', 'declaration')"
+        )
+        connection.execute(
+            "INSERT INTO type_candidates VALUES ('c', 'exe/test', 1, 5, 'aggregate_region', "
+            "'representation', 4, 'unknown', 'blocked', 'lead', 'unresolved', '[]', 'gap')"
+        )
+        return connection
+
+    monkeypatch.setattr(
+        "harness.commands.rev_query.connect", lambda _root: typed_connection()
+    )
+
+    assert (
+        main(["--json", "types", "Thing", "--target", "exe/test", "--detail", "full"])
+        == 0
+    )
+    declaration = json.loads(capsys.readouterr().out)[0]
+    assert declaration["canonical"] == "struct Thing;"
+    assert declaration["fields"] == []
+
+    assert main(["--json", "type-uses", "g_thing", "--target", "exe/test"]) == 0
+    assert json.loads(capsys.readouterr().out)[0]["type_name"] == "Thing"
+
+    assert (
+        main(
+            [
+                "--json",
+                "type-candidates",
+                "--target",
+                "exe/test",
+                "--status",
+                "blocked",
+                "--kind",
+                "aggregate_region",
+            ]
+        )
+        == 0
+    )
+    candidate = json.loads(capsys.readouterr().out)[0]
+    assert candidate["representation_status"] == "lead"
+    assert candidate["semantic_status"] == "unresolved"
+
+
+def test_macro_query_cli_filters_and_decodes_payload(capsys, monkeypatch) -> None:
+    def indexed_connection():
+        connection = sqlite3.connect(":memory:")
+        connection.row_factory = sqlite3.Row
+        create_schema(connection)
+        connection.execute(
+            "INSERT INTO targets VALUES ('exe/test', 'b', 'h', 0, 'rizin', 'v', 's', 'sh')"
+        )
+        connection.execute(
+            "INSERT INTO macro_definitions VALUES "
+            "('d', '__shared__', 'EMIT', 'src/shared/x.inc', 1, '[\"name\"]', "
+            "'void name(void) {}', '[]', 'body_emitting_template', 'shared_template', "
+            "'[\"target_local_wrapper_required\"]', 0, 'existing', 'abc', NULL)"
+        )
+        connection.execute(
+            "INSERT INTO macro_uses VALUES "
+            "('exe/test', 'd', 'EMIT', 'src/test/x.c', 4, 1, 'run', '[]', "
+            "'expansion', NULL, 0, 'existing', '[\"target_local_wrapper_required\"]')"
+        )
+        return connection
+
+    monkeypatch.setattr(
+        "harness.commands.rev_query.connect", lambda _root: indexed_connection()
+    )
+
+    assert main(["--json", "macros", "EMIT", "--target", "exe/test"]) == 0
+    definition = json.loads(capsys.readouterr().out)[0]
+    assert definition["parameters"] == ["name"]
+    assert definition["restrictions"] == ["target_local_wrapper_required"]
+
+    assert main(["--json", "macro-uses", "EMIT", "--target", "exe/test"]) == 0
+    use = json.loads(capsys.readouterr().out)[0]
+    assert use["definition_owner"] == "__shared__"
+    assert use["source_line"] == 4
+
+
 def test_xrefs_are_filtered_by_target(capsys, monkeypatch) -> None:
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row
@@ -235,6 +328,217 @@ def test_xrefs_require_target_qualified_address(capsys, monkeypatch) -> None:
     assert "function ID must be TARGET@8-digit-address" in capsys.readouterr().err
 
 
+def test_inventory_lists_target_raw_functions_and_data(
+    capsys, monkeypatch, tmp_path
+) -> None:
+    monkeypatch.setattr(
+        "harness.commands.rev_query.load_target_manifests",
+        lambda _root: {"exe/t": object()},
+    )
+    monkeypatch.setattr(
+        "harness.commands.rev_query.collect_naming_debt",
+        lambda _root, _manifests: type(
+            "Debt",
+            (),
+            {
+                "raw_functions": frozenset(
+                    {"exe/t:func_80100000", "exe/u:func_80200000"}
+                ),
+                "raw_data": frozenset({"exe/t:D_80100010"}),
+            },
+        )(),
+    )
+    monkeypatch.setattr(
+        "harness.commands.rev_query.connect",
+        lambda _root: (_ for _ in ()).throw(
+            AssertionError("inventory must not open index")
+        ),
+    )
+
+    assert (
+        main(["--root", str(tmp_path), "--json", "--limit", "1", "inventory", "exe/t"])
+        == 0
+    )
+
+    assert json.loads(capsys.readouterr().out) == [
+        {"kind": "function", "name": "func_80100000"},
+        {"kind": "data", "name": "D_80100010"},
+    ]
+
+
+def test_describe_reports_payload_splat_symbol_and_references(
+    capsys, monkeypatch, tmp_path
+) -> None:
+    target = "exe/test"
+    config = tmp_path / "config/targets/exe/test/target.toml"
+    config.parent.mkdir(parents=True)
+    config.write_text(
+        "schema='harness.target/v2'\nid='exe/test'\nkind='executable'\n"
+        "source_dir='src/test'\nbinary='out/test.bin'\nload_address=0x80100000\n"
+        "splat='config/targets/exe/test/splat.yaml'\n",
+        encoding="utf-8",
+    )
+    (config.parent / "splat.yaml").write_text(
+        "segments:\n  - [0x0, data, D_80100000]\n  - [0x20]\n",
+        encoding="utf-8",
+    )
+    binary = tmp_path / "out/test.bin"
+    binary.parent.mkdir(parents=True)
+    binary.write_bytes(b"\0" * 0x20)
+    connection = sqlite3.connect(":memory:")
+    connection.row_factory = sqlite3.Row
+    create_schema(connection)
+    connection.execute(
+        "INSERT INTO targets VALUES (?, 'b', 'h', 0x80100000, 'rizin', 'v', 's', 'sh')",
+        (target,),
+    )
+    connection.execute(
+        "INSERT INTO symbols VALUES (?, 0x80100010, 'D_80100010', 'data')", (target,)
+    )
+    connection.execute(
+        "INSERT INTO data_references VALUES (?, NULL, 0x80100004, 0x80100010, 'D_80100010', 'store', 'sh')",
+        (target,),
+    )
+    monkeypatch.setattr("harness.commands.rev_query.connect", lambda _root: connection)
+
+    assert (
+        main(["--root", str(tmp_path), "--json", "describe", f"{target}@0x80100010"])
+        == 0
+    )
+    row = json.loads(capsys.readouterr().out)[0]
+    assert row["payload"] == {
+        "contained": True,
+        "file_offset": "0x10",
+        "payload_offset": "0x10",
+        "remaining_bytes": 16,
+    }
+    assert row["splat"]["kind"] == "data"
+    assert row["symbol"] == {"kind": "data", "name": "D_80100010"}
+    assert row["references"][0]["opcode"] == "sh"
+
+
+def test_owners_find_other_images_covering_runtime_address(capsys, monkeypatch) -> None:
+    connection = sqlite3.connect(":memory:")
+    connection.row_factory = sqlite3.Row
+    create_schema(connection)
+    for target in ("emi/etc/game/01", "exe/slus_004_22", "emi/other/00"):
+        connection.execute(
+            "INSERT INTO targets VALUES (?, 'b', 'h', 0, 'rizin', 'v', 's', 'sh')",
+            (target,),
+        )
+    columns = "?,?,?,?,?,NULL,?,NULL,NULL,?,?,?,'unlifted',?,?,?,?,?,?,?,?,?,0"
+    for function_id, target, address, size, name in (
+        ("emi/etc/game/01@801D0000", "emi/etc/game/01", 0x801D0000, 0x100, "overlay"),
+        ("exe/slus_004_22@8014B854", "exe/slus_004_22", 0x8014B854, 0x28, "resident"),
+        ("emi/other/00@8014B850", "emi/other/00", 0x8014B850, 0x10, "overlap"),
+    ):
+        connection.execute(
+            f"INSERT INTO functions VALUES ({columns})",
+            (
+                function_id,
+                target,
+                address,
+                size,
+                name,
+                "a" * 64,
+                0,
+                0,
+                None,
+                1,
+                1,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                None,
+            ),
+        )
+    connection.executemany(
+        "INSERT INTO function_candidates VALUES (?, ?, ?, ?, 'analyzer_range', 'medium', 1)",
+        (
+            ("exe/slus_004_22", 0x8014B854, 0x8014B87C, "resident"),
+            ("emi/other/00", 0x8014B850, 0x8014B860, "overlap"),
+        ),
+    )
+    monkeypatch.setattr("harness.commands.rev_query.connect", lambda _root: connection)
+
+    assert main(["--json", "owners", "emi/etc/game/01@0x8014B854"]) == 0
+
+    assert json.loads(capsys.readouterr().out) == [
+        {
+            "function_address": "0x8014B854",
+            "function_end": "0x8014B87C",
+            "confidence": "medium",
+            "match": "entry",
+            "name": "resident",
+            "payload_contained": 1,
+            "provenance": "analyzer_range",
+            "size": 40,
+            "target_id": "exe/slus_004_22",
+        },
+        {
+            "function_address": "0x8014B850",
+            "function_end": "0x8014B860",
+            "confidence": "medium",
+            "match": "contains",
+            "name": "overlap",
+            "payload_contained": 1,
+            "provenance": "analyzer_range",
+            "size": 16,
+            "target_id": "emi/other/00",
+        },
+    ]
+
+
+def test_xrefs_include_rich_data_reference_metadata(capsys, monkeypatch) -> None:
+    connection = sqlite3.connect(":memory:")
+    connection.row_factory = sqlite3.Row
+    create_schema(connection)
+    connection.execute(
+        "INSERT INTO targets VALUES ('exe/test', 'b', 'h', 0, 'rizin', 'v', 's', 'sh')"
+    )
+    connection.execute(
+        "INSERT INTO data_references VALUES ('exe/test', NULL, 0x80100004, 0x80100010, 'D_80100010', 'store', 'sh')"
+    )
+    monkeypatch.setattr("harness.commands.rev_query.connect", lambda _root: connection)
+
+    assert main(["--json", "xrefs", "exe/test@0x80100010"]) == 0
+    assert json.loads(capsys.readouterr().out) == [
+        {
+            "destination": "0x80100010",
+            "function_id": None,
+            "kind": "store",
+            "opcode": "sh",
+            "source": "0x80100004",
+            "target_id": "exe/test",
+        }
+    ]
+
+
+def test_xrefs_limit_applies_per_reference_kind(capsys, monkeypatch) -> None:
+    connection = sqlite3.connect(":memory:")
+    connection.row_factory = sqlite3.Row
+    create_schema(connection)
+    connection.execute(
+        "INSERT INTO targets VALUES ('exe/test', 'b', 'h', 0, 'rizin', 'v', 's', 'sh')"
+    )
+    connection.execute(
+        "INSERT INTO xrefs VALUES ('exe/test', 0x80100008, 0x80100010, 'call')"
+    )
+    connection.execute(
+        "INSERT INTO data_references VALUES ('exe/test', NULL, 0x80100004, 0x80100010, NULL, 'load', 'lw')"
+    )
+    monkeypatch.setattr("harness.commands.rev_query.connect", lambda _root: connection)
+
+    assert main(["--json", "--limit", "1", "xrefs", "exe/test@0x80100010"]) == 0
+    assert [row["kind"] for row in json.loads(capsys.readouterr().out)] == [
+        "call",
+        "load",
+    ]
+
+
 def test_metrics_distinguish_recursive_leaf_with_unresolved_evidence() -> None:
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row
@@ -263,12 +567,12 @@ def test_metrics_distinguish_recursive_leaf_with_unresolved_evidence() -> None:
         None,
     )
     connection.execute(
-        "INSERT INTO functions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
+        "INSERT INTO functions VALUES (?, ?, ?, ?, ?, NULL, ?, NULL, NULL, ?, ?, ?, 'unlifted', ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
         function,
     )
     second = ("t@00000002", "t", 2, 8, "b", "b" * 64, *function[6:])
     connection.execute(
-        "INSERT INTO functions VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
+        "INSERT INTO functions VALUES (?, ?, ?, ?, ?, NULL, ?, NULL, NULL, ?, ?, ?, 'unlifted', ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
         second,
     )
     connection.execute("INSERT INTO calls VALUES ('t@00000001', 't@00000002', 1)")
@@ -313,7 +617,7 @@ def test_mission_composes_sdk_callees_callers_and_risk(
     connection.execute(
         "INSERT INTO targets VALUES ('exe/t', 'b', 'h', 0x80100000, 'rizin', 'v', 's', 'sh')"
     )
-    columns = "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0"
+    columns = "?,?,?,?,?,NULL,?,NULL,NULL,?,?,?,'unlifted',?,?,?,?,?,?,?,?,?,0"
     connection.execute(
         f"INSERT INTO functions VALUES ({columns})",
         (

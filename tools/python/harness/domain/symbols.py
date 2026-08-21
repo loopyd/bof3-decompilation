@@ -100,6 +100,14 @@ def map_path(root: Path, target: str) -> Path:
     return root / "config" / "targets" / target / "symbols.txt"
 
 
+def name_terms(name: str) -> set[str]:
+    """Split one camelCase symbol name into its case-boundary terms."""
+    return {
+        term.lower()
+        for term in re.findall(r"[A-Z]+(?=[A-Z][a-z]|$)|[A-Z]?[a-z]+|[0-9]+", name)
+    }
+
+
 def shared_map_path(root: Path) -> Path:
     return root / "config" / "targets" / "shared" / "symbols.txt"
 
@@ -108,15 +116,19 @@ def sdk_map_path(root: Path, space: str) -> Path:
     return root / "config" / "sdk" / f"psyq-{space}.txt"
 
 
-def load_target_symbols(root: Path, target: str) -> list[MapSymbol]:
+def load_target_symbols(
+    root: Path, target: str, *, psyq_space: str | None = None
+) -> list[MapSymbol]:
     """Compose shared base + PSX SDK (by target space) + target-local symbols.
 
-    Local wins on conflict.
+    Local wins on conflict. Bulk callers pass the already-loaded PsyQ space.
     """
-    from ..domain import load_target_manifests  # local import avoids a module cycle
+    if psyq_space is None:
+        from ..domain import load_target_manifests  # local import avoids a module cycle
 
-    manifests = load_target_manifests(root)
-    space = manifests[target].psyq_space if target in manifests else "slus"
+        manifests = load_target_manifests(root)
+        psyq_space = manifests[target].psyq_space if target in manifests else "slus"
+    space = psyq_space
     shared = load_map(shared_map_path(root))
     sdk = load_map(sdk_map_path(root, space))
     local = load_map(map_path(root, target))
@@ -188,61 +200,3 @@ def load_weak_symbol_bindings(path: Path) -> dict[str, int]:
                 )
             bindings[name] = address
     return bindings
-
-
-def dedupe_shared_symbols(
-    root: Path,
-    manifests: dict,
-    threshold: int,
-    *,
-    write: bool,
-) -> tuple[bool, list[str]]:
-    """Extract symbols duplicated across N+ targets into the shared base.
-
-    Returns (changed, display messages); writing happens only with ``write``.
-    """
-
-    targets = sorted(manifests.keys())
-    addr_count: dict[int, int] = {}
-    addr_symbol: dict[int, MapSymbol] = {}
-    for target in targets:
-        seen: set[int] = set()
-        for symbol in load_map(map_path(root, target)):
-            if symbol.address not in seen:
-                addr_count[symbol.address] = addr_count.get(symbol.address, 0) + 1
-                addr_symbol[symbol.address] = symbol
-                seen.add(symbol.address)
-
-    shared_existing = load_map(shared_map_path(root))
-    shared_addrs = {s.address for s in shared_existing}
-    new_shared = [
-        addr_symbol[addr]
-        for addr, count in sorted(addr_count.items())
-        if count >= threshold and addr not in shared_addrs
-    ]
-    if not new_shared:
-        return False, [f"no symbols duplicated in {threshold}+ targets"]
-
-    merged = sorted(shared_existing + new_shared)
-    messages = [
-        f"extracting {len(new_shared)} symbols into shared base ({len(merged)} total)"
-    ]
-    if write:
-        write_map(shared_map_path(root), merged)
-        for target in targets:
-            local = load_map(map_path(root, target))
-            trimmed = [
-                s for s in local if s.address not in {x.address for x in new_shared}
-            ]
-            if len(trimmed) < len(local):
-                write_map(map_path(root, target), trimmed)
-        messages.append(f"wrote {shared_map_path(root).relative_to(root)}")
-    else:
-        for s in new_shared[:10]:
-            messages.append(
-                f"  {s.canonical_name} = 0x{s.address:08X}; ({addr_count[s.address]}×)"
-            )
-        if len(new_shared) > 10:
-            messages.append(f"  ... and {len(new_shared) - 10} more")
-        messages.append("pass --write to apply")
-    return True, messages

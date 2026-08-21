@@ -4,13 +4,18 @@ from __future__ import annotations
 
 import io
 import json
+import sqlite3
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
+from harness.analysis import type_context as type_context_module
 from harness.domain import parse_function_id
-from harness.domain.c_context import public_declaration_context
+from harness.domain.c_context import (
+    public_declaration_context,
+    scalar_declaration_context,
+)
 from harness.toolchain.decompme import (
     DecompMeScratchpadToolchain,
     ScratchpadPayload,
@@ -27,6 +32,23 @@ class _Response(io.BytesIO):
 
     def __exit__(self, *exc: object) -> None:
         self.close()
+
+
+@pytest.fixture
+def isolated_registry_context(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep payload tests independent of the disposable repository index.
+
+    The toolchain still exercises declaration closure over preprocessed target
+    headers. Dedicated freshness tests cover the registry's fail-closed path.
+    """
+
+    from harness.io import repo_layout
+    from harness.toolchain import decompme
+
+    scalars = scalar_declaration_context(
+        (repo_layout().root / "include/base/types.h").read_text(encoding="utf-8")
+    )
+    monkeypatch.setattr(decompme, "type_context", lambda *_: scalars)
 
 
 def test_remote_compiler_id_uses_decompme_ps1_spelling() -> None:
@@ -95,7 +117,40 @@ def test_publish_rejects_malformed_response(
         DecompMeScratchpadToolchain(SimpleNamespace(root=tmp_path)).publish(payload)
 
 
-def test_payload_for_battle_range_lift_uses_ps1_and_preprocessed_source() -> None:
+def test_payload_requires_fresh_registry_when_index_exists(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    from harness.toolchain import decompme
+
+    (tmp_path / ".git").mkdir()
+    source = tmp_path / "source.c"
+    source.write_text("void test(void) {}\n", encoding="utf-8")
+    index = tmp_path / "out/index/reverse.sqlite"
+    index.parent.mkdir(parents=True)
+    with sqlite3.connect(index) as connection:
+        connection.execute("CREATE TABLE metadata (key TEXT PRIMARY KEY, value TEXT)")
+        connection.execute("INSERT INTO metadata VALUES ('schema', 'test-schema')")
+    function = parse_function_id("exe/test@0x80100000")
+    manifest = SimpleNamespace(id=SimpleNamespace(value="exe/test"))
+    resolved = SimpleNamespace(manifest=manifest, source=source, compiled_symbol="test")
+    toolchain = DecompMeScratchpadToolchain(SimpleNamespace(root=tmp_path))
+    monkeypatch.setattr(decompme, "resolve_function", lambda *_: resolved)
+    monkeypatch.setattr(
+        decompme, "_preprocess_source", lambda *_: ("", "void test(void) {}\n")
+    )
+
+    def stale_index(*_: object) -> object:
+        raise ValueError("stale index")
+
+    monkeypatch.setattr(type_context_module, "connect", stale_index)
+
+    with pytest.raises(ValueError, match="stale index"):
+        toolchain.payload(function, compiler="gcc-2.7.2-psx")
+
+
+def test_payload_for_battle_range_lift_uses_ps1_and_preprocessed_source(
+    isolated_registry_context: None,
+) -> None:
     from harness.io import repo_layout
 
     payload = DecompMeScratchpadToolchain(repo_layout()).payload(
@@ -122,6 +177,7 @@ def test_payload_for_battle_range_lift_uses_ps1_and_preprocessed_source() -> Non
 
 def test_payload_uses_registry_function_name(
     monkeypatch: pytest.MonkeyPatch,
+    isolated_registry_context: None,
 ) -> None:
     from harness.io import repo_layout
     from harness.toolchain import decompme
@@ -246,7 +302,9 @@ def test_public_context_rejects_conflicting_same_name_declarations() -> None:
         )
 
 
-def test_payload_allows_local_names_that_collide_with_ignored_headers() -> None:
+def test_payload_allows_local_names_that_collide_with_ignored_headers(
+    isolated_registry_context: None,
+) -> None:
     from harness.io import repo_layout
 
     payload = DecompMeScratchpadToolchain(repo_layout()).payload(
@@ -258,7 +316,9 @@ def test_payload_allows_local_names_that_collide_with_ignored_headers() -> None:
     assert "result" in payload.source_code
 
 
-def test_payload_resolves_referenced_psyq_declarations() -> None:
+def test_payload_resolves_referenced_psyq_declarations(
+    isolated_registry_context: None,
+) -> None:
     from harness.io import repo_layout
 
     payload = DecompMeScratchpadToolchain(repo_layout()).payload(
@@ -266,7 +326,7 @@ def test_payload_resolves_referenced_psyq_declarations() -> None:
         compiler="gcc-2.7.2-psx",
     )
 
-    assert payload.source_code.lstrip().startswith("void func_801F3D88(")
+    assert payload.source_code.lstrip().startswith("void drawTexturedFrame(")
     assert "typedef struct { short x, y; short w, h; } RECT;" in payload.context
     assert "} POLY_FT4;" in payload.context
     assert "} DR_MODE;" in payload.context

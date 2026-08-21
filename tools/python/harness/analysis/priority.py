@@ -23,7 +23,7 @@ RANK_FIELDS = {
             "representative",
             "members",
             "unlifted_members",
-            "estimated_saved_instructions",
+            "remaining_effort_instructions",
         ),
         "default": (
             "id",
@@ -42,7 +42,7 @@ RANK_FIELDS = {
             "members",
             "unlifted_members",
             "targets",
-            "estimated_saved_instructions",
+            "remaining_effort_instructions",
             "functions",
         ),
         "default": (

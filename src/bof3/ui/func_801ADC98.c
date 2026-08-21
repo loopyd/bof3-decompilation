@@ -5,6 +5,7 @@
  * @source 0x801ADC98
  * @status exact
  * @match 100.00
+ * @residual none
  */
 s8 func_801ADC98(void) {
   s32 quotient;

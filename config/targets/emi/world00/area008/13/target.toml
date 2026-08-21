@@ -23,7 +23,7 @@ sources = [
     "src/bof3/world/func_801F39B4.c",
     "src/bof3/world/func_801F3A64.c",
     "src/bof3/world/func_801F3AA8.c",
-    "src/bof3/world/func_801F3D88.c",
+    "src/bof3/world/drawTexturedFrame.c",
     "src/bof3/world/func_801F42D4.c",
     "src/bof3/world/loadResourceSelectMode2.c",
     "src/bof3/world/resetCounter1.c",

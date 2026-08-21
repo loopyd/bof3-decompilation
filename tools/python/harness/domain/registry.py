@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .layout import parse_splat_layout
+from .psx import binary_offset_for
 from .claims import (
     manifest_header_paths,
     manifest_source_paths,
@@ -125,6 +126,20 @@ def resolve_function(root: Path, value: str | FunctionId) -> ResolvedFunction:
     )
 
 
+def payload_end_for(root: Path, manifest: TargetManifest) -> int:
+    """Reviewed payload end for one target's original binary.
+
+    A PS-X EXE image carries a 0x800 (2048-byte) loader header, so the
+    payload that maps at ``load_address`` is the on-disk size minus that
+    offset; raw binaries map their full size.
+    """
+    binary = root / manifest.binary
+    if not binary.is_file():
+        raise ValueError(f"target binary not found: {manifest.binary}")
+    offset = binary_offset_for(binary.read_bytes())
+    return manifest.load_address + binary.stat().st_size - offset
+
+
 def resolve_target(root: Path, value: str) -> ResolvedTarget:
     """Resolve a shipped or canonical ID to a ``ResolvedTarget``.
 
@@ -224,6 +239,7 @@ __all__ = [
     "ResolvedFunction",
     "ResolvedTarget",
     "lookup_target_manifest",
+    "payload_end_for",
     "resolve_all_targets",
     "resolve_function",
     "resolve_target",

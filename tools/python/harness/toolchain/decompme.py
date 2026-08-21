@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from ..analysis.type_context import type_context
 from ..domain.c_context import public_declaration_context
 from ..domain import FunctionId, TargetManifest, resolve_function
 from ..domain.sources import CompiledSymbolError
@@ -22,13 +23,6 @@ DEFAULT_API_URL = "https://decomp.me/api"
 DEFAULT_SITE_URL = "https://decomp.me"
 _USER_AGENT = "Mozilla/5.0 (compatible; rebof3-scratchpad/1.0)"
 _IDENTIFIER = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
-_BASE_CONTEXT = """typedef signed char s8;
-typedef signed short s16;
-typedef signed int s32;
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-"""
 
 
 @dataclass(frozen=True)
@@ -211,8 +205,15 @@ class DecompMeScratchpadToolchain:
         # declaration and its type dependencies from the complete preprocessor
         # stream, including SDK headers required to compile the scratch.
         preprocessed_context, source_code = _preprocess_source(self.layout, source)
+        registry_context = type_context(
+            self.layout.root,
+            manifest.id.value,
+            source_code,
+        )
         context = public_declaration_context(
-            preprocessed_context, source_code, base=_BASE_CONTEXT
+            preprocessed_context,
+            source_code,
+            base=registry_context,
         )
         compiler_flags = _decompme_compiler_flags(
             _source_arguments(self.layout, source)

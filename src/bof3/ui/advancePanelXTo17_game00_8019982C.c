@@ -1,5 +1,6 @@
 #include "bof3/ui/game00_internal.h"
 #include "ui/panel_task.h"
+#include "shared/ui/panel_task.inc"
 
 /* @source 0x8019982C
  * @behavior advances panel x by 17 with the template clamp behavior.

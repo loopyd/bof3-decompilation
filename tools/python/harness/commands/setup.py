@@ -132,6 +132,14 @@ def _extract_and_materialize(root: Path, cue: Path, *, force: bool) -> None:
     materialize_reviewed_targets(root=root, catalog=load_catalog(root))
 
 
+def _staged_psyq_member(root: Path, member: str) -> Path:
+    path = root / "toolchains" / member
+    if path.is_file() or path.suffix.upper() != ".OBJ":
+        return path
+    converted = path.with_name(path.stem.lower() + ".o")
+    return converted if converted.is_file() else path
+
+
 def _psyq_47_members(root: Path) -> list[Path]:
     members: set[Path] = set()
     for manifest in (root / "config" / "targets").rglob("target.toml"):
@@ -140,7 +148,7 @@ def _psyq_47_members(root: Path) -> list[Path]:
             for member in library.get("members", []):
                 path = Path(member)
                 if path.parts[:2] == ("psyq", "4.7"):
-                    members.add(root / "toolchains" / path)
+                    members.add(_staged_psyq_member(root, member))
     return sorted(members)
 
 

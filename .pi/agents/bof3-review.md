@@ -19,9 +19,8 @@ defaultProgress: true
 Review prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`.
 
 ## Context
-1. Run once: `python3 .pi/skills/bof3-re/scripts/agent-context.py review SELECTOR` (ordered context incl. `docs/agents/lessons.md`, manifest/map/Splat/header, bindings, source/asm).
-2. Never `read` an emitted `=====` path; unbundled path only for a named finding. Brief allowed.
-3. Skill: `.pi/skills/bof3-re/SKILL.md` (ladder, pin rules). Role: `.pi/skills/bof3-re/references/REVIEW/SHARING_NONMATCHES.md`.
+1. First repository command, once: `bin/agent-context review SELECTOR`. Its stdout is bounded tracked prefill; do not rerun or reread an emitted `=====` path absent a named finding. Brief allowed.
+2. The prefill includes BOF3 skill/review protocols, manifest/map/Splat/header/bindings, and selected source. Generated assembly/index evidence stays finding-driven.
 
 ## Audit scope
 - Only game-function declarations/bindings added/changed by this mission's diff.

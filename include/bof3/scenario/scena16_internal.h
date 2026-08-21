@@ -119,7 +119,7 @@ void noopSecondaryState(void);
 void finalizeSecondaryPath(void);
 void dispatchRecordCallback(void* record);
 s32  returnZero(void);
-void func_801F83B0(u32 intensity);
+void clampPaletteChannels(u32 intensity);
 s32  returnZero2(void);
 s32  returnZero3(void);
 void copyPaletteBlock(void);

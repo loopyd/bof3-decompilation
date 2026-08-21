@@ -72,9 +72,9 @@ void displayBootExceptionDump(void) {
     rebuildBootRenderTables();
 
     for (; i < 0x12; i++) {
-      func_80150098(x1, y, 0, (const u8*)label_table[i]);
+      drawGlyphString8x8(x1, y, 0, (const u8*)label_table[i]);
       sprintf((char*)D_80145AD4, D_80149990, saved_context[i + 2]);
-      func_80150098((s16)(x2 >> 16), y, 0, (const u8*)D_80145AD4);
+      drawGlyphString8x8((s16)(x2 >> 16), y, 0, (const u8*)D_80145AD4);
       y += 8;
     }
 
@@ -83,22 +83,22 @@ void displayBootExceptionDump(void) {
     x2 = 0xc8 << 16;
 
     for (i = 0x12; i < 0x25; i++) {
-      func_80150098(x1, y, 0, (const u8*)label_table[i]);
+      drawGlyphString8x8(x1, y, 0, (const u8*)label_table[i]);
       sprintf((char*)D_80145AD4, D_80149990, saved_context[i + 2]);
-      func_80150098((s16)(x2 >> 16), y, 0, (const u8*)D_80145AD4);
+      drawGlyphString8x8((s16)(x2 >> 16), y, 0, (const u8*)D_80145AD4);
       y += 8;
     }
 
-    func_80150098(0x14, 0x14, 0, (const u8*)PTR_s_EXCEPTION_8017f504);
-    func_80150098(0x64, 0x14, 2,
+    drawGlyphString8x8(0x14, 0x14, 0, (const u8*)PTR_s_EXCEPTION_8017f504);
+    drawGlyphString8x8(0x64, 0x14, 2,
                   *(void* const*)((const u8*)PTR_s_INTERRRUPT_8017f508 +
                                   (cause & 0x3c)));
 
     fmt = D_80149990;
     sprintf((char*)D_80145AD4, fmt, (u32)exception_pc);
-    func_80150098(0x46, 0x24, 3, (const u8*)D_80145AD4);
+    drawGlyphString8x8(0x46, 0x24, 3, (const u8*)D_80145AD4);
     sprintf((char*)D_80145AD4, fmt, exception_pc[0]);
-    func_80150098(0x8e, 0x24, 4, (const u8*)D_80145AD4);
+    drawGlyphString8x8(0x8e, 0x24, 4, (const u8*)D_80145AD4);
 
     DrawSync(0);
     linkRenderOtPackets();

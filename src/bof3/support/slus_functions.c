@@ -31,7 +31,7 @@ WEAK_SYMBOL_AT(yieldCallbackSlotScheduler, 0x8014b87c);
 WEAK_SYMBOL_AT(appendRenderPrim, 0x8014e5a0);
 WEAK_SYMBOL_AT(fadeLoop, 0x8014f514);
 WEAK_SYMBOL_AT(drawFadeTile, 0x8014f704);
-WEAK_SYMBOL_AT(func_80150098, 0x80150098);
+WEAK_SYMBOL_AT(drawGlyphString8x8, 0x80150098);
 WEAK_SYMBOL_AT(dispatchSoundCue, 0x8015df18);
 WEAK_SYMBOL_AT(adjustBoundedCounter, 0x801655f4);
 

@@ -146,8 +146,8 @@ segments:
     - '@behavior: draws one local frame, formats the single-byte world value into the shared UI text buffer, then queues the matching local label.'
   - - 4488
     - c
-    - func_801F3D88
-    - '@source: src/bof3/world/func_801F3D88.c'
+    - drawTexturedFrame
+    - '@source: src/bof3/world/drawTexturedFrame.c'
     - '@behavior: draws the local textured frame as four translucent FT4 border strips (left edge, top/bottom span, right-inner span, right edge) around a shared texture window, then queues the matching inner fill rectangle.'
   - - 5844
     - c

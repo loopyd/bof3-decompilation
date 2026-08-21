@@ -19,9 +19,8 @@ acceptance: {"level":"checked","criteria":["Produce either a byte-matched exact 
 Lift only prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`.
 
 ## Context
-1. Run once: `python3 .pi/skills/bof3-re/scripts/agent-context.py reverse SELECTOR` (ordered common/role context incl. `docs/agents/lessons.md`, manifest/map/Splat/header, bindings, selected source/asm, data-scan gaps).
-2. Never `read` an emitted `=====` path; unbundled path only for a named evidence gap. Supplied brief allowed.
-3. Skill: `.pi/skills/bof3-re/SKILL.md` (matching ladder, fast-evidence commands, pipeline-test contract). Role: `.pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md`.
+1. First repository command, once: `bin/agent-context reverse SELECTOR`. Its stdout is bounded tracked prefill; do not rerun or reread an emitted `=====` path absent a named evidence gap. Supplied brief allowed.
+2. The prefill includes the BOF3 skill, reverse protocol, manifest/map/Splat/header/bindings, and selected source. Generated assembly/index evidence stays task-driven.
 
 ## Edits
 - Owned source, `internal.h`, target map (incl. proven data-scan `D_*` labels), Splat boundary only.

@@ -6,6 +6,7 @@
  * @source 0x801D2658
  * @status exact
  * @match 100.00
+ * @residual none
  */
 void func_801D2658(void) {
   SVECTOR position;

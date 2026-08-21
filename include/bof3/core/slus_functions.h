@@ -37,7 +37,7 @@ void yieldCallbackSlotScheduler(u16 countdown);
 void appendRenderPrim(u32 ot_index, u32 primitive_size);
 void fadeLoop(s32 a0, s32 a1, s32 a2);
 u8   drawFadeTile(s16* value, s32 arg, u8 arg2, u8 arg3, u8 arg4);
-void func_80150098(s16 x, s16 y, u32 clut, const u8* text);
+void drawGlyphString8x8(s16 x, s16 y, u32 clut, const u8* text);
 void dispatchSoundCue(u32 cue_id);
 s32  adjustBoundedCounter(u8* counter, s32 delta);
 

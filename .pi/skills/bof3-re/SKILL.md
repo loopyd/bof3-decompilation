@@ -5,7 +5,7 @@ description: Lift or review one target-qualified BOF3 function, normalize proven
 
 # BOF3 RE
 
-Selector: `TARGET@0xADDRESS` | shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. For `bof3-reverse`/`bof3-review` run `python3 .pi/skills/bof3-re/scripts/agent-context.py <agents|reverse|review> [SELECTOR]` once (common+role context, `references/<ROLE>/`, `docs/agents/lessons.md`, manifest/map/Splat/header, bindings, source/asm). Never reread bundled paths; unbundled only for a named gap; psx-rizin only for a concrete question. Repo `bin` wins.
+Selector: `TARGET@0xADDRESS` | shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First command for `bof3-reverse`/`bof3-review`: `bin/agent-context <reverse|review> SELECTOR`, once. Its bounded tracked prefill includes role rules and target-owned facts; never reread bundled paths. Generated asm/index evidence is task-driven; psx-rizin only for a concrete question. Repo `bin` wins.
 
 ## Invariants
 

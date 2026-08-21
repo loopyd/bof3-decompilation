@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
-import re
 
 from ..domain.tags import (
     PREFIXED_RAW_NAME_RE,
@@ -17,7 +16,9 @@ from ..domain.symbols import (
     load_target_symbols,
     map_path,
     sdk_map_path,
+    shared_map_path,
     weak_bindings_c,
+    parse_weak_symbol_bindings,
     write_map,
 )
 from ..domain.claims import (
@@ -41,21 +42,21 @@ from ..domain import (
     FUNCTION_ID_HELP,
     load_target_manifests,
 )
+from ..domain.identity import (
+    collision_findings,
+    composed_map_findings,
+    reviewed_function_identities,
+    splat_source_findings,
+)
 from ..domain.layout import parse_splat_layout
 from ._common import add_example_argument, add_root_argument, run_main
 
 from .symbols_psyq import (
     _root,
     _targets,
-    run_dedupe,
     run_import_psyq,
     run_psyq_bindings,
     run_psyq_report,
-)
-
-_WEAK_BINDING = re.compile(
-    r"WEAK_SYMBOL_AT\(\s*(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*,\s*"
-    r"(?P<address>0x[0-9A-Fa-f]+)\s*\)"
 )
 
 
@@ -154,24 +155,24 @@ def run_check(args: argparse.Namespace) -> int:
             if top_level.is_file():
                 lenient_files.append(top_level)
         for binding in strict_files:
-            for match in _WEAK_BINDING.finditer(binding.read_text(encoding="utf-8")):
-                address = int(match.group("address"), 0)
+            for name, address in parse_weak_symbol_bindings(
+                binding.read_text(encoding="utf-8")
+            ).items():
                 expected = by_address.get(address)
-                if expected is None or expected.canonical_name != match.group("name"):
+                if expected is None or expected.canonical_name != name:
                     errors.append(
                         f"binding/map drift: {binding.relative_to(root)} "
-                        f"has {match.group('name')} at 0x{address:08X}"
+                        f"has {name} at 0x{address:08X}"
                     )
         top_text = ""
         for top_level in lenient_files:
             text = top_level.read_text(encoding="utf-8")
             top_text += text + "\n"
-            for match in _WEAK_BINDING.finditer(text):
-                address = int(match.group("address"), 0)
+            for name, address in parse_weak_symbol_bindings(text).items():
                 if address not in by_address:
                     errors.append(
                         f"binding/map drift: {top_level.relative_to(root)} "
-                        f"has {match.group('name')} at 0x{address:08X}"
+                        f"has {name} at 0x{address:08X}"
                     )
         # Naming rule: raw hex names must be the whole name; conflicts resolve
         # by a different name or a suffix, never an overlay-name prefix.
@@ -215,12 +216,7 @@ def run_check(args: argparse.Namespace) -> int:
                         break
             if declared == symbol.address:
                 continue
-            binding = re.search(
-                rf"WEAK_SYMBOL_AT\(\s*{re.escape(name)}\s*,\s*"
-                rf"0x0*{symbol.address:x}\s*\)",
-                top_text,
-            )
-            if binding is not None:
+            if parse_weak_symbol_bindings(top_text).get(name) == symbol.address:
                 continue
             errors.append(
                 f"untracked symbol: {path.relative_to(root)} has {name} = "
@@ -229,6 +225,33 @@ def run_check(args: argparse.Namespace) -> int:
     if args.target is None:
         debt = collect_naming_debt(root, manifests)
         errors.extend(naming_debt_regressions(debt, load_naming_baseline(root)))
+        identities = [
+            identity
+            for target, manifest in manifests.items()
+            for identity in reviewed_function_identities(root, target, manifest)
+        ]
+        errors.extend(
+            str(finding)
+            for finding in collision_findings(identities)
+            if finding.verdict == "reject"
+        )
+        for target, manifest in manifests.items():
+            layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+            errors.extend(
+                str(finding)
+                for finding in splat_source_findings(target, layout)
+                if finding.verdict == "reject"
+            )
+            layers = {
+                "shared": load_map(shared_map_path(root)),
+                "sdk": load_map(sdk_map_path(root, manifest.psyq_space)),
+                "local": load_map(map_path(root, target)),
+            }
+            errors.extend(
+                str(finding)
+                for finding in composed_map_findings(layers)
+                if finding.verdict == "reject"
+            )
     if errors:
         raise ValueError("; ".join(errors))
     print("symbol maps: OK")
@@ -288,12 +311,6 @@ def build_parser() -> argparse.ArgumentParser:
     import_psyq.add_argument("--all-qualified", action="store_true")
     import_psyq.add_argument("--write", action="store_true")
     import_psyq.set_defaults(handler=run_import_psyq)
-    dedupe = sub.add_parser(
-        "dedupe", help="extract symbols duplicated across N+ targets into shared base"
-    )
-    dedupe.add_argument("--threshold", type=int, default=5)
-    dedupe.add_argument("--write", action="store_true")
-    dedupe.set_defaults(handler=run_dedupe)
     return parser
 
 

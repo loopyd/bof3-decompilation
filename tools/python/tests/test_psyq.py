@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import zipfile
 
+from harness.commands.setup import _staged_psyq_member
 from harness.commands.symbols import main as symbols_main
 from harness.psyq.signature_calls import find_calls
 from harness.psyq.signatures import scan
@@ -15,6 +16,19 @@ from harness.analysis.snapshot import (
 )
 from harness.toolchain import psyq_discovery
 from harness.toolchain.psyq import import_psyq_sdk, stage_psyq_sdk
+
+
+def test_staged_psyq_member_resolves_converted_obj_name(tmp_path: Path) -> None:
+    converted = tmp_path / "toolchains/psyq/4.7/libsnd/vm_nowof.o"
+    converted.parent.mkdir(parents=True)
+    converted.touch()
+
+    assert (
+        _staged_psyq_member(tmp_path, "psyq/4.7/libsnd/VM_NOWOF.OBJ") == converted
+    )
+    assert _staged_psyq_member(tmp_path, "psyq/4.7/libcard/END.OBJ") == (
+        tmp_path / "toolchains/psyq/4.7/libcard/END.OBJ"
+    )
 
 
 def make_fake_psyq_tree(root: Path) -> None:

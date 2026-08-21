@@ -19,7 +19,7 @@ sources = [
     "src/bof3/scenario/func_801F7230_scena16.c",
     "src/bof3/scenario/func_801F7790_scena16.c",
     "src/bof3/scenario/func_801F7CC4_scena16.c",
-    "src/bof3/scenario/func_801F83B0_scena16.c",
+    "src/bof3/scenario/clampPaletteChannels.c",
     "src/bof3/scenario/noopRecordHandler_scena16.c",
     "src/bof3/scenario/noopSecondaryState_scena16.c",
     "src/bof3/scenario/resetEffectBank_scena16.c",

@@ -9,6 +9,8 @@ from pathlib import Path
 
 import yaml
 
+from .psx import PsxPayload, reviewed_range_digest
+
 
 _RAW_FUNCTION = re.compile(r"func_[0-9A-F]{8}\Z")
 _MIXED_CASE_RAW_FUNCTION = re.compile(r"func_[0-9A-Fa-f]{8}\Z")
@@ -91,6 +93,28 @@ class ReviewedSplatLayout:
             ),
             None,
         )
+
+    def reviewed_range_identity(
+        self, payload: PsxPayload, *, binary: bytes
+    ) -> dict[int, tuple[str, int]]:
+        """Map each reviewed, finite function start to ``(reviewed_sha256, reviewed_size)``.
+
+        The digest/size are over the reviewed Splat half-open range, not the
+        analyzer size, so a group's reviewed identity is independent of how
+        the analyzer sliced the same bytes.  Boundaries whose end is not
+        contained in the payload are skipped (they cannot be hashed from the
+        image).  Only named function boundaries participate.
+        """
+        identity: dict[int, tuple[str, int]] = {}
+        for boundary in self.boundaries:
+            if not boundary.is_function or boundary.name is None:
+                continue
+            digest = reviewed_range_digest(
+                payload, boundary.virtual_start, boundary.virtual_end, binary=binary
+            )
+            if digest is not None:
+                identity[boundary.virtual_start] = digest
+        return identity
 
 
 def _integer(value: object, *, field: str) -> int:

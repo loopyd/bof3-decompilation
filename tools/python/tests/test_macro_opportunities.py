@@ -1,0 +1,260 @@
+"""Adversarial semantic guards for read-only macro opportunity analysis."""
+
+from __future__ import annotations
+
+import hashlib
+import sqlite3
+from pathlib import Path
+
+import pytest
+
+from harness.analysis.macro_opportunities import macro_opportunities_payload
+from harness.analysis.near_duplicates import near_duplicates_payload
+from harness.analysis.schema import create_schema
+from harness.commands.rev_query import main
+
+
+def _connection() -> sqlite3.Connection:
+    connection = sqlite3.connect(":memory:")
+    connection.row_factory = sqlite3.Row
+    create_schema(connection)
+    return connection
+
+
+def _target(
+    connection: sqlite3.Connection, root: Path, target: str, data: bytes
+) -> None:
+    binary = root / f"{target}.bin"
+    binary.parent.mkdir(parents=True, exist_ok=True)
+    binary.write_bytes(data)
+    connection.execute(
+        "INSERT INTO targets VALUES (?, ?, ?, 0x80100000, 'rizin', 'v', 's', 'sh')",
+        (target, binary.relative_to(root).as_posix(), hashlib.sha256(data).hexdigest()),
+    )
+
+
+def _source(
+    connection: sqlite3.Connection, root: Path, target: str, path: str, text: str
+) -> Path:
+    source = root / path
+    source.parent.mkdir(parents=True, exist_ok=True)
+    source.write_text(text, encoding="utf-8")
+    connection.execute(
+        "INSERT INTO macro_input_fingerprints VALUES (?, ?, ?, 'source_claim', ?)",
+        (target, path, hashlib.sha256(text.encode()).hexdigest(), target),
+    )
+    return source
+
+
+def test_opportunities_are_blocked_and_preserve_adversarial_semantic_guards(
+    tmp_path: Path,
+) -> None:
+    connection = _connection()
+    _target(connection, tmp_path, "exe/test", b"")
+    _source(
+        connection,
+        tmp_path,
+        "exe/test",
+        "src/test.c",
+        """int f(int *p, volatile int *v) {
+    int a = 17; int b = 17; int c = 17;
+    a = p->field; b = p->field; p->field = c; c = p->field;
+    a = next()->field;
+    a += b; b += c; c += a;
+    a += b; b += c; c += a;
+    return (*v) + a;
+}
+""",
+    )
+
+    payload = macro_opportunities_payload(
+        connection, tmp_path, target="exe/test", kind=None, limit=0
+    )
+
+    assert payload and {row["status"] for row in payload} == {"blocked"}
+    constant = next(row for row in payload if row["kind"] == "constant")
+    assert constant["semantic_guards"]["integer_promotions"]["status"] == "unproven"
+    accessor = next(row for row in payload if row["kind"] == "expression_accessor")
+    assert accessor["semantic_guards"]["evaluation_count"]["status"] == "proven"
+    assert accessor["semantic_guards"]["lvalue"]["status"] == "proven"
+    assert accessor["semantic_guards"]["volatile"]["status"] == "unproven"
+    assert accessor["semantic_guards"]["aliasing"]["status"] == "unproven"
+    assert any(
+        row["kind"] == "non_identifier_receiver" for row in accessor["counterexamples"]
+    )
+    window = next(row for row in payload if row["kind"] == "statement_window")
+    assert "side_effect_equivalence_unproven" in window["blockers"]
+    assert "control_flow_equivalence_unproven" in window["blockers"]
+    assert window["semantic_guards"]["precedence"]["status"] == "proven"
+    assert window["semantic_guards"]["control_flow"]["status"] == "not_applicable"
+
+
+def test_query_cli_exposes_opportunities_and_near_duplicates(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    connection = _connection()
+    _target(connection, tmp_path, "exe/test", b"")
+    _source(
+        connection,
+        tmp_path,
+        "exe/test",
+        "src/test.c",
+        "int f(void) { int a=17,b=17,c=17; return a+b+c; }\n",
+    )
+    monkeypatch.setattr("harness.commands.rev_query.connect", lambda _root: connection)
+
+    assert (
+        main(
+            [
+                "--root",
+                str(tmp_path),
+                "--json",
+                "macro-opportunities",
+                "--target",
+                "exe/test",
+                "--kind",
+                "constant",
+            ]
+        )
+        == 0
+    )
+    assert '"kind": "constant"' in capsys.readouterr().out
+
+    connection = _connection()
+    _target(connection, tmp_path, "exe/test", b"")
+    monkeypatch.setattr("harness.commands.rev_query.connect", lambda _root: connection)
+    assert (
+        main(
+            [
+                "--root",
+                str(tmp_path),
+                "--json",
+                "near-duplicates",
+                "--target",
+                "exe/test",
+            ]
+        )
+        == 0
+    )
+    assert capsys.readouterr().out.strip() == "[]"
+
+
+def test_generated_source_is_excluded_and_stale_source_fails_closed(
+    tmp_path: Path,
+) -> None:
+    connection = _connection()
+    _target(connection, tmp_path, "exe/test", b"")
+    source = _source(
+        connection,
+        tmp_path,
+        "exe/test",
+        "src/generated.c",
+        "/* Generated by tool; do not edit. */\nint a=23,b=23,c=23;\n",
+    )
+
+    assert (
+        macro_opportunities_payload(
+            connection, tmp_path, target="exe/test", kind=None, limit=0
+        )
+        == []
+    )
+
+    source.write_text("int a=23,b=23,c=23;\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="stale macro opportunity source"):
+        macro_opportunities_payload(
+            connection, tmp_path, target="exe/test", kind=None, limit=0
+        )
+
+
+def _word(opcode: int, rs: int = 0, rt: int = 0, immediate: int = 0) -> bytes:
+    return ((opcode << 26) | (rs << 21) | (rt << 16) | immediate).to_bytes(4, "little")
+
+
+def _function(
+    connection: sqlite3.Connection,
+    *,
+    target: str,
+    address: int,
+    data: bytes,
+    basic_blocks: int = 1,
+    cfg_edges: int = 0,
+    trivial: str | None = None,
+) -> str:
+    function_id = f"{target}@{address:08X}"
+    digest = hashlib.sha256(data).hexdigest()
+    connection.execute(
+        "INSERT INTO functions VALUES (?, ?, ?, ?, ?, NULL, ?, ?, ?, 1, 0, NULL, "
+        "'unlifted', ?, ?, ?, 1, 0, 0, 0, 0, ?, 0)",
+        (
+            function_id,
+            target,
+            address,
+            len(data),
+            f"func_{address:08X}",
+            digest,
+            digest,
+            len(data),
+            len(data) // 4,
+            basic_blocks,
+            cfg_edges,
+            trivial,
+        ),
+    )
+    return function_id
+
+
+def test_near_duplicate_accepts_immediate_only_and_keeps_targets_qualified(
+    tmp_path: Path,
+) -> None:
+    connection = _connection()
+    first = _word(0x09, 4, 2, 17) + _word(0x09, 2, 2, 1) + b"\x08\x00\xe0\x03"
+    second = _word(0x09, 4, 2, 23) + _word(0x09, 2, 2, 1) + b"\x08\x00\xe0\x03"
+    _target(connection, tmp_path, "exe/one", first)
+    _target(connection, tmp_path, "exe/two", second)
+    _function(connection, target="exe/one", address=0x80100000, data=first)
+    _function(connection, target="exe/two", address=0x80100000, data=second)
+
+    (candidate,) = near_duplicates_payload(connection, tmp_path, target=None, limit=0)
+
+    assert candidate["status"] == "blocked"
+    assert candidate["target_scope"] == "cross_target_report_only"
+    assert [member["function"] for member in candidate["members"]] == [
+        "exe/one@80100000",
+        "exe/two@80100000",
+    ]
+    assert candidate["immediate_deltas"] == [
+        {"instruction": 0, "field": "immediate16", "values": [17, 23]}
+    ]
+    assert candidate["evidence"]["reviewed_boundaries"] is True
+    assert candidate["semantic_guards"]["side_effects"]["status"] == "unproven"
+
+
+def test_near_duplicate_rejects_cfg_call_shape_and_trivial_differences(
+    tmp_path: Path,
+) -> None:
+    connection = _connection()
+    first = _word(0x09, 4, 2, 17) + _word(0x09, 2, 2, 1) + b"\x08\x00\xe0\x03"
+    second = _word(0x09, 4, 2, 23) + _word(0x09, 2, 2, 1) + b"\x08\x00\xe0\x03"
+    binary = first + second + first + second
+    _target(connection, tmp_path, "exe/test", binary)
+    one = _function(connection, target="exe/test", address=0x80100000, data=first)
+    two = _function(
+        connection, target="exe/test", address=0x8010000C, data=second, basic_blocks=2
+    )
+    _function(
+        connection,
+        target="exe/test",
+        address=0x80100018,
+        data=first,
+        trivial="constant_return",
+    )
+    four = _function(connection, target="exe/test", address=0x80100024, data=second)
+    connection.execute(
+        "INSERT INTO unresolved_calls VALUES (?, 0x80110000, 0x80100028, 'unknown')",
+        (four,),
+    )
+
+    assert (
+        near_duplicates_payload(connection, tmp_path, target="exe/test", limit=0) == []
+    )
+    assert one != two

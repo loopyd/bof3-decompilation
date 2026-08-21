@@ -3,23 +3,42 @@
 from __future__ import annotations
 
 import argparse
-from collections import defaultdict
 import json
 from typing import Any
 
 from ..domain import (
-    FUNCTION_ID_FORMAT,
-    FUNCTION_ID_HELP,
+    load_target_manifests,
     normalize_target_id,
     parse_function_id,
 )
-from ..output import add_detail_argument, resolve_detail
-from ..analysis.graph import function_metrics
-from ..analysis.index import connect, rows
+from ..domain.naming_debt import collect_naming_debt
+from ..output import resolve_detail
+from ..analysis.index import connect
 from ..analysis.mission import mission_brief
+from ..analysis.naming_readiness import transaction_scope
 from ..analysis.priority import RANK_FIELDS, priority_rows
+from ..analysis.rev_queries import (
+    analyzer_candidates_payload,
+    calls_payload,
+    describe_payload,
+    duplicates_payload,
+    known_target,
+    macro_opportunities_payload,
+    macro_uses_payload,
+    macros_payload,
+    near_duplicates_payload,
+    owners_payload,
+    status_payload,
+    symbols_payload,
+    type_candidates_payload,
+    type_usages_payload,
+    types_payload,
+    variables_payload,
+    xrefs_payload,
+)
 
-from ._common import add_example_argument, add_root_argument, resolved_root, run_main
+from ._common import resolved_root, run_main
+from ._rev_query_parsers import build_parser
 
 
 def _project_rows(
@@ -45,89 +64,71 @@ def _print(
 
 
 def run_query(args: argparse.Namespace) -> int:
+    if args.command == "inventory":
+        root = resolved_root(args)
+        target = normalize_target_id(args.target).value
+        manifests = load_target_manifests(root)
+        if target not in manifests:
+            raise ValueError(f"unknown target: {target}")
+        debt = collect_naming_debt(root, manifests)
+        payload: list[dict[str, Any]] = [
+            {"kind": kind, "name": row.split(":", 1)[1]}
+            for kind, entries in (
+                ("function", debt.raw_functions),
+                ("data", debt.raw_data),
+            )
+            for row in sorted(entries)
+            if row.startswith(f"{target}:")
+        ]
+        _print(payload, args.json)
+        return 0
     connection = connect(resolved_root(args))
     try:
         if getattr(args, "target", None):
             args.target = normalize_target_id(args.target).value
-            if (
-                connection.execute(
-                    "SELECT 1 FROM targets WHERE id = ?", (args.target,)
-                ).fetchone()
-                is None
-            ):
+            if not known_target(connection, args.target):
                 raise ValueError(f"unknown target: {args.target}")
-        if getattr(args, "function", None):
-            args.function = str(parse_function_id(args.function))
         limit = args.limit
-        sql_limit = -1 if limit == 0 else limit
-        if args.command == "symbols":
-            pattern = f"%{args.pattern}%" if args.pattern else "%"
-            payload = rows(
+        if args.command == "describe":
+            function = parse_function_id(args.function)
+            root = resolved_root(args)
+            manifests = load_target_manifests(root)
+            payload = describe_payload(
                 connection,
-                "SELECT target_id, printf('0x%08X', address) AS address, name, kind FROM symbols WHERE name LIKE ? ORDER BY target_id, address, name LIMIT ?",
-                (pattern, sql_limit),
+                function,
+                root=root,
+                manifests=manifests,
+                limit=limit,
+            )
+        elif args.command == "transaction-scope":
+            scope = transaction_scope(resolved_root(args), args.target, args.symbol)
+            _print([scope], args.json, labeled=True)
+            return 0
+        elif args.command == "symbols":
+            payload = symbols_payload(
+                connection, getattr(args, "pattern", None), limit=limit
             )
         elif args.command == "xrefs":
             function = parse_function_id(args.function)
-            payload = rows(
-                connection,
-                "SELECT target_id, printf('0x%08X', source) AS source, printf('0x%08X', destination) AS destination, kind FROM xrefs WHERE target_id = ? AND destination = ? ORDER BY source LIMIT ?",
-                (function.target.value, function.address, sql_limit),
-            )
+            payload = xrefs_payload(connection, function, limit=limit)
+        elif args.command == "owners":
+            function = parse_function_id(args.function)
+            payload = owners_payload(connection, function, limit=limit)
         elif args.command == "duplicates":
-            metrics = function_metrics(connection, None)
-            grouped: dict[tuple[str, int], list[dict[str, Any]]] = defaultdict(list)
-            for row in metrics:
-                if row["duplicate_members"] > 1:
-                    grouped[(row["exact_sha256"], row["size"])].append(row)
-            payload = []
-            for (digest, size), members in sorted(grouped.items()):
-                members.sort(key=lambda row: row["id"])
-                if args.target and not any(
-                    row["target"] == args.target for row in members
-                ):
-                    continue
-                if args.function and args.function not in {
-                    row["id"] for row in members
-                }:
-                    continue
-                unlifted = [row for row in members if not row["lifted"]]
-                if args.unlifted and not unlifted:
-                    continue
-                representative = min(
-                    members,
-                    key=lambda row: (
-                        -row["reviewed"],
-                        -row["lifted"],
-                        -row["unique_callers"],
-                        row["id"],
-                    ),
-                )
-                payload.append(
-                    {
-                        "hash": digest,
-                        "size": size,
-                        "members": len(members),
-                        "unlifted_members": len(unlifted),
-                        "targets": len({row["target"] for row in members}),
-                        "representative": representative["id"],
-                        "estimated_saved_instructions": representative[
-                            "instruction_count"
-                        ]
-                        * max(
-                            0, len(unlifted) - (0 if representative["lifted"] else 1)
-                        ),
-                        "functions": [row["id"] for row in members],
-                        "score_version": "reverse-priority/v1",
-                    }
-                )
-            payload.sort(
-                key=lambda row: (
-                    -row["estimated_saved_instructions"],
-                    -row["unlifted_members"],
-                    -row["members"],
-                    row["hash"],
-                )
+            payload = duplicates_payload(
+                connection,
+                target=args.target,
+                function=getattr(args, "function", None),
+                unlifted=getattr(args, "unlifted", False),
+                include_trivial=getattr(args, "include_trivial", False),
+            )
+            payload = payload[:limit] if limit else payload
+        elif args.command == "analyzer-candidates":
+            payload = analyzer_candidates_payload(
+                connection,
+                target=args.target,
+                function=getattr(args, "function", None),
+                unlifted=getattr(args, "unlifted", False),
             )
             payload = payload[:limit] if limit else payload
         elif args.command in {"metrics", "hotspots", "leafs", "quick-wins", "pareto"}:
@@ -143,23 +144,70 @@ def run_query(args: argparse.Namespace) -> int:
                 root=resolved_root(args),
             )
         elif args.command == "calls":
-            payload = rows(
-                connection,
-                "SELECT caller, callee, printf('0x%08X', callsite) AS callsite FROM calls WHERE caller = ? OR callee = ? ORDER BY caller, callsite LIMIT ?",
-                (args.function, args.function, sql_limit),
-            )
+            function_id = str(parse_function_id(args.function))
+            payload = calls_payload(connection, function_id, limit=limit)
         elif args.command == "variables":
-            pattern = f"%{args.pattern}%" if args.pattern else "%"
-            payload = rows(
+            payload = variables_payload(
+                connection, getattr(args, "pattern", None), limit=limit
+            )
+        elif args.command == "types":
+            payload = types_payload(
                 connection,
-                "SELECT target_id, printf('0x%08X', address) AS address, name FROM symbols WHERE kind = 'data' AND name LIKE ? ORDER BY target_id, address LIMIT ?",
-                (pattern, sql_limit),
+                target=getattr(args, "target", None),
+                pattern=getattr(args, "pattern", None),
+                untyped=getattr(args, "untyped", False),
+                limit=limit,
+                detail=resolve_detail(
+                    requested=getattr(args, "detail", None), json_output=args.json
+                ),
+            )
+        elif args.command == "type-uses":
+            payload = type_usages_payload(
+                connection,
+                target=getattr(args, "target", None),
+                pattern=getattr(args, "pattern", None),
+                limit=limit,
+            )
+        elif args.command == "macros":
+            payload = macros_payload(
+                connection,
+                target=getattr(args, "target", None),
+                pattern=getattr(args, "pattern", None),
+                classification=getattr(args, "classification", None),
+                limit=limit,
+            )
+        elif args.command == "macro-uses":
+            payload = macro_uses_payload(
+                connection,
+                target=getattr(args, "target", None),
+                pattern=getattr(args, "pattern", None),
+                limit=limit,
+            )
+        elif args.command == "macro-opportunities":
+            payload = macro_opportunities_payload(
+                connection,
+                resolved_root(args),
+                target=getattr(args, "target", None),
+                kind=getattr(args, "kind", None),
+                limit=limit,
+            )
+        elif args.command == "near-duplicates":
+            payload = near_duplicates_payload(
+                connection,
+                resolved_root(args),
+                target=getattr(args, "target", None),
+                limit=limit,
+            )
+        elif args.command == "type-candidates":
+            payload = type_candidates_payload(
+                connection,
+                target=getattr(args, "target", None),
+                status=getattr(args, "status", None),
+                kind=getattr(args, "kind", None),
+                limit=limit,
             )
         else:  # status
-            payload = rows(
-                connection,
-                "SELECT t.id, t.engine, COUNT(DISTINCT f.id) AS functions, COUNT(DISTINCT s.address) AS symbols FROM targets t LEFT JOIN functions f ON f.target_id = t.id LEFT JOIN symbols s ON s.target_id = t.id GROUP BY t.id ORDER BY t.id",
-            )
+            payload = status_payload(connection)
         detail = "full"
         ranked = args.command in {
             "metrics",
@@ -168,6 +216,7 @@ def run_query(args: argparse.Namespace) -> int:
             "quick-wins",
             "pareto",
             "duplicates",
+            "analyzer-candidates",
         }
         if ranked:
             detail = (
@@ -234,71 +283,6 @@ def run_mission(args: argparse.Namespace) -> int:
     else:
         _print_mission(brief)
     return 0
-
-
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="rev-query")
-    add_root_argument(parser)
-    add_example_argument(parser, "bin/rev-query symbols func_")
-    parser.add_argument("--json", action="store_true")
-
-    def nonnegative(value: str) -> int:
-        parsed = int(value)
-        if parsed < 0:
-            raise argparse.ArgumentTypeError("must be nonnegative")
-        return parsed
-
-    parser.add_argument(
-        "--limit", type=nonnegative, default=20, help="maximum rows; 0 means all"
-    )
-    sub = parser.add_subparsers(dest="command", required=True)
-    symbols = sub.add_parser("symbols", help="find canonical target-local symbols")
-    symbols.add_argument("pattern", nargs="?")
-    xrefs = sub.add_parser(
-        "xrefs", help="find target-local indexed references to an address"
-    )
-    xrefs.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
-    calls = sub.add_parser("calls", help="show calls to or from a function selector")
-    calls.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
-    variables = sub.add_parser("variables", help="list mapped data symbols")
-    variables.add_argument("pattern", nargs="?")
-    ranked = (
-        ("metrics", "show raw and derived function metrics"),
-        ("quick-wins", "rank low-effort, high-leverage candidates"),
-        ("hotspots", "rank high-impact functions"),
-        ("leafs", "show SCC-aware leaf candidates"),
-        ("pareto", "show nondominated effort/value candidates"),
-        ("duplicates", "show exact duplicate groups"),
-    )
-    for name, help_text in ranked:
-        command = sub.add_parser(name, help=help_text)
-        command.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
-        command.add_argument("--limit", type=nonnegative, default=argparse.SUPPRESS)
-        add_detail_argument(command)
-        command.add_argument("--target")
-        if name != "duplicates":
-            command.add_argument(
-                "--exclusions",
-                action="store_true",
-                help="show candidate rows rejected by canonical-code checks",
-            )
-        command.add_argument("--unlifted", action="store_true")
-        if name != "duplicates":
-            command.add_argument(
-                "--include-trivial",
-                action="store_true",
-                help="include classified return-only stubs in rankings",
-            )
-        if name in {"metrics", "duplicates"}:
-            command.add_argument("function", nargs="?")
-    sub.add_parser("status", help="show index coverage")
-    for command in sub.choices.values():
-        command.set_defaults(handler=run_query)
-    mission = sub.add_parser("mission", help="compose a single-function lifting brief")
-    mission.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
-    mission.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
-    mission.set_defaults(handler=run_mission)
-    return parser
 
 
 def main(argv: list[str] | None = None) -> int:

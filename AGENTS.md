@@ -1,12 +1,11 @@
 # AGENTS.md — BOF3
 
-Fetch your full ordered context with one read-only command before repository
-work instead of reading files one by one. The script owns the canonical
-reading order (identity, law, standards, role protocol) for every agent role:
-
-```sh
-python3 .pi/skills/bof3-re/scripts/agent-context.py agents
-```
+First repository command: `bin/agent-context ROLE` (plus the prompted selector
+for reverse/review/cleanup roles). The active role definition owns the exact
+invocation; use `agents` only when no narrower role is active. Run it once. Its
+bounded, tracked output owns canonical reading order; do not rerun it or reread
+an emitted path without a named evidence gap. Use repository-relative commands
+without `cd`.
 
 After `.pi` agent/skill Markdown edits, run `/skill:agent-skill-compaction`.
 

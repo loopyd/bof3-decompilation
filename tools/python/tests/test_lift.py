@@ -21,6 +21,11 @@ from harness.toolchain.m2c import M2cToolchain, render_context
 def _target(
     root: Path, *, sources: tuple[str, ...] = ("src/exe/logo/initSelectionState.c",)
 ) -> None:
+    base = root / "include/base/types.h"
+    base.parent.mkdir(parents=True, exist_ok=True)
+    base.write_text(
+        "typedef unsigned char u8;\ntypedef signed int s32;\n", encoding="utf-8"
+    )
     target = root / "config" / "targets" / "exe" / "logo" / "target.toml"
     target.parent.mkdir(parents=True)
     lines = [
@@ -74,6 +79,31 @@ def test_lift_commands_explain_missing_source(
     assert lift.main("asm-diff", ["exe/logo@0x801CE758"]) == 2
     assert "lifted source does not exist for exe/logo@0x801CE758" in (
         capsys.readouterr().err
+    )
+
+
+def test_context_uses_registry_and_bootstrap_fallback_is_explicit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _target(tmp_path)
+    monkeypatch.setattr(lift, "repo_layout", lambda: _layout(tmp_path))
+    monkeypatch.setattr(_common, "repo_layout", lambda: _layout(tmp_path))
+    monkeypatch.setattr(m2c_toolchain, "repo_layout", lambda: _layout(tmp_path))
+    function, manifest, _ = lift.resolve_function_selector("exe/logo@0x801CE758")
+
+    context = render_context(function, manifest)
+
+    assert (
+        "WARNING: reverse type index unavailable during explicit bootstrap" in context
+    )
+    assert "typedef unsigned char u8;" in context
+
+    placeholder = tmp_path / "out/index/reverse.sqlite"
+    placeholder.parent.mkdir(parents=True)
+    placeholder.write_bytes(b"bootstrap placeholder")
+    context = render_context(function, manifest)
+    assert (
+        "WARNING: reverse type index unavailable during explicit bootstrap" in context
     )
 
 

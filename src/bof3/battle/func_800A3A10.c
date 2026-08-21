@@ -6,6 +6,7 @@
  * compares it with a random percentage roll.
  * @status exact
  * @match 100.00
+ * @residual none
  */
 s32 func_800A3A10(s32 battler_index, s32 selection_kind)
 {

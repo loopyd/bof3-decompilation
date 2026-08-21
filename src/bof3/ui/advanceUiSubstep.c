@@ -4,6 +4,7 @@
  * @behavior increments D_80148652.
  * @status exact
  * @match 100.00
+ * @residual none
  */
 void advanceUiSubstep(void) {
   u8 *cell = &D_80148652;

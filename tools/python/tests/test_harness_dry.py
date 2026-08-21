@@ -4,12 +4,64 @@ from __future__ import annotations
 
 import ast
 from collections import deque
+import dataclasses
+import os
+import subprocess
+import tempfile
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[3]
 COMMANDS = ROOT / "tools" / "python" / "harness" / "commands"
 HARNESS = ROOT / "tools" / "python" / "harness"
+
+
+def test_required_untracked_file_modes_are_normalized() -> None:
+    result = subprocess.run(
+        ["git", "ls-files", "--others", "--exclude-standard", "-z"],
+        cwd=ROOT,
+        capture_output=True,
+        check=True,
+    )
+    names = [
+        name
+        for name in result.stdout.decode(errors="surrogateescape").split("\0")
+        if name and (ROOT / name).is_file()
+    ]
+    if not names:
+        return
+    with tempfile.TemporaryDirectory() as temporary:
+        index_name = str(Path(temporary) / "index")
+        env = {**os.environ, "GIT_INDEX_FILE": index_name}
+        subprocess.run(["git", "read-tree", "HEAD"], cwd=ROOT, env=env, check=True)
+        for name in names:
+            blob = subprocess.run(
+                ["git", "hash-object", "-w", "--", name],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=True,
+            ).stdout.strip()
+            mode = "100755" if name.startswith("bin/") else "100644"
+            subprocess.run(
+                ["git", "update-index", "--add", "--cacheinfo", mode, blob, name],
+                cwd=ROOT,
+                env=env,
+                check=True,
+            )
+        indexed = subprocess.run(
+            ["git", "ls-files", "--stage", "--", *names],
+            cwd=ROOT,
+            env=env,
+            text=True,
+            capture_output=True,
+            check=True,
+        ).stdout.splitlines()
+    actual = {line.split(maxsplit=3)[3]: line.split()[0] for line in indexed}
+    expected = {
+        name: "100755" if name.startswith("bin/") else "100644" for name in names
+    }
+    assert actual == expected
 
 
 def _defs(path: Path) -> set[str]:
@@ -154,10 +206,9 @@ def test_package_initializer_edges_are_locked() -> None:
         "harness.domain": {
             "harness.domain.ids",
             "harness.domain.manifests",
-            "harness.domain.registry",
-            "harness.domain.sources",
             "harness.domain.tags",
         },
+        "harness.context": {"harness.context.base"},
         "harness.emi": {"harness.emi.operations"},
         "harness.psyq": {"harness.psyq.fingerprints", "harness.psyq.headers"},
         "harness.toolchain": {"harness.io"},
@@ -202,6 +253,78 @@ def test_harness_imports_resolve_and_are_acyclic() -> None:
     assert visited == len(graph), "harness import cycle: " + ", ".join(
         sorted(n for n, d in in_degree.items() if d)
     )
+
+
+def test_function_collision_matrix() -> None:
+    from harness.domain.identity import ReviewedFunctionIdentity, collision_findings
+
+    def identity(target: str, address: int, parent: str, digest: str):
+        return ReviewedFunctionIdentity(
+            target,
+            address,
+            address + 4,
+            "c",
+            "sameName",
+            "sameName",
+            parent,
+            f"{parent}/wrapper.c",
+            digest,
+            4,
+        )
+
+    same = collision_findings(
+        [
+            identity("a", 1, "src/bof3/ui", "x"),
+            identity("b", 2, "src/bof3/ui", "x"),
+        ]
+    )
+    rejected = collision_findings(
+        [
+            identity("a", 1, "src/bof3/ui", "x"),
+            identity("b", 2, "src/bof3/ui", "y"),
+        ]
+    )
+    allowed = collision_findings(
+        [
+            identity("a", 1, "src/bof3/ui", "x"),
+            identity("b", 2, "src/bof3/world", "y"),
+        ]
+    )
+    assert not any(f.verdict == "reject" for f in same)
+    assert any(f.verdict == "reject" for f in rejected)
+    assert not any(f.verdict == "reject" for f in allowed)
+    same_target = collision_findings(
+        [
+            identity("a", 1, "src/bof3/ui", "x"),
+            identity("a", 2, "src/bof3/world", "x"),
+        ]
+    )
+    casefolded = collision_findings(
+        [
+            identity("a", 1, "src/bof3/ui", "x"),
+            dataclasses.replace(
+                identity("b", 2, "src/bof3/ui", "y"), compiled_name="SameName"
+            ),
+        ]
+    )
+    assert any(f.verdict == "reject" for f in same_target)
+    assert any(f.verdict == "reject" for f in casefolded)
+
+
+def test_shared_function_templates_stay_target_owned() -> None:
+    template = ROOT / "src/shared/ui/panel_task.inc"
+    assert template.is_file()
+    wrappers = [
+        path
+        for path in (ROOT / "src/bof3").rglob("*.c")
+        if '"shared/ui/panel_task.inc"' in path.read_text(encoding="utf-8")
+    ]
+    assert len(wrappers) >= 2
+    assert all("@source" in path.read_text(encoding="utf-8") for path in wrappers)
+    assert "PANEL_ADVANCE_X" not in (ROOT / "include/ui/panel_task.h").read_text(
+        encoding="utf-8"
+    )
+    assert not any(path.suffix == ".inc" for path in (ROOT / "src/shared").rglob("*.c"))
 
 
 def test_harness_modules_stay_decomposed() -> None:

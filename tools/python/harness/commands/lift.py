@@ -78,22 +78,7 @@ def _print_match(
     resolved = resolve_detail(requested=detail, json_output=json_output)
     if json_output:
         if bytes_only:
-            print(
-                json.dumps(
-                    {
-                        key: payload[key]
-                        for key in (
-                            "function",
-                            "address",
-                            "original_size",
-                            "current_size",
-                            "byte_match",
-                            "outputs",
-                        )
-                    },
-                    sort_keys=True,
-                )
-            )
+            print(json.dumps(payload, indent=2, sort_keys=True))
         else:
             projected = payload
             if resolved == "minimal":

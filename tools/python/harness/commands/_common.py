@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 from typing import Any, Callable, Generic, TypeVar
 
-from ..domain import FunctionId, resolve_function
+from ..domain.ids import FunctionId
 from ..domain.manifests import TargetManifest
 from ..io import repo_layout
 
@@ -47,12 +47,16 @@ def resolve_function_selector(
     report the explicit absence.
     """
 
+    from ..domain.registry import resolve_function
+
     resolved = resolve_function(repo_layout().root, value)
     return resolved.id, resolved.manifest, resolved.source
 
 
-def add_root_argument(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("--root", type=Path, default=repo_layout().root)
+def add_root_argument(
+    parser: argparse.ArgumentParser, *, default: Path | None = None
+) -> None:
+    parser.add_argument("--root", type=Path, default=default or repo_layout().root)
 
 
 def resolved_root(args: argparse.Namespace) -> Path:
@@ -84,6 +88,9 @@ def run_main(
         print(example)
         return 0
     args = parser.parse_args(raw)
+    validator = getattr(args, "argument_validator", None)
+    if validator is not None:
+        validator(parser, args)
     handler = getattr(args, "handler", None)
     if handler is None:
         parser.error("missing command handler")
@@ -92,5 +99,5 @@ def run_main(
     except BrokenPipeError:
         return 0
     except (FileNotFoundError, RuntimeError, ValueError) as exc:
-        print(f"error: {exc}", file=sys.stderr)
+        print(f"{getattr(args, 'error_prefix', 'error: ')}{exc}", file=sys.stderr)
         return 2

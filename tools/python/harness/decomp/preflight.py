@@ -50,6 +50,7 @@ def _invalid_record(
     return {
         "target": target,
         "function": source.stem,
+        "compiled_symbol": None,
         "address": None if address is None else f"0x{address:08X}",
         "source": source.relative_to(root).as_posix(),
         "status": "invalid",
@@ -74,7 +75,8 @@ def _batch_result(
     instructions = result["instruction_count"]
     return {
         "target": target,
-        "function": source.stem,
+        "function": result.get("function", source.stem),
+        "compiled_symbol": result.get("function"),
         "address": f"0x{address:08X}",
         "source": source_name,
         "status": "exact" if result["byte_match"] else "partial",

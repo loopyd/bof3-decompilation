@@ -3,8 +3,8 @@
 
 #include "bof3/bof3.h"
 
-extern u8  D_800F724C;    /* @source 0x800F724C @kind unknown */
-extern void (*D_800F71F0[])(void); /* @source 0x800F71F0 @kind table */
+extern u8 handlerIndex; /* @source 0x800F724C @kind data */
+extern void (*handlerTable[])(void); /* @source 0x800F71F0 @kind table */
 
 void dispatchArea030CompanionHandler(void); /* @source 0x800F500C */
 

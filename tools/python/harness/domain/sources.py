@@ -18,12 +18,15 @@ This module centralizes lift-source identity:
 from __future__ import annotations
 
 from pathlib import Path
+import re
 from typing import Iterable, Mapping
 
 from .layout import ReviewedSplatLayout, parse_splat_layout
 from .symbols import load_map, map_path
 from .manifests import load_target_manifests
 from .tags import parse_behavior_tag, parse_source_tag
+
+_LOCAL_INCLUDE_RE = re.compile(r'^\s*#\s*include\s+"([^"]+)"', re.MULTILINE)
 
 
 class LiftMetadataError(ValueError):
@@ -59,6 +62,46 @@ class CompiledSymbolError(ValueError):
             + f": {detail}"
         )
         super().__init__(message)
+
+
+def local_include_files(root: Path, seeds: list[Path]) -> list[Path]:
+    """Follow repository-local quoted includes from target-owned sources.
+
+    Resolves each `#include "name"` against the including file's directory
+    and the repository root/`include` trees; only files inside ``root`` are
+    returned, and each file is visited once.
+    """
+    roots = (root, root / "include")
+    found: list[Path] = []
+    pending = list(seeds)
+    seen = set(pending)
+    while pending:
+        path = pending.pop()
+        if not path.is_file():
+            continue
+        try:
+            names = _LOCAL_INCLUDE_RE.findall(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError):
+            continue
+        for name in names:
+            candidates = [path.parent / name, *(base / name for base in roots)]
+            resolved = next(
+                (
+                    candidate.resolve()
+                    for candidate in candidates
+                    if candidate.is_file()
+                ),
+                None,
+            )
+            if (
+                resolved is not None
+                and root in resolved.parents
+                and resolved not in seen
+            ):
+                seen.add(resolved)
+                found.append(resolved)
+                pending.append(resolved)
+    return found
 
 
 def source_address(source_path: Path) -> int:
@@ -397,6 +440,7 @@ __all__ = [
     "compiled_symbol_name",
     "expected_lift_sources",
     "lift_metadata",
+    "local_include_files",
     "owning_manifest",
     "resolve_source_for_address",
     "reviewed_function_name",

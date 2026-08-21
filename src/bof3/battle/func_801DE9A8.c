@@ -5,6 +5,7 @@
  * @source 0x801DE9A8
  * @status exact
  * @match 100.00
+ * @residual none
  */
 void func_801DE9A8(u32 arg0) {
   func_801501E4(D_801490D8,

@@ -23,7 +23,7 @@ Never dispatch dirty/stale. `loop-status` fails closed; `--recover` serially rep
 
 ## Function pipeline
 
-Render/verify [`references/workflow-script.md`](references/workflow-script.md); submit unchanged as `subagent.workflowScript` with mission and lane launch. Script owns state, iterations, cleanup, review, integration; parent owns queue, launch, closure, freshness.
+Render/verify `scripts/render-workflow.py` (renderer-owned template `scripts/lift_workflow_template.py`); submit unchanged as `subagent.workflowScript` with mission and lane launch. Script owns state, iterations, cleanup, review, integration; parent owns queue, launch, closure, freshness.
 
 Each function is single-threaded regardless of batch parallelism:
 
@@ -69,4 +69,4 @@ Exhausted non-exact: lesson, restore prior state, then `bin/scratchpad share SEL
 
 Never stop for: non-exact candidate, unshareable, publish failure, review rejection of an exact claim, bounded escalation; journal + continue. Stop only: queue exhausted, budget reached, evidence-recovery fatal, child output conflicts with owned worktree, user approval required. Print journal, counts, commits, scratch URLs/results, risks, next step.
 
-Role protocols are preloaded by `agent-context.py`; the reference workflow supplies compact child tasks and ownership limits.
+Role protocols are preloaded once by `bin/agent-context`; the renderer-owned workflow template (`scripts/lift_workflow_template.py`) supplies compact child tasks and ownership limits.

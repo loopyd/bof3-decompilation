@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import struct
 from pathlib import Path
 from unittest.mock import patch
@@ -49,6 +50,29 @@ def test_snapshot_records_missing_battle15_static_jals_once(tmp_path: Path) -> N
             "kind": "static_jal",
         },
     ]
+
+
+def test_snapshot_psx_payload_hash_and_jal_use_header_offset(tmp_path: Path) -> None:
+    function = 0x80100000
+    callsite = function + 4
+    payload = b"\x08\x00\xe0\x03" + _jal(callsite, 0x80123450) + b"\0" * 8
+    binary = tmp_path / "target.exe"
+    binary.write_bytes(b"H" * 0x800 + payload)
+    engine = EngineIdentity("rizin", tmp_path / "rizin", "test", {})
+    functions = [{"offset": function, "size": len(payload), "name": "func_80100000"}]
+
+    with patch("harness.analysis.engine._run_analysis", return_value=(functions, [])):
+        snapshot = build_snapshot(
+            engine,
+            binary,
+            function,
+            "exe/test",
+            binary_offset=0x800,
+        )
+
+    assert snapshot.functions[0].exact_sha256 == hashlib.sha256(payload).hexdigest()
+    assert snapshot.unresolved_calls[0].callsite == callsite
+    assert snapshot.unresolved_calls[0].target_address == 0x80123450
 
 
 def test_snapshot_ignores_incomplete_final_instruction(tmp_path: Path) -> None:

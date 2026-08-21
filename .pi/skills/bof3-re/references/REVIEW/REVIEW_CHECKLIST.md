@@ -1,6 +1,6 @@
 # Review checklist
 
-Review one selector, exact or non-exact. `agent-context.py review SELECTOR` preloads this file, `SHARING_NONMATCHES.md`, `docs/agents/lessons.md`, target evidence. Use executor brief/diff/rung ledger; fresh `bin/byte-match TARGET@0xADDRESS` only for an exact claim. `decomp-status` is cache, never acceptance. No `just check`, brief, m2c, Rizin, or index rebuild without a concrete finding.
+Review one selector, exact or non-exact. `bin/agent-context review SELECTOR` preloads this file, `SHARING_NONMATCHES.md`, and tracked target evidence once. Use executor brief/diff/rung ledger; fresh `bin/byte-match TARGET@0xADDRESS` only for an exact claim. `decomp-status` is cache, never acceptance. No `just check`, brief, m2c, Rizin, or index rebuild without a concrete finding.
 
 1. live byte match exits 0 for an exact claim;
 2. no banned asm/direct pins/asm-renamed externs/unauthorized `INCLUDE_ASM`; a retained `REGISTER_PIN` has allocator/entry-register evidence, local `MATCHING_AID`, live exact match, independent review;

@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 
 from ..analysis.engine import find_engine
 from ..analysis.project import analyze_project, prepare_target, rizin_argv, status
@@ -19,6 +20,19 @@ def run_open(args: argparse.Namespace) -> int:
     engine = find_engine("rizin", root=_root(args))
     os.execv(str(engine.executable), rizin_argv(project, engine))
     return 2
+
+
+def run_query(args: argparse.Namespace) -> int:
+    root = _root(args)
+    project = prepare_target(root, args.target)
+    engine = find_engine("rizin", root=root)
+    completed = subprocess.run(
+        rizin_argv(project, engine, commands=tuple(args.execute), quiet=True),
+        cwd=root,
+        timeout=args.timeout,
+        check=False,
+    )
+    return completed.returncode
 
 
 def run_status(args: argparse.Namespace) -> int:
@@ -55,6 +69,17 @@ def build_parser() -> argparse.ArgumentParser:
     analyze.add_argument("target")
     analyze.add_argument("--timeout", type=int, default=120)
     analyze.set_defaults(handler=run_analyze)
+    query = sub.add_parser("query", help="run bounded commands on a target and exit")
+    query.add_argument("target")
+    query.add_argument(
+        "-c",
+        "--execute",
+        action="append",
+        required=True,
+        help="Rizin command to execute; repeat for multiple commands",
+    )
+    query.add_argument("--timeout", type=int, default=120)
+    query.set_defaults(handler=run_query)
     return parser
 
 

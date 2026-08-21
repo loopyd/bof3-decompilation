@@ -101,7 +101,7 @@ void drawScratchStatus(void);
 void drawFlagStatus(void);
 void func_801F2F24(void);
 void func_801F317C(void);
-void func_801F3D88(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
+void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
 void func_801F3244(void);
 
 #define WORLD00_AREA008_SCRATCH_PTR                                            \

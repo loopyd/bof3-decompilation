@@ -1,5 +1,6 @@
 #include "bof3/ui/sisyou00_internal.h"
 #include "ui/panel_task.h"
+#include "shared/ui/panel_task.inc"
 
 /* @source 0x801D2520
  * @behavior emits the panel icon primitive.

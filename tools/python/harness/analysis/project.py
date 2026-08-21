@@ -9,7 +9,13 @@ from pathlib import Path
 
 from .engine import EngineIdentity, build_snapshot, find_engine
 from ..domain import lookup_target_manifest
+from ..domain.manifests import TargetManifest
 from ..domain.layout import parse_splat_layout
+from ..domain.psx import (
+    binary_offset_for,
+    is_psx_exe,
+    validate_psx_header,
+)
 from ..domain.symbols import MapSymbol, load_target_symbols
 from .snapshot import SNAPSHOT_SCHEMA, snapshot_path, write_snapshot
 
@@ -19,6 +25,7 @@ class RizinProjectSpec:
     target: str
     binary: Path
     load_address: int
+    binary_offset: int
     source_dir: Path
     snapshot: Path
     reviewed_addresses: frozenset[int]
@@ -32,7 +39,6 @@ def _baseline(symbols: list[MapSymbol], roots: frozenset[int]) -> str:
     lines = [
         "e asm.arch=mips",
         "e asm.bits=32",
-        "e cfg.bigendian=false",
         "e scr.color=0",
         "fs bof3",
     ]
@@ -63,10 +69,12 @@ def replay_commands(replay: str) -> list[str]:
     ]
 
 
-def prepare_target(root: Path, target_id: str) -> RizinProjectSpec:
+def prepare_target(
+    root: Path, target_id: str, *, manifest: TargetManifest | None = None
+) -> RizinProjectSpec:
     """Compose a target recipe without writing generated project files."""
 
-    manifest = lookup_target_manifest(root, target_id)
+    manifest = lookup_target_manifest(root, target_id) if manifest is None else manifest
     if manifest is None:
         raise ValueError(f"unknown target: {target_id}")
     binary = root / manifest.binary
@@ -75,7 +83,16 @@ def prepare_target(root: Path, target_id: str) -> RizinProjectSpec:
     splat = root / manifest.splat
     layout = parse_splat_layout(splat, manifest.load_address)
     roots = frozenset(layout.reviewed_function_addresses)
-    binary_end = manifest.load_address + binary.stat().st_size
+    binary_bytes = binary.read_bytes()
+    binary_offset = binary_offset_for(binary_bytes)
+    if is_psx_exe(binary_bytes):
+        validate_psx_header(
+            binary_bytes, manifest.load_address, binary_name=manifest.binary
+        )
+    payload_size = len(binary_bytes) - binary_offset
+    if payload_size <= 0:
+        raise ValueError(f"target payload is empty: {manifest.binary}")
+    binary_end = manifest.load_address + payload_size
     invalid_roots = sorted(
         address
         for address in roots
@@ -86,7 +103,8 @@ def prepare_target(root: Path, target_id: str) -> RizinProjectSpec:
         raise ValueError(f"reviewed function roots outside target image: {rendered}")
     overlay = root / "config" / "targets" / manifest.id.value / "reviewed.rz"
     replay = _baseline(
-        load_target_symbols(root, manifest.id.value), roots
+        load_target_symbols(root, manifest.id.value, psyq_space=manifest.psyq_space),
+        roots,
     ) + _reviewed_overlay(overlay)
     # Explicit claim identity participates in the Rizin fingerprint: comment
     # lines are filtered out by replay_commands but change replay_sha256, so
@@ -98,6 +116,7 @@ def prepare_target(root: Path, target_id: str) -> RizinProjectSpec:
     )
     if claim_lines:
         replay += claim_lines + "\n"
+    replay += f"# binary_offset 0x{binary_offset:X}\n"
     from ..domain.registry import resolve_target
     from ..domain.sources import expected_lift_sources
 
@@ -110,6 +129,7 @@ def prepare_target(root: Path, target_id: str) -> RizinProjectSpec:
         target=manifest.id.value,
         binary=binary,
         load_address=manifest.load_address,
+        binary_offset=binary_offset,
         source_dir=root / manifest.source_dir,
         snapshot=snapshot_path(root, manifest.id.value),
         reviewed_addresses=roots,
@@ -130,6 +150,7 @@ def analyze_project(
         target.binary,
         target.load_address,
         target.target,
+        binary_offset=target.binary_offset,
         reviewed_addresses=set(target.reviewed_addresses),
         replay_commands=replay_commands(target.replay),
         replay_sha256=target.replay_sha256,
@@ -170,7 +191,13 @@ def status(root: Path, target_id: str) -> dict[str, object]:
     }
 
 
-def rizin_argv(target: RizinProjectSpec, engine: EngineIdentity) -> list[str]:
+def rizin_argv(
+    target: RizinProjectSpec,
+    engine: EngineIdentity,
+    *,
+    commands: tuple[str, ...] = (),
+    quiet: bool = False,
+) -> list[str]:
     argv = [
         str(engine.executable),
         "-N",
@@ -179,12 +206,14 @@ def rizin_argv(target: RizinProjectSpec, engine: EngineIdentity) -> list[str]:
         "mips",
         "-b",
         "32",
-        "-e",
-        "cfg.bigendian=false",
+        "-E",
+        "little",
         "-m",
-        f"0x{target.load_address:08X}",
+        f"0x{target.load_address - target.binary_offset:08X}",
     ]
-    for command in replay_commands(target.replay):
+    if quiet:
+        argv.append("-q")
+    for command in (*replay_commands(target.replay), *commands):
         argv.extend(("-c", command))
     argv.append(str(target.binary))
     return argv

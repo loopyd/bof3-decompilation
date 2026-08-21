@@ -1,5 +1,6 @@
 #include "bof3/battle/battle15_internal.h"
 #include "ui/panel_task.h"
+#include "shared/ui/panel_task.inc"
 
 /* @source 0x800B2218
  * @behavior UNKNOWN: exact behavior is not yet documented.

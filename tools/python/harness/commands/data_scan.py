@@ -20,7 +20,8 @@ def run(args: argparse.Namespace) -> int:
         for region in regions:
             print(
                 f"{target} {region['start']}..{region['end']} "
-                f"{region['class']} refs={region['refs']}"
+                f"{region['class']} refs={region['refs']} "
+                f"type_candidates={len(region['type_candidates'])}"
             )
     return 0
 

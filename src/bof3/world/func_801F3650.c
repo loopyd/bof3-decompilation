@@ -5,6 +5,7 @@
  * @behavior Resets the area state; flags 0 and 1 set scenario progress to 5 and 6 respectively.
  * @status exact
  * @match 100.00
+ * @residual none
  */
 void func_801F3650(void) {
   s32 flags;

@@ -99,15 +99,8 @@ contracts under `include/bof3/` remain active public headers.
 
 ## Plans
 
-- [Documentation readability refresh](plans/documentation-readability-refresh.md) —
-  open: content complete; final semantic-review corrections applied; `.pi`
-  policy gates pass; `just check` red only on known naming debt
-- [Harness package refactor](plans/harness-package-refactor.md) — open: final
-  independent closure review pending on shared required gates
-- [Project symbol naming cleanup](plans/project-symbol-naming-cleanup.md)
-- [Agent and skill compaction](plans/agent-skill-compaction.md) — open:
-  semantic parity corrections applied; both policy gates pass; final
-  independent acceptance pending
+No implementation plans are active. Completed implementation history is
+preserved in `git log`.
 
 ## Community
 
@@ -120,7 +113,3 @@ contracts under `include/bof3/` remain active public headers.
   `git log` is authoritative for complete current history.
 - [Credits](../CREDITS.md) — original game, project origin, contributors, and
   third-party software.
-- Completed plans — historical implementation records:
-  [flat-reverse-snapshots](plans/flat-reverse-snapshots.md),
-  [harness-consistency-cleanup](plans/harness-consistency-cleanup.md),
-  [source-tree-classification-cleanup](plans/source-tree-classification-cleanup.md).

@@ -1,0 +1,32 @@
+#!/bin/sh
+set -eu
+
+ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+if [ -n "${PSX_PYTHON:-}" ]; then
+    PYTHON="$PSX_PYTHON"
+elif [ -x "$ROOT/.venv/bin/python" ]; then
+    PYTHON="$ROOT/.venv/bin/python"
+else
+    PYTHON="$(command -v python3 || true)"
+fi
+if [ -z "$PYTHON" ] || [ ! -x "$PYTHON" ]; then
+    printf 'invalid Python interpreter: %s\n' "${PYTHON:-python3}" >&2
+    exit 2
+fi
+PROBE="$($PYTHON -S -c 'import sys; print("agent-context-python") if sys.version_info >= (3, 11) else None' 2>/dev/null || true)"
+if [ "$PROBE" != "agent-context-python" ]; then
+    printf 'invalid Python interpreter (requires Python 3.11+): %s\n' "$PYTHON" >&2
+    exit 2
+fi
+PYTHONPATH="$ROOT/tools/python${PYTHONPATH:+:$PYTHONPATH}"
+export PYTHONPATH
+compat=
+for arg in "$@"; do
+    case "$arg" in
+        --mode=compatibility | compatibility) compat=1 ; break ;;
+    esac
+done
+if [ -n "$compat" ]; then
+    exec "$PYTHON" -m harness.commands.agent_context "$@"
+fi
+exec "$PYTHON" -S -m harness.commands.agent_context "$@"

@@ -4,6 +4,7 @@
  * @behavior activates a task scratch record and writes its variant-dependent label word.
  * @status exact
  * @match 100.00
+ * @residual none
  */
 void func_801F0E1C(u8 task_index, u8 record_kind_index) {
   if (variantRotation[record_kind_index & 0xFF] == 0) {

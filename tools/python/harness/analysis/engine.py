@@ -5,11 +5,11 @@ from __future__ import annotations
 import json
 import hashlib
 import subprocess
-import struct
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
 
+from ..domain.mips import static_jals
 from ..io import repo_layout
 
 from .snapshot import (
@@ -201,6 +201,7 @@ def build_snapshot(
     load_address: int,
     target_id: str,
     *,
+    binary_offset: int = 0,
     reviewed_addresses: set[int] | None = None,
     replay_commands: list[str] | None = None,
     replay_sha256: str | None = None,
@@ -218,7 +219,7 @@ def build_snapshot(
     raw_functions, raw_xrefs = _run_analysis(
         engine,
         binary_path,
-        load_address,
+        load_address - binary_offset,
         replay_commands=commands,
         timeout=timeout,
     )
@@ -230,8 +231,8 @@ def build_snapshot(
     for raw in raw_functions if isinstance(raw_functions, list) else []:
         address = int(raw.get("offset", raw.get("addr", 0)))
         size = int(raw.get("size", 0))
-        offset = address - load_address
-        if size <= 0 or offset < 0 or offset + size > len(binary):
+        offset = binary_offset + address - load_address
+        if size <= 0 or offset < binary_offset or offset + size > len(binary):
             continue
         function_id = f"{target_id}@{address:08x}"
         source = None
@@ -307,14 +308,12 @@ def build_snapshot(
     # Rizin's `aa` omits direct JAL xrefs whose destination is outside this
     # image. Preserve those calls as unresolved graph edges.
     for start, end, caller in ranges:
-        for callsite in range(start, end - 3, 4):
+        function_bytes = binary[
+            binary_offset + start - load_address : binary_offset + end - load_address
+        ]
+        for callsite, target in static_jals(function_bytes, start):
             if (caller, callsite) in recorded_callsites:
                 continue
-            offset = callsite - load_address
-            word = struct.unpack_from("<I", binary, offset)[0]
-            if word >> 26 != 3:
-                continue
-            target = ((callsite + 4) & 0xF0000000) | ((word & 0x03FFFFFF) << 2)
             callee = function_ids.get(target)
             if callee is not None:
                 calls.append(SnapshotCall(caller, callee, callsite))

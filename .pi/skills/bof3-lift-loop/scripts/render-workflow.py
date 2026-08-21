@@ -1,31 +1,30 @@
 #!/usr/bin/env python3
-"""Render and verify the checked-in BOF3 lane workflow."""
+"""Render and verify the renderer-owned BOF3 lane workflow template."""
 
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[4]
-REFERENCE = ROOT / ".pi/skills/bof3-lift-loop/references/workflow-script.md"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from lift_workflow_template import TEMPLATE  # noqa: E402
 
-def template() -> str:
-    text = REFERENCE.read_text()
-    start = text.index("```js\n") + 6
-    return text[start:text.index("\n```", start)]
+OLD_SELECTOR = 'const SELECTORS = [\n  "emi/example/00@0x80123456"\n];'
+OLD_KEY = 'const RUN_KEY = "replace-with-unique-wave-id";'
+OLD_ATTEMPTS = "const MAX_ATTEMPTS = 20;"
 
 
 def rendered(selector: str, run_key: str, max_attempts: int = 20) -> str:
-    text = template()
-    old_selector = 'const SELECTORS = [\n  "emi/example/00@0x80123456"\n];'
-    old_key = 'const RUN_KEY = "replace-with-unique-wave-id";'
-    old_attempts = "const MAX_ATTEMPTS = 20;"
-    if text.count(old_selector) != 1 or text.count(old_key) != 1 or text.count(old_attempts) != 1:
+    text = TEMPLATE
+    if text.count(OLD_SELECTOR) != 1 or text.count(OLD_KEY) != 1 or text.count(OLD_ATTEMPTS) != 1:
         raise SystemExit("canonical workflow constants changed")
-    selector_json = json.dumps(selector)
-    key_json = json.dumps(run_key)
-    return text.replace(old_selector, f"const SELECTORS = [\n  {selector_json}\n];").replace(old_key, f"const RUN_KEY = {key_json};").replace(old_attempts, f"const MAX_ATTEMPTS = {max_attempts};")
+    return text.replace(
+        OLD_SELECTOR, f"const SELECTORS = [\n  {json.dumps(selector)}\n];"
+    ).replace(OLD_KEY, f"const RUN_KEY = {json.dumps(run_key)};").replace(
+        OLD_ATTEMPTS, f"const MAX_ATTEMPTS = {max_attempts};"
+    )
 
 
 def main() -> int:

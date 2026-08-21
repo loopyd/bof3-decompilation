@@ -13,7 +13,7 @@ void drawScratchStatus(void) {
   s32                    field_5d;
   s32                    field_5e;
 
-  func_801F3D88(0x78, 0x38, 0x46, 0x14, 1u);
+  drawTexturedFrame(0x78, 0x38, 0x46, 0x14, 1u);
 
   scratch = (World00Area008Scratch*)WORLD00_AREA008_SCRATCH_PTR;
   field_5d = scratch->field_5d;

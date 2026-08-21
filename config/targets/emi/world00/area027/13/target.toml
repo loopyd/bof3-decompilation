@@ -8,7 +8,7 @@ splat = "config/targets/emi/world00/area027/13/splat.yaml"
 load_address = 0x801f2c00
 
 sources = [
-    "src/bof3/world/func_801F2C30.c",
+    "src/bof3/world/dispatchScratchMode1.c",
     "src/bof3/world/emitTrailStrip.c",
     "src/bof3/world/dispatchScratchMode2.c",
     "src/bof3/world/emitMarkerPair.c",

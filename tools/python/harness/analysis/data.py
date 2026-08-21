@@ -39,6 +39,29 @@ def collect_unlabeled_regions(
             "SELECT target_id, address, size FROM functions"
         ):
             code_ranges[target_id].append((int(address), int(address) + int(size)))
+        candidates = defaultdict(list)
+        for (
+            target_id,
+            address,
+            kind,
+            evidence_class,
+            status,
+            width,
+            blocker,
+        ) in connection.execute(
+            "SELECT target_id, address, kind, evidence_class, status, width, blocker "
+            "FROM type_candidates ORDER BY target_id, address, kind"
+        ):
+            candidates[target_id].append(
+                {
+                    "address": int(address),
+                    "kind": kind,
+                    "evidence_class": evidence_class,
+                    "status": status,
+                    "width": width,
+                    "blocker": blocker,
+                }
+            )
     finally:
         connection.close()
     report: dict[str, list[dict]] = {}
@@ -68,6 +91,14 @@ def collect_unlabeled_regions(
         for region in regions:
             chunk = binary[region["start"] - load : region["end"] - load + 16]
             region["class"] = "BSS" if all(byte == 0 for byte in chunk) else "FILE"
+            region["type_candidates"] = [
+                {
+                    **candidate,
+                    "address": f"0x{candidate['address']:08X}",
+                }
+                for candidate in candidates[target]
+                if region["start"] <= candidate["address"] <= region["end"]
+            ]
             region["start"] = f"0x{region['start']:08X}"
             region["end"] = f"0x{region['end']:08X}"
         report[target] = regions

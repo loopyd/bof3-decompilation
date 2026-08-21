@@ -289,6 +289,57 @@ def test_parse_declaration_source_tag_forms() -> None:
     )
 
 
+def test_parse_declaration_kind_tag_forms_and_rejections() -> None:
+    from harness.domain.tags import parse_declaration_kind_tag
+
+    assert (
+        parse_declaration_kind_tag("extern u8 foo; /* @kind bss */\n", "foo") == "bss"
+    )
+    assert (
+        parse_declaration_kind_tag(
+            "/* @kind: table */\nextern const u8 table[];\n", "table"
+        )
+        == "table"
+    )
+    with pytest.raises(ValueError, match="unknown"):
+        parse_declaration_kind_tag("extern u8 foo; /* @kind heap */\n", "foo")
+    assert (
+        parse_declaration_kind_tag(
+            "/* @kind bss */\nint unrelated;\nextern u8 foo;\n", "foo"
+        )
+        is None
+    )
+    with pytest.raises(ValueError, match="free-floating"):
+        parse_declaration_kind_tag("/* @kind bss */\n\nextern u8 foo;\n", "foo")
+    with pytest.raises(ValueError, match="conflicting"):
+        parse_declaration_kind_tag(
+            "/* @kind: bss */\nextern u8 foo; /* @kind data */\n", "foo"
+        )
+    with pytest.raises(ValueError, match="conflicting"):
+        parse_declaration_kind_tag(
+            "/* @kind: bss */\nextern u8 other; /* @kind data */\nextern u8 foo;\n",
+            "foo",
+        )
+    with pytest.raises(ValueError, match="malformed"):
+        parse_declaration_kind_tag("/* @kind: */\nint foo;\n", "foo")
+    with pytest.raises(ValueError, match="malformed"):
+        parse_declaration_kind_tag("/* @kind 123 */\nstatic int foo;\n", "foo")
+    assert parse_declaration_kind_tag("/* @kind bss */\nint foo;\n", "foo") == "bss"
+    assert (
+        parse_declaration_kind_tag("/* @kind data */\nstatic int foo;\n", "foo")
+        == "data"
+    )
+    assert parse_declaration_kind_tag('const char *s = "@kind heap";\n', "s") is None
+
+
+def test_parse_declaration_kind_tag_from_real_multi_declaration_header() -> None:
+    from harness.domain.tags import parse_declaration_kind_tag
+
+    header = Path("include/bof3/battle/battle03_internal.h").read_text(encoding="utf-8")
+    assert parse_declaration_kind_tag(header, "ABILITY_OBJECTS") == "unknown"
+    assert parse_declaration_kind_tag(header, "uiRingHead") == "bss"
+
+
 def test_prefixed_raw_names_rejected_by_check() -> None:
     from harness.domain.tags import PREFIXED_RAW_NAME_RE, RAW_SYMBOL_NAME_RE
 

@@ -3,8 +3,8 @@
 /* @behavior runs the secondary SCENA16 controller rooted at state 3.
  * @source 0x801F7790
  * @status partial
- * @match 50.45
- * @residual non-exact live audit: 168/333 instructions; 1332 original bytes versus 1260 current.
+ * @match 51.35
+ * @residual non-exact live audit: 171/333 instructions; 1332 original bytes versus 1232 current.
  */
 void func_801F7790(void) {
   volatile u16* timer;
@@ -78,7 +78,7 @@ void func_801F7790(void) {
       timer = &D_80146876;
       *timer = (u16)(*timer + 1u);
       if (*timer != 0x20u) {
-        func_801F83B0((u32)((u8)*timer));
+        clampPaletteChannels((u32)((u8)*timer));
         break;
       }
       copyPaletteBlock();
@@ -101,7 +101,7 @@ void func_801F7790(void) {
       if (*timer != 0u) {
         func_8014F800(0x48, 0x50, 0, 0xffu,
                       SCENA16_VRAM_BASE + (u32)D_80010006);
-        func_801F83B0((u32)(*(volatile u8*)timer));
+        clampPaletteChannels((u32)(*(volatile u8*)timer));
         break;
       }
       copyPaletteBlock();

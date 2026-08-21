@@ -14,7 +14,6 @@ from ..domain import (
     normalize_target_id,
     parse_function_id,
 )
-from ..domain.symbols import dedupe_shared_symbols
 from ..psyq.bindings import (
     apply_psyq_provenance,
     parse_psyq_find,
@@ -84,16 +83,4 @@ def run_psyq_report(args: argparse.Namespace) -> int:
         print(f"{target} ({space}): {len(referenced)}/{total} SDK symbols referenced")
         for symbol in referenced:
             print(f"  {symbol.canonical_name} = 0x{symbol.address:08X}")
-    return 0
-
-
-def run_dedupe(args: argparse.Namespace) -> int:
-    """Extract symbols duplicated across N+ targets into the shared base."""
-    root = _root(args)
-    manifests = load_target_manifests(root)
-    _changed, messages = dedupe_shared_symbols(
-        root, manifests, args.threshold, write=args.write
-    )
-    for message in messages:
-        print(message)
     return 0

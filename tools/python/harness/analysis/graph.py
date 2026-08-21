@@ -30,8 +30,12 @@ def function_metrics(connection, target: str | None) -> list[dict[str, Any]]:
                    SUM(CASE WHEN f2.lifted = 0 THEN 1 ELSE 0 END) AS unlifted_members,
                    COUNT(DISTINCT f2.target_id) AS targets
             FROM duplicate_members dm
-            JOIN duplicate_groups dg ON dg.hash = dm.hash
-            JOIN duplicate_members dm2 ON dm2.hash = dm.hash
+            JOIN duplicate_groups dg
+              ON dg.reviewed_sha256 = dm.reviewed_sha256
+             AND dg.reviewed_size = dm.reviewed_size
+            JOIN duplicate_members dm2
+              ON dm2.reviewed_sha256 = dm.reviewed_sha256
+             AND dm2.reviewed_size = dm.reviewed_size
             JOIN functions f2 ON f2.id = dm2.function_id
             GROUP BY dm.function_id, dg.members
         )
@@ -46,7 +50,8 @@ def function_metrics(connection, target: str | None) -> list[dict[str, Any]]:
                COALESCE(o.unique_callees, 0) AS unique_callees,
                COALESCE(u.calls, 0) AS unresolved_calls,
                CAST(f.reviewed AS INTEGER) AS reviewed,
-               CAST(f.lifted AS INTEGER) AS lifted, f.exact_sha256,
+               CAST(f.lifted AS INTEGER) AS lifted,
+               f.analyzer_sha256 AS exact_sha256,
                COALESCE(d.members, 1) AS duplicate_members,
                COALESCE(d.unlifted_members, CASE WHEN f.lifted = 0 THEN 1 ELSE 0 END)
                    AS unlifted_duplicate_members,

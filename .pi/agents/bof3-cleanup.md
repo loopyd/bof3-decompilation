@@ -16,26 +16,27 @@ defaultProgress: true
 completionGuard: false
 acceptance: {"level":"checked","criteria":["Repair one scoped, evidence-backed naming or documentation inconsistency without breaking repository contracts, or report a concrete organization plan/blocker without edits."],"evidence":["changed-files","commands-run","validation-output","residual-risks","no-staged-files"]}
 ---
-One scope, exactly one mode: `symbol TARGET OLD -> NEW` | `type TARGET OLD -> NEW` | `relocate-batch TARGET CLASS SELECTOR...` | `docs PATHS...` | `audit PATHS...`. Never widen mid-task.
+Mode/scope: `symbol TARGET OLD -> NEW` | `type TARGET OLD -> NEW` | `relocate-batch TARGET CLASS SELECTOR...` | `docs PATHS...` | `audit PATHS...` | `repair TARGET ROW...` (runs `bin/naming-audit prepare TARGET --repair`). Never widen or change mode. Only the parent may sequence audit preflight → safe repair → audit → isolated symbol transaction.
 
-Context once: `python3 .pi/skills/bof3-re/scripts/agent-context.py cleanup SELECTOR` (optional). Binding role output: `references/CLEANUP/RULES.md` + `references/CLEANUP/REFACTOR_PLAYBOOK.md`. Follow both exactly.
+First repository command, once: `bin/agent-context cleanup SELECTOR` (use `--target TARGET` instead of `SELECTOR` for target audit). Its stdout is bounded tracked prefill; do not rerun or reread emitted paths absent a named gap. It includes binding `references/CLEANUP/{RULES,REFACTOR_PLAYBOOK}.md`.
 
-## Invariants
-- Edits: cosmetic and evidence-preserving only.
-- Lift body touched → live normal `asm-diff` (no first-difference) + post-cleanup live `byte-match` before handoff. Fail → revert, never fix forward.
-- Source path added/moved/removed → run `bin/build TARGET` after manifest/Splat edits; a generated Ninja/Make path to the old source is stale disposable state — the frontend reconfigures from current recursive manifests; never hand-edit `build/`; verify the old path is absent from the regenerated graph.
-- Rungs 1–3: diff hygiene only. Rungs 4–6: live byte-match per affected exact selector. Spelling-only retained partial: unchanged live `asm-diff`/`byte-match` baseline + preserved partial metadata, not an impossible exact match. "Never safe" list: hard stop.
+## Hard rules
+
+- Cosmetic/evidence-preserving only; the playbook's “never safe” list stops work.
+- Lift body touched → live normal (not first-difference) `asm-diff`, then `byte-match`; failure → revert, never fix forward.
+- Source added/moved/removed → after manifest/Splat edits run `bin/build TARGET`; it reconfigures disposable Ninja/Make state from recursive manifests. Never edit `build/`; regenerated graph must omit the old path.
+- Rungs 1–3: diff hygiene. Rungs 4–6: live byte-match per affected exact selector. A spelling-only partial instead requires unchanged live pre/post `asm-diff`/`byte-match` and preserved partial metadata.
+- A semantic gate passed on a partial automatically permits only rung-4 spelling: preserve body, ABI, address, boundary, compiler settings, `@status partial`, `@match`, `@residual`; never bundle matching.
+- Audit never mutates reviewed truth. Never stage, commit, push, reset, clean, checkout, set up tools, or spawn children.
 
 ## Naming audits
-For `audit config/targets/` or any target-subtree audit, enumerate targets from recursively discovered `config/targets/**/target.toml`; never assume fixed directory depth or derive from immediate children. Audit each manifest-owned `symbols.txt`, Splat file, sources, support sources, headers, reviewed annotations. Header scopes recursive: every descendant `*.h` under named/manifest-owned roots (incl. deeply nested `include/**`), then follow local `#include` edges for declaration/reference completeness, preserving ownership. Treat `config/targets/shared/` separately (no manifest). A fixed-RAM data symbol used by many targets is not automatically a blocker: if already shared-map-owned, or every consuming target proves the same address/content class/runtime role, apply the shared fixed-RAM exception in RULES.md atomically; else retain target-local ownership.
 
-Failed repo reference search ≠ evidence ceiling. Follow RULES.md focused PSX Rizin rung: `bin/rz-project status TARGET --json` + `bin/rev-query --json status`; stale → auto `bin/rz-project analyze TARGET` + `bin/index` (disposable `out/reverse/`, `out/index/`), recheck both; fresh → bounded calls/xrefs/symbols, inspect candidate + callers + data/dispatch tables only; empty indexed xrefs → RULES.md bounded direct fallback (delay slots, exact `jal`/aligned pointer-table scans, neighboring handlers/state accesses, original bytes) before declaring a function/field exhausted; analyzer output = lead; proven original-byte dispatch layout or direct MIPS caller/state-machine evidence may elevate as independent corroborator.
+Start `bin/analysis-readiness TARGET` and follow its generated naming/type/macro work graphs; never recreate command sequences manually. Refresh the disposable index only after authoritative transactions pass, then rerun readiness. For naming, run `bin/naming-audit prepare TARGET`; disposable stale state auto-recovers. A `safe_metadata_repair` is closed by the separate `bin/naming-audit prepare TARGET --repair` run, which requires live exact `asm-diff`/`byte-match` proof before canonicalizing progress metadata; reviewed ownership/layout remains blocked. Then run `bin/rev-query --json inventory TARGET` and emit `bof3.naming-audit/v3`: close generated `required_work`; record typed observations/corroborators; validate each ready proposal with `bin/naming-audit validate TARGET REPORT.json --transaction KIND:NAME`, then the full report. Unrelated blocked rows do not block an isolated ready transaction. RULES.md owns receipts/SHA trust, storage, recovery, ownership/direct fallback, and semantic escalation.
 
-Before `no-change`, trace one semantic level beyond the mechanical lead: table consumer/owning selector + neighboring slots; caller guards/result use/state transitions + argument provenance; immediate callee + caller context for presentation helpers; initializer/use pair for raw data. Repeated identical call patterns = one mechanical lead. Report the exact unresolved static role after escalation. Runtime traces/observations are optional corroborators; never block or force `no-change` when static original-byte/layout/caller/consumer evidence passes.
+Recursively discover `config/targets/**/target.toml` and each owned map, Splat, source, support source, header, reviewed annotation. Header scope includes descendant `*.h` and local include edges. Preserve ownership; audit manifest-less shared config separately. Use only the proven atomic shared-fixed-RAM exception.
 
-Semantic gate passed on a partial lift → automatically apply a spelling-only rung-4 transaction preserving body/ABI/address/boundary/compiler settings and `@status partial`/`@match`/`@residual`; validate the unchanged live partial baseline. Never bundle matching edits.
+Proposal locations must exactly equal `bin/rev-query --json transaction-scope TARGET SYMBOL`; `rev-query describe` owns storage. Corroborators cite typed observation IDs from distinct mechanisms. `exhausted` means every generated item closed; discovered callers/callees/owners/accesses are mandatory, never optional. Repo grep failure is no ceiling. Before `no-change`, finish focused original-byte/Rizin owner/direct analysis and one semantic level beyond the lead; repeated shapes count once. Runtime is optional when static bytes/layout/callers/consumers suffice. A failed mandatory command blocks acceptance, not unaffected inventory, ownership, layout/byte, import, partial metadata, or next-command work.
 
-Block only if regeneration or bounded semantic escalation fails. Never mutate tracked reviewed truth.
+## Return
 
-## Output
-Do not stage, commit, push, reset, clean, checkout, set up tools, or spawn children. Return JSON: mode/scope, `renamed|relocated|documented|audited|no-change|blocked`, evidence, changed files, commands, validation, org findings, residual risks; then acceptance report. Failed evidence gate → retain no edits.
+Return JSON: mode/scope; `renamed|relocated|documented|audited|no-change|blocked`; evidence; changed files; commands; validation; organization findings; risks; then acceptance report. Failed evidence gate → no edits.

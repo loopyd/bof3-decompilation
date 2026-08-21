@@ -124,6 +124,23 @@ def test_partial_progress_metadata_is_atomic() -> None:
         parse_progress_tags("/* @status partial */")
 
 
+@pytest.mark.parametrize(
+    "text",
+    [
+        "/* @status exact\n * @status partial\n * @match 100\n * @residual none\n */",
+        "/* @status partial\n * @match 101\n * @residual mismatch\n */",
+        "/* @status exact\n * @match 100\n * @residual mismatch\n */",
+        "/* @status partial\n * @match 100\n * @residual mismatch\n */",
+        "/* @status partial\n * @match 50\n * @residual none\n */",
+        "/* @status exact\n * @match 100\n * @residual none\n * @status bogus\n */",
+        "/* @status exact\n * @match 100\n * @residual none\n * @match nonsense\n */",
+    ],
+)
+def test_progress_metadata_rejects_conflicts_and_impossible_states(text: str) -> None:
+    with pytest.raises(ValueError):
+        parse_progress_tags(text)
+
+
 def test_source_address_from_tag_only(tmp_path: Path) -> None:
     renamed = tmp_path / "initSelectionState.c"
     renamed.write_text("/* @source 0x80100004 @behavior stages selection */\n")

@@ -3,8 +3,8 @@
 /* @behavior runs the secondary SCENA16 controller rooted at state 4.
  * @source 0x801F7CC4
  * @status partial
- * @match 33.49
- * @residual non-exact live audit: 141/421 instructions; 1684 original bytes versus 1500 current.
+ * @match 32.54
+ * @residual non-exact live audit: 137/421 instructions; 1684 original bytes versus 1436 current.
  */
 void func_801F7CC4(void) {
   u8 advance_state;
@@ -53,11 +53,11 @@ void func_801F7CC4(void) {
         func_8014F800(0x48, 0x50, 0, 0xffu,
                       SCENA16_VRAM_BASE + (u32)D_80010006);
         if (progress < 0x20u) {
-          func_801F83B0((u32)(progress & 0xffu));
+          clampPaletteChannels((u32)(progress & 0xffu));
         } else if (progress == 0x20u) {
           copyPaletteBlock();
         } else if (progress > 0x9fu) {
-          func_801F83B0((u32)((0xbfu - progress) & 0xffu));
+          clampPaletteChannels((u32)((0xbfu - progress) & 0xffu));
         }
       } else if (progress == 0xbfu) {
         copyPaletteBlock();
