@@ -15,6 +15,7 @@ from .type_candidate_review import (
     digest,
     validate_reviewed_candidate,
 )
+from .transaction_files import preflight_existing_replacements
 from .type_shared_proofs import private_proofs, proof_dependencies
 from .type_transaction_checks import capture_partial_baselines, required_checks
 from .transaction_workspace import (
@@ -67,9 +68,7 @@ def _header(root: Path, manifest: Any, concern: str, value: object) -> str:
         header = ""
         exists = False
     if not exists:
-        raise ValueError(
-            "type transaction header must be an existing repo-relative file"
-        )
+        raise ValueError("header must be an existing repo-relative file")
     if concern == "shared":
         relative = Path(header)
         private_headers = set(manifest.headers)
@@ -250,6 +249,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
     allowed = validate_paths(
         root, {header, *(canonical_repo_path(item["source"]) for item in functions)}
     )
+    preflight_existing_replacements(root, allowed)
     pre_state = file_state(root, allowed)
     partial_baselines = capture_partial_baselines(root, functions)
     facts = {

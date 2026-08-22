@@ -3,11 +3,8 @@
 set -eu
 
 ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-PYTHON="${PSX_PYTHON:-${ROOT}/.venv/bin/python}"
-if [ ! -x "$PYTHON" ]; then
-    printf 'missing project Python environment: %s\n' "$PYTHON" >&2
-    exit 2
-fi
+. "$ROOT/bin/python-env"
+python_env "${PSX_PYTHON:-$ROOT/.venv/bin/python}" 2 ''
 if [ "${1-}" = "--help" ] || [ "${1-}" = "-h" ]; then
     printf '%s\n' 'usage: bin/harness psyq {scan|calls|proposal} --all'
     exit 0
@@ -22,6 +19,4 @@ if [ "${1-}" != "psyq" ]; then
     exit 2
 fi
 shift
-PYTHONPATH="${ROOT}/tools/python${PYTHONPATH:+:${PYTHONPATH}}"
-export PYTHONPATH
 exec "$PYTHON" -m harness.commands.psyq "$@"

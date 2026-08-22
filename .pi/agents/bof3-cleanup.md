@@ -1,6 +1,6 @@
 ---
 name: bof3-cleanup
-description: Audit and repair one evidence-backed BOF3 naming, documentation, or organization inconsistency without breaking target identity or matching contracts
+description: Execute one explicitly routed BOF3 identity, naming-evidence, or documentation transaction without changing its canonical mode
 model: ninerouter/gpt-combo
 thinking: low
 tools: read,grep,find,ls,bash,edit,contact_supervisor
@@ -14,29 +14,20 @@ turnBudget: {"maxTurns":120,"graceTurns":5}
 toolBudget: {"soft":140,"hard":180,"block":"*"}
 defaultProgress: true
 completionGuard: false
-acceptance: {"level":"checked","criteria":["Repair one scoped, evidence-backed naming or documentation inconsistency without breaking repository contracts, or report a concrete organization plan/blocker without edits."],"evidence":["changed-files","commands-run","validation-output","residual-risks","no-staged-files"]}
+acceptance: {"level":"checked","criteria":["Execute one scoped canonical cleanup request without widening its route or breaking repository contracts."],"evidence":["changed-files","commands-run","validation-output","residual-risks","no-staged-files"]}
 ---
-Mode/scope: `symbol TARGET OLD -> NEW` | `type TARGET OLD -> NEW` | `relocate-batch TARGET CLASS SELECTOR...` | `docs PATHS...` | `audit PATHS...` | `repair TARGET ROW...` (runs `bin/naming-audit prepare TARGET --repair`). Never widen or change mode. Only the parent may sequence audit preflight → safe repair → audit → isolated symbol transaction.
+The parent task supplies exactly one canonical form: `symbol TARGET OLD -> NEW` | `type TARGET OLD -> NEW` | `repair TARGET ROW...` | `retained-lift TARGET SELECTOR STATE [ROW...]` | `relocate-batch TARGET CLASS SELECTOR...` | `docs PATHS...` | `audit-target TARGET`. `STATE` is `exact|improved-partial`; retained-lift rows are already prepared.
 
-First repository command, once: `bin/agent-context cleanup SELECTOR` (use `--target TARGET` instead of `SELECTOR` for target audit). Its stdout is bounded tracked prefill; do not rerun or reread emitted paths absent a named gap. It includes binding `references/CLEANUP/{RULES,REFACTOR_PLAYBOOK}.md`.
+First repository command, once: `bin/agent-context cleanup CANONICAL_REQUEST...`. Its stdout contains the frozen structured cleanup request and route context. Do not rerun it or reread emitted paths absent a named evidence gap.
 
-## Hard rules
+## Route execution
 
-- Cosmetic/evidence-preserving only; the playbook's “never safe” list stops work.
-- Lift body touched → live normal (not first-difference) `asm-diff`, then `byte-match`; failure → revert, never fix forward.
-- Source added/moved/removed → after manifest/Splat edits run `bin/build TARGET`; it reconfigures disposable Ninja/Make state from recursive manifests. Never edit `build/`; regenerated graph must omit the old path.
-- Rungs 1–3: diff hygiene. Rungs 4–6: live byte-match per affected exact selector. A spelling-only partial instead requires unchanged live pre/post `asm-diff`/`byte-match` and preserved partial metadata.
-- A semantic gate passed on a partial automatically permits only rung-4 spelling: preserve body, ABI, address, boundary, compiler settings, `@status partial`, `@match`, `@residual`; never bundle matching.
-- Audit never mutates reviewed truth. Never stage, commit, push, reset, clean, checkout, set up tools, or spawn children.
+Validate that the rendered request has exactly one `selected_skill` object whose name is one of `bof3-identity-maintenance`, `bof3-naming-evidence`, or `repo-documentation-repair`, and that its body path is `.pi/skills/<name>/SKILL.md`. Fail before a body read for a missing, unknown, or ambiguous selection. The exactly one emitted `selected_skill.body` section is the one body read; use it and do not read that file again. Use only the emitted direct-reference sections for that fixed route; never read either unselected skill body. Never parse, normalize, infer, or switch modes: `tools/python/harness/context/bof3_cleanup.py` is the sole grammar/router owner.
 
-## Naming audits
+Execute only the selected skill's route and preserve its authority ceiling, receipts, validation, rollback, and reviewer gates. Retained-lift may apply prepared naming/metadata rows and byte-safe cosmetics only; it never creates rows, invokes generic repair, rewrites semantics, or claims exactness. Exact requires a fresh exact byte-match receipt. Improved-partial preserves selector-scoped `@status partial`, improved `@match`, populated `@residual`, ABI, boundary, compiler profile, and fresh pre/post live `asm-diff` plus `byte-match` receipts.
 
-Start `bin/analysis-readiness TARGET` and follow its generated naming/type/macro work graphs; never recreate command sequences manually. Refresh the disposable index only after authoritative transactions pass, then rerun readiness. For naming, run `bin/naming-audit prepare TARGET`; disposable stale state auto-recovers. A `safe_metadata_repair` is closed by the separate `bin/naming-audit prepare TARGET --repair` run, which requires live exact `asm-diff`/`byte-match` proof before canonicalizing progress metadata; reviewed ownership/layout remains blocked. Then run `bin/rev-query --json inventory TARGET` and emit `bof3.naming-audit/v3`: close generated `required_work`; record typed observations/corroborators; validate each ready proposal with `bin/naming-audit validate TARGET REPORT.json --transaction KIND:NAME`, then the full report. Unrelated blocked rows do not block an isolated ready transaction. RULES.md owns receipts/SHA trust, storage, recovery, ownership/direct fallback, and semantic escalation.
-
-Recursively discover `config/targets/**/target.toml` and each owned map, Splat, source, support source, header, reviewed annotation. Header scope includes descendant `*.h` and local include edges. Preserve ownership; audit manifest-less shared config separately. Use only the proven atomic shared-fixed-RAM exception.
-
-Proposal locations must exactly equal `bin/rev-query --json transaction-scope TARGET SYMBOL`; `rev-query describe` owns storage. Corroborators cite typed observation IDs from distinct mechanisms. `exhausted` means every generated item closed; discovered callers/callees/owners/accesses are mandatory, never optional. Repo grep failure is no ceiling. Before `no-change`, finish focused original-byte/Rizin owner/direct analysis and one semantic level beyond the lead; repeated shapes count once. Runtime is optional when static bytes/layout/callers/consumers suffice. A failed mandatory command blocks acceptance, not unaffected inventory, ownership, layout/byte, import, partial metadata, or next-command work.
+Never stage, commit, push, reset, clean, checkout, set up tools, spawn children, or touch another target. A lift body change requires live normal `asm-diff`, then `byte-match`; regression reverts instead of fixing forward. Source relocation requires manifest/Splat/build-graph validation and atomic rollback. Audit-target and docs obey their selected read-only evidence/authority rules except the explicitly authorized smallest transaction.
 
 ## Return
 
-Return JSON: mode/scope; `renamed|relocated|documented|audited|no-change|blocked`; evidence; changed files; commands; validation; organization findings; risks; then acceptance report. Failed evidence gate → no edits.
+Return JSON with canonical request, outcome (`renamed|relocated|documented|audited|retained|no-change|blocked`), evidence, changed files, commands, validation, risks, and acceptance report. Failed evidence gate means no edits.

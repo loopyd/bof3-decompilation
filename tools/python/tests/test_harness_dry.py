@@ -198,6 +198,11 @@ def _harness_import_graph() -> dict[str, set[str]]:
 def test_package_initializer_edges_are_locked() -> None:
     """Every package initializer resolves relative imports from its own package."""
     graph = _harness_import_graph()
+    # The toolchain package intentionally imports harness.io plus the shared
+    # base at module scope; its concrete registry members are imported lazily
+    # inside ``_managed_types`` and locked by
+    # ``test_toolchain_initializer_imports_base_plus_concrete_registrations``.
+    # The commands package initializer stays a one-line docstring-only file.
     expected = {
         "harness.media": {"harness.media.str_media"},
         "harness.analysis": set(),
@@ -208,10 +213,13 @@ def test_package_initializer_edges_are_locked() -> None:
             "harness.domain.manifests",
             "harness.domain.tags",
         },
-        "harness.context": {"harness.context.base"},
+        "harness.context": {
+            "harness.context.base",
+            "harness.context.bof3_cleanup",
+        },
         "harness.emi": {"harness.emi.operations"},
         "harness.psyq": {"harness.psyq.fingerprints", "harness.psyq.headers"},
-        "harness.toolchain": {"harness.io"},
+        "harness.toolchain": {"harness.io", "harness.toolchain.base"},
         "harness.commands": set(),
         "harness.match": set(),
         "harness": set(),
@@ -224,6 +232,35 @@ def test_package_initializer_edges_are_locked() -> None:
     assert initializer_edges == expected, (
         f"initializer edges drifted: {initializer_edges}"
     )
+
+
+def test_toolchain_initializer_imports_base_plus_concrete_registrations() -> None:
+    """Toolchain initializer: shared base at module scope, registry members lazily."""
+    graph = _harness_import_graph()
+    assert graph["harness.toolchain"] == {"harness.io", "harness.toolchain.base"}
+    tree = ast.parse(
+        (HARNESS / "toolchain" / "__init__.py").read_text(encoding="utf-8")
+    )
+    lazy = {
+        node.module
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom)
+        and node.level == 1
+        and node.module is not None
+        and node.module != "base"
+    }
+    assert lazy == {
+        "asm_differ",
+        "gcc",
+        "m2c",
+        "maspsx",
+        "permuter",
+        "psn00b",
+        "rizin",
+        "signatures",
+        "splat",
+        "spimdisasm",
+    }
 
 
 def test_harness_imports_resolve_and_are_acyclic() -> None:

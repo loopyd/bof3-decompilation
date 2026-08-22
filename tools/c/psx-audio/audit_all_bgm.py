@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Audit all BGM tracks for feature coverage: reverb, modulation, noise readiness."""
 
-import json
 import os
 import subprocess
 import sys
@@ -49,10 +48,12 @@ def run_audit(tool: Path, track: Path) -> dict | None:
 def main():
     root = Path(__file__).resolve().parent.parent.parent.parent
     tool = root / "tools" / "c" / "psx-audio" / "build" / "bof3-audio"
-    if not tool.exists():
-        tool = root / "bin" / "psx-audio-bin"
-    if not tool.exists():
-        print(f"error: tool not found, build first", file=sys.stderr)
+    if not tool.is_file() or not os.access(tool, os.X_OK):
+        print(
+            "error: audio tool not built; run `bin/psx-audio --help` "
+            "to configure and build it (requires CMake, a C compiler, and zlib development files)",
+            file=sys.stderr,
+        )
         return 1
 
     bgm_dir = find_bgm_dir(root)
@@ -74,7 +75,9 @@ def main():
     results = []
 
     print(f"\n  BGM Feature Audit ({total} tracks)\n")
-    print(f"  {'Track':<16} {'Tones':>6} {'RevTones':>9} {'ModTones':>9} {'Rev%':>6} {'Mod%':>6}")
+    print(
+        f"  {'Track':<16} {'Tones':>6} {'RevTones':>9} {'ModTones':>9} {'Rev%':>6} {'Mod%':>6}"
+    )
     print(f"  {'─' * 16} {'─' * 6} {'─' * 9} {'─' * 9} {'─' * 6} {'─' * 6}")
 
     for track in tracks:
@@ -101,7 +104,9 @@ def main():
         results.append(data)
 
     print(f"  {'─' * 16} {'─' * 6} {'─' * 9} {'─' * 9} {'─' * 6} {'─' * 6}")
-    print(f"  {'TOTAL':<16} {total_tones:>6} {total_reverb_tones:>9} {total_modulation_tones:>9}")
+    print(
+        f"  {'TOTAL':<16} {total_tones:>6} {total_reverb_tones:>9} {total_modulation_tones:>9}"
+    )
     print()
     print(f"  Tracks with reverb tones:    {with_reverb}/{total}")
     print(f"  Tracks with modulation tones: {with_modulation}/{total}")

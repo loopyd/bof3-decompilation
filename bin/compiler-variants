@@ -1,43 +1,8 @@
-#!/usr/bin/env python3
-"""Inspect and manage compiler variants from the catalog.
+#!/bin/sh
 
-`just setup` primes every host-compatible catalog candidate, and `path` or a
-selected compile command may self-heal a missing selected install from the
-digest-verified cache. A catalog entry never implicitly selects a compiler:
-without an explicit selection the build keeps the canonical toolchain, and an
-empty catalog reports "empty" with exit 0.
+set -eu
 
-Commands:
-  list     — show catalog entries (empty when no candidates).
-  install  — download, digest-verify, and install a variant.
-  verify   — verify an installed variant.
-  path     — print the verified compiler executable path for CMake.
-"""
-
-from __future__ import annotations
-
-import os
-import sys
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parent.parent
-PYTHON = ROOT / ".venv" / "bin" / "python"
-
-
-def _main() -> int:
-    sys.path.insert(0, str(ROOT / "tools" / "python"))
-    from harness.commands.compiler_variants import main  # noqa: E402
-    return main()
-
-
-if not PYTHON.is_file():
-    print(f"missing project Python environment: {PYTHON}", file=sys.stderr)
-    print("run `just setup` first", file=sys.stderr)
-    raise SystemExit(2)
-
-if Path(sys.executable).resolve() != PYTHON.resolve():
-    environment = os.environ.copy()
-    environment["PYTHONPATH"] = str(ROOT / "tools" / "python")
-    os.execve(str(PYTHON), [str(PYTHON), __file__, *sys.argv[1:]], environment)
-
-sys.exit(_main())
+ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+. "$ROOT/bin/python-env"
+python_env "$ROOT/.venv/bin/python" 2 'run `just setup` first'
+exec "$PYTHON" -m harness.commands.compiler_variants "$@"

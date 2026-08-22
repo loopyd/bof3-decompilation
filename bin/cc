@@ -160,7 +160,8 @@ run_c_compile() {
     if [ -n "$expand_div" ]; then
         maspsx_div_flag="--expand-div"
     fi
-    "$maspsx_python" "$maspsx" \
+    PYTHONPATH="${ROOT}/third_party/maspsx:${ROOT}/tools/python" \
+        PYTHONSAFEPATH=1 "$maspsx_python" -P "$maspsx" \
         "--aspsx-version=${aspsx_version}" $maspsx_div_flag <"$compiler_asm" \
         >"$translated_asm"
     run_assembler "$translated_asm" "$compile_output" "$@"

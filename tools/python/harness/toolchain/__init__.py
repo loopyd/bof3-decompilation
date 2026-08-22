@@ -1,30 +1,15 @@
-"""Toolchain-specific installers and validation helpers."""
+"""Ordered registry for repository-managed toolchains."""
 
 from __future__ import annotations
 
-from pathlib import Path
+from collections.abc import Iterator
 
 from ..io import RepoLayout
+from .base import ExecutableToolchain, Toolchain
 
 
-# Order-sensitive: setup run labels and doctor verify labels share this sequence.
-_MANAGED_TOOLCHAIN_TYPES: list[tuple[type, str]] = []
-
-
-def register_managed_toolchain(toolchain_type: type, constructor_arg: str) -> None:
-    """Register a managed toolchain with its constructor argument type.
-
-    ``constructor_arg`` must be ``"root"`` (for ``root: Path``) or ``"layout"``
-    (for ``layout: RepoLayout``).
-    """
-    _MANAGED_TOOLCHAIN_TYPES.append((toolchain_type, constructor_arg))
-
-
-def _register() -> None:
-    """Register managed toolchains in registration order."""
-    if _MANAGED_TOOLCHAIN_TYPES:
-        return  # already registered
-    # Lazy imports to avoid circular dependency at package level.
+# Order-sensitive: setup and doctor consume the same membership and labels.
+def _managed_types() -> tuple[tuple[str, type[Toolchain]], ...]:
     from .asm_differ import AsmDifferToolchain  # noqa: PLC0415
     from .gcc import GccToolchain  # noqa: PLC0415
     from .m2c import M2cToolchain  # noqa: PLC0415
@@ -36,35 +21,44 @@ def _register() -> None:
     from .splat import SplatToolchain  # noqa: PLC0415
     from .spimdisasm import SpimdisasmToolchain  # noqa: PLC0415
 
-    for tc, arg in (
-        (Psn00bToolchain, "layout"),
-        (GccToolchain, "layout"),
-        (MaspsxToolchain, "root"),
-        (RizinToolchain, "layout"),
-        (M2cToolchain, "root"),
-        (AsmDifferToolchain, "root"),
-        (DecompPermuterToolchain, "root"),
-        (PsyqSignaturesToolchain, "root"),
-        (SplatToolchain, "root"),
-        (SpimdisasmToolchain, "root"),
-    ):
-        register_managed_toolchain(tc, arg)
+    registry = (
+        ("psn00b", Psn00bToolchain),
+        ("gcc", GccToolchain),
+        ("maspsx", MaspsxToolchain),
+        ("rizin", RizinToolchain),
+        ("m2c", M2cToolchain),
+        ("asm-differ", AsmDifferToolchain),
+        ("decomp-permuter", DecompPermuterToolchain),
+        ("psyq-signatures", PsyqSignaturesToolchain),
+        ("splat", SplatToolchain),
+        ("spimdisasm", SpimdisasmToolchain),
+    )
+    keys = tuple(key for key, _ in registry)
+    if len(keys) != len(set(keys)):
+        raise ValueError("duplicate managed toolchain registry key")
+    return registry
 
 
-def managed_toolchains(root: Path, layout: RepoLayout) -> tuple:
-    """Return instantiated managed external toolchains in registration order.
+def managed_toolchains(layout: RepoLayout) -> tuple[Toolchain, ...]:
+    """Instantiate every managed toolchain in stable lifecycle order."""
+    return tuple(toolchain_type(layout) for _, toolchain_type in _managed_types())
 
-    Setup calls ``toolchain.run(force=...)``; doctor calls
-    ``toolchain.verify()``.  Both consume this ordered factory so the
-    membership list never drifts.
-    """
-    _register()
-    result: list = []
-    for toolchain_type, arg in _MANAGED_TOOLCHAIN_TYPES:
-        if arg == "layout":
-            result.append(toolchain_type(layout))
-        elif arg == "root":
-            result.append(toolchain_type(root))
-        else:
-            raise ValueError(f"unknown constructor arg type: {arg!r}")
-    return tuple(result)
+
+def managed_toolchain(layout: RepoLayout, key: str) -> ExecutableToolchain:
+    """Return one executable managed toolchain by its stable registry key."""
+    for registered_key, toolchain_type in _managed_types():
+        if registered_key != key:
+            continue
+        toolchain = toolchain_type(layout)
+        if isinstance(toolchain, ExecutableToolchain):
+            return toolchain
+        break
+    raise ValueError(f"unknown toolchain executable: {key}")
+
+
+def managed_lifecycle(
+    layout: RepoLayout, *, force: bool = False, verify_only: bool = False
+) -> Iterator[str]:
+    """Run the base-owned lifecycle in registry order and yield actual labels."""
+    for toolchain in managed_toolchains(layout):
+        yield toolchain.verify() if verify_only else toolchain.run(force=force)

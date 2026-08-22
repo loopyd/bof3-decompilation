@@ -23,7 +23,9 @@ It similarly installs the pinned `asm-differ` submodule and its declared
 dependencies. Use `bin/splat`, `bin/spimdisasm`, `bin/permute`, and
 `bin/asm-diff` rather than host installs.
 
-The signature submodule is used only by the limited adapter:
+The signature submodule is used only by the permanent, narrow
+`bin/harness psyq {scan|calls|proposal}` evidence adapter. Do not add other
+top-level command families; symbol-map mutation remains under `bin/symbols`.
 
 ```sh
 git submodule update --init

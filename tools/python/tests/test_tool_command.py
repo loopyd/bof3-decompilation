@@ -27,7 +27,7 @@ def test_tool_command_delegates_to_owned_invocation(
     executable = tmp_path / "tool"
     executable.touch()
     fake = FakeToolchain(executable)
-    monkeypatch.setattr(tool, "_toolchain", lambda root, name: fake)
+    monkeypatch.setattr(tool, "managed_toolchain", lambda layout, name: fake)
 
     assert tool.main(["--root", str(tmp_path), "rizin", "--", "-V"]) == 7
     assert fake.calls == [("-V",)]
@@ -39,7 +39,7 @@ def test_tool_command_requires_project_python_when_owned(
     executable = tmp_path / "tool"
     executable.touch()
     fake = FakeToolchain(executable, tmp_path / ".venv/bin/python")
-    monkeypatch.setattr(tool, "_toolchain", lambda root, name: fake)
+    monkeypatch.setattr(tool, "managed_toolchain", lambda layout, name: fake)
 
     with pytest.raises(FileNotFoundError, match="missing project Python environment"):
         tool.run(tool.build_parser().parse_args(["--root", str(tmp_path), "maspsx"]))

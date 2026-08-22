@@ -20,6 +20,7 @@ def run(args: argparse.Namespace) -> int:
         archive=args.archive,
         archive_url=args.archive_url,
         private_assets_root=args.private_root or layout.private_assets_dir,
+        inputs_root=layout.inputs_dir,
         version=args.version,
         force=args.force,
     )

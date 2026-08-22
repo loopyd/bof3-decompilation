@@ -6,8 +6,12 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from importlib import import_module
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from ..domain.ids import FunctionId
+
+if TYPE_CHECKING:
+    from .bof3_cleanup import CleanupRequest
 
 
 _PREFILL_NOTE = (
@@ -26,6 +30,7 @@ class ContextRequest:
     function: FunctionId | None = None
     target: str | None = None
     mode: str = "stable"
+    cleanup: CleanupRequest | None = None
 
 
 @dataclass(frozen=True)
@@ -146,6 +151,14 @@ def _profile(name: str) -> ContextProfile:
 def _validate(profile: ContextProfile, request: ContextRequest) -> None:
     if request.mode not in {"stable", "compatibility"}:
         raise ValueError(f"unknown agent context mode: {request.mode}")
+    if request.cleanup is not None and profile.name != "cleanup":
+        raise ValueError("structured cleanup request requires cleanup role")
+    if (
+        profile.name == "cleanup"
+        and request.cleanup is None
+        and request.mode != "compatibility"
+    ):
+        raise ValueError("stable cleanup context requires a structured request")
     # Compatibility retains selectors historically accepted and ignored by
     # workflow roles. Stable prefills reject task evidence a role cannot own.
     if (
@@ -183,11 +196,12 @@ def render_context(
     selector: FunctionId | None = None,
     target: str | None = None,
     mode: str = "stable",
+    cleanup: CleanupRequest | None = None,
 ) -> str:
     """Render one deterministic, read-only role prefill."""
 
     profile = _profile(role)
-    request = ContextRequest(root.resolve(), role, selector, target, mode)
+    request = ContextRequest(root.resolve(), role, selector, target, mode, cleanup)
     _validate(profile, request)
     sections = _required_sections(profile, request)
     if mode == "stable":

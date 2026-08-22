@@ -10,16 +10,15 @@ from pathlib import Path
 import pytest
 
 
-_CC = Path(__file__).resolve().parents[3] / "bin" / "cc"
+_ROOT = Path(__file__).resolve().parents[3]
+_CC = _ROOT / "bin" / "cc"
+_LIVE_SELECTOR = "emi/world00/area030/04@0x801DAE3C"
 
 
 def _stub(path: Path, label: str, body: str) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        "#!/bin/sh\n"
-        "set -eu\n"
-        f'printf \'%s\\n\' "{label}:$*" >> "$STUB_LOG"\n'
-        f"{body}\n"
+        f'#!/bin/sh\nset -eu\nprintf \'%s\\n\' "{label}:$*" >> "$STUB_LOG"\n{body}\n'
     )
     path.chmod(0o755)
     return path
@@ -31,7 +30,7 @@ def _pipeline(tmp_path: Path, *, explicit_gcc: bool, expand_div: bool) -> list[s
     (root / "bin").mkdir(parents=True)
     shutil.copy2(_CC, root / "bin" / "cc")
     log = root / "pipeline.log"
-    gcc_body = '''
+    gcc_body = """
 out=""
 previous=""
 for arg in "$@"; do
@@ -45,10 +44,13 @@ f:
     jr $ra
     nop
 EOF
-'''
+"""
     _stub(root / "toolchains" / "gcc-2.7.2-psx" / "gcc", "canonical-gcc", gcc_body)
     _stub(root / "third_party" / "maspsx" / "maspsx.py", "maspsx", "cat")
-    assembler = _stub(root / "stubs" / "as", "assembler", '''
+    assembler = _stub(
+        root / "stubs" / "as",
+        "assembler",
+        """
 out=""
 previous=""
 for arg in "$@"; do
@@ -56,8 +58,14 @@ for arg in "$@"; do
     previous="$arg"
 done
 : > "$out"
-''')
+""",
+    )
     explicit = _stub(root / "stubs" / "gcc", "explicit-gcc", gcc_body)
+    python = _stub(
+        root / "stubs" / "python",
+        "python",
+        '[ "$1" = -P ]\nshift\nexec sh "$@"',
+    )
 
     source = root / "source.c"
     output = root / "source.o"
@@ -66,7 +74,7 @@ done
         **os.environ,
         "STUB_LOG": str(log),
         "PSX_AS": str(assembler),
-        "MASPSX_PYTHON": "sh",
+        "MASPSX_PYTHON": str(python),
     }
     if explicit_gcc:
         env["PSX_GCC"] = str(explicit)
@@ -106,3 +114,95 @@ def test_expand_div_is_maspsx_only(tmp_path: Path) -> None:
 
     assert "--expand-div" in maspsx
     assert "--expand-div" not in assembler
+
+
+def test_live_maspsx_rejects_inherited_caller_python_paths(tmp_path: Path) -> None:
+    caller = tmp_path / "caller"
+    caller.mkdir()
+    for package in ("maspsx", "harness"):
+        fake = caller / package
+        fake.mkdir()
+        (fake / "__init__.py").write_text(
+            f'raise SystemExit("CALLER CWD {package.upper()} IMPORTED")\n'
+        )
+
+    log = tmp_path / "pipeline.log"
+    gcc = _stub(
+        tmp_path / "gcc",
+        "gcc",
+        """
+out=""
+previous=""
+for arg in "$@"; do
+    [ "$previous" = "-o" ] && out="$arg"
+    previous="$arg"
+done
+cat > "$out" <<'EOF'
+.text
+.globl f
+f:
+    jr $ra
+    nop
+EOF
+""",
+    )
+    assembler = _stub(
+        tmp_path / "as",
+        "assembler",
+        """
+out=""
+previous=""
+for arg in "$@"; do
+    [ "$previous" = "-o" ] && out="$arg"
+    previous="$arg"
+done
+: > "$out"
+""",
+    )
+    source = tmp_path / "source.c"
+    output = tmp_path / "source.o"
+    source.write_text("int f(void) { return 0; }\n")
+    env = {
+        **os.environ,
+        "STUB_LOG": str(log),
+        "PSX_GCC": str(gcc),
+        "PSX_AS": str(assembler),
+        "MASPSX_PYTHON": shutil.which("python3") or "python3",
+        "PYTHONPATH": str(caller),
+        "PYTHONSAFEPATH": "inherited-caller-value",
+    }
+
+    result = subprocess.run(
+        [str(_CC), "-c", str(source), "-o", str(output)],
+        cwd=caller,
+        env=env,
+        text=True,
+        capture_output=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert output.is_file()
+    assert "CALLER CWD" not in result.stdout + result.stderr
+
+
+def test_live_asm_diff_rejects_inherited_caller_harness(tmp_path: Path) -> None:
+    caller = tmp_path / "caller"
+    fake = caller / "harness"
+    fake.mkdir(parents=True)
+    (fake / "__init__.py").write_text(
+        'raise SystemExit("CALLER CWD HARNESS IMPORTED")\n'
+    )
+    result = subprocess.run(
+        [str(_ROOT / "bin" / "asm-diff"), "--json", _LIVE_SELECTOR],
+        cwd=caller,
+        env={
+            **os.environ,
+            "PYTHONPATH": str(caller),
+            "PYTHONSAFEPATH": "inherited-caller-value",
+        },
+        text=True,
+        capture_output=True,
+    )
+
+    assert result.returncode in (0, 1), result.stderr
+    assert "CALLER CWD HARNESS IMPORTED" not in result.stdout + result.stderr

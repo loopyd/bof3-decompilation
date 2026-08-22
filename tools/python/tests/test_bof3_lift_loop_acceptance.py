@@ -94,12 +94,34 @@ def test_agent_context_qwen_roles_stay_bounded() -> None:
         assert "===== context prefill contract =====" in result.stdout
 
 
+def test_checkpoint_and_orchestration_security_self_checks() -> None:
+    scripts = ROOT / ".pi/skills/bof3-lift-loop/scripts"
+    for name in ("test-attempt-checkpoint.py", "test-orchestration.py"):
+        subprocess.run(
+            (sys.executable, str(scripts / name)),
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+
+def test_retained_lift_cleanup_uses_canonical_payload_not_generic_repair() -> None:
+    template = (
+        ROOT / ".pi/skills/bof3-lift-loop/scripts/lift_workflow_template.py"
+    ).read_text()
+    assert 'const cleanupRequest = ["retained-lift"' in template
+    assert "task: cleanupRequest" in template
+    assert 'cleanupRequest.startsWith("repair ")' in template
+    assert 'task: "Clean the retained "' not in template
+
+
 def test_agent_and_skill_context_files_stay_compact() -> None:
     files = sorted((ROOT / ".pi/agents").glob("*.md"))
     files += sorted((ROOT / ".pi/skills").glob("*/SKILL.md"))
     files += sorted((ROOT / ".pi/skills/bof3-re/references").glob("*/*.md"))
     total = sum(len(path.read_bytes()) for path in files)
-    assert total <= 69_000, f".pi context files re-inflated: {total} bytes"
+    assert total <= 72_000, f".pi context files re-inflated: {total} bytes"
 
 
 def test_function_brief_data_table_probe() -> None:

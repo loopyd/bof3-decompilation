@@ -1,38 +1,7 @@
-#!/usr/bin/env python3
-"""Prepare and run the repository's explicitly configured decomp-permuter."""
+#!/bin/sh
+set -eu
 
-from __future__ import annotations
-
-import os
-import sys
-from pathlib import Path
-
-
-ROOT = Path(__file__).resolve().parent.parent
-TOOLS_PYTHON = ROOT / "tools" / "python"
-PROJECT_PYTHON = ROOT / ".venv" / "bin" / "python"
-
-
-def _use_project_python() -> None:
-    if not PROJECT_PYTHON.is_file():
-        print(
-            f"missing project Python environment: {PROJECT_PYTHON}\n"
-            f"run `just venv` from {ROOT}",
-            file=sys.stderr,
-        )
-        raise SystemExit(1)
-    if Path(sys.executable).resolve() != PROJECT_PYTHON.resolve():
-        environment = os.environ.copy()
-        environment["PYTHONPATH"] = str(TOOLS_PYTHON)
-        os.execve(
-            str(PROJECT_PYTHON),
-            [str(PROJECT_PYTHON), str(Path(__file__).resolve()), *sys.argv[1:]],
-            environment,
-        )
-    sys.path.insert(0, str(TOOLS_PYTHON))
-
-
-_use_project_python()
-from harness.commands.permute import main
-
-raise SystemExit(main())
+ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+. "$ROOT/bin/python-env"
+python_env "$ROOT/.venv/bin/python" 1 'run `just venv` from '"$ROOT"
+exec "$PYTHON" -m harness.commands.permute "$@"

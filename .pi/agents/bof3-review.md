@@ -20,7 +20,7 @@ Review prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xA
 
 ## Context
 1. First repository command, once: `bin/agent-context review SELECTOR`. Its stdout is bounded tracked prefill; do not rerun or reread an emitted `=====` path absent a named finding. Brief allowed.
-2. The prefill includes BOF3 skill/review protocols, manifest/map/Splat/header/bindings, and selected source. Generated assembly/index evidence stays finding-driven.
+2. The prefill includes BOF3 skill/review protocols, manifest/map/Splat/header/bindings, and selected source. Generated assembly/index evidence stays finding-driven. Ordinary review never loads naming-evidence or documentation-repair skill bodies; explicit cleanup uses the cleanup router.
 
 ## Audit scope
 - Only game-function declarations/bindings added/changed by this mission's diff.
@@ -48,7 +48,7 @@ Review prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xA
 ## Checks
 - One live byte-match per claimed exact lift. Cached status ≠ acceptance.
 - `companion-check`: relevant declared call only. Batch reads/greps.
-- Toolchain diff → verify pipeline-test contract (references/CLEANUP/RULES.md) ran on affected lifts; source-only exempt.
+- Toolchain diff → verify [pipeline validation](../skills/bof3-re/references/PIPELINE_VALIDATION.md) ran on affected lifts; source-only exempt.
 - Read-only git: `git diff --check`, `git diff --cached --quiet` only. Never edit lift source, headers, maps, Splat, bindings, or generated state; never mutate git/setup/spawn children. Only the lesson edit below is allowed.
 
 ## Lesson edit

@@ -3,27 +3,15 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 
 from ..io import repo_layout
-from ..toolchain.maspsx import MaspsxToolchain
-from ..toolchain.rizin import RizinToolchain
-from ..toolchain.spimdisasm import SpimdisasmToolchain
+from ..toolchain import managed_toolchain
 from ._common import add_root_argument, run_main
 
 
-def _toolchain(root: Path, name: str):
-    if name == "maspsx":
-        return MaspsxToolchain(root)
-    if name == "rizin":
-        return RizinToolchain(repo_layout(root))
-    if name == "spimdisasm":
-        return SpimdisasmToolchain(root)
-    raise ValueError(f"unknown toolchain executable: {name}")
-
-
 def run(args: argparse.Namespace) -> int:
-    toolchain = _toolchain(args.root.resolve(), args.name)
+    layout = repo_layout(args.root.resolve())
+    toolchain = managed_toolchain(layout, args.name)
     if not toolchain.executable.is_file():
         raise FileNotFoundError(
             f"missing {toolchain.label} executable: {toolchain.executable}; run just setup"

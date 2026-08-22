@@ -18,13 +18,11 @@ from .releases import (
 from .psyq_discovery import (
     INCLUDE_FILE_NAMES,
     LIB_FILE_NAMES,
-    default_private_assets_root,
     default_psyq_archive_url,
     default_psyq_converted_archive_url,
     discover_source_archive,
     discover_source_input,
     find_sdk_subdir,
-    psyq_dest,
     psyq_private_cache_root,
     source_root_looks_valid,
 )
@@ -41,20 +39,28 @@ from .psyq_materialize import (
 
 def stage_psyq_sdk(
     *,
-    dest: Path | None = None,
+    dest: Path,
+    inputs_root: Path,
+    private_assets_root: Path,
     source_root: Path | None = None,
     archive: Path | None = None,
     version: str | None = None,
     force: bool = False,
 ) -> Path:
     psyq_version = normalize_psyq_version(version)
-    source_input = discover_source_input(source_root, archive, version=psyq_version)
+    source_input = discover_source_input(
+        source_root,
+        archive,
+        inputs_root=inputs_root,
+        private_assets_root=private_assets_root,
+        version=psyq_version,
+    )
     if source_input is None:
         raise FileNotFoundError(
             f"missing PsyQ {psyq_version} source tree or archive under inputs/; pass --source-root or --archive with a path under inputs/"
         )
 
-    dest_root = (dest or psyq_dest(psyq_version)).resolve()
+    dest_root = dest.resolve()
     if original_sdk_is_ready(dest_root) and not force:
         return dest_root
 
@@ -83,19 +89,24 @@ def stage_psyq_sdk(
 
 def import_psyq_sdk(
     *,
-    dest: Path | None = None,
+    dest: Path,
+    private_assets_root: Path,
+    inputs_root: Path,
     archive: Path | None = None,
     archive_url: str | None = None,
-    private_assets_root: Path | None = None,
     version: str | None = None,
     force: bool = False,
 ) -> Path:
     psyq_version = normalize_psyq_version(version)
-    resolved_private_assets_root = private_assets_root or default_private_assets_root()
-    cache_root = psyq_private_cache_root(resolved_private_assets_root, psyq_version)
+    cache_root = psyq_private_cache_root(private_assets_root, psyq_version)
     archive_store = cache_root / "source-media"
     if archive is not None:
-        resolved_archive = discover_source_archive(archive, version=psyq_version)
+        resolved_archive = discover_source_archive(
+            archive,
+            inputs_root=inputs_root,
+            private_assets_root=private_assets_root,
+            version=psyq_version,
+        )
         if resolved_archive is None:
             raise FileNotFoundError(
                 f"missing PsyQ {psyq_version} source archive: {archive}"
@@ -142,21 +153,22 @@ def import_psyq_sdk(
         dest=dest,
         source_root=source_root,
         version=psyq_version,
+        inputs_root=inputs_root,
+        private_assets_root=private_assets_root,
         force=force,
     )
 
 
 def stage_psyq_converted_sdk(
     *,
-    dest: Path | None = None,
-    private_assets_root: Path | None = None,
+    dest: Path,
+    private_assets_root: Path,
     version: str | None = None,
     force: bool = False,
 ) -> Path:
     """Stage converted per-object members needed by reviewed SDK evidence."""
     psyq_version = normalize_psyq_version(version)
-    private_root = private_assets_root or default_private_assets_root()
-    cache_root = psyq_private_cache_root(private_root, psyq_version)
+    cache_root = psyq_private_cache_root(private_assets_root, psyq_version)
     archive_url = default_psyq_converted_archive_url(psyq_version)
     if archive_url is None:
         raise FileNotFoundError(
@@ -185,7 +197,7 @@ def stage_psyq_converted_sdk(
         raise RuntimeError(
             f"converted PsyQ {psyq_version} archive has no library directory"
         )
-    dest_root = (dest or psyq_dest(psyq_version)).resolve()
+    dest_root = dest.resolve()
     for source_library in library_root.iterdir():
         if source_library.is_dir():
             shutil.copytree(
@@ -216,6 +228,7 @@ class PsyqToolchain(Toolchain):
             archive=self.archive,
             archive_url=self.archive_url,
             private_assets_root=self.layout.private_assets_dir,
+            inputs_root=self.layout.inputs_dir,
             force=force,
         )
         stage_psyq_converted_sdk(

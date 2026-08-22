@@ -7,9 +7,14 @@ TMPDIR="$(mktemp -d)"
 trap 'rm -rf "$TMPDIR"' EXIT
 
 git -C "$ROOT" ls-files -- tools/c/psx-audio/ | while IFS= read -r f; do
-    dest="$TMPDIR/psx-audio/${f#tools/c/psx-audio/}"
-    mkdir -p "$(dirname "$dest")"
-    cp "$ROOT/$f" "$dest"
+    case "$f" in
+        *.c|*.h|*/CMakeLists.txt)
+            [ -f "$ROOT/$f" ] || continue
+            dest="$TMPDIR/psx-audio/${f#tools/c/psx-audio/}"
+            mkdir -p "$(dirname "$dest")"
+            cp "$ROOT/$f" "$dest"
+            ;;
+    esac
 done
 
 rm -f "$OUT"

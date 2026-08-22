@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 import re
 
+from ..io import repo_layout
 from ..toolchain.permuter import DecompPermuterToolchain
 from ._common import add_example_argument, add_root_argument, run_main
 
@@ -195,7 +196,7 @@ def run(args: argparse.Namespace) -> int:
 
         if not args.prepared:
             ensure_target_assembly(source, function, directory, root)
-            toolchain = DecompPermuterToolchain(root)
+            toolchain = DecompPermuterToolchain(repo_layout(root))
             prepare = subprocess.run(
                 [
                     str(toolchain.python),
@@ -218,7 +219,7 @@ def run(args: argparse.Namespace) -> int:
                 )
         if args.prepare_only:
             return 0
-        toolchain = DecompPermuterToolchain(root)
+        toolchain = DecompPermuterToolchain(repo_layout(root))
         result = toolchain.execute(
             [*permuter_arguments(args), str(directory)],
             timeout=args.time_limit,

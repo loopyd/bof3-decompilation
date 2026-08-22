@@ -9,6 +9,7 @@ from pathlib import Path
 from ..domain import lookup_target_manifest
 from ..domain.sources import LiftMetadataError, lift_metadata
 from ..domain.layout import parse_splat_layout
+from ..io import repo_layout
 from ..toolchain.splat import SplatToolchain
 from ._common import add_root_argument, run_main
 
@@ -123,7 +124,7 @@ def run(args: argparse.Namespace) -> int:
     manifest = lookup_target_manifest(root, args.target)
     if manifest is None:
         raise ValueError(f"unknown target: {args.target}")
-    toolchain = SplatToolchain(root)
+    toolchain = SplatToolchain(repo_layout(root))
     if not toolchain.executable.is_file():
         raise FileNotFoundError(
             f"missing Splat executable: {toolchain.executable}; run just setup"

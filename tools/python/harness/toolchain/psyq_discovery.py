@@ -21,9 +21,6 @@ from .releases import (
 )
 
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-
-
 INCLUDE_FILE_NAMES = ("LIBGPU.H", "libgpu.h")
 
 
@@ -38,14 +35,6 @@ DEFAULT_PSYQ_ARCHIVE_URL = (
 DEFAULT_PSYQ_CONVERTED_ARCHIVE_URL = (
     "https://psx.arthus.net/sdk/Psy-Q/psyq-4.7-converted-full.7z"
 )
-
-
-def psyq_dest(version: str | None = None) -> Path:
-    return REPO_ROOT / "toolchains" / "psyq" / normalize_psyq_version(version)
-
-
-def default_private_assets_root() -> Path:
-    return REPO_ROOT / "inputs" / "external" / "private-assets"
 
 
 def psyq_archive_stem(version: str | None = None) -> str:
@@ -67,14 +56,8 @@ def default_psyq_converted_archive_url(version: str | None = None) -> str | None
     return None
 
 
-def psyq_private_cache_root(
-    private_root: Path | None = None, version: str | None = None
-) -> Path:
-    return (
-        (private_root or default_private_assets_root())
-        / "psyq"
-        / (normalize_psyq_version(version))
-    )
+def psyq_private_cache_root(private_root: Path, version: str | None = None) -> Path:
+    return private_root / "psyq" / normalize_psyq_version(version)
 
 
 @dataclass(frozen=True)
@@ -112,45 +95,45 @@ def source_root_looks_valid(path: Path) -> bool:
     return True
 
 
-def auto_discovery_roots(version: str | None = None) -> list[Path]:
+def auto_discovery_roots(
+    inputs_root: Path, private_assets_root: Path, version: str | None = None
+) -> list[Path]:
     stem = psyq_archive_stem(version)
-    cache_root = psyq_private_cache_root(version=version)
-    candidates: list[Path] = []
-    candidates.extend(
-        [
-            REPO_ROOT / "inputs" / "external" / stem,
-            REPO_ROOT / "inputs" / stem,
-            cache_root / "source-tree" / stem,
-            cache_root / "source-tree",
-        ]
-    )
-    return paths_under(candidates, REPO_ROOT / "inputs")
+    cache_root = psyq_private_cache_root(private_assets_root, version)
+    candidates = [
+        inputs_root / "external" / stem,
+        inputs_root / stem,
+        cache_root / "source-tree" / stem,
+        cache_root / "source-tree",
+    ]
+    return paths_under(candidates, inputs_root)
 
 
-def auto_discovery_archives(version: str | None = None) -> list[Path]:
+def auto_discovery_archives(
+    inputs_root: Path, private_assets_root: Path, version: str | None = None
+) -> list[Path]:
     stem = psyq_archive_stem(version)
-    cache_root = psyq_private_cache_root(version=version)
-    candidates: list[Path] = []
-    candidates.append(cache_root / "source-media")
-    for parent in (REPO_ROOT / "inputs" / "external", REPO_ROOT / "inputs"):
+    cache_root = psyq_private_cache_root(private_assets_root, version)
+    candidates = [cache_root / "source-media"]
+    for parent in (inputs_root / "external", inputs_root):
         for suffix in (".7z", ".zip", ".tar.gz", ".tgz"):
             candidates.append(parent / f"{stem}{suffix}")
-    return paths_under(candidates, REPO_ROOT / "inputs")
+    return paths_under(candidates, inputs_root)
 
 
 def discover_source_root(
     explicit_source: Path | None = None,
     *,
+    inputs_root: Path,
+    private_assets_root: Path,
     version: str | None = None,
 ) -> Path | None:
     candidates: list[Path] = []
     if explicit_source is not None:
         candidates.append(
-            require_path_under(
-                explicit_source, REPO_ROOT / "inputs", label="PsyQ source root"
-            )
+            require_path_under(explicit_source, inputs_root, label="PsyQ source root")
         )
-    candidates.extend(auto_discovery_roots(version))
+    candidates.extend(auto_discovery_roots(inputs_root, private_assets_root, version))
     for candidate in unique_paths(candidates):
         if source_root_looks_valid(candidate):
             return candidate
@@ -160,16 +143,18 @@ def discover_source_root(
 def discover_source_archive(
     explicit_archive: Path | None = None,
     *,
+    inputs_root: Path,
+    private_assets_root: Path,
     version: str | None = None,
 ) -> Path | None:
     candidates: list[Path] = []
     if explicit_archive is not None:
         candidates.append(
-            require_path_under(
-                explicit_archive, REPO_ROOT / "inputs", label="PsyQ archive"
-            )
+            require_path_under(explicit_archive, inputs_root, label="PsyQ archive")
         )
-    candidates.extend(auto_discovery_archives(version))
+    candidates.extend(
+        auto_discovery_archives(inputs_root, private_assets_root, version)
+    )
     for candidate in unique_paths(candidates):
         matches = find_matching_files(candidate, archive_file_looks_valid)
         if matches:
@@ -181,12 +166,24 @@ def discover_source_input(
     explicit_source: Path | None = None,
     explicit_archive: Path | None = None,
     *,
+    inputs_root: Path,
+    private_assets_root: Path,
     version: str | None = None,
 ) -> PsyqSource | None:
-    source_root = discover_source_root(explicit_source, version=version)
+    source_root = discover_source_root(
+        explicit_source,
+        inputs_root=inputs_root,
+        private_assets_root=private_assets_root,
+        version=version,
+    )
     if source_root is not None:
         return PsyqSource(kind="tree", path=source_root)
-    archive_path = discover_source_archive(explicit_archive, version=version)
+    archive_path = discover_source_archive(
+        explicit_archive,
+        inputs_root=inputs_root,
+        private_assets_root=private_assets_root,
+        version=version,
+    )
     if archive_path is not None:
         return PsyqSource(kind="archive", path=archive_path)
     return None
@@ -194,12 +191,20 @@ def discover_source_input(
 
 def find_psyq_source(
     *,
+    inputs_root: Path,
+    private_assets_root: Path,
     source_root: Path | None = None,
     archive: Path | None = None,
     version: str | None = None,
 ) -> PsyqSource | None:
     psyq_version = normalize_psyq_version(version)
-    return discover_source_input(source_root, archive, version=psyq_version)
+    return discover_source_input(
+        source_root,
+        archive,
+        inputs_root=inputs_root,
+        private_assets_root=private_assets_root,
+        version=psyq_version,
+    )
 
 
 __all__ = [
@@ -208,11 +213,9 @@ __all__ = [
     "INCLUDE_FILE_NAMES",
     "LIB_FILE_NAMES",
     "PsyqSource",
-    "REPO_ROOT",
     "auto_discovery_archives",
     "auto_discovery_roots",
     "contains_any_file",
-    "default_private_assets_root",
     "default_psyq_archive_url",
     "default_psyq_converted_archive_url",
     "discover_source_archive",
@@ -221,7 +224,6 @@ __all__ = [
     "find_psyq_source",
     "find_sdk_subdir",
     "psyq_archive_stem",
-    "psyq_dest",
     "psyq_private_cache_root",
     "source_root_looks_valid",
 ]

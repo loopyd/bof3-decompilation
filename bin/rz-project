@@ -3,13 +3,8 @@
 set -eu
 
 ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-PYTHON="${PSX_PYTHON:-${ROOT}/.venv/bin/python}"
-if [ ! -x "$PYTHON" ]; then
-    printf 'missing project Python environment: %s\n' "$PYTHON" >&2
-    printf '%s\n' 'run `just venv` first' >&2
-    exit 2
-fi
-PYTHONPATH="${ROOT}/tools/python${PYTHONPATH:+:${PYTHONPATH}}"
-PATH="${ROOT}/toolchains/rizin/bin:${PATH}"
-export PYTHONPATH PATH
+. "$ROOT/bin/python-env"
+python_env "${PSX_PYTHON:-$ROOT/.venv/bin/python}" 2 'run `just venv` first'
+PATH="$ROOT/toolchains/rizin/bin:$PATH"
+export PATH
 exec "$PYTHON" -m harness.commands.rz_project "$@"

@@ -13,12 +13,14 @@ if [ -z "$PYTHON" ] || [ ! -x "$PYTHON" ]; then
     printf 'invalid Python interpreter: %s\n' "${PYTHON:-python3}" >&2
     exit 2
 fi
+PYTHONSAFEPATH=1
+export PYTHONSAFEPATH
 PROBE="$($PYTHON -S -c 'import sys; print("agent-context-python") if sys.version_info >= (3, 11) else None' 2>/dev/null || true)"
 if [ "$PROBE" != "agent-context-python" ]; then
     printf 'invalid Python interpreter (requires Python 3.11+): %s\n' "$PYTHON" >&2
     exit 2
 fi
-PYTHONPATH="$ROOT/tools/python${PYTHONPATH:+:$PYTHONPATH}"
+PYTHONPATH="$ROOT/tools/python"
 export PYTHONPATH
 compat=
 for arg in "$@"; do

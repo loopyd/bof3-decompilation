@@ -42,6 +42,11 @@ class RepoLayout:
     psyq_root: Path
 
     @property
+    def external_inputs_dir(self) -> Path:
+        """Authorized/private input staging root."""
+        return self.inputs_dir / "external"
+
+    @property
     def gcc_archive_cache_dir(self) -> Path:
         """Digest-verified GCC archive cache root under private assets.
 

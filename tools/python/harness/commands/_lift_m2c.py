@@ -53,8 +53,9 @@ def run_m2c(args: argparse.Namespace) -> int:
     context = context_path(function)
     context.parent.mkdir(parents=True, exist_ok=True)
     context.write_text(render_context(function, manifest), encoding="utf-8")
-    root = repo_layout().root
-    m2c = M2cToolchain(root)
+    layout = repo_layout()
+    root = layout.root
+    m2c = M2cToolchain(layout)
     arguments: list[str] = [
         "-t",
         "mipsel-gcc-c",

@@ -1,12 +1,7 @@
 #!/bin/sh
 set -eu
+
 ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-PYTHON="${PSX_PYTHON:-${ROOT}/.venv/bin/python}"
-if [ ! -x "$PYTHON" ]; then
-    printf 'missing project Python environment: %s\n' "$PYTHON" >&2
-    printf '%s\n' 'run `just setup` first' >&2
-    exit 2
-fi
-PYTHONPATH="${ROOT}/tools/python${PYTHONPATH:+:${PYTHONPATH}}"
-export PYTHONPATH
+. "$ROOT/bin/python-env"
+python_env "${PSX_PYTHON:-$ROOT/.venv/bin/python}" 2 'run `just setup` first'
 exec "$PYTHON" -c "from harness.commands.lift import main; raise SystemExit(main('m2ctx'))" "$@"

@@ -17,8 +17,8 @@ banks + SEP sequences) driven by the PsyQ `libsnd`/`libspu` runtime.
 bin/psx-audio list                        # browse all 81 BGM tracks
 bin/psx-audio play BGM000                 # play by track name (auto-resolves)
 bin/psx-audio play BGMBAT02 --gain 0.7    # adjust playback/render volume
-bin/psx-audio render BGMBAT04 -o track.ogg # Ogg output (requires vorbis/ogg/FLAC libs; see runtime requirements below)
-bin/psx-audio render BGMBAT04 -o track.flac # FLAC output (requires libFLAC.so.14; see runtime requirements below)
+bin/psx-audio render BGMBAT04 -o track.ogg # Ogg output (requires vorbis/ogg development libs; see build requirements below)
+bin/psx-audio render BGMBAT04 -o track.flac # FLAC output (requires FLAC development lib; see build requirements below)
 bin/psx-audio render BGMBAT04 -o track.wav
 bin/psx-audio play out/extracted/BIN/BGM/BGM000.EMI        # play directly from EMI without prior extraction
 bin/psx-audio play BGM000 -o out.wav                       # render to WAV instead of speakers
@@ -32,18 +32,14 @@ bin/psx-audio psf-run out/audio/bof3.psflib -n 100000
 bin/psx-audio --examples
 ```
 
-> **Runtime requirements:** the tracked audio ELF
-> (`tools/c/psx-audio/psx-audio`, dispatched by the thin `bin/psx-audio`
-> wrapper via `exec`) is an x86-64 PIE built for GNU **x86-64-v4** (ELF notes
-> require x86-64-baseline through x86-64-v4) and carries an unconditional
-> `DT_NEEDED` for `libFLAC.so.14` (plus the standard asound/vorbis/ogg/z/m/c
-> runtime). Both are load-time requirements for every subcommand — `list`,
-> WAV render, and `--help` included — so a host missing either one fails
-> with exit 127 before `main` runs. Installing `libFLAC.so.14` alone does
-> **not** unblock a host that lacks x86-64-v4 ISA support (the loader aborts with
-> “CPU ISA level is lower than required”). A
-> compatible host must provide an x86-64-v4-capable CPU **and** the
-> `libFLAC.so.14` SONAME together with the other shared libraries above.
+> **Build requirements:** `bin/psx-audio` is the stable surface. On
+> first use it configures the tracked CMake source and builds `bof3-audio` into
+> ignored `tools/c/psx-audio/build/`; later calls perform an incremental build.
+> Setup requires CMake, a C compiler, and zlib development files. Ogg/Vorbis
+> and FLAC support are independent build-time options, enabled when their
+> development libraries are detected; ALSA is linked when found.
+> Configure/build failures print a setup diagnostic and leave tracked source
+> unchanged; no prebuilt audio executable is stored in Git.
 
 Bare track names (`BGM000`) auto-resolve through the extracted track
 catalog; bare `.EMI`/`.STR` paths such as `BGM000.EMI` or `VOICE.STR` do
@@ -495,7 +491,7 @@ refresh: 60Hz
 | Direct BGM render | `spu_device_test` covers live voice looping, key-off, and pitch cap; source audit in `audio_audit.c` | It is an approximate offline SEP/VAB renderer; it does not execute the game runtime. |
 | XA decode to WAV | native `xa_test` decodes a synthetic audio sector and parses its WAV output | CD/XA is not mixed or captured through the SPU. |
 | VAB WAV/SF2 and SEP MIDI export | CLI paths are implemented in `vab.c`, `sf2.c`, `sep.c`, and `export.c` | No fixture or retail-media golden output is claimed. |
-| Ogg/FLAC output | writers in `ogg.c`/`flac.c` (build-time feature detection) | The shipped ELF links vorbis/ogg/FLAC unconditionally (`DT_NEEDED`), so those codec libraries are mandatory load-time dependencies of every subcommand; no codec-output golden is claimed. |
+| Ogg/FLAC output | writers in `ogg.c`/`flac.c` (build-time feature detection) | Codec support depends on the libraries detected by CMake on the build host; no codec-output golden is claimed. |
 
 The SPU's reverb, noise, pitch modulation, and volume sweeps are implemented
 in `spu_device.c` and used by the `fast` renderer; exact DMA/FIFO/IRQ timing and
@@ -509,7 +505,7 @@ Self-contained C11 library + CLI. Uses miniaudio for playback.
 Gaussian table and ADSR from DuckStation (hardware-verified).
 
 ```sh
-bin/psx-audio <command>           # dispatches the tracked ELF in tools/c/psx-audio/
+bin/psx-audio <command>           # incrementally builds, then runs ignored build/bof3-audio
 ```
 
 | Command | Description |

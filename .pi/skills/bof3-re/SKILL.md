@@ -5,6 +5,8 @@ description: Lift or review one target-qualified BOF3 function, normalize proven
 
 # BOF3 RE
 
+Compiler, assembler, linker, registry, or invocation-wrapper changes must follow [compiler pipeline validation](references/PIPELINE_VALIDATION.md). Role details remain in [reverse mission protocol](references/REVERSE/MISSION_PROTOCOL.md), [review checklist](references/REVIEW/REVIEW_CHECKLIST.md), and [sharing/non-match review](references/REVIEW/SHARING_NONMATCHES.md). Explicit cleanup routes are owned by the structured cleanup router and its selected skill; ordinary lifting, matching, review, and pipeline work must not load naming-evidence or documentation-repair bodies.
+
 Selector: `TARGET@0xADDRESS` | shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First command for `bof3-reverse`/`bof3-review`: `bin/agent-context <reverse|review> SELECTOR`, once. Its bounded tracked prefill includes role rules and target-owned facts; never reread bundled paths. Generated asm/index evidence is task-driven; psx-rizin only for a concrete question. Repo `bin` wins.
 
 ## Invariants

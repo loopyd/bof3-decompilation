@@ -13,7 +13,7 @@ import tomllib
 
 import pytest
 
-from harness.context import profile_names, render_context
+from harness.context import parse_cleanup_request, profile_names, render_context
 from harness.context.base import ContextProfile, _add_profile
 from harness.domain import parse_function_id
 
@@ -68,11 +68,7 @@ GOLDEN_COMPAT_SECTIONS = {
         ".pi/skills/bof3-re/references/REVIEW/REVIEW_CHECKLIST.md",
         ".pi/skills/bof3-re/references/REVIEW/SHARING_NONMATCHES.md",
     ),
-    "cleanup": (
-        *_HEAD_FULL_SECTIONS,
-        ".pi/skills/bof3-re/references/CLEANUP/RULES.md",
-        ".pi/skills/bof3-re/references/CLEANUP/REFACTOR_PLAYBOOK.md",
-    ),
+    "cleanup": (),
     "classifier": (),
     "context-builder": ("AGENTS.md", "docs/agents/project-context.md"),
     "oracle": ("AGENTS.md", "docs/agents/plan-authoring.md"),
@@ -147,6 +143,18 @@ def _target_selectors() -> dict[str, str]:
     return selectors
 
 
+def test_compatibility_agents_role_restores_legacy_optional_selector_parser() -> None:
+    no_selector = _command("agents", mode="compatibility")
+    selector = _command("agents", SELECTOR, mode="compatibility")
+    invalid = _command("agents", "invalid", mode="compatibility")
+    multiple = _command("agents", SELECTOR, SELECTOR, mode="compatibility")
+    assert no_selector.returncode == selector.returncode == 0
+    assert selector.stdout != no_selector.stdout
+    assert no_selector.stderr == selector.stderr == ""
+    assert invalid.returncode == 2 and "expected TARGET@0xADDRESS" in invalid.stderr
+    assert multiple.returncode == 2 and "unrecognized arguments" in multiple.stderr
+
+
 @pytest.mark.parametrize(
     "role",
     tuple(role for role in ROLES if role not in {"reverse", "review", "cleanup"}),
@@ -176,7 +184,7 @@ def test_compatibility_role_output_is_deterministic(role: str) -> None:
     assert len(names) == len(set(names))
 
 
-@pytest.mark.parametrize("role", ("reverse", "review", "cleanup"))
+@pytest.mark.parametrize("role", ("reverse", "review"))
 def test_compatibility_selector_output_is_deterministic(role: str) -> None:
     first = _command(role, SELECTOR, mode="compatibility")
     second = _command(role, SELECTOR, mode="compatibility")
@@ -185,14 +193,32 @@ def test_compatibility_selector_output_is_deterministic(role: str) -> None:
     assert first.stderr == second.stderr == ""
 
 
-def test_compatibility_cleanup_target_output_is_deterministic() -> None:
-    first = _command("cleanup", "--target", "exe/logo", mode="compatibility")
-    second = _command("cleanup", "--target", "exe/logo", mode="compatibility")
-    assert (first.returncode, first.stdout, first.stderr) == (
-        second.returncode,
-        second.stdout,
-        second.stderr,
+def test_historical_cleanup_target_form_matches_compatibility_target_context() -> None:
+    historical = _command("cleanup", "--target", "exe/logo", mode="compatibility")
+    direct = render_context(ROOT, "cleanup", target="exe/logo", mode="compatibility")
+    assert historical.returncode == 0
+    assert historical.stderr == ""
+    assert historical.stdout == direct
+
+
+def test_stable_cleanup_target_form_normalizes_to_audit_target() -> None:
+    historical = _command("cleanup", "--target", "exe/logo")
+    canonical = _command("cleanup", "audit-target", "exe/logo")
+    assert (historical.returncode, historical.stdout, historical.stderr) == (
+        canonical.returncode,
+        canonical.stdout,
+        canonical.stderr,
     )
+
+
+def test_compatibility_cleanup_selector_matches_historical_full_context() -> None:
+    result = _command("cleanup", SELECTOR, mode="compatibility")
+    expected = render_context(
+        ROOT, "cleanup", parse_function_id(SELECTOR), mode="compatibility"
+    )
+    assert result.returncode == 0
+    assert result.stderr == ""
+    assert result.stdout == expected
 
 
 def test_root_first_command_policy_defers_to_every_role_definition() -> None:
@@ -219,8 +245,7 @@ def test_bof_role_first_commands_include_required_scope_placeholders() -> None:
     }
     assert "bin/agent-context reverse SELECTOR" in definitions["reverse"]
     assert "bin/agent-context review SELECTOR" in definitions["review"]
-    assert "bin/agent-context cleanup SELECTOR" in definitions["cleanup"]
-    assert "--target TARGET" in definitions["cleanup"]
+    assert "bin/agent-context cleanup CANONICAL_REQUEST..." in definitions["cleanup"]
 
 
 def test_profile_order_and_role_membership() -> None:
@@ -276,11 +301,16 @@ def test_stable_prefills_are_tracked_bounded_and_save_discovery_calls() -> None:
         "agents": (None, 14_000, 4),
         "reverse": (SELECTOR, 100_000, 24),
         "review": (SELECTOR, 100_000, 24),
-        "cleanup": (SELECTOR, 40_000, 16),
+        "cleanup": (None, 24_000, 6),
     }
     for role, (selector, byte_limit, section_limit) in cases.items():
         function = parse_function_id(selector) if selector else None
-        output = render_context(ROOT, role, function)
+        cleanup = (
+            parse_cleanup_request(("audit-target", "exe/logo"))
+            if role == "cleanup"
+            else None
+        )
+        output = render_context(ROOT, role, function, cleanup=cleanup)
         names = _section_names(output)
         assert len(output.encode()) <= byte_limit, role
         assert len(names) <= section_limit, role
@@ -296,17 +326,17 @@ def test_full_92_case_stable_target_matrix_stays_within_measured_bounds() -> Non
         for role, byte_limit, section_limit in (
             ("reverse", 100_000, 24),
             ("review", 100_000, 24),
-            ("cleanup", 40_000, 16),
         ):
             output = render_context(ROOT, role, function)
             assert len(output.encode()) <= byte_limit, (role, selector)
             assert len(_section_names(output)) <= section_limit, (role, selector)
             cases += 1
-        output = render_context(ROOT, "cleanup", target=target)
-        assert len(output.encode()) <= 40_000, target
-        assert len(_section_names(output)) <= 16, target
+        cleanup = parse_cleanup_request(("audit-target", target))
+        output = render_context(ROOT, "cleanup", cleanup=cleanup)
+        assert len(output.encode()) <= 24_000, target
+        assert len(_section_names(output)) <= 6, target
         cases += 1
-    assert cases == 92
+    assert cases == 69
 
 
 @pytest.mark.parametrize(
@@ -369,8 +399,12 @@ def test_stable_profiles_only_emit_required_inherited_contracts() -> None:
             ).count("AGENTS.md")
             == 1
         )
-    for role in set(ROLES) - {"classifier", "reverse", "review"}:
+    for role in set(ROLES) - {"classifier", "reverse", "review", "cleanup"}:
         assert "AGENTS.md" not in _section_names(render_context(ROOT, role))
+    cleanup = parse_cleanup_request(("audit-target", "exe/logo"))
+    assert "AGENTS.md" not in _section_names(
+        render_context(ROOT, "cleanup", cleanup=cleanup)
+    )
     assert _section_names(render_context(ROOT, "reviewer")) == [
         "context prefill contract"
     ]
@@ -391,13 +425,40 @@ def test_stable_workflow_selector_is_rejected() -> None:
     assert "does not accept a function selector" in result.stderr
 
 
+@pytest.mark.parametrize(
+    "role",
+    tuple(
+        role for role in ROLES if role not in {"agents", "reverse", "review", "cleanup"}
+    ),
+)
+def test_compatibility_non_bof_roles_match_historical_optional_selector(
+    role: str,
+) -> None:
+    baseline = _command(role, mode="compatibility")
+    selector = _command(role, SELECTOR, mode="compatibility")
+    invalid = _command(role, "arbitrary", mode="compatibility")
+    extra = _command(role, SELECTOR, "extra", mode="compatibility")
+    assert selector.returncode == baseline.returncode == 0
+    assert selector.stdout == baseline.stdout
+    assert selector.stderr == baseline.stderr == ""
+    assert invalid.returncode == 2 and "expected TARGET@0xADDRESS" in invalid.stderr
+    assert extra.returncode == 2 and "unrecognized arguments: extra" in extra.stderr
+
+
+def test_cleanup_symbol_arrow_cli_transport_is_shell_safe() -> None:
+    result = _command(
+        "cleanup", "symbol", "exe/logo", "old_name", "--rename-to", "new_name"
+    )
+    assert result.returncode == 0, result.stderr
+    request = _sections(result.stdout)["cleanup request"]
+    assert '"arguments": [\n    "old_name",\n    "new_name"' in request
+
+
 def test_full_selector_and_target_modes_have_characterized_ceilings() -> None:
     cases = (
-        ("agents", None, None, 72_000, 12),
+        ("agents", None, None, 73_000, 12),
         ("reverse", SELECTOR, None, 83_000, 24),
         ("review", SELECTOR, None, 81_000, 24),
-        ("cleanup", SELECTOR, None, 92_000, 24),
-        ("cleanup", None, "exe/slus_004_22", 122_000, 20),
     )
     for role, selector, target, ceiling, sections in cases:
         function = parse_function_id(selector) if selector else None
@@ -539,11 +600,11 @@ def test_missing_required_file_fails_but_optional_artifacts_do_not(
     (
         (("nope",), "invalid choice"),
         (("reverse", "broken"), "expected TARGET@0xADDRESS"),
-        (("reverse", "--target", "exe/logo"), "--target requires cleanup role"),
+        (("reverse", "extra", "scope"), "reverse requires a function selector"),
         (("reverse",), "reverse requires a function selector"),
         (("review",), "review requires a function selector"),
-        (("cleanup",), "cleanup requires a function selector or --target"),
-        (("cleanup", "--target", "exe/not-real"), "unknown target"),
+        (("cleanup",), "cleanup requires one canonical request"),
+        (("cleanup", "audit-target", "exe/not-real", "extra"), "exactly one TARGET"),
     ),
 )
 def test_cli_rejects_invalid_requests(args: tuple[str, ...], message: str) -> None:
@@ -561,11 +622,8 @@ def test_compatibility_selector_behavior_for_non_bof_roles(role: str) -> None:
 
 def test_cli_errors_preserve_semantics_after_program_rename() -> None:
     for args, message in (
-        (("cleanup", "--target", "exe/not-real"), "unknown target"),
-        (
-            ("cleanup", SELECTOR, "--target", "exe/logo"),
-            "--target requires cleanup role and no function selector",
-        ),
+        (("cleanup", "audit-target", "exe/logo", "extra"), "exactly one TARGET"),
+        (("cleanup", "not-a-selector"), "unknown cleanup mode"),
     ):
         current = _command(*args, mode="compatibility")
         assert current.returncode == 2
@@ -624,6 +682,32 @@ def test_stable_selectors_run_with_isolated_system_python() -> None:
         assert result.returncode == 0
         assert result.stderr == ""
         assert expected in result.stdout
+
+
+@pytest.mark.parametrize("mode", (None, "stable", "compatibility"))
+@pytest.mark.parametrize("python", (sys.executable, "/usr/bin/python3"))
+def test_wrapper_ignores_ambient_stdlib_and_harness_modules(
+    tmp_path: Path, mode: str | None, python: str
+) -> None:
+    if not Path(python).is_file():
+        pytest.skip("requested Python mode is unavailable")
+    poison = tmp_path / "poison"
+    poison.mkdir()
+    (poison / "argparse.py").write_text(
+        "raise RuntimeError('ambient argparse loaded')\n", encoding="utf-8"
+    )
+    (poison / "harness.py").write_text(
+        "raise RuntimeError('ambient harness loaded')\n", encoding="utf-8"
+    )
+    env = os.environ.copy()
+    env["PSX_PYTHON"] = python
+    env["PYTHONPATH"] = str(poison)
+    args = [str(COMMAND), "worker"]
+    if mode:
+        args.extend(("--mode", mode))
+    result = _run(tuple(args), cwd=tmp_path, env=env)
+    assert result.returncode == 0, result.stderr
+    assert "ambient" not in result.stderr
 
 
 def test_wrapper_equals_mode_matches_split_mode_in_isolated_env() -> None:

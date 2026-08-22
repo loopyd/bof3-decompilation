@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+import errno
 import os
 import subprocess
 from pathlib import Path
 
 import pytest
 
-from harness.analysis import transaction_files, transaction_git
+from harness.analysis import rename_noreplace, transaction_files, transaction_git
 
 
 def _git_repo(tmp_path: Path) -> Path:
@@ -148,6 +149,125 @@ def test_atomic_write_new_leaf_commit_substitution_preserves_both_files(
     temporaries = list(parent.glob(".*.transaction-*"))
     assert len(temporaries) == 1
     assert temporaries[0].read_bytes() == b"after\n"
+
+
+@pytest.mark.parametrize("unsupported_errno", (None, errno.ENOSYS, errno.EINVAL))
+def test_rename_noreplace_unsupported_preserves_both_paths(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, unsupported_errno: int | None
+) -> None:
+    source = tmp_path / "source"
+    destination = tmp_path / "destination"
+    source.write_bytes(b"source")
+    destination.write_bytes(b"destination")
+    directory = os.open(tmp_path, os.O_RDONLY | os.O_DIRECTORY)
+
+    class Libc:
+        if unsupported_errno is not None:
+
+            def renameat2(self, *_args):
+                assert unsupported_errno is not None
+                rename_noreplace.ctypes.set_errno(unsupported_errno)
+                return -1
+
+    monkeypatch.setattr(rename_noreplace.ctypes, "CDLL", lambda *_a, **_k: Libc())
+    try:
+        with pytest.raises(
+            rename_noreplace.UnsupportedRenameNoReplaceError,
+            match=r"renameat2\(RENAME_NOREPLACE\).*(unavailable|unsupported)",
+        ):
+            transaction_files._rename_noreplace(
+                "source", "destination", src_dir_fd=directory, dst_dir_fd=directory
+            )
+    finally:
+        os.close(directory)
+
+    assert source.read_bytes() == b"source"
+    assert destination.read_bytes() == b"destination"
+
+
+def test_existing_replacement_preflight_rejects_fuseblk_without_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    existing = tmp_path / "include/test.h"
+    existing.parent.mkdir()
+    existing.write_bytes(b"before\n")
+    before = sorted(path.relative_to(tmp_path) for path in tmp_path.rglob("*"))
+
+    def unsupported(*_args, **_kwargs):
+        raise rename_noreplace.UnsupportedRenameNoReplaceError(
+            "renameat2(RENAME_NOREPLACE) is unsupported by fuseblk"
+        )
+
+    monkeypatch.setattr(rename_noreplace, "rename_noreplace", unsupported)
+    with pytest.raises(
+        rename_noreplace.UnsupportedRenameNoReplaceError,
+        match="unsupported filesystem.*existing-file transactions",
+    ):
+        transaction_files.preflight_existing_replacements(tmp_path, {"include/test.h"})
+
+    assert existing.read_bytes() == b"before\n"
+    assert sorted(path.relative_to(tmp_path) for path in tmp_path.rglob("*")) == before
+
+
+def test_new_file_preflight_does_not_require_native_rename_noreplace(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    called = False
+
+    def unsupported(*_args, **_kwargs):
+        nonlocal called
+        called = True
+        raise rename_noreplace.UnsupportedRenameNoReplaceError()
+
+    monkeypatch.setattr(rename_noreplace, "rename_noreplace", unsupported)
+    transaction_files.preflight_existing_replacements(tmp_path, {"new.h"})
+    assert called is False and not any(tmp_path.iterdir())
+
+
+def test_rename_noreplace_linux_native_path(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    destination = tmp_path / "destination"
+    source.write_bytes(b"source")
+    directory = os.open(tmp_path, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        publication = rename_noreplace.publish_noreplace(
+            "source", "destination", src_dir_fd=directory, dst_dir_fd=directory
+        )
+    finally:
+        os.close(directory)
+
+    assert publication == rename_noreplace.Publication("renameat2", None)
+    assert not source.exists()
+    assert destination.read_bytes() == b"source"
+
+
+def test_publish_noreplace_fallback_retains_source_and_refuses_collision(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = tmp_path / "source"
+    destination = tmp_path / "destination"
+    source.write_bytes(b"source")
+    monkeypatch.setattr(
+        rename_noreplace,
+        "rename_noreplace",
+        lambda *_a, **_k: (_ for _ in ()).throw(
+            rename_noreplace.UnsupportedRenameNoReplaceError()
+        ),
+    )
+    directory = os.open(tmp_path, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        publication = rename_noreplace.publish_noreplace(
+            "source", "destination", src_dir_fd=directory, dst_dir_fd=directory
+        )
+        with pytest.raises(FileExistsError):
+            rename_noreplace.publish_noreplace(
+                "source", "destination", src_dir_fd=directory, dst_dir_fd=directory
+            )
+    finally:
+        os.close(directory)
+
+    assert publication == rename_noreplace.Publication("hard-link", "source")
+    assert source.read_bytes() == destination.read_bytes() == b"source"
 
 
 def test_safe_unlink_moves_matching_leaf_to_durable_quarantine(tmp_path: Path) -> None:

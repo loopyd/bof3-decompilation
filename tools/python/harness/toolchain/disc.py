@@ -6,6 +6,8 @@ import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
 
+from ..io import RepoLayout
+
 from .base import Toolchain
 from .helpers import (
     download_file,
@@ -21,12 +23,8 @@ from .releases import (
 )
 
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-DEFAULT_DISC_DIR = REPO_ROOT / "inputs" / "external"
-DEFAULT_PRIVATE_ASSETS_ROOT = DEFAULT_DISC_DIR / "private-assets"
 DEFAULT_BOF3_ARCHIVE_URL = "https://archive.org/download/BreathOfFireIIIv1.1.7z"
-
-AUTO_DISCOVERY_ARCHIVES = (DEFAULT_DISC_DIR / "BreathOfFireIIIv1.1.7z",)
+ARCHIVE_NAME = "BreathOfFireIIIv1.1.7z"
 
 FILE_PATTERN = re.compile(r'^\s*FILE\s+"([^"]+)"\s+\S+', re.IGNORECASE)
 
@@ -39,15 +37,18 @@ class DiscImportResult:
     staged_paths: tuple[Path, ...]
 
 
-def discover_disc_archive(explicit_archive: Path | None = None) -> Path | None:
+def discover_disc_archive(
+    explicit_archive: Path | None = None,
+    *,
+    inputs_root: Path,
+    archive_cache_root: Path,
+) -> Path | None:
     candidates: list[Path] = []
     if explicit_archive is not None:
         candidates.append(
-            require_path_under(
-                explicit_archive, REPO_ROOT / "inputs", label="BOF3 archive"
-            )
+            require_path_under(explicit_archive, inputs_root, label="BOF3 archive")
         )
-    candidates.extend(AUTO_DISCOVERY_ARCHIVES)
+    candidates.extend((inputs_root / "external" / ARCHIVE_NAME, archive_cache_root))
 
     for candidate in unique_paths(candidates):
         matches = find_matching_files(candidate, archive_path_looks_valid)
@@ -58,19 +59,24 @@ def discover_disc_archive(explicit_archive: Path | None = None) -> Path | None:
 
 def resolve_bof3_archive(
     *,
+    inputs_root: Path,
+    archive_cache_root: Path,
+    downloads_root: Path,
     archive: Path | None = None,
     archive_url: str | None = None,
-    private_assets_root: Path = DEFAULT_PRIVATE_ASSETS_ROOT,
     force: bool = False,
 ) -> Path:
-    archive_store = private_assets_root / "bof3" / "source-media"
     if archive is not None:
-        resolved_archive = discover_disc_archive(archive)
+        resolved_archive = discover_disc_archive(
+            archive,
+            inputs_root=inputs_root,
+            archive_cache_root=archive_cache_root,
+        )
         if resolved_archive is None:
             raise FileNotFoundError(f"missing BOF3 archive: {archive}")
         return sync_archive_into_store(
             resolved_archive,
-            archive_store / resolved_archive.name,
+            archive_cache_root / resolved_archive.name,
             force=force,
         )
 
@@ -78,16 +84,23 @@ def resolve_bof3_archive(
         archive_name = Path(urllib.parse.urlparse(archive_url).path).name
         if not archive_name:
             raise ValueError(f"could not derive archive name from URL: {archive_url}")
-        return download_file(archive_url, archive_store / archive_name, force=force)
+        downloaded = download_file(
+            archive_url, downloads_root / archive_name, force=force
+        )
+        return sync_archive_into_store(
+            downloaded, archive_cache_root / archive_name, force=force
+        )
 
-    resolved_archive = discover_disc_archive()
+    resolved_archive = discover_disc_archive(
+        inputs_root=inputs_root, archive_cache_root=archive_cache_root
+    )
     if resolved_archive is None:
         raise FileNotFoundError(
             "missing BOF3 archive; pass --archive or use `toolchain disc import` to download, cache, and stage it via the optional private-assets workspace"
         )
     return sync_archive_into_store(
         resolved_archive,
-        archive_store / resolved_archive.name,
+        archive_cache_root / resolved_archive.name,
         force=force,
     )
 
@@ -123,16 +136,20 @@ def find_disc_set(root: Path) -> tuple[Path, list[Path]]:
 
 def import_bof3_disc(
     *,
-    dest: Path = DEFAULT_DISC_DIR,
+    inputs_root: Path,
+    private_assets_root: Path,
+    downloads_root: Path,
     archive: Path | None = None,
     archive_url: str | None = None,
-    private_assets_root: Path = DEFAULT_PRIVATE_ASSETS_ROOT,
     force: bool = False,
 ) -> DiscImportResult:
+    archive_cache_root = private_assets_root / "bof3" / "source-media"
     archive_path = resolve_bof3_archive(
+        inputs_root=inputs_root,
+        archive_cache_root=archive_cache_root,
+        downloads_root=downloads_root,
         archive=archive,
         archive_url=archive_url,
-        private_assets_root=private_assets_root,
         force=force,
     )
     extracted_root = (
@@ -155,20 +172,26 @@ def import_bof3_disc(
 class DiscToolchain(Toolchain):
     label = "disc media"
 
-    def __init__(self, root: Path) -> None:
-        self.root = root
+    def __init__(self, layout: RepoLayout) -> None:
+        super().__init__(layout)
+        self.disc_root = layout.external_inputs_dir
         self.cue_path: Path | None = None
 
     def install(self, *, force: bool = False) -> str:
-        disc_root = self.root / "inputs" / "external"
+        disc_root = self.disc_root
         try:
             self.cue_path, tracks = find_disc_set(disc_root)
         except FileNotFoundError:
-            result = import_bof3_disc(dest=disc_root, force=force)
+            result = import_bof3_disc(
+                inputs_root=self.layout.inputs_dir,
+                private_assets_root=self.layout.private_assets_dir,
+                downloads_root=self.layout.downloads_dir,
+                force=force,
+            )
             self.cue_path, tracks = result.cue_path, list(result.staged_paths[1:])
         return f"{self.cue_path.name}, {len(tracks)} tracks"
 
     def verify(self) -> str:
-        cue, tracks = find_disc_set(self.root / "inputs" / "external")
+        cue, tracks = find_disc_set(self.disc_root)
         self.cue_path = cue
         return f"{cue.name}, {len(tracks)} tracks"

@@ -15,6 +15,7 @@ from .macro_transaction_review import (
     exact_proofs,
     reviewed_artifact,
 )
+from .transaction_files import preflight_existing_replacements
 from .type_candidate_review import digest
 from .type_transaction_checks import capture_partial_baselines, required_checks
 from .type_transaction_runtime import (
@@ -180,6 +181,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
             *(canonical_repo_path(item["source"]) for item in functions),
         },
     )
+    preflight_existing_replacements(root, allowed)
     pre_state = file_state(root, allowed)
     baseline = workspace_baseline(root)
     adopted = request.get("adopted_baseline")

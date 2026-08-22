@@ -10,7 +10,7 @@ from pathlib import Path
 from ..build.compiler import load_object_compilers
 from ..domain import load_target_manifests
 from ..io import repo_layout
-from ..toolchain import managed_toolchains
+from ..toolchain import managed_lifecycle
 from ..toolchain.disc import DiscToolchain
 from ..toolchain.psyq import PsyqToolchain
 from ._common import (
@@ -38,7 +38,7 @@ def _toolchain(root: Path) -> str:
     from ..toolchain.gcc_variants import lookup_variant
 
     layout = repo_layout(root)
-    labels = [toolchain.verify() for toolchain in managed_toolchains(root, layout)]
+    labels = list(managed_lifecycle(layout, verify_only=True))
 
     # Inspect compiler variants only when BOF3_OBJCOMPILER_ selections exist.
     selections = load_object_compilers(root)
@@ -66,7 +66,7 @@ def _psyq(root: Path) -> str:
 
 @register_check("disc media", TASKS)
 def _disc(root: Path) -> str:
-    return DiscToolchain(root).verify()
+    return DiscToolchain(repo_layout(root)).verify()
 
 
 @register_check("target images", TASKS)

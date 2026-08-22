@@ -67,6 +67,10 @@ Use `bin/rz-project open TARGET` only for interactive investigation.
 
 PsyQ SDK evidence and application:
 
+`bin/harness` is the permanent, narrow PsyQ object-signature evidence adapter.
+Its only command family is `psyq {scan|calls|proposal}`; symbol-map mutation
+remains under `bin/symbols`.
+
 ```sh
 # Gather provenance (signatures identify objects; official headers own declarations)
 bin/psyq-import --example
@@ -86,17 +90,20 @@ reviewed exact candidates into the space's SDK map; `psyq-bindings` regenerates
 the compiled manifest-owned `psyq_source` (e.g. `src/bof3/support/slus_psyq.c`)
 from it. Nothing edits maps without `--write`.
 
-### 3b. Analysis sequence (freshness → rebuild → query)
+### 3b. Target analysis (freshness → rebuild → query)
+
+Run the existing commands explicitly, in order:
 
 ```sh
-bin/analysis-sequence TARGET --ranking quick-wins
-bin/analysis-sequence TARGET --ranking metrics TARGET@0xADDRESS --detail normal
+bin/rz-project status TARGET
+bin/index
+bin/rev-query quick-wins --target TARGET
+# Or: bin/rev-query metrics TARGET@0xADDRESS --detail normal
 ```
 
-`analysis-sequence` checks `bin/rz-project status TARGET` first; fails with the
-target and `snapshot` stage when stale; rebuilds the index only after freshness
-succeeds; runs the requested `rev-query` ranking without touching other targets
-or reviewed maps. The lift-loop status script
+Stop if `rz-project status` reports a stale snapshot; rebuild that target's
+snapshot before running `bin/index`. Rebuild the index only after freshness
+succeeds, then query the requested target without touching reviewed maps. The lift-loop status script
 (`python3 .pi/skills/bof3-lift-loop/scripts/loop-status.py`) is inspection-only
 by default; use `--recover` to repair stale generated snapshots/indexes before
 it ranks candidates. `rev-query` refuses stale snapshot/index evidence. Use `--exclusions`
@@ -110,14 +117,23 @@ prefill:
 
 ```sh
 bin/agent-context ROLE [TARGET@0xADDRESS]
-bin/agent-context cleanup --target TARGET
+bin/agent-context cleanup audit-target TARGET
+bin/agent-context cleanup retained-lift TARGET TARGET@0xADDRESS exact [ROW...]
 ```
 
 The default `stable` mode emits tracked role rules and, when selected, tracked
-target-owned facts; it never includes generated `out/` evidence. Do not rerun it
-or reread emitted paths without a named evidence gap. `--mode compatibility`
-exists only for full legacy-output diagnostics and may include optional generated
-evidence; agents must not use it as their prefill.
+target-owned facts; it never includes generated `out/` evidence. Cleanup accepts
+only the seven canonical forms documented by `bof3-cleanup`; its structured
+request selects and loads exactly one cleanup skill body plus route-owned direct
+references. The temporary parent-only `audit docs/...` form requires
+`--parent-compatibility`; other old audit inputs are rejected. This bounded
+compatibility remains intentionally active after implementation closeout; it is
+not incomplete work. Remove it only after one tagged project release or 30
+consecutive qualifying parent cleanup sessions, with zero tracked callers and
+independent review. Do not rerun a prefill or reread emitted paths without a
+named evidence gap. `--mode compatibility` exists only for full legacy-output
+diagnostics and may include optional generated evidence; agents must not use it
+as their prefill.
 
 ### 4. Select one function
 
@@ -328,7 +344,7 @@ used for acceptance: immediately before accepting a lift, run live
 | `bin/promote` | validate canonical candidate | generated comparison only |
 | `bin/decomp-status` | audit exact/partial/invalid lifts | `out/matching/`; full JSON with `-o` |
 | `bin/psyq-import` | stage PsyQ build headers | explicit destination |
-| `bin/harness psyq` | scan/calls/proposal PsyQ object signatures | `out/psyq/` |
+| `bin/harness psyq` | permanent narrow scan/calls/proposal PsyQ signature-evidence adapter | `out/psyq/` |
 
 `bin/cc`, `as`, `ld`, `ar`, `nm`, `objcopy`, `objdump`, `ranlib`, `strip`, and
 `maspsx` are build adapters. Workflow users should call `bin/build` and the

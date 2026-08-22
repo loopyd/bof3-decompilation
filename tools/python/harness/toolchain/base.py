@@ -9,6 +9,8 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+from ..io import RepoLayout
+
 
 def ensure_gitkeep(root: Path) -> None:
     root.mkdir(parents=True, exist_ok=True)
@@ -19,6 +21,9 @@ class Toolchain(ABC):
     """An installable local dependency with an optional build step."""
 
     label: str
+
+    def __init__(self, layout: RepoLayout) -> None:
+        self.layout = layout
 
     @abstractmethod
     def install(self, *, force: bool = False) -> str:
@@ -46,8 +51,9 @@ class SubmoduleToolchain(Toolchain):
     submodule: str
     command: tuple[str, ...]
 
-    def __init__(self, root: Path) -> None:
-        self.root = root.resolve()
+    def __init__(self, layout: RepoLayout) -> None:
+        super().__init__(layout)
+        self.root = layout.root
 
     @property
     def source(self) -> Path:
@@ -191,9 +197,19 @@ class PythonScriptSubmoduleToolchain(PythonSubmoduleToolchain):
     def executable(self) -> Path:
         return self.source / self.script
 
+    @property
+    def environment(self) -> dict[str, str]:
+        environment = os.environ.copy()
+        environment["PYTHONPATH"] = os.pathsep.join(
+            (str(self.source), str(self.root / "tools/python"))
+        )
+        environment["PYTHONSAFEPATH"] = "1"
+        return environment
+
     def invocation(self, arguments: Sequence[str] = ()) -> list[str]:
         return [
             str(self.python),
+            "-P",
             *self.interpreter_flags,
             str(self.executable),
             *arguments,

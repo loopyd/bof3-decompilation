@@ -20,7 +20,7 @@ Lift only prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@
 
 ## Context
 1. First repository command, once: `bin/agent-context reverse SELECTOR`. Its stdout is bounded tracked prefill; do not rerun or reread an emitted `=====` path absent a named evidence gap. Supplied brief allowed.
-2. The prefill includes the BOF3 skill, reverse protocol, manifest/map/Splat/header/bindings, and selected source. Generated assembly/index evidence stays task-driven.
+2. The prefill includes the BOF3 skill, reverse protocol, manifest/map/Splat/header/bindings, and selected source. Generated assembly/index evidence stays task-driven. Ordinary lifting/matching never loads naming-evidence or documentation-repair skill bodies; explicit cleanup uses the cleanup router.
 
 ## Edits
 - Owned source, `internal.h`, target map (incl. proven data-scan `D_*` labels), Splat boundary only.
@@ -43,7 +43,7 @@ Lift only prompted selector: `TARGET@0xADDRESS` | `BIN/FAMILY/ARCHIVE.EMI#INDEX@
 - `barrier()`: evidenced memory-access ordering only; never allocator ordering or nop delay slot.
 - Retain pin only after live exact byte-match + independent review: local `MATCHING_AID` (residual, exhausted rungs, exact check, removal condition) + `matching_aids` entry.
 - Numeric `"$N"`: explicit user approval + proof the macro form changes codegen. No function-specific pin macro.
-- Toolchain/catalog changes: pipeline-test contract (references/CLEANUP/RULES.md). `just setup` primes catalog installs; never manage cache/install manually.
+- Toolchain/catalog changes: [pipeline validation](../skills/bof3-re/references/PIPELINE_VALIDATION.md). `just setup` primes catalog installs; never manage cache/install manually.
 
 ## Escalation
 Restore regressing experiments; leave the best coherent candidate for independent review. Report truthful changed files + `parent_restore_required: true`; only the parent restores after review + lesson integration.

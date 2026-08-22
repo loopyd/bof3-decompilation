@@ -15,6 +15,7 @@ const STALL_LIMIT = 3;
 const LADDER = ["clean-c", "static-allocation", "compiler-profile", "permuter", "compiler-ceiling"];
 
 const selector = SELECTORS[0];
+const target = selector.slice(0, selector.lastIndexOf("@"));
 const laneKey = RUN_KEY + "-" + selector.replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "").toLowerCase();
 const text = r => String(r && r.output || "");
 const json = r => {
@@ -45,19 +46,36 @@ const files = r => {
   const value = json(r);
   return Array.isArray(value.files_changed) ? value.files_changed : Array.isArray(value.changedFiles) ? value.changedFiles : [];
 };
+const preparedRows = r => {
+  const value = json(r);
+  if (!Array.isArray(value.prepared_rows)) throw new Error("final output omitted prepared_rows");
+  const rows = value.prepared_rows.map(String);
+  const pattern = /^(?:(?:exe|emi)\/[A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)*@)?(?:function|data):[A-Za-z_][A-Za-z0-9_]*$/;
+  if (rows.some(row => !pattern.test(row))) throw new Error("invalid prepared cleanup row IDs");
+  if (new Set(rows).size !== rows.length) throw new Error("duplicate prepared cleanup row IDs");
+  if (JSON.stringify(rows) !== JSON.stringify([...rows].sort())) throw new Error("prepared cleanup row IDs are not canonically ordered");
+  if (rows.some(row => row.includes("@") && !row.startsWith(target + "@"))) throw new Error("prepared cleanup row target mismatch");
+  return rows;
+};
 const experimentKey = value => JSON.stringify([value.lever || "", value.expected_effect || ""]);
 const choices = (review, seen) => (Array.isArray(json(review).experiments) ? json(review).experiments : [])
   .filter(value => value.lever && value.expected_effect && !seen.includes(experimentKey(value)));
-const checkpoint = (attempt, run) => [
+const checkpoint = (attempt, run, unique = false) => [
   "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py capture",
   "--lane", quote(laneKey), "--selector", quote(selector),
   "--attempt", String(attempt), "--match=" + String(score(run)),
+  "--target-scope", quote(target),
+  unique ? "--unique --require-improvement" : "",
   files(run).map(quote).join(" ")
 ].filter(Boolean).join(" ");
-const measureTask = "Measure " + selector + " with live asm-diff. Do not edit. Return JSON with status, match_percent, and files_changed containing every file this lift may edit.";
-const restore = "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py restore --lane " + quote(laneKey);
+const measureTask = "Measure " + selector + " with live asm-diff. Do not edit. Return JSON with status, match_percent, files_changed containing every file this lift may edit, and prepared_rows as an array of [TARGET@]KIND:NAME naming-audit/v3 IDs (empty when none).";
+const checkpointTool = "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py";
+const restore = checkpointTool + " restore --lane " + quote(laneKey);
+const restoreCheckpoint = checkpoint => restore + " --checkpoint " + quote(checkpoint);
+const inspectBest = checkpointTool + " best --lane " + quote(laneKey);
+const cleanupAttempt = MAX_ATTEMPTS + 1;
 const manager = "$(git worktree list --porcelain | awk '/^worktree / {print substr($0,10); exit}')/.pi/skills/bof3-lift-loop/scripts/lane-worktree.py";
-const durableEntry = row => JSON.stringify({ selector, lane_key: laneKey, row });
+const durableEntry = row => JSON.stringify({ selector, lane_key: laneKey, transaction_id: String(row.attempt) + ":" + row.rung + ":" + row.lever, row });
 const recordLedger = async row => {
   const recorded = await runs.run("record-ledger-" + lane.attempt + "-" + lane.ledger.length, {
     agent: "bof3-review", task: "Report the host ledger gate only. No edits.",
@@ -105,21 +123,58 @@ if (!lane.historyLoaded) {
   await save(lane);
 }
 if (lane.phase !== "ready") {
+  let recoveryCheckpoint;
+  let recoveryActual = "restored persisted best checkpoint";
+  if (lane.phase === "best-promoting") {
+    const pending = lane.pendingAttempt;
+    if (!pending || !pending.row || !pending.result || !Array.isArray(pending.consumedQueue)) throw new Error("pending promotion transaction is incomplete");
+    const inspected = await runs.run("inspect-promoted-best", {
+      agent: "bof3-review", task: "Report the verified host best checkpoint only. No edits.", gate: inspectBest
+    });
+    if (!inspected.ok) throw new Error("pending best checkpoint verification failed");
+    const durable = gateEvidence(inspected).best;
+    const durableScore = durable && durable.metric && Number(durable.metric.match_percent);
+    const pendingMatches = durable && durable.selector === selector && durable.attempt === pending.checkpointAttempt && Number.isFinite(durableScore) && durableScore === pending.score;
+    if (!pendingMatches && Number.isFinite(durableScore) && durableScore > lane.bestScore) throw new Error("durable best checkpoint mismatches pending promotion");
+    if (pendingMatches) {
+      if (!durable.checkpoint) throw new Error("verified promoted best omitted checkpoint");
+      await recordLedger(pending.row);
+      const nextLane = JSON.parse(JSON.stringify(lane));
+      nextLane.bestCheckpoint = durable.checkpoint;
+      nextLane.bestScore = durableScore;
+      nextLane.attempt = pending.attempt;
+      nextLane.stalledQueues = 0;
+      nextLane.ledger.push(pending.row);
+      nextLane.seen.push(...pending.consumedQueue.map(experimentKey).filter(key => !nextLane.seen.includes(key)));
+      nextLane.queue = [];
+      nextLane.phase = "ready";
+      nextLane.status = durableScore === 100 ? "exact" : "running";
+      delete nextLane.pendingAttempt;
+      await save(nextLane);
+      lane = nextLane;
+      recoveryCheckpoint = lane.bestCheckpoint;
+      recoveryActual = "adopted verified durable promoted best checkpoint";
+    } else {
+      recoveryCheckpoint = lane.bestCheckpoint;
+      delete lane.pendingAttempt;
+    }
+  } else {
+    const cleanupPending = lane.phase === "cleanup-pending";
+    const cleanupPhase = lane.phase.startsWith("cleanup") || lane.phase.startsWith("consolidation");
+    recoveryCheckpoint = cleanupPending ? lane.bestCheckpoint : cleanupPhase ? lane.cleanupCheckpoint : lane.bestCheckpoint;
+  }
+  if (!recoveryCheckpoint) throw new Error("interrupted lane omitted persisted checkpoint: " + lane.phase);
   const recovered = await runs.run("restore-interrupted", {
-    agent: "bof3-review", task: "Report the host restore only. No edits.", gate: restore
+    agent: "bof3-review", task: "Report the host restore only. No edits.", gate: restoreCheckpoint(recoveryCheckpoint)
   });
   if (!recovered.ok) throw new Error("interrupted lane restore failure: " + lane.phase);
-  lane.phase = "ready";
-  lane.status = "running";
-  lane.bestScore = lane.ledger.length ? lane.ledger[0].score : lane.bestScore;
-  lane.attempt = 0;
-  lane.rung = 0;
-  lane.stalledQueues = 0;
-  lane.queue = [];
-  lane.seen = [];
-  lane.ledger = lane.ledger.length ? [lane.ledger[0]] : [];
-  lane.ledger.push({ attempt: 0, score: lane.bestScore, improved: false, lever: "interruption recovery", predicted: "", actual: "restored baseline checkpoint and reset ladder state", variants: [], rung: LADDER[0] });
-  await save(lane);
+  if (lane.phase !== "ready") {
+    lane.phase = "ready";
+    lane.status = lane.bestScore === 100 ? "exact" : "running";
+    lane.queue = [];
+    lane.ledger.push({ attempt: lane.attempt, score: lane.bestScore, improved: false, lever: "interruption recovery", predicted: "", actual: recoveryActual, variants: [], rung: LADDER[lane.rung] });
+    await save(lane);
+  }
 }
 
 if (lane.status === "baseline") {
@@ -132,6 +187,8 @@ if (lane.status === "baseline") {
   const baselineEvidence = gateEvidence(captured);
   if (!baselineEvidence.accepted) throw new Error("baseline checkpoint rejected");
   lane.bestScore = baselineEvidence.current.metric.match_percent;
+  lane.bestCheckpoint = baselineEvidence.current.checkpoint || baselineEvidence.checkpoint;
+  if (!lane.bestCheckpoint) throw new Error("baseline checkpoint omitted exact leaf");
   lane.status = baselineEvidence.current.metric.exact === true ? "exact" : "running";
   const baselineRow = { attempt: 0, score: lane.bestScore, accepted: true, lever: "baseline", predicted: "", actual: "", variants: [], rung: LADDER[lane.rung] };
   lane.ledger.push(baselineRow);
@@ -174,34 +231,59 @@ while (lane.status === "running" && lane.attempt < MAX_ATTEMPTS && lane.bestScor
     : rung === "compiler-ceiling" ? true
     : variants.length >= 3;
   if (String(result.rung || rung) !== rung || !substantive) throw new Error("executor did not complete active ladder rung: " + rung);
-  const improved = liveScore > lane.bestScore;
-  if (improved) {
-    lane.bestScore = liveScore;
-    lane.stalledQueues = 0;
-  } else {
-    lane.stalledQueues++;
-  }
-  lane.attempt = attempt;
-  lane.phase = "ready";
+  const acceptedBest = liveScore > lane.bestScore || exact(reverse);
+  const consumedQueue = JSON.parse(JSON.stringify(lane.queue));
   const attemptRow = {
     attempt,
     score: liveScore,
-    improved,
-    lever: json(reverse).lever || (lane.queue[0] && lane.queue[0].lever) || "initial",
-    predicted: json(reverse).predicted_effect || (lane.queue[0] && lane.queue[0].expected_effect) || "",
-    actual: json(reverse).actual_effect || json(reverse).residual || "",
+    improved: acceptedBest,
+    lever: result.lever || (consumedQueue[0] && consumedQueue[0].lever) || "initial",
+    predicted: result.predicted_effect || (consumedQueue[0] && consumedQueue[0].expected_effect) || "",
+    actual: result.actual_effect || result.residual || "",
     variants,
     rung
   };
-  lane.ledger.push(attemptRow);
-  await recordLedger(attemptRow);
-  lane.queue = [];
+  if (acceptedBest) {
+    lane.phase = "best-promoting";
+    lane.pendingAttempt = { attempt, checkpointAttempt: attempt + 1, score: liveScore, consumedQueue, row: attemptRow, result };
+    await save(lane);
+    const captured = await runs.run("checkpoint-best-" + attempt, {
+      agent: "bof3-review", task: "Report the host best checkpoint gate only. No edits.", gate: checkpoint(attempt + 1, reverse, true)
+    });
+    if (!captured.ok) throw new Error("best checkpoint capture failed");
+    const evidence = gateEvidence(captured);
+    const bestCheckpoint = evidence.current && evidence.current.checkpoint || evidence.checkpoint;
+    const promotedScore = evidence.current && evidence.current.metric && Number(evidence.current.metric.match_percent);
+    if (!evidence.accepted || !bestCheckpoint || promotedScore !== lane.pendingAttempt.score) throw new Error("best checkpoint capture rejected");
+    await recordLedger(attemptRow);
+    const nextLane = JSON.parse(JSON.stringify(lane));
+    nextLane.bestScore = promotedScore;
+    nextLane.bestCheckpoint = bestCheckpoint;
+    nextLane.stalledQueues = 0;
+    nextLane.attempt = attempt;
+    nextLane.phase = "ready";
+    nextLane.ledger.push(attemptRow);
+    nextLane.seen.push(...consumedQueue.map(experimentKey).filter(key => !nextLane.seen.includes(key)));
+    nextLane.queue = [];
+    delete nextLane.pendingAttempt;
+    await save(nextLane);
+    lane = nextLane;
+  } else {
+    lane.stalledQueues++;
+    lane.attempt = attempt;
+    lane.phase = "ready";
+  }
+  const improved = acceptedBest;
+  if (!acceptedBest) {
+    lane.ledger.push(attemptRow);
+    await recordLedger(attemptRow);
+    lane.queue = [];
+  }
   const oneShotRung = rung === "compiler-profile" || rung === "permuter";
   const rungLimit = oneShotRung || rung === "compiler-ceiling" ? 1 : STALL_LIMIT;
   const advanceRung = oneShotRung || (!improved && lane.stalledQueues >= rungLimit);
 
   if (exact(reverse)) {
-    lane.bestScore = 100;
     lane.status = "exact";
     await save(lane);
     break;
@@ -284,20 +366,22 @@ if (!Number.isFinite(score(finalMeasure))) throw new Error("final measurement om
 lane.finalScore = score(finalMeasure);
 const finalReview = await runs.run("final-review", {
   agent: "bof3-review",
-  task: "Final review " + selector + ". Verify live score and semantics. No edits. Mission lane state: " + JSON.stringify(lane)
+  task: "Final review " + selector + ". Verify live score and semantics. No edits. Return JSON with verdict, findings, and prepared_rows as an array of [TARGET@]KIND:NAME naming-audit/v3 IDs (empty when none). Mission lane state: " + JSON.stringify(lane)
 });
 lane.finalReview = json(finalReview);
+const measuredRows = preparedRows(finalMeasure);
+const reviewedRows = preparedRows(finalReview);
+if (JSON.stringify(measuredRows) !== JSON.stringify(reviewedRows)) throw new Error("final reviewer prepared_rows disagree with final measurement");
 const rejected = String(lane.finalReview.verdict || "") === "block";
 const exhausted = lane.status === "ladder-exhausted";
 if (rejected || (lane.finalScore < lane.bestScore && lane.finalScore < 100) || (lane.finalScore <= lane.ledger[0].score && lane.finalScore < 100)) {
   lane.phase = "final-restore";
   await save(lane);
   const restored = await runs.run("restore-final", {
-    agent: "bof3-review", task: "Report the host restore only. No edits.", gate: restore
+    agent: "bof3-review", task: "Report the host restore only. No edits.", gate: restoreCheckpoint(lane.bestCheckpoint)
   });
   if (!restored.ok) throw new Error("final checkpoint restore failure");
   lane.status = rejected ? "restored-review-block" : lane.finalScore < lane.bestScore ? "restored-below-best" : exhausted ? "restored-ladder-exhausted" : "restored-no-improvement";
-  lane.bestScore = lane.ledger[0].score;
 } else if (lane.finalScore === 100) {
   lane.status = "exact";
   lane.bestScore = 100;
@@ -306,15 +390,45 @@ if (rejected || (lane.finalScore < lane.bestScore && lane.finalScore < 100) || (
   lane.bestScore = lane.finalScore;
 }
 if (lane.status === "exact" || lane.status === "improved-partial") {
+  lane.phase = "cleanup-pending";
+  await save(lane);
+  const cleanupState = lane.status;
+  const retainedScore = lane.bestScore;
+  const cleanupRows = measuredRows;
+  const target = selector.slice(0, selector.lastIndexOf("@"));
+  const cleanupRequest = ["retained-lift", target, selector, cleanupState, ...cleanupRows].join(" ");
+  if (cleanupRequest.includes(" repair ") || cleanupRequest.startsWith("repair ")) throw new Error("retained lift must not dispatch generic repair");
+  const cleanupCheckpoint = await runs.run("checkpoint-pre-cleanup", {
+    agent: "bof3-review",
+    task: "Report the host cleanup checkpoint only. No edits.",
+    gate: [
+      "python3 .pi/skills/bof3-lift-loop/scripts/attempt-checkpoint.py capture",
+      "--lane", quote(laneKey), "--selector", quote(selector),
+      "--attempt", String(cleanupAttempt), "--replace --paths-only --target-scope", quote(target),
+      files(finalMeasure).map(quote).join(" ")
+    ].filter(Boolean).join(" ")
+  });
+  if (!cleanupCheckpoint.ok) throw new Error("pre-cleanup checkpoint failed");
+  const cleanupEvidence = gateEvidence(cleanupCheckpoint);
+  const cleanupLeaf = cleanupEvidence.checkpoint || cleanupEvidence.current && cleanupEvidence.current.checkpoint;
+  if (!cleanupLeaf) throw new Error("pre-cleanup checkpoint omitted exact leaf");
+  lane.cleanupCheckpoint = cleanupLeaf;
   lane.phase = "cleanup";
   await save(lane);
   const cleanup = await runs.run("cleanup", {
     agent: "bof3-cleanup",
-    task: "Clean the retained " + lane.status + " for " + selector + ". Preserve live score, ABI, boundary, and compiler profile. Fix only evidence-backed naming, metadata, and sanctioned-aid documentation. No git or other targets."
+    task: cleanupRequest
   });
   lane.cleanup = json(cleanup);
   if (!cleanup.ok) {
-    lane.status = "cleanup-blocked";
+    lane.phase = "cleanup-restore";
+    await save(lane);
+    const restored = await runs.run("restore-cleanup-failure", {
+      agent: "bof3-review", task: "Report the host restore only. No edits.", gate: restoreCheckpoint(lane.cleanupCheckpoint)
+    });
+    if (!restored.ok) throw new Error("cleanup failure retained-state restore failed");
+    lane.status = "cleanup-blocked-restored";
+    lane.bestScore = retainedScore;
     lane.phase = "ready";
     await save(lane);
     return lane;
@@ -326,8 +440,16 @@ if (lane.status === "exact" || lane.status === "improved-partial") {
   lane.consolidationReview = json(consolidationReview);
   const consolidationVerdict = String(lane.consolidationReview.verdict || "");
   const approved = consolidationVerdict === "pass" || (lane.status === "improved-partial" && ["retain-improved-partial", "retain-as-improved-partial"].includes(consolidationVerdict));
-  if (!consolidationReview.ok || !approved) lane.status = "consolidation-blocked";
-  else lane.status = lane.status === "exact" ? "ready-to-integrate-exact" : "ready-to-integrate-partial";
+  if (!consolidationReview.ok || !approved) {
+    lane.phase = "consolidation-restore";
+    await save(lane);
+    const restored = await runs.run("restore-consolidation-failure", {
+      agent: "bof3-review", task: "Report the host restore only. No edits.", gate: restoreCheckpoint(lane.cleanupCheckpoint)
+    });
+    if (!restored.ok) throw new Error("consolidation failure retained-state restore failed");
+    lane.status = "consolidation-blocked-restored";
+    lane.bestScore = retainedScore;
+  } else lane.status = lane.status === "exact" ? "ready-to-integrate-exact" : "ready-to-integrate-partial";
 }
 if (lane.status === "ready-to-integrate-exact" || lane.status === "ready-to-integrate-partial") {
   lane.phase = "integrate";

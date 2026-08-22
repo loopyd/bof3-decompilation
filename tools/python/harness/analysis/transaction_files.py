@@ -2,16 +2,20 @@
 
 from __future__ import annotations
 
-import ctypes
-import errno
 import hashlib
 import os
 import secrets
 import stat
 from pathlib import Path
 
+from .rename_noreplace import (
+    UnsupportedRenameNoReplaceError,
+    publish_noreplace,
+    rename_noreplace as _rename_noreplace,
+    require_native_noreplace,
+)
+
 QUARANTINE_DIRECTORY = "out/reviews/evidence/quarantine"
-_RENAME_NOREPLACE = 1
 _MISSING = object()
 
 
@@ -144,6 +148,20 @@ def read_file(root: Path, name: str, *, missing_ok: bool = False) -> bytes | Non
         os.close(parent)
 
 
+def preflight_existing_replacements(root: Path, names: set[str]) -> None:
+    """Reject unsupported filesystems before replacement transactions create state."""
+    for name in sorted(names):
+        try:
+            parent, leaf = parent_fd(root, name)
+        except FileNotFoundError:
+            continue
+        try:
+            if _read_leaf(parent, leaf, name, missing_ok=True) is not None:
+                require_native_noreplace(parent, leaf)
+        finally:
+            os.close(parent)
+
+
 def atomic_write(
     root: Path,
     name: str,
@@ -196,7 +214,10 @@ def atomic_write(
             )
         _verify_parent_chain(root, name, descriptors)
         try:
-            _rename_noreplace(temporary, leaf, src_dir_fd=parent, dst_dir_fd=parent)
+            try:
+                _rename_noreplace(temporary, leaf, src_dir_fd=parent, dst_dir_fd=parent)
+            except UnsupportedRenameNoReplaceError:
+                publish_noreplace(temporary, leaf, src_dir_fd=parent, dst_dir_fd=parent)
         except BaseException as error:
             recovery = f"temporary retained as {temporary_name}"
             if quarantine is not None:
@@ -212,27 +233,6 @@ def atomic_write(
         if descriptor >= 0:
             os.close(descriptor)
         _close_descriptors(descriptors)
-
-
-def _rename_noreplace(
-    source: str, destination: str, *, src_dir_fd: int, dst_dir_fd: int
-) -> None:
-    """Atomically rename without ever replacing a destination inode."""
-
-    libc = ctypes.CDLL(None, use_errno=True)
-    renameat2 = getattr(libc, "renameat2", None)
-    if renameat2 is None:
-        raise OSError(errno.ENOSYS, "renameat2 is required for safe transactions")
-    result = renameat2(
-        src_dir_fd,
-        os.fsencode(source),
-        dst_dir_fd,
-        os.fsencode(destination),
-        _RENAME_NOREPLACE,
-    )
-    if result:
-        error = ctypes.get_errno()
-        raise OSError(error, os.strerror(error), destination)
 
 
 def _quarantine_name(name: str) -> str:

@@ -16,7 +16,7 @@ from ..emi.catalog import load_catalog
 from ..emi.catalog_bootstrap import materialize_reviewed_targets
 from ..emi.operations import emi_unpack
 from ..io import RepoLayout, repo_layout
-from ..toolchain import managed_toolchains
+from ..toolchain import managed_lifecycle
 from ..toolchain.disc import DiscToolchain, find_disc_set
 from ..toolchain.gcc_variants import check_host_compatible, load_variants
 from ..toolchain.psyq import PsyqToolchain
@@ -70,8 +70,8 @@ def _run(command: list[str], *, cwd: Path, quiet: bool = False) -> None:
         )
 
 
-def _build_local_tools(root: Path) -> None:
-    layout = repo_layout(root)
+def _build_local_tools(layout: RepoLayout) -> None:
+    root = layout.root
     for source, target in (
         (layout.harness_disk_src, layout.harness_disk_bin.parent.parent),
         (layout.emi_ex_src, layout.emi_ex_bin.parent.parent),
@@ -162,8 +162,8 @@ def verify_setup(root: Path) -> None:
         layout.psyq_root / "lib",
         layout.harness_disk_bin,
         layout.emi_ex_bin,
-        root / "third_party" / "maspsx" / "maspsx.py",
-        root / "toolchains" / "rizin" / "bin" / "rizin",
+        layout.third_party_dir / "maspsx" / "maspsx.py",
+        layout.toolchains_dir / "rizin" / "bin" / "rizin",
     )
     missing = [str(path.relative_to(root)) for path in required if not path.exists()]
     if missing:
@@ -171,7 +171,7 @@ def verify_setup(root: Path) -> None:
     _run([str(root / "bin" / "cc"), "-x", "c", "-E", "-"], cwd=root, quiet=True)
     for tool in REQUIRED_TOOLS:
         _run([str(root / tool), "--version"], cwd=root, quiet=True)
-    cue, tracks = find_disc_set(root / "inputs" / "external")
+    cue, tracks = find_disc_set(layout.external_inputs_dir)
     if not tracks or not all(track.is_file() for track in tracks):
         raise FileNotFoundError(f"incomplete BIN/CUE set: {cue}")
     missing_images = [
@@ -206,7 +206,7 @@ def _submodules(state: SetupState) -> str:
 
 @register_check("disc media", TASKS)
 def _disc(state: SetupState) -> str:
-    disc = DiscToolchain(state.root)
+    disc = DiscToolchain(state.layout)
     detail = disc.run(force=state.args.force)
     state.cue = disc.cue_path
     return detail
@@ -214,8 +214,7 @@ def _disc(state: SetupState) -> str:
 
 @register_check("toolchain", TASKS)
 def _toolchain(state: SetupState) -> str:
-    for toolchain in managed_toolchains(state.root, state.layout):
-        toolchain.run(force=state.args.force)
+    labels = list(managed_lifecycle(state.layout, force=state.args.force))
 
     # Prime every host-compatible catalog candidate so all project-confirmed
     # GCC versions are staged; an invalid catalog fails setup closed. This
@@ -231,7 +230,7 @@ def _toolchain(state: SetupState) -> str:
             continue
         variant.install(state.layout, force=state.args.force)
         primed.append(variant.id)
-    detail = "PSn00b, GCC 2.7.2, maspsx, Rizin, m2c, asm-differ, decomp-permuter, splat, spimdisasm"
+    detail = ", ".join(filter(None, labels))
     if primed:
         detail += f"; primed variants: {', '.join(primed)}"
     if skipped:
@@ -248,7 +247,7 @@ def _psyq(state: SetupState) -> str:
 
 @register_check("local tools", TASKS)
 def _tools(state: SetupState) -> str:
-    _build_local_tools(state.root)
+    _build_local_tools(state.layout)
     return "bof3-disk, emi-ex"
 
 

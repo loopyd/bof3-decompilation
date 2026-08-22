@@ -14,6 +14,7 @@ from harness.analysis.snapshot import (
     snapshot_path,
     write_snapshot,
 )
+from harness.io import repo_layout
 from harness.toolchain import psyq_discovery
 from harness.toolchain.psyq import import_psyq_sdk, stage_psyq_sdk
 
@@ -23,9 +24,7 @@ def test_staged_psyq_member_resolves_converted_obj_name(tmp_path: Path) -> None:
     converted.parent.mkdir(parents=True)
     converted.touch()
 
-    assert (
-        _staged_psyq_member(tmp_path, "psyq/4.7/libsnd/VM_NOWOF.OBJ") == converted
-    )
+    assert _staged_psyq_member(tmp_path, "psyq/4.7/libsnd/VM_NOWOF.OBJ") == converted
     assert _staged_psyq_member(tmp_path, "psyq/4.7/libcard/END.OBJ") == (
         tmp_path / "toolchains/psyq/4.7/libcard/END.OBJ"
     )
@@ -86,13 +85,18 @@ def test_psyq_report_scans_nested_lift(tmp_path: Path, capsys) -> None:
     assert "SomeSdkCall = 0x80010000" in captured.out
 
 
-def test_stage_psyq_sdk_from_tree(monkeypatch, tmp_path: Path) -> None:
-    monkeypatch.setattr(psyq_discovery, "REPO_ROOT", tmp_path)
-    source_root = tmp_path / "inputs" / "psyq-source"
+def test_stage_psyq_sdk_from_tree(tmp_path: Path) -> None:
+    layout = repo_layout(tmp_path)
+    source_root = layout.inputs_dir / "psyq-source"
     dest_root = tmp_path / "psyq-staged"
     make_fake_psyq_tree(source_root)
 
-    staged = stage_psyq_sdk(dest=dest_root, source_root=source_root)
+    staged = stage_psyq_sdk(
+        dest=dest_root,
+        source_root=source_root,
+        inputs_root=layout.inputs_dir,
+        private_assets_root=layout.private_assets_dir,
+    )
 
     assert staged == dest_root.resolve()
     assert (dest_root / "include" / "LIBGPU.H").exists()
@@ -102,10 +106,10 @@ def test_stage_psyq_sdk_from_tree(monkeypatch, tmp_path: Path) -> None:
     assert (dest_root / ".gitkeep").exists()
 
 
-def test_import_psyq_sdk_stages_original_archive(monkeypatch, tmp_path: Path) -> None:
-    monkeypatch.setattr(psyq_discovery, "REPO_ROOT", tmp_path)
-    archive_path = tmp_path / "inputs" / "psyq47.zip"
-    private_root = tmp_path / "inputs" / "external" / "private-assets"
+def test_import_psyq_sdk_stages_original_archive(tmp_path: Path) -> None:
+    layout = repo_layout(tmp_path)
+    archive_path = layout.inputs_dir / "psyq47.zip"
+    private_root = layout.private_assets_dir
     dest_root = tmp_path / "psyq-staged"
     archive_path.parent.mkdir(parents=True)
     with zipfile.ZipFile(archive_path, "w") as archive:
@@ -116,6 +120,7 @@ def test_import_psyq_sdk_stages_original_archive(monkeypatch, tmp_path: Path) ->
         dest=dest_root,
         archive=archive_path,
         private_assets_root=private_root,
+        inputs_root=layout.inputs_dir,
         archive_url=None,
     )
 
@@ -124,16 +129,38 @@ def test_import_psyq_sdk_stages_original_archive(monkeypatch, tmp_path: Path) ->
     assert (dest_root / "include" / "libgpu.h").exists()
 
 
-def test_find_psyq_source_rejects_explicit_paths_outside_inputs(tmp_path: Path) -> None:
-    source_root = tmp_path / "external" / "private-assets" / "psyq-source"
+def test_psyq_auto_discovery_uses_only_layout_roots(tmp_path: Path) -> None:
+    layout = repo_layout(tmp_path)
+    source_root = layout.private_assets_dir / "psyq/4.7/source-tree"
     make_fake_psyq_tree(source_root)
 
-    try:
-        psyq_discovery.find_psyq_source(source_root=source_root)
-    except ValueError as exc:
-        assert "must stay under the repo's inputs/ tree" in str(exc)
-    else:
-        raise AssertionError("expected non-input source to be rejected")
+    source = psyq_discovery.find_psyq_source(
+        inputs_root=layout.inputs_dir,
+        private_assets_root=layout.private_assets_dir,
+    )
+
+    assert source == psyq_discovery.PsyqSource(kind="tree", path=source_root)
+
+
+def test_find_psyq_source_rejects_explicit_paths_outside_inputs(tmp_path: Path) -> None:
+    layout = repo_layout(tmp_path)
+    source_root = tmp_path / "external" / "private-assets" / "psyq-source"
+    archive = tmp_path / "external" / "psyq.zip"
+    make_fake_psyq_tree(source_root)
+    archive.write_bytes(b"archive")
+
+    for source, source_archive in ((source_root, None), (None, archive)):
+        try:
+            psyq_discovery.find_psyq_source(
+                source_root=source,
+                archive=source_archive,
+                inputs_root=layout.inputs_dir,
+                private_assets_root=layout.private_assets_dir,
+            )
+        except ValueError as exc:
+            assert "must stay under the repo's inputs/ tree" in str(exc)
+        else:
+            raise AssertionError("expected non-input source to be rejected")
 
 
 def test_symbols_import_psyq_requires_write_and_replaces_raw_name(

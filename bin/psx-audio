@@ -1,4 +1,29 @@
 #!/bin/sh
 set -eu
 ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-exec "${ROOT}/tools/c/psx-audio/psx-audio" --dir "$ROOT" "$@"
+SOURCE="$ROOT/tools/c/psx-audio"
+BUILD="$SOURCE/build"
+
+if ! command -v cmake >/dev/null 2>&1; then
+    echo "psx-audio setup failed: cmake is required (plus a C compiler and zlib development files)" >&2
+    exit 2
+fi
+LOG="$(mktemp -d)"
+trap 'rm -rf "$LOG"' EXIT
+if [ ! -f "$BUILD/CMakeCache.txt" ]; then
+    if ! cmake -S "$SOURCE" -B "$BUILD" >"$LOG/stdout" 2>"$LOG/stderr"; then
+        cat "$LOG/stdout"
+        cat "$LOG/stderr" >&2
+        echo "psx-audio setup failed: install a C compiler and zlib development files, then retry" >&2
+        exit 2
+    fi
+fi
+if ! cmake --build "$BUILD" --target bof3-audio >"$LOG/stdout" 2>"$LOG/stderr"; then
+    cat "$LOG/stdout"
+    cat "$LOG/stderr" >&2
+    echo "psx-audio build failed: inspect the CMake diagnostics above, install missing development libraries, then retry" >&2
+    exit 2
+fi
+rm -rf "$LOG"
+trap - EXIT
+exec "$BUILD/bof3-audio" --dir "$ROOT" "$@"

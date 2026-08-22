@@ -37,7 +37,6 @@ pytestmark = [
 ]
 
 
-
 def _assemble_minimal(as_path: Path, tmp: Path) -> Path:
     """Assemble a minimal MIPS stub returning from a function."""
     src = tmp / "minimal.s"
@@ -146,29 +145,10 @@ class TestLinkAtAddress:
 
     def test_function_bytes_match_via_harness(self) -> None:
         """Round-trip through the harness link-at-address extraction API."""
-        from harness.io import RepoLayout
+        from harness.io import repo_layout
 
         obj = _assemble_minimal(self.as_path, self.tmp)
-
-        layout = RepoLayout(
-            root=_REPO_ROOT,
-            build_dir=_REPO_ROOT / "build",
-            out_dir=_REPO_ROOT / "out",
-            toolchains_dir=_REPO_ROOT / "toolchains",
-            third_party_dir=_REPO_ROOT / "third_party",
-            inputs_dir=_REPO_ROOT / "inputs",
-            downloads_dir=_REPO_ROOT / "downloads",
-            private_assets_dir=_REPO_ROOT / "inputs" / "external" / "private-assets",
-            harness_disk_src=_REPO_ROOT / "tools" / "rust" / "bof3-disk",
-            emi_ex_src=_REPO_ROOT / "tools" / "rust" / "emi-ex",
-            harness_disk_bin=_REPO_ROOT / "bof3-disk",
-            emi_ex_bin=_REPO_ROOT / "emi-ex",
-            psn00b_toolchain_root=_REPO_ROOT / "toolchains" / "psn00b_toolchain",
-            psn00b_sdk_root=_REPO_ROOT / "toolchains" / "psn00bsdk",
-            gcc272_psx_root=_REPO_ROOT / "toolchains" / "gcc-2.7.2-psx",
-            gcc_variants_root=_REPO_ROOT / "toolchains" / "gcc-variants",
-            psyq_root=_REPO_ROOT / "toolchains" / "psyq" / "4.7",
-        )
+        layout = repo_layout(_REPO_ROOT)
 
         from harness.match._asm_link import (
             link_object_at_address,
