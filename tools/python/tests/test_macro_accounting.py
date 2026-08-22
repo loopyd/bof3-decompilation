@@ -115,6 +115,59 @@ def test_account_rejects_stale_source_binary_and_report_fingerprints(
         macro_accounting.candidate_account(tmp_path)
 
 
+def test_account_derives_target_membership_for_all_candidate_shapes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    database = _database(tmp_path)
+    monkeypatch.setattr(macro_accounting, "connect", lambda _root: _connect(database))
+    candidates = [
+        {
+            "id": "opportunity",
+            "kind": "constant",
+            "status": "blocked",
+            "target_scope": "exe/test",
+            "members": [{"target": "exe/test"}],
+            "blockers": ["review_required"],
+        },
+        {
+            "id": "exact",
+            "kind": "exact_group",
+            "status": "blocked",
+            "target_scope": "cross_target",
+            "members": [
+                {"function": "exe/test@80100000"},
+                {"function": "emi/test/00@80100000"},
+            ],
+            "blockers": ["review_required"],
+        },
+        {
+            "id": "shared",
+            "kind": "constant",
+            "status": "blocked",
+            "target_scope": "__shared__",
+            "members": [],
+            "blockers": ["review_required"],
+        },
+    ]
+    monkeypatch.setattr(
+        macro_accounting,
+        "macro_opportunities_payload",
+        lambda *_args, **_kwargs: candidates,
+    )
+    monkeypatch.setattr(
+        macro_accounting, "near_duplicates_payload", lambda *_args, **_kwargs: []
+    )
+
+    rows = {
+        row["id"]: row for row in macro_accounting.candidate_account(tmp_path)["rows"]
+    }
+
+    assert rows["opportunity"]["targets"] == ["exe/test"]
+    assert rows["exact"]["targets"] == ["emi/test/00", "exe/test"]
+    assert rows["shared"]["targets"] == []
+    assert rows["shared"]["shared"] is True
+
+
 def test_account_rejects_duplicate_ids_or_blocked_without_reason(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

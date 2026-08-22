@@ -75,6 +75,30 @@ def _input_fingerprints(
     return inputs
 
 
+def _candidate_targets(candidate: dict[str, Any]) -> list[str]:
+    """Derive canonical target membership from the global candidate shape."""
+
+    targets = {
+        target
+        for member in candidate.get("members", [])
+        if isinstance(member, dict)
+        for target in (
+            member.get("target"),
+            str(member.get("function", "")).rsplit("@", 1)[0],
+        )
+        if isinstance(target, str) and target and "/" in target
+    }
+    scope = candidate.get("target_scope")
+    if isinstance(scope, str) and "/" in scope:
+        targets.add(scope)
+    declared = candidate.get("targets", [])
+    if isinstance(declared, list):
+        targets.update(
+            item for item in declared if isinstance(item, str) and "/" in item
+        )
+    return sorted(targets)
+
+
 def _candidate_rows(candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
     if len({item.get("id") for item in candidates}) != len(candidates):
         raise ValueError("macro candidate accounting is not exactly once")
@@ -100,7 +124,13 @@ def _candidate_rows(candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "id": candidate_id,
                 "kind": candidate["kind"],
                 "status": status,
-                "blocked_reason": "; ".join(blockers) if status == "blocked" else None,
+                "targets": _candidate_targets(candidate),
+                "shared": candidate.get("target_scope") == "__shared__",
+                "blocked_reason": (
+                    "; ".join(blockers)
+                    if status == "blocked" and isinstance(blockers, list)
+                    else None
+                ),
                 "candidate_fingerprint": _digest(candidate),
             }
         )

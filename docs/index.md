@@ -99,8 +99,11 @@ contracts under `include/bof3/` remain active public headers.
 
 ## Plans
 
-No implementation plans are active. Completed implementation history is
-preserved in `git log`.
+- [Project symbol naming cleanup](plans/project-symbol-naming-cleanup.md) —
+  active: 1,361 target-qualified raw map rows remain evidence-gated across 23
+  targets; 22 target reports still contain blocked initializer rows.
+
+Completed implementation history is preserved in `git log`.
 
 ## Community
 

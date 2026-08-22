@@ -176,7 +176,7 @@ bin/rev-query status
 
 `macro-opportunities` ranks read-only, target-qualified leads for repeated constants, expression/accessors, token-exact three-statement windows, and reviewed exact groups. `near-duplicates` reports reviewed non-trivial functions only when instruction count, CFG metrics, call/data-reference shape, and normalized instruction shape agree and all deltas are immediate/address operands (branch displacements remain exact). Every row stays `blocked`, includes evidence, counterexamples, source-level semantic guards, and fingerprints or reviewed hashes; cross-target clusters are report-only. Generated inputs, stale source/binary evidence, embedded data, trivial stubs, and analyzer/reviewed boundary disagreement fail closed or are excluded. These queries never edit source or promote a candidate.
 
-`bin/analysis-readiness [TARGET]` is the aggregate checkpoint. It reports snapshot/index freshness and stale facts, then composes naming inventory/debt plus target-qualified required-work rows, type inventory/conflicts/diagnostics plus candidate accounting, and macro inventory plus opportunity accounting. Type and macro rows carry the same blockers and fingerprints as their audit reports; naming rows carry generated caller/callee/access/owner work. It is read-only and prints `bin/index --recover` when authoritative inputs have made the disposable index stale. Recovery is explicit so reviewed transactions pass before index refresh.
+`bin/analysis-readiness [TARGET]` is the bounded aggregate checkpoint. By default it reports snapshot/index freshness and stale facts, then summary work graphs and exact naming, type, and macro counts; `TARGET` restricts every inventory, debt, candidate, and work count to that target. Use `--detail full` only when the exhaustive candidate rows, blockers, fingerprints, and generated naming work are required. Both modes retain the `bof3.analysis-readiness/v2` schema and differ only in `work_graph` detail. The command is read-only and prints `bin/index --recover` when authoritative inputs have made the disposable index stale. Recovery is explicit so reviewed transactions pass before index refresh.
 
 Naming audits start with readiness preflight, then use `bof3.naming-audit/v3` typed rungs, generated required work, typed corroborators, canonical transaction scope/storage, and digest-verified receipts. A mechanically safe exact-progress repair requires live proof:
 
@@ -336,7 +336,8 @@ used for acceptance: immediately before accepting a lift, run live
 | `bin/rizin` | pinned local Rizin analyzer | terminal output only |
 | `bin/rz-project` | isolated Rizin analyze/status/open | `out/reverse/snapshots/` on analyze |
 | `bin/index` | rebuild the fresh cross-target query cache | `out/index/` |
-| `bin/rev-query` | query fresh indexed evidence | none |
+| `bin/rev-query`, `bin/analysis-readiness` | query fresh indexed evidence and bounded aggregate readiness | none |
+| `bin/naming-audit`, `bin/type-audit`, `bin/macro-audit` | validate concern-owned evidence and run explicitly prepared atomic transactions | review artifacts and receipts under the chosen `out/` paths |
 | `bin/m2ctx`, `bin/m2c` | generate target context and C seed | `out/` or `-o` |
 | `bin/asm-diff`, `bin/byte-match` | compare one authored lift | `out/asm-diff/`, `out/matching/`, `out/bindings/`, `build/` |
 | `bin/flag-search` | rank known compiler flag profiles | report plus `out/matching/` baseline |
@@ -345,6 +346,8 @@ used for acceptance: immediately before accepting a lift, run live
 | `bin/decomp-status` | audit exact/partial/invalid lifts | `out/matching/`; full JSON with `-o` |
 | `bin/psyq-import` | stage PsyQ build headers | explicit destination |
 | `bin/harness psyq` | permanent narrow scan/calls/proposal PsyQ signature-evidence adapter | `out/psyq/` |
+
+The shared panel-task implementation template lives at `src/shared/ui/panel_task.inc`; target-local wrappers compile it and retain symbol/address ownership.
 
 `bin/cc`, `as`, `ld`, `ar`, `nm`, `objcopy`, `objdump`, `ranlib`, `strip`, and
 `maspsx` are build adapters. Workflow users should call `bin/build` and the

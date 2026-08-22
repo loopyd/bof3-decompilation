@@ -38,10 +38,7 @@ headers remain the build-facing declaration baseline.
 
 ## Historical GCC variants
 
-`gcc-2.6.3-psx` and `gcc-2.8.0-psx` are verified, opt-in negative candidates
-in `config/compiler/variants.json`; no object selects either, so canonical GCC
-remains the default. Add another candidate only with the same reviewed
-provenance. The `bin/compiler-variants` CLI manages the lifecycle:
+Four verified opt-in candidates live in `config/compiler/variants.json`: `gcc-2.6.3-psx`, `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, and `gcc-2.95.2-psx`. They remain comparison candidates unless an exact, target-qualified object selection is recorded; currently `bof3/audio/dispatchSoundCue.c` selects `gcc-2.6.3-psx`, while every other object uses canonical GCC 2.7.2. Add another candidate only with the same reviewed provenance. The `bin/compiler-variants` CLI manages the lifecycle:
 
 ```sh
 bin/compiler-variants list                    # show catalog entries
@@ -75,5 +72,4 @@ sets `PSX_GCC`, adds an object override, or changes the default compilation
 selection. A corrupt or malformed existing install fails closed
 rather than falling back to canonical or host GCC.
 
-A catalog entry never changes the compiler until an exact, target-qualified
-object selection is added.
+A catalog entry never changes the compiler until an exact, target-qualified object selection is added as `BOF3_OBJCOMPILER_<sanitized-source-path>` in `config/compiler/object-flags.cmake`. That file is the reviewed object-selection authority; absent an entry, the canonical compiler remains selected.
