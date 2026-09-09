@@ -11,7 +11,7 @@ Atomically update all affected source/support/header paths, manifest claims incl
 ## Transaction
 
 1. Refuse overlap with modified candidates unless the parent named those edits.
-2. Consume the recursive inventory and manifest-less shared-config findings from [Naming audit v3](../../bof3-naming-evidence/references/NAMING_AUDIT_V3.md#recursive-inventory-and-audit-authority); do not redefine audit discovery while applying a move.
+2. Consume the recursive inventory and manifest-less shared-config findings from [Naming audit v3](NAMING_AUDIT_V3.md#recursive-inventory-and-audit-authority); do not redefine audit discovery while applying a move.
 3. Validate metadata identity and destination class before moving anything. Never rename a Splat boundary address.
 4. Apply the complete batch atomically. Any failed move, metadata update, regeneration, or validation reverts the whole batch; never fix forward.
 5. Regenerate build metadata with `bin/build TARGET`, never by editing `build/`. Prove old paths absent from the graph and every current manifest source present.

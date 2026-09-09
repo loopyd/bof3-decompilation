@@ -10,7 +10,7 @@ All paths are below `tools/python/harness/`.
 | Package | Owns | Entry points |
 | --- | --- | --- |
 | `macros/` | lexical macro facts, assembly/C opportunities, ranking, consumer scope, reviewed macro transactions | `bin/macro-audit` → `harness.macros.cli` |
-| `naming/` | symbol identity inventory, evidence collection, naming audits, proposals, application and acceptance | `bin/naming-audit` → `harness.naming.cli`; `bin/naming-evidence-run` → `harness.naming.runner` |
+| `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/naming-audit` → `harness.naming.cli`; `bin/naming-evidence-run` → `harness.naming.runner` |
 | `types/` | C declarations, representation inference, type-use/candidate indexing, reviewed type transactions | `bin/type-audit` → `harness.types.cli` |
 | `common/` | reusable CLI, digests, confined files, process lifecycle, workspace, native receipts and acceptance mechanisms | direct imports from the mechanism owner |
 | `analysis/` | cross-domain reverse index, graph, mission and query coordination | `bin/index`, `bin/rev-query` |
@@ -30,6 +30,13 @@ inventory remains manifest-backed without requiring an index; transaction scope
 retains its indexed target check and labeled output. Macro and type table schemas
 live in `macros/schema.py` and `types/schema.py`, composed by `analysis/schema.py`.
 
+`naming/opportunities.py` owns legacy inventory projection and read-only raw-symbol
+leads. `naming/debt.py` owns raw-spelling classification; the opportunity collector
+parses one target-map snapshot through the canonical domain parser. Its CLI lives
+in `naming/cli.py`, not an analysis adapter or type module. Discovery fingerprints
+bind map bytes and row identity, not semantic evidence, layout or application
+authority. See [naming opportunities](../usage.md#symbol-naming-opportunities).
+
 ## Policy versus mechanism
 
 The read-only cleanup context router selects one existing domain skill:
@@ -38,8 +45,9 @@ The read-only cleanup context router selects one existing domain skill:
 | --- | --- |
 | `macro-opportunity TARGET ID` | `bof3-macros` |
 | `type-opportunity TARGET ID` | `bof3-types` |
+| `naming-opportunity TARGET ID` | `bof3-naming` |
 
-Pass either form to `bin/agent-context cleanup`. The router checks a known target
+Pass one form to `bin/agent-context cleanup`. The router checks a known target
 and one nonempty printable ID token, retains that opaque ID unchanged, and loads
 only the selected body. It performs no opportunity query, index rebuild, ranking,
 transaction or approval. Candidate existence, target membership, freshness and
@@ -48,6 +56,15 @@ Canonical re-derivation rejects inconsistent fields or skill selection, not a
 different internally valid request; it does not authenticate the caller's original
 target/ID. The parent retains those bindings independently. Existing
 `type TARGET OLD -> NEW` remains an identity route, not type representation work.
+Likewise naming-opportunity is read-only assessment, not whole-target
+`audit-target TARGET` or the approved `symbol TARGET OLD -> NEW` identity route.
+All three now select `bof3-naming`, with only the mode's direct references loaded.
+Its audit, transaction, retained-lift and relocation contracts live in that one
+skill tree; the old naming-evidence and identity-maintenance skills are retired.
+One owner does not collapse authority: audit may write authorized disposable
+evidence, not identities; only approved transaction modes may edit repository truth.
+Explicit-only invocation policy is preserved. Macro/type skills keep their own
+domain lifecycles; type spelling remains separate from type representation.
 
 Macro extraction policy belongs in [MACROS.md](MACROS.md). Naming evidence and
 identity-application contracts are linked from the documentation index. Type

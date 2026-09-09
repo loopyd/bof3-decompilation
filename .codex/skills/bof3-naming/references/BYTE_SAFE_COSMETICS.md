@@ -4,7 +4,7 @@ Cleanup edits are cosmetic and evidence-preserving only. Any lift-body edit requ
 
 ## Metadata preflight and authority
 
-Before any rung, require parsable function-level `@behavior` and address-authoritative `@source`; a missing tag fails preflight. Preserve `@behavior`, `@source`, `@kind`, `MATCHING_AID`, `INFERRED:`, and evidence comments; correct stale tags in place, never infer identity from filename or directory ancestry. Naming evidence and eligibility come from [Naming audit v3](../../bof3-naming-evidence/references/NAMING_AUDIT_V3.md); atomic application, map/binding authority, and rollback come from [Identity transactions](IDENTITY_TRANSACTIONS.md); file moves come only from [Source relocation](SOURCE_RELOCATION.md).
+Before any rung, require parsable function-level `@behavior` and address-authoritative `@source`; a missing tag fails preflight. Preserve `@behavior`, `@source`, `@kind`, `MATCHING_AID`, `INFERRED:`, and evidence comments; correct stale tags in place, never infer identity from filename or directory ancestry. Naming evidence and eligibility come from [Naming audit v3](NAMING_AUDIT_V3.md); atomic application, map/binding authority, and rollback come from [Identity transactions](IDENTITY_TRANSACTIONS.md); file moves come only from [Source relocation](SOURCE_RELOCATION.md).
 
 ## Safe ladder
 

@@ -35,11 +35,18 @@ class NamingDebt:
         }
 
 
+def classify_raw_symbol(name: str) -> str | None:
+    """Return the naming-debt kind, not a proven storage or function boundary."""
+    if _RAW_FUNCTION.fullmatch(name):
+        return "function"
+    if _RAW_DATA.fullmatch(name):
+        return "data"
+    return None
+
+
 def collect_naming_debt(root: Path, manifests: dict[str, TargetManifest]) -> NamingDebt:
     raw_function_files: set[str] = set()
     invalid_semantic_files: set[str] = set()
-    raw_functions: set[str] = set()
-    raw_data: set[str] = set()
 
     for path in (root / "src" / "bof3").rglob("*.c"):
         relative = path.relative_to(root).as_posix()
@@ -51,6 +58,21 @@ def collect_naming_debt(root: Path, manifests: dict[str, TargetManifest]) -> Nam
         ):
             invalid_semantic_files.add(relative)
 
+    raw_functions, raw_data = collect_symbol_debt(root, manifests)
+    return NamingDebt(
+        frozenset(raw_function_files),
+        frozenset(invalid_semantic_files),
+        raw_functions,
+        raw_data,
+    )
+
+
+def collect_symbol_debt(
+    root: Path, manifests: dict[str, TargetManifest]
+) -> tuple[frozenset[str], frozenset[str]]:
+    """Collect raw map spellings without scanning authored source filenames."""
+    raw_functions: set[str] = set()
+    raw_data: set[str] = set()
     for target in sorted(manifests):
         path = map_path(root, target)
         if not path.is_file():
@@ -58,17 +80,13 @@ def collect_naming_debt(root: Path, manifests: dict[str, TargetManifest]) -> Nam
         for match in _MAP_ROW.finditer(path.read_text(encoding="utf-8")):
             name = match.group("name")
             row = f"{target}:{name}"
-            if _RAW_FUNCTION.fullmatch(name):
+            kind = classify_raw_symbol(name)
+            if kind == "function":
                 raw_functions.add(row)
-            elif _RAW_DATA.fullmatch(name):
+            elif kind == "data":
                 raw_data.add(row)
 
-    return NamingDebt(
-        frozenset(raw_function_files),
-        frozenset(invalid_semantic_files),
-        frozenset(raw_functions),
-        frozenset(raw_data),
-    )
+    return frozenset(raw_functions), frozenset(raw_data)
 
 
 def load_naming_baseline(root: Path) -> dict[str, set[str]]:

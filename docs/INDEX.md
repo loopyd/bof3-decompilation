@@ -27,9 +27,10 @@ minimal entry contract; this index owns the detailed reading map.
 | Codex MCP or Pi extension migration | [Codex configuration](specs/CODEX.md) | Global settings stay in `~/.codex`; project skills below |
 | Macro opportunity indexing, ranking or resolution | [Macro specification](specs/MACROS.md) | [Explicit cleanup routing](usage.md#cleanup-opportunity-routing), owning code/checks; matching or tooling route when making changes |
 | Type representation opportunities and reviewed application | [Tool usage](usage.md#3b-target-analysis-freshness--rebuild--query) | [Cleanup routing](usage.md#cleanup-opportunity-routing), `$bof3-types`; [harness ownership](specs/HARNESS.md) |
+| Symbol naming opportunity discovery or assessment | [Naming opportunities](usage.md#symbol-naming-opportunities) | `$bof3-naming`; [harness ownership](specs/HARNESS.md); evidence and identity routes remain separate |
 | Plan creation, management or execution | [Plan authoring](agents/plan-authoring.md) | `$plans`; selected file under `plans/`; refresh live evidence |
-| Symbol/type/metadata identity maintenance | [Project context](agents/project-context.md) | Explicit `$bof3-identity-maintenance` route only |
-| Naming evidence/audit closure | [Naming evidence contract](../.codex/skills/bof3-naming-evidence/SKILL.md) | Explicit `$bof3-naming-evidence` route only |
+| Symbol/type/metadata identity maintenance | [Project context](agents/project-context.md) | Explicit `$bof3-naming` transaction mode only |
+| Naming evidence/audit closure | [Naming audit contract](../.codex/skills/bof3-naming/references/NAMING_AUDIT_V3.md) | Explicit `$bof3-naming` audit mode only |
 | Documentation-only repair | Owning implementation/policy source | `$repo-documentation-repair` |
 | Runtime, format, target, or data research | [Specifications index](specs/INDEX.md) | Relevant spec and original evidence |
 | Repository overview / contributor onboarding | [README](../README.md) | [Contributing](../CONTRIBUTING.md), [Tool usage](usage.md) |
@@ -70,8 +71,7 @@ Codex scheduler or installed extension.
 | [`$bof3-re`](../.codex/skills/bof3-re/SKILL.md) | target-qualified lifting and independent review |
 | [`$bof3-macros`](../.codex/skills/bof3-macros/SKILL.md) | macro opportunities, human-value ranking and reviewed resolution |
 | [`$bof3-types`](../.codex/skills/bof3-types/SKILL.md) | established C types, representation opportunities and reviewed application |
-| [`$bof3-naming-evidence`](../.codex/skills/bof3-naming-evidence/SKILL.md) | explicitly routed naming evidence and audit closure |
-| [`$bof3-identity-maintenance`](../.codex/skills/bof3-identity-maintenance/SKILL.md) | explicitly authorized identity transactions |
+| [`$bof3-naming`](../.codex/skills/bof3-naming/SKILL.md) | explicitly routed naming opportunities, evidence, audits and reviewed identity transactions |
 | [`$plans`](../.codex/skills/plans/SKILL.md) | persistent plan management |
 | [`$psx-rizin`](../.codex/skills/psx-rizin/SKILL.md) | explicitly requested analyzer workflow |
 | [`$repo-documentation-repair`](../.codex/skills/repo-documentation-repair/SKILL.md) | explicitly scoped documentation repair |

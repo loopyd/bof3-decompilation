@@ -31,4 +31,4 @@ rollback and parent acceptance. Shared promotion needs independently accepted
 private proofs; one successful compile is insufficient. Never hand-edit generated
 bindings or recover the index silently. Report unresolved evidence as a gap.
 Symbol identity changes remain a separate explicitly routed
-[identity transaction](../bof3-identity-maintenance/SKILL.md).
+[naming identity transaction](../bof3-naming/references/IDENTITY_TRANSACTIONS.md).

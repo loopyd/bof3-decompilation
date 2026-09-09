@@ -22,15 +22,64 @@ Context-heavy commands accept `--detail minimal|normal|full`:
 ```sh
 bin/agent-context cleanup macro-opportunity TARGET ID
 bin/agent-context cleanup type-opportunity TARGET ID
+bin/agent-context cleanup naming-opportunity TARGET ID
 ```
 
-Each read-only prefill retains one opaque owner ID and selects the existing macro
-or type skill. Routing checks neither candidate freshness nor target membership;
+Each read-only prefill retains one opaque owner ID and selects its macro, type or
+naming skill. Routing checks neither candidate freshness nor target membership;
 the owner must verify both before work. It grants no transaction authority and
 never replaces a frozen lead or rebuilds an index. See
 [harness routing](specs/HARNESS.md#policy-versus-mechanism) and the
 [macro specification](specs/MACROS.md#candidate-and-consumer-inspection).
 The older `type TARGET OLD -> NEW` form still means identity maintenance.
+
+## Symbol naming opportunities
+
+```sh
+bin/naming-audit opportunities TARGET
+bin/naming-audit describe-opportunity TARGET ID --expected-fingerprint PIN
+bin/agent-context cleanup naming-opportunity TARGET ID
+```
+
+`harness.naming.opportunities` owns read-only target-local raw function/data
+discovery and the existing `bin/rev-query inventory TARGET` projection. The new
+commands emit JSON without opening or refreshing the reverse index or changing
+reports. Missing or invalid target maps fail instead of appearing exhausted.
+The legacy inventory keeps its permissive map scan and output shape, now scoped
+to the selected map without scanning source filenames. Opportunity discovery uses
+the strict shared map parser while retaining exact spellings, including suffixes;
+it does not normalize names into different candidates.
+They enumerate raw naming debt, not every semantic name that could be improved,
+shared symbols or C type-representation opportunities.
+
+Each `bof3.naming-opportunity/v1` row contains `id` (`TARGET@KIND:NAME`), `target`,
+`kind`, `name`, actual mapped `address`, repository-relative `map`, `map_sha256`
+and `fingerprint`. The fingerprint is `v1:` SHA-256 of compact sorted-key JSON
+over all other row fields. Rows sort functions first, then data, by name; this is
+deterministic enumeration, not a semantic-value ranking. There is no implicit
+top-N, attempt ledger or automatic proposal/application loop.
+
+Retain the original target/ID/fingerprint independently when selecting a lead.
+`describe-opportunity` requires exact current membership in that target; supplying
+`--expected-fingerprint` also rejects map or row drift. Omit the pin only for
+scouting. Any map byte change invalidates its leads' pins; do not silently repin.
+The observations are non-atomic and bind only the map snapshot, not manifests,
+source, consumer evidence or the reverse index. A successful description neither
+clears stale downstream evidence nor authorizes work or proves a useful name.
+
+The unified `bof3-naming` skill uses distinct opportunity, audit and transaction
+modes. Opportunity assessment performs no source/map/report mutation; whole-target
+evidence collection remains `audit-target TARGET` in that skill's audit mode.
+An assessed row cannot claim unfiltered `complete: true`;
+existing evidence-backed proposal, explicit identity-transaction approval,
+native verification and rollback still govern any rename. Type/layout decisions
+remain in `harness.types`. The older `symbol TARGET OLD -> NEW` route is unchanged.
+Its selected skill is now `bof3-naming`, as for spelling-only `type`, `repair`,
+`retained-lift` and `relocate-batch`; canonical inputs and authority remain distinct.
+The former naming-evidence and identity-maintenance skill definitions are retired,
+not forwarding aliases. Their explicit-only invocation policy is retained in the
+merged skill. Restart Codex to refresh discovery; do not rewrite previously frozen
+requests or receipts to disguise the changed skill paths or execution closure.
 
 ## Naming conclusion import
 

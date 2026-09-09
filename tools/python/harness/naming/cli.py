@@ -10,10 +10,12 @@ from pathlib import Path
 from typing import Any
 
 from harness.common.cli import add_root_argument, resolved_root, run_main
-from harness.domain.ids import normalize_target_id
-from harness.domain.manifests import load_target_manifests
 from harness.naming.context import SCHEMA_V3
-from harness.naming.debt import collect_naming_debt
+from harness.naming.opportunities import (
+    collect_inventory,
+    collect_opportunities,
+    describe_opportunity,
+)
 from harness.naming.readiness import transaction_scope
 
 
@@ -41,21 +43,7 @@ def _query_scope(
 def _query_inventory(
     args: argparse.Namespace, connection: None
 ) -> list[dict[str, Any]]:
-    root = resolved_root(args)
-    target = normalize_target_id(args.target).value
-    manifests = load_target_manifests(root)
-    if target not in manifests:
-        raise ValueError(f"unknown target: {target}")
-    debt = collect_naming_debt(root, manifests)
-    return [
-        {"kind": kind, "name": row.split(":", 1)[1]}
-        for kind, entries in (
-            ("function", debt.raw_functions),
-            ("data", debt.raw_data),
-        )
-        for row in sorted(entries)
-        if row.startswith(f"{target}:")
-    ]
+    return collect_inventory(resolved_root(args), args.target)
 
 
 def _print(payload: dict[str, Any]) -> None:
@@ -75,6 +63,18 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="naming-audit")
     add_root_argument(parser)
     sub = parser.add_subparsers(dest="command", required=True)
+    opportunities = sub.add_parser(
+        "opportunities", help="list read-only target-local raw symbol naming leads"
+    )
+    opportunities.add_argument("target")
+    opportunities.set_defaults(handler=_run_opportunities)
+    describe = sub.add_parser(
+        "describe-opportunity", help="inspect one exact naming lead without mutation"
+    )
+    describe.add_argument("target")
+    describe.add_argument("id")
+    describe.add_argument("--expected-fingerprint")
+    describe.set_defaults(handler=_run_opportunities)
     prep = sub.add_parser(
         "prepare", help="readiness preflight; --repair closes proven repairs"
     )
@@ -178,6 +178,19 @@ def build_parser() -> argparse.ArgumentParser:
     terminal.add_argument("--evidence-root", action=_SingleEvidenceRoot)
     terminal.set_defaults(handler=_run_terminal_verify)
     return parser
+
+
+def _run_opportunities(args: argparse.Namespace) -> int:
+    root = resolved_root(args)
+    payload = (
+        collect_opportunities(root, args.target)
+        if args.command == "opportunities"
+        else describe_opportunity(
+            root, args.target, args.id, expected_fingerprint=args.expected_fingerprint
+        )
+    )
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
 
 
 def _report(args: argparse.Namespace) -> dict[str, Any]:

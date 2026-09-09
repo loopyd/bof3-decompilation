@@ -32,7 +32,11 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
 - `harness.macros`, `harness.naming`, and `harness.types` own their respective
   opportunity discovery, evidence, transactions, audits, editing and CLI policy.
   Naming identifies symbols; types own C representation and layout decisions.
+  An `opportunities.py` owner discovers and describes leads; `cli.py` only adapts
+  arguments. Lead enumeration is not ranking, evidence closure or edit authority.
   Cross-domain queries dispatch to these owners instead of re-exporting them.
+  Keep one concern skill for discovery, evidence, audit and transaction modes;
+  route-specific references preserve authority boundaries, not separate skill copies.
 - No compatibility re-export shims (`x as x`, `# noqa: F401` facades).
   Importers reference the owning module directly.
 - Header order: one-line module docstring, `from __future__ import

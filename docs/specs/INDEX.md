@@ -7,7 +7,7 @@ lowercase paths are retained; `MACROS.md` is the canonical macro-resolution spec
 | Spec | Read it when |
 | --- | --- |
 | [MACROS.md](MACROS.md) | macro opportunity discovery, human-value ranking requirements, consumer scope, and reviewed resolution tooling |
-| [HARNESS.md](HARNESS.md) | Python domain packages, explicit cleanup routes, shared mechanisms, CLI ownership and refactor evidence boundaries |
+| [HARNESS.md](HARNESS.md) | macro, naming and type owners, explicit cleanup routes, shared mechanisms, CLI ownership and refactor evidence boundaries |
 | [CODEX.md](CODEX.md) | global MCP credentials/configuration, Pi extension equivalents and explicit exclusions |
 | [targets.md](targets.md) | identifying executable and overlay load addresses |
 | [methods.md](methods.md) | pointer maps, table extraction, and evidence methods |

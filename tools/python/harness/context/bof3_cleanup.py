@@ -27,7 +27,9 @@ _ROW = re.compile(
 
 
 _SKILL_REFERENCES = {
-    "bof3-identity-maintenance": {
+    "bof3-naming": {
+        "opportunity": (),
+        "audit": ("references/NAMING_AUDIT_V3.md",),
         "identity": ("references/IDENTITY_TRANSACTIONS.md",),
         "retained": (
             "references/IDENTITY_TRANSACTIONS.md",
@@ -38,22 +40,20 @@ _SKILL_REFERENCES = {
     "repo-documentation-repair": {
         "docs": ("references/DOCUMENTATION_REPAIR.md",),
     },
-    "bof3-naming-evidence": {
-        "audit": ("references/NAMING_AUDIT_V3.md",),
-    },
     "bof3-macros": {"opportunity": ()},
     "bof3-types": {"opportunity": ()},
 }
 _ROUTE = {
-    "symbol": ("bof3-identity-maintenance", "identity"),
-    "type": ("bof3-identity-maintenance", "identity"),
-    "repair": ("bof3-identity-maintenance", "identity"),
-    "retained-lift": ("bof3-identity-maintenance", "retained"),
-    "relocate-batch": ("bof3-identity-maintenance", "relocation"),
+    "symbol": ("bof3-naming", "identity"),
+    "type": ("bof3-naming", "identity"),
+    "repair": ("bof3-naming", "identity"),
+    "retained-lift": ("bof3-naming", "retained"),
+    "relocate-batch": ("bof3-naming", "relocation"),
     "docs": ("repo-documentation-repair", "docs"),
-    "audit-target": ("bof3-naming-evidence", "audit"),
+    "audit-target": ("bof3-naming", "audit"),
     "macro-opportunity": ("bof3-macros", "opportunity"),
     "type-opportunity": ("bof3-types", "opportunity"),
+    "naming-opportunity": ("bof3-naming", "opportunity"),
 }
 
 
@@ -286,7 +286,7 @@ def parse_cleanup_request(
         class_name = _repository_class(root, tokens[2])
         selectors = tuple(_selector(value, target) for value in tokens[3:])
         values = (class_name, *(str(value) for value in selectors))
-    elif mode in {"macro-opportunity", "type-opportunity"}:
+    elif mode in {"macro-opportunity", "type-opportunity", "naming-opportunity"}:
         if len(tokens) != 3:
             raise ValueError(f"{mode} requires exactly TARGET ID")
         target = _known_target(root, tokens[1])
@@ -334,7 +334,12 @@ def _canonical_tokens(cleanup: CleanupRequest) -> tuple[str, ...]:
             cleanup.state or "",
             *cleanup.rows,
         )
-    if cleanup.mode in {"relocate-batch", "macro-opportunity", "type-opportunity"}:
+    if cleanup.mode in {
+        "relocate-batch",
+        "macro-opportunity",
+        "type-opportunity",
+        "naming-opportunity",
+    }:
         return (cleanup.mode, cleanup.target or "", *cleanup.arguments)
     if cleanup.mode == "docs":
         return (cleanup.mode, *cleanup.arguments)

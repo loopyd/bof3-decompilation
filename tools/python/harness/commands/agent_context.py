@@ -191,6 +191,7 @@ def _documented_placeholder_usage(role: str) -> str:
             "audit-target TARGET",
             "macro-opportunity TARGET ID",
             "type-opportunity TARGET ID",
+            "naming-opportunity TARGET ID",
         ),
         "reverse": ("bin/agent-context reverse TARGET@0xADDRESS",),
         "review": ("bin/agent-context review TARGET@0xADDRESS",),

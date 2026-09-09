@@ -41,7 +41,9 @@ class MapSymbol:
         return bool(_RAW_FUNCTION.fullmatch(name) or _RAW_DATA.fullmatch(name))
 
 
-def parse_map(text: str, *, source: str = "map") -> list[MapSymbol]:
+def parse_map(
+    text: str, *, source: str = "map", canonicalize: bool = True
+) -> list[MapSymbol]:
     """Parse one Splat map and reject malformed, ambiguous entries."""
 
     result: list[MapSymbol] = []
@@ -54,6 +56,8 @@ def parse_map(text: str, *, source: str = "map") -> list[MapSymbol]:
             raise ValueError(f"{source}:{line_number}: expected 'name = 0xADDRESS;'")
         result.append(MapSymbol(int(match.group("address"), 16), match.group("name")))
     validate_symbols(result, source=source)
+    if not canonicalize:
+        return sorted(result)
     return sorted((MapSymbol(row.address, row.canonical_name) for row in result))
 
 

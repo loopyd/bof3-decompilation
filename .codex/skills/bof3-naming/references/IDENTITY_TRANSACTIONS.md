@@ -1,6 +1,6 @@
 # Identity transactions
 
-Apply only an evidence-approved `symbol`, `type`, `repair`, or `retained-lift` request. Naming evidence preparation belongs to `bof3-naming-evidence`; never generate semantic evidence here or switch routes.
+Apply only an evidence-approved `symbol`, `type`, `repair`, or `retained-lift` request. Evidence preparation belongs to the separate [audit mode](NAMING_AUDIT_V3.md); never generate semantic evidence here or switch routes.
 
 ## Authority ceiling
 

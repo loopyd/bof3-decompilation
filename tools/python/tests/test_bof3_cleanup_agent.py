@@ -24,19 +24,19 @@ SELECTOR = "exe/logo@0x801CE758"
         (
             ("symbol", "exe/logo", "old", "->", "new"),
             "symbol",
-            "bof3-identity-maintenance",
+            "bof3-naming",
             ("IDENTITY_TRANSACTIONS.md",),
         ),
         (
             ("type", "exe/logo", "old", "->", "new"),
             "type",
-            "bof3-identity-maintenance",
+            "bof3-naming",
             ("IDENTITY_TRANSACTIONS.md",),
         ),
         (
             ("repair", "exe/logo", "function:func_801CE758"),
             "repair",
-            "bof3-identity-maintenance",
+            "bof3-naming",
             ("IDENTITY_TRANSACTIONS.md",),
         ),
         (
@@ -48,13 +48,13 @@ SELECTOR = "exe/logo@0x801CE758"
                 "exe/logo@function:func_801CE758",
             ),
             "retained-lift",
-            "bof3-identity-maintenance",
+            "bof3-naming",
             ("IDENTITY_TRANSACTIONS.md", "BYTE_SAFE_COSMETICS.md"),
         ),
         (
             ("relocate-batch", "exe/logo", "ui", SELECTOR),
             "relocate-batch",
-            "bof3-identity-maintenance",
+            "bof3-naming",
             ("SOURCE_RELOCATION.md",),
         ),
         (
@@ -66,7 +66,7 @@ SELECTOR = "exe/logo@0x801CE758"
         (
             ("audit-target", "exe/logo"),
             "audit-target",
-            "bof3-naming-evidence",
+            "bof3-naming",
             ("NAMING_AUDIT_V3.md",),
         ),
     ),
@@ -106,9 +106,10 @@ def test_canonical_routes_load_exact_selected_body_and_direct_refs(
     assert loaded_bytes <= 16_000
     assert selected["loaded_bytes"] == loaded_bytes
     unselected = {
-        "bof3-identity-maintenance",
+        "bof3-naming",
         "repo-documentation-repair",
-        "bof3-naming-evidence",
+        "bof3-macros",
+        "bof3-types",
     } - {skill}
     assert not any(any(name in str(path) for name in unselected) for path in reads)
 
@@ -192,7 +193,9 @@ def test_missing_unknown_or_ambiguous_selection_reads_zero_bodies() -> None:
         replace(request, selected_skill=SelectedSkill("", "", ())),
         replace(
             request,
-            selected_skill=SelectedSkill("unknown", ".codex/skills/unknown/SKILL.md", ()),
+            selected_skill=SelectedSkill(
+                "unknown", ".codex/skills/unknown/SKILL.md", ()
+            ),
         ),
         replace(
             request,
@@ -201,7 +204,7 @@ def test_missing_unknown_or_ambiguous_selection_reads_zero_bodies() -> None:
                 ".codex/skills/repo-documentation-repair/SKILL.md",
                 (
                     ".codex/skills/repo-documentation-repair/references/DOCUMENTATION_REPAIR.md",
-                    ".codex/skills/bof3-naming-evidence/SKILL.md",
+                    ".codex/skills/bof3-naming/SKILL.md",
                 ),
             ),
         ),

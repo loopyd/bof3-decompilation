@@ -334,21 +334,15 @@ def test_inventory_lists_target_raw_functions_and_data(
     capsys, monkeypatch, tmp_path
 ) -> None:
     monkeypatch.setattr(
-        "harness.naming.cli.load_target_manifests",
+        "harness.naming.opportunities.load_target_manifests",
         lambda _root: {"exe/t": object()},
     )
     monkeypatch.setattr(
-        "harness.naming.cli.collect_naming_debt",
-        lambda _root, _manifests: type(
-            "Debt",
-            (),
-            {
-                "raw_functions": frozenset(
-                    {"exe/t:func_80100000", "exe/u:func_80200000"}
-                ),
-                "raw_data": frozenset({"exe/t:D_80100010"}),
-            },
-        )(),
+        "harness.naming.opportunities.collect_symbol_debt",
+        lambda _root, _manifests: (
+            frozenset({"exe/t:func_80100000", "exe/u:func_80200000"}),
+            frozenset({"exe/t:D_80100010"}),
+        ),
     )
     monkeypatch.setattr(
         "harness.commands.rev_query.connect",

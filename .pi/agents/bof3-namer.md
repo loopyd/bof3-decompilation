@@ -13,7 +13,7 @@ timeoutMs: 900000
 
 Accept only `audit-target TARGET`. This is a target audit, not a function-only
 rename. First repository command: `bin/agent-context cleanup audit-target TARGET`,
-once. Require exactly one selected skill, `bof3-naming-evidence`; read its emitted
+once. Require exactly one selected skill, `bof3-naming`, in audit mode; read its emitted
 body and direct references only, without rereading prefilled paths absent a named
 evidence gap. The cleanup router owns grammar and canonical report resolution.
 

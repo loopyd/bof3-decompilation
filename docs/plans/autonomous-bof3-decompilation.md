@@ -784,6 +784,26 @@ not rerun for this evidence/documentation-only continuation.
 
 ## Proposed roles and sequence
 
+The symbol-naming routing prerequisite now follows the same concern ownership:
+`harness.naming.opportunities` owns target-local read-only leads and legacy
+inventory projection. `bin/naming-audit opportunities` / `describe-opportunity`
+bind exact spelling and mapped address to one map-byte fingerprint; inventory
+no longer scans every target or authored-source filename. One explicit-only
+`bof3-naming` skill replaces the separate evidence and identity skills, retaining
+opportunity, audit and transaction authority as distinct modes with selective
+references. Existing canonical inputs are unchanged; frozen old skill bindings
+reject rather than silently migrate. Type representation remains in `types`.
+Native read-only scouting enumerated 249 battle15 raw leads, not accepted naming
+decisions or additions to the frozen queue; exact ID/pin description and all six
+legacy naming prefills succeeded. Disposable suffix/address, map-drift and stale
+binding probes passed, preserving the raw Git index, frozen reverse index/report
+and unrelated dirty sources. The merged audit prefill stays under 16 KiB.
+Existing checks: 210 passed plus the separate file-mode case; no new tests.
+Herschel independently accepted the feature and consolidated layout after 58
+existing checks and native/rejection probes; Bohr found no lost audit requirements.
+This does not close target naming evidence or S3.2's bounded native sequence;
+the macro/type stale-index handoff below remains unchanged.
+
 S3.2 routing prerequisite: native cleanup prefills rejected both macro and type
 opportunity requests because the structured router and cleaner admitted only
 identity, naming and documentation skills. Explicit `macro-opportunity TARGET ID`
@@ -914,7 +934,7 @@ must satisfy them before the corresponding phase is marked done.
 - Owner: parent
 - Depends: none
 - Blocker: none
-- Evidence: .codex/skills/bof3-re, .codex/skills/bof3-naming-evidence and .codex/skills/bof3-identity-maintenance.
+- Evidence: .codex/skills/bof3-re and the unified .codex/skills/bof3-naming opportunity/audit/transaction contracts.
 - Acceptance: consistent target-qualified inputs/results; separate naming proposal, approval and application; remove duplicated prompt/orchestration text; retain byte-match and rollback requirements.
 
 2. [S2.2] (done) Reconcile supporting skills and project instructions.
