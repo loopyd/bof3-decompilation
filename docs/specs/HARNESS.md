@@ -119,8 +119,24 @@ Records live at `out/reviews/evidence/{macro,type}-recovery-<nonce>.json`, mode
 detects drift against a separately retained pin; neither that digest, file mode
 nor writer PID authenticates restoration authority or proves writer termination.
 For new files, creation mode remains `0644` masked by the process umask; v2/v3 bind
-the resulting exact mode. Exception rollback checks POST/PRE identities, and
-workspace rollback does not rewrite already-restored byte-identical files.
+the resulting exact mode. Exception rollback checks POST/PRE identities.
+
+Ordinary type/macro failure restores only the transaction's captured owned source
+images. Unexpected workspace or Git-index changes are not proof of ownership:
+never overwrite them or quarantine newly observed user files. After owned rollback,
+compare allowed PRE bytes, the adopted workspace, exact raw index snapshot and a
+separate all-PRE safeguard snapshot (including untouched modes/identities/links).
+Drift or inspection failure preserves external state and requires parent review;
+it is not complete rollback or retry authority. Restore owned images before
+inspecting external state, so an unreadable or foreign untouched path cannot
+suppress otherwise safe owned restoration. `ProcessCleanupError` still forbids
+rollback while native descendant termination is uncertain.
+
+These snapshots are non-atomic observations, not exclusion of manual editors.
+The non-Git fallback lacks workspace metadata safeguards; do not present it as
+metadata-verified recovery. Durable v3 safeguards retain their separate inventory
+excluding changed paths. Generic workspace/index restoration primitives remain
+available only to separately authorized callers, never as an owner fallback.
 
 Identity-bound source rollback is replayable: it requires complete backup/image
 coverage, recognizes original PRE as a no-op, and resumes a missing destination

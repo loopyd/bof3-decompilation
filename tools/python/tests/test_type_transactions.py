@@ -344,9 +344,12 @@ def test_validation_cannot_change_git_index_even_for_allowed_path(
 
     def stage(argv, **_kwargs):
         subprocess.run(["git", "add", "include/test.h"], cwd=tmp_path, check=True)
+        staged["index"] = (tmp_path / ".git/index").read_bytes()
         return subprocess.CompletedProcess(argv, 0, "", "")
 
-    with pytest.raises(ValueError, match="changed the Git index"):
+    staged = {}
+    original = (tmp_path / "include/test.h").read_bytes()
+    with pytest.raises(RuntimeError, match="external state preserved"):
         transactions.run_transaction(
             tmp_path,
             manifest,
@@ -360,10 +363,12 @@ def test_validation_cannot_change_git_index_even_for_allowed_path(
         capture_output=True,
         check=True,
     ).stdout
-    assert after == before
+    assert after != before
+    assert (tmp_path / ".git/index").read_bytes() == staged["index"]
+    assert (tmp_path / "include/test.h").read_bytes() == original
     assert (
         subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=tmp_path).returncode
-        == 0
+        == 1
     )
 
 
@@ -546,7 +551,7 @@ def test_failed_check_rolls_back(tmp_path: Path, monkeypatch) -> None:
     assert (tmp_path / "include/test.h").read_bytes() == before
 
 
-def test_failed_check_rolls_back_unrelated_runner_side_effect(
+def test_failed_check_preserves_unowned_runner_side_effect(
     tmp_path: Path, monkeypatch
 ) -> None:
     _repo(tmp_path, git=True)
@@ -557,14 +562,15 @@ def test_failed_check_rolls_back_unrelated_runner_side_effect(
         (tmp_path / "src/test/func_80100000.c").write_text("runner changed this\n")
         return subprocess.CompletedProcess(argv, 1, "", "failed")
 
-    with pytest.raises(ValueError, match="validation mutated an allowed path"):
+    original = (tmp_path / "include/test.h").read_bytes()
+    with pytest.raises(RuntimeError, match="external state preserved"):
         transactions.run_transaction(
             tmp_path, manifest, {"include/test.h": "bad\n"}, runner=side_effect
         )
-    assert (tmp_path / "src/test/func_80100000.c").read_text() == (
-        "/** @source 0x80100000\n * @behavior test lift\n */\n"
-        "void func_80100000(void) {}\n"
-    )
+    assert (
+        tmp_path / "src/test/func_80100000.c"
+    ).read_text() == "runner changed this\n"
+    assert (tmp_path / "include/test.h").read_bytes() == original
 
 
 def test_rollback_failure_is_reported(tmp_path: Path, monkeypatch) -> None:
@@ -1861,7 +1867,7 @@ def test_type_context_concurrent_index_preserves_owned_source_rollback(
         raise ValueError("execution context concurrent drift")
 
     monkeypatch.setattr(transactions.execution_context, "checked", reject)
-    with pytest.raises(RuntimeError, match="rollback failed") as error:
+    with pytest.raises(RuntimeError, match="external state preserved") as error:
         transactions.run_transaction(
             tmp_path,
             manifest,

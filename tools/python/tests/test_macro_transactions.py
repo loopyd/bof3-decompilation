@@ -849,9 +849,11 @@ def test_validation_cannot_unstage_git_index(
         subprocess.run(
             ["git", "reset", "-q", "HEAD", "--", marker.name], cwd=tmp_path, check=True
         )
+        unstaged["index"] = (tmp_path / ".git/index").read_bytes()
         return subprocess.CompletedProcess(argv, 0, "", "")
 
-    with pytest.raises(ValueError, match="changed the Git index"):
+    unstaged = {}
+    with pytest.raises(RuntimeError, match="external state preserved"):
         macro_transactions.run_transaction(
             tmp_path,
             manifest,
@@ -867,8 +869,9 @@ def test_validation_cannot_unstage_git_index(
             capture_output=True,
             check=True,
         ).stdout
-        == before
+        != before
     )
+    assert (tmp_path / ".git/index").read_bytes() == unstaged["index"]
 
 
 def test_dirty_baseline_and_runner_side_effect_fail_closed(
@@ -884,17 +887,18 @@ def test_dirty_baseline_and_runner_side_effect_fail_closed(
     ]
     manifest = macro_transactions.prepare_transaction(tmp_path, request)
     source = tmp_path / "src/test/func_80100000.c"
-    before = source.read_text()
+    before = (tmp_path / "include/test.h").read_bytes()
 
     def mutate(argv, **_kwargs):
         source.write_text("mutated\n")
         return subprocess.CompletedProcess(argv, 0, "", "")
 
-    with pytest.raises(ValueError, match="validation mutated"):
+    with pytest.raises(RuntimeError, match="external state preserved"):
         macro_transactions.run_transaction(
             tmp_path, manifest, {"include/test.h": "changed\n"}, runner=mutate
         )
-    assert source.read_text() == before
+    assert source.read_text() == "mutated\n"
+    assert (tmp_path / "include/test.h").read_bytes() == before
 
 
 def test_shared_proofs_require_external_unique_exact_pins_and_no_address_leaks(
@@ -1190,7 +1194,7 @@ def test_macro_context_concurrent_index_preserves_owned_source_rollback(
         raise ValueError("execution context concurrent drift")
 
     monkeypatch.setattr(macro_transactions.execution_context, "checked", reject)
-    with pytest.raises(RuntimeError, match="rollback failed") as error:
+    with pytest.raises(RuntimeError, match="external state preserved") as error:
         macro_transactions.run_transaction(
             tmp_path,
             manifest,

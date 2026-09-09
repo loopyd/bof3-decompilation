@@ -372,6 +372,10 @@ require owned-PRE reconciliation before reuse.
 Source rollback can resume identity-verified partial restoration; see the
 [shared recovery contract](HARNESS.md#guarded-source-recovery). Neither rollback
 nor guarded recovery grants source acceptance or an autonomous attempt budget.
+Ordinary failure restores only captured owned source images; unexpected workspace
+edits, new files and Git staging remain untouched for parent review, not overwritten
+as presumed tool side effects. See the [shared recovery contract](HARNESS.md)
+for post-rollback verification and metadata limitations.
 
 Macro `run` and `revalidate` share a fail-fast repository writer lease with type
 transactions. It spans live manifest validation through gates, publication and

@@ -22,15 +22,12 @@ from harness.common.runtime import apply_changes
 from harness.common.directory import validate_repo_path
 from harness.common.runtime import changed_paths
 from harness.common.paths import file_state
-from harness.common.git import git_index_backup
-from harness.common.git import git_index_state
-from harness.common.git import restore_git_index
+from harness.common.git import git_index_backup, workspace_backup
 from harness.common.runtime import rollback
-from harness.common.git import rollback_workspace
+from harness.common.safeguards import capture_safeguards, inspect_safeguards
 from harness.common.process import ProcessCleanupError
 from harness.common.runtime import run_checks
 from harness.common.paths import validate_paths
-from harness.common.git import workspace_backup
 from harness.common.runtime import write_attestation
 from harness.common.workspace import adopted_baseline as _adopted_baseline
 from harness.common.workspace import workspace_baseline as _workspace_baseline
@@ -315,8 +312,8 @@ def run_transaction(
     validate_paths(root, allowed)
     backup: dict[str, bytes | None] = {}
     quarantines = {}
-    index_state, index_backup = git_index_state(root), git_index_backup(root)
-    expected_index = index_backup
+    index_backup = git_index_backup(root)
+    safeguards = capture_safeguards(root, set(), full_backup, index_backup)
     try:
         backup, quarantines = apply_changes(
             root,
@@ -349,7 +346,7 @@ def run_transaction(
                 start_index=len(receipts),
             )
             receipts.extend(current)
-            if (expected_index := git_index_backup(root)) != index_backup:
+            if git_index_backup(root) != index_backup:
                 raise ValueError("type transaction validation changed the Git index")
             execution_context.checked(root, manifest, context, check, current[0])
             if file_state(root, allowed) != post:
@@ -388,7 +385,7 @@ def run_transaction(
             {key: item for key, item in application.items() if key != "digest"}
         )
         application["attestation"] = write_attestation(root, application)
-        if (expected_index := git_index_backup(root)) != index_backup:
+        if git_index_backup(root) != index_backup:
             raise ValueError("type transaction changed the Git index before proof")
         execution_context.recheck(root, manifest, context)
         execution_context.publish(root, application, output)
@@ -398,20 +395,26 @@ def run_transaction(
     except BaseException:
         try:
             verify_writer(root)
-            validate_paths(root, allowed)
-            try:
-                restore_git_index(root, index_backup, expected_index)
-            finally:
-                rollback(root, backup, quarantines)
-            rollback_workspace(root, full_backup)
+            rollback(root, backup, quarantines)
         except BaseException as error:
             raise RuntimeError("type transaction rollback failed") from error
-        if (
-            file_state(root, allowed) != manifest["pre_state"]
-            or _workspace_state(root) != manifest["workspace_baseline"]["state"]
-            or git_index_state(root) != index_state
-        ):
-            raise RuntimeError("type transaction rollback failed")
+        try:
+            if (
+                file_state(root, allowed) != manifest["pre_state"]
+                or git_index_backup(root) != index_backup
+                or _workspace_state(root) != manifest["workspace_baseline"]["state"]
+                or (
+                    safeguards is not None
+                    and inspect_safeguards(root, safeguards, set())["matches"]
+                    is not True
+                )
+            ):
+                raise ValueError("workspace or Git index changed concurrently")
+        except BaseException as error:
+            raise RuntimeError(
+                "type transaction rollback failed or is unverified; "
+                "external state preserved; parent review required"
+            ) from error
         raise
 
 

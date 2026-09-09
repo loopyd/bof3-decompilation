@@ -648,6 +648,63 @@ and 75 local documentation links/anchors pass; frozen live index/report pins
 remain unchanged. No persistent tests or dependencies were added. Full `just check`
 and a new global source audit were not run; this is only the scoped checkpoint.
 
+### Concurrent-work preservation repair
+
+Budget/deadline checkpoint `de9d8229` is committed locally without pushing.
+Independent editor probes in `/tmp/bof3-concurrent-type-32_cfy6g` and
+`/tmp/bof3-concurrent-macro-wmbneevt`, plus staging probes in
+`/tmp/bof3-staging-type-6jtr162y` and `/tmp/bof3-staging-macro-p1s1gbc1`, confirmed
+that previous automatic workspace/index restoration erased unowned work.
+Type/macro exception handlers now restore only captured identity-bound owned
+source images. They never automatically restore the workspace or Git index.
+External drift or inspection failure stops for parent review after safe owned
+rollback; unreadable or foreign untouched paths cannot suppress that restoration.
+Original raw index and all-PRE metadata safeguards are checked separately from
+durable v3 recovery inventory. Non-Git checks remain weaker; observations are not
+atomic and no lease excludes manual editors. See the
+[owning recovery contract](../specs/HARNESS.md) for guarantees and exclusions.
+
+Existing destructive-expectation tests now require preserved external bytes and
+staging while retaining drift detection and owned-PRE restoration checks; no new
+test cases were added. The focused 21-case failure/publication suite passes.
+Broader owner/revalidation/harness/plan checks passed 272 cases; the previously
+run file-mode check also passes. Ruff, formatting, whitespace, plan status and
+98 local documentation links/anchors pass; frozen live index/report pins remain
+unchanged. Independent code/docs review found no blocker. Disposable patched
+type/macro editor, staging and metadata probes passed separately from native work.
+
+Actual native preservation used `/tmp/bof3-codex-recovery-4i_rt0f3`, terminal tool
+chunk `741b18` (exit 0), with one counted writer dispatch, zero repairs and a
+60-second absolute original deadline. Parent control
+`v1:d04fd9bc7feb08277ce12cdb812dd3c209a6c3f9646c3078bff88a6072bc9cb0`
+was pinned before launch. The real Splat fixture gate spawned and joined an
+editor that changed an unrelated file and mode, created another file and staged
+the edited file. Splat exited 7, owner CLI exited 2 for preserved external drift,
+only the owned original header PRE returned, and all editor-post bytes, identities,
+modes, links, mtime/ctime and raw index bytes remained exact. Unchanged C remained
+exact too. One failed receipt and no application/later gate were observed; the
+bounded dispatch finished in 0.691 seconds. Reviewer
+`01a084ec-947a-7a72-ad93-604fa3c331f9` independently accepted the pins, restored
+PRE/retained POST, editor-post state, receipts and absence of later gates or
+application. Native tool termination remains parent-reported. V3 guard drift is
+exactly the preserved editor work/staging, not a falsely clean recovery state.
+
+Invalid setup controls remain untouched: `_cdbppj6` rejected an unsupported CLI
+option, and `1nh5aaiu` rejected a manifest whose gate changed after preparation;
+neither ran a gate. An earlier float-valued disposable contract failed digest
+validation before pinning or dispatch. None is successful native evidence or a
+reset of the separately pinned successful attempt. This repair does not close
+uncertain-cleanup resume, the bounded controller, S3.5 or the pipeline.
+
+Next bounded cell: retain original budget/latest consumption pins and a real
+`ProcessCleanupError` transcript, then use a fresh read-only `check_budget` plus
+owner `inspect-recovery`. Budget remaining or a free lease must not override the
+parent's cleanup-unconfirmed stop disposition. No new debit, writer, revalidation
+or recovery is allowed until independent native termination review authorizes
+the existing guarded recovery path. This proves parent-controlled refusal, not
+automatic enforcement: arbitrary dispatch currently has no durable cleanup hold.
+Do not introduce a generic controller merely to demonstrate this cell.
+
 ## Proposed roles and sequence
 
 `select TARGET@ADDRESS → bof3-lifter → bof3-reviewer → bof3-namer →
