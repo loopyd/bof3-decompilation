@@ -186,6 +186,32 @@ Moving implementation files changes tooling-bound execution closure. Do not edit
 retained receipts, frozen requests or historical evidence to make old proofs appear
 current. Revalidation and original-byte/ABI/source-range preservation remain gates.
 
+## Request-bound resume
+
+`type-audit resume` and `macro-audit resume` inspect a published application for
+the original pinned manifest and implementation run. `common/continuation.py`
+returns a current disposition, not a scheduler or another persisted receipt:
+
+- `needs-review`: the owning live verifier confirms the application and captured
+  context, but no accepted envelope was supplied;
+- `skip-accepted`: the supplied independently pinned envelope contains this exact
+  complete application, including its attestation, and owner final verification
+  confirms current acceptance.
+
+Both routes require the complete original manifest/request binding and a nonempty
+matching captured run ID. Manifest checking is structural; PRE is never regenerated
+from current POST. Envelope and pin must be supplied together. Invalid supplied
+acceptance, stale state or mismatched pins fail rather than downgrade to review.
+The result includes owner, manifest/request/run/application/proof bindings and the
+envelope pin, without applying changes, rerunning gates or writing a skip token.
+
+The parent still establishes writer termination/exclusion and preserves queue
+identity and attempt budgets. This read-only, non-atomic disposition grants no
+mutation or retry authority and resets no budget. Reproduce the captured launch
+environment; never edit proofs or relax execution-context checks to make resume
+pass. Historical integrity alone is not current acceptance. The broader bounded
+execution loop remains unfinished.
+
 ## Validation
 
 Run the existing focused domain suites, shared application/history/revalidation

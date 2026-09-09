@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 from harness.common.cli import resolved_root
+from harness.common.continuation import resolve_disposition
 from harness.common.evidence import evidence_output_path
 from harness.common.files import atomic_write, read_file
 from harness.common.inspection import inspect_recovery
@@ -68,6 +69,49 @@ def add_recovery_commands(sub: argparse._SubParsersAction, owner, validator) -> 
         handler=_restore_sources,
         recovery_owner=owner,
         recovery_manifest_validator=validator,
+    )
+
+
+def _resume(args: argparse.Namespace) -> int:
+    result = resolve_disposition(
+        resolved_root(args),
+        _read(args.manifest),
+        args.expected_manifest_digest,
+        args.implementation_run_id,
+        _read(args.application),
+        args.expected_application_digest,
+        owner=args.resume_owner,
+        manifest_validator=args.resume_manifest_validator,
+        verify_application=args.resume_verify_application,
+        verify_reviewed=args.resume_verify_reviewed,
+        envelope=_read(args.reviewed_envelope)
+        if args.reviewed_envelope is not None
+        else None,
+        expected_envelope_digest=args.expected_envelope_digest,
+    )
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
+
+
+def add_resume_command(
+    sub: argparse._SubParsersAction, owner, validator, verify, review
+) -> None:
+    parser = sub.add_parser(
+        "resume", help="inspect request-bound review or accepted-skip disposition"
+    )
+    parser.add_argument("manifest", type=Path)
+    parser.add_argument("application", type=Path)
+    parser.add_argument("--expected-manifest-digest", required=True)
+    parser.add_argument("--expected-application-digest", required=True)
+    parser.add_argument("--implementation-run-id", required=True)
+    parser.add_argument("--reviewed-envelope", type=Path)
+    parser.add_argument("--expected-envelope-digest")
+    parser.set_defaults(
+        handler=_resume,
+        resume_owner=owner,
+        resume_manifest_validator=validator,
+        resume_verify_application=verify,
+        resume_verify_reviewed=review,
     )
 
 

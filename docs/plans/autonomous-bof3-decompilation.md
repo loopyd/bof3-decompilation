@@ -496,6 +496,53 @@ plan/harness cases pass. No persistent tests or dependencies were added. Full
 reconciliation, workspace/Git restoration, durable automatic/session recovery and
 the bounded ranked execution loop remain unfinished; no phase advances here.
 
+Request-bound `type-audit resume` and `macro-audit resume` now use the existing
+live owner verifiers, not a second reconciliation receipt or scheduler. The
+[shared contract](../specs/HARNESS.md#request-bound-resume) binds the original
+manifest/request, captured implementation run and complete application. Valid
+unreviewed POST yields `needs-review`; an independently pinned accepted envelope
+for that same application yields `skip-accepted`. Invalid supplied acceptance
+rejects rather than downgrading. Neither disposition applies work or resets budgets.
+
+Full-owner type CLI fixture `/tmp/bof3-codex-recovery-uzbwpbhm` executed four
+synthetic native gates, including real CMake/Ninja, with captured execution context.
+At 14:10:40 UTC session 43002 started; it published application pin
+`v1:e99a908fd3b319d1268b8f7ab121af77de4be271f9e1eee862932de074fbc895`, then paused
+before review. Parent retained that pin before Ctrl-C (terminal exit 1). Original
+manifest pin is `v1:ad3fad3ff6918c9ac2f63faed6ab031d61db6cd9232465c238960726cea24730`;
+run is `postpublication-fixture-implementation`. Fresh resume returned
+`needs-review`, with complete proof pin
+`v1:1260a156c820858b4f8c086e14d958d14dc4b3c9287793f352bd18633785b8a6`.
+
+Reviewer `01a084ec-947a-7a72-ad93-604fa3c331f9` independently verified that
+application and baseline for fixture-only acceptance. Existing parent review
+published envelope pin
+`v1:05a828d58f2c76475ef3a8174005546e243a56d81133ce9ce7447fa8c9865569`; session
+5346 paused after acceptance at 14:16:16 UTC, then Ctrl-C returned terminal exit 1.
+Fresh request-bound resume returned `skip-accepted`. A disposable preservation
+probe verified 16 source/index/evidence files retained bytes, inode, mode, link
+count and timestamps, with no duplicate application or receipts.
+The same reviewer independently confirmed final acceptance, `skip-accepted`, both
+pins and preservation, accepting only the scoped native continuation cells.
+
+Execution-context checking was not relaxed. Plain invocation initially failed;
+diagnostics isolated only `environment_digest`. Parent replay required the original
+compound PTY launch and `PYTHONDONTWRITEBYTECODE=1`. Independent verifier replay
+also explicitly reproduced the original `CODEX_THREAD_ID`/`CODEX_SESSION_ID`
+runtime-input values (`01a08454-8f36-7af3-b72d-d98bb3daa9f5`), while retaining the
+actual independent reviewer ID in acceptance evidence. No proof, guard or actual
+Codex session identity changed. A prior disposable full-owner attempt correctly
+rejected unignored generated CMake files; the next fresh fixture supplied its
+missing `.gitignore`, not a relaxed unrelated-workspace guard.
+
+Independent callback/CLI probes cover both owners/dispositions, ten pre-verifier
+rejection cases and eight verifier failures. Existing checks pass 217 cases,
+including the escalated file-mode probe; Ruff, formatting, whitespace and plan
+parsing pass. No persistent tests or dependencies were added; frozen live index
+and naming-report pins remain unchanged. These native fixture cells do not prove
+BOF3 semantic acceptance, whole S3.5 or the durable bounded queue/budget loop.
+Full `just check` and a new global source audit were not run.
+
 ## Proposed roles and sequence
 
 `select TARGET@ADDRESS → bof3-lifter → bof3-reviewer → bof3-namer →
@@ -639,13 +686,13 @@ must satisfy them before the corresponding phase is marked done.
 - Owner: worker with independent reviewer and parent
 - Depends: S3.4
 - Blocker: none
-- Evidence: parent accepted reviewer 9342ff6b's bounded preapply interrupt/read-only resume cell and reviewer 12b72400's retained active-tool timeout/closure cell below; no transaction rollback or independent hard-stop/process-tree acceptance.
+- Evidence: parent accepted reviewer 9342ff6b's preapply interrupt/read-only resume cell and reviewer 12b72400's retained active-tool timeout cell below; Current Codex continuation records source rollback, guarded recovery and post-publication/acceptance resume cells. Whole failure-matrix and native process-tree acceptance remain incomplete.
 - Acceptance: run the failure matrix below against owner transactions and the small native workflow; inspect actual run state/tool outputs, not prompt text or exit zero alone. Reviewer verifies rollback bytes/modes/absence, unchanged unrelated dirty work/index and no duplicate apply; parent owns freshness recovery and attestation. Report unavailable native capabilities as blockers, not mocked acceptance.
 
 5. [S3.2] (blocked) Encode the proven sequence with bounded repair and native recovery.
 - Owner: parent
 - Depends: S3.5
-- Blocker: whole S3.5 remains unaccepted despite its bounded preapply cell; no bounded native loop is demonstrated. Full-target naming blocks production, not controlled fixture stages or read-only blocked accounting.
+- Blocker: whole S3.5 remains unaccepted; guarded recovery and request-bound resume are partial mechanisms, not a demonstrated bounded native loop. Full-target naming blocks production, not controlled fixture stages or read-only blocked accounting.
 - Evidence: S3.1 handoffs and bounded efb1b118 accounting accepted; neither is a native loop. Parent freshness/attestation checkpoints remain explicit and cannot be delegated implicitly.
 - Acceptance: native syntax validation, existing applicable checks and independently reviewed finite execution with fixed queue/budget. May select/account blocked entries and simulate controlled fixture stages, never advance a failed/unknown mutation or claim live campaign completion. Production cannot pass failed unfiltered full-target naming complete:true or missing separate identity approval; final review binds actual selector/change. Accepted work skips; uncertain apply stops for recovery; no budget reset on resume.
 

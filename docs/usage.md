@@ -432,6 +432,21 @@ the supervising parent and local native runtime, not protection against a
 malicious local writer. Shared input pins use exactly `path`, `target`, and
 `expected_envelope_digest`. Paths remain canonical under `out/reviews`;
 retain the envelope digest externally, never derive it from the supplied file.
+
+Request-bound resume inspects published work without reapplication:
+
+```sh
+bin/type-audit resume ORIGINAL_MANIFEST APPLICATION --expected-manifest-digest MANIFEST_PIN --expected-application-digest APPLICATION_PIN --implementation-run-id ORIGINAL_RUN
+bin/type-audit resume ORIGINAL_MANIFEST APPLICATION --expected-manifest-digest MANIFEST_PIN --expected-application-digest APPLICATION_PIN --implementation-run-id ORIGINAL_RUN --reviewed-envelope REVIEWED_ENVELOPE --expected-envelope-digest ENVELOPE_PIN
+```
+
+Current owner verification yields `needs-review` without an accepted envelope;
+valid current acceptance for the exact complete application yields `skip-accepted`.
+Mismatches or invalid acceptance reject, never fall back to application. This is a
+non-atomic read-only disposition, not a scheduler, durable skip token or authority
+to retry; preserve writer and budget obligations in
+[request-bound resume](specs/HARNESS.md#request-bound-resume).
+
 Preparation verifies each original reviewed private envelope against current
 state and retains its full bytes/hash and application in the shared manifest.
 Distinct target/path/digest, private/exact-wrapper, equal-contract and shared

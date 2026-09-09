@@ -454,6 +454,22 @@ Identical read-only replay is valid. Reuse for changed state, another owner, or
 another application rejects; verification never rewrites proofs, reruns gates, or
 reapplies changes. Historical success is not current acceptance after tooling drift.
 
+To resume inspection of the original published work without applying it again:
+
+```sh
+bin/macro-audit resume ORIGINAL_MANIFEST APPLICATION --expected-manifest-digest MANIFEST_PIN --expected-application-digest APPLICATION_PIN --implementation-run-id ORIGINAL_RUN
+bin/macro-audit resume ORIGINAL_MANIFEST APPLICATION --expected-manifest-digest MANIFEST_PIN --expected-application-digest APPLICATION_PIN --implementation-run-id ORIGINAL_RUN --reviewed-envelope REVIEWED_ENVELOPE --expected-envelope-digest ENVELOPE_PIN
+```
+
+The first form returns `needs-review` only after current owner verification. The
+second returns `skip-accepted` only for the same complete application, including
+attestation, with valid current parent acceptance. Wrong request/run, changed
+state, missing context, invalid acceptance or incomplete pin pairs reject. See
+[request-bound resume](HARNESS.md#request-bound-resume) for shared boundaries.
+Neither form performs extraction, consumes/resets a ranked budget, establishes
+writer termination or supplies a durable skip token. The bounded actor must retain
+its original queue and externally pinned proofs; autonomous marching remains open.
+
 ## Private revalidation and shared promotion
 
 Shared-template preparation currently requires exactly two declared `shared_targets`
