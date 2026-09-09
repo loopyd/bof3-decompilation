@@ -17,6 +17,21 @@ Context-heavy commands accept `--detail minimal|normal|full`:
 `-o FILE` always writes the complete artifact. For payload commands such as
 `m2c`, use `-o` and open only the file you need to edit.
 
+## Cleanup opportunity routing
+
+```sh
+bin/agent-context cleanup macro-opportunity TARGET ID
+bin/agent-context cleanup type-opportunity TARGET ID
+```
+
+Each read-only prefill retains one opaque owner ID and selects the existing macro
+or type skill. Routing checks neither candidate freshness nor target membership;
+the owner must verify both before work. It grants no transaction authority and
+never replaces a frozen lead or rebuilds an index. See
+[harness routing](specs/HARNESS.md#policy-versus-mechanism) and the
+[macro specification](specs/MACROS.md#candidate-and-consumer-inspection).
+The older `type TARGET OLD -> NEW` form still means identity maintenance.
+
 ## Naming conclusion import
 
 `bin/naming-audit conclude TARGET REPORT INPUT [--evidence-root ABSOLUTE_PATH]`

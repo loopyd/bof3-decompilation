@@ -10,6 +10,11 @@ for type queries and [parent acceptance](../../../docs/usage.md#type-parent-revi
 for the application lifecycle. [Harness ownership](../../../docs/specs/HARNESS.md)
 separates type representation from symbol naming and macro extraction.
 
+`bin/agent-context cleanup type-opportunity TARGET ID` routes one supplied lead.
+Keep the emitted target and opaque ID; verify current target membership through
+the type owner before preparing work. Routing supplies neither candidate evidence
+nor application approval. `type TARGET OLD -> NEW` remains identity maintenance.
+
 Inspect existing target headers, shared declarations and PsyQ definitions before
 proposing a new alias, aggregate, field or prototype. Prefer established types;
 justify widths, signedness, pointer depth, alignment, offsets and ABI from original

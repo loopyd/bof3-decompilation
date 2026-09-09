@@ -784,6 +784,37 @@ not rerun for this evidence/documentation-only continuation.
 
 ## Proposed roles and sequence
 
+S3.2 routing prerequisite: native cleanup prefills rejected both macro and type
+opportunity requests because the structured router and cleaner admitted only
+identity, naming and documentation skills. Explicit `macro-opportunity TARGET ID`
+and `type-opportunity TARGET ID` now select their existing concern skills and
+retain one opaque owner ID. They query or mutate nothing, infer no ranking inputs,
+and grant no transaction authority. Existing type-spelling identity requests stay
+unchanged. Canonical re-derivation checks internal coherence, not original caller
+authenticity; the parent retains bindings and owners validate candidate freshness,
+membership and separate approval. Policy and invocation details live in
+[harness routing](../specs/HARNESS.md#policy-versus-mechanism) and
+[usage](../usage.md#cleanup-opportunity-routing), with macro specifics in MACROS.md.
+
+Actual prefills for frozen `exact_group:8e1ad03b4ba92303` and the battle15
+`@1F800044:storage` lead now exit zero, each loading only its selected body and
+preserving the supplied ID. Disposable probes reject malformed tokens and forged
+inconsistent fields without body reads, preserve the old identity route, and
+verify unchanged raw index/frozen report/live reverse-index bytes. Existing cleanup,
+context, wrapper, skill-status and harness checks pass 100 cases plus the separately
+escalated file-mode case. Both changed skills validate; changed Markdown is directly
+compacted. No persistent tests or dependencies were added.
+
+The subsequent actual macro/type owner queries both exit 2 for stale battle15
+type inputs in the reverse index. Context transport is not candidate acceptance:
+no index rebuild, frozen-proof update, source edit, ranking or application follows.
+Reviewer `01a084ec-94e4-7473-a0d0-f0c691222ff7` independently accepts this routing
+prerequisite, including 40 disposable routing/transport/coherence probes and the
+code/docs boundaries. Whole S3.2, current production freshness and the bounded
+native sequence remain unfinished. An additional 46 existing plan checks pass;
+125 local links/anchors, Ruff and formatting pass. This is neither a successful
+live opportunity resolution nor a completed loop.
+
 `select TARGET@ADDRESS → bof3-lifter → bof3-reviewer → bof3-namer →
 bof3-reviewer → bof3-cleaner → bof3-reviewer → record result → next function`
 

@@ -220,6 +220,13 @@ attempt ledger remain unfinished. Do not substitute output limits for that ledge
 
 ## Candidate and consumer inspection
 
+`bin/agent-context cleanup macro-opportunity TARGET ID` supplies a bounded prefill
+for one caller-selected lead and routes only to `bof3-macros`. It retains the
+opaque ID, not a guessed replacement or target-local subset. This is context
+transport only: use the owner inspection below to verify existence, target
+membership and current fingerprint against the caller's frozen evidence before
+proceeding. No ranking parameters or application authority are inferred.
+
 ```sh
 bin/macro-audit account out/reviews/macro-account.json
 bin/macro-audit validate-account out/reviews/macro-account.json

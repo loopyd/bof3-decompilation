@@ -25,8 +25,8 @@ minimal entry contract; this index owns the detailed reading map.
 | Generic analyzer work explicitly requesting Rizin | [Project context](agents/project-context.md) | `$psx-rizin` |
 | Tooling, Python harness, CLI, tests | [Coding standards](agents/CODING_STANDARDS.md) | [Harness ownership](specs/HARNESS.md), [Tool usage](usage.md) and owning code/tests |
 | Codex MCP or Pi extension migration | [Codex configuration](specs/CODEX.md) | Global settings stay in `~/.codex`; project skills below |
-| Macro opportunity indexing, ranking or resolution | [Macro specification](specs/MACROS.md) | Owning code/checks there; matching or tooling route above when making changes |
-| Type representation opportunities and reviewed application | [Tool usage](usage.md#3b-target-analysis-freshness--rebuild--query) | `$bof3-types`; [harness ownership](specs/HARNESS.md) |
+| Macro opportunity indexing, ranking or resolution | [Macro specification](specs/MACROS.md) | [Explicit cleanup routing](usage.md#cleanup-opportunity-routing), owning code/checks; matching or tooling route when making changes |
+| Type representation opportunities and reviewed application | [Tool usage](usage.md#3b-target-analysis-freshness--rebuild--query) | [Cleanup routing](usage.md#cleanup-opportunity-routing), `$bof3-types`; [harness ownership](specs/HARNESS.md) |
 | Plan creation, management or execution | [Plan authoring](agents/plan-authoring.md) | `$plans`; selected file under `plans/`; refresh live evidence |
 | Symbol/type/metadata identity maintenance | [Project context](agents/project-context.md) | Explicit `$bof3-identity-maintenance` route only |
 | Naming evidence/audit closure | [Naming evidence contract](../.codex/skills/bof3-naming-evidence/SKILL.md) | Explicit `$bof3-naming-evidence` route only |

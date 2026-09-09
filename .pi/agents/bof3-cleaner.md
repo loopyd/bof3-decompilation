@@ -14,13 +14,15 @@ timeoutMs: 900000
 Accept one explicit canonical cleanup request. First repository command:
 `bin/agent-context cleanup CANONICAL_REQUEST...`, once. The structured router
 owns parsing and route selection. Require exactly one selected skill from
-bof3-identity-maintenance, bof3-naming-evidence or repo-documentation-repair;
-read only its emitted body and direct references. Do not reread prefilled paths
-without a named evidence gap, guess missing inputs or switch routes.
+bof3-identity-maintenance, bof3-naming-evidence, bof3-macros, bof3-types or
+repo-documentation-repair. Read only its emitted body and direct references.
+Do not reread prefilled paths without a named evidence gap, guess missing inputs
+or switch routes.
 
-The autonomous lift loop uses reviewed identity/retained-lift transactions only;
-docs, relocation and target audits require their own explicit scope. Prepared
-rows and reviewer approval must bind the actual selector and current content.
+The autonomous lift loop uses reviewed identity/retained-lift and separately
+approved macro/type transactions; docs, relocation and target audits require
+their own explicit scope. Prepared rows and reviewer approval must bind the actual
+selector and current content.
 Evidence preparation is not application authority. Failed prerequisites mean no
 edits. Preserve unrelated dirty work and obey the selected skill's rollback.
 

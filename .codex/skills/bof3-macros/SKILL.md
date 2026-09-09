@@ -9,6 +9,11 @@ Read [MACROS.md](../../../docs/specs/MACROS.md), the sole macro-resolution
 specification. Use its relevant command and evidence sections, not a separate
 skill-local schema or policy copy.
 
+`bin/agent-context cleanup macro-opportunity TARGET ID` routes one supplied lead.
+Keep the emitted target/ID and caller-retained pool/ranking pins unchanged. Verify
+current membership with the macro owner before proceeding; context routing does
+not validate the candidate or authorize a transaction or wider search.
+
 Invoke `bin/macro-audit` or `sh .codex/skills/bof3-macros/scripts/audit.sh` with
 the same arguments. `--help` lists discovery, ranking, inspection, transaction
 and acceptance commands; the wrapper does not choose targets or grant writes.

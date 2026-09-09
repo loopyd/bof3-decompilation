@@ -32,6 +32,23 @@ live in `macros/schema.py` and `types/schema.py`, composed by `analysis/schema.p
 
 ## Policy versus mechanism
 
+The read-only cleanup context router selects one existing domain skill:
+
+| Canonical request | Selected skill |
+| --- | --- |
+| `macro-opportunity TARGET ID` | `bof3-macros` |
+| `type-opportunity TARGET ID` | `bof3-types` |
+
+Pass either form to `bin/agent-context cleanup`. The router checks a known target
+and one nonempty printable ID token, retains that opaque ID unchanged, and loads
+only the selected body. It performs no opportunity query, index rebuild, ranking,
+transaction or approval. Candidate existence, target membership, freshness and
+caller-retained fingerprints remain owner gates before preparation/application.
+Canonical re-derivation rejects inconsistent fields or skill selection, not a
+different internally valid request; it does not authenticate the caller's original
+target/ID. The parent retains those bindings independently. Existing
+`type TARGET OLD -> NEW` remains an identity route, not type representation work.
+
 Macro extraction policy belongs in [MACROS.md](MACROS.md). Naming evidence and
 identity-application contracts are linked from the documentation index. Type
 candidate/application schemas remain in

@@ -41,6 +41,8 @@ _SKILL_REFERENCES = {
     "bof3-naming-evidence": {
         "audit": ("references/NAMING_AUDIT_V3.md",),
     },
+    "bof3-macros": {"opportunity": ()},
+    "bof3-types": {"opportunity": ()},
 }
 _ROUTE = {
     "symbol": ("bof3-identity-maintenance", "identity"),
@@ -50,6 +52,8 @@ _ROUTE = {
     "relocate-batch": ("bof3-identity-maintenance", "relocation"),
     "docs": ("repo-documentation-repair", "docs"),
     "audit-target": ("bof3-naming-evidence", "audit"),
+    "macro-opportunity": ("bof3-macros", "opportunity"),
+    "type-opportunity": ("bof3-types", "opportunity"),
 }
 
 
@@ -105,7 +109,8 @@ def _selected_skill(mode: str) -> SelectedSkill:
         name,
         f".codex/skills/{name}/SKILL.md",
         tuple(
-            f".codex/skills/{name}/{path}" for path in _SKILL_REFERENCES[name][operation]
+            f".codex/skills/{name}/{path}"
+            for path in _SKILL_REFERENCES[name][operation]
         ),
     )
 
@@ -202,13 +207,25 @@ def _repository_class(root: Path, value: str) -> str:
     return value
 
 
+def _validate_opportunity(value: str) -> str:
+    if (
+        not isinstance(value, str)
+        or not value
+        or any(
+            character.isspace() or not character.isprintable() for character in value
+        )
+    ):
+        raise ValueError("opportunity ID must be one nonempty printable token")
+    return value
+
+
 def parse_cleanup_request(
     arguments: Sequence[str],
     *,
     parent_compatibility: bool = False,
     root: Path = _REPOSITORY_ROOT,
 ) -> CleanupRequest:
-    """Parse one of seven canonical forms, plus bounded parent old-audit input."""
+    """Parse canonical cleanup forms plus bounded parent old-audit input."""
 
     tokens = tuple(arguments)
     if not tokens:
@@ -269,6 +286,11 @@ def parse_cleanup_request(
         class_name = _repository_class(root, tokens[2])
         selectors = tuple(_selector(value, target) for value in tokens[3:])
         values = (class_name, *(str(value) for value in selectors))
+    elif mode in {"macro-opportunity", "type-opportunity"}:
+        if len(tokens) != 3:
+            raise ValueError(f"{mode} requires exactly TARGET ID")
+        target = _known_target(root, tokens[1])
+        values = (_validate_opportunity(tokens[2]),)
     elif mode == "docs":
         values = _docs_paths(root, tokens[1:])
     else:
@@ -312,7 +334,7 @@ def _canonical_tokens(cleanup: CleanupRequest) -> tuple[str, ...]:
             cleanup.state or "",
             *cleanup.rows,
         )
-    if cleanup.mode == "relocate-batch":
+    if cleanup.mode in {"relocate-batch", "macro-opportunity", "type-opportunity"}:
         return (cleanup.mode, cleanup.target or "", *cleanup.arguments)
     if cleanup.mode == "docs":
         return (cleanup.mode, *cleanup.arguments)
