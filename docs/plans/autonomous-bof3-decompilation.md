@@ -839,6 +839,54 @@ pass; frozen live index/report hashes remain unchanged. No coverage added. The
 whole native sequence, original budget receipt and live owner queue remain
 unfinished; S3.2 stays in progress with frozen queue and source gates unchanged.
 
+### Integrated native sequence checkpoint
+
+After local deadline feature commit `2118f979`, the fixed disposable driver
+`/tmp/bof3-s32-sequence.py` joins actual owner subprocesses and native Codex review
+handoffs under one original budget at `/tmp/bof3-codex-recovery-4duf1zqh`.
+Prelaunch review closed request-pin drift, cleanup short-circuit, helper binding,
+preparation timeout and watchdog handoff gaps before freezing any work allowance.
+The two earlier setup-only roots `8n5vlba9` and `t4e7s9yj` never received a budget
+or owner dispatch; they are not successful native runs or refunded attempts.
+
+The four-entry fixture queue has 12 native-dispatch slots, zero repairs, two
+separately accounted Codex review handoffs, 1,200 seconds of original work and a
+fixed ten-second cleanup tail. Budget pin:
+`v1:cb5fd493a7359c3ac6e5153f9c820cbfa0e457f6e601f7addefdcd996f328931`.
+Eight durably pre-debited native dispatches reach high-water sequence 8:
+`v1:eaf3c8a5f07f665740aabb4ca737fb4062b8a629aceb34eee8197ad9f4c4c625`.
+Actual type apply → needs-review → independent Herschel review → parent review /
+final verification → fresh skip-accepted passes without duplicate application or
+new gates on skip. First envelope pin:
+`v1:26fc9ac3e607b574488e4cf82d1b1d9aca4984e7cbd5a7f20d7f9b34bb5b5bc3`.
+
+The subsequent macro account reports a real stale-input blocker. A separately
+counted, original-cutoff-bounded fixture preparation refreshes only its disposable
+index and creates a new candidate artifact, preserving the earlier proof. A second
+actual type application produces cleanup uncertainty, retained POST/backing and
+no application. Fresh process inspection matches guards and refuses advancement
+while original gate/guardian pidfds are still nonterminal, despite four launches
+remaining. Naming is deferred. Independent pre-exec watchdog supervision then
+confirms CLI/gate/guardian termination and child reaping, with no cleanup errors.
+No source restoration or retry follows; first acceptance is historical after the
+declared later transition, not current source acceptance. Failure pin:
+`v1:9fd5368b14f845140e956b889582e38fa0d52836df835c6e9a26649c5f92057b`.
+
+Retained `out/rehearsal/{budget,consumption-0..8,native-*,independent-review,
+parent,accepted-checkpoint,blocked,failure,read-only-result,terminal,watchdog-result,
+sequence-result}` artifacts distinguish observed progress, blocked work and deferred
+successors. Independent reviewer `01a084ec-947a-7a72-ad93-604fa3c331f9` accepted
+this integrated fixture scope in `out/rehearsal/sequence-review.md`, SHA-256
+`89319d13510632e58fc13a4477f5bf01b1ea4fc00888d5921d19206c14e36cc1`.
+The observer's terminal checkpoint is 360.585262 seconds after original start;
+both native Codex reviews finish before the original work cutoff. Review attributes
+pidfd observations to the original supervisors, not reopened saved PIDs, and does
+not establish every watchdog-loss/early-error path or a persistent enforced hold.
+Validation: native script syntax/Ruff, 46 existing plan checks and whitespace pass;
+no production code or persistent tests changed. This is not a durable production
+dispatcher, named lift/naming/cleanup success path or live BOF3 semantic acceptance.
+S3.2 and S4 remain unfinished; frozen production pins are unchanged.
+
 Documentation operations now share `bof3-docs` and `harness.docs`, replacing the
 repair-only skill and separate context-builder profile. Context/search/aggregate
 are read-only; edit/repair/one-document compact prepare full pinned inputs for
