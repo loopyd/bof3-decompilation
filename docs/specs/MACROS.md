@@ -367,6 +367,10 @@ fails the gate (exit 124 or 125), never supplies positive evidence. Owner-death
 process cleanup does not itself prove file rollback; interrupted transactions
 require owned-PRE reconciliation before reuse.
 
+Source rollback can resume identity-verified partial restoration; see the
+[shared recovery contract](HARNESS.md#policy-versus-mechanism). This is not a
+macro recovery command, authorization to retry, or an autonomous attempt ledger.
+
 Macro `run` and `revalidate` share a fail-fast repository writer lease with type
 transactions. It spans live manifest validation through gates, publication and
 rollback; a competing cooperating writer rejects before source mutation. The

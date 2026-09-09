@@ -28,7 +28,7 @@ from harness.common.git import (
 )
 from harness.common.paths import file_state, validate_paths
 from harness.common.lease import verify_writer
-from harness.common.images import install_image
+from harness.common.images import classify_restoration, install_image
 from harness.common.git import GitIndexSnapshot
 from harness.io import unique_object
 
@@ -240,12 +240,14 @@ def rollback(
     backup: dict[str, bytes | None],
     records: dict[str, dict[str, Any]] | None = None,
 ) -> None:
+    if records is not None and set(records) != set(backup):
+        raise RuntimeError("type transaction rollback failed: recovery paths differ")
     errors = []
     for name, content in backup.items():
         try:
             verify_writer(root)
-            current = _read_file(root, name, missing_ok=True)
             if records is None:
+                current = _read_file(root, name, missing_ok=True)
                 _atomic_write(root, name, content or b"", expected=current)
                 if content is None:
                     verify_writer(root)
@@ -253,11 +255,11 @@ def rollback(
             elif name in records:
                 image = records[name]
                 quarantine, installed = image["quarantine"], image["installed"]
-                if current not in {None, installed}:
-                    raise ValueError(
-                        f"transaction path drifted during rollback: {name}"
-                    )
-                if current is not None:
+                state = classify_restoration(root, name, content, image)
+                if state == "pre":
+                    continue
+                if state == "post":
+                    verify_writer(root)
                     _safe_unlink(
                         root,
                         name,
@@ -283,6 +285,9 @@ def rollback(
                         ),
                         expected_mode=image["pre"]["mode"],
                     )
+                verify_writer(root)
+                if classify_restoration(root, name, content, image) != "pre":
+                    raise ValueError(f"transaction PRE restoration failed: {name}")
         except (OSError, ValueError, RuntimeError) as error:
             errors.append(f"{name}: {error}")
     if errors:

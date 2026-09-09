@@ -103,6 +103,19 @@ For new files, creation mode remains `0644` masked by the process umask; v2/v3 b
 the resulting exact mode. Exception rollback checks POST/PRE identities, and
 workspace rollback does not rewrite already-restored byte-identical files.
 
+Identity-bound source rollback is replayable: it requires complete backup/image
+coverage, recognizes original PRE as a no-op, and resumes a missing destination
+only with its original PRE quarantine. Originally absent paths remain absent.
+`common/images.py` requires exactly one original POST image at the source,
+staging path or reserved POST quarantine; unexpected bytes, mode, inode, links or
+location combinations reject before that path is changed. PRE/POST byte equality
+does not bypass identity checks. `common/observation.py` shares non-atomic file
+observations with inspection; actual moves retain descriptor/no-replace checks.
+This low-level mechanism does not validate external record authority, acquire an
+absent lease, reconcile publication or restore workspace/Git state. Legacy
+byte-only rollback has no identity-replay guarantee. A no-op replay does not
+complete interrupted directory syncing or establish power-loss durability.
+
 `common/inspection.py` supplies read-only `inspect-recovery RECORD
 --expected-recovery-digest PIN` to both owner CLIs. It checks the independent
 pin, private record, root/owner/manifest bindings, PRE encoding and reserved

@@ -6,14 +6,14 @@ import base64
 import hashlib
 import json
 import re
-import stat
 from pathlib import Path
 from typing import Any, Callable
 
 from harness.common.digests import digest
 from harness.common.files import read_file
 from harness.common.directory import validate_repo_path
-from harness.common.paths import leaf_stat, validate_paths
+from harness.common.paths import validate_paths
+from harness.common.observation import observe_file
 from harness.common.quarantine import validate_quarantine
 from harness.common.images import validate_image_path
 from harness.common.recovery import IDENTITY_SCHEMA, LEGACY_SCHEMA, SCHEMA
@@ -29,34 +29,6 @@ def _require_fields(value: object, fields: str) -> dict[str, Any]:
 
 def _is_hash(value: object) -> bool:
     return isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) is not None
-
-
-def _observe(root: Path, name: str) -> dict[str, Any] | None:
-    before = leaf_stat(root, name)
-    content = read_file(root, name, missing_ok=True)
-    after = leaf_stat(root, name)
-    fields = (
-        "st_dev",
-        "st_ino",
-        "st_mode",
-        "st_nlink",
-        "st_size",
-        "st_mtime_ns",
-        "st_ctime_ns",
-    )
-    if tuple(getattr(before, field, None) for field in fields) != tuple(
-        getattr(after, field, None) for field in fields
-    ) or (before is None) != (content is None):
-        raise ValueError(f"recovery inspection raced with a writer: {name}")
-    if after is None:
-        return None
-    return {
-        "sha256": hashlib.sha256(content).hexdigest(),
-        "mode": stat.S_IMODE(after.st_mode),
-        "device": after.st_dev,
-        "inode": after.st_ino,
-        "links": after.st_nlink,
-    }
 
 
 def _validate_file(
@@ -124,10 +96,10 @@ def _validate_file(
 def _describe_file(
     root: Path, name: str, entry: dict[str, Any], *, legacy: bool
 ) -> dict[str, Any]:
-    current = _observe(root, name)
+    current = observe_file(root, name)
     pre = {key: value for key, value in entry["pre"].items() if key != "content_base64"}
     quarantine = entry["quarantine"]
-    displaced = _observe(root, quarantine) if quarantine is not None else None
+    displaced = observe_file(root, quarantine) if quarantine is not None else None
     expected = {**pre, "links": 1} if pre["sha256"] is not None else None
     expected_post = {
         **{
@@ -164,7 +136,7 @@ def _describe_file(
     }
     if not legacy:
         staging = entry["post"]["staging"]
-        staged = _observe(root, staging)
+        staged = observe_file(root, staging)
         result["staging"] = staging
         result["staging_state"] = (
             "absent"
@@ -174,7 +146,7 @@ def _describe_file(
             else "drifted"
         )
         post_quarantine = entry["post"]["quarantine"]
-        displaced_post = _observe(root, post_quarantine)
+        displaced_post = observe_file(root, post_quarantine)
         result["post_quarantine"] = post_quarantine
         result["post_quarantine_state"] = (
             "absent"
@@ -203,7 +175,7 @@ def inspect_recovery(
         is None
     ):
         raise ValueError("invalid recovery record path or owner")
-    metadata = _observe(root, name)
+    metadata = observe_file(root, name)
     if metadata is None or metadata["mode"] != 0o600 or metadata["links"] != 1:
         raise ValueError("recovery record must be a private, single-link regular file")
     content = read_file(root, name)
@@ -267,7 +239,7 @@ def inspect_recovery(
         files[path] = _describe_file(root, path, entry, legacy=legacy)
     unchanged = {}
     for path in sorted(allowed - record["files"].keys()):
-        observed = _observe(root, path)
+        observed = observe_file(root, path)
         actual = observed["sha256"] if observed is not None else None
         unchanged[path] = "pre-content-only" if actual == pre_state[path] else "drifted"
     output = binding["output"]
@@ -277,9 +249,9 @@ def inspect_recovery(
         if not output.startswith("out/reviews/evidence/"):
             raise ValueError("invalid recovery publication path")
         publication = (
-            "present-unverified" if _observe(root, output) is not None else "absent"
+            "present-unverified" if observe_file(root, output) is not None else "absent"
         )
-    if _observe(root, name) != metadata:
+    if observe_file(root, name) != metadata:
         raise ValueError("recovery record changed during inspection")
     return {
         "schema": "bof3.transaction-recovery-inspection/v1",

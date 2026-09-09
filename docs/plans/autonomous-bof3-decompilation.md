@@ -414,6 +414,43 @@ Source/manifest and plan/harness checks pass 118 existing cases, including the
 Git-object file-mode probe rerun with sandbox escalation. Plan parsing and
 whitespace pass; full `just check` and a new global source audit were not run.
 
+The next recovery slice fixes a reproduced replay failure: a second source
+rollback rejected the already-restored original PRE. Identity-bound rollback now
+checks complete backup/image coverage and consistent PRE/POST locations before
+each path's transition; already-restored PRE is a no-op and an interrupted missing
+destination resumes from its original quarantine. The shared
+[recovery contract](../specs/HARNESS.md#policy-versus-mechanism) retains authority,
+non-atomic observation, publication, workspace/Git and durability limitations.
+
+Native tool session 8495 exercised this primitive under `/tmp` at
+13:45:18–13:45:28 UTC. Fixture `/tmp/bof3-rollback-native-cq79wiuz` paused after
+the first original file was restored, the second POST was quarantined but PRE
+not restored, and a newly created third file remained POST. The externally
+retained recovery pin is
+`v1:e171d13e41653a134ee85ce9536eb8e497c8d8c530211eef9bab2ac19fdbd8ca`
+for `out/reviews/evidence/type-recovery-414edffa5e90a9c437a89459ec8f0ca1.json`.
+Ctrl-C produced terminal exit 1. Explicit parent resume under a fresh writer
+lease restored original bytes/modes/inodes and new-file absence; repeated rollback
+passed without replacing restored inodes. This is actual tool cancellation during
+disposable source restoration, not native BOF3 gate acceptance, whole-owner
+automatic recovery or an agent-session resume protocol. Frozen live index and
+naming-report hashes remain unchanged.
+
+Eight disposable cases additionally verify equal/empty PRE/POST bytes, corrupt or
+substituted PRE, mode/link drift, missing POST and incomplete scope; refused states
+preserve all observed bytes/inodes/modes/links. Independent reviewer
+`01a084ec-947a-7a72-ad93-604fa3c331f9` accepted the bounded implementation and
+320 mock-only state combinations. Existing owner/file checks pass 186 cases;
+plan/harness checks pass 56 and the escalated Git-object mode probe passes.
+Reviewer `01a084ec-94e4-7473-a0d0-f0c691222ff7` independently verified the retained
+pin, original PRE identities/bytes/modes, absent new file and all three exact
+quarantined POST images, without claiming to have witnessed cancellation timing.
+The Git-backed full-owner failure probe passes at
+`/tmp/bof3-codex-recovery-kh4lhswi`; its first invocation lacked the disposable
+fixture's test-import path and was corrected without repository changes.
+No persistent tests or dependencies were added. Guarded recovery and the bounded
+loop remain unfinished; no phase advances from this prerequisite.
+
 ## Proposed roles and sequence
 
 `select TARGET@ADDRESS → bof3-lifter → bof3-reviewer → bof3-namer →

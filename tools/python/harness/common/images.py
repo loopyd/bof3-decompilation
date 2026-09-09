@@ -14,7 +14,8 @@ from harness.common.directory import open_parent_fd
 from harness.common.files import atomic_write, read_file, restore_quarantined
 from harness.common.lease import verify_writer
 from harness.common.paths import leaf_stat
-from harness.common.quarantine import reserve_quarantine
+from harness.common.observation import observe_file
+from harness.common.quarantine import reserve_quarantine, validate_quarantine
 from harness.common.rename import require_native_noreplace
 
 IMAGE_DIRECTORY = "out/reviews/evidence/images"
@@ -97,3 +98,50 @@ def install_image(
         create=True,
     )
     verify_writer(root)
+
+
+def classify_restoration(
+    root: Path, name: str, content: bytes | None, image: dict[str, Any]
+) -> str:
+    pre, post = image["pre"], image["post"]
+    before_hash = hashlib.sha256(content).hexdigest() if content is not None else None
+    if (
+        pre["sha256"] != before_hash
+        or hashlib.sha256(image["installed"]).hexdigest() != post["sha256"]
+    ):
+        raise ValueError(f"transaction recovery content drifted: {name}")
+    keys = ("sha256", "mode", "device", "inode")
+    expected_pre = (
+        {**{key: pre[key] for key in keys}, "links": 1} if content is not None else None
+    )
+    expected_post = {**{key: post[key] for key in keys}, "links": 1}
+    quarantine = image["quarantine"]
+    if (quarantine is None) != (content is None):
+        raise ValueError(f"transaction PRE quarantine binding drifted: {name}")
+    if quarantine is not None:
+        validate_quarantine(name, quarantine)
+    staging = validate_image_path(name, post["staging"])
+    displaced_path = validate_quarantine(name, post["quarantine"])
+    if displaced_path == quarantine:
+        raise ValueError(f"transaction quarantines overlap: {name}")
+    current = observe_file(root, name)
+    displaced_pre = observe_file(root, quarantine) if quarantine is not None else None
+    staged = observe_file(root, staging)
+    displaced_post = observe_file(root, displaced_path)
+    if (
+        any(
+            value is not None and value != expected_post
+            for value in (staged, displaced_post)
+        )
+        or sum(value == expected_post for value in (current, staged, displaced_post))
+        != 1
+    ):
+        raise ValueError(f"transaction POST locations drifted during rollback: {name}")
+    if current == expected_pre and displaced_pre is None:
+        return "pre"
+    if displaced_pre == expected_pre:
+        if current == expected_post:
+            return "post"
+        if current is None:
+            return "missing"
+    raise ValueError(f"transaction path drifted during rollback: {name}")
