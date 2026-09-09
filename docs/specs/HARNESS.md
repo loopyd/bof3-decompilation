@@ -327,6 +327,42 @@ receipt. `owned_popen` accepts the same optional deadline and rejects prelaunch
 expiry with `subprocess.TimeoutExpired`. Convert a validated nanosecond deadline
 to monotonic seconds without replacing it with a fresh relative allowance.
 
+### Owner work deadlines
+
+`bin/type-audit run ... --deadline SECONDS` and `bin/macro-audit run ... --deadline
+SECONDS` accept an optional **absolute monotonic work cutoff**, not a duration or
+UTC timestamp. Their `run_transaction(..., deadline=...)` APIs expose the same
+control. The caller must first validate its original budget/consumption pins and
+freeze a separate cleanup hard-stop; a numeric cutoff grants no authority and is
+not an execution-budget validator. Do not replace either endpoint on a retry.
+
+`common.deadlines` binds this limit to the synchronous owner invocation before
+writer-lease acquisition. Invalid/nonfinite/boolean values reject; already-expired
+work raises `DeadlineExpired` without entering the writer. Nested bindings can
+only tighten the current limit and reset in `finally`. The native default runner
+inherits the limit, including hidden partial-function baseline gates during
+manifest rederivation. It retains the earlier of the work cutoff and its normal
+120-second command ceiling. Injected runner call signatures remain unchanged;
+checks around their return do not make a custom runner interruptible. New threads
+and subprocess entry points require explicit deadline propagation.
+
+Forward checks surround source transitions, gate execution and proof publication.
+After expiry, owned-image rollback and its safeguards run without that expired
+work limit; the parent must supervise the owner until the original cleanup
+hard-stop. Filesystem/Git inspection or restoration can still stall, so this is
+bounded cooperation, not guaranteed automatic recovery. `ProcessCleanupError`
+still prevents rollback while descendant termination is unconfirmed.
+
+Expiry after a gate may leave no ordinary command receipt. If publication itself
+crosses the cutoff, an output/attestation may remain as retained failure evidence
+after source rollback. A file's existence is not success: retain native terminal
+status, verify current owner state and use the existing inspection/recovery gates.
+Never delete or rewrite failed publication to manufacture acceptance.
+
+Without `--deadline`, existing standalone behavior is unchanged. This integration
+currently covers type/macro **run**, not check-only revalidation, naming collection,
+an automatic scheduler or the complete bounded Codex sequence.
+
 ## Validation
 
 Run the existing focused domain suites, shared application/history/revalidation

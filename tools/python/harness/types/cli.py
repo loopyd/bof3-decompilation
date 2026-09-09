@@ -169,6 +169,8 @@ def _run(args: argparse.Namespace) -> int:
     )
     if getattr(args, "participating_targets", None) is not None:
         options["participating_targets"] = args.participating_targets
+    if getattr(args, "deadline", None) is not None:
+        options["deadline"] = args.deadline
     application = run_transaction(
         root, _read(args.manifest), _read(args.changes), output=output, **options
     )
@@ -251,6 +253,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("changes", type=Path)
     run.add_argument("output", type=Path)
     run.add_argument("--implementation-run-id")
+    run.add_argument(
+        "--deadline",
+        type=float,
+        help="original absolute monotonic work cutoff; not a duration",
+    )
     run.add_argument(
         "--participating-targets",
         nargs="+",

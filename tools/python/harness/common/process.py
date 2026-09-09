@@ -14,24 +14,18 @@ from pathlib import Path
 from typing import IO, Any
 
 from harness.common.children import adopt_children, reap_children
+from harness.common.deadlines import resolve_deadline, validate_deadline
 
 
 class ProcessCleanupError(RuntimeError):
     """Descendant termination is unconfirmed; mutation recovery must stop."""
 
 
-def _check_deadline(deadline: float | None) -> None:
-    if deadline is not None and (
-        type(deadline) not in {int, float} or not math.isfinite(deadline)
-    ):
-        raise ValueError("work deadline must be a finite monotonic timestamp")
-
-
 def _supervise(owner_fd: int, argv: Sequence[str], deadline: float | None) -> int:
     """Reap owned descendants after direct exit or loss of the owner pipe."""
 
     adopt_children()
-    _check_deadline(deadline)
+    validate_deadline(deadline)
     with selectors.DefaultSelector() as poll:
         poll.register(owner_fd, selectors.EVENT_READ)
         if deadline is not None and time.monotonic() >= deadline:
@@ -145,7 +139,7 @@ def owned_popen(
 
     if not sys.platform.startswith("linux"):
         raise RuntimeError("native process ownership requires Linux subreaper support")
-    _check_deadline(deadline)
+    validate_deadline(deadline)
     if deadline is not None and time.monotonic() >= deadline:
         raise subprocess.TimeoutExpired(argv, 0)
     command = json.dumps([os.fspath(item) for item in argv])
@@ -209,7 +203,7 @@ def run_bounded(
         or output_limit < 1
     ):
         raise ValueError("command timeout and output limit must be positive")
-    _check_deadline(deadline)
+    validate_deadline(deadline)
     started = time.monotonic()
     deadline = (
         min(started + timeout, deadline) if deadline is not None else started + timeout
@@ -290,12 +284,20 @@ def run_command(
     cwd: str | Path,
     text: bool = True,
     capture_output: bool = True,
+    deadline: float | None = None,
 ) -> subprocess.CompletedProcess[str]:
     """Run one native transaction gate within 120 seconds and 2 MiB of output."""
     if text is not True or capture_output is not True:
         raise ValueError("transaction commands require captured text output")
+    deadline = resolve_deadline(deadline)
+    options = {"deadline": deadline} if deadline is not None else {}
     result = run_bounded(
-        Path(cwd), argv, timeout=120, output_limit=2 * 1024 * 1024, errors="strict"
+        Path(cwd),
+        argv,
+        timeout=120,
+        output_limit=2 * 1024 * 1024,
+        errors="strict",
+        **options,
     )
     failure = result["failure"]
     return subprocess.CompletedProcess(

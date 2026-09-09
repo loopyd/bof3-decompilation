@@ -291,6 +291,11 @@ readability judgment or proof that arbitrary future macro arguments are safe.
 
 ## Reviewed application
 
+For bounded cleanup, `run` accepts the original absolute `--deadline` work cutoff;
+the parent separately supervises its retained cleanup tail. See
+[owner work deadlines](HARNESS.md#owner-work-deadlines) for expiry, rollback and
+retained late-publication evidence. Other macro subcommands do not gain this flag.
+
 ```sh
 bin/type-audit baseline
 bin/macro-audit prepare out/reviews/macro-request.json out/reviews/evidence/macro-manifest.json

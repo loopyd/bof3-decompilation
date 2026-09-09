@@ -13,22 +13,19 @@ from harness.common import promotion as shared_pre
 from harness.common.process import run_command
 from harness.common.checks import capture_partial_baselines, required_checks
 from harness.common.digests import digest
+from harness.common.deadlines import bind_deadline
 from harness.common.files import preflight_existing_replacements
 from harness.common.history import validate_application_history
 from harness.common.lease import exclude_writers, verify_writer
-from harness.common.runtime import APPLICATION_SCHEMA
-from harness.common.runtime import application_record
-from harness.common.runtime import apply_changes
+from harness.common.runtime import APPLICATION_SCHEMA, application_record, apply_changes
 from harness.common.directory import validate_repo_path
 from harness.common.runtime import changed_paths
 from harness.common.paths import file_state
 from harness.common.git import git_index_backup, workspace_backup
-from harness.common.runtime import rollback
+from harness.common.runtime import rollback, run_checks, write_attestation
 from harness.common.safeguards import capture_safeguards, inspect_safeguards
 from harness.common.process import ProcessCleanupError
-from harness.common.runtime import run_checks
 from harness.common.paths import validate_paths
-from harness.common.runtime import write_attestation
 from harness.common.workspace import adopted_baseline as _adopted_baseline
 from harness.common.workspace import workspace_baseline as _workspace_baseline
 from harness.common.workspace import workspace_state as _workspace_state
@@ -285,6 +282,7 @@ def _manifest(root: Path, value: object, *, rederive: bool = False) -> dict[str,
     return value
 
 
+@bind_deadline
 @exclude_writers
 def run_transaction(
     root: Path,
@@ -295,6 +293,7 @@ def run_transaction(
     implementation_run_id: str | None = None,
     participating_targets: list[str] | None = None,
     output: str | None = None,
+    deadline: float | None = None,
 ) -> dict[str, Any]:
     manifest = _manifest(root, manifest_value, rederive=True)
     allowed = validate_paths(root, manifest["allowed_paths"])

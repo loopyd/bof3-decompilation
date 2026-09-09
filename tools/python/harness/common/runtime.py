@@ -14,6 +14,7 @@ from harness.common.process import run_command
 from harness.common.recovery import capture_recovery
 from harness.common.checks import check_evidence
 from harness.common.digests import digest
+from harness.common.deadlines import check_deadline
 from harness.common.files import atomic_write as _atomic_write
 from harness.common.files import restore_quarantined
 from harness.common.directory import validate_repo_path
@@ -85,9 +86,11 @@ def run_checks(
 ) -> tuple[list[dict[str, Any]], bool]:
     receipts, passed = [], True
     for index, check in enumerate(checks, start_index):
+        check_deadline()
         verify_writer(root)
         argv = check["argv"]
         result = runner(argv, cwd=root, text=True, capture_output=True)
+        check_deadline()
         verify_writer(root)
         evidence = check_evidence(check, result.returncode, result.stdout, root)
         output = (
@@ -108,6 +111,7 @@ def run_checks(
             "selector": check["selector"],
             "post_state_digest": post_state_digest,
         }
+        check_deadline()
         ref = _write_receipt(
             root, index, payload, schema=receipt_schema, prefix=evidence_prefix
         )
@@ -189,6 +193,7 @@ def apply_changes(
     workspace: dict[str, bytes] | None = None,
     index: GitIndexSnapshot | None = None,
 ) -> tuple[dict[str, bytes | None], dict[str, dict[str, Any]]]:
+    check_deadline()
     safe_allowed = validate_paths(root, allowed)
     if not isinstance(changes, dict) or not changes:
         raise ValueError("type application requires non-empty changes")
@@ -201,6 +206,7 @@ def apply_changes(
         raise ValueError("type application content must be text")
     backup = {name: _read_file(root, name, missing_ok=True) for name in changes}
     verify_writer(root)
+    check_deadline()
     images = capture_recovery(
         root, recovery, changes, backup, workspace=workspace, index=index
     )
@@ -208,12 +214,14 @@ def apply_changes(
     records: dict[str, dict[str, Any]] = {}
     try:
         for name, content in changes.items():
+            check_deadline()
             verify_writer(root)
             current = backup[name]
             image = images[name]
             installed = content.encode()
             quarantine = None
             if current is not None:
+                check_deadline()
                 quarantine = _safe_unlink(
                     root,
                     name,
@@ -228,7 +236,9 @@ def apply_changes(
             verify_writer(root)
             changed[name] = current
             records[name] = {**image, "installed": installed}
+            check_deadline()
             install_image(root, name, installed, image=image["post"])
+        check_deadline()
     except BaseException:
         rollback(root, changed, records)
         raise
@@ -324,6 +334,7 @@ def write_attestation(
     schema: str = ATTESTATION_SCHEMA,
     prefix: str = "type",
 ) -> dict[str, str]:
+    check_deadline()
     attestation_id = secrets.token_hex(16)
     facts = {
         "schema": schema,
@@ -334,6 +345,7 @@ def write_attestation(
     }
     record = {**facts, "digest": digest(facts)}
     relative = f"out/reviews/evidence/{prefix}-attestation-{attestation_id}.json"
+    check_deadline()
     _atomic_write(
         root,
         relative,

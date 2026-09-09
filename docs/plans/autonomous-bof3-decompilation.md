@@ -784,6 +784,31 @@ not rerun for this evidence/documentation-only continuation.
 
 ## Proposed roles and sequence
 
+Type/macro `run` now accepts an inherited absolute monotonic work deadline;
+native gates, including partial-baseline preflight, no longer silently receive a
+fresh full allowance beyond it. Forward edits and publication have cooperative
+checks; original owned-image rollback uses the parent's separately retained cleanup
+tail. `ProcessCleanupError` still stops speculative restoration. This is run-only,
+not revalidation/naming collection or a completed S3.2 scheduler.
+The native type fixture `/tmp/bof3-codex-recovery-eduu8e40` used one launch, zero
+repairs, an 8-second work cutoff and fixed 10-second cleanup tail. It observed POST,
+then owner exit 2, exact PRE bytes/inode/mode and raw index preservation, both
+observed gate/child pidfds terminal and no application publication in 8.143740s.
+`out/rehearsal/deadline.json` SHA-256 is
+`4f95989fe4f7acba234b5c25369c3a3a0a2458800eabd71e976f041109fbbe1e`;
+`deadline-result.json` SHA-256 is
+`c1dd9a144812124b9d90719886d5c98b337c918ba01d27b5e16a3df8ae5041ea`.
+These are fixture observations, not a new campaign-budget schema or BOF3 acceptance.
+Both owners' disposable API probes cover timely success, gate expiry and retained
+late publication after PRE rollback, plus inherited preflight limits and scope
+reset. The earlier `fzglhs7f` control failed observer setup and CLI error normalization;
+its observed PRE restoration is not accepted native-termination evidence. Independent
+review accepts the scoped integration; whole S3.2 remains in progress.
+Validation: 365 distinct existing checks passed across type/macro transactions,
+shared application/history/revalidation, process ownership, harness structure,
+file modes and plans. No regression cases were added. Native/API fixtures are
+disposable characterization, not production source or naming acceptance.
+
 Documentation operations now share `bof3-docs` and `harness.docs`, replacing the
 repair-only skill and separate context-builder profile. Context/search/aggregate
 are read-only; edit/repair/one-document compact prepare full pinned inputs for
