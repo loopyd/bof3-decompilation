@@ -130,12 +130,57 @@ identity but no workspace/index guards. Neither is upgraded. Observations are
 non-atomic; termination, exclusion and publication authenticity remain unverified.
 Exit zero means inspection succeeded, not that restoration or continuation is safe.
 
-Guarded owner recovery remains unfinished. Do not retry a transaction against its
-still-modified POST or automatically restore from a discovered record. Confirm
-writer termination/exclusion, validate independent bindings and reconcile any
-published application before explicit parent recovery. Durable workspace/index
-images provide backing, not permission or an implemented restoration protocol.
-Exception rollback and process cleanup still do not establish complete crash-safe recovery.
+## Guarded source recovery
+
+`type-audit recover` and `macro-audit recover` restore owned PRE only under an
+externally pinned parent authorization and a separately pinned v3 record.
+`common/authorization.py` validates authority bindings; `common/restoration.py`
+owns the fail-stop operation; `common/inspection.py::load_recovery` validates
+backing for both inspection and restoration. No discovered record grants authority.
+
+The supervising parent must actually verify the named native tool handle is
+terminal and its writer tree has stopped, then obtain independent recovery review.
+The CLI checks retained artifacts and pins; it does **not** authenticate actor IDs
+or interpret tool output as proof of termination. PID reuse, a free lock or a
+stopped launcher alone is insufficient. These are explicit trusted-parent
+attestations, not unattended recovery or authorization for another transaction.
+
+Authorization is a private, single-link `0600` JSON file under
+`out/reviews/evidence/`, with closed schema `bof3.source-recovery-authorization/v1`:
+
+- `schema`, `approved: true`, distinct nonempty `parent_run_id` and
+  `reviewer_run_id` (also distinct from the captured implementation run ID);
+- `review_artifact: {path, sha256}`: retained, nonempty, single-link review;
+- `binding`: exactly `action: "restore-owned-pre"`, `owner`, captured `root`
+  (`path`, `device`, `inode`), `implementation_run_id`,
+  `recovery: {path, digest}`, `manifest_digest`, sorted exact changed `paths`,
+  captured `publication`, and deterministic `completion` path
+  `out/reviews/evidence/{owner}-restoration-{record_nonce}.json`;
+- `termination`: exactly nonempty `tool`, specific nonempty string `handle`,
+  `state: "terminal"`, `writer_tree_stopped: true`, and `artifact: {path, sha256}`;
+- `digest`: `v1:` SHA-256 of compact sorted-key JSON without `digest`.
+
+Artifact paths are canonical repository-relative evidence paths with byte SHA-256;
+authorization, record, completion, publication and both artifacts must be distinct.
+Keep the authorization digest outside the assessor's mutable artifact before use.
+
+Recovery acquires the writer lease before live validation. It refuses historical
+schemas, missing implementation identity or workspace/Git guards, guard drift,
+unknown or present application publication, and inconsistent image locations.
+Every owned image is checked before each transition; completed paths must remain
+PRE. Each singleton rollback stops on failure rather than modifying later paths.
+Authority, guards and complete owned PRE are checked again around completion.
+Unexpected unrelated or Git-index changes are never overwritten.
+
+Completion writes an exclusive private `bof3.source-restoration/v1` receipt bound
+to both pins, authority binding, terminal attestation and restored PRE identities.
+It omits source bytes. Identical replay requires valid receipt bytes/mode/link
+count and fresh authority, guards and PRE checks; a receipt alone never proves
+current success. Partial restoration or publication failure stops and retains
+original evidence for reviewed retry; the original recovery record is not rewritten.
+The result grants neither source acceptance nor automatic retry. Power-loss
+durability, published-application reconciliation, workspace/Git restoration and
+automatic worker/session recovery remain unfinished.
 
 Moving implementation files changes tooling-bound execution closure. Do not edit
 retained receipts, frozen requests or historical evidence to make old proofs appear

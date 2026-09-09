@@ -368,8 +368,8 @@ process cleanup does not itself prove file rollback; interrupted transactions
 require owned-PRE reconciliation before reuse.
 
 Source rollback can resume identity-verified partial restoration; see the
-[shared recovery contract](HARNESS.md#policy-versus-mechanism). This is not a
-macro recovery command, authorization to retry, or an autonomous attempt ledger.
+[shared recovery contract](HARNESS.md#guarded-source-recovery). Neither rollback
+nor guarded recovery grants source acceptance or an autonomous attempt budget.
 
 Macro `run` and `revalidate` share a fail-fast repository writer lease with type
 transactions. It spans live manifest validation through gates, publication and
@@ -409,8 +409,20 @@ authorize restoration or a retry. Historical v1 records retain content-only POST
 inspection; v2 has no workspace/index guards. V3 reports scoped workspace drift,
 index agreement and locks without printing archived bytes. A matching guard is
 not restoration authority or complete atomic verification. Historical records
-are not upgraded. Guarded restoration commands and broader workspace/Git recovery remain unfinished;
-see [shared recovery contracts](HARNESS.md).
+are not upgraded.
+
+For explicit parent-authorized source-only restoration:
+
+```sh
+bin/macro-audit recover out/reviews/evidence/macro-recovery-NONCE.json --expected-recovery-digest RECOVERY_PIN --authorization out/reviews/evidence/recovery-authorization.json --expected-authorization-digest AUTHORIZATION_PIN
+```
+
+The [shared authorization schema and recovery gates](HARNESS.md#guarded-source-recovery)
+require independent parent-pinned authority, reviewed terminal writer evidence,
+matching v3 workspace/Git guards and known absent publication. This command
+restores original owned PRE; it never resolves the macro opportunity, accepts
+source, consumes a ranked attempt budget or permits automatic retry. Unexpected
+publication and workspace/Git drift require separate reconciliation.
 
 ## Parent acceptance and replay
 

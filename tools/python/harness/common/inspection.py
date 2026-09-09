@@ -17,7 +17,7 @@ from harness.common.observation import observe_file
 from harness.common.quarantine import validate_quarantine
 from harness.common.images import validate_image_path
 from harness.common.recovery import IDENTITY_SCHEMA, LEGACY_SCHEMA, SCHEMA
-from harness.common.safeguards import inspect_safeguards
+from harness.common.safeguards import _validate_safeguards, inspect_safeguards
 from harness.io import unique_object
 
 
@@ -158,7 +158,7 @@ def _describe_file(
     return result
 
 
-def inspect_recovery(
+def load_recovery(
     root: Path,
     name: str,
     expected_recovery_digest: str,
@@ -166,6 +166,8 @@ def inspect_recovery(
     owner: str,
     manifest_validator: Callable[..., dict[str, Any]],
 ) -> dict[str, Any]:
+    """Load validated, externally pinned backing without restoration authority."""
+
     name = validate_repo_path(name)
     if (
         owner not in {"type", "macro"}
@@ -232,11 +234,54 @@ def inspect_recovery(
         or not set(record["files"]) <= allowed
     ):
         raise ValueError("invalid recovery owned PRE or changed paths")
-    files = {}
     legacy = record["schema"] == LEGACY_SCHEMA
     for path, entry in record["files"].items():
         _validate_file(path, entry, manifest, legacy=legacy)
-        files[path] = _describe_file(root, path, entry, legacy=legacy)
+    output = binding["output"]
+    if output is not None:
+        output = validate_repo_path(output)
+        if not output.startswith("out/reviews/evidence/"):
+            raise ValueError("invalid recovery publication path")
+    if record.get("safeguards") is not None:
+        _validate_safeguards(record["safeguards"], set(record["files"]))
+    if (
+        read_file(root, name) != content
+        or observe_file(root, name) != metadata
+        or digest({key: value for key, value in record.items() if key != "digest"})
+        != expected_recovery_digest
+        or record["digest"] != expected_recovery_digest
+    ):
+        raise ValueError("recovery record changed during inspection")
+    return record
+
+
+def inspect_recovery(
+    root: Path,
+    name: str,
+    expected_recovery_digest: str,
+    *,
+    owner: str,
+    manifest_validator: Callable[..., dict[str, Any]],
+) -> dict[str, Any]:
+    name = validate_repo_path(name)
+    metadata = observe_file(root, name)
+    record = load_recovery(
+        root,
+        name,
+        expected_recovery_digest,
+        owner=owner,
+        manifest_validator=manifest_validator,
+    )
+    binding = record["binding"]
+    manifest = binding["manifest"]
+    allowed = set(manifest["allowed_paths"])
+    pre_state = manifest["pre_state"]
+    files = {
+        path: _describe_file(
+            root, path, entry, legacy=record["schema"] == LEGACY_SCHEMA
+        )
+        for path, entry in record["files"].items()
+    }
     unchanged = {}
     for path in sorted(allowed - record["files"].keys()):
         observed = observe_file(root, path)
@@ -245,9 +290,6 @@ def inspect_recovery(
     output = binding["output"]
     publication = "unknown"
     if output is not None:
-        output = validate_repo_path(output)
-        if not output.startswith("out/reviews/evidence/"):
-            raise ValueError("invalid recovery publication path")
         publication = (
             "present-unverified" if observe_file(root, output) is not None else "absent"
         )
@@ -260,7 +302,7 @@ def inspect_recovery(
         "owner": owner,
         "manifest_digest": manifest["digest"],
         "manifest_rederived": False,
-        "implementation_run_id": run_id,
+        "implementation_run_id": binding["implementation_run_id"],
         "files": files,
         "unchanged_paths": unchanged,
         "publication": {"path": output, "state": publication},

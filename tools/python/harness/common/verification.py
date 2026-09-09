@@ -1,4 +1,4 @@
-"""CLI transport for type/macro revalidation and read-only recovery inspection."""
+"""CLI transport for type/macro revalidation and parent-authorized recovery."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from harness.common.cli import resolved_root
 from harness.common.evidence import evidence_output_path
 from harness.common.files import atomic_write, read_file
 from harness.common.inspection import inspect_recovery
+from harness.common.restoration import restore_sources
 from harness.io import unique_object
 
 
@@ -29,7 +30,21 @@ def _inspect_recovery(args: argparse.Namespace) -> int:
     return 0
 
 
-def add_recovery_command(sub: argparse._SubParsersAction, owner, validator) -> None:
+def _restore_sources(args: argparse.Namespace) -> int:
+    result = restore_sources(
+        resolved_root(args),
+        args.record,
+        args.expected_recovery_digest,
+        args.authorization,
+        args.expected_authorization_digest,
+        owner=args.recovery_owner,
+        manifest_validator=args.recovery_manifest_validator,
+    )
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
+
+
+def add_recovery_commands(sub: argparse._SubParsersAction, owner, validator) -> None:
     parser = sub.add_parser(
         "inspect-recovery",
         help="inspect pinned recovery evidence without restoring files",
@@ -38,6 +53,19 @@ def add_recovery_command(sub: argparse._SubParsersAction, owner, validator) -> N
     parser.add_argument("--expected-recovery-digest", required=True)
     parser.set_defaults(
         handler=_inspect_recovery,
+        recovery_owner=owner,
+        recovery_manifest_validator=validator,
+    )
+    restore = sub.add_parser(
+        "recover",
+        help="restore owned PRE with pinned parent authority and matching guards",
+    )
+    restore.add_argument("record", help="canonical repo-relative recovery record path")
+    restore.add_argument("--expected-recovery-digest", required=True)
+    restore.add_argument("--authorization", required=True)
+    restore.add_argument("--expected-authorization-digest", required=True)
+    restore.set_defaults(
+        handler=_restore_sources,
         recovery_owner=owner,
         recovery_manifest_validator=validator,
     )

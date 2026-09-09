@@ -382,10 +382,17 @@ bin/type-audit inspect-recovery out/reviews/evidence/type-recovery-NONCE.json --
 
 The summary omits PRE source images and reports drift and publication presence;
 success is not restoration readiness. A discovered record or PID alone does not
-authorize restoration: guarded restoration commands and
-unrelated workspace/Git-index recovery remain unfinished. Macro invocation belongs
-to [MACROS.md](specs/MACROS.md); see
-[harness recovery contracts](specs/HARNESS.md).
+authorize restoration. Explicit parent-authorized recovery uses:
+
+```sh
+bin/type-audit recover out/reviews/evidence/type-recovery-NONCE.json --expected-recovery-digest RECOVERY_PIN --authorization out/reviews/evidence/recovery-authorization.json --expected-authorization-digest AUTHORIZATION_PIN
+```
+
+Follow the [shared authorization and recovery gates](specs/HARNESS.md#guarded-source-recovery).
+Recovery requires pinned v3 backing, parent-attested writer termination, matching
+workspace/Git guards and absent known publication. It restores owned PRE only;
+source acceptance, automatic retry and unrelated workspace/Git-index recovery are
+not granted. Macro invocation belongs to [MACROS.md](specs/MACROS.md).
 
 ### Type parent review and final verification
 

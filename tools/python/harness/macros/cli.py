@@ -10,7 +10,7 @@ from typing import Any
 
 from harness.common.cli import add_root_argument, resolved_root, run_main
 from harness.common.evidence import evidence_output_path, write_evidence_output
-from harness.common.verification import add_recovery_command, add_revalidation_commands
+from harness.common.verification import add_recovery_commands, add_revalidation_commands
 from harness.io import unique_object
 from harness.macros import application as macro_application_review
 from harness.macros.accounting import candidate_account, validate_account
@@ -328,7 +328,7 @@ def build_parser() -> argparse.ArgumentParser:
     final.add_argument("--expected-envelope-digest", required=True)
     final.set_defaults(handler=_final_verify)
     add_revalidation_commands(sub, macro_application_review)
-    add_recovery_command(sub, "macro", _manifest)
+    add_recovery_commands(sub, "macro", _manifest)
     return parser
 
 

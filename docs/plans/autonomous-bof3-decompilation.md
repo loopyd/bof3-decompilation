@@ -451,6 +451,51 @@ fixture's test-import path and was corrected without repository changes.
 No persistent tests or dependencies were added. Guarded recovery and the bounded
 loop remain unfinished; no phase advances from this prerequisite.
 
+Guarded source-only parent recovery is now implemented by `type-audit recover`
+and `macro-audit recover`; the [canonical contract](../specs/HARNESS.md#guarded-source-recovery)
+owns its closed authorization schema, mandatory lease, matching v3 guards,
+publication refusal and replay checks. The CLI authenticates neither actor IDs nor
+tool output: the supervising parent attests stopped writers from actual native
+evidence, retains an independent review, and pins that authorization separately.
+Recovered PRE is not source acceptance or permission for automatic retry.
+
+The native cancellation fixture `/tmp/bof3-codex-recovery-f4paaqpl` started at
+13:59:33 UTC; tool session 77110 reached retained source POST, then Ctrl-C returned
+terminal exit 1. Its bounded pause had no child writer. Record pin, retained before
+cancellation: `v1:fef66b14b0f0f57eba1122c48f5db1fdf363aa2f27aaec98f147fe4e4a88df13`
+at `out/reviews/evidence/type-recovery-79a484dcbccf87d8e256078a8df3bb01.json`.
+Reviewer `01a084ec-947a-7a72-ad93-604fa3c331f9` independently inspected POST,
+original PRE quarantine, guards and absent publication, approving only fixture
+source restoration subject to fresh CLI checks; cancellation timing remained
+parent-attested. Parent authority pin:
+`v1:edf4ae747f1a3a09be232455e3974d707408c1e4d28f8c5d540f13f4e2963e58`.
+The actual type CLI restored `include/test.h` to original inode 5382625, mode
+0664 and bytes; replay passed at 14:01:35 UTC with completion pin
+`v1:22d94f60428d5af523371a1d975b5ecd87a73067724bd62fe232926d21c634f8`.
+This fixture uses real capture/restoration and Git guards with a synthetic
+manifest, not BOF3 native-gate or whole-owner campaign acceptance.
+The same reviewer accepted the final PRE/POST identities, guard agreement,
+absent publication and all three pins; termination remains parent-attested.
+
+Independent macro CLI restoration/replay passed in
+`/tmp/bof3-independent-macro-recover-8o41662x` under explicitly synthetic authority,
+pin `v1:950ee0beeed884691570490b0a6edb4df2556950daf1ec9bf693e1cb5bc7c9ec`;
+reviewer `01a084ec-94e4-7473-a0d0-f0c691222ff7` verified original PRE, retained POST,
+unchanged receipt bytes/inode/timestamps, guards and absent publication. Initial
+type CLI/replay under synthetic authority also passed in
+`/tmp/bof3-codex-recovery-g_2drq7l` at
+`v1:7bf48bcc2b9360f92842e1eddfa3aca4fcf488010939cc0b3e10ed58815fa9a6`.
+
+Review-driven corrections now reclassify every owned image before each transition
+and complete PRE after receipt publication, revalidate authority at completion,
+check private receipt metadata and reject equal-valued float/bool binding fields.
+Twenty-one mock adversarial scenarios, four independent binding-type rejection
+probes, historical v1/v2/v3 inspection comparisons and 243 existing owner/file/
+plan/harness cases pass. No persistent tests or dependencies were added. Full
+`just check` and a new global source audit were not run. Published-application
+reconciliation, workspace/Git restoration, durable automatic/session recovery and
+the bounded ranked execution loop remain unfinished; no phase advances here.
+
 ## Proposed roles and sequence
 
 `select TARGET@ADDRESS → bof3-lifter → bof3-reviewer → bof3-namer →
