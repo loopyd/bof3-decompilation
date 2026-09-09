@@ -41,12 +41,14 @@ def check_deadline() -> None:
         )
 
 
-def bind_deadline(function: Callable[..., _Result]) -> Callable[..., _Result]:
+def bind_deadline(
+    function: Callable[..., _Result], *, argument: str = "deadline"
+) -> Callable[..., _Result]:
     """Bind one keyword deadline through nested preflight and forward operations."""
 
     @wraps(function)
     def execute(*args, **kwargs):
-        token = _CURRENT.set(resolve_deadline(kwargs.get("deadline")))
+        token = _CURRENT.set(resolve_deadline(kwargs.get(argument)))
         try:
             check_deadline()
             return function(*args, **kwargs)

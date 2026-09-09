@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from harness.common.process import OwnedProcess, owned_popen
+from harness.common.deadlines import resolve_deadline
 from harness.naming.namespace import selected_evidence_root
 
 OUTPUT_BUDGET = 65536
@@ -33,7 +34,10 @@ class IndexWorker:
         target: str,
         report: dict[str, Any],
         timeout: float = MAX_DEADLINE,
+        *,
+        work_deadline: float | None = None,
     ) -> None:
+        self.work_deadline = resolve_deadline(work_deadline)
         environment = dict(os.environ)
         environment.pop("BOF3_NAMING_EVIDENCE_ROOT", None)
         environment["PYTHONPATH"] = str(Path(__file__).resolve().parents[2])
@@ -49,13 +53,31 @@ class IndexWorker:
             stderr=subprocess.PIPE,
             text=True,
             bufsize=1,
+            **(
+                {"deadline": self.work_deadline}
+                if self.work_deadline is not None
+                else {}
+            ),
         )
         self._send({"root": str(root), "target": target, "report": report}, timeout)
 
-    def _send(self, value: dict[str, Any], timeout: float = MAX_DEADLINE) -> None:
+    def resolve_cutoff(self, timeout: float, *, cleanup: bool = False) -> float:
+        cutoff = time.monotonic() + timeout
+        inherited = getattr(self, "work_deadline", None)
+        return (
+            min(cutoff, inherited) if inherited is not None and not cleanup else cutoff
+        )
+
+    def _send(
+        self,
+        value: dict[str, Any],
+        timeout: float = MAX_DEADLINE,
+        *,
+        cleanup: bool = False,
+    ) -> None:
         if self.process.stdin is None:
             raise RuntimeError("index worker stdin closed")
-        deadline = time.monotonic() + timeout
+        deadline = self.resolve_cutoff(timeout, cleanup=cleanup)
         try:
             pending = memoryview((json.dumps(value) + "\n").encode())
             descriptor = self.process.stdin.fileno()
@@ -79,7 +101,7 @@ class IndexWorker:
     def receive(self, timeout: float) -> dict[str, Any]:
         if self.process.stdout is None:
             raise RuntimeError("index worker stdout closed")
-        deadline = time.monotonic() + timeout
+        deadline = self.resolve_cutoff(timeout)
         stdout = self.process.stdout.fileno()
         stderr = (
             self.process.stderr.fileno() if self.process.stderr is not None else None
@@ -105,6 +127,8 @@ class IndexWorker:
                         raise RuntimeError(
                             f"index worker failed: {detail.decode(errors='replace')}"
                         )
+            if time.monotonic() >= deadline:
+                raise TimeoutError("index worker deadline exceeded")
             line, self._stdout_buffer = pending.split(b"\n", 1)
             self._stderr_buffer = detail
             return json.loads(line)
@@ -115,7 +139,7 @@ class IndexWorker:
     def request(
         self, request_id: int, row: dict[str, Any], timeout: float
     ) -> list[dict[str, Any]]:
-        deadline = time.monotonic() + timeout
+        deadline = self.resolve_cutoff(timeout)
         self._send({"id": request_id, "row": row}, timeout)
         response = self.receive(max(0, deadline - time.monotonic()))
         if response.get("id") != request_id or not isinstance(
@@ -140,7 +164,7 @@ class IndexWorker:
     def close(self) -> None:
         try:
             if self.process.poll() is None:
-                self._send({"op": "close"}, 2)
+                self._send({"op": "close"}, 2, cleanup=True)
                 self.process.wait(timeout=2)
         except (BrokenPipeError, subprocess.TimeoutExpired, TimeoutError):
             pass

@@ -10,6 +10,19 @@ from pathlib import Path
 from harness.common.directory import validate_repo_path, open_parent_fd
 
 
+def require_absent(root: Path, name: str) -> None:
+    """Reject any occupied confined leaf, including symlinks, without reading it."""
+    parent, leaf = open_parent_fd(root, name)
+    try:
+        try:
+            os.stat(leaf, dir_fd=parent, follow_symlinks=False)
+        except FileNotFoundError:
+            return
+        raise FileExistsError(name)
+    finally:
+        os.close(parent)
+
+
 def leaf_stat(root: Path, name: str) -> os.stat_result | None:
     try:
         parent, leaf = open_parent_fd(root, name)

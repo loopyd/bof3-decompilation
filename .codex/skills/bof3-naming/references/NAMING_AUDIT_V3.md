@@ -15,8 +15,12 @@ only to receipt-backed `exhausted` or `proposed` conclusions. Return proposals t
 the parent for separately approved identity application.
 
 Each invocation processes at most 10 rows within a 600-second shard wall and
-120-second native-operation deadline. Resume the same canonical command without
-replaying completed checkpoint rows. Keep tool output at most 8 KiB; cite report
+120-second relative per-operation cap (`--deadline`). For a bounded parent run,
+pass its original absolute monotonic `--work-deadline`; retain the separate cleanup
+hard-stop. Follow [owner work deadlines](../../../../docs/specs/HARNESS.md#owner-work-deadlines):
+expiry stops forward writes/finalization, not client cleanup; partial evidence
+remains for inspection. Resume only within the original budget, with the same
+canonical command and no replay of completed checkpoint rows. Keep output at most 8 KiB; cite report
 and receipt paths with SHA-256, not report bodies. A shard/query success is not
 target completion: require successful `bin/naming-audit validate TARGET REPORT`
 without a transaction filter and `complete:true`. If collection/import used an

@@ -90,12 +90,18 @@ def build_parser() -> argparse.ArgumentParser:
         "--deadline",
         type=int,
         default=DEFAULT_DEADLINE,
-        help=f"per-row collection deadline in seconds (default {DEFAULT_DEADLINE})",
+        help=f"relative per-operation/index-request limit in seconds (default {DEFAULT_DEADLINE})",
     )
     parser.add_argument(
         "--instructions",
         action="store_true",
         help="capture complete original instructions for function rows and their direct work",
+    )
+    parser.add_argument(
+        "--work-deadline",
+        type=float,
+        action=_SingleValue,
+        help="original absolute monotonic work cutoff; --deadline remains a relative per-operation cap",
     )
     parser.set_defaults(handler=_run)
     return parser
@@ -131,6 +137,11 @@ def _run(args: argparse.Namespace) -> int:
             deadline=args.deadline,
             rows_budget=args.rows_budget,
             terminalize=args.terminalize,
+            **(
+                {"work_deadline": args.work_deadline}
+                if getattr(args, "work_deadline", None) is not None
+                else {}
+            ),
         )
     finally:
         reset_receipt_root(receipt_token)

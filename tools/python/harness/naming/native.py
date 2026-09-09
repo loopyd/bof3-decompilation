@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import subprocess
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from harness.common.process import owned_popen
+from harness.common.deadlines import resolve_deadline
 
 OUTPUT_BUDGET = 8 * 1024
 
@@ -37,9 +39,12 @@ def _bounded_text(text: str, budget: int = OUTPUT_BUDGET) -> str:
 class NativeByteOps:
     """Bounded ``asm-diff``/``byte-match`` subcommand execution."""
 
-    def __init__(self, root: Path, deadline: int) -> None:
+    def __init__(
+        self, root: Path, deadline: int, *, work_deadline: float | None = None
+    ) -> None:
         self.root = root
         self.deadline = deadline
+        self.work_deadline = resolve_deadline(work_deadline)
 
     def run(
         self, operation: dict[str, Any], timeout: float | None = None
@@ -47,15 +52,27 @@ class NativeByteOps:
         kind = operation["kind"]
         argv = [str(self.root / "bin" / kind), operation["target"], *operation["args"]]
         limit = min(self.deadline, timeout) if timeout is not None else self.deadline
+        cutoff = (
+            min(time.monotonic() + limit, self.work_deadline)
+            if self.work_deadline is not None
+            else None
+        )
         process = owned_popen(
             argv,
             cwd=self.root,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
+            **({"deadline": cutoff} if cutoff is not None else {}),
         )
         try:
-            stdout, stderr = process.communicate(timeout=limit)
+            stdout, stderr = process.communicate(
+                timeout=max(0, cutoff - time.monotonic())
+                if cutoff is not None
+                else limit
+            )
+            if cutoff is not None and time.monotonic() >= cutoff:
+                raise subprocess.TimeoutExpired(argv, limit)
         except subprocess.TimeoutExpired:
             process.terminate_tree(timeout=2)
             stdout, stderr = "", ""

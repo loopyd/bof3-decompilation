@@ -46,6 +46,7 @@ def revalidate_application(
     runner=run_command,
     output: str | None = None,
     intervening: list | None = None,
+    deadline: float | None = None,
 ) -> dict:
     from harness.common.revalidation import revalidate
 
@@ -61,6 +62,7 @@ def revalidate_application(
         runner=runner,
         output=output,
         intervening=intervening,
+        deadline=deadline,
     )
 
 

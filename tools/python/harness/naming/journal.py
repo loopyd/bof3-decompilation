@@ -19,6 +19,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+from harness.common.deadlines import check_deadline
 
 from harness.domain.receipts import command_records
 from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
@@ -86,9 +87,11 @@ def commit_entry(
         if hasattr(namespace, "path")
         else journal_path(namespace, report, target)
     )
+    check_deadline()
     path.parent.mkdir(parents=True, exist_ok=True)
     committed = dict(entry)
     committed["entry_sha256"] = entry_sha256(committed)
+    check_deadline()
     with path.open("a", encoding="utf-8", newline="") as handle:
         handle.write(json.dumps(committed, sort_keys=True) + "\n")
         handle.flush()
@@ -133,15 +136,18 @@ def load_journal(
         except (json.JSONDecodeError, ValueError) as error:
             tail = "\n".join(lines[index:])
             forensic = path.with_name("checkpoint.jsonl.tail")
+            check_deadline()
             forensic.write_text(tail + "\n", encoding="utf-8")
             torn_final = isinstance(error, json.JSONDecodeError) and not any(
                 item.strip() for item in lines[index + 1 :]
             )
             if not torn_final:
+                check_deadline()
                 path.with_name("checkpoint.jsonl.corrupt").write_bytes(
                     path.read_bytes()
                 )
                 return {}, True
+            check_deadline()
             path.write_text(
                 "\n".join(valid) + ("\n" if valid else ""), encoding="utf-8"
             )
@@ -165,6 +171,7 @@ def rotate_journal(root: Path, report: Path, target: str, reason: str) -> None:
             while forensic.exists():
                 forensic = path.with_name(f"{path.name}.{reason}.{suffix}")
                 suffix += 1
+            check_deadline()
             path.replace(forensic)
 
 
@@ -200,13 +207,16 @@ def write_manifest(
         ],
     }
     path = manifest_path(root, report, target)
+    check_deadline()
     path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(manifest, indent=2, sort_keys=True) + "\n"
     temporary = path.with_name(f".{path.name}.tmp")
+    check_deadline()
     with temporary.open("w", encoding="utf-8") as handle:
         handle.write(text)
         handle.flush()
         os.fsync(handle.fileno())
+    check_deadline()
     os.replace(temporary, path)
     directory = os.open(path.parent, os.O_RDONLY)
     try:

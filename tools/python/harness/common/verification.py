@@ -117,6 +117,11 @@ def add_resume_command(
 
 def _revalidate(args: argparse.Namespace) -> int:
     root = resolved_root(args)
+    options = (
+        {"deadline": args.deadline}
+        if getattr(args, "deadline", None) is not None
+        else {}
+    )
     record = args.revalidation_owner.revalidate_application(
         root,
         _read(args.proof),
@@ -125,6 +130,7 @@ def _revalidate(args: argparse.Namespace) -> int:
         adopted_baseline=args.adopted_baseline,
         intervening=_read(args.intervening) if args.intervening is not None else None,
         output=evidence_output_path(root, args.output.as_posix()),
+        **options,
     )
     print(
         json.dumps(
@@ -176,6 +182,11 @@ def add_revalidation_commands(sub: argparse._SubParsersAction, owner) -> None:
     revalidate.add_argument("output", type=Path)
     revalidate.add_argument("--expected-envelope-digest", required=True)
     revalidate.add_argument("--execution-run-id", required=True)
+    revalidate.add_argument(
+        "--deadline",
+        type=float,
+        help="original absolute monotonic work cutoff; not a duration",
+    )
     revalidate.add_argument("--adopted-baseline", required=True)
     revalidate.add_argument(
         "--intervening",

@@ -27,11 +27,13 @@ See [DOCS.md](specs/DOCS.md) for commands, bounds, scope and preservation contra
 
 ## Cleanup opportunity routing
 
-Type/macro `run` commands accept the parent's original `--deadline` in absolute
-monotonic seconds. Freeze a separate cleanup hard-stop; this is not a relative
-timeout or permission to reset the campaign budget. See
+Type/macro `run` and `revalidate` accept the parent's original `--deadline` in
+absolute monotonic seconds. Naming collection uses `--work-deadline` for that
+cutoff; its existing `--deadline` stays a relative per-operation cap. Freeze a
+separate cleanup hard-stop; neither flag permits resetting the campaign budget. See
 [owner work deadlines](specs/HARNESS.md#owner-work-deadlines) for rollback and
-late-publication handling. Other subcommands do not inherit this CLI option.
+late-publication handling and check-only revalidation's no-restoration boundary.
+Other subcommands do not inherit these CLI options.
 
 ```sh
 bin/agent-context cleanup macro-opportunity TARGET ID

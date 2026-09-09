@@ -1577,9 +1577,9 @@ def test_partial_runner_commits_strict_exit_one_evidence(
         def close(self) -> None:
             pass
 
-    import harness.naming.execution as evidence_run
+    import harness.naming.session as sessions
 
-    monkeypatch.setattr(evidence_run, "IndexWorker", Worker)
+    monkeypatch.setattr(sessions, "IndexWorker", Worker)
     common = {
         "status": "different",
         "exact_match": False,

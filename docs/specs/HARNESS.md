@@ -329,10 +329,10 @@ to monotonic seconds without replacing it with a fresh relative allowance.
 
 ### Owner work deadlines
 
-`bin/type-audit run ... --deadline SECONDS` and `bin/macro-audit run ... --deadline
-SECONDS` accept an optional **absolute monotonic work cutoff**, not a duration or
-UTC timestamp. Their `run_transaction(..., deadline=...)` APIs expose the same
-control. The caller must first validate its original budget/consumption pins and
+Type/macro `run` and `revalidate` commands accept `--deadline SECONDS`, an optional
+**absolute monotonic work cutoff**, not a duration or UTC timestamp. Their
+`run_transaction(..., deadline=...)` and `revalidate_application(..., deadline=...)`
+APIs expose the same control. The caller must validate original budget/consumption pins and
 freeze a separate cleanup hard-stop; a numeric cutoff grants no authority and is
 not an execution-budget validator. Do not replace either endpoint on a retry.
 
@@ -359,9 +359,30 @@ after source rollback. A file's existence is not success: retain native terminal
 status, verify current owner state and use the existing inspection/recovery gates.
 Never delete or rewrite failed publication to manufacture acceptance.
 
-Without `--deadline`, existing standalone behavior is unchanged. This integration
-currently covers type/macro **run**, not check-only revalidation, naming collection,
-an automatic scheduler or the complete bounded Codex sequence.
+Check-only revalidation acquires no source-restoration authority. Expiry or an
+unexpected gate write leaves current source for parent inspection, never automatic
+rollback. A late revalidation publication can still verify against unchanged
+source; mechanical verification does not prove deadline compliance or authorize
+advancement. Retain the failed invocation and the parent's budget decision.
+
+Naming collection uses `bin/naming-evidence-run ... --work-deadline SECONDS` and
+`run_evidence(..., work_deadline=...)` for the same absolute cutoff. Its existing
+`--deadline` remains a relative per-operation/index-request cap, not a campaign
+budget. The effective collection limit is the earlier of the inherited cutoff and
+the existing 600-second shard wall. `naming.session` owns client acquisition and
+cleanup; index, native-byte and Rizin clients pass the cutoff to their guardians
+and clip foreground waits. Cleanup attempts all acquired clients and preserves
+`ProcessCleanupError` over ordinary failures; shutdown/drain is not work.
+
+Naming checks before receipt/journal writes and finalization stop further forward
+work on expiry. They do not make filesystem operations atomic or interruptible:
+in-flight writes and earlier completed checkpoints may remain. Expiry skips later
+manifest/telemetry/report finalization, not retained evidence; never delete it to
+manufacture success. Collection still cannot approve identities or satisfy an
+unfiltered full-target naming audit by itself.
+
+Without an absolute cutoff, existing standalone limits remain. These owner controls
+are not an automatic scheduler or the complete bounded Codex sequence.
 
 ## Validation
 

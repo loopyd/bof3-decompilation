@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from harness.domain.receipts import command_records, write_receipt
+from harness.common.deadlines import check_deadline
 from harness.naming.evidence import SCHEMA as ANALYZER_VERSION
 from harness.naming.journal import commit_entry
 from harness.naming.native import OUTPUT_BUDGET
@@ -64,6 +65,7 @@ class EvidenceNamespace:
     ) -> dict[str, Any]:
         """Write one receipt using this namespace's canonical path spelling."""
 
+        check_deadline()
         return write_receipt(
             self.root,
             self.receipt(row, name),
@@ -98,6 +100,7 @@ def evidence_namespace(root: Path, report: Path, target: str) -> EvidenceNamespa
     from harness.naming.namespace import artifact_root
     from harness.naming.namespace import selected_evidence_root
 
+    check_deadline()
     return EvidenceNamespace(
         root,
         artifact_root(root, report, target),
@@ -276,13 +279,16 @@ def _commit_row(
     }
     raw_path = namespace.artifact(row, "payload.json")
     raw_file = namespace.record_path(raw_path)
+    check_deadline()
     raw_path.parent.mkdir(parents=True, exist_ok=True)
     for index, result in enumerate(semantic):
         stdout = str(result.pop("raw", result.get("output", "")))
         stderr = str(result.pop("stderr", ""))
         path = raw_path.parent / f"semantic-{index}.stdout.raw"
         error_path = raw_path.parent / f"semantic-{index}.stderr.raw"
+        check_deadline()
         path.write_text(stdout, encoding="utf-8")
+        check_deadline()
         error_path.write_text(stderr, encoding="utf-8")
         result["raw_file"] = namespace.record_path(path)
         result["raw_sha256"] = hashlib.sha256(stdout.encode()).hexdigest()
@@ -291,9 +297,11 @@ def _commit_row(
         result["stderr_sha256"] = hashlib.sha256(stderr.encode()).hexdigest()
         result["stderr_size"] = error_path.stat().st_size
     raw_text = _json_lines(payload)
+    check_deadline()
     raw_path.write_text(raw_text, encoding="utf-8")
     derived_path = raw_path.parent / "derived.json"
     derived_text = _json_lines(derived)
+    check_deadline()
     derived_path.write_text(derived_text, encoding="utf-8")
     entry: dict[str, Any] = {
         "row": _row_key(row),
@@ -307,6 +315,7 @@ def _commit_row(
         "analyzer_version": ANALYZER_VERSION,
     }
     commit_entry(namespace, report, target, entry)
+    check_deadline()
     failed_path = raw_path.parent / "failed.json"
     if failed_path.exists():
         failed_path.unlink()

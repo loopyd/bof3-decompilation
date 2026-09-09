@@ -5,16 +5,22 @@ from __future__ import annotations
 import hashlib
 import json
 import time
+from functools import partial
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
 from harness.analysis.index import index_path
 from harness.common.process import ProcessCleanupError
+from harness.common.deadlines import (
+    DeadlineExpired,
+    bind_deadline,
+    check_deadline,
+    resolve_deadline,
+)
 from harness.domain.ids import normalize_target_id, parse_function_id
 from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.client import (
-    IndexWorker,
     _validate_report_shape,
     _validate_run_arguments,
 )
@@ -35,7 +41,6 @@ from harness.naming.journal import (
     rotate_journal,
 )
 from harness.naming.journal import write_manifest as write_journal_manifest
-from harness.naming.native import NativeByteOps
 from harness.naming.plan import (
     collection_row,
     indexed_operation_plan,
@@ -43,7 +48,7 @@ from harness.naming.plan import (
     validate_report_operations,
 )
 from harness.naming.proposal import canonical_report_path
-from harness.naming.semantics import RizinSession
+from harness.naming.session import open_session
 from harness.naming.state import (
     evidence_dir,
     manifest_path,
@@ -171,6 +176,7 @@ def _semantic_succeeded(
     return True
 
 
+@partial(bind_deadline, argument="work_deadline")
 def run_evidence(
     root: Path,
     target: str,
@@ -185,6 +191,7 @@ def run_evidence(
     rizin_executable: str | Path | None = None,
     terminalize: bool = False,
     registry=PRODUCTION_EXACT_CAPABILITIES,
+    work_deadline: float | None = None,
 ) -> dict[str, Any]:
     telemetry = RunTelemetry()
     report = canonical_report_path(root, report)
@@ -213,6 +220,7 @@ def run_evidence(
             for path in sorted(root.glob("config/targets/**/target.toml"))
         },
     )
+    check_deadline()
     loaded, corrupt = load_journal(root, report, target)
     fresh = bool(loaded) and journal_is_fresh(
         root, report, target, inputs, registry=registry
@@ -232,23 +240,24 @@ def run_evidence(
     telemetry.rows_skipped = len(reusable)
     telemetry.phase("prepare")
     shard_end = time.monotonic() + SHARD_WALL_CLOCK
-    worker = IndexWorker(
+    if resolve_deadline() is not None:
+        shard_end = min(shard_end, resolve_deadline())
+    executed = 0
+    errors: list[str] = []
+    with open_session(
         root,
         target,
         report_payload,
-        min(deadline, max(0, shard_end - time.monotonic())),
-    )
-    telemetry.external_processes += 1
-    telemetry.index_opens += 1
-    rizin = RizinSession(
-        root, target, command_timeout=deadline, executable=rizin_executable
-    )
-    byte_ops = NativeByteOps(root, deadline)
-    executed = 0
-    errors: list[str] = []
-    try:
+        deadline,
+        shard_end,
+        work_deadline=resolve_deadline(),
+        rizin_executable=rizin_executable,
+    ) as (worker, rizin, byte_ops):
+        telemetry.external_processes += 1
+        telemetry.index_opens += 1
         worker.receive(min(deadline, max(0, shard_end - time.monotonic())))
         for request_id, report_row in enumerate(selected):
+            check_deadline()
             key = _row_key(report_row)
             row = collection_row(report_row, target, registry=registry)
             remaining = shard_end - time.monotonic()
@@ -259,6 +268,7 @@ def run_evidence(
             try:
                 semantic: list[dict[str, Any]] = []
                 for op in semantic_operation_plan(row, target):
+                    check_deadline()
                     if op["target"] != target and not op["target"].startswith(
                         f"{target}@"
                     ):
@@ -365,6 +375,7 @@ def run_evidence(
                     operations=operation_records,
                     registry=registry,
                 )
+                check_deadline()
                 receipts = _receipts_for(namespace, target, row, operations, semantic)
                 checkpoint[key] = _commit_row(
                     namespace,
@@ -379,18 +390,14 @@ def run_evidence(
                 write_journal_manifest(root, report, target, inputs, checkpoint)
                 executed += 1
                 telemetry.rows_completed += 1
-            except ProcessCleanupError:
+            except (ProcessCleanupError, DeadlineExpired):
                 raise
             except Exception as error:
                 worker.kill()
                 write_failed_receipt(namespace, target, row, error)
                 errors.append(f"{key}: {error}")
                 break
-    finally:
-        try:
-            rizin.close()
-        finally:
-            worker.close()
+    check_deadline()
     telemetry.phase("collect")
     entries = load_journal(root, report, target)[0]
     manifest = write_journal_manifest(root, report, target, inputs, entries)
@@ -399,12 +406,15 @@ def run_evidence(
     )
     telemetry_path = evidence_dir(root, report, target) / "telemetry.json"
     summary = telemetry.payload(manifest["sha256"])
+    check_deadline()
     write_telemetry(telemetry_path, summary)
+    check_deadline()
     terminalized = (
         terminalize
         and not errors
         and terminalize_report(root, report, target, report_rows, entries)
     )
+    check_deadline()
     return {
         "schema": "bof3.naming-evidence-run/v2",
         "target": target,

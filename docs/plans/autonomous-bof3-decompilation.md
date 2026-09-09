@@ -809,6 +809,36 @@ shared application/history/revalidation, process ownership, harness structure,
 file modes and plans. No regression cases were added. Native/API fixtures are
 disposable characterization, not production source or naming acceptance.
 
+The follow-up extends original cutoffs to type/macro `revalidate --deadline` and
+naming `--work-deadline`, preserving naming's relative `--deadline` cap. Binding
+precedes writer exclusion; naming session ownership cleans all acquired clients,
+preserves cleanup uncertainty and skips forward finalization after expiry.
+Revalidation never gains restoration authority. Partial writes and late verifiable
+check-only receipts remain evidence, not budget acceptance or permission to advance.
+Disposable API logs `/tmp/bof3-revalidation-deadline-api-final.log` (eight cases)
+and `/tmp/bof3-naming-cutoff-api-final.log` (five cases) passed timely execution,
+gate/commit/finalization expiry, retained publication and cleanup priority cases.
+Native naming fixtures `/tmp/bof3-naming-work-index-e4tu8i_j`,
+`/tmp/bof3-naming-work-byte-81l35hmh` and `/tmp/bof3-naming-work-rizin-gvx4y362`
+each used one launch, zero repairs, five-second work and ten-second cleanup limits.
+Their `deadline.json` / `result.json` retain terminal original process pidfds,
+no expired finalization and unchanged report/index. Bohr accepted this scope.
+Native check-only type fixture `/tmp/bof3-codex-recovery-0h1rjbgg` used one launch,
+zero repairs, eight-second work and ten-second cleanup: exit 2 at 8.050233s,
+original gate/child pidfds terminal, source bytes/inode/mode and raw index unchanged,
+no new publication or later gate. Its synthetic review prerequisite is not BOF3
+acceptance. `out/rehearsal/deadline.json` SHA-256:
+`6f7aeca9f13b5e67927c1dd7e9753b67cf2f7a49a3d124c12f1c330a715cc11f`;
+`out/rehearsal/result.json` SHA-256:
+`f7e6e9c21dc6223937098c9887714b3cbf792d8d86117460f62c33cfc9768a25`.
+Herschel accepted scoped code/docs parity and the retained revalidation evidence.
+Validation passed 513 distinct existing checks: naming/revalidation 115,
+owner/shared application, process, structure, skills/context, wrappers and plans
+397, plus the separately escalated file-mode check. Ruff, formatting and whitespace
+pass; frozen live index/report hashes remain unchanged. No coverage added. The
+whole native sequence, original budget receipt and live owner queue remain
+unfinished; S3.2 stays in progress with frozen queue and source gates unchanged.
+
 Documentation operations now share `bof3-docs` and `harness.docs`, replacing the
 repair-only skill and separate context-builder profile. Context/search/aggregate
 are read-only; edit/repair/one-document compact prepare full pinned inputs for

@@ -24,6 +24,7 @@ from typing import Any
 from harness.analysis.engine import EngineIdentity, find_engine
 from harness.analysis.project import prepare_target, rizin_argv
 from harness.common.process import OwnedProcess, owned_popen
+from harness.common.deadlines import resolve_deadline
 from harness.domain.manifests import load_target_manifests
 from harness.naming import native as evidence_native
 
@@ -46,11 +47,13 @@ class RizinSession:
         *,
         command_timeout: int = DEFAULT_COMMAND_TIMEOUT,
         executable: str | Path | None = None,
+        work_deadline: float | None = None,
     ) -> None:
         self.root = root
         self.target = target
         self.command_timeout = command_timeout
         self.executable = executable
+        self.work_deadline = resolve_deadline(work_deadline)
         self.process: OwnedProcess | None = None
         self.commands_executed = 0
         self.commands_killed = 0
@@ -93,6 +96,11 @@ class RizinSession:
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
+                **(
+                    {"deadline": self.work_deadline}
+                    if self.work_deadline is not None
+                    else {}
+                ),
             )
             assert self.process.stderr is not None
             self._stderr_thread = threading.Thread(
@@ -167,6 +175,11 @@ class RizinSession:
             started = time.monotonic()
             stderr_start = self._stderr_size()
             try:
+                if (
+                    self.work_deadline is not None
+                    and time.monotonic() >= self.work_deadline
+                ):
+                    return self.expire_command(command, selector)
                 # The deliberately invalid final command makes Rizin write a
                 # unique marker to stderr.  Waiting until the drain thread has
                 # acknowledged that marker establishes a cross-pipe command
@@ -192,16 +205,12 @@ class RizinSession:
                 if timeout is None
                 else min(self.command_timeout, timeout)
             )
+            if self.work_deadline is not None:
+                limit = min(limit, max(0, self.work_deadline - started))
             while True:
                 if time.monotonic() - started > limit:
-                    self.kill()
-                    self.commands_killed += 1
-                    return evidence_native.SemanticResult(
-                        command=command,
-                        selector=selector,
-                        exit=124,
-                        output=f"deadline exceeded: rizin command {command!r} killed",
-                        killed=True,
+                    return self.expire_command(
+                        command, selector, raw=raw.decode(errors="replace")
                     )
                 ready, _, _ = select.select(
                     [process.stdout] if process.stdout else [], [], [], 0.05
@@ -275,6 +284,10 @@ class RizinSession:
                             for line in diagnostic_lines
                         )
                         forensic = output + stderr
+                        if time.monotonic() - started >= limit:
+                            return self.expire_command(
+                                command, selector, raw=output, stderr=stderr
+                            )
                         return evidence_native.SemanticResult(
                             command=command,
                             selector=selector,
@@ -292,6 +305,21 @@ class RizinSession:
                         output="rizin session exited before command completed",
                         killed=True,
                     )
+
+    def expire_command(
+        self, command: str, selector: str, *, raw: str = "", stderr: str = ""
+    ) -> evidence_native.SemanticResult:
+        self.kill()
+        self.commands_killed += 1
+        return evidence_native.SemanticResult(
+            command=command,
+            selector=selector,
+            exit=124,
+            output=f"deadline exceeded: rizin command {command!r} killed",
+            killed=True,
+            raw=raw,
+            stderr=stderr,
+        )
 
     def kill(self) -> None:
         """Terminate and reap the session so nothing outlives the run."""
