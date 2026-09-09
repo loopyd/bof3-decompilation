@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import selectors
 import subprocess
@@ -19,16 +20,32 @@ class ProcessCleanupError(RuntimeError):
     """Descendant termination is unconfirmed; mutation recovery must stop."""
 
 
-def _supervise(owner_fd: int, argv: Sequence[str]) -> int:
+def _check_deadline(deadline: float | None) -> None:
+    if deadline is not None and (
+        type(deadline) not in {int, float} or not math.isfinite(deadline)
+    ):
+        raise ValueError("work deadline must be a finite monotonic timestamp")
+
+
+def _supervise(owner_fd: int, argv: Sequence[str], deadline: float | None) -> int:
     """Reap owned descendants after direct exit or loss of the owner pipe."""
 
     adopt_children()
+    _check_deadline(deadline)
     with selectors.DefaultSelector() as poll:
         poll.register(owner_fd, selectors.EVENT_READ)
+        if deadline is not None and time.monotonic() >= deadline:
+            os.close(owner_fd)
+            return 124
         child = subprocess.Popen(argv, start_new_session=True)
         try:
             while child.poll() is None:
-                if poll.select(0.05) and not os.read(owner_fd, 1):
+                remaining = (
+                    deadline - time.monotonic() if deadline is not None else 0.05
+                )
+                if remaining <= 0:
+                    break
+                if poll.select(min(0.05, remaining)) and not os.read(owner_fd, 1):
                     break
         finally:
             os.close(owner_fd)
@@ -122,11 +139,15 @@ def owned_popen(
     stderr: int | IO[Any] | None = None,
     text: bool = False,
     bufsize: int = -1,
+    deadline: float | None = None,
 ) -> OwnedProcess:
     """Start one Linux-owned tree with subreaper and cleanup acknowledgement."""
 
     if not sys.platform.startswith("linux"):
         raise RuntimeError("native process ownership requires Linux subreaper support")
+    _check_deadline(deadline)
+    if deadline is not None and time.monotonic() >= deadline:
+        raise subprocess.TimeoutExpired(argv, 0)
     command = json.dumps([os.fspath(item) for item in argv])
     owner_read, owner_write = os.pipe()
     try:
@@ -142,9 +163,12 @@ def owned_popen(
         str(owner_read),
         str(completion_write),
         command,
+        json.dumps(deadline),
     ]
     try:
         os.set_blocking(completion_read, False)
+        if deadline is not None and time.monotonic() >= deadline:
+            raise subprocess.TimeoutExpired(argv, 0)
         process = subprocess.Popen(
             launcher,
             cwd=cwd,
@@ -174,16 +198,40 @@ def run_bounded(
     timeout: float,
     output_limit: int,
     errors: str = "replace",
+    deadline: float | None = None,
 ) -> dict[str, Any]:
-    """Bound captured output and runtime while owning the entire child group."""
-    if timeout <= 0 or output_limit < 1:
+    """Bound owned work by pre-spawn timeout and an optional monotonic deadline."""
+    if (
+        type(timeout) not in {int, float}
+        or not math.isfinite(timeout)
+        or timeout <= 0
+        or type(output_limit) is not int
+        or output_limit < 1
+    ):
         raise ValueError("command timeout and output limit must be positive")
-    process = owned_popen(
-        argv, cwd=root, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    _check_deadline(deadline)
+    started = time.monotonic()
+    deadline = (
+        min(started + timeout, deadline) if deadline is not None else started + timeout
     )
+    try:
+        process = owned_popen(
+            argv,
+            cwd=root,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            deadline=deadline,
+        )
+    except subprocess.TimeoutExpired:
+        return {
+            "argv": argv,
+            "exit_code": 124,
+            "failure": "timeout",
+            "stdout": "",
+            "stderr": "work deadline expired before launch\n",
+        }
     streams = {"stdout": bytearray(), "stderr": bytearray()}
     failure = None
-    deadline = time.monotonic() + timeout
     try:
         with selectors.DefaultSelector() as poll:
             for name in streams:
@@ -206,10 +254,14 @@ def run_bounded(
                             break
                 if failure:
                     break
+        if failure is None and time.monotonic() >= deadline:
+            failure = "timeout"
         if failure:
             process.terminate_tree(timeout=2)
         else:
             process.wait(timeout=max(0.01, deadline - time.monotonic()))
+            if time.monotonic() >= deadline:
+                failure = "timeout"
     except subprocess.TimeoutExpired:
         failure = "timeout"
         process.terminate_tree(timeout=2)
@@ -277,7 +329,9 @@ def run_analyzer(
 def _main() -> int:
     completion = int(sys.argv[2])
     try:
-        result = _supervise(int(sys.argv[1]), json.loads(sys.argv[3]))
+        result = _supervise(
+            int(sys.argv[1]), json.loads(sys.argv[3]), json.loads(sys.argv[4])
+        )
         os.write(completion, b"complete\n")
         return result
     finally:

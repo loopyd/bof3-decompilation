@@ -231,6 +231,41 @@ environment; never edit proofs or relax execution-context checks to make resume
 pass. Historical integrity alone is not current acceptance. The broader bounded
 execution loop remains unfinished.
 
+## Bounded continuation
+
+`common.continuation.check_budget` is a read-only validator, not a scheduler or
+launch permission. Its `bof3.execution-budget/v1` contract pins the canonical
+root path/device/inode, ordered unique queue IDs and fingerprints, same-boot
+monotonic start/deadline, UTC start, global launch ceiling and per-entry repair
+ceilings. All integer counters reject booleans. There are no implicit defaults.
+
+Supply the externally retained budget digest, latest checkpoint digest and
+sequence, plus the complete `bof3.execution-consumption/v1` chain from zero.
+Each checkpoint pins the contract and previous checkpoint; each transition
+consumes exactly one launch or one entry repair, never refunds or resets.
+Queue membership, counters, ceilings, root and boot must remain bound.
+`bof3.execution-budget-status/v1` reports remaining time/counts and exhaustion
+with `launch_authorized:false`. Latestness depends on the parent's external
+high-water pin: a mutually consistent stale prefix and stale pin cannot be
+detected internally. Queue fingerprints are bound, not freshly re-queried.
+
+The controller must durably pre-debit before dispatch and preserve the original
+deadline across fresh invocations. Repair work that launches a process owes
+both debits. No checkpoint writer, reservation service, CLI, automatic recovery
+or accepted-source authority is implemented by this validator. Owner freshness,
+writer quiescence and independent parent acceptance remain separate gates.
+
+`common.process.run_bounded(..., deadline=...)` accepts an optional finite absolute
+`time.monotonic()` deadline; the earlier of that deadline and the per-call timeout
+applies, including startup. Already-expired work does not spawn. The Linux
+supervisor also enforces the deadline without parent polling, then reaps owned
+descendants before completion ACK. Capture, wait and confirmed completion all
+respect expiry. Cleanup may finish after the work deadline but grants no further
+work; uncertain cleanup raises `ProcessCleanupError`, not a successful timeout
+receipt. `owned_popen` accepts the same optional deadline and rejects prelaunch
+expiry with `subprocess.TimeoutExpired`. Convert a validated nanosecond deadline
+to monotonic seconds without replacing it with a fresh relative allowance.
+
 ## Validation
 
 Run the existing focused domain suites, shared application/history/revalidation

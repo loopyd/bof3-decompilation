@@ -586,6 +586,68 @@ Native forward partial-mutation recovery, original-budget deadline expiry and th
 resumed bounded queue/budget workflow remain unproven; S3.5 stays in-progress and
 S3.2 stays blocked. Full `just check` and a new global source audit were not run.
 
+### Budget and failure rehearsal checkpoint
+
+The read-only budget validator and absolute native deadline contract now live in
+[HARNESS.md](../specs/HARNESS.md#bounded-continuation). This is not a scheduler:
+the parent retains the latest externally pinned consumption position, durably
+pre-debits work, checks owner freshness and establishes quiescence separately.
+Neither fresh invocation nor repair resets the original allowance.
+
+Native forward partial-application interruption used
+`/tmp/bof3-codex-recovery-n0_bam7g`, session 56479 (terminal exit 1), after the
+first real install and before the second source mutation or any gate. Recovery pin
+`v1:ad478dd1591fd07aa0fa124c02ae152ccc0b67286685bdffb3a3b6a0bb3076dc`
+bound header POST/original PRE quarantine and untouched C PRE/staged POST.
+Reviewer `01a084ec-947a-7a72-ad93-604fa3c331f9` checked the actual states and
+approved fixture-only recovery. Actual owner CLI recovery with parent authority
+`v1:4b47990cc54b14fb7a65a192328ac16e54757c3c15898424fbbcec26d807a7bc`
+produced completion
+`v1:f18dbb6bfbd7cf7b7791ed84419312593ccd7b06c72c17669c97de0f12861631`.
+Both original PRE inodes/modes returned; both POST images and unchanged guards
+remain. No gate, application, acceptance or retry authority follows.
+
+Original-budget expiry used `/tmp/bof3-budget-deadline-wzu9yjr_`, native session
+90788 (exit 0), one read-only dispatch, zero repairs and a 12-second original
+deadline. Externally retained budget
+`v1:c8bf8ef5813dcf66d2e5911c00eb4de4b0778e98a4c6422125bba00fc6c76868`
+and sequence-1 consumption
+`v1:231e101d142132428de7be2652def3b024df738638c8ae36eb17beed2d8fb319`
+were pinned before dispatch. Startup delay consumed time; the child stopped at
+the original deadline, with confirmed descendant cleanup and protected source,
+dirty file and Git index unchanged. A fresh invocation using the same pins and
+sequence reported zero time/launches and dispatched nothing. Independent reviewer
+`01a084ec-94e4-7473-a0d0-f0c691222ff7` repeated this native cell in
+`/tmp/bof3-budget-deadline-cvrsn_yl`, including an unchanged inventory on resume.
+The approximately 32-ms cleanup tail grants no work extension.
+
+Native fixture tool failure in `/tmp/bof3-codex-recovery-nulu3b5r` stopped after
+Splat exit 7 with one failed receipt and no application. Structured verification
+failure in `/tmp/bof3-codex-recovery-pphg7i4b` passed Splat/build, then rejected
+exit-zero asm-diff JSON `null`; byte-match did not run. Both owner CLIs exited 2
+and restored owned PRE while preserving captured unrelated source/dirty/index.
+These synthetic gate fixtures are not BOF3 source acceptance.
+The earlier `/tmp/bof3-codex-recovery-8in6gwp8` negative control was invalid:
+Splat diagnostic-looking output with exit zero satisfies its documented opaque
+exit-status contract. Its published application and POST remain untouched; it
+is not failed-verification evidence. No diagnostic blacklist was added.
+
+These observations supersede the preceding unproven claims only for forward
+partial recovery and original-deadline/exhausted fresh-invocation cells. S3.5
+remains in-progress, S3.2 blocked and the broader pipeline unfinished. Independent
+concurrent-editor probes confirmed a remaining P1: type/macro automatic workspace
+rollback can overwrite unrelated changed bytes and quarantine unrelated new files.
+The next scoped repair must preserve unexplained concurrent work, restore only
+proven owned paths and inspect automatic index restoration for the same defect.
+Uncertain-cleanup stop state across controller resume also remains unfinished.
+
+Independent reviewers accepted the bounded code/docs and native failure cells.
+Existing process/owner/revalidation/harness/plan checks passed 276 cases plus the
+separately escalated file-mode check. Ruff, formatting, whitespace, plan status
+and 75 local documentation links/anchors pass; frozen live index/report pins
+remain unchanged. No persistent tests or dependencies were added. Full `just check`
+and a new global source audit were not run; this is only the scoped checkpoint.
+
 ## Proposed roles and sequence
 
 `select TARGET@ADDRESS → bof3-lifter → bof3-reviewer → bof3-namer →
