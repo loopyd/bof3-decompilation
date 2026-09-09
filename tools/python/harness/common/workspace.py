@@ -2,31 +2,27 @@
 
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
 from typing import Any
 
 from harness.common.digests import digest
+from harness.common.git import read_git
 from harness.domain.receipts import sha256_file
 
 
 def workspace_state(root: Path) -> dict[str, dict[str, str | None]]:
     if not (root / ".git").exists():
         return {}
-    result = subprocess.run(
-        [
-            "git",
-            "--no-optional-locks",
-            "status",
-            "--porcelain=v1",
-            "-z",
-            "--untracked-files=all",
-        ],
-        cwd=root,
-        capture_output=True,
-        check=True,
+    command = [
+        "--no-optional-locks",
+        "status",
+        "--porcelain=v1",
+        "-z",
+        "--untracked-files=all",
+    ]
+    records = (
+        read_git(root, command).encode("utf-8", errors="surrogateescape").split(b"\0")
     )
-    records = result.stdout.split(b"\0")
     state = {}
     index = 0
     while index < len(records) and records[index]:

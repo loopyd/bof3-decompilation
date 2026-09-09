@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import math
 import time
+from contextlib import contextmanager
 from contextvars import ContextVar
 from functools import wraps
-from typing import Callable, TypeVar
+from typing import Callable, Iterator, TypeVar
 
 _CURRENT: ContextVar[float | None] = ContextVar("harness_work_deadline", default=None)
 _Result = TypeVar("_Result")
@@ -39,6 +40,16 @@ def check_deadline() -> None:
         raise DeadlineExpired(
             "transaction work deadline expired; cleanup requires its retained tail"
         )
+
+
+@contextmanager
+def suspend_work_deadline() -> Iterator[None]:
+    """Exclude recovery from the work cutoff; the owner retains its cleanup hard-stop."""
+    token = _CURRENT.set(None)
+    try:
+        yield
+    finally:
+        _CURRENT.reset(token)
 
 
 def bind_deadline(

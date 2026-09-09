@@ -11,9 +11,26 @@ from typing import Any
 
 from harness.common.directory import validate_repo_path
 from harness.common.git import GitIndexSnapshot, git_index_backup, workspace_backup
-from harness.common.paths import leaf_stat
+from harness.common.paths import leaf_stat, file_state
+from harness.common.workspace import workspace_state
 
 SCHEMA = "bof3.recovery-safeguards/v1"
+
+
+def verify_restored_state(
+    root: Path, manifest: dict, index: GitIndexSnapshot | None, safeguards: dict | None
+) -> None:
+    """Verify owned PRE and the adopted workspace/index without restoring external state."""
+    if (
+        file_state(root, set(manifest["allowed_paths"])) != manifest["pre_state"]
+        or git_index_backup(root) != index
+        or workspace_state(root) != manifest["workspace_baseline"]["state"]
+        or (
+            safeguards is not None
+            and inspect_safeguards(root, safeguards, set())["matches"] is not True
+        )
+    ):
+        raise ValueError("workspace or Git index changed concurrently")
 
 
 def _encode_index(backup: GitIndexSnapshot) -> dict[str, Any]:

@@ -40,6 +40,13 @@ authority. See [naming opportunities](../usage.md#symbol-naming-opportunities).
 
 ## Policy versus mechanism
 
+`common.git.read_git` bounds workspace/index snapshot queries by 30 seconds,
+2 MiB and the inherited absolute work cutoff. It retains filename bytes and
+propagates cleanup uncertainty; timeout or truncated output is never a baseline.
+Type/macro exception handlers suspend only the forward cutoff around owned rollback
+and `common.safeguards.verify_restored_state`. They still require the parent's cleanup
+hard-stop; this grants no new budget, forward gates, retry or restoration authority.
+
 The read-only cleanup context router selects one existing domain skill:
 
 | Canonical request | Selected skill |

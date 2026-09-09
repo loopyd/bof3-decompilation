@@ -15,6 +15,8 @@ from harness.common.files import atomic_write
 from harness.common.directory import validate_repo_path
 from harness.common.files import read_file
 from harness.common.files import safe_unlink
+from harness.common.deadlines import resolve_deadline
+from harness.common.process import run_bounded
 
 
 @dataclass(frozen=True)
@@ -41,16 +43,45 @@ def _index_state(
     )
 
 
+def read_git(root: Path, arguments: list[str]) -> str:
+    """Run a captured Git query within the owner's cutoff, preserving filename bytes."""
+    command = ["git", *arguments]
+    result = run_bounded(
+        root,
+        command,
+        timeout=30,
+        output_limit=2 * 1024 * 1024,
+        deadline=resolve_deadline(),
+        errors="surrogateescape",
+    )
+    if result["failure"] or result["exit_code"] != 0:
+        code = (
+            (124 if result["failure"] == "timeout" else 125)
+            if result["failure"]
+            else result["exit_code"]
+        )
+        cause = subprocess.CalledProcessError(
+            code,
+            command,
+            output=result["stdout"],
+            stderr=result["stderr"]
+            + (
+                f"\nGit query aborted: {result['failure']}" if result["failure"] else ""
+            ),
+        )
+        reason = result["failure"] or f"exit {code}"
+        raise RuntimeError(f"Git snapshot query failed: {reason}") from cause
+    return result["stdout"]
+
+
 def _index_path(root: Path) -> Path | None:
     if not (root / ".git").exists():
         return None
-    value = subprocess.run(
-        ["git", "rev-parse", "--path-format=absolute", "--git-path", "index"],
-        cwd=root,
-        capture_output=True,
-        check=True,
-    ).stdout.rstrip(b"\n")
-    return Path(os.fsdecode(value))
+    return Path(
+        read_git(
+            root, ["rev-parse", "--path-format=absolute", "--git-path", "index"]
+        ).rstrip("\n")
+    )
 
 
 def _verify_index_parent(path: Path, parent: int) -> None:
@@ -317,24 +348,15 @@ def git_index_state(root: Path) -> bytes | None:
 
     if not (root / ".git").is_dir():
         return None
-    return subprocess.run(
-        ["git", "ls-files", "--stage", "-z"],
-        cwd=root,
-        capture_output=True,
-        check=True,
-    ).stdout
+    return read_git(root, ["ls-files", "--stage", "-z"]).encode(
+        "utf-8", "surrogateescape"
+    )
 
 
 def workspace_backup(root: Path) -> dict[str, bytes]:
     if not (root / ".git").exists():
         return {}
-    result = subprocess.run(
-        ["git", "ls-files", "-co", "--exclude-standard", "-z"],
-        cwd=root,
-        capture_output=True,
-        check=True,
-    )
-    names = result.stdout.decode(errors="surrogateescape").split("\0")
+    names = read_git(root, ["ls-files", "-co", "--exclude-standard", "-z"]).split("\0")
     backup = {}
     for name in names:
         if not name or name.startswith(

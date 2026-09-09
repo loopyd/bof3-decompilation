@@ -12,7 +12,7 @@ from harness.common import promotion as shared_pre
 from harness.common.process import run_command
 from harness.common.checks import capture_partial_baselines, required_checks
 from harness.common.digests import digest
-from harness.common.deadlines import bind_deadline
+from harness.common.deadlines import bind_deadline, suspend_work_deadline
 from harness.common.files import preflight_existing_replacements
 from harness.common.history import validate_application_history
 from harness.common.lease import exclude_writers, verify_writer
@@ -23,7 +23,7 @@ from harness.common.runtime import changed_paths
 from harness.common.paths import file_state
 from harness.common.git import git_index_backup
 from harness.common.runtime import rollback
-from harness.common.safeguards import capture_safeguards, inspect_safeguards
+from harness.common.safeguards import capture_safeguards, verify_restored_state
 from harness.common.process import ProcessCleanupError
 from harness.common.runtime import run_checks
 from harness.common.paths import validate_paths
@@ -402,28 +402,23 @@ def run_transaction(
     except ProcessCleanupError:
         raise
     except BaseException:
-        try:
-            verify_writer(root)
-            rollback(root, backup, quarantines)
-        except BaseException as error:
-            raise RuntimeError("macro transaction rollback failed") from error
-        try:
-            if (
-                file_state(root, allowed) != manifest["pre_state"]
-                or git_index_backup(root) != index_backup
-                or _workspace_state(root) != manifest["workspace_baseline"]["state"]
-                or (
-                    safeguards is not None
-                    and inspect_safeguards(root, safeguards, set())["matches"]
-                    is not True
-                )
-            ):
-                raise ValueError("workspace or Git index changed concurrently")
-        except BaseException as error:
-            raise RuntimeError(
-                "macro transaction rollback failed or is unverified; "
-                "external state preserved; parent review required"
-            ) from error
+        with suspend_work_deadline():
+            try:
+                verify_writer(root)
+                rollback(root, backup, quarantines)
+            except ProcessCleanupError:
+                raise
+            except BaseException as error:
+                raise RuntimeError("macro transaction rollback failed") from error
+            try:
+                verify_restored_state(root, manifest, index_backup, safeguards)
+            except ProcessCleanupError:
+                raise
+            except BaseException as error:
+                raise RuntimeError(
+                    "macro transaction rollback failed or is unverified; "
+                    "external state preserved; parent review required"
+                ) from error
         raise
 
 
