@@ -8,6 +8,7 @@ splat = "config/targets/emi/battle/battle/15/splat.yaml"
 load_address = 0x80096800
 
 sources = [
+    "src/bof3/battle/passesBytePairGate.c",
     "src/bof3/battle/accumulateWorkCounter.c",
     "src/bof3/battle/applyKindMaskSelection.c",
     "src/bof3/battle/armRecordFlag8ResetFields.c",

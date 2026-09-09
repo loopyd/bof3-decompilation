@@ -4,14 +4,13 @@
  * @source 0x800A41D8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
-u8 resetSelectionApplyInput(s32 input_mask)
-{
-    func_800A3F28();
-    if (func_800A3A10(D_80146374, D_80146394) == 0) {
-        func_800A31E0(D_80146394, (u16)input_mask);
-        return 0;
-    }
-    return 1;
+u8 resetSelectionApplyInput(s32 input_mask) {
+  func_800A3F28();
+  if ((u8)func_800A3A10(D_80146374, D_80146394) == 0) {
+    func_800A31E0(D_80146394, (u16)input_mask);
+    return 0;
+  }
+  return 1;
 }

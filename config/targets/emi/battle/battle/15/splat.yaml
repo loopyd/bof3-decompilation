@@ -732,8 +732,8 @@ segments:
     - asm
     - func_800A31E0
   - - 52792
-    - asm
-    - func_800A3638
+    - c
+    - passesBytePairGate
   - - 52872
     - c
     - func_800A3688

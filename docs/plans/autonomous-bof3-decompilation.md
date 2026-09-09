@@ -384,6 +384,36 @@ accepts the inode-preservation correction and documented scope. Ruff, formatting
 regression tests or dependencies were added; broader acceptance and context
 coverage remain open. No additional commit or push at that v2 checkpoint.
 
+The accumulated harness/domain/recovery checkpoint is committed locally as
+`5dd2ab20`; no push occurred. The subsequent source checkpoint accepts
+`passesBytePairGate` at `emi/battle/battle/15@0x800A3638` (20 instructions,
+80 bytes) with matching `s32` definition/prototype, byte arguments and reviewed
+`BattleLocalWork` fields at `0x86/0x87`, preserving size `0x140`. Reviewer
+`01a084ec-947a-7a72-ad93-604fa3c331f9` independently verified final native
+instructions/bytes and header/map/layout scope. This return spelling is a
+conservative reconstruction, not proof of the original declared width.
+
+Explicit caller-side `(u8)` conversions restore `resetSelectionApplyInput`
+at `@0x800A41D8` and `querySelectionApplyInput` at `@0x800A4238` in the same
+target to 24/24 instructions (96 bytes) and 23/23 (92 bytes). The unchanged
+callee declaration remains `s32`; reviewer
+`01a084ec-94e4-7473-a0d0-f0c691222ff7` independently accepted both byte matches
+and semantics. The [signedness lesson](../agents/matching-playbook.md#signedness)
+records the distinction between caller conversion and callee declaration.
+
+The user specifically authorized installing clang-format; version 23.1.0 is now
+local to `.venv`. All three candidate C files pass formatting and `bin/promote`;
+target symbol checks and Splat regeneration pass. Existing header-wide formatter
+violations reproduce at HEAD and remain outside this source change. Source,
+header and map edits can stale analysis/cleanup evidence; no frozen index, naming
+report, ranking or receipt is rebound. Whole-target naming, macro acceptance,
+automatic recovery and the broader pipeline remain unfinished; no phase advances
+from these three source validations.
+
+Source/manifest and plan/harness checks pass 118 existing cases, including the
+Git-object file-mode probe rerun with sandbox escalation. Plan parsing and
+whitespace pass; full `just check` and a new global source audit were not run.
+
 ## Proposed roles and sequence
 
 `select TARGET@ADDRESS → bof3-lifter → bof3-reviewer → bof3-namer →

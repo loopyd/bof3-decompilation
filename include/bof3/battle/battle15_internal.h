@@ -68,7 +68,10 @@ typedef struct BattleLocalWork {
   u8 unk_02;
   u8 unk_03;
   u8 unk_04;
-  u8 unk_05[0x13B];
+  u8 unk_05[0x81];
+  u8 unk_86;
+  u8 unk_87;
+  u8 unk_88[0xB8];
 } BattleLocalWork;
 
 typedef struct BattleStatusSlots {
@@ -320,6 +323,7 @@ void __attribute__((noinline)) runPanelTasks16To19(void);
 u8                             func_8009C8AC(u16 required_mask);
 void                           func_8009CFEC(void);
 s16  func_800A2880(u8 battler_index, u16 base_value, u8 element_flag, u32 mode);
+s32  passesBytePairGate(u8 battler_index, u8 value);
 s16  func_800A2AE0(u8 battler_index, u16 element_mask);
 s16  func_800A2D70(s32 battler_index, s32 selection_mask);
 void func_800A31E0(u8 selection_kind, u16 input_mask);

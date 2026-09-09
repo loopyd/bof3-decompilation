@@ -337,6 +337,12 @@ translation unit's default `char` signedness when the original uses plain
 `char`. Extra `andi` before a shift → check whether your reconstructed field
 has a wider unsigned type than the original.
 
+A caller's `andi v0,v0,0xFF` proves low-byte consumption, not a `u8`
+callee return declaration. Preserve an evidenced full-width prototype and express
+the caller conversion explicitly: `(u8)callee(...)`; verify both callers and
+callee with live instruction/byte checks. A callee returning only 0/1 does not
+independently establish its original declared return width.
+
 ---
 
 ## Boolean spelling
