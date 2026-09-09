@@ -234,7 +234,7 @@ acceptance, Git-index recovery, automatic recovery or agent-session resume is
 proven; original live inputs remain unchanged.
 
 Read-only recovery inspection is now exposed by both owner CLIs with an external
-recovery digest pin. It validates private record/root/owner bindings and PRE
+recovery digest pin. It validates recovery record/root/owner bindings and PRE
 material, reports current source/quarantine/publication observations without
 source images, and explicitly leaves manifest re-derivation, POST inode binding,
 writer termination/exclusion and workspace/Git verification unproven. This is an
@@ -300,7 +300,7 @@ Independent code/docs review reports no blockers; Ruff, decomposition, whitespac
 98 documentation links/anchors and unchanged plan-phase checks pass. Full
 `just check` and broader pipeline acceptance are not claimed.
 
-Recovery v2 now stages POST images in fresh private directories before any source
+Recovery v2 now stages POST images in fresh directories before any source
 mutation and binds exact hash/device/inode/mode plus staging and reserved
 PRE/POST quarantine names. Verified no-replace installation preserves the prepared
 inode; rollback rejects same-content substitutions. New-file mode binds the
@@ -889,8 +889,8 @@ S3.2 and S4 remain unfinished; frozen production pins are unchanged.
 
 ### Native review transport rollout
 
-The working-tree reviewer transport (`bin/agent-run`, `context.dispatch/codex/journal`
-and the `bof3-re` dispatch helper) remains uncommitted and incomplete. Its scoped
+The reviewer transport (`bin/agent-run`, `context.dispatch/codex/journal`
+and the `bof3-re` dispatch helper) is scoped to explicit read-only review. Its initial
 code review, private-artifact/hold/event probes and 320 distinct existing checks
 passed before the native attempt. Shared `run_bounded` now supports selector-driven
 stdin and retained-output/spawn callbacks without blocking on an initial prompt
@@ -903,10 +903,9 @@ After that correction, 174 existing process/type/macro/revalidation checks and
 
 The separately approved read-only native invocation stopped **before any Codex
 process or dispatch debit**: the actual repository is `fuseblk`, and its empty
-writer lock reports `0770` after `fchmod(0600)`. The strict lease rejected it. This
-also prevents treating repository-local model streams as private; newly created
-private files now verify actual permissions/ownership/type/link count while empty,
-before writing contents. Native AI/authenticated review remains unproven.
+writer lock reports `0770` after `fchmod(0600)`. The then-strict mode guard rejected
+it. This is historical failure evidence, not a requirement to enforce Unix modes
+on NTFS; that attempt established no native AI/authenticated review.
 The failed attempt is retained unchanged under `out/reviews/native-codex-review-v1`:
 original 900-second work / ten-second cleanup allowance, one dispatch, zero repairs,
 budget pin `v1:55146dfe5be00b15b1da88db0c4bc1142704ee1b9d95ab934298bf1827a4d53b`,
@@ -916,13 +915,53 @@ initial high-water pin
 `a37924dd1b91ebe2820b1f1eaf74b4652d6d4403b5baaff9b1730ab641d4397f`.
 No model was retried, allowance reset, source restored or production queue repinned.
 
-Both reviewers require an explicitly selected, identity-bound POSIX private state
-store, permission verification before payload writes, and dual coordination with
-the persistent legacy lock inode; the legacy token is not a private lease. Keep
-strict source-owner guards intact, never unlink locks or silently choose a fresh
-temporary history. Moving source staging/quarantine across filesystems is not
-authorized by this read-only storage work. This is the next implementation gap;
-S3.2/S4 and live report-provenance repair remain open.
+The user's subsequent NTFS decision supersedes the proposed POSIX-private state
+store and dual-lock workaround: remove fixed `0600`/`0700` enforcement from leases,
+dispatch streams, staging and recovery records; delete the unused storage modules.
+Keep ownership, regular-file/single-link, root/path/inode, exclusive creation,
+locking, evidence pins and rollback checks. Preserve captured source modes, native
+read-only capability policy and global credential hygiene. Filesystem-native modes
+do not promise confidentiality. Never unlink locks, move recovery across filesystems,
+reset an allowance or silently retry. Continue transport validation without claiming
+production acceptance; S3.2/S4 and live report-provenance repair remain open.
+
+Post-change NTFS characterization passes `0770` lease/journal creation, native
+flock contention, hard-link rejection, persistent-inode reacquisition and exclusive
+journal publication (`/tmp/bof3-ntfs-lease-journal-probe.py`). A separate synthetic
+recovery attempt reaches POST preparation but stops at its single-link guard:
+unsupported cross-name no-replace rename falls back to a retained hard link
+(`nlink=2`). Same-path `EEXIST` preflight is insufficient support evidence. Retain
+`out/reviews/bof3-codex-recovery-o62e76l2` unchanged; no source was installed or
+restored. This independent filesystem capability gap remains open: do not remove
+link/identity safeguards or claim that mode-policy removal completes NTFS recovery.
+
+The separately approved post-fix native check completed in 59.493424 seconds:
+`out/reviews/native-codex-review-ntfs-0f1e317f573ee50d`, original 600-second work /
+ten-second cleanup allowance, one dispatch, zero repairs. Budget pin:
+`v1:6fdd9c8320ccf6cf608a2a002103f9babf48961acfd64aee91408a0fb027e418`;
+initial pin `v1:d4e4d4ce5c90ad4136455a9002aeb03beccd7180886695f2904347b29553d34b`;
+sequence-one pin `v1:04580416012c0460a8d0dc4d9bddaa7ee5bce6bb24741aa8f1aaa959f13f51ec`;
+receipt pin `v1:de9b4eb23a31dac89efbf47f611e0966ad63c60af65db9f96ed533eab467081d`.
+Dispatch evidence is under `out/reviews/dispatch/<budget hash>/1`; native thread:
+`01a0881e-717f-72f0-a562-6bcad0219767`. The original failed allowance is unchanged.
+
+Independent reviewer `01a084ec-94e4-7473-a0d0-f0c691222ff7` accepted the narrow
+permission-policy and read-only transport scope: eight artifact hashes, queue and
+consumption bindings, terminal outer exit zero, completed native turn, no failure
+marker and all 383 then-adopted baseline entries verified. Seventeen events include
+six completed read-only diagnostic commands. The proposal reports no limited-scope
+findings, but unavailable byte/build gates and unverified assembly freshness block
+source acceptance. Global-configuration preservation is parent-attested, not proven
+by before/after hashes in this bundle. This does not complete NTFS recovery, the
+named-role scheduler, S3.2/S4 or any live BOF3 acceptance gate.
+
+Validation: 430 existing checks pass, including 110 transaction-file and application
+review/transition checks; the Git-object file-mode check initially
+failed only because `.git` was sandbox-read-only, then passed with approval using
+its separate index. Full Python Ruff, changed-module formatting, whitespace,
+disposable event/hold probes and frozen production index/report hashes pass.
+No persistent tests were added. Subsequent documentation/commit changes make the
+transport baseline historical; do not reuse it as a fresh source-acceptance pin.
 
 Documentation operations now share `bof3-docs` and `harness.docs`, replacing the
 repair-only skill and separate context-builder profile. Context/search/aggregate

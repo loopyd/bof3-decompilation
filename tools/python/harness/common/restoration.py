@@ -129,12 +129,8 @@ def restore_sources(
         encoded = (json.dumps(result, indent=2, sort_keys=True) + "\n").encode()
         existing = read_file(root, output, missing_ok=True)
         metadata = observe_file(root, output)
-        if metadata is not None and (
-            metadata["mode"] != 0o600 or metadata["links"] != 1
-        ):
-            raise ValueError(
-                "source restoration receipt must be private and single-link"
-            )
+        if metadata is not None and metadata["links"] != 1:
+            raise ValueError("source restoration receipt must be single-link")
         if existing is not None and existing != encoded:
             raise ValueError("source restoration completion receipt drifted")
         if existing is not None and any(
@@ -178,7 +174,6 @@ def restore_sources(
         published = observe_file(root, output)
         if (
             published is None
-            or published["mode"] != 0o600
             or published["links"] != 1
             or published["sha256"] != hashlib.sha256(encoded).hexdigest()
         ):

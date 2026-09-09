@@ -34,8 +34,6 @@ def _verify_image_filesystem(root: Path, name: str, path: str) -> None:
         try:
             if os.fstat(destination).st_dev != os.fstat(prepared).st_dev:
                 raise ValueError("prepared POST must share the destination filesystem")
-            if stat.S_IMODE(os.fstat(prepared).st_mode) != 0o700:
-                raise ValueError("prepared POST directory must be private")
             require_native_noreplace(prepared, leaf)
         finally:
             os.close(prepared)

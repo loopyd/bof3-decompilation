@@ -111,7 +111,7 @@ index inspection and reviewed owned-PRE recovery remain separate obligations.
 writers in one repository. A nonblocking `flock` spans canonical manifest
 re-derivation, source application, native gates, publication and exception
 rollback. The persistent `out/reviews/evidence/transaction.lock` is an empty,
-single-link regular file with mode `0600`; root, path and inode checks reject
+owned single-link regular file; root, path and inode checks reject
 substitution. Nested writers reject. Release closes the descriptor without
 unlinking the lock, and exec'd native gates do not inherit it. Invalid requests
 may create this lock artifact before domain validation, but cannot thereby edit
@@ -124,6 +124,12 @@ separate. Direct low-level helpers do not acquire a lease. Neither a free lock
 nor its file establishes prior native-worker termination or restoration authority.
 Read-only proof verification and recovery inspection acquire no writer lease.
 
+Repository locks, staging and evidence use filesystem-native permissions. Creation
+requests restrictive modes where supported, but no fixed POSIX mode is enforced
+on NTFS. This does not guarantee confidentiality: keep source-bearing records out
+of public logs and commits. Source/PRE/POST mode capture and drift checks remain
+part of identity-preserving rollback, not an owner-only permission policy.
+
 Native tool cancellation can bypass Python exception handlers entirely. Macro/type
 transactions now use `common/recovery.py` to persist
 `bof3.transaction-recovery/v3` evidence before the first source mutation.
@@ -131,7 +137,7 @@ transactions now use `common/recovery.py` to persist
 The record binds root identity, owner, manifest, implementation run ID (nullable
 for legacy applications), publication path, PRE bytes/hash/mode/inode, intended
 POST hash/exact mode/inode, staging path and reserved PRE/POST quarantine mapping.
-`common/images.py` prepares POST images under fresh `0700` directories before
+`common/images.py` prepares POST images under fresh staging directories before
 record capture, then installs the bound inode with verified no-replace moves.
 Images must share the destination filesystem and require native no-replace
 support. Failed capture may retain unreferenced images, but cannot mutate sources.
@@ -146,11 +152,11 @@ tracked and unignored files, excluding `out/`, `sessions/subagent-artifacts/` an
 unchanged owned paths remain in the workspace inventory. A pending index lock
 rejects capture. Non-Git or low-level runs without snapshots explicitly lack these
 guards; missing data is not treated as a clean workspace. Capture avoids a second
-full-workspace read, but private records grow with retained PRE content.
+full-workspace read, but recovery records grow with retained PRE content.
 An exact index snapshot is not a complete Git metadata backup.
 
-Records live at `out/reviews/evidence/{macro,type}-recovery-<nonce>.json`, mode
-`0600`. They contain source text: retain them as private evidence. Their digest
+Records live at `out/reviews/evidence/{macro,type}-recovery-<nonce>.json`.
+They contain source text: retain them as nonpublic evidence. Their digest
 detects drift against a separately retained pin; neither that digest, file mode
 nor writer PID authenticates restoration authority or proves writer termination.
 For new files, creation mode remains `0644` masked by the process umask; v2/v3 bind
@@ -188,7 +194,7 @@ complete interrupted directory syncing or establish power-loss durability.
 
 `common/inspection.py` supplies read-only `inspect-recovery RECORD
 --expected-recovery-digest PIN` to both owner CLIs. It checks the independent
-pin, private record, root/owner/manifest bindings, PRE encoding and reserved
+pin, recovery record, root/owner/manifest bindings, PRE encoding and reserved
 quarantine identities. It reports original PRE, missing, exact v2/v3 POST or
 drifted files, staged/displaced POST, unchanged-path hashes and publication presence without printing
 source images. Manifest validation is structural, not live re-derivation.
@@ -215,7 +221,7 @@ or interpret tool output as proof of termination. PID reuse, a free lock or a
 stopped launcher alone is insufficient. These are explicit trusted-parent
 attestations, not unattended recovery or authorization for another transaction.
 
-Authorization is a private, single-link `0600` JSON file under
+Authorization is a single-link regular JSON file under
 `out/reviews/evidence/`, with closed schema `bof3.source-recovery-authorization/v1`:
 
 - `schema`, `approved: true`, distinct nonempty `parent_run_id` and
@@ -315,6 +321,17 @@ deadline across fresh invocations. Repair work that launches a process owes
 both debits. No checkpoint writer, reservation service, CLI, automatic recovery
 or accepted-source authority is implemented by this validator. Owner freshness,
 writer quiescence and independent parent acceptance remain separate gates.
+
+The separate [native read-only reviewer](CODEX.md#bounded-native-review) now owns
+an exclusive per-dispatch debit and evidence journal. It does not create budgets,
+repair failed invocations or provide the full named-role production scheduler.
+
+`run_bounded` optionally accepts prompt `input_data` bytes, `on_spawn` and
+`on_output(stream, chunk)` callbacks. Selector-driven stdin writes proceed alongside
+stdout/stderr reads without a blocking initial pipe write. Output callbacks receive
+only retained bytes within the combined cap. These trusted owner callbacks do not
+confer child/semantic authority; callback failure still requires original-owner
+cleanup, and cleanup uncertainty takes priority over the callback error.
 
 `common.process.run_bounded(..., deadline=...)` accepts an optional finite absolute
 `time.monotonic()` deadline; the earlier of that deadline and the per-call timeout

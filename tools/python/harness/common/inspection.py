@@ -178,8 +178,8 @@ def load_recovery(
     ):
         raise ValueError("invalid recovery record path or owner")
     metadata = observe_file(root, name)
-    if metadata is None or metadata["mode"] != 0o600 or metadata["links"] != 1:
-        raise ValueError("recovery record must be a private, single-link regular file")
+    if metadata is None or metadata["links"] != 1:
+        raise ValueError("recovery record must be a single-link regular file")
     content = read_file(root, name)
     if hashlib.sha256(content).hexdigest() != metadata["sha256"]:
         raise ValueError("recovery record changed during inspection")

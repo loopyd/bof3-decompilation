@@ -27,6 +27,14 @@ See [DOCS.md](specs/DOCS.md) for commands, bounds, scope and preservation contra
 
 ## Cleanup opportunity routing
 
+For an explicit budgeted native read-only reviewer, use
+`bin/agent-run review REQUEST --budget BUDGET --consumption INITIAL
+--expected-budget-digest PIN --expected-checkpoint-digest PIN --expected-sequence 0`.
+The [native review contract](specs/CODEX.md#bounded-native-review) owns request
+shape, subsequent chain/result pins, child-only capability restrictions and private
+streaming evidence. This is separate from cleanup routing and never accepts a lift
+or authorizes a transaction merely because Codex finishes.
+
 Type/macro `run` and `revalidate` accept the parent's original `--deadline` in
 absolute monotonic seconds. Naming collection uses `--work-deadline` for that
 cutoff; its existing `--deadline` stays a relative per-operation cap. Freeze a
@@ -437,18 +445,20 @@ owner death still requires owned-PRE reconciliation, not only process cleanup.
 
 Type `run` and `revalidate` acquire the same nonblocking writer lease as macro
 transactions and retain it through native checks, publication and rollback.
-Contention rejects before source mutation. The persistent private lock under
+Contention rejects before source mutation. The persistent writer lock under
 `out/reviews/evidence/transaction.lock` is not a stale-PID file to delete; neither
 its presence nor successful acquisition proves prior worker termination. Manual
 editors and other nonparticipating commands are outside this cooperative contract.
 Read-only verification/inspection acquire no lease. See
 [harness ownership](specs/HARNESS.md) for identity-loss and recovery limitations.
 
-Before modifying sources, macro/type runs persist private v3 recovery records at
+Before modifying sources, macro/type runs persist v3 recovery records at
 `out/reviews/evidence/{macro,type}-recovery-<nonce>.json`. They bind root,
-manifest/run/publication, PRE images, exact prepared POST inode/mode, private
+manifest/run/publication, PRE images, exact prepared POST inode/mode, fresh
 staging and reserved PRE/POST quarantines. Images require the same filesystem and
-native no-replace support; new-file mode reflects the actual umask.
+native no-replace support; source modes are captured as observed. Repository
+evidence uses filesystem-native permissions, not enforced POSIX modes; keep its
+source-bearing content out of public logs and commits.
 With Git-backed snapshots, v3 also archives untouched workspace PRE content and
 metadata plus exact index bytes/state. Inspection reports scoped drift and index
 locks without printing those bytes; unavailable guards are explicit. Matching

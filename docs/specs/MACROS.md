@@ -393,7 +393,7 @@ for post-rollback verification and metadata limitations.
 Macro `run` and `revalidate` share a fail-fast repository writer lease with type
 transactions. It spans live manifest validation through gates, publication and
 rollback; a competing cooperating writer rejects before source mutation. The
-persistent private lock is not removed on release. Detected identity loss stops
+persistent writer lock is not removed on release. Detected identity loss stops
 guarded restoration rather than overwriting another writer's work. This does not
 exclude manual editors or establish that an interrupted native worker terminated;
 see [shared lease contracts](HARNESS.md). Read-only commands acquire no lease.
@@ -401,11 +401,10 @@ see [shared lease contracts](HARNESS.md). Read-only commands acquire no lease.
 Macro runs persist a `bof3.transaction-recovery/v3` record before source mutation
 at `out/reviews/evidence/macro-recovery-<nonce>.json`. It retains PRE source images,
 mode/inode facts, exact prepared POST identity/mode, manifest/run bindings and
-reserved PRE/POST quarantine destinations. POST images are staged in fresh private
-`0700` directories on the destination filesystem and installed by verified native
+reserved PRE/POST quarantine destinations. POST images are staged in fresh
+directories on the destination filesystem and installed by verified native
 no-replace moves. Capture failure prevents source writes but may retain images.
-Records are private (`0600`)
-and require independently pinned inspection, not automatic restoration. They do
+Records require independently pinned inspection, not automatic restoration. They do
 not replace application receipts, parent acceptance or publication reconciliation.
 
 Git-backed runs also retain untouched workspace PRE images/metadata and exact
@@ -413,7 +412,9 @@ index bytes/state from the owner's existing snapshots. This avoids another
 full-workspace read at capture. Inventory covers tracked/unignored files except
 the shared generated-artifact exclusions; missing snapshots mean unavailable
 guards, not a clean workspace. Records can include local unignored content and
-must remain private. A pending index lock rejects capture.
+must remain nonpublic. Repository evidence uses filesystem-native permissions,
+not enforced POSIX modes; see [the shared policy](HARNESS.md). A pending index lock
+rejects capture.
 
 ```sh
 bin/macro-audit inspect-recovery out/reviews/evidence/macro-recovery-NONCE.json --expected-recovery-digest INDEPENDENT_PIN

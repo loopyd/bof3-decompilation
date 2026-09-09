@@ -48,8 +48,8 @@ def load_recovery_authorization(
     if not name.startswith("out/reviews/evidence/"):
         raise ValueError("recovery authorization must be retained as evidence")
     observed = observe_file(root, name)
-    if observed is None or observed["mode"] != 0o600 or observed["links"] != 1:
-        raise ValueError("recovery authorization must be private and single-link")
+    if observed is None or observed["links"] != 1:
+        raise ValueError("recovery authorization must be a single-link regular file")
     content = read_file(root, name)
     authorization = _require_authorization_fields(
         json.loads(content, object_pairs_hook=unique_object),

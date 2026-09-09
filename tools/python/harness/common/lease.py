@@ -44,7 +44,6 @@ def _verify_lease(lease: WriterLease, root: Path) -> None:
         not stat.S_ISDIR(current_root.st_mode)
         or (current_root.st_dev, current_root.st_ino) != lease.identity
         or not stat.S_ISREG(opened.st_mode)
-        or stat.S_IMODE(opened.st_mode) != 0o600
         or opened.st_nlink != 1
         or opened.st_size != 0
         or opened.st_uid != os.geteuid()
@@ -73,7 +72,6 @@ def _open_lease(root: Path) -> int:
         except FileExistsError:
             descriptor = os.open(leaf, flags, dir_fd=parent)
         else:
-            os.fchmod(descriptor, 0o600)
             os.fsync(descriptor)
             os.fsync(parent)
         return descriptor

@@ -25,6 +25,7 @@ minimal entry contract; this index owns the detailed reading map.
 | Generic analyzer work explicitly requesting Rizin | [Project context](agents/project-context.md) | `$psx-rizin` |
 | Tooling, Python harness, CLI, tests | [Coding standards](agents/CODING_STANDARDS.md) | [Harness ownership](specs/HARNESS.md), [Tool usage](usage.md) and owning code/tests |
 | Codex MCP or Pi extension migration | [Codex configuration](specs/CODEX.md) | Global settings stay in `~/.codex`; project skills below |
+| Explicit budgeted native Codex review | [Native review transport](specs/CODEX.md#bounded-native-review) | `$bof3-re`; proposal only, no source-writing or semantic acceptance |
 | Macro opportunity indexing, ranking or resolution | [Macro specification](specs/MACROS.md) | [Explicit cleanup routing](usage.md#cleanup-opportunity-routing), owning code/checks; matching or tooling route when making changes |
 | Type representation opportunities and reviewed application | [Tool usage](usage.md#3b-target-analysis-freshness--rebuild--query) | [Cleanup routing](usage.md#cleanup-opportunity-routing), `$bof3-types`; [harness ownership](specs/HARNESS.md) |
 | Symbol naming opportunity discovery or assessment | [Naming opportunities](usage.md#symbol-naming-opportunities) | `$bof3-naming`; [harness ownership](specs/HARNESS.md); evidence and identity routes remain separate |
