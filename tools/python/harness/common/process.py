@@ -5,67 +5,80 @@ from __future__ import annotations
 import json
 import os
 import selectors
-import signal
 import subprocess
 import sys
-import threading
 import time
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import IO, Any
 
+from harness.common.children import adopt_children, reap_children
 
-def _kill_group(pid: int, sig: signal.Signals = signal.SIGKILL) -> None:
-    try:
-        os.killpg(pid, sig)
-    except ProcessLookupError:
-        pass
+
+class ProcessCleanupError(RuntimeError):
+    """Descendant termination is unconfirmed; mutation recovery must stop."""
 
 
 def _supervise(owner_fd: int, argv: Sequence[str]) -> int:
-    """Own one child group; owner EOF and direct-child exit clean the tree."""
+    """Reap owned descendants after direct exit or loss of the owner pipe."""
 
-    child = subprocess.Popen(argv, start_new_session=True)
-    owner_gone = threading.Event()
-
-    def watch_owner() -> None:
+    adopt_children()
+    with selectors.DefaultSelector() as poll:
+        poll.register(owner_fd, selectors.EVENT_READ)
+        child = subprocess.Popen(argv, start_new_session=True)
         try:
-            while os.read(owner_fd, 1):
-                pass
+            while child.poll() is None:
+                if poll.select(0.05) and not os.read(owner_fd, 1):
+                    break
         finally:
             os.close(owner_fd)
-            owner_gone.set()
-            _kill_group(child.pid)
-
-    watcher = threading.Thread(target=watch_owner, daemon=True)
-    watcher.start()
-    result = child.wait()
-    _kill_group(child.pid, signal.SIGTERM)
-    try:
-        os.killpg(child.pid, 0)
-    except ProcessLookupError:
-        pass
-    else:
-        # Descendants retaining inherited descriptors get one short graceful
-        # interval before the complete group is forcibly removed.
-        owner_gone.wait(0.1)
-        _kill_group(child.pid)
-    return result
+            reap_children(child)
+    return child.returncode
 
 
 class OwnedProcess:
     """Popen-compatible handle whose owner pipe governs a supervised tree."""
 
-    def __init__(self, process: subprocess.Popen[Any], owner_fd: int | None) -> None:
+    def __init__(
+        self,
+        process: subprocess.Popen[Any],
+        owner_fd: int | None,
+        completion_fd: int,
+    ) -> None:
         self._process = process
         self._owner_fd = owner_fd
+        self._completion_fd = completion_fd
+        self._cleanup_confirmed = False
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self._process, name)
 
     @property
     def returncode(self) -> int | None:
+        if self._process.returncode is not None:
+            self._confirm_cleanup()
         return self._process.returncode
+
+    def poll(self) -> int | None:
+        result = self._process.poll()
+        if result is not None:
+            self._release_owner()
+            self._confirm_cleanup()
+        return result
+
+    def _confirm_cleanup(self) -> None:
+        if self._completion_fd is not None:
+            descriptor, self._completion_fd = self._completion_fd, None
+            try:
+                self._cleanup_confirmed = os.read(descriptor, 32) == b"complete\n"
+            except BlockingIOError:
+                self._cleanup_confirmed = False
+            finally:
+                os.close(descriptor)
+        if not self._cleanup_confirmed:
+            raise ProcessCleanupError(
+                "process supervisor exited without confirmed descendant cleanup"
+            )
 
     def _release_owner(self) -> None:
         if self._owner_fd is not None:
@@ -78,12 +91,11 @@ class OwnedProcess:
         self._release_owner()
         try:
             self._process.wait(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            if sys.platform.startswith("linux"):
-                self._process.kill()
-            else:
-                _kill_group(self._process.pid)
-            self._process.wait(timeout=timeout)
+        except subprocess.TimeoutExpired as error:
+            raise ProcessCleanupError(
+                "descendant cleanup remains active; preserve state for parent recovery"
+            ) from error
+        self._confirm_cleanup()
 
     def communicate(self, *args: Any, **kwargs: Any) -> tuple[Any, Any]:
         try:
@@ -91,10 +103,12 @@ class OwnedProcess:
         finally:
             if self._process.poll() is not None:
                 self._release_owner()
+                self._confirm_cleanup()
 
     def wait(self, *args: Any, **kwargs: Any) -> int:
         result = self._process.wait(*args, **kwargs)
         self._release_owner()
+        self._confirm_cleanup()
         return result
 
 
@@ -109,49 +123,48 @@ def owned_popen(
     text: bool = False,
     bufsize: int = -1,
 ) -> OwnedProcess:
-    """Start one external tree with a dedicated group and owner-death pipe."""
+    """Start one Linux-owned tree with subreaper and cleanup acknowledgement."""
 
-    command = [os.fspath(item) for item in argv]
-    if sys.platform.startswith("linux"):
-        owner_read, owner_write = os.pipe()
-        launcher = [
-            sys.executable,
-            "-m",
-            "harness.common.process",
-            str(owner_read),
-            json.dumps(command),
-        ]
-        try:
-            process = subprocess.Popen(
-                launcher,
-                cwd=cwd,
-                env=env,
-                stdin=stdin,
-                stdout=stdout,
-                stderr=stderr,
-                text=text,
-                bufsize=bufsize,
-                pass_fds=(owner_read,),
-                start_new_session=True,
-            )
-        except BaseException:
-            os.close(owner_write)
-            raise
-        finally:
-            os.close(owner_read)
-        return OwnedProcess(process, owner_write)
-    process = subprocess.Popen(
+    if not sys.platform.startswith("linux"):
+        raise RuntimeError("native process ownership requires Linux subreaper support")
+    command = json.dumps([os.fspath(item) for item in argv])
+    owner_read, owner_write = os.pipe()
+    try:
+        completion_read, completion_write = os.pipe()
+    except BaseException:
+        os.close(owner_read)
+        os.close(owner_write)
+        raise
+    launcher = [
+        sys.executable,
+        "-m",
+        "harness.common.process",
+        str(owner_read),
+        str(completion_write),
         command,
-        cwd=cwd,
-        env=env,
-        stdin=stdin,
-        stdout=stdout,
-        stderr=stderr,
-        text=text,
-        bufsize=bufsize,
-        start_new_session=True,
-    )
-    return OwnedProcess(process, None)
+    ]
+    try:
+        os.set_blocking(completion_read, False)
+        process = subprocess.Popen(
+            launcher,
+            cwd=cwd,
+            env=env,
+            stdin=stdin,
+            stdout=stdout,
+            stderr=stderr,
+            text=text,
+            bufsize=bufsize,
+            pass_fds=(owner_read, completion_write),
+            start_new_session=True,
+        )
+    except BaseException:
+        os.close(owner_write)
+        os.close(completion_read)
+        raise
+    finally:
+        os.close(owner_read)
+        os.close(completion_write)
+    return OwnedProcess(process, owner_write, completion_read)
 
 
 def run_bounded(
@@ -200,6 +213,8 @@ def run_bounded(
     except subprocess.TimeoutExpired:
         failure = "timeout"
         process.terminate_tree(timeout=2)
+    except ProcessCleanupError:
+        raise
     except BaseException:
         process.terminate_tree(timeout=2)
         raise
@@ -260,7 +275,13 @@ def run_analyzer(
 
 
 def _main() -> int:
-    return _supervise(int(sys.argv[1]), json.loads(sys.argv[2]))
+    completion = int(sys.argv[2])
+    try:
+        result = _supervise(int(sys.argv[1]), json.loads(sys.argv[3]))
+        os.write(completion, b"complete\n")
+        return result
+    finally:
+        os.close(completion)
 
 
 if __name__ == "__main__":

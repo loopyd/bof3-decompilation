@@ -543,6 +543,49 @@ and naming-report pins remain unchanged. These native fixture cells do not prove
 BOF3 semantic acceptance, whole S3.5 or the durable bounded queue/budget loop.
 Full `just check` and a new global source audit were not run.
 
+Native hard-stop investigation exposed a real lifecycle defect: killing the owner
+terminated its direct child but left a `setsid` grandchild running. The observer
+used pidfds acquired for its own spawned processes in the same namespace, not
+stored cross-namespace PIDs or heartbeat silence. Before-fix evidence at
+`/tmp/bof3-escaped-child-1qpqddua/result.json` distinguishes failed supervisor
+cleanup from the observer's subsequent explicit survivor cleanup.
+
+Linux supervision now uses a fresh subreaper, sole-waiter descendant reaping and
+a private completion ACK. Missing ACK or cleanup timeout raises
+`ProcessCleanupError`, retaining the still-cleaning guardian and stopping type/
+macro restoration and naming finalization. Non-Linux rejects before spawn; no
+process-group-only fallback claims equivalent safety. The
+[shared lifecycle contract](../specs/HARNESS.md#policy-versus-mechanism) owns details
+and preserves the separate lease/quiescence and parent recovery obligations.
+
+Parent native hard-stop, normal exit and timeout controls pass at
+`/tmp/bof3-escaped-child-{j5e4ovv4,cjyqoi3g,ona6zr5c}/result.json` with owner exits
+-9, 7 and 124. All observed pidfds were terminal before observer cleanup. Retained
+before/after evidence is pinned by `/tmp/bof3-escaped-child-reviewed.sha256`, SHA-256
+`a175fa2f91f0d509ade1fee5f3b8e8458ca170ee5af3efa93872e0fed56530f2`.
+Python lacked pidfd bindings, but an actual x86-64 kernel preflight passed;
+architecture-specific ctypes syscalls stay in the disposable probe, not production.
+These are observer-triggered native SIGKILL/timeout cells, not a claim that the
+Codex stop endpoint itself supplies pidfds.
+
+Reviewer `01a084ec-94e4-7473-a0d0-f0c691222ff7` independently repeated all three
+native cases at `/tmp/bof3-escaped-child-{mxkoqh3o,44806hdf,jhf3usd3}`, accepting
+those lifecycle cells only. It also verified missing-ACK refusal across handle
+APIs, guardian retention, descriptor cleanup, exit status preservation and naming
+fail-stop behavior. Reviewer `01a084ec-947a-7a72-ad93-604fa3c331f9` verified four
+Git-backed type/macro owner probes: uncertain cleanup preserves POST and original
+quarantines with no rollback/publication; ordinary failure still restores PRE.
+Their runners were injected, not native descendant evidence. An additional
+first-install failure probe at `/tmp/bof3-first-install-failure-0m9zp7w6` disproved
+a suspected backup/record coverage mismatch; no fix was needed.
+
+Existing checks pass 326 cases (owner/revalidation, process/naming, harness/plans
+and escalated file-mode check). Ruff, formatting and whitespace pass; no persistent
+tests or dependencies were added, and frozen live index/report pins remain intact.
+Native forward partial-mutation recovery, original-budget deadline expiry and the
+resumed bounded queue/budget workflow remain unproven; S3.5 stays in-progress and
+S3.2 stays blocked. Full `just check` and a new global source audit were not run.
+
 ## Proposed roles and sequence
 
 `select TARGET@ADDRESS → bof3-lifter → bof3-reviewer → bof3-namer →
@@ -686,7 +729,7 @@ must satisfy them before the corresponding phase is marked done.
 - Owner: worker with independent reviewer and parent
 - Depends: S3.4
 - Blocker: none
-- Evidence: parent accepted reviewer 9342ff6b's preapply interrupt/read-only resume cell and reviewer 12b72400's retained active-tool timeout cell below; Current Codex continuation records source rollback, guarded recovery and post-publication/acceptance resume cells. Whole failure-matrix and native process-tree acceptance remain incomplete.
+- Evidence: parent accepted reviewer 9342ff6b's preapply interrupt/read-only resume cell and reviewer 12b72400's retained active-tool timeout cell below; Current Codex continuation records source rollback, guarded recovery, post-publication/acceptance resume and independently repeated native escaped-descendant lifecycle cells. Whole failure-matrix and bounded resumed-workflow acceptance remain incomplete.
 - Acceptance: run the failure matrix below against owner transactions and the small native workflow; inspect actual run state/tool outputs, not prompt text or exit zero alone. Reviewer verifies rollback bytes/modes/absence, unchanged unrelated dirty work/index and no duplicate apply; parent owns freshness recovery and attestation. Report unavailable native capabilities as blockers, not mocked acceptance.
 
 5. [S3.2] (blocked) Encode the proven sequence with bounded repair and native recovery.

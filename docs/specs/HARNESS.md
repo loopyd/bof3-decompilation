@@ -46,12 +46,31 @@ interchangeable unless their semantics agree.
 
 `common/process.py` owns application/revalidation command lifetimes and bounded
 capture. Naming postapply and macro/type native gates use 120-second deadlines
-and retain at most 2 MiB of native output per command. On Linux an owner-death
-pipe supervises the child process group; timeout, overflow and interrupted
-capture clean up that owned tree. Macro/type timeout and overflow receipts fail
-with exit codes 124 and 125. Injected test runners do not prove this production
-path. Process cleanup is not transaction recovery: abrupt owner death requires
-owned-PRE reconciliation before continuation.
+and retain at most 2 MiB of native output per command. Supported native ownership
+requires Linux; other platforms reject before spawning rather than claim process
+groups provide complete descendant closure. `common/children.py` establishes a
+fresh single-threaded subreaper before launch. Owner-pipe EOF or direct-child exit
+triggers killing and reaping adopted descendants, including redirected-stdio and
+`setsid` escapees. The sole reaper retains child identities until wait, preserving
+direct-child exit status.
+
+A private completion pipe, not inherited by gates, acknowledges only finished
+cleanup. `poll`, `wait`, `communicate` and terminal `returncode` require that ACK.
+Timeout/overflow produces failed gate evidence (124/125) only after confirmed
+cleanup. Missing ACK or cleanup wait expiry raises `ProcessCleanupError`: callers
+do not kill the still-cleaning guardian and pretend its descendants stopped. Type
+and macro owners retain POST and recovery backing instead of restoring source,
+workspace or index while writers may remain. Naming evidence propagates uncertainty
+without ordinary failure receipts or final journal/telemetry/report publication;
+both owned clients still receive cleanup attempts.
+
+The guardian can remain active when termination cannot be confirmed; callers stop
+for parent inspection, not automatic retry. Lease release/reacquisition alone is
+not quiescence. This mechanism is not a sandbox, cross-platform guarantee or proof
+against privileged interference. Injected runners do not prove native lifecycle
+behavior. Native cancellation can bypass Python rollback: process closure is not
+file restoration. Parent-owned native handle/tree verification, source/workspace/
+index inspection and reviewed owned-PRE recovery remain separate obligations.
 
 `common/lease.py` excludes concurrent macro/type application and revalidation
 writers in one repository. A nonblocking `flock` spans canonical manifest

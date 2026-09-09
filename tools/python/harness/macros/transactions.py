@@ -25,6 +25,7 @@ from harness.common.git import git_index_state
 from harness.common.git import restore_git_index
 from harness.common.runtime import rollback
 from harness.common.git import rollback_workspace
+from harness.common.process import ProcessCleanupError
 from harness.common.runtime import run_checks
 from harness.common.paths import validate_paths
 from harness.common.git import workspace_backup
@@ -400,6 +401,8 @@ def run_transaction(
         execution_context.recheck(root, manifest, context)
         execution_context.publish(root, application, output)
         return application
+    except ProcessCleanupError:
+        raise
     except BaseException:
         try:
             verify_writer(root)

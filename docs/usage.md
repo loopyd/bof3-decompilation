@@ -312,7 +312,7 @@ in-row/external ambiguity reject. Omitted `--post-apply-receipts` stays legacy.
 Failures retain native evidence and return rollback ownership to cleaner/parent,
 never restore HEAD or recover derived state automatically.
 
-Reviewed type applications are concern-isolated and atomic. The disposable reverse index only supplies leads; `prepare` requires a separately reviewed, live-fingerprinted candidate artifact with resolved representation and semantics plus two independent observations. On a dirty worktree, the request must include the exact adopted baseline digest printed by the preflight error/workflow. `run` restricts writes to manifest-owned paths, executes the recorded checks, writes immutable structured receipts, and rolls all changes back on failure:
+Reviewed type applications are concern-isolated and atomic. The disposable reverse index only supplies leads; `prepare` requires a separately reviewed, live-fingerprinted candidate artifact with resolved representation and semantics plus two independent observations. On a dirty worktree, the request must include the exact adopted baseline digest printed by the preflight error/workflow. `run` restricts writes to manifest-owned paths, executes the recorded checks, writes immutable structured receipts, and rolls back ordinary failures after confirmed native process cleanup. Unconfirmed cleanup preserves POST/recovery backing and stops for parent inspection; follow the [shared lifecycle rules](specs/HARNESS.md#policy-versus-mechanism):
 
 ```sh
 bin/type-audit account out/reviews/type-account.json

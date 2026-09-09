@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from harness.analysis.index import index_path
+from harness.common.process import ProcessCleanupError
 from harness.domain.ids import normalize_target_id, parse_function_id
 from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.client import (
@@ -378,14 +379,18 @@ def run_evidence(
                 write_journal_manifest(root, report, target, inputs, checkpoint)
                 executed += 1
                 telemetry.rows_completed += 1
+            except ProcessCleanupError:
+                raise
             except Exception as error:
                 worker.kill()
                 write_failed_receipt(namespace, target, row, error)
                 errors.append(f"{key}: {error}")
                 break
     finally:
-        rizin.close()
-        worker.close()
+        try:
+            rizin.close()
+        finally:
+            worker.close()
     telemetry.phase("collect")
     entries = load_journal(root, report, target)[0]
     manifest = write_journal_manifest(root, report, target, inputs, entries)

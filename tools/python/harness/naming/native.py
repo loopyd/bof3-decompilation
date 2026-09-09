@@ -63,7 +63,7 @@ class NativeByteOps:
                 command=" ".join(argv),
                 selector=operation["target"],
                 exit=124,
-                output=f"deadline exceeded: {kind} process group killed",
+                output=f"deadline exceeded: {kind} owned process tree reaped",
                 killed=True,
                 raw=stdout,
                 stderr=stderr,

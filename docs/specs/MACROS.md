@@ -338,8 +338,10 @@ proof. Other include-walker clients retain their quoted local/root/include defau
 
 The changes JSON maps each permitted repo-relative path to its complete replacement
 text. `run` rederives the manifest, confines writes, runs pinned checks, retains
-immutable receipts, and rolls back its changes on failure. Generated files are not
-hand-edited. Retain the application digest externally before `verify`; never derive
+immutable receipts, and rolls back ordinary failures after confirmed native process
+cleanup. Unconfirmed descendant cleanup retains POST and recovery backing and
+stops for parent inspection; see [shared lifecycle rules](HARNESS.md#policy-versus-mechanism).
+Generated files are not hand-edited. Retain the application digest externally before `verify`; never derive
 an expected pin from the untrusted file being checked. Local append-only
 attestation detects replacement, not a remote signature or malicious local writer.
 Prepare/run outputs must be canonical repo-relative paths under
