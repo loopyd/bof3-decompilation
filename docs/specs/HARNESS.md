@@ -247,6 +247,16 @@ environment; never edit proofs or relax execution-context checks to make resume
 pass. Historical integrity alone is not current acceptance. The broader bounded
 execution loop remains unfinished.
 
+Unpublished POST after `ProcessCleanupError` uses `inspect-recovery`, not the
+published-application `resume` route. Retain the original budget, latest consumption
+pins and failure evidence across fresh invocation. Remaining time/launches and an
+available lease do not clear the parent's cleanup-unconfirmed stop. Inspection
+does not authenticate termination; retain native process handles in their owning
+PID namespace rather than interpreting saved PIDs in another tool invocation.
+Neither API persists a cleanup hold or automatically prevents another dispatch.
+The supervising parent must withhold mutation until independently reviewed native
+termination permits separately authorized recovery; no implicit retry follows.
+
 ## Bounded continuation
 
 `common.continuation.check_budget` is a read-only validator, not a scheduler or

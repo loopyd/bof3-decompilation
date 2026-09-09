@@ -691,9 +691,12 @@ exactly the preserved editor work/staging, not a falsely clean recovery state.
 
 Invalid setup controls remain untouched: `_cdbppj6` rejected an unsupported CLI
 option, and `1nh5aaiu` rejected a manifest whose gate changed after preparation;
-neither ran a gate. An earlier float-valued disposable contract failed digest
-validation before pinning or dispatch. None is successful native evidence or a
-reset of the separately pinned successful attempt. This repair does not close
+neither supplies successful gate evidence. The earlier explanation attributing a
+setup failure to float-valued digest validation is withdrawn: that cause and its
+pre-dispatch timing were not established by retained evidence. Do not treat the
+rejected fixture's control file as a complete immutable attempt history. None
+supplies acceptance or a reset of the separately pinned successful attempt.
+This repair does not close
 uncertain-cleanup resume, the bounded controller, S3.5 or the pipeline.
 
 Next bounded cell: retain original budget/latest consumption pins and a real
@@ -704,6 +707,80 @@ or recovery is allowed until independent native termination review authorizes
 the existing guarded recovery path. This proves parent-controlled refusal, not
 automatic enforcement: arbitrary dispatch currently has no durable cleanup hold.
 Do not introduce a generic controller merely to demonstrate this cell.
+
+### Cleanup-unconfirmed fresh continuation
+
+Concurrent-work preservation is committed as `bcee2854`, without pushing.
+The next native fixture `/tmp/bof3-codex-recovery-xv5bph8t` used session 78045
+(terminal exit 0), one counted owner dispatch, zero repairs, 60 seconds of original
+work allowance and a separate 10-second cleanup tail. Watchdog and read-only
+observers are supervision, not additional owner attempts. Original budget pin:
+`v1:2e32522700247ddbaabab57470ec16515e164e300873578df3845a2c6ea0dcef`;
+pre-debited sequence-1 pin:
+`v1:975a7bfb04e4948c9c6154a2a647785ab6c9aeb532cb11b9d655f08c504d5e26`.
+
+An independent watchdog started before dispatch. The native gate overflowed its
+output bound while its guardian was deliberately stopped; actual production CLI
+exit 2 reported `ProcessCleanupError`, leaving owned POST/original PRE quarantine
+and no application or ordinary command receipt. Same-namespace observer pidfds
+confirmed the guardian and gate remained alive. Retained failure pin:
+`v1:1de3b38eb48e33d11e6b7877841b3488cdfddf9115d0aad60da8563703c00d93`;
+recovery `out/reviews/evidence/type-recovery-81b5e96dda90d633a6e6130298e694ad.json`
+has pin `v1:3e609d4f61164ff312af539102d90083e7b65194314488357e38b1975f03f20f`.
+
+A fresh OS-process invocation used those original pins for `check_budget` and
+actual owner `inspect-recovery`. It reported parent-controlled stop despite one
+launch and 57.28 seconds remaining and an available lease. All 64 inventoried
+file states stayed identical; no debit, writer, gate, revalidation, recovery or
+application followed. The original observer confirmed both processes still alive
+around inspection, then released the watchdog for cleanup. All observed CLI,
+guardian and gate pidfds became terminal, their children were reaped and watchdog
+exit was zero. POST/backing remain deliberately retained; no source recovery or
+acceptance is asserted. Artifacts are `out/rehearsal/{budget,consumption-0,
+consumption-1,failure,read-only-result,terminal,watchdog-result}.json` in that root.
+
+An earlier separately bounded fixture `/tmp/bof3-codex-recovery-fns8p9ag` produced
+the same real cleanup uncertainty, then reached its original deadline. Its
+watchdog stopped/reaped observed processes with a 57-ms cleanup tail. A separate
+tool invocation could not open saved PIDs from another PID namespace; its corrected
+read-only attempt then rejected the exhausted original time allowance. Neither
+failure caused another owner dispatch or reset; original pins remain unchanged.
+The successful cell keeps native liveness in its original observer, never infers
+it from stored PIDs, heartbeat silence or a free lease.
+
+Reviewer `01a084ec-947a-7a72-ad93-604fa3c331f9` accepts the scoped cell inspection
+and semantic recording. The disposable watchdog's early-error/handle-handoff path
+was not proven; successful observed cleanup does not establish that path.
+This is a parent-controlled fresh invocation, not Codex agent-session revival or
+an automatically enforced persistent cleanup hold. S3.2 still owns the bounded
+execution loop.
+
+### Whole S3.5 acceptance
+
+Reviewer `01a084ec-94e4-7473-a0d0-f0c691222ff7` independently audited the complete
+failure/recovery matrix, checked the retained final-cell pins and image identities,
+and explicitly accepted **whole S3.5** after Bohr's scoped cell review. Parent
+accepts that verdict, not an inference from accumulated test passes. Historical
+native observations remain historical evidence; they grant no current acceptance
+to tooling-stale applications. Historical Pi preapply/session evidence is not
+relabeled Codex session revival. The last cell proves fresh OS invocation and
+parent refusal, not automatic persistent exclusion; the disposable watchdog's
+unproven early-error handoff remains outside reuse approval.
+
+This supersedes earlier pending/open whole-S3.5 claims only. S3.5 becomes done and
+S3.2 in-progress; S3 remains in-progress, and S4 plus frozen live/full-target naming
+obligations remain unchanged. The next dependency-ready work is one small bounded
+Codex sequence using existing concern owners, native tools, frozen membership,
+original budgets, independent stage reviews and explicit parent stop/recovery.
+No generic controller is a prerequisite retroactively added to S3.5. S3.2 is not
+complete until that bounded sequence is independently demonstrated; production
+still cannot bypass unfiltered naming `complete:true` or separate identity approval.
+
+Current documentation checks: 46 existing plan cases, plan status, whitespace and
+98 local links/anchors pass. No repository Python, skill/agent Markdown, source,
+index, report, dependency or global configuration changed in this milestone.
+Frozen live index/report pins remain unchanged; broad Python/source audits were
+not rerun for this evidence/documentation-only continuation.
 
 ## Proposed roles and sequence
 
@@ -820,7 +897,7 @@ must satisfy them before the corresponding phase is marked done.
 - Owner: parent
 - Depends: S2
 - Blocker: none
-- Evidence: accepted bounded owner/handler/accounting slices below; accepted native preapply interrupt/read-only retained recovery cell recorded below; remaining recovery matrix and loop execution NOT RUN.
+- Evidence: accepted owner/handler/accounting slices and whole S3.4 below; whole S3.5 accepted by 01a084ec-94e4-7473-a0d0-f0c691222ff7 after complete matrix audit and final native cell review. Bounded loop execution remains NOT RUN.
 - Acceptance: independently accepted S3.4 machine integration, S3.5 actual native recovery and S3.2 bounded loop; project bof3-* profiles, finite budgets and no custom infrastructure. Fail-closed blocked handling proves machinery, not S4 live closure; separation contract below governs.
 
 1. [S3.1] (done) Exercise one direct target-qualified handoff before automation.
@@ -844,18 +921,18 @@ must satisfy them before the corresponding phase is marked done.
 - Evidence: whole S3.4 independently accepted by 2dc9dec6 (715 passed, 2 skipped), attributed in the superseding acceptance record below. S3.4 checkpoint below records independently accepted duplicate-key rejection and the independently accepted native-gate prerequisite repair and accepted execution-context/publication prerequisite and accepted parent-envelope slice; accepted reviewed shared-input migration; accepted no-drift check-only revalidation including B1; accepted fresh no-drift parent acceptance; accepted internal historical validation prerequisite; accepted same-target exact private transition; accepted distinct-target common-PRE integration; accepted shared PRE/POST integration; accepted current-byte owner CLI transport (b295c173); accepted bounded terminal CLI/API (e2920f90, 605 passed/two skipped); accepted all-handler fixture sequence (11fcb490) and bounded frozen-five accounting (efb1b118), not native execution or live closure; frozen local-data control BLOCKED (d740aabe), not accepted exhaustion/no-op. naming/postapply*.py supports selected target-local FUNCTION only; existing type/macro digest pins do not establish independent final review.
 - Acceptance: independent reviewer decides whole machine readiness from accepted owner, all-handler and frozen-accounting coverage: proposal versus approval, dirty-baseline adoption, scope/storage/layout preservation, gate rejection, digest-bound final verification and all-five accounting. Supported fixture positives must be labeled synthetic; unsupported/live-blocked routes fail closed. Actual Pi recovery belongs to S3.5; live evidence/application/full-target closure moves to S4.3/S4.4 below. Never route data/types/macros through FUNCTION-only postapply or invent a framework; no writer self-approval.
 
-4. [S3.5] (in-progress) Prove failure, rollback and resume before unattended execution.
+4. [S3.5] (done) Prove failure, rollback and resume before unattended execution.
 - Owner: worker with independent reviewer and parent
 - Depends: S3.4
 - Blocker: none
-- Evidence: parent accepted reviewer 9342ff6b's preapply interrupt/read-only resume cell and reviewer 12b72400's retained active-tool timeout cell below; Current Codex continuation records source rollback, guarded recovery, post-publication/acceptance resume and independently repeated native escaped-descendant lifecycle cells. Whole failure-matrix and bounded resumed-workflow acceptance remain incomplete.
+- Evidence: whole S3.5 accepted by 01a084ec-94e4-7473-a0d0-f0c691222ff7 after complete failure-matrix audit and 01a084ec-947a-7a72-ad93-604fa3c331f9's final cleanup-unconfirmed cell review; parent accepts the superseding Whole S3.5 acceptance record above. Original deadline, no duplicate apply, owned recovery, concurrent preservation and fresh parent-controlled refusal are evidenced; no automatic dispatch hold or Codex session revival is claimed.
 - Acceptance: run the failure matrix below against owner transactions and the small native workflow; inspect actual run state/tool outputs, not prompt text or exit zero alone. Reviewer verifies rollback bytes/modes/absence, unchanged unrelated dirty work/index and no duplicate apply; parent owns freshness recovery and attestation. Report unavailable native capabilities as blockers, not mocked acceptance.
 
-5. [S3.2] (blocked) Encode the proven sequence with bounded repair and native recovery.
+5. [S3.2] (in-progress) Encode the proven sequence with bounded repair and native recovery.
 - Owner: parent
 - Depends: S3.5
-- Blocker: whole S3.5 remains unaccepted; guarded recovery and request-bound resume are partial mechanisms, not a demonstrated bounded native loop. Full-target naming blocks production, not controlled fixture stages or read-only blocked accounting.
-- Evidence: S3.1 handoffs and bounded efb1b118 accounting accepted; neither is a native loop. Parent freshness/attestation checkpoints remain explicit and cannot be delegated implicitly.
+- Blocker: none
+- Evidence: S3.1 handoffs, efb1b118 accounting and whole S3.5 accepted; the bounded native sequence remains unfinished. Full-target naming blocks production, not controlled fixture stages or read-only blocked accounting. Parent freshness/attestation checkpoints remain explicit and cannot be delegated implicitly.
 - Acceptance: native syntax validation, existing applicable checks and independently reviewed finite execution with fixed queue/budget. May select/account blocked entries and simulate controlled fixture stages, never advance a failed/unknown mutation or claim live campaign completion. Production cannot pass failed unfiltered full-target naming complete:true or missing separate identity approval; final review binds actual selector/change. Accepted work skips; uncertain apply stops for recovery; no budget reset on resume.
 
 ## 4. [S4] (open) Demonstrate useful autonomy and close accepted scope
