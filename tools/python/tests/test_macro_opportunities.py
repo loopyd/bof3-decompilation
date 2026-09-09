@@ -7,11 +7,10 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-
-from harness.analysis.macro_opportunities import macro_opportunities_payload
-from harness.analysis.near_duplicates import near_duplicates_payload
 from harness.analysis.schema import create_schema
 from harness.commands.rev_query import main
+from harness.macros.opportunities import macro_opportunities_payload
+from harness.macros.similarity import near_duplicates_payload
 
 
 def _connection() -> sqlite3.Connection:
@@ -258,3 +257,38 @@ def test_near_duplicate_rejects_cfg_call_shape_and_trivial_differences(
         near_duplicates_payload(connection, tmp_path, target="exe/test", limit=0) == []
     )
     assert one != two
+
+
+def test_exact_group_target_filter_retains_global_membership_as_report_only(
+    tmp_path: Path,
+) -> None:
+    from harness.analysis.index_groups import insert_duplicate_groups
+
+    connection = _connection()
+    data = b"\0" * 64
+    expected = {}
+    for target, addresses in [
+        ("exe/one", [0x80100000, 0x80100040]),
+        ("exe/two", [0x80100000]),
+    ]:
+        _target(connection, tmp_path, target, data * 2)
+        expected[target] = {
+            _function(connection, target=target, address=address, data=data)
+            for address in addresses
+        }
+    insert_duplicate_groups(connection)
+    (local,) = macro_opportunities_payload(
+        connection, tmp_path, target="exe/one", kind="exact_group", limit=0
+    )
+    (global_,) = macro_opportunities_payload(
+        connection, tmp_path, target=None, kind="exact_group", limit=0
+    )
+    assert local["id"] == global_["id"]
+    assert {m["function"] for m in local["members"]} == expected["exe/one"]
+    assert {m["function"] for m in global_["members"]} == set.union(*expected.values())
+    assert local["evidence"]["targets"] == global_["evidence"]["targets"] == 2
+    assert local["target_scope"] == "exe/one"
+    assert global_["target_scope"] == "cross_target"
+    assert local["status"] == global_["status"] == "blocked"
+    assert "two_independent_exact_c_members_required" in global_["blockers"]
+    assert "no exact member" in global_["evidence"]["registry_blockers"]

@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
 import shutil
+from pathlib import Path
+
+from harness.common.cli import add_example_argument, add_root_argument, run_main
 
 from ..media.str_media import convert_str, inspect_str, validate_str
-from ._common import add_example_argument, add_root_argument, run_main
 
 
 def _source(args: argparse.Namespace) -> Path:

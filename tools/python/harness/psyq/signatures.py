@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 from typing import Any, Iterable
 
-from ..domain import load_target_manifests
+from ..domain.manifests import load_target_manifests
 from .headers import (
     HEADER_SCHEMA,
     declaration_from_index,
@@ -47,8 +47,10 @@ SIGNATURE_VERSIONS = (
 HISTORICAL_PRIMARY_VERSIONS = ("3610", "3611", "370", "400")
 REGIONAL_REBUILD_VERSIONS = ("410",)
 
+
 def signature_root(root: Path) -> Path:
     return root / "toolchains" / "psx_psyq_signatures"
+
 
 def _parse_signature(value: object, *, source: Path) -> tuple[bytes, bytes]:
     if not isinstance(value, str):
@@ -70,6 +72,7 @@ def _parse_signature(value: object, *, source: Path) -> tuple[bytes, bytes]:
         mask.append(0xFF)
     return bytes(data), bytes(mask)
 
+
 def _symbols(labels: object, *, source: Path) -> tuple[tuple[str, int], ...]:
     if not isinstance(labels, list):
         raise ValueError(f"invalid labels in {source}")
@@ -86,6 +89,7 @@ def _symbols(labels: object, *, source: Path) -> tuple[tuple[str, int], ...]:
             continue
         rows.append((name, offset))
     return tuple(sorted(set(rows), key=lambda row: (row[1], row[0])))
+
 
 def _signature_entries(root: Path) -> list[dict[str, Any]]:
     directory = signature_root(root)
@@ -147,6 +151,7 @@ def _signature_entries(root: Path) -> list[dict[str, Any]]:
         entries, key=lambda row: (row["library"], row["object"], row["versions"])
     )
 
+
 def _longest_fixed_run(data: bytes, mask: bytes) -> tuple[int, bytes]:
     best_start = best_end = 0
     start: int | None = None
@@ -158,6 +163,7 @@ def _longest_fixed_run(data: bytes, mask: bytes) -> tuple[int, bytes]:
                 best_start, best_end = start, index
             start = None
     return best_start, data[best_start:best_end]
+
 
 def _matches(
     payload: bytes, data: bytes, mask: bytes, anchor: tuple[int, bytes]
@@ -184,6 +190,7 @@ def _matches(
             for index, required in enumerate(mask)
         ):
             yield offset
+
 
 def scan(root: Path) -> dict[str, Any]:
     """Scan every manifest binary and return complete-object signature evidence."""
@@ -248,6 +255,7 @@ def scan(root: Path) -> dict[str, Any]:
         # so callers cannot mistake a best fit for provenance.
         "version_evidence": version_evidence,
     }
+
 
 def _version_evidence(
     targets: list[str], matches: list[dict[str, Any]]
@@ -329,6 +337,7 @@ def _version_evidence(
         )
     return evidence
 
+
 def write_index(root: Path) -> dict[str, Any]:
     payload = scan(root)
     # The generated catalog is the durable lookup for official Psy-Q macros,
@@ -336,6 +345,7 @@ def write_index(root: Path) -> dict[str, Any]:
     index_headers(root, "4.7")
     _write_json(signature_index_path(root), payload)
     return payload
+
 
 __all__ = [
     "SIGNATURE_VERSIONS",

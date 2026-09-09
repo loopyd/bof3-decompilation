@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 from harness.commands.symbols import main as symbols_main
-from harness.domain.naming_debt import (
+from harness.naming.debt import (
     collect_naming_debt,
     load_naming_baseline,
     naming_debt_regressions,

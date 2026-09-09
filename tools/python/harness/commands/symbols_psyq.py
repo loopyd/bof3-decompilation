@@ -9,11 +9,10 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from ..domain import (
-    load_target_manifests,
-    normalize_target_id,
-    parse_function_id,
-)
+from harness.common.cli import resolved_root
+
+from ..domain.ids import normalize_target_id, parse_function_id
+from ..domain.manifests import load_target_manifests
 from ..psyq.bindings import (
     apply_psyq_provenance,
     parse_psyq_find,
@@ -21,8 +20,6 @@ from ..psyq.bindings import (
     sdk_weak_bindings,
     select_import_rows,
 )
-from ._common import resolved_root
-
 
 _root = resolved_root
 

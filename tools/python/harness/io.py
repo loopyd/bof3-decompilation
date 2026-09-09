@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -12,6 +13,14 @@ from typing import Any
 
 
 DEFAULT_PSYQ_VERSION = "4.7"
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def normalize_psyq_version(version: str | None = None) -> str:
@@ -90,6 +99,16 @@ def repo_layout(
         gcc_variants_root=toolchains / "gcc-variants",
         psyq_root=toolchains / "psyq" / psyq,
     )
+
+
+def unique_object(pairs):
+    """Reject ambiguous JSON objects, including nested duplicate keys."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key: {key}")
+        result[key] = value
+    return result
 
 
 def read_json(path: Path) -> dict[str, Any]:

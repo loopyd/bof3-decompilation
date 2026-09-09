@@ -7,10 +7,15 @@ import json
 import os
 import subprocess
 
+from harness.common.cli import (
+    add_example_argument,
+    add_root_argument,
+    resolved_root,
+    run_main,
+)
+
 from ..analysis.engine import find_engine
 from ..analysis.project import analyze_project, prepare_target, rizin_argv, status
-from ._common import add_example_argument, add_root_argument, resolved_root, run_main
-
 
 _root = resolved_root
 

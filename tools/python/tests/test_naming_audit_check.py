@@ -2,28 +2,64 @@ from __future__ import annotations
 
 import hashlib
 import json
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
 import pytest
+from harness.naming.audit import (
+    prepare_transaction,
+    validate,
+)
+from harness.naming.audit import (
+    verify as _verify,
+)
+from harness.naming.context import DIGEST_VERSION, pre_apply
 
-from harness.analysis.naming import DIGEST_VERSION, pre_apply
-from harness.commands.naming_audit import validate, verify
+
+def verify(
+    root: Path, target: str, report: dict[str, Any], transaction: str
+) -> dict[str, Any]:
+    """Invoke production verification with the fixture's canonical report path."""
+    return _verify(
+        root,
+        target,
+        report,
+        transaction,
+        report_path=root / "docs/reviews/test.json",
+    )
+
 
 TARGET = "exe/test"
 
 
-def _binding(root: Path, report: dict[str, Any]) -> dict[str, object]:
-    """Capture the pre-apply fact record before the repository mutates."""
-    from harness.analysis.naming import TargetContext, naming_manifest
-    from harness.domain import load_target_manifests
+class _EmptyConnection:
+    """Bulk-work snapshot connection stand-in: three empty bounded queries."""
 
-    manifest = load_target_manifests(root)[TARGET]
-    ctx = TargetContext(root, TARGET, manifest)
-    row = report["rows"][0]
-    binding = pre_apply(ctx, "function", "func_80100000", row)
-    row["manifest"] = naming_manifest(ctx, "function", "func_80100000", row, binding)
-    return binding
+    def execute(self, *_args, **_kwargs):
+        return []
+
+    def close(self):
+        pass
+
+
+class _DataReferenceConnection:
+    """Bulk snapshot that reports one data access for ``D_80100010``.
+
+    Only the second bounded query (``data_references``) yields a row so the
+    snapshot generates an ``access:`` work item for the data row; the other
+    two queries stay empty. This keeps the bulk snapshot count at three
+    queries while letting the data row carry open required work.
+    """
+
+    def execute(self, query: str, *_args: object, **_kwargs: object) -> list[object]:
+        if "data_references" in query:
+            return [(0x80100010, "x")]
+        return []
+
+    def close(self) -> None:
+        pass
 
 
 def _repo(root: Path) -> None:
@@ -122,7 +158,7 @@ def _row(root: Path, kind: str, name: str, state: str) -> dict[str, Any]:
         if kind == "function"
         else ("selected_range", "selected_access", "storage_class", "one_level_beyond")
     )
-    return {
+    row = {
         "kind": kind,
         "name": name,
         "rung_status": state,
@@ -136,6 +172,7 @@ def _row(root: Path, kind: str, name: str, state: str) -> dict[str, Any]:
         "missing_fact": "semantic role",
         "ceiling_next_command": "runtime-trace: optional experiment",
     }
+    return row
 
 
 def _report(root: Path) -> dict[str, Any]:
@@ -175,19 +212,142 @@ def _report(root: Path) -> dict[str, Any]:
         "schema": "bof3.naming-audit/v3",
         "target": TARGET,
         "complete": True,
-        "rows": [function, _row(root, "data", "D_80100010", "exhausted")],
+        "rows": [function, _row(root, "data", "D_80100010", "blocked")],
     }
+
+
+def _prepared_report(
+    root: Path, report: dict[str, Any] | None = None, monkeypatch=None
+) -> tuple[dict[str, Any], Path]:
+    """Prepare a proposal through the production atomic producer."""
+    payload = report or _report(root)
+    if monkeypatch is not None:
+        monkeypatch.setattr(
+            "harness.naming.audit.connect_index",
+            lambda *_, **__: _EmptyConnection(),
+        )
+    payload["complete"] = False
+    data = payload["rows"][1]
+    data["smallest_repair"] = "bin/rev-query --json xrefs exe/test@0x80100010"
+    data["rungs"]["selected_access"] = {
+        "status": "open",
+        "next_command": "bin/rev-query --json xrefs exe/test@0x80100010",
+        "observations": [_observation("D_80100010.selected_access.open")],
+        "authority": "original bytes",
+    }
+    path = root / "docs/reviews/test.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    prepare_transaction(root, TARGET, path, "function:func_80100000")
+    return json.loads(path.read_text(encoding="utf-8")), path
+
+
+def _prepared_post_apply(root: Path, monkeypatch) -> dict[str, Any]:
+    """Prepare through production, then add only post-apply receipts."""
+    report, _ = _prepared_report(root, monkeypatch=monkeypatch)
+    report["rows"][0]["post_apply_receipts"] = _post_apply_receipts(root)
+    return report
+
+
+def test_prepare_transaction_rejects_concurrent_write_atomically(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _repo(tmp_path)
+    monkeypatch.setattr(
+        "harness.naming.audit.connect_index",
+        lambda *_, **__: _EmptyConnection(),
+    )
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report = _report(tmp_path)
+    report["complete"] = False
+    data = report["rows"][1]
+    data["smallest_repair"] = "bin/rev-query --json xrefs exe/test@0x80100010"
+    data["rungs"]["selected_access"] = {
+        "status": "open",
+        "next_command": data["smallest_repair"],
+        "observations": [_observation("D_80100010.selected_access.open")],
+        "authority": "original bytes",
+    }
+    path = tmp_path / "docs/reviews/test.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(report, sort_keys=True) + "\n", encoding="utf-8")
+    from harness.naming import audit
+
+    real_write = audit.atomic_write_if_unchanged
+    concurrent = b'{"concurrent":true}\n'
+
+    def race(target, expected, payload):
+        target.write_bytes(concurrent)
+        real_write(target, expected, payload)
+
+    monkeypatch.setattr(audit, "atomic_write_if_unchanged", race)
+    with pytest.raises(ValueError, match="changed concurrently"):
+        prepare_transaction(tmp_path, TARGET, path, "function:func_80100000")
+    assert path.read_bytes() == concurrent
+    assert not list(path.parent.glob(f".{path.name}.*"))
+
+
+def test_prepare_transaction_serializes_competing_writers(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _repo(tmp_path)
+    monkeypatch.setattr(
+        "harness.naming.audit.connect_index",
+        lambda *_, **__: _EmptyConnection(),
+    )
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report = _report(tmp_path)
+    report["complete"] = False
+    data = report["rows"][1]
+    data["smallest_repair"] = "bin/rev-query --json xrefs exe/test@0x80100010"
+    data["rungs"]["selected_access"] = {
+        "status": "open",
+        "next_command": data["smallest_repair"],
+        "observations": [_observation("D_80100010.selected_access.open")],
+        "authority": "original bytes",
+    }
+    path = tmp_path / "docs/reviews/test.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(report, sort_keys=True) + "\n", encoding="utf-8")
+
+    # The lock owns read/validate/CAS/replace. A competing writer cannot enter
+    # until the first leaves, so its stale expected bytes lose the CAS.
+    from harness.naming.editing import report_mutation
+    from harness.naming.proposal import atomic_write_if_unchanged
+
+    expected = path.read_bytes()
+    barrier = threading.Barrier(2)
+
+    def compete(writer: int) -> str:
+        barrier.wait(timeout=2)
+        try:
+            with report_mutation(path, report=True):
+                atomic_write_if_unchanged(path, expected, {"writer": writer})
+            return "accepted"
+        except ValueError:
+            return "rejected"
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        results = list(executor.map(compete, (1, 2)))
+    assert sorted(results) == ["accepted", "rejected"]
 
 
 def test_validate_v3_accepts_complete_explicit_blocked_gap_inventory(
     tmp_path: Path, monkeypatch
 ) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
+    monkeypatch.setattr(
+        "harness.naming.audit.connect_index",
+        lambda *_, **__: _EmptyConnection(),
+    )
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
     report = _report(tmp_path)
     report["complete"] = False
     for row in report["rows"]:
         row["rung_status"] = "blocked"
+        row.pop("conclusion_provenance", None)
         row["smallest_repair"] = "bin/rev-query --json xrefs exe/test@0x80100000"
         row["required_work"] = []
         for rung in row["rungs"].values():
@@ -197,15 +357,47 @@ def test_validate_v3_accepts_complete_explicit_blocked_gap_inventory(
     assert validate(tmp_path, TARGET, report)["complete"] is False
 
 
+@pytest.mark.parametrize("mutation", ["missing", "malformed", "extra"])
+def test_validate_v3_rejects_noncanonical_terminal_provenance(
+    tmp_path: Path, monkeypatch, mutation: str
+) -> None:
+    _repo(tmp_path)
+    monkeypatch.setattr(
+        "harness.naming.audit.connect_index",
+        lambda *_, **__: _EmptyConnection(),
+    )
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report, report_path = _prepared_report(tmp_path, monkeypatch=monkeypatch)
+    provenance = report["rows"][0]["conclusion_provenance"]
+    if mutation == "missing":
+        report["rows"][0].pop("conclusion_provenance")
+    elif mutation == "malformed":
+        provenance["kind"] = "unknown"
+    else:
+        provenance["extra"] = True
+    with pytest.raises(ValueError, match="provenance|non-canonical"):
+        validate(tmp_path, TARGET, report, report_path=report_path)
+
+
 def test_validate_v3_full_and_isolated_transaction(tmp_path: Path, monkeypatch) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    assert validate(tmp_path, TARGET, report)["complete"] is True
+    monkeypatch.setattr(
+        "harness.naming.audit.connect_index",
+        lambda *_, **__: _EmptyConnection(),
+    )
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report, report_path = _prepared_report(tmp_path, monkeypatch=monkeypatch)
     assert (
-        validate(tmp_path, TARGET, report, transaction="function:func_80100000")[
-            "ready"
-        ]
+        validate(tmp_path, TARGET, report, report_path=report_path)["complete"] is False
+    )
+    assert (
+        validate(
+            tmp_path,
+            TARGET,
+            report,
+            transaction="function:func_80100000",
+            report_path=report_path,
+        )["ready"]
         is True
     )
 
@@ -214,10 +406,8 @@ def test_post_apply_validates_new_scope_and_old_absence(
     tmp_path: Path, monkeypatch
 ) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    report["rows"][0]["pre_apply"] = _binding(tmp_path, report)
-    report["rows"][0]["post_apply_receipts"] = _post_apply_receipts(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report = _prepared_post_apply(tmp_path, monkeypatch)
     for path in (
         tmp_path / "config/targets/exe/test/symbols.txt",
         tmp_path / "config/targets/exe/test/splat.yaml",
@@ -235,15 +425,52 @@ def test_post_apply_validates_new_scope_and_old_absence(
     assert result["applied"] is True
 
 
+@pytest.mark.parametrize(
+    "case",
+    ["interpretation", "authored-row", "report", "row-digest", "report-digest"],
+)
+def test_post_apply_rejects_provenance_digest_drift(
+    tmp_path: Path, monkeypatch, case: str
+) -> None:
+    _repo(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report = _prepared_post_apply(tmp_path, monkeypatch)
+    for path in (
+        tmp_path / "config/targets/exe/test/symbols.txt",
+        tmp_path / "config/targets/exe/test/splat.yaml",
+        tmp_path / "config/targets/exe/test/target.toml",
+        tmp_path / "src/test/func_80100000.c",
+    ):
+        path.write_text(
+            path.read_text().replace("func_80100000", "returnImmediately"),
+            encoding="utf-8",
+        )
+    (tmp_path / "src/test/func_80100000.c").rename(
+        tmp_path / "src/test/returnImmediately.c"
+    )
+    row = report["rows"][0]
+    if case == "interpretation":
+        row["interpretation"] = "tampered after apply"
+    elif case == "authored-row":
+        row["confidence"] = "low"
+    elif case == "report":
+        report["campaign"] = "tampered"
+    elif case == "row-digest":
+        row["conclusion_provenance"]["row_sha256"] = "0" * 64
+    else:
+        row["conclusion_provenance"]["report_sha256"] = "0" * 64
+    with pytest.raises(ValueError, match="proposal (row|report) digest drifted"):
+        verify(tmp_path, TARGET, report, "function:func_80100000")
+
+
 @pytest.mark.parametrize("case", ["missing", "failed", "stale", "wrong-target"])
 def test_post_apply_rejects_invalid_required_receipts(
     tmp_path: Path, monkeypatch, case: str
 ) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    report["rows"][0]["pre_apply"] = _binding(tmp_path, report)
-    receipts = _post_apply_receipts(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report = _prepared_post_apply(tmp_path, monkeypatch)
+    receipts = report["rows"][0]["post_apply_receipts"]
     if case == "missing":
         receipts = receipts[:-1]
     elif case == "failed":
@@ -272,10 +499,9 @@ def test_post_apply_rejects_invalid_required_receipts(
 
 def test_post_apply_rejects_wrong_review_selector(tmp_path: Path, monkeypatch) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    report["rows"][0]["pre_apply"] = _binding(tmp_path, report)
-    receipts = _post_apply_receipts(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report = _prepared_post_apply(tmp_path, monkeypatch)
+    receipts = report["rows"][0]["post_apply_receipts"]
     review = receipts[-1]
     review["selector"] = "exe/WRONG@0xDEADBEEF"
     path = tmp_path / review["receipt"]
@@ -324,10 +550,8 @@ def test_post_apply_rejects_each_tampered_manifest_field(
     tmp_path: Path, monkeypatch, field: str
 ) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    report["rows"][0]["pre_apply"] = _binding(tmp_path, report)
-    report["rows"][0]["post_apply_receipts"] = _post_apply_receipts(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report = _prepared_post_apply(tmp_path, monkeypatch)
     manifest = report["rows"][0]["manifest"]
     manifest[field] = (
         "tampered"
@@ -347,7 +571,7 @@ def test_post_apply_rejects_each_tampered_manifest_field(
     (tmp_path / "src/test/func_80100000.c").rename(
         tmp_path / "src/test/returnImmediately.c"
     )
-    with pytest.raises(ValueError, match="manifest drifted"):
+    with pytest.raises(ValueError, match="transaction records differ from provenance"):
         verify(tmp_path, TARGET, report, "function:func_80100000")
 
 
@@ -355,9 +579,9 @@ def test_reviewed_rz_scope_digest_covers_reviewed_annotations(
     tmp_path: Path, monkeypatch
 ) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    from harness.analysis.naming import TargetContext, reviewed_scope_digest
-    from harness.domain import load_target_manifests
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    from harness.domain.manifests import load_target_manifests
+    from harness.naming.context import TargetContext, reviewed_scope_digest
 
     manifest = load_target_manifests(tmp_path)[TARGET]
     ctx = TargetContext(tmp_path, TARGET, manifest)
@@ -382,9 +606,15 @@ def test_transaction_check_captures_versioned_pre_apply_facts(
     tmp_path: Path, monkeypatch
 ) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    result = validate(tmp_path, TARGET, report, transaction="function:func_80100000")
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report, report_path = _prepared_report(tmp_path, monkeypatch=monkeypatch)
+    result = validate(
+        tmp_path,
+        TARGET,
+        report,
+        transaction="function:func_80100000",
+        report_path=report_path,
+    )
     assert result["ready"] is True
     binding = result["pre_apply"]
     assert binding["version"] == DIGEST_VERSION
@@ -407,10 +637,8 @@ def test_post_apply_rejects_new_name_change_after_capture(
     tmp_path: Path, monkeypatch
 ) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    report["rows"][0]["pre_apply"] = _binding(tmp_path, report)
-    report["rows"][0]["post_apply_receipts"] = _post_apply_receipts(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report = _prepared_post_apply(tmp_path, monkeypatch)
     for path in (
         tmp_path / "config/targets/exe/test/symbols.txt",
         tmp_path / "config/targets/exe/test/splat.yaml",
@@ -428,15 +656,15 @@ def test_post_apply_rejects_new_name_change_after_capture(
     # (or an invented new name) after capture is a fresh transaction.
     report["rows"][0]["new_name"] = "laterName"
     report["rows"][0]["identity"]["new"] = "laterName"
-    with pytest.raises(ValueError, match="differs from the captured proposal"):
+    with pytest.raises(ValueError, match="proposal row digest drifted"):
         verify(tmp_path, TARGET, report, "function:func_80100000")
 
 
 def test_post_apply_rejects_pre_apply_digest_drift(tmp_path: Path, monkeypatch) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    binding = _binding(tmp_path, report)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report, _ = _prepared_report(tmp_path, monkeypatch=monkeypatch)
+    binding = report["rows"][0]["pre_apply"]
     binding["facts"]["scope"]["binding_locations"] = [
         "config/targets/exe/test/invented.txt"
     ]
@@ -454,15 +682,15 @@ def test_post_apply_rejects_pre_apply_digest_drift(tmp_path: Path, monkeypatch) 
     old_source = tmp_path / "src/test/func_80100000.c"
     if old_source.exists():
         old_source.rename(tmp_path / "src/test/returnImmediately.c")
-    with pytest.raises(ValueError, match="pre-apply digest does not match"):
+    with pytest.raises(ValueError, match="transaction records differ from provenance"):
         verify(tmp_path, TARGET, report, "function:func_80100000")
 
 
 def test_post_apply_rejects_older_digest_version(tmp_path: Path, monkeypatch) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    binding = _binding(tmp_path, report)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report, _ = _prepared_report(tmp_path, monkeypatch=monkeypatch)
+    binding = report["rows"][0]["pre_apply"]
     binding["version"] = 0
     report["rows"][0]["pre_apply"] = binding
     for path in (
@@ -478,7 +706,7 @@ def test_post_apply_rejects_older_digest_version(tmp_path: Path, monkeypatch) ->
     old_source = tmp_path / "src/test/func_80100000.c"
     if old_source.exists():
         old_source.rename(tmp_path / "src/test/returnImmediately.c")
-    with pytest.raises(ValueError, match="pre-apply facts are version 0"):
+    with pytest.raises(ValueError, match="transaction records differ from provenance"):
         verify(tmp_path, TARGET, report, "function:func_80100000")
 
 
@@ -486,7 +714,7 @@ def test_post_apply_requires_captured_pre_apply_binding(
     tmp_path: Path, monkeypatch
 ) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
     report = _report(tmp_path)
     for path in (
         tmp_path / "config/targets/exe/test/symbols.txt",
@@ -501,16 +729,16 @@ def test_post_apply_requires_captured_pre_apply_binding(
     old_source = tmp_path / "src/test/func_80100000.c"
     if old_source.exists():
         old_source.rename(tmp_path / "src/test/returnImmediately.c")
-    with pytest.raises(ValueError, match="requires the captured pre-apply facts"):
+    with pytest.raises(
+        ValueError, match="proposal provenance has a non-canonical shape"
+    ):
         verify(tmp_path, TARGET, report, "function:func_80100000")
 
 
 def test_post_apply_rejects_changed_map_address(tmp_path: Path, monkeypatch) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    report["rows"][0]["pre_apply"] = _binding(tmp_path, report)
-    report["rows"][0]["post_apply_receipts"] = _post_apply_receipts(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report = _prepared_post_apply(tmp_path, monkeypatch)
     for path in (
         tmp_path / "config/targets/exe/test/symbols.txt",
         tmp_path / "config/targets/exe/test/splat.yaml",
@@ -532,14 +760,14 @@ def test_post_apply_rejects_old_spelling_in_local_include(
     tmp_path: Path, monkeypatch
 ) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
     source = tmp_path / "src/test/func_80100000.c"
     source.write_text('#include "local.h"\n' + source.read_text(), encoding="utf-8")
     local = source.parent / "local.h"
     local.write_text("void func_80100000(void);\n", encoding="utf-8")
     report = _report(tmp_path)
     report["rows"][0]["identity"]["source_locations"].append("src/test/local.h")
-    report["rows"][0]["pre_apply"] = _binding(tmp_path, report)
+    report, _ = _prepared_report(tmp_path, report, monkeypatch)
     report["rows"][0]["post_apply_receipts"] = _post_apply_receipts(tmp_path)
     for path in (
         tmp_path / "config/targets/exe/test/symbols.txt",
@@ -556,9 +784,8 @@ def test_post_apply_rejects_old_spelling_in_local_include(
 
 def test_post_apply_rejects_remaining_old_spelling(tmp_path: Path, monkeypatch) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    report["rows"][0]["pre_apply"] = _binding(tmp_path, report)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report, _ = _prepared_report(tmp_path, monkeypatch=monkeypatch)
     with pytest.raises(ValueError, match="binding scope|old spelling|pre-apply"):
         verify(tmp_path, TARGET, report, "function:func_80100000")
 
@@ -579,31 +806,40 @@ def test_transaction_scope_rejects_omitted_or_invented_locations(
     tmp_path: Path, monkeypatch
 ) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report, report_path = _prepared_report(tmp_path, monkeypatch=monkeypatch)
     report["rows"][0]["identity"]["source_locations"] = ["invented.c"]
     with pytest.raises(ValueError, match="must equal derived scope"):
-        validate(tmp_path, TARGET, report, transaction="function:func_80100000")
+        validate(
+            tmp_path,
+            TARGET,
+            report,
+            transaction="function:func_80100000",
+            report_path=report_path,
+        )
 
 
-def test_exhausted_rejects_open_generated_work(tmp_path: Path, monkeypatch) -> None:
+def test_blocked_rejects_unsubstantiated_generated_work(
+    tmp_path: Path, monkeypatch
+) -> None:
     _repo(tmp_path)
     monkeypatch.setattr(
-        "harness.analysis.naming.required_work_items",
-        lambda *_: [{"id": "callee:x", "profile": "callee_body", "description": "x"}],
+        "harness.naming.audit.connect_index",
+        lambda *_, **__: _DataReferenceConnection(),
     )
     report = _report(tmp_path)
-    report["rows"][0]["required_work"] = [
-        {
-            "id": "callee:x",
-            "status": "completed",
-            "commands": [_command(tmp_path, "completed-callee")],
-            "observations": [_observation("completed-callee")],
-        }
+    report["rows"][0]["rung_status"] = "blocked"
+    report["rows"][0].pop("conclusion_provenance", None)
+    report["rows"][0]["smallest_repair"] = (
+        "bin/rev-query --json callers exe/test@0x80100000"
+    )
+    report["rows"][0]["rungs"]["selected_call"]["status"] = "open"
+    report["rows"][0]["rungs"]["selected_call"]["next_command"] = report["rows"][0][
+        "smallest_repair"
     ]
     row = report["rows"][1]
-    row["required_work"] = [{"id": "callee:x", "status": "open"}]
-    with pytest.raises(ValueError, match="cannot be exhausted"):
+    row["required_work"] = [{"id": "access:x", "status": "open"}]
+    with pytest.raises(ValueError, match="blocked row requires failed rung"):
         validate(tmp_path, TARGET, report)
 
 
@@ -611,22 +847,30 @@ def test_corroborators_must_link_independent_observations(
     tmp_path: Path, monkeypatch
 ) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report, report_path = _prepared_report(tmp_path, monkeypatch=monkeypatch)
     report["rows"][0]["corroborators"]["B"] = {
         "observation_ids": ["func_80100000.selected_call"],
         "mechanism": "selected_original_instructions",
     }
     with pytest.raises(ValueError, match="share evidence"):
-        validate(tmp_path, TARGET, report, transaction="function:func_80100000")
+        validate(
+            tmp_path,
+            TARGET,
+            report,
+            transaction="function:func_80100000",
+            report_path=report_path,
+        )
 
 
-def test_storage_authority_order_is_canonicalized(tmp_path: Path, monkeypatch) -> None:
-    _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    report["rows"][0]["rung_status"] = "exhausted"
-    report["rows"][0]["missing_fact"] = "semantic role"
+def _data_proposal(root: Path) -> dict[str, Any]:
+    """Build the historical DATA proposal used by storage validator tests."""
+    report = _report(root)
+    function = report["rows"][0]
+    function["rung_status"] = "blocked"
+    function["smallest_repair"] = "bin/rev-query --json callers exe/test@0x80100000"
+    function["rungs"]["selected_call"]["status"] = "open"
+    function["rungs"]["selected_call"]["next_command"] = function["smallest_repair"]
     data = report["rows"][1]
     data.update(
         {
@@ -664,8 +908,23 @@ def test_storage_authority_order_is_canonicalized(tmp_path: Path, monkeypatch) -
             },
         }
     )
+    return report
+
+
+def test_storage_authority_order_is_canonicalized(tmp_path: Path, monkeypatch) -> None:
+    _repo(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report = _data_proposal(tmp_path)
+    from harness.naming import audit
+
     assert (
-        validate(tmp_path, TARGET, report, transaction="data:D_80100010")["ready"]
+        audit.validate_v3(
+            tmp_path,
+            TARGET,
+            report,
+            audit._context(tmp_path, TARGET),
+            transaction="data:D_80100010",
+        )["ready"]
         is True
     )
 
@@ -674,14 +933,15 @@ def test_duplicate_work_profile_comes_from_generated_item(
     tmp_path: Path, monkeypatch
 ) -> None:
     _repo(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report, report_path = _prepared_report(tmp_path, monkeypatch=monkeypatch)
     generated = [
         {"id": "caller:a", "profile": "caller_context", "description": "a"},
         {"id": "callee:b", "profile": "callee_body", "description": "b"},
     ]
     monkeypatch.setattr(
-        "harness.analysis.naming.required_work_items", lambda *_: generated
+        "harness.naming.context.required_work_items", lambda *_: generated
     )
-    report = _report(tmp_path)
     report["rows"][0]["required_work"] = [
         {
             "id": "caller:a",
@@ -693,21 +953,34 @@ def test_duplicate_work_profile_comes_from_generated_item(
         {"id": "callee:b", "status": "duplicate", "duplicate_of": "caller:a"},
     ]
     with pytest.raises(ValueError, match="same-profile"):
-        validate(tmp_path, TARGET, report, transaction="function:func_80100000")
+        validate(
+            tmp_path,
+            TARGET,
+            report,
+            transaction="function:func_80100000",
+            report_path=report_path,
+        )
 
 
 def test_new_name_must_equal_identity_new(tmp_path: Path, monkeypatch) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report, report_path = _prepared_report(tmp_path, monkeypatch=monkeypatch)
     report["rows"][0]["identity"]["new"] = "differentName"
     with pytest.raises(ValueError, match="new_name must equal"):
-        validate(tmp_path, TARGET, report, transaction="function:func_80100000")
+        validate(
+            tmp_path,
+            TARGET,
+            report,
+            transaction="function:func_80100000",
+            report_path=report_path,
+        )
 
 
 def test_partial_used_is_repository_derived(tmp_path: Path, monkeypatch) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report, report_path = _prepared_report(tmp_path, monkeypatch=monkeypatch)
     source = tmp_path / "src/test/func_80100000.c"
     source.write_text(
         source.read_text()
@@ -716,50 +989,34 @@ def test_partial_used_is_repository_derived(tmp_path: Path, monkeypatch) -> None
         .replace("@residual none", "@residual instruction order differs"),
         encoding="utf-8",
     )
-    report = _report(tmp_path)
     with pytest.raises(ValueError, match="partial_used must match"):
-        validate(tmp_path, TARGET, report, transaction="function:func_80100000")
+        validate(
+            tmp_path,
+            TARGET,
+            report,
+            transaction="function:func_80100000",
+            report_path=report_path,
+        )
 
 
 def test_data_storage_must_equal_canonical_storage(tmp_path: Path, monkeypatch) -> None:
     _repo(tmp_path)
-    monkeypatch.setattr("harness.analysis.naming.required_work_items", lambda *_: [])
-    report = _report(tmp_path)
-    data = report["rows"][1]
-    data.update(
-        {
-            "rung_status": "proposed",
-            "new_name": "handlerIndex",
-            "semantic_status": "accepted",
-            "transaction_status": "ready",
-            "readiness_blockers": [],
-            "corroborators": {
-                "A": {
-                    "observation_ids": ["D_80100010.selected_access"],
-                    "mechanism": "selected_original_instructions",
-                },
-                "B": {
-                    "observation_ids": ["D_80100010.one_level_beyond"],
-                    "mechanism": "independent_consumer",
-                },
-            },
-            "name_terms": {"handler": ["A"], "index": ["B"]},
-            "identity": {
-                "selector": "exe/test@0x80100010",
-                "old": "D_80100010",
-                "new": "handlerIndex",
-                "unchanged_range": "0x80100010..0x80100011",
-                "binding_locations": ["config/targets/exe/test/symbols.txt"],
-                "source_locations": ["config/targets/exe/test/target.toml"],
-            },
-            "storage": {
-                "kind": "bss",
-                "start": "0x80100010",
-                "end": "0x80100011",
-                "present_in_binary": False,
-                "authority": [],
-            },
-        }
-    )
+    monkeypatch.setattr("harness.naming.context.required_work_items", lambda *_: [])
+    report = _data_proposal(tmp_path)
+    report["rows"][1]["storage"] = {
+        "kind": "bss",
+        "start": "0x80100010",
+        "end": "0x80100011",
+        "present_in_binary": False,
+        "authority": [],
+    }
+    from harness.naming import audit
+
     with pytest.raises(ValueError, match="canonical storage"):
-        validate(tmp_path, TARGET, report, transaction="data:D_80100010")
+        audit.validate_v3(
+            tmp_path,
+            TARGET,
+            report,
+            audit._context(tmp_path, TARGET),
+            transaction="data:D_80100010",
+        )

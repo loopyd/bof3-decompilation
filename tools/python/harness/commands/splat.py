@@ -6,12 +6,13 @@ import argparse
 import sys
 from pathlib import Path
 
-from ..domain import lookup_target_manifest
-from ..domain.sources import LiftMetadataError, lift_metadata
+from harness.common.cli import add_example_argument, add_root_argument, run_main
+
 from ..domain.layout import parse_splat_layout
+from ..domain.registry import lookup_target_manifest
+from ..domain.sources import LiftMetadataError, lift_metadata
 from ..io import repo_layout
 from ..toolchain.splat import SplatToolchain
-from ._common import add_root_argument, run_main
 
 
 def _legacy_stub_candidates(root: Path, manifest) -> list[tuple[Path, Path, int]]:
@@ -153,18 +154,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="splat")
     add_root_argument(parser)
     parser.add_argument("target", help="target id, for example exe/logo")
-    parser.add_argument("--example", action="store_true")
+    add_example_argument(parser, "bin/splat exe/logo")
     parser.add_argument("--verbose", action="store_true", help="show full Splat output")
     parser.set_defaults(handler=run)
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
-    arguments = sys.argv[1:] if argv is None else argv
-    if "--example" in arguments:
-        print("bin/splat exe/logo")
-        return 0
-    return run_main(build_parser, arguments)
+    return run_main(build_parser, argv)
 
 
 if __name__ == "__main__":

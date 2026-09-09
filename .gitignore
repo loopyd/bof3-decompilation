@@ -67,9 +67,11 @@ toolchains/psyq-stock/
 
 # Session / agent artifacts
 session-*.md
-sessions/
+# Legacy live-session symlink; remove after restarting Pi.
+/sessions
 ledger/
-.codex
+/.codex/*
+!/.codex/skills/
 
 # Project Pi runtime state (tracked configuration lives in .pi/)
 .pi/sessions/

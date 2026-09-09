@@ -7,10 +7,8 @@ from pathlib import Path
 import sys
 from typing import Any
 
-from ..domain import (
-    CompiledSymbolError,
-    load_target_manifests,
-)
+from ..domain.sources import CompiledSymbolError
+from ..domain.manifests import load_target_manifests
 from ..domain.layout import parse_splat_layout
 from ..domain.sources import reviewed_function_name
 from ..domain.symbols import load_map, sdk_map_path

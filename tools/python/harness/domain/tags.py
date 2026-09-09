@@ -70,20 +70,44 @@ def parse_behavior_tag(text: str) -> str | None:
 
 
 def set_tag_line(text: str, tag: str, value: str) -> tuple[str, bool]:
-    pattern = re.compile(rf"^([ \\t]*\\S*? ?@){tag}\\b[^\\r\\n]*", re.MULTILINE)
+    pattern = re.compile(
+        rf"^([ \t]*(?:/\*|\*)?[ \t]*@){tag}\b[^\r\n]*",
+        re.MULTILINE,
+    )
     match = pattern.search(text)
     if match is None:
         return text, False
     return pattern.sub(rf"{match.group(1)}{tag} {value}", text, count=1), True
 
 
+def _set_single_tag_line(text: str, tag: str, value: str) -> tuple[str, bool]:
+    """Replace the first tag line and remove duplicate lines of that tag."""
+
+    pattern = re.compile(
+        rf"^([ \t]*(?:/\*|\*)?[ \t]*@){tag}\b[^\r\n]*(?:\r?\n)?",
+        re.MULTILINE,
+    )
+    matches = list(pattern.finditer(text))
+    if not matches:
+        return text, False
+    first = matches[0]
+    replacement = f"{first.group(1)}{tag} {value}"
+    if first.group(0).endswith(("\n", "\r")):
+        replacement += "\n"
+    fixed = text[: first.start()] + replacement + text[first.end() :]
+    duplicates = list(pattern.finditer(fixed))[1:]
+    for duplicate in reversed(duplicates):
+        fixed = fixed[: duplicate.start()] + fixed[duplicate.end() :]
+    return fixed, True
+
+
 def canonical_exact_progress(text: str) -> tuple[str, bool]:
     """Canonicalize an existing progress block without touching C syntax."""
     if not STATUS_TAG_RE.search(text):
         return text, False
-    fixed, _ = set_tag_line(text, "status", "exact")
-    fixed, _ = set_tag_line(fixed, "match", "100.00")
-    fixed, residual = set_tag_line(fixed, "residual", "none")
+    fixed, _ = _set_single_tag_line(text, "status", "exact")
+    fixed, _ = _set_single_tag_line(fixed, "match", "100.00")
+    fixed, residual = _set_single_tag_line(fixed, "residual", "none")
     if not residual:
         match = MATCH_TAG_RE.search(fixed)
         if match:

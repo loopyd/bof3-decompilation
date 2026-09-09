@@ -4,21 +4,17 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-
 from harness.analysis.schema import create_schema
-from harness.analysis import type_context as type_context_module
-from harness.analysis.type_context import type_context, type_context_from_connection
-from harness.analysis.type_index import (
-    infer_type_candidates,
-    insert_authored_types,
-    insert_shared_scalar_types,
-    type_candidates_payload,
-    type_usages_payload,
-    types_payload,
-)
-from harness.domain import load_target_manifests
 from harness.domain.c_context import declaration_records, scalar_declaration_context
-
+from harness.domain.manifests import load_target_manifests
+from harness.types import context as type_context_module
+from harness.types.context import type_context, type_context_from_connection
+from harness.types.inference import infer_type_candidates
+from harness.types.index import insert_authored_types
+from harness.types.index import insert_shared_scalar_types
+from harness.types.queries import type_candidates_payload
+from harness.types.queries import type_usages_payload
+from harness.types.queries import types_payload
 
 TARGET = "exe/test"
 
@@ -444,3 +440,24 @@ def test_conflicting_same_name_declarations_are_diagnosed(tmp_path: Path) -> Non
     connection = _connection()
     with pytest.raises(sqlite3.IntegrityError):
         insert_authored_types(connection, tmp_path, TARGET, manifest)
+
+
+def test_fixed_ram_storage_and_aggregate_keep_distinct_blocked_target_ids() -> None:
+    connection = _connection()
+    connection.execute(
+        "INSERT INTO targets VALUES ('exe/other', 'b', 'h', 0, 'rizin', 'v', 's', 'sh')"
+    )
+    for target in (TARGET, "exe/other"):
+        connection.execute(
+            "INSERT INTO data_references VALUES (?, NULL, 4, 0x1F800044, 'g_battle_work', 'load', 'lw')",
+            (target,),
+        )
+        infer_type_candidates(connection, target)
+    rows = type_candidates_payload(connection, target=TARGET, status=None, limit=0)
+    assert {row["id"] for row in rows} == {
+        f"{TARGET}@1F800044:storage",
+        f"{TARGET}@1F800044:aggregate_region",
+    }
+    assert all(row["status"] == "blocked" and row["blocker"] for row in rows)
+    assert all(row["semantic_status"] == "unresolved" for row in rows)
+    assert next(row for row in rows if row["kind"] == "storage")["width"] == 4

@@ -2,22 +2,24 @@
 
 from __future__ import annotations
 
-import json
 import hashlib
+import json
 import subprocess
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterable
 
+from harness.common.process import run_analyzer
+
 from ..domain.mips import static_jals
 from ..io import repo_layout
-
 from .snapshot import (
     SNAPSHOT_SCHEMA,
+    AnalysisSnapshot,
     SnapshotCall,
     SnapshotFunction,
     SnapshotUnresolvedCall,
-    AnalysisSnapshot,
     snapshot_path,
 )
 
@@ -114,20 +116,11 @@ def _probe_capabilities(executable: Path) -> dict[str, bool]:
     return capabilities
 
 
-def find_engine(name: str = "rizin", *, root: Path | None = None) -> EngineIdentity:
-    """Locate and verify the installed analyzer engine.
+@lru_cache(maxsize=4)
+def _verified_engine(executable: Path, mtime_ns: int, size: int) -> EngineIdentity:
+    """Verify one executable generation and cache its immutable identity."""
 
-    Raises ``FileNotFoundError`` if the engine is not installed, or
-    ``RuntimeError`` if it lacks required capabilities.
-    """
-
-    if name != "rizin":
-        raise ValueError("only rizin is supported")
-    executable = repo_layout(root).toolchains_dir / "rizin" / "bin" / "rizin"
-    if not executable.is_file():
-        raise FileNotFoundError(
-            f"missing project Rizin: {executable}; run `just setup`"
-        )
+    del mtime_ns, size
     version = _get_version(executable)
     capabilities = _probe_capabilities(executable)
     missing = [
@@ -145,6 +138,20 @@ def find_engine(name: str = "rizin", *, root: Path | None = None) -> EngineIdent
         version=version,
         capabilities=capabilities,
     )
+
+
+def find_engine(name: str = "rizin", *, root: Path | None = None) -> EngineIdentity:
+    """Locate and verify the installed analyzer engine."""
+
+    if name != "rizin":
+        raise ValueError("only rizin is supported")
+    executable = repo_layout(root).toolchains_dir / "rizin" / "bin" / "rizin"
+    if not executable.is_file():
+        raise FileNotFoundError(
+            f"missing project Rizin: {executable}; run `just setup`"
+        )
+    stat = executable.stat()
+    return _verified_engine(executable, stat.st_mtime_ns, stat.st_size)
 
 
 def _run_analysis(
@@ -174,7 +181,7 @@ def _run_analysis(
     for command in replay_commands:
         argv.extend(["-c", command])
     argv.extend(["-c", "aa", "-c", "aflj", "-c", "axlj", str(binary_path)])
-    result = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
+    result = run_analyzer(argv, timeout=timeout)
     if result.returncode != 0:
         diagnostic = (result.stderr or result.stdout).strip()
         raise RuntimeError(
@@ -227,6 +234,10 @@ def build_snapshot(
     function_ids: dict[int, str] = {}
     ranges: list[tuple[int, int, str]] = []
     reviewed = reviewed_addresses or set()
+    # ponytail: capture-local lookup; rebuild each capture to preserve freshness.
+    from ..domain.claims import index_source_paths
+
+    sources_by_address = index_source_paths(source_paths or ())
 
     for raw in raw_functions if isinstance(raw_functions, list) else []:
         address = int(raw.get("offset", raw.get("addr", 0)))
@@ -237,9 +248,7 @@ def build_snapshot(
         function_id = f"{target_id}@{address:08x}"
         source = None
         if source_paths is not None:
-            from ..domain.claims import resolve_source_for_paths
-
-            resolved = resolve_source_for_paths(source_paths, address)
+            resolved = sources_by_address.get(address)
             if resolved is not None:
                 source = str(resolved)
         elif source_dir is not None:
@@ -354,7 +363,8 @@ def build_snapshot(
 def write_target_snapshot(root: Path, target_id: str, *, timeout: int = 120) -> Path:
     """Analyze a manifest-backed target and atomically write its snapshot."""
 
-    from ..domain import lookup_target_manifest, normalize_target_id
+    from ..domain.ids import normalize_target_id
+    from ..domain.registry import lookup_target_manifest
 
     manifest = lookup_target_manifest(root, target_id)
     if manifest is None:

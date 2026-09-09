@@ -6,11 +6,13 @@ import argparse
 import json
 from pathlib import Path
 
-from ..domain import FUNCTION_ID_HELP, load_target_manifests, parse_function_id
+from harness.common.cli import add_example_argument, run_main
+
+from ..domain.ids import FUNCTION_ID_HELP, parse_function_id
+from ..domain.manifests import load_target_manifests
 from ..io import repo_layout
 from ..match.flag_search import search_flags
 from ..toolchain.gcc_variants import EmptyCatalog, lookup_variant
-from ._common import add_example_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:
@@ -19,7 +21,7 @@ def run(args: argparse.Namespace) -> int:
     manifest = load_target_manifests(layout.root).get(function.target.value)
     if manifest is None:
         raise ValueError(f"unknown target: {function.target.value}")
-    from ._common import resolve_function_selector
+    from harness.common.cli import resolve_function_selector
 
     _, _, source = resolve_function_selector(args.function)
     if source is None or not source.is_file():

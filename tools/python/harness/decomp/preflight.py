@@ -7,7 +7,7 @@ import re
 from typing import Any, Callable, Iterable
 
 from ..build.operations import batch_build, cmake_target_for_source, configure
-from ..domain import TargetManifest
+from ..domain.manifests import TargetManifest
 from ..domain.claims import manifest_source_paths
 from ..domain.layout import ReviewedSplatLayout, parse_splat_layout
 from ..domain.sources import (

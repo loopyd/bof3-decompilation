@@ -10,6 +10,7 @@ import re
 
 from ..domain.ids import FunctionId, normalize_target_id, parse_function_id
 from ..domain.manifests import load_target_manifests
+from ..naming.campaign import resolve_campaign_report
 from .base import ContextRequest, ContextSection, _context_profile
 from .common import FULL_PATHS, selector_sections, target_audit_sections
 
@@ -72,6 +73,7 @@ class CleanupRequest:
     rows: tuple[str, ...]
     arguments: tuple[str, ...]
     selected_skill: SelectedSkill
+    report: str | None = None
     warning: str | None = None
 
     def as_dict(self, *, loaded_bytes: int | None = None) -> dict[str, object]:
@@ -92,6 +94,7 @@ class CleanupRequest:
             "rows": list(self.rows),
             "arguments": list(self.arguments),
             "selected_skill": selected,
+            "report": self.report,
             "warning": self.warning,
         }
 
@@ -100,9 +103,9 @@ def _selected_skill(mode: str) -> SelectedSkill:
     name, operation = _ROUTE[mode]
     return SelectedSkill(
         name,
-        f".pi/skills/{name}/SKILL.md",
+        f".codex/skills/{name}/SKILL.md",
         tuple(
-            f".pi/skills/{name}/{path}" for path in _SKILL_REFERENCES[name][operation]
+            f".codex/skills/{name}/{path}" for path in _SKILL_REFERENCES[name][operation]
         ),
     )
 
@@ -231,6 +234,7 @@ def parse_cleanup_request(
     selector: FunctionId | None = None
     state: str | None = None
     rows: tuple[str, ...] = ()
+    report: str | None = None
     values: tuple[str, ...]
     if mode in {"symbol", "type"}:
         if len(tokens) != 5 or tokens[3] != "->":
@@ -271,6 +275,9 @@ def parse_cleanup_request(
         if len(tokens) != 2:
             raise ValueError("audit-target requires exactly one TARGET")
         target = _known_target(root, tokens[1])
+        report = (
+            resolve_campaign_report(root, target).relative_to(root.resolve()).as_posix()
+        )
         values = ()
 
     return CleanupRequest(
@@ -281,6 +288,7 @@ def parse_cleanup_request(
         rows=rows,
         arguments=values,
         selected_skill=_selected_skill(mode),
+        report=report,
         warning=warning,
     )
 

@@ -17,19 +17,11 @@ from pathlib import Path
 
 SNAPSHOT_STATUS = (
     Path(__file__).resolve().parents[3]
-    / ".pi"
+    / ".codex"
     / "skills"
     / "psx-rizin"
     / "scripts"
     / "snapshot-status.py"
-)
-LOOP_STATUS = (
-    Path(__file__).resolve().parents[3]
-    / ".pi"
-    / "skills"
-    / "bof3-lift-loop"
-    / "scripts"
-    / "loop-status.py"
 )
 
 # (canonical id, disc_id, kind, load_address) — created in reversed order so the
@@ -42,7 +34,9 @@ TARGETS = (
 IDS = tuple(entry[0] for entry in TARGETS)
 
 
-def _write_target(root: Path, target_id: str, disc_id: str, kind: str, load_address: int) -> None:
+def _write_target(
+    root: Path, target_id: str, disc_id: str, kind: str, load_address: int
+) -> None:
     target_dir = root / "config" / "targets" / target_id
     target_dir.mkdir(parents=True)
     (target_dir / "target.toml").write_text(
@@ -135,44 +129,3 @@ def test_snapshot_status_single_selection_and_unknown_target(tmp_path: Path) -> 
     unknown = _run(SNAPSHOT_STATUS, tmp_path, "emi/etc/game/02")
     assert unknown.returncode == 2
     assert "unknown target: emi/etc/game/02" in unknown.stderr
-
-
-def test_loop_status_sorted_ids_and_inspection_only(tmp_path: Path) -> None:
-    _workspace(tmp_path, fresh=False)
-
-    result = _run(LOOP_STATUS, tmp_path)
-    assert result.returncode == 0, result.stderr
-    report = json.loads(result.stdout)
-
-    assert report["schema"] == "bof3.skill-lift-loop-status/v1"
-    assert [entry["command"][2] for entry in report["snapshots"]] == sorted(IDS)
-    assert report["stale_targets"] == sorted(IDS)
-    # Default invocation inspects only: no recovery, no index, no candidates.
-    assert report["recovery"] is None
-    assert report["suppressed_candidates"] == {
-        "reason": "stale_snapshot",
-        "stale_targets": sorted(IDS),
-        "hint": "use --recover to repair stale generated evidence",
-    }
-    assert report["index"] == {"command": ["(skipped)"], "exit_code": 1}
-    assert report["candidates"] == {"command": ["(skipped)"], "exit_code": 1}
-    assert "analyze" not in str(report)
-    assert report["journal"]["records"] == []
-
-
-def test_loop_status_fresh_path_queries_candidates_in_order(tmp_path: Path) -> None:
-    _workspace(tmp_path, fresh=True)
-
-    result = _run(LOOP_STATUS, tmp_path, "--selection", "hotspots", "--limit", "1")
-    assert result.returncode == 0, result.stderr
-    report = json.loads(result.stdout)
-
-    assert report["schema"] == "bof3.skill-lift-loop-status/v1"
-    assert [entry["command"][2] for entry in report["snapshots"]] == sorted(IDS)
-    assert report["stale_targets"] == []
-    assert report["suppressed_candidates"] is None
-    assert report["recovery"] is None
-    assert report["index"]["exit_code"] == 0
-    assert report["candidates"]["command"][:2] == ["bin/rev-query", "hotspots"]
-    assert report["candidates"]["exit_code"] == 0
-    assert report["journal"]["records"] == []

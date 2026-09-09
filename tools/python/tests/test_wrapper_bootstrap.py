@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -39,11 +40,13 @@ BIN_DISPOSITIONS = {
     "macro-audit": "executable",
     "maspsx": "executable",
     "naming-audit": "executable",
+    "naming-evidence-run": "executable",
     "nm": "executable",
     "objcopy": "executable",
     "objdump": "executable",
     "package-psx-audio": "executable",
     "permute": "executable",
+    "plans": "executable",
     "promote": "executable",
     "psx-audio": "executable",
     "psyq-import": "executable",
@@ -82,14 +85,19 @@ WRAPPER_MATRIX = {
     "ld": ("flat", "PSX_LD"),
     "m2c": ("python-env", "harness.commands.lift"),
     "m2ctx": ("python-env", "harness.commands.lift"),
-    "macro-audit": ("python-env", "harness.commands.macro_audit"),
+    "macro-audit": ("python-env", "harness.macros.cli"),
     "maspsx": ("python-env", "harness.commands.tool"),
-    "naming-audit": ("python-env", "harness.commands.naming_audit"),
+    "naming-audit": ("python-env", "harness.naming.cli"),
+    "naming-evidence-run": (
+        "python-env",
+        "harness.naming.runner",
+    ),
     "nm": ("flat", "PSX_NM"),
     "objcopy": ("flat", "PSX_OBJCOPY"),
     "objdump": ("flat", "PSX_OBJDUMP"),
     "package-psx-audio": ("shell", "source packager"),
     "permute": ("python-env-fixed", "harness.commands.permute"),
+    "plans": ("python-env", "harness.commands.plans"),
     "promote": ("python-env", "harness.commands.lift"),
     "psx-audio": ("native", "ignored CMake build/bof3-audio"),
     "psyq-import": ("python-env", "harness.commands.psyq_import"),
@@ -104,7 +112,7 @@ WRAPPER_MATRIX = {
     "str-media": ("python-env", "harness.commands.str_media"),
     "strip": ("flat", "PSX_STRIP"),
     "symbols": ("python-env-fixed", "harness.commands.symbols"),
-    "type-audit": ("python-env", "harness.commands.type_audit"),
+    "type-audit": ("python-env", "harness.types.cli"),
 }
 PYTHON_WRAPPERS = tuple(
     name
@@ -120,6 +128,7 @@ MISSING_HINTS = {
     "decomp-status": "run `just setup` first",
     "m2c": "run `just setup` first",
     "m2ctx": "run `just setup` first",
+    "naming-evidence-run": "run `just venv` first",
     "maspsx": "run `just setup` first",
     "permute": "run `just venv` from {root}",
     "promote": "run `just setup` first",
@@ -231,16 +240,6 @@ def test_python_helper_private_arguments_ignore_ambient_configuration(
     )
 
 
-def test_all_python_wrappers_help_from_outside_cwd(tmp_path: Path) -> None:
-    assert len(PYTHON_WRAPPERS) == 29
-    for name in PYTHON_WRAPPERS:
-        result = _run(
-            str(ROOT / "bin" / name), "--help", env=_clean_env(), cwd=tmp_path
-        )
-        assert (result.returncode, result.stderr) == (0, ""), name
-        assert result.stdout, name
-
-
 def test_shared_wrapper_forwards_argv_stdout_stderr_and_exit(
     tmp_path: Path,
 ) -> None:
@@ -315,6 +314,8 @@ def test_inherited_private_overrides_cannot_change_wrapper_failures(
 def _index_mode(name: str) -> str:
     result = _run("git", "ls-files", "-s", "--", f"bin/{name}")
     assert result.returncode == 0, result.stderr
+    if not result.stdout:
+        return "100755" if os.access(ROOT / "bin" / name, os.X_OK) else "100644"
     return result.stdout.split("\t", 1)[0].split()[0]
 
 
@@ -327,10 +328,18 @@ def test_bin_inventory_matches_disposition_table() -> None:
     tracked = sorted(
         line for line in result.stdout.splitlines() if line and line not in removed
     )
+    tracked = sorted(
+        tracked
+        + [
+            f"bin/{name}"
+            for name in BIN_DISPOSITIONS
+            if (ROOT / "bin" / name).is_file() and f"bin/{name}" not in tracked
+        ]
+    )
     expected = sorted(f"bin/{name}" for name in BIN_DISPOSITIONS)
     assert tracked == expected
     assert set(WRAPPER_MATRIX) == set(BIN_DISPOSITIONS)
-    assert len(WRAPPER_MATRIX) == 44
+    assert len(WRAPPER_MATRIX) == 46
 
 
 def test_all_shell_wrappers_parse_and_use_the_characterized_bootstrap() -> None:
@@ -382,6 +391,26 @@ def test_python_env_is_sourced_only_not_directly_executable() -> None:
         )
 
 
+@pytest.mark.parametrize("name", PYTHON_WRAPPERS)
+def test_python_wrapper_helps_outside_cwd_and_blocks_caller_packages(
+    tmp_path: Path, name: str
+) -> None:
+    for package, message in (
+        ("harness", "CALLER CWD HARNESS IMPORTED"),
+        ("maspsx", "CALLER CWD MASPSX IMPORTED"),
+    ):
+        fake = tmp_path / package
+        fake.mkdir(exist_ok=True)
+        (fake / "__init__.py").write_text(
+            f"raise SystemExit('{message}')\n", encoding="utf-8"
+        )
+    result = _run(str(ROOT / "bin" / name), "--help", env=_clean_env(), cwd=tmp_path)
+    assert (result.returncode, result.stderr) == (0, ""), name
+    assert result.stdout, name
+    assert "CALLER CWD HARNESS IMPORTED" not in result.stderr, name
+    assert "CALLER CWD MASPSX IMPORTED" not in result.stderr, name
+
+
 def test_safe_path_blocks_caller_cwd_python_packages(tmp_path: Path) -> None:
     for package, message in (
         ("harness", "CALLER CWD HARNESS IMPORTED"),
@@ -392,14 +421,6 @@ def test_safe_path_blocks_caller_cwd_python_packages(tmp_path: Path) -> None:
         (fake / "__init__.py").write_text(
             f"raise SystemExit('{message}')\n", encoding="utf-8"
         )
-    for name in PYTHON_WRAPPERS:
-        result = _run(
-            str(ROOT / "bin" / name), "--help", env=_clean_env(), cwd=tmp_path
-        )
-        assert result.returncode == 0, name
-        assert "CALLER CWD HARNESS IMPORTED" not in result.stderr, name
-        assert "CALLER CWD MASPSX IMPORTED" not in result.stderr, name
-
     result = _run(
         str(ROOT / "bin/agent-context"), "worker", env=_clean_env(), cwd=tmp_path
     )

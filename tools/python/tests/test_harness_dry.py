@@ -103,7 +103,7 @@ def test_permute_delegates_to_run_main() -> None:
 
 
 def test_example_mechanism_only_in_common() -> None:
-    text = (COMMANDS / "_common.py").read_text(encoding="utf-8")
+    text = (HARNESS / "common" / "cli.py").read_text(encoding="utf-8")
     assert "def add_example_argument(" in text
     assert '"--example" in raw' in text
     for path in COMMANDS.glob("*.py"):
@@ -123,7 +123,7 @@ def test_no_semantic_name_collisions() -> None:
         "AnalysisSnapshot": {HARNESS / "analysis" / "snapshot.py"},
         "RizinProjectSpec": {HARNESS / "analysis" / "project.py"},
         "MatchStatusCache": {HARNESS / "match" / "status_cache.py"},
-        "resolve_function_selector": {HARNESS / "commands" / "_common.py"},
+        "resolve_function_selector": {HARNESS / "common" / "cli.py"},
     }
     for name, allowed in owners.items():
         found = {p for p in HARNESS.rglob("*.py") if name in _defs(p)}
@@ -204,21 +204,18 @@ def test_package_initializer_edges_are_locked() -> None:
     # ``test_toolchain_initializer_imports_base_plus_concrete_registrations``.
     # The commands package initializer stays a one-line docstring-only file.
     expected = {
-        "harness.media": {"harness.media.str_media"},
+        "harness.media": set(),
         "harness.analysis": set(),
+        "harness.naming": set(),
+        "harness.macros": set(),
+        "harness.types": set(),
+        "harness.common": set(),
         "harness.build": set(),
         "harness.decomp": set(),
-        "harness.domain": {
-            "harness.domain.ids",
-            "harness.domain.manifests",
-            "harness.domain.tags",
-        },
-        "harness.context": {
-            "harness.context.base",
-            "harness.context.bof3_cleanup",
-        },
-        "harness.emi": {"harness.emi.operations"},
-        "harness.psyq": {"harness.psyq.fingerprints", "harness.psyq.headers"},
+        "harness.domain": set(),
+        "harness.context": set(),
+        "harness.emi": set(),
+        "harness.psyq": set(),
         "harness.toolchain": {"harness.io", "harness.toolchain.base"},
         "harness.commands": set(),
         "harness.match": set(),

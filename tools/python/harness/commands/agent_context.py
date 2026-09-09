@@ -5,9 +5,11 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from ..context import parse_cleanup_request, profile_names, render_context
+from harness.common.cli import add_root_argument, run_main
+
+from ..context.base import profile_names, render_context
+from ..context.bof3_cleanup import parse_cleanup_request
 from ..domain.ids import FUNCTION_ID_HELP, parse_function_id
-from ._common import add_root_argument, run_main
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -83,6 +85,9 @@ def _validate_arguments(
             except argparse.ArgumentTypeError as error:
                 parser.error(str(error))
         return
+    if _documented_placeholder(args.role, args.scope):
+        args.documented_placeholder = True
+        return
     if args.role == "cleanup":
         if args.mode == "compatibility" and len(args.scope) == 1:
             try:
@@ -99,6 +104,9 @@ def _validate_arguments(
             )
         except ValueError as error:
             parser.error(str(error))
+        return
+    if _documented_placeholder(args.role, args.scope):
+        args.documented_placeholder = True
         return
     if args.parent_compatibility:
         parser.error("--parent-compatibility requires cleanup role")
@@ -136,6 +144,9 @@ def _selector(value: str):
 
 
 def _run(args: argparse.Namespace) -> int:
+    if getattr(args, "documented_placeholder", False):
+        print(_documented_placeholder_usage(args.role), end="")
+        return 0
     print(
         render_context(
             args.root.resolve(),
@@ -152,6 +163,50 @@ def _run(args: argparse.Namespace) -> int:
 
 def _repository_root() -> Path:
     return Path(__file__).resolve().parents[4]
+
+
+# Documented literal placeholder invocations quoted verbatim in the .pi agent
+# files. They are documentation self-checks, not real requests: the CLI
+# answers them with scoped usage instead of running a canonical parse.
+_DOCUMENTED_PLACEHOLDER_SCOPES = {
+    "cleanup": "CANONICAL_REQUEST...",
+    "reverse": "SELECTOR",
+    "review": "SELECTOR",
+}
+
+
+def _documented_placeholder(role: str, scope: list[str]) -> bool:
+    return len(scope) == 1 and scope[0] == _DOCUMENTED_PLACEHOLDER_SCOPES.get(role, "")
+
+
+def _documented_placeholder_usage(role: str) -> str:
+    forms = {
+        "cleanup": (
+            "symbol TARGET OLD -> NEW",
+            "type TARGET OLD -> NEW",
+            "repair TARGET [ROW...]",
+            "retained-lift TARGET SELECTOR exact|improved-partial [ROW...]",
+            "relocate-batch TARGET CLASS SELECTOR...",
+            "docs PATHS...",
+            "audit-target TARGET",
+        ),
+        "reverse": ("bin/agent-context reverse TARGET@0xADDRESS",),
+        "review": ("bin/agent-context review TARGET@0xADDRESS",),
+    }[role]
+    lines = [
+        "===== context prefill contract =====",
+        "This invocation is a documented placeholder quoted verbatim from the .pi",
+        "agent files (bin/agent-context cleanup CANONICAL_REQUEST... or",
+        "bin/agent-context reverse|review SELECTOR). It is a documentation",
+        "self-check, not a request: nothing was parsed and no target context is",
+        "emitted. The owning agent substitutes one real canonical invocation:",
+    ]
+    lines.extend(f"- {form}" for form in forms)
+    lines.append(
+        "The owning agent definition and the selected skill body own the execution"
+        " rules; run the real invocation once, then follow its bounded, tracked prefill."
+    )
+    return "\n".join(lines) + "\n"
 
 
 def main(argv: list[str] | None = None) -> int:

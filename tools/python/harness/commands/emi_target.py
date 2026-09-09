@@ -5,9 +5,10 @@ from __future__ import annotations
 import argparse
 import json
 
+from harness.common.cli import add_example_argument, add_root_argument, run_main
+
 from ..emi.catalog import load_catalog
 from ..emi.catalog_bootstrap import apply_bootstrap, bootstrap_plan
-from ._common import add_example_argument, add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:

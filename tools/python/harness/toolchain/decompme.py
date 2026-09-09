@@ -11,12 +11,15 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from ..analysis.type_context import type_context
+from harness.types.context import type_context
+
 from ..domain.c_context import public_declaration_context
-from ..domain import FunctionId, TargetManifest, resolve_function
+from ..domain.ids import FunctionId
+from ..domain.layout import parse_splat_layout
+from ..domain.manifests import TargetManifest
+from ..domain.registry import resolve_function
 from ..domain.sources import CompiledSymbolError
 from ..io import RepoLayout
-from ..domain.layout import parse_splat_layout
 from ..match._asm_resolve import extract_original_bytes, infer_original_size
 
 DEFAULT_API_URL = "https://decomp.me/api"
@@ -81,9 +84,8 @@ def _decompme_compiler_flags(arguments: list[str]) -> str:
     )
 
 
-def _source_command(layout: RepoLayout, source: Path) -> list[str]:
+def _source_command(arguments: list[str]) -> list[str]:
     command: list[str] = []
-    arguments = _source_arguments(layout, source)
     skip = False
     for argument in arguments:
         if skip:
@@ -102,8 +104,10 @@ def _source_command(layout: RepoLayout, source: Path) -> list[str]:
     return command
 
 
-def _preprocess_source(layout: RepoLayout, source: Path) -> tuple[str, str]:
-    command = _source_command(layout, source)
+def _preprocess_source(
+    layout: RepoLayout, source: Path, arguments: list[str]
+) -> tuple[str, str]:
+    command = _source_command(arguments)
     result = subprocess.run(
         [*command, "-E"],
         cwd=layout.root,
@@ -204,7 +208,10 @@ class DecompMeScratchpadToolchain:
         # Macro-expanded source avoids includes. Resolve every referenced
         # declaration and its type dependencies from the complete preprocessor
         # stream, including SDK headers required to compile the scratch.
-        preprocessed_context, source_code = _preprocess_source(self.layout, source)
+        arguments = _source_arguments(self.layout, source)
+        preprocessed_context, source_code = _preprocess_source(
+            self.layout, source, arguments
+        )
         registry_context = type_context(
             self.layout.root,
             manifest.id.value,
@@ -215,9 +222,7 @@ class DecompMeScratchpadToolchain:
             source_code,
             base=registry_context,
         )
-        compiler_flags = _decompme_compiler_flags(
-            _source_arguments(self.layout, source)
-        )
+        compiler_flags = _decompme_compiler_flags(arguments)
         return ScratchpadPayload(
             name=name,
             platform="ps1",

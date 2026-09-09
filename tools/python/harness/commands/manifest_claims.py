@@ -12,8 +12,9 @@ from __future__ import annotations
 
 import argparse
 
+from harness.common.cli import add_root_argument, run_main
+
 from ..domain.manifests import load_target_manifests
-from ._common import add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:

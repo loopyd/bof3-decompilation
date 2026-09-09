@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from harness.emi.companions import build_companion_report
-from harness.domain import load_target_manifests
+from harness.domain.manifests import load_target_manifests
 from harness.emi.catalog import build_catalog
 from harness.emi.catalog_bootstrap import materialize_reviewed_targets
 from harness.emi.catalog_verify import verify_declared_companions

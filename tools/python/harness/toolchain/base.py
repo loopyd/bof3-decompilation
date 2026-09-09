@@ -198,6 +198,10 @@ class PythonScriptSubmoduleToolchain(PythonSubmoduleToolchain):
         return self.source / self.script
 
     @property
+    def working_directory(self) -> Path:
+        return self.source
+
+    @property
     def environment(self) -> dict[str, str]:
         environment = os.environ.copy()
         environment["PYTHONPATH"] = os.pathsep.join(

@@ -5,29 +5,23 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from ..domain.tags import (
-    PREFIXED_RAW_NAME_RE,
-    RAW_SYMBOL_NAME_RE,
-    parse_declaration_source_tag,
-)
-from ..domain.symbols import (
-    format_map,
-    load_map,
-    load_target_symbols,
-    map_path,
-    sdk_map_path,
-    shared_map_path,
-    weak_bindings_c,
-    parse_weak_symbol_bindings,
-    write_map,
-)
+from harness.common.cli import add_example_argument, add_root_argument, run_main
+
 from ..domain.claims import (
     collect_manifest_source_addresses,
     manifest_header_paths,
     manifest_source_paths,
-    resolve_manifest_source_for_address,
 )
-from ..domain.naming_debt import (
+from ..domain.identity import (
+    collision_findings,
+    composed_map_findings,
+    reviewed_function_identities,
+    splat_source_findings,
+)
+from ..domain.ids import FUNCTION_ID_FORMAT, FUNCTION_ID_HELP
+from ..domain.layout import parse_splat_layout
+from ..domain.manifests import load_target_manifests
+from harness.naming.debt import (
     collect_naming_debt,
     load_naming_baseline,
     naming_debt_regressions,
@@ -37,20 +31,22 @@ from ..domain.sources import (
     SourceAddressCollision,
     expected_lift_sources,
 )
-from ..domain import (
-    FUNCTION_ID_FORMAT,
-    FUNCTION_ID_HELP,
-    load_target_manifests,
+from ..domain.symbols import (
+    format_map,
+    load_map,
+    load_target_symbols,
+    map_path,
+    parse_weak_symbol_bindings,
+    sdk_map_path,
+    shared_map_path,
+    weak_bindings_c,
+    write_map,
 )
-from ..domain.identity import (
-    collision_findings,
-    composed_map_findings,
-    reviewed_function_identities,
-    splat_source_findings,
+from ..domain.tags import (
+    PREFIXED_RAW_NAME_RE,
+    RAW_SYMBOL_NAME_RE,
+    parse_declaration_source_tag,
 )
-from ..domain.layout import parse_splat_layout
-from ._common import add_example_argument, add_root_argument, run_main
-
 from .symbols_psyq import (
     _root,
     _targets,
@@ -100,7 +96,10 @@ def run_check(args: argparse.Namespace) -> int:
         # Bindings may reference shared engine globals and PSX SDK symbols, not
         # just the target-local map; validate them against the composed set.
         by_address = {
-            symbol.address: symbol for symbol in load_target_symbols(root, target)
+            symbol.address: symbol
+            for symbol in load_target_symbols(
+                root, target, psyq_space=manifest.psyq_space
+            )
         }
         source_dir = root / manifest.source_dir
         try:
@@ -118,6 +117,7 @@ def run_check(args: argparse.Namespace) -> int:
         except SourceAddressCollision as exc:
             errors.append(str(exc))
             lift_rows = []
+        lift_addresses = {address for _source, address in lift_rows}
         for source, address in lift_rows:
             if address not in addresses:
                 errors.append(
@@ -196,8 +196,7 @@ def run_check(args: argparse.Namespace) -> int:
             name = symbol.canonical_name
             if RAW_SYMBOL_NAME_RE.fullmatch(name) or name in sdk_names:
                 continue
-            lift = resolve_manifest_source_for_address(root, manifest, symbol.address)
-            if lift is not None:
+            if symbol.address in lift_addresses:
                 continue
             declared = parse_declaration_source_tag(header_text, name)
             if declared != symbol.address:

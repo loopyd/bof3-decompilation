@@ -7,16 +7,17 @@ import json
 from collections import Counter
 from pathlib import Path
 
+from harness.common.cli import add_root_argument, resolved_root, run_main
+from harness.macros.accounting import candidate_account as macro_account
+from harness.naming.context import inventory_expected
+from harness.naming.readiness import required_work_snapshot
+from harness.types.review import candidate_account as type_account
+
 from ..analysis.index import connect
-from ..analysis.macro_accounting import candidate_account as macro_account
-from ..analysis.naming import inventory_expected
-from ..analysis.naming_readiness import required_work_snapshot
 from ..analysis.project import status as project_status
-from ..analysis.type_transactions import candidate_account as type_account
-from ..domain import load_target_manifests, normalize_target_id
-from ..domain.manifests import TargetManifest
-from ..domain.naming_debt import address_of, collect_naming_debt
-from ._common import add_root_argument, resolved_root, run_main
+from ..domain.ids import normalize_target_id
+from ..domain.manifests import TargetManifest, load_target_manifests
+from harness.naming.debt import address_of, collect_naming_debt
 
 
 def _count(
@@ -90,13 +91,13 @@ def _summaries(
                 ]
                 for key, rows in debt_rows.items()
             }
-        type_report = type_account(root)
+        type_report = type_account(root, lambda _root: connection, target, close=False)
         type_rows = [
             row
             for row in type_report["rows"]
             if target is None or row["target"] == target
         ]
-        macro_report = macro_account(root)
+        macro_report = macro_account(root, connection, target)
         macro_rows = _target_macro_rows(macro_report["rows"], target)
         naming_rows = {item: len(expected[item]) for item in targets}
         naming_detail = {
@@ -199,7 +200,9 @@ def readiness(
     unknown = [item for item in targets if item not in manifests]
     if unknown:
         raise ValueError(f"unknown target: {unknown[0]}")
-    snapshots = [project_status(root, item) for item in targets]
+    snapshots = [
+        project_status(root, item, manifest=manifests[item]) for item in targets
+    ]
     try:
         summaries = _summaries(root, manifests, targets, detail)
         index_ready = True

@@ -6,39 +6,38 @@ import argparse
 import json
 from typing import Any
 
-from ..domain import (
-    load_target_manifests,
-    normalize_target_id,
-    parse_function_id,
-)
-from ..domain.naming_debt import collect_naming_debt
-from ..output import resolve_detail
-from ..analysis.index import connect
-from ..analysis.mission import mission_brief
-from ..analysis.naming_readiness import transaction_scope
-from ..analysis.priority import RANK_FIELDS, priority_rows
-from ..analysis.rev_queries import (
+from harness.analysis.index import connect, connect_status
+from harness.analysis.mission import mission_brief
+from harness.analysis.priority import RANK_FIELDS, priority_rows
+from harness.analysis.rev_queries import (
     analyzer_candidates_payload,
     calls_payload,
     describe_payload,
     duplicates_payload,
     known_target,
-    macro_opportunities_payload,
-    macro_uses_payload,
-    macros_payload,
-    near_duplicates_payload,
     owners_payload,
     status_payload,
     symbols_payload,
-    type_candidates_payload,
-    type_usages_payload,
-    types_payload,
     variables_payload,
     xrefs_payload,
 )
-
-from ._common import resolved_root, run_main
-from ._rev_query_parsers import build_parser
+from harness.common.cli import (
+    add_example_argument,
+    add_root_argument,
+    resolved_root,
+    run_main,
+)
+from harness.domain.ids import (
+    FUNCTION_ID_FORMAT,
+    FUNCTION_ID_HELP,
+    normalize_target_id,
+    parse_function_id,
+)
+from harness.domain.manifests import load_target_manifests
+from harness.macros.cli import add_query_commands as add_macro_queries
+from harness.naming.cli import add_query_commands as add_naming_queries
+from harness.output import add_detail_argument, resolve_detail
+from harness.types.cli import add_query_commands as add_type_queries
 
 
 def _project_rows(
@@ -64,23 +63,17 @@ def _print(
 
 
 def run_query(args: argparse.Namespace) -> int:
-    if args.command == "inventory":
-        root = resolved_root(args)
-        target = normalize_target_id(args.target).value
-        manifests = load_target_manifests(root)
-        if target not in manifests:
-            raise ValueError(f"unknown target: {target}")
-        debt = collect_naming_debt(root, manifests)
-        payload: list[dict[str, Any]] = [
-            {"kind": kind, "name": row.split(":", 1)[1]}
-            for kind, entries in (
-                ("function", debt.raw_functions),
-                ("data", debt.raw_data),
-            )
-            for row in sorted(entries)
-            if row.startswith(f"{target}:")
-        ]
-        _print(payload, args.json)
+    if args.command == "status":
+        connection = connect_status(resolved_root(args))
+        try:
+            payload = status_payload(connection)
+            _print(payload, args.json)
+        finally:
+            connection.close()
+        return 0
+    if not getattr(args, "query_requires_index", True):
+        payload = args.query_handler(args, None)
+        _print(payload, args.json, labeled=getattr(args, "query_labeled", False))
         return 0
     connection = connect(resolved_root(args))
     try:
@@ -89,7 +82,9 @@ def run_query(args: argparse.Namespace) -> int:
             if not known_target(connection, args.target):
                 raise ValueError(f"unknown target: {args.target}")
         limit = args.limit
-        if args.command == "describe":
+        if getattr(args, "query_handler", None) is not None:
+            payload = args.query_handler(args, connection)
+        elif args.command == "describe":
             function = parse_function_id(args.function)
             root = resolved_root(args)
             manifests = load_target_manifests(root)
@@ -100,10 +95,6 @@ def run_query(args: argparse.Namespace) -> int:
                 manifests=manifests,
                 limit=limit,
             )
-        elif args.command == "transaction-scope":
-            scope = transaction_scope(resolved_root(args), args.target, args.symbol)
-            _print([scope], args.json, labeled=True)
-            return 0
         elif args.command == "symbols":
             payload = symbols_payload(
                 connection, getattr(args, "pattern", None), limit=limit
@@ -150,62 +141,6 @@ def run_query(args: argparse.Namespace) -> int:
             payload = variables_payload(
                 connection, getattr(args, "pattern", None), limit=limit
             )
-        elif args.command == "types":
-            payload = types_payload(
-                connection,
-                target=getattr(args, "target", None),
-                pattern=getattr(args, "pattern", None),
-                untyped=getattr(args, "untyped", False),
-                limit=limit,
-                detail=resolve_detail(
-                    requested=getattr(args, "detail", None), json_output=args.json
-                ),
-            )
-        elif args.command == "type-uses":
-            payload = type_usages_payload(
-                connection,
-                target=getattr(args, "target", None),
-                pattern=getattr(args, "pattern", None),
-                limit=limit,
-            )
-        elif args.command == "macros":
-            payload = macros_payload(
-                connection,
-                target=getattr(args, "target", None),
-                pattern=getattr(args, "pattern", None),
-                classification=getattr(args, "classification", None),
-                limit=limit,
-            )
-        elif args.command == "macro-uses":
-            payload = macro_uses_payload(
-                connection,
-                target=getattr(args, "target", None),
-                pattern=getattr(args, "pattern", None),
-                limit=limit,
-            )
-        elif args.command == "macro-opportunities":
-            payload = macro_opportunities_payload(
-                connection,
-                resolved_root(args),
-                target=getattr(args, "target", None),
-                kind=getattr(args, "kind", None),
-                limit=limit,
-            )
-        elif args.command == "near-duplicates":
-            payload = near_duplicates_payload(
-                connection,
-                resolved_root(args),
-                target=getattr(args, "target", None),
-                limit=limit,
-            )
-        elif args.command == "type-candidates":
-            payload = type_candidates_payload(
-                connection,
-                target=getattr(args, "target", None),
-                status=getattr(args, "status", None),
-                kind=getattr(args, "kind", None),
-                limit=limit,
-            )
         else:  # status
             payload = status_payload(connection)
         detail = "full"
@@ -225,7 +160,13 @@ def run_query(args: argparse.Namespace) -> int:
                 else resolve_detail(requested=args.detail, json_output=args.json)
             )
             payload = _project_rows(payload, command=args.command, detail=detail)
-        _print(payload, args.json, labeled=ranked and detail != "full")
+        _print(
+            payload,
+            args.json,
+            labeled=getattr(args, "query_labeled", False)
+            or ranked
+            and detail != "full",
+        )
     finally:
         connection.close()
     return 0
@@ -283,6 +224,87 @@ def run_mission(args: argparse.Namespace) -> int:
     else:
         _print_mission(brief)
     return 0
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="rev-query")
+    add_root_argument(parser)
+    add_example_argument(parser, "bin/rev-query symbols func_")
+    parser.add_argument("--json", action="store_true")
+
+    def nonnegative(value: str) -> int:
+        parsed = int(value)
+        if parsed < 0:
+            raise argparse.ArgumentTypeError("must be nonnegative")
+        return parsed
+
+    parser.add_argument(
+        "--limit", type=nonnegative, default=20, help="maximum rows; 0 means all"
+    )
+    sub = parser.add_subparsers(dest="command", required=True)
+    describe = sub.add_parser(
+        "describe",
+        help="describe target-qualified payload, Splat, symbol, and references",
+    )
+    describe.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
+    symbols = sub.add_parser("symbols", help="find canonical target-local symbols")
+    symbols.add_argument("pattern", nargs="?")
+    xrefs = sub.add_parser(
+        "xrefs", help="find target-local indexed references to an address"
+    )
+    xrefs.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
+    add_naming_queries(sub)
+    owners = sub.add_parser(
+        "owners",
+        help="find other indexed images with function bytes covering an address",
+    )
+    owners.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
+    calls = sub.add_parser("calls", help="show calls to or from a function selector")
+    calls.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
+    variables = sub.add_parser("variables", help="list mapped data symbols")
+    variables.add_argument("pattern", nargs="?")
+    add_type_queries(sub)
+    add_macro_queries(sub)
+    ranked = (
+        ("metrics", "show raw and derived function metrics"),
+        ("quick-wins", "rank low-effort, high-leverage candidates"),
+        ("hotspots", "rank high-impact functions"),
+        ("leafs", "show SCC-aware leaf candidates"),
+        ("pareto", "show nondominated effort/value candidates"),
+        ("duplicates", "show exact duplicate groups"),
+        (
+            "analyzer-candidates",
+            "show unconfirmed analyzer-equality candidate groups",
+        ),
+    )
+    for name, help_text in ranked:
+        command = sub.add_parser(name, help=help_text)
+        command.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
+        command.add_argument("--limit", type=nonnegative, default=argparse.SUPPRESS)
+        add_detail_argument(command)
+        command.add_argument("--target")
+        if name not in {"duplicates", "analyzer-candidates"}:
+            command.add_argument(
+                "--exclusions",
+                action="store_true",
+                help="show candidate rows rejected by canonical-code checks",
+            )
+        command.add_argument("--unlifted", action="store_true")
+        command.add_argument(
+            "--include-trivial",
+            action="store_true",
+            help="include classified return-only stubs",
+        )
+        if name in {"metrics", "duplicates", "analyzer-candidates"}:
+            command.add_argument("function", nargs="?")
+    sub.add_parser("status", help="show index coverage")
+    for command in sub.choices.values():
+        command.set_defaults(handler=run_query)
+    mission = sub.add_parser("mission", help="compose a single-function lifting brief")
+    mission.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
+    mission.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
+    mission.set_defaults(handler=run_mission)
+    return parser
 
 
 def main(argv: list[str] | None = None) -> int:

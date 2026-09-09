@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .engine import EngineIdentity, build_snapshot, find_engine
-from ..domain import lookup_target_manifest
+from ..domain.registry import lookup_target_manifest
 from ..domain.manifests import TargetManifest
 from ..domain.layout import parse_splat_layout
 from ..domain.psx import (
@@ -70,7 +70,11 @@ def replay_commands(replay: str) -> list[str]:
 
 
 def prepare_target(
-    root: Path, target_id: str, *, manifest: TargetManifest | None = None
+    root: Path,
+    target_id: str,
+    *,
+    manifest: TargetManifest | None = None,
+    layout=None,
 ) -> RizinProjectSpec:
     """Compose a target recipe without writing generated project files."""
 
@@ -81,7 +85,9 @@ def prepare_target(
     if not binary.is_file():
         raise FileNotFoundError(f"target binary not found: {manifest.binary}")
     splat = root / manifest.splat
-    layout = parse_splat_layout(splat, manifest.load_address)
+    layout = (
+        parse_splat_layout(splat, manifest.load_address) if layout is None else layout
+    )
     roots = frozenset(layout.reviewed_function_addresses)
     binary_bytes = binary.read_bytes()
     binary_offset = binary_offset_for(binary_bytes)
@@ -117,14 +123,14 @@ def prepare_target(
     if claim_lines:
         replay += claim_lines + "\n"
     replay += f"# binary_offset 0x{binary_offset:X}\n"
-    from ..domain.registry import resolve_target
+    from ..domain.claims import manifest_source_paths
     from ..domain.sources import expected_lift_sources
 
     expected_lifts = expected_lift_sources(layout, root / manifest.source_dir)
     try:
-        resolved = resolve_target(root, manifest.id.value)
-    except (FileNotFoundError, ValueError, RuntimeError):
-        resolved = None
+        source_paths = tuple(manifest_source_paths(root, manifest))
+    except ValueError:
+        source_paths = ()
     return RizinProjectSpec(
         target=manifest.id.value,
         binary=binary,
@@ -136,7 +142,7 @@ def prepare_target(
         replay=replay,
         replay_sha256=hashlib.sha256(replay.encode()).hexdigest(),
         expected_lifts=expected_lifts,
-        source_paths=() if resolved is None else resolved.source_paths,
+        source_paths=source_paths,
     )
 
 
@@ -163,8 +169,10 @@ def analyze_project(
     return target
 
 
-def status(root: Path, target_id: str) -> dict[str, object]:
-    target = prepare_target(root, target_id)
+def status(
+    root: Path, target_id: str, *, manifest: TargetManifest | None = None
+) -> dict[str, object]:
+    target = prepare_target(root, target_id, manifest=manifest)
     binary_sha256 = hashlib.sha256(target.binary.read_bytes()).hexdigest()
     snapshot_exists = target.snapshot.is_file()
     fresh = False

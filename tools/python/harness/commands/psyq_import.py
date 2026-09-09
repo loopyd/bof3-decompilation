@@ -5,10 +5,10 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from ..io import repo_layout
-from ..io import DEFAULT_PSYQ_VERSION
+from harness.common.cli import add_example_argument, add_root_argument, run_main
+
+from ..io import DEFAULT_PSYQ_VERSION, repo_layout
 from ..toolchain.psyq import import_psyq_sdk
-from ._common import add_example_argument, add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:

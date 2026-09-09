@@ -11,7 +11,7 @@ from harness.domain.symbols import (
     sdk_map_path,
 )
 from harness.commands.symbols import main as symbols_main
-from harness.domain import load_target_manifests
+from harness.domain.manifests import load_target_manifests
 from harness.io import repo_layout
 
 

@@ -1,0 +1,13 @@
+{
+  "conclusion": {},
+  "report_sha256": "CURRENT_REPORT_SHA256",
+  "schema": "bof3.naming-conclusion/v1",
+  "source": {
+    "conclusion_capability": "CAPABILITY_ID",
+    "evidence": "out/reviews/evidence/RUN/payload.json",
+    "evidence_sha256": "EVIDENCE_SHA256",
+    "report": "out/reviews/TARGET.json",
+    "report_digest": "INITIALIZER_REPORT_SHA256"
+  },
+  "target": "TARGET"
+}

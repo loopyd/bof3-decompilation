@@ -5,7 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from ..domain import load_target_manifests, parse_function_id
+from ..domain.manifests import load_target_manifests
+from ..domain.ids import parse_function_id
 from ..domain.claims import resolve_manifest_source_for_address
 from ..domain.layout import parse_splat_layout
 from ..domain.symbols import load_map, load_target_symbols, sdk_map_path
@@ -57,9 +58,12 @@ def mission_brief(root: Path, function_selector: str) -> dict[str, Any]:
             duplicate_group = [
                 member_id
                 for (member_id,) in connection.execute(
-                    "SELECT function_id FROM duplicate_members WHERE hash = ? "
-                    "ORDER BY function_id",
-                    (row["exact_sha256"],),
+                    "SELECT member.function_id FROM duplicate_members selected "
+                    "JOIN duplicate_members member "
+                    "ON member.reviewed_sha256 = selected.reviewed_sha256 "
+                    "AND member.reviewed_size = selected.reviewed_size "
+                    "WHERE selected.function_id = ? ORDER BY member.function_id",
+                    (function_id,),
                 )
             ]
     finally:

@@ -5,9 +5,10 @@ from __future__ import annotations
 import argparse
 import json
 
-from ..domain import FUNCTION_ID_HELP
+from harness.common.cli import add_root_argument, run_main
+
+from ..domain.ids import FUNCTION_ID_HELP
 from ..emi.companions import build_companion_report
-from ._common import add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:

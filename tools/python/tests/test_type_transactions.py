@@ -9,15 +9,19 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
 from harness.analysis.index import SCHEMA_VERSION
 from harness.analysis.schema import create_schema
-from harness.analysis import transaction_files, transaction_git
-from harness.analysis import type_transaction_runtime as runtime
-from harness.analysis import type_transactions as transactions
-from harness.analysis.type_candidate_review import SCHEMA as REVIEW_SCHEMA, digest
-from harness.commands import type_audit
+from harness.common import files as transaction_files
+from harness.common import git as transaction_git
+from harness.common import quarantine as transaction_quarantine
+from harness.common import runtime
+from harness.common.digests import digest
 from harness.domain.receipts import CANDIDATE_SCHEMA, sha256_file
+from harness.types import cli as type_audit
+from harness.types import proofs as type_shared_proofs
+from harness.types import transactions
+from harness.types.review import SCHEMA as REVIEW_SCHEMA
+from transaction_native_fixture import exact_payload
 
 TARGET = "exe/test"
 
@@ -196,7 +200,12 @@ def _runner(fail: int | None = None):
         nonlocal count
         count += 1
         code = 1 if fail == count else 0
-        return subprocess.CompletedProcess(argv, code, "ran " + " ".join(argv), "")
+        output = (
+            json.dumps(exact_payload(kwargs["cwd"], argv[0]))
+            if argv[0] in {"bin/asm-diff", "bin/byte-match"}
+            else "ran " + " ".join(argv)
+        )
+        return subprocess.CompletedProcess(argv, code, output, "")
 
     return run
 
@@ -225,7 +234,13 @@ def test_type_cli_outputs_are_confined_and_symlink_safe(
     monkeypatch.setattr(
         type_audit, "prepare_transaction", lambda *_args: {"proof": True}
     )
-    monkeypatch.setattr(type_audit, "run_transaction", lambda *_args: {"proof": True})
+    monkeypatch.setattr(
+        type_audit,
+        "run_transaction",
+        lambda root, *_args, **kwargs: type_audit.write_evidence_output(
+            root, kwargs["output"], {"proof": True}
+        ),
+    )
     monkeypatch.setattr(type_audit, "_read", lambda _path: {})
     handler = type_audit._prepare if command == "prepare" else type_audit._run
     args = argparse.Namespace(
@@ -307,12 +322,19 @@ def test_dirty_worktree_requires_exact_adopted_baseline(
     ]
 
 
+@pytest.mark.parametrize("implementation_run_id", [None, "implementation-1"])
 def test_validation_cannot_change_git_index_even_for_allowed_path(
-    tmp_path: Path, monkeypatch
+    tmp_path: Path, monkeypatch, implementation_run_id
 ) -> None:
+    from transaction_native_fixture import execution_inputs
+
     _repo(tmp_path, git=True)
+    if implementation_run_id:
+        execution_inputs(tmp_path)
     monkeypatch.setattr(transactions, "connect", _connect)
-    manifest = transactions.prepare_transaction(tmp_path, _request(tmp_path))
+    request = _request(tmp_path)
+    request["adopted_baseline"] = digest(transactions._workspace_state(tmp_path))
+    manifest = transactions.prepare_transaction(tmp_path, request)
     before = subprocess.run(
         ["git", "ls-files", "--stage", "-z"],
         cwd=tmp_path,
@@ -326,7 +348,11 @@ def test_validation_cannot_change_git_index_even_for_allowed_path(
 
     with pytest.raises(ValueError, match="changed the Git index"):
         transactions.run_transaction(
-            tmp_path, manifest, {"include/test.h": "changed\n"}, runner=stage
+            tmp_path,
+            manifest,
+            {"include/test.h": "changed\n"},
+            runner=stage,
+            implementation_run_id=implementation_run_id,
         )
     after = subprocess.run(
         ["git", "ls-files", "--stage", "-z"],
@@ -409,7 +435,9 @@ def test_runner_mutating_allowed_path_fails_without_deleting_substitute(
             runner=mutate,
         )
     assert header.read_bytes() == b"runner changed this\n"
-    quarantines = list((tmp_path / transaction_files.QUARANTINE_DIRECTORY).iterdir())
+    quarantines = list(
+        (tmp_path / transaction_quarantine.QUARANTINE_DIRECTORY).iterdir()
+    )
     assert any(path.read_bytes() == before for path in quarantines)
 
 
@@ -473,7 +501,7 @@ def test_second_write_failure_restores_only_changed_paths(
     source = tmp_path / "src/test/func_80100000.c"
     before = (header.read_bytes(), source.read_bytes())
     manifest = transactions.prepare_transaction(tmp_path, _request(tmp_path))
-    original = runtime._atomic_write
+    original = runtime.install_image
     original_unlink = runtime._safe_unlink
     writes = 0
     unlink_calls: list[str] = []
@@ -490,7 +518,7 @@ def test_second_write_failure_restores_only_changed_paths(
                 raise OSError("write failed")
         return original(root, name, content, **kwargs)
 
-    monkeypatch.setattr(runtime, "_atomic_write", fail_second_write)
+    monkeypatch.setattr(runtime, "install_image", fail_second_write)
     monkeypatch.setattr(runtime, "_safe_unlink", record_unlink)
     with pytest.raises(OSError, match="write failed"):
         transactions.run_transaction(
@@ -568,7 +596,7 @@ def test_write_rollback_failure_is_reported(tmp_path: Path, monkeypatch) -> None
     _repo(tmp_path)
     monkeypatch.setattr(transactions, "connect", _connect)
     manifest = transactions.prepare_transaction(tmp_path, _request(tmp_path))
-    original = runtime._atomic_write
+    original = runtime.install_image
     writes = 0
 
     def fail_second_write(root, name, content, **kwargs):
@@ -579,7 +607,7 @@ def test_write_rollback_failure_is_reported(tmp_path: Path, monkeypatch) -> None
                 raise OSError("write failed")
         return original(root, name, content, **kwargs)
 
-    monkeypatch.setattr(runtime, "_atomic_write", fail_second_write)
+    monkeypatch.setattr(runtime, "install_image", fail_second_write)
     monkeypatch.setattr(
         runtime,
         "restore_quarantined",
@@ -608,11 +636,11 @@ def _private_proof(
     }
     path = root / f"out/reviews/{name}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value))
+    path.write_text(json.dumps({"application": value}))
     return {
         "path": path.relative_to(root).as_posix(),
         "target": target,
-        "expected_application_digest": expected_digest,
+        "expected_envelope_digest": expected_digest,
     }
 
 
@@ -620,7 +648,7 @@ def _verify_private(
     _root: Path, proof: dict[str, Any], expected_digest: str
 ) -> dict[str, str]:
     assert expected_digest != proof.get("digest")
-    return {"target": proof["target"], "digest": expected_digest}
+    return {"target": proof["application"]["target"], "digest": expected_digest}
 
 
 def _private_manifests() -> dict[str, object]:
@@ -705,32 +733,29 @@ def test_shared_header_requires_every_candidate_location_and_proof_dependency(
     ]
     proofs = [{"target": "exe/a"}, {"target": "exe/b"}]
     monkeypatch.setattr(
-        transactions,
+        type_shared_proofs,
         "proof_dependencies",
         lambda _root, proof: {header} if proof["target"] == "exe/a" else set(),
     )
     with pytest.raises(ValueError, match="private proof dependency for every owner"):
-        transactions._validate_shared_header(tmp_path, header, reviewed, proofs)
+        type_shared_proofs.validate_shared_header(tmp_path, header, reviewed, proofs)
     reviewed[1]["candidate"]["locations"] = []
     with pytest.raises(ValueError, match="reviewed candidate location for every owner"):
-        transactions._validate_shared_header(tmp_path, header, reviewed, proofs)
+        type_shared_proofs.validate_shared_header(tmp_path, header, reviewed, proofs)
 
 
-def test_valid_two_private_proofs_use_external_digest_pins(tmp_path: Path) -> None:
+def test_legacy_private_integrity_pins_reject_shared_promotion(tmp_path: Path) -> None:
     pins = [
         _verified_private_proof(tmp_path, "a", "exe/a", 10),
         _verified_private_proof(tmp_path, "b", "exe/b", 20),
     ]
-    proofs = transactions._private_proofs(tmp_path, pins, _private_manifests())
-    assert [
-        (proof["target"], proof["expected_application_digest"]) for proof in proofs
-    ] == [
-        ("exe/a", pins[0]["expected_application_digest"]),
-        ("exe/b", pins[1]["expected_application_digest"]),
-    ]
-    manifest_digest = digest({"private_transaction_proofs": proofs})
-    proofs[0]["expected_application_digest"] = digest({"replacement": "pin"})
-    assert digest({"private_transaction_proofs": proofs}) != manifest_digest
+    for pin in pins:
+        app = json.loads((tmp_path / pin["path"]).read_text())
+        assert transactions.verify_application(
+            tmp_path, app, pin["expected_application_digest"]
+        )["applied"]
+    with pytest.raises(ValueError, match="proof pin is invalid"):
+        transactions._private_proofs(tmp_path, pins, _private_manifests())
 
 
 def test_replaced_full_private_proof_chain_is_rejected(tmp_path: Path) -> None:
@@ -741,14 +766,17 @@ def test_replaced_full_private_proof_chain_is_rejected(tmp_path: Path) -> None:
     trusted_digest = pins[1]["expected_application_digest"]
     replacement = _verified_private_proof(tmp_path, "b", "exe/b", 50)
     assert replacement["expected_application_digest"] != trusted_digest
-    with pytest.raises(ValueError, match="attestation is not trusted"):
+    with pytest.raises(ValueError, match="proof pin is invalid"):
         transactions._private_proofs(tmp_path, pins, _private_manifests())
 
 
 def test_private_proof_pins_require_unique_target_and_digest(
     tmp_path: Path, monkeypatch
 ) -> None:
-    monkeypatch.setattr(transactions, "verify_application", _verify_private)
+    monkeypatch.setattr(
+        "harness.types.application.verify_reviewed_application",
+        _verify_private,
+    )
     pins = [
         _private_proof(tmp_path, "a", "exe/a"),
         _private_proof(tmp_path, "b", "exe/a"),
@@ -756,13 +784,16 @@ def test_private_proof_pins_require_unique_target_and_digest(
     with pytest.raises(ValueError, match="targets must be unique"):
         transactions._private_proofs(tmp_path, pins, _private_manifests())
     pins[1] = _private_proof(tmp_path, "b", "exe/b")
-    pins[1]["expected_application_digest"] = pins[0]["expected_application_digest"]
+    pins[1]["expected_envelope_digest"] = pins[0]["expected_envelope_digest"]
     with pytest.raises(ValueError, match="digests must be unique"):
         transactions._private_proofs(tmp_path, pins, _private_manifests())
 
 
 def test_private_proof_path_is_confined_to_reviews(tmp_path: Path, monkeypatch) -> None:
-    monkeypatch.setattr(transactions, "verify_application", _verify_private)
+    monkeypatch.setattr(
+        "harness.types.application.verify_reviewed_application",
+        _verify_private,
+    )
     outside = _private_proof(tmp_path, "a", "exe/a")
     outside_path = tmp_path / "outside.json"
     outside_path.write_bytes((tmp_path / outside["path"]).read_bytes())
@@ -775,23 +806,28 @@ def test_private_proof_path_is_confined_to_reviews(tmp_path: Path, monkeypatch) 
 def test_shared_proofs_require_two_equal_private_contracts(
     tmp_path: Path, monkeypatch
 ) -> None:
-    monkeypatch.setattr(transactions, "verify_application", _verify_private)
+    monkeypatch.setattr(
+        "harness.types.application.verify_reviewed_application",
+        _verify_private,
+    )
     pins = [
         _private_proof(tmp_path, "a", "exe/a"),
         _private_proof(tmp_path, "b", "exe/b"),
     ]
     proofs = transactions._private_proofs(tmp_path, pins, _private_manifests())
-    assert [proof["expected_application_digest"] for proof in proofs] == [
-        pin["expected_application_digest"] for pin in pins
+    assert [proof["expected_envelope_digest"] for proof in proofs] == [
+        pin["expected_envelope_digest"] for pin in pins
     ]
     second = tmp_path / pins[1]["path"]
     second.write_text(
         json.dumps(
             {
-                "target": "exe/b",
-                "concern": "layout",
-                "representation": {"size": 12},
-                "semantics": {"role": "same"},
+                "application": {
+                    "target": "exe/b",
+                    "concern": "layout",
+                    "representation": {"size": 12},
+                    "semantics": {"role": "same"},
+                }
             }
         )
     )
@@ -800,7 +836,10 @@ def test_shared_proofs_require_two_equal_private_contracts(
 
 
 def test_shared_proof_rejects_target_address(tmp_path: Path, monkeypatch) -> None:
-    monkeypatch.setattr(transactions, "verify_application", _verify_private)
+    monkeypatch.setattr(
+        "harness.types.application.verify_reviewed_application",
+        _verify_private,
+    )
     pins = [
         _private_proof(tmp_path, "a", "exe/a", "table at 0x80100000"),
         _private_proof(tmp_path, "b", "exe/b", "table at 0x80100000"),
@@ -876,7 +915,7 @@ def test_workspace_state_ignores_tool_owned_quarantine(tmp_path: Path) -> None:
 
     assert transactions._workspace_state(tmp_path) == {}
     assert all(
-        not name.startswith(transaction_files.QUARANTINE_DIRECTORY)
+        not name.startswith(transaction_quarantine.QUARANTINE_DIRECTORY)
         for name in transaction_git.workspace_backup(tmp_path)
     )
 
@@ -977,7 +1016,7 @@ def test_exact_checks_require_success_and_partial_checks_preserve_baseline(
         "bin/byte-match": json.dumps({"schema": "harness.byte-match-one/v1", **common}),
     }
 
-    from harness.analysis.type_transaction_checks import _baseline_facts, _check
+    from harness.common.checks import _baseline_facts, _check
 
     baselines = []
     for tool in ("asm-diff", "byte-match"):
@@ -1013,11 +1052,7 @@ def test_exact_checks_require_success_and_partial_checks_preserve_baseline(
 def test_partial_baseline_rejects_empty_missing_swapped_and_unselected_changes(
     tmp_path: Path,
 ) -> None:
-    from harness.analysis.type_transaction_checks import (
-        _baseline_facts,
-        _check,
-        check_evidence,
-    )
+    from harness.common.checks import _baseline_facts, _check, check_evidence
 
     selector = f"{TARGET}@0x80100000"
     check = _check(
@@ -1048,7 +1083,7 @@ def test_partial_evidence_rejects_every_malformed_field(
 ) -> None:
     import copy
 
-    from harness.analysis.type_transaction_checks import _baseline_facts, _check
+    from harness.common.checks import _baseline_facts, _check
 
     selector = f"{TARGET}@0x80100000"
     check = _check(
@@ -1145,7 +1180,7 @@ def test_partial_evidence_rejects_every_malformed_field(
 
 
 def test_partial_receipt_preserves_full_raw_json(tmp_path: Path) -> None:
-    from harness.analysis.type_transaction_checks import _baseline_facts, _check
+    from harness.common.checks import _baseline_facts, _check
 
     check = _check(
         "byte-match",
@@ -1302,7 +1337,7 @@ def test_partial_baseline_captures_and_verifies_real_tool_identity(
     (outside source, wrong source, symlinked source, wrong address) fail.
     """
 
-    from harness.analysis.type_transaction_checks import (
+    from harness.common.checks import (
         _baseline_facts,
         _check,
         capture_partial_baselines,
@@ -1444,7 +1479,7 @@ def test_forged_allowed_paths_and_swap_before_write_fail_closed(
 
     outside = tmp_path / "outside.h"
     outside.write_text("outside\n")
-    original = runtime._atomic_write
+    original = runtime.install_image
     swapped = False
 
     def swap(root, name, content, **kwargs):
@@ -1454,7 +1489,7 @@ def test_forged_allowed_paths_and_swap_before_write_fail_closed(
             (root / name).symlink_to(outside)
         return original(root, name, content, **kwargs)
 
-    monkeypatch.setattr(runtime, "_atomic_write", swap)
+    monkeypatch.setattr(runtime, "install_image", swap)
     with pytest.raises((ValueError, RuntimeError), match="unsafe|rollback"):
         transactions.run_transaction(
             tmp_path, manifest, {"include/test.h": "changed\n"}, runner=_runner()
@@ -1480,3 +1515,494 @@ def test_rollback_rejects_leaf_symlink(tmp_path: Path, monkeypatch) -> None:
             tmp_path, manifest, {"include/test.h": "changed\n"}, runner=attack
         )
     assert outside.read_text() == "outside\n"
+
+
+@pytest.mark.parametrize("key", ["schema", "verdict", "reviewer"])
+def test_prepare_rejects_duplicate_review_keys_before_writes(
+    tmp_path: Path, monkeypatch, key: str
+) -> None:
+    _repo(tmp_path)
+    monkeypatch.setattr(transactions, "connect", _connect)
+    request = _request(tmp_path)
+    path = tmp_path / request["candidate_artifacts"][0]
+    # Last-value parsing would retain the valid digest and accepted review.
+    path.write_text(
+        path.read_text().replace(f'"{key}":', f'"{key}": "rejected", "{key}":', 1)
+    )
+    before = {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+    with pytest.raises(ValueError, match="duplicate JSON key"):
+        transactions.prepare_transaction(tmp_path, request)
+    assert {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()} == before
+
+
+def test_shared_type_rejects_duplicate_private_proof_keys(tmp_path: Path) -> None:
+    pins = [
+        _verified_private_proof(tmp_path, "a", "exe/a", 10),
+        _verified_private_proof(tmp_path, "b", "exe/b", 20),
+    ]
+    for pin in pins:
+        pin["expected_envelope_digest"] = pin.pop("expected_application_digest")
+    path = tmp_path / pins[0]["path"]
+    path.write_text(
+        path.read_text().replace('"concern":', '"concern": "shared", "concern":', 1)
+    )
+    with pytest.raises(ValueError, match="duplicate JSON key"):
+        transactions._private_proofs(tmp_path, pins, _private_manifests())
+
+
+@pytest.mark.parametrize("tool", ["bin/asm-diff", "bin/byte-match"])
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "warning",
+        "missing",
+        "unknown",
+        "duplicate",
+        "malformed",
+        "source",
+        "binary",
+        "size",
+        "boolean",
+        "receipt",
+    ],
+)
+def test_native_exact_gate_rejects_exit_zero_without_owner_evidence(
+    tmp_path: Path, monkeypatch, tool: str, fault: str
+) -> None:
+    _repo(tmp_path)
+    monkeypatch.setattr(transactions, "connect", _connect)
+    manifest = transactions.prepare_transaction(tmp_path, _request(tmp_path))
+    before = {
+        name: (tmp_path / name).read_bytes() for name in manifest["allowed_paths"]
+    }
+    normal = _runner()
+
+    def run(argv, **kwargs):
+        result = normal(argv, **kwargs)
+        if argv[0] != tool:
+            return result
+        payload = exact_payload(tmp_path, tool)
+        if fault == "warning":
+            payload["status"] = "warning"
+        elif fault == "missing":
+            del payload["status"]
+        elif fault == "unknown":
+            payload["unexpected"] = True
+        elif fault == "source":
+            payload["source"] = "src/other.c"
+        elif fault == "binary":
+            payload["original_binary"] = "out/other.bin"
+        elif fault == "size":
+            payload["current_size"] = 12
+        elif fault == "boolean":
+            payload["exact_match"] = 1
+        output = json.dumps(payload)
+        if fault == "duplicate":
+            output = output.replace('"status":', '"status": "warning", "status":', 1)
+        elif fault == "malformed":
+            output = "not JSON"
+        elif fault == "receipt":
+            # Exact stdout must survive stderr and the old 16K tail truncation.
+            result.stderr = "diagnostic " * 2000
+            result.stdout = output
+            return result
+        return subprocess.CompletedProcess(argv, 0, output, "")
+
+    if fault == "receipt":
+        application = transactions.run_transaction(
+            tmp_path, manifest, {"include/test.h": "changed header\n"}, runner=run
+        )
+        assert transactions.verify_application(
+            tmp_path, application, application["digest"]
+        )["applied"]
+        receipt = next(
+            item for item in application["receipts"] if item["argv"][0] == tool
+        )
+        assert json.loads(receipt["output"])["status"] == "exact_match"
+        assert receipt["stderr"] == "diagnostic " * 2000
+        path = tmp_path / receipt["path"]
+        record = json.loads(path.read_text())
+        payload = json.loads(record["output"])
+        payload["status"] = "warning"
+        record["output"] = json.dumps(payload)
+        record["digest"] = digest({k: v for k, v in record.items() if k != "digest"})
+        path.write_text(json.dumps(record))
+        receipt.update({k: v for k, v in record.items() if k != "schema"})
+        receipt["sha256"] = sha256_file(path)
+        with pytest.raises(ValueError, match="does not match transaction"):
+            runtime.validate_receipts(
+                tmp_path,
+                application["receipts"],
+                manifest["required_checks"],
+                application["post_state_digest"],
+                receipt_schema=record["schema"],
+            )
+    else:
+        with pytest.raises(RuntimeError, match="validation failed"):
+            transactions.run_transaction(
+                tmp_path, manifest, {"include/test.h": "changed header\n"}, runner=run
+            )
+        assert {name: (tmp_path / name).read_bytes() for name in before} == before
+        receipts = list((tmp_path / "out/reviews/evidence").glob("*-run-*.json"))
+        assert any(
+            json.loads(path.read_text())["status"] == "failed" for path in receipts
+        )
+
+
+@pytest.mark.parametrize(
+    "drift",
+    [
+        None,
+        "catalog",
+        "mode",
+        "source",
+        "index",
+        "tooling",
+        "build",
+        "publication",
+        "launcher",
+        "python-config",
+        "python-import",
+        "ninja-script",
+    ],
+)
+def test_type_execution_context_binds_actual_gates(tmp_path, monkeypatch, drift):
+    from transaction_native_fixture import execution_inputs, native_build
+
+    _repo(tmp_path)
+    execution_inputs(tmp_path)
+    monkeypatch.setattr(transactions, "connect", _connect)
+    manifest = transactions.prepare_transaction(tmp_path, _request(tmp_path))
+    header = tmp_path / "include/test.h"
+    header.chmod(0o750)
+    original = header.read_bytes()
+    native = _runner()
+    calls = []
+
+    def mutate():
+        paths = {
+            "launcher": ".venv/bin/splat",
+            "python-config": ".venv/pyvenv.cfg",
+            "python-import": ".venv/lib/site-packages/runtime.pth",
+            "ninja-script": "build/cmake/CMakeFiles/VerifyGlobs.cmake",
+            "catalog": "out/catalog/emi.json",
+            "source": "src/new.c",
+            "index": "out/index/reverse.sqlite",
+            "tooling": "bin/new",
+            "build": "build/cmake/build.ninja",
+            "publication": "out/catalog/emi.json",
+        }
+        if drift == "mode":
+            (tmp_path / "CMakeLists.txt").chmod(0o600)
+        else:
+            path = tmp_path / paths[drift]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"drift")
+
+    def run(argv, **kwargs):
+        calls.append(argv)
+        if not drift and argv[0] == "bin/build":
+            native_build(tmp_path)
+        result = native(argv, **kwargs)
+        if drift not in {None, "publication"}:
+            mutate()
+        return result
+
+    if drift == "publication":
+        original_attest = transactions.write_attestation
+
+        def attest(*args, **kwargs):
+            result = original_attest(*args, **kwargs)
+            mutate()
+            return result
+
+        monkeypatch.setattr(transactions, "write_attestation", attest)
+    if drift:
+        with pytest.raises(ValueError, match="execution context"):
+            transactions.run_transaction(
+                tmp_path,
+                manifest,
+                {"include/test.h": "typedef unsigned long Test;\n"},
+                runner=run,
+                implementation_run_id="implementation-1",
+            )
+        assert header.read_bytes() == original
+        assert header.stat().st_mode & 0o7777 == 0o750
+        assert len(calls) == (
+            len(manifest["required_checks"]) if drift == "publication" else 1
+        )
+        return
+    app = transactions.run_transaction(
+        tmp_path,
+        manifest,
+        {"include/test.h": "typedef unsigned long Test;\n"},
+        runner=run,
+        implementation_run_id="implementation-1",
+    )
+    assert (
+        app["review_context"]["final_build"]["build/cmake/CMakeFiles/VerifyGlobs.cmake"]
+        is not None
+    )
+    assert header.stat().st_mode & 0o7777 == 0o750
+    context = app["review_context"]
+    assert context["initial_state"]["inputs"]["out/catalog/emi.json"] is None
+    assert (
+        context["initial_state"]["inputs"]["include/test.h"]
+        != context["final_state"]["inputs"]["include/test.h"]
+    )
+    assert [g["receipt_digest"] for g in context["gates"]] == app["receipt_digests"]
+    assert transactions.verify_application(tmp_path, app, app["digest"])["applied"]
+    (tmp_path / "CMakeLists.txt").write_text("changed")
+    with pytest.raises(ValueError, match="execution context"):
+        transactions.verify_application(tmp_path, app, app["digest"])
+
+
+@pytest.mark.parametrize("mode", [True, -1, 0o10000, "644"])
+def test_atomic_write_rejects_invalid_explicit_mode(tmp_path, mode):
+    with pytest.raises(ValueError, match="file mode"):
+        transaction_files.atomic_write(tmp_path, "new/file", b"x", mode=mode)
+    assert not (tmp_path / "new").exists()
+
+
+@pytest.mark.parametrize("invalid", ["", " ", False])
+def test_type_execution_context_rejects_invalid_run_before_apply(
+    tmp_path, monkeypatch, invalid
+):
+    _repo(tmp_path)
+    monkeypatch.setattr(transactions, "connect", _connect)
+    manifest = transactions.prepare_transaction(tmp_path, _request(tmp_path))
+    original = (tmp_path / "include/test.h").read_bytes()
+    with pytest.raises(ValueError, match="run ID"):
+        transactions.run_transaction(
+            tmp_path,
+            manifest,
+            {"include/test.h": "new"},
+            runner=_runner(),
+            implementation_run_id=invalid,
+        )
+    assert (tmp_path / "include/test.h").read_bytes() == original
+
+
+@pytest.mark.parametrize(
+    "field", ["unknown", "gate", "initial", "null", "catalog", "environment", "build"]
+)
+def test_type_execution_context_rejects_rebound_shape_and_transition(
+    tmp_path, monkeypatch, field
+):
+    from harness.common.execution import validate_context
+    from transaction_native_fixture import execution_inputs
+
+    _repo(tmp_path)
+    execution_inputs(tmp_path)
+    monkeypatch.setattr(transactions, "connect", _connect)
+    manifest = transactions.prepare_transaction(tmp_path, _request(tmp_path))
+    app = transactions.run_transaction(
+        tmp_path,
+        manifest,
+        {"include/test.h": "typedef unsigned long Test;\n"},
+        runner=_runner(),
+        implementation_run_id="implementation-1",
+    )
+    ctx = app["review_context"]
+    if field == "unknown":
+        ctx["unknown"] = True
+    elif field == "gate":
+        ctx["gates"][0]["unknown"] = True
+    elif field == "initial":
+        ctx["initial_state"]["inputs"]["include/test.h"]["sha256"] = "0" * 64
+    elif field == "null":
+        app["review_context"] = None
+    elif field == "catalog":
+        ctx["initial_state"]["inputs"]["out/catalog/emi.json"] = {
+            "sha256": "0" * 64,
+            "mode": 0o644,
+        }
+    elif field == "environment":
+        ctx["initial_state"]["environment_digest"] = "forged"
+    else:
+        ctx["gates"][0]["build_before"]["build/cmake/build.ninja"] = {
+            "sha256": "0" * 64,
+            "mode": 0o644,
+        }
+    with pytest.raises(ValueError, match="execution"):
+        validate_context(tmp_path, app)
+
+
+def test_type_cli_execution_id_and_duplicate_input(tmp_path):
+    args = type_audit.build_parser().parse_args(
+        ["run", "manifest", "changes", "output", "--implementation-run-id", "worker"]
+    )
+    assert args.implementation_run_id == "worker"
+    path = tmp_path / "input.json"
+    path.write_text('{"review_context":{"x":1,"x":2}}')
+    with pytest.raises(ValueError, match="duplicate"):
+        type_audit._read(path)
+
+
+def test_type_context_concurrent_index_preserves_owned_source_rollback(
+    tmp_path, monkeypatch
+):
+    from transaction_native_fixture import execution_inputs
+
+    _repo(tmp_path, git=True)
+    monkeypatch.setattr(transactions, "connect", _connect)
+    request = _request(tmp_path)
+    execution_inputs(tmp_path)
+    (tmp_path / "include/test.h").chmod(0o750)
+    request["adopted_baseline"] = transactions.workspace_baseline(tmp_path)["digest"]
+    manifest = transactions.prepare_transaction(tmp_path, request)
+    header = tmp_path / "include/test.h"
+    original = header.read_bytes()
+    index = tmp_path / ".git/index"
+    concurrent = index.read_bytes() + b"concurrent"
+
+    def reject(*_args):
+        index.write_bytes(concurrent)
+        raise ValueError("execution context concurrent drift")
+
+    monkeypatch.setattr(transactions.execution_context, "checked", reject)
+    with pytest.raises(RuntimeError, match="rollback failed") as error:
+        transactions.run_transaction(
+            tmp_path,
+            manifest,
+            {"include/test.h": "changed\n"},
+            runner=_runner(),
+            implementation_run_id="implementation-1",
+        )
+    assert "concurrently" in str(error.value.__cause__)
+    assert index.read_bytes() == concurrent
+    assert header.read_bytes() == original
+    assert header.stat().st_mode & 0o7777 == 0o750
+
+
+@pytest.mark.parametrize(
+    "invalid", ["missing-launcher", "empty-launcher", "wrong-python", "system-site"]
+)
+def test_type_context_rejects_unsupported_splat_runtime(tmp_path, monkeypatch, invalid):
+    from transaction_native_fixture import execution_inputs
+
+    _repo(tmp_path)
+    execution_inputs(tmp_path)
+    monkeypatch.setattr(transactions, "connect", _connect)
+    manifest = transactions.prepare_transaction(tmp_path, _request(tmp_path))
+    launcher = tmp_path / ".venv/bin/splat"
+    if invalid == "missing-launcher":
+        launcher.unlink()
+    elif invalid == "empty-launcher":
+        launcher.write_text("")
+    elif invalid == "wrong-python":
+        launcher.write_text("#!/usr/bin/env python\n")
+    else:
+        (tmp_path / ".venv/pyvenv.cfg").write_text(
+            "include-system-site-packages = true\n"
+        )
+    header = tmp_path / "include/test.h"
+    original = header.read_bytes()
+    with pytest.raises(ValueError, match="execution context"):
+        transactions.run_transaction(
+            tmp_path,
+            manifest,
+            {"include/test.h": "changed\n"},
+            runner=_runner(),
+            implementation_run_id="implementation-1",
+        )
+    assert header.read_bytes() == original
+
+
+@pytest.mark.parametrize("failure", [None, "before", "after", "write", "index"])
+def test_type_cli_publication_rolls_back_owned_edits(tmp_path, monkeypatch, failure):
+    from transaction_native_fixture import execution_inputs
+
+    monkeypatch.setenv("GIT_OPTIONAL_LOCKS", "0")
+
+    _repo(tmp_path, git=True)
+    monkeypatch.setattr(transactions, "connect", _connect)
+    request = _request(tmp_path)
+    execution_inputs(tmp_path)
+    header = tmp_path / "include/test.h"
+    header.chmod(0o750)
+    original = header.read_bytes()
+    unrelated = tmp_path / "unrelated.txt"
+    unrelated.write_text("adopted dirty work\n")
+    request["adopted_baseline"] = transactions.workspace_baseline(tmp_path)["digest"]
+    manifest = transactions.prepare_transaction(tmp_path, request)
+    inputs = tmp_path / "out/reviews/evidence"
+    inputs.mkdir(parents=True, exist_ok=True)
+    manifest_path = inputs / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest))
+    changes_path = inputs / "changes.json"
+    changes_path.write_text(json.dumps({"include/test.h": "changed\n"}))
+    output = Path("out/reviews/evidence/application.json")
+    index = tmp_path / ".git/index"
+    original_index = index.read_bytes()
+    catalog = tmp_path / "out/catalog/emi.json"
+    assert not catalog.exists()
+    context = transactions.execution_context
+    validate = context.validate_context
+    write = context.write_evidence_output
+    validations = []
+
+    def validate_publication(root, application):
+        validations.append(True)
+        if failure == "before" and len(validations) == 1:
+            catalog.parent.mkdir(parents=True, exist_ok=True)
+            catalog.write_text("concurrent catalog\n")
+        validate(root, application)
+
+    def write_publication(root, name, application):
+        if failure == "write":
+            raise OSError("publication failed")
+        write(root, name, application)
+        if failure == "after":
+            catalog.parent.mkdir(parents=True, exist_ok=True)
+            catalog.write_text("concurrent catalog\n")
+        if failure == "index":
+            index.write_bytes(original_index + b"concurrent")
+
+    monkeypatch.setattr(context, "validate_context", validate_publication)
+    monkeypatch.setattr(context, "write_evidence_output", write_publication)
+    run = transactions.run_transaction
+    monkeypatch.setattr(
+        type_audit,
+        "run_transaction",
+        lambda *args, **kwargs: run(*args, runner=_runner(), **kwargs),
+    )
+    args = type_audit.build_parser().parse_args(
+        [
+            "--root",
+            str(tmp_path),
+            "run",
+            str(manifest_path),
+            str(changes_path),
+            str(output),
+            "--implementation-run-id",
+            "implementation-1",
+        ]
+    )
+    if failure is None:
+        assert type_audit._run(args) == 0
+        app = json.loads((tmp_path / output).read_text())
+        assert transactions.verify_application(tmp_path, app, app["digest"])["applied"]
+        assert header.read_text() == "changed\n"
+    else:
+        with pytest.raises((ValueError, RuntimeError, OSError)) as error:
+            type_audit._run(args)
+        assert header.read_bytes() == original
+        if failure == "index":
+            assert "concurrently" in str(error.value.__cause__)
+        elif failure == "write":
+            assert "publication failed" in str(error.value)
+        else:
+            assert "execution context" in str(error.value)
+        assert (tmp_path / output).exists() == (failure in {"after", "index"})
+        if failure in {"after", "index"}:
+            app = json.loads((tmp_path / output).read_text())
+            with pytest.raises(ValueError, match="post-state drifted"):
+                transactions.verify_application(tmp_path, app, app["digest"])
+    assert header.stat().st_mode & 0o7777 == 0o750
+    assert unrelated.read_text() == "adopted dirty work\n"
+    assert index.read_bytes() == original_index + (
+        b"concurrent" if failure == "index" else b""
+    )
+    if failure in {"before", "after"}:
+        assert catalog.read_text() == "concurrent catalog\n"

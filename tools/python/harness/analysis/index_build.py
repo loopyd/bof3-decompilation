@@ -1,10 +1,4 @@
-"""Reverse-index build: per-target records, duplicate lifecycle, and grouping.
-
-Owns the `rebuild` write path. Domain modules own all byte/tag parsing:
-PS-X payload and reviewed-range hashing (`domain.psx`), MIPS lui/%lo and
-static-JAL decoding plus the trivial classifier (`domain.mips`), and lift
-lifecycle derivation from progress tags (`domain.tags`).
-"""
+"""Atomically build target records and groups using domain-owned byte/tag parsing."""
 
 from __future__ import annotations
 
@@ -13,26 +7,31 @@ import sqlite3
 import tempfile
 from pathlib import Path
 
-from ..discovery import file_sha256
-from ..domain import load_target_manifests, lift_lifecycle
-from ..domain.claims import resolve_source_for_paths
+from harness.macros.index import (
+    insert_macro_registry,
+    macro_input_digest,
+    macro_input_rows,
+)
+from harness.types.inference import infer_type_candidates
+from harness.types.index import insert_authored_types
+from harness.types.index import insert_shared_scalar_types
+from harness.types.inputs import type_input_digest, type_input_rows
+
+from ..domain.claims import index_source_paths
 from ..domain.layout import parse_splat_layout
+from ..domain.manifests import load_target_manifests
 from ..domain.mips import data_references, trivial_kind
 from ..domain.psx import payload_for
 from ..domain.sources import reviewed_function_name
 from ..domain.symbols import load_target_symbols
+from ..domain.tags import lift_lifecycle
+from ..io import file_sha256
+from ._index_symbols import insert_symbols
 from .index import SCHEMA_VERSION, index_path
 from .index_groups import insert_duplicate_groups, insert_unconfirmed_candidates
 from .index_snapshot import snapshot_for
-from .schema import create_schema
 from .project import prepare_target
-from .type_index import (
-    infer_type_candidates,
-    insert_authored_types,
-    insert_shared_scalar_types,
-)
-from .type_inputs import type_input_digest, type_input_rows
-from .macro_index import insert_macro_registry, macro_input_digest, macro_input_rows
+from .schema import create_schema
 
 
 def _validate_candidate(path: Path, expected_targets: set[str]) -> None:
@@ -70,6 +69,7 @@ def _validate_candidate(path: Path, expected_targets: set[str]) -> None:
             "type_conflicts",
             "type_candidates",
             "type_input_fingerprints",
+            "selected_map_fingerprints",
             "macro_definitions",
             "macro_uses",
             "macro_templates",
@@ -107,7 +107,14 @@ def rebuild(root: Path) -> Path:
         binary = root / manifest.binary
         if not binary.is_file():
             raise ValueError(f"missing target binary: {manifest.binary}")
-        records.append((target, manifest, binary, *snapshot_for(root, target, binary)))
+        records.append(
+            (
+                target,
+                manifest,
+                binary,
+                *snapshot_for(root, target, binary, manifest=manifest),
+            )
+        )
     output = index_path(root)
     output.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary = tempfile.mkstemp(
@@ -124,14 +131,15 @@ def rebuild(root: Path) -> Path:
             )
             insert_shared_scalar_types(connection, root)
             for target, manifest, binary, path, snapshot in records:
-                target_spec = prepare_target(root, target)
+                target_spec = prepare_target(root, target, manifest=manifest)
                 _insert_target(
                     connection, root, target, manifest, binary, path, snapshot
                 )
                 _insert_function_candidates(
                     connection, root, target, manifest, target_spec, binary
                 )
-                _insert_symbols(connection, root, target)
+                insert_authored_types(connection, root, target, manifest)
+                insert_symbols(connection, root, target, manifest)
                 _insert_functions(
                     connection, root, target, manifest, target_spec, binary, snapshot
                 )
@@ -139,7 +147,6 @@ def rebuild(root: Path) -> Path:
                     connection, root, target, manifest, binary, snapshot
                 )
                 _insert_calls(connection, target, snapshot)
-                insert_authored_types(connection, root, target, manifest)
                 infer_type_candidates(connection, target)
             for target, manifest, *_unused in records:
                 insert_macro_registry(connection, root, target, manifest)
@@ -188,6 +195,11 @@ def _insert_target(
             "INSERT INTO type_input_fingerprints VALUES (?, ?, ?, ?)",
             (target, source_path, digest, kind),
         )
+    layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+    connection.executemany(
+        "INSERT INTO selected_map_fingerprints VALUES (?, ?, ?)",
+        ((target, path, file_sha256(root / path)) for path in layout.symbol_map_paths),
+    )
     macro_inputs = macro_input_rows(root, target, manifest)
     connection.execute(
         "INSERT INTO metadata VALUES (?, ?)",
@@ -203,7 +215,7 @@ def _insert_function_candidates(
     target_spec,
     binary: Path,
 ) -> None:
-    target_symbols = load_target_symbols(root, target)
+    target_symbols = load_target_symbols(root, target, psyq_space=manifest.psyq_space)
     layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
     payload = payload_for(
         binary.read_bytes(), manifest.load_address, binary_name=manifest.binary
@@ -227,12 +239,7 @@ def _insert_function_candidates(
                 ),
             ),
         )
-    source_addresses = {
-        address
-        for address in (symbol.address for symbol in target_symbols)
-        if target_spec.source_paths
-        and resolve_source_for_paths(target_spec.source_paths, address) is not None
-    }
+    source_addresses = index_source_paths(target_spec.source_paths)
     for symbol in target_symbols:
         if (
             not symbol.canonical_name.startswith("func_")
@@ -252,23 +259,14 @@ def _insert_function_candidates(
         )
 
 
-def _insert_symbols(connection: sqlite3.Connection, root: Path, target: str) -> None:
-    for symbol in load_target_symbols(root, target):
-        kind = "data" if symbol.canonical_name.startswith("D_") else "function"
-        connection.execute(
-            "INSERT INTO symbols VALUES (?, ?, ?, ?)",
-            (target, symbol.address, symbol.canonical_name, kind),
-        )
-
-
-def _compiled_symbol(root: Path, target: str, address: int, layout) -> str | None:
-    """Reviewed map/Splat identity: the target-owned compiled symbol at ``address``.
-
-    ``None`` when the target-local map has not claimed the address, so a
-    compiled symbol is never inferred from the analyzer name or Splat label.
-    """
+def _compiled_symbol(
+    root: Path, target: str, address: int, layout, manifest=None
+) -> str | None:
+    """Return reviewed map/Splat identity or None; never infer an analyzer name."""
     try:
-        return reviewed_function_name(root, target, address, layout=layout)
+        return reviewed_function_name(
+            root, target, address, layout=layout, manifest=manifest
+        )
     except Exception:
         return None
 
@@ -289,21 +287,16 @@ def _insert_functions(
     layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
     reviewed_identity = layout.reviewed_range_identity(payload, binary=binary_bytes)
     claimed_paths = target_spec.source_paths
-    claimed_by_address: dict[int, Path | None] = {}
-    if claimed_paths:
-        for address in sorted({function.address for function in snapshot.functions}):
-            claimed_by_address[address] = resolve_source_for_paths(
-                claimed_paths, address
-            )
+    claimed_by_address = index_source_paths(claimed_paths)
     data_addresses = [
         symbol.address
-        for symbol in load_target_symbols(root, target)
+        for symbol in load_target_symbols(root, target, psyq_space=manifest.psyq_space)
         if symbol.canonical_name.startswith("D_")
     ]
     for function in snapshot.functions:
         identity = reviewed_identity.get(function.address)
         source = (
-            claimed_by_address.get(function.address, function.source)
+            claimed_by_address.get(function.address)
             if claimed_paths
             else function.source
         )
@@ -311,7 +304,9 @@ def _insert_functions(
         if source is not None:
             source_path = Path(source)
             lifecycle_text = source_path.read_text(encoding="utf-8", errors="replace")
-        compiled_symbol = _compiled_symbol(root, target, function.address, layout)
+        compiled_symbol = _compiled_symbol(
+            root, target, function.address, layout, manifest
+        )
         connection.execute(
             """INSERT INTO functions (
                 id, target_id, address, size, name, compiled_symbol,
@@ -378,7 +373,7 @@ def _insert_data_references(
     )
     symbol_by_address = {
         symbol.address: symbol.canonical_name
-        for symbol in load_target_symbols(root, target)
+        for symbol in load_target_symbols(root, target, psyq_space=manifest.psyq_space)
     }
     for function in snapshot.functions:
         function_bytes = binary_bytes[

@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+from contextvars import ContextVar
 from pathlib import Path
 from typing import Any
 
 from .ids import normalize_target_id
 from .manifests import load_target_manifests
-from .sources import local_include_files
+from .includes import local_include_files
 
 CANDIDATE_SCHEMA = "bof3.analysis-candidate/v1"
 TRANSACTION_SCHEMA = "bof3.analysis-transaction/v1"
@@ -60,7 +61,65 @@ def _receipt_payload(command: dict[str, object]) -> dict[str, object]:
     }
 
 
-def command_records(value: object, field: str, root: Path) -> list[dict[str, Any]]:
+def write_receipt(
+    root: Path,
+    relative: str,
+    command: dict[str, object],
+    *,
+    evidence_root: Path | None = None,
+) -> dict[str, Any]:
+    """Write one digest-bound five-field receipt file and its command record.
+
+    The receipt file holds exactly the five-field payload (never extra keys);
+    the returned record carries the repo-relative path and the SHA-256 of the
+    receipt file itself.  The native runner is the sole receipt producer; the
+    validator side is ``command_records`` above.
+    """
+
+    if not isinstance(relative, str) or not relative:
+        raise ValueError("receipt path must be non-empty")
+    allowed_root = (evidence_root or root / "out/reviews/evidence").resolve()
+    candidate = Path(relative)
+    if candidate.is_absolute() and evidence_root is None:
+        raise ValueError("receipt path must be repo-relative")
+    path = (candidate if candidate.is_absolute() else root / candidate).resolve()
+    if allowed_root != path and allowed_root not in path.parents:
+        raise ValueError(f"receipt must stay under selected evidence root: {relative}")
+    payload = _receipt_payload(command)
+    for key in payload.values():
+        if not isinstance(key, str) and key is not None:
+            raise ValueError("receipt payload must hold strings only")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(payload, sort_keys=True) + "\n"
+    path.write_text(text, encoding="utf-8")
+    record = dict(command)
+    record["receipt"] = relative
+    record["sha256"] = sha256_file(path)
+    return record
+
+
+_RECEIPT_ROOT: ContextVar[Path | None] = ContextVar("receipt_root", default=None)
+
+
+def set_receipt_root(path: Path | None):
+    """Select the trusted explicit receipt root for nested validators."""
+
+    return _RECEIPT_ROOT.set(path.resolve() if path is not None else None)
+
+
+def reset_receipt_root(token) -> None:
+    """Restore the previous explicit receipt root."""
+
+    _RECEIPT_ROOT.reset(token)
+
+
+def command_records(
+    value: object,
+    field: str,
+    root: Path,
+    *,
+    evidence_root: Path | None = None,
+) -> list[dict[str, Any]]:
     """Validate receipts binding command/status/target/selector/output."""
     if not isinstance(value, list) or not value:
         raise ValueError(f"{field} must contain executed command records")
@@ -84,11 +143,13 @@ def command_records(value: object, field: str, root: Path) -> list[dict[str, Any
         digest = command.get("sha256")
         if not isinstance(receipt, str) or not isinstance(digest, str):
             raise ValueError(f"{field} command requires receipt and sha256")
-        if Path(receipt).is_absolute():
-            raise ValueError(f"{field} receipt must be repo-relative")
-        evidence_root = (root / "out/reviews/evidence").resolve()
-        path = (root / receipt).resolve()
-        if evidence_root not in path.parents or not path.is_file():
+        candidate = Path(receipt)
+        selected_root = evidence_root or _RECEIPT_ROOT.get()
+        if candidate.is_absolute() and selected_root is None:
+            raise ValueError(f"{field} absolute receipt requires an evidence root")
+        allowed_root = (selected_root or root / "out/reviews/evidence").resolve()
+        path = (candidate if candidate.is_absolute() else root / candidate).resolve()
+        if allowed_root not in path.parents or not path.is_file():
             raise ValueError(f"{field} command receipt missing or stale: {receipt}")
         try:
             recorded = json.loads(path.read_text(encoding="utf-8"))
@@ -96,7 +157,18 @@ def command_records(value: object, field: str, root: Path) -> list[dict[str, Any
             raise ValueError(
                 f"{field} command receipt is not structured: {receipt}"
             ) from error
-        if recorded != _receipt_payload(command) or sha256_file(path) != digest:
+        base = _receipt_payload(command)
+        if (
+            isinstance(recorded, dict)
+            and recorded.get("schema") == "bof3.naming-evidence-facts/v1"
+        ):
+            valid_payload = all(
+                recorded.get(key) == value for key, value in base.items()
+            )
+            valid_payload = valid_payload and isinstance(recorded.get("facts"), list)
+        else:
+            valid_payload = recorded == base
+        if not valid_payload or sha256_file(path) != digest:
             raise ValueError(f"{field} command receipt missing or stale: {receipt}")
         result.append(command)
     return result
@@ -338,4 +410,5 @@ __all__ = [
     "typed_observation_ids",
     "validate_candidate",
     "validate_transaction",
+    "write_receipt",
 ]

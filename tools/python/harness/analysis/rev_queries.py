@@ -9,19 +9,12 @@ from __future__ import annotations
 import sqlite3
 from typing import Any
 
-from ..domain import FunctionId
+from harness.naming.readiness import canonical_storage
+
+from ..domain.ids import FunctionId
 from ..domain.layout import parse_splat_layout
 from .index import rows
-from .naming_readiness import canonical_storage
 from .project import prepare_target
-from .type_index import (
-    type_candidates_payload,
-    type_usages_payload,
-    types_payload,
-)
-from .macro_opportunities import macro_opportunities_payload
-from .macro_queries import macro_uses_payload, macros_payload
-from .near_duplicates import near_duplicates_payload
 
 
 def known_target(connection: sqlite3.Connection, target: str) -> bool:
@@ -131,6 +124,43 @@ def xrefs_payload(
         (function.target.value, function.address, sql_limit),
     )
     return call_rows + data_rows
+
+
+def owner_payload(
+    connection: sqlite3.Connection, function: FunctionId
+) -> list[dict[str, Any]]:
+    """Return the exact target-qualified owner selected by generated work."""
+    return rows(
+        connection,
+        """SELECT target_id,
+                  printf('0x%08X', address) AS function_address,
+                  CASE WHEN end IS NULL THEN NULL ELSE printf('0x%08X', end) END AS function_end,
+                  name,
+                  CASE WHEN end IS NULL THEN NULL ELSE end - address END AS size,
+                  CASE WHEN address = ? THEN 'entry' ELSE 'contains' END AS match,
+                  provenance,
+                  confidence,
+                  payload_contained
+             FROM function_candidates
+            WHERE target_id = ?
+              AND ((end IS NOT NULL AND ? >= address AND ? < end)
+                   OR (end IS NULL AND ? = address))
+            ORDER BY CASE WHEN address = ? THEN 0 ELSE 1 END,
+                     CASE provenance
+                       WHEN 'reviewed_range' THEN 0
+                       WHEN 'analyzer_range' THEN 1
+                       ELSE 2
+                     END,
+                     address""",
+        (
+            function.address,
+            function.target.value,
+            function.address,
+            function.address,
+            function.address,
+            function.address,
+        ),
+    )
 
 
 def owners_payload(
@@ -318,23 +348,4 @@ def analyzer_candidates_payload(
     )
 
 
-__all__ = [
-    "analyzer_candidates_payload",
-    "calls_payload",
-    "describe_payload",
-    "duplicates_payload",
-    "known_target",
-    "macro_opportunities_payload",
-    "macro_uses_payload",
-    "macros_payload",
-    "near_duplicates_payload",
-    "owners_payload",
-    "status_payload",
-    "symbol_at",
-    "type_candidates_payload",
-    "type_usages_payload",
-    "types_payload",
-    "symbols_payload",
-    "variables_payload",
-    "xrefs_payload",
-]
+__all__ = ['analyzer_candidates_payload', 'calls_payload', 'describe_payload', 'duplicates_payload', 'known_target', 'owner_payload', 'owners_payload', 'status_payload', 'symbol_at', 'symbols_payload', 'variables_payload', 'xrefs_payload']

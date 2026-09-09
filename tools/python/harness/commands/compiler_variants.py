@@ -6,9 +6,10 @@ import argparse
 import json
 import sys
 
+from harness.common.cli import run_main
+
 from ..io import repo_layout
 from ..toolchain.gcc_variants import ensure_variant, load_variants, lookup_variant
-from ._common import run_main
 
 
 def _cmd_list(args: argparse.Namespace) -> int:
@@ -16,11 +17,14 @@ def _cmd_list(args: argparse.Namespace) -> int:
     try:
         candidates = load_variants(layout, validate=args.validate)
         if not candidates:
-            print('{"schema":"harness.compiler-variants/v1","candidates":[],"status":"empty"}')
+            print(
+                '{"schema":"harness.compiler-variants/v1","candidates":[],"status":"empty"}'
+            )
             return 0
-        payload = {"schema": "harness.compiler-variants/v1", "candidates": [
-            {"id": v.id, "label": v.label} for v in candidates
-        ]}
+        payload = {
+            "schema": "harness.compiler-variants/v1",
+            "candidates": [{"id": v.id, "label": v.label} for v in candidates],
+        }
         print(json.dumps(payload, indent=2))
     except ValueError as exc:
         print(f"compiler-variants: schema validation error: {exc}", file=sys.stderr)
@@ -71,8 +75,13 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command")
 
     p = subparsers.add_parser("list", help="Show catalog entries")
-    p.add_argument("--no-validate", dest="validate", action="store_false",
-                   default=True, help="Skip full schema validation")
+    p.add_argument(
+        "--no-validate",
+        dest="validate",
+        action="store_false",
+        default=True,
+        help="Skip full schema validation",
+    )
     p.set_defaults(handler=_cmd_list)
 
     p = subparsers.add_parser("install", help="Download and install a variant")

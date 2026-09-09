@@ -13,10 +13,8 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
 from harness.commands import permute
 from harness.toolchain.permuter import DecompPermuterToolchain
-
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -598,7 +596,7 @@ def test_main_resolves_target_address(
     )
 
     monkeypatch.setattr(
-        "harness.commands._common.resolve_function_selector",
+        "harness.common.cli.resolve_function_selector",
         lambda raw: (mock_id, mock_id.target, src),
     )
     monkeypatch.setattr(permute.fcntl, "flock", lambda fd, op: None)

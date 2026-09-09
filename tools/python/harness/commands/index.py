@@ -4,20 +4,39 @@ from __future__ import annotations
 
 import argparse
 
-from ..analysis.index import rebuild
+from harness.common.cli import add_root_argument, run_main
+
+from ..analysis.index import connect, index_path, rebuild
 from ..analysis.project import analyze_project, status
-from ..domain import load_target_manifests
-from ._common import add_root_argument, run_main
+from ..domain.manifests import load_target_manifests
 
 
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     if args.recover:
-        targets = sorted(load_target_manifests(root))
-        stale = [target for target in targets if not status(root, target)["fresh"]]
+        manifests = load_target_manifests(root)
+        states = {
+            target: status(root, target, manifest=manifest)
+            for target, manifest in sorted(manifests.items())
+        }
+        stale = [target for target, state in states.items() if not state["fresh"]]
+        if not stale:
+            path = index_path(root)
+            try:
+                connection = connect(root, manifests=manifests)
+            except (FileNotFoundError, ValueError):
+                pass
+            else:
+                connection.close()
+                print(path.relative_to(root))
+                return 0
         for target in stale:
             analyze_project(root, target, timeout=args.timeout)
-        remaining = [target for target in targets if not status(root, target)["fresh"]]
+        remaining = [
+            target
+            for target in stale
+            if not status(root, target, manifest=manifests[target])["fresh"]
+        ]
         if remaining:
             raise ValueError(
                 "analysis recovery left stale targets: " + ", ".join(remaining)

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import FrozenInstanceError, replace
 from pathlib import Path
+import json
+import re
 
 import pytest
 
@@ -86,12 +88,23 @@ def test_canonical_routes_load_exact_selected_body_and_direct_refs(
         tuple(Path(path).name for path in request.selected_skill.direct_references)
         == references
     )
-    assert reads[0] == ROOT / f".pi/skills/{skill}/SKILL.md"
+    assert reads[0] == ROOT / f".codex/skills/{skill}/SKILL.md"
     assert tuple(path.name for path in reads[1:]) == references
     assert len(reads) == 1 + len(references)
+    rendered = json.loads(sections[0].text)
+    assert rendered["mode"] == mode
+    selected = rendered["selected_skill"]
+    assert selected["name"] == skill
+    assert selected["body"] == f".codex/skills/{skill}/SKILL.md"
+    emitted_references = selected["direct_references"]
+    assert len(emitted_references) == len(set(emitted_references))
+    assert [Path(ref).name for ref in emitted_references] == list(references)
+    # emitted references point only at the one selected skill tree
+    for ref in emitted_references:
+        assert ref.startswith(f".codex/skills/{skill}/")
     loaded_bytes = sum(len(section.text.encode()) for section in sections[1:])
     assert loaded_bytes <= 16_000
-    assert f'"loaded_bytes": {loaded_bytes}' in sections[0].text
+    assert selected["loaded_bytes"] == loaded_bytes
     unselected = {
         "bof3-identity-maintenance",
         "repo-documentation-repair",
@@ -124,11 +137,11 @@ def test_cleanup_request_is_frozen_and_retains_structured_state() -> None:
 
 def test_parent_old_audit_normalizes_docs_only_with_warning() -> None:
     request = parse_cleanup_request(
-        ("audit", "docs/usage.md", "docs/index.md"), parent_compatibility=True
+        ("audit", "docs/usage.md", "docs/INDEX.md"), parent_compatibility=True
     )
     assert request.mode == "docs"
     assert request.warning
-    assert request.arguments == ("docs/usage.md", "docs/index.md")
+    assert request.arguments == ("docs/usage.md", "docs/INDEX.md")
 
 
 @pytest.mark.parametrize(
@@ -140,7 +153,6 @@ def test_parent_old_audit_normalizes_docs_only_with_warning() -> None:
         ("audit", "src/file.c"),
         ("docs", "src/file.c"),
         ("docs", "docs/../src/file.c"),
-        ("docs", ".pi/agents/worker.md"),
         ("docs", "docs/missing.md"),
         ("audit-target", "exe/missing"),
         ("audit-target", "exe/logo", "extra"),
@@ -180,16 +192,16 @@ def test_missing_unknown_or_ambiguous_selection_reads_zero_bodies() -> None:
         replace(request, selected_skill=SelectedSkill("", "", ())),
         replace(
             request,
-            selected_skill=SelectedSkill("unknown", ".pi/skills/unknown/SKILL.md", ()),
+            selected_skill=SelectedSkill("unknown", ".codex/skills/unknown/SKILL.md", ()),
         ),
         replace(
             request,
             selected_skill=SelectedSkill(
                 "repo-documentation-repair",
-                ".pi/skills/repo-documentation-repair/SKILL.md",
+                ".codex/skills/repo-documentation-repair/SKILL.md",
                 (
-                    ".pi/skills/repo-documentation-repair/references/DOCUMENTATION_REPAIR.md",
-                    ".pi/skills/bof3-naming-evidence/SKILL.md",
+                    ".codex/skills/repo-documentation-repair/references/DOCUMENTATION_REPAIR.md",
+                    ".codex/skills/bof3-naming-evidence/SKILL.md",
                 ),
             ),
         ),
@@ -254,9 +266,4 @@ def test_full_frozen_request_is_revalidated_before_reads() -> None:
     assert reads == []
 
 
-def test_cleanup_agent_has_one_selected_body_read_and_no_mode_parser() -> None:
-    text = (ROOT / ".pi/agents/bof3-cleanup.md").read_text()
-    assert text.count("exactly one emitted `selected_skill.body` section") == 1
-    assert "do not read that file again" in text
-    assert "Never parse, normalize, infer, or switch modes" in text
-    assert "inheritSkills: true" in text
+FRONT_MATTER_RE = re.compile(r"\A---\n(.*?)\n---\n", re.DOTALL)

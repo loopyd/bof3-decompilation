@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import json
 
+from harness.common.cli import add_root_argument, run_main
+
 from ..build.compiler import (
     load_object_compilers,
     load_object_flags,
@@ -12,7 +14,6 @@ from ..build.compiler import (
 )
 from ..io import repo_layout
 from ..toolchain.gcc_variants import ensure_variant, lookup_variant
-from ._common import add_root_argument, run_main
 
 OPTIMIZATION_RE = __import__("re").compile(r"^-O(?:[0-3s]|fast)$")
 

@@ -3,6 +3,42 @@
 from __future__ import annotations
 
 import sqlite3
+from functools import lru_cache
+
+from harness.types.schema import SCHEMA as TYPE_SCHEMA
+from harness.macros.schema import SCHEMA as MACRO_SCHEMA
+
+
+@lru_cache(maxsize=1)
+def required_schema() -> dict[
+    str, tuple[tuple[tuple[object, ...], ...], tuple[tuple[object, ...], ...]]
+]:
+    """Return exact columns and foreign keys derived from the canonical schema."""
+
+    connection = sqlite3.connect(":memory:")
+    try:
+        create_schema(connection)
+        tables = [
+            row[0]
+            for row in connection.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table'"
+            )
+        ]
+        return {
+            table: (
+                tuple(
+                    tuple(row[1:7])
+                    for row in connection.execute(f'PRAGMA table_xinfo("{table}")')
+                ),
+                tuple(
+                    tuple(row)
+                    for row in connection.execute(f'PRAGMA foreign_key_list("{table}")')
+                ),
+            )
+            for table in tables
+        }
+    finally:
+        connection.close()
 
 
 def create_schema(connection: sqlite3.Connection) -> None:
@@ -20,6 +56,12 @@ def create_schema(connection: sqlite3.Connection) -> None:
             engine_version TEXT NOT NULL,
             snapshot TEXT NOT NULL,
             snapshot_sha256 TEXT NOT NULL
+        );
+        CREATE TABLE selected_map_fingerprints (
+            target_id TEXT NOT NULL REFERENCES targets(id) ON DELETE CASCADE,
+            source_path TEXT NOT NULL,
+            sha256 TEXT NOT NULL,
+            PRIMARY KEY (target_id, source_path)
         );
         CREATE TABLE symbols (
             target_id TEXT NOT NULL REFERENCES targets(id),
@@ -140,147 +182,7 @@ def create_schema(connection: sqlite3.Connection) -> None:
             evidence TEXT NOT NULL,
             PRIMARY KEY(target_id, address, name)
         );
-        CREATE TABLE type_declarations (
-            id TEXT PRIMARY KEY,
-            target_id TEXT NOT NULL,
-            name TEXT NOT NULL,
-            kind TEXT NOT NULL,
-            tag_name TEXT,
-            source_path TEXT NOT NULL,
-            provenance TEXT NOT NULL,
-            canonical TEXT NOT NULL,
-            review_status TEXT NOT NULL,
-            byte_size INTEGER,
-            byte_alignment INTEGER,
-            diagnostic TEXT,
-            UNIQUE(target_id, name, kind, source_path)
-        );
-        CREATE INDEX type_declarations_name
-            ON type_declarations(target_id, name);
-        CREATE TABLE type_fields (
-            declaration_id TEXT NOT NULL REFERENCES type_declarations(id),
-            target_id TEXT NOT NULL,
-            ordinal INTEGER NOT NULL,
-            name TEXT NOT NULL,
-            type_name TEXT NOT NULL,
-            byte_offset INTEGER,
-            byte_width INTEGER,
-            array_extent TEXT,
-            qualifiers TEXT NOT NULL,
-            semantic_status TEXT NOT NULL,
-            provenance TEXT NOT NULL,
-            PRIMARY KEY(declaration_id, ordinal)
-        );
-        CREATE TABLE type_usages (
-            target_id TEXT NOT NULL REFERENCES targets(id),
-            source_path TEXT NOT NULL,
-            subject TEXT NOT NULL,
-            function_id TEXT,
-            type_name TEXT NOT NULL,
-            use_kind TEXT NOT NULL,
-            storage_kind TEXT,
-            provenance TEXT NOT NULL,
-            evidence TEXT NOT NULL,
-            PRIMARY KEY(target_id, source_path, subject, type_name, use_kind)
-        );
-        CREATE TABLE type_constraints (
-            target_id TEXT NOT NULL REFERENCES targets(id),
-            type_name TEXT NOT NULL,
-            source_path TEXT NOT NULL,
-            field_name TEXT,
-            constraint_kind TEXT NOT NULL,
-            value TEXT NOT NULL,
-            expression TEXT NOT NULL,
-            provenance TEXT NOT NULL,
-            evidence_class TEXT NOT NULL,
-            PRIMARY KEY(target_id, type_name, source_path, constraint_kind, field_name)
-        );
-        CREATE TABLE type_conflicts (
-            target_id TEXT NOT NULL REFERENCES targets(id),
-            subject TEXT NOT NULL,
-            left_value TEXT NOT NULL,
-            right_value TEXT NOT NULL,
-            source_path TEXT NOT NULL,
-            conflict_kind TEXT NOT NULL,
-            PRIMARY KEY(target_id, subject, left_value, right_value, source_path)
-        );
-        CREATE TABLE type_candidates (
-            id TEXT PRIMARY KEY,
-            target_id TEXT NOT NULL REFERENCES targets(id),
-            address INTEGER NOT NULL,
-            end INTEGER,
-            kind TEXT NOT NULL,
-            evidence_class TEXT NOT NULL,
-            width INTEGER,
-            signedness TEXT NOT NULL,
-            status TEXT NOT NULL,
-            representation_status TEXT NOT NULL,
-            semantic_status TEXT NOT NULL,
-            evidence TEXT NOT NULL,
-            blocker TEXT
-        );
-        CREATE INDEX type_candidates_target_address
-            ON type_candidates(target_id, address);
-        CREATE TABLE type_input_fingerprints (
-            target_id TEXT NOT NULL REFERENCES targets(id),
-            source_path TEXT NOT NULL,
-            sha256 TEXT NOT NULL,
-            input_kind TEXT NOT NULL,
-            PRIMARY KEY(target_id, source_path)
-        );
-        CREATE TABLE macro_definitions (
-            id TEXT PRIMARY KEY,
-            owner_target TEXT NOT NULL,
-            name TEXT NOT NULL,
-            source_path TEXT NOT NULL,
-            source_line INTEGER NOT NULL,
-            parameters TEXT NOT NULL,
-            body TEXT NOT NULL,
-            conditional_context TEXT NOT NULL,
-            classification TEXT NOT NULL,
-            provenance TEXT NOT NULL,
-            restrictions TEXT NOT NULL,
-            generated INTEGER NOT NULL,
-            candidate_status TEXT NOT NULL,
-            source_sha256 TEXT NOT NULL,
-            diagnostic TEXT,
-            UNIQUE(owner_target, source_path, source_line, name)
-        );
-        CREATE INDEX macro_definitions_name
-            ON macro_definitions(name, owner_target);
-        CREATE TABLE macro_uses (
-            target_id TEXT NOT NULL REFERENCES targets(id),
-            definition_id TEXT NOT NULL REFERENCES macro_definitions(id),
-            name TEXT NOT NULL,
-            source_path TEXT NOT NULL,
-            source_line INTEGER NOT NULL,
-            source_column INTEGER NOT NULL,
-            arguments TEXT,
-            conditional_context TEXT NOT NULL,
-            use_context TEXT NOT NULL,
-            function_id TEXT REFERENCES functions(id),
-            generated INTEGER NOT NULL,
-            candidate_status TEXT NOT NULL,
-            restrictions TEXT NOT NULL,
-            PRIMARY KEY(target_id, definition_id, source_path, source_line, source_column)
-        );
-        CREATE INDEX macro_uses_name ON macro_uses(name, target_id);
-        CREATE TABLE macro_templates (
-            definition_id TEXT PRIMARY KEY REFERENCES macro_definitions(id),
-            owner_target TEXT NOT NULL,
-            source_path TEXT NOT NULL,
-            name TEXT NOT NULL,
-            template_kind TEXT NOT NULL,
-            wrapper_contract TEXT NOT NULL,
-            source_sha256 TEXT NOT NULL
-        );
-        CREATE TABLE macro_input_fingerprints (
-            target_id TEXT NOT NULL REFERENCES targets(id),
-            source_path TEXT NOT NULL,
-            sha256 TEXT NOT NULL,
-            input_kind TEXT NOT NULL,
-            owner_target TEXT NOT NULL,
-            PRIMARY KEY(target_id, source_path, owner_target)
-        );
         """
+        + TYPE_SCHEMA
+        + MACRO_SCHEMA
     )

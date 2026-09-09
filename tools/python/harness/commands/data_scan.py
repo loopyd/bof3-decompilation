@@ -5,8 +5,9 @@ from __future__ import annotations
 import argparse
 import json
 
+from harness.common.cli import add_root_argument, run_main
+
 from ..analysis.data import collect_unlabeled_regions
-from ._common import add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:

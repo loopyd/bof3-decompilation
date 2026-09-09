@@ -124,7 +124,12 @@ def trivial_kind(data: bytes) -> str | None:
 
 
 def data_references(data: bytes) -> list[tuple[int, int, str, str]]:
-    """Return source offsets, addresses, access kinds, and opcodes for lui/%lo pairs."""
+    """Return source offsets, addresses, access kinds, and opcodes for lui/%lo pairs.
+
+    Only direct uses within 12 instructions are recognized; materialized-pointer
+    chaining and dynamic indexed bases are not resolved. Absence is not negative
+    coverage, and an address-materialization row is not a memory-access row.
+    """
 
     references: set[tuple[int, int, str, str]] = set()
     lui: dict[int, tuple[int, int]] = {}

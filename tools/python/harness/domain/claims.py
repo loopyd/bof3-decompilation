@@ -104,6 +104,19 @@ def manifest_binding_sources(root: Path, manifest: TargetManifest) -> list[Path]
     return top or sorted(candidates)
 
 
+def index_source_paths(source_paths: Iterable[Path]) -> dict[int, Path]:
+    """Read each claimed source once; preserve sorted first-match resolution."""
+
+    sources: dict[int, Path] = {}
+    for path in sorted(path for path in source_paths if path.suffix == ".c"):
+        try:
+            address, _behavior = lift_metadata(path)
+        except (OSError, UnicodeError, LiftMetadataError):
+            continue
+        sources.setdefault(address, path)
+    return sources
+
+
 def resolve_source_for_paths(source_paths: Iterable[Path], address: int) -> Path | None:
     """Return the claimed source carrying ``address`` in its ``@source`` tag."""
 

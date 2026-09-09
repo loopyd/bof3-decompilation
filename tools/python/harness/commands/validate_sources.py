@@ -5,8 +5,9 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from harness.common.cli import add_root_argument, run_main
+
 from ..decomp.status import build_report, write_report
-from ._common import add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:

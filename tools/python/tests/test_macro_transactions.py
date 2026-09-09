@@ -12,14 +12,16 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-
-from harness.analysis import macro_accounting, macro_transactions, transaction_files
-from harness.analysis import type_transaction_runtime as runtime
-from harness.analysis.macro_transaction_review import GUARDS, OBSERVATIONS
 from harness.analysis.schema import create_schema
-from harness.analysis.type_candidate_review import digest
-from harness.commands import macro_audit
+from harness.common import quarantine as transaction_quarantine
+from harness.common import runtime
+from harness.common.digests import digest
 from harness.domain.receipts import sha256_file
+from harness.macros import accounting as macro_accounting
+from harness.macros import cli as macro_audit
+from harness.macros import transactions as macro_transactions
+from harness.macros.review import GUARDS, OBSERVATIONS, REVIEW_SCHEMA
+from transaction_native_fixture import exact_payload
 
 TARGET = "exe/test"
 SELECTOR = f"{TARGET}@0x80100000"
@@ -118,7 +120,7 @@ def _artifact(
 ) -> str:
     owners = owners or ["include/test.h"]
     facts = {
-        "schema": macro_transactions.REVIEW_SCHEMA,
+        "schema": REVIEW_SCHEMA,
         "candidate_id": report["rows"][0]["id"],
         "candidate_fingerprint": report["rows"][0]["candidate_fingerprint"],
         "concern": concern,
@@ -154,7 +156,12 @@ def _runner(fail: int | None = None):
     def run(argv, **_kwargs):
         nonlocal count
         count += 1
-        return subprocess.CompletedProcess(argv, int(count == fail), "ran", "")
+        output = (
+            json.dumps(exact_payload(_kwargs["cwd"], argv[0]))
+            if argv[0] in {"bin/asm-diff", "bin/byte-match"}
+            else "ran"
+        )
+        return subprocess.CompletedProcess(argv, int(count == fail), output, "")
 
     return run
 
@@ -205,7 +212,13 @@ def test_macro_cli_outputs_are_confined_and_symlink_safe(
     monkeypatch.setattr(
         macro_audit, "prepare_transaction", lambda *_args: {"proof": True}
     )
-    monkeypatch.setattr(macro_audit, "run_transaction", lambda *_args: {"proof": True})
+    monkeypatch.setattr(
+        macro_audit,
+        "run_transaction",
+        lambda root, *_args, **kwargs: macro_audit.write_evidence_output(
+            root, kwargs["output"], {"proof": True}
+        ),
+    )
     monkeypatch.setattr(macro_audit, "_read", lambda _path: {})
     handler = macro_audit._prepare if command == "prepare" else macro_audit._run
     args = argparse.Namespace(
@@ -475,7 +488,11 @@ def test_shared_prepare_passes_pinned_proofs_to_review(
 
     def review(*args, **kwargs):
         captured["proofs"] = kwargs["proofs"]
-        return {"owners": ["include/test.h"], "declared_targets": [TARGET, "exe/other"]}
+        return {
+            "candidate_id": "statement_window:test",
+            "owners": ["include/test.h"],
+            "declared_targets": [TARGET, "exe/other"],
+        }
 
     monkeypatch.setattr(macro_transactions, "reviewed_artifact", review)
     monkeypatch.setattr(macro_transactions, "_functions", lambda *args: [])
@@ -635,7 +652,7 @@ def test_macro_forged_escape_swap_and_rollback_symlink_fail_closed(
 
     outside = tmp_path / "outside.h"
     outside.write_text("outside\n")
-    original = runtime._atomic_write
+    original = runtime.install_image
     swapped = False
 
     def swap(root, name, content, **kwargs):
@@ -645,7 +662,7 @@ def test_macro_forged_escape_swap_and_rollback_symlink_fail_closed(
             (root / name).symlink_to(outside)
         return original(root, name, content, **kwargs)
 
-    monkeypatch.setattr(runtime, "_atomic_write", swap)
+    monkeypatch.setattr(runtime, "install_image", swap)
     with pytest.raises((ValueError, RuntimeError), match="unsafe|rollback"):
         macro_transactions.run_transaction(
             tmp_path,
@@ -655,7 +672,7 @@ def test_macro_forged_escape_swap_and_rollback_symlink_fail_closed(
         )
     assert outside.read_text() == "outside\n"
 
-    monkeypatch.setattr(runtime, "_atomic_write", original)
+    monkeypatch.setattr(runtime, "install_image", original)
     header = tmp_path / "include/test.h"
     if header.is_symlink():
         header.unlink()
@@ -758,7 +775,9 @@ def test_macro_validation_substitution_retains_leaf_and_original_quarantine(
         )
 
     assert leaf.read_bytes() == b"unexpected\n"
-    quarantines = list((tmp_path / transaction_files.QUARANTINE_DIRECTORY).iterdir())
+    quarantines = list(
+        (tmp_path / transaction_quarantine.QUARANTINE_DIRECTORY).iterdir()
+    )
     assert any(path.read_bytes() == before for path in quarantines)
 
 
@@ -801,10 +820,16 @@ def test_manifest_and_receipt_tampering_fail_closed(
         )
 
 
+@pytest.mark.parametrize("implementation_run_id", [None, "macro-implementation"])
 def test_validation_cannot_unstage_git_index(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, implementation_run_id
 ) -> None:
+    from transaction_native_fixture import execution_inputs
+
     report = _setup(tmp_path, monkeypatch, git=True)
+    if implementation_run_id:
+        execution_inputs(tmp_path)
+    original = (tmp_path / "include/test.h").read_bytes()
     marker = tmp_path / "marker.txt"
     marker.write_text("staged\n")
     subprocess.run(["git", "add", marker.name], cwd=tmp_path, check=True)
@@ -828,8 +853,13 @@ def test_validation_cannot_unstage_git_index(
 
     with pytest.raises(ValueError, match="changed the Git index"):
         macro_transactions.run_transaction(
-            tmp_path, manifest, {"include/test.h": "changed\n"}, runner=unstage
+            tmp_path,
+            manifest,
+            {"include/test.h": "changed\n"},
+            runner=unstage,
+            implementation_run_id=implementation_run_id,
         )
+    assert (tmp_path / "include/test.h").read_bytes() == original
     assert (
         subprocess.run(
             ["git", "ls-files", "--stage", "-z"],
@@ -883,23 +913,24 @@ def test_shared_proofs_require_external_unique_exact_pins_and_no_address_leaks(
         }
         path = tmp_path / f"out/reviews/proof-{index}.json"
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(application))
+        path.write_text(json.dumps({"application": application}))
         expected = digest({"proof": index})
         proofs.append(
             {
                 "path": path.relative_to(tmp_path).as_posix(),
                 "target": target,
                 "selector": application["exact_function_proofs"][0],
-                "expected_application_digest": expected,
+                "expected_envelope_digest": expected,
             }
         )
     monkeypatch.setattr(
-        "harness.analysis.macro_transaction_review.repo_path",
+        "harness.macros.review.repo_path",
         lambda _root, value: value,
     )
 
-    def verify(_root, value, expected):
-        assert expected in {item["expected_application_digest"] for item in proofs}
+    def verify(_root, envelope, expected):
+        value = envelope["application"]
+        assert expected in {item["expected_envelope_digest"] for item in proofs}
         return {
             "target": value["exact_function_proofs"][0].split("@", 1)[0],
             "concern": value["concern"],
@@ -913,21 +944,35 @@ def test_shared_proofs_require_external_unique_exact_pins_and_no_address_leaks(
         proofs,
         manifests,
         normalize_target=normalized,
-        verify_application=verify,
+        verify_reviewed_application=verify,
     )
     assert len(result) == 2
-    proofs[1]["expected_application_digest"] = proofs[0]["expected_application_digest"]
+    path = tmp_path / proofs[0]["path"]
+    original = path.read_text()
+    path.write_text(
+        original.replace('"concern":', '"concern": "shared_template", "concern":', 1)
+    )
+    with pytest.raises(ValueError, match="duplicate JSON key"):
+        macro_transactions.exact_proofs(
+            tmp_path,
+            proofs,
+            manifests,
+            normalize_target=normalized,
+            verify_reviewed_application=verify,
+        )
+    path.write_text(original)
+    proofs[1]["expected_envelope_digest"] = proofs[0]["expected_envelope_digest"]
     with pytest.raises(ValueError, match="independently pinned"):
         macro_transactions.exact_proofs(
             tmp_path,
             proofs,
             manifests,
             normalize_target=normalized,
-            verify_application=verify,
+            verify_reviewed_application=verify,
         )
-    proofs[1]["expected_application_digest"] = digest({"proof": 1})
+    proofs[1]["expected_envelope_digest"] = digest({"proof": 1})
     second = json.loads((tmp_path / proofs[1]["path"]).read_text())
-    second["observations"]["all_use_sites"] = "leak 0x80101234"
+    second["application"]["observations"]["all_use_sites"] = "leak 0x80101234"
     (tmp_path / proofs[1]["path"]).write_text(json.dumps(second))
     with pytest.raises(ValueError, match="differ or contain address leaks"):
         macro_transactions.exact_proofs(
@@ -935,5 +980,327 @@ def test_shared_proofs_require_external_unique_exact_pins_and_no_address_leaks(
             proofs,
             manifests,
             normalize_target=normalized,
-            verify_application=verify,
+            verify_reviewed_application=verify,
         )
+
+
+@pytest.mark.parametrize("key", ["schema", "verdict", "reviewer", "evaluation_count"])
+def test_prepare_rejects_duplicate_review_keys_before_writes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, key: str
+) -> None:
+    report = _setup(tmp_path, monkeypatch)
+    request = _request(tmp_path, report)
+    path = tmp_path / request["candidate_artifact"]
+    # Last-value parsing would retain the valid digest and accepted review.
+    path.write_text(
+        path.read_text().replace(f'"{key}":', f'"{key}": "rejected", "{key}":', 1)
+    )
+    before = {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+    with pytest.raises(ValueError, match="duplicate JSON key"):
+        macro_transactions.prepare_transaction(tmp_path, request)
+    assert {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()} == before
+
+
+@pytest.mark.parametrize("tool", ["bin/asm-diff", "bin/byte-match"])
+@pytest.mark.parametrize(
+    "fault",
+    [
+        "warning",
+        "missing",
+        "unknown",
+        "duplicate",
+        "malformed",
+        "source",
+        "binary",
+        "size",
+        "boolean",
+        "receipt",
+    ],
+)
+def test_native_exact_gate_rejects_exit_zero_without_owner_evidence(
+    tmp_path: Path, monkeypatch, tool: str, fault: str
+) -> None:
+    manifest = _manifest(tmp_path, monkeypatch)
+    before = {
+        name: (tmp_path / name).read_bytes() for name in manifest["allowed_paths"]
+    }
+    normal = _runner()
+
+    def run(argv, **kwargs):
+        result = normal(argv, **kwargs)
+        if argv[0] != tool:
+            return result
+        payload = exact_payload(tmp_path, tool)
+        if fault == "warning":
+            payload["status"] = "warning"
+        elif fault == "missing":
+            del payload["status"]
+        elif fault == "unknown":
+            payload["unexpected"] = True
+        elif fault == "source":
+            payload["source"] = "src/other.c"
+        elif fault == "binary":
+            payload["original_binary"] = "out/other.bin"
+        elif fault == "size":
+            payload["current_size"] = 12
+        elif fault == "boolean":
+            payload["exact_match"] = 1
+        output = json.dumps(payload)
+        if fault == "duplicate":
+            output = output.replace('"status":', '"status": "warning", "status":', 1)
+        elif fault == "malformed":
+            output = "not JSON"
+        elif fault == "receipt":
+            # Exact stdout must survive stderr and the old 16K tail truncation.
+            result.stderr = "diagnostic " * 2000
+            result.stdout = output
+            return result
+        return subprocess.CompletedProcess(argv, 0, output, "")
+
+    if fault == "receipt":
+        application = macro_transactions.run_transaction(
+            tmp_path, manifest, {"include/test.h": "changed header\n"}, runner=run
+        )
+        assert macro_transactions.verify_application(
+            tmp_path, application, application["digest"]
+        )["applied"]
+        receipt = next(
+            item for item in application["receipts"] if item["argv"][0] == tool
+        )
+        assert json.loads(receipt["output"])["status"] == "exact_match"
+        assert receipt["stderr"] == "diagnostic " * 2000
+        path = tmp_path / receipt["path"]
+        record = json.loads(path.read_text())
+        payload = json.loads(record["output"])
+        payload["status"] = "warning"
+        record["output"] = json.dumps(payload)
+        record["digest"] = digest({k: v for k, v in record.items() if k != "digest"})
+        path.write_text(json.dumps(record))
+        receipt.update({k: v for k, v in record.items() if k != "schema"})
+        receipt["sha256"] = sha256_file(path)
+        with pytest.raises(ValueError, match="does not match transaction"):
+            runtime.validate_receipts(
+                tmp_path,
+                application["receipts"],
+                manifest["required_checks"],
+                application["post_state_digest"],
+                receipt_schema=record["schema"],
+            )
+    else:
+        with pytest.raises(RuntimeError, match="validation failed"):
+            macro_transactions.run_transaction(
+                tmp_path, manifest, {"include/test.h": "changed header\n"}, runner=run
+            )
+        assert {name: (tmp_path / name).read_bytes() for name in before} == before
+        receipts = list((tmp_path / "out/reviews/evidence").glob("*-run-*.json"))
+        assert any(
+            json.loads(path.read_text())["status"] == "failed" for path in receipts
+        )
+
+
+@pytest.mark.parametrize("drift", [False, True])
+def test_macro_execution_context_binds_actual_gates(tmp_path, monkeypatch, drift):
+    from transaction_native_fixture import execution_inputs, native_build
+
+    report = _setup(tmp_path, monkeypatch)
+    execution_inputs(tmp_path)
+    manifest = macro_transactions.prepare_transaction(
+        tmp_path, _request(tmp_path, report)
+    )
+    header = tmp_path / "include/test.h"
+    header.chmod(0o750)
+    original = header.read_bytes()
+    native = _runner()
+    calls = []
+
+    def run(argv, **kwargs):
+        calls.append(argv)
+        if not drift and argv[0] == "bin/build":
+            native_build(tmp_path)
+        result = native(argv, **kwargs)
+        if drift:
+            (tmp_path / "CMakeLists.txt").chmod(0o600)
+        return result
+
+    if drift:
+        with pytest.raises(ValueError, match="execution context"):
+            macro_transactions.run_transaction(
+                tmp_path,
+                manifest,
+                {"include/test.h": "#define NEW_VALUE 17\n"},
+                runner=run,
+                implementation_run_id="macro-implementation",
+            )
+        assert len(calls) == 1
+        assert header.read_bytes() == original
+        assert header.stat().st_mode & 0o7777 == 0o750
+        return
+    app = macro_transactions.run_transaction(
+        tmp_path,
+        manifest,
+        {"include/test.h": "#define NEW_VALUE 17\n"},
+        runner=run,
+        implementation_run_id="macro-implementation",
+    )
+    assert header.stat().st_mode & 0o7777 == 0o750
+    assert (
+        app["review_context"]["final_build"]["build/cmake/CMakeFiles/VerifyGlobs.cmake"]
+        is not None
+    )
+    assert app["review_context"]["implementation_run_id"] == "macro-implementation"
+    assert macro_transactions.verify_application(tmp_path, app, app["digest"])[
+        "applied"
+    ]
+    (tmp_path / "config/compiler/object-flags.cmake").write_text("# changed\n")
+    with pytest.raises(ValueError, match="execution context"):
+        macro_transactions.verify_application(tmp_path, app, app["digest"])
+
+
+def test_macro_cli_execution_id_and_duplicate_input(tmp_path):
+    args = macro_audit.build_parser().parse_args(
+        ["run", "manifest", "changes", "output", "--implementation-run-id", "worker"]
+    )
+    assert args.implementation_run_id == "worker"
+    path = tmp_path / "input.json"
+    path.write_text('{"review_context":{"x":1,"x":2}}')
+    with pytest.raises(ValueError, match="duplicate"):
+        macro_audit._read(path)
+
+
+def test_macro_context_concurrent_index_preserves_owned_source_rollback(
+    tmp_path, monkeypatch
+):
+    from transaction_native_fixture import execution_inputs
+
+    report = _setup(tmp_path, monkeypatch, git=True)
+    request = _request(tmp_path, report)
+    execution_inputs(tmp_path)
+    (tmp_path / "include/test.h").chmod(0o750)
+    request["adopted_baseline"] = macro_transactions.workspace_baseline(tmp_path)[
+        "digest"
+    ]
+    manifest = macro_transactions.prepare_transaction(tmp_path, request)
+    header = tmp_path / "include/test.h"
+    original = header.read_bytes()
+    index = tmp_path / ".git/index"
+    concurrent = index.read_bytes() + b"concurrent"
+
+    def reject(*_args):
+        index.write_bytes(concurrent)
+        raise ValueError("execution context concurrent drift")
+
+    monkeypatch.setattr(macro_transactions.execution_context, "checked", reject)
+    with pytest.raises(RuntimeError, match="rollback failed") as error:
+        macro_transactions.run_transaction(
+            tmp_path,
+            manifest,
+            {"include/test.h": "changed\n"},
+            runner=_runner(),
+            implementation_run_id="implementation-1",
+        )
+    assert "concurrently" in str(error.value.__cause__)
+    assert index.read_bytes() == concurrent
+    assert header.read_bytes() == original
+    assert header.stat().st_mode & 0o7777 == 0o750
+
+
+@pytest.mark.parametrize("failure", [None, "before", "after", "write", "index"])
+def test_macro_cli_publication_rolls_back_owned_edits(tmp_path, monkeypatch, failure):
+    from transaction_native_fixture import execution_inputs
+
+    monkeypatch.setenv("GIT_OPTIONAL_LOCKS", "0")
+
+    report = _setup(tmp_path, monkeypatch, git=True)
+    request = _request(tmp_path, report)
+    execution_inputs(tmp_path)
+    header = tmp_path / "include/test.h"
+    header.chmod(0o750)
+    original = header.read_bytes()
+    unrelated = tmp_path / "unrelated.txt"
+    unrelated.write_text("adopted dirty work\n")
+    request["adopted_baseline"] = macro_transactions.workspace_baseline(tmp_path)[
+        "digest"
+    ]
+    manifest = macro_transactions.prepare_transaction(tmp_path, request)
+    inputs = tmp_path / "out/reviews/evidence"
+    inputs.mkdir(parents=True, exist_ok=True)
+    manifest_path = inputs / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest))
+    changes_path = inputs / "changes.json"
+    changes_path.write_text(json.dumps({"include/test.h": "changed\n"}))
+    output = Path("out/reviews/evidence/application.json")
+    index = tmp_path / ".git/index"
+    original_index = index.read_bytes()
+    catalog = tmp_path / "out/catalog/emi.json"
+    assert not catalog.exists()
+    context = macro_transactions.execution_context
+    validate = context.validate_context
+    write = context.write_evidence_output
+    validations = []
+
+    def validate_publication(root, application):
+        validations.append(True)
+        if failure == "before" and len(validations) == 1:
+            catalog.parent.mkdir(parents=True, exist_ok=True)
+            catalog.write_text("concurrent catalog\n")
+        validate(root, application)
+
+    def write_publication(root, name, application):
+        if failure == "write":
+            raise OSError("publication failed")
+        write(root, name, application)
+        if failure == "after":
+            catalog.parent.mkdir(parents=True, exist_ok=True)
+            catalog.write_text("concurrent catalog\n")
+        if failure == "index":
+            index.write_bytes(original_index + b"concurrent")
+
+    monkeypatch.setattr(context, "validate_context", validate_publication)
+    monkeypatch.setattr(context, "write_evidence_output", write_publication)
+    run = macro_transactions.run_transaction
+    monkeypatch.setattr(
+        macro_audit,
+        "run_transaction",
+        lambda *args, **kwargs: run(*args, runner=_runner(), **kwargs),
+    )
+    args = macro_audit.build_parser().parse_args(
+        [
+            "--root",
+            str(tmp_path),
+            "run",
+            str(manifest_path),
+            str(changes_path),
+            str(output),
+            "--implementation-run-id",
+            "implementation-1",
+        ]
+    )
+    if failure is None:
+        assert macro_audit._run(args) == 0
+        app = json.loads((tmp_path / output).read_text())
+        assert macro_transactions.verify_application(tmp_path, app, app["digest"])[
+            "applied"
+        ]
+        assert header.read_text() == "changed\n"
+    else:
+        with pytest.raises((ValueError, RuntimeError, OSError)) as error:
+            macro_audit._run(args)
+        assert header.read_bytes() == original
+        if failure == "index":
+            assert "concurrently" in str(error.value.__cause__)
+        elif failure == "write":
+            assert "publication failed" in str(error.value)
+        else:
+            assert "execution context" in str(error.value)
+        assert (tmp_path / output).exists() == (failure in {"after", "index"})
+        if failure in {"after", "index"}:
+            app = json.loads((tmp_path / output).read_text())
+            with pytest.raises(ValueError, match="post-state drifted"):
+                macro_transactions.verify_application(tmp_path, app, app["digest"])
+    assert header.stat().st_mode & 0o7777 == 0o750
+    assert unrelated.read_text() == "adopted dirty work\n"
+    assert index.read_bytes() == original_index + (
+        b"concurrent" if failure == "index" else b""
+    )
+    if failure in {"before", "after"}:
+        assert catalog.read_text() == "concurrent catalog\n"

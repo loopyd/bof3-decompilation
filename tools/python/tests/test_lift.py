@@ -8,11 +8,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from harness.commands import lift
-from harness.commands import _common
-from harness.commands import _lift_m2c
+from harness.commands import _lift_m2c, lift
 from harness.commands._lift_m2c import run_m2c
+from harness.common import cli as _common
 from harness.match._asm_diff_payload import AsmDiffRequest
 from harness.toolchain import m2c as m2c_toolchain
 from harness.toolchain.m2c import M2cToolchain, render_context

@@ -9,9 +9,11 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
 import re
 import sys
+from pathlib import Path
+
+from harness.common.cli import resolve_function_selector
 
 from ..io import repo_layout
 from ..toolchain.m2c import (
@@ -21,7 +23,6 @@ from ..toolchain.m2c import (
     render_context,
     splat_assembly,
 )
-from ._common import resolve_function_selector
 
 
 def run_m2ctx(args: argparse.Namespace) -> int:

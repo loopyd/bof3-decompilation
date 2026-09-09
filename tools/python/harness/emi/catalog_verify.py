@@ -7,8 +7,9 @@ import struct
 from pathlib import Path
 from typing import Any
 
-from ..discovery import file_sha256
-from ..domain import load_target_manifests, normalize_target_id
+from ..io import file_sha256
+from ..domain.manifests import load_target_manifests
+from ..domain.ids import normalize_target_id
 from ..io import read_json
 
 

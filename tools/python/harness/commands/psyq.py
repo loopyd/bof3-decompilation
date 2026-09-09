@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import argparse
 
+from harness.common.cli import add_example_argument, add_root_argument, run_main
+
 from ..psyq.signature_calls import write_calls, write_promotion_proposal
 from ..psyq.signatures import write_index
-from ._common import add_example_argument, add_root_argument, run_main
 
 
 def _require_all(args: argparse.Namespace) -> None:

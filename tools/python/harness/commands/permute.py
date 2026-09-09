@@ -5,14 +5,15 @@ from __future__ import annotations
 import argparse
 import fcntl
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
-import re
+
+from harness.common.cli import add_example_argument, add_root_argument, run_main
 
 from ..io import repo_layout
 from ..toolchain.permuter import DecompPermuterToolchain
-from ._common import add_example_argument, add_root_argument, run_main
 
 
 def require_inside_root(path: Path, description: str, root: Path) -> None:
@@ -336,7 +337,7 @@ def _resolve_and_run(args: argparse.Namespace) -> int:
         raise ValueError("TARGET@0xADDRESS is required")
     raw_source = str(args.source)
     if "@" in raw_source:
-        from harness.commands._common import resolve_function_selector
+        from harness.common.cli import resolve_function_selector
 
         function_id, _, args.source = resolve_function_selector(raw_source)
         if args.source is None:

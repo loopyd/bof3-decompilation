@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import argparse
 
+from harness.common.cli import add_root_argument, run_main
+
 from ..io import repo_layout
 from ..toolchain import managed_toolchain
-from ._common import add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:

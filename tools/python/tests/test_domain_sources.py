@@ -15,10 +15,12 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
-
 from harness.analysis.engine import EngineIdentity, build_snapshot
-from harness.commands import _common, permute
-from harness.domain import parse_function_id, parse_progress_tags, resolve_function
+from harness.commands import permute
+from harness.common import cli as _common
+from harness.domain.ids import parse_function_id
+from harness.domain.layout import parse_splat_layout
+from harness.domain.registry import resolve_function
 from harness.domain.sources import (
     CompiledSymbolError,
     LiftMetadataError,
@@ -32,7 +34,7 @@ from harness.domain.sources import (
     reviewed_function_name,
     source_address,
 )
-from harness.domain.layout import parse_splat_layout
+from harness.domain.tags import parse_progress_tags
 from harness.match._asm_diff_payload import AsmDiffRequest
 from harness.match._asm_diff_run import _asm_diff_resolve
 from harness.match._asm_resolve import infer_size_from_sibling_sources

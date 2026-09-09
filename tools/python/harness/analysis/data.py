@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections import defaultdict
 from pathlib import Path
 
-from ..domain import load_target_manifests
+from ..domain.manifests import load_target_manifests
 from .index import connect
 
 _CLUSTER_GAP = 32

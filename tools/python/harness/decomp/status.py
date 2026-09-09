@@ -8,10 +8,9 @@ import sqlite3
 import tempfile
 from typing import Any, Iterable
 
-from ..analysis.index import SCHEMA_VERSION, index_path
-from ..analysis.snapshot import read_snapshot, snapshot_path, validate_snapshot_identity
-from ..discovery import file_sha256
-from ..domain import TargetManifest, load_target_manifests, normalize_target_id
+
+from ..domain.manifests import TargetManifest, load_target_manifests
+from ..domain.ids import normalize_target_id
 from ..match.asm_diff import (
     run_asm_diff_one,
 )
@@ -68,64 +67,27 @@ def index_coverage(
 ) -> tuple[dict[str, int], dict[str, list[dict[str, str]]]]:
     """Return index counts and contains-data functions; only when fresh."""
 
-    path = index_path(root)
-    if not path.is_file():
-        raise FileNotFoundError(
-            f"reverse index not found: {path.relative_to(root)}; run just index"
-        )
-    index_mtime = path.stat().st_mtime_ns
+    from ..analysis.index import connect_status
+
+    connection = connect_status(root)
     try:
-        connection = sqlite3.connect(path)
-        try:
-            schema = connection.execute(
-                "SELECT value FROM metadata WHERE key = 'schema'"
-            ).fetchone()
-            if schema is None or schema[0] != SCHEMA_VERSION:
-                raise ValueError("reverse index schema is stale; run just index")
-            counts: dict[str, int] = {}
-            contains_data: dict[str, list[dict[str, str]]] = {}
-            for target, manifest in manifests:
-                binary = root / manifest.binary
-                snapshot_file = snapshot_path(root, target)
-                if not snapshot_file.is_file():
-                    raise ValueError(
-                        f"missing Rizin snapshot: {snapshot_file.relative_to(root)}"
-                    )
-                if snapshot_file.stat().st_mtime_ns > index_mtime:
-                    raise ValueError("reverse index is stale; run just index")
-                snapshot = read_snapshot(snapshot_file)
-                errors = validate_snapshot_identity(snapshot)
-                if errors or snapshot.target != target:
-                    raise ValueError(
-                        "reverse index has invalid Rizin snapshot; run just index"
-                    )
-                if snapshot.inputs.get("binary_sha256") != file_sha256(binary):
-                    raise ValueError(
-                        "reverse index has stale Rizin snapshot; run just index"
-                    )
-                row = connection.execute(
-                    "SELECT binary_sha256 FROM targets WHERE id = ?", (target,)
-                ).fetchone()
-                if row is None or row[0] != file_sha256(binary):
-                    raise ValueError(
-                        "reverse index is incomplete or stale; run just index"
-                    )
-                counts[target] = connection.execute(
-                    "SELECT COUNT(*) FROM functions WHERE target_id = ?", (target,)
-                ).fetchone()[0]
-                contains_data[target] = [
-                    {"address": f"0x{row[0]:08X}", "name": row[1]}
-                    for row in connection.execute(
-                        "SELECT address, name FROM functions "
-                        "WHERE target_id = ? AND contains_data",
-                        (target,),
-                    )
-                ]
-            return counts, contains_data
-        finally:
-            connection.close()
-    except sqlite3.DatabaseError as exc:
-        raise ValueError(f"invalid reverse index: {exc}") from exc
+        counts: dict[str, int] = {}
+        contains_data: dict[str, list[dict[str, str]]] = {}
+        for target, _manifest in manifests:
+            counts[target] = connection.execute(
+                "SELECT COUNT(*) FROM functions WHERE target_id = ?", (target,)
+            ).fetchone()[0]
+            contains_data[target] = [
+                {"address": f"0x{row[0]:08X}", "name": row[1]}
+                for row in connection.execute(
+                    "SELECT address, name FROM functions "
+                    "WHERE target_id = ? AND contains_data",
+                    (target,),
+                )
+            ]
+        return counts, contains_data
+    finally:
+        connection.close()
 
 
 def build_report(

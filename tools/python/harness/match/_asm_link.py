@@ -5,6 +5,7 @@ import subprocess
 from collections.abc import Mapping
 from pathlib import Path
 
+from ..domain.manifests import TargetManifest
 from ..domain.symbols import load_target_symbols, load_weak_symbol_bindings
 from ..io import RepoLayout, repo_layout
 
@@ -14,16 +15,23 @@ from ..io import RepoLayout, repo_layout
 _HEX_SUFFIX_RE = re.compile(r"^(?:func|D)_([0-9a-fA-F]{8})$")
 
 
-def _target_map_bindings(repo: RepoLayout, symbols_c_path: Path) -> dict[str, int]:
+def _target_map_bindings(
+    repo: RepoLayout, symbols_c_path: Path, *, manifest: TargetManifest | None = None
+) -> dict[str, int]:
     """Load the canonical map only for the source target owning this link."""
 
     try:
         target = symbols_c_path.parent.relative_to(repo.root / "src").as_posix()
     except ValueError:
         return {}
+    space = (
+        manifest.psyq_space
+        if manifest is not None and manifest.id.value == target
+        else None
+    )
     return {
         symbol.canonical_name: symbol.address
-        for symbol in load_target_symbols(repo.root, target)
+        for symbol in load_target_symbols(repo.root, target, psyq_space=space)
     }
 
 

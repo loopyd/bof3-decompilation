@@ -8,10 +8,9 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-
-from harness.analysis import macro_accounting
 from harness.analysis.schema import create_schema
-from harness.commands.macro_audit import main
+from harness.macros import accounting as macro_accounting
+from harness.macros.cli import main
 
 TARGET = "exe/test"
 BINARY_DATA = b""

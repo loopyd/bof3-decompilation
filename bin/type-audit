@@ -4,4 +4,4 @@ set -eu
 ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
 . "$ROOT/bin/python-env"
 python_env "${PSX_PYTHON:-$ROOT/.venv/bin/python}" 2 ''
-exec "$PYTHON" -m harness.commands.type_audit "$@"
+exec "$PYTHON" -m harness.types.cli "$@"

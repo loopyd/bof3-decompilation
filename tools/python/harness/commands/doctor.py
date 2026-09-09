@@ -7,21 +7,21 @@ import subprocess
 import tomllib
 from pathlib import Path
 
-from ..build.compiler import load_object_compilers
-from ..domain import load_target_manifests
-from ..io import repo_layout
-from ..toolchain import managed_lifecycle
-from ..toolchain.disc import DiscToolchain
-from ..toolchain.psyq import PsyqToolchain
-from ._common import (
+from harness.common.cli import (
     Check,
     add_root_argument,
     register_check,
     render_task,
     run_main,
 )
-from .setup import REQUIRED_TOOLS, _psyq_47_members
 
+from ..build.compiler import load_object_compilers
+from ..domain.manifests import load_target_manifests
+from ..io import repo_layout
+from ..toolchain import managed_lifecycle
+from ..toolchain.disc import DiscToolchain
+from ..toolchain.psyq import PsyqToolchain
+from .setup import REQUIRED_TOOLS, _psyq_47_members
 
 TASKS: list[Check[Path]] = []
 

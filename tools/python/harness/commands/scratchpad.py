@@ -6,10 +6,11 @@ import argparse
 import json
 import sys
 
-from ..domain import FUNCTION_ID_HELP, parse_function_id
+from harness.common.cli import run_main
+
+from ..domain.ids import FUNCTION_ID_HELP, parse_function_id
 from ..io import repo_layout
 from ..toolchain.decompme import DecompMeScratchpadToolchain
-from ._common import run_main
 
 
 def run_share(args: argparse.Namespace) -> int:

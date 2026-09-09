@@ -97,9 +97,10 @@ class TargetManifest:
             raise ValueError("only EMI targets may declare companion overlays")
 
 
-def _load_toml(path: Path) -> dict[str, Any]:
-    with path.open("rb") as stream:
-        return tomllib.load(stream)
+def _load_toml(path: Path, content: bytes | None = None) -> dict[str, Any]:
+    return tomllib.loads(
+        (content if content is not None else path.read_bytes()).decode()
+    )
 
 
 def _parse_companions(
@@ -265,9 +266,10 @@ def _validate_claim_overlap(manifests: dict[str, TargetManifest]) -> None:
             )
 
 
-def _validate_claim_files(root: Path, manifests: dict[str, TargetManifest]) -> None:
-    """Require every claimed path to exist with its expected file kind and stay
-    inside the repository (no symlink escape)."""
+def _validate_claim_files(
+    root: Path, manifests: dict[str, TargetManifest], canonical: dict[str, Path]
+) -> None:
+    """Require each canonical claimed path to have its expected file kind."""
 
     kinds = {
         "sources": {".c", ".s", ".S"},
@@ -278,21 +280,45 @@ def _validate_claim_files(root: Path, manifests: dict[str, TargetManifest]) -> N
     for manifest in manifests.values():
         for key in ("sources", "support_sources", "headers"):
             for claimed in getattr(manifest, key):
-                path = root / claimed
-                if not path.is_file():
+                path = canonical.get(claimed)
+                if path is None or not path.is_file():
                     raise ValueError(
                         f"claimed {key} file missing for {manifest.id.value}: {claimed}"
                     )
-                if path.suffix not in kinds[key]:
+                if Path(claimed).suffix not in kinds[key]:
                     raise ValueError(
                         f"claimed {key} path has unexpected kind for "
                         f"{manifest.id.value}: {claimed} "
                         f"(expected one of {sorted(kinds[key])})"
                     )
-                if not path.resolve().is_relative_to(root_resolved):
+                if not path.is_relative_to(root_resolved):
                     raise ValueError(
                         f"claimed {key} path escapes repository for "
                         f"{manifest.id.value}: {claimed}"
+                    )
+
+
+def _validate_section_placements(
+    root: Path, manifests: dict[str, TargetManifest]
+) -> None:
+    """Validate binary-dependent placement bounds on every load."""
+
+    for manifest in manifests.values():
+        binary_path = root / manifest.binary
+        if not binary_path.is_file():
+            continue
+        target_end = manifest.load_address + binary_path.stat().st_size
+        for values in manifest.section_placements.values():
+            for placement in values:
+                if not (
+                    manifest.load_address <= placement.function < target_end
+                    and manifest.load_address <= placement.address
+                    and placement.address + placement.size <= target_end
+                ):
+                    raise ValueError(
+                        f"matching section placement outside target "
+                        f"{manifest.id.value}: {placement.section} at "
+                        f"{placement.address:#x}"
                     )
 
 
@@ -312,12 +338,21 @@ def _validate_claimed_paths(manifests: dict[str, TargetManifest]) -> None:
 
 
 def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
+    from . import _manifest_cache
+
+    root = root.resolve()
     directory = root / "config" / "targets"
+    fingerprint, manifest_contents = (
+        _manifest_cache.manifest_inputs(directory) if directory.is_dir() else ((), {})
+    )
+    cached = _manifest_cache.get(root, fingerprint)
+    if cached is not None:
+        return cached
     manifests: dict[str, TargetManifest] = {}
     if not directory.is_dir():
         return manifests
-    for path in sorted(directory.rglob("*.toml")):
-        raw = _load_toml(path)
+    for path, content in manifest_contents.items():
+        raw = _load_toml(path, content)
         if raw.get("schema") != "harness.target/v2":
             raise ValueError(
                 f"unsupported target manifest schema in {path}: {raw.get('schema')!r}"
@@ -384,27 +419,15 @@ def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
             },
             companions=_parse_companions(raw, target_id),
         )
-        binary_path = root / manifest.binary
-        if binary_path.is_file():
-            target_end = manifest.load_address + binary_path.stat().st_size
-            for values in manifest.section_placements.values():
-                for placement in values:
-                    if not (
-                        manifest.load_address <= placement.function < target_end
-                        and manifest.load_address <= placement.address
-                        and placement.address + placement.size <= target_end
-                    ):
-                        raise ValueError(
-                            f"matching section placement outside target {manifest.id.value}: "
-                            f"{placement.section} at {placement.address:#x}"
-                        )
         if manifest.id.value in manifests:
             raise ValueError(f"duplicate target manifest: {manifest.id.value}")
         manifests[manifest.id.value] = manifest
+    claims = _manifest_cache.claim_files(root, manifests)
     _validate_companions(manifests)
     _validate_claim_overlap(manifests)
     _validate_claimed_paths(manifests)
-    _validate_claim_files(root, manifests)
+    _validate_claim_files(root, manifests, dict(claims.canonical))
+    _validate_section_placements(root, manifests)
     for manifest in manifests.values():
         if (
             manifest.has_explicit_sources
@@ -415,4 +438,5 @@ def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
                 f"{manifest.id.value}: psyq_source must be explicitly claimed "
                 "in sources or support_sources"
             )
+    _manifest_cache.put(root, fingerprint, manifests, claims=claims)
     return manifests

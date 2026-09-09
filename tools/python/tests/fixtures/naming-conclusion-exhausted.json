@@ -1,0 +1,26 @@
+{
+  "authority": "expert review and original image",
+  "ceiling_next_command": "bin/rev-query --json owners exe/test@0x80100000",
+  "interpretation": "no supported identity",
+  "kind": "function",
+  "missing_fact": "independent semantic role",
+  "name": "func_80100000",
+  "optional_work": [],
+  "outside_payload": false,
+  "partial_used": false,
+  "required_work": [],
+  "rung_status": "exhausted",
+  "rungs": {
+    "selected_range": {
+      "authority": "original image",
+      "negative_result": "reviewed instructions establish no semantic role",
+      "observations": [
+        {
+          "id": "negative",
+          "text": "expert reviewed original instructions"
+        }
+      ],
+      "status": "negative"
+    }
+  }
+}

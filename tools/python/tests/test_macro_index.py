@@ -6,13 +6,13 @@ import sqlite3
 from pathlib import Path
 from types import SimpleNamespace
 
-from harness.analysis.macro_index import (
+from harness.analysis.schema import create_schema
+from harness.domain.ids import normalize_target_id
+from harness.macros.index import (
     insert_macro_registry,
     macro_input_digest,
     macro_input_rows,
 )
-from harness.analysis.schema import create_schema
-from harness.domain.ids import normalize_target_id
 
 TARGET = "exe/test"
 

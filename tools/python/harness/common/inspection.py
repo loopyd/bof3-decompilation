@@ -1,0 +1,303 @@
+"""Read-only, externally pinned inspection of transaction recovery evidence."""
+
+from __future__ import annotations
+
+import base64
+import hashlib
+import json
+import re
+import stat
+from pathlib import Path
+from typing import Any, Callable
+
+from harness.common.digests import digest
+from harness.common.files import read_file
+from harness.common.directory import validate_repo_path
+from harness.common.paths import leaf_stat, validate_paths
+from harness.common.quarantine import validate_quarantine
+from harness.common.images import validate_image_path
+from harness.common.recovery import IDENTITY_SCHEMA, LEGACY_SCHEMA, SCHEMA
+from harness.common.safeguards import inspect_safeguards
+from harness.io import unique_object
+
+
+def _require_fields(value: object, fields: str) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != set(fields.split()):
+        raise ValueError("invalid recovery record fields")
+    return value
+
+
+def _is_hash(value: object) -> bool:
+    return isinstance(value, str) and re.fullmatch(r"[0-9a-f]{64}", value) is not None
+
+
+def _observe(root: Path, name: str) -> dict[str, Any] | None:
+    before = leaf_stat(root, name)
+    content = read_file(root, name, missing_ok=True)
+    after = leaf_stat(root, name)
+    fields = (
+        "st_dev",
+        "st_ino",
+        "st_mode",
+        "st_nlink",
+        "st_size",
+        "st_mtime_ns",
+        "st_ctime_ns",
+    )
+    if tuple(getattr(before, field, None) for field in fields) != tuple(
+        getattr(after, field, None) for field in fields
+    ) or (before is None) != (content is None):
+        raise ValueError(f"recovery inspection raced with a writer: {name}")
+    if after is None:
+        return None
+    return {
+        "sha256": hashlib.sha256(content).hexdigest(),
+        "mode": stat.S_IMODE(after.st_mode),
+        "device": after.st_dev,
+        "inode": after.st_ino,
+        "links": after.st_nlink,
+    }
+
+
+def _validate_file(
+    name: str, value: object, manifest: dict[str, Any], *, legacy: bool
+) -> None:
+    entry = _require_fields(value, "pre post quarantine")
+    pre = _require_fields(entry["pre"], "content_base64 sha256 mode device inode")
+    post = _require_fields(
+        entry["post"],
+        "sha256 mode creation_mode"
+        if legacy
+        else "sha256 mode device inode staging quarantine",
+    )
+    if not _is_hash(post["sha256"]):
+        raise ValueError("invalid recovery POST hash")
+    if not legacy:
+        if (
+            type(post["mode"]) is not int
+            or not 0 <= post["mode"] <= 0o7777
+            or any(
+                type(post[key]) is not int or post[key] < 0
+                for key in ("device", "inode")
+            )
+        ):
+            raise ValueError("invalid recovery POST identity")
+        validate_image_path(name, post["staging"])
+        validate_quarantine(name, post["quarantine"])
+        if post["quarantine"] == entry["quarantine"]:
+            raise ValueError("recovery PRE and POST quarantines must differ")
+    if pre["sha256"] != manifest["pre_state"][name]:
+        raise ValueError("recovery PRE does not match its manifest")
+    if pre["content_base64"] is None:
+        if (
+            any(value is not None for value in pre.values())
+            or entry["quarantine"] is not None
+        ):
+            raise ValueError("invalid absent recovery PRE")
+        if legacy and (
+            post["mode"] is not None
+            or post["creation_mode"] != ("0644 masked by the process umask")
+        ):
+            raise ValueError("invalid recovery creation mode policy")
+        return
+    encoded = pre["content_base64"]
+    if not isinstance(encoded, str):
+        raise ValueError("invalid recovery PRE encoding")
+    try:
+        content = base64.b64decode(encoded, validate=True)
+    except ValueError as error:
+        raise ValueError("invalid recovery PRE encoding") from error
+    if (
+        base64.b64encode(content).decode("ascii") != encoded
+        or hashlib.sha256(content).hexdigest() != pre["sha256"]
+        or type(pre["mode"]) is not int
+        or not 0 <= pre["mode"] <= 0o7777
+        or any(type(pre[key]) is not int or pre[key] < 0 for key in ("device", "inode"))
+        or type(post["mode"]) is not int
+        or post["mode"] != pre["mode"]
+        or (legacy and post["creation_mode"] is not None)
+    ):
+        raise ValueError("invalid recovery PRE content or identity")
+    validate_quarantine(name, entry["quarantine"])
+
+
+def _describe_file(
+    root: Path, name: str, entry: dict[str, Any], *, legacy: bool
+) -> dict[str, Any]:
+    current = _observe(root, name)
+    pre = {key: value for key, value in entry["pre"].items() if key != "content_base64"}
+    quarantine = entry["quarantine"]
+    displaced = _observe(root, quarantine) if quarantine is not None else None
+    expected = {**pre, "links": 1} if pre["sha256"] is not None else None
+    expected_post = {
+        **{
+            key: value
+            for key, value in entry["post"].items()
+            if key not in {"staging", "quarantine"}
+        },
+        "links": 1,
+    }
+    if current == expected:
+        state = "pre"
+    elif current is None:
+        state = "missing"
+    elif not legacy and current == expected_post:
+        state = "post"
+    elif legacy and (
+        current["sha256"] == entry["post"]["sha256"]
+        and current["links"] == 1
+        and (entry["post"]["mode"] is None or current["mode"] == entry["post"]["mode"])
+    ):
+        state = "post-content-only"
+    else:
+        state = "drifted"
+    result = {
+        "state": state,
+        "observed": current,
+        "quarantine": quarantine,
+        "quarantine_state": "absent"
+        if displaced is None
+        else "original-pre"
+        if displaced == expected
+        else "drifted",
+        "post_identity_bound": not legacy,
+    }
+    if not legacy:
+        staging = entry["post"]["staging"]
+        staged = _observe(root, staging)
+        result["staging"] = staging
+        result["staging_state"] = (
+            "absent"
+            if staged is None
+            else "prepared-post"
+            if staged == expected_post
+            else "drifted"
+        )
+        post_quarantine = entry["post"]["quarantine"]
+        displaced_post = _observe(root, post_quarantine)
+        result["post_quarantine"] = post_quarantine
+        result["post_quarantine_state"] = (
+            "absent"
+            if displaced_post is None
+            else "original-post"
+            if displaced_post == expected_post
+            else "drifted"
+        )
+    return result
+
+
+def inspect_recovery(
+    root: Path,
+    name: str,
+    expected_recovery_digest: str,
+    *,
+    owner: str,
+    manifest_validator: Callable[..., dict[str, Any]],
+) -> dict[str, Any]:
+    name = validate_repo_path(name)
+    if (
+        owner not in {"type", "macro"}
+        or re.fullmatch(
+            rf"out/reviews/evidence/{owner}-recovery-[0-9a-f]{{32}}\.json", name
+        )
+        is None
+    ):
+        raise ValueError("invalid recovery record path or owner")
+    metadata = _observe(root, name)
+    if metadata is None or metadata["mode"] != 0o600 or metadata["links"] != 1:
+        raise ValueError("recovery record must be a private, single-link regular file")
+    content = read_file(root, name)
+    if hashlib.sha256(content).hexdigest() != metadata["sha256"]:
+        raise ValueError("recovery record changed during inspection")
+    record = json.loads(content, object_pairs_hook=unique_object)
+    fields = "schema nonce root writer_pid binding files recovery_scope restoration_authority digest"
+    if isinstance(record, dict) and record.get("schema") == SCHEMA:
+        fields += " safeguards"
+    record = _require_fields(record, fields)
+    facts = {key: value for key, value in record.items() if key != "digest"}
+    if (
+        record["schema"] not in (LEGACY_SCHEMA, IDENTITY_SCHEMA, SCHEMA)
+        or record["digest"] != expected_recovery_digest
+        or record["digest"] != digest(facts)
+        or record["restoration_authority"] is not False
+        or record["recovery_scope"]
+        != "owned source files only; not Git index or unrelated files"
+        or type(record["writer_pid"]) is not int
+        or record["writer_pid"] <= 0
+        or name != f"out/reviews/evidence/{owner}-recovery-{record['nonce']}.json"
+    ):
+        raise ValueError("recovery record or independent digest drifted")
+    identity = root.stat()
+    recorded_root = _require_fields(record["root"], "path device inode")
+    if any(
+        type(recorded_root[key]) is not int for key in ("device", "inode")
+    ) or recorded_root != {
+        "path": str(root.resolve()),
+        "device": identity.st_dev,
+        "inode": identity.st_ino,
+    }:
+        raise ValueError("recovery root identity drifted")
+    binding = _require_fields(
+        record["binding"], "owner manifest implementation_run_id output"
+    )
+    if binding["owner"] != owner:
+        raise ValueError("recovery record belongs to another owner")
+    run_id = binding["implementation_run_id"]
+    if run_id is not None and (not isinstance(run_id, str) or not run_id.strip()):
+        raise ValueError("invalid recovery implementation run ID")
+    manifest = manifest_validator(root, binding["manifest"], rederive=False)
+    allowed = validate_paths(root, manifest["allowed_paths"])
+    pre_state = manifest.get("pre_state")
+    if (
+        not isinstance(pre_state, dict)
+        or set(pre_state) != allowed
+        or any(
+            value is not None and not _is_hash(value) for value in pre_state.values()
+        )
+        or manifest.get("pre_state_digest") != digest(pre_state)
+        or not isinstance(record["files"], dict)
+        or not record["files"]
+        or not set(record["files"]) <= allowed
+    ):
+        raise ValueError("invalid recovery owned PRE or changed paths")
+    files = {}
+    legacy = record["schema"] == LEGACY_SCHEMA
+    for path, entry in record["files"].items():
+        _validate_file(path, entry, manifest, legacy=legacy)
+        files[path] = _describe_file(root, path, entry, legacy=legacy)
+    unchanged = {}
+    for path in sorted(allowed - record["files"].keys()):
+        observed = _observe(root, path)
+        actual = observed["sha256"] if observed is not None else None
+        unchanged[path] = "pre-content-only" if actual == pre_state[path] else "drifted"
+    output = binding["output"]
+    publication = "unknown"
+    if output is not None:
+        output = validate_repo_path(output)
+        if not output.startswith("out/reviews/evidence/"):
+            raise ValueError("invalid recovery publication path")
+        publication = (
+            "present-unverified" if _observe(root, output) is not None else "absent"
+        )
+    if _observe(root, name) != metadata:
+        raise ValueError("recovery record changed during inspection")
+    return {
+        "schema": "bof3.transaction-recovery-inspection/v1",
+        "recovery_digest": expected_recovery_digest,
+        "recovery_schema": record["schema"],
+        "owner": owner,
+        "manifest_digest": manifest["digest"],
+        "manifest_rederived": False,
+        "implementation_run_id": run_id,
+        "files": files,
+        "unchanged_paths": unchanged,
+        "publication": {"path": output, "state": publication},
+        "restoration_authority": False,
+        "writer_termination_verified": False,
+        "writer_exclusion_verified": False,
+        "workspace_and_git_verified": False,
+        "safeguards": inspect_safeguards(
+            root, record.get("safeguards"), set(record["files"])
+        ),
+        "observation_atomic": False,
+    }

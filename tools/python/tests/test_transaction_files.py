@@ -8,8 +8,10 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
-from harness.analysis import rename_noreplace, transaction_files, transaction_git
+from harness.common import files as transaction_files
+from harness.common import git as transaction_git
+from harness.common import quarantine as transaction_quarantine
+from harness.common import rename as rename_noreplace
 
 
 def _git_repo(tmp_path: Path) -> Path:
@@ -121,7 +123,9 @@ def test_atomic_write_existing_leaf_commit_substitution_preserves_every_inode(
     temporaries = list(parent.glob(".*.transaction-*"))
     assert len(temporaries) == 1
     assert temporaries[0].read_bytes() == b"after\n"
-    quarantines = list((tmp_path / transaction_files.QUARANTINE_DIRECTORY).iterdir())
+    quarantines = list(
+        (tmp_path / transaction_quarantine.QUARANTINE_DIRECTORY).iterdir()
+    )
     assert len(quarantines) == 1
     assert quarantines[0].read_bytes() == b"before\n"
     assert quarantines[0].stat().st_ino == original_inode
@@ -330,7 +334,9 @@ def test_safe_unlink_rejects_parent_swap_at_quarantine_rename(
     with pytest.raises(ValueError, match="parent detached"):
         transaction_files.safe_unlink(tmp_path, "include/test.h", expected=b"before\n")
     _assert_swap_rejected(tmp_path)
-    quarantines = list((tmp_path / transaction_files.QUARANTINE_DIRECTORY).iterdir())
+    quarantines = list(
+        (tmp_path / transaction_quarantine.QUARANTINE_DIRECTORY).iterdir()
+    )
     assert len(quarantines) == 1
     assert quarantines[0].read_bytes() == b"before\n"
 
@@ -343,8 +349,12 @@ def test_safe_unlink_quarantine_collision_preserves_both_inodes(
     leaf = parent / "test.h"
     leaf.write_bytes(b"before\n")
     source_inode = leaf.stat().st_ino
-    monkeypatch.setattr(transaction_files, "_quarantine_name", lambda _name: "fixed")
-    quarantine = tmp_path / transaction_files.QUARANTINE_DIRECTORY / "fixed"
+    monkeypatch.setattr(
+        transaction_files,
+        "reserve_quarantine",
+        lambda _name: f"{transaction_quarantine.QUARANTINE_DIRECTORY}/fixed",
+    )
+    quarantine = tmp_path / transaction_quarantine.QUARANTINE_DIRECTORY / "fixed"
     quarantine.parent.mkdir(parents=True)
     quarantine.write_bytes(b"occupied\n")
     occupied_inode = quarantine.stat().st_ino
@@ -420,7 +430,9 @@ def test_safe_unlink_restore_boundary_substitution_retains_both_inodes(
         transaction_files.safe_unlink(tmp_path, "include/test.h", expected=b"before\n")
 
     assert leaf.read_bytes() == b"unexpected\n"
-    quarantines = list((tmp_path / transaction_files.QUARANTINE_DIRECTORY).iterdir())
+    quarantines = list(
+        (tmp_path / transaction_quarantine.QUARANTINE_DIRECTORY).iterdir()
+    )
     assert len(quarantines) == 1
     assert quarantines[0].read_bytes() == b"before\n"
     assert quarantines[0].stat().st_ino == original_inode

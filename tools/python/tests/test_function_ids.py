@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from harness.domain import FUNCTION_ID_FORMAT, FUNCTION_ID_HELP, parse_function_id
+from harness.domain.ids import FUNCTION_ID_FORMAT, FUNCTION_ID_HELP, parse_function_id
 
 
 def test_parse_function_id_accepts_executable_and_shipped_emi_selectors() -> None:

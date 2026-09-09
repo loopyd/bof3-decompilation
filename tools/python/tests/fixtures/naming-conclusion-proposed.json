@@ -1,0 +1,36 @@
+{
+  "authority": "expert review and original image",
+  "ceiling_next_command": "bin/rev-query --json owners exe/test@0x80100000",
+  "corroborators": {
+    "bytes": {
+      "mechanism": "selected_original_instructions"
+    },
+    "caller": {
+      "mechanism": "independent_caller"
+    }
+  },
+  "identity": {
+    "new": "reviewedRole"
+  },
+  "interpretation": "supported identity",
+  "kind": "function",
+  "name": "func_80100000",
+  "new_name": "reviewedRole",
+  "optional_work": [],
+  "outside_payload": false,
+  "partial_used": false,
+  "required_work": [],
+  "rung_status": "proposed",
+  "rungs": {
+    "selected_range": {
+      "authority": "original image",
+      "observations": [
+        {
+          "id": "bytes",
+          "text": "reviewed original instructions"
+        }
+      ],
+      "status": "passed"
+    }
+  }
+}

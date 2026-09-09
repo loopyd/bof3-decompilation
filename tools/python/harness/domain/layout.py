@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import re
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import yaml
 
@@ -60,6 +60,7 @@ class ReviewedSplatLayout:
     boundaries: tuple[SplatBoundary, ...]
     load_address: int
     sha256: str
+    symbol_map_paths: tuple[str, ...]
 
     @property
     def has_reviewed_functions(self) -> bool:
@@ -171,7 +172,7 @@ def _row(
 
 def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedSplatLayout:
     text = splat_path.read_text(encoding="utf-8")
-    document = yaml.safe_load(text)
+    document = yaml.load(text, Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader))
     if not isinstance(document, dict) or not isinstance(document.get("segments"), list):
         raise ValueError(f"invalid Splat segments in {splat_path}")
 
@@ -242,8 +243,25 @@ def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedSplatLayo
                 behavior,
             )
         )
+    options = document.get("options", {})
+    if not isinstance(options, dict):
+        raise ValueError(f"invalid Splat options in {splat_path}")
+    symbol_maps = options.get("symbol_addrs_path", [])
+    if isinstance(symbol_maps, str):
+        symbol_maps = [symbol_maps]
+    if not isinstance(symbol_maps, list) or not all(
+        isinstance(path, str)
+        and bool(path)
+        and not PurePosixPath(path).is_absolute()
+        and ".." not in PurePosixPath(path).parts
+        for path in symbol_maps
+    ):
+        raise ValueError(f"invalid Splat symbol_addrs_path in {splat_path}")
     return ReviewedSplatLayout(
-        tuple(boundaries), load_address, hashlib.sha256(text.encode()).hexdigest()
+        tuple(boundaries),
+        load_address,
+        hashlib.sha256(text.encode()).hexdigest(),
+        tuple(symbol_maps),
     )
 
 

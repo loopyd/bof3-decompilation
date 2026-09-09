@@ -1,3 +1,1 @@
-from .operations import emi_unpack
-
-__all__ = ["emi_unpack"]
+"""EMI archive operations and catalog support."""

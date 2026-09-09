@@ -19,7 +19,7 @@ FULL_PATHS = (
     "SOUL.md",
     "AGENTS.md",
     "docs/agents/CODING_STANDARDS.md",
-    ".pi/skills/bof3-re/SKILL.md",
+    ".codex/skills/bof3-re/SKILL.md",
     "docs/agents/memory-api.md",
     "docs/agents/matching.md",
     "docs/agents/matching-playbook.md",
@@ -148,11 +148,11 @@ def roster_sections(root: Path) -> list[ContextSection]:
         )
     agents.sort(key=lambda value: value.split(":", 1)[0])
     skills = sorted(
-        path.parent.name for path in (root / ".pi/skills").glob("*/SKILL.md")
+        path.parent.name for path in (root / ".codex/skills").glob("*/SKILL.md")
     )
     return [
         ContextSection("subagent roster (.pi/agents)", "\n".join(agents) + "\n"),
-        ContextSection("skills (.pi/skills)", "\n".join(skills) + "\n"),
+        ContextSection("skills (.codex/skills)", "\n".join(skills) + "\n"),
     ]
 
 

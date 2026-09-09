@@ -11,7 +11,15 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..domain import load_target_manifests
+from harness.common.cli import (
+    Check,
+    add_root_argument,
+    register_check,
+    render_task,
+    run_main,
+)
+
+from ..domain.manifests import load_target_manifests
 from ..emi.catalog import load_catalog
 from ..emi.catalog_bootstrap import materialize_reviewed_targets
 from ..emi.operations import emi_unpack
@@ -20,15 +28,7 @@ from ..toolchain import managed_lifecycle
 from ..toolchain.disc import DiscToolchain, find_disc_set
 from ..toolchain.gcc_variants import check_host_compatible, load_variants
 from ..toolchain.psyq import PsyqToolchain
-from ._common import (
-    Check,
-    add_root_argument,
-    register_check,
-    render_task,
-    run_main,
-)
 from .compile_commands import run as write_compile_commands
-
 
 REQUIRED_TOOLS = (
     "bin/as",

@@ -9,7 +9,7 @@ from pathlib import Path
 import tempfile
 from typing import Any, Iterable
 
-from ..domain import load_target_manifests
+from ..domain.manifests import load_target_manifests
 from ..analysis.snapshot import read_snapshot, snapshot_path
 from ..domain.symbols import load_target_symbols
 

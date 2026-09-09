@@ -8,7 +8,7 @@ from pathlib import Path
 import sqlite3
 from typing import Any, Iterable
 
-from ..discovery import file_sha256
+from ..io import file_sha256
 from ..domain.manifests import TargetManifest
 
 _SCHEMA = "harness.decomp-status-cache/v2"

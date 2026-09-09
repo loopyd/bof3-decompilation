@@ -67,7 +67,7 @@ just check                      # full practical validation gate
 
 ## Documentation
 
-Start with [docs/index.md](docs/index.md) for the audience-oriented map.
+Start with [docs/INDEX.md](docs/INDEX.md) for the request-oriented documentation map.
 
 | Task | Reference |
 | --- | --- |

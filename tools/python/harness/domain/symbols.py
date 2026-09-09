@@ -124,7 +124,7 @@ def load_target_symbols(
     Local wins on conflict. Bulk callers pass the already-loaded PsyQ space.
     """
     if psyq_space is None:
-        from ..domain import load_target_manifests  # local import avoids a module cycle
+        from ..domain.manifests import load_target_manifests
 
         manifests = load_target_manifests(root)
         psyq_space = manifests[target].psyq_space if target in manifests else "slus"

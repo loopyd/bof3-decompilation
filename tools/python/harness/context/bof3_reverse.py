@@ -8,13 +8,13 @@ from .common import FULL_PATHS, contract_sections, selector_sections
     "reverse",
     paths=(
         *FULL_PATHS,
-        ".pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md",
+        ".codex/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md",
         "docs/reference/bof3-eu/README.md",
     ),
     accepts_selector=True,
     stable_paths=(
-        ".pi/skills/bof3-re/SKILL.md",
-        ".pi/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md",
+        ".codex/skills/bof3-re/SKILL.md",
+        ".codex/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md",
     ),
     byte_limit=100_000,
     section_limit=24,

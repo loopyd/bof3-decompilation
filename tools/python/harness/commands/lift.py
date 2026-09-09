@@ -9,21 +9,21 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
-from ..domain.symbols import load_target_symbols, weak_bindings_c
-from ..domain import FUNCTION_ID_HELP, FunctionId
+from harness.common.cli import add_example_argument, resolve_function_selector
+
+from ..domain.ids import FUNCTION_ID_HELP, FunctionId
 from ..domain.manifests import TargetManifest
+from ..domain.symbols import load_target_symbols, weak_bindings_c
 from ..io import repo_layout
 from ..match._asm_diff_payload import AsmDiffRequest
 from ..match.asm_diff import run_asm_diff_one
 from ..match.bundle import write_bundle
 from ..output import add_detail_argument, resolve_detail
-from ._common import add_example_argument, resolve_function_selector
 from ._asm_diff_output import format_asm_diff_llm, format_asm_diff_summary
-
 from ._lift_m2c import run_m2c, run_m2ctx
 
 
@@ -42,7 +42,9 @@ def _run_match(
 ) -> dict[str, object]:
     root = repo_layout().root
     bindings = root / "out" / "bindings" / function.target.value / "symbols.c"
-    symbols = load_target_symbols(root, function.target.value)
+    symbols = load_target_symbols(
+        root, function.target.value, psyq_space=manifest.psyq_space
+    )
     binding_text = weak_bindings_c(symbols)
     bindings.parent.mkdir(parents=True, exist_ok=True)
     if not bindings.is_file() or bindings.read_text(encoding="utf-8") != binding_text:

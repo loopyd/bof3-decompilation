@@ -10,8 +10,8 @@ from pathlib import Path
 from typing import Any
 
 from ..domain.symbols import load_map
-from ..discovery import file_sha256
-from ..domain import load_target_manifests
+from ..io import file_sha256
+from ..domain.manifests import load_target_manifests
 from ..io import write_json
 
 from .catalog_verify import resolve_entry, target_slug, verify_companion_relations

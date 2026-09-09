@@ -112,6 +112,7 @@ def resolve_function(root: Path, value: str | FunctionId) -> ResolvedFunction:
             target.id.value,
             function.address,
             layout=parse_splat_layout(root / manifest.splat, manifest.load_address),
+            manifest=manifest,
         )
     except (CompiledSymbolError, OSError):
         # Missing layout or a not-yet-owned map entry means no agreed

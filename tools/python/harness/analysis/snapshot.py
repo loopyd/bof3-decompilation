@@ -157,10 +157,15 @@ def write_snapshot(snapshot: AnalysisSnapshot, path: Path) -> None:
         raise
 
 
-def read_snapshot(path: Path) -> AnalysisSnapshot:
-    """Read and validate a snapshot from disk."""
+def read_snapshot(path: Path, *, read_file=None) -> AnalysisSnapshot:
+    """Read and validate a snapshot from disk or an invocation-local reader."""
 
-    raw = json.loads(path.read_text(encoding="utf-8"))
+    text = (
+        path.read_text(encoding="utf-8")
+        if read_file is None
+        else read_file(path).decode("utf-8")
+    )
+    raw = json.loads(text)
     if raw.get("schema") != SNAPSHOT_SCHEMA:
         raise ValueError(
             f"snapshot schema mismatch: expected {SNAPSHOT_SCHEMA!r}, "

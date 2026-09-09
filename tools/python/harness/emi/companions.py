@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from ..domain import parse_function_id
+from ..domain.ids import parse_function_id
 from ..domain.claims import manifest_header_paths
 from ..domain.manifests import CompanionOverlay, load_target_manifests
 from ..domain.layout import parse_splat_layout

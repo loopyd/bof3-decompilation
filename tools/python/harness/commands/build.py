@@ -6,15 +6,17 @@ import argparse
 import shutil
 import sys
 
+from harness.common.cli import add_example_argument, resolve_function_selector, run_main
+
 from ..build.operations import (
     build,
     cmake_target_for_directory,
     cmake_target_for_source,
 )
-from ..domain import lookup_target_manifest, normalize_target_id
 from ..domain.claims import manifest_source_paths
+from ..domain.ids import normalize_target_id
+from ..domain.registry import lookup_target_manifest
 from ..io import repo_layout
-from ._common import add_example_argument, resolve_function_selector, run_main
 
 
 def run(args: argparse.Namespace) -> int:

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from harness.domain.macro_facts import (
+from harness.macros.facts import (
     parse_macro_definitions,
     parse_macro_file,
     parse_macro_uses,

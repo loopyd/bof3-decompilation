@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 from typing import Any
 
-from ..domain import FUNCTION_ID_FORMAT, normalize_target_id
+from ..domain.ids import FUNCTION_ID_FORMAT, normalize_target_id
 from ..domain.symbols import (
     MapSymbol,
     format_map,

@@ -1,32 +1,14 @@
-"""Metadata-backed source registry (strict).
-
-``domain.tags`` remains the parser authority for @source/@behavior tags.
-This module centralizes lift-source identity:
-
-- a lift source is identified ONLY by its function-level @source tag;
-  filenames are never parsed for addresses and never confer candidacy;
-- lift candidacy comes only from function-level metadata or reviewed Splat
-  expected-lift evidence; helper/support translation units are ignored;
-- a lift requires BOTH @source and @behavior; a candidate missing either is
-  a deterministic :class:`LiftMetadataError` naming the file and the gap;
-- duplicate target-local address claims raise
-  :class:`SourceAddressCollision`;
-- compiled symbol identity is target-owned and requires map/Splat agreement;
-  ``func_<ADDR>`` is never synthesized from a missing map entry.
-"""
+"""Strict metadata-backed lift ownership and compiled-symbol resolution."""
 
 from __future__ import annotations
 
 from pathlib import Path
-import re
 from typing import Iterable, Mapping
 
 from .layout import ReviewedSplatLayout, parse_splat_layout
 from .symbols import load_map, map_path
-from .manifests import load_target_manifests
+from .manifests import TargetManifest, load_target_manifests
 from .tags import parse_behavior_tag, parse_source_tag
-
-_LOCAL_INCLUDE_RE = re.compile(r'^\s*#\s*include\s+"([^"]+)"', re.MULTILINE)
 
 
 class LiftMetadataError(ValueError):
@@ -62,46 +44,6 @@ class CompiledSymbolError(ValueError):
             + f": {detail}"
         )
         super().__init__(message)
-
-
-def local_include_files(root: Path, seeds: list[Path]) -> list[Path]:
-    """Follow repository-local quoted includes from target-owned sources.
-
-    Resolves each `#include "name"` against the including file's directory
-    and the repository root/`include` trees; only files inside ``root`` are
-    returned, and each file is visited once.
-    """
-    roots = (root, root / "include")
-    found: list[Path] = []
-    pending = list(seeds)
-    seen = set(pending)
-    while pending:
-        path = pending.pop()
-        if not path.is_file():
-            continue
-        try:
-            names = _LOCAL_INCLUDE_RE.findall(path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError):
-            continue
-        for name in names:
-            candidates = [path.parent / name, *(base / name for base in roots)]
-            resolved = next(
-                (
-                    candidate.resolve()
-                    for candidate in candidates
-                    if candidate.is_file()
-                ),
-                None,
-            )
-            if (
-                resolved is not None
-                and root in resolved.parents
-                and resolved not in seen
-            ):
-                seen.add(resolved)
-                found.append(resolved)
-                pending.append(resolved)
-    return found
 
 
 def source_address(source_path: Path) -> int:
@@ -346,6 +288,7 @@ def reviewed_function_name(
     address: int,
     *,
     layout: ReviewedSplatLayout | None = None,
+    manifest=None,
 ) -> str:
     """Return the target-owned compiled symbol name at ``address``.
 
@@ -361,9 +304,9 @@ def reviewed_function_name(
     ``func_<ADDR>``.
     """
 
-    manifests = load_target_manifests(root)
-    manifest = manifests.get(target)
     if manifest is None:
+        manifest = load_target_manifests(root).get(target)
+    if manifest is None or manifest.id.value != target:
         raise CompiledSymbolError(None, address, f"unknown target: {target}")
     if layout is None:
         layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
@@ -413,23 +356,35 @@ def compiled_symbol_name(
     address: int,
     *,
     layout: ReviewedSplatLayout | None = None,
+    manifest: TargetManifest | None = None,
 ) -> str:
-    """Return the object symbol compiled from ``source_path`` at ``address``.
+    """Resolve the compiled name, optionally reusing this operation's proven owner."""
 
-    Target-owned and map/Splat-agreed via :func:`reviewed_function_name`.
-    Raises :class:`CompiledSymbolError` when the address is not a reviewed
-    target-local function symbol; never confuses shared/SDK/data symbols and
-    never fabricates ``func_<ADDR>``.
-    """
-
-    manifest = owning_manifest(root, source_path)
+    if manifest is None:
+        manifest = owning_manifest(root, source_path)
+    else:
+        try:
+            source_rel = (
+                source_path.expanduser()
+                .resolve()
+                .relative_to(root.expanduser().resolve())
+                .as_posix()
+            )
+        except ValueError:
+            source_rel = None
+        if source_rel not in (
+            manifest.sources + manifest.support_sources + manifest.headers
+        ):
+            manifest = None
     if manifest is None:
         raise CompiledSymbolError(
             source_path,
             address,
             "source is not claimed by or inside a known target source directory",
         )
-    return reviewed_function_name(root, manifest.id.value, address, layout=layout)
+    return reviewed_function_name(
+        root, manifest.id.value, address, layout=layout, manifest=manifest
+    )
 
 
 __all__ = [
@@ -440,7 +395,6 @@ __all__ = [
     "compiled_symbol_name",
     "expected_lift_sources",
     "lift_metadata",
-    "local_include_files",
     "owning_manifest",
     "resolve_source_for_address",
     "reviewed_function_name",

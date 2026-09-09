@@ -6,12 +6,26 @@ import argparse
 import json
 from pathlib import Path
 
+from harness.common.cli import add_example_argument, add_root_argument, run_main
+
 from ..decomp.status import build_report, project_report, render_text, write_report
 from ..output import add_detail_argument, resolve_detail
-from ._common import add_example_argument, add_root_argument, run_main
 
 
 def run(args: argparse.Namespace) -> int:
+    if args.coverage_only:
+        if args.out is not None:
+            raise ValueError("--coverage-only rejects --out; coverage is stdout-only")
+        from ..decomp.coverage import build_coverage, render_coverage
+
+        report = build_coverage(args.root, args.targets)
+        detail = resolve_detail(requested=args.detail, json_output=args.json)
+        print(
+            json.dumps(report, indent=2, sort_keys=True)
+            if args.json
+            else render_coverage(report, detail)
+        )
+        return 2
     root = args.root.resolve()
     report = build_report(root, args.targets, use_cache=not args.no_cache)
     if args.out is not None:
@@ -39,6 +53,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--no-cache",
         action="store_true",
         help="recompute every lift instead of reusing disposable audit summaries",
+    )
+    parser.add_argument(
+        "--coverage-only",
+        action="store_true",
+        help="report original coverage without builds or writes",
     )
     parser.add_argument("-o", "--out", type=Path, help="write the complete JSON report")
     parser.add_argument(

@@ -5,12 +5,13 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from ..domain import FunctionId
-from ..analysis.type_context import type_context
+from harness.types.context import type_context
+
 from ..domain.claims import (
     manifest_header_paths,
     resolve_manifest_source_for_address,
 )
+from ..domain.ids import FunctionId
 from ..domain.manifests import TargetManifest
 from ..domain.symbols import load_target_symbols
 from ..io import repo_layout
@@ -23,6 +24,10 @@ class M2cToolchain(PythonScriptSubmoduleToolchain):
     label = "m2c"
     submodule = "third_party/m2c"
     script = "m2c.py"
+
+    @property
+    def working_directory(self) -> Path:
+        return self.root
 
 
 def splat_assembly(manifest: TargetManifest, address: int) -> Path:

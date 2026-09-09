@@ -7,12 +7,13 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-from ..discovery import file_sha256
+from ..io import file_sha256
 from ..io import read_json
 
 from .catalog_verify import _payload_kind, target_slug, verify_companion_relations
 
 CATALOG_SCHEMA = "harness.catalog.emi/v3"
+
 
 def _instruction_density(payload: Path) -> float:
     data = payload.read_bytes()
@@ -51,6 +52,7 @@ def _instruction_density(payload: Path) -> float:
         ):
             plausible += 1
     return plausible / words
+
 
 def _entry_records(emi_root: Path) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
@@ -105,6 +107,7 @@ def _entry_records(emi_root: Path) -> list[dict[str, Any]]:
                 }
             )
     return records
+
 
 def build_catalog(emi_root: Path) -> dict[str, Any]:
     entries = _entry_records(emi_root)
@@ -166,11 +169,13 @@ def build_catalog(emi_root: Path) -> dict[str, Any]:
         catalog["companion_relations"] = []
     return catalog
 
+
 def load_catalog(root: Path) -> dict[str, Any]:
     emi_root = root / "out/extracted/BIN"
     if not emi_root.is_dir():
         raise FileNotFoundError(f"missing extracted EMI root: {emi_root}")
     return build_catalog(emi_root)
+
 
 __all__ = [
     "build_catalog",

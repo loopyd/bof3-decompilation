@@ -22,7 +22,14 @@ def cmake_target_for_directory(source_directory: str) -> str:
 
 def _has_missing_source(root: Path, generated: Path) -> bool:
     text = generated.read_text(encoding="utf-8", errors="ignore")
-    sources = set(re.findall(r"(?:[A-Za-z]:)?[^\s:|]+/src/[^\s:|]+\.(?:c|s|S)", text))
+    sources = {
+        source
+        for token in text.split()
+        if "/src/" in token
+        for source in re.findall(
+            r"(?:[A-Za-z]:)?[^\s:|]+/src/[^\s:|]+\.(?:c|s|S)", token
+        )
+    }
     return any(not Path(source).is_file() for source in sources)
 
 

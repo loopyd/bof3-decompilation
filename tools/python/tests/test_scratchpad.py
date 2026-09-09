@@ -9,19 +9,19 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-
-from harness.analysis import type_context as type_context_module
-from harness.domain import parse_function_id
 from harness.domain.c_context import (
     public_declaration_context,
     scalar_declaration_context,
 )
+from harness.domain.ids import parse_function_id
 from harness.toolchain.decompme import (
     DecompMeScratchpadToolchain,
     ScratchpadPayload,
     _decompme_compiler_flags,
     _remote_compiler_id,
+    _source_command,
 )
+from harness.types import context as type_context_module
 
 
 class _Response(io.BytesIO):
@@ -49,6 +49,20 @@ def isolated_registry_context(monkeypatch: pytest.MonkeyPatch) -> None:
         (repo_layout().root / "include/base/types.h").read_text(encoding="utf-8")
     )
     monkeypatch.setattr(decompme, "type_context", lambda *_: scalars)
+
+
+@pytest.mark.parametrize(
+    ("arguments", "expected"),
+    [
+        (["cc", "-c", "a.c", "-o", "a.o", "-Iinc"], ["cc", "a.c", "-Iinc"]),
+        (["cc", "a.c", "-oa.o", "-Wa,x", "-DOK"], ["cc", "a.c", "-DOK"]),
+        (["cc", "a.c", "-o"], ["cc", "a.c"]),
+    ],
+)
+def test_source_command_filters_compile_only_arguments(
+    arguments: list[str], expected: list[str]
+) -> None:
+    assert _source_command(arguments) == expected
 
 
 def test_remote_compiler_id_uses_decompme_ps1_spelling() -> None:
@@ -135,6 +149,7 @@ def test_payload_requires_fresh_registry_when_index_exists(
     resolved = SimpleNamespace(manifest=manifest, source=source, compiled_symbol="test")
     toolchain = DecompMeScratchpadToolchain(SimpleNamespace(root=tmp_path))
     monkeypatch.setattr(decompme, "resolve_function", lambda *_: resolved)
+    monkeypatch.setattr(decompme, "_source_arguments", lambda *_: ["cc"])
     monkeypatch.setattr(
         decompme, "_preprocess_source", lambda *_: ("", "void test(void) {}\n")
     )
@@ -179,10 +194,10 @@ def test_payload_uses_registry_function_name(
     monkeypatch: pytest.MonkeyPatch,
     isolated_registry_context: None,
 ) -> None:
+    import dataclasses
+
     from harness.io import repo_layout
     from harness.toolchain import decompme
-
-    import dataclasses
 
     real = decompme.resolve_function
 

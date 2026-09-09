@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 from .base import PythonScriptSubmoduleToolchain
 
 
@@ -11,7 +9,3 @@ class DecompPermuterToolchain(PythonScriptSubmoduleToolchain):
     script = "permuter.py"
     interpreter_flags = ("-u",)
     pip_packages = ("toml",)
-
-    @property
-    def working_directory(self) -> Path:
-        return self.source

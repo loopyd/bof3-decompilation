@@ -5,7 +5,9 @@ import sqlite3
 
 from harness.analysis.graph import dominates, enrich_graph, function_metrics, sccs
 from harness.analysis.priority import candidate_exclusion, priority_rows
-from harness.commands.rev_query import _project_rows, build_parser, main
+from harness.commands.rev_query import _project_rows
+from harness.commands.rev_query import build_parser
+from harness.commands.rev_query import main
 from harness.analysis.schema import create_schema
 
 
@@ -332,11 +334,11 @@ def test_inventory_lists_target_raw_functions_and_data(
     capsys, monkeypatch, tmp_path
 ) -> None:
     monkeypatch.setattr(
-        "harness.commands.rev_query.load_target_manifests",
+        "harness.naming.cli.load_target_manifests",
         lambda _root: {"exe/t": object()},
     )
     monkeypatch.setattr(
-        "harness.commands.rev_query.collect_naming_debt",
+        "harness.naming.cli.collect_naming_debt",
         lambda _root, _manifests: type(
             "Debt",
             (),
