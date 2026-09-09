@@ -5,18 +5,18 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, replace
 import json
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 import re
 
 from ..domain.ids import FunctionId, normalize_target_id, parse_function_id
 from ..domain.manifests import load_target_manifests
+from ..docs.paths import validate_cleanup_paths
 from ..naming.campaign import resolve_campaign_report
 from .base import ContextRequest, ContextSection, _context_profile
 from .common import FULL_PATHS, selector_sections, target_audit_sections
 
 
 _REPOSITORY_ROOT = Path(__file__).resolve().parents[4]
-_ROOT_DOCUMENTATION = {"README.md", "AGENTS.md"}
 _PREPARED_ROW_KINDS = {"function", "data"}
 _IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 _CLASS = re.compile(r"^[a-z][a-z0-9_]*$")
@@ -37,7 +37,7 @@ _SKILL_REFERENCES = {
         ),
         "relocation": ("references/SOURCE_RELOCATION.md",),
     },
-    "repo-documentation-repair": {
+    "bof3-docs": {
         "docs": ("references/DOCUMENTATION_REPAIR.md",),
     },
     "bof3-macros": {"opportunity": ()},
@@ -49,7 +49,7 @@ _ROUTE = {
     "repair": ("bof3-naming", "identity"),
     "retained-lift": ("bof3-naming", "retained"),
     "relocate-batch": ("bof3-naming", "relocation"),
-    "docs": ("repo-documentation-repair", "docs"),
+    "docs": ("bof3-docs", "docs"),
     "audit-target": ("bof3-naming", "audit"),
     "macro-opportunity": ("bof3-macros", "opportunity"),
     "type-opportunity": ("bof3-types", "opportunity"),
@@ -156,45 +156,6 @@ def _rows(root: Path, target: str, values: Sequence[str]) -> tuple[str, ...]:
     return rows
 
 
-def _has_symlink_component(root: Path, relative: PurePosixPath) -> bool:
-    path = root
-    for part in relative.parts:
-        path /= part
-        if path.is_symlink():
-            return True
-    return False
-
-
-def _docs_paths(root: Path, values: Sequence[str]) -> tuple[str, ...]:
-    if not values:
-        raise ValueError("docs requires at least one documentation path")
-    if any("\\" in value for value in values):
-        raise ValueError(
-            "documentation cleanup paths must use canonical forward slashes"
-        )
-    paths = tuple(values)
-    for value in paths:
-        relative = PurePosixPath(value)
-        candidate = root.joinpath(*relative.parts)
-        allowed = value in _ROOT_DOCUMENTATION or (
-            len(relative.parts) >= 2
-            and relative.parts[0] == "docs"
-            and relative.suffix.lower() == ".md"
-        )
-        if (
-            relative.is_absolute()
-            or not allowed
-            or any(part in {"", ".", ".."} for part in relative.parts)
-            or _has_symlink_component(root, relative)
-            or not candidate.is_file()
-            or not candidate.resolve().is_relative_to(root.resolve())
-        ):
-            raise ValueError(
-                "documentation cleanup paths must be existing regular repository Markdown"
-            )
-    return paths
-
-
 def _identifier(value: str, label: str) -> str:
     if not _IDENTIFIER.fullmatch(value):
         raise ValueError(f"{label} must be a nonempty C identifier")
@@ -236,7 +197,7 @@ def parse_cleanup_request(
         if not parent_compatibility:
             raise ValueError("old audit form is parent-only; use docs or audit-target")
         try:
-            paths = _docs_paths(root, tokens[1:])
+            paths = validate_cleanup_paths(root, tokens[1:])
         except ValueError as error:
             raise ValueError(
                 "old audit accepts documentation paths only; use audit-target TARGET"
@@ -292,7 +253,7 @@ def parse_cleanup_request(
         target = _known_target(root, tokens[1])
         values = (_validate_opportunity(tokens[2]),)
     elif mode == "docs":
-        values = _docs_paths(root, tokens[1:])
+        values = validate_cleanup_paths(root, tokens[1:])
     else:
         if len(tokens) != 2:
             raise ValueError("audit-target requires exactly one TARGET")

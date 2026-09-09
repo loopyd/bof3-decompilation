@@ -31,7 +31,7 @@ minimal entry contract; this index owns the detailed reading map.
 | Plan creation, management or execution | [Plan authoring](agents/plan-authoring.md) | `$plans`; selected file under `plans/`; refresh live evidence |
 | Symbol/type/metadata identity maintenance | [Project context](agents/project-context.md) | Explicit `$bof3-naming` transaction mode only |
 | Naming evidence/audit closure | [Naming audit contract](../.codex/skills/bof3-naming/references/NAMING_AUDIT_V3.md) | Explicit `$bof3-naming` audit mode only |
-| Documentation-only repair | Owning implementation/policy source | `$repo-documentation-repair` |
+| Markdown search, context, aggregation, edit, repair or compaction | [Documentation operations](specs/DOCS.md) | `$bof3-docs`; owning implementation/policy source before edits |
 | Runtime, format, target, or data research | [Specifications index](specs/INDEX.md) | Relevant spec and original evidence |
 | Repository overview / contributor onboarding | [README](../README.md) | [Contributing](../CONTRIBUTING.md), [Tool usage](usage.md) |
 
@@ -74,9 +74,9 @@ Codex scheduler or installed extension.
 | [`$bof3-naming`](../.codex/skills/bof3-naming/SKILL.md) | explicitly routed naming opportunities, evidence, audits and reviewed identity transactions |
 | [`$plans`](../.codex/skills/plans/SKILL.md) | persistent plan management |
 | [`$psx-rizin`](../.codex/skills/psx-rizin/SKILL.md) | explicitly requested analyzer workflow |
-| [`$repo-documentation-repair`](../.codex/skills/repo-documentation-repair/SKILL.md) | explicitly scoped documentation repair |
+| [`$bof3-docs`](../.codex/skills/bof3-docs/SKILL.md) | explicit Markdown search, context, aggregation, editing, repair and one-document compaction |
 
-Macro, type and naming skills include invocation scripts that dispatch to `bin/`;
+Macro, type, naming and documentation skills dispatch invocation scripts to `bin/`;
 policy, parsing and editing remain in the harness owners. Explicit-only routing is
 preserved in skill metadata; discovery never expands mutation authority.
 
@@ -117,6 +117,7 @@ own wrapper, declarations, map, layout, and validation.
 - [Specifications index](specs/INDEX.md)
 - [Macro opportunity indexing and resolution](specs/MACROS.md)
 - [Python harness ownership](specs/HARNESS.md)
+- [Documentation operations](specs/DOCS.md)
 - [Tool usage](usage.md)
 - [External EU reference](reference/bof3-eu/README.md) — leads only; EU
   addresses are not reviewed US facts

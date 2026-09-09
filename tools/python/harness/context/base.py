@@ -70,7 +70,6 @@ _MODULES = (
     ("bof3_review", "review"),
     ("bof3_cleanup", "cleanup"),
     ("classifier", "classifier"),
-    ("context_builder", "context-builder"),
     ("oracle", "oracle"),
     ("planner", "planner"),
     ("researcher", "researcher"),

@@ -60,7 +60,7 @@ SELECTOR = "exe/logo@0x801CE758"
         (
             ("docs", "docs/usage.md"),
             "docs",
-            "repo-documentation-repair",
+            "bof3-docs",
             ("DOCUMENTATION_REPAIR.md",),
         ),
         (
@@ -107,7 +107,7 @@ def test_canonical_routes_load_exact_selected_body_and_direct_refs(
     assert selected["loaded_bytes"] == loaded_bytes
     unselected = {
         "bof3-naming",
-        "repo-documentation-repair",
+        "bof3-docs",
         "bof3-macros",
         "bof3-types",
     } - {skill}
@@ -200,10 +200,10 @@ def test_missing_unknown_or_ambiguous_selection_reads_zero_bodies() -> None:
         replace(
             request,
             selected_skill=SelectedSkill(
-                "repo-documentation-repair",
-                ".codex/skills/repo-documentation-repair/SKILL.md",
+                "bof3-docs",
+                ".codex/skills/bof3-docs/SKILL.md",
                 (
-                    ".codex/skills/repo-documentation-repair/references/DOCUMENTATION_REPAIR.md",
+                    ".codex/skills/bof3-docs/references/DOCUMENTATION_REPAIR.md",
                     ".codex/skills/bof3-naming/SKILL.md",
                 ),
             ),

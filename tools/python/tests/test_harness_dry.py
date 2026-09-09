@@ -213,6 +213,7 @@ def test_package_initializer_edges_are_locked() -> None:
         "harness.build": set(),
         "harness.decomp": set(),
         "harness.domain": set(),
+        "harness.docs": set(),
         "harness.context": set(),
         "harness.emi": set(),
         "harness.psyq": set(),

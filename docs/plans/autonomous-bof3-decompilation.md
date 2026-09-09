@@ -784,6 +784,14 @@ not rerun for this evidence/documentation-only continuation.
 
 ## Proposed roles and sequence
 
+Documentation operations now share `bof3-docs` and `harness.docs`, replacing the
+repair-only skill and separate context-builder profile. Context/search/aggregate
+are read-only; edit/repair/one-document compact prepare full pinned inputs for
+reviewed agent edits, never automatic rewrites. Legacy docs cleanup keeps its
+narrow scope. Independent review closed runtime-path exclusions; 38 disposable
+native probes preserve the protected index/report/sources. This documentation
+feature does not complete S3.2 or alter its frozen queues and authority gates.
+
 The symbol-naming routing prerequisite now follows the same concern ownership:
 `harness.naming.opportunities` owns target-local read-only leads and legacy
 inventory projection. `bin/naming-audit opportunities` / `describe-opportunity`
@@ -941,7 +949,7 @@ must satisfy them before the corresponding phase is marked done.
 - Owner: parent
 - Depends: S2.1
 - Blocker: none
-- Evidence: .codex/skills/psx-rizin, .codex/skills/repo-documentation-repair, .codex/skills/plans, AGENTS.md and docs/INDEX.md.
+- Evidence: .codex/skills/psx-rizin, unified .codex/skills/bof3-docs, .codex/skills/plans, AGENTS.md and docs/INDEX.md.
 - Acceptance: preserve explicit psx-rizin opt-in and documentation-only scope; eliminate stale imported-agent/default-loop references; no home/package skill edits or global skill rewrite.
 
 ## 3. [S3] (in-progress) Prove machine integration, native recovery and one bounded loop

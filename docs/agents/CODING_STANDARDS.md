@@ -32,6 +32,7 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
 - `harness.macros`, `harness.naming`, and `harness.types` own their respective
   opportunity discovery, evidence, transactions, audits, editing and CLI policy.
   Naming identifies symbols; types own C representation and layout decisions.
+  `harness.docs` owns Markdown operations, not the domain facts or approvals described.
   An `opportunities.py` owner discovers and describes leads; `cli.py` only adapts
   arguments. Lead enumeration is not ranking, evidence closure or edit authority.
   Cross-domain queries dispatch to these owners instead of re-exporting them.

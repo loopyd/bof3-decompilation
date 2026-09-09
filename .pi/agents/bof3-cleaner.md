@@ -15,7 +15,7 @@ Accept one explicit canonical cleanup request. First repository command:
 `bin/agent-context cleanup CANONICAL_REQUEST...`, once. The structured router
 owns parsing and route selection. Require exactly one selected skill from
 bof3-naming, bof3-macros, bof3-types or
-repo-documentation-repair. Read only its emitted body and direct references.
+bof3-docs. Read only its emitted body and direct references.
 Do not reread prefilled paths without a named evidence gap, guess missing inputs
 or switch routes.
 

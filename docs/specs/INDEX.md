@@ -9,6 +9,7 @@ lowercase paths are retained; `MACROS.md` is the canonical macro-resolution spec
 | [MACROS.md](MACROS.md) | macro opportunity discovery, human-value ranking requirements, consumer scope, and reviewed resolution tooling |
 | [HARNESS.md](HARNESS.md) | macro, naming and type owners, explicit cleanup routes, shared mechanisms, CLI ownership and refactor evidence boundaries |
 | [CODEX.md](CODEX.md) | global MCP credentials/configuration, Pi extension equivalents and explicit exclusions |
+| [DOCS.md](DOCS.md) | unified Markdown search/context, aggregation, repair/edit preparation and explicit compaction |
 | [targets.md](targets.md) | identifying executable and overlay load addresses |
 | [methods.md](methods.md) | pointer maps, table extraction, and evidence methods |
 | [pseudocode.md](pseudocode.md) | source-backed runtime and extraction algorithms |

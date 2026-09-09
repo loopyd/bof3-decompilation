@@ -2,7 +2,7 @@
 
 ## Scope and authority
 
-The caller must name existing files under `docs/`, `AGENTS.md`, or `README.md`. Find the owning implementation, configuration, specification, policy, or plan before editing; generated `out/` state and analyzer prose are not authority. Correct or delete dated lift counts, transient rankings, disposable snapshots, duplicate claims, and dead links. Preserve history and changelogs.
+The caller must name existing authored Markdown files. The legacy `bin/agent-context cleanup docs PATHS...` route remains limited to `docs/`, `AGENTS.md` and `README.md`; broader explicit scopes use `bin/docs repair` under the [document contract](../../../../docs/specs/DOCS.md). Find the owning implementation, configuration, specification, policy, or plan before editing; generated `out/` state and analyzer prose are not authority. Correct or delete dated lift counts, transient rankings, disposable snapshots, duplicate claims, and dead links. Preserve history and changelogs.
 
 Place durable runtime/format facts in `docs/specs/`, agent policy in `docs/agents/`, and scoped work in `docs/plans/`. Do not relocate files, refactor source, invent policy, execute a plan, or turn a docs repair into naming, lifting, matching, or analysis work.
 

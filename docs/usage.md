@@ -17,6 +17,14 @@ Context-heavy commands accept `--detail minimal|normal|full`:
 `-o FILE` always writes the complete artifact. For payload commands such as
 `m2c`, use `-o` and open only the file you need to edit.
 
+## Documentation operations
+
+Use `$bof3-docs` for Markdown context, search, aggregation, edit, repair or explicit
+one-document compaction. `bin/docs compact PATH` prepares a complete hashed input
+for reviewed agent editing; it does not automatically rewrite the document.
+`bin/docs context PATHS...` replaces the retired context-builder profile.
+See [DOCS.md](specs/DOCS.md) for commands, bounds, scope and preservation contracts.
+
 ## Cleanup opportunity routing
 
 ```sh

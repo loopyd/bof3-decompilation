@@ -12,6 +12,7 @@ All paths are below `tools/python/harness/`.
 | `macros/` | lexical macro facts, assembly/C opportunities, ranking, consumer scope, reviewed macro transactions | `bin/macro-audit` → `harness.macros.cli` |
 | `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/naming-audit` → `harness.naming.cli`; `bin/naming-evidence-run` → `harness.naming.runner` |
 | `types/` | C declarations, representation inference, type-use/candidate indexing, reviewed type transactions | `bin/type-audit` → `harness.types.cli` |
+| `docs/` | scoped Markdown snapshots, search, context, aggregation and edit/repair/compaction preparation | `bin/docs` → `harness.docs.cli` |
 | `common/` | reusable CLI, digests, confined files, process lifecycle, workspace, native receipts and acceptance mechanisms | direct imports from the mechanism owner |
 | `analysis/` | cross-domain reverse index, graph, mission and query coordination | `bin/index`, `bin/rev-query` |
 | `domain/` | manifests, target identity, original binary/layout, source claims and includes | shared repository facts, not candidate acceptance |
@@ -23,7 +24,7 @@ Package initializers are inert: import the actual owner, not a compatibility fac
 The cross-domain index remains one derived database; package separation does not
 create independent databases or relax freshness checks.
 
-Each domain's `cli.py` also registers its `rev-query` subcommands and owns their
+Macro, naming and type `cli.py` modules register their `rev-query` subcommands and own their
 argument-to-query adapters. `commands/rev_query.py` composes those registrations,
 checks index freshness and target identity, and prints their results. Naming
 inventory remains manifest-backed without requiring an index; transaction scope
