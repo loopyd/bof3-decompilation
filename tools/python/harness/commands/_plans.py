@@ -318,11 +318,13 @@ def sync_directory(path: Path) -> None:
         os.close(fd)
 
 
-def write_copy(path: Path, raw: bytes, mode: int) -> None:
-    with path.open("xb") as stream:
+def write_copy(path: Path, raw: bytes, mode: int | None = None) -> None:
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(descriptor, "wb") as stream:
         stream.write(raw)
         stream.flush()
-        os.fchmod(stream.fileno(), mode)
+        if mode is not None:
+            os.fchmod(stream.fileno(), mode)
         os.fsync(stream.fileno())
     if read_regular(path) != raw:
         raise ValueError(f"copy verification failed: {path}")
@@ -384,8 +386,8 @@ def consolidate(root: Path, review: Path, apply: bool, backup: Path | None) -> i
         (backup / "sources").mkdir(mode=0o700)
         for name, raw in sources.items():
             write_copy(backup / "sources" / name, raw, modes[name])
-        write_copy(backup / "candidate.md", candidate, 0o600)
-        write_copy(backup / "review.json", review_raw, 0o600)
+        write_copy(backup / "candidate.md", candidate)
+        write_copy(backup / "review.json", review_raw)
         manifest = {
             name: {"sha256": digest(raw), "mode": modes[name]}
             for name, raw in sources.items()
@@ -393,7 +395,6 @@ def consolidate(root: Path, review: Path, apply: bool, backup: Path | None) -> i
         write_copy(
             backup / "manifest.json",
             (json.dumps(manifest, indent=2) + "\n").encode(),
-            0o600,
         )
         sync_directory(backup / "sources")
         sync_directory(backup)

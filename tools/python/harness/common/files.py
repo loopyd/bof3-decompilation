@@ -85,11 +85,14 @@ def atomic_write(
     expected: bytes | None | object = _MISSING,
     exclusive: bool = False,
     mode: int | None = None,
+    creation_mode: int = 0o644,
 ) -> str | None:
     """Install content without replacing or deleting an unverified inode."""
 
     if mode is not None and (type(mode) is not int or not 0 <= mode <= 0o7777):
         raise ValueError("invalid transaction file mode")
+    if type(creation_mode) is not int or not 0 <= creation_mode <= 0o7777:
+        raise ValueError("invalid transaction creation mode")
     explicit_mode = mode
     descriptors, leaf = open_parent_chain(root, name, create=True)
     parent = descriptors[-1]
@@ -106,7 +109,11 @@ def atomic_write(
         if exclusive and current is not None:
             raise FileExistsError(name)
         if mode is None:
-            mode = (current_stat.st_mode & 0o777) if current_stat is not None else 0o644
+            mode = (
+                (current_stat.st_mode & 0o777)
+                if current_stat is not None
+                else creation_mode
+            )
         descriptor = os.open(
             temporary,
             os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,

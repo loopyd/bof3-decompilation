@@ -136,6 +136,8 @@ requests restrictive modes where supported, but no fixed POSIX mode is enforced
 on NTFS. This does not guarantee confidentiality: keep source-bearing records out
 of public logs and commits. Source/PRE/POST mode capture and drift checks remain
 part of identity-preserving rollback, not an owner-only permission policy.
+Recovery records, completion receipts and plan review artifacts use creation hints
+without requiring `chmod`. Explicit captured-mode restoration remains strict.
 
 Native tool cancellation can bypass Python exception handlers entirely. Macro/type
 transactions now use `common/recovery.py` to persist

@@ -100,5 +100,5 @@ def capture_recovery(
     record["digest"] = digest(record)
     path = f"out/reviews/evidence/{binding['owner']}-recovery-{nonce}.json"
     encoded = (json.dumps(record, indent=2, sort_keys=True) + "\n").encode("utf-8")
-    atomic_write(root, path, encoded, expected=None, mode=0o600)
+    atomic_write(root, path, encoded, expected=None, creation_mode=0o600)
     return files

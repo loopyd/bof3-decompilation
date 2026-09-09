@@ -168,7 +168,7 @@ def restore_sources(
         _verify_restoration_states(root, backup, images, set(images))
         verify_writer(root)
         if existing is None:
-            atomic_write(root, output, encoded, expected=None, mode=0o600)
+            atomic_write(root, output, encoded, expected=None, creation_mode=0o600)
         if read_file(root, output) != encoded:
             raise ValueError("source restoration receipt changed during publication")
         published = observe_file(root, output)
