@@ -887,6 +887,43 @@ no production code or persistent tests changed. This is not a durable production
 dispatcher, named lift/naming/cleanup success path or live BOF3 semantic acceptance.
 S3.2 and S4 remain unfinished; frozen production pins are unchanged.
 
+### Native review transport rollout
+
+The working-tree reviewer transport (`bin/agent-run`, `context.dispatch/codex/journal`
+and the `bof3-re` dispatch helper) remains uncommitted and incomplete. Its scoped
+code review, private-artifact/hold/event probes and 320 distinct existing checks
+passed before the native attempt. Shared `run_bounded` now supports selector-driven
+stdin and retained-output/spawn callbacks without blocking on an initial prompt
+write. Callback `ProcessCleanupError` and `TimeoutExpired` also require cleanup,
+retain exception identity when cleanup succeeds, and yield to cleanup uncertainty.
+Bohr accepted that correction; four real-process callback probes retain terminal
+original supervisor pidfds in `/tmp/bof3-callback-error-probe.log`.
+After that correction, 174 existing process/type/macro/revalidation checks and
+46 plan checks pass; no persistent regression tests were added.
+
+The separately approved read-only native invocation stopped **before any Codex
+process or dispatch debit**: the actual repository is `fuseblk`, and its empty
+writer lock reports `0770` after `fchmod(0600)`. The strict lease rejected it. This
+also prevents treating repository-local model streams as private; newly created
+private files now verify actual permissions/ownership/type/link count while empty,
+before writing contents. Native AI/authenticated review remains unproven.
+The failed attempt is retained unchanged under `out/reviews/native-codex-review-v1`:
+original 900-second work / ten-second cleanup allowance, one dispatch, zero repairs,
+budget pin `v1:55146dfe5be00b15b1da88db0c4bc1142704ee1b9d95ab934298bf1827a4d53b`,
+initial high-water pin
+`v1:98046a50a1993eeee6c92a20b6b01f22aab84a8b5678acd1910cc723d1d58602`.
+`outer-result.json` SHA-256:
+`a37924dd1b91ebe2820b1f1eaf74b4652d6d4403b5baaff9b1730ab641d4397f`.
+No model was retried, allowance reset, source restored or production queue repinned.
+
+Both reviewers require an explicitly selected, identity-bound POSIX private state
+store, permission verification before payload writes, and dual coordination with
+the persistent legacy lock inode; the legacy token is not a private lease. Keep
+strict source-owner guards intact, never unlink locks or silently choose a fresh
+temporary history. Moving source staging/quarantine across filesystems is not
+authorized by this read-only storage work. This is the next implementation gap;
+S3.2/S4 and live report-provenance repair remain open.
+
 Documentation operations now share `bof3-docs` and `harness.docs`, replacing the
 repair-only skill and separate context-builder profile. Context/search/aggregate
 are read-only; edit/repair/one-document compact prepare full pinned inputs for
