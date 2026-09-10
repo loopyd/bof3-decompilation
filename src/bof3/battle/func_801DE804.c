@@ -2,9 +2,9 @@
 
 /* @behavior clears the first three bytes of all eight event-queue slots.
  * @source 0x801DE804
- * @status partial
- * @match 29.17
- * @residual non-exact live audit: 7/21 instructions; 84 original bytes versus 96 current.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801DE804(void) {
   u8  index;
@@ -13,9 +13,9 @@ void func_801DE804(void) {
   index = 0u;
   do {
     offset = (u32)index * 0xcu;
-    BATTLE_EVENT_SLOT_FLAG(index) = 0u;
-    BATTLE_EVENT_SLOT_A(index) = 0u;
-    BATTLE_EVENT_SLOT_B(index) = 0u;
+    D_801EB4F0[offset] = 0u;
+    D_801EB4F0[offset + 1u] = 0u;
+    D_801EB4F0[offset + 2u] = 0u;
     index += 1u;
   } while (index < 8u);
 }
