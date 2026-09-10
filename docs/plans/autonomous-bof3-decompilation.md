@@ -205,6 +205,32 @@ pass: 60 macro transactions, 12 shared PRE/decomposition (one pre-existing mode
 check deselected), 46 plans, plus the 122-check macro/history/review run. No frozen proof was expanded or rewritten, and
 the panel group's live private/shared acceptance obligations remain unfinished.
 
+The bounded battler predicate mission retained an independently reviewed partial
+at `emi/battle/battle/03@0x801DB3A0`. It replaces the absolute address macro with
+the existing target-local `Battle03LocalHalfRecord` array view. Original and
+retained code each read ordinary RAM once; this does not license removing volatile
+qualification elsewhere. Native comparison improved from 8/20 instructions,
+80 bytes, to 11/18 instructions (61.11%), 72 bytes; original size is 68. Final
+instruction and byte gates remain DIFFER, symbols pass, and metadata stays partial.
+Reviewer `01a089a5-937f-7780-b4a3-9bf2afa7a794` accepted coherent partial retention,
+not exactness or ladder exhaustion, and is closed. All four source trials are
+consumed; do not restart that mission or extend its `1219657.660698305` cutoff.
+Evidence, original pins and final native summary are retained under
+`out/reviews/battler-threshold-bvcl3lvf/`. Untried signed-comparison/early-return
+and single-result forms remain future proposals, not authorized extra trials.
+
+Macro readiness scout `01a089a0-dedc-7332-9273-f2c6766c197e` completed and closed:
+all ten frozen panel wrappers already use `PANEL_ADVANCE_X(..., 320)`; four other
+consumers use limit 17. No useful private extraction was found. Do not unshare and
+re-extract merely to obtain transaction receipts. The next tooling obligation is
+a separately pinned, independently reviewed **existing-abstraction disposition**,
+with unchanged-state verification, semantic/use-site evidence and native gates.
+It must distinguish reviewed existing work from new safe applications, reject
+drift, and preserve all consumers and original participation/history constraints.
+Current empty/identical edits reject, revalidation needs a prior reviewed envelope,
+and accounting has no existing-work disposition. Thus the frozen macro remains
+blocked, not accepted no-op; three-target capability alone does not close it.
+
 Retained history follows. The skill-only correction above governs current execution;
 old transport commands, permissions and NOT RUN/readiness claims are historical.
 
