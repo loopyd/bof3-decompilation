@@ -41,6 +41,13 @@ Claim parents are resolved once per collection and rechecked before return;
 retargeted or missing parents reject the pass. Parent resolution is never reused
 between collections; returned mutable manifest fields remain isolated.
 
+The decomp-status batch path loads a fresh catalog after each successful build and
+reuses it only during read-only source resolution. Ownership winner/tie rules stay
+unchanged. Per-source fallback builds and native comparisons reload ownership;
+the phase catalog is not passed across those subprocess boundaries or stored in
+resolved results. This avoids repeated full claim validation without weakening
+post-build comparison checks.
+
 Macro, naming and type `cli.py` modules register their `rev-query` subcommands and own their
 argument-to-query adapters. `commands/rev_query.py` composes those registrations,
 checks index freshness and target identity, and prints their results. Naming

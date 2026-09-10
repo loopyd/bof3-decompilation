@@ -250,13 +250,19 @@ def resolve_source_for_address(
     return None
 
 
-def owning_manifest(root: Path, source_path: Path):
+def owning_manifest(
+    root: Path,
+    source_path: Path,
+    *,
+    manifests: Mapping[str, TargetManifest] | None = None,
+):
     """Return the manifest that explicitly claims ``source_path``, or None.
 
     Ownership is target-qualified and path-independent: only explicit
     ``sources``/``support_sources``/``headers`` claims confer it, so a lift
     moved into a semantic ``src/bof3/<class>/`` folder keeps its owner.
-    ``source_dir`` directory ancestry never confers ownership.
+    ``source_dir`` directory ancestry never confers ownership. A caller may
+    supply a validated catalog for one read-only resolution phase.
     """
 
     try:
@@ -265,9 +271,10 @@ def owning_manifest(root: Path, source_path: Path):
         )
     except ValueError:
         return None
+    catalog = load_target_manifests(root) if manifests is None else manifests
     claimed_owners = [
         manifest
-        for manifest in load_target_manifests(root).values()
+        for manifest in catalog.values()
         if any(Path(claimed) == source_rel for claimed in manifest.sources)
         or any(Path(claimed) == source_rel for claimed in manifest.support_sources)
         or any(Path(claimed) == source_rel for claimed in manifest.headers)

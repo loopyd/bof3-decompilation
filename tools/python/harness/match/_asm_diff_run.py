@@ -6,7 +6,7 @@ import os
 import re
 import shutil
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from ..build.operations import build, cmake_target_for_source
 from ..io import write_json, RepoLayout
@@ -29,6 +29,7 @@ from ._asm_resolve import (
 )
 
 from ..domain.sources import compiled_symbol_name, owning_manifest, source_address
+from ..domain.manifests import TargetManifest
 
 from ._asm_diff_payload import AsmDiffRequest, build_result_payload, render_diff
 
@@ -64,7 +65,12 @@ def run_build_object(
         )
 
 
-def _asm_diff_resolve(repo: RepoLayout, request: AsmDiffRequest) -> dict[str, Any]:
+def _asm_diff_resolve(
+    repo: RepoLayout,
+    request: AsmDiffRequest,
+    *,
+    manifests: Mapping[str, TargetManifest] | None = None,
+) -> dict[str, Any]:
     """Resolve and prepare every input needed by the comparison step.
 
     Returns a dict with keys:
@@ -78,7 +84,11 @@ def _asm_diff_resolve(repo: RepoLayout, request: AsmDiffRequest) -> dict[str, An
     address = (
         request.address if request.address is not None else source_address(source_path)
     )
-    manifest = owning_manifest(repo.root, source_path)
+    manifest = (
+        owning_manifest(repo.root, source_path)
+        if manifests is None
+        else owning_manifest(repo.root, source_path, manifests=manifests)
+    )
     function_name = compiled_symbol_name(
         repo.root, source_path, address, manifest=manifest
     )

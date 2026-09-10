@@ -7,7 +7,7 @@ import re
 from typing import Any, Callable, Iterable
 
 from ..build.operations import batch_build, cmake_target_for_source, configure
-from ..domain.manifests import TargetManifest
+from ..domain.manifests import TargetManifest, load_target_manifests
 from ..domain.claims import manifest_source_paths
 from ..domain.layout import ReviewedSplatLayout, parse_splat_layout
 from ..domain.sources import (
@@ -248,11 +248,14 @@ def _run_batch_misses(
             # record and stale objects cannot enter the matcher.
             resolved_items: list[tuple[_WorkItem, AsmDiffRequest, dict[str, Any]]] = []
             stale_items: list[_WorkItem] = []
+            manifests = None
             for item in items:
                 _, source, address, _, _, manifest = item
                 try:
+                    if manifests is None:
+                        manifests = load_target_manifests(root)
                     request = _request_for_source(root, source, address, manifest)
-                    resolved = _asm_diff_resolve(repo, request)
+                    resolved = _asm_diff_resolve(repo, request, manifests=manifests)
                     obj = resolved["object_path"]
                     if (
                         not obj.is_file()

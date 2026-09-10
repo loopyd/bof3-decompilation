@@ -408,7 +408,7 @@ def test_batch_builds_fresh_misses_once_per_target(tmp_path: Path, monkeypatch) 
         batch_calls.append(targets)
         return subprocess.CompletedProcess([], 0, "", "")
 
-    def resolve(repo, request):
+    def resolve(repo, request, *, manifests=None):
         object_path = request.source_path.with_suffix(".o")
         object_path.touch()
         return {
@@ -463,7 +463,7 @@ def test_batch_resolve_failure_falls_back_once(tmp_path: Path, monkeypatch) -> N
     monkeypatch.setattr(
         dsp,
         "_asm_diff_resolve",
-        lambda repo, request: (_ for _ in ()).throw(
+        lambda repo, request, *, manifests=None: (_ for _ in ()).throw(
             ValueError("cannot infer test size")
         ),
     )
@@ -503,7 +503,7 @@ def test_batch_stale_object_falls_back_once_without_duplicate_record(
     monkeypatch.setattr(
         dsp,
         "_asm_diff_resolve",
-        lambda repo, request: {
+        lambda repo, request, *, manifests=None: {
             "source_path": request.source_path,
             "address": request.address,
             "function_name": request.source_path.stem,
@@ -682,7 +682,7 @@ def test_source_change_invalidates_cache_and_recomputes(
         batch_calls.append(targets)
         return subprocess.CompletedProcess([], 0, "", "")
 
-    def resolve(repo, req):
+    def resolve(repo, req, *, manifests=None):
         obj = req.source_path.with_suffix(".o")
         obj.touch()
         return {
@@ -767,7 +767,7 @@ def test_compile_inputs_invalidate_only_affected_target_then_all_targets(
         batches.append(targets)
         return subprocess.CompletedProcess([], 0, "", "")
 
-    def resolve(repo, request):
+    def resolve(repo, request, *, manifests=None):
         object_path = request.source_path.with_suffix(".o")
         object_path.touch()
         return {

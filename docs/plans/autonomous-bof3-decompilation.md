@@ -146,6 +146,26 @@ inferred. This bounded two-trial stop is not exhaustion. Remaining work includes
 clean call bindings/address representations and register/code-generation
 differences, with a separately bounded mission and independent review required.
 
+Call-binding follow-up for battle15 `800A36F0` remains evidence-blocked: its
+manifest declares no companion ownership. Current owner queries locate `80196718`
+in game00 and `801DDAB4` in battle03 (other images also contain that address).
+These static leads do not establish battle15 residency or ABI; no foreign binding
+or prototype was introduced. The retained pointer/status corrections are unchanged.
+
+Status pipeline continuation reuses a validated manifest catalog only in the
+post-build, read-only resolution loop; comparisons and fallback builds still load
+fresh ownership. Independent reviewer `01a08983-ec3d-7cf2-bcbc-07239455dc2a`
+found no issues and was closed. Controlled battle03 resolution of all 217 functions
+fell from 31.286s to 3.851s, with identical serialized outputs and catalog loads
+reduced from 217 to one. Profiles are `/tmp/bof3-resolution-{before,after}.prof`.
+The full uncached native check completed in 44.359s; all 217 function records equal
+the retained earlier report: 185 exact, 32 partial, zero invalid, no coverage error.
+Current report: `out/reviews/status-catalog-after.json`; full profile:
+`/tmp/bof3-status-catalog-after.prof`. This is not a controlled whole-command timing
+comparison against the older run. Existing checks: 68 status/source tests plus
+12 owner/decomposition tests pass; one pre-existing fixed-mode test is deselected.
+No new tests, persistent cache or claim/ownership policy changes were added.
+
 ## Current Codex continuation
 
 Retained history follows. The skill-only correction above governs current execution;
