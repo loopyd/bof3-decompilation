@@ -6,6 +6,9 @@ from pathlib import Path
 import re
 from typing import Any, Callable, Iterable
 
+from harness.domain.functions import collect_lift_metadata
+from harness.domain.tags import count_function_metadata
+
 from ..build.operations import batch_build, cmake_target_for_source, configure
 from ..domain.manifests import TargetManifest, load_target_manifests
 from ..domain.claims import manifest_source_paths
@@ -132,6 +135,23 @@ def _build_preflight(
             except (OSError, UnicodeError) as exc:
                 ready.append(_invalid_record(root, target, source, str(exc)))
                 continue
+            if count_function_metadata(text) > 1:
+                try:
+                    records = collect_lift_metadata(text)
+                except ValueError as error:
+                    ready.append(_invalid_record(root, target, source, str(error)))
+                    continue
+                ready.extend(
+                    _invalid_record(
+                        root,
+                        target,
+                        source,
+                        "multi-function native comparison requires compilation-unit migration",
+                        address,
+                    )
+                    for address in records
+                )
+                continue
             address = parse_source_tag(text)
             expected_key = source_expected_key(source_dir, source)
             expected_address = (
@@ -159,7 +179,15 @@ def _build_preflight(
                         root,
                         target,
                         source,
-                        f"source address disagrees with Splat boundary 0x{expected_address:08X}",
+                        "source address disagrees with Splat boundary "
+                        + ", ".join(
+                            f"0x{value:08X}"
+                            for value in (
+                                expected_address
+                                if isinstance(expected_address, tuple)
+                                else (expected_address,)
+                            )
+                        ),
                         address,
                     )
                 )

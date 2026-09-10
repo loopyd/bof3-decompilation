@@ -15,10 +15,11 @@ from pathlib import Path
 from typing import Iterable, Mapping
 
 from .manifests import TargetManifest
+from .functions import collect_lift_metadata
+from .tags import parse_behavior_tag
 from .sources import (
-    LiftMetadataError,
     _scan_lift_sources,
-    lift_metadata,
+    SourceAddressCollision,
     source_expected_key,
 )
 
@@ -55,7 +56,7 @@ def collect_manifest_source_addresses(
     root: Path,
     manifest: TargetManifest,
     *,
-    expected_lifts: Mapping[str, int] | None = None,
+    expected_lifts: Mapping[str, int | tuple[int, ...]] | None = None,
 ) -> list[tuple[Path, int]]:
     """Target-qualified lift scan from explicit claims.  Same metadata rules
     as ``domain.sources.collect_source_addresses``; collisions name the
@@ -74,7 +75,7 @@ def resolve_manifest_source_for_address(
     manifest: TargetManifest,
     address: int,
     *,
-    expected_lifts: Mapping[str, int] | None = None,
+    expected_lifts: Mapping[str, int | tuple[int, ...]] | None = None,
 ) -> Path | None:
     """Return the target's claimed source claiming ``address``, or None."""
 
@@ -105,29 +106,29 @@ def manifest_binding_sources(root: Path, manifest: TargetManifest) -> list[Path]
 
 
 def index_source_paths(source_paths: Iterable[Path]) -> dict[int, Path]:
-    """Read each claimed source once; preserve sorted first-match resolution."""
+    """Read each claimed source once and retain every unambiguous function owner."""
 
     sources: dict[int, Path] = {}
     for path in sorted(path for path in source_paths if path.suffix == ".c"):
         try:
-            address, _behavior = lift_metadata(path)
-        except (OSError, UnicodeError, LiftMetadataError):
+            records = collect_lift_metadata(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError):
             continue
-        sources.setdefault(address, path)
+        for address, metadata in records.items():
+            if parse_behavior_tag(metadata) is None:
+                continue
+            if address in sources and sources[address] != path:
+                raise SourceAddressCollision(
+                    f"duplicate source owner for 0x{address:08X}: {sources[address]} and {path}"
+                )
+            sources[address] = path
     return sources
 
 
 def resolve_source_for_paths(source_paths: Iterable[Path], address: int) -> Path | None:
     """Return the claimed source carrying ``address`` in its ``@source`` tag."""
 
-    for source_path in sorted(path for path in source_paths if path.suffix == ".c"):
-        try:
-            candidate, _behavior = lift_metadata(source_path)
-        except (OSError, UnicodeError, LiftMetadataError):
-            continue
-        if candidate == address:
-            return source_path
-    return None
+    return index_source_paths(source_paths).get(address)
 
 
 __all__ = [

@@ -125,14 +125,11 @@ def transaction_scope(
     cross = _files_containing(
         root, old_name, _cross_target_files(root, target, manifest)
     )
-    try:
-        from harness.domain.claims import resolve_source_for_paths
+    from harness.domain.claims import resolve_source_for_paths
 
-        definition = resolve_source_for_paths(
-            manifest_source_paths(root, manifest), address
-        )
-    except (ValueError, OSError):
-        definition = None
+    definition = resolve_source_for_paths(
+        manifest_source_paths(root, manifest), address
+    )
     map_rel = (
         (root / "config" / "targets" / target / "symbols.txt")
         .relative_to(root)

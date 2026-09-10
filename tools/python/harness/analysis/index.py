@@ -10,7 +10,7 @@ from ..domain.manifests import load_target_manifests
 from ..domain.manifests import TargetManifest
 from .index_validation import validate_index, validate_status_index
 
-SCHEMA_VERSION = "bof3.reverse-index/v14"
+SCHEMA_VERSION = "bof3.reverse-index/v15"
 
 
 def index_path(root: Path) -> Path:

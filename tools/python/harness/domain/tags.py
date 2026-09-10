@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import re
 
+from harness.common.lexicon import iter_c_lexemes
+
 SOURCE_TAG_RE = re.compile(r"@source\s+(?:0x)?([0-9A-Fa-f]{8})\b")
 BEHAVIOR_TAG_RE = re.compile(r"@behavior (?:UNKNOWN: .+|[^\n]+)")
 STATUS_TAG_RE = re.compile(r"@status\s+(exact|partial|invalid)\b")
@@ -29,6 +31,51 @@ RAW_SYMBOL_NAME_RE = re.compile(r"^(?:func|D|T)_[0-9A-Fa-f]{8}$")
 PREFIXED_RAW_NAME_RE = re.compile(r"(?:^|_)(?:func|D)_[0-9A-Fa-f]{8}\b")
 
 
+def count_function_metadata(text: str) -> int:
+    """Count function metadata groups, including incomplete leading source tags."""
+
+    groups: list[tuple[int, int, int]] = []
+    for match in iter_c_lexemes(text):
+        if not match.group().startswith(("/*", "//")):
+            continue
+        start, end = match.span()
+        body = match.group()
+        behaviors = len(re.findall(r"@behavior\b", body))
+        sources = len(re.findall(r"@source\b", body))
+        before = text[text.rfind("\n", 0, start) + 1 : start].strip()
+        after = text[end:].lstrip()
+        if (
+            not behaviors
+            and not re.match(r"extern\b[^;{}]*\([^;{}]*\)\s*\{", after)
+            and (
+                re.match(r"(?:extern|typedef)\b|#\s*define\b", after)
+                or re.search(r"\bextern\b|#\s*define\b|;", before)
+            )
+        ):
+            sources = 0
+        if groups and not text[groups[-1][0] : start].strip():
+            _previous_end, previous_sources, previous_behaviors = groups[-1]
+            groups[-1] = (
+                end,
+                sources + previous_sources,
+                behaviors + previous_behaviors,
+            )
+        else:
+            groups.append((end, sources, behaviors))
+    return sum(max(sources, behaviors) for _end, sources, behaviors in groups)
+
+
+def require_single_function(text: str) -> None:
+    """Reject ambiguous file-level readers/editors until their record migration."""
+
+    if (
+        text.count("@behavior") > 1 or text.count("@source") > 1
+    ) and count_function_metadata(text) > 1:
+        raise ValueError(
+            "multiple function metadata blocks require address-scoped access"
+        )
+
+
 def parse_source_tag(text: str) -> int | None:
     """Return the lift file's function address from its @source tag, or None.
 
@@ -38,6 +85,7 @@ def parse_source_tag(text: str) -> int | None:
     origin address without identifying the function and are skipped.
     """
 
+    require_single_function(text)
     fallback = None
     for match in SOURCE_TAG_RE.finditer(text):
         start = text.rfind("/*", 0, match.start())
@@ -65,6 +113,7 @@ def parse_source_tag(text: str) -> int | None:
 def parse_behavior_tag(text: str) -> str | None:
     """Return the @behavior tag text, or None when absent."""
 
+    require_single_function(text)
     match = BEHAVIOR_TAG_RE.search(text)
     return match.group(0) if match is not None else None
 
@@ -103,6 +152,7 @@ def _set_single_tag_line(text: str, tag: str, value: str) -> tuple[str, bool]:
 
 def canonical_exact_progress(text: str) -> tuple[str, bool]:
     """Canonicalize an existing progress block without touching C syntax."""
+    require_single_function(text)
     if not STATUS_TAG_RE.search(text):
         return text, False
     fixed, _ = _set_single_tag_line(text, "status", "exact")
@@ -122,6 +172,7 @@ def canonical_exact_progress(text: str) -> tuple[str, bool]:
 def parse_progress_tags(text: str) -> tuple[str, float | None, str] | None:
     """Return validated lift status, live match percentage, and residual."""
 
+    require_single_function(text)
     occurrences = {
         name: len(pattern.findall(text)) for name, pattern in _TAG_OCCURRENCES.items()
     }

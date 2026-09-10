@@ -11,9 +11,12 @@ for rollout and unfinished gates.
 `sh bin/combiner inspect-source src/bof3/ui/advancePanelXTo17.c` reads one explicit
 source without building, refreshing the index or writing. `harness.domain.functions`
 owns `parse_function_records` and `select_function_record`; `harness.combiner`
-owns inspection and CLI adaptation. This first slice inspects multiple records;
-existing source registry, index, matching and transaction consumers are not yet
-migrated. Do not consolidate production sources until those gates are implemented.
+owns inspection and CLI adaptation. Source claim enumeration and address-selected
+metadata now support grouped files; the reverse index derives each member's own
+lifecycle and attributes direct macro occurrences by implementation range. This is
+not full consumer migration: native matching, metadata repair, source-renaming and
+macro/type transactions still reject grouped inputs. Do not consolidate production
+sources until all gates are implemented.
 
 Each implementation has its own immediately preceding comment containing one
 `@source` and nonempty `@behavior`. Progress tags remain an atomic
@@ -48,6 +51,27 @@ Code between tagged implementations must end with a declaration semicolon; an
 untagged helper ending in `}` is not assumed to establish a safe boundary. Add its
 own leading metadata or defer unsupported source for review. Implicit-int definitions
 also require an explicit return type before inspection.
+
+Read-only enumeration uses `collect_lift_metadata` / `select_lift_metadata` and
+retains invalid progress as invalid rather than hiding a function. Strict inspection
+still rejects malformed progress. Legacy single-function metadata before includes or
+split across adjacent comments remains readable; combined files require attached
+records. Unscoped tag readers and exact-progress repair reject multiple records,
+including incomplete member tags, instead of selecting or overwriting the first.
+
+Reviewed source expectations retain every boundary address: singleton values remain
+integers and grouped values are sorted tuples. Scans require complete agreement and
+reject duplicate owners; they do not choose the first path. Layout promotion and
+function-qualified status caching remain pending. Index v15 invalidates older derived
+semantics; preserve the old index before rebuilding. A rejected candidate never
+replaces it, and an older schema is historical evidence, not current acceptance.
+
+Macro association uses authored ranges even when the analyzer omitted a sibling;
+that sibling's uses remain unresolved, never borrowed by the sole indexed function.
+Prologue/header/definition uses remain contextual. This does not yet migrate macro
+consumer coverage or type-use identities. Native resolve/compare and status preflight
+reject grouped files before comparison/cache reuse; transaction preparation, proposed
+C images and filename-changing naming facts retain corresponding guards.
 
 ## Planned discovery and ranking
 

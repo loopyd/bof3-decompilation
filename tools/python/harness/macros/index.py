@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Any
 
 from harness.domain.claims import manifest_header_paths, manifest_source_paths
+from harness.domain.functions import parse_function_records
+from harness.domain.tags import count_function_metadata
 from harness.io import file_sha256
 from harness.macros.facts import parse_macro_definitions, parse_macro_uses
 
@@ -255,9 +257,20 @@ def insert_macro_registry(
         text = row.path.read_text(encoding="utf-8", errors="replace")
         source_path = _relative(root, row.path)
         functions = connection.execute(
-            "SELECT id FROM functions WHERE target_id = ? AND source IN (?, ?)",
+            "SELECT id, address FROM functions WHERE target_id = ? AND source IN (?, ?)",
             (target, source_path, row.path.as_posix()),
         ).fetchall()
+        is_source = (
+            row.owner == target
+            and row.provenance == "source_claim"
+            and not row.generated_psyq
+        )
+        records = (
+            parse_function_records(text, validate_progress=False)
+            if is_source and count_function_metadata(text) > 1
+            else ()
+        )
+        functions_by_address = {function[1]: function[0] for function in functions}
         function_id = (
             functions[0][0]
             if len(functions) == 1
@@ -266,7 +279,30 @@ def insert_macro_registry(
             and not row.generated_psyq
             else None
         )
+        lines = text.splitlines(keepends=True)
+        line_offsets = [0]
+        for line in lines:
+            line_offsets.append(line_offsets[-1] + len(line))
         for use in parse_macro_uses(text, definition_names):
+            use_function = function_id
+            if records:
+                offset = line_offsets[use.source_line - 1] + use.source_column - 1
+                use_function = (
+                    next(
+                        (
+                            functions_by_address.get(record.address)
+                            for record in records
+                            if record.implementation_start
+                            <= offset
+                            < record.implementation_end
+                        ),
+                        None,
+                    )
+                    if row.owner == target
+                    and row.provenance == "source_claim"
+                    and not row.generated_psyq
+                    else None
+                )
             for definition_id in definitions[use.name]:
                 definition = connection.execute(
                     "SELECT generated, candidate_status, restrictions "
@@ -289,7 +325,7 @@ def insert_macro_registry(
                         use.arguments,
                         json.dumps(use.conditions),
                         use.context,
-                        function_id,
+                        use_function,
                         int(generated),
                         "noncandidate" if generated else definition[1],
                         json.dumps(restrictions),

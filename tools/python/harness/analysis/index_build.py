@@ -7,6 +7,8 @@ import sqlite3
 import tempfile
 from pathlib import Path
 
+from harness.domain.functions import select_lift_metadata
+
 from harness.macros.index import (
     insert_macro_registry,
     macro_input_digest,
@@ -303,7 +305,10 @@ def _insert_functions(
         lifecycle_text = None
         if source is not None:
             source_path = Path(source)
-            lifecycle_text = source_path.read_text(encoding="utf-8", errors="replace")
+            lifecycle_text = select_lift_metadata(
+                source_path.read_text(encoding="utf-8", errors="replace"),
+                function.address,
+            )
         compiled_symbol = _compiled_symbol(
             root, target, function.address, layout, manifest
         )
@@ -326,7 +331,7 @@ def _insert_functions(
                 identity[0] if identity else None,
                 identity[1] if identity else None,
                 int(identity is not None),
-                int(function.is_lifted),
+                int(source is not None),
                 source.as_posix() if isinstance(source, Path) else source,
                 lift_lifecycle(lifecycle_text),
                 (function.analyzer_size + 3) // 4,

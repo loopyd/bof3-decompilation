@@ -32,6 +32,7 @@ from harness.common.runtime import write_attestation
 from harness.domain.ids import normalize_target_id
 from harness.domain.manifests import load_target_manifests
 from harness.domain.registry import resolve_function
+from harness.domain import functions as source_functions
 from harness.macros import accounting as macro_accounting
 from harness.macros.blocks import validate_minimum
 from harness.macros.coverage import validate_consumer_coverage
@@ -108,6 +109,7 @@ def _functions(
             raise ValueError(
                 f"affected function must be exact/partial and manifest-claimed: {selector}"
             )
+        source_functions.require_single_source(resolved.source)
         result.append(
             {
                 "selector": selector,
@@ -284,6 +286,7 @@ def run_transaction(
     deadline: float | None = None,
 ) -> dict[str, Any]:
     manifest = _manifest(root, manifest_value, rederive=True)
+    source_functions.validate_single_source_changes(changes)
     allowed = validate_paths(root, manifest["allowed_paths"])
     validate_proof_inputs(root, manifest["exact_function_proofs"])
     if (

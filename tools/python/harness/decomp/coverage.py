@@ -8,11 +8,13 @@ from pathlib import Path
 
 import yaml
 
+from harness.domain.functions import collect_lift_metadata
+
 from ..domain.ids import normalize_target_id
 from ..domain.layout import parse_splat_layout
 from ..domain.psx import is_psx_exe, payload_for, validate_psx_header
 from ..domain.symbols import parse_map
-from ..domain.tags import parse_behavior_tag, parse_source_tag
+from ..domain.tags import parse_behavior_tag
 from .coverage_index import read_index, reconcile_index
 from .coverage_inputs import (
     CoverageInputs,
@@ -182,11 +184,20 @@ def target_coverage(inputs, target, manifest):
         authored = []
         for path in manifest.sources:
             text = inputs.read(path).decode()
-            address, behavior = parse_source_tag(text), parse_behavior_tag(text)
-            if address is None or behavior is None:
+            records = collect_lift_metadata(text)
+            if not records:
                 errors.append(f"missing authored function metadata: {path}")
                 continue
-            authored.append({"address": address, "source": path, "behavior": behavior})
+            for address, metadata in records.items():
+                behavior = parse_behavior_tag(metadata)
+                if behavior is None:
+                    errors.append(
+                        f"missing authored function metadata: {path}@0x{address:08X}"
+                    )
+                    continue
+                authored.append(
+                    {"address": address, "source": path, "behavior": behavior}
+                )
         row["authored"] = authored
         row["excluded_support_sources"] = list(manifest.support_sources)
         if not manifest.has_explicit_sources:

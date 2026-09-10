@@ -1514,23 +1514,35 @@ must satisfy them before the corresponding phase is marked done.
 - Evidence: domain/functions.py and combiner/inspection.py expose address-selected records and lexical ranges; bounded independent release review 01a089de-ca01-7261-9efd-7a82f332d533 accepts this slice only, retained at out/reviews/combiner-foundation-c1-20260910/review.md. All 147 relevant checks pass (one known Git-writing mode check deselected); wrapper checks 48 pass with pre-existing HEAD inventory omission bin/agent-run left reported. Thirty disposable negative cases, mixed records and all 14 panel records pass; Ruff and 119 documentation references pass. Earlier reviewer findings fixed; actual handles closed, no native or source acceptance claimed.
 - Acceptance: ordinary C89 bodies and body-emitting invocation records isolate metadata/progress; ambiguous, duplicate, nested or unsupported inputs reject; existing checks, disposable characterizations and independent review. Inspection never proves macro expansion or enables production combination.
 
-2. [C1.2] (open) Migrate source claims, layout, index and all metadata consumers.
+2. [C1.2] (in-progress) Migrate source claims, layout, index and all metadata consumers.
 - Owner: domain, analysis, decomp, naming, types and macros owners
 - Depends: C1.1
 - Blocker: none
-- Evidence: domain/sources.py and claims.py scan one address; identity.py rejects many boundaries per file; index_build.py, macros/index.py, decomp/preflight.py and naming consumers assume file-level metadata.
+- Evidence: source/claim enumeration, complete boundary address sets, scoped lifecycle and direct macro occurrences implemented; duplicate owners reject. Native resolve/compare/status, unscoped metadata repair, filename-changing naming facts and macro/type PRE/proposed C guards remain restrictive. Layout, function-qualified cache, naming editing and type/macro consumer coverage remain unmigrated. Existing battle15 testEntryBitE1.c also defines 0x8009C87C, already claimed by setEntryBitE1.c; new ownership checks expose this pre-existing collision rather than silently picking one file. Reviewed source cleanup and original/native evidence are required before publishing the v15 working index; do not delete that implementation or rewrite metadata merely to pass indexing.
 - Acceptance: exact target/address-to-record relation, many boundaries per source with complete coverage and duplicate rejection; metadata edits touch only selected records; status cache keys and lexical use links remain function-qualified, include-level consumers remain conservative; no first-record fallback or unrelated lifecycle overwrite.
+
+C1.2 source/index slice has a scoped clean final code review from
+`01a089f8-f794-7a63-802d-aaaf58d25f9d`; both earlier naming guard findings are fixed.
+Evidence is `out/reviews/c1-source-ownership-IPs4j27l/checkpoint.md`. Actual index
+rebuild exited 2 for the existing duplicate and preserved v14 bytes unchanged;
+repository metadata preflight fails for the same collision. Parent check groups
+364/241/104/56 pass with overlap and the known Git-writing mode check omitted;
+disposable grouped-index/guard probes and 69 references pass. Unchanged game00
+`0x801996FC` still passes 16/16 instructions and 64-byte native smoke under its
+original 180-second cap. These are not production consolidation acceptance.
+C1.3 may develop from C1.1 in parallel with remaining consumers, avoiding a circular
+dependency on the currently unpublishable index; C1.4 still requires both complete.
 
 3. [C1.3] (open) Prove multi-function compiler, build and native comparison correctness.
 - Owner: build, toolchain and matching owners
-- Depends: C1.2
+- Depends: C1.1
 - Blocker: none
 - Evidence: build/compiler.py overrides and native match/_asm_link.py text-prefix extraction need migration; catalog/default GCC selection must remain authoritative.
 - Acceptance: independently select whole-object placement or deterministic per-function compilation projections; preserve every effective compiler/flag profile or reject, no duplicated shared state or unbound generated inputs. Prove per-symbol original placement/relocation/size/instruction/byte checks including noncontiguous functions, calls and data sections; all-member native positive and negative probes. Scoped reviewed execution only; no sandbox changes or installs.
 
 4. [C1.4] (open) Add combiner discovery, ranked assessment and reviewed transactions.
 - Owner: combiner owner with independent human-value reviewer
-- Depends: C1.3
+- Depends: C1.2, C1.3
 - Blocker: none
 - Evidence: planned macro-family, functional-subcategory, shared-state/type and helper/call-cluster methods in combiner guide; no ranker or mutation CLI implemented yet.
 - Acceptance: one noun-module owner and concern skill for opportunities/ranking/audit/transactions/editing/CLI; explicit cleanup combiner node and thin invocation script; finite pinned membership/method/limits, overlap handling and configurable top N; would-a-human-do-this decisions before mutation. PRE/POST claims/maps/compiler/consumer closure, all-member gates, distinct final acceptance and owned deletion/move cancellation rollback preserve unrelated work and original budgets.

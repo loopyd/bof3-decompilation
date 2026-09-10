@@ -214,7 +214,7 @@ def build_snapshot(
     replay_sha256: str | None = None,
     source_dir: Path | None = None,
     source_paths: Iterable[Path] | None = None,
-    expected_lifts: dict[str, int] | None = None,
+    expected_lifts: dict[str, int | tuple[int, ...]] | None = None,
     timeout: int = 120,
 ) -> AnalysisSnapshot:
     """Build a portable snapshot from one stateless analyzer invocation set."""

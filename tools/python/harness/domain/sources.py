@@ -9,6 +9,7 @@ from .layout import ReviewedSplatLayout, parse_splat_layout
 from .symbols import load_map, map_path
 from .manifests import TargetManifest, load_target_manifests
 from .tags import parse_behavior_tag, parse_source_tag
+from .functions import collect_lift_metadata, select_lift_metadata
 
 
 class LiftMetadataError(ValueError):
@@ -59,10 +60,12 @@ def source_address(source_path: Path) -> int:
     return address
 
 
-def lift_metadata(source_path: Path) -> tuple[int, str]:
+def lift_metadata(source_path: Path, address: int | None = None) -> tuple[int, str]:
     """Return (address, behavior) for a lift source, raising on any gap."""
 
     text = source_path.read_text(encoding="utf-8")
+    if address is not None:
+        text = select_lift_metadata(text, address)
     address = parse_source_tag(text)
     if address is None:
         raise LiftMetadataError(
@@ -115,7 +118,7 @@ def source_expected_key(source_dir: Path, source_path: Path) -> str | None:
 def _scan_lift_sources(
     source_paths: Iterable[Path],
     source_dir: Path,
-    expected_lifts: Mapping[str, int] | None,
+    expected_lifts: Mapping[str, int | tuple[int, ...]] | None,
     owner: str | None = None,
 ) -> list[tuple[Path, int]]:
     """Shared strict lift scan over an explicit candidate set.
@@ -134,49 +137,58 @@ def _scan_lift_sources(
     claimed: dict[int, Path] = {}
     for source_path in sorted(source_paths):
         text = source_path.read_text(encoding="utf-8")
-        address = parse_source_tag(text)
+        try:
+            records = collect_lift_metadata(text)
+        except ValueError as error:
+            raise LiftMetadataError(
+                source_path, "invalid_metadata", str(error)
+            ) from error
         expected = None
         if expected_lifts is not None:
             key = source_expected_key(source_dir, source_path)
             if key is not None:
                 expected = expected_lifts.get(key)
-        if address is None:
+        if not records:
             if expected is None:
                 continue  # support/helper translation unit, not a lift
             raise LiftMetadataError(
                 source_path,
                 "missing_source",
-                f"expected lift from reviewed Splat boundary 0x{expected:08X}",
+                f"expected lift from reviewed Splat boundaries {expected!r}",
             )
-        if expected is not None and address != expected:
+        expected_addresses = (
+            set(expected) if isinstance(expected, tuple) else {expected}
+        )
+        if expected is not None and set(records) != expected_addresses:
             raise LiftMetadataError(
                 source_path,
                 "address_mismatch",
-                f"Splat boundary claims 0x{expected:08X}",
+                "Splat boundaries claim "
+                + ", ".join(
+                    f"0x{address:08X}" for address in sorted(expected_addresses)
+                ),
             )
-        behavior = parse_behavior_tag(text)
-        if behavior is None:
-            raise LiftMetadataError(
-                source_path,
-                "missing_behavior",
-                "expected an '@behavior' tag",
-            )
-        previous = claimed.get(address)
-        if previous is not None:
-            location = owner or str(source_dir)
-            raise SourceAddressCollision(
-                f"source address collision 0x{address:08X}: "
-                f"{previous.name} and {source_path.name} in {location}"
-            )
-        claimed[address] = source_path
-        rows.append((source_path, address))
+        for address, metadata in records.items():
+            if parse_behavior_tag(metadata) is None:
+                raise LiftMetadataError(
+                    source_path, "missing_behavior", "expected an '@behavior' tag"
+                )
+            previous = claimed.get(address)
+            if previous is not None:
+                location = owner or str(source_dir)
+                raise SourceAddressCollision(
+                    f"source address collision 0x{address:08X}: "
+                    f"{previous.name} and {source_path.name} in {location}"
+                )
+            claimed[address] = source_path
+            rows.append((source_path, address))
     return sorted(rows, key=lambda row: (row[1], row[0].name))
 
 
 def collect_source_addresses(
     source_dir: Path,
     *,
-    expected_lifts: Mapping[str, int] | None = None,
+    expected_lifts: Mapping[str, int | tuple[int, ...]] | None = None,
 ) -> list[tuple[Path, int]]:
     """Scan one target source directory deterministically.
 
@@ -192,7 +204,7 @@ def collect_source_addresses(
 
 def expected_lift_sources(
     layout: ReviewedSplatLayout, source_dir: Path
-) -> dict[str, int]:
+) -> dict[str, int | tuple[int, ...]]:
     """Map every reviewed Splat ``c`` boundary to a target-relative source stem.
 
     Relocated sources use their reviewed ``@source`` path.  In-root paths stay
@@ -200,7 +212,7 @@ def expected_lift_sources(
     relative.  Legacy boundaries without a source path remain top-level names.
     """
 
-    result: dict[str, int] = {}
+    result: dict[str, int | tuple[int, ...]] = {}
     source_parts = source_dir.parts
     for boundary in layout.boundaries:
         if boundary.kind != "c":
@@ -224,7 +236,23 @@ def expected_lift_sources(
             stem = boundary.name
         if stem is None:
             continue
-        result[stem] = boundary.virtual_start
+        previous = result.get(stem)
+        addresses = (
+            ()
+            if previous is None
+            else previous
+            if isinstance(previous, tuple)
+            else (previous,)
+        )
+        if boundary.virtual_start in addresses:
+            raise ValueError(
+                f"duplicate Splat source boundary: {stem}@0x{boundary.virtual_start:08X}"
+            )
+        result[stem] = (
+            tuple(sorted((*addresses, boundary.virtual_start)))
+            if addresses
+            else boundary.virtual_start
+        )
     return result
 
 
@@ -232,7 +260,7 @@ def resolve_source_for_address(
     source_dir: Path,
     address: int,
     *,
-    expected_lifts: Mapping[str, int] | None = None,
+    expected_lifts: Mapping[str, int | tuple[int, ...]] | None = None,
 ) -> Path | None:
     """Return the source claiming ``address``, or None when absent.
 

@@ -31,7 +31,7 @@ class RizinProjectSpec:
     reviewed_addresses: frozenset[int]
     replay: str
     replay_sha256: str
-    expected_lifts: dict[str, int]
+    expected_lifts: dict[str, int | tuple[int, ...]]
     source_paths: tuple[Path, ...] = ()
 
 

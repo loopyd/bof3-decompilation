@@ -4,13 +4,20 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from pathlib import Path
 
-from .tags import SOURCE_TAG_RE, lift_lifecycle, parse_behavior_tag, parse_progress_tags
+from harness.common.lexicon import iter_c_lexemes
 
-_LEXEME = re.compile(
-    r'/\*.*?\*/|//[^\n]*|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'',
-    re.DOTALL,
+from .tags import (
+    SOURCE_TAG_RE,
+    count_function_metadata,
+    lift_lifecycle,
+    parse_behavior_tag,
+    parse_progress_tags,
+    parse_source_tag,
+    require_single_function,
 )
+
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 _DIRECTIVE = re.compile(r"^[ \t]*#([^\n]*)(?:\n|$)", re.MULTILINE)
 _SOURCE = re.compile(r"@source\b")
@@ -39,7 +46,7 @@ class FunctionRecord:
 def _mask_lexemes(text: str) -> tuple[str, list[re.Match[str]]]:
     masked = list(text)
     comments = []
-    for match in _LEXEME.finditer(text):
+    for match in iter_c_lexemes(text):
         is_comment = match.group().startswith(("/*", "//"))
         if is_comment:
             comments.append(match)
@@ -106,7 +113,9 @@ def _parse_implementation(masked: str, start: int) -> tuple[int, int, str, str]:
     return start, end, "template", prefix
 
 
-def parse_function_records(text: str) -> tuple[FunctionRecord, ...]:
+def parse_function_records(
+    text: str, *, validate_progress: bool = True
+) -> tuple[FunctionRecord, ...]:
     """Inspect attached metadata without expanding macros or claiming native identity.
 
     Ordinary ANSI C89 definitions and standalone template invocations are supported.
@@ -156,7 +165,8 @@ def parse_function_records(text: str) -> tuple[FunctionRecord, ...]:
             " */\r\n\t"
         ):
             raise ValueError("function metadata requires nonempty @behavior")
-        parse_progress_tags(metadata)
+        if validate_progress:
+            parse_progress_tags(metadata)
         address = int(sources[0], 16)
         if address in addresses:
             raise ValueError(f"duplicate function metadata address 0x{address:08X}")
@@ -204,3 +214,43 @@ def select_function_record(text: str, address: int) -> FunctionRecord:
         if record.address == address:
             return record
     raise ValueError(f"no function metadata for 0x{address:08X}")
+
+
+def collect_lift_metadata(text: str) -> dict[int, str]:
+    """Enumerate attached records or one legacy file-level lift without guessing."""
+
+    if count_function_metadata(text) > 1:
+        return {
+            record.address: record.metadata
+            for record in parse_function_records(text, validate_progress=False)
+        }
+    address = parse_source_tag(text)
+    return {} if address is None else {address: text}
+
+
+def select_lift_metadata(text: str, address: int) -> str:
+    """Select metadata by original address, retaining legacy single-file syntax."""
+
+    records = collect_lift_metadata(text)
+    if address not in records:
+        raise ValueError(f"no function metadata for 0x{address:08X}")
+    return records[address]
+
+
+def require_single_source(source: Path) -> None:
+    """Keep unmigrated native/mutation owners from accepting a combined source."""
+
+    require_single_function(source.read_text(encoding="utf-8"))
+
+
+def validate_single_source_changes(changes: object) -> None:
+    """Reject proposed grouped C images before installation by legacy owners."""
+
+    if isinstance(changes, dict):
+        for name, content in changes.items():
+            if (
+                isinstance(name, str)
+                and name.endswith(".c")
+                and isinstance(content, str)
+            ):
+                require_single_function(content)

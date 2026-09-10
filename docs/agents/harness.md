@@ -36,10 +36,12 @@ as skill missions. Local process supervision remains for deterministic native to
 The cross-domain index remains one derived database; package separation does not
 create independent databases or relax freshness checks.
 
-`domain.functions` owns attached per-function metadata and lexical implementation
-ranges, including template invocations. Its new inspection API does not yet replace
-legacy file-level resolution; [combiner rollout](combiner.md) must migrate every
-consumer before production multi-function claims or transactions are enabled.
+`domain.functions` owns attached per-function metadata, address-selected read access
+and lexical implementation ranges, including template invocations. `domain.claims`
+enumerates all members and rejects duplicate owners; the index scopes lifecycle and
+direct macro occurrences. Shared comment/literal traversal belongs to `common.lexicon`.
+The [combiner rollout](combiner.md) still must migrate layout, native, naming/type/
+macro coverage and mutation owners before production consolidation is enabled.
 
 `domain/cache.py` owns process-local manifest reuse. Every lookup hashes current
 manifest and claim contents and checks canonical paths before reusing parsed data.

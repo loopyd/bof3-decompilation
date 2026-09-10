@@ -1,10 +1,4 @@
-"""Consolidated bof3.naming-audit/v3 row validation and immutable transaction facts.
-
-Analysis-specific derivation stays here: transaction scope, canonical
-storage, and generated required work come from ``naming_readiness``; the
-generic report/receipt/rung structural parsing lives in
-``domain.naming_facts`` so no domain module ever imports analysis.
-"""
+"""Naming row validation and immutable, target-qualified transaction facts."""
 
 from __future__ import annotations
 
@@ -14,6 +8,7 @@ import re
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Mapping
 
+from harness.domain.functions import require_single_source
 from harness.domain.claims import manifest_source_paths, resolve_source_for_paths
 from harness.naming.debt import address_of, collect_naming_debt
 from harness.domain.registry import payload_end_for, resolve_target
@@ -173,12 +168,14 @@ def pre_apply_facts(ctx: TargetContext, kind: str, name: str, new_name: str) -> 
     }
     if kind == "data":
         facts["storage"] = canonical_storage(ctx.root, ctx.target, address)
-    try:
-        destination = resolve_source_for_paths(
-            manifest_source_paths(ctx.root, ctx.manifest), address
-        )
-    except (ValueError, OSError):
-        destination = None
+    destination = resolve_source_for_paths(
+        manifest_source_paths(ctx.root, ctx.manifest), address
+    )
+    for relative in facts["scope"]["source_locations"]:
+        if relative.endswith(".c"):
+            require_single_source(ctx.root / relative)
+    if destination is not None:
+        require_single_source(destination)
     facts["destination"] = (
         destination.with_name(f"{new_name}{destination.suffix}")
         .relative_to(ctx.root)

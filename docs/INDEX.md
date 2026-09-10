@@ -67,8 +67,10 @@ authorization does not override sandbox decisions or authorize dependency instal
 | Macro opportunity policy and tool reference | `docs/agents/macros.md` |
 
 Until the [multi-function rollout](agents/combiner.md) clears registry and native
-gates, keep production lifts one function per C source; inspection now supports
-attached per-function records. This is a staged migration, not a permanent ban on
+gates, keep new production lifts one function per C source; inspection and read-only
+source/index ownership support attached per-function records. Existing grouped
+sources are not grandfathered into native or transaction acceptance. This is a
+staged migration, not a permanent ban on
 cohesive multi-function files. Lift identity comes from manifest claims,
 maps, Splat, and function-level `@source`/`@behavior` metadata—not filenames or
 directory ancestry. Maps use sorted `name = 0xADDRESS;` rows with uppercase
