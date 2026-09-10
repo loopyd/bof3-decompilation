@@ -260,6 +260,24 @@ No production macro disposition exists yet. Next: prepare the selected targets'
 native build before freezing fresh audit inputs, prove every actual consumer,
 obtain independent live semantic review, then verify the separate disposition.
 
+Live panel audit prerequisites exposed four additional limit-17 consumers with
+invalid progress metadata. Their bodies already match all 16 instructions/64 bytes.
+Canonical residual tags and accurate add-32/clamp-17 behavior now replace the
+invalid/incorrect comments; only game00's corresponding Splat behavior annotation
+also changes. Original boundaries, bindings and all C bodies are unchanged. Native
+before/after comparisons, byte matches and all three symbol checks pass. Reviewer
+`01a089be-920e-7ef3-a2eb-77d535781485` independently passed this metadata scope and
+the existing macro's semantics across all 14 consumers; final macro acceptance
+still requires the separate native audit and review, not this prerequisite review.
+The refreshed index has the unchanged ten-member candidate fingerprint and all
+14 exact consumers; the game00 snapshot remains fresh. The three target builds
+are warmed before freezing. Stage inputs and prior working index are retained in
+`out/reviews/panel-existing-du5098he/`; the original audit cutoff is
+`1222016.415020909`, one preparation and one native inspection, with two reviews
+total. The metadata dependency has its own consumed one-pass/one-review bound.
+Read current disposition evidence, when produced, through the macro owner; do not
+infer acceptance from this checkpoint or rewrite the original frozen-five pins.
+
 Retained history follows. The skill-only correction above governs current execution;
 old transport commands, permissions and NOT RUN/readiness claims are historical.
 

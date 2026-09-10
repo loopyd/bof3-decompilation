@@ -307,7 +307,7 @@ segments:
     - c
     - advancePanelXTo17
     - '@source: src/bof3/ui/advancePanelXTo17_game00_8019982C.c'
-    - '@behavior: advances panel x by 17 with the template clamp behavior.'
+    - '@behavior: Adds 32 to 16-bit panel x; signed results above 17 clamp to 17 and clear state.'
   - - 16492
     - asm
     - func_8019986C
