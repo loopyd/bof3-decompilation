@@ -70,6 +70,43 @@ Historical S3.4/S3.5 acceptance does not prove this new operator's end-to-end be
 S3.6 owns removal/skill implementation; S3.2 still owes a real bounded skill sequence;
 S4–S9 retain useful campaign, naming, type, macro and whole-game acceptance.
 
+## Skill-only continuation checkpoint
+
+Feature commit `53ba86e8` removes the model launchers and installs the instructional
+operator. Two concurrent read-only skill scouts completed before their shared
+original cutoff `1215665.660447284`, one assessment each, zero repairs or writes.
+Both real handles were observed completed and closed. Before/after index SHA-256
+was `6ab87c008e4cd085ef6cd893986a3c86cfa6e91f6ffd0190193ef8c83a0b8d04`;
+plan SHA-256 was `7f4f424b91537070f1968eb7e9f88029e147df6c830ca26ab1d0a0400f510f21`.
+These are bounded scouting results, not live domain or S3.2 acceptance:
+
+- Types, `01a0896a-d1ce-7f73-86ac-e6860fc9a55c`: the frozen storage and aggregate
+  leads at battle15 `1F800044` remain one linked blocked concern. Original accesses
+  distinguish a four-byte pointer cell from changing pointees; the existing
+  `BattleWork` declaration does not prove universal pointee identity or extent.
+  Next inspect the two pointer-assignment branches and restoration in
+  `emi/battle/battle/15@800A36F0`, resolving its extra source indirection against
+  original cell loads/stores before proposing a layout.
+- Macros, `01a0896a-d1ff-7a41-856e-dff9bf102a7c`: frozen exact group
+  `8e1ad03b4ba92303` retains all ten members and their original 64-byte hash.
+  `PANEL_ADVANCE_X` already implements the useful operation; fourteen lexical
+  consumers include four limit-17 uses. Cross-target private proofs, all semantic
+  guards and complete consumer acceptance remain missing. Next consider a scoped
+  metadata correction plus native/independent checks for frozen game00 `801996FC`,
+  not another extraction. Narrow index/source inspection was not live owner
+  descriptor validation or permission to widen the transaction.
+- Parent control: current manifest/source/map still bind battle15 `800A3638` to
+  `passesBytePairGate`; no rename replay or fresh terminal acceptance. Unfiltered
+  canonical naming validation with its retained evidence root exits 2 on the
+  historical `func_800A3638` binding scope. Local data remains blocked, not a no-op;
+  no report initialization, reconciliation or receipt rebinding occurred.
+
+Broader pytest and whole-source validation were deliberately interrupted after
+roughly eight and seven minutes; both process terminations were observed. Pytest
+also reported an interruption-time fixture teardown KeyError. Neither run passed;
+focused checks remain the feature evidence. No full native audit, recovery/resume,
+full-target naming closure or production skill sequence is claimed.
+
 ## Current Codex continuation
 
 Retained history follows. The skill-only correction above governs current execution;
@@ -1217,7 +1254,7 @@ must satisfy them before the corresponding phase is marked done.
 - Owner: parent
 - Depends: S3.6
 - Blocker: none
-- Evidence: S3.1 handoffs, efb1b118 accounting and whole S3.5 accepted; the bounded native sequence remains unfinished. Full-target naming blocks production, not controlled fixture stages or read-only blocked accounting. Parent freshness/attestation checkpoints remain explicit and cannot be delegated implicitly.
+- Evidence: S3.1 handoffs, efb1b118 accounting and whole S3.5 accepted; the skill-only continuation checkpoint records two real parallel read-only domain scouts and parent skip/blocked controls after 53ba86e8. The full bounded sequence remains unfinished. Full-target naming blocks production, not controlled fixtures or read-only blocked accounting. Parent freshness/attestation checkpoints remain explicit and cannot be delegated implicitly.
 - Acceptance: active-session mission delegation, existing applicable checks and independently reviewed finite skill execution with fixed queue/budget. Parallel read/review results must retain actual handles and disjoint scope; shared-checkout writes serialize. No Codex CLI/model subprocess or Pi fallback. May account blocked entries, never advance failed/unknown mutation or claim live closure from fixtures. Production requires unfiltered full-target naming complete:true and separate identity approval; final review binds actual selector/change. Accepted work skips; uncertain apply stops for recovery; no budget reset on resume.
 
 6. [S3.6] (done) Retire harness Codex launchers and establish the skill operator.
