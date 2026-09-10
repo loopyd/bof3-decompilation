@@ -1556,21 +1556,33 @@ that separate metadata audit. Full C1.2 consumer migration remains unfinished.
 
 Read-only scout `01a08a05-dac7-77c0-9588-81539af9a405` completed and closed within
 180 seconds, favoring post-maspsx section placement for compatible profiles over
-duplicating C translation units. Inactive, uncommitted `build/sections.py` and
-`match/placement.py` prototypes preserve one C unit, partition complete assembler
-envelopes and inspect actual linked symbols/ranges. Disposable native characterization
+duplicating C translation units. The inactive `build/sections.py` and
+`match/placement.py` kernel preserves one C unit, partitions complete assembler
+envelopes and inspects actual linked symbols/ranges. Disposable native characterization
 covers five noncontiguous functions, calls/tails/branches/function pointers, shared
 initialized data and one BSS allocation; 13 negative cases pass. Existing 71 checks
 pass with the known Git-writing mode check omitted. A fresh compiler characterization
 retained at `out/reviews/c1-native-sections-5_4evx1e/terminal.md` correctly rejected
 the old alias's 56 bytes against its reviewed 48-byte range; no grouped acceptance.
 Kernel reviewer `01a08a1c-afac-7202-bc74-6d8b3a3653e4` completed within 300 seconds
-and withheld acceptance. Fix reachable control-flow/delay-slot fallthrough, private
-validated no-replace output publication, subsection/attribute rejection and bounded
-native process ownership before integration or a feature commit. Default compiler,
-matcher and grouped-source guards remain unchanged. Shared-data proof, full member
-coverage, instruction selection, cache identities and producer/placement freshness
-remain required; do not infer readiness from the five-function probe.
+and withheld acceptance. All four findings are now fixed: reachable MIPS-I flow
+tracks ordinary entries separately from delay slots; private snapshot linking
+validates before confined no-replace publication; unsupported text subsections/
+attributes reject; supervised native calls share the caller's original deadline
+and output bound. `match.flow` and `match.execution` own those checks. Failed work
+retains scratch, especially with unconfirmed descendant cleanup; script/ELF
+publication is not an atomic pair and never replaces concurrent artifacts.
+Follow-up reviewer `01a08a3f-e26b-70f3-8c59-6b20675748ac` found no actionable
+inactive-kernel findings within the original 240 seconds and was closed. Parent
+evidence `out/reviews/c1-native-safety-0sdngfjo/result.json` records 18 safety
+rejects, including real MIPS branch-to-delay-slot fallthrough, both publication
+races, timeout cleanup and retained unconfirmed scratch. The five-function native
+probe and 13 negatives pass again; 34 existing checks pass with the known
+Git-writing mode check omitted. No GCC rerun or production consolidation occurred.
+Default compiler, matcher and grouped-source guards remain unchanged. Compatible
+profile/compiler integration, shared-data proof, full member coverage, instruction
+selection, cache identities and producer/placement freshness remain required;
+kernel acceptance does not complete C1.3 or authorize C1.4/C1.5.
 
 4. [C1.4] (open) Add combiner discovery, ranked assessment and reviewed transactions.
 - Owner: combiner owner with independent human-value reviewer

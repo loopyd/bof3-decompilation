@@ -75,9 +75,19 @@ C images and filename-changing naming facts retain corresponding guards.
 
 Native development currently favors section placement after one complete maspsx
 translation, retaining the original C translation unit and compiler profile. The
-inactive `build.sections` / `match.placement` prototypes are not production routes:
-control-flow, publication, subsection and process-bound review findings remain open.
-Do not use their artifacts as grouped-source acceptance or bypass existing guards.
+inactive `build.sections` / `match.placement` kernel is not a production route.
+It rejects unsupported text subsections/attributes, unplaced allocated sections,
+incorrect symbols/ranges and non-ELF32 little-endian MIPS inputs. `match.flow`
+checks reachable branches and delay slots, conservatively rejecting unproved
+indirect/exception transfers. This proves isolation, not original-byte fidelity.
+`match.execution` supervises every native command under one caller-owned absolute
+deadline and output bound. Linking validates a private snapshot before confined,
+exclusive script/ELF publication; the pair is not atomic. Failure retains scratch
+and partial outputs, including when descendant cleanup is unconfirmed. Concurrent
+artifacts are never replaced. These kernel fixes pass disposable native probes
+and independent review, not grouped-source acceptance. Compiler integration,
+profile compatibility, shared-data proof, instruction comparison, complete member
+coverage and cache freshness remain open; do not bypass existing guards.
 
 ## Planned discovery and ranking
 
