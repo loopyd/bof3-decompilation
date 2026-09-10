@@ -6,14 +6,15 @@
  * returns the updated status word.
  * @source 0x800A36F0
  * @status partial
- * @match 24.86
- * @residual non-exact live audit: 44/177 instructions; 708 original bytes versus 704 current.
+ * @match 15.25
+ * @residual non-exact live audit: 27/177 instructions; 708 original bytes versus 708 current.
  */
 u16 func_800A36F0(u8 battler_index, u16 flags) {
   volatile u8*  player_base;
   volatile u16* status_slot;
   u16           status;
-  u32           scratchpad_saved;
+  u16           applied_status;
+  u8*           scratchpad_saved;
   u8            player;
   u8            enemy;
 
@@ -78,23 +79,24 @@ u16 func_800A36F0(u8 battler_index, u16 flags) {
     player = battler_index;
     FUNCTION_AT(void (*)(volatile u8*),
                 0x80196718u)(player_base + ((u32)player * 0x140u) + 0x5e90u);
-    scratchpad_saved = (u32)*BATTLE_SCRATCHPAD_PTR;
-    PSX_REF(volatile u16, 0x80145f10u + ((u32)player * 0x140u)) = status;
-    *BATTLE_SCRATCHPAD_PTR =
-        (volatile u8*)(u32)(player_base + ((u32)player * 0x140u) + 0x5e90u);
+    scratchpad_saved = g_battle_work;
+    status_slot = PSX_PTR(volatile u16, 0x80145f10u + ((u32)player * 0x140u));
+    *status_slot = status;
+    applied_status = *status_slot;
+    g_battle_work = (u8*)(player_base + ((u32)player * 0x140u) + 0x5e90u);
   } else {
     enemy = battler_index - 3u;
     FUNCTION_AT(void (*)(volatile u8*), 0x80196718u)(
-        (volatile u8*)((u32)BATTLE_ENEMY_BATTLER_BASE + ((u32)enemy * 0x118u)));
-    scratchpad_saved = (u32)*BATTLE_SCRATCHPAD_PTR;
-    PSX_REF(volatile u16, 0x801eb6b2u + ((u32)enemy * 0x118u)) = status;
-    *BATTLE_SCRATCHPAD_PTR =
-        (volatile u8*)(u32)((u32)BATTLE_ENEMY_BATTLER_BASE +
-                            ((u32)enemy * 0x118u));
+        BATTLE_ENEMY_BATTLER_BASE + ((u32)battler_index * 0x118u));
+    scratchpad_saved = g_battle_work;
+    status_slot = PSX_PTR(volatile u16, 0x801eb6b2u + ((u32)enemy * 0x118u));
+    *status_slot = status;
+    applied_status = *status_slot;
+    g_battle_work = (u8*)(BATTLE_ENEMY_BATTLER_BASE + ((u32)battler_index * 0x118u));
   }
 
-  FUNCTION_AT(void (*)(u16), 0x801ddab4u)(status);
-  *BATTLE_SCRATCHPAD_PTR = (volatile u8*)scratchpad_saved;
+  FUNCTION_AT(void (*)(u16), 0x801ddab4u)(applied_status);
+  g_battle_work = scratchpad_saved;
 
   return status;
 }

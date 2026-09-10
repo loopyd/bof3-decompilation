@@ -128,6 +128,24 @@ installation occurred. Native approval is still required; the host restriction
 itself is not removed. Skill validators, 41 existing context/cleanup checks and
 19 documentation references pass.
 
+Pointer-slot continuation (reviewed partial, not lift/type acceptance): the
+single-selector battle15 `800A36F0` mission retained evidence and both trials in
+`out/reviews/pointer-slot-mqohxl/`, under unchanged cutoff `1216748.861511238`.
+The preserved before-source equals HEAD at mission start. Baseline was 44/177
+(24.86%), 704 bytes against original 708. Trial one repaired byte-vs-pointer-cell
+access and measured 51/177 (28.81%), 656 bytes; reviewer
+`01a0897b-aee6-7620-b52c-108a5f9b013b` accepted only that narrow correction.
+Trial two also restored the full enemy index for the call/installed pointer and
+the volatile status reload used as the second call argument, preserving the cached
+return value. It measures 27/177 (15.25%), 708 bytes; reviewer
+`01a0897d-1a8b-7e50-9580-9b631d379089` explicitly recommends retaining the coherent
+semantic corrections despite the lower positional score. Both handles completed
+and closed before cutoff; final byte-match exits 1 (DIFFER), never accepted/exact.
+Symbols pass; no shared type, pointee layout, macro proof or naming closure is
+inferred. This bounded two-trial stop is not exhaustion. Remaining work includes
+clean call bindings/address representations and register/code-generation
+differences, with a separately bounded mission and independent review required.
+
 ## Current Codex continuation
 
 Retained history follows. The skill-only correction above governs current execution;
