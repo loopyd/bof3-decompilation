@@ -13,7 +13,7 @@ All paths are below `tools/python/harness/`.
 | `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/naming-audit` → `harness.naming.cli`; `bin/naming-evidence-run` → `harness.naming.runner` |
 | `types/` | C declarations, representation inference, type-use/candidate indexing, reviewed type transactions | `bin/type-audit` → `harness.types.cli` |
 | `docs/` | scoped Markdown references, snapshots, search, context, aggregation and edit/repair/compaction preparation | `bin/docs` → `harness.docs.cli` |
-| `decomp/` | lift inventory/mission pins, parent native diagnosis and review-pending candidate gates | `bin/agent-run diagnose` → `harness.decomp.cli` |
+| `decomp/` | lift inventory/mission pins, parent native diagnosis and review-pending candidate audits | `bin/agent-run diagnose` / `audit` → `harness.decomp.cli` |
 | `common/` | reusable CLI, digests, confined files, process lifecycle, workspace, native receipts and acceptance mechanisms | direct imports from the mechanism owner |
 | `analysis/` | cross-domain reverse index, graph, mission and query coordination | `bin/index`, `bin/rev-query` |
 | `domain/` | manifests, target identity, original binary/layout, source claims and includes | shared repository facts, not candidate acceptance |
@@ -22,9 +22,10 @@ Each domain uses noun files such as `index.py`, `queries.py`, `review.py`,
 `transactions.py`, `application.py`, and `cli.py`. Naming's finer categories include
 `collection.py`, `journal.py`, `namespace.py`, `equivalence.py`, and `terminal.py`.
 Package initializers are inert: import the actual owner, not a compatibility facade.
-Parent [lift diagnosis](codex.md#parent-lift-diagnosis) uses `decomp.diagnosis`,
-`missions`, `inventory`, `gates` and `execution`; `context.capabilities` owns the
-explicit directory policy. Diagnosis is neither a model writer nor acceptance.
+Parent [lift diagnosis](codex.md#parent-lift-diagnosis) and [audit](codex.md#retained-lift-audit)
+use `decomp.diagnosis`, `audit`, `missions`, `inventory`, `gates`, `execution` and
+`evidence`; `context.capabilities` owns directory policy. Shared boot/cutoff checks
+live in `common.deadlines`. Neither command is a model writer or acceptance.
 The cross-domain index remains one derived database; package separation does not
 create independent databases or relax freshness checks.
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+from pathlib import Path
 import time
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -40,6 +41,30 @@ def check_deadline() -> None:
         raise DeadlineExpired(
             "transaction work deadline expired; cleanup requires its retained tail"
         )
+
+
+def capture_work_clock() -> dict:
+    check_deadline()
+    deadline = resolve_deadline()
+    if deadline is None:
+        raise ValueError("retained work clock requires an original cutoff")
+    return {
+        "boot_id": Path("/proc/sys/kernel/random/boot_id").read_text().strip(),
+        "deadline": deadline,
+    }
+
+
+def validate_work_clock(clock: object) -> float:
+    if (
+        not isinstance(clock, dict)
+        or set(clock) != {"boot_id", "deadline"}
+        or clock["boot_id"]
+        != Path("/proc/sys/kernel/random/boot_id").read_text().strip()
+        or clock["deadline"] is None
+    ):
+        raise ValueError("retained work clock is invalid or belongs to another boot")
+    validate_deadline(clock["deadline"])
+    return clock["deadline"]
 
 
 @contextmanager

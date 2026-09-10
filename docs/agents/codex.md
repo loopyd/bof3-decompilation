@@ -136,12 +136,54 @@ independent semantic review needed for acceptance.
 Only a fresh direct-child output directory is allowed. It retains the pinned
 `mission.json`, `policy.json`, invocation cutoff, started/spawn/terminal records,
 fsynced stdout/stderr and `bof3.lift-diagnosis/v1` result. Stdout reports only paths,
-pins and measured status. Evidence can contain source/PRE images; keep it out of
+pins and measured status. The result pins its boot/original cutoff in `clock` and
+hashes all 23 retained input/native artifacts. Evidence can contain source/PRE images; keep it out of
 public logs and commits. Existing output rejects unchanged. Failure retains evidence
 and records no restoration/retry authority; a leftover result alongside failure is
 not a successful handoff. Native cleanup uncertainty remains distinct. Saved PIDs
 are diagnostic only. No automatic rollback, model edit/retry loop, independent
 acceptance or stale-index handoff is established by this prerequisite.
+
+## Retained lift audit
+
+```sh
+bin/agent-run audit out/reviews/lift-diagnosis/BEFORE out/reviews/proposal.md \
+  --expected-diagnosis-digest PIN --expected-proposal-sha256 SHA256 \
+  --output out/reviews/lift-audit/AFTER
+```
+
+The parent uses this after a separately authorized edit and confirmed writer
+termination. It reuses the original mission, policy and boot-bound cutoff, not a
+new baseline/deadline; the CLI has no replacement-clock flag. Supply externally
+retained diagnosis/proposal pins. Missing, failed, altered or legacy diagnostics
+without clock/artifact coverage reject; never upgrade or silently repin old evidence.
+The original manifest/native inputs, index, unrelated workspace and source-directory
+guards remain active. Do not refresh analysis between diagnosis and audit; report
+required refresh for the later parent checkpoint. A free lease is not quiescence.
+
+Default `--proposal-format mission` checks the measured two-fence report above.
+For a writer unable to run the legacy compiler, explicitly use
+`--proposal-format unmeasured`: the same report must contain
+`status:"unverified"` and `match_percent:null`, with truthful attempts, changed files,
+risks and refresh/restoration flags. Ordinary mission completion does not gain this
+status. Parent gates supply measured outcomes separately; they never rewrite an
+unmeasured writer claim into a claimed exact result or bypass unavailable tooling.
+
+The source-read-only audit reruns cold native checks, verifies retained evidence
+and proposal bytes before/after, and publishes `bof3.lift-audit/v2` with their pins,
+native artifacts and before/after comparison. A lower instruction score or loss of
+byte exactness requests parent restoration **review**, without restoring anything.
+The comparison is against this diagnosis, not proof of best-of-history or semantic
+quality. Exact/partial results remain `needs-independent-review` unless a regression
+or writer request requires parent restoration review; exit zero is not acceptance.
+Only the selected function is measured: final approval still owes affected-consumer,
+matching-aid, semantic and domain-owner checks.
+
+Output must be a fresh direct-child audit directory. Failure retains evidence and
+any candidate, with no retry/restoration/acceptance authority. The parent accounts
+each invocation against the original campaign budget; neither command debits it or
+implements a model writer, repair scheduler, independent acceptance or recovery.
+`bof3-re`'s dispatch script forwards both commands unchanged.
 
 ## Global MCP ownership
 

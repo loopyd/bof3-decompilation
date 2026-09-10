@@ -251,7 +251,7 @@ def inspect_candidate(root: Path, record: dict) -> dict:
     return {"inventory": observed, "changed_paths": changed}
 
 
-def parse_result(text: str, selector: str) -> dict:
+def parse_result(text: str, selector: str, *, unmeasured: bool = False) -> dict:
     reports = re.findall(
         r"(?m)^```(json|acceptance-report)\s*\n(.*?)^```\s*$", text, re.S
     )
@@ -274,11 +274,19 @@ def parse_result(text: str, selector: str) -> dict:
         not isinstance(mission["function"], str)
         or str(parse_function_id(mission["function"])) != selector
         or not isinstance(mission["status"], str)
-        or mission["status"] not in {"exact", "partial", "escalated"}
+        or not isinstance(mission["notes"], str)
+    ):
+        raise ValueError("lift mission identity or status is invalid")
+    if unmeasured:
+        if mission["status"] != "unverified" or mission["match_percent"] is not None:
+            raise ValueError(
+                "unmeasured lift proposals must report unverified with a null score"
+            )
+    elif (
+        mission["status"] not in {"exact", "partial", "escalated"}
         or type(mission["match_percent"]) not in (int, float)
         or not 0 <= mission["match_percent"] <= 100
         or not math.isfinite(mission["match_percent"])
-        or not isinstance(mission["notes"], str)
     ):
         raise ValueError("lift mission identity or status is invalid")
     if mission["status"] == "exact" and mission["match_percent"] != 100:

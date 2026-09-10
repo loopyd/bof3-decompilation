@@ -1,4 +1,4 @@
-"""Run parent native diagnosis or explicitly budgeted read-only BOF3 Codex review."""
+"""Run parent lift diagnosis/audits or explicitly budgeted native Codex review."""
 
 from __future__ import annotations
 

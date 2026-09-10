@@ -3,19 +3,27 @@
 from __future__ import annotations
 
 from pathlib import Path
-from contextlib import ExitStack
 import os
 import secrets
 from typing import Callable
 
-from harness.common.deadlines import bind_deadline, check_deadline, resolve_deadline
+from harness.common.deadlines import (
+    bind_deadline,
+    capture_work_clock,
+    check_deadline,
+    resolve_deadline,
+)
 from harness.common.digests import digest
-from harness.common.directory import open_parent_fd, validate_repo_path
-from harness.common.files import read_file
+from harness.common.directory import open_parent_fd
 from harness.common.lease import acquire_writer, require_writer
-from harness.common.process import ProcessCleanupError
 from harness.context.capabilities import OUTPUTS, capture_policy, verify_policy
-from harness.context.journal import open_stream, write_chunk, write_record
+from harness.context.journal import write_record
+from harness.decomp.evidence import (
+    capture_streams,
+    hash_files,
+    reserve_directory,
+    retain_failure,
+)
 from harness.decomp.gates import check_candidate
 from harness.decomp.missions import capture_mission, verify_mission
 
@@ -54,33 +62,12 @@ def diagnose_mission(
     result = {
         **{key: value for key, value in checked.items() if key != "digest"},
         "schema": "bof3.lift-diagnosis/v1",
+        "clock": capture_work_clock(),
         "status": "diagnosed-not-accepted",
         "source_write_authorized": False,
         "model_dispatched": False,
     }
     return {**result, "digest": digest(result)}
-
-
-def reserve_directory(root: Path, output: str) -> None:
-    validate_repo_path(output)
-    if (
-        not output.startswith("out/reviews/lift-diagnosis/")
-        or len(Path(output).parts) != 4
-    ):
-        raise ValueError(
-            "diagnosis output must be a fresh out/reviews/lift-diagnosis/NAME directory"
-        )
-    parent, leaf = open_parent_fd(root, output, create=True)
-    try:
-        try:
-            os.mkdir(leaf, dir_fd=parent)
-        except FileExistsError as error:
-            raise ValueError(
-                "diagnosis output already exists; retain prior evidence"
-            ) from error
-        os.fsync(parent)
-    finally:
-        os.close(parent)
 
 
 @bind_deadline
@@ -102,7 +89,7 @@ def run_diagnosis(
             record = capture_mission(root, request)
             if not record["facts"]["existing_source"]:
                 raise ValueError("native diagnosis requires an existing claimed lift")
-            reserve_directory(root, output)
+            reserve_directory(root, output, kind="diagnosis")
             reserved = True
             write_record(root, output + "/mission.json", record)
             temporary = "out/dispatch/lift-diagnosis-" + secrets.token_hex(12) + "/tmp"
@@ -130,31 +117,7 @@ def run_diagnosis(
                     "model_dispatched": False,
                 },
             )
-            with ExitStack() as stack:
-                streams = {}
-
-                def publish(name: str, value: dict) -> None:
-                    if name.endswith("-started"):
-                        label = name.removesuffix("-started")
-                        for stream in ("stdout", "stderr"):
-                            streams[label, stream] = stack.enter_context(
-                                open_stream(root, f"{output}/{label}-{stream}.log")
-                            )
-                    elif name.endswith("-terminal"):
-                        label = name.removesuffix("-terminal")
-                        for stream in ("stdout", "stderr"):
-                            if (
-                                read_file(root, f"{output}/{label}-{stream}.log")
-                                != value[stream].encode()
-                            ):
-                                raise ValueError(
-                                    "retained diagnosis stream differs from native output"
-                                )
-                    write_record(root, f"{output}/{name}.json", value)
-
-                def stream_gate(label: str, stream: str, chunk: bytes) -> None:
-                    write_chunk(streams[label, stream], chunk)
-
+            with capture_streams(root, output) as (publish, stream_gate, artifacts):
                 result = diagnose_mission(
                     root,
                     record,
@@ -164,6 +127,13 @@ def run_diagnosis(
                     publish=publish,
                     stream_gate=stream_gate,
                 )
+            result = {key: value for key, value in result.items() if key != "digest"}
+            result["artifacts"] = hash_files(
+                root,
+                output,
+                ["mission.json", "policy.json", "invocation.json", *artifacts],
+            )
+            result["digest"] = digest(result)
             write_record(root, output + "/result.json", result)
             check_deadline()
             require_writer(root)
@@ -179,20 +149,5 @@ def run_diagnosis(
         }
     except BaseException as error:
         if reserved:
-            try:
-                write_record(
-                    root,
-                    output + "/failure.json",
-                    {
-                        "error_type": type(error).__name__,
-                        "cleanup_unconfirmed": isinstance(error, ProcessCleanupError),
-                        "source_accepted": False,
-                        "restoration_authorized": False,
-                        "retry_authorized": False,
-                    },
-                )
-            except BaseException:
-                if isinstance(error, ProcessCleanupError):
-                    raise error
-                raise
+            retain_failure(root, output, error)
         raise

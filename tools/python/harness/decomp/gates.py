@@ -32,10 +32,13 @@ def audit_candidate(
     expected_policy_digest: str,
     publish: Callable[[str, dict], None],
     stream_gate: Callable[[str, str, bytes], None],
+    unmeasured: bool = False,
 ) -> dict:
     require_writer(root)
     validate_mission_record(record, expected_mission_digest)
-    report = parse_result(proposal, record["request"]["selector"])
+    report = parse_result(
+        proposal, record["request"]["selector"], unmeasured=unmeasured
+    )
     if (
         report["acceptance"]["pre_mission"]
         != {
@@ -57,7 +60,7 @@ def audit_candidate(
         stream_gate=stream_gate,
     )
     after = checks["post"]
-    if report["mission"]["match_percent"] != checks["match_percent"]:
+    if not unmeasured and report["mission"]["match_percent"] != checks["match_percent"]:
         raise ValueError("lift match percentage differs from parent native evidence")
     if report["mission"]["status"] == "exact" and not checks["byte_exact"]:
         raise ValueError("lift byte-match claim differs from parent native gates")
