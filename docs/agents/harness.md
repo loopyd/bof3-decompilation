@@ -36,6 +36,12 @@ Neither writer nor reviewer completion unlocks generic next dispatch or acceptan
 The cross-domain index remains one derived database; package separation does not
 create independent databases or relax freshness checks.
 
+`domain/cache.py` owns process-local manifest reuse. Every lookup hashes current
+manifest and claim contents and checks canonical paths before reusing parsed data.
+Claim parents are resolved once per collection and rechecked before return;
+retargeted or missing parents reject the pass. Parent resolution is never reused
+between collections; returned mutable manifest fields remain isolated.
+
 Macro, naming and type `cli.py` modules register their `rev-query` subcommands and own their
 argument-to-query adapters. `commands/rev_query.py` composes those registrations,
 checks index freshness and target identity, and prints their results. Naming

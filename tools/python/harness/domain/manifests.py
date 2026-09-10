@@ -338,14 +338,14 @@ def _validate_claimed_paths(manifests: dict[str, TargetManifest]) -> None:
 
 
 def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
-    from . import _manifest_cache
+    from . import cache
 
     root = root.resolve()
     directory = root / "config" / "targets"
     fingerprint, manifest_contents = (
-        _manifest_cache.manifest_inputs(directory) if directory.is_dir() else ((), {})
+        cache.read_manifest_inputs(directory) if directory.is_dir() else ((), {})
     )
-    cached = _manifest_cache.get(root, fingerprint)
+    cached = cache.get_manifests(root, fingerprint)
     if cached is not None:
         return cached
     manifests: dict[str, TargetManifest] = {}
@@ -422,7 +422,7 @@ def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
         if manifest.id.value in manifests:
             raise ValueError(f"duplicate target manifest: {manifest.id.value}")
         manifests[manifest.id.value] = manifest
-    claims = _manifest_cache.claim_files(root, manifests)
+    claims = cache.collect_claim_files(root, manifests)
     _validate_companions(manifests)
     _validate_claim_overlap(manifests)
     _validate_claimed_paths(manifests)
@@ -438,5 +438,5 @@ def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
                 f"{manifest.id.value}: psyq_source must be explicitly claimed "
                 "in sources or support_sources"
             )
-    _manifest_cache.put(root, fingerprint, manifests, claims=claims)
+    cache.store_manifests(root, fingerprint, manifests, claims=claims)
     return manifests

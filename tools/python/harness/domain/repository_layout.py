@@ -64,9 +64,9 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
     """Parse each canonical manifest/Splat and discover owned paths once."""
     root = root.resolve()
     manifests = load_target_manifests(root)
-    from ._manifest_cache import validated_claim_files
+    from .cache import get_validated_claim_files
 
-    claims = validated_claim_files(root)
+    claims = get_validated_claim_files(root)
     splats = {
         target: parse_splat_layout(root / manifest.splat, manifest.load_address)
         for target, manifest in manifests.items()

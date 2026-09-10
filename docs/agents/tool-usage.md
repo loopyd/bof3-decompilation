@@ -735,6 +735,11 @@ PYTHONPATH=tools/python .venv/bin/python -m cProfile -o /tmp/bof3-status.prof -m
 `--no-cache` bypasses status summaries, not native build caches. Manifest reuse
 stays within the current operation; comparison reloads ownership after building.
 Each manifest-validation pass rechecks every claim's contents and canonical path.
+Within that pass, shared parent paths are resolved once and rechecked at the end;
+leaf symlinks retain strict resolution. This reduces repeated ancestor traversal,
+not content hashing or post-build freshness checks. Measure manifest setup
+separately from native build, link and comparison time; setup speedups alone do
+not establish an end-to-end status speedup.
 
 ## Command ownership
 

@@ -29,7 +29,7 @@ _CACHE: dict[
 _CLAIMS: dict[Path, ClaimFiles] = {}
 
 
-def manifest_inputs(
+def read_manifest_inputs(
     directory: Path,
 ) -> tuple[ManifestFingerprint, dict[Path, bytes]]:
     """Read each manifest once and return its content-keyed generation."""
@@ -51,8 +51,8 @@ def clone_manifest(manifest: TargetManifest) -> TargetManifest:
     )
 
 
-def claim_files(root: Path, manifests: dict[str, TargetManifest]) -> ClaimFiles:
-    """Resolve and stat every distinct claim exactly once."""
+def collect_claim_files(root: Path, manifests: dict[str, TargetManifest]) -> ClaimFiles:
+    """Hash every claim with pass-local, rechecked parent resolution."""
     paths = {manifest.binary for manifest in manifests.values() if manifest.binary}
     for manifest in manifests.values():
         paths.update(manifest.sources)
@@ -60,9 +60,17 @@ def claim_files(root: Path, manifests: dict[str, TargetManifest]) -> ClaimFiles:
         paths.update(manifest.headers)
     rows = []
     canonical = {}
+    parents = {}
     for relative in sorted(paths):
         try:
-            resolved = (root / relative).resolve(strict=True)
+            path = root / relative
+            parent = parents.get(path.parent)
+            if parent is None:
+                parent = path.parent.resolve(strict=True)
+                parents[path.parent] = parent
+            resolved = parent / path.name
+            if resolved.is_symlink():
+                resolved = resolved.resolve(strict=True)
             content = resolved.read_bytes()
             rows.append(
                 (
@@ -75,15 +83,23 @@ def claim_files(root: Path, manifests: dict[str, TargetManifest]) -> ClaimFiles:
             canonical[relative] = resolved
         except OSError:
             rows.append((relative, -1, "", ""))
+    for parent, expected in parents.items():
+        message = f"manifest claim directory changed during validation: {parent}"
+        try:
+            current = parent.resolve(strict=True)
+        except OSError as error:
+            raise ValueError(message) from error
+        if current != expected:
+            raise ValueError(message)
     return ClaimFiles(tuple(rows), MappingProxyType(canonical))
 
 
-def validated_claim_files(root: Path) -> ClaimFiles | None:
+def get_validated_claim_files(root: Path) -> ClaimFiles | None:
     """Return claim metadata established by the latest manifest load."""
     return _CLAIMS.get(root)
 
 
-def get(
+def get_manifests(
     root: Path, fingerprint: ManifestFingerprint
 ) -> dict[str, TargetManifest] | None:
     cached = _CACHE.get((root, fingerprint))
@@ -91,21 +107,21 @@ def get(
         return None
     expected, values = cached
     manifests = {key: clone_manifest(value) for key, value in values.items()}
-    current = claim_files(root, manifests)
+    current = collect_claim_files(root, manifests)
     if current.fingerprint != expected.fingerprint:
         return None
     _CLAIMS[root] = current
     return manifests
 
 
-def put(
+def store_manifests(
     root: Path,
     fingerprint: ManifestFingerprint,
     manifests: dict[str, TargetManifest],
     *,
     claims: ClaimFiles | None = None,
 ) -> None:
-    claims = claims or claim_files(root, manifests)
+    claims = claims or collect_claim_files(root, manifests)
     _CACHE.clear()
     _CLAIMS.clear()
     _CLAIMS[root] = claims

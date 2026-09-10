@@ -96,7 +96,7 @@ def test_manifest_cache_detects_same_size_edit_with_restored_mtime(
     assert after["emi/etc/game/00"].disc_id == "Y"
 
 
-def test_manifest_claims_are_resolved_once_and_symlink_escape_rejected(
+def test_manifest_claim_parents_are_rechecked_and_symlink_escape_rejected(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     target = "emi/etc/game/00"
@@ -114,13 +114,13 @@ def test_manifest_claims_are_resolved_once_and_symlink_escape_rejected(
 
     def counted(path: Path, strict: bool = False) -> Path:
         nonlocal calls
-        if path == source:
+        if path == source.parent:
             calls += 1
         return original(path, strict=strict)
 
     monkeypatch.setattr(Path, "resolve", counted)
     load_target_manifests(tmp_path)
-    assert calls == 1
+    assert calls == 2
 
     outside = tmp_path.parent / f"{tmp_path.name}-outside.c"
     outside.write_text("outside\n", encoding="utf-8")
