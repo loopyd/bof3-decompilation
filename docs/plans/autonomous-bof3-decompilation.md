@@ -30,7 +30,7 @@ loader collectors, handshakes, mirrored state or custom receipt reconstruction.
 ## Current Codex continuation
 
 The latest discovery slice adds reviewed within-function assembly blocks under the
-[macro specification](../specs/MACROS.md#assembly-blocks). An explicit experimental
+[macro specification](../agents/macros.md#assembly-blocks). An explicit experimental
 floor of eight instructions yields 1,568 global four-use groups, 675 involving
 battle/15; the largest displayed lead spans 67 instructions at four sites. Reports
 are `out/reviews/codex-macro-blocks-battle15.json`,
@@ -44,7 +44,7 @@ remain unfinished. The experiment does not establish a project-wide size default
 
 The latest macro consumer-coverage correction closes the independently reproduced
 literal-include omissions; its current contract lives in
-[MACROS.md](../specs/MACROS.md). Six disposable omission probes now reject while
+[macros.md](../agents/macros.md). Six disposable omission probes now reject while
 covered scopes pass, and their dependency sets agree with native C89 preprocessing.
 Default dependency lists remain unchanged for all 977 manifest source/support
 inputs. All 343 scoped source/macro/type/naming checks pass; reviewer
@@ -123,7 +123,7 @@ after CMake scan filtering; all reports are identical, with native build product
 warm and status summaries bypassed for the repeats. The scan retained all 977
 paths while falling from 1.080s to 0.249s. Warm full-report profiles remain about
 2.5s; no meaningful warm-cache speedup is claimed. Profiles and JSON live under
-`out/reviews/codex-decomp-status-*`; `docs/usage.md` gives reproduction commands.
+`out/reviews/codex-decomp-status-*`; `docs/agents/tool-usage.md` gives reproduction commands.
 
 Final uncached `decomp-status` independently recomputed all 920 lifts across 23
 targets: 817 exact, 103 partial, zero invalid, with complete JSON equality to
@@ -419,7 +419,7 @@ rollback rejected the already-restored original PRE. Identity-bound rollback now
 checks complete backup/image coverage and consistent PRE/POST locations before
 each path's transition; already-restored PRE is a no-op and an interrupted missing
 destination resumes from its original quarantine. The shared
-[recovery contract](../specs/HARNESS.md#policy-versus-mechanism) retains authority,
+[recovery contract](../agents/harness.md#policy-versus-mechanism) retains authority,
 non-atomic observation, publication, workspace/Git and durability limitations.
 
 Native tool session 8495 exercised this primitive under `/tmp` at
@@ -452,7 +452,7 @@ No persistent tests or dependencies were added. Guarded recovery and the bounded
 loop remain unfinished; no phase advances from this prerequisite.
 
 Guarded source-only parent recovery is now implemented by `type-audit recover`
-and `macro-audit recover`; the [canonical contract](../specs/HARNESS.md#guarded-source-recovery)
+and `macro-audit recover`; the [canonical contract](../agents/harness.md#guarded-source-recovery)
 owns its closed authorization schema, mandatory lease, matching v3 guards,
 publication refusal and replay checks. The CLI authenticates neither actor IDs nor
 tool output: the supervising parent attests stopped writers from actual native
@@ -498,7 +498,7 @@ the bounded ranked execution loop remain unfinished; no phase advances here.
 
 Request-bound `type-audit resume` and `macro-audit resume` now use the existing
 live owner verifiers, not a second reconciliation receipt or scheduler. The
-[shared contract](../specs/HARNESS.md#request-bound-resume) binds the original
+[shared contract](../agents/harness.md#request-bound-resume) binds the original
 manifest/request, captured implementation run and complete application. Valid
 unreviewed POST yields `needs-review`; an independently pinned accepted envelope
 for that same application yields `skip-accepted`. Invalid supplied acceptance
@@ -555,7 +555,7 @@ a private completion ACK. Missing ACK or cleanup timeout raises
 `ProcessCleanupError`, retaining the still-cleaning guardian and stopping type/
 macro restoration and naming finalization. Non-Linux rejects before spawn; no
 process-group-only fallback claims equivalent safety. The
-[shared lifecycle contract](../specs/HARNESS.md#policy-versus-mechanism) owns details
+[shared lifecycle contract](../agents/harness.md#policy-versus-mechanism) owns details
 and preserves the separate lease/quiescence and parent recovery obligations.
 
 Parent native hard-stop, normal exit and timeout controls pass at
@@ -589,7 +589,7 @@ S3.2 stays blocked. Full `just check` and a new global source audit were not run
 ### Budget and failure rehearsal checkpoint
 
 The read-only budget validator and absolute native deadline contract now live in
-[HARNESS.md](../specs/HARNESS.md#bounded-continuation). This is not a scheduler:
+[harness.md](../agents/harness.md#bounded-continuation). This is not a scheduler:
 the parent retains the latest externally pinned consumption position, durably
 pre-debits work, checks owner freshness and establishes quiescence separately.
 Neither fresh invocation nor repair resets the original allowance.
@@ -662,7 +662,7 @@ rollback; unreadable or foreign untouched paths cannot suppress that restoration
 Original raw index and all-PRE metadata safeguards are checked separately from
 durable v3 recovery inventory. Non-Git checks remain weaker; observations are not
 atomic and no lease excludes manual editors. See the
-[owning recovery contract](../specs/HARNESS.md) for guarantees and exclusions.
+[owning recovery contract](../agents/harness.md) for guarantees and exclusions.
 
 Existing destructive-expectation tests now require preserved external bytes and
 staging while retaining drift detection and owned-PRE restoration checks; no new
@@ -1000,8 +1000,8 @@ and grant no transaction authority. Existing type-spelling identity requests sta
 unchanged. Canonical re-derivation checks internal coherence, not original caller
 authenticity; the parent retains bindings and owners validate candidate freshness,
 membership and separate approval. Policy and invocation details live in
-[harness routing](../specs/HARNESS.md#policy-versus-mechanism) and
-[usage](../usage.md#cleanup-opportunity-routing), with macro specifics in MACROS.md.
+[harness routing](../agents/harness.md#policy-versus-mechanism) and
+[usage](../agents/tool-usage.md#cleanup-opportunity-routing), with macro specifics in macros.md.
 
 Actual prefills for frozen `exact_group:8e1ad03b4ba92303` and the battle15
 `@1F800044:storage` lead now exit zero, each loading only its selected body and

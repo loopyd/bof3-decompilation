@@ -5,9 +5,9 @@ description: Inspect BOF3 type declarations, uses and representation opportuniti
 
 # BOF3 types
 
-Start at [tool usage](../../../docs/usage.md#3b-target-analysis-freshness--rebuild--query)
-for type queries and [parent acceptance](../../../docs/usage.md#type-parent-review-and-final-verification)
-for the application lifecycle. [Harness ownership](../../../docs/specs/HARNESS.md)
+Start at [tool usage](../../../docs/agents/tool-usage.md#3b-target-analysis-freshness--rebuild--query)
+for type queries and [parent acceptance](../../../docs/agents/tool-usage.md#type-parent-review-and-final-verification)
+for the application lifecycle. [Harness ownership](../../../docs/agents/harness.md)
 separates type representation from symbol naming and macro extraction.
 
 `bin/agent-context cleanup type-opportunity TARGET ID` routes one supplied lead.

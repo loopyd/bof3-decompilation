@@ -33,7 +33,7 @@ promote individual EMI entries.
 # Data ownership and duplication
 
 This page identifies owning archives. Byte offsets and record layouts remain in
-the linked [data specs](data/index.md).
+the linked [data specs](data/INDEX.md).
 
 ## Static data
 

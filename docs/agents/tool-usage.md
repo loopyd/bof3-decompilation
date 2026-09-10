@@ -23,14 +23,14 @@ Use `$bof3-docs` for Markdown context, search, aggregation, edit, repair or expl
 one-document compaction. `bin/docs compact PATH` prepares a complete hashed input
 for reviewed agent editing; it does not automatically rewrite the document.
 `bin/docs context PATHS...` replaces the retired context-builder profile.
-See [DOCS.md](specs/DOCS.md) for commands, bounds, scope and preservation contracts.
+See [documentation.md](documentation.md) for commands, bounds, scope and preservation contracts.
 
 ## Cleanup opportunity routing
 
 For an explicit budgeted native read-only reviewer, use
 `bin/agent-run review REQUEST --budget BUDGET --consumption INITIAL
 --expected-budget-digest PIN --expected-checkpoint-digest PIN --expected-sequence 0`.
-The [native review contract](specs/CODEX.md#bounded-native-review) owns request
+The [native review contract](codex.md#bounded-native-review) owns request
 shape, subsequent chain/result pins, child-only capability restrictions and private
 streaming evidence. This is separate from cleanup routing and never accepts a lift
 or authorizes a transaction merely because Codex finishes.
@@ -39,7 +39,7 @@ Type/macro `run` and `revalidate` accept the parent's original `--deadline` in
 absolute monotonic seconds. Naming collection uses `--work-deadline` for that
 cutoff; its existing `--deadline` stays a relative per-operation cap. Freeze a
 separate cleanup hard-stop; neither flag permits resetting the campaign budget. See
-[owner work deadlines](specs/HARNESS.md#owner-work-deadlines) for rollback and
+[owner work deadlines](harness.md#owner-work-deadlines) for rollback and
 late-publication handling and check-only revalidation's no-restoration boundary.
 Other subcommands do not inherit these CLI options.
 
@@ -53,8 +53,8 @@ Each read-only prefill retains one opaque owner ID and selects its macro, type o
 naming skill. Routing checks neither candidate freshness nor target membership;
 the owner must verify both before work. It grants no transaction authority and
 never replaces a frozen lead or rebuilds an index. See
-[harness routing](specs/HARNESS.md#policy-versus-mechanism) and the
-[macro specification](specs/MACROS.md#candidate-and-consumer-inspection).
+[harness routing](harness.md#policy-versus-mechanism) and the
+[macro specification](macros.md#candidate-and-consumer-inspection).
 The older `type TARGET OLD -> NEW` form still means identity maintenance.
 
 ## Symbol naming opportunities
@@ -90,6 +90,11 @@ scouting. Any map byte change invalidates its leads' pins; do not silently repin
 The observations are non-atomic and bind only the map snapshot, not manifests,
 source, consumer evidence or the reverse index. A successful description neither
 clears stale downstream evidence nor authorizes work or proves a useful name.
+
+For [reviewed Battle 15 table consumers](../specs/runtime/battle-dispatch-tables.md),
+Fresh collection must still fail closed while any unrelated access evidence is
+open or unavailable. Positive capability facts cannot turn such a row into an
+`exhausted` or `proposed` conclusion.
 
 The unified `bof3-naming` skill uses distinct opportunity, audit and transaction
 modes. Opportunity assessment performs no source/map/report mutation; whole-target
@@ -136,8 +141,8 @@ it remains stable as evidence provenance after a successful conclusion changes
 the current report. `source` also binds the collected `bof3.naming-evidence/v2`
 payload and the code-owned terminal capability. Its `conclusion` is a
 shape-only row illustrated by the checked fixtures
-[`naming-conclusion-exhausted.json`](../tools/python/tests/fixtures/naming-conclusion-exhausted.json)
-or [`naming-conclusion-proposed.json`](../tools/python/tests/fixtures/naming-conclusion-proposed.json).
+[`naming-conclusion-exhausted.json`](../../tools/python/tests/fixtures/naming-conclusion-exhausted.json)
+or [`naming-conclusion-proposed.json`](../../tools/python/tests/fixtures/naming-conclusion-proposed.json).
 These files validate row shape only and are not importable fixture sets. Conclusion import remains fail-closed unless the supported typed analyzer can
 recompute every required rung from bound native output. Collection receipts,
 checkpoints, and manifests provide integrity and crash-recovery bookkeeping,
@@ -172,7 +177,7 @@ just doctor
 ```
 
 First-time setup requires the host tools listed in the
-[README prerequisites](../README.md#prerequisites); see that list for which
+[README prerequisites](../../README.md#prerequisites); see that list for which
 `cmake`/`7z` roles are required and why. `setup` validates one complete CUE/BIN
 set under `inputs/external/`. If it is not present, it accepts `inputs/external/BreathOfFireIIIv1.1.7z` and extracts it
 to the private-assets cache. It then downloads/stages the required toolchains,
@@ -297,7 +302,7 @@ independent semantic ladder exhaustion or current no-op acceptance.
 `owners` combines reviewed Splat ranges, analyzer ranges, and exact mapped-entry leads; provenance and confidence are hypotheses, never ownership authority. `xrefs` includes call references and decoded data accesses with source address, access kind, and opcode. `describe` reports canonical payload/file offsets, reviewed Splat boundary, exact symbol, and references. `types` inventories target-owned declarations plus the explicitly shared base scalar aliases; full detail includes fields, layout constraints, conflicts, diagnostics, and provenance. `type-uses` reports declaration/use relationships. `type-candidates` reports conservative representation and semantic leads only: every inferred aggregate, field, array, prototype, or class-like receiver/dispatch row remains blocked until its independent evidence gaps are closed.
 
 Macro discovery, near-duplicate ranking, consumer inspection, and resolution commands
-are documented only in [MACROS.md](specs/MACROS.md).
+are documented only in [macros.md](macros.md).
 
 Type storage/layout inference requires a decoded load/store with a recognized
 width and matching opcode/access kind. Address materialization (`addiu`/`ori`)
@@ -400,7 +405,7 @@ in-row/external ambiguity reject. Omitted `--post-apply-receipts` stays legacy.
 Failures retain native evidence and return rollback ownership to cleaner/parent,
 never restore HEAD or recover derived state automatically.
 
-Reviewed type applications are concern-isolated and atomic. The disposable reverse index only supplies leads; `prepare` requires a separately reviewed, live-fingerprinted candidate artifact with resolved representation and semantics plus two independent observations. On a dirty worktree, the request must include the exact adopted baseline digest printed by the preflight error/workflow. `run` restricts writes to manifest-owned paths, executes the recorded checks, writes immutable structured receipts, and rolls back ordinary failures after confirmed native process cleanup. Unconfirmed cleanup preserves POST/recovery backing and stops for parent inspection; follow the [shared lifecycle rules](specs/HARNESS.md#policy-versus-mechanism):
+Reviewed type applications are concern-isolated and atomic. The disposable reverse index only supplies leads; `prepare` requires a separately reviewed, live-fingerprinted candidate artifact with resolved representation and semantics plus two independent observations. On a dirty worktree, the request must include the exact adopted baseline digest printed by the preflight error/workflow. `run` restricts writes to manifest-owned paths, executes the recorded checks, writes immutable structured receipts, and rolls back ordinary failures after confirmed native process cleanup. Unconfirmed cleanup preserves POST/recovery backing and stops for parent inspection; follow the [shared lifecycle rules](harness.md#policy-versus-mechanism):
 
 ```sh
 bin/type-audit account out/reviews/type-account.json
@@ -414,7 +419,7 @@ bin/type-audit verify out/reviews/type-application.json --expected-application-d
 The changes file is a JSON object mapping each allowed repo-relative file to its complete replacement text. Retain the application digest from the `run` output in a trusted external record; do not derive the expected value from the application file being verified. Shared preparation requires two externally pinned reviewed private envelopes with identical representation and semantic contracts; target-address-bearing contracts are rejected. Integrity-only pins cannot authorize shared preparation.
 
 For macro applications, parent review, and revalidation, use the canonical
-[macro resolution workflow](specs/MACROS.md#reviewed-application). The following
+[macro resolution workflow](macros.md#reviewed-application). The following
 sections document type transactions.
 
 For context-bearing native runs add `--implementation-run-id IMPLEMENTATION_RUN`
@@ -450,7 +455,7 @@ Contention rejects before source mutation. The persistent writer lock under
 its presence nor successful acquisition proves prior worker termination. Manual
 editors and other nonparticipating commands are outside this cooperative contract.
 Read-only verification/inspection acquire no lease. See
-[harness ownership](specs/HARNESS.md) for identity-loss and recovery limitations.
+[harness ownership](harness.md) for identity-loss and recovery limitations.
 
 Before modifying sources, macro/type runs persist v3 recovery records at
 `out/reviews/evidence/{macro,type}-recovery-<nonce>.json`. They bind root,
@@ -478,11 +483,11 @@ authorize restoration. Explicit parent-authorized recovery uses:
 bin/type-audit recover out/reviews/evidence/type-recovery-NONCE.json --expected-recovery-digest RECOVERY_PIN --authorization out/reviews/evidence/recovery-authorization.json --expected-authorization-digest AUTHORIZATION_PIN
 ```
 
-Follow the [shared authorization and recovery gates](specs/HARNESS.md#guarded-source-recovery).
+Follow the [shared authorization and recovery gates](harness.md#guarded-source-recovery).
 Recovery requires pinned v3 backing, parent-attested writer termination, matching
 workspace/Git guards and absent known publication. It restores owned PRE only;
 source acceptance, automatic retry and unrelated workspace/Git-index recovery are
-not granted. Macro invocation belongs to [MACROS.md](specs/MACROS.md).
+not granted. Macro invocation belongs to [macros.md](macros.md).
 
 ### Type parent review and final verification
 
@@ -535,7 +540,7 @@ valid current acceptance for the exact complete application yields `skip-accepte
 Mismatches or invalid acceptance reject, never fall back to application. This is a
 non-atomic read-only disposition, not a scheduler, durable skip token or authority
 to retry; preserve writer and budget obligations in
-[request-bound resume](specs/HARNESS.md#request-bound-resume).
+[request-bound resume](harness.md#request-bound-resume).
 
 Preparation verifies each original reviewed private envelope against current
 state and retains its full bytes/hash and application in the shared manifest.
@@ -689,7 +694,7 @@ before the build selects it.
 ### 6. Promote duplicate knowledge
 
 Follow the evidence gate and ownership model in
-[function matching: Exact duplicate groups](agents/matching.md#exact-duplicate-groups).
+[function matching: Exact duplicate groups](matching.md#exact-duplicate-groups).
 It is the normative duplicate-promotion procedure; every wrapper remains
 address-owned and independently validated.
 
@@ -764,9 +769,9 @@ The shared panel-task implementation template lives at `src/shared/ui/panel_task
 `maspsx` are build adapters. Workflow users should call `bin/build` and the
 matching commands instead of invoking these adapters directly.
 
-See [function matching](agents/matching.md) for C iteration rules,
+See [function matching](matching.md) for C iteration rules,
 [build analysis evidence](#3-build-analysis-evidence) for analyzer contracts, and
-[project context](agents/project-context.md) for ownership.
+[project context](project-context.md) for ownership.
 
 ## Plans
 
@@ -781,7 +786,7 @@ bin/plans consolidate /absolute/review.json --apply --backup-dir /absolute/new-r
 Omit the status filename only with exactly one plan. Lists/status read persistent
 Markdown, not session history. Consolidation previews by default; apply requires
 a fresh external recovery directory and hash-bound reviewed candidate/mappings.
-See [plan authoring](agents/plan-authoring.md) and `$plans`. These commands
+See [plan authoring](plan-authoring.md) and `$plans`. These commands
 neither infer semantic completion nor execute the plan's domain commands.
 
 

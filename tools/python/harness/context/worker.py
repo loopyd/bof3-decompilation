@@ -7,8 +7,8 @@ _context_profile(
     "worker",
     paths=(
         "AGENTS.md",
-        "docs/agents/CODING_STANDARDS.md",
+        "docs/agents/coding-standards.md",
         "docs/agents/project-context.md",
     ),
-    stable_paths=("docs/agents/CODING_STANDARDS.md",),
+    stable_paths=("docs/agents/coding-standards.md",),
 )(lambda request: ())

@@ -290,7 +290,7 @@ signedness. Remaining behavior-only questions stay explicitly `unresolved`.
 
 ## Sources
 
-- [Data-table index](index.md)
+- [Data-table index](INDEX.md)
 - [Equipment](equipment.md)
 - [Fairy reward data](fairies.md)
 - [Characters](characters.md)

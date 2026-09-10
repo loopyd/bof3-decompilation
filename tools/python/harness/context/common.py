@@ -18,7 +18,7 @@ from .stable import (
 FULL_PATHS = (
     "SOUL.md",
     "AGENTS.md",
-    "docs/agents/CODING_STANDARDS.md",
+    "docs/agents/coding-standards.md",
     ".codex/skills/bof3-re/SKILL.md",
     "docs/agents/memory-api.md",
     "docs/agents/matching.md",

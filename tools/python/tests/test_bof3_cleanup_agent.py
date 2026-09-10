@@ -58,7 +58,7 @@ SELECTOR = "exe/logo@0x801CE758"
             ("SOURCE_RELOCATION.md",),
         ),
         (
-            ("docs", "docs/usage.md"),
+            ("docs", "docs/agents/tool-usage.md"),
             "docs",
             "bof3-docs",
             ("DOCUMENTATION_REPAIR.md",),
@@ -138,11 +138,12 @@ def test_cleanup_request_is_frozen_and_retains_structured_state() -> None:
 
 def test_parent_old_audit_normalizes_docs_only_with_warning() -> None:
     request = parse_cleanup_request(
-        ("audit", "docs/usage.md", "docs/INDEX.md"), parent_compatibility=True
+        ("audit", "docs/agents/tool-usage.md", "docs/INDEX.md"),
+        parent_compatibility=True,
     )
     assert request.mode == "docs"
     assert request.warning
-    assert request.arguments == ("docs/usage.md", "docs/INDEX.md")
+    assert request.arguments == ("docs/agents/tool-usage.md", "docs/INDEX.md")
 
 
 @pytest.mark.parametrize(
@@ -150,7 +151,7 @@ def test_parent_old_audit_normalizes_docs_only_with_warning() -> None:
     (
         (),
         ("unknown",),
-        ("audit", "docs/usage.md"),
+        ("audit", "docs/agents/tool-usage.md"),
         ("audit", "src/file.c"),
         ("docs", "src/file.c"),
         ("docs", "docs/../src/file.c"),
@@ -182,7 +183,7 @@ def test_invalid_routes_fail_before_any_body_read(tokens: tuple[str, ...]) -> No
 
 
 def test_missing_unknown_or_ambiguous_selection_reads_zero_bodies() -> None:
-    request = parse_cleanup_request(("docs", "docs/usage.md"))
+    request = parse_cleanup_request(("docs", "docs/agents/tool-usage.md"))
     reads: list[Path] = []
 
     def read(path: Path) -> bytes:

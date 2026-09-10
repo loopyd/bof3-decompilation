@@ -22,7 +22,7 @@ Thanks for helping improve this reverse-engineering project.
   [Function matching](docs/agents/matching.md) for the matching workflow and
   [AGENTS.md](AGENTS.md) for the complete sanctioned-helper contract.
 
-Read [AGENTS.md](AGENTS.md), [Tool usage](docs/usage.md), and
+Read [AGENTS.md](AGENTS.md), [Tool usage](docs/agents/tool-usage.md), and
 [Function matching](docs/agents/matching.md) before proposing a lift.
 
 ## Pull requests

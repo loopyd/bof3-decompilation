@@ -8,13 +8,13 @@ first. Domain facts, plan authority and source acceptance remain with their owne
 ## Commands
 
 ```sh
-bin/docs context docs/specs/MACROS.md --start-line 1 --lines 60
-bin/docs search --ignore-case --limit 20 'transaction' docs/specs/HARNESS.md
-bin/docs aggregate docs/specs/HARNESS.md docs/agents/CODING_STANDARDS.md --max-bytes 65536
+bin/docs context docs/agents/macros.md --start-line 1 --lines 60
+bin/docs search --ignore-case --limit 20 'transaction' docs/agents/harness.md
+bin/docs aggregate docs/agents/harness.md docs/agents/coding-standards.md --max-bytes 65536
 bin/docs edit docs/INDEX.md
-bin/docs repair docs/usage.md --max-bytes 262144
-bin/docs compact docs/specs/DOCS.md
-bin/docs compact docs/specs/DOCS.md --expected-sha256 RETAINED_SHA256
+bin/docs repair docs/agents/tool-usage.md --max-bytes 262144
+bin/docs compact docs/agents/documentation.md
+bin/docs compact docs/agents/documentation.md --expected-sha256 RETAINED_SHA256
 ```
 
 All commands are **read-only**. Edit, repair and compact prepare complete document
@@ -73,8 +73,8 @@ does not lock files or make subsequent edits atomic. Preserve unrelated dirty wo
 
 Find each disputed fact's implementation, configuration, specification or policy
 owner before changing it. Preserve historical context; analyzer prose and
-disposable outputs are not reviewed truth. Place durable facts under `docs/specs/`,
-agent policy under `docs/agents/` and scoped work under `docs/plans/`.
+disposable outputs are not reviewed truth. Place game facts under `docs/specs/`, agent/tooling contracts under `docs/agents/`,
+and scoped work under `docs/plans/`; follow [placement and naming](../INDEX.md#documentation-placement-and-names).
 
 Compact by removing redundant wording and linking to a single authority, not by
 deleting requirements, evidence gates, exceptions, dependencies, owners, stable
@@ -101,5 +101,6 @@ Other role and target-qualified context profiles remain in `harness.context`.
 `harness.docs.cli` owns command parsing; `docs.documents` owns snapshots, context,
 literal search and edit preparation; `docs.paths` owns document scope and the
 legacy cleanup path contract. Shared confined reads stay in `harness.common`.
-No compatibility skill, copied body, generic scheduler or second document index
-is introduced. Installed Pi extensions and historical logs are not modified.
+No compatibility skill, copied body, generic scheduler or document database is
+introduced. Markdown navigation indexes remain the reading maps; installed Pi
+extensions and historical logs are not modified.

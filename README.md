@@ -36,7 +36,7 @@ just doctor
 
 `just setup` initializes retained dependencies, user-authorized media, and
 local toolchains. `just doctor` verifies the result. See
-[Tool usage](docs/usage.md) for the complete ordered workflow.
+[Tool usage](docs/agents/tool-usage.md) for the complete ordered workflow.
 
 Work on an extracted executable image or EMI entry — never the EMI archive.
 Original bytes and target manifests are the source of truth.
@@ -71,7 +71,7 @@ Start with [docs/INDEX.md](docs/INDEX.md) for the request-oriented documentation
 
 | Task | Reference |
 | --- | --- |
-| Complete ordered tool workflow | [Tool usage](docs/usage.md) |
+| Complete ordered tool workflow | [Tool usage](docs/agents/tool-usage.md) |
 | Lift and match one function | [Function matching](docs/agents/matching.md) |
 | Resolve asm-diff symptoms | [Matching playbook](docs/agents/matching-playbook.md) |
 | Memory macros and qualifiers | [Memory API](docs/agents/memory-api.md) |

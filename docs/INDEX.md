@@ -23,19 +23,18 @@ minimal entry contract; this index owns the detailed reading map.
 | --- | --- | --- |
 | One hand-guided target-qualified lift, match, duplicate normalization, source/map/Splat edit | [Function matching](agents/matching.md) | [Matching playbook](agents/matching-playbook.md), [Memory API](agents/memory-api.md), `$bof3-re` |
 | Generic analyzer work explicitly requesting Rizin | [Project context](agents/project-context.md) | `$psx-rizin` |
-| Tooling, Python harness, CLI, tests | [Coding standards](agents/CODING_STANDARDS.md) | [Harness ownership](specs/HARNESS.md), [Tool usage](usage.md) and owning code/tests |
-| Codex MCP or Pi extension migration | [Codex configuration](specs/CODEX.md) | Global settings stay in `~/.codex`; project skills below |
-| Explicit budgeted native Codex review | [Native review transport](specs/CODEX.md#bounded-native-review) | `$bof3-re`; proposal only, no source-writing or semantic acceptance |
-| Macro opportunity indexing, ranking or resolution | [Macro specification](specs/MACROS.md) | [Explicit cleanup routing](usage.md#cleanup-opportunity-routing), owning code/checks; matching or tooling route when making changes |
-| Type representation opportunities and reviewed application | [Tool usage](usage.md#3b-target-analysis-freshness--rebuild--query) | [Cleanup routing](usage.md#cleanup-opportunity-routing), `$bof3-types`; [harness ownership](specs/HARNESS.md) |
-| Symbol naming opportunity discovery or assessment | [Naming opportunities](usage.md#symbol-naming-opportunities) | `$bof3-naming`; [harness ownership](specs/HARNESS.md); evidence and identity routes remain separate |
+| Tooling, Python harness, CLI, tests | [Coding standards](agents/coding-standards.md) | [Harness ownership](agents/harness.md), [Tool usage](agents/tool-usage.md) and owning code/tests |
+| Codex MCP or Pi extension migration | [Codex configuration](agents/codex.md) | Global settings stay in `~/.codex`; project skills below |
+| Explicit budgeted native Codex review | [Native review transport](agents/codex.md#bounded-native-review) | `$bof3-re`; proposal only, no source-writing or semantic acceptance |
+| Macro opportunity indexing, ranking or resolution | [Macro resolution guide](agents/macros.md) | [Explicit cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), owning code/checks; matching or tooling route when making changes |
+| Type representation opportunities and reviewed application | [Tool usage](agents/tool-usage.md#3b-target-analysis-freshness--rebuild--query) | [Cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), `$bof3-types`; [harness ownership](agents/harness.md) |
+| Symbol naming opportunity discovery or assessment | [Naming opportunities](agents/tool-usage.md#symbol-naming-opportunities) | `$bof3-naming`; [harness ownership](agents/harness.md); evidence and identity routes remain separate |
 | Plan creation, management or execution | [Plan authoring](agents/plan-authoring.md) | `$plans`; selected file under `plans/`; refresh live evidence |
 | Symbol/type/metadata identity maintenance | [Project context](agents/project-context.md) | Explicit `$bof3-naming` transaction mode only |
 | Naming evidence/audit closure | [Naming audit contract](../.codex/skills/bof3-naming/references/NAMING_AUDIT_V3.md) | Explicit `$bof3-naming` audit mode only |
-| Markdown search, context, aggregation, edit, repair or compaction | [Documentation operations](specs/DOCS.md) | `$bof3-docs`; owning implementation/policy source before edits |
+| Markdown search, context, aggregation, edit, repair or compaction | [Documentation operations](agents/documentation.md) | `$bof3-docs`; owning implementation/policy source before edits |
 | Runtime, format, target, or data research | [Specifications index](specs/INDEX.md) | Relevant spec and original evidence |
-| Repository overview / contributor onboarding | [README](../README.md) | [Contributing](../CONTRIBUTING.md), [Tool usage](usage.md) |
-
+| Repository overview / contributor onboarding | [README](../README.md) | [Contributing](../CONTRIBUTING.md), [Tool usage](agents/tool-usage.md) |
 
 ## Ownership
 
@@ -47,7 +46,7 @@ minimal entry contract; this index owns the detailed reading map.
 | Shared SDK symbol maps | `config/sdk/psyq-{slus,logo}.txt` |
 | Reviewed Rizin annotations | `config/targets/<target>/reviewed.rz` |
 | Authored lifts | Metadata-resolved source under `src/bof3/` |
-| Macro opportunity policy and tool reference | `docs/specs/MACROS.md` |
+| Macro opportunity policy and tool reference | `docs/agents/macros.md` |
 
 Keep one C source per lifted function. Lift identity comes from manifest claims,
 maps, Splat, and function-level `@source`/`@behavior` metadata—not filenames or
@@ -106,9 +105,25 @@ second member. Promote only a worthwhile common body after two cross-target
 members independently byte-match with the same C shape; each target retains its
 own wrapper, declarations, map, layout, and validation.
 
+## Documentation placement and names
+
+| Directory | Owns |
+| --- | --- |
+| `docs/agents/` | Agent/session policy, harness and CLI contracts, matching and evidence workflows |
+| `docs/specs/` | BOF3 game knowledge: runtime behavior, binary formats, layouts and target-specific evidence |
+| `docs/plans/` | Active scoped work, dependencies and acceptance status |
+| `docs/reference/` | External research and leads, with provenance and authority limits |
+
+Use lowercase kebab-case Markdown filenames; `INDEX.md` and `README.md` are
+navigation exceptions. Preserve externally sourced filenames where provenance
+requires them. Update both owning and root indexes plus all path references when
+moving a document. Split mixed tooling/game topics rather than duplicating owners.
+
 ## Documentation map
 
-- [Agent coding standards](agents/CODING_STANDARDS.md)
+- [Agent and tooling index](agents/INDEX.md)
+
+- [Agent coding standards](agents/coding-standards.md)
 - [Project context and repository map](agents/project-context.md)
 - [Function matching](agents/matching.md)
 - [Matching playbook](agents/matching-playbook.md)
@@ -116,10 +131,10 @@ own wrapper, declarations, map, layout, and validation.
 - [Plan authoring](agents/plan-authoring.md)
 - [Lessons](agents/lessons.md)
 - [Specifications index](specs/INDEX.md)
-- [Macro opportunity indexing and resolution](specs/MACROS.md)
-- [Python harness ownership](specs/HARNESS.md)
-- [Documentation operations](specs/DOCS.md)
-- [Tool usage](usage.md)
+- [Macro opportunity indexing and resolution](agents/macros.md)
+- [Python harness ownership](agents/harness.md)
+- [Documentation operations](agents/documentation.md)
+- [Tool usage](agents/tool-usage.md)
 - [External EU reference](reference/bof3-eu/README.md) — leads only; EU
   addresses are not reviewed US facts
 

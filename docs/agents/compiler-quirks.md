@@ -1,5 +1,5 @@
 ---
-type: Runtime research
+type: Agent guide
 title: Historical GCC MIPS scheduling residuals
 description: Evidence and bounded next steps for register-allocation and delay-slot mismatches.
 tags: [compiler, matching, mips, evidence]
@@ -74,14 +74,14 @@ tested explicit-source fallback before relying on broad automated flag search.
 ## `battle/15@0x800AF66C` application
 
 The parameter roles are documented in
-[`battle-range-predicates.md`](battle-range-predicates.md): `a0` is the range
+[`battle-range-predicates.md`](../specs/runtime/battle-range-predicates.md): `a0` is the range
 pointer and `a1` is the extent copied into `t0`. The entry move is an
 allocator/scheduling residual that is now resolved exactly: a local
 `REGISTER_PIN(u32, result, "v0")` constrains only the result local, which
 makes canonical GCC preserve the extent in `t0` and allocate the derived
 values as in the original. Live `bin/asm-diff` and `bin/byte-match` report
 19/19 instructions, 76 bytes, `func_800AF66C` (`@status exact`); see
-[`battle-range-predicates.md`](battle-range-predicates.md) for the complete
+[`battle-range-predicates.md`](../specs/runtime/battle-range-predicates.md) for the complete
 solution record.
 
 ### Historical flag-search matrix
@@ -105,7 +105,7 @@ dated historical evidence of the negative search, not current state.
 | `-fno-regmove` | — | Unsupported by bundled `cc1`; reject the flag rather than infer behavior |
 
 The residual was resolved by the bounded allocator experiment described in
-[`battle-range-predicates.md`](battle-range-predicates.md): a local
+[`battle-range-predicates.md`](../specs/runtime/battle-range-predicates.md): a local
 `REGISTER_PIN(u32, result, "v0")` recovered the entry register web without a
 wider flag search, a profile override, or a source-shape reversal. Reject
 any result that changes function size, control flow, or fails live byte

@@ -12,7 +12,7 @@ settings, partial-lift metadata and unrelated dirty work.
 
 | Mode | Contract |
 |---|---|
-| `naming-opportunity TARGET ID` | Read-only [opportunity assessment](../../../docs/usage.md#symbol-naming-opportunities); no source, map or report edits |
+| `naming-opportunity TARGET ID` | Read-only [opportunity assessment](../../../docs/agents/tool-usage.md#symbol-naming-opportunities); no source, map or report edits |
 | `audit-target TARGET` | [Naming audit v3](references/NAMING_AUDIT_V3.md): target/report binding, bounded evidence collection and full-report closure; no identity edits |
 | `symbol`, `type`, `repair`, `retained-lift` | [Identity transactions](references/IDENTITY_TRANSACTIONS.md): separately approved scope, validation and rollback |
 | `retained-lift` cosmetics | Also [byte-safe cosmetics](references/BYTE_SAFE_COSMETICS.md); no semantic lift rewrites |

@@ -1,10 +1,10 @@
 # Macro opportunity indexing and resolution
 
-This is the canonical specification and tool reference for macro opportunities,
-their ranking, review, and resolution during BOF3 cleanup and source finalization.
+This guide owns macro opportunity ranking, review and resolution tooling for
+BOF3 cleanup and source finalization.
 Start at [the documentation index](../INDEX.md). Execution history, frozen pilot
 membership, and unfinished campaign work stay in
-[the active plan](../plans/autonomous-bof3-decompilation.md), not this specification.
+[the active plan](../plans/autonomous-bof3-decompilation.md), not this guide.
 
 ## Contents
 
@@ -293,7 +293,7 @@ readability judgment or proof that arbitrary future macro arguments are safe.
 
 For bounded cleanup, `run` and `revalidate` accept the original absolute `--deadline` work cutoff;
 the parent separately supervises its retained cleanup tail. See
-[owner work deadlines](HARNESS.md#owner-work-deadlines) for expiry, rollback and
+[owner work deadlines](harness.md#owner-work-deadlines) for expiry, rollback and
 retained late-publication evidence. Check-only revalidation never restores source;
 other macro subcommands do not gain this flag.
 
@@ -353,7 +353,7 @@ The changes JSON maps each permitted repo-relative path to its complete replacem
 text. `run` rederives the manifest, confines writes, runs pinned checks, retains
 immutable receipts, and rolls back ordinary failures after confirmed native process
 cleanup. Unconfirmed descendant cleanup retains POST and recovery backing and
-stops for parent inspection; see [shared lifecycle rules](HARNESS.md#policy-versus-mechanism).
+stops for parent inspection; see [shared lifecycle rules](harness.md#policy-versus-mechanism).
 Generated files are not hand-edited. Retain the application digest externally before `verify`; never derive
 an expected pin from the untrusted file being checked. Local append-only
 attestation detects replacement, not a remote signature or malicious local writer.
@@ -383,11 +383,11 @@ process cleanup does not itself prove file rollback; interrupted transactions
 require owned-PRE reconciliation before reuse.
 
 Source rollback can resume identity-verified partial restoration; see the
-[shared recovery contract](HARNESS.md#guarded-source-recovery). Neither rollback
+[shared recovery contract](harness.md#guarded-source-recovery). Neither rollback
 nor guarded recovery grants source acceptance or an autonomous attempt budget.
 Ordinary failure restores only captured owned source images; unexpected workspace
 edits, new files and Git staging remain untouched for parent review, not overwritten
-as presumed tool side effects. See the [shared recovery contract](HARNESS.md)
+as presumed tool side effects. See the [shared recovery contract](harness.md)
 for post-rollback verification and metadata limitations.
 
 Macro `run` and `revalidate` share a fail-fast repository writer lease with type
@@ -396,7 +396,7 @@ rollback; a competing cooperating writer rejects before source mutation. The
 persistent writer lock is not removed on release. Detected identity loss stops
 guarded restoration rather than overwriting another writer's work. This does not
 exclude manual editors or establish that an interrupted native worker terminated;
-see [shared lease contracts](HARNESS.md). Read-only commands acquire no lease.
+see [shared lease contracts](harness.md). Read-only commands acquire no lease.
 
 Macro runs persist a `bof3.transaction-recovery/v3` record before source mutation
 at `out/reviews/evidence/macro-recovery-<nonce>.json`. It retains PRE source images,
@@ -413,7 +413,7 @@ full-workspace read at capture. Inventory covers tracked/unignored files except
 the shared generated-artifact exclusions; missing snapshots mean unavailable
 guards, not a clean workspace. Records can include local unignored content and
 must remain nonpublic. Repository evidence uses filesystem-native permissions,
-not enforced POSIX modes; see [the shared policy](HARNESS.md). A pending index lock
+not enforced POSIX modes; see [the shared policy](harness.md). A pending index lock
 rejects capture.
 
 ```sh
@@ -437,7 +437,7 @@ For explicit parent-authorized source-only restoration:
 bin/macro-audit recover out/reviews/evidence/macro-recovery-NONCE.json --expected-recovery-digest RECOVERY_PIN --authorization out/reviews/evidence/recovery-authorization.json --expected-authorization-digest AUTHORIZATION_PIN
 ```
 
-The [shared authorization schema and recovery gates](HARNESS.md#guarded-source-recovery)
+The [shared authorization schema and recovery gates](harness.md#guarded-source-recovery)
 require independent parent-pinned authority, reviewed terminal writer evidence,
 matching v3 workspace/Git guards and known absent publication. This command
 restores original owned PRE; it never resolves the macro opportunity, accepts
@@ -485,7 +485,7 @@ The first form returns `needs-review` only after current owner verification. The
 second returns `skip-accepted` only for the same complete application, including
 attestation, with valid current parent acceptance. Wrong request/run, changed
 state, missing context, invalid acceptance or incomplete pin pairs reject. See
-[request-bound resume](HARNESS.md#request-bound-resume) for shared boundaries.
+[request-bound resume](harness.md#request-bound-resume) for shared boundaries.
 Neither form performs extraction, consumes/resets a ranked budget, establishes
 writer termination or supplies a durable skip token. The bounded actor must retain
 its original queue and externally pinned proofs; autonomous marching remains open.
@@ -590,7 +590,7 @@ All paths below are under `tools/python/harness/`:
 | Parent acceptance | `macros/application.py`; shared review/revalidation in `common/` |
 | CLI | `macros/cli.py` owns `bin/macro-audit` and macro `rev-query` parsing/adapters; `commands/rev_query.py` composes domain registrations |
 
-The [harness layout](HARNESS.md) and [Python standards](../agents/CODING_STANDARDS.md)
+The [harness layout](harness.md) and [Python standards](coding-standards.md)
 own module structure. Evidence schemas, target identity and native gates do not
 change merely because an implementation owner moves. Tooling-bound historical
 proofs still require their original closure or authorized fresh revalidation.

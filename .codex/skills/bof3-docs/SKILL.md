@@ -5,9 +5,9 @@ description: Search, assemble context, aggregate, edit, repair or compact explic
 
 # BOF3 documentation
 
-Start at [docs/INDEX.md](../../../docs/INDEX.md), then the
-[documentation command contract](../../../docs/specs/DOCS.md). Use one explicit
-mode and caller-named paths; do not scan or edit the whole repository by default.
+Read [docs/INDEX.md](../../../docs/INDEX.md), then the
+[document contract](../../../docs/agents/documentation.md). Use one explicit mode
+and caller-named paths; no whole-repository scan or edit by default.
 
 | Mode | Action |
 |---|---|

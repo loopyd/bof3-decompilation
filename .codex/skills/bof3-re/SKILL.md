@@ -5,7 +5,7 @@ description: Lift or review one target-qualified BOF3 function, normalize proven
 
 # BOF3 RE
 
-Explicit native read-only dispatch uses [the bounded review contract](../../../docs/specs/CODEX.md#bounded-native-review) and `scripts/dispatch.py review REQUEST ...`. Require original budget/consumption pins and child-only capability policy; completion is a proposal, never lift/transaction acceptance. No automatic dispatch, retry or fallback.
+Explicit native read-only dispatch uses [the bounded review contract](../../../docs/agents/codex.md#bounded-native-review) and `scripts/dispatch.py review REQUEST ...`. Require original budget/consumption pins and child-only capability policy; completion is a proposal, never lift/transaction acceptance. No automatic dispatch, retry or fallback.
 
 Compiler, assembler, linker, registry, or invocation-wrapper changes must follow [compiler pipeline validation](references/PIPELINE_VALIDATION.md). Role details remain in [reverse mission protocol](references/REVERSE/MISSION_PROTOCOL.md), [review checklist](references/REVIEW/REVIEW_CHECKLIST.md), and [sharing/non-match review](references/REVIEW/SHARING_NONMATCHES.md). Explicit cleanup routes are owned by the structured cleanup router and its selected skill; ordinary lifting, matching, review, and pipeline work must not load naming-evidence or documentation-repair bodies.
 

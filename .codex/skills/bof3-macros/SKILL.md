@@ -5,9 +5,8 @@ description: Discover, assess and resolve BOF3 preprocessor macro opportunities 
 
 # BOF3 macros
 
-Read [MACROS.md](../../../docs/specs/MACROS.md), the sole macro-resolution
-specification. Use its relevant command and evidence sections, not a separate
-skill-local schema or policy copy.
+Read the [macro guide](../../../docs/agents/macros.md) for canonical commands,
+schemas and evidence gates; do not duplicate its policy in this skill.
 
 `bin/agent-context cleanup macro-opportunity TARGET ID` routes one supplied lead.
 Keep the emitted target/ID and caller-retained pool/ranking pins unchanged. Verify

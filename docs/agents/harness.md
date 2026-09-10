@@ -1,7 +1,7 @@
 # Harness ownership
 
-Read [the documentation index](../INDEX.md) first. This is the Python ownership
-map; [coding standards](../agents/CODING_STANDARDS.md) own naming and decomposition.
+Read [the documentation index](../INDEX.md) first. This map owns harness modules
+and lifecycles; [coding standards](coding-standards.md) own naming and decomposition.
 
 ## Domain packages
 
@@ -36,7 +36,7 @@ leads. `naming/debt.py` owns raw-spelling classification; the opportunity collec
 parses one target-map snapshot through the canonical domain parser. Its CLI lives
 in `naming/cli.py`, not an analysis adapter or type module. Discovery fingerprints
 bind map bytes and row identity, not semantic evidence, layout or application
-authority. See [naming opportunities](../usage.md#symbol-naming-opportunities).
+authority. See [naming opportunities](tool-usage.md#symbol-naming-opportunities).
 
 ## Policy versus mechanism
 
@@ -74,10 +74,10 @@ evidence, not identities; only approved transaction modes may edit repository tr
 Explicit-only invocation policy is preserved. Macro/type skills keep their own
 domain lifecycles; type spelling remains separate from type representation.
 
-Macro extraction policy belongs in [MACROS.md](MACROS.md). Naming evidence and
+Macro extraction policy belongs in [macros.md](macros.md). Naming evidence and
 identity-application contracts are linked from the documentation index. Type
 candidate/application schemas remain in
-[tool usage](../usage.md#type-parent-review-and-final-verification).
+[tool usage](tool-usage.md#type-parent-review-and-final-verification).
 
 Common mechanisms preserve existing wire schemas and trust boundaries, including
 historical `bof3.type-*` defaults where callers already depend on them. They do not
@@ -331,7 +331,7 @@ both debits. No checkpoint writer, reservation service, CLI, automatic recovery
 or accepted-source authority is implemented by this validator. Owner freshness,
 writer quiescence and independent parent acceptance remain separate gates.
 
-The separate [native read-only reviewer](CODEX.md#bounded-native-review) now owns
+The separate [native read-only reviewer](codex.md#bounded-native-review) now owns
 an exclusive per-dispatch debit and evidence journal. It does not create budgets,
 repair failed invocations or provide the full named-role production scheduler.
 

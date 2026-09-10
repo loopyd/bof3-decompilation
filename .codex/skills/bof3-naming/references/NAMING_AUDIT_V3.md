@@ -17,7 +17,7 @@ the parent for separately approved identity application.
 Each invocation processes at most 10 rows within a 600-second shard wall and
 120-second relative per-operation cap (`--deadline`). For a bounded parent run,
 pass its original absolute monotonic `--work-deadline`; retain the separate cleanup
-hard-stop. Follow [owner work deadlines](../../../../docs/specs/HARNESS.md#owner-work-deadlines):
+hard-stop. Follow [owner work deadlines](../../../../docs/agents/harness.md#owner-work-deadlines):
 expiry stops forward writes/finalization, not client cleanup; partial evidence
 remains for inspection. Resume only within the original budget, with the same
 canonical command and no replay of completed checkpoint rows. Keep output at most 8 KiB; cite report
@@ -37,7 +37,7 @@ identity edits. Never use `init-all` for reconciliation: it replaces all reports
 
 Structural validation/capability exhaustion is not independent semantic acceptance.
 Autonomous no-op/exhaustion requires the read-only parent-pinned
-[terminal verification](../../../../docs/usage.md#naming-terminal-acceptance-read-only):
+[terminal verification](../../../../docs/agents/tool-usage.md#naming-terminal-acceptance-read-only):
 distinct preparation/reviewer/parent runs, exact current binding, retained ceiling
 evidence and no unresolved executable leads. It neither rewrites history nor
 authorizes identities. Selected-row acceptance never replaces the full-report gate.

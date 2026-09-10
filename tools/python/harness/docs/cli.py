@@ -22,7 +22,7 @@ from harness.docs.documents import (
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="docs", description=__doc__)
     add_root_argument(parser)
-    add_example_argument(parser, "bin/docs compact docs/specs/DOCS.md")
+    add_example_argument(parser, "bin/docs compact docs/agents/documentation.md")
     commands = parser.add_subparsers(dest="command", required=True)
     for name, help_text in (
         ("context", "read numbered excerpts from explicit Markdown paths"),

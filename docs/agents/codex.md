@@ -1,7 +1,7 @@
 # Codex configuration and Pi migration
 
 Read [the documentation index](../INDEX.md) first. Project skill definitions and
-Python owners are described there and in [HARNESS.md](HARNESS.md).
+Python owners are described there and in [harness.md](harness.md).
 
 ## Bounded native review
 
@@ -27,7 +27,7 @@ Requests contain exactly:
 ```
 
 Use the shared canonical function-ID spelling and current `bin/type-audit baseline`
-digest. The original [execution budget](HARNESS.md#bounded-continuation)
+digest. The original [execution budget](harness.md#bounded-continuation)
 must contain queue ID `review:SELECTOR` with fingerprint `digest(REQUEST)`. Supply
 `--expected-budget-digest`, `--expected-checkpoint-digest`, `--expected-sequence`
 and the complete ordered consumption chain through repeated `--consumption`.

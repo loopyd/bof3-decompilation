@@ -1,4 +1,4 @@
-# Naming evidence: fixed-width table consumers
+# Battle dispatch tables
 
 ## Battle 15 reviewed capability set
 
@@ -23,6 +23,4 @@ local table, scales an unsigned-byte selector by four, and dispatches through
 `jalr` with a `nop` delay slot. This proves a fixed-width dispatch-table
 consumer fact only; it does not establish a semantic symbol name.
 
-Fresh collection must still fail closed while any unrelated access evidence is
-open or unavailable. Positive capability facts cannot turn such a row into an
-`exhausted` or `proposed` conclusion.
+Naming collection policy stays in the [agent tool guide](../../agents/tool-usage.md#symbol-naming-opportunities).

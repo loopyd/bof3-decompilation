@@ -47,7 +47,7 @@ Before tuning C:
 | `build/` | generated objects/binaries |
 | `out/` | disposable snapshots, index, matching workspaces |
 
-See `docs/agents/project-context.md` + `docs/usage.md` for the canonical map.
+See `docs/agents/project-context.md` + `docs/agents/tool-usage.md` for the canonical map.
 
 ## Function iteration
 
