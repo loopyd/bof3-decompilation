@@ -15,6 +15,8 @@ Selector: `TARGET@0xADDRESS` | shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRE
 
 Explicit `scripts/dispatch.py lift DIAGNOSIS ...` uses the [one-shot writer contract](../../../docs/agents/codex.md#one-shot-lift-writer), not the ordinary in-agent match loop. Require original budget/diagnosis pins and explicit directory-write scope. The parent supplies prefill/cold diff; propose one experiment or no-op, report `unverified`/null, then stop. Parent audit requires the external writer receipt pin. Failed, interrupted or completed writer jobs grant no automatic retry, restoration, acceptance or next dispatch.
 
+Explicit `scripts/dispatch.py review-lift AUDIT ...` performs [audited lift review](../../../docs/agents/codex.md#audited-lift-review) only when planned in the original budget. Require external writer/audit/diagnosis pins and unchanged audited POST; never refresh analysis or reset the cutoff. Native completion retains a review proposal, not semantic acceptance or authority to advance, repair or restore. Respect the documented native writer cleanup blocker.
+
 ## Invariants
 
 - Original bytes, PS-X headers, `t_addr` outrank tools. Verify load: `runtime address - load address = payload offset`.

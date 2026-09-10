@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-from contextlib import ExitStack
 import hashlib
 import json
 from pathlib import Path
-import time
 
 from harness.common.continuation import check_budget
 from harness.common.deadlines import bind_deadline, check_deadline, validate_work_clock
@@ -15,17 +13,14 @@ from harness.common.files import read_file
 from harness.common.inputs import file_state
 from harness.common.lease import acquire_writer, require_writer
 from harness.common.paths import leaf_stat
-from harness.common.process import run_bounded
 from harness.context.base import render_context
 from harness.context.capabilities import MODE, build_overrides, verify_policy
-from harness.context.codex import resolve_options, summarize_events
+from harness.context.codex import resolve_options
+from harness.context.execution import run_native
 from harness.context.journal import (
-    STREAMS,
     debit_dispatch,
     hash_artifacts,
-    open_stream,
     seal_record,
-    write_chunk,
     write_private,
     write_record,
 )
@@ -230,52 +225,8 @@ def run_lift(
             verify_policy(
                 root, policy, diagnosis["policy_digest"], before_dispatch=True
             )
-            with ExitStack() as stack:
-                streams = {
-                    name: stack.enter_context(
-                        open_stream(root, directory + "/" + filename)
-                    )
-                    for name, filename in STREAMS.items()
-                }
-
-                def retain_output(name: str, chunk: bytes) -> None:
-                    write_chunk(streams[name], chunk)
-
-                def retain_spawn(process) -> None:
-                    require_writer(root)
-                    write_record(
-                        root,
-                        directory + "/spawn.json",
-                        {
-                            "supervisor_pid": process.pid,
-                            "saved_pid_is_not_termination_authority": True,
-                        },
-                    )
-
-                check_deadline()
-                require_writer(root)
-                observed = run_bounded(
-                    root,
-                    command,
-                    timeout=max(0.001, deadline - time.monotonic()),
-                    deadline=deadline,
-                    output_limit=1024 * 1024,
-                    errors="strict",
-                    input_data=prompt,
-                    on_output=retain_output,
-                    on_spawn=retain_spawn,
-                )
-            if observed["failure"] or observed["exit_code"] != 0:
-                raise RuntimeError(
-                    "native lift failed; retain debit and candidate for inspection"
-                )
-            events = summarize_events(observed["stdout"])
+            events = run_native(root, directory, command, prompt, deadline)
             proposal = events.pop("proposal")
-            if any(
-                read_file(root, directory + "/" + filename) != observed[name].encode()
-                for name, filename in STREAMS.items()
-            ):
-                raise ValueError("retained lift stream differs from observed output")
             if file_state(native) != executable_state:
                 raise ValueError("native Codex executable drifted during lift")
             load_diagnosis(root, diagnosis_directory, expected_diagnosis_digest)

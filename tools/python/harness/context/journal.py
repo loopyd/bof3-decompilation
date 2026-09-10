@@ -13,6 +13,7 @@ from harness.common.continuation import check_budget
 from harness.common.digests import digest
 from harness.common.directory import open_parent_fd
 from harness.common.files import read_file
+from harness.common.lease import require_writer
 from harness.io import unique_object
 
 ARTIFACTS = (
@@ -108,7 +109,6 @@ def debit_dispatch(
     )
     if before["exhausted"]:
         raise ValueError("original dispatch budget is exhausted")
-    sequence = previous["sequence"] + 1
     if previous["sequence"]:
         if not expected_result:
             raise ValueError(
@@ -139,6 +139,24 @@ def debit_dispatch(
             raise ValueError("prior dispatch artifacts drifted")
     elif expected_result is not None:
         raise ValueError("initial dispatch cannot adopt a previous result")
+    return record_debit(root, budget, chain, identity)
+
+
+def record_debit(
+    root: Path, budget: dict, chain: list[dict], identity: str
+) -> tuple[str, dict]:
+    """Persist one charge after the owner validates its prior-stage handoff."""
+    require_writer(root)
+    previous = chain[-1]
+    before = check_budget(
+        root, budget, chain, budget["digest"], previous["digest"], previous["sequence"]
+    )
+    if before["exhausted"]:
+        raise ValueError("original dispatch budget is exhausted")
+    if identity not in previous["launches"]:
+        raise ValueError("dispatch identity is absent from the original queue")
+    sequence = previous["sequence"] + 1
+    base = f"out/reviews/dispatch/{budget['digest'][3:]}"
     launches = {**previous["launches"], identity: previous["launches"][identity] + 1}
     charged = seal_record(
         {

@@ -13,7 +13,7 @@ All paths are below `tools/python/harness/`.
 | `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/naming-audit` → `harness.naming.cli`; `bin/naming-evidence-run` → `harness.naming.runner` |
 | `types/` | C declarations, representation inference, type-use/candidate indexing, reviewed type transactions | `bin/type-audit` → `harness.types.cli` |
 | `docs/` | scoped Markdown references, snapshots, search, context, aggregation and edit/repair/compaction preparation | `bin/docs` → `harness.docs.cli` |
-| `decomp/` | lift inventory/mission pins, native diagnosis, one-shot writer and retained candidate audits | `bin/agent-run diagnose` / `lift` / `audit` → `harness.decomp.cli` |
+| `decomp/` | lift inventory/mission pins, native diagnosis/writer, retained audits and read-only review handoffs | `bin/agent-run diagnose` / `lift` / `audit` / `review-lift` → `harness.decomp.cli` |
 | `common/` | reusable CLI, digests, confined files, process lifecycle, workspace, native receipts and acceptance mechanisms | direct imports from the mechanism owner |
 | `analysis/` | cross-domain reverse index, graph, mission and query coordination | `bin/index`, `bin/rev-query` |
 | `domain/` | manifests, target identity, original binary/layout, source claims and includes | shared repository facts, not candidate acceptance |
@@ -29,7 +29,10 @@ live in `common.deadlines`. Neither gate command writes source or grants accepta
 `decomp.dispatch` owns the explicit [one-shot writer](codex.md#one-shot-lift-writer);
 `decomp.writers` verifies its diagnosis slot, debit and pinned completion before
 audit. `context.arguments` shares budget flags/loading with read-only review.
-Writer completion stops for parent audit; it never unlocks generic next dispatch.
+`decomp.review` verifies an [audited writer](codex.md#audited-lift-review) before its
+original planned review debit; `audit.load_audit` owns retained/current verification.
+`context.execution` shares bounded native streams between lift and lift-review.
+Neither writer nor reviewer completion unlocks generic next dispatch or acceptance.
 The cross-domain index remains one derived database; package separation does not
 create independent databases or relax freshness checks.
 

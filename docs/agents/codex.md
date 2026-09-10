@@ -216,6 +216,8 @@ dispatch debit and exclusive `DIAGNOSIS_DIRECTORY/writer.json` slot. One diagnos
 and queue entry permit only one writer job. Failure, cancellation or a leftover
 slot stops replay; a completed writer cannot unlock generic next-dispatch logic.
 Missing cleanup confirmation requires parent native-handle inspection, not rollback.
+Only the separately pinned [audited-review step](#audited-lift-review) may consume
+its planned review debit after a successful audit; that is not acceptance.
 
 The child inherits configured model/provider/authentication, disables the review
 capabilities above, and uses `--strict-config` with the pinned named permission
@@ -250,6 +252,68 @@ using a real Codex patch/event stream but scripted provider responses and synthe
 gate payloads. Empty temporary Codex homes avoided credentials and live models.
 These probes do not prove production authentication, BOF3 semantics, independent
 review or whole-pipeline acceptance. No live BOF3 writer is claimed.
+
+**Native writer reliability remains unresolved.** Two subsequent fresh fixtures
+left new `.git`, `.codex` and `.agents` directories beside the owned source.
+Both stopped at the unchanged membership guard after native turn completion,
+retaining candidate/debit without a successful writer receipt. Codex's
+[version-matched sandbox source](https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/linux-sandbox/src/linux_run_main.rs)
+implements synthetic metadata mounts and cleanup; the precise residue cause is
+not established. Do not ignore these paths, pre-create them in production, relax
+sandbox rules, delete unexpected entries or treat a stopped writer as accepted.
+
+## Audited lift review
+
+```sh
+bin/agent-run review-lift out/reviews/lift-audit/AFTER \
+  --expected-audit-digest AUDIT_PIN --expected-diagnosis-digest DIAGNOSIS_PIN \
+  --expected-writer-digest WRITER_PIN --expected-result-digest WRITER_PIN \
+  --budget out/budget.json --consumption out/initial-consumption.json \
+  --consumption out/reviews/dispatch/BUDGET_DIGEST/1/consumption.json \
+  --expected-budget-digest BUDGET_PIN --expected-checkpoint-digest WRITER_CHECKPOINT \
+  --expected-sequence 1
+```
+
+Plan queue ID `review-lift:SELECTOR` with fingerprint `digest(LIFT_REQUEST)` in the
+**original** budget, before diagnosis. The complete consumption chain must end at
+the immediate writer debit; the two writer-pin flags bind audit provenance and
+that prior result, respectively. No inferred queue entry, new budget/cutoff or
+receipt scan supplies authorization. This route requires a managed writer, not
+an unbound hand-guided proposal.
+
+Under the writer lease, the command verifies the pinned diagnosis, writer, audit,
+all retained artifacts and unchanged audited POST/native inputs/Git index. It
+renders the canonical tracked review prefill without refreshing or trusting the
+post-edit reverse index. Its prompt separates original facts, parent measurements,
+writer claims and review obligations. Parent native gates remain parent-owned;
+the reviewer must disclose unavailable independent checks, never claim to run them.
+
+One durable debit and diagnosis-owned `review.json` slot precede capability
+preparation and a fresh native `codex exec --sandbox read-only` job. It inherits
+the [read-only restrictions](#bounded-native-review), prompt/output bounds and
+original boot-bound cutoff. Slot/debit drift, stale evidence, changed candidate,
+failed/unfinished output or reuse of the writer's thread rejects. Empty/partial
+publication or failure retains the slot/debit and candidate; no automatic replay.
+Audit/candidate verification runs again before and after the native job.
+
+`bof3.codex-lift-review/v1` binds the original queue/debit, diagnosis/audit/writer
+pins, separate native thread, review text and eight input/output hashes. The
+generated review-request digest binds these runtime facts; the planned queue
+fingerprint still binds the original lift request. Stdout reports the receipt pin
+and path, not source text. `native-audited-lift-review` is a distinct handoff kind:
+generic dispatch cannot advance from it. `record_debit` only accounts/persists a
+charge under a writer lease; its domain caller must validate the preceding stage.
+
+Completion proves transport and retained scope, **not a parsed or accepted semantic
+verdict**. Parent acceptance, affected-consumer checks, matching-aid approval,
+reviewed partial/exhaustion handling, repair scheduling and safe recovery remain
+unfinished. Separate threads do not alone prove independent review quality.
+
+A controlled native fixture with metadata directories already present in PRE
+completed writer/audit/reviewer transport; the reviewer's source write was denied
+with `EROFS`, and audited source remained unchanged. Scripted loopback responses,
+synthetic gates and injected prefills isolate transport, not live-model behavior or
+BOF3 acceptance. This fixture does not resolve the missing-directory writer issue.
 
 ## Global MCP ownership
 
