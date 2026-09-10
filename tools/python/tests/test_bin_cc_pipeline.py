@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -29,6 +30,8 @@ def _pipeline(tmp_path: Path, *, explicit_gcc: bool, expand_div: bool) -> list[s
     root = tmp_path / "repo"
     (root / "bin").mkdir(parents=True)
     shutil.copy2(_CC, root / "bin" / "cc")
+    shutil.copy2(_ROOT / "bin" / "python-env", root / "bin" / "python-env")
+    (root / "tools").symlink_to(_ROOT / "tools", target_is_directory=True)
     log = root / "pipeline.log"
     gcc_body = """
 out=""
@@ -75,6 +78,7 @@ done
         "STUB_LOG": str(log),
         "PSX_AS": str(assembler),
         "MASPSX_PYTHON": str(python),
+        "PSX_PYTHON": sys.executable,
     }
     if explicit_gcc:
         env["PSX_GCC"] = str(explicit)

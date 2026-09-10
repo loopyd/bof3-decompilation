@@ -1551,7 +1551,7 @@ that separate metadata audit. Full C1.2 consumer migration remains unfinished.
 - Owner: build, toolchain and matching owners
 - Depends: C1.1
 - Blocker: none
-- Evidence: build/compiler.py overrides and native match/_asm_link.py text-prefix extraction need migration; catalog/default GCC selection must remain authoritative.
+- Evidence: bin/cc now partitions one complete maspsx translation by attached records and reviewed ownership; scratch two-panel GCC/native proof passes. Path-keyed profile preservation, full producer freshness and native match/_asm_link.py text-prefix extraction still need migration; catalog/default GCC selection remains authoritative.
 - Acceptance: independently select whole-object placement or deterministic per-function compilation projections; preserve every effective compiler/flag profile or reject, no duplicated shared state or unbound generated inputs. Prove per-symbol original placement/relocation/size/instruction/byte checks including noncontiguous functions, calls and data sections; all-member native positive and negative probes. Scoped reviewed execution only; no sandbox changes or installs.
 
 Read-only scout `01a08a05-dac7-77c0-9588-81539af9a405` completed and closed within
@@ -1579,10 +1579,39 @@ rejects, including real MIPS branch-to-delay-slot fallthrough, both publication
 races, timeout cleanup and retained unconfirmed scratch. The five-function native
 probe and 13 negatives pass again; 34 existing checks pass with the known
 Git-writing mode check omitted. No GCC rerun or production consolidation occurred.
-Default compiler, matcher and grouped-source guards remain unchanged. Compatible
+At that checkpoint the compiler, matcher and grouped-source guards were unchanged. Compatible
 profile/compiler integration, shared-data proof, full member coverage, instruction
 selection, cache identities and producer/placement freshness remain required;
 kernel acceptance does not complete C1.3 or authorize C1.4/C1.5.
+
+The next producer slice wires `build.translation` into `bin/cc` after its single
+whole-unit maspsx pass. Ungrouped input is unchanged; grouped records require one
+explicit lift owner and complete map/Splat-resolved assembler membership. CMake
+now invalidates objects for adapter/partitioner/ownership inputs. Reviewer
+`01a08a49-8d22-7ea1-a90b-ab21692ba6fe` found a separate-comment compiler-annotation
+bypass; scanning grouped comment lexemes fixes it. Follow-up
+`01a08a4d-05b6-7f83-90c4-760a09f42859` accepts the repair after 44 in-memory checks
+within 90 seconds; both reviewers are closed within their original bounds.
+Parent evidence `out/reviews/c1-grouped-producer-60skk_tr/` preserves one configured
+GCC compilation of a scratch game00 panel pair: each matches 16/16 instructions
+and all 64 original bytes at its noncontiguous address. Post-repair replay uses
+retained compiler assembly under the original 600-second cutoff, produces an
+identical object and keeps both matches; no second GCC run or production source
+edit. Scratch CMake generation verifies new dependencies. Existing groups of
+4 wrapper, 34 build/compiler/DRY and 99 source/preflight/plan checks pass; the
+Git-writing mode check and unrelated live asm-diff wrapper check are omitted.
+
+Scout `01a08a46-8908-72e3-8508-fc2505601ee7` confirmed there are no implemented
+per-function compiler tags: current authority is project defaults plus path-keyed
+object flags/compiler IDs. Preserve every member's PRE path, ordered effective
+arguments, compiler identity and configuration pins before consolidation; reject
+incompatibility or missing history, then verify the destination reproduces that
+profile. Unsupported annotations reject, not silently fall back. This validator
+and profile migration remain required. Full include/toolchain freshness, late
+private-header dependency registration, function-qualified caches and production
+grouped matching/consumer gates also remain open. The broad new CMake ownership
+dependencies favor correctness; later narrow them without losing invalidation.
+This producer slice does not complete C1.3 or authorize C1.4/C1.5.
 
 4. [C1.4] (open) Add combiner discovery, ranked assessment and reviewed transactions.
 - Owner: combiner owner with independent human-value reviewer

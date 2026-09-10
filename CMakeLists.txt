@@ -39,6 +39,17 @@ file(GLOB_RECURSE BOF3_SHARED_HEADERS CONFIGURE_DEPENDS
      "${CMAKE_SOURCE_DIR}/src/shared/*.inc")
 file(GLOB_RECURSE BOF3_SHARED_SOURCES CONFIGURE_DEPENDS
      "${CMAKE_SOURCE_DIR}/src/shared/*.h" "${CMAKE_SOURCE_DIR}/src/shared/*.inc")
+file(GLOB_RECURSE BOF3_COMPILER_INPUTS CONFIGURE_DEPENDS
+     "${CMAKE_SOURCE_DIR}/tools/python/harness/build/*.py"
+     "${CMAKE_SOURCE_DIR}/tools/python/harness/domain/*.py"
+     "${CMAKE_SOURCE_DIR}/tools/python/harness/common/*.py"
+     "${CMAKE_SOURCE_DIR}/third_party/maspsx/*.py"
+     "${CMAKE_SOURCE_DIR}/config/targets/*/target.toml"
+     "${CMAKE_SOURCE_DIR}/config/targets/*/splat.yaml"
+     "${CMAKE_SOURCE_DIR}/config/targets/*/symbols.txt")
+list(APPEND BOF3_COMPILER_INPUTS
+     "${BOF3_CC}" "${BOF3_AS}" "${CMAKE_SOURCE_DIR}/bin/python-env"
+     "${CMAKE_SOURCE_DIR}/tools/python/harness/io.py")
 
 set(BOF3_OBJECTS)
 set(BOF3_SOURCE_DIRECTORIES)
@@ -150,7 +161,7 @@ foreach(source IN LISTS BOF3_C_SOURCES BOF3_ASM_SOURCES)
       COMMAND ${_cc_command} ${BOF3_CPPFLAGS} ${object_cflags} ${BOF3_CC_ASFLAGS}
               -c "${source}" -o "${object}"
       DEPENDS "${source}" ${source_headers} ${BOF3_SHARED_HEADERS}
-              ${BOF3_SHARED_SOURCES}
+              ${BOF3_SHARED_SOURCES} ${BOF3_COMPILER_INPUTS}
       COMMENT "Compiling ${relative}"
       VERBATIM)
   else()

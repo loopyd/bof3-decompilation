@@ -73,10 +73,20 @@ consumer coverage or type-use identities. Native resolve/compare and status pref
 reject grouped files before comparison/cache reuse; transaction preparation, proposed
 C images and filename-changing naming facts retain corresponding guards.
 
-Native development currently favors section placement after one complete maspsx
-translation, retaining the original C translation unit and compiler profile. The
-inactive `build.sections` / `match.placement` kernel is not a production route.
-It rejects unsupported text subsections/attributes, unplaced allocated sections,
+`bin/cc` now passes its one complete maspsx translation through
+`build.translation` before assembly. Ordinary sources pass through unchanged;
+grouped lifts require attached records, exactly one explicit source owner and
+complete map/Splat-resolved assembler membership. CMake tracks the adapter,
+partitioner and consumed ownership inputs. This low-level producer retains the
+selected GCC and ordered flags; it does not prove a consolidation preserved each
+member's PRE profile. Those profiles currently live in path-keyed
+`config/compiler/object-flags.cmake`, not function tags. Unsupported compiler/flag
+annotations anywhere in grouped-source comments reject rather than silently fall
+back. Profile migration must freeze old paths/settings before moves, require one
+compatible effective profile and reproduce it at the new path.
+
+`build.sections` partitions output; `match.placement` is still outside production
+matching. The kernel rejects unsupported text subsections/attributes, unplaced allocated sections,
 incorrect symbols/ranges and non-ELF32 little-endian MIPS inputs. `match.flow`
 checks reachable branches and delay slots, conservatively rejecting unproved
 indirect/exception transfers. This proves isolation, not original-byte fidelity.
@@ -85,9 +95,12 @@ deadline and output bound. Linking validates a private snapshot before confined,
 exclusive script/ELF publication; the pair is not atomic. Failure retains scratch
 and partial outputs, including when descendant cleanup is unconfirmed. Concurrent
 artifacts are never replaced. These kernel fixes pass disposable native probes
-and independent review, not grouped-source acceptance. Compiler integration,
-profile compatibility, shared-data proof, instruction comparison, complete member
-coverage and cache freshness remain open; do not bypass existing guards.
+and independent review, not grouped-source acceptance. A scratch two-panel unit
+also passes original-byte/instruction comparison after one configured GCC run.
+Profile compatibility, full producer/include/toolchain freshness, shared-data
+proof, matcher instruction selection, complete member coverage and function-scoped
+caching remain open; do not bypass existing guards. Current CMake ownership
+dependencies are conservative across targets, not a performance optimization.
 
 ## Planned discovery and ranking
 

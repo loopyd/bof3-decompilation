@@ -154,6 +154,7 @@ run_c_compile() {
     run_gcc_compile "$compile_source" "$compile_output" "$@"
 
     translated_asm=
+    partitioned_asm=
     trap 'status=$?; cleanup; exit "$status"' 0 1 2 3 15
     translated_asm=$(mktemp "${compile_output}.translated.XXXXXX")
     maspsx_div_flag=
@@ -164,12 +165,20 @@ run_c_compile() {
         PYTHONSAFEPATH=1 "$maspsx_python" -P "$maspsx" \
         "--aspsx-version=${aspsx_version}" $maspsx_div_flag <"$compiler_asm" \
         >"$translated_asm"
-    run_assembler "$translated_asm" "$compile_output" "$@"
+    partitioned_asm=$(mktemp "${compile_output}.partitioned.XXXXXX")
+    . "$ROOT/bin/python-env"
+    python_env "${PSX_PYTHON:-$ROOT/.venv/bin/python}" 2 ''
+    "$PYTHON" -m harness.build.cli --root "$ROOT" translation "$compile_source" \
+        <"$translated_asm" >"$partitioned_asm"
+    run_assembler "$partitioned_asm" "$compile_output" "$@"
 }
 
 cleanup() {
     if [ -n "$translated_asm" ]; then
         rm -f "$translated_asm"
+    fi
+    if [ -n "$partitioned_asm" ]; then
+        rm -f "$partitioned_asm"
     fi
 }
 
