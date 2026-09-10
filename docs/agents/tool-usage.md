@@ -199,6 +199,10 @@ bin/splat TARGET
 creates a new identity plus bin-only reviewed layout. `symbols` validates
 target-local maps. `splat` regenerates assembly and linker inputs for new or
 existing reviewed targets; add `--verbose` only for complete Splat diagnostics.
+The harness applies a temporary options overlay under `out/splat/<target>/`:
+`create_c_files: false` prevents placeholder C/`INCLUDE_ASM` sources, while
+`disassemble_all: true` retains individual assembly output. Reviewed target YAML
+and authored C stay unchanged; the overlay is removed after the subprocess exits.
 
 ### 3. Build analysis evidence
 

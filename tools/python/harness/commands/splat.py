@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import tempfile
 from pathlib import Path
 
 from harness.common.cli import add_example_argument, add_root_argument, run_main
@@ -131,11 +132,24 @@ def run(args: argparse.Namespace) -> int:
             f"missing Splat executable: {toolchain.executable}; run just setup"
         )
     _assert_pre_run_safety(root, manifest)
-    result = toolchain.execute(
-        ["split", "--make-full-disasm-for-code", str(root / manifest.splat)],
-        capture_output=not args.verbose,
-        text=not args.verbose,
-    )
+    output = root / "out" / "splat" / manifest.id.value
+    output.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="policy-", dir=output) as temporary:
+        policy = Path(temporary) / "options.yaml"
+        policy.write_text(
+            "options:\n  create_c_files: false\n  disassemble_all: true\n",
+            encoding="utf-8",
+        )
+        result = toolchain.execute(
+            [
+                "split",
+                "--make-full-disasm-for-code",
+                str(root / manifest.splat),
+                str(policy),
+            ],
+            capture_output=not args.verbose,
+            text=not args.verbose,
+        )
     if not args.verbose:
         if result.returncode:
             if result.stdout:
