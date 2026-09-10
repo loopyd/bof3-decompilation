@@ -273,6 +273,11 @@ rejected by canonical code checks; it reports `candidate_exclusion` instead of
 ranked candidates. Use `quick-wins` for low effort, `hotspots` for caller impact, `leafs` for
 bounded call dependencies, `pareto` for visible effort/value trade-offs, and
 `duplicates` for exact-byte leverage. Rankings are hints, not promotion proof.
+Each ranking call loads target context once, reusing its validated manifest,
+original bytes, reviewed boundaries and SDK exclusions across candidates. Context
+is discarded between calls; standalone candidate checks load fresh context.
+Local symbol-map agreement and index freshness checks remain required. These
+read-only observations are not an atomic snapshot or live source acceptance.
 
 Supporting queries:
 

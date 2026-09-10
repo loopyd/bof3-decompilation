@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from functools import lru_cache
 from pathlib import Path
 import sys
 from typing import Any
@@ -62,8 +61,7 @@ RANK_FIELDS = {
 }
 
 
-@lru_cache(maxsize=None)
-def candidate_context(root: Path, target: str):
+def load_candidate_context(root: Path, target: str):
     manifest = load_target_manifests(root)[target]
     binary = root / manifest.binary
     if not binary.is_file():
@@ -80,7 +78,7 @@ def candidate_context(root: Path, target: str):
     )
 
 
-def candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
+def candidate_exclusion(root: Path, row: dict[str, Any], *, context=None) -> str | None:
     """Reject analyzer-only roots that lack canonical code evidence.
 
     Reviewed Splat labels and Rizin's function finder are hypotheses. Ranking
@@ -88,7 +86,11 @@ def candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
     """
 
     address = int(str(row["address"]), 0)
-    manifest, image, layout, sdk_addresses = candidate_context(root, row["target"])
+    if context is None:
+        context = load_candidate_context(root, row["target"])
+    manifest, image, layout, sdk_addresses = context
+    if manifest.id.value != row["target"]:
+        raise ValueError("candidate context belongs to a different target")
     if image is None:
         return "missing_binary"
     assert layout is not None
@@ -119,7 +121,9 @@ def candidate_exclusion(root: Path, row: dict[str, Any]) -> str | None:
     if boundary.name == f"func_{address:08X}":
         return None
     try:
-        reviewed_function_name(root, row["target"], address, layout=layout)
+        reviewed_function_name(
+            root, row["target"], address, layout=layout, manifest=manifest
+        )
     except CompiledSymbolError:
         return "noncanonical_boundary_name"
     return None
@@ -143,7 +147,14 @@ def priority_rows(
 
     payload = function_metrics(connection, target)
     if root is not None:
-        exclusion_rows = [(row, candidate_exclusion(root, row)) for row in payload]
+        contexts = {
+            owner: load_candidate_context(root, owner)
+            for owner in dict.fromkeys(row["target"] for row in payload)
+        }
+        exclusion_rows = [
+            (row, candidate_exclusion(root, row, context=contexts[row["target"]]))
+            for row in payload
+        ]
         if exclusions:
             payload = [
                 {**row, "candidate_exclusion": reason}
