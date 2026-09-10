@@ -5,6 +5,13 @@ Python owners are described there and in [harness.md](harness.md).
 
 ## Bounded native review
 
+The [autonomous execution authorization](../INDEX.md#autonomous-execution) covers
+external transmission of relevant private BOF3 source and review evidence to the
+configured Codex/model service. Do not request per-review user approval. The parent
+supplies each explicit request, scope, original budget and pins; these machine
+inputs are execution safeguards, not another user-consent gate. Successful review
+still supplies a proposal, not source acceptance or authority to reset consumption.
+
 Bounded read-only review is available; the broader production pipeline is unfinished.
 Repository evidence and writer leases use filesystem-native permissions, without
 requiring POSIX `0600`/`0700` modes or a separate state store on NTFS. Ownership,

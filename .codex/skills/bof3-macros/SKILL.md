@@ -27,6 +27,8 @@ reverse work. Ranking is not semantic acceptance or a durable attempt ledger.
 Resolve only authorized candidates through their reviewed owner transactions.
 Preserve all consumer, independent-review, native-byte and rollback gates in the
 specification. Source lifting/review still follows [BOF3 RE](../bof3-re/SKILL.md).
-Do not edit generated files, rebuild the index silently, or rewrite frozen proofs.
+Do not hand-edit generated files or rewrite frozen proofs. Parent-owned index
+refreshes and external reviews use [standing autonomous authorization](../../../docs/INDEX.md#autonomous-execution);
+do not ask the user again, and never refresh during a pinned transaction.
 Report selected, rejected, deferred and unresolved work separately from accepted
 applications; never count a suggestion or passing Python check as source cleanup.

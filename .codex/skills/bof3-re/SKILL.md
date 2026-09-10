@@ -5,7 +5,12 @@ description: Lift or review one target-qualified BOF3 function, normalize proven
 
 # BOF3 RE
 
-Explicit native read-only dispatch uses [the bounded review contract](../../../docs/agents/codex.md#bounded-native-review) and `scripts/dispatch.py review REQUEST ...`. Require original budget/consumption pins and child-only capability policy; completion is a proposal, never lift/transaction acceptance. No automatic dispatch, retry or fallback.
+Use [standing autonomous authorization](../../../docs/INDEX.md#autonomous-execution)
+for parent-owned index refreshes and external review; do not ask the user again.
+Explicit requests/budgets bind scope and consumption, not new consent. Child
+missions still cannot refresh pinned inputs or grant semantic acceptance.
+
+Native read-only dispatch uses [the bounded review contract](../../../docs/agents/codex.md#bounded-native-review) and `scripts/dispatch.py review REQUEST ...`. Require original budget/consumption pins and child-only capability policy; completion is a proposal, never lift/transaction acceptance. The parent invokes each budget-pinned request; no implicit retry or fallback.
 
 Parent-only `scripts/dispatch.py diagnose REQUEST ...` obtains [cold diagnosis](../../../docs/agents/codex.md#parent-lift-diagnosis) for an existing claimed lift. After a separately authorized edit and confirmed writer termination, use `scripts/dispatch.py audit DIAGNOSIS PROPOSAL ...` for [retained audit](../../../docs/agents/codex.md#retained-lift-audit). Keep original evidence/cutoff and external pins; never guess compiler results. Explicit unmeasured proposals use `unverified`/null until parent gates measure them. Neither command edits/restores source, bypasses stale analysis, grants acceptance/retry, launches a model or completes the lift loop.
 

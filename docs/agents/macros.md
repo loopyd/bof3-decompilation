@@ -6,6 +6,10 @@ Start at [the documentation index](../INDEX.md). Execution history, frozen pilot
 membership, and unfinished campaign work stay in
 [the active plan](../plans/autonomous-bof3-decompilation.md), not this guide.
 
+Parent-owned index refreshes and external review use the
+[standing autonomous authorization](../INDEX.md#autonomous-execution), not a new
+user permission request. Preserve pinned transactions and frozen proofs.
+
 ## Contents
 
 - [Purpose](#purpose)

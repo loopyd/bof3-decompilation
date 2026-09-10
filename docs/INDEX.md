@@ -17,6 +17,19 @@ minimal entry contract; this index owns the detailed reading map.
 - Complete assigned scope. Stop only on an evidence-backed blocker and report
   what was tried plus the smallest unblocking action.
 
+## Autonomous execution
+
+The full BOF3 reconstruction goal has standing user authorization for parent-owned
+index/analysis refreshes and external reviews through the configured Codex/model
+service. Do not ask again for either. Review payloads may include relevant private
+source, diffs, agent instructions, target metadata and original-byte evidence;
+exclude credentials and unrelated user media. The parent selects bounded review
+scope and execution limits before launch. Keep original pins, consumed budgets,
+independent semantic review and live acceptance gates; never refresh inputs during
+a pinned transaction. Preserve frozen evidence before replacing working indexes.
+Local feature-completion commits are authorized; do not push or release. Standing
+authorization does not override sandbox decisions or authorize dependency installs.
+
 ## Request routes
 
 | Request | Read first | Then |
@@ -25,7 +38,7 @@ minimal entry contract; this index owns the detailed reading map.
 | Generic analyzer work explicitly requesting Rizin | [Project context](agents/project-context.md) | `$psx-rizin` |
 | Tooling, Python harness, CLI, tests | [Coding standards](agents/coding-standards.md) | [Harness ownership](agents/harness.md), [Tool usage](agents/tool-usage.md) and owning code/tests |
 | Codex MCP or Pi extension migration | [Codex configuration](agents/codex.md) | Global settings stay in `~/.codex`; project skills below |
-| Explicit budgeted native Codex review | [Native review transport](agents/codex.md#bounded-native-review) | `$bof3-re`; proposal only, no source-writing or semantic acceptance |
+| Autonomous bounded native Codex review | [Native review transport](agents/codex.md#bounded-native-review) | `$bof3-re`; standing authorization above, proposal only, no source-writing or semantic acceptance |
 | Parent pre-edit native lift diagnosis / retained candidate audit | [Parent lift diagnosis](agents/codex.md#parent-lift-diagnosis) | [Retained audit](agents/codex.md#retained-lift-audit), `$bof3-re`; original pins/cutoff, no model or source edits |
 | Explicit budgeted native lift proposal | [One-shot writer](agents/codex.md#one-shot-lift-writer) | `$bof3-re`; pinned scope/cutoff, no acceptance; heed the [native cleanup blocker](agents/codex.md#native-writer-cleanup) |
 | Explicit review of an audited native lift | [Audited lift review](agents/codex.md#audited-lift-review) | `$bof3-re`; original queue/cutoff, pinned writer/audit and unchanged candidate; proposal only |

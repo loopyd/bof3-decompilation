@@ -327,6 +327,11 @@ termination permits separately authorized recovery; no implicit retry follows.
 
 ## Bounded continuation
 
+The parent prepares review scopes and budgets under the
+[standing autonomous authorization](../INDEX.md#autonomous-execution), without
+another user prompt for external review or safe-checkpoint index refresh.
+Validator fields do not confer authority by themselves or replace that authorization.
+
 `common.continuation.check_budget` is a read-only validator, not a scheduler or
 launch permission. Its `bof3.execution-budget/v1` contract pins the canonical
 root path/device/inode, ordered unique queue IDs and fingerprints, same-boot
