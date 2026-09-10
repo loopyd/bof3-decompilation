@@ -414,9 +414,9 @@ segments:
     - storeHalvedSelectionResult
   - - 33484
     - c
-    - storeHalvedResultPlus1
-    - [source, src/bof3/battle/storeHalvedResultPlus1.c]
-    - [behavior, "sets selection flag and stores half target result"]
+    - name: storeHalvedResultPlus1
+      source: src/bof3/battle/storeHalvedResultPlus1.c
+      behavior: sets selection flag and stores half target result
   - - 33576
     - asm
     - func_8009EB28
@@ -1225,9 +1225,9 @@ segments:
     - func_800ADCA4
   - - 95428
     - c
-    - dispatchWorkTable69b8
-    - [0x800ADCC4, 0x800ADD44]
-    - {source: src/bof3/battle/dispatchWorkTable69b8.c, behavior: "copies the three handlers at 0x800969B8 and dispatches the entry selected by battle work byte 0x01"}
+    - name: dispatchWorkTable69b8
+      source: src/bof3/battle/dispatchWorkTable69b8.c
+      behavior: copies the three handlers at 0x800969B8 and dispatches the entry selected by battle work byte 0x01
   - - 95556
     - asm
     - func_800ADD44
@@ -1382,9 +1382,9 @@ segments:
     - func_800B0058
   - - 104728
     - c
-    - selectOffsetPairByMode
-    - [0x800B0118, 0x800B0180]
-    - {source: src/bof3/battle/selectOffsetPairByMode.c, behavior: "Select local offset pair by battle-work mode and active table."}
+    - name: selectOffsetPairByMode
+      source: src/bof3/battle/selectOffsetPairByMode.c
+      behavior: Select local offset pair by battle-work mode and active table.
   - - 104832
     - c
     - dispatchPanelTaskTable69e4
@@ -1498,8 +1498,8 @@ segments:
     - func_800B2104
   - - 112984
     - c
-    - panelStepLeftEndNegC8
-    - source: src/bof3/battle/panelStepLeftEndNegC8.c
+    - name: panelStepLeftEndNegC8
+      source: src/bof3/battle/panelStepLeftEndNegC8.c
       behavior: leaf
   - - 113048
     - c

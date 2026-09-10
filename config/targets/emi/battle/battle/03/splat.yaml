@@ -390,9 +390,9 @@ segments:
     - stubHandlerE7fc
   - - 56324
     - c
-    - func_801DE804
-    - [0x801DE804, 0x801DE858]
-    - {source: src/bof3/battle/func_801DE804.c, behavior: clears the first three bytes of all eight event-queue slots}
+    - name: func_801DE804
+      source: src/bof3/battle/func_801DE804.c
+      behavior: clears the first three bytes of all eight event-queue slots
   - - 56408
     - asm
     - func_801DE858
