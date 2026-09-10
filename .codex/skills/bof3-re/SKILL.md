@@ -13,6 +13,8 @@ Compiler, assembler, linker, registry, or invocation-wrapper changes must follow
 
 Selector: `TARGET@0xADDRESS` | shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First command for `bof3-lifter`/`bof3-reviewer`: `bin/agent-context <reverse|review> SELECTOR`, once. Its bounded tracked prefill includes role rules and target-owned facts; never reread bundled paths. Generated asm/index evidence is task-driven; psx-rizin only for a concrete question. Repo `bin` wins.
 
+Explicit `scripts/dispatch.py lift DIAGNOSIS ...` uses the [one-shot writer contract](../../../docs/agents/codex.md#one-shot-lift-writer), not the ordinary in-agent match loop. Require original budget/diagnosis pins and explicit directory-write scope. The parent supplies prefill/cold diff; propose one experiment or no-op, report `unverified`/null, then stop. Parent audit requires the external writer receipt pin. Failed, interrupted or completed writer jobs grant no automatic retry, restoration, acceptance or next dispatch.
+
 ## Invariants
 
 - Original bytes, PS-X headers, `t_addr` outrank tools. Verify load: `runtime address - load address = payload offset`.

@@ -117,6 +117,7 @@ def debit_dispatch(
         status = read_record(root, f"{base}/{previous['sequence']}/result.json")
         if (
             status.get("transport_completed") is not True
+            or status.get("capabilities") != "native-read-only"
             or status.get("digest") != expected_result
             or status.get("checkpoint_digest") != previous["digest"]
             or status.get("digest")

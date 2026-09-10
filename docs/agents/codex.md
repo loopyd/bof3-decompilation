@@ -45,7 +45,8 @@ failed, unpinned or changed previous completion evidence blocks another dispatch
 No retry/refund, recovery, restoration or automatic acceptance is provided.
 
 The explicit capability policy is **child-only**: `--sandbox read-only`, approval
-policy `never`, no apps/plugins/multi-agent/skill-triggered MCP installation, and
+policy `never`, no apps/plugins/multi-agent variants/hooks/shell snapshots or
+skill-triggered MCP installation, and
 every enumerated MCP server disabled by override. A second native listing must
 confirm the disabled inventory; failure stops before model dispatch. Unsupported
 server-key spellings reject. Empty-table overrides do not disable inherited MCP
@@ -109,8 +110,8 @@ The installed legacy 32-bit compiler could not run under the tested Codex comman
 sandbox. Parent gates therefore have their own explicit installed `bwrap` invocation:
 separate namespaces/network, read-only root/source/Git/evidence, writable generated
 build/asm-diff/bindings/matching/Splat outputs and fresh dispatch scratch; home Codex
-and Pi directories are masked. No package install, altered Codex policy, fallback
-after a denial, or source-writing model transport is introduced. Outer sandbox
+and Pi directories are masked. These gates neither install packages, alter Codex
+policy, provide a fallback after denial, nor grant source-writing authority. Outer sandbox
 restrictions still apply; unavailable native capabilities require approval or stop.
 This is bounded cooperative execution, not proof against hostile filesystem aliases
 or arbitrary privileged code. Other credential locations are not inventoried/masked.
@@ -161,6 +162,13 @@ The original manifest/native inputs, index, unrelated workspace and source-direc
 guards remain active. Do not refresh analysis between diagnosis and audit; report
 required refresh for the later parent checkpoint. A free lease is not quiescence.
 
+After a [managed writer](#one-shot-lift-writer), also supply its externally retained
+`--expected-writer-digest`. Audit verifies the diagnosis-owned slot, original debit,
+completion pin and all eight writer artifacts before and after native checks.
+Failed/incomplete writers reject. The candidate must still match the writer's POST,
+and the proposal must be its original unmeasured report. A hand-guided edit with
+no managed slot retains the existing route; a supplied pin without a slot rejects.
+
 Default `--proposal-format mission` checks the measured two-fence report above.
 For a writer unable to run the legacy compiler, explicitly use
 `--proposal-format unmeasured`: the same report must contain
@@ -184,6 +192,64 @@ any candidate, with no retry/restoration/acceptance authority. The parent accoun
 each invocation against the original campaign budget; neither command debits it or
 implements a model writer, repair scheduler, independent acceptance or recovery.
 `bof3-re`'s dispatch script forwards both commands unchanged.
+
+## One-shot lift writer
+
+```sh
+bin/agent-run lift out/reviews/lift-diagnosis/BEFORE \
+  --expected-diagnosis-digest DIAGNOSIS_PIN \
+  --capabilities native-scoped-directory-write \
+  --budget out/budget.json --consumption out/initial-consumption.json \
+  --expected-budget-digest BUDGET_PIN --expected-checkpoint-digest CHECKPOINT_PIN \
+  --expected-sequence 0
+```
+
+This explicitly authorized source-writing command connects diagnosis to retained
+audit, not to automatic acceptance. Its original budget queue contains
+`lift:SELECTOR` with fingerprint `digest(LIFT_REQUEST)`; use the same boot-bound
+cutoff as diagnosis. Later sequence positions require the complete consumption
+chain and previous read-only completion pin, as [review](#bounded-native-review)
+does. It never creates or resets a budget, refreshes an index, or repins evidence.
+
+Under the shared writer lease, fresh mission/policy checks precede one durable
+dispatch debit and exclusive `DIAGNOSIS_DIRECTORY/writer.json` slot. One diagnosis
+and queue entry permit only one writer job. Failure, cancellation or a leftover
+slot stops replay; a completed writer cannot unlock generic next-dispatch logic.
+Missing cleanup confirmation requires parent native-handle inspection, not rollback.
+
+The child inherits configured model/provider/authentication, disables the review
+capabilities above, and uses `--strict-config` with the pinned named permission
+profile. It does not use workspace-wide writes or weaken the outer sandbox.
+Existing siblings/child directories, Git and frozen evidence remain read-only;
+declared source parents and generated outputs/scratch are writable, tool networking
+is disabled, and home Codex/Pi paths are denied to tools. **Future names within a
+writable parent are not confined**: post-audit rejects unexpected names, including
+ignored files. This is cooperative scoped-directory execution, not a hostile-code
+or credential-inventory guarantee. Codex's own authentication/runtime is separate.
+
+The retained role and canonical reverse prefill accompany the pinned cold diff.
+The writer is instructed to make one structural experiment or justified no-op,
+then return the full two-fence `unverified`/null report. It cannot claim unavailable
+compiler measurements; native gates stay with the parent. Prompt instructions do
+not mechanically prove one semantic experiment or a human-quality improvement.
+One job shares the original deadline, 128 KiB prompt bound and 1 MiB output cap.
+
+Successful transport publishes `bof3.codex-lift/v1`: original bindings, native thread
+ID, eight artifact hashes, actual POST inventory/owned images and the writer report.
+Stdout supplies its receipt digest and proposal SHA-256 for `audit`, using
+`--proposal-format unmeasured --expected-writer-digest WRITER_PIN`. Audit retains
+that writer pin separately from native measurements. Neither completion permits
+source acceptance, automatic restoration, retry or campaign advancement.
+
+Installed Codex 0.153.4 applied this named profile through native `exec` in disposable
+Linux/NTFS probes. Scripted loopback responses exercised shell writes and native
+`apply_patch`: owned edits succeeded, protected sibling edits/deletions/moves failed,
+and an unexpected ignored name remained visible to the rejecting post-audit.
+A separate Git-backed fixture completed `diagnose` → native `lift` → `audit`,
+using a real Codex patch/event stream but scripted provider responses and synthetic
+gate payloads. Empty temporary Codex homes avoided credentials and live models.
+These probes do not prove production authentication, BOF3 semantics, independent
+review or whole-pipeline acceptance. No live BOF3 writer is claimed.
 
 ## Global MCP ownership
 

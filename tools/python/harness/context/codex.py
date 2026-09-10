@@ -11,10 +11,18 @@ from typing import Any
 from harness.common.process import run_bounded
 from harness.io import unique_object
 
-FEATURES = ("apps", "plugins", "multi_agent", "skill_mcp_dependency_install")
+FEATURES = (
+    "apps",
+    "plugins",
+    "multi_agent",
+    "multi_agent_v2",
+    "hooks",
+    "shell_snapshot",
+    "skill_mcp_dependency_install",
+)
 
 
-def resolve_command(root: Path, deadline: float) -> tuple[list[str], list[str]]:
+def resolve_options(root: Path, deadline: float) -> tuple[str, list[str], list[str]]:
     executable = shutil.which("codex")
     if executable is None:
         raise ValueError("installed Codex executable is required; nothing is installed")
@@ -64,11 +72,15 @@ def resolve_command(root: Path, deadline: float) -> tuple[list[str], list[str]]:
         valid = False
     if not valid:
         raise RuntimeError("Codex did not confirm the restricted capability inventory")
+    options.extend(("-c", 'approval_policy="never"'))
+    return executable, options, names
+
+
+def resolve_command(root: Path, deadline: float) -> tuple[list[str], list[str]]:
+    executable, options, names = resolve_options(root, deadline)
     command = [
         executable,
         *options,
-        "-c",
-        'approval_policy="never"',
         "exec",
         "--json",
         "--ephemeral",

@@ -19,7 +19,12 @@ from harness.io import unique_object
 
 from .inventory import verify_scope
 from .execution import build_gate_command
-from .missions import inspect_candidate, parse_result, validate_mission_record
+from .missions import (
+    inspect_candidate,
+    parse_handoff,
+    validate_handoff,
+    validate_mission_record,
+)
 
 
 def audit_candidate(
@@ -36,20 +41,7 @@ def audit_candidate(
 ) -> dict:
     require_writer(root)
     validate_mission_record(record, expected_mission_digest)
-    report = parse_result(
-        proposal, record["request"]["selector"], unmeasured=unmeasured
-    )
-    if (
-        report["acceptance"]["pre_mission"]
-        != {
-            "mission_digest": expected_mission_digest,
-            "baseline_digest": record["request"]["adopted_baseline"],
-        }
-        or report["acceptance"]["retained_candidate"] != record["request"]["source"]
-    ):
-        raise ValueError(
-            "lift acceptance pre-mission or retained-source binding drifted"
-        )
+    report = parse_handoff(proposal, record, unmeasured=unmeasured)
     checks = check_candidate(
         root,
         record,
@@ -64,19 +56,7 @@ def audit_candidate(
         raise ValueError("lift match percentage differs from parent native evidence")
     if report["mission"]["status"] == "exact" and not checks["byte_exact"]:
         raise ValueError("lift byte-match claim differs from parent native gates")
-    if sorted(report["mission"]["files_changed"]) != after["changed_paths"]:
-        raise ValueError("lift changed-file claim differs from retained candidate")
-    if (
-        after["changed_paths"]
-        and not report["acceptance"]["snapshot_index_refresh_required"]
-    ):
-        raise ValueError(
-            "lift changed indexed inputs without requesting parent refresh"
-        )
-    if report["acceptance"]["staged_index_changed"]:
-        raise ValueError(
-            "lift report claims staged-index mutation; parent inspection required"
-        )
+    validate_handoff(report, after)
     check_deadline()
     require_writer(root)
     result = {

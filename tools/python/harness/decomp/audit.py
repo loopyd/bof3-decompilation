@@ -21,7 +21,8 @@ from harness.decomp.evidence import (
 )
 from harness.decomp.gates import audit_candidate
 from harness.decomp.inventory import verify_scope
-from harness.decomp.missions import validate_mission_record
+from harness.decomp.missions import inspect_candidate, validate_mission_record
+from harness.decomp.writers import verify_writer_result
 
 
 def validate_diagnosis(diagnosis: dict, expected_digest: str) -> float:
@@ -118,6 +119,7 @@ def run_audit(
     expected_proposal_sha256: str,
     output: str,
     unmeasured: bool = False,
+    expected_writer_digest: str | None = None,
 ) -> dict:
     diagnosis = read_record(root, validate_repo_path(directory) + "/result.json")
     deadline = validate_diagnosis(diagnosis, expected_diagnosis_digest)
@@ -130,6 +132,7 @@ def run_audit(
         output=output,
         deadline=deadline,
         unmeasured=unmeasured,
+        expected_writer_digest=expected_writer_digest,
     )
 
 
@@ -144,6 +147,7 @@ def execute_audit(
     output: str,
     deadline: float,
     unmeasured: bool = False,
+    expected_writer_digest: str | None = None,
 ) -> dict:
     reserved = False
     try:
@@ -151,6 +155,22 @@ def execute_audit(
             diagnosis, mission, policy = load_diagnosis(
                 root, directory, expected_diagnosis_digest
             )
+            writer = verify_writer_result(
+                root, directory, diagnosis, mission, expected_writer_digest
+            )
+            if writer is not None:
+                if (
+                    not unmeasured
+                    or expected_proposal_sha256 != writer["artifacts"]["proposal.md"]
+                ):
+                    raise ValueError(
+                        "managed lift audit must use its original unmeasured proposal"
+                    )
+                verify_scope(
+                    writer["post"]["inventory"],
+                    inspect_candidate(root, mission)["inventory"],
+                    [],
+                )
             if deadline != validate_work_clock(diagnosis["clock"]):
                 raise ValueError("audit cannot replace the original diagnosis cutoff")
             proposal = read_file(root, proposal_path)
@@ -178,6 +198,9 @@ def execute_audit(
                     unmeasured=unmeasured,
                 )
             load_diagnosis(root, directory, expected_diagnosis_digest)
+            verify_writer_result(
+                root, directory, diagnosis, mission, expected_writer_digest
+            )
             if read_file(root, proposal_path) != proposal:
                 raise ValueError("audit proposal changed during native checks")
             regression = checked["match_percent"] < diagnosis["match_percent"] or (
@@ -191,6 +214,7 @@ def execute_audit(
                     "digest": expected_diagnosis_digest,
                 },
                 "proposal_sha256": expected_proposal_sha256,
+                "writer_digest": expected_writer_digest,
                 "proposal_format": "unmeasured" if unmeasured else "mission",
                 "clock": diagnosis["clock"],
                 "comparison": {

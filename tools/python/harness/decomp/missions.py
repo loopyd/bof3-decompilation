@@ -251,6 +251,38 @@ def inspect_candidate(root: Path, record: dict) -> dict:
     return {"inventory": observed, "changed_paths": changed}
 
 
+def parse_handoff(text: str, record: dict, *, unmeasured: bool = False) -> dict:
+    report = parse_result(text, record["request"]["selector"], unmeasured=unmeasured)
+    if (
+        report["acceptance"]["pre_mission"]
+        != {
+            "mission_digest": record["digest"],
+            "baseline_digest": record["request"]["adopted_baseline"],
+        }
+        or report["acceptance"]["retained_candidate"] != record["request"]["source"]
+    ):
+        raise ValueError(
+            "lift acceptance pre-mission or retained-source binding drifted"
+        )
+    return report
+
+
+def validate_handoff(report: dict, post: dict) -> None:
+    if sorted(report["mission"]["files_changed"]) != post["changed_paths"]:
+        raise ValueError("lift changed-file claim differs from retained candidate")
+    if (
+        post["changed_paths"]
+        and not report["acceptance"]["snapshot_index_refresh_required"]
+    ):
+        raise ValueError(
+            "lift changed indexed inputs without requesting parent refresh"
+        )
+    if report["acceptance"]["staged_index_changed"]:
+        raise ValueError(
+            "lift report claims staged-index mutation; parent inspection required"
+        )
+
+
 def parse_result(text: str, selector: str, *, unmeasured: bool = False) -> dict:
     reports = re.findall(
         r"(?m)^```(json|acceptance-report)\s*\n(.*?)^```\s*$", text, re.S

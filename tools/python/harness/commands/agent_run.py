@@ -1,4 +1,4 @@
-"""Run parent lift diagnosis/audits or explicitly budgeted native Codex review."""
+"""Run pinned parent lift gates or explicitly budgeted native Codex proposals."""
 
 from __future__ import annotations
 
@@ -13,26 +13,19 @@ from harness.common.cli import (
 )
 from harness.context.dispatch import run_dispatch
 from harness.context.journal import read_record
+from harness.context.arguments import add_dispatch_arguments, load_dispatch_inputs
 from harness.decomp.cli import register_commands
 
 
 def dispatch_review(args: argparse.Namespace) -> int:
     args.root = resolved_root(args)
-    budget = read_record(args.root, args.budget)
-    try:
-        deadline = budget["clock"]["deadline_ns"] / 1e9
-    except (KeyError, TypeError, OverflowError) as error:
-        raise ValueError("invalid execution budget clock") from error
+    budget, chain, options = load_dispatch_inputs(args.root, args)
     result = run_dispatch(
         args.root,
         read_record(args.root, args.request),
         budget,
-        [read_record(args.root, name) for name in args.consumption],
-        expected_budget=args.expected_budget_digest,
-        expected_checkpoint=args.expected_checkpoint_digest,
-        expected_sequence=args.expected_sequence,
-        expected_result=args.expected_result_digest,
-        deadline=deadline,
+        chain,
+        **options,
     )
     print(json.dumps(result), flush=True)
     return 0
@@ -51,15 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
         "review", help="launch one native-read-only Codex review"
     )
     review.add_argument("request")
-    review.add_argument("--budget", required=True)
-    review.add_argument("--consumption", action="append", required=True)
-    review.add_argument("--expected-budget-digest", required=True)
-    review.add_argument("--expected-checkpoint-digest", required=True)
-    review.add_argument("--expected-sequence", required=True, type=int)
-    review.add_argument(
-        "--expected-result-digest",
-        help="external prior completed-dispatch pin; required after sequence zero",
-    )
+    add_dispatch_arguments(review)
     review.set_defaults(handler=dispatch_review)
     return parser
 
