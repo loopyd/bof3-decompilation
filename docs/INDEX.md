@@ -27,7 +27,7 @@ minimal entry contract; this index owns the detailed reading map.
 | Codex MCP or Pi extension migration | [Codex configuration](agents/codex.md) | Global settings stay in `~/.codex`; project skills below |
 | Explicit budgeted native Codex review | [Native review transport](agents/codex.md#bounded-native-review) | `$bof3-re`; proposal only, no source-writing or semantic acceptance |
 | Parent pre-edit native lift diagnosis / retained candidate audit | [Parent lift diagnosis](agents/codex.md#parent-lift-diagnosis) | [Retained audit](agents/codex.md#retained-lift-audit), `$bof3-re`; original pins/cutoff, no model or source edits |
-| Explicit budgeted native lift proposal | [One-shot writer](agents/codex.md#one-shot-lift-writer) | `$bof3-re`; pinned diagnosis/scope, one job, stops for parent audit without acceptance |
+| Explicit budgeted native lift proposal | [One-shot writer](agents/codex.md#one-shot-lift-writer) | `$bof3-re`; pinned scope/cutoff, no acceptance; heed the [native cleanup blocker](agents/codex.md#native-writer-cleanup) |
 | Explicit review of an audited native lift | [Audited lift review](agents/codex.md#audited-lift-review) | `$bof3-re`; original queue/cutoff, pinned writer/audit and unchanged candidate; proposal only |
 | Macro opportunity indexing, ranking or resolution | [Macro resolution guide](agents/macros.md) | [Explicit cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), owning code/checks; matching or tooling route when making changes |
 | Type representation opportunities and reviewed application | [Tool usage](agents/tool-usage.md#3b-target-analysis-freshness--rebuild--query) | [Cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), `$bof3-types`; [harness ownership](agents/harness.md) |

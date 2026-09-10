@@ -253,14 +253,32 @@ gate payloads. Empty temporary Codex homes avoided credentials and live models.
 These probes do not prove production authentication, BOF3 semantics, independent
 review or whole-pipeline acceptance. No live BOF3 writer is claimed.
 
-**Native writer reliability remains unresolved.** Two subsequent fresh fixtures
-left new `.git`, `.codex` and `.agents` directories beside the owned source.
-Both stopped at the unchanged membership guard after native turn completion,
-retaining candidate/debit without a successful writer receipt. Codex's
-[version-matched sandbox source](https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/linux-sandbox/src/linux_run_main.rs)
-implements synthetic metadata mounts and cleanup; the precise residue cause is
-not established. Do not ignore these paths, pre-create them in production, relax
-sandbox rules, delete unexpected entries or treat a stopped writer as accepted.
+### Native writer cleanup
+
+**Writer reliability remains unresolved on Codex 0.153.4.** Fresh fixtures can
+leave new `.git`, `.codex` and `.agents` directories beside the owned source.
+The unchanged membership guard rejects them after native turn completion,
+retaining candidate/debit without a successful writer receipt.
+
+A failed lightweight syscall trace identifies the premature kill: a native Codex
+thread sends `SIGKILL` to its `codex-linux-sandbox --codex-run-as-fs-helper` process
+after metadata mount targets appear, before their removal. Our supervisor reaps
+the remaining descendants more than a second later; it is not the first killer.
+A heavier trace completed the same pipeline and showed normal target removal,
+so tracing changes timing and a passing run alone does not establish reliability.
+
+The version-matched [helper client](https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/exec-server/src/fs_sandbox.rs)
+uses `kill_on_drop(true)`; [sandbox cleanup](https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/linux-sandbox/src/linux_run_main.rs)
+removes synthetic targets after its child exits. This supports a canceled-helper
+lifecycle diagnosis; the precise canceling call site remains unproven. Adding
+supervisor grace cannot undo Codex's earlier kill. No local guard/process change,
+installed-runtime patch or fixed release is claimed by this investigation.
+
+Do not ignore these paths, pre-create them in production, relax sandbox rules,
+delete unexpected entries or treat a stopped writer as accepted. Any replacement
+runtime needs separately authorized installation/build and fresh reproduction,
+scope, deadline and cancellation checks before live use. Diagnostic logs and
+scripted provider/gate fixtures are not BOF3 semantic or recovery authority.
 
 ## Audited lift review
 
