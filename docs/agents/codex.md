@@ -78,6 +78,71 @@ Authentication, completed native review and production pipeline acceptance requi
 their own observed evidence; CLI discovery, fixture JSON events and green tests do
 not establish them. See [official non-interactive Codex usage](https://developers.openai.com/codex/noninteractive/).
 
+## Parent lift diagnosis
+
+`bin/agent-run diagnose REQUEST --expected-request-digest PIN --output
+out/reviews/lift-diagnosis/NAME --deadline ORIGINAL_MONOTONIC_CUTOFF` measures an
+**existing claimed lift** before editing. The `bof3-re` dispatch script forwards
+this command too. It launches no model, changes no source, and grants no review,
+restoration, retry or campaign advancement. New unlifted functions still need the
+original-byte/first-source mission route; this command cannot diagnose absent C.
+
+The closed `bof3.lift-request/v1` request contains `schema`, canonical `selector`,
+`source`, sorted unique explicit `paths` (at most twelve), nonempty `task` (at most
+8 KiB), current `adopted_baseline`, and
+`capabilities:"native-scoped-directory-write"`. That explicit scope describes the
+potential mission, **not a write grant from diagnosis**. Existing ownership must
+match the selector; shared source/header changes reject. Retain the request digest
+externally. Capture validates current mission/index freshness, original span and
+PS-X header, source/configuration ownership, native inputs/tools/environment,
+workspace metadata and exact raw Git index. Stale analysis stops; it is never
+refreshed or replaced here.
+
+The parent supplies its already-accounted original monotonic work cutoff; diagnosis
+does not create/debit a campaign budget or infer permission to retry. Preparation,
+each native command and publication retain that cutoff, with each command capped
+at 120 seconds and 1 MiB combined output. Keep the separate parent cleanup hard-stop.
+The shared writer lease excludes cooperating writers throughout; it neither proves
+prior-worker termination nor excludes manual editors.
+
+The installed legacy 32-bit compiler could not run under the tested Codex command
+sandbox. Parent gates therefore have their own explicit installed `bwrap` invocation:
+separate namespaces/network, read-only root/source/Git/evidence, writable generated
+build/asm-diff/bindings/matching/Splat outputs and fresh dispatch scratch; home Codex
+and Pi directories are masked. No package install, altered Codex policy, fallback
+after a denial, or source-writing model transport is introduced. Outer sandbox
+restrictions still apply; unavailable native capabilities require approval or stop.
+This is bounded cooperative execution, not proof against hostile filesystem aliases
+or arbitrary privileged code. Other credential locations are not inventoried/masked.
+
+Diagnosis performs fresh CMake/Ninja configuration, selectively removes the chosen
+object, verifies its absence, then runs full JSON asm-diff and byte-match. It checks
+native schemas, identity, original span, instruction/byte agreement and unchanged
+PRE/native inputs around the gates. Exact **and valid partial** measurements are
+useful diagnostics, never source acceptance. The owning candidate audit reuses these
+same gates after edits and separately validates the mission/acceptance report.
+
+The candidate-audit API's machine report uses two fences: mission `json`, then
+JSON `acceptance-report`. The latter has exactly `pre_mission` (mission/baseline
+digests), `commands`, `attempts`, `risks`, `retained_candidate` (source path),
+`remaining_candidates`, `snapshot_index_refresh_required`, `staged_index_changed`,
+`parent_restore_required`, and `matching_aid_approvals`. Commands, risks, candidates
+and approvals are lists; the three flags are booleans. Each ordered attempt contains
+`order`, `diagnosis`, `change`, `command`, `result`, `retained`, and `reason`.
+This explicit JSON variant is not inferred from legacy prose. Writer claims are
+compared with parent measurement; neither parsing nor matching bytes supplies the
+independent semantic review needed for acceptance.
+
+Only a fresh direct-child output directory is allowed. It retains the pinned
+`mission.json`, `policy.json`, invocation cutoff, started/spawn/terminal records,
+fsynced stdout/stderr and `bof3.lift-diagnosis/v1` result. Stdout reports only paths,
+pins and measured status. Evidence can contain source/PRE images; keep it out of
+public logs and commits. Existing output rejects unchanged. Failure retains evidence
+and records no restoration/retry authority; a leftover result alongside failure is
+not a successful handoff. Native cleanup uncertainty remains distinct. Saved PIDs
+are diagnostic only. No automatic rollback, model edit/retry loop, independent
+acceptance or stale-index handoff is established by this prerequisite.
+
 ## Global MCP ownership
 
 MCP server definitions and configured credentials belong in `~/.codex/config.toml`,

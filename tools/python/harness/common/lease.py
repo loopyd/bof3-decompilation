@@ -60,6 +60,14 @@ def verify_writer(root: Path) -> None:
         _verify_lease(lease, root)
 
 
+def require_writer(root: Path) -> None:
+    """Require an active, identity-retained lease before native writer operations."""
+    lease = ACTIVE_WRITER.get()
+    if lease is None:
+        raise RuntimeError("native writer operation requires an active writer lease")
+    _verify_lease(lease, root)
+
+
 def _open_lease(root: Path) -> int:
     parent, leaf = open_parent_fd(root, LOCK_PATH, create=True)
     descriptor = -1

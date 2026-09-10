@@ -10,7 +10,7 @@ BOF3 runtime, format and data evidence belongs in [specs](../specs/INDEX.md).
 | [Project context](project-context.md) | Identity, authority and repository layout |
 | [Harness](harness.md) | Domain modules, transactions, native lifecycles and recovery |
 | [Tool usage](tool-usage.md) | Ordered CLI workflows, flags and evidence gates |
-| [Codex](codex.md) | Native review, global MCP configuration and Pi migration |
+| [Codex](codex.md) | Native review/diagnosis, global MCP configuration and Pi migration |
 | [Macros](macros.md) | Opportunity indexing, human-value ranking and reviewed resolution |
 | [Documentation](documentation.md) | Markdown references, search/context, editing, repair and compaction |
 | [Function matching](matching.md) | Target-qualified lift and validation loop |

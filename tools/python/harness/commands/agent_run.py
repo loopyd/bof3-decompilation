@@ -1,4 +1,4 @@
-"""Dispatch one explicitly budgeted read-only BOF3 Codex review."""
+"""Run parent native diagnosis or explicitly budgeted read-only BOF3 Codex review."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from harness.common.cli import (
 )
 from harness.context.dispatch import run_dispatch
 from harness.context.journal import read_record
+from harness.decomp.cli import register_commands
 
 
 def dispatch_review(args: argparse.Namespace) -> int:
@@ -45,6 +46,7 @@ def build_parser() -> argparse.ArgumentParser:
         "bin/agent-run review out/review-request.json --budget out/budget.json --consumption out/initial-consumption.json --expected-budget-digest PIN --expected-checkpoint-digest PIN --expected-sequence 0",
     )
     commands = parser.add_subparsers(dest="command", required=True)
+    register_commands(commands)
     review = commands.add_parser(
         "review", help="launch one native-read-only Codex review"
     )
