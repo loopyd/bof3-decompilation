@@ -29,6 +29,28 @@ experiment is superseded by skill-only operation. `agent-run diagnose` and `audi
 remain model-free measurement tools, not a replacement scheduler or acceptance
 shortcut. Independent review and final parent acceptance still bind actual source.
 
+## Native compiler execution
+
+The installed canonical GCC driver, `cpp` and `cc1` are static i386 ELF programs.
+On this host, even `gcc --version` receives `SIGSYS` (shell exit 159) under the
+Codex command sandbox; the same compiler completes native comparisons through
+reviewed escalated execution. This is an execution-capability failure, not a C
+error. Nested `bwrap` cannot remove the outer inherited syscall restrictions.
+
+For this known host/compiler combination, the active-session parent requests the
+exact bounded native gate with `exec_command`'s `sandbox_permissions:
+"require_escalated"` **before the baseline build**. Prefer the pinned diagnosis/audit
+commands below, whose inner sandbox keeps source/Git/evidence read-only and limits
+generated writes. Direct scoped asm-diff/byte-match commands also require that
+reviewed execution route; a worker without it returns unverified, not another
+sandboxed compiler attempt. Keep original scope, cutoff, evidence and cleanup.
+
+Approval remains per reviewed action: no automatic self-elevation, command-rule or
+Codex-policy changes, alternate wrapper after denial, emulator installation or
+silent compiler substitution. A denied/unavailable native route blocks its gates;
+continue only unaffected work. On a different host/compiler, establish capability
+once before relying on this diagnosis. Ordinary Python inspection stays sandboxed.
+
 ## Parent lift diagnosis
 
 `bin/agent-run diagnose REQUEST --expected-request-digest PIN --output
@@ -56,8 +78,8 @@ at 120 seconds and 1 MiB combined output. Keep the separate parent cleanup hard-
 The shared writer lease excludes cooperating writers throughout; it neither proves
 prior-worker termination nor excludes manual editors.
 
-The installed legacy 32-bit compiler could not run under the tested Codex command
-sandbox. Parent gates therefore have their own explicit installed `bwrap` invocation:
+Parent gates use the [reviewed native execution route](#native-compiler-execution)
+and an explicit installed `bwrap` invocation:
 separate namespaces/network, read-only root/source/Git/evidence, writable generated
 build/asm-diff/bindings/matching/Splat outputs and fresh dispatch scratch; home Codex
 and Pi directories are masked. These gates neither install packages, alter Codex

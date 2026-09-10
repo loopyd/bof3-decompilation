@@ -107,6 +107,27 @@ also reported an interruption-time fixture teardown KeyError. Neither run passed
 focused checks remain the feature evidence. No full native audit, recovery/resume,
 full-target naming closure or production skill sequence is claimed.
 
+The subsequent game00 `801996FC` metadata pass corrected its behavior description
+and canonical `@residual none`, with the same description in Splat; no macro body,
+type, symbol, boundary or instruction changed. Pre/post native comparisons were
+16/16 instructions and 64 bytes exact; post byte-match, target symbols and Splat
+checks passed. Independent active-session reviewer
+`01a08972-8826-78c0-b97c-26466d09cff3` accepted metadata semantics only and was closed.
+Parent retained the prior working index/snapshot and original/native proof in
+`out/reviews/game00-metadata-5oI1Mf/` before rebuilding the index. Frozen pilot
+archives and unrelated dirty identities remain unchanged. This advances one
+cross-target wrapper prerequisite, not reviewed private/shared macro acceptance.
+
+The baseline compiler failure is an execution-capability issue: the installed
+static i386 GCC receives SIGSYS/159 even for `--version` in this host's command
+sandbox, while reviewed native execution completes the comparisons. Skills now
+route the known host's baseline gates through the reviewed parent-native tool call
+before compiling, retaining the inner read-only native-gate sandbox and original
+bounds. No Codex policy/rule weakening, automatic self-elevation, compiler swap or
+installation occurred. Native approval is still required; the host restriction
+itself is not removed. Skill validators, 41 existing context/cleanup checks and
+19 documentation references pass.
+
 ## Current Codex continuation
 
 Retained history follows. The skill-only correction above governs current execution;

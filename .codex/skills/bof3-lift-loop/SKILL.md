@@ -95,6 +95,10 @@ skills' existing helpers/CLIs. `bin/agent-run diagnose` and `audit` only capture
 bounded lift missions; read their help/contracts before constructing pinned inputs.
 Local compiler subprocesses and existing supervision remain allowed, not Codex or
 model subprocesses. Never refresh inputs during an active pinned transaction.
+Before baseline compilation, follow the [native compiler execution route](../../../docs/agents/codex.md#native-compiler-execution):
+the known i386/SIGSYS host needs a reviewed, scoped parent-native tool call, not
+another sandboxed build or a sandbox-policy change. Missing approval blocks native
+gates; workers report unverified and retain original bounds.
 
 Poll the same real handle after observation timeout. Stored PIDs, elapsed time,
 files and a free lease do not establish termination. On actual interruption retain

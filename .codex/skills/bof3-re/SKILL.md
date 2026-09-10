@@ -33,6 +33,10 @@ Selector: `TARGET@0xADDRESS` | shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRE
 ## Fast evidence
 
 Narrowest sufficient command; live acceptance never cached.
+Before the first native build, use the [compiler execution route](../../../docs/agents/codex.md#native-compiler-execution).
+On the verified i386/SIGSYS host, request the scoped parent-native gate through
+reviewed escalated tool execution; do not repeat the known failing sandbox baseline.
+This does not change sandbox policy or authorize retries after denial.
 
 | Need | Command | Do not |
 | --- | --- | --- |
