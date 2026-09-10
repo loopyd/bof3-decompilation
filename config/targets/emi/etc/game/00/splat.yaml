@@ -291,7 +291,7 @@ segments:
     - c
     - advancePanelXTo320
     - '@source: src/bof3/ui/advancePanelXTo320_game00_801996FC.c'
-    - '@behavior: advances panel x toward 320 with the template clamp behavior.'
+    - '@behavior: Adds 32 to 16-bit panel x; signed results above 320 clamp to 320 and clear state.'
   - - 16188
     - asm
     - retreatPanelXTo152
