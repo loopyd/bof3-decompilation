@@ -166,6 +166,27 @@ comparison against the older run. Existing checks: 68 status/source tests plus
 12 owner/decomposition tests pass; one pre-existing fixed-mode test is deselected.
 No new tests, persistent cache or claim/ownership policy changes were added.
 
+Frozen-panel wrapper continuation corrected only the six shop00 source metadata
+records at `801E31C4`, `801E3774`, `801E3BF8`, `801E3D4C`, `801E438C`, and
+`801E4540`; macro bodies, types, maps and Splat remain unchanged. Before/after
+native checks pass for every selector: 16 instructions, 64 bytes exact, matching
+the frozen original hash. Independent read-only reviewers
+`01a08988-7cb6-7c53-af29-1af6e2102393` and
+`01a08988-7cf8-7d43-8012-ae8ef3e611f4` each accepted three metadata-only scopes;
+both handles completed and closed within the original `1217661.25391831` cutoff.
+Symbols pass; the snapshot remains fresh. Evidence and prior index are retained
+in `out/reviews/shop-panels-c0OrwK/`; frozen archives and unrelated dirty identities
+are unchanged.
+
+After parent index refresh, live macro owner inspection retains exactly the same
+ten members of `exact_group:8e1ad03b4ba92303`, now all indexed exact. Observation
+fingerprint `v1:71651687c009d6580d72ef482c10420bc4dcb1d681c6c21af0ee7ba563a7c682`
+is a new descriptor observation, not a replacement ranking or rewritten private
+proof. Resolution remains blocked with zero safe applications: private/shared
+proofs, semantic guards and complete consumer coverage still apply. The existing
+macro already factors these wrappers; no extra extraction or shared acceptance
+is claimed by correcting their metadata.
+
 ## Current Codex continuation
 
 Retained history follows. The skill-only correction above governs current execution;

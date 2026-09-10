@@ -3,9 +3,9 @@
 #include "shared/ui/panel_task.inc"
 
 /* @source 0x801E3774
- * @behavior advances panel x toward 320 with the template clamp behavior.
+ * @behavior Adds 32 to 16-bit panel x; signed results above 320 clamp to 320 and clear state.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 PANEL_ADVANCE_X(advancePanelXTo320B, 320)
