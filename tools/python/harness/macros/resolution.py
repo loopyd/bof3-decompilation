@@ -123,7 +123,7 @@ def describe_candidate(
                 "Obtain independent review of explicit owners and their current fingerprints.",
                 *(
                     [
-                        "Shared templates require two independently pinned exact private wrappers on distinct targets."
+                        "Shared templates require an independently pinned exact private wrapper per declared target, with at least two targets."
                     ]
                     if "shared_template" in concerns
                     else []

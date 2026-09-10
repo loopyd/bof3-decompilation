@@ -82,12 +82,12 @@ def _evidence_paths(value) -> set[str]:
 
 
 def _participating_targets(manifest: dict, targets: list[str]) -> list[str]:
-    # ponytail: two-private pilot only; larger sets need an explicit owner slice.
+    from harness.common.participation import resolve_limit
     from harness.domain.ids import normalize_target_id
 
     if (
         not isinstance(targets, list)
-        or not 1 <= len(targets) <= 2
+        or not 1 <= len(targets) <= resolve_limit(manifest)
         or any(not isinstance(target, str) for target in targets)
         or targets != sorted(set(targets))
         or not set(manifest["targets"]) <= set(targets)

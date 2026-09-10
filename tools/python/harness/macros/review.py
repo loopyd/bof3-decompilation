@@ -145,8 +145,10 @@ def _proof_wrapper_sources(
                 "shared template proof does not identify a target-local exact wrapper"
             )
         wrappers[target] = matches[0]["source"]
-    if len(wrappers) != 2:
-        raise ValueError("shared template requires two target-local exact wrappers")
+    if len(wrappers) < 2 or len(wrappers) != len(proofs):
+        raise ValueError(
+            "shared template requires distinct target-local exact wrappers"
+        )
     return wrappers
 
 
@@ -190,7 +192,7 @@ def _shared_targets(
             for owner in owners
         ):
             raise ValueError(
-                "shared template owner is not a proven dependency of both exact wrappers"
+                "shared template owner is not a proven dependency of every exact wrapper"
             )
     return set(wrappers)
 
@@ -334,12 +336,17 @@ def exact_proofs(
     values: object,
     manifests: dict[str, Any],
     *,
+    expected_count: int = 2,
     normalize_target: Callable[[object, dict[str, Any]], str],
     verify_reviewed_application: Callable[[Path, object, str], dict[str, Any]],
 ) -> list[dict[str, Any]]:
-    if not isinstance(values, list) or len(values) != 2:
+    if (
+        expected_count < 2
+        or not isinstance(values, list)
+        or len(values) != expected_count
+    ):
         raise ValueError(
-            "shared template requires exactly two independent exact proofs"
+            "shared template requires one independent exact proof per declared target"
         )
     proofs = []
     for value in values:
@@ -391,7 +398,7 @@ def exact_proofs(
             }
         )
     uniqueness = ("path", "target", "selector", "expected_envelope_digest")
-    if any(len({item[key] for item in proofs}) != 2 for key in uniqueness):
+    if any(len({item[key] for item in proofs}) != expected_count for key in uniqueness):
         raise ValueError("shared template proofs must be independently pinned")
     contracts = {
         json.dumps(

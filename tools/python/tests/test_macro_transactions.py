@@ -460,7 +460,7 @@ def test_shared_review_rejects_public_owner_unrelated_to_both_exact_wrappers(
     artifact = _artifact(
         tmp_path, report, "shared_template", ["include/shared/unrelated.h"]
     )
-    with pytest.raises(ValueError, match="proven dependency of both exact wrappers"):
+    with pytest.raises(ValueError, match="proven dependency of every exact wrapper"):
         macro_transactions.reviewed_artifact(
             tmp_path,
             artifact,
@@ -476,7 +476,24 @@ def test_shared_prepare_passes_pinned_proofs_to_review(
 ) -> None:
     report = _setup(tmp_path, monkeypatch)
     captured = {}
-    proofs = [{"target": TARGET}, {"target": "exe/other"}]
+    functions = [
+        {
+            "target": target,
+            "selector": f"{target}@0x80100000",
+            "source": "src/test/func_80100000.c",
+            "function": "func_80100000",
+            "status": "exact",
+        }
+        for target in (TARGET, "exe/other")
+    ]
+    proofs = [
+        {
+            "target": function["target"],
+            "selector": function["selector"],
+            "application": {"manifest": {"affected_functions": [function]}},
+        }
+        for function in functions
+    ]
     monkeypatch.setattr(
         macro_transactions,
         "load_target_manifests",
@@ -495,7 +512,7 @@ def test_shared_prepare_passes_pinned_proofs_to_review(
         }
 
     monkeypatch.setattr(macro_transactions, "reviewed_artifact", review)
-    monkeypatch.setattr(macro_transactions, "_functions", lambda *args: [])
+    monkeypatch.setattr(macro_transactions, "_functions", lambda *args: functions)
     request = {
         "schema": macro_transactions.REQUEST_SCHEMA,
         "target": TARGET,
@@ -581,7 +598,7 @@ def test_shared_prepare_rejects_unrelated_owner_end_to_end(
         "exact_function_proofs": [{}, {}],
         "affected_functions": [SELECTOR],
     }
-    with pytest.raises(ValueError, match="proven dependency of both exact wrappers"):
+    with pytest.raises(ValueError, match="proven dependency of every exact wrapper"):
         macro_transactions.prepare_transaction(tmp_path, request)
 
 

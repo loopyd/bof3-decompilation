@@ -315,7 +315,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument(
         "--participating-targets",
         nargs="+",
-        help="sorted one/two-target evidence capture scope; requires implementation ID",
+        help="sorted configured-target evidence capture scope; requires implementation ID",
     )
     run.set_defaults(handler=_run)
     verify = sub.add_parser(

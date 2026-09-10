@@ -36,6 +36,11 @@ from harness.macros import accounting as macro_accounting
 from harness.macros.blocks import validate_minimum
 from harness.macros.coverage import validate_consumer_coverage
 from harness.macros.ranking import require_ranked_candidate
+from harness.macros.participation import (
+    resolve_targets,
+    validate_manifest,
+    validate_wrappers,
+)
 from harness.macros.review import exact_proofs, reviewed_artifact, validate_proof_inputs
 from harness.common.workspace import workspace_state as _workspace_state
 from harness.types.transactions import workspace_baseline
@@ -134,14 +139,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
         )
     manifests = load_target_manifests(root)
     target = _target(request.get("target"), manifests)
-    targets = {target}
-    if concern == "shared_template":
-        shared_targets = request.get("shared_targets")
-        if not isinstance(shared_targets, list):
-            raise ValueError("shared template requires exactly two declared targets")
-        targets = {_target(item, manifests) for item in shared_targets}
-        if target not in targets or len(targets) != 2:
-            raise ValueError("shared template requires exactly two declared targets")
+    targets = resolve_targets(request, target, manifests, _target)
     proof_refs = request.get("exact_function_proofs")
     if concern != "shared_template" and proof_refs not in (None, []):
         raise ValueError("private macro transactions cannot reference shared proofs")
@@ -152,6 +150,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
             root,
             proof_refs,
             manifests,
+            expected_count=len(targets),
             normalize_target=_target,
             verify_reviewed_application=verify_reviewed_application,
         )
@@ -159,7 +158,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
         else []
     )
     if proofs and {item["target"] for item in proofs} != targets:
-        raise ValueError("shared template proofs must cover both declared targets")
+        raise ValueError("shared template proofs must cover all declared targets")
     reviewed = reviewed_artifact(
         root,
         request.get("candidate_artifact"),
@@ -188,6 +187,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
         validate_consumer_coverage(
             connection, root, reviewed["owners"], functions, manifests
         )
+        validate_wrappers(proofs, functions)
     finally:
         connection.close()
     if concern == "local_template" and any(
@@ -214,6 +214,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
     partial_baselines = capture_partial_baselines(root, functions)
     facts = {
         "schema": MANIFEST_SCHEMA,
+        "participation_limit": len(manifests),
         "target": target,
         "targets": sorted(targets),
         "concern": concern,
@@ -240,6 +241,7 @@ def _manifest(root: Path, value: object, *, rederive: bool = False) -> dict[str,
     facts = {key: item for key, item in value.items() if key != "digest"}
     if facts.get("schema") != MANIFEST_SCHEMA or value.get("digest") != digest(facts):
         raise ValueError("macro transaction manifest drifted")
+    validate_manifest(value)
     if rederive:
         try:
             canonical = prepare_transaction(root, value["request"])

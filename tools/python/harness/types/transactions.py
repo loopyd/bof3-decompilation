@@ -257,6 +257,8 @@ def _manifest(root: Path, value: object, *, rederive: bool = False) -> dict[str,
     facts = {key: item for key, item in value.items() if key != "digest"}
     if facts.get("schema") != MANIFEST_SCHEMA or value.get("digest") != digest(facts):
         raise ValueError("type transaction manifest drifted")
+    if "participation_limit" in value:
+        raise ValueError("type transactions do not support a participation override")
     if rederive:
         try:
             canonical = prepare_transaction(root, value["request"])

@@ -189,6 +189,22 @@ is claimed by correcting their metadata.
 
 ## Current Codex continuation
 
+The user's shared-macro relaxation now permits two or more declared targets,
+with one independently accepted exact private wrapper per target. New macro
+manifests retain a catalog-derived participation limit; old histories retain two,
+and revalidation cannot enlarge original capture scope. Type policy is unchanged.
+Every proven wrapper must be an affected function with both POST native checks,
+even if lexical coverage finds no definitions. Common PRE, complete consumers,
+distinct executions, independent reviews and historical replay remain gates.
+Independent reviewer `01a08994-74a6-78b1-85e2-df1cb8b0d12e` identified the wrapper
+omission; `01a08996-9f5c-7721-9f54-677d87f564d3` confirmed its fix. Both are closed.
+The disposable three-target integration and current-code replay passed; evidence
+is `/tmp/bof3-three-macro-probe-20260910/RESULTS.md`. Native Ninja and synthetic
+BOF3 gates/reviews prove protocol behavior, not source acceptance. Existing checks
+pass: 60 macro transactions, 12 shared PRE/decomposition (one pre-existing mode
+check deselected), 46 plans, plus the 122-check macro/history/review run. No frozen proof was expanded or rewritten, and
+the panel group's live private/shared acceptance obligations remain unfinished.
+
 Retained history follows. The skill-only correction above governs current execution;
 old transport commands, permissions and NOT RUN/readiness claims are historical.
 

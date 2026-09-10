@@ -1,10 +1,11 @@
-"""Frozen common PRE binding for two freshly reviewed private owner results."""
+"""Frozen common PRE binding for freshly reviewed private owner results."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 from harness.common import execution as context
+from harness.common.participation import validate_targets
 from harness.common.transition import _state_equal
 
 
@@ -32,12 +33,14 @@ def freeze(root: Path, manifest: dict, proofs: list[dict]) -> dict:
     if not any(record is not None for record in fresh):
         return {}  # Existing preparation-only route retains its acceptance guard.
     if (
-        len(fresh) != 2
+        len(fresh) != validate_targets(manifest)
         or any(record is None for record in fresh)
-        or len(set(manifest["targets"])) != 2
+        or len(manifest["targets"]) < 2
         or {proof["target"] for proof in proofs} != set(manifest["targets"])
     ):
-        raise ValueError("shared PRE requires exactly two fresh private revalidations")
+        raise ValueError(
+            "shared PRE requires one fresh private revalidation per target"
+        )
     pre = {
         "state": context.capture(root, manifest, manifest["targets"]),
         "build": context.build_state(root),
@@ -48,19 +51,20 @@ def freeze(root: Path, manifest: dict, proofs: list[dict]) -> dict:
 
 
 def _validate_common(manifest, fresh, pre):
+    count = validate_targets(manifest)
     if (
-        len(fresh) != 2
+        len(fresh) != count
         or {r["manifest"]["target"] for r in fresh} != set(manifest["targets"])
-        or len(set(manifest["targets"])) != 2
+        or count < 2
     ):
-        raise ValueError("shared PRE requires two distinct private targets")
+        raise ValueError("shared PRE requires distinct private targets, at least two")
     states = [record["review_context"] for record in fresh]
     if any(
         state["initial_state"].get("participating_targets") != manifest["targets"]
         for state in states
     ):
         raise ValueError("shared PRE requires identical participating targets")
-    if len({state["implementation_run_id"] for state in states}) != 2:
+    if len({state["implementation_run_id"] for state in states}) != count:
         raise ValueError("shared PRE requires distinct fresh check executions")
     for record, state in zip(fresh, states):
         _state_equal(record, state["final_state"], {"manifest": manifest}, pre["state"])

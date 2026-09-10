@@ -66,8 +66,8 @@ the autonomous attempt scheduler is not:
    A bounded ranked march is not permission to edit every discovered target.
    Preserve rejected/deferred reasoning and validate each retained change.
 
-Four-use eligibility is separate from the **two independently exact cross-target
-private proofs** required for shared promotion. Neither requirement replaces the
+Four-use eligibility is separate from the **independently exact private proof per
+declared target, at least two targets,** required for shared promotion. Neither replaces the
 other, semantic review, nor validation of all affected consumers. Existing macros
 and historical candidates are not retroactively approved or deleted by this policy.
 
@@ -496,14 +496,16 @@ its original queue and externally pinned proofs; autonomous marching remains ope
 
 ## Private revalidation and shared promotion
 
-Shared-template preparation currently requires exactly two declared `shared_targets`
-including the primary target and two `exact_function_proofs` from distinct targets.
+Shared-template preparation requires two or more distinct declared `shared_targets`,
+including the primary target, and one `exact_function_proofs` entry per target.
+Every proven exact wrapper must appear in `affected_functions` and receive POST
+`asm-diff` and `byte-match` checks, including when lexical indexing finds no uses.
 Each pin has exactly `path`, `target`, `selector`, `expected_envelope_digest` and
 references an independently reviewed private exact-wrapper envelope under
 `out/reviews`. Retain original bytes/hash, native checks, parent acceptance, and
 matching address-free semantic/parameter contracts. Integrity-only application
-pins and legacy `expected_application_digest` shared pins reject. Two examples do
-not authorize edits affecting uncovered third-target consumers.
+pins and legacy `expected_application_digest` shared pins reject. Representative
+proofs never authorize edits affecting uncovered consumers on any target.
 
 For private proofs requiring fresh check-only evidence:
 
@@ -540,19 +542,21 @@ original acceptance, intervening history, and current closure without rewriting
 proofs, publishing files, or rerunning gates.
 
 Distinct-target private sequences must declare the same sorted
-`run --participating-targets TARGET TARGET` before either execution; one or two
-configured targets are supported, include all mutation targets, and require an
-implementation ID. This captures evidence only: it adds no writable paths or checks
+`run --participating-targets TARGET TARGET [TARGET ...]` before every original execution.
+New macro manifests bind `participation_limit` to the configured catalog size;
+the selected scope must include all mutation targets and requires an implementation
+ID. Manifests without this field retain their legacy two-target limit; types retain
+their separate policy. This captures evidence only: it adds no writable paths or checks
 for another participant. Revalidation inherits participation; missing historical
 scope cannot be expanded retroactively. Explicit adoption does not excuse drift.
 
-Shared parent acceptance is supported only through the two-fresh-revalidation
+Shared parent acceptance is supported only through the fresh-revalidation
 branch and its owner-validated shared PRE/POST transition. Original private
 application envelopes alone remain preparation-only; fresh private envelopes are
 shared PRE prerequisites, not shared POST acceptance. Other branches remain guarded.
 
-The fresh shared PRE branch accepts exactly two reviewed revalidations with distinct
-execution IDs and targets, identical explicit two-target capture scope, and common
+The fresh shared PRE branch requires one reviewed revalidation per declared target,
+with distinct execution IDs, identical explicit full target capture scope, and common
 current native inputs, environment, index, build, and workspace state. Mixed fresh
 revalidation/original application envelopes reject. Complete nested envelopes and
 external pins remain frozen alongside `shared_pre` state/build/baseline. Shared
