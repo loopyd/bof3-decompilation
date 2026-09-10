@@ -12,7 +12,7 @@ from harness.common.deadlines import check_deadline, resolve_deadline
 from harness.common.digests import digest
 from harness.common.lease import require_writer
 from harness.common.process import run_bounded
-from harness.context.capabilities import verify_policy
+from harness.decomp.scope import verify_policy
 from harness.domain.ids import parse_function_id
 from harness.domain.sources import reviewed_function_name
 from harness.io import unique_object

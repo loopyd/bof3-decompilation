@@ -3,23 +3,24 @@
 
 ## Goal and scope
 
-Design the loop by recovering and streamlining our project-specific `bof3-*`
-agent definitions and domain skills. **Do not use or copy built-in Pi subagent
-profiles or home-directory agents.** Pi subagents is the execution mechanism,
-not the source of agent roles. The owner approved implementation and requested
-cleanup additions before execution; campaign scope remains a finite, explicit queue.
+Deliver 100% byte-faithful, human-readable BOF3 source through the instructional
+`bof3-lift-loop` skill and its lift, naming, types, macros, review and documentation
+missions. Orchestration belongs to the active agent session, not a Python scheduler,
+Codex CLI subprocess, standalone model call or Pi fallback. Use project domain
+skills; do not copy built-in or home agent profiles. Campaigns retain finite,
+explicit queues and budgets without narrowing the whole-game end goal.
 
-The preceding cleanup removed `.pi/agents/`. Recover its latest BOF3 definitions
-from retained source reads/mutation history, not invented prompts. The roles were
+Historical cleanup removed `.pi/agents/`; subsequent recovery retained the BOF3
+definitions from source reads/mutation history. The roles were
 `bof3-lifter`, `bof3-namer`, `bof3-cleaner`, `bof3-reviewer`,
 `bof3-lift-batch-coordinator` and `bof3-lift-batch-finalizer`. Git HEAD contains
 older `bof3-reverse.md`, `bof3-cleanup.md` and `bof3-review.md`; compare these but
 do not assume they are the latest versions. Generic classifier/scout/planner/
 worker/reviewer definitions imported from home are not recovery targets.
 
-The current user explicitly authorizes narrowly targeted integration regression
-tests for functions, shared variables/data, structs/types and macro opportunities,
-and worker/reviewer implementation iterations. Generic roles implement/review
+Historical iterations authorized narrowly targeted integration regression tests;
+current `AGENTS.md` requires fresh explicit authorization before adding tests.
+Run existing coverage and disposable characterization instead. Generic roles implement/review
 tooling only; the four project BOF3 roles still own domain execution. No copying
 generic profiles into the project. Installed-extension edits and dependency
 installation remain unauthorized. Preserve unrelated dirty work and
@@ -27,7 +28,52 @@ original media. Git writes/publication remain separately authorized. Existing
 domain validation and transaction rollback stay; no campaign backup framework,
 loader collectors, handshakes, mirrored state or custom receipt reconstruction.
 
+## Current skill-only operator correction
+
+The user's latest architecture decision supersedes all executable Pi/native-Codex
+launch and scheduler proposals below. Historical runs, failure evidence and accepted
+domain primitives remain history, not permission to revive retired transports.
+Remove harness code that discovers, configures or launches Codex, including native
+writer/reviewer commands and their transport-only helpers. Keep local deterministic
+diagnosis, audit, evidence, transactions, native compiler gates and guarded recovery.
+The uncommitted auto-review child-configuration experiment is superseded too.
+
+`bof3-lift-loop` owns the instruction-only operator: select a finite evidence-bound
+queue; issue scoped missions to the other skills through tools available in the
+active session; inspect actual results; review independently; apply/verify through
+domain owners; account every outcome; continue until the original budget ends.
+Do not shell out to Codex, invoke a model SDK, create detached agents or substitute
+synthetic identities for unavailable active-session delegation. Missing host
+delegation blocks parallel execution/independent review, not safe local inspection.
+
+Parallelize independent read-only evidence and review missions. Serialize all writes
+in this shared checkout, including shared headers/maps, target refreshes and domain
+transactions. Disjoint selectors alone do not prove disjoint effects. Future writer
+parallelism requires genuinely isolated, validated workspaces and explicit ownership;
+never clean this dirty checkout by discarding unrelated work to manufacture isolation.
+
+Mission inputs bind selector/opportunity and full membership, owning skill/mode,
+allowed paths, adopted baseline/evidence pins, predecessor results, original limits,
+acceptance gates and rollback/stop conditions. Results bind actual session/tool
+handles, changed content, checks, reviewer provenance and accepted/no-op/repair/
+blocked/deferred disposition. Durable transaction receipts remain owner evidence;
+Markdown and live session handles own orchestration, not a new state database.
+Resume preserves original consumption and first verifies real handles/current state.
+Never infer termination, acceptance or permission from stale records or a free lease.
+
+Index refreshes and active-session reviews have standing authorization; no repetitive
+user prompts. Preserve frozen proofs before refresh and never invalidate an active
+mission's inputs. Local feature commits are authorized; no push. Source fidelity,
+independent review, naming `complete:true`, type layout and macro human-value/use-site
+gates, same-envelope obligations and all frozen-five blockers remain unchanged.
+Historical S3.4/S3.5 acceptance does not prove this new operator's end-to-end behavior.
+S3.6 owns removal/skill implementation; S3.2 still owes a real bounded skill sequence;
+S4–S9 retain useful campaign, naming, type, macro and whole-game acceptance.
+
 ## Current Codex continuation
+
+Retained history follows. The skill-only correction above governs current execution;
+old transport commands, permissions and NOT RUN/readiness claims are historical.
 
 The latest discovery slice adds reviewed within-function assembly blocks under the
 [macro specification](../agents/macros.md#assembly-blocks). An explicit experimental
@@ -1040,13 +1086,14 @@ justified no-op; never manufacture changes to satisfy a stage.
 Retain only these four core profiles unless a retained definition proves another
 role necessary. Remove coordinator/finalizer wrappers that merely relay calls;
 move any unique target freshness or acceptance obligation into its owning skill
-or final review stage. One writer, one selector and one serial loop initially.
+or final review stage. The active session may parallelize independent reads/reviews;
+one shared-checkout writer and explicit selector/consumer ownership remain required.
 
 Agent files should contain role, tools/model, input, skill route, output and stop
 conditions. Skills own domain procedures. Put shared rules in one owning place,
-not every prompt. Use one small workflow definition with native `runs.run`, a
-finite queue and bounded repair rounds. No default generic framework or separate
-scheduler. Repairable findings return to the owning stage; failed/unknown native
+not every prompt. Use the instructional `bof3-lift-loop` mission protocol with a
+finite queue and bounded repair rounds. No harness model launcher, generic framework
+or separate scheduler. Repairable findings return to the owning stage; failed/unknown
 execution stops for recovery, never silently replays mutations. Record blocked
 items honestly and proceed to independent items only within the approved scope.
 
@@ -1166,12 +1213,19 @@ must satisfy them before the corresponding phase is marked done.
 - Evidence: whole S3.5 accepted by 01a084ec-94e4-7473-a0d0-f0c691222ff7 after complete failure-matrix audit and 01a084ec-947a-7a72-ad93-604fa3c331f9's final cleanup-unconfirmed cell review; parent accepts the superseding Whole S3.5 acceptance record above. Original deadline, no duplicate apply, owned recovery, concurrent preservation and fresh parent-controlled refusal are evidenced; no automatic dispatch hold or Codex session revival is claimed.
 - Acceptance: run the failure matrix below against owner transactions and the small native workflow; inspect actual run state/tool outputs, not prompt text or exit zero alone. Reviewer verifies rollback bytes/modes/absence, unchanged unrelated dirty work/index and no duplicate apply; parent owns freshness recovery and attestation. Report unavailable native capabilities as blockers, not mocked acceptance.
 
-5. [S3.2] (in-progress) Encode the proven sequence with bounded repair and native recovery.
+5. [S3.2] (in-progress) Demonstrate the skill-only sequence with bounded repair and recovery.
 - Owner: parent
-- Depends: S3.5
+- Depends: S3.6
 - Blocker: none
 - Evidence: S3.1 handoffs, efb1b118 accounting and whole S3.5 accepted; the bounded native sequence remains unfinished. Full-target naming blocks production, not controlled fixture stages or read-only blocked accounting. Parent freshness/attestation checkpoints remain explicit and cannot be delegated implicitly.
-- Acceptance: native syntax validation, existing applicable checks and independently reviewed finite execution with fixed queue/budget. May select/account blocked entries and simulate controlled fixture stages, never advance a failed/unknown mutation or claim live campaign completion. Production cannot pass failed unfiltered full-target naming complete:true or missing separate identity approval; final review binds actual selector/change. Accepted work skips; uncertain apply stops for recovery; no budget reset on resume.
+- Acceptance: active-session mission delegation, existing applicable checks and independently reviewed finite skill execution with fixed queue/budget. Parallel read/review results must retain actual handles and disjoint scope; shared-checkout writes serialize. No Codex CLI/model subprocess or Pi fallback. May account blocked entries, never advance failed/unknown mutation or claim live closure from fixtures. Production requires unfiltered full-target naming complete:true and separate identity approval; final review binds actual selector/change. Accepted work skips; uncertain apply stops for recovery; no budget reset on resume.
+
+6. [S3.6] (done) Retire harness Codex launchers and establish the skill operator.
+- Owner: parent with independent active-session reviewer
+- Depends: S3.5
+- Blocker: none
+- Evidence: parent accepts this removal/skill scope after independent active-session reviewers 01a08963-3714-7410-82ec-ff6a93c7a4c5 (code) and 01a08963-3763-7133-99dc-35bd6c959bdd (protocol) found no blockers; two documentation corrections are applied. Native CLI transports are removed; deterministic tools and the discoverable bof3-lift-loop remain. Existing focused checks: 151 passed, one pre-existing fixed-mode assertion deselected; Ruff/import/parser/skill checks pass, 119 references resolve without broken/unchecked entries. Native no-edit diagnosis skill-local-check-8b67f3d46ee6 is byte-exact at 100%, source_accepted:false and model_dispatched:false, digest v1:08dd97c2ce60130fd13edda6dcdb7aacc2cd0c8baa56d457ea22c97b36e230a1. Its original 180-second window expired before retained audit; a disposable probe confirms rejection before output, without reset. Frozen evidence and four unrelated dirty file identities are preserved. Broader suite/source validation is pending; symbols check flags existing emi/battle/battle/03:D_801EB4F0 raw-data naming debt from the preceding source feature. Parallel read-only reviews prove capability, not full S3.2 execution, native audit acceptance or whole-game closure.
+- Acceptance: no harness Codex discovery/configuration/process launch or detached model dispatch; deterministic diagnosis/audit/transaction/recovery tools remain usable. One discoverable bof3-lift-loop skill owns mission inputs/results, parallel-read/serialized-write policy, original budgets, recovery and domain handoffs. Update live instructions/paths, run existing checks and demonstrate available active-session capability without inventing delegation or marking S3.2 complete.
 
 ## 4. [S4] (open) Demonstrate useful autonomy and close accepted scope
 - Owner: parent with bof3-reviewer

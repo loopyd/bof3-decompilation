@@ -13,7 +13,7 @@ All paths are below `tools/python/harness/`.
 | `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/naming-audit` → `harness.naming.cli`; `bin/naming-evidence-run` → `harness.naming.runner` |
 | `types/` | C declarations, representation inference, type-use/candidate indexing, reviewed type transactions | `bin/type-audit` → `harness.types.cli` |
 | `docs/` | scoped Markdown references, snapshots, search, context, aggregation and edit/repair/compaction preparation | `bin/docs` → `harness.docs.cli` |
-| `decomp/` | lift inventory/mission pins, native diagnosis/writer, retained audits and read-only review handoffs | `bin/agent-run diagnose` / `lift` / `audit` / `review-lift` → `harness.decomp.cli` |
+| `decomp/` | lift inventory/mission pins, source scope, deterministic native diagnosis and candidate audit | `bin/agent-run diagnose` / `audit` → `harness.decomp.cli` |
 | `common/` | reusable CLI, digests, confined files, process lifecycle, workspace, native receipts and acceptance mechanisms | direct imports from the mechanism owner |
 | `analysis/` | cross-domain reverse index, graph, mission and query coordination | `bin/index`, `bin/rev-query` |
 | `domain/` | manifests, target identity, original binary/layout, source claims and includes | shared repository facts, not candidate acceptance |
@@ -24,15 +24,14 @@ Each domain uses noun files such as `index.py`, `queries.py`, `review.py`,
 Package initializers are inert: import the actual owner, not a compatibility facade.
 Parent [lift diagnosis](codex.md#parent-lift-diagnosis) and [audit](codex.md#retained-lift-audit)
 use `decomp.diagnosis`, `audit`, `missions`, `inventory`, `gates`, `execution` and
-`evidence`; `context.capabilities` owns directory policy. Shared boot/cutoff checks
-live in `common.deadlines`. Neither gate command writes source or grants acceptance.
-`decomp.dispatch` owns the explicit [one-shot writer](codex.md#one-shot-lift-writer);
-`decomp.writers` verifies its diagnosis slot, debit and pinned completion before
-audit. `context.arguments` shares budget flags/loading with read-only review.
-`decomp.review` verifies an [audited writer](codex.md#audited-lift-review) before its
-original planned review debit; `audit.load_audit` owns retained/current verification.
-`context.execution` shares bounded native streams between lift and lift-review.
-Neither writer nor reviewer completion unlocks generic next dispatch or acceptance.
+`evidence`; `decomp.scope` owns directory/source policy and `common.journal` owns
+exclusive records and fsynced streams. Shared boot/cutoff checks live in
+`common.deadlines`. Neither gate command writes source or grants acceptance.
+The [lift-loop skill](../../.codex/skills/bof3-lift-loop/SKILL.md) instructs the
+active session to delegate domain missions and independently review outcomes.
+The harness never discovers, configures or launches Codex/model processes. Retired
+transport records remain historical; their writer/reviewer slots cannot be reused
+as skill missions. Local process supervision remains for deterministic native tools.
 The cross-domain index remains one derived database; package separation does not
 create independent databases or relax freshness checks.
 
@@ -354,9 +353,9 @@ both debits. No checkpoint writer, reservation service, CLI, automatic recovery
 or accepted-source authority is implemented by this validator. Owner freshness,
 writer quiescence and independent parent acceptance remain separate gates.
 
-The separate [native read-only reviewer](codex.md#bounded-native-review) now owns
-an exclusive per-dispatch debit and evidence journal. It does not create budgets,
-repair failed invocations or provide the full named-role production scheduler.
+The active-session [skill operator](../../.codex/skills/bof3-lift-loop/SKILL.md)
+accounts original mission bounds and actual handles. No harness model-dispatch
+debit, detached controller or second campaign database owns orchestration.
 
 `run_bounded` optionally accepts prompt `input_data` bytes, `on_spawn` and
 `on_output(stream, chunk)` callbacks. Selector-driven stdin writes proceed alongside

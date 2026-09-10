@@ -12,8 +12,7 @@ from harness.common.directory import validate_repo_path
 from harness.common.files import read_file
 from harness.common.lease import acquire_writer, require_writer
 from harness.common.paths import leaf_stat
-from harness.context.capabilities import verify_policy
-from harness.context.journal import read_record, write_private, write_record
+from harness.common.journal import read_record, write_private, write_record
 from harness.decomp.evidence import (
     capture_streams,
     hash_files,
@@ -22,8 +21,7 @@ from harness.decomp.evidence import (
 )
 from harness.decomp.gates import audit_candidate
 from harness.decomp.inventory import verify_scope
-from harness.decomp.missions import inspect_candidate, validate_mission_record
-from harness.decomp.writers import verify_writer_result
+from harness.decomp.missions import validate_mission_record
 
 
 def validate_diagnosis(diagnosis: dict, expected_digest: str) -> float:
@@ -70,6 +68,11 @@ def load_diagnosis(
         raise ValueError("audit requires a retained lift diagnosis directory")
     if leaf_stat(root, directory + "/failure.json") is not None:
         raise ValueError("diagnosis failed; parent inspection required")
+    if any(
+        leaf_stat(root, directory + "/" + name) is not None
+        for name in ("writer.json", "review.json")
+    ):
+        raise ValueError("retired model-dispatch diagnosis is historical evidence only")
     diagnosis = read_record(root, directory + "/result.json")
     validate_diagnosis(diagnosis, expected_digest)
     names = ["mission.json", "policy.json", "invocation.json"]
@@ -111,105 +114,6 @@ def load_diagnosis(
     return diagnosis, mission, wrapper["policy"]
 
 
-def load_audit(
-    root: Path,
-    directory: str,
-    expected_digest: str,
-    expected_diagnosis_digest: str,
-    expected_writer_digest: str,
-) -> tuple[dict, dict, dict, dict, dict]:
-    validate_repo_path(directory)
-    if (
-        not directory.startswith("out/reviews/lift-audit/")
-        or len(Path(directory).parts) != 4
-    ):
-        raise ValueError("review requires a retained lift audit directory")
-    if leaf_stat(root, directory + "/failure.json") is not None:
-        raise ValueError("audit failed; parent inspection required")
-    audit = read_record(root, directory + "/result.json")
-    if (
-        audit.get("schema") != "bof3.lift-audit/v2"
-        or audit.get("digest") != expected_digest
-        or digest({key: value for key, value in audit.items() if key != "digest"})
-        != expected_digest
-        or audit.get("writer_digest") != expected_writer_digest
-        or audit.get("proposal_format") != "unmeasured"
-        or audit.get("status")
-        not in ("needs-independent-review", "needs-parent-restoration-review")
-        or any(
-            audit.get(key) is not False
-            for key in (
-                "source_accepted",
-                "source_write_authorized",
-                "model_dispatched",
-                "restoration_authorized",
-                "retry_authorized",
-                "budget_debit_performed",
-            )
-        )
-        or not isinstance(audit.get("diagnosis"), dict)
-        or set(audit["diagnosis"]) != {"directory", "digest"}
-        or audit["diagnosis"]["digest"] != expected_diagnosis_digest
-        or any(
-            not isinstance(audit.get(key), list) or len(audit[key]) != 2
-            for key in ("gates", "cold_gates")
-        )
-        or not isinstance(audit.get("layout_gates"), list)
-        or len(audit["layout_gates"]) not in {0, 2}
-        or not isinstance(audit.get("post"), dict)
-        or not isinstance(audit["post"].get("inventory"), dict)
-        or set(audit["post"]["inventory"]) != {"entries", "index"}
-        or not isinstance(audit["post"]["inventory"]["entries"], dict)
-    ):
-        raise ValueError("lift audit pin, scope or disposition is invalid")
-    diagnosis_directory = audit["diagnosis"]["directory"]
-    diagnosis, mission, policy = load_diagnosis(
-        root, diagnosis_directory, expected_diagnosis_digest
-    )
-    if (
-        audit.get("mission_digest") != diagnosis["mission_digest"]
-        or audit.get("policy_digest") != diagnosis["policy_digest"]
-        or audit.get("selector") != mission["request"]["selector"]
-        or audit.get("clock") != diagnosis["clock"]
-    ):
-        raise ValueError("audit differs from its original mission, policy or clock")
-    names = ["proposal.md"]
-    for label, gates in (
-        ("layout", audit["layout_gates"]),
-        ("cold", audit["cold_gates"]),
-        ("gate", audit["gates"]),
-    ):
-        for position in range(1, len(gates) + 1):
-            names.extend(
-                f"{label}-{position}-{suffix}"
-                for suffix in (
-                    "started.json",
-                    "spawn.json",
-                    "terminal.json",
-                    "stdout.log",
-                    "stderr.log",
-                )
-            )
-    if audit.get("artifacts") != hash_files(root, directory, names):
-        raise ValueError("audit evidence coverage or retained bytes drifted")
-    writer = verify_writer_result(
-        root, diagnosis_directory, diagnosis, mission, expected_writer_digest
-    )
-    if (
-        writer is None
-        or audit.get("proposal_sha256") != writer["artifacts"]["proposal.md"]
-        or audit["artifacts"]["proposal.md"] != audit["proposal_sha256"]
-        or audit.get("report") != writer["report"]
-    ):
-        raise ValueError("audit proposal differs from its original writer")
-    verify_scope(writer["post"]["inventory"], audit["post"]["inventory"], [])
-    verify_policy(root, policy, diagnosis["policy_digest"], before_dispatch=False)
-    verify_scope(
-        audit["post"]["inventory"], inspect_candidate(root, mission)["inventory"], []
-    )
-    return audit, diagnosis, mission, policy, writer
-
-
 def run_audit(
     root: Path,
     directory: str,
@@ -219,7 +123,6 @@ def run_audit(
     expected_proposal_sha256: str,
     output: str,
     unmeasured: bool = False,
-    expected_writer_digest: str | None = None,
 ) -> dict:
     diagnosis = read_record(root, validate_repo_path(directory) + "/result.json")
     deadline = validate_diagnosis(diagnosis, expected_diagnosis_digest)
@@ -232,7 +135,6 @@ def run_audit(
         output=output,
         deadline=deadline,
         unmeasured=unmeasured,
-        expected_writer_digest=expected_writer_digest,
     )
 
 
@@ -247,7 +149,6 @@ def execute_audit(
     output: str,
     deadline: float,
     unmeasured: bool = False,
-    expected_writer_digest: str | None = None,
 ) -> dict:
     reserved = False
     try:
@@ -255,22 +156,6 @@ def execute_audit(
             diagnosis, mission, policy = load_diagnosis(
                 root, directory, expected_diagnosis_digest
             )
-            writer = verify_writer_result(
-                root, directory, diagnosis, mission, expected_writer_digest
-            )
-            if writer is not None:
-                if (
-                    not unmeasured
-                    or expected_proposal_sha256 != writer["artifacts"]["proposal.md"]
-                ):
-                    raise ValueError(
-                        "managed lift audit must use its original unmeasured proposal"
-                    )
-                verify_scope(
-                    writer["post"]["inventory"],
-                    inspect_candidate(root, mission)["inventory"],
-                    [],
-                )
             if deadline != validate_work_clock(diagnosis["clock"]):
                 raise ValueError("audit cannot replace the original diagnosis cutoff")
             proposal = read_file(root, proposal_path)
@@ -298,9 +183,6 @@ def execute_audit(
                     unmeasured=unmeasured,
                 )
             load_diagnosis(root, directory, expected_diagnosis_digest)
-            verify_writer_result(
-                root, directory, diagnosis, mission, expected_writer_digest
-            )
             if read_file(root, proposal_path) != proposal:
                 raise ValueError("audit proposal changed during native checks")
             regression = checked["match_percent"] < diagnosis["match_percent"] or (
@@ -308,13 +190,12 @@ def execute_audit(
             )
             result = {
                 **{key: value for key, value in checked.items() if key != "digest"},
-                "schema": "bof3.lift-audit/v2",
+                "schema": "bof3.lift-audit/v3",
                 "diagnosis": {
                     "directory": directory,
                     "digest": expected_diagnosis_digest,
                 },
                 "proposal_sha256": expected_proposal_sha256,
-                "writer_digest": expected_writer_digest,
                 "proposal_format": "unmeasured" if unmeasured else "mission",
                 "clock": diagnosis["clock"],
                 "comparison": {

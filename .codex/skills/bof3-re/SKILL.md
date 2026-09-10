@@ -7,20 +7,19 @@ description: Lift or review one target-qualified BOF3 function, normalize proven
 
 Use [standing autonomous authorization](../../../docs/INDEX.md#autonomous-execution)
 for parent-owned index refreshes and external review; do not ask the user again.
-Explicit requests/budgets bind scope and consumption, not new consent. Child
-missions still cannot refresh pinned inputs or grant semantic acceptance.
+Explicit missions/budgets bind scope and consumption, not new consent. Workers
+still cannot refresh pinned inputs or grant semantic acceptance.
 
-Native read-only dispatch uses [the bounded review contract](../../../docs/agents/codex.md#bounded-native-review) and `scripts/dispatch.py review REQUEST ...`. Require original budget/consumption pins and child-only capability policy; completion is a proposal, never lift/transaction acceptance. The parent invokes each budget-pinned request; no implicit retry or fallback.
+[`bof3-lift-loop`](../bof3-lift-loop/SKILL.md) delegates scoped lift/review missions
+through tools available in the active session. Never launch Codex, a model SDK/API
+or a detached fallback through the harness. Review actual content with distinct
+session provenance; worker output is a proposal, not acceptance.
 
-Parent-only `scripts/dispatch.py diagnose REQUEST ...` obtains [cold diagnosis](../../../docs/agents/codex.md#parent-lift-diagnosis) for an existing claimed lift. After a separately authorized edit and confirmed writer termination, use `scripts/dispatch.py audit DIAGNOSIS PROPOSAL ...` for [retained audit](../../../docs/agents/codex.md#retained-lift-audit). Keep original evidence/cutoff and external pins; never guess compiler results. Explicit unmeasured proposals use `unverified`/null until parent gates measure them. Neither command edits/restores source, bypasses stale analysis, grants acceptance/retry, launches a model or completes the lift loop.
+Parent-only `scripts/mission.py diagnose REQUEST ...` obtains [cold diagnosis](../../../docs/agents/codex.md#parent-lift-diagnosis) for an existing claimed lift. After a scoped edit and confirmed writer termination, use `scripts/mission.py audit DIAGNOSIS PROPOSAL ...` for [retained audit](../../../docs/agents/codex.md#retained-lift-audit). Keep original evidence/cutoff and external pins; never guess compiler results. Unmeasured proposals use `unverified`/null until parent gates measure them. Neither command edits/restores source, bypasses stale analysis, grants acceptance/retry, launches a model or completes the loop.
 
 Compiler, assembler, linker, registry, or invocation-wrapper changes must follow [compiler pipeline validation](references/PIPELINE_VALIDATION.md). Role details remain in [reverse mission protocol](references/REVERSE/MISSION_PROTOCOL.md), [review checklist](references/REVIEW/REVIEW_CHECKLIST.md), and [sharing/non-match review](references/REVIEW/SHARING_NONMATCHES.md). Explicit cleanup routes are owned by the structured cleanup router and its selected skill; ordinary lifting, matching, review, and pipeline work must not load naming-evidence or documentation-repair bodies.
 
 Selector: `TARGET@0xADDRESS` | shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First command for `bof3-lifter`/`bof3-reviewer`: `bin/agent-context <reverse|review> SELECTOR`, once. Its bounded tracked prefill includes role rules and target-owned facts; never reread bundled paths. Generated asm/index evidence is task-driven; psx-rizin only for a concrete question. Repo `bin` wins.
-
-Explicit `scripts/dispatch.py lift DIAGNOSIS ...` uses the [one-shot writer contract](../../../docs/agents/codex.md#one-shot-lift-writer), not the ordinary in-agent match loop. Require original budget/diagnosis pins and explicit directory-write scope. The parent supplies prefill/cold diff; propose one experiment or no-op, report `unverified`/null, then stop. Parent audit requires the external writer receipt pin. Failed, interrupted or completed writer jobs grant no automatic retry, restoration, acceptance or next dispatch.
-
-Explicit `scripts/dispatch.py review-lift AUDIT ...` performs [audited lift review](../../../docs/agents/codex.md#audited-lift-review) only when planned in the original budget. Require external writer/audit/diagnosis pins and unchanged audited POST; never refresh analysis or reset the cutoff. Native completion retains a review proposal, not semantic acceptance or authority to advance, repair or restore. Respect the documented native writer cleanup blocker.
 
 ## Invariants
 

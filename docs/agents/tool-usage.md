@@ -27,13 +27,11 @@ See [documentation.md](documentation.md) for commands, bounds, scope and preserv
 
 ## Cleanup opportunity routing
 
-For an explicit budgeted native read-only reviewer, use
-`bin/agent-run review REQUEST --budget BUDGET --consumption INITIAL
---expected-budget-digest PIN --expected-checkpoint-digest PIN --expected-sequence 0`.
-The [native review contract](codex.md#bounded-native-review) owns request
-shape, subsequent chain/result pins, child-only capability restrictions and private
-streaming evidence. This is separate from cleanup routing and never accepts a lift
-or authorizes a transaction merely because Codex finishes.
+Use [`bof3-lift-loop`](../../.codex/skills/bof3-lift-loop/SKILL.md) for bounded
+active-session worker/reviewer missions. The harness does not launch Codex or model
+processes. `bin/agent-run diagnose` and `audit` remain deterministic local tools;
+their [mission contract](codex.md#parent-lift-diagnosis) preserves evidence, original
+cutoffs and independent acceptance. Transport success never authorizes a transaction.
 
 Type/macro `run` and `revalidate` accept the parent's original `--deadline` in
 absolute monotonic seconds. Naming collection uses `--work-deadline` for that

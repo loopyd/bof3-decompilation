@@ -11,7 +11,7 @@ from typing import Iterator
 from harness.common.directory import open_parent_fd, validate_repo_path
 from harness.common.files import read_file
 from harness.common.process import ProcessCleanupError
-from harness.context.journal import open_stream, write_chunk, write_record
+from harness.common.journal import open_stream, write_chunk, write_record
 
 
 def hash_files(root: Path, directory: str, names: list[str]) -> dict[str, str]:

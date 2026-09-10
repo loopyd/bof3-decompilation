@@ -7,7 +7,7 @@ import shutil
 
 from harness.common.execution import capture
 from harness.common.inputs import file_state
-from harness.context.capabilities import verify_policy
+from harness.decomp.scope import verify_policy
 
 
 def capture_context(root: Path, target: str, paths: list[str]) -> dict:

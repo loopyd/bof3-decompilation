@@ -14,7 +14,7 @@ from harness.common.digests import digest
 from harness.common.directory import validate_repo_path
 from harness.common.files import read_file
 from harness.common.workspace import workspace_baseline
-from harness.context.capabilities import MODE
+from harness.decomp.scope import MODE
 from harness.domain.claims import resolve_manifest_source_for_address
 from harness.domain.ids import parse_function_id
 from harness.domain.layout import parse_splat_layout

@@ -16,8 +16,8 @@ from harness.common.deadlines import (
 from harness.common.digests import digest
 from harness.common.directory import open_parent_fd
 from harness.common.lease import acquire_writer, require_writer
-from harness.context.capabilities import OUTPUTS, capture_policy, verify_policy
-from harness.context.journal import write_record
+from harness.decomp.scope import OUTPUTS, capture_policy, verify_policy
+from harness.common.journal import write_record
 from harness.decomp.evidence import (
     capture_streams,
     hash_files,

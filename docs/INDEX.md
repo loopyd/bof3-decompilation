@@ -19,9 +19,11 @@ minimal entry contract; this index owns the detailed reading map.
 
 ## Autonomous execution
 
-The full BOF3 reconstruction goal has standing user authorization for parent-owned
-index/analysis refreshes and external reviews through the configured Codex/model
-service. Do not ask again for either. Review payloads may include relevant private
+The full BOF3 reconstruction goal is driven by `bof3-lift-loop` in the active
+session, with standing authorization for parent-owned index/analysis refreshes and
+reviews through available session tools. Do not ask again for either. No harness
+Codex CLI invocation, model SDK/API launch, detached runner or Pi fallback.
+Review payloads may include relevant private
 source, diffs, agent instructions, target metadata and original-byte evidence;
 exclude credentials and unrelated user media. The parent selects bounded review
 scope and execution limits before launch. Keep original pins, consumed budgets,
@@ -38,10 +40,9 @@ authorization does not override sandbox decisions or authorize dependency instal
 | Generic analyzer work explicitly requesting Rizin | [Project context](agents/project-context.md) | `$psx-rizin` |
 | Tooling, Python harness, CLI, tests | [Coding standards](agents/coding-standards.md) | [Harness ownership](agents/harness.md), [Tool usage](agents/tool-usage.md) and owning code/tests |
 | Codex MCP or Pi extension migration | [Codex configuration](agents/codex.md) | Global settings stay in `~/.codex`; project skills below |
-| Autonomous bounded native Codex review | [Native review transport](agents/codex.md#bounded-native-review) | `$bof3-re`; standing authorization above, proposal only, no source-writing or semantic acceptance |
+| Autonomous lift/naming/type/macro loop or resume | [`$bof3-lift-loop`](../.codex/skills/bof3-lift-loop/SKILL.md) | Active-session mission protocol; parallel independent reads/reviews, serialized writes; no harness model launcher |
 | Parent pre-edit native lift diagnosis / retained candidate audit | [Parent lift diagnosis](agents/codex.md#parent-lift-diagnosis) | [Retained audit](agents/codex.md#retained-lift-audit), `$bof3-re`; original pins/cutoff, no model or source edits |
-| Explicit budgeted native lift proposal | [One-shot writer](agents/codex.md#one-shot-lift-writer) | `$bof3-re`; pinned scope/cutoff, no acceptance; heed the [native cleanup blocker](agents/codex.md#native-writer-cleanup) |
-| Explicit review of an audited native lift | [Audited lift review](agents/codex.md#audited-lift-review) | `$bof3-re`; original queue/cutoff, pinned writer/audit and unchanged candidate; proposal only |
+| Scoped worker or independent review mission | [Skill-only operator](agents/codex.md#skill-only-operator) | `$bof3-lift-loop` delegates `$bof3-re` or the selected domain skill through actual session tools; no self-acceptance |
 | Macro opportunity indexing, ranking or resolution | [Macro resolution guide](agents/macros.md) | [Explicit cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), owning code/checks; matching or tooling route when making changes |
 | Type representation opportunities and reviewed application | [Tool usage](agents/tool-usage.md#3b-target-analysis-freshness--rebuild--query) | [Cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), `$bof3-types`; [harness ownership](agents/harness.md) |
 | Symbol naming opportunity discovery or assessment | [Naming opportunities](agents/tool-usage.md#symbol-naming-opportunities) | `$bof3-naming`; [harness ownership](agents/harness.md); evidence and identity routes remain separate |
@@ -84,6 +85,7 @@ Codex scheduler or installed extension.
 
 | Skill | Scope |
 | --- | --- |
+| [`$bof3-lift-loop`](../.codex/skills/bof3-lift-loop/SKILL.md) | instruction-only active-session operator, bounded missions, parallel evidence/review and serialized domain writes |
 | [`$bof3-re`](../.codex/skills/bof3-re/SKILL.md) | target-qualified lifting and independent review |
 | [`$bof3-macros`](../.codex/skills/bof3-macros/SKILL.md) | macro opportunities, human-value ranking and reviewed resolution |
 | [`$bof3-types`](../.codex/skills/bof3-types/SKILL.md) | established C types, representation opportunities and reviewed application |

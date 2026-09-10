@@ -1,104 +1,47 @@
-# Codex configuration and Pi migration
+# Codex session integration
 
-Read [the documentation index](../INDEX.md) first. Project skill definitions and
-Python owners are described there and in [harness.md](harness.md).
+Start at [docs/INDEX.md](../INDEX.md). The active session owns agent execution;
+the project harness owns deterministic domain tools, not Codex/model launchers.
 
-## Bounded native review
+## Skill-only operator
 
-The [autonomous execution authorization](../INDEX.md#autonomous-execution) covers
-external transmission of relevant private BOF3 source and review evidence to the
-configured Codex/model service. Do not request per-review user approval. The parent
-supplies each explicit request, scope, original budget and pins; these machine
-inputs are execution safeguards, not another user-consent gate. Successful review
-still supplies a proposal, not source acceptance or authority to reset consumption.
+[`bof3-lift-loop`](../../.codex/skills/bof3-lift-loop/SKILL.md) defines the bounded
+mission protocol and lift → review → naming → types/macros → cleanup/final review
+sequence. Delegate only through actual tools exposed by the active session.
+Parallelize independent reads/reviews; serialize shared-checkout writes, native
+target outputs and index refreshes. Missing delegation or independent review is a
+host-capability blocker, never permission for a CLI/SDK/Pi fallback.
 
-Bounded read-only review is available; the broader production pipeline is unfinished.
-Repository evidence and writer leases use filesystem-native permissions, without
-requiring POSIX `0600`/`0700` modes or a separate state store on NTFS. Ownership,
-file/root identity, single-link and locking checks remain; filesystem modes do not
-guarantee confidentiality. Empty/partial files after creation/write failure remain
-unresolved evidence, never successful publication. Removing mode checks does not
-reset an existing allowance or authorize retry.
+Standing authorization covers relevant project evidence/reviews and safe-checkpoint
+index refreshes; do not repeatedly request user consent. The host session owns
+its own approvals and configuration. The harness must not invoke `codex`, launch
+a model SDK/API, discover MCP via Codex CLI or rewrite child permission profiles.
+No detached controller, background model session or second campaign database.
+Local native compiler processes retain existing ownership/deadline/cleanup guards.
 
-`bin/agent-run review REQUEST --budget BUDGET --consumption INITIAL ...` dispatches
-one read-only `bof3-reviewer` through the installed `codex exec`. It is not the
-lift/naming/cleanup scheduler, a writer transport, a Pi runtime fallback or semantic
-acceptance. `harness.context.{dispatch,codex,journal}` owns role policy, native
-configuration/events and immutable dispatch evidence; `commands.agent_run` owns
-the CLI. The `bof3-re` skill's `scripts/dispatch.py` delegates to that same CLI.
+## Retired transports
 
-Requests contain exactly:
-
-```json
-{"schema":"bof3.codex-review/v1","selector":"emi/battle/battle/15@800a3638","capabilities":"native-read-only","task":"Review the specified source without editing or claiming unavailable gates passed.","adopted_baseline":"CURRENT_BASELINE_DIGEST"}
-```
-
-Use the shared canonical function-ID spelling and current `bin/type-audit baseline`
-digest. The original [execution budget](harness.md#bounded-continuation)
-must contain queue ID `review:SELECTOR` with fingerprint `digest(REQUEST)`. Supply
-`--expected-budget-digest`, `--expected-checkpoint-digest`, `--expected-sequence`
-and the complete ordered consumption chain through repeated `--consumption`.
-After sequence zero, also supply the **externally retained**
-`--expected-result-digest` from the preceding completed invocation. Do not discover
-success by scanning receipt files or silently replace a frozen request/baseline.
-
-One dispatch debit covers its context/capability preparation and one Codex job,
-including that job's diagnostic subprocesses; it is not an unlimited token or
-time allowance. The shared writer lease excludes cooperating source writers.
-Exclusive `out/reviews/dispatch/BUDGET_DIGEST/SEQUENCE/consumption.json` is durable
-before any Codex process. Its `dispatch.debited` JSONL event reports the new
-checkpoint pin before launch; interrupted dispatches retain that debit. Missing,
-failed, unpinned or changed previous completion evidence blocks another dispatch.
-No retry/refund, recovery, restoration or automatic acceptance is provided.
-
-The explicit capability policy is **child-only**: `--sandbox read-only`, approval
-policy `never`, no apps/plugins/multi-agent variants/hooks/shell snapshots or
-skill-triggered MCP installation, and
-every enumerated MCP server disabled by override. A second native listing must
-confirm the disabled inventory; failure stops before model dispatch. Unsupported
-server-key spellings reject. Empty-table overrides do not disable inherited MCP
-servers in the inspected CLI. Global settings, configured model/provider and
-existing authentication remain inherited, not rewritten or copied. Normal Codex
-home runtime/auth activity is not a promise of zero home writes. Installation,
-credentials, network access and execution approvals retain their own gates.
-
-The existing role body and complete canonical review prefill go over stdin, not
-argv. Task text is at most 8 KiB; the complete prompt at most 128 KiB. The child
-uses `--json --ephemeral`; no implicit `codex exec resume`. Native stdout/stderr
-are incrementally flushed/fsynced into exclusive evidence files, with a combined
-1 MiB cap and the original absolute work cutoff. Output can contain source
-or diagnostics: never dump it, credential-bearing configuration or environment
-values into public logs. Capability enumeration diagnostics are withheld.
-
-Only exit zero plus a structurally valid ordered native thread/turn event stream,
-nonempty proposal, unchanged baseline and retained writer lease can publish
-`bof3.codex-dispatch/v1`. It binds hashes of all eight retained input/output artifacts
-and records the emitted native thread ID. `dispatch.completed` prints its receipt
-pin, not model text. `semantic_acceptance:false` and `parent_review_required:true`
-remain mandatory; unavailable byte/build gates remain blockers. A lease/publication
-failure can leave a receipt, but no successful CLI handoff or automatic advancement.
-
-The original owner supervises and reaps descendants through `common.process`.
-Saved supervisor PIDs are diagnostic, never future termination authority.
-`ProcessCleanupError` remains distinct even if failure recording fails; pending
-records require parent investigation. Retain a separate outer cleanup hard-stop.
-Authentication, completed native review and production pipeline acceptance require
-their own observed evidence; CLI discovery, fixture JSON events and green tests do
-not establish them. See [official non-interactive Codex usage](https://developers.openai.com/codex/noninteractive/).
+The former `agent-run review`, `lift` and `review-lift` commands, their CLI
+configuration/process helpers and dispatch script are removed. Historical receipts,
+thread IDs, budget pins and failures remain immutable history, not live mission
+state or permission to replay. The abandoned auto-review child-configuration
+experiment is superseded by skill-only operation. `agent-run diagnose` and `audit`
+remain model-free measurement tools, not a replacement scheduler or acceptance
+shortcut. Independent review and final parent acceptance still bind actual source.
 
 ## Parent lift diagnosis
 
 `bin/agent-run diagnose REQUEST --expected-request-digest PIN --output
 out/reviews/lift-diagnosis/NAME --deadline ORIGINAL_MONOTONIC_CUTOFF` measures an
-**existing claimed lift** before editing. The `bof3-re` dispatch script forwards
-this command too. It launches no model, changes no source, and grants no review,
+**existing claimed lift** before editing. The `bof3-re` `scripts/mission.py` helper forwards
+this local command. It launches no model, changes no source, and grants no review,
 restoration, retry or campaign advancement. New unlifted functions still need the
 original-byte/first-source mission route; this command cannot diagnose absent C.
 
 The closed `bof3.lift-request/v1` request contains `schema`, canonical `selector`,
 `source`, sorted unique explicit `paths` (at most twelve), nonempty `task` (at most
 8 KiB), current `adopted_baseline`, and
-`capabilities:"native-scoped-directory-write"`. That explicit scope describes the
+`capabilities:"mission-scoped-source-edit"`. That explicit scope describes the
 potential mission, **not a write grant from diagnosis**. Existing ownership must
 match the selector; shared source/header changes reject. Retain the request digest
 externally. Capture validates current mission/index freshness, original span and
@@ -169,12 +112,9 @@ The original manifest/native inputs, index, unrelated workspace and source-direc
 guards remain active. Do not refresh analysis between diagnosis and audit; report
 required refresh for the later parent checkpoint. A free lease is not quiescence.
 
-After a [managed writer](#one-shot-lift-writer), also supply its externally retained
-`--expected-writer-digest`. Audit verifies the diagnosis-owned slot, original debit,
-completion pin and all eight writer artifacts before and after native checks.
-Failed/incomplete writers reject. The candidate must still match the writer's POST,
-and the proposal must be its original unmeasured report. A hand-guided edit with
-no managed slot retains the existing route; a supplied pin without a slot rejects.
+Diagnoses owning retired CLI writer/reviewer slots reject as historical-only.
+Do not reinterpret their receipts as active-session missions or strip their slots
+to gain acceptance. Prepare fresh mission inputs at an authorized checkpoint.
 
 Default `--proposal-format mission` checks the measured two-fence report above.
 For a writer unable to run the legacy compiler, explicitly use
@@ -185,7 +125,7 @@ status. Parent gates supply measured outcomes separately; they never rewrite an
 unmeasured writer claim into a claimed exact result or bypass unavailable tooling.
 
 The source-read-only audit reruns cold native checks, verifies retained evidence
-and proposal bytes before/after, and publishes `bof3.lift-audit/v2` with their pins,
+and proposal bytes before/after, and publishes `bof3.lift-audit/v3` with their pins,
 native artifacts and before/after comparison. A lower instruction score or loss of
 byte exactness requests parent restoration **review**, without restoring anything.
 The comparison is against this diagnosis, not proof of best-of-history or semantic
@@ -198,147 +138,7 @@ Output must be a fresh direct-child audit directory. Failure retains evidence an
 any candidate, with no retry/restoration/acceptance authority. The parent accounts
 each invocation against the original campaign budget; neither command debits it or
 implements a model writer, repair scheduler, independent acceptance or recovery.
-`bof3-re`'s dispatch script forwards both commands unchanged.
-
-## One-shot lift writer
-
-```sh
-bin/agent-run lift out/reviews/lift-diagnosis/BEFORE \
-  --expected-diagnosis-digest DIAGNOSIS_PIN \
-  --capabilities native-scoped-directory-write \
-  --budget out/budget.json --consumption out/initial-consumption.json \
-  --expected-budget-digest BUDGET_PIN --expected-checkpoint-digest CHECKPOINT_PIN \
-  --expected-sequence 0
-```
-
-This explicitly authorized source-writing command connects diagnosis to retained
-audit, not to automatic acceptance. Its original budget queue contains
-`lift:SELECTOR` with fingerprint `digest(LIFT_REQUEST)`; use the same boot-bound
-cutoff as diagnosis. Later sequence positions require the complete consumption
-chain and previous read-only completion pin, as [review](#bounded-native-review)
-does. It never creates or resets a budget, refreshes an index, or repins evidence.
-
-Under the shared writer lease, fresh mission/policy checks precede one durable
-dispatch debit and exclusive `DIAGNOSIS_DIRECTORY/writer.json` slot. One diagnosis
-and queue entry permit only one writer job. Failure, cancellation or a leftover
-slot stops replay; a completed writer cannot unlock generic next-dispatch logic.
-Missing cleanup confirmation requires parent native-handle inspection, not rollback.
-Only the separately pinned [audited-review step](#audited-lift-review) may consume
-its planned review debit after a successful audit; that is not acceptance.
-
-The child inherits configured model/provider/authentication, disables the review
-capabilities above, and uses `--strict-config` with the pinned named permission
-profile. It does not use workspace-wide writes or weaken the outer sandbox.
-Existing siblings/child directories, Git and frozen evidence remain read-only;
-declared source parents and generated outputs/scratch are writable, tool networking
-is disabled, and home Codex/Pi paths are denied to tools. **Future names within a
-writable parent are not confined**: post-audit rejects unexpected names, including
-ignored files. This is cooperative scoped-directory execution, not a hostile-code
-or credential-inventory guarantee. Codex's own authentication/runtime is separate.
-
-The retained role and canonical reverse prefill accompany the pinned cold diff.
-The writer is instructed to make one structural experiment or justified no-op,
-then return the full two-fence `unverified`/null report. It cannot claim unavailable
-compiler measurements; native gates stay with the parent. Prompt instructions do
-not mechanically prove one semantic experiment or a human-quality improvement.
-One job shares the original deadline, 128 KiB prompt bound and 1 MiB output cap.
-
-Successful transport publishes `bof3.codex-lift/v1`: original bindings, native thread
-ID, eight artifact hashes, actual POST inventory/owned images and the writer report.
-Stdout supplies its receipt digest and proposal SHA-256 for `audit`, using
-`--proposal-format unmeasured --expected-writer-digest WRITER_PIN`. Audit retains
-that writer pin separately from native measurements. Neither completion permits
-source acceptance, automatic restoration, retry or campaign advancement.
-
-Installed Codex 0.153.4 applied this named profile through native `exec` in disposable
-Linux/NTFS probes. Scripted loopback responses exercised shell writes and native
-`apply_patch`: owned edits succeeded, protected sibling edits/deletions/moves failed,
-and an unexpected ignored name remained visible to the rejecting post-audit.
-A separate Git-backed fixture completed `diagnose` → native `lift` → `audit`,
-using a real Codex patch/event stream but scripted provider responses and synthetic
-gate payloads. Empty temporary Codex homes avoided credentials and live models.
-These probes do not prove production authentication, BOF3 semantics, independent
-review or whole-pipeline acceptance. No live BOF3 writer is claimed.
-
-### Native writer cleanup
-
-**Writer reliability remains unresolved on Codex 0.153.4.** Fresh fixtures can
-leave new `.git`, `.codex` and `.agents` directories beside the owned source.
-The unchanged membership guard rejects them after native turn completion,
-retaining candidate/debit without a successful writer receipt.
-
-A failed lightweight syscall trace identifies the premature kill: a native Codex
-thread sends `SIGKILL` to its `codex-linux-sandbox --codex-run-as-fs-helper` process
-after metadata mount targets appear, before their removal. Our supervisor reaps
-the remaining descendants more than a second later; it is not the first killer.
-A heavier trace completed the same pipeline and showed normal target removal,
-so tracing changes timing and a passing run alone does not establish reliability.
-
-The version-matched [helper client](https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/exec-server/src/fs_sandbox.rs)
-uses `kill_on_drop(true)`; [sandbox cleanup](https://github.com/openai/codex/blob/rust-v0.153.4/codex-rs/linux-sandbox/src/linux_run_main.rs)
-removes synthetic targets after its child exits. This supports a canceled-helper
-lifecycle diagnosis; the precise canceling call site remains unproven. Adding
-supervisor grace cannot undo Codex's earlier kill. No local guard/process change,
-installed-runtime patch or fixed release is claimed by this investigation.
-
-Do not ignore these paths, pre-create them in production, relax sandbox rules,
-delete unexpected entries or treat a stopped writer as accepted. Any replacement
-runtime needs separately authorized installation/build and fresh reproduction,
-scope, deadline and cancellation checks before live use. Diagnostic logs and
-scripted provider/gate fixtures are not BOF3 semantic or recovery authority.
-
-## Audited lift review
-
-```sh
-bin/agent-run review-lift out/reviews/lift-audit/AFTER \
-  --expected-audit-digest AUDIT_PIN --expected-diagnosis-digest DIAGNOSIS_PIN \
-  --expected-writer-digest WRITER_PIN --expected-result-digest WRITER_PIN \
-  --budget out/budget.json --consumption out/initial-consumption.json \
-  --consumption out/reviews/dispatch/BUDGET_DIGEST/1/consumption.json \
-  --expected-budget-digest BUDGET_PIN --expected-checkpoint-digest WRITER_CHECKPOINT \
-  --expected-sequence 1
-```
-
-Plan queue ID `review-lift:SELECTOR` with fingerprint `digest(LIFT_REQUEST)` in the
-**original** budget, before diagnosis. The complete consumption chain must end at
-the immediate writer debit; the two writer-pin flags bind audit provenance and
-that prior result, respectively. No inferred queue entry, new budget/cutoff or
-receipt scan supplies authorization. This route requires a managed writer, not
-an unbound hand-guided proposal.
-
-Under the writer lease, the command verifies the pinned diagnosis, writer, audit,
-all retained artifacts and unchanged audited POST/native inputs/Git index. It
-renders the canonical tracked review prefill without refreshing or trusting the
-post-edit reverse index. Its prompt separates original facts, parent measurements,
-writer claims and review obligations. Parent native gates remain parent-owned;
-the reviewer must disclose unavailable independent checks, never claim to run them.
-
-One durable debit and diagnosis-owned `review.json` slot precede capability
-preparation and a fresh native `codex exec --sandbox read-only` job. It inherits
-the [read-only restrictions](#bounded-native-review), prompt/output bounds and
-original boot-bound cutoff. Slot/debit drift, stale evidence, changed candidate,
-failed/unfinished output or reuse of the writer's thread rejects. Empty/partial
-publication or failure retains the slot/debit and candidate; no automatic replay.
-Audit/candidate verification runs again before and after the native job.
-
-`bof3.codex-lift-review/v1` binds the original queue/debit, diagnosis/audit/writer
-pins, separate native thread, review text and eight input/output hashes. The
-generated review-request digest binds these runtime facts; the planned queue
-fingerprint still binds the original lift request. Stdout reports the receipt pin
-and path, not source text. `native-audited-lift-review` is a distinct handoff kind:
-generic dispatch cannot advance from it. `record_debit` only accounts/persists a
-charge under a writer lease; its domain caller must validate the preceding stage.
-
-Completion proves transport and retained scope, **not a parsed or accepted semantic
-verdict**. Parent acceptance, affected-consumer checks, matching-aid approval,
-reviewed partial/exhaustion handling, repair scheduling and safe recovery remain
-unfinished. Separate threads do not alone prove independent review quality.
-
-A controlled native fixture with metadata directories already present in PRE
-completed writer/audit/reviewer transport; the reviewer's source write was denied
-with `EROFS`, and audited source remained unchanged. Scripted loopback responses,
-synthetic gates and injected prefills isolate transport, not live-model behavior or
-BOF3 acceptance. This fixture does not resolve the missing-directory writer issue.
+`bof3-re`'s `scripts/mission.py` forwards both commands unchanged.
 
 ## Global MCP ownership
 

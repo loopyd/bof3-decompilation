@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Delegate explicitly budgeted native review to the harness CLI."""
+"""Run local mission diagnosis or audit without launching an agent."""
 
 from pathlib import Path
 import sys

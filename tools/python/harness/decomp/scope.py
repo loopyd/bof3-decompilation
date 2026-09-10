@@ -1,11 +1,9 @@
-"""Explicit scoped-directory Codex grants and source-read-only native gate policy."""
+"""Mission source ownership and output-only policy for local native gates."""
 
 from __future__ import annotations
 
-import json
 import os
 from pathlib import Path
-import secrets
 import stat
 
 from harness.common.deadlines import check_deadline
@@ -13,7 +11,7 @@ from harness.common.digests import digest
 from harness.common.directory import open_parent_fd, validate_repo_path
 from harness.decomp.inventory import observe_path
 
-MODE = "native-scoped-directory-write"
+MODE = "mission-scoped-source-edit"
 PROTECTED = (
     ".git",
     ".codex",
@@ -35,7 +33,7 @@ def capture_directory(root: Path, name: str) -> dict:
             named.st_dev,
             named.st_ino,
         ):
-            raise ValueError(f"Codex writable directory identity drifted: {name}")
+            raise ValueError(f"mission directory identity drifted: {name}")
         return {
             "device": opened.st_dev,
             "inode": opened.st_ino,
@@ -59,7 +57,7 @@ def capture_members(root: Path, paths: list[str]) -> dict:
             relative = child.relative_to(root).as_posix()
             entries[relative] = observe_path(root, relative)
         if before != capture_directory(root, name):
-            raise ValueError("Codex source directory changed during policy capture")
+            raise ValueError("mission source directory changed during policy capture")
         result[name] = {"identity": before, "entries": entries}
     return result
 
@@ -118,7 +116,7 @@ def capture_policy(
         )
     )
     return {
-        "schema": "bof3.codex-directory-policy/v1",
+        "schema": "bof3.mission-directory-policy/v1",
         "mode": MODE,
         "root": str(root),
         "paths": paths,
@@ -127,7 +125,6 @@ def capture_policy(
         "writable": writable,
         "readonly": readonly,
         "temporary": temporary,
-        "profile": "bof3_lift_" + secrets.token_hex(12),
         "network": False,
         "future_names_confined": False,
     }
@@ -137,9 +134,9 @@ def verify_policy(
     root: Path, policy: dict, expected_digest: str, *, before_dispatch: bool
 ) -> None:
     if digest(policy) != expected_digest:
-        raise ValueError("native Codex policy pin drifted")
+        raise ValueError("mission policy pin drifted")
     if root.resolve().as_posix() != policy["root"]:
-        raise ValueError("native Codex policy root drifted")
+        raise ValueError("mission policy root drifted")
     for name, identity in policy["outputs"].items():
         if capture_directory(root, name) != identity:
             raise ValueError("native output directory identity drifted")
@@ -157,43 +154,3 @@ def verify_policy(
             raise ValueError(
                 "native source-directory membership or unowned state drifted"
             )
-
-
-def build_overrides(policy: dict, *, source_write: bool) -> list[str]:
-    root = Path(policy["root"])
-    writable = policy["writable"] if source_write else list(policy["outputs"])
-    rules = {str(root): "read"}
-    rules.update({str(root / name): "write" for name in writable})
-    rules.update({str(root / name): "read" for name in policy["readonly"]})
-    rules[str(Path.home() / ".codex")] = "deny"
-    rules[str(Path.home() / ".pi")] = "deny"
-    entries = ",".join(
-        f"{json.dumps(name)}={json.dumps(access)}"
-        for name, access in sorted(rules.items())
-    )
-    value = (
-        '{extends=":read-only",filesystem={' + entries + "},network={enabled=false}}"
-    )
-    if len(value.encode()) > 60000:
-        raise ValueError(
-            "native scoped-directory policy exceeds the reviewed argument limit"
-        )
-    temporary = str(root / policy["temporary"])
-    environment = (
-        "{"
-        + ",".join(
-            f"{name}={json.dumps(temporary)}" for name in ("TMPDIR", "TMP", "TEMP")
-        )
-        + "}"
-    )
-    profile = policy["profile"] + ("_writer" if source_write else "_gates")
-    return [
-        "-c",
-        "default_permissions=" + json.dumps(profile),
-        "-c",
-        f"permissions.{profile}={value}",
-        "-c",
-        'web_search="disabled"',
-        "-c",
-        "shell_environment_policy.set=" + environment,
-    ]
