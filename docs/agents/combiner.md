@@ -73,6 +73,12 @@ consumer coverage or type-use identities. Native resolve/compare and status pref
 reject grouped files before comparison/cache reuse; transaction preparation, proposed
 C images and filename-changing naming facts retain corresponding guards.
 
+Native development currently favors section placement after one complete maspsx
+translation, retaining the original C translation unit and compiler profile. The
+inactive `build.sections` / `match.placement` prototypes are not production routes:
+control-flow, publication, subsection and process-bound review findings remain open.
+Do not use their artifacts as grouped-source acceptance or bypass existing guards.
+
 ## Planned discovery and ranking
 
 The cleanup node is **combiner**, with explicit discovery, assessment, audit and

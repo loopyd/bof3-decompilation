@@ -1518,27 +1518,59 @@ must satisfy them before the corresponding phase is marked done.
 - Owner: domain, analysis, decomp, naming, types and macros owners
 - Depends: C1.1
 - Blocker: none
-- Evidence: source/claim enumeration, complete boundary address sets, scoped lifecycle and direct macro occurrences implemented; duplicate owners reject. Native resolve/compare/status, unscoped metadata repair, filename-changing naming facts and macro/type PRE/proposed C guards remain restrictive. Layout, function-qualified cache, naming editing and type/macro consumer coverage remain unmigrated. Existing battle15 testEntryBitE1.c also defines 0x8009C87C, already claimed by setEntryBitE1.c; new ownership checks expose this pre-existing collision rather than silently picking one file. Reviewed source cleanup and original/native evidence are required before publishing the v15 working index; do not delete that implementation or rewrite metadata merely to pass indexing.
+- Evidence: source/claim enumeration, complete boundary address sets, scoped lifecycle and direct macro occurrences implemented; duplicate owners reject. Native resolve/compare/status, unscoped metadata repair, filename-changing naming facts and macro/type PRE/proposed C guards remain restrictive. Layout, function-qualified cache, naming editing and type/macro consumer coverage remain unmigrated. The exposed battle15 duplicate was resolved by reviewed original/native source cleanup, not by weakening indexing; the v15 index now publishes and validates. Its repair evidence and unchanged setter metadata obligation are recorded below.
 - Acceptance: exact target/address-to-record relation, many boundaries per source with complete coverage and duplicate rejection; metadata edits touch only selected records; status cache keys and lexical use links remain function-qualified, include-level consumers remain conservative; no first-record fallback or unrelated lifecycle overwrite.
 
 C1.2 source/index slice has a scoped clean final code review from
 `01a089f8-f794-7a63-802d-aaaf58d25f9d`; both earlier naming guard findings are fixed.
-Evidence is `out/reviews/c1-source-ownership-IPs4j27l/checkpoint.md`. Actual index
+Evidence is `out/reviews/c1-source-ownership-IPs4j27l/checkpoint.md`. Initial index
 rebuild exited 2 for the existing duplicate and preserved v14 bytes unchanged;
-repository metadata preflight fails for the same collision. Parent check groups
+repository metadata preflight failed for the same collision. Parent check groups
 364/241/104/56 pass with overlap and the known Git-writing mode check omitted;
 disposable grouped-index/guard probes and 69 references pass. Unchanged game00
 `0x801996FC` still passes 16/16 instructions and 64-byte native smoke under its
 original 180-second cap. These are not production consolidation acceptance.
 C1.3 may develop from C1.1 in parallel with remaining consumers, avoiding a circular
-dependency on the currently unpublishable index; C1.4 still requires both complete.
+dependency on the then-unpublishable index; C1.4 still requires both complete.
 
-3. [C1.3] (open) Prove multi-function compiler, build and native comparison correctness.
+The publication blocker is now resolved by a separate, bounded source cleanup:
+`out/reviews/entry-ownership-9bvgvfnl/terminal.json`. Independent original/native
+evidence justified removing the unused incorrect alias only; first C body and
+canonical setter/map/layout/claims remain unchanged. Four native checks pass
+(5/5 instructions, 20 bytes; 12/12, 48 bytes), symbol validation passes, and the
+v15 index published and validates. All 23 targets scan 920 unique function claims;
+repository metadata/index preflight passes. Prereviewer
+`01a08a20-d01c-77a1-b0f9-10633da9a245` and final reviewer
+`01a08a29-c15c-7c32-8e1f-eb74ef6007fb` completed and closed within their original
+bounds. One source edit and one index publication; no layout promotion or reset
+of earlier stage budgets. The setter remains natively exact but metadata-invalid
+because its pre-existing noncanonical residual was deliberately preserved; queue
+that separate metadata audit. Full C1.2 consumer migration remains unfinished.
+
+3. [C1.3] (in-progress) Prove multi-function compiler, build and native comparison correctness.
 - Owner: build, toolchain and matching owners
 - Depends: C1.1
 - Blocker: none
 - Evidence: build/compiler.py overrides and native match/_asm_link.py text-prefix extraction need migration; catalog/default GCC selection must remain authoritative.
 - Acceptance: independently select whole-object placement or deterministic per-function compilation projections; preserve every effective compiler/flag profile or reject, no duplicated shared state or unbound generated inputs. Prove per-symbol original placement/relocation/size/instruction/byte checks including noncontiguous functions, calls and data sections; all-member native positive and negative probes. Scoped reviewed execution only; no sandbox changes or installs.
+
+Read-only scout `01a08a05-dac7-77c0-9588-81539af9a405` completed and closed within
+180 seconds, favoring post-maspsx section placement for compatible profiles over
+duplicating C translation units. Inactive, uncommitted `build/sections.py` and
+`match/placement.py` prototypes preserve one C unit, partition complete assembler
+envelopes and inspect actual linked symbols/ranges. Disposable native characterization
+covers five noncontiguous functions, calls/tails/branches/function pointers, shared
+initialized data and one BSS allocation; 13 negative cases pass. Existing 71 checks
+pass with the known Git-writing mode check omitted. A fresh compiler characterization
+retained at `out/reviews/c1-native-sections-5_4evx1e/terminal.md` correctly rejected
+the old alias's 56 bytes against its reviewed 48-byte range; no grouped acceptance.
+Kernel reviewer `01a08a1c-afac-7202-bc74-6d8b3a3653e4` completed within 300 seconds
+and withheld acceptance. Fix reachable control-flow/delay-slot fallthrough, private
+validated no-replace output publication, subsection/attribute rejection and bounded
+native process ownership before integration or a feature commit. Default compiler,
+matcher and grouped-source guards remain unchanged. Shared-data proof, full member
+coverage, instruction selection, cache identities and producer/placement freshness
+remain required; do not infer readiness from the five-function probe.
 
 4. [C1.4] (open) Add combiner discovery, ranked assessment and reviewed transactions.
 - Owner: combiner owner with independent human-value reviewer
