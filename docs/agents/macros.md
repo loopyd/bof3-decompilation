@@ -41,6 +41,11 @@ BOF3 uses C89, not C++ templates. A good macro can provide useful compile-time
 parameterization, but a macro is only sometimes the right cleanup. Readability,
 semantic clarity, and original-byte fidelity matter more than macro count.
 
+An already useful macro may suggest grouping its wrappers into a cohesive source
+file rather than another extraction. That separate [combiner concern](combiner.md)
+owns multi-function metadata and consolidation; discovery does not bypass its
+pending native/transaction gates or expand cross-target ownership.
+
 ## Required opportunity policy
 
 These are the outer-audit requirements. Discovery and pinned ranking are implemented;

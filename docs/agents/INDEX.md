@@ -13,6 +13,7 @@ BOF3 runtime, format and data evidence belongs in [specs](../specs/INDEX.md).
 | [Codex](codex.md) | Skill-only session orchestration, local mission diagnosis/audit, global MCP and Pi migration |
 | [Lift loop](../../.codex/skills/bof3-lift-loop/SKILL.md) | Bounded skill missions, parallel evidence/review, serialized writes, recovery and completion |
 | [Macros](macros.md) | Opportunity indexing, human-value ranking and reviewed resolution |
+| [Combiner](combiner.md) | Attached function metadata inspection and planned reviewed source consolidation |
 | [Documentation](documentation.md) | Markdown references, search/context, editing, repair and compaction |
 | [Function matching](matching.md) | Target-qualified lift and validation loop |
 | [Matching playbook](matching-playbook.md) | Instruction residual diagnosis and clean-C experiments |

@@ -208,6 +208,7 @@ def test_package_initializer_edges_are_locked() -> None:
         "harness.analysis": set(),
         "harness.naming": set(),
         "harness.macros": set(),
+        "harness.combiner": set(),
         "harness.types": set(),
         "harness.common": set(),
         "harness.build": set(),

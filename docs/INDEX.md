@@ -44,6 +44,7 @@ authorization does not override sandbox decisions or authorize dependency instal
 | Parent pre-edit native lift diagnosis / retained candidate audit | [Parent lift diagnosis](agents/codex.md#parent-lift-diagnosis) | [Retained audit](agents/codex.md#retained-lift-audit), `$bof3-re`; original pins/cutoff, no model or source edits |
 | Scoped worker or independent review mission | [Skill-only operator](agents/codex.md#skill-only-operator) | `$bof3-lift-loop` delegates `$bof3-re` or the selected domain skill through actual session tools; no self-acceptance |
 | Macro opportunity indexing, ranking or resolution | [Macro resolution guide](agents/macros.md) | [Explicit cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), owning code/checks; matching or tooling route when making changes |
+| Multi-function C metadata or function consolidation | [Combiner](agents/combiner.md) | [Active rollout](plans/autonomous-bof3-decompilation.md#multi-function-consolidation); tooling/matching owners; production consolidation remains gated |
 | Type representation opportunities and reviewed application | [Tool usage](agents/tool-usage.md#3b-target-analysis-freshness--rebuild--query) | [Cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), `$bof3-types`; [harness ownership](agents/harness.md) |
 | Symbol naming opportunity discovery or assessment | [Naming opportunities](agents/tool-usage.md#symbol-naming-opportunities) | `$bof3-naming`; [harness ownership](agents/harness.md); evidence and identity routes remain separate |
 | Plan creation, management or execution | [Plan authoring](agents/plan-authoring.md) | `$plans`; selected file under `plans/`; refresh live evidence |
@@ -65,7 +66,10 @@ authorization does not override sandbox decisions or authorize dependency instal
 | Authored lifts | Metadata-resolved source under `src/bof3/` |
 | Macro opportunity policy and tool reference | `docs/agents/macros.md` |
 
-Keep one C source per lifted function. Lift identity comes from manifest claims,
+Until the [multi-function rollout](agents/combiner.md) clears registry and native
+gates, keep production lifts one function per C source; inspection now supports
+attached per-function records. This is a staged migration, not a permanent ban on
+cohesive multi-function files. Lift identity comes from manifest claims,
 maps, Splat, and function-level `@source`/`@behavior` metadata—not filenames or
 directory ancestry. Maps use sorted `name = 0xADDRESS;` rows with uppercase
 addresses. Bind target symbols through plain declarations plus sanctioned

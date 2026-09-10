@@ -10,6 +10,7 @@ All paths are below `tools/python/harness/`.
 | Package | Owns | Entry points |
 | --- | --- | --- |
 | `macros/` | lexical facts, assembly/C opportunities, ranking, consumers, reviewed transactions and unchanged existing-abstraction dispositions | `bin/macro-audit` → `harness.macros.cli` |
+| `combiner/` | read-only attached-function inspection; ranked consolidation/transactions are queued | `sh bin/combiner` → `harness.combiner.cli`; [rollout contract](combiner.md) |
 | `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/naming-audit` → `harness.naming.cli`; `bin/naming-evidence-run` → `harness.naming.runner` |
 | `types/` | C declarations, representation inference, type-use/candidate indexing, reviewed type transactions | `bin/type-audit` → `harness.types.cli` |
 | `docs/` | scoped Markdown references, snapshots, search, context, aggregation and edit/repair/compaction preparation | `bin/docs` → `harness.docs.cli` |
@@ -34,6 +35,11 @@ transport records remain historical; their writer/reviewer slots cannot be reuse
 as skill missions. Local process supervision remains for deterministic native tools.
 The cross-domain index remains one derived database; package separation does not
 create independent databases or relax freshness checks.
+
+`domain.functions` owns attached per-function metadata and lexical implementation
+ranges, including template invocations. Its new inspection API does not yet replace
+legacy file-level resolution; [combiner rollout](combiner.md) must migrate every
+consumer before production multi-function claims or transactions are enabled.
 
 `domain/cache.py` owns process-local manifest reuse. Every lookup hashes current
 manifest and claim contents and checks canonical paths before reusing parsed data.

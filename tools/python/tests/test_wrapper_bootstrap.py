@@ -25,6 +25,7 @@ BIN_DISPOSITIONS = {
     "build": "executable",
     "byte-match": "executable",
     "cc": "executable",
+    "combiner": "executable",
     "companion-check": "executable",
     "compiler-variants": "executable",
     "data-scan": "executable",
@@ -74,6 +75,7 @@ WRAPPER_MATRIX = {
     "build": ("python-env", "harness.commands.build"),
     "byte-match": ("python-env", "harness.commands.lift"),
     "cc": ("flat", "GCC -> maspsx -> PSX_AS"),
+    "combiner": ("python-env", "harness.combiner.cli"),
     "companion-check": ("python-env", "harness.commands.companion_check"),
     "compiler-variants": ("python-env-fixed", "harness.commands.compiler_variants"),
     "data-scan": ("python-env", "harness.commands.data_scan"),
@@ -341,7 +343,7 @@ def test_bin_inventory_matches_disposition_table() -> None:
     expected = sorted(f"bin/{name}" for name in BIN_DISPOSITIONS)
     assert tracked == expected
     assert set(WRAPPER_MATRIX) == set(BIN_DISPOSITIONS)
-    assert len(WRAPPER_MATRIX) == 47
+    assert len(WRAPPER_MATRIX) == 48
 
 
 def test_all_shell_wrappers_parse_and_use_the_characterized_bootstrap() -> None:

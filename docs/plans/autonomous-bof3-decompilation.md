@@ -275,8 +275,40 @@ are warmed before freezing. Stage inputs and prior working index are retained in
 `out/reviews/panel-existing-du5098he/`; the original audit cutoff is
 `1222016.415020909`, one preparation and one native inspection, with two reviews
 total. The metadata dependency has its own consumed one-pass/one-review bound.
-Read current disposition evidence, when produced, through the macro owner; do not
-infer acceptance from this checkpoint or rewrite the original frozen-five pins.
+The native inspection subsequently completed with tool session 13686 exit zero,
+34 passing gates, `checked:true`, `accepted:false` and zero safe applications.
+Inspection pin: `v1:0db6cf6cc3f8fe384554f1d6f9c1861c577391b92021d491c988c9d24b60d607`.
+Final reviewer `01a089c9-c554-7f23-9a28-d9af66332163` reported PENDING: parent external
+pin confirmation did not arrive within its original 220-second bound. That actual
+handle is closed; both reviews and the single preparation/inspection are consumed.
+No acceptance envelope or final owner acceptance exists. Preserve `terminal.md`
+in the mission folder; subsequent tooling/plan edits make this historical evidence,
+not fresh closure. Do not extend this mission or rewrite original frozen-five pins.
+
+### Multi-function consolidation
+
+The user's new scope adds cohesive multi-function C files, with leading metadata
+for every implementation, and a ranked **combiner** cleanup node. The canonical
+[combiner contract](../agents/combiner.md) owns methods, human-value filtering and
+safety. This does not add entries to or replace the frozen five, restart their
+budgets, close existing macro acceptance, or require a manufactured extraction.
+Queue C1 alongside unfinished S3.2; production consolidation waits for C1's owner,
+native and transaction gates. S4.1 only invokes combiner where applicable; S4.2
+must include its reviewed result or explicit blocked/deferred/no-op accounting.
+
+Current inspection finds one-address source scans, source-keyed status caching,
+whole-file progress parsing, unique-source macro association, a Splat bijection,
+and native `.text` prefix comparison. Compiler overrides are currently source/object
+keyed in `config/compiler/object-flags.cmake`; do not invent supported comment flags.
+These are migration seams, not license to relax validation. The panel example is
+14 wrappers across battle15/game00/shop00 with repeated compiled symbols: first
+evaluate target-local groups, never concatenate all 14 into one linked object.
+No source consolidation or map/layout/compiler migration has occurred yet.
+Read-only scout `01a089ce-f27b-7612-8b68-475ebbb785f7` completed and closed within
+its original 240-second bound. It recommends evaluating per-function generated
+compilation units rather than whole-object relinking for noncontiguous panel ranges.
+That is an architecture lead, not validated code; C1.3 must choose and prove the
+approach, including shared state/linkage, compiler settings and execution closure.
 
 Retained history follows. The skill-only correction above governs current execution;
 old transport commands, permissions and NOT RUN/readiness claims are historical.
@@ -1449,7 +1481,7 @@ must satisfy them before the corresponding phase is marked done.
 
 2. [S4.2] (open) Run a small approved queue and measure intervention cost.
 - Owner: parent
-- Depends: S4.1, S4.3, S4.4
+- Depends: S4.1, S4.3, S4.4, C1.5
 - Blocker: none
 - Evidence: finite pilot and closure matrix below; no queue execution accepted yet
 - Acceptance: finite queue/budget, native stop/resume without duplicate writes, honest completed/blocked/deferred outcomes; assess elapsed effort and parent interventions before scaling.
@@ -1467,6 +1499,48 @@ must satisfy them before the corresponding phase is marked done.
 - Blocker: unfiltered report rejects func_800A3638 binding_locations: missing=[] invented=['config/targets/emi/battle/battle/15/symbols.txt']; full-target complete:true is absent.
 - Evidence: efb1b118 actual unfiltered verifier failure; selected FUNCTION history and frozen accounting do not override it.
 - Acceptance: separately authorize evidence-preserving report/provenance recovery if needed; obtain successful unfiltered full-target complete:true and separate identity approval before production advancement. Never narrow the report gate, rewrite historical receipts or treat selected acceptance as target completion.
+
+## 5. [C1] (in-progress) Support per-function metadata and reviewed source consolidation
+- Owner: parent with domain/build/cleanup owners and independent reviewer
+- Depends: S3.6
+- Blocker: none
+- Evidence: latest user request; panel audit exposes 14 coherent template uses across three independently loaded targets; migration seams recorded above.
+- Acceptance: complete per-function identity/native/consumer support, reviewed bounded combiner methods and human-value decisions, recoverable transactions and independently verified target-local pilot; no pipeline or source acceptance inferred from inspection.
+
+1. [C1.1] (done) Establish attached metadata records and read-only inspection.
+- Owner: domain and combiner owners
+- Depends: none
+- Blocker: none
+- Evidence: domain/functions.py and combiner/inspection.py expose address-selected records and lexical ranges; bounded independent release review 01a089de-ca01-7261-9efd-7a82f332d533 accepts this slice only, retained at out/reviews/combiner-foundation-c1-20260910/review.md. All 147 relevant checks pass (one known Git-writing mode check deselected); wrapper checks 48 pass with pre-existing HEAD inventory omission bin/agent-run left reported. Thirty disposable negative cases, mixed records and all 14 panel records pass; Ruff and 119 documentation references pass. Earlier reviewer findings fixed; actual handles closed, no native or source acceptance claimed.
+- Acceptance: ordinary C89 bodies and body-emitting invocation records isolate metadata/progress; ambiguous, duplicate, nested or unsupported inputs reject; existing checks, disposable characterizations and independent review. Inspection never proves macro expansion or enables production combination.
+
+2. [C1.2] (open) Migrate source claims, layout, index and all metadata consumers.
+- Owner: domain, analysis, decomp, naming, types and macros owners
+- Depends: C1.1
+- Blocker: none
+- Evidence: domain/sources.py and claims.py scan one address; identity.py rejects many boundaries per file; index_build.py, macros/index.py, decomp/preflight.py and naming consumers assume file-level metadata.
+- Acceptance: exact target/address-to-record relation, many boundaries per source with complete coverage and duplicate rejection; metadata edits touch only selected records; status cache keys and lexical use links remain function-qualified, include-level consumers remain conservative; no first-record fallback or unrelated lifecycle overwrite.
+
+3. [C1.3] (open) Prove multi-function compiler, build and native comparison correctness.
+- Owner: build, toolchain and matching owners
+- Depends: C1.2
+- Blocker: none
+- Evidence: build/compiler.py overrides and native match/_asm_link.py text-prefix extraction need migration; catalog/default GCC selection must remain authoritative.
+- Acceptance: independently select whole-object placement or deterministic per-function compilation projections; preserve every effective compiler/flag profile or reject, no duplicated shared state or unbound generated inputs. Prove per-symbol original placement/relocation/size/instruction/byte checks including noncontiguous functions, calls and data sections; all-member native positive and negative probes. Scoped reviewed execution only; no sandbox changes or installs.
+
+4. [C1.4] (open) Add combiner discovery, ranked assessment and reviewed transactions.
+- Owner: combiner owner with independent human-value reviewer
+- Depends: C1.3
+- Blocker: none
+- Evidence: planned macro-family, functional-subcategory, shared-state/type and helper/call-cluster methods in combiner guide; no ranker or mutation CLI implemented yet.
+- Acceptance: one noun-module owner and concern skill for opportunities/ranking/audit/transactions/editing/CLI; explicit cleanup combiner node and thin invocation script; finite pinned membership/method/limits, overlap handling and configurable top N; would-a-human-do-this decisions before mutation. PRE/POST claims/maps/compiler/consumer closure, all-member gates, distinct final acceptance and owned deletion/move cancellation rollback preserve unrelated work and original budgets.
+
+5. [C1.5] (open) Integrate a bounded panel consolidation pilot and update source contracts.
+- Owner: parent with bof3-re and combiner reviewers
+- Depends: C1.4
+- Blocker: none
+- Evidence: existing panel wrappers are leads, not accepted consolidation or an expanded frozen macro queue.
+- Acceptance: independently justify target-local advance-panel files or retain explicit rejection/defer; prove every original function unchanged before/after, safe rollback and no duplicate application; refresh safe-checkpoint index/status, docs/skills/source references and both indexes. Replace temporary single-function restrictions only after supporting owners pass; integrate result accounting into S3.2/S4 without marking whole-game completion.
 
 ## Milestone separation and superseding obligation map
 

@@ -27,7 +27,8 @@ Ownership is explicit: lifts, bindings, headers, and PsyQ source are claimed
 in `config/targets/<target>/target.toml`
 (`sources`/`support_sources`/`headers`/`psyq_source`) with `@source`/
 `@behavior`; identity (binary, layout, symbols) stays centralized; `source_dir`
-is only the historical Splat root. Each lift is one C source plus its claimed
+is only the historical Splat root. Until the [combiner rollout](combiner.md) clears
+its supporting gates, each production lift is one C source plus its claimed
 target-private header (`include/bof3/<subsystem>/`); filenames never supply
 address fallback. Function C, local headers, maps, and Splat layouts are
 hand-edited as evidence improves. Shared declarations belong in
