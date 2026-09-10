@@ -21,6 +21,7 @@ from harness.macros.accounting import candidate_account, validate_account
 from harness.macros.application import review_application, verify_reviewed_application
 from harness.macros.blocks import block_report, validate_minimum
 from harness.macros.impact import describe_definition_impact
+from harness.macros.inspection import add_inspection_commands
 from harness.macros.opportunities import macro_opportunities_payload
 from harness.macros.queries import macro_uses_payload, macros_payload
 from harness.macros.resolution import describe_candidate
@@ -253,6 +254,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_root_argument(parser)
     sub = parser.add_subparsers(dest="command", required=True)
     add_ranking_commands(sub, _read)
+    add_inspection_commands(sub, _read)
     blocks = sub.add_parser(
         "blocks", help="rank four-use assembly blocks, largest first"
     )

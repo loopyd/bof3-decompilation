@@ -1,4 +1,4 @@
-"""Reject macro transactions that omit known consumers of writable owners."""
+"""Reject macro checks that omit known consumers of scoped definitions."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from harness.domain.claims import manifest_source_paths
+from harness.domain.ids import parse_function_id
 from harness.macros.impact import definition_impact_payload
 from harness.macros.review import _wrapper_dependencies
 
@@ -16,6 +17,9 @@ def validate_consumer_coverage(
     owners: list[str],
     functions: list[dict[str, str]],
     manifests: dict[str, Any],
+    *,
+    definition_ids: set[str] | None = None,
+    require_function_identity: bool = False,
 ) -> None:
     """Require gates for known lexical consumers, not proof of complete coverage."""
     owner_paths = set(owners) | {row["source"] for row in functions}
@@ -26,18 +30,39 @@ def validate_consumer_coverage(
         )
         if source in owner_paths
     }
+    if definition_ids is not None:
+        if not definition_ids <= definitions:
+            raise ValueError(
+                "macro coverage definitions are outside the reviewed owners"
+            )
+        definitions = definition_ids
     if not definitions:
         return
     impact = definition_impact_payload(connection, definitions)
     if impact["unresolved_definition_uses"]:
         raise ValueError("macro consumer definition-body ownership is unresolved")
     required: set[tuple[str, str]] = set()
+    covered_identities = (
+        {parse_function_id(row["selector"]).value for row in functions}
+        if require_function_identity
+        else set()
+    )
     dependencies: dict[tuple[str, str], set[str]] = {}
     claims: dict[str, set[str]] = {}
     for use in impact["uses"]:
         if use["use_context"] == "definition_body":
             continue
         target = use["target_id"]
+        if require_function_identity:
+            identity = use["function_id"]
+            if (
+                not isinstance(identity, str)
+                or identity.rsplit("@", 1)[0] != target
+                or parse_function_id(identity).value not in covered_identities
+            ):
+                raise ValueError(
+                    "macro consumer function identity is unresolved or uncovered"
+                )
         if target not in manifests:
             raise ValueError(f"macro consumer target is unknown: {target}")
         if target not in claims:

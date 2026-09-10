@@ -31,3 +31,14 @@ def write_evidence_output(root: Path, name: str, value: Any) -> None:
         (json.dumps(value, indent=2, sort_keys=True) + "\n").encode(),
         expected=current,
     )
+
+
+def write_new_evidence_output(root: Path, name: str, value: Any) -> None:
+    safe = evidence_output_path(root, name)
+    atomic_write(
+        root,
+        safe,
+        (json.dumps(value, indent=2, sort_keys=True) + "\n").encode(),
+        expected=None,
+        exclusive=True,
+    )

@@ -231,6 +231,35 @@ Current empty/identical edits reject, revalidation needs a prior reviewed envelo
 and accounting has no existing-work disposition. Thus the frozen macro remains
 blocked, not accepted no-op; three-target capability alone does not close it.
 
+The existing-abstraction tooling gap now has a separate prepare/check/review/verify
+lifecycle and explicit accounting; see the [macro guide](../agents/macros.md#existing-abstractions).
+Unchanged audits freeze all candidate members, selected definitions and every
+direct/transitive consumer function. Exact native evidence, unchanged captured
+build/source/index/tooling/workspace, externally pinned proofs and independent
+review remain required. Existing dispositions count separately from applications
+and cannot enter legacy private/shared promotion or revalidation. The frozen
+adapter accepts a distinct macro-only `existing` route without changing original
+pilot/freshness pins; this is not live closure or permission to rewrite history.
+
+Current-code parent validation exercised four candidate members across four targets
+plus a fifth-target consumer, 20 owner-derived gates and 42 expected adversarial
+rejections. The real preparation/CLI/context/receipt/review/accounting code and
+CMake/Ninja ran; BOF3 byte claims and reviewer identities were synthetic. Evidence:
+`/tmp/bof3-existing-probe-20260910/parent-final.log`. The parent `timeout 180s` check
+finished with exit zero. The preceding delegated replay exceeded its original
+420-second bound; that worker was closed and its late result was not accepted as
+a bounded mission. It was not resumed or given replacement budget.
+Independent code reviews identified and resolved unchecked ranking inputs,
+per-gate opportunity proof capture, occupied output preflight, function-level
+consumer coverage and adopted-entry metadata preservation. Final reviewer
+`01a089b8-a6dc-7380-8ec3-599a016d663a` found no remaining critical issue in the
+last two fixes; all review handles are closed. Existing checks pass (134 combined,
+74 final accounting/structure, 70 macro/structure and 46 plans; one known fixed-mode
+check deselected where applicable), as do Ruff and documentation references.
+No production macro disposition exists yet. Next: prepare the selected targets'
+native build before freezing fresh audit inputs, prove every actual consumer,
+obtain independent live semantic review, then verify the separate disposition.
+
 Retained history follows. The skill-only correction above governs current execution;
 old transport commands, permissions and NOT RUN/readiness claims are historical.
 

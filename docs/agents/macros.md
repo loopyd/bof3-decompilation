@@ -23,6 +23,7 @@ user permission request. Preserve pinned transactions and frozen proofs.
 - [Reviewed application](#reviewed-application)
 - [Parent acceptance and replay](#parent-acceptance-and-replay)
 - [Private revalidation and shared promotion](#private-revalidation-and-shared-promotion)
+- [Existing abstractions](#existing-abstractions)
 - [Implementation owners and checks](#implementation-owners-and-checks)
 
 ## Purpose
@@ -581,6 +582,81 @@ Outputs for fresh checks/reviews must be new canonical repo-relative paths under
 `out/reviews/evidence`. Commands transport the workflow; they do not schedule it,
 infer approval, recover the index, or schedule a bounded attempt campaign.
 
+## Existing abstractions
+
+Do not unshare and re-extract useful existing macros to manufacture application
+receipts. The separate unchanged-assessment lifecycle can establish that a frozen
+opportunity already has a suitable abstraction. It never reconstructs missing
+private applications or authorizes shared promotion.
+
+```sh
+bin/macro-audit prepare-existing REQUEST > MANIFEST
+bin/macro-audit check-existing MANIFEST --expected-manifest-digest DIGEST \
+  --implementation-run-id RUN --deadline CUTOFF --output out/reviews/evidence/CHECK.json
+bin/macro-audit review-existing CHECK PARENT_REVIEW --expected-inspection-digest DIGEST \
+  --output out/reviews/evidence/DISPOSITION.json
+bin/macro-audit verify-existing DISPOSITION --expected-envelope-digest DIGEST
+bin/macro-audit account-existing REFERENCES
+```
+
+`bof3.macro-existing-request/v1` requires exactly `schema`, `target`, sorted distinct
+`targets`, `candidate_artifact`, `candidate_id`, `candidate_fingerprint`, sorted
+distinct `definition_ids` and `affected_functions`, `adopted_baseline`, and a nonempty
+`rationale` explaining why the existing abstraction is worthwhile and no edit is
+needed. Optional `block_min_instructions` and `ranking` retain the assembly-block
+floor and pinned top-N gate. Templates require at least four candidate uses;
+constant/expression-only leads remain outside this route.
+Non-block candidates reject supplied block-floor/ranking fields rather than retaining
+unchecked pins.
+
+Use the existing reviewed-opportunity schema, with `shared_template` for multiple
+targets or `local_template` for one. All eight semantic guards, parameter mapping
+and all-use-site observations remain required. The audit freezes every candidate
+member separately from the larger consumer/check scope. Every covered function
+must already be exact, and each declared target receives target gates. Known
+direct and transitive consumers of every selected definition must be covered,
+including consumers outside the candidate and different parameter values. This
+unchanged audit freezes whole owner files but does not edit their other macros;
+mutation transactions still require whole writable-file consumer coverage.
+Every consuming function identity must be covered; ambiguous/unresolved mappings
+reject even when another function in the same source is covered.
+
+Literal include paths and lexical use matches provide binding leads, not expansion
+proof. Independent review must establish actual definition selection, evaluation
+counts, side effects, conversions and all use-site behavior; inspecting an unrelated
+macro in the same source file is not evidence that the candidate is already solved.
+
+Warm the required native build before freezing. Checking accepts no source changes
+and runs owner-derived native gates under writer exclusion. PRE/POST source, index,
+tooling, environment, full adopted workspace and captured build closure must remain
+unchanged, including across every gate and publication. Outputs are exclusive new
+files under `out/reviews/evidence`; evidence-path reuse rejects before native work.
+Adopted entries also retain observed file modes/types; this does not require
+restrictive permission bits or authorize changing permissions. `--deadline` is the
+original absolute monotonic cutoff, not a fresh duration. Failed gates, unexpected
+writes or cleanup uncertainty grant no source rollback authority: preserve state
+for separately scoped recovery.
+
+Checking returns `checked:true`, not acceptance. Parent review uses
+`bof3.macro-existing-parent-review/v1`, the existing complete application-style
+binding and preservation fields, three distinct actual run identities and a retained
+nonempty absolute reviewer artifact. The opportunity reviewer must be independent
+of the execution and parent. Externally retain manifest, inspection and disposition
+pins at each handoff. Final verification rederives scope/checks and validates current
+closure and receipts without running native commands or rewriting evidence.
+
+Only final verification returns `accepted:true`, `existing_abstraction_count:1`
+and `safe_application_count:0`. `account-existing` consumes an explicit list of
+`{path, expected_envelope_digest}` references, rejects duplicate candidate IDs and
+counts existing work separately. It does not change generated candidate inventory.
+The frozen-five adapter has an explicit macro-only `existing` claim with a
+`{disposition: Path, expected_envelope_digest}` proof. Its original baseline/pilot
+freshness gates still apply; this route cannot re-pin stale frozen inputs.
+
+These schemas reject at mutation application, revalidation, private exact-proof,
+promotion and resume entry points. A current unchanged audit cannot supply the
+historical private/shared transaction chain required for future edits.
+
 ## Implementation owners and checks
 
 All paths below are under `tools/python/harness/`:
@@ -596,6 +672,7 @@ All paths below are under `tools/python/harness/`:
 | Human-value selection | `macros/ranking.py`; CLI wiring in `macros/selection.py` |
 | Reviewed artifact, known-consumer check, transaction | `macros/review.py`, `macros/coverage.py`, `macros/transactions.py` |
 | Parent acceptance | `macros/application.py`; shared review/revalidation in `common/` |
+| Existing-abstraction assessment and disposition | `macros/assessment.py`, `macros/disposition.py`; CLI in `macros/inspection.py` |
 | CLI | `macros/cli.py` owns `bin/macro-audit` and macro `rev-query` parsing/adapters; `commands/rev_query.py` composes domain registrations |
 
 The [harness layout](harness.md) and [Python standards](coding-standards.md)

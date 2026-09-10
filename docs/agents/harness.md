@@ -9,7 +9,7 @@ All paths are below `tools/python/harness/`.
 
 | Package | Owns | Entry points |
 | --- | --- | --- |
-| `macros/` | lexical macro facts, assembly/C opportunities, ranking, consumer scope, reviewed macro transactions | `bin/macro-audit` → `harness.macros.cli` |
+| `macros/` | lexical facts, assembly/C opportunities, ranking, consumers, reviewed transactions and unchanged existing-abstraction dispositions | `bin/macro-audit` → `harness.macros.cli` |
 | `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/naming-audit` → `harness.naming.cli`; `bin/naming-evidence-run` → `harness.naming.runner` |
 | `types/` | C declarations, representation inference, type-use/candidate indexing, reviewed type transactions | `bin/type-audit` → `harness.types.cli` |
 | `docs/` | scoped Markdown references, snapshots, search, context, aggregation and edit/repair/compaction preparation | `bin/docs` → `harness.docs.cli` |
@@ -102,6 +102,11 @@ Macro extraction policy belongs in [macros.md](macros.md). Naming evidence and
 identity-application contracts are linked from the documentation index. Type
 candidate/application schemas remain in
 [tool usage](tool-usage.md#type-parent-review-and-final-verification).
+
+Macro `assessment`, `disposition` and `inspection` own the separate unchanged
+audit lifecycle. It reuses native receipts and execution capture but cannot supply
+mutation/revalidation/private-promotion proofs. Existing dispositions count apart
+from applications; `common.evidence.write_new_evidence_output` publishes exclusively.
 
 Common mechanisms preserve existing wire schemas and trust boundaries, including
 historical `bof3.type-*` defaults where callers already depend on them. They do not

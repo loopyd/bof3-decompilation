@@ -7,11 +7,12 @@ import hashlib
 import re
 from contextlib import closing
 from pathlib import Path
-from typing import Literal, TypedDict
+from typing import Literal, NotRequired, TypedDict
 
 from harness.analysis import index
 from harness.common.digests import digest
 from harness.macros import application as macro_application_review
+from harness.macros.disposition import verify_existing
 from harness.macros.opportunities import macro_opportunities_payload
 from harness.naming import audit
 from harness.naming import terminal as terminal_review
@@ -41,7 +42,7 @@ IDS = (
     "exact_group:8e1ad03b4ba92303",
 )
 REPORT = "out/reviews/plan-audit-naming/emi__battle__battle__15.json"
-Outcome = Literal["accepted", "noop", "blocked"]
+Outcome = Literal["accepted", "noop", "existing", "blocked"]
 
 
 class Blocker(TypedDict):
@@ -65,7 +66,12 @@ class ApplicationProof(TypedDict):
     expected_envelope_digest: str
 
 
-Proof = FunctionProof | TerminalProof | ApplicationProof
+class ExistingProof(TypedDict):
+    disposition: Path
+    expected_envelope_digest: str
+
+
+Proof = FunctionProof | TerminalProof | ApplicationProof | ExistingProof
 
 
 class FrozenEntryRecord(TypedDict):
@@ -89,6 +95,7 @@ class Counts(TypedDict):
     noop: int
     blocked: int
     historical_skip: int
+    existing: NotRequired[int]
 
 
 class OverlapGroup(TypedDict):
@@ -250,6 +257,8 @@ def _positive(root: Path, entry: dict, record: FrozenEntryRecord, report: Path) 
         reference, pin, versioned = "parent", "expected_parent_digest", False
     elif identity in IDS[2:] and claim == "accepted":
         reference, pin, versioned = "envelope", "expected_envelope_digest", True
+    elif identity == IDS[4] and claim == "existing":
+        reference, pin, versioned = "disposition", "expected_envelope_digest", True
     else:
         raise ValueError("unsupported frozen claim/owner route")
     keys(proof, f"{reference} {pin}")
@@ -286,6 +295,17 @@ def _positive(root: Path, entry: dict, record: FrozenEntryRecord, report: Path) 
             or result.get("parent_digest") != proof[pin]
         ):
             raise ValueError("terminal owner returned mismatched acceptance")
+    elif reference == "disposition":
+        result = verify_existing(root, load(path), proof[pin])
+        if (
+            result["candidate_id"] != entry["id"]
+            or result["candidate_fingerprint"]
+            != digest(entry["cross_target_report_only"])
+            or TARGET not in result["targets"]
+            or result["existing_abstraction_count"] != 1
+            or result["safe_application_count"] != 0
+        ):
+            raise ValueError("existing disposition does not bind frozen candidate")
     else:
         _application(root, entry, proof)
     if _sha(_path(path)) != before:
@@ -320,6 +340,7 @@ def account_frozen_queue(
         if not isinstance(record["id"], str) or record["claim"] not in (
             "accepted",
             "noop",
+            "existing",
             "blocked",
         ):
             raise ValueError("invalid frozen ID or claim")
@@ -389,7 +410,7 @@ def account_frozen_queue(
     ]
     counts = Counts(accepted=0, noop=0, blocked=0, historical_skip=1)
     for entry in entries:
-        counts[entry["outcome"]] += 1
+        counts[entry["outcome"]] = counts.get(entry["outcome"], 0) + 1
     return FrozenQueueAccounting(
         pilot_sha256=expected_pilot_sha256,
         accounted=True,

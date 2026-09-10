@@ -120,6 +120,7 @@ def describe_candidate(
                 "Inspect member source and original bytes; establish useful equivalent C shape.",
                 "Resolve all semantic guards and parameter mapping; inspect all affected use sites.",
                 "Review global definition impact, including other candidates and parameter values; target focus is not write authority.",
+                "If the abstraction already exists, use prepare-existing/check-existing/review-existing/verify-existing; never manufacture edits or count existing work as an application.",
                 "Obtain independent review of explicit owners and their current fingerprints.",
                 *(
                     [
