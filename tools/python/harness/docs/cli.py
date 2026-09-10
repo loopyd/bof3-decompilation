@@ -17,6 +17,7 @@ from harness.docs.documents import (
     read_documents,
     search_documents,
 )
+from harness.docs.references import inspect_references
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -25,6 +26,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_example_argument(parser, "bin/docs compact docs/agents/documentation.md")
     commands = parser.add_subparsers(dest="command", required=True)
     for name, help_text in (
+        ("refs", "resolve links in explicit Markdown files or directories"),
         ("context", "read numbered excerpts from explicit Markdown paths"),
         ("search", "search a literal in explicit Markdown paths"),
         ("aggregate", "collect complete documents without merging or writing them"),
@@ -33,6 +35,8 @@ def build_parser() -> argparse.ArgumentParser:
         ("compact", "prepare one complete document for reviewed AI compaction"),
     ):
         command = commands.add_parser(name, help=help_text)
+        if name == "refs":
+            command.add_argument("--broken-only", action="store_true")
         if name == "search":
             command.add_argument("pattern")
             command.add_argument("--ignore-case", action="store_true")
@@ -52,8 +56,10 @@ def run_documents(args: argparse.Namespace) -> int:
     if not 512 <= args.max_bytes <= 1_048_576:
         raise ValueError("docs max-bytes must be between 512 and 1048576")
     root = resolved_root(args)
-    documents = read_documents(root, args.paths)
-    if args.command == "search":
+    documents = [] if args.command == "refs" else read_documents(root, args.paths)
+    if args.command == "refs":
+        facts = inspect_references(root, args.paths, broken_only=args.broken_only)
+    elif args.command == "search":
         facts = search_documents(
             documents, args.pattern, ignore_case=args.ignore_case, limit=args.limit
         )
@@ -80,7 +86,7 @@ def run_documents(args: argparse.Namespace) -> int:
             "docs output exceeds max-bytes; narrow scope or explicitly increase the bound"
         )
     print(rendered, end="")
-    return 0
+    return 1 if facts.get("broken_count", 0) else 0
 
 
 def main(argv: list[str] | None = None) -> int:

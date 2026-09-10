@@ -1,6 +1,6 @@
 ---
 name: bof3-docs
-description: Search, assemble context, aggregate, edit, repair or compact explicitly scoped BOF3 Markdown. Own documentation operations without granting source edits, policy invention, plan execution or semantic acceptance.
+description: Inspect references, search, assemble context, aggregate, edit, repair or compact explicitly scoped BOF3 Markdown. No source-edit, policy, plan-execution or semantic-acceptance authority.
 ---
 
 # BOF3 documentation
@@ -11,6 +11,7 @@ and caller-named paths; no whole-repository scan or edit by default.
 
 | Mode | Action |
 |---|---|
+| `refs` | List links in named files/directories, resolve from each containing document and inspect broken/unchecked targets; `--broken-only` narrows repair leads |
 | `context` | Read numbered excerpts with full-file hashes; partial excerpts are not complete authority |
 | `search` | Find literal claims and links within the named Markdown scope |
 | `aggregate` | Collect complete documents with provenance; merging or deleting originals needs separate explicit scope |

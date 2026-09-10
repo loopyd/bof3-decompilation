@@ -1,13 +1,15 @@
 # Documentation operations
 
-`bof3-docs` owns explicitly scoped Markdown search, context, aggregation, editing,
-repair and compaction. It replaces the documentation-repair skill; context is a
+`bof3-docs` owns explicitly scoped Markdown references, search, context, aggregation,
+editing, repair and compaction. It replaces the documentation-repair skill; context is a
 subcommand, not a separate context-builder role. Read [docs/INDEX.md](../INDEX.md)
 first. Domain facts, plan authority and source acceptance remain with their owners.
 
 ## Commands
 
 ```sh
+bin/docs refs docs/agents/macros.md
+bin/docs refs docs .codex/skills --broken-only --max-bytes 262144
 bin/docs context docs/agents/macros.md --start-line 1 --lines 60
 bin/docs search --ignore-case --limit 20 'transaction' docs/agents/harness.md
 bin/docs aggregate docs/agents/harness.md docs/agents/coding-standards.md --max-bytes 65536
@@ -30,8 +32,8 @@ subcommand. The CLI never chooses a larger scope or writes an output file itself
 
 ## Scope and output
 
-Supply existing canonical repository-relative `.md` files, not directories,
-globs, symlinks or duplicate paths. Caller order is retained. The CLI excludes
+Supply existing canonical repository-relative `.md` files, not globs, symlinks
+or duplicate paths. Only `refs` also accepts directories. Caller order is retained. The CLI excludes
 `out/`, `build/`, `toolchains/`, `inputs/`, `tmp/`, `.git/`, `.venv/`, `.agents/`,
 `sessions/`, `ledger/`, `.pi-subagents/`, `.cache/`, `.uv-cache/`, `dist/`, `assets/`
 and root `session-*.md` artifacts. Within `.pi/`, only authored `.pi/agents/`
@@ -45,7 +47,7 @@ JSON uses `bof3.docs/v1`, names its `operation` and canonical absolute `root`, a
 `write_authorized:false`. Each document has its path, SHA-256 of original bytes,
 original byte count and total line count. Context includes one-based start/end
 lines, excerpt text and `partial`; an empty document has range 1–0. Other document
-modes include full text. Snapshots are independent non-atomic observations, not
+modes except search/refs include full text. Snapshots are independent non-atomic observations, not
 authenticated scope, semantic authority or an atomic multi-file transaction.
 
 Context defaults to the first 80 lines per file; positive `--start-line` and
@@ -69,12 +71,56 @@ result is current scouting/preparation only. Before editing, independently check
 the full current document against the retained hash and stop on drift; the CLI
 does not lock files or make subsequent edits atomic. Preserve unrelated dirty work.
 
+## Reference inspection
+
+`refs FILE_OR_DIRECTORY...` recursively inventories Markdown in each named directory,
+sorting children and deduplicating overlapping scopes. There is no implicit root
+scan. Excluded paths and discovered symlinks/special files are listed in `skipped`,
+never followed; explicitly naming them rejects. Empty directories return an empty
+inventory. Other commands retain file-only scope.
+
+Each `references` row reports its containing `path`, one-based `line`/`column`,
+`kind`, raw `destination`, and `status`. Local rows include `resolved_path`, decoded
+`fragment` and `query`; reference-style links also name their label and definition
+line. Relative destinations resolve from the **containing Markdown directory**,
+not the shell directory; `/PATH` means repository-root-relative. Parent traversal
+may stay within the repository, never escape it. URL escaping and entities are
+decoded; queries do not change filesystem lookup. Directories are valid targets.
+
+The scanner handles inline links/images (including linked images, balanced
+parentheses, angle destinations and optional titles), reference definitions and
+full/collapsed/defined-shortcut references, angle autolinks, and HTML `href`/`src`.
+Fenced/indented code, code spans and HTML comments are excluded. Undefined explicit
+reference pairs are reported as `undefined-reference` candidates: bracketed byte
+notation can be literal prose, so inspect it before proposing a repair. Bare paths,
+code-path mentions, bare URLs, wiki links, footnotes and renderer extensions are not inferred;
+this is a source scanner, not a complete Markdown renderer.
+
+Local existence and authored Markdown fragments are checked. ATX/setext headings
+use lowercase, punctuation-stripped, space-to-hyphen slugs with duplicate suffixes;
+explicit HTML IDs and anchor names are also accepted. Renderer-specific anchors
+require manual confirmation. Linked authored Markdown may be read solely for its
+anchors, with an invocation-local cache; its outbound links are not added to scope.
+Other fragments, unreadable targets and symlinks remain explicitly unchecked.
+External URLs are displayed as `external`, never fetched or declared healthy.
+
+`reference_count`, `status_counts`, `broken_count` and `unchecked_count` cover the
+whole inventory. `--broken-only` filters rows, not counts or document hashes; use
+the unfiltered view to inspect unchecked targets. Exit **1** means broken references
+or undefined-reference candidates, **2** means scope/output/argument failure, and
+**0** means no detected breakage—not verification of external or unchecked targets.
+Output retains the shared byte cap and fails before printing rather than silently
+omitting references. Narrow the directory or raise the cap explicitly.
+
+Use row locations to prepare an authorized `apply_patch` repair, then rerun the same
+scope and check affected indexes. `refs` never rewrites links or grants edit authority.
+
 ## Editing and compaction
 
 Find each disputed fact's implementation, configuration, specification or policy
 owner before changing it. Preserve historical context; analyzer prose and
-disposable outputs are not reviewed truth. Place game facts under `docs/specs/`, agent/tooling contracts under `docs/agents/`,
-and scoped work under `docs/plans/`; follow [placement and naming](../INDEX.md#documentation-placement-and-names).
+disposable outputs are not reviewed truth. Follow [placement and naming](../INDEX.md#documentation-placement-and-names):
+game facts in `docs/specs/`, agent/tooling contracts in `docs/agents/`, scoped work in `docs/plans/`.
 
 Compact by removing redundant wording and linking to a single authority, not by
 deleting requirements, evidence gates, exceptions, dependencies, owners, stable
@@ -99,8 +145,10 @@ Frozen selections of the retired skill reject, rather than silently rebind.
 Other role and target-qualified context profiles remain in `harness.context`.
 
 `harness.docs.cli` owns command parsing; `docs.documents` owns snapshots, context,
-literal search and edit preparation; `docs.paths` owns document scope and the
-legacy cleanup path contract. Shared confined reads stay in `harness.common`.
+literal search and edit preparation; `docs.paths` owns file/directory scope and the
+legacy cleanup contract. `docs.references` owns resolution and reporting,
+`docs.markdown` link extraction and `docs.anchors` fragment inventory.
+Shared confined reads stay in `harness.common`.
 No compatibility skill, copied body, generic scheduler or document database is
 introduced. Markdown navigation indexes remain the reading maps; installed Pi
 extensions and historical logs are not modified.

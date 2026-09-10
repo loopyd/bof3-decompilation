@@ -3,10 +3,42 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+import os
 from pathlib import Path, PurePosixPath
+import stat
 
-from harness.common.directory import validate_repo_path
+from harness.common.directory import open_parent_fd, validate_repo_path
 from harness.common.paths import leaf_stat
+
+
+EXCLUDED_ROOTS = {
+    "out",
+    "build",
+    "toolchains",
+    "inputs",
+    "tmp",
+    ".git",
+    ".venv",
+    ".agents",
+    "sessions",
+    "ledger",
+    ".pi-subagents",
+    ".cache",
+    ".uv-cache",
+    "dist",
+    "assets",
+}
+
+
+def is_authored_path(name: str) -> bool:
+    path = PurePosixPath(name)
+    return (
+        bool(path.parts)
+        and path.parts[0] not in EXCLUDED_ROOTS
+        and (path.parts[0] != ".pi" or name.startswith(".pi/agents/"))
+        and (path.parts[0] != ".codex" or name.startswith(".codex/skills/"))
+        and not (len(path.parts) == 1 and name.startswith("session-"))
+    )
 
 
 def validate_document_paths(root: Path, values: Sequence[str]) -> tuple[str, ...]:
@@ -17,31 +49,63 @@ def validate_document_paths(root: Path, values: Sequence[str]) -> tuple[str, ...
         path = PurePosixPath(name)
         if (
             path.suffix.lower() != ".md"
-            or path.parts[0]
-            in {
-                "out",
-                "build",
-                "toolchains",
-                "inputs",
-                "tmp",
-                ".git",
-                ".venv",
-                ".agents",
-                "sessions",
-                "ledger",
-                ".pi-subagents",
-                ".cache",
-                ".uv-cache",
-                "dist",
-                "assets",
-            }
-            or (path.parts[0] == ".pi" and not name.startswith(".pi/agents/"))
-            or (path.parts[0] == ".codex" and not name.startswith(".codex/skills/"))
-            or (len(path.parts) == 1 and name.startswith("session-"))
+            or not is_authored_path(name)
             or leaf_stat(root, name) is None
         ):
             raise ValueError("docs requires existing authored repository Markdown")
     return paths
+
+
+def collect_document_paths(
+    root: Path, values: Sequence[str]
+) -> tuple[list[str], list[dict]]:
+    if not values or len(set(values)) != len(values):
+        raise ValueError("refs requires nonempty, unique file or directory scopes")
+    documents = []
+    skipped = []
+    seen = set()
+
+    def visit(name: str, *, explicit: bool) -> None:
+        if name in seen:
+            return
+        seen.add(name)
+        if not is_authored_path(name + "/"):
+            if explicit:
+                raise ValueError(f"refs scope is not authored Markdown: {name}")
+            skipped.append({"path": name, "reason": "excluded"})
+            return
+        parent, leaf = open_parent_fd(root, name)
+        try:
+            details = os.stat(leaf, dir_fd=parent, follow_symlinks=False)
+            if stat.S_ISDIR(details.st_mode):
+                descriptor = os.open(
+                    leaf, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=parent
+                )
+                try:
+                    children = sorted(os.listdir(descriptor))
+                finally:
+                    os.close(descriptor)
+            elif stat.S_ISREG(details.st_mode):
+                if Path(name).suffix.lower() == ".md":
+                    documents.extend(validate_document_paths(root, [name]))
+                elif explicit:
+                    raise ValueError(f"refs requires Markdown files: {name}")
+                return
+            else:
+                if explicit:
+                    raise ValueError(
+                        f"refs scope is not a regular file/directory: {name}"
+                    )
+                skipped.append({"path": name, "reason": "symlink-or-special-file"})
+                return
+        finally:
+            os.close(parent)
+        for child in children:
+            visit(f"{name}/{child}", explicit=False)
+
+    for value in values:
+        visit(validate_repo_path(value), explicit=True)
+    return documents, skipped
 
 
 def validate_cleanup_paths(root: Path, values: Sequence[str]) -> tuple[str, ...]:

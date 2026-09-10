@@ -32,7 +32,7 @@ minimal entry contract; this index owns the detailed reading map.
 | Plan creation, management or execution | [Plan authoring](agents/plan-authoring.md) | `$plans`; selected file under `plans/`; refresh live evidence |
 | Symbol/type/metadata identity maintenance | [Project context](agents/project-context.md) | Explicit `$bof3-naming` transaction mode only |
 | Naming evidence/audit closure | [Naming audit contract](../.codex/skills/bof3-naming/references/NAMING_AUDIT_V3.md) | Explicit `$bof3-naming` audit mode only |
-| Markdown search, context, aggregation, edit, repair or compaction | [Documentation operations](agents/documentation.md) | `$bof3-docs`; owning implementation/policy source before edits |
+| Markdown references, search, context, aggregation, edit, repair or compaction | [Documentation operations](agents/documentation.md) | `$bof3-docs`; [reference inspection](agents/documentation.md#reference-inspection), owning implementation/policy source before edits |
 | Runtime, format, target, or data research | [Specifications index](specs/INDEX.md) | Relevant spec and original evidence |
 | Repository overview / contributor onboarding | [README](../README.md) | [Contributing](../CONTRIBUTING.md), [Tool usage](agents/tool-usage.md) |
 
@@ -74,7 +74,7 @@ Codex scheduler or installed extension.
 | [`$bof3-naming`](../.codex/skills/bof3-naming/SKILL.md) | explicitly routed naming opportunities, evidence, audits and reviewed identity transactions |
 | [`$plans`](../.codex/skills/plans/SKILL.md) | persistent plan management |
 | [`$psx-rizin`](../.codex/skills/psx-rizin/SKILL.md) | explicitly requested analyzer workflow |
-| [`$bof3-docs`](../.codex/skills/bof3-docs/SKILL.md) | explicit Markdown search, context, aggregation, editing, repair and one-document compaction |
+| [`$bof3-docs`](../.codex/skills/bof3-docs/SKILL.md) | explicit Markdown reference inspection, search, context, aggregation, editing, repair and one-document compaction |
 
 Macro, type, naming and documentation skills dispatch invocation scripts to `bin/`;
 policy, parsing and editing remain in the harness owners. Explicit-only routing is
