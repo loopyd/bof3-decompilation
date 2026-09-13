@@ -90,3 +90,36 @@ threshold experiment was not retained: both range fields and thresholds are
 (`func_800AF66C`, `@status exact`). No object compiler override or generic
 macro was used. Those aided results remain historical evidence only; the removal
 requeue uses `@status partial`, `@match unavailable` pending fresh checks.
+
+## Clean-C requeue measurement
+
+The parent continuation from `52d46b6c` retains native measurements in
+`out/reviews/clean-c-requeue-20260913/`. Its six parent-confirmed variants are:
+
+| Shape | Ordered instruction match | Compiled bytes (original 76) |
+| --- | --- | --- |
+| Direct boolean | 2/19 (10.53%) | 76 |
+| Early return | 5/20 (25.00%) | 80 |
+| Declaration order | 2/19 (10.53%) | 76 |
+| Signed result | 2/19 (10.53%) | 76 |
+| Direct parameter, no alias | 2/19 (10.53%) | 76 |
+| Direct value parameter and direct conjunction (retained) | 2/19 (10.53%) | 76 |
+
+`variant-1.json` through `variant-5.json` corroborate the first five rows. The retained
+`variant-6-final.json` and `af66c-final-{diff,byte}.log` report 2/19 instructions,
+76 bytes and byte DIFFER. Entry is `move a3,a1; move t0,zero`, versus original
+`move t0,a1; move v0,zero`; the generated return moves `t0` into `v0` in the
+delay slot. Equal size does not establish exactness, and the higher early-return
+positional score adds four bytes. Parent confirms final asm/byte exits 1
+(DIFF/DIFFER), with metadata partial at 10.53. Parent confirms independent
+partial-retention review PASS for source SHA-256
+`6b5abf5f4f8b5efd1acbde25482e12b053aeaa9c41beec585f158d4d49678c6d`,
+matching the live source and `final-pins.txt`; the measured residual is correctly
+bound. This accepts coherent partial retention, not exactness or full
+type/macro/naming stages.
+
+The historical 52-profile search and 300-second permuter above were not rerun
+for this continuation and establish no exhaustion of other clean-C shapes.
+No register aid is permitted. Mission limits, consumption and deferred naming
+stay in the [canonical continuation](../../plans/autonomous-bof3-decompilation.md#bounded-clean-c-continuation--2026-09-13);
+the range/ABI evidence and historical aided receipt remain unchanged.

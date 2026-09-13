@@ -40,7 +40,7 @@ compiler attributes, original disassembly, raw measurements and provenance.
 the [source contract](../INDEX.md#source-and-duplicate-rules) owns current policy.
 
 Parent reports removal from 50 C sources and the compiler-header rename applied.
-Persistent requeue tags are `@status partial`, `@match unavailable`, and
+Initial persistent requeue tags were `@status partial`, `@match unavailable`, and
 `@residual requeued ...`, pending independent clean-C review and further matching
 where needed. Parent also reports
 live enforcement in `tools/python/harness/domain/policy.py`, called at asm-diff
@@ -56,55 +56,63 @@ acceptance or exact cleanup. Previous scores, cached exact rows, receipts and
 review verdicts remain historical; do not rebind them to cleaned source or use
 old retention/restoration instructions to keep a banned matching candidate.
 This correction closes no phase and changes no stable IDs, frozen pilot membership,
-consumed budgets or unrelated obligations. This documentation pass performs no
-source audit, tests or native validation and grants no acceptance.
+consumed budgets or unrelated obligations. The removal documentation pass performed
+no source audit, tests or native validation and granted no acceptance; subsequent
+parent-confirmed source acceptance is recorded below.
 
 ### Durable clean-C requeue
 
-All 50 entries across ten targets remain pending independent clean-C review;
-40 also need further matching. The table is the canonical work queue; no separate plan is
-needed. Paths are relative to `src/bof3/`. PRE status/match values are historical
-only: 46 exact and four partial before removal, zero renewed acceptances here.
+The 50-entry queue across ten targets now has four clean-C reviewed exact
+dispatchers and 46 outstanding entries: six prior MATCH candidates still need
+review, and 40 DIFFER entries, including AF66C, still need matching and acceptance.
+The table is canonical; paths are relative to `src/bof3/`. PRE values remain
+historical: 46 exact and four partial before removal. The bounded continuation
+below records the four renewed acceptances and their parent-confirmed gates.
 The parent inventory retains each `sha256_before` and complete `progress_before`:
 `out/reviews/register-aid-removal-20260913-complete/inventory.json`, SHA-256
 `24dd1dc35eeb58192d1b31fb33320ca87f324c4bdc8a83b43f8462b7a41c0b0a`.
 Membership below was checked against that JSON; game source was not inspected.
 Do not overwrite its PRE evidence or apply historical scores to cleaned C.
 
-Parent completed native compilation/comparison for all 50: 10 MATCH, 40 DIFFER,
-zero tool errors. `verification.json` beside the inventory binds each selector,
-source, return code and log; its SHA-256 is
+At the initial removal measurement, parent completed native compilation/comparison
+for all 50: 10 MATCH, 40 DIFFER, zero tool errors. `verification.json` beside the
+inventory binds each selector, source, return code and log; its SHA-256 is
 `22697c8a28352a4d65a2fcc49dfb9619510750b1f3d545d5782680be604253fb`.
 Its 50 source/selector pairs and 10/40 return-code split match this queue.
-Parent reports `bin/index --recover --timeout 180` succeeded: all 50 sources have
-requeue metadata, but only 49 affected functions are indexed as partial.
+Parent reported `bin/index --recover --timeout 180` succeeded at removal: all 50
+sources had requeue metadata, but only 49 affected functions were indexed as partial.
 `emi/scenario/scena16/00@0x801F6E30` (`seedRouteEnterState3_scena16.c`) is absent
 from `snapshot.functions`; the index builder iterates analyzer functions only.
 Its manifest-backed queue row remains explicit below with native result DIFFER.
 Do not fabricate analyzer functions or treat index omission as completed work.
-Independent source review is delegated separately. All 50 retain `partial` /
-`unavailable` tags; even MATCH rows are measured candidates, not promoted or
-accepted sources. Indexed coverage is 49 partial plus one explicit manifest-backed
-queue entry, not 50 indexed functions.
-The documentation pass inspected the JSON, not native logs or source semantics.
+At that removal checkpoint all 50 retained `partial` / `unavailable` tags;
+MATCH rows were measured candidates, not accepted sources. Indexed coverage was
+49 partial plus one explicit manifest-backed queue entry, not 50 indexed functions.
+That documentation pass inspected the JSON, not native logs or source semantics;
+subsequent review/measurement updates are attributed separately below.
+Parent confirms index refresh after the frozen source phase and successful
+naming/type/macro queries. Parent's rebuilt SQL count is exactly four exact,
+45 partial and one missing, retained in
+`out/reviews/clean-c-requeue-20260913/index-counts.json`. This worker read that
+receipt, not a native audit; the original 49-partial observation remains historical.
 
-| Target-qualified selector | Source under `src/bof3/` | Historical PRE status / match | Native result, review pending |
+| Target-qualified selector | Source under `src/bof3/` | Historical PRE status / match | Native result / current review disposition |
 | --- | --- | --- | --- |
 | `exe/slus_004_22@0x8015DF18` | `audio/dispatchSoundCue.c` | exact / 100.00 | DIFFER |
 | `emi/battle/battle/03@0x801E6724` | `battle/dispatchByte1PairFlagged.c` | exact / 100.00 | DIFFER |
 | `emi/battle/battle/15@0x800AE014` | `battle/dispatchLocalHandlerPair.c` | exact / 100.00 | DIFFER |
 | `emi/battle/battle/15@0x800A83F8` | `battle/dispatchWorkByte1Pair.c` | exact / 100.00 | DIFFER |
-| `emi/battle/battle/15@0x800AD26C` | `battle/dispatchWorkTable6994.c` | exact / 100.00 | MATCH |
-| `emi/battle/battle/15@0x800AD69C` | `battle/dispatchWorkTable69a0.c` | exact / 100.00 | MATCH |
-| `emi/battle/battle/15@0x800AD9CC` | `battle/dispatchWorkTable69ac.c` | exact / 100.00 | MATCH |
-| `emi/battle/battle/15@0x800ADCC4` | `battle/dispatchWorkTable69b8.c` | exact / 100.00 | MATCH |
+| `emi/battle/battle/15@0x800AD26C` | `battle/dispatchWorkTable6994.c` | exact / 100.00 | Clean-C reviewed exact; final MATCH, receipt below |
+| `emi/battle/battle/15@0x800AD69C` | `battle/dispatchWorkTable69a0.c` | exact / 100.00 | Clean-C reviewed exact; final MATCH, receipt below |
+| `emi/battle/battle/15@0x800AD9CC` | `battle/dispatchWorkTable69ac.c` | exact / 100.00 | Clean-C reviewed exact; final MATCH, receipt below |
+| `emi/battle/battle/15@0x800ADCC4` | `battle/dispatchWorkTable69b8.c` | exact / 100.00 | Clean-C reviewed exact; final MATCH, receipt below |
 | `emi/battle/battle/03@0x801DB3E4` | `battle/enemyBattlerMeetsThresholds.c` | exact / 100.00 | DIFFER |
 | `emi/battle/battle/15@0x8009DC6C` | `battle/func_8009DC6C.c` | exact / 100.00 | MATCH |
 | `emi/battle/battle/15@0x800A0E68` | `battle/func_800A0E68.c` | exact / 100.00 | MATCH |
 | `emi/battle/battle/15@0x800A3F28` | `battle/func_800A3F28.c` | partial / 88.57 | DIFFER |
 | `emi/battle/battle/15@0x800A8360` | `battle/func_800A8360.c` | partial / 94.87 | DIFFER |
 | `emi/battle/battle/15@0x800AAEBC` | `battle/func_800AAEBC.c` | exact / 100.00 | DIFFER |
-| `emi/battle/battle/15@0x800AF66C` | `battle/func_800AF66C.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/15@0x800AF66C` | `battle/func_800AF66C.c` | exact / 100.00 | Reviewed clean-C partial; DIFFER, 2/19, 76 bytes |
 | `emi/battle/battle/15@0x800AF720` | `battle/func_800AF720.c` | exact / 100.00 | DIFFER |
 | `emi/battle/battle/03@0x801DC73C` | `battle/func_801DC73C.c` | exact / 100.00 | DIFFER |
 | `emi/battle/battle/03@0x801DCD50` | `battle/func_801DCD50.c` | exact / 100.00 | DIFFER |
@@ -140,6 +148,78 @@ The documentation pass inspected the JSON, not native logs or source semantics.
 | `emi/etc/game/01@0x801D1B00` | `ui/updateWindows_game01_801D1B00.c` | exact / 100.00 | MATCH |
 | `emi/world00/area008/13@0x801F3D88` | `world/drawTexturedFrame.c` | partial / 96.17 | DIFFER |
 | `emi/world00/area016/13@0x801F3460` | `world/resetAdvanceScratchState.c` | exact / 100.00 | MATCH |
+
+### Bounded clean-C continuation — 2026-09-13
+
+Parent mission `out/reviews/clean-c-requeue-20260913/mission.md` starts from
+`52d46b6c` and owns the four battle15 dispatchers above plus
+`emi/battle/battle/15@0x800AF66C`. Original work cutoff is 03:23 UTC, cleanup
+hard stop 03:25 UTC: at most nine C variants, three profile probes, one 60-second
+permuter pass, one independent dispatcher review and one range review, each with
+one repair. This record does not reset consumption, extend a cutoff or replace
+the historical frozen-five pilot; its receipts, full-goal scope and phase states
+remain unchanged. Parent owns all five sources and serialized native/generated
+writes; this worker owns only this plan and the range-predicate specification.
+
+Parent confirms independent source-semantics passes for `800AD26C`, `800AD69C`,
+`800AD9CC` and `800ADCC4`, plus the explicit `table.handlers` member repair in
+place of the whole-aggregate cast. All four candidate native gates passed;
+after final metadata (`@status exact`, `@match 100`, `@residual none`), all four
+`bin/byte-match` gates exited zero with MATCH. Parent accepts these four clean-C
+sources. Receipts in the mission directory are `800AD26C-final.log`,
+`800AD69C-final.log`, `800AD9CC-final.log`, `800ADCC4-final.log` and
+`final-pins.txt` (SHA-256
+`4390621283088106117af5462444f1805ac8c66eb8471bcc7ec0c3ac8a6906e0`).
+This worker read the logs/pins; review and gate execution are parent-attributed.
+Source review does not accept full types, macros or naming stages.
+
+Six AF66C variants consumed attempts without improving the retained
+clean-C shape: direct boolean 2/19 (76 bytes), early return 5/20 (80 bytes),
+declaration order 2/19, signed result 2/19 and direct parameter/no alias 2/19
+(the latter three each 76 bytes). Retained `variant-1.json` through
+`variant-5.json` corroborate those five measurements. Parent confirms variant six
+is the retained direct value parameter plus direct conjunction: `variant-6-final.json`
+and `af66c-final-{diff,byte}.log` record 2/19 (10.53%), 76→76 bytes,
+asm/byte exits 1 (DIFF/DIFFER). Parent confirms independent partial-review PASS
+for source SHA-256
+`6b5abf5f4f8b5efd1acbde25482e12b053aeaa9c41beec585f158d4d49678c6d`,
+equal to the live source and `final-pins.txt`; the 19-instruction/76-byte, 2/19
+residual is correctly bound. Metadata remains partial at 10.53, with no exact
+claim or exhausted-ladder acceptance. Six of nine C attempts
+are consumed; the remaining allowance is not a new mission. The prior 52-profile
+search and 300-second permuter exhausted only their old-shape allowances and were not rerun;
+no pins or implicit replacement budgets. Further clean-C experiments need a
+distinct bounded scope after this mission; timeout alone is not ladder exhaustion.
+
+Naming remains a separate deferred future audit of
+`emi/battle/battle/15@function:func_800AF66C`. Retained `naming-lead.json` has
+fingerprint `v1:0f0d1562a8345c3b2fb55cb8f054e4be7d7446a9abb4f39d30d8348141dc4f74`;
+the live map still hashes to
+`b4e1143924c872248f6e2d76b2f26cf849f6a7cd77ac68c1f512f9b20287bfd7`.
+This preserves the framework lead, not rename acceptance or full-target
+`complete:true`. Type/macro pool observations likewise grant no application.
+After refresh, parent began only read-only macro ranking for battle15:
+instruction floor 12, pool size three, top one, `require_source:true`, pool pin
+`v1:9038c1cc736f79d5fdf3b933562bce28e070372f970784a7b9c7ec4b46e08872`.
+`macro-ranking-request.json` and `macro-ranking-result.json` in the mission
+directory retain these proposed dispositions:
+
+| Candidate | Parent ranking / remaining gate |
+| --- | --- |
+| `assembly_block:366ad828049fbe14`, 32 instructions, exactly the four accepted dispatchers | try; validated read-only ranked selection for review |
+| `assembly_block:cb455b0d8fb5016a`, 28 instructions, six five-entry dispatchers | defer; type/selector contracts and baselines unresolved |
+| `assembly_block:e0385e3255d66393`, 24 instructions, ten three-entry dispatchers | reject on human value; only two useful C statements |
+
+These are ranking proposals, not macro extraction, semantic acceptance or a new
+frozen pipeline queue. Formal rank validation succeeded for
+`out/reviews/evidence/clean-c-dispatch-ranking-20260913.json`: one selected for
+review, not application acceptance. Receipt
+`out/reviews/clean-c-requeue-20260913/macro-ranking-validation.json` retains digest
+`v1:9c8ccfbe3c3f30bb820014b94aa4af50c9b3a8b893098b2680b87e1bc64f76a2`;
+names are unchanged and naming audit remains open. All work retains the original
+03:23 UTC cutoff and consumed budgets. Forty-six requeue entries remain
+outstanding, including reviewed partial AF66C. Runtime measurements live in the
+[range-predicate note](../specs/runtime/battle-range-predicates.md#clean-c-requeue-measurement).
 
 ## Current skill-only operator correction
 
