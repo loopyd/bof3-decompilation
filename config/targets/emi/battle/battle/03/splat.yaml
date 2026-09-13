@@ -390,8 +390,8 @@ segments:
     - stubHandlerE7fc
   - - 56324
     - c
-    - name: func_801DE804
-      source: src/bof3/battle/func_801DE804.c
+    - name: deactivateBattleDispatchSlots
+      source: src/bof3/battle/deactivateBattleDispatchSlots.c
       behavior: clears the first three bytes of all eight event-queue slots
   - - 56408
     - asm

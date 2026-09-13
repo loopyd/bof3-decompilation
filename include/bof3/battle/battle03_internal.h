@@ -518,7 +518,7 @@ void func_801DE1D4(void);
 void func_801DE60C(u32 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4, u32 arg5);
 void stubHandlerE690(void);
 void stubHandlerE7fc(void);
-void func_801DE804(void);
+void deactivateBattleDispatchSlots(void);
 u8   func_801DE858(s8 arg0);
 void pushUiRingTriple(s8 arg0, s8 arg1, u32 arg2);
 u8   hasUiRingWork(void);

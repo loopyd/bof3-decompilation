@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801DE804(void) {
+void deactivateBattleDispatchSlots(void) {
   u8  index;
   u32 offset;
 

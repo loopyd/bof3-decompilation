@@ -1146,6 +1146,108 @@ macro budgets are not restarted. `S3.2`, S4 and consolidation obligations remain
 unfinished. Selected-row acceptance does not replace unfiltered full-target
 `complete:true`, separate identity approval or the whole-game completion gates.
 
+### Successor FUNCTION action — 2026-09-13 (checkpoint accepted; commit pending)
+
+Parent's observed action start is **20:37:16 UTC**, after accepted DATA/report
+checkpoint `d2bbb57c`. Mission `out/reviews/naming-function-20260913/mission.md`
+retains **21:00 work / 21:05 cleanup** cutoffs. The preceding production mission's
+20:25/20:35 bounds are expired and closed; its one-row collection took 2.573579s,
+with `terminalized:false` and no FUNCTION proposal/application attempt consumed.
+This distinct stage queues only `emi/battle/battle/03@0x801DE804` for
+`deactivateBattleDispatchSlots`: one proposal/application and one bounded repair,
+without renewing any previous allowance.
+
+Gauss accepts the selected semantics and corrected proposal in this mission's
+`semantic-review.md`, rechecked at 20:45 before its original 20:47 review cutoff.
+The one wording repair is consumed: byte 2 remains an additional cleared byte
+of unknown role, and the callee initializes its own counter rather than depending
+on incoming argument values. Corrected candidate SHA-256 is
+`d753669cb8376c81bb9e611297de2c87cc10ad966786083d54c4f87e4fa10e1a`;
+the rejected candidate and original receipts remain historical evidence.
+This is proposal acceptance, not application acceptance.
+
+Parent baseline receipts establish 21/21 instructions and 84/84 bytes exact.
+The sole source application, including required source relocation, has occurred;
+parent reports all six native FUNCTION gates pass. The sidecar read
+`baseline-bytes.json` and the `gates.json` bundle pointer; execution and six-gate
+success remain parent-attributed. Parent confirms index recovery and fresh
+readiness pass, plus **673 existing naming, harness-DRY and target-manifest tests
+passed, two skipped in 38.86s**. The configured-compiler target audit's populated
+`target-status.json` records **179 exact, 38 partial, zero invalid; 217 lifts**,
+with no coverage error. Its original exec handle was lost at compaction; this
+artifact establishes reported counts, not an observed terminal exit. No full-suite
+or composite `just check` pass is claimed for this source-only identity step.
+Gauss's actual `application-review.md` records **POST ACCEPT** at 20:54, before
+the 20:56 handoff; SHA-256
+`75687f13a767d6d5fc23e9a1c17c31bd9ac0764c6a47a402ced21ee5d3741fc1`.
+The sidecar read that review: it verifies exact spelling/relocation, physical PRE,
+six gate receipts, linked 84-byte equality, fresh readiness and all 246 historical
+DATA proof artifacts. Parent confirms review ingestion and public verification
+both exited zero; the sidecar read `verify.json`: `applied:true`, one row.
+Finalizer preview and apply launched at 20:59 before the work cutoff. Parent
+observed apply handle `54978` terminate exit zero at **21:00:45**, within the
+unchanged cleanup allowance. The sidecar read `finalize-apply.json`:
+`disposition:published`, `current_acceptance:true`, `production_complete:false`,
+**189 rows, complete:false**. Preview retains 29 new proof artifacts; plan pin
+`7f158ec4dddcd9398c2fce25f8b34da24225527cccbf26754d16814912239eff`
+binds successor generation
+`7420fd6a09eb4382f04f3154a886aed6edbd9842dfb1535bfa904d4c0be7c22f`,
+SHA-256 `fbcc3fc81f45c96655ebcaddbaa0eb90b2411384d44ab63b7c4810d60ad33b88`.
+This accepts the selected FUNCTION/report checkpoint, not full-target closure.
+Only the local commit remains pending; no further source application or repair
+is authorized. Uncertain state still stops for parent inspection, never replay.
+
+Parent's final live inventory across 23 targets is **1,360 raw names: 529
+functions and 831 data**; battle03 has **189: 85 functions and 104 data**.
+Battle15 still retains 250 report rows versus 249 live names, with stale
+`func_800A3638`; its 249-row summary is accurate. This reproduces existing S4.4
+debt, not drift introduced here, and remains unrepaired. Parent reports no other
+inventory discrepancies; selected-target closure is still incomplete.
+
+The new user requirement records wall-clock start for every action. This action
+keeps its observed 20:37:16 start without reset. Parent will write actual commit
+identity, stop time and elapsed duration immediately after commit to
+`out/reviews/naming-function-20260913/timing.json`; consult that retained evidence
+without requiring another documentation commit. No stop time is claimed yet. After the accepted
+transaction is committed, stop further transaction work and self-assess which
+deterministic preparation, checking and accounting steps can reduce agent turns.
+First assess a reusable naming snapshot producer and explicit parent-review
+packaging to replace per-action authored Python scripts. Gauss's proposed owner
+reuse is `inputs.frozen` / `transaction_paths`, `common.inventory.capture_file`
+and `history.read_snapshot_states`; `common.recovery` for macro/type transactions
+is not a drop-in replacement. Assess packaging in naming `review.py` with explicit
+parent-supplied acceptance, preservation and run IDs, leaving downstream
+`review.ingest` unchanged. Never derive approval by parsing ACCEPT prose;
+semantic review and approval remain external active-session responsibilities.
+These are post-commit assessment leads, not implemented or newly budgeted work.
+It must follow [modular standards](../agents/coding-standards.md):
+concern-owned noun modules, verb-led operations, thin CLI adapters and existing
+shared mechanisms. It grants no implementation, dependency, generic scheduler,
+Codex CLI/model invocation or renewed source budget.
+
+For current naming scope, the reviewed DATA support and `d2bbb57c` supersede
+historical FUNCTION-only postapply descriptions, including S3.4's old evidence.
+The [bounded FUNCTION/DATA lifecycle](../agents/tool-usage.md#frozen-naming-postapply-lifecycle)
+retains distinct provenance and concern-specific restrictions; types/macros are
+not admitted through it. Individually approved selected transactions may proceed
+through their own proposal, native gates, independent review and public verify
+without claiming full-target closure. Unfiltered full-target `complete:true`
+and separate identity approval still gate production campaign advancement;
+selected acceptance or report activation cannot satisfy S3.2/S4 or whole-game
+completion. Historical proofs and full-report blockers are not rewritten.
+
+The initial documentation slot released at 20:58:22 with 46 plan tests, parser,
+references and whitespace passing. Parent authorized this final outcome-only
+plan revision and checks within the unchanged **21:05 cleanup** cutoff, without
+renewed source work. The sidecar performs no source/runtime, build, index or Git
+writes and launches no children. Preserve `.pi/settings.json`
+without inspection, both unrelated dirty battle sources and `tmp/`. The immutable
+191-row predecessor proof and 190-row successor provenance survive; the latter
+is the stage's input, not a claimed final row count. Frozen-five membership and
+blockers, linked type controls, both macro obligations and their consumed limits,
+the 50-entry clean-C queue (four accepted, 46 outstanding), stable IDs/states,
+S3.2/S4/consolidation and all other unfinished obligations remain unchanged.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex
@@ -2564,8 +2666,8 @@ must satisfy them before the corresponding phase is marked done.
 - Owner: worker with independent reviewer; parent owns scope acceptance
 - Depends: S3.3
 - Blocker: none
-- Evidence: whole S3.4 independently accepted by 2dc9dec6 (715 passed, 2 skipped), attributed in the superseding acceptance record below. S3.4 checkpoint below records independently accepted duplicate-key rejection and the independently accepted native-gate prerequisite repair and accepted execution-context/publication prerequisite and accepted parent-envelope slice; accepted reviewed shared-input migration; accepted no-drift check-only revalidation including B1; accepted fresh no-drift parent acceptance; accepted internal historical validation prerequisite; accepted same-target exact private transition; accepted distinct-target common-PRE integration; accepted shared PRE/POST integration; accepted current-byte owner CLI transport (b295c173); accepted bounded terminal CLI/API (e2920f90, 605 passed/two skipped); accepted all-handler fixture sequence (11fcb490) and bounded frozen-five accounting (efb1b118), not native execution or live closure; frozen local-data control BLOCKED (d740aabe), not accepted exhaustion/no-op. naming/postapply*.py supports selected target-local FUNCTION only; existing type/macro digest pins do not establish independent final review.
-- Acceptance: independent reviewer decides whole machine readiness from accepted owner, all-handler and frozen-accounting coverage: proposal versus approval, dirty-baseline adoption, scope/storage/layout preservation, gate rejection, digest-bound final verification and all-five accounting. Supported fixture positives must be labeled synthetic; unsupported/live-blocked routes fail closed. Actual Pi recovery belongs to S3.5; live evidence/application/full-target closure moves to S4.3/S4.4 below. Never route data/types/macros through FUNCTION-only postapply or invent a framework; no writer self-approval.
+- Evidence: whole S3.4 independently accepted by 2dc9dec6 (715 passed, 2 skipped), attributed in the superseding acceptance record below. S3.4 checkpoint below records independently accepted duplicate-key rejection and the independently accepted native-gate prerequisite repair and accepted execution-context/publication prerequisite and accepted parent-envelope slice; accepted reviewed shared-input migration; accepted no-drift check-only revalidation including B1; accepted fresh no-drift parent acceptance; accepted internal historical validation prerequisite; accepted same-target exact private transition; accepted distinct-target common-PRE integration; accepted shared PRE/POST integration; accepted current-byte owner CLI transport (b295c173); accepted bounded terminal CLI/API (e2920f90, 605 passed/two skipped); accepted all-handler fixture sequence (11fcb490) and bounded frozen-five accounting (efb1b118), not native execution or live closure; frozen local-data control BLOCKED (d740aabe), not accepted exhaustion/no-op. Postapply was FUNCTION-only at that checkpoint; reviewed bounded DATA support and its accepted production transaction are recorded above, without rebinding old proofs. Existing type/macro digest pins do not establish independent final review.
+- Acceptance: independent reviewer decides whole machine readiness from accepted owner, all-handler and frozen-accounting coverage: proposal versus approval, dirty-baseline adoption, scope/storage/layout preservation, gate rejection, digest-bound final verification and all-five accounting. Supported fixture positives must be labeled synthetic; unsupported/live-blocked routes fail closed. Historical Pi recovery belongs to S3.5; live evidence/application/full-target closure moves to S4.3/S4.4 below. Current selected FUNCTION/DATA transactions retain distinct bounded admission; never route types/macros through naming postapply or invent a framework; no writer self-approval.
 
 4. [S3.5] (done) Prove failure, rollback and resume before unattended execution.
 - Owner: worker with independent reviewer and parent
@@ -2579,7 +2681,7 @@ must satisfy them before the corresponding phase is marked done.
 - Depends: S3.6
 - Blocker: none
 - Evidence: S3.1 handoffs, efb1b118 accounting and whole S3.5 accepted; the skill-only continuation checkpoint records two real parallel read-only domain scouts and parent skip/blocked controls after 53ba86e8. The full bounded sequence remains unfinished. Full-target naming blocks production, not controlled fixtures or read-only blocked accounting. Parent freshness/attestation checkpoints remain explicit and cannot be delegated implicitly.
-- Acceptance: active-session mission delegation, existing applicable checks and independently reviewed finite skill execution with fixed queue/budget. Parallel read/review results must retain actual handles and disjoint scope; shared-checkout writes serialize. No Codex CLI/model subprocess or Pi fallback. May account blocked entries, never advance failed/unknown mutation or claim live closure from fixtures. Production requires unfiltered full-target naming complete:true and separate identity approval; final review binds actual selector/change. Accepted work skips; uncertain apply stops for recovery; no budget reset on resume.
+- Acceptance: active-session mission delegation, existing applicable checks and independently reviewed finite skill execution with fixed queue/budget. Parallel read/review results must retain actual handles and disjoint scope; shared-checkout writes serialize. No Codex CLI/model subprocess or Pi fallback. May account blocked entries, never advance failed/unknown mutation or claim live closure from fixtures. Production campaign advancement requires unfiltered full-target naming complete:true and separate identity approval; individually approved selected transactions retain their own gates without satisfying that closure. Final review binds actual selector/change. Accepted work skips; uncertain apply stops for recovery; no budget reset on resume.
 
 6. [S3.6] (done) Retire harness Codex launchers and establish the skill operator.
 - Owner: parent with independent active-session reviewer
@@ -2628,7 +2730,7 @@ must satisfy them before the corresponding phase is marked done.
 - Depends: none
 - Blocker: unfiltered report rejects func_800A3638 binding_locations: missing=[] invented=['config/targets/emi/battle/battle/15/symbols.txt']; full-target complete:true is absent.
 - Evidence: efb1b118 actual unfiltered verifier failure; selected FUNCTION history and frozen accounting do not override it.
-- Acceptance: separately authorize evidence-preserving report/provenance recovery if needed; obtain successful unfiltered full-target complete:true and separate identity approval before production advancement. Never narrow the report gate, rewrite historical receipts or treat selected acceptance as target completion.
+- Acceptance: separately authorize evidence-preserving report/provenance recovery if needed; obtain successful unfiltered full-target complete:true and separate identity approval before production campaign advancement. Individually approved selected transactions do not complete this obligation. Never narrow the report gate, rewrite historical receipts or treat selected acceptance as target completion.
 
 ## 5. [C1] (in-progress) Support per-function metadata and reviewed source consolidation
 - Owner: parent with domain/build/cleanup owners and independent reviewer

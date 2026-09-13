@@ -140,7 +140,7 @@ sources = [
     "src/bof3/battle/func_801DE1D4.c",
     "src/bof3/battle/func_801DE560.c",
     "src/bof3/battle/func_801DE60C.c",
-    "src/bof3/battle/func_801DE804.c",
+    "src/bof3/battle/deactivateBattleDispatchSlots.c",
     "src/bof3/battle/func_801DE858.c",
     "src/bof3/battle/func_801DE9A8.c",
     "src/bof3/battle/func_801DEA64.c",
