@@ -465,8 +465,10 @@ Parent confirms `bof3.reviewed-macro-opportunity/v2` admission for one new
 target-private `local_template` header is committed in `c9f884b6`, with independent
 review and 165 passing checks. The [authoritative plan](../plans/autonomous-bof3-decompilation.md#reviewed-private-header-creation--2026-09-13-acceptance-pending)
 owns application scope, pins, consumed budgets, review identities and check receipts.
-The macro application is parked after failure before publication: PRE is unchanged,
-the proposed header/application remain absent, and the original bounds are expired.
+The user explicitly reopened the same macro after prerequisite commit `452498ad`;
+the [reopening checkpoint](../plans/autonomous-bof3-decompilation.md#battle-dispatch-macro-reopening--2026-09-13)
+records fresh PRE approval and its consumed owner entry. The original failure and
+expired bounds remain historical; no automatic retry or allowance reset follows.
 
 Parent accepts the exact frozen [submodule isolation candidate](harness.md#submodule-isolation-candidate)
 after independent Pasteur PASS within its documented support ceiling. Both repairs
@@ -480,10 +482,16 @@ separates final gates, historical failures and unrelated test debt. Observations
 non-atomic, manual concurrency is not excluded and root Git metadata is trusted.
 Arbitrary Git layouts/index-extension confinement remain unassessed; no extension
 escape or projection hardening is established. The root/ten-module checksum-valid
-v2 TREE inventory does not prove other formats. The whole-game goal remains paused;
-C/macros stay parked. Dependency snapshots grant no restoration or repair,
-macro retry, acceptance, budget reset or evidence rebinding. Native/application
-review and frozen obligations remain.
+v2 TREE inventory does not prove other formats. The full goal is active/incomplete;
+this macro is blocked on the actual `fuseblk` move capability. A same-leaf
+`RENAME_NOREPLACE` probe falsely passes while distinct moves fail; the hard-link
+fallback leaves two links, correctly rejected before source publication. Correcting
+the probe only improves diagnostics. No recovery record, owner command receipts,
+application, header or POST acceptance followed; empty rollback maps prove no
+restoration. PRE and the adopted baseline remain unchanged. An ext4 working copy
+is requested but unauthorized; no migration or portability acceptance is inferred.
+Dependency snapshots grant no restoration/repair, retry, acceptance, budget reset
+or evidence rebinding. Native/application review and frozen obligations remain.
 V1 stays existing-only; shared-header and type creation are not added.
 
 V2 retains all v1 evidence fields and adds exactly one `creation` object with

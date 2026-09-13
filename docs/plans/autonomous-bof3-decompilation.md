@@ -291,7 +291,7 @@ application or new game header exists at this handoff. Whole-game scope, phase
 states, frozen-five membership, historical proofs and every unfinished domain
 obligation remain intact; tooling closure grants no macro acceptance.
 
-The parked source-application stage is
+The original source-application stage was
 `out/reviews/battle-dispatch-macro-20260913/mission.md`, with work cutoff
 2026-09-13 04:45 UTC and cleanup hard stop 04:48 UTC. Its original allowance was one initial
 extraction and one repair, with distinct pre-application and post-application
@@ -312,7 +312,7 @@ original cutoff; `run.log` reports
 `error: transaction path is unsafe: .agents/skills/bof3-docs`.
 Parent verified all six PRE hashes unchanged and the proposed header and application
 absent.
-Application is blocked and parked: no retry, refunded attempt or budget reset.
+At that checkpoint application was blocked and parked: no retry, refunded attempt or budget reset.
 Preserve original pins, consumption and now-expired 04:45/04:48 UTC bounds. Failure is
 neither macro acceptance nor semantic exhaustion. Owner-controlled application and
 guarded rollback, all target/native gates, independent POST semantic review,
@@ -584,14 +584,89 @@ No agents, source/worktree/dependency writes, native builds, index refreshes or
 macro retries belong to this sidecar. Preserve `.pi/settings.json`, both dirty
 battle sources and unrelated `tmp/`.
 
-C and macros remain parked; the real macro's one pre-publication failure, six
+At that tooling checkpoint C and macros remained parked; the real macro's one pre-publication failure, six
 unchanged PRE states, absent header/application, original pins and expired
 04:45/04:48 bounds remain. Four accepted clean-C dispatchers and 46 outstanding
 requeue entries, stable IDs/states, frozen-five membership and all unfinished
-domain obligations survive. Parent confirms the whole reconstruction goal is
-**paused**, superseding the stale active summary; aggregate plan states remain
+domain obligations survive. Parent then confirmed the whole reconstruction goal was
+**paused**; the explicit continuation below supersedes that historical pause. Aggregate plan states remain
 unchanged. This narrow tooling acceptance closes no phase, grants no source/macro
 acceptance and launches no successor.
+
+<a id="battle-dispatch-macro-reopening--2026-09-13"></a>
+### Explicit macro reopening — 2026-09-13 (filesystem blocked)
+
+The user explicitly resumed the full goal and reopened the existing
+`out/reviews/battle-dispatch-macro-20260913/mission.md` after supported submodule
+prerequisite commit `452498ad`. The same `assembly_block:366ad828049fbe14`, floor
+12, pool three, top one, four dispatchers and six authored paths remain frozen.
+Original candidate/ranking/proposal/changes pins and the failed `-01` launch under
+expired 04:45/04:48 UTC bounds remain history, without refund or rebinding.
+New bounds are 08:10 UTC work / 08:15 cleanup: one resumed owner entry, one PRE
+reconfirmation, one distinct POST review and one bounded clarification each; at
+most one review-driven proposal repair before launch only, never automatic retry.
+
+Parent readiness confirms all six original PRE states, unchanged proposal/changes,
+the original ranking pin with one selected lead and adopted baseline
+`v1:5ff94dfa4e811c12c321a64bbfa295df531e60fb45b485b61e2c6bf5fff321c3`.
+Current preparation is retained separately as
+`out/reviews/evidence/battle-dispatch-manifest-reopen-20260913.json`; original
+proofs are not overwritten. Four fresh parent native PRE checks each pass 32/32
+instructions and 128/128 bytes. Independent Kierkegaard
+`01a099a1-aad9-7bd3-8d2a-fe926626382c` reconfirms all eight guards, parameter
+mapping, complete four-consumer coverage and human value in
+`out/reviews/evidence/battle-dispatch-pre-review-reopen-20260913.md`.
+No proposal repair was needed; that handle is closed. This is PRE approval only.
+
+`reopen-run.log` in the mission directory retains a wrong-option argument-parsing
+failure before owner entry; parent checked CLI help/source and unchanged PRE.
+It is a separate failed invocation, not another owner entry or refunded attempt.
+Actual owner session `28025`, run `battle-dispatch-macro-20260913-02`, subsequently
+terminated exit 2 around 07:34 UTC. `reopen-owner-run.log` reports
+`prepared POST changed: config/targets/emi/battle/battle/15/target.toml`.
+The sole resumed owner entry is consumed; no retry or POST review followed.
+
+Independent Erdos `01a099b5-a9d8-7b20-85f0-99f56fb1c558` reproduced the cause;
+its closed review is retained in the mission's `reopen-failure-review.md`, read by
+this writer. On actual `fuseblk`, same-leaf `RENAME_NOREPLACE` returns `EEXIST`,
+falsely passing the capability probe; distinct same-directory and cross-directory
+moves to absent destinations return `EINVAL`. The `/tmp` ext4 control succeeds,
+proving that invocation only, not checkout portability. `atomic_write` falls back
+to hard links and retains its temporary alias: correct proposed bytes have two
+links, so the prepared-image single-link guard correctly rejects them.
+
+Failure occurs while `capture_recovery` prepares its first image, before source
+publication or a recovery record. Empty outer rollback maps do not establish
+restoration of applied source. Failed-stage forensics remain; no new recovery
+record, owner command receipts, application or header exists, and no POST acceptance
+is claimed. All six PRE hashes/absence states remain exact. Parent's fresh
+after-failure baseline session `75882` exits zero with the identical adopted digest
+above. Earlier native PRE receipts remain PRE evidence only.
+
+The macro is blocked pending an explicit filesystem decision. Fixing the false
+positive preflight only improves diagnostics; installation/quarantine/restoration
+still need unsupported moves. No link-guard relaxation, replacing rename,
+check-then-unlink workaround or fixture portability claim is accepted. Parent
+requested a persistent ext4 working copy under home preserving the original
+checkout, dirty work and submodules; authorization is pending and no copy/move
+occurred. Reported readiness is approximately 11 GiB excluding `out/build/.venv/tmp`
+and home ext4 with 1.1 TiB free, not permission. Any authorized destination still
+needs actual capability testing and reconciliation of root-bound evidence.
+
+The full reconstruction goal remains **active and incomplete**, not globally
+blocked by this mission. Game01 is parked with zero C/native/application attempts
+and no source edits; its two candidates remain unreviewed. All 50 requeue entries,
+four accepted clean-C sources, 46 outstanding entries, stable IDs/states, frozen
+five and full naming/type/macro/combiner obligations survive. AF66C and all earlier
+tooling allowances remain expired/consumed as recorded. Future macro acceptance
+still requires owner-controlled application/recovery, all native/target gates,
+distinct POST review, a parent-bound envelope and live final verification.
+
+This sidecar read all 3,262 prior plan lines before its sole serialized final edit
+to this plan and `docs/agents/macros.md`. Existing plan tests/parsing, changed-doc
+and index references, and scoped whitespace checks accompany slot release; no
+source/native/index/Git writes, agents, new tests or migration belong to this edit.
+The unchanged 08:10/08:15 bounds grant no replacement implementation allowance.
 
 ## Current skill-only operator correction
 
