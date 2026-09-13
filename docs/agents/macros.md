@@ -21,6 +21,7 @@ user permission request. Preserve pinned transactions and frozen proofs.
 - [Candidate and consumer inspection](#candidate-and-consumer-inspection)
 - [Semantic review](#semantic-review)
 - [Reviewed application](#reviewed-application)
+- [Reviewed private-header creation](#reviewed-private-header-creation)
 - [Parent acceptance and replay](#parent-acceptance-and-replay)
 - [Private revalidation and shared promotion](#private-revalidation-and-shared-promotion)
 - [Existing abstractions](#existing-abstractions)
@@ -339,7 +340,8 @@ The artifact (`bof3.reviewed-macro-opportunity/v1`) has exactly `schema`,
 `candidate_id`, `candidate_fingerprint`, `concern`, `owners`, `owner_fingerprints`,
 `semantic_guards`, `observations`, `review`, and `digest`. Guard statuses are
 `resolved` or `not_applicable`, with nonempty evidence; review must be accepted by
-a named independent reviewer. Private paths must belong to one manifest target.
+a named independent reviewer. V1 remains existing-only: private paths must already
+belong to one manifest target.
 Shared owners must be sanctioned templates/public headers, with proven wrapper
 dependencies and the separate private-proof contract below.
 
@@ -456,6 +458,51 @@ matching v3 workspace/Git guards and known absent publication. This command
 restores original owned PRE; it never resolves the macro opportunity, accepts
 source, consumes a ranked attempt budget or permits automatic retry. Unexpected
 publication and workspace/Git drift require separate reconciliation.
+
+### Reviewed private-header creation
+
+The current parent-owned initiative adds explicit
+`bof3.reviewed-macro-opportunity/v2` admission for one new target-private header
+under `local_template` only. Final checks and acceptance remain pending;
+the [active checkpoint](../plans/autonomous-bof3-decompilation.md#reviewed-private-header-creation--2026-09-13-acceptance-pending)
+records parent-reported checks, repaired review findings, limits and application status.
+V1 stays existing-only; shared-header and type creation are not added.
+
+V2 retains all v1 evidence fields and adds exactly one `creation` object with
+`target`, `header`, `header_text`, `manifest_before` and `manifest_after`.
+The reviewed digest pins complete header contents and both complete manifest
+texts. Only appending that header to the target's `headers` list may change
+manifest facts; identity and every other field remain unchanged. `owners` contains
+only that absent header and its `owner_fingerprints` value is null. The canonical
+`include/` path must end in `_internal.h`, have an existing parent directory and
+no existing file or manifest claim. This planned transition does not relax the
+ordinary live manifest loader's existing-file requirements.
+
+The transaction binds the exact reviewed header and manifest POST texts plus
+affected sources. Planned-POST validation must normalize relative include aliases,
+follow literal quoted/angle include closure, require all new-header consumers to
+equal the affected source set, cover support-source ownership, reject cross-target
+reach and reject new macro identifiers already present in existing C/header/template
+inputs. Structural checks retain exact target, null header PRE and configuration
+PRE-hash bindings.
+Literal traversal remains conservative evidence, not preprocessor binding;
+independent all-use-site, semantic, human-value and exact-wrapper review survives.
+
+Existing common recovery already records absent PRE;
+`preflight_existing_replacements` skips absent paths. Existing-only owner review
+was the admission blocker, not replacement preflight. Publication retains staged
+no-overwrite installation and identity-safe rollback to proven PRE bytes or
+absence, preserving unexpected concurrent changes. Missing PRE membership in
+aggregate history is not absence proof and grants no history reconstruction or
+shared promotion. Guarded retained-history verification checks original `None`
+PRE; generic revalidation uses POST as adopted PRE and `structural_manifest`
+without rederivation, not fresh creation admission. Its exact retained POST shape
+rejects ordinary run. Parent-reported read-only probes verify these boundaries,
+including rejection of missing historical membership; they do not prove fresh
+full acceptance or native revalidation. No dummy header scaffolding or manual
+extraction substitutes for the reviewed
+transaction. Later native gates, independent application review and parent
+confirmation remain mandatory before claiming an applied macro.
 
 ## Parent acceptance and replay
 
@@ -679,6 +726,7 @@ All paths below are under `tools/python/harness/`:
 | Accounting, inspection, consumer graph | `macros/accounting.py`, `macros/resolution.py`, `macros/impact.py` |
 | Human-value selection | `macros/ranking.py`; CLI wiring in `macros/selection.py` |
 | Reviewed artifact, known-consumer check, transaction | `macros/review.py`, `macros/coverage.py`, `macros/transactions.py` |
+| Planned private-header creation (acceptance pending) | `domain/headers.py`, `macros/creation.py`; admission/application in the review and transaction owners above |
 | Parent acceptance | `macros/application.py`; shared review/revalidation in `common/` |
 | Existing-abstraction assessment and disposition | `macros/assessment.py`, `macros/disposition.py`; CLI in `macros/inspection.py` |
 | CLI | `macros/cli.py` owns `bin/macro-audit` and macro `rev-query` parsing/adapters; `commands/rev_query.py` composes domain registrations |

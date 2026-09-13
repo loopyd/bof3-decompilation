@@ -10,10 +10,11 @@ from typing import Any, Callable
 from harness.common.digests import digest
 from harness.common.directory import validate_repo_path
 from harness.common.paths import file_state, validate_paths
-from harness.domain.claims import manifest_header_paths, manifest_source_paths
 from harness.domain.includes import local_include_files
 from harness.domain.receipts import sha256_file
 from harness.io import unique_object
+from harness.macros import creation as macro_creation
+from harness.macros import owners as macro_owners
 
 REVIEW_SCHEMA = "bof3.reviewed-macro-opportunity/v1"
 GUARDS = frozenset(
@@ -71,26 +72,6 @@ def repo_path(root: Path, value: object) -> str:
     except (OSError, ValueError):
         raise ValueError(f"macro transaction path is invalid: {value}") from None
     return name
-
-
-def _target_owned_paths(root: Path, target: str, manifest: Any) -> set[str]:
-    paths = manifest_source_paths(root, manifest) + manifest_header_paths(
-        root, manifest
-    )
-    paths.extend(
-        root / name
-        for name in (
-            f"config/targets/{target}/target.toml",
-            manifest.splat,
-            f"config/targets/{target}/symbols.txt",
-            f"config/targets/{target}/reviewed.rz",
-        )
-    )
-    return {
-        path.resolve().relative_to(root.resolve()).as_posix()
-        for path in paths
-        if path.is_file()
-    }
 
 
 def _shared_owner_kind(root: Path, name: str, manifests: dict[str, Any]) -> str | None:
@@ -237,9 +218,18 @@ def reviewed_artifact(
         "review",
         "digest",
     }
+    creating = artifact.get("schema") == macro_creation.REVIEW_SCHEMA
+    creation = None
+    if creating:
+        required.add("creation")
+        if concern != "local_template":
+            raise ValueError("header creation requires a local template review")
+        creation = macro_creation.validate_admission(
+            root, artifact.get("creation"), manifests
+        )
     if (
         set(artifact) != required
-        or artifact.get("schema") != REVIEW_SCHEMA
+        or artifact.get("schema") not in {REVIEW_SCHEMA, macro_creation.REVIEW_SCHEMA}
         or artifact.get("digest") != digest(facts)
         or artifact.get("concern") != concern
     ):
@@ -264,6 +254,10 @@ def reviewed_artifact(
     ):
         raise ValueError("reviewed macro opportunity owners are invalid")
     for owner in owners:
+        if creation is not None:
+            if owners != [creation["header"]] or fingerprints[owner] is not None:
+                raise ValueError("creation requires its sole absent header owner")
+            continue
         path = repo_path(root, owner)
         if sha256_file(root / path) != fingerprints[owner]:
             raise ValueError("reviewed macro opportunity owner fingerprint drifted")
@@ -305,13 +299,15 @@ def reviewed_artifact(
     ):
         raise ValueError("reviewed macro opportunity is not accepted")
     owner_set = set(owners)
-    if concern == "shared_template":
+    if creation is not None:
+        declared_targets = {creation["target"]}
+    elif concern == "shared_template":
         declared_targets = _shared_targets(root, owners, proofs or [], manifests)
     else:
         declared_targets = {
             target
             for target, manifest in manifests.items()
-            if owner_set <= _target_owned_paths(root, target, manifest)
+            if owner_set <= macro_owners.target_owned_paths(root, target, manifest)
         }
         if not declared_targets:
             raise ValueError(
@@ -328,6 +324,7 @@ def reviewed_artifact(
         "observations": observations,
         "review": review,
         "declared_targets": sorted(declared_targets),
+        **({"creation": creation} if creation is not None else {}),
     }
 
 

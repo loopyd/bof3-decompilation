@@ -31,6 +31,9 @@ def local_include_files(
     *,
     include_roots: tuple[Path, ...] | None = None,
     include_angle: bool = False,
+    replacements: dict[Path, str] | None = None,
+    strict: bool = False,
+    require_literal: bool = False,
 ) -> list[Path]:
     """Follow literal includes once per file, retaining repository containment.
 
@@ -39,18 +42,30 @@ def local_include_files(
     angle includes do not search the including file's directory.
     """
     roots = (root, root / "include") if include_roots is None else include_roots
+    replacements = {path.resolve(): text for path, text in (replacements or {}).items()}
     found: list[Path] = []
     pending = list(seeds)
     seen = set(pending)
     while pending:
         path = pending.pop()
-        if not path.is_file():
+        if path not in replacements and not path.is_file():
             continue
         try:
-            names = _LOCAL_INCLUDE_RE.findall(
-                _include_text(path.read_text(encoding="utf-8"))
+            text = _include_text(
+                replacements[path]
+                if path in replacements
+                else path.read_text(encoding="utf-8")
             )
+            if require_literal:
+                for directive in re.finditer(
+                    r"^\s*#\s*include\b[^\n]*", text, re.MULTILINE
+                ):
+                    if _LOCAL_INCLUDE_RE.fullmatch(directive.group().rstrip()) is None:
+                        raise ValueError(f"unresolved nonliteral include in {path}")
+            names = _LOCAL_INCLUDE_RE.findall(text)
         except (OSError, UnicodeDecodeError):
+            if strict:
+                raise
             continue
         for quoted, angle in names:
             if not quoted and not include_angle:
@@ -61,9 +76,9 @@ def local_include_files(
             ]
             resolved = next(
                 (
-                    candidate.resolve()
-                    for candidate in candidates
-                    if candidate.is_file()
+                    candidate
+                    for candidate in (path.resolve() for path in candidates)
+                    if candidate in replacements or candidate.is_file()
                 ),
                 None,
             )

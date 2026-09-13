@@ -15,7 +15,7 @@ from harness.macros.coverage import validate_consumer_coverage
 from harness.macros.ranking import require_ranked_candidate
 from harness.macros.resolution import describe_candidate
 from harness.macros.review import _wrapper_dependencies, reviewed_artifact
-from harness.macros.transactions import _functions, _target
+from harness.macros.owners import resolve_functions, resolve_target
 from harness.types.transactions import workspace_baseline
 
 REQUEST_SCHEMA = "bof3.macro-existing-request/v1"
@@ -52,11 +52,11 @@ def prepare_assessment(root: Path, request: object) -> dict:
     } & set(request):
         raise ValueError("existing assessment has inapplicable block ranking fields")
     manifests = load_target_manifests(root)
-    target = _target(request["target"], manifests)
+    target = resolve_target(request["target"], manifests)
     supplied = request["targets"]
     if not isinstance(supplied, list) or not supplied:
         raise ValueError("existing assessment requires explicit targets")
-    targets = sorted({_target(value, manifests) for value in supplied})
+    targets = sorted({resolve_target(value, manifests) for value in supplied})
     if supplied != targets or target not in targets:
         raise ValueError("existing assessment targets must be canonical and unique")
     options = (
@@ -106,7 +106,7 @@ def prepare_assessment(root: Path, request: object) -> dict:
             raise ValueError(
                 "existing assessment requires distinct canonical selectors"
             )
-        functions = _functions(
+        functions = resolve_functions(
             root, connection, request["affected_functions"], set(targets)
         )
         if any(function["status"] != "exact" for function in functions):

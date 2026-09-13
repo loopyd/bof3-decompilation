@@ -512,7 +512,9 @@ def test_shared_prepare_passes_pinned_proofs_to_review(
         }
 
     monkeypatch.setattr(macro_transactions, "reviewed_artifact", review)
-    monkeypatch.setattr(macro_transactions, "_functions", lambda *args: functions)
+    monkeypatch.setattr(
+        macro_transactions.macro_owners, "resolve_functions", lambda *args: functions
+    )
     request = {
         "schema": macro_transactions.REQUEST_SCHEMA,
         "target": TARGET,
@@ -580,8 +582,8 @@ def test_shared_prepare_rejects_unrelated_owner_end_to_end(
         macro_transactions, "load_target_manifests", lambda _: manifests
     )
     monkeypatch.setattr(
-        macro_transactions,
-        "_target",
+        macro_transactions.macro_owners,
+        "resolve_target",
         lambda value, known: (
             value if value in known else (_ for _ in ()).throw(ValueError())
         ),
@@ -743,9 +745,57 @@ def test_review_requires_all_eight_guards_two_observations_and_fresh_owner(
 def test_atomic_apply_receipts_attestation_expected_digest_and_rollback(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    manifest = _manifest(tmp_path, monkeypatch)
+    report = _setup(tmp_path, monkeypatch)
+    report["rows"][0]["kind"] = "statement_window"
+    monkeypatch.setattr(
+        macro_accounting, "candidate_account", lambda *args, **kwargs: report
+    )
+    request = _request(tmp_path, report, concern="local_template")
+    request["candidate_artifact"] = _artifact(
+        tmp_path, report, concern="local_template"
+    )
+    artifact_path = tmp_path / request["candidate_artifact"]
+    artifact = json.loads(artifact_path.read_text())
+    header = "include/local_dispatch_internal.h"
+    config = f"config/targets/{TARGET}/target.toml"
+    before = (tmp_path / config).read_text()
+    after = before.replace(
+        "headers=['include/test.h']", f"headers=['include/test.h', '{header}']"
+    )
+    header_text = "#ifndef LOCAL_DISPATCH_INTERNAL_H\n#define LOCAL_DISPATCH_INTERNAL_H\n#define DEFINE_THREE_VALUES() int a = 17; int b = 17; int c = 17\n#endif\n"
+    artifact.update(
+        schema="bof3.reviewed-macro-opportunity/v2",
+        owners=[header],
+        owner_fingerprints={header: None},
+        creation={
+            "target": TARGET,
+            "header": header,
+            "header_text": header_text,
+            "manifest_before": before,
+            "manifest_after": after,
+        },
+    )
+    facts = {key: value for key, value in artifact.items() if key != "digest"}
+    artifact = {**facts, "digest": digest(facts)}
+    artifact_path.write_text(json.dumps(artifact))
+    manifest = macro_transactions.prepare_transaction(tmp_path, request)
+    source = "src/test/func_80100000.c"
+    changes = {
+        header: header_text,
+        config: after,
+        source: '#include "local_dispatch_internal.h"\n'
+        + SOURCE_TEXT.replace("int a=17,b=17,c=17", "DEFINE_THREE_VALUES()"),
+    }
+    assert manifest["pre_state"][header] is None
+    with pytest.raises(RuntimeError, match="validation failed"):
+        macro_transactions.run_transaction(
+            tmp_path, manifest, changes, runner=_runner(1)
+        )
+    assert not (tmp_path / header).exists()
+    assert (tmp_path / config).read_text() == before
+    assert (tmp_path / source).read_text() == SOURCE_TEXT
     application = macro_transactions.run_transaction(
-        tmp_path, manifest, {"include/test.h": "#define VALUE 17\n"}, runner=_runner()
+        tmp_path, manifest, changes, runner=_runner()
     )
     expected = application["digest"]
     assert macro_transactions.verify_application(tmp_path, application, expected)[
@@ -758,18 +808,8 @@ def test_atomic_apply_receipts_attestation_expected_digest_and_rollback(
             tmp_path, application, digest({"wrong": 1})
         )
 
-    (tmp_path / "include/test.h").write_text("#define OLD_VALUE 17\n")
-    manifest["pre_state"] = macro_transactions.file_state(
-        tmp_path, set(manifest["allowed_paths"])
-    )
-    facts = {key: item for key, item in manifest.items() if key != "digest"}
-    manifest = {**facts, "digest": digest(facts)}
-    before = (tmp_path / "include/test.h").read_bytes()
-    with pytest.raises(RuntimeError, match="validation failed"):
-        macro_transactions.run_transaction(
-            tmp_path, manifest, {"include/test.h": "bad\n"}, runner=_runner(1)
-        )
-    assert (tmp_path / "include/test.h").read_bytes() == before
+    assert (tmp_path / header).read_text() == header_text
+    assert (tmp_path / config).read_text() == after
 
 
 def test_macro_validation_substitution_retains_leaf_and_original_quarantine(

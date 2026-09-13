@@ -29,11 +29,11 @@ from harness.common.runtime import run_checks
 from harness.common.paths import validate_paths
 from harness.common.git import workspace_backup
 from harness.common.runtime import write_attestation
-from harness.domain.ids import normalize_target_id
 from harness.domain.manifests import load_target_manifests
-from harness.domain.registry import resolve_function
 from harness.domain import functions as source_functions
 from harness.macros import accounting as macro_accounting
+from harness.macros import creation as macro_creation
+from harness.macros import owners as macro_owners
 from harness.macros.blocks import validate_minimum
 from harness.macros.coverage import validate_consumer_coverage
 from harness.macros.ranking import require_ranked_candidate
@@ -54,75 +54,6 @@ ATTESTATION_SCHEMA = "bof3.macro-application-attestation/v1"
 CONCERNS = frozenset({"constant", "expression", "local_template", "shared_template"})
 
 
-def _target(value: object, manifests: dict[str, Any]) -> str:
-    if not isinstance(value, str):
-        raise ValueError("macro transaction target must be canonical")
-    try:
-        target = normalize_target_id(value).value
-    except ValueError as error:
-        raise ValueError(
-            f"unknown or non-canonical macro transaction target: {value}"
-        ) from error
-    if target != value or target not in manifests:
-        raise ValueError(f"unknown or non-canonical macro transaction target: {value}")
-    return target
-
-
-def _functions(
-    root: Path, connection: Any, values: object, targets: set[str]
-) -> list[dict[str, str]]:
-    if (
-        not isinstance(values, list)
-        or not values
-        or any(not isinstance(item, str) for item in values)
-    ):
-        raise ValueError("affected_functions must be non-empty strings")
-    result = []
-    for selector in sorted(set(values)):
-        if "@0x" not in selector:
-            raise ValueError(f"invalid affected function selector: {selector}")
-        target, raw = selector.rsplit("@0x", 1)
-        if target not in targets:
-            raise ValueError(f"affected function selector has wrong target: {selector}")
-        try:
-            address = int(raw, 16)
-        except ValueError as error:
-            raise ValueError(
-                f"invalid affected function selector: {selector}"
-            ) from error
-        try:
-            resolved = resolve_function(root, selector)
-        except (OSError, RuntimeError, ValueError) as error:
-            raise ValueError(
-                f"affected function identity is not canonical: {selector}"
-            ) from error
-        row = connection.execute(
-            "SELECT lift_status FROM functions WHERE target_id=? AND address=?",
-            (target, address),
-        ).fetchone()
-        if (
-            row is None
-            or row[0] not in {"exact", "partial"}
-            or resolved.source is None
-            or resolved.compiled_symbol is None
-        ):
-            raise ValueError(
-                f"affected function must be exact/partial and manifest-claimed: {selector}"
-            )
-        source_functions.require_single_source(resolved.source)
-        result.append(
-            {
-                "selector": selector,
-                "target": target,
-                "address": f"0x{address:08X}",
-                "function": resolved.compiled_symbol,
-                "status": row[0],
-                "source": resolved.source.relative_to(root).as_posix(),
-            }
-        )
-    return result
-
-
 def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
     if not isinstance(request, dict) or request.get("schema") != REQUEST_SCHEMA:
         raise ValueError(f"macro transaction request schema must be {REQUEST_SCHEMA}")
@@ -140,8 +71,8 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
             "macro transaction requires zero current automatic applications"
         )
     manifests = load_target_manifests(root)
-    target = _target(request.get("target"), manifests)
-    targets = resolve_targets(request, target, manifests, _target)
+    target = macro_owners.resolve_target(request.get("target"), manifests)
+    targets = resolve_targets(request, target, manifests, macro_owners.resolve_target)
     proof_refs = request.get("exact_function_proofs")
     if concern != "shared_template" and proof_refs not in (None, []):
         raise ValueError("private macro transactions cannot reference shared proofs")
@@ -153,7 +84,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
             proof_refs,
             manifests,
             expected_count=len(targets),
-            normalize_target=_target,
+            normalize_target=macro_owners.resolve_target,
             verify_reviewed_application=verify_reviewed_application,
         )
         if concern == "shared_template"
@@ -183,7 +114,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
         raise ValueError("macro transaction target does not own reviewed paths")
     connection = connect(root)
     try:
-        functions = _functions(
+        functions = macro_owners.resolve_functions(
             root, connection, request.get("affected_functions"), targets
         )
         validate_consumer_coverage(
@@ -203,6 +134,10 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
             *(validate_repo_path(item["source"]) for item in functions),
         },
     )
+    if reviewed.get("creation"):
+        allowed.update(
+            validate_paths(root, [macro_creation.manifest_path(reviewed["creation"])])
+        )
     preflight_existing_replacements(root, allowed)
     pre_state = file_state(root, allowed)
     baseline = workspace_baseline(root)
@@ -264,6 +199,12 @@ def _manifest(root: Path, value: object, *, rederive: bool = False) -> dict[str,
                 for item in value["affected_functions"]
             ),
         }
+        if value["reviewed_opportunity"].get("creation"):
+            creation = macro_creation.validate_contract(
+                value["reviewed_opportunity"]["creation"]
+            )
+            macro_creation.validate_manifest_state(value, creation)
+            expected.add(macro_creation.manifest_path(creation))
         supplied = set(value["allowed_paths"])
     except (KeyError, TypeError, ValueError) as error:
         raise ValueError("macro transaction manifest paths are invalid") from error
@@ -287,6 +228,7 @@ def run_transaction(
 ) -> dict[str, Any]:
     manifest = _manifest(root, manifest_value, rederive=True)
     source_functions.validate_single_source_changes(changes)
+    macro_creation.validate_changes(root, manifest, changes)
     allowed = validate_paths(root, manifest["allowed_paths"])
     validate_proof_inputs(root, manifest["exact_function_proofs"])
     if (

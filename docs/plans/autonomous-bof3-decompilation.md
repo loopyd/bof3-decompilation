@@ -221,6 +221,69 @@ names are unchanged and naming audit remains open. All work retains the original
 outstanding, including reviewed partial AF66C. Runtime measurements live in the
 [range-predicate note](../specs/runtime/battle-range-predicates.md#clean-c-requeue-measurement).
 
+### Reviewed private-header creation — 2026-09-13 (acceptance pending)
+
+Parent mission `out/reviews/private-header-creation-20260913/mission.md` starts
+from `20030baa`, with work cutoff 04:05 UTC and cleanup hard stop 04:08 UTC.
+It permits one implementation pass, existing-check iteration, one independent
+review and one repair; consumed allowances never reset. Parent owns all code and
+serialized application/native work. This documentation worker owns only this plan
+and `docs/agents/macros.md`; initial work was bounded to eight minutes and
+04:05 UTC. Parent subsequently authorizes verification-only documentary cleanup
+through the unchanged 04:08 UTC hard stop, without renewed implementation budget.
+
+The real-game lead remains `assembly_block:366ad828049fbe14`: floor 12, pool
+three, top N one, exactly the four accepted battle15 dispatchers above. It is
+selected for review and still **not applied**. The existing monolithic header
+requires unrelated consumers, including partials and support bindings; do not
+narrow that coverage, create dummy headers or manually extract the macro.
+
+The prerequisite blocker was existing-only reviewed owner admission. Common
+recovery already supports absent PRE, and `preflight_existing_replacements`
+skips absent paths; neither needs an absence workaround. Current parent-owned
+`domain/headers.py`, `macros/creation.py`, `macros/review.py` and
+`macros/transactions.py` introduce the explicit v2 local-template contract
+described in the [macro guide](../agents/macros.md#reviewed-private-header-creation).
+It pins one new private header's complete contents and complete manifest PRE/POST
+text, permitting only its appended header claim. The sole absent owner has a
+null fingerprint, its parent directory must exist, and ordinary live manifest
+loading stays strict. Reuse staged no-overwrite publication and identity-safe
+owned rollback, preserving concurrent work and restoring proven PRE absence.
+
+Acceptance must cover planned-POST literal-include consumers, exact affected
+source scope, cross-target reachability and new-identifier collisions, alongside
+the existing semantic, ranking and exact-wrapper gates. V1 remains existing-only;
+shared/type creation is not added. Missing PRE membership in aggregate history
+is not evidence of absence and cannot be reconstructed from current files.
+Parent reports the updated existing atomic macro test passed in 1.22 seconds:
+v2 creation failure restores header absence and original manifest/source; success
+publishes, passes `verify_application` and rejects a wrong attestation digest.
+The 165 existing targeted macro/manifest-claim/file/domain tests passed before
+the last repair; the same 165-case final rerun began around 04:04 UTC and has no
+reported final result. The atomic lifecycle test passed again after repair in
+0.94 seconds. This worker records parent verification, not an independent run.
+
+Parent reports independent review initially found two P1s: normalized planned
+include aliases and an invalid `include_support` keyword, plus structural PRE/
+target checks. One repair resolves the reported findings; read-only review probes
+now pass canonical relative aliases, support-source coverage, correct targets,
+null PRE and configuration PRE-hash checks. They confirm the exact POST shape
+used by retained revalidation rejects ordinary run, while missing historical
+membership still fails closed. Real-repository dry admission and relative-include
+POST scope checks passed across the catalog for the four dispatchers, publishing
+no files or macros. Code is frozen pending final tests and a parent-owned local
+commit; neither completion is reported here.
+
+Guarded retained-history verification checks the original `None` PRE. Generic
+revalidation uses POST as its adopted PRE and `structural_manifest` without
+rederivation, rather than rerunning creation admission; original absence evidence
+is not rewritten. No fresh full-acceptance or native revalidation case is proven.
+Resolved review probes do not establish full acceptance. Later live native gates,
+independent application review and parent confirmation remain mandatory. No game macro
+application or new game header exists. Whole-game scope, phase states, frozen-five
+membership, historical proofs and every unfinished obligation remain intact;
+these bounded checks do not complete implementation or acceptance.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex
