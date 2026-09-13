@@ -1321,7 +1321,7 @@ the 50-entry clean-C queue (four accepted, 46 outstanding) and unrelated dirty w
 Battle15's stale `func_800A3638` remains S4.4 debt; full-target `complete:true`,
 S3.2/S4/consolidation and whole-game obligations remain unfinished.
 
-**Production-resume preflight — runtime accepted, commit pending.** The
+**Production-resume preflight — committed.** The
 new action retains its **21:21:48 UTC** start from `2d1d125b`, **21:50 work /
 21:55 cleanup** cutoffs and one implementation/up to two repairs; the first
 implementation is consumed. Before repair, parent confirmed fresh battle03
@@ -1351,16 +1351,135 @@ FUNCTION/DATA proposals, exhaustion and corruption, and **44 existing tests**
 pinned runtime files, not documentation or source/name/native acceptance.
 Parent's read-only old-HEAD/current `input_state` comparison yields identical
 **1,804 path states**, taking 1.555/1.510s; this is parity evidence, not a speed
-benchmark. Commit remains parent-owned after pin verification. This serialized
-docs slot covers only this plan and a brief harness note; existing checks grant
-no source acceptance.
+benchmark. Commit `8319fbcd` closed this action at **21:31:36 UTC**, elapsed
+**9m48s**, recorded in `out/reviews/naming-bootstrap-20260913/timing.json` and
+`assessment.md`; this sidecar read the timing record. That docs slot covered only
+this plan and a brief harness note; its checks grant no source acceptance.
 
-No new semantic name is chosen or source rename applied. Battle03
+At that bootstrap checkpoint no semantic name was chosen or rename applied. Battle03
 `func_801DE560`, `func_801DE60C` and `func_801DE858` remain partial and must not
 route as exact; `func_801DE9A8` is only an exact 112-byte scout with two indexed
 callers and no accepted semantic name. All source goals, queues, historical proofs,
 consumed budgets and phase states remain unchanged; no native/index/Git writes or
 children belong to this sidecar. Existing docs checks accompany handoff.
+
+### Battle03 name-copy identity — 2026-09-13 (rolled back; tooling fixed)
+
+Parent resumes one candidate and at most one accepted identity application for
+`emi/battle/battle/03@0x801DE9A8` from `8319fbcd`. The initial clock observation
+was lost to output overflow; **21:35:49 UTC** is only the first recovered clock,
+so later elapsed time from it is a lower bound. Work/cleanup cutoffs remain
+**234800 / 235400 monotonic**; no earlier budget is reset or replaced.
+
+Parent reports semantic acceptance of `copyLocalBattlerNameToTextSlot0` through
+candidate `5afcc889` and final semantic verdict `5ccf3998`. Original resident
+callee bytes prove bounded NUL-terminated copying (maximum five), corroborated by
+START's Ryu/Nina/etc. name initialization, local copying and the resident text-slot
+consumer. This contradicts the old script/event `@behavior`. A parent draft
+misread compressed output and was corrected using independent original-byte
+evidence; no native corruption was established. The original aligned-JAL scan
+finds **five sites versus two indexed**; the reviewer covers the extra three raw
+callers through candidate `optional_work`, without inventing reviewed boundaries.
+Indexed incoming-call coverage is not complete. The collector correctly refuses
+unreviewed caller `emi/battle/battle/03@0x801D54F8`; parent's minimal
+`naming/instructions.py` patch adds its selector to the existing refusal only.
+Indexed collection succeeds; the reviewed-byte gate is unchanged.
+
+One consumed spelling-only application followed a first-line patch-verification
+failure that made zero edits: parent verified every physical PRE before applying,
+without taking a replacement PRE. Prepared report SHA-256 is
+`71710dca41c4efa7b0d72870004458b271c10449a7d30c9f46c50cc6339c7273`.
+Public PRE is `out/reviews/evidence/postapply-5ae74bc0ee71b2468ccf2e8e7a46b025/snapshot.json`;
+native receipts are `out/reviews/evidence/postapply-4f63e2362de972c2f5a1d364f522f400/gates.json`.
+This sidecar read all six passed gate results: symbols normalize/check, Splat,
+build, asm-diff **28/28** and byte-match **112/112** for the selected helper only.
+Parent confirmed POST index recovery and fresh `ready:true`, plus **164 existing
+tests passed in 27.36s**; the earlier 64-test subset overlaps and is not added to
+that count. No tests were added.
+
+Gödel `01a09cc5-afb0-78d3-9ae0-a426c37b0aa4` issued the sole POST verdict
+**BLOCKED**, `accepted:false`, `repairable:false`, in
+`out/reviews/evidence/naming-template-20260913/post-review.json`, SHA-256
+`16b4d17c0de5a2374da6f0ece13c1e365f74b4ba04b7a07ff1b73ab4aec4b431`.
+This sidecar read and hash-verified it. Preservation and selected native checks
+pass; no source defect or failed native comparison was observed. Two blockers:
+
+- The parent's handoff transcribed the semantic-review digest suffix incorrectly:
+  supplied `5ccf3998ef11d9d781f213ce027ecc18da0cf62b88e6a04a3db9da029a546bbc`,
+  actual `5ccf399855f7221b2071d314f1dec76e6ec70ac6c68a02722b602bba1a7028cc`.
+  This sidecar verified the actual artifact and correct candidate digest; original
+  artifacts remain unchanged. Recording the discrepancy is not silent pin rebinding
+  or acceptance of the mismatched handoff.
+- At rejection, `naming/application.py` generated FUNCTION asm/byte checks only for
+  the selected helper. Changed C callers `emi/battle/battle/03@0x801D54F8`, `@0x801D5658` and
+  `@0x801D590C` also require live comparisons; target compilation does not prove
+  their byte equality. The six passing gates therefore do not close affected scope.
+
+Parent completed exact physical-PRE rollback; this sidecar verified all nine
+physical paths against snapshot bytes/modes/absence after its earlier POST-only
+observation. Names are restored. Parent confirms rollback build/index/readiness
+complete and battle03 **189 = 85 functions + 104 data**, `complete:false`, versus
+global **1360 = 529 functions + 831 data**, with prepared report SHA unchanged.
+No full-report completion, finalization or
+historical-row deletion occurred.
+This sidecar read `rollback-readiness.json` and all six `rollback-*-{asm,bytes}.json`
+records under `out/reviews/naming-template-20260913`: the three PRE callers pass
+asm/byte checks at **352, 340, 340 bytes**, respectively. These prove restored PRE,
+not the rejected POST. No successor was published or production rename accepted.
+The one application remains consumed: no new PRE, source retry or acceptance.
+
+Parent implemented the bounded coverage-root fix within the original **234800**
+work / **235400** cleanup cutoffs. `application.collect_function_checks` derives
+affected C callers from frozen `source_locations`, live pinned exact metadata and
+resolver identity; producer and validator share `plan(root, target, row)`, requiring
+**12 gates** for this scope once caller metadata is valid, versus the original six.
+Evidence checks bind each caller selector/name/source, positive aligned original
+size and exact current bytes; no raw boundary is promoted. This sidecar inspected the implementation
+delta. Final existing coverage passes **164 tests in 27.47s**, retained in
+`/tmp/naming-template-final-tests.log`; this sidecar read the result. This rerun
+supersedes the earlier run for current tooling, not a cumulative test count.
+Lovelace `01a09ccf-bbc2-7872-aa29-362663535a8c` independently **ACCEPT_TOOLING**
+in `out/reviews/naming-template-20260913/coverage-review`, SHA-256
+`d9e07982b305d5ba1bfc102f9e79c04af95cba82837f93365982bca427fae448`.
+This sidecar read/hash-verified the artifact and all three live implementation pins.
+Independent validation passed **146 existing tests, two skipped**, Ruff/format,
+fixture coverage and 96 negative payload cases; overlap with the parent's 164 is
+unknown, so counts are not summed. Actual PRE asm-full/byte payloads validate
+under canonical-metadata fixtures; normal-detail asm correctly rejects missing
+fields. The snapshot refusal probe mocks surrounding setup, not the real caller
+metadata or collector, and grants no live publication. This accepts coverage and
+early eligibility tooling only, not source/POST acceptance, metadata repair or
+retry authority. Original review/work cutoffs remain unchanged. Existing docs
+checks accompany handoff; parent owns final stop/commit timing.
+
+Strict preflight exposes a separate production blocker in all three restored
+callers: their `@status exact` / `@match 100` accompanies
+`@residual none; live audit is instruction- and byte-exact.` Canonical
+`parse_progress_tags` requires literal `none`, so `lift_lifecycle` is `invalid`
+despite the **352/340/340-byte** native matches. Parent preserves source PRE and
+does not soften parsing or edit these tags. `collect_function_checks` now reports
+the invalid caller path; public snapshot preparation runs it before physical-PRE
+publication, rejecting before identity mutation. This sidecar inspected both
+changes. Parent's retained `coverage-probe.json` in the wave directory, read by
+this sidecar, reports the final **99 passing assertions**: original 94, four
+selected-size checks rejecting 116 against frozen 112 bytes, and one DATA-plan
+comparison identical to HEAD. The 12-gate plan exists only
+under an in-memory canonical-metadata fixture; real PRE rejects malformed caller
+progress before publication. Production C hashes stay unchanged. These disposable
+checks establish neither production readiness nor a new source attempt.
+Separate evidence-backed metadata repair must precede any future rename involving
+these callers. The present case remains blocked by invalid metadata, its consumed
+application and the recorded parent pin-transcription failure; report counts stay
+**189/1360**, with no completion decrease.
+
+Accepted harness coverage remains required; caller metadata repair is still pending.
+stale `@behavior` correction remains the immediate source follow-up after future
+identity closure;
+future deterministic raw-JAL-versus-indexed coverage diagnostics remain explicit
+work. Preserve all frozen queues, proofs, consumed bounds and phase states: the
+three neighboring partials, **46 outstanding clean-C entries**, linked type and
+both macro obligations, battle15's stale history, full-target `complete:true`,
+S3.2/S4/consolidation and whole-game goals are not closed or refreshed by this row.
 
 ## Current skill-only operator correction
 

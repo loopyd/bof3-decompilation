@@ -36,6 +36,21 @@ as skill missions. Local process supervision remains for deterministic native to
 The cross-domain index remains one derived database; package separation does not
 create independent databases or relax freshness checks.
 
+`naming.instructions.resolve_instructions` includes the target-qualified selector
+when refusing capture without a closed reviewed function boundary. The diagnostic
+does not admit raw/unreviewed caller ranges or relax the capture gate.
+
+FUNCTION identity native checks cover the selected function and every changed C
+caller derived from frozen `source_locations`. `application.collect_function_checks`
+requires one canonically valid exact record per caller and matching resolver
+source/symbol; producer and validator share `plan(root, target, row)`. Public
+snapshot preparation runs these checks before physical-PRE publication and reports
+invalid caller metadata with its path. Native exactness does not excuse malformed
+progress tags; repair them separately before a future identity transaction.
+Caller evidence binds selector, name, source, positive aligned original size and
+exact current bytes. Target compilation alone is insufficient; metadata does not
+promote raw ranges to reviewed boundaries.
+
 `domain.functions` owns attached per-function metadata, address-selected read access
 and lexical implementation ranges, including template invocations. `domain.claims`
 enumerates all members and rejects duplicate owners; the index scopes lifecycle and

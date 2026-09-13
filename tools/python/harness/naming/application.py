@@ -29,7 +29,56 @@ BUNDLE_KEYS = "schema binding implementation_run_id initial_state final_state in
 OUTPUT_LIMIT = 2 * 1024 * 1024
 
 
-def plan(target: str, row) -> list[list[str]]:
+def collect_function_checks(root: Path, row) -> list[dict]:
+    from harness.domain.functions import parse_function_records
+    from harness.domain.registry import resolve_function
+
+    facts = row["pre_apply"]["facts"]
+    start, end = (int(value, 0) for value in facts["unchanged_range"].split(".."))
+    checks = [
+        {
+            "selector": row["identity"]["selector"],
+            "address": start,
+            "size": end - start,
+            "name": row["new_name"],
+            "source": facts["destination"],
+        }
+    ]
+    scope = facts["scope"]
+    selectors = {checks[0]["selector"]}
+    for relative in sorted(set(scope["source_locations"])):
+        if relative == scope["definition"] or not relative.endswith(".c"):
+            continue
+        source = root / relative
+        try:
+            records = parse_function_records(source.read_text(encoding="utf-8"))
+        except ValueError as error:
+            raise ValueError(f"invalid caller metadata: {relative}: {error}") from error
+        if len(records) != 1 or records[0].status != "exact":
+            raise ValueError(f"function identity requires one exact caller: {relative}")
+        record = records[0]
+        selector = f"{scope['target']}@0x{record.address:08X}"
+        resolved = resolve_function(root, selector)
+        if (
+            resolved.source != source
+            or resolved.compiled_symbol != record.spelling
+            or selector in selectors
+        ):
+            raise ValueError(f"function caller ownership is ambiguous: {relative}")
+        selectors.add(selector)
+        checks.append(
+            {
+                "selector": selector,
+                "address": record.address,
+                "size": None,
+                "name": record.spelling,
+                "source": relative,
+            }
+        )
+    return checks
+
+
+def plan(root: Path, target: str, row) -> list[list[str]]:
     selectors = (
         [
             consumer["selector"]
@@ -38,7 +87,7 @@ def plan(target: str, row) -> list[list[str]]:
             ]
         ]
         if row["kind"] == "data"
-        else [row["identity"]["selector"]]
+        else [check["selector"] for check in collect_function_checks(root, row)]
     )
     commands = [
         ["bin/symbols", "normalize", target, "--write"],
@@ -92,8 +141,20 @@ def evidence(root: Path, result: dict, row) -> bool:
                 consumer["source"],
             )
         else:
-            start, end = (int(x, 0) for x in facts["unchanged_range"].split(".."))
-            size, name, destination = end - start, row["new_name"], facts["destination"]
+            checks = [
+                check
+                for check in collect_function_checks(root, row)
+                if check["selector"] == result["argv"][1]
+            ]
+            if len(checks) != 1:
+                return False
+            check = checks[0]
+            start, size, name, destination = (
+                check["address"],
+                check["size"],
+                check["name"],
+                check["source"],
+            )
         source = Path(payload["source"])
         if source.is_absolute():
             source = source.relative_to(root.resolve())
@@ -111,9 +172,11 @@ def evidence(root: Path, result: dict, row) -> bool:
             and int(payload["address"], 0) == start
             and source.as_posix() == destination
             and type(payload["original_size"]) is int
-            and payload["original_size"] == size
+            and payload["original_size"] > 0
+            and payload["original_size"] % 4 == 0
+            and (size is None or payload["original_size"] == size)
             and type(payload["current_size"]) is int
-            and payload["current_size"] == size
+            and payload["current_size"] == payload["original_size"]
             and type(payload["size_delta"]) is int
             and payload["size_delta"] == 0
             and Path(payload["original_binary"]).resolve()
@@ -252,7 +315,7 @@ def produce(
     try:
         if row["kind"] == "data" and expected != initial:
             raise ValueError("data postapply requires an already normalized map")
-        for number, argv in enumerate(plan(target, row)):
+        for number, argv in enumerate(plan(root, target, row)):
             recheck(root, bundle, row)
             before = digest(bundle["final_state"])
             result = _execute(root, argv)
@@ -311,7 +374,7 @@ def validate_bundle(
     recheck(root, bundle, row)
     if bundle["graph_state"] is None:
         raise ValueError("native build graph evidence missing")
-    commands = plan(target, row)
+    commands = plan(root, target, row)
     if not isinstance(bundle["gates"], list) or len(bundle["gates"]) != len(commands):
         raise ValueError("native bundle requires every planned gate")
     initial, final = bundle["initial_state"], bundle["final_state"]

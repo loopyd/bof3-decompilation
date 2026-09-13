@@ -22,7 +22,9 @@ def resolve_instructions(root: Path, selector: str) -> tuple[dict, bytes]:
     layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
     boundary = layout.find_boundary_at(function.address)
     if boundary is None or not boundary.is_function or boundary.virtual_end is None:
-        raise ValueError("instruction capture requires a closed reviewed function")
+        raise ValueError(
+            f"instruction capture requires a closed reviewed function: {selector}"
+        )
     start, end = boundary.virtual_start, boundary.virtual_end
     size = end - start
     # ponytail: bound one capture to 64 KiB; larger functions need reviewed chunking.

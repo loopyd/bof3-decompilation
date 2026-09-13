@@ -12,7 +12,7 @@ from harness.common.git import capture_git_index
 from harness.common.inputs import file_state
 from harness.common.inventory import CaptureBudget, capture_file
 from harness.common.lease import acquire_writer, require_writer
-from harness.naming.application import directory
+from harness.naming.application import collect_function_checks, directory
 from harness.naming.audit import validate
 from harness.naming.editing import report_mutation
 from harness.naming.history import (
@@ -47,6 +47,8 @@ def create_snapshot(
         if index is None or index.content is None:
             raise ValueError("naming snapshot requires an existing Git index")
         validate(root, target, report, transaction=transaction, report_path=path)
+        if row["kind"] == "function":
+            collect_function_checks(root, row)
         budget = CaptureBudget()
         names = transaction_paths(row)
         observations = {
