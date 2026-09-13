@@ -1594,6 +1594,32 @@ budgets and **1360 = 529 functions + 831 data** global counts. No successor,
 full-report completion or broader phase closure follows. This plan-only slot runs
 existing checks; no staging or commit belongs to the sidecar.
 
+### Supervisor finalization performance — 2026-09-13 (tooling accepted)
+
+Action starts **23:08:44 UTC** after `91a2263a`; work/cleanup remain
+**23:33:44 / 23:38:44**, with this plan-only slot ending **23:29:00**.
+One focused fix and one bounded repair are consumed: `process.py` flushes available
+Python streams and calls `os._exit` only after `_main` finishes cleanup/FD closure.
+Initial FAIL R1 (absent streams causing false failure) is preserved; the None guard
+fixes it while genuine flush errors still fail. No ownership/deadline/ACK guard,
+Git query, validator or cache policy is weakened. Parent accepts tooling only.
+Lagrange's [final review](../../out/reviews/validation-profile-20260913/final-review.json)
+passed **23:25:33**, before the unchanged **23:26** review ceiling; SHA-256
+`0a860fb485f3ff42c0c277dcc5ee9de5a4425ad1364b57b2a351eb145a45a5d6`.
+This sidecar read/hash-verified it and the live process/guide pins.
+The [measurement summary](../../out/reviews/validation-profile-20260913/summary.json)
+owns methods/limits: 216 commands consume 6.264s of 8.608s; 163 Git calls take
+4.690s (66 index-path, 44 HEAD, 44 entry, nine root queries). Final exact-code
+`-m` pair passes at **8.246699→7.818148s (~5.20%, one pair)**; pre-repair `-m`
+means improve **2.80%**, high variance/two pairs; controlled `-c` improves **6.13%**.
+The unmatched **8.608→8.800s** profile remains unimproved. Cold startup/repeated Git
+queries still dominate; no whole-suite, throughput guarantee or bottleneck closure.
+Independent 20 existing checks, 21 semantic probes and closed-stream/flush-error
+cases pass; parent 20 post-repair checks, earlier 172 naming and four owner
+integrations pass, without summing overlap. Existing plan checks accompany handoff.
+No source/report/index acceptance, naming retry or queue/phase change: preserve
+**1360 = 529 functions + 831 data**, prior blocked/deferred budgets and all debts.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex

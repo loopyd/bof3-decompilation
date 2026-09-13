@@ -400,6 +400,7 @@ def run_analyzer(
 
 
 def _main() -> int:
+    """Finish descendant cleanup and close its acknowledgement before worker exit."""
     completion = int(sys.argv[2])
     try:
         result = _supervise(
@@ -412,4 +413,8 @@ def _main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(_main())
+    return_code = _main()
+    for stream in (sys.stdout, sys.stderr):
+        if stream is not None:
+            stream.flush()
+    os._exit(return_code)

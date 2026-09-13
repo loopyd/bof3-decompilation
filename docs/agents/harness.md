@@ -194,6 +194,12 @@ triggers killing and reaping adopted descendants, including redirected-stdio and
 `setsid` escapees. The sole reaper retains child identities until wait, preserving
 direct-child exit status.
 
+After `_main` finishes cleanup and closes the completion pipe, the supervisor
+flushes its available Python output streams and exits directly with the retained status.
+This avoids interpreter-finalization overhead for short commands; it does not
+skip child reaping, the cleanup ACK, output capture or deadline checks. Exceptions
+before this point retain Python's failing-exit path. No supervisor state is pooled.
+
 The bounded supervisor observes its direct child's exit through libc
 `pidfd_open` readiness where available; unsupported or denied capability retains
 the existing 50 ms polling fallback. Readiness neither reaps descendants nor
