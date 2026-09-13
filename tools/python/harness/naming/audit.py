@@ -13,12 +13,14 @@ publication live in ``initialize``; scoped repair lives in ``prepare``.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Mapping
 
+from harness.common.deadlines import check_deadline
 from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.context import SCHEMA_V2, SCHEMA_V3, TargetContext
 from harness.naming.editing import report_mutation
@@ -311,8 +313,9 @@ def prepare_transaction(
     *,
     candidate: dict[str, Any] | None = None,
     expected_sha256: str | None = None,
+    check_only: bool = False,
 ) -> dict[str, Any]:
-    """Atomically bind one ready proposal to its report and live facts."""
+    """Validate one ready proposal, optionally publishing its bound report."""
     if (candidate is None) != (expected_sha256 is None):
         raise ValueError("candidate and expected SHA-256 must be supplied together")
     path = canonical_report_path(root, report_path)
@@ -366,6 +369,20 @@ def prepare_transaction(
             root, path, report, row, result["pre_apply"], result["manifest"]
         )
         validate(root, target, report, report_path=path)
+        check_deadline()
+        if check_only:
+            if path.read_bytes() != original:
+                raise ValueError("proposal report changed concurrently")
+            result = {
+                "schema": SCHEMA_V3,
+                "target": target,
+                "transaction": transaction,
+                "checked": True,
+                "prepared": False,
+                "report_sha256": hashlib.sha256(original).hexdigest(),
+            }
+            check_deadline()
+            return result
         atomic_write_if_unchanged(path, original, report)
     return {
         "schema": SCHEMA_V3,

@@ -87,6 +87,15 @@ authority. See [naming opportunities](tool-usage.md#symbol-naming-opportunities)
 
 ### Naming preparation
 
+`naming.audit.prepare_transaction(check_only=True)` uses the same validation and
+report lock as publication, including prospective full-report provenance checks,
+but leaves the bound report in memory. It checks the original report bytes and
+inherited deadline before returning `checked:true`, `prepared:false`; the CLI
+exposes this as `prepare-transaction --check`. The sibling lock may be created;
+source, report and receipt publication remain disabled. This catches candidate
+schema/scope defects before independent review without granting acceptance or
+rebinding existing proposals. See the [invocation contract](tool-usage.md#frozen-naming-postapply-lifecycle).
+
 `naming.snapshot.create_snapshot` owns physical PRE capture for a pinned prepared
 FUNCTION/DATA transaction. It composes `inputs.frozen`/`transaction_paths`,
 `common.inventory.capture_file`, actual-index capture and

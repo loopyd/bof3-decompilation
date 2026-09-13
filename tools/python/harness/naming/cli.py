@@ -136,6 +136,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--expected-sha256", help="reviewed current report byte SHA-256"
     )
     transaction.add_argument("--evidence-root", action=_SingleEvidenceRoot)
+    transaction.add_argument(
+        "--check",
+        action="store_true",
+        help="validate prospective preparation without publishing the report",
+    )
     transaction.set_defaults(handler=_run_prepare_transaction)
     conclusion = sub.add_parser(
         "conclude", help="import one explicit expert-authored row conclusion"
@@ -347,6 +352,7 @@ def _run_prepare_transaction(args: argparse.Namespace) -> int:
                 args.transaction,
                 candidate=candidate,
                 expected_sha256=args.expected_sha256,
+                check_only=args.check,
             )
         )
     return 0

@@ -370,6 +370,27 @@ format and `proposed-function-transaction/v1` provenance. Both FUNCTION and the
 bounded DATA route require explicit source claims, Ninja, no companion overlays
 and no environment toolchain overrides. Gates perform no rename or index recovery.
 
+Before independent semantic review, check a draft FUNCTION or DATA candidate
+against its frozen report without publishing it:
+
+```sh
+bin/naming-audit prepare-transaction TARGET REPORT --transaction KIND:OLD --candidate CANDIDATE_JSON --expected-sha256 REPORT_SHA256 --check
+```
+
+Use the same canonical `--evidence-root` as collection when explicit. `--check`
+runs the preparation path, including prospective full-report/provenance validation,
+under the report-set lock; it may create that sibling lock file but changes no
+report, source or receipt. Success returns `checked:true`, `prepared:false` and the
+unchanged report byte SHA-256. It does not publish PRE or grant semantic acceptance.
+Review the exact checked candidate bytes separately; after acceptance, omit
+`--check` with the original report pin. No budget reset or automatic repair/retry.
+
+Corroborator `mechanism` values are `selected_original_instructions`,
+`independent_caller`, `independent_callee`, `reviewed_layout`,
+`independent_initializer`, `independent_consumer` and `runtime_trace`. Group
+observations of one mechanism under one corroborator; duplicating its label does
+not create independent evidence. Diagnostics identify invalid or repeated classes.
+
 Human-reviewed DATA candidates replace one frozen blocked initializer using the
 current report's compare-and-swap pin:
 

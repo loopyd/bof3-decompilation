@@ -1532,6 +1532,68 @@ Metadata acceptance closes no broader phase or whole-game goal. Preserve battle0
 **189 = 85 functions + 104 data**, global **1360 = 529 functions + 831 data**,
 all other queues/budgets, the 46 clean-C obligations and all unfinished phases.
 
+### Area027 naming scout — 2026-09-13 (deferred; semantic budget exhausted)
+
+Mission `out/reviews/naming-area027-20260913/mission.md` starts **22:31:56 UTC**
+after metadata commit `35763b5e`. Its sole selector is
+`emi/world00/area027/13@0x801F3650`, a reviewed **64-byte** helper absent from prior
+frozen/consumed queues. Bounds remain one semantic candidate plus one repair,
+one conditional identity application with zero forward fixes/retries, fifteen
+minutes semantic review, ten minutes POST review, and **236800 / 237400 monotonic**
+work/cleanup cutoffs. This separate candidate replaces no prior queue member.
+
+Faraday `01a09cea-21c1-7533-b8f2-0cc0b80915a2` initially supported
+`setScenarioProgress5Or6FromSelection` at historical candidate `3b717733…`.
+Schema-authoring defects consumed review time and the single repair before any
+mutation. Final candidate SHA-256 is
+`b91badbeb10d377113e136a2a2eed330c8ea357a22c5e1210edca4eaa2c794d1`;
+verification finished **22:51:37 UTC**, after the original **22:51:32** ceiling.
+The definitive decision is **blocked**, not late acceptance, in
+`out/reviews/evidence/naming-area027-20260913/semantic-decision.json`, SHA-256
+`60a03b2759c3dce83bb52b30f6e177448c923212854f5004b23e726ddb932114`.
+This sidecar read the mission/decision and verified both final hashes. Earlier
+semantic evidence does not bind the repaired pin; no retry, extension or rebinding.
+
+Zero source/report mutations or identity applications occurred. The source remains
+`func_801F3650`; the 64-byte exact baseline is not naming acceptance. This sidecar
+verified source preservation and the unchanged 19-row report SHA-256
+`e650abab8da0faf832c5f90fe61dbfc4d36a62b6023762794a5ccab498fa29bb`.
+Parent implemented `audit.prepare_transaction(check_only=...)` and CLI `--check`:
+the same full-validation/lock path retains deadline/report-byte guards but skips
+report publication. Existing preparation already fully validated before publishing;
+no surviving-proposal invalidation bug is claimed. `facts.py` now reports allowed
+corroborator classes and grouping advice. This sidecar inspected the code delta.
+Parent's production check exits zero with `checked:true`, `prepared:false`, and
+unchanged report SHA above; the semantic decision remains blocked. Parent reports
+**642 existing naming tests passed, two skipped**, **60 focused tests passed** and
+**42 documentation references valid**; overlap is not added into a combined count.
+Pascal's initial **FAIL R1** remains preserved: the final report read could cross
+the deadline before returning `checked:true`. The single bounded repair computes
+the result/hash first, then checks the deadline immediately before return under
+the lock. Final **PASS** completed **23:05:20 UTC**, before the unchanged
+**23:07:40** review ceiling, in
+`out/reviews/naming-preflight-20260913/final-review.json`, SHA-256
+`d9db1a2ebb041b4c7babd2a5fca7da52ce330cf422ffc4b57de6387c3fd79e38`.
+This sidecar read the verdict and verified its hash, all five code/guide pins and
+the preserved initial review. Independent checks passed **173 existing tests and
+16 disposable probes**; parent reports **60 post-repair tests and 16 rerun probes**
+passed, without summing overlapping runs. Acceptance is tooling-only: point-in-time
+mechanical checks reserve no state and do not accept candidate semantics.
+
+Parent reports whole-tools Ruff and symbols pass. Full `just check` timed out
+after **300s**, exit **124** at **23:04:15 UTC**, with 35 progress dots and no
+assertion failure shown; it is not a full pass. Source aggregate audit handle
+`35843` entered `decomp.build_report`/native compilation and was cancelled by
+actual Ctrl-C, confirmed exit **130**. Source audit is unverified, with no retry,
+claimed native outcome or unsupported compiler-failure diagnosis. Authored
+source/report pins remain intact. Final plan-only cleanup is bounded by
+**23:08:20 UTC**; original work cutoff **236800** is unchanged. These checks neither
+retry semantic review nor grant source/name acceptance. Preserve battle03's rejected
+prepared row, its spent application, battle15's stale history, all prior queues,
+budgets and **1360 = 529 functions + 831 data** global counts. No successor,
+full-report completion or broader phase closure follows. This plan-only slot runs
+existing checks; no staging or commit belongs to the sidecar.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex

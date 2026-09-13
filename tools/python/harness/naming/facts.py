@@ -170,7 +170,10 @@ def corroborators(
     }
     for label in labels:
         if parsed[label]["mechanism"] not in allowed_mechanisms:
-            raise ValueError(f"{name}.corroborators[{label}] has unknown mechanism")
+            raise ValueError(
+                f"{name}.corroborators[{label}] has unknown mechanism; "
+                f"expected one of {sorted(allowed_mechanisms)}"
+            )
     for i, left in enumerate(labels):
         for right in labels[i + 1 :]:
             shared = set(parsed[left]["observation_ids"]) & set(
@@ -180,7 +183,8 @@ def corroborators(
                 raise ValueError(f"{name}.corroborators {left}/{right} share evidence")
             if parsed[left]["mechanism"] == parsed[right]["mechanism"]:
                 raise ValueError(
-                    f"{name}.corroborators {left}/{right} duplicate mechanism"
+                    f"{name}.corroborators {left}/{right} duplicate mechanism; "
+                    "group its observations under one corroborator"
                 )
     return parsed
 
