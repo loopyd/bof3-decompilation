@@ -331,8 +331,8 @@ is complete; zero review repairs were used. Actual independent reviewer
 `01a09912-f4dd-7b03-a226-1de8703f4c2d` returned PASS with no blocking findings,
 retained in `out/reviews/evidence/workspace-symlink-review-20260913.md` and read by
 this writer. The scoped implementation/review checkpoint closes with the validation
-limitation below; no allowance resets. The parent alone owns the local commit
-checkpoint; consult Git for any recorded commit.
+limitation below; no allowance resets. Parent completed local checkpoint
+`99180d69`; the separate rejected submodule candidate below does not supersede it.
 
 `common/links.py` captures literal link bytes and identity without following the
 referent, preserving no-follow ancestor checks. Safeguards v2 distinguishes files
@@ -377,6 +377,80 @@ reconstruction goal remains active: four native/reviewed clean-C dispatch matche
 are committed in `20030baa`, 46 requeue entries remain, and no macro acceptance
 or aggregate phase completion follows. Stable IDs, phase states and frozen-five
 obligations are unchanged.
+
+### Tracked-submodule candidate — 2026-09-13 (rejected and restored)
+
+Distinct mission `out/reviews/workspace-submodules-20260913/mission.md` retains
+its original 05:35 UTC work cutoff and 05:38 UTC cleanup hard stop. One
+implementation pass is consumed; zero of one review-driven repair passes began.
+Design scout Peirce `01a09921-5e6a-7ac2-9db8-b398013fb3a0` completed and closed.
+Independent reviewer Ptolemy `01a0992c-3999-7a03-9849-d263464182ae` returned
+**needs repair before acceptance**. Parent received its completed bounded
+clarification, including the fifth finding below, and is closing the actual handle;
+closure is not yet confirmed. No acceptance or allowance reset follows.
+
+The retained `review.md` and parent-relayed completed reviewer clarification
+establish five findings against the candidate:
+
+- P1: root Git status traverses unvalidated submodules before protection; a
+  disposable probe executed a configured fsmonitor hook.
+- P1: Git follows mutable refs, configuration includes and excludes outside the
+  confined descriptors; an external loose-ref symlink left the snapshot identical.
+- P2: gitfile retargeting can bind old Git-directory/HEAD facts to a new marker.
+- P2: an initially empty uninitialized module lacks a final namespace/marker
+  recheck; an injected file escaped verification.
+- P1: low-level `capture_recovery` and `apply_changes` with `workspace=None` and
+  `index=None` both reached dependency `prepare_image`. Reviewer probe
+  `/tmp/bof3-submodule-review-lowlevel.py` intercepted before image preparation;
+  bytes stayed unchanged. This is reviewer-confirmed evidence, not a parent rerun.
+
+Parent retained exact `candidate.patch`, `candidate-submodules.py` and
+`candidate-hashes.txt` in that mission directory, verified candidate bytes, then
+restored only twelve tracked tooling/test files to `99180d69` and removed only
+the candidate's new `common/submodules.py`. This writer read the review and
+confirmed Git lists only the three original tracked dirty files and unrelated
+`tmp/` before these documentation edits. No partial repair or configuration
+whitelist began. Retained candidate files are disposable evidence, not reviewed
+truth or live implementation; the [harness contract](../agents/harness.md#policy-versus-mechanism)
+still uses safeguards v2 and rejects tracked gitlink directories.
+
+Parent-confirmed **historical candidate checks**, not restored-code acceptance:
+three focused checks passed in 13.40s; the full selected suite passed 196 cases
+with one deselection in 177.03s. The previously failing Git-object-writing DRY
+case remains unresolved; no permission expansion or unrelated-file mutation
+bypassed it. Six disposable characterization categories passed after two fixture
+corrections. Real workspace backup captured ten top-level modules and initialized
+`vast-violence/randomtools` nesting in 11.79s; full guard round trip took 46.95s.
+Existing atomic fixtures gained embedded submodules without new test inventory.
+These positives do not resolve the independent findings or accept the candidate.
+
+After restoration, parent confirms the three focused existing checks are terminal:
+**3 passed in 5.74s**, `/tmp/bof3-submodule-restored-tests.txt`, read by this writer.
+This validates the selected restored-code checks, not the rejected candidate.
+
+Next prerequisite is separately bounded, independently reviewed design: isolate
+Git query metadata immutably and compose a dependency baseline without recursive
+unvalidated root status. Preserve actual staged/dirty facts; neither declaring
+every module dirty nor skipping dependencies is acceptable. Bind marker selection
+and final uninitialized namespace observations. Reviewer advice, **not implemented**:
+use confined bounded captures and independent metadata copies, never hardlinks;
+control configuration/environment to exclude hooks, includes and fetch; bound
+required refs, index and objects. Compose nonrecursive root status with correct
+HEAD/index/module dirty facts, retaining worktree attribute/ignore semantics.
+Enforce gitlink mutation boundaries before images unconditionally, independent
+of optional workspace/index guards. These are future design obligations, not proof
+that the restored code or retained candidate enforces them.
+
+The real macro stays parked after its single pre-publication failure: parent
+reverified all six PRE states unchanged and proposed header/application absent.
+No native build, index refresh, macro retry or source acceptance occurred. Preserve
+the expired 04:45/04:48 bounds, original pins and consumption, four accepted clean-C
+matches, 46 outstanding requeue entries, all frozen pilot bindings and phase states.
+The full reconstruction goal remains active; this checkpoint closes no domain work.
+
+This documentation-only pass directly compacted the changed guide text; 46 existing
+plan tests passed in 2.72s. Plan parsing, 63 local references and whitespace checks
+pass. Broader suites and native gates were not rerun for these three documents.
 
 ## Current skill-only operator correction
 

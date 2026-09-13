@@ -468,14 +468,12 @@ owns application scope, pins, consumed budgets, review identities and check rece
 The macro application is parked after failure before publication: PRE is unchanged,
 the proposed header/application remain absent, and the original bounds are expired.
 
-The [symlink repair checkpoint](../plans/autonomous-bof3-decompilation.md#active-tracked-symlink-tooling-prerequisite--2026-09-13)
-is independently reviewed, with an unresolved existing Git-object-write sandbox
-check failure and unchanged test inventory. Its [literal-link safeguards](harness.md#policy-versus-mechanism)
-grant no link restoration or symlink-owned mutation authority. Ten tracked gitlink
-directories still block complete workspace backup and live macro readiness; this
-stage permits no submodule skip, dereference or repair. No game source edits,
-macro acceptance, implicit retry, budget reset or evidence rebinding follow.
-Native/application review gates, phase states, frozen pilot and full goal remain.
+Tracked gitlinks still block workspace capture under the live
+[v2 safeguards](harness.md#policy-versus-mechanism). The
+[rejected submodule checkpoint](../plans/autonomous-bof3-decompilation.md#tracked-submodule-candidate--2026-09-13-rejected-and-restored)
+owns candidate findings, historical checks, restoration and the remaining design
+prerequisite. It grants no dependency skip/repair, macro retry, acceptance, budget
+reset or evidence rebinding; native/application review and frozen obligations remain.
 V1 stays existing-only; shared-header and type creation are not added.
 
 V2 retains all v1 evidence fields and adds exactly one `creation` object with

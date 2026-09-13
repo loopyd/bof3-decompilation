@@ -210,7 +210,10 @@ rejects, including same-target replacement. Macro/type publication rechecks capt
 links; snapshots grant no restoration authority, unrelated links are never restored,
 and symlink-owned mutation remains refused. Tracked gitlink directories are still
 unsupported and fail workspace capture; link support establishes neither complete
-workspace backup nor submodule skip, dereference or repair authority.
+workspace backup nor submodule skip, dereference or repair authority. The
+[rejected submodule candidate](../plans/autonomous-bof3-decompilation.md#tracked-submodule-candidate--2026-09-13-rejected-and-restored)
+records the remaining design/review blockers; its retained implementation is not
+part of this live v2 contract.
 
 Records live at `out/reviews/evidence/{macro,type}-recovery-<nonce>.json`.
 They contain source text: retain them as nonpublic evidence. Their digest
