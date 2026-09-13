@@ -8,9 +8,6 @@ import re
 import stat
 from pathlib import Path
 
-from harness.domain.claims import manifest_source_paths
-from harness.domain.includes import local_include_files
-from harness.domain.manifests import load_target_manifests
 from harness.io import unique_object
 
 
@@ -64,6 +61,10 @@ def relative(value: str) -> str:
 
 def input_state(root: Path, target: str, transaction_paths: set[str]) -> dict:
     """Re-derive the complete conservative CMake/target closure, never caller scope."""
+    from harness.domain.claims import manifest_source_paths
+    from harness.domain.includes import local_include_files
+    from harness.domain.manifests import load_target_manifests
+
     manifest = load_target_manifests(root)[target]
     if not manifest.has_explicit_sources or manifest.companions:
         raise ValueError(

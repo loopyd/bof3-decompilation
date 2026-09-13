@@ -9,9 +9,10 @@ import re
 import stat
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from harness.naming.context import TargetContext, naming_manifest, pre_apply
+if TYPE_CHECKING:
+    from harness.naming.context import TargetContext
 
 KIND = "proposed-function-transaction/v1"
 DATA_KIND = "proposed-data-transaction/v1"
@@ -193,6 +194,8 @@ def validate_proposal(
     ctx: TargetContext,
 ) -> None:
     """Recompute one prepared proposal from current repository state."""
+    from harness.naming.context import naming_manifest, pre_apply
+
     selector = f"{row.get('kind')}:{row.get('name')}"
     if (
         row.get("kind") not in {"function", "data"}

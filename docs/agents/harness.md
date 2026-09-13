@@ -136,6 +136,13 @@ evidence, not identities; only approved transaction modes may edit repository tr
 Explicit-only invocation policy is preserved. Macro/type skills keep their own
 domain lifecycles; type spelling remains separate from type representation.
 
+Cleanup context and saved-proposal history must remain importable under the
+wrapper's stdlib-only `-S` bootstrap. `common.inputs` loads domain claims/includes/
+manifests only inside `input_state`; `naming.proposal` imports `TargetContext` only
+under `TYPE_CHECKING` and loads context helpers inside live `validate_proposal`.
+Deferring imports preserves live ownership/closure validation and dependency
+failures when those operations run; it does not bypass guards or alter the wrapper.
+
 Macro extraction policy belongs in [macros.md](macros.md). Naming evidence and
 identity-application contracts are linked from the documentation index. Type
 candidate/application schemas remain in

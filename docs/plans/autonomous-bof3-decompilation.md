@@ -1250,13 +1250,15 @@ blockers, linked type controls, both macro obligations and their consumed limits
 the 50-entry clean-C queue (four accepted, 46 outstanding), stable IDs/states,
 S3.2/S4/consolidation and all other unfinished obligations remain unchanged.
 
-### Naming preparation tooling — 2026-09-13 (tooling accepted; commit pending)
+<a id="naming-preparation-tooling--2026-09-13-tooling-accepted-commit-pending"></a>
+### Naming preparation tooling — 2026-09-13 (checkpoint committed)
 
 The separate parent action starts **21:03:46 UTC** from `e6f3a076`, with unchanged
 **21:35 work / 21:40 cleanup** cutoffs: one implementation and up to two repair
-rounds. First implementation and both repair rounds are complete; independent
-tooling review accepts, with local commit pending. No repair allowance remains; no source,
-earlier repair allowance or original cutoff is renewed.
+rounds. First implementation and both repairs are consumed; independent tooling
+review accepts. Commit `2d1d125b` completed at **21:20:39 UTC**, elapsed **16m53s**,
+as recorded in `out/reviews/naming-preparation-20260913/timing.json` and
+`assessment.md`, read by this sidecar. No allowance or cutoff is renewed.
 Parent owns `naming/snapshot.py`, `naming/review.py` and thin `naming/cli.py` adapters;
 the [harness](../agents/harness.md#naming-preparation) and
 [CLI lifecycle](../agents/tool-usage.md#frozen-naming-postapply-lifecycle) own details.
@@ -1307,17 +1309,58 @@ limited to tooling at those pins, not this plan, source/native/name acceptance,
 restoration authority, report finalization or retries. The probes use synthetic
 native/build-closure/index fixtures; cooperative checks do not exclude manual
 writers or authenticate remote actors. Later runtime/guide changes require renewed
-review or explicit reviewer rebinding. Commit/timing remain parent-owned.
+review or explicit reviewer rebinding. The commit/timing outcome is recorded above.
 
 The parent grants this sidecar only the plan and both linked guides, targeting
 writer release by **21:18 UTC** within the original cutoffs. Existing plan tests,
-parsing, scoped references and whitespace checks accompany handoff. Record actual
-commit/stop/elapsed results later in this action's `timing.json`, without requiring
-another documentation commit. Preserve all prior history, budgets, stable IDs and
+parsing, scoped references and whitespace checks accompany handoff. The parent
+subsequently recorded commit/stop/elapsed results in `timing.json`. Preserve all
+prior history, budgets, stable IDs and
 states, frozen-five membership/blockers, linked type controls, both macro queues,
 the 50-entry clean-C queue (four accepted, 46 outstanding) and unrelated dirty work.
 Battle15's stale `func_800A3638` remains S4.4 debt; full-target `complete:true`,
 S3.2/S4/consolidation and whole-game obligations remain unfinished.
+
+**Production-resume preflight — runtime accepted, commit pending.** The
+new action retains its **21:21:48 UTC** start from `2d1d125b`, **21:50 work /
+21:55 cleanup** cutoffs and one implementation/up to two repairs; the first
+implementation is consumed. Before repair, parent confirmed fresh battle03
+readiness with **189 rows: 85 functions, 104 data**. Actual
+`bin/agent-context cleanup audit-target emi/battle/battle/03` then failed because
+campaign history imported `common.inputs` and domain claims/layout requiring
+`yaml` under the wrapper's stdlib-only `-S` bootstrap.
+
+Parent's import-boundary repair moves domain imports into `common.inputs.input_state`;
+`naming.proposal` keeps its context type under `TYPE_CHECKING` and imports live
+context helpers inside `validate_proposal`. Saved-proposal history remains
+stdlib-only; live validation guards remain required. This sidecar inspected the
+import-only delta. Parent reports the unchanged `-S` wrapper command now exits
+zero in **1.32s**; handle `47414` completed with **749 passed, two skipped in
+46.99s**, retained in `/tmp/naming-bootstrap-tests.log` and read by this sidecar.
+Parent reports whole-tools Ruff passes. Pure `-S` verification of historical
+prepared `func_801DE804` through `require_provenance`/`validate_authored_digests`,
+then active-history resolution, passes without importing `yaml`, `naming.context`
+or `domain.manifests`. Independent **ACCEPT** at **21:28:24 UTC** is retained in
+`out/reviews/naming-bootstrap-20260913/review.json`, SHA-256
+`1263010a3f8e766ab1446cba86fe02bec6f20b5d31c94d3c3dd454d9d2481bdf`.
+This sidecar read the record and verified its hash and both live runtime pins.
+No blockers remain: the reviewer passed the exact live wrapper, **37** retained
+disposable `-S` helper/history checks (expanding the initial 21) covering
+FUNCTION/DATA proposals, exhaustion and corruption, and **44 existing tests**
+(75 deselected); non-import ASTs equal `2d1d125b`. Acceptance covers only the two
+pinned runtime files, not documentation or source/name/native acceptance.
+Parent's read-only old-HEAD/current `input_state` comparison yields identical
+**1,804 path states**, taking 1.555/1.510s; this is parity evidence, not a speed
+benchmark. Commit remains parent-owned after pin verification. This serialized
+docs slot covers only this plan and a brief harness note; existing checks grant
+no source acceptance.
+
+No new semantic name is chosen or source rename applied. Battle03
+`func_801DE560`, `func_801DE60C` and `func_801DE858` remain partial and must not
+route as exact; `func_801DE9A8` is only an exact 112-byte scout with two indexed
+callers and no accepted semantic name. All source goals, queues, historical proofs,
+consumed budgets and phase states remain unchanged; no native/index/Git writes or
+children belong to this sidecar. Existing docs checks accompany handoff.
 
 ## Current skill-only operator correction
 
