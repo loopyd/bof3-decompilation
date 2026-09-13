@@ -7,6 +7,9 @@ import json
 from pathlib import Path
 
 from harness.common.inputs import file_state
+from harness.common.deadlines import check_deadline
+from harness.common.files import atomic_write
+from harness.common.lease import acquire_writer, require_writer
 from harness.io import unique_object
 from harness.naming.application import (
     _execute,
@@ -21,9 +24,81 @@ from harness.naming.inputs import keys
 from harness.naming.inputs import load
 from harness.common.inputs import relative
 from harness.naming.inputs import transaction_paths
+from harness.naming.editing import report_mutation
+from harness.naming.history import compute_sha256, encode, require_pin
+from harness.naming.proposal import canonical_report_path
 
 ATTESTATION_KEYS = "schema accepted implementation_run_id reviewer_run_id binding final_state_digest gates_digest review_artifact snapshot baseline_index_digest preservation"
 PRESERVATION = {"scope": True, "body": True, "abi": True, "range": True, "index": True}
+
+
+def prepare_attestation(
+    root: Path,
+    target: str,
+    report_path: Path,
+    transaction: str,
+    gates: Path,
+    decision: Path,
+    *,
+    expected_report_sha256: str,
+    expected_gates_sha256: str,
+    expected_decision_sha256: str,
+) -> Path:
+    """Package explicit parent decisions without inferring semantic acceptance."""
+    root = root.resolve()
+    path = canonical_report_path(root, report_path)
+    for pin in (
+        expected_report_sha256,
+        expected_gates_sha256,
+        expected_decision_sha256,
+    ):
+        require_pin(pin)
+    with acquire_writer(root), report_mutation(path, report=True):
+        references = [
+            {"path": str(path), "sha256": expected_report_sha256},
+            {"path": str(gates), "sha256": expected_gates_sha256},
+            {"path": str(decision), "sha256": expected_decision_sha256},
+        ]
+        for reference in references:
+            _artifact(reference)
+        value = load(decision)
+        keys(
+            value,
+            "schema accepted implementation_run_id reviewer_run_id "
+            "review_artifact snapshot preservation",
+        )
+        if value["schema"] != "bof3.naming-parent-decision/v1":
+            raise ValueError("explicit naming parent decision required")
+        _, row, bundle, _ = validate_bundle(root, target, path, transaction, gates)
+        if bundle["review"] is not None:
+            raise ValueError("native bundle already has a review")
+        payload = {
+            **value,
+            "schema": "bof3.naming-parent-review/v1",
+            "binding": bundle["binding"],
+            "final_state_digest": digest(bundle["final_state"]),
+            "gates_digest": digest(bundle["gates"]),
+            "baseline_index_digest": bundle["index_digest"],
+        }
+        attestation(root, bundle, row, payload)
+        recheck(root, bundle, row)
+        for reference in references:
+            _artifact(reference)
+        check_deadline()
+        require_writer(root)
+        output = directory(root) / "parent-attestation.json"
+        content = encode(payload)
+        atomic_write(output.parent, output.name, content, exclusive=True)
+        _, _, current, _ = validate_bundle(root, target, path, transaction, gates)
+        if current != bundle:
+            raise ValueError("native bundle changed during review preparation")
+        attestation(root, bundle, row, load(output))
+        for reference in references:
+            _artifact(reference)
+        _artifact({"path": str(output), "sha256": compute_sha256(content)})
+        require_writer(root)
+        check_deadline()
+        return output
 
 
 def _artifact(ref) -> Path:

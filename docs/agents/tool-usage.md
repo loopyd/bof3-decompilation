@@ -398,8 +398,27 @@ no actual exact consumer fail closed. Automatic `conclude` typed-exhaustion
 capability admission and the unsupported proposed-analyzer seam remain unchanged;
 this human-reviewed path grants neither automated naming nor production acceptance.
 
-After an authorized cleaner freezes its rollback snapshot and applies **only**
-the approved spelling, use the same canonical target/report/evidence root.
+Before the authorized spelling application, capture physical PRE for the prepared
+FUNCTION or DATA transaction:
+
+```sh
+bin/naming-audit snapshot TARGET REPORT --transaction KIND:OLD --expected-report-sha256 REPORT_PIN --evidence-root "$ROOT"
+```
+
+Omit `--evidence-root` only for default-root evidence. The command returns
+`snapshot`, a canonical absolute manifest path; retain its byte SHA-256 externally.
+It captures exactly the transaction paths, original file bytes/modes and expected
+absence and pins the report/reviewed inputs and actual Git index. It checks copies
+before publishing the manifest last, then validates the manifest and rechecks live
+inputs/index/report/deadline before returning. Copies cover selected transaction
+PRE only; state checks also hash the native build closure. Source/report bytes stay
+unchanged. Retained copies supply review evidence, not unattended restoration
+authority. Both preparation commands hold the cooperative source
+writer lease and nonblocking report lock; manual editors remain outside that
+exclusion. See [preparation ownership](harness.md#naming-preparation).
+
+After the cleaner applies **only** the approved spelling, use the same canonical
+target/report/evidence root.
 DATA uses `data:OLD` in the same gate/review/verify chain shown for FUNCTION:
 
 ```sh
@@ -412,12 +431,32 @@ bin/analysis-readiness TARGET
 git diff --check
 # Compare staged index with cleaner snapshot; independent native reviewer now
 # inspects snapshot, current files, native gates and readiness, NOT final verify.
-# Trusted supervising parent writes the explicit attestation below after review.
+# Parent pins its explicit decision after independent review, then packages it.
+bin/naming-audit prepare-review TARGET REPORT --transaction function:OLD --gates GATES_ABS --decision DECISION_ABS --expected-report-sha256 REPORT_PIN --expected-gates-sha256 GATES_PIN --expected-decision-sha256 DECISION_PIN --evidence-root "$ROOT"
+# Pass the returned parent_attestation path as PARENT_JSON below.
 bin/naming-audit postapply-review TARGET REPORT --transaction function:OLD --gates GATES_JSON --parent-attestation PARENT_JSON --evidence-root "$ROOT"
 bin/naming-audit verify TARGET REPORT --transaction function:OLD --post-apply-receipts REVIEWED_BUNDLE --evidence-root "$ROOT"
 ```
 
-Parent JSON is a closed `bof3.naming-parent-review/v1` object with:
+`prepare-review` requires canonical absolute gates/decision paths and their
+externally retained byte SHA-256 pins, plus the current report pin. The decision
+has exactly `schema: "bof3.naming-parent-decision/v1"`, `accepted: true`,
+`implementation_run_id`, `reviewer_run_id`, `review_artifact`, `snapshot`, and
+`preservation`. Artifact references and preservation use the same closed shapes
+below. Actual run IDs must be nonempty and distinct; implementation must match
+the gates. Acceptance and preservation are explicit parent decisions, never
+inferred from prose. The owner derives only mechanical bundle bindings/digests,
+validates through the existing attestation checker, then revalidates
+bundle/source/execution pins, the attestation, parent-decision/report/gates pins and
+deadline after exclusive publication. Both producers finally require the published
+byte SHA-256 to match the originally encoded payload, then recheck writer
+lease/deadline; structurally valid substitutions still fail. Failures retain
+artifacts, including manifests, without implying validity or restoration authority.
+The returned `parent_attestation` still requires
+existing `postapply-review` ingestion and public `verify`; packaging runs no native
+gates and grants no new rename or full-target acceptance.
+
+The resulting parent JSON is a closed `bof3.naming-parent-review/v1` object with:
 `accepted: true`, distinct nonempty `implementation_run_id`/`reviewer_run_id`,
 `binding` copied exactly from gates.json, `final_state_digest` and `gates_digest`
 (SHA-256 of compact sorted-key JSON for `final_state` and `gates`),

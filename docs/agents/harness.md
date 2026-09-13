@@ -70,6 +70,36 @@ in `naming/cli.py`, not an analysis adapter or type module. Discovery fingerprin
 bind map bytes and row identity, not semantic evidence, layout or application
 authority. See [naming opportunities](tool-usage.md#symbol-naming-opportunities).
 
+### Naming preparation
+
+`naming.snapshot.create_snapshot` owns physical PRE capture for a pinned prepared
+FUNCTION/DATA transaction. It composes `inputs.frozen`/`transaction_paths`,
+`common.inventory.capture_file`, actual-index capture and
+`history.read_snapshot_states`: exact source scope, bytes/modes/absence and frozen
+report/reviewed/index pins. It checks retained copies before manifest-last
+publication, then the manifest and live inputs/index/report/deadline before return.
+Copies cover selected transaction paths only; `inputs.state` conservatively hashes
+the native build closure, including unrelated source paths. It does not read
+`.pi/settings.json`. Source and report bytes remain unchanged.
+This evidence is not macro/type recovery or unattended restoration authority.
+
+`naming.review.prepare_attestation` packages an explicitly pinned parent decision
+through the existing attestation validator. It derives bundle bindings/digests,
+requires actual distinct run IDs and retained review/snapshot proofs. After
+exclusive publication it revalidates bundle/source/execution pins, the attestation,
+parent-decision/report/gates pins and deadline. Both producers finally compare
+published byte SHA-256 with the originally encoded payload, then recheck writer
+lease/deadline. Valid replacement JSON cannot substitute another reviewer identity
+or snapshot manifest. Failures retain artifacts, including manifests, for
+inspection without implying validity or restoration authority.
+Neither producer infers acceptance or preservation from prose.
+`naming.cli` only adapts `snapshot` and `prepare-review` arguments
+and prints artifact paths; existing ingestion/public verification remain mandatory.
+Both operations hold `common.lease` writer exclusion and the nonblocking naming
+report lock. These cooperative checks neither exclude manual editors nor authorize
+source mutation, index recovery or automatic restoration. Schemas and invocation
+belong to the [naming lifecycle](tool-usage.md#frozen-naming-postapply-lifecycle).
+
 ## Policy versus mechanism
 
 `common.git.read_git` bounds workspace/index snapshot queries by 30 seconds,
@@ -156,8 +186,9 @@ behavior. Native cancellation can bypass Python rollback: process closure is not
 file restoration. Parent-owned native handle/tree verification, source/workspace/
 index inspection and reviewed owned-PRE recovery remain separate obligations.
 
-`common/lease.py` excludes concurrent macro/type application and revalidation
-writers in one repository. A nonblocking `flock` spans canonical manifest
+`common/lease.py` excludes cooperating writers, including macro/type application
+and revalidation and naming preparation, in one repository. For macro/type, a
+nonblocking `flock` spans canonical manifest
 re-derivation, source application, native gates, publication and exception
 rollback. The persistent `out/reviews/evidence/transaction.lock` is an empty,
 owned single-link regular file; root, path and inode checks reject

@@ -172,6 +172,28 @@ def build_parser() -> argparse.ArgumentParser:
     finalization.add_argument("--apply", action="store_true")
     finalization.add_argument("--evidence-root", action=_SingleEvidenceRoot)
     finalization.set_defaults(handler=_run_finalization)
+    snapshot = sub.add_parser(
+        "snapshot", help="capture exact PRE files for a pinned prepared transaction"
+    )
+    snapshot.add_argument("target")
+    snapshot.add_argument("report", type=Path)
+    snapshot.add_argument("--transaction", required=True)
+    snapshot.add_argument("--expected-report-sha256", required=True)
+    snapshot.add_argument("--evidence-root", action=_SingleEvidenceRoot)
+    snapshot.set_defaults(handler=_run_snapshot)
+    attestation = sub.add_parser(
+        "prepare-review", help="package an explicit pinned parent review decision"
+    )
+    attestation.add_argument("target")
+    attestation.add_argument("report", type=Path)
+    attestation.add_argument("--transaction", required=True)
+    attestation.add_argument("--gates", type=Path, required=True)
+    attestation.add_argument("--decision", type=Path, required=True)
+    attestation.add_argument("--expected-report-sha256", required=True)
+    attestation.add_argument("--expected-gates-sha256", required=True)
+    attestation.add_argument("--expected-decision-sha256", required=True)
+    attestation.add_argument("--evidence-root", action=_SingleEvidenceRoot)
+    attestation.set_defaults(handler=_run_attestation)
     for name in ("postapply-gates", "postapply-review"):
         native = sub.add_parser(name, help="bounded native postapply lifecycle")
         native.add_argument("target")
@@ -385,6 +407,40 @@ def _run_postapply(args: argparse.Namespace) -> int:
             )
         )
         _print({"bundle": str(path)})
+    return 0
+
+
+def _run_snapshot(args: argparse.Namespace) -> int:
+    from harness.naming.snapshot import create_snapshot
+
+    with _evidence_context(args.evidence_root):
+        path = create_snapshot(
+            resolved_root(args),
+            args.target,
+            args.report,
+            args.transaction,
+            expected_report_sha256=args.expected_report_sha256,
+        )
+        _print({"snapshot": str(path)})
+    return 0
+
+
+def _run_attestation(args: argparse.Namespace) -> int:
+    from harness.naming.review import prepare_attestation
+
+    with _evidence_context(args.evidence_root):
+        path = prepare_attestation(
+            resolved_root(args),
+            args.target,
+            args.report,
+            args.transaction,
+            args.gates,
+            args.decision,
+            expected_report_sha256=args.expected_report_sha256,
+            expected_gates_sha256=args.expected_gates_sha256,
+            expected_decision_sha256=args.expected_decision_sha256,
+        )
+        _print({"parent_attestation": str(path)})
     return 0
 
 

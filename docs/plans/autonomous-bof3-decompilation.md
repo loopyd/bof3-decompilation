@@ -1146,7 +1146,8 @@ macro budgets are not restarted. `S3.2`, S4 and consolidation obligations remain
 unfinished. Selected-row acceptance does not replace unfiltered full-target
 `complete:true`, separate identity approval or the whole-game completion gates.
 
-### Successor FUNCTION action — 2026-09-13 (checkpoint accepted; commit pending)
+<a id="successor-function-action--2026-09-13-checkpoint-accepted-commit-pending"></a>
+### Successor FUNCTION action — 2026-09-13 (checkpoint committed)
 
 Parent's observed action start is **20:37:16 UTC**, after accepted DATA/report
 checkpoint `d2bbb57c`. Mission `out/reviews/naming-function-20260913/mission.md`
@@ -1194,8 +1195,9 @@ binds successor generation
 `7420fd6a09eb4382f04f3154a886aed6edbd9842dfb1535bfa904d4c0be7c22f`,
 SHA-256 `fbcc3fc81f45c96655ebcaddbaa0eb90b2411384d44ab63b7c4810d60ad33b88`.
 This accepts the selected FUNCTION/report checkpoint, not full-target closure.
-Only the local commit remains pending; no further source application or repair
-is authorized. Uncertain state still stops for parent inspection, never replay.
+Local commit `e6f3a076` completed at **21:02:48 UTC**, closing this action after
+**25 minutes 32 seconds**. No further source application or repair is authorized.
+Uncertain state still stops for parent inspection, never replay.
 
 Parent's final live inventory across 23 targets is **1,360 raw names: 529
 functions and 831 data**; battle03 has **189: 85 functions and 104 data**.
@@ -1205,24 +1207,24 @@ debt, not drift introduced here, and remains unrepaired. Parent reports no other
 inventory discrepancies; selected-target closure is still incomplete.
 
 The new user requirement records wall-clock start for every action. This action
-keeps its observed 20:37:16 start without reset. Parent will write actual commit
-identity, stop time and elapsed duration immediately after commit to
-`out/reviews/naming-function-20260913/timing.json`; consult that retained evidence
-without requiring another documentation commit. No stop time is claimed yet. After the accepted
-transaction is committed, stop further transaction work and self-assess which
-deterministic preparation, checking and accounting steps can reduce agent turns.
-First assess a reusable naming snapshot producer and explicit parent-review
-packaging to replace per-action authored Python scripts. Gauss's proposed owner
+keeps its observed 20:37:16 start without reset. Parent's
+`out/reviews/naming-function-20260913/timing.json` records the commit, stop time
+and elapsed duration above; its `assessment.md` records the completed post-commit
+assessment. Both were read by this sidecar. Further transaction work stopped;
+the assessment identifies reusable naming snapshot production and explicit
+parent-review packaging to replace per-action authored Python scripts. Gauss's proposed owner
 reuse is `inputs.frozen` / `transaction_paths`, `common.inventory.capture_file`
 and `history.read_snapshot_states`; `common.recovery` for macro/type transactions
 is not a drop-in replacement. Assess packaging in naming `review.py` with explicit
 parent-supplied acceptance, preservation and run IDs, leaving downstream
 `review.ingest` unchanged. Never derive approval by parsing ACCEPT prose;
 semantic review and approval remain external active-session responsibilities.
-These are post-commit assessment leads, not implemented or newly budgeted work.
+These were post-commit assessment leads; the distinct tooling action below owns
+their subsequent implementation and budget.
 It must follow [modular standards](../agents/coding-standards.md):
 concern-owned noun modules, verb-led operations, thin CLI adapters and existing
-shared mechanisms. It grants no implementation, dependency, generic scheduler,
+shared mechanisms. The assessment alone grants no implementation, dependency,
+generic scheduler,
 Codex CLI/model invocation or renewed source budget.
 
 For current naming scope, the reviewed DATA support and `d2bbb57c` supersede
@@ -1247,6 +1249,75 @@ is the stage's input, not a claimed final row count. Frozen-five membership and
 blockers, linked type controls, both macro obligations and their consumed limits,
 the 50-entry clean-C queue (four accepted, 46 outstanding), stable IDs/states,
 S3.2/S4/consolidation and all other unfinished obligations remain unchanged.
+
+### Naming preparation tooling — 2026-09-13 (tooling accepted; commit pending)
+
+The separate parent action starts **21:03:46 UTC** from `e6f3a076`, with unchanged
+**21:35 work / 21:40 cleanup** cutoffs: one implementation and up to two repair
+rounds. First implementation and both repair rounds are complete; independent
+tooling review accepts, with local commit pending. No repair allowance remains; no source,
+earlier repair allowance or original cutoff is renewed.
+Parent owns `naming/snapshot.py`, `naming/review.py` and thin `naming/cli.py` adapters;
+the [harness](../agents/harness.md#naming-preparation) and
+[CLI lifecycle](../agents/tool-usage.md#frozen-naming-postapply-lifecycle) own details.
+
+`snapshot` captures physical PRE for exact prepared FUNCTION/DATA scope, retaining
+bytes/modes/absence and actual-index/report/reviewed pins with manifest-last
+publication. `prepare-review` binds an explicit closed parent decision to pinned
+report/gates/review/snapshot evidence; it derives mechanical digests only and feeds
+existing ingestion/public verification. Both use cooperative source/report locks;
+neither mutates source, infers approval or grants unattended restoration.
+
+Independent review found source/deadline drift could escape during final
+publication. Repair round 1 adds snapshot copy checks before manifest publication
+and complete live-input/index/report/deadline rechecks afterward; review packaging
+revalidates bundle/source/execution pins, attestation, parent-decision/report/gates
+pins and deadline after publication. Failures retain artifacts, including manifests,
+without validity or restoration authority. Copies cover selected PRE paths only;
+existing state checks conservatively hash the native build closure.
+Retained `out/reviews/naming-preparation-20260913/repair-source.log` and
+`repair-deadline.log` show the snapshot reviewer's source/deadline reproductions
+now reject as intended. Reviewer then confirmed valid JSON could substitute an
+alternative reviewer ID or snapshot manifest after publication. Final repair 2
+requires both published byte SHA-256 values to match their originally encoded
+payloads, followed by lease/deadline checks; all prior live-input checks remain.
+Both repair rounds are consumed.
+
+Parent's consolidated final repair-2 validation reports **749 passed, two skipped in
+47.24s** (`out/reviews/naming-preparation-20260913/tests-final.log`); this reruns
+the focused checks, not an additional cumulative count. Retained
+`out/reviews/naming-preparation-20260913/probe.py` and `probe.log`, inspected by this
+sidecar, exercise actual snapshot/prepare-review CLI handlers and existing
+ingestion/verification APIs for FUNCTION and DATA with synthetic native/index
+fixtures. Positive controls, exact PRE/absence, stale pins, applied-PRE refusal and
+seven decision rejections pass per log; this is no new production rename or native
+acceptance. Final logs inspected by this sidecar confirm both lifecycle probes pass
+on the repository NTFS filesystem (`probe-final.log`), still with synthetic
+native/index fixtures, and whole-tools Ruff passes (`ruff-final.log`). Parent
+confirms production report history resolves. No whole-suite or production native
+rerun is claimed.
+Independent review at **21:17:16 UTC** records **ACCEPT** in
+`out/reviews/naming-preparation-20260913/independent-review-repair2.json`
+(SHA-256 `1d362d1e82c7b9fdbd59e64a238b75f2283960b1b5f1302d6c8191d0f1b2c1a7`).
+This sidecar read the artifact and verified all five exact runtime/owner-guide
+pins; accepted guide bytes remain unchanged. All **12/12** adversarial publication
+controls reject and retain outputs; no open review blockers remain. The review's
+then-pending parent reruns are evidenced by the final logs above. Acceptance is
+limited to tooling at those pins, not this plan, source/native/name acceptance,
+restoration authority, report finalization or retries. The probes use synthetic
+native/build-closure/index fixtures; cooperative checks do not exclude manual
+writers or authenticate remote actors. Later runtime/guide changes require renewed
+review or explicit reviewer rebinding. Commit/timing remain parent-owned.
+
+The parent grants this sidecar only the plan and both linked guides, targeting
+writer release by **21:18 UTC** within the original cutoffs. Existing plan tests,
+parsing, scoped references and whitespace checks accompany handoff. Record actual
+commit/stop/elapsed results later in this action's `timing.json`, without requiring
+another documentation commit. Preserve all prior history, budgets, stable IDs and
+states, frozen-five membership/blockers, linked type controls, both macro queues,
+the 50-entry clean-C queue (four accepted, 46 outstanding) and unrelated dirty work.
+Battle15's stale `func_800A3638` remains S4.4 debt; full-target `complete:true`,
+S3.2/S4/consolidation and whole-game obligations remain unfinished.
 
 ## Current skill-only operator correction
 
