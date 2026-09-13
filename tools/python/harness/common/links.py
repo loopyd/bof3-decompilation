@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import stat
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -70,7 +71,7 @@ def read_symlink(root: Path, name: str) -> SymlinkSnapshot | None:
         close_descriptors(descriptors)
 
 
-def verify_symlinks(root: Path, workspace: dict[str, bytes | SymlinkSnapshot]) -> None:
+def verify_symlinks(root: Path, workspace: Mapping[str, object]) -> None:
     """Require every captured symlink to remain unchanged without restoring it."""
     for name, snapshot in workspace.items():
         if (

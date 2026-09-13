@@ -14,6 +14,7 @@ from harness.common.evidence import evidence_output_path
 from harness.common.files import atomic_write
 from harness.common.paths import require_absent
 from harness.common.lease import exclude_writers, verify_writer
+from harness.common.submodules import protect_artifacts
 from harness.common.runtime import run_checks, validate_receipts
 from harness.common.workspace import workspace_baseline
 
@@ -112,6 +113,7 @@ def _context_record(record: dict) -> dict:
 
 
 @bind_deadline
+@protect_artifacts
 @exclude_writers
 def revalidate(
     root: Path,

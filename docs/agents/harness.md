@@ -197,23 +197,112 @@ tracked and unignored files, excluding `out/`, `sessions/subagent-artifacts/` an
 `.pi/subagents/`. Changed owned paths remain covered by their source images;
 unchanged owned paths remain in the workspace inventory. A pending index lock
 rejects capture. Non-Git or low-level runs without snapshots explicitly lack these
-guards; missing data is not treated as a clean workspace. Capture avoids a second
-full-workspace read, but recovery records grow with retained PRE content.
+guards; missing data is not treated as a clean workspace. Regular-file archival
+reuses captured bytes; dependency evidence is recaptured for comparison. Recovery
+records grow with retained PRE content.
 An exact index snapshot is not a complete Git metadata backup.
 
 `common/links.py` captures unrelated workspace symlinks as literal bytes plus
 identity through confined no-follow parent traversal, never reading referents.
-`bof3.recovery-safeguards/v2` distinguishes file/link entries and binds link bytes,
-mode, device/inode, ownership, link count and timestamps; historical v1 file guards
-remain readable without upgrading their evidence. Link target/type/identity drift
+Link evidence binds bytes, mode, device/inode, ownership, link count and timestamps.
+Link target/type/identity drift
 rejects, including same-target replacement. Macro/type publication rechecks captured
 links; snapshots grant no restoration authority, unrelated links are never restored,
-and symlink-owned mutation remains refused. Tracked gitlink directories are still
-unsupported and fail workspace capture; link support establishes neither complete
-workspace backup nor submodule skip, dereference or repair authority. The
-[rejected submodule candidate](../plans/autonomous-bof3-decompilation.md#tracked-submodule-candidate--2026-09-13-rejected-and-restored)
-records the remaining design/review blockers; its retained implementation is not
-part of this live v2 contract.
+and symlink-owned mutation remains refused.
+
+### Submodule isolation candidate
+
+The [successor checkpoint](../plans/autonomous-bof3-decompilation.md#submodule-isolation-successor--2026-09-13-acceptance-pending)
+records parent acceptance of the exact frozen candidate after independent Pasteur
+review: PASS with no confirmed open findings, within the support ceiling below.
+Both repairs are consumed; the original six findings and three repair-one residuals
+are closed. This accepts only the submodule prerequisite; the whole-game goal stays
+paused, C/macros parked. The prior rejected implementation remains historical.
+
+| Common owner | Responsibility |
+| --- | --- |
+| `submodules.py` | HEAD/index gitlink boundaries, recursive dependency snapshots, marker/absence binding and unconditional mutation exclusion |
+| `repositories.py` | independent root/module metadata copies, sanitized configuration/environment and bounded scratch Git queries |
+| `inventory.py` | confined file/namespace observations, identity rechecks and shared capture budgets |
+| `trees.py` | scratch worktree inputs, literal links, supported status semantics and live-input rechecks |
+| `workspace.py`, `safeguards.py` | composed baseline, dependency verification and durable observational guards |
+| `recovery.py`, `runtime.py`, `images.py`, `evidence.py` | dependency exclusion before source/image/evidence writes, even without optional workspace/index snapshots |
+
+Root status and workspace backup use an independent metadata/worktree mirror;
+submodule-suppression flags alone did not prevent live dependency reads. Separate HEAD/index
+enumeration protects both current and staged-removed gitlinks; baseline composition
+retains staged changes, module HEAD-versus-gitlink differences, tracked changes and
+recursive untracked state. Clean modules remain absent from the dirty map but
+present in preservation evidence. Absent, empty uninitialized and initialized
+modules remain distinct; marker selection and final namespace/identity observations
+are rechecked. Final raw observations recursively recheck the captured aggregate
+after nested queries, without interpreting live Git data. Nonempty uninitialized
+modules reject. Root mirrors retain the generated-artifact exclusions even for
+tracked paths.
+
+Initialized modules use independent scratch files, never hardlinks or redirects
+back to live metadata. Confined capture supplies refs, index/object dependencies
+and configuration before module-state queries. Scratch config parsing disables
+includes; queries disable hooks, fsmonitor, recursive status, optional writes,
+implicit fetching and host attribute/exclude files. Supported configuration values
+are reconstructed explicitly. Metadata and host configuration are separately
+rechecked against their live origins after queries; scratch consistency alone is
+insufficient. Captured module `*.lock` files are observed, excluded from query
+copies and never deleted. The superproject index-lock capture refusal still applies.
+Optional multi-pack-index and commit-graph files retain raw observations but are
+not copied or interpreted; scratch queries disable both accelerators. Their
+presence alone does not reject capture: the real root contains a commit graph.
+
+Worktree mirrors capture regular `.gitignore`/`.gitattributes` controls and
+tracked/unignored content; literal symlink bytes are compared without referent
+reads. Linked controls reject even though ordinary literal links are supported.
+Ignored undeclared embedded `.git` directories stay opaque and are never queried;
+their enclosing namespace is observed, not a complete ignored-content backup.
+Unignored undeclared repositories reject, including empty roots independently of
+descendant selection. Metadata hooks/logs/modules/worktrees
+directories are excluded from that metadata scan; declared nested modules receive
+their own bounded capture.
+
+Supported settings include file-mode, autocrlf/eol normalization, ignore-case,
+symlink and Unicode handling, repository format and SHA-1/SHA-256 object format.
+Unknown status-affecting settings reject, including configured filters, config
+includes, external attribute/exclude controls, submodule-ignore settings and
+nonempty global ignore/attribute files. Unsupported layouts include external or
+linked Git controls, bare/shared-commondir worktrees, worktree-specific config,
+alternates, grafts/loose or packed replacement refs, promisor metadata, unmerged indexes and
+sparse/assume-unchanged entries. This is an explicit support ceiling, not arbitrary
+Git-layout compatibility; nonrecursive boundary discovery still reads root HEAD/index.
+
+One recursive capture budget permits 200,000 inventory charges, 2 GiB of observed
+bytes and 512 queries, including rechecks; charges are not unique-file counts.
+Regular inputs cap at 128 MiB each, metadata at 256 MiB, gitfiles at 4 KiB,
+namespace depth at 64 and module ancestry at 32. Each isolated query has 30 seconds,
+2 MiB output, 1 GiB address space, 30 CPU seconds and zero file-output allowance,
+bounded further by the inherited work cutoff. Failure/overflow is never a baseline.
+The root mirror has a separate budget from recursive module capture.
+
+`bof3.recovery-safeguards/v3` adds `gitlink` entries containing canonical
+`bof3.submodule-snapshot/v2` evidence; historical safeguard v1 file and v2 file/link
+readers retain their original scope without upgrading evidence. The enclosing
+`bof3.transaction-recovery/v3` schema is unchanged. Macro/type publication rechecks
+dependencies. Boundary/descendant/ancestor mutation overlap rejects before images,
+including low-level calls without optional guards. Image/evidence destinations are
+checked before directory creation; application, `common.revalidation` and
+`macros.disposition` artifact guards run before writer-lease acquisition. Bound-image
+owned rollback uses captured identities without depending on a concurrently
+corrupted index; unbound rollback separately enforces dependency exclusion.
+Direct receipt/attestation destinations are also guarded; subsequent external-state
+checks still require parent review. Snapshots grant no dependency
+restoration, reset, initialization, deinitialization or repair authority. Drift
+preserves dependency state for parent review; observations remain non-atomic.
+
+Acceptance does not exclude manual concurrent edits; root Git metadata remains
+trusted. Arbitrary Git-layout compatibility and arbitrary index-extension confinement
+are unassessed: no extension escape was demonstrated and no projection hardening
+is claimed. The inspected real root and ten root-module indexes contain checksum-valid
+v2 TREE extensions only; that inventory proves nothing about other formats.
+
+### Recovery evidence and rollback
 
 Records live at `out/reviews/evidence/{macro,type}-recovery-<nonce>.json`.
 They contain source text: retain them as nonpublic evidence. Their digest

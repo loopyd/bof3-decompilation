@@ -10,6 +10,7 @@ from harness.common.deadlines import bind_deadline, check_deadline
 from harness.common.digests import digest
 from harness.common.evidence import evidence_output_path, write_new_evidence_output
 from harness.common.lease import exclude_writers
+from harness.common.submodules import protect_artifacts
 from harness.common.paths import require_absent
 from harness.common.process import run_command
 from harness.common.review import _binding, _keys, _validate_parent
@@ -31,6 +32,7 @@ ENVELOPE_SCHEMA = "bof3.macro-existing-disposition/v1"
 
 
 @bind_deadline
+@protect_artifacts
 @exclude_writers
 def inspect_existing(
     root: Path,

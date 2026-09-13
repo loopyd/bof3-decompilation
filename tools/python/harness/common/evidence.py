@@ -9,6 +9,7 @@ from typing import Any
 
 from harness.common.files import atomic_write, read_file
 from harness.common.directory import validate_repo_path, open_parent_fd
+from harness.common.submodules import validate_mutations
 
 
 def evidence_output_path(root: Path, value: object) -> str:
@@ -17,6 +18,7 @@ def evidence_output_path(root: Path, value: object) -> str:
     name = validate_repo_path(value)
     if not name.startswith("out/reviews/evidence/"):
         raise ValueError("application proof output must be under out/reviews/evidence")
+    validate_mutations(root, {name})
     parent, _leaf = open_parent_fd(root, name, create=True)
     os.close(parent)
     return name

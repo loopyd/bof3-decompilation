@@ -12,7 +12,7 @@ import pytest
 from harness.analysis.index import SCHEMA_VERSION
 from harness.analysis.schema import create_schema
 from harness.common import files as transaction_files
-from harness.common import git as transaction_git
+from harness.common import workspace as transaction_workspace
 from harness.common import quarantine as transaction_quarantine
 from harness.common import runtime
 from harness.common.digests import digest
@@ -373,6 +373,26 @@ def test_validation_cannot_change_git_index_even_for_allowed_path(
 
 
 def test_atomic_run_and_immutable_runner_receipts(tmp_path: Path, monkeypatch) -> None:
+    dependency = tmp_path / "third_party/example"
+    dependency.mkdir(parents=True)
+    (dependency / "input.txt").write_text("dependency PRE\n")
+    subprocess.run(["git", "init", "-q", str(dependency)], check=True)
+    subprocess.run(["git", "-C", str(dependency), "add", "."], check=True)
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(dependency),
+            "-c",
+            "user.name=T",
+            "-c",
+            "user.email=t@x",
+            "commit",
+            "-qm",
+            "dependency",
+        ],
+        check=True,
+    )
     link = tmp_path / ".agents/skills/example"
     link.parent.mkdir(parents=True)
     link.symlink_to("../../.codex/skills/example")
@@ -389,6 +409,7 @@ def test_atomic_run_and_immutable_runner_receipts(tmp_path: Path, monkeypatch) -
     expected_digest = application["digest"]
     assert link.lstat().st_ino == link_identity
     assert link.readlink().as_posix() == "../../.codex/skills/example"
+    assert (dependency / "input.txt").read_text() == "dependency PRE\n"
     assert transactions.verify_application(tmp_path, application, expected_digest)[
         "applied"
     ]
@@ -928,7 +949,7 @@ def test_workspace_state_ignores_tool_owned_quarantine(tmp_path: Path) -> None:
     assert transactions._workspace_state(tmp_path) == {}
     assert all(
         not name.startswith(transaction_quarantine.QUARANTINE_DIRECTORY)
-        for name in transaction_git.workspace_backup(tmp_path)
+        for name in transaction_workspace.workspace_backup(tmp_path)
     )
 
 

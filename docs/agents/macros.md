@@ -423,8 +423,8 @@ Records require independently pinned inspection, not automatic restoration. They
 not replace application receipts, parent acceptance or publication reconciliation.
 
 Git-backed runs also retain untouched workspace PRE images/metadata and exact
-index bytes/state from the owner's existing snapshots. This avoids another
-full-workspace read at capture. Inventory covers tracked/unignored files except
+index bytes/state from the owner's existing snapshots. Regular-file archival
+reuses captured bytes; dependency verification recaptures its evidence. Inventory covers tracked/unignored files except
 the shared generated-artifact exclusions; missing snapshots mean unavailable
 guards, not a clean workspace. Records can include local unignored content and
 must remain nonpublic. Repository evidence uses filesystem-native permissions,
@@ -468,12 +468,22 @@ owns application scope, pins, consumed budgets, review identities and check rece
 The macro application is parked after failure before publication: PRE is unchanged,
 the proposed header/application remain absent, and the original bounds are expired.
 
-Tracked gitlinks still block workspace capture under the live
-[v2 safeguards](harness.md#policy-versus-mechanism). The
-[rejected submodule checkpoint](../plans/autonomous-bof3-decompilation.md#tracked-submodule-candidate--2026-09-13-rejected-and-restored)
-owns candidate findings, historical checks, restoration and the remaining design
-prerequisite. It grants no dependency skip/repair, macro retry, acceptance, budget
-reset or evidence rebinding; native/application review and frozen obligations remain.
+Parent accepts the exact frozen [submodule isolation candidate](harness.md#submodule-isolation-candidate)
+after independent Pasteur PASS within its documented support ceiling. Both repairs
+are consumed; the original six findings and all three repair-one residuals close.
+Immutable root/dependency mirrors, observational safeguard v3 and historical v1/v2
+readers remain; unbound rollback and direct receipt/attestation guards now close
+their gaps, and empty unignored embedded roots reject independently of descendants.
+Bound-image rollback remains independent of a corrupted index.
+The [successor checkpoint](../plans/autonomous-bof3-decompilation.md#submodule-isolation-successor--2026-09-13-acceptance-pending)
+separates final gates, historical failures and unrelated test debt. Observations remain
+non-atomic, manual concurrency is not excluded and root Git metadata is trusted.
+Arbitrary Git layouts/index-extension confinement remain unassessed; no extension
+escape or projection hardening is established. The root/ten-module checksum-valid
+v2 TREE inventory does not prove other formats. The whole-game goal remains paused;
+C/macros stay parked. Dependency snapshots grant no restoration or repair,
+macro retry, acceptance, budget reset or evidence rebinding. Native/application
+review and frozen obligations remain.
 V1 stays existing-only; shared-header and type creation are not added.
 
 V2 retains all v1 evidence fields and adds exactly one `creation` object with

@@ -29,10 +29,12 @@ _MISSING = object()
 
 
 def _read_leaf_state(
-    parent: int, leaf: str, name: str, *, missing_ok: bool
+    parent: int, leaf: str, name: str, *, missing_ok: bool, max_bytes: int | None = None
 ) -> tuple[bytes | None, os.stat_result | None]:
     try:
-        descriptor = os.open(leaf, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=parent)
+        descriptor = os.open(
+            leaf, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent
+        )
     except FileNotFoundError:
         if missing_ok:
             return None, None
@@ -43,14 +45,23 @@ def _read_leaf_state(
         leaf_state = os.fstat(stream.fileno())
         if not stat.S_ISREG(leaf_state.st_mode):
             raise ValueError(f"transaction path is not a regular file: {name}")
-        return stream.read(), leaf_state
+        if max_bytes is not None and leaf_state.st_size > max_bytes:
+            raise ValueError(f"transaction file exceeds capture limit: {name}")
+        content = stream.read() if max_bytes is None else stream.read(max_bytes + 1)
+        if max_bytes is not None and len(content) > max_bytes:
+            raise ValueError(f"transaction file exceeds capture limit: {name}")
+        return content, leaf_state
 
 
 def _read_leaf(parent: int, leaf: str, name: str, *, missing_ok: bool) -> bytes | None:
     return _read_leaf_state(parent, leaf, name, missing_ok=missing_ok)[0]
 
 
-def read_file(root: Path, name: str, *, missing_ok: bool = False) -> bytes | None:
+def read_file(
+    root: Path, name: str, *, missing_ok: bool = False, max_bytes: int | None = None
+) -> bytes | None:
+    if max_bytes is not None and (type(max_bytes) is not int or max_bytes < 0):
+        raise ValueError("invalid transaction file capture limit")
     try:
         parent, leaf = open_parent_fd(root, name)
     except FileNotFoundError:
@@ -58,6 +69,10 @@ def read_file(root: Path, name: str, *, missing_ok: bool = False) -> bytes | Non
             return None
         raise
     try:
+        if max_bytes is not None:
+            return _read_leaf_state(
+                parent, leaf, name, missing_ok=missing_ok, max_bytes=max_bytes
+            )[0]
         return _read_leaf(parent, leaf, name, missing_ok=missing_ok)
     finally:
         os.close(parent)

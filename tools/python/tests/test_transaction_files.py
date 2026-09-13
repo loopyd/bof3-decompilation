@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 from harness.common import files as transaction_files
 from harness.common import git as transaction_git
+from harness.common import workspace as transaction_workspace
 from harness.common import quarantine as transaction_quarantine
 from harness.common import rename as rename_noreplace
 
@@ -639,11 +640,11 @@ def test_rollback_workspace_records_retained_quarantine(
     leaf = parent / "generated.h"
     leaf.write_bytes(b"generated\n")
     monkeypatch.setattr(
-        transaction_git,
+        transaction_workspace,
         "workspace_backup",
         lambda _root: {"include/generated.h": b"generated\n"},
     )
-    quarantines = transaction_git.rollback_workspace(tmp_path, {})
+    quarantines = transaction_workspace.rollback_workspace(tmp_path, {})
 
     assert not leaf.exists()
     assert len(quarantines) == 1

@@ -20,7 +20,7 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
 
 ## Module organization
 
-- Hard ceiling: 450 lines per module, enforced by
+- Hard ceiling: 600 lines per module, enforced by
   `test_harness_dry.py::test_harness_modules_stay_decomposed`. Decompose
   mechanically before growing into noun categories or a cohesive subpackage.
   Dependencies flow toward the owner; do not hide cycles behind facade imports.

@@ -17,6 +17,7 @@ from harness.common.paths import leaf_stat
 from harness.common.observation import observe_file
 from harness.common.quarantine import reserve_quarantine, validate_quarantine
 from harness.common.rename import require_native_noreplace
+from harness.common.submodules import validate_mutations
 
 IMAGE_DIRECTORY = "out/reviews/evidence/images"
 
@@ -54,6 +55,7 @@ def prepare_image(
 ) -> dict[str, Any]:
     fingerprint = hashlib.sha256(name.encode()).hexdigest()[:16]
     directory = f"{IMAGE_DIRECTORY}/{secrets.token_hex(16)}-{fingerprint}"
+    validate_mutations(root, {name, directory})
     parent, leaf = open_parent_fd(root, directory, create=True)
     try:
         os.mkdir(leaf, 0o700, dir_fd=parent)

@@ -386,8 +386,9 @@ implementation pass is consumed; zero of one review-driven repair passes began.
 Design scout Peirce `01a09921-5e6a-7ac2-9db8-b398013fb3a0` completed and closed.
 Independent reviewer Ptolemy `01a0992c-3999-7a03-9849-d263464182ae` returned
 **needs repair before acceptance**. Parent received its completed bounded
-clarification, including the fifth finding below, and is closing the actual handle;
-closure is not yet confirmed. No acceptance or allowance reset follows.
+clarification, including the fifth finding below. Retained `clarification.md` now
+confirms parent closed the actual reviewer handle before interruption. No acceptance
+or allowance reset follows.
 
 The retained `review.md` and parent-relayed completed reviewer clarification
 establish five findings against the candidate:
@@ -412,7 +413,8 @@ confirmed Git lists only the three original tracked dirty files and unrelated
 `tmp/` before these documentation edits. No partial repair or configuration
 whitelist began. Retained candidate files are disposable evidence, not reviewed
 truth or live implementation; the [harness contract](../agents/harness.md#policy-versus-mechanism)
-still uses safeguards v2 and rejects tracked gitlink directories.
+at that restoration checkpoint used safeguards v2 and rejected tracked gitlink
+directories; the separate successor below does not accept this rejected candidate.
 
 Parent-confirmed **historical candidate checks**, not restored-code acceptance:
 three focused checks passed in 13.40s; the full selected suite passed 196 cases
@@ -428,7 +430,8 @@ After restoration, parent confirms the three focused existing checks are termina
 **3 passed in 5.74s**, `/tmp/bof3-submodule-restored-tests.txt`, read by this writer.
 This validates the selected restored-code checks, not the rejected candidate.
 
-Next prerequisite is separately bounded, independently reviewed design: isolate
+The next prerequisite identified at that checkpoint was separately bounded,
+independently reviewed design: isolate
 Git query metadata immutably and compose a dependency baseline without recursive
 unvalidated root status. Preserve actual staged/dirty facts; neither declaring
 every module dirty nor skipping dependencies is acceptable. Bind marker selection
@@ -448,9 +451,147 @@ the expired 04:45/04:48 bounds, original pins and consumption, four accepted cle
 matches, 46 outstanding requeue entries, all frozen pilot bindings and phase states.
 The full reconstruction goal remains active; this checkpoint closes no domain work.
 
-This documentation-only pass directly compacted the changed guide text; 46 existing
+That documentation-only pass directly compacted the changed guide text; 46 existing
 plan tests passed in 2.72s. Plan parsing, 63 local references and whitespace checks
 pass. Broader suites and native gates were not rerun for these three documents.
+
+<a id="submodule-isolation-successor--2026-09-13-acceptance-pending"></a>
+### Submodule isolation successor — 2026-09-13 (supported prerequisite accepted)
+
+Distinct mission `out/reviews/workspace-isolation-20260913/mission.md` starts from
+`f2751f58`; the user explicitly prioritizes completing submodule preservation before
+C. Work cutoff is 07:10 UTC, cleanup hard stop 07:13 UTC: one architectural
+implementation pass, one independent review and at most two bounded repair passes,
+plus one parallel read-only scout. The implementation and both repairs are consumed;
+no implementation/review allowance remains. Scout Goodall `01a0994a-41ec-7023-ad43-55430d61a59b` completed
+and closed. Independent reviewer Pasteur `01a0995b-ebcf-7901-9fd0-e90663dac982`
+returned needs repair for six gaps: MIDX external paths, live dependency reads by
+root status despite suppression, corrupt-index rollback failure, artifact paths
+inside gitlinks, packed replacement refs and late nested drift. Repair-one
+verification retained its 06:55 UTC cutoff and 06:57 cleanup. At the initial
+sidecar's 06:49 final-revision instruction, parent supplied independent findings:
+the six effects closed, but unbound rollback, direct receipt/attestation artifact
+writes and false-clean empty unignored embedded repositories remained. Acceptance
+was withheld at that checkpoint; repair two subsequently addressed all three.
+
+Final verification retained its 07:07 UTC cutoff and 07:09 cleanup. Pasteur's
+`final-review.md` in the mission directory, read by this terminal-accounting writer,
+reports **PASS with no confirmed open findings**. Parent accepts only the code
+frozen at 06:55:54 UTC and bound by `final-code.sha256`, within the support ceiling
+below. Prior rejection, its five findings and consumed 05:35/05:38 bounds remain
+historical; this acceptance neither revives them nor completes an aggregate phase.
+
+The [harness candidate contract](../agents/harness.md#submodule-isolation-candidate)
+owns noun-module responsibilities, independent metadata copies, sanitized scratch
+configuration/status inputs, supported normalization and rejected layouts/settings,
+resource ceilings, literal-link versus linked-control behavior, opaque ignored
+embedded repositories and observational module locks. Repair one extends immutable
+mirrors to root status/backup. Optional MIDX/commit-graph files remain observed but
+uncopied/uninterpreted, with both accelerators disabled; the real root has a commit
+graph. Packed replacement refs reject. Artifact guards precede mkdir and leases;
+bound-image rollback remains independent of a concurrently corrupted index, and
+final raw recursive observations address late nested drift. `workspace`, `safeguards`,
+`recovery` and direct consumers compose real staged/dirty and nested dependency
+facts; unconditional gitlink exclusion precedes images even without optional
+guards. Safeguard v3 embeds submodule snapshot v2; historical safeguard v1/v2
+readers and enclosing recovery v3 remain distinct. Source rechecks and dependency
+nonrestoration are mandatory; no atomic whole-workspace guarantee follows.
+Repair two guards unbound rollback separately from bound-image restoration,
+guards direct receipt/attestation destinations and rejects empty unignored embedded
+roots independently of descendant selection.
+
+The accepted deployment retains non-atomic observations and does not exclude manual
+concurrency; root Git metadata is trusted. Arbitrary Git-layout compatibility and
+arbitrary index-extension confinement remain unassessed. No index-extension escape
+was demonstrated and no projection hardening is claimed. The inspected real root
+and ten root-module indexes have checksum-valid v2 TREE extensions only; this
+inventory establishes no support or confinement for other formats.
+
+Parent reports these results, separating pre-repair and repaired evidence from
+historical rejected-candidate checks:
+
+- Three initial existing atomic cases passed in 41.06s. Initial clean capture of
+  ten root modules plus initialized nested randomtools observed 685,427,642 bytes,
+  63,537 inventory charges and 99 queries; this was capture-only evidence.
+- Pre-repair root round trip passed in 120.68s: 2,144 backup entries, ten root modules
+  plus nesting, with exact index, guards and workspace state unchanged.
+- Earlier selected suite: 196 passed, one deselected in 255.89s, but it started
+  before the latest hardening and does not validate the frozen candidate. Parent
+  reports its frozen rerun ended with 192 passed, four corrupt-index rollback
+  failures and one deselection. Single-case reproduction at
+  `/tmp/bof3-isolation-index-rollback.txt` ended with one failure in 7.08s, read by
+  this writer. These failures preceded repair one. The excluded existing
+  untracked-mode root Git-object-writing test
+  remains a separate known unrelated failure; no permissions were expanded or
+  unrelated content changed to bypass it.
+- Five prior adverse findings plus additional probes passed in 16.15s; separate
+  staged/dirty/symlink/absent-status probes passed. These are parent-attributed
+  gates, not independent review or application acceptance.
+- Repair one: real root round trip passed in 172.18s; all six finding probes
+  passed, with zero observed external-read events. Repaired status semantics pass;
+  12 rollback/publication cases passed in 199.91s, resolving the four corrupt-index
+  regressions in those cases. Parent confirms 195 behavioral cases passed in
+  433.74s; the 450-line ceiling failure is historical after the user's explicit
+  increase to 600 and parent edits to the existing DRY test and coding standards.
+  At that checkpoint no post-policy complete-suite rerun was supplied; policy change
+  alone established neither source acceptance nor closure of the three residuals.
+- A broader application suite against older code observed a separate stale
+  `_target` test reference. Parent reproduced the single latest-code case in
+  17.00s and confirms baseline `f2751f58` already lacks `macros.transactions._target`
+  used by `test_application_review.py:320`. This unrelated test/facade is not repaired
+  here; its failure is neither concealed nor attributed to submodule acceptance.
+- Final independent checks: adverse probes passed in 16.69s, including ignored
+  ancestors, newline names, selected descendants and unchanged-file checks; two
+  existing corrupt-index rollback cases passed in 23.86s; the authorized 600-line
+  ceiling check passed in 0.06s (parent's earlier focused check: 0.05s). The original
+  six probes passed again, including zero external MIDX/config/ref accesses,
+  packed-replacement/artifact rejection and late nested-drift detection. No test
+  inventory was added; parent owns the authorized existing-test/standards edits.
+- Final parent suite `83201` terminated with exit 0: **196 passed, one known
+  untracked-mode case deselected in 469.58s**. That exclusion remains unresolved.
+  Final real-root round trip `30681` terminated with exit 0, **PASS in 172.88s**:
+  2,144 entries, ten root modules plus nested dependencies. Earlier capture `58789`
+  rejected spimdisasm drift; its exact cause remains unproven.
+- Broader suite `44396` terminated with exit 1: **147 passed, one pre-existing
+  `_target` failure in 3,423.51s**. It began before final repair and is historical,
+  not final-revision authority. Final review also records passing Ruff/format and
+  whitespace, with matching code fingerprints after review.
+
+After the repair-one real round trip terminated, parent froze code and granted the initial sidecar
+the serialized slot for this plan, `docs/agents/harness.md` and
+`docs/agents/macros.md` only. The writer read all 3,121 original plan lines before
+editing. One initial compact documentation edit and one final evidence revision
+after parent supplies review results are allowed; cutoff 06:50 UTC, cleanup 06:52.
+Parent subsequently permits the final revision at 06:49 with honest pending status
+if no review arrives; parent supplied the repair findings during this final revision.
+That consumed its reserved allowance without accepting the candidate. Its final edit
+completed at 06:50:36, a recorded deviation from the unchanged 06:50 work cutoff;
+46 plan tests and 64-reference checks passed before 06:52, then its handle closed.
+The parent's separately authorized 600-line policy/test edits remain outside either
+sidecar's three-file ownership. Initial documentation validation passed 46
+existing plan tests in 2.62s, plan parsing, 64 references and whitespace checks;
+these remain historical checks.
+
+The distinct terminal-accounting sidecar read all 3,217 current plan lines and both
+guides while read-only, then received the parent's sole serialized authored-write
+slot after final outcomes and narrow acceptance. It owns one compact revision to
+these same three documents only, with work cutoff 07:10 UTC and cleanup 07:12,
+inside the unchanged parent 07:10/07:13 bounds. Required handoff checks are existing
+plan tests/parsing, references for changed Markdown plus documentation indexes and
+scoped whitespace; their actual outcomes accompany slot release. This is accounting,
+not another implementation/review budget or permission to resume the goal.
+No agents, source/worktree/dependency writes, native builds, index refreshes or
+macro retries belong to this sidecar. Preserve `.pi/settings.json`, both dirty
+battle sources and unrelated `tmp/`.
+
+C and macros remain parked; the real macro's one pre-publication failure, six
+unchanged PRE states, absent header/application, original pins and expired
+04:45/04:48 bounds remain. Four accepted clean-C dispatchers and 46 outstanding
+requeue entries, stable IDs/states, frozen-five membership and all unfinished
+domain obligations survive. Parent confirms the whole reconstruction goal is
+**paused**, superseding the stale active summary; aggregate plan states remain
+unchanged. This narrow tooling acceptance closes no phase, grants no source/macro
+acceptance and launches no successor.
 
 ## Current skill-only operator correction
 

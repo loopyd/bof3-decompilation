@@ -1,4 +1,4 @@
-"""Git index and workspace snapshots for review transactions."""
+"""Bounded Git queries and exact index snapshots for review transactions."""
 
 from __future__ import annotations
 
@@ -11,13 +11,8 @@ from pathlib import Path
 
 from harness.common.rename import rename_noreplace as _rename_noreplace
 from harness.common.lease import verify_writer
-from harness.common.files import atomic_write
-from harness.common.directory import validate_repo_path
-from harness.common.files import read_file
-from harness.common.files import safe_unlink
 from harness.common.deadlines import resolve_deadline
 from harness.common.process import run_bounded
-from harness.common.links import SymlinkSnapshot, read_symlink
 
 
 @dataclass(frozen=True)
@@ -46,7 +41,35 @@ def _index_state(
 
 def read_git(root: Path, arguments: list[str]) -> str:
     """Run a captured Git query within the owner's cutoff, preserving filename bytes."""
-    command = ["git", *arguments]
+    for key in os.environ:
+        if (
+            key
+            in {
+                "GIT_DIR",
+                "GIT_WORK_TREE",
+                "GIT_INDEX_FILE",
+                "GIT_COMMON_DIR",
+                "GIT_OBJECT_DIRECTORY",
+                "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+                "GIT_CONFIG",
+                "GIT_CONFIG_COUNT",
+                "GIT_CONFIG_PARAMETERS",
+                "GIT_CONFIG_SYSTEM",
+            }
+            and os.environ[key]
+        ):
+            raise ValueError(f"Git environment override prevents snapshot: {key}")
+    if os.environ.get("GIT_CONFIG_GLOBAL") not in {None, "/dev/null"}:
+        raise ValueError("custom global Git configuration prevents snapshot")
+    command = [
+        "git",
+        "--no-optional-locks",
+        "-c",
+        "core.fsmonitor=false",
+        "-c",
+        "submodule.recurse=false",
+        *arguments,
+    ]
     result = run_bounded(
         root,
         command,
@@ -97,14 +120,21 @@ def _verify_index_parent(path: Path, parent: int) -> None:
 
 def _capture_index_at(parent: int, path: Path) -> GitIndexSnapshot:
     try:
-        descriptor = os.open(path.name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=parent)
+        descriptor = os.open(
+            path.name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent
+        )
     except FileNotFoundError:
         return GitIndexSnapshot(path, None, None)
     with os.fdopen(descriptor, "rb") as stream:
         state = os.fstat(stream.fileno())
-        if not stat.S_ISREG(state.st_mode):
+        if not stat.S_ISREG(state.st_mode) or state.st_size > 128 * 1024 * 1024:
             raise ValueError("Git index is not a regular file")
-        return GitIndexSnapshot(path, stream.read(), _index_state(state))
+        content = stream.read(128 * 1024 * 1024 + 1)
+        if len(content) > 128 * 1024 * 1024 or _index_state(
+            os.fstat(stream.fileno())
+        ) != _index_state(state):
+            raise ValueError("Git index changed during capture")
+        return GitIndexSnapshot(path, content, _index_state(state))
 
 
 def _capture_index_path(path: Path) -> GitIndexSnapshot:
@@ -352,55 +382,3 @@ def git_index_state(root: Path) -> bytes | None:
     return read_git(root, ["ls-files", "--stage", "-z"]).encode(
         "utf-8", "surrogateescape"
     )
-
-
-def workspace_backup(root: Path) -> dict[str, bytes | SymlinkSnapshot]:
-    if not (root / ".git").exists():
-        return {}
-    names = read_git(root, ["ls-files", "-co", "--exclude-standard", "-z"]).split("\0")
-    backup = {}
-    for name in names:
-        if not name or name.startswith(
-            ("out/", "sessions/subagent-artifacts/", ".pi/subagents/")
-        ):
-            continue
-        validate_repo_path(name)
-        content = read_symlink(root, name)
-        if content is None:
-            content = read_file(root, name, missing_ok=True)
-        if content is not None:
-            backup[name] = content
-    return backup
-
-
-def rollback_workspace(
-    root: Path, backup: dict[str, bytes | SymlinkSnapshot]
-) -> list[str]:
-    errors = []
-    quarantines = []
-    current = workspace_backup(root)
-    for name in current.keys() | backup.keys():
-        if (
-            isinstance(current.get(name), SymlinkSnapshot)
-            or isinstance(backup.get(name), SymlinkSnapshot)
-        ) and current.get(name) != backup.get(name):
-            raise ValueError(f"workspace symlink drift requires parent review: {name}")
-    for name in sorted(set(current) - set(backup)):
-        try:
-            verify_writer(root)
-            quarantine = safe_unlink(root, name, expected=current[name])
-            if quarantine is not None:
-                quarantines.append(quarantine)
-        except (OSError, ValueError) as error:
-            errors.append(f"{name}: {error}")
-    for name, content in backup.items():
-        if current.get(name) == content:
-            continue
-        try:
-            verify_writer(root)
-            atomic_write(root, name, content, expected=current.get(name))
-        except (OSError, ValueError) as error:
-            errors.append(f"{name}: {error}")
-    if errors:
-        raise RuntimeError("type transaction rollback failed: " + "; ".join(errors))
-    return quarantines

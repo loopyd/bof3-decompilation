@@ -16,6 +16,7 @@ from harness.common.deadlines import bind_deadline, suspend_work_deadline
 from harness.common.files import preflight_existing_replacements
 from harness.common.history import validate_application_history
 from harness.common.lease import exclude_writers, verify_writer
+from harness.common.submodules import protect_artifacts
 from harness.common.runtime import application_record
 from harness.common.runtime import apply_changes
 from harness.common.directory import validate_repo_path
@@ -27,8 +28,7 @@ from harness.common.safeguards import capture_safeguards, verify_restored_state
 from harness.common.process import ProcessCleanupError
 from harness.common.runtime import run_checks
 from harness.common.paths import validate_paths
-from harness.common.git import workspace_backup
-from harness.common.links import verify_symlinks
+from harness.common.workspace import workspace_backup, verify_workspace
 from harness.common.runtime import write_attestation
 from harness.domain.manifests import load_target_manifests
 from harness.domain import functions as source_functions
@@ -215,6 +215,7 @@ def _manifest(root: Path, value: object, *, rederive: bool = False) -> dict[str,
 
 
 @bind_deadline
+@protect_artifacts
 @exclude_writers
 def run_transaction(
     root: Path,
@@ -345,7 +346,7 @@ def run_transaction(
         if current_index != index_backup:
             raise ValueError("macro transaction changed the Git index before proof")
         execution_context.recheck(root, manifest, context)
-        verify_symlinks(root, full_backup)
+        verify_workspace(root, full_backup)
         execution_context.publish(root, application, output)
         return application
     except ProcessCleanupError:

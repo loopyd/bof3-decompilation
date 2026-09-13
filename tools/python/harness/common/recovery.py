@@ -18,7 +18,8 @@ from harness.common.git import GitIndexSnapshot
 from harness.common.paths import file_state, leaf_stat
 from harness.common.quarantine import reserve_quarantine
 from harness.common.safeguards import capture_safeguards
-from harness.common.links import SymlinkSnapshot
+from harness.common.submodules import validate_mutations
+from harness.common.workspace import WorkspaceSnapshot
 
 LEGACY_SCHEMA = "bof3.transaction-recovery/v1"
 IDENTITY_SCHEMA = "bof3.transaction-recovery/v2"
@@ -31,7 +32,7 @@ def capture_recovery(
     changes: dict[str, str],
     backup: dict[str, bytes | None],
     *,
-    workspace: dict[str, bytes | SymlinkSnapshot] | None = None,
+    workspace: WorkspaceSnapshot | None = None,
     index: GitIndexSnapshot | None = None,
 ) -> dict[str, dict[str, Any]]:
     if set(binding) != {"owner", "manifest", "implementation_run_id", "output"}:
@@ -47,11 +48,13 @@ def capture_recovery(
         manifest["allowed_paths"]
     ):
         raise ValueError("recovery paths differ from the authorized changes")
+    validate_mutations(root, {*manifest["allowed_paths"], "out/reviews/evidence"})
     if file_state(root, manifest["allowed_paths"]) != manifest["pre_state"]:
         raise ValueError("recovery capture requires the complete owned PRE")
     safeguards = capture_safeguards(root, set(changes), workspace, index)
     files = {}
     for name, content in changes.items():
+        validate_mutations(root, {*changes, "out/reviews/evidence"})
         before = backup[name]
         metadata = leaf_stat(root, name)
         if (metadata is None) != (before is None):
@@ -101,5 +104,6 @@ def capture_recovery(
     record["digest"] = digest(record)
     path = f"out/reviews/evidence/{binding['owner']}-recovery-{nonce}.json"
     encoded = (json.dumps(record, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    validate_mutations(root, {path})
     atomic_write(root, path, encoded, expected=None, creation_mode=0o600)
     return files

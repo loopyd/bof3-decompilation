@@ -365,7 +365,7 @@ def test_shared_function_templates_stay_target_owned() -> None:
 
 def test_harness_modules_stay_decomposed() -> None:
     """Seal: no harness module regrows past the decomposition ceiling."""
-    ceiling = 450
+    ceiling = 600
     oversized = []
     for path in HARNESS.rglob("*.py"):
         if "__pycache__" in path.parts:

@@ -12,6 +12,7 @@ from typing import Any, Callable
 
 from harness.common.process import run_command
 from harness.common.recovery import capture_recovery
+from harness.common.submodules import validate_mutations
 from harness.common.checks import check_evidence
 from harness.common.digests import digest
 from harness.common.deadlines import check_deadline
@@ -24,14 +25,12 @@ from harness.common.git import (
     git_index_backup,
     git_index_state,
     restore_git_index,
-    rollback_workspace,
-    workspace_backup,
 )
 from harness.common.paths import file_state, validate_paths
 from harness.common.lease import verify_writer
 from harness.common.images import classify_restoration, install_image
 from harness.common.git import GitIndexSnapshot
-from harness.common.links import SymlinkSnapshot
+from harness.common.workspace import WorkspaceSnapshot
 from harness.io import unique_object
 
 RECEIPT_SCHEMA = "bof3.type-command-receipt/v1"
@@ -59,6 +58,7 @@ def _write_receipt(
     record = {**facts, "digest": digest(facts)}
     name = f"{prefix}-run-{os.getpid()}-{index}-{secrets.token_hex(8)}.json"
     relative = f"out/reviews/evidence/{name}"
+    validate_mutations(root, {relative})
     _atomic_write(
         root,
         relative,
@@ -191,11 +191,12 @@ def apply_changes(
     allowed: set[str],
     *,
     recovery: dict[str, Any],
-    workspace: dict[str, bytes | SymlinkSnapshot] | None = None,
+    workspace: WorkspaceSnapshot | None = None,
     index: GitIndexSnapshot | None = None,
 ) -> tuple[dict[str, bytes | None], dict[str, dict[str, Any]]]:
     check_deadline()
     safe_allowed = validate_paths(root, allowed)
+    validate_mutations(root, safe_allowed)
     if not isinstance(changes, dict) or not changes:
         raise ValueError("type application requires non-empty changes")
     if any(
@@ -217,6 +218,7 @@ def apply_changes(
         for name, content in changes.items():
             check_deadline()
             verify_writer(root)
+            validate_mutations(root, safe_allowed)
             current = backup[name]
             image = images[name]
             installed = content.encode()
@@ -258,6 +260,7 @@ def rollback(
         try:
             verify_writer(root)
             if records is None:
+                validate_mutations(root, {name})
                 current = _read_file(root, name, missing_ok=True)
                 _atomic_write(root, name, content or b"", expected=current)
                 if content is None:
@@ -347,6 +350,7 @@ def write_attestation(
     record = {**facts, "digest": digest(facts)}
     relative = f"out/reviews/evidence/{prefix}-attestation-{attestation_id}.json"
     check_deadline()
+    validate_mutations(root, {relative})
     _atomic_write(
         root,
         relative,
@@ -418,11 +422,9 @@ __all__ = [
     "git_index_state",
     "restore_git_index",
     "rollback",
-    "rollback_workspace",
     "run_checks",
     "validate_attestation",
     "validate_paths",
     "validate_receipts",
-    "workspace_backup",
     "write_attestation",
 ]

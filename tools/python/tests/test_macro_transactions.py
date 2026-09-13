@@ -745,6 +745,26 @@ def test_review_requires_all_eight_guards_two_observations_and_fresh_owner(
 def test_atomic_apply_receipts_attestation_expected_digest_and_rollback(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    dependency = tmp_path / "third_party/example"
+    dependency.mkdir(parents=True)
+    (dependency / "input.txt").write_text("dependency PRE\n")
+    subprocess.run(["git", "init", "-q", str(dependency)], check=True)
+    subprocess.run(["git", "-C", str(dependency), "add", "."], check=True)
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(dependency),
+            "-c",
+            "user.name=T",
+            "-c",
+            "user.email=t@x",
+            "commit",
+            "-qm",
+            "dependency",
+        ],
+        check=True,
+    )
     link = tmp_path / ".agents/skills/example"
     link.parent.mkdir(parents=True)
     link.symlink_to("../../.codex/skills/example")
@@ -817,6 +837,7 @@ def test_atomic_apply_receipts_attestation_expected_digest_and_rollback(
     assert (tmp_path / header).read_text() == header_text
     assert (tmp_path / config).read_text() == after
     assert link.lstat().st_ino == link_identity
+    assert (dependency / "input.txt").read_text() == "dependency PRE\n"
 
 
 def test_macro_validation_substitution_retains_leaf_and_original_quarantine(

@@ -196,6 +196,7 @@ def run_bounded(
     input_data: bytes | None = None,
     on_output: Callable[[str, bytes], None] | None = None,
     on_spawn: Callable[[OwnedProcess], None] | None = None,
+    env: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     """Bound owned work by pre-spawn timeout and an optional monotonic deadline.
 
@@ -229,6 +230,7 @@ def run_bounded(
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             deadline=deadline,
+            **({"env": env} if env is not None else {}),
             **({"stdin": subprocess.PIPE} if input_data is not None else {}),
         )
     except subprocess.TimeoutExpired:
