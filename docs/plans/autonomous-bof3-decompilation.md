@@ -231,6 +231,10 @@ serialized application/native work. This documentation worker owns only this pla
 and `docs/agents/macros.md`; initial work was bounded to eight minutes and
 04:05 UTC. Parent subsequently authorizes verification-only documentary cleanup
 through the unchanged 04:08 UTC hard stop, without renewed implementation budget.
+Those original bounds are consumed. Parent confirms overdue formatting-only
+cleanup completed on continuation, with no new implementation trials, and local
+feature commit `c9f884b6` is complete. This closes the tooling checkpoint;
+macro application acceptance remains pending.
 
 The real-game lead remains `assembly_block:366ad828049fbe14`: floor 12, pool
 three, top N one, exactly the four accepted battle15 dispatchers above. It is
@@ -259,9 +263,10 @@ Parent reports the updated existing atomic macro test passed in 1.22 seconds:
 v2 creation failure restores header absence and original manifest/source; success
 publishes, passes `verify_application` and rejects a wrong attestation digest.
 The 165 existing targeted macro/manifest-claim/file/domain tests passed before
-the last repair; the same 165-case final rerun began around 04:04 UTC and has no
-reported final result. The atomic lifecycle test passed again after repair in
-0.94 seconds. This worker records parent verification, not an independent run.
+the last repair; the final rerun begun around 04:04 UTC passed all 165 in 63.16s,
+retained in `out/reviews/private-header-creation-20260913/tests-final.txt` and read
+by this worker. The atomic lifecycle test passed again after repair in 0.94s.
+Test execution remains parent-attributed; this worker ran no tests.
 
 Parent reports independent review initially found two P1s: normalized planned
 include aliases and an invalid `include_support` keyword, plus structural PRE/
@@ -271,8 +276,8 @@ null PRE and configuration PRE-hash checks. They confirm the exact POST shape
 used by retained revalidation rejects ordinary run, while missing historical
 membership still fails closed. Real-repository dry admission and relative-include
 POST scope checks passed across the catalog for the four dispatchers, publishing
-no files or macros. Code is frozen pending final tests and a parent-owned local
-commit; neither completion is reported here.
+no files or macros. Parent confirms scoped independent review passed; final tests,
+formatting-only closure and the local commit are now complete.
 
 Guarded retained-history verification checks the original `None` PRE. Generic
 revalidation uses POST as its adopted PRE and `structural_manifest` without
@@ -280,9 +285,31 @@ rederivation, rather than rerunning creation admission; original absence evidenc
 is not rewritten. No fresh full-acceptance or native revalidation case is proven.
 Resolved review probes do not establish full acceptance. Later live native gates,
 independent application review and parent confirmation remain mandatory. No game macro
-application or new game header exists. Whole-game scope, phase states, frozen-five
-membership, historical proofs and every unfinished obligation remain intact;
-these bounded checks do not complete implementation or acceptance.
+application or new game header exists at this handoff. Whole-game scope, phase
+states, frozen-five membership, historical proofs and every unfinished domain
+obligation remain intact; tooling closure grants no macro acceptance.
+
+The new source-application stage is
+`out/reviews/battle-dispatch-macro-20260913/mission.md`, with work cutoff
+2026-09-13 04:45 UTC and cleanup hard stop 04:48 UTC. It permits one initial
+extraction and one repair, with distinct pre-application and post-application
+reviewers, each limited to one bounded clarification. Parent confirms explicit
+index refresh followed by validation of the unchanged original ranking pin
+`v1:9c8ccfbe3c3f30bb820014b94aa4af50c9b3a8b893098b2680b87e1bc64f76a2`;
+`ranking-validation.json` in that mission directory retains one selected lead.
+The original candidate, floor 12, pool three, top N one and four-member scope
+remain unchanged; validation is not reranking or application acceptance.
+
+Parent alone owns the four `src/bof3/battle/dispatchWorkTable69*.c` dispatchers
+listed above, one new `include/bof3/battle/battle15_dispatch_internal.h`, and
+`config/targets/emi/battle/battle/15/target.toml` for its header claim. No other
+header/map/layout/type/flag changes are authorized. Prepare the pinned transaction
+only after this documentation handoff completes. Owner-controlled application and
+guarded rollback, all target/native gates, independent POST semantic review,
+parent-bound reviewed envelope and live final verification remain required.
+No macro is accepted yet; failure grants no new harness implementation budget.
+This stage neither resets the consumed 04:05/04:08 bounds nor promotes any other
+plan phase or changes the original frozen pilot and full reconstruction goal.
 
 ## Current skill-only operator correction
 

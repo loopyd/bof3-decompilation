@@ -461,12 +461,18 @@ publication and workspace/Git drift require separate reconciliation.
 
 ### Reviewed private-header creation
 
-The current parent-owned initiative adds explicit
-`bof3.reviewed-macro-opportunity/v2` admission for one new target-private header
-under `local_template` only. Final checks and acceptance remain pending;
-the [active checkpoint](../plans/autonomous-bof3-decompilation.md#reviewed-private-header-creation--2026-09-13-acceptance-pending)
-records parent-reported checks, repaired review findings, limits and application status.
-V1 stays existing-only; shared-header and type creation are not added.
+Parent confirms `bof3.reviewed-macro-opportunity/v2` admission for one new
+target-private `local_template` header is complete in local commit `c9f884b6`:
+165 final tests passed in 63.16s, scoped independent review passed, and overdue
+formatting-only cleanup completed on continuation without new implementation
+trials. The [active checkpoint](../plans/autonomous-bof3-decompilation.md#reviewed-private-header-creation--2026-09-13-acceptance-pending)
+retains the test log, consumed 04:05/04:08 UTC bounds and the new source stage's
+04:45/04:48 UTC limits: one extraction plus one repair, distinct pre/POST reviewers,
+four dispatchers, one new private header and its manifest claim only. Explicit
+index refresh validated the unchanged original ranking pin. No game macro is
+applied or accepted yet; native/application review gates, phase states, frozen
+pilot and full goal remain unchanged. V1 stays existing-only; shared-header and
+type creation are not added.
 
 V2 retains all v1 evidence fields and adds exactly one `creation` object with
 `target`, `header`, `header_text`, `manifest_before` and `manifest_after`.
