@@ -210,7 +210,7 @@ class RepositoryCopy:
         return values
 
 
-def capture_configuration(copy: RepositoryCopy) -> tuple[dict, dict]:
+def _capture_configuration(copy: RepositoryCopy) -> tuple[dict, list[bytes]]:
     """Capture explicit host config inputs without following includes or redirects."""
     allowed_environment = {
         "GIT_CONFIG_NOSYSTEM",
@@ -232,13 +232,13 @@ def capture_configuration(copy: RepositoryCopy) -> tuple[dict, dict]:
     if global_path is None:
         paths += [xdg / "git/config", home / ".gitconfig"]
     controls = {}
-    values = {}
+    contents = []
     for path in paths:
         name = path.relative_to("/").as_posix()
         state, content = capture_file(Path("/"), name, copy.budget, missing_ok=True)
         controls[str(path)] = state
         if content is not None:
-            values.update(copy.parse_config(content))
+            contents.append(content)
     for path in (
         xdg / "git/ignore",
         xdg / "git/attributes",
@@ -256,7 +256,22 @@ def capture_configuration(copy: RepositoryCopy) -> tuple[dict, dict]:
             raise ValueError(
                 "global Git ignore/attribute files require explicit support"
             )
+    return controls, contents
+
+
+def capture_configuration(copy: RepositoryCopy) -> tuple[dict, dict]:
+    """Parse the freshly captured configuration once before isolated queries."""
+    controls, contents = _capture_configuration(copy)
+    values = {}
+    for content in contents:
+        values.update(copy.parse_config(content))
     return controls, values
+
+
+def verify_configuration(copy: RepositoryCopy, expected: dict) -> None:
+    """Reobserve configuration bytes and controls without reparsing unchanged input."""
+    if _capture_configuration(copy)[0] != expected:
+        raise ValueError("host Git configuration changed during capture")
 
 
 def capture_metadata(root: Path, name: str, copy: RepositoryCopy) -> dict:
@@ -373,5 +388,4 @@ def isolate_repository(root: Path, gitdir: str, budget: CaptureBudget):
         copy.write_config(values)
         yield copy, {"metadata": metadata, "host": host}
         verify_metadata(root, gitdir, budget, metadata)
-        if capture_configuration(copy)[0] != host:
-            raise ValueError("host Git configuration changed during capture")
+        verify_configuration(copy, host)

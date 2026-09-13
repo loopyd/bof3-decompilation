@@ -772,6 +772,101 @@ clean-C sources, 46 outstanding entries, frozen five, stable IDs/states, prior
 history/budgets and all naming/type/macro/combiner obligations survive. This
 reviewed tooling checkpoint completes no aggregate phase.
 
+### Transaction validation performance — 2026-09-13 (reviewed tooling checkpoint)
+
+The user redirected validation to identifying and fixing extreme bottlenecks,
+starting from accepted NTFS checkpoint `227f7394`. This separate tooling mission
+retains its **17:45 UTC work / 17:50 cleanup** bounds; the serialized docs sidecar
+has **17:40 / 17:45** bounds. One measured implementation pass is consumed; Boole's
+actual final review at 16:50 accepted the exact three frozen fingerprints without
+findings, so no repair pass was consumed. Reviewer:
+`01a09ba1-4e35-74b3-9163-dd1850d7f926`. Only
+`tools/python/harness/common/{children,process,repositories}.py` changed in the
+implementation; no tracked test inventory, C, metadata, configuration, dependency
+or Git-policy change belongs to this scope.
+
+The [harness contract](../agents/harness.md) retains subreaper ownership, cleanup
+ACK, absolute deadlines, output bounds, environment rejection, live HEAD/index/
+worktree checks, confinement, submodule exclusion, leases, guarded rollback and
+the accepted cooperative single-link NTFS publisher. Libc pidfd readiness removes
+the normal direct-child polling delay, with the old polling fallback on unsupported
+or denied capability. Configuration parsing is skipped only for an unchanged
+post-query recapture of live controls, identities and hashes, never initial
+validation or through a stale cross-transaction cache.
+
+Identical existing
+`test_shared_application_pre.py::test_shared_pre_from_two_fresh_private_owners[type]`
+ran under `python -m cProfile -m pytest` before and after, without assertion edits.
+Sessions `75698` and `32218` both terminated exit 0 (one passed, one deselected):
+
+| Measurement | Before | After |
+| --- | ---: | ---: |
+| Test elapsed seconds | 498.45 | 181.38 |
+| Bounded subprocess calls / cumulative seconds | 5,011 / 444.973 | 4,765 / 138.301 |
+| Configuration parses / cumulative seconds | 738 / 64.323 | 492 / 15.570 |
+| Fresh `read_git` calls | 3,310 | 3,310 |
+| `collect_entries` boundaries / cumulative seconds | 435 / 236.589 | 435 / 74.466 |
+| Guarded Git median milliseconds, 20 samples | 83.006 | 27.809 |
+| Owned `/bin/true` median milliseconds, 20 samples | 77.587 | 28.775 |
+
+This profiled workload is **2.748x faster, 63.6% lower elapsed time**, not a
+whole-pipeline speed claim; nested cumulative times are not additive. All 246
+removed subprocesses are redundant configuration parses. Parent non-profiled
+shared-PRE type/macro cases separately measured 487.58/483.25s before versus
+152.46/149.07s after. Remaining overhead includes 3,310 fresh Git calls and 435
+capture boundaries; future batching needs equivalent live-boundary proofs, not
+unsafe caching across writes, callbacks, native gates or transactions.
+
+Parent terminal accounting covers the original **1,912 unique existing nodes**,
+with no duplicate completed nodes or exclusions:
+
+| Stage / actual handle | Terminal result |
+| --- | --- |
+| Broad 69 modules, `5016` | exit 1: 1,565 passed, 13 failed, 2 skipped, 30 setup errors; 412.01s |
+| Private owners, `76959` | exit 0: 24 passed; 442.25s |
+| Six owner files, `16793` | original 1,500s cap, exit 124 at 17:14: 226 passed, one failed |
+| Only remaining 51 owner nodes, `65952` | exit 0: 51 passed; 77.89s, separate 600s stage within original mission bounds |
+
+The parent matched 227 named completed owner results to the collected prefix;
+the unnamed interrupted XML entry is not a pass. The continuation includes that
+interrupted case but replays no completed case and does not reset the original
+timeout. Raw unique totals are **1,866 passed, 14 failed, two skipped and 30 setup
+errors**, not a full-suite PASS. Baseline broad validation was 1,566 passed,
+12 failed, two skipped and 30 setup errors in 1,078.85s. Its additional optimized
+raw failure was live `asm-diff` rebuilding a formerly cached object and hitting
+SIGSYS 159. Approved native classification `19621` terminated exit 1 with 21
+passed and one stale local-`result` assertion in 3.31s: five compiler-dependent
+raw failures clear there, without erasing their original results. Nine
+unresolved failures and 30 fixture setup errors remain, classified as legacy
+test/API debt (including the missing `transactions._target` macro-review helper),
+missing claims, wrapper expectations and the protected real `.git` write; none
+was attributed to this optimization or repaired in this scope.
+
+Fresh approved native all-source audit `56113` terminated exit 0: **784 exact,
+136 partial, zero invalid**, without C/config edits. Four existing managed-process
+tests passed in 0.42s; independent review passed 24 helper/lifecycle and 14
+configuration-drift probes, including failure withholding ACK. Real NTFS repeat
+`90530` terminated exit 0 with all probes passing and its disposable fixture
+removed. Parent full Ruff, focused formatting and whitespace checks passed.
+The earlier full `just check` handle `15603` was explicitly interrupted on user
+redirection at 16:37, exit 130, not passed. Existing symbol debt remains
+`emi/battle/battle/03:D_801EB4F0`; these checks establish no whole-pipeline acceptance.
+
+Disposable provenance is under
+`out/reviews/transaction-performance-20260913/`: `mission.md`, `review.md`,
+`implementation.sha256`, `before.txt`, `after.txt` and the now-populated
+`tests.json`. The sidecar read its matching final totals; parent verified exact
+node-set equality after correcting XML class-method identity formatting, without
+changing test outcomes. The docs sidecar read the complete
+3,441-line selected plan before its single compact revision to this plan and
+`docs/agents/harness.md`; existing plan/parser/reference and preservation checks
+are reported at handoff. All earlier failed macro bounds, histories, structured
+states, the full 50-entry requeue (four accepted, 46 outstanding), frozen five and
+remaining naming/type/macro/combiner obligations remain unchanged. The macro is
+still unapplied and requires separate later readiness; the full goal remains
+**active and unfinished**. This accepted performance checkpoint completes no
+aggregate phase and grants no unrelated repair or macro retry.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex

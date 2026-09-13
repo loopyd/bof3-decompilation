@@ -13,7 +13,7 @@ from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import IO, Any
 
-from harness.common.children import adopt_children, reap_children
+from harness.common.children import adopt_children, open_child_exit, reap_children
 from harness.common.deadlines import resolve_deadline, validate_deadline
 
 
@@ -32,18 +32,31 @@ def _supervise(owner_fd: int, argv: Sequence[str], deadline: float | None) -> in
             os.close(owner_fd)
             return 124
         child = subprocess.Popen(argv, start_new_session=True)
+        child_exit = None
         try:
+            child_exit = open_child_exit(child.pid)
+            if child_exit is not None:
+                poll.register(child_exit, selectors.EVENT_READ)
             while child.poll() is None:
                 remaining = (
                     deadline - time.monotonic() if deadline is not None else 0.05
                 )
                 if remaining <= 0:
                     break
-                if poll.select(min(0.05, remaining)) and not os.read(owner_fd, 1):
+                events = poll.select(min(0.05, remaining))
+                if any(key.fd == owner_fd for key, _ in events) and not os.read(
+                    owner_fd, 1
+                ):
                     break
         finally:
-            os.close(owner_fd)
-            reap_children(child)
+            try:
+                os.close(owner_fd)
+            finally:
+                try:
+                    reap_children(child)
+                finally:
+                    if child_exit is not None:
+                        os.close(child_exit)
     return child.returncode
 
 

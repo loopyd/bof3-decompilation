@@ -133,6 +133,11 @@ triggers killing and reaping adopted descendants, including redirected-stdio and
 `setsid` escapees. The sole reaper retains child identities until wait, preserving
 direct-child exit status.
 
+The bounded supervisor observes its direct child's exit through libc
+`pidfd_open` readiness where available; unsupported or denied capability retains
+the existing 50 ms polling fallback. Readiness neither reaps descendants nor
+replaces the private cleanup ACK; descriptor errors retain guarded cleanup.
+
 A private completion pipe, not inherited by gates, acknowledges only finished
 cleanup. `poll`, `wait`, `communicate` and terminal `returncode` require that ACK.
 Timeout/overflow produces failed gate evidence (124/125) only after confirmed
@@ -288,7 +293,13 @@ includes; queries disable hooks, fsmonitor, recursive status, optional writes,
 implicit fetching and host attribute/exclude files. Supported configuration values
 are reconstructed explicitly. Metadata and host configuration are separately
 rechecked against their live origins after queries; scratch consistency alone is
-insufficient. Captured module `*.lock` files are observed, excluded from query
+insufficient. Host configuration is parsed initially, then freshly recaptured with
+environment, control-path, absence, identity, mode and content/hash checks before
+unchanged inputs can avoid reparsing. This is not a cross-transaction cache:
+fresh Git/workspace boundaries remain mandatory. See the
+[reviewed performance checkpoint](../plans/autonomous-bof3-decompilation.md#transaction-validation-performance--2026-09-13-reviewed-tooling-checkpoint)
+for measurements and remaining validation debt. Captured module `*.lock` files
+are observed, excluded from query
 copies and never deleted. The superproject index-lock capture refusal still applies.
 Optional multi-pack-index and commit-graph files retain raw observations but are
 not copied or interpreted; scratch queries disable both accelerators. Their
