@@ -25,12 +25,12 @@ percentage alone is not a diagnosis.
 | `lb` vs `lbu` | Field type and default `char` signedness | [Signedness](#signedness) |
 | Wrong global/BSS offsets | COMMON, section, alignment, ordering, padding | [COMMON, BSS, and symbol order](#common-bss-and-symbol-order) |
 | GNU assembler rejects GTE op | Exact `.word` in generated assembly | [Generated-assembly spelling](#generated-assembly-spelling) |
-| Proven incoming `a*` copied to `t*`/`v*` at entry | Preserve a local value's lifetime; after the ladder, one local `REGISTER_PIN` experiment | [Allocation ladder](#allocation-ladder) |
-| Same-sized near match with a lone delay-slot difference | Inspect the exact branch/jump and live operands; use clean-C ordering, then an evidenced caller-register clobber | [Delay slots and entry copies](#delay-slots-and-entry-copies) |
+| Proven incoming `a*` copied to `t*`/`v*` at entry | Preserve a local value's lifetime; follow the clean-C ladder and record any remaining residual | [Allocation ladder](#allocation-ladder) |
+| Same-sized near match with a lone delay-slot difference | Inspect the exact branch/jump and live operands; use clean-C ordering and lifetime changes | [Delay slots and entry copies](#delay-slots-and-entry-copies) |
 | Sole difference is commutative `addu` operand order using `$at` | Exhaust source representation forms, then record a compiler-order ceiling; never pin assembler scratch `$at` | [Allocation ladder](#allocation-ladder) |
 | Preinitialization fills the desired delay slot but changes downstream registers | Reject it unless the longer value lifetime preserves the complete register web; placement alone is not progress | [Delay slots and entry copies](#delay-slots-and-entry-copies) |
-| Code size or stack frame differs | Check calls, address-taken locals, aggregate copies, temporary lifetime, and branch topology before allocator aids | [Temporaries and allocation](#temporaries-and-allocation) |
-| No clean C solution after levers | Record the exhausted evidence; do not add inline asm or `INCLUDE_ASM` without explicit approval | [Allocation ladder](#allocation-ladder) |
+| Code size or stack frame differs | Check calls, address-taken locals, aggregate copies, temporary lifetime, and branch topology | [Temporaries and allocation](#temporaries-and-allocation) |
+| No clean C solution after levers | Record the exhausted evidence; pins and empty asm remain banned, and `INCLUDE_ASM` needs separate explicit approval | [Allocation ladder](#allocation-ladder) |
 
 ---
 
@@ -186,12 +186,12 @@ is the most common partial-lift root cause. Levers:
 
 ## `MATCHING_AID` comments
 
-Every artificial matching aid is adjacent to the aid and says: what it
+Every opaque clean-C matching aid has an adjacent comment saying what it
 controls, the `asm-diff`-observed original/current instruction or register
 placement, the exhausted ladder rung, and what future evidence removes it.
-Retained `CLOBBER_*`/`REGISTER_PIN` aids must also say the immediately following
-live `bin/byte-match` was exact. Never retain an aid on a percentage
-improvement.
+Comments and historical exact results never authorize the
+[banned register/empty-asm aids](../INDEX.md#source-and-duplicate-rules).
+Never retain an aid on a percentage improvement.
 
 ```c
 /* MATCHING_AID: produces the li $t2,2 feeding the next comparison; both
@@ -200,9 +200,8 @@ improvement.
 if (count == 2) { flags |= 0x20; } else { flags |= 0x20; }
 ```
 
-Do not mark obvious workarounds (evidenced `barrier()` ordering is in
-[Volatility](#volatility)); reserve `MATCHING_AID` for shape decisions opaque
-to readers without the matching diff.
+Reserve `MATCHING_AID` for shape decisions opaque to readers without the
+matching diff; ordinary readable C needs no workaround annotation.
 
 ---
 
@@ -263,7 +262,7 @@ Classify a same-CFG near match as allocator-sensitive when separate probes
 (one narrow temporary, one split chained assignment, one removed constraint)
 cause spills, frame/size changes, saved-register role changes, a
 prologue-first mismatch, or a broad score collapse. Probes diagnose the search
-neighborhood but do not authorize retaining a non-exact allocator aid.
+neighborhood but never authorize banned allocator or empty-asm aids.
 
 For a classified function:
 
@@ -295,10 +294,10 @@ For a classified function:
    chained assignment broadly changes allocation, move the intact chain only as
    a unit; reusing a dead-looking local for an unrelated role is also a
    lifetime-changing experiment, not free storage.
-6. After an existing `REGISTER_PIN` removal probe, record score/size/frame and
-   allocator effects; a severe regression prevents redundant removal retries
-   but does not waive the exact-match retention rule in
-   [Allocation ladder](#allocation-ladder).
+6. Removing banned pins or empty asm is mandatory even when allocation regresses.
+   Keep prior scores as history; requeue the cleaned source with unavailable
+   match status until fresh native measurement. Do not restore the aid or repeat
+   its old permission ladder; diagnose the new clean-C residual.
 
 Queue at least two independent experiments plus one combination with the best
 strict/frontier candidate when evidence supports a safe combination; restore
@@ -479,14 +478,10 @@ matching technique.
 
 ## Allocation ladder
 
-Direct MIPS register pinning (`register type name asm("$N")`) and
-`INCLUDE_ASM` are **banned unless the user explicitly approves them** for a
-specific function. After this ladder, the shared `REGISTER_PIN(type, name,
-reg)` macro may be tried once as a bounded local experiment for an
-asm-diff-proven allocator or entry-register residual. A bare numeric spelling
-needs proof the macro form alters codegen plus explicit user approval;
-retention also requires independent review. Pins change the register web
-globally and mask real causes. Ladder:
+`REGISTER_PIN`, direct asm register bindings (numeric or named), `CLOBBER_*`,
+`barrier()` and every artificial empty-asm matching barrier are banned.
+The [current source contract](../INDEX.md#source-and-duplicate-rules) supersedes
+all previous bounded-experiment and exact-retention permissions. Use clean C:
 
 1. Correct types and declarations
 2. Correct control-flow structure
@@ -494,18 +489,17 @@ globally and mask real causes. Ladder:
 4. Introduce or remove temporaries
 5. Hoist pointer dereferences
 6. Try separate loop counter vs pointer induction variable
-7. Use `barrier()` / `CLOBBER_*` for ordering and delay-slot placement
-8. Check the compiler profile (`bin/flag-search`); if a non-canonical profile
+7. Check the compiler profile (`bin/flag-search`); if a non-canonical profile
    byte-matches clean C, record it in `config/compiler/object-flags.cmake`
-   (per-object override) rather than pinning
-9. Bind fixed-address symbols with `WEAK_SYMBOL_AT` in `symbols.c`, not
+   (per-object override)
+8. Bind fixed-address symbols with `WEAK_SYMBOL_AT` in `symbols.c`, not
    `extern X asm("NAME")` renames
-10. For an asm-diff-proven allocator or entry-register residual, make one
-    bounded local `REGISTER_PIN` experiment; otherwise report the residual.
-    `INCLUDE_ASM` still requires user approval.
+9. Run one bounded permuter attempt when appropriate, then report the remaining
+   allocator or entry-register residual. `INCLUDE_ASM` still requires separate
+   explicit approval and cannot close the aid-removal clean-C requeue.
 
-A pinned local can stay live across the whole function and displace unrelated
-variables — one pin can create new mismatches elsewhere.
+Preserve ordinary `NO_SIBLING_CALLS` compiler attributes and address-binding
+assembly. Do not replace banned aids with declaration-only or no-op shims.
 
 ---
 
@@ -517,10 +511,10 @@ disposable priority state.
 
 | Observed first-diff shape | Diagnose first | First clean-C levers | Escalation boundary |
 | --- | --- | --- | --- |
-| Same byte size; one/few differences around `jal`, branch, or `j` delay slots | The exact original/current instruction, its live input/output register, and whether its value is needed after the transfer | Invert the branch, use early return vs result variable, reorder independent statements, introduce/remove one local, or adjust a pointer hoist | `CLOBBER_CALLER_REG` only if the evidence names a caller-clobbered register and placement; it must retain C-generated work, never select an opcode |
-| Original begins `move tN,aN` or `move vN,aN`; current uses the argument directly | Whether the copied argument remains live across a call/branch or overlaps another temporary | Name one local copy at the original source lifetime; vary its declaration/first use and surrounding independent statement order | After all clean-C, profile, and one permuter attempt, one local `REGISTER_PIN(type, name, "tN"/"vN")` experiment is allowed only for this asm-diff-proven entry allocator residual |
-| Frame/size differs at or before the first call | Exact prologue/epilogue, calls made, address-taken locals, aggregate assignment, and values live across calls | Correct prototypes and widths; remove accidental address-taking; split/collapse aggregate copies; choose early return/loop shape; shorten/extend a temporary lifetime | A pin never substitutes for an unmatched frame or changed control-flow shape |
-| Same size; relocated address, `lui`/`addiu`, or load order differs | Symbol owner/declaration form, field offset, pointer-cell volatility, and whether a pointer is cached or reloaded | Pointer versus array; standalone symbol versus field; `PSX_REF`/`SPAD_PTR_SLOT` qualifiers; hoist or unhoist one dereference | `CLOBBER_*` only after the precise caller-clobbered reload ordering is proven |
+| Same byte size; one/few differences around `jal`, branch, or `j` delay slots | The exact original/current instruction, its live input/output register, and whether its value is needed after the transfer | Invert the branch, use early return vs result variable, reorder independent statements, introduce/remove one local, or adjust a pointer hoist | Record the scheduling residual after clean-C/profile/permuter attempts; no empty-asm clobber |
+| Original begins `move tN,aN` or `move vN,aN`; current uses the argument directly | Whether the copied argument remains live across a call/branch or overlaps another temporary | Name one local copy at the original source lifetime; vary its declaration/first use and surrounding independent statement order | Record the entry-allocation residual after the ladder; no register pin |
+| Frame/size differs at or before the first call | Exact prologue/epilogue, calls made, address-taken locals, aggregate assignment, and values live across calls | Correct prototypes and widths; remove accidental address-taking; split/collapse aggregate copies; choose early return/loop shape; shorten/extend a temporary lifetime | Resolve the frame/control-flow discrepancy; pins remain banned |
+| Same size; relocated address, `lui`/`addiu`, or load order differs | Symbol owner/declaration form, field offset, pointer-cell volatility, and whether a pointer is cached or reloaded | Pointer versus array; standalone symbol versus field; `PSX_REF`/`SPAD_PTR_SLOT` qualifiers; hoist or unhoist one dereference | Retain precise reload-order evidence as a residual; no artificial empty-asm barrier |
 
 Preinitializing a result can fill a desired branch delay slot but lengthens
 that value's lifetime; reject it when downstream allocation changes (even if
@@ -548,8 +542,7 @@ clean-C residual; never add an assembly-backed source stub.
 
 Use `bin/permute TARGET@0xADDRESS --time-limit 60 -j N` for source-shape
 search (60s hard cap; `--allow-long-run` is interactive-only). Lessons: fix
-structure/declarations first (a lower-percentage clean source often beats a
-heavily pinned near-match); register pins constrain the search space; it
+structure/declarations first; search only clean-C candidates. The permuter
 handles scheduling/allocation changes, not wrong control-flow shape;
 pointer-hoist mutations can unlock inaccessible allocations; mark
 permuter-found aids with `MATCHING_AID`.
@@ -563,8 +556,10 @@ permuter-found aids with `MATCHING_AID`.
 `config/compiler/variants.json` + `bin/compiler-variants` manage four
 SHA-256-verified candidates (`gcc-2.6.3-psx`, `gcc-2.8.0-psx`,
 `gcc-2.8.1-psx`, `gcc-2.95.2-psx`). One object selects `gcc-2.6.3-psx`:
-`src/bof3/audio/dispatchSoundCue.c`, byte-exact at
-`exe/slus_004_22@0x8015DF18` (671/671, 2684 bytes).
+`src/bof3/audio/dispatchSoundCue.c`, historically byte-exact at
+`exe/slus_004_22@0x8015DF18` (671/671, 2684 bytes). Its aided acceptance is
+superseded: the source is in the [clean-C requeue](../plans/autonomous-bof3-decompilation.md#durable-clean-c-requeue)
+pending fresh native matching and review; compiler selection alone proves neither.
 
 Add a candidate catalog-first, probe second: add full provenance to
 `config/compiler/variants.json` (`bin/compiler-variants list` validates);

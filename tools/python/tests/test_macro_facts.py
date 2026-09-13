@@ -83,8 +83,9 @@ void func(void) { \\
     )
     by_name = {macro.name: macro for macro in macros}
 
-    assert by_name["REGISTER_PIN"].classification == "matching_helper"
+    assert by_name["REGISTER_PIN"].classification == "forbidden_matching_aid"
     assert by_name["REGISTER_PIN"].restrictions == (
+        "forbidden_matching_aid",
         "allocator_constraint",
         "generator_owned",
     )

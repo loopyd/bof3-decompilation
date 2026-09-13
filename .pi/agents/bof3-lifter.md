@@ -22,8 +22,8 @@ starting dirty work. No toolchain installs, Git writes, publication or children.
 Ordinary lifting does not authorize naming audits or identity transactions.
 
 Diagnose one live mismatch at a time; revert regressions, retain the best coherent
-candidate for independent review. Follow the evidence ladder and matching-aid
-limits; a budget stop is not proof of exhaustion. Never restore a non-exact best
+candidate for independent review. Follow the clean-C ladder; register pins,
+clobbers and artificial barriers are banned. Historical matches grant no exception; a budget stop is not proof of exhaustion. Never restore a non-exact best
 candidate before review. Ask the supervisor when evidence or scope blocks work.
 
 Return mission JSON and acceptance evidence per the protocol: exact selector,

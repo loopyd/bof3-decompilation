@@ -8,6 +8,7 @@ from typing import Any, Callable, Iterable
 
 from harness.domain.functions import collect_lift_metadata
 from harness.domain.tags import count_function_metadata
+from harness.domain.policy import validate_matching_source
 
 from ..build.operations import batch_build, cmake_target_for_source, configure
 from ..domain.manifests import TargetManifest, load_target_manifests
@@ -113,6 +114,7 @@ def _build_preflight(
     """
     ready: list[_Record] = []
     worklist: dict[str, list[_WorkItem]] = {}
+    checked: set[Path] = set()
 
     for target, manifest in manifests:
         source_dir = root / manifest.source_dir
@@ -153,6 +155,11 @@ def _build_preflight(
                 )
                 continue
             address = parse_source_tag(text)
+            try:
+                validate_matching_source(root, source, checked=checked)
+            except ValueError as error:
+                ready.append(_invalid_record(root, target, source, str(error), address))
+                continue
             expected_key = source_expected_key(source_dir, source)
             expected_address = (
                 None if expected_key is None else expected.get(expected_key)

@@ -11,7 +11,7 @@ from typing import Any, Iterable
 from ..io import file_sha256
 from ..domain.manifests import TargetManifest
 
-_SCHEMA = "harness.decomp-status-cache/v2"
+_SCHEMA = "harness.decomp-status-cache/v3"
 
 
 def _paths(root: Path, manifest: TargetManifest) -> Iterable[Path]:

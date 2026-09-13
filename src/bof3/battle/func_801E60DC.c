@@ -2,15 +2,13 @@
 
 /* @source 0x801E60DC
  * @behavior Advances the current queued slot motion and resets it when its timer expires.
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void func_801E60DC(void) {
-  /* MATCHING_AID: clean-C, profile, and permuter rungs left an exact-size
-   * entry allocator residual (slot a1 versus v1); pin only the slot lifetime.
-   * Remove when the canonical compiler allocates this pointer to v1 unaided. */
-  REGISTER_PIN(Battle03QueuedSlot*, slot, "v1");
+
+  Battle03QueuedSlot* slot;
   s32 value_3a;
   s32 value_36;
 

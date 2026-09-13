@@ -22,9 +22,9 @@ typedef struct Scena16Bank80150000 {
 
 /* @behavior seeds one routed setup path and enters secondary state 3 on success.
  * @source 0x801F6E30
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void seedRouteEnterState3(void) {
   u32 arg0;
@@ -48,15 +48,7 @@ void seedRouteEnterState3(void) {
                ->word_686c;
     ((volatile Scena16Bank80140000*)SCENA16_BANK_80140000(Scena16Bank80140000))
         ->byte_832e = 0u;
-    /*
-     * MATCHING_AID: memory-access ordering. asm-diff showed the original
-     * keeps `sb zero,-31954(at)` immediately before `jal func_8015B580`
-     * with `li a1,1` in the delay slot; without the barrier GCC schedules
-     * `li a1,1` before the store and emits a nop delay slot (+4 bytes).
-     * Live bin/byte-match after this aid is exact. Remove if GCC's
-     * scheduler placement for this call is otherwise reproduced.
-     */
-    barrier();
+
     func_8015B580(arg0, 1);
     ((volatile Scena16Bank80140000*)SCENA16_BANK_80140000(Scena16Bank80140000))
         ->byte_6874 = 3;

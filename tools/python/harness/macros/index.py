@@ -16,7 +16,7 @@ from harness.io import file_sha256
 from harness.macros.facts import parse_macro_definitions, parse_macro_uses
 
 SHARED_MACRO_HEADERS = (
-    Path("include/base/barrier.h"),
+    Path("include/base/compiler.h"),
     Path("include/bof3/asm.h"),
     Path("include/bof3/symbols.h"),
     Path("include/include_asm.h"),

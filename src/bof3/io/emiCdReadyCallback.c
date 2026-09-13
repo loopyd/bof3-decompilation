@@ -3,9 +3,9 @@
 /* @behavior services the active EMI CD-ready callback, validates the sector source,
  * dispatches the current loader phase, and advances the streaming ring.
  * @source 0x80162230
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 
 extern void (*D_80183248[])(void);
@@ -54,20 +54,8 @@ void emiCdReadyCallback(u8 status, u8* result) {
       (state == 10)) {
     D_80183248[D_80146460]();
   } else {
-    /*
-     * MATCHING_AID: the original derives the slot_sizes base as
-     * read_progress+0x84 in $v1 (filling the sltiu-branch delay slot),
-     * which rotates the ring slot to $a1 and lets $v1 be reused for the
-     * 0x800 constant; clean C allocates the base to $a1 and the slot to
-     * $v1. The pointee stays non-volatile: a volatile store can never
-     * move into the jump delay slot (reorg resource_conflicts_p), but the
-     * original stores 0x800 there. Clean-C reorderings, hoists,
-     * local/global variants, a bounded permuter run, profile and
-     * historical-compiler probes were exhausted; without the pin the live
-     * diff is exactly this $v1/$a1 swap. Remove when the allocator web is
-     * understood.
-     */
-    REGISTER_PIN(u32*, slot_sizes, "v1");
+
+    u32* slot_sizes;
     s32 slot = D_80146489;
     if ((D_801464A0[slot] & 0x80) == 0) {
     fail:

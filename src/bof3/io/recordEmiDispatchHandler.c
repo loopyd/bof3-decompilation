@@ -8,9 +8,9 @@ extern s8 D_801464A0[];
 /* @behavior records the current EMI dispatch handler for the active ring slot,
  * marks that slot active, and advances the loader step.
  * @source 0x80162618
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void recordEmiDispatchHandler(void) {
   s8*  active_slot;
@@ -19,10 +19,7 @@ void recordEmiDispatchHandler(void) {
   active_slot = &D_80146489;
   dispatches = (u32*)(active_slot + 0x2f);
   dispatches[*active_slot] = D_80146458;
-  /* The original reloads the slot index with a plain lb after the dispatch
-   * store (memory-access ordering). A volatile pointee would emit the
-   * lbu/sll/sra narrow-load quirk instead; keep this barrier. */
-  barrier();
+
   D_801464A0[*active_slot] = 1;
 
   if (D_8014646C == 0) {

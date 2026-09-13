@@ -62,9 +62,11 @@ levers: [matching playbook](matching-playbook.md); iteration:
 - Add `volatile` only with asynchronous/hardware-mutation evidence
   (`func_800B2218` matched only after `D_80148648` became a named
   `PanelTask*`); levers: [playbook §Volatility](matching-playbook.md#volatility).
-- Tail-dispatch prologue between index load and `sll`: a `const` table extern
-  can block that schedule; dropping `const` plus a local-copy + `barrier()`
-  shape are levers before pins.
+- Tail-dispatch prologue between index load and `sll`: the historical advice
+  combined dropping `const`, a local copy and `barrier()` before trying pins.
+  The [current ban](../INDEX.md#source-and-duplicate-rules) supersedes its barrier
+  and pin permissions. Investigate evidenced table qualifiers and local lifetime
+  in clean C; do not reproduce the empty-asm constraint.
 - Recover stable field offsets into a target-local struct before permuting.
   Addresses, masks, encoded values stay hexadecimal; human quantities
   (32-pixel step, 320-pixel clamp) decimal.
@@ -90,12 +92,13 @@ each target compiles and validates its own symbol.
 
 ### Argument-register pins as allocator residual
 
-- A retained `REGISTER_PIN` on an `a*` register is not automatically an
-entry-copy problem: when the original frees the argument early (entry copy
+- Historical `REGISTER_PIN` experiments on `a*` registers distinguished an
+entry-copy problem from later reuse: when the original frees the argument early (entry copy
 into a callee-saved register in the prologue) and reuses the freed `a*` as a
 scratch load destination (`lhu a1` / `andi v0,a1,...`), that is an allocator
-residual. Same ladder, `MATCHING_AID`, live byte-match, and independent-review
-requirements; the split load/mask pair may need one pin per register.
+residual. The old advice to retain reviewed pins, including one per split
+load/mask register, is superseded. Preserve the original register-use evidence;
+remove pins and solve or record the clean-C lifetime/allocation residual.
 
 ### Detect allocator-sensitive functions
 

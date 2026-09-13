@@ -31,6 +31,7 @@ from ._asm_resolve import (
 from ..domain.sources import compiled_symbol_name, owning_manifest, source_address
 from ..domain.manifests import TargetManifest
 from ..domain.tags import require_single_function
+from ..domain.policy import validate_matching_source
 
 from ._asm_diff_payload import AsmDiffRequest, build_result_payload, render_diff
 
@@ -82,6 +83,7 @@ def _asm_diff_resolve(
     without duplicating resolution logic.
     """
     source_path = request.source_path.expanduser().resolve()
+    validate_matching_source(repo.root, source_path)
     require_single_function(source_path.read_text(encoding="utf-8"))
     address = (
         request.address if request.address is not None else source_address(source_path)
@@ -151,6 +153,7 @@ def _asm_diff_compare(
     freshness is verified via ``st_mtime``.
     """
     source_path = resolved["source_path"]
+    validate_matching_source(repo.root, source_path)
     require_single_function(source_path.read_text(encoding="utf-8"))
     address = resolved["address"]
     function_name = resolved["function_name"]

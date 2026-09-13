@@ -3,15 +3,14 @@
 /* @behavior Returns the signed 28-step delta between the work byte at 0x30 and
  * D_80145EC0, scaling negative quotients by four.
  * @source 0x801ADC98
- * @status exact
- * @match 100.00
- * @residual none
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 s8 func_801ADC98(void) {
   s32 quotient;
-  /* MATCHING_AID: clean C coalesces result into quotient (v1), omitting the
-   * original +0x48 a0 copy and conditional result lifetime. */
-  REGISTER_PIN(s32, result, "a0");
+
+  s32 result;
 
   quotient = (s8)(g_game_work->unk_30 - D_80145EC0);
   quotient /= 28;

@@ -9,8 +9,10 @@ tags: [compiler, matching, mips, evidence]
 
 This is a research guide for clean-C matching residuals under the repository's
 `gcc-2.7.2-psx` / maspsx / ASPSX chain. It does not prove that retail BOF3 used
-a particular compiler flag or permit a profile override. Only a live exact
-`bin/byte-match` does either.
+a particular compiler flag or permit a profile override. Current acceptance
+requires clean-C native byte equality and independent review under the
+[source contract](../INDEX.md#source-and-duplicate-rules). Historical aided
+matches below do not satisfy that contract.
 
 ## What the compiler passes can change
 
@@ -76,19 +78,20 @@ tested explicit-source fallback before relying on broad automated flag search.
 The parameter roles are documented in
 [`battle-range-predicates.md`](../specs/runtime/battle-range-predicates.md): `a0` is the range
 pointer and `a1` is the extent copied into `t0`. The entry move is an
-allocator/scheduling residual that is now resolved exactly: a local
-`REGISTER_PIN(u32, result, "v0")` constrains only the result local, which
-makes canonical GCC preserve the extent in `t0` and allocate the derived
-values as in the original. Live `bin/asm-diff` and `bin/byte-match` report
-19/19 instructions, 76 bytes, `func_800AF66C` (`@status exact`); see
+allocator/scheduling residual historically matched using
+`REGISTER_PIN(u32, result, "v0")`. Constraining only the result local
+made canonical GCC preserve the extent in `t0` and allocate the derived
+values as in the original. The recorded `bin/asm-diff` and `bin/byte-match` result
+was 19/19 instructions, 76 bytes, `func_800AF66C` (`@status exact`); see
 [`battle-range-predicates.md`](../specs/runtime/battle-range-predicates.md) for the complete
-solution record.
+historical record. The user-directed ban supersedes its pin permission and
+current acceptance: remove the pin and requeue for fresh clean-C matching/review.
 
 ### Historical flag-search matrix
 
 The bounded profile experiment below was run on 2026-07-30 against the
 strongest same-size clean-C permuter candidate, using its disposable compile
-command, before the allocator pin resolved the residual. None matched the
+command, before the historical aided match. None matched the
 entry register web: baseline and all accepted flag spellings began
 `move a3,a1`, rather than original `move t0,a1; move v0,zero`. This matrix is
 dated historical evidence of the negative search, not current state.
@@ -104,12 +107,12 @@ dated historical evidence of the negative search, not current state.
 | `-fno-force-mem` | 76 | Changed other registers but still began `move a3,a1` |
 | `-fno-regmove` | — | Unsupported by bundled `cc1`; reject the flag rather than infer behavior |
 
-The residual was resolved by the bounded allocator experiment described in
-[`battle-range-predicates.md`](../specs/runtime/battle-range-predicates.md): a local
+In the historical bounded allocator experiment described in
+[`battle-range-predicates.md`](../specs/runtime/battle-range-predicates.md), a local
 `REGISTER_PIN(u32, result, "v0")` recovered the entry register web without a
-wider flag search, a profile override, or a source-shape reversal. Reject
-any result that changes function size, control flow, or fails live byte
-matching.
+wider flag search, a profile override, or a source-shape reversal. Preserve that
+observation and the matrix, but do not repeat or retain the banned pin. Any new
+candidate needs fresh clean-C byte matching and independent semantic review.
 
 ## Sources
 

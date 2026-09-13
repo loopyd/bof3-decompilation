@@ -1,6 +1,6 @@
 #include "bof3/scenario/sce10eff_internal.h"
 
-#include "base/barrier.h"
+#include "base/compiler.h"
 
 /* @behavior dispatches byte 2 of the scratchpad-resident state object through
  * its handler table.

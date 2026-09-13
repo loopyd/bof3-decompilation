@@ -3,7 +3,7 @@
 Review one selector, exact or non-exact. `bin/agent-context review SELECTOR` preloads this file, `SHARING_NONMATCHES.md`, and tracked target evidence once. Use executor brief/diff/rung ledger; fresh `bin/byte-match TARGET@0xADDRESS` only for an exact claim. `decomp-status` is cache, never acceptance. No `just check`, brief, m2c, Rizin, or index rebuild without a concrete finding.
 
 1. live byte match exits 0 for an exact claim;
-2. no banned asm/direct pins/asm-renamed externs/unauthorized `INCLUDE_ASM`; a retained `REGISTER_PIN` has allocator/entry-register evidence, local `MATCHING_AID`, live exact match, independent review;
+2. no register bindings, `REGISTER_PIN`, `CLOBBER_*`, `barrier()`, artificial empty asm or alias/no-op substitutes; historical matches/reviews are not exemptions. Keep manifest-owned `WEAK_SYMBOL_AT`; reject handwritten asm, asm-renamed externs and unauthorized `INCLUDE_ASM`. Removed-aid lifts require fresh clean-C matching and independent review;
 3. types, signedness, flow, data ownership, names, header order are credible;
 4. new game function bindings have local reviewed map+ABI+binding or shared SDK ownership; do not block unchanged pre-existing debt;
 5. changed map/Splat facts pass `bin/symbols check TARGET`, `bin/splat TARGET`;

@@ -88,7 +88,7 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         *(
             root / relative
             for relative in (
-                "include/base/barrier.h",
+                "include/base/compiler.h",
                 "include/bof3/asm.h",
                 "include/bof3/symbols.h",
                 "include/include_asm.h",

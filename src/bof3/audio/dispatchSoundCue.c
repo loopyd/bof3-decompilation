@@ -10,42 +10,22 @@ extern short SsUtSetDetVVol(short, short, short);
  * volumes while a fade is active, and keys on/upvolumes cue channels via
  * PsyQ SsUtKeyOnV/SsUtSetDetVVol.
  * @source 0x8015DF18
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void dispatchSoundCue(u32 cue_id) {
-  /* MATCHING_AID: original keeps cue_id in a0 through the pre-call
-   * computations and copies it to s0 in the jalr delay slot
-   * (`jalr v0; move s0,a0`); clean C copied a0 to s0 at function entry and
-   * read s0 before the call. The pinned local assigned just before the call
-   * reproduces the original copy placement. Exhausted rungs: declarations,
-   * statement order, temporaries, compiler-profile search, two bounded
-   * permuter runs. Remove if a clean-C shape reproduces the delay-slot copy.
-   * Immediately following bin/byte-match was exact (2684 bytes). */
-  REGISTER_PIN(u32, saved, "s0");
+
+  u32 saved;
   s32 hi;
   s32 lo8;
   s32 lo;
   s16 result;
   s32 shifted;
-  /* MATCHING_AID: original computes the cue-family mask as `andi v0,s0,0xf000`
-   * (duplicated into two jump delay slots) followed by `bnez v0`; with an
-   * unpinned local GCC tied the andi destination to the dead pinned s0
-   * (`andi s0,s0,0xf000`) and could not fill the delay slots. The v0 pin
-   * restores the original destination and delay-slot duplication. Remove if
-   * the allocator stops tying the mask temp to s0. Immediately following
-   * bin/byte-match was exact. */
-  REGISTER_PIN(s32, top, "v0");
-  /* MATCHING_AID: in each volume-ease second half the original places the
-   * `mult step,target` product in a0 (the dead target register:
-   * `mult v0,a0; mflo a0`) and the shifted result in v0; clean C put the
-   * product in v1 (shared local) or v0 with the shifted result in a0. The
-   * a0 pin on the second-product local restores the original register web in
-   * all four channel blocks. Remove if a clean temp arrangement reproduces
-   * `mflo a0`/`sra v0,a0,7`. Immediately following bin/byte-match was exact.
-   */
-  REGISTER_PIN(s32, lo2, "a0");
+
+  s32 top;
+
+  s32 lo2;
 
   hi = (cue_id & 0xF00) >> 8;
   lo8 = cue_id & 0xFF;

@@ -3,7 +3,7 @@
 
 #include "bof3/context.h"
 #include "base/types.h"
-#include "base/barrier.h"
+#include "base/compiler.h"
 #include "bof3/core.h"
 #include "bof3/psyq.h"
 #include "memory/scratchpad.h"

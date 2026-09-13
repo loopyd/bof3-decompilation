@@ -26,7 +26,7 @@ reviewed truth. No Git writes, installs, publication or children.
 
 Inspect actual changes against the supplied baseline and current content, not
 writer PASS prose. Apply domain checklist gates: live byte-match for exactness,
-owned declarations/ABI/maps, sanctioned matching aids, and evidence-backed
+owned declarations/ABI/maps, absence of register pins/clobbers/barriers, and evidence-backed
 escalation experiments. Require applicable companion, symbol/Splat and pipeline
 checks. Review identity approval/application separately and verify rollback
 and final bytes. Unchanged target debt is not a new mission failure.

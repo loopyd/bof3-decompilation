@@ -359,12 +359,20 @@ def test_build_preflight_reuses_cache_hits(tmp_path: Path, monkeypatch) -> None:
     ready, worklist = dsp._build_preflight(
         tmp_path, ds.select_manifests(tmp_path), cache
     )
-    cache.close()
-
     assert any(r["function"] == "func_80100010" for r in ready)
     # func_80100020 has no cache entry → appears in worklist
     assert "exe/logo" in worklist
     assert any(item[2] == 0x80100020 for item in worklist["exe/logo"])
+
+    source = tmp_path / "src/exe/logo/func_80100010.c"
+    source.write_text(source.read_text() + "\n#define PIN __asm__\n")
+    ready, worklist = dsp._build_preflight(
+        tmp_path, ds.select_manifests(tmp_path), cache
+    )
+    cache.close()
+    record = next(row for row in ready if row["function"] == "func_80100010")
+    assert record["status"] == "invalid"
+    assert "forbidden" in record["reason"]
 
 
 def _batch_result() -> dict[str, object]:

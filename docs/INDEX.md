@@ -117,11 +117,20 @@ preserved in skill metadata; discovery never expands mutation authority.
 
 ## Source and duplicate rules
 
-Write readable C89. Inline assembly is banned except the sanctioned helpers in
-`include/base/barrier.h`: `barrier()`/`CLOBBER_*`, bounded approved
-`REGISTER_PIN`, and manifest-owned `WEAK_SYMBOL_AT`. A retained matching aid
-requires adjacent rationale, live byte-match evidence, and independent review.
-Direct numeric register spelling and `INCLUDE_ASM` require explicit approval.
+Write readable C89. `REGISTER_PIN`, direct asm register bindings, `CLOBBER_*`,
+`barrier()` and all artificial empty-asm matching barriers are banned, including
+aliases and declaration-only/no-op compatibility shims. This user-directed ban
+supersedes every earlier pin/clobber exception, including historical plans and
+previously exact aided results. Remove the aids and requeue every affected source
+for fresh clean-C native matching and independent review; old scores and receipts
+remain historical evidence, not current acceptance.
+
+Preserve manifest-owned `WEAK_SYMBOL_AT` address-binding assembly, original
+disassembly and provenance. Ordinary `NO_SIBLING_CALLS` compiler attributes remain
+allowed in `include/base/compiler.h`, replacing `include/base/barrier.h`.
+Other handwritten inline assembly remains banned; `INCLUDE_ASM` still requires
+explicit approval and is not a substitute for this clean-C requeue. Opaque clean-C
+matching shapes require adjacent rationale, live byte evidence and independent review.
 
 Treat `(analyzer-range SHA-256, size)` as a reuse candidate, not shared
 ownership. Match one representative, then independently port and validate a
@@ -166,7 +175,7 @@ moving a document. Split mixed tooling/game topics rather than duplicating owner
 
 | Directory | Domain |
 | --- | --- |
-| `include/base/`, `include/memory/` | common types, barriers, fixed RAM and hardware addresses |
+| `include/base/`, `include/memory/` | common types, compiler attributes, fixed RAM and hardware addresses |
 | `include/gpu/`, `include/frontend/`, `include/callback/` | rendering, frontend, callbacks |
 | `include/loader/`, `include/panel/`, `include/battle/` | loader, panel, battle runtime |
 | `include/data/`, `include/media/`, `include/ui/`, `include/game/` | records, media, UI and game templates |

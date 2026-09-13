@@ -1,5 +1,5 @@
 #include "bof3/context.h"
-#include "base/barrier.h"
+#include "base/compiler.h"
 #include "bof3/core/slus_internal.h"
 
 extern int sprintf(char* buffer, const char* format, ...);
@@ -17,9 +17,9 @@ extern const void* PTR_s_INTERRRUPT_8017f508[];
 /* @behavior displays the boot exception register dump and loops forever updating
  * the double-buffered debug screen.
  * @source 0x8014B3C4
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void displayBootExceptionDump(void) {
   const u32*           exception_frame;
@@ -46,10 +46,7 @@ void displayBootExceptionDump(void) {
   } while (src != (const ExceptionQuad*)(exception_frame + 48));
 
   cause = exception_frame[0x26];
-  /* MATCHING_AID barrier(): original stores cause (sw 208(sp)) before
-   * loading exception_pc (lw s8,136(a2)); without this barrier GCC
-   * schedules the load first. */
-  barrier();
+
   exception_pc = (const u32*)exception_frame[0x22];
   ExitCriticalSection();
 

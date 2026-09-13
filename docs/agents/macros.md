@@ -122,10 +122,13 @@ target IDs; function operations use `TARGET@0xADDRESS`. Original bytes, reviewed
 ranges, target manifests, and source metadata outrank analyzer suggestions.
 
 Definitions come from manifest-claimed headers, sources/support sources,
-sanctioned shared helpers, and `src/shared/**/*.inc`. The index retains definition
+shared helper headers, and `src/shared/**/*.inc`. The index retains definition
 bodies, parameters, source hashes, conditions, provenance, restrictions, and lexical
-uses. Generated PsyQ bindings are generator-owned/noncandidates. Matching helpers
-are restricted mechanisms, not permission to generate arbitrary inline assembly.
+uses. Generated PsyQ bindings are generator-owned/noncandidates. Historical
+`matching_helper`/`sanctioned_helper` labels do not authorize the
+[banned register/empty-asm aids](../INDEX.md#source-and-duplicate-rules), extraction
+of aliases, or no-op shims. Requeue affected consumers for clean-C matching;
+preserve address-binding assembly and original evidence.
 
 Use rows are lexical name matches, **not proven preprocessor expansions**. Multiple
 same-name definitions and their conditions remain visible. A unique target-owned

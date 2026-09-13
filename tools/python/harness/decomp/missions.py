@@ -19,6 +19,7 @@ from harness.domain.claims import resolve_manifest_source_for_address
 from harness.domain.ids import parse_function_id
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
+from harness.domain.policy import validate_matching_source
 from harness.domain.psx import (
     is_psx_exe,
     payload_for,
@@ -235,6 +236,7 @@ def inspect_candidate(root: Path, record: dict) -> dict:
     resolved = resolve_manifest_source_for_address(root, manifest, function.address)
     if resolved is None or resolved.relative_to(root).as_posix() != request["source"]:
         raise ValueError("retained lift source does not own the selected function")
+    validate_matching_source(root, resolved)
     if not record["facts"]["existing_source"]:
         boundary = parse_splat_layout(
             root / manifest.splat, manifest.load_address

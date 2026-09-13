@@ -3,15 +3,14 @@
 /* @source 0x801E6724
  * @behavior sets the temporary battle global, dispatches one of two local
  * handlers selected by work byte 1, then restores the global.
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void NO_SIBLING_CALLS dispatchByte1PairFlagged(void)
 {
     Battle03Handler handlers[2];
 
-    barrier();
     handlers[0] = func_801E679C;
     handlers[1] = func_801E68EC;
     D_801459F0 = 0x800F0800;

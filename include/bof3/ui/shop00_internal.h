@@ -2,7 +2,7 @@
 #define EMI_SHOP_00_INTERNAL_H
 
 #include "bof3/context.h"
-#include "base/barrier.h"
+#include "base/compiler.h"
 #include "panel/task.h"
 #include "gpu/prim.h"
 

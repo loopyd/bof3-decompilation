@@ -54,7 +54,8 @@ branch-local-return resolution:
 - declaration/volatile forms for loader globals;
 - branch inversion, early-return, `goto`, local-result, and return-expression
   shapes;
-- sanctioned `barrier()`/`CLOBBER_*` placement attempts;
+- then-sanctioned `barrier()`/`CLOBBER_*` placement attempts (permission now
+  superseded by the [source ban](../../INDEX.md#source-and-duplicate-rules));
 - reviewed flag-catalog candidates plus scheduling, peephole, CSE, ABI, and
   MIPS-mode deltas;
 - bounded permuter search (best score improved but did not yield credible C);

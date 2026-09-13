@@ -11,6 +11,12 @@ This note records only evidence from the reviewed `battle/15` function ranges.
 Neither function has recovered callers, so parameter names describe observed
 roles rather than a proven gameplay contract.
 
+The [user-directed source ban](../../INDEX.md#source-and-duplicate-rules)
+supersedes the register-pin permission and aided exact status recorded below.
+Keep the original register/ABI evidence and historical measurements; remove the
+aid and requeue the source for fresh clean-C native matching and independent
+review. No current acceptance follows from this record.
+
 ## `emi/battle/battle/15@0x800AF66C`
 
 **Identity:** load `0x80096800`, payload offset `0x18E6C`, range `0x4C` bytes;
@@ -55,9 +61,9 @@ For `0x800AF66C`, a candidate that copies `a0` to preserve the range pointer is
 not evidence for the intended ABI: original instructions load `a0`'s two fields
 into `a1` then `a0` and reserve `t0` for `a1`. The historical mismatch was the
 compiler's allocation/scheduling of this proven `(range, value)` shape, not an
-unknown parameter order; the allocator experiment below resolved it.
+unknown parameter order; the historical aided experiment below matched it.
 
-The retained clean-C partial lift first loaded `g_battle_work`, then shifted
+The then-retained clean-C partial lift first loaded `g_battle_work`, then shifted
 `a1` directly and kept range/work values in `v0`/`v1`; it measured 76→80 bytes
 and first differed at entry, where the original is `move t0,a1; move v0,zero`.
 A 52-profile matrix found canonical GCC 2.7.2 and GCC 2.6.3 tie at 25.00%,
@@ -74,12 +80,13 @@ candidate was the latter 2/19 form. A local `t0` pin experiment recovered the
 first `move t0,a1` but produced 4/21 instructions and 84 bytes, so it was
 reverted.
 
-The final allocator experiment constrained only the result local to `v0` with
-`REGISTER_PIN(u32, result, "v0")`; all other values remain ordinary clean-C
-locals. This causes canonical GCC to preserve `value` in `t0`, initialize the
+The historical final allocator experiment constrained only the result local to `v0` with
+`REGISTER_PIN(u32, result, "v0")`; all other values remained ordinary clean-C
+locals. This caused canonical GCC to preserve `value` in `t0`, initialize the
 result in `v0`, and allocate the derived values as in the original. The signed
 threshold experiment was not retained: both range fields and thresholds are
 `u32`, consistent with the original `sltu` comparisons. A fresh live
 `bin/asm-diff` and `bin/byte-match` then matched all 19 instructions / 76 bytes
 (`func_800AF66C`, `@status exact`). No object compiler override or generic
-macro is used.
+macro was used. Those aided results remain historical evidence only; the removal
+requeue uses `@status partial`, `@match unavailable` pending fresh checks.

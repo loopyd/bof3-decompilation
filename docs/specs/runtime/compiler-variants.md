@@ -10,15 +10,22 @@ tags: [compiler, research, gcc, mips, negative-evidence, pipeline]
 
 Research into historical GCC compilers that may have produced BOF3 objects.
 
+The [current source ban](../../INDEX.md#source-and-duplicate-rules) supersedes
+all register-pin and artificial empty-asm permissions and aided acceptance claims
+below. Preserve these dated measurements and provenance; affected sources require
+aid removal, fresh clean-C native matching and independent review.
+
 ## Status: four verified candidates
 
 `gcc-2.6.3-psx`, `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, and `gcc-2.95.2-psx` are
 provenance-pinned, opt-in candidates in `config/compiler/variants.json`.
-One candidate is selected by one reviewed exact object:
+One candidate is selected by one historically reviewed exact object:
 `src/bof3/audio/dispatchSoundCue.c` selects `gcc-2.6.3-psx`
 (`BOF3_OBJCOMPILER_bof3_audio_dispatchSoundCue_c`,
-`config/compiler/object-flags.cmake:61`) with a byte-exact live match at
-`exe/slus_004_22@0x8015DF18` (671/671 instructions, 2684 bytes). The other
+`config/compiler/object-flags.cmake:61`) with a historical aided match at
+`exe/slus_004_22@0x8015DF18` (671/671 instructions, 2684 bytes). That source is
+now requeued for clean-C matching/review; its old exact result is not current
+acceptance. The other
 three candidates have no object selection; each produced only negative
 target-qualified probe results (historical matrices below). The framework
 (`bin/compiler-variants`, `tools/python/harness/toolchain/gcc_variants.py`)
@@ -59,7 +66,7 @@ and no `BOF3_OBJCOMPILER_` override was retained.
 
 ### `battle/15@0x800AF66C` historical-version matrix (pre-exact lift)
 
-The user-authorized clean-C revival tested the source shape now retained at
+The user-authorized clean-C revival tested the source shape then retained at
 `src/bof3/battle/func_800AF66C.c` against reviewed boundary
 `0x18E6C..0x18EB8` (76 original bytes). At the time, its canonical residual
 was 5/20 instructions (25.00%), 76→80 bytes, first at `+0x0000`
@@ -74,10 +81,10 @@ was 5/20 instructions (25.00%), 76→80 bytes, first at `+0x0000`
 | 2.8.1 PSX (old-gcc 0.17) | 50 | 2 | `-O2 -mno-split-addresses -fno-schedule-insns -fno-delayed-branch` | 23.81% | no |
 | 2.95.2 PSX (old-gcc 0.17) | 52 | 0 | `-O2 -mno-split-addresses -fno-schedule-insns -fno-delayed-branch` | 23.81% | no |
 
-That tested source shape was later superseded by the current exact target-local
-lift; it was never proof of retail compiler identity. The matrix closes these
-versions for this target; do not repeat it without new source, ABI, or
-compiler-provenance evidence.
+That source shape was later superseded by an aided target-local match, whose
+acceptance is now superseded by the ban. Neither result proves retail compiler
+identity. The matrix remains negative evidence for the tested shape; a repeat
+requires new source, ABI, or compiler-provenance evidence.
 
 **ASPSX**: Used with `bin/cc` driver, produces byte-identical output to
 canonical GCC 2.7.2-psx toolchain for all tested functions.
@@ -106,7 +113,7 @@ Bounded research has been performed and documented:
 - Disposable stock PsyQ `CC1PSX.EXE` 4.0, 4.1, 4.3, 4.6
 - Declaration/volatile forms for loader globals
 - Branch inversion, early-return, `goto`, local-result, return-expression shapes
-- Sanctioned `barrier()`/`CLOBBER_*` placement attempts
+- Then-sanctioned `barrier()`/`CLOBBER_*` placement attempts (now banned)
 - Reviewed flag-catalog candidates plus scheduling, peephole, CSE, ABI, MIPS-mode deltas
 
 These negative results do not generalize to other functions; retained exact
@@ -125,9 +132,9 @@ observed `gcc --version` output `2.6.3`. `bin/compiler-variants install`,
 The initial disposable clean-C pilot was a 76-byte entry-register residual;
 its source was removed after that closeout. A later user-authorized revival
 (dated pre-resolution history) was retained at that time as a target-local
-partial lift with its separate all-version matrix above; it has since been
-resolved exactly (see below), so the partial-lift description no longer
-reflects current state. GCC 2.6.3 initially rejected the pre-existing
+partial lift with its separate all-version matrix above, then matched using the
+now-banned pin below. Both measurements are historical; neither establishes the
+cleaned source's current match. GCC 2.6.3 initially rejected the pre-existing
 declaration spelling
 `void __attribute__((noinline)) func_8009B20C(void);`. Its equivalent
 post-declarator spelling was used only for the experiment then restored. Under
@@ -140,13 +147,13 @@ was 76→76 bytes with first difference `+0x0000`: original
 `move t0,a1; move v0,zero`, current `move a2,a1; srl a3,a2,1` (2/19
 instructions).
 
-The residual was later resolved exactly without a flag override: a local
+The residual later byte-matched without a flag override: a local
 `REGISTER_PIN(u32, result, "v0")` recovered the entry register web, and live
-`bin/asm-diff`/`bin/byte-match` now report 19/19 instructions, 76 bytes
+`bin/asm-diff`/`bin/byte-match` then reported 19/19 instructions, 76 bytes
 (`func_800AF66C`, `@status exact`). See
-[`battle-range-predicates.md`](battle-range-predicates.md) for the solution
-record. The probe narrative and matrix below remain dated historical evidence
-of the negative flag search, not current state.
+[`battle-range-predicates.md`](battle-range-predicates.md) for the historical
+record. That aided exact status is superseded; fresh clean-C matching/review
+remains pending. The probe narrative and matrices retain their original scope.
 
 This closes the first probe. Do not generalize its score or repeat the flag
 matrix; a follow-up needs new source, ABI, or compiler provenance.
@@ -171,6 +178,10 @@ Tool versions as of 2026-07-30:
 | GNU objcopy | 2.40 (PSn00b) |
 
 ### Reviewed nondefault optimization control
+
+The `game/01` control below is historical aided evidence, now superseded by its
+[clean-C requeue](../../plans/autonomous-bof3-decompilation.md#durable-clean-c-requeue).
+Its cleaned source has no fresh accepted match in this record.
 
 | Target | asm-diff | byte-match | Flags |
 |--------|----------|------------|-------|

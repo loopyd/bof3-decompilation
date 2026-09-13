@@ -2,20 +2,14 @@
 
 /* @source 0x800A0E68
  * @behavior UNKNOWN: exact behavior is not yet documented.
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 
 void func_800A0E68(void) {
-  /*
-     * MATCHING_AID (user-approved register pin):
-     * Pin half to $v1 so the sign-extension naturally flows v0→v1,
-     * leaving $v0 free for the D_801463A0 pointer load. This matches
-     * the original scheduling where lui+lw fills the addu→sra gap
-     * and sh lands in the beqz delay slot.
-     */
-  REGISTER_PIN(s32, half, "v1");
+
+  s32 half;
 
   half = func_801DC044(D_80146374, D_80146394, 0xFFFF) / 2;
   ((u16*)D_801463A0)[2] = half;

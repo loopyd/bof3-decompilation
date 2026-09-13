@@ -28,6 +28,119 @@ original media. Git writes/publication remain separately authorized. Existing
 domain validation and transaction rollback stay; no campaign backup framework,
 loader collectors, handshakes, mirrored state or custom receipt reconstruction.
 
+## Current clean-C aid-removal supersession
+
+The user's ban supersedes every earlier sanctioned-pin/clobber exception and
+aided acceptance claim in this plan, skills and matching advice. Remove
+`REGISTER_PIN`, direct asm register bindings, `CLOBBER_*`, `barrier()` and all
+artificial empty-asm matching barriers; no declaration-only or no-op shims.
+Preserve `WEAK_SYMBOL_AT` address-binding assembly, ordinary `NO_SIBLING_CALLS`
+compiler attributes, original disassembly, raw measurements and provenance.
+`include/base/compiler.h` replaces `include/base/barrier.h` for compiler attributes;
+the [source contract](../INDEX.md#source-and-duplicate-rules) owns current policy.
+
+Parent reports removal from 50 C sources and the compiler-header rename applied.
+Persistent requeue tags are `@status partial`, `@match unavailable`, and
+`@residual requeued ...`, pending independent clean-C review and further matching
+where needed. Parent also reports
+live enforcement in `tools/python/harness/domain/policy.py`, called at asm-diff
+resolve/compare, decomp pre-cache validation and `decomp.missions.inspect_candidate`;
+status-cache schema is v3 and 77 focused tests passed. Header references are updated
+in `domain.repository_layout` and `macros.index`. These are attributed parent
+tooling results, not independent source acceptance. Parent owns source/harness and `.codex`/`.pi`
+policy edits; this pass updates existing docs only.
+
+Every affected target-qualified consumer, including shared-template wrappers,
+needs fresh native instruction/byte checks and independent review before renewed
+acceptance or exact cleanup. Previous scores, cached exact rows, receipts and
+review verdicts remain historical; do not rebind them to cleaned source or use
+old retention/restoration instructions to keep a banned matching candidate.
+This correction closes no phase and changes no stable IDs, frozen pilot membership,
+consumed budgets or unrelated obligations. This documentation pass performs no
+source audit, tests or native validation and grants no acceptance.
+
+### Durable clean-C requeue
+
+All 50 entries across ten targets remain pending independent clean-C review;
+40 also need further matching. The table is the canonical work queue; no separate plan is
+needed. Paths are relative to `src/bof3/`. PRE status/match values are historical
+only: 46 exact and four partial before removal, zero renewed acceptances here.
+The parent inventory retains each `sha256_before` and complete `progress_before`:
+`out/reviews/register-aid-removal-20260913-complete/inventory.json`, SHA-256
+`24dd1dc35eeb58192d1b31fb33320ca87f324c4bdc8a83b43f8462b7a41c0b0a`.
+Membership below was checked against that JSON; game source was not inspected.
+Do not overwrite its PRE evidence or apply historical scores to cleaned C.
+
+Parent completed native compilation/comparison for all 50: 10 MATCH, 40 DIFFER,
+zero tool errors. `verification.json` beside the inventory binds each selector,
+source, return code and log; its SHA-256 is
+`22697c8a28352a4d65a2fcc49dfb9619510750b1f3d545d5782680be604253fb`.
+Its 50 source/selector pairs and 10/40 return-code split match this queue.
+Parent reports `bin/index --recover --timeout 180` succeeded: all 50 sources have
+requeue metadata, but only 49 affected functions are indexed as partial.
+`emi/scenario/scena16/00@0x801F6E30` (`seedRouteEnterState3_scena16.c`) is absent
+from `snapshot.functions`; the index builder iterates analyzer functions only.
+Its manifest-backed queue row remains explicit below with native result DIFFER.
+Do not fabricate analyzer functions or treat index omission as completed work.
+Independent source review is delegated separately. All 50 retain `partial` /
+`unavailable` tags; even MATCH rows are measured candidates, not promoted or
+accepted sources. Indexed coverage is 49 partial plus one explicit manifest-backed
+queue entry, not 50 indexed functions.
+The documentation pass inspected the JSON, not native logs or source semantics.
+
+| Target-qualified selector | Source under `src/bof3/` | Historical PRE status / match | Native result, review pending |
+| --- | --- | --- | --- |
+| `exe/slus_004_22@0x8015DF18` | `audio/dispatchSoundCue.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/03@0x801E6724` | `battle/dispatchByte1PairFlagged.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/15@0x800AE014` | `battle/dispatchLocalHandlerPair.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/15@0x800A83F8` | `battle/dispatchWorkByte1Pair.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/15@0x800AD26C` | `battle/dispatchWorkTable6994.c` | exact / 100.00 | MATCH |
+| `emi/battle/battle/15@0x800AD69C` | `battle/dispatchWorkTable69a0.c` | exact / 100.00 | MATCH |
+| `emi/battle/battle/15@0x800AD9CC` | `battle/dispatchWorkTable69ac.c` | exact / 100.00 | MATCH |
+| `emi/battle/battle/15@0x800ADCC4` | `battle/dispatchWorkTable69b8.c` | exact / 100.00 | MATCH |
+| `emi/battle/battle/03@0x801DB3E4` | `battle/enemyBattlerMeetsThresholds.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/15@0x8009DC6C` | `battle/func_8009DC6C.c` | exact / 100.00 | MATCH |
+| `emi/battle/battle/15@0x800A0E68` | `battle/func_800A0E68.c` | exact / 100.00 | MATCH |
+| `emi/battle/battle/15@0x800A3F28` | `battle/func_800A3F28.c` | partial / 88.57 | DIFFER |
+| `emi/battle/battle/15@0x800A8360` | `battle/func_800A8360.c` | partial / 94.87 | DIFFER |
+| `emi/battle/battle/15@0x800AAEBC` | `battle/func_800AAEBC.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/15@0x800AF66C` | `battle/func_800AF66C.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/15@0x800AF720` | `battle/func_800AF720.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/03@0x801DC73C` | `battle/func_801DC73C.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/03@0x801DCD50` | `battle/func_801DCD50.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/03@0x801E60DC` | `battle/func_801E60DC.c` | exact / 100.00 | DIFFER |
+| `emi/battle/battle/03@0x801DEBC4` | `battle/queueScriptEvent.c` | exact / 100.00 | DIFFER |
+| `exe/slus_004_22@0x8014B3C4` | `boot/displayBootExceptionDump.c` | exact / 100.00 | DIFFER |
+| `exe/slus_004_22@0x80162230` | `io/emiCdReadyCallback.c` | exact / 100.00 | DIFFER |
+| `exe/slus_004_22@0x80162618` | `io/recordEmiDispatchHandler.c` | exact / 100.00 | DIFFER |
+| `exe/slus_004_22@0x80162790` | `io/selectNextEmiEntry.c` | exact / 100.00 | DIFFER |
+| `emi/scenario/scena00/00@0x801FC7D0` | `scenario/dispatchRecordCallbackByByte7A.c` | exact / 100.00 | DIFFER |
+| `emi/scenario/scena16/00@0x801F8358` | `scenario/dispatchRecordCallback_scena16.c` | exact / 100.00 | DIFFER |
+| `emi/scenario/scena00/00@0x801FC8FC` | `scenario/resetEffectBank_801FC8FC.c` | exact / 100.00 | DIFFER |
+| `emi/scenario/scena16/00@0x801F84AC` | `scenario/resetEffectBank_scena16.c` | exact / 100.00 | DIFFER |
+| `emi/scenario/scena16/00@0x801F6E30` | `scenario/seedRouteEnterState3_scena16.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/01@0x801D0D5C` | `ui/armFadeDelay_game01_801D0D5C.c` | exact / 100.00 | MATCH |
+| `emi/etc/game/00@0x801C57F4` | `ui/dispatchScenarioSubstate.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/00@0x801975E4` | `ui/dispatchSubstate1.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/00@0x80197A24` | `ui/dispatchSubstate2.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/00@0x80198234` | `ui/dispatchSubstate3.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/00@0x801984AC` | `ui/dispatchSubstate4.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/00@0x80198744` | `ui/dispatchSubstate5.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/00@0x80198904` | `ui/dispatchSubstate6.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/00@0x80198AC4` | `ui/dispatchSubstate7.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/00@0x801BDB7C` | `ui/findModeFreeSlot.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/01@0x801D0E54` | `ui/finishSelection_game01_801D0E54.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/00@0x801ADC98` | `ui/func_801ADC98.c` | exact / 100.00 | DIFFER |
+| `emi/etc/shop/00@0x801DAB90` | `ui/func_801DAB90.c` | partial / 59.29 | DIFFER |
+| `emi/etc/game/01@0x801D0F00` | `ui/handleMenuInput_game01_801D0F00.c` | exact / 100.00 | DIFFER |
+| `emi/etc/shop/00@0x801E2650` | `ui/initializeShopUiState.c` | exact / 100.00 | MATCH |
+| `emi/etc/game/00@0x801970EC` | `ui/resetSelectionState.c` | exact / 100.00 | DIFFER |
+| `emi/etc/shop/00@0x801E2D1C` | `ui/retreatPanelField6To62.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/01@0x801D18F8` | `ui/updateBanner_game01_801D18F8.c` | exact / 100.00 | DIFFER |
+| `emi/etc/game/01@0x801D1B00` | `ui/updateWindows_game01_801D1B00.c` | exact / 100.00 | MATCH |
+| `emi/world00/area008/13@0x801F3D88` | `world/drawTexturedFrame.c` | partial / 96.17 | DIFFER |
+| `emi/world00/area016/13@0x801F3460` | `world/resetAdvanceScratchState.c` | exact / 100.00 | MATCH |
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex
@@ -462,6 +575,11 @@ macro ranking in `out/reviews/evidence/codex-macro-dispatch-ranking.json` has pi
 `v1:60c90358ce826d520543986e1986ed33d78bf7f6193be267e346e793b82c9966`:
 one defer, four rejections, zero selected. A generic macro must not hide the
 local `REGISTER_PIN`; no extraction or type declaration was accepted.
+
+That dispatch checkpoint is historical: its aided exact results and permission
+to retain the local pin are superseded by the clean-C aid-removal correction above.
+Keep its measurements and ranking pin; requeue the affected wrappers for fresh
+clean-C matching and review.
 
 Application/revalidation runtime preparation now shares naming postapply's
 bounded process owner with macro/type gates: 120 seconds and 2 MiB of native

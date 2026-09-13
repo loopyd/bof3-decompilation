@@ -5,18 +5,16 @@
  * shared texture window, then queues the matching inner fill rectangle.
  * @source 0x801F3D88
  * @status partial
- * @match 96.17
- * @residual non-exact live audit: 326/339 instructions; 1356 original bytes versus 1356 current; first mismatch +0x0154.
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   RECT*     texture_window;
   POLY_FT4* primitive;
   s32       x;
-  /* MATCHING_AID: bounded removal tests regressed bottom_y to 302/339 and
-   * half_copy to 212/339; retain these allocator constraints only while this
-   * lift is partial. Removal condition: an exact match without the pin. */
-  REGISTER_PIN(s32, bottom_y, "s3");
-  REGISTER_PIN(s32, half_copy, "s4");
+
+  s32 bottom_y;
+  s32 half_copy;
   s32       y;
   s32       clut_x;
   s32       left_x;
@@ -25,10 +23,7 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   s32       widthPlus1;
   s32       odd_width;
   s32       right_base;
-  /* MATCHING_AID: `two`/`tpage_val` named constants came from a bounded
-   * permuter win (score 2290->2185); they steer the gcc2 scheduler's
-   * load/store placement in the FT4 blocks. Removal condition: exact match
-   * retained with plain literals. */
+
   s32       two;
   s16       tpage_val;
   s32       arg3_l;
@@ -87,7 +82,6 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->v2 -= 3;
   primitive->b0 = 0xacu;
   primitive->clut = GetClut(clut_x, 0x1e1);
-  barrier();
   widthPlus1 = arg2 + 1;
   x = (s32)(u16)widthPlus1;
 

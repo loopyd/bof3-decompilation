@@ -2,9 +2,9 @@
 
 /* @source 0x801E2650
  * @behavior initializes shop UI state fields.
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void initializeShopUiState(void) {
   u8* base;
@@ -15,7 +15,6 @@ void initializeShopUiState(void) {
   D_80148333 = 2;
   base[0] = 1;
   base += 0x2F4;
-  barrier();
   D_80148334 = 20;
   D_80148336 = -20;
   D_80148626 = 3;

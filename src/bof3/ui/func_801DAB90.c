@@ -5,8 +5,8 @@
  * shared texture window, then queues the matching inner fill rectangle.
  * @source 0x801DAB90
  * @status partial
- * @match 59.29
- * @residual frame/register allocation differs; original frame 0x78, current 0x70
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void func_801DAB90(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   RECT*     texture_window;
@@ -23,10 +23,7 @@ void func_801DAB90(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   s32       width_plus_1;
   s32       odd_width;
   s32       right_base;
-  /* MATCHING_AID: `two`/`tpage_val` named constants came from a bounded
-   * permuter win (score 2290->2185); they steer the gcc2 scheduler's
-   * load/store placement in the FT4 blocks. Removal condition: exact match
-   * retained with plain literals. */
+
   s32       two;
   s16       tpage_val;
   s32       arg3_l;
@@ -85,9 +82,7 @@ void func_801DAB90(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->v0 += two;
   primitive->v2 -= 3;
   primitive->clut = GetClut(clut_x, 0x1e1);
-  /* MATCHING_AID: keeps the completed primitive memory stores before the
-   * following width reload, reproducing the original post-call ordering. */
-  barrier();
+
   width_plus_1 = arg2 + 1;
   x = (s32)(u16)width_plus_1;
 

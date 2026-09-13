@@ -2,7 +2,9 @@
 
 /* @source 0x800A8360
  * @behavior initializes battle selection state fields.
- * @status matching
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void func_800A8360(void)
 {
@@ -13,7 +15,6 @@ void func_800A8360(void)
     state = &D_80148570;
     one = 1;
     eight = 8;
-    barrier();
     state->first = one;
     D_80148572 = one;
     D_80148573 = 2;

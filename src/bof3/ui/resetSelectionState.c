@@ -27,9 +27,9 @@ extern void func_801C1400(u32 arg0);
 /* @behavior resets front-state globals, then seeds the authored selection byte from
  * the active EXE-side selection when one already exists.
  * @source 0x801970EC
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void resetSelectionState(void) {
   u16 selection_seed;
@@ -40,9 +40,7 @@ void resetSelectionState(void) {
 
   D_8014832E = 0x1fu;
   D_8014933E = 6u;
-  /* MATCHING_AID: CLOBBER_CALLER_REG(a0) retains move a0,zero in the
-   * func_801C1400 jal delay slot. */
-  CLOBBER_CALLER_REG(a0);
+
   func_801C1400(0u);
   selection_seed = D_801448FC;
   D_80143F00 = 0xffffu;

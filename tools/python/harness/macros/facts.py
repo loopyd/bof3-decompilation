@@ -144,6 +144,8 @@ def _closing_parenthesis(text: str, start: int) -> int | None:
 
 def _restrictions(name: str, generated: bool) -> tuple[str, ...]:
     restrictions: list[str] = []
+    if name == "REGISTER_PIN" or name == "barrier" or name.startswith("CLOBBER_"):
+        restrictions.append("forbidden_matching_aid")
     if name == "REGISTER_PIN":
         restrictions.append("allocator_constraint")
     if name == "barrier" or name.startswith("CLOBBER_"):
@@ -162,13 +164,9 @@ def _classification(
 ) -> str:
     if name == "WEAK_SYMBOL_AT":
         return "generated_binding"
-    if (
-        name == "REGISTER_PIN"
-        or name == "barrier"
-        or name.startswith("CLOBBER_")
-        or name.startswith("INCLUDE_ASM")
-        or name.startswith("INCLUDE_RODATA")
-    ):
+    if name == "REGISTER_PIN" or name == "barrier" or name.startswith("CLOBBER_"):
+        return "forbidden_matching_aid"
+    if name.startswith("INCLUDE_ASM") or name.startswith("INCLUDE_RODATA"):
         return "matching_helper"
     if Path(source).suffix == ".inc" and parameters is not None and "{" in body_mask:
         return "body_emitting_template"

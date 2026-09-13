@@ -4,27 +4,18 @@ extern int rand(void);
 /* @behavior applies the current scratchpad damage modifiers, variance table, and
  * optional battler-specific scale table to one signed damage value.
  * @source 0x801DCD50
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 u32 func_801DCD50(u32 arg0, u8 arg1, s32 arg2) {
   volatile u16 *scratch;
   s32 scaled;
   s32 scale;
   s32 value;
-  /*
-   * MATCHING_AID:
-   * REGISTER_PIN pair reproduces the original's first scratchpad-flags test
-   * `lhu a1,0(s0); andi v0,a1,0x1f; beqz v0`; clean C coalesces both into
-   * v0 (`lhu v0,0(s0); andi v0,v0,0x1f`). Exhausted rungs: type/declaration
-   * and statement-order variants, flag-search profiles, and one 60s
-   * permuter run (best score 30, same residual). The live bin/byte-match
-   * immediately after adding this aid was exact (106/106, 424 bytes).
-   * Remove if a clean-C shape reproduces the a1 load / v0 mask split.
-   */
-  REGISTER_PIN(u16, flags, "a1");
-  REGISTER_PIN(s32, mode, "v0");
+
+  u16 flags;
+  s32 mode;
 
   value = arg2 << 8;
   scaled = value;

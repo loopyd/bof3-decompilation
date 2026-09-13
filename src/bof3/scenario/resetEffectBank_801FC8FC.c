@@ -18,9 +18,9 @@ typedef struct Scena00EffectBank80140000 {
 
 /* @behavior resets one local effect bank and marks the frontend flag byte.
  * @source 0x801FC8FC
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void resetEffectBank(void) {
   u8 flags;
@@ -35,8 +35,6 @@ void resetEffectBank(void) {
   SCENA00_EFFECT_BANK->byte_4f5f = 0xffu;
   SCENA00_EFFECT_BANK->byte_6254 = 0u;
   SCENA00_EFFECT_BANK->byte_4f59 = (u8)(flags | 7u);
-  /* MATCHING_AID: CLOBBER_CALLER_REG(a0) forces a0=10 into the jal delay slot
-   * instead of being hoisted after the first call. */
-  CLOBBER_CALLER_REG(a0);
+
   func_801C187C(10);
 }

@@ -99,6 +99,11 @@ semantics/types. Valid partial lifts exit `0`; invalid
 metadata/compilation/linking/comparison exits `2`. Rizin-index coverage is
 supplementary; its unavailability does not invalidate the audit.
 
+Aid-removal requeues use `@status partial`, `@match unavailable`, and a residual
+stating that fresh clean-C matching and independent review are pending. Never
+carry an aided score forward as a measurement of the cleaned source. These
+unmeasured requeues are not accepted partial or exact results.
+
 ## Approved assembly fallback
 
 `INCLUDE_ASM` is an explicit-user-approved fallback only (policy:
@@ -167,15 +172,13 @@ Acceptable: temporaries, pointer hoists, early returns, if/else inversion,
 duplicated assignments, manual `goto` loops, reordered independent statements.
 Never promote function-specific aids into generic macros.
 
-`REGISTER_PIN(type, name, reg)` is the shared spelling for a local allocator
-constraint — only after declarations, symbol representation, branch direction,
-loop shape, temporaries, deref hoists, statement reordering, and the permuter
-are exhausted, as one bounded local experiment on an asm-diff-proven allocator
-or entry-register residual. Retain only with adjacent `MATCHING_AID` rationale,
-independent review, live byte match. Never a generic matching macro. A legacy
-direct numeric `"$N"` spelling requires explicit user approval and proof the
-macro form changes codegen. Remove speculative pins once a structural match is
-found.
+The [source contract](../INDEX.md#source-and-duplicate-rules) bans `REGISTER_PIN`,
+direct asm register bindings, `CLOBBER_*`, `barrier()` and artificial empty asm.
+Prior approvals, exact aided bytes and allocator regressions do not permit
+retention or restoration as matching candidates. Remove the aids without a
+declaration/no-op shim, preserve historical evidence, and requeue each consumer
+for clean-C native matching and independent review. Exhausting clean-C levers
+leaves a documented residual; it does not reopen the old exceptions.
 
 ## Owned-data materialization
 

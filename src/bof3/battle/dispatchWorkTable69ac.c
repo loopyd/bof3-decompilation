@@ -3,15 +3,15 @@
 /* @source 0x800AD9CC
  * @behavior copies the three handlers at 0x800969AC and dispatches the entry
  * selected by battle work byte 0x01.
- * @status exact
- * @match 100.00
- * @residual none
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void dispatchWorkTable69ac(void)
 {
     BattleSelectionDispatchTable handlers;
-    /* MATCHING_AID: original retains g_battle_work in v1 for the stack-table index. */
-    REGISTER_PIN(u8*, work, "v1");
+
+    u8* work;
 
     handlers = D_800969AC;
     work = g_battle_work;

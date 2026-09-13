@@ -5,27 +5,19 @@ addresses, PS1 hardware registers, and scratchpad RAM from lifted C.
 Fixed-address macros are casts; they access memory only when their result is
 read or written. Put `const`/`volatile` directly on the `type` argument.
 
-## Base types and matching helpers (`include/base/`)
+## Base types and compiler attributes (`include/base/`)
 
 `include/base/types.h` defines `u8`..`u64`, `s8`..`s64`, `f32`, `f64`.
-`include/base/barrier.h` defines the only inline-assembly helpers allowed in
-lifted code:
+`include/base/compiler.h` owns the ordinary `NO_SIBLING_CALLS` compiler attribute
+for preserving a real `jal` instead of a tail call. It replaces the former
+`include/base/barrier.h`; it must not retain banned aids as no-op shims.
 
-- `NO_SIBLING_CALLS` prevents a tail call when original code has a real `jal`.
-- `barrier()` emits no instructions; it only prevents compiler reordering.
-  Use for asm-diff-proven volatile-access ordering across a call.
-- `CLOBBER_CALLER_REG(reg)` and named `CLOBBER_*` wrappers model an
-  asm-diff-proven caller-clobbered register for delay-slot or fixed-address
-  reload scheduling. Never select an opcode; never clobber `s*`, `gp`, `sp`,
-  `ra`.
-- `REGISTER_PIN(type, name, reg)` is a last-resort allocator constraint. After
-  the clean-C ladder, retain one only for an asm-diff-proven allocator or
-  entry-register residual, with adjacent `MATCHING_AID`, independent review,
-  live byte match. Not a scheduling tool.
-
-Handwritten inline `__asm__`, direct `register X asm("$N")` pins,
-`extern X asm("NAME")` renames, and `INCLUDE_ASM` are forbidden unless project
-rules explicitly authorize them. Bind fixed-address symbols with a plain
+`REGISTER_PIN`, direct asm register bindings, `CLOBBER_*`, `barrier()` and all
+artificial empty-asm matching barriers are banned under the
+[source contract](../INDEX.md#source-and-duplicate-rules), even after an exact
+match or exhausted clean-C ladder. Handwritten inline assembly and
+`extern X asm("NAME")` renames remain forbidden; `INCLUDE_ASM` needs separate
+explicit approval. Bind fixed-address symbols with a plain
 target-local `extern` in `internal.h` plus `WEAK_SYMBOL_AT(name, addr)` in
 target `symbols.c`.
 

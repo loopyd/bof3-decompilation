@@ -6,7 +6,7 @@ Apply only an evidence-approved `symbol`, `type`, `repair`, or `retained-lift` r
 
 - Symbol/type changes are target-local: sorted `symbols.txt` with one spelling/address, target `internal.h`/`symbols.c`, and same-target references. No aliases or generated `symbols/psyq.c` edits.
 - Shared fixed-RAM requires either an existing shared map or recursive proof of identical address, content class, and runtime role in every composing consumer. Inventory every composing Splat; atomically unify spelling across declarations, bindings, annotations, and references. Otherwise keep it local: address/reference count is insufficient. Function/source ownership is never shared.
-- Renames preserve width, signedness, pointer depth, volatility, ABI, storage, extent, packing, code/CFG shape, matching aids, flags, and addresses.
+- Renames preserve width, signedness, pointer depth, volatility, ABI, storage, extent, packing, code/CFG shape, flags, and addresses. Forbidden register pins/clobbers/barriers require a separate removal/requeue scope; never grandfather them through identity acceptance.
 
 ## Identity invariants
 

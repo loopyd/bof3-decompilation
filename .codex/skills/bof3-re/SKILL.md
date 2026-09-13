@@ -25,7 +25,7 @@ Selector: `TARGET@0xADDRESS` | shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRE
 
 - Original bytes, PS-X headers, `t_addr` outrank tools. Verify load: `runtime address - load address = payload offset`.
 - Targets independent: one metadata-tagged lift source, local `internal.h`, map, Splat boundary, validation. Parsable `@source` + `@behavior` mandatory and authoritative; filenames never supply identity/address fallback. Never copy game extern addresses across targets.
-- C89. Banned: handwritten asm, direct register pins, asm-renamed externs, `INCLUDE_ASM`. Sanctioned: `barrier()`/`CLOBBER_*`, `REGISTER_PIN(type, name, reg)`, `symbols.c` `WEAK_SYMBOL_AT`. A pin is autonomous only for an asm-diff-proven allocator/entry-register residual after the clean-C ladder; needs local `MATCHING_AID`, independent review, live exact match. No generic matching macro. Legacy direct numeric pin: explicit user approval + proof the macro form changes codegen. No fallback asm without approval.
+- C89. Ban register pinning (including `REGISTER_PIN` and numeric bindings), `CLOBBER_*`, `barrier()` and artificial empty asm, including aliases/no-op substitutes. Historical exact matches or reviews grant no exception: remove aids and requeue affected lifts for fresh clean-C byte matching and independent review. Keep manifest-owned `symbols.c` `WEAK_SYMBOL_AT`. Handwritten asm, asm-renamed externs and unapproved `INCLUDE_ASM` remain prohibited.
 - SDK external: official PsyQ names/maps/headers; never lift SDK bodies.
 - Unknown fields `unk_XX`; canonical map names; `internal.h` order: guard, includes, types, extern data, prototypes, macros/helpers.
 - No commit without explicit user approval. No behavior tests for lifts; add tooling tests only when explicitly requested.
@@ -63,17 +63,16 @@ Honor the selected function/group. None: rank via `bin/rev-query <quick-wins|lea
 
 1. types/declarations: width, signedness, pointers, fields, prototypes;
 2. control flow: branch direction, loop/return/switch shape; equal-valued arms use the playbook's bounded branch-shape matrix before escalation;
-3. expression/register order: temps, hoists, statement order; then asm-diff-proven caller-register `CLOBBER_CALLER_REG(reg)` for delay-slot/fixed-address reloads, local `MATCHING_AID`; never encode an opcode or clobber `s*`/`gp`/`sp`/`ra`;
+3. expression/register order: ordinary temporaries, hoists and statement order; no artificial allocator/scheduler controls;
 4. compiler profile: `bin/flag-search TARGET@0xADDRESS`; record only clean-C exact profiles;
 5. one bounded `bin/permute TARGET@0xADDRESS --time-limit 60 -j N` after shape is right;
-6. asm-diff-proven allocator/entry-register residual: one bounded local `REGISTER_PIN` experiment; retain only if exact + independently reviewed;
-7. report residual; never force banned assembly.
+6. report unresolved allocation/scheduling with the best coherent clean-C candidate; never force registers or assembly.
 
-Frame/size residuals: start at types/calls, address-taken locals, aggregate copies, control flow — never a pin. Same-size relocation/load-order: symbol representation, pointer-cell volatility. Entry `move tN,aN`/`move vN,aN` = allocator residual only after lifetime, clean-C ordering, profile, permuter variants. Lone delay-slot residual needs exact branch/jump operands + liveness before a caller-register clobber.
+Frame/size residuals: start at types/calls, address-taken locals, aggregate copies and control flow. Same-size relocation/load-order: symbol representation and evidenced pointer-cell volatility. Entry copies require lifetime, clean-C ordering, profile and permuter diagnosis. Lone delay-slot residuals require exact branch/jump operands and liveness, never a clobber.
 
 Non-exact review returns 1–3 ranked untried experiments with expected instruction effects; preserve the best coherent candidate. The caller owns retry count and stopping. Retain coherent improvement with atomic `@status partial`/`@match`/`@residual`; revert only no-progress/semantic defects. Partial→exact review identifies the decisive experiment; parent records a generalizable playbook/lesson rule.
 
-Read `first=` first; a percentage is not success. Retained `MATCHING_AID` names original/current instruction or register placement, exhausted rung, and the following exact live byte-match; remove if clean C later matches. No generic matching-hack macros. Third non-progressing attempt: restore best clean-C state, advance; on exhaustion report target, first difference, attempts, next untried/blocked evidence. Accept only final live `bin/byte-match` exit 0.
+Read `first=` first; a percentage is not success. No matching-hack macros or historical aid exemptions. Third non-progressing attempt: restore best clean-C state, advance; on exhaustion report target, first difference, attempts and next untried/blocked evidence. Accept only final live `bin/byte-match` exit 0 plus independent review.
 
 ## Duplicates + handoff
 

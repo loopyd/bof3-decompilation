@@ -10,43 +10,19 @@ typedef struct GameFrontBannerState {
 /* @behavior advances the four-panel frontend banner fade and draws each
  * visible panel with its current alpha.
  * @source 0x801D18F8
- *
- * Exact byte match (130/130 insn, bin/byte-match MATCH) at canonical -O2.
- * The pin-free lift stalls at 109/131 insn (83.21%): control flow, calls,
- * loads/stores, and relocations all match; the diff is purely IRA register
- * allocation that the sanctioned clean-C levers cannot reverse (see the
- * MATCHING_AID notes below). `bin/flag-search` over all 52 catalog profiles
- * peaks at 83.21% (-O2); -O1 keeps both allocation choices and adds further
- * structural drift (58.87%). barrier()/CLOBBER_* govern delay-slot
- * scheduling, not register allocation, so they do not apply.
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match unavailable
+ * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
  */
 void updateBanner(void) {
   volatile GameFrontBannerState* state;
   volatile u16*                  alpha;
   volatile u8*                   phase_addr;
-  /* MATCHING_AID: REGISTER_PIN on the two loop induction variables.
-   * Original allocator residual: cc1 swaps i and marker (i -> s2, marker ->
-   * s1; original i -> s1, marker -> s2) because marker's `& 0x3ff` uses sit
-   * in inner delay slots, giving it the higher allocation priority. Current
-   * allocator residual: identical swap at 83.21%. Exhausted rungs: clean-C
-   * lifetime/init-order shaping, strength-reduced GIV derivation of marker,
-   * expression order, and all 52 supported catalog profiles (peak 83.21%
-   * at -O2; -O1 drifts structurally to 58.87%). Exact check: live
-   * bin/asm-diff + bin/byte-match on emi/etc/game/01@0x801D18F8.
-   * Removal condition: reattempt clean C whenever the compiler or flags
-   * change. */
-  REGISTER_PIN(s32, i, "s1");
-  REGISTER_PIN(s32, marker, "s2");
-  /* MATCHING_AID: same residual family as above: the original
-   * rematerializes the 128 clamp / 2 phase constants in v0 at each store
-   * site (li v0,128 / li v0,2 in branch delay slots); cc1 instead hoists
-   * them into extra saved registers (s5/s6/s7), growing the frame. Pinning
-   * the transient store temp to v0 restores the original shape. Removal
-   * condition: same as above. */
-  REGISTER_PIN(s32, v, "v0");
+
+  s32 i;
+  s32 marker;
+
+  s32 v;
   s32                            x;
   s32                            flags;
   s32                            a;
@@ -60,8 +36,7 @@ void updateBanner(void) {
   phase_addr = &GAME_FRONT_FADE_PHASE;
   /* Initialize the loop counter before the early-return guard so cc1 schedules
    * the `i = 0` clear into the beqz delay slot, matching the original prologue.
-   * (This fixes delay-slot placement only; it does not steer which saved register
-   * cc1 picks for i -- see the RESIDUAL note above.) */
+   * This does not select a saved register for i. */
   i = 0;
   if (*phase_addr == 0) {
     return;
