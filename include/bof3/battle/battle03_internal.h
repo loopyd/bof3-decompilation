@@ -326,7 +326,7 @@ extern Battle03Handler D_801EB460[]; /* @source 0x801EB460 @kind unknown */
 extern Battle03Handler D_801EB478[]; /* @source 0x801EB478 @kind unknown */
 extern void             D_801492B8; /* @source 0x801492B8 @kind unknown */
 extern u8               D_801EB000[]; /* @source 0x801EB000 @kind unknown */
-extern volatile u8      D_801EB4F0[]; /* @source 0x801EB4F0 @kind unknown */
+extern volatile u8      battleDispatchSlots[]; /* @source 0x801EB4F0 @kind unknown */
 extern s8               D_801EB4F2; /* @source 0x801EB4F2 @kind unknown */
 extern volatile u8  BATTLE_GLOBAL_BYTE_62E2; /* @source 0x801462E2 @kind unknown */
 extern volatile u16 BATTLE_GLOBAL_HALF_62E8; /* @source 0x801462E8 @kind unknown */

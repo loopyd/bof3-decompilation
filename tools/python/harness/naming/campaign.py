@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from harness.io import unique_object
+
 from ..domain.ids import normalize_target_id
 
 CAMPAIGN_REPORT_DIRECTORY = Path("out/reviews/plan-audit-naming")
@@ -49,7 +51,9 @@ def resolve_campaign_report(root: Path, target: str) -> Path:
         root, CAMPAIGN_REPORT_DIRECTORY / "summary.json"
     )
     try:
-        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        summary = json.loads(
+            summary_path.read_text(encoding="utf-8"), object_pairs_hook=unique_object
+        )
     except (OSError, json.JSONDecodeError) as error:
         raise ValueError(
             f"canonical naming campaign summary is unavailable; {_CAMPAIGN_REPAIR}"
@@ -72,6 +76,30 @@ def resolve_campaign_report(root: Path, target: str) -> Path:
             f"canonical naming campaign target entry is {state}; {_CAMPAIGN_REPAIR}"
         )
     recorded = matches[0].get("report")
+    history = matches[0].get("history")
+    if history is not None:
+        from harness.naming.history import (
+            resolve_contained_path,
+            select_target_entry,
+            update_summary,
+            validate_history,
+            validate_record,
+        )
+
+        expected = validate_history(
+            root.resolve(), normalized, expected.parent, history
+        )
+        latest = history[-1]
+        record = validate_record(
+            root.resolve(),
+            resolve_contained_path(root.resolve(), latest["path"]),
+            latest["sha256"],
+        )
+        prior = json.loads(record["summary"]["text"], object_pairs_hook=unique_object)
+        if matches[0] != select_target_entry(
+            update_summary(prior, record, latest), normalized
+        ):
+            raise ValueError("active campaign entry differs from checkpoint activation")
     if (
         not isinstance(recorded, str)
         or _recorded_campaign_path(root, recorded) != expected

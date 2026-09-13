@@ -13,9 +13,9 @@ void func_801DE804(void) {
   index = 0u;
   do {
     offset = (u32)index * 0xcu;
-    D_801EB4F0[offset] = 0u;
-    D_801EB4F0[offset + 1u] = 0u;
-    D_801EB4F0[offset + 2u] = 0u;
+    battleDispatchSlots[offset] = 0u;
+    battleDispatchSlots[offset + 1u] = 0u;
+    battleDispatchSlots[offset + 2u] = 0u;
     index += 1u;
   } while (index < 8u);
 }

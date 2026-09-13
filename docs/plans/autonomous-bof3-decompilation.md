@@ -1012,6 +1012,140 @@ frozen five, unrelated dirty work and all remaining domain obligations. The macr
 remains unapplied with no retry or queue reset; the full goal stays **active and
 unfinished**.
 
+### Production naming and report generations — 2026-09-13
+
+Mission `naming-production-20260913` starts at **19:31 UTC** from `abb2f1df`,
+separate from the historical DATA-tooling mission above. Its original **20:25 work
+/ 20:35 cleanup** bounds remain unchanged: at most two production transactions,
+one source application and one bounded repair each. Read-only queue scout Hubble
+`01a09c40-b0dc-7d23-8a47-27bab5266365` completed by 19:41; no children were used.
+Parent serializes runtime, source, native refresh and documentation writers.
+
+**First DATA transaction accepted:** parent public
+`out/reviews/naming-production-20260913/data-verify.json` returns `applied:true`,
+one row, target `emi/battle/battle/03`, transaction `data:D_801EB4F0`.
+The spelling is now `battleDispatchSlots`, with six real native gates and distinct
+independent POST review accepted. This supersedes only the preceding checkpoint's
+unapplied-candidate/symbol-debt status, not its historical results. Parent reports
+fresh independent DATA re-review accepted at **20:16:04 UTC** after the runtime
+repair: all 223 physical PRE copies, 1,803 input-closure identities, six real gates
+and current index/readiness checked. The reviewer finished four seconds beyond
+its requested cleanup node, within the original 20:25 work cap; no limit reset or
+old-bundle rebinding follows. Composite `just check` session `83024`, started 19:42,
+failed at 20:25:39; its exact terminal status is recorded below.
+
+Two autonomy gaps were diagnosed and repaired within this mission. First,
+`inputs._SHAPES` omitted the `role` emitted by indexed command collection; the
+repair admits only the existing four enumerated roles and rejects invalid roles,
+without weakening the closed schema. Second, accepted DATA left a prepared row
+that ordinary reconciliation refused as extra inventory. The new explicit
+[report-generation lifecycle](../agents/tool-usage.md#accepted-naming-report-generations)
+previews and CAS-publishes a successor while retaining immutable predecessor
+proof; it is implemented and independently accepted, not merely a deferred design.
+
+Mill released the runtime writer at **20:11:34 UTC**. Hubble's original review
+rejected incomplete embedded proof membership (P1) and blocking lock acquisition
+(P2) before 20:10. One authorized repair recheck, cutoff **20:20**, closed both:
+shared `collect_evidence_states` now derives complete proof membership and embedded
+bindings, including physical PRE copies; report acquisition uses `LOCK_NB` and
+deadline checks. Independent memory-only probe session `45091`, chunk `8e4ccc`,
+passed complete/restored controls, rejected 21 omission/missing/rebased-evidence
+cases over seven artifact classes, and passed three contention/deadline controls.
+Fresh tool chunk `f5834d` matched all eight runtime release pins, including the
+unchanged role repair. Final review **ACCEPT** is retained in
+`out/reviews/naming-production-20260913/checkpoint-review.md`, SHA-256
+`29394fcf083c259488ceb98d9d12cf7b2062a0ba4e41c26dbbb8638422d56a01`;
+the original rejection remains historical. These consumed repairs reset no budget.
+
+Parent reports **291 passed, two skipped**, Ruff/diff passing at writer release,
+then a **653 passed, two skipped** naming rerun in 39.43 seconds. Its disposable
+public DATA→FUNCTION two-generation probe passes preview/CAS/replay, stale pins,
+rejected verification, corrupt backups, interrupted activation/orphan retention,
+changed-orphan refusal and advancing-draft preservation. Native execution in that
+fixture is explicitly **injected**, not production proof. The fresh actual native
+gates and independent re-review above remain distinct from this fixture.
+
+**Production report checkpoint published at 20:23:04 UTC:** parent apply session
+`13398` exited zero after fresh review ingestion/public verification and preview.
+Sidecar tool chunk `ec3bbe` read
+`out/reviews/naming-production-20260913/data-finalize-apply.json`:
+`disposition:published`, `current_acceptance:true`, `production_complete:false`,
+190 rows, `complete:false`. The retained preview plan SHA-256 is
+`8439fe09b5ee7f1d4d50f4c1872e1319ac5d1b0afac30096cb961c880fd63198`;
+the active report is
+`out/reviews/plan-audit-naming/emi__battle__battle__03.generation-9dd5be5b1747750372c25977b65582da63a210aaf6dcf2ce356dd4d7527aa231.json`,
+SHA-256 `4dfd7c899344a7fc2b3bd5cae961e3800b0f00c30ff15813eeb00549b015239c`.
+Parent confirms resolver and exact retained 190-row equality checks; the preview
+retains 246 proof artifacts. S3.7 accepts this actual DATA activation together
+with the separately labeled two-generation fixture, not a second production name.
+
+The conditional second candidate `emi/battle/battle/03@0x801DE804` is canonical and
+unflagged but remains unapplied. Parent started a bounded 75-second
+`--instructions` collection against the new active report, previously blocked on
+the accepted predecessor; collection does not authorize terminalization, source
+application or report edits. Before 20:25, sidecar chunk `a5602c` read the completed
+`next-function-collection.json`: no errors, one executed/one resumed command,
+one completed row, `terminalized:false`, 2.574 seconds, manifest SHA-256
+`582eb139aaf32ceafa737e82a199fdbb368c2ea447209a4ffab8e769ba456aee`.
+Parent confirms collection exit zero with no proposal or source edit. This is
+next-transaction evidence only, not another accepted name. Composite `just check`
+terminated at **20:25:39**: **two failed, 1,909 passed, two skipped**, 2,537.71 seconds.
+Failures are `test_wrapper_bootstrap::test_safe_path_blocks_caller_cwd_python_packages`
+and `test_wrapper_bootstrap::test_agent_context_system_fallback_and_invocation_modes`.
+Cause isolated during cleanup: campaign's module-level history import reached
+`common.inputs` → `domain.layout` → `yaml`, breaking the intentionally stdlib-only
+system-Python worker fallback. Parent moved only the five history imports inside
+`if history is not None`; no validation, fallback safety, dependency installation
+or C source change. This is a separate library-load cleanup fix after production
+activation, not another source attempt or budget reset. The original **20:35
+cleanup cutoff** remains fixed.
+
+Hubble independently **ACCEPTS** only new campaign SHA-256
+`90647ecf34d3353af03d68f65a6cd7eb2db3054fdf90a75053e0bdc82c4f6fae`.
+Old bytes remain in `out/reviews/naming-production-20260913/campaign-before-bootstrap.py`,
+SHA-256 `9bf7a7b550eefdd92e4a654a25cc2950f8cf45fe208abedd3e0aac0658addc4c`.
+Tool chunk `e3f5d4` verified the exact retained delta and system Python `-S` worker
+exit zero. Independent read-only probe session `49493`, terminal chunk `a39e7c`,
+proved AST identity except import placement, legacy resolution without loading
+history/YAML, fail-closed dependency failure whenever history is present, and
+actual published-history resolution at the unchanged successor hash above.
+Historical DATA receipts, native proof, 20:23 activation and original runtime
+review artifact remain unchanged; this new acceptance does not rebase them.
+
+Parent reports the two-generation/interruption/corrupt-backup public fixture and
+Ruff check/format passing after cleanup. Focused wrapper/naming/dry-run union
+session `70156` completed at **20:28:16**: **703 passed, two skipped**, 42.31 seconds,
+including both previously failing wrapper cases. Combined test accounting is
+1,911 passed/two skipped across the initial run and focused recovery, **not a
+second full `just check` invocation**. All `tools/python` Ruff and symbol checks
+pass per parent; final all-sources-native stage `55743` completed at **20:31:26**,
+exit zero: lifts **exact=784, partial=136, invalid=0**.
+`runtime-final.sha256` records the cleanup pins while the original
+`runtime.sha256` remains unchanged. Retain the initial full-run failure record;
+focused recovery alone is not complete phase validation.
+
+Outstanding inventory after the first DATA rename is **1,361 raw names: 530
+functions and 831 data across 23 targets**; battle03 has **190: 86 functions and
+104 data**. The scout baseline was 1,362 raw names versus 1,363 report rows
+(1,361 blocked, one exhausted, one historical proposed row). Do not conflate row
+counts with semantic debt or accepted no-ops. Old battle15 summary drift remains:
+249 summarized versus 250 report rows, with the historical accepted function row
+still retained; unfiltered validation first rejects `func_8009DC6C` metadata.
+Battle03 preflight's **176 safe metadata repairs and two review-required** entries
+are actionable legacy metadata debt, not parser drift: noncanonical residual
+wording and missing match/residual fields remain independently of the selected
+DATA/function. No bulk repairs were authorized or performed by this sidecar.
+
+Preserve all frozen obligations: the five-entry pilot remains blocked with zero
+new accepted no-ops; local `D_80096994` structural exhaustion is not semantic
+acceptance; the two `1F800044` type controls and exact macro group
+`8e1ad03b4ba92303` remain open. Distinct dispatch macro `366ad828049fbe14` remains
+unapplied with its two consumed failures and expired limits. The clean-C queue
+still has four accepted and **46 outstanding** of 50; old matching/permuter and
+macro budgets are not restarted. `S3.2`, S4 and consolidation obligations remain
+unfinished. Selected-row acceptance does not replace unfiltered full-target
+`complete:true`, separate identity approval or the whole-game completion gates.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex
@@ -2453,6 +2587,13 @@ must satisfy them before the corresponding phase is marked done.
 - Blocker: none
 - Evidence: parent accepts this removal/skill scope after independent active-session reviewers 01a08963-3714-7410-82ec-ff6a93c7a4c5 (code) and 01a08963-3763-7133-99dc-35bd6c959bdd (protocol) found no blockers; two documentation corrections are applied. Native CLI transports are removed; deterministic tools and the discoverable bof3-lift-loop remain. Existing focused checks: 151 passed, one pre-existing fixed-mode assertion deselected; Ruff/import/parser/skill checks pass, 119 references resolve without broken/unchecked entries. Native no-edit diagnosis skill-local-check-8b67f3d46ee6 is byte-exact at 100%, source_accepted:false and model_dispatched:false, digest v1:08dd97c2ce60130fd13edda6dcdb7aacc2cd0c8baa56d457ea22c97b36e230a1. Its original 180-second window expired before retained audit; a disposable probe confirms rejection before output, without reset. Frozen evidence and four unrelated dirty file identities are preserved. Broader suite/source validation is pending; symbols check flags existing emi/battle/battle/03:D_801EB4F0 raw-data naming debt from the preceding source feature. Parallel read-only reviews prove capability, not full S3.2 execution, native audit acceptance or whole-game closure.
 - Acceptance: no harness Codex discovery/configuration/process launch or detached model dispatch; deterministic diagnosis/audit/transaction/recovery tools remain usable. One discoverable bof3-lift-loop skill owns mission inputs/results, parallel-read/serialized-write policy, original budgets, recovery and domain handoffs. Update live instructions/paths, run existing checks and demonstrate available active-session capability without inventing delegation or marking S3.2 complete.
+
+7. [S3.7] (done) Preserve accepted naming proof across active report generations.
+- Owner: parent with naming owner and independent active-session reviewer
+- Depends: S3.6
+- Blocker: none
+- Evidence: production naming checkpoint above; final runtime pins independently accepted by Hubble after one P1/P2 repair recheck. Fresh real gates, independent DATA re-review, ingestion and public verification accepted; actual DATA checkpoint published at 20:23:04, session 13398 exit zero, exact 190-row successor/resolver checks pass. Separate two-generation FUNCTION fixture native execution remains injected; no second production name accepted.
+- Acceptance: exact reviewed preview/CAS successor activated after fresh public verification; immutable predecessor and complete embedded proof retained, active-generation resolution and subsequent proposal demonstrated without historical replay overwrite. Preserve unrelated summary drift, original budgets and all incomplete naming obligations; tooling or selected-row success is not full-target closure.
 
 ## 4. [S4] (open) Demonstrate useful autonomy and close accepted scope
 - Owner: parent with bof3-reviewer

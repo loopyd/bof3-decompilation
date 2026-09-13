@@ -120,7 +120,13 @@ separator; the filesystem root `/` is not a valid evidence root. No existing
 path component may be a symlink. A
 nonexistent suffix is created only beneath its nearest symlink-free ancestor.
 
-Initialize the campaign report set with `bin/naming-audit init-all out/reviews/plan-audit-naming`. Then `bin/agent-context cleanup audit-target TARGET` emits the one canonical report path; audit agents pass that `TARGET` and `REPORT` unchanged to the lower-level runner. Generated `out/` state remains disposable, while the explicit report argument binds downstream provenance.
+Initialize a new campaign with `bin/naming-audit init-all out/reviews/plan-audit-naming`.
+Then `bin/agent-context cleanup audit-target TARGET` resolves the active canonical
+report generation; pass its `TARGET` and `REPORT` unchanged to the runner. Do not
+reinitialize retained history. Explicit report paths bind provenance. Derived
+analysis can be rebuilt, but retain campaign reports, checkpoints and referenced
+proof while their chain uses them; canonical plans remain persistent intent
+authority.
 
 ```sh
 bin/agent-context cleanup audit-target TARGET
@@ -445,6 +451,46 @@ copy after original provenance. Duplicate/unknown new-route JSON fields and
 in-row/external ambiguity reject. Omitted `--post-apply-receipts` stays legacy.
 Failures retain native evidence and return rollback ownership to cleaner/parent,
 never restore HEAD or recover derived state automatically.
+
+### Accepted naming report generations
+
+After public `verify` accepts one explicitly authorized FUNCTION or DATA rename,
+preview its canonical campaign successor without rewriting the accepted report:
+
+```sh
+bin/naming-audit finalize-transaction TARGET REPORT --transaction KIND:OLD --post-apply-receipts REVIEWED_BUNDLE --expected-report-sha256 REPORT_PIN --expected-bundle-sha256 BUNDLE_PIN --expected-summary-sha256 SUMMARY_PIN --evidence-root "$ROOT"
+```
+
+Retain the original report, reviewed-bundle and campaign `summary.json` byte
+SHA-256 pins externally. Inspect the preview's successor, validation and
+`plan_sha256`; apply the same command and original pins with
+`--apply --expected-plan-sha256 PREVIEW_PLAN_PIN`. Use the same canonical absolute
+evidence root as the accepted lifecycle, or omit it throughout for the default.
+This is report finalization, not source application or new identity approval.
+
+`harness.naming.finalization` rechecks public verification, inventory and evidence;
+it removes exactly the accepted proposal while preserving every surviving row.
+Apply holds the cooperative writer lease and fail-closed nonblocking report lock,
+publishes a successor and immutable checkpoint, then compare-and-swaps the
+summary's active generation. Canonical paths, target identity, all three input
+pins and the preview pin must agree. `history.collect_evidence_states` derives
+complete frozen proof membership, including embedded receipt/execution bindings,
+parent review and physical PRE copies; a rehashed record cannot omit these.
+
+The campaign resolver validates the target's predecessor chain and active draft.
+Only the active report may advance through supported row writers; retired reports,
+checkpoints and retained proof remain immutable, and `init-all` refuses retained
+generations. Successor proposals need fresh provenance, gates and independent
+review. Other targets' summary entries are not repaired by this operation.
+
+Publication is recoverable, not a multi-file atomic transaction. Interruption may
+leave an unpublished successor/checkpoint: preserve it, establish writer release
+and inspect state before retrying the identical pinned request. Changed orphans,
+stale pins or evidence reject, never overwrite. Published replay returns
+`already-published` with `current_acceptance:false`; it preserves subsequently
+advanced drafts rather than reapplying or rebinding old acceptance. No path grants
+full naming closure: `production_complete:false` remains explicit, and unfiltered
+target `complete:true` plus separate identity approval are still required.
 
 Reviewed type applications are concern-isolated and atomic. The disposable reverse index only supplies leads; `prepare` requires a separately reviewed, live-fingerprinted candidate artifact with resolved representation and semantics plus two independent observations. On a dirty worktree, the request must include the exact adopted baseline digest printed by the preflight error/workflow. `run` restricts writes to manifest-owned paths, executes the recorded checks, writes immutable structured receipts, and rolls back ordinary failures after confirmed native process cleanup. Unconfirmed cleanup preserves POST/recovery backing and stops for parent inspection; follow the [shared lifecycle rules](harness.md#policy-versus-mechanism):
 

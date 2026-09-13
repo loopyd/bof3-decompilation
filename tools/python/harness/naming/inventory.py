@@ -14,6 +14,7 @@ from harness.naming.debt import address_of, collect_naming_debt
 from harness.naming.campaign import campaign_report_filename
 from harness.naming.context import SCHEMA_V3, TargetContext, inventory_expected
 from harness.naming.editing import report_mutation
+from harness.naming.history import require_replaceable_set
 
 
 def expected_inventories(
@@ -51,6 +52,7 @@ def publish_reports(
 
     output.parent.mkdir(parents=True, exist_ok=True)
     with report_mutation(output):
+        require_replaceable_set(output)
         if _report_set_digest(output) != expected_digest:
             raise ValueError(
                 "report set changed concurrently; stale publication rejected"
@@ -236,6 +238,7 @@ def _initialize_all(
 ) -> dict[str, Any]:
     """Build one validated report set using collaborators supplied by its owner."""
 
+    require_replaceable_set(output)
     manifests = load_manifests(root)
     expected_by_target = expected_inventories(root, manifests)
     output.parent.mkdir(parents=True, exist_ok=True)

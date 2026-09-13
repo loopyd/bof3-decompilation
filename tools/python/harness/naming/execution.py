@@ -33,6 +33,7 @@ from harness.naming.collection import (
     write_failed_receipt,
 )
 from harness.naming.evidence import _RUNNER_TOKEN, _analyze_validated_records
+from harness.naming.editing import guard_report_operation
 from harness.naming.journal import (
     JournalInputs,
     journal_is_fresh,
@@ -177,6 +178,7 @@ def _semantic_succeeded(
 
 
 @partial(bind_deadline, argument="work_deadline")
+@guard_report_operation
 def run_evidence(
     root: Path,
     target: str,

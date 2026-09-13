@@ -158,6 +158,20 @@ def build_parser() -> argparse.ArgumentParser:
     proof.add_argument("--evidence-root", action=_SingleEvidenceRoot)
     proof.add_argument("--post-apply-receipts", type=Path)
     proof.set_defaults(handler=_run_verify)
+    finalization = sub.add_parser(
+        "finalize-transaction", help="preview or activate a verified report successor"
+    )
+    finalization.add_argument("target")
+    finalization.add_argument("report", type=Path)
+    finalization.add_argument("--transaction", required=True)
+    finalization.add_argument("--post-apply-receipts", type=Path, required=True)
+    finalization.add_argument("--expected-report-sha256", required=True)
+    finalization.add_argument("--expected-bundle-sha256", required=True)
+    finalization.add_argument("--expected-summary-sha256", required=True)
+    finalization.add_argument("--expected-plan-sha256")
+    finalization.add_argument("--apply", action="store_true")
+    finalization.add_argument("--evidence-root", action=_SingleEvidenceRoot)
+    finalization.set_defaults(handler=_run_finalization)
     for name in ("postapply-gates", "postapply-review"):
         native = sub.add_parser(name, help="bounded native postapply lifecycle")
         native.add_argument("target")
@@ -213,15 +227,17 @@ def _run_prepare(args: argparse.Namespace) -> int:
 
 def _run_init(args: argparse.Namespace) -> int:
     from harness.naming.audit import initialize
+    from harness.naming.editing import report_mutation
     from harness.naming.proposal import canonical_report_path
 
     root = resolved_root(args)
     output = canonical_report_path(root, args.output)
-    payload = initialize(root, args.target)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(
-        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
+    with report_mutation(output, report=True):
+        payload = initialize(root, args.target)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(
+            json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
     _print(
         {
             "schema": SCHEMA_V3,
@@ -369,6 +385,27 @@ def _run_postapply(args: argparse.Namespace) -> int:
             )
         )
         _print({"bundle": str(path)})
+    return 0
+
+
+def _run_finalization(args: argparse.Namespace) -> int:
+    from harness.naming.finalization import finalize_transaction
+
+    with _evidence_context(args.evidence_root):
+        _print(
+            finalize_transaction(
+                resolved_root(args),
+                args.target,
+                args.report,
+                args.transaction,
+                post_apply_receipts=args.post_apply_receipts,
+                expected_report_sha256=args.expected_report_sha256,
+                expected_bundle_sha256=args.expected_bundle_sha256,
+                expected_summary_sha256=args.expected_summary_sha256,
+                apply=args.apply,
+                expected_plan_sha256=args.expected_plan_sha256,
+            )
+        )
     return 0
 
 

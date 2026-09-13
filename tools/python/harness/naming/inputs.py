@@ -70,7 +70,7 @@ _SHAPES = {
     "inventory": "address kind new_name old_name selector",
     "work": "commands description id observations profile status next_command reason",
     "rung": "authority commands next_command observations status negative_result",
-    "command": "command item operation output receipt selector sha256 status supplemental target",
+    "command": "command item operation output receipt role selector sha256 status supplemental target",
     "observation": "id producer source_id text",
     "corroborator": "mechanism observation_ids source_id",
     "storage": "kind start end file_offset present_in_binary authority",
@@ -102,6 +102,15 @@ def _shape(value, kind: str) -> None:
             _shape(item, kind)
     elif isinstance(value, dict):
         keys(value, _SHAPES[kind], exact=False)
+        if kind == "command" and "role" in value:
+            role = value["role"]
+            if not isinstance(role, str) or role not in {
+                "selected_data_describe",
+                "access_function_describe",
+                "access_function_xrefs",
+                "data_dispatch_consumer",
+            }:
+                raise ValueError("unsupported naming evidence command role")
         for key, item in value.items():
             if kind == "facts" and key == "data":
                 validate_data_shape(item)
