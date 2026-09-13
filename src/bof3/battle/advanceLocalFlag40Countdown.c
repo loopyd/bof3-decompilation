@@ -5,7 +5,7 @@
  * @source 0x801D5658
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 advanceLocalFlag40Countdown(void) {
   u8 index;

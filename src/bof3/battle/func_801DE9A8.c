@@ -1,7 +1,7 @@
 #include "bof3/battle/battle03_internal.h"
 
-/* @behavior submits one local battler template selected by byte `0x79` through the
- * common script/event helper rooted at `0x801490d8`.
+/* @behavior copies the selected local battler's name into text substitution slot
+ * 0, taking at most five source bytes and appending a NUL terminator.
  * @source 0x801DE9A8
  * @status exact
  * @match 100.00

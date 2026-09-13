@@ -1472,14 +1472,65 @@ these callers. The present case remains blocked by invalid metadata, its consume
 application and the recorded parent pin-transcription failure; report counts stay
 **189/1360**, with no completion decrease.
 
-Accepted harness coverage remains required; caller metadata repair is still pending.
-stale `@behavior` correction remains the immediate source follow-up after future
-identity closure;
-future deterministic raw-JAL-versus-indexed coverage diagnostics remain explicit
-work. Preserve all frozen queues, proofs, consumed bounds and phase states: the
+At that checkpoint caller metadata and stale `@behavior` repair remained pending;
+the next separately scoped action below authorizes these without identity retry.
+Accepted harness coverage remains required; raw-JAL-versus-indexed coverage
+diagnostics remain explicit work. Preserve frozen queues, proofs, budgets and states: the
 three neighboring partials, **46 outstanding clean-C entries**, linked type and
 both macro obligations, battle15's stale history, full-target `complete:true`,
 S3.2/S4/consolidation and whole-game goals are not closed or refreshed by this row.
+
+### Battle03 metadata correction — 2026-09-13 (accepted)
+
+Prior action committed locally as `4d5fc2dd`, stopping **22:18:14 UTC**:
+**42m25s is only a lower bound** from the first recovered clock, not a recovered
+initial start. Timing/assessment live in `out/reviews/naming-template-20260913/`.
+The new metadata-only action starts **22:19:42 UTC**, with unchanged work/cleanup
+cutoffs **235100 / 235700 monotonic**. Its four-source before-images protect this
+metadata action; they are not a new PRE for the spent naming application.
+
+Parent applied only comment corrections, confirmed by this sidecar's diff read:
+`emi/battle/battle/03@0x801D590C` (`advanceLocalFlag20Countdown`), `@0x801D5658`
+(`advanceLocalFlag40Countdown`) and `@0x801D54F8` now have literal `@residual none`;
+`@0x801DE9A8` corrects `@behavior` to copying the selected local battler's name into
+text substitution slot 0, at most five source bytes followed by NUL, from the
+retained original proof. Names, bodies, ABI, addresses and compiler settings stay
+unchanged; no symbol rename or source retry is authorized.
+
+The initial unsorted `--rows` request rejected before edits. Parent verified all
+four before-image hashes, then passed the same three sorted repair rows to the
+existing CLI. All six selected live asm/byte gates passed. CLI exit 1 reports
+remaining target-wide findings—**two blocked, 173 repairable**—not selected repair
+failure or permission to expand scope. Parent reports all **eight fresh POST
+asm/byte gates** pass at **352/340/340/112 bytes** for `801D54F8`, `801D5658`,
+`801D590C`, `801DE9A8`, respectively, plus symbol checking. All four strict progress
+records parse valid; complete sources equal only the approved progress/behavior
+comment replacements. Actual production `collect_function_checks` returns four
+functions and `plan` requires 12 gates without mocks. Its selected name/destination
+remain the historical proposal, not an applied identity or new PRE.
+
+Parent ran one batch index recovery after type-state comment-hash staleness;
+`out/reviews/naming-metadata-20260913/final-readiness.json`, read by this sidecar,
+reports `ready:true` and `index_ready:true`. Existing preflight tests passed
+**30 in 0.08s**, read from `/tmp/naming-metadata-tests.log`.
+
+Plato `01a09cdf-1ce0-7451-b4fa-ebb91a72a75b` issued **PASS** at **22:27:31 UTC**,
+within the ten-minute review and original outer bounds. Artifact
+`out/reviews/naming-metadata-20260913/review.json` has SHA-256
+`7a605a879175b5ee9ff51c407df55a784b36147e59a9e255b9bb900da4975278`;
+this sidecar read it and verified its hash and all four live source pins. The
+review confirms exact comment-only deltas, strict progress, eight native artifacts,
+frozen ownership/index/report pins, original semantics and fresh readiness, with
+no findings. Parent accepts **only these four metadata corrections**. Reviewer
+inspected parent native evidence without rerunning compilation; unrelated dirty
+exclusions remain parent-attested. No review/attempt budget resets.
+
+This plan-only handoff runs existing plan/reference/whitespace checks. The failed
+identity application's consumed allowance and rejected POST remain historical;
+no new naming PRE, retry, successor, finalization or historical-row deletion follows.
+Metadata acceptance closes no broader phase or whole-game goal. Preserve battle03
+**189 = 85 functions + 104 data**, global **1360 = 529 functions + 831 data**,
+all other queues/budgets, the 46 clean-C obligations and all unfinished phases.
 
 ## Current skill-only operator correction
 
