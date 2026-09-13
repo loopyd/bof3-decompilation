@@ -221,7 +221,8 @@ names are unchanged and naming audit remains open. All work retains the original
 outstanding, including reviewed partial AF66C. Runtime measurements live in the
 [range-predicate note](../specs/runtime/battle-range-predicates.md#clean-c-requeue-measurement).
 
-### Reviewed private-header creation — 2026-09-13 (acceptance pending)
+<a id="reviewed-private-header-creation--2026-09-13-acceptance-pending"></a>
+### Reviewed private-header creation — 2026-09-13 (tooling committed; application blocked)
 
 Parent mission `out/reviews/private-header-creation-20260913/mission.md` starts
 from `20030baa`, with work cutoff 04:05 UTC and cleanup hard stop 04:08 UTC.
@@ -233,7 +234,8 @@ and `docs/agents/macros.md`; initial work was bounded to eight minutes and
 through the unchanged 04:08 UTC hard stop, without renewed implementation budget.
 Those original bounds are consumed. Parent confirms overdue formatting-only
 cleanup completed on continuation, with no new implementation trials, and local
-feature commit `c9f884b6` is complete. This closes the tooling checkpoint;
+feature commit `c9f884b6` and documentation commit `6ed5dd60` are complete.
+This closes the tooling checkpoint;
 macro application acceptance remains pending.
 
 The real-game lead remains `assembly_block:366ad828049fbe14`: floor 12, pool
@@ -289,9 +291,9 @@ application or new game header exists at this handoff. Whole-game scope, phase
 states, frozen-five membership, historical proofs and every unfinished domain
 obligation remain intact; tooling closure grants no macro acceptance.
 
-The new source-application stage is
+The parked source-application stage is
 `out/reviews/battle-dispatch-macro-20260913/mission.md`, with work cutoff
-2026-09-13 04:45 UTC and cleanup hard stop 04:48 UTC. It permits one initial
+2026-09-13 04:45 UTC and cleanup hard stop 04:48 UTC. Its original allowance was one initial
 extraction and one repair, with distinct pre-application and post-application
 reviewers, each limited to one bounded clarification. Parent confirms explicit
 index refresh followed by validation of the unchanged original ranking pin
@@ -303,13 +305,78 @@ remain unchanged; validation is not reranking or application acceptance.
 Parent alone owns the four `src/bof3/battle/dispatchWorkTable69*.c` dispatchers
 listed above, one new `include/bof3/battle/battle15_dispatch_internal.h`, and
 `config/targets/emi/battle/battle/15/target.toml` for its header claim. No other
-header/map/layout/type/flag changes are authorized. Prepare the pinned transaction
-only after this documentation handoff completes. Owner-controlled application and
+header/map/layout/type/flag changes are authorized. The prepared transaction ran
+once as `battle-dispatch-macro-20260913-01`; parent reports session `83761`
+exited 2 before source publication. Retained `runtime.json` binds the run and
+original cutoff; `run.log` reports
+`error: transaction path is unsafe: .agents/skills/bof3-docs`.
+Parent verified all six PRE hashes unchanged and the proposed header and application
+absent.
+Application is blocked and parked: no retry, refunded attempt or budget reset.
+Preserve original pins, consumption and now-expired 04:45/04:48 UTC bounds. Failure is
+neither macro acceptance nor semantic exhaustion. Owner-controlled application and
 guarded rollback, all target/native gates, independent POST semantic review,
 parent-bound reviewed envelope and live final verification remain required.
 No macro is accepted yet; failure grants no new harness implementation budget.
 This stage neither resets the consumed 04:05/04:08 bounds nor promotes any other
 plan phase or changes the original frozen pilot and full reconstruction goal.
+
+<a id="active-tracked-symlink-tooling-prerequisite--2026-09-13"></a>
+### Reviewed tracked-symlink tooling checkpoint — 2026-09-13 (gitlink blocker remains)
+
+This separate prerequisite retains its frozen 2026-09-13 05:00 UTC work cutoff
+and 05:03 UTC cleanup hard stop: one implementation pass, one review-driven repair,
+one independent reviewer and one bounded clarification. One implementation pass
+is complete; zero review repairs were used. Actual independent reviewer
+`01a09912-f4dd-7b03-a226-1de8703f4c2d` returned PASS with no blocking findings,
+retained in `out/reviews/evidence/workspace-symlink-review-20260913.md` and read by
+this writer. The scoped implementation/review checkpoint closes with the validation
+limitation below; no allowance resets. The parent alone owns the local commit
+checkpoint; consult Git for any recorded commit.
+
+`common/links.py` captures literal link bytes and identity without following the
+referent, preserving no-follow ancestor checks. Safeguards v2 distinguishes files
+from links and retains historical v1 reading. Both macro/type publication paths
+check captured links; target/type/identity drift rejects, unrelated links are never
+restored and symlink-owned mutation remains refused. The durable contract lives in
+[harness ownership](../agents/harness.md#policy-versus-mechanism). Existing macro/type
+atomic cases now use tracked-link fixtures; the test inventory is unchanged.
+No new regression tests, game source/header/target edits or source acceptance belong
+to this stage.
+
+Parent-confirmed checks (probe and final-suite logs read by this writer):
+
+- `/tmp/bof3-symlink-probe.txt`: six disposable characterization categories PASS,
+  including literal directory/dangling/non-UTF8 links, mutation refusal, drift and
+  concurrent-link preservation, read races and legacy regular-file guards.
+- Initial transaction run: 186 passed in 154.97s, before final fixture updates;
+  focused final two atomic cases: two passed in 5.14s.
+- Final handle `7729` is terminal. `/tmp/bof3-symlink-final-tests.txt` reports
+  **1 failed, 196 passed in 155.82s**: 186 transaction cases and ten other DRY cases
+  pass. Existing `test_harness_dry.py::test_required_untracked_file_modes_are_normalized`
+  fails because `git hash-object -w` for preserved untracked
+  `tmp/default-g4-fix-before/check-live-receipts.mjs` cannot write a Git object under
+  the sandbox (exit 128). This remains unresolved, not an implementation repair or
+  an all-green check. Parent will neither broaden permissions nor mutate/stage
+  unrelated `tmp/` content to make it pass. Scoped Ruff and whitespace pass.
+
+The real-repository probe clears all eight canonical skill links, then fails on
+tracked gitlink directories. Parent confirms all ten; read-only `git ls-files
+--stage` corroborates mode `160000`: `third_party/asm-differ`,
+`third_party/decomp-permuter`, `third_party/m2c`, `third_party/maspsx`,
+`third_party/references/bof3-data-doc`, `third_party/references/vast-violence`,
+`third_party/rizin`, `third_party/spimdisasm`, `third_party/splat`, and
+`toolchains/psx_psyq_signatures`. No submodule skip, dereference or repair belongs
+to this stage. Complete workspace backup and live macro readiness remain blocked;
+this review grants no further implementation scope.
+
+Repair completion cannot resume the parked application or rebind old evidence.
+Retain original pins and consumption; changed tooling may stale transaction inputs
+and requires explicit future scope and fresh applicable validation. The 100%
+reconstruction goal remains active: four native/reviewed clean-C dispatch matches
+are committed in `20030baa`, 46 requeue entries remain, and no macro acceptance
+or aggregate phase completion follows. Stable IDs, phase states and frozen-five
+obligations are unchanged.
 
 ## Current skill-only operator correction
 

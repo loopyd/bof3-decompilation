@@ -18,6 +18,7 @@ from harness.common.git import GitIndexSnapshot
 from harness.common.paths import file_state, leaf_stat
 from harness.common.quarantine import reserve_quarantine
 from harness.common.safeguards import capture_safeguards
+from harness.common.links import SymlinkSnapshot
 
 LEGACY_SCHEMA = "bof3.transaction-recovery/v1"
 IDENTITY_SCHEMA = "bof3.transaction-recovery/v2"
@@ -30,7 +31,7 @@ def capture_recovery(
     changes: dict[str, str],
     backup: dict[str, bytes | None],
     *,
-    workspace: dict[str, bytes] | None = None,
+    workspace: dict[str, bytes | SymlinkSnapshot] | None = None,
     index: GitIndexSnapshot | None = None,
 ) -> dict[str, dict[str, Any]]:
     if set(binding) != {"owner", "manifest", "implementation_run_id", "output"}:

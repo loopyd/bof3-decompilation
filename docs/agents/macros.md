@@ -462,17 +462,21 @@ publication and workspace/Git drift require separate reconciliation.
 ### Reviewed private-header creation
 
 Parent confirms `bof3.reviewed-macro-opportunity/v2` admission for one new
-target-private `local_template` header is complete in local commit `c9f884b6`:
-165 final tests passed in 63.16s, scoped independent review passed, and overdue
-formatting-only cleanup completed on continuation without new implementation
-trials. The [active checkpoint](../plans/autonomous-bof3-decompilation.md#reviewed-private-header-creation--2026-09-13-acceptance-pending)
-retains the test log, consumed 04:05/04:08 UTC bounds and the new source stage's
-04:45/04:48 UTC limits: one extraction plus one repair, distinct pre/POST reviewers,
-four dispatchers, one new private header and its manifest claim only. Explicit
-index refresh validated the unchanged original ranking pin. No game macro is
-applied or accepted yet; native/application review gates, phase states, frozen
-pilot and full goal remain unchanged. V1 stays existing-only; shared-header and
-type creation are not added.
+target-private `local_template` header is committed in `c9f884b6`, with independent
+review and 165 passing checks. The [authoritative plan](../plans/autonomous-bof3-decompilation.md#reviewed-private-header-creation--2026-09-13-acceptance-pending)
+owns application scope, pins, consumed budgets, review identities and check receipts.
+The macro application is parked after failure before publication: PRE is unchanged,
+the proposed header/application remain absent, and the original bounds are expired.
+
+The [symlink repair checkpoint](../plans/autonomous-bof3-decompilation.md#active-tracked-symlink-tooling-prerequisite--2026-09-13)
+is independently reviewed, with an unresolved existing Git-object-write sandbox
+check failure and unchanged test inventory. Its [literal-link safeguards](harness.md#policy-versus-mechanism)
+grant no link restoration or symlink-owned mutation authority. Ten tracked gitlink
+directories still block complete workspace backup and live macro readiness; this
+stage permits no submodule skip, dereference or repair. No game source edits,
+macro acceptance, implicit retry, budget reset or evidence rebinding follow.
+Native/application review gates, phase states, frozen pilot and full goal remain.
+V1 stays existing-only; shared-header and type creation are not added.
 
 V2 retains all v1 evidence fields and adds exactly one `creation` object with
 `target`, `header`, `header_text`, `manifest_before` and `manifest_after`.
@@ -732,7 +736,7 @@ All paths below are under `tools/python/harness/`:
 | Accounting, inspection, consumer graph | `macros/accounting.py`, `macros/resolution.py`, `macros/impact.py` |
 | Human-value selection | `macros/ranking.py`; CLI wiring in `macros/selection.py` |
 | Reviewed artifact, known-consumer check, transaction | `macros/review.py`, `macros/coverage.py`, `macros/transactions.py` |
-| Planned private-header creation (acceptance pending) | `domain/headers.py`, `macros/creation.py`; admission/application in the review and transaction owners above |
+| Reviewed private-header admission | `domain/headers.py`, `macros/creation.py`; admission/application in the review and transaction owners above |
 | Parent acceptance | `macros/application.py`; shared review/revalidation in `common/` |
 | Existing-abstraction assessment and disposition | `macros/assessment.py`, `macros/disposition.py`; CLI in `macros/inspection.py` |
 | CLI | `macros/cli.py` owns `bin/macro-audit` and macro `rev-query` parsing/adapters; `commands/rev_query.py` composes domain registrations |

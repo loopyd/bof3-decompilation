@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 from typing import Any
 
 from harness.common.digests import digest
 from harness.common.git import read_git
-from harness.domain.receipts import sha256_file
+from harness.common.links import read_symlink
+from harness.common.files import read_file
 
 
 def workspace_state(root: Path) -> dict[str, dict[str, str | None]]:
@@ -34,11 +36,18 @@ def workspace_state(root: Path) -> dict[str, dict[str, str | None]]:
             index += 1
         if name.startswith(("out/", "sessions/subagent-artifacts/", ".pi/subagents/")):
             continue
-        path = root / name
+        link = read_symlink(root, name)
+        content = (
+            link.content if link is not None else read_file(root, name, missing_ok=True)
+        )
         state[name] = {
             "status": status,
-            "sha256": sha256_file(path) if path.is_file() else None,
+            "sha256": hashlib.sha256(content).hexdigest()
+            if content is not None
+            else None,
         }
+        if link is not None:
+            state[name]["kind"] = "symlink"
     return dict(sorted(state.items()))
 
 

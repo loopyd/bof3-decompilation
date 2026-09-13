@@ -745,7 +745,11 @@ def test_review_requires_all_eight_guards_two_observations_and_fresh_owner(
 def test_atomic_apply_receipts_attestation_expected_digest_and_rollback(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    report = _setup(tmp_path, monkeypatch)
+    link = tmp_path / ".agents/skills/example"
+    link.parent.mkdir(parents=True)
+    link.symlink_to("../../.codex/skills/example")
+    link_identity = link.lstat().st_ino
+    report = _setup(tmp_path, monkeypatch, git=True)
     report["rows"][0]["kind"] = "statement_window"
     monkeypatch.setattr(
         macro_accounting, "candidate_account", lambda *args, **kwargs: report
@@ -794,6 +798,8 @@ def test_atomic_apply_receipts_attestation_expected_digest_and_rollback(
     assert not (tmp_path / header).exists()
     assert (tmp_path / config).read_text() == before
     assert (tmp_path / source).read_text() == SOURCE_TEXT
+    assert link.lstat().st_ino == link_identity
+    assert link.readlink().as_posix() == "../../.codex/skills/example"
     application = macro_transactions.run_transaction(
         tmp_path, manifest, changes, runner=_runner()
     )
@@ -810,6 +816,7 @@ def test_atomic_apply_receipts_attestation_expected_digest_and_rollback(
 
     assert (tmp_path / header).read_text() == header_text
     assert (tmp_path / config).read_text() == after
+    assert link.lstat().st_ino == link_identity
 
 
 def test_macro_validation_substitution_retains_leaf_and_original_quarantine(

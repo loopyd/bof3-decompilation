@@ -28,6 +28,7 @@ from harness.common.process import ProcessCleanupError
 from harness.common.runtime import run_checks
 from harness.common.paths import validate_paths
 from harness.common.git import workspace_backup
+from harness.common.links import verify_symlinks
 from harness.common.runtime import write_attestation
 from harness.domain.manifests import load_target_manifests
 from harness.domain import functions as source_functions
@@ -344,6 +345,7 @@ def run_transaction(
         if current_index != index_backup:
             raise ValueError("macro transaction changed the Git index before proof")
         execution_context.recheck(root, manifest, context)
+        verify_symlinks(root, full_backup)
         execution_context.publish(root, application, output)
         return application
     except ProcessCleanupError:

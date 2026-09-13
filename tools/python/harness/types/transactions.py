@@ -20,12 +20,12 @@ from harness.common.lease import exclude_writers, verify_writer
 from harness.common.runtime import APPLICATION_SCHEMA, application_record, apply_changes
 from harness.common.directory import validate_repo_path
 from harness.common.runtime import changed_paths
-from harness.common.paths import file_state
+from harness.common.paths import file_state, validate_paths
 from harness.common.git import git_index_backup, workspace_backup
 from harness.common.runtime import rollback, run_checks, write_attestation
 from harness.common.safeguards import capture_safeguards, verify_restored_state
 from harness.common.process import ProcessCleanupError
-from harness.common.paths import validate_paths
+from harness.common.links import verify_symlinks
 from harness.common.workspace import adopted_baseline as _adopted_baseline
 from harness.common.workspace import workspace_baseline as _workspace_baseline
 from harness.common.workspace import workspace_state as _workspace_state
@@ -392,6 +392,7 @@ def run_transaction(
         if git_index_backup(root) != index_backup:
             raise ValueError("type transaction changed the Git index before proof")
         execution_context.recheck(root, manifest, context)
+        verify_symlinks(root, full_backup)
         execution_context.publish(root, application, output)
         return application
     except ProcessCleanupError:

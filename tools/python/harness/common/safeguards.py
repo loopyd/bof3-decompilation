@@ -13,8 +13,10 @@ from harness.common.directory import validate_repo_path
 from harness.common.git import GitIndexSnapshot, git_index_backup, workspace_backup
 from harness.common.paths import leaf_stat, file_state
 from harness.common.workspace import workspace_state
+from harness.common.links import SymlinkSnapshot, read_symlink
 
-SCHEMA = "bof3.recovery-safeguards/v1"
+LEGACY_SCHEMA = "bof3.recovery-safeguards/v1"
+SCHEMA = "bof3.recovery-safeguards/v2"
 
 
 def verify_restored_state(
@@ -53,7 +55,7 @@ def _has_index_lock(backup: GitIndexSnapshot) -> bool:
 
 def _describe_workspace(
     root: Path,
-    workspace: dict[str, bytes],
+    workspace: dict[str, bytes | SymlinkSnapshot],
     changed: set[str],
     *,
     include_content: bool = False,
@@ -63,10 +65,36 @@ def _describe_workspace(
         if name in changed:
             continue
         validate_repo_path(name)
+        if isinstance(content, SymlinkSnapshot):
+            if read_symlink(root, name) != content:
+                raise ValueError(f"recovery safeguard symlink drifted: {name}")
+            result[name] = {
+                "kind": "symlink",
+                "sha256": hashlib.sha256(content.content).hexdigest(),
+                "mode": stat.S_IMODE(content.mode),
+                **{
+                    key: getattr(content, key)
+                    for key in (
+                        "device",
+                        "inode",
+                        "uid",
+                        "gid",
+                        "links",
+                        "mtime_ns",
+                        "ctime_ns",
+                    )
+                },
+            }
+            if include_content:
+                result[name]["content_base64"] = base64.b64encode(
+                    content.content
+                ).decode("ascii")
+            continue
         metadata = leaf_stat(root, name)
         if metadata is None:
             raise ValueError(f"recovery safeguard path disappeared: {name}")
         result[name] = {
+            "kind": "file",
             "sha256": hashlib.sha256(content).hexdigest(),
             "mode": stat.S_IMODE(metadata.st_mode),
             "device": metadata.st_dev,
@@ -83,7 +111,7 @@ def _describe_workspace(
 def capture_safeguards(
     root: Path,
     changed: set[str],
-    workspace: dict[str, bytes] | None,
+    workspace: dict[str, bytes | SymlinkSnapshot] | None,
     index: GitIndexSnapshot | None,
 ) -> dict[str, Any] | None:
     if index is None:
@@ -104,25 +132,32 @@ def capture_safeguards(
 def _validate_safeguards(value: object, changed: set[str]) -> dict:
     if not isinstance(value, dict) or set(value) != {"schema", "untouched", "index"}:
         raise ValueError("invalid recovery safeguards")
-    if value["schema"] != SCHEMA or not isinstance(value["untouched"], dict):
+    if value["schema"] not in {SCHEMA, LEGACY_SCHEMA} or not isinstance(
+        value["untouched"], dict
+    ):
         raise ValueError("invalid recovery safeguards schema")
     for name, entry in value["untouched"].items():
         validate_repo_path(name)
-        if (
-            name in changed
-            or not isinstance(entry, dict)
-            or set(entry)
-            != {
-                "sha256",
-                "mode",
-                "device",
-                "inode",
-                "uid",
-                "gid",
-                "links",
-                "content_base64",
-            }
-        ):
+        fields = {
+            "sha256",
+            "mode",
+            "device",
+            "inode",
+            "uid",
+            "gid",
+            "links",
+            "content_base64",
+        }
+        if value["schema"] == SCHEMA:
+            if not isinstance(entry, dict) or entry.get("kind") not in {
+                "file",
+                "symlink",
+            }:
+                raise ValueError("invalid recovery untouched kind")
+            fields.add("kind")
+            if entry["kind"] == "symlink":
+                fields.update({"mtime_ns", "ctime_ns"})
+        if name in changed or not isinstance(entry, dict) or set(entry) != fields:
             raise ValueError("invalid recovery untouched path")
         checksum = entry["sha256"]
         if (
@@ -132,7 +167,7 @@ def _validate_safeguards(value: object, changed: set[str]) -> dict:
             or any(
                 type(entry[key]) is not int or entry[key] < 0
                 for key in entry
-                if key not in {"sha256", "content_base64"}
+                if key not in {"sha256", "content_base64", "kind"}
             )
         ):
             raise ValueError("invalid recovery untouched identity")
@@ -180,6 +215,10 @@ def inspect_safeguards(root: Path, value: object, changed: set[str]) -> dict[str
     if index is None:
         return {"available": True, "matches": False, "git_present": False}
     current = _describe_workspace(root, workspace_backup(root), changed)
+    if expected["schema"] == LEGACY_SCHEMA:
+        for entry in current.values():
+            if entry["kind"] == "file":
+                del entry["kind"]
     previous = {
         name: {key: value for key, value in entry.items() if key != "content_base64"}
         for name, entry in expected["untouched"].items()

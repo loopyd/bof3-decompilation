@@ -201,6 +201,17 @@ guards; missing data is not treated as a clean workspace. Capture avoids a secon
 full-workspace read, but recovery records grow with retained PRE content.
 An exact index snapshot is not a complete Git metadata backup.
 
+`common/links.py` captures unrelated workspace symlinks as literal bytes plus
+identity through confined no-follow parent traversal, never reading referents.
+`bof3.recovery-safeguards/v2` distinguishes file/link entries and binds link bytes,
+mode, device/inode, ownership, link count and timestamps; historical v1 file guards
+remain readable without upgrading their evidence. Link target/type/identity drift
+rejects, including same-target replacement. Macro/type publication rechecks captured
+links; snapshots grant no restoration authority, unrelated links are never restored,
+and symlink-owned mutation remains refused. Tracked gitlink directories are still
+unsupported and fail workspace capture; link support establishes neither complete
+workspace backup nor submodule skip, dereference or repair authority.
+
 Records live at `out/reviews/evidence/{macro,type}-recovery-<nonce>.json`.
 They contain source text: retain them as nonpublic evidence. Their digest
 detects drift against a separately retained pin; neither that digest, file mode

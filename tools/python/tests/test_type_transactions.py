@@ -373,7 +373,11 @@ def test_validation_cannot_change_git_index_even_for_allowed_path(
 
 
 def test_atomic_run_and_immutable_runner_receipts(tmp_path: Path, monkeypatch) -> None:
-    _repo(tmp_path)
+    link = tmp_path / ".agents/skills/example"
+    link.parent.mkdir(parents=True)
+    link.symlink_to("../../.codex/skills/example")
+    link_identity = link.lstat().st_ino
+    _repo(tmp_path, git=True)
     monkeypatch.setattr(transactions, "connect", _connect)
     manifest = transactions.prepare_transaction(tmp_path, _request(tmp_path))
     application = transactions.run_transaction(
@@ -383,6 +387,8 @@ def test_atomic_run_and_immutable_runner_receipts(tmp_path: Path, monkeypatch) -
         runner=_runner(),
     )
     expected_digest = application["digest"]
+    assert link.lstat().st_ino == link_identity
+    assert link.readlink().as_posix() == "../../.codex/skills/example"
     assert transactions.verify_application(tmp_path, application, expected_digest)[
         "applied"
     ]

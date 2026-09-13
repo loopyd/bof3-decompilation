@@ -17,6 +17,7 @@ from harness.common.files import read_file
 from harness.common.files import safe_unlink
 from harness.common.deadlines import resolve_deadline
 from harness.common.process import run_bounded
+from harness.common.links import SymlinkSnapshot, read_symlink
 
 
 @dataclass(frozen=True)
@@ -353,7 +354,7 @@ def git_index_state(root: Path) -> bytes | None:
     )
 
 
-def workspace_backup(root: Path) -> dict[str, bytes]:
+def workspace_backup(root: Path) -> dict[str, bytes | SymlinkSnapshot]:
     if not (root / ".git").exists():
         return {}
     names = read_git(root, ["ls-files", "-co", "--exclude-standard", "-z"]).split("\0")
@@ -364,16 +365,26 @@ def workspace_backup(root: Path) -> dict[str, bytes]:
         ):
             continue
         validate_repo_path(name)
-        content = read_file(root, name, missing_ok=True)
+        content = read_symlink(root, name)
+        if content is None:
+            content = read_file(root, name, missing_ok=True)
         if content is not None:
             backup[name] = content
     return backup
 
 
-def rollback_workspace(root: Path, backup: dict[str, bytes]) -> list[str]:
+def rollback_workspace(
+    root: Path, backup: dict[str, bytes | SymlinkSnapshot]
+) -> list[str]:
     errors = []
     quarantines = []
     current = workspace_backup(root)
+    for name in current.keys() | backup.keys():
+        if (
+            isinstance(current.get(name), SymlinkSnapshot)
+            or isinstance(backup.get(name), SymlinkSnapshot)
+        ) and current.get(name) != backup.get(name):
+            raise ValueError(f"workspace symlink drift requires parent review: {name}")
     for name in sorted(set(current) - set(backup)):
         try:
             verify_writer(root)
