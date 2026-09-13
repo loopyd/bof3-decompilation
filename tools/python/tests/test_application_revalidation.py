@@ -217,7 +217,7 @@ def test_revalidation_late_output_creation_never_clobbers(
         for r in app["receipts"]
     }
     original = copy.deepcopy(envelope)
-    publish = transaction_files._rename_noreplace
+    publish = transaction_files.publish_file
     collided = []
 
     def create_at_publication(source, leaf, **kwargs):
@@ -232,7 +232,7 @@ def test_revalidation_late_output_creation_never_clobbers(
             collided.append((destination.read_bytes(), destination.stat().st_mode))
         return publish(source, leaf, **kwargs)
 
-    monkeypatch.setattr(transaction_files, "_rename_noreplace", create_at_publication)
+    monkeypatch.setattr(transaction_files, "publish_file", create_at_publication)
     native = (type_tests if owner == "type" else macro_tests)._runner()
     commands = []
 
@@ -247,7 +247,7 @@ def test_revalidation_late_output_creation_never_clobbers(
             )
         return native(argv, **kwargs)
 
-    with pytest.raises(RuntimeError, match="without replacing"):
+    with pytest.raises(RuntimeError, match="outcome requires verification"):
         review.revalidate_application(
             root,
             envelope,

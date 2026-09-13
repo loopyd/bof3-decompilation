@@ -643,15 +643,17 @@ is claimed. All six PRE hashes/absence states remain exact. Parent's fresh
 after-failure baseline session `75882` exits zero with the identical adopted digest
 above. Earlier native PRE receipts remain PRE evidence only.
 
-The macro is blocked pending an explicit filesystem decision. Fixing the false
+At that failure checkpoint the macro awaited an explicit filesystem decision. Fixing the false
 positive preflight only improves diagnostics; installation/quarantine/restoration
-still need unsupported moves. No link-guard relaxation, replacing rename,
-check-then-unlink workaround or fixture portability claim is accepted. Parent
+still needed unsupported moves. No link-guard relaxation, replacing rename,
+check-then-unlink workaround or fixture portability claim was accepted. Parent
 requested a persistent ext4 working copy under home preserving the original
-checkout, dirty work and submodules; authorization is pending and no copy/move
+checkout, dirty work and submodules; authorization was pending and no copy/move
 occurred. Reported readiness is approximately 11 GiB excluding `out/build/.venv/tmp`
 and home ext4 with 1.1 TiB free, not permission. Any authorized destination still
-needs actual capability testing and reconciliation of root-bound evidence.
+needed actual capability testing and reconciliation of root-bound evidence.
+The user subsequently refused migration and authorized only the in-place
+cooperative publication correction below; this historical request is closed.
 
 The full reconstruction goal remains **active and incomplete**, not globally
 blocked by this mission. Game01 is parked with zero C/native/application attempts
@@ -667,6 +669,108 @@ to this plan and `docs/agents/macros.md`. Existing plan tests/parsing, changed-d
 and index references, and scoped whitespace checks accompany slot release; no
 source/native/index/Git writes, agents, new tests or migration belong to this edit.
 The unchanged 08:10/08:15 bounds grant no replacement implementation allowance.
+
+### In-place NTFS publication — 2026-09-13 (reviewed tooling checkpoint)
+
+Distinct mission `out/reviews/ntfs-publication-20260913/mission.md` starts from
+`9331af91`. The user refuses migration and explicitly permits the relevant
+publication-guard relaxation to replace retained-hard-link publication in place.
+Original work cutoff is 08:45 UTC, cleanup hard stop 08:50: one implementation
+pass and one review-driven repair, with independent design advice and final
+review/recheck. The implementation and single review-driven repair are consumed;
+no allowance resets. Parent froze repaired code at 08:25 UTC. Bernoulli
+`01a099c3-0c38-7180-befb-75d57f41728f` returned final **ACCEPT**, observed through
+the parent's actual wait. Parent accepts only the six repaired files bound by
+`repaired-code.sha256` in the mission directory, independently reviewed and matched
+by this writer. Final checks below resolve the filesystem tooling blocker, not
+macro application or any aggregate phase.
+
+Parent owns exactly `tools/python/harness/common/{rename,files,git,images}.py`
+and adaptations to existing `tools/python/tests/test_transaction_files.py` and
+`tools/python/tests/test_application_revalidation.py`.
+No new test inventory, dependencies, home/mount migration, settings or sandbox/
+approval changes belong to this scope. The [publication contract](../agents/harness.md#file-publication)
+owns strict native-first publication and the unsupported-filesystem cooperative
+reservation/check/rename fallback. Source and prepared images retain one link;
+the retained-alias return field and false-positive same-leaf capability probe
+are removed. Atomic creation, quarantine/restoration, images and every Git-index
+move use the central publisher. Shared `describe_locations` supplies files/Git
+failure diagnostics, including adjacent restoration catches, without asserting
+no mutation or retained source after a post-move error. `safe_unlink` classifies movement by device/inode,
+mode, link count, size and mtime, excluding rename-sensitive ctime.
+
+The explicit relaxation admits external check/rename and check/cleanup races,
+visible empty reservations and crash leftovers. It provides no atomic CAS against
+noncooperating writers. Native collision behavior, confined paths, source identity,
+writer exclusion, submodule protections and guarded owned rollback remain required;
+detected foreign names are preserved. Filesystem compatibility does not broaden
+workspace/Git restoration authority or make recovery automatic.
+
+Initial independent review required three repairs: cleanup could remove a captured
+nonempty or multiply linked reservation; Git post-move fsync errors falsely claimed
+retained source; an existing revalidation case still patched the retired publisher
+and message. The single repair requires an initially regular, empty, single-link
+reservation plus unchanged descriptor/path identity before cleanup, shares honest
+location diagnostics across files/Git catches, and migrates only the existing test
+seam/message, preserving behavioral assertions. Zero length alone never authorizes
+deleting crash residue. Bernoulli confirms all three findings closed and all six
+fingerprints matched: both altered-reservation reproductions preserve destinations,
+five Git post-move reproductions report uncertainty/locations without descriptor
+leaks, and 25 live-NTFS cases pass with the native-only case deselected. Its
+whitespace check passes; these are parent-relayed independent results.
+
+Validation distinguishes initial and repaired code:
+
+- Initial transaction cases: **26 passed in 2.71s**. Owner/DRY session `52362`
+  terminated exit 0: **170 passed, one deselected in 510.45s**; 196 focused passes
+  in total. The known untracked-mode Git-object-writing exclusion remains unresolved.
+- Initial actual NTFS probe `18073` completed; repeat `73849` was subsequently
+  confirmed terminal exit 0. This writer read all **12 PASS lines** in
+  `/tmp/ntfs-publication-probe.txt`: alias-free creation; original inode/mode
+  preservation through replacement/quarantine/restoration; identity-bound apply/
+  rollback including new-file absence; cancellation after first publication with
+  owned PRE restoration; Git-index restoration; success, collision, pre-error,
+  foreign-reservation, post-error and cancellation cases; fixture removal.
+  Two earlier disposable fixture-only API corrections (restore keyword and staging
+  key) changed no production code and are not separate successful probes.
+- Final repaired owner/DRY session `25098` terminated exit 0 at 08:35:47 UTC:
+  **170 passed, one deselected in 478.71s**. Final targeted session `66706`
+  terminated exit 0 around 08:39: **32 passed, 40 deselected in 350.61s**: 26
+  transaction-file cases and six existing type/macro direct/symlink/hardlink
+  late-output collision variants. This writer read
+  `/tmp/ntfs-publication-repaired-owners.txt` and
+  `/tmp/ntfs-publication-targeted-revalidation.txt`. These **202 final focused
+  passes** are distinct from the initial 196; the known owner/DRY exclusion remains.
+- Parent intentionally interrupted broader 72-case revalidation/file session
+  `99580` with Ctrl-C within the original budget; terminal exit 130 at 08:33.
+  Partial passing progress is neither a completed 72-pass run nor a reproduced
+  test failure. The narrowed 32-case check adds no coverage or implementation
+  allowance; full-suite and native game-owner validation are not claimed.
+- Final repaired actual NTFS probe `37834` terminated exit 0 with all 12 PASS
+  lines, parent-confirmed. These disposable filesystem/transaction probes prove
+  their bounded cases, not native BOF3 compiler or macro application acceptance.
+
+This sidecar read all 3,337 prior plan lines and both guides, checked their retained
+hashes and received the parent's sole serialized documentation-write slot while
+code remained frozen. Its initial compact revision to this plan,
+`docs/agents/harness.md` and `docs/agents/macros.md` landed before the repair
+findings; the writer immediately released the slot for parent repair. Read-only
+plan session `64126` then passed 46 tests in 2.54s; parsing, 146 local references
+and scoped whitespace passed. After independent acceptance and actual final test
+outcomes, parent granted one final compact accounting revision to these same
+three files. Existing plan tests/parsing, changed-document/index references and
+scoped whitespace are rerun at handoff within the original 08:45/08:50 bounds. No
+agent launch, source/native/index/Git write or new test belongs to the sidecar;
+preserve `.pi/settings.json`, both dirty battle sources and unrelated `tmp/`.
+
+No macro is applied or accepted; this stage includes no C or native compiler work.
+Any subsequent macro owner entry needs separately recorded finite scope, fresh
+readiness and review. Failed `-01` and `-02`, original pins, consumed/expired
+04:45/04:48 and 08:10/08:15 bounds remain intact, without automatic retry. The
+full goal stays **active and incomplete**: all 50 requeue entries, four accepted
+clean-C sources, 46 outstanding entries, frozen five, stable IDs/states, prior
+history/budgets and all naming/type/macro/combiner obligations survive. This
+reviewed tooling checkpoint completes no aggregate phase.
 
 ## Current skill-only operator correction
 

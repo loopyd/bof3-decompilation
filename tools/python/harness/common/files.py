@@ -12,12 +12,7 @@ from harness.common.quarantine import (
     reserve_quarantine,
     validate_quarantine,
 )
-from harness.common.rename import (
-    UnsupportedRenameNoReplaceError,
-    publish_noreplace,
-    require_native_noreplace,
-)
-from harness.common.rename import rename_noreplace as _rename_noreplace
+from harness.common.rename import describe_locations, publish_file
 from harness.common.directory import (
     close_descriptors,
     open_parent_chain,
@@ -79,15 +74,16 @@ def read_file(
 
 
 def preflight_existing_replacements(root: Path, names: set[str]) -> None:
-    """Reject unsupported filesystems before replacement transactions create state."""
+    """Validate existing leaves without claiming native move support."""
     for name in sorted(names):
         try:
             parent, leaf = open_parent_fd(root, name)
         except FileNotFoundError:
             continue
         try:
-            if _read_leaf(parent, leaf, name, missing_ok=True) is not None:
-                require_native_noreplace(parent, leaf)
+            _, current = _read_leaf_state(parent, leaf, name, missing_ok=True)
+            if current is not None and current.st_nlink != 1:
+                raise ValueError(f"unsafe transaction path: {name}")
         finally:
             os.close(parent)
 
@@ -102,7 +98,7 @@ def atomic_write(
     mode: int | None = None,
     creation_mode: int = 0o644,
 ) -> str | None:
-    """Install content without replacing or deleting an unverified inode."""
+    """Publish verified content through the native or cooperative move backend."""
 
     if mode is not None and (type(mode) is not int or not 0 <= mode <= 0o7777):
         raise ValueError("invalid transaction file mode")
@@ -158,16 +154,13 @@ def atomic_write(
             )
         verify_parent_chain(root, name, descriptors)
         try:
-            try:
-                _rename_noreplace(temporary, leaf, src_dir_fd=parent, dst_dir_fd=parent)
-            except UnsupportedRenameNoReplaceError:
-                publish_noreplace(temporary, leaf, src_dir_fd=parent, dst_dir_fd=parent)
+            publish_file(temporary, leaf, src_dir_fd=parent, dst_dir_fd=parent)
         except BaseException as error:
-            recovery = f"temporary retained as {temporary_name}"
+            recovery = describe_locations(parent, temporary, leaf)
             if quarantine is not None:
                 recovery += f"; quarantine retained as {quarantine}"
             raise RuntimeError(
-                f"transaction commit failed without replacing {name}; "
+                f"transaction publication failed for {name}; outcome requires verification; "
                 f"{recovery} for manual recovery"
             ) from error
         verify_parent_chain(root, name, descriptors)
@@ -209,7 +202,7 @@ def _restore_quarantine(
             f"transaction quarantine drifted during rollback: {quarantine}"
         )
     try:
-        _rename_noreplace(
+        publish_file(
             quarantine_leaf,
             leaf,
             src_dir_fd=quarantine_descriptors[-1],
@@ -356,7 +349,7 @@ def safe_unlink(
         verify_parent_chain(root, name, descriptors)
         verify_parent_chain(root, quarantine, quarantine_descriptors)
         try:
-            _rename_noreplace(
+            publish_file(
                 leaf,
                 quarantine_leaf,
                 src_dir_fd=descriptors[-1],
@@ -364,13 +357,25 @@ def safe_unlink(
             )
         except BaseException:
             try:
+                quarantine_state = os.stat(
+                    quarantine_leaf,
+                    dir_fd=quarantine_descriptors[-1],
+                    follow_symlinks=False,
+                )
                 moved = (
-                    os.stat(
-                        quarantine_leaf,
-                        dir_fd=quarantine_descriptors[-1],
-                        follow_symlinks=False,
-                    ).st_ino
-                    == source_stat.st_ino
+                    quarantine_state.st_dev,
+                    quarantine_state.st_ino,
+                    quarantine_state.st_mode,
+                    quarantine_state.st_nlink,
+                    quarantine_state.st_size,
+                    quarantine_state.st_mtime_ns,
+                ) == (
+                    source_stat.st_dev,
+                    source_stat.st_ino,
+                    source_stat.st_mode,
+                    source_stat.st_nlink,
+                    source_stat.st_size,
+                    source_stat.st_mtime_ns,
                 )
             except FileNotFoundError:
                 moved = False

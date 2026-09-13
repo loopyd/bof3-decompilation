@@ -176,6 +176,45 @@ part of identity-preserving rollback, not an owner-only permission policy.
 Recovery records, completion receipts and plan review artifacts use creation hints
 without requiring `chmod`. Explicit captured-mode restoration remains strict.
 
+### File publication
+
+The [in-place NTFS checkpoint](../plans/autonomous-bof3-decompilation.md#in-place-ntfs-publication--2026-09-13-reviewed-tooling-checkpoint)
+records parent acceptance of the independently reviewed repaired implementation. The user
+refuses migration and authorizes only this cooperative fallback, not home, mount,
+settings or sandbox changes. `common.rename.publish_file` first attempts strict
+native `RENAME_NOREPLACE`; collisions retain native no-replace behavior. Only an
+unsupported platform/filesystem result selects cooperative publication: open the
+regular single-link source without following links, exclusively create an empty
+destination reservation, compare source/reservation descriptor and path identities,
+rename over the checked reservation, then verify source absence and published
+identity and fsync both directories. Rename-sensitive ctime is excluded from POST
+comparison; a displaced reservation's descriptor link count is not a FUSE invariant.
+
+This fallback is not atomic CAS against noncooperating writers. An external writer
+can race source/reservation checks before rename or the reservation-cleanup check
+before unlink; undetected substitution can affect foreign names. Detected foreign
+names are preserved. Readers can observe the empty reservation, and crashes can
+leave reservations, prepared images or displaced files. Failure after movement or
+sync does not imply no effect: retain evidence and inspect actual locations before
+reviewed recovery. Cleanup requires an initially regular, empty, single-link
+reservation whose captured descriptor/path identity remains unchanged, subject to
+that check/unlink race. Nonempty or multiply linked captures are ineligible;
+zero length alone never authorizes deleting crash residue. No race-free or
+power-loss guarantee follows.
+
+`common.files` creation, quarantine/restoration and `common.git` index moves use
+this publisher. Retained-hard-link publication and its alias return field are
+removed; same-leaf preflight no longer claims native capability. Source/images
+stay single-link, prepared images stay on the destination filesystem, and source
+bytes/mode/identity, root confinement, leases, submodule exclusion and guarded
+rollback remain required. Shared `common.rename.describe_locations` supplies
+files/Git publication and restoration errors with observed names and uncertainty,
+never inferred retained source after post-move failure. `safe_unlink` classifies failed movement by device/inode,
+mode, link count, size and mtime, excluding ctime. This changes publication support,
+not restoration authority or the scope of workspace/Git guards.
+
+### Recovery capture
+
 Native tool cancellation can bypass Python exception handlers entirely. Macro/type
 transactions now use `common/recovery.py` to persist
 `bof3.transaction-recovery/v3` evidence before the first source mutation.
@@ -184,9 +223,9 @@ The record binds root identity, owner, manifest, implementation run ID (nullable
 for legacy applications), publication path, PRE bytes/hash/mode/inode, intended
 POST hash/exact mode/inode, staging path and reserved PRE/POST quarantine mapping.
 `common/images.py` prepares POST images under fresh staging directories before
-record capture, then installs the bound inode with verified no-replace moves.
-Images must share the destination filesystem and require native no-replace
-support. Failed capture may retain unreferenced images, but cannot mutate sources.
+record capture, then installs the bound inode through [file publication](#file-publication).
+Images must share the destination filesystem and retain one link. Failed capture
+may retain unreferenced images, but cannot mutate sources.
 `common/directory.py` owns confined descriptor traversal. Files and directory links are
 synced before mutation; capture failure aborts before moving sources.
 
@@ -216,8 +255,10 @@ The [successor checkpoint](../plans/autonomous-bof3-decompilation.md#submodule-i
 records parent acceptance of the exact frozen candidate after independent Pasteur
 review: PASS with no confirmed open findings, within the support ceiling below.
 Both repairs are consumed; the original six findings and three repair-one residuals
-are closed. This accepts only the submodule prerequisite; the whole-game goal stays
-paused, C/macros parked. The prior rejected implementation remains historical.
+are closed. This accepts only the submodule prerequisite. The whole-game goal is
+active and incomplete; the separate publication prerequisite is accepted, while
+C/macros retain their own readiness/review gates. The prior rejected implementation
+remains historical.
 
 | Common owner | Responsibility |
 | --- | --- |
@@ -335,7 +376,8 @@ only with its original PRE quarantine. Originally absent paths remain absent.
 staging path or reserved POST quarantine; unexpected bytes, mode, inode, links or
 location combinations reject before that path is changed. PRE/POST byte equality
 does not bypass identity checks. `common/observation.py` shares non-atomic file
-observations with inspection; actual moves retain descriptor/no-replace checks.
+observations with inspection; actual moves use the checked [publication backend](#file-publication)
+with its explicit cooperative race limitations.
 This low-level mechanism does not validate external record authority, acquire an
 absent lease, reconcile publication or restore workspace/Git state. Legacy
 byte-only rollback has no identity-replay guarantee. A no-op replay does not

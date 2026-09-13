@@ -102,7 +102,7 @@ def test_atomic_write_existing_leaf_commit_substitution_preserves_every_inode(
     leaf = parent / "test.h"
     leaf.write_bytes(b"before\n")
     original_inode = leaf.stat().st_ino
-    original = transaction_files._rename_noreplace
+    original = transaction_files.publish_file
     calls = 0
 
     def substitute_at_commit(source, destination, *, src_dir_fd, dst_dir_fd):
@@ -114,8 +114,8 @@ def test_atomic_write_existing_leaf_commit_substitution_preserves_every_inode(
             source, destination, src_dir_fd=src_dir_fd, dst_dir_fd=dst_dir_fd
         )
 
-    monkeypatch.setattr(transaction_files, "_rename_noreplace", substitute_at_commit)
-    with pytest.raises(RuntimeError, match="temporary retained.*quarantine retained"):
+    monkeypatch.setattr(transaction_files, "publish_file", substitute_at_commit)
+    with pytest.raises(RuntimeError, match="observed locations.*quarantine retained"):
         transaction_files.atomic_write(
             tmp_path, "include/test.h", b"after\n", expected=b"before\n"
         )
@@ -138,7 +138,7 @@ def test_atomic_write_new_leaf_commit_substitution_preserves_both_files(
     parent = tmp_path / "include"
     parent.mkdir()
     leaf = parent / "test.h"
-    original = transaction_files._rename_noreplace
+    original = transaction_files.publish_file
 
     def substitute_at_commit(source, destination, *, src_dir_fd, dst_dir_fd):
         leaf.write_bytes(b"unexpected\n")
@@ -146,8 +146,8 @@ def test_atomic_write_new_leaf_commit_substitution_preserves_both_files(
             source, destination, src_dir_fd=src_dir_fd, dst_dir_fd=dst_dir_fd
         )
 
-    monkeypatch.setattr(transaction_files, "_rename_noreplace", substitute_at_commit)
-    with pytest.raises(RuntimeError, match="temporary retained"):
+    monkeypatch.setattr(transaction_files, "publish_file", substitute_at_commit)
+    with pytest.raises(RuntimeError, match="observed locations"):
         transaction_files.atomic_write(tmp_path, "include/test.h", b"after\n")
 
     assert leaf.read_bytes() == b"unexpected\n"
@@ -180,7 +180,7 @@ def test_rename_noreplace_unsupported_preserves_both_paths(
             rename_noreplace.UnsupportedRenameNoReplaceError,
             match=r"renameat2\(RENAME_NOREPLACE\).*(unavailable|unsupported)",
         ):
-            transaction_files._rename_noreplace(
+            rename_noreplace.rename_noreplace(
                 "source", "destination", src_dir_fd=directory, dst_dir_fd=directory
             )
     finally:
@@ -190,7 +190,7 @@ def test_rename_noreplace_unsupported_preserves_both_paths(
     assert destination.read_bytes() == b"destination"
 
 
-def test_existing_replacement_preflight_rejects_fuseblk_without_state(
+def test_existing_replacement_preflight_skips_native_probe_without_state(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     existing = tmp_path / "include/test.h"
@@ -204,11 +204,7 @@ def test_existing_replacement_preflight_rejects_fuseblk_without_state(
         )
 
     monkeypatch.setattr(rename_noreplace, "rename_noreplace", unsupported)
-    with pytest.raises(
-        rename_noreplace.UnsupportedRenameNoReplaceError,
-        match="unsupported filesystem.*existing-file transactions",
-    ):
-        transaction_files.preflight_existing_replacements(tmp_path, {"include/test.h"})
+    transaction_files.preflight_existing_replacements(tmp_path, {"include/test.h"})
 
     assert existing.read_bytes() == b"before\n"
     assert sorted(path.relative_to(tmp_path) for path in tmp_path.rglob("*")) == before
@@ -235,18 +231,18 @@ def test_rename_noreplace_linux_native_path(tmp_path: Path) -> None:
     source.write_bytes(b"source")
     directory = os.open(tmp_path, os.O_RDONLY | os.O_DIRECTORY)
     try:
-        publication = rename_noreplace.publish_noreplace(
+        publication = rename_noreplace.publish_file(
             "source", "destination", src_dir_fd=directory, dst_dir_fd=directory
         )
     finally:
         os.close(directory)
 
-    assert publication == rename_noreplace.Publication("renameat2", None)
+    assert publication == rename_noreplace.Publication("renameat2")
     assert not source.exists()
     assert destination.read_bytes() == b"source"
 
 
-def test_publish_noreplace_fallback_retains_source_and_refuses_collision(
+def test_publish_file_fallback_moves_source_and_refuses_collision(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     source = tmp_path / "source"
@@ -261,18 +257,22 @@ def test_publish_noreplace_fallback_retains_source_and_refuses_collision(
     )
     directory = os.open(tmp_path, os.O_RDONLY | os.O_DIRECTORY)
     try:
-        publication = rename_noreplace.publish_noreplace(
+        publication = rename_noreplace.publish_file(
             "source", "destination", src_dir_fd=directory, dst_dir_fd=directory
         )
+        assert not source.exists()
+        source.write_bytes(b"next source")
         with pytest.raises(FileExistsError):
-            rename_noreplace.publish_noreplace(
+            rename_noreplace.publish_file(
                 "source", "destination", src_dir_fd=directory, dst_dir_fd=directory
             )
     finally:
         os.close(directory)
 
-    assert publication == rename_noreplace.Publication("hard-link", "source")
-    assert source.read_bytes() == destination.read_bytes() == b"source"
+    assert publication == rename_noreplace.Publication("reserved-rename")
+    assert source.read_bytes() == b"next source"
+    assert destination.read_bytes() == b"source"
+    assert destination.stat().st_nlink == 1
 
 
 def test_safe_unlink_moves_matching_leaf_to_durable_quarantine(tmp_path: Path) -> None:
@@ -319,7 +319,7 @@ def test_safe_unlink_rejects_parent_swap_at_quarantine_rename(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     parent, replacement = _tree(tmp_path)
-    original = transaction_files._rename_noreplace
+    original = transaction_files.publish_file
     moved = False
 
     def swap_before_move(source, destination, *, src_dir_fd, dst_dir_fd):
@@ -331,7 +331,7 @@ def test_safe_unlink_rejects_parent_swap_at_quarantine_rename(
             source, destination, src_dir_fd=src_dir_fd, dst_dir_fd=dst_dir_fd
         )
 
-    monkeypatch.setattr(transaction_files, "_rename_noreplace", swap_before_move)
+    monkeypatch.setattr(transaction_files, "publish_file", swap_before_move)
     with pytest.raises(ValueError, match="parent detached"):
         transaction_files.safe_unlink(tmp_path, "include/test.h", expected=b"before\n")
     _assert_swap_rejected(tmp_path)
@@ -380,7 +380,7 @@ def test_safe_unlink_leaf_substitution_deletes_no_unexpected_inode(
     replacement = parent / "replacement"
     replacement.write_bytes(b"unexpected\n")
     replacement_inode = replacement.stat().st_ino
-    original = transaction_files._rename_noreplace
+    original = transaction_files.publish_file
     substituted = False
 
     def substitute_before_move(source, destination, *, src_dir_fd, dst_dir_fd):
@@ -393,7 +393,7 @@ def test_safe_unlink_leaf_substitution_deletes_no_unexpected_inode(
             source, destination, src_dir_fd=src_dir_fd, dst_dir_fd=dst_dir_fd
         )
 
-    monkeypatch.setattr(transaction_files, "_rename_noreplace", substitute_before_move)
+    monkeypatch.setattr(transaction_files, "publish_file", substitute_before_move)
     with pytest.raises(ValueError, match="drifted during rollback"):
         transaction_files.safe_unlink(tmp_path, "include/test.h", expected=b"before\n")
 
@@ -410,7 +410,7 @@ def test_safe_unlink_restore_boundary_substitution_retains_both_inodes(
     leaf = parent / "test.h"
     leaf.write_bytes(b"before\n")
     original_inode = leaf.stat().st_ino
-    original = transaction_files._rename_noreplace
+    original = transaction_files.publish_file
     calls = 0
 
     def substitute_before_restore(source, destination, *, src_dir_fd, dst_dir_fd):
@@ -424,9 +424,7 @@ def test_safe_unlink_restore_boundary_substitution_retains_both_inodes(
             raise ValueError("force rollback")
         return result
 
-    monkeypatch.setattr(
-        transaction_files, "_rename_noreplace", substitute_before_restore
-    )
+    monkeypatch.setattr(transaction_files, "publish_file", substitute_before_restore)
     with pytest.raises(ValueError, match="quarantine retained as"):
         transaction_files.safe_unlink(tmp_path, "include/test.h", expected=b"before\n")
 
@@ -491,7 +489,7 @@ def test_git_index_cleanup_substitution_at_rename_preserves_replacement(
     assert snapshot is not None
     lock = tmp_path / ".git/index.lock"
     detached = tmp_path / ".git/owned-lock-recovery"
-    original = transaction_git._rename_noreplace
+    original = transaction_git.publish_file
     replacement_inode = 0
 
     def substitute(source, destination, *, src_dir_fd, dst_dir_fd):
@@ -504,7 +502,7 @@ def test_git_index_cleanup_substitution_at_rename_preserves_replacement(
             source, destination, src_dir_fd=src_dir_fd, dst_dir_fd=dst_dir_fd
         )
 
-    monkeypatch.setattr(transaction_git, "_rename_noreplace", substitute)
+    monkeypatch.setattr(transaction_git, "publish_file", substitute)
     with pytest.raises(RuntimeError, match="substituted at rename boundary"):
         transaction_git.restore_git_index(tmp_path, snapshot, snapshot)
 
@@ -570,7 +568,7 @@ def test_git_index_restore_commit_substitution_restores_unexpected_inode(
     expected = transaction_git.git_index_backup(tmp_path)
     assert expected is not None
     index = tmp_path / ".git/index"
-    original = transaction_git._rename_noreplace
+    original = transaction_git.publish_file
     substituted = False
     concurrent_inode = 0
 
@@ -585,7 +583,7 @@ def test_git_index_restore_commit_substitution_restores_unexpected_inode(
             source, destination, src_dir_fd=src_dir_fd, dst_dir_fd=dst_dir_fd
         )
 
-    monkeypatch.setattr(transaction_git, "_rename_noreplace", substitute)
+    monkeypatch.setattr(transaction_git, "publish_file", substitute)
     with pytest.raises(RuntimeError, match="changed concurrently during rollback"):
         transaction_git.restore_git_index(tmp_path, backup, expected)
 

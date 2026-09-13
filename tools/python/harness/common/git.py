@@ -9,7 +9,7 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
-from harness.common.rename import rename_noreplace as _rename_noreplace
+from harness.common.rename import describe_locations, publish_file
 from harness.common.lease import verify_writer
 from harness.common.deadlines import resolve_deadline
 from harness.common.process import run_bounded
@@ -153,7 +153,7 @@ def _quarantine_owned_artifact(
     identity: tuple[int, int],
     content: bytes,
 ) -> None:
-    """Move an owned artifact without clobbering or deleting any inode."""
+    """Move an owned artifact through the checked publication backend."""
 
     try:
         descriptor = os.open(leaf, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=parent)
@@ -179,23 +179,25 @@ def _quarantine_owned_artifact(
             f"preserved and quarantine target reserved at {quarantine_leaf}"
         )
     try:
-        _rename_noreplace(leaf, quarantine_leaf, src_dir_fd=parent, dst_dir_fd=parent)
-    except OSError as error:
+        publish_file(leaf, quarantine_leaf, src_dir_fd=parent, dst_dir_fd=parent)
+    except BaseException as error:
+        failure = (
+            "collision" if isinstance(error, FileExistsError) else "publication failed"
+        )
         raise RuntimeError(
-            f"Git cleanup quarantine collision; {leaf} preserved and existing "
-            f"{quarantine_leaf} retained for manual recovery"
+            f"Git cleanup quarantine {failure}; outcome requires verification; "
+            f"{describe_locations(parent, leaf, quarantine_leaf)} for manual recovery"
         ) from error
     moved = _capture_index_at(parent, Path(quarantine_leaf))
     moved_identity = moved.state[:2] if moved.state is not None else None
     if moved_identity != identity or moved.content != content:
         try:
-            _rename_noreplace(
-                quarantine_leaf, leaf, src_dir_fd=parent, dst_dir_fd=parent
-            )
-        except OSError as error:
+            publish_file(quarantine_leaf, leaf, src_dir_fd=parent, dst_dir_fd=parent)
+        except BaseException as error:
             raise RuntimeError(
-                f"Git cleanup quarantine verification failed; unexpected artifact "
-                f"retained at {quarantine_leaf} and {leaf} requires manual recovery"
+                "Git cleanup quarantine verification failed; restoration outcome "
+                f"requires verification; {describe_locations(parent, quarantine_leaf, leaf)} "
+                "for manual recovery"
             ) from error
         os.fsync(parent)
         raise RuntimeError(
@@ -239,11 +241,13 @@ def _restore_moved_index(
     expected_state = expected.state[:-1] if expected.state is not None else None
     if moved.content != expected.content or moved_state != expected_state:
         try:
-            _rename_noreplace(
-                recovery, index_leaf, src_dir_fd=parent, dst_dir_fd=parent
-            )
-        except OSError:
-            pass
+            publish_file(recovery, index_leaf, src_dir_fd=parent, dst_dir_fd=parent)
+        except BaseException as error:
+            raise RuntimeError(
+                "Git index changed concurrently during rollback; restoration outcome "
+                f"requires verification; {describe_locations(parent, recovery, index_leaf)} "
+                "for manual recovery"
+            ) from error
         raise RuntimeError(
             "Git index changed concurrently during rollback; current index restored"
         )
@@ -266,26 +270,38 @@ def _restore_git_index_locked(
     if current == backup:
         return False
     if expected.content is not None:
-        _rename_noreplace(
-            backup.path.name,
-            recovery_leaf,
-            src_dir_fd=parent,
-            dst_dir_fd=parent,
-        )
+        try:
+            publish_file(
+                backup.path.name,
+                recovery_leaf,
+                src_dir_fd=parent,
+                dst_dir_fd=parent,
+            )
+        except BaseException as error:
+            raise RuntimeError(
+                "Git index quarantine failed; outcome requires verification; "
+                f"{describe_locations(parent, backup.path.name, recovery_leaf, backup_leaf)} "
+                "for manual recovery"
+            ) from error
         _restore_moved_index(parent, recovery_leaf, backup.path.name, expected)
     if backup.content is not None:
         try:
-            _rename_noreplace(
+            publish_file(
                 backup_leaf,
                 backup.path.name,
                 src_dir_fd=parent,
                 dst_dir_fd=parent,
             )
-        except OSError as error:
+        except BaseException as error:
+            failure = (
+                "appeared concurrently"
+                if isinstance(error, FileExistsError)
+                else "publication failed"
+            )
             raise RuntimeError(
-                f"Git index appeared concurrently; current index preserved, backup "
-                f"retained at {backup.path.with_name(backup_leaf)}, and transaction "
-                f"index retained at {backup.path.with_name(recovery_leaf)}"
+                f"Git index {failure}; outcome requires verification; "
+                f"{describe_locations(parent, backup_leaf, backup.path.name, recovery_leaf)} "
+                "for manual recovery"
             ) from error
     os.fsync(parent)
     return True

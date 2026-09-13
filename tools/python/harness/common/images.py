@@ -16,7 +16,6 @@ from harness.common.lease import verify_writer
 from harness.common.paths import leaf_stat
 from harness.common.observation import observe_file
 from harness.common.quarantine import reserve_quarantine, validate_quarantine
-from harness.common.rename import require_native_noreplace
 from harness.common.submodules import validate_mutations
 
 IMAGE_DIRECTORY = "out/reviews/evidence/images"
@@ -31,11 +30,10 @@ def _verify_image_filesystem(root: Path, name: str, path: str) -> None:
         except FileNotFoundError:
             candidate = candidate.parent
     try:
-        prepared, leaf = open_parent_fd(root, path)
+        prepared, _leaf = open_parent_fd(root, path)
         try:
             if os.fstat(destination).st_dev != os.fstat(prepared).st_dev:
                 raise ValueError("prepared POST must share the destination filesystem")
-            require_native_noreplace(prepared, leaf)
         finally:
             os.close(prepared)
     finally:

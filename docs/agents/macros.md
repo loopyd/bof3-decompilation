@@ -416,9 +416,14 @@ see [shared lease contracts](harness.md). Read-only commands acquire no lease.
 Macro runs persist a `bof3.transaction-recovery/v3` record before source mutation
 at `out/reviews/evidence/macro-recovery-<nonce>.json`. It retains PRE source images,
 mode/inode facts, exact prepared POST identity/mode, manifest/run bindings and
-reserved PRE/POST quarantine destinations. POST images are staged in fresh
-directories on the destination filesystem and installed by verified native
-no-replace moves. Capture failure prevents source writes but may retain images.
+reserved PRE/POST quarantine destinations. Single-link POST images are staged on
+the destination filesystem and installed through the [publication backend](harness.md#file-publication):
+strict native no-replace first, cooperative reservation/check/rename only when
+unsupported. The fallback admits external check/rename and check/cleanup races,
+visible empty reservations and crash leftovers; it is not atomic CAS against
+noncooperating writers. Source/images retain one link. Capture failure prevents
+source writes but may retain images; publication failure requires location
+inspection and does not establish no effect.
 Records require independently pinned inspection, not automatic restoration. They do
 not replace application receipts, parent acceptance or publication reconciliation.
 
@@ -482,14 +487,29 @@ separates final gates, historical failures and unrelated test debt. Observations
 non-atomic, manual concurrency is not excluded and root Git metadata is trusted.
 Arbitrary Git layouts/index-extension confinement remain unassessed; no extension
 escape or projection hardening is established. The root/ten-module checksum-valid
-v2 TREE inventory does not prove other formats. The full goal is active/incomplete;
-this macro is blocked on the actual `fuseblk` move capability. A same-leaf
-`RENAME_NOREPLACE` probe falsely passes while distinct moves fail; the hard-link
-fallback leaves two links, correctly rejected before source publication. Correcting
-the probe only improves diagnostics. No recovery record, owner command receipts,
-application, header or POST acceptance followed; empty rollback maps prove no
-restoration. PRE and the adopted baseline remain unchanged. An ext4 working copy
-is requested but unauthorized; no migration or portability acceptance is inferred.
+v2 TREE inventory does not prove other formats. The full goal is active/incomplete.
+The consumed `-02` macro entry failed before source publication: same-leaf
+`RENAME_NOREPLACE` falsely passed while distinct `fuseblk` moves failed, and the
+retained-hard-link fallback violated the prepared-image single-link guard. No
+recovery record, owner command receipts, application, header or POST acceptance
+followed; empty rollback maps prove no restoration. PRE and the adopted baseline
+were unchanged at that failure checkpoint.
+
+The user rejects migration and permits only the [in-place publication correction](../plans/autonomous-bof3-decompilation.md#in-place-ntfs-publication--2026-09-13-reviewed-tooling-checkpoint).
+Parent accepts the six repaired code/test files after independent Bernoulli ACCEPT,
+202 final focused passes and actual repaired NTFS apply/rollback, cancellation,
+Git-index and adverse-publication probes. Initial 196 passes and the deliberately
+interrupted broader revalidation run remain separate evidence in that checkpoint.
+The implementation and single repair are consumed; no test inventory was added.
+The [shared contract](harness.md#file-publication) owns native-first publication,
+cooperative race/crash limitations and preserved identity controls. Reservation
+cleanup requires an initially regular, empty, single-link capture and unchanged
+descriptor/path identity; zero length alone does not authorize crash-residue deletion.
+The filesystem tooling blocker is resolved; no macro is applied or accepted and no
+C/native compiler stage ran. A subsequent macro entry needs separately recorded
+finite scope and fresh readiness/review. Failed 04:45/04:48 and 08:10/08:15 bounds
+remain consumed; the
+08:45/08:50 tooling scope grants no automatic retry or aggregate completion.
 Dependency snapshots grant no restoration/repair, retry, acceptance, budget reset
 or evidence rebinding. Native/application review and frozen obligations remain.
 V1 stays existing-only; shared-header and type creation are not added.
