@@ -359,12 +359,42 @@ underscores; IDs start alphanumeric and contain only ASCII letters, digits,
 periods, underscores and hyphens. Flags start with `-` and contain only ASCII
 letters, digits and `_,=.+-`. Quoting, escapes, lists, variable expansion,
 multiline/uppercase commands and all other CMake content reject before gates.
-Only exact in-payload, target-local FUNCTION proposals with explicit source
-claims, Ninja and no companion overlays or environment toolchain overrides are
-supported. Other classes fail closed. No rename or index recovery is performed.
+Exact in-payload, target-local FUNCTION proposals retain their existing wire
+format and `proposed-function-transaction/v1` provenance. Both FUNCTION and the
+bounded DATA route require explicit source claims, Ninja, no companion overlays
+and no environment toolchain overrides. Gates perform no rename or index recovery.
+
+Human-reviewed DATA candidates replace one frozen blocked initializer using the
+current report's compare-and-swap pin:
+
+```sh
+bin/naming-audit prepare-transaction TARGET REPORT --transaction data:OLD --candidate CANDIDATE_JSON --expected-sha256 REPORT_SHA256
+```
+
+This produces distinct `proposed-data-transaction/v1` provenance (`DATA_KIND`).
+Preparation pins every owned source/header and map/manifest/Splat input's PRE and
+expected spelling-only POST hashes and mode, plus canonical storage. No file move,
+type/qualifier/layout/extent change or extra normalization byte change is allowed.
+The cleaner snapshot must cover every pinned input, not merely renamed files.
+Exact direct consumers bind metadata-owned source, compiled name, address and
+reviewed size, including metadata-qualified exact functions sharing one C file.
+The existing FUNCTION single-source guard is unchanged. Native execution requires
+four base gates (normalize, symbols, Splat, build), then asm-diff/byte-match for
+**every consumer**, not the data address; missing or mismatched gates reject.
+
+This bounded route accepts only plain unwrapped extern declarations without
+initializers and standalone literal-address `WEAK_SYMBOL_AT` bindings. Scanning
+uses line-spliced C and requires spelling replacement to commute with splicing;
+joined identifiers cannot escape discovery or destination-collision checks.
+Keyword-shadowing macros, macro-mediated references, call arguments (including
+indirect calls), cross-owner/cross-target scopes, partial/runtime consumers and
+no actual exact consumer fail closed. Automatic `conclude` typed-exhaustion
+capability admission and the unsupported proposed-analyzer seam remain unchanged;
+this human-reviewed path grants neither automated naming nor production acceptance.
 
 After an authorized cleaner freezes its rollback snapshot and applies **only**
-the approved spelling, use the same canonical target/report/evidence root:
+the approved spelling, use the same canonical target/report/evidence root.
+DATA uses `data:OLD` in the same gate/review/verify chain shown for FUNCTION:
 
 ```sh
 bin/naming-audit postapply-gates TARGET REPORT --transaction function:OLD --implementation-run-id IMPLEMENTATION_RUN --evidence-root "$ROOT"
@@ -394,14 +424,18 @@ The actual accepted reviewer artifact must be retained. Snapshot is the cleaner'
 `{"files":[...],"frozen":{...}}` manifest: each transaction path has `path`,
 `exists`, and (when present) `sha256`/`mode`; preserved copies live beneath the
 manifest directory at those relative paths. It must cover every captured
-binding/source path plus old definition and destination, including absence.
+binding/source path; FUNCTION also covers old definition and destination,
+including absence, while DATA requires all pinned owned inputs at their exact
+PRE hashes/modes and matching expected POST images.
 `frozen` binds report, reviewed paths and raw `.git/index` SHA-256. Ingestion
 checks retained snapshot bytes/modes/absence, not just the manifest hash.
 
 Trust is the local repository runtime and supervising parent, like local
 application attestations—not remote authentication or protection from malicious
 local writers. Preapply body/ABI/range/scope preservation is parent/reviewer
-attested against the real snapshot; prepared naming provenance does not contain
+attested against the real snapshot; for DATA this includes unchanged representation
+and every pinned owned source hash, not a function at the data address.
+Prepared naming provenance does not contain
 old source bytes. Native gates prove execution/current scope/exactness and
 post-start index preservation. Review ingestion rechecks readiness and diff
 hygiene; final verification repeats these and all existing naming validators,

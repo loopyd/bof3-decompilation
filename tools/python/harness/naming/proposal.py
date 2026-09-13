@@ -1,4 +1,4 @@
-"""Closed provenance for prepared proposed-function naming transactions."""
+"""Closed provenance for prepared naming transactions."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ from typing import Any
 from harness.naming.context import TargetContext, naming_manifest, pre_apply
 
 KIND = "proposed-function-transaction/v1"
+DATA_KIND = "proposed-data-transaction/v1"
 PROVENANCE_FIELD = "conclusion_provenance"
 _TOOL_FIELDS = {PROVENANCE_FIELD, "pre_apply", "manifest", "post_apply_receipts"}
 _SHA256 = re.compile(r"[0-9a-f]{64}").fullmatch
@@ -94,12 +95,14 @@ def replace_initializer(
         raise ValueError("candidate requires the selected v3 target report")
     if (
         not isinstance(candidate, dict)
-        or candidate.get("kind") != "function"
+        or candidate.get("kind") not in {"function", "data"}
         or candidate.get("rung_status") != "proposed"
-        or transaction != f"function:{candidate.get('name')}"
+        or transaction != f"{candidate.get('kind')}:{candidate.get('name')}"
         or (_TOOL_FIELDS | {"initializer_state"}) & candidate.keys()
     ):
-        raise ValueError("candidate must be an unprepared proposed FUNCTION row")
+        raise ValueError(
+            "candidate must be an unprepared proposed FUNCTION or DATA row"
+        )
     rows = report.get("rows")
     if not isinstance(rows, list):
         raise ValueError("report rows must be a list")
@@ -133,7 +136,7 @@ def build_provenance(
 ) -> dict[str, Any]:
     """Build the closed proposal receipt from production-derived records."""
     return {
-        "kind": KIND,
+        "kind": DATA_KIND if row["kind"] == "data" else KIND,
         "report": _relative_report(root, report_path),
         "report_sha256": _digest(_authored_report(report)),
         "row_sha256": _digest(_authored_row(row)),
@@ -146,7 +149,7 @@ def require_provenance(row: dict[str, Any], selector: str) -> dict[str, Any]:
     provenance = row.get(PROVENANCE_FIELD)
     if not isinstance(provenance, dict) or set(provenance) != _KEYS:
         raise ValueError(f"{selector} proposal provenance has a non-canonical shape")
-    if provenance.get("kind") != KIND:
+    if provenance.get("kind") != (DATA_KIND if row.get("kind") == "data" else KIND):
         raise ValueError(f"{selector} proposal provenance kind is unsupported")
     for key in ("report_sha256", "row_sha256"):
         value = provenance.get(key)
@@ -189,10 +192,13 @@ def validate_proposal(
     row: dict[str, Any],
     ctx: TargetContext,
 ) -> None:
-    """Recompute one prepared FUNCTION proposal from current repository state."""
+    """Recompute one prepared proposal from current repository state."""
     selector = f"{row.get('kind')}:{row.get('name')}"
-    if row.get("kind") != "function" or row.get("rung_status") != "proposed":
-        raise ValueError("proposal provenance is valid only for proposed FUNCTION rows")
+    if (
+        row.get("kind") not in {"function", "data"}
+        or row.get("rung_status") != "proposed"
+    ):
+        raise ValueError("proposal provenance requires a proposed FUNCTION or DATA row")
     provenance = require_provenance(row, selector)
     relative = _relative_report(root, report_path)
     if provenance["report"] != relative:
@@ -201,8 +207,10 @@ def validate_proposal(
     name = row.get("name")
     if not isinstance(name, str):
         raise ValueError("proposal row name is invalid")
-    binding = pre_apply(ctx, "function", name, row)
-    manifest = naming_manifest(ctx, "function", name, row, binding)
+    binding = pre_apply(
+        ctx, row["kind"], name, row, data_proposal=row["kind"] == "data"
+    )
+    manifest = naming_manifest(ctx, row["kind"], name, row, binding)
     if provenance["pre_apply"] != binding or row.get("pre_apply") != binding:
         raise ValueError("proposal pre_apply drifted")
     if provenance["manifest"] != manifest or row.get("manifest") != manifest:

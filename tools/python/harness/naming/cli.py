@@ -121,13 +121,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     check.set_defaults(handler=_run_validate)
     transaction = sub.add_parser(
-        "prepare-transaction", help="atomically bind one ready FUNCTION proposal"
+        "prepare-transaction",
+        help="atomically bind one ready FUNCTION or DATA proposal",
     )
     transaction.add_argument("target")
     transaction.add_argument("report", type=Path)
-    transaction.add_argument("--transaction", required=True, help="function:NAME")
     transaction.add_argument(
-        "--candidate", type=Path, help="reviewed proposed FUNCTION row JSON"
+        "--transaction", required=True, help="function:NAME or data:NAME"
+    )
+    transaction.add_argument(
+        "--candidate", type=Path, help="reviewed proposed FUNCTION or DATA row JSON"
     )
     transaction.add_argument(
         "--expected-sha256", help="reviewed current report byte SHA-256"

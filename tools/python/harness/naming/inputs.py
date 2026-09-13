@@ -15,6 +15,7 @@ from harness.domain.symbols import load_target_symbols
 from harness.io import unique_object
 from harness.naming.annotations import reviewed_scope_digest
 from harness.naming.context import READY_STATUS, SCHEMA_V3, TargetContext
+from harness.naming.data import validate_data_preservation, validate_data_shape
 from harness.naming.proposal import (
     canonical_report_path,
     require_provenance,
@@ -61,7 +62,7 @@ _SHAPES = {
     "provenance": "kind report report_sha256 row_sha256 pre_apply manifest evidence evidence_sha256 evidence_namespace initializer_report_sha256",
     "namespace": "mode namespace root",
     "binding": "version digest facts",
-    "facts": "address destination kind new_name old_name reviewed reviewed_digest scope selector status unchanged_range work storage",
+    "facts": "address destination kind new_name old_name reviewed reviewed_digest scope selector status unchanged_range work storage data",
     "scope": "address binding_locations cross_target_locations definition kind manifest map old_name source_locations splat target",
     "status": "rung_status semantic_status transaction_status",
     "identity": "binding_locations new old selector source_locations unchanged_range",
@@ -102,7 +103,9 @@ def _shape(value, kind: str) -> None:
     elif isinstance(value, dict):
         keys(value, _SHAPES[kind], exact=False)
         for key, item in value.items():
-            if key in {"rungs", "corroborators", "name_terms"}:
+            if kind == "facts" and key == "data":
+                validate_data_shape(item)
+            elif key in {"rungs", "corroborators", "name_terms"}:
                 if not isinstance(item, dict):
                     raise ValueError("invalid labeled report record")
                 if key == "rungs":
@@ -160,22 +163,28 @@ def frozen(root: Path, target: str, report_path: Path, transaction: str):
     if row["pre_apply"]["digest"] != "v1:" + digest(facts):
         raise ValueError("captured facts digest mismatch")
     if (
-        row["kind"] != "function"
+        row["kind"] not in {"function", "data"}
         or row.get("partial_used") is not False
         or row.get("outside_payload") is not False
         or facts["scope"]["cross_target_locations"]
     ):
         raise ValueError(
-            "native postapply supports exact, in-payload, target-local FUNCTION transactions only"
+            "native postapply supports exact, in-payload, target-local transactions only"
         )
     if (
         facts["selector"] != row["identity"]["selector"]
         or facts["new_name"] != row["new_name"]
         or facts["old_name"] != row["name"]
-        or facts["kind"] != "function"
+        or facts["kind"] != row["kind"]
         or not facts["selector"].startswith(target + "@0x")
     ):
         raise ValueError("captured identity mismatch")
+    if row["kind"] == "data":
+        validate_data_shape(facts.get("data"))
+        if facts["destination"] is not None or facts["scope"]["definition"] is not None:
+            raise ValueError("data transactions cannot migrate source files")
+    elif "data" in facts:
+        raise ValueError("function transactions cannot contain data facts")
     if file_state(path) != before:
         raise ValueError("frozen report changed while reading")
     return (
@@ -193,6 +202,10 @@ def frozen(root: Path, target: str, report_path: Path, transaction: str):
 
 def transaction_paths(row) -> set[str]:
     facts = row["pre_apply"]["facts"]
+    if row["kind"] == "data":
+        return {
+            relative(path) for path in validate_data_shape(facts.get("data"))["files"]
+        }
     scope = facts["scope"]
     return {
         relative(p)
@@ -215,11 +228,17 @@ def applied_scope(root: Path, target: str, row) -> None:
     address = int(facts["address"], 0)
     ctx = TargetContext(root, target, load_target_manifests(root)[target])
     _binding_scope_holds(facts["scope"], old, ctx)
-    _binding_scope_holds({"source_locations": [facts["destination"]]}, old, ctx)
-    actual = ctx.scope(new, address=address, kind="function")
-    expected = set(facts["scope"]["source_locations"]) - {
-        facts["scope"]["definition"]
-    } | {facts["destination"]}
+    if row["kind"] == "data":
+        if facts["destination"] is not None or facts["scope"]["definition"] is not None:
+            raise ValueError("data transactions cannot migrate source files")
+        validate_data_preservation(ctx, row, facts, post_apply=True)
+        expected = set(facts["scope"]["source_locations"])
+    else:
+        _binding_scope_holds({"source_locations": [facts["destination"]]}, old, ctx)
+        expected = set(facts["scope"]["source_locations"]) - {
+            facts["scope"]["definition"]
+        } | {facts["destination"]}
+    actual = ctx.scope(new, address=address, kind=row["kind"])
     if (
         set(actual["source_locations"]) != expected
         or set(actual["binding_locations"]) != set(facts["scope"]["binding_locations"])
@@ -237,5 +256,5 @@ def applied_scope(root: Path, target: str, row) -> None:
         or reviewed_scope_digest(root, target) != facts["reviewed_digest"]
     ):
         raise ValueError("map address or reviewed annotations changed")
-    if facts["destination"] not in ctx.manifest.sources:
+    if row["kind"] == "function" and facts["destination"] not in ctx.manifest.sources:
         raise ValueError("destination is not a live manifest source")

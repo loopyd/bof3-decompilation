@@ -151,7 +151,14 @@ def reviewed_scope_digest(root: Path, target: str) -> str | None:
     return _reviewed_scope_digest(root, target)
 
 
-def pre_apply_facts(ctx: TargetContext, kind: str, name: str, new_name: str) -> dict:
+def pre_apply_facts(
+    ctx: TargetContext,
+    kind: str,
+    name: str,
+    new_name: str,
+    *,
+    data_proposal: bool = False,
+) -> dict:
     address = address_of(name)
     facts: dict = {
         "selector": f"{ctx.target}@0x{address:08X}",
@@ -168,6 +175,14 @@ def pre_apply_facts(ctx: TargetContext, kind: str, name: str, new_name: str) -> 
     }
     if kind == "data":
         facts["storage"] = canonical_storage(ctx.root, ctx.target, address)
+        if data_proposal:
+            from harness.naming.data import capture_data
+
+            facts["data"] = capture_data(
+                ctx, {"name": name, "new_name": new_name}, facts["scope"]
+            )
+        facts["destination"] = None
+        return facts
     destination = resolve_source_for_paths(
         manifest_source_paths(ctx.root, ctx.manifest), address
     )
@@ -186,7 +201,14 @@ def pre_apply_facts(ctx: TargetContext, kind: str, name: str, new_name: str) -> 
     return facts
 
 
-def pre_apply(ctx: TargetContext, kind: str, name: str, row: dict[str, object]) -> dict:
+def pre_apply(
+    ctx: TargetContext,
+    kind: str,
+    name: str,
+    row: dict[str, object],
+    *,
+    data_proposal: bool = False,
+) -> dict:
     """Digest the immutable pre-apply facts plus the accepted row statuses.
 
     Captured once, before the transaction applies; the report stores it and
@@ -199,7 +221,14 @@ def pre_apply(ctx: TargetContext, kind: str, name: str, row: dict[str, object]) 
     new_name = row.get("new_name")
     if not isinstance(new_name, str) or not new_name:
         raise ValueError(f"{name} pre-apply requires new_name")
-    facts = pre_apply_facts(ctx, kind, name, new_name)
+    if kind == "data":
+        from harness.naming.proposal import DATA_KIND, PROVENANCE_FIELD
+
+        provenance = row.get(PROVENANCE_FIELD)
+        data_proposal = data_proposal or (
+            isinstance(provenance, dict) and provenance.get("kind") == DATA_KIND
+        )
+    facts = pre_apply_facts(ctx, kind, name, new_name, data_proposal=data_proposal)
     identity = row.get("identity")
     range_value = (
         identity.get("unchanged_range") if isinstance(identity, dict) else None
@@ -293,6 +322,21 @@ def naming_manifest(
             )
         ),
     }
+    if kind == "data" and "data" in binding["facts"]:
+        manifest["required_checks"] = sorted(
+            [
+                "bin/symbols normalize TARGET --write",
+                "bin/symbols check",
+                "bin/splat TARGET",
+                "bin/build TARGET",
+                "bin/naming-audit verify",
+            ]
+            + [
+                f"{tool} {consumer['selector']}"
+                for consumer in binding["facts"]["data"]["consumers"]
+                for tool in ("bin/asm-diff", "bin/byte-match")
+            ]
+        )
     return manifest
 
 

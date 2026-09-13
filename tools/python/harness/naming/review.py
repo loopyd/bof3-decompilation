@@ -90,7 +90,20 @@ def attestation(root: Path, bundle, row, value) -> None:
             raise ValueError("retained snapshot bytes/mode/absence changed")
     facts = row["pre_apply"]["facts"]
     old, new = facts["scope"]["definition"], facts["destination"]
-    if not snapshot_files[old]["exists"] or (
+    if row["kind"] == "data":
+        for name, item in snapshot_files.items():
+            captured = facts["data"]["files"][name]
+            if (
+                item.get("exists") is not True
+                or item.get("sha256") != captured["before"]
+                or item.get("mode") != captured["mode"]
+                or bundle["final_state"].get(name)
+                != {"sha256": captured["after"], "mode": captured["mode"]}
+            ):
+                raise ValueError(
+                    "snapshot does not bind data preapply and postapply images"
+                )
+    elif not snapshot_files[old]["exists"] or (
         old != new and snapshot_files[new]["exists"]
     ):
         raise ValueError("snapshot is not a preapply source migration baseline")

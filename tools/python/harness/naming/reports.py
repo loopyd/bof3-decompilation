@@ -35,6 +35,7 @@ from harness.naming.context import (
     validate_row_v3,
 )
 from harness.naming.facts import range_contains
+from harness.naming.data import validate_data_preservation, validate_data_shape
 
 _SPACING = re.compile(r"\s+")
 
@@ -249,8 +250,22 @@ def _validation_receipts(
             if row.get("partial_used") is True
             else [f"bin/asm-diff {selector}", f"bin/byte-match {selector}"]
         )
+    elif "data" in row["pre_apply"]["facts"]:
+        consumers = validate_data_shape(row["pre_apply"]["facts"]["data"])["consumers"]
+        required += ["bin/splat", "bin/build"]
+        required += [
+            f"{tool} {consumer['selector']}"
+            for consumer in consumers
+            for tool in ("bin/asm-diff", "bin/byte-match")
+        ]
     for prefix in required:
         matching = [command for command in passed if command.startswith(prefix)]
+        if kind == "data" and "data" in row["pre_apply"]["facts"]:
+            matching = [
+                command
+                for command in matching
+                if command == prefix or command.startswith(prefix + " ")
+            ]
         if len(matching) != 1:
             raise ValueError(
                 f"{old_name} post-apply receipts require exactly one passed {prefix}"
@@ -262,7 +277,27 @@ def _validation_receipts(
         selector_required = command.startswith(
             ("bin/asm-diff", "bin/byte-match", "partial baseline", "independent review")
         )
-        if selector_required and record.get("selector") != selector:
+        expected_selector = selector
+        if kind == "data" and "data" in row["pre_apply"]["facts"]:
+            if command.startswith(("bin/asm-diff", "bin/byte-match")):
+                parts = command.split()
+                if (
+                    len(parts) < 2
+                    or parts[0] not in {"bin/asm-diff", "bin/byte-match"}
+                    or parts[1] not in {consumer["selector"] for consumer in consumers}
+                ):
+                    raise ValueError(
+                        f"{old_name} receipt does not select a captured consumer"
+                    )
+                expected_selector = parts[1]
+            elif command.startswith("partial baseline"):
+                raise ValueError("data consumer partial baselines are unsupported")
+            elif (
+                command.startswith("independent review")
+                and command != f"independent review {selector}"
+            ):
+                raise ValueError(f"{old_name} independent review selector mismatch")
+        if selector_required and record.get("selector") != expected_selector:
             raise ValueError(f"{old_name} post-apply receipt selector mismatch")
         if not selector_required and record.get("selector") is not None:
             raise ValueError(
@@ -377,6 +412,13 @@ def _binding_digest(
             ctx.root, ctx.target, address
         ):
             raise ValueError(f"{old_name} pre-apply storage changed")
+        if "data" in recorded:
+            if (
+                recorded.get("destination") is not None
+                or recorded["scope"].get("definition") is not None
+            ):
+                raise ValueError("data transactions cannot migrate source files")
+            validate_data_preservation(ctx, row, recorded, post_apply=True)
 
 
 def _binding_scope_holds(recorded: Any, old_name: str, ctx: TargetContext) -> None:

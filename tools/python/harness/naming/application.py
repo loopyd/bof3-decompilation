@@ -12,6 +12,7 @@ from harness.common.process import run_bounded
 from harness.domain.receipts import command_records, write_receipt
 from harness.domain.symbols import format_map, load_map
 from harness.io import unique_object
+from harness.naming.data import validate_data_shape
 from harness.naming.inputs import (
     applied_scope,
     digest,
@@ -29,15 +30,30 @@ OUTPUT_LIMIT = 2 * 1024 * 1024
 
 
 def plan(target: str, row) -> list[list[str]]:
-    selector = row["identity"]["selector"]
-    return [
+    selectors = (
+        [
+            consumer["selector"]
+            for consumer in validate_data_shape(row["pre_apply"]["facts"].get("data"))[
+                "consumers"
+            ]
+        ]
+        if row["kind"] == "data"
+        else [row["identity"]["selector"]]
+    )
+    commands = [
         ["bin/symbols", "normalize", target, "--write"],
         ["bin/symbols", "check", target],
         ["bin/splat", target],
         ["bin/build", target],
-        ["bin/asm-diff", selector, "--json", "--detail", "full"],
-        ["bin/byte-match", selector, "--json"],
     ]
+    for selector in selectors:
+        commands.extend(
+            [
+                ["bin/asm-diff", selector, "--json", "--detail", "full"],
+                ["bin/byte-match", selector, "--json"],
+            ]
+        )
+    return commands
 
 
 def _execute(root: Path, argv: list[str]) -> dict:
@@ -60,7 +76,24 @@ def evidence(root: Path, result: dict, row) -> bool:
     try:
         payload = json.loads(result["stdout"], object_pairs_hook=unique_object)
         facts = row["pre_apply"]["facts"]
-        start, end = (int(x, 0) for x in facts["unchanged_range"].split(".."))
+        if row["kind"] == "data":
+            consumers = [
+                consumer
+                for consumer in validate_data_shape(facts.get("data"))["consumers"]
+                if consumer["selector"] == result["argv"][1]
+            ]
+            if len(consumers) != 1:
+                return False
+            consumer = consumers[0]
+            start = int(consumer["address"], 0)
+            size, name, destination = (
+                consumer["size"],
+                consumer["name"],
+                consumer["source"],
+            )
+        else:
+            start, end = (int(x, 0) for x in facts["unchanged_range"].split(".."))
+            size, name, destination = end - start, row["new_name"], facts["destination"]
         source = Path(payload["source"])
         if source.is_absolute():
             source = source.relative_to(root.resolve())
@@ -74,13 +107,13 @@ def evidence(root: Path, result: dict, row) -> bool:
             and payload["status"] == "exact_match"
             and payload["exact_match"] is True
             and payload["byte_match"] is True
-            and payload["function"] == row["new_name"]
+            and payload["function"] == name
             and int(payload["address"], 0) == start
-            and source.as_posix() == facts["destination"]
+            and source.as_posix() == destination
             and type(payload["original_size"]) is int
-            and payload["original_size"] == end - start
+            and payload["original_size"] == size
             and type(payload["current_size"]) is int
-            and payload["current_size"] == end - start
+            and payload["current_size"] == size
             and type(payload["size_delta"]) is int
             and payload["size_delta"] == 0
             and Path(payload["original_binary"]).resolve()
@@ -88,7 +121,7 @@ def evidence(root: Path, result: dict, row) -> bool:
                 root / load_target_manifests(root)[facts["scope"]["target"]].binary
             ).resolve()
         )
-    except (ValueError, TypeError, KeyError):
+    except (ValueError, TypeError, KeyError, IndexError):
         return False
 
 
@@ -128,6 +161,13 @@ def _graph(root: Path, row) -> None:
     # ponytail: Ninja is the supported graph; add Makefile parsing only on demand.
     graph = root / "build/cmake/build.ninja"
     text = graph.read_text()
+    if row["kind"] == "data":
+        consumers = validate_data_shape(row["pre_apply"]["facts"].get("data"))[
+            "consumers"
+        ]
+        if any(str(root / consumer["source"]) not in text for consumer in consumers):
+            raise ValueError("generated Ninja graph omits data consumers")
+        return
     old = row["pre_apply"]["facts"]["scope"]["definition"]
     new = row["pre_apply"]["facts"]["destination"]
     if str(root / new) not in text or (old != new and str(root / old) in text):
@@ -210,6 +250,8 @@ def produce(
         },
     }
     try:
+        if row["kind"] == "data" and expected != initial:
+            raise ValueError("data postapply requires an already normalized map")
         for number, argv in enumerate(plan(target, row)):
             recheck(root, bundle, row)
             before = digest(bundle["final_state"])
@@ -231,7 +273,7 @@ def produce(
                 output / f"receipt-{number}.json",
                 " ".join(argv),
                 target,
-                row["identity"]["selector"] if number >= 4 else None,
+                argv[1] if argv[0] in {"bin/asm-diff", "bin/byte-match"} else None,
                 result["stdout"] + result["stderr"],
             )
             bundle["gates"].append(
@@ -269,11 +311,14 @@ def validate_bundle(
     recheck(root, bundle, row)
     if bundle["graph_state"] is None:
         raise ValueError("native build graph evidence missing")
-    if not isinstance(bundle["gates"], list) or len(bundle["gates"]) != 6:
-        raise ValueError("native bundle requires all six gates")
+    commands = plan(target, row)
+    if not isinstance(bundle["gates"], list) or len(bundle["gates"]) != len(commands):
+        raise ValueError("native bundle requires every planned gate")
     initial, final = bundle["initial_state"], bundle["final_state"]
     if not isinstance(initial, dict) or set(initial) != set(final):
         raise ValueError("native initial scope differs from final closure")
+    if row["kind"] == "data" and initial != final:
+        raise ValueError("data native gates must preserve exact postapply inputs")
     map_name = row["pre_apply"]["facts"]["scope"]["map"]
     if (
         any(initial[p] != final[p] for p in initial if p != map_name)
@@ -293,7 +338,7 @@ def validate_bundle(
     ):
         raise ValueError("normalization is not the native map formatting transition")
     records = []
-    for number, (gate, argv) in enumerate(zip(bundle["gates"], plan(target, row))):
+    for number, (gate, argv) in enumerate(zip(bundle["gates"], commands)):
         keys(gate, "execution execution_state receipt")
         execution = Path(gate["execution"])
         if (
@@ -317,7 +362,7 @@ def validate_bundle(
             or record["status"] != "passed"
             or record["target"] != target
             or record["selector"]
-            != (row["identity"]["selector"] if number >= 4 else None)
+            != (argv[1] if argv[0] in {"bin/asm-diff", "bin/byte-match"} else None)
             or record["output"] != result["stdout"] + result["stderr"]
         ):
             raise ValueError("receipt differs from native execution")

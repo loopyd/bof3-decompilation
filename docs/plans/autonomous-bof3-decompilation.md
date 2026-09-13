@@ -931,6 +931,87 @@ unrelated `tmp/`, all prior history/budgets, structured states, the 50-entry req
 The macro remains unapplied, with no retry or backlog reset; the full goal remains
 **active and unfinished**.
 
+### Reviewed DATA proposals — 2026-09-13 (tooling accepted; production unapplied)
+
+The user explicitly authorized missing DATA proposal support from `deb3d5cf`,
+separate from production identity application. Mission
+`out/reviews/data-proposals-20260913/mission.md` retains its **18:38 UTC start,
+20:00 work / 20:05 cleanup** bounds: up to three implementation/validation cycles
+per root cause, one independent findings pass and one correction review. Parent
+owns preparation/data guards; Curie `01a09c10-a6ad-7291-9fa3-efe624e7d5a0` supplied
+four postapply/review owners through a serialized slot. Final scope is nine files
+under `tools/python/harness/naming/`: new `data.py` plus `audit.py`, `context.py`,
+`proposal.py`, `inputs.py`, `application.py`, `reports.py`, `review.py` and `cli.py`.
+No tests, dependencies, production C/config changes or identity transaction were
+added; local feature commit remains parent-owned and pending at this checkpoint.
+
+The [native lifecycle contract](../agents/tool-usage.md#frozen-naming-postapply-lifecycle)
+now documents human-reviewed DATA candidate preparation with frozen-initializer
+report CAS and distinct `proposed-data-transaction/v1` provenance. FUNCTION wire
+format/`KIND`, single-source restrictions and automatic `conclude` typed-exhaustion
+admission remain unchanged; the unsupported proposed-analyzer seam is not widened.
+Complete owned PRE/POST hashes, modes and canonical storage bind spelling-only
+changes without file moves, representation/qualifier/extent edits or normalization
+byte changes. Parent reports 223 pinned owned inputs for the real candidate;
+snapshot coverage cannot narrow to renamed files. Every exact direct consumer's
+source/name/address/size determines its own asm-diff and byte-match gates after
+four base gates; the data address is never treated as a function.
+
+Independent Maxwell `01a09c19-8f13-7132-a709-8325627090e0` accepted the corrected
+DATA core: four initial findings and two remaining variants closed within the
+review cycle; 16 probes yielded 14 expected rejections, two positive controls and
+zero unexpected outcomes. Splicing/rename commutation and spliced collision checks
+prevent joined-identifier omission; plain externs exclude wrappers/initializers,
+bindings require standalone literal-address `WEAK_SYMBOL_AT`, and call arguments
+(including indirect calls), keyword macros, cross-owner/partial/runtime and
+consumerless scopes reject. A subsequent disposable multi-function-C preparation
+probe exposed the old bulk metadata adapter's whole-file source-tag assumption.
+The root repair uses `collect_lift_metadata` per address with one file read,
+preserving FUNCTION's single-source guard. Public DATA preparation/preservation
+then passed; Maxwell accepted eight focused adapter checks covering legacy and
+two-record inputs, scoped progress errors, structural/missing/unreadable metadata
+and FUNCTION refusal. All nine final `implementation.sha256` pins match.
+
+Five disjoint existing-inventory groups reached actual terminal **exit 0**:
+
+| Group | Final result | Seconds |
+| --- | --- | ---: |
+| Broad | 1,554 passed, two existing forensic skips | 430.60 |
+| Application | 58 passed | 925.79 |
+| Review/private | 84 passed | 820.80 |
+| Owners | 160 passed | 254.53 |
+| Approved native | 55 passed | 3.56 |
+
+Parent's exact XML/current-collection comparison and populated `tests.json`
+account for the unchanged **1,913 unique nodes: 1,911 passed, two skipped, zero
+failures/errors**. Both skips lack existing disposable forensic inputs. After the
+last DATA guard and metadata repairs, all naming/harness-DRY checks separately
+passed **653 cases, two skipped in 37.04s**; this overlapping rerun is not added
+to the inventory total. Earlier focused checks likewise are not extra coverage.
+
+The public producer → gates → parent review → public verify disposable probe
+passed two-consumer/eight-gate and negative cases using **injected execution**;
+explicit rollback restored PRE, frozen report and index. Separate actual native
+PRE/POST temporary copies retained an 84-byte function, every allocated ELF
+section and normalized relocation identity unchanged, with live C untouched.
+`native-rehearsal.json` retains that proof; a failed optional Python ELF import
+was followed by existing toolchain `readelf`, not a dependency installation.
+Fresh parent all-source validation reports **784 exact, 136 partial, zero invalid**.
+These bounded proofs do not establish a production DATA rename or whole-pipeline
+acceptance.
+
+The authorized battle03 report regeneration archived its predecessor and produced
+191 structurally valid rows, not semantic closure. `D_801EB4F0` remains raw;
+`battleDispatchSlots` is still an unapplied candidate requiring a separate
+evidenced production transaction. The symbol gate remains failed and composite
+`just check` is **not green**; no baseline waiver or invented name follows.
+The serialized docs sidecar updates only this plan and `docs/agents/tool-usage.md`
+by 19:40, with existing plan/parser/reference checks at handoff. Preserve every
+prior plan byte, state, budget, the 50-entry requeue (four accepted, 46 outstanding),
+frozen five, unrelated dirty work and all remaining domain obligations. The macro
+remains unapplied with no retry or queue reset; the full goal stays **active and
+unfinished**.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex

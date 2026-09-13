@@ -42,9 +42,11 @@ from ..domain.claims import manifest_source_paths
 from ..domain.ids import normalize_target_id
 from ..domain.manifests import load_target_manifests
 from harness.naming.debt import address_of
-from ..domain.tags import parse_progress_tags, parse_source_tag
+from ..domain.tags import parse_progress_tags
+from ..domain.functions import collect_lift_metadata
 from ..io import unique_object
 from .proposal import (
+    DATA_KIND as DATA_PROPOSAL_KIND,
     KIND as PROPOSAL_KIND,
 )
 from .proposal import (
@@ -159,15 +161,13 @@ def _source_metadata(root: Path, manifest: Any) -> dict[int, tuple[Path, Any]]:
         if source.suffix != ".c":
             continue
         try:
-            text = source.read_text(encoding="utf-8")
-            address = parse_source_tag(text)
-            if address is None:
-                continue
-            try:
-                progress: Any = parse_progress_tags(text)
-            except ValueError as error:
-                progress = error
-            metadata[address] = (source, progress)
+            records = collect_lift_metadata(source.read_text(encoding="utf-8"))
+            for address, text in records.items():
+                try:
+                    progress: Any = parse_progress_tags(text)
+                except ValueError as error:
+                    progress = error
+                metadata[address] = (source, progress)
         except (OSError, UnicodeError):
             continue
     return metadata
@@ -290,7 +290,7 @@ def validate(
             raise ValueError("terminal report validation requires report path")
         for row in terminal:
             provenance = row[PROVENANCE_FIELD]
-            if provenance.get("kind") == PROPOSAL_KIND:
+            if provenance.get("kind") in {PROPOSAL_KIND, DATA_PROPOSAL_KIND}:
                 validate_proposal(root, report_path, report, row, ctx)
             else:
                 validate_terminal_capability(
@@ -312,7 +312,7 @@ def prepare_transaction(
     candidate: dict[str, Any] | None = None,
     expected_sha256: str | None = None,
 ) -> dict[str, Any]:
-    """Atomically bind one ready FUNCTION proposal to its report and live facts."""
+    """Atomically bind one ready proposal to its report and live facts."""
     if (candidate is None) != (expected_sha256 is None):
         raise ValueError("candidate and expected SHA-256 must be supplied together")
     path = canonical_report_path(root, report_path)
@@ -338,14 +338,28 @@ def prepare_transaction(
             _context(root, target),
             transaction=transaction,
         )
-        if result.get("ready") is not True or not transaction.startswith("function:"):
-            raise ValueError("prepare-transaction requires one ready FUNCTION proposal")
+        if result.get("ready") is not True or not transaction.startswith(
+            ("function:", "data:")
+        ):
+            raise ValueError(
+                "prepare-transaction requires one ready FUNCTION or DATA proposal"
+            )
         kind, name = transaction.split(":", 1)
         row = next(
             item
             for item in report["rows"]
             if item.get("kind") == kind and item.get("name") == name
         )
+        if kind == "data":
+            from harness.naming.context import naming_manifest, pre_apply
+
+            context = _context(root, target)
+            result["pre_apply"] = pre_apply(
+                context, kind, name, row, data_proposal=True
+            )
+            result["manifest"] = naming_manifest(
+                context, kind, name, row, result["pre_apply"]
+            )
         row["pre_apply"] = result["pre_apply"]
         row["manifest"] = result["manifest"]
         row[PROVENANCE_FIELD] = build_provenance(
