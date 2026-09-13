@@ -13,7 +13,7 @@ from harness.domain.receipts import command_records, write_receipt
 from harness.common.deadlines import check_deadline
 from harness.naming.evidence import SCHEMA as ANALYZER_VERSION
 from harness.naming.journal import commit_entry
-from harness.naming.native import OUTPUT_BUDGET
+from harness.naming.native import OUTPUT_BUDGET, SemanticResult
 from harness.naming.plan import row_operation_sequence
 
 
@@ -343,9 +343,20 @@ def write_failed_receipt(
     target: str,
     row: dict[str, Any],
     error: Exception,
+    result: SemanticResult | None = None,
 ) -> dict[str, Any]:
     """Persist one honest forensic failure without committing the row."""
 
+    output = {"error": str(error)}
+    if result is not None:
+        output["last_operation"] = {
+            "command": result.command,
+            "selector": result.selector,
+            "exit": result.exit,
+            "killed": result.killed,
+            "raw": result.raw,
+            "stderr": result.stderr,
+        }
     return namespace.write_receipt(
         row,
         "failed.json",
@@ -354,7 +365,7 @@ def write_failed_receipt(
             "status": "failed",
             "target": target,
             "selector": _row_key(row),
-            "output": _bounded_text(str(error)),
+            "output": _json_lines(output),
         },
     )
 

@@ -1620,6 +1620,63 @@ integrations pass, without summing overlap. Existing plan checks accompany hando
 No source/report/index acceptance, naming retry or queue/phase change: preserve
 **1360 = 529 functions + 831 data**, prior blocked/deferred budgets and all debts.
 
+### Commu00 naming prerequisite — 2026-09-13 (prerequisite accepted; naming deferred)
+
+[Mission](../../out/reviews/naming-commu-20260913/mission.md) starts **23:28:56 UTC**
+after `d79db07a`, selecting only `emi/etc/commu00/00@0x801F0E1C` (**172 bytes**),
+with no prior frozen-queue overlap. Effective work cutoff remains **240500 monotonic
+(~00:11:27 UTC)**, stricter than **2026-09-14 00:13:56** wall work; cleanup is
+**00:23:56**. Retain the mission's one candidate/one semantic repair, one conditional
+identity application, 15-minute semantic/10-minute POST reviews and no forward retry.
+Parent's native asm/byte baseline is **172/172**; naming has **zero candidates,
+reviews, applications or renames**, deferred at the prerequisite, not accepted.
+
+Original collection failed because installed Rizin **1.0.0 cc06c1d** treats `tl` as
+type listing; both old type-link commands failed and their definitions were absent.
+Emitted `pdj` bytes do not make that operation successful. Original 30-row report
+SHA-256 `e7f9409089e96e8fcd0698fc29fd3bbafc74ff5d36707e8d4a75cb46cd651ba2`
+and failed-namespace manifest SHA-256
+`1fc30225a405c66c51e6acfa619410ee5e16631d0626f186885bae5f3b14e8a5`
+remain unchanged, checked by this sidecar; original evidence is not rebound.
+
+Separate authorized prerequisite repair changes only commu00 `reviewed.rz` to
+`td` structs plus `avga` arrays: Gift **20×4** at `0x801EEC48`, Explore **48×2** at
+`0x801F2618`. Parent verifies original archive load **0x801EEC00**, size **0x3D50**,
+offset **0x800**, byte-equal extracted/normalized payloads. Real Rizin probes match
+original instructions for selected/Gift-consumer/Explore-consumer **172/516/684**
+bytes and exact table extents **80/96**. Collection/execution now retain full failed
+operation context/raw stderr; deliberate bad-command evidence stays failed without
+a journal commit. This sidecar inspected those deltas and the harness note.
+Existing **156 tests passed in 57.12s**; full naming run `90491` exited zero with
+**642 passed, two skipped in 32.53s**, read from the mission's respective logs.
+Parent reports scoped Ruff passes and harness references **19 valid, zero broken**;
+overlapping test runs are not summed. Schrödinger
+`01a09d24-f9cc-7240-9183-de8982ce8483` issued **PASS** at **23:48:23 UTC**, before
+the unchanged **23:55:41** ceiling, with no findings requiring repair. Parent accepts
+only the four pinned prerequisite files. This sidecar read the
+[review](../../out/reviews/naming-commu-20260913/prerequisite-review.json), verified
+SHA-256 `e9e5a9cca9a7b1b9f85f635f30085bec3a4b457b14070d664b658ba9bc9156f1`
+and matched live files to the reviewer's starting pins. Independent checks cover
+real type fields/array extents/original bytes, **13 existing tests**, seven injected
+attribution/cleanup/deadline cases and full **>8 KiB** raw/stderr retention. Parent's
+full-collector disposable failure probe passed after fixing missing fixture
+`required_work`, not a product repair or production collection rerun.
+
+Residual limits remain: `SemanticResult.output` is not retained, so lifecycle-only
+summary diagnostics can be absent; pre-existing timeout paths may supply empty
+raw/stderr. Full forensic JSON is not bounded by the lifecycle's 8 KiB summary cap.
+Control-flow probes are not native process-cleanup proof; no full-suite or fresh
+POST compiler acceptance is claimed. Naming remains at zero candidates/reviews/
+applications; prerequisite acceptance grants no semantic approval.
+
+Changed recipe correctly leaves snapshot `fresh:false`; no index refresh or campaign
+rebinding occurs under this frozen attempt. After this accepted prerequisite,
+future continuation requires separately safe snapshot/index refresh and explicit provenance
+recovery preserving the old report/failures, never a silent rerun. GAME's **eight**
+obsolete `tl` entries remain outside scope. Preserve all prior queues, consumed
+budgets, **1360 = 529 functions + 831 data**, and broader unfinished goals. This
+plan-only slot grants no commit, source acceptance or renewed naming mission.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex

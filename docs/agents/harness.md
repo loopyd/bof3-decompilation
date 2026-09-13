@@ -215,6 +215,10 @@ workspace or index while writers may remain. Naming evidence propagates uncertai
 without ordinary failure receipts or final journal/telemetry/report publication;
 both owned clients still receive cleanup attempts.
 
+Ordinary naming collection failures retain the error and full last-operation
+command, selector, exit, killed state, raw output and stderr in a failed receipt.
+That forensic record never commits a successful row or closes semantic work.
+
 The guardian can remain active when termination cannot be confirmed; callers stop
 for parent inspection, not automatic retry. Lease release/reacquisition alone is
 not quiescence. This mechanism is not a sandbox, cross-platform guarantee or proof

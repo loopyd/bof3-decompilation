@@ -267,9 +267,11 @@ def run_evidence(
                 worker.kill()
                 errors.append(f"{key}: shard wall clock exceeded")
                 break
+            result = None
             try:
                 semantic: list[dict[str, Any]] = []
                 for op in semantic_operation_plan(row, target):
+                    result = None
                     check_deadline()
                     if op["target"] != target and not op["target"].startswith(
                         f"{target}@"
@@ -291,7 +293,11 @@ def run_evidence(
                         rizin.queue(binding["rizin"], op["target"])
                         result = rizin.run_queued(min(deadline, remaining))[-1]
                         if result.killed or result.exit != 0:
-                            raise ValueError("instruction operation failed")
+                            raise ValueError(
+                                f"instruction operation failed: {result.command} "
+                                f"(exit={result.exit}, killed={result.killed}); "
+                                "see failed.json for command output and stderr"
+                            )
                         validate_instructions(result.raw, binding, original)
                         instruction = {
                             "instruction_id": op["command"],
@@ -396,7 +402,7 @@ def run_evidence(
                 raise
             except Exception as error:
                 worker.kill()
-                write_failed_receipt(namespace, target, row, error)
+                write_failed_receipt(namespace, target, row, error, result)
                 errors.append(f"{key}: {error}")
                 break
     check_deadline()
