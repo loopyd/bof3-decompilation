@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pytest
 from harness.naming import client as index_client
-from harness.naming import execution as runner
 from harness.naming.namespace import canonical_evidence_root
 from harness.naming.namespace import reset_evidence_root
 from harness.naming.namespace import set_evidence_root
@@ -77,7 +76,7 @@ def _worker_environment(
     monkeypatch.setenv("BOF3_NAMING_EVIDENCE_ROOT", "/tmp/ambient-untrusted")
     token = set_evidence_root(selected)
     try:
-        runner.IndexWorker(tmp_path, "exe/test", {})
+        index_client.IndexWorker(tmp_path, "exe/test", {})
     finally:
         reset_evidence_root(token)
     return captured

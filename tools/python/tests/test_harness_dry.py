@@ -30,14 +30,29 @@ def test_required_untracked_file_modes_are_normalized() -> None:
     ]
     if not names:
         return
+    object_path = subprocess.run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-path", "objects"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=True,
+    ).stdout.strip()
     with tempfile.TemporaryDirectory() as temporary:
         index_name = str(Path(temporary) / "index")
-        env = {**os.environ, "GIT_INDEX_FILE": index_name}
+        objects = Path(temporary) / "objects"
+        objects.mkdir()
+        env = {
+            **os.environ,
+            "GIT_INDEX_FILE": index_name,
+            "GIT_OBJECT_DIRECTORY": str(objects),
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES": object_path,
+        }
         subprocess.run(["git", "read-tree", "HEAD"], cwd=ROOT, env=env, check=True)
         for name in names:
             blob = subprocess.run(
                 ["git", "hash-object", "-w", "--", name],
                 cwd=ROOT,
+                env=env,
                 text=True,
                 capture_output=True,
                 check=True,

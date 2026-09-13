@@ -285,6 +285,7 @@ def test_review_cli_rejects_duplicate_json(tmp_path, owner, command):
 
 def test_shared_consumers_use_real_reviewed_owner_envelopes(reviewed_run, monkeypatch):
     from harness.domain.manifests import load_target_manifests
+    from harness.macros import owners as macro_owners
     from harness.macros import review as macro_transaction_review
     from harness.types import proofs as type_shared_proofs
 
@@ -317,7 +318,9 @@ def test_shared_consumers_use_real_reviewed_owner_envelopes(reviewed_run, monkey
             root,
             [pin, dict(pin)],
             load_target_manifests(root),
-            normalize_target=transactions._target,
+            normalize_target=(
+                transactions._target if owner == "type" else macro_owners.resolve_target
+            ),
             verify_reviewed_application=verify,
         )
 

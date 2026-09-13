@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[3]
 # "retired" = scheduled for deletion (mode needs no normalization).
 BIN_DISPOSITIONS = {
     "agent-context": "executable",
+    "agent-run": "executable",
     "analysis-readiness": "executable",
     "ar": "executable",
     "as": "executable",
@@ -67,6 +68,7 @@ BIN_DISPOSITIONS = {
 }
 WRAPPER_MATRIX = {
     "agent-context": ("standalone", "harness.commands.agent_context"),
+    "agent-run": ("python-env", "harness.commands.agent_run"),
     "analysis-readiness": ("python-env", "harness.commands.analysis_readiness"),
     "ar": ("flat", "PSX_AR"),
     "as": ("flat", "PSX_AS"),
@@ -74,7 +76,7 @@ WRAPPER_MATRIX = {
     "bof3-disk": ("native", "PSX_BOF3_DISK"),
     "build": ("python-env", "harness.commands.build"),
     "byte-match": ("python-env", "harness.commands.lift"),
-    "cc": ("flat", "GCC -> maspsx -> PSX_AS"),
+    "cc": ("compile-python-env", "GCC -> maspsx -> harness.build.cli -> PSX_AS"),
     "combiner": ("python-env", "harness.combiner.cli"),
     "companion-check": ("python-env", "harness.commands.companion_check"),
     "compiler-variants": ("python-env-fixed", "harness.commands.compiler_variants"),
@@ -343,7 +345,7 @@ def test_bin_inventory_matches_disposition_table() -> None:
     expected = sorted(f"bin/{name}" for name in BIN_DISPOSITIONS)
     assert tracked == expected
     assert set(WRAPPER_MATRIX) == set(BIN_DISPOSITIONS)
-    assert len(WRAPPER_MATRIX) == 48
+    assert len(WRAPPER_MATRIX) == 49
 
 
 def test_all_shell_wrappers_parse_and_use_the_characterized_bootstrap() -> None:
@@ -354,7 +356,7 @@ def test_all_shell_wrappers_parse_and_use_the_characterized_bootstrap() -> None:
         result = _run("sh", "-n", str(wrapper))
         assert result.returncode == 0, f"bin/{name}: {result.stderr}"
         text = wrapper.read_text(encoding="utf-8")
-        if bootstrap.startswith("python-env"):
+        if "python-env" in bootstrap:
             assert '. "$ROOT/bin/python-env"' in text, name
             assert "python_env " in text, name
         else:
@@ -375,7 +377,7 @@ def test_bin_index_modes_match_dispositions() -> None:
 
 def test_python_env_is_sourced_only_not_directly_executable() -> None:
     # A 100644 index mode checks out non-executable on fresh clones, so no
-    # consumer can depend on direct execution; every tracked consumer sources
+    # consumer can depend on direct execution; every tracked wrapper sources
     # it (`. "$ROOT/bin/python-env"`).
     assert _index_mode("python-env") == "100644"
     result = _run(
@@ -384,8 +386,8 @@ def test_python_env_is_sourced_only_not_directly_executable() -> None:
         "-n",
         "bin/python-env",
         "--",
+        "bin",
         ":!bin/python-env",
-        ":!tools/python/tests/test_wrapper_bootstrap.py",
     )
     assert result.returncode == 0, result.stderr
     for line in result.stdout.splitlines():

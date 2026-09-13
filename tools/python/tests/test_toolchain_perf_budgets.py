@@ -245,7 +245,6 @@ def test_model_facing_output_stays_within_budget(tmp_path: Path, monkeypatch) ->
     summary that a shard may inject into a model context.
     """
 
-    import harness.naming.execution as runner
     import harness.naming.native as native
 
     _repo(tmp_path)
@@ -255,7 +254,7 @@ def test_model_facing_output_stays_within_budget(tmp_path: Path, monkeypatch) ->
     entry = load_checkpoint(tmp_path, report)["function:func_80100000"]
     payload = json.loads((tmp_path / entry["evidence"]).read_text(encoding="utf-8"))
     for record in payload["commands"]:
-        assert len(record["output"]) <= runner.OUTPUT_BUDGET, (
+        assert len(record["output"]) <= native.OUTPUT_BUDGET, (
             "bounded summary: raw payloads never reach the model context"
         )
     # A hostile oversized raw payload is bounded the same way: the result

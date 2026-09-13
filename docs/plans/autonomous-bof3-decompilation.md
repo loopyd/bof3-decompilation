@@ -867,6 +867,70 @@ still unapplied and requires separate later readiness; the full goal remains
 **active and unfinished**. This accepted performance checkpoint completes no
 aggregate phase and grants no unrelated repair or macro retry.
 
+### Existing-fixture repair — 2026-09-13 (reviewed pytest checkpoint)
+
+The user's separate request to resolve the nine remaining pytest failures and
+30 fixture setup errors starts from `160f86f3` at **17:29 UTC**, with original
+**19:00 work / 19:05 cleanup** bounds: up to three diagnosis/fix cycles per root
+cause, one independent review and one correction. This does not renew any earlier
+mission allowance. Boole `01a09ba1-4e35-74b3-9163-dd1850d7f926` accepted the exact
+seven frozen test/fixture hashes with no confirmed weakening or requested review
+correction. Eight reviewer-selected existing tests and isolated Git/token probes
+passed; AST comparison found no added or removed test functions.
+
+Parent changes only `tools/python/tests/naming_synthetic_fixture.py` and existing
+`test_{application_review,harness_dry,naming_evidence_root,scratchpad,
+toolchain_perf_budgets,wrapper_bootstrap}.py`. Repairs explicitly declare
+`support_sources` before synthetic index/evidence construction; use canonical
+`IndexWorker`, `native.OUTPUT_BUDGET` and `macro_owners.resolve_target` owners;
+isolate Git object/index writes in temporary storage while preserving real-root
+inventory/mode assertions; and update wrapper inventory/bootstrap expectations.
+Scratchpad coverage uses deterministic temporary C through the real SDK
+preprocessor, proves the header-name collision and retains referenced declarations
+while removing irrelevant context. Token-aware regexes correct macro-expansion
+spacing assumptions. No compatibility facade, production-gate relaxation, compiler
+substitution, C/config change or source/macro transaction belongs to this repair.
+
+All seven final disjoint groups reached actual terminal **exit 0**, parent-reported:
+
+| Group | Final result | Seconds |
+| --- | --- | ---: |
+| Broad | 1,504 passed, two skipped | 417.46 |
+| Application | 58 passed | 925.05 |
+| Review/private | 84 passed | 819.38 |
+| Macros | 60 passed | 124.97 |
+| Types | 100 passed | 146.00 |
+| Approved native | 55 passed | 3.63 |
+| Wrappers | 50 passed | 2.90 |
+
+Parent's exact XML/current-collection comparison accounts for **1,913 unique
+nodes: 1,911 passed, two skipped, zero failures or errors**, without duplicates
+or exclusions. All original 1,912 nodes remain; the current `agent-run` wrapper
+adds one case through existing parametrization, not a new test function. Both
+existing forensic skips lack disposable inputs. Initial focused terminal-fixture
+validation passed 37 cases; the first native group had 54 passes and one whitespace
+assertion failure. Its `native-before.*` evidence remains historical and is not
+double-counted after the final 55-pass rerun. The nine pytest failures and all
+30 setup errors close at this checkpoint, not retroactively in prior runs.
+
+Parent fresh native source validation reports **784 exact, 136 partial, zero
+invalid**; full Ruff, changed-file formatting and whitespace pass. Separately,
+`bin/symbols check` still exits **2** for `emi/battle/battle/03:D_801EB4F0`, debt
+introduced in `604b567c`. Do not waive this baseline, invent a semantic name or
+claim composite `just check` is green; identity repair needs its own evidenced
+authorization. Pytest closure is not whole-game or aggregate-phase acceptance.
+
+The sidecar read all 3,536 prior plan lines, then the mission's `mission.md`,
+`review.md` and `tests.json` under `out/reviews/fixture-repair-20260913/`, and
+matched all seven `implementation.sha256` pins. Its sole serialized plan edit
+retains **18:05 work / 18:10 cleanup** bounds; existing plan/parser/reference and
+preservation checks accompany handoff. No other authored sidecar file or Git
+write is authorized. Preserve `.pi/settings.json`, both dirty battle sources,
+unrelated `tmp/`, all prior history/budgets, structured states, the 50-entry requeue
+(four accepted, 46 outstanding), frozen five and every remaining domain obligation.
+The macro remains unapplied, with no retry or backlog reset; the full goal remains
+**active and unfinished**.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex

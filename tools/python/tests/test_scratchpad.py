@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+import re
 import sqlite3
 from pathlib import Path
 from types import SimpleNamespace
@@ -319,16 +320,48 @@ def test_public_context_rejects_conflicting_same_name_declarations() -> None:
 
 def test_payload_allows_local_names_that_collide_with_ignored_headers(
     isolated_registry_context: None,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     from harness.io import repo_layout
+    from harness.toolchain import decompme
 
+    source = tmp_path / "collision.c"
+    source.write_text(
+        '#include "bof3/battle/battle15_internal.h"\n'
+        "#define LOCAL_RESULT result\n"
+        "u32 func_800AF66C(BattleRange *range) {\n"
+        "    u32 LOCAL_RESULT;\n"
+        "    LOCAL_RESULT = range->range_axis_34;\n"
+        "    return LOCAL_RESULT;\n"
+        "}\n",
+        encoding="utf-8",
+    )
+    real_preprocess = decompme._preprocess_source
+
+    def preprocess_fixture(layout, original_source, arguments):
+        assert arguments.count(str(original_source)) == 1
+        arguments = [
+            str(source) if argument == str(original_source) else argument
+            for argument in arguments
+        ]
+        context, source_code = real_preprocess(layout, source, arguments)
+        assert "int CdControl(u_char com, u_char *param, u_char *result);" in context
+        return context, source_code
+
+    monkeypatch.setattr(decompme, "_preprocess_source", preprocess_fixture)
     payload = DecompMeScratchpadToolchain(repo_layout()).payload(
         parse_function_id("emi/battle/battle/15@0x800AF66C"),
         compiler="gcc-2.7.2-psx",
     )
 
     assert "REGISTER_PIN" not in payload.source_code
-    assert "result" in payload.source_code
+    assert "LOCAL_RESULT" not in payload.source_code
+    assert re.search(r"\bu32\s+result\s*;", payload.source_code)
+    assert re.search(r"\breturn\s+result\s*;", payload.source_code)
+    assert "typedef struct BattleRange" in payload.context
+    assert "range_axis_34" in payload.context
+    assert "CdControl" not in payload.context
 
 
 def test_payload_resolves_referenced_psyq_declarations(

@@ -125,7 +125,11 @@ def _build_synthetic_exact_evidence(tmp_path: Path):
         "schema='harness.target/v2'\nid='exe/test'\nkind='executable'\n"
         "source_dir='src/test'\nbinary='out/test.bin'\nload_address=0x80100000\n"
         "splat='config/targets/exe/test/splat.yaml'\nsources=[]\n"
+        "support_sources=['src/test/symbols.c']\n"
     )
+    support = tmp_path / "src/test/symbols.c"
+    support.parent.mkdir(parents=True)
+    support.write_text("extern unsigned int D_80100080[3];\n")
     (config / "symbols.txt").write_text(
         "func_80100000 = 0x80100000;\nD_80100080 = 0x80100080;\n"
         "func_8010008C = 0x8010008C;\nfunc_80100098 = 0x80100098;\nfunc_801000A0 = 0x801000A0;\n"
