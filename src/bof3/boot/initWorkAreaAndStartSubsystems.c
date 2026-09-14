@@ -6,7 +6,8 @@
  * subsystems and the supplied disc-LBA setup.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
+ * live audit is instruction- and byte-exact.
  */
 void initWorkAreaAndStartSubsystems(s32 work_base, u_long disc_lba) {
   volatile u8 scratch[0x30];

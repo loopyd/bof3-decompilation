@@ -2050,7 +2050,7 @@ One score/report update and one M1 raw-DATA `@kind unknown` declaration repair c
 first-seed body unchanged. Final byte gate and four claimed no-cache lifts pass (90022, exit 0).
 Independent [PASS](../../out/reviews/logo-ced48-seed-20260914/review/review.json) at **05:16:08**, SHA-256
 `5b7c3aa09e34b2e348b6a51edb4f40c32c255ce579ae4cdad2270ab942f0e869`, binds nine paths/102 proof hashes.
-Parent [accepts that scope](../../out/reviews/logo-ced48-seed-20260914/acceptance.json), reverified after refresh; local feature commit authorized, no push.
+Parent [accepts that scope](../../out/reviews/logo-ced48-seed-20260914/acceptance.json), reverified after refresh; committed locally **`c0314885`**, no push.
 Old SDK index/snapshot/consistent SQLite backup survive. SDK scan 60278 exits **0**:
 **23 targets / 1088 matches**, [CdMix correction](../../out/reviews/logo-ced48-seed-20260914/psyq-correction.json) **0x801D0A9C→0x801D029C**
 for SYS.OBJ/S_020.OBJ by regeneration from normalized payload; no runtime scanner patch.
@@ -2059,6 +2059,30 @@ Logo analysis/global index 76043 exits **0**, fresh/index-ready with **0 stale f
 LOGO retains **17 naming opportunities (7 raw functions/10 data), 35 required work**;
 raw naming/storage claims remain unfinished. Prior spent budgets and 900s full-suite timeout
 are not reset or resolved; this is native/matching plus SDK-binding acceptance, not whole-goal completion.
+
+### LOGO progress handoff — 2026-09-14 (metadata/diagnostic/docs accepted)
+
+[Separate admission](../../out/reviews/logo-progress-canonicalization-20260914/admission.json) at **05:31:47**, HEAD `c0314885`, freezes
+work/review/cleanup **06:00 / 06:05 / 06:10**, seven paths and one owner repair.
+The earlier four byte-exact claims remain true, but did not establish canonical tags:
+three old sources plus new CED48 had `@residual none; annotation`, correctly rejected
+by strict parsing—not extraction loss or a parser bug. All four are disjoint from the
+spent sce10eff six-file batch; neither that batch nor the closed source attempt renews.
+Unchanged owner repair 65949 exits **0** after eight prewrite native gates, **8.958s**
+command elapsed, not whole-operator time. It moves notes beside canonical `none`;
+bodies/ABI/prose remain unchanged. POST 54461 exits **0**, four byte matches and four
+no-cache exact lifts; all four progress records now parse `exact / 100 / none`.
+Readiness diagnostics expose the actual `ValueError`; no parser relaxation. Raw-kind
+docs distinguish reviewed kind evidence from raw spelling, naming or storage promotion;
+no blanket raw-kind ban or new checker feature. Existing evidence gates remain intact.
+Independent [PASS](../../out/reviews/logo-progress-canonicalization-20260914/review/review.json), published **05:40:20**, SHA-256
+`d121b0f6046bb2e59fb9fcfc54bdcc690f2eecde743aeaef7941637896afaf33`, no semantic-review repairs.
+Parent [accepts seven paths](../../out/reviews/logo-progress-canonicalization-20260914/acceptance.json), rechecking 7 pins/38 proof hashes after refresh.
+Parent **150 existing tests**, reviewer **17 overlapping tests** (not summed), **10 refs** PASS.
+Old snapshot/consistent database preserved; refresh 51774 exits **0**, analysis/index ready,
+zero stale facts; naming preflight ready with **0 findings**. Local feature commit authorized, no push.
+Canonical audit remains **16 rows versus 17 inventory**: additive reconciliation is a
+later action, not performed here. No naming transaction, spent-budget reset or whole-goal closure.
 
 ## Current skill-only operator correction
 

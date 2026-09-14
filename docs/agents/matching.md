@@ -18,6 +18,13 @@ Unresolved ownership/ABI or a failed native gate stops matching until resolved
 within the original bounds. Final live byte matching and independent review remain
 mandatory. `agent-run diagnose` still requires an existing claimed source.
 
+Native equality is not progress-metadata validity. An exact record uses
+`@status exact`, `@match 100.00`, and `@residual none`; put explanatory notes on
+separate comment lines, not after a semicolon in a tag value. At naming handoff,
+`bin/naming-audit prepare TARGET` reports metadata debt. Its explicit repair mode
+requires fresh exact proof and preserves notes; never weaken the parser or repair
+unrelated rows to make a selected function ready.
+
 ```sh
 bin/splat TARGET
 bin/m2ctx TARGET@0xADDRESS

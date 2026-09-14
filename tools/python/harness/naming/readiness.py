@@ -409,7 +409,7 @@ def progress_metadata_findings(
             row["row"] = f"function:func_{address:08X}"
             try:
                 parse_progress_tags(text)
-            except ValueError:
+            except ValueError as error:
                 status = STATUS_TAG_RE.search(text)
                 match = MATCH_TAG_RE.search(text)
                 exact_claim = (
@@ -418,9 +418,7 @@ def progress_metadata_findings(
                     and match is not None
                     and match.group(1) in {"100", "100.00"}
                 )
-                row["reason"] = (
-                    "malformed progress metadata (@status/@match/@residual incomplete)"
-                )
+                row["reason"] = f"malformed progress metadata: {error}"
                 if exact_claim:
                     row["class"] = "safe_metadata_repair"
                     row["repair"] = (

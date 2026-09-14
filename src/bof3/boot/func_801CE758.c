@@ -4,6 +4,7 @@
  * @source 0x801CE758
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
+ * live audit is instruction- and byte-exact.
  */
 void func_801CE758(void) {}

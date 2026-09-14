@@ -137,11 +137,17 @@ keep each symbol in exactly one map.
   `D_*`/`func_*` name with an overlay name (`SCENA16_D_*`); a collision
   resolves by a different name or a suffix (`D_80146864_BYTE`). Data:
   camelCase + role suffix (`...Table`/`...Strings`/`...State`) +
-  `/* @source 0xXXXXXXXX` and `@kind table|rodata|bss|data */` tags (raw
-  `D_*`: `@kind unknown`; `/* */` only — `//` breaks gcc-2.6.3). Every
+  `/* @source 0xXXXXXXXX` and `@kind table|rodata|bss|data */` tags.
+  Use `@kind unknown` until independent reviewed evidence establishes the kind;
+  a raw `D_*` spelling neither proves nor invalidates that evidence. Preserve
+  proven kinds during spelling-only transactions; classification/repair is a
+  separate action. Content kinds such as `table` are not storage sections, and
+  mapped bytes or a typedef alone do not prove either. Use `/* */` only — `//`
+  breaks gcc-2.6.3. Every
   non-address-named map symbol (SDK exempt) needs one @source-tagged
   definition: lift file, header/source declaration, or `WEAK_SYMBOL_AT`
-  binding; `bin/symbols check` enforces both rules.
+  binding. `bin/symbols check` enforces raw-prefix spelling and origin tracking,
+  not `@kind` evidence or semantic acceptance; those remain audit obligations.
 - Preserve pre-promotion evidence with an `INFERRED:` comment beside the owning metadata-tagged declaration (what was observed, what would verify promotion); never create a semantic alias from a hint alone.
 - Equal addresses across targets are insufficient — overlays and PsyQ copies
   can share a role with different addresses or bytes.

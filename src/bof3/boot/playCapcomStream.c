@@ -6,7 +6,8 @@
  * @source 0x801CEDFC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
+ * live audit is instruction- and byte-exact.
  */
 void playCapcomStream(void) {
   volatile u8 scratch[0x18];

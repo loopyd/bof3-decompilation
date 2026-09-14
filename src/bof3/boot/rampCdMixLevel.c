@@ -6,7 +6,8 @@
  * two, submitting each level to CdMix.
  * @status exact
  * @match 100.00
- * @residual none; live comparison is instruction- and byte-exact.
+ * @residual none
+ * live comparison is instruction- and byte-exact.
  */
 void func_801CED48(void) {
   s32 level;
