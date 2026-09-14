@@ -1808,6 +1808,61 @@ performed. No source/report/index mutation, naming acceptance or spent-budget re
 belongs to this feature. Preserve **1360 = 529 functions + 831 data**, original
 Commu/battle03/Area027 limits, all prior queues and the full unfinished objective.
 
+### Sce10eff metadata prerequisite — 2026-09-14 (tooling accepted; native batch stopped)
+
+Action starts **01:03:14 UTC** at `865f6f11`, whose accepted include optimization
+remains unchanged. Original work/cleanup bounds are **01:43:14 / 01:53:14**.
+The six-source metadata batch consumed its one baseline attempt without C writes:
+`801D0E9C` passed asm/byte checks; `setupSceneObjectTransform` at `801D0EE0` failed
+asm **50/51 (98.04%)**, equal **204-byte** extents, `+0x68` original `lh` versus
+current `lhu`. [Failure](../../out/reviews/sce10eff-metadata-20260914/baseline-failure.json)
+retains all three commands. Owner `prepare --repair` was never invoked; no passing
+subset, metadata/application retry, index refresh or naming transaction occurred.
+Six physical PRE bytes/modes, 28 protected inputs and raw Git index remain unchanged.
+
+The separate annotation-loss tooling draft initially failed Goodall review at
+**01:20:39**. One bounded repair fixed comment-literal mutation and tight-prefix
+closure, but the [second FAIL](../../out/reviews/sce10eff-metadata-20260914/final-review.json)
+was timely at **01:26:10.489**, before **01:26:31**: a raw CRLF `//` lexeme ending
+backslash+CR escaped the splice guard and could expose C tokens. File-based prepare
+normalizes CRLF and rejects safely; no production write was demonstrated. Parent
+restored both tooling files to HEAD at **01:27:39**, retaining `unaccepted.patch`.
+Both FAILs and the consumed original repair remain immutable history.
+
+The user explicitly authorized another edge-case repair at **01:28:56**: restore
+the draft and fix CRLF rejection, with new work/cleanup **01:58:56 / 02:08:56**;
+this is additional authorization, not a reset of the earlier allowance/deadline.
+Goodall `01a09d78-0eee-7a70-9337-58b0c41087cb` had review window **01:30:45–01:50:45** and
+published [PASS](../../out/reviews/sce10eff-metadata-20260914/authorized-review.json)
+at **01:35:13.912**; SHA-256
+`bd21a2ecc5e7a54c9249220f0bd25d73731ad725f9a604db9c1f539ae610d0af`.
+This sidecar verified the review and exact tags/harness pins; parent accepts only
+those two files. At **01:39:54**, parent reverified both current pins and ten proof
+hashes; a later reviewer ping hit model capacity without changing or invalidating
+the published PASS. Reviewer is closed; no additional review is claimed.
+Annotation notes survive beside canonical progress tags; literal,
+tight-prefix and LF/CRLF splice cases are resolved. A later raw-CR-only exploration
+failed and its unaccepted generalization was removed, restoring the reviewed pins.
+No raw-CR-only support or erased evidence is claimed. The
+[confirmed probe](../../out/reviews/sce10eff-metadata-20260914/authorized-crlf-confirmed.json)
+uses host preprocessing, not PSX proof. The same-pin rerun in `accepted-tests.log`
+completed with **706 passed, two skipped in 40.31s** (handle `68049`, exit zero).
+Independent **94 existing checks**, actual
+LF/CRLF prepare/rollback fixtures and six real-source dry transforms pass without
+summing overlap; stubbed exact proofs do not accept the stopped native batch.
+Unchanged limits: missing-residual insertion uses LF even in CRLF text, multiple
+progress tags on one line remain unsupported, and the global parser still counts
+literal tag text; the mutator now rejects ambiguity instead of editing literals.
+Broader-guard test runs are not proof for the accepted pins.
+
+[Diagnosis](../../out/reviews/sce10eff-metadata-20260914/diagnosis.json) traces the
+native defect to `5bb91498a7911938f4cb6897a2fc2c276a8c9000` changing shared `unk_3e`
+from `s16` to `u16` while consumer arithmetic stayed unchanged. Consumer-local signed
+interpretation versus an all-consumer field-type transaction requires a separately
+frozen lift mission; neither was tried here. The 176-byte naming scout stays
+unadmitted. Preserve **1360 = 529 functions + 831 data**, all other queues, spent
+identity limits and the full objective. This plan-only update closes no source phase.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex

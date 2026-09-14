@@ -130,23 +130,44 @@ def set_tag_line(text: str, tag: str, value: str) -> tuple[str, bool]:
 
 
 def _set_single_tag_line(text: str, tag: str, value: str) -> tuple[str, bool]:
-    """Replace the first tag line and remove duplicate lines of that tag."""
+    """Normalize one tag and preserve semicolon annotations as comment text."""
 
     pattern = re.compile(
-        rf"^([ \t]*(?:/\*|\*)?[ \t]*@){tag}\b[^\r\n]*(?:\r?\n)?",
+        rf"^([ \t]*(?:/\*|\*|//)?[ \t]*)@{tag}\b((?:(?!\*/)[^\r\n])*)",
         re.MULTILINE,
     )
     matches = list(pattern.finditer(text))
     if not matches:
         return text, False
-    first = matches[0]
-    replacement = f"{first.group(1)}{tag} {value}"
-    if first.group(0).endswith(("\n", "\r")):
-        replacement += "\n"
-    fixed = text[: first.start()] + replacement + text[first.end() :]
-    duplicates = list(pattern.finditer(fixed))[1:]
-    for duplicate in reversed(duplicates):
-        fixed = fixed[: duplicate.start()] + fixed[duplicate.end() :]
+    comments = [
+        comment
+        for comment in iter_c_lexemes(text)
+        if comment.group().startswith(("/*", "//"))
+    ]
+    for match in matches:
+        tag_start = match.start() + len(match.group(1))
+        comment = next(
+            (
+                comment
+                for comment in comments
+                if comment.start() <= tag_start < match.end() <= comment.end()
+            ),
+            None,
+        )
+        if comment is None or re.search(r"\\(?:\r?\n|\r?$)", comment.group()):
+            raise ValueError("progress edits require unspliced C comment lines")
+    fixed = text
+    for index, match in reversed(list(enumerate(matches))):
+        prefix = match.group(1)
+        annotation = match.group(2).partition(";")[2].strip()
+        replacement = f"{prefix}@{tag} {value}" if index == 0 else prefix
+        if annotation:
+            if re.search(r"@(status|match|residual)\b", annotation):
+                raise ValueError("progress annotation contains another progress tag")
+            note_prefix = prefix.replace("/*", " *", 1).rstrip() + " "
+            newline = "\r\n" if "\r\n" in match.string else "\n"
+            replacement += f"{newline}{note_prefix}{annotation}"
+        fixed = fixed[: match.start()] + replacement + fixed[match.end() :]
     return fixed, True
 
 
@@ -161,10 +182,24 @@ def canonical_exact_progress(text: str) -> tuple[str, bool]:
     if not residual:
         match = MATCH_TAG_RE.search(fixed)
         if match:
+            comment = next(
+                (
+                    comment
+                    for comment in iter_c_lexemes(fixed)
+                    if comment.group().startswith(("/*", "//"))
+                    and comment.start() <= match.start() < match.end() <= comment.end()
+                ),
+                None,
+            )
+            if comment is None:
+                raise ValueError("residual insertion requires a C comment")
             line_end = fixed.find("\n", match.start())
             line_end = len(fixed) if line_end < 0 else line_end
             line_start = fixed.rfind("\n", 0, match.start()) + 1
             prefix = fixed[line_start : match.start()]
+            if comment.group().startswith("/*") and comment.end() - 2 < line_end:
+                line_end = comment.end() - 2
+                prefix = prefix.replace("/*", " *", 1)
             fixed = fixed[:line_end] + f"\n{prefix}@residual none" + fixed[line_end:]
     return fixed, fixed != text
 

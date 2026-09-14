@@ -92,6 +92,10 @@ traversal. It still scans the complete resulting set for cross-target spellings;
 each scope call rederives it. No persistent include cache or freshness exemption
 is introduced.
 
+Live-proven metadata repair preserves semicolon-delimited progress annotations as
+adjacent comment text while canonicalizing the fields. Notes are not progress
+authority; an annotation containing another progress tag is rejected, not erased.
+
 `naming.audit.prepare_transaction(check_only=True)` uses the same validation and
 report lock as publication, including prospective full-report provenance checks,
 but leaves the bound report in memory. It checks the original report bytes and
