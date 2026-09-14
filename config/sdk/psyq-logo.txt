@@ -6,6 +6,7 @@ StopCallback = 0x801CF1EC;
 CheckCallback = 0x801CF24C;
 SetVideoMode = 0x801CFBD8;
 CdInit = 0x801CFC30;
+CdMix = 0x801D029C;
 CdReadSync = 0x801D209C;
 SetDefDispEnv = 0x801D3428;
 SetLineF3 = 0x801D38EC;

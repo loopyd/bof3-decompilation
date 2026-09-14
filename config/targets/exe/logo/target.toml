@@ -11,6 +11,7 @@ psyq_source = "src/bof3/support/logo_psyq.c"
 sources = [
     "src/bof3/boot/func_801CE758.c",
     "src/bof3/boot/initWorkAreaAndStartSubsystems.c",
+    "src/bof3/boot/rampCdMixLevel.c",
     "src/bof3/boot/playCapcomStream.c",
 ]
 support_sources = [
@@ -29,9 +30,12 @@ headers = [
 [psyq]
 space = "logo"
 [psyq.libraries.LIBCD]
-members = ["psyq/4.7/libcd/event.o"]
+members = ["psyq/4.7/libcd/event.o", "psyq/4.7/libcd/s_020.o"]
 confidence = "high"
-evidence = ["LOGO.EXE 0x801cfc30 matches CdInit in PsyQ 4.7 libcd.a"]
+evidence = [
+    "LOGO.EXE 0x801cfc30 matches CdInit in PsyQ 4.7 libcd.a",
+    "CdMix at 0x801D029C matches the 32-byte PsyQ 4.7 s_020.o wrapper with its CD_vol relocation resolving to 0x801D1394; the 1900-byte PsyQ 3.7 LIBCD SYS.OBJ signature uniquely matches at 0x801CFD38 and places CdMix at +0x564. This proves compatible LIBCD identity, not a unique historical SDK release.",
+]
 [psyq.libraries.LIBETC]
 members = ["psyq/4.7/libetc/intr.o"]
 confidence = "high"

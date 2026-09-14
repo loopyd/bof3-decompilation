@@ -11,5 +11,6 @@ extern s32 D_801EB448; /* @source 0x801EB448 @kind unknown */
 extern s32 D_801EB44C; /* @source 0x801EB44C @kind unknown */
 extern s32 D_801EB450; /* @source 0x801EB450 @kind unknown */
 extern s32 D_801EB454; /* @source 0x801EB454 @kind unknown */
+extern CdlATV D_801EB470; /* @source 0x801EB470 @kind unknown */
 
 #endif

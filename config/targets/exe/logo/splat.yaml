@@ -35,7 +35,7 @@ segments:
       - [0x930, asm, func_801CE930]
       - [0xa98, asm, func_801CEA98]
       - [0xbfc, asm, func_801CEBFC]
-      - [0xd48, asm, func_801CED48]
+      - [0xd48, c, func_801CED48, '@source: src/bof3/boot/rampCdMixLevel.c']
       - [0xda4, asm, func_801CEDA4]
   - name: main
     type: code

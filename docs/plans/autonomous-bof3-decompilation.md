@@ -2021,7 +2021,7 @@ This is **one fixture pair**, not general pipeline speed; old `cebea83b` collect
 never reverted in tracked files. The full 1913-test suite remains incomplete.
 Prior full-suite timeout/profile failure/Git-cost evidence and **1360** debt remain; no source promotion.
 
-### First-source route — 2026-09-14 (documentation reviewed; source unadmitted)
+### First-source route — 2026-09-14 (documentation committed)
 
 At accepted local commits `cebea83b` / `b4886e6f` (no push), the [documentation mission](../../out/reviews/first-source-route-20260914/admission.json)
 retains work/cleanup **05:05 / 05:10**. Three docs reconcile existing `codex.md`
@@ -2034,10 +2034,31 @@ Independent [three-pin PASS](../../out/reviews/first-source-route-20260914/revie
 SHA-256 `8086af9ba1b9605d8e4e332aa3a8911ab6df3d82820d8b9204de643ae673b03f`,
 binds [review pins](../../out/reviews/first-source-route-20260914/review-pins.json), not the admission's PRE hashes.
 Parent confirms current pins, **11 existing tests / 17 valid refs**; reviewer **2 tests / 17 refs**,
-without summing overlap. Local documentation commit follows parent validation.
-`exe/logo@0x801CED48` remains an ABI/SDK scout with Epicurus's **04:58** cutoff;
-no source edit/promotion or new source admission consumed, no spent mission renewed.
+without summing overlap. Documentation committed locally as **`5142e713`**, no push.
+At that checkpoint `exe/logo@0x801CED48` was an ABI/SDK scout with **04:58** cutoff;
+no source admission had been consumed or spent mission renewed; subsequent admission follows.
 The 900s full-suite timeout and unfinished whole goal/**1360** debt remain unchanged.
+
+### LOGO first source — 2026-09-14 (native/SDK scope accepted)
+
+[Admission](../../out/reviews/logo-ced48-seed-20260914/admission.json) at **04:55**, HEAD `5142e713`, freezes work/review/cleanup
+**05:20 / 05:25 / 05:30** and nine paths with source PRE absence. One C89 seed for
+`exe/logo@0x801CED48` is first-diff exact **23 instructions / 92 bytes** (24970, exit 0),
+without aids or another C-body experiment. Original machine V0 behavior survives the void
+hypothesis; official `CdMix`/`CdlATV` support the typed binding, not a unique historical SDK version.
+One score/report update and one M1 raw-DATA `@kind unknown` declaration repair consumed;
+first-seed body unchanged. Final byte gate and four claimed no-cache lifts pass (90022, exit 0).
+Independent [PASS](../../out/reviews/logo-ced48-seed-20260914/review/review.json) at **05:16:08**, SHA-256
+`5b7c3aa09e34b2e348b6a51edb4f40c32c255ce579ae4cdad2270ab942f0e869`, binds nine paths/102 proof hashes.
+Parent [accepts that scope](../../out/reviews/logo-ced48-seed-20260914/acceptance.json), reverified after refresh; local feature commit authorized, no push.
+Old SDK index/snapshot/consistent SQLite backup survive. SDK scan 60278 exits **0**:
+**23 targets / 1088 matches**, [CdMix correction](../../out/reviews/logo-ced48-seed-20260914/psyq-correction.json) **0x801D0A9C→0x801D029C**
+for SYS.OBJ/S_020.OBJ by regeneration from normalized payload; no runtime scanner patch.
+Logo analysis/global index 76043 exits **0**, fresh/index-ready with **0 stale facts** at
+**05:19:45**; coverage is **4 claimed exact / 52 indexed**, not full original coverage.
+LOGO retains **17 naming opportunities (7 raw functions/10 data), 35 required work**;
+raw naming/storage claims remain unfinished. Prior spent budgets and 900s full-suite timeout
+are not reset or resolved; this is native/matching plus SDK-binding acceptance, not whole-goal completion.
 
 ## Current skill-only operator correction
 
