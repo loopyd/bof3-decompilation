@@ -135,6 +135,15 @@ belong to the [naming lifecycle](tool-usage.md#frozen-naming-postapply-lifecycle
 
 ## Policy versus mechanism
 
+`commands.binaries` owns executable materialization, shared by setup and
+`just binaries`; the latter restores existing extracted media without setup or
+downloads. It validates original PS-X headers through `domain.psx` and writes only
+the payload to `out/binaries`, matching reviewed Splat coordinates and hashes.
+Correct payloads stay untouched; exact legacy full-image copies are normalized.
+Unexplained differences require explicit `--force` on the module CLI. Replacements
+use expected-content publication and report retained quarantine paths; extracted
+originals stay unchanged. EMI restoration stays with `emi.catalog_bootstrap`.
+
 `common.git.read_git` bounds workspace/index snapshot queries by 30 seconds,
 2 MiB and the inherited absolute work cutoff. It retains filename bytes and
 propagates cleanup uncertainty; timeout or truncated output is never a baseline.

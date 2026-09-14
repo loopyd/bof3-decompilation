@@ -60,6 +60,7 @@ authorization does not override sandbox decisions or authorize dependency instal
 | --- | --- |
 | Binary identity and load address | `config/targets/<target>/target.toml` |
 | Reviewed layout | `config/targets/<target>/splat.yaml` |
+| Shared Splat execution options | `config/splat.yaml` |
 | Target-local symbols | `config/targets/<target>/symbols.txt` |
 | Shared SDK symbol maps | `config/sdk/psyq-{slus,logo}.txt` |
 | Reviewed Rizin annotations | `config/targets/<target>/reviewed.rz` |

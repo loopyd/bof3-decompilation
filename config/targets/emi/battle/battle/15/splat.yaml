@@ -10,6 +10,10 @@ options:
   asm_path: out/splat/emi/battle/battle/15/asm
   src_path: src/emi/battle/battle/15
   ld_script_path: out/splat/emi/battle/battle/15/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/battle/battle/15/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/battle/battle/15/undefined_syms_auto.txt
+  cache_path: out/splat/emi/battle/battle/15/.splache
+  asset_path: out/splat/emi/battle/battle/15/assets
   symbol_addrs_path:
   - config/targets/shared/symbols.txt
   - config/sdk/psyq-slus.txt

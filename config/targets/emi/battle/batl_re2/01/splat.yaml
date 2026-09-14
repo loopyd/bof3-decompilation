@@ -9,6 +9,10 @@ options:
   asm_path: out/splat/emi/battle/batl_re2/01/asm
   src_path: src/emi/battle/batl_re2/01
   ld_script_path: out/splat/emi/battle/batl_re2/01/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/battle/batl_re2/01/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/battle/batl_re2/01/undefined_syms_auto.txt
+  cache_path: out/splat/emi/battle/batl_re2/01/.splache
+  asset_path: out/splat/emi/battle/batl_re2/01/assets
   symbol_addrs_path:
   - config/targets/shared/symbols.txt
   - config/sdk/psyq-slus.txt

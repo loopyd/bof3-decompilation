@@ -14,6 +14,12 @@ bin/asm-diff TARGET@0xADDRESS
 bin/byte-match TARGET@0xADDRESS
 ```
 
+`bin/splat` reads tracked target configuration under `config/targets/` and shared
+source-protection/full-disassembly options from [`config/splat.yaml`](../../config/splat.yaml).
+Target YAML owns generated symbol-list, asset and cache paths under `out/splat/<target>/`;
+bootstrapping propagates these settings. Generated lists are disposable evidence,
+not reviewed maps: promote only verified target-local facts into `symbols.txt`.
+
 1. Verify the target manifest, Splat boundary, and map.
 2. Treat m2c output as a C seed, never layout evidence.
 3. Recover control flow, signedness, access widths, calls, delay slots in

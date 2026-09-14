@@ -76,6 +76,7 @@ def input_state(root: Path, target: str, transaction_paths: set[str]) -> dict:
         f"config/targets/{target}/reviewed.rz",
         "CMakeLists.txt",
         "out/catalog/emi.json",
+        "config/splat.yaml",
         "config/compiler/object-flags.cmake",
         "config/compiler/variants.json",
         manifest.psyq_source,

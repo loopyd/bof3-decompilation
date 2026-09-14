@@ -9,6 +9,10 @@ options:
   asm_path: out/splat/exe/logo/asm
   src_path: src/exe/logo
   ld_script_path: out/splat/exe/logo/linker.ld
+  undefined_funcs_auto_path: out/splat/exe/logo/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/exe/logo/undefined_syms_auto.txt
+  cache_path: out/splat/exe/logo/.splache
+  asset_path: out/splat/exe/logo/assets
   symbol_addrs_path:
   - config/targets/shared/symbols.txt
   - config/sdk/psyq-logo.txt

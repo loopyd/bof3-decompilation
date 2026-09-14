@@ -1863,6 +1863,139 @@ frozen lift mission; neither was tried here. The 176-byte naming scout stays
 unadmitted. Preserve **1360 = 529 functions + 831 data**, all other queues, spent
 identity limits and the full objective. This plan-only update closes no source phase.
 
+### Sce10eff signed-load lift — 2026-09-14 (source restored; tooling accepted)
+
+Separate `bof3-re` action starts **01:50:24 UTC** at `bac32219`, with immutable
+native work/cleanup **02:25:24 / 02:35:24**, one code experiment and one bounded
+review repair. Scope is `emi/scenario/sce10eff/00@0x801D0EE0` source plus its
+existing Splat boundary; shared header, names, ABI and compiler settings stay fixed.
+Local `(s16)` interpretation before `(s32)` changes the baseline **50/51 (98.04%)**
+LH/LHU mismatch to exploratory **51/51, 204-byte exact** output. Proposed residual
+canonicalization preserves the adjacent annotation; the boundary changes `asm→c`.
+These results are not final source acceptance.
+
+Parent's initial report format failed before gates; its immutable failure survives
+the one consumed report-only repair, not another code experiment. Final audit
+`out/reviews/lift-audit/sce10eff-signed-load-protocol-repair-20260914` exits **2**:
+symbols PASS, Splat FAIL attempting repository-root `undefined_funcs_auto.txt` on
+the correctly read-only filesystem. No final native candidate byte gate ran.
+Independent [review](../../out/reviews/sce10eff-signed-load-20260914/reviewer/result/review.json)
+SHA-256 `4b3f8c76b28231ae1c232947ef23baa9b7a2bad6ae0217e91405a6586d1f369b`
+passes semantics but blocks overall acceptance. This sidecar verified the hash;
+the reviewer independently decoded original bytes and all 65,536 halfword cases,
+not a fresh native audit. Parent retained POST under the action's `post/`, restored
+both physical PRE files at **02:10:18**, and verified bytes/modes/raw Git index in
+[recovery](../../out/reviews/sce10eff-signed-load-20260914/recovery.json). No candidate
+or stopped six-file metadata-batch retry or source promotion follows. Recovery
+readiness was fresh/index-ready with zero stale targets before later config changes.
+
+Actual harness gap discovery **02:09:08 UTC** starts a new measured harness/skill
+phase under the user's timing rule, with tooling work/cleanup **02:39:08 / 02:49:08**.
+It does not reset the original native cutoff, consumed attempts or historical proofs.
+Explicit user correction supersedes the temporary-option repair and cancels its
+review. Final design removes the temporary overlay entirely: tracked
+`config/splat.yaml` owns `create_c_files: false` and `disassemble_all: true`; all
+**23** target Splat configs add only generated function/symbol/cache/asset paths under
+their target's `out/splat`; the bootstrap propagates all four, including `asset_path`
+at `out/splat/<target>/assets`.
+Generated lists remain disposable, never automatically promoted to reviewed maps.
+No external Splat/library or sandbox/approval-policy change. This sidecar verified
+all **28** current [v2 config pins](../../out/reviews/sce10eff-signed-load-20260914/config-pins-v2.json).
+Parent's parsed comparison against HEAD preserves every other option, boundary and
+symbol reference. Repo `.venv` has **PyYAML 6.0.3**, declared as `PyYAML>=6.0` in
+`pyproject.toml`; the earlier missing-dependency claim was not reproduced.
+
+Historical read-only-bwrap reproduction failed before (exit 1, **0.4456s**) and
+passed with the superseded overlay (exit 0, **0.4793s**); neither accepts the final
+design. The [tracked-config probe](../../out/reviews/sce10eff-signed-load-20260914/splat-tracked-config/result.json)
+exits **0 in 0.4825s**, with unchanged command hash
+`3aa788bc3a30e7c0d5ad64b9d43cfde7e0116a050664d43ab033d9576928e398`.
+These are output-path proofs, not speedup or production lift acceptance. Historical
+checks remain historical; `config-final-tests.log` confirms **199 passed / 11.81s**,
+without summing overlap. Parent reports **55 INDEX / 3 matching-guide** refs valid.
+Generated lists were **635/302 bytes**; no cache creation is claimed without
+`--use-cache`. First index recovery (9539) passed for the superseded three-field
+revision. First all-target probes passed **6**, found **16** default-root asset
+output errors, and retained `exe/logo`'s existing SHA-1 mismatch (expected `d8a873…`,
+actual `967b182…`), not a pass or permission to restamp. The asset-default harness
+gap at **02:30:43** resets only measured harness/skill timing, not frozen work/cleanup
+or attempts. V2's final 23 read-only Splat probes complete with **22 PASS**; only
+`exe/logo` exits **2** for its unchanged SHA-1 mismatch, without bypass or restamp.
+All root-output path failures resolve; existing root undefined outputs remain
+unchanged. Final four-field index recovery exits **0** (`config-final-index.log`);
+`config-final-readiness.json` confirms ready/index-ready **true**, stale **0**, before
+the closure fix below. Production C remains exact original PRE; no source retry.
+Independent config review in **02:27:42–02:37:42** published **FAIL B1 at 02:36**:
+shared `config/splat.yaml` was absent from native `input_state`. Immutable receipt
+`config-review/review.json` SHA-256
+`b4ba3b65009e25db83a1c02d8050bd0220f5395d5f7388ead82fb201a72938ea` survives.
+Parent added that unconditional input in a **29th**, unreviewed support file,
+`common/inputs.py`, SHA-256 `61ab9d183505a8069e8aaeaee668fbb056e10e2c68e98969c5bfc3996f41c743`.
+`closure-probe-final.json` confirms shared-config bytes/change detection/current mode,
+not independent review; fixture fixes were disposable only. Transaction checks (35184)
+exit **0**: `closure-tests.log`, **216 passed / 214.37s** (overlaps 199; do not sum).
+B1 inspection **02:37:28** resets measured timing only,
+not the expired review/work bounds. **Prior checkpoint: feature UNACCEPTED**, retained, not reverted,
+with no feature commit or source promotion; closure fix needs fresh bounded review
+admission; the separately admitted continuation below did not obtain a verdict.
+Closure continuation **02:48:19**, work/cleanup **03:08:19 / 03:18:19**, preserved
+all 29 pins. Epicurus's **02:49:47–03:04:47** review hit model capacity at **02:57**;
+one identical retry with unchanged parameters/deadline errored again at **03:01:23**.
+Reviewer closed; no verdict `review.json` published and no alternate model/agent used.
+Retained independent/consumer proofs and **23 checks / 0.30s** are not acceptance.
+Parent reports **80 checks / 10.36s**, Ruff clean, fresh readiness and **55/3** refs;
+no feature commit or source acceptance. Original FAIL and all old bounds survive.
+Next, unadmitted `logo-normalization-diagnosis.json` identifies LOGO's normalized
+image as the full original PS-X EXE, including its **0x800** header; expected SHA-1
+matches exactly the payload. SLUS already holds raw payload. Setup's
+`_materialize_executables` copies the full original via `copy2`; force could break
+both. Preserve original headers/payload offsets, not checksum restamping; at that
+checkpoint no next-gap implementation or binary mutation was admitted.
+After acceptance, another lift needs separate admission under new tool pins;
+no automatic retry or label-only renewal. Preserve **1360**
+debt, prior queues/limits and the full unfinished goal.
+
+Normalization [admitted](../../out/reviews/executable-normalization-20260914/admission.md)
+at **03:12 UTC**, work/cleanup **03:37 / 03:42**, separately from spent source attempts.
+`commands/binaries.py` validates PS-X magic/load/size/nonempty payload through the
+domain owner; preserves correct payloads, automatically normalizes only exact full
+originals, rejects unknown differences unless forced, and publishes atomically with
+expected-content guards and retained PRE. Setup shares this owner; `just binaries`
+uses current imports. Four new-scope paths plus unchanged 29 Splat integration pins
+form [33 review pins](../../out/reviews/executable-normalization-20260914/review-pins.json), SHA-256
+`b25f4106a90131254d63994526a1b0aa8f92f0159135045ce4bf1284ed07243a`.
+Parent verified original media/user C/index unchanged before recovery; LOGO now has
+the exact **120832-byte** payload (`d8a873…`), SLUS remains exact; public `just binaries`
+reports 23 images. Parent reports **315 checks / 37.58s**, 12 disposable cases and
+19 valid harness refs. All 23 Splat probes pass in retained
+`config-targets-normalized-native/result.json` using original inner bwrap mounts;
+earlier socket failure before tool startup remains in `config-targets-normalized`.
+Index recovery 96995 exits **0**. User explicitly authorized one same-model retry;
+Epicurus's **03:20–03:35** review admission binds all 33 pins; parent observed terminal
+model-capacity infrastructure failure at **03:27 UTC**. Reviewer closed, no verdict
+published and no automatic retry; the implementation remains unaccepted.
+No acceptance, commit or source promotion; prior B1 FAIL, failed review bounds,
+consumed attempts and **1360** debt remain unchanged, without automatic retry.
+
+Full validation **03:32–03:57**, cleanup **04:02**, preserves 33 pins; [logs](../../out/reviews/tooling-full-validation-20260914).
+Python collected **1913 / 0.23s**; its 900s run (64649) exits **124**, 60 pass dots/no assertion
+failure, incomplete—not full green. Full Ruff and symbols check PASS. Disposable cProfile/
+faulthandler probe fixed its own filename collision, then exited **139** with no statistics;
+retained stack is `common.git.read_git→submodules.collect_entries→runtime.write_receipt`.
+Safer existing CLI-sequence instrumentation records **2805 real Git queries / 119.897s**,
+**67.632s (~56.4%)** in Git; 62428 exits **124**. No harness/library mutation or completed fix.
+Six alternating pairs agree: supervised/plain rev-parse **24.54/2.12ms**, ls-files **34.44/2.00ms**;
+no plain replacement or weakened supervision/freshness. Repeated Git capture is only a lead.
+`logo-name-scout-20260914/result.json` pins `jr ra`/`nop` and main caller; purpose deferred, no proposal.
+User authorized **03:38** capacity retry with 30s backoff; same Epicurus resumed **03:40**, fixed
+review cutoff **04:08**/parent cleanup **04:18** (`backoff-admission.md`), no fallback/model change.
+Terminal [review PASS](../../out/reviews/executable-normalization-20260914/review-backoff/review.json) binds exactly 33 files;
+SHA-256 `863e42c94eb6bfe382cb679605e6df5f7bf9580cedf6019bdfe30fc3f253724f`, 28 checks/44 proof hashes.
+Parent [accepts exactly 33 tooling files](../../out/reviews/executable-normalization-20260914/acceptance.json)
+after verifying all implementation/44 proof hashes and original media/user C/raw index; local commit pending.
+Restored source stays unaccepted; no whole-harness acceptance. LOGO fresh `--no-cache` audit 35594
+exits **0**: **3 exact / 0 partial / 0 invalid**, coverage **3/52**; no source promotion or debt change.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex
@@ -1895,6 +2028,14 @@ blocked/deferred disposition. Durable transaction receipts remain owner evidence
 Markdown and live session handles own orchestration, not a new state database.
 Resume preserves original consumption and first verifies real handles/current state.
 Never infer termination, acceptance or permission from stale records or a free lease.
+
+Current user timing reports measure wall intervals spent executing the harness or
+attached skills, not total action/conversation elapsed time. An actually discovered
+harness gap/bug resets only that measured phase: record its timestamp/reason and
+retain prior intervals, durations and evidence. Never reinterpret historical elapsed
+figures as this new metric. Measurement resets do not extend immutable transaction/
+review cutoffs, restore consumed attempts or authorize source retries; any separate
+tooling phase retains its explicitly frozen bounds and authority.
 
 Before source application, reserve realistic time for remaining native gates,
 index recovery, independent POST review and finalization, plus margin; cleanup has

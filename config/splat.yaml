@@ -1,0 +1,3 @@
+options:
+  create_c_files: false
+  disassemble_all: true

@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import contextlib
 import io
-import shutil
 import subprocess
 import tomllib
 from dataclasses import dataclass
@@ -28,6 +27,7 @@ from ..toolchain import managed_lifecycle
 from ..toolchain.disc import DiscToolchain, find_disc_set
 from ..toolchain.gcc_variants import check_host_compatible, load_variants
 from ..toolchain.psyq import PsyqToolchain
+from .binaries import materialize_executables
 from .compile_commands import run as write_compile_commands
 
 REQUIRED_TOOLS = (
@@ -92,23 +92,6 @@ def _build_local_tools(layout: RepoLayout) -> None:
         )
 
 
-def _materialize_executables(root: Path, *, force: bool) -> None:
-    extracted = (root / "out" / "extracted").resolve()
-    for manifest in load_target_manifests(root).values():
-        if manifest.kind != "executable":
-            continue
-        source = (extracted / manifest.disc_id).resolve()
-        if not source.is_relative_to(extracted) or not source.is_file():
-            raise FileNotFoundError(
-                f"missing extracted executable for {manifest.id}: {source}"
-            )
-        destination = root / manifest.binary
-        if destination.exists() and not force:
-            continue
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, destination)
-
-
 def _extract_and_materialize(root: Path, cue: Path, *, force: bool) -> None:
     _run(
         [
@@ -128,7 +111,7 @@ def _extract_and_materialize(root: Path, cue: Path, *, force: bool) -> None:
         extracted_dir=root / "out" / "extracted",
         raw_emi_dir=root / "out" / "extracted",
     )
-    _materialize_executables(root, force=force)
+    materialize_executables(root, force=force)
     materialize_reviewed_targets(root=root, catalog=load_catalog(root))
 
 
