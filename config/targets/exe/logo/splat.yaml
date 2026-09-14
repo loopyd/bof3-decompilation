@@ -44,4 +44,11 @@ segments:
     subsegments:
       - [0xdfc, c, playCapcomStream, '@source: src/bof3/boot/playCapcomStream.c']
   - [0xe7c, bin, post_main]
+  - name: cd_mix
+    type: code
+    start: 0x229c
+    vram: 0x801d029c
+    subsegments:
+      - [0x229c, asm, CdMix]
+  - [0x22bc, bin, post_cd_mix]
   - [0x1d800]

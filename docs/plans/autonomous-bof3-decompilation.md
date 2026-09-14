@@ -2080,9 +2080,50 @@ Independent [PASS](../../out/reviews/logo-progress-canonicalization-20260914/rev
 Parent [accepts seven paths](../../out/reviews/logo-progress-canonicalization-20260914/acceptance.json), rechecking 7 pins/38 proof hashes after refresh.
 Parent **150 existing tests**, reviewer **17 overlapping tests** (not summed), **10 refs** PASS.
 Old snapshot/consistent database preserved; refresh 51774 exits **0**, analysis/index ready,
-zero stale facts; naming preflight ready with **0 findings**. Local feature commit authorized, no push.
-Canonical audit remains **16 rows versus 17 inventory**: additive reconciliation is a
-later action, not performed here. No naming transaction, spent-budget reset or whole-goal closure.
+zero stale facts; naming preflight ready with **0 findings**. Committed locally **`7303951d`**, no push.
+At that checkpoint the canonical audit retained **16 rows versus 17 inventory**;
+reconciliation was not part of that feature. No naming transaction, budget reset or goal closure.
+
+### LOGO naming audit — 2026-09-14 (capture blocked; reconciliation structurally reviewed)
+
+[Audit-only admission](../../out/reviews/logo-naming-audit-20260914/admission.json) at **05:50:09**, HEAD `7303951d`, retains original
+work/cleanup **06:15:09 / 06:20:09**, one additive publication and one selected evidence run.
+Canonical `out/reviews/plan-audit-naming/exe__logo.json` grows **16→17** with `D_801EB470`;
+prior 16 rows unchanged; other pins held during reconciliation. Full validation exits **0**, `complete:false`.
+Report SHA-256 `94edc89ba8e9708737ca4dd6c328c5970e6b7fcfb85f8559f377a1650e980896`.
+Original reconciliation session/exit remain unknown, not replayed: [recovery](../../out/reviews/logo-naming-audit-20260914/reconciliation-recovery.json)
+records approved host/normalized-child scans excluding a live writer and validated report pin.
+Selected `function:func_801CED48 --instructions` (29258) exits **1 in 2.166s**, **0 completed rows**:
+`instruction capture requires a closed reviewed function: exe/logo@801d029c`.
+At failure, known SDK `CdMix` lay inside broad `post_main` bin; the reviewed-boundary guard
+correctly refused capture. No established harness bug, raw-boundary promotion or capacity retry.
+Retained [failure manifest](../../out/reviews/logo-naming-audit-20260914/failed-evidence/manifest.json) SHA-256
+`7b16f582244cd1c650f092286af463bc6663474d7ffa5a1621a1b7f36128ff1c`; selected attempt **spent**.
+Audit closed blocked **05:58:52**. Independent structural review published **06:02:50**;
+parent [accepts frozen-report structure only](../../out/reviews/logo-naming-audit-20260914/structural-acceptance.json), 18 proof hashes/exact reconstruction verified,
+review SHA-256 `0a48774751d0589eed125e1a040f461068377fca3bd58a4946a04747b7834a73`.
+No semantics or completion accepted. Subsequent Splat owner change belongs to the separately
+admitted CdMix boundary repair, not reconciliation; fresh full validation followed below.
+No identity application or audit retry; prior spent limits/full unfinished goal remain intact.
+
+### LOGO CdMix boundary — 2026-09-14 (layout repair accepted)
+
+[Separate admission](../../out/reviews/logo-cdmix-boundary-20260914/admission.json) at **05:59:33** freezes work/review/cleanup
+**06:19:33 / 06:22:33 / 06:24:33**. One seven-line edit to
+`config/targets/exe/logo/splat.yaml` closes reviewed SDK `CdMix` as a **32-byte/eight-instruction**
+asm range **[0x801D029C, 0x801D02BC)**, preserving nine prior ranges and unknown neighbors.
+No C/map/manifest edit or guard weakening; the SDK body remains external, not lifted.
+Independent [PASS](../../out/reviews/logo-cdmix-boundary-20260914/review/review.json), published **06:08:38**, SHA-256
+`6857546f19c71ea4fabb40984fbb0e4b6e147681a529cba26c12277c84fb3d4d`, no review repairs.
+Parent [accepts the single config](../../out/reviews/logo-cdmix-boundary-20260914/acceptance.json), verifying its pin/28 proof hashes again after refresh.
+**64 existing tests**, symbols PASS; native 61396 exits **0**, Splat and all four live
+byte matches/no-cache exact lifts. Old snapshot/report/consistent SQLite backup retained.
+Refresh 65854 exits **0**, snapshot/index ready, zero stale facts/preflight findings.
+Direct current `pdj 8` capture verifies all 32 original bytes through the unchanged owner;
+34719 exits **0**, including unfiltered full naming validation: **17 rows, complete:false**.
+This is technical boundary/refresh acceptance only: no SDK lift, identity edit, spent-audit
+replay or whole-coverage claim. Local config-plus-plan commit authorized, no push;
+all earlier consumption, original bounds and the unfinished full goal remain intact.
 
 ## Current skill-only operator correction
 
