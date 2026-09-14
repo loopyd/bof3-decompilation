@@ -53,7 +53,8 @@ def _owned_files(root: Path, target: str, manifest: Any) -> list[Path]:
     return list(dict.fromkeys(owned))
 
 
-def _cross_target_files(root: Path, target: str, manifest: Any) -> list[Path]:
+def _collect_cross_target_files(root: Path, target: str, manifest: Any) -> list[Path]:
+    """Collect other-target seeds before one transitive local include traversal."""
     files: list[Path] = []
     for other, other_manifest in load_target_manifests(root).items():
         if other == target:
@@ -68,7 +69,7 @@ def _cross_target_files(root: Path, target: str, manifest: Any) -> list[Path]:
             pass
         files += [root / path for path in other_manifest.headers]
         files += [base / "reviewed.rz"]
-        files += local_include_files(root, files)
+    files += local_include_files(root, files)
     return list(dict.fromkeys(files))
 
 
@@ -123,7 +124,7 @@ def transaction_scope(
         source_locations.append(manifest_rel)
     source_locations.sort()
     cross = _files_containing(
-        root, old_name, _cross_target_files(root, target, manifest)
+        root, old_name, _collect_cross_target_files(root, target, manifest)
     )
     from harness.domain.claims import resolve_source_for_paths
 

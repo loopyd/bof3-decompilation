@@ -1765,13 +1765,48 @@ The [profile](../../out/reviews/naming-admission-20260914/profile.json) and sibl
 `prepare.prof` retain **53.3787s** profiled wall: four `transaction_scope` calls
 48.079s, four `cross_target_files` 47.074s, 98 `local_include_files` 46.630s;
 211,331 resolves, 1,719,996 lstats (20.399s), 517,377 stats (11.750s). Cumulative
-times overlap and include profiler overhead; they are not summed. Live
-`readiness._cross_target_files` calls `local_include_files(root, files)` inside each
-other-target iteration on an accumulating list. Gathering all seeds before one
-include traversal is a concrete separate optimization lead, not implemented here
-or a measured speedup/new naming attempt. No source/report/index mutation or pin
-rebinding occurred. Keep **1360**
+times overlap and include profiler overhead; they are not summed. At that checkpoint,
+`readiness._cross_target_files` called `local_include_files(root, files)` inside each
+other-target iteration on an accumulating list. Gathering seeds before one traversal
+was a separate lead, implemented only in the subsequent action below. The 53.3787s
+profile remains historical attribution, not its benchmark baseline. No production
+mutation or pin rebinding occurred. Keep **1360**
 debt, full-goal scope and all Commu/battle03/Area027 spent/deferred limits unchanged.
+
+### Naming include traversal — 2026-09-14 (tooling accepted)
+
+Action starts **00:40:44 UTC** after `cb6298ff`; work/cleanup remain **01:20:44 /
+01:30:44**, with 15-minute review reserved and at most one repair. The sole runtime
+change gathers other-target seeds before one include closure, renaming the private
+helper `_collect_cross_target_files`; complete scope, parser/containment policy and
+fresh calls remain intact, without a cache. Parent accepts only readiness/harness
+pins reviewed by Copernicus `01a09d66-0a2d-71f3-9fd3-33d3854930c2`:
+[PASS](../../out/reviews/naming-includes-20260914/review.json) checks completed
+**00:56:37**; parent observed the final receipt and verified pins/1,125 inputs at
+**00:58:52**, before both the 15-minute limit and **01:07**. First observed reviewer
+clock was **00:51:50**; check completion is not artifact publication.
+Review SHA-256 `af6fe22ed77b66c28fa4891134e9c07b34f0af8302a779f092b444c7561cbd7d`
+and both live pins were verified by this sidecar; no findings or repairs occurred.
+
+[Equivalence](../../out/reviews/naming-includes-20260914/equivalence.json) covers all
+**23** real target cross-path sets, one available raw symbol per target, two full
+public scopes and **1,125 unchanged inputs**. Six fresh supervised public `--check`
+processes in three alternating before/after pairs retain equal outputs and the same
+spent Commu report. [Benchmark](../../out/reviews/naming-includes-20260914/benchmark.json)
+medians are **41.86504338→7.43869904s (82.2317% lower)**, including startup and equal
+instrumentation. Readiness include calls fall **92→8**; global cProfile **98→14**
+includes other owners and is attribution only. This is not cold-filesystem proof,
+a statistical interval, a production application or a whole-pipeline speedup.
+Parent **732 existing tests passed, two skipped in 34.01s**; independent **81**
+adversarial cases (64 deterministic graphs) and **60 existing checks in 8.7s** pass.
+Ruff/check-format and **19** docs references pass; overlapping checks are not summed.
+
+Next `emi/scenario/sce10eff/00@0x801D2658` (**176 bytes**) is only an unadmitted scout:
+unfiltered preflight is `ready:false`, zero blocked/six repairable metadata rows;
+the selected function's own metadata is exact. No repair or queue replacement was
+performed. No source/report/index mutation, naming acceptance or spent-budget reset
+belongs to this feature. Preserve **1360 = 529 functions + 831 data**, original
+Commu/battle03/Area027 limits, all prior queues and the full unfinished objective.
 
 ## Current skill-only operator correction
 
