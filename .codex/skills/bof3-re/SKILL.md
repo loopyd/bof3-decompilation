@@ -59,7 +59,7 @@ Honor the selected function/group. None: rank via `bin/rev-query <quick-wins|lea
 
 ## Match loop
 
-**Never edit C before a live asm diff.** Diagnose first mismatch, classify per [matching playbook](../../../docs/agents/matching-playbook.md#delay-slots-and-entry-copies), one structural fix, rerun normal diff; revert at once if percentage drops. Full diff only for first/ambiguous diagnosis. Partial-lift catalog = parent audit data, not live diagnosis. 3 non-progressing attempts per level:
+**Before changing existing C, obtain a live asm diff.** A genuinely absent first source uses the bounded [first-source route](../../../docs/agents/matching.md#first-source-and-required-loop); no seed is accepted without native gates and independent review. Diagnose first mismatch, classify per [matching playbook](../../../docs/agents/matching-playbook.md#delay-slots-and-entry-copies), one structural fix, rerun normal diff; revert at once if percentage drops. Full diff only for first/ambiguous diagnosis. Partial-lift catalog = parent audit data, not live diagnosis. 3 non-progressing attempts per level:
 
 1. types/declarations: width, signedness, pointers, fields, prototypes;
 2. control flow: branch direction, loop/return/switch shape; equal-valued arms use the playbook's bounded branch-shape matrix before escalation;

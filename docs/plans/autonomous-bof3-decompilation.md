@@ -2021,6 +2021,24 @@ This is **one fixture pair**, not general pipeline speed; old `cebea83b` collect
 never reverted in tracked files. The full 1913-test suite remains incomplete.
 Prior full-suite timeout/profile failure/Git-cost evidence and **1360** debt remain; no source promotion.
 
+### First-source route — 2026-09-14 (documentation reviewed; source unadmitted)
+
+At accepted local commits `cebea83b` / `b4886e6f` (no push), the [documentation mission](../../out/reviews/first-source-route-20260914/admission.json)
+retains work/cleanup **05:05 / 05:10**. Three docs reconcile existing `codex.md`
+first-source authority with the pre-edit-diff rule: genuinely absent source needs
+parent-owned bounded seed admission, original-byte/ownership evidence and PRE absence.
+Missing-source CLI exit **2** is not a native baseline or runtime bug. Seed score
+is unavailable; first live diff precedes further C edits, final byte match and
+independent review remain mandatory. No guard bypass, budget renewal or source retry.
+Independent [three-pin PASS](../../out/reviews/first-source-route-20260914/review/review.json), published by **04:42:26** before **04:55**,
+SHA-256 `8086af9ba1b9605d8e4e332aa3a8911ab6df3d82820d8b9204de643ae673b03f`,
+binds [review pins](../../out/reviews/first-source-route-20260914/review-pins.json), not the admission's PRE hashes.
+Parent confirms current pins, **11 existing tests / 17 valid refs**; reviewer **2 tests / 17 refs**,
+without summing overlap. Local documentation commit follows parent validation.
+`exe/logo@0x801CED48` remains an ABI/SDK scout with Epicurus's **04:58** cutoff;
+no source edit/promotion or new source admission consumed, no spent mission renewed.
+The 900s full-suite timeout and unfinished whole goal/**1360** debt remain unchanged.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex
