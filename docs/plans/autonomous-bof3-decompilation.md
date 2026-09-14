@@ -1666,16 +1666,71 @@ Residual limits remain: `SemanticResult.output` is not retained, so lifecycle-on
 summary diagnostics can be absent; pre-existing timeout paths may supply empty
 raw/stderr. Full forensic JSON is not bounded by the lifecycle's 8 KiB summary cap.
 Control-flow probes are not native process-cleanup proof; no full-suite or fresh
-POST compiler acceptance is claimed. Naming remains at zero candidates/reviews/
+POST compiler acceptance is claimed. At that checkpoint naming had zero candidates/reviews/
 applications; prerequisite acceptance grants no semantic approval.
 
-Changed recipe correctly leaves snapshot `fresh:false`; no index refresh or campaign
-rebinding occurs under this frozen attempt. After this accepted prerequisite,
-future continuation requires separately safe snapshot/index refresh and explicit provenance
+Changed recipe left snapshot `fresh:false`; prerequisite acceptance performed no
+index refresh or campaign rebinding. Subsequent continuation requires separately
+safe snapshot/index refresh and explicit provenance
 recovery preserving the old report/failures, never a silent rerun. GAME's **eight**
 obsolete `tl` entries remain outside scope. Preserve all prior queues, consumed
 budgets, **1360 = 529 functions + 831 data**, and broader unfinished goals. This
 plan-only slot grants no commit, source acceptance or renewed naming mission.
+
+**Same-queue continuation — POST deadline failed; exact PRE restored.** Prerequisite
+commit `85a0a1f1` stopped **23:50:19 UTC** (21m23s); continuation starts **23:51:07**,
+retaining original **240500** work / **00:23:56** cleanup bounds and the failed
+collector. Parent preserved prior index/snapshot and original report CAS/failure
+evidence before one safe refresh; no physical backup of the original initializer
+report is claimed. Only the later prepared physical PRE exists. Stale commu00
+analysis rebuilt, then index; readiness is true.
+Fresh manual owner receipts in a distinct namespace cover selected/caller/initializer/
+dispatch/consumer **172/796/484/56/76 bytes**; no production collector rerun occurred.
+Original initializer report CAS stayed unchanged through successful public `--check`.
+Socrates `01a09d33-817f-7c51-9712-0d92d738fc2f` passed the original candidate
+`configureScratchTaskForVariant` at **2026-09-14 00:00:15 UTC**, before **00:02:30**;
+parent pin-verified and separately accepted in the mission's `semantic-acceptance.json`.
+
+One candidate, zero repairs and **one identity application** are consumed. Parent
+verifies five logical roles equal physical PRE with only raw-name replacement and
+unchanged modes. Public PRE `postapply-2b3696a44015a189c7101858727a0f80/snapshot.json`
+hashes to `73fe85d810acb01dff4ba077a2f00a27ea65d85a1dac7afd30591c7b6808d2ba`;
+six passed gates in `postapply-02c7bd4ad461664f1b8fe0bf48eb9fdb/gates.json` hash to
+`9833c80ec3fe560facb012cfbae9da017d84ad6cf24b7d665e1427e324b9a339`
+(both under `out/reviews/evidence/`). This sidecar verified hashes and gate results:
+**43/43 instructions, 172/172 bytes**. Prepared report SHA-256 is
+`d61cc2c3c4809553183fa0695bee9ab3c235e988e2ac4973110c77ffa206fa44`.
+An unsupported-deadline-flag invocation rejected before gates; one syntax correction
+used the same `bind_deadline(240500)` launcher, not a source retry. Parent confirms
+one POST index recovery and `ready:true` before rejection. Boyle
+`01a09d3c-1a3b-7080-84cf-47d34a2eb133` missed the original **00:08:45** POST ceiling:
+at **00:09:03 UTC**, parent stat-verified no canonical review artifact while the
+reviewer remained active, then interrupted and required an honest timing failure.
+The subsequent [FAIL](../../out/reviews/evidence/naming-commu-continuation-20260913/post-review.json)
+was reported **00:09:40.821818 UTC**, SHA-256
+`eebc4e603b86264a7da1425fd2ad69fc7a0c255a5ad7ab39cebe734ca822ed27`.
+This sidecar read the timing verdict and verified its hash. All technical checks,
+including 1,805 final-state file pins and independent ELF extraction of the original
+172 bytes, passed; these and semantic approval are not timely POST acceptance.
+No source defect was found. Parent compressed the POST review budget after the
+prerequisite work; insufficient allocation/handoff and missed publication caused
+failure, not semantic uncertainty or compiler failure. Reviewer is closed; no late PASS.
+
+Parent reversed the five identity roles and verified all six physical PRE states,
+frozen report/recipe pins and raw Git index. This sidecar independently confirms
+all six paths' bytes/modes/absence and unchanged prepared-report SHA above:
+`func_801F0E1C.c` is restored and the new source is absent. Rollback index recovery
+`31842` exited zero with readiness true at **00:09:53 UTC**; native build `29785`
+exited zero at **00:10:18 UTC**. This sidecar read rollback
+readiness (`ready:true`, `index_ready:true`) and confirms `build/cmake/build.ninja`
+contains the old source and excludes the new source. Restoration is complete.
+No `prepare-review`, public `verify` or finalization executed; the prepared report
+stays immutable. Accounting is **one candidate, zero semantic repairs, one spent
+application, zero accepted names**. No automatic retry, new naming PRE or pin
+rebinding follows. Semantic proof and exercised rollback are progress, not debt
+closure: global **1360** and all prior queues/budgets remain unchanged. Existing
+plan/reference/whitespace checks accompany this rollback checkpoint; any local
+recording commit is not feature/naming completion or broader phase acceptance.
 
 ## Current skill-only operator correction
 
