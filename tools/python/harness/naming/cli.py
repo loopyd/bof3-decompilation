@@ -9,7 +9,13 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
-from harness.common.cli import add_root_argument, resolved_root, run_main
+from harness.common.cli import (
+    SingleValue,
+    add_root_argument,
+    add_work_deadline_argument,
+    resolved_root,
+    run_main,
+)
 from harness.naming.context import SCHEMA_V3
 from harness.naming.opportunities import (
     collect_inventory,
@@ -186,6 +192,12 @@ def build_parser() -> argparse.ArgumentParser:
     snapshot.add_argument("--expected-report-sha256", required=True)
     snapshot.add_argument("--evidence-root", action=_SingleEvidenceRoot)
     snapshot.set_defaults(handler=_run_snapshot)
+    snapshot.add_argument(
+        "--reserve-seconds",
+        type=float,
+        action=SingleValue,
+        help="positive time reserved for remaining gates, POST review and finalization",
+    )
     attestation = sub.add_parser(
         "prepare-review", help="package an explicit pinned parent review decision"
     )
@@ -221,6 +233,18 @@ def build_parser() -> argparse.ArgumentParser:
     terminal.add_argument("--expected-parent-digest", required=True)
     terminal.add_argument("--evidence-root", action=_SingleEvidenceRoot)
     terminal.set_defaults(handler=_run_terminal_verify)
+    for name in (
+        "validate",
+        "prepare-transaction",
+        "snapshot",
+        "postapply-gates",
+        "prepare-review",
+        "postapply-review",
+        "verify",
+        "finalize-transaction",
+        "terminal-verify",
+    ):
+        add_work_deadline_argument(sub.choices[name])
     return parser
 
 
@@ -426,6 +450,7 @@ def _run_snapshot(args: argparse.Namespace) -> int:
             args.report,
             args.transaction,
             expected_report_sha256=args.expected_report_sha256,
+            reserve_seconds=args.reserve_seconds,
         )
         _print({"snapshot": str(path)})
     return 0

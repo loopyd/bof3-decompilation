@@ -43,6 +43,27 @@ def check_deadline() -> None:
         )
 
 
+def check_reserve(seconds: float | None) -> None:
+    """Require a positive remaining-time reserve without extending the work cutoff."""
+    check_deadline()
+    if seconds is None:
+        return
+    try:
+        valid = type(seconds) in {int, float} and math.isfinite(seconds) and seconds > 0
+    except OverflowError:
+        valid = False
+    if not valid:
+        raise ValueError("remaining-time reserve must be finite and positive")
+    deadline = resolve_deadline()
+    if deadline is None:
+        raise ValueError("remaining-time reserve requires a bound work deadline")
+    if deadline - time.monotonic() < seconds:
+        raise DeadlineExpired(
+            "insufficient remaining work time for the reserved "
+            f"{seconds:g} seconds; defer before source application"
+        )
+
+
 def capture_work_clock() -> dict:
     check_deadline()
     deadline = resolve_deadline()
@@ -77,6 +98,17 @@ def suspend_work_deadline() -> Iterator[None]:
         _CURRENT.reset(token)
 
 
+@contextmanager
+def use_deadline(deadline: float | None = None) -> Iterator[None]:
+    """Bind the stricter inherited or supplied cutoff and restore it on every exit."""
+    token = _CURRENT.set(resolve_deadline(deadline))
+    try:
+        check_deadline()
+        yield
+    finally:
+        _CURRENT.reset(token)
+
+
 def bind_deadline(
     function: Callable[..., _Result], *, argument: str = "deadline"
 ) -> Callable[..., _Result]:
@@ -84,11 +116,7 @@ def bind_deadline(
 
     @wraps(function)
     def execute(*args, **kwargs):
-        token = _CURRENT.set(resolve_deadline(kwargs.get(argument)))
-        try:
-            check_deadline()
+        with use_deadline(kwargs.get(argument)):
             return function(*args, **kwargs)
-        finally:
-            _CURRENT.reset(token)
 
     return execute

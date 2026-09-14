@@ -39,7 +39,9 @@ cutoff; its existing `--deadline` stays a relative per-operation cap. Freeze a
 separate cleanup hard-stop; neither flag permits resetting the campaign budget. See
 [owner work deadlines](harness.md#owner-work-deadlines) for rollback and
 late-publication handling and check-only revalidation's no-restoration boundary.
-Other subcommands do not inherit these CLI options.
+The supported [frozen naming lifecycle](#frozen-naming-postapply-lifecycle) nodes
+also accept the original `--work-deadline`. These are per-command options, not
+implicitly inherited CLI flags.
 
 ```sh
 bin/agent-context cleanup macro-opportunity TARGET ID
@@ -423,8 +425,18 @@ Before the authorized spelling application, capture physical PRE for the prepare
 FUNCTION or DATA transaction:
 
 ```sh
-bin/naming-audit snapshot TARGET REPORT --transaction KIND:OLD --expected-report-sha256 REPORT_PIN --evidence-root "$ROOT"
+bin/naming-audit snapshot TARGET REPORT --transaction KIND:OLD --expected-report-sha256 REPORT_PIN --evidence-root "$ROOT" --work-deadline "$WORK_DEADLINE" --reserve-seconds "$POST_RESERVE_SECONDS"
 ```
+
+For autonomous missions, `WORK_DEADLINE` is the already frozen absolute monotonic
+cutoff, never `now + duration` on retry. `POST_RESERVE_SECONDS` is the positive,
+parent-budgeted remaining native/index/independent-POST/finalization time plus
+margin, excluding the separately retained cleanup tail. Pass the same
+`--work-deadline` to the subsequent lifecycle commands below. Snapshot admission
+refuses insufficient time before application; do not shorten the reserve or review
+budget to force a fit. Recheck the same reserve immediately before editing; its
+successful check is not durable timing permission. Unbounded manual calls may omit
+both options; a reserve without a bound cutoff rejects.
 
 Omit `--evidence-root` only for default-root evidence. The command returns
 `snapshot`, a canonical absolute manifest path; retain its byte SHA-256 externally.

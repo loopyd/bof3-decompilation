@@ -54,7 +54,10 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
   cross-domain commands. `bin/` and skill invocation scripts only dispatch; they
   must not duplicate parsing, validation, mutation or recovery policy.
 - Shared flags come from `harness.common.cli`: `add_root_argument(parser)`,
-  `add_example_argument(parser, text)`. No per-command parse boilerplate, no
+  `add_example_argument(parser, text)`, `add_work_deadline_argument(parser)`.
+  Deadline opt-in binds the original monotonic cutoff through common guards and
+  rejects late handler success; it never renews a duration or controls cleanup.
+  No per-command parse boilerplate, no
   raw argv scans, no hand-rolled `--root`/`--example`.
 
 ## DRY and simplicity

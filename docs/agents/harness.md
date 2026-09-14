@@ -219,6 +219,25 @@ Ordinary naming collection failures retain the error and full last-operation
 command, selector, exit, killed state, raw output and stderr in a failed receipt.
 That forensic record never commits a successful row or closes semantic work.
 
+Naming lifecycle `validate`, `prepare-transaction`, `snapshot`, `postapply-gates`,
+`prepare-review`, `postapply-review`, `verify`, `finalize-transaction` and
+`terminal-verify` accept one `--work-deadline`: the original absolute monotonic
+cutoff. Shared CLI dispatch binds the stricter inherited/supplied cutoff, restores
+the caller's context on exit and rejects late success. These are cooperative guards
+and owned-subprocess budgets, not asynchronous Python cancellation or automatic
+rollback; always inspect exit status, not just emitted JSON. Cleanup retains its
+separately frozen tail, never charged by extending work time.
+
+Before autonomous identity application, `snapshot --reserve-seconds SECONDS`
+requires a positive reserve under a bound work cutoff. Freeze a realistic remaining
+native/index/independent-POST/finalization budget, with margin, in the mission; do
+not compress review to fit a nearly spent window. Admission checks precede capture
+and output creation and recur before publication/return. Expiry may retain
+unaccepted PRE artifacts but grants no source permission. A snapshot is not durable
+timing admission: recheck the same remaining-time reserve immediately before editing.
+Insufficient time defers before application; never reset consumed attempts or
+rebind a failed transaction. Reserve estimates cannot guarantee completion.
+
 The guardian can remain active when termination cannot be confirmed; callers stop
 for parent inspection, not automatic retry. Lease release/reacquisition alone is
 not quiescence. This mechanism is not a sandbox, cross-platform guarantee or proof

@@ -1732,6 +1732,47 @@ closure: global **1360** and all prior queues/budgets remain unchanged. Existing
 plan/reference/whitespace checks accompany this rollback checkpoint; any local
 recording commit is not feature/naming completion or broader phase acceptance.
 
+### Naming deadline/admission tooling — 2026-09-14 (tooling accepted)
+
+Separate tooling action starts **00:16:10 UTC** after rollback checkpoint `b859b849`;
+work/cleanup remain **00:56:10 / 01:06:10**, with 15-minute independent review
+reserved and one repair consumed. Dirac `01a09d4d-9ce2-7ed1-9498-e56caaa8889b`
+completed final repair checks **00:34:56**, before the unchanged **00:39:29** ceiling.
+Four Python owners add original `--work-deadline` binding to nine public naming
+lifecycle nodes via `common.cli`/`common.deadlines`: single finite value, stricter
+inherited cutoff, cooperative entry/late-return checks and context restoration.
+Snapshot's optional positive `--reserve-seconds` requires a bound original cutoff,
+checked at entry, before output, before publication and before return. Schemas
+stay unchanged; a late rejected PRE may remain on disk without acceptance. Reserve
+is admission evidence, not guaranteed completion, clock reset or retry authority.
+Initial **FAIL** at **00:31:28** remains preserved: legacy outer broken-pipe success
+bypassed the opted deadline (R1), and the overview omitted the nine nodes (R2).
+One bounded repair catches EPIPE inside the bound context before the final deadline
+check; legacy/unexpired EPIPE still returns zero. The overview is corrected.
+Final [PASS](../../out/reviews/naming-admission-20260914/final-review.json), SHA-256
+`ca0012bcb9e57137f2385c8b214e6d7620fcb7a8f9b0a74bef2365f8397e607b`, accepts only
+seven exact code/guide pins. This sidecar read/hash-verified both reviews and all
+live pins. Independent 25 probe groups, real OS EPIPE and four nested/legacy cases
+pass. Parent's post-repair **663 tests passed, two skipped in 37.39s**, **16 probe
+groups**, **four actual EPIPE cases** and **43 valid docs references** supersede its
+earlier 40.20s run without summing overlap. No regression tests, dependencies or
+production mutations were added. This plan/operator text and profile are outside
+the tooling review; no semantic, source or phase acceptance follows.
+
+Read-only public `prepare-transaction --check` on spent Commu's prepared report
+(handle `3064`) exited zero, `checked:true`, `prepared:false`, preserving `d61cc2…`.
+The [profile](../../out/reviews/naming-admission-20260914/profile.json) and sibling
+`prepare.prof` retain **53.3787s** profiled wall: four `transaction_scope` calls
+48.079s, four `cross_target_files` 47.074s, 98 `local_include_files` 46.630s;
+211,331 resolves, 1,719,996 lstats (20.399s), 517,377 stats (11.750s). Cumulative
+times overlap and include profiler overhead; they are not summed. Live
+`readiness._cross_target_files` calls `local_include_files(root, files)` inside each
+other-target iteration on an accumulating list. Gathering all seeds before one
+include traversal is a concrete separate optimization lead, not implemented here
+or a measured speedup/new naming attempt. No source/report/index mutation or pin
+rebinding occurred. Keep **1360**
+debt, full-goal scope and all Commu/battle03/Area027 spent/deferred limits unchanged.
+
 ## Current skill-only operator correction
 
 The user's latest architecture decision supersedes all executable Pi/native-Codex
@@ -1764,6 +1805,14 @@ blocked/deferred disposition. Durable transaction receipts remain owner evidence
 Markdown and live session handles own orchestration, not a new state database.
 Resume preserves original consumption and first verifies real handles/current state.
 Never infer termination, acceptance or permission from stale records or a free lease.
+
+Before source application, reserve realistic time for remaining native gates,
+index recovery, independent POST review and finalization, plus margin; cleanup has
+its own separate bound. Never compress review to fit an expiring work clock.
+Autonomous naming passes the original `--work-deadline` to public lifecycle nodes
+and a positive snapshot `--reserve-seconds` covering those remaining phases.
+Recheck the remaining budget immediately before editing; insufficient time defers
+before application. Reserve checks promise neither completion nor a fresh allowance.
 
 Index refreshes and active-session reviews have standing authorization; no repetitive
 user prompts. Preserve frozen proofs before refresh and never invalidate an active
