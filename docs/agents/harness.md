@@ -147,6 +147,9 @@ originals stay unchanged. EMI restoration stays with `emi.catalog_bootstrap`.
 `common.git.read_git` bounds workspace/index snapshot queries by 30 seconds,
 2 MiB and the inherited absolute work cutoff. It retains filename bytes and
 propagates cleanup uncertainty; timeout or truncated output is never a baseline.
+Gitlink discovery groups HEAD and index-path queries, but still compares fresh HEAD
+and physical index snapshots before/after reading staged and committed entries.
+No persistent cache or subprocess-supervision bypass is used.
 Type/macro exception handlers suspend only the forward cutoff around owned rollback
 and `common.safeguards.verify_restored_state`. They still require the parent's cleanup
 hard-stop; this grants no new budget, forward gates, retry or restoration authority.

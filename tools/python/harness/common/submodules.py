@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import os
 import stat
-import subprocess
 from contextlib import contextmanager
 from dataclasses import dataclass
 from functools import wraps
@@ -17,7 +16,7 @@ from harness.common.directory import (
     validate_repo_path,
     verify_parent_chain,
 )
-from harness.common.git import git_index_backup, read_git
+from harness.common.git import capture_git_state, read_git
 from harness.common.inventory import CaptureBudget, capture_file, describe_identity
 from harness.common.repositories import isolate_repository, verify_metadata
 from harness.common.trees import (
@@ -41,31 +40,17 @@ def _encode(value: dict) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
 
 
-def _read_head(root: Path) -> str | None:
-    try:
-        return read_git(root, ["rev-parse", "--verify", "--quiet", "HEAD"]).strip()
-    except RuntimeError as error:
-        cause = error.__cause__
-        if (
-            not isinstance(cause, subprocess.CalledProcessError)
-            or cause.returncode != 1
-        ):
-            raise
-        return None
-
-
 def collect_entries(root: Path) -> tuple[dict, dict]:
-    if not (root / ".git").exists():
+    before = capture_git_state(root)
+    if before is None:
         return {}, {}
-    before = git_index_backup(root)
     indexed = parse_entries(read_git(root, ["ls-files", "--stage", "-z"]))
-    head = _read_head(root)
     committed = (
-        parse_entries(read_git(root, ["ls-tree", "-r", "-z", head]), tree=True)
-        if head is not None
+        parse_entries(read_git(root, ["ls-tree", "-r", "-z", before.head]), tree=True)
+        if before.head is not None
         else {}
     )
-    if git_index_backup(root) != before or _read_head(root) != head:
+    if capture_git_state(root) != before:
         raise ValueError("Git index or HEAD changed during gitlink discovery")
     return indexed, committed
 

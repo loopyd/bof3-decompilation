@@ -1992,9 +1992,34 @@ review cutoff **04:08**/parent cleanup **04:18** (`backoff-admission.md`), no fa
 Terminal [review PASS](../../out/reviews/executable-normalization-20260914/review-backoff/review.json) binds exactly 33 files;
 SHA-256 `863e42c94eb6bfe382cb679605e6df5f7bf9580cedf6019bdfe30fc3f253724f`, 28 checks/44 proof hashes.
 Parent [accepts exactly 33 tooling files](../../out/reviews/executable-normalization-20260914/acceptance.json)
-after verifying all implementation/44 proof hashes and original media/user C/raw index; local commit pending.
+after verifying all implementation/44 proof hashes and original media/user C/raw index.
+Local commit **`cebea83b`** contains those 33 files plus checked plan; parent verified all 34 blobs, no push.
 Restored source stays unaccepted; no whole-harness acceptance. LOGO fresh `--no-cache` audit 35594
 exits **0**: **3 exact / 0 partial / 0 invalid**, coverage **3/52**; no source promotion or debt change.
+
+### Git capture batching — 2026-09-14 (tooling accepted)
+
+[Admission](../../out/reviews/git-capture-batching-20260914/admission.md): **04:05** at `cebea83b`,
+work/cleanup **04:30 / 04:35**, one candidate/one bounded repair. Three implementation paths:
+`common/git.py`, `common/submodules.py`, harness guide; [pins](../../out/reviews/git-capture-batching-20260914/review-pins.json)
+SHA-256 `1e017e91bb7729f362546de8c7b12a50f0474a180956ea1c90838af11df888e9`.
+`capture_git_state` groups HEAD/index-path queries while retaining physical index/HEAD
+before/after fresh staged/committed reads: **6→4** Git queries, no cache or weakened
+supervision, environment, deadlines or freshness. Six alternating old-`cebea83b`-AST/new
+pairs (`paired.json`) have identical outputs: medians **168.4385→119.9648ms**, **28.7783%**
+lower, microcollector only—not whole-pipeline speed. Parent: **42 checks / 6.29s**, 13
+disposable probes (unborn/no Git/index absence, unusual paths, linked worktree, staged
+gitlink removal, HEAD/index drift, malformed/timeout) PASS; 19 valid harness refs.
+Two existing type/macro CLI sequences (38568) exit **0**, **2 passed / 301.09s**
+(type **148.51s**, macro **152.53s**). Epicurus [PASS](../../out/reviews/git-capture-batching-20260914/review/review.json),
+SHA-256 `005670c5217fa776deb879e924566540fc3c62f3a618cf4a32d6091573a94aa6`, under **04:27** cutoff;
+parent [accepted exactly three files](../../out/reviews/git-capture-batching-20260914/acceptance.json) after 3 pins/33 proof hashes
+and protected media/user C verification. Local feature commit only, no push. Parent's separate, non-review-bound
+`sequence-comparison.json` (81631, exit 0) passes the same type case twice: **178.490099713→169.628006965s**,
+**3852→3330** Git queries, Git time **102.1684→91.1266s**: **4.965%** less wall time, **522 (13.551%)** fewer queries.
+This is **one fixture pair**, not general pipeline speed; old `cebea83b` collector was patched only in memory,
+never reverted in tracked files. The full 1913-test suite remains incomplete.
+Prior full-suite timeout/profile failure/Git-cost evidence and **1360** debt remain; no source promotion.
 
 ## Current skill-only operator correction
 

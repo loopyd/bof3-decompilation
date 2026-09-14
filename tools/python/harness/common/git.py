@@ -24,6 +24,14 @@ class GitIndexSnapshot:
     state: tuple[int, int, int, int, int, int, int, int] | None
 
 
+@dataclass(frozen=True)
+class GitState:
+    """HEAD and a physical index snapshot observed through one path query."""
+
+    index: GitIndexSnapshot
+    head: str | None
+
+
 def _index_state(
     value: os.stat_result,
 ) -> tuple[int, int, int, int, int, int, int, int]:
@@ -310,6 +318,46 @@ def _restore_git_index_locked(
 def capture_git_index(root: Path) -> GitIndexSnapshot | None:
     path = _index_path(root)
     return _capture_index_path(path) if path is not None else None
+
+
+def capture_git_state(root: Path) -> GitState | None:
+    if not (root / ".git").exists():
+        return None
+    unborn = False
+    try:
+        output = read_git(
+            root,
+            [
+                "rev-parse",
+                "--path-format=absolute",
+                "--git-path",
+                "index",
+                "--verify",
+                "--quiet",
+                "HEAD",
+            ],
+        )
+    except RuntimeError as error:
+        cause = error.__cause__
+        if (
+            not isinstance(cause, subprocess.CalledProcessError)
+            or cause.returncode != 1
+        ):
+            raise
+        output = cause.output
+        unborn = True
+    if not isinstance(output, str) or not output.endswith("\n"):
+        raise ValueError("invalid Git index/HEAD observation")
+    if unborn:
+        name, head = output[:-1], None
+    else:
+        name, separator, head = output[:-1].rpartition("\n")
+        if not separator or not head:
+            raise ValueError("invalid Git index/HEAD observation")
+    path = Path(name)
+    if not path.is_absolute():
+        raise ValueError("Git index observation is not absolute")
+    return GitState(_capture_index_path(path), head)
 
 
 def git_index_backup(root: Path) -> GitIndexSnapshot | None:
