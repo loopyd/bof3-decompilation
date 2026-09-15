@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -75,21 +76,30 @@ def prepare_target(
     *,
     manifest: TargetManifest | None = None,
     layout=None,
+    files=None,
 ) -> RizinProjectSpec:
     """Compose a target recipe without writing generated project files."""
 
+    if files is not None and manifest is None:
+        raise ValueError("captured recipe requires its manifest")
     manifest = lookup_target_manifest(root, target_id) if manifest is None else manifest
     if manifest is None:
         raise ValueError(f"unknown target: {target_id}")
     binary = root / manifest.binary
-    if not binary.is_file():
+    if files is None and not binary.is_file():
         raise FileNotFoundError(f"target binary not found: {manifest.binary}")
     splat = root / manifest.splat
-    layout = (
-        parse_splat_layout(splat, manifest.load_address) if layout is None else layout
-    )
+    if layout is None:
+        if files is None:
+            layout = parse_splat_layout(splat, manifest.load_address)
+        else:
+            from ..domain.layout import parse_splat_text
+
+            layout = parse_splat_text(
+                files.text(splat), manifest.load_address, origin=splat
+            )
     roots = frozenset(layout.reviewed_function_addresses)
-    binary_bytes = binary.read_bytes()
+    binary_bytes = binary.read_bytes() if files is None else files.read(binary)
     binary_offset = binary_offset_for(binary_bytes)
     if is_psx_exe(binary_bytes):
         validate_psx_header(
@@ -108,10 +118,27 @@ def prepare_target(
         rendered = ", ".join(f"0x{address:08X}" for address in invalid_roots)
         raise ValueError(f"reviewed function roots outside target image: {rendered}")
     overlay = root / "config" / "targets" / manifest.id.value / "reviewed.rz"
-    replay = _baseline(
-        load_target_symbols(root, manifest.id.value, psyq_space=manifest.psyq_space),
-        roots,
-    ) + _reviewed_overlay(overlay)
+    if files is None:
+        overlay_text = _reviewed_overlay(overlay)
+    else:
+        overlay_bytes = files.read_optional(overlay)
+        overlay_text = (
+            ""
+            if overlay_bytes is None
+            else io.StringIO(overlay_bytes.decode("utf-8"), newline=None).read()
+        )
+    replay = (
+        _baseline(
+            load_target_symbols(
+                root,
+                manifest.id.value,
+                psyq_space=manifest.psyq_space,
+                read_file=None if files is None else files.read_optional,
+            ),
+            roots,
+        )
+        + overlay_text
+    )
     # Explicit claim identity participates in the Rizin fingerprint: comment
     # lines are filtered out by replay_commands but change replay_sha256, so
     # adding/removing/renaming a claimed source, support unit, or header

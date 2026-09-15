@@ -138,7 +138,7 @@ def validate_status_index(connection: sqlite3.Connection, root: Path) -> None:
                 manifest=manifests[target],
                 binary_sha256=binary_digest,
                 layout=repository.splats[target],
-                read_file=repository.files.read,
+                files=repository.files,
             )
             types = list(repository.type_input_rows[target])
             macros = list(repository.macro_input_rows[target])
@@ -216,11 +216,10 @@ def validate_index(
     manifest_loader=None,
 ) -> None:
     """Validate index structure and every repository-owned input fingerprint."""
-    from harness.macros.index import macro_input_digest, macro_input_rows
-    from harness.types.inputs import type_input_digest, type_input_rows
+    from harness.macros.index import macro_input_digest
+    from harness.types.inputs import type_input_digest
 
     from ..domain.manifests import load_target_manifests
-    from ..io import file_sha256
     from .index_snapshot import snapshot_for
 
     try:
@@ -230,11 +229,20 @@ def validate_index(
         from ..domain.repository_layout import load_repository_layout
 
         repository = load_repository_layout(root)
-        loader = load_target_manifests if manifest_loader is None else manifest_loader
-        loaded = loader(root) if manifests is None else manifests
+        loaded = manifests
+        if loaded is None:
+            loaded = (
+                repository.manifests
+                if manifest_loader is None or manifest_loader is load_target_manifests
+                else manifest_loader(root)
+            )
         if set(loaded) != set(repository.manifests):
             raise ValueError("stale reverse index target coverage; run just index")
         for target, manifest in loaded.items():
+            if manifest != repository.manifests[target]:
+                raise ValueError(
+                    f"stale reverse index manifest for {target}; run just index"
+                )
             repository_input(root, Path(f"config/targets/{target}/target.toml"))
             repository_input(root, Path(manifest.binary))
             repository_input(root, Path(manifest.splat))
@@ -259,12 +267,12 @@ def validate_index(
         ) in indexed:
             seen.add(target)
             binary = repository_input(root, Path(binary_name))
-            snapshot = repository_input(root, Path(snapshot_name))
-            if file_sha256(binary) != binary_digest:
+            repository_input(root, Path(snapshot_name))
+            if repository.files.digest(root / binary_name) != binary_digest:
                 raise ValueError(
                     f"stale reverse index binary for {target}; run just index"
                 )
-            if file_sha256(snapshot) != snapshot_digest:
+            if repository.files.digest(root / snapshot_name) != snapshot_digest:
                 raise ValueError(
                     f"stale reverse index snapshot for {target}; run just index"
                 )
@@ -274,6 +282,8 @@ def validate_index(
                 binary,
                 manifest=loaded[target],
                 binary_sha256=binary_digest,
+                layout=repository.splats[target],
+                files=repository.files,
             )
             _validate_selected_maps(
                 connection, target, repository.selected_map_rows[target]
@@ -282,7 +292,7 @@ def validate_index(
                 "SELECT source_path, sha256, input_kind FROM type_input_fingerprints WHERE target_id = ? ORDER BY source_path",
                 (target,),
             ).fetchall()
-            expected_inputs = type_input_rows(root, loaded[target])
+            expected_inputs = list(repository.type_input_rows[target])
             digest = connection.execute(
                 "SELECT value FROM metadata WHERE key = ?", (f"type_inputs:{target}",)
             ).fetchone()
@@ -298,7 +308,7 @@ def validate_index(
                 "SELECT source_path, sha256, input_kind, owner_target FROM macro_input_fingerprints WHERE target_id = ? ORDER BY source_path, owner_target",
                 (target,),
             ).fetchall()
-            expected_macros = macro_input_rows(root, target, loaded[target])
+            expected_macros = list(repository.macro_input_rows[target])
             macro_digest = connection.execute(
                 "SELECT value FROM metadata WHERE key = ?", (f"macro_inputs:{target}",)
             ).fetchone()

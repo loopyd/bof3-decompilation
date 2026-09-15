@@ -349,8 +349,11 @@ profile and transaction capture remain strict: query support does not authorize
 linked inputs in those gates.
 `RepositoryLayout` reuses held file captures for manifest validation, Splat models
 and its raw-byte/digest map; Splat text retains universal-newline normalization.
-This is per-input consistency, not a simultaneous repository snapshot. Recipe
-validation and index construction still have separate reads outside that map.
+Full/status recipe validation reuses captured binaries, maps, overlays and layouts;
+optional shared maps and overlays retain explicit absence, and unknown reads fail.
+Preloaded manifests must agree with the captured generation. This is per-input
+consistency, not a simultaneous repository snapshot. Index construction still has
+separate reads outside that map.
 
 `bin/analysis-readiness [TARGET]` is the bounded aggregate checkpoint. By default it reports snapshot/index freshness and stale facts, then summary work graphs and exact naming, type, and macro counts; `TARGET` restricts every inventory, debt, candidate, and work count to that target. Use `--detail full` only when the exhaustive candidate rows, blockers, fingerprints, and generated naming work are required. Both modes retain the `bof3.analysis-readiness/v2` schema and differ only in `work_graph` detail. The command is read-only and prints `bin/index --recover` when authoritative inputs have made the disposable index stale. Recovery is explicit so reviewed transactions pass before index refresh.
 

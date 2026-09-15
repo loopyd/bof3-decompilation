@@ -26,6 +26,7 @@ class RepositoryFiles:
     contents: Mapping[Path, bytes]
     digests: Mapping[Path, str]
     canonical_paths: Mapping[Path, Path]
+    absent_paths: frozenset[Path]
 
     def canonical(self, path: Path) -> Path:
         """Return a prevalidated repository-owned regular file."""
@@ -46,6 +47,15 @@ class RepositoryFiles:
     def digest(self, path: Path) -> str:
         """Return a precomputed repository input digest."""
         return self.digests[self.canonical(path)]
+
+    def read_optional(self, path: Path) -> bytes | None:
+        """Read an owned input or return its explicitly captured absence."""
+        lexical = path if path.is_absolute() else self.root / path
+        return None if lexical in self.absent_paths else self.read(path)
+
+    def text(self, path: Path) -> str:
+        """Decode captured UTF-8 with the ordinary universal-newline convention."""
+        return io.StringIO(self.read(path).decode("utf-8"), newline=None).read()
 
 
 @dataclass(frozen=True)
@@ -153,6 +163,7 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         ),
         *templates,
     }
+    optional_paths = {root / "config/targets/shared/symbols.txt"}
     for target, manifest in manifests.items():
         paths.update(root / relative for relative in splats[target].symbol_map_paths)
         target_config = root / "config/targets" / target
@@ -168,11 +179,13 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         paths.add(target_config / "symbols.txt")
         paths.add(root / "config/sdk" / f"psyq-{manifest.psyq_space}.txt")
         reviewed = target_config / "reviewed.rz"
-        if reviewed.is_file():
-            paths.add(reviewed)
+        optional_paths.add(reviewed)
         paths.add(root / "out/reverse/snapshots" / f"{target.replace('/', '--')}.json")
         paths.update(sources[target])
         paths.update(headers[target])
+    for path in sorted(optional_paths):
+        if capture(path.relative_to(root).as_posix(), missing_ok=True) is not None:
+            paths.add(path)
     ordered_paths = tuple(sorted(paths))
     for path in ordered_paths:
         capture(path.relative_to(root).as_posix())
@@ -186,6 +199,7 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         MappingProxyType({path: contents[path] for path in resolved_paths}),
         MappingProxyType({path: digests[path] for path in resolved_paths}),
         MappingProxyType(selected),
+        frozenset(optional_paths & absent),
     )
     from harness.macros.index import macro_input_rows
     from harness.types.inputs import type_input_rows

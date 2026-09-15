@@ -8,6 +8,7 @@ and link bindings cannot each grow a subtly different spelling rule.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from collections.abc import Callable
 from pathlib import Path
 import re
 
@@ -86,7 +87,16 @@ def validate_symbols(symbols: list[MapSymbol], *, source: str = "map") -> None:
         addresses[symbol.address] = symbol
 
 
-def load_map(path: Path) -> list[MapSymbol]:
+def load_map(
+    path: Path, *, read_file: Callable[[Path], bytes | None] | None = None
+) -> list[MapSymbol]:
+    if read_file is not None:
+        content = read_file(path)
+        return (
+            []
+            if content is None
+            else parse_map(content.decode("utf-8"), source=str(path))
+        )
     if not path.is_file():
         return []
     return parse_map(path.read_text(encoding="utf-8"), source=str(path))
@@ -121,7 +131,11 @@ def sdk_map_path(root: Path, space: str) -> Path:
 
 
 def load_target_symbols(
-    root: Path, target: str, *, psyq_space: str | None = None
+    root: Path,
+    target: str,
+    *,
+    psyq_space: str | None = None,
+    read_file: Callable[[Path], bytes | None] | None = None,
 ) -> list[MapSymbol]:
     """Compose shared base + PSX SDK (by target space) + target-local symbols.
 
@@ -133,9 +147,9 @@ def load_target_symbols(
         manifests = load_target_manifests(root)
         psyq_space = manifests[target].psyq_space if target in manifests else "slus"
     space = psyq_space
-    shared = load_map(shared_map_path(root))
-    sdk = load_map(sdk_map_path(root, space))
-    local = load_map(map_path(root, target))
+    shared = load_map(shared_map_path(root), read_file=read_file)
+    sdk = load_map(sdk_map_path(root, space), read_file=read_file)
+    local = load_map(map_path(root, target), read_file=read_file)
     by_addr: dict[int, MapSymbol] = {s.address: s for s in shared}
     for s in sdk:
         by_addr[s.address] = s
