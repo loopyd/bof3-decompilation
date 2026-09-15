@@ -216,15 +216,8 @@ def check_host_compatible(host: str) -> None:
         )
 
 
-def ensure_variant(layout: RepoLayout, variant: CompilerVariant) -> str:
-    """Resolve the verified GCC executable path, auto-installing when absent.
-
-    Fails closed: an unsupported host, unknown ID, corrupt existing install,
-    or failed install raises instead of falling back to the canonical or host
-    GCC. ``compiler-variants path <id>`` and ``compile_commands.py`` both use
-    this so a selected variant is installed on demand when only its install
-    is missing.
-    """
+def resolve_variant(layout: RepoLayout, variant: CompilerVariant) -> str:
+    """Resolve a verified installed GCC without downloading or installing it."""
     check_host_compatible(variant.host)
     dest = variant.install_path(layout)
     exe = dest / variant.executable_relpath
@@ -236,9 +229,10 @@ def ensure_variant(layout: RepoLayout, variant: CompilerVariant) -> str:
             f"{variant.id}: existing installation at {dest} is corrupt or "
             f"incomplete; run `bin/compiler-variants install --force {variant.id}`"
         )
-    variant.install(layout)
-    variant.verify(layout)
-    return str(exe.resolve())
+    raise FileNotFoundError(
+        f"missing compiler variant {variant.id}; "
+        f"explicit installation required: bin/compiler-variants install {variant.id}"
+    )
 
 
 def lookup_variant(layout: RepoLayout, compiler_id: str) -> CompilerVariant:
@@ -246,10 +240,16 @@ def lookup_variant(layout: RepoLayout, compiler_id: str) -> CompilerVariant:
 
     Returns the matching variant or raises ValueError if not found.
     """
-    variants = load_variants(layout, validate=True)
-    for v in variants:
-        if v.id == compiler_id:
-            return v
+    return select_variant(load_variants(layout, validate=True), compiler_id)
+
+
+def select_variant(
+    variants: list[CompilerVariant], compiler_id: str
+) -> CompilerVariant:
+    """Select an explicit compiler ID from supplied variants without file access."""
+    for variant in variants:
+        if variant.id == compiler_id:
+            return variant
     raise ValueError(f"compiler variant {compiler_id!r} not found in catalog")
 
 
@@ -264,7 +264,12 @@ def load_variants(
     path = layout.root / "config" / "compiler" / "variants.json"
     if not path.is_file():
         return []
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    return parse_variants(path.read_text(encoding="utf-8"), validate=validate)
+
+
+def parse_variants(text: str, *, validate: bool = True) -> list[CompilerVariant]:
+    """Parse the supplied catalog using the file loader's validation policy."""
+    payload = json.loads(text)
     if not isinstance(payload, dict):
         raise ValueError("catalog root must be a JSON object")
     _reject_extra_keys(payload, _ALLOWED_ROOT_KEYS, "catalog root")
@@ -274,9 +279,9 @@ def load_variants(
     if note is not None:
         if not isinstance(note, list):
             raise ValueError("catalog 'note' must be a list")
-        for i, item in enumerate(note):
+        for index, item in enumerate(note):
             if not isinstance(item, str):
-                raise ValueError(f"catalog 'note[{i}]' must be a string")
+                raise ValueError(f"catalog 'note[{index}]' must be a string")
     entries = payload.get("candidates", [])
     if not isinstance(entries, list):
         raise ValueError("catalog 'candidates' must be a list")
@@ -284,8 +289,8 @@ def load_variants(
         seen_ids: set[str] = set()
         for entry in entries:
             _validate_entry(entry)
-            cid = entry["id"]
-            if cid in seen_ids:
-                raise ValueError(f"duplicate variant ID: {cid!r}")
-            seen_ids.add(cid)
-    return [CompilerVariant(e) for e in entries]
+            compiler_id = entry["id"]
+            if compiler_id in seen_ids:
+                raise ValueError(f"duplicate variant ID: {compiler_id!r}")
+            seen_ids.add(compiler_id)
+    return [CompilerVariant(entry) for entry in entries]

@@ -8,37 +8,18 @@ import json
 from harness.common.cli import add_root_argument, run_main
 
 from ..build.compiler import (
+    build_compiler_arguments,
     load_object_compilers,
     load_object_flags,
     sanitize_identifier,
 )
 from ..io import repo_layout
-from ..toolchain.gcc_variants import ensure_variant, lookup_variant
-
-OPTIMIZATION_RE = __import__("re").compile(r"^-O(?:[0-3s]|fast)$")
+from ..toolchain.gcc_variants import lookup_variant, resolve_variant
 
 
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     output = root / "compile_commands.json"
-    cc_driver = root / "bin" / "cc"
-    common = [
-        str(cc_driver),
-        "-DHARNESS_TARGET_PSX=1",
-        f"-I{root / 'src'}",
-        f"-I{root / 'include'}",
-        f"-I{root / 'toolchains' / 'psyq' / '4.7' / 'include'}",
-        "-O2",
-        "-G0",
-        "-funsigned-char",
-        "-msoft-float",
-        "-gcoff",
-        "-Wa,--aspsx-version=2.56",
-        "-Wa,-G0,-EL,-mips1",
-    ]
-    c_flags = [flag for flag in common if not flag.startswith("-Wa")]
-    wa_flags = [flag for flag in common if flag.startswith("-Wa")]
-    c_flags_base = [flag for flag in c_flags if not OPTIMIZATION_RE.match(flag)]
     object_flags = load_object_flags(root)
     object_compilers = load_object_compilers(root)
     src_root = root / "src"
@@ -47,35 +28,27 @@ def run(args: argparse.Namespace) -> int:
         object_path = root / "build" / source.relative_to(root).with_suffix(".o")
         relative = source.relative_to(src_root).as_posix()
         key = sanitize_identifier(relative)
-        override = object_flags.get(key)
         compiler_id = object_compilers.get(key)
         # Build argument vector
         if compiler_id is None:
             variant_prefix: list[str] = []
         else:
-            # Resolve the specific requested compiler ID; a missing install is
-            # installed on demand (only this catalog ID is ever downloaded).
             layout = repo_layout(root)
             variant = lookup_variant(layout, compiler_id)
-            gcc_path = ensure_variant(layout, variant)
+            gcc_path = resolve_variant(layout, variant)
             variant_prefix = [
                 "cmake",
                 "-E",
                 "env",
                 f"PSX_GCC={gcc_path}",
             ]
-        if override is None:
-            base_args = [*common, "-c", str(source), "-o", str(object_path)]
-        else:
-            base_args = [
-                *c_flags_base,
-                *override,
-                *wa_flags,
-                "-c",
-                str(source),
-                "-o",
-                str(object_path),
-            ]
+        base_args = [
+            *build_compiler_arguments(root, source, object_flags),
+            "-c",
+            str(source),
+            "-o",
+            str(object_path),
+        ]
         arguments = [*variant_prefix, *base_args]
         entries.append(
             {

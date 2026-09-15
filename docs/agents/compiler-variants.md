@@ -23,10 +23,12 @@ temporary download, digest validation before atomic cache publication, fresh
 sibling staging extraction, staged `gcc --version` identity verification, and
 an atomic install swap that preserves a prior verified install on any failed
 network, digest, extraction, or identity check. `bin/compiler-variants path
-<id>` and `compile_commands.json` resolve a selected compiler through the same
-ensure-installed operation; a missing install self-heals from the verified
-cache, while an unsupported host, unknown ID, corrupt install, or failed
-install fails closed (never canonical/host GCC). `just setup` primes the
+<id>` and compilation database generation share installed-only resolution:
+they verify the selected compiler but never download, install or repair it,
+even when a cached archive exists. Missing installations report the explicit
+`bin/compiler-variants install <id>` remedy; run it only with installation
+authorization. Unsupported hosts, unknown IDs and corrupt installations reject,
+never falling back to canonical/host GCC. `just setup` primes the
 canonical compiler plus every host-compatible entry in the
 `config/compiler/variants.json` catalog; host-incompatible candidates are
 skipped with their ID and host reported, an invalid catalog fails setup

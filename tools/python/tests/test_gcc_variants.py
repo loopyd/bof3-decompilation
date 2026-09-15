@@ -748,13 +748,13 @@ class TestInstallCachedVerification:
             )
 
 
-class TestEnsureVariant:
-    def test_missing_install_auto_installs(
+class TestResolveVariant:
+    def test_missing_install_requires_explicit_install(
         self, tmp_path: Path, linux_x86_64: None
     ) -> None:
-        """ensure_variant installs a missing selected install from the cache."""
+        """A cached archive does not authorize installation during lookup."""
         from harness.toolchain.gcc_archive import sha256_file
-        from harness.toolchain.gcc_variants import CompilerVariant, ensure_variant
+        from harness.toolchain.gcc_variants import CompilerVariant, resolve_variant
 
         entry = CompilerVariant(_minimal_valid_entry({"id": "test-gcc"}))
         layout = _make_layout(tmp_path)
@@ -765,9 +765,9 @@ class TestEnsureVariant:
         cache_dir.mkdir(parents=True)
         (cache_dir / entry.archive_name).write_bytes(valid.read_bytes())
 
-        resolved = ensure_variant(layout, entry)
-        expected = (entry.install_path(layout) / "gcc").resolve()
-        assert Path(resolved) == expected
+        with pytest.raises(FileNotFoundError, match="explicit installation required"):
+            resolve_variant(layout, entry)
+        assert not entry.install_path(layout).exists()
 
     def test_corrupt_install_fails_closed(
         self, tmp_path: Path, linux_x86_64: None
@@ -775,7 +775,7 @@ class TestEnsureVariant:
         """An existing-but-unverifiable install raises; no host/canonical fallback."""
         from harness.toolchain.gcc_variants import (
             CompilerVariant,
-            ensure_variant,
+            resolve_variant,
         )
 
         entry = CompilerVariant(_minimal_valid_entry({"id": "test-gcc"}))
@@ -784,12 +784,12 @@ class TestEnsureVariant:
         dest.mkdir(parents=True)
         (dest / "junk").write_text("not a compiler")
         with pytest.raises(RuntimeError, match="corrupt or incomplete"):
-            ensure_variant(layout, entry)
+            resolve_variant(layout, entry)
 
     def test_unsupported_host_fails_closed(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        """A host-incompatible selected variant fails closed in ensure_variant."""
+        """A host-incompatible selected variant fails closed during lookup."""
         import sys
 
         from harness.toolchain import gcc_variants
@@ -801,14 +801,14 @@ class TestEnsureVariant:
         )
         layout = _make_layout(tmp_path)
         with pytest.raises(RuntimeError, match="host mismatch"):
-            gcc_variants.ensure_variant(layout, entry)
+            gcc_variants.resolve_variant(layout, entry)
 
 
 class TestPathAndCompileCommandsParity:
-    def test_cmd_path_auto_installs_missing_variant(
+    def test_cmd_path_requires_explicit_install(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, linux_x86_64: None
     ) -> None:
-        """`compiler-variants path <id>` installs a missing selected install."""
+        """`compiler-variants path <id>` rejects a missing selected install."""
         from harness.commands import compiler_variants as cmd
         from harness.commands.compiler_variants import _cmd_path
 
@@ -829,13 +829,13 @@ class TestPathAndCompileCommandsParity:
         cache_dir.mkdir(parents=True)
         (cache_dir / entry["archive_name"]).write_bytes(valid.read_bytes())
         args = SimpleNamespace(id="test-gcc")
-        assert _cmd_path(args) == 0
-        assert (layout.gcc_variants_root / "test-gcc" / "gcc").is_file()
+        assert _cmd_path(args) == 2
+        assert not (layout.gcc_variants_root / "test-gcc").exists()
 
-    def test_compile_commands_auto_installs_selected_variant(
+    def test_compile_commands_uses_selected_installed_variant(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, linux_x86_64: None
     ) -> None:
-        """compile_commands.json emits PSX_GCC and installs a missing selection."""
+        """compile_commands.json retains the selected installed compiler path."""
         from harness.commands import compile_commands as cc_cmd
 
         layout = _make_layout(tmp_path)
@@ -846,18 +846,16 @@ class TestPathAndCompileCommandsParity:
         objflags.parent.mkdir(parents=True)
         objflags.write_text("set(BOF3_OBJCOMPILER_game_a_c test-gcc)\n")
         entry = _minimal_valid_entry({"id": "test-gcc"})
-        valid = tmp_path / "valid.tar.gz"
-        _make_fake_gcc_archive(valid)
-        entry["checksum"] = sha256_file(valid)
         catalog = tmp_path / "config" / "compiler" / "variants.json"
         catalog.write_text(
             json.dumps(
                 {"schema": "harness.compiler-variants/v1", "candidates": [entry]}
             )
         )
-        cache_dir = layout.gcc_archive_cache_dir
-        cache_dir.mkdir(parents=True)
-        (cache_dir / entry["archive_name"]).write_bytes(valid.read_bytes())
+        installed = layout.gcc_variants_root / "test-gcc" / "gcc"
+        installed.parent.mkdir(parents=True)
+        installed.write_bytes(b"fixture compiler")
+        monkeypatch.setattr(CompilerVariant, "verify", lambda self, layout: "verified")
 
         assert cc_cmd.run(SimpleNamespace(root=tmp_path)) == 0
         payload = json.loads((tmp_path / "compile_commands.json").read_text())

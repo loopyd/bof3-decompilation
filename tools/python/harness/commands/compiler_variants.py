@@ -9,7 +9,7 @@ import sys
 from harness.common.cli import run_main
 
 from ..io import repo_layout
-from ..toolchain.gcc_variants import ensure_variant, load_variants, lookup_variant
+from ..toolchain.gcc_variants import load_variants, lookup_variant, resolve_variant
 
 
 def _cmd_list(args: argparse.Namespace) -> int:
@@ -59,11 +59,11 @@ def _cmd_verify(args: argparse.Namespace) -> int:
 
 
 def _cmd_path(args: argparse.Namespace) -> int:
-    """Resolve (auto-installing when absent) and print the verified GCC path."""
+    """Print the verified installed GCC path without changing installation state."""
     layout = repo_layout()
     try:
         variant = lookup_variant(layout, args.id)
-        print(ensure_variant(layout, variant))
+        print(resolve_variant(layout, variant))
     except (ValueError, FileNotFoundError, RuntimeError, OSError) as exc:
         print(f"path {args.id}: {exc}", file=sys.stderr)
         return 2
