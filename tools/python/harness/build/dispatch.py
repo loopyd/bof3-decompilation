@@ -110,8 +110,13 @@ def _read_source(path: Path) -> str:
     return content.decode("utf-8")
 
 
-def inspect_arguments(arguments: list[str]) -> tuple[list[Path], Path | None]:
+def inspect_arguments(
+    arguments: list[str], *, cwd: Path | None = None
+) -> tuple[list[Path], Path | None]:
     """Classify explicit operands without launching a compiler."""
+    cwd = Path.cwd() if cwd is None else cwd
+    if not cwd.is_absolute():
+        raise ValueError("compiler working directory must be absolute")
     if len(arguments) > 256 or sum(len(arg) for arg in arguments) > 65536:
         raise ValueError("compiler argument bounds exceeded")
     if any("\x00" in arg or arg == "-" or arg.startswith("@") for arg in arguments):
@@ -123,7 +128,7 @@ def inspect_arguments(arguments: list[str]) -> tuple[list[Path], Path | None]:
     for argument in arguments:
         check_deadline()
         if output_pending:
-            output = Path(argument).absolute()
+            output = cwd / argument
             output_pending = False
             continue
         if argument == "-o":
@@ -134,7 +139,7 @@ def inspect_arguments(arguments: list[str]) -> tuple[list[Path], Path | None]:
         if argument.startswith("-o") and len(argument) > 2:
             if output is not None:
                 raise ValueError("multiple compiler outputs are unsupported")
-            output = Path(argument[2:]).absolute()
+            output = cwd / argument[2:]
             continue
         if argument == "--":
             operands = True
@@ -147,7 +152,7 @@ def inspect_arguments(arguments: list[str]) -> tuple[list[Path], Path | None]:
                     break
             else:
                 continue
-        path = Path(candidate).absolute()
+        path = cwd / candidate
         if path.is_file() or path.suffix.lower() in {".c", ".s"}:
             try:
                 _read_source(path)
@@ -179,7 +184,7 @@ def inspect_arguments(arguments: list[str]) -> tuple[list[Path], Path | None]:
     ):
         if len(candidates) != 1:
             raise ValueError("implicit compiler outputs require one named source")
-        output = Path.cwd() / (
+        output = cwd / (
             candidates[0].with_suffix(".s").name if "-S" in arguments else "a.out"
         )
     return list(dict.fromkeys(candidates)), output
@@ -288,22 +293,32 @@ class Dispatch:
     selection: Selection
 
 
+def _observe_working_directory() -> dict:
+    cwd = Path.cwd()
+    return {"path": str(cwd), "identity": _observe(cwd)}
+
+
 def prepare_dispatch(root: Path, arguments: list[str]) -> Dispatch:
     """Freeze an invocation after checking its externally pinned grouped history."""
     root = root.resolve()
-    sources, output = inspect_arguments(arguments)
+    working_directory = _observe_working_directory()
+    sources, output = inspect_arguments(arguments, cwd=Path(working_directory["path"]))
     grouped = [
         path for path in sources if count_function_metadata(_read_source(path)) >= 2
     ]
     selection = select_preservation(root, sources, grouped)
     try:
-        return _prepare_selected(root, arguments, sources, output, grouped, selection)
+        return _prepare_selected(
+            root, arguments, sources, output, grouped, selection, working_directory
+        )
     except BaseException:
         selection.close()
         raise
 
 
-def _prepare_selected(root, arguments, sources, output, grouped, selection) -> Dispatch:
+def _prepare_selected(
+    root, arguments, sources, output, grouped, selection, working_directory
+) -> Dispatch:
     selection.protect_outputs(output)
     annotated_compiler, metadata_paths = _select_annotated_compiler(
         root, arguments, sources, output, grouped
@@ -357,6 +372,9 @@ def _prepare_selected(root, arguments, sources, output, grouped, selection) -> D
             )
     executable = _resolve_executable(os.environ.get("PSX_CC_DRIVER") or str(compiler))
     paths = {*sources, executable, *metadata_paths}
+    cwd = Path(working_directory["path"])
+    if cwd.parent != cwd:
+        paths.add(cwd)
     if selection.routes is not None:
         paths.add(selection.routes)
     if proof:
@@ -368,6 +386,7 @@ def _prepare_selected(root, arguments, sources, output, grouped, selection) -> D
     directories = {
         parent for path in paths for parent in path.parents if parent.is_dir()
     }
+    directories.add(cwd)
     watch = PathWatch(paths)
     try:
         return _capture_dispatch(
@@ -385,6 +404,7 @@ def _prepare_selected(root, arguments, sources, output, grouped, selection) -> D
             directories,
             watch,
             selection,
+            working_directory,
         )
     except BaseException:
         watch.close()
@@ -406,6 +426,7 @@ def _capture_dispatch(
     directories,
     watch,
     selection,
+    working_directory,
 ) -> Dispatch:
     observations = {str(parent): _observe(parent) for parent in sorted(directories)}
     contents = {}
@@ -417,6 +438,7 @@ def _capture_dispatch(
                 read_file(path.parent, path.name, max_bytes=64 * 1024 * 1024)
             ).hexdigest()
     state = {
+        "working_directory": working_directory,
         "root": str(root),
         "arguments": arguments,
         "compiler": str(compiler),
@@ -458,10 +480,14 @@ def validate_dispatch(dispatch: Dispatch) -> None:
     if hash_preservation(dispatch.state) != dispatch.fingerprint:
         raise ValueError("compiler invocation binding changed")
     state = dispatch.state
+    if state["working_directory"] != _observe_working_directory():
+        raise ValueError("compiler working directory changed during dispatch")
     dispatch.selection.protect_outputs(
         dispatch.output, inputs=(Path(name) for name in state["observations"])
     )
-    sources, output = inspect_arguments(list(dispatch.arguments))
+    sources, output = inspect_arguments(
+        list(dispatch.arguments), cwd=Path(state["working_directory"]["path"])
+    )
     annotated_compiler, _ = _select_annotated_compiler(
         dispatch.root,
         list(dispatch.arguments),
@@ -557,4 +583,6 @@ def validate_dispatch(dispatch: Dispatch) -> None:
             raise ValueError(f"compiler input or ancestor changed: {name}")
     dispatch.watch.validate()
     dispatch.selection.validate()
+    if state["working_directory"] != _observe_working_directory():
+        raise ValueError("compiler working directory changed during validation")
     check_deadline()

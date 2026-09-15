@@ -27,10 +27,14 @@ class CompilerFailure(RuntimeError):
 
 
 def _execute(
-    arguments: list[str], environment: dict[str, str], *, input_text: str | None = None
+    arguments: list[str],
+    environment: dict[str, str],
+    *,
+    cwd: Path,
+    input_text: str | None = None,
 ) -> str:
     result = run_bounded(
-        Path.cwd(),
+        cwd,
         arguments,
         timeout=300.0,
         deadline=resolve_deadline(),
@@ -163,14 +167,15 @@ def _publish(output: Path, content: bytes, original: bytes | None) -> None:
 
 
 def _run(root: Path, arguments: list[str]) -> int:
-    sources, output = inspect_arguments(arguments)
+    cwd = Path.cwd()
+    sources, output = inspect_arguments(arguments, cwd=cwd)
     named = [path for path in sources if path.suffix == ".c"]
     named.extend(
-        Path(argument).absolute()
+        cwd / argument
         for argument in arguments
         if not argument.startswith("-")
         and argument.endswith((".s", ".S"))
-        and Path(argument).absolute() != output
+        and cwd / argument != output
     )
     compile_mode = "-c" in arguments and not any(
         flag in arguments for flag in ("-E", "-S", "-M", "-MM")
@@ -197,6 +202,8 @@ def _run(root: Path, arguments: list[str]) -> int:
     publication_started = False
     try:
         dispatch = prepare_dispatch(root, arguments)
+        if dispatch.state["working_directory"]["path"] != str(cwd):
+            raise ValueError("compiler working directory changed during preparation")
         environment = {
             **os.environ,
             "PYTHONDONTWRITEBYTECODE": "1",
@@ -226,6 +233,7 @@ def _run(root: Path, arguments: list[str]) -> int:
             rendered = _execute(
                 [dispatch.state["executable"], *native_arguments],
                 environment if driver else compiler_environment,
+                cwd=cwd,
             )
             validate_dispatch(dispatch)
             if output:
@@ -254,11 +262,12 @@ def _run(root: Path, arguments: list[str]) -> int:
             operand = next(
                 argument
                 for argument in arguments
-                if not argument.startswith("-") and Path(argument).absolute() == source
+                if not argument.startswith("-") and cwd / argument == source
             )
             rendered = _execute(
                 [assembler, *_assembler_arguments(arguments, staged_object), operand],
                 environment,
+                cwd=cwd,
             )
         else:
             assembly = temporary / "compiler.s"
@@ -277,6 +286,7 @@ def _run(root: Path, arguments: list[str]) -> int:
                     *_compiler_arguments(arguments, assembly),
                 ],
                 compiler_environment,
+                cwd=cwd,
             )
             validate_dispatch(dispatch)
             maspsx = os.environ.get(
@@ -307,6 +317,7 @@ def _run(root: Path, arguments: list[str]) -> int:
                     ),
                 ],
                 python_environment,
+                cwd=cwd,
                 input_text=read_file(
                     temporary, "compiler.s", max_bytes=64 * 1024 * 1024
                 ).decode("utf-8"),
@@ -324,6 +335,7 @@ def _run(root: Path, arguments: list[str]) -> int:
                     str(partitioned),
                 ],
                 environment,
+                cwd=cwd,
             )
 
         validate_dispatch(dispatch)

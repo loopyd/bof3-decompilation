@@ -497,6 +497,13 @@ positive/negative byte checks remain required for production admission.
 dispatch, while `harness.build.dispatch` binds the invocation and
 `harness.build.preservation` verifies frozen history. Combiner retains capture policy;
 there are no compatibility re-exports from its former verification owner.
+Dispatch pins the caller's actual working-directory path and filesystem identity,
+watches its linkage, and classifies relative operands against that captured base.
+Every GCC, maspsx, assembler or explicit-driver stage receives the same directory;
+observed context drift rejects rather than silently switching to repository root.
+Producer receipts use `bof3.grouped-producer/v2`; old receipts do not gain this
+binding retroactively. This does not capture relative search inputs, environment
+or runtime dependencies in full, nor confer native/source-adoption authority.
 
 For an explicitly admitted grouped-unit compile, supply
 `BOF3_PRESERVATION_RECORD` and `BOF3_PRESERVATION_FINGERPRINT` together. The record

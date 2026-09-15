@@ -20,7 +20,7 @@ from harness.common.observation import PathWatch
 from harness.common.paths import leaf_stat
 from harness.io import unique_object
 
-_SCHEMA = "bof3.grouped-producer/v1"
+_SCHEMA = "bof3.grouped-producer/v2"
 _LIMIT = 16 * 1024 * 1024
 
 
