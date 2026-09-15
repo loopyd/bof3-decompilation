@@ -307,6 +307,34 @@ def validate_transition(profile: dict, post: dict) -> tuple[str, str, list[str]]
     return manifest, layout, sources
 
 
+def validate_ownership_images(
+    record: dict, manifest_text: str, layout_text: str
+) -> None:
+    """Require proposed ownership text to make only the captured source relocation."""
+    check_deadline()
+    profile = record["profile"]
+    destination = profile["destination"]
+    members = {member["source"] for member in profile["members"]}
+    expected_manifest = copy.deepcopy(record["manifest_pre"])
+    retained = []
+    for source in expected_manifest["sources"]:
+        if source in members:
+            if destination not in retained:
+                retained.append(destination)
+        else:
+            retained.append(source)
+    expected_manifest["sources"] = retained
+    if hash_preservation(tomllib.loads(manifest_text)) != hash_preservation(
+        expected_manifest
+    ):
+        raise ValueError("POST manifest changes more than selected source ownership")
+    if hash_preservation(decode_layout(layout_text)) != hash_preservation(
+        record["layout_post"]
+    ):
+        raise ValueError("POST Splat changes more than selected source ownership")
+    check_deadline()
+
+
 def verify_preservation(
     root: Path,
     record: dict,
@@ -431,25 +459,10 @@ def verify_preservation(
         or profile["destination_profile"] != common
     ):
         raise ValueError("POST destination compiler profile differs")
-    expected_manifest = copy.deepcopy(record["manifest_pre"])
-    members = set(sources)
-    retained = []
-    for source in expected_manifest["sources"]:
-        if source in members:
-            if destination not in retained:
-                retained.append(destination)
-        else:
-            retained.append(source)
-    expected_manifest["sources"] = retained
-    if hash_preservation(
-        tomllib.loads(context.read(manifest_path).decode("utf-8"))
-    ) != hash_preservation(expected_manifest):
-        raise ValueError("POST manifest changes more than selected source ownership")
     layout_text = context.read(layout_path).decode("utf-8")
-    if hash_preservation(decode_layout(layout_text)) != hash_preservation(
-        record["layout_post"]
-    ):
-        raise ValueError("POST Splat changes more than selected source ownership")
+    validate_ownership_images(
+        record, context.read(manifest_path).decode("utf-8"), layout_text
+    )
     manifests = context.read_manifests()
     manifest = manifests[profile["target"]]
     if manifest.splat != layout_path:

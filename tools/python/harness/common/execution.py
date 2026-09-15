@@ -12,7 +12,7 @@ from harness.common.digests import digest
 from harness.common.deadlines import check_deadline
 from harness.common.evidence import write_evidence_output
 from harness.common.git import git_index_backup
-from harness.common.inputs import file_state, input_state
+from harness.common.inputs import file_state, input_state, relative
 from harness.common.lease import verify_writer
 from harness.io import repo_layout
 from harness.toolchain.splat import SplatToolchain
@@ -207,9 +207,38 @@ def begin(
     }
 
 
-def applied(root: Path, manifest: dict, context, changes: dict) -> None:
+def applied(
+    root: Path,
+    manifest: dict,
+    context,
+    changes: dict,
+    *,
+    deletions: set[str] | None = None,
+) -> None:
+    if deletions is not None:
+        if (
+            not isinstance(deletions, set)
+            or any(
+                not isinstance(name, str) or relative(name) != name for name in changes
+            )
+            or not set(changes) <= set(manifest["allowed_paths"])
+            or {name for name, text in changes.items() if text is None} != deletions
+            or any(
+                text is not None and not isinstance(text, str)
+                for text in changes.values()
+            )
+        ):
+            raise ValueError("execution context requires exact owned deletion opt-in")
+        if deletions and context is None:
+            raise ValueError("execution context deletions require captured PRE inputs")
     if context is None:
         return
+    if deletions is None and any(
+        not isinstance(text, str) for text in changes.values()
+    ):
+        raise ValueError(
+            "execution context requires text unless deletions are explicit"
+        )
     current = capture(
         root, manifest, context["initial_state"].get("participating_targets")
     )
@@ -218,7 +247,14 @@ def applied(root: Path, manifest: dict, context, changes: dict) -> None:
         "inputs": dict(context["initial_state"]["inputs"]),
     }
     for name, text in changes.items():
+        if name not in expected["inputs"] or name not in current["inputs"]:
+            raise ValueError("execution context intended edit lacks captured input")
         actual = current["inputs"][name]
+        if deletions is not None and name in deletions:
+            if expected["inputs"][name] is None or actual is not None:
+                raise ValueError("execution context intended deletion mismatch")
+            expected["inputs"][name] = None
+            continue
         if (
             actual is None
             or (

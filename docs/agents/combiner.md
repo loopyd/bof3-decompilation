@@ -70,7 +70,7 @@ Macro association uses authored ranges even when the analyzer omitted a sibling;
 that sibling's uses remain unresolved, never borrowed by the sole indexed function.
 Prologue/header/definition uses remain contextual. This does not yet migrate macro
 consumer coverage or type-use identities. Native resolve/compare and status preflight
-reject grouped files before comparison/cache reuse; transaction preparation, proposed
+reject grouped files before comparison/cache reuse; macro/type preparation, proposed
 C images and filename-changing naming facts retain corresponding guards.
 
 `bin/cc` now passes its one complete maspsx translation through
@@ -249,12 +249,12 @@ selected-key edit is permitted. Verification replays PRE profiles with retained
 configuration and checks POST profiles against live configuration. Partial or
 unrelated configuration changes reject.
 These commands do not apply the migration, edit/delete sources, refresh indexes or
-build. A deletion-aware combiner transaction, owned rollback, native all-member
+build. A deletion-aware combiner apply, owned rollback, native all-member
 checks and independent final acceptance remain required before production use.
 The shared runtime now supports explicit owned deletions, v4 absent-POST recovery
 and identity-backed restoration alongside replacement images; see
 [recovery capture](harness.md#recovery-capture). This prerequisite does not create
-a combiner transaction or authorize consolidation. Its domain adapter must bind
+a combiner application or authorize consolidation. Its domain adapter must bind
 the exact deletion set to the reviewed joint source/configuration plan and preserve
 all existing execution, audit and acceptance gates.
 
@@ -306,6 +306,32 @@ Checks fence mutations during each observation; matching SHA/mode endpoints do n
 prove inode continuity between PRE and POST. The CLI checks the inherited cutoff
 after rendering, before stdout publication; callers still require complete output
 and successful terminal exit, not atomic publication if writing itself crosses the cutoff.
+
+### Joint transaction preparation
+
+```sh
+bin/combiner transaction prepare pre-profile.json images.json \
+  --expected-profile-fingerprint PRE_SHA --expected-images-sha256 IMAGES_FILE_SHA
+bin/combiner transaction verify transaction.json --expected-fingerprint TRANSACTION_SHA
+```
+
+These commands only prepare/recheck live PRE; neither applies nor accepts edits.
+The profile must embed the exact destination draft. `images.json` maps every
+destination, superseded source, manifest, Splat and planned configuration path to
+`{ "text": "complete UTF-8 file contents", "mode": 420 }`, or `null` for an
+explicit deletion. Preserve observed modes for existing files; a new destination
+declares its intended mode. The CLI pins the images file's actual bytes.
+
+Preparation checks the complete path/deletion set, compiler preservation, proposed
+manifest/source-list and Splat-marker relocation, and exact configuration migration
+before any mutation. It retains joint text, PRE/POST states, owner/input pins and
+inventories under one externally retained fingerprint. Verification re-derives the
+record against live PRE and rejects changed images, owners, inventory or inputs;
+it is not the preservation command's live-POST check. Records share the 4 MiB bound
+and original `--work-deadline`. Permission changes, source writes, index refreshes
+and native commands are not performed. `native_verified`, `coverage_verified`,
+`write_authorized` and `accepted` remain false. Domain application, all-member native
+and consumer gates, recovery integration and independent acceptance are still open.
 
 ### Compiler dispatch
 

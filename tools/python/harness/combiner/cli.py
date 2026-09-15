@@ -1,4 +1,4 @@
-"""CLI adapters for explicit read-only consolidation inspection."""
+"""CLI adapters for read-only consolidation inspection and transaction preparation."""
 
 from __future__ import annotations
 
@@ -21,6 +21,7 @@ from harness.build.preservation import (
     verify_preservation,
 )
 from harness.combiner.preservation import capture_preservation
+from harness.combiner.transactions import prepare_transaction, verify_transaction
 
 
 def _inspect_source(args: argparse.Namespace) -> int:
@@ -59,6 +60,28 @@ def _run_preservation(args: argparse.Namespace) -> int:
         )
     else:
         payload = verify_preservation(
+            resolved_root(args),
+            read_preservation_document(args.record),
+            expected_fingerprint=args.expected_fingerprint,
+        )
+    rendered = json.dumps(payload, indent=2, sort_keys=True)
+    check_deadline()
+    print(rendered)
+    return 0
+
+
+def _run_transaction(args: argparse.Namespace) -> int:
+    if args.transaction_command == "prepare":
+        payload = prepare_transaction(
+            resolved_root(args),
+            read_preservation_document(args.profile),
+            read_preservation_document(
+                args.images, expected_sha256=args.expected_images_sha256
+            ),
+            expected_profile_fingerprint=args.expected_profile_fingerprint,
+        )
+    else:
+        payload = verify_transaction(
             resolved_root(args),
             read_preservation_document(args.record),
             expected_fingerprint=args.expected_fingerprint,
@@ -110,6 +133,24 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--expected-fingerprint", required=True)
     add_work_deadline_argument(verify)
     verify.set_defaults(handler=_run_preservation)
+    transaction = commands.add_parser(
+        "transaction", help="prepare or verify exact joint images without applying"
+    )
+    stages = transaction.add_subparsers(dest="transaction_command", required=True)
+    prepare = stages.add_parser("prepare", help="bind proposed images to live PRE")
+    prepare.add_argument("profile", type=Path)
+    prepare.add_argument("images", type=Path)
+    prepare.add_argument("--expected-profile-fingerprint", required=True)
+    prepare.add_argument("--expected-images-sha256", required=True)
+    add_work_deadline_argument(prepare)
+    prepare.set_defaults(handler=_run_transaction)
+    verify = stages.add_parser(
+        "verify", help="recheck a prepared record against live PRE"
+    )
+    verify.add_argument("record", type=Path)
+    verify.add_argument("--expected-fingerprint", required=True)
+    add_work_deadline_argument(verify)
+    verify.set_defaults(handler=_run_transaction)
     return parser
 
 

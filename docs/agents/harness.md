@@ -10,7 +10,7 @@ All paths are below `tools/python/harness/`.
 | Package | Owns | Entry points |
 | --- | --- | --- |
 | `macros/` | lexical facts, assembly/C opportunities, ranking, consumers, reviewed transactions and unchanged existing-abstraction dispositions | `bin/macro-audit` → `harness.macros.cli` |
-| `combiner/` | read-only attached-function inspection; ranked consolidation/transactions are queued | `sh bin/combiner` → `harness.combiner.cli`; [rollout contract](combiner.md) |
+| `combiner/` | read-only inspection, compiler preservation and joint-image preparation; ranking/application are queued | `sh bin/combiner` → `harness.combiner.cli`; [rollout contract](combiner.md) |
 | `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/naming-audit` → `harness.naming.cli`; `bin/naming-evidence-run` → `harness.naming.runner` |
 | `types/` | C declarations, representation inference, type-use/candidate indexing, reviewed type transactions | `bin/type-audit` → `harness.types.cli` |
 | `docs/` | scoped Markdown references, snapshots, search, context, aggregation and edit/repair/compaction preparation | `bin/docs` → `harness.docs.cli` |
@@ -457,6 +457,12 @@ Mixed edits capture `bof3.transaction-recovery/v4`: each deleted path has presen
 PRE and `post: null`; replacements retain prepared POST images. Text-only capture
 remains v3. The common owner vocabulary includes `combiner`, but this mechanism
 does not supply its domain transaction, audit, native gates or recovery CLI.
+`common.execution.applied` can bind absent POST only with an exact, canonical,
+manifest-owned `deletions` set and captured present PRE. Other calls remain
+text-only. A retained file, absent PRE, mismatched deletion set or unrelated input/
+build drift rejects without advancing the context. This is execution bookkeeping,
+not deletion authority or combiner acceptance; [joint preparation](combiner.md#joint-transaction-preparation)
+binds proposed images separately and remains read-only.
 `common/directory.py` owns confined descriptor traversal. Files and directory links are
 synced before mutation; capture failure aborts before moving sources.
 
