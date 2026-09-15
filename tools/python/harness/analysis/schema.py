@@ -60,11 +60,14 @@ def required_schema() -> dict[str, tuple[SchemaRows, SchemaRows, SchemaRows]]:
         connection.close()
 
 
-def create_schema(connection: sqlite3.Connection) -> None:
+def create_schema(connection: sqlite3.Connection, *, atomic: bool = False) -> None:
     """Create the reverse-index tables and foreign-key enforcement."""
-    connection.executescript(
+    if not isinstance(atomic, bool):
+        raise TypeError("atomic schema option must be boolean")
+    if atomic and connection.in_transaction:
+        raise ValueError("atomic schema creation requires an idle connection")
+    script = (
         """
-        PRAGMA foreign_keys = ON;
         CREATE TABLE metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL);
         CREATE TABLE targets (
             id TEXT PRIMARY KEY,
@@ -211,3 +214,13 @@ def create_schema(connection: sqlite3.Connection) -> None:
         + TYPE_SCHEMA
         + MACRO_SCHEMA
     )
+    prefix = "PRAGMA foreign_keys = ON;\n"
+    if not atomic:
+        connection.executescript(prefix + script)
+        return
+    try:
+        connection.executescript(prefix + "BEGIN;\n" + script + "\nCOMMIT;")
+    except BaseException:
+        if connection.in_transaction:
+            connection.execute("ROLLBACK")
+        raise

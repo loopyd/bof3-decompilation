@@ -104,7 +104,7 @@ def rebuild(root: Path) -> Path:
     try:
         connection = sqlite3.connect(temporary_path)
         try:
-            create_schema(connection)
+            create_schema(connection, atomic=True)
             connection.execute(
                 "INSERT INTO metadata VALUES (?, ?)", ("schema", SCHEMA_VERSION)
             )

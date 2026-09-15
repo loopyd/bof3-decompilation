@@ -362,6 +362,10 @@ fallbacks when a target has no explicit source claims. Fallbacks must name regul
 Canonical snapshot encoding is shared by capture and lookup; old indexes rebuild.
 Before atomic replacement, candidate publication uses the canonical schema checks
 and the status validator against the same captured generation, without recapture.
+Fresh build connections create the schema in one explicit transaction, enabling
+foreign keys before `BEGIN`; journals and synchronous settings remain unchanged.
+Atomic schema creation rejects pending transactions and rolls back partial DDL
+on failure. The default schema API retains its existing transaction behavior.
 
 `bin/analysis-readiness [TARGET]` is the bounded aggregate checkpoint. By default it reports snapshot/index freshness and stale facts, then summary work graphs and exact naming, type, and macro counts; `TARGET` restricts every inventory, debt, candidate, and work count to that target. Use `--detail full` only when the exhaustive candidate rows, blockers, fingerprints, and generated naming work are required. Both modes retain the `bof3.analysis-readiness/v2` schema and differ only in `work_graph` detail. The command is read-only and prints `bin/index --recover` when authoritative inputs have made the disposable index stale. Recovery is explicit so reviewed transactions pass before index refresh.
 
