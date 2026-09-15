@@ -429,7 +429,7 @@ def run_evidence(
         "report": report.relative_to(root).as_posix(),
         "rows": [_row_key(row) for row in selected],
         "executed": executed,
-        "resumed": len(checkpoint),
+        "resumed": len(reusable),
         "errors": errors,
         "terminalized": terminalized,
         "manifest": namespace.record_path(manifest_path(root, report, target)),

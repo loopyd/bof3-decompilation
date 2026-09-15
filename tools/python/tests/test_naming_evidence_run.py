@@ -1562,7 +1562,7 @@ def test_partial_runner_commits_strict_exit_one_evidence(
     monkeypatch.setattr(registry, "resolve_function", lambda *_: resolved)
 
     class Worker:
-        def __init__(self, *_args: Any) -> None:
+        def __init__(self, *_args: Any, work_deadline: float | None = None) -> None:
             pass
 
         def receive(self, _timeout: float) -> dict[str, Any]:

@@ -11,6 +11,8 @@ import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from harness.common.deadlines import check_deadline
+
 if TYPE_CHECKING:
     from harness.naming.context import TargetContext
 
@@ -233,6 +235,7 @@ def atomic_write_if_unchanged(
     path: Path, expected: bytes, payload: dict[str, Any]
 ) -> None:
     """Atomically replace path only when its bytes still match the read snapshot."""
+    check_deadline()
     if path.read_bytes() != expected:
         raise ValueError("proposal report changed concurrently")
     rendered = (json.dumps(payload, indent=2, sort_keys=True) + "\n").encode()
@@ -246,6 +249,7 @@ def atomic_write_if_unchanged(
         os.chmod(temporary, mode)
         if path.read_bytes() != expected:
             raise ValueError("proposal report changed concurrently")
+        check_deadline()
         os.replace(temporary, path)
     except BaseException:
         Path(temporary).unlink(missing_ok=True)

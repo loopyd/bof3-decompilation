@@ -140,6 +140,10 @@ bin/naming-audit conclude TARGET REPORT INPUT --evidence-root "$ROOT"
 bin/naming-audit conclude TARGET REPORT INPUT --evidence-root "$ROOT"
 ```
 
+Runner `resumed` counts reusable journal entries present before collection,
+matching `telemetry_summary.rows.skipped`, not newly completed `executed` work.
+Stale entries are excluded. These progress counts grant no semantic acceptance.
+
 `INPUT` uses `bof3.naming-conclusion/v1`. The top-level `report_sha256` is the
 current report CAS digest: import fails if the report bytes have changed. The
 source `report_digest` is the initializer/report digest recorded by collection;
@@ -524,6 +528,39 @@ in-row/external ambiguity reject. Omitted `--post-apply-receipts` stays legacy.
 Failures retain native evidence and return rollback ownership to cleaner/parent,
 never restore HEAD or recover derived state automatically.
 
+### Naming inventory reconciliation
+
+`bin/naming-audit reconcile TARGET` previews missing blocked inventory rows and
+campaign accounting; `--apply` publishes through the naming owner. Retained
+evidence uses the same `--evidence-root` as collection. Full report validation,
+including prepared-proposal digests, must pass without rebinding conclusions.
+
+For an initial report, reconciliation preserves existing rows and other target
+entries, then updates its cached count/completeness and the aggregate count.
+It also repairs an already-appended report whose summary count is still lower.
+Malformed/inconsistent accounting, mismatched initial completeness, inventory
+removal and retained-generation additions reject. New inventory in retained
+history needs a supported successor transition; reconciliation never rewrites it.
+Cached aggregate totals are not a fresh audit of every target.
+
+Apply holds the repository writer lease and active-report lock, retains input
+states, and durably publishes the report before compare-and-swapping the summary.
+`--work-deadline` binds the original monotonic cutoff; each atomic replacement
+checks it after temporary-file fsync and the final byte comparison. Postapply gates
+inherit that cutoff without extending their per-command timeout or output cap.
+These are two writes, not one atomic pair. If interrupted between them, preserve
+the report and rerun reconciliation: it revalidates live inventory/evidence and
+repairs accounting without rewriting existing proposal bytes. A failed run grants
+no acceptance. Publication errors retain before/current states; deadline failures
+preserve their type, using the cleanup tail only for diagnostic reads. Retry requires
+remaining bounds and authorization, never bypassing a denial. A completeness
+transition interrupted between writes remains blocked for separate owner recovery.
+Inspect `summary.changed`, before/after hashes and counts; `applied`
+can be true for an accounting-only repair. Neither operation approves a rename,
+refreshes analysis, repairs a checkpoint, or grants production completion.
+Before admitting a new canonical naming source action, require a fresh preview
+with no additions or accounting changes, and retain its report/summary pins.
+
 ### Accepted naming report generations
 
 After public `verify` accepts one explicitly authorized FUNCTION or DATA rename,
@@ -876,6 +913,19 @@ acceptance evidence for an individual lift.
 On a cold or partially invalidated cache, `decomp-status` batch-builds all
 valid cache-miss objects per owning target in a single CMake invocation, then
 compares each individually. An all-cache-hit target issues no build command.
+Configuration belongs to the shared batch builder; status does not repeat it.
+Post-build ownership refresh and per-source fallback remain mandatory.
+After every successful or failed batch, status reloads manifests. Missing, changed
+or unreadable target metadata yields uncached invalid records, without comparison
+or fallback using the queued model. Unchanged models retain fallback; work-deadline
+expiry propagates. This boundary check does not prove continuity through later
+native steps.
+Cache v6 retires prior summaries and binds the supplied target model, including
+nested placements and companion metadata loaded from alternate TOML names, plus
+object flags and the variant catalog.
+Those two files use bounded confined reads (4 MiB each); missing and empty differ,
+and unsafe paths or failed reads reject. Dictionary order is ignored; sequence order
+is preserved. This is not atomic input capture or complete compiler/runtime closure.
 `--no-cache` bypasses disposable audit summaries but still batch-builds selected
 valid misses; it is for diagnosis, not lift acceptance. Cache rows are never
 used for acceptance: immediately before accepting a lift, run live

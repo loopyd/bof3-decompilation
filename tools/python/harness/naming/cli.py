@@ -234,6 +234,7 @@ def build_parser() -> argparse.ArgumentParser:
     terminal.add_argument("--evidence-root", action=_SingleEvidenceRoot)
     terminal.set_defaults(handler=_run_terminal_verify)
     for name in (
+        "reconcile",
         "validate",
         "prepare-transaction",
         "snapshot",

@@ -12,8 +12,9 @@ from harness.common.git import capture_git_index
 from harness.common.inputs import file_state
 from harness.common.inventory import CaptureBudget, capture_file
 from harness.common.lease import acquire_writer, require_writer
-from harness.naming.application import collect_function_checks, directory
+from harness.naming.application import directory
 from harness.naming.audit import validate
+from harness.naming.checks import collect_function_checks
 from harness.naming.editing import report_mutation
 from harness.naming.history import (
     compute_sha256,

@@ -1,16 +1,4 @@
-"""Strict bof3.naming-audit/v3 validation.
-
-v3 keeps the structural core (rung checks, receipts) and adds derived-fact
-equality: transaction scope, canonical storage, generated required work,
-typed observation-linked corroborators, and semantic/transaction status.
-A pre-apply check captures the immutable ``pre_apply`` fact record
-(selector, statuses, reviewed range, canonical scope, generated work,
-canonical storage, reviewed.rz scope digest) plus its versioned digest; the
-post-apply check requires that record and verifies the digest against the
-recorded facts, so post-apply validation is bound to the facts that held
-before the transaction.  Agents supply observations; the toolchain derives
-completeness.
-"""
+"""Validate naming audits and immutable transaction receipt bindings."""
 
 from __future__ import annotations
 
@@ -23,6 +11,7 @@ from typing import Any
 from harness.domain.manifests import load_target_manifests
 from harness.domain.receipts import command_records
 from harness.domain.symbols import load_target_symbols
+from harness.naming.checks import collect_function_checks
 from harness.naming.context import (
     DIGEST_VERSION,
     READY_STATUS,
@@ -243,29 +232,31 @@ def _validation_receipts(
     if len(passed) != len(records):
         raise ValueError(f"{old_name} post-apply receipt contains a failed command")
     required = ["bin/symbols normalize", "bin/symbols check", "independent review"]
+    native_selectors = None
     if kind == "function":
         required += ["bin/splat", "bin/build"]
-        required += (
-            ["partial baseline"]
-            if row.get("partial_used") is True
-            else [f"bin/asm-diff {selector}", f"bin/byte-match {selector}"]
-        )
+        if row.get("partial_used") is True:
+            required += ["partial baseline"]
+        else:
+            native_selectors = {
+                check["selector"] for check in collect_function_checks(ctx.root, row)
+            }
     elif "data" in row["pre_apply"]["facts"]:
         consumers = validate_data_shape(row["pre_apply"]["facts"]["data"])["consumers"]
+        native_selectors = {consumer["selector"] for consumer in consumers}
         required += ["bin/splat", "bin/build"]
+    if native_selectors is not None:
         required += [
-            f"{tool} {consumer['selector']}"
-            for consumer in consumers
+            f"{tool} {native_selector}"
+            for native_selector in sorted(native_selectors)
             for tool in ("bin/asm-diff", "bin/byte-match")
         ]
     for prefix in required:
-        matching = [command for command in passed if command.startswith(prefix)]
-        if kind == "data" and "data" in row["pre_apply"]["facts"]:
-            matching = [
-                command
-                for command in matching
-                if command == prefix or command.startswith(prefix + " ")
-            ]
+        matching = [
+            command
+            for command in passed
+            if command == prefix or command.startswith(prefix + " ")
+        ]
         if len(matching) != 1:
             raise ValueError(
                 f"{old_name} post-apply receipts require exactly one passed {prefix}"
@@ -278,20 +269,20 @@ def _validation_receipts(
             ("bin/asm-diff", "bin/byte-match", "partial baseline", "independent review")
         )
         expected_selector = selector
-        if kind == "data" and "data" in row["pre_apply"]["facts"]:
+        if native_selectors is not None:
             if command.startswith(("bin/asm-diff", "bin/byte-match")):
                 parts = command.split()
                 if (
                     len(parts) < 2
                     or parts[0] not in {"bin/asm-diff", "bin/byte-match"}
-                    or parts[1] not in {consumer["selector"] for consumer in consumers}
+                    or parts[1] not in native_selectors
                 ):
                     raise ValueError(
                         f"{old_name} receipt does not select a captured consumer"
                     )
                 expected_selector = parts[1]
             elif command.startswith("partial baseline"):
-                raise ValueError("data consumer partial baselines are unsupported")
+                raise ValueError(f"{kind} consumer partial baselines are unsupported")
             elif (
                 command.startswith("independent review")
                 and command != f"independent review {selector}"

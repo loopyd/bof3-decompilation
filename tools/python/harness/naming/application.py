@@ -7,11 +7,13 @@ import os
 import secrets
 from pathlib import Path
 
+from harness.common.deadlines import resolve_deadline
 from harness.common.inputs import file_state
 from harness.common.process import run_bounded
 from harness.domain.receipts import command_records, write_receipt
 from harness.domain.symbols import format_map, load_map
 from harness.io import unique_object
+from harness.naming.checks import collect_function_checks
 from harness.naming.data import validate_data_shape
 from harness.naming.inputs import (
     applied_scope,
@@ -27,55 +29,6 @@ from harness.naming.namespace import selected_evidence_root
 SCHEMA = "bof3.naming-postapply/v1"
 BUNDLE_KEYS = "schema binding implementation_run_id initial_state final_state index_digest normalization_input graph_state gates review"
 OUTPUT_LIMIT = 2 * 1024 * 1024
-
-
-def collect_function_checks(root: Path, row) -> list[dict]:
-    from harness.domain.functions import parse_function_records
-    from harness.domain.registry import resolve_function
-
-    facts = row["pre_apply"]["facts"]
-    start, end = (int(value, 0) for value in facts["unchanged_range"].split(".."))
-    checks = [
-        {
-            "selector": row["identity"]["selector"],
-            "address": start,
-            "size": end - start,
-            "name": row["new_name"],
-            "source": facts["destination"],
-        }
-    ]
-    scope = facts["scope"]
-    selectors = {checks[0]["selector"]}
-    for relative in sorted(set(scope["source_locations"])):
-        if relative == scope["definition"] or not relative.endswith(".c"):
-            continue
-        source = root / relative
-        try:
-            records = parse_function_records(source.read_text(encoding="utf-8"))
-        except ValueError as error:
-            raise ValueError(f"invalid caller metadata: {relative}: {error}") from error
-        if len(records) != 1 or records[0].status != "exact":
-            raise ValueError(f"function identity requires one exact caller: {relative}")
-        record = records[0]
-        selector = f"{scope['target']}@0x{record.address:08X}"
-        resolved = resolve_function(root, selector)
-        if (
-            resolved.source != source
-            or resolved.compiled_symbol != record.spelling
-            or selector in selectors
-        ):
-            raise ValueError(f"function caller ownership is ambiguous: {relative}")
-        selectors.add(selector)
-        checks.append(
-            {
-                "selector": selector,
-                "address": record.address,
-                "size": None,
-                "name": record.spelling,
-                "source": relative,
-            }
-        )
-    return checks
 
 
 def plan(root: Path, target: str, row) -> list[list[str]]:
@@ -107,7 +60,13 @@ def plan(root: Path, target: str, row) -> list[list[str]]:
 
 def _execute(root: Path, argv: list[str]) -> dict:
     """Run bounded native naming gates through the shared process owner."""
-    return run_bounded(root, argv, timeout=120, output_limit=OUTPUT_LIMIT)
+    return run_bounded(
+        root,
+        argv,
+        deadline=resolve_deadline(),
+        timeout=120,
+        output_limit=OUTPUT_LIMIT,
+    )
 
 
 def evidence(root: Path, result: dict, row) -> bool:
