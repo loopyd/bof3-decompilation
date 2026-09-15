@@ -16,6 +16,7 @@ from harness.combiner.inspection import inspect_source
 from harness.combiner.profiles import inspect_profiles
 from harness.common.deadlines import check_deadline
 from harness.build.preservation import (
+    read_destination_source,
     read_preservation_document,
     verify_preservation,
 )
@@ -28,18 +29,20 @@ def _inspect_source(args: argparse.Namespace) -> int:
 
 
 def _inspect_profiles(args: argparse.Namespace) -> int:
-    print(
-        json.dumps(
-            inspect_profiles(
-                resolved_root(args),
-                args.target,
-                args.destination,
-                args.sources,
-                expected_fingerprint=args.expected_fingerprint,
-            ),
-            indent=2,
-        )
+    payload = inspect_profiles(
+        resolved_root(args),
+        args.target,
+        args.destination,
+        args.sources,
+        expected_fingerprint=args.expected_fingerprint,
+        destination_text=read_destination_source(
+            args.destination_source,
+            expected_sha256=args.expected_destination_sha256,
+        ),
     )
+    rendered = json.dumps(payload, indent=2)
+    check_deadline()
+    print(rendered)
     return 0
 
 
@@ -81,6 +84,8 @@ def build_parser() -> argparse.ArgumentParser:
     profile.add_argument("destination")
     profile.add_argument("sources", nargs="+")
     profile.add_argument("--expected-fingerprint")
+    profile.add_argument("--destination-source", type=Path)
+    profile.add_argument("--expected-destination-sha256")
     add_work_deadline_argument(profile)
     profile.set_defaults(handler=_inspect_profiles)
     preservation = commands.add_parser(

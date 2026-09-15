@@ -9,6 +9,12 @@ from pathlib import Path
 
 from harness.build.compiler import DEFAULT_COMPILER_ID, sanitize_identifier
 from harness.build.profiles import ProfileContext, collect_profile_sources
+from harness.build.preservation import (
+    PROFILE_SCHEMA,
+    validate_destination_text,
+    validate_preservation_size,
+)
+from harness.common.deadlines import check_deadline
 from harness.common.inputs import relative
 from harness.domain.claims import collect_manifest_source_addresses
 from harness.domain.functions import collect_lift_metadata
@@ -36,6 +42,7 @@ def inspect_profiles(
     sources: list[str],
     *,
     expected_fingerprint: str | None = None,
+    destination_text: str | None = None,
 ) -> dict:
     """Require one configured profile for explicit whole-file members and destination."""
     root = root.resolve()
@@ -187,7 +194,8 @@ def inspect_profiles(
     common = members[0]["profile"]
     if any(member["profile"] != common for member in members[1:]):
         raise ValueError("member compiler profiles are incompatible")
-    destination_profile = context.resolve(destination)
+    validate_destination_text(destination_text, target, members)
+    destination_profile = context.resolve(destination, text=destination_text)
     if destination_profile != common:
         raise ValueError("destination would change the captured compiler profile")
     for name in (
@@ -200,12 +208,13 @@ def inspect_profiles(
         raise ValueError("source inventory changed during profile capture")
     context.verify_manifest_inventory()
     result = {
-        "schema": "bof3.combiner-profile/v1",
+        "schema": PROFILE_SCHEMA,
         "target": target,
         "destination": destination,
         "members": members,
         "common_profile": common,
         "destination_profile": destination_profile,
+        "destination_text": destination_text,
         "inputs": context.inputs,
         "source_inventory": {
             "count": len(inventory),
@@ -225,4 +234,7 @@ def inspect_profiles(
     ).hexdigest()
     if expected_fingerprint is not None and digest != expected_fingerprint:
         raise ValueError("compiler profile fingerprint drifted")
-    return {**result, "fingerprint": digest}
+    result = {**result, "fingerprint": digest}
+    validate_preservation_size(result)
+    check_deadline()
+    return result

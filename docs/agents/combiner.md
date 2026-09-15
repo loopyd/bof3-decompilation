@@ -157,13 +157,17 @@ compiler overrides and malformed or unattached compiler annotations reject. An e
 destination must be a selected member; its independently resolved profile must
 equal every retained member profile.
 
-Preservation v3 authenticates retained PRE source text against the captured hashes
+Preservation v4 authenticates retained PRE source text against the captured hashes
 before resolving original annotations, including removed files and an overwritten
 destination. POST settings resolve from live captured destination text, never from
 the retained PRE image. Older preservation records are not upgraded or rebound.
-An absent destination still must reproduce the common profile through its
-configured path/defaults; this does not yet plan prospective metadata or migrate
-legacy object settings automatically.
+For a new or overwritten destination, pass `--destination-source DRAFT.c` and
+`--expected-destination-sha256 SHA` together. Profile v2 embeds that bounded UTF-8
+image without writing it: attached records must cover all selected members, ordinary
+definition names must match, and the draft's effective metadata/path/default profile
+must equal every PRE profile. Template expansion and C semantics still need their
+later gates. Without a draft, inspection uses existing destination bytes or absent
+path defaults. Neither mode migrates legacy object settings automatically.
 
 The reader supports one fixed, reviewed CMake recipe digest and a closed literal
 object-configuration grammar. Unknown recipe bytes, including harmless edits,
@@ -175,8 +179,8 @@ comments, value-less assignments and trailing assignment comments reject rather
 than silently erase an override. Members require aligned 32-bit MIPS C
 boundaries with consistent positive file/virtual extents.
 
-The `fingerprint` binds the inspection, including destination absence/content and
-source-path inventory. Replay with `--expected-fingerprint PIN` before any edits.
+The `fingerprint` binds destination absence/content, any draft, and source-path
+inventory. Replay with `--expected-fingerprint PIN` before any edits.
 Manifest discovery is shared with the domain loader: every consumed TOML under
 `config/targets/` is pinned, including non-`target.toml` names. Parsing and cache keys
 use the context's captured bytes, not a second unbound file read. Final checks
@@ -225,9 +229,12 @@ stdout; retain its canonical fingerprint externally before any transaction. POST
 JSON maps exactly the destination, every old source, target manifest and Splat path
 to `{ "sha256": "…", "mode": 420 }` file states; superseded sources use `null`.
 Modes describe observed images, not permission-changing operations. The POST-file
-digest binds actual JSON bytes. Only already-compatible destination profiles are
-supported; compiler configuration migration is not implemented. No source edit,
-deletion, index refresh, build or transaction is performed by these commands.
+digest binds actual JSON bytes. If profile v2 embeds a draft, the destination POST
+hash must match its exact UTF-8 bytes; capture replays that draft against live PRE,
+and verification checks live POST against both pins. Profiles and preservation
+records share the 4 MiB serialized-document bound; older schemas require fresh
+capture, never rehashing or rebinding. These commands neither migrate compiler
+configuration nor edit/delete sources, refresh indexes, build or apply transactions.
 
 Verification requires exact pinned POST bytes and unchanged captured inputs, source
 and manifest inventories, ordered compiler profiles, selectors and symbol identities.
@@ -271,8 +278,8 @@ Full destination code and metadata review remains mandatory: membership does not
 The repository-bound record requires an independently retained fingerprint; its
 self-hash gives no review authority. Success proves configured preservation only,
 not native equality, complete toolchain/include identity or producer freshness.
-`bin/cc` consumes v3 preservation records through the build-owned driver described
-below; v1/v2 records require fresh capture. Production consolidation remains gated.
+`bin/cc` consumes v4 preservation records through the build-owned driver described
+below; v1–v3 records require fresh capture. Production consolidation remains gated.
 Checks fence mutations during each observation; matching SHA/mode endpoints do not
 prove inode continuity between PRE and POST. The CLI checks the inherited cutoff
 after rendering, before stdout publication; callers still require complete output

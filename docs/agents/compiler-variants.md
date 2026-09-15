@@ -76,10 +76,14 @@ dispatch itself does not perform another version check.
 `BOF3_COMPILER_TRIAL`. Only one ungrouped scratch object may use trial overrides;
 the marker is bound to the dispatch and cannot relax grouped preservation checks.
 Trial results do not update authored metadata or establish configured production
-acceptance. Preservation v3 retains PRE source text authenticated by its original
+acceptance. Preservation v4 retains PRE source text authenticated by its original
 hash, so removed or overwritten paths cannot erase the original settings.
 Captured records must fit the existing 4 MiB document bound, including their PRE
-text; oversized records reject before publication.
+text; oversized records reject before publication. Profile v2 optionally embeds a
+hash-pinned destination draft, resolves its attached metadata without writing it,
+and requires identical compiler/ordered arguments and exact selected membership.
+Capture and verification bind POST bytes to that draft; this does not migrate
+legacy configuration, prove C semantics or authorize consolidation.
 
 ## Verification
 

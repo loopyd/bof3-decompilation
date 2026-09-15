@@ -17,13 +17,14 @@ from harness.common.files import read_file
 from harness.common.inputs import InputBatch, relative
 from harness.domain.claims import collect_manifest_source_addresses
 from harness.domain.cache import collect_manifest_paths
-from harness.domain.functions import collect_lift_metadata
+from harness.domain.functions import collect_lift_metadata, parse_function_records
 from harness.domain.layout import parse_splat_text
 from harness.domain.sources import compiled_symbol_name, expected_lift_sources
 from harness.domain.symbols import parse_map
 from harness.io import unique_object
 
-PRESERVATION_SCHEMA = "bof3.combiner-preservation/v3"
+PROFILE_SCHEMA = "bof3.combiner-profile/v2"
+PRESERVATION_SCHEMA = "bof3.combiner-preservation/v4"
 PRESERVATION_OWNERS = (
     "tools/python/harness/combiner/preservation.py",
     "tools/python/harness/build/preservation.py",
@@ -64,9 +65,7 @@ def validate_preservation_size(document: dict) -> None:
     check_deadline()
 
 
-def read_preservation_document(
-    path: Path, *, expected_sha256: str | None = None
-) -> dict:
+def _read_document_bytes(path: Path, *, expected_sha256: str | None = None) -> bytes:
     if expected_sha256 is not None:
         validate_fingerprint(expected_sha256)
     content = read_file(path.parent, path.name, max_bytes=_LIMIT)
@@ -75,6 +74,13 @@ def read_preservation_document(
         and hashlib.sha256(content).hexdigest() != expected_sha256
     ):
         raise ValueError("preservation document bytes drifted")
+    return content
+
+
+def read_preservation_document(
+    path: Path, *, expected_sha256: str | None = None
+) -> dict:
+    content = _read_document_bytes(path, expected_sha256=expected_sha256)
     try:
         value = json.loads(content, object_pairs_hook=unique_object)
     except RecursionError as error:
@@ -83,6 +89,50 @@ def read_preservation_document(
         raise ValueError("preservation document must be an object")
     check_deadline()
     return value
+
+
+def read_destination_source(
+    path: Path | None, *, expected_sha256: str | None
+) -> str | None:
+    """Read an optional prospective C image only with an external byte digest."""
+    if path is None:
+        if expected_sha256 is not None:
+            raise ValueError("a destination digest requires a destination source")
+        return None
+    validate_fingerprint(expected_sha256)
+    content = _read_document_bytes(path, expected_sha256=expected_sha256)
+    try:
+        return content.decode("utf-8")
+    except UnicodeError as error:
+        raise ValueError("destination source must be UTF-8 text") from error
+
+
+def validate_destination_text(
+    text: str | None, target: str, members: list[dict]
+) -> None:
+    """Bind prospective attached records to the complete selected member set."""
+    check_deadline()
+    if text is None:
+        return
+    if not isinstance(text, str) or len(text.encode("utf-8")) > _LIMIT:
+        raise ValueError("destination source must be bounded UTF-8 text")
+    expected = {
+        function["selector"]: function["symbol"]
+        for member in members
+        for function in member["functions"]
+    }
+    records = parse_function_records(text)
+    actual = {f"{target}@0x{record.address:08X}": record for record in records}
+    if len(expected) != sum(len(member["functions"]) for member in members):
+        raise ValueError("PRE function selectors are duplicated")
+    if set(actual) != set(expected):
+        raise ValueError("destination metadata differs from complete PRE membership")
+    if any(
+        record.kind == "function" and record.spelling != expected[selector]
+        for selector, record in actual.items()
+    ):
+        raise ValueError("destination function spelling differs from PRE identity")
+    check_deadline()
 
 
 def validate_states(states: object) -> dict:
@@ -181,7 +231,8 @@ def decode_layout(text: str) -> object:
 def validate_transition(profile: dict, post: dict) -> tuple[str, str, list[str]]:
     if (
         not isinstance(profile, dict)
-        or profile.get("schema") != "bof3.combiner-profile/v1"
+        or profile.get("schema") != PROFILE_SCHEMA
+        or "destination_text" not in profile
     ):
         raise ValueError("preservation requires a configured PRE profile")
     members = profile.get("members")
@@ -236,6 +287,12 @@ def validate_transition(profile: dict, post: dict) -> tuple[str, str, list[str]]
         )
     if any(post[source] is not None for source in sources if source != destination):
         raise ValueError("every superseded member must be absent in POST")
+    text = profile["destination_text"]
+    validate_destination_text(text, profile["target"], members)
+    if text is not None and (
+        hashlib.sha256(text.encode("utf-8")).hexdigest() != post[destination]["sha256"]
+    ):
+        raise ValueError("POST destination bytes differ from the inspected draft")
     return manifest, layout, sources
 
 

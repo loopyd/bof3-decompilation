@@ -75,6 +75,7 @@ def capture_preservation(
         profile["destination"],
         sources,
         expected_fingerprint=expected_profile_fingerprint,
+        destination_text=profile["destination_text"],
     )
     if profile != current:
         raise ValueError("supplied PRE profile differs from current configured inputs")
