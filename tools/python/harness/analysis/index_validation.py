@@ -32,7 +32,7 @@ def repository_input(root: Path, path: Path) -> Path:
 
 def _validate_structure(connection: sqlite3.Connection) -> None:
     from .index import SCHEMA_VERSION
-    from .schema import required_schema
+    from .schema import collect_indexes, required_schema
 
     quick_check = connection.execute("PRAGMA quick_check(1)").fetchone()
     if quick_check is None or quick_check[0] != "ok":
@@ -48,7 +48,12 @@ def _validate_structure(connection: sqlite3.Connection) -> None:
     }
     if not schema.keys() <= tables:
         raise ValueError("reverse index required tables missing")
-    for table, (expected_columns, expected_foreign_keys) in schema.items():
+    indexes = collect_indexes(connection)
+    for table, (
+        expected_columns,
+        expected_foreign_keys,
+        expected_indexes,
+    ) in schema.items():
         actual_columns = tuple(
             tuple(row[1:7])
             for row in connection.execute(f'PRAGMA table_xinfo("{table}")')
@@ -60,6 +65,7 @@ def _validate_structure(connection: sqlite3.Connection) -> None:
         if (
             actual_columns != expected_columns
             or actual_foreign_keys != expected_foreign_keys
+            or indexes.get(table, ()) != expected_indexes
         ):
             raise ValueError(f"reverse index table schema mismatch: {table}")
     row = connection.execute(

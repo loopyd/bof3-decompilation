@@ -338,6 +338,10 @@ lexical candidates: these rows never satisfy `types --untyped`, prove a type
 binding, close include consumers or grant transaction/native acceptance.
 Reverse index v16 invalidates older cached inference; refresh explicitly with
 `bin/index` after snapshot freshness checks. Queries never rebuild it implicitly.
+Both full and status readers validate the exact generated index definitions on
+required tables, including partial uniqueness predicates. Missing, altered or
+extra indexes on those tables require rebuilding; unrelated extra tables remain
+permitted. This structural check does not authenticate arbitrary row contents.
 
 `bin/analysis-readiness [TARGET]` is the bounded aggregate checkpoint. By default it reports snapshot/index freshness and stale facts, then summary work graphs and exact naming, type, and macro counts; `TARGET` restricts every inventory, debt, candidate, and work count to that target. Use `--detail full` only when the exhaustive candidate rows, blockers, fingerprints, and generated naming work are required. Both modes retain the `bof3.analysis-readiness/v2` schema and differ only in `work_graph` detail. The command is read-only and prints `bin/index --recover` when authoritative inputs have made the disposable index stale. Recovery is explicit so reviewed transactions pass before index refresh.
 

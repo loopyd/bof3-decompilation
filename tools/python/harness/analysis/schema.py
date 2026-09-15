@@ -8,16 +8,34 @@ from functools import lru_cache
 from harness.types.schema import SCHEMA as TYPE_SCHEMA
 from harness.macros.schema import SCHEMA as MACRO_SCHEMA
 
+SchemaRows = tuple[tuple[object, ...], ...]
+
+
+def collect_indexes(connection: sqlite3.Connection) -> dict[str, SchemaRows]:
+    """Collect exact stored index definitions, grouped by owning table."""
+
+    indexes: dict[str, list[tuple[object, ...]]] = {}
+    for table, *definition in connection.execute(
+        'SELECT owner.tbl_name, owner.name, owner.sql, flags."unique", '
+        "flags.origin, flags.partial, detail.seqno, detail.cid, detail.name, "
+        'detail."desc", detail.coll, detail.key FROM sqlite_master AS owner '
+        "LEFT JOIN pragma_index_list(owner.tbl_name) AS flags "
+        "ON flags.name = owner.name "
+        "LEFT JOIN pragma_index_xinfo(owner.name) AS detail ON 1 "
+        "WHERE owner.type = 'index' ORDER BY owner.tbl_name, owner.name, detail.seqno"
+    ):
+        indexes.setdefault(table, []).append(tuple(definition))
+    return {table: tuple(rows) for table, rows in indexes.items()}
+
 
 @lru_cache(maxsize=1)
-def required_schema() -> dict[
-    str, tuple[tuple[tuple[object, ...], ...], tuple[tuple[object, ...], ...]]
-]:
-    """Return exact columns and foreign keys derived from the canonical schema."""
+def required_schema() -> dict[str, tuple[SchemaRows, SchemaRows, SchemaRows]]:
+    """Return columns, foreign keys and indexes from the canonical schema."""
 
     connection = sqlite3.connect(":memory:")
     try:
         create_schema(connection)
+        indexes = collect_indexes(connection)
         tables = [
             row[0]
             for row in connection.execute(
@@ -34,6 +52,7 @@ def required_schema() -> dict[
                     tuple(row)
                     for row in connection.execute(f'PRAGMA foreign_key_list("{table}")')
                 ),
+                indexes.get(table, ()),
             )
             for table in tables
         }
