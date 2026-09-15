@@ -111,13 +111,19 @@ def manifest_binding_sources(root: Path, manifest: TargetManifest) -> list[Path]
     return top or sorted(candidates)
 
 
-def index_source_paths(source_paths: Iterable[Path]) -> dict[int, Path]:
+def index_source_paths(
+    source_paths: Iterable[Path], *, read_source: Callable[[Path], str] | None = None
+) -> dict[int, Path]:
     """Read each claimed source once and retain every unambiguous function owner."""
 
     sources: dict[int, Path] = {}
     for path in sorted(path for path in source_paths if path.suffix == ".c"):
         try:
-            records = collect_lift_metadata(path.read_text(encoding="utf-8"))
+            records = collect_lift_metadata(
+                path.read_text(encoding="utf-8")
+                if read_source is None
+                else read_source(path)
+            )
         except (OSError, UnicodeError):
             continue
         for address, metadata in records.items():

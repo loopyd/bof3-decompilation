@@ -9,7 +9,7 @@ from ..domain.symbols import load_target_symbols
 
 
 def insert_symbols(
-    connection: sqlite3.Connection, root: Path, target: str, manifest
+    connection: sqlite3.Connection, root: Path, target: str, manifest, *, symbols=None
 ) -> None:
     globals_ = {
         row[0]
@@ -19,7 +19,12 @@ def insert_symbols(
             (target,),
         )
     }
-    for symbol in load_target_symbols(root, target, psyq_space=manifest.psyq_space):
+    mapped = (
+        load_target_symbols(root, target, psyq_space=manifest.psyq_space)
+        if symbols is None
+        else symbols
+    )
+    for symbol in mapped:
         declared_global = symbol.canonical_name in globals_
         if (
             declared_global

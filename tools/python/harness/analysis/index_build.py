@@ -12,24 +12,21 @@ from harness.domain.functions import select_lift_metadata
 from harness.macros.index import (
     insert_macro_registry,
     macro_input_digest,
-    macro_input_rows,
 )
 from harness.types.inference import infer_type_candidates
 from harness.types.index import insert_authored_types
 from harness.types.index import insert_shared_scalar_types
-from harness.types.inputs import type_input_digest, type_input_rows
+from harness.types.inputs import type_input_digest
 from harness.types.usages import insert_source_usages
 
 from ..domain.claims import index_source_paths
-from ..domain.layout import parse_splat_layout
-from ..domain.manifests import load_target_manifests
+from ..domain.repository_layout import load_repository_layout
 from ..domain.mips import data_references, trivial_kind
 from ..domain.psx import payload_for
 from ..domain.sources import reviewed_function_name
-from ..domain.symbols import load_target_symbols
+from ..domain.symbols import load_map, load_target_symbols, map_path
 from ..domain.tags import lift_lifecycle
-from ..io import file_sha256
-from ._index_symbols import insert_symbols
+from .symbols import insert_symbols
 from .index import SCHEMA_VERSION, index_path
 from .index_groups import insert_duplicate_groups, insert_unconfirmed_candidates
 from .index_snapshot import snapshot_for
@@ -37,8 +34,12 @@ from .project import prepare_target
 from .schema import create_schema
 
 
-def _validate_candidate(path: Path, expected_targets: set[str]) -> None:
+def _validate_candidate(
+    path: Path, expected_targets: set[str], *, repository=None
+) -> None:
     """Reject an incomplete or corrupt candidate before atomic publication."""
+
+    from .index_validation import validate_status_index, validate_structure
 
     connection = sqlite3.connect(path)
     try:
@@ -48,44 +49,12 @@ def _validate_candidate(path: Path, expected_targets: set[str]) -> None:
         foreign_keys = connection.execute("PRAGMA foreign_key_check").fetchall()
         if foreign_keys:
             raise ValueError(f"reverse index foreign key check failed: {foreign_keys}")
-        schema = connection.execute(
-            "SELECT value FROM metadata WHERE key = 'schema'"
-        ).fetchone()
-        expected_tables = {
-            "metadata",
-            "targets",
-            "symbols",
-            "functions",
-            "calls",
-            "xrefs",
-            "unresolved_calls",
-            "data_references",
-            "function_candidates",
-            "duplicate_groups",
-            "duplicate_members",
-            "unconfirmed_candidates",
-            "psyq_evidence",
-            "type_declarations",
-            "type_fields",
-            "type_usages",
-            "type_constraints",
-            "type_conflicts",
-            "type_candidates",
-            "type_input_fingerprints",
-            "selected_map_fingerprints",
-            "macro_definitions",
-            "macro_uses",
-            "macro_templates",
-            "macro_input_fingerprints",
-        }
-        tables = {
-            row[0]
-            for row in connection.execute(
-                "SELECT name FROM sqlite_master WHERE type = 'table'"
+        if repository is None:
+            validate_structure(connection)
+        else:
+            validate_status_index(
+                connection, repository.files.root, repository=repository
             )
-        }
-        if schema != (SCHEMA_VERSION,) or not expected_tables <= tables:
-            raise ValueError("reverse index schema validation failed")
         actual_targets = {
             row[0] for row in connection.execute("SELECT id FROM targets")
         }
@@ -104,18 +73,25 @@ def _validate_candidate(path: Path, expected_targets: set[str]) -> None:
 def rebuild(root: Path) -> Path:
     """Rebuild the index atomically; retain the previous complete file on error."""
 
-    manifests = load_target_manifests(root)
+    root = root.resolve()
+    repository = load_repository_layout(root)
+    manifests = repository.manifests
     records = []
     for target, manifest in sorted(manifests.items()):
         binary = root / manifest.binary
-        if not binary.is_file():
-            raise ValueError(f"missing target binary: {manifest.binary}")
         records.append(
             (
                 target,
                 manifest,
                 binary,
-                *snapshot_for(root, target, binary, manifest=manifest),
+                *snapshot_for(
+                    root,
+                    target,
+                    binary,
+                    manifest=manifest,
+                    layout=repository.splats[target],
+                    files=repository.files,
+                ),
             )
         )
     output = index_path(root)
@@ -132,34 +108,95 @@ def rebuild(root: Path) -> Path:
             connection.execute(
                 "INSERT INTO metadata VALUES (?, ?)", ("schema", SCHEMA_VERSION)
             )
-            insert_shared_scalar_types(connection, root)
+            insert_shared_scalar_types(connection, root, files=repository.files)
             for target, manifest, binary, path, snapshot in records:
-                target_spec = prepare_target(root, target, manifest=manifest)
+                target_spec = prepare_target(
+                    root,
+                    target,
+                    manifest=manifest,
+                    layout=repository.splats[target],
+                    files=repository.files,
+                )
+                symbols = load_target_symbols(
+                    root,
+                    target,
+                    psyq_space=manifest.psyq_space,
+                    read_file=repository.files.read_optional,
+                )
+                local_symbols = load_map(
+                    map_path(root, target), read_file=repository.files.read
+                )
+                source_addresses = index_source_paths(
+                    target_spec.source_paths, read_source=repository.files.text
+                )
                 _insert_target(
-                    connection, root, target, manifest, binary, path, snapshot
+                    connection,
+                    root,
+                    target,
+                    manifest,
+                    binary,
+                    path,
+                    snapshot,
+                    repository,
                 )
                 _insert_function_candidates(
-                    connection, root, target, manifest, target_spec, binary
+                    connection,
+                    root,
+                    target,
+                    manifest,
+                    target_spec,
+                    binary,
+                    repository,
+                    symbols,
+                    source_addresses,
                 )
-                insert_authored_types(connection, root, target, manifest)
-                insert_symbols(connection, root, target, manifest)
+                insert_authored_types(
+                    connection, root, target, manifest, files=repository.files
+                )
+                insert_symbols(connection, root, target, manifest, symbols=symbols)
                 _insert_functions(
-                    connection, root, target, manifest, target_spec, binary, snapshot
+                    connection,
+                    root,
+                    target,
+                    manifest,
+                    target_spec,
+                    binary,
+                    snapshot,
+                    repository,
+                    symbols,
+                    local_symbols,
+                    source_addresses,
                 )
-                insert_source_usages(connection, root, target, manifest)
+                insert_source_usages(
+                    connection, root, target, manifest, files=repository.files
+                )
                 _insert_data_references(
-                    connection, root, target, manifest, binary, snapshot
+                    connection,
+                    root,
+                    target,
+                    manifest,
+                    binary,
+                    snapshot,
+                    repository,
+                    symbols,
                 )
                 _insert_calls(connection, target, snapshot)
                 infer_type_candidates(connection, target)
             for target, manifest, *_unused in records:
-                insert_macro_registry(connection, root, target, manifest)
+                insert_macro_registry(
+                    connection,
+                    root,
+                    target,
+                    manifest,
+                    files=repository.files,
+                    inputs=repository.macro_sources[target],
+                )
             insert_duplicate_groups(connection)
             insert_unconfirmed_candidates(connection)
             connection.commit()
         finally:
             connection.close()
-        _validate_candidate(temporary_path, set(manifests))
+        _validate_candidate(temporary_path, set(manifests), repository=repository)
         temporary_path.replace(output)
     except BaseException:
         temporary_path.unlink(missing_ok=True)
@@ -175,19 +212,20 @@ def _insert_target(
     binary: Path,
     snapshot_path: Path,
     snapshot,
+    repository,
 ) -> None:
-    inputs = type_input_rows(root, manifest)
+    inputs = list(repository.type_input_rows[target])
     connection.execute(
         "INSERT INTO targets VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         (
             target,
             manifest.binary,
-            file_sha256(binary),
+            repository.files.digest(binary),
             manifest.load_address,
             snapshot.engine["name"],
             snapshot.engine.get("version", ""),
             snapshot_path.relative_to(root).as_posix(),
-            file_sha256(snapshot_path),
+            repository.files.digest(snapshot_path),
         ),
     )
     connection.execute(
@@ -199,12 +237,21 @@ def _insert_target(
             "INSERT INTO type_input_fingerprints VALUES (?, ?, ?, ?)",
             (target, source_path, digest, kind),
         )
-    layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
     connection.executemany(
         "INSERT INTO selected_map_fingerprints VALUES (?, ?, ?)",
-        ((target, path, file_sha256(root / path)) for path in layout.symbol_map_paths),
+        (
+            (target, path, digest)
+            for path, digest in repository.selected_map_rows[target]
+        ),
     )
-    macro_inputs = macro_input_rows(root, target, manifest)
+    connection.executemany(
+        "INSERT INTO source_fingerprints VALUES (?, ?, ?)",
+        (
+            (target, path, digest)
+            for path, digest in repository.source_input_rows[target]
+        ),
+    )
+    macro_inputs = list(repository.macro_input_rows[target])
     connection.execute(
         "INSERT INTO metadata VALUES (?, ?)",
         (f"macro_inputs:{target}", macro_input_digest(macro_inputs)),
@@ -218,11 +265,15 @@ def _insert_function_candidates(
     manifest,
     target_spec,
     binary: Path,
+    repository,
+    target_symbols,
+    source_addresses,
 ) -> None:
-    target_symbols = load_target_symbols(root, target, psyq_space=manifest.psyq_space)
-    layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+    layout = repository.splats[target]
     payload = payload_for(
-        binary.read_bytes(), manifest.load_address, binary_name=manifest.binary
+        repository.files.read(binary),
+        manifest.load_address,
+        binary_name=manifest.binary,
     )
     for boundary in layout.boundaries:
         if not boundary.is_function:
@@ -243,7 +294,6 @@ def _insert_function_candidates(
                 ),
             ),
         )
-    source_addresses = index_source_paths(target_spec.source_paths)
     for symbol in target_symbols:
         if (
             not symbol.canonical_name.startswith("func_")
@@ -264,12 +314,12 @@ def _insert_function_candidates(
 
 
 def _compiled_symbol(
-    root: Path, target: str, address: int, layout, manifest=None
+    root: Path, target: str, address: int, layout, manifest=None, symbols=None
 ) -> str | None:
     """Return reviewed map/Splat identity or None; never infer an analyzer name."""
     try:
         return reviewed_function_name(
-            root, target, address, layout=layout, manifest=manifest
+            root, target, address, layout=layout, manifest=manifest, symbols=symbols
         )
     except Exception:
         return None
@@ -283,19 +333,20 @@ def _insert_functions(
     target_spec,
     binary: Path,
     snapshot,
+    repository,
+    symbols,
+    local_symbols,
+    claimed_by_address,
 ) -> None:
-    binary_bytes = binary.read_bytes()
+    binary_bytes = repository.files.read(binary)
     payload = payload_for(
         binary_bytes, manifest.load_address, binary_name=manifest.binary
     )
-    layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+    layout = repository.splats[target]
     reviewed_identity = layout.reviewed_range_identity(payload, binary=binary_bytes)
     claimed_paths = target_spec.source_paths
-    claimed_by_address = index_source_paths(claimed_paths)
     data_addresses = [
-        symbol.address
-        for symbol in load_target_symbols(root, target, psyq_space=manifest.psyq_space)
-        if symbol.canonical_name.startswith("D_")
+        symbol.address for symbol in symbols if symbol.canonical_name.startswith("D_")
     ]
     for function in snapshot.functions:
         identity = reviewed_identity.get(function.address)
@@ -308,11 +359,11 @@ def _insert_functions(
         if source is not None:
             source_path = Path(source)
             lifecycle_text = select_lift_metadata(
-                source_path.read_text(encoding="utf-8", errors="replace"),
+                repository.files.text(source_path, errors="replace"),
                 function.address,
             )
         compiled_symbol = _compiled_symbol(
-            root, target, function.address, layout, manifest
+            root, target, function.address, layout, manifest, local_symbols
         )
         connection.execute(
             """INSERT INTO functions (
@@ -373,15 +424,14 @@ def _insert_data_references(
     manifest,
     binary: Path,
     snapshot,
+    repository,
+    symbols,
 ) -> None:
-    binary_bytes = binary.read_bytes()
+    binary_bytes = repository.files.read(binary)
     payload = payload_for(
         binary_bytes, manifest.load_address, binary_name=manifest.binary
     )
-    symbol_by_address = {
-        symbol.address: symbol.canonical_name
-        for symbol in load_target_symbols(root, target, psyq_space=manifest.psyq_space)
-    }
+    symbol_by_address = {symbol.address: symbol.canonical_name for symbol in symbols}
     for function in snapshot.functions:
         function_bytes = binary_bytes[
             payload.binary_offset

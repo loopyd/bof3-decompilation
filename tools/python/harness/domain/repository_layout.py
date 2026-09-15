@@ -7,13 +7,24 @@ import io
 from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType
-from typing import Mapping
+from typing import TYPE_CHECKING, Mapping
 
 from harness.common.links import read_linked_state
 
 from .claims import manifest_header_paths, manifest_source_paths
 from .layout import ReviewedSplatLayout, parse_splat_text
 from .manifests import TargetManifest, load_manifest_generation
+
+if TYPE_CHECKING:
+    from harness.macros.index import MacroInput
+
+
+class SnapshotBinaryError(ValueError):
+    """Captured binary bytes disagree with the snapshot used to admit sources."""
+
+    def __init__(self, target: str, path: Path):
+        self.target = target
+        super().__init__(f"stale Rizin snapshot bytes: {path}")
 
 
 @dataclass(frozen=True)
@@ -53,9 +64,11 @@ class RepositoryFiles:
         lexical = path if path.is_absolute() else self.root / path
         return None if lexical in self.absent_paths else self.read(path)
 
-    def text(self, path: Path) -> str:
+    def text(self, path: Path, *, errors: str = "strict") -> str:
         """Decode captured UTF-8 with the ordinary universal-newline convention."""
-        return io.StringIO(self.read(path).decode("utf-8"), newline=None).read()
+        return io.StringIO(
+            self.read(path).decode("utf-8", errors=errors), newline=None
+        ).read()
 
 
 @dataclass(frozen=True)
@@ -71,10 +84,18 @@ class RepositoryLayout:
     type_input_rows: Mapping[str, tuple[tuple[str, str, str], ...]]
     macro_input_rows: Mapping[str, tuple[tuple[str, str, str, str], ...]]
     selected_map_rows: Mapping[str, tuple[tuple[str, str], ...]]
+    macro_sources: Mapping[str, tuple[MacroInput, ...]]
+    source_input_rows: Mapping[str, tuple[tuple[str, str], ...]]
 
 
 def load_repository_layout(root: Path) -> RepositoryLayout:
     """Parse each canonical manifest/Splat and discover owned paths once."""
+    from ..analysis.snapshot import (
+        read_snapshot,
+        snapshot_path,
+        validate_snapshot_identity,
+    )
+
     root = root.resolve()
     canonical_paths: dict[Path, Path] = {}
     stats: dict[Path, tuple[int, int]] = {}
@@ -83,15 +104,21 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
     identities: dict[Path, tuple[int, ...]] = {}
     absent: set[Path] = set()
 
-    def capture(name: str, *, missing_ok: bool = False) -> bytes | None:
+    def capture(
+        name: str, *, missing_ok: bool = False, allow_links: bool = True
+    ) -> bytes | None:
         path = root / name
         if path in absent:
             if missing_ok:
                 return None
             raise FileNotFoundError(f"repository input absent during capture: {name}")
         if path in canonical_paths:
+            if not allow_links and canonical_paths[path] != path:
+                raise ValueError(f"transaction path is unsafe: {name}")
             return contents[canonical_paths[path]]
-        captured = read_linked_state(root, name, missing_ok=missing_ok)
+        captured = read_linked_state(
+            root, name, missing_ok=missing_ok, allow_links=allow_links
+        )
         if captured is None:
             absent.add(path)
             return None
@@ -164,6 +191,7 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         *templates,
     }
     optional_paths = {root / "config/targets/shared/symbols.txt"}
+    fallback_sources: dict[str, tuple[Path, ...]] = {}
     for target, manifest in manifests.items():
         paths.update(root / relative for relative in splats[target].symbol_map_paths)
         target_config = root / "config/targets" / target
@@ -180,15 +208,77 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         paths.add(root / "config/sdk" / f"psyq-{manifest.psyq_space}.txt")
         reviewed = target_config / "reviewed.rz"
         optional_paths.add(reviewed)
-        paths.add(root / "out/reverse/snapshots" / f"{target.replace('/', '--')}.json")
+        snapshot = snapshot_path(root, target)
+        try:
+            capture(manifest.binary)
+        except FileNotFoundError as error:
+            raise ValueError(f"missing target binary: {manifest.binary}") from error
+        try:
+            capture(snapshot.relative_to(root).as_posix())
+        except FileNotFoundError as error:
+            raise ValueError(
+                f"missing Rizin snapshot: {snapshot.relative_to(root)}"
+            ) from error
+        fallback_sources[target] = ()
+        if not sources[target]:
+            parsed = read_snapshot(
+                snapshot,
+                read_file=lambda path: capture(path.relative_to(root).as_posix()),
+            )
+            errors = validate_snapshot_identity(parsed)
+            if (
+                errors
+                or parsed.target != target
+                or parsed.engine.get("name") != "rizin"
+            ):
+                raise ValueError(
+                    f"invalid Rizin snapshot identity: {snapshot.relative_to(root)}"
+                )
+            if (
+                parsed.inputs.get("binary_sha256")
+                != hashlib.sha256(capture(manifest.binary)).hexdigest()
+            ):
+                raise SnapshotBinaryError(target, snapshot.relative_to(root))
+            discovered = set()
+            for function in parsed.functions:
+                if function.source is None:
+                    continue
+                if not isinstance(function.source, str):
+                    raise ValueError("invalid snapshot source path")
+                source = Path(function.source)
+                try:
+                    relative = (
+                        source.relative_to(root) if source.is_absolute() else source
+                    )
+                except ValueError as error:
+                    raise ValueError(f"unowned snapshot source: {source}") from error
+                if (
+                    not relative.parts
+                    or relative.parts[0] != "src"
+                    or ".." in relative.parts
+                    or relative.suffix != ".c"
+                ):
+                    raise ValueError(f"unowned snapshot source: {source}")
+                capture(relative.as_posix(), allow_links=False)
+                discovered.add(root / relative)
+            fallback_sources[target] = tuple(sorted(discovered))
+        paths.add(snapshot)
         paths.update(sources[target])
         paths.update(headers[target])
+        paths.update(fallback_sources[target])
     for path in sorted(optional_paths):
         if capture(path.relative_to(root).as_posix(), missing_ok=True) is not None:
             paths.add(path)
     ordered_paths = tuple(sorted(paths))
     for path in ordered_paths:
-        capture(path.relative_to(root).as_posix())
+        try:
+            capture(path.relative_to(root).as_posix())
+        except FileNotFoundError as error:
+            if path == root / "include/base/types.h":
+                raise ValueError(
+                    "missing claimed type input: include/base/types.h"
+                ) from error
+            raise
     selected = {path: canonical_paths[path] for path in ordered_paths}
     selected.update((resolved, resolved) for resolved in tuple(selected.values()))
     resolved_paths = set(selected.values())
@@ -201,7 +291,11 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         MappingProxyType(selected),
         frozenset(optional_paths & absent),
     )
-    from harness.macros.index import macro_input_rows
+    from harness.macros.index import (
+        SHARED_MACRO_HEADERS,
+        macro_input_rows,
+        macro_inputs,
+    )
     from harness.types.inputs import type_input_rows
 
     type_rows = {
@@ -212,6 +306,25 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
                 digest_file=files.digest,
                 source_paths=sources[target],
                 header_paths=headers[target],
+                validate_paths=False,
+            )
+        )
+        for target, manifest in manifests.items()
+    }
+    macro_sources = {
+        target: tuple(
+            macro_inputs(
+                root,
+                target,
+                manifest,
+                source_paths=sources[target],
+                header_paths=headers[target],
+                template_paths=templates,
+                shared_header_paths=tuple(
+                    root / relative
+                    for relative in SHARED_MACRO_HEADERS
+                    if root / relative in paths
+                ),
                 validate_paths=False,
             )
         )
@@ -228,6 +341,7 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
                 header_paths=headers[target],
                 template_paths=templates,
                 validate_paths=False,
+                inputs=macro_sources[target],
             )
         )
         for target, manifest in manifests.items()
@@ -249,4 +363,16 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         MappingProxyType(type_rows),
         MappingProxyType(macro_rows),
         MappingProxyType(selected_maps),
+        MappingProxyType(macro_sources),
+        MappingProxyType(
+            {
+                target: tuple(
+                    (path.relative_to(root).as_posix(), files.digest(path))
+                    for path in sorted(
+                        set(sources[target]) | set(fallback_sources[target])
+                    )
+                )
+                for target in manifests
+            }
+        ),
     )

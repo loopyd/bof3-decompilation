@@ -63,7 +63,7 @@ def _collect_occurrences(text, names, records, identities):
 
 
 def insert_source_usages(
-    connection: sqlite3.Connection, root: Path, target: str, manifest
+    connection: sqlite3.Connection, root: Path, target: str, manifest, *, files=None
 ) -> None:
     """Index candidate spellings, never semantic bindings or native type evidence."""
 
@@ -82,7 +82,14 @@ def insert_source_usages(
         if path.suffix != ".c":
             continue
         source = path.relative_to(root).as_posix()
-        raw = read_file(root, source, max_bytes=_LIMIT)
+        if files is None:
+            raw = read_file(root, source, max_bytes=_LIMIT)
+        else:
+            if files.canonical(path) != path:
+                raise ValueError(f"transaction path is unsafe: {source}")
+            raw = files.read(path)
+            if len(raw) > _LIMIT:
+                raise ValueError(f"transaction file exceeds capture limit: {source}")
         fingerprint = hashlib.sha256(raw).hexdigest()
         expected = connection.execute(
             "SELECT sha256, input_kind FROM type_input_fingerprints "

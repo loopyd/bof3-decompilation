@@ -313,7 +313,7 @@ def test_rebuild_preserves_old_index_when_candidate_validation_fails(
     monkeypatch.setattr(
         index_build,
         "_validate_candidate",
-        lambda _path, _targets: (_ for _ in ()).throw(
+        lambda _path, _targets, **_kwargs: (_ for _ in ()).throw(
             ValueError("integrity check failed")
         ),
     )
@@ -975,7 +975,7 @@ def test_declared_globals_classify_symbols_without_cross_target_leakage(
     tmp_path: Path, collision: str | None
 ) -> None:
     from harness.analysis.rev_queries import variables_payload
-    from harness.analysis._index_symbols import insert_symbols
+    from harness.analysis.symbols import insert_symbols
 
     binary, _ = _manifest(tmp_path)
     symbols = tmp_path / f"config/targets/{TARGET}/symbols.txt"

@@ -82,6 +82,12 @@ def create_schema(connection: sqlite3.Connection) -> None:
             sha256 TEXT NOT NULL,
             PRIMARY KEY (target_id, source_path)
         );
+        CREATE TABLE source_fingerprints (
+            target_id TEXT NOT NULL REFERENCES targets(id) ON DELETE CASCADE,
+            source_path TEXT NOT NULL,
+            sha256 TEXT NOT NULL,
+            PRIMARY KEY (target_id, source_path)
+        );
         CREATE TABLE symbols (
             target_id TEXT NOT NULL REFERENCES targets(id),
             address INTEGER NOT NULL,

@@ -52,6 +52,7 @@ def macro_inputs(
     source_paths: tuple[Path, ...] | None = None,
     header_paths: tuple[Path, ...] | None = None,
     template_paths: tuple[Path, ...] | None = None,
+    shared_header_paths: tuple[Path, ...] | None = None,
     validate_paths: bool = True,
 ) -> list[MacroInput]:
     """Return target claims plus the bounded shared macro owner set."""
@@ -76,10 +77,17 @@ def macro_inputs(
                     and _relative(root, path) == manifest.psyq_source,
                 )
             )
+    shared_headers = (
+        tuple(
+            root / relative
+            for relative in SHARED_MACRO_HEADERS
+            if (root / relative).is_file()
+        )
+        if shared_header_paths is None
+        else shared_header_paths
+    )
     rows.extend(
-        MacroInput(root / relative, "__shared__", "sanctioned_helper")
-        for relative in SHARED_MACRO_HEADERS
-        if (root / relative).is_file()
+        MacroInput(path, "__shared__", "sanctioned_helper") for path in shared_headers
     )
     templates = (
         shared_template_paths(root) if template_paths is None else template_paths
@@ -116,6 +124,7 @@ def macro_input_rows(
     header_paths: tuple[Path, ...] | None = None,
     template_paths: tuple[Path, ...] | None = None,
     validate_paths: bool = True,
+    inputs: tuple[MacroInput, ...] | None = None,
 ) -> list[tuple[str, str, str, str]]:
     """Return deterministic input fingerprints for one target."""
 
@@ -126,14 +135,18 @@ def macro_input_rows(
             row.provenance,
             row.owner,
         )
-        for row in macro_inputs(
-            root,
-            target,
-            manifest,
-            source_paths=source_paths,
-            header_paths=header_paths,
-            template_paths=template_paths,
-            validate_paths=validate_paths,
+        for row in (
+            macro_inputs(
+                root,
+                target,
+                manifest,
+                source_paths=source_paths,
+                header_paths=header_paths,
+                template_paths=template_paths,
+                validate_paths=validate_paths,
+            )
+            if inputs is None
+            else inputs
         )
     )
 
@@ -152,6 +165,8 @@ def _insert_definition(
     root: Path,
     row: MacroInput,
     definition: Any,
+    *,
+    digest_file=file_sha256,
 ) -> str:
     source_path = _relative(root, row.path)
     definition_id = _definition_id(
@@ -178,7 +193,7 @@ def _insert_definition(
             json.dumps(restrictions),
             int(generated),
             candidate_status,
-            file_sha256(row.path),
+            digest_file(row.path),
             definition.diagnostic,
         ),
     )
@@ -208,11 +223,24 @@ def _insert_template(
 
 
 def insert_macro_registry(
-    connection: sqlite3.Connection, root: Path, target: str, manifest: Any
+    connection: sqlite3.Connection,
+    root: Path,
+    target: str,
+    manifest: Any,
+    *,
+    files=None,
+    inputs: tuple[MacroInput, ...] | None = None,
 ) -> None:
     """Populate definitions, templates, uses, and fingerprints for one target."""
 
-    inputs = macro_inputs(root, target, manifest)
+    inputs = macro_inputs(root, target, manifest) if inputs is None else inputs
+    digest_file = file_sha256 if files is None else files.digest
+    texts = {
+        row.path: row.path.read_text(encoding="utf-8", errors="replace")
+        if files is None
+        else files.text(row.path, errors="replace")
+        for row in inputs
+    }
     definitions: dict[str, list[str]] = {}
     definition_names: set[str] = set()
     for definition_id, name in connection.execute(
@@ -224,9 +252,9 @@ def insert_macro_registry(
         source_path = _relative(root, row.path)
         connection.execute(
             "INSERT OR IGNORE INTO macro_input_fingerprints VALUES (?, ?, ?, ?, ?)",
-            (target, source_path, file_sha256(row.path), row.provenance, row.owner),
+            (target, source_path, digest_file(row.path), row.provenance, row.owner),
         )
-        text = row.path.read_text(encoding="utf-8", errors="replace")
+        text = texts[row.path]
         for definition in parse_macro_definitions(text, source=row.path):
             definition_id = _definition_id(
                 row.owner,
@@ -240,7 +268,9 @@ def insert_macro_registry(
                 ).fetchone()
                 is None
             ):
-                _insert_definition(connection, root, row, definition)
+                _insert_definition(
+                    connection, root, row, definition, digest_file=digest_file
+                )
             if definition.classification == "body_emitting_template":
                 _insert_template(
                     connection,
@@ -248,13 +278,13 @@ def insert_macro_registry(
                     row.owner,
                     _relative(root, row.path),
                     definition.name,
-                    file_sha256(row.path),
+                    digest_file(row.path),
                 )
             definitions.setdefault(definition.name, []).append(definition_id)
             definitions[definition.name] = sorted(set(definitions[definition.name]))
             definition_names.add(definition.name)
     for row in inputs:
-        text = row.path.read_text(encoding="utf-8", errors="replace")
+        text = texts[row.path]
         source_path = _relative(root, row.path)
         functions = connection.execute(
             "SELECT id, address FROM functions WHERE target_id = ? AND source IN (?, ?)",

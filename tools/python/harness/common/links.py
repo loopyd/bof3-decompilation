@@ -132,7 +132,7 @@ def _resolve_target(root: Path, name: str, content: bytes, stack: ExitStack) -> 
 
 
 def read_linked_state(
-    root: Path, name: str, *, missing_ok: bool = False
+    root: Path, name: str, *, missing_ok: bool = False, allow_links: bool = True
 ) -> tuple[bytes, os.stat_result, Path] | None:
     """Capture bytes, metadata and canonical identity through held descriptors."""
 
@@ -156,6 +156,8 @@ def read_linked_state(
                 return content, captured, root / current
             if depth == 40:
                 raise ValueError(f"input link hop limit exceeded: {name}")
+            if not allow_links:
+                raise ValueError(f"transaction path is unsafe: {name}")
             aliases.add(current)
             current = _resolve_target(root, current, snapshot.content, stack)
     raise AssertionError("bounded link resolution did not terminate")

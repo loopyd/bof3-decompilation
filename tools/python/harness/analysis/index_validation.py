@@ -32,7 +32,7 @@ def repository_input(root: Path, path: Path) -> Path:
     return lexical
 
 
-def _validate_structure(connection: sqlite3.Connection) -> None:
+def validate_structure(connection: sqlite3.Connection) -> None:
     from .index import SCHEMA_VERSION
     from .schema import collect_indexes, required_schema
 
@@ -97,17 +97,36 @@ def _validate_selected_maps(
         )
 
 
-def validate_status_index(connection: sqlite3.Connection, root: Path) -> None:
+def _validate_source_inputs(connection, target, expected) -> None:
+    actual = [
+        tuple(row)
+        for row in connection.execute(
+            "SELECT source_path, sha256 FROM source_fingerprints WHERE target_id = ? ORDER BY source_path",
+            (target,),
+        )
+    ]
+    if actual != sorted(tuple(row) for row in expected):
+        raise ValueError(
+            f"stale reverse index source fingerprints for {target}; run just index"
+        )
+
+
+def validate_status_index(
+    connection: sqlite3.Connection, root: Path, *, repository=None
+) -> None:
     """Validate status against the same repository-derived facts as connect()."""
     from harness.macros.index import macro_input_digest
     from harness.types.inputs import type_input_digest
 
-    from ..domain.repository_layout import load_repository_layout
+    from ..domain.repository_layout import SnapshotBinaryError, load_repository_layout
     from .index_snapshot import snapshot_for
 
     try:
-        _validate_structure(connection)
-        repository = load_repository_layout(root)
+        validate_structure(connection)
+        if repository is None:
+            repository = load_repository_layout(root)
+        elif repository.files.root != root.resolve():
+            raise ValueError("captured repository root mismatch")
         manifests = repository.manifests
         targets = connection.execute(
             "SELECT id, binary, binary_sha256, snapshot, snapshot_sha256 FROM targets"
@@ -161,6 +180,9 @@ def validate_status_index(connection: sqlite3.Connection, root: Path) -> None:
             _validate_selected_maps(
                 connection, target, repository.selected_map_rows[target]
             )
+            _validate_source_inputs(
+                connection, target, repository.source_input_rows[target]
+            )
             actual_types = [
                 tuple(row)
                 for row in connection.execute(
@@ -201,6 +223,10 @@ def validate_status_index(connection: sqlite3.Connection, root: Path) -> None:
                     f"stale reverse index macro inputs for {target}; run just index"
                 )
     except (sqlite3.DatabaseError, ValueError, OSError, KeyError) as exc:
+        if isinstance(exc, SnapshotBinaryError):
+            raise ValueError(
+                f"stale reverse index binary for {exc.target}; run just index"
+            ) from exc
         if isinstance(exc, InputBoundaryError):
             raise ValueError(f"repository input escapes root: {exc.path}") from exc
         if isinstance(exc, ValueError):
@@ -220,14 +246,13 @@ def validate_index(
     from harness.types.inputs import type_input_digest
 
     from ..domain.manifests import load_target_manifests
+    from ..domain.repository_layout import SnapshotBinaryError, load_repository_layout
     from .index_snapshot import snapshot_for
 
     try:
-        _validate_structure(connection)
+        validate_structure(connection)
         # Canonical registered-input traversal owns containment for both open
         # modes; full validation must never maintain a weaker parallel list.
-        from ..domain.repository_layout import load_repository_layout
-
         repository = load_repository_layout(root)
         loaded = manifests
         if loaded is None:
@@ -288,6 +313,9 @@ def validate_index(
             _validate_selected_maps(
                 connection, target, repository.selected_map_rows[target]
             )
+            _validate_source_inputs(
+                connection, target, repository.source_input_rows[target]
+            )
             inputs = connection.execute(
                 "SELECT source_path, sha256, input_kind FROM type_input_fingerprints WHERE target_id = ? ORDER BY source_path",
                 (target,),
@@ -323,6 +351,10 @@ def validate_index(
         if seen != set(loaded):
             raise ValueError("stale reverse index target coverage; run just index")
     except (sqlite3.DatabaseError, ValueError, KeyError) as exc:
+        if isinstance(exc, SnapshotBinaryError):
+            raise ValueError(
+                f"stale reverse index binary for {exc.target}; run just index"
+            ) from exc
         if isinstance(exc, InputBoundaryError):
             raise ValueError(f"repository input escapes root: {exc.path}") from exc
         if isinstance(exc, ValueError):

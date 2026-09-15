@@ -351,9 +351,17 @@ linked inputs in those gates.
 and its raw-byte/digest map; Splat text retains universal-newline normalization.
 Full/status recipe validation reuses captured binaries, maps, overlays and layouts;
 optional shared maps and overlays retain explicit absence, and unknown reads fail.
-Preloaded manifests must agree with the captured generation. This is per-input
-consistency, not a simultaneous repository snapshot. Index construction still has
-separate reads outside that map.
+Preloaded manifests must agree with the captured generation. Index construction
+uses that generation for function, symbol, type and macro facts and fingerprints,
+including its fixed shared-helper inventory. Lexical type-use scans retain their
+4 MiB byte limit and strict source-alias rejection. Publication remains atomic;
+per-input consistency does not imply a simultaneous repository snapshot.
+Index schema v17 fingerprints all source inputs, including legacy snapshot
+fallbacks when a target has no explicit source claims. Fallbacks must name regular
+`.c` files under `src/`, without source aliases, in an identity-checked snapshot.
+Canonical snapshot encoding is shared by capture and lookup; old indexes rebuild.
+Before atomic replacement, candidate publication uses the canonical schema checks
+and the status validator against the same captured generation, without recapture.
 
 `bin/analysis-readiness [TARGET]` is the bounded aggregate checkpoint. By default it reports snapshot/index freshness and stale facts, then summary work graphs and exact naming, type, and macro counts; `TARGET` restricts every inventory, debt, candidate, and work count to that target. Use `--detail full` only when the exhaustive candidate rows, blockers, fingerprints, and generated naming work are required. Both modes retain the `bof3.analysis-readiness/v2` schema and differ only in `work_graph` detail. The command is read-only and prints `bin/index --recover` when authoritative inputs have made the disposable index stale. Recovery is explicit so reviewed transactions pass before index refresh.
 

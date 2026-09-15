@@ -241,11 +241,19 @@ def _insert_usages(
                 )
 
 
-def insert_shared_scalar_types(connection: sqlite3.Connection, root: Path) -> None:
+def insert_shared_scalar_types(
+    connection: sqlite3.Connection, root: Path, *, files=None
+) -> None:
     """Index the explicitly shared scalar header once under a synthetic owner."""
 
-    path, provenance = authored_type_headers(root, type("M", (), {"headers": ()})())[0]
-    text = path.read_text(encoding="utf-8", errors="replace")
+    path, provenance = authored_type_headers(
+        root, type("M", (), {"headers": ()})(), validate_paths=files is None
+    )[0]
+    text = (
+        path.read_text(encoding="utf-8", errors="replace")
+        if files is None
+        else files.text(path, errors="replace")
+    )
     declarations = declaration_records(text)
     for ordinal, declaration in enumerate(declarations):
         _insert_declaration(
@@ -254,13 +262,24 @@ def insert_shared_scalar_types(connection: sqlite3.Connection, root: Path) -> No
 
 
 def insert_authored_types(
-    connection: sqlite3.Connection, root: Path, target: str, manifest: Any
+    connection: sqlite3.Connection,
+    root: Path,
+    target: str,
+    manifest: Any,
+    *,
+    files=None,
 ) -> None:
     """Populate declarations, layout constraints, diagnostics, and usages."""
 
     seen: dict[tuple[str, str], str] = {}
-    for path, provenance in authored_type_headers(root, manifest, include_shared=False):
-        text = path.read_text(encoding="utf-8", errors="replace")
+    for path, provenance in authored_type_headers(
+        root, manifest, include_shared=False, validate_paths=files is None
+    ):
+        text = (
+            path.read_text(encoding="utf-8", errors="replace")
+            if files is None
+            else files.text(path, errors="replace")
+        )
         declarations = declaration_records(text)
         for ordinal, declaration in enumerate(declarations):
             for name in _declaration_names(declaration, ordinal):

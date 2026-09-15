@@ -13,7 +13,11 @@ SCALAR_HEADER = Path("include/base/types.h")
 
 
 def authored_type_headers(
-    root: Path, manifest: Any, *, include_shared: bool = True
+    root: Path,
+    manifest: Any,
+    *,
+    include_shared: bool = True,
+    validate_paths: bool = True,
 ) -> list[tuple[Path, str]]:
     """Return explicit shared and target-private declaration owners."""
 
@@ -22,7 +26,7 @@ def authored_type_headers(
         (path, "header_claim") for path in manifest_header_paths(root, manifest)
     )
     for path, _provenance in rows:
-        if not path.is_file():
+        if validate_paths and not path.is_file():
             raise ValueError(f"missing claimed type input: {path.relative_to(root)}")
     return sorted(set(rows), key=lambda row: row[0].as_posix())
 
