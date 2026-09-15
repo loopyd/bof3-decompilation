@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Mapping
 
-from harness.domain.functions import require_single_source
+from harness.domain.functions import require_single_source, select_lift_metadata
 from harness.domain.claims import manifest_source_paths, resolve_source_for_paths
 from harness.naming.debt import address_of, collect_naming_debt
 from harness.domain.registry import payload_end_for, resolve_target
@@ -126,7 +126,9 @@ def partial_status(root: Path, manifest: TargetManifest, name: str) -> bool:
     if source is None:
         return False
     try:
-        progress = parse_progress_tags(source.read_text(encoding="utf-8"))
+        progress = parse_progress_tags(
+            select_lift_metadata(source.read_text(encoding="utf-8"), address)
+        )
     except ValueError:
         return False
     return progress is not None and progress[0] == "partial"

@@ -14,6 +14,7 @@ import re
 from typing import Any
 
 from harness.domain.claims import resolve_source_for_paths
+from harness.domain.functions import select_lift_metadata
 from harness.naming.debt import address_of
 from harness.domain.receipts import command_records, typed_observation_ids
 from harness.domain.registry import resolve_target
@@ -395,7 +396,9 @@ def metadata_state(root, manifest, name: str) -> tuple[bool, str]:
     if source is None:
         return (True, "no claimed source")
     try:
-        parse_progress_tags(source.read_text(encoding="utf-8"))
+        parse_progress_tags(
+            select_lift_metadata(source.read_text(encoding="utf-8"), address_of(name))
+        )
     except ValueError as error:
         return (False, f"{source}: {error}")
     return (True, "metadata canonical")

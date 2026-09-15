@@ -13,8 +13,10 @@ source without building, refreshing the index or writing. `harness.domain.functi
 owns `parse_function_records` and `select_function_record`; `harness.combiner`
 owns inspection and CLI adaptation. Source claim enumeration and address-selected
 metadata now support grouped files; the reverse index derives each member's own
-lifecycle and attributes direct macro occurrences by implementation range. This is
-not full consumer migration: ordinary native matching, metadata repair, source-renaming and
+lifecycle and attributes direct macro occurrences by implementation range. Naming's
+single-row metadata and partial-status readers select the addressed record, matching
+bulk inspection for valid, unambiguous records. This does not prove naming readiness
+or atomic read consistency: native matching, preflight metadata repair, source-renaming and
 macro/type transactions still reject grouped inputs. Do not consolidate production
 sources until all gates are implemented.
 
