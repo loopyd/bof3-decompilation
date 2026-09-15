@@ -27,6 +27,14 @@ _DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 _DIRECTORY_CACHE_SIZE = 256
 
 
+class InputBoundaryError(ValueError):
+    """A claimed input resolves outside the repository boundary."""
+
+    def __init__(self, path: str):
+        self.path = path
+        super().__init__(f"claimed path escapes repository: {path}")
+
+
 def _capture_metadata(status: os.stat_result) -> tuple[int, ...]:
     return tuple(getattr(status, field) for field in _INPUT_FIELDS)
 

@@ -12,7 +12,8 @@ from typing import Any, Callable, Mapping
 
 from harness.common.deadlines import check_deadline
 from harness.common.directory import open_parent_fd
-from harness.common.inputs import read_input, relative
+from harness.common.inputs import InputBoundaryError, read_input, relative
+from harness.common.links import read_linked_input
 
 TargetManifest = Any
 
@@ -72,7 +73,9 @@ def collect_manifest_paths(root: Path) -> list[str]:
                     relative = f"{name}/{entry.name}"
                     status = entry.stat(follow_symlinks=False)
                     if entry.name.endswith(".toml"):
-                        if not stat.S_ISREG(status.st_mode):
+                        if not (
+                            stat.S_ISREG(status.st_mode) or stat.S_ISLNK(status.st_mode)
+                        ):
                             raise ValueError(
                                 f"manifest is not a regular file: {relative}"
                             )
@@ -94,7 +97,11 @@ def read_manifest_inputs(
     for name in collect_manifest_paths(root):
         check_deadline()
         path = root / name
-        content = path.read_bytes() if read_manifest is None else read_manifest(name)
+        content = (
+            read_linked_input(root, name)
+            if read_manifest is None
+            else read_manifest(name)
+        )
         if not isinstance(content, bytes):
             raise ValueError(f"manifest reader must return immutable bytes: {name}")
         contents[path] = content
@@ -167,13 +174,13 @@ def collect_claim_files(
             else:
                 parent = observation[0]
             if not parent.is_relative_to(root):
-                raise ValueError(f"claimed path escapes repository: {relative_path}")
+                raise InputBoundaryError(relative_path)
             resolved = parent / path.name
             if resolved.is_symlink():
                 resolved = resolved.resolve(strict=False)
                 aliases[path] = resolved
             if not resolved.is_relative_to(root):
-                raise ValueError(f"claimed path escapes repository: {relative_path}")
+                raise InputBoundaryError(relative_path)
             if resolved.parent != parent and resolved.parent not in parents:
                 parents[resolved.parent] = (
                     resolved.parent,

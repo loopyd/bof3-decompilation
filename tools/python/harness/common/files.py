@@ -17,15 +17,30 @@ from harness.common.directory import (
     close_descriptors,
     open_parent_chain,
     open_parent_fd,
+    validate_repo_path,
     verify_parent_chain,
 )
 
 _MISSING = object()
 
 
-def _read_leaf_state(
-    parent: int, leaf: str, name: str, *, missing_ok: bool, max_bytes: int | None = None
+def read_leaf_state(
+    parent: int,
+    leaf: str,
+    name: str,
+    *,
+    missing_ok: bool,
+    max_bytes: int | None = None,
+    expected: os.stat_result | None = None,
 ) -> tuple[bytes | None, os.stat_result | None]:
+    """Read through a held parent, optionally binding pre-read file metadata."""
+    validate_repo_path(leaf)
+    if len(Path(leaf).parts) != 1:
+        raise ValueError("file leaf must be one path component")
+    if max_bytes is not None and (type(max_bytes) is not int or max_bytes < 0):
+        raise ValueError("invalid transaction file capture limit")
+    if expected is not None and not isinstance(expected, os.stat_result):
+        raise ValueError("invalid expected file metadata")
     try:
         descriptor = os.open(
             leaf, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent
@@ -36,20 +51,38 @@ def _read_leaf_state(
         raise
     except OSError as error:
         raise ValueError(f"transaction path is unsafe: {name}") from error
-    with os.fdopen(descriptor, "rb") as stream:
-        leaf_state = os.fstat(stream.fileno())
-        if not stat.S_ISREG(leaf_state.st_mode):
-            raise ValueError(f"transaction path is not a regular file: {name}")
-        if max_bytes is not None and leaf_state.st_size > max_bytes:
-            raise ValueError(f"transaction file exceeds capture limit: {name}")
-        content = stream.read() if max_bytes is None else stream.read(max_bytes + 1)
-        if max_bytes is not None and len(content) > max_bytes:
-            raise ValueError(f"transaction file exceeds capture limit: {name}")
-        return content, leaf_state
+    try:
+        with os.fdopen(descriptor, "rb", closefd=False) as stream:
+            leaf_state = os.fstat(stream.fileno())
+            if not stat.S_ISREG(leaf_state.st_mode):
+                raise ValueError(f"transaction path is not a regular file: {name}")
+            if expected is not None and any(
+                getattr(expected, field) != getattr(leaf_state, field)
+                for field in (
+                    "st_dev",
+                    "st_ino",
+                    "st_mode",
+                    "st_nlink",
+                    "st_uid",
+                    "st_gid",
+                    "st_size",
+                    "st_mtime_ns",
+                    "st_ctime_ns",
+                )
+            ):
+                raise ValueError(f"file changed before descriptor read: {name}")
+            if max_bytes is not None and leaf_state.st_size > max_bytes:
+                raise ValueError(f"transaction file exceeds capture limit: {name}")
+            content = stream.read() if max_bytes is None else stream.read(max_bytes + 1)
+            if max_bytes is not None and len(content) > max_bytes:
+                raise ValueError(f"transaction file exceeds capture limit: {name}")
+            return content, leaf_state
+    finally:
+        os.close(descriptor)
 
 
 def _read_leaf(parent: int, leaf: str, name: str, *, missing_ok: bool) -> bytes | None:
-    return _read_leaf_state(parent, leaf, name, missing_ok=missing_ok)[0]
+    return read_leaf_state(parent, leaf, name, missing_ok=missing_ok)[0]
 
 
 def read_file(
@@ -65,7 +98,7 @@ def read_file(
         raise
     try:
         if max_bytes is not None:
-            return _read_leaf_state(
+            return read_leaf_state(
                 parent, leaf, name, missing_ok=missing_ok, max_bytes=max_bytes
             )[0]
         return _read_leaf(parent, leaf, name, missing_ok=missing_ok)
@@ -81,7 +114,7 @@ def preflight_existing_replacements(root: Path, names: set[str]) -> None:
         except FileNotFoundError:
             continue
         try:
-            _, current = _read_leaf_state(parent, leaf, name, missing_ok=True)
+            _, current = read_leaf_state(parent, leaf, name, missing_ok=True)
             if current is not None and current.st_nlink != 1:
                 raise ValueError(f"unsafe transaction path: {name}")
         finally:
@@ -112,7 +145,7 @@ def atomic_write(
     descriptor = -1
     quarantine: str | None = None
     try:
-        current, current_stat = _read_leaf_state(parent, leaf, name, missing_ok=True)
+        current, current_stat = read_leaf_state(parent, leaf, name, missing_ok=True)
         if expected is not _MISSING and current != expected:
             raise ValueError(
                 f"transaction path drifted immediately before write: {name}"

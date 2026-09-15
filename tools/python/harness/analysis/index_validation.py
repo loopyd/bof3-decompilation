@@ -6,6 +6,8 @@ import sqlite3
 from pathlib import Path
 from typing import TYPE_CHECKING, Mapping, Sequence
 
+from harness.common.inputs import InputBoundaryError
+
 if TYPE_CHECKING:
     from ..domain.manifests import TargetManifest
 
@@ -199,6 +201,8 @@ def validate_status_index(connection: sqlite3.Connection, root: Path) -> None:
                     f"stale reverse index macro inputs for {target}; run just index"
                 )
     except (sqlite3.DatabaseError, ValueError, OSError, KeyError) as exc:
+        if isinstance(exc, InputBoundaryError):
+            raise ValueError(f"repository input escapes root: {exc.path}") from exc
         if isinstance(exc, ValueError):
             raise
         raise ValueError("invalid reverse index; run just index") from exc
@@ -309,6 +313,8 @@ def validate_index(
         if seen != set(loaded):
             raise ValueError("stale reverse index target coverage; run just index")
     except (sqlite3.DatabaseError, ValueError, KeyError) as exc:
+        if isinstance(exc, InputBoundaryError):
+            raise ValueError(f"repository input escapes root: {exc.path}") from exc
         if isinstance(exc, ValueError):
             raise
         raise ValueError("invalid reverse index; run just index") from exc
