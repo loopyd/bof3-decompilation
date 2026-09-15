@@ -10,6 +10,7 @@ from types import MappingProxyType
 from typing import TYPE_CHECKING, Mapping
 
 from harness.common.links import read_linked_state
+from harness.common.paths import format_relative_path
 
 from .claims import manifest_header_paths, manifest_source_paths
 from .layout import ReviewedSplatLayout, parse_splat_text
@@ -214,7 +215,7 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         except FileNotFoundError as error:
             raise ValueError(f"missing target binary: {manifest.binary}") from error
         try:
-            capture(snapshot.relative_to(root).as_posix())
+            capture(format_relative_path(root, snapshot))
         except FileNotFoundError as error:
             raise ValueError(
                 f"missing Rizin snapshot: {snapshot.relative_to(root)}"
@@ -223,7 +224,7 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         if not sources[target]:
             parsed = read_snapshot(
                 snapshot,
-                read_file=lambda path: capture(path.relative_to(root).as_posix()),
+                read_file=lambda path: capture(format_relative_path(root, path)),
             )
             errors = validate_snapshot_identity(parsed)
             if (
@@ -267,12 +268,12 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         paths.update(headers[target])
         paths.update(fallback_sources[target])
     for path in sorted(optional_paths):
-        if capture(path.relative_to(root).as_posix(), missing_ok=True) is not None:
+        if capture(format_relative_path(root, path), missing_ok=True) is not None:
             paths.add(path)
     ordered_paths = tuple(sorted(paths))
     for path in ordered_paths:
         try:
-            capture(path.relative_to(root).as_posix())
+            capture(format_relative_path(root, path))
         except FileNotFoundError as error:
             if path == root / "include/base/types.h":
                 raise ValueError(
@@ -367,7 +368,7 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         MappingProxyType(
             {
                 target: tuple(
-                    (path.relative_to(root).as_posix(), files.digest(path))
+                    (format_relative_path(root, path), files.digest(path))
                     for path in sorted(
                         set(sources[target]) | set(fallback_sources[target])
                     )

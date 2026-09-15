@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from harness.common.paths import format_relative_path
 from harness.domain.claims import manifest_header_paths, manifest_source_paths
 from harness.domain.functions import parse_function_records
 from harness.domain.tags import count_function_metadata
@@ -31,10 +32,6 @@ class MacroInput:
     owner: str
     provenance: str
     generated_psyq: bool = False
-
-
-def _relative(root: Path, path: Path) -> str:
-    return path.relative_to(root).as_posix()
 
 
 def shared_template_paths(root: Path) -> list[Path]:
@@ -74,7 +71,7 @@ def macro_inputs(
                     target,
                     "source_claim",
                     bool(manifest.psyq_source)
-                    and _relative(root, path) == manifest.psyq_source,
+                    and format_relative_path(root, path) == manifest.psyq_source,
                 )
             )
     shared_headers = (
@@ -100,7 +97,7 @@ def macro_inputs(
     }
     missing = (
         sorted(
-            _relative(root, row.path)
+            format_relative_path(root, row.path)
             for row in unique.values()
             if not row.path.is_file()
         )
@@ -110,7 +107,8 @@ def macro_inputs(
     if missing:
         raise ValueError(f"missing claimed macro inputs for {target}: {missing}")
     return sorted(
-        unique.values(), key=lambda row: (row.owner, _relative(root, row.path))
+        unique.values(),
+        key=lambda row: (row.owner, format_relative_path(root, row.path)),
     )
 
 
@@ -130,7 +128,7 @@ def macro_input_rows(
 
     return sorted(
         (
-            row.path.relative_to(root).as_posix(),
+            format_relative_path(root, row.path),
             digest_file(row.path),
             row.provenance,
             row.owner,
@@ -168,7 +166,7 @@ def _insert_definition(
     *,
     digest_file=file_sha256,
 ) -> str:
-    source_path = _relative(root, row.path)
+    source_path = format_relative_path(root, row.path)
     definition_id = _definition_id(
         row.owner, source_path, definition.source_line, definition.name
     )
@@ -249,7 +247,7 @@ def insert_macro_registry(
         definitions.setdefault(name, []).append(definition_id)
         definition_names.add(name)
     for row in inputs:
-        source_path = _relative(root, row.path)
+        source_path = format_relative_path(root, row.path)
         connection.execute(
             "INSERT OR IGNORE INTO macro_input_fingerprints VALUES (?, ?, ?, ?, ?)",
             (target, source_path, digest_file(row.path), row.provenance, row.owner),
@@ -258,7 +256,7 @@ def insert_macro_registry(
         for definition in parse_macro_definitions(text, source=row.path):
             definition_id = _definition_id(
                 row.owner,
-                _relative(root, row.path),
+                format_relative_path(root, row.path),
                 definition.source_line,
                 definition.name,
             )
@@ -276,7 +274,7 @@ def insert_macro_registry(
                     connection,
                     definition_id,
                     row.owner,
-                    _relative(root, row.path),
+                    format_relative_path(root, row.path),
                     definition.name,
                     digest_file(row.path),
                 )
@@ -285,7 +283,7 @@ def insert_macro_registry(
             definition_names.add(definition.name)
     for row in inputs:
         text = texts[row.path]
-        source_path = _relative(root, row.path)
+        source_path = format_relative_path(root, row.path)
         functions = connection.execute(
             "SELECT id, address FROM functions WHERE target_id = ? AND source IN (?, ?)",
             (target, source_path, row.path.as_posix()),

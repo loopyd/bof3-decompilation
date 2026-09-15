@@ -6,6 +6,7 @@ import hashlib
 from pathlib import Path
 from typing import Any
 
+from harness.common.paths import format_relative_path
 from harness.domain.claims import manifest_header_paths, manifest_source_paths
 from harness.io import file_sha256
 
@@ -60,7 +61,7 @@ def type_input_rows(
         paths.extend((path, "source") for path in sources)
     missing = (
         sorted(
-            path.relative_to(root).as_posix()
+            format_relative_path(root, path)
             for path, _kind in paths
             if not path.is_file()
         )
@@ -72,7 +73,7 @@ def type_input_rows(
             f"missing claimed type inputs for {manifest.id.value}: {missing}"
         )
     return [
-        (path.relative_to(root).as_posix(), digest_file(path), kind)
+        (format_relative_path(root, path), digest_file(path), kind)
         for path, kind in sorted(set(paths), key=lambda item: item[0].as_posix())
     ]
 

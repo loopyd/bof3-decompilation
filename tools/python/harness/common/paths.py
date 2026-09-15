@@ -5,9 +5,21 @@ from __future__ import annotations
 import hashlib
 import os
 import stat
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from harness.common.directory import validate_repo_path, open_parent_fd
+
+
+def format_relative_path(root: Path, path: Path) -> str:
+    """Format a lexical descendant without resolving filesystem paths."""
+    if not isinstance(path, PurePosixPath):
+        return path.relative_to(root).as_posix()
+    parent = path.with_segments(root)
+    parts = path.parts
+    count = len(parent.parts)
+    if path.with_segments(*parts[:count]) != parent or (not count and path.anchor):
+        raise ValueError(f"{str(path)!r} is not in the subpath of {str(parent)!r}")
+    return path.with_segments(*parts[count:]).as_posix()
 
 
 def require_absent(root: Path, name: str) -> None:
