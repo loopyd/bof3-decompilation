@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 import hashlib
+import io
 from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType
 from typing import Mapping
 
+from harness.common.links import read_linked_state
+
 from .claims import manifest_header_paths, manifest_source_paths
-from .layout import ReviewedSplatLayout, parse_splat_layout
+from .layout import ReviewedSplatLayout, parse_splat_text
 from .manifests import TargetManifest, load_manifest_generation
 
 
@@ -63,11 +66,65 @@ class RepositoryLayout:
 def load_repository_layout(root: Path) -> RepositoryLayout:
     """Parse each canonical manifest/Splat and discover owned paths once."""
     root = root.resolve()
-    generation = load_manifest_generation(root)
+    canonical_paths: dict[Path, Path] = {}
+    stats: dict[Path, tuple[int, int]] = {}
+    contents: dict[Path, bytes] = {}
+    digests: dict[Path, str] = {}
+    identities: dict[Path, tuple[int, ...]] = {}
+    absent: set[Path] = set()
+
+    def capture(name: str, *, missing_ok: bool = False) -> bytes | None:
+        path = root / name
+        if path in absent:
+            if missing_ok:
+                return None
+            raise FileNotFoundError(f"repository input absent during capture: {name}")
+        if path in canonical_paths:
+            return contents[canonical_paths[path]]
+        captured = read_linked_state(root, name, missing_ok=missing_ok)
+        if captured is None:
+            absent.add(path)
+            return None
+        content, metadata, resolved = captured
+        identity = tuple(
+            getattr(metadata, field)
+            for field in (
+                "st_dev",
+                "st_ino",
+                "st_mode",
+                "st_nlink",
+                "st_uid",
+                "st_gid",
+                "st_size",
+                "st_mtime_ns",
+                "st_ctime_ns",
+            )
+        )
+        if resolved in contents and (
+            contents[resolved] != content or identities[resolved] != identity
+        ):
+            raise ValueError(f"repository input changed between aliases: {name}")
+        canonical_paths[path] = resolved
+        canonical_paths[resolved] = resolved
+        stats[resolved] = (metadata.st_size, metadata.st_mtime_ns)
+        contents[resolved] = content
+        identities[resolved] = identity
+        digests[resolved] = hashlib.sha256(content).hexdigest()
+        return content
+
+    def capture_claim(name: str) -> bytes | None:
+        return capture(name, missing_ok=True)
+
+    generation = load_manifest_generation(
+        root, read_manifest=capture, read_claim=capture_claim
+    )
     manifests = generation.manifests
-    claims = generation.claims
     splats = {
-        target: parse_splat_layout(root / manifest.splat, manifest.load_address)
+        target: parse_splat_text(
+            io.StringIO(capture(manifest.splat).decode("utf-8"), newline=None).read(),
+            manifest.load_address,
+            origin=root / manifest.splat,
+        )
         for target, manifest in manifests.items()
     }
     sources = {
@@ -117,35 +174,18 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         paths.update(sources[target])
         paths.update(headers[target])
     ordered_paths = tuple(sorted(paths))
-    canonical_paths: dict[Path, Path] = {}
-    stats: dict[Path, tuple[int, int]] = {}
-    contents: dict[Path, bytes] = {}
-    digests: dict[Path, str] = {}
     for path in ordered_paths:
-        relative = path.relative_to(root).as_posix()
-        resolved = claims.canonical.get(relative)
-        resolved = resolved or path.resolve(strict=True)
-        try:
-            resolved.relative_to(root)
-        except ValueError as exc:
-            raise ValueError(f"repository input escapes root: {path}") from exc
-        metadata = resolved.stat()
-        if not resolved.is_file():
-            raise ValueError(f"repository input is not a file: {path}")
-        canonical_paths[path] = resolved
-        canonical_paths[resolved] = resolved
-        if resolved not in contents:
-            content = resolved.read_bytes()
-            stats[resolved] = (metadata.st_size, metadata.st_mtime_ns)
-            contents[resolved] = content
-            digests[resolved] = hashlib.sha256(content).hexdigest()
+        capture(path.relative_to(root).as_posix())
+    selected = {path: canonical_paths[path] for path in ordered_paths}
+    selected.update((resolved, resolved) for resolved in tuple(selected.values()))
+    resolved_paths = set(selected.values())
     files = RepositoryFiles(
         root,
         ordered_paths,
-        MappingProxyType(stats),
-        MappingProxyType(contents),
-        MappingProxyType(digests),
-        MappingProxyType(canonical_paths),
+        MappingProxyType({path: stats[path] for path in resolved_paths}),
+        MappingProxyType({path: contents[path] for path in resolved_paths}),
+        MappingProxyType({path: digests[path] for path in resolved_paths}),
+        MappingProxyType(selected),
     )
     from harness.macros.index import macro_input_rows
     from harness.types.inputs import type_input_rows

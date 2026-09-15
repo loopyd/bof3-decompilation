@@ -131,8 +131,10 @@ def _resolve_target(root: Path, name: str, content: bytes, stack: ExitStack) -> 
     return "/".join(parts)
 
 
-def read_linked_input(root: Path, name: str) -> bytes:
-    """Read one confined leaf chain, preserving strict canonical input capture."""
+def read_linked_state(
+    root: Path, name: str, *, missing_ok: bool = False
+) -> tuple[bytes, os.stat_result, Path] | None:
+    """Capture bytes, metadata and canonical identity through held descriptors."""
 
     aliases = set()
     current = name
@@ -142,16 +144,23 @@ def read_linked_input(root: Path, name: str) -> bytes:
             if current in aliases:
                 raise ValueError(f"input link cycle: {name}")
             snapshot, parent, leaf, metadata = stack.enter_context(
-                _observe_symlink(root, current)
+                _observe_symlink(root, current, missing_ok=missing_ok)
             )
+            if parent is None:
+                return None
             if snapshot is None:
-                content, _ = read_leaf_state(
+                content, captured = read_leaf_state(
                     parent, leaf, current, missing_ok=False, expected=metadata
                 )
                 check_deadline()
-                return content
+                return content, captured, root / current
             if depth == 40:
                 raise ValueError(f"input link hop limit exceeded: {name}")
             aliases.add(current)
             current = _resolve_target(root, current, snapshot.content, stack)
     raise AssertionError("bounded link resolution did not terminate")
+
+
+def read_linked_input(root: Path, name: str) -> bytes:
+    """Read one confined leaf chain, preserving strict canonical input capture."""
+    return read_linked_state(root, name)[0]
