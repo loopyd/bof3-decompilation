@@ -4,18 +4,28 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import asdict
 from pathlib import Path
 import sqlite3
 from typing import Any, Iterable
 
+from harness.common.files import read_file
+
 from ..io import file_sha256
 from ..domain.manifests import TargetManifest
 
-_SCHEMA = "harness.decomp-status-cache/v3"
+_SCHEMA = "harness.decomp-status-cache/v6"
+_CONFIGURATION = (
+    "config/compiler/object-flags.cmake",
+    "config/compiler/variants.json",
+)
+_LIMIT = 4 * 1024 * 1024
 
 
 def _paths(root: Path, manifest: TargetManifest) -> Iterable[Path]:
     yield root / "CMakeLists.txt"
+    for name in _CONFIGURATION:
+        yield root / name
     yield root / "config" / "targets" / manifest.id.value / "target.toml"
     yield root / manifest.splat
     yield root / "config" / "targets" / manifest.id.value / "symbols.txt"
@@ -49,14 +59,30 @@ def _paths(root: Path, manifest: TargetManifest) -> Iterable[Path]:
 
 
 def target_fingerprint(root: Path, manifest: TargetManifest) -> str:
-    """Hash every shared and target-local input that can affect its object."""
+    """Bind the supplied target model, configuration and enumerated audit inputs."""
 
     digest = hashlib.sha256(_SCHEMA.encode())
-    for path in _paths(root, manifest):
+    digest.update(b"\0")
+    digest.update(
+        json.dumps(
+            asdict(manifest), sort_keys=True, separators=(",", ":"), allow_nan=False
+        ).encode()
+    )
+    digest.update(b"\0")
+    for path in dict.fromkeys(_paths(root, manifest)):
         relative = path.relative_to(root).as_posix()
         digest.update(relative.encode())
         digest.update(b"\0")
-        digest.update(file_sha256(path).encode() if path.is_file() else b"missing")
+        if relative in _CONFIGURATION:
+            content = read_file(root, relative, missing_ok=True, max_bytes=_LIMIT)
+            fingerprint = (
+                hashlib.sha256(content).hexdigest().encode()
+                if content is not None
+                else b"missing"
+            )
+        else:
+            fingerprint = file_sha256(path).encode() if path.is_file() else b"missing"
+        digest.update(fingerprint)
         digest.update(b"\0")
     binary = root / manifest.binary
     digest.update(manifest.binary.encode())
@@ -85,7 +111,7 @@ class MatchStatusCache:
         row = self.connection.execute(
             "SELECT value FROM metadata WHERE key = 'schema'"
         ).fetchone()
-        if row is not None and row[0] != _SCHEMA:
+        if row is None or row[0] != _SCHEMA:
             self.connection.execute("DROP TABLE IF EXISTS results")
             self.connection.execute("DELETE FROM metadata")
         self.connection.execute(
