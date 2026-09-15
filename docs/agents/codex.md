@@ -32,13 +32,14 @@ shortcut. Independent review and final parent acceptance still bind actual sourc
 ## Native compiler execution
 
 Resolve the function's effective compiler and flags before choosing its execution
-route. `config/compiler/object-flags.cmake` owns per-source `BOF3_OBJCOMPILER_`
-catalog IDs and `BOF3_OBJFLAGS_` overrides; `config/compiler/variants.json` owns
-the managed GCC variants. Without overrides, use the project CMake defaults.
+route. [Attached function settings](compiler-variants.md#function-compiler-settings)
+take precedence over per-source `BOF3_OBJCOMPILER_` and `BOF3_OBJFLAGS_` entries in
+`config/compiler/object-flags.cmake`, then project defaults.
+`config/compiler/variants.json` owns the managed nondefault GCC variants.
 CMake and the generated compile database carry this selection through `bin/cc`;
 native gates must preserve it, not hard-code GCC 2.7.2 or replace it with host GCC.
 The sandbox route changes execution capability only, never compiler/flag selection.
-Current source tags do not define an additional inline compiler/flags authority.
+Every member of a grouped source must resolve one compatible effective profile.
 
 The installed canonical GCC driver, `cpp` and `cc1` are static i386 ELF programs.
 On this host, even `gcc --version` receives `SIGSYS` (shell exit 159) under the

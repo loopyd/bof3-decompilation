@@ -6,8 +6,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import re
 import tomllib
-from typing import Any
+from typing import Any, Callable
 
+from .cache import ClaimFiles
 from .ids import TargetId, normalize_target_id
 
 _SHA256 = re.compile(r"[0-9a-f]{64}")
@@ -95,6 +96,14 @@ class TargetManifest:
             raise ValueError(f"unsupported psyq space: {self.psyq_space}")
         if self.companions and self.kind != "emi":
             raise ValueError("only EMI targets may declare companion overlays")
+
+
+@dataclass(frozen=True)
+class ManifestGeneration:
+    """One load's isolated models and immutable validated claim sample."""
+
+    manifests: dict[str, TargetManifest]
+    claims: ClaimFiles
 
 
 def _load_toml(path: Path, content: bytes | None = None) -> dict[str, Any]:
@@ -281,7 +290,7 @@ def _validate_claim_files(
         for key in ("sources", "support_sources", "headers"):
             for claimed in getattr(manifest, key):
                 path = canonical.get(claimed)
-                if path is None or not path.is_file():
+                if path is None:
                     raise ValueError(
                         f"claimed {key} file missing for {manifest.id.value}: {claimed}"
                     )
@@ -299,15 +308,15 @@ def _validate_claim_files(
 
 
 def _validate_section_placements(
-    root: Path, manifests: dict[str, TargetManifest]
+    manifests: dict[str, TargetManifest], claims: ClaimFiles
 ) -> None:
-    """Validate binary-dependent placement bounds on every load."""
+    """Validate placement bounds against the sampled binary lengths."""
 
     for manifest in manifests.values():
-        binary_path = root / manifest.binary
-        if not binary_path.is_file():
+        size = claims.sizes.get(manifest.binary, -1)
+        if size < 0:
             continue
-        target_end = manifest.load_address + binary_path.stat().st_size
+        target_end = manifest.load_address + size
         for values in manifest.section_placements.values():
             for placement in values:
                 if not (
@@ -337,97 +346,116 @@ def _validate_claimed_paths(manifests: dict[str, TargetManifest]) -> None:
             claims[claimed] = manifest.id.value
 
 
-def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
+def load_target_manifests(
+    root: Path,
+    *,
+    read_manifest: Callable[[str], bytes] | None = None,
+    read_claim: Callable[[str], bytes | None] | None = None,
+) -> dict[str, TargetManifest]:
+    """Load isolated manifest models, validating current claims on every call."""
+    return load_manifest_generation(
+        root, read_manifest=read_manifest, read_claim=read_claim
+    ).manifests
+
+
+def _parse_manifest(path: Path, content: bytes) -> TargetManifest:
+    """Parse one captured target model without reading other repository inputs."""
+    raw = _load_toml(path, content)
+    if raw.get("schema") != "harness.target/v2":
+        raise ValueError(
+            f"unsupported target manifest schema in {path}: {raw.get('schema')!r}"
+        )
+    target_id = normalize_target_id(str(raw["id"]))
+    psyq = raw.get("psyq", {})
+    libraries = {
+        name: tuple(str(member) for member in value.get("members", []))
+        for name, value in psyq.get("libraries", {}).items()
+    }
+    library_confidence = {
+        name: str(value.get("confidence", ""))
+        for name, value in psyq.get("libraries", {}).items()
+        if value.get("confidence") is not None
+    }
+    library_evidence = {
+        name: tuple(str(item) for item in value.get("evidence", []))
+        for name, value in psyq.get("libraries", {}).items()
+        if value.get("evidence")
+    }
+    placements: dict[int, list[SectionPlacement]] = {}
+    seen_placements: set[tuple[int, str]] = set()
+    for value in raw.get("matching", {}).get("section_placements", []):
+        placement = SectionPlacement(
+            function=int(value["function"]),
+            section=str(value["section"]),
+            address=int(value["address"]),
+            size=int(value["size"]),
+        )
+        key = (placement.function, placement.section)
+        if not re.fullmatch(r"\.[A-Za-z0-9_.]+", placement.section):
+            raise ValueError(f"invalid matching section name: {placement.section}")
+        if placement.function % 4 or placement.address % 4:
+            raise ValueError("matching function and section addresses must be aligned")
+        if placement.size <= 0:
+            raise ValueError("matching section placement size must be positive")
+        if key in seen_placements:
+            raise ValueError(
+                f"duplicate matching section placement: {placement.function:#x} "
+                f"{placement.section}"
+            )
+        seen_placements.add(key)
+        placements.setdefault(placement.function, []).append(placement)
+    return TargetManifest(
+        id=target_id,
+        disc_id=str(raw.get("disc_id", target_id.shipped)),
+        kind=str(raw["kind"]),
+        source_dir=str(raw["source_dir"]),
+        binary=str(raw["binary"]),
+        splat=str(raw["splat"]),
+        load_address=int(raw.get("load_address", 0)),
+        psyq_space=str(psyq.get("space", "slus")),
+        libraries=libraries,
+        library_confidence=library_confidence,
+        library_evidence=library_evidence,
+        sources=_parse_path_claims(raw, "sources"),
+        support_sources=_parse_path_claims(raw, "support_sources"),
+        headers=_parse_path_claims(raw, "headers"),
+        psyq_source=_parse_single_path_claim(raw, "psyq_source"),
+        section_placements={
+            function: tuple(values) for function, values in placements.items()
+        },
+        companions=_parse_companions(raw, target_id),
+    )
+
+
+def load_manifest_generation(
+    root: Path,
+    *,
+    read_manifest: Callable[[str], bytes] | None = None,
+    read_claim: Callable[[str], bytes | None] | None = None,
+) -> ManifestGeneration:
+    """Return models with the exact claim sample used to validate this load."""
     from . import cache
 
     root = root.resolve()
-    directory = root / "config" / "targets"
-    fingerprint, manifest_contents = (
-        cache.read_manifest_inputs(directory) if directory.is_dir() else ((), {})
+    fingerprint, manifest_contents = cache.read_manifest_inputs(
+        root, read_manifest=read_manifest
     )
     cached = cache.get_manifests(root, fingerprint)
-    if cached is not None:
-        return cached
-    manifests: dict[str, TargetManifest] = {}
-    if not directory.is_dir():
-        return manifests
-    for path, content in manifest_contents.items():
-        raw = _load_toml(path, content)
-        if raw.get("schema") != "harness.target/v2":
-            raise ValueError(
-                f"unsupported target manifest schema in {path}: {raw.get('schema')!r}"
-            )
-        target_id = normalize_target_id(str(raw["id"]))
-        psyq = raw.get("psyq", {})
-        libraries = {
-            name: tuple(str(member) for member in value.get("members", []))
-            for name, value in psyq.get("libraries", {}).items()
-        }
-        library_confidence = {
-            name: str(value.get("confidence", ""))
-            for name, value in psyq.get("libraries", {}).items()
-            if value.get("confidence") is not None
-        }
-        library_evidence = {
-            name: tuple(str(item) for item in value.get("evidence", []))
-            for name, value in psyq.get("libraries", {}).items()
-            if value.get("evidence")
-        }
-        placements: dict[int, list[SectionPlacement]] = {}
-        seen_placements: set[tuple[int, str]] = set()
-        for value in raw.get("matching", {}).get("section_placements", []):
-            placement = SectionPlacement(
-                function=int(value["function"]),
-                section=str(value["section"]),
-                address=int(value["address"]),
-                size=int(value["size"]),
-            )
-            key = (placement.function, placement.section)
-            if not re.fullmatch(r"\.[A-Za-z0-9_.]+", placement.section):
-                raise ValueError(f"invalid matching section name: {placement.section}")
-            if placement.function % 4 or placement.address % 4:
-                raise ValueError(
-                    "matching function and section addresses must be aligned"
-                )
-            if placement.size <= 0:
-                raise ValueError("matching section placement size must be positive")
-            if key in seen_placements:
-                raise ValueError(
-                    f"duplicate matching section placement: {placement.function:#x} "
-                    f"{placement.section}"
-                )
-            seen_placements.add(key)
-            placements.setdefault(placement.function, []).append(placement)
-        manifest = TargetManifest(
-            id=target_id,
-            disc_id=str(raw.get("disc_id", target_id.shipped)),
-            kind=str(raw["kind"]),
-            source_dir=str(raw["source_dir"]),
-            binary=str(raw["binary"]),
-            splat=str(raw["splat"]),
-            load_address=int(raw.get("load_address", 0)),
-            psyq_space=str(psyq.get("space", "slus")),
-            libraries=libraries,
-            library_confidence=library_confidence,
-            library_evidence=library_evidence,
-            sources=_parse_path_claims(raw, "sources"),
-            support_sources=_parse_path_claims(raw, "support_sources"),
-            headers=_parse_path_claims(raw, "headers"),
-            psyq_source=_parse_single_path_claim(raw, "psyq_source"),
-            section_placements={
-                function: tuple(values) for function, values in placements.items()
-            },
-            companions=_parse_companions(raw, target_id),
-        )
+    manifests: dict[str, TargetManifest] = cached if cached is not None else {}
+    for path, content in () if cached is not None else manifest_contents.items():
+        try:
+            manifest = _parse_manifest(path, content)
+        except (AttributeError, KeyError, TypeError, OverflowError) as error:
+            raise ValueError(f"invalid target manifest in {path}: {error}") from error
         if manifest.id.value in manifests:
             raise ValueError(f"duplicate target manifest: {manifest.id.value}")
         manifests[manifest.id.value] = manifest
-    claims = cache.collect_claim_files(root, manifests)
+    claims = cache.collect_claim_files(root, manifests, read_claim=read_claim)
     _validate_companions(manifests)
     _validate_claim_overlap(manifests)
     _validate_claimed_paths(manifests)
     _validate_claim_files(root, manifests, dict(claims.canonical))
-    _validate_section_placements(root, manifests)
+    _validate_section_placements(manifests, claims)
     for manifest in manifests.values():
         if (
             manifest.has_explicit_sources
@@ -438,5 +466,5 @@ def load_target_manifests(root: Path) -> dict[str, TargetManifest]:
                 f"{manifest.id.value}: psyq_source must be explicitly claimed "
                 "in sources or support_sources"
             )
-    cache.store_manifests(root, fingerprint, manifests, claims=claims)
-    return manifests
+    cache.store_manifests(root, fingerprint, manifests)
+    return ManifestGeneration(manifests, claims)

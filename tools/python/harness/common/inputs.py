@@ -4,47 +4,338 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import stat
 from pathlib import Path
 
+from harness.common.deadlines import check_deadline
 from harness.io import unique_object
+
+_INPUT_FIELDS = (
+    "st_dev",
+    "st_ino",
+    "st_mode",
+    "st_nlink",
+    "st_uid",
+    "st_gid",
+    "st_size",
+    "st_mtime_ns",
+    "st_ctime_ns",
+)
+_DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+_DIRECTORY_CACHE_SIZE = 256
+
+
+def _capture_metadata(status: os.stat_result) -> tuple[int, ...]:
+    return tuple(getattr(status, field) for field in _INPUT_FIELDS)
+
+
+def _capture_parent_metadata(status: os.stat_result) -> tuple[int, ...]:
+    return tuple(
+        getattr(status, field) for field in _INPUT_FIELDS if field != "st_size"
+    )
 
 
 def load(path: Path):
     return json.loads(path.read_bytes(), object_pairs_hook=unique_object)
 
 
-def file_state(path: Path):
+def read_input(path: Path) -> tuple[dict | None, bytes | None]:
+    """Bind input state to the exact bytes read between stable metadata samples."""
+    check_deadline()
+    before = None
     for part in (path, *path.parents):
-        if part.is_symlink():
+        check_deadline()
+        try:
+            observed = part.stat(follow_symlinks=False)
+        except (FileNotFoundError, NotADirectoryError):
+            continue
+        if stat.S_ISLNK(observed.st_mode):
             raise ValueError(f"symlink input: {path}")
-    if not path.exists():
-        return None
-    before = path.stat()
+        if part == path:
+            before = observed
+    if before is None:
+        try:
+            path.stat(follow_symlinks=False)
+        except (FileNotFoundError, NotADirectoryError):
+            check_deadline()
+            return None, None
+        raise ValueError(f"input appeared during observation: {path}")
     mode = before.st_mode
     if not stat.S_ISREG(mode):
         raise ValueError(f"not a regular input: {path}")
     content = path.read_bytes()
-    after = path.stat()
+    check_deadline()
+    after = path.stat(follow_symlinks=False)
     # Reading may update atime; identity and mutation metadata must stay stable.
-    fields = (
-        "st_dev",
-        "st_ino",
-        "st_mode",
-        "st_nlink",
-        "st_uid",
-        "st_gid",
-        "st_size",
-        "st_mtime_ns",
-        "st_ctime_ns",
-    )
-    if any(getattr(before, field) != getattr(after, field) for field in fields):
+    if _capture_metadata(before) != _capture_metadata(after):
         raise ValueError(f"moving input: {path}")
     return {
         "sha256": hashlib.sha256(content).hexdigest(),
         "mode": stat.S_IMODE(mode),
-    }
+    }, content
+
+
+class InputBatch:
+    """Reuse confined directory traversal within one verified input-reading pass."""
+
+    def __init__(self, root: Path):
+        self.root = Path(root)
+        if self.root.anchor != "/" or Path(os.path.abspath(root)) != self.root:
+            raise ValueError("input batch root must be canonical and absolute")
+        self._directories: dict[Path, int] = {}
+        self._metadata: dict[Path, tuple[int, ...]] = {}
+        self._chains: dict[Path, tuple[tuple[Path, Path], ...]] = {}
+        self._missing: set[Path] = set()
+        self._active = False
+        self._closed = False
+        self._failed = False
+
+    def __enter__(self) -> InputBatch:
+        if self._active or self._closed:
+            raise ValueError("input batch cannot be reused")
+        self._active = True
+        try:
+            if self._open_directory(self.root) is None:
+                raise ValueError("input batch root is missing")
+        except BaseException:
+            self._failed = True
+            self._close()
+            raise
+        return self
+
+    def __exit__(self, error_type, error, traceback) -> None:
+        try:
+            if error_type is None:
+                self._verify()
+        finally:
+            self._close()
+
+    def _require_active(self) -> None:
+        check_deadline()
+        if not self._active or self._closed or self._failed:
+            raise ValueError("input batch is inactive or failed")
+
+    def _release_directory(self, protected: Path) -> None:
+        if len(self._directories) < _DIRECTORY_CACHE_SIZE:
+            return
+        parents = {path.parent for path in self._directories}
+        for path in self._directories:
+            if path not in parents and not protected.is_relative_to(path):
+                descriptor = self._directories.pop(path)
+                os.close(descriptor)
+                return
+
+    def _open_directory(self, path: Path) -> int | None:
+        self._require_active()
+        if path in self._directories:
+            descriptor = self._directories.pop(path)
+            self._directories[path] = descriptor
+            return descriptor
+        parent = None
+        if path != path.parent:
+            parent = self._open_directory(path.parent)
+            if parent is None:
+                return None
+        name = str(path) if parent is None else path.name
+        try:
+            before = os.stat(name, dir_fd=parent, follow_symlinks=False)
+        except FileNotFoundError:
+            if path in self._metadata:
+                raise ValueError(
+                    f"previously observed input parent disappeared: {path}"
+                )
+            try:
+                os.stat(name, dir_fd=parent, follow_symlinks=False)
+            except FileNotFoundError:
+                return None
+            raise ValueError(f"input parent appeared during observation: {path}")
+        if stat.S_ISLNK(before.st_mode):
+            raise ValueError(f"symlink input parent: {path}")
+        if not stat.S_ISDIR(before.st_mode):
+            if path in self._metadata:
+                raise ValueError(f"previously observed input parent changed: {path}")
+            return None
+        self._release_directory(path)
+        descriptor = os.open(name, _DIRECTORY_FLAGS, dir_fd=parent)
+        try:
+            expected = _capture_parent_metadata(before)
+            if (
+                _capture_parent_metadata(os.fstat(descriptor)) != expected
+                or _capture_parent_metadata(
+                    os.stat(name, dir_fd=parent, follow_symlinks=False)
+                )
+                != expected
+                or self._metadata.get(path, expected) != expected
+            ):
+                raise ValueError(f"input parent changed during observation: {path}")
+            self._metadata[path] = expected
+            self._directories[path] = descriptor
+        except BaseException:
+            os.close(descriptor)
+            raise
+        return descriptor
+
+    def _verify_chain(self, path: Path) -> None:
+        chain = self._chains.get(path)
+        if chain is None:
+            chain = tuple(
+                (ancestor, ancestor.parent)
+                for ancestor in reversed((path, *path.parents))
+            )
+            self._chains[path] = chain
+        for ancestor, parent in chain:
+            check_deadline()
+            linked = (
+                os.stat(ancestor, follow_symlinks=False)
+                if ancestor == parent
+                else os.stat(
+                    ancestor.name,
+                    dir_fd=self._directories[parent],
+                    follow_symlinks=False,
+                )
+            )
+            if _capture_parent_metadata(linked) != self._metadata[ancestor]:
+                raise ValueError(f"input parent detached or changed: {ancestor}")
+        if (
+            _capture_parent_metadata(os.fstat(self._directories[path]))
+            != self._metadata[path]
+        ):
+            raise ValueError(f"input parent descriptor changed: {path}")
+
+    def _observe_missing(self, parent: int, path: Path) -> None:
+        try:
+            os.stat(path.name, dir_fd=parent, follow_symlinks=False)
+        except FileNotFoundError:
+            check_deadline()
+            self._missing.add(path)
+            return
+        raise ValueError(f"input appeared during observation: {path}")
+
+    def _prepare_parent(self, path: Path) -> int | None:
+        self._require_active()
+        if (
+            not path.is_absolute()
+            or not path.is_relative_to(self.root)
+            or Path(os.path.abspath(path)) != path
+        ):
+            raise ValueError("input batch path must be canonical and confined")
+        parent = self._open_directory(path.parent)
+        if parent is not None:
+            self._verify_chain(path.parent)
+        return parent
+
+    def validate_path(self, path: Path) -> None:
+        """Reject noncanonical components before a caller observes the input path."""
+        try:
+            parent = self._prepare_parent(path)
+            if parent is not None:
+                try:
+                    status = os.stat(path.name, dir_fd=parent, follow_symlinks=False)
+                except FileNotFoundError:
+                    check_deadline()
+                    return
+                if stat.S_ISLNK(status.st_mode):
+                    raise ValueError(f"symlink input: {path}")
+            check_deadline()
+        except BaseException:
+            self._failed = True
+            raise
+
+    def _read(self, path: Path) -> tuple[dict | None, bytes | None]:
+        parent = self._prepare_parent(path)
+        if parent is None:
+            self._missing.add(path)
+            check_deadline()
+            return None, None
+        try:
+            before = os.stat(path.name, dir_fd=parent, follow_symlinks=False)
+        except FileNotFoundError:
+            self._observe_missing(parent, path)
+            return None, None
+        if not stat.S_ISREG(before.st_mode):
+            raise ValueError(f"not a regular input: {path}")
+        descriptor = os.open(
+            path.name,
+            os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK,
+            dir_fd=parent,
+        )
+        try:
+            expected = _capture_metadata(before)
+            if _capture_metadata(os.fstat(descriptor)) != expected:
+                raise ValueError(f"moving input: {path}")
+            with os.fdopen(descriptor, "rb", closefd=False) as stream:
+                content = stream.read()
+            check_deadline()
+            if (
+                _capture_metadata(os.fstat(descriptor)) != expected
+                or _capture_metadata(
+                    os.stat(path.name, dir_fd=parent, follow_symlinks=False)
+                )
+                != expected
+            ):
+                raise ValueError(f"moving input: {path}")
+            return {
+                "sha256": hashlib.sha256(content).hexdigest(),
+                "mode": stat.S_IMODE(before.st_mode),
+            }, content
+        finally:
+            os.close(descriptor)
+
+    def read(self, path: Path) -> tuple[dict | None, bytes | None]:
+        """Read fresh bytes; never cache content, absence or validation success."""
+        try:
+            return self._read(path)
+        except BaseException:
+            self._failed = True
+            raise
+
+    def _verify(self) -> None:
+        self._require_active()
+        for path in self._missing:
+            parent = self._open_directory(path.parent)
+            if parent is not None:
+                self._observe_missing(parent, path)
+        for path, expected in self._metadata.items():
+            check_deadline()
+            descriptor = self._open_directory(path)
+            if descriptor is None:
+                raise ValueError(f"input parent disappeared: {path}")
+            linked = (
+                os.stat(path, follow_symlinks=False)
+                if path == path.parent
+                else os.stat(
+                    path.name,
+                    dir_fd=self._directories[path.parent],
+                    follow_symlinks=False,
+                )
+            )
+            if (
+                _capture_parent_metadata(linked) != expected
+                or _capture_parent_metadata(os.fstat(descriptor)) != expected
+            ):
+                raise ValueError(f"input parent detached or changed: {path}")
+        check_deadline()
+
+    def _close(self) -> None:
+        descriptors = tuple(self._directories.values())
+        self._directories.clear()
+        self._chains.clear()
+        self._active = False
+        self._closed = True
+        failure = None
+        for descriptor in reversed(descriptors):
+            try:
+                os.close(descriptor)
+            except OSError as error:
+                failure = error
+        if failure is not None:
+            raise failure
+
+
+def file_state(path: Path):
+    return read_input(path)[0]
 
 
 def relative(value: str) -> str:

@@ -6,11 +6,12 @@ from pathlib import Path
 import re
 from typing import Any, Callable, Iterable
 
+from harness.common.deadlines import DeadlineExpired
 from harness.domain.functions import collect_lift_metadata
 from harness.domain.tags import count_function_metadata
 from harness.domain.policy import validate_matching_source
 
-from ..build.operations import batch_build, cmake_target_for_source, configure
+from ..build.operations import batch_build, cmake_target_for_source
 from ..domain.manifests import TargetManifest, load_target_manifests
 from ..domain.claims import manifest_source_paths
 from ..domain.layout import ReviewedSplatLayout, parse_splat_layout
@@ -271,25 +272,61 @@ def _run_batch_misses(
         batch_ok = True
 
         try:
-            configure(root)
             result = batch_build(root, cmake_targets)
             if result.returncode != 0:
                 batch_ok = False
+        except DeadlineExpired:
+            raise
         except (RuntimeError, ValueError, FileNotFoundError):
             batch_ok = False
+
+        try:
+            manifests = load_target_manifests(root)
+        except DeadlineExpired:
+            raise
+        except (OSError, RuntimeError, ValueError) as error:
+            for _, source, address, _, _, _manifest in items:
+                records.append(
+                    _invalid_record(
+                        root,
+                        target,
+                        source,
+                        f"target metadata unavailable after build: {error}",
+                        address,
+                    )
+                )
+            continue
+        current_manifest = manifests.get(target)
+        current_items = []
+        for item in items:
+            _, source, address, _, _, queued_manifest = item
+            if current_manifest is None or current_manifest != queued_manifest:
+                records.append(
+                    _invalid_record(
+                        root,
+                        target,
+                        source,
+                        "target metadata changed during build; rerun the audit",
+                        address,
+                    )
+                )
+            else:
+                current_items.append(item)
+        items = current_items
+        if not items:
+            continue
 
         if batch_ok:
             # Check freshness before comparing so every work item produces one
             # record and stale objects cannot enter the matcher.
             resolved_items: list[tuple[_WorkItem, AsmDiffRequest, dict[str, Any]]] = []
             stale_items: list[_WorkItem] = []
-            manifests = None
             for item in items:
-                _, source, address, _, _, manifest = item
+                _, source, address, _, _, _manifest = item
                 try:
-                    if manifests is None:
-                        manifests = load_target_manifests(root)
-                    request = _request_for_source(root, source, address, manifest)
+                    request = _request_for_source(
+                        root, source, address, current_manifest
+                    )
                     resolved = _asm_diff_resolve(repo, request, manifests=manifests)
                     obj = resolved["object_path"]
                     if (
@@ -299,16 +336,20 @@ def _run_batch_misses(
                         stale_items.append(item)
                         continue
                     resolved_items.append((item, request, resolved))
+                except DeadlineExpired:
+                    raise
                 except (FileNotFoundError, RuntimeError, ValueError):
                     stale_items.append(item)
 
             # A successful CMake request that did not refresh an object needs
             # the existing per-source path for a trustworthy diagnosis.
             for item in stale_items:
-                _, source, address, source_name, key, manifest = item
-                request = _request_for_source(root, source, address, manifest)
+                _, source, address, source_name, key, _manifest = item
+                request = _request_for_source(root, source, address, current_manifest)
                 try:
                     result = diff_runner(request)
+                except DeadlineExpired:
+                    raise
                 except (FileNotFoundError, RuntimeError, ValueError) as exc:
                     records.append(
                         _invalid_record(
@@ -327,6 +368,8 @@ def _run_batch_misses(
                 _, source, address, source_name, key, _manifest = item
                 try:
                     result = _asm_diff_compare(repo, request, resolved)
+                except DeadlineExpired:
+                    raise
                 except (FileNotFoundError, RuntimeError, ValueError) as exc:
                     records.append(
                         _invalid_record(
@@ -344,9 +387,11 @@ def _run_batch_misses(
             # Batch failed — fall back to per-source build + compare
             for item in items:
                 _, source, address, source_name, key, _manifest = item
-                request = _request_for_source(root, source, address, _manifest)
+                request = _request_for_source(root, source, address, current_manifest)
                 try:
                     result = diff_runner(request)
+                except DeadlineExpired:
+                    raise
                 except (FileNotFoundError, RuntimeError, ValueError) as exc:
                     records.append(
                         _invalid_record(

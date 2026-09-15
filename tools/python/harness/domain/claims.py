@@ -12,7 +12,7 @@ claims; the legacy ``source_dir`` inventory is no longer consulted.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Iterable, Mapping
+from typing import Callable, Iterable, Mapping
 
 from .manifests import TargetManifest
 from .functions import collect_lift_metadata
@@ -57,16 +57,22 @@ def collect_manifest_source_addresses(
     manifest: TargetManifest,
     *,
     expected_lifts: Mapping[str, int | tuple[int, ...]] | None = None,
+    read_source: Callable[[Path], str] | None = None,
 ) -> list[tuple[Path, int]]:
     """Target-qualified lift scan from explicit claims.  Same metadata rules
     as ``domain.sources.collect_source_addresses``; collisions name the
-    owning target."""
+    owning target. An explicit text reader owns sample freshness; the default
+    retains ordinary UTF-8 file reads."""
 
     source_paths = [
         path for path in manifest_source_paths(root, manifest) if path.suffix == ".c"
     ]
     return _scan_lift_sources(
-        source_paths, root / manifest.source_dir, expected_lifts, manifest.id.value
+        source_paths,
+        root / manifest.source_dir,
+        expected_lifts,
+        manifest.id.value,
+        read_source=read_source,
     )
 
 

@@ -1,3 +1,5 @@
+"""Link selected function objects and compare complete symbol-qualified bytes."""
+
 from __future__ import annotations
 
 import re
@@ -8,6 +10,7 @@ from pathlib import Path
 from ..domain.manifests import TargetManifest
 from ..domain.symbols import load_target_symbols, load_weak_symbol_bindings
 from ..io import RepoLayout, repo_layout
+from .extraction import read_function_image
 
 # Raw address-encoding names are exactly `func_XXXXXXXX`/`D_XXXXXXXX`;
 # overlay-prefixed variants (`SCENA16_D_*`) are banned — conflicts resolve by
@@ -100,23 +103,6 @@ def link_object_at_address(
     return out
 
 
-def extract_function_bytes(
-    linked_path: Path,
-    *,
-    size: int,
-    layout: RepoLayout | None = None,
-) -> bytes:
-    repo = layout or repo_layout()
-    objcopy = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-objcopy"
-    flat = subprocess.run(
-        [str(objcopy), "-O", "binary", "-j", ".text", str(linked_path), "/dev/stdout"],
-        capture_output=True,
-    )
-    if flat.returncode != 0:
-        raise RuntimeError(f"objcopy failed: {flat.stderr.decode()}")
-    return flat.stdout[:size]
-
-
 def extract_section_bytes(
     linked_path: Path,
     *,
@@ -137,6 +123,7 @@ def extract_section_bytes(
 def function_bytes_match(
     object_path: Path,
     *,
+    function_name: str,
     address: int,
     size: int,
     original_bytes: bytes,
@@ -145,11 +132,17 @@ def function_bytes_match(
     layout: RepoLayout | None = None,
     section_addresses: dict[str, int] | None = None,
 ) -> tuple[bool, bytes]:
+    if type(size) is not int or size <= 0 or size % 4 or len(original_bytes) != size:
+        raise ValueError(
+            "byte comparison requires the complete aligned original extent"
+        )
     repo = layout or repo_layout()
     nm = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-nm"
     nm_result = subprocess.run(
         [str(nm), "-u", str(object_path)], capture_output=True, text=True
     )
+    if nm_result.returncode != 0:
+        raise RuntimeError(f"nm failed: {nm_result.stderr}")
     undefined: list[str] = []
     for line in nm_result.stdout.splitlines():
         stripped = line.strip()
@@ -164,5 +157,7 @@ def function_bytes_match(
         layout=repo,
         section_addresses=section_addresses,
     )
-    compiled = extract_function_bytes(linked, size=size, layout=repo)
+    compiled = read_function_image(
+        linked, function_name=function_name, address=address
+    ).content
     return compiled == original_bytes, compiled

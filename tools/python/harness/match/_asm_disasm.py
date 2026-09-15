@@ -1,3 +1,5 @@
+"""Disassemble original and selected linked function ranges for comparison."""
+
 from __future__ import annotations
 
 import re
@@ -8,9 +10,6 @@ from ._asm_resolve import format_hex
 
 INSTRUCTION_RE = re.compile(
     r"^\s*(?P<address>[0-9a-fA-F]+):\s+[0-9a-fA-F]{8}\s+(?P<instruction>.+?)\s*$"
-)
-SYMBOL_SIZE_RE = re.compile(
-    r"^(?P<address>[0-9a-fA-F]+)\s+(?P<size>[0-9a-fA-F]+)\s+[A-Za-z]\s+(?P<name>\S+)$"
 )
 
 
@@ -50,25 +49,29 @@ def disassemble_original(
     return result.stdout
 
 
-def disassemble_linked(*, objdump_path: Path, linked_path: Path) -> str:
-    result = run_command([str(objdump_path), "-d", str(linked_path)])
+def disassemble_linked(
+    *, objdump_path: Path, linked_path: Path, address: int, size: int
+) -> str:
+    if (
+        type(address) is not int
+        or type(size) is not int
+        or not 0 <= address < address + size <= 2**32
+        or address % 4
+        or size % 4
+    ):
+        raise ValueError("disassembly requires an aligned function address and extent")
+    result = run_command(
+        [
+            str(objdump_path),
+            "-d",
+            f"--start-address=0x{address:X}",
+            f"--stop-address=0x{address + size:X}",
+            str(linked_path),
+        ]
+    )
     if result.returncode != 0:
         raise RuntimeError(result.stderr or result.stdout)
     return result.stdout
-
-
-def current_symbol_size(
-    nm_path: Path, object_path: Path, function_name: str
-) -> int | None:
-    result = run_command([str(nm_path), "-S", str(object_path)])
-    if result.returncode != 0:
-        return None
-    for raw_line in result.stdout.splitlines():
-        match = SYMBOL_SIZE_RE.match(raw_line.strip())
-        if match is None or match.group("name") != function_name:
-            continue
-        return int(match.group("size"), 16)
-    return None
 
 
 _COMMENT_RE = re.compile(r"\s*<[^>]*>")

@@ -9,9 +9,8 @@ from harness.common.cli import add_root_argument, run_main
 
 from ..build.compiler import (
     build_compiler_arguments,
-    load_object_compilers,
-    load_object_flags,
-    sanitize_identifier,
+    load_compiler_configuration,
+    resolve_compiler_settings,
 )
 from ..io import repo_layout
 from ..toolchain.gcc_variants import lookup_variant, resolve_variant
@@ -20,15 +19,18 @@ from ..toolchain.gcc_variants import lookup_variant, resolve_variant
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     output = root / "compile_commands.json"
-    object_flags = load_object_flags(root)
-    object_compilers = load_object_compilers(root)
+    object_flags, object_compilers = load_compiler_configuration(root)
     src_root = root / "src"
     entries = []
     for source in sorted(src_root.rglob("*.c")):
         object_path = root / "build" / source.relative_to(root).with_suffix(".o")
-        relative = source.relative_to(src_root).as_posix()
-        key = sanitize_identifier(relative)
-        compiler_id = object_compilers.get(key)
+        settings = resolve_compiler_settings(
+            source.relative_to(root).as_posix(),
+            source.read_text(encoding="utf-8"),
+            object_flags,
+            object_compilers,
+        )
+        compiler_id = settings.compiler_id
         # Build argument vector
         if compiler_id is None:
             variant_prefix: list[str] = []
@@ -43,7 +45,7 @@ def run(args: argparse.Namespace) -> int:
                 f"PSX_GCC={gcc_path}",
             ]
         base_args = [
-            *build_compiler_arguments(root, source, object_flags),
+            *build_compiler_arguments(root, settings.flags),
             "-c",
             str(source),
             "-o",

@@ -11,6 +11,7 @@ from ..domain.manifests import SectionPlacement
 
 from ._asm_resolve import format_hex
 
+
 @dataclass(frozen=True)
 class AsmDiffRequest:
     source_path: Path
@@ -24,6 +25,7 @@ class AsmDiffRequest:
     section_placements: tuple[SectionPlacement, ...] | None = None
     diagnostics: bool = True
 
+
 def render_diff(original_lines: list[str], current_lines: list[str]) -> str:
     diff_lines = difflib.unified_diff(
         original_lines,
@@ -34,11 +36,13 @@ def render_diff(original_lines: list[str], current_lines: list[str]) -> str:
     )
     return "\n".join(diff_lines) + "\n"
 
+
 def matching_instruction_count(
     original_lines: list[str], current_lines: list[str]
 ) -> int:
     matcher = difflib.SequenceMatcher(a=original_lines, b=current_lines, autojunk=False)
     return sum(block.size for block in matcher.get_matching_blocks())
+
 
 def first_instruction_mismatch(
     original_lines: list[str], current_lines: list[str]
@@ -67,6 +71,7 @@ def first_instruction_mismatch(
         }
     return None
 
+
 def build_result_payload(
     *,
     source_path: Path,
@@ -82,9 +87,16 @@ def build_result_payload(
     current_lines: list[str],
     linked_path: Path | None = None,
 ) -> dict[str, Any]:
-    exact_match = (
-        byte_match if byte_match is not None else original_lines == current_lines
-    )
+    if byte_match is not None:
+        byte_match = (
+            byte_match is True
+            and type(original_size) is int
+            and original_size > 0
+            and original_size % 4 == 0
+            and type(current_size) is int
+            and current_size == original_size
+        )
+    exact_match = byte_match is True
     status = "exact_match" if exact_match else "different"
     matching_count = matching_instruction_count(original_lines, current_lines)
     denominator = max(len(original_lines), len(current_lines), 1)

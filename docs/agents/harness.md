@@ -58,11 +58,117 @@ direct macro occurrences. Shared comment/literal traversal belongs to `common.le
 The [combiner rollout](combiner.md) still must migrate layout, native, naming/type/
 macro coverage and mutation owners before production consolidation is enabled.
 
-`domain/cache.py` owns process-local manifest reuse. Every lookup hashes current
-manifest and claim contents and checks canonical paths before reusing parsed data.
-Claim parents are resolved once per collection and rechecked before return;
-retargeted or missing parents reject the pass. Parent resolution is never reused
-between collections; returned mutable manifest fields remain isolated.
+`domain/cache.py` owns complete `config/targets/**/*.toml` discovery and process-local
+manifest reuse. Default lookup hashes live manifest and claim contents and checks
+canonical paths before reusing parsed data. An explicit `read_manifest` callback
+receives repository-relative names and supplies immutable bytes for parsing/cache
+keys; it does not authorize trusting stale physical inputs. `ProfileContext` binds
+that reader to its guarded captured bytes, keeps the original manifest inventory,
+and rechecks discovery plus file metadata/content before publication. PRE/POST
+inventory checks use the same domain owner; alternate TOML names are not hidden.
+Build inventory v4 retains this complete TOML set and raw hashes, including edits
+with restored timestamps, plus each source's effective function compiler settings.
+It also binds object flags and the variant catalog as
+bounded raw hashes or verified absence; missing and empty files differ. The
+frontend and CMake discover alternate TOML names; inventory capture precedes the
+flags include and target reads, with a final endpoint check. Older snapshots
+reject. Defaults remain unchanged; producers share strict literal configuration
+parsing. These checks do not
+establish configure-time continuity, atomic helper reads or full compiler closure.
+Each load must consume exactly that inventory once, including cache hits; prior
+context inputs cannot stand in for this load's missing or unexpected reads.
+Descriptor-based discovery never suppresses a failed subtree scan or follows
+directory symlinks. Nonregular TOML inputs reject; only an absent initial target
+tree is empty. Limits are 16,384 visited directories and 65,536 total entries;
+aliases, traversal failures and deadlines reject instead of truncating the set.
+The cache, manifest parser, target-ID and confined traversal owners are also pinned.
+Missing fields, wrong table/value shapes and numeric overflow during one captured
+model's parsing become path-qualified `ValueError` failures. This boundary does
+not catch manifest/claim reader exceptions or deadlines; accepted model values,
+cache isolation and per-load claim validation are unchanged.
+`load_manifest_generation` returns each load's isolated models and immutable claim
+sample together; there is no global latest-claims lookup. Every load validates
+binary/source/header claims, including parsed-model cache hits. Default reads keep
+pass-local parent resolution and stable regular-file samples; only absent paths
+are optional, while escapes, nonregular inputs and I/O failures reject.
+Only the shared reader's verified missing-path result becomes absence; errors
+after a present-input observation, during reading or at final checks propagate.
+Dangling aliases cannot bypass containment; contained aliases retain ordinary
+lookup semantics, and captured parent/alias resolutions are rechecked on return.
+An explicit claim reader is a trusted sample provider: bytes alone do not prove
+physical containment, regularity or freshness. It supplies bytes or `None` for
+absence. Profiles enforce those physical guards through their input reader and
+capture every consulted claim once with its exact per-load set; placement
+bounds use sampled lengths, never a later binary stat. Final profile verification
+still rechecks physical inputs. Each manifest capture and verification pass uses
+a fresh descriptor-confined `InputBatch`. It caches directory handles, not byte
+samples, absence or validation success; context-owned immutable samples remain
+separate. Batch canonical checks precede path observations without repeating
+`Path.resolve`; parent links are rechecked before bytes, leaf metadata brackets
+each read, and directory linkage/metadata are verified before descriptors close.
+Directory allocation size follows the existing profile policy; leaf sizes remain
+bound. Eviction never resets original directory observations. Canonical,
+single-link, ancestor-membership and manifest-inventory guards remain mandatory;
+no batch or original profile context is carried across output mutations.
+Profile inspection projects Splat boundaries from its captured text; preservation
+validation reuses one sample for strict decoding and projection. `parse_splat_text`
+performs no I/O and hashes the supplied UTF-8 text. Its `origin` labels diagnostics,
+not freshness. The file parser retains its existing newline normalization;
+raw CRLF samples therefore retain their distinct digest. Final input checks stay.
+Profiles also pin the layout, PS-X, source-claim, function/tag, symbol-map and C
+lexical owners, plus shared I/O, confined file/path and deadline helpers.
+Preservation requires every observed input, including optional absence, in the
+retained PRE-plus-POST map: initial omissions and later unbound reads reject.
+The initial retained-input read loop also uses a fresh `InputBatch`, closed before
+semantic validation. State/hash/mode and optional-absence comparisons remain;
+each verification still rereads inputs and runs its complete guards. No batch,
+content or validation-success cache crosses passes or output mutations.
+Newly required owners require fresh capture/review, never current-state backfill.
+These explicit repository owners do not establish imported/runtime, PyYAML,
+stdlib, compiler-backend or include closure, or authenticate already-loaded code.
+Object flags and compiler IDs are parsed from captured override text. Variant
+selection lazily parses the captured catalog once per profile context; unused
+catalog schema is not validated early. Missing catalogs differ from empty files,
+unknown configured IDs reject, and defaults/ordered arguments stay unchanged.
+Ordinary compiler file loaders retain their behavior through pure parsing owners;
+neither parsed variants nor their context may survive output mutations.
+Source-ownership scans consume captured C text, and compiled names reuse the
+canonical parser's captured target-local map once per profile/verification pass.
+Explicit text/map providers are trusted data, not freshness evidence; ordinary
+domain callers retain file reads. Metadata, collision, map/boundary agreement and
+final physical/input-set checks remain mandatory. No shared/SDK map substitutes
+for target-local names, and supplied empty maps never trigger file fallback.
+Repository layout consumes the returned claim
+sample, but its later file/layout reads are not an atomic repository snapshot.
+Expanded claim capture makes repeated preservation proofs more expensive; no
+cross-sample validation-success cache or relaxed producer deadline is implied.
+
+`common.observation.observe_directory` binds bounded, nofollow membership to an
+opened directory and checks path linkage. Profiles retain raw directory metadata;
+only size may differ with the same other fields and membership. File checks and
+latched mutation watches stay exact; membership endpoints do not prove history.
+
+`common.inputs.read_input` returns state and the exact bytes hashed under one
+stable metadata sample; `file_state` retains its state-only schema. Profile capture
+uses those bytes without a duplicate read, but verification always reopens and
+rehashes inputs. All file mutation fields, ancestor symlink checks and profile-only
+single-link checks remain enforced. Only `ENOENT`/`ENOTDIR` denote absence;
+permission, I/O and malformed-path failures reject.
+Absence is rechecked after the ancestor walk; newly present entries reject.
+
+`build.receipts` owns grouped producer receipts: `build-adapter producer` always
+compiles under the writer lease, while `build-adapter receipt` requires an external
+receipt SHA and freshly checks configured provenance. Receipts cannot authorize
+reuse, native equality or deadline compliance. `build.inventory` owns configured
+classification and its always-run graph gate; `config/compiler/graph.cmake` owns
+unique lift nodes, with grouped producers forced and ordinary commands retained.
+`build.routing` selects externally pinned, source-bound preservation records for
+mixed ordinary/grouped builds without changing the caller environment. Explicit
+single-record and routing-table inputs conflict; neither silently overrides the
+other. The selected record still passes the existing preservation checks.
+Full input closure and native/transaction integration remain open.
+See the [combiner contract](combiner.md) for supported entrypoints, invocation,
+invalid markers and retained recovery handling.
 
 The decomp-status batch path loads a fresh catalog after each successful build and
 reuses it only during read-only source resolution. Ownership winner/tie rules stay

@@ -8,6 +8,9 @@ import re
 import shutil
 import subprocess
 
+from harness.build.inventory import has_current_inventory
+from harness.domain.cache import collect_manifest_paths
+
 
 def cmake_target_for_source(root: Path, source: Path) -> str:
     relative = source.resolve().relative_to(root.resolve()).as_posix()
@@ -48,11 +51,14 @@ def configure(root: Path) -> Path:
         for line in cache.read_text().splitlines():
             if line.startswith("CMAKE_HOME_DIRECTORY:"):
                 cached_home = line.split("=", 1)[1].strip()
-                inputs = [root / "CMakeLists.txt"] + list(
-                    (root / "config" / "targets").rglob("target.toml")
-                )
+                inputs = [root / "CMakeLists.txt"] + [
+                    root / name for name in collect_manifest_paths(root)
+                ]
                 stale = generated is not None and (
                     _has_missing_source(root, generated)
+                    or not has_current_inventory(
+                        root, build_tree / "bof3-inventory.json"
+                    )
                     or any(
                         path.is_file()
                         and path.stat().st_mtime_ns > generated.stat().st_mtime_ns

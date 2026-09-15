@@ -434,7 +434,6 @@ def test_batch_builds_fresh_misses_once_per_target(tmp_path: Path, monkeypatch) 
         compared_roots.append(repo.root)
         return _batch_result()
 
-    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
     monkeypatch.setattr(dsp, "batch_build", batch)
     monkeypatch.setattr(dsp, "_asm_diff_resolve", resolve)
     monkeypatch.setattr(dsp, "_asm_diff_compare", compare)
@@ -461,7 +460,6 @@ def test_batch_resolve_failure_falls_back_once(tmp_path: Path, monkeypatch) -> N
     from harness.decomp import status as ds
 
     fallback = 0
-    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
     monkeypatch.setattr(
         dsp,
         "batch_build",
@@ -502,7 +500,6 @@ def test_batch_stale_object_falls_back_once_without_duplicate_record(
     from harness.decomp import status as ds
 
     fallback = 0
-    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
     monkeypatch.setattr(
         dsp,
         "batch_build",
@@ -558,7 +555,6 @@ def test_batch_failure_falls_back_per_source_with_error_attribution(
 
     diff_calls: list[str] = []
 
-    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
     monkeypatch.setattr(
         dsp,
         "batch_build",
@@ -704,7 +700,6 @@ def test_source_change_invalidates_cache_and_recomputes(
             "output_dir": tmp_path / "out/matching/dummy",
         }
 
-    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
     monkeypatch.setattr(dsp, "batch_build", batch)
     monkeypatch.setattr(dsp, "_asm_diff_resolve", resolve)
     monkeypatch.setattr(dsp, "_asm_diff_compare", lambda repo, rq, rs: _batch_result())
@@ -789,7 +784,6 @@ def test_compile_inputs_invalidate_only_affected_target_then_all_targets(
             "output_dir": tmp_path / "out/matching/dummy",
         }
 
-    monkeypatch.setattr(dsp, "configure", lambda root: tmp_path / "build/cmake")
     monkeypatch.setattr(dsp, "batch_build", batch)
     monkeypatch.setattr(dsp, "_asm_diff_resolve", resolve)
     monkeypatch.setattr(

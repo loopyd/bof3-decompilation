@@ -171,10 +171,21 @@ def _row(
 
 
 def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedSplatLayout:
-    text = splat_path.read_text(encoding="utf-8")
+    """Read a layout file with the existing UTF-8 text and newline conventions."""
+    return parse_splat_text(
+        splat_path.read_text(encoding="utf-8"), load_address, origin=splat_path
+    )
+
+
+def parse_splat_text(
+    text: str, load_address: int, *, origin: str | Path = "<text>"
+) -> ReviewedSplatLayout:
+    """Parse supplied text without I/O; hash its exact UTF-8 representation."""
+    if not isinstance(text, str):
+        raise TypeError("Splat layout text must be a string")
     document = yaml.load(text, Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader))
     if not isinstance(document, dict) or not isinstance(document.get("segments"), list):
-        raise ValueError(f"invalid Splat segments in {splat_path}")
+        raise ValueError(f"invalid Splat segments in {origin}")
 
     starts: list[tuple[int, int, str, str | None, str | None, str | None]] = []
     eof: int | None = None
@@ -191,19 +202,19 @@ def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedSplatLayo
                 )
             continue
         if not isinstance(segment, dict):
-            raise ValueError(f"unsupported Splat segment in {splat_path}: {segment!r}")
+            raise ValueError(f"unsupported Splat segment in {origin}: {segment!r}")
         segment_start = _integer(segment.get("start", 0), field="segment start")
         segment_vram = _integer(
             segment.get("vram", load_address + segment_start), field="segment vram"
         )
         subsegments = segment.get("subsegments", [])
         if not isinstance(subsegments, list):
-            raise ValueError(f"invalid Splat subsegments in {splat_path}")
+            raise ValueError(f"invalid Splat subsegments in {origin}")
         for subsegment in subsegments:
             parsed = _row(subsegment)
             if parsed is None:
                 raise ValueError(
-                    f"unsupported Splat subsegment in {splat_path}: {subsegment!r}"
+                    f"unsupported Splat subsegment in {origin}: {subsegment!r}"
                 )
             offset, kind, name, source, behavior = parsed
             starts.append(
@@ -245,7 +256,7 @@ def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedSplatLayo
         )
     options = document.get("options", {})
     if not isinstance(options, dict):
-        raise ValueError(f"invalid Splat options in {splat_path}")
+        raise ValueError(f"invalid Splat options in {origin}")
     symbol_maps = options.get("symbol_addrs_path", [])
     if isinstance(symbol_maps, str):
         symbol_maps = [symbol_maps]
@@ -256,7 +267,7 @@ def parse_splat_layout(splat_path: Path, load_address: int) -> ReviewedSplatLayo
         and ".." not in PurePosixPath(path).parts
         for path in symbol_maps
     ):
-        raise ValueError(f"invalid Splat symbol_addrs_path in {splat_path}")
+        raise ValueError(f"invalid Splat symbol_addrs_path in {origin}")
     return ReviewedSplatLayout(
         tuple(boundaries),
         load_address,

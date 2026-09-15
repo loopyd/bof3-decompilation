@@ -154,7 +154,11 @@ def search_flags(
                     cwd=str(cmd_dir),
                     capture_output=True,
                     text=True,
-                    env={**os.environ, **variant_env},
+                    env={
+                        **os.environ,
+                        **variant_env,
+                        "BOF3_COMPILER_TRIAL": str(work.resolve()),
+                    },
                 )
             except FileNotFoundError:
                 results.append(
@@ -169,6 +173,7 @@ def search_flags(
             try:
                 match_ok, compiled = function_bytes_match(
                     object_path=object_path,
+                    function_name=baseline["function"],
                     address=address,
                     size=original_size,
                     original_bytes=original_bytes,
@@ -179,7 +184,10 @@ def search_flags(
                 linked_path = object_path.with_suffix(".linked.o")
                 if match_ok:
                     linked_dump = disassemble_linked(
-                        objdump_path=Path(objdump), linked_path=linked_path
+                        objdump_path=Path(objdump),
+                        linked_path=linked_path,
+                        address=address,
+                        size=len(compiled),
                     )
                     current = extract_instructions(linked_dump)
                     matches = matching_instruction_count(original, current)
@@ -191,7 +199,10 @@ def search_flags(
                     # Bytes differ; still compute instruction percentage
                     try:
                         linked_dump = disassemble_linked(
-                            objdump_path=Path(objdump), linked_path=linked_path
+                            objdump_path=Path(objdump),
+                            linked_path=linked_path,
+                            address=address,
+                            size=len(compiled),
                         )
                         current = extract_instructions(linked_dump)
                         matches = matching_instruction_count(original, current)
@@ -201,7 +212,7 @@ def search_flags(
                     except RuntimeError:
                         percent = 0.0
                     status = "different"
-            except RuntimeError:
+            except (RuntimeError, ValueError):
                 results.append(
                     {"flags": flags, "status": "link_error", "match_percent": 0.0}
                 )

@@ -11,7 +11,6 @@ from typing import Any, Mapping
 from ..build.operations import build, cmake_target_for_source
 from ..io import write_json, RepoLayout
 from ._asm_disasm import (
-    current_symbol_size,
     disassemble_linked,
     disassemble_original,
     extract_instructions,
@@ -215,6 +214,7 @@ def _asm_diff_compare(
         )
     byte_match, compiled_bytes = function_bytes_match(
         object_path,
+        function_name=function_name,
         address=address,
         size=original_size,
         original_bytes=original_bytes,
@@ -239,7 +239,7 @@ def _asm_diff_compare(
                 f"reviewed {placement.section} placement for {function_name} does not "
                 "match original bytes"
             )
-    current_size = current_symbol_size(nm_path, object_path, function_name)
+    current_size = len(compiled_bytes)
     if not request.diagnostics:
         return {
             "schema": "harness.byte-match-one/v1",
@@ -267,7 +267,10 @@ def _asm_diff_compare(
         address=address,
     )
     linked_objdump = disassemble_linked(
-        objdump_path=objdump_path, linked_path=linked_path
+        objdump_path=objdump_path,
+        linked_path=linked_path,
+        address=address,
+        size=len(compiled_bytes),
     )
 
     original_lines = extract_instructions(original_objdump)

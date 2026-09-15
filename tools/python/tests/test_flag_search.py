@@ -21,38 +21,50 @@ def _make_layout(root: Path) -> SimpleNamespace:
 class TestVariantCatalogLookup:
     def test_lookup_by_id_returns_matching_variant(self, tmp_path: Path) -> None:
         from harness.toolchain.gcc_variants import lookup_variant
+
         layout = _make_layout(tmp_path)
         variants_file = tmp_path / "config" / "compiler" / "variants.json"
         variants_file.parent.mkdir(parents=True)
-        variants_file.write_text(json.dumps({
-            "schema": "harness.compiler-variants/v1",
-            "candidates": [{
-                "id": "gcc-v1",
-                "label": "GCC V1",
-                "url": "https://example.com/gcc-v1.tar.gz",
-                "checksum": "sha256:" + "a" * 64,
-                "archive_name": "gcc-v1.tar.gz",
-                "license": "GPL-2.0+",
-                "source": "https://example.com/gcc-v1",
-                "host": "linux-x86_64",
-                "identity": "mips-sony-psx-gcc",
-                "assembler": "ASPSX compatible",
-                "executable_relpath": "gcc",
-            }],
-        }))
+        variants_file.write_text(
+            json.dumps(
+                {
+                    "schema": "harness.compiler-variants/v1",
+                    "candidates": [
+                        {
+                            "id": "gcc-v1",
+                            "label": "GCC V1",
+                            "url": "https://example.com/gcc-v1.tar.gz",
+                            "checksum": "sha256:" + "a" * 64,
+                            "archive_name": "gcc-v1.tar.gz",
+                            "license": "GPL-2.0+",
+                            "source": "https://example.com/gcc-v1",
+                            "host": "linux-x86_64",
+                            "identity": "mips-sony-psx-gcc",
+                            "assembler": "ASPSX compatible",
+                            "executable_relpath": "gcc",
+                        }
+                    ],
+                }
+            )
+        )
         variant = lookup_variant(layout, "gcc-v1")  # type: ignore[arg-type]
         assert variant.id == "gcc-v1"
         assert variant.label == "GCC V1"
 
     def test_lookup_nonexistent_id_raises(self, tmp_path: Path) -> None:
         from harness.toolchain.gcc_variants import lookup_variant
+
         layout = _make_layout(tmp_path)
         variants_file = tmp_path / "config" / "compiler" / "variants.json"
         variants_file.parent.mkdir(parents=True)
-        variants_file.write_text(json.dumps({
-            "schema": "harness.compiler-variants/v1",
-            "candidates": [],
-        }))
+        variants_file.write_text(
+            json.dumps(
+                {
+                    "schema": "harness.compiler-variants/v1",
+                    "candidates": [],
+                }
+            )
+        )
         with pytest.raises(ValueError, match="not found"):
             lookup_variant(layout, "does-not-exist")  # type: ignore[arg-type]
 
@@ -62,6 +74,7 @@ class TestCompilerVariantsCLI:
         """list subcommand exits 0 with empty-catalog message."""
         from harness.commands.compiler_variants import _cmd_list
         import argparse
+
         ns = argparse.Namespace(command="list", validate=True)
         rc = _cmd_list(ns)
         assert rc == 0
@@ -69,6 +82,7 @@ class TestCompilerVariantsCLI:
     def test_verify_without_id_raises(self) -> None:
         """verify requires a positional id argument."""
         from harness.commands.compiler_variants import build_parser
+
         parser = build_parser()
         for argv in [["verify"], ["path"], ["install"]]:
             ns = parser.parse_args(argv + ["test-id"])
@@ -77,8 +91,10 @@ class TestCompilerVariantsCLI:
 
 class TestWithCandidate:
     """Tests for _with_candidate flag replacement."""
+
     def test_replaces_o_level(self) -> None:
         from harness.match.flag_search import _with_candidate
+
         cmd = ["bin/cc", "-O2", "-G0", "-c", "src/foo.c", "-o", "foo.o"]
         result = _with_candidate(cmd, ["-O1"], Path("/out/candidate.o"))
         # -O2 removed, -o foo.o removed, -O1 added, output path set
@@ -89,7 +105,17 @@ class TestWithCandidate:
 
     def test_preserves_non_opt_flags(self) -> None:
         from harness.match.flag_search import _with_candidate
-        cmd = ["bin/cc", "-O2", "-G0", "-funsigned-char", "-c", "src/foo.c", "-o", "foo.o"]
+
+        cmd = [
+            "bin/cc",
+            "-O2",
+            "-G0",
+            "-funsigned-char",
+            "-c",
+            "src/foo.c",
+            "-o",
+            "foo.o",
+        ]
         result = _with_candidate(cmd, ["-O1", "-fno-schedule-insns"], Path("/out/c.o"))
         assert "-G0" in result
         assert "-funsigned-char" in result
@@ -100,6 +126,7 @@ class TestWithCandidate:
     def test_list_of_lists_flag_handling(self) -> None:
         """Verifies the _with_candidate handles flag lists as used by the flag-catalog."""
         from harness.match.flag_search import _with_candidate
+
         cmd = ["bin/cc", "-O2", "-G0", "-c", "src/bar.c", "-o", "bar.o"]
         # Simulate the flag-catalog format: each candidate is a list of flags
         for flags in [["-O0"], ["-O1"], ["-O2", "-fno-schedule-insns"], ["-O3"]]:
@@ -114,6 +141,7 @@ class TestNonemptyListOfLists:
         """The disassemble_linked call uses object_path.with_suffix('.linked.o')."""
         import inspect
         from harness.match.flag_search import search_flags
+
         source = inspect.getsource(search_flags)
         # The linked_path must be derived from object_path with .linked.o suffix
         assert 'with_suffix(".linked.o")' in source, (
@@ -124,6 +152,7 @@ class TestNonemptyListOfLists:
         """Each flag list from a nonempty catalog is processed through _with_candidate."""
         from harness.match.flag_search import _with_candidate
         from pathlib import Path
+
         cmd = ["bin/cc", "-O2", "-G0", "-c", "src/foo.c", "-o", "foo.o"]
         catalog = [["-O0"], ["-O1"], ["-O2", "-fno-schedule-insns"], ["-O3"]]
         results = []
@@ -141,12 +170,27 @@ class TestExplicitCompilerOverride:
         from harness.match.flag_search import _strip_embedded_psx_gcc
 
         command = [
-            "cmake", "-E", "env", "KEEP=1", "PSX_GCC=/old/gcc",
-            "bin/cc", "-c", "source.c", "-o", "source.o",
+            "cmake",
+            "-E",
+            "env",
+            "KEEP=1",
+            "PSX_GCC=/old/gcc",
+            "bin/cc",
+            "-c",
+            "source.c",
+            "-o",
+            "source.o",
         ]
         assert _strip_embedded_psx_gcc(command) == [
-            "cmake", "-E", "env", "KEEP=1", "bin/cc", "-c", "source.c",
-            "-o", "source.o",
+            "cmake",
+            "-E",
+            "env",
+            "KEEP=1",
+            "bin/cc",
+            "-c",
+            "source.c",
+            "-o",
+            "source.o",
         ]
 
     def test_unselected_command_is_unchanged(self) -> None:
@@ -167,19 +211,45 @@ class TestExplicitCompilerOverride:
         original_bytes = tmp_path / "original.bin"
         original_bytes.write_bytes(b"\0\0\0\0")
         command = [
-            "cmake", "-E", "env", "KEEP=1", "PSX_GCC=/selected/gcc",
-            "bin/cc", "PSX_GCC=argument", "-O2", "-c", str(source),
-            "-o", "source.o",
+            "cmake",
+            "-E",
+            "env",
+            "KEEP=1",
+            "PSX_GCC=/selected/gcc",
+            "bin/cc",
+            "PSX_GCC=argument",
+            "-O2",
+            "-c",
+            str(source),
+            "-o",
+            "source.o",
         ]
-        (tmp_path / "compile_commands.json").write_text(json.dumps([{
-            "directory": str(tmp_path), "file": str(source), "arguments": command,
-        }]))
+        (tmp_path / "compile_commands.json").write_text(
+            json.dumps(
+                [
+                    {
+                        "directory": str(tmp_path),
+                        "file": str(source),
+                        "arguments": command,
+                    }
+                ]
+            )
+        )
         catalog = tmp_path / "flags.json"
         catalog.write_text(json.dumps({"candidates": [["-O1"]]}))
-        monkeypatch.setattr(flag_search, "run_asm_diff_one", lambda *_a, **_kw: {
-            "outputs": {"original": str(original), "original_bytes": str(original_bytes)},
-            "original_size": 4, "address": "0x80000000",
-        })
+        monkeypatch.setattr(
+            flag_search,
+            "run_asm_diff_one",
+            lambda *_a, **_kw: {
+                "outputs": {
+                    "original": str(original),
+                    "original_bytes": str(original_bytes),
+                },
+                "original_size": 4,
+                "address": "0x80000000",
+                "function": "f",
+            },
+        )
 
         class Variant:
             label = "requested"
@@ -218,9 +288,10 @@ class TestDefaultObjdump:
     def test_objdump_path_has_bin(self) -> None:
         """Default objdump path includes /bin/ directory component."""
         import pathlib as _pl
+
         _root = _pl.Path(__file__).resolve().parents[1]
         _src = (_root / "harness" / "match" / "flag_search.py").read_text()
-        assert "psn00b_toolchain_root / \"bin\" / \"mipsel-none-elf-objdump\"" in _src
+        assert 'psn00b_toolchain_root / "bin" / "mipsel-none-elf-objdump"' in _src
 
 
 class TestResolveBindings:
@@ -243,25 +314,17 @@ class TestResolveBindings:
         )
         source = root / "src/bof3/ui/selectUiMode14.c"
         source.parent.mkdir(parents=True)
-        source.write_text(
-            "/* @source 0x801F0EC8 @behavior x */\n", encoding="utf-8"
-        )
+        source.write_text("/* @source 0x801F0EC8 @behavior x */\n", encoding="utf-8")
         support = root / "src/bof3/support/test_symbols.c"
         support.parent.mkdir(parents=True)
-        support.write_text(
-            "WEAK_SYMBOL_AT(foo, 0x801448eb);\n", encoding="utf-8"
-        )
-        (root / "src/bof3/support/test_psyq.c").write_text(
-            "", encoding="utf-8"
-        )
+        support.write_text("WEAK_SYMBOL_AT(foo, 0x801448eb);\n", encoding="utf-8")
+        (root / "src/bof3/support/test_psyq.c").write_text("", encoding="utf-8")
         (root / "config/targets/emi/test/00/symbols.txt").write_text(
             "foo = 0x801448EB;\n", encoding="utf-8"
         )
         sdk = root / "config/sdk"
         sdk.mkdir(parents=True)
-        (sdk / "psyq-slus.txt").write_text(
-            "PadInit = 0x80174668;\n", encoding="utf-8"
-        )
+        (sdk / "psyq-slus.txt").write_text("PadInit = 0x80174668;\n", encoding="utf-8")
         return source
 
     def test_uses_claimed_support_binding_source(self, tmp_path: Path) -> None:

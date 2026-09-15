@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 from pathlib import Path
-import re
 
-from harness.common.lexicon import iter_c_lexemes
+from harness.build.dispatch import Dispatch, validate_dispatch
 from harness.domain.functions import parse_function_records
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
@@ -15,7 +14,9 @@ from harness.domain.tags import count_function_metadata
 from .sections import partition_assembly
 
 
-def prepare_translation(root: Path, source: Path, assembly: str) -> str:
+def prepare_translation(
+    root: Path, source: Path, assembly: str, *, dispatch: Dispatch | None = None
+) -> str:
     """Leave ordinary units intact; partition only completely owned grouped lifts.
 
     This does not select a compiler, authorize consolidation, or prove matching.
@@ -25,16 +26,14 @@ def prepare_translation(root: Path, source: Path, assembly: str) -> str:
     source = source.resolve()
     text = source.read_text(encoding="utf-8")
     if count_function_metadata(text) < 2:
+        if dispatch is not None:
+            validate_dispatch(dispatch)
         return assembly
-    if any(
-        lexeme.group().startswith(("/*", "//"))
-        and re.search(r"@(compiler|gcc|cflags|flags)\b", lexeme.group())
-        for lexeme in iter_c_lexemes(text)
-    ):
+    if dispatch is None or dispatch.source != source or dispatch.root != root.resolve():
         raise ValueError(
-            "per-function compiler annotations are not implemented; "
-            "use reviewed compatible object profiles or defer consolidation"
+            "grouped translation requires an active preserved compiler invocation"
         )
+    validate_dispatch(dispatch)
     records = parse_function_records(text, validate_progress=False)
     relative = source.relative_to(root.resolve()).as_posix()
     owners = [
@@ -56,4 +55,6 @@ def prepare_translation(root: Path, source: Path, assembly: str) -> str:
                 "function spelling disagrees with reviewed compiled symbol"
             )
         names.append(name)
-    return partition_assembly(assembly, names)
+    result = partition_assembly(assembly, names)
+    validate_dispatch(dispatch)
+    return result

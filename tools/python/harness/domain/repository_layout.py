@@ -10,7 +10,7 @@ from typing import Mapping
 
 from .claims import manifest_header_paths, manifest_source_paths
 from .layout import ReviewedSplatLayout, parse_splat_layout
-from .manifests import TargetManifest, load_target_manifests
+from .manifests import TargetManifest, load_manifest_generation
 
 
 @dataclass(frozen=True)
@@ -63,10 +63,9 @@ class RepositoryLayout:
 def load_repository_layout(root: Path) -> RepositoryLayout:
     """Parse each canonical manifest/Splat and discover owned paths once."""
     root = root.resolve()
-    manifests = load_target_manifests(root)
-    from .cache import get_validated_claim_files
-
-    claims = get_validated_claim_files(root)
+    generation = load_manifest_generation(root)
+    manifests = generation.manifests
+    claims = generation.claims
     splats = {
         target: parse_splat_layout(root / manifest.splat, manifest.load_address)
         for target, manifest in manifests.items()
@@ -124,7 +123,7 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
     digests: dict[Path, str] = {}
     for path in ordered_paths:
         relative = path.relative_to(root).as_posix()
-        resolved = claims.canonical.get(relative) if claims is not None else None
+        resolved = claims.canonical.get(relative)
         resolved = resolved or path.resolve(strict=True)
         try:
             resolved.relative_to(root)

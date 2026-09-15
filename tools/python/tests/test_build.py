@@ -14,7 +14,10 @@ def test_configure_reuses_complete_ninja_tree(tmp_path: Path) -> None:
     cache.write_text(f"CMAKE_HOME_DIRECTORY:INTERNAL={tmp_path.resolve()}\n")
     (cache.parent / "build.ninja").touch()
 
-    with patch("harness.build.operations.subprocess.run") as run:
+    with (
+        patch("harness.build.operations.has_current_inventory", return_value=True),
+        patch("harness.build.operations.subprocess.run") as run,
+    ):
         assert configure(tmp_path) == cache.parent
 
     run.assert_not_called()

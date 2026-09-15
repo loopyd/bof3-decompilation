@@ -10,10 +10,12 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from harness.build.sections import function_section
+from harness.common.deadlines import check_deadline, use_deadline
 from harness.common.files import atomic_write
 from harness.common.paths import require_absent
 from harness.io import RepoLayout
 from harness.match.execution import NativeExecution
+from harness.match.extraction import read_function_image
 from harness.match.flow import validate_function_flow
 
 _SECTION = re.compile(r"[.A-Za-z_][.A-Za-z0-9_]*")
@@ -291,6 +293,7 @@ def extract_grouped_function(
     if execution.root != layout.root:
         raise ValueError("native execution root differs from extraction root")
     execution.check_deadline()
+    check_deadline()
     scratch = Path(tempfile.mkdtemp(prefix="bof3-grouped-extract-"))
     try:
         private_input = scratch / "linked.elf"
@@ -307,6 +310,8 @@ def extract_grouped_function(
         error.add_note(f"grouped native scratch retained at {scratch}")
         raise
     shutil.rmtree(scratch)
+    execution.check_deadline()
+    check_deadline()
     return content
 
 
@@ -325,6 +330,8 @@ def _extract_function(
         )
     if type(address) is not int or not 0 <= address <= 0xFFFFFFFF or address % 4:
         raise ValueError("reviewed function address must be an aligned 32-bit integer")
+    if size > execution.output_limit:
+        raise ValueError("reviewed function exceeds native extraction output limit")
     tools = layout.psn00b_toolchain_root / "bin"
     section = function_section(name)
     sections = read_allocated_sections(
@@ -342,21 +349,21 @@ def _extract_function(
         or symbol != (address, section, size)
     ):
         raise ValueError("linked function does not occupy exactly the reviewed range")
-    content = execution.run_bytes(
-        [
-            str(tools / "mipsel-none-elf-objcopy"),
-            "-O",
-            "binary",
-            "-j",
-            section,
-            str(linked),
-            "/dev/stdout",
-        ],
-    )
-    if len(content) != size:
-        raise RuntimeError(
-            "grouped function extraction failed or returned a short range"
-        )
-    validate_function_flow(content, address)
-    execution.check_deadline()
-    return content
+    with use_deadline(execution.deadline):
+        image = read_function_image(linked, function_name=name, address=address)
+        check_deadline()
+        if (
+            image.section != section
+            or image.section_address != address
+            or image.section_size != size
+            or len(image.content) != size
+        ):
+            raise RuntimeError(
+                "grouped function extraction failed or returned a short range"
+            )
+        content = image.content
+        check_deadline()
+        validate_function_flow(content, address)
+        check_deadline()
+        execution.check_deadline()
+        return content

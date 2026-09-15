@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Iterable, Mapping
+from typing import Callable, Iterable, Mapping
 
 from .layout import ReviewedSplatLayout, parse_splat_layout
-from .symbols import load_map, map_path
+from .symbols import MapSymbol, load_map, map_path
 from .manifests import TargetManifest, load_target_manifests
 from .tags import parse_behavior_tag, parse_source_tag
 from .functions import collect_lift_metadata, select_lift_metadata
@@ -120,6 +120,8 @@ def _scan_lift_sources(
     source_dir: Path,
     expected_lifts: Mapping[str, int | tuple[int, ...]] | None,
     owner: str | None = None,
+    *,
+    read_source: Callable[[Path], str] | None = None,
 ) -> list[tuple[Path, int]]:
     """Shared strict lift scan over an explicit candidate set.
 
@@ -131,12 +133,17 @@ def _scan_lift_sources(
     a Splat-expected candidate missing metadata raises
     :class:`LiftMetadataError`.  Rows sort by ``(address, filename)``.
     ``owner`` names the target for out-of-root collision messages.
+    ``read_source`` supplies trusted text; its caller owns sample freshness.
     """
 
     rows: list[tuple[Path, int]] = []
     claimed: dict[int, Path] = {}
     for source_path in sorted(source_paths):
-        text = source_path.read_text(encoding="utf-8")
+        text = (
+            source_path.read_text(encoding="utf-8")
+            if read_source is None
+            else read_source(source_path)
+        )
         try:
             records = collect_lift_metadata(text)
         except ValueError as error:
@@ -324,6 +331,7 @@ def reviewed_function_name(
     *,
     layout: ReviewedSplatLayout | None = None,
     manifest=None,
+    symbols: list[MapSymbol] | None = None,
 ) -> str:
     """Return the target-owned compiled symbol name at ``address``.
 
@@ -337,6 +345,8 @@ def reviewed_function_name(
 
     Raises :class:`CompiledSymbolError` on any failure.  Never synthesizes
     ``func_<ADDR>``.
+    Supplied ``symbols`` must come from the canonical target-local map parser;
+    the caller owns their provenance and freshness, including an empty map.
     """
 
     if manifest is None:
@@ -346,12 +356,10 @@ def reviewed_function_name(
     if layout is None:
         layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
     boundary = layout.find_boundary_at(address)
+    if symbols is None:
+        symbols = load_map(map_path(root, target))
     entry = next(
-        (
-            symbol
-            for symbol in load_map(map_path(root, target))
-            if symbol.address == address
-        ),
+        (symbol for symbol in symbols if symbol.address == address),
         None,
     )
     if entry is None:
@@ -392,6 +400,7 @@ def compiled_symbol_name(
     *,
     layout: ReviewedSplatLayout | None = None,
     manifest: TargetManifest | None = None,
+    symbols: list[MapSymbol] | None = None,
 ) -> str:
     """Resolve the compiled name, optionally reusing this operation's proven owner."""
 
@@ -418,7 +427,12 @@ def compiled_symbol_name(
             "source is not claimed by or inside a known target source directory",
         )
     return reviewed_function_name(
-        root, manifest.id.value, address, layout=layout, manifest=manifest
+        root,
+        manifest.id.value,
+        address,
+        layout=layout,
+        manifest=manifest,
+        symbols=symbols,
     )
 
 

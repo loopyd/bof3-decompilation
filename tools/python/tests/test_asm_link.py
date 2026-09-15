@@ -4,7 +4,7 @@ Uses the real PSn00b binutils (as/ld/objcopy/nm) available in the repo's
 toolchains/psn00b_toolchain directory to verify that:
   1. A minimal MIPS object can be assembled.
   2. link_object_at_address links it at a chosen text address.
-  3. extract_function_bytes extracts the correct bytes from the linked output.
+  3. read_function_image selects the complete named function in linked output.
 
 This requires PSn00b toolchain binutils on the host at the standard repo path.
 """
@@ -152,8 +152,8 @@ class TestLinkAtAddress:
 
         from harness.match._asm_link import (
             link_object_at_address,
-            extract_function_bytes,
         )
+        from harness.match.extraction import read_function_image
 
         linked = link_object_at_address(
             object_path=obj,
@@ -171,7 +171,9 @@ class TestLinkAtAddress:
         )
         assert "80010000 T func_80010000" in symbols.stdout
 
-        extracted = extract_function_bytes(linked, size=8, layout=layout)
+        extracted = read_function_image(
+            linked, function_name="func_80010000", address=0x80010000
+        ).content
         # jr $ra in little-endian: 08 00 e0 03
         assert extracted == b"\x08\x00\xe0\x03\x00\x00\x00\x00", (
             f"harness extraction mismatch: {extracted.hex()}"

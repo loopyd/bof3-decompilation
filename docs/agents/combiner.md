@@ -79,11 +79,12 @@ grouped lifts require attached records, exactly one explicit source owner and
 complete map/Splat-resolved assembler membership. CMake tracks the adapter,
 partitioner and consumed ownership inputs. This low-level producer retains the
 selected GCC and ordered flags; it does not prove a consolidation preserved each
-member's PRE profile. Those profiles currently live in path-keyed
-`config/compiler/object-flags.cmake`, not function tags. Unsupported compiler/flag
-annotations anywhere in grouped-source comments reject rather than silently fall
-back. Profile migration must freeze old paths/settings before moves, require one
-compatible effective profile and reproduce it at the new path.
+member's PRE profile. [Compiler settings](compiler-variants.md#function-compiler-settings)
+resolve attached function tags, then legacy path-keyed
+`config/compiler/object-flags.cmake`, then project defaults. Members with different
+effective selections reject; no setting is silently discarded. Profile migration
+must freeze old paths/settings before moves, require one compatible effective
+profile and reproduce it at the new path.
 
 `build.sections` partitions output; `match.placement` is still outside production
 matching. The kernel rejects unsupported text subsections/attributes, unplaced allocated sections,
@@ -97,16 +98,316 @@ and partial outputs, including when descendant cleanup is unconfirmed. Concurren
 artifacts are never replaced. These kernel fixes pass disposable native probes
 and independent review, not grouped-source acceptance. A scratch two-panel unit
 also passes original-byte/instruction comparison after one configured GCC run.
-Profile compatibility, full producer/include/toolchain freshness, shared-data
-proof, matcher instruction selection, complete member coverage and function-scoped
-caching remain open; do not bypass existing guards. Current CMake ownership
+Complete producer/include/toolchain freshness, shared
+data, instruction selection, complete member coverage and function-scoped caching
+remain open; do not bypass existing guards. Current CMake ownership
 dependencies are conservative across targets, not a performance optimization.
+
+## Symbol-qualified comparison
+
+`match.extraction` reads a bounded, immutable ELF32 little-endian MIPS byte image
+and selects one defined function by name, linked address and executable section.
+The complete positive, aligned symbol extent must fit the section. Missing, zero,
+ambiguous or unsupported symbols reject; expected length and neighboring symbols
+never supply a guessed boundary. Reserved entries, local/global ordering, section
+indices and declared alignment must be valid. Canonical PSX linked images can put
+extra zero-size local FILE/NOTYPE entries after the declared local cutoff;
+only those are allowed before the first nonlocal symbol. Function symbols retain
+the declared partition; locals after a nonlocal reject. Overlapping executable ranges reject,
+even without allocation flags. The input limit is 64 MiB; extraction also respects
+the caller's native output limit without truncating a function.
+
+Ordinary byte comparison and flag search compare that whole function, not a
+`.text` prefix. A valid longer or shorter function is `different`, with its actual
+size retained. Diagnostics disassemble the actual address range, including extra
+instructions. Instruction-only agreement or inconsistent sizes cannot yield native
+exactness. Status-cache v6 discards older entries and binds the supplied target
+model plus object flags/catalog bytes or absence. Nested metadata and sequence
+order survive; dictionary order is immaterial. This does not establish atomic
+input capture, complete compiler/runtime closure, a production re-audit or renewed
+source attempts.
+Status reloads target models after successful or failed batches and rejects changed,
+missing or unreadable metadata before comparison or fallback, without caching the
+invalid result. This is a post-build boundary check, not continuous native freshness.
+
+Grouped extraction shares this reader while retaining section placement, complete
+symbol-inventory and flow checks. The parser inherits the original native deadline,
+never a renewed allowance; the tighter inherited cutoff covers parsing, flow
+boundaries and return. Retained ELF
+replay is compatibility evidence, not fresh compilation or native acceptance.
+Public grouped-source guards and the remaining C1.3 producer, profile, cache and
+consumer gates remain in place.
+
+## Configured compiler profiles
+
+Before planning a move, inspect two to 32 explicit source files in one target:
+
+```sh
+bin/combiner profile emi/etc/game/00 src/bof3/ui/advancePanel_game00.c \
+  src/bof3/ui/advancePanelXTo17_game00_8019982C.c \
+  src/bof3/ui/advancePanelXTo320_game00_801996FC.c
+```
+
+This read-only preflight freezes source paths, member identities, ordered compiler
+arguments, selected installed GCC executable hashes and configuration inputs. Each
+member records its configured command using the default `build/` output path.
+It never compiles, configures CMake, generates a compile database or installs a
+compiler. Missing compilers, incompatible profiles, ambiguous path keys, ambient
+compiler overrides and malformed or unattached compiler annotations reject. An existing
+destination must be a selected member; its independently resolved profile must
+equal every retained member profile.
+
+Preservation v3 authenticates retained PRE source text against the captured hashes
+before resolving original annotations, including removed files and an overwritten
+destination. POST settings resolve from live captured destination text, never from
+the retained PRE image. Older preservation records are not upgraded or rebound.
+An absent destination still must reproduce the common profile through its
+configured path/defaults; this does not yet plan prospective metadata or migrate
+legacy object settings automatically.
+
+The reader supports one fixed, reviewed CMake recipe digest and a closed literal
+object-configuration grammar. Unknown recipe bytes, including harmless edits,
+reject until the recipe, argument parity and affected ownership are reviewed.
+Never update that digest mechanically. Included configuration and driver inputs
+are separately validated/pinned; this is not an arbitrary CMake interpreter.
+Only ASCII assignments/line comments with LF or CRLF are supported. Bracket
+comments, value-less assignments and trailing assignment comments reject rather
+than silently erase an override. Members require aligned 32-bit MIPS C
+boundaries with consistent positive file/virtual extents.
+
+The `fingerprint` binds the inspection, including destination absence/content and
+source-path inventory. Replay with `--expected-fingerprint PIN` before any edits.
+Manifest discovery is shared with the domain loader: every consumed TOML under
+`config/targets/` is pinned, including non-`target.toml` names. Parsing and cache keys
+use the context's captured bytes, not a second unbound file read. Final checks
+retain the original inventory and reject additions, removals or input drift.
+Every load's actual read set must equal that inventory, with no duplicates.
+Binary/source/header claim validation uses captured bytes and optional absence;
+the exact consulted claim set is also required on every load, including cache hits.
+Placement bounds derive from sampled binary lengths, not a second live stat.
+PRE/POST preservation uses that same set; changed reader-owner bytes require fresh
+capture rather than rebinding historical records. Captured claim validation does
+not make repository layout, runtime or include inputs globally atomic or complete
+the remaining closure work.
+Profile inspection and preservation project layout semantics from their captured
+Splat text rather than reopening it; final physical checks remain. Other layout
+and source consumers are not thereby snapshot-based.
+Input hashes and mutation metadata remain stable throughout capture. Directory
+observations retain all nine stat fields plus a descriptor-bound fingerprint of
+direct names, devices, inodes and nofollow types. Only directory size may differ
+when the original location, other eight fields and membership remain equal;
+directory allocation size can vary without a namespace edit on FUSE/NTFS.
+Regular files and symlinks retain exact metadata checks. Complete enumeration is
+bounded to 16,384 entries and 4 MiB per directory, including ancestors above the
+repository; errors, overflow and expiry reject. Original snapshots never refresh.
+Membership endpoints are not mutation-history proof; existing latched watches and
+file-content checks remain required at their owning transaction/producer gates.
+`--work-deadline` retains the caller's monotonic cutoff.
+This command does not migrate source/configuration or compare POST against PRE;
+the separate preservation commands below perform pinned transition checking.
+
+Only the selected compiler executable is hashed, not its backends or runtime.
+Configured identity is not a fresh version check. Native fidelity, include/shared
+state, producer freshness and complete consumer coverage remain unverified; the
+report sets verification flags and `write_authorized` to false. This is a C1.3
+prerequisite, not C1.3 completion, C1.4 ranking or production consolidation authority.
+
+### Profile preservation across a move
+
+```sh
+bin/combiner preservation capture pre-profile.json post-states.json \
+  --expected-profile-fingerprint PRE_SHA --expected-post-sha256 POST_FILE_SHA
+bin/combiner preservation verify preservation.json --expected-fingerprint RECORD_SHA
+```
+
+Both commands are read-only. Capture re-inspects live PRE and emits the record to
+stdout; retain its canonical fingerprint externally before any transaction. POST
+JSON maps exactly the destination, every old source, target manifest and Splat path
+to `{ "sha256": "…", "mode": 420 }` file states; superseded sources use `null`.
+Modes describe observed images, not permission-changing operations. The POST-file
+digest binds actual JSON bytes. Only already-compatible destination profiles are
+supported; compiler configuration migration is not implemented. No source edit,
+deletion, index refresh, build or transaction is performed by these commands.
+
+Verification requires exact pinned POST bytes and unchanged captured inputs, source
+and manifest inventories, ordered compiler profiles, selectors and symbol identities.
+Only manifest source-list replacement and explicit Splat `@source:` C-boundary
+replacement may change semantically; all other manifest/layout fields must remain.
+YAML aliases, anchors, tags and non-string or duplicate mapping keys reject.
+Event preflight bounds nesting before composition; the validated node graph is
+constructed once and must remain JSON-compatible. Python-safe parsing retains the
+existing YAML grammar: the C-safe backend has incompatible acceptance behavior.
+Byte/depth limits, cooperative deadline checks and parser disposal remain intact.
+Ancestor-drift errors report raw identity/stat tuples and membership fingerprints;
+the qualified directory-size exception above does not establish a kernel cause.
+
+Profile capture reuses only bytes bound to a fresh `common.inputs.read_input`
+metadata/hash sample; final verification still rereads every input. Leaf metadata
+is reused within that sample, never between calls. Ancestor symlink checks remain
+mandatory even for absent leaves, and outer identity/ancestor/single-link checks
+remain separate. The input-reader owner is included in preservation pins.
+Layout/PS-X, source metadata/claims, symbol maps and lexical interpretation owners
+are pinned with their shared I/O, file/path and deadline helpers. Validation rejects
+initial input omissions and requires its complete observed map to equal retained
+PRE-plus-POST states, including optional absence and later reads. Missing owner
+pins require fresh capture and review, not silent present-state backfill. Explicit
+repository-owner pins are not full runtime/import or loaded-code authentication.
+The initial retained-input read loop uses its own fresh `InputBatch`, closed before
+semantic checks. State/hash/mode and absence comparisons stay exact; every full
+verification and final guard remains. Batches are never shared across passes or
+output mutations, and no prior validation success substitutes for fresh reads.
+Configured flags and compiler IDs use captured override text; selected variants
+use a lazily parsed, context-local captured catalog rather than later file reads.
+Absent and empty catalogs remain distinct; unused schema validation is not moved
+earlier, and missing configured IDs never fall back. Ordered flags and public
+file-loader policies stay unchanged. Final physical and complete input-map checks
+still apply; parsed variants do not authorize reuse across mutations.
+Source-ownership scans use captured C text; compiled-name resolution parses the
+captured target-local map once per pass. Trusted reader/map injection preserves
+metadata, collision and boundary rules but does not prove freshness. Default
+domain file APIs remain unchanged; an empty supplied map never falls back to disk.
+Final physical and complete observed-input checks still reject drift or omissions.
+Full destination code and metadata review remains mandatory: membership does not prove C semantics.
+The repository-bound record requires an independently retained fingerprint; its
+self-hash gives no review authority. Success proves configured preservation only,
+not native equality, complete toolchain/include identity or producer freshness.
+`bin/cc` consumes v3 preservation records through the build-owned driver described
+below; v1/v2 records require fresh capture. Production consolidation remains gated.
+Checks fence mutations during each observation; matching SHA/mode endpoints do not
+prove inode continuity between PRE and POST. The CLI checks the inherited cutoff
+after rendering, before stdout publication; callers still require complete output
+and successful terminal exit, not atomic publication if writing itself crosses the cutoff.
+
+### Compiler dispatch
+
+`bin/cc` is a thin bootstrap; `harness.build.driver` owns GCC → maspsx → assembler
+dispatch, while `harness.build.dispatch` binds the invocation and
+`harness.build.preservation` verifies frozen history. Combiner retains capture policy;
+there are no compatibility re-exports from its former verification owner.
+
+For an explicitly admitted grouped-unit compile, supply
+`BOF3_PRESERVATION_RECORD` and `BOF3_PRESERVATION_FINGERPRINT` together. The record
+must select the actual canonical `src/bof3/` source and configured GCC executable.
+Arguments must exactly reproduce the ordered preserved driver flags followed by
+`-c ABSOLUTE_SOURCE -o ABSOLUTE_OBJECT`; grouped objects belong under `build/` or
+`out/`. Explicit configured `PSX_GCC` is permitted only when it equals that selected
+compiler; other unsupported compiler environment overrides still reject. The
+bootstrap itself is closed by a reviewed digest, not guessed shell-default parsing.
+
+For mixed ordinary/grouped or multiple grouped units, instead supply
+`BOF3_PRESERVATION_ROUTES=/absolute/repository/out/routes.json` and
+`BOF3_PRESERVATION_ROUTES_SHA256=<external raw-file SHA-256>`. Both variables are
+required; combining them with the explicit pair rejects. The closed JSON shape is:
+
+```json
+{
+  "schema": "bof3.preservation-routes/v1",
+  "root": "/absolute/repository",
+  "records": {
+    "src/bof3/ui/panel.c": {
+      "record": "out/panel-preservation.json",
+      "fingerprint": "<external preservation fingerprint>"
+    }
+  }
+}
+```
+
+The table contains 1–4096 canonical source keys and distinct repository-relative
+record paths. Duplicate keys, malformed pins, path aliases, conflicting inputs,
+missing grouped entries or a recorded source becoming ordinary reject. Routed
+invocations require one canonical `src/` C source. Ordinary sources absent from
+the table keep ordinary dispatch; each selected group still needs its own valid
+PRE/POST record and exact compiler/arguments. Unselected records receive schema
+and path checks, not preservation acceptance. The table is a selector, not an
+authority store: retain its raw SHA independently. Its bytes, identity, ancestors
+and caller selection remain watched through dispatch and receipt validation;
+no process-global environment mutation or automatic record discovery occurs.
+Routes reserve the table and every named source/record, even for ordinary calls.
+Direct and routed grouped dispatch also protect every selected preserved input
+against primary, diagnostic and receipt outputs, including resolved aliases.
+V3 records also bind global source and manifest state: another consolidation can
+stale an earlier record. Routing does not compose or rebase those histories;
+multi-group build acceptance still requires mutually valid preservation evidence.
+
+Detected grouped inputs reject before native launch without this external pin, even
+on delegated-driver, preprocessing or assembly-only paths. Opaque response files,
+stdin inputs and unsupported grouped forms reject rather than bypass inspection.
+Ordinary named single-function and assembly pipeline arguments retain GCC selection,
+maspsx version/division controls and assembler flags; link mode remains unsupported.
+CLI translation alone cannot admit a grouped unit without its active invocation.
+
+The in-process invocation binding is retained across compiler, translation and
+assembler checks, including source grouping, profile, argument, compiler/environment
+identity and input observations. Native children use the common supervised runner;
+`BOF3_WORK_DEADLINE`, when present, is an absolute monotonic cutoff and never renews
+the inherited budget. Inputs are rechecked between diagnostic/object publication,
+after publication/stdout, and after cleanup before success. Resolved compiler or
+delegated-executable bytes are bound even for ordinary sources. `common.observation`
+owns descriptor-bound Linux path watches: input-entry changes and ancestor moves
+remain latched, including create/delete cycles of absent inputs or missing parent
+components. Ongoing validation ignores unrelated sibling names; owned outputs cannot
+mask input changes. Installation conservatively rejects concurrent directory activity,
+even from unrelated siblings. Setup races, malformed/overflowed queues and lost watches fail
+closed. Event tracking supplements content and identity checks, not full include
+or toolchain provenance.
+Object and diagnostic
+assembly outputs are staged privately, then use the existing owned publication
+backend; this is not atomic publication of a multi-file bundle. Validation failure
+before publication preserves existing outputs. Unconfirmed child cleanup retains
+staging instead of racing live descendants; publication/durability failures require
+inspection of retained output/quarantine state, not blind rollback. Publication that
+crosses the cutoff fails with retained recovery information; the existing cooperative
+backend cannot promise an atomic time fence or rollback after publication.
+Compiler pipe failures remain nonzero instead of inheriting the shared CLI's pipe-success
+policy; failed-stage exit status is preserved when its diagnostics encounter a closed pipe.
+
+Grouped CMake lift targets always run the combined producer, including unchanged or
+future-dated objects; receipts never authorize reuse. Aggregate targets depend on
+unique lift owners. `build.inventory` captures source classification through the
+same metadata parser as dispatch; a pinned, always-run gate rejects changed classes,
+membership or classifier owners even when source timestamps were restored.
+Inventory v4 binds each source's effective compiler settings, every discovered TOML
+path and raw hash, plus object flags and the variant catalog as bounded hashes or
+verified absence.
+Empty files are not absence; aliases, read failures and in-capture changes reject.
+V1–v3 snapshots require reconfiguration. CMake watches all TOML names and contents,
+captures inventory before including flags or reading target roots/claims and
+checks it after constructing targets. Defaults and configuration syntax remain
+unchanged. These endpoints do not prove configure-time ABA continuity or an atomic
+snapshot across CMake and its helpers. Ordinary
+unchanged objects remain timestamp-driven. The public frontend regenerates stale
+inventory; raw CMake/Ninja users must reconfigure on its diagnostic.
+
+Supported graph entrypoints are friendly lift, target-group and `lifts` targets,
+plus Ninja's direct object outputs. Make's internal `build.make` fragments are not
+entrypoints or proof. A single ambient preservation pair covers only its admitted
+group and rejects rebuilding ordinary units. Use the source-bound table for mixed
+or multi-group routing; graph wiring alone does not prove native aggregate success.
+An active parent writer lease cannot be borrowed by a child producer. Compiler
+configuration migration, full include/toolchain freshness, native equality and
+remaining transaction/cache consumers stay open. Language-free generator fixtures
+with literal Python producers do not prove a native project build or consolidation.
+
+`build-adapter producer -- <compiler arguments>` always compiles a guarded grouped
+unit under the repository writer lease, then writes `<object>.producer.json` with
+configured invocation provenance and object/diagnostic hashes. Replaced receipts
+remain as recovery material; artifacts cannot overwrite preserved inputs.
+Compilation starts with an empty, invalid receipt;
+failed final checks attempt to invalidate new publication. Unconfirmed invalidation
+is an error requiring recovery inspection. `build-adapter receipt --expected-sha256
+<external receipt pin> -- <compiler arguments>` freshly verifies the preservation
+record, configured inputs, arguments and outputs. Both commands require either
+the explicit preservation pair or the source-bound routing pair. Receipts expressly
+deny reuse authority: complete input
+closure, native consumer integration and byte equality remain open. A successful
+configured-provenance check never permits skipping compilation or proves a prior
+invocation finished within its deadline; retain terminal status separately.
 
 ## Planned discovery and ranking
 
 The cleanup node is **combiner**, with explicit discovery, assessment, audit and
-transaction modes under one concern skill. These modes beyond inspection are queued,
-not implemented commands. Candidates require at least two distinct functions and
+transaction modes under one concern skill. Beyond inspection/profile preflight,
+these modes are queued, not implemented. Candidates require two distinct functions and
 two existing source files; a single already-cohesive file is not a fabricated win.
 
 | Method | Evidence required before selection |
