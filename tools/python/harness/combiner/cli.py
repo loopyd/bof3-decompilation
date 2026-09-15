@@ -1,4 +1,4 @@
-"""CLI adapters for consolidation inspection, preparation and native comparison."""
+"""CLI adapters for consolidation inspection, comparison, rehearsal and recovery."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from pathlib import Path
 from harness.common.cli import (
     add_root_argument,
     add_work_deadline_argument,
+    SingleValue,
     resolved_root,
     run_main,
 )
@@ -24,6 +25,9 @@ from harness.combiner.preservation import capture_preservation
 from harness.combiner.transactions import prepare_transaction, verify_transaction
 from harness.combiner.comparison import compare_members
 from harness.common.lease import acquire_writer
+from harness.common.verification import add_recovery_commands
+from harness.combiner.rehearsal import rehearse_transaction
+from harness.combiner.recovery import validate_recovery_manifest
 
 
 def _inspect_source(args: argparse.Namespace) -> int:
@@ -110,10 +114,30 @@ def _run_comparison(args: argparse.Namespace) -> int:
     return 0 if payload["all_function_bytes_match"] else 1
 
 
+def _run_rehearsal(args: argparse.Namespace) -> int:
+    payload = rehearse_transaction(
+        resolved_root(args),
+        read_preservation_document(args.record),
+        expected_fingerprint=args.expected_fingerprint,
+        implementation_run_id=args.implementation_run_id,
+        object_path=args.object,
+        output=args.output,
+        adopted_workspace=args.adopted_baseline,
+        deadline=args.work_deadline,
+        cleanup_deadline=args.cleanup_deadline,
+        output_limit=args.output_limit,
+    )
+    rendered = json.dumps(payload, indent=2, sort_keys=True)
+    check_deadline()
+    print(rendered)
+    return 0 if payload["all_function_bytes_match"] else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="combiner")
     add_root_argument(parser)
     commands = parser.add_subparsers(dest="command", required=True)
+    add_recovery_commands(commands, "combiner", validate_recovery_manifest)
     inspect = commands.add_parser(
         "inspect-source", help="inspect leading function metadata"
     )
@@ -169,6 +193,21 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--expected-fingerprint", required=True)
     add_work_deadline_argument(verify)
     verify.set_defaults(handler=_run_transaction)
+    rehearse = stages.add_parser(
+        "rehearse", help="temporarily compare a joint transaction and restore PRE"
+    )
+    rehearse.add_argument("record", type=Path)
+    rehearse.add_argument("--expected-fingerprint", required=True)
+    rehearse.add_argument("--implementation-run-id", required=True)
+    rehearse.add_argument("--object", required=True)
+    rehearse.add_argument("--output", required=True)
+    rehearse.add_argument("--adopted-baseline")
+    rehearse.add_argument("--output-limit", type=int, default=2 * 1024 * 1024)
+    rehearse.add_argument(
+        "--cleanup-deadline", type=float, action=SingleValue, required=True
+    )
+    add_work_deadline_argument(rehearse)
+    rehearse.set_defaults(handler=_run_rehearsal)
     compare = commands.add_parser(
         "compare", help="compile and compare all preserved group members"
     )

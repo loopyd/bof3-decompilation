@@ -9,7 +9,7 @@ import os
 import secrets
 import stat
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from harness.common.digests import digest
 from harness.common.files import atomic_write, read_file
@@ -36,7 +36,10 @@ def capture_recovery(
     *,
     workspace: WorkspaceSnapshot | None = None,
     index: GitIndexSnapshot | None = None,
+    on_capture: Callable[[dict[str, str]], None] | None = None,
 ) -> dict[str, dict[str, Any]]:
+    if on_capture is not None and not callable(on_capture):
+        raise ValueError("invalid recovery capture callback")
     if set(binding) != {"owner", "manifest", "implementation_run_id", "output"}:
         raise ValueError("invalid recovery binding")
     if binding["owner"] not in RECOVERY_OWNERS:
@@ -118,4 +121,19 @@ def capture_recovery(
     encoded = (json.dumps(record, indent=2, sort_keys=True) + "\n").encode("utf-8")
     validate_mutations(root, {path})
     atomic_write(root, path, encoded, expected=None, creation_mode=0o600)
+    if on_capture is not None:
+        metadata = leaf_stat(root, path)
+        if (
+            metadata is None
+            or metadata.st_nlink != 1
+            or read_file(root, path, max_bytes=len(encoded)) != encoded
+        ):
+            raise ValueError("fresh recovery record differs from publication")
+        on_capture(
+            {
+                "path": path,
+                "digest": record["digest"],
+                "sha256": hashlib.sha256(encoded).hexdigest(),
+            }
+        )
     return files

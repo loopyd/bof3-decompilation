@@ -330,8 +330,72 @@ record against live PRE and rejects changed images, owners, inventory or inputs;
 it is not the preservation command's live-POST check. Records share the 4 MiB bound
 and original `--work-deadline`. Permission changes, source writes, index refreshes
 and native commands are not performed. `native_verified`, `coverage_verified`,
-`write_authorized` and `accepted` remain false. Domain application, all-member native
-and consumer gates, recovery integration and independent acceptance are still open.
+`write_authorized` and `accepted` remain false. The separate rehearsal below exercises
+temporary application and owned restoration; permanent application, complete consumer
+gates and independent production acceptance remain open.
+
+### Transaction rehearsal and recovery
+
+```sh
+BOF3_PRESERVATION_RECORD=/absolute/repository/out/group-preservation.json \
+BOF3_PRESERVATION_FINGERPRINT=RECORD_SHA \
+bin/combiner transaction rehearse transaction.json \
+  --expected-fingerprint TRANSACTION_SHA --implementation-run-id RUN_ID \
+  --object out/group-check/rehearsal.o \
+  --output out/reviews/evidence/rehearsal.json \
+  --work-deadline ORIGINAL_MONOTONIC_CUTOFF \
+  --cleanup-deadline LATER_MONOTONIC_CUTOFF
+```
+
+This explicitly mutating experiment always restores owned PRE; it is not a permanent
+apply command. Supply the prepared transaction's exact preservation record through
+the existing explicit or source-qualified routing, without changing compiler
+overrides. Fresh preparation is required when transaction owners change. Dirty
+workspaces require `--adopted-baseline` equal to the current shared workspace digest.
+An initialized Git index and existing canonical source/object parents are required.
+The report, `OUTPUT.recovery.json` and every native artifact must be absent and
+disjoint from retained inputs.
+
+Rehearsal holds one writer lease, rechecks live PRE, and captures shared v4 deletion
+recovery before applying exactly the prepared images. Before the first source edit,
+`OUTPUT.recovery.json` retains that invocation's recovery path, structured digest and
+raw-file SHA, run ID and transaction pin; callback/publication failure prevents edits.
+Use this receipt after interruption, never select the newest matching recovery file.
+The receipt grants no restoration authority. Rehearsal checks exact POST, invokes
+the grouped comparator once, then restores the identity-bound old source, manifest,
+Splat and configuration images, including absent destinations. Direct source matching
+aids reject before application. No broad workspace or index restoration occurs.
+Unrelated drift stops success after safe owned rollback; retained recovery permits
+parent inspection, not automatic retries. No new directories under source are created.
+
+One original work cutoff bounds forward work; a separately supplied later cleanup
+cutoff fences each rollback transition, including partial application cleanup.
+Expired cleanup starts no further owned transition and retains remaining backing;
+this is cooperative fencing, not interruption of an in-flight filesystem syscall.
+Neither cutoff renews on retry. A child `ProcessCleanupError` leaves evidence and
+current owned state untouched
+until actual writer-tree termination is established; never roll back beneath an
+unconfirmed live child. These safeguards use the common runtime and restoration
+owners, not a second recovery engine.
+
+After confirmed restoration, the absent report is exclusively published. Exit zero
+means the temporary comparison matched all selected function bytes and PRE was
+restored; differences exit one. Native failure, expiry or unverified restoration
+raises instead. The report retains historical POST comparison evidence, never current
+POST admission: `accepted`, `reusable`, `write_authorized`, `native_verified` and
+`coverage_verified` remain false. Full compiler/consumer closure and actual native
+validation are separate production gates, not proven by synthetic characterization.
+
+`bin/combiner inspect-recovery RECORD --expected-recovery-digest PIN` reads shared
+recovery evidence without changing files. `bin/combiner recover RECORD
+--expected-recovery-digest PIN --authorization AUTHORIZATION
+--expected-authorization-digest AUTH_PIN` uses the same independently pinned parent
+authority, distinct run identities, actual terminal evidence, absent publication and
+workspace/index safeguards as other domains. Historical manifest validation does
+not demand live PRE, so partial/deleted POST remains inspectable. See
+[recovery capture](harness.md#recovery-capture). Standalone recovery remains
+parent-supervised; the shared recovery CLI does not enforce the stored cleanup clock.
+No new semantic acceptance is granted.
 
 ### Grouped comparison
 

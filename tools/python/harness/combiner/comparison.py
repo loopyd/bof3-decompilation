@@ -82,7 +82,7 @@ def _policy_inputs(root: Path, source: Path) -> set[Path]:
     }
 
 
-def _resolve_outputs(root: Path, name: str) -> tuple[Path, Path, set[Path]]:
+def resolve_comparison_outputs(root: Path, name: str) -> tuple[Path, Path, set[Path]]:
     if (
         relative(name) != name
         or not name.startswith("out/")
@@ -188,7 +188,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
     )
     if len(records) < 2:
         raise ValueError("comparison requires a complete grouped translation unit")
-    output, linked, artifacts = _resolve_outputs(root, output_name)
+    output, linked, artifacts = resolve_comparison_outputs(root, output_name)
     layout = repo_layout(root)
     execution = NativeExecution(root, cutoff, output_limit)
     policy_inputs = _policy_inputs(root, source_path)

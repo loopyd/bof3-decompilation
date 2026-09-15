@@ -10,12 +10,19 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable
 
-from harness.common.process import run_command
+from harness.common.process import ProcessCleanupError, run_command
 from harness.common.recovery import capture_recovery
 from harness.common.submodules import validate_mutations
 from harness.common.checks import check_evidence
 from harness.common.digests import digest
-from harness.common.deadlines import check_deadline
+from harness.common.deadlines import (
+    DeadlineExpired,
+    check_deadline,
+    resolve_deadline,
+    suspend_work_deadline,
+    use_deadline,
+    validate_deadline,
+)
 from harness.common.files import atomic_write as _atomic_write
 from harness.common.files import restore_quarantined
 from harness.common.directory import validate_repo_path
@@ -194,8 +201,15 @@ def apply_changes(
     workspace: WorkspaceSnapshot | None = None,
     index: GitIndexSnapshot | None = None,
     deletions: set[str] | None = None,
+    cleanup_deadline: float | None = None,
+    recovery_callback: Callable[[dict[str, str]], None] | None = None,
 ) -> tuple[dict[str, bytes | None], dict[str, dict[str, Any]]]:
     check_deadline()
+    validate_deadline(cleanup_deadline)
+    if cleanup_deadline is not None and (
+        resolve_deadline() is None or cleanup_deadline <= resolve_deadline()
+    ):
+        raise ValueError("cleanup cutoff must follow the original work cutoff")
     safe_allowed = validate_paths(root, allowed)
     validate_mutations(root, safe_allowed)
     if not isinstance(changes, dict) or not changes:
@@ -219,7 +233,13 @@ def apply_changes(
     verify_writer(root)
     check_deadline()
     images = capture_recovery(
-        root, recovery, changes, backup, workspace=workspace, index=index
+        root,
+        recovery,
+        changes,
+        backup,
+        workspace=workspace,
+        index=index,
+        **({"on_capture": recovery_callback} if recovery_callback is not None else {}),
     )
     changed: dict[str, bytes | None] = {}
     records: dict[str, dict[str, Any]] = {}
@@ -258,8 +278,14 @@ def apply_changes(
             ):
                 raise ValueError(f"transaction deletion POST drifted: {name}")
         check_deadline()
+    except ProcessCleanupError:
+        raise
     except BaseException:
-        rollback(root, changed, records)
+        if cleanup_deadline is None:
+            rollback(root, changed, records)
+        else:
+            with suspend_work_deadline(), use_deadline(cleanup_deadline):
+                rollback(root, changed, records, deadline=cleanup_deadline)
         raise
     return backup, records
 
@@ -268,19 +294,33 @@ def rollback(
     root: Path,
     backup: dict[str, bytes | None],
     records: dict[str, dict[str, Any]] | None = None,
+    *,
+    deadline: float | None = None,
 ) -> None:
+    validate_deadline(deadline)
+
+    def guard():
+        if deadline is None:
+            verify_writer(root)
+        else:
+            with use_deadline(deadline):
+                verify_writer(root)
+
     if records is not None and set(records) != set(backup):
         raise RuntimeError("type transaction rollback failed: recovery paths differ")
+    if deadline is not None:
+        guard()
     errors = []
     for name, content in backup.items():
         try:
-            verify_writer(root)
+            guard()
             if records is None:
                 validate_mutations(root, {name})
                 current = _read_file(root, name, missing_ok=True)
+                guard()
                 _atomic_write(root, name, content or b"", expected=current)
                 if content is None:
-                    verify_writer(root)
+                    guard()
                     _safe_unlink(root, name, expected=b"")
             elif name in records:
                 image = records[name]
@@ -289,7 +329,7 @@ def rollback(
                 if state == "pre":
                     continue
                 if state == "post":
-                    verify_writer(root)
+                    guard()
                     _safe_unlink(
                         root,
                         name,
@@ -303,7 +343,7 @@ def rollback(
                     )
                 if content is not None:
                     assert quarantine is not None
-                    verify_writer(root)
+                    guard()
                     restore_quarantined(
                         root,
                         name,
@@ -315,13 +355,19 @@ def rollback(
                         ),
                         expected_mode=image["pre"]["mode"],
                     )
-                verify_writer(root)
+                guard()
                 if classify_restoration(root, name, content, image) != "pre":
                     raise ValueError(f"transaction PRE restoration failed: {name}")
         except (OSError, ValueError, RuntimeError) as error:
+            if isinstance(error, ProcessCleanupError) or (
+                deadline is not None and isinstance(error, DeadlineExpired)
+            ):
+                raise
             errors.append(f"{name}: {error}")
     if errors:
         raise RuntimeError("type transaction rollback failed: " + "; ".join(errors))
+    if deadline is not None:
+        guard()
 
 
 def application_record(
