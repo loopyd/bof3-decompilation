@@ -251,6 +251,12 @@ unrelated configuration changes reject.
 These commands do not apply the migration, edit/delete sources, refresh indexes or
 build. A deletion-aware combiner transaction, owned rollback, native all-member
 checks and independent final acceptance remain required before production use.
+The shared runtime now supports explicit owned deletions, v4 absent-POST recovery
+and identity-backed restoration alongside replacement images; see
+[recovery capture](harness.md#recovery-capture). This prerequisite does not create
+a combiner transaction or authorize consolidation. Its domain adapter must bind
+the exact deletion set to the reviewed joint source/configuration plan and preserve
+all existing execution, audit and acceptance gates.
 
 Verification requires exact pinned POST bytes and unchanged captured inputs, source
 and manifest inventories, ordered compiler profiles, selectors and symbol identities.

@@ -24,12 +24,14 @@ from harness.common.workspace import WorkspaceSnapshot
 LEGACY_SCHEMA = "bof3.transaction-recovery/v1"
 IDENTITY_SCHEMA = "bof3.transaction-recovery/v2"
 SCHEMA = "bof3.transaction-recovery/v3"
+DELETION_SCHEMA = "bof3.transaction-recovery/v4"
+RECOVERY_OWNERS = frozenset({"macro", "type", "combiner"})
 
 
 def capture_recovery(
     root: Path,
     binding: dict[str, Any],
-    changes: dict[str, str],
+    changes: dict[str, str | None],
     backup: dict[str, bytes | None],
     *,
     workspace: WorkspaceSnapshot | None = None,
@@ -37,7 +39,7 @@ def capture_recovery(
 ) -> dict[str, dict[str, Any]]:
     if set(binding) != {"owner", "manifest", "implementation_run_id", "output"}:
         raise ValueError("invalid recovery binding")
-    if binding["owner"] not in {"macro", "type"}:
+    if binding["owner"] not in RECOVERY_OWNERS:
         raise ValueError("invalid recovery owner")
     manifest = binding["manifest"]
     if manifest.get("digest") != digest(
@@ -48,6 +50,12 @@ def capture_recovery(
         manifest["allowed_paths"]
     ):
         raise ValueError("recovery paths differ from the authorized changes")
+    if any(
+        (content is not None and not isinstance(content, str))
+        or (content is None and backup[name] is None)
+        for name, content in changes.items()
+    ):
+        raise ValueError("recovery requires text or deletion of an existing PRE")
     validate_mutations(root, {*manifest["allowed_paths"], "out/reviews/evidence"})
     if file_state(root, manifest["allowed_paths"]) != manifest["pre_state"]:
         raise ValueError("recovery capture requires the complete owned PRE")
@@ -81,13 +89,17 @@ def capture_recovery(
                 name,
                 content.encode("utf-8"),
                 stat.S_IMODE(metadata.st_mode) if metadata else None,
-            ),
+            )
+            if content is not None
+            else None,
             "quarantine": destination,
         }
     identity = root.stat()
     nonce = secrets.token_hex(16)
     record = {
-        "schema": SCHEMA,
+        "schema": DELETION_SCHEMA
+        if any(content is None for content in changes.values())
+        else SCHEMA,
         "nonce": nonce,
         "root": {
             "path": str(root.resolve()),

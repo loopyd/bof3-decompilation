@@ -193,6 +193,7 @@ def apply_changes(
     recovery: dict[str, Any],
     workspace: WorkspaceSnapshot | None = None,
     index: GitIndexSnapshot | None = None,
+    deletions: set[str] | None = None,
 ) -> tuple[dict[str, bytes | None], dict[str, dict[str, Any]]]:
     check_deadline()
     safe_allowed = validate_paths(root, allowed)
@@ -204,9 +205,17 @@ def apply_changes(
         for name in changes
     ):
         raise ValueError("type application attempted an unowned path")
-    if any(not isinstance(content, str) for content in changes.values()):
+    if any(
+        not isinstance(content, str) and (content is not None or deletions is None)
+        for content in changes.values()
+    ):
         raise ValueError("type application content must be text")
+    safe_deletions = validate_paths(root, deletions) if deletions is not None else set()
+    if safe_deletions != {name for name, content in changes.items() if content is None}:
+        raise ValueError("transaction deletions differ from the explicit allowed paths")
     backup = {name: _read_file(root, name, missing_ok=True) for name in changes}
+    if any(backup[name] is None for name in safe_deletions):
+        raise ValueError("transaction deletion requires an existing PRE")
     verify_writer(root)
     check_deadline()
     images = capture_recovery(
@@ -221,7 +230,9 @@ def apply_changes(
             validate_mutations(root, safe_allowed)
             current = backup[name]
             image = images[name]
-            installed = content.encode()
+            installed = content.encode() if content is not None else None
+            changed[name] = current
+            records[name] = {**image, "installed": installed}
             quarantine = None
             if current is not None:
                 check_deadline()
@@ -234,13 +245,18 @@ def apply_changes(
                     quarantine=image["quarantine"],
                 )
                 assert quarantine is not None
-                changed[name] = current
-                records[name] = {**image, "installed": installed}
             verify_writer(root)
-            changed[name] = current
-            records[name] = {**image, "installed": installed}
             check_deadline()
-            install_image(root, name, installed, image=image["post"])
+            if installed is not None:
+                install_image(root, name, installed, image=image["post"])
+        for name in safe_deletions:
+            check_deadline()
+            verify_writer(root)
+            if (
+                classify_restoration(root, name, backup[name], records[name])
+                != "deleted"
+            ):
+                raise ValueError(f"transaction deletion POST drifted: {name}")
         check_deadline()
     except BaseException:
         rollback(root, changed, records)

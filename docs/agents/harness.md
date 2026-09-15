@@ -449,6 +449,14 @@ POST hash/exact mode/inode, staging path and reserved PRE/POST quarantine mappin
 record capture, then installs the bound inode through [file publication](#file-publication).
 Images must share the destination filesystem and retain one link. Failed capture
 may retain unreferenced images, but cannot mutate sources.
+Shared `common.runtime.apply_changes` additionally accepts an exact `deletions`
+path set and `null` content for those paths only. The default remains text-only;
+extra, undeclared, unowned or already-absent deletions reject before source mutation.
+Deleted files move to their reserved PRE quarantine, never to an empty placeholder.
+Mixed edits capture `bof3.transaction-recovery/v4`: each deleted path has present
+PRE and `post: null`; replacements retain prepared POST images. Text-only capture
+remains v3. The common owner vocabulary includes `combiner`, but this mechanism
+does not supply its domain transaction, audit, native gates or recovery CLI.
 `common/directory.py` owns confined descriptor traversal. Files and directory links are
 synced before mutation; capture failure aborts before moving sources.
 
@@ -574,11 +582,11 @@ v2 TREE extensions only; that inventory proves nothing about other formats.
 
 ### Recovery evidence and rollback
 
-Records live at `out/reviews/evidence/{macro,type}-recovery-<nonce>.json`.
+Records live at `out/reviews/evidence/{macro,type,combiner}-recovery-<nonce>.json`.
 They contain source text: retain them as nonpublic evidence. Their digest
 detects drift against a separately retained pin; neither that digest, file mode
 nor writer PID authenticates restoration authority or proves writer termination.
-For new files, creation mode remains `0644` masked by the process umask; v2/v3 bind
+For new files, creation mode remains `0644` masked by the process umask; v2/v3/v4 bind
 the resulting exact mode. Exception rollback checks POST/PRE identities.
 
 Ordinary type/macro failure restores only the transaction's captured owned source
@@ -612,13 +620,21 @@ absent lease, reconcile publication or restore workspace/Git state. Legacy
 byte-only rollback has no identity-replay guarantee. A no-op replay does not
 complete interrupted directory syncing or establish power-loss durability.
 
+V4 deletion rollback requires an absent source and its original single-link PRE
+inode in the reserved quarantine; restored PRE with an absent quarantine is a
+replayable no-op. Missing backing, duplicate locations or foreign replacements
+reject without overwriting them. Deletions have no POST inode to authenticate.
+Read-only inspection reports `deleted` only with that PRE backing, and distinguishes
+lost backing as `missing` or `drifted`. Neither observed absence nor a v4 record
+grants restoration authority or establishes an atomic multi-file commit.
+
 `common/inspection.py` supplies read-only `inspect-recovery RECORD
 --expected-recovery-digest PIN` to both owner CLIs. It checks the independent
 pin, recovery record, root/owner/manifest bindings, PRE encoding and reserved
-quarantine identities. It reports original PRE, missing, exact v2/v3 POST or
+quarantine identities. It reports original PRE, missing, exact v2/v3/v4 POST or
 drifted files, staged/displaced POST, unchanged-path hashes and publication presence without printing
 source images. Manifest validation is structural, not live re-derivation.
-V3 inspection also reports scoped workspace additions/removals/drift, index
+V3/v4 inspection also reports scoped workspace additions/removals/drift, index
 agreement and index locks without printing archived bytes. `matches` means only
 that these scoped observations agree, not complete workspace/Git verification.
 Historical v1 records retain content-only POST evidence; v2 retains exact POST
@@ -629,7 +645,7 @@ Exit zero means inspection succeeded, not that restoration or continuation is sa
 ## Guarded source recovery
 
 `type-audit recover` and `macro-audit recover` restore owned PRE only under an
-externally pinned parent authorization and a separately pinned v3 record.
+externally pinned parent authorization and a separately pinned v3 or v4 record.
 `common/authorization.py` validates authority bindings; `common/restoration.py`
 owns the fail-stop operation; `common/inspection.py::load_recovery` validates
 backing for both inspection and restoration. No discovered record grants authority.

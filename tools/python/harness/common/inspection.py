@@ -16,7 +16,13 @@ from harness.common.paths import validate_paths
 from harness.common.observation import observe_file
 from harness.common.quarantine import validate_quarantine
 from harness.common.images import validate_image_path
-from harness.common.recovery import IDENTITY_SCHEMA, LEGACY_SCHEMA, SCHEMA
+from harness.common.recovery import (
+    DELETION_SCHEMA,
+    IDENTITY_SCHEMA,
+    LEGACY_SCHEMA,
+    RECOVERY_OWNERS,
+    SCHEMA,
+)
 from harness.common.safeguards import _validate_safeguards, inspect_safeguards
 from harness.io import unique_object
 
@@ -32,19 +38,31 @@ def _is_hash(value: object) -> bool:
 
 
 def _validate_file(
-    name: str, value: object, manifest: dict[str, Any], *, legacy: bool
+    name: str,
+    value: object,
+    manifest: dict[str, Any],
+    *,
+    legacy: bool,
+    deletions: bool = False,
 ) -> None:
     entry = _require_fields(value, "pre post quarantine")
     pre = _require_fields(entry["pre"], "content_base64 sha256 mode device inode")
-    post = _require_fields(
-        entry["post"],
-        "sha256 mode creation_mode"
-        if legacy
-        else "sha256 mode device inode staging quarantine",
+    deleted = entry["post"] is None
+    if deleted and (not deletions or pre["content_base64"] is None):
+        raise ValueError("invalid recovery POST deletion")
+    post = (
+        _require_fields(
+            entry["post"],
+            "sha256 mode creation_mode"
+            if legacy
+            else "sha256 mode device inode staging quarantine",
+        )
+        if not deleted
+        else None
     )
-    if not _is_hash(post["sha256"]):
+    if not deleted and not _is_hash(post["sha256"]):
         raise ValueError("invalid recovery POST hash")
-    if not legacy:
+    if not legacy and not deleted:
         if (
             type(post["mode"]) is not int
             or not 0 <= post["mode"] <= 0o7777
@@ -85,8 +103,10 @@ def _validate_file(
         or type(pre["mode"]) is not int
         or not 0 <= pre["mode"] <= 0o7777
         or any(type(pre[key]) is not int or pre[key] < 0 for key in ("device", "inode"))
-        or type(post["mode"]) is not int
-        or post["mode"] != pre["mode"]
+        or (
+            not deleted
+            and (type(post["mode"]) is not int or post["mode"] != pre["mode"])
+        )
         or (legacy and post["creation_mode"] is not None)
     ):
         raise ValueError("invalid recovery PRE content or identity")
@@ -101,6 +121,25 @@ def _describe_file(
     quarantine = entry["quarantine"]
     displaced = observe_file(root, quarantine) if quarantine is not None else None
     expected = {**pre, "links": 1} if pre["sha256"] is not None else None
+    if entry["post"] is None:
+        return {
+            "state": "pre"
+            if current == expected and displaced is None
+            else "deleted"
+            if current is None and displaced == expected
+            else "missing"
+            if current is None and displaced is None
+            else "drifted",
+            "observed": current,
+            "quarantine": quarantine,
+            "quarantine_state": "absent"
+            if displaced is None
+            else "original-pre"
+            if displaced == expected
+            else "drifted",
+            "post_kind": "absent",
+            "post_identity_bound": False,
+        }
     expected_post = {
         **{
             key: value
@@ -170,7 +209,7 @@ def load_recovery(
 
     name = validate_repo_path(name)
     if (
-        owner not in {"type", "macro"}
+        owner not in RECOVERY_OWNERS
         or re.fullmatch(
             rf"out/reviews/evidence/{owner}-recovery-[0-9a-f]{{32}}\.json", name
         )
@@ -185,12 +224,13 @@ def load_recovery(
         raise ValueError("recovery record changed during inspection")
     record = json.loads(content, object_pairs_hook=unique_object)
     fields = "schema nonce root writer_pid binding files recovery_scope restoration_authority digest"
-    if isinstance(record, dict) and record.get("schema") == SCHEMA:
+    if isinstance(record, dict) and record.get("schema") in {SCHEMA, DELETION_SCHEMA}:
         fields += " safeguards"
     record = _require_fields(record, fields)
     facts = {key: value for key, value in record.items() if key != "digest"}
     if (
-        record["schema"] not in (LEGACY_SCHEMA, IDENTITY_SCHEMA, SCHEMA)
+        record["schema"]
+        not in (LEGACY_SCHEMA, IDENTITY_SCHEMA, SCHEMA, DELETION_SCHEMA)
         or record["digest"] != expected_recovery_digest
         or record["digest"] != digest(facts)
         or record["restoration_authority"] is not False
@@ -236,7 +276,17 @@ def load_recovery(
         raise ValueError("invalid recovery owned PRE or changed paths")
     legacy = record["schema"] == LEGACY_SCHEMA
     for path, entry in record["files"].items():
-        _validate_file(path, entry, manifest, legacy=legacy)
+        _validate_file(
+            path,
+            entry,
+            manifest,
+            legacy=legacy,
+            deletions=record["schema"] == DELETION_SCHEMA,
+        )
+    if record["schema"] == DELETION_SCHEMA and not any(
+        entry["post"] is None for entry in record["files"].values()
+    ):
+        raise ValueError("deletion recovery requires an absent POST")
     output = binding["output"]
     if output is not None:
         output = validate_repo_path(output)

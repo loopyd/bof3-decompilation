@@ -103,6 +103,25 @@ def classify_restoration(
 ) -> str:
     pre, post = image["pre"], image["post"]
     before_hash = hashlib.sha256(content).hexdigest() if content is not None else None
+    if post is None:
+        if (
+            content is None
+            or pre["sha256"] != before_hash
+            or image["installed"] is not None
+        ):
+            raise ValueError(f"transaction deletion recovery content drifted: {name}")
+        expected = {
+            **{key: pre[key] for key in ("sha256", "mode", "device", "inode")},
+            "links": 1,
+        }
+        quarantine = validate_quarantine(name, image["quarantine"])
+        current = observe_file(root, name)
+        displaced = observe_file(root, quarantine)
+        if current == expected and displaced is None:
+            return "pre"
+        if current is None and displaced == expected:
+            return "deleted"
+        raise ValueError(f"transaction deletion path drifted during rollback: {name}")
     if (
         pre["sha256"] != before_hash
         or hashlib.sha256(image["installed"]).hexdigest() != post["sha256"]

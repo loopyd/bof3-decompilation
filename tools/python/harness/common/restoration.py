@@ -16,7 +16,7 @@ from harness.common.inspection import load_recovery
 from harness.common.lease import acquire_writer, verify_writer
 from harness.common.observation import observe_file
 from harness.common.paths import file_state
-from harness.common.recovery import SCHEMA
+from harness.common.recovery import DELETION_SCHEMA, SCHEMA
 from harness.common.runtime import rollback
 from harness.common.safeguards import inspect_safeguards
 
@@ -49,6 +49,10 @@ def _load_restoration_images(
         encoded = entry["pre"]["content_base64"]
         backup[name] = base64.b64decode(encoded) if encoded is not None else None
         post = entry["post"]
+        if post is None:
+            images[name] = {**entry, "installed": None}
+            classify_restoration(root, name, backup[name], images[name])
+            continue
         expected = {key: post[key] for key in ("sha256", "mode", "device", "inode")}
         expected["links"] = 1
         locations = [
@@ -98,8 +102,8 @@ def restore_sources(
             owner=owner,
             manifest_validator=manifest_validator,
         )
-        if record["schema"] != SCHEMA:
-            raise ValueError("source recovery requires v3 identity and guard backing")
+        if record["schema"] not in {SCHEMA, DELETION_SCHEMA}:
+            raise ValueError("source recovery requires identity and guard backing")
         authorization = load_recovery_authorization(
             root, authorization_name, expected_authorization_digest, name, record
         )
