@@ -113,16 +113,21 @@ def _capture_directory_identity(status: os.stat_result) -> tuple[int, ...]:
 class PathWatch:
     """Latch local Linux input-entry changes across repeated content observations."""
 
-    def __init__(self, paths: set[Path]) -> None:
+    def __init__(
+        self, paths: set[Path], *, directories: set[Path] | None = None
+    ) -> None:
         self._descriptor: int | None = None
         self._directories: dict[Path, int] = {}
         self._identities: dict[Path, tuple[int, ...]] = {}
         self._entries: dict[int, set[bytes]] = {}
+        self._memberships: set[int] = set()
         self._failure: str | None = None
-        if not paths or len(paths) > 16384:
+        directories = set() if directories is None else set(directories)
+        inputs = set(paths) | directories
+        if not inputs or len(inputs) > 16384:
             raise ValueError("path watch input count is outside supported bounds")
-        entries: dict[Path, set[bytes]] = {}
-        for path in paths:
+        entries: dict[Path, set[bytes]] = {path: set() for path in directories}
+        for path in inputs:
             check_deadline()
             if not path.is_absolute() or ".." in path.parts or path == path.parent:
                 raise ValueError("path watch requires absolute named inputs")
@@ -172,6 +177,8 @@ class PathWatch:
                         ctypes.get_errno(), f"cannot watch input parent: {path}"
                     )
                 self._entries.setdefault(watch, set()).update(entries[path])
+                if path in directories:
+                    self._memberships.add(watch)
                 after = os.fstat(directory)
                 if (
                     _capture_directory_identity(before)
@@ -181,6 +188,8 @@ class PathWatch:
                 ):
                     self._fail(f"input directory changed during watch setup: {path}")
                 self._identities[path] = _capture_directory_identity(after)
+            if directories - self._directories.keys():
+                self._fail("input membership directory is missing")
             self.validate()
         except BaseException:
             self.close()
@@ -217,7 +226,12 @@ class PathWatch:
                 or not mask & (_ENTRY_EVENTS | _SELF_EVENTS)
             ):
                 self._fail("unknown input watch event")
-            if mask & _SELF_EVENTS or not name or name in self._entries[watch]:
+            if (
+                mask & _SELF_EVENTS
+                or not name
+                or watch in self._memberships
+                or name in self._entries[watch]
+            ):
                 self._fail("watched input entry or ancestor changed")
 
     def _drain(self) -> None:
@@ -242,7 +256,7 @@ class PathWatch:
         self._fail("input watch event drain exceeded its bound")
 
     def validate(self) -> None:
-        """Reject relevant events permanently while ignoring unbound sibling names."""
+        """Latch selected-entry events and every explicit directory's child event."""
         check_deadline()
         if self._failure is not None:
             raise ValueError(self._failure)

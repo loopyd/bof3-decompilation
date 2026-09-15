@@ -147,6 +147,14 @@ cross-sample validation-success cache or relaxed producer deadline is implied.
 opened directory and checks path linkage. Profiles retain raw directory metadata;
 only size may differ with the same other fields and membership. File checks and
 latched mutation watches stay exact; membership endpoints do not prove history.
+`PathWatch(paths, directories=...)` additionally latches every immediate child
+event in explicitly named existing directories, including create/delete/rename
+and mutation-restore sequences. Default selected-path filtering is unchanged.
+Directory inputs share the bounded input/ancestor budget and nofollow linkage
+checks; missing directories, overflow and interrupted event drains reject.
+This is not recursive discovery or content capture: callers must enumerate each
+dependency directory, establish watches before sampling, and verify afterward.
+No existing producer gains complete include/toolchain closure from this primitive.
 
 `common.inputs.read_input` returns state and the exact bytes hashed under one
 stable metadata sample; `file_state` retains its state-only schema. Profile capture
