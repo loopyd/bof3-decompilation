@@ -13,13 +13,10 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from harness.domain.claims import resolve_source_for_paths
-from harness.domain.functions import select_lift_metadata
 from harness.naming.debt import address_of
 from harness.domain.receipts import command_records, typed_observation_ids
-from harness.domain.registry import resolve_target
 from harness.domain.symbols import name_terms
-from harness.domain.tags import parse_progress_tags
+from harness.naming.metadata import inspect_metadata
 
 RUNG_PROFILES = {
     ("function", False): {"selected_range", "selected_call", "one_level_beyond"},
@@ -387,21 +384,8 @@ def status_pair(row: dict[str, object], name: str, blocked: bool) -> None:
 
 def metadata_state(root, manifest, name: str) -> tuple[bool, str]:
     """Return (metadata_ok, detail) for the row's metadata-resolved source."""
-    source = None
-    try:
-        resolved = resolve_target(root, manifest.id.value)
-        source = resolve_source_for_paths(resolved.source_paths, address_of(name))
-    except (FileNotFoundError, ValueError, RuntimeError):
-        return (True, "no claimed source")
-    if source is None:
-        return (True, "no claimed source")
-    try:
-        parse_progress_tags(
-            select_lift_metadata(source.read_text(encoding="utf-8"), address_of(name))
-        )
-    except ValueError as error:
-        return (False, f"{source}: {error}")
-    return (True, "metadata canonical")
+    valid, detail, _partial = inspect_metadata(root, manifest, address_of(name))
+    return valid, detail
 
 
 __all__ = [

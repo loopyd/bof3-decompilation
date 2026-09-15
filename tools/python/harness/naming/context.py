@@ -8,15 +8,13 @@ import re
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Mapping
 
-from harness.domain.functions import require_single_source, select_lift_metadata
+from harness.domain.functions import require_single_source
 from harness.domain.claims import manifest_source_paths, resolve_source_for_paths
 from harness.naming.debt import address_of, collect_naming_debt
-from harness.domain.registry import payload_end_for, resolve_target
-from harness.domain.tags import parse_progress_tags
+from harness.domain.registry import payload_end_for
 from harness.naming.annotations import expected_reviewed_digest, reviewed_annotations
 from harness.naming.annotations import reviewed_scope_digest as _reviewed_scope_digest
 from harness.naming.facts import corroborators as _corroborators
-from harness.naming.facts import metadata_state as _metadata_state_uncached
 from harness.naming.facts import name_terms_v3 as _name_terms_v3
 from harness.naming.facts import optional_work as _optional_work
 from harness.naming.facts import parse_range as _parse_range
@@ -25,6 +23,7 @@ from harness.naming.facts import row_observation_ids as _row_observation_ids
 from harness.naming.facts import row_rungs as _row_rungs
 from harness.naming.facts import scope_equality as _scope_equality
 from harness.naming.facts import status_pair as _status_pair
+from harness.naming.metadata import describe_metadata, inspect_metadata
 from harness.naming.readiness import (
     RequiredWorkSnapshot,
     canonical_storage,
@@ -116,36 +115,15 @@ def inventory_expected(
 
 def partial_status(root: Path, manifest: TargetManifest, name: str) -> bool:
     """Derive partial_lift from the metadata-resolved source, never the report."""
-    address = address_of(name)
-    source = None
-    try:
-        resolved = resolve_target(root, manifest.id.value)
-        source = resolve_source_for_paths(resolved.source_paths, address)
-    except (FileNotFoundError, ValueError, RuntimeError):
-        source = None
-    if source is None:
-        return False
-    try:
-        progress = parse_progress_tags(
-            select_lift_metadata(source.read_text(encoding="utf-8"), address)
-        )
-    except ValueError:
-        return False
-    return progress is not None and progress[0] == "partial"
+    return inspect_metadata(root, manifest, address_of(name))[2]
 
 
 def _metadata_state(ctx: TargetContext, name: str) -> tuple[bool, str, bool]:
     """Return cached source metadata validity and partial status for one row."""
 
     if ctx.source_metadata is None:
-        metadata_ok, detail = _metadata_state_uncached(ctx.root, ctx.manifest, name)
-        return metadata_ok, detail, partial_status(ctx.root, ctx.manifest, name)
-    source, progress = ctx.source_metadata.get(address_of(name), (None, None))
-    if source is None:
-        return True, "no claimed source", False
-    if isinstance(progress, ValueError):
-        return False, f"{source}: {progress}", False
-    return True, "metadata canonical", progress is not None and progress[0] == "partial"
+        return inspect_metadata(ctx.root, ctx.manifest, address_of(name))
+    return describe_metadata(ctx.source_metadata, address_of(name))
 
 
 def reviewed_scope_digest(root: Path, target: str) -> str | None:

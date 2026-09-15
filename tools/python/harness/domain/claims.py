@@ -24,9 +24,13 @@ from .sources import (
 )
 
 
+class NoSourceClaims(ValueError):
+    """The target has no explicitly claimed source inputs."""
+
+
 def _require_claims(manifest: TargetManifest, kind: str) -> None:
     if not manifest.has_explicit_sources:
-        raise ValueError(
+        raise NoSourceClaims(
             f"{manifest.id.value}: target has no explicit source claims; "
             "declare manifest sources/support_sources (legacy source_dir "
             f"inventory is no longer consulted for {kind})"

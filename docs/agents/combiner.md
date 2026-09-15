@@ -16,9 +16,17 @@ metadata now support grouped files; the reverse index derives each member's own
 lifecycle and attributes direct macro occurrences by implementation range. Naming's
 single-row metadata and partial-status readers select the addressed record, matching
 bulk inspection for valid, unambiguous records. This does not prove naming readiness
-or atomic read consistency: native matching, preflight metadata repair, source-renaming and
+or atomic read consistency: ordinary native matching, preflight metadata repair, source-renaming and
 macro/type transactions still reject grouped inputs. Do not consolidate production
 sources until all gates are implemented.
+
+`naming.metadata` owns bulk and single-row lifecycle inspection. Ambiguous function
+owners, unreadable claimed C files, malformed record structure and failed target
+resolution reject rather than become absent sources. Bulk context construction
+fails; single-row inspection returns an invalid diagnostic. Malformed progress
+remains a per-record blocker. A missing function claim in a successfully inspected
+inventory is distinct from an inspection failure; these facts grant no native or
+transaction authority and do not establish an atomic source snapshot.
 
 Each implementation has its own immediately preceding comment containing one
 `@source` and nonempty `@behavior`. Progress tags remain an atomic

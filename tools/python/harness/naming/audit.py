@@ -28,6 +28,7 @@ from harness.naming.inventory import (
     _initialize_all,
     initialize_with_context,
 )
+from harness.naming.metadata import read_source_metadata
 from harness.naming.preparation import (
     merge_findings_notes,
     repair_selected_rows,
@@ -44,8 +45,6 @@ from ..domain.claims import manifest_source_paths
 from ..domain.ids import normalize_target_id
 from ..domain.manifests import load_target_manifests
 from harness.naming.debt import address_of
-from ..domain.tags import parse_progress_tags
-from ..domain.functions import collect_lift_metadata
 from ..io import unique_object
 from .proposal import (
     DATA_KIND as DATA_PROPOSAL_KIND,
@@ -151,30 +150,6 @@ def prepare(
     }
 
 
-def _source_metadata(root: Path, manifest: Any) -> dict[int, tuple[Path, Any]]:
-    """Read each claimed lift source once for bulk row validation."""
-
-    metadata: dict[int, tuple[Path, Any]] = {}
-    try:
-        sources = manifest_source_paths(root, manifest)
-    except ValueError:
-        return metadata
-    for source in sources:
-        if source.suffix != ".c":
-            continue
-        try:
-            records = collect_lift_metadata(source.read_text(encoding="utf-8"))
-            for address, text in records.items():
-                try:
-                    progress: Any = parse_progress_tags(text)
-                except ValueError as error:
-                    progress = error
-                metadata[address] = (source, progress)
-        except (OSError, UnicodeError):
-            continue
-    return metadata
-
-
 def _context(
     root: Path,
     target: str,
@@ -203,7 +178,11 @@ def _context(
         target,
         manifest,
         work_snapshot=work,
-        source_metadata=_source_metadata(root, manifest),
+        source_metadata=read_source_metadata(
+            manifest_source_paths(root, manifest)
+            if manifest.has_explicit_sources
+            else ()
+        ),
         payload_end=work.payload_end,
     )
 
