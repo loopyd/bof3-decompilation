@@ -26,7 +26,8 @@ from harness.common.trees import (
     verify_worktree,
 )
 
-SCHEMA = "bof3.submodule-snapshot/v2"
+SCHEMA = "bof3.submodule-snapshot/v3"
+LEGACY_SCHEMA = "bof3.submodule-snapshot/v2"
 
 
 @dataclass(frozen=True)
@@ -253,6 +254,8 @@ def read_submodule(
 
 def verify_observations(root: Path, facts: dict, budget: CaptureBudget) -> None:
     """Recheck the full aggregate after queries, without interpreting live Git data."""
+    if facts.get("schema") != SCHEMA:
+        raise ValueError("submodule verification requires the current snapshot schema")
     name = facts["path"]
     if facts["state"] == "absent":
         if _capture_absence(root, name) != facts["identity"]:
@@ -326,7 +329,7 @@ def validate_snapshot(name: str, content: bytes) -> None:
     if (
         not isinstance(value, dict)
         or set(value) != fields
-        or value["schema"] != SCHEMA
+        or value["schema"] not in (SCHEMA, LEGACY_SCHEMA)
         or value["path"] != name
         or value["state"] not in {"absent", "uninitialized", "initialized"}
         or _encode(value) != content

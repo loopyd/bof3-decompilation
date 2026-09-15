@@ -42,7 +42,8 @@ class CaptureBudget:
 
 
 def describe_identity(metadata: os.stat_result) -> dict:
-    return {
+    """Bind object identity without directory allocation-size noise."""
+    identity = {
         field.removeprefix("st_"): getattr(metadata, field)
         for field in (
             "st_dev",
@@ -56,6 +57,9 @@ def describe_identity(metadata: os.stat_result) -> dict:
             "st_ctime_ns",
         )
     }
+    if stat.S_ISDIR(metadata.st_mode):
+        del identity["size"]
+    return identity
 
 
 def capture_file(

@@ -500,6 +500,17 @@ remains historical.
 | `workspace.py`, `safeguards.py` | composed baseline, dependency verification and durable observational guards |
 | `recovery.py`, `runtime.py`, `images.py`, `evidence.py` | dependency exclusion before source/image/evidence writes, even without optional workspace/index snapshots |
 
+`inventory.describe_identity` omits directory allocation size: NTFS/FUSE can report
+different sizes for an unchanged directory during observation. Directory membership,
+device/inode, mode, link count, ownership and modification/change times remain bound;
+non-directory size and file-content hashes remain exact. This removes an unstable
+storage detail, not namespace, content, confinement or mutation checks.
+
+New dependency captures use `bof3.submodule-snapshot/v3`. Historical v2 records remain
+structurally readable, but live observation verification requires v3, including
+absent/uninitialized dependencies. Never rewrite historical records or their external
+pins to claim compatibility; recapture and independently rebind a new transaction.
+
 Root status and workspace backup use an independent metadata/worktree mirror;
 submodule-suppression flags alone did not prevent live dependency reads. Separate HEAD/index
 enumeration protects both current and staged-removed gitlinks; baseline composition
@@ -560,10 +571,11 @@ bounded further by the inherited work cutoff. Failure/overflow is never a baseli
 The root mirror has a separate budget from recursive module capture.
 
 `bof3.recovery-safeguards/v3` adds `gitlink` entries containing canonical
-`bof3.submodule-snapshot/v2` evidence; historical safeguard v1 file and v2 file/link
-readers retain their original scope without upgrading evidence. The enclosing
-`bof3.transaction-recovery/v3` schema is unchanged. Macro/type publication rechecks
-dependencies. Boundary/descendant/ancestor mutation overlap rejects before images,
+`bof3.submodule-snapshot/v3` evidence; historical submodule v2 and safeguard v1
+file/v2 file-link records remain readable without rewriting their bytes or pins.
+Enclosing transaction-recovery v3/v4 formats retain their existing scopes.
+Macro/type publication rechecks dependencies. Boundary/descendant/ancestor
+mutation overlap rejects before images,
 including low-level calls without optional guards. Image/evidence destinations are
 checked before directory creation; application, `common.revalidation` and
 `macros.disposition` artifact guards run before writer-lease acquisition. Bound-image
