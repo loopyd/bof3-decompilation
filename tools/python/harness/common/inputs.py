@@ -257,11 +257,14 @@ class InputBatch:
         *,
         max_bytes: int | None = None,
         include_metadata: bool = False,
+        single_link: bool = False,
     ) -> tuple[dict | None, bytes | None]:
         if max_bytes is not None and (type(max_bytes) is not int or max_bytes < 0):
             raise ValueError("invalid input batch byte limit")
         if type(include_metadata) is not bool:
             raise ValueError("invalid input batch metadata selection")
+        if type(single_link) is not bool:
+            raise ValueError("invalid input batch link policy")
         parent = self._prepare_parent(path)
         if parent is None:
             self._missing.add(path)
@@ -274,6 +277,8 @@ class InputBatch:
             return None, None
         if not stat.S_ISREG(before.st_mode):
             raise ValueError(f"not a regular input: {path}")
+        if single_link and before.st_nlink != 1:
+            raise ValueError(f"input has multiple links: {path}")
         if max_bytes is not None and before.st_size > max_bytes:
             raise ValueError(f"input exceeds batch byte limit: {path}")
         descriptor = os.open(
@@ -316,11 +321,18 @@ class InputBatch:
         *,
         max_bytes: int | None = None,
         include_metadata: bool = False,
+        single_link: bool = False,
     ) -> tuple[dict | None, bytes | None]:
-        """Read fresh bytes; never cache content, absence or validation success."""
+        """Read fresh bytes, optionally requiring one link before content access.
+
+        Content, absence and successful validation are never cached.
+        """
         try:
             return self._read(
-                path, max_bytes=max_bytes, include_metadata=include_metadata
+                path,
+                max_bytes=max_bytes,
+                include_metadata=include_metadata,
+                single_link=single_link,
             )
         except BaseException:
             self._failed = True

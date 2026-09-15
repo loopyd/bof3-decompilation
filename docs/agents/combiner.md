@@ -62,6 +62,13 @@ untagged helper ending in `}` is not assumed to establish a safe boundary. Add i
 own leading metadata or defer unsupported source for review. Implicit-int definitions
 also require an explicit return type before inspection.
 
+Inspection captures at most 16 MiB through confined held descriptors, rejecting
+symlinks, multiple links and nonregular inputs before reading content. It parses
+and hashes the same captured bytes; the source name is not reopened after a path
+precheck. The shared `InputBatch.read(single_link=True)` policy is opt-in; other
+callers retain their existing hardlink policy. This binds one input generation,
+not current source freshness after return or an atomic repository snapshot.
+
 Read-only enumeration uses `collect_lift_metadata` / `select_lift_metadata` and
 retains invalid progress as invalid rather than hiding a function. Strict inspection
 still rejects malformed progress. Legacy single-function metadata before includes or
