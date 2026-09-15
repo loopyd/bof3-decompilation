@@ -14,6 +14,7 @@ from harness.build.preservation import (
 )
 from harness.build.receipts import produce_object, verify_production
 from harness.build.routing import select_preservation
+from harness.combiner.dependencies import IncludeSnapshot
 from harness.combiner.members import capture_members
 from harness.common.deadlines import check_deadline, resolve_deadline, use_deadline
 from harness.common.inputs import InputBatch, relative
@@ -21,7 +22,6 @@ from harness.common.lease import require_writer
 from harness.common.observation import PathWatch
 from harness.common.paths import require_absent
 from harness.domain.functions import parse_function_records
-from harness.domain.includes import local_include_files
 from harness.domain.policy import validate_matching_text
 from harness.common.files import read_file
 from harness.io import repo_layout
@@ -29,10 +29,11 @@ from harness.match.execution import NativeExecution
 from harness.match.extraction import read_function_image
 from harness.match.placement import extract_grouped_function, place_grouped_object
 
-SCHEMA = "bof3.combiner-comparison/v1"
+SCHEMA = "bof3.combiner-comparison/v2"
 _LIMIT = 64 * 1024 * 1024
 _OWNERS = (
     "tools/python/harness/combiner/comparison.py",
+    "tools/python/harness/combiner/dependencies.py",
     "tools/python/harness/combiner/members.py",
     "tools/python/harness/combiner/cli.py",
     "tools/python/harness/build/receipts.py",
@@ -59,27 +60,6 @@ def _capture_states(root: Path, paths: set[Path]) -> dict:
                 raise ValueError(f"comparison input or output is hardlinked: {path}")
             result[path.relative_to(root).as_posix()] = state
     return result
-
-
-def _policy_inputs(root: Path, source: Path) -> set[Path]:
-    return {
-        source,
-        *local_include_files(
-            root,
-            [source],
-            include_roots=(
-                root / "src",
-                root / "include",
-                root / "toolchains/psyq/4.7/include",
-            ),
-            include_angle=True,
-            strict=True,
-            require_literal=True,
-            read_source=lambda path: read_file(
-                root, path.relative_to(root).as_posix(), max_bytes=_LIMIT
-            ).decode("utf-8"),
-        ),
-    }
 
 
 def resolve_comparison_outputs(root: Path, name: str) -> tuple[Path, Path, set[Path]]:
@@ -191,14 +171,14 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
     output, linked, artifacts = resolve_comparison_outputs(root, output_name)
     layout = repo_layout(root)
     execution = NativeExecution(root, cutoff, output_limit)
-    policy_inputs = _policy_inputs(root, source_path)
     tools = layout.psn00b_toolchain_root / "bin"
-    extra_paths = (
-        policy_inputs
-        | {root / name for name in _OWNERS}
-        | {tools / f"mipsel-none-elf-{name}" for name in ("ld", "objdump", "nm")}
-    )
     with ExitStack() as stack:
+        includes = stack.enter_context(closing(IncludeSnapshot(root, source_path)))
+        extra_paths = (
+            set(includes.content)
+            | {root / name for name in _OWNERS}
+            | {tools / f"mipsel-none-elf-{name}" for name in ("ld", "objdump", "nm")}
+        )
         selection = stack.enter_context(
             closing(select_preservation(root, [source_path], [source_path]))
         )
@@ -220,6 +200,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
         protected = (
             {root / name for name in preserved["inputs"]}
             | extra_paths
+            | includes.paths
             | selection.reserved
             | {selection.record}
         )
@@ -245,15 +226,10 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
             )
         native_watch = stack.enter_context(closing(PathWatch(extra_paths)))
         native_inputs = _capture_states(root, extra_paths)
-        if _policy_inputs(root, source_path) != policy_inputs:
-            raise ValueError("comparison local include closure changed")
-        for path in policy_inputs:
+        includes.validate()
+        for path, content in includes.content.items():
             if not path.is_relative_to(root / "toolchains"):
-                validate_matching_text(
-                    read_file(
-                        root, path.relative_to(root).as_posix(), max_bytes=_LIMIT
-                    ).decode("utf-8")
-                )
+                validate_matching_text(content.decode("utf-8"))
         members = capture_members(root, record, preserved)
 
         def guard():
@@ -263,6 +239,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
             selection.validate()
             dispatch.watch.validate()
             native_watch.validate()
+            includes.check()
 
         guard()
         validate_dispatch(dispatch)
@@ -324,8 +301,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
         producer_watch.validate()
         linked_watch.validate()
         validate_dispatch(dispatch)
-        if _policy_inputs(root, source_path) != policy_inputs:
-            raise ValueError("comparison local include closure changed")
+        includes.validate()
         if (
             _capture_states(root, extra_paths) != native_inputs
             or _capture_states(root, producer_paths) != producer_states
@@ -352,6 +328,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
             "status": "exact" if exact else "different",
             "all_function_bytes_match": exact,
             "native_inputs": native_inputs,
+            "include_inputs": includes.describe_inputs(),
             "outputs": {**producer_states, **linked_states},
             "full_input_closure_verified": False,
             "consumer_coverage_verified": False,

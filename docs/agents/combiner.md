@@ -452,11 +452,21 @@ cap, not a bound on unobserved backend reads; `--output-limit` defaults to 2 MiB
 cannot exceed 64 MiB. Captured inputs and outputs must be single-link files; final
 descriptor-bound identity and mutation metadata detect restored-byte writes too.
 Shared `InputBatch` supports opt-in bounds and metadata without changing defaults.
-Literal local-header discovery uses the same bounded reader, retains its file set
-under watches and rechecks it before/after native work. Source and authored headers
-must pass the existing no-register-pins/clobbers policy before compilation;
-nonliteral includes reject. This is not complete compiler/preprocessor dependency
-closure or proof against transient changes to unobserved include search candidates.
+`combiner.dependencies.IncludeSnapshot` captures literal header bytes and every
+preceding absent lookup candidate through confined single-link reads. Comparison
+v2 reports that exact `include_inputs` set, protects it from output collisions,
+and validates samples after watch registration and before publication. Immediate
+directory mutation watches and candidate-path watches latch transient shadows;
+stage guards drain events without repeatedly hashing all headers. Full endpoint
+checks still reread every captured input. Limits are 16,384 lookup paths, 64 MiB
+per file and 128 MiB total captured content. Existing discovery callers are unchanged.
+All syntactic conditional branches are conservatively traversed, not evaluated.
+Missing headers, absolute/noncanonical names, macro operands, include-next/import,
+pragmas and alternative preprocessing spellings reject; no system-header fallback
+is inferred. Strict scanning accepts LF/CRLF, rejects bare CR and splices only once.
+Source/authored-header policy checks consume the captured bytes.
+This closes observed literal-search gaps, not complete compiler/preprocessor,
+flag-induced include, toolchain/runtime or producer-receipt dependency closure.
 
 Membership comes from preserved selectors, target-local symbols and unique reviewed
 C boundaries. Captured manifest/layout/maps/binary bytes supply bindings and original
