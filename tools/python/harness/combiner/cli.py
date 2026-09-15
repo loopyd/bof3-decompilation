@@ -1,4 +1,4 @@
-"""CLI adapters for read-only consolidation inspection and transaction preparation."""
+"""CLI adapters for consolidation inspection, preparation and native comparison."""
 
 from __future__ import annotations
 
@@ -22,6 +22,8 @@ from harness.build.preservation import (
 )
 from harness.combiner.preservation import capture_preservation
 from harness.combiner.transactions import prepare_transaction, verify_transaction
+from harness.combiner.comparison import compare_members
+from harness.common.lease import acquire_writer
 
 
 def _inspect_source(args: argparse.Namespace) -> int:
@@ -92,6 +94,22 @@ def _run_transaction(args: argparse.Namespace) -> int:
     return 0
 
 
+def _run_comparison(args: argparse.Namespace) -> int:
+    root = resolved_root(args)
+    with acquire_writer(root):
+        payload = compare_members(
+            root,
+            args.source,
+            args.output,
+            deadline=args.work_deadline,
+            output_limit=args.output_limit,
+        )
+        rendered = json.dumps(payload, indent=2, sort_keys=True)
+        check_deadline()
+        print(rendered)
+    return 0 if payload["all_function_bytes_match"] else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="combiner")
     add_root_argument(parser)
@@ -151,6 +169,14 @@ def build_parser() -> argparse.ArgumentParser:
     verify.add_argument("--expected-fingerprint", required=True)
     add_work_deadline_argument(verify)
     verify.set_defaults(handler=_run_transaction)
+    compare = commands.add_parser(
+        "compare", help="compile and compare all preserved group members"
+    )
+    compare.add_argument("source")
+    compare.add_argument("--output", required=True)
+    compare.add_argument("--output-limit", type=int, default=2 * 1024 * 1024)
+    add_work_deadline_argument(compare)
+    compare.set_defaults(handler=_run_comparison)
     return parser
 
 

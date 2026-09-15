@@ -243,7 +243,17 @@ class InputBatch:
             self._failed = True
             raise
 
-    def _read(self, path: Path) -> tuple[dict | None, bytes | None]:
+    def _read(
+        self,
+        path: Path,
+        *,
+        max_bytes: int | None = None,
+        include_metadata: bool = False,
+    ) -> tuple[dict | None, bytes | None]:
+        if max_bytes is not None and (type(max_bytes) is not int or max_bytes < 0):
+            raise ValueError("invalid input batch byte limit")
+        if type(include_metadata) is not bool:
+            raise ValueError("invalid input batch metadata selection")
         parent = self._prepare_parent(path)
         if parent is None:
             self._missing.add(path)
@@ -256,6 +266,8 @@ class InputBatch:
             return None, None
         if not stat.S_ISREG(before.st_mode):
             raise ValueError(f"not a regular input: {path}")
+        if max_bytes is not None and before.st_size > max_bytes:
+            raise ValueError(f"input exceeds batch byte limit: {path}")
         descriptor = os.open(
             path.name,
             os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK,
@@ -266,7 +278,11 @@ class InputBatch:
             if _capture_metadata(os.fstat(descriptor)) != expected:
                 raise ValueError(f"moving input: {path}")
             with os.fdopen(descriptor, "rb", closefd=False) as stream:
-                content = stream.read()
+                content = (
+                    stream.read() if max_bytes is None else stream.read(max_bytes + 1)
+                )
+            if max_bytes is not None and len(content) > max_bytes:
+                raise ValueError(f"input exceeds batch byte limit: {path}")
             check_deadline()
             if (
                 _capture_metadata(os.fstat(descriptor)) != expected
@@ -276,17 +292,28 @@ class InputBatch:
                 != expected
             ):
                 raise ValueError(f"moving input: {path}")
-            return {
+            state = {
                 "sha256": hashlib.sha256(content).hexdigest(),
                 "mode": stat.S_IMODE(before.st_mode),
-            }, content
+            }
+            if include_metadata:
+                state["metadata"] = dict(zip(_INPUT_FIELDS, expected, strict=True))
+            return state, content
         finally:
             os.close(descriptor)
 
-    def read(self, path: Path) -> tuple[dict | None, bytes | None]:
+    def read(
+        self,
+        path: Path,
+        *,
+        max_bytes: int | None = None,
+        include_metadata: bool = False,
+    ) -> tuple[dict | None, bytes | None]:
         """Read fresh bytes; never cache content, absence or validation success."""
         try:
-            return self._read(path)
+            return self._read(
+                path, max_bytes=max_bytes, include_metadata=include_metadata
+            )
         except BaseException:
             self._failed = True
             raise

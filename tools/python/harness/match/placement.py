@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 import shutil
 import tempfile
@@ -170,6 +171,29 @@ def link_grouped_object(
     bindings: Mapping[str, int] | None = None,
     data_sections: Mapping[str, int] | None = None,
 ) -> Path:
+    """Return the linked path after guarded complete-group placement."""
+    result = place_grouped_object(
+        object_path,
+        output,
+        functions,
+        layout=layout,
+        execution=execution,
+        bindings=bindings,
+        data_sections=data_sections,
+    )
+    return Path(result["path"])
+
+
+def place_grouped_object(
+    object_path: Path,
+    output: Path,
+    functions: Mapping[str, int],
+    *,
+    layout: RepoLayout,
+    execution: NativeExecution,
+    bindings: Mapping[str, int] | None = None,
+    data_sections: Mapping[str, int] | None = None,
+) -> dict:
     """Validate privately, then publish confined new artifacts without replacement.
 
     Failure retains scratch and any partial publication for inspection. Publication
@@ -206,20 +230,26 @@ def link_grouped_object(
             data_sections=data_sections,
         )
         execution.check_deadline()
-        atomic_write(
-            layout.root, script_name, private_script.read_bytes(), exclusive=True
-        )
+        script_content = private_script.read_bytes()
+        linked_content = private_output.read_bytes()
+        result = {
+            "path": str(output),
+            "sha256": hashlib.sha256(linked_content).hexdigest(),
+            "script": str(script),
+            "script_sha256": hashlib.sha256(script_content).hexdigest(),
+        }
+        atomic_write(layout.root, script_name, script_content, exclusive=True)
         execution.check_deadline()
-        atomic_write(
-            layout.root, output_name, private_output.read_bytes(), exclusive=True
-        )
+        atomic_write(layout.root, output_name, linked_content, exclusive=True)
     except BaseException as error:
         error.add_note(
             f"grouped native scratch retained at {scratch}; inspect partial outputs"
         )
         raise
     shutil.rmtree(scratch)
-    return output
+    execution.check_deadline()
+    check_deadline()
+    return result
 
 
 def _link_object(

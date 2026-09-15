@@ -92,8 +92,7 @@ def _resolve_lease(root: Path):
     return acquire_writer(root)
 
 
-def run_producer(root: Path, arguments: list[str]) -> int:
-    """Always compile under a writer lease, recording only configured provenance."""
+def _run_producer(root: Path, arguments: list[str]) -> tuple[int, dict | None]:
     root = root.resolve()
     deadline = os.environ.get("BOF3_WORK_DEADLINE")
     receipt = None
@@ -117,7 +116,7 @@ def run_producer(root: Path, arguments: list[str]) -> int:
                     validate_dispatch(dispatch)
                     status = run_compiler(root, arguments)
                     if status:
-                        return status
+                        return status, None
                     validate_dispatch(dispatch)
                     outputs = {
                         dispatch.output,
@@ -129,6 +128,11 @@ def run_producer(root: Path, arguments: list[str]) -> int:
                         validate_dispatch(dispatch)
                         verify_writer(root)
                         check_deadline()
+                        produced = {
+                            "receipt": str(receipt),
+                            "sha256": hashlib.sha256(content).hexdigest(),
+                            "invocation_fingerprint": hash_preservation(dispatch.state),
+                        }
                         published = content
                         _write_receipt(root, receipt, content, b"")
                         watch.validate()
@@ -149,7 +153,7 @@ def run_producer(root: Path, arguments: list[str]) -> int:
                     close_dispatch(dispatch)
                 verify_writer(root)
             check_deadline()
-        return 0
+        return 0, produced
     except BaseException:
         if receipt is not None and published is not None:
             try:
@@ -170,6 +174,20 @@ def run_producer(root: Path, arguments: list[str]) -> int:
                     f"producer receipt invalidation unconfirmed; inspect {receipt} and retained recovery"
                 ) from error
         raise
+
+
+def run_producer(root: Path, arguments: list[str]) -> int:
+    """Always compile under a writer lease, recording only configured provenance."""
+    status, _ = _run_producer(root, arguments)
+    return status
+
+
+def produce_object(root: Path, arguments: list[str]) -> dict:
+    """Return the fresh in-process receipt pin, not a later unbound receipt read."""
+    status, produced = _run_producer(root, arguments)
+    if status or produced is None:
+        raise RuntimeError(f"grouped compilation failed with exit status {status}")
+    return produced
 
 
 def verify_production(root: Path, arguments: list[str], expected_sha256: str) -> dict:

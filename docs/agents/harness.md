@@ -10,7 +10,7 @@ All paths are below `tools/python/harness/`.
 | Package | Owns | Entry points |
 | --- | --- | --- |
 | `macros/` | lexical facts, assembly/C opportunities, ranking, consumers, reviewed transactions and unchanged existing-abstraction dispositions | `bin/macro-audit` → `harness.macros.cli` |
-| `combiner/` | read-only inspection, compiler preservation and joint-image preparation; ranking/application are queued | `sh bin/combiner` → `harness.combiner.cli`; [rollout contract](combiner.md) |
+| `combiner/` | inspection, compiler preservation, joint-image preparation and explicit grouped comparison; ranking/application are queued | `sh bin/combiner` → `harness.combiner.cli`; [rollout contract](combiner.md) |
 | `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/naming-audit` → `harness.naming.cli`; `bin/naming-evidence-run` → `harness.naming.runner` |
 | `types/` | C declarations, representation inference, type-use/candidate indexing, reviewed type transactions | `bin/type-audit` → `harness.types.cli` |
 | `docs/` | scoped Markdown references, snapshots, search, context, aggregation and edit/repair/compaction preparation | `bin/docs` → `harness.docs.cli` |

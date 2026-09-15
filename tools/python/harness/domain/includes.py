@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from pathlib import Path
 
 _LOCAL_INCLUDE_RE = re.compile(
@@ -34,6 +35,7 @@ def local_include_files(
     replacements: dict[Path, str] | None = None,
     strict: bool = False,
     require_literal: bool = False,
+    read_source: Callable[[Path], str] | None = None,
 ) -> list[Path]:
     """Follow literal includes once per file, retaining repository containment.
 
@@ -54,6 +56,8 @@ def local_include_files(
             text = _include_text(
                 replacements[path]
                 if path in replacements
+                else read_source(path)
+                if read_source is not None
                 else path.read_text(encoding="utf-8")
             )
             if require_literal:

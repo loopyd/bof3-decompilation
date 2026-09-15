@@ -207,7 +207,8 @@ def _select_annotated_compiler(root, arguments, sources, output, grouped):
     annotated = [
         source
         for source in sources
-        if source.suffix == ".c" and has_compiler_annotations(_read_source(source))
+        if source.suffix == ".c"
+        and (grouped or has_compiler_annotations(_read_source(source)))
     ]
     if not annotated:
         return None, set()

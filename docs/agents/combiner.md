@@ -14,7 +14,7 @@ owns `parse_function_records` and `select_function_record`; `harness.combiner`
 owns inspection and CLI adaptation. Source claim enumeration and address-selected
 metadata now support grouped files; the reverse index derives each member's own
 lifecycle and attributes direct macro occurrences by implementation range. This is
-not full consumer migration: native matching, metadata repair, source-renaming and
+not full consumer migration: ordinary native matching, metadata repair, source-renaming and
 macro/type transactions still reject grouped inputs. Do not consolidate production
 sources until all gates are implemented.
 
@@ -86,8 +86,8 @@ effective selections reject; no setting is silently discarded. Profile migration
 must freeze old paths/settings before moves, require one compatible effective
 profile and reproduce it at the new path.
 
-`build.sections` partitions output; `match.placement` is still outside production
-matching. The kernel rejects unsupported text subsections/attributes, unplaced allocated sections,
+`build.sections` partitions output; `match.placement` serves explicit grouped
+comparison, not ordinary production matching. The kernel rejects unsupported text subsections/attributes, unplaced allocated sections,
 incorrect symbols/ranges and non-ELF32 little-endian MIPS inputs. `match.flow`
 checks reachable branches and delay slots, conservatively rejecting unproved
 indirect/exception transfers. This proves isolation, not original-byte fidelity.
@@ -332,6 +332,62 @@ and original `--work-deadline`. Permission changes, source writes, index refresh
 and native commands are not performed. `native_verified`, `coverage_verified`,
 `write_authorized` and `accepted` remain false. Domain application, all-member native
 and consumer gates, recovery integration and independent acceptance are still open.
+
+### Grouped comparison
+
+With live POST and its externally retained preservation record, compare the entire
+group through one fresh configured producer invocation:
+
+```sh
+BOF3_PRESERVATION_RECORD=out/group-preservation.json \
+BOF3_PRESERVATION_FINGERPRINT=RECORD_SHA \
+bin/combiner compare src/bof3/ui/group.c \
+  --output out/group-check/attempt.o --work-deadline MONOTONIC_CUTOFF
+```
+
+The output parent must already exist canonically. The object, assembly listing,
+producer receipt, linked ELF and linker script must all be absent; no old artifact
+is reused or replaced. Existing source-qualified preservation routes also work.
+The CLI owns a writer lease; `comparison.compare_members` requires that same-process
+lease when called by another owner. No child borrows it. Grouped compiler selection
+honors attached metadata and legacy object settings, not just an ambient default.
+
+The producer returns its fresh in-process receipt pin; placement returns hashes of
+the private linked/script images before publication. Later reads must match those
+pins. Input/output watches, final hashes, writer checks and one original deadline
+cover compilation, placement and every member. Captured inputs use a 64 MiB per-file
+cap, not a bound on unobserved backend reads; `--output-limit` defaults to 2 MiB and
+cannot exceed 64 MiB. Captured inputs and outputs must be single-link files; final
+descriptor-bound identity and mutation metadata detect restored-byte writes too.
+Shared `InputBatch` supports opt-in bounds and metadata without changing defaults.
+Literal local-header discovery uses the same bounded reader, retains its file set
+under watches and rechecks it before/after native work. Source and authored headers
+must pass the existing no-register-pins/clobbers policy before compilation;
+nonliteral includes reject. This is not complete compiler/preprocessor dependency
+closure or proof against transient changes to unobserved include search candidates.
+
+Membership comes from preserved selectors, target-local symbols and unique reviewed
+C boundaries. Captured manifest/layout/maps/binary bytes supply bindings and original
+ranges; SDK/shared maps never establish member identity. Binding precedence remains
+shared, SDK, local by address, with surviving duplicate/case-colliding names rejected.
+PS-X `t_addr`/`t_size`, payload offset and file/virtual coordinates must agree. Every
+range must be finite, aligned and at least two instructions; no return-based size guess.
+
+Comparison links the complete group once and checks full symbol extents. Different
+sizes stay different, never prefix matches; equal-sized functions also pass the
+existing flow checks. Reports include every member's sizes, hashes and first differing
+byte. Exit zero means all selected function bytes match; a reported difference exits
+one. Unsupported placement/flow or stale inputs fail rather than emit exactness.
+Unplaced allocated data rejects: this route does not invent shared-data ownership.
+Failed native work retains artifacts for inspection; unconfirmed process cleanup is
+not retry or restoration authority.
+
+This is generated-artifact work, not source application or final acceptance. Reports
+set `reusable`, `accepted`, `write_authorized`, full-input closure and consumer coverage
+false. Full include/toolchain/runtime closure, initialized/shared-data proof, ordinary
+matching/status consumers, transactions/recovery and production acceptance remain open.
+Intercepted fixtures cannot establish native equivalence; actual compiler and all-member
+positive/negative byte checks remain required for production admission.
 
 ### Compiler dispatch
 
