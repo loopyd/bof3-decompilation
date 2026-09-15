@@ -11,6 +11,11 @@ from pathlib import Path
 
 import yaml
 
+from harness.build.compiler import CONFIGURATION_PATH
+from harness.build.migration import (
+    read_migration_settings,
+    validate_configuration_migration,
+)
 from harness.build.profiles import ProfileContext, collect_profile_sources
 from harness.common.deadlines import check_deadline
 from harness.common.files import read_file
@@ -23,8 +28,8 @@ from harness.domain.sources import compiled_symbol_name, expected_lift_sources
 from harness.domain.symbols import parse_map
 from harness.io import unique_object
 
-PROFILE_SCHEMA = "bof3.combiner-profile/v2"
-PRESERVATION_SCHEMA = "bof3.combiner-preservation/v4"
+PROFILE_SCHEMA = "bof3.combiner-profile/v3"
+PRESERVATION_SCHEMA = "bof3.combiner-preservation/v5"
 PRESERVATION_OWNERS = (
     "tools/python/harness/combiner/preservation.py",
     "tools/python/harness/build/preservation.py",
@@ -233,6 +238,7 @@ def validate_transition(profile: dict, post: dict) -> tuple[str, str, list[str]]
         not isinstance(profile, dict)
         or profile.get("schema") != PROFILE_SCHEMA
         or "destination_text" not in profile
+        or "configuration" not in profile
     ):
         raise ValueError("preservation requires a configured PRE profile")
     members = profile.get("members")
@@ -279,11 +285,13 @@ def validate_transition(profile: dict, post: dict) -> tuple[str, str, list[str]]
         raise ValueError("preservation requires one pinned target Splat layout")
     layout = layouts[0]
     expected = {destination, manifest, layout, *sources}
+    if profile["configuration"] is not None:
+        expected.add(CONFIGURATION_PATH)
     if set(post) != expected or any(
         post[path] is None for path in [destination, manifest, layout]
     ):
         raise ValueError(
-            "POST must pin only the destination, member removals, manifest and Splat"
+            "POST must pin exactly the destination, member removals, manifest, Splat and declared configuration migration"
         )
     if any(post[source] is not None for source in sources if source != destination):
         raise ValueError("every superseded member must be absent in POST")
@@ -293,6 +301,9 @@ def validate_transition(profile: dict, post: dict) -> tuple[str, str, list[str]]
         hashlib.sha256(text.encode("utf-8")).hexdigest() != post[destination]["sha256"]
     ):
         raise ValueError("POST destination bytes differ from the inspected draft")
+    validate_configuration_migration(
+        profile["configuration"], sources, destination, inputs, post
+    )
     return manifest, layout, sources
 
 
@@ -385,6 +396,8 @@ def verify_preservation(
     source_pre = record["source_pre"]
     if not isinstance(source_pre, dict) or set(source_pre) != set(sources):
         raise ValueError("preservation requires every original source image")
+    migration = profile["configuration"]
+    configuration_text = (migration["before"] or "") if migration is not None else None
     for member in profile["members"]:
         source = member["source"]
         text = source_pre[source]
@@ -394,7 +407,24 @@ def verify_preservation(
             != profile["inputs"][source]["sha256"]
         ):
             raise ValueError("preserved source image differs from its PRE pin")
-        if context.resolve(source, text=text) != common or member["profile"] != common:
+        if (
+            migration is not None
+            and source == sources[0]
+            and (
+                context.resolve_settings(
+                    source, text=text, configuration_text=configuration_text
+                )
+                != read_migration_settings(migration["settings"])
+            )
+        ):
+            raise ValueError(
+                "configuration migration settings differ from retained PRE source"
+            )
+        if (
+            context.resolve(source, text=text, configuration_text=configuration_text)
+            != common
+            or member["profile"] != common
+        ):
             raise ValueError("PRE member compiler profile was not preserved")
     if (
         context.resolve(destination) != common

@@ -10,11 +10,11 @@ import stat
 from pathlib import Path
 
 from harness.build.compiler import (
+    CONFIGURATION_PATH,
+    CompilerSettings,
     build_compiler_arguments,
-    parse_object_compilers,
-    parse_object_flags,
+    parse_compiler_configuration,
     resolve_compiler_settings,
-    validate_object_configuration,
 )
 from harness.common.deadlines import check_deadline
 from harness.common.inputs import InputBatch, read_input
@@ -160,22 +160,20 @@ class ProfileContext:
             raise ValueError(
                 "unsupported build graph recipe; compiler-profile review required"
             )
-        overrides = self.read(
-            "config/compiler/object-flags.cmake", required=False
-        ).decode("utf-8")
+        overrides = self.read(CONFIGURATION_PATH, required=False).decode("utf-8")
         catalog = self.read("config/compiler/variants.json", required=False)
         if catalog:
             json.loads(catalog, object_pairs_hook=unique_object)
-        validate_object_configuration(overrides)
         _validate_cmake_configuration(self.root, cmake)
-        self.flags = parse_object_flags(overrides)
-        self.compilers = parse_object_compilers(overrides)
+        self.flags, self.compilers = parse_compiler_configuration(overrides)
+        self._configurations = {overrides: (self.flags, self.compilers)}
         self.driver = self.read("bin/cc").decode("utf-8")
         for relative in (
             "bin/as",
             "bin/python-env",
             "tools/python/harness/build/compiler.py",
             "tools/python/harness/build/profiles.py",
+            "tools/python/harness/build/migration.py",
             "tools/python/harness/build/preservation.py",
             "tools/python/harness/build/dispatch.py",
             "tools/python/harness/build/routing.py",
@@ -288,11 +286,41 @@ class ProfileContext:
         ):
             raise ValueError("manifest inventory changed during profile capture")
 
-    def resolve(self, source: str, *, text: str | None = None) -> dict:
-        """Resolve the current configured compiler and ordered driver options."""
+    def resolve_settings(
+        self,
+        source: str,
+        *,
+        text: str | None = None,
+        configuration_text: str | None = None,
+    ) -> CompilerSettings:
+        """Resolve metadata against captured current or explicit retained settings."""
+        check_deadline()
         if text is None:
             text = self.read(source, required=False).decode("utf-8")
-        settings = resolve_compiler_settings(source, text, self.flags, self.compilers)
+        flags, compilers = self.flags, self.compilers
+        if configuration_text is not None:
+            if not isinstance(configuration_text, str):
+                raise ValueError("compiler configuration must be text")
+            if configuration_text not in self._configurations:
+                self._configurations[configuration_text] = parse_compiler_configuration(
+                    configuration_text
+                )
+            flags, compilers = self._configurations[configuration_text]
+        result = resolve_compiler_settings(source, text, flags, compilers)
+        check_deadline()
+        return result
+
+    def resolve(
+        self,
+        source: str,
+        *,
+        text: str | None = None,
+        configuration_text: str | None = None,
+    ) -> dict:
+        """Resolve the selected compiler and ordered options with captured inputs."""
+        settings = self.resolve_settings(
+            source, text=text, configuration_text=configuration_text
+        )
         compiler_id = settings.compiler_id
         if compiler_id is None:
             executable = self.layout.gcc272_psx_root / "gcc"

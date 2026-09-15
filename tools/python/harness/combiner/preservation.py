@@ -76,6 +76,7 @@ def capture_preservation(
         sources,
         expected_fingerprint=expected_profile_fingerprint,
         destination_text=profile["destination_text"],
+        migrate_configuration=profile["configuration"] is not None,
     )
     if profile != current:
         raise ValueError("supplied PRE profile differs from current configured inputs")

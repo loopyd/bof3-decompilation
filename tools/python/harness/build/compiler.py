@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from harness.common.files import read_file
+from harness.common.deadlines import check_deadline
 from harness.common.lexicon import iter_c_lexemes
 from harness.domain.functions import parse_function_records
 from harness.toolchain.gcc import OLD_GCC_IDENTITY
@@ -17,6 +18,7 @@ OBJECT_FLAGS_RE = re.compile(r"^\s*set\(\s*BOF3_OBJFLAGS_(\S+)\s+(.*?)\)\s*$")
 OBJCOMPILER_RE = re.compile(r"^\s*set\(\s*BOF3_OBJCOMPILER_(\S+)\s+(\S+)\s*\)\s*$")
 COMPILER_TAG_RE = re.compile(r"@(compiler|gcc|cflags|flags)\b")
 DEFAULT_COMPILER_ID = f"gcc-{OLD_GCC_IDENTITY}-psx"
+CONFIGURATION_PATH = "config/compiler/object-flags.cmake"
 _INVOCATION_FLAGS = {
     "-c",
     "-E",
@@ -129,19 +131,29 @@ def validate_object_configuration(text: str) -> None:
                 raise ValueError("unsupported object compiler flag syntax")
 
 
+def parse_compiler_configuration(
+    text: str,
+) -> tuple[dict[str, list[str]], dict[str, str]]:
+    """Decode bounded literal settings without evaluating CMake statements."""
+    check_deadline()
+    if not isinstance(text, str) or len(text.encode("utf-8")) > 4 * 1024 * 1024:
+        raise ValueError("object compiler configuration exceeds the text bound")
+    validate_object_configuration(text)
+    result = parse_object_flags(text), parse_object_compilers(text)
+    check_deadline()
+    return result
+
+
 def load_compiler_configuration(
     root: Path,
 ) -> tuple[dict[str, list[str]], dict[str, str]]:
     """Read one bounded, literal configuration for settings-producing callers."""
     content = read_file(
-        root,
-        "config/compiler/object-flags.cmake",
-        missing_ok=True,
-        max_bytes=4 * 1024 * 1024,
+        root, CONFIGURATION_PATH, missing_ok=True, max_bytes=4 * 1024 * 1024
     )
-    text = content.decode("utf-8") if content is not None else ""
-    validate_object_configuration(text)
-    return parse_object_flags(text), parse_object_compilers(text)
+    return parse_compiler_configuration(
+        content.decode("utf-8") if content is not None else ""
+    )
 
 
 @dataclass(frozen=True)

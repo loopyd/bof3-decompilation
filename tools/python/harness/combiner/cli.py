@@ -39,6 +39,7 @@ def _inspect_profiles(args: argparse.Namespace) -> int:
             args.destination_source,
             expected_sha256=args.expected_destination_sha256,
         ),
+        migrate_configuration=args.migrate_configuration,
     )
     rendered = json.dumps(payload, indent=2)
     check_deadline()
@@ -86,6 +87,7 @@ def build_parser() -> argparse.ArgumentParser:
     profile.add_argument("--expected-fingerprint")
     profile.add_argument("--destination-source", type=Path)
     profile.add_argument("--expected-destination-sha256")
+    profile.add_argument("--migrate-configuration", action="store_true")
     add_work_deadline_argument(profile)
     profile.set_defaults(handler=_inspect_profiles)
     preservation = commands.add_parser(

@@ -7,7 +7,12 @@ import json
 import re
 from pathlib import Path
 
-from harness.build.compiler import DEFAULT_COMPILER_ID, sanitize_identifier
+from harness.build.compiler import (
+    CONFIGURATION_PATH,
+    DEFAULT_COMPILER_ID,
+    sanitize_identifier,
+)
+from harness.build.migration import plan_configuration
 from harness.build.profiles import ProfileContext, collect_profile_sources
 from harness.build.preservation import (
     PROFILE_SCHEMA,
@@ -43,9 +48,12 @@ def inspect_profiles(
     *,
     expected_fingerprint: str | None = None,
     destination_text: str | None = None,
+    migrate_configuration: bool = False,
 ) -> dict:
     """Require one configured profile for explicit whole-file members and destination."""
     root = root.resolve()
+    if type(migrate_configuration) is not bool:
+        raise ValueError("configuration migration selection must be boolean")
     target = normalize_target_id(target).value
     destination = _resolve_source_path(destination)
     sources = [_resolve_source_path(source) for source in sources]
@@ -195,7 +203,22 @@ def inspect_profiles(
     if any(member["profile"] != common for member in members[1:]):
         raise ValueError("member compiler profiles are incompatible")
     validate_destination_text(destination_text, target, members)
-    destination_profile = context.resolve(destination, text=destination_text)
+    configuration = None
+    if migrate_configuration:
+        before = context.read(CONFIGURATION_PATH, required=False).decode("utf-8")
+        configuration = plan_configuration(
+            before if context.inputs[CONFIGURATION_PATH] is not None else None,
+            sources,
+            destination,
+            context.resolve_settings(sources[0]),
+        )
+    destination_profile = context.resolve(
+        destination,
+        text=destination_text,
+        configuration_text=configuration["after"]
+        if configuration is not None
+        else None,
+    )
     if destination_profile != common:
         raise ValueError("destination would change the captured compiler profile")
     for name in (
@@ -215,6 +238,7 @@ def inspect_profiles(
         "common_profile": common,
         "destination_profile": destination_profile,
         "destination_text": destination_text,
+        "configuration": configuration,
         "inputs": context.inputs,
         "source_inventory": {
             "count": len(inventory),
