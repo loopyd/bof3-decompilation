@@ -63,9 +63,15 @@ Reviewed source expectations retain every boundary address: singleton values rem
 integers and grouped values are sorted tuples. Scans require complete agreement and
 reject duplicate owners; they do not choose the first path. Layout promotion remains
 pending. Status cache v7 keys each target/source/address and checks record identity;
-grouped native status/cache admission remains gated. Index v15 invalidates older derived
+grouped native status/cache admission remains gated. Index v16 invalidates older derived
 semantics; preserve the old index before rebuilding. A rejected candidate never
 replaces it, and an older schema is historical evidence, not current acceptance.
+
+Type-use indexing retains known type spellings from fingerprinted source claims.
+Supported attached implementation ranges link to the matching indexed target,
+source and address; unsupported metadata and outside-body spellings remain source
+context. Separate function keys preserve sibling uses. These lexical candidates
+do not prove C type binding, close include consumers or enable type transactions.
 
 Macro association uses authored ranges even when the analyzer omitted a sibling;
 that sibling's uses remain unresolved, never borrowed by the sole indexed function.

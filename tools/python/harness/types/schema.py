@@ -38,14 +38,17 @@ SCHEMA = """
             target_id TEXT NOT NULL REFERENCES targets(id),
             source_path TEXT NOT NULL,
             subject TEXT NOT NULL,
-            function_id TEXT,
+            function_id TEXT REFERENCES functions(id),
             type_name TEXT NOT NULL,
             use_kind TEXT NOT NULL,
             storage_kind TEXT,
             provenance TEXT NOT NULL,
             evidence TEXT NOT NULL,
-            PRIMARY KEY(target_id, source_path, subject, type_name, use_kind)
+            PRIMARY KEY(target_id, source_path, subject, type_name, use_kind, function_id)
         );
+        CREATE UNIQUE INDEX type_usages_context
+            ON type_usages(target_id, source_path, subject, type_name, use_kind)
+            WHERE function_id IS NULL;
         CREATE TABLE type_constraints (
             target_id TEXT NOT NULL REFERENCES targets(id),
             type_name TEXT NOT NULL,

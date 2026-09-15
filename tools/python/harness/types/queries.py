@@ -26,7 +26,7 @@ def types_payload(
     if untyped:
         clauses.append(
             "NOT EXISTS (SELECT 1 FROM type_usages u WHERE u.target_id = d.target_id "
-            "AND u.type_name = d.name)"
+            "AND u.type_name = d.name AND u.use_kind != 'lexical')"
         )
     where = "WHERE " + " AND ".join(clauses) if clauses else ""
     params.append(-1 if limit == 0 else limit)
@@ -112,7 +112,7 @@ def type_usages_payload(
         for row in connection.execute(
             f"SELECT target_id, source_path, subject, function_id, type_name, use_kind, "
             f"storage_kind, provenance, evidence FROM type_usages {where} ORDER BY target_id, "
-            "source_path, subject, type_name LIMIT ?",
+            "source_path, subject, type_name, function_id, use_kind LIMIT ?",
             params,
         )
     ]

@@ -18,6 +18,7 @@ from harness.types.inference import infer_type_candidates
 from harness.types.index import insert_authored_types
 from harness.types.index import insert_shared_scalar_types
 from harness.types.inputs import type_input_digest, type_input_rows
+from harness.types.usages import insert_source_usages
 
 from ..domain.claims import index_source_paths
 from ..domain.layout import parse_splat_layout
@@ -145,6 +146,7 @@ def rebuild(root: Path) -> Path:
                 _insert_functions(
                     connection, root, target, manifest, target_spec, binary, snapshot
                 )
+                insert_source_usages(connection, root, target, manifest)
                 _insert_data_references(
                     connection, root, target, manifest, binary, snapshot
                 )

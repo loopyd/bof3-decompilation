@@ -329,7 +329,14 @@ remains in reference queries, but cannot establish storage widths, layout fields
 regions or array strides. Aggregate/array `end` is the exclusive end of the
 observed access span, including access widths—not a proven object/array extent.
 Prototype and blocked semantic receiver/dispatch leads remain separate.
-Reverse index v14 invalidates older cached inference; refresh explicitly with
+`type-uses` also reports known type spellings from fingerprinted claimed C sources
+as `lexical` rows, with occurrence positions and unresolved binding evidence.
+Supported attached ranges link only to matching indexed target/source/address
+identities; other occurrences retain conservative source context. Comments and
+literals are excluded. Same-spelled variables, fields or macros can still be
+lexical candidates: these rows never satisfy `types --untyped`, prove a type
+binding, close include consumers or grant transaction/native acceptance.
+Reverse index v16 invalidates older cached inference; refresh explicitly with
 `bin/index` after snapshot freshness checks. Queries never rebuild it implicitly.
 
 `bin/analysis-readiness [TARGET]` is the bounded aggregate checkpoint. By default it reports snapshot/index freshness and stale facts, then summary work graphs and exact naming, type, and macro counts; `TARGET` restricts every inventory, debt, candidate, and work count to that target. Use `--detail full` only when the exhaustive candidate rows, blockers, fingerprints, and generated naming work are required. Both modes retain the `bof3.analysis-readiness/v2` schema and differ only in `work_graph` detail. The command is read-only and prints `bin/index --recover` when authoritative inputs have made the disposable index stale. Recovery is explicit so reviewed transactions pass before index refresh.
