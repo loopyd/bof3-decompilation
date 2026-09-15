@@ -226,7 +226,11 @@ def _build_preflight(
             claimed[address] = source
             source_name = source.relative_to(root).as_posix()
             key = source_fingerprint(source, target_key) if cache is not None else ""
-            record = cache.get(target, source_name, key) if cache is not None else None
+            record = (
+                cache.get(target, source_name, address, key)
+                if cache is not None
+                else None
+            )
             if record is not None:
                 ready.append(record)
                 continue
@@ -361,7 +365,7 @@ def _run_batch_misses(
                     root, target, source, address, source_name, result
                 )
                 if cache is not None:
-                    cache.put(target, source_name, key, record)
+                    cache.put(target, source_name, address, key, record)
                 records.append(record)
 
             for item, request, resolved in resolved_items:
@@ -381,7 +385,7 @@ def _run_batch_misses(
                     root, target, source, address, source_name, result
                 )
                 if cache is not None:
-                    cache.put(target, source_name, key, record)
+                    cache.put(target, source_name, address, key, record)
                 records.append(record)
         else:
             # Batch failed — fall back to per-source build + compare
@@ -403,7 +407,7 @@ def _run_batch_misses(
                     root, target, source, address, source_name, result
                 )
                 if cache is not None:
-                    cache.put(target, source_name, key, record)
+                    cache.put(target, source_name, address, key, record)
                 records.append(record)
 
     return records

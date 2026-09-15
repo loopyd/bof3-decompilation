@@ -337,6 +337,7 @@ def test_build_preflight_reuses_cache_hits(tmp_path: Path, monkeypatch) -> None:
     cache.put(
         "exe/logo",
         "src/exe/logo/func_80100010.c",
+        0x80100010,
         "fake-fingerprint",
         {
             "target": "exe/logo",
@@ -603,6 +604,7 @@ def test_no_batch_when_all_sources_are_cached(tmp_path: Path, monkeypatch) -> No
     cache.put(
         "exe/logo",
         "src/exe/logo/func_80100010.c",
+        0x80100010,
         "fake-fp",
         {
             "target": "exe/logo",

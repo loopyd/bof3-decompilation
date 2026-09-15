@@ -61,8 +61,9 @@ including incomplete member tags, instead of selecting or overwriting the first.
 
 Reviewed source expectations retain every boundary address: singleton values remain
 integers and grouped values are sorted tuples. Scans require complete agreement and
-reject duplicate owners; they do not choose the first path. Layout promotion and
-function-qualified status caching remain pending. Index v15 invalidates older derived
+reject duplicate owners; they do not choose the first path. Layout promotion remains
+pending. Status cache v7 keys each target/source/address and checks record identity;
+grouped native status/cache admission remains gated. Index v15 invalidates older derived
 semantics; preserve the old index before rebuilding. A rejected candidate never
 replaces it, and an older schema is historical evidence, not current acceptance.
 
@@ -103,7 +104,7 @@ artifacts are never replaced. These kernel fixes pass disposable native probes
 and independent review, not grouped-source acceptance. A scratch two-panel unit
 also passes original-byte/instruction comparison after one configured GCC run.
 Complete producer/include/toolchain freshness, shared
-data, instruction selection, complete member coverage and function-scoped caching
+data, instruction selection, complete member coverage and grouped status/cache admission
 remain open; do not bypass existing guards. Current CMake ownership
 dependencies are conservative across targets, not a performance optimization.
 

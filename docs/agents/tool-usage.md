@@ -914,6 +914,12 @@ On a cold or partially invalidated cache, `decomp-status` batch-builds all
 valid cache-miss objects per owning target in a single CMake invocation, then
 compares each individually. An all-cache-hit target issues no build command.
 Configuration belongs to the shared batch builder; status does not repeat it.
+Disposable status cache v7 keys entries by canonical target, source path and function
+address. Cached payload identity must match that key; malformed or misbound records
+are misses, and source-only schemas invalidate rather than promote old rows. Target
+and whole-source fingerprints retain their existing input coverage. This does not
+authenticate arbitrary cached result values or permit grouped native comparison;
+the preflight guard still rejects grouped sources before cache reuse.
 Post-build ownership refresh and per-source fallback remain mandatory.
 After every successful or failed batch, status reloads manifests. Missing, changed
 or unreadable target metadata yields uncached invalid records, without comparison

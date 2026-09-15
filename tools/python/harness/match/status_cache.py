@@ -10,11 +10,13 @@ import sqlite3
 from typing import Any, Iterable
 
 from harness.common.files import read_file
+from harness.common.directory import validate_repo_path
+from harness.domain.ids import normalize_target_id
 
 from ..io import file_sha256
 from ..domain.manifests import TargetManifest
 
-_SCHEMA = "harness.decomp-status-cache/v6"
+_SCHEMA = "harness.decomp-status-cache/v7"
 _CONFIGURATION = (
     "config/compiler/object-flags.cmake",
     "config/compiler/variants.json",
@@ -98,6 +100,15 @@ def source_fingerprint(source: Path, target_fingerprint: str) -> str:
     return digest.hexdigest()
 
 
+def _validate_identity(target: str, source: str, address: int) -> dict[str, str]:
+    if not isinstance(target, str) or normalize_target_id(target).value != target:
+        raise ValueError("status cache target must be canonical")
+    validate_repo_path(source)
+    if type(address) is not int or not 0 <= address <= 0xFFFFFFFF:
+        raise ValueError("status cache address must be an unsigned 32-bit integer")
+    return {"target": target, "source": source, "address": f"0x{address:08X}"}
+
+
 class MatchStatusCache:
     """SQLite-backed, throwaway cache whose misses are always safe to recompute."""
 
@@ -120,15 +131,20 @@ class MatchStatusCache:
         )
         self.connection.execute(
             "CREATE TABLE IF NOT EXISTS results ("
-            "target TEXT NOT NULL, source TEXT NOT NULL, fingerprint TEXT NOT NULL, "
-            "record TEXT NOT NULL, PRIMARY KEY (target, source))"
+            "target TEXT NOT NULL, source TEXT NOT NULL, address INTEGER NOT NULL, "
+            "fingerprint TEXT NOT NULL, record TEXT NOT NULL, "
+            "PRIMARY KEY (target, source, address))"
         )
         self.connection.commit()
 
-    def get(self, target: str, source: str, fingerprint: str) -> dict[str, Any] | None:
+    def get(
+        self, target: str, source: str, address: int, fingerprint: str
+    ) -> dict[str, Any] | None:
+        expected = _validate_identity(target, source, address)
         row = self.connection.execute(
-            "SELECT record FROM results WHERE target = ? AND source = ? AND fingerprint = ?",
-            (target, source, fingerprint),
+            "SELECT record FROM results WHERE target = ? AND source = ? "
+            "AND address = ? AND fingerprint = ?",
+            (target, source, address, fingerprint),
         ).fetchone()
         if row is None:
             return None
@@ -136,15 +152,29 @@ class MatchStatusCache:
             record = json.loads(row[0])
         except json.JSONDecodeError:
             return None
-        return record if isinstance(record, dict) else None
+        if not isinstance(record, dict) or any(
+            record.get(name) != value for name, value in expected.items()
+        ):
+            return None
+        return record
 
     def put(
-        self, target: str, source: str, fingerprint: str, record: dict[str, Any]
+        self,
+        target: str,
+        source: str,
+        address: int,
+        fingerprint: str,
+        record: dict[str, Any],
     ) -> None:
+        expected = _validate_identity(target, source, address)
+        if not isinstance(record, dict) or any(
+            record.get(name) != value for name, value in expected.items()
+        ):
+            raise ValueError("status cache record differs from function identity")
         self.connection.execute(
-            "INSERT OR REPLACE INTO results (target, source, fingerprint, record) "
-            "VALUES (?, ?, ?, ?)",
-            (target, source, fingerprint, json.dumps(record, sort_keys=True)),
+            "INSERT OR REPLACE INTO results (target, source, address, fingerprint, record) "
+            "VALUES (?, ?, ?, ?, ?)",
+            (target, source, address, fingerprint, json.dumps(record, sort_keys=True)),
         )
         self.connection.commit()
 
