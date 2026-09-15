@@ -68,8 +68,12 @@ replaces it, and an older schema is historical evidence, not current acceptance.
 
 Macro association uses authored ranges even when the analyzer omitted a sibling;
 that sibling's uses remain unresolved, never borrowed by the sole indexed function.
-Prologue/header/definition uses remain contextual. This does not yet migrate macro
-consumer coverage or type-use identities. Native resolve/compare and status preflight
+The macro coverage guard now checks exact source/function identities against
+hash-matching source samples and complete authored/indexed membership. Contextual
+source and included-header uses require every affected member; direct lexical uses
+retain their own range. Strict unchanged-assessment mode still rejects unresolved
+identities. This does not migrate type-use identities or enable grouped application.
+Native resolve/compare and status preflight
 reject grouped files before comparison/cache reuse; macro/type preparation, proposed
 C images and filename-changing naming facts retain corresponding guards.
 

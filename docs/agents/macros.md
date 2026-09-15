@@ -347,11 +347,19 @@ dependencies and the separate private-proof contract below.
 
 Preparation currently rejects **known omitted consumers** of existing macros in
 writable owner/affected-source files. It follows indexed transitive uses and maps
-header uses to claimed includers; those sources must be in `affected_functions`.
-The guard is conservative for the whole writable file, not just a planned macro
-body edit, and run-time rederivation repeats it before writes. It is a necessary
-coverage check, not completeness proof for new definitions or unindexed/dynamic
-uses. Semantic review and explicit scope remain mandatory.
+direct uses to exact target/source/function identities. Grouped source samples must
+match their indexed hashes and every attached metadata address must have exactly
+one corresponding indexed member. Use locations must agree with those authored
+ranges; a covered sibling cannot substitute for an omitted or unresolved consumer.
+Contextual source uses and header uses through claimed includers conservatively
+require every member of each affected source. Direct uses do not automatically make
+unreferenced siblings consumers. Strict unchanged-assessment mode still requires
+a resolved indexed identity; it never expands contextual uses into broader scope.
+
+The guard covers the whole writable owner file, not just a planned macro body edit;
+run-time rederivation repeats it before writes. This is necessary lexical coverage,
+not proof of complete expansion, new definitions or unindexed/dynamic uses. Semantic
+review, explicit scope and the existing grouped native/mutation guards remain.
 
 Macro dependency checks follow literal quoted and angle-bracket includes in one
 transitive traversal across the configured build's `src/`, `include/`, and
