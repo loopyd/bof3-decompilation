@@ -7,7 +7,7 @@ import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from harness.build.runtime import ASSEMBLER_POLICY, MASPSX_POLICY, Runtime
+from harness.build.runtime import ASSEMBLER_POLICY, GCC_POLICY, MASPSX_POLICY, Runtime
 from harness.common.digests import digest
 from harness.common.process import resolve_supervisor
 
@@ -282,6 +282,7 @@ def plan_invocation(
                     [executable, *argv],
                     base if driver else compiler_environment,
                     produced=produced,
+                    runtime=None if driver else Runtime(GCC_POLICY, root),
                 ),
             ),
         )
@@ -333,6 +334,7 @@ def plan_invocation(
                 [executable, *_compiler_arguments(arguments, assembly)],
                 compiler_environment,
                 produced=assembly,
+                runtime=Runtime(GCC_POLICY, root),
             ),
             stage(
                 "maspsx",

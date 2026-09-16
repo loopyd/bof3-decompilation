@@ -14,11 +14,56 @@ if TYPE_CHECKING:
 
 MASPSX_POLICY = "maspsx-local-sources/v1"
 ASSEMBLER_POLICY = "bof3-assembler-wrapper/v1"
+GCC_POLICY = "gcc-2.7.2-psx-search/v1"
 _SOURCES = {
     MASPSX_POLICY: "38c090123ad707fb28c40013121c71036a763ec3b787a5c6ab6b55752d1166ae",
     ASSEMBLER_POLICY: "1bc786f76eb2fc72f448a00ea7b94ca5fb3a3d2ecc55a591020951c9585011ca",
+    GCC_POLICY: "4eb1d9e0335ef61aa484afe1c671e807f54a2526c483a48ee6ae9e5e98f408c6",
 }
 _COMMON = {"provider", "root", "stage", "cwd", "operand", "spelling"}
+_FIELDS = {
+    MASPSX_POLICY: {"interpreter", "python_path"},
+    ASSEMBLER_POLICY: {"assembler", "path"},
+    GCC_POLICY: {"exec_prefix", "compiler_path", "path", "controls"},
+}
+
+
+def _is_search_control(argument: str) -> bool:
+    return argument.startswith(("-B", "-b", "-V", "-specs", "--", "@", "-x"))
+
+
+def _gcc_candidates(seed: dict) -> list[tuple[str, str, list[str] | None]]:
+    machine = "mips-sony-psx/"
+    suffix = machine + "2.7.2/"
+    standard = ("/opt/cross/lib/gcc-lib/", "/usr/lib/gcc/")
+    tool = "/opt/cross/mips-sony-psx/"
+    compiler_paths = [
+        (path if path.endswith("/") else path + "/") if path else "./"
+        for path in seed["compiler_path"].split(os.pathsep)
+    ]
+    specs = [
+        (seed["exec_prefix"], (suffix, "")),
+        *((prefix, (suffix,)) for prefix in standard),
+        (tool + "lib/", (suffix, "")),
+    ]
+    executables = [
+        *((prefix, (suffix, "")) for prefix in [seed["exec_prefix"], *compiler_paths]),
+        *((prefix, (suffix, machine)) for prefix in standard),
+        (tool + "bin/", (suffix, "")),
+    ]
+    pending = [
+        ("runtime-source", prefix + ending + "specs", None)
+        for prefix, endings in specs
+        for ending in endings
+    ]
+    for name in ("cpp", "cc1"):
+        pending.extend(
+            ("runtime-executable", prefix + ending + name, None)
+            for prefix, endings in executables
+            for ending in endings
+        )
+        pending.append(("runtime-executable", name, seed["path"]))
+    return pending
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,6 +103,17 @@ def describe_seeds(invocation: Invocation) -> list[dict]:
             seed.update(
                 interpreter=stage.arguments[0], python_path=path.split(os.pathsep)
             )
+        elif policy.provider == GCC_POLICY:
+            seed.update(
+                exec_prefix=environment.get("GCC_EXEC_PREFIX"),
+                compiler_path=environment.get("COMPILER_PATH"),
+                path=os.get_exec_path(environment),
+                controls=[
+                    argument
+                    for argument in stage.arguments[1:]
+                    if isinstance(argument, str) and _is_search_control(argument)
+                ],
+            )
         else:
             seed.update(
                 path=os.get_exec_path(environment),
@@ -85,17 +141,20 @@ def validate_seeds(seeds: object) -> None:
         ):
             raise ValueError("unknown runtime candidate policy")
         python = seed["provider"] == MASPSX_POLICY
-        if set(seed) != _COMMON | (
-            {"interpreter", "python_path"} if python else {"assembler", "path"}
-        ):
+        gcc = seed["provider"] == GCC_POLICY
+        if set(seed) != _COMMON | _FIELDS[seed["provider"]]:
             raise ValueError("runtime policy seed fields differ")
-        for name in (
+        spellings = (
             "root",
             "stage",
             "cwd",
             "spelling",
-            "interpreter" if python else "assembler",
-        ):
+        ) + (
+            ("exec_prefix", "compiler_path")
+            if gcc
+            else ("interpreter" if python else "assembler",)
+        )
+        for name in spellings:
             value = seed[name]
             if (
                 not isinstance(value, str)
@@ -122,6 +181,21 @@ def validate_seeds(seeds: object) -> None:
             )
         ):
             raise ValueError("runtime search roots exceed their bounds")
+        if gcc:
+            controls = seed["controls"]
+            if (
+                len(seed["compiler_path"].split(os.pathsep)) > 16
+                or not isinstance(controls, list)
+                or len(controls) > 256
+                or any(
+                    not isinstance(value, str)
+                    or "\0" in value
+                    or len(os.fsencode(value)) > 16384
+                    or not _is_search_control(value)
+                    for value in controls
+                )
+            ):
+                raise ValueError("GCC search controls exceed their bounds")
         identity = (seed["stage"], seed["provider"])
         if identity in identities:
             raise ValueError("duplicate runtime stage policy")
@@ -175,8 +249,13 @@ def derive_candidates(
             if checksum == _SOURCES[seed["provider"]]
             else "unrecognized-source"
         )
-        if not python and source["spelling"] != str(root / "bin/as"):
+        gcc = seed["provider"] == GCC_POLICY
+        if seed["provider"] == ASSEMBLER_POLICY and source["spelling"] != str(
+            root / "bin/as"
+        ):
             status = "unsupported-location"
+        if gcc and status == "candidate-only" and seed["controls"]:
+            status = "unsupported-controls"
         pending = []
         if status == "candidate-only":
             if python:
@@ -190,6 +269,8 @@ def derive_candidates(
                         "maspsx.pyc",
                     )
                 ]
+            elif gcc:
+                pending = _gcc_candidates(seed)
             else:
                 pending = [
                     ("runtime-executable", "/bin/sh", None),
@@ -230,6 +311,16 @@ def derive_candidates(
                         "startup-stdlib-runtime",
                     ]
                     if python
+                    else [
+                        "source-build-correspondence",
+                        "executable-suffix-variants",
+                        "specs-command-expansion",
+                        "post-specs-prefixes",
+                        "language-specific-backends",
+                        "effective-executable-selection",
+                        "preprocessor-inputs",
+                    ]
+                    if gcc
                     else [
                         "shell-command-semantics",
                         "shell-directory-resolution",

@@ -200,7 +200,16 @@ validation-success cache. `build.runtime` derives versioned source-pin-driven
 candidate edges from declared Stage policies; `build.observations` validates
 retained direct/runtime graphs and causal replay without live reads. Provider
 settings participate in profile cache keys; recapture rederives the expansion.
-These are candidate observations, not effective import or shell resolution.
+The canonical GCC policy pins the captured driver binary and binds its effective
+GCC_EXEC_PREFIX, COMPILER_PATH and PATH. It records initial specs and cpp/cc1
+candidates, including machine/version prefixes, compiled default roots and PATH
+fallbacks; repeated roots retain their order. Alternate binaries and search-control
+options remain explicit unresolved cases, never default substitutions. Existing
+policy replay and historical graph shapes remain unchanged; live owner pins and
+stage fingerprints require fresh evidence after policy edits.
+These observations do not prove effective import, shell or GCC selection.
+Executable suffixes, specs expansion, post-specs prefixes, other language backends
+and preprocessor inputs remain unresolved; native and consolidation gates stay closed.
 See [program observations](combiner.md#program-observations)
 for limits and unresolved runtime/backend dependencies.
 `build.inventory` owns configured
