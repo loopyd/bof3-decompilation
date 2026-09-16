@@ -256,6 +256,13 @@ the phase catalog is not passed across those subprocess boundaries or stored in
 resolved results. This avoids repeated full claim validation without weakening
 post-build comparison checks.
 
+Link bindings use a supplied resolved manifest's target ID and PsyQ space even
+when a custom weak-binding source lives elsewhere. Its filename does not change
+canonical map ownership. Without a manifest, legacy directory inference remains;
+explicit canonical bindings, including an empty mapping, still suppress map reload.
+Address-encoded names and per-symbol weak-file fallback keep their precedence.
+This lookup rule is not source authority or native match evidence.
+
 Macro, naming and type `cli.py` modules register their `rev-query` subcommands and own their
 argument-to-query adapters. `commands/rev_query.py` composes those registrations,
 checks index freshness and target identity, and prints their results. Naming

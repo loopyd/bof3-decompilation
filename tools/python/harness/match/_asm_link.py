@@ -23,15 +23,15 @@ def _target_map_bindings(
 ) -> dict[str, int]:
     """Load the canonical map only for the source target owning this link."""
 
-    try:
-        target = symbols_c_path.parent.relative_to(repo.root / "src").as_posix()
-    except ValueError:
-        return {}
-    space = (
-        manifest.psyq_space
-        if manifest is not None and manifest.id.value == target
-        else None
-    )
+    if manifest is not None:
+        target = manifest.id.value
+        space = manifest.psyq_space
+    else:
+        try:
+            target = symbols_c_path.parent.relative_to(repo.root / "src").as_posix()
+        except ValueError:
+            return {}
+        space = None
     return {
         symbol.canonical_name: symbol.address
         for symbol in load_target_symbols(repo.root, target, psyq_space=space)
