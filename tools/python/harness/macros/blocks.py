@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from harness.analysis.index import connect
+from harness.common.deadlines import check_deadline
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
 from harness.domain.mips import normalized_instruction_stream
@@ -40,6 +41,7 @@ def validate_minimum(value: object) -> int:
 
 
 def _corpus(connection: sqlite3.Connection, root: Path, minimum: int):
+    check_deadline()
     manifests = load_target_manifests(root)
     contexts = {}
     functions = []
@@ -51,6 +53,7 @@ def _corpus(connection: sqlite3.Connection, root: Path, minimum: int):
         "AND analyzer_sha256=reviewed_sha256 AND trivial_kind IS NULL "
         "AND contains_data=0 ORDER BY target_id,address,id",
     ):
+        check_deadline()
         identity, target, address, size, expected, source, status = raw
         if size < minimum * 4 or size % 4 or address % 4:
             continue
@@ -118,10 +121,12 @@ def _corpus(connection: sqlite3.Connection, root: Path, minimum: int):
         positions.extend((function_index, index) for index in range(len(stream.words)))
         words.append(-function_index - 1)
         positions.append((-1, -1))
+    check_deadline()
     return functions, words, positions
 
 
 def _nonoverlapping(functions, positions, starts, size):
+    check_deadline()
     ordered = sorted(
         {positions[start] for start in starts},
         key=lambda item: (
@@ -133,12 +138,14 @@ def _nonoverlapping(functions, positions, starts, size):
     ends: dict[str, int] = {}
     selected = []
     for function_index, offset in ordered:
+        check_deadline()
         function = functions[function_index]
         address = function["address"] + offset * 4
         if address < ends.get(function["target"], -1):
             continue
         ends[function["target"]] = address + size * 4
         selected.append((function_index, offset))
+    check_deadline()
     return selected
 
 
@@ -146,10 +153,12 @@ def block_opportunities_payload(
     connection: sqlite3.Connection, root: Path, *, min_instructions: int
 ) -> list[dict[str, Any]]:
     """Find repeated sub-function intervals; all output remains evidence-blocked."""
+    check_deadline()
     minimum = validate_minimum(min_instructions)
     functions, words, positions = _corpus(connection, root, minimum)
     groups = []
     for size, parent_size, starts in repeated_intervals(words, minimum):
+        check_deadline()
         selected = _nonoverlapping(functions, positions, starts, size)
         if len(selected) < MINIMUM_USES:
             low, high = max(minimum, parent_size + 1), size - 1
@@ -174,6 +183,7 @@ def block_opportunities_payload(
     retained = defaultdict(list)
     candidates = []
     for size, selected, shape, raw_count in groups:
+        check_deadline()
         identity_set = tuple(index for index, _offset in selected)
         if any(
             all(
@@ -188,6 +198,7 @@ def block_opportunities_payload(
         retained[identity_set].append((size, selected))
         members = []
         for function_index, offset in selected:
+            check_deadline()
             function = functions[function_index]
             start = function["address"] + offset * 4
             members.append(
@@ -250,10 +261,12 @@ def block_opportunities_payload(
     candidates.sort(
         key=lambda row: (-row["instruction_count"], -len(row["members"]), row["id"])
     )
+    check_deadline()
     return candidates
 
 
 def block_report(root: Path, *, min_instructions: int, target: str | None, limit: int):
+    check_deadline()
     minimum = validate_minimum(min_instructions)
     if type(limit) is not int or limit < 0:
         raise ValueError("block limit must be a nonnegative integer")
@@ -278,6 +291,7 @@ def block_report(root: Path, *, min_instructions: int, target: str | None, limit
         if target is None
         or any(member["target"] == target for member in row["members"])
     ]
+    check_deadline()
     return {
         "schema": SCHEMA,
         "min_instructions": minimum,

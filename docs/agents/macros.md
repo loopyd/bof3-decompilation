@@ -86,6 +86,13 @@ explicit size floor, four-use eligibility, and largest-first machine ordering;
 AI readability assessments now feed a validated, pinned top-N selection;
 bounded autonomous execution remains unfinished.
 
+`blocks`, `rank-input`, `rank` and `validate-ranking` accept `--work-deadline`
+as the original absolute monotonic cutoff. Discovery and ranking cooperatively
+check it; expiry is an error, not a successful partial ranking. This does not
+preempt filesystem reads or built-in sorts, renew the cutoff, or prove native
+cancellation/recovery. Output already emitted or published may remain after expiry;
+the error is not acceptance. Ranking remains distinct from application authority.
+
 Lexical discovery hashes and decodes one byte sample per source; constant evidence
 uses that same verified digest. Token line numbers use an incremental scan.
 This binds leads to sampled content, not an atomic repository snapshot or approval

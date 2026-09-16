@@ -8,7 +8,12 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from harness.common.cli import add_root_argument, resolved_root, run_main
+from harness.common.cli import (
+    add_root_argument,
+    add_work_deadline_argument,
+    resolved_root,
+    run_main,
+)
 from harness.common.evidence import evidence_output_path, write_evidence_output
 from harness.common.verification import (
     add_recovery_commands,
@@ -258,6 +263,7 @@ def build_parser() -> argparse.ArgumentParser:
     blocks = sub.add_parser(
         "blocks", help="rank four-use assembly blocks, largest first"
     )
+    add_work_deadline_argument(blocks)
     blocks.add_argument("--min-instructions", type=_positive, required=True)
     blocks.add_argument(
         "--target", help="focus results without dropping global members"

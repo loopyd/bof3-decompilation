@@ -7,7 +7,8 @@ import json
 from pathlib import Path
 from typing import Any, Callable
 
-from harness.common.cli import resolved_root
+from harness.common.cli import add_work_deadline_argument, resolved_root
+from harness.common.deadlines import check_deadline
 from harness.common.evidence import evidence_output_path, write_evidence_output
 from harness.macros.ranking import (
     create_ranking_request,
@@ -43,6 +44,7 @@ def add_ranking_commands(sub: Any, read: Callable[[Path], Any]) -> None:
             root, read(args.request), expected_pool_digest=args.expected_pool_digest
         )
         output = evidence_output_path(root, args.output.as_posix())
+        check_deadline()
         write_evidence_output(root, output, report)
         print(
             json.dumps(
@@ -79,6 +81,7 @@ def add_ranking_commands(sub: Any, read: Callable[[Path], Any]) -> None:
     parser = sub.add_parser(
         "rank-input", help="draft assessments for a largest-first block pool"
     )
+    add_work_deadline_argument(parser)
     parser.add_argument("--min-instructions", type=int, required=True)
     parser.add_argument("--target")
     parser.add_argument("--pool-size", type=int, required=True)
@@ -92,6 +95,7 @@ def add_ranking_commands(sub: Any, read: Callable[[Path], Any]) -> None:
     parser = sub.add_parser(
         "rank", help="validate human-value assessments and select top N"
     )
+    add_work_deadline_argument(parser)
     parser.add_argument("request", type=Path)
     parser.add_argument("output", type=Path)
     parser.add_argument("--expected-pool-digest", required=True)
@@ -100,6 +104,7 @@ def add_ranking_commands(sub: Any, read: Callable[[Path], Any]) -> None:
         "validate-ranking",
         help="replay an externally pinned ranking against fresh candidates",
     )
+    add_work_deadline_argument(parser)
     parser.add_argument("report", type=Path)
     parser.add_argument("--expected-ranking-digest", required=True)
     parser.set_defaults(handler=verify)
