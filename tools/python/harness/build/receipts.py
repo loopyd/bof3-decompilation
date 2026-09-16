@@ -11,7 +11,8 @@ from contextlib import closing, nullcontext
 from pathlib import Path
 
 from harness.build.dispatch import close_dispatch, prepare_dispatch, validate_dispatch
-from harness.build.driver import run_compiler
+from harness.build.driver import execute_compiler
+from harness.build.execution import verify_execution
 from harness.build.preservation import hash_preservation, validate_fingerprint
 from harness.common.deadlines import check_deadline, use_deadline
 from harness.common.files import atomic_write, read_file
@@ -20,7 +21,7 @@ from harness.common.observation import PathWatch
 from harness.common.paths import leaf_stat
 from harness.io import unique_object
 
-_SCHEMA = "bof3.grouped-producer/v3"
+_SCHEMA = "bof3.grouped-producer/v4"
 _LIMIT = 16 * 1024 * 1024
 
 
@@ -69,13 +70,28 @@ def _write_receipt(root: Path, receipt: Path, content: bytes, expected: bytes | 
         sys.stderr.write(f"producer receipt recovery retained: {quarantine}\n")
 
 
-def _encode_receipt(dispatch, outputs: dict) -> bytes:
+def _verify_execution(dispatch, outputs: dict, execution: object) -> str:
+    return verify_execution(
+        dispatch.invocation,
+        dispatch.fingerprint,
+        dispatch.state["grouped"],
+        execution,
+        outputs={
+            str(dispatch.root / name): state["sha256"]
+            for name, state in outputs.items()
+        },
+    )
+
+
+def _encode_receipt(dispatch, outputs: dict, execution: object) -> bytes:
+    _verify_execution(dispatch, outputs, execution)
     document = {
         "schema": _SCHEMA,
         "status": "configured-provenance",
         "reusable": False,
         "invocation": dispatch.state,
         "outputs": outputs,
+        "execution": execution,
     }
     content = (
         json.dumps(document, sort_keys=True, indent=2, allow_nan=False) + "\n"
@@ -114,7 +130,7 @@ def _run_producer(root: Path, arguments: list[str]) -> tuple[int, dict | None]:
                     _write_receipt(root, receipt, b"", previous)
                     check_deadline()
                     validate_dispatch(dispatch)
-                    status = run_compiler(root, arguments)
+                    status, execution = execute_compiler(root, arguments)
                     if status:
                         return status, None
                     validate_dispatch(dispatch)
@@ -123,7 +139,8 @@ def _run_producer(root: Path, arguments: list[str]) -> tuple[int, dict | None]:
                         dispatch.output.with_name(dispatch.output.name + ".s"),
                     }
                     with closing(PathWatch(outputs)) as watch:
-                        content = _encode_receipt(dispatch, _collect_outputs(dispatch))
+                        outputs = _collect_outputs(dispatch)
+                        content = _encode_receipt(dispatch, outputs, execution)
                         watch.validate()
                         validate_dispatch(dispatch)
                         verify_writer(root)
@@ -132,6 +149,9 @@ def _run_producer(root: Path, arguments: list[str]) -> tuple[int, dict | None]:
                             "receipt": str(receipt),
                             "sha256": hashlib.sha256(content).hexdigest(),
                             "invocation_fingerprint": hash_preservation(dispatch.state),
+                            "execution_fingerprint": _verify_execution(
+                                dispatch, outputs, execution
+                            ),
                         }
                         published = content
                         _write_receipt(root, receipt, content, b"")
@@ -218,9 +238,11 @@ def verify_production(root: Path, arguments: list[str], expected_sha256: str) ->
                         document = json.loads(content, object_pairs_hook=unique_object)
                     except (ValueError, RecursionError) as error:
                         raise ValueError("invalid producer receipt JSON") from error
-                    expected = json.loads(
-                        _encode_receipt(dispatch, _collect_outputs(dispatch))
-                    )
+                    if not isinstance(document, dict):
+                        raise ValueError("producer receipt must be an object")
+                    outputs = _collect_outputs(dispatch)
+                    execution = document.get("execution")
+                    expected = json.loads(_encode_receipt(dispatch, outputs, execution))
                     if hash_preservation(document) != hash_preservation(expected):
                         raise ValueError(
                             "producer receipt differs from current configured provenance"
@@ -235,6 +257,9 @@ def verify_production(root: Path, arguments: list[str], expected_sha256: str) ->
                         "receipt": str(receipt),
                         "sha256": expected_sha256,
                         "invocation_fingerprint": hash_preservation(dispatch.state),
+                        "execution_fingerprint": _verify_execution(
+                            dispatch, outputs, execution
+                        ),
                     }
             finally:
                 close_dispatch(dispatch)

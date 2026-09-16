@@ -167,7 +167,14 @@ Absence is rechecked after the ancestor walk; newly present entries reject.
 `build.receipts` owns grouped producer receipts: `build-adapter producer` always
 compiles under the writer lease, while `build-adapter receipt` requires an external
 receipt SHA and freshly checks configured provenance. Receipts cannot authorize
-reuse, native equality or deadline compliance. `build.inventory` owns configured
+reuse, native equality or deadline compliance. `build.arguments` owns bounded operand
+classification; `build.invocation` supplies the immutable recipe consumed by dispatch
+and driver. `build.execution` captures successful process, partition and publication
+edges and verifies them against that recipe without recreating deleted staging.
+The driver returns evidence in-process after cleanup; producer v4 and comparison v4
+bind it separately from live invocation identity. Profile compatibility remains
+independent of source/output paths; historical restoration schemas are unchanged.
+`build.inventory` owns configured
 classification and its always-run graph gate; `config/compiler/graph.cmake` owns
 unique lift nodes, with grouped producers forced and ordinary commands retained.
 `build.routing` selects externally pinned, source-bound preservation records for

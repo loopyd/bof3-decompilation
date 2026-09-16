@@ -17,19 +17,19 @@ from harness.build.receipts import produce_object, verify_production
 from harness.build.routing import select_preservation
 from harness.combiner.members import capture_members
 from harness.common.deadlines import check_deadline, resolve_deadline, use_deadline
+from harness.common.files import read_file
 from harness.common.inputs import InputBatch, relative
 from harness.common.lease import require_writer
 from harness.common.observation import PathWatch
 from harness.common.paths import require_absent
 from harness.domain.functions import parse_function_records
 from harness.domain.policy import validate_matching_text
-from harness.common.files import read_file
 from harness.io import repo_layout
 from harness.match.execution import NativeExecution
 from harness.match.extraction import read_function_image
 from harness.match.placement import extract_grouped_function, place_grouped_object
 
-SCHEMA = "bof3.combiner-comparison/v3"
+SCHEMA = "bof3.combiner-comparison/v4"
 _LIMIT = 64 * 1024 * 1024
 _OWNERS = (
     "tools/python/harness/combiner/comparison.py",
@@ -253,6 +253,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
         if (
             production["receipt"] != produced["receipt"]
             or production["invocation_fingerprint"] != dispatch.fingerprint
+            or production["execution_fingerprint"] != produced["execution_fingerprint"]
         ):
             raise ValueError(
                 "fresh producer receipt differs from comparison provenance"

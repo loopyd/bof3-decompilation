@@ -5,10 +5,10 @@ from __future__ import annotations
 import hashlib
 import os
 import shutil
-import stat
 from dataclasses import dataclass
 from pathlib import Path
 
+from harness.build.arguments import inspect_arguments, observe_input, read_source
 from harness.build.compiler import (
     build_compiler_arguments,
     has_compiler_annotations,
@@ -17,6 +17,7 @@ from harness.build.compiler import (
     resolve_compiler_settings,
     validate_object_configuration,
 )
+from harness.build.invocation import Invocation, plan_dispatch
 from harness.build.preservation import (
     hash_preservation,
     read_preservation_document,
@@ -62,28 +63,6 @@ _ENVIRONMENT = (
 )
 
 
-def _observe(path: Path) -> list:
-    current = path
-    while not current.exists():
-        current = current.parent
-    status = current.stat(follow_symlinks=False)
-    identity = [
-        str(current),
-        status.st_dev,
-        status.st_ino,
-        status.st_mode,
-    ]
-    if stat.S_ISDIR(status.st_mode):
-        return identity
-    return [
-        *identity,
-        status.st_nlink,
-        status.st_size,
-        status.st_mtime_ns,
-        status.st_ctime_ns,
-    ]
-
-
 def _resolve_executable(name: str) -> Path:
     resolved = shutil.which(name) if "/" not in name else name
     if resolved is None:
@@ -100,94 +79,6 @@ def close_dispatch(dispatch: Dispatch) -> None:
         dispatch.watch.close()
     finally:
         dispatch.selection.close()
-
-
-def _read_source(path: Path) -> str:
-    before = _observe(path)
-    content = read_file(path.parent, path.name, max_bytes=_LIMIT)
-    if before != _observe(path):
-        raise ValueError("compiler source changed during inspection")
-    return content.decode("utf-8")
-
-
-def inspect_arguments(
-    arguments: list[str], *, cwd: Path | None = None
-) -> tuple[list[Path], Path | None]:
-    """Classify explicit operands without launching a compiler."""
-    cwd = Path.cwd() if cwd is None else cwd
-    if not cwd.is_absolute():
-        raise ValueError("compiler working directory must be absolute")
-    if len(arguments) > 256 or sum(len(arg) for arg in arguments) > 65536:
-        raise ValueError("compiler argument bounds exceeded")
-    if any("\x00" in arg or arg == "-" or arg.startswith("@") for arg in arguments):
-        raise ValueError("response files and stdin compiler inputs are unsupported")
-    candidates = []
-    output = None
-    output_pending = False
-    operands = False
-    for argument in arguments:
-        check_deadline()
-        if output_pending:
-            output = cwd / argument
-            output_pending = False
-            continue
-        if argument == "-o":
-            if output is not None:
-                raise ValueError("multiple compiler outputs are unsupported")
-            output_pending = True
-            continue
-        if argument.startswith("-o") and len(argument) > 2:
-            if output is not None:
-                raise ValueError("multiple compiler outputs are unsupported")
-            output = cwd / argument[2:]
-            continue
-        if argument == "--":
-            operands = True
-            continue
-        candidate = argument
-        if not operands and argument.startswith("-"):
-            for option in ("-include", "-imacros"):
-                if argument.startswith(option) and len(argument) > len(option):
-                    candidate = argument[len(option) :]
-                    break
-            else:
-                continue
-        path = cwd / candidate
-        if path.is_file() or path.suffix.lower() in {".c", ".s"}:
-            try:
-                _read_source(path)
-            except UnicodeDecodeError:
-                if path.suffix.lower() == ".c":
-                    raise ValueError("compiler C source must be UTF-8") from None
-                continue
-            candidates.append(path)
-    if output_pending:
-        raise ValueError("missing compiler output operand")
-    if (
-        output is None
-        and candidates
-        and "-c" not in arguments
-        and not any(
-            argument
-            in {
-                "-E",
-                "-M",
-                "-MM",
-                "-fsyntax-only",
-                "--version",
-                "-dumpversion",
-                "-dumpmachine",
-            }
-            or argument.startswith("-print-")
-            for argument in arguments
-        )
-    ):
-        if len(candidates) != 1:
-            raise ValueError("implicit compiler outputs require one named source")
-        output = cwd / (
-            candidates[0].with_suffix(".s").name if "-S" in arguments else "a.out"
-        )
-    return list(dict.fromkeys(candidates)), output
 
 
 def _select_annotated_compiler(root, arguments, sources, output, grouped):
@@ -213,7 +104,7 @@ def _select_annotated_compiler(root, arguments, sources, output, grouped):
         source
         for source in sources
         if source.suffix == ".c"
-        and (grouped or has_compiler_annotations(_read_source(source)))
+        and (grouped or has_compiler_annotations(read_source(source)))
     ]
     if not annotated:
         return None, set()
@@ -245,7 +136,7 @@ def _select_annotated_compiler(root, arguments, sources, output, grouped):
     validate_object_configuration(text)
     settings = resolve_compiler_settings(
         source.relative_to(root).as_posix(),
-        _read_source(source),
+        read_source(source),
         parse_object_flags(text),
         parse_object_compilers(text),
     )
@@ -291,11 +182,12 @@ class Dispatch:
     fingerprint: str
     watch: PathWatch
     selection: Selection
+    invocation: Invocation
 
 
 def _observe_working_directory() -> dict:
     cwd = Path.cwd()
-    return {"path": str(cwd), "identity": _observe(cwd)}
+    return {"path": str(cwd), "identity": observe_input(cwd)}
 
 
 def prepare_dispatch(root: Path, arguments: list[str]) -> Dispatch:
@@ -304,7 +196,7 @@ def prepare_dispatch(root: Path, arguments: list[str]) -> Dispatch:
     working_directory = _observe_working_directory()
     sources, output = inspect_arguments(arguments, cwd=Path(working_directory["path"]))
     grouped = [
-        path for path in sources if count_function_metadata(_read_source(path)) >= 2
+        path for path in sources if count_function_metadata(read_source(path)) >= 2
     ]
     selection = select_preservation(root, sources, grouped)
     try:
@@ -428,11 +320,13 @@ def _capture_dispatch(
     selection,
     working_directory,
 ) -> Dispatch:
-    observations = {str(parent): _observe(parent) for parent in sorted(directories)}
+    observations = {
+        str(parent): observe_input(parent) for parent in sorted(directories)
+    }
     contents = {}
     for path in sorted(paths):
         check_deadline()
-        observations[str(path)] = _observe(path)
+        observations[str(path)] = observe_input(path)
         if path.is_file():
             contents[str(path)] = hashlib.sha256(
                 read_file(path.parent, path.name, max_bytes=64 * 1024 * 1024)
@@ -456,6 +350,8 @@ def _capture_dispatch(
         "environment_fingerprint": hash_preservation(environment),
         "routing": selection.describe(),
     }
+    invocation = plan_dispatch(state, environment)
+    state["recipe"] = invocation.describe()
     dispatch = Dispatch(
         root,
         tuple(arguments),
@@ -468,6 +364,7 @@ def _capture_dispatch(
         hash_preservation(state),
         watch,
         selection,
+        invocation,
     )
     validate_dispatch(dispatch)
     return dispatch
@@ -498,7 +395,7 @@ def validate_dispatch(dispatch: Dispatch) -> None:
         [
             source
             for source in sources
-            if count_function_metadata(_read_source(source)) >= 2
+            if count_function_metadata(read_source(source)) >= 2
         ],
     )
     selected = sources[0] if len(sources) == 1 else None
@@ -538,8 +435,13 @@ def validate_dispatch(dispatch: Dispatch) -> None:
         raise ValueError("compiler invocation differs from its binding")
     if state.get("environment_fingerprint") != hash_preservation(dict(os.environ)):
         raise ValueError("compiler environment changed during dispatch")
+    if (
+        dispatch.invocation.describe() != state["recipe"]
+        or plan_dispatch(state, dict(os.environ)).describe() != state["recipe"]
+    ):
+        raise ValueError("compiler stage recipe changed")
     for name, observation in state["observations"].items():
-        if _observe(Path(name)) != observation:
+        if observe_input(Path(name)) != observation:
             raise ValueError(f"compiler input or ancestor changed: {name}")
     for name, checksum in state["contents"].items():
         path = Path(name)
@@ -553,7 +455,7 @@ def validate_dispatch(dispatch: Dispatch) -> None:
     grouped = [
         path
         for path in state["sources"]
-        if count_function_metadata(_read_source(Path(path))) >= 2
+        if count_function_metadata(read_source(Path(path))) >= 2
     ]
     if bool(grouped) != state["grouped"]:
         raise ValueError("compiler source grouping changed")
@@ -581,7 +483,7 @@ def validate_dispatch(dispatch: Dispatch) -> None:
         if list(dispatch.arguments) != expected:
             raise ValueError("compiler arguments no longer match preserved order")
     for name, observation in state["observations"].items():
-        if _observe(Path(name)) != observation:
+        if observe_input(Path(name)) != observation:
             raise ValueError(f"compiler input or ancestor changed: {name}")
     dispatch.watch.validate()
     dispatch.selection.validate()

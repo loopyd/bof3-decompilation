@@ -8,12 +8,14 @@ import sys
 import tempfile
 from pathlib import Path
 
+from harness.build.arguments import inspect_arguments
 from harness.build.dispatch import (
     close_dispatch,
-    inspect_arguments,
     prepare_dispatch,
     validate_dispatch,
 )
+from harness.build.execution import Execution, capture_stage, complete_stage
+from harness.build.invocation import Stage, select_mode
 from harness.build.translation import prepare_translation
 from harness.common.deadlines import check_deadline, resolve_deadline, use_deadline
 from harness.common.files import atomic_write, read_file
@@ -62,88 +64,17 @@ def _execute(
     return result["stdout"]
 
 
-def _compiler_environment(
-    root: Path, compiler: Path, environment: dict[str, str]
-) -> dict[str, str]:
-    executable = str(compiler)
-    resolved = shutil.which(executable) if "/" not in executable else executable
-    if resolved is None:
-        raise ValueError(f"missing compiler: {compiler}")
-    directory = str(Path(resolved).absolute().parent)
-    return {
-        **environment,
-        "GCC_EXEC_PREFIX": directory + "/",
-        "COMPILER_PATH": directory,
-        "PATH": os.pathsep.join(
-            [
-                directory,
-                str(root / "toolchains/psn00b_toolchain/bin"),
-                environment.get("PATH", ""),
-            ]
-        ),
-    }
-
-
-def _resolve_version(arguments: list[str]) -> str:
-    version = os.environ.get("ASPSX_VERSION", "2.56")
-    for argument in arguments:
-        if argument.startswith("-Wa,"):
-            for flag in argument[4:].split(","):
-                if flag.startswith("--aspsx-version="):
-                    version = flag.split("=", 1)[1]
-    return version
-
-
-def _replace_output(arguments: list[str], output: Path) -> list[str]:
-    result = []
-    skip = False
-    for argument in arguments:
-        if skip:
-            skip = False
-        elif argument == "-o":
-            skip = True
-        elif not argument.startswith("-o"):
-            result.append(argument)
-    return [*result, "-o", str(output)]
-
-
-def _compiler_arguments(arguments: list[str], assembly: Path) -> list[str]:
-    result = []
-    skip_output = False
-    for argument in arguments:
-        if skip_output:
-            skip_output = False
-        elif argument == "-o":
-            skip_output = True
-        elif argument == "-c" or argument.startswith("-o"):
-            continue
-        elif argument.startswith("-Wa,"):
-            retained = [
-                flag
-                for flag in argument[4:].split(",")
-                if flag
-                and flag != "--expand-div"
-                and not flag.startswith("--aspsx-version=")
-            ]
-            if retained:
-                result.append("-Wa," + ",".join(retained))
-        else:
-            result.append(argument)
-    return [*result, "-S", "-o", str(assembly)]
-
-
-def _assembler_arguments(arguments: list[str], output: Path) -> list[str]:
-    flags = []
-    for argument in arguments:
-        if argument.startswith("-Wa,"):
-            flags.extend(
-                flag
-                for flag in argument[4:].split(",")
-                if flag
-                and flag != "--expand-div"
-                and not flag.startswith("--aspsx-version=")
-            )
-    return [*flags, "-o", str(output)]
+def _execute_stage(stage: Stage, temporary: Path, execution: Execution) -> str:
+    entry, arguments, environment, input_text = capture_stage(stage, temporary)
+    execution.check_stage(stage, entry)
+    rendered = _execute(
+        arguments,
+        environment,
+        cwd=stage.cwd,
+        input_text=input_text,
+    )
+    execution.events.append(complete_stage(entry, stage, temporary, rendered))
+    return rendered
 
 
 def _publish(output: Path, content: bytes, original: bytes | None) -> None:
@@ -166,36 +97,24 @@ def _publish(output: Path, content: bytes, original: bytes | None) -> None:
     check_deadline()
 
 
-def _run(root: Path, arguments: list[str]) -> int:
+def _publish_recorded(
+    execution: Execution,
+    output: Path,
+    content: bytes,
+    original: bytes | None,
+    artifact: str,
+) -> None:
+    execution.check_publication(content, artifact)
+    _publish(output, content, original)
+    execution.record_publication(output, content, artifact)
+
+
+def _run(root: Path, arguments: list[str]) -> Execution:
     cwd = Path.cwd()
     sources, output = inspect_arguments(arguments, cwd=cwd)
-    named = [path for path in sources if path.suffix == ".c"]
-    named.extend(
-        cwd / argument
-        for argument in arguments
-        if not argument.startswith("-")
-        and argument.endswith((".s", ".S"))
-        and cwd / argument != output
+    select_mode(
+        arguments, sources=sources, output=output, cwd=cwd, environment=dict(os.environ)
     )
-    compile_mode = "-c" in arguments and not any(
-        flag in arguments for flag in ("-E", "-S", "-M", "-MM")
-    )
-    if (
-        compile_mode
-        and not os.environ.get("PSX_CC_DRIVER")
-        and (len(named) != 1 or output is None)
-    ):
-        raise ValueError(
-            "bin/cc expects exactly one .c/.s/.S source and a -o output for -c"
-        )
-    if (
-        not compile_mode
-        and not os.environ.get("PSX_CC_DRIVER")
-        and not any(argument in {"-E", "-M", "-MM", "-S"} for argument in arguments)
-    ):
-        raise ValueError(
-            "link mode is unsupported; compile with -c and link with bin/ld"
-        )
     temporary = Path(tempfile.mkdtemp(prefix=".bof3-cc-"))
     cleanup = True
     dispatch = None
@@ -204,16 +123,12 @@ def _run(root: Path, arguments: list[str]) -> int:
         dispatch = prepare_dispatch(root, arguments)
         if dispatch.state["working_directory"]["path"] != str(cwd):
             raise ValueError("compiler working directory changed during preparation")
-        environment = {
-            **os.environ,
-            "PYTHONDONTWRITEBYTECODE": "1",
-            "TMPDIR": str(temporary),
-        }
-        compiler_environment = _compiler_environment(
-            root, dispatch.compiler, environment
+        invocation = dispatch.invocation
+        execution = Execution(
+            invocation, dispatch.fingerprint, dispatch.state["grouped"], temporary
         )
-        driver = os.environ.get("PSX_CC_DRIVER")
-        if driver or not compile_mode:
+        validate_dispatch(dispatch)
+        if invocation.mode == "direct":
             original = (
                 read_file(
                     output.parent,
@@ -227,50 +142,33 @@ def _run(root: Path, arguments: list[str]) -> int:
             staged_output = temporary / "direct-output"
             if original is not None:
                 (temporary / "previous-object").write_bytes(original)
-            native_arguments = (
-                _replace_output(arguments, staged_output) if output else arguments
-            )
-            rendered = _execute(
-                [dispatch.state["executable"], *native_arguments],
-                environment if driver else compiler_environment,
-                cwd=cwd,
-            )
+            rendered = _execute_stage(invocation.stages[0], temporary, execution)
             validate_dispatch(dispatch)
             if output:
                 publication_started = True
-                _publish(
+                _publish_recorded(
+                    execution,
                     output,
                     read_file(
                         temporary, staged_output.name, max_bytes=64 * 1024 * 1024
                     ),
                     original,
+                    "direct-output",
                 )
             validate_dispatch(dispatch)
             sys.stdout.write(rendered)
             sys.stdout.flush()
             validate_dispatch(dispatch)
-            return 0
-        source = named[0]
-        assembler = os.environ.get("PSX_AS", str(root / "bin/as"))
+            return execution
+        source = invocation.source
         original = read_file(
             output.parent, output.name, missing_ok=True, max_bytes=64 * 1024 * 1024
         )
-        staged_object = temporary / "translation.o"
         if original is not None:
             (temporary / "previous-object").write_bytes(original)
-        if source.suffix != ".c":
-            operand = next(
-                argument
-                for argument in arguments
-                if not argument.startswith("-") and cwd / argument == source
-            )
-            rendered = _execute(
-                [assembler, *_assembler_arguments(arguments, staged_object), operand],
-                environment,
-                cwd=cwd,
-            )
+        if invocation.mode == "assembly":
+            rendered = _execute_stage(invocation.stages[0], temporary, execution)
         else:
-            assembly = temporary / "compiler.s"
             retained_assembly = output.with_name(output.name + ".s")
             original_assembly = read_file(
                 retained_assembly.parent,
@@ -280,63 +178,21 @@ def _run(root: Path, arguments: list[str]) -> int:
             )
             if original_assembly is not None:
                 (temporary / "previous-assembly").write_bytes(original_assembly)
-            _execute(
-                [
-                    dispatch.state["executable"],
-                    *_compiler_arguments(arguments, assembly),
-                ],
-                compiler_environment,
-                cwd=cwd,
-            )
+            _execute_stage(invocation.stages[0], temporary, execution)
             validate_dispatch(dispatch)
-            maspsx = os.environ.get(
-                "PSX_MASPSX", str(root / "third_party/maspsx/maspsx.py")
-            )
-            interpreter = os.environ.get("MASPSX_PYTHON", "python3")
-            python_environment = {
-                **environment,
-                "PYTHONPATH": os.pathsep.join(
-                    [str(root / "third_party/maspsx"), str(root / "tools/python")]
-                ),
-                "PYTHONSAFEPATH": "1",
-            }
-            translated = _execute(
-                [
-                    interpreter,
-                    "-P",
-                    maspsx,
-                    "--aspsx-version=" + _resolve_version(arguments),
-                    *(
-                        ["--expand-div"]
-                        if any(
-                            "--expand-div" in argument[4:].split(",")
-                            for argument in arguments
-                            if argument.startswith("-Wa,")
-                        )
-                        else []
-                    ),
-                ],
-                python_environment,
-                cwd=cwd,
-                input_text=read_file(
-                    temporary, "compiler.s", max_bytes=64 * 1024 * 1024
-                ).decode("utf-8"),
-            )
+            translated = _execute_stage(invocation.stages[1], temporary, execution)
+            unpartitioned = translated
             translated = prepare_translation(
                 root, source, translated, dispatch=dispatch
             )
             validate_dispatch(dispatch)
             partitioned = temporary / "partitioned.s"
             partitioned.write_text(translated)
-            rendered = _execute(
-                [
-                    assembler,
-                    *_assembler_arguments(arguments, staged_object),
-                    str(partitioned),
-                ],
-                environment,
-                cwd=cwd,
+            execution.record_partition(
+                unpartitioned,
+                read_file(temporary, "partitioned.s", max_bytes=64 * 1024 * 1024),
             )
+            rendered = _execute_stage(invocation.stages[2], temporary, execution)
 
         validate_dispatch(dispatch)
         content = read_file(temporary, "translation.o", max_bytes=64 * 1024 * 1024)
@@ -345,19 +201,21 @@ def _run(root: Path, arguments: list[str]) -> int:
         validate_dispatch(dispatch)
         if source.suffix == ".c":
             publication_started = True
-            _publish(
+            _publish_recorded(
+                execution,
                 retained_assembly,
                 read_file(temporary, "compiler.s", max_bytes=64 * 1024 * 1024),
                 original_assembly,
+                "compiler.s",
             )
         validate_dispatch(dispatch)
         publication_started = True
-        _publish(output, content, original)
+        _publish_recorded(execution, output, content, original, "translation.o")
         validate_dispatch(dispatch)
         sys.stdout.write(rendered)
         sys.stdout.flush()
         validate_dispatch(dispatch)
-        return 0
+        return execution
     except ProcessCleanupError:
         cleanup = False
         sys.stderr.write(
@@ -387,15 +245,23 @@ def _run(root: Path, arguments: list[str]) -> int:
                 close_dispatch(dispatch)
 
 
-def run_compiler(root: Path, arguments: list[str]) -> int:
-    """Preserve normal compiler behavior while gating grouped-unit production."""
+def execute_compiler(root: Path, arguments: list[str]) -> tuple[int, dict | None]:
+    """Return successful execution evidence only after terminal checks and cleanup."""
     deadline = os.environ.get("BOF3_WORK_DEADLINE")
     try:
         with use_deadline(float(deadline) if deadline else None):
-            status = _run(root.resolve(), arguments)
+            execution = _run(root.resolve(), arguments)
             check_deadline()
-            return status
+            evidence = execution.finish()
+            check_deadline()
+            return 0, evidence
     except CompilerFailure as error:
-        return error.status
+        return error.status, None
     except BrokenPipeError:
-        return 1
+        return 1, None
+
+
+def run_compiler(root: Path, arguments: list[str]) -> int:
+    """Preserve the compiler CLI exit-status interface without dropping its gates."""
+    status, _ = execute_compiler(root, arguments)
+    return status

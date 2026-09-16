@@ -481,7 +481,7 @@ passes the original PRE digest; prospective text is prediction, not acceptance.
 Current images must equal captured physical bytes. Virtual images never reopen
 their seed path: dependency lookup uses the nominal parent, while `content` and
 `include_inputs` describe physical reads only. An explicit include of the seed
-path reads that physical file, not the virtual image again. Comparison v3 records
+path reads that physical file, not the virtual image again. Comparison v4 records
 `source_image` separately; the retired combiner module has no shim. This interface
 does not prove virtual-image native replay or add compiler flag, spec, default-search
 or runtime dependency resolution.
@@ -513,8 +513,9 @@ positive/negative byte checks remain required for production admission.
 
 ### Compiler dispatch
 
-`bin/cc` is a thin bootstrap; `harness.build.driver` owns GCC → maspsx → assembler
-dispatch, while `harness.build.dispatch` binds the invocation and
+`bin/cc` is a thin bootstrap; `harness.build.driver` executes GCC → maspsx → assembler
+from the immutable `build.invocation` recipe. `build.arguments` owns operand
+classification; `harness.build.dispatch` binds the invocation and
 `harness.build.preservation` verifies frozen history. Combiner retains capture policy;
 there are no compatibility re-exports from its former verification owner.
 Dispatch pins the caller's actual working-directory path and filesystem identity,
@@ -524,10 +525,24 @@ observed context drift rejects rather than silently switching to repository root
 Dispatch also fingerprints the complete incoming environment from one captured
 mapping, without adding unlisted names or values to the receipt. Validation checks
 that digest before and after input verification; absent and empty values differ.
-This detects endpoint drift, not mutations reverted between checks. Producer receipts
-use `bof3.grouped-producer/v3`; older receipts do not gain these bindings retroactively.
-Derived child environments, relative search inputs and runtime dependencies are not
-captured in full; this grants no native/source-adoption authority.
+This detects endpoint drift, not mutations reverted between checks. The captured
+recipe binds ordered stages, typed temporary operands and derived environment
+fingerprints; rendering never substitutes substrings in literal options. Relative
+compiler PATH entries resolve from the captured working directory. The driver
+consumes that recipe rather than reselecting stage controls from ambient state.
+
+Producer v4 records `build.execution` edges: successful child commands/environment
+digests, stdin/generated-image hashes, partitioning and final publication. Evidence
+returns directly from the driver after cleanup and terminal checks. Invocation,
+recipe and execution fingerprints stay distinct; comparison v4 binds the producer's
+execution fingerprint. Verification renders the recorded temporary binding without
+allocating or rereading deleted staging. Unknown environment values are not printed.
+Older receipts cannot acquire these bindings retroactively. Profile v3 and
+preservation v5 retain their shapes and strict historical-restoration validation;
+new compilation requires current owner pins, including the new build modules.
+Recorded execution is not authenticated native proof: endpoint samples do not
+detect reverted mutations or establish complete compiler search/import/runtime
+dependencies. Reuse, native equality and source-adoption authority remain denied.
 
 For an explicitly admitted grouped-unit compile, supply
 `BOF3_PRESERVATION_RECORD` and `BOF3_PRESERVATION_FINGERPRINT` together. The record
@@ -638,13 +653,15 @@ with literal Python producers do not prove a native project build or consolidati
 
 `build-adapter producer -- <compiler arguments>` always compiles a guarded grouped
 unit under the repository writer lease, then writes `<object>.producer.json` with
-configured invocation provenance and object/diagnostic hashes. Replaced receipts
+configured invocation provenance, execution edges and object/diagnostic hashes. Replaced receipts
 remain as recovery material; artifacts cannot overwrite preserved inputs.
 Compilation starts with an empty, invalid receipt;
 failed final checks attempt to invalidate new publication. Unconfirmed invalidation
 is an error requiring recovery inspection. `build-adapter receipt --expected-sha256
 <external receipt pin> -- <compiler arguments>` freshly verifies the preservation
-record, configured inputs, arguments and outputs. Both commands require either
+record, configured inputs, recipe, execution edges and outputs. Missing, reordered,
+failed or inconsistent execution records reject, as do changed publication hashes.
+Both commands require either
 the explicit preservation pair or the source-bound routing pair. Receipts expressly
 deny reuse authority: complete input
 closure, native consumer integration and byte equality remain open. A successful
