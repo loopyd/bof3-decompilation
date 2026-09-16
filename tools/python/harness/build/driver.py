@@ -22,6 +22,35 @@ from harness.common.deadlines import check_deadline, resolve_deadline, use_deadl
 from harness.common.files import atomic_write, read_file
 from harness.common.process import ProcessCleanupError, run_bounded
 
+_STAGING_PREFIX = ".bof3-cc-"
+
+
+def select_staging_directory() -> Path:
+    """Select a POSIX staging directory without tempfile's write probe."""
+    check_deadline()
+    if tempfile.tempdir is not None:
+        return Path(os.fsdecode(tempfile.tempdir)).absolute()
+    candidates = [os.environ.get(name) for name in ("TMPDIR", "TEMP", "TMP")]
+    candidates.extend(("/tmp", "/var/tmp", "/usr/tmp", str(Path.cwd())))
+    for candidate in candidates:
+        check_deadline()
+        if candidate:
+            directory = Path(candidate).absolute()
+            if directory.is_dir() and os.access(directory, os.W_OK | os.X_OK):
+                return directory
+    raise ValueError("no accessible compiler staging directory")
+
+
+def protect_staging(dispatch: Dispatch, *, inputs: tuple[Path, ...] = ()) -> Path:
+    """Check compiler staging families without allocating or publishing files."""
+    directory = select_staging_directory()
+    dispatch.programs.protect_temporary(
+        directory,
+        _STAGING_PREFIX,
+        inputs=(*[Path(name) for name in dispatch.state["observations"]], *inputs),
+    )
+    return directory
+
 
 class CompilerFailure(RuntimeError):
     def __init__(self, status: int) -> None:
@@ -133,13 +162,8 @@ def _run(
     try:
         if owns_dispatch:
             dispatch = prepare_dispatch(root, arguments)
-        temporary_parent = Path(tempfile.gettempdir())
-        dispatch.programs.protect_temporary(
-            temporary_parent,
-            ".bof3-cc-",
-            inputs=tuple(Path(name) for name in dispatch.state["observations"]),
-        )
-        temporary = Path(tempfile.mkdtemp(prefix=".bof3-cc-", dir=temporary_parent))
+        temporary_parent = protect_staging(dispatch)
+        temporary = Path(tempfile.mkdtemp(prefix=_STAGING_PREFIX, dir=temporary_parent))
         if dispatch.state["working_directory"]["path"] != str(cwd):
             raise ValueError("compiler working directory changed during preparation")
         invocation = dispatch.invocation

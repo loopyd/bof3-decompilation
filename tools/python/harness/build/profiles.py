@@ -255,6 +255,7 @@ class ProfileContext:
             "tools/python/harness/common/deadlines.py",
             "tools/python/harness/common/digests.py",
             "tools/python/harness/common/files.py",
+            "tools/python/harness/common/quarantine.py",
             "tools/python/harness/common/inputs.py",
             "tools/python/harness/common/lexicon.py",
             "tools/python/harness/common/observation.py",

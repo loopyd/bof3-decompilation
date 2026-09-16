@@ -13,6 +13,7 @@ from harness.common.deadlines import check_deadline
 from harness.common.lookups import LookupBatch
 from harness.common.observation import PathWatch
 from harness.common.process import resolve_supervisor
+from harness.common.quarantine import QUARANTINE_DIRECTORY
 
 _SCHEMA = "bof3.program-inputs/v2"
 
@@ -200,14 +201,28 @@ class ProgramSnapshot:
             self._failed = True
             raise
 
-    def protect_outputs(self, outputs: list[Path]) -> None:
+    def protect_outputs(
+        self, outputs: list[Path], *, inputs: tuple[Path, ...] = ()
+    ) -> None:
         try:
             self._require_active()
+            paths = [
+                (Path(name), node["kind"])
+                for name, node in self._description["nodes"].items()
+            ]
+            paths.extend(
+                (candidate, "input")
+                for path in inputs
+                for candidate in {path, path.resolve()}
+            )
+            quarantine = (
+                Path(self._description["roots"]["repository"]["path"])
+                / QUARANTINE_DIRECTORY
+            )
             for output in outputs:
                 for artifact in {output, output.resolve()}:
-                    for name, node in self._description["nodes"].items():
+                    for path, kind in paths:
                         check_deadline()
-                        path = Path(name)
                         if (
                             artifact == path
                             or path.is_relative_to(artifact)
@@ -218,12 +233,10 @@ class ProgramSnapshot:
                                 )
                             )
                             or path.is_relative_to(
-                                artifact.parent / "out/reviews/evidence/quarantine"
+                                artifact.parent / QUARANTINE_DIRECTORY
                             )
-                            or (
-                                node["kind"] != "directory"
-                                and artifact.is_relative_to(path)
-                            )
+                            or path.is_relative_to(quarantine)
+                            or (kind != "directory" and artifact.is_relative_to(path))
                         ):
                             raise ValueError(
                                 "compiler artifact collides with a program dependency"

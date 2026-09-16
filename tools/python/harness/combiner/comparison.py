@@ -8,6 +8,7 @@ from pathlib import Path
 
 from harness.build.dependencies import IncludeSnapshot
 from harness.build.dispatch import close_dispatch, prepare_dispatch, validate_dispatch
+from harness.build.driver import protect_staging
 from harness.build.preservation import (
     hash_preservation,
     read_preservation_document,
@@ -234,7 +235,9 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
             protected.add(selection.routes)
         if artifacts & protected:
             raise ValueError("comparison artifact collides with a retained input")
-        dispatch.programs.protect_outputs(list(artifacts))
+        protected_inputs = tuple(sorted(protected))
+        dispatch.programs.protect_outputs(list(artifacts), inputs=protected_inputs)
+        protect_staging(dispatch, inputs=protected_inputs)
         native_watch = stack.enter_context(closing(PathWatch(extra_paths)))
         native_inputs = _capture_states(root, extra_paths)
         includes.validate()

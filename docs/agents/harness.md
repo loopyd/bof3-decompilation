@@ -251,6 +251,12 @@ resolve transitive headers, forwarded options, default paths or compiler support
 Grouped comparison seeds its literal snapshot from dispatch's physical forced
 files too. Their descendants and negative lookups join mutation/output guards;
 captured non-toolchain bytes pass matching-policy checks before production.
+Comparison's protected inputs also exclude compiler staging, publication-temp
+and quarantine families through shared driver/program guards before production.
+Cold staging selection uses the first accessible POSIX temp candidate without
+write probes or cache changes; a cached tempfile directory keeps precedence.
+Allocation failure propagates rather than trying another directory. These checks
+do not reserve names or freeze directory/alias changes before allocation.
 This bounded union is not effective preprocessing or transitive PRE preservation.
 Full input closure and native/transaction integration remain open.
 See the [combiner contract](combiner.md) for supported entrypoints, invocation,
