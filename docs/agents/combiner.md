@@ -521,9 +521,13 @@ Dispatch pins the caller's actual working-directory path and filesystem identity
 watches its linkage, and classifies relative operands against that captured base.
 Every GCC, maspsx, assembler or explicit-driver stage receives the same directory;
 observed context drift rejects rather than silently switching to repository root.
-Producer receipts use `bof3.grouped-producer/v2`; old receipts do not gain this
-binding retroactively. This does not capture relative search inputs, environment
-or runtime dependencies in full, nor confer native/source-adoption authority.
+Dispatch also fingerprints the complete incoming environment from one captured
+mapping, without adding unlisted names or values to the receipt. Validation checks
+that digest before and after input verification; absent and empty values differ.
+This detects endpoint drift, not mutations reverted between checks. Producer receipts
+use `bof3.grouped-producer/v3`; older receipts do not gain these bindings retroactively.
+Derived child environments, relative search inputs and runtime dependencies are not
+captured in full; this grants no native/source-adoption authority.
 
 For an explicitly admitted grouped-unit compile, supply
 `BOF3_PRESERVATION_RECORD` and `BOF3_PRESERVATION_FINGERPRINT` together. The record

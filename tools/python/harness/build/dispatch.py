@@ -437,6 +437,7 @@ def _capture_dispatch(
             contents[str(path)] = hashlib.sha256(
                 read_file(path.parent, path.name, max_bytes=64 * 1024 * 1024)
             ).hexdigest()
+    environment = dict(os.environ)
     state = {
         "working_directory": working_directory,
         "root": str(root),
@@ -451,7 +452,8 @@ def _capture_dispatch(
         "sources": [str(path) for path in sources],
         "observations": observations,
         "contents": contents,
-        "environment": {name: os.environ.get(name) for name in _ENVIRONMENT},
+        "environment": {name: environment.get(name) for name in _ENVIRONMENT},
+        "environment_fingerprint": hash_preservation(environment),
         "routing": selection.describe(),
     }
     dispatch = Dispatch(
@@ -534,7 +536,7 @@ def validate_dispatch(dispatch: Dispatch) -> None:
         or state["root"] != str(dispatch.root)
     ):
         raise ValueError("compiler invocation differs from its binding")
-    if state["environment"] != {name: os.environ.get(name) for name in _ENVIRONMENT}:
+    if state.get("environment_fingerprint") != hash_preservation(dict(os.environ)):
         raise ValueError("compiler environment changed during dispatch")
     for name, observation in state["observations"].items():
         if _observe(Path(name)) != observation:
@@ -585,4 +587,6 @@ def validate_dispatch(dispatch: Dispatch) -> None:
     dispatch.selection.validate()
     if state["working_directory"] != _observe_working_directory():
         raise ValueError("compiler working directory changed during validation")
+    if state.get("environment_fingerprint") != hash_preservation(dict(os.environ)):
+        raise ValueError("compiler environment changed during validation")
     check_deadline()
