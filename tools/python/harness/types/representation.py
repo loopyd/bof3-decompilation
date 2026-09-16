@@ -6,11 +6,19 @@ import sqlite3
 
 
 def resolve_identity_declaration(
-    connection: sqlite3.Connection, declaration_id: str
+    connection: sqlite3.Connection,
+    declaration_id: str,
+    *,
+    identities: dict[str, str] | None = None,
 ) -> str:
-    """Resolve identity aliases, stopping before any derived representation."""
+    """Resolve aliases; share identities only within one unchanged query snapshot."""
+    if identities is None:
+        identities = {}
     visited: set[str] = set()
     while declaration_id not in visited:
+        if declaration_id in identities:
+            declaration_id = identities[declaration_id]
+            break
         visited.add(declaration_id)
         row = connection.execute(
             "SELECT namespace, kind, complete, alias_kind, alias_target, diagnostic "
@@ -26,16 +34,24 @@ def resolve_identity_declaration(
             or alias_kind != "identity"
             or alias_target is None
         ):
-            return declaration_id
+            break
         declaration_id = alias_target
-    raise ValueError(f"cyclic type identity alias: {declaration_id}")
+    else:
+        raise ValueError(f"cyclic type identity alias: {declaration_id}")
+    identities.update((visited_id, declaration_id) for visited_id in visited)
+    return declaration_id
 
 
 def resolve_field_declaration(
-    connection: sqlite3.Connection, declaration_id: str
+    connection: sqlite3.Connection,
+    declaration_id: str,
+    *,
+    identities: dict[str, str] | None = None,
 ) -> str | None:
     """Find definition-owned fields without copying them onto derived aliases."""
-    declaration_id = resolve_identity_declaration(connection, declaration_id)
+    declaration_id = resolve_identity_declaration(
+        connection, declaration_id, identities=identities
+    )
     namespace, kind, complete, diagnostic = connection.execute(
         "SELECT namespace, kind, complete, diagnostic FROM type_declarations WHERE id = ?",
         (declaration_id,),

@@ -45,14 +45,17 @@ def types_payload(
         )
     ]
     field_owners = {}
-    representations = {}
+    representations: dict[str, str] = {}
     for row in rows:
-        representation = resolve_identity_declaration(connection, row["id"])
-        representations[row["id"]] = representation
+        representation = resolve_identity_declaration(
+            connection, row["id"], identities=representations
+        )
         row["byte_size"] = connection.execute(
             "SELECT byte_size FROM type_declarations WHERE id = ?", (representation,)
         ).fetchone()[0]
-        field_owner = resolve_field_declaration(connection, row["id"])
+        field_owner = resolve_field_declaration(
+            connection, row["id"], identities=representations
+        )
         field_owners[row["id"]] = field_owner
         row["field_count"] = connection.execute(
             "SELECT COUNT(*) FROM type_fields WHERE declaration_id = ?",
