@@ -133,7 +133,9 @@ def _run_producer(root: Path, arguments: list[str]) -> tuple[int, dict | None]:
                     _write_receipt(root, receipt, b"", previous)
                     check_deadline()
                     validate_dispatch(dispatch)
-                    status, execution = execute_compiler(root, arguments)
+                    status, execution = execute_compiler(
+                        root, arguments, dispatch=dispatch
+                    )
                     if status:
                         return status, None
                     validate_dispatch(dispatch)

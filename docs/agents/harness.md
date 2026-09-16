@@ -185,6 +185,11 @@ edges and verifies them against that recipe without recreating deleted staging.
 The driver returns evidence in-process after cleanup; producer v6 and comparison v6
 bind it separately from live invocation identity. Profile compatibility remains
 independent of source/output paths; older restoration records remain versioned history.
+Receipt production lends its live dispatch to the synchronous compiler call. The
+driver checks the exact root/arguments before staging and retains every validation
+checkpoint; only the receipt owner closes the borrowed dispatch. Standalone calls
+own their dispatch. This removes duplicate preparation, not fresh verification,
+and grants no concurrent sharing, persistent reuse or retry after uncertain cleanup.
 `build.programs` derives executable candidates, declared scripts and the process
 supervisor from those same stages. `common.lookups` walks raw spellings through
 held nofollow directory descriptors, preserving alias and absence evidence.

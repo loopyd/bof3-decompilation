@@ -10,6 +10,7 @@ from pathlib import Path
 
 from harness.build.arguments import inspect_arguments
 from harness.build.dispatch import (
+    Dispatch,
     close_dispatch,
     prepare_dispatch,
     validate_dispatch,
@@ -112,7 +113,14 @@ def _publish_recorded(
     execution.record_publication(output, content, artifact)
 
 
-def _run(root: Path, arguments: list[str]) -> Execution:
+def _run(
+    root: Path, arguments: list[str], *, dispatch: Dispatch | None = None
+) -> Execution:
+    owns_dispatch = dispatch is None
+    if dispatch is not None:
+        if dispatch.root != root or dispatch.arguments != tuple(arguments):
+            raise ValueError("borrowed compiler dispatch differs from the invocation")
+        validate_dispatch(dispatch)
     cwd = Path.cwd()
     sources, output = inspect_arguments(arguments, cwd=cwd)
     select_mode(
@@ -120,10 +128,10 @@ def _run(root: Path, arguments: list[str]) -> Execution:
     )
     temporary = None
     cleanup = True
-    dispatch = None
     publication_started = False
     try:
-        dispatch = prepare_dispatch(root, arguments)
+        if owns_dispatch:
+            dispatch = prepare_dispatch(root, arguments)
         temporary_parent = Path(tempfile.gettempdir())
         dispatch.programs.protect_temporary(temporary_parent, ".bof3-cc-")
         temporary = Path(tempfile.mkdtemp(prefix=".bof3-cc-", dir=temporary_parent))
@@ -247,16 +255,18 @@ def _run(root: Path, arguments: list[str]) -> Execution:
             )
             raise
         finally:
-            if dispatch is not None:
+            if owns_dispatch and dispatch is not None:
                 close_dispatch(dispatch)
 
 
-def execute_compiler(root: Path, arguments: list[str]) -> tuple[int, dict | None]:
-    """Return successful execution evidence only after terminal checks and cleanup."""
+def execute_compiler(
+    root: Path, arguments: list[str], *, dispatch: Dispatch | None = None
+) -> tuple[int, dict | None]:
+    """Return checked execution evidence; a supplied dispatch remains caller-owned."""
     deadline = os.environ.get("BOF3_WORK_DEADLINE")
     try:
         with use_deadline(float(deadline) if deadline else None):
-            execution = _run(root.resolve(), arguments)
+            execution = _run(root.resolve(), arguments, dispatch=dispatch)
             check_deadline()
             evidence = execution.finish()
             check_deadline()
