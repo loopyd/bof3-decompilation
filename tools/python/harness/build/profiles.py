@@ -29,6 +29,7 @@ from harness.toolchain.gcc_variants import (
     select_variant,
 )
 
+_LANGUAGE_INCLUDES = ("C_INCLUDE_PATH", "CPLUS_INCLUDE_PATH", "OBJC_INCLUDE_PATH")
 _ENVIRONMENT = (
     "PSX_CC_DRIVER",
     "PSX_GCC",
@@ -38,9 +39,7 @@ _ENVIRONMENT = (
     "MASPSX_PYTHON",
     "PSX_PYTHON",
     "CPATH",
-    "C_INCLUDE_PATH",
-    "CPLUS_INCLUDE_PATH",
-    "OBJC_INCLUDE_PATH",
+    *_LANGUAGE_INCLUDES,
     "DEPENDENCIES_OUTPUT",
     "SUNPRO_DEPENDENCIES",
 )
@@ -142,7 +141,12 @@ class ProfileContext:
         self.ancestors: dict[Path, tuple] = {}
         self.manifest_paths: tuple[str, ...] | None = None
         self._variants: list[CompilerVariant] | None = None
-        active = [name for name in _ENVIRONMENT if os.environ.get(name)]
+        active = [
+            name
+            for name in _ENVIRONMENT
+            if os.environ.get(name)
+            or (name in _LANGUAGE_INCLUDES and name in os.environ)
+        ]
         if compiler is not None:
             if not compiler.is_absolute() or compiler.resolve() != compiler:
                 raise ValueError(

@@ -518,8 +518,12 @@ must select the actual canonical `src/bof3/` source and configured GCC executabl
 Arguments must exactly reproduce the ordered preserved driver flags followed by
 `-c ABSOLUTE_SOURCE -o ABSOLUTE_OBJECT`; grouped objects belong under `build/` or
 `out/`. Explicit configured `PSX_GCC` is permitted only when it equals that selected
-compiler; other unsupported compiler environment overrides still reject. The
-bootstrap itself is closed by a reviewed digest, not guessed shell-default parsing.
+compiler; other unsupported compiler environment overrides still reject. Profiles
+reject any set `C_INCLUDE_PATH`, `CPLUS_INCLUDE_PATH` or `OBJC_INCLUDE_PATH`, including
+empty values: historical GCC can interpret an empty language path as CWD, unlike an
+unset variable. Empty `CPATH` and empty executable-override fallbacks remain allowed;
+no environment is silently sanitized. This guard is not complete dependency capture.
+The bootstrap is closed by a reviewed digest, not guessed shell-default parsing.
 
 For mixed ordinary/grouped or multiple grouped units, instead supply
 `BOF3_PRESERVATION_ROUTES=/absolute/repository/out/routes.json` and
