@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from harness.build.arguments import read_source
 from harness.build.dispatch import Dispatch, validate_dispatch
+from harness.common.deadlines import check_deadline
 from harness.domain.functions import parse_function_records
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
@@ -23,13 +25,25 @@ def prepare_translation(
     The caller retains its configured compiler and full translation-unit flags.
     """
 
+    check_deadline()
+    root = root.resolve()
     source = source.resolve()
-    text = source.read_text(encoding="utf-8")
+    if dispatch is not None:
+        if (
+            dispatch.source is None
+            or dispatch.source.resolve() != source
+            or dispatch.root != root
+        ):
+            raise ValueError("translation source differs from its compiler invocation")
+        validate_dispatch(dispatch)
+    text = read_source(source).replace("\r\n", "\n").replace("\r", "\n")
+    check_deadline()
     if count_function_metadata(text) < 2:
         if dispatch is not None:
             validate_dispatch(dispatch)
+        check_deadline()
         return assembly
-    if dispatch is None or dispatch.source != source or dispatch.root != root.resolve():
+    if dispatch is None:
         raise ValueError(
             "grouped translation requires an active preserved compiler invocation"
         )
@@ -57,4 +71,5 @@ def prepare_translation(
         names.append(name)
     result = partition_assembly(assembly, names)
     validate_dispatch(dispatch)
+    check_deadline()
     return result

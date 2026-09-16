@@ -178,7 +178,14 @@ Absence is rechecked after the ancestor walk; newly present entries reject.
 `build.receipts` owns grouped producer receipts: `build-adapter producer` always
 compiles under the writer lease, while `build-adapter receipt` requires an external
 receipt SHA and freshly checks configured provenance. Receipts cannot authorize
-reuse, native equality or deadline compliance. `build.arguments` owns bounded operand
+reuse, native equality or deadline compliance. Translation binds every supplied
+dispatch to the requested root/source and validates it before reading metadata,
+including ordinary-source passthrough. It reuses the bounded compiler source
+reader rather than reopening text without an admission limit; later dispatch
+checks and grouped ownership/partition guards remain mandatory. Source names are
+compared resolved without relaxing original dispatch-path validation; newline
+normalization is unchanged. Entry/return checkpoints cover ordinary passthrough.
+`build.arguments` owns bounded operand
 classification; `build.invocation` supplies the immutable recipe consumed by dispatch
 and driver. `build.execution` captures successful process, partition and publication
 edges and verifies them against that recipe without recreating deleted staging.
