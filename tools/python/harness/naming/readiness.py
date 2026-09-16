@@ -170,7 +170,7 @@ def canonical_storage(root: Path, target: str, address: int) -> dict[str, Any]:
     mapped = manifest.load_address <= address < payload_end
     splat_kind = boundary.kind if boundary is not None else None
     start = address
-    symbols = load_target_symbols(root, target)
+    symbols = load_target_symbols(root, target, psyq_space=manifest.psyq_space)
     later = sorted(symbol.address for symbol in symbols if symbol.address > address)
     boundary_end = boundary.virtual_end if boundary is not None else None
     end = min(
@@ -180,15 +180,17 @@ def canonical_storage(root: Path, target: str, address: int) -> dict[str, Any]:
     widths = {"lb": 1, "lbu": 1, "sb": 1, "lh": 2, "lhu": 2, "sh": 2, "lw": 4, "sw": 4}
     try:
         connection = connect(root)
-        opcodes = [
-            row[0]
-            for row in connection.execute(
-                "SELECT DISTINCT opcode FROM data_references WHERE target_id = ? AND address = ?",
-                (target, address),
-            )
-            if row[0] in widths
-        ]
-        connection.close()
+        try:
+            opcodes = [
+                row[0]
+                for row in connection.execute(
+                    "SELECT DISTINCT opcode FROM data_references WHERE target_id = ? AND address = ?",
+                    (target, address),
+                )
+                if row[0] in widths
+            ]
+        finally:
+            connection.close()
         if opcodes:
             end = min(end, address + max(widths[opcode] for opcode in opcodes))
     except (FileNotFoundError, ValueError):
