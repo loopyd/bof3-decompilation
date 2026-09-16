@@ -7,7 +7,7 @@ import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from harness.build.arguments import parse_arguments
+from harness.build.arguments import Argument, parse_arguments
 from harness.build.runtime import ASSEMBLER_POLICY, GCC_POLICY, MASPSX_POLICY, Runtime
 from harness.common.digests import digest
 from harness.common.process import resolve_supervisor
@@ -50,6 +50,31 @@ class Stage:
     files: tuple[int, ...] = ()
     supervisor: tuple[str, ...] = field(default_factory=resolve_supervisor)
     runtime: Runtime | None = None
+
+    def parse_compiler_arguments(self) -> tuple[Argument, ...]:
+        """Classify compiler operands while keeping generated artifact slots opaque."""
+        values = []
+        artifact_index = None
+        for index, argument in enumerate(self.arguments[1:]):
+            if isinstance(argument, Artifact):
+                if artifact_index is not None or argument != self.output:
+                    raise ValueError("compiler stage contains an unexpected artifact")
+                artifact_index = index
+                values.append("")
+            elif isinstance(argument, str):
+                values.append(argument)
+            else:
+                raise ValueError("compiler stage contains an invalid argument value")
+        parsed = parse_arguments(values, generated_output=artifact_index is not None)
+        outputs = []
+        offset = 0
+        for argument in parsed:
+            offset += len(argument.tokens)
+            if argument.role == "output":
+                outputs.append(offset - 1)
+        if artifact_index is not None and outputs != [artifact_index]:
+            raise ValueError("generated compiler output differs from its argument role")
+        return parsed
 
     def describe(self) -> dict:
         return {

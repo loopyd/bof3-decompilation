@@ -109,9 +109,10 @@ def describe_seeds(invocation: Invocation) -> list[dict]:
                 compiler_path=environment.get("COMPILER_PATH"),
                 path=os.get_exec_path(environment),
                 controls=[
-                    argument
-                    for argument in stage.arguments[1:]
-                    if isinstance(argument, str) and _is_search_control(argument)
+                    argument.tokens[0]
+                    for argument in stage.parse_compiler_arguments()
+                    if argument.role in {"option", "delimiter"}
+                    and _is_search_control(argument.tokens[0])
                 ],
             )
         else:

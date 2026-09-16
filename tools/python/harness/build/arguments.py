@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import stat
+from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -11,6 +12,14 @@ from harness.common.files import read_file
 
 _LIMIT = 16 * 1024 * 1024
 _FORCED_OPTIONS = ("-include", "-imacros")
+_VALUE_OPTIONS = ("-D", "-U", "-A", "-I")
+_WORD_OPTIONS = (
+    "-isystem",
+    "-idirafter",
+    "-iprefix",
+    "-iwithprefix",
+    "-iwithprefixbefore",
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -20,50 +29,75 @@ class Argument:
     tokens: tuple[str, ...]
 
 
-def parse_arguments(arguments: list[str] | tuple[str, ...]) -> tuple[Argument, ...]:
-    """Preserve explicit forced/output operand spans without interpreting cpp specs."""
+def parse_arguments(
+    arguments: list[str] | tuple[str, ...], *, generated_output: bool = False
+) -> tuple[Argument, ...]:
+    """Preserve supported preprocessing/output spans without interpreting cpp specs."""
     check_deadline()
-    if len(arguments) > 256 or sum(len(arg) for arg in arguments) > 65536:
+    if not isinstance(generated_output, bool):
+        raise ValueError("generated output admission must be boolean")
+    allowance = 2 if generated_output else 0
+    if (
+        len(arguments) > 256 + allowance
+        or sum(len(arg) for arg in arguments) > 65536 + allowance
+    ):
         raise ValueError("compiler argument bounds exceeded")
-    if any("\x00" in arg or arg == "-" or arg.startswith("@") for arg in arguments):
+    return tuple(iter_arguments(arguments))
+
+
+def iter_arguments(
+    arguments: list[str] | tuple[str, ...], *, partial: bool = False
+) -> Iterator[Argument]:
+    """Read spans; stored flag fragments may end before an operand is supplied."""
+    check_deadline()
+    if any("\x00" in arg or arg.startswith("@") for arg in arguments):
         raise ValueError("response files and stdin compiler inputs are unsupported")
-    result = []
     index = 0
     operands = False
     while index < len(arguments):
         check_deadline()
         token = arguments[index]
         index += 1
+        if token == "-" and not partial:
+            raise ValueError("stdin compiler inputs are unsupported")
         if not operands and token == "--":
             operands = True
-            result.append(Argument("delimiter", token, (token,)))
+            yield Argument("delimiter", token, (token,))
             continue
-        option = (
-            None
-            if operands
-            else next(
-                (name for name in (*_FORCED_OPTIONS, "-o") if token.startswith(name)),
-                None,
+        option = None
+        if not operands and token != "-I-":
+            option = (
+                token
+                if token in _WORD_OPTIONS
+                else next(
+                    (
+                        name
+                        for name in (*_FORCED_OPTIONS, *_VALUE_OPTIONS, "-o")
+                        if token.startswith(name)
+                    ),
+                    None,
+                )
             )
-        )
         if option is not None:
             if token == option:
                 if index == len(arguments):
-                    raise ValueError(f"missing compiler operand after {option}")
-                value = arguments[index]
-                index += 1
-                tokens = (token, value)
+                    if not partial:
+                        raise ValueError(f"missing compiler operand after {option}")
+                    value, tokens = "", (token,)
+                else:
+                    value = arguments[index]
+                    index += 1
+                    tokens = (token, value)
             else:
                 value = token[len(option) :]
                 tokens = (token,)
-            result.append(
-                Argument("output" if option == "-o" else option, value, tokens)
-            )
+            if not partial and option in (*_FORCED_OPTIONS, "-o") and value == "-":
+                raise ValueError("stdin/stdout compiler operands are unsupported")
+            yield Argument("output" if option == "-o" else option, value, tokens)
         else:
             role = "option" if not operands and token.startswith("-") else "source"
-            result.append(Argument(role, token, (token,)))
+            yield Argument(role, token, (token,))
     check_deadline()
-    return tuple(result)
 
 
 @dataclass(frozen=True, slots=True)

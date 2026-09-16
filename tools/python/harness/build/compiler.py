@@ -6,6 +6,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from harness.build.arguments import iter_arguments
 from harness.common.files import read_file
 from harness.common.deadlines import check_deadline
 from harness.common.lexicon import iter_c_lexemes
@@ -89,7 +90,10 @@ def _is_invocation_flag(flag: str) -> bool:
 
 def validate_compiler_flags(flags: tuple[str, ...] | None) -> None:
     """Keep translation-unit profiles separate from operation and output control."""
-    if any(_is_invocation_flag(flag) for flag in flags or ()):
+    if any(
+        _is_invocation_flag(argument.tokens[0])
+        for argument in iter_arguments(flags or (), partial=True)
+    ):
         raise ValueError("compiler profile cannot change the build operation or output")
 
 

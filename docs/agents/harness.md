@@ -239,6 +239,17 @@ unique lift nodes, with grouped producers forced and ordinary commands retained.
 mixed ordinary/grouped builds without changing the caller environment. Explicit
 single-record and routing-table inputs conflict; neither silently overrides the
 other. The selected record still passes the existing preservation checks.
+Preprocessing operands share explicit spans across source classification, profile
+flag checks, recipe rewriting and runtime-control inspection: joined/split
+`-D/-U/-A/-I`, plus exact `-isystem`, `-idirafter`, `-iprefix`, `-iwithprefix`
+and `-iwithprefixbefore`. Values are not source files or switches; `-I-` stays
+distinct from directory operand `-I -`. Generated output slots retain position.
+Only a stage's own output Artifact permits two generated slots/characters beyond
+the unchanged user-argument bounds; other opaque values or roles reject.
+Stored flag fragments keep historical validation, including trailing options;
+only complete invocation parsing imposes operand completeness and CLI limits.
+This is not a complete GCC grammar, include-search model or native support claim.
+
 `build.dependencies` owns digest-bound current/retained/prospective source images
 for profile resolution and conservative literal snapshots. Virtual seed bytes and
 physical include reads stay distinct; comparison records both kinds of evidence.
