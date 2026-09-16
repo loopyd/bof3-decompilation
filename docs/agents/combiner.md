@@ -185,12 +185,12 @@ compiler overrides and malformed or unattached compiler annotations reject. An e
 destination must be a selected member; its independently resolved profile must
 equal every retained member profile.
 
-Preservation v5 authenticates retained PRE source text against the captured hashes
+Preservation v6 authenticates retained PRE source text against the captured hashes
 before resolving original annotations, including removed files and an overwritten
 destination. POST settings resolve from live captured destination text, never from
 the retained PRE image. Older preservation records are not upgraded or rebound.
 For a new or overwritten destination, pass `--destination-source DRAFT.c` and
-`--expected-destination-sha256 SHA` together. Profile v3 embeds that bounded UTF-8
+`--expected-destination-sha256 SHA` together. Profile v4 embeds that bounded UTF-8
 image without writing it: attached records must cover all selected members, ordinary
 definition names must match, and the draft's effective metadata/path/default profile
 must equal every PRE profile. Template expansion and C semantics still need their
@@ -247,7 +247,8 @@ file-content checks remain required at their owning transaction/producer gates.
 This command does not migrate source/configuration or compare POST against PRE;
 the separate preservation commands below perform pinned transition checking.
 
-Only the selected compiler executable is hashed, not its backends or runtime.
+Profiles also bind the [declared program graph](#program-observations), not complete
+backend or runtime dependencies.
 Configured identity is not a fresh version check. Native fidelity, include/shared
 state, producer freshness and complete consumer coverage remain unverified; the
 report sets verification flags and `write_authorized` to false. This is a C1.3
@@ -266,7 +267,7 @@ stdout; retain its canonical fingerprint externally before any transaction. POST
 JSON maps exactly the destination, every old source, target manifest and Splat path
 to `{ "sha256": "…", "mode": 420 }` file states; superseded sources use `null`.
 Modes describe observed images, not permission-changing operations. The POST-file
-digest binds actual JSON bytes. If profile v3 embeds a draft, the destination POST
+digest binds actual JSON bytes. If profile v4 embeds a draft, the destination POST
 hash must match its exact UTF-8 bytes; capture replays that draft against live PRE,
 and verification checks live POST against both pins. Profiles and preservation
 records share the 4 MiB serialized-document bound; older schemas require fresh
@@ -328,8 +329,8 @@ Full destination code and metadata review remains mandatory: membership does not
 The repository-bound record requires an independently retained fingerprint; its
 self-hash gives no review authority. Success proves configured preservation only,
 not native equality, complete toolchain/include identity or producer freshness.
-`bin/cc` consumes v5 preservation records through the build-owned driver described
-below; v1–v4 records require fresh capture. Production consolidation remains gated.
+`bin/cc` consumes v6 preservation records through the build-owned driver described
+below; older records require fresh capture. Production consolidation remains gated.
 Checks fence mutations during each observation; matching SHA/mode endpoints do not
 prove inode continuity between PRE and POST. The CLI checks the inherited cutoff
 after rendering, before stdout publication; callers still require complete output
@@ -362,12 +363,12 @@ and native commands are not performed. `native_verified`, `coverage_verified`,
 temporary application and owned restoration; permanent application, complete consumer
 gates and independent production acceptance remain open.
 
-New preparation emits transaction v2, pinning `combiner.history` and
-`combiner.images` alongside the existing owners. The history owner validates exact
-v1/v2 owner sets and retained preservation v5/profile v3 transitions independently
-of current admission versions. Fingerprints, images, modes, ownership and false
-acceptance flags remain mandatory. V1 is restoration history only: live transaction
-verification and rehearsal require fresh v2 preparation, never automatic backfill.
+New preparation emits transaction v3, adding `build.programs` and `common.lookups`
+to the v2 owners. The history owner validates exact versioned owner sets: v1/v2
+retain preservation v5/profile v3; v3 requires preservation v6/profile v4.
+Fingerprints, images, modes, ownership and false acceptance flags remain mandatory.
+Older transactions are restoration history only: live verification and rehearsal
+require fresh v3 preparation, never automatic backfill.
 Recovery manifest v1 is unchanged; historical validation grants neither restoration
 authority nor current compiler/dependency freshness.
 
@@ -540,18 +541,54 @@ fingerprints; rendering never substitutes substrings in literal options. Relativ
 compiler PATH entries resolve from the captured working directory. The driver
 consumes that recipe rather than reselecting stage controls from ambient state.
 
-Producer v4 records `build.execution` edges: successful child commands/environment
+Producer v5 records `build.execution` v2 edges: successful child commands/environment
 digests, stdin/generated-image hashes, partitioning and final publication. Evidence
 returns directly from the driver after cleanup and terminal checks. Invocation,
-recipe and execution fingerprints stay distinct; comparison v4 binds the producer's
+recipe and execution fingerprints stay distinct; comparison v5 binds the producer's
 execution fingerprint. Verification renders the recorded temporary binding without
 allocating or rereading deleted staging. Unknown environment values are not printed.
-Older receipts cannot acquire these bindings retroactively. Profile v3 and
-preservation v5 retain their shapes and strict historical-restoration validation;
-new compilation requires current owner pins, including the new build modules.
+Older receipts cannot acquire these bindings retroactively. New compilation requires
+profile v4/preservation v6 and current owner pins. Older retained transitions keep
+their strict historical-restoration validation, not current admission.
 Recorded execution is not authenticated native proof: endpoint samples do not
 detect reverted mutations or establish complete compiler search/import/runtime
 dependencies. Reuse, native equality and source-adoption authority remain denied.
+
+### Program observations
+
+`build.programs` derives ordered executable candidates, explicit script operands
+and the supervisor executable from each actual `build.invocation` stage. Bare
+programs retain every effective PATH candidate, including absent earlier entries;
+empty PATH components mean CWD and an absent PATH uses the platform default.
+This is candidate evidence, not proof of the kernel's selected executable. Existing
+compiler/direct-driver argv canonicalization is unchanged; raw lookup spelling,
+alias edges and physical nodes remain separate. The captured supervisor tuple is
+also passed to the common process launcher without changing its cleanup protocol.
+
+`common.lookups` traverses only declared names and encountered alias targets through
+held nofollow directory descriptors. Single-link regular files bind bytes and
+mutation identity; missing entries and non-directory blockers remain explicit.
+Repository and external-host roots have distinct observational types; the external
+`/` anchor grants no enumeration, arbitrary sibling reads or write/restore authority.
+Retained validation replays bounded lookup semantics and rejects unrelated nodes
+or inconsistent trails, terminals and root bindings without live filesystem reads.
+
+Limits per capture pass are 2,048 candidates, 8,192 nodes, 512 directory descriptors,
+256 steps and 40 aliases per lookup, 16 KiB spellings/targets, 64 MiB per file,
+256 MiB total bytes and 512 KiB serialized graph. A concurrent watch has additional
+descriptors. Discovery is followed by watch installation and a complete recapture;
+later checks bracket fresh reads with latched events. Failure/expiry cannot revive
+a snapshot; closure remains available. Output, publication scratch/quarantine and
+staging-family collisions reject before their creation. No successful prior check
+substitutes for a fresh validation.
+
+Profiles omit incidental source/output operands from this common program graph;
+concrete recipes bind those separately. Dispatch retains the graph in its invocation
+fingerprint, transitively binding execution and producer/comparison receipts.
+Profile v4 and preservation v6 require it; historical schemas are never backfilled.
+This direct-stage graph still excludes GCC backend/spec searches, imported modules,
+Python startup, shell interpreters and ELF loaders/libraries. `complete:false`,
+configured provenance and non-reuse remain mandatory; native fidelity is unverified.
 
 For an explicitly admitted grouped-unit compile, supply
 `BOF3_PRESERVATION_RECORD` and `BOF3_PRESERVATION_FINGERPRINT` together. The record

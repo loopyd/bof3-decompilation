@@ -136,6 +136,11 @@ class OwnedProcess:
         return result
 
 
+def resolve_supervisor() -> tuple[str, ...]:
+    """Describe the Python launcher actually used by owned process execution."""
+    return (sys.executable, "-m", "harness.common.process")
+
+
 def owned_popen(
     argv: Sequence[str | Path],
     *,
@@ -147,6 +152,7 @@ def owned_popen(
     text: bool = False,
     bufsize: int = -1,
     deadline: float | None = None,
+    supervisor: tuple[str, ...] | None = None,
 ) -> OwnedProcess:
     """Start one Linux-owned tree with subreaper and cleanup acknowledgement."""
 
@@ -155,6 +161,9 @@ def owned_popen(
     validate_deadline(deadline)
     if deadline is not None and time.monotonic() >= deadline:
         raise subprocess.TimeoutExpired(argv, 0)
+    current_supervisor = resolve_supervisor()
+    if supervisor is not None and supervisor != current_supervisor:
+        raise ValueError("owned process supervisor differs from its captured command")
     command = json.dumps([os.fspath(item) for item in argv])
     owner_read, owner_write = os.pipe()
     try:
@@ -164,9 +173,7 @@ def owned_popen(
         os.close(owner_write)
         raise
     launcher = [
-        sys.executable,
-        "-m",
-        "harness.common.process",
+        *(current_supervisor if supervisor is None else supervisor),
         str(owner_read),
         str(completion_write),
         command,
@@ -210,6 +217,7 @@ def run_bounded(
     on_output: Callable[[str, bytes], None] | None = None,
     on_spawn: Callable[[OwnedProcess], None] | None = None,
     env: Mapping[str, str] | None = None,
+    supervisor: tuple[str, ...] | None = None,
 ) -> dict[str, Any]:
     """Bound owned work by pre-spawn timeout and an optional monotonic deadline.
 
@@ -243,6 +251,7 @@ def run_bounded(
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             deadline=deadline,
+            **({"supervisor": supervisor} if supervisor is not None else {}),
             **({"env": env} if env is not None else {}),
             **({"stdin": subprocess.PIPE} if input_data is not None else {}),
         )

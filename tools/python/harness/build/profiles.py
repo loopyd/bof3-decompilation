@@ -17,7 +17,10 @@ from harness.build.compiler import (
     resolve_compiler_settings,
 )
 from harness.build.dependencies import SourceImage
+from harness.build.invocation import Invocation, plan_invocation
+from harness.build.programs import capture_description, describe_requests
 from harness.common.deadlines import check_deadline
+from harness.common.digests import digest
 from harness.common.inputs import InputBatch, read_input
 from harness.common.observation import DirectoryBatch, observe_directory
 from harness.domain.cache import collect_claim_paths, collect_manifest_paths
@@ -147,6 +150,7 @@ class ProfileContext:
         self.ancestors: dict[Path, tuple] = {}
         self.manifest_paths: tuple[str, ...] | None = None
         self._variants: list[CompilerVariant] | None = None
+        self._programs: dict[str, tuple[Invocation, dict]] = {}
         active = [
             name
             for name in _ENVIRONMENT
@@ -184,6 +188,7 @@ class ProfileContext:
             "tools/python/harness/build/compiler.py",
             "tools/python/harness/build/arguments.py",
             "tools/python/harness/build/invocation.py",
+            "tools/python/harness/build/programs.py",
             "tools/python/harness/build/execution.py",
             "tools/python/harness/build/dependencies.py",
             "tools/python/harness/build/profiles.py",
@@ -203,6 +208,9 @@ class ProfileContext:
             "tools/python/harness/common/inputs.py",
             "tools/python/harness/common/lexicon.py",
             "tools/python/harness/common/observation.py",
+            "tools/python/harness/common/lookups.py",
+            "tools/python/harness/common/process.py",
+            "tools/python/harness/common/children.py",
             "tools/python/harness/common/paths.py",
             "tools/python/harness/common/directory.py",
             "tools/python/harness/common/root.py",
@@ -370,6 +378,24 @@ class ProfileContext:
             checksum = variant.checksum
         executable_name = executable.relative_to(self.root).as_posix()
         self.read(executable_name)
+        arguments = build_compiler_arguments(self.root, settings.flags)
+        output = self.root / "build" / Path(source).with_suffix(".o")
+        invocation = plan_invocation(
+            self.root,
+            [*arguments[1:], "-c", str(self.root / source), "-o", str(output)],
+            sources=[self.root / source],
+            output=output,
+            compiler=executable,
+            executable=str(executable),
+            cwd=Path.cwd(),
+            environment=dict(os.environ),
+        )
+        program_key = digest(describe_requests(invocation))
+        if program_key not in self._programs:
+            self._programs[program_key] = (
+                invocation,
+                capture_description(self.root, invocation),
+            )
         return {
             "compiler": {
                 "id": compiler_id,
@@ -378,7 +404,8 @@ class ProfileContext:
                 "executable": executable_name,
                 "sha256": self.inputs[executable_name]["sha256"],
             },
-            "arguments": build_compiler_arguments(self.root, settings.flags),
+            "arguments": arguments,
+            "programs": self._programs[program_key][1],
         }
 
     def verify(self) -> None:
@@ -410,6 +437,9 @@ class ProfileContext:
                     ):
                         raise ValueError(f"profile input changed: {relative}")
             self._verify_ancestors(directories)
+        for invocation, expected in self._programs.values():
+            if capture_description(self.root, invocation) != expected:
+                raise ValueError("configured compiler programs changed")
         self.verify_manifest_inventory()
 
     def _verify_ancestors(self, directories: DirectoryBatch | None = None) -> None:

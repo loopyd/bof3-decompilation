@@ -17,7 +17,8 @@ from harness.build.compiler import (
     resolve_compiler_settings,
     validate_object_configuration,
 )
-from harness.build.invocation import Invocation, plan_dispatch
+from harness.build.invocation import Invocation, plan_dispatch, plan_invocation
+from harness.build.programs import ProgramSnapshot
 from harness.build.preservation import (
     hash_preservation,
     read_preservation_document,
@@ -78,7 +79,10 @@ def close_dispatch(dispatch: Dispatch) -> None:
     try:
         dispatch.watch.close()
     finally:
-        dispatch.selection.close()
+        try:
+            dispatch.programs.close()
+        finally:
+            dispatch.selection.close()
 
 
 def _select_annotated_compiler(root, arguments, sources, output, grouped):
@@ -183,6 +187,7 @@ class Dispatch:
     watch: PathWatch
     selection: Selection
     invocation: Invocation
+    programs: ProgramSnapshot
 
 
 def _observe_working_directory() -> dict:
@@ -273,14 +278,38 @@ def _prepare_selected(
         paths.update(root / name for name in proof["inputs"])
         paths.add(record_path)
     selection.protect_outputs(output, inputs=paths)
-    if output is not None:
-        output.parent.mkdir(parents=True, exist_ok=True)
-    directories = {
-        parent for path in paths for parent in path.parents if parent.is_dir()
-    }
-    directories.add(cwd)
-    watch = PathWatch(paths)
+    environment = dict(os.environ)
+    invocation = plan_invocation(
+        root,
+        arguments,
+        sources=sources,
+        output=output,
+        compiler=compiler,
+        executable=str(executable),
+        cwd=cwd,
+        environment=environment,
+    )
+    programs = ProgramSnapshot(root, invocation)
+    watch = None
     try:
+        programs.protect_outputs(
+            [
+                output,
+                output.with_name(output.name + ".s"),
+                output.with_name(output.name + ".producer.json"),
+            ]
+            if output
+            else []
+        )
+        if proof and proof["profile"]["programs"] != programs.describe():
+            raise ValueError("dispatch programs differ from preserved profile")
+        if output is not None:
+            output.parent.mkdir(parents=True, exist_ok=True)
+        directories = {
+            parent for path in paths for parent in path.parents if parent.is_dir()
+        }
+        directories.add(cwd)
+        watch = PathWatch(paths)
         return _capture_dispatch(
             root,
             arguments,
@@ -297,9 +326,16 @@ def _prepare_selected(
             watch,
             selection,
             working_directory,
+            environment,
+            invocation,
+            programs,
         )
     except BaseException:
-        watch.close()
+        try:
+            if watch is not None:
+                watch.close()
+        finally:
+            programs.close()
         raise
 
 
@@ -319,6 +355,9 @@ def _capture_dispatch(
     watch,
     selection,
     working_directory,
+    environment,
+    invocation,
+    programs,
 ) -> Dispatch:
     observations = {
         str(parent): observe_input(parent) for parent in sorted(directories)
@@ -331,7 +370,6 @@ def _capture_dispatch(
             contents[str(path)] = hashlib.sha256(
                 read_file(path.parent, path.name, max_bytes=64 * 1024 * 1024)
             ).hexdigest()
-    environment = dict(os.environ)
     state = {
         "working_directory": working_directory,
         "root": str(root),
@@ -349,8 +387,10 @@ def _capture_dispatch(
         "environment": {name: environment.get(name) for name in _ENVIRONMENT},
         "environment_fingerprint": hash_preservation(environment),
         "routing": selection.describe(),
+        "programs": programs.describe(),
     }
-    invocation = plan_dispatch(state, environment)
+    if invocation.describe() != plan_dispatch(state, environment).describe():
+        raise ValueError("compiler stage recipe changed during capture")
     state["recipe"] = invocation.describe()
     dispatch = Dispatch(
         root,
@@ -365,6 +405,7 @@ def _capture_dispatch(
         watch,
         selection,
         invocation,
+        programs,
     )
     validate_dispatch(dispatch)
     return dispatch
@@ -376,9 +417,12 @@ def validate_dispatch(dispatch: Dispatch) -> None:
     dispatch.selection.validate()
     dispatch.selection.protect_outputs(dispatch.output)
     dispatch.watch.validate()
+    dispatch.programs.validate(dispatch.invocation)
     if hash_preservation(dispatch.state) != dispatch.fingerprint:
         raise ValueError("compiler invocation binding changed")
     state = dispatch.state
+    if state["programs"] != dispatch.programs.describe():
+        raise ValueError("compiler program generation binding changed")
     if state["working_directory"] != _observe_working_directory():
         raise ValueError("compiler working directory changed during dispatch")
     dispatch.selection.protect_outputs(
@@ -471,6 +515,7 @@ def validate_dispatch(dispatch: Dispatch) -> None:
         if (
             proof["destination"]
             != dispatch.source.relative_to(dispatch.root).as_posix()
+            or proof["profile"]["programs"] != state["programs"]
         ):
             raise ValueError("preservation no longer selects the compiler source")
         expected = [
@@ -487,6 +532,7 @@ def validate_dispatch(dispatch: Dispatch) -> None:
             raise ValueError(f"compiler input or ancestor changed: {name}")
     dispatch.watch.validate()
     dispatch.selection.validate()
+    dispatch.programs.validate(dispatch.invocation)
     if state["working_directory"] != _observe_working_directory():
         raise ValueError("compiler working directory changed during validation")
     if state.get("environment_fingerprint") != hash_preservation(dict(os.environ)):

@@ -29,7 +29,7 @@ from harness.match.execution import NativeExecution
 from harness.match.extraction import read_function_image
 from harness.match.placement import extract_grouped_function, place_grouped_object
 
-SCHEMA = "bof3.combiner-comparison/v4"
+SCHEMA = "bof3.combiner-comparison/v5"
 _LIMIT = 64 * 1024 * 1024
 _OWNERS = (
     "tools/python/harness/combiner/comparison.py",
@@ -217,6 +217,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
         ]
         dispatch = prepare_dispatch(root, arguments)
         stack.callback(close_dispatch, dispatch)
+        dispatch.programs.protect_outputs(list(artifacts))
         if (
             dispatch.record_path != selection.record
             or dispatch.record_fingerprint != selection.fingerprint
@@ -238,6 +239,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
             require_writer(root)
             selection.validate()
             dispatch.watch.validate()
+            dispatch.programs.validate(dispatch.invocation)
             native_watch.validate()
             includes.check()
 

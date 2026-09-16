@@ -182,9 +182,17 @@ reuse, native equality or deadline compliance. `build.arguments` owns bounded op
 classification; `build.invocation` supplies the immutable recipe consumed by dispatch
 and driver. `build.execution` captures successful process, partition and publication
 edges and verifies them against that recipe without recreating deleted staging.
-The driver returns evidence in-process after cleanup; producer v4 and comparison v4
+The driver returns evidence in-process after cleanup; producer v5 and comparison v5
 bind it separately from live invocation identity. Profile compatibility remains
-independent of source/output paths; historical restoration schemas are unchanged.
+independent of source/output paths; older restoration records remain versioned history.
+`build.programs` derives executable candidates, declared scripts and the process
+supervisor from those same stages. `common.lookups` walks raw spellings through
+held nofollow directory descriptors, preserving alias and absence evidence.
+Typed repository/external observations grant no external writes. Dispatch watches
+and recaptures this bounded generation; its fingerprint transitively binds execution.
+Profiles retain the same configured graph and verify it afresh, not a persistent
+validation-success cache. See [program observations](combiner.md#program-observations)
+for limits and unresolved runtime/backend dependencies.
 `build.inventory` owns configured
 classification and its always-run graph gate; `config/compiler/graph.cmake` owns
 unique lift nodes, with grouped producers forced and ordinary commands retained.
@@ -200,12 +208,13 @@ See the [combiner contract](combiner.md) for supported entrypoints, invocation,
 invalid markers and retained recovery handling.
 
 `combiner.images` owns joint text/mode preparation; `combiner.history` owns strict
-transaction v1/v2 history and their exact owner sets. Current preparation emits v2
-with both new owners pinned. Historical profile v3 transitions use
+transaction v1/v2/v3 history and their exact owner sets. Current preparation emits v3
+with program/lookup owners pinned and preservation v6/profile v4. Historical v1/v2
+retain preservation v5/profile v3. Both profile versions use
 `build.preservation.validate_profile_history`, independent of current admission
 schema constants; new captures still use `validate_transition`'s current-version
 gate. Recovery keeps manifest v1 and validates retained bindings without live PRE.
-Live transaction verification/rehearsal rejects historical v1; recapture v2 rather
+Live transaction verification/rehearsal rejects historical v1/v2; recapture v3 rather
 than rewriting old pins. No schema support grants restoration or source authority.
 
 The decomp-status batch path loads a fresh catalog after each successful build and

@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from harness.common.digests import digest
+from harness.common.process import resolve_supervisor
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,6 +45,8 @@ class Stage:
     cwd: Path
     stdin: Artifact | None = None
     output: Artifact | None = None
+    files: tuple[int, ...] = ()
+    supervisor: tuple[str, ...] = field(default_factory=resolve_supervisor)
 
     def describe(self) -> dict:
         return {
@@ -60,6 +63,8 @@ class Stage:
             "cwd": str(self.cwd),
             "stdin": self.stdin.name if self.stdin is not None else None,
             "output": self.output.name if self.output is not None else None,
+            "files": list(self.files),
+            "supervisor": list(self.supervisor),
         }
 
     def render(self, temporary: Path) -> tuple[list[str], dict[str, str]]:
@@ -86,7 +91,7 @@ class Invocation:
 
     def describe(self) -> dict:
         return {
-            "schema": "bof3.compiler-invocation/v1",
+            "schema": "bof3.compiler-invocation/v2",
             "mode": self.mode,
             "source": str(self.source) if self.source is not None else None,
             "output": str(self.output) if self.output is not None else None,
@@ -249,9 +254,15 @@ def plan_invocation(
     base = {**environment, "PYTHONDONTWRITEBYTECODE": "1", "TMPDIR": Artifact("root")}
     compiler_environment = _compiler_environment(root, compiler, base, cwd)
 
-    def stage(name, argv, values, *, stdin=None, produced=None):
+    def stage(name, argv, values, *, stdin=None, produced=None, files=()):
         return Stage(
-            name, tuple(argv), tuple(sorted(values.items())), cwd, stdin, produced
+            name,
+            tuple(argv),
+            tuple(sorted(values.items())),
+            cwd,
+            stdin,
+            produced,
+            files,
         )
 
     if mode == "direct":
@@ -329,6 +340,7 @@ def plan_invocation(
                 ],
                 python_environment,
                 stdin=assembly,
+                files=(2,),
             ),
             stage(
                 "assembler",

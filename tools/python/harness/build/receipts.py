@@ -21,7 +21,7 @@ from harness.common.observation import PathWatch
 from harness.common.paths import leaf_stat
 from harness.io import unique_object
 
-_SCHEMA = "bof3.grouped-producer/v4"
+_SCHEMA = "bof3.grouped-producer/v5"
 _LIMIT = 16 * 1024 * 1024
 
 
@@ -120,6 +120,9 @@ def _run_producer(root: Path, arguments: list[str]) -> tuple[int, dict | None]:
                 dispatch = prepare_dispatch(root, arguments)
                 try:
                     receipt = _select_receipt(dispatch)
+                    dispatch.programs.protect_outputs(
+                        [receipt, root / "out/reviews/evidence/quarantine"]
+                    )
                     previous = read_file(
                         root,
                         receipt.relative_to(root).as_posix(),

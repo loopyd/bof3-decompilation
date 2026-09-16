@@ -34,6 +34,7 @@ def _execute(
     *,
     cwd: Path,
     input_text: str | None = None,
+    supervisor: tuple[str, ...] | None = None,
 ) -> str:
     result = run_bounded(
         cwd,
@@ -43,6 +44,7 @@ def _execute(
         input_data=input_text.encode() if input_text is not None else None,
         output_limit=64 * 1024 * 1024,
         env=environment,
+        supervisor=supervisor,
     )
     failed = result["exit_code"] != 0 or result["failure"]
     status = result["exit_code"] or (124 if result["failure"] == "timeout" else 2)
@@ -72,6 +74,7 @@ def _execute_stage(stage: Stage, temporary: Path, execution: Execution) -> str:
         environment,
         cwd=stage.cwd,
         input_text=input_text,
+        supervisor=stage.supervisor,
     )
     execution.events.append(complete_stage(entry, stage, temporary, rendered))
     return rendered
@@ -115,12 +118,15 @@ def _run(root: Path, arguments: list[str]) -> Execution:
     select_mode(
         arguments, sources=sources, output=output, cwd=cwd, environment=dict(os.environ)
     )
-    temporary = Path(tempfile.mkdtemp(prefix=".bof3-cc-"))
+    temporary = None
     cleanup = True
     dispatch = None
     publication_started = False
     try:
         dispatch = prepare_dispatch(root, arguments)
+        temporary_parent = Path(tempfile.gettempdir())
+        dispatch.programs.protect_temporary(temporary_parent, ".bof3-cc-")
+        temporary = Path(tempfile.mkdtemp(prefix=".bof3-cc-", dir=temporary_parent))
         if dispatch.state["working_directory"]["path"] != str(cwd):
             raise ValueError("compiler working directory changed during preparation")
         invocation = dispatch.invocation
@@ -231,7 +237,7 @@ def _run(root: Path, arguments: list[str]) -> Execution:
         raise
     finally:
         try:
-            if cleanup:
+            if cleanup and temporary is not None:
                 shutil.rmtree(temporary)
                 if dispatch is not None and sys.exc_info()[0] is None:
                     validate_dispatch(dispatch)
