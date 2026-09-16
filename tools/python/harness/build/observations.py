@@ -59,6 +59,9 @@ def validate_description(value: object) -> None:
             not isinstance(description, dict)
             or set(description) != fields
             or not isinstance(description["path"], str)
+            or not isinstance(description["identity"], list)
+            or len(description["identity"]) != 5
+            or any(type(item) is not int for item in description["identity"])
         ):
             raise ValueError("program root fields differ")
         path = Path(description["path"])
@@ -166,6 +169,7 @@ def validate_description(value: object) -> None:
     if anchor["terminal"] != str(repository) or anchor["status"] != "directory":
         raise ValueError("program repository anchor differs")
     count = 0
+    stage_directories = {}
     for request in requests:
         check_deadline()
         if not isinstance(request, dict) or set(request) != {
@@ -201,6 +205,11 @@ def validate_description(value: object) -> None:
         cwd = Path(request["cwd"])
         if not cwd.is_absolute() or str(cwd) != request["cwd"] or ".." in cwd.parts:
             raise ValueError("program request CWD is not canonical")
+        if (
+            stage_directories.setdefault(request["stage"], request["cwd"])
+            != request["cwd"]
+        ):
+            raise ValueError("program stage working directories differ")
         candidates, lookups = request["candidates"], request["lookups"]
         if (
             not isinstance(candidates, list)
@@ -221,6 +230,11 @@ def validate_description(value: object) -> None:
             role in {"script", "runtime-source"} or "/" in request["spelling"]
         ) and candidates != [request["spelling"]]:
             raise ValueError("program literal candidates differ")
+        if role not in {"script", "runtime-source"} and "/" not in request["spelling"]:
+            if any(
+                os.path.basename(name) != request["spelling"] for name in candidates
+            ):
+                raise ValueError("program search candidate command differs")
         if role == "supervisor":
             command = request["command"]
             if (
