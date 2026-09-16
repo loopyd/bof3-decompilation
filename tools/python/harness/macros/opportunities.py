@@ -6,10 +6,10 @@ import hashlib
 import re
 import sqlite3
 from collections import defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from harness.io import file_sha256
 from harness.macros.groups import exact_group_opportunities
 
 _GENERATED = re.compile(
@@ -39,6 +39,16 @@ _CONTROL = {"break", "continue", "goto", "return", "case", "default"}
 _ASSIGNMENTS = {"=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="}
 
 
+@dataclass(frozen=True)
+class SourceInput:
+    """Lexical source and digest derived from one verified byte sample."""
+
+    target: str
+    source_path: str
+    text: str
+    sha256: str
+
+
 def _without_directives(text: str) -> str:
     rows = text.splitlines(keepends=True)
     masked: list[str] = []
@@ -53,11 +63,15 @@ def _without_directives(text: str) -> str:
 def _tokens(text: str) -> list[tuple[str, str, int]]:
     result: list[tuple[str, str, int]] = []
     source = _without_directives(text)
+    line = 1
+    previous = 0
     for match in _TOKEN.finditer(source):
+        line += source.count("\n", previous, match.start())
+        previous = match.start()
         kind = match.lastgroup or ""
         if kind in {"space", "comment", "string"}:
             continue
-        result.append((match.group(), kind, source.count("\n", 0, match.start()) + 1))
+        result.append((match.group(), kind, line))
     return result
 
 
@@ -109,7 +123,7 @@ def _literal_type(token: str) -> str:
 
 def _source_inputs(
     connection: sqlite3.Connection, root: Path, target: str | None
-) -> list[tuple[str, str, Path, str]]:
+) -> list[SourceInput]:
     clauses = "WHERE m.owner_target = m.target_id"
     params: list[object] = []
     if target:
@@ -121,7 +135,7 @@ def _source_inputs(
         "ORDER BY m.target_id, m.source_path",
         params,
     ).fetchall()
-    result: list[tuple[str, str, Path, str]] = []
+    result: list[SourceInput] = []
     root_resolved = root.resolve()
     for target_id, source_path, digest, input_kind in rows:
         path = (root / source_path).resolve()
@@ -129,25 +143,31 @@ def _source_inputs(
             raise ValueError(
                 f"stale macro opportunity source: {target_id}:{source_path}"
             )
-        if file_sha256(path) != digest:
+        content = path.read_bytes()
+        if hashlib.sha256(content).hexdigest() != digest:
             raise ValueError(
                 f"stale macro opportunity source: {target_id}:{source_path}"
             )
-        text = path.read_text(encoding="utf-8", errors="replace")
+        text = (
+            content.decode("utf-8", errors="replace")
+            .replace("\r\n", "\n")
+            .replace("\r", "\n")
+        )
         if not _GENERATED.search(text):
-            result.append((target_id, source_path, path, text))
+            result.append(SourceInput(target_id, source_path, text, digest))
     return result
 
 
 def _constant_opportunities(
-    sources: list[tuple[str, str, Path, str]],
+    sources: list[SourceInput],
 ) -> list[dict[str, Any]]:
     occurrences: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(
         list
     )
     contexts: dict[tuple[str, str], set[str]] = defaultdict(set)
-    for target, source_path, _path, text in sources:
-        tokens = _tokens(text)
+    for source in sources:
+        target, source_path = source.target, source.source_path
+        tokens = _tokens(source.text)
         for index, (token, kind, line) in enumerate(tokens):
             if kind != "number" or token in _TRIVIAL_LITERALS:
                 continue
@@ -177,11 +197,7 @@ def _constant_opportunities(
                     "semantic_context": context,
                     "type_context": type_context,
                     "source_fingerprints": sorted(
-                        {
-                            file_sha256(path)
-                            for t, _s, path, _text in sources
-                            if t == target
-                        }
+                        {source.sha256 for source in sources if source.target == target}
                     ),
                 },
                 "counterexamples": [
@@ -214,12 +230,13 @@ def _constant_opportunities(
 
 
 def _accessor_opportunities(
-    sources: list[tuple[str, str, Path, str]],
+    sources: list[SourceInput],
 ) -> list[dict[str, Any]]:
     uses: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
     unsafe: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
-    for target, source_path, _path, text in sources:
-        tokens = _tokens(text)
+    for source in sources:
+        target, source_path = source.target, source.source_path
+        tokens = _tokens(source.text)
         for index in range(1, len(tokens) - 1):
             operator = tokens[index][0]
             if operator not in {"->", "."} or tokens[index + 1][1] != "identifier":
@@ -308,11 +325,12 @@ def _accessor_opportunities(
 
 
 def _statement_opportunities(
-    sources: list[tuple[str, str, Path, str]],
+    sources: list[SourceInput],
 ) -> list[dict[str, Any]]:
     windows: dict[tuple[str, tuple[str, ...]], list[dict[str, Any]]] = defaultdict(list)
-    for target, source_path, _path, text in sources:
-        tokens = _tokens(text)
+    for source in sources:
+        target, source_path = source.target, source.source_path
+        tokens = _tokens(source.text)
         statements: list[list[tuple[str, str, int]]] = []
         current: list[tuple[str, str, int]] = []
         for token in tokens:

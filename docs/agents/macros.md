@@ -86,6 +86,11 @@ explicit size floor, four-use eligibility, and largest-first machine ordering;
 AI readability assessments now feed a validated, pinned top-N selection;
 bounded autonomous execution remains unfinished.
 
+Lexical discovery hashes and decodes one byte sample per source; constant evidence
+uses that same verified digest. Token line numbers use an incremental scan.
+This binds leads to sampled content, not an atomic repository snapshot or approval
+to apply them. Later consumers still require fresh evidence and reviewed transactions.
+
 | Current lead | Admission and current numeric rank |
 | --- | --- |
 | `constant` | At least three lexical occurrences in the grouped context; rank is occurrence count. |
