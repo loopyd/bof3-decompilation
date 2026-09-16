@@ -467,6 +467,13 @@ is inferred. Strict scanning accepts LF/CRLF, rejects bare CR and splices only o
 Source/authored-header policy checks consume the captured bytes.
 This closes observed literal-search gaps, not complete compiler/preprocessor,
 flag-induced include, toolchain/runtime or producer-receipt dependency closure.
+[GCC 2.7.2](https://ftp.gnu.org/old-gnu/gcc/gcc-2.7.2.tar.gz) also consults
+`header.gcc` mappings in each searched directory and the
+candidate header's parent. Literal capture records their absence before checking
+the candidate; an existing mapping rejects, even if empty. Later creation or
+creation/removal is watched, including at earlier roots with no selected header.
+Unsearched roots are not traversed. This rejects unsupported remapping; it does
+not implement mappings or prove native closure. These paths share existing bounds.
 
 Membership comes from preserved selectors, target-local symbols and unique reviewed
 C boundaries. Captured manifest/layout/maps/binary bytes supply bindings and original

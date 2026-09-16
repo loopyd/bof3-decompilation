@@ -47,6 +47,14 @@ class IncludeSnapshot:
                     search = ((path.parent,) if quoted else ()) + roots
                     for directory in search:
                         candidate = directory / filename
+                        for mapping in (
+                            directory / "header.gcc",
+                            candidate.parent / "header.gcc",
+                        ):
+                            if self._read(batch, mapping) is not None:
+                                raise ValueError(
+                                    f"unsupported compiler header mapping: {mapping}"
+                                )
                         if self._read(batch, candidate) is not None:
                             if candidate not in scheduled:
                                 scheduled.add(candidate)
