@@ -2,16 +2,19 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
 from typing import Any
 
 from harness.common.digests import digest
+from harness.common.deadlines import check_deadline
+from harness.common.directory import validate_repo_path
+from harness.common.inputs import InputBatch
 from harness.domain.receipts import validate_candidate
 from harness.io import unique_object
 
 SCHEMA = "bof3.reviewed-type-candidate/v1"
+_LIMIT = 4 * 1024 * 1024
 _KIND_FOR_CONCERN = {
     "alias": {"typedef"},
     "layout": {"aggregate"},
@@ -31,15 +34,17 @@ _INDEX_FOR_CONCERN = {
 }
 
 
-def _record(path: Path) -> dict[str, Any]:
+def _record(content: bytes, artifact: str) -> dict[str, Any]:
+    check_deadline()
     try:
-        value = json.loads(
-            path.read_text(encoding="utf-8"), object_pairs_hook=unique_object
-        )
-    except (json.JSONDecodeError, UnicodeDecodeError) as error:
-        raise ValueError(f"reviewed type candidate is not JSON: {path}") from error
+        value = json.loads(content.decode("utf-8"), object_pairs_hook=unique_object)
+    except (json.JSONDecodeError, UnicodeDecodeError, RecursionError) as error:
+        raise ValueError(
+            f"reviewed type candidate is not bounded JSON: {artifact}"
+        ) from error
     if not isinstance(value, dict):
         raise ValueError("reviewed type candidate must be an object")
+    check_deadline()
     return value
 
 
@@ -51,10 +56,12 @@ def validate_reviewed_candidate(
 ) -> dict[str, Any]:
     """Validate independent review plus live repository and index fingerprints."""
 
-    path = Path(artifact)
-    if path.is_absolute() or not (root / path).is_file():
+    artifact = validate_repo_path(artifact)
+    with InputBatch(root) as batch:
+        state, content = batch.read(root / artifact, max_bytes=_LIMIT)
+    if state is None:
         raise ValueError(f"reviewed type candidate artifact missing: {artifact}")
-    value = _record(root / path)
+    value = _record(content, artifact)
     facts = {key: item for key, item in value.items() if key != "digest"}
     if (
         facts.get("schema") != SCHEMA
@@ -107,9 +114,10 @@ def validate_reviewed_candidate(
         or not review["reviewer"].strip()
     ):
         raise ValueError("reviewed type candidate has unresolved review contract")
+    check_deadline()
     return {
         "artifact": artifact,
-        "artifact_sha256": hashlib.sha256((root / path).read_bytes()).hexdigest(),
+        "artifact_sha256": state["sha256"],
         "index_id": index_row["id"],
         "candidate": candidate,
         "representation": representation["contract"],
@@ -170,7 +178,7 @@ def artifact_paths(value: object) -> list[str]:
         or len(set(value)) != len(value)
     ):
         raise ValueError("candidate_artifacts must be unique repo-relative paths")
-    return value
+    return [validate_repo_path(path) for path in value]
 
 
 __all__ = [

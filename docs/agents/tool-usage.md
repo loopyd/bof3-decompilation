@@ -647,6 +647,11 @@ bin/type-audit run out/reviews/type-manifest.json out/reviews/type-changes.json 
 bin/type-audit verify out/reviews/type-application.json --expected-application-digest DIGEST
 ```
 
+Reviewed type artifacts use canonical repository-relative paths and one confined,
+metadata-checked capture, limited to 4 MiB. UTF-8 parsing and the raw-byte SHA use
+that same sample; symlinks, oversized files and observed read-time mutation reject.
+The sample does not establish later freshness; transaction rederivation still applies.
+
 The changes file is a JSON object mapping each allowed repo-relative file to its complete replacement text. Retain the application digest from the `run` output in a trusted external record; do not derive the expected value from the application file being verified. Shared preparation requires two externally pinned reviewed private envelopes with identical representation and semantic contracts; target-address-bearing contracts are rejected. Integrity-only pins cannot authorize shared preparation.
 
 For macro applications, parent review, and revalidation, use the canonical
