@@ -485,6 +485,8 @@ path reads that physical file, not the virtual image again. Comparison v3 record
 `source_image` separately; the retired combiner module has no shim. This interface
 does not prove virtual-image native replay or add compiler flag, spec, default-search
 or runtime dependency resolution.
+Fast snapshot checks enforce the inherited work cutoff even with no physical
+inputs and latch expiry as failure; closing remains available after expiry.
 
 Membership comes from preserved selectors, target-local symbols and unique reviewed
 C boundaries. Captured manifest/layout/maps/binary bytes supply bindings and original

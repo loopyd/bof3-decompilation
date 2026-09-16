@@ -199,6 +199,7 @@ class IncludeSnapshot:
         if self._failed or not self._active:
             raise ValueError("include snapshot is closed or failed")
         try:
+            check_deadline()
             if self._watch is not None:
                 self._watch.validate()
         except BaseException:
