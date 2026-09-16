@@ -18,7 +18,7 @@ from harness.build.compiler import (
 )
 from harness.build.dependencies import SourceImage
 from harness.build.invocation import Invocation, plan_invocation
-from harness.build.programs import capture_description, describe_requests
+from harness.build.programs import capture_description, describe_inputs
 from harness.common.deadlines import check_deadline
 from harness.common.digests import digest
 from harness.common.inputs import InputBatch, read_input
@@ -189,6 +189,8 @@ class ProfileContext:
             "tools/python/harness/build/arguments.py",
             "tools/python/harness/build/invocation.py",
             "tools/python/harness/build/programs.py",
+            "tools/python/harness/build/runtime.py",
+            "tools/python/harness/build/observations.py",
             "tools/python/harness/build/execution.py",
             "tools/python/harness/build/dependencies.py",
             "tools/python/harness/build/profiles.py",
@@ -390,7 +392,7 @@ class ProfileContext:
             cwd=Path.cwd(),
             environment=dict(os.environ),
         )
-        program_key = digest(describe_requests(invocation))
+        program_key = digest(describe_inputs(invocation))
         if program_key not in self._programs:
             self._programs[program_key] = (
                 invocation,

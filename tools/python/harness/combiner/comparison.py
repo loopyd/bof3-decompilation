@@ -29,7 +29,7 @@ from harness.match.execution import NativeExecution
 from harness.match.extraction import read_function_image
 from harness.match.placement import extract_grouped_function, place_grouped_object
 
-SCHEMA = "bof3.combiner-comparison/v5"
+SCHEMA = "bof3.combiner-comparison/v6"
 _LIMIT = 64 * 1024 * 1024
 _OWNERS = (
     "tools/python/harness/combiner/comparison.py",

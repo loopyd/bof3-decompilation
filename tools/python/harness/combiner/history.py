@@ -40,6 +40,11 @@ _OWNERS_V3 = (
     "tools/python/harness/build/programs.py",
     "tools/python/harness/common/lookups.py",
 )
+_OWNERS_V4 = (
+    *_OWNERS_V3,
+    "tools/python/harness/build/runtime.py",
+    "tools/python/harness/build/observations.py",
+)
 
 
 def collect_transaction_owners(schema: str) -> tuple[str, ...]:
@@ -50,6 +55,8 @@ def collect_transaction_owners(schema: str) -> tuple[str, ...]:
         return _OWNERS_V2
     if schema == "bof3.combiner-transaction/v3":
         return _OWNERS_V3
+    if schema == "bof3.combiner-transaction/v4":
+        return _OWNERS_V4
     raise ValueError("unsupported retained transaction schema")
 
 
@@ -62,7 +69,24 @@ def validate_transaction_history(
     if not isinstance(transaction, dict):
         raise ValueError("transaction must be an object")
     required_owners = collect_transaction_owners(transaction.get("schema"))
-    current_programs = transaction["schema"] == "bof3.combiner-transaction/v3"
+    preservation_schema, profile_schema = {
+        "bof3.combiner-transaction/v1": (
+            "bof3.combiner-preservation/v5",
+            "bof3.combiner-profile/v3",
+        ),
+        "bof3.combiner-transaction/v2": (
+            "bof3.combiner-preservation/v5",
+            "bof3.combiner-profile/v3",
+        ),
+        "bof3.combiner-transaction/v3": (
+            "bof3.combiner-preservation/v6",
+            "bof3.combiner-profile/v4",
+        ),
+        "bof3.combiner-transaction/v4": (
+            "bof3.combiner-preservation/v7",
+            "bof3.combiner-profile/v5",
+        ),
+    }[transaction["schema"]]
     validate_preservation_size(transaction)
     transaction = copy.deepcopy(transaction)
     if (
@@ -110,12 +134,7 @@ def validate_transaction_history(
         or set(owners) != set(required_owners)
         or any(state is None for state in owners.values())
         or not isinstance(record, dict)
-        or record.get("schema")
-        != (
-            "bof3.combiner-preservation/v6"
-            if current_programs
-            else "bof3.combiner-preservation/v5"
-        )
+        or record.get("schema") != preservation_schema
         or record.get("root") != transaction["root"]
         or record.get("fingerprint")
         != hash_preservation(
@@ -133,11 +152,7 @@ def validate_transaction_history(
     ):
         raise ValueError("transaction images or retained bindings differ")
     try:
-        if record["profile"].get("schema") != (
-            "bof3.combiner-profile/v4"
-            if current_programs
-            else "bof3.combiner-profile/v3"
-        ):
+        if record["profile"].get("schema") != profile_schema:
             raise ValueError("retained transaction/profile versions differ")
         manifest, layout, _ = validate_profile_history(record["profile"], post)
         if (

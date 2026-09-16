@@ -11,7 +11,7 @@ from harness.common.deadlines import check_deadline
 from harness.common.digests import digest
 from harness.common.files import read_file
 
-_SCHEMA = "bof3.compiler-execution/v2"
+_SCHEMA = "bof3.compiler-execution/v3"
 _LIMIT = 64 * 1024 * 1024
 
 

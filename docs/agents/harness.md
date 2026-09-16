@@ -182,7 +182,7 @@ reuse, native equality or deadline compliance. `build.arguments` owns bounded op
 classification; `build.invocation` supplies the immutable recipe consumed by dispatch
 and driver. `build.execution` captures successful process, partition and publication
 edges and verifies them against that recipe without recreating deleted staging.
-The driver returns evidence in-process after cleanup; producer v5 and comparison v5
+The driver returns evidence in-process after cleanup; producer v6 and comparison v6
 bind it separately from live invocation identity. Profile compatibility remains
 independent of source/output paths; older restoration records remain versioned history.
 `build.programs` derives executable candidates, declared scripts and the process
@@ -191,7 +191,12 @@ held nofollow directory descriptors, preserving alias and absence evidence.
 Typed repository/external observations grant no external writes. Dispatch watches
 and recaptures this bounded generation; its fingerprint transitively binds execution.
 Profiles retain the same configured graph and verify it afresh, not a persistent
-validation-success cache. See [program observations](combiner.md#program-observations)
+validation-success cache. `build.runtime` derives versioned source-pin-driven
+candidate edges from declared Stage policies; `build.observations` validates
+retained direct/runtime graphs and causal replay without live reads. Provider
+settings participate in profile cache keys; recapture rederives the expansion.
+These are candidate observations, not effective import or shell resolution.
+See [program observations](combiner.md#program-observations)
 for limits and unresolved runtime/backend dependencies.
 `build.inventory` owns configured
 classification and its always-run graph gate; `config/compiler/graph.cmake` owns
@@ -208,13 +213,14 @@ See the [combiner contract](combiner.md) for supported entrypoints, invocation,
 invalid markers and retained recovery handling.
 
 `combiner.images` owns joint text/mode preparation; `combiner.history` owns strict
-transaction v1/v2/v3 history and their exact owner sets. Current preparation emits v3
-with program/lookup owners pinned and preservation v6/profile v4. Historical v1/v2
-retain preservation v5/profile v3. Both profile versions use
+transaction v1–v4 history and their exact owner sets. Current preparation emits v4
+with runtime/observation owners pinned and preservation v7/profile v5. Historical
+v1/v2 retain preservation v5/profile v3; v3 retains preservation v6/profile v4.
+Retained profile versions use
 `build.preservation.validate_profile_history`, independent of current admission
 schema constants; new captures still use `validate_transition`'s current-version
 gate. Recovery keeps manifest v1 and validates retained bindings without live PRE.
-Live transaction verification/rehearsal rejects historical v1/v2; recapture v3 rather
+Live transaction verification/rehearsal rejects historical v1–v3; recapture v4 rather
 than rewriting old pins. No schema support grants restoration or source authority.
 
 The decomp-status batch path loads a fresh catalog after each successful build and

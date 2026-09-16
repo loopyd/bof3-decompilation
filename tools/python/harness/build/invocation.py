@@ -7,6 +7,7 @@ import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from harness.build.runtime import ASSEMBLER_POLICY, MASPSX_POLICY, Runtime
 from harness.common.digests import digest
 from harness.common.process import resolve_supervisor
 
@@ -47,6 +48,7 @@ class Stage:
     output: Artifact | None = None
     files: tuple[int, ...] = ()
     supervisor: tuple[str, ...] = field(default_factory=resolve_supervisor)
+    runtime: Runtime | None = None
 
     def describe(self) -> dict:
         return {
@@ -65,6 +67,7 @@ class Stage:
             "output": self.output.name if self.output is not None else None,
             "files": list(self.files),
             "supervisor": list(self.supervisor),
+            "runtime": self.runtime.describe() if self.runtime is not None else None,
         }
 
     def render(self, temporary: Path) -> tuple[list[str], dict[str, str]]:
@@ -91,7 +94,7 @@ class Invocation:
 
     def describe(self) -> dict:
         return {
-            "schema": "bof3.compiler-invocation/v2",
+            "schema": "bof3.compiler-invocation/v3",
             "mode": self.mode,
             "source": str(self.source) if self.source is not None else None,
             "output": str(self.output) if self.output is not None else None,
@@ -254,7 +257,7 @@ def plan_invocation(
     base = {**environment, "PYTHONDONTWRITEBYTECODE": "1", "TMPDIR": Artifact("root")}
     compiler_environment = _compiler_environment(root, compiler, base, cwd)
 
-    def stage(name, argv, values, *, stdin=None, produced=None, files=()):
+    def stage(name, argv, values, *, stdin=None, produced=None, files=(), runtime=None):
         return Stage(
             name,
             tuple(argv),
@@ -263,6 +266,7 @@ def plan_invocation(
             stdin,
             produced,
             files,
+            runtime=runtime,
         )
 
     if mode == "direct":
@@ -300,6 +304,7 @@ def plan_invocation(
                     [*assembler_arguments, operand],
                     base,
                     produced=produced,
+                    runtime=Runtime(ASSEMBLER_POLICY, root),
                 ),
             ),
         )
@@ -341,12 +346,14 @@ def plan_invocation(
                 python_environment,
                 stdin=assembly,
                 files=(2,),
+                runtime=Runtime(MASPSX_POLICY, root),
             ),
             stage(
                 "assembler",
                 [*assembler_arguments, Artifact("partitioned.s")],
                 base,
                 produced=produced,
+                runtime=Runtime(ASSEMBLER_POLICY, root),
             ),
         ),
     )

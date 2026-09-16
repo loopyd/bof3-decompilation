@@ -22,7 +22,7 @@ from harness.common.deadlines import check_deadline
 from harness.common.inputs import InputBatch
 from harness.domain.cache import collect_manifest_paths
 
-SCHEMA = "bof3.combiner-transaction/v3"
+SCHEMA = "bof3.combiner-transaction/v4"
 OWNERS = collect_transaction_owners(SCHEMA)
 
 
