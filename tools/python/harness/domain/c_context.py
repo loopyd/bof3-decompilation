@@ -19,7 +19,8 @@ _AGGREGATE = re.compile(
     r"(struct|union|enum)\b\s*([A-Za-z_]\w*)?"
 )
 _FUNCTION_POINTER = re.compile(
-    r"\(\s*\*\s*(?:const\s+|volatile\s+)*([A-Za-z_]\w*)\s*\)"
+    r"\(\s*\*\s*(?:const\s+|volatile\s+)*([A-Za-z_]\w*)\s*"
+    r"(?:\[[^][{};]*\]\s*)*\)"
 )
 _DIRECTIVE = re.compile(r"(?m)^[ \t]*#(?:[^\n]*\\\n)*[^\n]*")
 
@@ -136,6 +137,9 @@ def _parse_declarators(
             continue
         name_group = 1 if pointer else 2
         name = match.group(name_group)
+        if name in _C_KEYWORDS:
+            diagnostic = "unsupported declarator"
+            continue
         prefix = item[: match.start(name_group)]
         suffix = item[match.end(name_group) :]
         if not base:
@@ -160,7 +164,7 @@ def _parse_declarators(
         if not re.fullmatch(pointer_prefix if pointer else plain_prefix, prefix):
             local_diagnostic = "unsupported declarator prefix"
         if pointer and not re.fullmatch(
-            r"\)\s*(?:\([^{};]*\)|(?:\[[^]]*\]\s*)+)", suffix
+            r"(?:\[[^][{};]*\]\s*)*\)\s*(?:\([^{};]*\)|(?:\[[^]]*\]\s*)+)", suffix
         ):
             local_diagnostic = "unsupported pointer declarator suffix"
         if re.search(r"\b(?:struct|union|enum)\b", suffix):
