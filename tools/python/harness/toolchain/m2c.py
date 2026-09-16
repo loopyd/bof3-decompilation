@@ -37,7 +37,9 @@ def splat_assembly(manifest: TargetManifest, address: int) -> Path:
     expected = directory / f"func_{address:08X}.s"
     if expected.is_file():
         return expected
-    for symbol in load_target_symbols(root, manifest.id.value):
+    for symbol in load_target_symbols(
+        root, manifest.id.value, psyq_space=manifest.psyq_space
+    ):
         if symbol.address == address:
             named = directory / f"{symbol.name}.s"
             if named.is_file():
@@ -68,7 +70,9 @@ def render_context(function: FunctionId, manifest: TargetManifest) -> str:
     """
 
     root = repo_layout().root
-    symbols = load_target_symbols(root, manifest.id.value)
+    symbols = load_target_symbols(
+        root, manifest.id.value, psyq_space=manifest.psyq_space
+    )
     base_context = type_context(
         root,
         manifest.id.value,
