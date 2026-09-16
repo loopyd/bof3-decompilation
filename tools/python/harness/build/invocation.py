@@ -281,7 +281,7 @@ def plan_invocation(
                 ),
             ),
         )
-    assembler = environment.get("PSX_AS", str(root / "bin/as"))
+    assembler = environment.get("PSX_AS") or str(root / "bin/as")
     produced = Artifact("translation.o")
     assembler_arguments = [assembler, *_assembler_flags(arguments), "-o", produced]
     if mode == "assembly":
@@ -304,8 +304,8 @@ def plan_invocation(
             ),
         )
     assembly = Artifact("compiler.s")
-    maspsx = environment.get("PSX_MASPSX", str(root / "third_party/maspsx/maspsx.py"))
-    interpreter = environment.get("MASPSX_PYTHON", "python3")
+    maspsx = environment.get("PSX_MASPSX") or str(root / "third_party/maspsx/maspsx.py")
+    interpreter = environment.get("MASPSX_PYTHON") or "python3"
     python_environment = {
         **base,
         "PYTHONPATH": os.pathsep.join(
