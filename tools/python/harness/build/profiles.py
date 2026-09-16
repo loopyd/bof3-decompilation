@@ -9,6 +9,7 @@ import re
 import stat
 from pathlib import Path
 
+from harness.build.arguments import parse_arguments
 from harness.build.compiler import (
     CONFIGURATION_PATH,
     CompilerSettings,
@@ -21,7 +22,7 @@ from harness.build.invocation import Invocation, plan_invocation
 from harness.build.programs import capture_description, describe_inputs
 from harness.common.deadlines import check_deadline
 from harness.common.digests import digest
-from harness.common.inputs import InputBatch, read_input
+from harness.common.inputs import InputBatch, read_input, relative
 from harness.common.observation import DirectoryBatch, observe_directory
 from harness.domain.cache import collect_claim_paths, collect_manifest_paths
 from harness.domain.manifests import TargetManifest, load_manifest_generation
@@ -57,6 +58,53 @@ _SUPPORTED_GRAPH_SHA256 = (
 _SUPPORTED_CC_SHA256 = (
     "71b741ddeee18d0d35dc6901549b1f25513bfa515e7af7cf8c7721035a26cf4a"
 )
+
+
+def collect_forced_paths(root: Path, arguments: list[str], cwd: Path) -> set[str]:
+    """Bind explicit forced operands to canonical repository paths without reads."""
+    if (
+        not isinstance(arguments, list)
+        or not arguments
+        or any(not isinstance(argument, str) for argument in arguments)
+    ):
+        raise ValueError("profile requires ordered compiler arguments")
+    paths = set()
+    for argument in parse_arguments(arguments[1:]):
+        if argument.role in {"-include", "-imacros"}:
+            try:
+                name = (cwd / argument.value).relative_to(root).as_posix()
+            except ValueError:
+                raise ValueError(
+                    "profile forced inputs must be repository-local"
+                ) from None
+            paths.add(relative(name))
+    return paths
+
+
+def collect_profile_forced_paths(profile: dict) -> set[str]:
+    """Collect forced dependencies from structurally validated configured profiles."""
+    paths = set()
+    for configured in [
+        profile["common_profile"],
+        profile["destination_profile"],
+        *(member["profile"] for member in profile["members"]),
+    ]:
+        programs = configured["programs"]
+        directories = [
+            request["cwd"]
+            for request in programs["requests"]
+            if request["stage"] == "compiler" and request["role"] == "executable"
+        ]
+        if len(directories) != 1:
+            raise ValueError("profile requires one compiler working directory")
+        paths.update(
+            collect_forced_paths(
+                Path(programs["roots"]["repository"]["path"]),
+                configured["arguments"],
+                Path(directories[0]),
+            )
+        )
+    return paths
 
 
 def _validate_cmake_configuration(root: Path, text: str) -> None:
@@ -182,7 +230,7 @@ class ProfileContext:
         self.flags, self.compilers = parse_compiler_configuration(overrides)
         self._configurations = {overrides: (self.flags, self.compilers)}
         self.driver = self.read("bin/cc").decode("utf-8")
-        for relative in (
+        for name in (
             "bin/as",
             "bin/python-env",
             "tools/python/harness/build/compiler.py",
@@ -230,7 +278,7 @@ class ProfileContext:
             "tools/python/harness/toolchain/gcc.py",
             "tools/python/harness/toolchain/gcc_variants.py",
         ):
-            self.read(relative)
+            self.read(name)
         self.layout = repo_layout(self.root)
         if hashlib.sha256(self.driver.encode()).hexdigest() != _SUPPORTED_CC_SHA256:
             raise ValueError("unsupported compiler bootstrap; dispatch review required")
@@ -381,6 +429,9 @@ class ProfileContext:
         executable_name = executable.relative_to(self.root).as_posix()
         self.read(executable_name)
         arguments = build_compiler_arguments(self.root, settings.flags)
+        cwd = Path.cwd()
+        for name in sorted(collect_forced_paths(self.root, arguments, cwd)):
+            self.read(name)
         output = self.root / "build" / Path(source).with_suffix(".o")
         invocation = plan_invocation(
             self.root,
@@ -389,7 +440,7 @@ class ProfileContext:
             output=output,
             compiler=executable,
             executable=str(executable),
-            cwd=Path.cwd(),
+            cwd=cwd,
             environment=dict(os.environ),
         )
         program_key = digest(describe_inputs(invocation))

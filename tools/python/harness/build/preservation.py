@@ -17,7 +17,11 @@ from harness.build.migration import (
     read_migration_settings,
     validate_configuration_migration,
 )
-from harness.build.profiles import ProfileContext, collect_profile_sources
+from harness.build.profiles import (
+    ProfileContext,
+    collect_profile_forced_paths,
+    collect_profile_sources,
+)
 from harness.build.observations import validate_description
 from harness.common.deadlines import check_deadline
 from harness.common.files import read_file
@@ -239,7 +243,14 @@ def validate_transition(profile: dict, post: dict) -> tuple[str, str, list[str]]
     """Admit only the current profile version for new preservation captures."""
     if not isinstance(profile, dict) or profile.get("schema") != PROFILE_SCHEMA:
         raise ValueError("preservation requires the current PRE profile schema")
-    return validate_profile_history(profile, post)
+    transition = validate_profile_history(profile, post)
+    for path in collect_profile_forced_paths(profile):
+        before = profile["inputs"].get(path)
+        if before is None:
+            raise ValueError(f"forced input missing from PRE profile: {path}")
+        if path in post and post[path] != before:
+            raise ValueError(f"forced input changes in POST: {path}")
+    return transition
 
 
 def validate_profile_history(profile: dict, post: dict) -> tuple[str, str, list[str]]:

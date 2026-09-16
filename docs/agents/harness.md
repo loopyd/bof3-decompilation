@@ -242,6 +242,12 @@ other. The selected record still passes the existing preservation checks.
 `build.dependencies` owns digest-bound current/retained/prospective source images
 for profile resolution and conservative literal snapshots. Virtual seed bytes and
 physical include reads stay distinct; comparison records both kinds of evidence.
+Configured profiles capture explicit repository-local `-include`/`-imacros` files
+against the invocation's CWD, including when replaying retained source images.
+They join the unchanged PRE input set: missing or changed files reject, and no
+header edits are added to the POST allowlist. Old records lacking these inputs
+cannot pass fresh verification; historical decoding is unchanged. This does not
+resolve transitive headers, forwarded options, default paths or compiler support.
 Full input closure and native/transaction integration remain open.
 See the [combiner contract](combiner.md) for supported entrypoints, invocation,
 invalid markers and retained recovery handling.
