@@ -16,6 +16,7 @@ from harness.build.compiler import (
     parse_compiler_configuration,
     resolve_compiler_settings,
 )
+from harness.build.dependencies import SourceImage
 from harness.common.deadlines import check_deadline
 from harness.common.inputs import InputBatch, read_input
 from harness.common.observation import observe_directory
@@ -176,6 +177,7 @@ class ProfileContext:
             "bin/as",
             "bin/python-env",
             "tools/python/harness/build/compiler.py",
+            "tools/python/harness/build/dependencies.py",
             "tools/python/harness/build/profiles.py",
             "tools/python/harness/build/migration.py",
             "tools/python/harness/build/preservation.py",
@@ -294,13 +296,27 @@ class ProfileContext:
         self,
         source: str,
         *,
-        text: str | None = None,
+        image: SourceImage | None = None,
         configuration_text: str | None = None,
     ) -> CompilerSettings:
-        """Resolve metadata against captured current or explicit retained settings."""
+        """Resolve metadata against captured current or digest-bound virtual bytes."""
         check_deadline()
-        if text is None:
-            text = self.read(source, required=False).decode("utf-8")
+        if image is not None and (
+            not isinstance(image, SourceImage) or image.source != source
+        ):
+            raise ValueError("compiler source image differs from its nominal path")
+        if image is None or image.kind == "current":
+            content = self.read(source, required=False)
+            state = self.inputs[source]
+            if image is not None and (state is None or image.content != content):
+                raise ValueError("current source image differs from captured bytes")
+            image = SourceImage(
+                source,
+                content,
+                "current" if state is not None else "prospective",
+                hashlib.sha256(content).hexdigest(),
+            )
+        text = image.decode_text()
         flags, compilers = self.flags, self.compilers
         if configuration_text is not None:
             if not isinstance(configuration_text, str):
@@ -318,12 +334,12 @@ class ProfileContext:
         self,
         source: str,
         *,
-        text: str | None = None,
+        image: SourceImage | None = None,
         configuration_text: str | None = None,
     ) -> dict:
         """Resolve the selected compiler and ordered options with captured inputs."""
         settings = self.resolve_settings(
-            source, text=text, configuration_text=configuration_text
+            source, image=image, configuration_text=configuration_text
         )
         compiler_id = settings.compiler_id
         if compiler_id is None:

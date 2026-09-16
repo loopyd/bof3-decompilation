@@ -12,6 +12,7 @@ from harness.build.compiler import (
     DEFAULT_COMPILER_ID,
     sanitize_identifier,
 )
+from harness.build.dependencies import SourceImage
 from harness.build.migration import plan_configuration
 from harness.build.profiles import ProfileContext, collect_profile_sources
 from harness.build.preservation import (
@@ -214,7 +215,14 @@ def inspect_profiles(
         )
     destination_profile = context.resolve(
         destination,
-        text=destination_text,
+        image=SourceImage(
+            destination,
+            destination_text.encode("utf-8"),
+            "prospective",
+            hashlib.sha256(destination_text.encode("utf-8")).hexdigest(),
+        )
+        if destination_text is not None
+        else None,
         configuration_text=configuration["after"]
         if configuration is not None
         else None,

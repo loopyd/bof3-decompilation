@@ -452,9 +452,9 @@ cap, not a bound on unobserved backend reads; `--output-limit` defaults to 2 MiB
 cannot exceed 64 MiB. Captured inputs and outputs must be single-link files; final
 descriptor-bound identity and mutation metadata detect restored-byte writes too.
 Shared `InputBatch` supports opt-in bounds and metadata without changing defaults.
-`combiner.dependencies.IncludeSnapshot` captures literal header bytes and every
+`build.dependencies.IncludeSnapshot` captures literal header bytes and every
 preceding absent lookup candidate through confined single-link reads. Comparison
-v2 reports that exact `include_inputs` set, protects it from output collisions,
+v3 reports that exact `include_inputs` set, protects it from output collisions,
 and validates samples after watch registration and before publication. Immediate
 directory mutation watches and candidate-path watches latch transient shadows;
 stage guards drain events without repeatedly hashing all headers. Full endpoint
@@ -474,6 +474,17 @@ the candidate; an existing mapping rejects, even if empty. Later creation or
 creation/removal is watched, including at earlier roots with no selected header.
 Unsearched roots are not traversed. This rejects unsupported remapping; it does
 not implement mappings or prove native closure. These paths share existing bounds.
+
+The shared `SourceImage` binds canonical nominal path, immutable bounded bytes,
+kind (`current`, `retained` or `prospective`) and expected SHA-256. Profile replay
+passes the original PRE digest; prospective text is prediction, not acceptance.
+Current images must equal captured physical bytes. Virtual images never reopen
+their seed path: dependency lookup uses the nominal parent, while `content` and
+`include_inputs` describe physical reads only. An explicit include of the seed
+path reads that physical file, not the virtual image again. Comparison v3 records
+`source_image` separately; the retired combiner module has no shim. This interface
+does not prove virtual-image native replay or add compiler flag, spec, default-search
+or runtime dependency resolution.
 
 Membership comes from preserved selectors, target-local symbols and unique reviewed
 C boundaries. Captured manifest/layout/maps/binary bytes supply bindings and original

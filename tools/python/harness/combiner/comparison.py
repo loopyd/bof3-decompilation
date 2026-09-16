@@ -6,6 +6,7 @@ import hashlib
 from contextlib import ExitStack, closing
 from pathlib import Path
 
+from harness.build.dependencies import IncludeSnapshot
 from harness.build.dispatch import close_dispatch, prepare_dispatch, validate_dispatch
 from harness.build.preservation import (
     hash_preservation,
@@ -14,7 +15,6 @@ from harness.build.preservation import (
 )
 from harness.build.receipts import produce_object, verify_production
 from harness.build.routing import select_preservation
-from harness.combiner.dependencies import IncludeSnapshot
 from harness.combiner.members import capture_members
 from harness.common.deadlines import check_deadline, resolve_deadline, use_deadline
 from harness.common.inputs import InputBatch, relative
@@ -29,11 +29,11 @@ from harness.match.execution import NativeExecution
 from harness.match.extraction import read_function_image
 from harness.match.placement import extract_grouped_function, place_grouped_object
 
-SCHEMA = "bof3.combiner-comparison/v2"
+SCHEMA = "bof3.combiner-comparison/v3"
 _LIMIT = 64 * 1024 * 1024
 _OWNERS = (
     "tools/python/harness/combiner/comparison.py",
-    "tools/python/harness/combiner/dependencies.py",
+    "tools/python/harness/build/dependencies.py",
     "tools/python/harness/combiner/members.py",
     "tools/python/harness/combiner/cli.py",
     "tools/python/harness/build/receipts.py",
@@ -329,6 +329,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
             "all_function_bytes_match": exact,
             "native_inputs": native_inputs,
             "include_inputs": includes.describe_inputs(),
+            "source_image": includes.image.describe(),
             "outputs": {**producer_states, **linked_states},
             "full_input_closure_verified": False,
             "consumer_coverage_verified": False,

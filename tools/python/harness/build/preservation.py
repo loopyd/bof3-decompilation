@@ -12,6 +12,7 @@ from pathlib import Path
 import yaml
 
 from harness.build.compiler import CONFIGURATION_PATH
+from harness.build.dependencies import SourceImage
 from harness.build.migration import (
     read_migration_settings,
     validate_configuration_migration,
@@ -435,12 +436,18 @@ def verify_preservation(
             != profile["inputs"][source]["sha256"]
         ):
             raise ValueError("preserved source image differs from its PRE pin")
+        image = SourceImage(
+            source,
+            text.encode("utf-8"),
+            "retained",
+            profile["inputs"][source]["sha256"],
+        )
         if (
             migration is not None
             and source == sources[0]
             and (
                 context.resolve_settings(
-                    source, text=text, configuration_text=configuration_text
+                    source, image=image, configuration_text=configuration_text
                 )
                 != read_migration_settings(migration["settings"])
             )
@@ -449,7 +456,7 @@ def verify_preservation(
                 "configuration migration settings differ from retained PRE source"
             )
         if (
-            context.resolve(source, text=text, configuration_text=configuration_text)
+            context.resolve(source, image=image, configuration_text=configuration_text)
             != common
             or member["profile"] != common
         ):

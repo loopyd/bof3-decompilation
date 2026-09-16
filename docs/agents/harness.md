@@ -174,6 +174,9 @@ unique lift nodes, with grouped producers forced and ordinary commands retained.
 mixed ordinary/grouped builds without changing the caller environment. Explicit
 single-record and routing-table inputs conflict; neither silently overrides the
 other. The selected record still passes the existing preservation checks.
+`build.dependencies` owns digest-bound current/retained/prospective source images
+for profile resolution and conservative literal snapshots. Virtual seed bytes and
+physical include reads stay distinct; comparison records both kinds of evidence.
 Full input closure and native/transaction integration remain open.
 See the [combiner contract](combiner.md) for supported entrypoints, invocation,
 invalid markers and retained recovery handling.
