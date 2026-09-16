@@ -8,7 +8,9 @@ from pathlib import Path
 from typing import Any, Callable
 
 from harness.common.digests import digest
+from harness.common.deadlines import check_deadline
 from harness.common.directory import validate_repo_path
+from harness.common.inputs import InputBatch
 from harness.common.paths import file_state, validate_paths
 from harness.domain.includes import local_include_files
 from harness.domain.receipts import sha256_file
@@ -17,6 +19,8 @@ from harness.macros import creation as macro_creation
 from harness.macros import owners as macro_owners
 
 REVIEW_SCHEMA = "bof3.reviewed-macro-opportunity/v1"
+_REVIEW_LIMIT = 4 * 1024 * 1024
+_PROOF_LIMIT = 64 * 1024 * 1024
 GUARDS = frozenset(
     {
         "evaluation_count",
@@ -187,6 +191,26 @@ def candidate_observations(kind: str) -> frozenset[str]:
     return OBSERVATIONS | {"human_value"} if kind == "assembly_block" else OBSERVATIONS
 
 
+def _capture_artifact(root: Path, value: object, limit: int) -> tuple[str, str, dict]:
+    check_deadline()
+    name = validate_repo_path(value)
+    with InputBatch(root) as batch:
+        state, content = batch.read(root / name, max_bytes=limit)
+    if state is None:
+        raise ValueError(f"macro transaction path is invalid: {name}")
+    check_deadline()
+    try:
+        artifact = json.loads(content.decode("utf-8"), object_pairs_hook=unique_object)
+    except (json.JSONDecodeError, UnicodeDecodeError, RecursionError) as error:
+        raise ValueError(
+            f"macro review artifact is not bounded JSON: {name}"
+        ) from error
+    if not isinstance(artifact, dict):
+        raise ValueError("macro review artifact must be an object")
+    check_deadline()
+    return name, state["sha256"], artifact
+
+
 def reviewed_artifact(
     root: Path,
     value: object,
@@ -196,15 +220,7 @@ def reviewed_artifact(
     *,
     proofs: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    name = repo_path(root, value)
-    try:
-        artifact = json.loads(
-            (root / name).read_text(encoding="utf-8"), object_pairs_hook=unique_object
-        )
-    except (json.JSONDecodeError, UnicodeDecodeError) as error:
-        raise ValueError("reviewed macro opportunity is not JSON") from error
-    if not isinstance(artifact, dict):
-        raise ValueError("reviewed macro opportunity must be an object")
+    name, checksum, artifact = _capture_artifact(root, value, _REVIEW_LIMIT)
     facts = {key: item for key, item in artifact.items() if key != "digest"}
     required = {
         "schema",
@@ -313,9 +329,10 @@ def reviewed_artifact(
             raise ValueError(
                 "private macro opportunity paths are not all owned by one target"
             )
+    check_deadline()
     return {
         "artifact": name,
-        "artifact_sha256": sha256_file(root / name),
+        "artifact_sha256": checksum,
         "candidate_id": artifact["candidate_id"],
         "candidate_fingerprint": artifact["candidate_fingerprint"],
         "owners": owners,
@@ -354,16 +371,13 @@ def exact_proofs(
             "expected_envelope_digest",
         }:
             raise ValueError("shared template proof pin is invalid")
-        name = repo_path(root, value["path"])
-        proof_path = (root / name).resolve()
-        if not proof_path.is_relative_to((root / "out/reviews").resolve()):
+        name = validate_repo_path(value["path"])
+        if not Path(name).is_relative_to("out/reviews"):
             raise ValueError("shared template proof path is invalid")
         expected = value["expected_envelope_digest"]
         if not isinstance(expected, str) or not _DIGEST.fullmatch(expected):
             raise ValueError("shared template proof digest pin is invalid")
-        proof = json.loads(
-            (root / name).read_text(encoding="utf-8"), object_pairs_hook=unique_object
-        )
+        name, checksum, proof = _capture_artifact(root, name, _PROOF_LIMIT)
         from harness.macros.transactions import _manifest
         from harness.common.promotion import private_application
 
@@ -376,6 +390,7 @@ def exact_proofs(
             verify_reviewed_application,
             manifest_validator=_manifest,
         )
+        check_deadline()
         target = normalize_target(value["target"], manifests)
         if (
             verified["target"] != target
@@ -386,7 +401,7 @@ def exact_proofs(
         proofs.append(
             {
                 "path": name,
-                "sha256": sha256_file(root / name),
+                "sha256": checksum,
                 "target": target,
                 "selector": value["selector"],
                 "expected_envelope_digest": expected,
@@ -414,7 +429,9 @@ def exact_proofs(
         raise ValueError(
             "shared template proof contracts differ or contain address leaks"
         )
-    return sorted(proofs, key=lambda item: (item["target"], item["path"]))
+    result = sorted(proofs, key=lambda item: (item["target"], item["path"]))
+    check_deadline()
+    return result
 
 
 __all__ = [

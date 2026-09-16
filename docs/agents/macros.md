@@ -345,6 +345,14 @@ belong to one manifest target.
 Shared owners must be sanctioned templates/public headers, with proven wrapper
 dependencies and the separate private-proof contract below.
 
+Opportunity documents use one confined, metadata-checked capture capped at 4 MiB;
+exact-proof envelopes use a separate 64 MiB cap. Parsing and retained raw-byte
+hashes use the same sample, without an unbounded preliminary read. Larger records
+reject rather than truncate; the envelope cap is a new admission restriction, not
+an assertion that all historical chains fit. Canonical paths, external proof pins,
+semantic checks and later rederivation remain mandatory. Capture does not prove
+later freshness; cooperative deadline checks reject late success, not interrupt parsing.
+
 Preparation currently rejects **known omitted consumers** of existing macros in
 writable owner/affected-source files. It follows indexed transitive uses and maps
 direct uses to exact target/source/function identities. Grouped source samples must
