@@ -106,7 +106,7 @@ segments:
     - asm
     - func_801F3DCC
   - - 4972
-    - asm
+    - data
     - T_801F3F6C
   - - 7424
     - rodata
