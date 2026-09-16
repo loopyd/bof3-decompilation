@@ -884,6 +884,15 @@ to monotonic seconds without replacing it with a fresh relative allowance.
 
 ### Owner work deadlines
 
+Public `common.files.read_file` checks the inherited deadline before traversal,
+before reading an acquired leaf, and after descriptor cleanup; missing-parent
+success also checks expiry. Byte limits and confined path rules are unchanged.
+These are cooperative checkpoints, not kernel-I/O interruption or a hard time
+bound. Low-level reads used within publication/quarantine stay deadline-neutral.
+`apply_changes` suspends failed forward work for its no-explicit-tail rollback;
+an explicit cleanup cutoff remains bound. Direct rollback/restoration callers
+still own their cleanup context; reads never silently discard that cutoff.
+
 Type/macro `run` and `revalidate` commands accept `--deadline SECONDS`, an optional
 **absolute monotonic work cutoff**, not a duration or UTC timestamp. Their
 `run_transaction(..., deadline=...)` and `revalidate_application(..., deadline=...)`

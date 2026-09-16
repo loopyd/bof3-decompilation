@@ -282,7 +282,8 @@ def apply_changes(
         raise
     except BaseException:
         if cleanup_deadline is None:
-            rollback(root, changed, records)
+            with suspend_work_deadline():
+                rollback(root, changed, records)
         else:
             with suspend_work_deadline(), use_deadline(cleanup_deadline):
                 rollback(root, changed, records, deadline=cleanup_deadline)
