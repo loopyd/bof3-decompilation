@@ -6,6 +6,11 @@ import json
 import sqlite3
 from typing import Any
 
+from harness.types.representation import (
+    resolve_field_declaration,
+    resolve_identity_declaration,
+)
+
 
 def types_payload(
     connection: sqlite3.Connection,
@@ -26,25 +31,42 @@ def types_payload(
     if untyped:
         clauses.append(
             "NOT EXISTS (SELECT 1 FROM type_usages u WHERE u.target_id = d.target_id "
-            "AND u.type_name = d.name AND u.use_kind != 'lexical')"
+            "AND u.type_name = CASE WHEN d.namespace = 'tag' THEN d.kind || ' ' || d.name "
+            "ELSE d.name END AND u.use_kind != 'lexical')"
         )
     where = "WHERE " + " AND ".join(clauses) if clauses else ""
     params.append(-1 if limit == 0 else limit)
     rows = [
         dict(row)
         for row in connection.execute(
-            f"SELECT d.id, d.target_id, d.name, d.kind, d.tag_name, d.source_path, "
-            f"d.provenance, d.canonical, d.review_status, d.byte_size, d.byte_alignment, "
-            f"d.diagnostic, (SELECT COUNT(*) FROM type_fields f WHERE f.declaration_id = d.id) "
-            f"field_count FROM type_declarations d {where} ORDER BY d.target_id, d.name, "
+            f"SELECT d.* FROM type_declarations d {where} ORDER BY d.target_id, d.name, d.namespace, "
             "d.source_path LIMIT ?",
             params,
         )
     ]
+    field_owners = {}
+    representations = {}
+    for row in rows:
+        representation = resolve_identity_declaration(connection, row["id"])
+        representations[row["id"]] = representation
+        row["byte_size"] = connection.execute(
+            "SELECT byte_size FROM type_declarations WHERE id = ?", (representation,)
+        ).fetchone()[0]
+        field_owner = resolve_field_declaration(connection, row["id"])
+        field_owners[row["id"]] = field_owner
+        row["field_count"] = connection.execute(
+            "SELECT COUNT(*) FROM type_fields WHERE declaration_id = ?",
+            (field_owner,),
+        ).fetchone()[0]
     if detail != "full":
         keys = (
+            "id",
             "target_id",
             "name",
+            "namespace",
+            "complete",
+            "alias_target",
+            "alias_kind",
             "kind",
             "source_path",
             "provenance",
@@ -68,24 +90,34 @@ def types_payload(
                 "SELECT ordinal, name, type_name, byte_offset, byte_width, array_extent, "
                 "qualifiers, semantic_status, provenance FROM type_fields WHERE declaration_id = ? "
                 "ORDER BY ordinal",
-                (row["id"],),
+                (field_owners[row["id"]],),
             )
         ]
         row["constraints"] = [
             dict(item)
             for item in connection.execute(
-                "SELECT field_name, constraint_kind, value, expression, provenance, evidence_class "
-                "FROM type_constraints WHERE target_id = ? AND type_name = ? AND source_path = ? "
-                "ORDER BY constraint_kind, field_name",
-                (row["target_id"], row["name"], row["source_path"]),
+                "SELECT field_name, constraint_kind, value, expression, provenance, evidence_class, "
+                "source_path, namespace, resolution FROM type_constraints WHERE target_id = ? "
+                "AND (declaration_id = ? OR representation_id = ?) "
+                "ORDER BY source_path, constraint_kind, field_name",
+                (row["target_id"], row["id"], representations[row["id"]]),
             )
         ]
         row["conflicts"] = [
             dict(item)
             for item in connection.execute(
                 "SELECT left_value, right_value, source_path, conflict_kind FROM type_conflicts "
-                "WHERE target_id = ? AND subject = ? ORDER BY source_path",
-                (row["target_id"], row["name"]),
+                "WHERE target_id = ? AND (declaration_id = ? OR representation_id = ?) ORDER BY source_path",
+                (row["target_id"], row["id"], representations[row["id"]]),
+            )
+        ]
+        row["occurrences"] = [
+            dict(item)
+            for item in connection.execute(
+                "SELECT occurrence.*, link.role FROM type_occurrences occurrence "
+                "JOIN type_declaration_occurrences link ON link.occurrence_id = occurrence.id "
+                "WHERE link.declaration_id = ? ORDER BY occurrence.source_path, occurrence.ordinal",
+                (row["id"],),
             )
         ]
     return rows

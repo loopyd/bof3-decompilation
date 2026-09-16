@@ -190,29 +190,25 @@ def test_registry_context_does_not_mask_stale_real_index(
 def test_registry_context_closes_dependencies_across_owned_headers() -> None:
     connection = _connection()
     connection.executemany(
-        "INSERT INTO type_declarations VALUES (?, ?, ?, 'typedef', NULL, ?, 'header_claim', ?, "
-        "'reviewed', NULL, NULL, NULL)",
+        "INSERT INTO type_occurrences VALUES (?, ?, ?, 0, ?, 'header_claim', NULL)",
         (
             (
                 f"{TARGET}:include/shared.h:typedef:Shared",
                 TARGET,
-                "Shared",
                 "include/shared.h",
                 "typedef struct Shared { u32 value;} Shared;",
             ),
             (
                 f"{TARGET}:include/private.h:typedef:Local",
                 TARGET,
-                "Local",
                 "include/private.h",
                 "typedef struct Local { Shared member;} Local;",
             ),
         ),
     )
     connection.execute(
-        "INSERT INTO type_declarations VALUES ('shared:u32', '__shared__', 'u32', "
-        "'typedef', NULL, 'include/base/types.h', 'shared_base', "
-        "'typedef unsigned int u32;', 'reviewed', NULL, NULL, NULL)"
+        "INSERT INTO type_occurrences VALUES ('shared:u32', '__shared__', "
+        "'include/base/types.h', 0, 'typedef unsigned int u32;', 'shared_base', NULL)"
     )
 
     context = type_context_from_connection(connection, TARGET, "Local value;")
@@ -226,7 +222,10 @@ def test_registry_context_closes_dependencies_across_owned_headers() -> None:
 def test_normal_type_projection_discloses_omitted_evidence() -> None:
     connection = _connection()
     connection.execute(
-        "INSERT INTO type_declarations VALUES ('x', ?, 'X', 'struct', 'X', 'h', "
+        "INSERT INTO type_declarations "
+        "(id, target_id, name, kind, tag_name, source_path, provenance, canonical, "
+        "review_status, byte_size, byte_alignment, diagnostic) "
+        "VALUES ('x', ?, 'X', 'struct', 'X', 'h', "
         "'header_claim', 'typedef struct X { u8 value;} X;', 'reviewed', 1, 1, NULL)",
         (TARGET,),
     )
@@ -257,7 +256,10 @@ def test_target_private_same_name_layouts_remain_separate() -> None:
         ("exe/other", "typedef struct X { u32 a;} X;"),
     ):
         connection.execute(
-            "INSERT INTO type_declarations VALUES (?, ?, 'X', 'struct', 'X', 'h', 'header_claim', ?, 'reviewed', NULL, NULL, NULL)",
+            "INSERT INTO type_declarations "
+            "(id, target_id, name, kind, tag_name, source_path, provenance, canonical, "
+            "review_status, byte_size, byte_alignment, diagnostic, namespace, complete) "
+            "VALUES (?, ?, 'X', 'struct', 'X', 'h', 'header_claim', ?, 'reviewed', NULL, NULL, NULL, 'tag', 1)",
             (f"{target}:h:struct:X", target, canonical),
         )
     assert (
@@ -402,7 +404,9 @@ def test_anonymous_enumerators_and_diagnostics_are_indexed(tmp_path: Path) -> No
         connection, target=TARGET, pattern="VALUE_", untyped=False, limit=0
     )
     assert {row["name"] for row in rows} == {"VALUE_A", "VALUE_B"}
-    assert all(row["diagnostic"] == "unsupported declaration name" for row in rows)
+    assert all(
+        row["diagnostic"] is None and row["namespace"] == "ordinary" for row in rows
+    )
 
 
 def test_all_manifest_claimed_headers_populate_without_kind_cross_talk() -> None:

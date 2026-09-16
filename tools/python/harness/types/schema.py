@@ -3,6 +3,16 @@
 from __future__ import annotations
 
 SCHEMA = """
+        CREATE TABLE type_occurrences (
+            id TEXT PRIMARY KEY,
+            target_id TEXT NOT NULL,
+            source_path TEXT NOT NULL,
+            ordinal INTEGER NOT NULL,
+            canonical TEXT NOT NULL,
+            provenance TEXT NOT NULL,
+            diagnostic TEXT,
+            UNIQUE(target_id, source_path, ordinal)
+        );
         CREATE TABLE type_declarations (
             id TEXT PRIMARY KEY,
             target_id TEXT NOT NULL,
@@ -16,7 +26,19 @@ SCHEMA = """
             byte_size INTEGER,
             byte_alignment INTEGER,
             diagnostic TEXT,
-            UNIQUE(target_id, name, kind, source_path)
+            namespace TEXT NOT NULL DEFAULT 'ordinary',
+            complete INTEGER CHECK(complete IN (0, 1)),
+            type_expression TEXT,
+            alias_target TEXT REFERENCES type_declarations(id) DEFERRABLE INITIALLY DEFERRED,
+            alias_kind TEXT,
+            definition_occurrence TEXT REFERENCES type_occurrences(id),
+            UNIQUE(target_id, namespace, name)
+        );
+        CREATE TABLE type_declaration_occurrences (
+            declaration_id TEXT NOT NULL REFERENCES type_declarations(id) ON DELETE CASCADE,
+            occurrence_id TEXT NOT NULL REFERENCES type_occurrences(id) ON DELETE CASCADE,
+            role TEXT NOT NULL,
+            PRIMARY KEY(declaration_id, occurrence_id, role)
         );
         CREATE INDEX type_declarations_name
             ON type_declarations(target_id, name);
@@ -59,6 +81,10 @@ SCHEMA = """
             expression TEXT NOT NULL,
             provenance TEXT NOT NULL,
             evidence_class TEXT NOT NULL,
+            declaration_id TEXT REFERENCES type_declarations(id),
+            namespace TEXT NOT NULL DEFAULT 'ordinary',
+            resolution TEXT NOT NULL DEFAULT 'unresolved',
+            representation_id TEXT REFERENCES type_declarations(id),
             PRIMARY KEY(target_id, type_name, source_path, constraint_kind, field_name)
         );
         CREATE TABLE type_conflicts (
@@ -68,6 +94,9 @@ SCHEMA = """
             right_value TEXT NOT NULL,
             source_path TEXT NOT NULL,
             conflict_kind TEXT NOT NULL,
+            declaration_id TEXT REFERENCES type_declarations(id),
+            namespace TEXT,
+            representation_id TEXT REFERENCES type_declarations(id),
             PRIMARY KEY(target_id, subject, left_value, right_value, source_path)
         );
         CREATE TABLE type_candidates (

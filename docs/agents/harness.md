@@ -36,6 +36,17 @@ as skill missions. Local process supervision remains for deterministic native to
 The cross-domain index remains one derived database; package separation does not
 create independent databases or relax freshness checks.
 
+`domain/declarations.py` owns namespace-qualified declaration entities and their
+source occurrences; `domain/c_context.py` parses statements and closes context
+dependencies through that model. Tags and same-spelling typedefs remain distinct.
+Aggregate completion retains forward provenance and definition-owned fields;
+pointer/array aliases do not inherit pointee layout. `types/representation.py`
+resolves explicit identity aliases for field queries and assertions. Constraints
+bind ordinary type identities, retain unresolved evidence and expose contradictions
+instead of overwriting layout facts. Type derivation changes require rebuilding
+the versioned index, not relabeling old rows. Parsed declarations and assertions
+remain representation evidence, not native byte-match or transaction acceptance.
+
 `naming.instructions.resolve_instructions` includes the target-qualified selector
 when refusing capture without a closed reviewed function boundary. The diagnostic
 does not admit raw/unreviewed caller ranges or relax the capture gate.

@@ -77,6 +77,7 @@ def insert_source_usages(
             "AND review_status = 'reviewed'",
             (target,),
         )
+        if re.fullmatch(r"[A-Za-z_]\w*", row[0])
     }
     for path in manifest_source_paths(root, manifest):
         if path.suffix != ".c":

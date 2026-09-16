@@ -112,7 +112,9 @@ def _storage_candidates(
         )
         if len(widths) != 1:
             connection.execute(
-                "INSERT OR IGNORE INTO type_conflicts VALUES (?, ?, ?, ?, ?, 'access_width')",
+                "INSERT OR IGNORE INTO type_conflicts "
+                "(target_id, subject, left_value, right_value, source_path, conflict_kind) "
+                "VALUES (?, ?, ?, ?, ?, 'access_width')",
                 (
                     target,
                     f"0x{address:08X}",

@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 import sqlite3
+from dataclasses import replace
 from pathlib import Path
 
 from harness.analysis.index import connect
 from harness.domain.c_context import (
-    public_declaration_context,
+    declaration_records,
+    render_declaration_context,
     scalar_declaration_context,
 )
+from harness.domain.declarations import build_declaration_occurrences
 from harness.types.inputs import SCALAR_HEADER
 
 _BOOTSTRAP_WARNING = (
@@ -71,17 +74,30 @@ def type_context_from_connection(
     """Close source dependencies across all explicitly owned registry headers."""
 
     rows = connection.execute(
-        "SELECT canonical FROM type_declarations WHERE target_id IN ('__shared__', ?) "
-        "AND kind != 'enumerator' ORDER BY CASE target_id WHEN '__shared__' THEN 0 ELSE 1 END, "
-        "source_path, name",
+        "SELECT canonical, diagnostic, source_path, ordinal FROM type_occurrences "
+        "WHERE target_id IN ('__shared__', ?) "
+        "ORDER BY CASE target_id WHEN '__shared__' THEN 0 ELSE 1 END, source_path, ordinal",
         (target,),
     ).fetchall()
-    declarations = list(dict.fromkeys(str(row[0]) for row in rows))
-    if not declarations:
+    records_by_origin = {}
+    for canonical, diagnostic, origin, ordinal in rows:
+        records = declaration_records(canonical)
+        group = records_by_origin.setdefault(origin, [])
+        if len(records) != 1 or ordinal != len(group):
+            raise ValueError(f"invalid type occurrence sequence: {origin}:{ordinal}")
+        group.append(
+            replace(records[0], diagnostic=diagnostic or records[0].diagnostic)
+        )
+    if not records_by_origin:
         raise ValueError(
             f"reverse index has no type declarations for {target}; run just index"
         )
-    return public_declaration_context("\n".join(declarations), source, base="")
+    occurrences = tuple(
+        occurrence
+        for origin, records in records_by_origin.items()
+        for occurrence in build_declaration_occurrences(records, origin=origin)
+    )
+    return render_declaration_context(occurrences, source)
 
 
 def _bootstrap_scalar_context(root: Path) -> str:
