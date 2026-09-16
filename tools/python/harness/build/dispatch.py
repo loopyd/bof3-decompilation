@@ -199,14 +199,15 @@ def prepare_dispatch(root: Path, arguments: list[str]) -> Dispatch:
     """Freeze an invocation after checking its externally pinned grouped history."""
     root = root.resolve()
     working_directory = _observe_working_directory()
-    sources, output = inspect_arguments(arguments, cwd=Path(working_directory["path"]))
+    operands = inspect_arguments(arguments, cwd=Path(working_directory["path"]))
+    sources = list(operands.sources)
     grouped = [
         path for path in sources if count_function_metadata(read_source(path)) >= 2
     ]
     selection = select_preservation(root, sources, grouped)
     try:
         return _prepare_selected(
-            root, arguments, sources, output, grouped, selection, working_directory
+            root, arguments, operands, grouped, selection, working_directory
         )
     except BaseException:
         selection.close()
@@ -214,8 +215,9 @@ def prepare_dispatch(root: Path, arguments: list[str]) -> Dispatch:
 
 
 def _prepare_selected(
-    root, arguments, sources, output, grouped, selection, working_directory
+    root, arguments, operands, grouped, selection, working_directory
 ) -> Dispatch:
+    sources, output = list(operands.sources), operands.output
     selection.protect_outputs(output)
     annotated_compiler, metadata_paths = _select_annotated_compiler(
         root, arguments, sources, output, grouped
@@ -268,7 +270,7 @@ def _prepare_selected(
                 "grouped compiler arguments differ from the ordered preserved invocation"
             )
     executable = _resolve_executable(os.environ.get("PSX_CC_DRIVER") or str(compiler))
-    paths = {*sources, executable, *metadata_paths}
+    paths = {*operands.inputs, executable, *metadata_paths}
     cwd = Path(working_directory["path"])
     if cwd.parent != cwd:
         paths.add(cwd)
@@ -321,6 +323,7 @@ def _prepare_selected(
             record_fingerprint,
             grouped,
             sources,
+            operands.describe_forced(),
             paths,
             directories,
             watch,
@@ -350,6 +353,7 @@ def _capture_dispatch(
     record_fingerprint,
     grouped,
     sources,
+    forced,
     paths,
     directories,
     watch,
@@ -382,6 +386,7 @@ def _capture_dispatch(
         "record_fingerprint": record_fingerprint,
         "grouped": bool(grouped),
         "sources": [str(path) for path in sources],
+        "forced_inputs": forced,
         "observations": observations,
         "contents": contents,
         "environment": {name: environment.get(name) for name in _ENVIRONMENT},
@@ -428,9 +433,10 @@ def validate_dispatch(dispatch: Dispatch) -> None:
     dispatch.selection.protect_outputs(
         dispatch.output, inputs=(Path(name) for name in state["observations"])
     )
-    sources, output = inspect_arguments(
+    operands = inspect_arguments(
         list(dispatch.arguments), cwd=Path(state["working_directory"]["path"])
     )
+    sources, output = list(operands.sources), operands.output
     annotated_compiler, _ = _select_annotated_compiler(
         dispatch.root,
         list(dispatch.arguments),
@@ -445,6 +451,7 @@ def validate_dispatch(dispatch: Dispatch) -> None:
     selected = sources[0] if len(sources) == 1 else None
     if (
         state["sources"] != [str(path) for path in sources]
+        or state.get("forced_inputs") != operands.describe_forced()
         or dispatch.source != selected
         or state["source"] != (str(selected) if selected else None)
         or dispatch.output != output

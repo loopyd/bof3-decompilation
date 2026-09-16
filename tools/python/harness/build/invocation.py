@@ -7,6 +7,7 @@ import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from harness.build.arguments import parse_arguments
 from harness.build.runtime import ASSEMBLER_POLICY, GCC_POLICY, MASPSX_POLICY, Runtime
 from harness.common.digests import digest
 from harness.common.process import resolve_supervisor
@@ -146,9 +147,9 @@ def _compiler_environment(
 
 def _resolve_version(arguments: tuple[str, ...], environment: dict[str, str]) -> str:
     version = environment.get("ASPSX_VERSION", "2.56")
-    for argument in arguments:
-        if argument.startswith("-Wa,"):
-            for flag in argument[4:].split(","):
+    for argument in parse_arguments(arguments):
+        if argument.role == "option" and argument.value.startswith("-Wa,"):
+            for flag in argument.value[4:].split(","):
                 if flag.startswith("--aspsx-version="):
                     version = flag.split("=", 1)[1]
     return version
@@ -156,44 +157,45 @@ def _resolve_version(arguments: tuple[str, ...], environment: dict[str, str]) ->
 
 def _replace_output(arguments: tuple[str, ...], output: Artifact) -> list:
     result = []
-    skip = False
-    for argument in arguments:
-        if skip:
-            skip = False
-        elif argument == "-o":
-            skip = True
-        elif not argument.startswith("-o"):
-            result.append(argument)
-    return [*result, "-o", output]
+    position = None
+    for argument in parse_arguments(arguments):
+        if argument.role == "output":
+            continue
+        if argument.role == "delimiter":
+            position = len(result)
+        result.extend(argument.tokens)
+    position = len(result) if position is None else position
+    return [*result[:position], "-o", output, *result[position:]]
 
 
 def _assembler_flags(arguments: tuple[str, ...]) -> list[str]:
     return [
         flag
-        for argument in arguments
-        if argument.startswith("-Wa,")
-        for flag in argument[4:].split(",")
+        for argument in parse_arguments(arguments)
+        if argument.role == "option" and argument.value.startswith("-Wa,")
+        for flag in argument.value[4:].split(",")
         if flag and flag != "--expand-div" and not flag.startswith("--aspsx-version=")
     ]
 
 
 def _compiler_arguments(arguments: tuple[str, ...], assembly: Artifact) -> list:
     result = []
-    skip_output = False
-    for argument in arguments:
-        if skip_output:
-            skip_output = False
-        elif argument == "-o":
-            skip_output = True
-        elif argument == "-c" or argument.startswith("-o"):
+    position = None
+    for argument in parse_arguments(arguments):
+        if argument.role == "output" or (
+            argument.role == "option" and argument.value == "-c"
+        ):
             continue
-        elif argument.startswith("-Wa,"):
-            retained = _assembler_flags((argument,))
+        if argument.role == "option" and argument.value.startswith("-Wa,"):
+            retained = _assembler_flags(argument.tokens)
             if retained:
                 result.append("-Wa," + ",".join(retained))
         else:
-            result.append(argument)
-    return [*result, "-S", "-o", assembly]
+            if argument.role == "delimiter":
+                position = len(result)
+            result.extend(argument.tokens)
+    position = len(result) if position is None else position
+    return [*result[:position], "-S", "-o", assembly, *result[position:]]
 
 
 def select_mode(
@@ -205,17 +207,15 @@ def select_mode(
     environment: dict[str, str],
 ) -> tuple[str, Path | None]:
     """Validate the supported branch before allocating compiler staging."""
-    compile_mode = "-c" in arguments and not any(
-        flag in arguments for flag in ("-E", "-S", "-M", "-MM")
+    options = {
+        argument.value
+        for argument in parse_arguments(arguments)
+        if argument.role == "option"
+    }
+    compile_mode = "-c" in options and not any(
+        flag in options for flag in ("-E", "-S", "-M", "-MM")
     )
-    named = [path for path in sources if path.suffix == ".c"]
-    named.extend(
-        cwd / argument
-        for argument in arguments
-        if not argument.startswith("-")
-        and argument.endswith((".s", ".S"))
-        and cwd / argument != output
-    )
+    named = [path for path in sources if path.suffix in {".c", ".s", ".S"}]
     driver = environment.get("PSX_CC_DRIVER")
     if compile_mode and not driver and (len(named) != 1 or output is None):
         raise ValueError(
@@ -224,7 +224,7 @@ def select_mode(
     if (
         not compile_mode
         and not driver
-        and not any(argument in {"-E", "-M", "-MM", "-S"} for argument in arguments)
+        and not options.intersection({"-E", "-M", "-MM", "-S"})
     ):
         raise ValueError(
             "link mode is unsupported; compile with -c and link with bin/ld"
@@ -291,9 +291,9 @@ def plan_invocation(
     assembler_arguments = [assembler, *_assembler_flags(arguments), "-o", produced]
     if mode == "assembly":
         operand = next(
-            argument
-            for argument in arguments
-            if not argument.startswith("-") and cwd / argument == source
+            argument.value
+            for argument in parse_arguments(arguments)
+            if argument.role == "source" and cwd / argument.value == source
         )
         return Invocation(
             "assembly",
@@ -320,9 +320,9 @@ def plan_invocation(
         "PYTHONSAFEPATH": "1",
     }
     expand = any(
-        "--expand-div" in argument[4:].split(",")
-        for argument in arguments
-        if argument.startswith("-Wa,")
+        "--expand-div" in argument.value[4:].split(",")
+        for argument in parse_arguments(arguments)
+        if argument.role == "option" and argument.value.startswith("-Wa,")
     )
     return Invocation(
         "c",

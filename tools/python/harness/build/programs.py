@@ -233,18 +233,22 @@ class ProgramSnapshot:
             self._failed = True
             raise
 
-    def protect_temporary(self, directory: Path, prefix: str) -> None:
+    def protect_temporary(
+        self, directory: Path, prefix: str, *, inputs: tuple[Path, ...] = ()
+    ) -> None:
         """Reject dependencies in the prospective allocation family before creation."""
         try:
             self.protect_outputs([directory / prefix])
-            for name in self._description["nodes"]:
+            paths = {Path(name) for name in self._description["nodes"]}
+            paths.update(path.absolute() for path in inputs)
+            paths.update(path.resolve() for path in inputs)
+            for path in paths:
                 check_deadline()
-                path = Path(name)
                 for parent in {directory.absolute(), directory.resolve()}:
                     if path.is_relative_to(parent) and path != parent:
                         if path.relative_to(parent).parts[0].startswith(prefix):
                             raise ValueError(
-                                "compiler staging family collides with a program dependency"
+                                "compiler staging family collides with a dependency"
                             )
             check_deadline()
         except BaseException:

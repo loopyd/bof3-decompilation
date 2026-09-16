@@ -185,13 +185,21 @@ reader rather than reopening text without an admission limit; later dispatch
 checks and grouped ownership/partition guards remain mandatory. Source names are
 compared resolved without relaxing original dispatch-path validation; newline
 normalization is unchanged. Entry/return checkpoints cover ordinary passthrough.
-`build.arguments` owns bounded operand
-classification; `build.invocation` supplies the immutable recipe consumed by dispatch
+`build.arguments` separates source operands from ordered explicit `-include` and
+`-imacros` inputs. Forced files remain captured and collision-protected but never
+select a translation unit or its metadata; missing files/operands reject. Original
+arguments stay unchanged. Recognized spellings do not prove compiler support,
+preprocessor ordering or transitive dependency closure.
+Stage mode/argument rewriting respects forced operand spans; dispatch inputs also
+participate in the existing preallocation temporary-family collision guard.
+`build.invocation` supplies the immutable recipe consumed by dispatch
 and driver. `build.execution` captures successful process, partition and publication
 edges and verifies them against that recipe without recreating deleted staging.
-The driver returns evidence in-process after cleanup; producer v6 and comparison v6
+The driver returns evidence in-process after cleanup; producer v7 and comparison v6
 bind it separately from live invocation identity. Profile compatibility remains
 independent of source/output paths; older restoration records remain versioned history.
+Producer v7 persists forced-input roles; older receipts are not upgraded or admitted
+as fresh provenance. The invocation recipe shape is unchanged.
 Receipt production lends its live dispatch to the synchronous compiler call. The
 driver checks the exact root/arguments before staging and retains every validation
 checkpoint; only the receipt owner closes the borrowed dispatch. Standalone calls

@@ -122,7 +122,8 @@ def _run(
             raise ValueError("borrowed compiler dispatch differs from the invocation")
         validate_dispatch(dispatch)
     cwd = Path.cwd()
-    sources, output = inspect_arguments(arguments, cwd=cwd)
+    operands = inspect_arguments(arguments, cwd=cwd)
+    sources, output = list(operands.sources), operands.output
     select_mode(
         arguments, sources=sources, output=output, cwd=cwd, environment=dict(os.environ)
     )
@@ -133,7 +134,11 @@ def _run(
         if owns_dispatch:
             dispatch = prepare_dispatch(root, arguments)
         temporary_parent = Path(tempfile.gettempdir())
-        dispatch.programs.protect_temporary(temporary_parent, ".bof3-cc-")
+        dispatch.programs.protect_temporary(
+            temporary_parent,
+            ".bof3-cc-",
+            inputs=tuple(Path(name) for name in dispatch.state["observations"]),
+        )
         temporary = Path(tempfile.mkdtemp(prefix=".bof3-cc-", dir=temporary_parent))
         if dispatch.state["working_directory"]["path"] != str(cwd):
             raise ValueError("compiler working directory changed during preparation")
