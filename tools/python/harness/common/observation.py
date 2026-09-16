@@ -15,6 +15,7 @@ from harness.common.deadlines import check_deadline
 from harness.common.paths import leaf_stat
 
 _ENTRY_EVENTS = 0x000003C6
+_NAMESPACE_EVENTS = 0x000003C0
 _SELF_EVENTS = 0x00002C00
 _LOST_EVENTS = 0x0000C000
 _DIRECTORY_EVENT = 0x40000000
@@ -114,8 +115,15 @@ class PathWatch:
     """Latch local Linux input-entry changes across repeated content observations."""
 
     def __init__(
-        self, paths: set[Path], *, directories: set[Path] | None = None
+        self,
+        paths: set[Path],
+        *,
+        directories: set[Path] | None = None,
+        namespace_only: bool = False,
     ) -> None:
+        if type(namespace_only) is not bool:
+            raise ValueError("invalid directory event selection")
+        self._membership_events = _NAMESPACE_EVENTS if namespace_only else _ENTRY_EVENTS
         self._descriptor: int | None = None
         self._directories: dict[Path, int] = {}
         self._identities: dict[Path, tuple[int, ...]] = {}
@@ -229,7 +237,7 @@ class PathWatch:
             if (
                 mask & _SELF_EVENTS
                 or not name
-                or watch in self._memberships
+                or (watch in self._memberships and mask & self._membership_events)
                 or name in self._entries[watch]
             ):
                 self._fail("watched input entry or ancestor changed")
@@ -256,7 +264,7 @@ class PathWatch:
         self._fail("input watch event drain exceeded its bound")
 
     def validate(self) -> None:
-        """Latch selected-entry events and every explicit directory's child event."""
+        """Latch selected-entry events and the chosen explicit-directory child events."""
         check_deadline()
         if self._failure is not None:
             raise ValueError(self._failure)
@@ -301,6 +309,67 @@ class PathWatch:
                 error = caught
         if error is not None:
             raise error
+
+
+class DirectoryBatch:
+    """Reuse bounded membership within one namespace-watched verification pass."""
+
+    def __init__(self, directories: set[Path]) -> None:
+        self._directories = {path for path in directories if path != path.parent}
+        self._watch: PathWatch | None = None
+        self._memberships: dict[Path, str] = {}
+        self._active = False
+        self._closed = False
+        self._failed = False
+
+    def __enter__(self) -> DirectoryBatch:
+        check_deadline()
+        if self._active or self._closed:
+            raise ValueError("directory batch cannot be reused")
+        try:
+            if self._directories:
+                self._watch = PathWatch(
+                    set(), directories=self._directories, namespace_only=True
+                )
+            self._active = True
+        except BaseException:
+            self._closed = True
+            raise
+        return self
+
+    def __exit__(self, error_type, error, traceback) -> None:
+        try:
+            if error_type is None:
+                check_deadline()
+                if self._failed:
+                    raise ValueError("directory batch observation failed")
+                if self._watch is not None:
+                    self._watch.validate()
+        finally:
+            self._active = False
+            self._closed = True
+            self._memberships.clear()
+            if self._watch is not None:
+                self._watch.close()
+
+    def observe(self, path: Path) -> tuple:
+        """Return fresh raw metadata; membership reuse requires successful batch exit."""
+        try:
+            check_deadline()
+            if not self._active or self._closed or self._failed:
+                raise ValueError("directory batch is inactive or failed")
+            if path not in self._directories:
+                return observe_directory(path)
+            if path not in self._memberships:
+                observed = observe_directory(path)
+                self._memberships[path] = observed[-1]
+                return observed
+            metadata = _capture_directory_metadata(path.stat(follow_symlinks=False))
+            check_deadline()
+            return (*metadata, self._memberships[path])
+        except BaseException:
+            self._failed = True
+            raise
 
 
 def observe_file(root: Path, name: str) -> dict[str, Any] | None:

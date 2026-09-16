@@ -19,7 +19,7 @@ from harness.build.compiler import (
 from harness.build.dependencies import SourceImage
 from harness.common.deadlines import check_deadline
 from harness.common.inputs import InputBatch, read_input
-from harness.common.observation import observe_directory
+from harness.common.observation import DirectoryBatch, observe_directory
 from harness.domain.cache import collect_claim_paths, collect_manifest_paths
 from harness.domain.manifests import TargetManifest, load_manifest_generation
 from harness.io import repo_layout, unique_object
@@ -77,7 +77,7 @@ def _validate_cmake_configuration(root: Path, text: str) -> None:
         )
 
 
-def _observe_input(path: Path) -> tuple:
+def _observe_input(path: Path, directories: DirectoryBatch | None = None) -> tuple:
     location = path
     while True:
         check_deadline()
@@ -92,7 +92,12 @@ def _observe_input(path: Path) -> tuple:
             raise ValueError(f"profile input has no existing ancestor: {path}")
         location = parent
     if stat.S_ISDIR(state.st_mode):
-        return (str(location), *observe_directory(location))
+        observed = (
+            observe_directory(location)
+            if directories is None
+            else directories.observe(location)
+        )
+        return (str(location), *observed)
     return (
         str(location),
         state.st_dev,
@@ -380,27 +385,37 @@ class ProfileContext:
         """Reject moving files or changed configuration instead of publishing stale pins."""
         check_deadline()
         self.verify_manifest_inventory()
-        self._verify_ancestors()
-        with InputBatch(self.root) as batch:
-            for relative, state in self.inputs.items():
-                check_deadline()
-                path = self.root / relative
-                observation = self.observations[relative]
-                if not _has_same_observation(observation, _observe_input(path)):
-                    raise ValueError(f"profile input changed: {relative}")
-                if batch.read(path)[0] != state or (
-                    state is not None and path.stat().st_nlink != 1
-                ):
-                    raise ValueError(f"profile input changed: {relative}")
-                if not _has_same_observation(observation, _observe_input(path)):
-                    raise ValueError(f"profile input changed: {relative}")
-        self._verify_ancestors()
+        parents = {
+            Path(observation[0])
+            for observation in self.ancestors.values()
+            if stat.S_ISDIR(observation[3])
+        }
+        with DirectoryBatch(parents) as directories:
+            self._verify_ancestors(directories)
+            with InputBatch(self.root) as batch:
+                for relative, state in self.inputs.items():
+                    check_deadline()
+                    path = self.root / relative
+                    observation = self.observations[relative]
+                    if not _has_same_observation(
+                        observation, _observe_input(path, directories)
+                    ):
+                        raise ValueError(f"profile input changed: {relative}")
+                    if batch.read(path)[0] != state or (
+                        state is not None and path.stat().st_nlink != 1
+                    ):
+                        raise ValueError(f"profile input changed: {relative}")
+                    if not _has_same_observation(
+                        observation, _observe_input(path, directories)
+                    ):
+                        raise ValueError(f"profile input changed: {relative}")
+            self._verify_ancestors(directories)
         self.verify_manifest_inventory()
 
-    def _verify_ancestors(self) -> None:
+    def _verify_ancestors(self, directories: DirectoryBatch | None = None) -> None:
         for ancestor, observation in self.ancestors.items():
             check_deadline()
-            current = _observe_input(ancestor)
+            current = _observe_input(ancestor, directories)
             if not _has_same_observation(observation, current):
                 raise ValueError(
                     f"profile input ancestor changed during capture: {ancestor}; "

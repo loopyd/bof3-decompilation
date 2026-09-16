@@ -156,6 +156,17 @@ This is not recursive discovery or content capture: callers must enumerate each
 dependency directory, establish watches before sampling, and verify afterward.
 No existing producer gains complete include/toolchain closure from this primitive.
 
+`DirectoryBatch` reuses membership hashes only within one verification pass under
+a live `PathWatch(..., namespace_only=True)` fence. This opt-in ignores unrelated
+child content/attribute events, not namespace, selected-path, ancestor or watch-loss
+events. Every observation still samples raw directory metadata; values remain
+provisional until successful batch exit validates events and linkage. Failure
+latches, exit closes descriptors, and closed batches cannot revive. Unwatched
+directories, including the filesystem root, retain full uncached observations.
+`ProfileContext.verify()` uses this batch without skipping file reads/hashes,
+single-link checks, ancestor comparisons or either manifest-inventory check.
+No membership sample or validation result survives the pass.
+
 `common.inputs.read_input` returns state and the exact bytes hashed under one
 stable metadata sample; `file_state` retains its state-only schema. Profile capture
 uses those bytes without a duplicate read, but verification always reopens and
