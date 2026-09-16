@@ -199,6 +199,15 @@ Full input closure and native/transaction integration remain open.
 See the [combiner contract](combiner.md) for supported entrypoints, invocation,
 invalid markers and retained recovery handling.
 
+`combiner.images` owns joint text/mode preparation; `combiner.history` owns strict
+transaction v1/v2 history and their exact owner sets. Current preparation emits v2
+with both new owners pinned. Historical profile v3 transitions use
+`build.preservation.validate_profile_history`, independent of current admission
+schema constants; new captures still use `validate_transition`'s current-version
+gate. Recovery keeps manifest v1 and validates retained bindings without live PRE.
+Live transaction verification/rehearsal rejects historical v1; recapture v2 rather
+than rewriting old pins. No schema support grants restoration or source authority.
+
 The decomp-status batch path loads a fresh catalog after each successful build and
 reuses it only during read-only source resolution. Ownership winner/tie rules stay
 unchanged. Per-source fallback builds and native comparisons reload ownership;

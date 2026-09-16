@@ -235,9 +235,17 @@ def decode_layout(text: str) -> object:
 
 
 def validate_transition(profile: dict, post: dict) -> tuple[str, str, list[str]]:
+    """Admit only the current profile version for new preservation captures."""
+    if not isinstance(profile, dict) or profile.get("schema") != PROFILE_SCHEMA:
+        raise ValueError("preservation requires the current PRE profile schema")
+    return validate_profile_history(profile, post)
+
+
+def validate_profile_history(profile: dict, post: dict) -> tuple[str, str, list[str]]:
+    """Validate retained v3 transitions independently of current admission versions."""
     if (
         not isinstance(profile, dict)
-        or profile.get("schema") != PROFILE_SCHEMA
+        or profile.get("schema") != "bof3.combiner-profile/v3"
         or "destination_text" not in profile
         or "configuration" not in profile
     ):

@@ -5,10 +5,8 @@ from __future__ import annotations
 import copy
 from pathlib import Path
 
-from harness.combiner.transactions import (
-    validate_transaction_history,
-    verify_transaction,
-)
+from harness.combiner.history import validate_transaction_history
+from harness.combiner.transactions import verify_transaction
 from harness.common.deadlines import validate_deadline
 from harness.common.digests import digest
 from harness.common.directory import validate_repo_path

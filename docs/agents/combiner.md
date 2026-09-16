@@ -362,6 +362,15 @@ and native commands are not performed. `native_verified`, `coverage_verified`,
 temporary application and owned restoration; permanent application, complete consumer
 gates and independent production acceptance remain open.
 
+New preparation emits transaction v2, pinning `combiner.history` and
+`combiner.images` alongside the existing owners. The history owner validates exact
+v1/v2 owner sets and retained preservation v5/profile v3 transitions independently
+of current admission versions. Fingerprints, images, modes, ownership and false
+acceptance flags remain mandatory. V1 is restoration history only: live transaction
+verification and rehearsal require fresh v2 preparation, never automatic backfill.
+Recovery manifest v1 is unchanged; historical validation grants neither restoration
+authority nor current compiler/dependency freshness.
+
 ### Transaction rehearsal and recovery
 
 ```sh
