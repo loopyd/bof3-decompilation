@@ -108,6 +108,6 @@ segments:
     - asm
     - func_801F394C
   - - 3764
-    - asm
+    - data
     - T_801F3AB4
 - - 8548

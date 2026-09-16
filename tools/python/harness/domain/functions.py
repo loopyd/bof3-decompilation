@@ -77,7 +77,7 @@ def _parse_implementation(masked: str, start: int) -> tuple[int, int, str, str]:
     if opening < 0:
         raise ValueError("function metadata has no following implementation")
     prefix = masked[start:opening].strip()
-    if not re.fullmatch(r"(?:[A-Za-z_][A-Za-z0-9_]*|\*|\s)+", prefix):
+    if not prefix or re.sub(r"[A-Za-z_][A-Za-z0-9_]*|[\s*]+", "", prefix):
         raise ValueError("function metadata is not immediately above an implementation")
     names = _IDENTIFIER.findall(prefix)
     if not names or names[0] in {
