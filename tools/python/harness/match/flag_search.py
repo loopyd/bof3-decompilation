@@ -76,7 +76,9 @@ def _resolve_bindings(
         )
         canonical_bindings = {
             symbol.canonical_name: symbol.address
-            for symbol in load_target_symbols(layout.root, manifest.id.value)
+            for symbol in load_target_symbols(
+                layout.root, manifest.id.value, psyq_space=manifest.psyq_space
+            )
         }
         return symbols_c_path, canonical_bindings
     return source.parent / "symbols.c", None
