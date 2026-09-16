@@ -196,7 +196,12 @@ held nofollow directory descriptors, preserving alias and absence evidence.
 Typed repository/external observations grant no external writes. Dispatch watches
 and recaptures this bounded generation; its fingerprint transitively binds execution.
 Profiles retain the same configured graph and verify it afresh, not a persistent
-validation-success cache. `build.runtime` derives versioned source-pin-driven
+validation-success cache. Verification can seed watches from a copied, validated
+current-schema graph bound to the same root, then require a full fresh capture to
+equal it, with watch checks before and after. Ordinary discovery still captures
+before establishing watches. This removes duplicate discovery, not content checks;
+endpoint descriptions grant neither continuous inter-call coverage nor authority
+to trust an unauthenticated baseline. `build.runtime` derives versioned source-pin-driven
 candidate edges from declared Stage policies; `build.observations` validates
 retained direct/runtime graphs and causal replay without live reads. Provider
 settings participate in profile cache keys; recapture rederives the expansion.

@@ -145,14 +145,24 @@ def _capture(root: Path, inputs: dict) -> dict:
 class ProgramSnapshot:
     """Retain one pass generation under live path watches until explicitly closed."""
 
-    def __init__(self, root: Path, invocation: Invocation) -> None:
+    def __init__(
+        self, root: Path, invocation: Invocation, *, expected: dict | None = None
+    ) -> None:
         self.root = root
         self._inputs = describe_inputs(invocation)
         self._watch: PathWatch | None = None
         self._failed = False
         self._closed = False
         try:
-            self._description = _capture(root, self._inputs)
+            if expected is None:
+                self._description = _capture(root, self._inputs)
+            else:
+                self._description = copy.deepcopy(expected)
+                validate_description(self._description)
+                if self._description["schema"] != _SCHEMA or self._description["roots"][
+                    "repository"
+                ]["path"] != str(root):
+                    raise ValueError("program verification baseline differs")
             paths = {Path(name) for name in self._description["nodes"] if name != "/"}
             self._watch = PathWatch(paths)
             self.validate(invocation)
@@ -247,9 +257,11 @@ class ProgramSnapshot:
             self._watch.close()
 
 
-def capture_description(root: Path, invocation: Invocation) -> dict:
-    """Return an endpoint-verified configured generation, not a live execution fence."""
-    snapshot = ProgramSnapshot(root, invocation)
+def capture_description(
+    root: Path, invocation: Invocation, *, expected: dict | None = None
+) -> dict:
+    """Freshly capture a generation, optionally checking a known baseline under watches."""
+    snapshot = ProgramSnapshot(root, invocation, expected=expected)
     try:
         return snapshot.describe()
     finally:

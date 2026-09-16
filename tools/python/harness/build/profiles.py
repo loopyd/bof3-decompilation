@@ -440,7 +440,10 @@ class ProfileContext:
                         raise ValueError(f"profile input changed: {relative}")
             self._verify_ancestors(directories)
         for invocation, expected in self._programs.values():
-            if capture_description(self.root, invocation) != expected:
+            if (
+                capture_description(self.root, invocation, expected=expected)
+                != expected
+            ):
                 raise ValueError("configured compiler programs changed")
         self.verify_manifest_inventory()
 
