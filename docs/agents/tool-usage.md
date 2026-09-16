@@ -651,6 +651,10 @@ Reviewed type artifacts use canonical repository-relative paths and one confined
 metadata-checked capture, limited to 4 MiB. UTF-8 parsing and the raw-byte SHA use
 that same sample; symlinks, oversized files and observed read-time mutation reject.
 The sample does not establish later freshness; transaction rederivation still applies.
+Shared-type private proof envelopes use the same capture guarantees with a separate
+64 MiB per-proof limit. This new admission cap rejects larger historical chains;
+it is not an aggregate memory limit. External pins, both reviewed-envelope routes,
+independent targets and equal private contracts remain mandatory.
 
 The changes file is a JSON object mapping each allowed repo-relative file to its complete replacement text. Retain the application digest from the `run` output in a trusted external record; do not derive the expected value from the application file being verified. Shared preparation requires two externally pinned reviewed private envelopes with identical representation and semantic contracts; target-address-bearing contracts are rejected. Integrity-only pins cannot authorize shared preparation.
 
