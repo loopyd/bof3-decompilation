@@ -65,7 +65,12 @@ class IncludeSnapshot:
     """Keep one bounded search generation and reject later input/lookup mutations."""
 
     def __init__(
-        self, root: Path, source: Path, *, image: SourceImage | None = None
+        self,
+        root: Path,
+        source: Path,
+        *,
+        image: SourceImage | None = None,
+        forced: tuple[Path, ...] = (),
     ) -> None:
         self.root = root
         self._watch: PathWatch | None = None
@@ -79,6 +84,8 @@ class IncludeSnapshot:
             not isinstance(image, SourceImage) or image.source != name
         ):
             raise ValueError("include source image differs from its nominal path")
+        if len(forced) > _INPUT_LIMIT:
+            raise ValueError("forced include seeds exceed the input bound")
         roots = (root / "src", root / "include", root / "toolchains/psyq/4.7/include")
         with InputBatch(root) as batch:
             physical = image is None or image.kind == "current"
@@ -98,6 +105,13 @@ class IncludeSnapshot:
             self.image = image
             pending = [(source, image.content)]
             scheduled = {source} if physical else set()
+            for path in forced:
+                content = self._read(batch, path)
+                if content is None:
+                    raise ValueError(f"missing forced include source: {path}")
+                if path not in scheduled:
+                    scheduled.add(path)
+                    pending.append((path, content))
             while pending:
                 check_deadline()
                 path, content = pending.pop()

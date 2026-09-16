@@ -173,12 +173,6 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
     execution = NativeExecution(root, cutoff, output_limit)
     tools = layout.psn00b_toolchain_root / "bin"
     with ExitStack() as stack:
-        includes = stack.enter_context(closing(IncludeSnapshot(root, source_path)))
-        extra_paths = (
-            set(includes.content)
-            | {root / name for name in _OWNERS}
-            | {tools / f"mipsel-none-elf-{name}" for name in ("ld", "objdump", "nm")}
-        )
         selection = stack.enter_context(
             closing(select_preservation(root, [source_path], [source_path]))
         )
@@ -192,6 +186,38 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
         )
         if preserved["destination"] != source:
             raise ValueError("comparison source differs from its preserved destination")
+        arguments = [
+            *preserved["profile"]["arguments"][1:],
+            "-c",
+            str(source_path),
+            "-o",
+            str(output),
+        ]
+        dispatch = prepare_dispatch(root, arguments)
+        stack.callback(close_dispatch, dispatch)
+        if (
+            dispatch.record_path != selection.record
+            or dispatch.record_fingerprint != selection.fingerprint
+        ):
+            raise ValueError(
+                "comparison compiler selected different preservation history"
+            )
+        includes = stack.enter_context(
+            closing(
+                IncludeSnapshot(
+                    root,
+                    source_path,
+                    forced=tuple(
+                        Path(item["path"]) for item in dispatch.state["forced_inputs"]
+                    ),
+                )
+            )
+        )
+        extra_paths = (
+            set(includes.content)
+            | {root / name for name in _OWNERS}
+            | {tools / f"mipsel-none-elf-{name}" for name in ("ld", "objdump", "nm")}
+        )
         extra_paths.update(
             root / name
             for name, state in preserved["inputs"].items()
@@ -208,23 +234,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
             protected.add(selection.routes)
         if artifacts & protected:
             raise ValueError("comparison artifact collides with a retained input")
-        arguments = [
-            *preserved["profile"]["arguments"][1:],
-            "-c",
-            str(source_path),
-            "-o",
-            str(output),
-        ]
-        dispatch = prepare_dispatch(root, arguments)
-        stack.callback(close_dispatch, dispatch)
         dispatch.programs.protect_outputs(list(artifacts))
-        if (
-            dispatch.record_path != selection.record
-            or dispatch.record_fingerprint != selection.fingerprint
-        ):
-            raise ValueError(
-                "comparison compiler selected different preservation history"
-            )
         native_watch = stack.enter_context(closing(PathWatch(extra_paths)))
         native_inputs = _capture_states(root, extra_paths)
         includes.validate()

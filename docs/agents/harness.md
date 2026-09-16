@@ -248,6 +248,10 @@ They join the unchanged PRE input set: missing or changed files reject, and no
 header edits are added to the POST allowlist. Old records lacking these inputs
 cannot pass fresh verification; historical decoding is unchanged. This does not
 resolve transitive headers, forwarded options, default paths or compiler support.
+Grouped comparison seeds its literal snapshot from dispatch's physical forced
+files too. Their descendants and negative lookups join mutation/output guards;
+captured non-toolchain bytes pass matching-policy checks before production.
+This bounded union is not effective preprocessing or transitive PRE preservation.
 Full input closure and native/transaction integration remain open.
 See the [combiner contract](combiner.md) for supported entrypoints, invocation,
 invalid markers and retained recovery handling.
