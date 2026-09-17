@@ -4,13 +4,11 @@
  * the frontend state.
  * @source 0x801D0D5C
  * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @match 62.50
+ * @residual qualified phase read adds masking and scheduling differences; 64 bytes versus original 56
  */
 void armFadeDelay(void) {
-
-  if (*(u8*)&GAME_FRONT_FADE_PHASE == 2u) {
-
+  if (GAME_FRONT_FADE_PHASE == 2u) {
     u16 state;
     u16 timer = 360u;
     state = GAME_FRONT_STATE;
