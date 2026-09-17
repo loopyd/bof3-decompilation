@@ -3,7 +3,7 @@
 /* @behavior copies one palette window while clamping each component to one limit.
  * @source 0x801F83B0
  * @status partial
- * @match 41.86
+ * @match 44.19
  * @residual volatile halfword lowering, loop shape, register allocation and scheduling; 168 bytes versus 172 original.
  */
 void clampPaletteChannels(u32 intensity) {
@@ -50,7 +50,7 @@ void clampPaletteChannels(u32 intensity) {
 
     src++;
     dst_offset += 2u;
-  } while (src < src_end);
+  } while ((s32)src < (s32)src_end);
 
   D_80145988 = (u8)(D_80145988 + 1u);
 }
