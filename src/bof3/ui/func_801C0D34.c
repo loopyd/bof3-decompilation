@@ -3,6 +3,9 @@
 /**
  * @source 0x801C0D34
  * @behavior Calls func_801C0F9C with mode 4.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801C0D34(void) {
   func_801C0F9C(4);

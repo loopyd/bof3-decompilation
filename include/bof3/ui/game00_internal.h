@@ -53,7 +53,7 @@ extern GameEntry0DispatchSet D_80195F44;
 
 struct GameWorkArea;
 
-void func_801C0F9C(s32 arg0);
+int func_801C0F9C(s32 arg0);
 void func_801C2538(void);
 void func_801C2710(void);
 int func_801C5474(void);
