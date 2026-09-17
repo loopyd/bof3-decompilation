@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 MASPSX_POLICY = "maspsx-local-sources/v1"
 ASSEMBLER_POLICY = "bof3-assembler-wrapper/v1"
 GCC_POLICY = "gcc-2.7.2-psx-search/v1"
+_MAX_EXECUTABLE_SEARCH_ROOTS = 64
 _SOURCES = {
     MASPSX_POLICY: "38c090123ad707fb28c40013121c71036a763ec3b787a5c6ab6b55752d1166ae",
     ASSEMBLER_POLICY: "1bc786f76eb2fc72f448a00ea7b94ca5fb3a3d2ecc55a591020951c9585011ca",
@@ -173,12 +174,16 @@ def validate_seeds(seeds: object) -> None:
         paths = seed["python_path" if python else "path"]
         if (
             not isinstance(paths, list)
-            or not 1 <= len(paths) <= 16
+            or not 1 <= len(paths) <= (16 if python else _MAX_EXECUTABLE_SEARCH_ROOTS)
             or any(
                 not isinstance(path, str)
                 or "\0" in path
                 or len(os.fsencode(path)) > 16384
                 for path in paths
+            )
+            or (
+                len(paths) > 16
+                and sum(len(os.fsencode(path)) + 1 for path in paths) > 16384
             )
         ):
             raise ValueError("runtime search roots exceed their bounds")
