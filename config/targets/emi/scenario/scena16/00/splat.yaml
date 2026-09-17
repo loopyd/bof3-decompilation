@@ -23,12 +23,12 @@ segments:
   - header
 - name: main
   type: code
-  start: 2108
-  vram: 2149545020
+  start: 1584
+  vram: 2149544496
   subsegments:
-  - - 2108
+  - - 1584
     - asm
-    - func_801F743C
+    - func_801F7230
   - - 2960
     - asm
     - func_801F7790
