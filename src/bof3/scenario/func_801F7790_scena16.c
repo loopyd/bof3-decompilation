@@ -3,11 +3,12 @@
 /* @behavior runs the secondary SCENA16 controller rooted at state 3.
  * @source 0x801F7790
  * @status partial
- * @match 51.35
- * @residual non-exact live audit: 171/333 instructions; 1332 original bytes versus 1232 current.
+ * @match 60.23
+ * @residual 206 matching instructions; 342 current/333 original; 1332 original bytes versus 1368 current.
  */
 void func_801F7790(void) {
   volatile u16* timer;
+  u8           object_index;
 
   switch (D_80146875) {
     case 0:
@@ -46,20 +47,30 @@ void func_801F7790(void) {
       func_8014ECAC(1u);
       D_80146866 = 0x30u;
       D_8014832E = 0x1fu;
-      SPAD_REF(volatile u8, 0x0u) = func_8019601C();
+      object_index = func_8019601C();
+      SPAD_REF(volatile u8, 0x0u) = object_index;
 
-      if (SPAD_REF(volatile u8, 0x0u) != 0xffu) {
+      if (object_index != 0xffu) {
         volatile u8* object;
-        u32          object_index;
 
-        object_index = (u32)SPAD_REF(volatile u8, 0x0u);
-        object = PSX_PTR(volatile u8, 0x80143fc8u) + (object_index * 0x74u);
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)object_index * 0x74u);
         object[0] = 1u;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         object[5] = 0x13u;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         *(volatile s32*)(object + 0x64) =
             (s32)((s16)D_801492D8 + 0x1c0);
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         *(volatile s32*)(object + 0x68) = (s32)(s16)D_801492DA;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         *(volatile s32*)(object + 0x6c) = (s32)(s16)D_801492DC;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         object[9] = 0xffu;
       }
 
