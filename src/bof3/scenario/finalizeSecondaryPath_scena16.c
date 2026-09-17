@@ -2,13 +2,13 @@
 
 /* @behavior finalizes the secondary SCENA16 path and exits the local callback.
  * @source 0x801F7188
- * @status invalid
- * @match 100.00
- * @residual byte-exact but the selection pointer casts away D_80145029 volatility; requires semantic repair.
+ * @status partial
+ * @match 88.64
+ * @residual volatile byte lowering adds mask and delay instruction; 176 bytes versus 168 original.
  */
 void finalizeSecondaryPath(void) {
   u8 selection;
-  u8* slot;
+  volatile u8* slot;
 
   if (D_80143C40 == 0u) {
     D_80143C30 = 0u;
@@ -16,7 +16,7 @@ void finalizeSecondaryPath(void) {
     copyPaletteBlock();
     game_queue_frontend_cue(0x213u);
     game_queue_frontend_cue(0x214u);
-    slot = (u8*)&D_80145029;
+    slot = &D_80145029;
     selection = *slot;
 
     if (selection != 0xffu) {

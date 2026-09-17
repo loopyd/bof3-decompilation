@@ -2,13 +2,13 @@
 
 /* @behavior dispatches through the secondary SCENA16 state table.
  * @source 0x801F7144
- * @status invalid
- * @match 100.00
- * @residual byte-exact but the state read casts away D_80146874 volatility; requires semantic repair.
+ * @status partial
+ * @match 81.25
+ * @residual volatile signed-byte lowering adds sign-extension instruction; 64 bytes versus 60 original.
  */
 void dispatchSecondaryState(void) {
   s8 state;
 
-  state = *(s8*)&D_80146874;
+  state = D_80146874;
   secondaryStateTable[state]();
 }
