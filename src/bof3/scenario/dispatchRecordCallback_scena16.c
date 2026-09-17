@@ -2,9 +2,9 @@
 
 /* @behavior dispatches one record callback selected by byte 0x7a.
  * @source 0x801F8358
- * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @status invalid
+ * @match 87.50
+ * @residual incompatible callback types and unresolved engine return contract; prologue scheduling differs, 64 bytes versus 64 original.
  */
 void dispatchRecordCallback(void* record) {
   Scena16RecordCallback callback;
