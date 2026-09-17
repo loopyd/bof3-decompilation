@@ -23,9 +23,36 @@ segments:
   - header
 - name: main
   type: code
-  start: 1584
-  vram: 2149544496
+  start: 144
+  vram: 2149543056
   subsegments:
+  - - 144
+    - asm
+    - dispatchPrimaryState
+  - - 204
+    - asm
+    - bootPrimaryState
+  - - 400
+    - asm
+    - func_801F6D90
+  - - 560
+    - asm
+    - seedRouteEnterState3
+  - - 688
+    - asm
+    - seedRouteEnterState2
+  - - 816
+    - asm
+    - func_801F6F30
+  - - 1348
+    - asm
+    - dispatchSecondaryState
+  - - 1408
+    - asm
+    - noopSecondaryState
+  - - 1416
+    - asm
+    - finalizeSecondaryPath
   - - 1584
     - asm
     - func_801F7230
