@@ -43,7 +43,7 @@ def contract_sections(root: Path, role: str) -> list[ContextSection]:
 
     paths = [*_CONTRACT_PATHS]
     if role == "reverse":
-        paths.append("docs/reference/bof3-eu/README.md")
+        paths.append("docs/specs/bof3-eu/README.md")
     sections = []
     for relative in paths:
         path = root / relative

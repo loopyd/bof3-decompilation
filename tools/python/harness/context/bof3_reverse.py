@@ -9,7 +9,7 @@ from .common import FULL_PATHS, contract_sections, selector_sections
     paths=(
         *FULL_PATHS,
         ".codex/skills/bof3-re/references/REVERSE/MISSION_PROTOCOL.md",
-        "docs/reference/bof3-eu/README.md",
+        "docs/specs/bof3-eu/README.md",
     ),
     accepts_selector=True,
     stable_paths=(
