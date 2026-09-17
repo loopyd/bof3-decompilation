@@ -4,7 +4,7 @@
  * @source 0x801F6C90
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchPrimaryState(void) {
   s8* state_base;

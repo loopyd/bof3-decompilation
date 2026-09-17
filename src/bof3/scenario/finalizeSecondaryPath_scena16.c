@@ -2,9 +2,9 @@
 
 /* @behavior finalizes the secondary SCENA16 path and exits the local callback.
  * @source 0x801F7188
- * @status exact
+ * @status invalid
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual byte-exact but the selection pointer casts away D_80145029 volatility; requires semantic repair.
  */
 void finalizeSecondaryPath(void) {
   u8 selection;

@@ -4,7 +4,7 @@
  * @source 0x801F6EB0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void seedRouteEnterState2(void) {
   if (func_8015B5D4(D_8014686C, 0) == 0) {

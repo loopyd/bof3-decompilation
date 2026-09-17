@@ -2,9 +2,9 @@
 
 /* @behavior dispatches through the secondary SCENA16 state table.
  * @source 0x801F7144
- * @status exact
+ * @status invalid
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual byte-exact but the state read casts away D_80146874 volatility; requires semantic repair.
  */
 void dispatchSecondaryState(void) {
   s8 state;
