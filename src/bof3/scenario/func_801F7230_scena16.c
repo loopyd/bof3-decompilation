@@ -3,10 +3,10 @@
 /* @behavior runs the secondary SCENA16 controller rooted at state 2.
  * @source 0x801F7230
  * @status partial
- * @match 63.37
- * @residual review-pending: 218/344 instructions; 1376 original bytes versus 1248 current.
- * Shortening the counter-pointer lifetime restores the original 32-byte prologue through
- * the saved-s0 delay slot; first residual is now the switch jump target at +0x0014.
+ * @match 70.77
+ * @residual 247 matching instructions; 349 current/344 original; 1376 original bytes versus 1396 current.
+ * Remaining differences include the exit-branch target at +0x14, switch-table placement,
+ * signed-load lowering, address formation, and branch/delay-slot code generation.
  */
 void func_801F7230(void) {
   volatile u8* object;
@@ -126,11 +126,21 @@ void func_801F7230(void) {
           object =
               PSX_PTR(volatile u8, 0x80143fc8u) + ((u32)object_index * 0x74u);
           object[0] = 1u;
+          object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                   ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
           object[5] = 0x13u;
+          object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                   ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
           *(volatile s32*)(object + 0x64) =
               (s32)((s16)D_801492D8 + 0x180);
+          object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                   ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
           *(volatile s32*)(object + 0x68) = (s32)(s16)D_801492DA;
+          object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                   ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
           *(volatile s32*)(object + 0x6c) = (s32)(s16)D_801492DC;
+          object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                   ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
           object[9] = 0x60u;
         }
 
