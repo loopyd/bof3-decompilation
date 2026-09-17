@@ -23,6 +23,21 @@ from .asm_diff import run_asm_diff_one
 
 OPTIMIZATION_RE = re.compile(r"^-O(?:[0-3s]|fast)$")
 CMAKE_ENV_ASSIGNMENT_RE = re.compile(r"^[^=]+=.*$")
+MAX_DIAGNOSTIC_CHARS = 4096
+
+
+def _failure_result(
+    flags: list[str], status: str, diagnostic: str, returncode: int | None = None
+) -> dict[str, Any]:
+    """Retain bounded diagnostics; a null return code means it is unavailable."""
+    return {
+        "flags": flags,
+        "status": status,
+        "match_percent": 0.0,
+        "returncode": returncode,
+        "error": diagnostic[-MAX_DIAGNOSTIC_CHARS:],
+        "error_truncated": len(diagnostic) > MAX_DIAGNOSTIC_CHARS,
+    }
 
 
 def _compile_command(layout: RepoLayout, source: Path) -> tuple[list[str], Path]:
@@ -162,14 +177,24 @@ def search_flags(
                         "BOF3_COMPILER_TRIAL": str(work.resolve()),
                     },
                 )
-            except FileNotFoundError:
-                results.append(
-                    {"flags": flags, "status": "compile_error", "match_percent": 0.0}
-                )
+            except FileNotFoundError as error:
+                results.append(_failure_result(flags, "compile_error", str(error)))
                 continue
             if compile_result.returncode != 0:
                 results.append(
-                    {"flags": flags, "status": "compile_error", "match_percent": 0.0}
+                    _failure_result(
+                        flags,
+                        "compile_error",
+                        "\n".join(
+                            output
+                            for output in (
+                                getattr(compile_result, "stdout", ""),
+                                getattr(compile_result, "stderr", ""),
+                            )
+                            if output
+                        ),
+                        compile_result.returncode,
+                    )
                 )
                 continue
             try:
@@ -214,10 +239,8 @@ def search_flags(
                     except RuntimeError:
                         percent = 0.0
                     status = "different"
-            except (RuntimeError, ValueError):
-                results.append(
-                    {"flags": flags, "status": "link_error", "match_percent": 0.0}
-                )
+            except (RuntimeError, ValueError) as error:
+                results.append(_failure_result(flags, "link_error", str(error)))
                 continue
             results.append(
                 {
