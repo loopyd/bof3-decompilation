@@ -3,8 +3,8 @@
 /* @behavior copies one palette window while clamping each component to one limit.
  * @source 0x801F83B0
  * @status partial
- * @match 37.78
- * @residual volatile halfword lowering, loop shape and nonzero-test branching; 180 bytes versus 172 original.
+ * @match 41.86
+ * @residual volatile halfword lowering, loop shape, register allocation and scheduling; 168 bytes versus 172 original.
  */
 void clampPaletteChannels(u32 intensity) {
   const volatile u16* src;
@@ -24,7 +24,6 @@ void clampPaletteChannels(u32 intensity) {
     s32  component_index;
     u32  packed;
     u32  component;
-    u32  next_packed;
     volatile u16* dst;
 
     color = *src;
@@ -32,22 +31,20 @@ void clampPaletteChannels(u32 intensity) {
     component_index = 0;
     packed = 0u;
     component = 0u;
-    next_packed = 0u;
 
     do {
       component = ((u32)color >> shift) & 0x1fu;
-      next_packed = packed << 5;
       if (limit < component) {
         component = intensity;
       }
-      packed = next_packed | component;
+      packed = (packed << 5) | component;
       component_index++;
       shift += 5u;
     } while (component_index < 3);
 
     dst = (volatile u16*)((volatile u8*)SCENA16_PALETTE_DST + dst_offset);
     *dst = (u16)packed;
-    if ((next_packed & 0xffffu) != 0u || component != 0u) {
+    if ((packed & 0xffffu) != 0u) {
       *dst = (u16)(packed | 0x8000u);
     }
 
