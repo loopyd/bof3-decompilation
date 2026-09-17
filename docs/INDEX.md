@@ -33,6 +33,8 @@ independent semantic review and live acceptance gates; never refresh inputs duri
 a pinned transaction. Preserve frozen evidence before replacing working indexes.
 Local feature-completion commits are authorized; do not push or release. Standing
 authorization does not override sandbox decisions or authorize dependency installs.
+Ordinary agent reviews may [retry model-capacity failures](agents/codex.md#review-capacity-retries)
+with backoff within their original bounds; auto-review denials are not retryable.
 
 ## Request routes
 

@@ -19,6 +19,24 @@ a model SDK/API, discover MCP via Codex CLI or rewrite child permission profiles
 No detached controller, background model session or second campaign database.
 Local native compiler processes retain existing ownership/deadline/cleanup guards.
 
+## Review capacity retries
+
+Ordinary active-session agent reviews have standing authorization to retry explicit
+model-capacity failures without renewed user consent. Confirm the prior attempt is
+terminal, then repeat the same scoped request on the same model after 30 seconds;
+double subsequent delays up to 300 seconds. Preserve input pins, consumed attempts,
+original cutoff and independent-review requirements; stop when bounds are exhausted.
+Record each failure and retry. Never replace a live reviewer: observation timeouts
+require polling the same handle, not a new launch. No silent model substitution.
+
+This rule does not override host approval decisions. An auto-review denial remains
+a denial even when its message mentions capacity: do not repeat it or route around
+it with wrappers, tools or broader permissions. Continue only a materially safer
+permitted alternative; otherwise report the denied action, reason and required
+authorization. If that alternative is denied, stop. An approval-review timeout is
+different: retry the identical request at most once; a second timeout is an
+infrastructure blocker. Never weaken sandbox settings, approval policies or rules.
+
 ## Retired transports
 
 The former `agent-run review`, `lift` and `review-lift` commands, their CLI
