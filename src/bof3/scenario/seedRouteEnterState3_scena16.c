@@ -23,8 +23,8 @@ typedef struct Scena16Bank80150000 {
 /* @behavior seeds one routed setup path and enters secondary state 3 on success.
  * @source 0x801F6E30
  * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @match 90.91
+ * @residual second call argument scheduling leaves an extra delay nop; 132 bytes versus 128 original; bank representation cleanup remains.
  */
 void seedRouteEnterState3(void) {
   u32 arg0;
