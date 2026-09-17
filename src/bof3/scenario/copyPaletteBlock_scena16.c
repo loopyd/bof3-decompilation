@@ -4,18 +4,18 @@
  * @source 0x801F845C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void copyPaletteBlock(void) {
-  u16*         dst;
-  const u16*   src;
-  s32          i;
-  u8           serial;
-  volatile u8* serial_base;
+  volatile u16*       dst;
+  const volatile u16* src;
+  s32                 i;
+  u8                  serial;
+  volatile u8*        serial_base;
 
   i = 0;
-  dst = (u16*)SCENA16_PALETTE_DST;
-  src = (const u16*)SCENA16_PALETTE_SRC;
+  dst = SCENA16_PALETTE_DST;
+  src = SCENA16_PALETTE_SRC;
 
   do {
     dst[i] = src[i];
