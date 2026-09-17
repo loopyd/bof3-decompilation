@@ -56,7 +56,7 @@ struct GameWorkArea;
 void func_801C0F9C(s32 arg0);
 void func_801C2538(void);
 void func_801C2710(void);
-void func_801C5474(void);
+int func_801C5474(void);
 s16 func_801BDCF8(void);
 u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range,
                  struct GameWorkArea* work);
