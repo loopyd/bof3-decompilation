@@ -42,6 +42,7 @@ def _assemble_minimal(as_path: Path, tmp: Path) -> Path:
     src = tmp / "minimal.s"
     src.write_text(
         ".text\n"
+        ".set noreorder\n"
         ".globl func_80010000\n"
         ".ent func_80010000\n"
         "func_80010000:\n"
