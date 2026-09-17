@@ -172,6 +172,7 @@ moving a document. Split mixed tooling/game topics rather than duplicating owner
 - [Plan authoring](agents/plan-authoring.md)
 - [Lessons](agents/lessons.md)
 - [Specifications index](specs/INDEX.md)
+- [AREA016 graphics initialization](specs/runtime/area016-graphics-initialization.md)
 - [Macro opportunity indexing and resolution](agents/macros.md)
 - [Python harness ownership](agents/harness.md)
 - [Documentation operations](agents/documentation.md)

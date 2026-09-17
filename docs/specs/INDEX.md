@@ -12,6 +12,7 @@ Agent policy, harness tooling and session workflows live in [agents](../agents/I
 | [archives.md](archives.md) | EMI archive roles and entry lists |
 | [runtime/runtime-layout.md](runtime/runtime-layout.md) | executable, overlay, and load-region boundaries |
 | [runtime/frontend.md](runtime/frontend.md) | title, menu, and attract-path transitions |
+| [runtime/area016-graphics-initialization.md](runtime/area016-graphics-initialization.md) | reviewed US AREA016 startup grid invariant and graphics-update exclusion |
 | [runtime/emi-loader.md](runtime/emi-loader.md) | SLUS EMI entry dispatch and loading |
 | [runtime/memory-layouts.md](runtime/memory-layouts.md) | byte layouts used by lifted code |
 | [runtime/psyq-constants.md](runtime/psyq-constants.md) | SDK constants, ABI declarations, and pinned PsyQ contracts |
