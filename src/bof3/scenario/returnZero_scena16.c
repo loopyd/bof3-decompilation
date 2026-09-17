@@ -2,9 +2,9 @@
 
 /* @behavior returns zero.
  * @source 0x801F8398
- * @status exact
+ * @status invalid
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual known callback-type incompatibility with Scena16RecordCallback; native bytes exact
  */
 s32 returnZero(void) {
   return 0;

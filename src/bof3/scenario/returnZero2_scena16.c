@@ -2,9 +2,9 @@
 
 /* @behavior returns zero.
  * @source 0x801F83A0
- * @status exact
+ * @status invalid
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual hook parameter contract unresolved; zero-return behavior and native bytes exact
  */
 s32 returnZero2(void) {
   return 0;
