@@ -170,7 +170,7 @@ value = 1..7 → rate = 2^value / 128  (as fraction, e.g. value=3 → 8/128 = 6.
 The tracked randomizer guards `2**rate / 128` behind `if self.steal_rate
 else 0` (value 0 = 0%, not 0.8%) and applies the same rule to drop rate.
 
-The imported EU reference (`docs/reference/bof3-eu/14-battle-mechanics.md`)
+The [imported EU reference](../bof3-eu/14-battle-mechanics.md)
 lists codes 1–7 with a different intermediate mapping (e.g. 1 = 1/256); it
 belongs to the EU release. The native SLUS runtime mapping is not yet proven:
 no lifted function or tracked consumer cites either formula, so do not treat

@@ -2,7 +2,7 @@
 
 One selector: `TARGET@0xADDRESS` or shipped EMI `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. `bin/agent-context reverse SELECTOR` preloads this file + tracked target evidence once; never reread bundled paths.
 
-EU knowledgebase: `docs/reference/bof3-eu/` (README maps chapters) = baseline for format/table/rule guesses; consult it first. Addresses EU-only; never copy. Verified US 1.1 difference: append `> **US 1.1 verified:** <claim> (<selector/commit>)` after the EU claim; never edit/delete EU text.
+Consult `docs/specs/bof3-eu/README.md` for BOF3JS format/table/rule leads before new research. EU addresses are not US facts; verify regional equivalence. Append verified differences after the relevant EU claim as `> **US 1.1 verified:** <claim> (<selector/commit>)`; never edit/delete EU text.
 
 1. Reuse brief; else `function-brief.py` once. Honor `data_table_probe.warning`: aligned code pointers, no prolog = data table; verify raw, promote Splat asm→rodata (`T_<ADDR>`), escalate restored (sce10eff/00@0x801D2708, scena16/00@0x801F8538).
 2. Before declarations: search per SKILL.md §Scope; no duplicates. New target-local fixed address needs `internal.h` extern + `symbols.c` `WEAK_SYMBOL_AT` + target map entry; check composed Splat maps first.

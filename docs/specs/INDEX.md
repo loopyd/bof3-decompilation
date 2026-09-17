@@ -6,6 +6,7 @@ Agent policy, harness tooling and session workflows live in [agents](../agents/I
 
 | Spec | Read it when |
 | --- | --- |
+| [bof3-eu/README.md](bof3-eu/README.md) | BOF3JS EU knowledgebase: engine, formats, maps, scripts, entities, battle, audio and address leads; not reviewed US facts |
 | [targets.md](targets.md) | identifying executable and overlay load addresses |
 | [pseudocode.md](pseudocode.md) | source-backed runtime and extraction algorithms |
 | [archives.md](archives.md) | EMI archive roles and entry lists |
@@ -27,4 +28,6 @@ Agent policy, harness tooling and session workflows live in [agents](../agents/I
 
 Add game findings to the narrowest existing spec; register new topics here.
 Tool contracts belong in `docs/agents/`, active work in `docs/plans/`, and
-external reference material in `docs/reference/`. No transient execution state.
+other external reference material in `docs/reference/`. The imported BOF3JS EU
+knowledgebase is preserved here with its provenance and regional limits;
+placement does not make its claims reviewed US facts. No transient execution state.

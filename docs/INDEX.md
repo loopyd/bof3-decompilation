@@ -54,6 +54,7 @@ authorization does not override sandbox decisions or authorize dependency instal
 | Naming evidence/audit closure | [Naming audit contract](../.codex/skills/bof3-naming/references/NAMING_AUDIT_V3.md) | `$bof3-naming` audit mode |
 | Markdown references, search, context, aggregation, edit, repair or compaction | [Documentation operations](agents/documentation.md) | `$bof3-docs`; [reference inspection](agents/documentation.md#reference-inspection), owning implementation/policy source before edits |
 | Runtime, format, target, or data research | [Specifications index](specs/INDEX.md) | Relevant spec and original evidence |
+| BOF3JS EU game knowledge, format or behavior leads | [EU knowledgebase](specs/bof3-eu/README.md) | Relevant chapter; verify regional differences against original US evidence |
 | Repository overview / contributor onboarding | [README](../README.md) | [Contributing](../CONTRIBUTING.md), [Tool usage](agents/tool-usage.md) |
 
 ## Ownership
@@ -173,7 +174,7 @@ moving a document. Split mixed tooling/game topics rather than duplicating owner
 - [Python harness ownership](agents/harness.md)
 - [Documentation operations](agents/documentation.md)
 - [Tool usage](agents/tool-usage.md)
-- [External EU reference](reference/bof3-eu/README.md) — leads only; EU
+- [BOF3JS EU knowledgebase](specs/bof3-eu/README.md) — leads only; EU
   addresses are not reviewed US facts
 
 ## Header layout

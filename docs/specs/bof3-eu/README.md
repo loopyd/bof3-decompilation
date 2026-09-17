@@ -1,13 +1,20 @@
-# Breath of Fire III (EU) — imported reverse-engineering reference
+# BOF3JS knowledgebase — Breath of Fire III (EU)
 
 Imported verbatim (chapter split only) from the bof3js project's
 `references/KNOWLEDGE.md`; documents the **EU release (SLES_013.04)**.
 
 ⚠ **Address-space warning.** Every RAM address here is EU address space.
-Formats, record layouts, and game rules carry over to US SLUS_004.22
-targets; addresses do not. A US fact still needs our own evidence — treat
-these files as leads and format contracts, not reviewed facts. Reviewed US
-facts live in [`../../specs/`](../../specs/).
+Formats, record layouts, and game rules can guide US SLUS_004.22 research,
+but regional equivalence must be checked; do not copy EU addresses into US
+maps or source. These chapters are research leads, not reviewed US facts.
+Use the [specifications index](../INDEX.md) for US evidence and the
+[documentation index](../../INDEX.md) for repository workflows.
+
+This is the existing 22-chapter import, relocated from `docs/reference/bof3-eu/`
+without changing chapter bytes. No newer root-level `KNOWLEDGE.md` was present
+at relocation. The source revision and original monolithic-file hash were not
+recorded by the earlier import; this move does not claim an upstream refresh.
+The browser-client chapter remains as upstream context, not harness instructions.
 
 **US 1.1 annotations.** These files are read-only for EU content. When our
 loop verifies a US 1.1 (SLUS_004.22) difference against an EU claim, append
