@@ -6,8 +6,10 @@ description: Inspect references, search, assemble context, aggregate, edit, repa
 # BOF3 documentation
 
 Read [docs/INDEX.md](../../../docs/INDEX.md), then the
-[document contract](../../../docs/agents/documentation.md). Use one explicit mode
-and caller-named paths; no whole-repository scan or edit by default.
+[document contract](../../../docs/agents/documentation.md). Select automatically
+for relevant Markdown work; no separate invocation approval is needed. The parent
+names one mode and paths within the authorized mission; no whole-repository scan
+or edit by default.
 
 | Mode | Action |
 |---|---|

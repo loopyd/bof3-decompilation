@@ -1,6 +1,6 @@
 ---
 name: psx-rizin
-description: Evidence-driven PlayStation 1 reverse-engineering with Rizin, runtime traces, symbols, overlays, and matching decompilation. Use only when the user explicitly invokes `$psx-rizin` or asks to load this skill.
+description: Evidence-driven PlayStation 1 reverse-engineering with Rizin, runtime traces, symbols, overlays, and matching decompilation. Use for a concrete analyzer question, including autonomous BOF3 missions.
 license: MIT
 metadata:
   compatibility: Linux, macOS, or WSL; Python 3.10+; Rizin recommended; optional rz-ghidra and emulator/decompilation tools.
@@ -12,7 +12,7 @@ metadata:
 
 # PSX Rizin
 
-Explicit invocation only. Findings reproducible from authorized machine code + runtime evidence. Analyzer/decompiler/signature output = hypothesis until corroborated.
+Select automatically when relevant; no separate invocation approval is needed. Findings must be reproducible from authorized machine code + runtime evidence. Analyzer/decompiler/signature output = hypothesis until corroborated.
 
 ## Rules
 

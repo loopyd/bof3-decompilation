@@ -5,8 +5,9 @@ description: Discover BOF3 symbol naming opportunities, gather and audit naming 
 
 # BOF3 naming
 
-One skill owns the naming lifecycle; the caller's canonical mode determines
-authority. Never infer missing inputs, switch modes or treat evidence as edit
+Select automatically for relevant naming work; no separate invocation approval
+is needed. The parent selects a canonical mode and pins its inputs within the
+authorized mission. Never infer missing inputs, switch modes or treat evidence as edit
 permission. Preserve behavior, bytes, ABI, addresses, boundaries, compiler
 settings, partial-lift metadata and unrelated dirty work.
 

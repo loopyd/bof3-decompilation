@@ -106,8 +106,9 @@ remain in `harness.types`. The older `symbol TARGET OLD -> NEW` route is unchang
 Its selected skill is now `bof3-naming`, as for spelling-only `type`, `repair`,
 `retained-lift` and `relocate-batch`; canonical inputs and authority remain distinct.
 The former naming-evidence and identity-maintenance skill definitions are retired,
-not forwarding aliases. Their explicit-only invocation policy is retained in the
-merged skill. Restart Codex to refresh discovery; do not rewrite previously frozen
+not forwarding aliases. The merged skill allows automatic invocation within the
+authorized mission; mode-specific inputs and transaction gates remain required.
+Restart Codex to refresh discovery; do not rewrite previously frozen
 requests or receipts to disguise the changed skill paths or execution closure.
 
 ## Naming conclusion import

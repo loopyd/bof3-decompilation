@@ -39,7 +39,7 @@ authorization does not override sandbox decisions or authorize dependency instal
 | Request | Read first | Then |
 | --- | --- | --- |
 | One hand-guided target-qualified lift, match, duplicate normalization, source/map/Splat edit | [Function matching](agents/matching.md) | [Matching playbook](agents/matching-playbook.md), [Memory API](agents/memory-api.md), `$bof3-re` |
-| Generic analyzer work explicitly requesting Rizin | [Project context](agents/project-context.md) | `$psx-rizin` |
+| Concrete Rizin analyzer question | [Project context](agents/project-context.md) | `$psx-rizin` |
 | Tooling, Python harness, CLI, tests | [Coding standards](agents/coding-standards.md) | [Harness ownership](agents/harness.md), [Tool usage](agents/tool-usage.md) and owning code/tests |
 | Codex MCP or Pi extension migration | [Codex configuration](agents/codex.md) | Global settings stay in `~/.codex`; project skills below |
 | Autonomous lift/naming/type/macro loop or resume | [`$bof3-lift-loop`](../.codex/skills/bof3-lift-loop/SKILL.md) | Active-session mission protocol; parallel independent reads/reviews, serialized writes; no harness model launcher |
@@ -50,8 +50,8 @@ authorization does not override sandbox decisions or authorize dependency instal
 | Type representation opportunities and reviewed application | [Tool usage](agents/tool-usage.md#3b-target-analysis-freshness--rebuild--query) | [Cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), `$bof3-types`; [harness ownership](agents/harness.md) |
 | Symbol naming opportunity discovery or assessment | [Naming opportunities](agents/tool-usage.md#symbol-naming-opportunities) | `$bof3-naming`; [harness ownership](agents/harness.md); evidence and identity routes remain separate |
 | Plan creation, management or execution | [Plan authoring](agents/plan-authoring.md) | `$plans`; selected file under `plans/`; refresh live evidence |
-| Symbol/type/metadata identity maintenance | [Project context](agents/project-context.md) | Explicit `$bof3-naming` transaction mode only |
-| Naming evidence/audit closure | [Naming audit contract](../.codex/skills/bof3-naming/references/NAMING_AUDIT_V3.md) | Explicit `$bof3-naming` audit mode only |
+| Symbol/type/metadata identity maintenance | [Project context](agents/project-context.md) | `$bof3-naming` transaction mode |
+| Naming evidence/audit closure | [Naming audit contract](../.codex/skills/bof3-naming/references/NAMING_AUDIT_V3.md) | `$bof3-naming` audit mode |
 | Markdown references, search, context, aggregation, edit, repair or compaction | [Documentation operations](agents/documentation.md) | `$bof3-docs`; [reference inspection](agents/documentation.md#reference-inspection), owning implementation/policy source before edits |
 | Runtime, format, target, or data research | [Specifications index](specs/INDEX.md) | Relevant spec and original evidence |
 | Repository overview / contributor onboarding | [README](../README.md) | [Contributing](../CONTRIBUTING.md), [Tool usage](agents/tool-usage.md) |
@@ -98,14 +98,16 @@ Codex scheduler or installed extension.
 | [`$bof3-re`](../.codex/skills/bof3-re/SKILL.md) | target-qualified lifting and independent review |
 | [`$bof3-macros`](../.codex/skills/bof3-macros/SKILL.md) | macro opportunities, human-value ranking and reviewed resolution |
 | [`$bof3-types`](../.codex/skills/bof3-types/SKILL.md) | established C types, representation opportunities and reviewed application |
-| [`$bof3-naming`](../.codex/skills/bof3-naming/SKILL.md) | explicitly routed naming opportunities, evidence, audits and reviewed identity transactions |
+| [`$bof3-naming`](../.codex/skills/bof3-naming/SKILL.md) | naming opportunities, evidence, audits and reviewed identity transactions |
 | [`$plans`](../.codex/skills/plans/SKILL.md) | persistent plan management |
-| [`$psx-rizin`](../.codex/skills/psx-rizin/SKILL.md) | explicitly requested analyzer workflow |
-| [`$bof3-docs`](../.codex/skills/bof3-docs/SKILL.md) | explicit Markdown reference inspection, search, context, aggregation, editing, repair and one-document compaction |
+| [`$psx-rizin`](../.codex/skills/psx-rizin/SKILL.md) | concrete analyzer questions |
+| [`$bof3-docs`](../.codex/skills/bof3-docs/SKILL.md) | scoped Markdown reference inspection, search, context, aggregation, editing, repair and one-document compaction |
 
 Macro, type, naming and documentation skills dispatch invocation scripts to `bin/`;
-policy, parsing and editing remain in the harness owners. Explicit-only routing is
-preserved in skill metadata; discovery never expands mutation authority.
+policy, parsing and editing remain in the harness owners. Naming, documentation
+and Rizin skills allow automatic invocation for relevant work without renewed user
+approval. The parent supplies bounded modes and inputs; discovery never expands
+mutation authority or bypasses sandbox, evidence, review or rollback gates.
 
 ## Validation gates
 

@@ -27,6 +27,10 @@ Finite missions bound execution, not that whole-game goal.
   or stage unrelated dirty work to manufacture clean worktree isolation.
 - Parent refreshes/reviews and feature commits have standing authority. Preserve
   frozen evidence; no push, installs, permission weakening or retries around denial.
+- Select `bof3-naming`, `bof3-docs` and `psx-rizin` automatically when relevant;
+  no separate user invocation or repeated skill approval is needed. The parent
+  supplies bounded mode, paths and inputs. Sandbox approvals, domain transaction
+  authority, independent review, evidence and rollback gates remain unchanged.
 
 ## Mission protocol
 
