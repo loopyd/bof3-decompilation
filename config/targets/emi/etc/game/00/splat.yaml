@@ -1091,6 +1091,18 @@ segments:
     - func_801AF5B0
     - '@source: src/bof3/ui/func_801AF5B0.c'
     - '@behavior: checks whether an ability kind is currently selectable for a character/category, applying learned-level, flag, and story-state gates.'
+  - - 106496
+    - asm
+    - func_801AF800
+  - - 112032
+    - asm
+    - func_801B0DA0
+  - - 112124
+    - asm
+    - func_801B0DFC
+  - - 112196
+    - asm
+    - func_801B0E44
   - - 120064
     - asm
     - func_801B2D00
