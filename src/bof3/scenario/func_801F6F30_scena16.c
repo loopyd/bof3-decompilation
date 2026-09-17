@@ -3,8 +3,8 @@
 /* @behavior stages one routed resource/object setup sequence for area path 2.
  * @source 0x801F6F30
  * @status partial
- * @match 39.85
- * @residual non-exact live audit: 53/133 instructions; 532 original bytes versus 428 current.
+ * @match 58.33
+ * @residual 84 matching instructions; 144 current/133 original; 532 original bytes versus 576 current; progress reset still has a store-width mismatch.
  */
 void func_801F6F30(void) {
   if (func_8015B5D4(D_8014686C, 2) == 0) {
@@ -21,11 +21,21 @@ void func_801F6F30(void) {
     if (object_index != 0xffu) {
       object = PSX_PTR(volatile u8, 0x80143fc8u) + ((u32)object_index * 0x74u);
       object[0] = 1u;
+      object = PSX_PTR(volatile u8, 0x80143fc8u) +
+               ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
       object[5] = 0x13u;
+      object = PSX_PTR(volatile u8, 0x80143fc8u) +
+               ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
       *(volatile s32*)(object + 0x64) =
           (s32)((s16)D_801492D8 - (s16)0xaau);
+      object = PSX_PTR(volatile u8, 0x80143fc8u) +
+               ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
       *(volatile s32*)(object + 0x68) = (s32)(s16)D_801492DA;
+      object = PSX_PTR(volatile u8, 0x80143fc8u) +
+               ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
       *(volatile s32*)(object + 0x6c) = (s32)(s16)D_801492DC;
+      object = PSX_PTR(volatile u8, 0x80143fc8u) +
+               ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
       object[9] = 0x40u;
     }
 

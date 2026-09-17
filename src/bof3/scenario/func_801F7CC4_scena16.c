@@ -3,11 +3,12 @@
 /* @behavior runs the secondary SCENA16 controller rooted at state 4.
  * @source 0x801F7CC4
  * @status partial
- * @match 32.54
- * @residual non-exact live audit: 137/421 instructions; 1684 original bytes versus 1436 current.
+ * @match 55.24
+ * @residual 237 matching instructions; 429 current/421 original; 1684 original bytes versus 1716 current.
  */
 void func_801F7CC4(void) {
   u8 advance_state;
+  u8 object_index;
 
   advance_state = 0u;
 
@@ -79,18 +80,27 @@ void func_801F7CC4(void) {
       if (g_ScenarioProgress != 5u) {
         return;
       }
-      SPAD_REF(volatile u8, 0x0u) = func_8019601C();
-      if (SPAD_REF(volatile u8, 0x0u) != 0xffu) {
+      object_index = func_8019601C();
+      SPAD_REF(volatile u8, 0x0u) = object_index;
+      if (object_index != 0xffu) {
         volatile u8* object;
-        u32          object_index;
 
-        object_index = (u32)SPAD_REF(volatile u8, 0x0u);
-        object = PSX_PTR(volatile u8, 0x80143fc8u) + (object_index * 0x74u);
+        object = PSX_PTR(volatile u8, 0x80143fc8u) + ((u32)object_index * 0x74u);
         object[0] = 1u;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         object[5] = 0x13u;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         *(volatile s32*)(object + 0x64) = -0x34a;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         *(volatile s32*)(object + 0x68) = (s32)(s16)D_801492DA;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         *(volatile s32*)(object + 0x6c) = (s32)(s16)D_801492DC;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         object[9] = 0x60u;
       }
       advance_state = 1u;
@@ -100,18 +110,27 @@ void func_801F7CC4(void) {
       if (g_ScenarioProgress != 8u) {
         break;
       }
-      SPAD_REF(volatile u8, 0x0u) = func_8019601C();
-      if (SPAD_REF(volatile u8, 0x0u) != 0xffu) {
+      object_index = func_8019601C();
+      SPAD_REF(volatile u8, 0x0u) = object_index;
+      if (object_index != 0xffu) {
         volatile u8* object;
-        u32          object_index;
 
-        object_index = (u32)SPAD_REF(volatile u8, 0x0u);
-        object = PSX_PTR(volatile u8, 0x80143fc8u) + (object_index * 0x74u);
+        object = PSX_PTR(volatile u8, 0x80143fc8u) + ((u32)object_index * 0x74u);
         object[0] = 1u;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         object[5] = 0x13u;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         *(volatile s32*)(object + 0x64) = -0x2ac;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         *(volatile s32*)(object + 0x68) = (s32)(s16)D_801492DA;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         *(volatile s32*)(object + 0x6c) = (s32)(s16)D_801492DC;
+        object = PSX_PTR(volatile u8, 0x80143fc8u) +
+                 ((u32)SPAD_REF(volatile u8, 0x0u) * 0x74u);
         object[9] = 0x20u;
       }
       D_80146876 = 0x200u;
