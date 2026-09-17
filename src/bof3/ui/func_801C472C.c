@@ -1,6 +1,12 @@
 #include "bof3/ui/game00_internal.h"
 
-/* @source 0x801C472C @behavior dispatches a four-argument tile query by mode */
+/**
+ * @source 0x801C472C
+ * @behavior Dispatches a four-argument tile query by mode.
+ * @status exact
+ * @match 100
+ * @residual none
+ */
 u8 func_801C472C(s32 arg0, s32 arg1, s32 mode, u8 value, u8 option)
 {
   if (mode == 0) {

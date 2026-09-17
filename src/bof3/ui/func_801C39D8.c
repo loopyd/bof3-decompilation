@@ -4,6 +4,9 @@
  * @source 0x801C39D8
  * @behavior Dispatches to one of two helpers, forwarding the low bytes of the
  * fourth and fifth arguments.
+ * @status exact
+ * @match 100
+ * @residual none
  */
 u8 func_801C39D8(s32 arg0, s32 arg1, s32 use_alt, u8 arg3, u8 arg4)
 {
