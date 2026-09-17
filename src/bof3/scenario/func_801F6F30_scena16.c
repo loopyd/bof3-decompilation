@@ -3,15 +3,15 @@
 /* @behavior stages one routed resource/object setup sequence for area path 2.
  * @source 0x801F6F30
  * @status partial
- * @match 58.33
- * @residual 84 matching instructions; 144 current/133 original; 532 original bytes versus 576 current; progress reset still has a store-width mismatch.
+ * @match 57.93
+ * @residual 84 matching instructions; 145 current/133 original; 532 original bytes versus 580 current; reset address formation and other code-generation differences remain.
  */
 void func_801F6F30(void) {
   if (func_8015B5D4(D_8014686C, 2) == 0) {
     volatile u8* object;
     u8           object_index;
 
-    g_ScenarioProgress = 0u;
+    PSX_REF(volatile u32, 0x80146864u) = 0u;
     func_80154FD8(0x300u);
     func_801C601C(0u);
     D_801492D8 = (u16)(D_801492D8 + 0xaau);
