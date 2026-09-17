@@ -4,7 +4,6 @@ extern u16 D_801448FC;
 extern u8  D_801448FF;
 extern u32 D_80144900;
 extern u32 D_80144904;
-extern u16 D_80146258;
 extern volatile u8 g_ScenarioProgress;
 extern s8  D_80146872;
 extern u8  D_8014832E;
