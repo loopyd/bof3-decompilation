@@ -55,8 +55,10 @@ generated writes. Direct scoped asm-diff/byte-match commands also require that
 reviewed execution route; a worker without it returns unverified, not another
 sandboxed compiler attempt. Keep original scope, cutoff, evidence and cleanup.
 
-Approval remains per reviewed action: no automatic self-elevation, command-rule or
-Codex-policy changes, alternate wrapper after denial, emulator installation or
+Standing user authorization covers bounded native gates in the autonomous loop;
+do not add a separate conversational permission checkpoint before requesting the
+reviewed tool action. Sandbox approval remains per action: no self-elevation,
+command-rule or Codex-policy changes, alternate wrapper after denial, emulator installation or
 silent compiler substitution. A denied/unavailable native route blocks its gates;
 continue only unaffected work. On a different host/compiler, establish capability
 once before relying on this diagnosis. Ordinary Python inspection stays sandboxed.

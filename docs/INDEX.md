@@ -20,9 +20,11 @@ minimal entry contract; this index owns the detailed reading map.
 ## Autonomous execution
 
 The full BOF3 reconstruction goal is driven by `bof3-lift-loop` in the active
-session, with standing authorization for parent-owned index/analysis refreshes and
-reviews through available session tools. Do not ask again for either. No harness
-Codex CLI invocation, model SDK/API launch, detached runner or Pi fallback.
+session, with standing authorization for parent-owned index/analysis refreshes,
+reviews and bounded native compile/compare gates through available session tools.
+Do not request separate conversational confirmation for these operations; use the
+[reviewed native execution route](agents/codex.md#native-compiler-execution).
+No harness Codex CLI invocation, model SDK/API launch, detached runner or Pi fallback.
 Review payloads may include relevant private
 source, diffs, agent instructions, target metadata and original-byte evidence;
 exclude credentials and unrelated user media. The parent selects bounded review
