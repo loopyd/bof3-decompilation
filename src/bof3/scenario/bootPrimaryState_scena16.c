@@ -11,9 +11,9 @@ extern u8  D_8014832E;
 
 /* @behavior boots the primary SCENA16 state and waits for slot 6 to finish.
  * @source 0x801F6CCC
- * @status exact
- * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @status partial
+ * @match 92.00
+ * @residual reset address formation and instruction scheduling; 200 bytes versus 196 original.
  */
 void bootPrimaryState(void) {
   func_801C1DF0(0u);
@@ -30,6 +30,6 @@ void bootPrimaryState(void) {
     func_8014B87C(1u);
   }
 
-  g_ScenarioProgress = 0u;
+  PSX_REF(volatile u32, 0x80146864u) = 0u;
   D_80146872 = 1;
 }
