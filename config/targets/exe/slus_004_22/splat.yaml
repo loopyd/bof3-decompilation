@@ -145,6 +145,13 @@ segments:
     subsegments:
       - [0xCF548, c, getEquipRecordBase, '@source: src/bof3/equipment/getEquipRecordBase.c']
   - [0xCF604, bin, post_emi_gap_0xCF604]
+  - name: map_byte_query
+    type: code
+    start: 0xD04B0
+    vram: 0x80166CB0
+    subsegments:
+      - [0xD04B0, asm, func_80166CB0]
+  - [0xD04EC, bin, post_map_byte_query]
   - name: cluster_0
     type: code
     start: 0xd438c
