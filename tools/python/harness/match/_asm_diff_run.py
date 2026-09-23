@@ -145,11 +145,17 @@ def _asm_diff_compare(
     repo: RepoLayout,
     request: AsmDiffRequest,
     resolved: dict[str, Any],
+    *,
+    manifests: Mapping[str, TargetManifest] | None = None,
 ) -> dict[str, Any]:
     """Run the link, byte-match, placement, size, and diagnostic steps.
 
     *Assumes* the object already exists (built by the caller).  Object
     freshness is verified via ``st_mtime``.
+
+    ``manifests`` lets a caller that already holds a validated catalog (the
+    status-audit batch path resolves it once per target) reuse it instead of
+    re-enumerating every claim file for each comparison.
     """
     source_path = resolved["source_path"]
     validate_matching_source(repo.root, source_path)
@@ -184,7 +190,7 @@ def _asm_diff_compare(
     if request.diagnostics:
         original_bytes_path.write_bytes(original_bytes)
 
-    manifest = owning_manifest(repo.root, source_path)
+    manifest = owning_manifest(repo.root, source_path, manifests=manifests)
     if request.section_placements is None:
         placements = (
             () if manifest is None else manifest.section_placements.get(address, ())

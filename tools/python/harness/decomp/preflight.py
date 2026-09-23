@@ -254,6 +254,60 @@ def _request_for_source(
     )
 
 
+def _failed_objects(root: Path, result: Any) -> set[str]:
+    """Repository-relative object paths the build system reported as ``FAILED``."""
+
+    text = f"{result.stdout or ''}\n{result.stderr or ''}"
+    failed: set[str] = set()
+    for line in text.splitlines():
+        if not line.startswith("FAILED:"):
+            continue
+        for token in line.split()[1:]:
+            token = token.strip("'\"")
+            if not token.endswith(".o"):
+                continue
+            path = Path(token)
+            if path.is_absolute():
+                candidate = path
+            elif token.startswith("build/"):
+                candidate = root / path
+            else:
+                candidate = root / "build" / path
+            try:
+                failed.add(candidate.resolve().relative_to(root.resolve()).as_posix())
+            except (OSError, ValueError):
+                continue
+    return failed
+
+
+def _batch_failed_objects(root: Path, cmake_targets: list[str]) -> set[str] | None:
+    """Batch-build every target and report the objects that failed.
+
+    ``None`` means the outcome cannot be attributed — the batch could not run,
+    or it failed without naming an object — so the caller keeps the
+    conservative per-source path for every item.
+    """
+
+    try:
+        result = batch_build(root, cmake_targets)
+    except DeadlineExpired:
+        raise
+    except (RuntimeError, ValueError, FileNotFoundError):
+        return None
+    if result.returncode == 0:
+        return set()
+    return _failed_objects(root, result) or None
+
+
+def _object_key(root: Path, object_path: Path) -> str:
+    """Repository-relative key for one built object."""
+
+    try:
+        return object_path.resolve().relative_to(root.resolve()).as_posix()
+    except (OSError, ValueError):
+        return str(object_path)
+
+
 def _run_batch_misses(
     root: Path,
     worklist: dict[str, list[_WorkItem]],
@@ -273,16 +327,14 @@ def _run_batch_misses(
     for target, items in worklist.items():
         sources = [item[1] for item in items]
         cmake_targets = [cmake_target_for_source(root, s) for s in sources]
-        batch_ok = True
 
-        try:
-            result = batch_build(root, cmake_targets)
-            if result.returncode != 0:
-                batch_ok = False
-        except DeadlineExpired:
-            raise
-        except (RuntimeError, ValueError, FileNotFoundError):
-            batch_ok = False
+        # Ninja's own verdict decides the path.  One failing translation unit no
+        # longer hides every later target, and only the objects the build
+        # reported as FAILED need the per-source build for a trustworthy
+        # diagnosis; the rest were built or verified current by the build
+        # system itself.  An unattributable batch keeps the original
+        # conservative per-source path for every item.
+        failed_objects = _batch_failed_objects(root, cmake_targets)
 
         try:
             manifests = load_target_manifests(root)
@@ -320,94 +372,65 @@ def _run_batch_misses(
         if not items:
             continue
 
-        if batch_ok:
-            # Check freshness before comparing so every work item produces one
-            # record and stale objects cannot enter the matcher.
-            resolved_items: list[tuple[_WorkItem, AsmDiffRequest, dict[str, Any]]] = []
-            stale_items: list[_WorkItem] = []
-            for item in items:
-                _, source, address, _, _, _manifest = item
-                try:
-                    request = _request_for_source(
-                        root, source, address, current_manifest
-                    )
-                    resolved = _asm_diff_resolve(repo, request, manifests=manifests)
-                    obj = resolved["object_path"]
-                    if (
-                        not obj.is_file()
-                        or obj.stat().st_mtime < source.stat().st_mtime
-                    ):
-                        stale_items.append(item)
-                        continue
-                    resolved_items.append((item, request, resolved))
-                except DeadlineExpired:
-                    raise
-                except (FileNotFoundError, RuntimeError, ValueError):
+        # Freshness and the build's own failure report decide the path.  Every
+        # object the build did not report as FAILED was built or verified
+        # current by ninja, so comparing it directly keeps the audit
+        # proportional to the number of lifts instead of rebuilding each one.
+        resolved_items: list[tuple[_WorkItem, AsmDiffRequest, dict[str, Any]]] = []
+        stale_items: list[_WorkItem] = []
+        for item in items:
+            _, source, address, _, _, _manifest = item
+            try:
+                request = _request_for_source(root, source, address, current_manifest)
+                resolved = _asm_diff_resolve(repo, request, manifests=manifests)
+                obj = resolved["object_path"]
+                if (
+                    failed_objects is None
+                    or _object_key(root, obj) in failed_objects
+                    or not obj.is_file()
+                    or obj.stat().st_mtime < source.stat().st_mtime
+                ):
                     stale_items.append(item)
+                    continue
+                resolved_items.append((item, request, resolved))
+            except DeadlineExpired:
+                raise
+            except (FileNotFoundError, RuntimeError, ValueError):
+                stale_items.append(item)
 
-            # A successful CMake request that did not refresh an object needs
-            # the existing per-source path for a trustworthy diagnosis.
-            for item in stale_items:
-                _, source, address, source_name, key, _manifest = item
-                request = _request_for_source(root, source, address, current_manifest)
-                try:
-                    result = diff_runner(request)
-                except DeadlineExpired:
-                    raise
-                except (FileNotFoundError, RuntimeError, ValueError) as exc:
-                    records.append(
-                        _invalid_record(
-                            root, target, source, _failure_detail(exc), address
-                        )
-                    )
-                    continue
-                record = _batch_result(
-                    root, target, source, address, source_name, result
+        # A batch request that did not refresh an object needs the existing
+        # per-source path for a trustworthy diagnosis.
+        for item in stale_items:
+            _, source, address, source_name, key, _manifest = item
+            request = _request_for_source(root, source, address, current_manifest)
+            try:
+                result = diff_runner(request)
+            except DeadlineExpired:
+                raise
+            except (FileNotFoundError, RuntimeError, ValueError) as exc:
+                records.append(
+                    _invalid_record(root, target, source, _failure_detail(exc), address)
                 )
-                if cache is not None:
-                    cache.put(target, source_name, address, key, record)
-                records.append(record)
+                continue
+            record = _batch_result(root, target, source, address, source_name, result)
+            if cache is not None:
+                cache.put(target, source_name, address, key, record)
+            records.append(record)
 
-            for item, request, resolved in resolved_items:
-                _, source, address, source_name, key, _manifest = item
-                try:
-                    result = _asm_diff_compare(repo, request, resolved)
-                except DeadlineExpired:
-                    raise
-                except (FileNotFoundError, RuntimeError, ValueError) as exc:
-                    records.append(
-                        _invalid_record(
-                            root, target, source, _failure_detail(exc), address
-                        )
-                    )
-                    continue
-                record = _batch_result(
-                    root, target, source, address, source_name, result
+        for item, request, resolved in resolved_items:
+            _, source, address, source_name, key, _manifest = item
+            try:
+                result = _asm_diff_compare(repo, request, resolved, manifests=manifests)
+            except DeadlineExpired:
+                raise
+            except (FileNotFoundError, RuntimeError, ValueError) as exc:
+                records.append(
+                    _invalid_record(root, target, source, _failure_detail(exc), address)
                 )
-                if cache is not None:
-                    cache.put(target, source_name, address, key, record)
-                records.append(record)
-        else:
-            # Batch failed — fall back to per-source build + compare
-            for item in items:
-                _, source, address, source_name, key, _manifest = item
-                request = _request_for_source(root, source, address, current_manifest)
-                try:
-                    result = diff_runner(request)
-                except DeadlineExpired:
-                    raise
-                except (FileNotFoundError, RuntimeError, ValueError) as exc:
-                    records.append(
-                        _invalid_record(
-                            root, target, source, _failure_detail(exc), address
-                        )
-                    )
-                    continue
-                record = _batch_result(
-                    root, target, source, address, source_name, result
-                )
-                if cache is not None:
-                    cache.put(target, source_name, address, key, record)
-                records.append(record)
+                continue
+            record = _batch_result(root, target, source, address, source_name, result)
+            if cache is not None:
+                cache.put(target, source_name, address, key, record)
+            records.append(record)
 
     return records
