@@ -29,6 +29,7 @@ extern u8 D_80146866;
 extern u8 D_80146867;
 /* @source 0x80146864 @kind unknown */
 extern volatile u8 g_ScenarioProgress;
+extern volatile u32 g_ScenarioProgressWord;
 /* @source 0x80146874 @kind unknown */
 extern volatile s8  D_80146874;
 /* @source 0x80146875 @kind unknown */

@@ -25,6 +25,11 @@ def insert_symbols(
         else symbols
     )
     for symbol in mapped:
+        # The index keys one name per (target, address). An alias shares its base's
+        # address and the base row is inserted independently, so aliases are skipped
+        # here; they remain in the map for link-time bindings.
+        if symbol.is_alias:
+            continue
         declared_global = symbol.canonical_name in globals_
         if (
             declared_global
