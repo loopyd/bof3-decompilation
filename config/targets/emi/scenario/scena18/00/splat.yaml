@@ -60,6 +60,6 @@ segments:
     - c
     - noopProgressHandler_scena18_801F6D50
   - - 344
-    - asm
-    - func_801F6D58
+    - rodata
+    - scena18HandlerTable
 - - 392

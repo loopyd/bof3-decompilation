@@ -2,3 +2,6 @@
 #include "bof3/symbols.h"
 WEAK_SYMBOL_AT(D_80146872, 0x80146872);
 WEAK_SYMBOL_AT(D_801F6D6C, 0x801F6D6C);
+/* @source 0x801F6D58 */
+extern u32 scena18HandlerTable[];
+WEAK_SYMBOL_AT(scena18HandlerTable, 0x801F6D58);
