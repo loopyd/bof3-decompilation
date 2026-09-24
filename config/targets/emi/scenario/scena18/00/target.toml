@@ -8,6 +8,10 @@ splat = "config/targets/emi/scenario/scena18/00/splat.yaml"
 load_address = 0x801F6C00
 
 sources = [
+    "src/bof3/scenario/noopProgressHandler_scena18_801F6D50.c",
+    "src/bof3/scenario/clearWorkRecordsAndResetEffectSlots_scena18.c",
+    "src/bof3/scenario/noopCallbackReturningZero_scena18.c",
+    "src/bof3/scenario/noopCallbackReturningZero_scena18_801F6CF4.c",
     "src/bof3/scenario/noopRecordCallbackByByte7A_scena18.c",
     "src/bof3/scenario/dispatchRecordCallback_scena18.c",
     "src/bof3/scenario/noopProgressHandler_scena18.c",

@@ -48,17 +48,17 @@ segments:
     - c
     - noopRecordCallbackByByte7A_scena18
   - - 244
-    - asm
-    - func_801F6CF4
+    - c
+    - noopCallbackReturningZero_scena18_801F6CF4
   - - 252
-    - asm
-    - func_801F6CFC
+    - c
+    - noopCallbackReturningZero_scena18
   - - 260
-    - asm
-    - func_801F6D04
+    - c
+    - clearWorkRecordsAndResetEffectSlots_scena18
   - - 336
-    - asm
-    - func_801F6D50
+    - c
+    - noopProgressHandler_scena18_801F6D50
   - - 344
     - asm
     - func_801F6D58
