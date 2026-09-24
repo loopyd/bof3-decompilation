@@ -1,0 +1,40 @@
+name: world00_area029_13
+sha1: 061e156bb9161eb66ccdbaa26ff6bda9471488fc
+options:
+  platform: psx
+  compiler: psyq
+  basename: world00_area029_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world00/area029/13.bin
+  asm_path: out/splat/emi/world00/area029/13/asm
+  src_path: src/emi/world00/area029/13
+  ld_script_path: out/splat/emi/world00/area029/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world00/area029/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world00/area029/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world00/area029/13/.splache
+  asset_path: out/splat/emi/world00/area029/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world00/area029/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149526532
+  subsegments:
+  - - 4
+    - asm
+    - func_801F2C04
+  - - 300
+    - c
+    - enterArea029Overlay
+    - func_801F2D2C
+  - - 332
+    - rodata
+    - area029PackedTable
+    - func_801F2D4C
+- - 536

@@ -1,0 +1,3 @@
+func_801F2C04 = 0x801F2C04;
+enterArea064Overlay = 0x801F2D2C;
+area064PackedTable = 0x801F2D4C;
