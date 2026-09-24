@@ -4,6 +4,9 @@ extern s8 D_80146872;
 
 /* @source 0x801F6C54
  * @behavior Stores the constant 2 into the overlay's signed shared progress byte
+ * @status exact
+ * @match 100.00
+ * @residual none
  * D_80146872 and does nothing else; this is the handler the overlay runs while that
  * byte reads 1 (entry 1 of the seven-entry handler table at 0x801F6D6C, whose
  * words 0x801F6C40/0x801F6C54/0x801F6C68/0x801F6CA4/0x801F6CEC/0x801F6D04/

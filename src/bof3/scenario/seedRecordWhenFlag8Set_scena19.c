@@ -6,6 +6,9 @@ s32 func_8019601C(void);
 
 /* @source 0x801F6CA4
  * @behavior When bit 8 of the shared flag word D_80145AA8 is set, calls the helper
+ * @status exact
+ * @match 100.00
+ * @residual none
  * func_8019601C, masks its result to a byte and, unless that byte is 0xFF, marks the
  * 0x74-stride record selected by it at D_80143FC8 by storing 1 at +0 and 0x2F at +5.
  */

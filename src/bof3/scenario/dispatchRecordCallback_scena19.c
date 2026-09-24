@@ -7,6 +7,9 @@ extern u32 D_8014686C;
 
 /* @source 0x801F6D10
  * @behavior Dispatches the per-record callback indexed by the record's unsigned
+ * @status exact
+ * @match 100.00
+ * @residual none
  * byte field at offset 0x7A through the scena19 overlay's trailing
  * callback-pointer table at 0x801F6DE0, passing the record pointer and the word
  * held in the shared cell at 0x8014686C. It is the scena19 twin of the exact
@@ -25,9 +28,6 @@ extern u32 D_8014686C;
  * 0x801F6C68, 0x801F6CA4) is the one func_801F6C40 indexes with `lw 0x6DD0(at)`.
  * Both runs end at the overlay image end 0x801F6DEC and are owned by the
  * neighbouring func_801F6DBC boundary, not by this source.
- * @status unverified
- * @match 0.00
- * @residual none
  */
 void dispatchRecordCallback_scena19(u8* record) {
   D_801F6DE0[record[0x7A]](record, D_8014686C);
