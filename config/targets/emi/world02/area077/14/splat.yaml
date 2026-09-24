@@ -249,8 +249,8 @@ segments:
     - asm
     - func_801F60C4
   - - 13788
-    - asm
-    - func_801F61DC
+    - c
+    - setWorld02Area07714_801F61DC
   - - 13808
     - asm
     - func_801F61F0

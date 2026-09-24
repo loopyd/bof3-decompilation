@@ -9,6 +9,7 @@ load_address = 0x800C1800
 
 sources = []
 support_sources = [
+    "src/bof3/boss/setBossBoss02513_800C1D64.c",
     "src/bof3/boss/noopHandlerBossBoss02513_800C217C.c",
     "src/bof3/boss/noopHandlerBossBoss02513_800C1D80.c",
     "src/bof3/boss/noopHandlerBossBoss02513_800C1D78.c",

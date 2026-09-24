@@ -33,8 +33,8 @@ segments:
     - asm
     - func_801F2CB8
   - - 248
-    - asm
-    - func_801F2CF8
+    - c
+    - setWorld00Area01513_801F2CF8
   - - 268
     - asm
     - func_801F2D0C

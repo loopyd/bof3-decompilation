@@ -1,0 +1,137 @@
+name: world04_area167_13
+sha1: 54fb6effbbbfcee45187972dae763f0033c32adc
+options:
+  platform: psx
+  compiler: psyq
+  basename: world04_area167_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world04/area167/13.bin
+  asm_path: out/splat/emi/world04/area167/13/asm
+  src_path: src/emi/world04/area167/13
+  ld_script_path: out/splat/emi/world04/area167/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world04/area167/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world04/area167/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world04/area167/13/.splache
+  asset_path: out/splat/emi/world04/area167/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world04/area167/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 136
+  vram: 2149526664
+  subsegments:
+  - - 136
+    - asm
+    - func_801F2C88
+  - - 204
+    - asm
+    - func_801F2CCC
+  - - 672
+    - asm
+    - func_801F2EA0
+  - - 992
+    - asm
+    - func_801F2FE0
+  - - 1084
+    - asm
+    - func_801F303C
+  - - 1356
+    - asm
+    - func_801F314C
+  - - 1468
+    - asm
+    - func_801F31BC
+  - - 2528
+    - asm
+    - func_801F35E0
+  - - 2596
+    - asm
+    - func_801F3624
+  - - 2812
+    - asm
+    - func_801F36FC
+  - - 2916
+    - asm
+    - func_801F3764
+  - - 2984
+    - asm
+    - func_801F37A8
+  - - 3312
+    - asm
+    - func_801F38F0
+  - - 3516
+    - asm
+    - func_801F39BC
+  - - 4320
+    - asm
+    - func_801F3CE0
+  - - 4436
+    - asm
+    - func_801F3D54
+  - - 4564
+    - asm
+    - func_801F3DD4
+  - - 4692
+    - asm
+    - func_801F3E54
+  - - 4788
+    - asm
+    - func_801F3EB4
+  - - 4884
+    - c
+    - setWorld04Area16713_801F3F14
+  - - 4904
+    - asm
+    - func_801F3F28
+  - - 4952
+    - asm
+    - func_801F3F58
+  - - 5248
+    - asm
+    - func_801F4080
+  - - 5364
+    - asm
+    - func_801F40F4
+  - - 5440
+    - asm
+    - func_801F4140
+  - - 5828
+    - asm
+    - func_801F42C4
+  - - 6072
+    - asm
+    - func_801F43B8
+  - - 6196
+    - asm
+    - func_801F4434
+  - - 6252
+    - c
+    - setWorld04Area16713_801F446C
+  - - 6272
+    - c
+    - setWorld04Area16713_801F4480
+  - - 6292
+    - asm
+    - func_801F4494
+  - - 7348
+    - asm
+    - func_801F48B4
+  - - 7444
+    - asm
+    - func_801F4914
+  - - 7664
+    - asm
+    - func_801F49F0
+  - - 7784
+    - asm
+    - func_801F4A68
+- - 15544

@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world02/setWorld02Area07714_801F61DC.c",
     "src/bof3/world02/invokeHelperArgWorld02Area07714_801F60A4.c",
     "src/bof3/world02/invokeHelperArgWorld02Area07714_801F6084.c",
     "src/bof3/support/area077_14_psyq.c",

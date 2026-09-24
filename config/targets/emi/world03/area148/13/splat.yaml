@@ -69,8 +69,8 @@ segments:
     - asm
     - func_801F37B8
   - - 3472
-    - asm
-    - func_801F3990
+    - c
+    - setWorld03Area14813_801F3990
   - - 3492
     - asm
     - func_801F39A4
@@ -78,8 +78,8 @@ segments:
     - asm
     - func_801F39D4
   - - 3596
-    - asm
-    - func_801F3A0C
+    - c
+    - setWorld03Area14813_801F3A0C
   - - 3616
     - asm
     - func_801F3A20

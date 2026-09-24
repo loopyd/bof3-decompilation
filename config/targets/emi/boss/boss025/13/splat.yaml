@@ -66,8 +66,8 @@ segments:
     - asm
     - func_800C1D2C
   - - 1380
-    - asm
-    - func_800C1D64
+    - c
+    - setBossBoss02513_800C1D64
   - - 1400
     - c
     - noopHandlerBossBoss02513_800C1D78
