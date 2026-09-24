@@ -12,6 +12,7 @@ from .cache import ClaimFiles
 from .ids import TargetId, normalize_target_id
 
 _SHA256 = re.compile(r"[0-9a-f]{64}")
+_REPLICA_SLOT = re.compile(r"BIN/(?:[A-Z0-9_]+/)+[A-Z0-9_]+\.EMI#\d+")
 
 
 @dataclass(frozen=True)
@@ -48,6 +49,24 @@ class CompanionOverlay:
 
 
 @dataclass(frozen=True)
+class ReplicaOverlay:
+    """One byte-identical shipped EMI slot covered by this target's boundaries.
+
+    The declaration carries its own identity evidence (payload digest, load
+    address and size) so coverage can fail closed when a replica no longer
+    matches the archive inventory.  Boundaries and symbol names belong to the
+    canonical target only; a replica contributes configuration identity, never
+    duplicated boundaries or raw names.
+    """
+
+    disc_id: str
+    payload_sha256: str
+    load_address: int
+    size: int
+    evidence: str
+
+
+@dataclass(frozen=True)
 class TargetManifest:
     id: TargetId
     disc_id: str
@@ -67,7 +86,7 @@ class TargetManifest:
     support_sources: tuple[str, ...] = ()
     headers: tuple[str, ...] = ()
     # Generated PsyQ weak-binding source (relative to the repo root).  Every
-    # target must declare this so ``bin/symbols psyq-bindings`` never guesses
+    # target must declare this so ``bin/harness source symbols psyq-bindings`` never guesses
     # an output path.
     psyq_source: str = ""
     libraries: dict[str, tuple[str, ...]] = field(default_factory=dict)
@@ -77,6 +96,7 @@ class TargetManifest:
         default_factory=dict
     )
     companions: tuple[CompanionOverlay, ...] = ()
+    replicas: tuple[ReplicaOverlay, ...] = ()
 
     @property
     def has_explicit_sources(self) -> bool:
@@ -96,6 +116,8 @@ class TargetManifest:
             raise ValueError(f"unsupported psyq space: {self.psyq_space}")
         if self.companions and self.kind != "emi":
             raise ValueError("only EMI targets may declare companion overlays")
+        if self.replicas and self.kind != "emi":
+            raise ValueError("only EMI targets may declare replicas")
 
 
 @dataclass(frozen=True)
@@ -192,6 +214,50 @@ def _parse_companions(
     return tuple(companions)
 
 
+def _parse_replicas(
+    raw: dict[str, Any], caller: TargetId
+) -> tuple[ReplicaOverlay, ...]:
+    """Parse byte-identical slot claims owned by this target's boundaries."""
+
+    values = raw.get("replicas", [])
+    if not isinstance(values, list):
+        raise ValueError("replicas must be an array of tables")
+    own = str(raw.get("disc_id", caller.shipped))
+    replicas: list[ReplicaOverlay] = []
+    seen: set[str] = set()
+    for value in values:
+        if not isinstance(value, dict):
+            raise ValueError("replica must be a table")
+        disc_id = str(value["disc_id"])
+        if _REPLICA_SLOT.fullmatch(disc_id) is None:
+            raise ValueError(f"invalid replica slot identity: {disc_id}")
+        if disc_id == own:
+            raise ValueError(f"replica cannot reference its own target: {disc_id}")
+        if disc_id in seen:
+            raise ValueError(f"duplicate replica: {disc_id}")
+        seen.add(disc_id)
+        digest = str(value["payload_sha256"])
+        if _SHA256.fullmatch(digest) is None:
+            raise ValueError(f"invalid replica payload SHA-256: {disc_id}")
+        raw_address = value["load_address"]
+        raw_size = value["size"]
+        if type(raw_address) is not int or type(raw_size) is not int:
+            raise ValueError(
+                f"replica load address and size must be integers: {disc_id}"
+            )
+        load_address = raw_address
+        size = raw_size
+        if load_address % 4 or not 0x80000000 <= load_address < 0x80200000:
+            raise ValueError(f"invalid replica load address: {disc_id}")
+        if size <= 0 or load_address + size > 0x80200000:
+            raise ValueError(f"invalid replica payload size: {disc_id}")
+        evidence = str(value["evidence"]).strip()
+        if not evidence:
+            raise ValueError(f"missing replica evidence: {disc_id}")
+        replicas.append(ReplicaOverlay(disc_id, digest, load_address, size, evidence))
+    return tuple(replicas)
+
+
 def _parse_path_claims(raw: dict[str, Any], key: str) -> tuple[str, ...]:
     """Parse canonical repo-relative path claims.
 
@@ -245,6 +311,26 @@ def _parse_single_path_claim(raw: dict[str, Any], key: str) -> str:
     if parsed[0] != value:
         raise ValueError(f"invalid {key} path: {value!r}")
     return value
+
+
+def _validate_replicas(manifests: dict[str, TargetManifest]) -> None:
+    """Every byte-identical slot is owned by at most one canonical target."""
+
+    owners: dict[str, str] = {}
+    for manifest in manifests.values():
+        for replica in manifest.replicas:
+            if replica.disc_id in owners:
+                raise ValueError(
+                    f"duplicate replica claim for {replica.disc_id}: "
+                    f"{owners[replica.disc_id]} and {manifest.id.value}"
+                )
+            owners[replica.disc_id] = manifest.id.value
+    shipped = {manifest.disc_id: manifest.id.value for manifest in manifests.values()}
+    for disc_id, owner in owners.items():
+        if disc_id in shipped and shipped[disc_id] != owner:
+            raise ValueError(
+                f"replica {disc_id} is also the shipped slot of {shipped[disc_id]}"
+            )
 
 
 def _validate_companions(manifests: dict[str, TargetManifest]) -> None:
@@ -424,6 +510,7 @@ def _parse_manifest(path: Path, content: bytes) -> TargetManifest:
             function: tuple(values) for function, values in placements.items()
         },
         companions=_parse_companions(raw, target_id),
+        replicas=_parse_replicas(raw, target_id),
     )
 
 
@@ -452,6 +539,7 @@ def load_manifest_generation(
         manifests[manifest.id.value] = manifest
     claims = cache.collect_claim_files(root, manifests, read_claim=read_claim)
     _validate_companions(manifests)
+    _validate_replicas(manifests)
     _validate_claim_overlap(manifests)
     _validate_claimed_paths(manifests)
     _validate_claim_files(root, manifests, dict(claims.canonical))

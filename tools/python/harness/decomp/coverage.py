@@ -274,8 +274,53 @@ def build_coverage(root: Path, target_ids=()) -> dict:
         report["original"] = original
         configured = {m.disc_id for m in manifests.values() if m.kind == "emi"}
         slots = {s["identity"]: s for s in original["slots"]}
+        # Replica slots are covered by a canonical target's boundaries. They count as
+        # configured only when their declared identity still matches the archive
+        # inventory; a mismatch is a blocker and contributes no configuration.
+        replica_slots: set[str] = set()
+        for manifest in manifests.values():
+            for replica in manifest.replicas:
+                slot = slots.get(replica.disc_id)
+                problems: list[str] = []
+                if slot is None:
+                    problems.append("slot missing from the archive inventory")
+                else:
+                    if slot.get("sha256") != replica.payload_sha256:
+                        problems.append("payload sha256 disagrees with the slot")
+                    if slot.get("load_address") != replica.load_address:
+                        problems.append("load address disagrees with the slot")
+                    if slot.get("bytes") != replica.size:
+                        problems.append("declared size disagrees with the slot")
+                if problems:
+                    report["blockers"].append(
+                        f"{manifest.id.value}: replica {replica.disc_id}: "
+                        + "; ".join(problems)
+                    )
+                else:
+                    replica_slots.add(replica.disc_id)
+        configured |= replica_slots
         original["configured_slots"] = sorted(configured & slots.keys())
         original["unconfigured_slots"] = sorted(slots.keys() - configured)
+        original["replica_slots"] = sorted(replica_slots)
+        # Two configured *shipped* slots with one payload at one load address are the
+        # same loaded image, so one of them is redundant: the duplicate must be declared
+        # a replica instead of carrying its own boundaries and raw names.
+        shipped_images: dict[tuple[str, int], list[str]] = {}
+        for manifest in manifests.values():
+            if manifest.kind != "emi":
+                continue
+            slot = slots.get(manifest.disc_id)
+            if slot is None:
+                continue
+            key = (str(slot.get("sha256")), int(slot["load_address"]))
+            shipped_images.setdefault(key, []).append(manifest.disc_id)
+        for (digest, address), members in sorted(shipped_images.items()):
+            if len(members) > 1:
+                report["blockers"].append(
+                    f"duplicate configured images for 0x{address:08X} "
+                    f"({digest[:12]}): {', '.join(sorted(members))} share one payload; "
+                    "declare all but one as replicas"
+                )
         original["missing_configured_slots"] = sorted(configured - slots.keys())
         report["blockers"].extend(original["discrepancies"])
         for target in selected:
@@ -321,11 +366,18 @@ def build_coverage(root: Path, target_ids=()) -> dict:
             "configured_targets": configured_count,
             "targets_with_boundaries": with_boundaries,
             "function_boundaries": boundaries,
+            "replica_slots_configured": len(replica_slots),
             "unconfigured_slots": unconfigured if inventory_complete else None,
         }
         report["denominator_reason"] = (
             f"Configured-target denominator: {boundaries} declared function "
             f"boundaries {scope}. "
+            + (
+                f"{len(replica_slots)} slots are covered as declared byte-identical "
+                "replicas and contribute no boundaries. "
+                if replica_slots
+                else ""
+            )
             + (
                 f"{unreadable} configured target(s) could not be read, so their "
                 "boundaries are not counted. "
