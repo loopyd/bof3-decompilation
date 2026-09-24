@@ -30,23 +30,23 @@ segments:
     - c
     - dispatchProgressHandler_scena18
   - - 64
-    - asm
-    - func_801F6C40
+    - c
+    - advanceScenarioProgressToOne_scena18
   - - 84
-    - asm
-    - func_801F6C54
+    - c
+    - advanceScenarioProgressTo2_scena18
   - - 104
-    - asm
-    - func_801F6C68
+    - c
+    - dispatchProgressHandler_scena18_801F6C68
   - - 164
-    - asm
-    - func_801F6CA4
+    - c
+    - noopProgressHandler_scena18
   - - 172
-    - asm
-    - func_801F6CAC
+    - c
+    - dispatchRecordCallback_scena18
   - - 236
-    - asm
-    - func_801F6CEC
+    - c
+    - noopRecordCallbackByByte7A_scena18
   - - 244
     - asm
     - func_801F6CF4

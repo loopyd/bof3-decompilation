@@ -8,6 +8,12 @@ splat = "config/targets/emi/scenario/scena18/00/splat.yaml"
 load_address = 0x801F6C00
 
 sources = [
+    "src/bof3/scenario/noopRecordCallbackByByte7A_scena18.c",
+    "src/bof3/scenario/dispatchRecordCallback_scena18.c",
+    "src/bof3/scenario/noopProgressHandler_scena18.c",
+    "src/bof3/scenario/dispatchProgressHandler_scena18_801F6C68.c",
+    "src/bof3/scenario/advanceScenarioProgressTo2_scena18.c",
+    "src/bof3/scenario/advanceScenarioProgressToOne_scena18.c",
     "src/bof3/scenario/dispatchProgressHandler_scena18.c",
 ]
 support_sources = [
