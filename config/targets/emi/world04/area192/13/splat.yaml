@@ -63,8 +63,8 @@ segments:
     - asm
     - func_801F33E4
   - - 2084
-    - asm
-    - func_801F3424
+    - c
+    - invokeHelperWorld04Area19213_801F3424
   - - 2116
     - asm
     - func_801F3444

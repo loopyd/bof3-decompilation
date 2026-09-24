@@ -1,0 +1,50 @@
+name: world04_area184_13
+sha1: 0522c34899b02d8d4211208d386800d90736ab7a
+options:
+  platform: psx
+  compiler: psyq
+  basename: world04_area184_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world04/area184/13.bin
+  asm_path: out/splat/emi/world04/area184/13/asm
+  src_path: src/emi/world04/area184/13
+  ld_script_path: out/splat/emi/world04/area184/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world04/area184/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world04/area184/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world04/area184/13/.splache
+  asset_path: out/splat/emi/world04/area184/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world04/area184/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 1752
+  vram: 2149528280
+  subsegments:
+  - - 1752
+    - asm
+    - func_801F32D8
+  - - 1832
+    - c
+    - invokeHelperArgWorld04Area18413_801F3328
+  - - 1864
+    - asm
+    - func_801F3348
+  - - 1912
+    - asm
+    - func_801F3378
+  - - 2020
+    - asm
+    - func_801F33E4
+  - - 2164
+    - asm
+    - func_801F3474
+- - 3040
