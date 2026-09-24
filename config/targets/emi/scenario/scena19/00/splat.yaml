@@ -39,8 +39,8 @@ segments:
     - c
     - dispatchProgressHandler_scena19_801F6C68
   - - 164
-    - asm
-    - func_801F6CA4
+    - c
+    - seedRecordWhenFlag8Set_scena19
   - - 272
     - c
     - dispatchRecordCallback_scena19
