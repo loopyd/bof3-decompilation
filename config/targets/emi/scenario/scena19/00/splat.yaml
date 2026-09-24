@@ -57,9 +57,9 @@ segments:
     - c
     - clearWorkRecordsAndResetEffectSlots_scena19
   - - 436
-    - asm
-    - func_801F6DB4
+    - c
+    - noopReturn_scena19
   - - 444
-    - asm
-    - func_801F6DBC
+    - rodata
+    - scena19HandlerTable
 - - 492

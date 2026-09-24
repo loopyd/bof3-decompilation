@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/noopReturn_scena19.c",
     "src/bof3/scenario/clearWorkRecordsAndResetEffectSlots_scena19.c",
     "src/bof3/scenario/noopCallbackReturningZero_scena19_801F6D60.c",
     "src/bof3/scenario/noopCallbackReturningZero_scena19_801F6D58.c",
