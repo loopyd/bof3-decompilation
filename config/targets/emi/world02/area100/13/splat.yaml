@@ -78,8 +78,8 @@ segments:
     - asm
     - func_801F3658
   - - 2688
-    - asm
-    - func_801F3680
+    - c
+    - setTwoWorld02Area10013_801F3680
   - - 2716
     - asm
     - func_801F369C

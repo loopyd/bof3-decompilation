@@ -69,8 +69,8 @@ segments:
     - asm
     - func_801F3410
   - - 2104
-    - asm
-    - func_801F3438
+    - c
+    - setTwoWorld01Area04914_801F3438
   - - 2132
     - asm
     - func_801F3454
@@ -96,8 +96,8 @@ segments:
     - asm
     - func_801F3728
   - - 2896
-    - asm
-    - func_801F3750
+    - c
+    - setTwoWorld01Area04914_801F3750
   - - 2924
     - asm
     - func_801F376C

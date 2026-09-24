@@ -1,0 +1,131 @@
+name: plchar_plp034_00
+sha1: 5bebe2fb8479091e81f5b1a2201d742b691d0f51
+options:
+  platform: psx
+  compiler: psyq
+  basename: plchar_plp034_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/plchar/plp034/00.bin
+  asm_path: out/splat/emi/plchar/plp034/00/asm
+  src_path: src/emi/plchar/plp034/00
+  ld_script_path: out/splat/emi/plchar/plp034/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/plchar/plp034/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/plchar/plp034/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/plchar/plp034/00/.splache
+  asset_path: out/splat/emi/plchar/plp034/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/plchar/plp034/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149377028
+  subsegments:
+  - - 4
+    - asm
+    - func_801CE404
+  - - 72
+    - asm
+    - func_801CE448
+  - - 552
+    - asm
+    - func_801CE628
+  - - 812
+    - asm
+    - func_801CE72C
+  - - 880
+    - asm
+    - func_801CE770
+  - - 1684
+    - asm
+    - func_801CEA94
+  - - 2096
+    - asm
+    - func_801CEC30
+  - - 2332
+    - asm
+    - func_801CED1C
+  - - 2836
+    - asm
+    - func_801CEF14
+  - - 3064
+    - asm
+    - func_801CEFF8
+  - - 3372
+    - asm
+    - func_801CF12C
+  - - 3440
+    - asm
+    - func_801CF170
+  - - 3644
+    - asm
+    - func_801CF23C
+  - - 3896
+    - asm
+    - func_801CF338
+  - - 3964
+    - asm
+    - func_801CF37C
+  - - 4032
+    - asm
+    - func_801CF3C0
+  - - 4320
+    - asm
+    - func_801CF4E0
+  - - 4892
+    - asm
+    - func_801CF71C
+  - - 5196
+    - asm
+    - func_801CF84C
+  - - 5292
+    - asm
+    - func_801CF8AC
+  - - 5440
+    - asm
+    - func_801CF940
+  - - 5964
+    - asm
+    - func_801CFB4C
+  - - 6200
+    - asm
+    - func_801CFC38
+  - - 6268
+    - asm
+    - func_801CFC7C
+  - - 6388
+    - asm
+    - func_801CFCF4
+  - - 6676
+    - asm
+    - func_801CFE14
+  - - 6828
+    - asm
+    - func_801CFEAC
+  - - 7248
+    - asm
+    - func_801D0050
+  - - 7316
+    - asm
+    - func_801D0094
+  - - 7520
+    - asm
+    - func_801D0160
+  - - 7772
+    - c
+    - getAndClearPlcharPlp03400_801D025C
+  - - 7788
+    - asm
+    - func_801D026C
+  - - 7856
+    - asm
+    - func_801D02B0
+  - - 7924
+    - asm
+    - func_801D02F4
+- - 8036

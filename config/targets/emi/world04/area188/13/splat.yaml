@@ -138,8 +138,8 @@ segments:
     - asm
     - func_801F4908
   - - 7472
-    - asm
-    - func_801F4930
+    - c
+    - setTwoWorld04Area18813_801F4930
   - - 7500
     - asm
     - func_801F494C

@@ -45,8 +45,8 @@ segments:
     - asm
     - func_800C21E4
   - - 2612
-    - asm
-    - func_800C2234
+    - c
+    - getAndClearBossBoss05516_800C2234
   - - 2628
     - asm
     - func_800C2244

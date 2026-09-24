@@ -105,8 +105,8 @@ segments:
     - asm
     - func_801F3E00
   - - 4640
-    - asm
-    - func_801F3E20
+    - c
+    - setTwoWorld01Area04113_801F3E20
   - - 4668
     - asm
     - func_801F3E3C

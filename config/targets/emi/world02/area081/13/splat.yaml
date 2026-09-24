@@ -42,8 +42,8 @@ segments:
     - asm
     - func_801F2D3C
   - - 356
-    - asm
-    - func_801F2D64
+    - c
+    - setTwoWorld02Area08113_801F2D64
 - - 384
   - bin
   - tail

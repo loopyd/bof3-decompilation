@@ -222,8 +222,8 @@ segments:
     - asm
     - func_801F5DC0
   - - 12776
-    - asm
-    - func_801F5DE8
+    - c
+    - setTwoWorld02Area07714_801F5DE8
   - - 12804
     - asm
     - func_801F5E04

@@ -1,0 +1,15 @@
+schema = "harness.target/v2"
+id = "emi/plchar/plp478/00"
+disc_id = "BIN/PLCHAR/PLP478.EMI#0"
+kind = "emi"
+source_dir = "src/emi/plchar/plp478/00"
+binary = "out/binaries/emi/plchar/plp478/00.bin"
+splat = "config/targets/emi/plchar/plp478/00/splat.yaml"
+load_address = 0x801CE400
+
+sources = []
+support_sources = [
+    "src/bof3/plchar/getAndClearPlcharPlp47800_801CE610.c",
+    "src/bof3/support/plp478_00_psyq.c",
+]
+psyq_source = "src/bof3/support/plp478_00_psyq.c"

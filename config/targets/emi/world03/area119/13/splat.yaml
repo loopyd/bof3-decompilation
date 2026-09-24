@@ -1,0 +1,161 @@
+name: world03_area119_13
+sha1: 7ed07fec0b4ca1674cc0dc37da370bc8dc7a05a2
+options:
+  platform: psx
+  compiler: psyq
+  basename: world03_area119_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world03/area119/13.bin
+  asm_path: out/splat/emi/world03/area119/13/asm
+  src_path: src/emi/world03/area119/13
+  ld_script_path: out/splat/emi/world03/area119/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world03/area119/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world03/area119/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world03/area119/13/.splache
+  asset_path: out/splat/emi/world03/area119/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world03/area119/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149526532
+  subsegments:
+  - - 4
+    - asm
+    - func_801F2C04
+  - - 72
+    - asm
+    - func_801F2C48
+  - - 136
+    - asm
+    - func_801F2C88
+  - - 224
+    - asm
+    - func_801F2CE0
+  - - 280
+    - asm
+    - func_801F2D18
+  - - 364
+    - asm
+    - func_801F2D6C
+  - - 452
+    - asm
+    - func_801F2DC4
+  - - 508
+    - asm
+    - func_801F2DFC
+  - - 592
+    - asm
+    - func_801F2E50
+  - - 664
+    - asm
+    - func_801F2E98
+  - - 732
+    - asm
+    - func_801F2EDC
+  - - 1052
+    - asm
+    - func_801F301C
+  - - 1300
+    - asm
+    - func_801F3114
+  - - 1392
+    - asm
+    - func_801F3170
+  - - 1552
+    - asm
+    - func_801F3210
+  - - 1688
+    - asm
+    - func_801F3298
+  - - 1828
+    - asm
+    - func_801F3324
+  - - 2444
+    - asm
+    - func_801F358C
+  - - 2512
+    - asm
+    - func_801F35D0
+  - - 2568
+    - asm
+    - func_801F3608
+  - - 2716
+    - asm
+    - func_801F369C
+  - - 3836
+    - asm
+    - func_801F3AFC
+  - - 3904
+    - asm
+    - func_801F3B40
+  - - 3992
+    - asm
+    - func_801F3B98
+  - - 4360
+    - asm
+    - func_801F3D08
+  - - 4428
+    - asm
+    - func_801F3D4C
+  - - 4496
+    - asm
+    - func_801F3D90
+  - - 4632
+    - asm
+    - func_801F3E18
+  - - 4756
+    - asm
+    - func_801F3E94
+  - - 4868
+    - asm
+    - func_801F3F04
+  - - 5432
+    - asm
+    - func_801F4138
+  - - 5560
+    - asm
+    - func_801F41B8
+  - - 5600
+    - asm
+    - func_801F41E0
+  - - 5640
+    - c
+    - setTwoWorld03Area11913_801F4208
+  - - 5668
+    - asm
+    - func_801F4224
+  - - 5796
+    - asm
+    - func_801F42A4
+  - - 5924
+    - asm
+    - func_801F4324
+  - - 6052
+    - asm
+    - func_801F43A4
+  - - 6180
+    - asm
+    - func_801F4424
+  - - 6308
+    - asm
+    - func_801F44A4
+  - - 6436
+    - asm
+    - func_801F4524
+  - - 6484
+    - asm
+    - func_801F4554
+  - - 6532
+    - asm
+    - func_801F4584
+  - - 6596
+    - asm
+    - func_801F45C4
+- - 10080

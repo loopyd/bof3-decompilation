@@ -141,8 +141,8 @@ segments:
     - asm
     - func_801F3A94
   - - 3860
-    - asm
-    - func_801F3B14
+    - c
+    - getAndClearWorld03Area13413_801F3B14
   - - 3876
     - asm
     - func_801F3B24
@@ -270,8 +270,8 @@ segments:
     - asm
     - func_801F51BC
   - - 9700
-    - asm
-    - func_801F51E4
+    - c
+    - setTwoWorld03Area13413_801F51E4
   - - 9728
     - asm
     - func_801F5200
@@ -288,8 +288,8 @@ segments:
     - asm
     - func_801F5350
   - - 10192
-    - asm
-    - func_801F53D0
+    - c
+    - setTwoWorld03Area13413_801F53D0
   - - 10220
     - asm
     - func_801F53EC

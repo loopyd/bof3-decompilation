@@ -1,0 +1,101 @@
+name: plchar_plp457_00
+sha1: 9b6c686093aa8b7968fea9921e59fcdf19d28715
+options:
+  platform: psx
+  compiler: psyq
+  basename: plchar_plp457_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/plchar/plp457/00.bin
+  asm_path: out/splat/emi/plchar/plp457/00/asm
+  src_path: src/emi/plchar/plp457/00
+  ld_script_path: out/splat/emi/plchar/plp457/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/plchar/plp457/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/plchar/plp457/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/plchar/plp457/00/.splache
+  asset_path: out/splat/emi/plchar/plp457/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/plchar/plp457/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149377028
+  subsegments:
+  - - 4
+    - asm
+    - func_801CE404
+  - - 72
+    - asm
+    - func_801CE448
+  - - 276
+    - asm
+    - func_801CE514
+  - - 528
+    - c
+    - getAndClearPlcharPlp45700_801CE610
+  - - 544
+    - asm
+    - func_801CE620
+  - - 612
+    - asm
+    - func_801CE664
+  - - 816
+    - asm
+    - func_801CE730
+  - - 1068
+    - asm
+    - func_801CE82C
+  - - 1136
+    - asm
+    - func_801CE870
+  - - 1596
+    - asm
+    - func_801CEA3C
+  - - 1864
+    - asm
+    - func_801CEB48
+  - - 2076
+    - asm
+    - func_801CEC1C
+  - - 2144
+    - asm
+    - func_801CEC60
+  - - 2388
+    - asm
+    - func_801CED54
+  - - 2640
+    - asm
+    - func_801CEE50
+  - - 2708
+    - asm
+    - func_801CEE94
+  - - 3552
+    - asm
+    - func_801CF1E0
+  - - 3964
+    - asm
+    - func_801CF37C
+  - - 4200
+    - asm
+    - func_801CF468
+  - - 4704
+    - asm
+    - func_801CF660
+  - - 4932
+    - asm
+    - func_801CF744
+  - - 5240
+    - asm
+    - func_801CF878
+  - - 5308
+    - asm
+    - func_801CF8BC
+  - - 5376
+    - asm
+    - func_801CF900
+- - 5460

@@ -36,8 +36,8 @@ segments:
     - asm
     - func_801CE514
   - - 528
-    - asm
-    - func_801CE610
+    - c
+    - getAndClearPlcharPlp46700_801CE610
   - - 544
     - asm
     - func_801CE620
