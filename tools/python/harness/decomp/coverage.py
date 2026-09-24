@@ -233,8 +233,16 @@ def build_coverage(root: Path, target_ids=()) -> dict:
     report = {
         "schema": "bof3.decomp-coverage/v1",
         "targets": [],
+        # Computed after the target loop from target-owned reviewed Splat boundaries;
+        # ``denominator_scope`` states what it covers and what remains unknown.
         "full_original_function_denominator": None,
-        "denominator_reason": "Unconfigured slots and unknown code/data/function boundaries require target-owned evidence; analyzer candidates are not a denominator.",
+        "denominator_scope": {},
+        "denominator_reason": (
+            "Configured-target denominator unavailable: coverage collection did not "
+            "complete, so no target-owned boundary count can be stated. Residual "
+            "unknown: every configured and unconfigured slot lacks accepted coverage "
+            "evidence in this report."
+        ),
         "blockers": [],
     }
     try:
@@ -285,6 +293,59 @@ def build_coverage(root: Path, target_ids=()) -> dict:
                         "configured slot binary/load disagreement"
                     )
             report["targets"].append(row)
+        boundaries = sum(
+            len(row.get("reviewed_starts") or [])
+            for row in report["targets"]
+            if "reviewed_starts" in row
+        )
+        with_boundaries = sum(
+            1 for row in report["targets"] if "reviewed_starts" in row
+        )
+        unreadable = len(report["targets"]) - with_boundaries
+        selected_count = len(report["targets"])
+        configured_count = len(manifests)
+        inventory_complete = original.get("declarations_complete") is True
+        unconfigured = len(original.get("unconfigured_slots") or [])
+        scope = (
+            f"over {selected_count} configured targets"
+            if selected_count == configured_count
+            else f"over {selected_count} selected targets of {configured_count} configured"
+        )
+        report["full_original_function_denominator"] = boundaries
+        report["denominator_scope"] = {
+            "basis": (
+                "declared target-owned reviewed Splat function boundaries; opaque "
+                "bin/data ranges inside readable targets are not counted as functions"
+            ),
+            "targets": selected_count,
+            "configured_targets": configured_count,
+            "targets_with_boundaries": with_boundaries,
+            "function_boundaries": boundaries,
+            "unconfigured_slots": unconfigured if inventory_complete else None,
+        }
+        report["denominator_reason"] = (
+            f"Configured-target denominator: {boundaries} declared function "
+            f"boundaries {scope}. "
+            + (
+                f"{unreadable} configured target(s) could not be read, so their "
+                "boundaries are not counted. "
+                if unreadable
+                else ""
+            )
+            + (
+                "No readable configured target declared a function boundary, so the "
+                "count is 0 rather than unknown. "
+                if not with_boundaries
+                else ""
+            )
+            + (
+                f"Residual unknown: {unconfigured} unconfigured slots have no "
+                "target-owned evidence and are outside this denominator."
+                if inventory_complete
+                else "Residual unknown: the archive declarations are incomplete, so "
+                "the unconfigured-slot count cannot be stated."
+            )
+        )
         report["index"] = read_index(inputs, selected)
         if not report["index"]["available"]:
             report["blockers"].append("index unavailable: " + report["index"]["reason"])
@@ -293,8 +354,14 @@ def build_coverage(root: Path, target_ids=()) -> dict:
         inputs.verify()
     except (OSError, ValueError, KeyError, TypeError) as exc:
         report["blockers"].append(str(exc))
+        if report["full_original_function_denominator"] is not None:
+            report["blockers"].append(
+                "coverage collection did not complete after the denominator was "
+                "computed; the reported count is partial and unverified"
+            )
     report["inputs"] = dict(sorted(inputs.files.items()))
-    report["blockers"].append(report["denominator_reason"])
+    if report["denominator_reason"]:
+        report["blockers"].append(report["denominator_reason"])
     return report
 
 
