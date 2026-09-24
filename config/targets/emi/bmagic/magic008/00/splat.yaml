@@ -1,0 +1,227 @@
+name: bmagic_magic008_00
+sha1: b9c10a4a40f4c3fcb65addd86a048a2de3dde102
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic008_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic008/00.bin
+  asm_path: out/splat/emi/bmagic/magic008/00/asm
+  src_path: src/emi/bmagic/magic008/00
+  ld_script_path: out/splat/emi/bmagic/magic008/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic008/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic008/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic008/00/.splache
+  asset_path: out/splat/emi/bmagic/magic008/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic008/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 240
+  vram: 2149510384
+  subsegments:
+  - - 240
+    - asm
+    - func_801EECF0
+  - - 348
+    - asm
+    - func_801EED5C
+  - - 876
+    - asm
+    - func_801EEF6C
+  - - 988
+    - asm
+    - func_801EEFDC
+  - - 1040
+    - asm
+    - func_801EF010
+  - - 1112
+    - asm
+    - func_801EF058
+  - - 1208
+    - asm
+    - func_801EF0B8
+  - - 1828
+    - asm
+    - func_801EF324
+  - - 1924
+    - asm
+    - func_801EF384
+  - - 2032
+    - asm
+    - func_801EF3F0
+  - - 2732
+    - asm
+    - func_801EF6AC
+  - - 2856
+    - asm
+    - func_801EF728
+  - - 2908
+    - asm
+    - func_801EF75C
+  - - 3016
+    - asm
+    - func_801EF7C8
+  - - 3540
+    - asm
+    - func_801EF9D4
+  - - 3648
+    - asm
+    - func_801EFA40
+  - - 3700
+    - asm
+    - func_801EFA74
+  - - 3796
+    - asm
+    - func_801EFAD4
+  - - 4240
+    - asm
+    - func_801EFC90
+  - - 4348
+    - asm
+    - func_801EFCFC
+  - - 4400
+    - asm
+    - func_801EFD30
+  - - 4496
+    - asm
+    - func_801EFD90
+  - - 5144
+    - asm
+    - func_801F0018
+  - - 5604
+    - asm
+    - func_801F01E4
+  - - 5680
+    - asm
+    - func_801F0230
+  - - 5712
+    - asm
+    - func_801F0250
+  - - 5780
+    - asm
+    - func_801F0294
+  - - 5936
+    - asm
+    - func_801F0330
+  - - 6012
+    - asm
+    - func_801F037C
+  - - 6140
+    - asm
+    - func_801F03FC
+  - - 6268
+    - asm
+    - func_801F047C
+  - - 6364
+    - asm
+    - func_801F04DC
+  - - 6472
+    - c
+    - invokeHelperBmagicMagic00800_801F0548
+  - - 6504
+    - asm
+    - func_801F0568
+  - - 6652
+    - asm
+    - func_801F05FC
+  - - 6928
+    - asm
+    - func_801F0710
+  - - 7124
+    - asm
+    - func_801F07D4
+  - - 7268
+    - asm
+    - func_801F0864
+  - - 7364
+    - asm
+    - func_801F08C4
+  - - 7524
+    - asm
+    - func_801F0964
+  - - 7632
+    - asm
+    - func_801F09D0
+  - - 7712
+    - asm
+    - func_801F0A20
+  - - 7880
+    - asm
+    - func_801F0AC8
+  - - 8004
+    - asm
+    - func_801F0B44
+  - - 8124
+    - asm
+    - func_801F0BBC
+  - - 8616
+    - asm
+    - func_801F0DA8
+  - - 8788
+    - asm
+    - func_801F0E54
+  - - 9124
+    - asm
+    - func_801F0FA4
+  - - 9360
+    - asm
+    - func_801F1090
+  - - 9596
+    - asm
+    - func_801F117C
+  - - 9668
+    - asm
+    - func_801F11C4
+  - - 9844
+    - c
+    - invokeHelperBmagicMagic00800_801F1274
+  - - 9876
+    - asm
+    - func_801F1294
+  - - 10044
+    - asm
+    - func_801F133C
+  - - 10116
+    - asm
+    - func_801F1384
+  - - 10240
+    - asm
+    - func_801F1400
+  - - 10356
+    - asm
+    - func_801F1474
+  - - 10984
+    - c
+    - invokeHelperBmagicMagic00800_801F16E8
+  - - 11016
+    - asm
+    - func_801F1708
+  - - 11196
+    - asm
+    - func_801F17BC
+  - - 11268
+    - asm
+    - func_801F1804
+  - - 11392
+    - asm
+    - func_801F1880
+  - - 11508
+    - asm
+    - func_801F18F4
+  - - 12236
+    - c
+    - invokeHelperBmagicMagic00800_801F1BCC
+  - - 12268
+    - asm
+    - func_801F1BEC
+- - 12316

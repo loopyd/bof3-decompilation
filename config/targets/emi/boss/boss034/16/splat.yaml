@@ -57,8 +57,8 @@ segments:
     - asm
     - func_800C1CBC
   - - 1344
-    - asm
-    - func_800C1D40
+    - c
+    - invokeHelperBossBoss03416_800C1D40
   - - 1376
     - asm
     - func_800C1D60

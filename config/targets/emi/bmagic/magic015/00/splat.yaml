@@ -1,0 +1,179 @@
+name: bmagic_magic015_00
+sha1: 7926a4a41a3780635920c2793e8f68461094425a
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic015_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic015/00.bin
+  asm_path: out/splat/emi/bmagic/magic015/00/asm
+  src_path: src/emi/bmagic/magic015/00
+  ld_script_path: out/splat/emi/bmagic/magic015/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic015/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic015/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic015/00/.splache
+  asset_path: out/splat/emi/bmagic/magic015/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic015/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 160
+  vram: 2149510304
+  subsegments:
+  - - 160
+    - asm
+    - func_801EECA0
+  - - 268
+    - asm
+    - func_801EED0C
+  - - 1360
+    - asm
+    - func_801EF150
+  - - 1484
+    - asm
+    - func_801EF1CC
+  - - 1536
+    - asm
+    - func_801EF200
+  - - 1608
+    - asm
+    - func_801EF248
+  - - 1716
+    - asm
+    - func_801EF2B4
+  - - 2452
+    - asm
+    - func_801EF594
+  - - 2576
+    - asm
+    - func_801EF610
+  - - 2628
+    - asm
+    - func_801EF644
+  - - 2736
+    - asm
+    - func_801EF6B0
+  - - 3388
+    - asm
+    - func_801EF93C
+  - - 3504
+    - asm
+    - func_801EF9B0
+  - - 3556
+    - asm
+    - func_801EF9E4
+  - - 3624
+    - asm
+    - func_801EFA28
+  - - 3812
+    - asm
+    - func_801EFAE4
+  - - 3984
+    - asm
+    - func_801EFB90
+  - - 4056
+    - asm
+    - func_801EFBD8
+  - - 4292
+    - asm
+    - func_801EFCC4
+  - - 4476
+    - asm
+    - func_801EFD7C
+  - - 4584
+    - asm
+    - func_801EFDE8
+  - - 4740
+    - asm
+    - func_801EFE84
+  - - 4860
+    - c
+    - invokeHelperBmagicMagic01500_801EFEFC
+  - - 4892
+    - asm
+    - func_801EFF1C
+  - - 5056
+    - asm
+    - func_801EFFC0
+  - - 5452
+    - asm
+    - func_801F014C
+  - - 5524
+    - asm
+    - func_801F0194
+  - - 5704
+    - asm
+    - func_801F0248
+  - - 5888
+    - asm
+    - func_801F0300
+  - - 5940
+    - asm
+    - func_801F0334
+  - - 6236
+    - asm
+    - func_801F045C
+  - - 6512
+    - asm
+    - func_801F0570
+  - - 6740
+    - asm
+    - func_801F0654
+  - - 7024
+    - asm
+    - func_801F0770
+  - - 7268
+    - asm
+    - func_801F0864
+  - - 7828
+    - asm
+    - func_801F0A94
+  - - 8076
+    - asm
+    - func_801F0B8C
+  - - 8240
+    - asm
+    - func_801F0C30
+  - - 8520
+    - asm
+    - func_801F0D48
+  - - 8628
+    - asm
+    - func_801F0DB4
+  - - 8788
+    - asm
+    - func_801F0E54
+  - - 9004
+    - asm
+    - func_801F0F2C
+  - - 9352
+    - asm
+    - func_801F1088
+  - - 9600
+    - asm
+    - func_801F1180
+  - - 9776
+    - c
+    - invokeHelperBmagicMagic01500_801F1230
+  - - 9808
+    - asm
+    - func_801F1250
+  - - 10012
+    - asm
+    - func_801F131C
+  - - 10196
+    - asm
+    - func_801F13D4
+  - - 10800
+    - asm
+    - func_801F1630
+- - 10820

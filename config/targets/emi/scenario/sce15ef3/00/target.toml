@@ -1,0 +1,17 @@
+schema = "harness.target/v2"
+id = "emi/scenario/sce15ef3/00"
+disc_id = "BIN/SCENARIO/SCE15EF3.EMI#0"
+kind = "emi"
+source_dir = "src/emi/scenario/sce15ef3/00"
+binary = "out/binaries/emi/scenario/sce15ef3/00.bin"
+splat = "config/targets/emi/scenario/sce15ef3/00/splat.yaml"
+load_address = 0x801D0C00
+
+sources = []
+support_sources = [
+    "src/bof3/scenario/invokeHelperScenarioSce15ef300_801D16BC.c",
+    "src/bof3/scenario/invokeHelperScenarioSce15ef300_801D1048.c",
+    "src/bof3/scenario/invokeHelperScenarioSce15ef300_801D0D18.c",
+    "src/bof3/support/sce15ef3_00_psyq.c",
+]
+psyq_source = "src/bof3/support/sce15ef3_00_psyq.c"

@@ -48,8 +48,8 @@ segments:
     - asm
     - func_800C1A08
   - - 720
-    - asm
-    - func_800C1AD0
+    - c
+    - invokeHelperBossBoss00113_800C1AD0
   - - 752
     - asm
     - func_800C1AF0
@@ -84,8 +84,8 @@ segments:
     - asm
     - func_800C1D24
   - - 1504
-    - asm
-    - func_800C1DE0
+    - c
+    - invokeHelperBossBoss00113_800C1DE0
   - - 1536
     - asm
     - func_800C1E00

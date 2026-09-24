@@ -96,8 +96,8 @@ segments:
     - asm
     - func_801F001C
   - - 5244
-    - asm
-    - func_801F007C
+    - c
+    - invokeHelperBmagicMagic06403_801F007C
   - - 5276
     - asm
     - func_801F009C

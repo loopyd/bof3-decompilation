@@ -1,0 +1,15 @@
+schema = "harness.target/v2"
+id = "emi/bmagic/magic154/03"
+disc_id = "BIN/BMAGIC/MAGIC154.EMI#3"
+kind = "emi"
+source_dir = "src/emi/bmagic/magic154/03"
+binary = "out/binaries/emi/bmagic/magic154/03.bin"
+splat = "config/targets/emi/bmagic/magic154/03/splat.yaml"
+load_address = 0x801EEC00
+
+sources = []
+support_sources = [
+    "src/bof3/bmagic/invokeHelperBmagicMagic15403_801EF6AC.c",
+    "src/bof3/support/magic154_03_psyq.c",
+]
+psyq_source = "src/bof3/support/magic154_03_psyq.c"

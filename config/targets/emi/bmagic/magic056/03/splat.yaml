@@ -1,0 +1,116 @@
+name: bmagic_magic056_03
+sha1: 558a24b74da66b3d7087c9a815d73faf928e34da
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic056_03
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic056/03.bin
+  asm_path: out/splat/emi/bmagic/magic056/03/asm
+  src_path: src/emi/bmagic/magic056/03
+  ld_script_path: out/splat/emi/bmagic/magic056/03/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic056/03/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic056/03/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic056/03/.splache
+  asset_path: out/splat/emi/bmagic/magic056/03/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic056/03/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 52
+  vram: 2149510196
+  subsegments:
+  - - 52
+    - asm
+    - func_801EEC34
+  - - 148
+    - asm
+    - func_801EEC94
+  - - 828
+    - asm
+    - func_801EEF3C
+  - - 1404
+    - asm
+    - func_801EF17C
+  - - 1456
+    - asm
+    - func_801EF1B0
+  - - 1524
+    - asm
+    - func_801EF1F4
+  - - 1660
+    - asm
+    - func_801EF27C
+  - - 1756
+    - asm
+    - func_801EF2DC
+  - - 1916
+    - asm
+    - func_801EF37C
+  - - 2064
+    - asm
+    - func_801EF410
+  - - 2240
+    - asm
+    - func_801EF4C0
+  - - 3664
+    - asm
+    - func_801EFA50
+  - - 3800
+    - asm
+    - func_801EFAD8
+  - - 3896
+    - asm
+    - func_801EFB38
+  - - 4004
+    - asm
+    - func_801EFBA4
+  - - 4084
+    - asm
+    - func_801EFBF4
+  - - 4212
+    - asm
+    - func_801EFC74
+  - - 4904
+    - asm
+    - func_801EFF28
+  - - 5096
+    - asm
+    - func_801EFFE8
+  - - 5156
+    - asm
+    - func_801F0024
+  - - 5320
+    - asm
+    - func_801F00C8
+  - - 5496
+    - asm
+    - func_801F0178
+  - - 5692
+    - asm
+    - func_801F023C
+  - - 6188
+    - asm
+    - func_801F042C
+  - - 6380
+    - asm
+    - func_801F04EC
+  - - 6744
+    - asm
+    - func_801F0658
+  - - 6948
+    - c
+    - invokeHelperBmagicMagic05603_801F0724
+  - - 6980
+    - asm
+    - func_801F0744
+- - 7024

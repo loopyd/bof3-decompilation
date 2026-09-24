@@ -108,8 +108,8 @@ segments:
     - asm
     - func_800C1FA4
   - - 2048
-    - asm
-    - func_800C2000
+    - c
+    - invokeHelperBossBoss03616_800C2000
   - - 2080
     - asm
     - func_800C2020

@@ -72,8 +72,8 @@ segments:
     - asm
     - func_801F7C24
   - - 4628
-    - asm
-    - func_801F7E14
+    - c
+    - invokeHelperScenarioScena1200_801F7E14
   - - 4660
     - asm
     - func_801F7E34

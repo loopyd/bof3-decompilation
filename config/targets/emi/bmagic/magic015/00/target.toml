@@ -1,0 +1,23 @@
+schema = "harness.target/v2"
+id = "emi/bmagic/magic015/00"
+disc_id = "BIN/BMAGIC/MAGIC015.EMI#0"
+kind = "emi"
+source_dir = "src/emi/bmagic/magic015/00"
+binary = "out/binaries/emi/bmagic/magic015/00.bin"
+splat = "config/targets/emi/bmagic/magic015/00/splat.yaml"
+load_address = 0x801EEC00
+
+sources = []
+support_sources = [
+    "src/bof3/bmagic/invokeHelperBmagicMagic01500_801F1230.c",
+    "src/bof3/bmagic/invokeHelperBmagicMagic01500_801EFEFC.c",
+    "src/bof3/support/magic015_00_psyq.c",
+]
+psyq_source = "src/bof3/support/magic015_00_psyq.c"
+
+[[replicas]]
+disc_id = "BIN/BMAGIC/MAGIC016.EMI#3"
+payload_sha256 = "4acfb5091359b72590405754be98ba9c221547e2f20239f1610c084afc0cbaf4"
+load_address = 0x801EEC00
+size = 10820
+evidence = "byte-identical to BIN/BMAGIC/MAGIC015.EMI#0: same payload sha256 and load address"

@@ -6,11 +6,21 @@ WEAK_SYMBOL_AT(g_areaWork, 0x1f800044);
 /* Shared PsyQ primitive cursor (owned by the main exe; weak-bound here so the
  * overlay resolves to the exe's definition at link time). */
 WEAK_SYMBOL_AT(g_PrimCursor, 0x8014598c);
+WEAK_SYMBOL_AT(D_8014601A, 0x8014601a);
+WEAK_SYMBOL_AT(D_80146028, 0x80146028);
+WEAK_SYMBOL_AT(D_80146865, 0x80146865);
+WEAK_SYMBOL_AT(D_80146884, 0x80146884);
 WEAK_SYMBOL_AT(D_80146888, 0x80146888);
+WEAK_SYMBOL_AT(D_80143FC8, 0x80143fc8);
+WEAK_SYMBOL_AT(D_1F800000, 0x1f800000);
 WEAK_SYMBOL_AT(countdown, 0x801f53f4);
 WEAK_SYMBOL_AT(D_801490A8, 0x801490a8);
 WEAK_SYMBOL_AT(D_801490C7, 0x801490c7);
+WEAK_SYMBOL_AT(D_801490D8, 0x801490d8);
 WEAK_SYMBOL_AT(D_801F53F0, 0x801f53f0);
+WEAK_SYMBOL_AT(D_801F4674, 0x801f4674);
+WEAK_SYMBOL_AT(D_801F4680, 0x801f4680);
+WEAK_SYMBOL_AT(D_801F2C14, 0x801f2c14);
 
 /* Local handler table: extern-array binding so `as` expands the indexed
  * relocation with the original `addu $at,$at,$idx` operand order. */

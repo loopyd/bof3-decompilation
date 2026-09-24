@@ -1,0 +1,152 @@
+name: plchar_plp026_00
+sha1: 28f822aa9cf6e7223850439d0821b506620b208a
+options:
+  platform: psx
+  compiler: psyq
+  basename: plchar_plp026_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/plchar/plp026/00.bin
+  asm_path: out/splat/emi/plchar/plp026/00/asm
+  src_path: src/emi/plchar/plp026/00
+  ld_script_path: out/splat/emi/plchar/plp026/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/plchar/plp026/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/plchar/plp026/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/plchar/plp026/00/.splache
+  asset_path: out/splat/emi/plchar/plp026/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/plchar/plp026/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149377028
+  subsegments:
+  - - 4
+    - asm
+    - func_801CE404
+  - - 72
+    - asm
+    - func_801CE448
+  - - 552
+    - asm
+    - func_801CE628
+  - - 812
+    - asm
+    - func_801CE72C
+  - - 880
+    - asm
+    - func_801CE770
+  - - 1684
+    - asm
+    - func_801CEA94
+  - - 2096
+    - asm
+    - func_801CEC30
+  - - 2332
+    - asm
+    - func_801CED1C
+  - - 2836
+    - asm
+    - func_801CEF14
+  - - 3064
+    - asm
+    - func_801CEFF8
+  - - 3372
+    - asm
+    - func_801CF12C
+  - - 3440
+    - asm
+    - func_801CF170
+  - - 3644
+    - asm
+    - func_801CF23C
+  - - 3896
+    - asm
+    - func_801CF338
+  - - 3964
+    - asm
+    - func_801CF37C
+  - - 4452
+    - asm
+    - func_801CF564
+  - - 4564
+    - asm
+    - func_801CF5D4
+  - - 4920
+    - asm
+    - func_801CF738
+  - - 5128
+    - asm
+    - func_801CF808
+  - - 5412
+    - asm
+    - func_801CF924
+  - - 5480
+    - asm
+    - func_801CF968
+  - - 5684
+    - asm
+    - func_801CFA34
+  - - 5936
+    - c
+    - invokeHelperPlcharPlp02600_801CFB30
+  - - 5968
+    - asm
+    - func_801CFB50
+  - - 6036
+    - asm
+    - func_801CFB94
+  - - 6104
+    - asm
+    - func_801CFBD8
+  - - 6360
+    - asm
+    - func_801CFCD8
+  - - 6948
+    - asm
+    - func_801CFF24
+  - - 7252
+    - asm
+    - func_801D0054
+  - - 7348
+    - asm
+    - func_801D00B4
+  - - 7496
+    - asm
+    - func_801D0148
+  - - 8020
+    - asm
+    - func_801D0354
+  - - 8256
+    - asm
+    - func_801D0440
+  - - 8324
+    - asm
+    - func_801D0484
+  - - 8432
+    - asm
+    - func_801D04F0
+  - - 8744
+    - asm
+    - func_801D0628
+  - - 8900
+    - asm
+    - func_801D06C4
+  - - 9320
+    - asm
+    - func_801D0868
+  - - 9676
+    - asm
+    - func_801D09CC
+  - - 9744
+    - asm
+    - func_801D0A10
+  - - 9812
+    - asm
+    - func_801D0A54
+- - 9932

@@ -78,8 +78,8 @@ segments:
     - asm
     - func_801F7384
   - - 1956
-    - asm
-    - func_801F73A4
+    - c
+    - invokeHelperScenarioScena0700_801F73A4
   - - 1988
     - asm
     - func_801F73C4
@@ -171,8 +171,8 @@ segments:
     - asm
     - func_801F8194
   - - 5556
-    - asm
-    - func_801F81B4
+    - c
+    - invokeHelperScenarioScena0700_801F81B4
   - - 5588
     - asm
     - func_801F81D4

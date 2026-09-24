@@ -1,0 +1,161 @@
+name: scenario_sce15ef3_00
+sha1: 148955ca1ad999c3d3486f35c87177fa93bd5fd8
+options:
+  platform: psx
+  compiler: psyq
+  basename: scenario_sce15ef3_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/scenario/sce15ef3/00.bin
+  asm_path: out/splat/emi/scenario/sce15ef3/00/asm
+  src_path: src/emi/scenario/sce15ef3/00
+  ld_script_path: out/splat/emi/scenario/sce15ef3/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/scenario/sce15ef3/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/scenario/sce15ef3/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/scenario/sce15ef3/00/.splache
+  asset_path: out/splat/emi/scenario/sce15ef3/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/scenario/sce15ef3/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149387268
+  subsegments:
+  - - 4
+    - asm
+    - func_801D0C04
+  - - 72
+    - asm
+    - func_801D0C48
+  - - 196
+    - asm
+    - func_801D0CC4
+  - - 280
+    - c
+    - invokeHelperScenarioSce15ef300_801D0D18
+  - - 312
+    - asm
+    - func_801D0D38
+  - - 380
+    - asm
+    - func_801D0D7C
+  - - 428
+    - asm
+    - func_801D0DAC
+  - - 568
+    - asm
+    - func_801D0E38
+  - - 684
+    - asm
+    - func_801D0EAC
+  - - 752
+    - asm
+    - func_801D0EF0
+  - - 916
+    - asm
+    - func_801D0F94
+  - - 1032
+    - asm
+    - func_801D1008
+  - - 1064
+    - asm
+    - func_801D1028
+  - - 1096
+    - c
+    - invokeHelperScenarioSce15ef300_801D1048
+  - - 1128
+    - asm
+    - func_801D1068
+  - - 1196
+    - asm
+    - func_801D10AC
+  - - 1480
+    - asm
+    - func_801D11C8
+  - - 1616
+    - asm
+    - func_801D1250
+  - - 1760
+    - asm
+    - func_801D12E0
+  - - 1904
+    - asm
+    - func_801D1370
+  - - 2012
+    - asm
+    - func_801D13DC
+  - - 2080
+    - asm
+    - func_801D1420
+  - - 2144
+    - asm
+    - func_801D1460
+  - - 2268
+    - asm
+    - func_801D14DC
+  - - 2440
+    - asm
+    - func_801D1588
+  - - 2508
+    - asm
+    - func_801D15CC
+  - - 2580
+    - asm
+    - func_801D1614
+  - - 2748
+    - c
+    - invokeHelperScenarioSce15ef300_801D16BC
+  - - 2780
+    - asm
+    - func_801D16DC
+  - - 2844
+    - asm
+    - func_801D171C
+  - - 2904
+    - asm
+    - func_801D1758
+  - - 3276
+    - asm
+    - func_801D18CC
+  - - 3488
+    - asm
+    - func_801D19A0
+  - - 3680
+    - asm
+    - func_801D1A60
+  - - 4012
+    - asm
+    - func_801D1BAC
+  - - 4384
+    - asm
+    - func_801D1D20
+  - - 5112
+    - asm
+    - func_801D1FF8
+  - - 5900
+    - asm
+    - func_801D230C
+  - - 6060
+    - asm
+    - func_801D23AC
+  - - 6180
+    - asm
+    - func_801D2424
+  - - 6592
+    - asm
+    - func_801D25C0
+  - - 6636
+    - asm
+    - func_801D25EC
+  - - 6708
+    - asm
+    - func_801D2634
+  - - 7088
+    - asm
+    - func_801D27B0
+- - 7192
