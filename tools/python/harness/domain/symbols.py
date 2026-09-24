@@ -194,12 +194,15 @@ def load_target_symbols(
     shared = load_map(shared_map_path(root), read_file=read_file)
     sdk = load_map(sdk_map_path(root, space), read_file=read_file)
     local = load_map(map_path(root, target), read_file=read_file)
-    by_addr: dict[int, MapSymbol] = {s.address: s for s in shared}
-    for s in sdk:
-        by_addr[s.address] = s
-    for s in local:
-        by_addr[s.address] = s
-    return sorted(by_addr.values())
+    # Compose by NAME, not by address: one address may legitimately carry more than one
+    # name (a base symbol plus its same-map aliases), and collapsing by address would
+    # silently drop every name but one, leaving the dropped name unbound at link time.
+    # Later groups still win for the same name, so local > SDK > shared precedence holds.
+    by_name: dict[str, MapSymbol] = {s.canonical_name: s for s in shared}
+    for group in (sdk, local):
+        for symbol in group:
+            by_name[symbol.canonical_name] = symbol
+    return sorted(by_name.values())
 
 
 def write_map(path: Path, symbols: list[MapSymbol]) -> None:
