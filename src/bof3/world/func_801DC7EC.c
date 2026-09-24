@@ -2,16 +2,18 @@
 
 /* @source 0x801DC7EC */
 /* @behavior Initializes three scratch work-record bytes when the shared mode is zero.
- * @status partial
- * @match 89.47
- * @residual Same-size scheduling residual: original places li v0,1 in the
- * bnez delay slot; current places it after the scratch pointer load; canonical
- * and installed historical compiler profiles produced no exact result.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
+/* The first store goes through the fixed-address scratch-cursor view, not the
+ * named D_1F800044 symbol: only that form puts the stored constant in the bnez
+ * delay slot (li v0,1 ahead of the folded cursor load), the lever recorded by
+ * siblings func_801D11C0 and func_801DBEDC in this target. */
 void func_801DC7EC(void)
 {
   if (D_80143C40 == 0) {
-    D_1F800044[2] = 1;
+    WORLD00_AREA030_SCRATCH_PTR[2] = 1;
     D_1F800044[3] = 0;
     D_1F800044[4] = 0;
   }
