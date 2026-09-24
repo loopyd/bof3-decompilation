@@ -1,0 +1,12 @@
+dispatchProgressHandler_scena19 = 0x801F6C04;
+advanceScenarioProgressToOne_scena19 = 0x801F6C40;
+advanceScenarioProgressTo2_scena19 = 0x801F6C54;
+dispatchProgressHandler_scena19_801F6C68 = 0x801F6C68;
+func_801F6CA4 = 0x801F6CA4;
+dispatchRecordCallback_scena19 = 0x801F6D10;
+noopProgressHandler_scena19_801F6D50 = 0x801F6D50;
+noopCallbackReturningZero_scena19_801F6D58 = 0x801F6D58;
+noopCallbackReturningZero_scena19_801F6D60 = 0x801F6D60;
+clearWorkRecordsAndResetEffectSlots_scena19 = 0x801F6D68;
+func_801F6DB4 = 0x801F6DB4;
+func_801F6DBC = 0x801F6DBC;

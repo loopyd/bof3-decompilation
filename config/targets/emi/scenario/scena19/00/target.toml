@@ -1,0 +1,23 @@
+schema = "harness.target/v2"
+id = "emi/scenario/scena19/00"
+disc_id = "BIN/SCENARIO/SCENA19.EMI#0"
+kind = "emi"
+source_dir = "src/emi/scenario/scena19/00"
+binary = "out/binaries/emi/scenario/scena19/00.bin"
+splat = "config/targets/emi/scenario/scena19/00/splat.yaml"
+load_address = 0x801F6C00
+
+sources = []
+support_sources = [
+    "src/bof3/scenario/clearWorkRecordsAndResetEffectSlots_scena19.c",
+    "src/bof3/scenario/noopCallbackReturningZero_scena19_801F6D60.c",
+    "src/bof3/scenario/noopCallbackReturningZero_scena19_801F6D58.c",
+    "src/bof3/scenario/noopProgressHandler_scena19_801F6D50.c",
+    "src/bof3/scenario/dispatchRecordCallback_scena19.c",
+    "src/bof3/scenario/dispatchProgressHandler_scena19_801F6C68.c",
+    "src/bof3/scenario/advanceScenarioProgressTo2_scena19.c",
+    "src/bof3/scenario/advanceScenarioProgressToOne_scena19.c",
+    "src/bof3/scenario/dispatchProgressHandler_scena19.c",
+    "src/bof3/support/scena19_00_psyq.c",
+]
+psyq_source = "src/bof3/support/scena19_00_psyq.c"

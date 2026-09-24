@@ -1,0 +1,65 @@
+name: scenario_scena19_00
+sha1: 8251c1a655a9febe6330294921ecffc75d0ea455
+options:
+  platform: psx
+  compiler: psyq
+  basename: scenario_scena19_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/scenario/scena19/00.bin
+  asm_path: out/splat/emi/scenario/scena19/00/asm
+  src_path: src/emi/scenario/scena19/00
+  ld_script_path: out/splat/emi/scenario/scena19/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/scenario/scena19/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/scenario/scena19/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/scenario/scena19/00/.splache
+  asset_path: out/splat/emi/scenario/scena19/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/scenario/scena19/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149542916
+  subsegments:
+  - - 4
+    - c
+    - dispatchProgressHandler_scena19
+  - - 64
+    - c
+    - advanceScenarioProgressToOne_scena19
+  - - 84
+    - c
+    - advanceScenarioProgressTo2_scena19
+  - - 104
+    - c
+    - dispatchProgressHandler_scena19_801F6C68
+  - - 164
+    - asm
+    - func_801F6CA4
+  - - 272
+    - c
+    - dispatchRecordCallback_scena19
+  - - 336
+    - c
+    - noopProgressHandler_scena19_801F6D50
+  - - 344
+    - c
+    - noopCallbackReturningZero_scena19_801F6D58
+  - - 352
+    - c
+    - noopCallbackReturningZero_scena19_801F6D60
+  - - 360
+    - c
+    - clearWorkRecordsAndResetEffectSlots_scena19
+  - - 436
+    - asm
+    - func_801F6DB4
+  - - 444
+    - asm
+    - func_801F6DBC
+- - 492
