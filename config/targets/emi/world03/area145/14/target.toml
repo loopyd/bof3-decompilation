@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world03/invokeHelperWorld03Area14514_801F2F10.c",
     "src/bof3/world03/noopHandlerWorld03Area14514_801F5324.c",
     "src/bof3/support/area145_14_psyq.c",
 ]

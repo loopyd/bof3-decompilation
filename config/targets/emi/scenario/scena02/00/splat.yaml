@@ -279,8 +279,8 @@ segments:
     - asm
     - func_801FD780
   - - 30072
-    - asm
-    - func_801FE178
+    - c
+    - invokeHelperArgScenarioScena0200_801FE178
   - - 30104
     - asm
     - func_801FE198

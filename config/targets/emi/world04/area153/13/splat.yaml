@@ -30,8 +30,8 @@ segments:
     - asm
     - func_801F2C04
   - - 92
-    - asm
-    - func_801F2C5C
+    - c
+    - noopHandlerWorld04Area15313_801F2C5C
 - - 100
   - bin
   - tail

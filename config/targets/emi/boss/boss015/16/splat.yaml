@@ -54,8 +54,8 @@ segments:
     - asm
     - func_800C1930
   - - 380
-    - asm
-    - func_800C197C
+    - c
+    - invokeHelperArgBossBoss01516_800C197C
   - - 412
     - asm
     - func_800C199C

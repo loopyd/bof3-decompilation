@@ -1,0 +1,104 @@
+name: world02_area085_13
+sha1: 04ef04fa9ce96197280a55e3d6e9fb2ec00e3022
+options:
+  platform: psx
+  compiler: psyq
+  basename: world02_area085_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world02/area085/13.bin
+  asm_path: out/splat/emi/world02/area085/13/asm
+  src_path: src/emi/world02/area085/13
+  ld_script_path: out/splat/emi/world02/area085/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world02/area085/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world02/area085/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world02/area085/13/.splache
+  asset_path: out/splat/emi/world02/area085/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world02/area085/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149526532
+  subsegments:
+  - - 4
+    - asm
+    - func_801F2C04
+  - - 72
+    - asm
+    - func_801F2C48
+  - - 180
+    - asm
+    - func_801F2CB4
+  - - 368
+    - asm
+    - func_801F2D70
+  - - 556
+    - asm
+    - func_801F2E2C
+  - - 688
+    - asm
+    - func_801F2EB0
+  - - 728
+    - asm
+    - func_801F2ED8
+  - - 972
+    - asm
+    - func_801F2FCC
+  - - 1180
+    - asm
+    - func_801F309C
+  - - 1248
+    - asm
+    - func_801F30E0
+  - - 2464
+    - asm
+    - func_801F35A0
+  - - 2740
+    - asm
+    - func_801F36B4
+  - - 2876
+    - asm
+    - func_801F373C
+  - - 3008
+    - asm
+    - func_801F37C0
+  - - 3280
+    - asm
+    - func_801F38D0
+  - - 3312
+    - asm
+    - func_801F38F0
+  - - 3572
+    - asm
+    - func_801F39F4
+  - - 3832
+    - asm
+    - func_801F3AF8
+  - - 3932
+    - asm
+    - func_801F3B5C
+  - - 4004
+    - asm
+    - func_801F3BA4
+  - - 4044
+    - asm
+    - func_801F3BCC
+  - - 4076
+    - asm
+    - func_801F3BEC
+  - - 4124
+    - c
+    - invokeHelperArgWorld02Area08513_801F3C1C
+  - - 4156
+    - asm
+    - func_801F3C3C
+  - - 4396
+    - asm
+    - func_801F3D2C
+- - 5948

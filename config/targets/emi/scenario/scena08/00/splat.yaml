@@ -189,8 +189,8 @@ segments:
     - asm
     - func_801F9618
   - - 10856
-    - asm
-    - func_801F9668
+    - c
+    - invokeHelperScenarioScena0800_801F9668
   - - 10888
     - asm
     - func_801F9688
@@ -246,8 +246,8 @@ segments:
     - asm
     - func_801F9F4C
   - - 13164
-    - asm
-    - func_801F9F6C
+    - c
+    - invokeHelperScenarioScena0800_801F9F6C
   - - 13196
     - asm
     - func_801F9F8C
@@ -339,8 +339,8 @@ segments:
     - asm
     - func_801FE6DC
   - - 31552
-    - asm
-    - func_801FE740
+    - c
+    - invokeHelperArgScenarioScena0800_801FE740
   - - 31584
     - asm
     - func_801FE760
@@ -354,8 +354,8 @@ segments:
     - asm
     - func_801FE840
   - - 31860
-    - asm
-    - func_801FE874
+    - c
+    - invokeHelperArgScenarioScena0800_801FE874
   - - 31892
     - asm
     - func_801FE894

@@ -9,6 +9,10 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/invokeHelperArgScenarioScena0300_801FCEDC.c",
+    "src/bof3/scenario/invokeHelperScenarioScena0300_801F88DC.c",
+    "src/bof3/scenario/invokeHelperScenarioScena0300_801F85DC.c",
+    "src/bof3/scenario/invokeHelperScenarioScena0300_801F842C.c",
     "src/bof3/scenario/noopHandlerScenarioScena0300_801FC688.c",
     "src/bof3/scenario/noopHandlerScenarioScena0300_801F9330.c",
     "src/bof3/support/scena03_00_psyq.c",

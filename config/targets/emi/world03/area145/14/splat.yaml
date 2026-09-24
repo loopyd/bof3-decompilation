@@ -51,8 +51,8 @@ segments:
     - asm
     - func_801F2ECC
   - - 784
-    - asm
-    - func_801F2F10
+    - c
+    - invokeHelperWorld03Area14514_801F2F10
   - - 816
     - asm
     - func_801F2F30

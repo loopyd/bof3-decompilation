@@ -39,8 +39,8 @@ segments:
     - asm
     - func_801F2CD8
   - - 524
-    - asm
-    - func_801F2E0C
+    - c
+    - invokeHelperWorld04Area17513_801F2E0C
   - - 556
     - asm
     - func_801F2E2C
@@ -63,8 +63,8 @@ segments:
     - asm
     - func_801F3374
   - - 2072
-    - asm
-    - func_801F3418
+    - c
+    - invokeHelperWorld04Area17513_801F3418
   - - 2104
     - asm
     - func_801F3438
@@ -81,8 +81,8 @@ segments:
     - asm
     - func_801F3644
   - - 2748
-    - asm
-    - func_801F36BC
+    - c
+    - invokeHelperWorld04Area17513_801F36BC
   - - 2780
     - asm
     - func_801F36DC
@@ -177,8 +177,8 @@ segments:
     - asm
     - func_801F3F2C
   - - 5052
-    - asm
-    - func_801F3FBC
+    - c
+    - invokeHelperArgWorld04Area17513_801F3FBC
   - - 5084
     - asm
     - func_801F3FDC

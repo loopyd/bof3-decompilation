@@ -198,11 +198,11 @@ segments:
     - asm
     - func_801FE0D0
   - - 29980
-    - asm
-    - func_801FE11C
+    - c
+    - invokeHelperArgScenarioScena0600_801FE11C
   - - 30012
-    - asm
-    - func_801FE13C
+    - c
+    - invokeHelperArgScenarioScena0600_801FE13C
   - - 30044
     - asm
     - func_801FE15C

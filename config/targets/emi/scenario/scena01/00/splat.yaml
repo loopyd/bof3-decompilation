@@ -240,8 +240,8 @@ segments:
     - asm
     - func_801FE1B0
   - - 30244
-    - asm
-    - func_801FE224
+    - c
+    - invokeHelperArgScenarioScena0100_801FE224
   - - 30276
     - asm
     - func_801FE244

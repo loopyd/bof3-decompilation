@@ -33,17 +33,17 @@ segments:
     - asm
     - func_801F2C2C
   - - 84
-    - asm
-    - func_801F2C54
+    - c
+    - invokeHelperArgWorld00Area01913_801F2C54
   - - 116
-    - asm
-    - func_801F2C74
+    - c
+    - invokeHelperArgWorld00Area01913_801F2C74
   - - 148
-    - asm
-    - func_801F2C94
+    - c
+    - invokeHelperArgWorld00Area01913_801F2C94
   - - 180
-    - asm
-    - func_801F2CB4
+    - c
+    - invokeHelperArgWorld00Area01913_801F2CB4
   - - 212
     - asm
     - func_801F2CD4

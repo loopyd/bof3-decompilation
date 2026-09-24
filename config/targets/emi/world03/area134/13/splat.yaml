@@ -93,8 +93,8 @@ segments:
     - asm
     - func_801F33C0
   - - 2080
-    - asm
-    - func_801F3420
+    - c
+    - invokeHelperWorld03Area13413_801F3420
   - - 2112
     - asm
     - func_801F3440
@@ -168,11 +168,11 @@ segments:
     - c
     - noopHandlerWorld03Area13413_801F3D40
   - - 4424
-    - asm
-    - func_801F3D48
+    - c
+    - invokeHelperWorld03Area13413_801F3D48
   - - 4456
-    - asm
-    - func_801F3D68
+    - c
+    - invokeHelperWorld03Area13413_801F3D68
   - - 4488
     - asm
     - func_801F3D88
@@ -192,8 +192,8 @@ segments:
     - asm
     - func_801F40C8
   - - 5552
-    - asm
-    - func_801F41B0
+    - c
+    - invokeHelperWorld03Area13413_801F41B0
   - - 5584
     - asm
     - func_801F41D0
@@ -219,8 +219,8 @@ segments:
     - asm
     - func_801F44C0
   - - 6460
-    - asm
-    - func_801F453C
+    - c
+    - invokeHelperWorld03Area13413_801F453C
   - - 6492
     - asm
     - func_801F455C
@@ -231,11 +231,11 @@ segments:
     - asm
     - func_801F4624
   - - 6828
-    - asm
-    - func_801F46AC
+    - c
+    - invokeHelperWorld03Area13413_801F46AC
   - - 6860
-    - asm
-    - func_801F46CC
+    - c
+    - invokeHelperWorld03Area13413_801F46CC
   - - 6892
     - asm
     - func_801F46EC

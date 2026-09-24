@@ -1,0 +1,143 @@
+name: world01_area041_13
+sha1: 5b2e6f3cc14b743564e5a5faeb2364a4318561c0
+options:
+  platform: psx
+  compiler: psyq
+  basename: world01_area041_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world01/area041/13.bin
+  asm_path: out/splat/emi/world01/area041/13/asm
+  src_path: src/emi/world01/area041/13
+  ld_script_path: out/splat/emi/world01/area041/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world01/area041/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world01/area041/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world01/area041/13/.splache
+  asset_path: out/splat/emi/world01/area041/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world01/area041/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149526532
+  subsegments:
+  - - 4
+    - asm
+    - func_801F2C04
+  - - 72
+    - asm
+    - func_801F2C48
+  - - 424
+    - asm
+    - func_801F2DA8
+  - - 572
+    - asm
+    - func_801F2E3C
+  - - 764
+    - asm
+    - func_801F2EFC
+  - - 1124
+    - asm
+    - func_801F3064
+  - - 1452
+    - asm
+    - func_801F31AC
+  - - 1520
+    - asm
+    - func_801F31F0
+  - - 1680
+    - asm
+    - func_801F3290
+  - - 1788
+    - asm
+    - func_801F32FC
+  - - 1932
+    - asm
+    - func_801F338C
+  - - 2048
+    - asm
+    - func_801F3400
+  - - 2220
+    - asm
+    - func_801F34AC
+  - - 2820
+    - asm
+    - func_801F3704
+  - - 3196
+    - asm
+    - func_801F387C
+  - - 3656
+    - asm
+    - func_801F3A48
+  - - 3744
+    - asm
+    - func_801F3AA0
+  - - 3848
+    - asm
+    - func_801F3B08
+  - - 3912
+    - asm
+    - func_801F3B48
+  - - 4044
+    - asm
+    - func_801F3BCC
+  - - 4308
+    - asm
+    - func_801F3CD4
+  - - 4356
+    - asm
+    - func_801F3D04
+  - - 4404
+    - asm
+    - func_801F3D34
+  - - 4472
+    - asm
+    - func_801F3D78
+  - - 4540
+    - asm
+    - func_801F3DBC
+  - - 4608
+    - asm
+    - func_801F3E00
+  - - 4640
+    - asm
+    - func_801F3E20
+  - - 4668
+    - asm
+    - func_801F3E3C
+  - - 4736
+    - asm
+    - func_801F3E80
+  - - 4836
+    - asm
+    - func_801F3EE4
+  - - 4968
+    - asm
+    - func_801F3F68
+  - - 5084
+    - asm
+    - func_801F3FDC
+  - - 5400
+    - asm
+    - func_801F4118
+  - - 5624
+    - asm
+    - func_801F41F8
+  - - 5680
+    - c
+    - invokeHelperArgWorld01Area04113_801F4230
+  - - 5712
+    - asm
+    - func_801F4250
+  - - 5768
+    - asm
+    - func_801F4288
+  - - 5832
+    - asm
+    - func_801F42C8
+- - 10894

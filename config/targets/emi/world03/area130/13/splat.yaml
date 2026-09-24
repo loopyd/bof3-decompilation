@@ -1,0 +1,128 @@
+name: world03_area130_13
+sha1: 357c0ab4fcbd9f676e225536411c700d8dbd9ea1
+options:
+  platform: psx
+  compiler: psyq
+  basename: world03_area130_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world03/area130/13.bin
+  asm_path: out/splat/emi/world03/area130/13/asm
+  src_path: src/emi/world03/area130/13
+  ld_script_path: out/splat/emi/world03/area130/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world03/area130/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world03/area130/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world03/area130/13/.splache
+  asset_path: out/splat/emi/world03/area130/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world03/area130/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 28
+  vram: 2149526556
+  subsegments:
+  - - 28
+    - asm
+    - func_801F2C1C
+  - - 96
+    - asm
+    - func_801F2C60
+  - - 220
+    - asm
+    - func_801F2CDC
+  - - 528
+    - c
+    - invokeHelperWorld03Area13013_801F2E10
+  - - 560
+    - asm
+    - func_801F2E30
+  - - 1232
+    - asm
+    - func_801F30D0
+  - - 1512
+    - asm
+    - func_801F31E8
+  - - 1580
+    - asm
+    - func_801F322C
+  - - 1668
+    - asm
+    - func_801F3284
+  - - 1852
+    - asm
+    - func_801F333C
+  - - 1996
+    - asm
+    - func_801F33CC
+  - - 2048
+    - asm
+    - func_801F3400
+  - - 2480
+    - asm
+    - func_801F35B0
+  - - 2620
+    - asm
+    - func_801F363C
+  - - 2748
+    - asm
+    - func_801F36BC
+  - - 2876
+    - asm
+    - func_801F373C
+  - - 2912
+    - asm
+    - func_801F3760
+  - - 2956
+    - asm
+    - func_801F378C
+  - - 3000
+    - asm
+    - func_801F37B8
+  - - 3056
+    - asm
+    - func_801F37F0
+  - - 3184
+    - asm
+    - func_801F3870
+  - - 3312
+    - asm
+    - func_801F38F0
+  - - 3452
+    - asm
+    - func_801F397C
+  - - 3580
+    - asm
+    - func_801F39FC
+  - - 3708
+    - asm
+    - func_801F3A7C
+  - - 3836
+    - asm
+    - func_801F3AFC
+  - - 3964
+    - asm
+    - func_801F3B7C
+  - - 4092
+    - asm
+    - func_801F3BFC
+  - - 4220
+    - c
+    - invokeHelperArgWorld03Area13013_801F3C7C
+  - - 4252
+    - asm
+    - func_801F3C9C
+  - - 4304
+    - asm
+    - func_801F3CD0
+  - - 4824
+    - asm
+    - func_801F3ED8
+- - 9308

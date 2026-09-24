@@ -1,0 +1,113 @@
+name: world02_area111_13
+sha1: 03973d69ae75c74379b85e2a0ad91eb99fb5da5a
+options:
+  platform: psx
+  compiler: psyq
+  basename: world02_area111_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world02/area111/13.bin
+  asm_path: out/splat/emi/world02/area111/13/asm
+  src_path: src/emi/world02/area111/13
+  ld_script_path: out/splat/emi/world02/area111/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world02/area111/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world02/area111/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world02/area111/13/.splache
+  asset_path: out/splat/emi/world02/area111/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world02/area111/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 100
+  vram: 2149526628
+  subsegments:
+  - - 100
+    - asm
+    - func_801F2C64
+  - - 168
+    - asm
+    - func_801F2CA8
+  - - 252
+    - asm
+    - func_801F2CFC
+  - - 384
+    - c
+    - invokeHelperWorld02Area11113_801F2D80
+  - - 416
+    - asm
+    - func_801F2DA0
+  - - 1260
+    - asm
+    - func_801F30EC
+  - - 1328
+    - asm
+    - func_801F3130
+  - - 1436
+    - asm
+    - func_801F319C
+  - - 1520
+    - asm
+    - func_801F31F0
+  - - 1604
+    - asm
+    - func_801F3244
+  - - 2000
+    - asm
+    - func_801F33D0
+  - - 2040
+    - asm
+    - func_801F33F8
+  - - 2120
+    - asm
+    - func_801F3448
+  - - 2144
+    - asm
+    - func_801F3460
+  - - 2548
+    - asm
+    - func_801F35F4
+  - - 2920
+    - asm
+    - func_801F3768
+  - - 2960
+    - asm
+    - func_801F3790
+  - - 3080
+    - asm
+    - func_801F3808
+  - - 3552
+    - asm
+    - func_801F39E0
+  - - 4032
+    - asm
+    - func_801F3BC0
+  - - 4412
+    - asm
+    - func_801F3D3C
+  - - 4840
+    - asm
+    - func_801F3EE8
+  - - 5440
+    - asm
+    - func_801F4140
+  - - 6416
+    - asm
+    - func_801F4510
+  - - 6660
+    - asm
+    - func_801F4604
+  - - 6824
+    - asm
+    - func_801F46A8
+  - - 7312
+    - asm
+    - func_801F4890
+- - 12340
