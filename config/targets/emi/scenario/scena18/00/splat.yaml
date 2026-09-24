@@ -1,0 +1,65 @@
+name: scenario_scena18_00
+sha1: 55c065e06fc3b32994a99c8021abef1711cab384
+options:
+  platform: psx
+  compiler: psyq
+  basename: scenario_scena18_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/scenario/scena18/00.bin
+  asm_path: out/splat/emi/scenario/scena18/00/asm
+  src_path: src/emi/scenario/scena18/00
+  ld_script_path: out/splat/emi/scenario/scena18/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/scenario/scena18/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/scenario/scena18/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/scenario/scena18/00/.splache
+  asset_path: out/splat/emi/scenario/scena18/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/scenario/scena18/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149542916
+  subsegments:
+  - - 4
+    - c
+    - dispatchProgressHandler_scena18
+  - - 64
+    - asm
+    - func_801F6C40
+  - - 84
+    - asm
+    - func_801F6C54
+  - - 104
+    - asm
+    - func_801F6C68
+  - - 164
+    - asm
+    - func_801F6CA4
+  - - 172
+    - asm
+    - func_801F6CAC
+  - - 236
+    - asm
+    - func_801F6CEC
+  - - 244
+    - asm
+    - func_801F6CF4
+  - - 252
+    - asm
+    - func_801F6CFC
+  - - 260
+    - asm
+    - func_801F6D04
+  - - 336
+    - asm
+    - func_801F6D50
+  - - 344
+    - asm
+    - func_801F6D58
+- - 392
