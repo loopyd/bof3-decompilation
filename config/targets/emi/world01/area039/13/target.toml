@@ -1,0 +1,16 @@
+schema = "harness.target/v2"
+id = "emi/world01/area039/13"
+disc_id = "BIN/WORLD01/AREA039.EMI#13"
+kind = "emi"
+source_dir = "src/emi/world01/area039/13"
+binary = "out/binaries/emi/world01/area039/13.bin"
+splat = "config/targets/emi/world01/area039/13/splat.yaml"
+load_address = 0x801F2C00
+
+sources = []
+support_sources = [
+    "src/bof3/world01/noopHandlerWorld01Area03913_801F2E94.c",
+    "src/bof3/world01/noopHandlerWorld01Area03913_801F2E8C.c",
+    "src/bof3/support/area039_13_psyq.c",
+]
+psyq_source = "src/bof3/support/area039_13_psyq.c"

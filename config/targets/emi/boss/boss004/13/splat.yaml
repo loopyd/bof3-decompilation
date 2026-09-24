@@ -1,0 +1,104 @@
+name: boss_boss004_13
+sha1: 8a95252477319679b0a374d17dff9819a22b44a7
+options:
+  platform: psx
+  compiler: psyq
+  basename: boss_boss004_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/boss/boss004/13.bin
+  asm_path: out/splat/emi/boss/boss004/13/asm
+  src_path: src/emi/boss/boss004/13
+  ld_script_path: out/splat/emi/boss/boss004/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/boss/boss004/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/boss/boss004/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/boss/boss004/13/.splache
+  asset_path: out/splat/emi/boss/boss004/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/boss/boss004/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2148276228
+  subsegments:
+  - - 4
+    - asm
+    - func_800C1804
+  - - 164
+    - asm
+    - func_800C18A4
+  - - 252
+    - asm
+    - func_800C18FC
+  - - 320
+    - asm
+    - func_800C1940
+  - - 448
+    - asm
+    - func_800C19C0
+  - - 516
+    - asm
+    - func_800C1A04
+  - - 588
+    - asm
+    - func_800C1A4C
+  - - 924
+    - asm
+    - func_800C1B9C
+  - - 956
+    - asm
+    - func_800C1BBC
+  - - 1012
+    - c
+    - noopHandlerBossBoss00413_800C1BF4
+  - - 1020
+    - c
+    - noopHandlerBossBoss00413_800C1BFC
+  - - 1028
+    - c
+    - noopHandlerBossBoss00413_800C1C04
+  - - 1036
+    - asm
+    - func_800C1C0C
+  - - 1092
+    - asm
+    - func_800C1C44
+  - - 1508
+    - asm
+    - func_800C1DE4
+  - - 1636
+    - asm
+    - func_800C1E64
+  - - 1968
+    - asm
+    - func_800C1FB0
+  - - 2024
+    - asm
+    - func_800C1FE8
+  - - 2440
+    - asm
+    - func_800C2188
+  - - 2568
+    - asm
+    - func_800C2208
+  - - 2892
+    - asm
+    - func_800C234C
+  - - 2948
+    - asm
+    - func_800C2384
+  - - 3364
+    - asm
+    - func_800C2524
+  - - 3492
+    - asm
+    - func_800C25A4
+  - - 3872
+    - asm
+    - func_800C2720
+- - 4000

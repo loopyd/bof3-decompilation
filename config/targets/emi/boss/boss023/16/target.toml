@@ -1,0 +1,18 @@
+schema = "harness.target/v2"
+id = "emi/boss/boss023/16"
+disc_id = "BIN/BOSS/BOSS023.EMI#16"
+kind = "emi"
+source_dir = "src/emi/boss/boss023/16"
+binary = "out/binaries/emi/boss/boss023/16.bin"
+splat = "config/targets/emi/boss/boss023/16/splat.yaml"
+load_address = 0x800C1800
+
+sources = []
+support_sources = [
+    "src/bof3/boss/zeroResultBossBoss02316_800C19BC.c",
+    "src/bof3/boss/noopHandlerBossBoss02316_800C197C.c",
+    "src/bof3/boss/noopHandlerBossBoss02316_800C1974.c",
+    "src/bof3/boss/noopHandlerBossBoss02316_800C196C.c",
+    "src/bof3/support/boss023_16_psyq.c",
+]
+psyq_source = "src/bof3/support/boss023_16_psyq.c"

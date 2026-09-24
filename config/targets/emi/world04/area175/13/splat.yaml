@@ -1,0 +1,221 @@
+name: world04_area175_13
+sha1: cd15f44ed8ec60028121b7a48be3cafb659e13fe
+options:
+  platform: psx
+  compiler: psyq
+  basename: world04_area175_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world04/area175/13.bin
+  asm_path: out/splat/emi/world04/area175/13/asm
+  src_path: src/emi/world04/area175/13
+  ld_script_path: out/splat/emi/world04/area175/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world04/area175/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world04/area175/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world04/area175/13/.splache
+  asset_path: out/splat/emi/world04/area175/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world04/area175/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 24
+  vram: 2149526552
+  subsegments:
+  - - 24
+    - asm
+    - func_801F2C18
+  - - 92
+    - asm
+    - func_801F2C5C
+  - - 216
+    - asm
+    - func_801F2CD8
+  - - 524
+    - asm
+    - func_801F2E0C
+  - - 556
+    - asm
+    - func_801F2E2C
+  - - 1228
+    - asm
+    - func_801F30CC
+  - - 1508
+    - asm
+    - func_801F31E4
+  - - 1576
+    - asm
+    - func_801F3228
+  - - 1636
+    - asm
+    - func_801F3264
+  - - 1828
+    - asm
+    - func_801F3324
+  - - 1908
+    - asm
+    - func_801F3374
+  - - 2072
+    - asm
+    - func_801F3418
+  - - 2104
+    - asm
+    - func_801F3438
+  - - 2348
+    - asm
+    - func_801F352C
+  - - 2416
+    - asm
+    - func_801F3570
+  - - 2484
+    - asm
+    - func_801F35B4
+  - - 2628
+    - asm
+    - func_801F3644
+  - - 2748
+    - asm
+    - func_801F36BC
+  - - 2780
+    - asm
+    - func_801F36DC
+  - - 3180
+    - asm
+    - func_801F386C
+  - - 3228
+    - asm
+    - func_801F389C
+  - - 3304
+    - asm
+    - func_801F38E8
+  - - 3372
+    - asm
+    - func_801F392C
+  - - 3440
+    - asm
+    - func_801F3970
+  - - 3480
+    - asm
+    - func_801F3998
+  - - 3564
+    - asm
+    - func_801F39EC
+  - - 3636
+    - asm
+    - func_801F3A34
+  - - 3676
+    - asm
+    - func_801F3A5C
+  - - 3716
+    - asm
+    - func_801F3A84
+  - - 3784
+    - asm
+    - func_801F3AC8
+  - - 3916
+    - asm
+    - func_801F3B4C
+  - - 3956
+    - asm
+    - func_801F3B74
+  - - 3996
+    - c
+    - noopHandlerWorld04Area17513_801F3B9C
+  - - 4004
+    - asm
+    - func_801F3BA4
+  - - 4104
+    - asm
+    - func_801F3C08
+  - - 4172
+    - asm
+    - func_801F3C4C
+  - - 4212
+    - asm
+    - func_801F3C74
+  - - 4252
+    - c
+    - noopHandlerWorld04Area17513_801F3C9C
+  - - 4260
+    - asm
+    - func_801F3CA4
+  - - 4300
+    - asm
+    - func_801F3CCC
+  - - 4376
+    - asm
+    - func_801F3D18
+  - - 4448
+    - asm
+    - func_801F3D60
+  - - 4500
+    - asm
+    - func_801F3D94
+  - - 4536
+    - asm
+    - func_801F3DB8
+  - - 4572
+    - asm
+    - func_801F3DDC
+  - - 4648
+    - asm
+    - func_801F3E28
+  - - 4688
+    - asm
+    - func_801F3E50
+  - - 4788
+    - asm
+    - func_801F3EB4
+  - - 4908
+    - asm
+    - func_801F3F2C
+  - - 5052
+    - asm
+    - func_801F3FBC
+  - - 5084
+    - asm
+    - func_801F3FDC
+  - - 5132
+    - asm
+    - func_801F400C
+  - - 5292
+    - asm
+    - func_801F40AC
+  - - 5636
+    - asm
+    - func_801F4204
+  - - 5704
+    - asm
+    - func_801F4248
+  - - 5740
+    - asm
+    - func_801F426C
+  - - 5916
+    - asm
+    - func_801F431C
+  - - 6044
+    - asm
+    - func_801F439C
+  - - 6252
+    - asm
+    - func_801F446C
+  - - 6360
+    - asm
+    - func_801F44D8
+  - - 6440
+    - asm
+    - func_801F4528
+  - - 6548
+    - asm
+    - func_801F4594
+  - - 6636
+    - asm
+    - func_801F45EC
+- - 10128

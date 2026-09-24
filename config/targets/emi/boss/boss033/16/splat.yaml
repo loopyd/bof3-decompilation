@@ -1,0 +1,122 @@
+name: boss_boss033_16
+sha1: 9ea107c75cc272a4de80fc1d3744b2679bda937f
+options:
+  platform: psx
+  compiler: psyq
+  basename: boss_boss033_16
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/boss/boss033/16.bin
+  asm_path: out/splat/emi/boss/boss033/16/asm
+  src_path: src/emi/boss/boss033/16
+  ld_script_path: out/splat/emi/boss/boss033/16/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/boss/boss033/16/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/boss/boss033/16/undefined_syms_auto.txt
+  cache_path: out/splat/emi/boss/boss033/16/.splache
+  asset_path: out/splat/emi/boss/boss033/16/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/boss/boss033/16/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2148276228
+  subsegments:
+  - - 4
+    - asm
+    - func_800C1804
+  - - 72
+    - asm
+    - func_800C1848
+  - - 160
+    - asm
+    - func_800C18A0
+  - - 228
+    - asm
+    - func_800C18E4
+  - - 600
+    - asm
+    - func_800C1A58
+  - - 760
+    - asm
+    - func_800C1AF8
+  - - 848
+    - c
+    - noopHandlerBossBoss03316_800C1B50
+  - - 856
+    - asm
+    - func_800C1B58
+  - - 924
+    - asm
+    - func_800C1B9C
+  - - 980
+    - asm
+    - func_800C1BD4
+  - - 1188
+    - asm
+    - func_800C1CA4
+  - - 1244
+    - asm
+    - func_800C1CDC
+  - - 1300
+    - asm
+    - func_800C1D14
+  - - 1384
+    - c
+    - noopHandlerBossBoss03316_800C1D68
+  - - 1392
+    - asm
+    - func_800C1D70
+  - - 1448
+    - c
+    - zeroResultBossBoss03316_800C1DA8
+  - - 1456
+    - asm
+    - func_800C1DB0
+  - - 1572
+    - c
+    - noopHandlerBossBoss03316_800C1E24
+  - - 1580
+    - asm
+    - func_800C1E2C
+  - - 1648
+    - asm
+    - func_800C1E70
+  - - 1752
+    - asm
+    - func_800C1ED8
+  - - 1848
+    - asm
+    - func_800C1F38
+  - - 1928
+    - asm
+    - func_800C1F88
+  - - 2252
+    - asm
+    - func_800C20CC
+  - - 2832
+    - asm
+    - func_800C2310
+  - - 3148
+    - asm
+    - func_800C244C
+  - - 3292
+    - asm
+    - func_800C24DC
+  - - 3436
+    - asm
+    - func_800C256C
+  - - 3540
+    - asm
+    - func_800C25D4
+  - - 3748
+    - asm
+    - func_800C26A4
+  - - 3908
+    - asm
+    - func_800C2744
+- - 4056

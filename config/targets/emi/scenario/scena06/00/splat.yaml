@@ -1,0 +1,245 @@
+name: scenario_scena06_00
+sha1: e08c1476574bab8ff2bb375c278b68238ddff401
+options:
+  platform: psx
+  compiler: psyq
+  basename: scenario_scena06_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/scenario/scena06/00.bin
+  asm_path: out/splat/emi/scenario/scena06/00/asm
+  src_path: src/emi/scenario/scena06/00
+  ld_script_path: out/splat/emi/scenario/scena06/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/scenario/scena06/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/scenario/scena06/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/scenario/scena06/00/.splache
+  asset_path: out/splat/emi/scenario/scena06/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/scenario/scena06/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 1688
+  vram: 2149544600
+  subsegments:
+  - - 1688
+    - asm
+    - func_801F7298
+  - - 1748
+    - asm
+    - func_801F72D4
+  - - 1792
+    - asm
+    - func_801F7300
+  - - 3584
+    - asm
+    - func_801F7A00
+  - - 3644
+    - c
+    - noopHandlerScenarioScena0600_801F7A3C
+  - - 3652
+    - asm
+    - func_801F7A44
+  - - 4204
+    - asm
+    - func_801F7C6C
+  - - 5512
+    - asm
+    - func_801F8188
+  - - 8016
+    - asm
+    - func_801F8B50
+  - - 8984
+    - asm
+    - func_801F8F18
+  - - 9408
+    - asm
+    - func_801F90C0
+  - - 11200
+    - asm
+    - func_801F97C0
+  - - 12788
+    - asm
+    - func_801F9DF4
+  - - 14288
+    - asm
+    - func_801FA3D0
+  - - 15200
+    - asm
+    - func_801FA760
+  - - 15596
+    - asm
+    - func_801FA8EC
+  - - 16136
+    - asm
+    - func_801FAB08
+  - - 17428
+    - asm
+    - func_801FB014
+  - - 18188
+    - asm
+    - func_801FB30C
+  - - 20616
+    - asm
+    - func_801FBC88
+  - - 20872
+    - asm
+    - func_801FBD88
+  - - 22680
+    - asm
+    - func_801FC498
+  - - 23320
+    - asm
+    - func_801FC718
+  - - 24448
+    - asm
+    - func_801FCB80
+  - - 24888
+    - asm
+    - func_801FCD38
+  - - 25040
+    - asm
+    - func_801FCDD0
+  - - 25104
+    - c
+    - noopHandlerScenarioScena0600_801FCE10
+  - - 25112
+    - asm
+    - func_801FCE18
+  - - 25196
+    - asm
+    - func_801FCE6C
+  - - 25280
+    - asm
+    - func_801FCEC0
+  - - 25392
+    - asm
+    - func_801FCF30
+  - - 25496
+    - asm
+    - func_801FCF98
+  - - 25536
+    - asm
+    - func_801FCFC0
+  - - 25620
+    - asm
+    - func_801FD014
+  - - 25708
+    - asm
+    - func_801FD06C
+  - - 25796
+    - asm
+    - func_801FD0C4
+  - - 25884
+    - asm
+    - func_801FD11C
+  - - 25968
+    - asm
+    - func_801FD170
+  - - 26056
+    - asm
+    - func_801FD1C8
+  - - 26164
+    - asm
+    - func_801FD234
+  - - 26260
+    - c
+    - zeroResultScenarioScena0600_801FD294
+  - - 26268
+    - asm
+    - func_801FD29C
+  - - 26444
+    - asm
+    - func_801FD34C
+  - - 26556
+    - asm
+    - func_801FD3BC
+  - - 26984
+    - asm
+    - func_801FD568
+  - - 27464
+    - asm
+    - func_801FD748
+  - - 27648
+    - asm
+    - func_801FD800
+  - - 28948
+    - asm
+    - func_801FDD14
+  - - 29052
+    - asm
+    - func_801FDD7C
+  - - 29228
+    - c
+    - noopHandlerScenarioScena0600_801FDE2C
+  - - 29236
+    - asm
+    - func_801FDE34
+  - - 29348
+    - asm
+    - func_801FDEA4
+  - - 29692
+    - asm
+    - func_801FDFFC
+  - - 29768
+    - asm
+    - func_801FE048
+  - - 29836
+    - asm
+    - func_801FE08C
+  - - 29904
+    - asm
+    - func_801FE0D0
+  - - 29980
+    - asm
+    - func_801FE11C
+  - - 30012
+    - asm
+    - func_801FE13C
+  - - 30044
+    - asm
+    - func_801FE15C
+  - - 30104
+    - asm
+    - func_801FE198
+  - - 30164
+    - asm
+    - func_801FE1D4
+  - - 30224
+    - asm
+    - func_801FE210
+  - - 30292
+    - asm
+    - func_801FE254
+  - - 30340
+    - asm
+    - func_801FE284
+  - - 30388
+    - asm
+    - func_801FE2B4
+  - - 30436
+    - asm
+    - func_801FE2E4
+  - - 30476
+    - asm
+    - func_801FE30C
+  - - 30516
+    - asm
+    - func_801FE334
+  - - 30564
+    - asm
+    - func_801FE364
+  - - 30604
+    - asm
+    - func_801FE38C
+  - - 30652
+    - asm
+    - func_801FE3BC
+- - 30964

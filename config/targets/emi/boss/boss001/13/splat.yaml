@@ -1,0 +1,116 @@
+name: boss_boss001_13
+sha1: 3973d3d529ea185f2d643d3d536d4b1a83cc3289
+options:
+  platform: psx
+  compiler: psyq
+  basename: boss_boss001_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/boss/boss001/13.bin
+  asm_path: out/splat/emi/boss/boss001/13/asm
+  src_path: src/emi/boss/boss001/13
+  ld_script_path: out/splat/emi/boss/boss001/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/boss/boss001/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/boss/boss001/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/boss/boss001/13/.splache
+  asset_path: out/splat/emi/boss/boss001/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/boss/boss001/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2148276228
+  subsegments:
+  - - 4
+    - asm
+    - func_800C1804
+  - - 100
+    - asm
+    - func_800C1864
+  - - 188
+    - asm
+    - func_800C18BC
+  - - 256
+    - asm
+    - func_800C1900
+  - - 384
+    - asm
+    - func_800C1980
+  - - 452
+    - asm
+    - func_800C19C4
+  - - 520
+    - asm
+    - func_800C1A08
+  - - 720
+    - asm
+    - func_800C1AD0
+  - - 752
+    - asm
+    - func_800C1AF0
+  - - 808
+    - c
+    - noopHandlerBossBoss00113_800C1B28
+  - - 816
+    - c
+    - noopHandlerBossBoss00113_800C1B30
+  - - 824
+    - c
+    - noopHandlerBossBoss00113_800C1B38
+  - - 832
+    - asm
+    - func_800C1B40
+  - - 900
+    - asm
+    - func_800C1B84
+  - - 988
+    - asm
+    - func_800C1BDC
+  - - 1056
+    - asm
+    - func_800C1C20
+  - - 1184
+    - asm
+    - func_800C1CA0
+  - - 1252
+    - asm
+    - func_800C1CE4
+  - - 1316
+    - asm
+    - func_800C1D24
+  - - 1504
+    - asm
+    - func_800C1DE0
+  - - 1536
+    - asm
+    - func_800C1E00
+  - - 1592
+    - c
+    - noopHandlerBossBoss00113_800C1E38
+  - - 1600
+    - c
+    - noopHandlerBossBoss00113_800C1E40
+  - - 1608
+    - c
+    - noopHandlerBossBoss00113_800C1E48
+  - - 1616
+    - asm
+    - func_800C1E50
+  - - 1672
+    - asm
+    - func_800C1E88
+  - - 2040
+    - asm
+    - func_800C1FF8
+  - - 2144
+    - asm
+    - func_800C2060
+  - - 2428
+    - asm
+    - func_800C217C
+- - 2684

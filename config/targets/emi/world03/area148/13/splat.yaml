@@ -1,0 +1,143 @@
+name: world03_area148_13
+sha1: e0d5c4e781b6c6facf5e538c1165c6c70e54d0ad
+options:
+  platform: psx
+  compiler: psyq
+  basename: world03_area148_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world03/area148/13.bin
+  asm_path: out/splat/emi/world03/area148/13/asm
+  src_path: src/emi/world03/area148/13
+  ld_script_path: out/splat/emi/world03/area148/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world03/area148/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world03/area148/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world03/area148/13/.splache
+  asset_path: out/splat/emi/world03/area148/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world03/area148/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 92
+  vram: 2149526620
+  subsegments:
+  - - 92
+    - asm
+    - func_801F2C5C
+  - - 160
+    - asm
+    - func_801F2CA0
+  - - 612
+    - asm
+    - func_801F2E64
+  - - 932
+    - asm
+    - func_801F2FA4
+  - - 1056
+    - asm
+    - func_801F3020
+  - - 1308
+    - asm
+    - func_801F311C
+  - - 1452
+    - asm
+    - func_801F31AC
+  - - 2520
+    - asm
+    - func_801F35D8
+  - - 2588
+    - asm
+    - func_801F361C
+  - - 2720
+    - asm
+    - func_801F36A0
+  - - 2848
+    - asm
+    - func_801F3720
+  - - 2952
+    - asm
+    - func_801F3788
+  - - 3000
+    - asm
+    - func_801F37B8
+  - - 3472
+    - asm
+    - func_801F3990
+  - - 3492
+    - asm
+    - func_801F39A4
+  - - 3540
+    - asm
+    - func_801F39D4
+  - - 3596
+    - asm
+    - func_801F3A0C
+  - - 3616
+    - asm
+    - func_801F3A20
+  - - 3812
+    - asm
+    - func_801F3AE4
+  - - 4008
+    - asm
+    - func_801F3BA8
+  - - 4048
+    - asm
+    - func_801F3BD0
+  - - 4132
+    - asm
+    - func_801F3C24
+  - - 5384
+    - asm
+    - func_801F4108
+  - - 5480
+    - asm
+    - func_801F4168
+  - - 5536
+    - asm
+    - func_801F41A0
+  - - 5748
+    - c
+    - noopHandlerWorld03Area14813_801F4274
+  - - 5756
+    - asm
+    - func_801F427C
+  - - 5824
+    - asm
+    - func_801F42C0
+  - - 5980
+    - asm
+    - func_801F435C
+  - - 6328
+    - asm
+    - func_801F44B8
+  - - 6468
+    - asm
+    - func_801F4544
+  - - 6600
+    - asm
+    - func_801F45C8
+  - - 6676
+    - asm
+    - func_801F4614
+  - - 7064
+    - asm
+    - func_801F4798
+  - - 7760
+    - asm
+    - func_801F4A50
+  - - 8688
+    - asm
+    - func_801F4DF0
+  - - 9156
+    - asm
+    - func_801F4FC4
+- - 13760

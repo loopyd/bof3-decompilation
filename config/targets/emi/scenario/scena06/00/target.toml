@@ -1,0 +1,18 @@
+schema = "harness.target/v2"
+id = "emi/scenario/scena06/00"
+disc_id = "BIN/SCENARIO/SCENA06.EMI#0"
+kind = "emi"
+source_dir = "src/emi/scenario/scena06/00"
+binary = "out/binaries/emi/scenario/scena06/00.bin"
+splat = "config/targets/emi/scenario/scena06/00/splat.yaml"
+load_address = 0x801F6C00
+
+sources = []
+support_sources = [
+    "src/bof3/scenario/noopHandlerScenarioScena0600_801FDE2C.c",
+    "src/bof3/scenario/zeroResultScenarioScena0600_801FD294.c",
+    "src/bof3/scenario/noopHandlerScenarioScena0600_801FCE10.c",
+    "src/bof3/scenario/noopHandlerScenarioScena0600_801F7A3C.c",
+    "src/bof3/support/scena06_00_psyq.c",
+]
+psyq_source = "src/bof3/support/scena06_00_psyq.c"

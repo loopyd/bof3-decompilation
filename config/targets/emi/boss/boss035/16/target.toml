@@ -1,0 +1,30 @@
+schema = "harness.target/v2"
+id = "emi/boss/boss035/16"
+disc_id = "BIN/BOSS/BOSS035.EMI#16"
+kind = "emi"
+source_dir = "src/emi/boss/boss035/16"
+binary = "out/binaries/emi/boss/boss035/16.bin"
+splat = "config/targets/emi/boss/boss035/16/splat.yaml"
+load_address = 0x800C1800
+
+sources = []
+support_sources = [
+    "src/bof3/boss/noopHandlerBossBoss03516_800C1CFC.c",
+    "src/bof3/boss/zeroResultBossBoss03516_800C1CA8.c",
+    "src/bof3/boss/noopHandlerBossBoss03516_800C1B44.c",
+    "src/bof3/boss/noopHandlerBossBoss03516_800C1B3C.c",
+    "src/bof3/boss/noopHandlerBossBoss03516_800C1B34.c",
+    "src/bof3/boss/noopHandlerBossBoss03516_800C1A4C.c",
+    "src/bof3/boss/noopHandlerBossBoss03516_800C1A44.c",
+    "src/bof3/boss/noopHandlerBossBoss03516_800C1904.c",
+    "src/bof3/boss/noopHandlerBossBoss03516_800C18FC.c",
+    "src/bof3/support/boss035_16_psyq.c",
+]
+psyq_source = "src/bof3/support/boss035_16_psyq.c"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS047.EMI#16"
+payload_sha256 = "b802372a33dd5846f89ff0680f59ae460dd6343750c680aba747ad48daf7acae"
+load_address = 0x800C1800
+size = 1504
+evidence = "byte-identical to BIN/BOSS/BOSS035.EMI#16: same payload sha256 and load address"

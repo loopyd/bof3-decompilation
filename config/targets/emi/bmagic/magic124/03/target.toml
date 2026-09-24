@@ -1,0 +1,15 @@
+schema = "harness.target/v2"
+id = "emi/bmagic/magic124/03"
+disc_id = "BIN/BMAGIC/MAGIC124.EMI#3"
+kind = "emi"
+source_dir = "src/emi/bmagic/magic124/03"
+binary = "out/binaries/emi/bmagic/magic124/03.bin"
+splat = "config/targets/emi/bmagic/magic124/03/splat.yaml"
+load_address = 0x801EEC00
+
+sources = []
+support_sources = [
+    "src/bof3/bmagic/noopHandlerBmagicMagic12403_801EF268.c",
+    "src/bof3/support/magic124_03_psyq.c",
+]
+psyq_source = "src/bof3/support/magic124_03_psyq.c"

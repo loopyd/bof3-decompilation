@@ -1,0 +1,10 @@
+#include "bof3/bof3.h"
+
+/* @source 0x800C19EC
+ * @behavior Empty overlay handler: returns to the caller immediately without touching any state; the overlay dispatch table references it as an inert slot.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void noopHandlerBossBoss00716_800C19EC(void) {
+}

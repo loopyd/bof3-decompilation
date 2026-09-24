@@ -1,0 +1,110 @@
+name: boss_boss035_16
+sha1: 5066152d76f1d2376a34537612a18fc2c5945686
+options:
+  platform: psx
+  compiler: psyq
+  basename: boss_boss035_16
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/boss/boss035/16.bin
+  asm_path: out/splat/emi/boss/boss035/16/asm
+  src_path: src/emi/boss/boss035/16
+  ld_script_path: out/splat/emi/boss/boss035/16/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/boss/boss035/16/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/boss/boss035/16/undefined_syms_auto.txt
+  cache_path: out/splat/emi/boss/boss035/16/.splache
+  asset_path: out/splat/emi/boss/boss035/16/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/boss/boss035/16/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2148276228
+  subsegments:
+  - - 4
+    - asm
+    - func_800C1804
+  - - 96
+    - asm
+    - func_800C1860
+  - - 196
+    - asm
+    - func_800C18C4
+  - - 252
+    - c
+    - noopHandlerBossBoss03516_800C18FC
+  - - 260
+    - c
+    - noopHandlerBossBoss03516_800C1904
+  - - 268
+    - asm
+    - func_800C190C
+  - - 336
+    - asm
+    - func_800C1950
+  - - 404
+    - asm
+    - func_800C1994
+  - - 504
+    - asm
+    - func_800C19F8
+  - - 560
+    - asm
+    - func_800C1A30
+  - - 580
+    - c
+    - noopHandlerBossBoss03516_800C1A44
+  - - 588
+    - c
+    - noopHandlerBossBoss03516_800C1A4C
+  - - 596
+    - asm
+    - func_800C1A54
+  - - 664
+    - asm
+    - func_800C1A98
+  - - 764
+    - asm
+    - func_800C1AFC
+  - - 820
+    - c
+    - noopHandlerBossBoss03516_800C1B34
+  - - 828
+    - c
+    - noopHandlerBossBoss03516_800C1B3C
+  - - 836
+    - c
+    - noopHandlerBossBoss03516_800C1B44
+  - - 844
+    - asm
+    - func_800C1B4C
+  - - 900
+    - asm
+    - func_800C1B84
+  - - 1008
+    - asm
+    - func_800C1BF0
+  - - 1084
+    - asm
+    - func_800C1C3C
+  - - 1136
+    - asm
+    - func_800C1C70
+  - - 1192
+    - c
+    - zeroResultBossBoss03516_800C1CA8
+  - - 1200
+    - asm
+    - func_800C1CB0
+  - - 1276
+    - c
+    - noopHandlerBossBoss03516_800C1CFC
+  - - 1284
+    - asm
+    - func_800C1D04
+- - 1504

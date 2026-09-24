@@ -1,0 +1,137 @@
+name: boss_boss002_16
+sha1: 1648a3224678b35682a8ef277841d4b7d99db8f7
+options:
+  platform: psx
+  compiler: psyq
+  basename: boss_boss002_16
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/boss/boss002/16.bin
+  asm_path: out/splat/emi/boss/boss002/16/asm
+  src_path: src/emi/boss/boss002/16
+  ld_script_path: out/splat/emi/boss/boss002/16/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/boss/boss002/16/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/boss/boss002/16/undefined_syms_auto.txt
+  cache_path: out/splat/emi/boss/boss002/16/.splache
+  asset_path: out/splat/emi/boss/boss002/16/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/boss/boss002/16/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2148276228
+  subsegments:
+  - - 4
+    - asm
+    - func_800C1804
+  - - 72
+    - asm
+    - func_800C1848
+  - - 160
+    - asm
+    - func_800C18A0
+  - - 228
+    - asm
+    - func_800C18E4
+  - - 284
+    - asm
+    - func_800C191C
+  - - 456
+    - asm
+    - func_800C19C8
+  - - 512
+    - asm
+    - func_800C1A00
+  - - 588
+    - asm
+    - func_800C1A4C
+  - - 672
+    - c
+    - noopHandlerBossBoss00216_800C1AA0
+  - - 680
+    - asm
+    - func_800C1AA8
+  - - 748
+    - asm
+    - func_800C1AEC
+  - - 836
+    - asm
+    - func_800C1B44
+  - - 904
+    - asm
+    - func_800C1B88
+  - - 1032
+    - asm
+    - func_800C1C08
+  - - 1088
+    - c
+    - noopHandlerBossBoss00216_800C1C40
+  - - 1096
+    - c
+    - noopHandlerBossBoss00216_800C1C48
+  - - 1104
+    - c
+    - noopHandlerBossBoss00216_800C1C50
+  - - 1112
+    - asm
+    - func_800C1C58
+  - - 1180
+    - asm
+    - func_800C1C9C
+  - - 1280
+    - asm
+    - func_800C1D00
+  - - 1336
+    - c
+    - noopHandlerBossBoss00216_800C1D38
+  - - 1344
+    - c
+    - noopHandlerBossBoss00216_800C1D40
+  - - 1352
+    - c
+    - noopHandlerBossBoss00216_800C1D48
+  - - 1360
+    - asm
+    - func_800C1D50
+  - - 1416
+    - asm
+    - func_800C1D88
+  - - 1492
+    - asm
+    - func_800C1DD4
+  - - 1588
+    - c
+    - noopHandlerBossBoss00216_800C1E34
+  - - 1596
+    - asm
+    - func_800C1E3C
+  - - 1652
+    - c
+    - zeroResultBossBoss00216_800C1E74
+  - - 1660
+    - asm
+    - func_800C1E7C
+  - - 1768
+    - asm
+    - func_800C1EE8
+  - - 1800
+    - asm
+    - func_800C1F08
+  - - 1856
+    - c
+    - zeroResultBossBoss00216_800C1F40
+  - - 1864
+    - asm
+    - func_800C1F48
+  - - 1940
+    - c
+    - noopHandlerBossBoss00216_800C1F94
+  - - 1948
+    - asm
+    - func_800C1F9C
+- - 2192

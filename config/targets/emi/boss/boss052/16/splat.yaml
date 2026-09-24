@@ -1,0 +1,83 @@
+name: boss_boss052_16
+sha1: 1e3c8171692c23c5ad2b7b67d3b8f972614f1e1f
+options:
+  platform: psx
+  compiler: psyq
+  basename: boss_boss052_16
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/boss/boss052/16.bin
+  asm_path: out/splat/emi/boss/boss052/16/asm
+  src_path: src/emi/boss/boss052/16
+  ld_script_path: out/splat/emi/boss/boss052/16/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/boss/boss052/16/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/boss/boss052/16/undefined_syms_auto.txt
+  cache_path: out/splat/emi/boss/boss052/16/.splache
+  asset_path: out/splat/emi/boss/boss052/16/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/boss/boss052/16/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2148276228
+  subsegments:
+  - - 4
+    - asm
+    - func_800C1804
+  - - 84
+    - asm
+    - func_800C1854
+  - - 184
+    - asm
+    - func_800C18B8
+  - - 252
+    - asm
+    - func_800C18FC
+  - - 388
+    - asm
+    - func_800C1984
+  - - 444
+    - c
+    - noopHandlerBossBoss05216_800C19BC
+  - - 452
+    - c
+    - noopHandlerBossBoss05216_800C19C4
+  - - 460
+    - asm
+    - func_800C19CC
+  - - 780
+    - asm
+    - func_800C1B0C
+  - - 836
+    - c
+    - zeroResultBossBoss05216_800C1B44
+  - - 844
+    - asm
+    - func_800C1B4C
+  - - 1300
+    - asm
+    - func_800C1D14
+  - - 1364
+    - asm
+    - func_800C1D54
+  - - 1432
+    - asm
+    - func_800C1D98
+  - - 1528
+    - asm
+    - func_800C1DF8
+  - - 1660
+    - asm
+    - func_800C1E7C
+  - - 1820
+    - asm
+    - func_800C1F1C
+  - - 1852
+    - asm
+    - func_800C1F3C
+- - 1960
