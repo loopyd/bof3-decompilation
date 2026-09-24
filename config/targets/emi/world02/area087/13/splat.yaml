@@ -63,8 +63,8 @@ segments:
     - asm
     - func_801F3494
   - - 2260
-    - asm
-    - func_801F34D4
+    - c
+    - invokeTwoHelpersWorld02Area08713_801F34D4
   - - 2300
     - asm
     - func_801F34FC
@@ -126,8 +126,8 @@ segments:
     - asm
     - func_801F4640
   - - 7024
-    - asm
-    - func_801F4770
+    - c
+    - invokeTwoHelpersWorld02Area08713_801F4770
   - - 7064
     - asm
     - func_801F4798

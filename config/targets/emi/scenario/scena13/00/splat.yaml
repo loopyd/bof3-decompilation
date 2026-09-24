@@ -39,8 +39,8 @@ segments:
     - asm
     - func_801F6F24
   - - 976
-    - asm
-    - func_801F6FD0
+    - c
+    - invokeTwoHelpersScenarioScena1300_801F6FD0
   - - 1016
     - asm
     - func_801F6FF8

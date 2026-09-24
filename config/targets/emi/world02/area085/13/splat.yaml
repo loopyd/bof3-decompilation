@@ -42,8 +42,8 @@ segments:
     - asm
     - func_801F2E2C
   - - 688
-    - asm
-    - func_801F2EB0
+    - c
+    - invokeTwoHelpersWorld02Area08513_801F2EB0
   - - 728
     - asm
     - func_801F2ED8

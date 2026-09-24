@@ -114,8 +114,8 @@ segments:
     - asm
     - func_801F8548
   - - 6640
-    - asm
-    - func_801F85F0
+    - c
+    - invokeTwoHelpersScenarioScena1500_801F85F0
   - - 6680
     - asm
     - func_801F8618
@@ -132,8 +132,8 @@ segments:
     - asm
     - func_801F8874
   - - 7472
-    - asm
-    - func_801F8930
+    - c
+    - invokeTwoHelpersScenarioScena1500_801F8930
   - - 7512
     - asm
     - func_801F8958

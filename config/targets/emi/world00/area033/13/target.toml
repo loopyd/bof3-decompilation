@@ -9,6 +9,8 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world00/invokeTwoHelpersWorld00Area03313_801F4674.c",
+    "src/bof3/world00/invokeTwoHelpersWorld00Area03313_801F33D4.c",
     "src/bof3/support/area033_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area033_13_psyq.c"
