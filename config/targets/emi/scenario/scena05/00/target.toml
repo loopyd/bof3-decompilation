@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/setScenarioScena0500_801F7AB4.c",
     "src/bof3/scenario/zeroResultScenarioScena0500_801FCD60.c",
     "src/bof3/scenario/noopHandlerScenarioScena0500_801FCA98.c",
     "src/bof3/scenario/noopHandlerScenarioScena0500_801F989C.c",

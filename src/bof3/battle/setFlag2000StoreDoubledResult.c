@@ -6,7 +6,7 @@
  * signed halfword result to D_801463A0[2].
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setFlag2000StoreDoubledResult(void)
 {

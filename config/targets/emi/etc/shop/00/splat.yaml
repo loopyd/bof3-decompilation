@@ -34,15 +34,18 @@ segments:
     - func_801D39BC
     - '@source: src/bof3/ui/func_801D39BC.c'
   - - 11768
-    - asm
+    - c
     - func_801D39F8
+    - '@source: src/bof3/ui/func_801D39F8.c'
   - - 11944
     - c
     - func_801D3AA8
     - '@source: src/bof3/ui/func_801D3AA8.c'
   - - 12004
-    - asm
+    - c
     - func_801D3AE4
+    - '@source: src/bof3/ui/func_801D3AE4.c'
+    - '@behavior: shop phase step, the countdown twin of the count-up step func_801D60B0: emits the shop panel strip through this EMI''s panel strip emitter func_801DAB90 with the panel x constant 0x14, the phase-relative second argument (0x12 - phaseTimer * 20) masked with 0xFFFE, the height constant 0x118, the constant 0x13 and the main-RAM CLUT-bank byte D_80144952 as the fifth argument; then decrements the frame timer phaseTimer through its address and, when the decremented byte reaches zero, arms the work-block byte D_8014865B with 1, advances the UI sub-step byte D_80148652 by one and, unless the saved-state byte D_8014865C still holds the -1 sentinel, calls the main-exe cue dispatcher func_80150284 with the cue id 0xD1.'
   - - 12184
     - asm
     - func_801D3B98
@@ -56,8 +59,10 @@ segments:
     - asm
     - func_801D3FD4
   - - 13452
-    - asm
+    - c
     - func_801D408C
+    - '@source: src/bof3/ui/func_801D408C_shop00.c'
+    - '@behavior: phase step sibling of func_801D4CF0: draws the phase-relative shop panel row through func_801D6D6C at x = phaseTimer * 48 + 0x6E with the y constant 0x4C, emits the shop panel strip through func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, draws the message panel through func_801DA2F4 at (0x62, 0x28) with the constant 0 and the main-RAM value D_80144F50 when the saved-state byte D_8014865C is not -1, then advances the frame timer phaseTimer by one and, when the advanced byte reaches 6, either resets phaseTimer and advances the UI phase byte D_80148651 by three when the overlay byte D_801E60F4 is set, or arms phaseTimer with 0x2D when the overlay byte D_801E60F0 is clear (otherwise 0), clears the UI sub-step byte D_80148652 and advances D_80148651 by D_801E60F0 + 1.'
   - - 13744
     - c
     - func_801D41B0
@@ -69,8 +74,10 @@ segments:
     - asm
     - func_801D430C
   - - 14244
-    - asm
+    - c
     - func_801D43A4
+    - '@source: src/bof3/ui/func_801D43A4.c'
+    - '@behavior: shop phase sub-step reached through entry 2 of the phase table D_801E52F0, which the dispatcher func_801D41B0 selects with the UI sub-step byte D_80148652: appends the fullscreen dim tile through appendFullscreenDimTile, calls the shared cue dispatcher func_801636A0 with the constants 0 and 1, re-arms the frame timer phaseTimer with 0x96 and advances the UI sub-step byte D_80148652 by one.'
   - - 14320
     - asm
     - func_801D43F0
@@ -81,24 +88,32 @@ segments:
     - asm
     - func_801D456C
   - - 14868
-    - asm
+    - c
     - func_801D4614
+    - '@source: src/bof3/ui/func_801D4614_shop00.c'
+    - '@behavior: emits the shop panel strip through func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, then resets phaseTimer and the UI sub-step byte D_80148652 and advances the UI phase byte D_80148651 by two when the work-block byte D_80148656[5] is zero, otherwise by one.'
   - - 15012
     - c
     - func_801D46A4
     - '@source: src/bof3/ui/func_801D46A4.c'
   - - 15072
-    - asm
+    - c
     - func_801D46E0
+    - '@source: src/bof3/ui/func_801D46E0_shop00.c'
+    - '@behavior: emits the shop panel strip through the shop emitter func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, then advances the UI sub-step byte D_80148652.'
   - - 15148
-    - asm
+    - c
     - func_801D472C
+    - '@source: src/bof3/ui/func_801D472C_shop00.c'
+    - '@behavior: clears the overlay-local byte D_801E6110 and arms D_801E60EC with 0x17, emits the shop panel strip through func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, clears D_801E6080, archives the sub-step byte D_80148652 incremented by one into D_801E6094, then sets D_80148652 to 0x13 and re-arms phaseTimer with 2.'
   - - 15276
     - asm
     - func_801D47AC
   - - 15728
-    - asm
+    - c
     - func_801D4970
+    - '@source: src/bof3/ui/func_801D4970.c'
+    - '@behavior: shop value-panel retreat phase step, the countdown mirror of the sibling phase step func_801D4CF0: when the frame timer phaseTimer reads 4 it plays the main-exe sound cue 0x102 through the cue dispatcher func_8015DF18, emits the shop panel strip through this EMI''s panel strip emitter func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, draws the sliding shop value panel through the value-panel emitter func_801DDFB0 at x = 0x62 - phaseTimer * 48 with the y constant 0x4C, the overlay flag byte D_801E60F8, the main-RAM byte D_8018E260 and the variant constant 1, then decrements the frame timer phaseTimer through its address and advances the UI sub-step byte D_80148652 by one when the decremented byte reaches zero.'
   - - 15932
     - asm
     - func_801D4A3C
@@ -106,11 +121,15 @@ segments:
     - asm
     - func_801D4BBC
   - - 16624
-    - asm
+    - c
     - func_801D4CF0
+    - '@source: src/bof3/ui/shopValuePanelPhaseStep.c'
+    - '@behavior: shop value-panel phase step: draws the sliding shop value panel through the value-panel emitter func_801DDFB0 at x = phaseTimer * 48 + 0x62 with the y constant 0x4C, the overlay flag byte D_801E60F8 and the main-RAM byte D_8018E260 and the variant constant 1, emits the shop panel strip through func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, then advances the frame timer phaseTimer by one and, when the advanced byte reaches 4, arms the UI sub-step byte D_80148652 with 0x12 when the overlay byte D_801E6080 is set, otherwise with its own value incremented by one.'
   - - 16820
-    - asm
+    - c
     - func_801D4DB4
+    - '@source: src/bof3/ui/func_801D4DB4_shop00.c'
+    - '@behavior: shop panel retreat phase step: when the frame timer phaseTimer reads 4 it plays the main-exe sound cue 0x102 through the cue dispatcher func_8015DF18, emits the shop panel strip through the panel strip emitter func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, draws the panel row derived from phaseTimer through the row emitter func_801D67B0 at X = 0x20 - phaseTimer * 80 with the constants 0x30 and 1, then decrements phaseTimer through its address and advances the UI sub-step byte D_80148652 by one when the decremented byte reaches zero.'
   - - 17012
     - asm
     - func_801D4E74
@@ -121,8 +140,10 @@ segments:
     - asm
     - func_801D51B8
   - - 18320
-    - asm
+    - c
     - func_801D5390
+    - '@source: src/bof3/ui/func_801D5390.c'
+    - '@behavior: emits the shop panel strip through the shop emitter func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, draws the panel row derived from the frame timer phaseTimer through func_801D67B0 (phaseTimer * 80 + 0x20, 0x30, 0), then advances phaseTimer by one and arms the UI sub-step byte D_80148652 with 0x12 or 1 depending on the overlay byte D_801E6080 when the advanced byte reaches 4.'
   - - 18492
     - asm
     - func_801D543C
@@ -148,11 +169,15 @@ segments:
     - asm
     - func_801D5E88
   - - 21528
-    - asm
+    - c
     - func_801D6018
+    - '@source: src/bof3/ui/func_801D6018.c'
+    - '@behavior: emits the shop panel strip through this EMI''s panel strip emitter func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument; when bit 2 of the global gate halfword D_801490A4 is set it either resets the frame timer phaseTimer and advances the UI phase byte D_80148651 by one (work-block byte D_80148656[5] zero) or jumps the phase byte to 3 and clears the UI sub-step byte D_80148652.'
   - - 21680
-    - asm
+    - c
     - func_801D60B0
+    - '@source: src/bof3/ui/func_801D60B0.c'
+    - '@behavior: shop phase step: emits the shop panel strip through the panel strip emitter func_801DAB90 with the panel x constant 0x14, the phase-relative second argument (0x12 - phaseTimer * 20) masked with 0xFFFE, the height constant 0x118, the constant 0x13 and the main-RAM CLUT-bank byte D_80144952 as the fifth argument; then advances the frame timer phaseTimer by one and, when the advanced byte reaches 5, arms the write-only byte D_80148650 with 1, clears the UI phase byte D_80148651 and, for the selection values 0x40 (D_80143F02) and 0xBC/0x85/0xC1 (D_80143F00), archives the overlay byte D_8014865F into the saved-state byte D_8014865C.'
   - - 21892
     - c
     - func_801D6184
@@ -164,14 +189,18 @@ segments:
     - asm
     - func_801D62DC
   - - 22944
-    - asm
+    - c
     - func_801D65A0
+    - '@source: src/bof3/ui/func_801D65A0.c'
+    - '@behavior: shop phase sub-step: appends the fullscreen dim tile through appendFullscreenDimTile, calls the shared cue dispatcher func_801636A0 with the constants 0 and 1, re-arms the frame timer phaseTimer with 0x96 and advances the UI phase byte D_80148651 by one.'
   - - 23020
     - asm
     - func_801D65EC
   - - 23144
-    - asm
+    - c
     - func_801D6668
+    - '@source: src/bof3/ui/func_801D6668_shop00.c'
+    - '@behavior: reads the global gate halfword D_80143C40 once at entry; when it is clear, calls the this-target rebuild helper func_801D68D0 with the constant 0 and then increments the UI phase byte D_80148651, otherwise returns without touching either cell.'
   - - 23212
     - c
     - setUiFlags
@@ -193,8 +222,10 @@ segments:
     - asm
     - func_801D69E0
   - - 24804
-    - asm
+    - c
     - func_801D6CE4
+    - '@source: src/bof3/ui/func_801D6CE4_shop00.c'
+    - '@behavior: copies the seven 32-bit words at byte offset 0xCA0 of the main-RAM shop state block into record index of the panel record table D_801E6098 (stride 0x1C).'
   - - 24940
     - asm
     - func_801D6D6C
@@ -206,8 +237,10 @@ segments:
     - asm
     - func_801D6F00
   - - 25728
-    - asm
+    - c
     - func_801D7080
+    - '@source: src/bof3/ui/func_801D7080_shop00.c'
+    - '@behavior: clears the 0x40-byte main-RAM text buffer D_80145AD4, then formats the shop header row through sprintf into that buffer with the EMI format string D_801D0C98 and the seven digit strings of the char-pointer table D_801E5434 selected by the slot byte D_801E6108 and by the tens/units halves of the front-end clock bytes D_80144FC0 (hours) and D_80144FC1 (minutes) and of the level byte D_8014496E.'
   - - 26120
     - asm
     - func_801D7208
@@ -216,8 +249,10 @@ segments:
     - func_801D7344
     - '@source: src/bof3/ui/func_801D7344.c'
   - - 26496
-    - asm
+    - c
     - func_801D7380
+    - '@source: src/bof3/ui/func_801D7380.c'
+    - '@behavior: shop phase step of the panel-timer family: calls the main-exe sound cue dispatcher func_8015DF18 with the cue id 0x102 when the frame timer phaseTimer still holds 6 at entry, then calls the panel setup helper buildSlotList with 1 and the record setup helper func_801D7E1C with the work-block index byte D_80148656[0], the phase-relative record offset (phaseTimer << 5) + 0x98, 0x3F, 0 and 0xFF, then decrements phaseTimer through its address and, when the decremented byte reaches zero, clears the work-block byte D_80148656[0], the timer, the byte D_80148655, the overlay byte D_8014865F and the UI sub-step byte D_80148652 and advances the UI phase byte D_80148651 by one.'
   - - 26692
     - asm
     - func_801D7444
@@ -228,17 +263,25 @@ segments:
     - asm
     - func_801D7960
   - - 28388
-    - asm
+    - c
     - func_801D7AE4
+    - '@source: src/bof3/ui/func_801D7AE4.c'
+    - '@behavior: shop phase step called before the field-list setup: calls buildSlotList with 1, then func_801D7E1C with the work-block index byte D_80148656[0], the phase-relative record offset (phaseTimer << 5) + 0x98, 0x3F, 0 and 0xFF, then advances the frame timer phaseTimer by one and, when the advanced byte equals 7, clears phaseTimer and the sub-step byte D_80148652, arms D_80148650 with 1 and clears the phase byte D_80148651.'
   - - 28532
-    - asm
+    - c
     - func_801D7B74
+    - '@source: src/bof3/ui/func_801D7B74_shop00.c'
+    - '@behavior: shop panel phase step sharing the entry sequence of the sibling steps func_801D7CC8 and func_801D7D48: calls func_801D7E1C with the work-block index byte D_80148656[0], 0x98, 0x3F, 0 and the main-RAM byte D_8014865D as the fifth argument, then buildSlotList with 0, then forwards the same work-block index byte read signed to the shop panel helper func_801D8E2C as the even value (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 0 and 6; when the byte counter func_801D81B4(&D_80148656[5], 0xF) returns a nonzero low byte it publishes 1 << (s8)D_8014865D into the byte at D_80144981 + 164 * D_80145FCC[index * 0x140], rebuilds that same 164-byte field record through func_80164A44 and rolls the UI phase byte D_80148651 back by four.'
   - - 28872
-    - asm
+    - c
     - func_801D7CC8
+    - '@source: src/bof3/ui/func_801D7CC8.c'
+    - '@behavior: shop panel phase step sharing the entry sequence of the sibling steps func_801D7B74 and func_801D7D48: calls func_801D7E1C with the work-block index byte D_80148656[0], 0x98, 0x3F, 0 and 0xFF, then buildSlotList with 0, then tests the byte counter func_801D81B4(&D_80148656[5], 0x10); when that counter returns a nonzero low byte the step rolls the UI phase byte D_80148651 back by two and clears the frame timer phaseTimer, and when it returns zero neither cell is touched.'
   - - 29000
-    - asm
+    - c
     - func_801D7D48
+    - '@source: src/bof3/ui/func_801D7D48.c'
+    - '@behavior: shop panel phase step sharing the entry sequence of the sibling steps func_801D7B74 and func_801D7CC8: calls func_801D7E1C with the work-block index byte D_80148656[0], 0x98, 0x3F, 0 and 0xFF, then buildSlotList with 0, then forwards the same work-block index byte read signed to the shop panel helper func_801D8E2C as the even value (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 1 and 6, and finally tests the byte counter func_801D81B4(&D_80148656[5], D_8014865F); when that counter returns a nonzero low byte the step rolls the UI phase byte D_80148651 back by six.'
   - - 29192
     - c
     - func_801D7E08
@@ -247,8 +290,10 @@ segments:
     - asm
     - func_801D7E1C
   - - 29776
-    - asm
-    - func_801D8050
+    - c
+    - buildSlotList
+    - '@source: src/bof3/ui/buildSlotList.c'
+    - '@behavior: shop slot-list builder: emits the shop panel strip through func_801DAB90 with the panel x constant 0x14, the phase-relative second argument (0x10 - phaseTimer * 10) masked with 0xFFFE, the height constant 0x118, the constant 0x13 and the main-RAM CLUT-bank byte D_80144952 as the fifth argument (its byte argument selects whether the frame timer phaseTimer or zero supplies the phase offset); then walks the slots while the byte result of the mode scanner func_801BDB7C(0) has not been reached, drawing each slot through the field-list emitter func_801D826C with the even row offset (slot * 54 + 0x3E) & 0xFFFE, the leading byte of the 0x140-byte-stride record D_80145FCC of that slot, the nonzero state of the bit-mask byte D_80144981[164 * record] and the constant 0; finally draws the shop panel through func_801DA2F4 at phaseTimer * 32 + 0xB4 with the y constant 0x26, the constant 0 and the main-RAM value D_80144F50.'
   - - 30132
     - asm
     - func_801D81B4
@@ -271,8 +316,10 @@ segments:
     - asm
     - func_801D8FC0
   - - 34060
-    - asm
+    - c
     - func_801D910C
+    - '@source: src/bof3/ui/func_801D910C_shop00.c'
+    - '@behavior: shop icon wrapper: when the kind byte arg2 equals 4 and the signed main-RAM byte D_80146870 is at least 8, substitutes the kind 0xB; then forwards the two zero-extended u16 coordinates, the kind byte and the mode byte arg3 to the shop icon emitter func_801D8FC0.'
   - - 34144
     - asm
     - func_801D9160
@@ -286,8 +333,10 @@ segments:
     - asm
     - func_801D98C0
   - - 37900
-    - asm
+    - c
     - func_801DA00C
+    - '@source: src/bof3/ui/func_801DA00C_shop00.c'
+    - '@behavior: emits one 16x8 semi-transparent textured sprite at (arg0, arg1) into the shared primitive cursor: a DR_MODE carrying the graph-type texture page (0x8f for graph types 1 and 2, 0x2f otherwise), then a SPRT with width 16, height 8, texture column arg2*16, texture row 0xd8 and CLUT 0x7800; the sprite color is the dim gray 0x10 when arg3 is set, otherwise the bright gray 0x80.'
   - - 38176
     - c
     - emitPanelIconPrim
@@ -308,8 +357,9 @@ segments:
     - asm
     - func_801DA77C
   - - 40388
-    - asm
+    - c
     - func_801DA9C4
+    - '@source: src/bof3/ui/func_801DA9C4.c'
   - - 40568
     - c
     - func_801DAA78
@@ -323,8 +373,10 @@ segments:
     - asm
     - func_801DB0DC
   - - 44344
-    - asm
+    - c
     - func_801DB938
+    - '@source: src/bof3/ui/func_801DB938_shop00.c'
+    - '@behavior: shop panel emitter: submits the shaded panel rectangle through func_801AE3F0 with the task''s x and field-6 halfwords, the fixed 0x8B by 0x9F size, the low byte of arg1 offset by 0xF0 and the main-RAM CLUT-bank byte D_80144952 as the trailing stack argument, then draws the same task twice through the shop row emitters func_801D95F4 and func_801D9254 with the leading byte of the 0x140-byte-stride record D_80145FCC selected by task byte 0xC and the low byte of arg1.'
   - - 44528
     - asm
     - func_801DB9F0
@@ -368,14 +420,20 @@ segments:
     - asm
     - func_801DE200
   - - 55240
-    - asm
+    - c
     - func_801DE3C8
+    - '@source: src/bof3/ui/func_801DE3C8_shop00.c'
+    - '@behavior: when the global gate halfword D_80143C40 is clear, calls the main-exe frontend mode setter func_8014ECAC with the constant 3 and then increments the UI sub-step byte D_80148652; when the gate is set neither the call nor the byte store happens.'
   - - 55308
-    - asm
+    - c
     - func_801DE40C
+    - '@source: src/bof3/ui/func_801DE40C_shop00.c'
+    - '@behavior: calls func_801DF6A8, then, when the global gate halfword D_80143C40 is clear, clears the UI sub-step byte D_80148652 and advances the UI phase byte D_80148651 by two.'
   - - 55388
-    - asm
+    - c
     - func_801DE45C
+    - '@source: src/bof3/ui/func_801DE45C.c'
+    - '@behavior: calls the this-EMI sprite-grid renderer func_801DBD24 with the main-RAM index byte D_80144953, calls func_801DEE64, then decrements the frame timer phaseTimer through its address and, when the byte wraps to zero, reads the UI phase byte D_80148651 before re-arming phaseTimer with 3 and writing the phase byte back incremented (sibling shape func_801D39F8).'
   - - 55496
     - asm
     - func_801DE4C8
@@ -384,8 +442,10 @@ segments:
     - func_801DE850
     - '@source: src/bof3/ui/func_801DE850.c'
   - - 56460
-    - asm
+    - c
     - func_801DE88C
+    - '@source: src/bof3/ui/func_801DE88C_shop00.c'
+    - '@behavior: sub-step handler reached as entry 0 of the phase table D_801E5C08 (indexed by the UI sub-step byte D_80148652): when the global gate halfword D_80143C40 is clear it appends the fullscreen dim tile through appendFullscreenDimTileB, re-arms phaseTimer with 2 and advances D_80148652 by one; when the gate is set it calls func_801DF6A8 instead and leaves phaseTimer and D_80148652 untouched.'
   - - 56552
     - c
     - func_801DE8E8
@@ -422,8 +482,10 @@ segments:
     - func_801DF978
     - '@source: src/bof3/ui/func_801DF978.c'
   - - 60852
-    - asm
+    - c
     - func_801DF9B4
+    - '@source: src/bof3/ui/func_801DF9B4_shop00.c'
+    - '@behavior: calls func_801E0F78 (shop list/state rebuild), then advances the UI phase byte D_80148651 and clears the overlay-local byte D_801E6260.'
   - - 60908
     - asm
     - func_801DF9EC
@@ -462,11 +524,15 @@ segments:
     - asm
     - func_801E0BAC
   - - 66344
-    - asm
-    - func_801E0F28
+    - c
+    - tickPhaseTimerThenBeginFrame
+    - '@source: src/bof3/ui/tickPhaseTimerThenBeginFrame.c'
+    - '@behavior: phase handler reached as entry 4 of the UI phase handler table D_801E5CE8, which func_801DF978 dispatches with the phase byte D_80148651 as index: decrements the per-frame phase timer through its address and, when the decremented byte wraps to zero, begins one shared front-end frame/update slice through func_80158E50 and arms the write-only byte D_80148650 with 1 (that byte has no loads in this target, so its role is unproven); the sibling ticks tickPhaseTimer and tickPhaseTimerB decrement the same timer and advance the sub-step byte D_80148652 instead.'
   - - 66424
-    - asm
+    - c
     - func_801E0F78
+    - '@source: src/bof3/ui/rebuildShopListState.c'
+    - '@behavior: shop list/state rebuild: clears the overlay counter byte D_801E6258 and refills the eight D_801E6264 slots with the indices of the 0xA4-byte field records at D_8014496F whose low bit is set, then rewrites the shop UI state block at D_80148330 through the pointer anchored at D_80148331 and, when func_80166140(0xF) returns zero, the second state block at D_80148408..0x8014840E; called by the phase advance handler func_801DF9B4 with no arguments.'
   - - 66860
     - asm
     - func_801E112C
@@ -482,14 +548,20 @@ segments:
     - swapBytes
     - '@source: src/bof3/ui/swapBytes.c'
   - - 69580
-    - asm
+    - c
     - func_801E1BCC
+    - '@source: src/bof3/ui/func_801E1BCC.c'
+    - '@behavior: normalizes adjacent byte pairs of the main-RAM skill-notes bank D_8014546C: for every outer pass i in 0..0x7E it re-seeds the byte cursor p at the bank start and walks j from 0 while j is below the signed pass limit 0x7F - i, deriving the next byte address q from the current cursor on every step and swapping the pair through swapBytes when the byte at p is zero and the byte at q is not, then advancing the cursor by one byte; both counters are u8.'
   - - 69768
-    - asm
-    - func_801E1C88
+    - c
+    - sortSkillNotesByCostDescending
+    - '@source: src/bof3/ui/sortSkillNotesByCostDescending.c'
+    - '@behavior: orders the main-RAM 128-slot skill-notes bank D_8014546C by ability cost after normalizing it: it first runs the scanner func_801E1BCC over the bank, then for every outer pass i in 0..0x7E re-seeds the byte cursor p at the bank start and walks j from 0 while j is below the signed pass limit 0x7F - i, deriving the next byte address q from the current cursor on every step and swapping the pair through swapBytes when both bytes are non-zero and the cost byte at offset 0x0E of the 0x14-byte ability record selected by p (so abilityObjects[kind].cost, the byte at 0x801CA71A) is below the cost of the record selected by q, then advancing the cursor by one byte; both counters are u8 and the cost comparison is unsigned.'
   - - 70020
-    - asm
+    - c
     - func_801E1D84
+    - '@source: src/bof3/ui/func_801E1D84.c'
+    - '@behavior: orders the main-RAM 128-slot skill-notes bank D_8014546C by ability cost after normalizing it; it is the mirror twin of the sibling sortSkillNotesByCostDescending with the cost comparison reversed: it first runs the scanner func_801E1BCC over the bank, then for every outer pass i in 0..0x7E re-seeds the byte cursor p at the bank start and walks j from 0 while j is below the signed pass limit 0x7F - i, deriving the next byte address q from the current cursor on every step and swapping the pair through swapBytes when both bytes are non-zero and the cost byte at offset 0x0E of the 0x14-byte ability record selected by p (so abilityObjects[kind].cost, the byte at 0x801CA71A) exceeds the cost of the record selected by q, then advancing the cursor by one byte; both counters are u8 and the cost comparison is unsigned, so the pass limit is recomputed from the truncated pass counter and the q address is re-derived from the cursor on every step. Moving the smaller cost one slot earlier per pass orders the non-zero prefix of the bank by ascending cost; it returns void and does not read the command id handed over by the shop command handler table.'
   - - 70272
     - asm
     - func_801E1E80
@@ -502,8 +574,10 @@ segments:
     - func_801E2048
     - '@source: src/bof3/ui/func_801E2048.c'
   - - 70788
-    - asm
+    - c
     - func_801E2084
+    - '@source: src/bof3/ui/func_801E2084_shop00.c'
+    - '@behavior: shop sub-step handler reached as entry 0 of the sub-step table D_801E5D48, which func_801E2048 dispatches with the UI sub-step byte D_80148652 as index: calls initializeShopUiState, re-arms the frame timer phaseTimer with 6, advances the UI sub-step byte D_80148652 by one and then calls the main-exe sound cue dispatcher func_8015DF18 with the cue id 0x102.'
   - - 70860
     - c
     - func_801E20CC
@@ -566,8 +640,10 @@ segments:
     - advancePanelField6To16
     - '@source: src/bof3/ui/advancePanelField6To16.c'
   - - 73160
-    - asm
+    - c
     - func_801E29C8
+    - '@source: src/bof3/ui/func_801E29C8_shop00.c'
+    - '@behavior: panel state dispatcher sibling of func_801E2AB0, func_801E2EB0, func_801E3720 and func_801E44E0: calls the handler D_801E5DC0[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop panel through func_801DA77C with the same task root''s signed x and field-6 halfwords, its bytes 0xA and 0xB and the constant 0.'
   - - 73264
     - c
     - retreatPanelField6ToNeg20B
@@ -577,8 +653,10 @@ segments:
     - advancePanelField6To38
     - '@source: src/bof3/ui/advancePanelField6To38.c'
   - - 73392
-    - asm
+    - c
     - func_801E2AB0
+    - '@source: src/bof3/ui/func_801E2AB0_shop00.c'
+    - '@behavior: panel state dispatcher sibling of func_801E2EB0: calls the handler D_801E5DCC[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop panel through func_801DA2F4 with the same task root''s x and field-6 halfwords, the constant 0 and the main-RAM value D_80144F50.'
   - - 73492
     - c
     - retreatPanelField6ToNeg20C
@@ -592,11 +670,15 @@ segments:
     - applyPanelPosition
     - '@source: src/bof3/ui/applyPanelPosition.c'
   - - 73668
-    - asm
+    - c
     - func_801E2BC4
+    - '@source: src/bof3/ui/func_801E2BC4_shop00.c'
+    - '@behavior: forwards the panel task''s x and field-6 halfwords, the u16 entry of the D_801E5DD8 table selected by task byte 0xA, the constant 0x34, task byte 0xB and the constant 6 to func_801D8E2C.'
   - - 73752
-    - asm
+    - c
     - func_801E2C18
+    - '@source: src/bof3/ui/func_801E2C18_shop00.c'
+    - '@behavior: panel state dispatcher sibling of func_801E2DB4: calls the handler D_801E5DDC[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same task root''s x and field-6 halfwords, the byte D_80181B10[D_80144F5A[task byte 0xA]], task byte 0xB and task byte 0xC to the shop field-record draw helper func_801DB9F0.'
   - - 73884
     - c
     - retreatPanelXToNeg150
@@ -614,8 +696,10 @@ segments:
     - func_801E2D5C
     - '@source: src/bof3/ui/func_801E2D5C.c'
   - - 74164
-    - asm
+    - c
     - func_801E2DB4
+    - '@source: src/bof3/ui/func_801E2DB4_shop00.c'
+    - '@behavior: panel state dispatcher sibling of func_801E29C8 and func_801E2AB0: calls the handler D_801E5DF0[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop panel through func_801D8A0C with the same task root''s x and field-6 halfwords and the byte D_80181B10[D_80144F5A[task byte 0xA]].'
   - - 74288
     - c
     - retreatPanelXToNeg150B
@@ -625,8 +709,10 @@ segments:
     - advancePanelXTo15
     - '@source: src/bof3/ui/advancePanelXTo15.c'
   - - 74416
-    - asm
+    - c
     - func_801E2EB0
+    - '@source: src/bof3/ui/func_801E2EB0_shop00.c'
+    - '@behavior: panel state dispatcher: calls the handler D_801E5DFC[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then steps the same panel task root through func_801E2F04.'
   - - 74500
     - asm
     - func_801E2F04
@@ -646,11 +732,15 @@ segments:
     - asm
     - func_801E3284
   - - 76536
-    - asm
+    - c
     - func_801E36F8
+    - '@source: src/bof3/ui/func_801E36F8.c'
+    - '@behavior: forwards the global panel task root (D_80148648) to func_801E3284.'
   - - 76576
-    - asm
+    - c
     - func_801E3720
+    - '@source: src/bof3/ui/func_801E3720_shop00.c'
+    - '@behavior: calls the handler D_801E5E2C[panel task root state byte] with no arguments (framed jalr), then forwards the same panel task root to the shop panel step func_801DC6FC.'
   - - 76660
     - c
     - advancePanelXTo320B
@@ -663,11 +753,15 @@ segments:
     - asm
     - func_801E37F4
   - - 77692
-    - asm
+    - c
     - func_801E3B7C
+    - '@source: src/bof3/ui/func_801E3B7C_shop00.c'
+    - '@behavior: forwards the global panel task root (D_80148648) to the shop panel draw helper func_801E37F4; the call result is unused and the wrapper returns nothing.'
   - - 77732
-    - asm
+    - c
     - func_801E3BA4
+    - '@source: src/bof3/ui/func_801E3BA4_shop00.c'
+    - '@behavior: panel state dispatcher sibling of func_801E2EB0/func_801E3720: calls the handler D_801E5E48[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same panel task root to the shop panel step func_801E112C.'
   - - 77816
     - c
     - advancePanelXTo320C
@@ -685,8 +779,10 @@ segments:
     - retreatPanelXToNeg170
     - '@source: src/bof3/ui/retreatPanelXToNeg170.c'
   - - 78072
-    - asm
+    - c
     - func_801E3CF8
+    - '@source: src/bof3/ui/func_801E3CF8_shop00.c'
+    - '@behavior: panel state dispatcher sibling of func_801E2EB0/func_801E3720/func_801E3BA4: calls the handler D_801E5E5C[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same panel task root to the shop panel step func_801E1710.'
   - - 78156
     - c
     - advancePanelXTo320D
@@ -704,8 +800,10 @@ segments:
     - advancePanelXTo150
     - '@source: src/bof3/ui/advancePanelXTo150.c'
   - - 78412
-    - asm
+    - c
     - func_801E3E4C
+    - '@source: src/bof3/ui/func_801E3E4C_shop00.c'
+    - '@behavior: panel state dispatcher sibling of func_801E2EB0/func_801E3720/func_801E3BA4/func_801E3CF8/func_801E4224: calls the handler D_801E5E70[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same panel task root to the shop field-list emitter func_801D826C with its x and field-6 halfwords, its byte 0xA and the constants 0 and 0.'
   - - 78516
     - c
     - retreatPanelXToNeg150C
@@ -715,14 +813,18 @@ segments:
     - advancePanelXTo17B
     - '@source: src/bof3/ui/advancePanelXTo17B.c'
   - - 78644
-    - asm
+    - c
     - func_801E3F34
+    - '@source: src/bof3/ui/func_801E3F34_shop00.c'
+    - '@behavior: forwards the global panel task root (D_80148648) to the shop panel helper func_801E3F5C; the call result is unused and the wrapper returns nothing.'
   - - 78684
     - asm
     - func_801E3F5C
   - - 79396
-    - asm
+    - c
     - func_801E4224
+    - '@source: src/bof3/ui/func_801E4224_shop00.c'
+    - '@behavior: panel state dispatcher sibling of func_801E2EB0/func_801E3720/func_801E3BA4/func_801E3CF8: calls the handler D_801E5F14[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same panel task root to the shop panel step func_801E45C0.'
   - - 79480
     - c
     - retreatPanelXToNeg120
@@ -736,8 +838,10 @@ segments:
     - retreatPanelXTo17B
     - '@source: src/bof3/ui/retreatPanelXTo17B.c'
   - - 79672
-    - asm
+    - c
     - func_801E4338
+    - '@source: src/bof3/ui/func_801E4338_shop00.c'
+    - '@behavior: panel state dispatcher sibling of func_801E2EB0/func_801E3720/func_801E3BA4/func_801E3CF8/func_801E4224: calls the handler D_801E5F24[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same panel task root to the shop panel emitter func_801E4DF4.'
   - - 79756
     - c
     - advancePanelXTo320E
@@ -747,8 +851,10 @@ segments:
     - retreatPanelXTo140
     - '@source: src/bof3/ui/retreatPanelXTo140.c'
   - - 79884
-    - asm
+    - c
     - func_801E440C
+    - '@source: src/bof3/ui/func_801E440C_shop00.c'
+    - '@behavior: panel state dispatcher sibling of func_801E2EB0/func_801E3720/func_801E3BA4/func_801E3CF8/func_801E4224/func_801E4338: calls the handler D_801E5F30[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same panel task root to the shop panel emitter func_801E4E9C.'
   - - 79968
     - c
     - advancePanelField6To240
@@ -758,8 +864,10 @@ segments:
     - retreatPanelField6To128
     - '@source: src/bof3/ui/retreatPanelField6To128.c'
   - - 80096
-    - asm
+    - c
     - func_801E44E0
+    - '@source: src/bof3/ui/func_801E44E0_shop00.c'
+    - '@behavior: panel state dispatcher sibling of func_801E2EB0, func_801E3720, func_801E3BA4, func_801E3CF8, func_801E4224, func_801E4338 and func_801E440C: calls the handler D_801E5F3C[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop panel at the same task root''s x and field-6 coordinates through func_801E1E80.'
   - - 80192
     - c
     - advancePanelXTo320F
@@ -775,8 +883,10 @@ segments:
     - asm
     - func_801E4C2C
   - - 82252
-    - asm
+    - c
     - func_801E4D4C
+    - '@source: src/bof3/ui/isSkillRecorded.c'
+    - '@behavior: byte-list membership test over the seven 164-byte records at D_801449E2 and the 128-byte list at D_8014546C.'
   - - 82420
     - asm
     - func_801E4DF4

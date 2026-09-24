@@ -4,7 +4,7 @@
  * @source 0x800AE06C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setWorkByte9Advance(void) {
   g_battle_work[9] = 0x3C;

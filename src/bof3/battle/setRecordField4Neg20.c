@@ -5,7 +5,7 @@
  * @source 0x8009DE50
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setRecordField4Neg20(void) {
   ((s16*)D_801463A0)[2] = -20;

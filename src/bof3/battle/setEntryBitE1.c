@@ -3,7 +3,7 @@
 /* @source 0x8009C87C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* @behavior Sets or clears bit `bit` in byte offset 0xE1 according to nonzero `set`. */
 void setEntryBitE1(u8 *arg0, s32 bit, u8 set) {

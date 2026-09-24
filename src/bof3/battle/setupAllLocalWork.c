@@ -5,7 +5,7 @@
  * @source 0x801DECE0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setupAllLocalWork(void) {
   Battle03LocalWork* battle_work;

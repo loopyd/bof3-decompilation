@@ -10,11 +10,14 @@ load_address = 0x80096800
 sources = [
     "src/bof3/battle/passesBytePairGate.c",
     "src/bof3/battle/accumulateWorkCounter.c",
+    "src/bof3/battle/advanceStageAndAccumulateWorkCounter.c",
     "src/bof3/battle/applyKindMaskSelection.c",
     "src/bof3/battle/armRecordFlag8ResetFields.c",
     "src/bof3/battle/armSecondaryGridAdvanceRoot.c",
     "src/bof3/battle/clearStateWhenGateClear.c",
     "src/bof3/battle/clampIndexedBattleByte14.c",
+    "src/bof3/battle/clearOwnerRecordFlag40.c",
+    "src/bof3/battle/clearOwnerRecordHead.c",
     "src/bof3/battle/dispatchLocalHandlerPair.c",
     "src/bof3/battle/dispatchPanelStateTable69f8.c",
     "src/bof3/battle/dispatchPanelStateTable6a08.c",
@@ -55,6 +58,7 @@ sources = [
     "src/bof3/battle/enterState2WhenB8Clear.c",
     "src/bof3/battle/enterState2WhenDcClear.c",
     "src/bof3/battle/entryKindIsListed.c",
+    "src/bof3/battle/findOwnerRecord_battle15.c",
     "src/bof3/battle/forwardSelector0.c",
     "src/bof3/battle/forwardSelector1.c",
     "src/bof3/battle/func_80096AB0.c",
@@ -70,32 +74,73 @@ sources = [
     "src/bof3/battle/func_8009B160.c",
     "src/bof3/battle/func_8009B700.c",
     "src/bof3/battle/func_8009B794.c",
+    "src/bof3/battle/func_8009C8AC_battle15.c",
+    "src/bof3/battle/func_8009CCBC_battle15.c",
+    "src/bof3/battle/func_8009CF80.c",
+    "src/bof3/battle/func_8009CFEC_battle15.c",
+    "src/bof3/battle/func_8009D198_battle15.c",
     "src/bof3/battle/func_8009DA94.c",
     "src/bof3/battle/runPanelTasks16To19.c",
     "src/bof3/battle/func_8009DC6C.c",
     "src/bof3/battle/func_8009DCC8.c",
     "src/bof3/battle/func_8009DD20.c",
+    "src/bof3/battle/func_8009DE18_battle15.c",
     "src/bof3/battle/func_8009DE64.c",
     "src/bof3/battle/func_8009DE78.c",
+    "src/bof3/battle/func_8009DE8C_battle15.c",
     "src/bof3/battle/func_8009DFBC.c",
+    "src/bof3/battle/func_8009DFEC_battle15.c",
+    "src/bof3/battle/func_8009E01C_battle15.c",
+    "src/bof3/battle/func_8009E04C.c",
     "src/bof3/battle/func_8009E7E4.c",
+    "src/bof3/battle/func_8009EECC.c",
     "src/bof3/battle/func_8009EF08.c",
     "src/bof3/battle/func_8009F258.c",
+    "src/bof3/battle/func_8009F278.c",
+    "src/bof3/battle/func_8009F2B0.c",
+    "src/bof3/battle/func_8009F2E8.c",
+    "src/bof3/battle/func_8009F3DC.c",
+    "src/bof3/battle/func_8009F414.c",
+    "src/bof3/battle/func_8009F44C.c",
+    "src/bof3/battle/func_8009F484.c",
+    "src/bof3/battle/func_8009F4BC.c",
+    "src/bof3/battle/func_8009F4F4.c",
+    "src/bof3/battle/func_8009F52C.c",
+    "src/bof3/battle/func_8009F564.c",
+    "src/bof3/battle/func_8009F59C.c",
     "src/bof3/battle/func_8009F5D4.c",
+    "src/bof3/battle/func_8009F60C.c",
+    "src/bof3/battle/func_8009F644.c",
+    "src/bof3/battle/func_8009F67C_battle15.c",
+    "src/bof3/battle/func_8009F6B4_battle15.c",
+    "src/bof3/battle/func_8009F7EC_battle15.c",
+    "src/bof3/battle/func_8009F814_battle15.c",
+    "src/bof3/battle/func_8009F83C_battle15.c",
     "src/bof3/battle/func_8009F864.c",
     "src/bof3/battle/func_8009F978.c",
     "src/bof3/battle/func_8009F998.c",
+    "src/bof3/battle/func_8009F9B8_battle15.c",
     "src/bof3/battle/func_8009FE70.c",
     "src/bof3/battle/func_8009FE84.c",
     "src/bof3/battle/func_8009FE98.c",
     "src/bof3/battle/func_8009FEAC.c",
     "src/bof3/battle/func_8009FED0.c",
+    "src/bof3/battle/func_8009FF7C_battle15.c",
+    "src/bof3/battle/func_8009FFB4_battle15.c",
     "src/bof3/battle/func_8009FFE4.c",
     "src/bof3/battle/func_8009FFF8.c",
+    "src/bof3/battle/func_800A0A04_battle15.c",
+    "src/bof3/battle/func_800A0BF4_battle15.c",
     "src/bof3/battle/func_800A0C44.c",
     "src/bof3/battle/func_800A0E68.c",
+    "src/bof3/battle/func_800A23CC_battle15.c",
+    "src/bof3/battle/func_800A2404.c",
+    "src/bof3/battle/func_800A2560.c",
     "src/bof3/battle/func_800A2880.c",
     "src/bof3/battle/func_800A2AE0.c",
+    "src/bof3/battle/func_800A2D70_battle15.c",
+    "src/bof3/battle/func_800A2EF0_battle15.c",
+    "src/bof3/battle/func_800A3060_battle15.c",
     "src/bof3/battle/func_800A30E8.c",
     "src/bof3/battle/func_800A3688.c",
     "src/bof3/battle/func_800A36BC.c",
@@ -106,34 +151,53 @@ sources = [
     "src/bof3/battle/func_800A4AD0.c",
     "src/bof3/battle/func_800A4B08.c",
     "src/bof3/battle/func_800A4C44.c",
+    "src/bof3/battle/func_800A4FD8_battle15.c",
     "src/bof3/battle/func_800A5300.c",
     "src/bof3/battle/func_800A59E8.c",
+    "src/bof3/battle/func_800A5D00_battle15.c",
     "src/bof3/battle/func_800A60A8.c",
     "src/bof3/battle/func_800A6488.c",
     "src/bof3/battle/func_800A6870.c",
+    "src/bof3/battle/func_800A6CF8_battle15.c",
+    "src/bof3/battle/func_800A7694_battle15.c",
+    "src/bof3/battle/func_800A7B40_battle15.c",
     "src/bof3/battle/func_800A82A0.c",
+    "src/bof3/battle/func_800A82F8.c",
     "src/bof3/battle/func_800A8360.c",
+    "src/bof3/battle/func_800A99AC_battle15.c",
     "src/bof3/battle/func_800AA874.c",
     "src/bof3/battle/func_800AA8A4.c",
     "src/bof3/battle/func_800AAA74.c",
     "src/bof3/battle/func_800AAEBC.c",
     "src/bof3/battle/func_800AB4BC.c",
+    "src/bof3/battle/func_800ABBE0_battle15.c",
     "src/bof3/battle/func_800ABC28.c",
+    "src/bof3/battle/func_800AC218_battle15.c",
     "src/bof3/battle/func_800AC704.c",
+    "src/bof3/battle/func_800AC7D0_battle15.c",
     "src/bof3/battle/func_800ACF80.c",
     "src/bof3/battle/func_800ACFF4.c",
     "src/bof3/battle/func_800AD044.c",
     "src/bof3/battle/func_800AD074.c",
+    "src/bof3/battle/func_800AD0A8_battle15.c",
+    "src/bof3/battle/func_800AD4D4_battle15.c",
+    "src/bof3/battle/func_800AD5C8_battle15.c",
     "src/bof3/battle/func_800AD67C.c",
+    "src/bof3/battle/func_800AD930.c",
     "src/bof3/battle/func_800AD9AC.c",
     "src/bof3/battle/func_800ADCA4.c",
     "src/bof3/battle/func_800ADF9C.c",
     "src/bof3/battle/func_800ADFBC.c",
     "src/bof3/battle/func_800AE390.c",
     "src/bof3/battle/func_800AE438.c",
+    "src/bof3/battle/func_800AF0F8.c",
+    "src/bof3/battle/func_800AF5FC.c",
     "src/bof3/battle/func_800AF66C.c",
+    "src/bof3/battle/func_800AF6B8.c",
     "src/bof3/battle/func_800AF720.c",
     "src/bof3/battle/func_800AFC54.c",
+    "src/bof3/battle/func_800AFF98_battle15.c",
+    "src/bof3/battle/func_800B0058_battle15.c",
     "src/bof3/battle/func_800B0498.c",
     "src/bof3/battle/func_800B0A2C.c",
     "src/bof3/battle/func_800B0B0C.c",
@@ -145,6 +209,7 @@ sources = [
     "src/bof3/battle/func_800B23F8.c",
     "src/bof3/battle/func_800B250C.c",
     "src/bof3/battle/func_800B254C.c",
+    "src/bof3/battle/func_800B258C.c",
     "src/bof3/battle/func_800B326C.c",
     "src/bof3/battle/initMenuState13.c",
     "src/bof3/battle/initMenuState15.c",
@@ -173,6 +238,7 @@ sources = [
     "src/bof3/battle/selectOffsetPairByMode.c",
     "src/bof3/battle/selectionSetupEnabled.c",
     "src/bof3/battle/setEntryBitE1.c",
+    "src/bof3/battle/setFlag2000StoreDecrementedSlotCounter.c",
     "src/bof3/battle/setFlag2000StoreDoubledResult.c",
     "src/bof3/battle/setRecordField4Neg20.c",
     "src/bof3/battle/setRecordFlag8Field6Neg100.c",
@@ -192,3 +258,290 @@ psyq_source = "src/bof3/support/battle15_psyq.c"
 headers = [
     "include/bof3/battle/battle15_internal.h",
 ]
+
+[[replicas]]
+disc_id = "BIN/BATTLE/BATTLE2.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS001.EMI#12"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS002.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS004.EMI#12"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS007.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS008.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS012.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS013.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS014.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS015.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS017.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS018.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS019.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS020.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS021.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS022.EMI#12"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS023.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS024.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS025.EMI#12"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS027.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS028.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS029.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS030.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS031.EMI#12"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS032.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS033.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS034.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS035.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS036.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS037.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS038.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS040.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS042.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS046.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS047.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS049.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS050.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS051.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS052.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS054.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS055.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#15: same payload sha256 and load address"

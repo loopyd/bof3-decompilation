@@ -1,0 +1,83 @@
+name: world03_area131_13
+sha1: a5facabd258e4918247243176bdaf89667cee6c2
+options:
+  platform: psx
+  compiler: psyq
+  basename: world03_area131_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world03/area131/13.bin
+  asm_path: out/splat/emi/world03/area131/13/asm
+  src_path: src/emi/world03/area131/13
+  ld_script_path: out/splat/emi/world03/area131/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world03/area131/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world03/area131/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world03/area131/13/.splache
+  asset_path: out/splat/emi/world03/area131/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world03/area131/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 64
+  vram: 2149526592
+  subsegments:
+  - - 64
+    - asm
+    - func_801F2C40
+  - - 224
+    - asm
+    - func_801F2CE0
+  - - 376
+    - asm
+    - func_801F2D78
+  - - 416
+    - asm
+    - func_801F2DA0
+  - - 456
+    - asm
+    - func_801F2DC8
+  - - 496
+    - asm
+    - func_801F2DF0
+  - - 536
+    - asm
+    - func_801F2E18
+  - - 576
+    - asm
+    - func_801F2E40
+  - - 616
+    - asm
+    - func_801F2E68
+  - - 656
+    - asm
+    - func_801F2E90
+  - - 696
+    - asm
+    - func_801F2EB8
+  - - 720
+    - asm
+    - func_801F2ED0
+  - - 748
+    - asm
+    - func_801F2EEC
+  - - 776
+    - c
+    - setWorld03Area13113_801F2F08
+  - - 796
+    - asm
+    - func_801F2F1C
+  - - 852
+    - asm
+    - func_801F2F54
+  - - 1140
+    - asm
+    - func_801F3074
+- - 4348

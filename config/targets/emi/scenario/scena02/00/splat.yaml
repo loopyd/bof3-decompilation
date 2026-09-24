@@ -207,14 +207,14 @@ segments:
     - asm
     - func_801FD1DC
   - - 26196
-    - asm
-    - func_801FD254
+    - c
+    - setScenarioScena0200_801FD254
   - - 26216
-    - asm
-    - func_801FD268
+    - c
+    - setScenarioScena0200_801FD268
   - - 26236
-    - asm
-    - func_801FD27C
+    - c
+    - setScenarioScena0200_801FD27C
   - - 26256
     - asm
     - func_801FD290

@@ -8,6 +8,7 @@ splat = "config/targets/emi/battle/battle/03/splat.yaml"
 load_address = 0x801d0c00
 
 sources = [
+    "src/bof3/battle/accumulateEligibleTemplateWord.c",
     "src/bof3/battle/activatePanelTask.c",
     "src/bof3/battle/advanceByte1WhenReady.c",
     "src/bof3/battle/advanceByte3UnlessFlag2.c",
@@ -25,14 +26,18 @@ sources = [
     "src/bof3/battle/advanceStateWhenLoaderReady.c",
     "src/bof3/battle/advanceUiRingCheck.c",
     "src/bof3/battle/applyGravityOrReset.c",
+    "src/bof3/battle/applyModeOffsetPairToWork_battle03.c",
+    "src/bof3/battle/broadcastByte9DrawDigitsAndAdvance_battle03.c",
     "src/bof3/battle/broadcastByte9DrawDigits.c",
     "src/bof3/battle/callD8450WhenIdle.c",
     "src/bof3/battle/callLocalReady1.c",
     "src/bof3/battle/callNextLocalHandler.c",
+    "src/bof3/battle/centerFieldText.c",
     "src/bof3/battle/checkEnemyQueuedPredicate.c",
     "src/bof3/battle/checkLocalQueuedBranch.c",
     "src/bof3/battle/checkReady2AdvanceByte2.c",
     "src/bof3/battle/checkReadyAdvanceByte2.c",
+    "src/bof3/battle/claimFlag2000AndQueueSlot.c",
     "src/bof3/battle/clampS32.c",
     "src/bof3/battle/clearBattlerActionFlags.c",
     "src/bof3/battle/clearByte9AdvanceByte1.c",
@@ -43,11 +48,19 @@ sources = [
     "src/bof3/battle/clearStateBytesAdvance.c",
     "src/bof3/battle/commitQueuedPanelTask.c",
     "src/bof3/battle/consumePanelBudget.c",
+    "src/bof3/battle/consumePendingGroupQueue.c",
     "src/bof3/battle/copyLocalTemplates.c",
+    "src/bof3/battle/copyLocalWorkToTemplates.c",
     "src/bof3/battle/copyScratchToLocalWork.c",
+    "src/bof3/battle/copySelectedWorkToQueuedSlot.c",
     "src/bof3/battle/countMessageTokens.c",
     "src/bof3/battle/countdownOrFlag40Advance.c",
     "src/bof3/battle/countdownOrFlag40Advance2.c",
+    "src/bof3/battle/countdownScratchByte1ByGroupFlags.c",
+    "src/bof3/battle/countdownWorkByte9ClearQueuedSlot_battle03.c",
+    "src/bof3/battle/countdownWorkByte9DecayTripleEnemyReady_battle03_801E50C0.c",
+    "src/bof3/battle/countdownWorkByteAdvancePairEnemyReady_battle03.c",
+    "src/bof3/battle/countdownWorkByteAdvancePair_battle03.c",
     "src/bof3/battle/dispatchAltState3Table.c",
     "src/bof3/battle/dispatchByte1FiveTable.c",
     "src/bof3/battle/dispatchByte1PairFlagged.c",
@@ -64,6 +77,7 @@ sources = [
     "src/bof3/battle/dispatchByte3TableB424.c",
     "src/bof3/battle/dispatchByte3TableB444.c",
     "src/bof3/battle/dispatchDefaultClassTable.c",
+    "src/bof3/battle/dispatchEnemyModeHandlers.c",
     "src/bof3/battle/dispatchLocalByte2Table.c",
     "src/bof3/battle/dispatchLocalState4Table.c",
     "src/bof3/battle/dispatchLocalStateTable.c",
@@ -105,6 +119,7 @@ sources = [
     "src/bof3/battle/enterFrontendMode4.c",
     "src/bof3/battle/enterPhase4WhenLoaderReady.c",
     "src/bof3/battle/findLocalWorkByKind.c",
+    "src/bof3/battle/forwardEffectThenDispatchLocalReady.c",
     "src/bof3/battle/forwardPanelHalfwords.c",
     "src/bof3/battle/forwardSelectedEffectId.c",
     "src/bof3/battle/func_801D9AB4.c",
@@ -115,8 +130,11 @@ sources = [
     "src/bof3/battle/func_801D57AC.c",
     "src/bof3/battle/func_801D5A60.c",
     "src/bof3/battle/func_801D5BC0.c",
+    "src/bof3/battle/func_801D9304.c",
     "src/bof3/battle/isBattlerBlockedOrUnavailable.c",
+    "src/bof3/battle/isBattlerEligibleForActorPhase.c",
     "src/bof3/battle/func_801DA69C.c",
+    "src/bof3/battle/func_801DA7D4.c",
     "src/bof3/battle/func_801DAAE4.c",
     "src/bof3/battle/markBattlersMeetingOpposingThresholds.c",
     "src/bof3/battle/func_801DB2F8.c",
@@ -124,6 +142,9 @@ sources = [
     "src/bof3/battle/enemyBattlerMeetsThresholds.c",
     "src/bof3/battle/findThresholdRank.c",
     "src/bof3/battle/func_801DB524.c",
+    "src/bof3/battle/func_801DB5CC.c",
+    "src/bof3/battle/func_801DB6F4.c",
+    "src/bof3/battle/func_801DB844_battle03.c",
     "src/bof3/battle/func_801DC73C.c",
     "src/bof3/battle/func_801DCCB0.c",
     "src/bof3/battle/func_801DCD50.c",
@@ -131,6 +152,7 @@ sources = [
     "src/bof3/battle/transformFirstPointPairByMode.c",
     "src/bof3/battle/func_801DD3CC.c",
     "src/bof3/battle/func_801DD800.c",
+    "src/bof3/battle/func_801DD978.c",
     "src/bof3/battle/submitCurrentWorkEffectVariant.c",
     "src/bof3/battle/copyCurrentBattlerVisibleStateToTemplate.c",
     "src/bof3/battle/copyCurrentBattlerToQueuedSlot.c",
@@ -140,29 +162,73 @@ sources = [
     "src/bof3/battle/func_801DE1D4.c",
     "src/bof3/battle/func_801DE560.c",
     "src/bof3/battle/func_801DE60C.c",
+    "src/bof3/battle/func_801DE698_battle03.c",
+    "src/bof3/battle/func_801DE754_battle03.c",
     "src/bof3/battle/deactivateBattleDispatchSlots.c",
     "src/bof3/battle/func_801DE858.c",
     "src/bof3/battle/func_801DE9A8.c",
     "src/bof3/battle/func_801DEA64.c",
     "src/bof3/battle/func_801DEAE0.c",
+    "src/bof3/battle/func_801DEF0C.c",
+    "src/bof3/battle/func_801DF3F8.c",
+    "src/bof3/battle/func_801E020C.c",
     "src/bof3/battle/func_801E0E0C.c",
     "src/bof3/battle/func_801E1050.c",
+    "src/bof3/battle/func_801E15CC_battle03.c",
+    "src/bof3/battle/func_801E1A14_battle03.c",
+    "src/bof3/battle/func_801E1BA8_battle03.c",
+    "src/bof3/battle/func_801E1DD4_battle03.c",
+    "src/bof3/battle/func_801E2284_battle03.c",
     "src/bof3/battle/func_801E2314.c",
+    "src/bof3/battle/func_801E24F8_battle03.c",
+    "src/bof3/battle/func_801E257C_battle03.c",
     "src/bof3/battle/func_801E2A88.c",
     "src/bof3/battle/func_801E2CA4.c",
     "src/bof3/battle/func_801E2D90.c",
+    "src/bof3/battle/func_801E320C.c",
+    "src/bof3/battle/func_801E3638_battle03.c",
+    "src/bof3/battle/func_801E3980_battle03.c",
+    "src/bof3/battle/func_801E3B04_battle03.c",
+    "src/bof3/battle/func_801E44D4_battle03.c",
+    "src/bof3/battle/func_801E46EC_battle03.c",
+    "src/bof3/battle/func_801E4A50_battle03.c",
+    "src/bof3/battle/func_801E4E10.c",
     "src/bof3/battle/func_801E4ECC.c",
+    "src/bof3/battle/func_801E5288_battle03.c",
     "src/bof3/battle/func_801E590C.c",
     "src/bof3/battle/func_801E5A38.c",
     "src/bof3/battle/func_801E5AF4.c",
+    "src/bof3/battle/func_801E5CA4.c",
     "src/bof3/battle/func_801E60DC.c",
+    "src/bof3/battle/func_801E61F0_battle03.c",
     "src/bof3/battle/func_801E62BC.c",
+    "src/bof3/battle/func_801E6420_battle03.c",
+    "src/bof3/battle/func_801E6AA0.c",
+    "src/bof3/battle/func_801E6D28.c",
+    "src/bof3/battle/func_801E7778_battle03.c",
     "src/bof3/battle/func_801E7818.c",
     "src/bof3/battle/func_801E7B34.c",
+    "src/bof3/battle/func_801E8558_battle03.c",
+    "src/bof3/battle/func_801E8D04_battle03.c",
     "src/bof3/battle/func_801E8DD8.c",
     "src/bof3/battle/func_801E8FA8.c",
+    "src/bof3/battle/func_801E915C_battle03.c",
+    "src/bof3/battle/func_801E9390_battle03.c",
+    "src/bof3/battle/func_801E9538.c",
+    "src/bof3/battle/func_801E960C.c",
+    "src/bof3/battle/func_801E97A8.c",
+    "src/bof3/battle/func_801E9910.c",
+    "src/bof3/battle/func_801E99AC.c",
+    "src/bof3/battle/func_801E9B18.c",
+    "src/bof3/battle/func_801E9FDC.c",
     "src/bof3/battle/func_801EA1E0.c",
+    "src/bof3/battle/func_801EA650.c",
+    "src/bof3/battle/func_801EA774.c",
     "src/bof3/battle/func_801EA7DC.c",
+    "src/bof3/battle/func_801EA894_battle03.c",
+    "src/bof3/battle/func_801EA8F4_battle03.c",
+    "src/bof3/battle/func_801EA9FC.c",
+    "src/bof3/battle/func_801EAAB8.c",
     "src/bof3/battle/hasUiRingWork.c",
     "src/bof3/battle/incrementStateByte3.c",
     "src/bof3/battle/initModeTuple510.c",
@@ -175,6 +241,7 @@ sources = [
     "src/bof3/battle/initUiBundleSlot2.c",
     "src/bof3/battle/initUiBundleSlot3.c",
     "src/bof3/battle/initUiBundleSlot4.c",
+    "src/bof3/battle/integrateMotionOrResetState_battle03.c",
     "src/bof3/battle/integrateMotionOrSet2.c",
     "src/bof3/battle/localReadyOrHelper1.c",
     "src/bof3/battle/localReadyOrHelper2.c",
@@ -185,6 +252,7 @@ sources = [
     "src/bof3/battle/pickTargetOrFf.c",
     "src/bof3/battle/pickTargetStoreGlobal.c",
     "src/bof3/battle/pushUiRingTriple.c",
+    "src/bof3/battle/queueEligibleWorkRecord.c",
     "src/bof3/battle/queueScriptEvent.c",
     "src/bof3/battle/queueScriptRecord.c",
     "src/bof3/battle/raiseBit80AllocSlot.c",
@@ -194,9 +262,11 @@ sources = [
     "src/bof3/battle/resetReadyAdvanceByte1.c",
     "src/bof3/battle/resetScratchByte4Set2.c",
     "src/bof3/battle/resetScratchWhenGlobalBit4.c",
+    "src/bof3/battle/resetWorkWhenFlag2000Clear.c",
     "src/bof3/battle/resolveKindResultMode.c",
     "src/bof3/battle/retreatStateWhenGateClear.c",
     "src/bof3/battle/rollSlotTimerAdvance.c",
+    "src/bof3/battle/runActiveDispatchSlotHandlers.c",
     "src/bof3/battle/runActiveLocalHandlers.c",
     "src/bof3/battle/runQueuedSlotHandlers.c",
     "src/bof3/battle/scalePercentClamp100.c",
@@ -217,9 +287,11 @@ sources = [
     "src/bof3/battle/stubHandler9530.c",
     "src/bof3/battle/stubHandlerA76c.c",
     "src/bof3/battle/stubHandlerAb64.c",
+    "src/bof3/battle/startScratchWorkTransform.c",
     "src/bof3/battle/stubHandlerE690.c",
     "src/bof3/battle/stubHandlerE7fc.c",
     "src/bof3/battle/stubHandlerEfdc.c",
+    "src/bof3/battle/submitCastVoiceEvent.c",
     "src/bof3/battle/submitEffectUnlessNeg1.c",
     "src/bof3/battle/submitEnemyScriptBlock.c",
     "src/bof3/battle/submitPositionalEffectBit80.c",
@@ -234,3 +306,296 @@ psyq_source = "src/bof3/support/battle03_psyq.c"
 headers = [
     "include/bof3/battle/battle03_internal.h",
 ]
+
+[[matching.section_placements]]
+function = 0x801E5CA4
+section = ".rodata"
+address = 0x801D0F0C
+size = 0x14
+
+[[replicas]]
+disc_id = "BIN/BATTLE/BATTLE2.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS001.EMI#0"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS002.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS004.EMI#0"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS007.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS008.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS012.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS013.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS014.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS015.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS017.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS018.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS019.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS020.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS021.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS022.EMI#0"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS023.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS024.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS025.EMI#0"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS027.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS028.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS029.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS030.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS031.EMI#0"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS032.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS033.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS034.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS035.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS036.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS037.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS038.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS040.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS042.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS046.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS047.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS049.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS050.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS051.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS052.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS054.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS055.EMI#3"
+payload_sha256 = "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"
+load_address = 0x801D0C00
+size = 118224
+evidence = "byte-identical to BIN/BATTLE/BATTLE.EMI#3: same payload sha256 and load address"

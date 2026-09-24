@@ -8,14 +8,30 @@ splat = "config/targets/emi/scenario/sce10eff/00/splat.yaml"
 load_address = 0x801d0c00
 
 sources = [
+    "src/bof3/scenario/func_801D0C10.c",
+    "src/bof3/scenario/func_801D0C70.c",
+    "src/bof3/scenario/func_801D0E64.c",
     "src/bof3/scenario/func_801D0E9C.c",
+    "src/bof3/scenario/func_801D1034.c",
     "src/bof3/scenario/func_801D10C8.c",
+    "src/bof3/scenario/func_801D11A0.c",
+    "src/bof3/scenario/func_801D1218.c",
+    "src/bof3/scenario/reseedScratchRotationAndAdvance.c",
+    "src/bof3/scenario/func_801D1D58.c",
+    "src/bof3/scenario/func_801D1DE0.c",
     "src/bof3/scenario/advanceScratchProgressUntil16.c",
     "src/bof3/scenario/func_801D1EFC.c",
+    "src/bof3/scenario/func_801D1F50.c",
+    "src/bof3/scenario/func_801D2064.c",
+    "src/bof3/scenario/func_801D218C.c",
     "src/bof3/scenario/setupSceneObjectTransform.c",
+    "src/bof3/scenario/func_801D0FAC.c",
     "src/bof3/scenario/emitRadialTranslucentQuads.c",
     "src/bof3/scenario/tickScratchCountdownAndAdvanceState.c",
+    "src/bof3/scenario/func_801D1430.c",
+    "src/bof3/scenario/func_801D1544.c",
     "src/bof3/scenario/func_801D2658.c",
+    "src/bof3/scenario/func_801D165C.c",
 ]
 support_sources = [
     "src/bof3/support/sce10eff_symbols.c",
@@ -25,3 +41,9 @@ psyq_source = "src/bof3/support/sce10eff_psyq.c"
 headers = [
     "include/bof3/scenario/sce10eff_internal.h",
 ]
+
+[[matching.section_placements]]
+function = 0x801D0C10
+section = ".rodata"
+address = 0x801D0C04
+size = 0xC

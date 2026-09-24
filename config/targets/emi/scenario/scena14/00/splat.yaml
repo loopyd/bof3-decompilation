@@ -33,8 +33,8 @@ segments:
     - asm
     - func_801F6FD8
   - - 1044
-    - asm
-    - func_801F7014
+    - c
+    - setScenarioScena1400_801F7014
   - - 1064
     - asm
     - func_801F7028

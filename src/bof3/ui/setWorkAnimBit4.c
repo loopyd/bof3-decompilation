@@ -4,7 +4,7 @@
  * @source 0x801A1A24
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setWorkAnimBit4(u8* arg0) {
   struct GameWorkArea* work = SPAD_PTR_SLOT(struct GameWorkArea, 0x44u);

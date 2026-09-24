@@ -4,7 +4,7 @@
  * @behavior sets scratch slot 6, stores variant-derived u16 to task slot entry
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setVariantTaskStatus(u8 task_index, u8 record_kind_index) {
   volatile s8* ptr;

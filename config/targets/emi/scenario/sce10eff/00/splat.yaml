@@ -27,12 +27,21 @@ segments:
   - - 0
     - asm
     - T_801D0C00
+  - - 16
+    - c
+    - func_801D0C10
+    - '@source: src/bof3/scenario/func_801D0C10.c'
+    - '@behavior: Dispatches the scratchpad work byte at offset 1 through the three-entry local handler table published at 0x801D0C04 (func_801D0C70, func_801D0E64, func_801D0E9C).'
   - - 112
-    - asm
+    - c
     - func_801D0C70
+    - '@source: src/bof3/scenario/func_801D0C70.c'
+    - '@behavior: Seeds nine slots of the 0x74-byte front-end record table at 0x80143FC8 after caching the scratchpad work pointer at 0x1F800044 into 0x801D2744: one record for slot 0, then four records for slot 1 and four more for slot 2, claiming one record per iteration from func_8019601C and storing the 0..3 iteration counter in record byte 0x04 and the slot number in record byte 0x02, then clears work byte 0x0B, increments work byte 0x01 and queues cue 0x203 through func_8015DF18.'
   - - 612
-    - asm
+    - c
     - func_801D0E64
+    - '@source: src/bof3/scenario/func_801D0E64.c'
+    - '@behavior: Clears the shared scratchpad work-area header when byte 11 of the scratchpad-resident state object equals 9.'
   - - 668
     - c
     - func_801D0E9C
@@ -44,11 +53,15 @@ segments:
     - '@source: src/bof3/scenario/setupSceneObjectTransform.c'
     - '@behavior: Builds a temporary transform from scratchpad camera state and submits it through the local scene object pipeline.'
   - - 940
-    - asm
+    - c
     - func_801D0FAC
+    - '@source: src/bof3/scenario/func_801D0FAC.c'
+    - '@behavior: Dispatches byte 3 of the scratchpad-resident state object through the local handler table, projects the scratch position, and, while that byte stays non-zero, rebuilds the scene transform, submits the local primitive batch and restores the matrix stack.'
   - - 1076
-    - asm
+    - c
     - func_801D1034
+    - '@source: src/bof3/scenario/func_801D1034.c'
+    - '@behavior: Reseeds the scratchpad work object: stores rand() & 0xF in its byte 11, clears bytes 9 and 10, copies the word pair at offsets 0x34/0x38 from the object cached at 0x801D2744 into its own 0x34/0x38, stores the distance between that pair (returned by func_8015477C) at offset 0x3E and advances byte 3.'
   - - 1224
     - c
     - func_801D10C8
@@ -60,49 +73,73 @@ segments:
     - '@source: src/bof3/scenario/tickScratchCountdownAndAdvanceState.c'
     - '@behavior: Advances byte 11 and counts down byte 9 of scratchpad work, advancing byte 3 when the countdown reaches zero.'
   - - 1440
-    - asm
+    - c
     - func_801D11A0
+    - '@source: src/bof3/scenario/func_801D11A0.c'
+    - '@behavior: Advances scratch byte 11 and counts down scratch byte 10; when that countdown reaches zero it advances byte 11 of the object cached at 0x801D2744 and calls func_80196070.'
   - - 1560
-    - asm
+    - c
     - func_801D1218
+    - '@source: src/bof3/scenario/func_801D1218.c'
+    - '@behavior: Dispatches byte 3 of the scratchpad-resident state object through the local handler table at 0x801D2724, projects the scratch position, and, while that byte stays non-zero, rebuilds the scene transform, submits a local primitive batch and restores the matrix stack.'
   - - 1704
-    - asm
+    - c
     - func_801D12A8
+    - '@source: src/bof3/scenario/reseedScratchRotationAndAdvance.c'
+    - '@behavior: Reseeds the scratchpad work object (rand() & 0xF in byte 11, bytes 9 and 10 cleared), derives the rotation counter from its byte 4 as byte4 << 5, publishes the counter''s low seven bits shifted left 5 as the angle offset in the volatile scratchpad cell at 0x1F800004 with the fixed 0x20 block size in the cell at 0x1F800000, scales the local rotation results func_801783C8/func_801782FC by that block size, adds them to the 0x34/0x38 coordinate pair cached in the object at 0x801D2744, copies that object''s 0x3E halfword into the work object and advances byte 3.'
   - - 1984
     - c
     - advanceScratchProgressUntil16
     - '@source: src/bof3/scenario/advanceScratchProgressUntil16.c'
     - '@behavior: Advances scratch byte 11, then advances byte 10 by two while it is below 16; otherwise resets byte 9 to 60 and advances byte 3.'
   - - 2096
-    - asm
+    - c
     - func_801D1430
+    - '@source: src/bof3/scenario/func_801D1430.c'
+    - '@behavior: Advances byte 11 of the scratchpad work object, increments its word counter at offset 0x0C and publishes the counter''s low seven bits shifted left 5 as the angle offset in the volatile scratchpad cell at 0x1F800004 together with the fixed 0x20 block size in the cell at 0x1F800000, then scales the local rotation results func_801783C8/func_801782FC by that block size, adds them to the 0x34/0x38 coordinate pair cached in the object at 0x801D2744 and stores those sums in the work object, and finally counts down byte 9 and advances byte 3 when that countdown reaches zero.'
   - - 2372
-    - asm
+    - c
     - func_801D1544
+    - '@source: src/bof3/scenario/func_801D1544.c'
+    - '@behavior: Advances byte 11 of the scratchpad work object, increments its word counter at offset 0x0C and publishes the counter''s low seven bits shifted left 5 as the angle offset in the cell at 0x1F800004 together with the fixed 0x20 block size in the cell at 0x1F800000, then scales the local rotation results func_801783C8/func_801782FC by that block size, adds them to the 0x34/0x38 coordinate pair cached in the object at 0x801D2744 and stores those sums in the work object, and finally counts down byte 10; when that countdown reaches zero it advances byte 11 of the object cached at 0x801D2744 and calls func_80196070.'
   - - 2652
-    - asm
+    - c
     - func_801D165C
+    - '@source: src/bof3/scenario/func_801D165C.c'
+    - '@behavior: Emits the scenario overlay''s translucent radial quad bands from the scratchpad frame at 0x1F800000/0x1F800004/0x1F800008/0x1F800014: seeds the 0x10 block size, the angular phase from work byte 0x0B, the seven-times colour from work byte 0x0A and the first radial sample, then walks seventeen bands, each re-seeding the block size from the caller''s halfwidth plus or minus a random fraction of the caller''s jitter, rebuilding the eight-halfword band from the previous sample shifted down by the caller''s thickness and the new sample (depth -(index << 6)) scaled by the block size, and drawing one four-vertex Gouraud quad whose colours are the thick-rim shade, the random colour cell and white; after RotTransPers4 it emits three more 0x24-byte quads through func_8014E5A0(2, 0x24) while the second projected vertex keeps a positive screen y, shifting the band halfwords by the caller''s thickness between them (down, up by twice, up) and closing with a two-thickness shift of the first sampled vertex, painting the two previous-sample vertices of every quad white on the first band.'
   - - 4440
-    - asm
+    - c
     - func_801D1D58
+    - '@source: src/bof3/scenario/func_801D1D58.c'
+    - '@behavior: Dispatches byte 3 of the scratchpad-resident state object through the alternate local handler table, projects the scratch position, and, while that byte stays non-zero, rebuilds the scene transform, submits the alternate local primitive batch and restores the matrix stack.'
   - - 4576
-    - asm
+    - c
     - func_801D1DE0
+    - '@source: src/bof3/scenario/func_801D1DE0.c'
+    - '@behavior: Reseeds the scratchpad work object (rand() & 0xF in byte 11, bytes 9 and 10 cleared), derives the rotation counter from its byte 4 as (byte4 << 5) + 0x10, publishes the counter''s low seven bits shifted left 5 as the angle offset in the scratchpad cell at 0x1F800004 with the fixed 0x18 block size in the cell at 0x1F800000, scales the local rotation results func_801783C8/func_801782FC by that block size, adds them to the 0x34/0x38 coordinate pair cached in the object at 0x801D2744, copies that object''s 0x3E halfword into the work object and advances byte 3.'
   - - 4860
     - c
     - func_801D1EFC
   - - 4944
-    - asm
+    - c
     - func_801D1F50
+    - '@source: src/bof3/scenario/func_801D1F50.c'
+    - '@behavior: Advances byte 11 of the scratchpad work object, increments its word counter at offset 0x0C and publishes the counter''s low seven bits shifted left 5 as the angle offset in the volatile scratchpad cell at 0x1F800004 together with the fixed 0x10 block size in the cell at 0x1F800000, then scales the local rotation results func_801783C8/func_801782FC by that block size, adds them to the 0x34/0x38 coordinate pair cached in the object at 0x801D2744 and stores those sums in the work object, and finally counts down byte 9 and advances byte 3 when that countdown reaches zero.'
   - - 5220
-    - asm
+    - c
     - func_801D2064
+    - '@source: src/bof3/scenario/func_801D2064.c'
+    - '@behavior: Advances byte 11 of the scratchpad work object, increments its word counter at offset 0x0C and publishes the counter''s low seven bits shifted left 5 as the angle offset in the scratchpad cell at 0x1F800004 together with the fixed 0x18 block size in the cell at 0x1F800000, then scales the local rotation results func_801783C8/func_801782FC by that block size, adds them to the 0x34/0x38 coordinate pair cached in the object at 0x801D2744 and stores those sums in the work object, and finally subtracts two from byte 10; when that byte then reads as zero it advances byte 11 of the object cached at 0x801D2744 and calls func_80196070.'
   - - 5516
-    - asm
+    - c
     - func_801D218C
+    - '@source: src/bof3/scenario/func_801D218C.c'
+    - '@behavior: Initializes the scratchpad cells at 0x1F800000/0x1F800004/0x1F800008/0x1F80000C (block size 0x40, angular phase from work byte 0x0B plus two, primitive count from work byte 0x0A, random colour seed), samples the first radial vertex at 0x1F800014 from the local rotation helper func_801782FC scaled by the block size shifted right 12, then repeatedly emits one semi-transparent two-vertex Gouraud primitive: seeds the draw mode from GetGraphType (0x2A5 for graphics types 1 and 2, 0xB5 otherwise), projects the previous radial vertex through RotTransPers into the primitive vertex at 0x08, re-randomizes the block size to 0x80 plus or minus 0..0x3F, samples the next radial vertex (phase advanced by two from work byte 0x0B, depth -(index << 6)), projects it into the primitive vertex at 0x10, writes the random colour into primitive bytes 0x04/0x05 and 0x0C/0x0D with 0x20 in bytes 0x06/0x0E, and queues each primitive through func_8014E5A0(2, 0x14) until the index reaches the count.'
   - - 6156
     - c
     - emitRadialTranslucentQuads
+    - '@source: src/bof3/scenario/emitRadialTranslucentQuads.c'
+    - '@behavior: Builds eight translucent quadrilateral primitives around the current scratchpad screen position from adjacent angular samples, reusing each iteration''s second sample as the next iteration''s first sample.'
   - - 6744
     - c
     - func_801D2658

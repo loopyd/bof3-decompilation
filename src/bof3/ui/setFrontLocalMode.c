@@ -4,7 +4,7 @@
  * @source 0x8014ECAC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void __attribute__((noinline)) setFrontLocalMode(u16 local_mode) {
   volatile u16* gameFront;

@@ -4,7 +4,7 @@
  * @behavior initializes the selected state record fields
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setRecordFlag8Field6Neg20(void)
 {

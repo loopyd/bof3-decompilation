@@ -8,7 +8,7 @@ extern u8 D_801492E8[];
  * @source 0x801D0EE0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setupSceneObjectTransform(void) {
   ScenarioSce10effScratch* scratch;
@@ -31,7 +31,7 @@ void setupSceneObjectTransform(void) {
   rotation[0] = (s16)(scratch->unk_34 >> 9) - 0x4000;
   rotation[1] = (s16)(scratch->unk_38 >> 9) - 0x4000;
 
-  rotation[2] = (s16)(-(s32)scratch->unk_3e / 2);
+  rotation[2] = (s16)(-(s16)scratch->unk_3e / 2);
 
   RotTrans((SVECTOR*)rotation, (VECTOR*)object_work.t, &flag);
   RotMatrix((SVECTOR*)translation, (MATRIX*)&object_work);

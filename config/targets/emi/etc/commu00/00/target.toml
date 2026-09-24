@@ -18,14 +18,49 @@ sources = [
     "src/bof3/ui/dispatchProgressTableAlt.c",
     "src/bof3/ui/dispatchSlotTable.c",
     "src/bof3/ui/copySelectedRecordKindToTaskRecord.c",
+    "src/bof3/ui/func_801EEDF8_commu00.c",
+    "src/bof3/ui/func_801EF110_commu00.c",
+    "src/bof3/ui/func_801EF214_commu00.c",
+    "src/bof3/ui/func_801F01F4_commu00.c",
     "src/bof3/ui/activateTaskWithRandomLabel.c",
+    "src/bof3/ui/func_801F08D8.c",
+    "src/bof3/ui/func_801F0C6C.c",
+    "src/bof3/ui/func_801F0D3C.c",
     "src/bof3/ui/func_801F0E1C.c",
     "src/bof3/ui/activateScratchTaskWithBandLabel.c",
+    "src/bof3/ui/func_801F0320_commu00.c",
+    "src/bof3/ui/func_801F0FBC.c",
     "src/bof3/ui/func_801F1064.c",
+    "src/bof3/ui/func_801F1110_commu00.c",
+    "src/bof3/ui/func_801F1318_commu00.c",
+    "src/bof3/ui/func_801F13B8_commu00.c",
+    "src/bof3/ui/func_801F1444_commu00.c",
+    "src/bof3/ui/func_801F1484_commu00.c",
+    "src/bof3/ui/func_801F14F8_commu00.c",
+    "src/bof3/ui/func_801F1538_commu00.c",
+    "src/bof3/ui/func_801F1578_commu00.c",
+    "src/bof3/ui/func_801F15B8_commu00.c",
+    "src/bof3/ui/func_801F15F8_commu00.c",
+    "src/bof3/ui/func_801F16F8_commu00.c",
+    "src/bof3/ui/func_801F17A4_commu00.c",
+    "src/bof3/ui/func_801F1824_commu00.c",
+    "src/bof3/ui/func_801F1874_commu00.c",
+    "src/bof3/ui/func_801F18F8_commu00.c",
     "src/bof3/ui/dispatchCurrentTaskVariantResource.c",
+    "src/bof3/ui/func_801F1AFC_commu00.c",
+    "src/bof3/ui/func_801F1B30_commu00.c",
+    "src/bof3/ui/func_801F1BC8_commu00.c",
+    "src/bof3/ui/func_801F1EB0_commu00.c",
+    "src/bof3/ui/func_801F1F4C_commu00.c",
     "src/bof3/ui/func_801F1F9C.c",
+    "src/bof3/ui/func_801F1FD8_commu00.c",
     "src/bof3/ui/func_801F2020.c",
+    "src/bof3/ui/func_801F205C_commu00.c",
+    "src/bof3/ui/func_801F222C_commu00.c",
     "src/bof3/ui/func_801F228C.c",
+    "src/bof3/ui/func_801F22C8_commu00.c",
+    "src/bof3/ui/func_801F235C_commu00.c",
+    "src/bof3/ui/func_801F23A4_commu00.c",
     "src/bof3/ui/selectMessage259.c",
     "src/bof3/ui/selectUiMode14.c",
     "src/bof3/ui/selectUiMode23.c",
@@ -39,3 +74,80 @@ psyq_source = "src/bof3/support/commu00_psyq.c"
 headers = [
     "include/bof3/ui/commu00_internal.h",
 ]
+
+[[replicas]]
+disc_id = "BIN/WORLD04/AREA175.EMI#14"
+payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"
+load_address = 0x801EEC00
+size = 15696
+evidence = "byte-identical to BIN/ETC/COMMU00.EMI#0: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD04/AREA176.EMI#14"
+payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"
+load_address = 0x801EEC00
+size = 15696
+evidence = "byte-identical to BIN/ETC/COMMU00.EMI#0: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD04/AREA177.EMI#14"
+payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"
+load_address = 0x801EEC00
+size = 15696
+evidence = "byte-identical to BIN/ETC/COMMU00.EMI#0: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD04/AREA178.EMI#14"
+payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"
+load_address = 0x801EEC00
+size = 15696
+evidence = "byte-identical to BIN/ETC/COMMU00.EMI#0: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD04/AREA179.EMI#14"
+payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"
+load_address = 0x801EEC00
+size = 15696
+evidence = "byte-identical to BIN/ETC/COMMU00.EMI#0: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD04/AREA180.EMI#14"
+payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"
+load_address = 0x801EEC00
+size = 15696
+evidence = "byte-identical to BIN/ETC/COMMU00.EMI#0: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD04/AREA181.EMI#14"
+payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"
+load_address = 0x801EEC00
+size = 15696
+evidence = "byte-identical to BIN/ETC/COMMU00.EMI#0: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD04/AREA182.EMI#14"
+payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"
+load_address = 0x801EEC00
+size = 15696
+evidence = "byte-identical to BIN/ETC/COMMU00.EMI#0: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD04/AREA183.EMI#14"
+payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"
+load_address = 0x801EEC00
+size = 15696
+evidence = "byte-identical to BIN/ETC/COMMU00.EMI#0: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD04/AREA184.EMI#14"
+payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"
+load_address = 0x801EEC00
+size = 15696
+evidence = "byte-identical to BIN/ETC/COMMU00.EMI#0: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD04/AREA185.EMI#14"
+payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"
+load_address = 0x801EEC00
+size = 15696
+evidence = "byte-identical to BIN/ETC/COMMU00.EMI#0: same payload sha256 and load address"

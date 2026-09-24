@@ -22,23 +22,65 @@ segments:
 - - 0
   - bin
   - header
+- name: header_functions
+  type: code
+  start: 752
+  vram: 0x801EEEF0
+  subsegments:
+  - - 752
+    - asm
+    - func_801EEEF0
+  - - 1296
+    - c
+    - func_801EF110
+    - '@source: src/bof3/ui/func_801EF110_commu00.c'
+    - '@behavior: Advances the signed counter byte at 0x801455C2 by the record-weighted elapsed-tick delta: reads the shared counter word at 0x8014502C and its snapshot at 0x801455B4, truncates their unsigned difference divided by five to 16 bits and returns immediately when that tick count is zero; otherwise it walks the sixty stride-8 active-record entries at 0x801455C8/0x801455C9 and sums the container-local byte at 0x801F2705 plus three, at stride nine, over the present entries whose kind byte equals nine, then stores the low-16-bit snapshot of that sum minus twice the supplied active-record count, multiplied by the tick count, added to the sign-extended 0x801455C2 byte, clamped to 0..99, back into 0x801455C2 and republishes the counter word as the new snapshot.'
+  - - 1556
+    - c
+    - func_801EF214
+    - '@source: src/bof3/ui/func_801EF214_commu00.c'
+    - '@behavior: Advances the village-expansion tier byte at 0x801455C4 once the shared battle counter has moved far enough past its snapshot: returns while the tier byte already reads seven, then for each of the eight armed stride-8 local slots at 0x801457A8/0x801457A9 that carry kind four with a nonzero second byte, it sums the stride-9 byte column at 0x801F2708 over the present active-record entries whose kind byte equals the tier index plus one and counts the matches; it returns when none matched, and otherwise compares the counter word at 0x8014502C minus its snapshot at 0x801455B8 against the tier total at 0x801F2514 floored at one, then advances the tier byte, adds the tier total to the snapshot word and appends notification kind 7 to the pending queue at 0x80145E60/0x80145E5D.'
+  - - 1944
+    - asm
+    - func_801EF398
+  - - 2348
+    - asm
+    - func_801EF52C
+  - - 2948
+    - asm
+    - func_801EF784
+  - - 3664
+    - asm
+    - func_801EFA50
+  - - 4776
+    - asm
+    - func_801EFEA8
+- - 5332
+  - bin
+  - header_data
 - name: main
   type: code
-  start: 8104
-  vram: 2149518248
+  start: 7384
+  vram: 2149517528
   subsegments:
   - - 7384
-    - asm
+    - c
     - func_801F08D8
+    - '@source: src/bof3/ui/func_801F08D8.c'
+    - '@behavior: Configures the indexed commu00 task slot as a variant-6 task and dispatches it: publishes the slot as the scratchpad task cursor, records the source index, derives the stride-8 active-record index from the source-indexed record byte, seeds the slot coordinate pair and resource id from the variant-rotation record selected by that record index and the rotation byte, seeds the slot table entry selected by the source index modulo six, selects the slot label through func_8015477C, runs the record-kind handler selected by the stride-8 kind byte, and advances that record rotation byte.'
   - - 8180
     - c
     - activateTaskWithRandomLabel
   - - 8300
-    - asm
+    - c
     - func_801F0C6C
+    - '@source: src/bof3/ui/func_801F0C6C.c'
+    - '@behavior: Stores the indexed task slot label word from the record-kind slot level byte, or the fixed 0xCC label when the village-expansion state bytes select it.'
   - - 8508
-    - asm
+    - c
     - func_801F0D3C
+    - '@source: src/bof3/ui/func_801F0D3C.c'
+    - '@behavior: Selects a variant-derived label and seeds the scratch task variant arguments.'
   - - 8732
     - c
     - func_801F0E1C
@@ -49,14 +91,20 @@ segments:
     - c
     - activateScratchTaskWithBandLabel
   - - 9148
-    - asm
+    - c
     - func_801F0FBC
+    - '@source: src/bof3/ui/func_801F0FBC.c'
+    - '@behavior: Reads the active record state byte for the source index and stores a state-selected label word on the indexed task, or clears the scratch task lead byte.'
   - - 9316
     - c
     - func_801F1064
+    - '@source: src/bof3/ui/func_801F1064.c'
+    - '@behavior: Configures the scratch commu00 task from the variant byte: while the variant is nonzero it marks the task active and stores the variant-derived label word; otherwise it marks the task active, seeds the variant arguments to 6 and 0, and stores the fixed 0xCB label word.'
   - - 9488
-    - asm
+    - c
     - func_801F1110
+    - '@source: src/bof3/ui/func_801F1110_commu00.c'
+    - '@behavior: Marks the scratch task active and stores the variant-selected label word on the indexed task: 0xC009 for rotation byte 0, 0xC00B or 0xD4 for rotation byte 1 depending on the shared flag-bank probe, and 0xD5 for every other rotation byte.'
   - - 9732
     - asm
     - setVariantTaskStatus
@@ -74,37 +122,55 @@ segments:
     - '@source: src/bof3/ui/copySelectedRecordKindToTaskRecord.c'
     - '@behavior: Copies the selected record-kind byte into the task-indexed UI record.'
   - - 10008
-    - asm
+    - c
     - func_801F1318
+    - '@source: src/bof3/ui/func_801F1318_commu00.c'
+    - '@behavior: Formats the container-local byte at 0x80144FC0, the byte at 0x80144FC1, and the shared counter words at 0x8014502C and 0x80145030 through the container-local decimal format string into the four 0x20-strided slots of the D_801490D8 text buffer, starts action 0x55 on the frontend task, and latches the shared phase byte to 2.'
   - - 10168
-    - asm
+    - c
     - func_801F13B8
+    - '@source: src/bof3/ui/func_801F13B8_commu00.c'
+    - '@behavior: Formats the shared counter words at 0x80145034, 0x80145038 and 0x8014503C through the container-local decimal format string into the three 0x20-strided slots of the D_801490D8 text buffer, starts action 0x56 on the frontend task, and latches the shared phase byte to 2.'
   - - 10308
-    - asm
+    - c
     - func_801F1444
+    - '@source: src/bof3/ui/func_801F1444_commu00.c'
+    - '@behavior: Stores the incoming task as the current commu00 task, requests UI mode 0x15, mirrors its source index into the fairy slot index, and refreshes the active UI.'
   - - 10372
-    - asm
+    - c
     - func_801F1484
+    - '@source: src/bof3/ui/func_801F1484_commu00.c'
+    - '@behavior: Stores the incoming task as the current commu00 task, requests UI mode 0x16, mirrors its source index into the fairy slot index, and refreshes the active UI.'
   - - 10436
     - c
     - selectUiMode23
     - '@source: src/bof3/ui/selectUiMode23.c'
     - '@behavior: Selects active UI data, requests mode 23, and refreshes it.'
   - - 10488
-    - asm
+    - c
     - func_801F14F8
+    - '@source: src/bof3/ui/func_801F14F8_commu00.c'
+    - '@behavior: Stores the incoming task as the current commu00 task, requests UI mode 0x17, refreshes the active UI, and stores 1 into the byte at 0x801448F2.'
   - - 10552
-    - asm
+    - c
     - func_801F1538
+    - '@source: src/bof3/ui/func_801F1538_commu00.c'
+    - '@behavior: Stores the incoming task as the current commu00 task, requests UI mode 0x17, sets the fairy slot index to 3, and refreshes the active UI.'
   - - 10616
-    - asm
+    - c
     - func_801F1578
+    - '@source: src/bof3/ui/func_801F1578_commu00.c'
+    - '@behavior: Stores the incoming task as the current commu00 task, requests UI mode 0x18, mirrors the task source index into the fairy slot index, and refreshes the active UI.'
   - - 10680
-    - asm
+    - c
     - func_801F15B8
+    - '@source: src/bof3/ui/func_801F15B8_commu00.c'
+    - '@behavior: Stores the incoming task as the current commu00 task, requests UI mode 0x3C, mirrors the task source index into the fairy slot index, and refreshes the active UI.'
   - - 10744
-    - asm
+    - c
     - func_801F15F8
+    - '@source: src/bof3/ui/func_801F15F8_commu00.c'
+    - '@behavior: Stores the incoming task as the current commu00 task, requests UI mode 0x19, mirrors the task source index into the fairy slot index, and refreshes the active UI.'
   - - 10808
     - c
     - dispatchCurrentTaskVariantResource
@@ -121,94 +187,126 @@ segments:
     - '@source: src/bof3/ui/dispatchProgressTable.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 11000
-    - asm
+    - c
     - func_801F16F8
+    - '@source: src/bof3/ui/func_801F16F8_commu00.c'
+    - '@behavior: Unless the shared frontend phase byte is already 2, advances the fairy progress byte when the shared flag word 0x801490A8 equals 0xF9, otherwise requests action 0xF8 and latches the phase byte to 2.'
   - - 11120
     - c
     - selectMessage259
     - '@source: src/bof3/ui/selectMessage259.c'
     - '@behavior: Selects message 0x259 and advances its local state byte.'
   - - 11172
-    - asm
+    - c
     - func_801F17A4
+    - '@source: src/bof3/ui/func_801F17A4_commu00.c'
+    - '@behavior: Once the EMI loader reports the streamed slot ready, calls the shared 0x8014E284 routine, publishes 1 into D_80145988, clears the four bytes at D_801F294C and the two bytes at D_801F2944, and advances the fairy progress byte.'
   - - 11300
-    - asm
+    - c
     - func_801F1824
+    - '@source: src/bof3/ui/func_801F1824_commu00.c'
+    - '@behavior: Sets the 0x20 transfer-ready flag in the shared EMI loader state byte, requests the stream slot for the low seven bits of the stream index hint in family 0, and advances the fairy progress byte.'
   - - 11380
-    - asm
+    - c
     - func_801F1874
+    - '@source: src/bof3/ui/func_801F1874_commu00.c'
+    - '@behavior: Once the EMI loader reports the streamed slot ready, clears the UI selection state, dispatches the current task variant resource, recomputes the state-10 and state-11 progress totals, and runs the record notification advance pass.'
   - - 11452
     - c
     - dispatchProgressTableAlt
     - '@source: src/bof3/ui/dispatchProgressTableAlt.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 11512
-    - asm
+    - c
     - func_801F18F8
+    - '@source: src/bof3/ui/func_801F18F8_commu00.c'
+    - '@behavior: Scans the container-local twenty-entry band table at 0x801EEC48 for the entry whose halfword bound first exceeds the elapsed battle count of the fairy slot active record, then resolves the selected entry into the shared item-name buffer and either re-anchors that record or advances the fairy progress byte.'
   - - 12028
-    - asm
+    - c
     - func_801F1AFC
+    - '@source: src/bof3/ui/func_801F1AFC_commu00.c'
+    - '@behavior: Clears the frontend UI selection state and dispatches the current task variant resource while the shared mode byte is clear.'
   - - 12080
-    - asm
+    - c
     - func_801F1B30
+    - '@source: src/bof3/ui/func_801F1B30_commu00.c'
+    - '@behavior: While the shared frontend mode byte at 0x80143BB0 is clear, starts action 0x97 through func_80150224, marks that mode byte as 2, and steps the fairy progress byte back by one.'
   - - 12172
     - c
     - dispatchProgressTable2
     - '@source: src/bof3/ui/dispatchProgressTable2.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 12232
-    - asm
+    - c
     - func_801F1BC8
+    - '@source: src/bof3/ui/func_801F1BC8_commu00.c'
+    - '@behavior: Fairy-slot battle outcome draw: state 3 of the fairy slot stride-8 active-record state byte starts action 0x52 through func_80150224; state 2 draws rand() & 0x7F capped at 100, subtracts the first three bytes of the four-byte weight record selected by the local record-kind slot byte while stepping through the record weights to pick the band the drawn value falls in, resolves the local reward-id byte pair selected by that band times sixteen plus a random nibble through func_801650B4 and, when that pair reports as consumed, copies the twelve-byte name func_80165D48 resolves for it into the shared name buffer, terminates that buffer and starts action 0x4F, otherwise starts action 0x50; every continuing path publishes the elapsed battle count as the fairy slot record progress anchor, clears that record state byte and labels the current commu00 task 0x51, and all paths advance the fairy progress byte and latch the shared frontend mode byte at 0x80143BB0 to 2.'
   - - 12916
     - c
     - dispatchProgressTable3
     - '@source: src/bof3/ui/dispatchProgressTable3.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 12976
-    - asm
+    - c
     - func_801F1EB0
+    - '@source: src/bof3/ui/func_801F1EB0_commu00.c'
+    - '@behavior: Sets the low three bits of the shared front/world flag word, starts the EMI slot stream selected by the fairy slot index (0x25B when that index is 3, otherwise 0x25A), and advances the fairy progress byte.'
   - - 13072
     - c
     - dispatchSlotTable
     - '@source: src/bof3/ui/dispatchSlotTable.c'
     - '@behavior: Dispatches the unsigned slot index through the local commu00 table.'
   - - 13132
-    - asm
+    - c
     - func_801F1F4C
+    - '@source: src/bof3/ui/func_801F1F4C_commu00.c'
+    - '@behavior: Clears the low three bits of the shared front/world flag word, clears the UI selection state, and dispatches the current task variant resource once the EMI loader reports the streamed slot ready.'
   - - 13212
     - c
     - func_801F1F9C
     - '@source: src/bof3/ui/func_801F1F9C.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 13272
-    - asm
+    - c
     - func_801F1FD8
+    - '@source: src/bof3/ui/func_801F1FD8_commu00.c'
+    - '@behavior: Sets the low three bits of the shared front/world flag word, starts the 0x25C EMI slot stream, and advances the fairy progress byte.'
   - - 13344
     - c
     - func_801F2020
     - '@source: src/bof3/ui/func_801F2020.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 13404
-    - asm
+    - c
     - func_801F205C
+    - '@source: src/bof3/ui/func_801F205C_commu00.c'
+    - '@behavior: Reads the high nibble of the fairy slot stride-8 active-record state byte to select one of the local 6-byte label records, fills and terminates the shared item-name buffer through the local label helpers, and starts the selected action before latching the shared phase byte to 2.'
   - - 13868
-    - asm
+    - c
     - func_801F222C
+    - '@source: src/bof3/ui/func_801F222C_commu00.c'
+    - '@behavior: While the shared frontend mode byte is not 2, sets the low three bits of the shared front/world flag word, starts the 0x25D EMI slot stream, and advances the fairy progress byte.'
   - - 13964
     - c
     - func_801F228C
     - '@source: src/bof3/ui/func_801F228C.c'
     - '@behavior: Dispatches the signed current handler index through the local commu00 table.'
   - - 14024
-    - asm
+    - c
     - func_801F22C8
+    - '@source: src/bof3/ui/func_801F22C8_commu00.c'
+    - '@behavior: Requests UI mode 6 while the notification gate byte, the pending queue count, and the queue append index are all clear; otherwise sets the low three bits of the shared front/world flag word, starts the 0x25E EMI slot stream, and advances the fairy progress byte.'
   - - 14172
-    - asm
+    - c
     - func_801F235C
+    - '@source: src/bof3/ui/func_801F235C_commu00.c'
+    - '@behavior: Clears the low three bits of the shared front/world flag word and clears the UI selection state, once the EMI loader reports the streamed slot ready.'
   - - 14244
-    - asm
+    - c
     - func_801F23A4
+    - '@source: src/bof3/ui/func_801F23A4_commu00.c'
+    - '@behavior: Switches on the signed front-end progress byte: state 0 publishes the selected-record index byte at 0x80145029 into the second byte of the 0x801F2944 pair, stops the shared selection effect for that index while indexing the 4-byte-stride EXE record pair at 0x80181EBA, queues the effect group 10 (or 8 when the first byte of the 0x801F2944 pair is clear) through func_801636A0 and advances the progress byte; state 1 starts action 0x2A1, latches the frontend mode byte to 2 and advances the progress byte once func_80163EA0 reports a nonzero low byte; state 2, unless the frontend mode byte already reads 2, queues the frontend cue (published index, 100, 8) through func_80161C20, clears the low three bits of the shared front/world flag word, clears the UI selection state and dispatches the current task variant resource.'
   - - 14588
-    - asm
+    - textbin
     - T_801F24FC
 - - 15696

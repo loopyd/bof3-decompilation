@@ -180,8 +180,8 @@ segments:
     - asm
     - func_801F9CAC
   - - 12520
-    - asm
-    - func_801F9CE8
+    - c
+    - setScenarioScena1500_801F9CE8
   - - 12540
     - asm
     - func_801F9CFC

@@ -5,7 +5,7 @@
  *         D_801490A4 is set.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setUiFlagsGated(void) {
   if (D_801490A4 & 2) {

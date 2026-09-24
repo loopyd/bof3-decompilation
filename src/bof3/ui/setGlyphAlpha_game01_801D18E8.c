@@ -5,7 +5,7 @@
  * @source 0x801D18E8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setGlyphAlpha(u8* primitive, u8 alpha) {
   primitive[4] = alpha;

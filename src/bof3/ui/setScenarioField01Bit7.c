@@ -4,7 +4,7 @@
  * @behavior sets bit 7 in scenarioState.field_01
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setScenarioField01Bit7(void) {
   scenarioState.field_01 |= 0x80;

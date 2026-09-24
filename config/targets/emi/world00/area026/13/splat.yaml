@@ -27,14 +27,21 @@ segments:
   - - 0
     - asm
     - T_801F2C00
+  - - 4
+    - c
+    - dispatchArea026ScratchMode
+    - '@source: src/bof3/world/dispatchArea026ScratchMode.c'
+    - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table at 0x801F33EC.'
   - - 72
     - c
     - copyWorkareaFieldsAndAdvanceMode
     - '@source: src/bof3/world/copyWorkareaFieldsAndAdvanceMode.c'
     - '@behavior: copies three workarea fields and advances mode'
   - - 148
-    - asm
+    - c
     - func_801F2C94
+    - '@source: src/bof3/world/func_801F2C94_area02613.c'
+    - '@behavior: services the scratchpad work cursor: hands its +0xC block and its +0x1C word to the local record dispatcher, advances the +0x1C word by 0x1199, and when the +0x9 timer counts down to zero posts cue 0x20D and advances the +0x1 mode byte.'
   - - 284
     - c
     - resetWorkareaSelectMode2
@@ -46,11 +53,15 @@ segments:
     - '@source: src/bof3/world/resetWorkareaSelectMode3.c'
     - '@behavior: mode-3 handler of the entry mode dispatch table (D_801F33EC):'
   - - 348
-    - asm
+    - c
     - func_801F2D5C
+    - '@source: src/bof3/world/func_801F2D5C_area02613.c'
+    - '@behavior: prepares a 0x20-byte projection scratch area, then dispatches the work-cursor record centre block at +0xC four times into the local ring emitter func_801F2E04, once per ring step, passing the record''s +0x1C scale word, the step angle and the two ring offset tables.'
   - - 516
-    - asm
+    - c
     - func_801F2E04
+    - '@source: src/bof3/world/func_801F2E04_area02613.c'
+    - '@behavior: emits the four-step flat-triangle ring of the AREA026 work record: projects the record''s own three-word centre, then for each of four ring angles steps the angle by 0x100, rotates the passed radius through the shared angular helpers over the record''s centre and projects that point; per step it sets a draw mode at the shared primitive cursor, links and advances the cursor through the shared grid-cell linker with a 0x18-byte flat primitive, and fills that flat triangle from the projected centre, the previous and the new ring point in colour 0x80.'
   - - 1036
     - c
     - func_801F300C
@@ -102,8 +113,10 @@ segments:
     - '@source: src/bof3/world/clearScenarioFlagBit2C.c'
     - '@behavior: clears bit 0x2C in the active scenario flags.'
   - - 1516
-    - asm
-    - func_801F31EC
+    - c
+    - setScenarioFlagBit33AndQueueCue106
+    - '@source: src/bof3/world/setScenarioFlagBit33AndQueueCue106.c'
+    - '@behavior: runs the scenario reward gate for the (4, 3) ability id, queues frontend cue 0x106 and then sets bit 0x33 in the active scenario flags.'
   - - 1584
     - c
     - retreatCounter
@@ -120,18 +133,22 @@ segments:
     - '@source: src/bof3/world/resetCounter.c'
     - '@behavior: resets the local selection counter, marks it active, and stops effect 0.'
   - - 1720
-    - asm
+    - c
     - func_801F32B8
+    - '@source: src/bof3/world/func_801F32B8.c'
+    - '@behavior: publishes the D_80145E90 work base as the scratchpad work cursor and stores the selection helper result byte +0xB into the published record unless it reports 0xFF'
   - - 1848
     - c
     - setScenarioFlagBit2E
     - '@source: src/bof3/world/setScenarioFlagBit2E.c'
     - '@behavior: sets bit 0x2E in the active scenario flags.'
   - - 1888
-    - asm
+    - c
     - func_801F3360
+    - '@source: src/bof3/world/func_801F3360_area02613.c'
+    - '@behavior: claims the next free front-end record from the allocator func_8019601C and, when the returned index is not 0xFF, marks the 0x74-byte record it selects at 0x80143FC8 as occupied (byte 0x00 set to 1), writes 0x33 into its byte 0x05, stores 0x70000 and 0x68000 in its words 0x34/0x38 and the distance returned by func_8015477C for that word pair, scaled by 0x10000, in its word 0x3C.'
   - - 2028
-    - asm
+    - textbin
     - T_801F33EC
 - - 8420
   - bin

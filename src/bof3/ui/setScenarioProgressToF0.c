@@ -4,7 +4,7 @@
  * @source 0x801A8714
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 setScenarioProgressToF0(void) {
   g_ScenarioProgress = 0xF0;

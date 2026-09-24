@@ -198,17 +198,17 @@ segments:
     - asm
     - func_801FD84C
   - - 27896
-    - asm
-    - func_801FD8F8
+    - c
+    - setScenarioScena0100_801FD8F8
   - - 27916
-    - asm
-    - func_801FD90C
+    - c
+    - setScenarioScena0100_801FD90C
   - - 27936
-    - asm
-    - func_801FD920
+    - c
+    - setScenarioScena0100_801FD920
   - - 27956
-    - asm
-    - func_801FD934
+    - c
+    - setScenarioScena0100_801FD934
   - - 27976
     - asm
     - func_801FD948
