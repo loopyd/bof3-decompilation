@@ -72,8 +72,8 @@ segments:
     - asm
     - func_800C1A28
   - - 628
-    - asm
-    - func_800C1A74
+    - c
+    - invokeZeroArgBossBoss01416_800C1A74
   - - 660
     - asm
     - func_800C1A94

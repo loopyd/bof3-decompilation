@@ -9,6 +9,11 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world02/setWorkHalfwordsWorld02Area08813_801F3F64.c",
+    "src/bof3/world02/incrementWorkByte1World02Area08813_801F2EE8.c",
+    "src/bof3/world02/incrementWorkByte1World02Area08813_801F2EC8.c",
+    "src/bof3/world02/incrementWorkByte1World02Area08813_801F2EA8.c",
+    "src/bof3/world02/incrementWorkByte1World02Area08813_801F2E88.c",
     "src/bof3/world02/invokeTwoHelpersWorld02Area08813_801F52A0.c",
     "src/bof3/world02/invokeTwoHelpersWorld02Area08813_801F4004.c",
     "src/bof3/world02/invokeHelperWorld02Area08813_801F2F08.c",

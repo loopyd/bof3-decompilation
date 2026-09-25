@@ -72,11 +72,11 @@ segments:
     - asm
     - func_801F72E0
   - - 1892
-    - asm
-    - func_801F7364
+    - c
+    - incrementWorkByte2ScenarioScena0700_801F7364
   - - 1924
-    - asm
-    - func_801F7384
+    - c
+    - incrementWorkByte2ScenarioScena0700_801F7384
   - - 1956
     - c
     - invokeHelperScenarioScena0700_801F73A4
@@ -165,11 +165,11 @@ segments:
     - asm
     - func_801F80F0
   - - 5492
-    - asm
-    - func_801F8174
+    - c
+    - incrementWorkByte2ScenarioScena0700_801F8174
   - - 5524
-    - asm
-    - func_801F8194
+    - c
+    - incrementWorkByte2ScenarioScena0700_801F8194
   - - 5556
     - c
     - invokeHelperScenarioScena0700_801F81B4

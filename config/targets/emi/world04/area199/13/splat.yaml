@@ -1,0 +1,77 @@
+name: world04_area199_13
+sha1: cad851442139b328f38445babffbc47effa7f7ca
+options:
+  platform: psx
+  compiler: psyq
+  basename: world04_area199_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world04/area199/13.bin
+  asm_path: out/splat/emi/world04/area199/13/asm
+  src_path: src/emi/world04/area199/13
+  ld_script_path: out/splat/emi/world04/area199/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world04/area199/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world04/area199/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world04/area199/13/.splache
+  asset_path: out/splat/emi/world04/area199/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world04/area199/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149526532
+  subsegments:
+  - - 4
+    - asm
+    - func_801F2C04
+  - - 80
+    - asm
+    - func_801F2C50
+  - - 124
+    - asm
+    - func_801F2C7C
+  - - 192
+    - c
+    - invokeZeroArgWorld04Area19913_801F2CC0
+  - - 224
+    - asm
+    - func_801F2CE0
+  - - 380
+    - asm
+    - func_801F2D7C
+  - - 488
+    - asm
+    - func_801F2DE8
+  - - 532
+    - asm
+    - func_801F2E14
+  - - 640
+    - asm
+    - func_801F2E80
+  - - 1944
+    - asm
+    - func_801F3398
+  - - 2780
+    - asm
+    - func_801F36DC
+  - - 3760
+    - asm
+    - func_801F3AB0
+  - - 4768
+    - asm
+    - func_801F3EA0
+  - - 5132
+    - asm
+    - func_801F400C
+  - - 6264
+    - asm
+    - func_801F4478
+  - - 6328
+    - asm
+    - func_801F44B8
+- - 10640

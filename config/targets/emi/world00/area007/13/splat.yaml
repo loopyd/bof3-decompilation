@@ -27,8 +27,8 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - invokeZeroArgWorld00Area00713_801F2C04
   - - 36
     - c
     - invokeHelperArgWorld00Area00713_801F2C24

@@ -60,11 +60,11 @@ segments:
     - asm
     - func_801D0F94
   - - 1032
-    - asm
-    - func_801D1008
+    - c
+    - incrementWorkByte1ScenarioSce15ef300_801D1008
   - - 1064
-    - asm
-    - func_801D1028
+    - c
+    - incrementWorkByte1ScenarioSce15ef300_801D1028
   - - 1096
     - c
     - invokeHelperScenarioSce15ef300_801D1048

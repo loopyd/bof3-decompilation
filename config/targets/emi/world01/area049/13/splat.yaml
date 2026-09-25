@@ -1,0 +1,107 @@
+name: world01_area049_13
+sha1: c4a5082a78e8a3061b71729b1af5c5bc3396662a
+options:
+  platform: psx
+  compiler: psyq
+  basename: world01_area049_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world01/area049/13.bin
+  asm_path: out/splat/emi/world01/area049/13/asm
+  src_path: src/emi/world01/area049/13
+  ld_script_path: out/splat/emi/world01/area049/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world01/area049/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world01/area049/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world01/area049/13/.splache
+  asset_path: out/splat/emi/world01/area049/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world01/area049/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2148626436
+  subsegments:
+  - - 4
+    - asm
+    - func_80117004
+  - - 72
+    - asm
+    - func_80117048
+  - - 164
+    - asm
+    - func_801170A4
+  - - 216
+    - asm
+    - func_801170D8
+  - - 720
+    - asm
+    - func_801172D0
+  - - 1040
+    - asm
+    - func_80117410
+  - - 1300
+    - asm
+    - func_80117514
+  - - 1436
+    - asm
+    - func_8011759C
+  - - 1552
+    - asm
+    - func_80117610
+  - - 1628
+    - asm
+    - func_8011765C
+  - - 1720
+    - asm
+    - func_801176B8
+  - - 1896
+    - asm
+    - func_80117768
+  - - 2072
+    - asm
+    - func_80117818
+  - - 2148
+    - asm
+    - func_80117864
+  - - 2244
+    - asm
+    - func_801178C4
+  - - 2304
+    - asm
+    - func_80117900
+  - - 2608
+    - asm
+    - func_80117A30
+  - - 2676
+    - asm
+    - func_80117A74
+  - - 2764
+    - asm
+    - func_80117ACC
+  - - 2912
+    - asm
+    - func_80117B60
+  - - 3060
+    - asm
+    - func_80117BF4
+  - - 3128
+    - c
+    - incrementWorkByte2World01Area04913_80117C38
+  - - 3160
+    - asm
+    - func_80117C58
+  - - 3568
+    - asm
+    - func_80117DF0
+  - - 3704
+    - asm
+    - func_80117E78
+  - - 4492
+    - asm
+    - func_8011818C
+- - 4576

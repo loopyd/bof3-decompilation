@@ -51,8 +51,8 @@ segments:
     - asm
     - func_801F32D0
   - - 1904
-    - asm
-    - func_801F3370
+    - c
+    - setWorkHalfwordsWorld03Area15113_801F3370
   - - 1932
     - asm
     - func_801F338C

@@ -66,8 +66,8 @@ segments:
     - asm
     - func_801F3378
   - - 2072
-    - asm
-    - func_801F3418
+    - c
+    - setWorkHalfwordsWorld03Area12114_801F3418
   - - 2100
     - asm
     - func_801F3434

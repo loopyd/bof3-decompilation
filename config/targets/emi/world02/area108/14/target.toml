@@ -9,6 +9,8 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world02/incrementWorkByte2World02Area10814_801F4108.c",
+    "src/bof3/world02/incrementWorkByte2World02Area10814_801F403C.c",
     "src/bof3/world02/noopHandlerWorld02Area10814_801F56E0.c",
     "src/bof3/support/area108_14_psyq.c",
 ]

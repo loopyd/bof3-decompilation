@@ -1,4 +1,4 @@
-func_801F2C04 = 0x801F2C04;
+invokeZeroArgWorld00Area00713_801F2C04 = 0x801F2C04;
 invokeHelperArgWorld00Area00713_801F2C24 = 0x801F2C24;
 invokeHelperArgWorld00Area00713_801F2C44 = 0x801F2C44;
 invokeHelperArgWorld00Area00713_801F2C64 = 0x801F2C64;

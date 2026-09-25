@@ -240,11 +240,11 @@ segments:
     - asm
     - func_801F9EC4
   - - 13100
-    - asm
-    - func_801F9F2C
+    - c
+    - incrementWorkByte1ScenarioScena0800_801F9F2C
   - - 13132
-    - asm
-    - func_801F9F4C
+    - c
+    - incrementWorkByte1ScenarioScena0800_801F9F4C
   - - 13164
     - c
     - invokeHelperScenarioScena0800_801F9F6C

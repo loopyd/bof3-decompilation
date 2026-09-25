@@ -1,0 +1,11 @@
+#include "bof3/bof3.h"
+
+/* @source 0x801EF87C
+ * @behavior Increments the scratchpad work byte at pointer-slot 0x44 + 0x2.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void incrementWorkByte2BmagicMagic06403_801EF87C(void) {
+  SPAD_PTR_SLOT(u8, 0x44)[2]++;
+}

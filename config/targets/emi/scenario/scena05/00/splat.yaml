@@ -201,8 +201,8 @@ segments:
     - c
     - invokeHelperArgScenarioScena0500_801FD34C
   - - 26476
-    - asm
-    - func_801FD36C
+    - c
+    - invokeZeroArgScenarioScena0500_801FD36C
   - - 26508
     - asm
     - func_801FD38C

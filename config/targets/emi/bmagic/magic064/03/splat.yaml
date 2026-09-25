@@ -33,8 +33,8 @@ segments:
     - asm
     - func_801EEC7C
   - - 220
-    - asm
-    - func_801EECDC
+    - c
+    - incrementWorkByte1BmagicMagic06403_801EECDC
   - - 252
     - asm
     - func_801EECFC
@@ -84,8 +84,8 @@ segments:
     - asm
     - func_801EF7F8
   - - 3196
-    - asm
-    - func_801EF87C
+    - c
+    - incrementWorkByte2BmagicMagic06403_801EF87C
   - - 3228
     - asm
     - func_801EF89C
@@ -138,8 +138,8 @@ segments:
     - asm
     - func_801F0CBC
   - - 8468
-    - asm
-    - func_801F0D14
+    - c
+    - incrementWorkByte2BmagicMagic06403_801F0D14
   - - 8500
     - asm
     - func_801F0D34

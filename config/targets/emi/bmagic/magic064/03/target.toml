@@ -9,6 +9,9 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/incrementWorkByte2BmagicMagic06403_801F0D14.c",
+    "src/bof3/bmagic/incrementWorkByte2BmagicMagic06403_801EF87C.c",
+    "src/bof3/bmagic/incrementWorkByte1BmagicMagic06403_801EECDC.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic06403_801F007C.c",
     "src/bof3/bmagic/noopHandlerBmagicMagic06403_801EF29C.c",
     "src/bof3/bmagic/noopHandlerBmagicMagic06403_801EF0D8.c",

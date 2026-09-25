@@ -42,17 +42,17 @@ segments:
     - asm
     - func_801F2E04
   - - 648
-    - asm
-    - func_801F2E88
+    - c
+    - incrementWorkByte1World02Area08813_801F2E88
   - - 680
-    - asm
-    - func_801F2EA8
+    - c
+    - incrementWorkByte1World02Area08813_801F2EA8
   - - 712
-    - asm
-    - func_801F2EC8
+    - c
+    - incrementWorkByte1World02Area08813_801F2EC8
   - - 744
-    - asm
-    - func_801F2EE8
+    - c
+    - incrementWorkByte1World02Area08813_801F2EE8
   - - 776
     - c
     - invokeHelperWorld02Area08813_801F2F08
@@ -93,8 +93,8 @@ segments:
     - asm
     - func_801F3EC4
   - - 4964
-    - asm
-    - func_801F3F64
+    - c
+    - setWorkHalfwordsWorld02Area08813_801F3F64
   - - 4992
     - asm
     - func_801F3F80

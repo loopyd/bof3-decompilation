@@ -66,8 +66,8 @@ segments:
     - asm
     - func_801F3628
   - - 2668
-    - asm
-    - func_801F366C
+    - c
+    - incrementWorkByte2World04Area19713_801F366C
   - - 2700
     - asm
     - func_801F368C
