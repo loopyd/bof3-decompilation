@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world03/resetAdvanceScratchStateCloneWorld03Area12114_801F3478.c",
     "src/bof3/world03/setWorkHalfwordsWorld03Area12114_801F3418.c",
     "src/bof3/world03/invokeTwoHelpersWorld03Area12114_801F4754.c",
     "src/bof3/world03/invokeTwoHelpersWorld03Area12114_801F34B8.c",

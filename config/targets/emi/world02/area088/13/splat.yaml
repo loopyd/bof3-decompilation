@@ -99,8 +99,8 @@ segments:
     - asm
     - func_801F3F80
   - - 5060
-    - asm
-    - func_801F3FC4
+    - c
+    - resetAdvanceScratchStateCloneWorld02Area08813_801F3FC4
   - - 5124
     - c
     - invokeTwoHelpersWorld02Area08813_801F4004
