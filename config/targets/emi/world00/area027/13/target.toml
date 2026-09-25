@@ -9,15 +9,26 @@ load_address = 0x801f2c00
 
 sources = [
     "src/bof3/world/dispatchScratchMode1.c",
+    "src/bof3/world/func_801F2C74_area02713.c",
+    "src/bof3/world/func_801F2D5C_area02713.c",
+    "src/bof3/world/func_801F2E3C.c",
     "src/bof3/world/emitTrailStrip.c",
+    "src/bof3/world/func_801F304C.c",
     "src/bof3/world/dispatchScratchMode2.c",
+    "src/bof3/world/func_801F3164_area02713.c",
     "src/bof3/world/emitMarkerPair.c",
+    "src/bof3/world/func_801F32B0_area02713.c",
+    "src/bof3/world/func_801F33A8_area02713.c",
     "src/bof3/world/emitMarkerQuad.c",
     "src/bof3/world/func_801F35E0.c",
     "src/bof3/world/func_801F3618.c",
     "src/bof3/world/func_801F3650.c",
     "src/bof3/world/func_801F3690.c",
     "src/bof3/world/func_801F36D0.c",
+    "src/bof3/world/func_801F3710.c",
+    "src/bof3/world/func_801F376C_area02713.c",
+    "src/bof3/world/func_801F37E4_area02713.c",
+    "src/bof3/world/func_801F394C_area02713.c",
 ]
 support_sources = [
     "src/bof3/support/area02713_symbols.c",
@@ -27,6 +38,24 @@ psyq_source = "src/bof3/support/area02713_psyq.c"
 headers = [
     "include/bof3/world/area02713_internal.h",
 ]
+
+# Each original switch dispatches its 0..4 mode byte through a five-entry table
+# in this entry's own rodata (0x14 bytes at 0x801F2C04 and 0x801F2C1C). psyq gcc
+# emits the switch jump table after `.rdata` + `.align 3`, so the section carries
+# 8-byte alignment while those addresses are 4-mod-8; the placement route lowers
+# only the affected section's alignment to the reviewed address's own alignment
+# so the table lands exactly and the emitted lui/lw relocation matches.
+[[matching.section_placements]]
+function = 0x801F37E4
+section = ".rodata"
+address = 0x801F2C04
+size = 0x14
+
+[[matching.section_placements]]
+function = 0x801F394C
+section = ".rodata"
+address = 0x801F2C1C
+size = 0x14
 
 [psyq]
 [psyq.libraries.LIBGTE]

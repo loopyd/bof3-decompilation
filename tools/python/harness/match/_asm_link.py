@@ -10,7 +10,7 @@ from pathlib import Path
 from ..domain.manifests import TargetManifest
 from ..domain.symbols import load_target_symbols, load_weak_symbol_bindings
 from ..io import RepoLayout, repo_layout
-from .extraction import read_function_image
+from .extraction import _HEADER, _SECTION, Section, read_function_image
 
 # Raw address-encoding names are exactly `func_XXXXXXXX`/`D_XXXXXXXX`;
 # overlay-prefixed variants (`SCENA16_D_*`) are banned — conflicts resolve by
@@ -52,6 +52,81 @@ def resolve_symbol_address(
     return load_weak_symbol_bindings(symbols_c_path).get(name)
 
 
+def _object_section_alignments(content: bytes) -> dict[str, int]:
+    """Read a relocatable object's per-section required alignments."""
+    header = _HEADER.unpack_from(content)
+    section_offset, entry_size, count, names_index = (
+        header[6],
+        header[11],
+        header[12],
+        header[13],
+    )
+    if (
+        entry_size != _SECTION.size
+        or not 0 < count < 0xFF00
+        or not 0 < names_index < count
+        or section_offset + count * entry_size > len(content)
+    ):
+        raise ValueError("unsupported object section table layout")
+    table = content[section_offset : section_offset + count * entry_size]
+    sections = [Section(*values) for values in _SECTION.iter_unpack(table)]
+    names = sections[names_index]
+    strings = content[names.offset : names.offset + names.size]
+    alignments: dict[str, int] = {}
+    for section in sections:
+        end = strings.find(b"\0", section.name_offset)
+        if end < 0:
+            continue
+        name = strings[section.name_offset : end].decode("ascii", "replace")
+        alignments[name] = section.alignment
+    return alignments
+
+
+def _exactly_placeable_object(
+    object_path: Path,
+    section_addresses: Mapping[str, int] | None,
+    *,
+    layout: RepoLayout,
+) -> Path:
+    """Return an object whose placed sections can honor the reviewed addresses.
+
+    A compiler-emitted table can require 8-byte alignment while its original
+    position is only 4-byte aligned (a 4-mod-8 jump table).  ``--section-start``
+    cannot honor such an address: the linker front-pads the section and the
+    table lands four bytes late, so the emitted ``lui``/``lw`` relocation no
+    longer matches the original.  For each requested section whose address the
+    object's current alignment cannot satisfy, lower that section's required
+    alignment to the largest power of two dividing the reviewed address - the
+    alignment the original object must have had - and link the adjusted copy.
+    No adjustment is made when every address already satisfies its alignment.
+    """
+    if not section_addresses:
+        return object_path
+    current = _object_section_alignments(object_path.read_bytes())
+    adjustments: dict[str, int] = {}
+    for section, section_address in section_addresses.items():
+        alignment = current.get(section, 0)
+        if alignment == 0 or section_address % alignment == 0:
+            continue
+        reduced = section_address & -section_address
+        while reduced > alignment:
+            reduced //= 2
+        if reduced:
+            adjustments[section] = reduced
+    if not adjustments:
+        return object_path
+    objcopy = layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-objcopy"
+    adjusted = object_path.with_suffix(".placed.o")
+    command = [str(objcopy)]
+    for section, alignment in sorted(adjustments.items()):
+        command.append(f"--set-section-alignment={section}={alignment}")
+    command.extend([str(object_path), str(adjusted)])
+    result = subprocess.run(command, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise RuntimeError(f"objcopy failed: {result.stderr}")
+    return adjusted
+
+
 def link_object_at_address(
     *,
     object_path: Path,
@@ -79,6 +154,9 @@ def link_object_at_address(
         if addr is not None:
             defsym_args.extend([f"--defsym={sym}={addr}"])
     out = output_path or object_path.with_suffix(".linked.o")
+    linked_input = _exactly_placeable_object(
+        object_path, section_addresses, layout=repo
+    )
     result = subprocess.run(
         [
             str(ld),
@@ -91,7 +169,7 @@ def link_object_at_address(
                 )
             ],
             *defsym_args,
-            str(object_path),
+            str(linked_input),
             "-o",
             str(out),
         ],

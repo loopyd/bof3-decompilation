@@ -259,6 +259,23 @@ headers = [
     "include/bof3/battle/battle15_internal.h",
 ]
 
+# func_8009CCBC's dense switch dispatches through a seven-entry table at
+# 0x80096934 (4-mod-8). psyq gcc emits the jump table after `.rdata` + `.align 3`
+# (8-byte alignment), so the placement route lowers the section's alignment to
+# the reviewed address's own alignment, landing the table exactly there instead
+# of front-padding it four bytes late.
+[[matching.section_placements]]
+function = 0x8009CCBC
+section = ".rodata"
+address = 0x80096934
+size = 0x1C
+
+[[matching.section_placements]]
+function = 0x8009CF80
+section = ".rodata"
+address = 0x80096954
+size = 0x20
+
 [[replicas]]
 disc_id = "BIN/BATTLE/BATTLE2.EMI#15"
 payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
