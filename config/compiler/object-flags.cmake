@@ -11,11 +11,11 @@
 # tools/python/harness/commands/compile_commands.py, so the build and the
 # compile database stay in sync.
 #
-# Value: a bin/flag-search candidate that REPLACES the canonical -O level and
+# Value: a bin/harness lift flag-search candidate that REPLACES the canonical -O level and
 # appends scheduling flags (the canonical -G0/-funsigned-char/... base is kept).
 #
-# Add an entry ONLY after `bin/flag-search TARGET@0xADDR` reports the profile as
-# an exact byte-match, then re-confirm with `bin/byte-match TARGET@0xADDR`.
+# Add an entry ONLY after `bin/harness lift flag-search TARGET@0xADDR` reports the profile as
+# an exact byte-match, then re-confirm with `bin/harness lift byte-match TARGET@0xADDR`.
 #
 # Format:  set(BOF3_OBJFLAGS_<sanitized_src_relative_path> <flags...>)
 # Example: set(BOF3_OBJFLAGS_emi_etc_game_01_armFadeDelay_c -O1)
@@ -34,13 +34,13 @@ set(BOF3_OBJFLAGS_bof3_ui_armFadeDelay_game01_801D0D5C_c -O1)
 # `front_gate - 0xF3` (front_gate is the fixed address &GAME_FRONT_INPUT_GATE)
 # into a fresh symbol-relative lui+lhu per access. Disabling that pass keeps the
 # access register-relative off the single base, matching the original byte-for-
-# byte with no register pinning. Verified by bin/flag-search (100% exact).
+# byte with no register pinning. Verified by bin/harness lift flag-search (100% exact).
 set(BOF3_OBJFLAGS_bof3_ui_preDispatchGate_game01_801D104C_c -O2 -fno-rerun-cse-after-loop)
 
 # pickRandomUnblockedId (battle/03) uses a signed modulo (rand() % count) whose original expansion
 # includes the full MIPS division-trap sequence (break 7 / break 6). The
 # canonical maspsx pass omits these traps; --expand-div restores them.
-# Verified by bin/flag-search (no -O variant matches) + manual maspsx test.
+# Verified by bin/harness lift flag-search (no -O variant matches) + manual maspsx test.
 set(BOF3_OBJFLAGS_bof3_battle_pickRandomUnblockedId_c -O2 -Wa,--expand-div)
 
 # pickRandomUnblockedId is a byte-identical duplicate of pickRandomUnblockedId (battle/03).
@@ -52,10 +52,25 @@ set(BOF3_OBJFLAGS_bof3_battle_pickRandomUnblockedId_battle15_800AB760_c -O2 -Wa,
 # sequences (break 7 / break 6). This object-local assembler expansion restores
 # those exact checks. /* @source 0x801DB058 */
 set(BOF3_OBJFLAGS_bof3_battle_markBattlersMeetingOpposingThresholds_c -O2 -Wa,--expand-div)
+
+# func_801E0ABC scales a slot amount with a signed division whose original
+# expansion keeps the full MIPS division-trap sequence (break 7 / break 6).
+# The canonical maspsx pass omits those traps; --expand-div restores them.
+# /* @source 0x801E0ABC */
+set(BOF3_OBJFLAGS_bof3_world_func_801E0ABC_c -O2 -Wa,--expand-div)
 # copyCurrentBattlerToQueuedSlot reloads the scratchpad work-pointer cell per access as a fresh
 # lui+lw pair; the canonical -G0 build CSEs the cell address into one
 # lui+addiu register. With -G4 the small-data threshold keeps the access
 # split per load, matching the original byte-for-byte.
-# Verified by bin/flag-search (100% exact; -G8 also exact).
+# Verified by bin/harness lift flag-search (100% exact; -G8 also exact).
 set(BOF3_OBJFLAGS_bof3_battle_copyCurrentBattlerToQueuedSlot_c -O2 -G4)
+
+# resetSelectionState hoists the single call's argument setup (move a0,zero) to the
+# top of the entry block, so the jal delay slot gets a nop instead of the move.
+# The original was built without the pre-reload scheduler. Disabling instruction
+# scheduling restores the original order; every clean-C shape tried (u8/u16/u32 arg
+# local, block-scoped stores) stays at 61/64, so this is a build-profile lever, not
+# a source ceiling. /* @source 0x801970EC */
+# Verified by bin/harness lift flag-search (100.00% exact; canonical -O2 is 95.31%).
+set(BOF3_OBJFLAGS_bof3_ui_resetSelectionState_c -O2 -fno-schedule-insns)
 set(BOF3_OBJCOMPILER_bof3_audio_dispatchSoundCue_c gcc-2.6.3-psx)

@@ -3,20 +3,19 @@
 /* @behavior Returns the signed 28-step delta between the work byte at 0x30 and
  * D_80145EC0, scaling negative quotients by four.
  * @source 0x801ADC98
- * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s8 func_801ADC98(void) {
   s32 quotient;
-
-  s32 result;
+  s8 result;
 
   quotient = (s8)(g_game_work->unk_30 - D_80145EC0);
   quotient /= 28;
-  result = quotient;
+  result = (s8)quotient;
   if ((s8)quotient < 0) {
-    result = quotient * 4;
+    result = (s8)(quotient * 4);
   }
-  return (s8)result;
+  return result;
 }

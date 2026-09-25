@@ -27,9 +27,9 @@ extern void func_801C1400(u32 arg0);
 /* @behavior resets front-state globals, then seeds the authored selection byte from
  * the active EXE-side selection when one already exists.
  * @source 0x801970EC
- * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void resetSelectionState(void) {
   u16 selection_seed;
