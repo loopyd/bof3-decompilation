@@ -3,12 +3,14 @@
 /* @behavior dispatches each active queued battle slot through its selected
  * handler while publishing the slot and associated local-work pointers.
  * @source 0x801E5824
- * @status partial
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void runQueuedSlotHandlers(void) {
   Battle03FourDispatchTable handlers = D_801D0CC0;
-  Battle03Handler* table = handlers.handlers;
   s32 i = 0;
+  Battle03Handler* table = handlers.handlers;
   u8* slot = (u8*)D_801EC330;
   s32 offset = 0;
 
